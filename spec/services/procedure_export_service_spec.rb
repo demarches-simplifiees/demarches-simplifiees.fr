@@ -78,6 +78,7 @@ describe ProcedureExportService do
           "iban",
           "annuaire_education",
           "cnaf",
+          "dgfip",
           "text"
         ]
       end
@@ -166,6 +167,7 @@ describe ProcedureExportService do
           "iban",
           "annuaire_education",
           "cnaf",
+          "dgfip",
           "text"
         ]
       end
@@ -250,6 +252,7 @@ describe ProcedureExportService do
             "iban",
             "annuaire_education",
             "cnaf",
+            "dgfip",
             "text"
           ]
         end

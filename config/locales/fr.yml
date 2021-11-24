@@ -299,6 +299,12 @@ fr:
               invalid: "doit être composé au maximum de 7 chiffres"
             code_postal:
               invalid: "doit posséder 5 caractères"
+        "champs/dgfip_champ":
+          attributes:
+            numero_fiscal:
+              invalid: "doit posséder 13 ou 14 caractères"
+            reference_avis:
+              invalid: "doit posséder 13 ou 14 caractères"
   errors:
     messages:
       saml_not_authorized: "Vous n’êtes pas autorisé à accéder à ce service."

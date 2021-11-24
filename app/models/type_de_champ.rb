@@ -50,7 +50,8 @@ class TypeDeChamp < ApplicationRecord
     titre_identite: 'titre_identite',
     iban: 'iban',
     annuaire_education: 'annuaire_education',
-    cnaf: 'cnaf'
+    cnaf: 'cnaf',
+    dgfip: 'dgfip'
   }
 
   belongs_to :revision, class_name: 'ProcedureRevision', optional: true
@@ -324,6 +325,8 @@ class TypeDeChamp < ApplicationRecord
         has_legacy_number
       when TypeDeChamp.type_champs.fetch(:cnaf)
         procedure.cnaf_enabled?
+      when TypeDeChamp.type_champs.fetch(:dgfip)
+        procedure.dgfip_enabled?
       else
         true
       end
