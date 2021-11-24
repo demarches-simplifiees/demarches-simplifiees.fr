@@ -456,6 +456,7 @@ describe Dossier do
 
       it { expect(dossier.state).to eq(Dossier.states.fetch(:en_construction)) }
       it { expect(dossier.en_construction_at).to eq(beginning_of_day) }
+      it { expect(dossier.depose_at).to eq(beginning_of_day) }
       it { expect(dossier.traitement.state).to eq(Dossier.states.fetch(:en_construction)) }
       it { expect(dossier.traitement.processed_at).to eq(beginning_of_day) }
 
@@ -467,6 +468,7 @@ describe Dossier do
         expect(dossier.traitements.size).to eq(3)
         expect(dossier.traitements.first.processed_at).to eq(beginning_of_day)
         expect(dossier.traitement.processed_at.round).to eq(dossier.en_construction_at.round)
+        expect(dossier.depose_at).to eq(beginning_of_day)
         expect(dossier.en_construction_at).to be > beginning_of_day
       end
     end
@@ -490,8 +492,9 @@ describe Dossier do
         dossier.repasser_en_construction!(instructeur)
         dossier.passer_en_instruction!(instructeur)
 
-        expect(dossier.traitements.size).to eq(3)
-        expect(dossier.traitements.first.processed_at).to eq(beginning_of_day)
+        expect(dossier.traitements.size).to eq(4)
+        expect(dossier.traitements.en_construction.first.processed_at).to eq(dossier.depose_at)
+        expect(dossier.traitements.en_instruction.first.processed_at).to eq(beginning_of_day)
         expect(dossier.traitement.processed_at.round).to eq(dossier.en_instruction_at.round)
         expect(dossier.en_instruction_at).to be > beginning_of_day
       end
