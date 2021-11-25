@@ -18,7 +18,6 @@
 #  description                               :string
 #  direction                                 :string
 #  duree_conservation_dossiers_dans_ds       :integer
-#  duree_conservation_dossiers_hors_ds       :integer
 #  durees_conservation_required              :boolean          default(TRUE)
 #  encrypted_api_particulier_token           :string
 #  euro_flag                                 :boolean          default(FALSE)
