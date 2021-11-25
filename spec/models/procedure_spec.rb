@@ -297,21 +297,21 @@ describe Procedure do
 
         it 'validates that no repetition type de champ is empty' do
           procedure.validate
-          expect(procedure.errors[:draft_revision]).to include(invalid_repetition_error_message)
+          expect(procedure.errors.full_messages_for(:draft_revision)).to include(invalid_repetition_error_message)
 
           text_field.revision = repetition.revision
           text_field.order_place = repetition.types_de_champ.size
           procedure.draft_revision.types_de_champ.find(&:repetition?).types_de_champ << text_field
 
           procedure.validate
-          expect(procedure.errors[:draft_revision]).not_to include(invalid_repetition_error_message)
+          expect(procedure.errors.full_messages_for(:draft_revision)).not_to include(invalid_repetition_error_message)
         end
       end
 
       context 'when validating for publication' do
         it 'validates that no repetition type de champ is empty' do
           procedure.validate(:publication)
-          expect(procedure.errors[:draft_revision]).to include(invalid_repetition_error_message)
+          expect(procedure.errors.full_messages_for(:draft_revision)).to include(invalid_repetition_error_message)
         end
       end
     end
