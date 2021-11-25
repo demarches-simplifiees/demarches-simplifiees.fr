@@ -119,7 +119,7 @@ class AttestationTemplate < ApplicationRecord
   def build_pdf(dossier)
     attestation = render_attributes_for(dossier: dossier)
     attestation_view = ApplicationController.render(
-      template: 'new_administrateur/attestation_templates/show',
+      template: 'administrateurs/attestation_templates/show',
       formats: :pdf,
       assigns: { attestation: attestation }
     )
