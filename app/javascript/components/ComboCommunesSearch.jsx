@@ -105,7 +105,8 @@ function ComboCommunesSearch(params) {
         <div>
           <div className="notice" id={communeDescribedBy}>
             <p>
-              Choisissez la commune. Vous pouver entre le nom ou le code postal.
+              Choisissez la commune. Vous pouvez entrer le nom ou le code
+              postal.
             </p>
           </div>
           <ComboSearch
