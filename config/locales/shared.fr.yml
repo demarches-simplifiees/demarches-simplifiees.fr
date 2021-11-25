@@ -7,6 +7,22 @@ fr:
           numero_allocataire_notice: Il est généralement composé de 7 chiffres.
           code_postal_label: Le code postal
           code_postal_notice: Il est généralement composé de 5 chiffres.
+      header:
+        expires_at:
+          brouillon: "Expirera le %{date}"
+          en_construction: "Expirera le %{date}"
+          en_instruction: "Ce dossier est en instruction, il n'expirera pas"
+          accepte: "Expirera le %{date}"
+          refuse: "Expirera le %{date}"
+          sans_suite: "Expirera le %{date}"
+        banner:
+          title: Votre dossier va expirer
+          states:
+            brouillon: Votre dossier est en brouillon, mais va bientôt expirer. Cela signifie qu’il va bientôt être supprimé sans avoir été déposé. Si vous souhaitez le conserver afin de poursuivre la démarche, vous pouvez le conserver un mois de plus en cliquant sur le bouton ci-dessous.
+            en_construction: Votre dossier est en attente de prise en charge par l'administration. Le delais de prise en charge maximale est de 6 mois. Vous pouvez toutefois entendre cette durée d'un mois en cliquant sur le bouton suivant.
+            termine: Le traitement de votre dossier est terminé, mais il va bientôt expirer. Cela signifie qu’il va bientôt être supprimé. Si vous souhaitez conserver une trace, vous pouvez le télécharger au format PDF.
+          button_delay_expiration: "Repousser sa suppression"
+
     champs:
       cnaf:
         show:

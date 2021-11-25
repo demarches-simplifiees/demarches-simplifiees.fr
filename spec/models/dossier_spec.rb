@@ -61,6 +61,16 @@ describe Dossier do
 
       it { is_expected.not_to include(expiring_dossier) }
     end
+
+    context 'when .close_to_expiration' do
+      subject { Dossier.close_to_expiration }
+      it do
+        is_expected.not_to include(young_dossier)
+        is_expected.to include(expiring_dossier)
+        is_expected.to include(just_expired_dossier)
+        is_expected.to include(long_expired_dossier)
+      end
+    end
   end
 
   describe 'en_construction_close_to_expiration' do
@@ -87,6 +97,16 @@ describe Dossier do
 
       it { is_expected.not_to include(expiring_dossier) }
     end
+
+    context 'when .close_to_expiration' do
+      subject { Dossier.close_to_expiration }
+      it do
+        is_expected.not_to include(young_dossier)
+        is_expected.to include(expiring_dossier)
+        is_expected.to include(just_expired_dossier)
+        is_expected.to include(long_expired_dossier)
+      end
+    end
   end
 
   describe 'en_instruction_close_to_expiration' do
@@ -103,6 +123,43 @@ describe Dossier do
       is_expected.to include(expiring_dossier)
       is_expected.to include(just_expired_dossier)
       is_expected.to include(long_expired_dossier)
+    end
+
+    context 'when .close_to_expiration' do
+      subject { Dossier.close_to_expiration }
+      it do
+        is_expected.not_to include(young_dossier)
+        is_expected.to include(expiring_dossier)
+        is_expected.to include(just_expired_dossier)
+        is_expected.to include(long_expired_dossier)
+      end
+    end
+  end
+
+  describe 'termine_close_to_expiration' do
+    let(:procedure) { create(:procedure, :published, duree_conservation_dossiers_dans_ds: 6) }
+    let!(:young_dossier) { create(:dossier, :accepte, procedure: procedure, traitements: [build(:traitement, :accepte)]) }
+    let!(:expiring_dossier) { create(:dossier, :accepte, procedure: procedure, traitements: [build(:traitement, :accepte, processed_at: 175.days.ago)]) }
+    let!(:just_expired_dossier) { create(:dossier, :accepte, procedure: procedure, traitements: [build(:traitement, :accepte, processed_at: (6.months + 1.hour + 10.seconds).ago)]) }
+    let!(:long_expired_dossier) { create(:dossier, :accepte, procedure: procedure, traitements: [build(:traitement, :accepte, processed_at: 1.year.ago)]) }
+
+    subject { Dossier.termine_close_to_expiration }
+
+    it do
+      is_expected.not_to include(young_dossier)
+      is_expected.to include(expiring_dossier)
+      is_expected.to include(just_expired_dossier)
+      is_expected.to include(long_expired_dossier)
+    end
+
+    context 'when .close_to_expiration' do
+      subject { Dossier.close_to_expiration }
+      it do
+        is_expected.not_to include(young_dossier)
+        is_expected.to include(expiring_dossier)
+        is_expected.to include(just_expired_dossier)
+        is_expected.to include(long_expired_dossier)
+      end
     end
   end
 
@@ -193,11 +250,21 @@ describe Dossier do
         expect(dossier.champs.count).to eq(1)
         expect(dossier.champs_private.count).to eq(1)
       end
+    end
+
+    describe '#build_default_individual' do
+      let(:dossier) { build(:dossier, procedure: procedure, user: user) }
+
+      subject do
+        dossier.individual = nil
+        dossier.build_default_individual
+      end
 
       context 'when the dossier belongs to a procedure for individuals' do
-        let(:procedure) { create(:procedure, :with_type_de_champ, for_individual: true) }
+        let(:procedure) { create(:procedure, for_individual: true) }
 
         it 'creates a default individual' do
+          subject
           expect(dossier.individual).to be_present
           expect(dossier.individual.nom).to be_nil
           expect(dossier.individual.prenom).to be_nil
@@ -209,6 +276,7 @@ describe Dossier do
           let(:user) { build(:user, france_connect_information: france_connect_information) }
 
           it 'fills the individual with the informations from France Connect' do
+            subject
             expect(dossier.individual.nom).to eq('DUBOIS')
             expect(dossier.individual.prenom).to eq('Angela Claire Louise')
             expect(dossier.individual.gender).to eq(Individual::GENDER_FEMALE)
@@ -217,9 +285,10 @@ describe Dossier do
       end
 
       context 'when the dossier belongs to a procedure for moral personas' do
-        let(:procedure) { create(:procedure, :with_type_de_champ, for_individual: false) }
+        let(:procedure) { create(:procedure, for_individual: false) }
 
         it 'doesn’t create a individual' do
+          subject
           expect(dossier.individual).to be_nil
         end
       end
@@ -387,6 +456,7 @@ describe Dossier do
 
       it { expect(dossier.state).to eq(Dossier.states.fetch(:en_construction)) }
       it { expect(dossier.en_construction_at).to eq(beginning_of_day) }
+      it { expect(dossier.depose_at).to eq(beginning_of_day) }
       it { expect(dossier.traitement.state).to eq(Dossier.states.fetch(:en_construction)) }
       it { expect(dossier.traitement.processed_at).to eq(beginning_of_day) }
 
@@ -398,6 +468,7 @@ describe Dossier do
         expect(dossier.traitements.size).to eq(3)
         expect(dossier.traitements.first.processed_at).to eq(beginning_of_day)
         expect(dossier.traitement.processed_at.round).to eq(dossier.en_construction_at.round)
+        expect(dossier.depose_at).to eq(beginning_of_day)
         expect(dossier.en_construction_at).to be > beginning_of_day
       end
     end
@@ -421,8 +492,9 @@ describe Dossier do
         dossier.repasser_en_construction!(instructeur)
         dossier.passer_en_instruction!(instructeur)
 
-        expect(dossier.traitements.size).to eq(3)
-        expect(dossier.traitements.first.processed_at).to eq(beginning_of_day)
+        expect(dossier.traitements.size).to eq(4)
+        expect(dossier.traitements.en_construction.first.processed_at).to eq(dossier.depose_at)
+        expect(dossier.traitements.en_instruction.first.processed_at).to eq(beginning_of_day)
         expect(dossier.traitement.processed_at.round).to eq(dossier.en_instruction_at.round)
         expect(dossier.en_instruction_at).to be > beginning_of_day
       end

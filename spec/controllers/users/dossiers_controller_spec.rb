@@ -1125,4 +1125,14 @@ describe Users::DossiersController, type: :controller do
       it { is_expected.to be_falsy }
     end
   end
+
+  describe '#index' do
+    before do
+      sign_in(user)
+    end
+    it 'works' do
+      get :index
+      expect(response).to have_http_status(:ok)
+    end
+  end
 end

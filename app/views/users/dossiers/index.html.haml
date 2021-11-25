@@ -39,6 +39,12 @@
             active: @statut == 'dossiers-transferes',
             badge: number_with_html_delimiter(@dossier_transfers.count))
 
+        - if @dossiers_close_to_expiration.count > 0
+          = tab_item(t('pluralize.dossiers_close_to_expiration', count: @dossiers_close_to_expiration.count),
+            dossiers_path(statut: 'dossiers-expirant'),
+            active: @statut == 'dossiers-expirant',
+            badge: number_with_html_delimiter(@dossiers_close_to_expiration.count))
+
 .container
   - if @statut == "mes-dossiers"
     = render partial: "dossiers_list", locals: { dossiers: @user_dossiers }
@@ -48,6 +54,8 @@
 
   - if @statut == "dossiers-supprimes"
     = render partial: "deleted_dossiers_list", locals: { deleted_dossiers: @dossiers_supprimes }
-
   - if @statut == "dossiers-transferes"
     = render partial: "transfered_dossiers_list", locals: { dossier_transfers: @dossier_transfers }
+
+  - if @statut == "dossiers-expirant"
+    = render partial: "dossiers_list", locals: { dossiers: @dossiers_close_to_expiration }

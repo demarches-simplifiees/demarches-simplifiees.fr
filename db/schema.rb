@@ -10,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_15_112933) do
+ActiveRecord::Schema.define(version: 2021_11_24_111429) do
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -322,6 +323,7 @@ ActiveRecord::Schema.define(version: 2021_11_15_112933) do
     t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
     t.bigint "dossier_transfer_id"
     t.datetime "identity_updated_at"
+    t.datetime "depose_at"
     t.index ["archived"], name: "index_dossiers_on_archived"
     t.index ["dossier_transfer_id"], name: "index_dossiers_on_dossier_transfer_id"
     t.index ["groupe_instructeur_id"], name: "index_dossiers_on_groupe_instructeur_id"
@@ -534,6 +536,8 @@ ActiveRecord::Schema.define(version: 2021_11_15_112933) do
     t.text "encrypted_login_token"
     t.datetime "login_token_created_at"
     t.boolean "bypass_email_login_token", default: false, null: false
+    t.string "agent_connect_id"
+    t.index ["agent_connect_id"], name: "index_instructeurs_on_agent_connect_id", unique: true
   end
 
   create_table "invites", id: :serial, force: :cascade do |t|

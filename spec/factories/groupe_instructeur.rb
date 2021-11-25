@@ -4,5 +4,9 @@ FactoryBot.define do
   factory :groupe_instructeur do
     label { generate(:groupe_label) }
     association :procedure
+
+    trait :default do
+      label { GroupeInstructeur::DEFAUT_LABEL }
+    end
   end
 end
