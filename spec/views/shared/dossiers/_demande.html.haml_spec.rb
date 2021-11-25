@@ -32,7 +32,7 @@ describe 'shared/dossiers/demande.html.haml', type: :view do
   end
 
   context 'when dossier was created by an individual' do
-    let(:individual) { create(:individual) }
+    let(:individual) { build(:individual) }
 
     it 'renders the individual identity infos' do
       expect(subject).to include(individual.gender)

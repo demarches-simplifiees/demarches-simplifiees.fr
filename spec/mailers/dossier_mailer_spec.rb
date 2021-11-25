@@ -12,7 +12,7 @@ RSpec.describe DossierMailer, type: :mailer do
   end
 
   describe '.notify_new_draft' do
-    let(:dossier) { create(:dossier, procedure: build(:simple_procedure, :with_auto_archive)) }
+    let(:dossier) { create(:dossier, procedure: create(:simple_procedure, :with_auto_archive)) }
 
     subject { described_class.notify_new_draft(dossier) }
 
@@ -27,7 +27,7 @@ RSpec.describe DossierMailer, type: :mailer do
   end
 
   describe '.notify_new_answer with dossier brouillon' do
-    let(:dossier) { create(:dossier, procedure: build(:simple_procedure)) }
+    let(:dossier) { create(:dossier, procedure: create(:simple_procedure)) }
     let(:commentaire) { create(:commentaire, dossier: dossier) }
     subject { described_class.with(commentaire: commentaire).notify_new_answer }
 
@@ -39,8 +39,9 @@ RSpec.describe DossierMailer, type: :mailer do
   end
 
   describe '.notify_new_answer with dossier en construction' do
-    let(:dossier) { create(:dossier, state: "en_construction", procedure: build(:simple_procedure)) }
+    let(:dossier) { create(:dossier, :en_construction, procedure: create(:simple_procedure)) }
     let(:commentaire) { create(:commentaire, dossier: dossier) }
+
     subject { described_class.with(commentaire: commentaire).notify_new_answer }
 
     it { expect(subject.subject).to include("Nouveau message") }
@@ -51,7 +52,7 @@ RSpec.describe DossierMailer, type: :mailer do
   end
 
   describe '.notify_new_answer with commentaire discarded' do
-    let(:dossier) { create(:dossier, procedure: build(:simple_procedure)) }
+    let(:dossier) { create(:dossier, procedure: create(:simple_procedure)) }
     let(:commentaire) { create(:commentaire, dossier: dossier, discarded_at: 2.minutes.ago) }
 
     subject { described_class.with(commentaire: commentaire).notify_new_answer }
@@ -83,7 +84,7 @@ RSpec.describe DossierMailer, type: :mailer do
   end
 
   describe '.notify_revert_to_instruction' do
-    let(:dossier) { create(:dossier, procedure: build(:simple_procedure)) }
+    let(:dossier) { create(:dossier, procedure: create(:simple_procedure)) }
 
     subject { described_class.notify_revert_to_instruction(dossier) }
 

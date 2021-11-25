@@ -165,6 +165,27 @@ describe 'The user' do
     expect(page).to have_current_path(merci_dossier_path(user_dossier))
   end
 
+  scenario 'extends dossier experation date more than one time, ', js: true do
+    user_old_dossier = create(:dossier,
+                              procedure: simple_procedure,
+                              created_at: simple_procedure.duree_conservation_dossiers_dans_ds.month.ago,
+                              user: user)
+    login_as(user, scope: :user)
+    visit brouillon_dossier_path(user_old_dossier)
+
+    expect(page).to have_css('.card-title', text: 'Votre dossier va expirer', visible: true)
+    click_on "Repousser sa suppression"
+    expect(page).not_to have_button("Repousser sa suppression")
+
+    Timecop.freeze(1.month.from_now) do
+      visit brouillon_dossier_path(user_old_dossier)
+
+      expect(page).to have_css('.card-title', text: 'Votre dossier va expirer', visible: true)
+      click_on "Repousser sa suppression"
+      expect(page).not_to have_button("Repousser sa suppression")
+    end
+  end
+
   let(:procedure_with_pj) do
     tdcs = [build(:type_de_champ_piece_justificative, mandatory: true, libelle: 'Pièce justificative')]
     create(:procedure, :published, :for_individual, types_de_champ: tdcs)

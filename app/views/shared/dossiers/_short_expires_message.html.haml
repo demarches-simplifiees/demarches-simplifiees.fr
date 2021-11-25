@@ -1,0 +1,9 @@
+- if dossier.expirable?
+  %p.expires_at
+    %small= t("shared.dossiers.header.expires_at.#{dossier.state}", date: safe_expiration_date(dossier))
+- else
+  %p.expires_at_en_instruction
+    %small= t("shared.dossiers.header.expires_at.en_instruction")
+
+
+= render(partial: 'shared/dossiers/expiration_banner', locals: {dossier: dossier})

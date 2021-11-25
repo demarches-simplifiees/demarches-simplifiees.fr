@@ -6,7 +6,7 @@ RSpec.describe APIEntreprise::Job, type: :job do
   describe '#perform' do
     let(:dossier) { create(:dossier, :with_entreprise) }
 
-    context 'when a un retryable error is raised' do
+    context 'when an un-retriable error is raised' do
       let(:errors) { [:standard_error] }
 
       it 'does not retry' do
@@ -14,7 +14,7 @@ RSpec.describe APIEntreprise::Job, type: :job do
       end
     end
 
-    context 'when a retryable error is raised' do
+    context 'when a retriable error is raised' do
       let(:errors) { [:service_unavaible, :bad_gateway, :timed_out] }
 
       it 'retries 5 times' do
