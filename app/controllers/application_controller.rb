@@ -224,7 +224,7 @@ class ApplicationController < ActionController::Base
   def redirect_if_untrusted
     if instructeur_signed_in? &&
         sensitive_path &&
-        !feature_enabled?(:instructeur_bypass_email_login_token) &&
+        !current_instructeur.bypass_email_login_token &&
         !IPService.ip_trusted?(request.headers['X-Forwarded-For']) &&
         !trusted_device?
 
