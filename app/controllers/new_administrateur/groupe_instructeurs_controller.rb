@@ -190,10 +190,10 @@ module NewAdministrateur
     end
 
     def update_routing_enabled
-      procedure.update!(routing_enabled: true)
+      procedure.update!(routing_enabled_params)
 
       redirect_to admin_procedure_groupe_instructeurs_path(procedure),
-      notice: "Le routage est activé."
+      notice: "Le routage est #{procedure.routing_enabled? ? "activée" : "désactivée"}."
     end
 
     def update_instructeurs_self_management_enabled
@@ -325,6 +325,10 @@ module NewAdministrateur
 
     def instructeurs_self_management_enabled_params
       params.require(:procedure).permit(:instructeurs_self_management_enabled)
+    end
+
+    def routing_enabled_params
+      { routing_enabled: params.require(:routing) == 'enable' }
     end
   end
 end

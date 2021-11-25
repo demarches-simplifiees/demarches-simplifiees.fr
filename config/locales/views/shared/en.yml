@@ -1,6 +1,14 @@
 en:
   views:
     shared:
+      dossiers:
+        identite_entreprise:
+          warning_for_private_info: "The establishment %{etablissement} applied his right to not publish information regarding his identity. These informaiton won't be visible from instructor services"
+      avis:
+        demande_envoyee_le: "Feedback send at %{date}"
+        demande_revoquee_le: "Feedback revoked at %{date}"
+        reponse_donnee_le: "Response sent at %{date}"
+        en_attente: "Waiting for response"
       france_connect_login:
         title: "With FranceConnect"
         description: "France connect is a solution proposed by the government to secure and simplify the connection to web services."
@@ -18,3 +26,12 @@ en:
         already_user: "I already have an account"
         create: 'Create an account'
         signin: 'Sign in'
+      commentaires:
+        destroy:
+          button: 'Destroy this message'
+          confirm: "Are you sure you want to destroy this message ?"
+          deleted_body: Message deleted
+          notice: 'Your message had been deleted'
+          alert_reasons:
+            acl: "Can not destroy message: it does not belong to you"
+            already_discarded: "Can not destroy message: it was already destroyed"

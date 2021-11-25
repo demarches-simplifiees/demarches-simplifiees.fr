@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_04_102349) do
-
+ActiveRecord::Schema.define(version: 2021_11_15_112933) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -219,6 +218,7 @@ ActiveRecord::Schema.define(version: 2021_11_04_102349) do
     t.bigint "user_id"
     t.bigint "instructeur_id"
     t.bigint "expert_id"
+    t.datetime "discarded_at"
     t.index ["dossier_id"], name: "index_commentaires_on_dossier_id"
     t.index ["expert_id"], name: "index_commentaires_on_expert_id"
     t.index ["instructeur_id"], name: "index_commentaires_on_instructeur_id"

@@ -20,6 +20,8 @@
 #  type_de_champ_id               :integer
 #
 class Champs::CommuneChamp < Champs::TextChamp
+  store_accessor :value_json, :departement, :code_departement
+
   def for_export
     [value, external_id]
   end

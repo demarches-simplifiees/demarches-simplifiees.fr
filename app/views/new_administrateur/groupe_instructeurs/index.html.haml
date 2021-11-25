@@ -10,10 +10,11 @@
                       'Instructeurs'] }
 
 .container.groupe-instructeur
+  = render partial: 'new_administrateur/groupe_instructeurs/routing', locals: { procedure: @procedure }
+
   - if @procedure.routee?
     = render partial: 'new_administrateur/groupe_instructeurs/edit', locals: { procedure: @procedure, groupes_instructeurs: @groupes_instructeurs }
   - else
-    = render partial: 'new_administrateur/groupe_instructeurs/routing', locals: { procedure: @procedure }
     = render partial: 'new_administrateur/groupe_instructeurs/instructeurs',
       locals: { procedure: @procedure,
         groupe_instructeur: @procedure.defaut_groupe_instructeur,

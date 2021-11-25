@@ -1,10 +1,9 @@
 module Users
   class ProfilController < UserController
     before_action :ensure_update_email_is_authorized, only: :update_email
+    before_action :find_transfers, only: [:show, :renew_api_token]
 
     def show
-      @waiting_merge_emails = waiting_merge_emails
-      @waiting_transfers = current_user.dossiers.joins(:transfer).group('dossier_transfers.email').count.to_a
     end
 
     def renew_api_token
@@ -55,6 +54,11 @@ module Users
     end
 
     private
+
+    def find_transfers
+      @waiting_merge_emails = waiting_merge_emails
+      @waiting_transfers = current_user.dossiers.joins(:transfer).group('dossier_transfers.email').count.to_a
+    end
 
     def waiting_merge_emails
       users_requesting_merge.pluck(:email)

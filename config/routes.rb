@@ -364,6 +364,8 @@ Rails.application.routes.draw do
 
         resources :dossiers, only: [:show], param: :dossier_id do
           member do
+            resources :commentaires, only: [:destroy]
+
             get 'attestation'
             get 'geo_data'
             get 'apercu_attestation'

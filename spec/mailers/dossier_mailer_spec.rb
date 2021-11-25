@@ -28,8 +28,8 @@ RSpec.describe DossierMailer, type: :mailer do
 
   describe '.notify_new_answer with dossier brouillon' do
     let(:dossier) { create(:dossier, procedure: build(:simple_procedure)) }
-
-    subject { described_class.notify_new_answer(dossier) }
+    let(:commentaire) { create(:commentaire, dossier: dossier) }
+    subject { described_class.with(commentaire: commentaire).notify_new_answer }
 
     it { expect(subject.subject).to include("Nouveau message") }
     it { expect(subject.subject).to include(dossier.id.to_s) }
@@ -40,14 +40,23 @@ RSpec.describe DossierMailer, type: :mailer do
 
   describe '.notify_new_answer with dossier en construction' do
     let(:dossier) { create(:dossier, state: "en_construction", procedure: build(:simple_procedure)) }
-
-    subject { described_class.notify_new_answer(dossier) }
+    let(:commentaire) { create(:commentaire, dossier: dossier) }
+    subject { described_class.with(commentaire: commentaire).notify_new_answer }
 
     it { expect(subject.subject).to include("Nouveau message") }
     it { expect(subject.subject).to include(dossier.id.to_s) }
     it { expect(subject.body).to include(messagerie_dossier_url(dossier)) }
 
     it_behaves_like 'a dossier notification'
+  end
+
+  describe '.notify_new_answer with commentaire discarded' do
+    let(:dossier) { create(:dossier, procedure: build(:simple_procedure)) }
+    let(:commentaire) { create(:commentaire, dossier: dossier, discarded_at: 2.minutes.ago) }
+
+    subject { described_class.with(commentaire: commentaire).notify_new_answer }
+
+    it { expect(subject.perform_deliveries).to be_falsy }
   end
 
   describe '.notify_deletion_to_user' do
