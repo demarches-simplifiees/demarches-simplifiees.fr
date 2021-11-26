@@ -128,6 +128,9 @@ fr:
           form: "Formulaire"
           edit_siret: "Modifier le SIRET"
           edit_identity: "Modifier l’identité"
+    instructeurs:
+      dossiers:
+        deleted_by_user: "Dossier supprimé par l'usager"
     users:
       dossiers:
         autosave:
@@ -187,6 +190,7 @@ fr:
           edit_dossier: "Modifier le dossier"
           start_other_dossier: "Commencer un autre dossier"
           delete_dossier: "Supprimer le dossier"
+          hide_dossier: "Supprimer de votre interface"
           transfer_dossier: "Transferer le dossier"
           edit_draft: "Modifier le brouillon"
           actions: "Actions"
@@ -334,10 +338,14 @@ fr:
       zero: archivé
       one: archivé
       other: archivés
-    mes_dossiers:
-      zero: mon dossier
-      one: mon dossier
-      other: mes dossiers
+    en_cours:
+      zero: en cours
+      one: en cours
+      other: en cours
+    traites:
+      zero: traité
+      one: traité
+      other: traités
     dossiers_invites:
       zero: dossier invité
       one: dossier invité
