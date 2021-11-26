@@ -52,6 +52,14 @@
                   = number_with_html_delimiter(archived_count)
                 .stats-legend
                   = t('pluralize.archived', count: archived_count)
+          %li
+            %object
+              = link_to(instructeur_procedure_path(p, statut: 'expirant')) do
+                - expirant_count = dossiers_expirant_count_per_procedure[p.id] || 0
+                .stats-number
+                  = number_with_html_delimiter(expirant_count)
+                .stats-legend
+                  = t('pluralize.dossiers_close_to_expiration', count: expirant_count)
 
       - if p.close?
         .procedure-status
