@@ -15,9 +15,9 @@ module Instructeurs
       dossiers = current_instructeur.dossiers.joins(:groupe_instructeur)
       @dossiers_count_per_procedure = dossiers.all_state.group('groupe_instructeurs.procedure_id').reorder(nil).count
       @dossiers_a_suivre_count_per_procedure = dossiers.without_followers.en_cours.group('groupe_instructeurs.procedure_id').reorder(nil).count
-      @dossiers_archived_count_per_procedure = dossiers.archived.group('groupe_instructeurs.procedure_id').count
+      @dossiers_archived_count_per_procedure = dossiers.archived.group('groupe_instructeurs.procedure_id').count #why not reorder(nil)
       @dossiers_termines_count_per_procedure = dossiers.termine.group('groupe_instructeurs.procedure_id').reorder(nil).count
-
+      @dossiers_expirant_count_per_procedure = dossiers.close_to_expiration.group('groupe_instructeurs.procedure_id').count  #why not reorder(nil)
       groupe_ids = current_instructeur.groupe_instructeurs.pluck(:id)
 
       @followed_dossiers_count_per_procedure = current_instructeur
@@ -34,7 +34,8 @@ module Instructeurs
         'suivis' => @followed_dossiers_count_per_procedure.sum { |_, v| v },
         'traités' => @dossiers_termines_count_per_procedure.sum { |_, v| v },
         'dossiers' => @dossiers_count_per_procedure.sum { |_, v| v },
-        'archivés' => @dossiers_archived_count_per_procedure.sum { |_, v| v }
+        'archivés' => @dossiers_archived_count_per_procedure.sum { |_, v| v },
+        'expirant' => @dossiers_expirant_count_per_procedure.sum { |_, v| v }
       }
 
       @procedure_ids_en_cours_with_notifications = current_instructeur.procedure_ids_with_notifications(:en_cours)
