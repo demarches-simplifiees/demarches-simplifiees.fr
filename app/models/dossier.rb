@@ -232,7 +232,7 @@ class Dossier < ApplicationRecord
   scope :en_construction,             -> { not_archived.state_en_construction }
   scope :en_instruction,              -> { not_archived.state_en_instruction }
   scope :termine,                     -> { not_archived.state_termine }
-  scope :not_termine,                 -> { state_not_termine }
+
   scope :processed_in_month, -> (month) do
     state_termine
       .joins(:traitements)
