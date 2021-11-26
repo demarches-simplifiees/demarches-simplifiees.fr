@@ -787,7 +787,10 @@ class Dossier < ApplicationRecord
     save!
   end
 
-  def after_passer_en_instruction(instructeur, disable_notification: false)
+  def after_passer_en_instruction(h)
+    instructeur = h[:instructeur]
+    disable_notification = h.fetch(:disable_notification, false)
+
     instructeur.follow(self)
 
     self.en_construction_close_to_expiration_notice_sent_at = nil
@@ -825,7 +828,10 @@ class Dossier < ApplicationRecord
     log_dossier_operation(instructeur, :repasser_en_construction)
   end
 
-  def after_repasser_en_instruction(instructeur, disable_notification: false)
+  def after_repasser_en_instruction(h)
+    instructeur = h[:instructeur]
+    disable_notification = h.fetch(:disable_notification, false)
+
     create_missing_traitemets
 
     self.archived = false
@@ -843,7 +849,12 @@ class Dossier < ApplicationRecord
     log_dossier_operation(instructeur, :repasser_en_instruction)
   end
 
-  def after_accepter(instructeur, motivation, justificatif: nil, disable_notification: false)
+  def after_accepter(h)
+    instructeur = h[:instructeur]
+    motivation = h[:motivation]
+    justificatif = h[:justificatif]
+    disable_notification = h.fetch(:disable_notification, false)
+
     self.processed_at = self.traitements
       .accepter(motivation: motivation, instructeur: instructeur)
       .processed_at
@@ -882,7 +893,12 @@ class Dossier < ApplicationRecord
     log_automatic_dossier_operation(:accepter, self)
   end
 
-  def after_refuser(instructeur, motivation, justificatif: nil, disable_notification: false)
+  def after_refuser(h)
+    instructeur = h[:instructeur]
+    motivation = h[:motivation]
+    justificatif = h[:justificatif]
+    disable_notification = h.fetch(:disable_notification, false)
+
     self.processed_at = self.traitements
       .refuser(motivation: motivation, instructeur: instructeur)
       .processed_at
@@ -901,7 +917,12 @@ class Dossier < ApplicationRecord
     log_dossier_operation(instructeur, :refuser, self)
   end
 
-  def after_classer_sans_suite(instructeur, motivation, justificatif: nil, disable_notification: false)
+  def after_classer_sans_suite(h)
+    instructeur = h[:instructeur]
+    motivation = h[:motivation]
+    justificatif = h[:justificatif]
+    disable_notification = h.fetch(:disable_notification, false)
+
     self.processed_at = self.traitements
       .classer_sans_suite(motivation: motivation, instructeur: instructeur)
       .processed_at

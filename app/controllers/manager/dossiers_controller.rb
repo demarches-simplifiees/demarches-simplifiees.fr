@@ -41,7 +41,7 @@ module Manager
 
     def repasser_en_instruction
       dossier = Dossier.find(params[:id])
-      dossier.repasser_en_instruction(current_super_admin)
+      dossier.repasser_en_instruction(instructeur: current_super_admin)
 
       logger.info("Le dossier #{dossier.id} est repassé en instruction par #{current_super_admin.email}")
       flash[:notice] = "Le dossier #{dossier.id} est repassé en instruction."

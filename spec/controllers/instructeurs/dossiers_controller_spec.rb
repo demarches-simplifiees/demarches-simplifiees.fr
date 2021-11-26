@@ -219,7 +219,7 @@ describe Instructeurs::DossiersController, type: :controller do
   describe '#terminer' do
     context "with refuser" do
       before do
-        dossier.passer_en_instruction!(instructeur)
+        dossier.passer_en_instruction!(instructeur: instructeur)
         sign_in(instructeur.user)
       end
 
@@ -260,7 +260,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
     context "with classer_sans_suite" do
       before do
-        dossier.passer_en_instruction!(instructeur)
+        dossier.passer_en_instruction!(instructeur: instructeur)
         sign_in(instructeur.user)
       end
       context 'without attachment' do
@@ -302,7 +302,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
     context "with accepter" do
       before do
-        dossier.passer_en_instruction!(instructeur)
+        dossier.passer_en_instruction!(instructeur: instructeur)
         sign_in(instructeur.user)
 
         expect(NotificationMailer).to receive(:send_accepte_notification)
@@ -749,12 +749,12 @@ describe Instructeurs::DossiersController, type: :controller do
     end
 
     before do
-      dossier.passer_en_instruction(instructeur)
+      dossier.passer_en_instruction(instructeur: instructeur)
     end
 
     context 'just before delete the dossier, the operation must be equal to 2' do
       before do
-        dossier.accepter!(instructeur, 'le dossier est correct')
+        dossier.accepter!(instructeur: instructeur, motivation: 'le dossier est correct')
       end
 
       it 'has 2 operations logs before deletion' do
@@ -764,7 +764,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
     context 'when the instructeur want to delete a dossier with a decision' do
       before do
-        dossier.accepter!(instructeur, "le dossier est correct")
+        dossier.accepter!(instructeur: instructeur, motivation: "le dossier est correct")
         allow(DossierMailer).to receive(:notify_instructeur_deletion_to_user).and_return(double(deliver_later: nil))
         subject
       end
