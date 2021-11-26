@@ -20,6 +20,14 @@ class UserMailer < ApplicationMailer
     mail(to: requested_email, subject: @subject)
   end
 
+  def france_connect_merge_confirmation(email, merge_token, merge_token_created_at)
+    @merge_token = merge_token
+    @merge_token_created_at = merge_token_created_at
+    @subject = "Veuillez confirmer la fusion de compte"
+
+    mail(to: email, subject: @subject)
+  end
+
   def invite_instructeur(user, reset_password_token)
     @reset_password_token = reset_password_token
     @user = user
