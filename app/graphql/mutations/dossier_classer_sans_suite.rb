@@ -14,7 +14,7 @@ module Mutations
     field :errors, [Types::ValidationErrorType], null: true
 
     def resolve(dossier:, instructeur:, motivation:, justificatif: nil, disable_notification:)
-      dossier.classer_sans_suite!(instructeur, motivation, justificatif: justificatif, disable_notification: disable_notification)
+      dossier.classer_sans_suite!(instructeur: instructeur, motivation: motivation, justificatif: justificatif, disable_notification: disable_notification)
 
       { dossier: dossier }
     end

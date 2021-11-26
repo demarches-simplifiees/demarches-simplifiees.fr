@@ -306,9 +306,9 @@ describe Dossier do
       Timecop.freeze(date1)
       d.passer_en_construction!
       Timecop.freeze(date2)
-      d.passer_en_instruction!(instructeur)
+      d.passer_en_instruction!(instructeur: instructeur)
       Timecop.freeze(date3)
-      d.accepter!(instructeur, "Motivation")
+      d.accepter!(instructeur: instructeur, motivation: "Motivation")
       Timecop.return
       d
     end
@@ -462,7 +462,7 @@ describe Dossier do
 
       it 'should keep first en_construction_at date' do
         Timecop.return
-        dossier.passer_en_instruction!(instructeur)
+        dossier.passer_en_instruction!(instructeur: instructeur)
         dossier.repasser_en_construction!(instructeur)
 
         expect(dossier.traitements.size).to eq(3)
@@ -478,7 +478,7 @@ describe Dossier do
       let(:instructeur) { create(:instructeur) }
 
       before do
-        dossier.passer_en_instruction!(instructeur)
+        dossier.passer_en_instruction!(instructeur: instructeur)
         dossier.reload
       end
 
@@ -490,7 +490,7 @@ describe Dossier do
       it 'should keep first en_instruction_at date if dossier is set to en_construction again' do
         Timecop.return
         dossier.repasser_en_construction!(instructeur)
-        dossier.passer_en_instruction!(instructeur)
+        dossier.passer_en_instruction!(instructeur: instructeur)
 
         expect(dossier.traitements.size).to eq(4)
         expect(dossier.traitements.en_construction.first.processed_at).to eq(dossier.depose_at)
@@ -504,7 +504,7 @@ describe Dossier do
       let(:dossier) { create(:dossier, :en_instruction, :with_individual) }
 
       before do
-        dossier.accepter!(instructeur, nil)
+        dossier.accepter!(instructeur: instructeur)
         dossier.reload
       end
 
@@ -518,7 +518,7 @@ describe Dossier do
       let(:dossier) { create(:dossier, :en_instruction, :with_individual) }
 
       before do
-        dossier.refuser!(instructeur, nil)
+        dossier.refuser!(instructeur: instructeur)
         dossier.reload
       end
 
@@ -532,7 +532,7 @@ describe Dossier do
       let(:dossier) { create(:dossier, :en_instruction, :with_individual) }
 
       before do
-        dossier.classer_sans_suite!(instructeur, nil)
+        dossier.classer_sans_suite!(instructeur: instructeur)
         dossier.reload
       end
 
@@ -611,7 +611,7 @@ describe Dossier do
     end
 
     it "sends an email when the dossier becomes en_instruction" do
-      dossier.passer_en_instruction!(instructeur)
+      dossier.passer_en_instruction!(instructeur: instructeur)
       expect(NotificationMailer).to have_received(:send_en_instruction_notification).with(dossier)
     end
 
@@ -949,7 +949,7 @@ describe Dossier do
       }.to_not have_enqueued_job(WebHookJob)
 
       expect {
-        dossier.passer_en_instruction!(instructeur)
+        dossier.passer_en_instruction!(instructeur: instructeur)
       }.to have_enqueued_job(WebHookJob)
     end
   end
@@ -1034,7 +1034,7 @@ describe Dossier do
       allow(dossier).to receive(:build_attestation).and_return(attestation)
 
       Timecop.freeze(now)
-      dossier.accepter!(instructeur, 'motivation')
+      dossier.accepter!(instructeur: instructeur, motivation: 'motivation')
       dossier.reload
     end
 
@@ -1089,7 +1089,7 @@ describe Dossier do
     let(:operation_serialized) { JSON.parse(last_operation.serialized.download) }
     let(:instructeur) { create(:instructeur) }
 
-    before { dossier.passer_en_instruction!(instructeur) }
+    before { dossier.passer_en_instruction!(instructeur: instructeur) }
 
     it { expect(dossier.state).to eq('en_instruction') }
     it { expect(dossier.followers_instructeurs).to include(instructeur) }
@@ -1216,7 +1216,7 @@ describe Dossier do
       Timecop.freeze
       allow(DossierMailer).to receive(:notify_revert_to_instruction)
         .and_return(double(deliver_later: true))
-      dossier.repasser_en_instruction!(instructeur)
+      dossier.repasser_en_instruction!(instructeur: instructeur)
       dossier.reload
     end
 
@@ -1495,21 +1495,21 @@ describe Dossier do
     it "clean up titres identite on accepter" do
       expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy
       expect(champ_titre_identite_vide.piece_justificative_file.attached?).to be_falsey
-      dossier.accepter!(dossier.followers_instructeurs.first, "yolo!")
+      dossier.accepter!(instructeur: dossier.followers_instructeurs.first, motivation: "yolo!")
       expect(champ_titre_identite.piece_justificative_file.attached?).to be_falsey
     end
 
     it "clean up titres identite on refuser" do
       expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy
       expect(champ_titre_identite_vide.piece_justificative_file.attached?).to be_falsey
-      dossier.refuser!(dossier.followers_instructeurs.first, "yolo!")
+      dossier.refuser!(instructeur: dossier.followers_instructeurs.first, motivation: "yolo!")
       expect(champ_titre_identite.piece_justificative_file.attached?).to be_falsey
     end
 
     it "clean up titres identite on classer_sans_suite" do
       expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy
       expect(champ_titre_identite_vide.piece_justificative_file.attached?).to be_falsey
-      dossier.classer_sans_suite!(dossier.followers_instructeurs.first, "yolo!")
+      dossier.classer_sans_suite!(instructeur: dossier.followers_instructeurs.first, motivation: "yolo!")
       expect(champ_titre_identite.piece_justificative_file.attached?).to be_falsey
     end
 
