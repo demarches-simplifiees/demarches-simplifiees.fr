@@ -33,7 +33,11 @@ class S3Synchronization < ApplicationRecord
       else
         upload(:s3, :local, under_rake, until_time)
       end
-      AdministrationMailer.s3_synchronization_report.deliver_now
+      AdministrationMailer.s3_synchronization_report.deliver_now if transfer_has_occured
+    end
+
+    def transfer_has_occured
+      S3Synchronization.where('updated_at > ?', 10.minutes.ago).count > 0
     end
 
     def switch_service(from_service, to_service)
@@ -46,18 +50,16 @@ class S3Synchronization < ApplicationRecord
       else
         upload(:local, :s3, false, nil)
       end
-      AdministrationMailer.s3_synchronization_report.deliver_now
+      AdministrationMailer.s3_synchronization_report.deliver_now if transfer_has_occured
     end
 
     def upload(from, to, under_rake, until_time)
-      puts "Synchronizing from #{from} to #{to}#{until_time ? ' until ' + until_time : ''}"
+      puts "Synchronizing from #{from} to #{to}#{until_time ? ' until ' + until_time.to_s : ''}"
       ActiveStorage::Blob.service
       configs = Rails.configuration.active_storage.service_configurations
       from_service = ActiveStorage::Service.configure from, configs
 
       ActiveStorage::Blob.service = from_service
-
-      S3Synchronization.all.count # load class before multi-threading
 
       progress = ProgressReport.new(blobs_to_upload(from).count) if under_rake
       pool = Concurrent::FixedThreadPool.new(POOL_SIZE)
