@@ -1,3 +1,4 @@
+
 describe ProcedureArchiveService do
   let(:procedure) { create(:procedure, :published) }
   let(:instructeur) { create(:instructeur) }
@@ -5,6 +6,7 @@ describe ProcedureArchiveService do
   let(:year) { 2020 }
   let(:month) { 3 }
   let(:date_month) { Date.strptime("#{year}-#{month}", "%Y-%m") }
+
   describe '#create_pending_archive' do
     context 'for a specific month' do
       it 'creates a pending archive' do
@@ -28,10 +30,8 @@ describe ProcedureArchiveService do
   end
 
   describe '#collect_files_archive' do
-    before do
-      create_dossier_for_month(year, month)
-      create_dossier_for_month(2020, month)
-    end
+    let!(:dossier) { create_dossier_for_month(year, month) }
+    let!(:dossier_2020) { create_dossier_for_month(2020, month) }
 
     after { Timecop.return }
 
@@ -42,14 +42,19 @@ describe ProcedureArchiveService do
 
       it 'collect files' do
         expect(InstructeurMailer).to receive(:send_archive).and_return(mailer)
-
         service.collect_files_archive(archive, instructeur)
 
         archive.file.open do |f|
           files = ZipTricks::FileReader.read_zip_structure(io: f)
-          expect(files.size).to be 2
-          expect(files.first.filename).to include("export")
-          expect(files.last.filename).to include("attestation")
+
+          structure = [
+            "procedure-#{procedure.id}/",
+            "procedure-#{procedure.id}/dossier-#{dossier.id}/",
+            "procedure-#{procedure.id}/dossier-#{dossier.id}/pieces_justificatives/",
+            "procedure-#{procedure.id}/dossier-#{dossier.id}/pieces_justificatives/attestation-dossier--05-03-2021-00-00-#{dossier.attestation.pdf.id % 10000}.pdf",
+            "procedure-#{procedure.id}/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2021-00-00-#{dossier.id}.pdf"
+          ]
+          expect(files.map(&:filename)).to match_array(structure)
         end
         expect(archive.file.attached?).to be_truthy
       end
@@ -89,9 +94,16 @@ describe ProcedureArchiveService do
 
           archive.file.open do |f|
             files = ZipTricks::FileReader.read_zip_structure(io: f)
-            expect(files.size).to be 4
-            expect(files.last.filename).to eq("procedure-#{procedure.id}/LISEZMOI.txt")
-            expect(extract(f, files.last)).to match(/Impossible de .*cni.*png/)
+            structure = [
+              "procedure-#{procedure.id}/",
+              "procedure-#{procedure.id}/dossier-#{dossier.id}/",
+              "procedure-#{procedure.id}/dossier-#{dossier.id}/export-dossier-05-03-2020-00-00-1.pdf",
+              "procedure-#{procedure.id}/dossier-#{dossier.id}/pieces_justificatives/",
+              "procedure-#{procedure.id}/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2021-00-00-#{dossier.id}.pdf",
+              "procedure-#{procedure.id}/LISEZMOI.txt"
+            ]
+            expect(files.map(&:filename)).to match_array(structure)
+            expect(extract(f, files.last)).to match(/Impossible de .* .*cni.*png/)
           end
         end
       end
@@ -109,7 +121,18 @@ describe ProcedureArchiveService do
         archive = Archive.last
         archive.file.open do |f|
           files = ZipTricks::FileReader.read_zip_structure(io: f)
-          expect(files.size).to be 4
+          structure = [
+            "procedure-#{procedure.id}/",
+            "procedure-#{procedure.id}/dossier-#{dossier.id}/",
+            "procedure-#{procedure.id}/dossier-#{dossier.id}/pieces_justificatives/",
+            "procedure-#{procedure.id}/dossier-#{dossier.id}/pieces_justificatives/attestation-dossier--05-03-2020-00-00-#{dossier.attestation.pdf.id % 10000}.pdf",
+            "procedure-#{procedure.id}/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2020-00-00-#{dossier.id}.pdf",
+            "procedure-#{procedure.id}/dossier-#{dossier_2020.id}/",
+            "procedure-#{procedure.id}/dossier-#{dossier_2020.id}/export-#{dossier_2020.id}-05-03-2020-00-00-#{dossier_2020.id}.pdf",
+            "procedure-#{procedure.id}/dossier-#{dossier_2020.id}/pieces_justificatives/",
+            "procedure-#{procedure.id}/dossier-#{dossier_2020.id}/pieces_justificatives/attestation-dossier--05-03-2020-00-00-#{dossier_2020.attestation.pdf.id % 10000}.pdf"
+          ]
+          expect(files.map(&:filename)).to match_array(structure)
         end
         expect(archive.file.attached?).to be_truthy
       end
