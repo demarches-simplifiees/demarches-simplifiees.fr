@@ -13,13 +13,14 @@ module Manager
         else
           flash[:error] = user.errors.full_messages.to_sentence
         end
+
+        redirect_to edit_manager_user_path(user)
       else
         targeted_user.merge(user)
 
         flash[:notice] = "Le compte « #{targeted_email} » a absorbé le compte « #{user.email} »."
+        redirect_to edit_manager_user_path(targeted_user)
       end
-
-      redirect_to edit_manager_user_path(user)
     end
 
     def resend_confirmation_instructions
