@@ -134,6 +134,9 @@ module Instructeurs
 
     def repasser_en_instruction
       begin
+        if dossier.hidden_by_user_at.present?
+          dossier.update!(hidden_by_user_at: nil)
+        end
         flash.notice = "Le dossier #{dossier.id} a été repassé en instruction."
         dossier.repasser_en_instruction!(current_instructeur)
       rescue AASM::InvalidTransition => e
