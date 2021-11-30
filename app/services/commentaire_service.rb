@@ -1,24 +1,58 @@
 class CommentaireService
-  class << self
-    def build(sender, dossier, params)
-      case sender
-      when Instructeur
-        params[:instructeur] = sender
-      when Expert
-        params[:expert] = sender
-      end
+  def self.create(sender, dossier, params)
+    save(dossier, prepare_params(sender, params))
+  end
 
-      build_with_email(sender.email, dossier, params)
+  def self.create!(sender, dossier, params)
+    save!(dossier, prepare_params(sender, params))
+  end
+
+  def self.build(sender, dossier, params)
+    dossier.commentaires.build(prepare_params(sender, params))
+  end
+
+  def self.prepare_params(sender, params)
+    case sender
+    when String
+      params[:email] = sender
+    when Instructeur
+      params[:instructeur] = sender
+      params[:email] = sender.email
+    when Expert
+      params[:expert] = sender
+      params[:email] = sender.email
+    else
+      params[:email] = sender.email
     end
 
-    def build_with_email(email, dossier, params)
-      attributes = params.merge(email: email, dossier: dossier)
-      # For some reason ActiveStorage trows an error in tests if we passe an empty string here.
-      # I suspect it could be resolved in rails 6 by using explicit `attach()`
-      if attributes[:piece_jointe].blank?
-        attributes.delete(:piece_jointe)
-      end
-      Commentaire.new(attributes)
+    # For some reason ActiveStorage trows an error in tests if we passe an empty string here.
+    # I suspect it could be resolved in rails 6 by using explicit `attach()`
+    if params[:piece_jointe].blank?
+      params.delete(:piece_jointe)
+    end
+
+    params
+  end
+
+  def self.save(dossier, params)
+    build_and_save(dossier, params)
+  rescue ActiveRecord::StaleObjectError
+    build_and_save(dossier, params)
+  end
+
+  def self.save!(dossier, params)
+    build_and_save(dossier, params, raise_exception: true)
+  rescue ActiveRecord::StaleObjectError
+    build_and_save(dossier, params, raise_exception: true)
+  end
+
+  def self.build_and_save(dossier, params, raise_exception: false)
+    message = dossier.commentaires.build(params)
+    if raise_exception
+      message.save!
+    else
+      message.save
+      message
     end
   end
 end
