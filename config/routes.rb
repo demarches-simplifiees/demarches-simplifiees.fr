@@ -190,7 +190,7 @@ Rails.application.routes.draw do
   end
 
   # order matters: we don't want those routes to match /admin/procedures/:id
-  get 'admin/procedures/new' => 'new_administrateur/procedures#new', as: :new_admin_procedure
+  get 'admin/procedures/new' => 'administrateurs/procedures#new', as: :new_admin_procedure
 
   namespace :admin do
     get 'activate' => '/administrateurs/activate#new'
@@ -397,7 +397,7 @@ Rails.application.routes.draw do
   # Administrateur
   #
 
-  namespace :admin, module: 'new_administrateur' do
+  scope module: 'administrateurs', path: 'admin', as: 'admin' do
     resources :procedures do
       collection do
         get 'new_from_existing'

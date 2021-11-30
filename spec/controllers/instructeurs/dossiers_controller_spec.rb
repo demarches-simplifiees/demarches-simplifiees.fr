@@ -160,19 +160,28 @@ describe Instructeurs::DossiersController, type: :controller do
     let(:dossier) { create(:dossier, :refuse, procedure: procedure) }
     let(:current_user) { instructeur.user }
 
-    before do
-      sign_in current_user
+    subject do
       post :repasser_en_instruction,
-        params: { procedure_id: procedure.id, dossier_id: dossier.id },
-        format: 'js'
+      params: { procedure_id: procedure.id, dossier_id: dossier.id },
+      format: 'js'
     end
 
-    it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction)) }
-    it { expect(response).to have_http_status(:ok) }
-    it { expect(response.body).to include('.header-actions') }
+    before do
+      sign_in current_user
+    end
+
+    context 'when the dossier is refuse' do
+      before { subject }
+
+      it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction)) }
+      it { expect(response).to have_http_status(:ok) }
+      it { expect(response.body).to include('.header-actions') }
+    end
 
     context 'when the dossier has already been put en_instruction' do
       let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+
+      before { subject }
 
       it 'warns about the error' do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction))
@@ -184,9 +193,25 @@ describe Instructeurs::DossiersController, type: :controller do
     context 'when the dossier is accepte' do
       let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
 
+      before { subject }
+
       it 'it is possible to go back to en_instruction as instructeur' do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction))
         expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context 'when the dossier is done and the user delete it' do
+      let!(:dossier) { create(:dossier, :accepte, procedure: procedure, user: current_user) }
+
+      before do
+        dossier.update!(hidden_by_user_at: Time.zone.now)
+        subject
+      end
+
+      it 'reveals the dossier' do
+        expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction))
+        expect(dossier.reload.hidden_by_user_at).to be_nil
       end
     end
   end
