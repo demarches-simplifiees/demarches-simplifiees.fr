@@ -1,6 +1,6 @@
 namespace :after_party do
   desc 'Deployment task: populate_bypass_email_login'
-  task populate_bypass_email_login: :environment do
+  task populate_bypass_email_login_again: :environment do
     user_ids = Flipper::Adapters::ActiveRecord::Gate
       .where(feature_key: 'instructeur_bypass_email_login_token')
       .pluck(:value)
