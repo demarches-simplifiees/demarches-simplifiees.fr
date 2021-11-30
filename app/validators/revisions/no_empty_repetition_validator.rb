@@ -1,4 +1,4 @@
-class Revisions::NoEmptyRepetitionsValidator < ActiveModel::EachValidator
+class Revisions::NoEmptyRepetitionValidator < ActiveModel::EachValidator
   def validate_each(procedure, attribute, revision)
     return if revision.nil?
 
