@@ -1709,21 +1709,6 @@ type PageInfo {
   startCursor: String
 }
 
-type VisaChamp implements Champ {
-  id: ID!
-
-  """
-  Libellé du champ.
-  """
-  label: String!
-  signedBy: String!
-
-  """
-  La valeur du champ sous forme texte.
-  """
-  stringValue: String
-}
-
 type ParcelleCadastrale implements GeoArea {
   codeArr: String! @deprecated(reason: "Utilisez le champ `prefixe` à la place.")
   codeCom: String! @deprecated(reason: "Utilisez le champ `commune` à la place.")
@@ -1930,7 +1915,7 @@ type Traitement {
   """
   L'instructeur ayant pris la décision.
   """
-  instructeurEmail: String!
+  instructeurEmail: String
 
   """
   La motivation de la décision.
@@ -1980,6 +1965,11 @@ enum TypeDeChamp {
   civilite
 
   """
+  Données de la Caisse nationale des allocations familiales
+  """
+  cnaf
+
+  """
   Code Postal de Polynésie
   """
   code_postal_de_polynesie
@@ -1988,10 +1978,6 @@ enum TypeDeChamp {
   Commune de Polynésie
   """
   commune_de_polynesie
-  """
-  Données de la Caisse nationale des allocations familiales
-  """
-  cnaf
 
   """
   Communes
@@ -2084,11 +2070,6 @@ enum TypeDeChamp {
   numero_dn
 
   """
-  Visa
-  """
-  visa
-
-  """
   Pays
   """
   pays
@@ -2137,6 +2118,11 @@ enum TypeDeChamp {
   Titre identité
   """
   titre_identite
+
+  """
+  Visa
+  """
+  visa
 
   """
   Oui/Non
@@ -2194,4 +2180,19 @@ type ValidationError {
   A description of the error
   """
   message: String!
+}
+
+type VisaChamp implements Champ {
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+  signedBy: String!
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
 }

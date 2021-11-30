@@ -18,14 +18,13 @@ module CommentaireHelper
   end
 
   def commentaire_date(commentaire)
-    is_current_year = (commentaire.created_at.year == Time.zone.now.year)
+    is_current_year = (commentaire.created_at.year == Time.zone.today.year)
     template = is_current_year ? :message_date : :message_date_with_year
     I18n.l(commentaire.created_at, format: template)
   end
 
   def pretty_commentaire(commentaire)
     return t('views.shared.commentaires.destroy.deleted_body') if commentaire.discarded?
-    body_formatted = commentaire.sent_by_system? ? sanitize_html(commentaire.body) : string_to_html(commentaire.body)
-    sanitize(body_formatted)
+    commentaire.sent_by_system? ? sanitize_html(commentaire.body) : string_to_html(commentaire.body)
   end
 end
