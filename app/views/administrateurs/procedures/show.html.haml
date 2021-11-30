@@ -52,15 +52,22 @@
       %p.button Modifier
 
     - if !@procedure.locked? || @procedure.feature_enabled?(:procedure_revisions)
-      = link_to champs_admin_procedure_path(@procedure), class: 'card-admin' do
-        - if @procedure.draft_types_de_champ.count > 0
-          %div
-            %span.icon.accept
-            %p.card-admin-status-accept Validé
-        - else
+      - @procedure.validate(:publication)
+      - error_messages = @procedure.errors.messages_for(:draft_revision).to_sentence
+
+      = link_to champs_admin_procedure_path(@procedure), class: 'card-admin', title: error_messages do
+        - if @procedure.draft_types_de_champ.count == 0
           %div
             %span.icon.clock
             %p.card-admin-status-todo À faire
+        - elsif error_messages.present?
+          %div
+            %span.icon.refuse
+            %p.card-admin-status-error À modifier
+        - else
+          %div
+            %span.icon.accept
+            %p.card-admin-status-accept Validé
         %div
           %p.card-admin-title
             %span.badge.baseline= @procedure.draft_types_de_champ.count
