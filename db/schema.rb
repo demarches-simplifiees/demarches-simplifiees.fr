@@ -320,12 +320,12 @@ ActiveRecord::Schema.define(version: 2021_11_27_143736) do
     t.interval "conservation_extension", default: "PT0S"
     t.string "deleted_user_email_never_send"
     t.datetime "declarative_triggered_at"
-    t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
-    t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
     t.bigint "dossier_transfer_id"
     t.datetime "identity_updated_at"
     t.datetime "depose_at"
     t.datetime "hidden_by_user_at"
+    t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
+    t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
     t.index ["archived"], name: "index_dossiers_on_archived"
     t.index ["dossier_transfer_id"], name: "index_dossiers_on_dossier_transfer_id"
     t.index ["groupe_instructeur_id"], name: "index_dossiers_on_groupe_instructeur_id"
@@ -646,15 +646,21 @@ ActiveRecord::Schema.define(version: 2021_11_27_143736) do
     t.text "api_particulier_scopes", default: [], array: true
     t.jsonb "api_particulier_sources", default: {}
     t.boolean "instructeurs_self_management_enabled"
+<<<<<<< HEAD
     t.bigint "zone_id"
     t.index ["api_particulier_sources"], name: "index_procedures_on_api_particulier_sources", using: :gin
+=======
+>>>>>>> a6fcae97b (refactor(traitement.process_expired): move process expired to procedure)
     t.boolean "routing_enabled"
+    t.boolean "procedure_expires_when_termine_enabled", default: false
+    t.index ["api_particulier_sources"], name: "index_procedures_on_api_particulier_sources", using: :gin
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
     t.index ["draft_revision_id"], name: "index_procedures_on_draft_revision_id"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
     t.index ["parent_procedure_id"], name: "index_procedures_on_parent_procedure_id"
     t.index ["path", "closed_at", "hidden_at", "unpublished_at"], name: "procedure_path_uniqueness", unique: true
     t.index ["path", "closed_at", "hidden_at"], name: "index_procedures_on_path_and_closed_at_and_hidden_at", unique: true
+    t.index ["procedure_expires_when_termine_enabled"], name: "index_procedures_on_procedure_expires_when_termine_enabled"
     t.index ["published_revision_id"], name: "index_procedures_on_published_revision_id"
     t.index ["service_id"], name: "index_procedures_on_service_id"
     t.index ["zone_id"], name: "index_procedures_on_zone_id"
@@ -745,6 +751,7 @@ ActiveRecord::Schema.define(version: 2021_11_27_143736) do
     t.datetime "processed_at"
     t.string "instructeur_email"
     t.boolean "process_expired"
+    t.boolean "process_expired_migrated", default: false
     t.index ["dossier_id"], name: "index_traitements_on_dossier_id"
     t.index ["process_expired"], name: "index_traitements_on_process_expired"
   end
