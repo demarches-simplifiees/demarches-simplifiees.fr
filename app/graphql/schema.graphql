@@ -233,6 +233,30 @@ type CiviliteChamp implements Champ {
   value: Civilite
 }
 
+type Commune {
+  """
+  Le code INSEE
+  """
+  code: String!
+  name: String!
+}
+
+type CommuneChamp implements Champ {
+  commune: Commune
+  departement: Departement
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
+}
+
 """
 GeoJSON coordinates
 """
@@ -647,6 +671,11 @@ enum DemarcheState {
   Publiée
   """
   publiee
+}
+
+type Departement {
+  code: String!
+  name: String!
 }
 
 """
