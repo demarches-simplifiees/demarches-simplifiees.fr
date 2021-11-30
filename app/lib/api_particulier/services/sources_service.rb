@@ -77,7 +77,11 @@ module APIParticulier
           'dgfip_annee_impot' => ['dgfip', 'annee_impot'],
           'dgfip_annee_revenus' => ['dgfip', 'annee_revenus'],
           'dgfip_erreur_correctif' => ['dgfip', 'erreur_correctif'],
-          'dgfip_situation_partielle' => ['dgfip', 'situation_partielle']
+          'dgfip_situation_partielle' => ['dgfip', 'situation_partielle'],
+          'pole_emploi_identite' => ['pole_emploi', 'identite'],
+          'pole_emploi_adresse' => ['pole_emploi', 'adresse'],
+          'pole_emploi_contact' => ['pole_emploi', 'contact'],
+          'pole_emploi_inscription' => ['pole_emploi', 'inscription']
         }
       end
 
@@ -114,6 +118,12 @@ module APIParticulier
             'annee_revenus' => { 'agregats_fiscaux' => ['anneeRevenus'] },
             'erreur_correctif' => { 'complements' => ['erreurCorrectif'] },
             'situation_partielle' => { 'complements' => ['situationPartielle'] }
+          },
+          'pole_emploi' => {
+            'identite' => ['identifiant', 'civilite', 'nom', 'nomUsage', 'prenom', 'sexe', 'dateNaissance'],
+            'adresse' => ['INSEECommune', 'codePostal', 'localite', 'ligneVoie', 'ligneComplementDestinataire', 'ligneComplementAdresse', 'ligneComplementDistribution', 'ligneNom'],
+            'contact' => ['email', 'telephone', 'telephone2'],
+            'inscription' => ['dateInscription', 'dateCessationInscription', 'codeCertificationCNAV', 'codeCategorieInscription', 'libelleCategorieInscription']
           }
         }
       end
