@@ -4,6 +4,7 @@ class APIParticulier::API
   INTROSPECT_RESOURCE_NAME = "introspect"
   COMPOSITION_FAMILIALE_RESOURCE_NAME = "v2/composition-familiale"
   AVIS_IMPOSITION_RESOURCE_NAME = "v2/avis-imposition"
+  SITUATION_POLE_EMPLOI = "v2/situations-pole-emploi"
 
   TIMEOUT = 20
 
@@ -27,6 +28,10 @@ class APIParticulier::API
     get(AVIS_IMPOSITION_RESOURCE_NAME,
         numeroFiscal: numero_fiscal.to_i.to_s.rjust(13, "0"),
         referenceAvis: reference_avis.to_i.to_s.rjust(13, "0"))
+  end
+
+  def situation_pole_emploi(identifiant)
+    get(SITUATION_POLE_EMPLOI, identifiant: identifiant)
   end
 
   private
