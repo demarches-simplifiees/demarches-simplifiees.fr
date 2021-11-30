@@ -27,7 +27,7 @@ class Champs::CommuneChamp < Champs::TextChamp
   end
 
   def name_departement
-    #FIXME we originaly saved already formatted departement with the code in the name
+    # FIXME we originaly saved already formatted departement with the code in the name
     departement&.gsub(/^(.[0-9])\s-\s/, '')
   end
 
