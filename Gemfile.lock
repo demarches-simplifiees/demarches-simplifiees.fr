@@ -858,6 +858,7 @@ DEPENDENCIES
   rails-i18n
   rake-progressbar
   react-rails
+  rexml
   rgeo-geojson
   rqrcode
   rspec-rails
