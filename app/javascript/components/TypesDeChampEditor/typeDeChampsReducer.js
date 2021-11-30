@@ -110,7 +110,7 @@ function updateTypeDeChamp(
         break;
       case 'drop_down_list':
       case 'multiple_drop_down_list':
-        typeDeChamp.drop_down_list_value = '--Premier élément du menu--\n';
+        typeDeChamp.drop_down_list_value = 'Premier choix\nDeuxième choix';
     }
   }
 
