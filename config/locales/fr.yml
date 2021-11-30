@@ -131,6 +131,8 @@ fr:
     instructeurs:
       dossiers:
         deleted_by_user: "Dossier supprimé par l'usager"
+      avis:
+        introduction_file_explaination: "Fichier joint à la demande d’avis"
     users:
       dossiers:
         autosave:
