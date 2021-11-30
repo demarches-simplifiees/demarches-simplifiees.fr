@@ -145,7 +145,7 @@ GEM
     bcrypt (3.1.16)
     bindata (2.4.10)
     bindex (0.8.1)
-    bootsnap (1.7.2)
+    bootsnap (1.9.3)
       msgpack (~> 1.0)
     brakeman (5.1.1)
     browser (5.3.1)
@@ -858,6 +858,7 @@ DEPENDENCIES
   rails-i18n
   rake-progressbar
   react-rails
+  rexml
   rgeo-geojson
   rqrcode
   rspec-rails
@@ -892,4 +893,4 @@ DEPENDENCIES
   zxcvbn-ruby
 
 BUNDLED WITH
-   2.1.4
+   2.2.32
