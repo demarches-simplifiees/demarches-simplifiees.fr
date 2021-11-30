@@ -622,6 +622,19 @@ describe Administrateurs::ProceduresController, type: :controller do
         let(:path) { 'Invalid Procedure Path' }
         it { expect { put :publish, params: { procedure_id: procedure.id, path: path, lien_site_web: lien_site_web } }.to raise_error(ActiveRecord::RecordInvalid) }
       end
+
+      context 'procedure revision is invalid' do
+        let(:path) { 'new_path' }
+        let(:empty_repetition) { build(:type_de_champ_repetition, types_de_champ: []) }
+        let(:procedure) do
+          create(:procedure,
+                 administrateur: admin,
+                 lien_site_web: lien_site_web,
+                 types_de_champ: [empty_repetition])
+        end
+
+        it { expect { put :publish, params: { procedure_id: procedure.id, path: path, lien_site_web: lien_site_web } }.to raise_error(ActiveRecord::RecordInvalid) }
+      end
     end
 
     context 'when admin is not the owner of the procedure' do

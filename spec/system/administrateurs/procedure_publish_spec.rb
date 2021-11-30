@@ -1,6 +1,6 @@
 require 'system/administrateurs/procedure_spec_helper'
 
-describe 'Publication de démarches', js: true do
+describe 'Publishing a procedure', js: true do
   include ProcedureSpecHelper
 
   let(:administrateur) { create(:administrateur) }
@@ -18,23 +18,26 @@ describe 'Publication de démarches', js: true do
     login_as administrateur.user, scope: :user
   end
 
-  context "lorsqu'on essaie d'accéder au backoffice déprécié" do
-    scenario "on est redirigé pour les démarches brouillon" do
+  context 'when using a deprecated back-office URL' do
+    scenario 'the admin is redirected to the draft procedure' do
       visit admin_procedures_draft_path
       expect(page).to have_current_path(admin_procedures_path(statut: "brouillons"))
     end
 
-    scenario "on est redirigé pour les démarches archivées" do
+    scenario 'the admin is redirected to the archived procedures' do
       visit admin_procedures_archived_path
       expect(page).to have_current_path(admin_procedures_path(statut: "archivees"))
     end
   end
 
-  context 'lorsqu’une démarche est en test' do
-    scenario 'un administrateur peut la publier' do
+  context 'when a procedure isn’t published yet' do
+    before do
       visit admin_procedures_path(statut: "brouillons")
       click_on procedure.libelle
       find('#publish-procedure-link').click
+    end
+
+    scenario 'an admin can publish it' do
       expect(find_field('procedure_path').value).to eq procedure.path
       fill_in 'lien_site_web', with: 'http://some.website'
       click_on 'Publier'
@@ -42,9 +45,31 @@ describe 'Publication de démarches', js: true do
       expect(page).to have_text('Démarche publiée')
       expect(page).to have_selector('#preview-procedure')
     end
+
+    context 'when the procedure has invalid champs' do
+      let(:empty_repetition) { build(:type_de_champ_repetition, types_de_champ: []) }
+      let!(:procedure) do
+        create(:procedure,
+               :with_path,
+               :with_service,
+               instructeurs: instructeurs,
+               administrateur: administrateur,
+               types_de_champ: [empty_repetition])
+      end
+
+      scenario 'an error message prevents the publication' do
+        expect(page).to have_content('Des problèmes empêchent la publication de la démarche')
+        expect(page).to have_content("Le bloc répétable « #{empty_repetition.libelle} » doit comporter au moins un champ")
+
+        expect(find_field('procedure_path').value).to eq procedure.path
+        fill_in 'lien_site_web', with: 'http://some.website'
+
+        expect(page).to have_button('Publier', disabled: true)
+      end
+    end
   end
 
-  context 'lorsqu’une démarche est close' do
+  context 'when a procedure is closed' do
     let!(:procedure) do
       create(:procedure_with_dossiers,
         :closed,
@@ -55,7 +80,7 @@ describe 'Publication de démarches', js: true do
         administrateur: administrateur)
     end
 
-    scenario 'un administrateur peut la publier' do
+    scenario 'an admin can publish it again' do
       visit admin_procedures_path(statut: "archivees")
       click_on procedure.libelle
       find('#publish-procedure-link').click
@@ -69,7 +94,7 @@ describe 'Publication de démarches', js: true do
     end
   end
 
-  context 'lorsqu’une démarche est dépublié' do
+  context 'when a procedure is de-published' do
     let!(:procedure) do
       create(:procedure_with_dossiers,
         :unpublished,
@@ -80,7 +105,7 @@ describe 'Publication de démarches', js: true do
         administrateur: administrateur)
     end
 
-    scenario 'un administrateur peut la publier' do
+    scenario 'an admin can publish it again' do
       visit admin_procedures_path(statut: "archivees")
       click_on procedure.libelle
       find('#publish-procedure-link').click
