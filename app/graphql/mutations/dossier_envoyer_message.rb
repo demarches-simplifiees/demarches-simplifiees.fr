@@ -11,9 +11,9 @@ module Mutations
     field :errors, [Types::ValidationErrorType], null: true
 
     def resolve(dossier:, instructeur:, body:, attachment: nil)
-      message = CommentaireService.build(instructeur, dossier, body: body, piece_jointe: attachment)
+      message = CommentaireService.create(instructeur, dossier, body: body, piece_jointe: attachment)
 
-      if message.save
+      if message.errors.empty?
         { message: message }
       else
         { errors: message.errors.full_messages }
