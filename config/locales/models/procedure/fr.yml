@@ -23,4 +23,5 @@ fr:
           attributes:
             api_particulier_token:
               invalid: 'n’a pas le bon format'
-
+            draft_revision:
+              format: '%{message}'
