@@ -1,7 +1,7 @@
 require:
   - rubocop-performance
   - rubocop-rails
-  - rubocop/rspec/focused
+  - rubocop-rspec
   - ./lib/cops/add_concurrent_index.rb
   - ./lib/cops/application_name.rb
   - ./lib/cops/unscoped.rb
@@ -877,7 +877,7 @@ Rails/WhereExists:
 Rails/WhereNot:
   Enabled: true
 
-RSpec/Focused:
+RSpec/Focus:
   Enabled: true
 
 Security/Eval:
