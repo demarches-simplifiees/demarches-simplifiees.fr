@@ -1,0 +1,6 @@
+%table.pole-emploi
+  %caption #{t("api_particulier.providers.pole_emploi.scopes.#{scope}.libelle")} :
+  - contact.slice('email', 'telephone', 'telephone2').keys.each do |key|
+    %tr
+      %th= t("api_particulier.providers.pole_emploi.scopes.#{scope}.#{key}")
+      %td= contact[key]
