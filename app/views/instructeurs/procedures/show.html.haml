@@ -14,6 +14,7 @@
         traites_count: @traites_count,
         tous_count: @tous_count,
         archives_count: @archives_count,
+        expirant_count: @expirant_count,
         has_en_cours_notifications: @has_en_cours_notifications,
         has_termine_notifications: @has_termine_notifications }
 
@@ -42,6 +43,8 @@
         = link_to deleted_dossiers_instructeur_procedure_path(@procedure) do
           %span.icon.delete
           Afficher les dossiers supprimés
+    - if @statut == 'expirant'
+      %p.explication-onglet Les dossiers n'expireront pas avant la période de conservation des données.
 
     - if @filtered_sorted_paginated_ids.present? || @current_filters.count > 0
       - pagination =  paginate @filtered_sorted_paginated_ids

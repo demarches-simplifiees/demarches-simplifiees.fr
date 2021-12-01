@@ -107,6 +107,15 @@ describe Dossier do
         is_expected.to include(long_expired_dossier)
       end
     end
+    context 'when .termine_or_en_construction_close_to_expiration' do
+      subject { Dossier.termine_or_en_construction_close_to_expiration }
+      it do
+        is_expected.not_to include(young_dossier)
+        is_expected.to include(expiring_dossier)
+        is_expected.to include(just_expired_dossier)
+        is_expected.to include(long_expired_dossier)
+      end
+    end
   end
 
   describe 'termine_close_to_expiration' do
@@ -127,6 +136,16 @@ describe Dossier do
 
     context 'when .close_to_expiration' do
       subject { Dossier.close_to_expiration }
+      it do
+        is_expected.not_to include(young_dossier)
+        is_expected.to include(expiring_dossier)
+        is_expected.to include(just_expired_dossier)
+        is_expected.to include(long_expired_dossier)
+      end
+    end
+
+    context 'when .close_to_expiration' do
+      subject { Dossier.termine_or_en_construction_close_to_expiration }
       it do
         is_expected.not_to include(young_dossier)
         is_expected.to include(expiring_dossier)

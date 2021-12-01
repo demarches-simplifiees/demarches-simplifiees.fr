@@ -17,7 +17,11 @@ module Instructeurs
       @dossiers_a_suivre_count_per_procedure = dossiers.without_followers.en_cours.group('groupe_instructeurs.procedure_id').reorder(nil).count
       @dossiers_archived_count_per_procedure = dossiers.archived.group('groupe_instructeurs.procedure_id').count #why not reorder(nil)
       @dossiers_termines_count_per_procedure = dossiers.termine.group('groupe_instructeurs.procedure_id').reorder(nil).count
-      @dossiers_expirant_count_per_procedure = dossiers.close_to_expiration.group('groupe_instructeurs.procedure_id').count  #why not reorder(nil)
+<<<<<<< HEAD
+      @dossiers_expirant_count_per_procedure = dossiers.termine_close_to_expiration.group('groupe_instructeurs.procedure_id').count  #why not reorder(nil)
+=======
+      @dossiers_expirant_count_per_procedure = dossiers.termine_or_en_construction_close_to_expiration.group('groupe_instructeurs.procedure_id').count # why not reorder(nil)
+>>>>>>> 2722cf295 (fixup! feat(instructeurs/procedures#show): add dossier experiant in procedure#show)
       groupe_ids = current_instructeur.groupe_instructeurs.pluck(:id)
 
       @followed_dossiers_count_per_procedure = current_instructeur
@@ -51,7 +55,7 @@ module Instructeurs
       @current_filters = current_filters
       @displayed_fields_options, @displayed_fields_selected = procedure_presentation.displayed_fields_for_select
 
-      @a_suivre_count, @suivis_count, @traites_count, @tous_count, @archives_count = current_instructeur
+      @a_suivre_count, @suivis_count, @traites_count, @tous_count, @archives_count, @expirant_count = current_instructeur
         .dossiers_count_summary(groupe_instructeur_ids)
         .fetch_values('a_suivre', 'suivis', 'traites', 'tous', 'archives', 'expirant')
 
@@ -72,7 +76,7 @@ module Instructeurs
       @termines_dossiers = dossiers_visibles.termine
       @all_state_dossiers = dossiers_visibles.all_state
       @archived_dossiers = dossiers_visibles.archived
-      @expirant_dossiers = dossiers_visibles.close_to_expiration
+      @expirant_dossiers = dossiers_visibles.termine_or_en_construction_close_to_expiration
 
       @dossiers = case statut
       when 'a-suivre'
@@ -91,7 +95,7 @@ module Instructeurs
         dossiers_count = @archives_count
         @archived_dossiers
       when 'expirant'
-        dossiers_count = @archives_count
+        dossiers_count = @expirant_count
         @expirant_dossiers
       end
 

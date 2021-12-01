@@ -319,6 +319,13 @@ class Dossier < ApplicationRecord
     end
   end
 
+  scope :termine_or_en_construction_close_to_expiration, -> do
+    joins(:procedure).scoping do
+      interval_en_construction_close_to_expiration
+        .or(interval_termine_close_to_expiration)
+    end
+  end
+
   scope :brouillon_expired, -> do
     state_brouillon
       .where("brouillon_close_to_expiration_notice_sent_at + INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_EXPIRATION })
