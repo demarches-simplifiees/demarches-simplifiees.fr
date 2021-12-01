@@ -75,23 +75,6 @@
         .chart.cumulative-dossiers-chart.hidden
           = area_chart @dossiers_cumulative
 
-    - if super_admin_signed_in?
-      .stat-card.stat-card-half.pull-left
-        %span.stat-card-title Temps de traitement moyen d’un dossier
-
-        .chart-container
-          .chart
-            = line_chart @dossier_instruction_mean_time,
-              :ytitle => "Jours"
-
-      .stat-card.stat-card-half.pull-left
-        %span.stat-card-title Temps de remplissage moyen d’un dossier
-
-        .chart-container
-          .chart
-            = line_chart @dossier_filling_mean_time,
-              :ytitle => "Minutes"
-
     .clearfix
 
   - if super_admin_signed_in?
