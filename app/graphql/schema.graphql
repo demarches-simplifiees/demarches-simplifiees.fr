@@ -2009,6 +2009,11 @@ enum TypeDeChamp {
   piece_justificative
 
   """
+  Situation Pôle emploi
+  """
+  pole_emploi
+
+  """
   Régions
   """
   regions
