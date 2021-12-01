@@ -402,7 +402,7 @@ fr:
         message_send: "Votre message a bien été envoyé à l’instructeur en charge de votre dossier."
       ask_deletion:
         undergoingreview: "L’instruction de votre dossier a commencé, il n’est plus possible de supprimer votre dossier. Si vous souhaitez annuler l’instruction contactez votre administration par la messagerie de votre dossier."
-        deleted_dossier: "Votre dossier a bien été supprimé."
+        soft_deleted_dossier: "Votre dossier a bien été supprimé de votre interface"
       update_brouillon:
         draft_saved: "Votre brouillon a bien été sauvegardé."
       etablissement:
