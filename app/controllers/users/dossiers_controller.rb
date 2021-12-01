@@ -217,7 +217,7 @@ module Users
 
       if dossier.can_be_deleted_by_user?
         dossier.discard_and_keep_track!(current_user, :user_request)
-        flash.notice = t('.deleted_dossier')
+        flash.notice = t('.soft_deleted_dossier')
         redirect_to dossiers_path
       else
         flash.notice = t('.undergoingreview')
@@ -291,7 +291,7 @@ module Users
     def hide_dossier
       dossier = current_user.dossiers.includes(:user, procedure: :administrateurs).find(params[:id])
       dossier.update(hidden_by_user_at: Time.zone.now)
-      flash.notice = t('users.dossiers.ask_deletion.deleted_dossier')
+      flash.notice = t('users.dossiers.ask_deletion.soft_deleted_dossier')
       redirect_to dossiers_path
     end
 
