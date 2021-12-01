@@ -1,3 +1,5 @@
+include ActiveSupport::Testing::TimeHelpers
+
 describe Stat do
   describe '.deleted_dossiers_states' do
     subject { Stat.send(:deleted_dossiers_states) }
@@ -78,19 +80,21 @@ describe Stat do
 
   describe '.last_four_months_hash' do
     it 'works count and cumulate counters by month for both dossier and deleted dossiers' do
-      4.downto(1).map do |i|
-        create(:dossier, state: :en_construction, en_construction_at: i.months.ago)
-        create(:deleted_dossier, dossier_id: i + 100, state: :en_construction, deleted_at: i.month.ago)
+      travel_to Time.zone.local(2021, 11, 25) do
+        4.downto(1).map do |i|
+          create(:dossier, state: :en_construction, en_construction_at: i.months.ago)
+          create(:deleted_dossier, dossier_id: i + 100, state: :en_construction, deleted_at: i.month.ago)
+        end
+        rs = Stat.send(:last_four_months_hash, [
+          [Dossier.state_not_brouillon, :en_construction_at],
+          [DeletedDossier.where.not(state: :brouillon), :deleted_at]
+        ])
+        expect(rs).to eq([
+          ["août 2021", 2],
+          ["septembre 2021", 2],
+          ["octobre 2021", 2]
+        ])
       end
-      rs = Stat.send(:last_four_months_hash, [
-        [Dossier.state_not_brouillon, :en_construction_at],
-        [DeletedDossier.where.not(state: :brouillon), :deleted_at]
-      ])
-      expect(rs).to eq([
-        ["août 2021", 2],
-        ["septembre 2021", 2],
-        ["octobre 2021", 2]
-      ])
     end
   end
 
