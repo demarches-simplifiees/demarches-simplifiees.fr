@@ -1,0 +1,37 @@
+ministeres:
+  - MAA:
+    label: "Ministère de l'Agriculture et de l'Alimentation"
+  - MC:
+    label: "Ministère de la Culture"
+  - MAS:
+    label: "Ministère des Solidarités et de la Santé"
+  - MTEI:
+    label: "Ministère du Travail"
+  - MEAE:
+    label: "Ministère de l'Europe et des Affaires étrangères"
+  - MEF:
+    label: "Ministère de l'Économie, des Finances et de la Relance"
+  - MJS:
+    label: "Ministère de la Jeunesse et des Sports"
+  - EN:
+    label: "Ministère de l'Éducation nationale, de la Jeunesse et des Sports"
+  - ESR:
+    label: "Ministère de l'Enseignement supérieur, de la Recherche et de l'Innovation"
+  - MI:
+    label: "Ministère de l'Intérieur"
+  - MInArm:
+    label: "Ministère des Armées"
+  - MJ:
+    label: "Ministère de la Justice"
+  - MTES:
+    label: "Ministère de la Transition écologique"
+  - MCTRCT:
+    label: "Ministère de la Cohésion des territoires et des Relations avec les collectivités territoriales"
+  - SPM:
+    label: "Premier ministre"
+  - MER:
+    label: "Ministère de la Mer"
+  - MTFP:
+    label: "Ministère de la Transformation et de la Fonction publiques"
+  - OM:
+    label: "Ministère des Outre-mer"
