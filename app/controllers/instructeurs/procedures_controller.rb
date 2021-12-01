@@ -53,7 +53,7 @@ module Instructeurs
 
       @a_suivre_count, @suivis_count, @traites_count, @tous_count, @archives_count = current_instructeur
         .dossiers_count_summary(groupe_instructeur_ids)
-        .fetch_values('a_suivre', 'suivis', 'traites', 'tous', 'archives')
+        .fetch_values('a_suivre', 'suivis', 'traites', 'tous', 'archives', 'expirant')
 
       dossiers_visibles = Dossier
         .where(groupe_instructeur_id: groupe_instructeur_ids)
@@ -72,6 +72,7 @@ module Instructeurs
       @termines_dossiers = dossiers_visibles.termine
       @all_state_dossiers = dossiers_visibles.all_state
       @archived_dossiers = dossiers_visibles.archived
+      @expirant_dossiers = dossiers_visibles.close_to_expiration
 
       @dossiers = case statut
       when 'a-suivre'
@@ -89,6 +90,9 @@ module Instructeurs
       when 'archives'
         dossiers_count = @archives_count
         @archived_dossiers
+      when 'expirant'
+        dossiers_count = @archives_count
+        @expirant_dossiers
       end
 
       notifications = current_instructeur.notifications_for_groupe_instructeurs(groupe_instructeur_ids)
