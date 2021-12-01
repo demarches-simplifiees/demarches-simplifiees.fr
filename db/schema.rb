@@ -576,7 +576,7 @@ ActiveRecord::Schema.define(version: 2021_11_27_143736) do
   create_table "procedure_presentations", id: :serial, force: :cascade do |t|
     t.integer "assign_to_id"
     t.jsonb "sort", default: {"order"=>"desc", "table"=>"notifications", "column"=>"notifications"}, null: false
-    t.jsonb "filters", default: {"tous"=>[], "suivis"=>[], "traites"=>[], "a-suivre"=>[], "archives"=>[]}, null: false
+    t.jsonb "filters", default: {"tous"=>[], "suivis"=>[], "traites"=>[], "a-suivre"=>[], "archives"=>[], "expirant"=>[]}, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.jsonb "displayed_fields", default: [{"label"=>"Demandeur", "table"=>"user", "column"=>"email"}], null: false
@@ -646,11 +646,7 @@ ActiveRecord::Schema.define(version: 2021_11_27_143736) do
     t.text "api_particulier_scopes", default: [], array: true
     t.jsonb "api_particulier_sources", default: {}
     t.boolean "instructeurs_self_management_enabled"
-<<<<<<< HEAD
     t.bigint "zone_id"
-    t.index ["api_particulier_sources"], name: "index_procedures_on_api_particulier_sources", using: :gin
-=======
->>>>>>> a6fcae97b (refactor(traitement.process_expired): move process expired to procedure)
     t.boolean "routing_enabled"
     t.boolean "procedure_expires_when_termine_enabled", default: false
     t.index ["api_particulier_sources"], name: "index_procedures_on_api_particulier_sources", using: :gin
