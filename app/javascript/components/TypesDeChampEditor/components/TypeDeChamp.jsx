@@ -29,7 +29,6 @@ import TypeDeChampDropDownSecondary from './TypeDeChampDropDownSecondary';
 const TypeDeChamp = sortableElement(
   ({ typeDeChamp, dispatch, idx: index, isFirstItem, isLastItem, state }) => {
     const isDropDown = [
-      'auto_completion',
       'drop_down_list',
       'multiple_drop_down_list',
       'linked_drop_down_list'

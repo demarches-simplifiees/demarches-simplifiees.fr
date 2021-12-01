@@ -50,7 +50,6 @@ describe ProcedureExportService do
           "Motivation de la décision",
           "Instructeurs",
 
-          "auto_completion",
           "textarea",
           "date",
           "datetime",
@@ -120,7 +119,7 @@ describe ProcedureExportService do
       context 'with a procedure routee' do
         before { procedure.groupe_instructeurs.create(label: '2') }
 
-        let(:routee_headers) { nominal_headers.insert(nominal_headers.index('auto_completion'), 'Groupe instructeur') }
+        let(:routee_headers) { nominal_headers.insert(nominal_headers.index('textarea'), 'Groupe instructeur') }
 
         it { expect(dossiers_sheet.headers).to match(routee_headers) }
         it { expect(dossiers_sheet.data[0][dossiers_sheet.headers.index('Groupe instructeur')]).to eq('défaut') }
@@ -147,7 +146,6 @@ describe ProcedureExportService do
           "Traité le",
           "Motivation de la décision",
           "Instructeurs",
-          "auto_completion",
           "textarea",
           "date",
           "datetime",
@@ -238,7 +236,6 @@ describe ProcedureExportService do
             "Traité le",
             "Motivation de la décision",
             "Instructeurs",
-            "auto_completion",
             "textarea",
             "date",
             "datetime",
