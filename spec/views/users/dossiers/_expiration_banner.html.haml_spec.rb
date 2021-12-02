@@ -1,4 +1,4 @@
-describe 'shared/dossiers/expiration_banner.html.haml', type: :view do
+describe 'users/dossiers/expiration_banner.html.haml', type: :view do
   include DossierHelper
 
   let(:dossier) do
@@ -10,7 +10,7 @@ describe 'shared/dossiers/expiration_banner.html.haml', type: :view do
   end
   let(:i18n_key_state) { state }
   subject do
-    render('shared/dossiers/expiration_banner.html.haml',
+    render('users/dossiers/expiration_banner.html.haml',
            dossier: dossier,
            current_user: build(:user))
   end
