@@ -1,6 +1,26 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "4254ed68100af9b496883716b1fd658e1943b2385a0d08de5a6ef5c600c1a8f9",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/traitement.rb",
+      "line": 51,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "ActiveRecord::Base.connection.execute(\"select date_trunc('month', r1.processed_at::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.formatted_offset}'::INTERVAL) as month, count(r1.processed_at)\\nfrom (#{Traitement.select(\"max(traitements.processed_at) as processed_at\").termine.where(:dossier => Dossier.state_termine.where(:groupe_instructeur => groupe_instructeurs)).group(:dossier_id).to_sql}) as r1\\ngroup by date_trunc('month', r1.processed_at::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.formatted_offset}'::INTERVAL)\\norder by month desc\\n\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Traitement",
+        "method": "Traitement.count_dossiers_termines_by_month"
+      },
+      "user_input": "Time.zone.formatted_offset",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "483ae8c038244eb3ed709e89846335e2c8ff6579260348ec31d3d03d1c94ad64",
@@ -15,7 +35,7 @@
           "type": "controller",
           "class": "Users::DossiersController",
           "method": "merci",
-          "line": 204,
+          "line": 209,
           "file": "app/controllers/users/dossiers_controller.rb",
           "rendered": {
             "name": "users/dossiers/merci",
@@ -58,7 +78,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/instructeurs/procedures_controller.rb",
-      "line": 180,
+      "line": 190,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Export.find_or_create_export(params[:export_format], (params[:time_span_type] or \"everything\"), current_instructeur.groupe_instructeurs.where(:procedure => procedure)).file.service_url)",
       "render_path": null,
@@ -72,6 +92,6 @@
       "note": ""
     }
   ],
-  "updated": "2021-09-02 16:12:11 -0500",
+  "updated": "2021-12-01 17:39:52 -1000",
   "brakeman_version": "5.1.1"
 }
