@@ -1,23 +1,5 @@
 module Manager
   class InstructeursController < Manager::ApplicationController
-    # Temporary code: synchronize Flipper's instructeur_bypass_email_login_token
-    # when Instructeur.bypass_email_login_token is modified.
-    #
-    # This will be removed when the migration of this feature flag out of Flipper will be complete.
-    def update
-      super
-
-      instructeur = requested_resource
-      saved_successfully = !requested_resource.changed?
-      if saved_successfully
-        if instructeur.bypass_email_login_token
-          Flipper.enable_actor(:instructeur_bypass_email_login_token, instructeur.user)
-        else
-          Flipper.disable_actor(:instructeur_bypass_email_login_token, instructeur.user)
-        end
-      end
-    end
-
     def reinvite
       instructeur = Instructeur.find(params[:id])
       instructeur.user.invite!
