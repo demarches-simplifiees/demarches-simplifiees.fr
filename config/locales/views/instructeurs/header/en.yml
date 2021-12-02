@@ -1,0 +1,11 @@
+en:
+  instructeurs:
+    dossiers:
+      header:
+        banner:
+          title: This file will expire
+          states:
+            brouillon: "" # not applicable, instructeur does not see brouillons
+            en_construction: This file is pending for instruction. The maximum delay is 6 months, you can extend the duration by a month by clicking on the underneath button.
+            termine: This file had been processed and will soon expire. So it will be deleted soon. If you want to keep it, you can dowload a PDF file of it.
+          button_delay_expiration: "Delay deletion"

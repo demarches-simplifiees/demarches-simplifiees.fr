@@ -1,0 +1,11 @@
+fr:
+  users:
+    dossiers:
+      header:
+        banner:
+          title: Votre dossier va expirer
+          states:
+            brouillon: Votre dossier est en brouillon, mais va bientôt expirer. Cela signifie qu’il va bientôt être supprimé sans avoir été déposé. Si vous souhaitez le conserver afin de poursuivre la démarche, vous pouvez le conserver un mois de plus en cliquant sur le bouton ci-dessous.
+            en_construction: Votre dossier est en attente de prise en charge par l'administration. Le delais de prise en charge maximale est de 6 mois. Vous pouvez toutefois entendre cette durée d'un mois en cliquant sur le bouton suivant.
+            termine: Le traitement de votre dossier est terminé, mais il va bientôt expirer. Cela signifie qu’il va bientôt être supprimé. Si vous souhaitez conserver une trace, vous pouvez le télécharger au format PDF.
+          button_delay_expiration: "Repousser sa suppression"

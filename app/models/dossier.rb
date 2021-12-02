@@ -646,6 +646,10 @@ class Dossier < ApplicationRecord
     parts.join
   end
 
+  def duree_totale_conservation_in_months
+    procedure.duree_conservation_dossiers_dans_ds + (conservation_extension / 1.month.to_i)
+  end
+
   def avis_for_instructeur(instructeur)
     if instructeur.dossiers.include?(self)
       avis.order(created_at: :asc)
