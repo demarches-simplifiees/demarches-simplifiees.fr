@@ -365,9 +365,9 @@ fr:
       one: demande de transfert
       other: demandes de transfert
     dossiers_close_to_expiration:
-      zero: dossier expirant
-      one: dossier expirant
-      other: dossiers expirant
+      zero: expirant
+      one: expirant
+      other: expirant
     dossier_trouve:
       zero: 0 dossier trouvé
       one: 1 dossier trouvé
