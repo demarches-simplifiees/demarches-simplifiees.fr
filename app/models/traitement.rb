@@ -42,9 +42,9 @@ class Traitement < ApplicationRecord
       .to_sql
 
     sql = <<~EOF
-      select date_trunc('month', r1.processed_at) as month, count(r1.processed_at)
+      select date_trunc('month', r1.processed_at::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.formatted_offset}'::INTERVAL) as month, count(r1.processed_at)
       from (#{last_traitements_per_dossier}) as r1
-      group by date_trunc('month', r1.processed_at)
+      group by date_trunc('month', r1.processed_at::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.formatted_offset}'::INTERVAL)
       order by month desc
     EOF
 
