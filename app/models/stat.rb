@@ -76,11 +76,11 @@ class Stat < ApplicationRecord
     end
 
     def last_four_months_hash(associations_with_date_attribute)
-      min_date = 3.months.ago.beginning_of_month.to_date
+      min_date = 3.months.ago.beginning_of_month
       timeseries = associations_with_date_attribute.map do |association, date_attribute|
         association
           .where(date_attribute => min_date..max_date)
-          .group("DATE_TRUNC('month', #{date_attribute})")
+          .group("DATE_TRUNC('month', #{date_attribute}::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.formatted_offset}'::INTERVAL)")
           .count
       end
 
@@ -94,7 +94,7 @@ class Stat < ApplicationRecord
       timeseries = associations_with_date_attribute.map do |association, date_attribute|
         association
           .where("#{date_attribute} < ?", max_date)
-          .group("DATE_TRUNC('month', #{date_attribute})")
+          .group("DATE_TRUNC('month', #{date_attribute}::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.formatted_offset}'::INTERVAL)")
           .count
       end
 
