@@ -17,12 +17,12 @@ describe StatsController, type: :controller do
       subject { @controller.send(:last_four_months_hash, association, :updated_at) }
 
       it do
-        expect(subject).to match_array([
-          [I18n.l(4.months.ago, format: "%B %Y"), 0],
-          [I18n.l(3.months.ago, format: "%B %Y"), 0],
-          [I18n.l(62.days.ago.beginning_of_month, format: "%B %Y"), 2],
-          [I18n.l(31.days.ago.beginning_of_month, format: "%B %Y"), 1]
-        ])
+        expect(subject).to eq({
+          4.months.ago => 0,
+          3.months.ago => 0,
+          62.days.ago => 2,
+          31.days.ago => 1
+        }.transform_keys { |date| I18n.l(date, format: '%B %Y') })
       end
     end
 
@@ -43,12 +43,12 @@ describe StatsController, type: :controller do
       subject { @controller.send(:last_four_months_hash, association, :updated_at) }
 
       it do
-        expect(subject).to eq([
-          [I18n.l(3.months.ago, format: "%B %Y"), 0],
-          [I18n.l(45.days.ago.beginning_of_month, format: "%B %Y"), 1],
-          [I18n.l(1.month.ago, format: "%B %Y"), 0],
-          [I18n.l(1.day.ago.beginning_of_month, format: "%B %Y"), 2]
-        ])
+        expect(subject).to eq({
+          3.months.ago => 0,
+          45.days.ago => 1,
+          1.month.ago => 0,
+          1.day.ago => 2
+        }.transform_keys { |date| I18n.l(date, format: '%B %Y') })
       end
     end
   end

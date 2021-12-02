@@ -174,7 +174,7 @@ class StatsController < ApplicationController
     association
       .group_by_month(date_attribute, last: 4, current: super_admin_signed_in?)
       .count
-      .map { |date, count| [l(date, format: '%B %Y'), count] }
+      .transform_keys { |k| l(k, format: "%B %Y") }
   end
 
   def cumulative_hash(association, date_attribute)
@@ -182,8 +182,7 @@ class StatsController < ApplicationController
     association
       .group_by_month(date_attribute, current: super_admin_signed_in?)
       .count
-      .to_a
-      .reduce({}) { |h, (m, v)| h[m] = (sum += v); h }
+      .transform_values { |v| sum += v }
   end
 
   def mean(collection)

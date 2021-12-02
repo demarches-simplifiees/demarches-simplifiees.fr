@@ -63,27 +63,18 @@ class Stat < ApplicationRecord
     end
 
     def last_four_months_hash(association, date_attribute)
-      min_date = 3.months.ago.beginning_of_month
-
       association
-        .where(date_attribute => min_date..max_date)
-        .group("DATE_TRUNC('month', #{date_attribute}::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.formatted_offset}'::INTERVAL)")
+        .group_by_month(date_attribute, last: 4, current: super_admin_signed_in?)
         .count
-        .to_a
-        .sort_by { |a| a[0] }
-        .map { |e| [I18n.l(e.first, format: "%B %Y"), e.last] }
+        .map { |date, count| [l(date, format: '%B %Y'), count] }
     end
 
     def cumulative_hash(association, date_attribute)
       sum = 0
       association
-        .where("#{date_attribute} < ?", max_date)
-        .group("DATE_TRUNC('month', #{date_attribute}::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.formatted_offset}'::INTERVAL)")
+        .group_by_month(date_attribute, current: super_admin_signed_in?)
         .count
-        .to_a
-        .sort_by { |a| a[0] }
-        .map { |x, y| { x => (sum += y) } }
-        .reduce({}, :merge)
+        .transform_values { |v| sum += v }
     end
 
     def max_date
