@@ -171,11 +171,11 @@ class StatsController < ApplicationController
   end
 
   def last_four_months_hash(association, date_attribute)
-    min_date = 3.months.ago.beginning_of_month.to_date
+    min_date = 3.months.ago.beginning_of_month
 
     association
       .where(date_attribute => min_date..max_date)
-      .group("DATE_TRUNC('month', #{date_attribute})")
+      .group("DATE_TRUNC('month', #{date_attribute}::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.formatted_offset}'::INTERVAL)")
       .count
       .to_a
       .sort_by { |a| a[0] }
@@ -186,7 +186,7 @@ class StatsController < ApplicationController
     sum = 0
     association
       .where("#{date_attribute} < ?", max_date)
-      .group("DATE_TRUNC('month', #{date_attribute})")
+      .group("DATE_TRUNC('month', #{date_attribute}::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.formatted_offset}'::INTERVAL)")
       .count
       .to_a
       .sort_by { |a| a[0] }

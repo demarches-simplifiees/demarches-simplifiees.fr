@@ -19,7 +19,6 @@
 class TypeDeChamp < ApplicationRecord
   enum type_champs: {
     text: 'text',
-    auto_completion: 'auto_completion',
     textarea: 'textarea',
     date: 'date',
     datetime: 'datetime',

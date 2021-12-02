@@ -1945,11 +1945,6 @@ enum TypeDeChamp {
   annuaire_education
 
   """
-  Assistance à la saisie
-  """
-  auto_completion
-
-  """
   Carte de France
   """
   carte

@@ -9037,12 +9037,6 @@
               "deprecationReason": null
             },
             {
-              "name": "auto_completion",
-              "description": "Assistance à la saisie",
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "textarea",
               "description": "Zone de texte",
               "isDeprecated": false,
