@@ -14,7 +14,7 @@
 = f.text_area :description, rows: '6', placeholder: 'Description de la démarche, destinataires, etc. ', class: 'form-control'
 
 = f.label :zone do
-  Organisme qui met en oeuvre la démarche
+  = t('zone', scope: 'activerecord.attributes.procedure')
   %span.mandatory *
 = f.collection_select :zone_id, Zone.order(:label), :id, :label, prompt: true
 
