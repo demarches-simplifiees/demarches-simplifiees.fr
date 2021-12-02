@@ -48,6 +48,7 @@
 #  parent_procedure_id                       :bigint
 #  published_revision_id                     :bigint
 #  service_id                                :bigint
+#  zone_id                                   :bigint
 #
 
 class Procedure < ApplicationRecord
@@ -85,6 +86,7 @@ class Procedure < ApplicationRecord
   belongs_to :parent_procedure, class_name: 'Procedure', optional: true
   belongs_to :canonical_procedure, class_name: 'Procedure', optional: true
   belongs_to :service, optional: true
+  belongs_to :zone, optional: true
 
   def active_revision
     brouillon? ? draft_revision : published_revision
