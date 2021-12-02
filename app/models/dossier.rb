@@ -16,6 +16,7 @@
 #  en_instruction_at                                  :datetime
 #  groupe_instructeur_updated_at                      :datetime
 #  hidden_at                                          :datetime
+#  hidden_by_instructeur_at                           :datetime
 #  hidden_by_user_at                                  :datetime
 #  identity_updated_at                                :datetime
 #  last_avis_updated_at                               :datetime
