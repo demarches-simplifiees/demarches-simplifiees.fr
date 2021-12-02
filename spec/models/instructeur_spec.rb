@@ -747,7 +747,6 @@ describe Instructeur, type: :model do
       context 'with an expirants dossier' do
         let!(:expiring_dossier_termine) { create(:dossier, :accepte, procedure: procedure, processed_at: 175.days.ago) }
         let!(:expiring_dossier_en_construction) { create(:dossier, :en_construction, en_construction_at: 175.days.ago, procedure: procedure) }
-
         before { subject }
 
         it { expect(subject['a_suivre']).to eq(1) }

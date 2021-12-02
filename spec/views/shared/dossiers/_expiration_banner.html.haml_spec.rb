@@ -1,6 +1,13 @@
 describe 'shared/dossiers/expiration_banner.html.haml', type: :view do
   include DossierHelper
-  let(:dossier) { build(:dossier, state, attributes.merge(id: 1, state: state)) }
+
+  let(:dossier) do
+    create(:dossier, state, attributes.merge(
+                              id: 1,
+                              state: state,
+                              procedure: create(:procedure, procedure_expires_when_termine_enabled: expiration_enabled)
+                            ))
+  end
   let(:i18n_key_state) { state }
   subject do
     render('shared/dossiers/expiration_banner.html.haml',
@@ -8,8 +15,8 @@ describe 'shared/dossiers/expiration_banner.html.haml', type: :view do
            current_user: build(:user))
   end
 
-  context 'with procedure having procedure_process_expired_dossiers_termine not enabled' do
-    before { allow(dossier.procedure).to receive(:feature_enabled?).with(:procedure_process_expired_dossiers_termine).and_return(false) }
+  context 'with procedure having procedure_expires_when_termine_enabled not enabled' do
+    let(:expiration_enabled) { false }
     let(:attributes) { { processed_at: 6.months.ago } }
     let(:state) { :accepte }
 
@@ -18,8 +25,8 @@ describe 'shared/dossiers/expiration_banner.html.haml', type: :view do
     end
   end
 
-  context 'with procedure having procedure_process_expired_dossiers_termine enabled' do
-    before { allow(dossier.procedure).to receive(:feature_enabled?).with(:procedure_process_expired_dossiers_termine).and_return(true) }
+  context 'with procedure having procedure_expires_when_termine_enabled enabled' do
+    let(:expiration_enabled) { true }
 
     context 'with dossier.brouillon?' do
       let(:attributes) { { created_at: 6.months.ago } }
