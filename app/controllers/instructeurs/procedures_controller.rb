@@ -34,8 +34,8 @@ module Instructeurs
         'suivis' => @followed_dossiers_count_per_procedure.sum { |_, v| v },
         'traités' => @dossiers_termines_count_per_procedure.sum { |_, v| v },
         'dossiers' => @dossiers_count_per_procedure.sum { |_, v| v },
-        'archivés' => @dossiers_archived_count_per_procedure.sum { |_, v| v },
-        'expirant' => @dossiers_expirant_count_per_procedure.sum { |_, v| v }
+        'expirant' => @dossiers_expirant_count_per_procedure.sum { |_, v| v },
+        'archivés' => @dossiers_archived_count_per_procedure.sum { |_, v| v }
       }
 
       @procedure_ids_en_cours_with_notifications = current_instructeur.procedure_ids_with_notifications(:en_cours)

@@ -40,12 +40,14 @@
       active: statut == 'tous',
       badge: number_with_html_delimiter(tous_count))
 
+    - if procedure.procedure_expires_when_termine_enabled
+      = tab_item(t('pluralize.dossiers_close_to_expiration', count: expirant_count),
+        instructeur_procedure_path(procedure, statut: 'expirant'),
+        active: statut == 'expirant',
+        badge: number_with_html_delimiter(expirant_count))
+
     = tab_item(t('pluralize.archived', count: archives_count),
       instructeur_procedure_path(procedure, statut: 'archives'),
       active: statut == 'archives',
       badge: number_with_html_delimiter(archives_count))
 
-    = tab_item(t('pluralize.dossiers_close_to_expiration', count: expirant_count),
-      instructeur_procedure_path(procedure, statut: 'expirant'),
-      active: statut == 'expirant',
-      badge: number_with_html_delimiter(expirant_count))
