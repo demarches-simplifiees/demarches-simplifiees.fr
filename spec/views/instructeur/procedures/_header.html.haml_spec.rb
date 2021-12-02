@@ -1,5 +1,7 @@
 describe 'instructeurs/procedures/_header.html.haml', type: :view do
-  let(:procedure) { create(:procedure, id: 1, procedure_expires_when_termine_enabled: expiration_enabled)}
+  let(:procedure) { create(:procedure, id: 1, procedure_expires_when_termine_enabled: expiration_enabled) }
+
+  before { allow(view).to receive(:current_instructeur).and_return(create(:instructeur)) }
 
   subject do
     render('instructeurs/procedures/header.html.haml',
@@ -12,8 +14,7 @@ describe 'instructeurs/procedures/_header.html.haml', type: :view do
             archives_count: 0,
             expirant_count: 0,
             has_en_cours_notifications: false,
-            has_termine_notifications: false,
-            current_instructeur: build_stubbed(:instructeur))
+            has_termine_notifications: false)
   end
 
   context 'when procedure_expires_when_termine_enabled is true' do

@@ -1,5 +1,5 @@
 describe 'instructeurs/procedures/_list.html.haml', type: :view do
-  let(:procedure) { create(:procedure, id: 1, procedure_expires_when_termine_enabled: expiration_enabled)}
+  let(:procedure) { create(:procedure, id: 1, procedure_expires_when_termine_enabled: expiration_enabled) }
 
   subject do
     render('instructeurs/procedures/list.html.haml',
