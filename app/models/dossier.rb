@@ -24,7 +24,6 @@
 #  last_commentaire_updated_at                        :datetime
 #  motivation                                         :text
 #  private_search_terms                               :text
-#  process_expired                                    :boolean          default(FALSE)
 #  processed_at                                       :datetime
 #  search_terms                                       :text
 #  state                                              :string
@@ -297,7 +296,7 @@ class Dossier < ApplicationRecord
   end
   scope :interval_termine_close_to_expiration, -> do
     state_termine
-      .where(procedures: { procedure_expires_when_termine_enabled: true})
+      .where(procedures: { procedure_expires_when_termine_enabled: true })
       .where("dossiers.processed_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   end
 
