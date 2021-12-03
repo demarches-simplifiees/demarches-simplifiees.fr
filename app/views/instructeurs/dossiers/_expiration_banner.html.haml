@@ -2,7 +2,10 @@
 - if dossier.expirable?
   %p.expires_at.mb-2
 
-    %small= t("shared.dossiers.header.expires_at.#{dossier.state}", date: safe_expiration_date(dossier), duree_conservation_totale: dossier.duree_totale_conservation_in_months)
+    %small
+      = t("shared.dossiers.header.expires_at.#{dossier.state}", date: safe_expiration_date(dossier), duree_conservation_totale: dossier.duree_totale_conservation_in_months)
+      - if dossier.conservation_extension.positive?
+        = t('instructeurs.dossiers.header.banner.expiration_date_extended')
   -# big banner warning
   - if dossier.close_to_expiration?
     .card.warning.mb-3
@@ -17,7 +20,9 @@
 
       - if dossier.expiration_can_be_extended?
         %br
-        = button_to t('instructeurs.dossiers.header.banner.button_delay_expiration'), users_dossier_repousser_expiration_path(dossier), class: 'button secondary mt-2'
+        = button_to repousser_expiration_instructeur_dossier_path(dossier.procedure, dossier), class: 'button mt-2', id: 'test-instructeur-repousser-expiration' do
+          %span.icon.standby
+          = t('instructeurs.dossiers.header.banner.button_delay_expiration')
 
 
 - else

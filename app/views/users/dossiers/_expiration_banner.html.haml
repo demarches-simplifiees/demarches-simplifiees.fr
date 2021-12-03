@@ -16,7 +16,9 @@
 
       - if dossier.expiration_can_be_extended?
         %br
-        = button_to t('users.dossiers.header.banner.button_delay_expiration'), users_dossier_repousser_expiration_path(dossier), class: 'button secondary mt-2'
+        = button_to users_dossier_repousser_expiration_path(dossier), class: 'button mt-2', id: 'test-user-repousser-expiration' do
+          %span.icon.standby
+          = t('users.dossiers.header.banner.button_delay_expiration', duree_conservation_dossiers_dans_ds: dossier.procedure.duree_conservation_dossiers_dans_ds)
 
 
 - else
