@@ -15,9 +15,9 @@ module Instructeurs
       dossiers = current_instructeur.dossiers.joins(:groupe_instructeur)
       @dossiers_count_per_procedure = dossiers.all_state.group('groupe_instructeurs.procedure_id').reorder(nil).count
       @dossiers_a_suivre_count_per_procedure = dossiers.without_followers.en_cours.group('groupe_instructeurs.procedure_id').reorder(nil).count
-      @dossiers_archived_count_per_procedure = dossiers.archived.group('groupe_instructeurs.procedure_id').count # why not reorder(nil)
+      @dossiers_archived_count_per_procedure = dossiers.archived.group('groupe_instructeurs.procedure_id').count
       @dossiers_termines_count_per_procedure = dossiers.termine.group('groupe_instructeurs.procedure_id').reorder(nil).count
-      @dossiers_expirant_count_per_procedure = dossiers.termine_or_en_construction_close_to_expiration.group('groupe_instructeurs.procedure_id').count # why not reorder(nil)
+      @dossiers_expirant_count_per_procedure = dossiers.termine_or_en_construction_close_to_expiration.group('groupe_instructeurs.procedure_id').count
       groupe_ids = current_instructeur.groupe_instructeurs.pluck(:id)
 
       @followed_dossiers_count_per_procedure = current_instructeur
