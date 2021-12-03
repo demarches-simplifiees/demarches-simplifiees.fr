@@ -57,9 +57,9 @@ class StatsController < ApplicationController
           "procedures.libelle",
           "users.id",
           "dossiers.state",
-          "dossiers.depose_at - dossiers.created_at",
-          "dossiers.en_instruction_at - dossiers.depose_at",
-          "dossiers.processed_at - dossiers.en_instruction_at"
+          Arel.sql("dossiers.depose_at - dossiers.created_at"),
+          Arel.sql("dossiers.en_instruction_at - dossiers.depose_at"),
+          Arel.sql("dossiers.processed_at - dossiers.en_instruction_at")
         )
     end
 
