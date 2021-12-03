@@ -136,6 +136,7 @@ fr:
         introduction_file_explaination: "Fichier joint à la demande d’avis"
     users:
       dossiers:
+        archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
         autosave:
           autosave_draft: Votre brouillon est automatiquement enregistré.
           more_infos: En savoir plus
@@ -390,7 +391,7 @@ fr:
       test_procedure: "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l’administrateur (ajout d'un champ, publication de la démarche...) entraînera sa suppression."
       no_access: "Vous n’avez pas accès à ce dossier"
       no_longer_editable: "Votre dossier ne peut plus être modifié"
-      archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
+
       create_commentaire:
         message_send: "Votre message a bien été envoyé à l’instructeur en charge de votre dossier."
       ask_deletion:

@@ -123,11 +123,12 @@
                 %a.cell-link{ href: path }= status_badge(p.state)
 
               %td.action-col.follow-col= render partial: 'dossier_actions',
-                locals: { procedure_id: @procedure.id,
-                          dossier_id: p.dossier_id,
-                          state: p.state,
-                          archived: p.archived,
-                          dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id) }
+                  locals: { procedure_id: @procedure.id,
+                            dossier_id: p.dossier_id,
+                            state: p.state,
+                            archived: p.archived,
+                            dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
+                            close_to_expiration: @statut == 'expirant' }
 
       = pagination
     - else

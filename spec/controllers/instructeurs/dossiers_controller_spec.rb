@@ -804,4 +804,23 @@ describe Instructeurs::DossiersController, type: :controller do
       end
     end
   end
+
+  describe '#extend_conservation' do
+    subject { post :extend_conservation, params: { procedure_id: procedure.id, dossier_id: dossier.id } }
+    context 'when user logged in' do
+      it 'works' do
+        expect(subject).to redirect_to(instructeur_dossier_path(procedure, dossier))
+      end
+
+      it 'extends conservation_extension by 1 month' do
+        subject
+        expect(dossier.reload.conservation_extension).to eq(1.month)
+      end
+
+      it 'flashed notice success' do
+        subject
+        expect(flash[:notice]).to eq(I18n.t('views.instructeurs.dossiers.archived_dossier'))
+      end
+    end
+  end
 end
