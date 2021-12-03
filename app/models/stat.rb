@@ -30,11 +30,11 @@ class Stat < ApplicationRecord
         dossiers_deposes_entre_60_et_30_jours: states['dossiers_deposes_entre_60_et_30_jours'],
         dossiers_not_brouillon: states['not_brouillon'],
         dossiers_termines: states['termines'],
-        dossiers_cumulative: cumulative_hash([
+        dossiers_cumulative: cumulative_month_serie([
           [Dossier.state_not_brouillon, :en_construction_at],
           [DeletedDossier.where.not(state: :brouillon), :deleted_at]
         ]),
-        dossiers_in_the_last_4_months: last_four_months_hash([
+        dossiers_in_the_last_4_months: last_four_months_serie([
           [Dossier.state_not_brouillon, :en_construction_at],
           [DeletedDossier.where.not(state: :brouillon), :deleted_at]
         ]),
@@ -76,38 +76,32 @@ class Stat < ApplicationRecord
     end
 
     def last_four_months_hash(associations_with_date_attribute)
-      min_date = 3.months.ago.beginning_of_month
       timeseries = associations_with_date_attribute.map do |association, date_attribute|
-        association
-          .where(date_attribute => min_date..max_date)
-          .group("DATE_TRUNC('month', #{date_attribute}::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.formatted_offset}'::INTERVAL)")
-          .count
+        association.group_by_month(date_attribute, last: 4, current: false).count
       end
 
-      sum_hashes(*timeseries)
-        .to_a
-        .sort_by { |a| a[0] }
-        .map { |e| [I18n.l(e.first, format: "%B %Y"), e.last] }
+      month_serie(sum_hashes(*timeseries))
     end
 
-    def cumulative_hash(associations_with_date_attribute)
+    def month_serie(date_serie)
+      date_serie.keys.sort.each_with_object({}) { |date, h| h[I18n.l(date, format: "%B %Y")] = date_serie[date] }
+    end
+
+    def cumulative_month_serie(associations_with_date_attribute)
       timeseries = associations_with_date_attribute.map do |association, date_attribute|
-        association
-          .where("#{date_attribute} < ?", max_date)
-          .group("DATE_TRUNC('month', #{date_attribute}::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.formatted_offset}'::INTERVAL)")
-          .count
+        association.group_by_month(date_attribute, current: false).count
       end
 
+      cumulative_serie(sum_hashes(*timeseries))
+    end
+
+    def cumulative_serie(sums)
       sum = 0
-      sum_hashes(*timeseries)
-        .to_a
-        .sort_by { |a| a[0] }
-        .map { |x, y| { x => (sum += y) } }
-        .reduce({}, :merge)
+      sums.keys.sort.index_with { |date| sum += sums[date] }
     end
 
     def sum_hashes(*hashes)
-      {}.merge(*hashes) { |_k, hash_one_value, hash_two_value| hash_one_value + hash_two_value }
+      {}.merge(*hashes) { |_k, v1, v2| v1 + v2 }
     end
 
     def max_date
