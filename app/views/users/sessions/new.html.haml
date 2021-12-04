@@ -23,13 +23,14 @@
 
       = f.submit t('views.users.sessions.new.connection'), class: "button large primary expand"
 
-    .france-connect-login-separator
-      = t('views.shared.france_connect_login.separator')
     - if AgentConnectService.enabled?
+      .france-connect-login-separator
+        = t('views.shared.france_connect_login.separator')
       .center
         %p.mb-2= t('views.users.sessions.new.instructor_or_admin')
         = link_to t('views.users.sessions.new.connect_with_agent_connect'), agent_connect_path
-    %hr
+    .france-connect-login-separator
+      = t('views.shared.france_connect_login.separator')
     %p.center
       %span= t('views.users.sessions.new.are_you_new', app_name: APPLICATION_NAME.gsub("-","&#8209;")).html_safe
       %br
