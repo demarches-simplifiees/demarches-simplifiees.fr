@@ -1,4 +1,21 @@
 FactoryBot.define do
   factory :procedure_revision do
+    transient do
+      from_original { nil }
+    end
+
+    after(:build) do |revision, evaluator|
+      if evaluator.from_original
+        original = evaluator.from_original
+
+        revision.procedure = original.procedure
+        original.revision_types_de_champ.each do |r_tdc|
+          revision.revision_types_de_champ << build(:procedure_revision_type_de_champ, from_original: r_tdc)
+        end
+        original.revision_types_de_champ_private.each do |r_tdc|
+          revision.revision_types_de_champ_private << build(:procedure_revision_type_de_champ, from_original: r_tdc)
+        end
+      end
+    end
   end
 end

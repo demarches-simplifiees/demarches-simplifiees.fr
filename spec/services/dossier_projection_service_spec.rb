@@ -92,7 +92,7 @@ describe DossierProjectionService do
       context 'for individual table' do
         let(:table) { 'individual' }
         let(:procedure) { create(:procedure, :for_individual, :with_type_de_champ, :with_type_de_champ_private) }
-        let(:dossier) { create(:dossier, procedure: procedure, individual: create(:individual, nom: 'Martin', prenom: 'Jacques', gender: 'M.')) }
+        let(:dossier) { create(:dossier, procedure: procedure, individual: build(:individual, nom: 'Martin', prenom: 'Jacques', gender: 'M.')) }
 
         context 'for prenom column' do
           let(:column) { 'prenom' }
