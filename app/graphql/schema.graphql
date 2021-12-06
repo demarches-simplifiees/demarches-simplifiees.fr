@@ -689,22 +689,27 @@ type Dossier {
   champs(id: ID): [Champ!]!
 
   """
+  Date de dépôt.
+  """
+  dateDepot: ISO8601DateTime!
+
+  """
   Date de la dernière modification.
   """
   dateDerniereModification: ISO8601DateTime!
 
   """
-  Date de dépôt.
+  Date du dernier passage en construction.
   """
   datePassageEnConstruction: ISO8601DateTime!
 
   """
-  Date de passage en instruction.
+  Date du dernier passage en instruction.
   """
   datePassageEnInstruction: ISO8601DateTime
 
   """
-  Date de traitement.
+  Date du dernier traitement.
   """
   dateTraitement: ISO8601DateTime
   demandeur: Demandeur!

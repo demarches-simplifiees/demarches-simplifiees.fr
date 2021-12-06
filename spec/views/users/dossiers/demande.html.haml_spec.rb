@@ -28,7 +28,7 @@ describe 'users/dossiers/demande.html.haml', type: :view do
     it { is_expected.not_to have_link('Modifier le dossier') }
   end
 
-  context 'when the dossier has no en_construction_at date' do
+  context 'when the dossier has no depose_at date' do
     let(:dossier) { create(:dossier, :with_entreprise, procedure: procedure) }
 
     it { expect(rendered).not_to have_text('Déposé le') }

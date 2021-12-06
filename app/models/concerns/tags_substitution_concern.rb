@@ -13,8 +13,8 @@ module TagsSubstitutionConcern
     },
     {
       libelle: 'date de dépôt',
-      description: 'Date du passage en construction du dossier par l’usager',
-      lambda: -> (d) { format_date(d.en_construction_at) },
+      description: 'Date de dépôt du dossier par l’usager',
+      lambda: -> (d) { format_date(d.depose_at) },
       available_for_states: Dossier::SOUMIS
     },
     {
