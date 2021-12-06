@@ -30,7 +30,7 @@
       - dossier = not_drafts.first
       %h2.huge-title= t('views.commencer.show.already_not_draft')
       %p
-        = t('views.commencer.show.already_not_draft_detail_html', time_ago: time_ago_in_words(dossier.en_construction_at), procedure: dossier.procedure.libelle)
+        = t('views.commencer.show.already_not_draft_detail_html', time_ago: time_ago_in_words(dossier.depose_at), procedure: dossier.procedure.libelle)
       = link_to t('views.commencer.show.show_my_submitted_file'), dossier_path(dossier), class: ['button large expand primary']
       = link_to t('views.commencer.show.start_new_file'), url_for_new_dossier(@revision), class: ['button large expand']
 

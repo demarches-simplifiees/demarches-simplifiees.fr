@@ -319,6 +319,7 @@ describe API::V2::GraphqlController do
               datePassageEnConstruction
               datePassageEnInstruction
               dateTraitement
+              dateDepot
               motivation
               motivationAttachment {
                 url
@@ -396,6 +397,7 @@ describe API::V2::GraphqlController do
             state: 'en_construction',
             dateDerniereModification: dossier.updated_at.iso8601,
             datePassageEnConstruction: dossier.en_construction_at.iso8601,
+            dateDepot: dossier.depose_at.iso8601,
             datePassageEnInstruction: nil,
             dateTraitement: nil,
             motivation: nil,

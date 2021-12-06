@@ -17,7 +17,7 @@ describe 'Dossier details:' do
   end
 
   describe "the user can see the mean time they are expected to wait" do
-    let(:other_dossier) { create(:dossier, :accepte, :with_individual, procedure: procedure, en_construction_at: 10.days.ago, en_instruction_at: 9.days.ago, processed_at: Time.zone.now) }
+    let(:other_dossier) { create(:dossier, :accepte, :with_individual, procedure: procedure, depose_at: 10.days.ago, en_instruction_at: 9.days.ago, processed_at: Time.zone.now) }
 
     context "when the dossier is in construction" do
       it "displays the estimated wait duration" do
