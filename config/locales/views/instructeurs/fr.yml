@@ -18,6 +18,8 @@ fr:
       archive_pending_html: Archive en cours de création<br>(demandée il y a %{created_period})
       archive_ready_html: Télécharger l’archive<br>(demandée il y a %{generated_period})
     dossiers:
+      extend_conservation:
+        archived_dossier: "Le dossier sera conservé 1 mois supplémentaire"
       decisions_rendues_block:
         without_email:
           en_construction: Le %{processed_at} ce dossier a été passé en construction

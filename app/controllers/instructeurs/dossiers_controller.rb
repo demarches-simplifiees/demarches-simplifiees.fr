@@ -19,6 +19,12 @@ module Instructeurs
       end
     end
 
+    def extend_conservation
+      dossier.update(conservation_extension: dossier.conservation_extension + 1.month)
+      flash[:notice] = t('views.instructeurs.dossiers.archived_dossier')
+      redirect_back(fallback_location: instructeur_dossier_path(@dossier.procedure, @dossier))
+    end
+
     def geo_data
       send_data dossier.to_feature_collection.to_json,
         type: 'application/json',
