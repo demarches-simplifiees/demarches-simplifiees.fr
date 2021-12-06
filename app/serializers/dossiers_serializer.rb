@@ -11,7 +11,7 @@ class DossiersSerializer < ActiveModel::Serializer
   end
 
   def initiated_at
-    object.en_construction_at&.in_time_zone('UTC')
+    object.depose_at&.in_time_zone('UTC')
   end
 
   def state

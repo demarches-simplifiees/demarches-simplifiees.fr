@@ -60,6 +60,7 @@ describe ProcedurePresentation do
         [
           { "label" => 'Créé le', "table" => 'self', "column" => 'created_at' },
           { "label" => 'En construction le', "table" => 'self', "column" => 'en_construction_at' },
+          { "label" => 'Déposé le', "table" => 'self', "column" => 'depose_at' },
           { "label" => 'Mis à jour le', "table" => 'self', "column" => 'updated_at' },
           { "label" => 'Demandeur', "table" => 'user', "column" => 'email' },
           { "label" => 'Email instructeur', "table" => 'followers_instructeurs', "column" => 'email' },

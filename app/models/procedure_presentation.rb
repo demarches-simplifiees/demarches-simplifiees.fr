@@ -38,6 +38,7 @@ class ProcedurePresentation < ApplicationRecord
     fields = [
       field_hash('Créé le', 'self', 'created_at'),
       field_hash('En construction le', 'self', 'en_construction_at'),
+      field_hash('Déposé le', 'self', 'depose_at'),
       field_hash('Mis à jour le', 'self', 'updated_at'),
       field_hash('Demandeur', 'user', 'email'),
       field_hash('Email instructeur', 'followers_instructeurs', 'email'),
