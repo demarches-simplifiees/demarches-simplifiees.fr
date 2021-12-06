@@ -123,7 +123,7 @@ module SystemHelpers
   def check_selected_values(champ, values)
     combobox = find(:xpath, "//input[@aria-label=\"#{champ}\"]/ancestor::div[@data-react-class='ComboMultipleDropdownList']")
     hidden_field_id = JSON.parse(combobox["data-react-props"])["hiddenFieldId"]
-    hidden_field = find("input[data-uuid=\"#{hidden_field_id}\"]")
+    hidden_field = find("input[data-id=\"#{hidden_field_id}\"][data-name=\"value\"]")
     hidden_field_values = JSON.parse(hidden_field.value)
     expect(values.sort).to eq(hidden_field_values.sort)
   end
@@ -131,7 +131,7 @@ module SystemHelpers
   def check_selected_value(champ, value)
     combobox = find(:xpath, "//input[@aria-label=\"#{champ}\"]/ancestor::div[@data-react-class='ComboMultipleDropdownList']")
     hidden_field_id = JSON.parse(combobox["data-react-props"])["hiddenFieldId"]
-    hidden_field = find("input[data-uuid=\"#{hidden_field_id}\"]")
+    hidden_field = find("input[data-id=\"#{hidden_field_id}\"][data-name=\"value\"]")
     hidden_field_values = JSON.parse(hidden_field.value)
     expect(hidden_field_values).to include(value)
   end

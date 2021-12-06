@@ -17,11 +17,10 @@ import {
 } from '@reach/combobox';
 import '@reach/combobox/styles.css';
 import { matchSorter } from 'match-sorter';
-import { fire } from '@utils';
 import { XIcon } from '@heroicons/react/outline';
 import isHotkey from 'is-hotkey';
 
-import { useDeferredSubmit } from './shared/hooks';
+import { useDeferredSubmit, useHiddenField } from './shared/hooks';
 
 const Context = createContext();
 
@@ -76,10 +75,7 @@ function ComboMultipleDropdownList({
       ].filter(([, value]) => !selections.includes(value)),
     [term, selections.join(','), newValues.join(',')]
   );
-  const hiddenField = useMemo(
-    () => document.querySelector(`input[data-uuid="${hiddenFieldId}"]`),
-    [hiddenFieldId]
-  );
+  const [, setHiddenFieldValue, hiddenField] = useHiddenField(hiddenFieldId);
   const awaitFormSubmit = useDeferredSubmit(hiddenField);
 
   const handleChange = (event) => {
@@ -89,10 +85,7 @@ function ComboMultipleDropdownList({
   const saveSelection = (fn) => {
     setSelections((selections) => {
       selections = fn(selections);
-      if (hiddenField) {
-        hiddenField.setAttribute('value', JSON.stringify(selections));
-        fire(hiddenField, 'autosave:trigger');
-      }
+      setHiddenFieldValue(JSON.stringify(selections));
       return selections;
     });
   };

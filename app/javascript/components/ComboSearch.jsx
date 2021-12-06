@@ -16,9 +16,8 @@ import {
   ComboboxOption
 } from '@reach/combobox';
 import '@reach/combobox/styles.css';
-import { fire } from '@utils';
 
-import { useDeferredSubmit } from './shared/hooks';
+import { useDeferredSubmit, useHiddenField } from './shared/hooks';
 
 function defaultTransformResults(_, results) {
   return results;
@@ -36,22 +35,14 @@ function ComboSearch({
   transformResults = defaultTransformResults,
   ...props
 }) {
-  const hiddenValueField = useMemo(
-    () => document.querySelector(`input[data-uuid="${hiddenFieldId}"]`),
-    [hiddenFieldId]
-  );
+  const [externalValue, setExternalValue, hiddenField] =
+    useHiddenField(hiddenFieldId);
   const comboInputId = useMemo(
-    () => hiddenValueField?.id || inputId,
-    [inputId, hiddenValueField]
+    () => hiddenField?.id || inputId,
+    [inputId, hiddenField]
   );
-  const hiddenIdField = useMemo(
-    () =>
-      document.querySelector(
-        `input[data-uuid="${hiddenFieldId}"] + input[data-reference]`
-      ),
-    [hiddenFieldId]
-  );
-  const initialValue = hiddenValueField ? hiddenValueField.value : props.value;
+  const [, setExternalId] = useHiddenField(hiddenFieldId, 'external_id');
+  const initialValue = externalValue ? externalValue : props.value;
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm] = useDebounce(searchTerm, 300);
   const [value, setValue] = useState(initialValue);
@@ -60,23 +51,6 @@ function ComboSearch({
     const [, value, label] = transformResult(result);
     return label ?? value;
   };
-  const setExternalValue = useCallback(
-    (value) => {
-      if (hiddenValueField) {
-        hiddenValueField.setAttribute('value', value);
-        fire(hiddenValueField, 'autosave:trigger');
-      }
-    },
-    [hiddenValueField]
-  );
-  const setExternalId = useCallback(
-    (key) => {
-      if (hiddenIdField) {
-        hiddenIdField.setAttribute('value', key);
-      }
-    },
-    [hiddenIdField]
-  );
   const setExternalValueAndId = useCallback((label) => {
     const { key, value, result } = resultsMap.current[label];
     setExternalId(key);
@@ -85,7 +59,7 @@ function ComboSearch({
       onChange(value, result);
     }
   }, []);
-  const awaitFormSubmit = useDeferredSubmit(hiddenValueField);
+  const awaitFormSubmit = useDeferredSubmit(hiddenField);
 
   const handleOnChange = useCallback(
     ({ target: { value } }) => {

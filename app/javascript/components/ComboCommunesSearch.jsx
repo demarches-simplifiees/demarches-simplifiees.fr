@@ -1,10 +1,11 @@
-import React, { useState, useMemo } from 'react';
+import React from 'react';
 import { QueryClientProvider } from 'react-query';
 import { matchSorter } from 'match-sorter';
 
 import ComboSearch from './ComboSearch';
 import { queryClient } from './shared/queryClient';
 import { ComboDepartementsSearch } from './ComboDepartementsSearch';
+import { useHiddenField } from './shared/hooks';
 
 // Avoid hiding similar matches for precise queries (like "Sainte Marie")
 function searchResultsLimit(term) {
@@ -49,31 +50,16 @@ const [placeholderDepartement, placeholderCommune] =
   ];
 
 function ComboCommunesSearch(params) {
-  const hiddenDepartementFieldId = `${params.hiddenFieldId}:departement`;
-  const hiddenDepartementField = useMemo(
-    () =>
-      document.querySelector(`input[data-attr="${hiddenDepartementFieldId}"]`),
-    [params.hiddenFieldId]
+  const [, , hiddenField] = useHiddenField(params.hiddenFieldId);
+  const [departementValue, setDepartementValue] = useHiddenField(
+    params.hiddenFieldId,
+    'departement'
   );
-  const hiddenCodeDepartementField = useMemo(
-    () =>
-      document.querySelector(
-        `input[data-attr="${params.hiddenFieldId}:code_departement"]`
-      ),
-    [params.hiddenFieldId]
+  const [codeDepartement, setCodeDepartement] = useHiddenField(
+    params.hiddenFieldId,
+    'code_departement'
   );
-  const inputId = useMemo(
-    () =>
-      document.querySelector(`input[data-uuid="${params.hiddenFieldId}"]`)?.id,
-    [params.hiddenFieldId]
-  );
-  const [departementCode, setDepartementCode] = useState(
-    () => hiddenCodeDepartementField?.value
-  );
-  const departementValue = useMemo(
-    () => hiddenDepartementField?.value,
-    [hiddenDepartementField]
-  );
+  const inputId = hiddenField?.id;
   const departementDescribedBy = `${inputId}_departement_notice`;
   const communeDescribedBy = `${inputId}_commune_notice`;
 
@@ -88,21 +74,18 @@ function ComboCommunesSearch(params) {
         </div>
         <ComboDepartementsSearch
           value={departementValue}
-          inputId={!departementCode ? inputId : null}
+          inputId={!codeDepartement ? inputId : null}
           aria-describedby={departementDescribedBy}
           placeholder={placeholderDepartement}
           addForeignDepartement={false}
           required={params.mandatory}
           onChange={(_, result) => {
-            setDepartementCode(result?.code);
-            if (hiddenDepartementField && hiddenCodeDepartementField) {
-              hiddenDepartementField.setAttribute('value', result?.nom);
-              hiddenCodeDepartementField.setAttribute('value', result?.code);
-            }
+            setDepartementValue(result?.nom);
+            setCodeDepartement(result?.code);
           }}
         />
       </div>
-      {departementCode ? (
+      {codeDepartement ? (
         <div>
           <div className="notice" id={communeDescribedBy}>
             <p>
@@ -118,7 +101,7 @@ function ComboCommunesSearch(params) {
             required={params.mandatory}
             hiddenFieldId={params.hiddenFieldId}
             scope="communes"
-            scopeExtra={departementCode}
+            scopeExtra={codeDepartement}
             minimumInputLength={2}
             transformResult={({ code, nom, codesPostaux }) => [
               code,
