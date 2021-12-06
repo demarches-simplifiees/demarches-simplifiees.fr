@@ -719,8 +719,8 @@ describe Instructeur, type: :model do
 
           it { expect(subject['a_suivre']).to eq(0) }
           it { expect(subject['suivis']).to eq(0) }
-          it { expect(subject['traites']).to eq(1) }
-          it { expect(subject['tous']).to eq(1) }
+          it { expect(subject['traites']).to eq(2) }
+          it { expect(subject['tous']).to eq(2) }
           it { expect(subject['archives']).to eq(0) }
           it { expect(subject['expirant']).to eq(0) }
         end
