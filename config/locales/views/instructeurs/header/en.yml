@@ -3,7 +3,7 @@ en:
     dossiers:
       header:
         banner:
-          expiration_date_extended: " – la date de conservation a déjà été etendue"
+          expiration_date_extended: " – the expiration date had already been extended"
           title: This file will expire
           states:
             brouillon: "" # not applicable, instructeur does not see brouillons
