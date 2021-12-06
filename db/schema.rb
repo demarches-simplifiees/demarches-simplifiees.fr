@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_27_143736) do
+ActiveRecord::Schema.define(version: 2021_12_01_135804) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -554,14 +554,6 @@ ActiveRecord::Schema.define(version: 2021_11_27_143736) do
     t.index ["user_id"], name: "index_merge_logs_on_user_id"
   end
 
-  create_table "zones", force: :cascade do |t|
-    t.string "acronym", null: false
-    t.string "label"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["acronym"], name: "index_zones_on_acronym", unique: true
-  end
-
   create_table "module_api_cartos", id: :serial, force: :cascade do |t|
     t.integer "procedure_id"
     t.boolean "use_api_carto", default: false
@@ -646,9 +638,9 @@ ActiveRecord::Schema.define(version: 2021_11_27_143736) do
     t.text "api_particulier_scopes", default: [], array: true
     t.jsonb "api_particulier_sources", default: {}
     t.boolean "instructeurs_self_management_enabled"
-    t.bigint "zone_id"
     t.boolean "routing_enabled"
     t.boolean "procedure_expires_when_termine_enabled", default: false
+    t.bigint "zone_id"
     t.index ["api_particulier_sources"], name: "index_procedures_on_api_particulier_sources", using: :gin
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
     t.index ["draft_revision_id"], name: "index_procedures_on_draft_revision_id"
@@ -834,6 +826,14 @@ ActiveRecord::Schema.define(version: 2021_11_27_143736) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["procedure_id"], name: "index_without_continuation_mails_on_procedure_id"
+  end
+
+  create_table "zones", force: :cascade do |t|
+    t.string "acronym", null: false
+    t.string "label"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["acronym"], name: "index_zones_on_acronym", unique: true
   end
 
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
