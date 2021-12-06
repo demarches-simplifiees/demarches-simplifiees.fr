@@ -232,12 +232,18 @@ module Instructeurs
     def delete_dossier
       if dossier.termine?
         dossier.discard_and_keep_track!(current_instructeur, :instructeur_request)
-        flash.notice = 'Le dossier a bien été supprimé'
+        flash.notice = t('instructeurs.dossiers.deleted_by_instructeur')
         redirect_to instructeur_procedure_path(procedure)
       else
-        flash.alert = "Suppression impossible : le dossier n’est pas traité"
+        flash.alert = t('instructeurs.dossiers.impossible_deletion')
         redirect_back(fallback_location: instructeur_procedures_url)
       end
+    end
+
+    def hide_dossier
+      dossier.update(hidden_by_instructeur_at: Time.zone.now)
+      flash.notice = t('instructeurs.dossiers.deleted_by_instructeur')
+      redirect_back(fallback_location: instructeur_procedures_url)
     end
 
     private
