@@ -105,7 +105,7 @@ class Procedure < ApplicationRecord
     if brouillon?
       TypeDeChamp.fillable
         .joins(:revision_types_de_champ)
-        .where(revision_types_de_champ: { revision: draft_revision })
+        .where(revision_types_de_champ: { revision: draft_revision, parent_id: nil })
         .order(:private, :position)
     else
       # fetch all type_de_champ.stable_id for all the revisions expect draft
@@ -114,12 +114,14 @@ class Procedure < ApplicationRecord
         .joins(:revisions)
         .where(procedure_revisions: { procedure_id: id })
         .where.not(procedure_revisions: { id: draft_revision_id })
+        .where(revision_types_de_champ: { parent_id: nil })
         .group(:stable_id)
         .select('MAX(types_de_champ.id)')
 
       # fetch the more recent procedure_revision_types_de_champ
       # which includes recents_ids
       recents_prtdc = ProcedureRevisionTypeDeChamp
+        .root
         .where(type_de_champ_id: recent_ids)
         .where.not(revision_id: draft_revision_id)
         .group(:type_de_champ_id)
@@ -139,7 +141,10 @@ class Procedure < ApplicationRecord
       TypeDeChamp.root
         .public_only
         .fillable
-        .where(revision: revisions - [draft_revision])
+        .joins(:revisions)
+        .where(procedure_revisions: { procedure_id: id })
+        .where.not(procedure_revisions: { id: draft_revision_id })
+        .where(revision_types_de_champ: { parent_id: nil })
         .order(:created_at)
         .uniq
     end
@@ -152,7 +157,10 @@ class Procedure < ApplicationRecord
       TypeDeChamp.root
         .private_only
         .fillable
-        .where(revision: revisions - [draft_revision])
+        .joins(:revisions)
+        .where(procedure_revisions: { procedure_id: id })
+        .where.not(procedure_revisions: { id: draft_revision_id })
+        .where(revision_types_de_champ: { parent_id: nil })
         .order(:created_at)
         .uniq
     end
@@ -471,7 +479,9 @@ class Procedure < ApplicationRecord
     procedure.save
     procedure.draft_types_de_champ.update_all(revision_id: procedure.draft_revision.id)
     procedure.draft_types_de_champ_private.update_all(revision_id: procedure.draft_revision.id)
-    TypeDeChamp.where(parent: procedure.draft_types_de_champ.repetition + procedure.draft_types_de_champ_private.repetition).update_all(revision_id: procedure.draft_revision.id)
+    types_de_champ_in_repetition = TypeDeChamp.where(parent: procedure.draft_types_de_champ.repetition + procedure.draft_types_de_champ_private.repetition)
+    types_de_champ_in_repetition.update_all(revision_id: procedure.draft_revision.id)
+    types_de_champ_in_repetition.each(&:migrate_parent!)
 
     if is_different_admin || from_library
       procedure.draft_types_de_champ.each { |tdc| tdc.options&.delete(:old_pj) }
