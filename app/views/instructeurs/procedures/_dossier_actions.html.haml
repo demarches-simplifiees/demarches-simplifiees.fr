@@ -23,10 +23,10 @@
                 Archiver le dossier
 
         %li.danger
-          = link_to supprimer_dossier_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, data: { confirm: "Voulez vous vraiment supprimer le dossier #{dossier_id} ? Cette action est irréversible. \nNous vous suggérons de télécharger le dossier au format PDF au préalable." } do
+          = link_to hide_dossier_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, data: { confirm: "Voulez vous vraiment supprimer le dossier #{dossier_id} ? Cette action est irréversible. \nNous vous suggérons de télécharger le dossier au format PDF au préalable." } do
             %span.icon.delete
             .dropdown-description
-              Supprimer le dossier
+              = t('views.instructeurs.dossiers.delete_dossier')
 
 - elsif Dossier::EN_CONSTRUCTION_OU_INSTRUCTION.include?(state)
   - if dossier_is_followed

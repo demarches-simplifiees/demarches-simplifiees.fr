@@ -135,6 +135,7 @@ en:
     instructeurs:
       dossiers:
         archived_dossier: "This file will be kept for an additional month"
+        delete_dossier: "Delete file"
         deleted_by_user: "File deleted by user"
       avis:
         introduction_file_explaination: "File attached to the request for advice"
@@ -198,7 +199,6 @@ en:
           edit_dossier: "Edit the file"
           start_other_dossier: "Start an other file"
           delete_dossier: "Delete the file"
-          hide_dossier: "Delete from your screen"
           transfer_dossier: "Transfer the file"
           edit_draft: "Edit the draft"
           actions: "Actions"
@@ -407,6 +407,10 @@ en:
         identity_saved: "Identity data is registred"
       attestation:
         no_longer_available: "The certificate is no longer available on this file."
+  instructeurs:
+    dossiers:
+       deleted_by_instructeur: "The folder has been deleted"
+       impossible_deletion: "Unable to delete : the folder is not processed"
   france_connect:
     particulier:
       password_confirmation:
