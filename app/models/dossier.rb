@@ -207,6 +207,7 @@ class Dossier < ApplicationRecord
   scope :archived,      -> { where(archived: true) }
   scope :not_archived,  -> { where(archived: false) }
   scope :not_hidden_by_user, -> { where(hidden_by_user_at: nil) }
+  scope :not_hidden_by_instructeur, -> { where(hidden_by_instructeur_at: nil) }
 
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
   scope :order_by_created_at, -> (order = :asc) { order(depose_at: order, created_at: order, id: order) }
