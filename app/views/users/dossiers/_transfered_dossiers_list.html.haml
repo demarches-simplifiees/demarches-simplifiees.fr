@@ -19,7 +19,7 @@
                   = dossier.id
                 %td= dossier.procedure.libelle
                 %td= status_badge(dossier.state)
-                %td{ style: 'padding: 18px;' }= (dossier.en_construction_at || dossier.created_at).strftime('%d/%m/%Y')
+                %td{ style: 'padding: 18px;' }= (dossier.depose_at || dossier.created_at).strftime('%d/%m/%Y')
 
         .transfer-actions.mt-4
           = link_to "Accepter", transfer_path(transfer), class: "button primary", method: :put
