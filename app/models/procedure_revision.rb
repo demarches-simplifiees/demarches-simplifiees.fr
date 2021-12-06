@@ -14,14 +14,16 @@ class ProcedureRevision < ApplicationRecord
 
   has_many :dossiers, inverse_of: :revision, foreign_key: :revision_id
 
-  has_many :revision_types_de_champ, -> { public_only.ordered }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
-  has_many :revision_types_de_champ_private, -> { private_only.ordered }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
+  has_many :revision_types_de_champ, -> { root.public_only.ordered }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
+  has_many :revision_types_de_champ_private, -> { root.private_only.ordered }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
   has_many :types_de_champ, through: :revision_types_de_champ, source: :type_de_champ
   has_many :types_de_champ_private, through: :revision_types_de_champ_private, source: :type_de_champ
 
   has_many :owned_types_de_champ, class_name: 'TypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
   has_one :draft_procedure, -> { with_discarded }, class_name: 'Procedure', foreign_key: :draft_revision_id, dependent: :nullify, inverse_of: :draft_revision
   has_one :published_procedure, -> { with_discarded }, class_name: 'Procedure', foreign_key: :published_revision_id, dependent: :nullify, inverse_of: :published_revision
+
+  scope :ordered, -> { order(:created_at) }
 
   def build_champs
     types_de_champ.map(&:build_champ)
@@ -39,7 +41,7 @@ class ProcedureRevision < ApplicationRecord
         .types_de_champ
         .tap do |types_de_champ|
           params[:order_place] = types_de_champ.present? ? types_de_champ.last.order_place + 1 : 0
-        end.create(params)
+        end.create(params).migrate_parent!
     elsif params[:private]
       types_de_champ_private.create(params)
     else
@@ -66,7 +68,9 @@ class ProcedureRevision < ApplicationRecord
       repetition_type_de_champ = find_or_clone_type_de_champ(id).parent
 
       move_type_de_champ_hash(repetition_type_de_champ.types_de_champ.to_a, type_de_champ, position).each do |(id, position)|
-        repetition_type_de_champ.types_de_champ.find(id).update!(order_place: position)
+        type_de_champ = repetition_type_de_champ.types_de_champ.find(id)
+        type_de_champ.update!(order_place: position)
+        type_de_champ.revision_type_de_champ&.update!(position: position)
       end
     elsif type_de_champ.private?
       move_type_de_champ_hash(types_de_champ_private.to_a, type_de_champ, position).each do |(id, position)|
@@ -294,6 +298,7 @@ class ProcedureRevision < ApplicationRecord
     end
     cloned_type_de_champ.revision = self
     association.update!(type_de_champ: cloned_type_de_champ)
+    cloned_type_de_champ.types_de_champ.each(&:migrate_parent!)
     cloned_type_de_champ
   end
 
