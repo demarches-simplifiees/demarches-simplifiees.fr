@@ -768,6 +768,7 @@ ActiveRecord::Schema.define(version: 2021_12_02_135804) do
     t.bigint "stable_id"
     t.bigint "parent_id"
     t.bigint "revision_id"
+    t.boolean "migrated_parent"
     t.index ["parent_id"], name: "index_types_de_champ_on_parent_id"
     t.index ["private"], name: "index_types_de_champ_on_private"
     t.index ["revision_id"], name: "index_types_de_champ_on_revision_id"

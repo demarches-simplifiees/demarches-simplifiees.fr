@@ -16,7 +16,9 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
 
   belongs_to :parent, class_name: 'ProcedureRevisionTypeDeChamp', optional: true
   has_many :revision_types_de_champ, -> { ordered }, foreign_key: :parent_id, class_name: 'ProcedureRevisionTypeDeChamp', inverse_of: :parent, dependent: :destroy
+  scope :root, -> { where(parent: nil) }
   scope :ordered, -> { order(:position) }
+  scope :revision_ordered, -> { order(:revision_id) }
   scope :public_only, -> { joins(:type_de_champ).where(types_de_champ: { private: false }) }
   scope :private_only, -> { joins(:type_de_champ).where(types_de_champ: { private: true }) }
 
