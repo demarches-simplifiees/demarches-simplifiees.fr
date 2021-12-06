@@ -6,7 +6,7 @@
     = t('views.users.dossiers.show.header.dossier_number', dossier_id: dossier.id)
     = t('views.users.dossiers.show.header.created_date', date_du_dossier: I18n.l(dossier.created_at))
 
-  = render(partial: 'shared/dossiers/expiration_banner', locals: {dossier: dossier})
+  = render(partial: 'users/dossiers/expiration_banner', locals: {dossier: dossier})
 
   .header-actions
     - if current_user.owns?(dossier)

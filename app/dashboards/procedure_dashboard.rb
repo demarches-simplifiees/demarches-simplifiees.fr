@@ -34,7 +34,8 @@ class ProcedureDashboard < Administrate::BaseDashboard
     closed_mail_template: MailTemplateField,
     refused_mail_template: MailTemplateField,
     without_continuation_mail_template: MailTemplateField,
-    attestation_template: AttestationTemplateField
+    attestation_template: AttestationTemplateField,
+    procedure_expires_when_termine_enabled: Field::Boolean
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -79,13 +80,16 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :closed_mail_template,
     :refused_mail_template,
     :without_continuation_mail_template,
-    :attestation_template
+    :attestation_template,
+    :procedure_expires_when_termine_enabled
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = [].freeze
+  FORM_ATTRIBUTES = [
+    :procedure_expires_when_termine_enabled
+  ].freeze
 
   # Overwrite this method to customize how procedures are displayed
   # across all pages of the admin dashboard.
