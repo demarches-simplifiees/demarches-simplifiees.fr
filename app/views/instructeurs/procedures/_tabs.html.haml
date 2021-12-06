@@ -1,0 +1,34 @@
+%ul.tabs.mt-3
+  = tab_item('à suivre',
+    instructeur_procedure_path(procedure, statut: 'a-suivre'),
+    active: statut == 'a-suivre',
+    badge: number_with_html_delimiter(a_suivre_count))
+
+  = tab_item(t('pluralize.followed', count: suivis_count),
+    instructeur_procedure_path(procedure, statut: 'suivis'),
+    active: statut == 'suivis',
+    badge: number_with_html_delimiter(suivis_count),
+    notification: has_en_cours_notifications)
+
+  = tab_item(t('pluralize.processed', count: traites_count),
+    instructeur_procedure_path(procedure, statut: 'traites'),
+    active: statut == 'traites',
+    badge: number_with_html_delimiter(traites_count),
+    notification: has_termine_notifications)
+
+  = tab_item('au total',
+    instructeur_procedure_path(procedure, statut: 'tous'),
+    active: statut == 'tous',
+    badge: number_with_html_delimiter(tous_count))
+
+  - if procedure.procedure_expires_when_termine_enabled
+    = tab_item(t('pluralize.dossiers_close_to_expiration', count: expirant_count),
+      instructeur_procedure_path(procedure, statut: 'expirant'),
+      active: statut == 'expirant',
+      badge: number_with_html_delimiter(expirant_count))
+
+  = tab_item(t('pluralize.archived', count: archives_count),
+    instructeur_procedure_path(procedure, statut: 'archives'),
+    active: statut == 'archives',
+    badge: number_with_html_delimiter(archives_count))
+

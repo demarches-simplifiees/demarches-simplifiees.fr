@@ -1,15 +1,23 @@
-describe 'shared/dossiers/expiration_banner.html.haml', type: :view do
+describe 'users/dossiers/expiration_banner.html.haml', type: :view do
   include DossierHelper
-  let(:dossier) { build(:dossier, state, attributes.merge(id: 1, state: state)) }
+  let(:duree_conservation_dossiers_dans_ds) { 3 }
+  let(:dossier) do
+    create(:dossier, state, attributes.merge(
+                              id: 1,
+                              state: state,
+                              conservation_extension: 1,
+                              procedure: create(:procedure, procedure_expires_when_termine_enabled: expiration_enabled, duree_conservation_dossiers_dans_ds: duree_conservation_dossiers_dans_ds)
+                            ))
+  end
   let(:i18n_key_state) { state }
   subject do
-    render('shared/dossiers/expiration_banner.html.haml',
+    render('users/dossiers/expiration_banner.html.haml',
            dossier: dossier,
            current_user: build(:user))
   end
 
-  context 'with procedure having procedure_process_expired_dossiers_termine not enabled' do
-    before { allow(dossier.procedure).to receive(:feature_enabled?).with(:procedure_process_expired_dossiers_termine).and_return(false) }
+  context 'with procedure having procedure_expires_when_termine_enabled not enabled' do
+    let(:expiration_enabled) { false }
     let(:attributes) { { processed_at: 6.months.ago } }
     let(:state) { :accepte }
 
@@ -18,8 +26,8 @@ describe 'shared/dossiers/expiration_banner.html.haml', type: :view do
     end
   end
 
-  context 'with procedure having procedure_process_expired_dossiers_termine enabled' do
-    before { allow(dossier.procedure).to receive(:feature_enabled?).with(:procedure_process_expired_dossiers_termine).and_return(true) }
+  context 'with procedure having procedure_expires_when_termine_enabled enabled' do
+    let(:expiration_enabled) { true }
 
     context 'with dossier.brouillon?' do
       let(:attributes) { { created_at: 6.months.ago } }
@@ -28,7 +36,8 @@ describe 'shared/dossiers/expiration_banner.html.haml', type: :view do
       it 'render estimated expiration date' do
         expect(subject).to have_selector('.expires_at',
                                          text: I18n.t("shared.dossiers.header.expires_at.#{i18n_key_state}",
-                                                      date: safe_expiration_date(dossier)))
+                                                      date: safe_expiration_date(dossier),
+                                                      duree_conservation_totale: duree_conservation_dossiers_dans_ds))
       end
     end
 
@@ -39,7 +48,8 @@ describe 'shared/dossiers/expiration_banner.html.haml', type: :view do
       it 'render estimated expiration date' do
         expect(subject).to have_selector('.expires_at',
                                          text: I18n.t("shared.dossiers.header.expires_at.#{i18n_key_state}",
-                                                      date: safe_expiration_date(dossier)))
+                                                      date: safe_expiration_date(dossier),
+                                                      duree_conservation_totale: duree_conservation_dossiers_dans_ds))
       end
     end
 
@@ -61,7 +71,8 @@ describe 'shared/dossiers/expiration_banner.html.haml', type: :view do
         allow(dossier).to receive(:processed_at).and_return(6.months.ago)
         expect(subject).to have_selector('.expires_at',
                                          text: I18n.t("shared.dossiers.header.expires_at.#{i18n_key_state}",
-                                                      date: safe_expiration_date(dossier)))
+                                                      date: safe_expiration_date(dossier),
+                                                      duree_conservation_totale: duree_conservation_dossiers_dans_ds))
       end
     end
   end

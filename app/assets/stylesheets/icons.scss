@@ -19,6 +19,10 @@
     background-image: image-url("icons/unfollow-folder.svg");
   }
 
+  &.standby {
+    background-image: image-url("icons/standby.svg");
+  }
+
   &.archive {
     background-image: image-url("icons/archive.svg");
   }
