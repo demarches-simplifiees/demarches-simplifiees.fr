@@ -560,7 +560,7 @@ class Dossier < ApplicationRecord
       approximative_expiration_date_reference,
       conservation_extension,
       procedure.duree_conservation_dossiers_dans_ds.months
-    ].compact.sum - REMAINING_WEEKS_BEFORE_EXPIRATION.weeks
+    ].sum - REMAINING_WEEKS_BEFORE_EXPIRATION.weeks
   end
 
   def close_to_expiration?
