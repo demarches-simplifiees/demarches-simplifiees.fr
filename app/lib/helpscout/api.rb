@@ -43,7 +43,7 @@ class Helpscout::API
   end
 
   def add_phone_number(email, phone)
-    query = URI.encode("(email:#{email})")
+    query = CGI.escape("(email:#{email})")
     response = call_api(:get, "#{CUSTOMERS}?mailbox=#{user_support_mailbox_id}&query=#{query}")
     if response.success?
       body = parse_response_body(response)
