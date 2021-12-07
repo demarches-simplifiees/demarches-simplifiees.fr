@@ -564,7 +564,8 @@ class Dossier < ApplicationRecord
   end
 
   def close_to_expiration?
-    return false
+    return false if en_instruction?
+    approximative_expiration_date < Time.zone.now
   end
 
   def expiration_date
