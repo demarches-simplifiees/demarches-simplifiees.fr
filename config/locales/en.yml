@@ -291,6 +291,12 @@ en:
               invalid: "must be a maximum of 7 digits"
             code_postal:
               invalid: "must be 5 characters long"
+        "champs/dgfip_champ":
+          attributes:
+            numero_fiscal:
+              invalid: "must be 13 or 14 characters long"
+            reference_avis:
+              invalid: "must be 13 or 14 characters long"
   errors:
     messages:
       dossier_not_found: "The file does not exist or you do not have access to it."

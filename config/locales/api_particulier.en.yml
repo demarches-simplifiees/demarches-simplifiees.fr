@@ -1,7 +1,7 @@
 en:
   api_particulier:
     providers:
-      cnaf: 
+      cnaf:
         libelle: Caisse nationale d’allocations familiales (CAF)
         scopes:
           personne: &personne
@@ -16,7 +16,7 @@ en:
           enfants:
             libelle: children
             <<: *personne
-          adresse: 
+          adresse:
             libelle: address
             identite: identity
             complementIdentite: complément d’identité
@@ -30,3 +30,41 @@ en:
             quotientFamilial: quotient familial
             mois: month
             annee: year
+      dgfip:
+        libelle: Direction Générale des Finances Publiques (DGFiP)
+        scopes:
+          declarant: &declarant
+            nom: name
+            nomNaissance: birth name
+            prenoms: firstname
+            dateNaissance: birth date
+          declarant1:
+            libelle: declarant 1
+            <<: *declarant
+          declarant2:
+            libelle: declarant 2
+            <<: *declarant
+          echeance_avis:
+            libelle: expiry of the notice
+            dateEtablissement: date of establishment
+            dateRecouvrement: recovery date
+          foyer_fiscal: &foyer_fiscal
+            libelle: taxable household
+            adresse: tax address for the year
+            annee: year
+            nombreParts: number of units
+            nombrePersonnesCharge: number of dependants
+            situationFamille: family status
+          agregats_fiscaux:
+            libelle: tax notice
+            revenuBrutGlobal: overall gross income
+            revenuImposable: taxable income
+            impotRevenuNetAvantCorrections: net income tax before correction
+            montantImpot: tax amount
+            revenuFiscalReference: reference tax income
+            anneeImpots: tax year
+            anneeRevenus: income year
+          complements:
+            libelle: supplements
+            erreurCorrectif: error correction
+            situationPartielle: partial status
