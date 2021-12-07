@@ -526,7 +526,7 @@ class Dossier < ApplicationRecord
   end
 
   def can_be_deleted_by_user?
-    brouillon? || en_construction?
+    brouillon? || en_construction? || termine?
   end
 
   def can_be_deleted_by_manager?
