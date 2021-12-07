@@ -1,0 +1,6 @@
+%table.dgfip
+  %caption #{t("api_particulier.providers.dgfip.scopes.#{scope}.libelle")} :
+  - echeance_avis.slice('dateRecouvrement', 'dateEtablissement').keys.each do |key|
+    %tr
+      %th= t("api_particulier.providers.dgfip.scopes.#{scope}.#{key}")
+      %td= echeance_avis[key]
