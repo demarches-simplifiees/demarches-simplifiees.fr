@@ -99,7 +99,7 @@ class Export < ApplicationRecord
   def io(since: nil)
     dossiers = Dossier.where(groupe_instructeur: groupe_instructeurs)
     if since.present?
-      dossiers = dossiers.where('dossiers.en_construction_at > ?', since)
+      dossiers = dossiers.where('dossiers.depose_at > ?', since)
     end
     service = ProcedureExportService.new(procedure, dossiers)
 

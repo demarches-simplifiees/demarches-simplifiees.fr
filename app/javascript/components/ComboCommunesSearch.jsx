@@ -93,10 +93,10 @@ function ComboCommunesSearch(params) {
           placeholder={placeholderDepartement}
           addForeignDepartement={false}
           required={params.mandatory}
-          onChange={(value, result) => {
+          onChange={(_, result) => {
             setDepartementCode(result?.code);
             if (hiddenDepartementField && hiddenCodeDepartementField) {
-              hiddenDepartementField.setAttribute('value', value);
+              hiddenDepartementField.setAttribute('value', result?.nom);
               hiddenCodeDepartementField.setAttribute('value', result?.code);
             }
           }}

@@ -1,5 +1,5 @@
 .container
-  - if dossier.en_construction_at.present?
+  - if dossier.depose_at.present?
     .card
       = render partial: "shared/dossiers/infos_generales", locals: { dossier: dossier }
 

@@ -20,7 +20,7 @@ class ProcedureOverview
     @dossiers_en_construction_count = dossiers.state_en_construction.count
     @old_dossiers_en_construction = dossiers
       .state_en_construction
-      .where('en_construction_at < ?', 1.week.ago)
+      .where('depose_at < ?', 1.week.ago)
 
     @created_dossiers_count = dossiers
       .where(created_at: start_date..Time.zone.now)

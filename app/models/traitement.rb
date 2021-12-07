@@ -22,7 +22,7 @@ class Traitement < ApplicationRecord
     includes(:dossier)
       .termine
       .where(dossier: procedure.dossiers)
-      .where.not('dossiers.en_construction_at' => nil, :processed_at => nil)
+      .where.not('dossiers.depose_at' => nil, processed_at: nil)
       .order(:processed_at)
   end
 
