@@ -17,7 +17,7 @@ describe APIParticulier::Services::SourcesService do
       it { is_expected.to eq({}) }
     end
 
-    context 'when a procedure has a cnaf_allocataires and a cnaf_adresse scopes' do
+    context 'when a procedure has a cnaf_allocataires and a cnaf_enfants scopes' do
       let(:api_particulier_scopes) { ['cnaf_allocataires', 'cnaf_enfants'] }
 
       let(:cnaf_allocataires_and_enfants) do
@@ -30,6 +30,21 @@ describe APIParticulier::Services::SourcesService do
       end
 
       it { is_expected.to match(cnaf_allocataires_and_enfants) }
+    end
+
+    context 'when a procedure has a dgfip_declarant1_nom , prenom and a dgfip_adresse_fiscale_taxation scopes' do
+      let(:api_particulier_scopes) { ['dgfip_declarant1_nom', 'dgfip_declarant1_prenoms', 'dgfip_adresse_fiscale_taxation'] }
+
+      let(:dgfip_avis_imposition_et_adresse) do
+        {
+          'dgfip' => {
+            'declarant1' => ['nom', 'prenoms'],
+            'foyer_fiscal' => ['adresse']
+          }
+        }
+      end
+
+      it { is_expected.to match(dgfip_avis_imposition_et_adresse) }
     end
 
     context 'when a procedure has an unknown scope' do
