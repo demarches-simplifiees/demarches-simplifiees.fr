@@ -43,6 +43,7 @@ class API::V2::Schema < GraphQL::Schema
     Types::Champs::CarteChampType,
     Types::Champs::CheckboxChampType,
     Types::Champs::CiviliteChampType,
+    Types::Champs::CommuneChampType,
     Types::Champs::DateChampType,
     Types::Champs::DatetimeChampType,
     Types::Champs::DecimalNumberChampType,

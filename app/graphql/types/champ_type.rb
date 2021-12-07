@@ -25,6 +25,12 @@ module Types
           else
             Types::Champs::DateChampType
           end
+        when ::Champs::CommuneChamp
+          if context.has_fragment?(:CommuneChamp)
+            Types::Champs::CommuneChampType
+          else
+            Types::Champs::TextChampType
+          end
         when ::Champs::DossierLinkChamp
           Types::Champs::DossierLinkChampType
         when ::Champs::PieceJustificativeChamp

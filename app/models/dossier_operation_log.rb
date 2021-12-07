@@ -111,9 +111,9 @@ class DossierOperationLog < ApplicationRecord
       nil
     elsif operation == operations.fetch(:supprimer)
       {
-        date_de_depot: subject.en_construction_at,
+        date_de_depot: subject.depose_at,
         date_de_mise_en_instruction: subject.en_instruction_at,
-        date_de_decision: subject.termine? ? subject.traitements.last.processed_at : nil
+        date_de_decision: subject.processed_at
       }.as_json
     else
       case subject
