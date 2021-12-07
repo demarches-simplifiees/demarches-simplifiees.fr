@@ -45,9 +45,39 @@ describe Administrateurs::JetonParticulierController, type: :controller do
         it 'saves the jeton' do
           expect(flash.alert).to be_nil
           expect(flash.notice).to eq("Le jeton a bien été mis à jour")
-          expect(procedure.reload.api_particulier_token).to eql(token)
-          expect(procedure.reload.api_particulier_scopes).to contain_exactly("dgfip_avis_imposition", "dgfip_adresse", "cnaf_allocataires", "cnaf_enfants", "cnaf_adresse", "cnaf_quotient_familial", "mesri_statut_etudiant")
-          expect(procedure.reload.api_particulier_sources).to be_empty
+          procedure.reload
+          expect(procedure.api_particulier_token).to eql(token)
+          expect(procedure.api_particulier_scopes).to contain_exactly(
+            'cnaf_adresse',
+            'cnaf_allocataires',
+            'cnaf_enfants',
+            'cnaf_quotient_familial',
+            'dgfip_adresse_fiscale_annee',
+            'dgfip_adresse_fiscale_taxation',
+            'dgfip_annee_impot',
+            'dgfip_annee_revenus',
+            'dgfip_date_etablissement',
+            'dgfip_date_recouvrement',
+            'dgfip_declarant1_date_naissance',
+            'dgfip_declarant1_nom',
+            'dgfip_declarant1_nom_naissance',
+            'dgfip_declarant1_prenoms',
+            'dgfip_declarant2_date_naissance',
+            'dgfip_declarant2_nom',
+            'dgfip_declarant2_nom_naissance',
+            'dgfip_declarant2_prenoms',
+            'dgfip_erreur_correctif',
+            'dgfip_impot_revenu_net_avant_corrections',
+            'dgfip_montant_impot',
+            'dgfip_nombre_parts',
+            'dgfip_nombre_personnes_a_charge',
+            'dgfip_revenu_brut_global',
+            'dgfip_revenu_fiscal_reference',
+            'dgfip_revenu_imposable',
+            'dgfip_situation_familiale',
+            'dgfip_situation_partielle'
+          )
+          expect(procedure.api_particulier_sources).to be_empty
         end
       end
 
