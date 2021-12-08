@@ -68,3 +68,39 @@ fr:
             libelle: compléments
             erreurCorrectif: erreur correctif
             situationPartielle: situation partielle
+      pole_emploi:
+        libelle: Pôle emploi
+        scopes:
+          identite:
+            libelle: Identité
+            identifiant: identifiant
+            civilite: civilité
+            nom: nom
+            nomUsage: nom d’usage
+            prenom: prénom
+            sexe: sexe
+            M: masculin
+            F: féminin
+            dateNaissance: date de naissance
+          adresse:
+            libelle: Adresse
+            INSEECommune: code INSEE de la commune
+            codePostal: code postal
+            localite: localité
+            ligneVoie: voie
+            ligneComplementDestinataire: destinataire
+            ligneComplementAdresse: adresse
+            ligneComplementDistribution: distribution
+            ligneNom: nom
+          contact:
+            libelle: Contact
+            email: email
+            telephone: téléphone
+            telephone2: téléphone 2
+          inscription:
+            libelle: Inscription
+            dateInscription: date d’inscription
+            dateCessationInscription: date de cessation d’inscription
+            codeCertificationCNAV: code de certification CNAV
+            codeCategorieInscription: code de catégorie d’inscription
+            libelleCategorieInscription: libellé de catégorie d’inscription
