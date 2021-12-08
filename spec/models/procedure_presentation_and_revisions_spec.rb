@@ -16,7 +16,7 @@ describe ProcedurePresentation do
 
     context 'for a published procedure' do
       let(:procedure) { create(:procedure, :published) }
-      let!(:tdc) { { type_champ: :number, libelle: 'libelle 1' } }
+      let(:tdc) { { type_champ: :number, libelle: 'libelle 1' } }
 
       before do
         procedure.draft_revision.add_type_de_champ(tdc)
@@ -26,7 +26,7 @@ describe ProcedurePresentation do
       it { is_expected.to match(['libelle 1']) }
 
       context 'when there is another published revision with an added tdc' do
-        let!(:added_tdc) { { type_champ: :number, libelle: 'libelle 2' } }
+        let(:added_tdc) { { type_champ: :number, libelle: 'libelle 2' } }
 
         before do
           procedure.draft_revision.add_type_de_champ(added_tdc)
@@ -37,7 +37,7 @@ describe ProcedurePresentation do
       end
 
       context 'add one tdc above the first one' do
-        let!(:tdc2) { { type_champ: :number, libelle: 'libelle 2' } }
+        let(:tdc2) { { type_champ: :number, libelle: 'libelle 2' } }
 
         before do
           created_tdc2 = procedure.draft_revision.add_type_de_champ(tdc2)
@@ -47,7 +47,7 @@ describe ProcedurePresentation do
 
         it { is_expected.to match(['libelle 2', 'libelle 1']) }
 
-        context 'and finaly, when this tdc is removed' do
+        context 'and finally, when this tdc is removed' do
           let!(:previous_tdc2) { procedure.published_revision.types_de_champ.find_by(libelle: 'libelle 2') }
 
           before do

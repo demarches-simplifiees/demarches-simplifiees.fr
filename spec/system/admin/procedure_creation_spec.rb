@@ -101,7 +101,7 @@ describe 'As an administrateur I wanna create a new procedure', js: true do
       expect(page).to have_link(nil, href: /#{commencer_test_path(Procedure.last.path)}/)
 
       expect(page).to have_selector('#procedure_path', visible: true)
-      expect(find_field('procedure_path').value).to eq 'service-libelle-de-la-procedure'
+      expect(find_field('procedure_path').value).to eq Procedure.last.service.suggested_path + '-libelle-de-la-procedure'
       fill_in 'lien_site_web', with: 'http://some.website'
       click_on 'publish'
 

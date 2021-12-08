@@ -20,20 +20,9 @@
 #  type_de_champ_id               :integer
 #
 class Champs::TitreIdentiteChamp < Champ
-  include FileValidationConcern
   FILE_MAX_SIZE = 20.megabytes
-
-  ACCEPTED_FORMATS = [
-    "image/png",
-    "image/jpeg"
-  ]
-
-  # TODO: once we're running on Rails 6, re-enable this validation.
-  # See https://github.com/betagouv/demarches-simplifiees.fr/issues/4926
-  #
-  validates :piece_justificative_file,
-    content_type: ACCEPTED_FORMATS,
-    size: file_size_validation(FILE_MAX_SIZE)
+  ACCEPTED_FORMATS = ['image/png', 'image/jpeg']
+  validates :piece_justificative_file, content_type: ACCEPTED_FORMATS, size: { less_than: FILE_MAX_SIZE }
 
   def main_value_name
     :piece_justificative_file

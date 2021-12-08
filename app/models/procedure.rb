@@ -53,7 +53,6 @@ class Procedure < ApplicationRecord
   self.ignored_columns = [:duree_conservation_dossiers_hors_ds]
   include ProcedureStatsConcern
   include EncryptableConcern
-  include FileValidationConcern
 
   include Discard::Model
   self.discard_column = :hidden_at
@@ -234,7 +233,6 @@ class Procedure < ApplicationRecord
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validates :administrateurs, presence: true
   validates :lien_site_web, presence: true, if: :publiee?
-  validate :validate_for_publication, on: :publication
   validate :check_juridique
   validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,200}\z/ }, uniqueness: { scope: [:path, :closed_at, :hidden_at, :unpublished_at], case_sensitive: false }
   validates :duree_conservation_dossiers_dans_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_DUREE_CONSERVATION }
@@ -253,7 +251,7 @@ class Procedure < ApplicationRecord
     "image/jpg",
     "image/png",
     "text/plain"
-  ], size: file_size_validation(FILE_MAX_SIZE), if: -> { new_record? || created_at > Date.new(2020, 2, 28) }
+  ], size: { less_than: FILE_MAX_SIZE }, if: -> { new_record? || created_at > Date.new(2020, 2, 28) }
 
   validates :deliberation, content_type: [
     "application/msword",
@@ -264,11 +262,11 @@ class Procedure < ApplicationRecord
     "image/jpg",
     "image/png",
     "text/plain"
-  ], size: file_size_validation(FILE_MAX_SIZE), if: -> { new_record? || created_at > Date.new(2020, 4, 29) }
+  ], size: { less_than: FILE_MAX_SIZE }, if: -> { new_record? || created_at > Date.new(2020, 4, 29) }
 
   LOGO_MAX_SIZE = 5.megabytes
   validates :logo, content_type: ['image/png', 'image/jpg', 'image/jpeg'],
-    size: file_size_validation(LOGO_MAX_SIZE),
+    size: { less_than: LOGO_MAX_SIZE },
     if: -> { new_record? || created_at > Date.new(2020, 11, 13) }
 
   validates :api_entreprise_token, jwt_token: true, allow_blank: true
@@ -322,18 +320,6 @@ class Procedure < ApplicationRecord
     if !locked? || draft_changed?
       draft_revision.dossiers.destroy_all
     end
-  end
-
-  def validate_for_publication
-    old_attributes = self.slice(:aasm_state, :closed_at)
-    self.aasm_state = :publiee
-    self.closed_at = nil
-
-    is_valid = validate
-
-    self.attributes = old_attributes
-
-    is_valid
   end
 
   def suggested_path(administrateur)
@@ -693,7 +679,9 @@ class Procedure < ApplicationRecord
   end
 
   def create_new_revision
-    draft_revision.deep_clone(include: [:revision_types_de_champ, :revision_types_de_champ_private])
+    draft_revision
+      .deep_clone(include: [:revision_types_de_champ, :revision_types_de_champ_private])
+      .tap(&:save!)
   end
 
   def column_styles(table)

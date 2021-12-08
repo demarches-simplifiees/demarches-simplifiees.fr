@@ -45,6 +45,12 @@ services:
     ports:
       - ${PORT}:3000
     environment:
+      - AGENT_CONNECT_ENABLED
+      - AGENT_CONNECT_ID
+      - AGENT_CONNECT_SECRET
+      - AGENT_CONNECT_BASE_URL
+      - AGENT_CONNECT_JWKS
+      - AGENT_CONNECT_REDIRECT
       - API_ADRESSE_URL
       - API_CPS_AUTH
       - API_CPS_CLIENT_ID

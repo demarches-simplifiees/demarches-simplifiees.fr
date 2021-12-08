@@ -47,6 +47,12 @@ RUN bundle install --deployment --without development test && \
     yarn install --production
 
 ENV \
+    AGENT_CONNECT_ENABLED=""\
+    AGENT_CONNECT_ID=""\
+    AGENT_CONNECT_SECRET=""\
+    AGENT_CONNECT_BASE_URL=""\
+    AGENT_CONNECT_JWKS=""\
+    AGENT_CONNECT_REDIRECT=""\
     API_ADRESSE_URL="https://api-adresse.data.gouv.fr"\
     API_CPS_AUTH=""\
     API_CPS_CLIENT_ID=""\

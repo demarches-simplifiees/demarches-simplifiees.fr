@@ -1,4 +1,6 @@
 class API::V2::GraphqlController < API::V2::BaseController
+  include GraphqlOperationLogConcern
+
   def execute
     variables = ensure_hash(params[:variables])
 
@@ -8,6 +10,8 @@ class API::V2::GraphqlController < API::V2::BaseController
       operation_name: params[:operationName])
 
     render json: result
+  rescue GraphQL::ParseError => exception
+    handle_parse_error(exception)
   rescue => exception
     if Rails.env.production?
       handle_error_in_production(exception)
@@ -22,41 +26,8 @@ class API::V2::GraphqlController < API::V2::BaseController
     super
 
     payload.merge!({
-      graphql_operation: operation_log(params[:query], params[:operationName], params[:variables])
+      graphql_operation: operation_log(params[:query], params[:operationName], params[:variables]&.to_unsafe_h)
     })
-  end
-
-  def operation_log(query, operation_name, variables)
-    return "NoQuery" if query.nil?
-
-    operation = GraphQL.parse(query).children.find do |node|
-      if node.is_a?(GraphQL::Language::Nodes::OperationDefinition)
-        node.name == operation_name
-      end
-    end
-
-    return "InvalidQuery" if operation.nil?
-    return "IntrospectionQuery" if operation.name == "IntrospectionQuery"
-
-    message = operation.operation_type
-    if operation.name
-      message += ": #{operation.name} { "
-    end
-    message += operation.selections.map(&:name).join(', ')
-    message += " }"
-    if variables.present?
-      message += " "
-      message += variables.to_unsafe_h.flat_map do |(name, value)|
-        if name == "input"
-          value.map do |(name, value)|
-            "#{name}: \"#{value.to_s.truncate(10)}\""
-          end
-        else
-          "#{name}: \"#{value.to_s.truncate(10)}\""
-        end
-      end.join(', ')
-    end
-    message
   end
 
   def process_action(*args)
@@ -86,6 +57,15 @@ class API::V2::GraphqlController < API::V2::BaseController
     else
       raise ArgumentError, "Unexpected parameter: #{ambiguous_param}"
     end
+  end
+
+  def handle_parse_error(exception)
+    render json: {
+      errors: [
+        { message: exception.message }
+      ],
+      data: nil
+    }, status: 400
   end
 
   def handle_error_in_development(exception)

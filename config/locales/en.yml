@@ -161,6 +161,7 @@ en:
             request: "Request"
             mailbox: "Mailbox"
             dossier_number: "File n. %{dossier_id}"
+            created_date: "- Draft on %{date_du_dossier}"
             submit_date: "- Submit on %{date_du_dossier}"
             print: "print"
             print_dossier: "All the file"
@@ -205,6 +206,8 @@ en:
           connection: Sign in
           are_you_new: First time on %{app_name}?
           find_procedure: Find your procedure
+          instructor_or_admin: Instructor or Administrator ?
+          connect_with_agent_connect: Connect with AgentConnect
       passwords:
         reset_link_sent:
           got_it: Got it!
@@ -341,6 +344,10 @@ en:
       zero: transfer request
       one: transfer request
       other: transfer requests
+    dossiers_close_to_expiration:
+      zero: expiring file
+      one: expiring file
+      other: expiring files
     dossier_trouve:
       zero: 0 file found
       one: 1 file found
