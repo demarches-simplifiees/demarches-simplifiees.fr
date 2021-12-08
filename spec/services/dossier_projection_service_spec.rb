@@ -103,7 +103,7 @@ describe DossierProjectionService do
         context 'for nom column' do
           let(:column) { 'nom' }
 
-          it { is_expected.to eq('MARTIN') }
+          it { is_expected.to eq('Martin') }
         end
 
         context 'for gender column' do
