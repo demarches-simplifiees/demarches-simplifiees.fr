@@ -1000,10 +1000,10 @@ describe Users::DossiersController, type: :controller do
     end
   end
 
-  describe '#ask_deletion' do
+  describe '#delete_dossier' do
     before { sign_in(user) }
 
-    subject { post :ask_deletion, params: { id: dossier.id } }
+    subject { patch :delete_dossier, params: { id: dossier.id } }
 
     shared_examples_for "the dossier can not be deleted" do
       it "doesn’t notify the deletion" do
@@ -1043,7 +1043,7 @@ describe Users::DossiersController, type: :controller do
         let(:dossier) { create(:dossier, :en_instruction, user: user, autorisation_donnees: true) }
 
         it_behaves_like "the dossier can not be deleted"
-        it { is_expected.to redirect_to(dossier_path(dossier)) }
+        it { is_expected.to redirect_to(dossiers_path) }
       end
     end
 
@@ -1053,6 +1053,15 @@ describe Users::DossiersController, type: :controller do
 
       it_behaves_like "the dossier can not be deleted"
       it { is_expected.to redirect_to(root_path) }
+    end
+
+    context 'when the dossier is already deleted by instructeur' do
+      let!(:dossier) { create(:dossier, :with_individual, state: :accepte, en_construction_at: Time.zone.yesterday.beginning_of_day.utc, user: user, autorisation_donnees: true, hidden_by_instructeur_at: Time.zone.now.beginning_of_day.utc) }
+      before { subject }
+
+      it 'discard the dossier' do
+        expect(dossier.reload.hidden_at).to be_present
+      end
     end
   end
 
