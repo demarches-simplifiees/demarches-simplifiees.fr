@@ -80,7 +80,13 @@ module APIParticulier
           'pole_emploi_identite' => ['pole_emploi', 'identite'],
           'pole_emploi_adresse' => ['pole_emploi', 'adresse'],
           'pole_emploi_contact' => ['pole_emploi', 'contact'],
-          'pole_emploi_inscription' => ['pole_emploi', 'inscription']
+          'pole_emploi_inscription' => ['pole_emploi', 'inscription'],
+          'mesri_identifiant' => ['mesri', 'identifiant'],
+          'mesri_identite' => ['mesri', 'identite'],
+          'mesri_inscription_etudiant' => ['mesri', 'inscriptions'],
+          'mesri_inscription_autre' => ['mesri', 'inscriptions'],
+          'mesri_admission' => ['mesri', 'admissions'],
+          'mesri_etablissements' => ['mesri', 'etablissements']
         }
       end
 
@@ -123,6 +129,13 @@ module APIParticulier
             'adresse' => ['INSEECommune', 'codePostal', 'localite', 'ligneVoie', 'ligneComplementDestinataire', 'ligneComplementAdresse', 'ligneComplementDistribution', 'ligneNom'],
             'contact' => ['email', 'telephone', 'telephone2'],
             'inscription' => ['dateInscription', 'dateCessationInscription', 'codeCertificationCNAV', 'codeCategorieInscription', 'libelleCategorieInscription']
+          },
+          'mesri' => {
+            'identifiant' => ['ine'],
+            'identite' => ['nom', 'prenom', 'dateNaissance'],
+            'inscriptions' => ['statut', 'regime', 'dateDebutInscription', 'dateFinInscription', 'codeCommune'],
+            'admissions' => ['statut', 'regime', 'dateDebutAdmission', 'dateFinAdmission', 'codeCommune'],
+            'etablissements' => ['uai', 'nom']
           }
         }
       end
