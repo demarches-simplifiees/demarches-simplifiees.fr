@@ -251,7 +251,7 @@ fr:
       super_admin:
         << : *default_attributes
       procedure:
-        zone: Organisme qui met en œuvre la démarche
+        zone: Zone qui met en œuvre la démarche
     errors:
       messages:
         not_a_phone: 'Numéro de téléphone invalide'
