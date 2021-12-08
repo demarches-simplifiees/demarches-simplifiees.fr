@@ -47,6 +47,21 @@ describe APIParticulier::Services::SourcesService do
       it { is_expected.to match(dgfip_avis_imposition_et_adresse) }
     end
 
+    context 'when a procedure has a pole_emploi_identite and a pole_emploi_adresse scopes' do
+      let(:api_particulier_scopes) { ['pole_emploi_identite', 'pole_emploi_adresse'] }
+
+      let(:pole_emploi_identite_et_adresse) do
+        {
+          'pole_emploi' => {
+            'identite' => ['identifiant', 'civilite', 'nom', 'nomUsage', 'prenom', 'sexe', 'dateNaissance'],
+            'adresse' => ['INSEECommune', 'codePostal', 'localite', 'ligneVoie', 'ligneComplementDestinataire', 'ligneComplementAdresse', 'ligneComplementDistribution', 'ligneNom']
+          }
+        }
+      end
+
+      it { is_expected.to match(pole_emploi_identite_et_adresse) }
+    end
+
     context 'when a procedure has an unknown scope' do
       let(:api_particulier_scopes) { ['unknown_scope'] }
 

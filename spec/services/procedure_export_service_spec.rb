@@ -79,6 +79,7 @@ describe ProcedureExportService do
           "annuaire_education",
           "cnaf",
           "dgfip",
+          "pole_emploi",
           "text"
         ]
       end
@@ -168,6 +169,7 @@ describe ProcedureExportService do
           "annuaire_education",
           "cnaf",
           "dgfip",
+          "pole_emploi",
           "text"
         ]
       end
@@ -253,6 +255,7 @@ describe ProcedureExportService do
             "annuaire_education",
             "cnaf",
             "dgfip",
+            "pole_emploi",
             "text"
           ]
         end
