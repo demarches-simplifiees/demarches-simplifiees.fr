@@ -38,34 +38,32 @@
     "email": {
       "type": "string"
     },
-    "$defs": {
-      "adresse": {
-        "type": "object",
-        "properties": {
-          "codePostal": {
-            "type": "string"
-          },
-          "INSEECommune": {
-            "type": "string"
-          },
-          "localite": {
-            "type": "string"
-          },
-          "ligneVoie": {
-            "type": "string"
-          },
-          "ligneComplementDestinataire": {
-            "type": "string"
-          },
-          "ligneComplementAdresse": {
-            "type": "string"
-          },
-          "ligneComplementDistribution": {
-            "type": "string"
-          },
-          "ligneNom": {
-            "type": "string"
-          }
+    "adresse": {
+      "type": "object",
+      "properties": {
+        "codePostal": {
+          "type": "string"
+        },
+        "INSEECommune": {
+          "type": "string"
+        },
+        "localite": {
+          "type": "string"
+        },
+        "ligneVoie": {
+          "type": "string"
+        },
+        "ligneComplementDestinataire": {
+          "type": "string"
+        },
+        "ligneComplementAdresse": {
+          "type": "string"
+        },
+        "ligneComplementDistribution": {
+          "type": "string"
+        },
+        "ligneNom": {
+          "type": "string"
         }
       }
     },
