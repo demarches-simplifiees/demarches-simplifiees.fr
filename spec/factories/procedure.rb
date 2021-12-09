@@ -206,6 +206,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_pole_emploi do
+      after(:build) do |procedure, _evaluator|
+        build(:type_de_champ_pole_emploi, procedure: procedure)
+      end
+    end
+
     trait :with_explication do
       after(:build) do |procedure, _evaluator|
         build(:type_de_champ_explication, procedure: procedure)

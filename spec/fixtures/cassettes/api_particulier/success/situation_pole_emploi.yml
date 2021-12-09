@@ -1,0 +1,76 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://particulier.api.gouv.fr/api/v2/situations-pole-emploi?identifiant=georges_moustaki_77
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Accept:
+      - application/json
+      X-Api-Key:
+      - 06fd8675601267d2988cbbdef56ecb0de1d45223
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 16 Mar 2021 17:01:19 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '651'
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - timeout=5
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - Range,Content-Range,X-Content-Range,X-API-Key
+      Etag:
+      - W/"2eb-A0NiRd+gbJKIAT0y4tR4j9tjXb0"
+      Server:
+      - nginx
+      Strict-Transport-Security:
+      - max-age=15552000
+      - max-age=15552000
+      Vary:
+      - Origin, Accept
+      X-Gravitee-Request-Id:
+      - 7bfb7f99-ac2d-4443-bb7f-99ac2d0443c5
+      X-Gravitee-Transaction-Id:
+      - f5dca8b3-2ab7-4c9a-9ca8-b32ab70c9a2b
+    body:
+      encoding: ASCII-8BIT
+      string: '{
+        "identifiant": "georges_moustaki_77",
+        "civilite": "M.",
+        "nom": "Moustaki",
+        "nomUsage": "Moustaki",
+        "prenom": "Georges",
+        "sexe": "M",
+        "dateNaissance": "1934-05-03",
+        "adresse": {
+          "INSEECommune": "75118",
+          "codePostal": "75018",
+          "localite": "75018 Paris",
+          "ligneVoie": "3 rue des Huttes",
+          "ligneNom": "MOUSTAKI"
+        },
+        "email": "georges@moustaki.fr",
+        "telephone": "0629212921",
+        "dateInscription": "1965-05-03",
+        "dateCessationInscription": "1966-05-03",
+        "codeCertificationCNAV": "VC",
+        "codeCategorieInscription": 1,
+        "libelleCategorieInscription": "PERSONNE SANS EMPLOI DISPONIBLE DUREE INDETERMINEE PLEIN TPS"
+      }'
+  recorded_at: Tue, 16 Mar 2021 17:01:18 GMT
+recorded_with: VCR 6.0.0

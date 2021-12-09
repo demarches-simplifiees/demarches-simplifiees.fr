@@ -217,7 +217,7 @@ module Users
 
       if dossier.can_be_deleted_by_user?
         dossier.discard_and_keep_track!(current_user, :user_request)
-        flash.notice = t('.deleted_dossier')
+        flash.notice = t('.soft_deleted_dossier')
         redirect_to dossiers_path
       else
         flash.notice = t('.undergoingreview')
@@ -291,7 +291,7 @@ module Users
     def hide_dossier
       dossier = current_user.dossiers.includes(:user, procedure: :administrateurs).find(params[:id])
       dossier.update(hidden_by_user_at: Time.zone.now)
-      flash.notice = t('users.dossiers.ask_deletion.deleted_dossier')
+      flash.notice = t('users.dossiers.ask_deletion.soft_deleted_dossier')
       redirect_to dossiers_path
     end
 
@@ -348,8 +348,8 @@ module Users
     def champs_params
       params.permit(dossier: {
         champs_attributes: [
-          :id, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :numero_fiscal, :reference_avis, :piece_justificative_file, :departement, :code_departement, value: [],
-          champs_attributes: [:id, :_destroy, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :numero_fiscal, :reference_avis, :piece_justificative_file, :departement, :code_departement, value: []]
+          :id, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :piece_justificative_file, :departement, :code_departement, value: [],
+          champs_attributes: [:id, :_destroy, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :piece_justificative_file, :departement, :code_departement, value: []]
         ]
       })
     end

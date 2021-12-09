@@ -779,6 +779,10 @@ class Dossier < ApplicationRecord
     end
   end
 
+  def attestation_activated?
+    termine? && procedure.attestation_template&.activated?
+  end
+
   def after_passer_en_construction
     self.conservation_extension = 0.days
     self.depose_at = self.en_construction_at = self.traitements
