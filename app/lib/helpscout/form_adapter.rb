@@ -54,7 +54,11 @@ class Helpscout::FormAdapter
   private
 
   def add_tags(conversation_id)
-    @api.add_tags(conversation_id, params[:tags])
+    @api.add_tags(conversation_id, tags)
+  end
+
+  def tags
+    (params[:tags].presence || []) + ['contact form']
   end
 
   def create_conversation
