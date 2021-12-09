@@ -72,6 +72,10 @@ FactoryBot.define do
       end
     end
 
+    trait :with_bulk_message do
+      groupe_instructeurs { [association(:groupe_instructeur, :default, :with_bulk_message, procedure: instance, strategy: :build)] }
+    end
+
     trait :with_logo do
       logo { Rack::Test::UploadedFile.new('spec/fixtures/files/logo_test_procedure.png', 'image/png') }
     end

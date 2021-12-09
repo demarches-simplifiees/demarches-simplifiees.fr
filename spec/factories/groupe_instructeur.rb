@@ -8,5 +8,9 @@ FactoryBot.define do
     trait :default do
       label { GroupeInstructeur::DEFAUT_LABEL }
     end
+
+    trait :with_bulk_message do
+      bulk_messages { [association(:bulk_message, strategy: :build)] }
+    end
   end
 end
