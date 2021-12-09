@@ -59,7 +59,7 @@ describe Helpscout::FormAdapter do
         expect(api).to have_received(:create_conversation)
           .with(email, subject, text, nil)
         expect(api).to have_received(:add_tags)
-          .with(conversation_id, tags)
+          .with(conversation_id, tags + ['contact form'])
       end
     end
 
