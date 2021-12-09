@@ -24,7 +24,8 @@ module Users
         .with_dossiers
         .where(email: current_user.email)
         .page(page)
-      @statut = statut(@user_dossiers, @dossiers_invites, @dossiers_supprimes, @dossier_transfers, params[:statut])
+      @dossiers_close_to_expiration = current_user.dossiers.close_to_expiration.page(page)
+      @statut = statut(@user_dossiers, @dossiers_invites, @dossiers_supprimes, @dossier_transfers, @dossiers_close_to_expiration, params[:statut])
     end
 
     def show
@@ -307,12 +308,13 @@ module Users
     # if the status tab is filled, then this tab
     # else first filled tab
     # else mes-dossiers
-    def statut(mes_dossiers, dossiers_invites, dossiers_supprimes, dossier_transfers, params_statut)
+    def statut(mes_dossiers, dossiers_invites, dossiers_supprimes, dossier_transfers, dossiers_close_to_expiration, params_statut)
       tabs = {
         'mes-dossiers' => mes_dossiers.present?,
         'dossiers-invites' => dossiers_invites.present?,
         'dossiers-supprimes' => dossiers_supprimes.present?,
-        'dossiers-transferes' => dossier_transfers.present?
+        'dossiers-transferes' => dossier_transfers.present?,
+        'dossiers-expirant' => dossiers_close_to_expiration.present?
       }
       if tabs[params_statut]
         params_statut

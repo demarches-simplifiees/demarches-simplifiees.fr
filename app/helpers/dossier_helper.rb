@@ -98,6 +98,11 @@ module DossierHelper
     end
   end
 
+  def safe_expiration_date(dossier)
+    date =  dossier.expiration_date.presence || dossier.approximative_expiration_date
+    l(date, format: '%d/%m/%Y')
+  end
+
   def annuaire_link(siren)
     return 'https://www.ispf.pf/bases/Repertoires/Entreprises/Recherche.aspx' if siren.blank?
 

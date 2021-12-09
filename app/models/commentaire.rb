@@ -13,7 +13,6 @@
 #  instructeur_id :bigint
 #
 class Commentaire < ApplicationRecord
-  include FileValidationConcern
   include Discard::Model
 
   self.ignored_columns = [:user_id]
@@ -31,7 +30,7 @@ class Commentaire < ApplicationRecord
   FILE_MAX_SIZE = 20.megabytes
   validates :piece_jointe,
     content_type: AUTHORIZED_CONTENT_TYPES,
-    size: file_size_validation(FILE_MAX_SIZE)
+    size: { less_than: FILE_MAX_SIZE }
 
   default_scope { order(created_at: :asc) }
   scope :updated_since?, -> (date) { where('commentaires.updated_at > ?', date) }

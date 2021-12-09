@@ -135,6 +135,12 @@ Rails.application.routes.draw do
   post '/auth/merge_with_existing_account' => 'omniauth#merge_with_existing_account', as: 'omniauth_merge_with_existing_account'
   post '/auth/merge_with_new_account' => 'omniauth#merge_with_new_account', as: 'omniauth_merge_with_new_account'
 
+  namespace :agent_connect do
+    get '' => 'agent#index'
+    get 'login' => 'agent#login'
+    get 'callback' => 'agent#callback'
+  end
+
   namespace :champs do
     get ':position/siret', to: 'siret#show', as: :siret
     get 'dn', to: 'numero_dn#show', as: :dn

@@ -155,6 +155,7 @@ fr:
             request: "Demande"
             mailbox: "Messagerie"
             dossier_number: "Dossier nº %{dossier_id}"
+            created_date: "- En brouillon depuis le %{date_du_dossier}"
             submit_date: "- Déposé le %{date_du_dossier}"
             print: "imprimer"
             print_dossier: "Tout le dossier"
@@ -199,6 +200,8 @@ fr:
           connection: Se connecter
           are_you_new: Vous êtes nouveau sur %{app_name} ?
           find_procedure: Trouvez votre démarche
+          instructor_or_admin: Vous êtes instructeur ou administrateur ?
+          connect_with_agent_connect: Se connecter avec AgentConnect
       passwords:
         reset_link_sent:
           email_sent_html: "Nous vous avons envoyé un email à l’adresse <strong>%{email}</strong>."
@@ -363,6 +366,10 @@ fr:
       zero: demande de transfert
       one: demande de transfert
       other: demandes de transfert
+    dossiers_close_to_expiration:
+      zero: dossier expirant
+      one: dossier expirant
+      other: dossiers expirant
     dossier_trouve:
       zero: 0 dossier trouvé
       one: 1 dossier trouvé

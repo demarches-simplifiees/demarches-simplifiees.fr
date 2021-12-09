@@ -4,13 +4,14 @@ describe 'As an administrateur I wanna clone a procedure', js: true do
   include ProcedureSpecHelper
 
   let(:administrateur) { create(:administrateur) }
+  let(:procedure_path) { 'service-libelle-de-la-procedure' }
 
   before do
     create(:procedure, :with_service, :with_instructeur,
       aasm_state: :publiee,
       administrateurs: [administrateur],
       libelle: 'libellé de la procédure',
-      path: 'service-libelle-de-la-procedure')
+      path: procedure_path)
     login_as administrateur.user, scope: :user
   end
 
@@ -26,7 +27,8 @@ describe 'As an administrateur I wanna clone a procedure', js: true do
       expect(page).to have_current_path(admin_procedure_path(Procedure.last))
 
       find('#publish-procedure-link').click
-      expect(find_field('procedure_path').value).to eq 'service-libelle-de-la-procedure'
+      expect(find_field('procedure_path').value).to eq Procedure.last.service.suggested_path + '-libelle-de-la-procedure'
+      fill_in 'procedure_path', with: procedure_path
       fill_in 'lien_site_web', with: 'http://some.website'
       click_on 'publish'
 
