@@ -730,6 +730,10 @@ class Procedure < ApplicationRecord
     api_particulier_sources['dgfip'].present?
   end
 
+  def pole_emploi_enabled?
+    api_particulier_sources['pole_emploi'].present?
+  end
+
   private
 
   def validate_for_publication?

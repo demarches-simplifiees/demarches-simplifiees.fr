@@ -1,0 +1,6 @@
+%table.pole-emploi
+  %caption #{t("api_particulier.providers.pole_emploi.scopes.#{scope}.libelle")} :
+  - adresse.slice('INSEECommune', 'codePostal', 'localite', 'ligneVoie', 'ligneComplementDestinataire', 'ligneComplementAdresse', 'ligneComplementDistribution', 'ligneNom').keys.each do |key|
+    %tr
+      %th= t("api_particulier.providers.pole_emploi.scopes.#{scope}.#{key}")
+      %td= adresse[key]

@@ -20,6 +20,12 @@ describe 'fetch API Particulier Data', js: true do
         'foyer_fiscal' => ['adresse', 'annee', 'nombreParts', 'nombrePersonnesCharge', 'situationFamille'],
         'agregats_fiscaux' => ['anneeImpots', 'anneeRevenus', 'impotRevenuNetAvantCorrections', 'montantImpot', 'revenuBrutGlobal', 'revenuFiscalReference', 'revenuImposable'],
         'complements' => ['situationPartielle', 'erreurCorrectif']
+      },
+      'pole_emploi' => {
+        'identite' => ['identifiant', 'civilite', 'nom', 'nomUsage', 'prenom', 'sexe', 'dateNaissance'],
+        'adresse' => ['INSEECommune', 'codePostal', 'localite', 'ligneVoie', 'ligneComplementDestinataire', 'ligneComplementAdresse', 'ligneComplementDistribution', 'ligneNom'],
+        'contact' => ['email', 'telephone', 'telephone2'],
+        'inscription' => ['dateInscription', 'dateCessationInscription', 'codeCertificationCNAV', 'codeCategorieInscription', 'libelleCategorieInscription']
       }
     }
   end
@@ -29,7 +35,7 @@ describe 'fetch API Particulier Data', js: true do
     Flipper.enable(:api_particulier)
   end
 
-  context 'when an administrateur is logged' do
+  context 'when an administrateur is logged in' do
     let(:procedure) do
       create(:procedure, :with_service, :with_instructeur,
              aasm_state: :brouillon,
@@ -56,14 +62,14 @@ describe 'fetch API Particulier Data', js: true do
       expect(page).to have_current_path(admin_procedure_api_particulier_sources_path(procedure))
 
       ['allocataires', 'enfants'].each do |scope|
-        within("##{scope}") do
+        within("#cnaf-#{scope}") do
           check('noms et prénoms')
           check('date de naissance')
           check('sexe')
         end
       end
 
-      within('#adresse') do
+      within('#cnaf-adresse') do
         check('identité')
         check('complément d’identité')
         check('complément d’identité géographique')
@@ -73,14 +79,14 @@ describe 'fetch API Particulier Data', js: true do
         check('pays')
       end
 
-      within('#quotient_familial') do
+      within('#cnaf-quotient_familial') do
         check('quotient familial')
         check('année')
         check('mois')
       end
 
       ['declarant1', 'declarant2'].each do |scope|
-        within("##{scope}") do
+        within("#dgfip-#{scope}") do
           check('nom')
           check('nom de naissance')
           check('prénoms')
@@ -88,13 +94,13 @@ describe 'fetch API Particulier Data', js: true do
         end
       end
 
-      scroll_to(find('#echeance_avis'))
-      within ('#echeance_avis') do
+      scroll_to(find('#dgfip-echeance_avis'))
+      within ('#dgfip-echeance_avis') do
         check('date de recouvrement')
         check("date d’établissement")
       end
 
-      within('#foyer_fiscal') do
+      within('#dgfip-foyer_fiscal') do
         check('année')
         check('adresse')
         check('nombre de parts')
@@ -102,7 +108,7 @@ describe 'fetch API Particulier Data', js: true do
         check('nombre de personnes à charge')
       end
 
-      within('#agregats_fiscaux') do
+      within('#dgfip-agregats_fiscaux') do
         check('revenu brut global')
         check('revenu imposable')
         check('impôt sur le revenu net avant correction')
@@ -112,22 +118,58 @@ describe 'fetch API Particulier Data', js: true do
         check('année des revenus')
       end
 
-      within('#complements') do
+      within('#dgfip-complements') do
         check('erreur correctif')
         check('situation partielle')
       end
 
+      within('#pole_emploi-identite') do
+        check('identifiant')
+        check('civilité')
+        check('nom')
+        check("nom d’usage")
+        check('prénom')
+        check('sexe')
+        check('date de naissance')
+      end
+
+      within('#pole_emploi-adresse') do
+        check('code INSEE de la commune')
+        check('code postal')
+        check('localité')
+        check('voie')
+        check('destinataire')
+        check('adresse')
+        check('distribution')
+        check('nom')
+      end
+
+      within('#pole_emploi-contact') do
+        check('email')
+        check('téléphone')
+        check('téléphone 2')
+      end
+
+      within('#pole_emploi-inscription') do
+        check("date d’inscription")
+        check("date de cessation d’inscription")
+        check('code de certification CNAV')
+        check("code de catégorie d’inscription")
+        check("libellé de catégorie d’inscription")
+      end
+
       click_on 'Enregistrer'
 
-      within('#enfants') do
+      within('#cnaf-enfants') do
         expect(find('input[value=nomPrenom]')).to be_checked
       end
 
       procedure.reload
 
-      expect(procedure.api_particulier_sources.keys).to contain_exactly('cnaf', 'dgfip')
+      expect(procedure.api_particulier_sources.keys).to contain_exactly('cnaf', 'dgfip', 'pole_emploi')
       expect(procedure.api_particulier_sources['cnaf'].keys).to contain_exactly('adresse', 'allocataires', 'enfants', 'quotient_familial')
       expect(procedure.api_particulier_sources['dgfip'].keys).to contain_exactly('declarant1', 'declarant2', 'echeance_avis', 'foyer_fiscal', 'agregats_fiscaux', 'complements')
+      expect(procedure.api_particulier_sources['pole_emploi'].keys).to contain_exactly('identite', 'adresse', 'contact', 'inscription')
 
       procedure.api_particulier_sources.each do |provider, scopes|
         scopes.each do |scope, fields|
@@ -153,17 +195,18 @@ describe 'fetch API Particulier Data', js: true do
     end
   end
 
-  context 'when an user is logged' do
+  context 'when a user is logged in' do
     let(:user) { create(:user) }
-    let(:api_particulier_token) { '29eb50b65f64e8e00c0847a8bbcbd150e1f847' }
     let(:numero_allocataire) { '5843972' }
     let(:code_postal) { '92110' }
     let(:numero_fiscal) { '2097699999077' }
     let(:reference_avis) { '2097699999077' }
     let(:instructeur) { create(:instructeur) }
+    let(:identifiant) { 'georges_moustaki_77' }
+    let(:api_particulier_token) { '29eb50b65f64e8e00c0847a8bbcbd150e1f847' }
 
     let(:procedure) do
-      create(:procedure, :for_individual, :with_service, :with_cnaf, :with_dgfip, :published,
+      create(:procedure, :for_individual, :with_service, :with_cnaf, :with_dgfip, :with_pole_emploi, :published,
              libelle: 'libellé de la procédure',
              path: 'libelle-de-la-procedure',
              instructeurs: [instructeur],
@@ -173,54 +216,124 @@ describe 'fetch API Particulier Data', js: true do
 
     before { login_as user, scope: :user }
 
-    scenario 'it can fill an cnaf champ' do
-      visit commencer_path(path: procedure.path)
-      click_on 'Commencer la démarche'
+    context 'CNAF' do
+      scenario 'it can fill an cnaf champ' do
+        visit commencer_path(path: procedure.path)
+        click_on 'Commencer la démarche'
 
-      choose 'Monsieur'
-      fill_in 'individual_nom',    with: 'Nom'
-      fill_in 'individual_prenom', with: 'Prenom'
+        choose 'Monsieur'
+        fill_in 'individual_nom',    with: 'Nom'
+        fill_in 'individual_prenom', with: 'Prenom'
 
-      click_button('Continuer')
+        click_button('Continuer')
 
-      fill_in 'Le numéro d’allocataire CAF', with: numero_allocataire
-      fill_in 'Le code postal', with: 'wrong_code'
+        fill_in 'Le numéro d’allocataire CAF', with: numero_allocataire
+        fill_in 'Le code postal', with: 'wrong_code'
 
-      blur
-      expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
+        blur
+        expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
 
-      dossier = Dossier.last
-      expect(dossier.champs.first.code_postal).to eq('wrong_code')
+        dossier = Dossier.last
+        expect(dossier.champs.first.code_postal).to eq('wrong_code')
 
-      click_on 'Déposer le dossier'
-      expect(page).to have_content(/code postal doit posséder 5 caractères/)
+        click_on 'Déposer le dossier'
+        expect(page).to have_content(/code postal doit posséder 5 caractères/)
 
-      fill_in 'Le code postal', with: code_postal
+        fill_in 'Le code postal', with: code_postal
 
-      VCR.use_cassette('api_particulier/success/composition_familiale') do
-        perform_enqueued_jobs { click_on 'Déposer le dossier' }
+        VCR.use_cassette('api_particulier/success/composition_familiale') do
+          perform_enqueued_jobs { click_on 'Déposer le dossier' }
+        end
+
+        visit demande_dossier_path(dossier)
+        expect(page).to have_content(/Des données.*ont été reçues depuis la CAF/)
+
+        log_out
+
+        login_as instructeur.user, scope: :user
+
+        visit instructeur_dossier_path(procedure, dossier)
+
+        expect(page).to have_content('code postal et ville 92110 Clichy')
+        expect(page).to have_content('identité Mr SNOW Eric')
+        expect(page).to have_content('complément d’identité ne connait rien')
+        expect(page).to have_content('numéro et rue 109 rue La Boétie')
+        expect(page).to have_content('pays FRANCE')
+        expect(page).to have_content('complément d’identité géographique au nord de paris')
+        expect(page).to have_content('lieu-dit glagla')
+        expect(page).to have_content('ERIC SNOW masculin 07/01/1991')
+        expect(page).to have_content('SANSA SNOW féminin 15/01/1992')
+        expect(page).to have_content('PAUL SNOW masculin 04/01/2018')
+        expect(page).to have_content('1856 6 2021')
       end
+    end
 
-      visit demande_dossier_path(dossier)
-      expect(page).to have_content(/Des données.*ont été reçues depuis la CAF/)
+    context 'Pôle emploi' do
+      let(:api_particulier_token) { '06fd8675601267d2988cbbdef56ecb0de1d45223' }
 
-      log_out
+      scenario 'it can fill a Pôle emploi field' do
+        visit commencer_path(path: procedure.path)
+        click_on 'Commencer la démarche'
 
-      login_as instructeur.user, scope: :user
+        choose 'Monsieur'
+        fill_in 'individual_nom',    with: 'Moustaki'
+        fill_in 'individual_prenom', with: 'Georges'
 
-      visit instructeur_dossier_path(procedure, dossier)
+        click_button('Continuer')
 
-      expect(page).to have_content('code postal et ville 92110 Clichy')
-      expect(page).to have_content('identité Mr SNOW Eric')
-      expect(page).to have_content('complément d’identité ne connait rien')
-      expect(page).to have_content('numéro et rue 109 rue La Boétie')
-      expect(page).to have_content('pays FRANCE')
-      expect(page).to have_content('complément d’identité géographique au nord de paris')
-      expect(page).to have_content('lieu-dit glagla')
-      expect(page).to have_content('ERIC SNOW masculin 07/01/1991')
-      expect(page).to have_content('SANSA SNOW féminin 15/01/1992')
-      expect(page).to have_content('PAUL SNOW masculin 04/01/2018')
-      expect(page).to have_content('1856 6 2021')
+        fill_in "Identifiant", with: 'wrong code'
+
+        blur
+        expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
+
+        dossier = Dossier.last
+        pole_emploi_champ = dossier.champs.third
+
+        expect(pole_emploi_champ.identifiant).to eq('wrong code')
+
+        fill_in "Identifiant", with: identifiant
+
+        VCR.use_cassette('api_particulier/success/situation_pole_emploi') do
+          perform_enqueued_jobs { click_on 'Déposer le dossier' }
+        end
+
+        visit demande_dossier_path(dossier)
+        expect(page).to have_content(/Des données.*ont été reçues depuis Pôle emploi/)
+
+        log_out
+
+        login_as instructeur.user, scope: :user
+
+        visit instructeur_dossier_path(procedure, dossier)
+
+        expect(page).to have_content('identifiant georges_moustaki_77')
+        expect(page).to have_content('civilité M.')
+        expect(page).to have_content('nom Moustaki')
+        expect(page).to have_content("nom d’usage Moustaki")
+        expect(page).to have_content('prénom Georges')
+        expect(page).to have_content('sexe masculin')
+        expect(page).to have_content('date de naissance 3 mai 1934')
+
+        expect(page).to have_content('code INSEE de la commune 75118')
+        expect(page).to have_content('code postal 75018')
+        expect(page).to have_content('localité 75018 Paris')
+        expect(page).to have_content('voie 3 rue des Huttes')
+        expect(page).to have_content('nom MOUSTAKI')
+
+        expect(page).to have_content('email georges@moustaki.fr')
+        expect(page).to have_content('téléphone 0629212921')
+
+        expect(page).to have_content("date d’inscription 3 mai 1965")
+        expect(page).to have_content("date de cessation d’inscription 3 mai 1966")
+        expect(page).to have_content('code de certification CNAV VC')
+        expect(page).to have_content("code de catégorie d’inscription 1")
+        expect(page).to have_content("libellé de catégorie d’inscription PERSONNE SANS EMPLOI DISPONIBLE DUREE INDETERMINEE PLEIN TPS")
+
+        expect(page).not_to have_content('téléphone 2')
+        expect(page).not_to have_content('destinataire')
+        expect(page).not_to have_content('adresse')
+        expect(page).not_to have_content('distribution')
+      end
     end
 
     scenario 'it can fill a DGFiP field' do

@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://demarches-simplifiees.fr/situation-pole-emploi.schema.json",
+  "title": "situation pole emploi",
+  "type": "object",
+  "properties": {
+    "identifiant": {
+      "type": "string"
+    },
+    "civilite": {
+      "type": "string"
+    },
+    "nom": {
+      "type": "string"
+    },
+    "nomUsage": {
+      "type": "string"
+    },
+    "prenom": {
+      "type": "string"
+    },
+    "sexe": {
+      "enum": ["F", "M"]
+    },
+    "dateNaissance": {
+      "format": "date",
+      "type": "string"
+    },
+    "codeCertificationCNAV": {
+      "type": "string"
+    },
+    "telephone": {
+      "type": "string"
+    },
+    "telephone2": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "$defs": {
+      "adresse": {
+        "type": "object",
+        "properties": {
+          "codePostal": {
+            "type": "string"
+          },
+          "INSEECommune": {
+            "type": "string"
+          },
+          "localite": {
+            "type": "string"
+          },
+          "ligneVoie": {
+            "type": "string"
+          },
+          "ligneComplementDestinataire": {
+            "type": "string"
+          },
+          "ligneComplementAdresse": {
+            "type": "string"
+          },
+          "ligneComplementDistribution": {
+            "type": "string"
+          },
+          "ligneNom": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "dateInscription": {
+      "format": "date",
+      "type": "string"
+    },
+    "dateCessationInscription": {
+      "format": "date",
+      "type": "string"
+    },
+    "codeCategorieInscription": {
+      "type": "integer"
+    },
+    "libelleCategroiieInscription": {
+      "type": "string"
+    }
+  }
+}

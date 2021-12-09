@@ -1,0 +1,12 @@
+%table.pole-emploi
+  %caption #{t("api_particulier.providers.pole_emploi.scopes.#{scope}.libelle")} :
+  - identite.slice('identifiant', 'civilite', 'nom', 'nomUsage', 'prenom', 'sexe', 'dateNaissance').keys.each do |key|
+    %tr
+      %th= t("api_particulier.providers.pole_emploi.scopes.#{scope}.#{key}")
+      - case key
+      - when 'dateNaissance'
+        %td= try_format_date(Date.strptime(identite[key], "%Y-%m-%d"))
+      - when 'sexe'
+        %td= t("api_particulier.providers.pole_emploi.scopes.#{scope}.#{identite[key]}")
+      - else
+        %td= identite[key]

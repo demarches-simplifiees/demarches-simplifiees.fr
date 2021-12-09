@@ -68,3 +68,39 @@ en:
             libelle: supplements
             erreurCorrectif: error correction
             situationPartielle: partial status
+      pole_emploi:
+        libelle: Pôle emploi
+        scopes:
+          identite:
+            libelle: Identity
+            identifiant: identifier
+            civilite: civility
+            nom: name
+            nomUsage: common name
+            prenom: first name
+            sexe: gender
+            M: male
+            F: female
+            dateNaissance: date of birth
+          adresse:
+            libelle: Address
+            INSEECommune: INSEE code of the commune
+            codePostal: postcode
+            localite: city
+            ligneVoie: route
+            ligneComplementDestinataire: recipient
+            ligneComplementAdresse: address
+            ligneComplementDistribution: distribution
+            ligneNom: name
+          contact:
+            libelle: Contact
+            email: email
+            telephone: phone number
+            telephone2: phone number 2
+          inscription:
+            libelle: Registration
+            dateInscription: registration date
+            dateCessationInscription: date of deregistration
+            codeCertificationCNAV: CNAV certification code
+            codeCategorieInscription: registration category code
+            libelleCategorieInscription: registration category label
