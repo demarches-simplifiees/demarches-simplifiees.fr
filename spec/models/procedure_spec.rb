@@ -1115,7 +1115,7 @@ describe Procedure do
   end
 
   describe "#destroy" do
-    let(:procedure) { create(:procedure, :closed, :with_type_de_champ) }
+    let(:procedure) { create(:procedure, :closed, :with_type_de_champ, :with_bulk_message) }
 
     before do
       procedure.discard!
