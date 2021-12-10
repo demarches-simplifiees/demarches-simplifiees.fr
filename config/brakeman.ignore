@@ -1,6 +1,26 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "02c4a46707ac4d1cb33b17847aad8fd9f2e1d4201ec9a93b27111d6a3ac1bd29",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "app/services/procedure_archive_service.rb",
+      "line": 131,
+      "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "`cd #{tmp_dir} && zip -r #{File.join(ARCHIVE_CREATION_DIR, \"#{zip_root_folder}.zip\")} #{zip_root_folder}`",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ProcedureArchiveService",
+        "method": "download_and_zip"
+      },
+      "user_input": "tmp_dir",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "42099f4550a8377f455e830e8ab645cecd5806248481c5c646b4e17548c3cb07",
@@ -109,7 +129,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/instructeurs/procedures_controller.rb",
-      "line": 190,
+      "line": 195,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Export.find_or_create_export(params[:export_format], (params[:time_span_type] or \"everything\"), current_instructeur.groupe_instructeurs.where(:procedure => procedure)).file.service_url)",
       "render_path": null,
@@ -143,6 +163,6 @@
       "note": "no user input, fixed value"
     }
   ],
-  "updated": "2021-11-26 13:22:41 +0100",
+  "updated": "2021-12-10 16:34:44 +0100",
   "brakeman_version": "5.1.1"
 }
