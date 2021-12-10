@@ -1,4 +1,3 @@
-
 describe ProcedureArchiveService do
   let(:procedure) { create(:procedure, :published) }
   let(:instructeur) { create(:instructeur) }
@@ -29,7 +28,97 @@ describe ProcedureArchiveService do
     end
   end
 
-  describe '#collect_files_archive' do
+  describe '#old_collect_files_archive' do
+    before do
+      create_dossier_for_month(year, month)
+      create_dossier_for_month(2020, month)
+    end
+
+    after { Timecop.return }
+
+    context 'for a specific month' do
+      let(:archive) { create(:archive, time_span_type: 'monthly', status: 'pending', month: date_month) }
+      let(:year) { 2021 }
+      let(:mailer) { double('mailer', deliver_later: true) }
+
+      it 'collect files' do
+        expect(InstructeurMailer).to receive(:send_archive).and_return(mailer)
+
+        service.collect_files_archive(archive, instructeur)
+
+        archive.file.open do |f|
+          files = ZipTricks::FileReader.read_zip_structure(io: f)
+          expect(files.size).to be 2
+          expect(files.first.filename).to include("export")
+          expect(files.last.filename).to include("attestation")
+        end
+        expect(archive.file.attached?).to be_truthy
+      end
+
+      context 'with a missing file' do
+        let(:pj) do
+          PiecesJustificativesService::FakeAttachment.new(
+            file: StringIO.new('coucou'),
+            filename: "export-dossier.pdf",
+            name: 'pdf_export_for_instructeur',
+            id: 1,
+            created_at: Time.zone.now
+          )
+        end
+
+        let(:bad_pj) do
+          PiecesJustificativesService::FakeAttachment.new(
+            file: nil,
+            filename: "cni.png",
+            name: 'cni.png',
+            id: 2,
+            created_at: Time.zone.now
+          )
+        end
+
+        let(:documents) { [pj, bad_pj] }
+        before do
+          allow(PiecesJustificativesService).to receive(:liste_documents).and_return(documents)
+        end
+
+        it 'collect files without raising exception' do
+          expect { service.collect_files_archive(archive, instructeur) }.not_to raise_exception
+        end
+
+        it 'add bug report to archive' do
+          service.collect_files_archive(archive, instructeur)
+
+          archive.file.open do |f|
+            files = ZipTricks::FileReader.read_zip_structure(io: f)
+            expect(files.size).to be 4
+            expect(files.last.filename).to eq("procedure-#{procedure.id}/LISEZMOI.txt")
+            expect(extract(f, files.last)).to match(/Impossible de .*cni.*png/)
+          end
+        end
+      end
+    end
+
+    context 'for all months' do
+      let(:archive) { create(:archive, time_span_type: 'everything', status: 'pending') }
+      let(:mailer) { double('mailer', deliver_later: true) }
+
+      it 'collect files' do
+        expect(InstructeurMailer).to receive(:send_archive).and_return(mailer)
+
+        service.collect_files_archive(archive, instructeur)
+
+        archive = Archive.last
+        archive.file.open do |f|
+          files = ZipTricks::FileReader.read_zip_structure(io: f)
+          expect(files.size).to be 4
+        end
+        expect(archive.file.attached?).to be_truthy
+      end
+    end
+  end
+
+  describe '#new_collect_files_archive' do
+    before { Flipper.enable_actor(:zip_using_binary, procedure) }
     let!(:dossier) { create_dossier_for_month(year, month) }
     let!(:dossier_2020) { create_dossier_for_month(2020, month) }
 
