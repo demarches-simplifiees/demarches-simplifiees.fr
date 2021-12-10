@@ -682,6 +682,10 @@ class Dossier < ApplicationRecord
     !procedure.brouillon? && !brouillon?
   end
 
+  def deleted_by_instructeur_and_user?
+    termine? && self.hidden_by_instructeur_at.present? && self.hidden_by_user_at.present?
+  end
+
   def expose_legacy_carto_api?
     procedure.expose_legacy_carto_api?
   end
@@ -733,17 +737,30 @@ class Dossier < ApplicationRecord
   end
 
   def discard_and_keep_track!(author, reason)
+    author_is_user = author.is_a?(User)
+    author_is_instructeur = author.is_a?(Instructeur)
+
+    if self.termine? && author_is_instructeur
+      self.update(hidden_by_instructeur_at: Time.zone.now)
+    end
+
+    if self.termine? && author_is_user
+      self.update(hidden_by_user_at: Time.zone.now)
+    end
+
     user_email = user_deleted? ? nil : user_email_for(:notification)
     deleted_dossier = nil
 
     transaction do
-      if keep_track_on_deletion?
+      if deleted_by_instructeur_and_user? || !author_is_instructeur && keep_track_on_deletion?
         log_dossier_operation(author, :supprimer, self)
         deleted_dossier = DeletedDossier.create_from_dossier(self, reason)
       end
 
-      update!(dossier_transfer_id: nil)
-      discard!
+      if deleted_by_instructeur_and_user? || !author_is_instructeur && !termine?
+        update!(dossier_transfer_id: nil)
+        discard!
+      end
     end
 
     if deleted_dossier.present?
