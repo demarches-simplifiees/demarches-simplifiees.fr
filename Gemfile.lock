@@ -118,6 +118,21 @@ GEM
       activerecord (>= 3.2, < 7.0)
       rake (>= 10.4, < 14.0)
     ast (2.4.2)
+    async (1.30.1)
+      console (~> 1.10)
+      nio4r (~> 2.3)
+      timers (~> 4.1)
+    async-http (0.56.5)
+      async (>= 1.25)
+      async-io (>= 1.28)
+      async-pool (>= 0.2)
+      protocol-http (~> 0.22.0)
+      protocol-http1 (~> 0.14.0)
+      protocol-http2 (~> 0.14.0)
+    async-io (1.32.2)
+      async
+    async-pool (0.3.9)
+      async (>= 1.25)
     attr_encrypted (3.1.0)
       encryptor (~> 3.0.0)
     attr_required (1.0.1)
@@ -183,6 +198,8 @@ GEM
       descendants_tracker (~> 0.0.1)
     concurrent-ruby (1.1.9)
     connection_pool (2.2.3)
+    console (1.14.0)
+      fiber-local
     crack (0.4.5)
       rexml
     crass (1.0.6)
@@ -268,6 +285,7 @@ GEM
     faraday-patron (1.0.0)
     faraday-rack (1.0.0)
     ffi (1.15.4)
+    fiber-local (1.0.0)
     flipper (0.20.3)
     flipper-active_record (0.20.3)
       activerecord (>= 5.0, < 7)
@@ -485,6 +503,13 @@ GEM
       actionmailer (>= 3)
       premailer (~> 1.7, >= 1.7.9)
     promise.rb (0.7.4)
+    protocol-hpack (1.4.2)
+    protocol-http (0.22.5)
+    protocol-http1 (0.14.2)
+      protocol-http (~> 0.22)
+    protocol-http2 (0.14.2)
+      protocol-hpack (~> 1.4)
+      protocol-http (~> 0.18)
     pry (0.13.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -724,6 +749,7 @@ GEM
     thread_safe (0.3.6)
     tilt (2.0.10)
     timecop (0.9.4)
+    timers (4.3.3)
     ttfunk (1.7.0)
     typhoeus (1.4.0)
       ethon (>= 0.9.0)
@@ -795,6 +821,8 @@ DEPENDENCIES
   after_party
   anchored
   annotate
+  async
+  async-http
   axe-core-rspec
   bcrypt
   bootsnap (>= 1.4.4)
