@@ -109,7 +109,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/instructeurs/procedures_controller.rb",
-      "line": 190,
+      "line": 195,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Export.find_or_create_export(params[:export_format], (params[:time_span_type] or \"everything\"), current_instructeur.groupe_instructeurs.where(:procedure => procedure)).file.service_url)",
       "render_path": null,
@@ -143,6 +143,6 @@
       "note": "no user input, fixed value"
     }
   ],
-  "updated": "2021-11-26 13:22:41 +0100",
+  "updated": "2021-12-13 17:09:07 +0100",
   "brakeman_version": "5.1.1"
 }
