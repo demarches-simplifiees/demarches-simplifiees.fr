@@ -128,7 +128,7 @@ class ProcedureArchiveService
         end
 
         File.delete(zip_path) if File.exist?(zip_path)
-        puts `cd #{tmp_dir} && zip -r #{zip_path} #{zip_root_folder}`
+        `cd #{tmp_dir} && zip -r #{zip_path} #{zip_root_folder}`
         yield(zip_path)
       ensure
         FileUtils.remove_entry_secure(archive_dir) if Dir.exist?(archive_dir)
