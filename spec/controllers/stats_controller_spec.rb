@@ -14,13 +14,15 @@ describe StatsController, type: :controller do
 
       let(:association) { Procedure.all }
 
-      subject { @controller.send(:last_four_months_hash, association, :updated_at) }
+      subject { @controller.send(:last_four_months_serie, association, :updated_at) }
 
       it do
-        expect(subject).to match_array([
-          [I18n.l(62.days.ago.beginning_of_month, format: "%B %Y"), 2],
-          [I18n.l(31.days.ago.beginning_of_month, format: "%B %Y"), 1]
-        ])
+        expect(subject).to eq({
+          4.months.ago => 0,
+          3.months.ago => 0,
+          62.days.ago => 2,
+          31.days.ago => 1
+        }.transform_keys { |date| I18n.l(date, format: '%B %Y') })
       end
     end
 
@@ -38,13 +40,15 @@ describe StatsController, type: :controller do
 
       let (:association) { Procedure.all }
 
-      subject { @controller.send(:last_four_months_hash, association, :updated_at) }
+      subject { @controller.send(:last_four_months_serie, association, :updated_at) }
 
       it do
-        expect(subject).to eq([
-          [I18n.l(45.days.ago.beginning_of_month, format: "%B %Y"), 1],
-          [I18n.l(1.day.ago.beginning_of_month, format: "%B %Y"), 2]
-        ])
+        expect(subject).to eq({
+          3.months.ago => 0,
+          45.days.ago => 1,
+          1.month.ago => 0,
+          1.day.ago => 2
+        }.transform_keys { |date| I18n.l(date, format: '%B %Y') })
       end
     end
   end
@@ -66,13 +70,13 @@ describe StatsController, type: :controller do
     context "while a super admin is logged in" do
       before { allow(@controller).to receive(:super_admin_signed_in?).and_return(true) }
 
-      subject { @controller.send(:cumulative_hash, association, :updated_at) }
+      subject { @controller.send(:cumulative_month_serie, association, :updated_at) }
 
       it do
         expect(subject).to eq({
-          Time.utc(2016, 8, 1) => 2,
-          Time.utc(2016, 9, 1) => 4,
-          Time.utc(2016, 10, 1) => 5
+          Date.new(2016, 8, 1) => 2,
+          Date.new(2016, 9, 1) => 4,
+          Date.new(2016, 10, 1) => 5
         })
       end
     end
@@ -80,12 +84,12 @@ describe StatsController, type: :controller do
     context "while a super admin is not logged in" do
       before { allow(@controller).to receive(:super_admin_signed_in?).and_return(false) }
 
-      subject { @controller.send(:cumulative_hash, association, :updated_at) }
+      subject { @controller.send(:cumulative_month_serie, association, :updated_at) }
 
       it do
         expect(subject).to eq({
-          Time.utc(2016, 8, 1) => 2,
-          Time.utc(2016, 9, 1) => 4
+          Date.new(2016, 8, 1) => 2,
+          Date.new(2016, 9, 1) => 4
         })
       end
     end
