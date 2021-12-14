@@ -16,7 +16,7 @@
 = f.label :zone do
   = t('zone', scope: 'activerecord.attributes.procedure')
   %span.mandatory *
-= f.collection_select :zone_id, Zone.order(:label), :id, :label, prompt: true
+= f.select :zone_id, grouped_options_for_zone
 
 %h3.header-subsection Logo de la démarche
 = image_upload_and_render f, @procedure.logo
