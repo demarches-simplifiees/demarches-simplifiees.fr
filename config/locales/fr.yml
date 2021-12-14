@@ -24,6 +24,7 @@ fr:
   utils:
     'yes': Oui
     'no': Non
+    i_dont_know: Je ne sais pas
     deconnexion: "Déconnexion"
     pj: "Pièces jointes"
     asterisk_html: Les champs suivis d’un astérisque ( <span class = mandatory> * </span> ) sont obligatoires.
@@ -442,6 +443,8 @@ fr:
         ready: "Validé"
         needs_configuration: "À configurer"
         configure_api_particulier_token: "Configurer le jeton API particulier"
+  zones:
+    ministeres: Ministères
   france_connect:
     particulier:
       password_confirmation:
