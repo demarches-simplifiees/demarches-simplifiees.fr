@@ -182,7 +182,7 @@ describe ProcedureArchiveService do
           service.collect_files_archive(archive, instructeur)
 
           archive.file.open do |f|
-            files = ZipTricks::FileReader.read_zip_structure(io: f)
+            zip_entries = ZipTricks::FileReader.read_zip_structure(io: f)
             structure = [
               "procedure-#{procedure.id}/",
               "procedure-#{procedure.id}/dossier-#{dossier.id}/",
@@ -191,8 +191,14 @@ describe ProcedureArchiveService do
               "procedure-#{procedure.id}/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2021-00-00-#{dossier.id}.pdf",
               "procedure-#{procedure.id}/LISEZMOI.txt"
             ]
-            expect(files.map(&:filename)).to match_array(structure)
-            expect(extract(f, files.last)).to match(/Impossible de .* .*cni.*png/)
+            expect(zip_entries.map(&:filename)).to match_array(structure)
+            zip_entries.map do |entry|
+              next unless entry.filename == "procedure-#{procedure.id}/LISEZMOI.txt"
+              extracted_content = ""
+              extractor = entry.extractor_from(f)
+              extracted_content << extractor.extract(1024 * 1024) until extractor.eof?
+              expect(extracted_content).to match(/Impossible de .* .*cni.*png/)
+            end
           end
         end
       end
