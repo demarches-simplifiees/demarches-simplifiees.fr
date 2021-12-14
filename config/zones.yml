@@ -13,13 +13,13 @@ ministeres:
     label: "Ministère de l'Économie, des Finances et de la Relance"
   - MJS:
     label: "Ministère de la Jeunesse et des Sports"
-  - EN:
+  - MEN:
     label: "Ministère de l'Éducation nationale, de la Jeunesse et des Sports"
   - ESR:
     label: "Ministère de l'Enseignement supérieur, de la Recherche et de l'Innovation"
   - MI:
     label: "Ministère de l'Intérieur"
-  - MInArm:
+  - MINARM:
     label: "Ministère des Armées"
   - MJ:
     label: "Ministère de la Justice"
@@ -27,7 +27,7 @@ ministeres:
     label: "Ministère de la Transition écologique"
   - MCTRCT:
     label: "Ministère de la Cohésion des territoires et des Relations avec les collectivités territoriales"
-  - SPM:
+  - PM:
     label: "Premier ministre"
   - MER:
     label: "Ministère de la Mer"
