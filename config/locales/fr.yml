@@ -462,3 +462,20 @@ fr:
         invalid_password: "Mauvais mot de passe"
         connection_done: "Les comptes FranceConnect et %{application_name} sont à présent fusionnés"
         merger_token_expired: "Le délai pour fusionner les comptes FranceConnect et %{application_name} est expirée. Veuillez recommencer la procédure pour vous fusionner les comptes."
+  shared:
+    procedures:
+      stats:
+        usual_processing_time: "Temps de traitement usuel"
+        processing_time_description: "%{percentile}% des demandes des %{span} derniers jours ont été traitées en moins de %{days} jours."
+        processing_time: "Temps de traitement"
+        since_procedure_creation: "depuis le lancement de la démarche"
+        nb_days: "Nb Jours"
+        processing_time_graph_description: "Temps de traitement entre le passage en instruction et la réponse (accepté, refusé, ou classé sans suite) pour 90% des dossiers"
+        status_evolution_details: "depuis le lancement de la démarche"
+        status_evolution: "Avancée des dossiers"
+        acceptance_rate: "Taux d’acceptation"
+        acceptance_rate_details: "depuis le lancement de la démarche"
+        rate: "Taux"
+        dossiers_count: "Nb dossiers"
+        weekly_distribution: "Répartition par semaine"
+        weekly_distribution_details: "au cours des 6 derniers mois"
