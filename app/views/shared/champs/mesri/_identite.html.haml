@@ -1,0 +1,10 @@
+%table.mesri
+  %caption #{t("api_particulier.providers.mesri.scopes.#{scope}.libelle")} :
+  - identite.slice('nom', 'prenom', 'dateNaissance').keys.each do |key|
+    %tr
+      %th= t("api_particulier.providers.mesri.scopes.#{scope}.#{key}")
+      - case key
+      - when 'dateNaissance'
+        %td= try_format_date(Date.strptime(identite[key], "%Y-%m-%d"))
+      - else
+        %td= identite[key]

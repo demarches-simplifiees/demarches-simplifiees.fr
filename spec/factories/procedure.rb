@@ -216,6 +216,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_mesri do
+      after(:build) do |procedure, _evaluator|
+        build(:type_de_champ_mesri, procedure: procedure)
+      end
+    end
+
     trait :with_explication do
       after(:build) do |procedure, _evaluator|
         build(:type_de_champ_explication, procedure: procedure)

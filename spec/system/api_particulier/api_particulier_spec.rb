@@ -26,6 +26,13 @@ describe 'fetch API Particulier Data', js: true do
         'adresse' => ['INSEECommune', 'codePostal', 'localite', 'ligneVoie', 'ligneComplementDestinataire', 'ligneComplementAdresse', 'ligneComplementDistribution', 'ligneNom'],
         'contact' => ['email', 'telephone', 'telephone2'],
         'inscription' => ['dateInscription', 'dateCessationInscription', 'codeCertificationCNAV', 'codeCategorieInscription', 'libelleCategorieInscription']
+      },
+      'mesri' => {
+        'identifiant' => ['ine'],
+        'identite' => ['nom', 'prenom', 'dateNaissance'],
+        'inscriptions' => ['statut', 'regime', 'dateDebutInscription', 'dateFinInscription', 'codeCommune'],
+        'admissions' => ['statut', 'regime', 'dateDebutAdmission', 'dateFinAdmission', 'codeCommune'],
+        'etablissements' => ['uai', 'nom']
       }
     }
   end
@@ -158,6 +165,37 @@ describe 'fetch API Particulier Data', js: true do
         check("libellé de catégorie d’inscription")
       end
 
+      within('#mesri-identifiant') do
+        check('INE')
+      end
+
+      within('#mesri-identite') do
+        check('nom')
+        check('prénom')
+        check('date de naissance')
+      end
+
+      within('#mesri-inscriptions') do
+        check('statut')
+        check('régime')
+        check("date de début d'inscription")
+        check("date de fin d'inscription")
+        check("code de la commune")
+      end
+
+      within('#mesri-admissions') do
+        check('statut')
+        check('régime')
+        check("date de début d'admission")
+        check("date de fin d'admission")
+        check("code de la commune")
+      end
+
+      within('#mesri-etablissements') do
+        check('UAI')
+        check('nom')
+      end
+
       click_on 'Enregistrer'
 
       within('#cnaf-enfants') do
@@ -166,10 +204,11 @@ describe 'fetch API Particulier Data', js: true do
 
       procedure.reload
 
-      expect(procedure.api_particulier_sources.keys).to contain_exactly('cnaf', 'dgfip', 'pole_emploi')
+      expect(procedure.api_particulier_sources.keys).to contain_exactly('cnaf', 'dgfip', 'pole_emploi', 'mesri')
       expect(procedure.api_particulier_sources['cnaf'].keys).to contain_exactly('adresse', 'allocataires', 'enfants', 'quotient_familial')
       expect(procedure.api_particulier_sources['dgfip'].keys).to contain_exactly('declarant1', 'declarant2', 'echeance_avis', 'foyer_fiscal', 'agregats_fiscaux', 'complements')
       expect(procedure.api_particulier_sources['pole_emploi'].keys).to contain_exactly('identite', 'adresse', 'contact', 'inscription')
+      expect(procedure.api_particulier_sources['mesri'].keys).to contain_exactly('identifiant', 'identite', 'inscriptions', 'admissions', 'etablissements')
 
       procedure.api_particulier_sources.each do |provider, scopes|
         scopes.each do |scope, fields|
@@ -203,10 +242,11 @@ describe 'fetch API Particulier Data', js: true do
     let(:reference_avis) { '2097699999077' }
     let(:instructeur) { create(:instructeur) }
     let(:identifiant) { 'georges_moustaki_77' }
+    let(:ine) { '090601811AB' }
     let(:api_particulier_token) { '29eb50b65f64e8e00c0847a8bbcbd150e1f847' }
 
     let(:procedure) do
-      create(:procedure, :for_individual, :with_service, :with_cnaf, :with_dgfip, :with_pole_emploi, :published,
+      create(:procedure, :for_individual, :with_service, :with_cnaf, :with_dgfip, :with_pole_emploi, :with_mesri, :published,
              libelle: 'libellé de la procédure',
              path: 'libelle-de-la-procedure',
              instructeurs: [instructeur],
@@ -333,6 +373,67 @@ describe 'fetch API Particulier Data', js: true do
         expect(page).not_to have_content('destinataire')
         expect(page).not_to have_content('adresse')
         expect(page).not_to have_content('distribution')
+      end
+    end
+
+    context 'MESRI' do
+      let(:api_particulier_token) { 'c6d23f3900b8fb4b3586c4804c051af79062f54b' }
+
+      scenario 'it can fill a MESRI field' do
+        visit commencer_path(path: procedure.path)
+        click_on 'Commencer la démarche'
+
+        choose 'Madame'
+        fill_in 'individual_nom',    with: 'Dubois'
+        fill_in 'individual_prenom', with: 'Angela Claire Louise'
+
+        click_button('Continuer')
+
+        fill_in "INE", with: 'wrong code'
+
+        blur
+        expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
+
+        dossier = Dossier.last
+        mesri_champ = dossier.champs.fourth
+
+        expect(mesri_champ.ine).to eq('wrong code')
+
+        fill_in "INE", with: ine
+
+        VCR.use_cassette('api_particulier/success/etudiants') do
+          perform_enqueued_jobs { click_on 'Déposer le dossier' }
+        end
+
+        visit demande_dossier_path(dossier)
+        expect(page).to have_content(/Des données.*ont été reçues depuis le MESRI/)
+
+        log_out
+
+        login_as instructeur.user, scope: :user
+
+        visit instructeur_dossier_path(procedure, dossier)
+
+        expect(page).to have_content('INE 090601811AB')
+
+        expect(page).to have_content('nom DUBOIS')
+        expect(page).to have_content('prénom Angela Claire Louise')
+        expect(page).to have_content('date de naissance 24 août 1962')
+
+        expect(page).to have_content('statut inscrit')
+        expect(page).to have_content('régime formation continue')
+        expect(page).to have_content("date de début d'inscription 1 septembre 2022")
+        expect(page).to have_content("date de fin d'inscription 31 août 2023")
+        expect(page).to have_content('code de la commune 75106')
+
+        expect(page).to have_content('statut admis')
+        expect(page).to have_content('régime formation continue')
+        expect(page).to have_content("date de début d'admission 1 septembre 2021")
+        expect(page).to have_content("date de fin d'admission 31 août 2022")
+        expect(page).to have_content('code de la commune 75106')
+
+        expect(page).to have_content('UAI 0751722P')
+        expect(page).to have_content('nom Université Pierre et Marie Curie - UPCM (Paris 6)')
       end
     end
 
