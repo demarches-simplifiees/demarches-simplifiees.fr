@@ -8,6 +8,7 @@ module APIParticulier
       def available_sources
         @procedure.api_particulier_scopes
           .filter_map { |provider_and_scope| raw_scopes[provider_and_scope] }
+          .uniq # remove provider/scope tuples duplicates (e.g. mesri inscriptions)
           .map { |provider, scope| extract_sources(provider, scope) }
           .reduce({}) { |acc, el| acc.deep_merge(el) { |_, this_val, other_val| this_val + other_val } }
       end
