@@ -1,4 +1,7 @@
 describe StatsController, type: :controller do
+  before { Timecop.travel(Date.parse("2021/12/15")) }
+  after { Timecop.return }
+
   describe "#last_four_months_hash" do
     context "while a regular user is logged in" do
       before do
