@@ -1,5 +1,5 @@
 describe 'populate_zones' do
-  let(:rake_task) { Rake::Task['populate_zones'] }
+  let(:rake_task) { Rake::Task['zones:populate_zones'] }
   subject(:run_task) do
     rake_task.invoke
   end

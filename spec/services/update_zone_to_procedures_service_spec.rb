@@ -1,6 +1,6 @@
 describe UpdateZoneToProceduresService do
   before(:all) do
-    Rake::Task['populate_zones'].invoke
+    Rake::Task['zones:populate_zones'].invoke
   end
 
   after(:all) do
