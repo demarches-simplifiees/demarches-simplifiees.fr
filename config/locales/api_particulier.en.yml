@@ -104,3 +104,32 @@ en:
             codeCertificationCNAV: CNAV certification code
             codeCategorieInscription: registration category code
             libelleCategorieInscription: registration category label
+      mesri:
+        libelle: Student status
+        scopes:
+          identifiant:
+            libelle: Identifier
+            ine: INE
+          identite:
+            libelle: Identity
+            nom: last name
+            prenom: first name
+            dateNaissance: date of birth
+          inscriptions:
+            libelle: Registrations
+            statut: status
+            regime: system
+            dateDebutInscription: start date of registration
+            dateFinInscription: end date of registration
+            codeCommune: postal code
+          admissions:
+            libelle: Admissions
+            statut: status
+            regime: system
+            dateDebutAdmission: start date of admission
+            dateFinAdmission: end date of admission
+            codeCommune: postal code
+          etablissements:
+            libelle: Institutions
+            uai: UAI
+            nom: name

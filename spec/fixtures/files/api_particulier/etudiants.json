@@ -1,0 +1,34 @@
+{
+  "identifiant": {
+    "ine": "090601811AB"
+  },
+  "identite": {
+    "nom": "DUBOIS",
+    "prenom": "Angela Claire Louise",
+    "dateNaissance": "1962-08-24"
+  },
+  "admissions": [
+    {
+      "statut": "admis",
+      "regime": "formation continue",
+      "dateDebutAdmission": "2021-09-01T00:00:00.000Z",
+      "dateFinAdmission": "2022-08-31T00:00:00.000Z",
+      "codeCommune": "75106"
+    }
+  ],
+  "inscriptions": [
+    {
+      "statut": "inscrit",
+      "regime": "formation continue",
+      "dateDebutInscription": "2022-09-01",
+      "dateFinInscription": "2023-08-31",
+      "codeCommune": "75106"
+    }
+  ],
+  "etablissements": [
+    {
+      "uai": "0751722P",
+      "nom": "Université Pierre et Marie Curie - UPCM (Paris 6)"
+    }
+  ]
+}
