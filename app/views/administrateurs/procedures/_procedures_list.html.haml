@@ -57,7 +57,7 @@
                     .dropdown-description
                       %h4 Clore
 
-              - if procedure.brouillon?
+              - if procedure.can_be_deleted_by_administrateur?
                 %li
                   = link_to admin_procedure_path(procedure), method: :delete, data: { confirm:  "Voulez-vous vraiment supprimer la démarche ? \nToute suppression est définitive et s'appliquera aux éventuels autres administrateurs de cette démarche !" } do
                     %span.icon.refuse
