@@ -41,7 +41,13 @@ describe APIParticulier::API do
           'pole_emploi_identite',
           'pole_emploi_adresse',
           'pole_emploi_contact',
-          'pole_emploi_inscription'
+          'pole_emploi_inscription',
+          'mesri_identifiant',
+          'mesri_identite',
+          'mesri_inscription_etudiant',
+          'mesri_inscription_autre',
+          'mesri_admission',
+          'mesri_etablissements'
         )
       end
     end

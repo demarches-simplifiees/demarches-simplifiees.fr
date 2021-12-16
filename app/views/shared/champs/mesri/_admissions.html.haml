@@ -1,0 +1,11 @@
+%table.mesri
+  %caption #{t("api_particulier.providers.mesri.scopes.#{scope}.libelle")} :
+  - admissions.each do |admission|
+    - admission.slice('statut', 'regime', 'dateDebutAdmission', 'dateFinAdmission', 'codeCommune').keys.each do |key|
+      %tr
+        %th= t("api_particulier.providers.mesri.scopes.#{scope}.#{key}")
+        - case key
+        - when 'dateDebutAdmission', 'dateFinAdmission'
+          %td= try_format_date(Date.strptime(admission[key], "%Y-%m-%d"))
+        - else
+          %td= admission[key]
