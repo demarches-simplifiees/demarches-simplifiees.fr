@@ -54,6 +54,8 @@ Rails.application.routes.draw do
 
     resources :super_admins, only: [:index, :show, :destroy]
 
+    resources :zones
+
     post 'demandes/create_administrateur'
     post 'demandes/refuse_administrateur'
 
