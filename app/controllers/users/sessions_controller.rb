@@ -19,7 +19,11 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def link_sent
-    @email = params[:email]
+    if Devise.email_regexp.match?(params[:email])
+      @email = params[:email]
+    else
+      redirect_to root_path
+    end
   end
 
   # DELETE /resource/sign_out

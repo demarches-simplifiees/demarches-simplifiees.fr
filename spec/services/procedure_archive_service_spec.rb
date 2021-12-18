@@ -5,6 +5,7 @@ describe ProcedureArchiveService do
   let(:year) { 2020 }
   let(:month) { 3 }
   let(:date_month) { Date.strptime("#{year}-#{month}", "%Y-%m") }
+
   describe '#create_pending_archive' do
     context 'for a specific month' do
       it 'creates a pending archive' do
@@ -27,7 +28,7 @@ describe ProcedureArchiveService do
     end
   end
 
-  describe '#collect_files_archive' do
+  describe '#old_collect_files_archive' do
     before do
       create_dossier_for_month(year, month)
       create_dossier_for_month(2020, month)
@@ -110,6 +111,123 @@ describe ProcedureArchiveService do
         archive.file.open do |f|
           files = ZipTricks::FileReader.read_zip_structure(io: f)
           expect(files.size).to be 4
+        end
+        expect(archive.file.attached?).to be_truthy
+      end
+    end
+  end
+
+  describe '#new_collect_files_archive' do
+    before { Flipper.enable_actor(:zip_using_binary, procedure) }
+    let!(:dossier) { create_dossier_for_month(year, month) }
+    let!(:dossier_2020) { create_dossier_for_month(2020, month) }
+
+    after { Timecop.return }
+
+    context 'for a specific month' do
+      let(:archive) { create(:archive, time_span_type: 'monthly', status: 'pending', month: date_month) }
+      let(:year) { 2021 }
+      let(:mailer) { double('mailer', deliver_later: true) }
+
+      it 'collect files' do
+        expect(InstructeurMailer).to receive(:send_archive).and_return(mailer)
+        service.collect_files_archive(archive, instructeur)
+
+        archive.file.open do |f|
+          files = ZipTricks::FileReader.read_zip_structure(io: f)
+
+          structure = [
+            "procedure-#{procedure.id}/",
+            "procedure-#{procedure.id}/dossier-#{dossier.id}/",
+            "procedure-#{procedure.id}/dossier-#{dossier.id}/pieces_justificatives/",
+            "procedure-#{procedure.id}/dossier-#{dossier.id}/pieces_justificatives/attestation-dossier--05-03-2021-00-00-#{dossier.attestation.pdf.id % 10000}.pdf",
+            "procedure-#{procedure.id}/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2021-00-00-#{dossier.id}.pdf"
+          ]
+          expect(files.map(&:filename)).to match_array(structure)
+        end
+        expect(archive.file.attached?).to be_truthy
+      end
+
+      context 'with a missing file' do
+        let(:pj) do
+          PiecesJustificativesService::FakeAttachment.new(
+            file: StringIO.new('coucou'),
+            filename: "export-dossier.pdf",
+            name: 'pdf_export_for_instructeur',
+            id: 1,
+            created_at: Time.zone.now
+          )
+        end
+
+        let(:bad_pj) do
+          PiecesJustificativesService::FakeAttachment.new(
+            file: nil,
+            filename: "cni.png",
+            name: 'cni.png',
+            id: 2,
+            created_at: Time.zone.now
+          )
+        end
+
+        let(:documents) { [pj, bad_pj] }
+        before do
+          allow(PiecesJustificativesService).to receive(:liste_documents).and_return(documents)
+        end
+
+        it 'collect files without raising exception' do
+          expect { service.collect_files_archive(archive, instructeur) }.not_to raise_exception
+        end
+
+        it 'add bug report to archive' do
+          service.collect_files_archive(archive, instructeur)
+
+          archive.file.open do |f|
+            zip_entries = ZipTricks::FileReader.read_zip_structure(io: f)
+            structure = [
+              "procedure-#{procedure.id}/",
+              "procedure-#{procedure.id}/dossier-#{dossier.id}/",
+              "procedure-#{procedure.id}/dossier-#{dossier.id}/export-dossier-05-03-2020-00-00-1.pdf",
+              "procedure-#{procedure.id}/dossier-#{dossier.id}/pieces_justificatives/",
+              "procedure-#{procedure.id}/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2021-00-00-#{dossier.id}.pdf",
+              "procedure-#{procedure.id}/LISEZMOI.txt"
+            ]
+            expect(zip_entries.map(&:filename)).to match_array(structure)
+            zip_entries.map do |entry|
+              next unless entry.filename == "procedure-#{procedure.id}/LISEZMOI.txt"
+              extracted_content = ""
+              extractor = entry.extractor_from(f)
+              extracted_content << extractor.extract(1024 * 1024) until extractor.eof?
+              expect(extracted_content).to match(/Impossible de .* .*cni.*png/)
+            end
+          end
+        end
+      end
+    end
+
+    context 'for all months' do
+      let(:archive) { create(:archive, time_span_type: 'everything', status: 'pending') }
+      let(:mailer) { double('mailer', deliver_later: true) }
+
+      it 'collect files' do
+        expect(InstructeurMailer).to receive(:send_archive).and_return(mailer)
+
+        service.collect_files_archive(archive, instructeur)
+
+        archive = Archive.last
+        archive.file.open do |f|
+          files = ZipTricks::FileReader.read_zip_structure(io: f)
+          structure = [
+            "procedure-#{procedure.id}/",
+            "procedure-#{procedure.id}/dossier-#{dossier.id}/",
+            "procedure-#{procedure.id}/dossier-#{dossier.id}/pieces_justificatives/",
+            "procedure-#{procedure.id}/dossier-#{dossier.id}/pieces_justificatives/attestation-dossier--05-03-2020-00-00-#{dossier.attestation.pdf.id % 10000}.pdf",
+            "procedure-#{procedure.id}/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2020-00-00-#{dossier.id}.pdf",
+            "procedure-#{procedure.id}/dossier-#{dossier_2020.id}/",
+            "procedure-#{procedure.id}/dossier-#{dossier_2020.id}/export-#{dossier_2020.id}-05-03-2020-00-00-#{dossier_2020.id}.pdf",
+            "procedure-#{procedure.id}/dossier-#{dossier_2020.id}/pieces_justificatives/",
+            "procedure-#{procedure.id}/dossier-#{dossier_2020.id}/pieces_justificatives/attestation-dossier--05-03-2020-00-00-#{dossier_2020.attestation.pdf.id % 10000}.pdf"
+          ]
+          expect(files.map(&:filename)).to match_array(structure)
         end
         expect(archive.file.attached?).to be_truthy
       end
