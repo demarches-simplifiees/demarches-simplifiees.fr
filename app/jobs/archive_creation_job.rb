@@ -1,5 +1,5 @@
 class ArchiveCreationJob < ApplicationJob
-  queue_as :exports
+  queue_as :archives
 
   def perform(procedure, archive, instructeur)
     ProcedureArchiveService

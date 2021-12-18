@@ -62,6 +62,21 @@ describe APIParticulier::Services::SourcesService do
       it { is_expected.to match(pole_emploi_identite_et_adresse) }
     end
 
+    context 'when a procedure has a mesri_identite and a mesri_etablissements scopes' do
+      let(:api_particulier_scopes) { ['mesri_identite', 'mesri_etablissements'] }
+
+      let(:mesri_identite_and_etablissements) do
+        {
+          'mesri' => {
+            'identite' => ['nom', 'prenom', 'dateNaissance'],
+            'etablissements' => ['uai', 'nom']
+          }
+        }
+      end
+
+      it { is_expected.to match(mesri_identite_and_etablissements) }
+    end
+
     context 'when a procedure has an unknown scope' do
       let(:api_particulier_scopes) { ['unknown_scope'] }
 

@@ -24,6 +24,7 @@ fr:
   utils:
     'yes': Oui
     'no': Non
+    i_dont_know: Je ne sais pas
     deconnexion: "Déconnexion"
     pj: "Pièces jointes"
     asterisk_html: Les champs suivis d’un astérisque ( <span class = mandatory> * </span> ) sont obligatoires.
@@ -420,7 +421,7 @@ fr:
     jeton_particulier:
       show:
         configure_token: "Configurer le jeton API Particulier"
-        api_particulier_description_html: "%{app_name} utilise <a href=\"https://api.gouv.fr/les-api/api-particulier\">API Particulier</a> qui permet d'accéder aux données familiales (CAF), aux données fiscales (DGFiP) et au statut pôle-emploi d'un citoyen.<br />Renseignez ici le <a href=\"https://api.gouv.fr/les-api/api-particulier/demande-acces\">jeton API Particulier</a> propre à votre démarche."
+        api_particulier_description_html: "%{app_name} utilise <a href=\"https://api.gouv.fr/les-api/api-particulier\">API Particulier</a> qui permet d'accéder aux données familiales (CAF), aux données fiscales (DGFiP), au statut pôle-emploi et au statut étudiant d'un citoyen.<br />Renseignez ici le <a href=\"https://api.gouv.fr/les-api/api-particulier/demande-acces\">jeton API Particulier</a> propre à votre démarche."
         token_description: "Il doit contenir au minimum 15 caractères."
       update:
         token_ok: "Le jeton a bien été mis à jour"
@@ -434,7 +435,7 @@ fr:
       show:
         title: "Définir les sources de données"
         data_sources: "Sources de données"
-        explication_html: "<p>API Particulier facilite l’accès des administrations aux données familiales (CAF), aux données fiscales (DGFiP) et au statut pôle-emploi d'un citoyen pour simplifier les démarches administratives mises en œuvre par les collectivités et les administrations.<br> Cela permet aux administrations d’accéder à des informations certifiées à la source et ainsi : </p> <ul> <li>de s’affranchir des pièces justificatives lors des démarches en ligne,</li> <li>de réduire le nombre d’erreurs de saisie,</li> <li>d’écarter le risque de fraude documentaire.</li> </ul> <p> <strong>Important&nbsp;:</strong> les disposition de l'article <a href='https://www.legifrance.gouv.fr/affichCodeArticle.do?cidTexte=LEGITEXT000031366350&amp;idArticle=LEGIARTI000031367412&amp;dateTexte=&amp;categorieLien=cid'>L144-8</a> n’autorisent que l’échange des informations strictement nécessaires pour traiter une démarche.<br /><br />En conséquence, ne sélectionnez ici que les données auxquelles vous aurez accès d’un point de vue légal.</p>"
+        explication_html: "<p>API Particulier facilite l’accès des administrations aux données familiales (CAF), aux données fiscales (DGFiP), au statut pôle-emploi et au statut étudiant d'un citoyen pour simplifier les démarches administratives mises en œuvre par les collectivités et les administrations.<br> Cela permet aux administrations d’accéder à des informations certifiées à la source et ainsi : </p> <ul> <li>de s’affranchir des pièces justificatives lors des démarches en ligne,</li> <li>de réduire le nombre d’erreurs de saisie,</li> <li>d’écarter le risque de fraude documentaire.</li> </ul> <p> <strong>Important&nbsp;:</strong> les disposition de l'article <a href='https://www.legifrance.gouv.fr/affichCodeArticle.do?cidTexte=LEGITEXT000031366350&amp;idArticle=LEGIARTI000031367412&amp;dateTexte=&amp;categorieLien=cid'>L144-8</a> n’autorisent que l’échange des informations strictement nécessaires pour traiter une démarche.<br /><br />En conséquence, ne sélectionnez ici que les données auxquelles vous aurez accès d’un point de vue légal.</p>"
       update:
         sources_ok: 'Mise à jour effectuée'
     procedures:
@@ -442,6 +443,8 @@ fr:
         ready: "Validé"
         needs_configuration: "À configurer"
         configure_api_particulier_token: "Configurer le jeton API particulier"
+  zones:
+    ministeres: Ministères
   france_connect:
     particulier:
       password_confirmation:
@@ -462,3 +465,20 @@ fr:
         invalid_password: "Mauvais mot de passe"
         connection_done: "Les comptes FranceConnect et %{application_name} sont à présent fusionnés"
         merger_token_expired: "Le délai pour fusionner les comptes FranceConnect et %{application_name} est expirée. Veuillez recommencer la procédure pour vous fusionner les comptes."
+  shared:
+    procedures:
+      stats:
+        usual_processing_time: "Temps de traitement usuel"
+        processing_time_description: "%{percentile}% des demandes des %{span} derniers jours ont été traitées en moins de %{days} jours."
+        processing_time: "Temps de traitement"
+        since_procedure_creation: "depuis le lancement de la démarche"
+        nb_days: "Nb Jours"
+        processing_time_graph_description: "Temps de traitement entre le passage en instruction et la réponse (accepté, refusé, ou classé sans suite) pour 90% des dossiers"
+        status_evolution_details: "depuis le lancement de la démarche"
+        status_evolution: "Avancée des dossiers"
+        acceptance_rate: "Taux d’acceptation"
+        acceptance_rate_details: "depuis le lancement de la démarche"
+        rate: "Taux"
+        dossiers_count: "Nb dossiers"
+        weekly_distribution: "Répartition par semaine"
+        weekly_distribution_details: "au cours des 6 derniers mois"

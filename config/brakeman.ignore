@@ -32,6 +32,26 @@
       "note": "explicitely sanitized even if we are using html_safe"
     },
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "4254ed68100af9b496883716b1fd658e1943b2385a0d08de5a6ef5c600c1a8f9",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/traitement.rb",
+      "line": 51,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "ActiveRecord::Base.connection.execute(\"select date_trunc('month', r1.processed_at::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.formatted_offset}'::INTERVAL) as month, count(r1.processed_at)\\nfrom (#{Traitement.select(\"max(traitements.processed_at) as processed_at\").termine.where(:dossier => Dossier.state_termine.where(:groupe_instructeur => groupe_instructeurs)).group(:dossier_id).to_sql}) as r1\\ngroup by date_trunc('month', r1.processed_at::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.formatted_offset}'::INTERVAL)\\norder by month desc\\n\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Traitement",
+        "method": "Traitement.count_dossiers_termines_by_month"
+      },
+      "user_input": "Time.zone.formatted_offset",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "483ae8c038244eb3ed709e89846335e2c8ff6579260348ec31d3d03d1c94ad64",
@@ -65,26 +85,6 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
-      "fingerprint": "6c98e520dd368104bb0c81334875010711cd523afc28057ef86a10930f95c4b7",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/stat.rb",
-      "line": 83,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "association.where(date_attribute => ((3.months.ago.beginning_of_month.to_date..max_date))).group(\"DATE_TRUNC('month', #{date_attribute})\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Stat",
-        "method": "last_four_months_hash"
-      },
-      "user_input": "date_attribute",
-      "confidence": "Weak",
-      "note": "no user input, fixed value"
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
       "fingerprint": "bd1df30f95135357b646e21a03d95498874faffa32e3804fc643e9b6b957ee14",
       "check_name": "SQL",
       "message": "Possible SQL injection",
@@ -103,13 +103,33 @@
       "note": "The table and column are escaped, which should make this safe"
     },
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "c0f93612a68c32da58f327e0b5fa33dd42fd8beb2984cf023338c5aadbbdacca",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/stat.rb",
+      "line": 83,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "association.where(date_attribute => ((3.months.ago.beginning_of_month..max_date))).group(\"DATE_TRUNC('month', #{date_attribute}::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.formatted_offset}'::INTERVAL)\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Stat",
+        "method": "last_four_months_hash"
+      },
+      "user_input": "date_attribute",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
       "warning_type": "Redirect",
       "warning_code": 18,
       "fingerprint": "c46b5c9cd6474ffae789f39a2280ba6b5a5a74d3ffa8a38cf8a409f9a027ed0e",
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/instructeurs/procedures_controller.rb",
-      "line": 190,
+      "line": 195,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Export.find_or_create_export(params[:export_format], (params[:time_span_type] or \"everything\"), current_instructeur.groupe_instructeurs.where(:procedure => procedure)).file.service_url)",
       "render_path": null,
@@ -125,13 +145,13 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
-      "fingerprint": "dc6d873aff3dc5e51e3349b17e1f35039b23d0bddbf04224b0f1bca3e4608c1e",
+      "fingerprint": "f2bb9bc6a56e44ab36ee18152c657395841cff354baed0a302b8d18650551529",
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/stat.rb",
       "line": 97,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "association.where(\"#{date_attribute} < ?\", max_date).group(\"DATE_TRUNC('month', #{date_attribute})\")",
+      "code": "association.where(\"#{date_attribute} < ?\", max_date).group(\"DATE_TRUNC('month', #{date_attribute}::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.formatted_offset}'::INTERVAL)\")",
       "render_path": null,
       "location": {
         "type": "method",
@@ -140,9 +160,9 @@
       },
       "user_input": "date_attribute",
       "confidence": "Weak",
-      "note": "no user input, fixed value"
+      "note": ""
     }
   ],
-  "updated": "2021-11-26 13:22:41 +0100",
+  "updated": "2021-12-01 17:39:08 -1000",
   "brakeman_version": "5.1.1"
 }

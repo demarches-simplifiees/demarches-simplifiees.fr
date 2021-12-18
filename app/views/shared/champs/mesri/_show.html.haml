@@ -1,0 +1,25 @@
+- if champ.blank?
+  %p= t('.not_filled')
+- elsif champ.data.blank?
+  %p= t('.fetching_data', ine: champ.ine)
+- else
+  - if profile == 'usager'
+    - sources = champ.procedure.api_particulier_sources['mesri'].keys
+    - i18n_sources = sources.map { |s| I18n.t("#{s}.libelle", scope: 'api_particulier.providers.mesri.scopes') }
+    %p= t('.data_fetched', sources: i18n_sources.to_sentence, ine: champ.ine)
+
+  - if profile == 'instructeur'
+    %p= t('.data_fetched_title')
+
+    - champ.data.slice('identifiant', 'identite', 'inscriptions', 'admissions', 'etablissements').keys.each do |scope|
+      - case scope
+      - when 'identifiant'
+        = render partial: 'shared/champs/mesri/identifiant', locals: { scope: scope, identifiant: champ.data[scope] }
+      - when 'identite'
+        = render partial: 'shared/champs/mesri/identite', locals: { scope: scope, identite: champ.data[scope] }
+      - when 'inscriptions'
+        = render partial: 'shared/champs/mesri/inscriptions', locals: { scope: scope, inscriptions: champ.data[scope] }
+      - when 'admissions'
+        = render partial: 'shared/champs/mesri/admissions', locals: { scope: scope, admissions: champ.data[scope] }
+      - when 'etablissements'
+        = render partial: 'shared/champs/mesri/etablissements', locals: { scope: scope, etablissements: champ.data[scope] }
