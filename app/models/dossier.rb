@@ -16,7 +16,7 @@
 #  en_instruction_at                                  :datetime
 #  groupe_instructeur_updated_at                      :datetime
 #  hidden_at                                          :datetime
-#  hidden_by_instructeur_at                           :datetime
+#  hidden_by_administration_at                        :datetime
 #  hidden_by_user_at                                  :datetime
 #  identity_updated_at                                :datetime
 #  last_avis_updated_at                               :datetime
@@ -206,9 +206,9 @@ class Dossier < ApplicationRecord
 
   scope :archived,      -> { where(archived: true) }
   scope :not_archived,  -> { where(archived: false) }
-  scope :hidden_by_instructeur, -> { where.not(hidden_by_instructeur_at: nil) }
+  scope :hidden_by_administration, -> { where.not(hidden_by_administration_at: nil) }
   scope :not_hidden_by_user, -> { where(hidden_by_user_at: nil) }
-  scope :not_hidden_by_instructeur, -> { where(hidden_by_instructeur_at: nil) }
+  scope :not_hidden_by_administration, -> { where(hidden_by_administration_at: nil) }
 
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
   scope :order_by_created_at, -> (order = :asc) { order(depose_at: order, created_at: order, id: order) }
@@ -237,7 +237,7 @@ class Dossier < ApplicationRecord
   end
   scope :downloadable_sorted, -> {
     state_not_brouillon
-      .not_hidden_by_instructeur
+      .not_hidden_by_administration
       .includes(
         :user,
         :individual,
@@ -688,16 +688,16 @@ class Dossier < ApplicationRecord
     hidden_by_user_at.present?
   end
 
-  def hidden_by_instructeur?
-    hidden_by_instructeur_at.present?
+  def hidden_by_administration?
+    hidden_by_administration_at.present?
   end
 
   def deleted_by_instructeur_and_user?
-    termine? && hidden_by_instructeur? && hidden_by_user?
+    termine? && hidden_by_administration? && hidden_by_user?
   end
 
   def can_be_restored_by_manager?
-    hidden_by_instructeur? || discarded? && !procedure.discarded?
+    hidden_by_administration? || discarded? && !procedure.discarded?
   end
 
   def expose_legacy_carto_api?
@@ -798,8 +798,8 @@ class Dossier < ApplicationRecord
   def restore(author)
     if discarded?
       transaction do
-        if hidden_by_instructeur?
-          update(hidden_by_instructeur_at: nil)
+        if hidden_by_administration?
+          update(hidden_by_administration_at: nil)
         elsif undiscard && keep_track_on_deletion?
           deleted_dossier&.destroy!
           log_dossier_operation(author, :restaurer, self)

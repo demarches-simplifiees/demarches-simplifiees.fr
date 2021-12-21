@@ -15,15 +15,15 @@ describe 'experts/avis/index.html.haml', type: :view do
 
   context 'when the dossier is deleted by instructeur' do
     before do
-      avis.dossier.update!(state: "accepte", hidden_by_instructeur_at: Time.zone.now.beginning_of_day.utc)
-      assign(:avis_by_procedure, avis.expert.avis.includes(dossier: [groupe_instructeur: :procedure]).where(dossiers: { hidden_by_instructeur_at: nil }).to_a.group_by(&:procedure))
+      avis.dossier.update!(state: "accepte", hidden_by_administration_at: Time.zone.now.beginning_of_day.utc)
+      assign(:avis_by_procedure, avis.expert.avis.includes(dossier: [groupe_instructeur: :procedure]).where(dossiers: { hidden_by_administration_at: nil }).to_a.group_by(&:procedure))
     end
     it { is_expected.not_to have_text("avis à donner") }
   end
 
   context 'when the dossier is not deleted by instructeur' do
     before do
-      assign(:avis_by_procedure, avis.expert.avis.includes(dossier: [groupe_instructeur: :procedure]).where(dossiers: { hidden_by_instructeur_at: nil }).to_a.group_by(&:procedure))
+      assign(:avis_by_procedure, avis.expert.avis.includes(dossier: [groupe_instructeur: :procedure]).where(dossiers: { hidden_by_administration_at: nil }).to_a.group_by(&:procedure))
     end
     it { is_expected.to have_text("avis à donner") }
   end
