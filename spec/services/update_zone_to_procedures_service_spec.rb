@@ -1,10 +1,10 @@
 describe UpdateZoneToProceduresService do
-  before(:all) do
+  before(:each) do
     Rake::Task['zones:populate_zones'].invoke
   end
 
-  after(:all) do
-    Zone.destroy_all
+  after(:each) do
+    Rake::Task['zones:populate_zones'].reenable
   end
 
   describe '#call' do
