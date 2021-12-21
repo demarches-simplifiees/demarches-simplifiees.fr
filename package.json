@@ -53,7 +53,7 @@
     "netlify-cli": "^2.61.2",
     "prettier": "^2.3.2",
     "webpack-bundle-analyzer": "^3.7.0",
-    "webpack-dev-server": "^3"
+    "webpack-dev-server": "^4.6.0"
   },
   "scripts": {
     "lint:js": "eslint --ext .js,.jsx,.ts,.tsx ./app/javascript ./config/webpack",
