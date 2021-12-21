@@ -326,7 +326,7 @@ ActiveRecord::Schema.define(version: 2021_12_02_133139) do
     t.datetime "hidden_by_user_at"
     t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
     t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
-    t.datetime "hidden_by_instructeur_at"
+    t.datetime "hidden_by_administration_at"
     t.index ["archived"], name: "index_dossiers_on_archived"
     t.index ["dossier_transfer_id"], name: "index_dossiers_on_dossier_transfer_id"
     t.index ["groupe_instructeur_id"], name: "index_dossiers_on_groupe_instructeur_id"

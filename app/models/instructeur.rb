@@ -256,7 +256,7 @@ class Instructeur < ApplicationRecord
           ON  follows.dossier_id = dossiers.id
           AND follows.unfollowed_at IS NULL
       WHERE "dossiers"."hidden_at" IS NULL
-        AND "dossiers"."hidden_by_instructeur_at" IS NULL
+        AND "dossiers"."hidden_by_administration_at" IS NULL
         AND "dossiers"."state" != 'brouillon'
         AND "dossiers"."groupe_instructeur_id" in (:groupe_instructeur_ids)
     EOF

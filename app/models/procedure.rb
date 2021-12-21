@@ -675,7 +675,7 @@ class Procedure < ApplicationRecord
       dossiers.with_discarded.discarded.find_each do |dossier|
         dossier.restore(author)
       end
-      dossiers.hidden_by_instructeur.find_each do |dossier|
+      dossiers.hidden_by_administration.find_each do |dossier|
         dossier.restore(author)
       end
     end

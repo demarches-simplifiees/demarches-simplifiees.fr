@@ -1056,7 +1056,7 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'when the dossier is already deleted by instructeur' do
-      let!(:dossier) { create(:dossier, :with_individual, state: :accepte, en_construction_at: Time.zone.yesterday.beginning_of_day.utc, user: user, autorisation_donnees: true, hidden_by_instructeur_at: Time.zone.now.beginning_of_day.utc) }
+      let!(:dossier) { create(:dossier, :with_individual, state: :accepte, en_construction_at: Time.zone.yesterday.beginning_of_day.utc, user: user, autorisation_donnees: true, hidden_by_administration_at: Time.zone.now.beginning_of_day.utc) }
       before { subject }
 
       it 'discard the dossier' do
