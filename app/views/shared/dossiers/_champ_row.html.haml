@@ -1,19 +1,19 @@
 - champs.reject(&:exclude_from_view?).each do |c|
   - if c.type_champ == TypeDeChamp.type_champs.fetch(:repetition)
     %tr
-      %th.libelle.repetition{ colspan: 3 }
+      %td.libelle.repetition{ colspan: 3 }
         = "#{c.libelle} :"
     - c.rows.each do |champs|
       = render partial: "shared/dossiers/champ_row", locals: { champs: champs, demande_seen_at: demande_seen_at, profile: profile, repetition: true }
       %tr
-        %th{ colspan: 4 }
+        %td.libelle{ colspan: 4 }
   - else
     %tr
       - if c.type_champ == TypeDeChamp.type_champs.fetch(:header_section)
         %th.header-section{ colspan: 3 }
           = c.libelle
       - else
-        %th.libelle{ class: repetition ? 'padded' : '' }
+        %td.libelle{ class: repetition ? 'padded' : '' }
           = "#{c.libelle} :"
         %td.rich-text
           %div{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
