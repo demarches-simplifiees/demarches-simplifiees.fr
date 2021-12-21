@@ -1,13 +1,15 @@
 describe Instructeur, type: :model do
   let(:admin) { create :administrateur }
-  let!(:procedure) { create :procedure, :published, administrateur: admin }
-  let!(:procedure_2) { create :procedure, :published, administrateur: admin }
-  let!(:procedure_3) { create :procedure, :published, administrateur: admin }
+  let(:procedure) { create :procedure, :published, administrateur: admin }
+  let(:procedure_2) { create :procedure, :published, administrateur: admin }
+  let(:procedure_3) { create :procedure, :published, administrateur: admin }
   let(:instructeur) { create :instructeur, administrateurs: [admin] }
-  let!(:procedure_assign) { assign(procedure) }
+  let(:procedure_assign) { assign(procedure) }
 
   before do
+    procedure_assign
     assign(procedure_2)
+    procedure_3
   end
 
   describe 'follow' do
@@ -81,36 +83,6 @@ describe Instructeur, type: :model do
 
       it { is_expected.to be_falsey }
       it { expect { subject }.not_to change(instructeur.procedures, :count) }
-    end
-  end
-
-  describe "#remove_from_groupe_instructeur" do
-    subject { instructeur.remove_from_groupe_instructeur(procedure_to_remove.defaut_groupe_instructeur) }
-
-    context "with an assigned procedure" do
-      let(:procedure_to_remove) { procedure }
-      let!(:procedure_presentation) { procedure_assign.procedure_presentation }
-
-      it { is_expected.to be_truthy }
-
-      describe "consequences" do
-        before do
-          procedure_assign.build_procedure_presentation
-          procedure_assign.save
-          subject
-        end
-
-        it "removes the assign_to and procedure_presentation" do
-          expect(AssignTo.where(id: procedure_assign).count).to eq(0)
-          expect(ProcedurePresentation.where(assign_to_id: procedure_assign.id).count).to eq(0)
-        end
-      end
-    end
-
-    context "with an already unassigned procedure" do
-      let(:procedure_to_remove) { procedure_3 }
-
-      it { is_expected.to be_falsey }
     end
   end
 
