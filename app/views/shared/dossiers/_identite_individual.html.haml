@@ -1,15 +1,15 @@
 %table.table.vertical.dossier-champs
   %tbody
     %tr
-      %th.libelle Civilité :
+      %td.libelle Civilité :
       %td= individual.gender
     %tr
-      %th.libelle Prénom :
+      %td.libelle Prénom :
       %td= individual.prenom
     %tr
-      %th.libelle Nom :
+      %td.libelle Nom :
       %td= individual.nom
     - if individual.birthdate.present?
       %tr
-        %th.libelle Date de naissance :
+        %td.libelle Date de naissance :
         %td= try_format_date(individual.birthdate)
