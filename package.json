@@ -36,7 +36,6 @@
     "react-popper": "^2.2.5",
     "react-query": "^3.9.7",
     "react-sortable-hoc": "^1.11.0",
-    "react_ujs": "^2.6.1",
     "trix": "^1.2.3",
     "use-debounce": "^5.2.0",
     "webpack": "^4.46.0",
