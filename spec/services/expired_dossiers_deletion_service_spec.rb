@@ -6,7 +6,7 @@ describe ExpiredDossiersDeletionService do
   let(:procedure_2) { create(:procedure, :published) }
   let(:reference_date) { Date.parse("March 8") }
 
-  describe '#process_expired_dossiers_brouillon' do
+  xdescribe '#process_expired_dossiers_brouillon' do
     let(:today) { Time.zone.now.at_midnight }
     let(:date_close_to_expiration) { Time.zone.now - procedure.duree_conservation_dossiers_dans_ds.months + 2.weeks }
     let(:date_expired) { Time.zone.now - procedure.duree_conservation_dossiers_dans_ds.months - 6.days }
