@@ -102,12 +102,8 @@ class ProcedureArchiveService
         FileUtils.remove_entry_secure(archive_dir) if Dir.exist?(archive_dir)
         Dir.mkdir(archive_dir)
 
-        ActiveStorage::DownloadManager
-          .new(download_to_dir: archive_dir)
-          .download_all(attachments: attachments,
-                        on_failure: proc { |_attachment, path, error|
-                         Rails.logger.error("Fail to download filename #{path} in procedure##{@procedure.id}, reason: #{error}")
-                       })
+        download_manager = DownloadManager::ProcedureAttachmentsExport.new(@procedure, attachments, archive_dir)
+        download_manager.download_all
 
         Dir.chdir(tmp_dir) do
           File.delete(zip_path) if File.exist?(zip_path)

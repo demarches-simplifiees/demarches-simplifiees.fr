@@ -1,14 +1,17 @@
-describe ActiveStorage::DownloadManager do
+describe DownloadManager::ParallelDownloadQueue do
   let(:test_dir) { Dir.mktmpdir(nil, Dir.tmpdir) }
   let(:download_to_dir) { test_dir }
+  before do
+    downloadable_manager.on_error = proc { |_, _, _| }
+  end
+
   after { FileUtils.remove_entry_secure(test_dir) if Dir.exist?(test_dir) }
 
-  let(:downloadable_manager) { ActiveStorage::DownloadManager.new(download_to_dir: download_to_dir) }
-
+  let(:downloadable_manager) { DownloadManager::ParallelDownloadQueue.new([attachment], download_to_dir) }
   describe '#download_one' do
-    subject { downloadable_manager.download_one(attachment: attachment, path_in_download_dir: path_in_download_dir, async_internet: double) }
+    subject { downloadable_manager.download_one(attachment: attachment, path_in_download_dir: destination, http_client: double) }
 
-    let(:path_in_download_dir) { 'lol.png' }
+    let(:destination) { 'lol.png' }
     let(:attachment) do
       PiecesJustificativesService::FakeAttachment.new(
         file: StringIO.new('coucou'),
@@ -21,21 +24,20 @@ describe ActiveStorage::DownloadManager do
 
     context 'with a PiecesJustificativesService::FakeAttachment and it works' do
       it 'write attachment.file to disk' do
-        target = File.join(download_to_dir, path_in_download_dir)
+        target = File.join(download_to_dir, destination)
         expect { subject }.to change { File.exist?(target) }
         attachment.file.rewind
         expect(attachment.file.read).to eq(File.read(target))
-        expect(downloadable_manager.errors).not_to have_key(path_in_download_dir)
       end
     end
 
     context 'with a PiecesJustificativesService::FakeAttachment and it fails' do
       it 'write attachment.file to disk' do
         expect(attachment.file).to receive(:read).and_raise("boom")
-        target = File.join(download_to_dir, path_in_download_dir)
+        target = File.join(download_to_dir, destination)
         expect { subject }.to raise_error(StandardError)
         expect(File.exist?(target)).to be_falsey
-        expect(downloadable_manager.errors).to have_key(path_in_download_dir)
+        # expect(downloadable_manager.errors).to have_key(destination)
       end
     end
   end

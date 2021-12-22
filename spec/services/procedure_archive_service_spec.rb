@@ -133,7 +133,7 @@ describe ProcedureArchiveService do
       end
       it 'collect files' do
         expect(InstructeurMailer).to receive(:send_archive).and_return(mailer)
-        VCR.use_cassette('archive/file.to.get') do
+        VCR.use_cassette('archive/file_to_get') do
           service.collect_files_archive(archive, instructeur)
         end
 
@@ -218,7 +218,7 @@ describe ProcedureArchiveService do
       it 'collect files' do
         expect(InstructeurMailer).to receive(:send_archive).and_return(mailer)
 
-        VCR.use_cassette('archive/file.to.get') do
+        VCR.use_cassette('archive/file_to_get') do
           service.collect_files_archive(archive, instructeur)
         end
 
