@@ -123,7 +123,7 @@ ENV \
     MICROSOFT_CLIENT_ID=""\
     MICROSOFT_CLIENT_SECRET=""\
     OTP_SECRET_KEY="" \
-    OUTSCALE_STEP="0" \
+    OUTSCALE_STEP="1" \
     PIPEDRIVE_KEY=""\
     PROCEDURE_DEFAULT_LOGO_SRC="polynesie.png"\
     RAILS_ENV="production"\
