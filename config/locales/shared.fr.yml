@@ -50,6 +50,6 @@ fr:
       mesri:
         show:
           not_filled: non renseigné
-          fetching_data: "La récupération automatique des données pour l'INE %{ine} et en cours."
+          fetching_data: "La récupération automatique des données pour l'INE %{ine} est en cours."
           data_fetched: "Des données concernant %{sources} liées à l'INE %{ine} ont été reçues depuis le MESRI."
           data_fetched_title: "Données obtenues du MESRI"
