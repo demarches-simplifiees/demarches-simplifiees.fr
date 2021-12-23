@@ -12,9 +12,13 @@ module Manager
     # This will be used to set the resource for the `show`, `edit`, and `update`
     # actions.
     #
-    # def find_resource(param)
-    #   Foo.find_by!(slug: param)
-    # end
+    def find_resource(param)
+      if param == "nil"
+        NullZone.new
+      else
+        Zone.find(param)
+      end
+    end
 
     # The result of this lookup will be available as `requested_resource`
 
