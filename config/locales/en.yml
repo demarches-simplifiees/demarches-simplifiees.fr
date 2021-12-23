@@ -244,9 +244,16 @@ en:
         one: User
         other: Users
     attributes:
+      default_attributes: &default_attributes
+        password: 'password'
+        requested_merge_into: 'new email address'
       user:
         siret: 'SIRET number'
-        password: 'password'
+        << : *default_attributes
+      instructeur:
+        << : *default_attributes
+      super_admin:
+        << : *default_attributes
       instructeur:
         password: 'password'
     errors:
@@ -268,6 +275,8 @@ en:
               too_short: 'is too short'
             password_confirmation:
               confirmation: ': The two passwords do not match'
+            requested_merge_into:
+              same: "can't be the same as the old one"
         invite:
           attributes:
             email:
