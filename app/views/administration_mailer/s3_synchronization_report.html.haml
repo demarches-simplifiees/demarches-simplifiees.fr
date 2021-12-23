@@ -1,6 +1,26 @@
 - content_for(:title, "Statistiques d'envoi des pièces jointes")
 
 %p
+  Etat des blobs de la base
+%table{ style: 'width: 80%;', align: 'center' }
+  %thead
+    %tr
+      %th{ style: 'border: 1px solid #0069CC;padding: 5px' }
+        service
+      %th{ style: 'border: 1px solid #0069CC;padding: 5px' }
+        Nombre de fichiers
+      %th{ style: 'border: 1px solid #0069CC;padding: 5px' }
+        Taille totale
+  %tbody
+    - @status[:count].keys.each do |service_name|
+      %tr
+        %td{ style: 'border: 1px solid #0069CC;padding: 5px' }
+          = service_name
+        %td{ style: 'border: 1px solid #0069CC;padding: 5px' }
+          = @status[:count][service_name]
+        %td{ style: 'border: 1px solid #0069CC;padding: 5px' }
+          = @status[:sum][service_name]
+%p
   statistiques d'envoi des fichiers
 = render partial: "stat_table", locals: { stats: @uploaded_stats }
 %p

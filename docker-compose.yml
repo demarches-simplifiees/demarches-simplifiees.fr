@@ -75,6 +75,7 @@ services:
       - DB_DATABASE
       - DB_HOST
       - DB_PASSWORD
+      - DB_POOL
       - DB_USERNAME
       - DEMANDE_INSCRIPTION_ADMIN_PAGE_URL
       - DOC_URL
@@ -100,6 +101,7 @@ services:
       - MICROSOFT_CLIENT_ID
       - MICROSOFT_CLIENT_SECRET
       - OTP_SECRET_KEY
+      - OUTSCALE_STEP
       - PROCEDURE_DEFAULT_LOGO_SRC
       - S3_ACCESS_KEY
       - S3_BUCKET
@@ -153,12 +155,14 @@ services:
       - DB_DATABASE
       - DB_HOST
       - DB_PASSWORD
+      - DB_POOL
       - DB_USERNAME
       - ENCRYPTION_SERVICE_SALT
       - MAILER_LOGO_SRC
       - MAILJET_API_KEY
       - MAILJET_SECRET_KEY
       - PROCEDURE_DEFAULT_LOGO_SRC
+      - OUTSCALE_STEP
       - S3_ACCESS_KEY
       - S3_BUCKET
       - S3_ENDPOINT

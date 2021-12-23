@@ -29,7 +29,7 @@ describe StatsController, type: :controller do
     context "while a super admin is logged in" do
       before do
         create(:procedure, updated_at: 6.months.ago)
-        create(:procedure, updated_at: 45.days.ago)
+        create(:procedure, updated_at: 2.months.ago)
         create(:procedure, updated_at: 1.day.ago)
         create(:procedure, updated_at: 1.day.ago)
 
@@ -45,7 +45,7 @@ describe StatsController, type: :controller do
       it do
         expect(subject).to eq({
           3.months.ago => 0,
-          45.days.ago => 1,
+          2.months.ago => 1,
           1.month.ago => 0,
           1.day.ago => 2
         }.transform_keys { |date| I18n.l(date, format: '%B %Y') })

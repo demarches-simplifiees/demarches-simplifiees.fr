@@ -33,6 +33,8 @@ features = [
   :instructeur_bypass_email_login_token,
   :qrcoded_pdf,
   :visa,
+  :reset_s3,
+  :switch_to_s3,
   :procedure_revisions,
   :procedure_routage_api,
   :procedure_process_expired_dossiers_termine

@@ -16,8 +16,20 @@ openstack:
 s3:
   service: S3
   endpoint: "<%= ENV['S3_ENDPOINT'] %>"
-  bucket: "<%= ENV['S3_BUCKET'] %>"
+  bucket: "<%= ENV.fetch('S3_BUCKET','') %>"
   access_key_id: "<%= ENV['S3_ACCESS_KEY'] %>"
   secret_access_key: "<%= ENV['S3_SECRET_KEY'] %>"
   region: "<%= ENV['S3_REGION'] %>"
   force_path_style: true
+
+local_mirror:
+  service: Mirror
+  primary: local
+  mirrors:
+    - s3
+
+s3_mirror:
+  service: Mirror
+  primary: s3
+  mirrors:
+    - local
