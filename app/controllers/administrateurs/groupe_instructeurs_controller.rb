@@ -125,7 +125,9 @@ module Administrateurs
         end
 
         if procedure.routee?
-          groupe_instructeur.instructeurs << instructeurs
+          instructeurs.each do |instructeur|
+            groupe_instructeur.add(instructeur)
+          end
 
           GroupeInstructeurMailer
             .add_instructeurs(groupe_instructeur, instructeurs, current_user.email)
@@ -139,7 +141,9 @@ module Administrateurs
         else
 
           if instructeurs.present?
-            procedure.defaut_groupe_instructeur.instructeurs << instructeurs
+            instructeurs.each do |instructeur|
+              procedure.defaut_groupe_instructeur.add(instructeur)
+            end
             flash[:notice] = "Les instructeurs ont bien été affectés à la démarche"
           end
         end
@@ -158,7 +162,7 @@ module Administrateurs
       else
         instructeur = Instructeur.find(instructeur_id)
         if procedure.routee?
-          if instructeur.remove_from_groupe_instructeur(groupe_instructeur)
+          if groupe_instructeur.remove(instructeur)
             flash[:notice] = "L’instructeur « #{instructeur.email} » a été retiré du groupe."
             GroupeInstructeurMailer
               .remove_instructeur(groupe_instructeur, instructeur, current_user.email)
@@ -167,7 +171,7 @@ module Administrateurs
             flash[:alert] = "L’instructeur « #{instructeur.email} » n’est pas dans le groupe."
           end
         else
-          if instructeur.remove_from_groupe_instructeur(procedure.defaut_groupe_instructeur)
+          if procedure.defaut_groupe_instructeur.remove(instructeur)
             flash[:notice] = "L’instructeur a bien été désaffecté de la démarche"
           else
             flash[:alert] = "L’instructeur n’est pas affecté à la démarche"
