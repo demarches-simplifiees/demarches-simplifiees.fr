@@ -1,5 +1,5 @@
-class Cron::BlobSynchronizationJob00h < Cron::CronJob
-  self.schedule_expression = "every day at midnight"
+class Cron::BlobSynchronization21hJob < Cron::CronJob
+  self.schedule_expression = "every day at 9 pm"
 
   def perform(*args)
     if ['1', '2'].include?(ENV.fetch('OUTSCALE_STEP'))

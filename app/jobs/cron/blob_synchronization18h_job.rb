@@ -1,4 +1,4 @@
-class Cron::BlobSynchronizationJob18h < Cron::CronJob
+class Cron::BlobSynchronization18hJob < Cron::CronJob
   self.schedule_expression = "every day at 6 pm"
 
   def perform(*args)
