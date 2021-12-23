@@ -12,4 +12,9 @@ $contact-padding: $default-space * 2;
   .hidden {
     display: none;
   }
+
+  ul {
+    margin-bottom: $default-space;
+  }
+
 }
