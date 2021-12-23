@@ -216,11 +216,13 @@ module Instructeurs
 
     def email_notifications
       @procedure = procedure
-      @assign_to = assign_to
+      @assign_to = assign_tos.first
     end
 
     def update_email_notifications
-      assign_to.update!(assign_to_params)
+      assign_tos.each do |assign_to|
+        assign_to.update!(assign_to_params)
+      end
       flash.notice = 'Vos notifications sont enregistrées.'
       redirect_to instructeur_procedure_path(procedure)
     end
@@ -288,10 +290,6 @@ module Instructeurs
 
     def assign_exports
       @exports = Export.find_for_groupe_instructeurs(groupe_instructeur_ids)
-    end
-
-    def assign_to
-      current_instructeur.assign_to.joins(:groupe_instructeur).find_by(groupe_instructeurs: { procedure: procedure })
     end
 
     def assign_tos
