@@ -19,12 +19,11 @@
           = label_tag :email do
             Email
             %span.mandatory *
-          = text_field_tag :email, params[:email], required: true
+          = text_field_tag :email, params[:email], required: true, autocomplete: 'email'
 
       .contact-champ
         = label_tag :type do
           = t('.your_question')
-          %span.mandatory *
         = hidden_field_tag :type, params[:type]
       %dl
         - @options.each do |(question, question_type, link)|
