@@ -6,6 +6,7 @@ class Cron::CronJob < ApplicationJob
     def schedule
       remove if cron_expression_changed?
       set(cron: cron_expression).perform_later if !scheduled?
+      display_schedule
     end
 
     def remove
