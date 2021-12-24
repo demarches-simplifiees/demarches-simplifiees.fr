@@ -49,7 +49,7 @@ class S3Synchronization < ApplicationRecord
     end
 
     def upload(from, to, under_rake, until_time)
-      puts "Synchronizing from #{from} to #{to}#{until_time ? ' until ' + until_time.to_s : ''}"
+      puts "Synchronizing from #{from} to #{to}#{until_time ? ' until ' + until_time.to_s : ''}."
       ActiveStorage::Blob.service
       configs = Rails.configuration.active_storage.service_configurations
       from_service = ActiveStorage::Service.configure from, configs
