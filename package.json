@@ -25,6 +25,8 @@
     "debounce": "^1.2.1",
     "dom4": "^2.1.6",
     "email-butler": "^1.0.13",
+    "esbuild": "^0.14.8",
+    "esbuild-plugin-alias": "^0.2.1",
     "highcharts": "^9.0.0",
     "intersection-observer": "^0.12.0",
     "is-hotkey": "^0.2.0",
@@ -61,9 +63,9 @@
     "webpack-dev-server": "^4.6.0"
   },
   "scripts": {
-    "lint:js": "eslint --ext .js,.jsx,.ts,.tsx ./app/javascript webpack.config.js",
-    "build": "webpack --config webpack.config.js --node-env=production",
-    "build-dev": "webpack --config webpack.config.js",
+    "lint:js": "eslint --ext .js,.jsx,.ts,.tsx app/javascript esbuild.config.js",
+    "build": "NODE_ENV='production' node esbuild.config.js --minify",
+    "build-dev": "node esbuild.config.js --watch",
     "graphql:docs:build": "graphdoc --force",
     "graphql:docs:deploy": "netlify deploy -d ./docs/graphql --prod",
     "graphql:docs:publish": "yarn graphql:docs:build && yarn graphql:docs:deploy"
