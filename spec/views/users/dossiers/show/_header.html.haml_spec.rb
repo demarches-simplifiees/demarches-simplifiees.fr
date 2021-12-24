@@ -12,7 +12,7 @@ describe 'users/dossiers/show/header.html.haml', type: :view do
     expect(rendered).to have_text("Dossier nº #{dossier.id}")
     expect(rendered).to have_text("en construction")
 
-    expect(rendered).to have_selector("ul.tabs")
+    expect(rendered).to have_selector("nav.tabs")
     expect(rendered).to have_link("Résumé", href: dossier_path(dossier))
     expect(rendered).to have_link("Demande", href: demande_dossier_path(dossier))
   end
