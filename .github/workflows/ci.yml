@@ -175,8 +175,8 @@ jobs:
         platforms: linux/amd64
         push: ${{ github.event_name != 'pull_request' }}
         tags: ${{ steps.meta.outputs.tags }}
-        cache-from: type=local,src=/tmp/.buildx-cache
-        cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
+        cache-from: type=registry,ref=${{env.repo}}:buildcache
+        cache-to:   type=registry,ref=${{env.repo}}:buildcache,mode=max
     - name: Update repo description
       uses: peter-evans/dockerhub-description@v2
       with:
