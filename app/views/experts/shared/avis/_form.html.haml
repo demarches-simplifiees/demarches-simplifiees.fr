@@ -5,12 +5,11 @@
 
     = form_for avis, url: url, html: { class: 'form', data: { persisted_content_id: "expert-ask-avis-for-dossier-#{@avis.dossier.id}" } } do |f|
       - hidden_field_id = SecureRandom.uuid
-      = hidden_field_tag  'avis[emails]', nil, data: { uuid: hidden_field_id }
+      = hidden_field_tag  'avis[emails]', nil, 'aria-labelledby': hidden_field_id, 'data-source': true
+      %span.hidden{ id: hidden_field_id } Entrez les adresses email des personnes invitées à donner leur avis
       = react_component("ComboMultipleDropdownList",
-          options: [],
-          selected: [], disabled: [],
-          hiddenFieldId: hidden_field_id,
-          label: 'avis_emails',
+          options: [], selected: [], disabled: [],
+          labelledby: hidden_field_id,
           acceptNewValues: true)
       = f.text_area :introduction, rows: 3, value: avis.introduction || 'Bonjour, merci de me donner votre avis sur ce dossier.', required: true, class: 'persisted-input'
       %p.tab-title Ajouter une pièce jointe

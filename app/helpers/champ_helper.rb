@@ -20,9 +20,17 @@ module ChampHelper
     simple_format(auto_linked_text, {}, sanitize: false)
   end
 
+  def input_id(champ)
+    "#{champ.stable_id}-#{champ.id}"
+  end
+
+  def labelledby_id(champ)
+    "label-#{input_id(champ)}"
+  end
+
   def describedby_id(champ)
     if champ.description.present?
-      "desc-#{champ.type_de_champ.id}-#{champ.row}"
+      "desc-#{input_id(champ)}"
     end
   end
 

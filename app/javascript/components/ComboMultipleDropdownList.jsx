@@ -27,14 +27,11 @@ const Context = createContext();
 
 function ComboMultipleDropdownList({
   options,
-  hiddenFieldId,
+  labelledby,
+  describedby,
   selected,
-  label,
   acceptNewValues = false
 }) {
-  if (label == undefined) {
-    label = 'Choisir une option';
-  }
   if (!Array.isArray(options[0])) {
     options = options.filter((o) => o).map((o) => [o, o]);
   }
@@ -77,8 +74,11 @@ function ComboMultipleDropdownList({
     [term, selections.join(','), newValues.join(',')]
   );
   const hiddenField = useMemo(
-    () => document.querySelector(`input[data-uuid="${hiddenFieldId}"]`),
-    [hiddenFieldId]
+    () =>
+      document.querySelector(
+        `input[data-source][aria-labelledby="${labelledby}"]`
+      ),
+    [labelledby]
   );
   const awaitFormSubmit = useDeferredSubmit(hiddenField);
 
@@ -157,10 +157,17 @@ function ComboMultipleDropdownList({
     }
   };
 
+  const removedLabelledby = `${labelledby}-remove`;
+  const selectedLabelledby = `${labelledby}-selected`;
+
   return (
-    <Combobox openOnFocus={true} onSelect={onSelect} aria-label={label}>
+    <Combobox openOnFocus={true} onSelect={onSelect}>
       <ComboboxTokenLabel onRemove={onRemove}>
+        <span id={removedLabelledby} className="hidden">
+          désélectionner
+        </span>
         <ul
+          id={selectedLabelledby}
           aria-live="polite"
           aria-atomic={true}
           data-reach-combobox-token-list
@@ -168,6 +175,7 @@ function ComboMultipleDropdownList({
           {selections.map((selection) => (
             <ComboboxToken
               key={selection}
+              describedby={removedLabelledby}
               value={optionLabelByValue(selection)}
             />
           ))}
@@ -179,6 +187,8 @@ function ComboMultipleDropdownList({
           onKeyDown={onKeyDown}
           onBlur={onBlur}
           autocomplete={false}
+          aria-labelledby={`${labelledby} ${selectedLabelledby}`}
+          aria-describedby={describedby}
         />
       </ComboboxTokenLabel>
       {results && (results.length > 0 || !acceptNewValues) && (
@@ -245,42 +255,37 @@ ComboboxSeparator.propTypes = {
   value: PropTypes.string
 };
 
-function ComboboxToken({ value, ...props }) {
+function ComboboxToken({ value, describedby, ...props }) {
   const { selectionsRef, onRemove } = useContext(Context);
   useEffect(() => {
     selectionsRef.current.push(value);
   });
 
   return (
-    <li
-      data-reach-combobox-token
-      tabIndex="0"
-      onKeyDown={(event) => {
-        if (event.key === 'Backspace') {
-          onRemove(value);
-        }
-      }}
-      {...props}
-    >
+    <li {...props}>
       <button
         type="button"
-        tabIndex={-1}
-        data-combobox-remove-token
+        data-reach-combobox-token
         onClick={() => {
           onRemove(value);
         }}
+        onKeyDown={(event) => {
+          if (event.key === 'Backspace') {
+            onRemove(value);
+          }
+        }}
+        aria-describedby={describedby}
       >
-        <XIcon className="icon-size" />
-        <span className="screen-reader-text">Désélectionner</span>
+        <XIcon className="icon-size" aria-hidden="true" />
+        {value}
       </button>
-      {value}
     </li>
   );
 }
 
 ComboboxToken.propTypes = {
   value: PropTypes.string,
-  label: PropTypes.string
+  describedby: PropTypes.string
 };
 
 ComboMultipleDropdownList.propTypes = {
@@ -292,11 +297,11 @@ ComboMultipleDropdownList.propTypes = {
       )
     )
   ]),
-  hiddenFieldId: PropTypes.string,
   selected: PropTypes.arrayOf(PropTypes.string),
   arraySelected: PropTypes.arrayOf(PropTypes.array),
-  label: PropTypes.string,
-  acceptNewValues: PropTypes.bool
+  acceptNewValues: PropTypes.bool,
+  labelledby: PropTypes.string,
+  describedby: PropTypes.string
 };
 
 export default ComboMultipleDropdownList;

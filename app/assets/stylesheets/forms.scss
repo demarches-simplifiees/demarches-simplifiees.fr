@@ -331,11 +331,6 @@
   [data-reach-combobox-token]:focus {
     background-color: $black;
     color: $white;
-
-    [data-combobox-remove-token] {
-      background-color: $black;
-      color: $white;
-    }
   }
 
   .editable-champ {
@@ -540,7 +535,7 @@
   padding: $default-spacer;
 }
 
-[data-combobox-remove-token] {
+[data-reach-combobox-token] {
   cursor: pointer;
   background-color: transparent;
   background-image: none;

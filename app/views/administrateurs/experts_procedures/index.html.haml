@@ -43,15 +43,14 @@
             html: { class: 'form' } do |f|
 
             .instructeur-wrapper
-              %p.notice Pendant l'instruction d’un dossier, les instructeurs peuvent demander leur avis à un ou plusieurs experts.
-              %p.notice Entrez les adresses email des experts que vous souhaitez affecter à cette démarche
               - hidden_field_id = SecureRandom.uuid
-              = hidden_field_tag :emails, nil, data: { uuid: hidden_field_id }
+              %p.notice Pendant l'instruction d’un dossier, les instructeurs peuvent demander leur avis à un ou plusieurs experts.
+              %p.notice{ id: hidden_field_id } Entrez les adresses email des experts que vous souhaitez affecter à cette démarche
+              = hidden_field_tag :emails, nil, 'aria-labelledby': hidden_field_id, 'data-source': true
               = react_component("ComboMultipleDropdownList",
                 options: [],
                 selected: [], disabled: [],
-                hiddenFieldId: hidden_field_id,
-                label: 'email expert',
+                labelledby: hidden_field_id,
                 acceptNewValues: true)
 
               = f.submit 'Affecter à la démarche', class: 'button primary send'

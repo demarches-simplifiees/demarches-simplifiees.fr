@@ -97,8 +97,13 @@
                 #custom-menu.dropdown-content.fade-in-down
                   = form_tag update_displayed_fields_instructeur_procedure_path(@procedure), method: :patch, class: 'dropdown-form large columns-form' do
                     - hidden_field_id = SecureRandom.uuid
-                    = hidden_field_tag :values, nil, data: { uuid: hidden_field_id }
-                    = react_component("ComboMultipleDropdownList", options: @displayed_fields_options, selected: @displayed_fields_selected, disabled: [], hiddenFieldId: hidden_field_id, label: 'colonne')
+                    = hidden_field_tag :values, nil, 'aria-labelledby': hidden_field_id, 'data-source': true
+                    %span.hidden{ id: hidden_field_id } Colonne à afficher
+                    = react_component("ComboMultipleDropdownList",
+                      options: @displayed_fields_options,
+                      selected: @displayed_fields_selected,
+                      disabled: [],
+                      labelledby: hidden_field_id)
 
                     = submit_tag "Enregistrer", class: 'button'
 

@@ -3,14 +3,15 @@
   .card-title Affectation des instructeurs
   = form_for :instructeur, url: { action: :add_instructeur, id: groupe_instructeur.id }, html: { class: 'form' } do |f|
     .instructeur-wrapper
-      - if !procedure.routee?
-        %p.notice Entrez les adresses email des instructeurs que vous souhaitez affecter à cette démarche
       - hidden_field_id = SecureRandom.uuid
-      = hidden_field_tag :emails, nil, data: { uuid: hidden_field_id }
+      - if !procedure.routee?
+        %p.notice{ id: hidden_field_id } Entrez les adresses email des instructeurs que vous souhaitez affecter à cette démarche
+      - else
+        %span.hidden{ id: hidden_field_id } Entrez les adresses email des instructeurs que vous souhaitez affecter à cette démarche
+      = hidden_field_tag :emails, nil, 'aria-labelledby': hidden_field_id, 'data-source': true
       = react_component("ComboMultipleDropdownList",
         options: available_instructeur_emails, selected: [], disabled: [],
-        hiddenFieldId: hidden_field_id,
-        label: 'email instructeur',
+        labelledby: hidden_field_id,
         acceptNewValues: true)
 
       = f.submit 'Affecter', class: 'button primary send'

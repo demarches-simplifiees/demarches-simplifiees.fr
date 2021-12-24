@@ -1,4 +1,5 @@
-.tab-title= "Envoyer ce dossier à un autre instructeur"
+- hidden_field_id = SecureRandom.uuid
+.tab-title{ id: hidden_field_id } Envoyer ce dossier à un autre instructeur
 
 - if potential_recipients.empty?
   %p.tab-paragraph
@@ -8,8 +9,10 @@
     Le destinataire suivra automatiquement le dossier
   = form_for dossier, url: send_to_instructeurs_instructeur_dossier_path(dossier.procedure, dossier), method: :post, html: { class: 'form recipients-form' } do |f|
     .flex.justify-start.align-start
-      - hidden_field_id = SecureRandom.uuid
-      = hidden_field_tag :recipients, nil, data: { uuid: hidden_field_id }
-      = react_component("ComboMultipleDropdownList", options: potential_recipients.map{|r| [r.email, r.id]}, selected: [], disabled: [], hiddenFieldId: hidden_field_id, label: "email instructeur")
+      = hidden_field_tag :recipients, nil, 'aria-labelledby': hidden_field_id, 'data-source': true
+      = react_component("ComboMultipleDropdownList",
+        options: potential_recipients.map{|r| [r.email, r.id]},
+        selected: [], disabled: [],
+        labelledby: hidden_field_id)
 
       = f.submit "Envoyer", class: "button large send gap-left"
