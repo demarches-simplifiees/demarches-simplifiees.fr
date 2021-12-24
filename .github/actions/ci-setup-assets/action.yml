@@ -9,7 +9,6 @@ runs:
       with:
         path: |
           public/assets
-          public/packs-test
         key: asset-cache-${{ runner.os }}-${{ github.ref }}-${{ github.sha }}
         restore-keys: |
           asset-cache-${{ runner.os }}-${{ github.ref }}-${{ github.sha }}

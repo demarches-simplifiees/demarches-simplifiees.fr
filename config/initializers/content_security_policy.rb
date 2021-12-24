@@ -23,8 +23,6 @@ Rails.application.config.content_security_policy do |policy|
     # Les CSP ne sont pas appliquées en dev: on notifie cependant une url quelconque de la violation
     # pour détecter les erreurs lors de l'ajout d'une nouvelle brique externe durant le développement
     policy.report_uri "http://#{ENV['APP_HOST']}/csp/"
-    # En développement, quand bin/webpack-dev-server est utilisé, on autorise les requêtes faites par le live-reload
-    policy.connect_src(*policy.connect_src, "ws://localhost:3035", "http://localhost:3035")
   end
 end
 # rubocop:enable DS/ApplicationName
