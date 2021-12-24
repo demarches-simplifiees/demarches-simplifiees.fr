@@ -270,7 +270,9 @@ describe Procedure do
         </a>
         MSG
         let(:procedure) { build(:procedure, monavis_embed: monavis_issue_phillipe) }
-        it { expect(procedure.valid?).to eq(true) }
+        it {
+          expect(procedure.valid?).to eq(true)
+        }
       end
     end
 

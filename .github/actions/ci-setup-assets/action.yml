@@ -10,7 +10,6 @@ runs:
         path: |
           public/assets
           public/packs-test
-          tmp/cache/webpacker
         key: asset-cache-${{ runner.os }}-${{ github.ref }}-${{ github.sha }}
         restore-keys: |
           asset-cache-${{ runner.os }}-${{ github.ref }}-${{ github.sha }}
