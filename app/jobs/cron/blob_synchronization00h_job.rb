@@ -3,7 +3,7 @@ class Cron::BlobSynchronization00hJob < Cron::CronJob
 
   def perform(*args)
     if ['1', '2'].include?(ENV.fetch('OUTSCALE_STEP'))
-      S3Synchronization.synchronize(false, Time.zone.now + 175.minutes)
+      S3Synchronization.synchronize(false, Time.zone.now + 135.minutes)
     end
   end
 end
