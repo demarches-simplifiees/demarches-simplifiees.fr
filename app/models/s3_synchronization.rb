@@ -56,14 +56,16 @@ class S3Synchronization < ApplicationRecord
 
       ActiveStorage::Blob.service = from_service
 
-      progress = ProgressReport.new(blobs_to_upload(from).count) if under_rake
+      progress = under_rake ? ProgressReport.new(blobs_to_upload(from).count) : nil
       pool = Concurrent::FixedThreadPool.new(POOL_SIZE)
 
       blobs_to_upload(from).find_each do |blob|
-        pool.post { upload_blob_if_present(from_service, configs, to, progress, until_time, blob) }
+        break if until_time.present? && Time.zone.now > until_time
+        enqueue(pool) { upload_blob_if_present(from_service, configs, to, progress, until_time, blob) }
       end
       blobs_to_verify(from).find_each do |blob|
-        pool.post { download_and_verify(configs, to, progress, until_time, blob) }
+        break if until_time.present? && Time.zone.now > until_time
+        enqueue(pool) { download_and_verify(configs, to, progress, until_time, blob) }
       end
       pool.shutdown
       pool.wait_for_termination
@@ -78,6 +80,14 @@ class S3Synchronization < ApplicationRecord
     end
 
     private
+
+    def enqueue(pool, &block)
+      if pool.queue_length > 2 * POOL_SIZE
+        yield
+      else
+        pool.post(&block)
+      end
+    end
 
     def blobs_to_upload(from_service)
       blobs(from_service, [false, nil])
