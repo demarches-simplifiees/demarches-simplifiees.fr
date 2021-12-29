@@ -63,6 +63,8 @@ class User < ApplicationRecord
 
   before_validation -> { sanitize_email(:email) }
 
+  validate :does_not_merge_on_self, if: :requested_merge_into_id_changed?
+
   def validate_password_complexity?
     administrateur?
   end
@@ -223,11 +225,20 @@ class User < ApplicationRecord
   end
 
   def ask_for_merge(requested_user)
-    update(requested_merge_into: requested_user)
-    UserMailer.ask_for_merge(self, requested_user.email).deliver_later
+    if update(requested_merge_into: requested_user)
+      UserMailer.ask_for_merge(self, requested_user.email).deliver_later
+      return true
+    else
+      return false
+    end
   end
 
   private
+
+  def does_not_merge_on_self
+    return if requested_merge_into_id != self.id
+    errors.add(:requested_merge_into, :same)
+  end
 
   def link_invites!
     Invite.where(email: email).update_all(user_id: id)
