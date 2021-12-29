@@ -244,6 +244,7 @@ fr:
     attributes:
       default_attributes: &default_attributes
         password: 'Le mot de passe'
+        requested_merge_into: 'La nouvelle adresse email'
       user:
         siret: 'Numéro SIRET'
         << : *default_attributes
@@ -273,6 +274,8 @@ fr:
               not_strong: 'n’est pas assez complexe'
             password_confirmation:
               confirmation: ': Les deux mots de passe ne correspondent pas'
+            requested_merge_into:
+              same: "ne peut être identique à l’ancienne"
         invite:
           attributes:
             email:
