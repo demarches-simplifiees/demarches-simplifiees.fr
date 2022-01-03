@@ -268,8 +268,7 @@ Rails.application.routes.draw do
         get 'demande'
         get 'messagerie'
         post 'commentaire' => 'dossiers#create_commentaire'
-        post 'ask_deletion'
-        patch 'hide_dossier'
+        patch 'delete_dossier'
         get 'attestation'
         get 'transferer', to: 'dossiers#transferer'
       end

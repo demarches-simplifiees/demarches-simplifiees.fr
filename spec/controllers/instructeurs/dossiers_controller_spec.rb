@@ -762,9 +762,10 @@ describe Instructeurs::DossiersController, type: :controller do
       end
     end
 
-    context 'when the instructeur want to delete a dossier with a decision' do
+    context 'when the instructeur want to delete a dossier with a decision and already hidden by user' do
       before do
         dossier.accepter!(instructeur: instructeur, motivation: "le dossier est correct")
+        dossier.update!(hidden_by_user_at: Time.zone.now.beginning_of_day.utc)
         allow(DossierMailer).to receive(:notify_instructeur_deletion_to_user).and_return(double(deliver_later: nil))
         subject
       end
@@ -787,6 +788,31 @@ describe Instructeurs::DossiersController, type: :controller do
 
       it 'discard the dossier' do
         expect(dossier.reload.hidden_at).not_to eq(nil)
+      end
+    end
+
+    context 'when the instructeur want to delete a dossier with a decision and not hidden by user' do
+      before do
+        dossier.accepter!(instructeur: instructeur, motivation: "le dossier est correct")
+        allow(DossierMailer).to receive(:notify_instructeur_deletion_to_user).and_return(double(deliver_later: nil))
+        subject
+      end
+
+      it 'does not deletes previous logs and does not add a suppression log' do
+        expect(DossierOperationLog.where(dossier_id: dossier.id).count).to eq(2)
+        expect(DossierOperationLog.where(dossier_id: dossier.id).last.operation).not_to eq('supprimer')
+      end
+
+      it 'does not send an email to the user' do
+        expect(DossierMailer).not_to have_received(:notify_instructeur_deletion_to_user).with(DeletedDossier.where(dossier_id: dossier.id).first, dossier.user.email)
+      end
+
+      it 'add a record into deleted_dossiers table' do
+        expect(DeletedDossier.where(dossier_id: dossier.id).count).to eq(0)
+      end
+
+      it 'does not discard the dossier' do
+        expect(dossier.reload.hidden_at).to eq(nil)
       end
     end
 
