@@ -10,4 +10,5 @@
 #
 class Zone < ApplicationRecord
   validates :acronym, presence: true, uniqueness: true
+  has_many :procedures, -> { order(published_at: :desc) }, inverse_of: :zone
 end

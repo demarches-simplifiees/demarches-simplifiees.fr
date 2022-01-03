@@ -20,7 +20,7 @@ module Instructeurs
       if groupe_instructeur.instructeurs.include?(instructeur)
         flash[:alert] = "L’instructeur « #{instructeur_email} » est déjà dans le groupe."
       else
-        groupe_instructeur.instructeurs << instructeur
+        groupe_instructeur.add(instructeur)
         flash[:notice] = "L’instructeur « #{instructeur_email} » a été affecté au groupe."
         GroupeInstructeurMailer
           .add_instructeurs(groupe_instructeur, [instructeur], current_user.email)
@@ -35,7 +35,7 @@ module Instructeurs
         flash[:alert] = "Suppression impossible : il doit y avoir au moins un instructeur dans le groupe"
       else
         instructeur = Instructeur.find(instructeur_id)
-        if instructeur.remove_from_groupe_instructeur(groupe_instructeur)
+        if groupe_instructeur.remove(instructeur)
           flash[:notice] = "L’instructeur « #{instructeur.email} » a été retiré du groupe."
           GroupeInstructeurMailer
             .remove_instructeur(groupe_instructeur, instructeur, current_user.email)

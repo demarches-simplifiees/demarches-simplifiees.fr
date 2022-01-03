@@ -3,7 +3,7 @@
   - placeholder = t('views.shared.dossiers.messages.form.write_message_to_administration_placeholder')
   - if instructeur_signed_in? || administrateur_signed_in?
     - placeholder = t('views.shared.dossiers.messages.form.write_message_placeholder')
-  = f.text_area :body, rows: 5, placeholder: placeholder, required: true, class: 'message-textarea persisted-input'
+  = f.text_area :body, rows: 5, placeholder: placeholder, title: placeholder, required: true, class: 'message-textarea persisted-input'
   .flex.justify-between.wrap
     - disable_piece_jointe = defined?(disable_piece_jointe) ? disable_piece_jointe : false
     %div
