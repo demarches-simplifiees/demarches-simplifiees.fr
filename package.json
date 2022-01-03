@@ -36,7 +36,6 @@
     "react-popper": "^2.2.5",
     "react-query": "^3.9.7",
     "react-sortable-hoc": "^1.11.0",
-    "react_ujs": "^2.6.1",
     "trix": "^1.2.3",
     "use-debounce": "^5.2.0",
     "webpack": "^4.46.0",
@@ -51,10 +50,10 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.25.1",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "netlify-cli": "^2.61.2",
+    "netlify-cli": "^8.3.0",
     "prettier": "^2.3.2",
     "webpack-bundle-analyzer": "^3.7.0",
-    "webpack-dev-server": "^3"
+    "webpack-dev-server": "^4.6.0"
   },
   "scripts": {
     "lint:js": "eslint --ext .js,.jsx,.ts,.tsx ./app/javascript ./config/webpack",

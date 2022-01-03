@@ -1,11 +1,11 @@
 %table.table.vertical.dossier-champs
   %tbody
     %tr
-      %th.libelle Déposé le :
+      %td.libelle Déposé le :
       %td= l(dossier.depose_at, format: '%d %B %Y')
   - if dossier.justificatif_motivation.attached?
     %tr
-      %th.libelle Justificatif :
+      %td.libelle Justificatif :
       %td
         .action
           = render partial: 'shared/attachment/show', locals: { attachment: dossier.justificatif_motivation.attachment }

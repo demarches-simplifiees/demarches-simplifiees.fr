@@ -48,6 +48,14 @@ describe Users::ProfilController, type: :controller do
   end
 
   describe 'PATCH #update_email' do
+    context 'when email is same as user' do
+      it 'fails' do
+        patch :update_email, params: { user: { email: user.email } }
+        expect(response).to have_http_status(302)
+        expect(flash[:alert]).to eq(["La nouvelle adresse email ne peut être identique à l’ancienne"])
+      end
+    end
+
     context 'when everything is fine' do
       let(:previous_request) { create(:user) }
 
@@ -69,7 +77,7 @@ describe Users::ProfilController, type: :controller do
       before do
         user.update(unconfirmed_email: 'unconfirmed@mail.com')
 
-        expect_any_instance_of(User).to receive(:ask_for_merge).with(existing_user)
+        expect(UserMailer).to receive(:ask_for_merge).with(user, existing_user.email).and_return(double(deliver_later: true))
 
         perform_enqueued_jobs do
           patch :update_email, params: { user: { email: existing_user.email } }
