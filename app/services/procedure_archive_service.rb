@@ -1,7 +1,6 @@
 require 'tempfile'
 
 class ProcedureArchiveService
-  include Utils::Retryable
   ARCHIVE_CREATION_DIR = ENV.fetch('ARCHIVE_CREATION_DIR') { '/tmp' }
 
   def initialize(procedure)
@@ -37,7 +36,6 @@ class ProcedureArchiveService
       archive.file.attach(
         io: File.open(zip_file),
         filename: archive.filename(@procedure),
-        # we don't want to run virus scanner on this file
         metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
       )
     end
@@ -104,32 +102,12 @@ class ProcedureArchiveService
         FileUtils.remove_entry_secure(archive_dir) if Dir.exist?(archive_dir)
         Dir.mkdir(archive_dir)
 
-        bug_reports = ''
-        attachments.each do |attachment, path|
-          attachment_path = File.join(archive_dir, path)
-          attachment_dir = File.dirname(attachment_path)
+        download_manager = DownloadManager::ProcedureAttachmentsExport.new(@procedure, attachments, archive_dir)
+        download_manager.download_all
 
-          FileUtils.mkdir_p(attachment_dir) if !Dir.exist?(attachment_dir)
-          begin
-            with_retry(max_attempt: 1) do
-              ActiveStorage::DownloadableFile.download(attachment: attachment,
-                                                       destination_path: attachment_path,
-                                                       in_chunk: true)
-            end
-          rescue => e
-            Rails.logger.error("Fail to download filename #{File.basename(attachment_path)} in procedure##{@procedure.id}, reason: #{e}")
-            File.delete(attachment_path) if File.exist?(attachment_path)
-            bug_reports += "Impossible de récupérer le fichier #{File.basename(attachment_path)}\n"
-          end
-        end
-
-        if !bug_reports.empty?
-          File.write(File.join(archive_dir, 'LISEZMOI.txt'), bug_reports)
-        end
-
-        File.delete(zip_path) if File.exist?(zip_path)
         Dir.chdir(tmp_dir) do
-          system 'zip', '-r', zip_path, zip_root_folder
+          File.delete(zip_path) if File.exist?(zip_path)
+          system 'zip', '-0', '-r', zip_path, zip_root_folder
         end
         yield(zip_path)
       ensure
@@ -152,8 +130,8 @@ class ProcedureArchiveService
   def self.attachments_from_champs_piece_justificative(champs)
     champs
       .filter { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative) }
-      .filter { |pj| pj.piece_justificative_file.attached? }
       .map(&:piece_justificative_file)
+      .filter(&:attached?)
   end
 
   def self.liste_pieces_justificatives_for_archive(dossier)
