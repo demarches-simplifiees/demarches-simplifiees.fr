@@ -11,17 +11,18 @@
       .procedure-header
         %h1= procedure_libelle @procedure
 
-        %ul.tabs
-          = tab_item('avis à donner',
-            procedure_expert_avis_index_path(statut: Instructeurs::AvisController::A_DONNER_STATUS),
-            active: @statut == Instructeurs::AvisController::A_DONNER_STATUS,
-            badge: @avis_a_donner.count,
-            notification: @avis_a_donner.any?)
+        %nav.tabs
+          %ul
+            = tab_item('avis à donner',
+              procedure_expert_avis_index_path(statut: Instructeurs::AvisController::A_DONNER_STATUS),
+              active: @statut == Instructeurs::AvisController::A_DONNER_STATUS,
+              badge: @avis_a_donner.count,
+              notification: @avis_a_donner.any?)
 
-          = tab_item("avis #{'donné'.pluralize(@avis_donnes.count)}",
-            procedure_expert_avis_index_path(statut: Instructeurs::AvisController::DONNES_STATUS),
-            active: @statut == Instructeurs::AvisController::DONNES_STATUS,
-            badge: @avis_donnes.count)
+            = tab_item("avis #{'donné'.pluralize(@avis_donnes.count)}",
+              procedure_expert_avis_index_path(statut: Instructeurs::AvisController::DONNES_STATUS),
+              active: @statut == Instructeurs::AvisController::DONNES_STATUS,
+              badge: @avis_donnes.count)
 
 .container
   - if @avis.present?
