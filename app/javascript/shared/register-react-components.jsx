@@ -9,9 +9,6 @@ const CLASS_NAME_ATTR = 'data-react-class';
 // example: `data-react-props="{\"item\": { \"id\": 1, \"name\": \"My Item\"} }"`
 const PROPS_ATTR = 'data-react-props';
 
-// A unique identifier to identify a node
-const CACHE_ID_ATTR = 'data-react-cache-id';
-
 const CLASS_NAME_SELECTOR = `[${CLASS_NAME_ATTR}]`;
 
 // helper method for the mount and unmount methods to find the
@@ -40,7 +37,6 @@ function getSelector(searchSelector) {
 }
 
 class ReactComponentRegistry {
-  #cache = {};
   #components;
 
   constructor(components) {
@@ -59,7 +55,6 @@ class ReactComponentRegistry {
       const ComponentClass = this.getConstructor(className);
       const propsJson = node.getAttribute(PROPS_ATTR);
       const props = propsJson && JSON.parse(propsJson);
-      const cacheId = node.getAttribute(CACHE_ID_ATTR);
 
       if (!ComponentClass) {
         const message = `Cannot find component: "${className}"`;
@@ -73,15 +68,7 @@ class ReactComponentRegistry {
           `${message}. Make sure your component is available to render.`
         );
       } else {
-        let component = this.#cache[cacheId];
-        if (!component) {
-          this.#cache[cacheId] = component = createElement(
-            ComponentClass,
-            props
-          );
-        }
-
-        render(component, node);
+        render(createElement(ComponentClass, props), node);
       }
     }
   }
