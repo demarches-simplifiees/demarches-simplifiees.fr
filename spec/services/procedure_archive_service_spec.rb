@@ -128,10 +128,14 @@ describe ProcedureArchiveService do
       let(:archive) { create(:archive, time_span_type: 'monthly', status: 'pending', month: date_month) }
       let(:year) { 2021 }
       let(:mailer) { double('mailer', deliver_later: true) }
-
+      before do
+        allow_any_instance_of(ActiveStorage::Attached::One).to receive(:url).and_return("http://file.to/get.ext")
+      end
       it 'collect files' do
         expect(InstructeurMailer).to receive(:send_archive).and_return(mailer)
-        service.collect_files_archive(archive, instructeur)
+        VCR.use_cassette('archive/file_to_get') do
+          service.collect_files_archive(archive, instructeur)
+        end
 
         archive.file.open do |f|
           files = ZipTricks::FileReader.read_zip_structure(io: f)
@@ -207,11 +211,16 @@ describe ProcedureArchiveService do
     context 'for all months' do
       let(:archive) { create(:archive, time_span_type: 'everything', status: 'pending') }
       let(:mailer) { double('mailer', deliver_later: true) }
+      before do
+        allow_any_instance_of(ActiveStorage::Attached::One).to receive(:url).and_return("https://i.etsystatic.com/6212702/r/il/744d2c/470726480/il_1588xN.470726480_bpk5.jpg")
+      end
 
       it 'collect files' do
         expect(InstructeurMailer).to receive(:send_archive).and_return(mailer)
 
-        service.collect_files_archive(archive, instructeur)
+        VCR.use_cassette('archive/file_to_get_typhoeus') do
+          service.collect_files_archive(archive, instructeur)
+        end
 
         archive = Archive.last
         archive.file.open do |f|
@@ -231,6 +240,36 @@ describe ProcedureArchiveService do
         end
         expect(archive.file.attached?).to be_truthy
       end
+    end
+  end
+
+  describe '#download_and_zip' do
+    it 'create a tmpdir while block is running' do
+      previous_dir_list = Dir.entries(ProcedureArchiveService::ARCHIVE_CREATION_DIR)
+
+      service.send(:download_and_zip, []) do |_zip_file|
+        new_dir_list = Dir.entries(ProcedureArchiveService::ARCHIVE_CREATION_DIR)
+        expect(previous_dir_list).not_to eq(new_dir_list)
+      end
+    end
+
+    it 'cleans up its tmpdir after block execution' do
+      expect { service.send(:download_and_zip, []) { |zip_file| } }
+        .not_to change { Dir.entries(ProcedureArchiveService::ARCHIVE_CREATION_DIR) }
+    end
+
+    it 'creates a zip with zip utility' do
+      expected_zip_path = File.join(ProcedureArchiveService::ARCHIVE_CREATION_DIR, "#{service.send(:zip_root_folder)}.zip")
+      expect(service).to receive(:system).with('zip', '-0', '-r', expected_zip_path, an_instance_of(String))
+      service.send(:download_and_zip, []) { |zip_path| }
+    end
+
+    it 'cleans up its generated zip' do
+      expected_zip_path = File.join(ProcedureArchiveService::ARCHIVE_CREATION_DIR, "#{service.send(:zip_root_folder)}.zip")
+      service.send(:download_and_zip, []) do |_zip_path|
+        expect(File.exist?(expected_zip_path)).to be_truthy
+      end
+      expect(File.exist?(expected_zip_path)).to be_falsey
     end
   end
 
