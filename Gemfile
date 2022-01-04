@@ -10,8 +10,6 @@ gem 'administrate'
 gem 'administrate-field-enum' # Allow using Field::Enum in administrate
 gem 'after_party'
 gem 'anchored'
-gem 'async'
-gem 'async-http'
 gem 'bcrypt'
 gem 'bootsnap', '>= 1.4.4', require: false # Reduces boot times through caching; required in config/boot.rb
 gem 'browser'

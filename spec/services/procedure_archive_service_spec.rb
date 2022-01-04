@@ -212,13 +212,13 @@ describe ProcedureArchiveService do
       let(:archive) { create(:archive, time_span_type: 'everything', status: 'pending') }
       let(:mailer) { double('mailer', deliver_later: true) }
       before do
-       allow_any_instance_of(ActiveStorage::Attached::One).to receive(:url).and_return("http://file.to/get.ext")
-     end
+        allow_any_instance_of(ActiveStorage::Attached::One).to receive(:url).and_return("https://i.etsystatic.com/6212702/r/il/744d2c/470726480/il_1588xN.470726480_bpk5.jpg")
+      end
 
       it 'collect files' do
         expect(InstructeurMailer).to receive(:send_archive).and_return(mailer)
 
-        VCR.use_cassette('archive/file_to_get') do
+        VCR.use_cassette('archive/file_to_get_typhoeus') do
           service.collect_files_archive(archive, instructeur)
         end
 
