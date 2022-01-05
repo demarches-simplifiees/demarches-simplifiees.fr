@@ -31,6 +31,10 @@ describe Champs::PieceJustificativeController, type: :controller do
         expect(response.status).to eq(200)
         expect(response.body).to include("##{champ.input_group_id}")
       end
+
+      it 'updates dossier.last_champ_updated_at' do
+        expect { subject }.to change { dossier.reload.last_champ_updated_at }
+      end
     end
 
     context 'when the file is invalid' do
