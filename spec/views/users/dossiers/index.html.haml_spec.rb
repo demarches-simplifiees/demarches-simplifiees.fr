@@ -12,7 +12,8 @@ describe 'users/dossiers/index.html.haml', type: :view do
     allow(controller).to receive(:current_user) { user }
     assign(:user_dossiers, Kaminari.paginate_array(user_dossiers).page(1))
     assign(:dossiers_invites, Kaminari.paginate_array(dossiers_invites).page(1))
-    assign(:dossiers_supprimes, Kaminari.paginate_array(user_dossiers).page(1))
+    assign(:dossiers_supprimes_recemment, Kaminari.paginate_array(user_dossiers).page(1))
+    assign(:dossiers_supprimes_definitivement, Kaminari.paginate_array(user_dossiers).page(1))
     assign(:dossiers_traites, Kaminari.paginate_array(user_dossiers).page(1))
     assign(:dossier_transfers, Kaminari.paginate_array([]).page(1))
     assign(:dossiers_close_to_expiration, Kaminari.paginate_array([]).page(1))
@@ -69,7 +70,7 @@ describe 'users/dossiers/index.html.haml', type: :view do
 
     it 'affiche la barre d’onglets' do
       expect(rendered).to have_selector('nav.tabs')
-      expect(rendered).to have_selector('nav.tabs li', count: 4)
+      expect(rendered).to have_selector('nav.tabs li', count: 5)
       expect(rendered).to have_selector('nav.tabs li.active', count: 1)
     end
   end
