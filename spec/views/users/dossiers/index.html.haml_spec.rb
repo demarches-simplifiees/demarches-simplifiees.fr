@@ -56,7 +56,7 @@ describe 'users/dossiers/index.html.haml', type: :view do
     end
 
     it 'n’affiche la barre d’onglets' do
-      expect(rendered).to have_selector('ul.tabs')
+      expect(rendered).to have_selector('nav.tabs')
     end
   end
 
@@ -68,9 +68,9 @@ describe 'users/dossiers/index.html.haml', type: :view do
     end
 
     it 'affiche la barre d’onglets' do
-      expect(rendered).to have_selector('ul.tabs')
-      expect(rendered).to have_selector('ul.tabs li', count: 4)
-      expect(rendered).to have_selector('ul.tabs li.active', count: 1)
+      expect(rendered).to have_selector('nav.tabs')
+      expect(rendered).to have_selector('nav.tabs li', count: 4)
+      expect(rendered).to have_selector('nav.tabs li.active', count: 1)
     end
   end
 
