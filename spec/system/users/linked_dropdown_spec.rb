@@ -27,16 +27,16 @@ describe 'linked dropdown lists' do
     fill_individual
 
     # Select a primary value
-    select('Primary 2', from: primary_id_for('linked dropdown'))
+    select('Primary 2', from: 'linked dropdown')
 
     # Secondary menu reflects chosen primary value
-    expect(page).to have_select(secondary_id_for('linked dropdown'), options: ['', 'Secondary 2.1', 'Secondary 2.2', 'Secondary 2.3'])
+    expect(page).to have_select("Valeur secondaire dépendant de la première", options: ['', 'Secondary 2.1', 'Secondary 2.2', 'Secondary 2.3'])
 
     # Select another primary value
-    select('Primary 1', from: primary_id_for('linked dropdown'))
+    select('Primary 1', from: 'linked dropdown')
 
     # Secondary menu gets updated
-    expect(page).to have_select(secondary_id_for('linked dropdown'), options: ['', 'Secondary 1.1', 'Secondary 1.2'])
+    expect(page).to have_select("Valeur secondaire dépendant de la première", options: ['', 'Secondary 1.1', 'Secondary 1.2'])
   end
 
   private
@@ -62,16 +62,5 @@ describe 'linked dropdown lists' do
     fill_in('individual_nom', with: 'nom')
     click_on 'Continuer'
     expect(page).to have_current_path(brouillon_dossier_path(user_dossier))
-  end
-
-  def primary_id_for(libelle)
-    find(:xpath, ".//label[contains(text()[normalize-space()], '#{libelle}')]")[:for]
-  end
-
-  def secondary_id_for(libelle)
-    primary_id = primary_id_for(libelle)
-    find("\##{primary_id}")
-      .ancestor('.editable-champ')
-      .find("[data-secondary]")['id']
   end
 end

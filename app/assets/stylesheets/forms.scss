@@ -317,7 +317,7 @@
     list-style: none;
   }
 
-  [data-reach-combobox-token] {
+  [data-reach-combobox-token] button {
     border: solid 1px $border-grey;
     color: $black;
     border-radius: 4px;
@@ -328,14 +328,9 @@
     align-items: center;
   }
 
-  [data-reach-combobox-token]:focus {
+  [data-reach-combobox-token] button:focus {
     background-color: $black;
     color: $white;
-
-    [data-combobox-remove-token] {
-      background-color: $black;
-      color: $white;
-    }
   }
 
   .editable-champ {
@@ -493,13 +488,13 @@
   }
 }
 
-[data-react-class]:not([data-react-class="ComboMultipleDropdownList"]) {
+[data-react-class]:not([data-react-class^="ComboMultiple"]) {
   [data-reach-combobox-input]:not(.no-margin) {
     margin-bottom: $default-fields-spacer;
   }
 }
 
-[data-react-class="ComboMultipleDropdownList"] {
+[data-react-class^="ComboMultiple"] {
   margin-bottom: $default-fields-spacer;
 
   [data-reach-combobox-input] {
@@ -516,7 +511,7 @@
   }
 }
 
-[data-combobox-token-label] {
+[data-reach-combobox-token-label] {
   border: 1px solid #CCCCCC;
   border-radius: 4px;
   display: flex;
@@ -533,14 +528,14 @@
   color: $white;
 }
 
-[data-combobox-separator] {
+[data-reach-combobox-separator] {
   font-size: 16px;
   color: $dark-grey;
   background: $light-grey;
   padding: $default-spacer;
 }
 
-[data-combobox-remove-token] {
+[data-reach-combobox-token] button {
   cursor: pointer;
   background-color: transparent;
   background-image: none;
@@ -552,7 +547,7 @@
   align-items: center !important;
 }
 
-[data-reach-combobox-input]:focus {
+[data-reach-combobox-input] button:focus {
   outline-color: $light-blue;
 }
 

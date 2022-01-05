@@ -4,15 +4,14 @@ import { QueryClientProvider } from 'react-query';
 import ComboSearch from './ComboSearch';
 import { queryClient } from './shared/queryClient';
 
-function ComboPaysSearch(params) {
+function ComboPaysSearch(props) {
   return (
     <QueryClientProvider client={queryClient}>
       <ComboSearch
-        required={params.mandatory}
-        hiddenFieldId={params.hiddenFieldId}
         scope="pays"
         minimumInputLength={0}
         transformResult={({ code, value, label }) => [code, value, label]}
+        {...props}
       />
     </QueryClientProvider>
   );

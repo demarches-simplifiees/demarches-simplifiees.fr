@@ -19,11 +19,11 @@ function expandResultsWithForeignDepartement(term, results) {
 
 export function ComboDepartementsSearch({
   addForeignDepartement = true,
-  ...params
+  ...props
 }) {
   return (
     <ComboSearch
-      {...params}
+      {...props}
       scope="departements"
       minimumInputLength={1}
       transformResult={({ code, nom }) => [code, `${code} - ${nom}`]}
@@ -37,10 +37,7 @@ export function ComboDepartementsSearch({
 function ComboDepartementsSearchDefault(params) {
   return (
     <QueryClientProvider client={queryClient}>
-      <ComboDepartementsSearch
-        required={params.mandatory}
-        hiddenFieldId={params.hiddenFieldId}
-      />
+      <ComboDepartementsSearch {...params} />
     </QueryClientProvider>
   );
 }
