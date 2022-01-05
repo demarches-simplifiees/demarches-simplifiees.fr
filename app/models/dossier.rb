@@ -206,9 +206,10 @@ class Dossier < ApplicationRecord
 
   scope :archived,      -> { where(archived: true) }
   scope :not_archived,  -> { where(archived: false) }
+  scope :hidden_by_user, -> { where.not(hidden_by_user_at: nil) }
   scope :hidden_by_administration, -> { where.not(hidden_by_administration_at: nil) }
-  scope :not_hidden_by_user, -> { where(hidden_by_user_at: nil) }
-  scope :not_hidden_by_administration, -> { where(hidden_by_administration_at: nil) }
+  scope :visible_by_user, -> { where(hidden_by_user_at: nil) }
+  scope :visible_by_administration, -> { where("hidden_by_administration_at IS NULL AND NOT (hidden_by_user_at IS NOT NULL AND state = 'en_construction')") }
 
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
   scope :order_by_created_at, -> (order = :asc) { order(depose_at: order, created_at: order, id: order) }
@@ -237,7 +238,7 @@ class Dossier < ApplicationRecord
   end
   scope :downloadable_sorted, -> {
     state_not_brouillon
-      .not_hidden_by_administration
+      .visible_by_administration
       .includes(
         :user,
         :individual,
@@ -531,6 +532,10 @@ class Dossier < ApplicationRecord
     brouillon? || en_construction? || termine?
   end
 
+  def can_be_hidden_by_user?
+    en_construction? || termine?
+  end
+
   def can_be_deleted_by_manager?
     kept? && can_be_deleted_by_user?
   end
@@ -750,15 +755,25 @@ class Dossier < ApplicationRecord
     false
   end
 
-  def discard_and_keep_track!(author, reason)
-    author_is_user = author.is_a?(User)
-    author_is_administration = author.is_a?(Instructeur) || author.is_a?(Administrateur) || author.is_a?(SuperAdmin)
+  def author_is_user(author)
+    author.is_a?(User)
+  end
 
-    if termine? && author_is_administration
+  def author_is_administration(author)
+    author.is_a?(Instructeur) || author.is_a?(Administrateur) || author.is_a?(SuperAdmin)
+  end
+
+  def restore_dossier_and_destroy_deleted_dossier(author)
+    deleted_dossier&.destroy!
+    log_dossier_operation(author, :restaurer, self)
+  end
+
+  def discard_and_keep_track!(author, reason)
+    if termine? && author_is_administration(author)
       update(hidden_by_administration_at: Time.zone.now)
     end
 
-    if termine? && author_is_user
+    if can_be_hidden_by_user? && author_is_user(author)
       update(hidden_by_user_at: Time.zone.now)
     end
 
@@ -766,14 +781,15 @@ class Dossier < ApplicationRecord
     deleted_dossier = nil
 
     transaction do
-      if deleted_by_instructeur_and_user? || en_construction? || brouillon?
+      if deleted_by_instructeur_and_user? || en_construction? && author_is_administration(author) || brouillon?
         if keep_track_on_deletion?
           log_dossier_operation(author, :supprimer, self)
           deleted_dossier = DeletedDossier.create_from_dossier(self, reason)
         end
 
-        update!(dossier_transfer_id: nil)
-        discard!
+        if !(en_construction? && author_is_user(author))
+          discard!
+        end
       end
     end
 
@@ -798,11 +814,19 @@ class Dossier < ApplicationRecord
   def restore(author)
     if discarded?
       transaction do
-        if hidden_by_administration?
+        if author_is_administration(author) && hidden_by_administration?
           update(hidden_by_administration_at: nil)
-        elsif undiscard && keep_track_on_deletion?
-          deleted_dossier&.destroy!
-          log_dossier_operation(author, :restaurer, self)
+        end
+
+        if undiscard && keep_track_on_deletion?
+          restore_dossier_and_destroy_deleted_dossier(author)
+        end
+      end
+    elsif author_is_user(author) && hidden_by_user?
+      transaction do
+        update(hidden_by_user_at: nil)
+        if en_construction?
+          restore_dossier_and_destroy_deleted_dossier(author)
         end
       end
     end
