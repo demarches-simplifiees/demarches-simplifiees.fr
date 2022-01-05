@@ -1,4 +1,6 @@
 class SupportController < ApplicationController
+  invisible_captcha only: [:create], on_spam: :redirect_to_root
+
   def index
     setup_context
   end
@@ -91,5 +93,9 @@ class SupportController < ApplicationController
 
   def email
     current_user&.email || params[:email]
+  end
+
+  def redirect_to_root
+    redirect_to root_path, alert: t('invisible_captcha.custom_message')
   end
 end

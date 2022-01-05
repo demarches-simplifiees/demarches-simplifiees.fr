@@ -2,14 +2,15 @@
   .container
     %h1.page-title Prévisualisation de la démarche «&nbsp;#{@dossier.procedure.libelle}&nbsp;»
 
-    %ul.tabs
-      = tab_item('le dossier',
-        apercu_admin_procedure_path(@dossier.procedure, tab: 'dossier'),
-        active: @tab == 'dossier')
-      - if @dossier.champs_private.size > 0
-        = tab_item('les annotations privées',
-          apercu_admin_procedure_path(@dossier.procedure, tab: 'annotations-privees'),
-          active: @tab == 'annotations-privees')
+    %nav.tabs
+      %ul
+        = tab_item('le dossier',
+          apercu_admin_procedure_path(@dossier.procedure, tab: 'dossier'),
+          active: @tab == 'dossier')
+        - if @dossier.champs_private.size > 0
+          = tab_item('les annotations privées',
+            apercu_admin_procedure_path(@dossier.procedure, tab: 'annotations-privees'),
+            active: @tab == 'annotations-privees')
 
 - if @tab == 'dossier'
   = render partial: "shared/dossiers/edit", locals: { dossier: @dossier, apercu: true }
