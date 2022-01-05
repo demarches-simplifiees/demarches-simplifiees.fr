@@ -18,8 +18,19 @@ describe Administrateurs::ProcedureAdministrateursController, type: :controller 
       it 'removes the admin from the procedure' do
         subject
         expect(response.status).to eq(200)
-        expect(signed_in_admin.procedures.reload).to include(procedure)
-        expect(other_admin.procedures.reload).not_to include(procedure)
+        expect(flash[:notice]).to be_present
+        expect(admin_to_remove.procedures.reload).not_to include(procedure)
+      end
+    end
+
+    context 'when removing oneself from a procedure' do
+      let(:admin_to_remove) { signed_in_admin }
+
+      it 'denies the right for an admin to remove itself' do
+        subject
+        expect(response.status).to eq(200)
+        expect(flash[:alert]).to be_present
+        expect(admin_to_remove.procedures.reload).to include(procedure)
       end
     end
   end
