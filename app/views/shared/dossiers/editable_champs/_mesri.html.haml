@@ -4,4 +4,4 @@
     %p.notice= t('.ine_notice')
     = form.text_field :ine,
       required: champ.mandatory?,
-      aria: { describedby: describedby_id(champ) }
+      aria: { describedby: champ.describedby_id }
