@@ -125,13 +125,13 @@ describe "procedure filters" do
 
   def add_column(column_name, column_path)
     click_on 'Personnaliser'
-    select_multi_combobox('colonne', column_name, column_path)
+    select_combobox('Colonne à afficher', column_name, column_path, check: false)
     click_button "Enregistrer"
   end
 
   def remove_column(column_name)
     click_on 'Personnaliser'
-    find(:xpath, ".//li[contains(text(), \"#{column_name}\")]/button", text: 'Désélectionner').click
+    click_button column_name
     find("body").native.send_key("Escape")
     click_button "Enregistrer"
   end
