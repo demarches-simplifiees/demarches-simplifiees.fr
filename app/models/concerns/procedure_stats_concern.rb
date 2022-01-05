@@ -50,17 +50,14 @@ module ProcedureStatsConcern
 
       dossier_state_values = chart_data.pluck(:state).sort.uniq
 
-      # rubocop:disable Style/HashTransformValues
-      dossier_state_values
-        .map do |state|
-          {
-            name: state,
-            data: chart_data .where(state: state) .group_by_week do |dossier|
-              dossier.traitements.first.processed_at
-            end.map { |k, v| [k, v.count] }.to_h.transform_keys { |week| pretty_week(week) }
-          }
-          # rubocop:enable Style/HashTransformValues
-        end
+      dossier_state_values.map do |state|
+        {
+          name: state,
+          data: chart_data .where(state: state) .group_by_week do |dossier|
+            dossier.traitements.first.processed_at
+          end.map { |k, v| [k, v.count] }.to_h.transform_keys { |week| pretty_week(week) }
+        }
+      end
     end
   end
 
