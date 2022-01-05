@@ -69,6 +69,7 @@ registerReactComponents({
   ComboMultipleDropdownList: Loadable(() =>
     import('../components/ComboMultipleDropdownList')
   ),
+  ComboMultiple: Loadable(() => import('../components/ComboMultiple')),
   ComboPaysSearch: Loadable(() => import('../components/ComboPaysSearch')),
   ComboRegionsSearch: Loadable(() =>
     import('../components/ComboRegionsSearch')
