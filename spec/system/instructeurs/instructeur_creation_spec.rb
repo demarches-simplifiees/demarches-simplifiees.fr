@@ -9,7 +9,7 @@ describe 'As an instructeur', js: true do
     visit admin_procedure_path(procedure)
     find('#groupe-instructeurs').click
 
-    find("input[aria-label='email instructeur'").send_keys(instructeur_email, :enter)
+    fill_in 'Emails', with: instructeur_email
     perform_enqueued_jobs { click_on 'Affecter' }
 
     expect(page).to have_text("Les instructeurs ont bien été affectés à la démarche")
