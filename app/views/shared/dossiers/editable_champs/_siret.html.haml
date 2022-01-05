@@ -1,4 +1,6 @@
 = form.text_field :value,
+  id: champ.input_id,
+  aria: { describedby: champ.describedby_id },
   placeholder: champ.libelle,
   data: { remote: true, debounce: true, url: champs_siret_path(form.index), params: { champ_id: champ&.id }.to_query, spinner: true },
   required: champ.mandatory?,

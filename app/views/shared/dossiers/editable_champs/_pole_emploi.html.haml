@@ -4,4 +4,4 @@
     %p.notice= t('.identifiant_notice')
     = form.text_field :identifiant,
       required: champ.mandatory?,
-      aria: { describedby: describedby_id(champ) }
+      aria: { describedby: champ.describedby_id }

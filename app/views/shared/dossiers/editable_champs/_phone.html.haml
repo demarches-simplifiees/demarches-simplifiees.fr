@@ -2,6 +2,8 @@
 -# very light validation is made client-side
 -# stronger validation is made server-side
 = form.phone_field :value,
+  id: champ.input_id,
+  aria: { describedby: champ.describedby_id },
   placeholder: champ.libelle,
   required: champ.mandatory?,
   pattern: "[^a-z^A-Z]+"
