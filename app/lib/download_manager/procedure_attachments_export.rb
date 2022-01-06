@@ -9,18 +9,20 @@ module DownloadManager
       @procedure = procedure
       @errors = {}
       @queue = ParallelDownloadQueue.new(attachments, destination)
-      @queue.on_error = proc do |_attachment, path, error|
-        errors[path] = true
+      @queue.on_error = proc do |attachment, path, error|
+        errors[path] = [attachment, path]
         Rails.logger.error("Fail to download filename #{path} in procedure##{@procedure.id}, reason: #{error}")
       end
-     end
-
-    def download_all
-      @queue.download_all
-      write_report if !errors.empty?
     end
 
-    private
+    def download_all(attempt_left: 1)
+      @queue.download_all
+      if !errors.empty? && attempt_left.positive?
+        retryable_queue = self.class.new(@procedure, errors.values, destination)
+        retryable_queue.download_all(attempt_left: 0)
+        retryable_queue.write_report if !retryable_queue.errors.empty?
+      end
+    end
 
     def write_report
       manifest_path = File.join(destination, 'LISEZMOI.txt')
