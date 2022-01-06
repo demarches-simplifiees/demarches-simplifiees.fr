@@ -13,7 +13,7 @@ module ApplicationHelper
     case level
     when 'notice'
       class_names << 'alert-success'
-    when 'alert'
+    when 'alert', 'error'
       class_names << 'alert-danger'
     end
 
