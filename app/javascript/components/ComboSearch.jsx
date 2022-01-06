@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useMemo,
-  useCallback,
-  useRef,
-  useEffect
-} from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { useDebounce } from 'use-debounce';
 import { useQuery } from 'react-query';
 import PropTypes from 'prop-types';
@@ -16,42 +10,33 @@ import {
   ComboboxOption
 } from '@reach/combobox';
 import '@reach/combobox/styles.css';
-import { fire } from '@utils';
+import invariant from 'tiny-invariant';
 
-import { useDeferredSubmit } from './shared/hooks';
+import { useDeferredSubmit, useHiddenField, groupId } from './shared/hooks';
 
 function defaultTransformResults(_, results) {
   return results;
 }
 
 function ComboSearch({
-  hiddenFieldId,
   onChange,
+  value: controlledValue,
   scope,
-  inputId,
   scopeExtra,
   minimumInputLength,
   transformResult,
   allowInputValues = false,
   transformResults = defaultTransformResults,
+  id,
+  describedby,
   ...props
 }) {
-  const hiddenValueField = useMemo(
-    () => document.querySelector(`input[data-uuid="${hiddenFieldId}"]`),
-    [hiddenFieldId]
-  );
-  const comboInputId = useMemo(
-    () => hiddenValueField?.id || inputId,
-    [inputId, hiddenValueField]
-  );
-  const hiddenIdField = useMemo(
-    () =>
-      document.querySelector(
-        `input[data-uuid="${hiddenFieldId}"] + input[data-reference]`
-      ),
-    [hiddenFieldId]
-  );
-  const initialValue = hiddenValueField ? hiddenValueField.value : props.value;
+  invariant(id || onChange, 'ComboSearch: `id` or `onChange` are required');
+
+  const group = !onChange ? groupId(id) : null;
+  const [externalValue, setExternalValue, hiddenField] = useHiddenField(group);
+  const [, setExternalId] = useHiddenField(group, 'external_id');
+  const initialValue = externalValue ? externalValue : controlledValue;
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm] = useDebounce(searchTerm, 300);
   const [value, setValue] = useState(initialValue);
@@ -60,41 +45,26 @@ function ComboSearch({
     const [, value, label] = transformResult(result);
     return label ?? value;
   };
-  const setExternalValue = useCallback(
-    (value) => {
-      if (hiddenValueField) {
-        hiddenValueField.setAttribute('value', value);
-        fire(hiddenValueField, 'autosave:trigger');
-      }
-    },
-    [hiddenValueField]
-  );
-  const setExternalId = useCallback(
-    (key) => {
-      if (hiddenIdField) {
-        hiddenIdField.setAttribute('value', key);
-      }
-    },
-    [hiddenIdField]
-  );
   const setExternalValueAndId = useCallback((label) => {
     const { key, value, result } = resultsMap.current[label];
-    setExternalId(key);
-    setExternalValue(value);
     if (onChange) {
       onChange(value, result);
+    } else {
+      setExternalId(key);
+      setExternalValue(value);
     }
   }, []);
-  const awaitFormSubmit = useDeferredSubmit(hiddenValueField);
+  const awaitFormSubmit = useDeferredSubmit(hiddenField);
 
   const handleOnChange = useCallback(
     ({ target: { value } }) => {
       setValue(value);
       if (!value) {
-        setExternalId('');
-        setExternalValue('');
         if (onChange) {
           onChange(null);
+        } else {
+          setExternalId('');
+          setExternalValue('');
         }
       } else if (value.length >= minimumInputLength) {
         setSearchTerm(value.trim());
@@ -133,20 +103,16 @@ function ComboSearch({
     }
   }, [data]);
 
-  useEffect(() => {
-    document
-      .querySelector(`#${comboInputId}[type="hidden"]`)
-      ?.removeAttribute('id');
-  }, [comboInputId]);
-
   return (
     <Combobox onSelect={handleOnSelect}>
       <ComboboxInput
         {...props}
-        id={comboInputId}
         onChange={handleOnChange}
         onBlur={onBlur}
         value={value}
+        autocomplete={false}
+        id={id}
+        aria-describedby={describedby}
       />
       {isSuccess && (
         <ComboboxPopover className="shadow-popup">
@@ -178,15 +144,16 @@ function ComboSearch({
 
 ComboSearch.propTypes = {
   value: PropTypes.string,
-  hiddenFieldId: PropTypes.string,
   scope: PropTypes.string,
   minimumInputLength: PropTypes.number,
   transformResult: PropTypes.func,
   transformResults: PropTypes.func,
   allowInputValues: PropTypes.bool,
   onChange: PropTypes.func,
-  inputId: PropTypes.string,
-  scopeExtra: PropTypes.string
+  scopeExtra: PropTypes.string,
+  mandatory: PropTypes.bool,
+  id: PropTypes.string,
+  describedby: PropTypes.string
 };
 
 export default ComboSearch;
