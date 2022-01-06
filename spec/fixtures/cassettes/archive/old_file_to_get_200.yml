@@ -1,0 +1,157 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://opengraph.githubassets.com/5e61989aecb78e369c93674f877d7bf4ecde378850114a9563cdf8b6a2472536/typhoeus/typhoeus/issues/110
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Ratelimit-Limit:
+      - '100'
+      X-Ratelimit-Remaining:
+      - '83'
+      X-Ratelimit-Reset:
+      - '1641476165'
+      Access-Control-Allow-Origin:
+      - "*"
+      Content-Security-Policy:
+      - default-src 'none';style-src 'unsafe-inline';font-src https://github.github.com;img-src
+        https://avatars.githubusercontent.com https://github.githubassets.com https://camo.githubusercontent.com
+      X-Dns-Prefetch-Control:
+      - 'off'
+      Expect-Ct:
+      - max-age=0
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Download-Options:
+      - noopen
+      X-Content-Type-Options:
+      - nosniff
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      Referrer-Policy:
+      - no-referrer
+      X-Xss-Protection:
+      - '0'
+      Cache-Control:
+      - public, max-age=21600, immutable
+      Content-Type:
+      - image/png
+      Etag:
+      - W/"1066a-R45DSLyb/5W3DaEyAWdsUpLVmr4"
+      X-Github-Backend:
+      - Kubernetes
+      X-Github-Request-Id:
+      - CB64:6748:E2B78:86C62A:61D6EE15
+      Via:
+      - 1.1 varnish, 1.1 varnish
+      Accept-Ranges:
+      - bytes
+      Date:
+      - Thu, 06 Jan 2022 14:38:47 GMT
+      Age:
+      - '4322'
+      X-Served-By:
+      - cache-iad-kiad7000110-IAD, cache-cdg20721-CDG
+      X-Cache:
+      - MISS, HIT
+      X-Cache-Hits:
+      - 0, 1
+      Strict-Transport-Security:
+      - max-age=31536000
+      X-Fastly-Request-Id:
+      - b6b7ae28f1e40734296daed0187e36df9f25de8d
+      Content-Length:
+      - '67178'
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+  recorded_at: Wed, 04 Mar 2020 23:00:00 GMT
+- request:
+    method: get
+    uri: https://opengraph.githubassets.com/5e61989aecb78e369c93674f877d7bf4ecde378850114a9563cdf8b6a2472536/typhoeus/typhoeus/issues/110
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Ratelimit-Limit:
+      - '100'
+      X-Ratelimit-Remaining:
+      - '83'
+      X-Ratelimit-Reset:
+      - '1641476165'
+      Access-Control-Allow-Origin:
+      - "*"
+      Content-Security-Policy:
+      - default-src 'none';style-src 'unsafe-inline';font-src https://github.github.com;img-src
+        https://avatars.githubusercontent.com https://github.githubassets.com https://camo.githubusercontent.com
+      X-Dns-Prefetch-Control:
+      - 'off'
+      Expect-Ct:
+      - max-age=0
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Download-Options:
+      - noopen
+      X-Content-Type-Options:
+      - nosniff
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      Referrer-Policy:
+      - no-referrer
+      X-Xss-Protection:
+      - '0'
+      Cache-Control:
+      - public, max-age=21600, immutable
+      Content-Type:
+      - image/png
+      Etag:
+      - W/"1066a-R45DSLyb/5W3DaEyAWdsUpLVmr4"
+      X-Github-Backend:
+      - Kubernetes
+      X-Github-Request-Id:
+      - CB64:6748:E2B78:86C62A:61D6EE15
+      Via:
+      - 1.1 varnish, 1.1 varnish
+      Accept-Ranges:
+      - bytes
+      Date:
+      - Thu, 06 Jan 2022 14:38:47 GMT
+      Age:
+      - '4322'
+      X-Served-By:
+      - cache-iad-kiad7000110-IAD, cache-cdg20767-CDG
+      X-Cache:
+      - MISS, HIT
+      X-Cache-Hits:
+      - 0, 1
+      Strict-Transport-Security:
+      - max-age=31536000
+      X-Fastly-Request-Id:
+      - 58c062baca0e760a7a6c348ab9c64cceb965dd1a
+      Content-Length:
+      - '67178'
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+  recorded_at: Wed, 04 Mar 2020 23:00:00 GMT
+recorded_with: VCR 6.0.0

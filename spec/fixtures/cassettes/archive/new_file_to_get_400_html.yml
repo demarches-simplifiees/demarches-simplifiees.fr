@@ -1,0 +1,105 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://www.demarches-simplifiees.fr/error_2
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Expect:
+      - ''
+  response:
+    status:
+      code: 404
+      message: ''
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Thu, 06 Jan 2022 14:39:31 GMT
+      Content-Type:
+      - text/html; charset=UTF-8
+      Content-Length:
+      - '1583'
+      X-Request-Id:
+      - 8881aea9-7dfc-442b-b818-a2988a8a39ee
+      X-Runtime:
+      - '0.003713'
+      Strict-Transport-Security:
+      - max-age=63072000
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+  recorded_at: Wed, 04 Mar 2020 23:00:00 GMT
+- request:
+    method: get
+    uri: https://www.demarches-simplifiees.fr/error_1
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Expect:
+      - ''
+  response:
+    status:
+      code: 404
+      message: ''
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Thu, 06 Jan 2022 14:53:09 GMT
+      Content-Type:
+      - text/html; charset=UTF-8
+      Content-Length:
+      - '1583'
+      X-Request-Id:
+      - ea764501-134e-49a4-bd65-7fb96f772908
+      X-Runtime:
+      - '0.005202'
+      Strict-Transport-Security:
+      - max-age=63072000
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+  recorded_at: Wed, 04 Mar 2020 23:00:00 GMT
+- request:
+    method: get
+    uri: https://www.demarches-simplifiees.fr/error_1
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Expect:
+      - ''
+  response:
+    status:
+      code: 404
+      message: ''
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Thu, 06 Jan 2022 14:53:09 GMT
+      Content-Type:
+      - text/html; charset=UTF-8
+      Content-Length:
+      - '1583'
+      X-Request-Id:
+      - 27892c10-cc06-4b63-80ea-b14428d4585c
+      X-Runtime:
+      - '0.003955'
+      Strict-Transport-Security:
+      - max-age=63072000
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+  recorded_at: Wed, 04 Mar 2020 23:00:00 GMT
+recorded_with: VCR 6.0.0
