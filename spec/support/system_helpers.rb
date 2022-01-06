@@ -103,41 +103,27 @@ module SystemHelpers
     end
   end
 
-  def select_combobox(champ, fill_with, value)
-    fill_in champ, with: fill_with
+  def select_combobox(libelle, fill_with, value, check: true)
+    fill_in libelle, with: fill_with
     selector = "li[data-option-value=\"#{value}\"]"
     find(selector).click
-    expect(page).to have_css(selector)
-    expect(page).to have_css("[type=\"hidden\"][value=\"#{value}\"]")
+    if check
+      check_selected_value(libelle, with: value)
+    end
   end
 
-  def select_multi_combobox(champ, fill_with, value)
-    input = find("input[aria-label=\"#{champ}\"")
-    input.click
-    input.fill_in with: fill_with
-    selector = "li[data-option-value=\"#{value}\"]"
-    find(selector).click
-    check_selected_value(champ, value)
-  end
-
-  def check_selected_values(champ, values)
-    combobox = find(:xpath, "//input[@aria-label=\"#{champ}\"]/ancestor::div[@data-react-class='ComboMultipleDropdownList']")
-    hidden_field_id = JSON.parse(combobox["data-react-props"])["hiddenFieldId"]
-    hidden_field = find("input[data-uuid=\"#{hidden_field_id}\"]")
-    hidden_field_values = JSON.parse(hidden_field.value)
-    expect(values.sort).to eq(hidden_field_values.sort)
-  end
-
-  def check_selected_value(champ, value)
-    combobox = find(:xpath, "//input[@aria-label=\"#{champ}\"]/ancestor::div[@data-react-class='ComboMultipleDropdownList']")
-    hidden_field_id = JSON.parse(combobox["data-react-props"])["hiddenFieldId"]
-    hidden_field = find("input[data-uuid=\"#{hidden_field_id}\"]")
-    hidden_field_values = JSON.parse(hidden_field.value)
-    expect(hidden_field_values).to include(value)
-  end
-
-  def have_hidden_field(libelle, with:)
-    have_css("##{form_id_for(libelle)}[value=\"#{with}\"]")
+  def check_selected_value(libelle, with:)
+    field = find_hidden_field_for(libelle)
+    value = field.value.starts_with?('[') ? JSON.parse(field.value) : field.value
+    if value.is_a?(Array)
+      if with.is_a?(Array)
+        expect(value.sort).to eq(with.sort)
+      else
+        expect(value).to include(with)
+      end
+    else
+      expect(value).to eq(with)
+    end
   end
 
   def log_out
@@ -171,6 +157,18 @@ module SystemHelpers
         STDOUT.puts "#{self.class}#reset! is a no-op, because leave_browser_open is enabled"
       end
     end
+  end
+
+  def find_hidden_field_for(libelle, name: 'value')
+    find("#{form_group_id_for(libelle)} input[type=\"hidden\"][name$=\"[#{name}]\"]")
+  end
+
+  def form_group_id_for(libelle)
+    "#champ-#{form_id_for(libelle).gsub('-input', '')}"
+  end
+
+  def form_id_for(libelle)
+    find(:xpath, ".//label[contains(text()[normalize-space()], '#{libelle}')]")[:for]
   end
 end
 

@@ -165,8 +165,8 @@ describe 'Instructing a dossier:', js: true do
 
     click_on 'Personnes impliquées'
 
-    select_multi_combobox('email instructeur', instructeur_2.email, instructeur_2.id)
-    select_multi_combobox('email instructeur', instructeur_3.email, instructeur_3.id)
+    select_combobox('Emails', instructeur_2.email, instructeur_2.id, check: false)
+    select_combobox('Emails', instructeur_3.email, instructeur_3.id, check: false)
 
     click_on 'Envoyer'
 

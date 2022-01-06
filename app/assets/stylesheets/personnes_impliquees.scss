@@ -9,7 +9,7 @@
     margin-left: 16px;
   }
 
-  [data-react-class="ComboMultipleDropdownList"] {
+  [data-react-class^="ComboMultiple"] {
     margin-bottom: $default-fields-spacer;
 
     [data-reach-combobox-token-list] {
@@ -17,7 +17,7 @@
       display: flex;
     }
 
-    [data-reach-combobox-token] {
+    [data-reach-combobox-token] button {
       border: solid 1px $border-grey;
       color: $black;
       margin-top: 0.5 * $default-padding;
@@ -29,7 +29,7 @@
       list-style: none;
     }
 
-    [data-reach-combobox-token]:focus {
+    [data-reach-combobox-token] button:focus {
       background-color: $black;
       color: $white;
     }
