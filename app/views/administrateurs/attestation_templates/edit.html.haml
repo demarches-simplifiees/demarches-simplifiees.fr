@@ -19,10 +19,6 @@
         - else
           %span.text-inactive désactivée
 
-      - if @attestation_template.activated && @procedure.locked?
-        .card.warning
-          %p L’attestation ne peut plus être désactivée car la démarche est publiée.
-
       %p.notice
         L’attestation, si elle est activée, est émise au moment où un dossier est accepté.
         %br
@@ -33,13 +29,11 @@
 
       .procedure-form__actions.sticky--bottom
         .actions-left
-          -# Admins cannot disactivate the Attestation if it is activated and the procedure is published
-          - if !(@attestation_template.activated && @procedure.locked?)
-            %label.toggle-switch
-              = f.check_box :activated, class: 'toggle-switch-checkbox'
-              %span.toggle-switch-control.round
-              %span.toggle-switch-label.on Attestation activée
-              %span.toggle-switch-label.off Attestation désactivée
+          %label.toggle-switch
+            = f.check_box :activated, class: 'toggle-switch-checkbox'
+            %span.toggle-switch-control.round
+            %span.toggle-switch-label.on Attestation activée
+            %span.toggle-switch-label.off Attestation désactivée
 
         .actions-right
           = link_to 'Annuler', edit_admin_procedure_attestation_template_path(id: @procedure), class: 'button', data: { confirm: 'Êtes-vous sûr de vouloir annuler les modifications effectuées ?'}
