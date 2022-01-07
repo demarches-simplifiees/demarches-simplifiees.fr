@@ -322,6 +322,7 @@ ActiveRecord::Schema.define(version: 2021_11_24_111429) do
     t.bigint "dossier_transfer_id"
     t.datetime "identity_updated_at"
     t.datetime "depose_at"
+    t.datetime "hidden_by_user_at"
     t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
     t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
     t.index ["archived"], name: "index_dossiers_on_archived"

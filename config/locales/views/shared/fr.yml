@@ -26,6 +26,7 @@ fr:
         already_user: 'J’ai déjà un compte'
         create: 'Créer un compte'
         signin: 'Connexion'
+        title: "via un compte %{name}"
       commentaires:
         destroy:
           button: 'Supprimer le message'
