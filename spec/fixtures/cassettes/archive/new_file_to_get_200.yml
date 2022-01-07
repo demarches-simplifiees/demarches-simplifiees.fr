@@ -1,0 +1,80 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://opengraph.githubassets.com/d0e7862b24d8026a3c03516d865b28151eb3859029c6c6c2e86605891fbdcd7a/socketry/async-io
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Ratelimit-Limit:
+      - '100'
+      X-Ratelimit-Remaining:
+      - '31'
+      X-Ratelimit-Reset:
+      - '1641406997'
+      Access-Control-Allow-Origin:
+      - "*"
+      Content-Security-Policy:
+      - default-src 'none';style-src 'unsafe-inline';font-src https://github.github.com;img-src
+        https://avatars.githubusercontent.com https://github.githubassets.com https://camo.githubusercontent.com
+      X-Dns-Prefetch-Control:
+      - 'off'
+      Expect-Ct:
+      - max-age=0
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Download-Options:
+      - noopen
+      X-Content-Type-Options:
+      - nosniff
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      Referrer-Policy:
+      - no-referrer
+      X-Xss-Protection:
+      - '0'
+      Cache-Control:
+      - public, max-age=21600, immutable
+      Content-Type:
+      - image/png
+      Etag:
+      - W/"106ec-qZkXmv4Ygfd8LZzQoW8mwToCU7k"
+      X-Github-Backend:
+      - Kubernetes
+      X-Github-Request-Id:
+      - 2BDC:1C4E:5B580:368C45:61D5E1B1
+      Via:
+      - 1.1 varnish, 1.1 varnish
+      Accept-Ranges:
+      - bytes
+      Date:
+      - Thu, 06 Jan 2022 14:38:48 GMT
+      Age:
+      - '3435'
+      X-Served-By:
+      - cache-iad-kiad7000127-IAD, cache-cdg20776-CDG
+      X-Cache:
+      - HIT, HIT
+      X-Cache-Hits:
+      - 1, 1
+      Strict-Transport-Security:
+      - max-age=31536000
+      X-Fastly-Request-Id:
+      - '064738cfe513e9a05fc3af47b513b4f63b3f199c'
+      Content-Length:
+      - '67308'
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+  recorded_at: Wed, 04 Mar 2020 23:00:00 GMT
+recorded_with: VCR 6.0.0
