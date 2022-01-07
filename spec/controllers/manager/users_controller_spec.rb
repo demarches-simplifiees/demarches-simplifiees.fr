@@ -29,6 +29,7 @@ describe Manager::UsersController, type: :controller do
           subject
 
           expect(User.find_by(id: user.id).email).to eq(nouvel_email)
+          expect(response).to redirect_to(edit_manager_user_path(user))
         end
       end
 
@@ -54,6 +55,7 @@ describe Manager::UsersController, type: :controller do
         subject
 
         expect(flash[:notice]).to match("Le compte « email.existant@domaine.fr » a absorbé le compte « ancien.email@domaine.fr ».")
+        expect(response).to redirect_to(edit_manager_user_path(targeted_user))
       end
     end
   end

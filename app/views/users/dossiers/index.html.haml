@@ -20,7 +20,6 @@
             dossiers_path(statut: 'en-cours'),
             active: @statut == 'en-cours',
             badge: number_with_html_delimiter(@user_dossiers.count))
-
         - if @dossiers_traites.present?
           = tab_item(t('pluralize.traites', count: @dossiers_traites.count),
             dossiers_path(statut: 'traites'),

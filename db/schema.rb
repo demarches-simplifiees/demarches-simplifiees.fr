@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_24_111429) do
+ActiveRecord::Schema.define(version: 2021_11_26_150915) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -253,6 +253,7 @@ ActiveRecord::Schema.define(version: 2021_11_24_111429) do
     t.bigint "user_id"
     t.bigint "groupe_instructeur_id"
     t.bigint "revision_id"
+    t.index ["deleted_at"], name: "index_deleted_dossiers_on_deleted_at"
     t.index ["dossier_id"], name: "index_deleted_dossiers_on_dossier_id", unique: true
     t.index ["procedure_id"], name: "index_deleted_dossiers_on_procedure_id"
   end
@@ -430,14 +431,6 @@ ActiveRecord::Schema.define(version: 2021_11_24_111429) do
     t.bigint "groupe_instructeur_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "feedbacks", force: :cascade do |t|
-    t.bigint "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "rating", null: false
-    t.index ["user_id"], name: "index_feedbacks_on_user_id"
   end
 
   create_table "flipper_features", force: :cascade do |t|
@@ -863,7 +856,6 @@ ActiveRecord::Schema.define(version: 2021_11_24_111429) do
   add_foreign_key "dossiers", "users"
   add_foreign_key "experts_procedures", "experts"
   add_foreign_key "experts_procedures", "procedures"
-  add_foreign_key "feedbacks", "users"
   add_foreign_key "france_connect_informations", "users"
   add_foreign_key "geo_areas", "champs"
   add_foreign_key "groupe_instructeurs", "procedures"

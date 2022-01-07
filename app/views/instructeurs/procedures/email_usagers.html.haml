@@ -1,6 +1,6 @@
 - content_for(:title, "Contacter les usagers pour #{@procedure.libelle}")
 
-= render partial: 'new_administrateur/breadcrumbs',
+= render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [link_to(@procedure.libelle, instructeur_procedure_path(@procedure)),
                     'Contacter les usagers (brouillon)'] }
 .messagerie.container
@@ -28,4 +28,3 @@
   - else
     .page-title.center
       %h2 Il n'y a aucun dossier en brouillon dans vos groupes instructeurs
-

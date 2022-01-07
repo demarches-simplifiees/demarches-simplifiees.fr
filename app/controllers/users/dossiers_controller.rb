@@ -16,8 +16,8 @@ module Users
     before_action :store_user_location!, only: :new
 
     def index
-      @user_dossiers = current_user.dossiers.includes(:procedure).not_termine.order_by_updated_at.page(page)
-      @dossiers_traites = current_user.dossiers.includes(:procedure).termine.not_hidden_by_user.order_by_updated_at.page(page)
+      @user_dossiers = current_user.dossiers.includes(:procedure).state_not_termine.order_by_updated_at.page(page)
+      @dossiers_traites = current_user.dossiers.includes(:procedure).state_termine.not_hidden_by_user.order_by_updated_at.page(page)
       @dossiers_invites = current_user.dossiers_invites.includes(:procedure).order_by_updated_at.page(page)
       @dossiers_supprimes = current_user.deleted_dossiers.order_by_updated_at.page(page)
       @dossier_transfers = DossierTransfer

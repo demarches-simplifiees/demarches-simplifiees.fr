@@ -415,7 +415,7 @@ fr:
         identity_saved: "Identité enregistrée"
       attestation:
         no_longer_available: "L’attestation n'est plus disponible sur ce dossier."
-  new_administrateur:
+  administrateurs:
     procedures:
       show:
         ready: "Validé"

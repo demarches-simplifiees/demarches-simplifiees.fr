@@ -893,6 +893,16 @@ describe Users::DossiersController, type: :controller do
         end
         it { expect(assigns(:statut)).to eq('en-cours') }
       end
+
+      context 'when the instructeur archive the dossier' do
+        before do
+          own_dossier2.update!(archived: true)
+          get(:index, params: { statut: 'en-cours' })
+        end
+        it { expect(assigns(:statut)).to eq('en-cours') }
+        it { expect(assigns(:dossiers_traites).map(&:id)).to eq([own_dossier2.id]) }
+        it { expect(own_dossier2.archived).to be_truthy }
+      end
     end
 
     describe 'sort order' do
