@@ -30,12 +30,12 @@ class Stat < ApplicationRecord
         dossiers_deposes_entre_60_et_30_jours: states['dossiers_deposes_entre_60_et_30_jours'],
         dossiers_not_brouillon: states['not_brouillon'],
         dossiers_termines: states['termines'],
-        dossiers_cumulative: cumulative_hash([
-          [Dossier.state_not_brouillon, :en_construction_at],
+        dossiers_cumulative: cumulative_month_serie([
+          [Dossier.state_not_brouillon, :depose_at],
           [DeletedDossier.where.not(state: :brouillon), :deleted_at]
         ]),
-        dossiers_in_the_last_4_months: last_four_months_hash([
-          [Dossier.state_not_brouillon, :en_construction_at],
+        dossiers_in_the_last_4_months: last_four_months_serie([
+          [Dossier.state_not_brouillon, :depose_at],
           [DeletedDossier.where.not(state: :brouillon), :deleted_at]
         ]),
         administrations_partenaires: AdministrateursProcedure.joins(:procedure).merge(Procedure.publiees_ou_closes).select('distinct administrateur_id').count
@@ -48,8 +48,8 @@ class Stat < ApplicationRecord
       sanitize_and_exec(Dossier, <<-EOF
         SELECT
           COUNT(*) FILTER ( WHERE state != 'brouillon' ) AS "not_brouillon",
-          COUNT(*) FILTER ( WHERE state != 'brouillon' and en_construction_at BETWEEN :one_month_ago AND :now ) AS "dossiers_depose_avant_30_jours",
-          COUNT(*) FILTER ( WHERE state != 'brouillon' and en_construction_at BETWEEN :two_months_ago AND :one_month_ago ) AS "dossiers_deposes_entre_60_et_30_jours",
+          COUNT(*) FILTER ( WHERE state != 'brouillon' and depose_at BETWEEN :one_month_ago AND :now ) AS "dossiers_depose_avant_30_jours",
+          COUNT(*) FILTER ( WHERE state != 'brouillon' and depose_at BETWEEN :two_months_ago AND :one_month_ago ) AS "dossiers_deposes_entre_60_et_30_jours",
           COUNT(*) FILTER ( WHERE state = 'brouillon' ) AS "brouillon",
           COUNT(*) FILTER ( WHERE state = 'en_construction' ) AS "en_construction",
           COUNT(*) FILTER ( WHERE state = 'en_instruction' ) AS "en_instruction",
@@ -91,7 +91,7 @@ class Stat < ApplicationRecord
       timeseries = associations_with_date_attribute.map do |association, date_attribute|
         association.group_by_month(date_attribute, current: false).count
       end
-
+      pp timeseries
       cumulative_serie(sum_hashes(*timeseries))
     end
 

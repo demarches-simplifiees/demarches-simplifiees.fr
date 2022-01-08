@@ -1,3 +1,5 @@
+include ActiveSupport::Testing::TimeHelpers
+
 describe Stat do
   describe '.deleted_dossiers_states' do
     subject { Stat.send(:deleted_dossiers_states) }
@@ -55,42 +57,45 @@ describe Stat do
         create(:dossier, state: :en_construction, en_construction_at: i.months.ago)
         create(:deleted_dossier, dossier_id: i + 100, state: :en_construction, deleted_at: i.month.ago)
       end
-      rs = Stat.send(:cumulative_hash, [
+      rs = Stat.send(:cumulative_month_serie, [
         [Dossier.state_not_brouillon, :en_construction_at],
         [DeletedDossier.where.not(state: :brouillon), :deleted_at]
       ])
       expect(rs).to eq({
-        12.months.ago.utc.beginning_of_month => 2,
-       11.months.ago.utc.beginning_of_month => 4,
-       10.months.ago.utc.beginning_of_month => 6,
-       9.months.ago.utc.beginning_of_month => 8,
-       8.months.ago.utc.beginning_of_month => 10,
-       7.months.ago.utc.beginning_of_month => 12,
-       6.months.ago.utc.beginning_of_month => 14,
-       5.months.ago.utc.beginning_of_month => 16,
-       4.months.ago.utc.beginning_of_month => 18,
-       3.months.ago.utc.beginning_of_month => 20,
-       2.months.ago.utc.beginning_of_month => 22,
-       1.month.ago.utc.beginning_of_month => 24
-      })
+        12 => 2,
+        11 => 4,
+        10 => 6,
+        9 => 8,
+        8 => 10,
+        7 => 12,
+        6 => 14,
+        5 => 16,
+        4 => 18,
+        3 => 20,
+        2 => 22,
+        1 => 24
+      }.transform_keys { |i| i.months.ago.beginning_of_month.to_date })
     end
   end
 
   describe '.last_four_months_hash' do
     it 'works count and cumulate counters by month for both dossier and deleted dossiers' do
-      4.downto(1).map do |i|
-        create(:dossier, state: :en_construction, en_construction_at: i.months.ago)
-        create(:deleted_dossier, dossier_id: i + 100, state: :en_construction, deleted_at: i.month.ago)
+      travel_to Time.zone.local(2021, 11, 25) do
+        4.downto(1).map do |i|
+          create(:dossier, state: :en_construction, depose_at: i.months.ago)
+          create(:deleted_dossier, dossier_id: i + 100, state: :en_construction, deleted_at: i.month.ago)
+        end
+        rs = Stat.send(:last_four_months_serie, [
+          [Dossier.state_not_brouillon, :depose_at],
+          [DeletedDossier.where.not(state: :brouillon), :deleted_at]
+        ])
+        expect(rs).to eq({
+          "juillet 2021" => 2,
+          "août 2021" => 2,
+          "septembre 2021" => 2,
+          "octobre 2021" => 2
+        })
       end
-      rs = Stat.send(:last_four_months_hash, [
-        [Dossier.state_not_brouillon, :en_construction_at],
-        [DeletedDossier.where.not(state: :brouillon), :deleted_at]
-      ])
-      expect(rs).to eq([
-        ["août 2021", 2],
-        ["septembre 2021", 2],
-        ["octobre 2021", 2]
-      ])
     end
   end
 
