@@ -157,7 +157,7 @@ services:
       - DB_PASSWORD
       - DB_POOL
       - DB_USERNAME
-      - DELAYED_JOB_ARGS=${DELAYED_JOB_ARGS:---pool=*:3}
+      - DELAYED_JOB_ARGS=${DELAYED_JOB_ARGS:---pool=*:10}
       - ENCRYPTION_SERVICE_SALT
       - MAILER_LOGO_SRC
       - MAILJET_API_KEY
