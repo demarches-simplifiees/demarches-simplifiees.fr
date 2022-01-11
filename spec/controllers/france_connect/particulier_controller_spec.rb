@@ -106,6 +106,16 @@ describe FranceConnect::ParticulierController, type: :controller do
               expect(response).to redirect_to(france_connect_particulier_merge_path(fci.reload.merge_token))
             end
           end
+          context 'and an instructeur with the same email exists' do
+            let!(:preexisting_user) { create(:instructeur, email: email) }
+
+            it 'redirects to the merge process' do
+              expect { subject }.not_to change { User.count }
+
+              expect(response).to redirect_to(new_user_session_path)
+              expect(flash[:alert]).to eq(I18n.t('errors.messages.france_connect.forbidden_html', reset_link: new_user_password_path))
+            end
+          end
         end
       end
 
@@ -150,7 +160,7 @@ describe FranceConnect::ParticulierController, type: :controller do
         else
           expect(subject).to redirect_to root_path
         end
-        expect(flash.alert).to eq('Votre compte FranceConnect a expiré, veuillez recommencer.')
+        expect(flash.alert).to eq("Le délai pour fusionner les comptes FranceConnect et #{APPLICATION_NAME} est expirée. Veuillez recommencer la procédure pour vous fusionner les comptes.")
       end
     end
   end
@@ -173,7 +183,7 @@ describe FranceConnect::ParticulierController, type: :controller do
 
       it do
         expect(subject).to redirect_to root_path
-        expect(flash.alert).to eq('Votre compte FranceConnect a expiré, veuillez recommencer.')
+        expect(flash.alert).to eq("Le délai pour fusionner les comptes FranceConnect et #{APPLICATION_NAME} est expirée. Veuillez recommencer la procédure pour vous fusionner les comptes.")
       end
     end
   end
@@ -241,6 +251,55 @@ describe FranceConnect::ParticulierController, type: :controller do
     end
   end
 
+  describe '#mail_merge_with_existing_account' do
+    let(:fci) { FranceConnectInformation.create!(user_info) }
+    let!(:merge_token) { fci.create_merge_token! }
+
+    context 'when the merge_token is ok and the user is found' do
+      subject { post :mail_merge_with_existing_account, params: { merge_token: fci.merge_token } }
+
+      let!(:user) { create(:user, email: email, password: TEST_PASSWORD) }
+
+      it 'merges the account, signs in, and delete the merge token' do
+        subject
+        fci.reload
+
+        expect(fci.user).to eq(user)
+        expect(fci.merge_token).to be_nil
+        expect(controller.current_user).to eq(user)
+        expect(flash[:notice]).to eq("Les comptes FranceConnect et #{APPLICATION_NAME} sont à présent fusionnés")
+      end
+
+      context 'but the targeted user is an instructeur' do
+        let!(:user) { create(:instructeur, email: email, password: TEST_PASSWORD).user }
+
+        it 'redirects to the new session' do
+          subject
+          expect(FranceConnectInformation.exists?(fci.id)).to be_falsey
+          expect(controller.current_user).to be_nil
+          expect(response).to redirect_to(new_user_session_path)
+          expect(flash[:alert]).to eq(I18n.t('errors.messages.france_connect.forbidden_html', reset_link: new_user_password_path))
+        end
+      end
+    end
+
+    context 'when the merge_token is not ok' do
+      subject { post :mail_merge_with_existing_account, params: { merge_token: 'ko' } }
+
+      let!(:user) { create(:user, email: email) }
+
+      it 'increases the failed attempts counter' do
+        subject
+        fci.reload
+
+        expect(fci.user).to be_nil
+        expect(fci.merge_token).not_to be_nil
+        expect(controller.current_user).to be_nil
+        expect(response).to redirect_to(root_path)
+      end
+    end
+  end
+
   describe '#merge_with_new_account' do
     let(:fci) { FranceConnectInformation.create!(user_info) }
     let(:merge_token) { fci.create_merge_token! }
@@ -278,6 +337,15 @@ describe FranceConnect::ParticulierController, type: :controller do
 
         expect(response.body).to include('entrez votre mot de passe')
       end
+    end
+  end
+
+  describe '#resend_and_renew_merge_confirmation' do
+    let(:fci) { FranceConnectInformation.create!(user_info) }
+    let(:merge_token) { fci.create_merge_token! }
+    it 'renew token' do
+      expect { post :resend_and_renew_merge_confirmation, params: { merge_token: merge_token } }.to change { fci.reload.merge_token }
+      expect(response).to redirect_to(france_connect_particulier_merge_path(fci.reload.merge_token))
     end
   end
 end

@@ -83,3 +83,11 @@
     width: 200px;
   }
 }
+
+.file-hidden-by-user {
+  background-color: rgba(242, 137, 0, 0.6);
+
+  &:hover {
+    background-color: rgba(242, 137, 0, 0.6) !important;
+  }
+}

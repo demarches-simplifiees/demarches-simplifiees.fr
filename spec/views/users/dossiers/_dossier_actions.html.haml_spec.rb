@@ -18,14 +18,4 @@ describe 'users/dossiers/dossier_actions.html.haml', type: :view do
     let(:procedure) { create(:procedure, :closed) }
     it { is_expected.not_to have_link('Commencer un autre dossier') }
   end
-
-  context 'when there are no actions to display' do
-    let(:procedure) { create(:procedure, :closed) }
-    let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
-    let(:user) { create(:user) }
-
-    it 'doesn’t render the menu at all' do
-      expect(subject).not_to have_selector('.dropdown')
-    end
-  end
 end

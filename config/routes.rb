@@ -125,6 +125,8 @@ Rails.application.routes.draw do
     get 'particulier' => 'particulier#login'
     get 'particulier/callback' => 'particulier#callback'
     get 'particulier/merge/:merge_token' => 'particulier#merge', as: :particulier_merge
+    get 'particulier/mail_merge_with_existing_account/:merge_token' => 'particulier#mail_merge_with_existing_account', as: :particulier_mail_merge_with_existing_account
+    post 'particulier/resend_and_renew_merge_confirmation' => 'particulier#resend_and_renew_merge_confirmation', as: :particulier_resend_and_renew_merge_confirmation
     post 'particulier/merge_with_existing_account' => 'particulier#merge_with_existing_account'
     post 'particulier/merge_with_new_account' => 'particulier#merge_with_new_account'
   end
@@ -196,7 +198,7 @@ Rails.application.routes.draw do
   end
 
   # order matters: we don't want those routes to match /admin/procedures/:id
-  get 'admin/procedures/new' => 'new_administrateur/procedures#new', as: :new_admin_procedure
+  get 'admin/procedures/new' => 'administrateurs/procedures#new', as: :new_admin_procedure
 
   namespace :admin do
     get 'procedures/archived', to: redirect('/admin/procedures?statut=archivees')
@@ -278,6 +280,7 @@ Rails.application.routes.draw do
         get 'messagerie'
         post 'commentaire' => 'dossiers#create_commentaire'
         post 'ask_deletion'
+        patch 'hide_dossier'
         get 'attestation'
         get 'qrcode/:created_at', action: 'qrcode', as: :qrcode
         get 'transferer', to: 'dossiers#transferer'
@@ -407,7 +410,7 @@ Rails.application.routes.draw do
   # Administrateur
   #
 
-  namespace :admin, module: 'new_administrateur' do
+  scope module: 'administrateurs', path: 'admin', as: 'admin' do
     resources :procedures do
       collection do
         get 'new_from_existing'

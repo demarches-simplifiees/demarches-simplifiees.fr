@@ -15,25 +15,30 @@
     - else
       %h1.page-title= t('views.users.dossiers.index.dossiers')
       %ul.tabs
-        - if @user_dossiers.count > 0
-          = tab_item(t('pluralize.mes_dossiers', count: @user_dossiers.count),
-            dossiers_path(statut: 'mes-dossiers'),
-            active: @statut == 'mes-dossiers',
+        - if @user_dossiers.present?
+          = tab_item(t('pluralize.en_cours', count: @user_dossiers.count),
+            dossiers_path(statut: 'en-cours'),
+            active: @statut == 'en-cours',
             badge: number_with_html_delimiter(@user_dossiers.count))
+        - if @dossiers_traites.present?
+          = tab_item(t('pluralize.traites', count: @dossiers_traites.count),
+            dossiers_path(statut: 'traites'),
+            active: @statut == 'traites',
+            badge: number_with_html_delimiter(@dossiers_traites.count))
 
-        - if @dossiers_invites.count > 0
+        - if @dossiers_invites.present?
           = tab_item(t('pluralize.dossiers_invites', count: @dossiers_invites.count),
             dossiers_path(statut: 'dossiers-invites'),
             active: @statut == 'dossiers-invites',
             badge: number_with_html_delimiter(@dossiers_invites.count))
 
-        - if @dossiers_supprimes.count > 0
+        - if @dossiers_supprimes.present?
           = tab_item(t('pluralize.dossiers_supprimes', count: @dossiers_supprimes.count),
             dossiers_path(statut: 'dossiers-supprimes'),
             active: @statut == 'dossiers-supprimes',
             badge: number_with_html_delimiter(@dossiers_supprimes.count))
 
-        - if @dossier_transfers.count > 0
+        - if @dossier_transfers.present?
           = tab_item(t('pluralize.dossiers_transferes', count: @dossier_transfers.count),
             dossiers_path(statut: 'dossiers-transferes'),
             active: @statut == 'dossiers-transferes',
@@ -46,8 +51,11 @@
             badge: number_with_html_delimiter(@dossiers_close_to_expiration.count))
 
 .container
-  - if @statut == "mes-dossiers"
+  - if @statut == "en-cours"
     = render partial: "dossiers_list", locals: { dossiers: @user_dossiers }
+
+  - if @statut == "traites"
+    = render partial: "dossiers_list", locals: { dossiers: @dossiers_traites }
 
   - if @statut == "dossiers-invites"
     = render partial: "dossiers_list", locals: { dossiers: @dossiers_invites }
