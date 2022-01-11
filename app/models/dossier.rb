@@ -347,23 +347,26 @@ class Dossier < ApplicationRecord
   scope :without_en_construction_expiration_notice_sent, -> { where(en_construction_close_to_expiration_notice_sent_at: nil) }
   scope :without_termine_expiration_notice_sent, -> { where(termine_close_to_expiration_notice_sent_at: nil) }
 
+  scope :discarded_expired, -> { discarded.where('dossiers.hidden_at < ?', 1.week.ago) }
+  scope :discarded_by_user_expired, -> { discarded.where('dossiers.hidden_by_user_at < ?', 1.week.ago) }
+  scope :discarded_by_administration_expired, -> { discarded.where('dossiers.hidden_by_administration_at < ?', 1.week.ago) }
   scope :discarded_brouillon_expired, -> do
     with_discarded
-      .discarded
       .state_brouillon
-      .where('hidden_at < ?', 1.week.ago)
+      .discarded_expired
+      .or(state_brouillon.discarded_by_user_expired)
   end
   scope :discarded_en_construction_expired, -> do
     with_discarded
-      .discarded
       .state_en_construction
-      .where('dossiers.hidden_at < ?', 1.week.ago)
+      .discarded_expired
+      .or(state_en_construction.discarded_by_user_expired)
   end
   scope :discarded_termine_expired, -> do
     with_discarded
-      .discarded
       .state_termine
-      .where('dossiers.hidden_at < ?', 1.week.ago)
+      .discarded_expired
+      .or(state_termine.discarded_by_user_expired.discarded_by_administration_expired)
   end
 
   scope :brouillon_near_procedure_closing_date, -> do
@@ -774,14 +777,14 @@ class Dossier < ApplicationRecord
     end
 
     if can_be_hidden_by_user? && author_is_user(author)
-      update(hidden_by_user_at: Time.zone.now)
+      update(hidden_by_user_at: Time.zone.now, dossier_transfer_id: nil)
     end
 
     user_email = user_deleted? ? nil : user_email_for(:notification)
     deleted_dossier = nil
 
     transaction do
-      if deleted_by_instructeur_and_user? || en_construction? && author_is_administration(author) || brouillon?
+      if deleted_by_instructeur_and_user? || en_construction? || brouillon?
         if keep_track_on_deletion?
           log_dossier_operation(author, :supprimer, self)
           deleted_dossier = DeletedDossier.create_from_dossier(self, reason)
