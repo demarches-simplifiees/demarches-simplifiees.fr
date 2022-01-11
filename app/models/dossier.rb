@@ -16,6 +16,7 @@
 #  en_instruction_at                                  :datetime
 #  groupe_instructeur_updated_at                      :datetime
 #  hidden_at                                          :datetime
+#  hidden_by_user_at                                  :datetime
 #  identity_updated_at                                :datetime
 #  last_avis_updated_at                               :datetime
 #  last_champ_private_updated_at                      :datetime
@@ -207,9 +208,11 @@ class Dossier < ApplicationRecord
   scope :state_en_construction_ou_instruction, -> { where(state: EN_CONSTRUCTION_OU_INSTRUCTION) }
   scope :state_instruction_commencee,          -> { where(state: INSTRUCTION_COMMENCEE) }
   scope :state_termine,                        -> { where(state: TERMINE) }
+  scope :state_not_termine,                    -> { where.not(state: TERMINE) }
 
   scope :archived,      -> { where(archived: true) }
   scope :not_archived,  -> { where(archived: false) }
+  scope :not_hidden_by_user, -> { where(hidden_by_user_at: nil) }
 
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
   scope :order_by_created_at, -> (order = :asc) { order(en_construction_at: order, created_at: order, id: order) }
@@ -230,6 +233,7 @@ class Dossier < ApplicationRecord
   scope :en_construction,             -> { not_archived.state_en_construction }
   scope :en_instruction,              -> { not_archived.state_en_instruction }
   scope :termine,                     -> { not_archived.state_termine }
+
   scope :processed_in_month, -> (month) do
     state_termine
       .joins(:traitements)
@@ -1099,6 +1103,10 @@ class Dossier < ApplicationRecord
       Avis.discarded_termine_expired.destroy_all
       discarded_termine_expired.destroy_all
     end
+  end
+
+  def hidden_by_user?
+    self.hidden_by_user_at.present?
   end
 
   private

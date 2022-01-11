@@ -6,14 +6,14 @@
 .column.commencer
   .form
     - if !user_signed_in?
-      %p.center= t('via_un_compte', name: APPLICATION_NAME)
+      %p.center= t('views.shared.account.title', name: APPLICATION_NAME)
       %br
       = link_to new_user_registration_path, class: ['button large expand'] do
         = t('views.shared.account.create')
       = link_to t('views.shared.account.already_user'), new_user_session_path, class: ['button large expand']
 
     - else
-      - dossiers = current_user.dossiers.where(revision: @revision.draft? ? @revision : @procedure.revisions.where.not(id: @procedure.draft_revision_id))
+      - dossiers = current_user.dossiers.where(hidden_by_user_at: nil, revision: @revision.draft? ? @revision : @procedure.revisions.where.not(id: @procedure.draft_revision_id))
       - drafts = dossiers.merge(Dossier.state_brouillon)
       - not_drafts = dossiers.merge(Dossier.state_not_brouillon)
 

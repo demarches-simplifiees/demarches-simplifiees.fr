@@ -100,8 +100,7 @@
         %tbody
           - @projected_dossiers.each do |p|
             - path = instructeur_dossier_path(@procedure, p.dossier_id)
-
-            %tr
+            %tr{ class: [p.hidden_by_user_at.present? && "file-hidden-by-user"] }
               %td.folder-col
                 %a.cell-link{ href: path }
                   %span.icon.folder
@@ -113,7 +112,9 @@
 
               - p.columns.each do |column|
                 %td
-                  %a.cell-link{ href: path }= column
+                  %a.cell-link{ href: path }
+                    = column
+                    = "- #{t('views.instructeurs.dossiers.deleted_by_user')}" if p.hidden_by_user_at.present?
 
               %td.status-col
                 %a.cell-link{ href: path }= status_badge(p.state)

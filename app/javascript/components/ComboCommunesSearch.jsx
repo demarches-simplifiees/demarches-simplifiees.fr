@@ -91,6 +91,7 @@ function ComboCommunesSearch(params) {
           inputId={!departementCode ? inputId : null}
           aria-describedby={departementDescribedBy}
           placeholder={placeholderDepartement}
+          addForeignDepartement={false}
           required={params.mandatory}
           onChange={(value, result) => {
             setDepartementCode(result?.code);

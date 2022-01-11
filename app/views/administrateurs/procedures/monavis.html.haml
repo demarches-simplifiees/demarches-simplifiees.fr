@@ -1,0 +1,15 @@
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [link_to('Démarches', admin_procedures_path),
+                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
+                    'MonAvis'] }
+
+.container
+  %h1.page-title
+    Insérer un lien vers « MonAvis »
+
+.container
+  %h1
+  = form_for @procedure, url: url_for({ controller: 'administrateurs/procedures', action: :update_monavis }), multipart: true, html: { class: 'form' } do |f|
+    = render partial: 'monavis', locals: { f: f }
+    .text-right
+      = f.button 'Enregistrer', class: 'button primary send'

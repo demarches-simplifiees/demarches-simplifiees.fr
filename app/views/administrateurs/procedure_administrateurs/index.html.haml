@@ -1,0 +1,18 @@
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [link_to('Démarches', admin_procedures_path),
+                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
+                    'Administrateurs'], preview: false }
+
+.container
+  %h1 Administrateurs de « #{@procedure.libelle} »
+  %table.table
+    %thead
+      %th= 'Adresse email'
+      %th= 'Enregistré le'
+      %th= 'État'
+    %tbody{ id: "procedure-#{@procedure.id}-administrateurs" }
+      = render partial: 'administrateur', collection: @procedure.administrateurs.order('users.email')
+    %tfoot
+      %tr
+        %th{ colspan: 4 }
+          = render 'add_admin_form', procedure: @procedure

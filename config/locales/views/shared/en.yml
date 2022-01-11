@@ -26,6 +26,7 @@ en:
         already_user: "I already have an account"
         create: 'Create an account'
         signin: 'Sign in'
+        title: "using %{name} account"
       commentaires:
         destroy:
           button: 'Destroy this message'

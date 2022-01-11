@@ -127,6 +127,9 @@ fr:
           form: "Formulaire"
           edit_siret: "Modifier le Numéro TAHITI"
           edit_identity: "Modifier l’identité"
+    instructeurs:
+      dossiers:
+        deleted_by_user: "Dossier supprimé par l'usager"
     users:
       dossiers:
         autosave:
@@ -186,6 +189,7 @@ fr:
           edit_dossier: "Modifier le dossier"
           start_other_dossier: "Commencer un autre dossier"
           delete_dossier: "Supprimer le dossier"
+          hide_dossier: "Supprimer de votre interface"
           transfer_dossier: "Transferer le dossier"
           edit_draft: "Modifier le brouillon"
           actions: "Actions"
@@ -350,10 +354,14 @@ fr:
       zero: archivé
       one: archivé
       other: archivés
-    mes_dossiers:
-      zero: mon dossier
-      one: mon dossier
-      other: mes dossiers
+    en_cours:
+      zero: en cours
+      one: en cours
+      other: en cours
+    traites:
+      zero: traité
+      one: traité
+      other: traités
     dossiers_invites:
       zero: dossier invité
       one: dossier invité
@@ -407,8 +415,7 @@ fr:
         identity_saved: "Identité enregistrée"
       attestation:
         no_longer_available: "L’attestation n'est plus disponible sur ce dossier."
-  via_un_compte: "via un compte %{name}"
-  new_administrateur:
+  administrateurs:
     procedures:
       show:
         ready: "Validé"
@@ -439,3 +446,23 @@ fr:
         ready: "Validé"
         needs_configuration: "À configurer"
         configure_api_particulier_token: "Configurer le jeton API particulier"
+  france_connect:
+    particulier:
+      password_confirmation:
+        back: 'revenir en arrière'
+        already_exists: Le compte %{email} existe déjà sur %{application_name}
+        fill_in_password: entrez votre mot de passe pour fusionner les comptes
+      merge:
+        title: "Fusion des comptes FranceConnect et %{application_name}"
+        subtitle: "Bonjour,<br /><br />Votre compte FranceConnect utilise <b class='bold'>%{email}</b> comme email de contact.<br />Or il existe un compte sur %{application_name} avec cet email."
+        label_select_merge_flow: Ce compte %{email} vous appartient-il ?
+        title_fill_in_password:  Pour les fusionner, entrez votre mot de passe
+        button_merge: Fusionner les comptes
+        title_fill_in_email: Donnez-nous alors le mail que %{application_name} utilisera pour vous contacter
+        button_use_this_email: Utiliser ce mail
+        link_confirm_by_email: Confirmer mon compte par email
+      flash:
+        confirmation_mail_sent: "Nous venons de vous envoyer le mail de confirmation, veuillez cliquer sur le lien contenu dans ce mail pour fusionner vos comptes"
+        invalid_password: "Mauvais mot de passe"
+        connection_done: "Les comptes FranceConnect et %{application_name} sont à présent fusionnés"
+        merger_token_expired: "Le délai pour fusionner les comptes FranceConnect et %{application_name} est expirée. Veuillez recommencer la procédure pour vous fusionner les comptes."

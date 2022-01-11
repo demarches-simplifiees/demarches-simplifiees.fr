@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { QueryClientProvider } from 'react-query';
 import { matchSorter } from 'match-sorter';
 
@@ -16,14 +17,19 @@ function expandResultsWithForeignDepartement(term, results) {
   ];
 }
 
-export function ComboDepartementsSearch(params) {
+export function ComboDepartementsSearch({
+  addForeignDepartement = true,
+  ...params
+}) {
   return (
     <ComboSearch
       {...params}
       scope="departements"
       minimumInputLength={1}
       transformResult={({ code, nom }) => [code, `${code} - ${nom}`]}
-      transformResults={expandResultsWithForeignDepartement}
+      transformResults={
+        addForeignDepartement ? expandResultsWithForeignDepartement : undefined
+      }
     />
   );
 }
@@ -38,5 +44,10 @@ function ComboDepartementsSearchDefault(params) {
     </QueryClientProvider>
   );
 }
+
+ComboDepartementsSearch.propTypes = {
+  ...ComboSearch.propTypes,
+  addForeignDepartement: PropTypes.bool
+};
 
 export default ComboDepartementsSearchDefault;

@@ -1,5 +1,5 @@
 class DossierProjectionService
-  class DossierProjection < Struct.new(:dossier_id, :state, :archived, :columns)
+  class DossierProjection < Struct.new(:dossier_id, :state, :archived, :hidden_by_user_at, :columns)
   end
 
   TABLE = 'table'
@@ -20,8 +20,9 @@ class DossierProjectionService
   def self.project(dossiers_ids, fields)
     state_field = { TABLE => 'self', COLUMN => 'state' }
     archived_field = { TABLE => 'self', COLUMN => 'archived' }
+    hidden_by_user_at_field = { TABLE => 'self', COLUMN => 'hidden_by_user_at' }
 
-    ([state_field, archived_field] + fields) # the view needs state and archived dossier attributes
+    ([state_field, archived_field, hidden_by_user_at_field] + fields) # the view needs state and archived dossier attributes
       .each { |f| f[:id_value_h] = {} }
       .group_by { |f| f[TABLE] } # one query per table
       .each do |table, fields|
@@ -45,7 +46,7 @@ class DossierProjectionService
           .pluck(:id, *fields.map { |f| f[COLUMN].to_sym })
           .each do |id, *columns|
             fields.zip(columns).each do |field, value|
-              if [state_field, archived_field].include?(field)
+              if [state_field, archived_field, hidden_by_user_at_field].include?(field)
                 field[:id_value_h][id] = value
               else
                 field[:id_value_h][id] = value&.strftime('%d/%m/%Y') # other fields are datetime
@@ -98,6 +99,7 @@ class DossierProjectionService
         dossier_id,
         state_field[:id_value_h][dossier_id],
         archived_field[:id_value_h][dossier_id],
+        hidden_by_user_at_field[:id_value_h][dossier_id],
         fields.map { |f| f[:id_value_h][dossier_id] }
       )
     end
