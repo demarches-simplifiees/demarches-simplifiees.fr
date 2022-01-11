@@ -318,9 +318,9 @@ describe TagsSubstitutionConcern, type: :model do
         Timecop.freeze(Time.zone.local(2001, 2, 3))
         dossier.passer_en_construction!
         Timecop.freeze(Time.zone.local(2004, 5, 6))
-        dossier.passer_en_instruction!(instructeur)
+        dossier.passer_en_instruction!(instructeur: instructeur)
         Timecop.freeze(Time.zone.local(2007, 8, 9))
-        dossier.accepter!(instructeur, nil)
+        dossier.accepter!(instructeur: instructeur)
         Timecop.return
       end
 
