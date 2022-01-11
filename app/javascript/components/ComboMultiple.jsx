@@ -196,13 +196,21 @@ function ComboMultiple({
       </ComboboxTokenLabel>
       {results && (results.length > 0 || !acceptNewValues) && (
         <ComboboxPopover className="shadow-popup">
-          {results.length === 0 && (
-            <p>
-              Aucun résultat{' '}
-              <button onClick={() => setTerm('')}>Effacer</button>
-            </p>
-          )}
           <ComboboxList>
+            {results.length === 0 && (
+              <li data-reach-combobox-no-results>
+                Aucun résultat{' '}
+                <button
+                  onClick={() => {
+                    setTerm('');
+                    inputRef.current?.focus();
+                  }}
+                  className="button"
+                >
+                  Effacer
+                </button>
+              </li>
+            )}
             {results.map(([label, value], index) => {
               if (label.startsWith('--')) {
                 return <ComboboxSeparator key={index} value={label} />;
