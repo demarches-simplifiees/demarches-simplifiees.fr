@@ -373,7 +373,7 @@ class Procedure < ApplicationRecord
   end
 
   def draft_changed?
-    publiee? && published_revision.changed?(draft_revision) && revision_changes.present?
+    publiee? && published_revision.different_from?(draft_revision) && revision_changes.present?
   end
 
   def revision_changes
