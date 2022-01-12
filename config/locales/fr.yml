@@ -371,10 +371,14 @@ fr:
       zero: dossier invité
       one: dossier invité
       other: dossiers invités
-    dossiers_supprimes:
-      zero: dossier supprimé
-      one: dossier supprimé
-      other: dossiers supprimés
+    dossiers_supprimes_recemment:
+      zero: dossier supprimé recemment
+      one: dossier supprimé recemment
+      other: dossiers supprimés recemment
+    dossiers_supprimes_definitivement:
+      zero: dossier supprimé définitivement
+      one: dossier supprimé définitivement
+      other: dossiers supprimés définitivement
     dossiers_transferes:
       zero: demande de transfert
       one: demande de transfert
@@ -410,6 +414,7 @@ fr:
       ask_deletion:
         undergoingreview: "L’instruction de votre dossier a commencé, il n’est plus possible de supprimer votre dossier. Si vous souhaitez annuler l’instruction contactez votre administration par la messagerie de votre dossier."
         soft_deleted_dossier: "Votre dossier a bien été supprimé de votre interface"
+      restore: "Votre dossier a bien été restauré"
       update_brouillon:
         draft_saved: "Votre brouillon a bien été sauvegardé."
       etablissement:
