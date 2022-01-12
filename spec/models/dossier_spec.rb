@@ -1327,29 +1327,31 @@ describe Dossier do
   end
 
   describe 'discarded_brouillon_expired and discarded_en_construction_expired' do
-    let(:super_admin) { create(:super_admin) }
+    let(:administrateur) { create(:administrateur) }
+    let(:user) { administrateur.user }
+    let(:reason) { DeletedDossier.reasons.fetch(:user_request) }
 
     before do
-      create(:dossier)
-      create(:dossier, :en_construction)
-      create(:dossier).discard!
-      create(:dossier, :en_construction).discard!
+      create(:dossier, user: user)
+      create(:dossier, :en_construction, user: user)
+      create(:dossier, user: user).discard_and_keep_track!(user, reason)
+      create(:dossier, :en_construction, user: user).discard_and_keep_track!(user, reason)
 
       Timecop.travel(2.months.ago) do
-        create(:dossier).discard!
-        create(:dossier, :en_construction).discard!
+        create(:dossier, user: user).discard_and_keep_track!(user, reason)
+        create(:dossier, :en_construction, user: user).discard_and_keep_track!(user, reason)
 
-        create(:dossier).procedure.discard_and_keep_track!(super_admin)
-        create(:dossier, :en_construction).procedure.discard_and_keep_track!(super_admin)
+        create(:dossier, user: user).procedure.discard_and_keep_track!(administrateur)
+        create(:dossier, :en_construction, user: user).procedure.discard_and_keep_track!(administrateur)
       end
       Timecop.travel(1.week.ago) do
-        create(:dossier).discard!
-        create(:dossier, :en_construction).discard!
+        create(:dossier, user: user).discard_and_keep_track!(user, reason)
+        create(:dossier, :en_construction, user: user).discard_and_keep_track!(user, reason)
       end
     end
 
-    it { expect(Dossier.discarded_brouillon_expired.count).to eq(3) }
-    it { expect(Dossier.discarded_en_construction_expired.count).to eq(3) }
+    it { expect(Dossier.discarded_brouillon_expired.count).to eq(2) }
+    it { expect(Dossier.discarded_en_construction_expired.count).to eq(0) }
   end
 
   describe "discarded procedure dossier should be able to access it's procedure" do
