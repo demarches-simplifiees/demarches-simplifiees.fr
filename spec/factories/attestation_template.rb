@@ -4,8 +4,6 @@ FactoryBot.define do
     body { 'body' }
     footer { 'footer' }
     activated { true }
-
-    association :procedure
   end
 
   trait :with_files do
