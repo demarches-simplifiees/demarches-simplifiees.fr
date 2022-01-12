@@ -720,9 +720,11 @@ class Dossier < ApplicationRecord
     { lon: lon, lat: lat, zoom: zoom }
   end
 
-  def unspecified_attestation_champs
-    attestation_template = procedure.attestation_template
+  def attestation_template
+    revision.attestation_template
+  end
 
+  def unspecified_attestation_champs
     if attestation_template&.activated?
       attestation_template.unspecified_champs_for_dossier(self)
     else
@@ -731,8 +733,8 @@ class Dossier < ApplicationRecord
   end
 
   def build_attestation
-    if procedure.attestation_template&.activated?
-      procedure.attestation_template.attestation_for(self)
+    if attestation_template&.activated?
+      attestation_template.attestation_for(self)
     end
   end
 
