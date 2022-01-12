@@ -27,10 +27,8 @@ describe Manager::ProceduresController, type: :controller do
   end
 
   describe '#discard' do
-    let(:dossier) { create(:dossier, :en_construction) }
+    let(:dossier) { create(:dossier, :accepte) }
     let(:procedure) { dossier.procedure }
-    let(:deleted_dossier) { DeletedDossier.find_by(dossier_id: dossier.id) }
-    let(:operations) { dossier.dossier_operation_logs.map(&:operation).map(&:to_sym) }
 
     before do
       post :discard, params: { id: procedure.id }
@@ -39,17 +37,12 @@ describe Manager::ProceduresController, type: :controller do
     end
 
     it { expect(procedure.discarded?).to be_truthy }
-    it { expect(dossier.discarded?).to be_truthy }
-    it { expect(deleted_dossier).not_to be_nil }
-    it { expect(deleted_dossier.reason).to eq("procedure_removed") }
-    it { expect(operations).to eq([:supprimer]) }
+    it { expect(dossier.hidden_by_administration?).to be_truthy }
   end
 
   describe '#restore' do
-    let(:dossier) { create(:dossier, :en_construction, :with_individual) }
+    let(:dossier) { create(:dossier, :accepte, :with_individual) }
     let(:procedure) { dossier.procedure }
-    let(:deleted_dossier) { DeletedDossier.find_by(dossier_id: dossier.id) }
-    let(:operations) { dossier.dossier_operation_logs.map(&:operation).map(&:to_sym) }
 
     before do
       procedure.discard_and_keep_track!(super_admin)
@@ -59,9 +52,7 @@ describe Manager::ProceduresController, type: :controller do
     end
 
     it { expect(procedure.kept?).to be_truthy }
-    it { expect(dossier.kept?).to be_truthy }
-    it { expect(deleted_dossier).to be_nil }
-    it { expect(operations).to eq([:supprimer, :restaurer]) }
+    it { expect(dossier.hidden_by_administration?).to be_falsey }
   end
 
   describe '#index' do
