@@ -5288,6 +5288,18 @@
               "deprecationReason": null
             },
             {
+              "name": "disableNotification",
+              "description": "Désactiver l’envoi de l’email de notification après l’opération",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "defaultValue": "false",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "clientMutationId",
               "description": "A unique identifier for the client performing the mutation.",
               "type": {
