@@ -535,6 +535,13 @@
   padding: $default-spacer;
 }
 
+[data-reach-combobox-no-results] {
+  font-size: 16px;
+  color: $dark-grey;
+  background: $light-grey;
+  padding: $default-spacer;
+}
+
 [data-reach-combobox-token] button {
   cursor: pointer;
   background-color: transparent;

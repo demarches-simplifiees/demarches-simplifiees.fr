@@ -14,9 +14,9 @@ module Instructeurs
 
       dossiers = current_instructeur.dossiers.joins(:groupe_instructeur)
       @dossiers_count_per_procedure = dossiers.all_state.group('groupe_instructeurs.procedure_id').reorder(nil).count
-      @dossiers_a_suivre_count_per_procedure = dossiers.without_followers.en_cours.group('groupe_instructeurs.procedure_id').reorder(nil).count
+      @dossiers_a_suivre_count_per_procedure = dossiers.without_followers.en_cours.visible_by_administration.group('groupe_instructeurs.procedure_id').reorder(nil).count
       @dossiers_archived_count_per_procedure = dossiers.archived.group('groupe_instructeurs.procedure_id').count
-      @dossiers_termines_count_per_procedure = dossiers.termine.not_hidden_by_administration.group('groupe_instructeurs.procedure_id').reorder(nil).count
+      @dossiers_termines_count_per_procedure = dossiers.termine.visible_by_administration.group('groupe_instructeurs.procedure_id').reorder(nil).count
       @dossiers_expirant_count_per_procedure = dossiers.termine_or_en_construction_close_to_expiration.group('groupe_instructeurs.procedure_id').count
       groupe_ids = current_instructeur.groupe_instructeurs.pluck(:id)
 
@@ -61,6 +61,7 @@ module Instructeurs
       @a_suivre_dossiers = dossiers_visibles
         .without_followers
         .en_cours
+        .visible_by_administration
 
       @followed_dossiers = current_instructeur
         .followed_dossiers
@@ -69,7 +70,7 @@ module Instructeurs
 
       @followed_dossiers_id = @followed_dossiers.pluck(:id)
 
-      @termines_dossiers = dossiers_visibles.termine.not_hidden_by_administration
+      @termines_dossiers = dossiers_visibles.termine.visible_by_administration
       @all_state_dossiers = dossiers_visibles.all_state
       @archived_dossiers = dossiers_visibles.archived
       @expirant_dossiers = dossiers_visibles.termine_or_en_construction_close_to_expiration

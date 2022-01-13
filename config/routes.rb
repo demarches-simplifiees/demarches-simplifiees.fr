@@ -269,6 +269,7 @@ Rails.application.routes.draw do
         get 'messagerie'
         post 'commentaire' => 'dossiers#create_commentaire'
         patch 'delete_dossier'
+        patch 'restore', to: 'dossiers#restore'
         get 'attestation'
         get 'transferer', to: 'dossiers#transferer'
       end
