@@ -232,17 +232,11 @@ function ComboMultiple({
                 </button>
               </li>
             )}
-            {results.map(([label, value], index) => {
+            {results.map(([label], index) => {
               if (label.startsWith('--')) {
                 return <ComboboxSeparator key={index} value={label} />;
               }
-              return (
-                <ComboboxOption
-                  key={index}
-                  value={label}
-                  data-option-value={value}
-                />
-              );
+              return <ComboboxOption key={index} value={label} />;
             })}
           </ComboboxList>
         </ComboboxPopover>
