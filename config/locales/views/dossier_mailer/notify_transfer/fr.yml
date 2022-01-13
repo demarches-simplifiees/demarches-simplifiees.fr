@@ -4,7 +4,7 @@ fr:
       subject:
         one: Une demande de transfert de dossier vous est adressée
         other: Une demande de transfert de dossiers vous est adressée
-      transfer_link: demande de transfer
+      transfer_link: demande de transfert
       body:
         one: |
           Accéder à la demande de transfert du dossier en cliquant sur le lien suivant :
