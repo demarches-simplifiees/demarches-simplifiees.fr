@@ -209,7 +209,7 @@ class Dossier < ApplicationRecord
   scope :hidden_by_user, -> { where.not(hidden_by_user_at: nil) }
   scope :hidden_by_administration, -> { where.not(hidden_by_administration_at: nil) }
   scope :visible_by_user, -> { where(hidden_by_user_at: nil) }
-  scope :visible_by_administration, -> { where("hidden_by_administration_at IS NULL AND NOT (hidden_by_user_at IS NOT NULL AND state = 'en_construction')") }
+  scope :visible_by_administration, -> { where("hidden_by_administration_at IS NULL AND NOT (hidden_by_user_at IS NOT NULL AND dossiers.state = 'en_construction')") }
 
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
   scope :order_by_created_at, -> (order = :asc) { order(depose_at: order, created_at: order, id: order) }
