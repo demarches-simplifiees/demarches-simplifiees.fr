@@ -110,9 +110,17 @@ function ComboMultiple({
         extraOptions[0] &&
         extraOptions[0][0] == selectedValue
       ) {
-        setNewValues((newValues) => [...newValues, selectedValue]);
+        setNewValues((newValues) => {
+          const set = new Set(newValues);
+          set.add(selectedValue);
+          return [...set];
+        });
       }
-      saveSelection((selections) => [...selections, selectedValue]);
+      saveSelection((selections) => {
+        const set = new Set(selections);
+        set.add(selectedValue);
+        return [...set];
+      });
     }
     setTerm('');
     awaitFormSubmit.done();
@@ -162,18 +170,17 @@ function ComboMultiple({
   };
 
   const onBlur = () => {
-    if (
+    const shouldSelect =
       term &&
-      [...extraOptions, ...options].map(([label]) => label).includes(term)
-    ) {
-      awaitFormSubmit(() => {
+      [...extraOptions, ...options].map(([label]) => label).includes(term);
+
+    awaitFormSubmit(() => {
+      if (shouldSelect) {
         onSelect(term);
-      });
-    } else {
-      setTimeout(() => {
+      } else {
         hidePopover();
-      }, 200);
-    }
+      }
+    });
   };
 
   return (
