@@ -1,21 +1,14 @@
-FROM ruby:3.0.3-alpine AS base
+FROM ruby:3.0.3-slim AS base
 
 #------------ intermediate container with specific dev tools
 FROM base AS builder
-# RUN ping -c 2 dl-cdn.alpinelinux.org
-# RUN wget  --debug --verbose  http://dl-cdn.alpinelinux.org/alpine/v3.8/main/x86_64/APKINDEX.tar.gz
-RUN apk add --update --virtual build-dependencies \
-        build-base \
-        imagemagick \
-        file \
-        gcc \
-        git \
-        icu \
-        libcurl \
-        curl-dev \
-        postgresql-dev \
-        yarn \
-        python3
+
+RUN apt-get update && apt-get install -y \
+  curl build-essential git libpq-dev libicu-dev gnupg &&\
+  curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+  echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
+  apt-get update && apt-get install -y yarn
+
 ENV INSTALL_PATH /app
 RUN mkdir -p ${INSTALL_PATH}
 COPY Gemfile Gemfile.lock package.json yarn.lock  ${INSTALL_PATH}/
@@ -23,28 +16,41 @@ WORKDIR ${INSTALL_PATH}
 
 # sassc https://github.com/sass/sassc-ruby/issues/146#issuecomment-608489863
 RUN bundle config specific_platform x86_64-linux \
-  && bundle config --local build.sassc --disable-march-tune-native
+  && bundle config build.sassc --disable-march-tune-native \
+    && bundle config deployment true \
+       && bundle config without "development test" \
+         && bundle install
 
-RUN bundle config --global frozen 1 &&\
-    bundle install --deployment --without development test&&\
-    yarn install --production
+RUN yarn install --production
 
 #----------- final tps
 FROM base
 ENV APP_PATH /app
 #----- minimum set of packages including PostgreSQL client, yarn
-RUN apk add --no-cache --update tzdata libcurl postgresql-libs yarn imagemagick icu
+RUN apt-get update && apt-get install -y \
+  curl git postgresql-client libicu67 imagemagick gnupg &&\
+  curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+  echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
+  apt-get update && apt-get install -y yarn
 
+#  curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
+RUN adduser --disabled-password --home ${APP_PATH} userapp
+USER userapp
 WORKDIR ${APP_PATH}
-RUN adduser -Dh ${APP_PATH} userapp
 
 #----- copy from previous container the dependency gems plus the current application files
-USER userapp
 
 COPY --chown=userapp:userapp --from=builder /app ${APP_PATH}/
-RUN bundle install --deployment --without development test && \
-    rm -fr .git && \
-    yarn install --production
+
+RUN bundle config specific_platform x86_64-linux \
+  && bundle config build.sassc --disable-march-tune-native \
+    && bundle config deployment true \
+       && bundle config without "development test" \
+         && bundle install
+
+RUN yarn install --production
+
+RUN rm -fr .git
 
 ENV \
     AGENT_CONNECT_ENABLED=""\
