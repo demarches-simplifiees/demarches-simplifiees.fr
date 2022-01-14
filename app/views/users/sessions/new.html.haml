@@ -1,6 +1,6 @@
 = content_for(:page_id, 'auth')
 
-.auth-form.sign-in-form
+#session-new.auth-form.sign-in-form
 
   = form_for resource, url: user_session_path, html: { class: "form" } do |f|
     %h1.huge-title= t('views.users.sessions.new.sign_in')
@@ -27,11 +27,7 @@
     = t('views.shared.france_connect_login.separator')
   - if AgentConnectService.enabled?
     .center
-      %p.mb-2= t('views.users.sessions.new.instructor_or_admin')
-      = link_to t('views.users.sessions.new.connect_with_agent_connect'), agent_connect_path
-    %hr
-  %p.center
-    %span= t('views.users.sessions.new.are_you_new', app_name: APPLICATION_NAME.gsub("-","&#8209;")).html_safe
-    %br
-    %br
-    = link_to t('views.users.sessions.new.find_procedure'), COMMENT_TROUVER_MA_DEMARCHE_URL, target: "_blank", class: "button expend secondary"
+      %h2.important-header= t('views.users.sessions.new.state_civil_servant')
+      %br
+      %br
+      = link_to t('views.users.sessions.new.connect_with_agent_connect'), agent_connect_path, class: "button expend secondary"
