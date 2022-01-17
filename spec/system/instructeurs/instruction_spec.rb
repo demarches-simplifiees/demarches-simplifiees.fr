@@ -181,7 +181,7 @@ describe 'Instructing a dossier:', js: true do
     let(:commentaire) { create(:commentaire, instructeur: instructeur, dossier: dossier) }
 
     before do
-      dossier.passer_en_instruction!(instructeur)
+      dossier.passer_en_instruction!(instructeur: instructeur)
       champ.piece_justificative_file.attach(io: File.open(path), filename: "piece_justificative_0.pdf", content_type: "application/pdf")
 
       log_in(instructeur.email, password)

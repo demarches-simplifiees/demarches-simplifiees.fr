@@ -25,9 +25,15 @@ class APIEntreprise::PfEtablissementAdapter < APIEntreprise::Adapter
   end
 
   def merge_values(etablissements, k)
-    Set.new(etablissements.map do |e|
-      e[k].presence
-    end.compact).to_a.join(' | ') || ''
+    if value_must_be_unique(k)
+      etablissements.find { |e| e.key?(k) }[k] || ''
+    else
+      Set.new(etablissements.filter_map { |e| e[k].presence }).to_a.join(' | ')
+    end
+  end
+
+  def value_must_be_unique(k)
+    k.to_s.include?('date')
   end
 
   def translation_map

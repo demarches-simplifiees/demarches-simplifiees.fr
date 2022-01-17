@@ -112,7 +112,7 @@ module Instructeurs
 
     def passer_en_instruction
       begin
-        dossier.passer_en_instruction!(current_instructeur)
+        dossier.passer_en_instruction!(instructeur: current_instructeur)
         flash.notice = 'Dossier passé en instruction.'
       rescue AASM::InvalidTransition => e
         flash.alert = aasm_error_message(e, target_state: :en_instruction)
@@ -138,7 +138,7 @@ module Instructeurs
           dossier.update!(hidden_by_user_at: nil)
         end
         flash.notice = "Le dossier #{dossier.id} a été repassé en instruction."
-        dossier.repasser_en_instruction!(current_instructeur)
+        dossier.repasser_en_instruction!(instructeur: current_instructeur)
       rescue AASM::InvalidTransition => e
         flash.alert = aasm_error_message(e, target_state: :en_instruction)
       end
@@ -150,19 +150,21 @@ module Instructeurs
       motivation = params[:dossier] && params[:dossier][:motivation]
       justificatif = params[:dossier] && params[:dossier][:justificatif_motivation]
 
+      h = { instructeur: current_instructeur, motivation: motivation, justificatif: justificatif }
+
       begin
         case params[:process_action]
         when "refuser"
           target_state = :refuse
-          dossier.refuser!(current_instructeur, motivation, justificatif: justificatif)
+          dossier.refuser!(h)
           flash.notice = "Dossier considéré comme refusé."
         when "classer_sans_suite"
           target_state = :sans_suite
-          dossier.classer_sans_suite!(current_instructeur, motivation, justificatif: justificatif)
+          dossier.classer_sans_suite!(h)
           flash.notice = "Dossier considéré comme sans suite."
         when "accepter"
           target_state = :accepte
-          dossier.accepter!(current_instructeur, motivation, justificatif: justificatif)
+          dossier.accepter!(h)
           flash.notice = "Dossier traité avec succès."
         end
       rescue AASM::InvalidTransition => e

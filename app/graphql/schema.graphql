@@ -1252,6 +1252,11 @@ input DossierRepasserEnInstructionInput {
   clientMutationId: String
 
   """
+  Désactiver l’envoi de l’email de notification après l’opération
+  """
+  disableNotification: Boolean = false
+
+  """
   Dossier ID
   """
   dossierId: ID!
