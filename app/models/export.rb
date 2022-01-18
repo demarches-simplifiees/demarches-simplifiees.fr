@@ -97,7 +97,8 @@ class Export < ApplicationRecord
   end
 
   def io(since: nil)
-    dossiers = Dossier.where(groupe_instructeur: groupe_instructeurs)
+    dossiers = Dossier.visible_by_administration
+      .where(groupe_instructeur: groupe_instructeurs)
     if since.present?
       dossiers = dossiers.where('dossiers.depose_at > ?', since)
     end
