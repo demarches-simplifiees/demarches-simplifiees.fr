@@ -293,7 +293,7 @@ describe Users::DossiersController, type: :controller do
     context 'with an invalid SIRET' do
       let(:params_siret) { '000 000 000' }
 
-      it_behaves_like 'the request fails with an error', ["Numéro TAHITI doit commencer par une lettre ou un chiffre, suivi de 5 chiffres"]
+      it_behaves_like 'the request fails with an error', ["Numéro TAHITI " + I18n.t('activemodel.errors.models.siret.attributes.siret.length')]
     end
 
     context 'with a valid SIRET' do
