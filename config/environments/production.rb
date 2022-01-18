@@ -1,4 +1,6 @@
 require "active_support/core_ext/integer/time"
+require Rails.root.join("app/lib/mailtrap/smtp")
+require Rails.root.join("app/lib/sendinblue/smtp")
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -76,8 +78,8 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   if ENV['MAILTRAP_ENABLED'] == 'enabled'
-    config.action_mailer.delivery_method = :smtp
-    config.action_mailer.smtp_settings = {
+    ActionMailer::Base.add_delivery_method :mailtrap, Mailtrap::Smtp
+    config.action_mailer.mailtrap_settings = {
       user_name: Rails.application.secrets.mailtrap[:username],
       password: Rails.application.secrets.mailtrap[:password],
       address: 'smtp.mailtrap.io',
@@ -85,17 +87,22 @@ Rails.application.configure do
       port: '2525',
       authentication: :cram_md5
     }
-  elsif ENV['SENDINBLUE_ENABLED'] == 'enabled'
-    config.action_mailer.delivery_method = :smtp
-    config.action_mailer.smtp_settings = {
-      user_name: Rails.application.secrets.sendinblue[:username],
-      password: Rails.application.secrets.sendinblue[:smtp_key],
-      address: 'smtp-relay.sendinblue.com',
-      domain: 'smtp-relay.sendinblue.com',
-      port: '587',
-      authentication: :cram_md5
-    }
-  else
+    config.action_mailer.delivery_method = :mailtrap
+  elsif
+    if ENV['SENDINBLUE_ENABLED'] == 'enabled'
+      ActionMailer::Base.add_delivery_method :sendinblue, Sendinblue::Smtp
+      config.action_mailer.sendinblue_settings = {
+        user_name: Rails.application.secrets.sendinblue[:username],
+        password: Rails.application.secrets.sendinblue[:smtp_key],
+        address: 'smtp-relay.sendinblue.com',
+        domain: 'smtp-relay.sendinblue.com',
+        port: '587',
+        authentication: :cram_md5
+      }
+    end
+
+    # Default delivery method
+    # (Actual delivery method will be selected at runtime by DynamicSmtpSettingsInterceptor)
     config.action_mailer.delivery_method = :mailjet
   end
 
