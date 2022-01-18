@@ -47,7 +47,7 @@ class ActiveJob::ApplicationLogSubscriber < ::ActiveJob::LogSubscriber
     end
     data[:tags] = tags
     data[:type] = 'tps'
-    data[:source] = ENV['SOURCE']
+    data[:source] = ENV['LOGRAGE_SOURCE']
 
     log(data)
   end
