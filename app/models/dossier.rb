@@ -539,10 +539,6 @@ class Dossier < ApplicationRecord
     en_construction? || termine?
   end
 
-  def can_be_deleted_by_manager?
-    kept? && can_be_deleted_by_user?
-  end
-
   def messagerie_available?
     !brouillon? && !user_deleted? && !archived
   end
@@ -702,10 +698,6 @@ class Dossier < ApplicationRecord
 
   def deleted_by_instructeur_and_user?
     termine? && hidden_by_administration? && hidden_by_user?
-  end
-
-  def can_be_restored_by_manager?
-    hidden_by_administration? || discarded? && !procedure.discarded?
   end
 
   def expose_legacy_carto_api?
