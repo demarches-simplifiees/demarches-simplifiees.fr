@@ -24,6 +24,12 @@ module ProcedureHelper
     t(action, scope: [:modal, :publish, key])
   end
 
+  # Returns a hash of { attribute: full_message } errors.
+  def procedure_publication_errors(procedure)
+    procedure.validate(:publication)
+    procedure.errors.to_hash(full_messages: true).except(:path)
+  end
+
   def types_de_champ_data(procedure)
     {
       isAnnotation: false,
