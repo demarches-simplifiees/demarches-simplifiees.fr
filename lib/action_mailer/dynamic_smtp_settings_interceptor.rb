@@ -6,17 +6,21 @@
 
 class DynamicSmtpSettingsInterceptor
   def self.delivering_email(message)
-    if ENV['SENDINBLUE_BALANCING'] == 'enabled'
-      if rand(0..99) < ENV['SENDINBLUE_BALANCING_VALUE'].to_i
-        message.delivery_method.settings = {
-          user_name: ENV['SENDINBLUE_USER_NAME'],
-          password: ENV['SENDINBLUE_SMTP_KEY'],
-          address: 'smtp-relay.sendinblue.com',
-          domain: 'smtp-relay.sendinblue.com',
-          port: '587',
-          authentication: :cram_md5
-        }
-      end
+    if balance_to_sendinblue?
+      ApplicationMailer.wrap_delivery_behavior(message, :sendinblue)
+    end
+    # fallback to the default delivery method
+  end
+
+  private
+
+  def self.balance_to_sendinblue?
+    if ENV.fetch('SENDINBLUE_ENABLED') != 'enabled'
+      false
+    elsif ENV.fetch('SENDINBLUE_BALANCING') == 'enabled'
+      rand(0..99) < ENV.fetch('SENDINBLUE_BALANCING_VALUE').to_i
+    else
+      true
     end
   end
 end
