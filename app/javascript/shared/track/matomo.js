@@ -1,11 +1,10 @@
-const { key, enabled } = gon.matomo || {};
+const { enabled, host, key } = gon.matomo || {};
 
 if (enabled) {
   window._paq = window._paq || [];
 
-  const url = '//stats.data.gouv.fr/';
-  const trackerUrl = `${url}piwik.php`;
-  const jsUrl = `${url}piwik.js`;
+  const jsUrl = `//${host}/piwik.js`;
+  const trackerUrl = `//${host}/piwik.php`;
 
   //
   // Configure Matomo analytics
