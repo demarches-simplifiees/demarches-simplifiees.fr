@@ -799,7 +799,6 @@ describe Dossier do
     let(:reason) { :user_request }
 
     before do
-      allow(DossierMailer).to receive(:notify_deletion_to_user).and_return(double(deliver_later: nil))
       allow(DossierMailer).to receive(:notify_deletion_to_administration).and_return(double(deliver_later: nil))
     end
 
@@ -833,10 +832,6 @@ describe Dossier do
         expect(deleted_dossier.procedure).to eq dossier.procedure
         expect(deleted_dossier.state).to eq dossier.state
         expect(deleted_dossier.deleted_at).to be_present
-      end
-
-      it 'notifies the user' do
-        expect(DossierMailer).to have_received(:notify_deletion_to_user).with(deleted_dossier, dossier.user.email)
       end
 
       it 'records the operation in the log' do
