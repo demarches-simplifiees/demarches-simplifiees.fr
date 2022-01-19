@@ -84,27 +84,14 @@ class DossierMailer < ApplicationMailer
     mail(to: to_email, subject: @subject)
   end
 
-  def notify_deletion_to_user(deleted_dossier, to_email)
-    I18n.with_locale(deleted_dossier.user_locale) do
-      @subject = default_i18n_subject(dossier_id: deleted_dossier.dossier_id)
-      @deleted_dossier = deleted_dossier
+  def notify_en_construction_deletion_to_administration(dossier, to_email)
+    @subject = default_i18n_subject(dossier_id: dossier.dossier_id)
 
-      mail(to: to_email, subject: @subject)
+    if dossier_or_deleted_dossier.is_a?(Dossier)
+      @dossier = dossier
+    else
+      @deleted_dossier = dossier
     end
-  end
-
-  def notify_instructeur_deletion_to_user(deleted_dossier, to_email)
-    I18n.with_locale(deleted_dossier.user_locale) do
-      @subject = default_i18n_subject(libelle_demarche: deleted_dossier.procedure.libelle)
-      @deleted_dossier = deleted_dossier
-
-      mail(to: to_email, subject: @subject)
-    end
-  end
-
-  def notify_deletion_to_administration(deleted_dossier, to_email)
-    @subject = default_i18n_subject(dossier_id: deleted_dossier.dossier_id)
-    @deleted_dossier = deleted_dossier
 
     mail(to: to_email, subject: @subject)
   end

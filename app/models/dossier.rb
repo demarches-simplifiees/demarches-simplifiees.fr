@@ -772,7 +772,6 @@ class Dossier < ApplicationRecord
       update(hidden_by_user_at: Time.zone.now, dossier_transfer_id: nil)
     end
 
-    user_email = user_deleted? ? nil : user_email_for(:notification)
     deleted_dossier = nil
 
     transaction do
@@ -793,14 +792,6 @@ class Dossier < ApplicationRecord
         administration_emails = followers_instructeurs.present? ? followers_instructeurs.map(&:email) : procedure.administrateurs.map(&:email)
         administration_emails.each do |email|
           DossierMailer.notify_deletion_to_administration(deleted_dossier, email).deliver_later
-        end
-      end
-
-      if user_email.present?
-        if reason == :user_request
-          DossierMailer.notify_deletion_to_user(deleted_dossier, user_email).deliver_later
-        else
-          DossierMailer.notify_instructeur_deletion_to_user(deleted_dossier, user_email).deliver_later
         end
       end
     end
