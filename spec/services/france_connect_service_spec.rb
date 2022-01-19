@@ -20,9 +20,31 @@ describe FranceConnectService do
   end
 
   describe '#authorization_uri' do
-    subject { FranceConnectParticulierClient.new.authorization_uri }
+    subject { described_class.new.authorization_uri }
 
     it { expect { Rack::OAuth2::Util.parse_uri(subject) }.not_to raise_exception }
+
+    context 'with default scopes' do
+      it 'must contain profile & email scopes' do
+        expect(Rails.configuration.x.fcp.scopes).to contain_exactly(:profile, :email)
+        expect(subject).to match('profile%20email%20openid')
+      end
+    end
+
+    context 'with custom scopes' do
+      before(:all) do
+        @default_scopes = Rails.configuration.x.fcp.scopes
+        Rails.configuration.x.fcp.scopes = [:birthdate, :given_name, :family_name, :preferred_username]
+      end
+
+      after(:all) do
+        Rails.configuration.x.fcp.scopes = @default_scopes
+      end
+
+      it 'must contain all the custom scopes' do
+        expect(subject).to match('birthdate%20given_name%20family_name%20preferred_username%20openid')
+      end
+    end
   end
 
   describe '#find_or_retrieve_france_connect_information' do

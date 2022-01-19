@@ -11,7 +11,7 @@ class FranceConnectService
 
   def authorization_uri
     client.authorization_uri(
-      scope: [:profile, :email],
+      scope: Rails.configuration.x.fcp.scopes,
       state: SecureRandom.hex(16),
       nonce: SecureRandom.hex(16),
       acr_values: Rails.configuration.x.fcp.acr_values
