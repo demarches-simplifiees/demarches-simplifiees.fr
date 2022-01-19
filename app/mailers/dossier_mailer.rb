@@ -96,19 +96,19 @@ class DossierMailer < ApplicationMailer
     mail(to: to_email, subject: @subject)
   end
 
-  def notify_automatic_deletion_to_user(deleted_dossiers, to_email)
-    I18n.with_locale(deleted_dossiers.first.user_locale) do
-      @state = deleted_dossiers.first.state
-      @subject = default_i18n_subject(count: deleted_dossiers.size)
-      @deleted_dossiers = deleted_dossiers
+  def notify_automatic_deletion_to_user(dossiers_or_deleted_dossiers, to_email)
+    I18n.with_locale(dossiers_or_deleted_dossiers.first.user_locale) do
+      @state = dossiers_or_deleted_dossiers.first.state
+      @subject = default_i18n_subject(count: dossiers_or_deleted_dossiers.size)
+      @deleted_dossiers = dossiers_or_deleted_dossiers
 
       mail(to: to_email, subject: @subject)
     end
   end
 
-  def notify_automatic_deletion_to_administration(deleted_dossiers, to_email)
-    @subject = default_i18n_subject(count: deleted_dossiers.size)
-    @deleted_dossiers = deleted_dossiers
+  def notify_automatic_deletion_to_administration(dossiers_or_deleted_dossiers, to_email)
+    @subject = default_i18n_subject(count: dossiers_or_deleted_dossiers.size)
+    @deleted_dossiers = dossiers_or_deleted_dossiers
 
     mail(to: to_email, subject: @subject)
   end
