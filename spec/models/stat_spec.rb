@@ -54,11 +54,11 @@ describe Stat do
   describe '.cumulative_hash' do
     it 'works count and cumulate counters by month for both dossier and deleted dossiers' do
       12.downto(1).map do |i|
-        create(:dossier, state: :en_construction, en_construction_at: i.months.ago)
+        create(:dossier, state: :en_construction, depose_at: i.months.ago)
         create(:deleted_dossier, dossier_id: i + 100, state: :en_construction, deleted_at: i.month.ago)
       end
       rs = Stat.send(:cumulative_month_serie, [
-        [Dossier.state_not_brouillon, :en_construction_at],
+        [Dossier.state_not_brouillon, :depose_at],
         [DeletedDossier.where.not(state: :brouillon), :deleted_at]
       ])
       expect(rs).to eq({

@@ -33,6 +33,7 @@
 #  monavis_embed                             :text
 #  organisation                              :string
 #  path                                      :string           not null
+#  procedure_expires_when_termine_enabled    :boolean          default(FALSE)
 #  published_at                              :datetime
 #  routing_criteria_name                     :text             default("Votre ville")
 #  routing_enabled                           :boolean
@@ -47,6 +48,7 @@
 #  parent_procedure_id                       :bigint
 #  published_revision_id                     :bigint
 #  service_id                                :bigint
+#  zone_id                                   :bigint
 #
 
 class Procedure < ApplicationRecord
@@ -84,6 +86,7 @@ class Procedure < ApplicationRecord
   belongs_to :parent_procedure, class_name: 'Procedure', optional: true
   belongs_to :canonical_procedure, class_name: 'Procedure', optional: true
   belongs_to :service, optional: true
+  belongs_to :zone, optional: true
 
   def active_revision
     brouillon? ? draft_revision : published_revision
@@ -101,7 +104,7 @@ class Procedure < ApplicationRecord
     if brouillon?
       TypeDeChamp.fillable
         .joins(:revision_types_de_champ)
-        .where(revision_types_de_champ: { revision: draft_revision })
+        .where(revision_types_de_champ: { revision: draft_revision, parent_id: nil })
         .order(:private, :position)
     else
       # fetch all type_de_champ.stable_id for all the revisions expect draft
@@ -110,12 +113,14 @@ class Procedure < ApplicationRecord
         .joins(:revisions)
         .where(procedure_revisions: { procedure_id: id })
         .where.not(procedure_revisions: { id: draft_revision_id })
+        .where(revision_types_de_champ: { parent_id: nil })
         .group(:stable_id)
         .select('MAX(types_de_champ.id)')
 
       # fetch the more recent procedure_revision_types_de_champ
       # which includes recents_ids
       recents_prtdc = ProcedureRevisionTypeDeChamp
+        .root
         .where(type_de_champ_id: recent_ids)
         .where.not(revision_id: draft_revision_id)
         .group(:type_de_champ_id)
@@ -135,7 +140,10 @@ class Procedure < ApplicationRecord
       TypeDeChamp.root
         .public_only
         .fillable
-        .where(revision: revisions - [draft_revision])
+        .joins(:revisions)
+        .where(procedure_revisions: { procedure_id: id })
+        .where.not(procedure_revisions: { id: draft_revision_id })
+        .where(revision_types_de_champ: { parent_id: nil })
         .order(:created_at)
         .uniq
     end
@@ -148,7 +156,10 @@ class Procedure < ApplicationRecord
       TypeDeChamp.root
         .private_only
         .fillable
-        .where(revision: revisions - [draft_revision])
+        .joins(:revisions)
+        .where(procedure_revisions: { procedure_id: id })
+        .where.not(procedure_revisions: { id: draft_revision_id })
+        .where(revision_types_de_champ: { parent_id: nil })
         .order(:created_at)
         .uniq
     end
@@ -469,7 +480,9 @@ class Procedure < ApplicationRecord
     procedure.save
     procedure.draft_types_de_champ.update_all(revision_id: procedure.draft_revision.id)
     procedure.draft_types_de_champ_private.update_all(revision_id: procedure.draft_revision.id)
-    TypeDeChamp.where(parent: procedure.draft_types_de_champ.repetition + procedure.draft_types_de_champ_private.repetition).update_all(revision_id: procedure.draft_revision.id)
+    types_de_champ_in_repetition = TypeDeChamp.where(parent: procedure.draft_types_de_champ.repetition + procedure.draft_types_de_champ_private.repetition)
+    types_de_champ_in_repetition.update_all(revision_id: procedure.draft_revision.id)
+    types_de_champ_in_repetition.each(&:migrate_parent!)
 
     if is_different_admin || from_library
       procedure.draft_types_de_champ.each { |tdc| tdc.options&.delete(:old_pj) }
@@ -727,6 +740,14 @@ class Procedure < ApplicationRecord
 
   def cnaf_enabled?
     api_particulier_sources['cnaf'].present?
+  end
+
+  def dgfip_enabled?
+    api_particulier_sources['dgfip'].present?
+  end
+
+  def pole_emploi_enabled?
+    api_particulier_sources['pole_emploi'].present?
   end
 
   private

@@ -233,6 +233,30 @@ type CiviliteChamp implements Champ {
   value: Civilite
 }
 
+type Commune {
+  """
+  Le code INSEE
+  """
+  code: String!
+  name: String!
+}
+
+type CommuneChamp implements Champ {
+  commune: Commune
+  departement: Departement
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
+}
+
 """
 GeoJSON coordinates
 """
@@ -649,6 +673,11 @@ enum DemarcheState {
   publiee
 }
 
+type Departement {
+  code: String!
+  name: String!
+}
+
 """
 Represents direct upload credentials
 """
@@ -689,22 +718,27 @@ type Dossier {
   champs(id: ID): [Champ!]!
 
   """
+  Date de dépôt.
+  """
+  dateDepot: ISO8601DateTime!
+
+  """
   Date de la dernière modification.
   """
   dateDerniereModification: ISO8601DateTime!
 
   """
-  Date de dépôt.
+  Date du dernier passage en construction.
   """
   datePassageEnConstruction: ISO8601DateTime!
 
   """
-  Date de passage en instruction.
+  Date du dernier passage en instruction.
   """
   datePassageEnInstruction: ISO8601DateTime
 
   """
-  Date de traitement.
+  Date du dernier traitement.
   """
   dateTraitement: ISO8601DateTime
   demandeur: Demandeur!
@@ -2005,6 +2039,11 @@ enum TypeDeChamp {
   departements
 
   """
+  Données de la Direction générale des Finances publiques
+  """
+  dgfip
+
+  """
   Lien vers un autre dossier
   """
   dossier_link
@@ -2083,6 +2122,11 @@ enum TypeDeChamp {
   Pièce justificative
   """
   piece_justificative
+
+  """
+  Situation Pôle emploi
+  """
+  pole_emploi
 
   """
   Régions

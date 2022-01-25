@@ -14,9 +14,10 @@ module Types
 
     field :demarche, Types::DemarcheDescriptorType, null: false, method: :procedure
 
-    field :date_passage_en_construction, GraphQL::Types::ISO8601DateTime, "Date de dépôt.", null: false, method: :en_construction_at
-    field :date_passage_en_instruction, GraphQL::Types::ISO8601DateTime, "Date de passage en instruction.", null: true, method: :en_instruction_at
-    field :date_traitement, GraphQL::Types::ISO8601DateTime, "Date de traitement.", null: true, method: :processed_at
+    field :date_depot, GraphQL::Types::ISO8601DateTime, "Date de dépôt.", null: false, method: :depose_at
+    field :date_passage_en_construction, GraphQL::Types::ISO8601DateTime, "Date du dernier passage en construction.", null: false, method: :en_construction_at
+    field :date_passage_en_instruction, GraphQL::Types::ISO8601DateTime, "Date du dernier passage en instruction.", null: true, method: :en_instruction_at
+    field :date_traitement, GraphQL::Types::ISO8601DateTime, "Date du dernier traitement.", null: true, method: :processed_at
     field :date_derniere_modification, GraphQL::Types::ISO8601DateTime, "Date de la dernière modification.", null: false, method: :updated_at
 
     field :archived, Boolean, null: false
@@ -155,8 +156,10 @@ module Types
     end
 
     def attestation
-      if object.termine? && object.procedure.attestation_template&.activated?
-        Loaders::Association.for(object.class, attestation: { pdf_attachment: :blob }).load(object).then(&:pdf)
+      if object.attestation_activated?
+        Loaders::Association.for(object.class, attestation: { pdf_attachment: :blob })
+          .load(object)
+          .then { |attestation| attestation&.pdf }
       end
     end
 

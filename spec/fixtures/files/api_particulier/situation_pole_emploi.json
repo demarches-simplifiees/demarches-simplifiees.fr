@@ -1,0 +1,29 @@
+{
+  "identite": {
+    "identifiant": "georges_moustaki_77",
+    "civilite": "M.",
+    "nom": "Moustaki",
+    "nomUsage": "Moustaki",
+    "prenom": "Georges",
+    "sexe": "M",
+    "dateNaissance": "1934-05-03"
+  },
+  "adresse": {
+    "INSEECommune": "75118",
+    "codePostal": "75018",
+    "localite": "75018 Paris",
+    "ligneVoie": "3 rue des Huttes",
+    "ligneNom": "MOUSTAKI"
+  },
+  "contact": {
+    "email": "georges@moustaki.fr",
+    "telephone": "0629212921"
+  },
+  "inscription": {
+    "dateInscription": "1965-05-03",
+    "dateCessationInscription": "1966-05-03",
+    "codeCertificationCNAV": "VC",
+    "codeCategorieInscription": 1,
+    "libelleCategorieInscription": "PERSONNE SANS EMPLOI DISPONIBLE DUREE INDETERMINEE PLEIN TPS"
+  }
+}

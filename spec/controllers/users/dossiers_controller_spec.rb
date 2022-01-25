@@ -1204,4 +1204,33 @@ describe Users::DossiersController, type: :controller do
       expect(response).to have_http_status(:ok)
     end
   end
+
+  describe '#extend_conservation' do
+    let(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds: 3) }
+    let(:dossier) { create(:dossier, procedure: procedure, user: user) }
+    subject { post :extend_conservation, params: { dossier_id: dossier.id } }
+    context 'when user logged in' do
+      before { sign_in(user) }
+      it 'works' do
+        expect(subject).to redirect_to(dossier_path(dossier))
+      end
+
+      it 'extends conservation_extension by duree_conservation_dossiers_dans_ds' do
+        subject
+        expect(dossier.reload.conservation_extension).to eq(procedure.duree_conservation_dossiers_dans_ds.months)
+      end
+
+      it 'flashed notice success' do
+        subject
+        expect(flash[:notice]).to eq(I18n.t('views.users.dossiers.archived_dossier', duree_conservation_dossiers_dans_ds: procedure.duree_conservation_dossiers_dans_ds))
+      end
+    end
+
+    context 'when not logged in' do
+      it 'fails' do
+       subject
+       expect { expect(response).to redirect_to(new_user_session_path) }
+     end
+    end
+  end
 end

@@ -92,20 +92,17 @@ class Dossier < ApplicationRecord
     def passer_en_construction(instructeur: nil, processed_at: Time.zone.now)
       build(state: Dossier.states.fetch(:en_construction),
         instructeur_email: instructeur&.email,
-        process_expired: false,
         processed_at: processed_at)
     end
 
     def passer_en_instruction(instructeur: nil, processed_at: Time.zone.now)
       build(state: Dossier.states.fetch(:en_instruction),
         instructeur_email: instructeur&.email,
-        process_expired: false,
         processed_at: processed_at)
     end
 
     def accepter_automatiquement(processed_at: Time.zone.now)
       build(state: Dossier.states.fetch(:accepte),
-        process_expired: proxy_association.owner.procedure.feature_enabled?(:procedure_process_expired_dossiers_termine),
         processed_at: processed_at)
     end
 
@@ -113,7 +110,6 @@ class Dossier < ApplicationRecord
       build(state: Dossier.states.fetch(:accepte),
         instructeur_email: instructeur&.email,
         motivation: motivation,
-        process_expired: proxy_association.owner.procedure.feature_enabled?(:procedure_process_expired_dossiers_termine),
         processed_at: processed_at)
     end
 
@@ -121,7 +117,6 @@ class Dossier < ApplicationRecord
       build(state: Dossier.states.fetch(:refuse),
         instructeur_email: instructeur&.email,
         motivation: motivation,
-        process_expired: proxy_association.owner.procedure.feature_enabled?(:procedure_process_expired_dossiers_termine),
         processed_at: processed_at)
     end
 
@@ -129,7 +124,6 @@ class Dossier < ApplicationRecord
       build(state: Dossier.states.fetch(:sans_suite),
         instructeur_email: instructeur&.email,
         motivation: motivation,
-        process_expired: proxy_association.owner.procedure.feature_enabled?(:procedure_process_expired_dossiers_termine),
         processed_at: processed_at)
     end
   end
@@ -215,9 +209,9 @@ class Dossier < ApplicationRecord
   scope :not_hidden_by_user, -> { where(hidden_by_user_at: nil) }
 
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
-  scope :order_by_created_at, -> (order = :asc) { order(en_construction_at: order, created_at: order, id: order) }
+  scope :order_by_created_at, -> (order = :asc) { order(depose_at: order, created_at: order, id: order) }
   scope :updated_since,       -> (since) { where('dossiers.updated_at >= ?', since) }
-  scope :created_since,       -> (since) { where('dossiers.en_construction_at >= ?', since) }
+  scope :created_since,       -> (since) { where('dossiers.depose_at >= ?', since) }
 
   scope :with_type_de_champ, -> (stable_id) {
     joins('INNER JOIN champs ON champs.dossier_id = dossiers.id INNER JOIN types_de_champ ON types_de_champ.id = champs.type_de_champ_id')
@@ -256,7 +250,7 @@ class Dossier < ApplicationRecord
         ],
         avis: [:claimant, :expert],
         etablissement: :champ
-      ).order(en_construction_at: 'asc')
+      ).order(depose_at: 'asc')
   }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
@@ -301,11 +295,10 @@ class Dossier < ApplicationRecord
   scope :interval_en_construction_close_to_expiration, -> do
     state_en_construction.where("dossiers.en_construction_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   end
-  scope :interval_en_instruction_close_to_expiration, -> do
-    state_en_instruction.where("dossiers.en_instruction_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
-  end
   scope :interval_termine_close_to_expiration, -> do
-    state_termine.where(id: Traitement.termine_close_to_expiration.select(:dossier_id).distinct)
+    state_termine
+      .where(procedures: { procedure_expires_when_termine_enabled: true })
+      .where("dossiers.processed_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   end
 
   scope :brouillon_close_to_expiration, -> do
@@ -313,9 +306,6 @@ class Dossier < ApplicationRecord
   end
   scope :en_construction_close_to_expiration, -> do
     joins(:procedure).interval_en_construction_close_to_expiration
-  end
-  scope :en_instruction_close_to_expiration, -> do
-    joins(:procedure).interval_en_instruction_close_to_expiration
   end
   scope :termine_close_to_expiration, -> do
     joins(:procedure).interval_termine_close_to_expiration
@@ -325,7 +315,13 @@ class Dossier < ApplicationRecord
     joins(:procedure).scoping do
       interval_brouillon_close_to_expiration
         .or(interval_en_construction_close_to_expiration)
-        .or(interval_en_instruction_close_to_expiration)
+        .or(interval_termine_close_to_expiration)
+    end
+  end
+
+  scope :termine_or_en_construction_close_to_expiration, -> do
+    joins(:procedure).scoping do
+      interval_en_construction_close_to_expiration
         .or(interval_termine_close_to_expiration)
     end
   end
@@ -464,11 +460,6 @@ class Dossier < ApplicationRecord
     traitement&.motivation || read_attribute(:motivation)
   end
 
-  def processed_at
-    return nil if !termine?
-    traitement&.processed_at || read_attribute(:processed_at)
-  end
-
   def update_search_terms
     self.search_terms = [
       user&.email,
@@ -546,7 +537,11 @@ class Dossier < ApplicationRecord
   end
 
   def expirable?
-    [brouillon?, en_construction?, termine? && procedure.feature_enabled?(:procedure_process_expired_dossiers_termine)].any?
+    [
+      brouillon?,
+      en_construction?,
+      termine? && procedure.procedure_expires_when_termine_enabled
+    ].any?
   end
 
   def approximative_expiration_date_reference
@@ -570,6 +565,7 @@ class Dossier < ApplicationRecord
   end
 
   def close_to_expiration?
+    return false if en_instruction?
     approximative_expiration_date < Time.zone.now
   end
 
@@ -636,7 +632,7 @@ class Dossier < ApplicationRecord
     else
       parts = [
         "Dossier déposé le ",
-        en_construction_at.strftime("%d/%m/%Y"),
+        depose_at.strftime("%d/%m/%Y"),
         " sur la démarche ",
         procedure.libelle,
         " gérée par l’organisme ",
@@ -645,6 +641,10 @@ class Dossier < ApplicationRecord
     end
 
     parts.join
+  end
+
+  def duree_totale_conservation_in_months
+    procedure.duree_conservation_dossiers_dans_ds + (conservation_extension / 1.month.to_i)
   end
 
   def avis_for_instructeur(instructeur)
@@ -786,6 +786,10 @@ class Dossier < ApplicationRecord
     if deleted_dossier&.procedure_removed?
       restore(author)
     end
+  end
+
+  def attestation_activated?
+    termine? && procedure.attestation_template&.activated?
   end
 
   def after_passer_en_construction
@@ -1045,7 +1049,7 @@ class Dossier < ApplicationRecord
       ['Archivé', :archived],
       ['État du dossier', Dossier.human_attribute_name("state.#{state}")],
       ['Dernière mise à jour le', :updated_at],
-      ['Déposé le', :en_construction_at],
+      ['Déposé le', :depose_at],
       ['Passé en instruction le', :en_instruction_at],
       ['Traité le', :processed_at],
       ['Motivation de la décision', :motivation],

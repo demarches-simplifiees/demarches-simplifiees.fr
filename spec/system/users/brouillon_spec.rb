@@ -180,7 +180,7 @@ describe 'The user' do
   end
 
   scenario 'extends dossier experation date more than one time, ', js: true do
-    Flipper.enable(:procedure_process_expired_dossiers_termine)
+    simple_procedure.update(procedure_expires_when_termine_enabled: true)
     allow(simple_procedure).to receive(:feature_enabled?).with(:procedure_process_expired_dossiers_termine).and_return(true)
     user_old_dossier = create(:dossier,
                               procedure: simple_procedure,
@@ -190,15 +190,14 @@ describe 'The user' do
     visit brouillon_dossier_path(user_old_dossier)
 
     expect(page).to have_css('.card-title', text: 'Votre dossier va expirer', visible: true)
-    click_on "Repousser sa suppression"
-    expect(page).not_to have_button("Repousser sa suppression")
+    find('#test-user-repousser-expiration').click
+    expect(page).not_to have_selector('#test-user-repousser-expiration')
 
-    Timecop.freeze(1.month.from_now) do
+    Timecop.freeze(simple_procedure.duree_conservation_dossiers_dans_ds.month.from_now) do
       visit brouillon_dossier_path(user_old_dossier)
-
       expect(page).to have_css('.card-title', text: 'Votre dossier va expirer', visible: true)
-      click_on "Repousser sa suppression"
-      expect(page).not_to have_button("Repousser sa suppression")
+      find('#test-user-repousser-expiration').click
+      expect(page).not_to have_selector('#test-user-repousser-expiration')
     end
   end
 

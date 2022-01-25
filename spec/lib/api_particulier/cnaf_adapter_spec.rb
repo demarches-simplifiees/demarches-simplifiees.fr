@@ -57,7 +57,7 @@ describe APIParticulier::CnafAdapter do
       end
     end
 
-    context 'when the api answer is valid' do
+    context 'when the api answer is invalid' do
       let(:cassette) { "api_particulier/success/composition_familiale_invalid" }
 
       context 'when no sources is requested' do

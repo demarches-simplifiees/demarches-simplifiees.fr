@@ -95,7 +95,6 @@ class ExpiredDossiersDeletionService
         deleted_dossier_ids << dossier.id
       end
     end
-
     user_notifications.each do |(email, dossier_ids)|
       dossier_ids = dossier_ids.intersection(deleted_dossier_ids)
       if dossier_ids.present?

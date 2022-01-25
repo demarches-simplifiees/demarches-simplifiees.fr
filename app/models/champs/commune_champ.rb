@@ -25,4 +25,25 @@ class Champs::CommuneChamp < Champs::TextChamp
   def for_export
     [value, external_id]
   end
+
+  def name_departement
+    # FIXME we originaly saved already formatted departement with the code in the name
+    departement&.gsub(/^(.[0-9])\s-\s/, '')
+  end
+
+  def departement_code_and_name
+    "#{code_departement} - #{name_departement}"
+  end
+
+  def departement?
+    departement.present?
+  end
+
+  def code?
+    code.present?
+  end
+
+  def code
+    external_id
+  end
 end

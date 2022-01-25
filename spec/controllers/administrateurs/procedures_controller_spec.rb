@@ -9,6 +9,7 @@ describe Administrateurs::ProceduresController, type: :controller do
   let(:description) { 'Description de test' }
   let(:organisation) { 'Organisation de test' }
   let(:direction) { 'Direction de test' }
+  let(:ministere) { create(:zone) }
   let(:cadre_juridique) { 'cadre juridique' }
   let(:duree_conservation_dossiers_dans_ds) { 3 }
   let(:monavis_embed) { nil }
@@ -33,6 +34,7 @@ describe Administrateurs::ProceduresController, type: :controller do
       description: description,
       organisation: organisation,
       direction: direction,
+      ministere: ministere,
       cadre_juridique: cadre_juridique,
       duree_conservation_dossiers_dans_ds: duree_conservation_dossiers_dans_ds,
       monavis_embed: monavis_embed,

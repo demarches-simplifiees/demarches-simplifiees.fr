@@ -184,9 +184,9 @@ module Users
     end
 
     def extend_conservation
-      dossier.update(conservation_extension: dossier.conservation_extension + 1.month)
-      flash[:notice] = t('.archived_dossier')
-      redirect_to dossier_path(@dossier)
+      dossier.update(conservation_extension: dossier.conservation_extension + dossier.procedure.duree_conservation_dossiers_dans_ds.months)
+      flash[:notice] = t('views.users.dossiers.archived_dossier', duree_conservation_dossiers_dans_ds: dossier.procedure.duree_conservation_dossiers_dans_ds)
+      redirect_back(fallback_location: dossier_path(@dossier))
     end
 
     def modifier
@@ -233,7 +233,7 @@ module Users
 
       if dossier.can_be_deleted_by_user?
         dossier.discard_and_keep_track!(current_user, :user_request)
-        flash.notice = t('.deleted_dossier')
+        flash.notice = t('.soft_deleted_dossier')
         redirect_to dossiers_path
       else
         flash.notice = t('.undergoingreview')
@@ -307,7 +307,7 @@ module Users
     def hide_dossier
       dossier = current_user.dossiers.includes(:user, procedure: :administrateurs).find(params[:id])
       dossier.update(hidden_by_user_at: Time.zone.now)
-      flash.notice = t('users.dossiers.ask_deletion.deleted_dossier')
+      flash.notice = t('users.dossiers.ask_deletion.soft_deleted_dossier')
       redirect_to dossiers_path
     end
 
@@ -364,8 +364,8 @@ module Users
     def champs_params
       params.permit(dossier: {
         champs_attributes: [
-          :id, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :piece_justificative_file, :date_de_naissance, :numero_dn, value: [],
-          champs_attributes: [:id, :_destroy, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :piece_justificative_file, :date_de_naissance, :numero_dn, :departement, :code_departement, value: []]
+          :id, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :piece_justificative_file, :date_de_naissance, :numero_dn, :departement, :code_departement, value: [],
+          champs_attributes: [:id, :_destroy, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :piece_justificative_file, :date_de_naissance, :numero_dn, :departement, :code_departement, value: []]
         ]
       })
     end

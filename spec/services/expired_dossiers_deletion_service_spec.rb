@@ -2,8 +2,9 @@ describe ExpiredDossiersDeletionService do
   let(:warning_period) { 1.month + 5.days }
   let(:conservation_par_defaut) { 3.months }
   let(:user) { create(:user) }
-  let(:procedure) { create(:procedure, :published) }
-  let(:procedure_2) { create(:procedure, :published) }
+  let(:procedure_opts) { {} }
+  let(:procedure) { create(:procedure, :published, procedure_opts) }
+  let(:procedure_2) { create(:procedure, :published, procedure_opts) }
   let(:reference_date) { Date.parse("March 8") }
 
   xdescribe '#process_expired_dossiers_brouillon' do
@@ -275,19 +276,18 @@ describe ExpiredDossiersDeletionService do
   describe '#send_termine_expiration_notices' do
     before { Timecop.freeze(reference_date) }
     after  { Timecop.return }
-
-    before do
-      Flipper.enable(:procedure_process_expired_dossiers_termine, procedure)
-      Flipper.enable(:procedure_process_expired_dossiers_termine, procedure_2)
+    let(:procedure_opts) do
+      {
+        procedure_expires_when_termine_enabled: true
+      }
     end
-
     before do
       allow(DossierMailer).to receive(:notify_near_deletion_to_user).and_call_original
       allow(DossierMailer).to receive(:notify_near_deletion_to_administration).and_call_original
     end
 
     context 'with a single dossier' do
-      let!(:dossier) { create(:dossier, :accepte, :followed, procedure: procedure, processed_at: processed_at) }
+      let!(:dossier) { create(:dossier, :followed, state: :accepte, procedure: procedure, processed_at: processed_at) }
 
       before { ExpiredDossiersDeletionService.send_termine_expiration_notices }
 
@@ -313,8 +313,8 @@ describe ExpiredDossiersDeletionService do
     end
 
     context 'with 2 dossiers to notice' do
-      let!(:dossier_1) { create(:dossier, :accepte, procedure: procedure, user: user, processed_at: (conservation_par_defaut - 2.weeks + 1.day).ago) }
-      let!(:dossier_2) { create(:dossier, :accepte, procedure: procedure_2, user: user, processed_at: (conservation_par_defaut - 2.weeks + 1.day).ago) }
+      let!(:dossier_1) { create(:dossier, state: :accepte, procedure: procedure, user: user, processed_at: (conservation_par_defaut - 2.weeks + 1.day).ago) }
+      let!(:dossier_2) { create(:dossier, state: :accepte, procedure: procedure_2, user: user, processed_at: (conservation_par_defaut - 2.weeks + 1.day).ago) }
 
       let!(:instructeur) { create(:instructeur) }
 
@@ -333,7 +333,7 @@ describe ExpiredDossiersDeletionService do
 
     context 'when an instructeur is also administrateur' do
       let!(:administrateur) { procedure.administrateurs.first }
-      let!(:dossier) { create(:dossier, :accepte, procedure: procedure, processed_at: (conservation_par_defaut - 2.weeks + 1.day).ago) }
+      let!(:dossier) { create(:dossier, state: :accepte, procedure: procedure, processed_at: (conservation_par_defaut - 2.weeks + 1.day).ago) }
 
       before do
         administrateur.instructeur.followed_dossiers << dossier
@@ -350,9 +350,10 @@ describe ExpiredDossiersDeletionService do
     before { Timecop.freeze(reference_date) }
     after  { Timecop.return }
 
-    before do
-      Flipper.enable(:procedure_process_expired_dossiers_termine, procedure)
-      Flipper.enable(:procedure_process_expired_dossiers_termine, procedure_2)
+    let(:procedure_opts) do
+      {
+        procedure_expires_when_termine_enabled: true
+      }
     end
 
     before do
@@ -361,7 +362,7 @@ describe ExpiredDossiersDeletionService do
     end
 
     context 'with a single dossier' do
-      let!(:dossier) { create(:dossier, :accepte, :followed, procedure: procedure, termine_close_to_expiration_notice_sent_at: notice_sent_at) }
+      let!(:dossier) { create(:dossier, :followed, :accepte, procedure: procedure, termine_close_to_expiration_notice_sent_at: notice_sent_at) }
       let(:deleted_dossier) { DeletedDossier.find_by(dossier_id: dossier.id) }
 
       before { ExpiredDossiersDeletionService.delete_expired_termine_and_notify }

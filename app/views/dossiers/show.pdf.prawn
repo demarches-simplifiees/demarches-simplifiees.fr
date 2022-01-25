@@ -207,8 +207,8 @@ def add_etat_dossier(pdf, dossier)
 end
 
 def add_etats_dossier(pdf, dossier)
-  if dossier.en_construction_at.present?
-    format_in_2_columns(pdf, "Déposé le", try_format_date(dossier.en_construction_at))
+  if dossier.depose_at.present?
+    format_in_2_columns(pdf, "Déposé le", try_format_date(dossier.depose_at))
   end
   if dossier.en_instruction_at.present?
     format_in_2_columns(pdf, "En instruction le", try_format_date(dossier.en_instruction_at))

@@ -2,7 +2,7 @@ class NotificationService
   class << self
     def send_instructeur_email_notification
       Instructeur
-        .includes(assign_to: { procedure: :dossiers })
+        .includes(assign_to: [:procedure])
         .where(assign_tos: { daily_email_notifications_enabled: true })
         .find_in_batches { |instructeurs| send_batch_of_instructeurs_email_notification(instructeurs) }
     end
