@@ -77,12 +77,15 @@ class Procedure < ApplicationRecord
   has_many :published_types_de_champ_private, through: :published_revision, source: :types_de_champ_private
   has_many :draft_types_de_champ, through: :draft_revision, source: :types_de_champ
   has_many :draft_types_de_champ_private, through: :draft_revision, source: :types_de_champ_private
+  has_one :draft_attestation_template, through: :draft_revision, source: :attestation_template
+  has_one :published_attestation_template, through: :published_revision, source: :attestation_template
 
   has_many :experts_procedures, dependent: :destroy
   has_many :experts, through: :experts_procedures
 
   has_one :module_api_carto, dependent: :destroy
   has_one :attestation_template, dependent: :destroy
+  has_many :attestation_templates, through: :revisions, source: :attestation_template
 
   belongs_to :parent_procedure, class_name: 'Procedure', optional: true
   belongs_to :canonical_procedure, class_name: 'Procedure', optional: true
@@ -373,7 +376,7 @@ class Procedure < ApplicationRecord
   end
 
   def draft_changed?
-    publiee? && published_revision.changed?(draft_revision) && revision_changes.present?
+    publiee? && published_revision.different_from?(draft_revision) && revision_changes.present?
   end
 
   def revision_changes
@@ -434,7 +437,8 @@ class Procedure < ApplicationRecord
         },
         revision_types_de_champ_private: {
           type_de_champ: :types_de_champ
-        }
+        },
+        attestation_template: []
       }
     }
     include_list[:groupe_instructeurs] = :instructeurs if !is_different_admin
@@ -572,13 +576,17 @@ class Procedure < ApplicationRecord
     touch(:whitelisted_at)
   end
 
+  def active_attestation_template
+    published_attestation_template || draft_attestation_template
+  end
+
   def closed_mail_template_attestation_inconsistency_state
     # As an optimization, don’t check the predefined templates (they are presumed correct)
     if closed_mail.present?
       tag_present = closed_mail.body.to_s.include?("--lien attestation--")
-      if attestation_template&.activated? && !tag_present
+      if active_attestation_template&.activated? && !tag_present
         :missing_tag
-      elsif !attestation_template&.activated? && tag_present
+      elsif !active_attestation_template&.activated? && tag_present
         :extraneous_tag
       end
     end
@@ -649,7 +657,7 @@ class Procedure < ApplicationRecord
   end
 
   def can_be_deleted_by_administrateur?
-    brouillon? || dossiers.state_instruction_commencee.empty?
+    brouillon? || dossiers.state_en_instruction.empty?
   end
 
   def can_be_deleted_by_manager?
@@ -663,18 +671,25 @@ class Procedure < ApplicationRecord
       close!
     end
 
-    dossiers.each do |dossier|
+    dossiers.termine.visible_by_administration.each do |dossier|
       dossier.discard_and_keep_track!(author, :procedure_removed)
     end
 
     discard!
   end
 
+  def purge_discarded
+    if !dossiers.with_discarded.exists?
+      destroy
+    end
+  end
+
+  def self.purge_discarded
+    discarded_expired.find_each(&:purge_discarded)
+  end
+
   def restore(author)
     if discarded? && undiscard
-      dossiers.with_discarded.discarded.find_each do |dossier|
-        dossier.restore(author)
-      end
       dossiers.hidden_by_administration.find_each do |dossier|
         dossier.restore(author)
       end

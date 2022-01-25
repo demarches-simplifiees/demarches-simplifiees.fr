@@ -107,6 +107,7 @@ describe Instructeurs::ProceduresController, type: :controller do
 
           before do
             create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction))
+            create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction), hidden_by_user_at: 1.hour.ago)
             create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction))
             create(:dossier, procedure: procedure, state: Dossier.states.fetch(:sans_suite), archived: true)
 
@@ -238,12 +239,25 @@ describe Instructeurs::ProceduresController, type: :controller do
         let!(:new_unfollow_dossier) { create(:dossier, :en_instruction, procedure: procedure) }
 
         before { subject }
-
         it { expect(assigns(:a_suivre_dossiers)).to match_array([new_unfollow_dossier]) }
         it { expect(assigns(:followed_dossiers)).to be_empty }
         it { expect(assigns(:termines_dossiers)).to be_empty }
         it { expect(assigns(:all_state_dossiers)).to match_array([new_unfollow_dossier]) }
         it { expect(assigns(:archived_dossiers)).to be_empty }
+
+        context 'with a dossier en contruction hidden by user' do
+          let!(:hidden_dossier) { create(:dossier, groupe_instructeur: gi_2, state: Dossier.states.fetch(:en_construction), hidden_by_user_at: 1.hour.ago) }
+          before { subject }
+
+          it { expect(assigns(:all_state_dossiers)).to match_array([new_unfollow_dossier]) }
+        end
+
+        context 'with a dossier en contruction not hidden by user' do
+          let!(:en_construction_dossier) { create(:dossier, groupe_instructeur: gi_2, state: Dossier.states.fetch(:en_construction)) }
+          before { subject }
+
+          it { expect(assigns(:all_state_dossiers)).to match_array([new_unfollow_dossier, en_construction_dossier]) }
+        end
 
         context 'and dossiers without follower on each of the others groups' do
           let!(:new_unfollow_dossier_on_gi_2) { create(:dossier, groupe_instructeur: gi_2, state: Dossier.states.fetch(:en_instruction)) }

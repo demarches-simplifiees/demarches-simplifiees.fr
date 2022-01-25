@@ -15,7 +15,8 @@ class AttestationTemplate < ApplicationRecord
   include ActionView::Helpers::NumberHelper
   include TagsSubstitutionConcern
 
-  belongs_to :procedure, optional: false
+  belongs_to :procedure, optional: true
+  has_many :revisions, class_name: 'ProcedureRevision', inverse_of: :attestation_template, dependent: :nullify
 
   has_one_attached :logo
   has_one_attached :signature
@@ -101,6 +102,25 @@ class AttestationTemplate < ApplicationRecord
       logo: params.fetch(:logo, logo.attached? ? logo : nil),
       signature: params.fetch(:signature, signature.attached? ? signature : nil)
     }
+  end
+
+  def revise!
+    if revisions.size > 1
+      attestation_template = dup
+      attestation_template.save!
+      revisions
+        .last
+        .procedure
+        .draft_revision
+        .update!(attestation_template: attestation_template)
+      attestation_template
+    else
+      self
+    end
+  end
+
+  def procedure
+    revisions.last&.procedure || super
   end
 
   private
