@@ -180,6 +180,8 @@ describe 'The user' do
   end
 
   scenario 'extends dossier experation date more than one time, ', js: true do
+    Flipper.enable(:procedure_process_expired_dossiers_termine)
+    allow(simple_procedure).to receive(:feature_enabled?).with(:procedure_process_expired_dossiers_termine).and_return(true)
     user_old_dossier = create(:dossier,
                               procedure: simple_procedure,
                               created_at: simple_procedure.duree_conservation_dossiers_dans_ds.month.ago,

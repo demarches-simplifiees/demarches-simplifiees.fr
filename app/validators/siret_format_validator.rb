@@ -1,8 +1,10 @@
 class SiretFormatValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     if !format_is_valid(value)
-      record.errors.add(attribute, :format)
-    elsif !luhn_passed(value)
+      record.errors.add(attribute, :length)
+    end
+
+    if !luhn_passed(value)
       record.errors.add(attribute, :checksum)
     end
   end

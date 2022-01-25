@@ -233,6 +233,10 @@ class Procedure < ApplicationRecord
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validates :administrateurs, presence: true
   validates :lien_site_web, presence: true, if: :publiee?
+  validates :draft_revision,
+    'revisions/no_empty_repetition': true,
+    'revisions/no_empty_drop_down': true,
+    if: :validate_for_publication?
   validate :check_juridique
   validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,200}\z/ }, uniqueness: { scope: [:path, :closed_at, :hidden_at, :unpublished_at], case_sensitive: false }
   validates :duree_conservation_dossiers_dans_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_DUREE_CONSERVATION }
@@ -727,6 +731,8 @@ class Procedure < ApplicationRecord
 
   private
 
+  #----- PF section start
+
   def dossier_column_styles
     date_index = index_of_dates
     exported_champs = types_de_champ.reject(&:exclude_from_export?)
@@ -778,8 +784,14 @@ class Procedure < ApplicationRecord
     end
   end
 
+  def validate_for_publication?
+    validation_context == :publication || publiee?
+  end
+
+  #----- PF section end
+
   def before_publish
-    update!(closed_at: nil, unpublished_at: nil)
+    assign_attributes(closed_at: nil, unpublished_at: nil)
   end
 
   def after_publish(canonical_procedure = nil)

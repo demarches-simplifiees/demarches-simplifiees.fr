@@ -100,7 +100,7 @@ group :test do
   gem 'launchy'
   gem 'rails-controller-testing'
   gem 'rspec_junit_formatter'
-  gem 'selenium-webdriver'
+  gem 'selenium-webdriver', '~> 4.0'
   gem 'shoulda-matchers', require: false
   gem 'timecop'
   gem 'vcr'
