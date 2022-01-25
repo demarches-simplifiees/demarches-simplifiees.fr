@@ -138,7 +138,7 @@
   .procedure-grid
 
     = link_to edit_admin_procedure_attestation_template_path(@procedure), class: 'card-admin' do
-      - if @procedure.draft_attestation_template&.activated?
+      - if @procedure.attestation_template.present? && @procedure.attestation_template.activated
         %div
           %span.icon.accept
           %p.card-admin-status-accept Activée
