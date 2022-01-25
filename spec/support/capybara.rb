@@ -15,7 +15,7 @@ Capybara.register_driver :headless_chrome do |app|
   options.add_argument('--window-size=1440,900')
 
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: ['disable-dev-shm-usage', 'disable-software-rasterizer', 'mute-audio', 'window-size=1440,900'] }
+    "goog:chromeOptions" => { args: ['disable-dev-shm-usage', 'disable-software-rasterizer', 'mute-audio', 'window-size=1440,900'] }
   )
 
   download_path = Capybara.save_path
@@ -43,9 +43,8 @@ Capybara.register_driver :wsl do |app|
   options.add_preference(:download, default_directory: download_path)
 
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: ['disable-dev-shm-usage', 'disable-software-rasterizer', 'mute-audio', 'window-size=1440,900'] }
+    "goog:chromeOptions" => { args: ['disable-dev-shm-usage', 'disable-software-rasterizer', 'mute-audio', 'window-size=1440,900'] }
   )
-
   Capybara::Selenium::Driver.new(app,
                                  browser:              :remote,
                                  url:                  "http://localhost:4444/wd/hub",
@@ -65,6 +64,9 @@ Capybara::Screenshot.prune_strategy = :keep_last_run
 Capybara::Screenshot.register_driver :headless_chrome do |driver, path|
   driver.browser.save_screenshot(path)
 end
+Capybara::Screenshot.register_driver :wsl do |driver, path|
+  driver.browser.save_screenshot(path)
+end
 
 RSpec.configure do |config|
   config.before(:each, type: :system) do
@@ -82,7 +84,7 @@ RSpec.configure do |config|
   # the default Accept-Language value reliably.
   # So instead we set the locale cookie explicitly before each Javascript test.
   config.before(:each, type: :system, js: true) do
-    visit '/' # Webdriver needs visiting a page before setting the cookie
+    Capybara.visit '/' # Webdriver needs visiting a page before setting the cookie
     Capybara.current_session.driver.browser.manage.add_cookie(
       name: :locale,
       value: Rails.application.config.i18n.default_locale

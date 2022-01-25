@@ -14,7 +14,7 @@ class InstructeurDashboard < Administrate::BaseDashboard
     updated_at: Field::DateTime,
     dossiers: Field::HasMany,
     procedures: Field::HasMany,
-    features: FeaturesField
+    bypass_email_login_token: Field::Boolean
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -35,13 +35,15 @@ class InstructeurDashboard < Administrate::BaseDashboard
     :id,
     :user,
     :created_at,
-    :features
+    :bypass_email_login_token
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = [].freeze
+  FORM_ATTRIBUTES = [
+    :bypass_email_login_token
+  ].freeze
 
   # Overwrite this method to customize how users are displayed
   # across all pages of the admin dashboard.

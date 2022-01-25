@@ -4,3 +4,10 @@ fr:
       instructeur:
         one: Instructeur
         other: Instructeurs
+    attributes:
+      instructeur:
+        bypass_email_login_token: Autoriser la connexion sans confirmer l’email
+  helpers:
+    label:
+      instructeur:
+        bypass_email_login_token: Autoriser la connexion sans confirmer l’email

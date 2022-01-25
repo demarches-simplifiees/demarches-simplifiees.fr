@@ -278,6 +278,43 @@ describe Procedure do
 
       it_behaves_like 'duree de conservation'
     end
+
+    describe 'draft_revision' do
+      let(:repetition) { build(:type_de_champ_repetition, libelle: 'Enfants') }
+      let(:text_field) { build(:type_de_champ_text) }
+      let(:procedure) { create(:procedure, types_de_champ: [repetition]) }
+      let(:invalid_repetition_error_message) { 'Le bloc répétable « Enfants » doit comporter au moins un champ' }
+
+      context 'on a draft procedure' do
+        it 'doesn’t validate repetitions' do
+          procedure.validate
+          expect(procedure.errors[:draft_revision]).not_to include(invalid_repetition_error_message)
+        end
+      end
+
+      context 'on a published procedure' do
+        before { procedure.publish }
+
+        it 'validates that no repetition type de champ is empty' do
+          procedure.validate
+          expect(procedure.errors.full_messages_for(:draft_revision)).to include(invalid_repetition_error_message)
+
+          text_field.revision = repetition.revision
+          text_field.order_place = repetition.types_de_champ.size
+          procedure.draft_revision.types_de_champ.find(&:repetition?).types_de_champ << text_field
+
+          procedure.validate
+          expect(procedure.errors.full_messages_for(:draft_revision)).not_to include(invalid_repetition_error_message)
+        end
+      end
+
+      context 'when validating for publication' do
+        it 'validates that no repetition type de champ is empty' do
+          procedure.validate(:publication)
+          expect(procedure.errors.full_messages_for(:draft_revision)).to include(invalid_repetition_error_message)
+        end
+      end
+    end
   end
 
   describe 'active' do
