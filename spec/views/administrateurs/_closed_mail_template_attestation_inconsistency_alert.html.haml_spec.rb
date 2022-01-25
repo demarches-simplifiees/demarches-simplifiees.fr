@@ -1,6 +1,5 @@
 describe 'admin/_closed_mail_template_attestation_inconsistency_alert.html.haml', type: :view do
-  let(:procedure) { create(:procedure, closed_mail: closed_mail, attestation_template: attestation_template) }
-  let(:attestation_template) { nil }
+  let(:procedure) { create(:procedure, closed_mail: closed_mail) }
 
   def alert
     assign(:procedure, procedure)
@@ -24,7 +23,7 @@ describe 'admin/_closed_mail_template_attestation_inconsistency_alert.html.haml'
 
   context 'when there is an active attestation but the closed mail template does not mention it' do
     let(:closed_mail) { create(:closed_mail) }
-    let(:attestation_template) { build(:attestation_template) }
+    let!(:attestation_template) { create(:attestation_template, procedure: procedure, activated: true) }
 
     it { expect(alert).to include("Cette démarche comporte une attestation, mais l’accusé d’acceptation ne la mentionne pas") }
     it { expect(alert).to include(edit_admin_procedure_mail_template_path(procedure, Mails::ClosedMail::SLUG)) }
