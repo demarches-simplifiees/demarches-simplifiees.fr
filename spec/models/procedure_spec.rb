@@ -66,16 +66,12 @@ describe Procedure do
   end
 
   describe '#closed_mail_template_attestation_inconsistency_state' do
-    let(:procedure_without_attestation) { create(:procedure, closed_mail: closed_mail) }
+    let(:procedure_without_attestation) { create(:procedure, closed_mail: closed_mail, attestation_template: nil) }
     let(:procedure_with_active_attestation) do
-      procedure = create(:procedure, closed_mail: closed_mail)
-      create(:attestation_template, procedure: procedure, activated: true)
-      procedure
+      create(:procedure, closed_mail: closed_mail, attestation_template: build(:attestation_template, activated: true))
     end
     let(:procedure_with_inactive_attestation) do
-      procedure = create(:procedure, closed_mail: closed_mail)
-      create(:attestation_template, procedure: procedure, activated: false)
-      procedure
+      create(:procedure, closed_mail: closed_mail, attestation_template: build(:attestation_template, activated: false))
     end
 
     subject { procedure.closed_mail_template_attestation_inconsistency_state }
@@ -270,6 +266,16 @@ describe Procedure do
         </a>
         MSG
         let(:procedure) { build(:procedure, monavis_embed: monavis_issue_phillipe) }
+        it { expect(procedure.valid?).to eq(true) }
+      end
+
+      context 'Monavis embed code without title allowed' do
+        monavis_issue_bouchra = <<-MSG
+          <a href="https://voxusagers.numerique.gouv.fr/Demarches/3193?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=58e099a09c02abe629c14905ed2b055d">
+            <img src="https://voxusagers.numerique.gouv.fr/static/bouton-bleu.svg" alt="Je donne mon avis" />
+          </a>
+        MSG
+        let(:procedure) { build(:procedure, monavis_embed: monavis_issue_bouchra) }
         it { expect(procedure.valid?).to eq(true) }
       end
     end
