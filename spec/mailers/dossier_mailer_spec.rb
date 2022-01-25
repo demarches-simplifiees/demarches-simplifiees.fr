@@ -60,16 +60,11 @@ RSpec.describe DossierMailer, type: :mailer do
     it { expect(subject.perform_deliveries).to be_falsy }
   end
 
-  describe '.notify_deletion_to_user' do
-    let(:deleted_dossier) { build(:deleted_dossier) }
+  def notify_deletion_to_administration(deleted_dossier, to_email)
+    @subject = default_i18n_subject(dossier_id: deleted_dossier.dossier_id)
+    @deleted_dossier = deleted_dossier
 
-    subject { described_class.notify_deletion_to_user(deleted_dossier, to_email) }
-
-    it { expect(subject.subject).to eq("Votre dossier nº #{deleted_dossier.dossier_id} a bien été supprimé") }
-    it { expect(subject.body).to include("Votre dossier") }
-    it { expect(subject.body).to include(deleted_dossier.dossier_id) }
-    it { expect(subject.body).to include("a bien été supprimé") }
-    it { expect(subject.body).to include(deleted_dossier.procedure.libelle) }
+    mail(to: to_email, subject: @subject)
   end
 
   describe '.notify_deletion_to_administration' do
