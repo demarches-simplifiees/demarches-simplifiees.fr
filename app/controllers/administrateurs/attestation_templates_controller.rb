@@ -3,17 +3,12 @@ module Administrateurs
     before_action :retrieve_procedure
 
     def edit
-      @attestation_template = build_attestation
+      @attestation_template = @procedure.attestation_template || AttestationTemplate.new(procedure: @procedure)
     end
 
     def update
-      attestation_template = @procedure.draft_attestation_template.revise!
-
+      attestation_template = @procedure.attestation_template
       if attestation_template.update(activated_attestation_params)
-        AttestationTemplate
-          .where(id: @procedure.revisions.pluck(:attestation_template_id).compact)
-          .update_all(activated: attestation_template.activated?)
-
         flash.notice = "L'attestation a bien été modifiée"
       else
         flash.alert = attestation_template.errors.full_messages.join('<br>')
@@ -23,7 +18,7 @@ module Administrateurs
     end
 
     def create
-      attestation_template = build_attestation(activated_attestation_params)
+      attestation_template = AttestationTemplate.new(activated_attestation_params.merge(procedure_id: @procedure.id))
 
       if attestation_template.save
         flash.notice = "L'attestation a bien été sauvegardée"
@@ -35,18 +30,13 @@ module Administrateurs
     end
 
     def preview
-      @attestation = build_attestation.render_attributes_for({})
+      attestation = @procedure.attestation_template || AttestationTemplate.new
+      @attestation = attestation.render_attributes_for({})
 
       render 'administrateurs/attestation_templates/show', formats: [:pdf]
     end
 
     private
-
-    def build_attestation(attributes = {})
-      attestation_template = @procedure.draft_attestation_template || @procedure.draft_revision.build_attestation_template
-      attestation_template.attributes = attributes
-      attestation_template
-    end
 
     def activated_attestation_params
       # cache result to avoid multiple uninterlaced computations
