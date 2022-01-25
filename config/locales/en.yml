@@ -392,7 +392,7 @@ en:
         message_send: "Your message has been sent to the instructor in charge of your file."
       ask_deletion:
         undergoingreview: "Your file is undergoing review. It is no longer possible to delete your file. To cancel the undergoingreview contact the adminitration via the mailbox."
-        deleted_dossier: "Your file has been successfully deleted"
+        soft_deleted_dossier: "Your file has been successfully deleted from your interface"
       update_brouillon:
         draft_saved: "Your draft has been saved."
       etablissement:

@@ -76,7 +76,7 @@ describe 'user access to the list of their dossiers' do
           end
         end
 
-        expect(page).to have_content('Votre dossier a bien été supprimé.')
+        expect(page).to have_content('Votre dossier a bien été supprimé')
         expect(page).not_to have_content(dossier_brouillon.procedure.libelle)
       end
     end

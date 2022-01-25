@@ -16,7 +16,7 @@
 
       - scopes.each do |scope_key, sources|
         %h3.explication-libelle= t("api_particulier.providers.#{provider_key}.scopes.#{scope_key}.libelle")
-        %ul.procedure-admin-api-particulier-sources{ id: scope_key }
+        %ul.procedure-admin-api-particulier-sources{ id: "#{provider_key}-#{scope_key}" }
           - sources.each do |source_key, enabled_hash|
             - enabled = (@procedure.api_particulier_sources.dig(provider_key, scope_key)&.include?(source_key)).present?
             %li

@@ -1,0 +1,10 @@
+%table.pole-emploi
+  %caption #{t("api_particulier.providers.pole_emploi.scopes.#{scope}.libelle")} :
+  - inscription.slice('dateInscription', 'dateCessationInscription', 'codeCertificationCNAV', 'codeCategorieInscription', 'libelleCategorieInscription').keys.each do |key|
+    %tr
+      %th= t("api_particulier.providers.pole_emploi.scopes.#{scope}.#{key}")
+      - case key
+      - when 'dateInscription', 'dateCessationInscription'
+        %td= try_format_date(Date.strptime(inscription[key], "%Y-%m-%d"))
+      - else
+        %td= inscription[key]

@@ -75,7 +75,11 @@ describe Administrateurs::JetonParticulierController, type: :controller do
             'dgfip_revenu_fiscal_reference',
             'dgfip_revenu_imposable',
             'dgfip_situation_familiale',
-            'dgfip_situation_partielle'
+            'dgfip_situation_partielle',
+            'pole_emploi_identite',
+            'pole_emploi_adresse',
+            'pole_emploi_contact',
+            'pole_emploi_inscription'
           )
           expect(procedure.api_particulier_sources).to be_empty
         end

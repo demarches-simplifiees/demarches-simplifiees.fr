@@ -86,6 +86,7 @@ describe ProcedureExportService do
           "visa",
           "cnaf",
           "dgfip",
+          "pole_emploi",
           "text"
         ]
       end
@@ -183,6 +184,7 @@ describe ProcedureExportService do
           "visa",
           "cnaf",
           "dgfip",
+          "pole_emploi",
           "text"
         ]
       end
@@ -274,6 +276,7 @@ describe ProcedureExportService do
             "visa",
             "cnaf",
             "dgfip",
+            "pole_emploi",
             "text"
           ]
         end
