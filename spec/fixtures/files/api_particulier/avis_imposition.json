@@ -1,0 +1,37 @@
+{
+  "declarant1": {
+    "nom": "FERRI",
+    "nomNaissance": "FERRI",
+    "prenoms": "Karine",
+    "dateNaissance": "12/08/1978"
+  },
+  "declarant2": {
+    "nom": "",
+    "nomNaissance": "",
+    "prenoms": "",
+    "dateNaissance": "12/08/1978"
+  },
+  "echeance_avis": {
+    "dateRecouvrement": "09/10/2020",
+    "dateEtablissement": "07/07/2020"
+  },
+  "foyer_fiscal": {
+    "annee": 2020,
+    "adresse": "13 rue de la Plage 97615 Pamanzi",
+    "nombreParts": 1,
+    "situationFamille": "Célibataire",
+    "nombrePersonnesCharge": 0
+  },
+  "agregats_fiscaux": {
+    "revenuBrutGlobal": 38814,
+    "revenuImposable": 38814,
+    "impotRevenuNetAvantCorrections": 38814,
+    "montantImpot": 38814,
+    "revenuFiscalReference": 38814,
+    "anneeImpots": "2020",
+    "anneeRevenus": "2020"
+  },
+  "complements": {
+    "situationPartielle": "SUP DOM"
+  }
+}

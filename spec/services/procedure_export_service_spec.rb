@@ -85,6 +85,7 @@ describe ProcedureExportService do
           "annuaire_education",
           "visa",
           "cnaf",
+          "dgfip",
           "text"
         ]
       end
@@ -181,6 +182,7 @@ describe ProcedureExportService do
           "annuaire_education",
           "visa",
           "cnaf",
+          "dgfip",
           "text"
         ]
       end
@@ -271,6 +273,7 @@ describe ProcedureExportService do
             "annuaire_education",
             "visa",
             "cnaf",
+            "dgfip",
             "text"
           ]
         end

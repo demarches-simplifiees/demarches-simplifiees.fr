@@ -742,6 +742,10 @@ class Procedure < ApplicationRecord
     api_particulier_sources['cnaf'].present?
   end
 
+  def dgfip_enabled?
+    api_particulier_sources['dgfip'].present?
+  end
+
   private
 
   #----- PF section start

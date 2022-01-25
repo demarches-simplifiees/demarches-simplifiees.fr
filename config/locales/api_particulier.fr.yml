@@ -1,7 +1,7 @@
 fr:
   api_particulier:
     providers:
-      cnaf: 
+      cnaf:
         libelle: Caisse nationale d’allocations familiales (CAF)
         scopes:
           personne: &personne
@@ -16,7 +16,7 @@ fr:
           enfants:
             libelle: enfants
             <<: *personne
-          adresse: 
+          adresse:
             libelle: adresse
             identite: identité
             complementIdentite: complément d’identité
@@ -30,3 +30,41 @@ fr:
             quotientFamilial: quotient familial
             mois: mois
             annee: année
+      dgfip:
+        libelle: Direction Générale des Finances Publiques (DGFiP)
+        scopes:
+          declarant: &declarant
+            nom: nom
+            nomNaissance: nom de naissance
+            prenoms: prénoms
+            dateNaissance: date de naissance
+          declarant1:
+            libelle: déclarant 1
+            <<: *declarant
+          declarant2:
+            libelle: déclarant 2
+            <<: *declarant
+          echeance_avis:
+            libelle: échéance de l’avis
+            dateEtablissement: date d’établissement
+            dateRecouvrement: date de recouvrement
+          foyer_fiscal: &foyer_fiscal
+            libelle: foyer fiscal
+            adresse: adresse fiscale de l’année passée
+            annee: année
+            nombreParts: nombre de parts
+            nombrePersonnesCharge: nombre de personnes à charge
+            situationFamille: situation familiale
+          agregats_fiscaux:
+            libelle: agrégats fiscaux
+            revenuBrutGlobal: revenu brut global
+            revenuImposable: revenu imposable
+            impotRevenuNetAvantCorrections: impôt sur le revenu net avant correction
+            montantImpot: montant de l’impôt
+            revenuFiscalReference: revenu fiscal de référence
+            anneeImpots: année d’imposition
+            anneeRevenus: année des revenus
+          complements:
+            libelle: compléments
+            erreurCorrectif: erreur correctif
+            situationPartielle: situation partielle

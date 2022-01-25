@@ -7,6 +7,11 @@ fr:
           numero_allocataire_notice: Il est généralement composé de 7 chiffres.
           code_postal_label: Le code postal
           code_postal_notice: Il est généralement composé de 5 chiffres.
+        dgfip:
+          numero_fiscal_label: Le numéro fiscal
+          numero_fiscal_notice: Il est généralement composé de 13 ou 14 caractères.
+          reference_avis_label: La référence d'avis d'imposition
+          reference_avis_notice: Elle est généralement composée de 13 ou 14 caractères.
       header:
         expires_at:
           brouillon: "Expirera le %{date} (%{duree_conservation_totale} mois après la création du dossier)"
@@ -24,3 +29,9 @@ fr:
           fetching_data: "La récupération automatique des données pour l’allocataire Nº %{numero_allocataire} avec le code postal %{code_postal} est en cours."
           data_fetched: "Des données concernant %{sources} liées au compte Nº %{numero_allocataire} avec le code postal %{code_postal} ont été reçues depuis la CAF."
           data_fetched_title: "Données obtenues de la Caisse nationale d’allocations familiales"
+      dgfip:
+        show:
+          not_filled: non renseigné
+          fetching_data: "La récupération automatique des données pour le déclarant Nº %{numero_fiscal} avec la référence d'avis %{reference_avis} est en cours."
+          data_fetched: "Des données concernant %{sources} liées au déclarant Nº %{numero_fiscal} avec la référence d'avis %{reference_avis} ont été reçues depuis la DGFiP."
+          data_fetched_title: "Données obtenues de la Direction générale des Finances publiques"

@@ -795,6 +795,11 @@
             },
             {
               "kind": "OBJECT",
+              "name": "CommuneChamp",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
               "name": "DateChamp",
               "ofType": null
             },
@@ -1180,6 +1185,150 @@
               "type": {
                 "kind": "ENUM",
                 "name": "Civilite",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "kind": "INTERFACE",
+              "name": "Champ",
+              "ofType": null
+            }
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "Commune",
+          "description": null,
+          "fields": [
+            {
+              "name": "code",
+              "description": "Le code INSEE",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "name",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "CommuneChamp",
+          "description": null,
+          "fields": [
+            {
+              "name": "commune",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Commune",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "departement",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Departement",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "label",
+              "description": "Libellé du champ.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "stringValue",
+              "description": "La valeur du champ sous forme texte.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -2698,6 +2847,55 @@
         },
         {
           "kind": "OBJECT",
+          "name": "Departement",
+          "description": null,
+          "fields": [
+            {
+              "name": "code",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "name",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
           "name": "DirectUpload",
           "description": "Represents direct upload credentials",
           "fields": [
@@ -2930,6 +3128,24 @@
               "deprecationReason": null
             },
             {
+              "name": "dateDepot",
+              "description": "Date de dépôt.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ISO8601DateTime",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "dateDerniereModification",
               "description": "Date de la dernière modification.",
               "args": [
@@ -2949,7 +3165,7 @@
             },
             {
               "name": "datePassageEnConstruction",
-              "description": "Date de dépôt.",
+              "description": "Date du dernier passage en construction.",
               "args": [
 
               ],
@@ -2967,7 +3183,7 @@
             },
             {
               "name": "datePassageEnInstruction",
-              "description": "Date de passage en instruction.",
+              "description": "Date du dernier passage en instruction.",
               "args": [
 
               ],
@@ -2981,7 +3197,7 @@
             },
             {
               "name": "dateTraitement",
-              "description": "Date de traitement.",
+              "description": "Date du dernier traitement.",
               "args": [
 
               ],
@@ -9267,6 +9483,12 @@
             {
               "name": "cnaf",
               "description": "Données de la Caisse nationale des allocations familiales",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "dgfip",
+              "description": "Données de la Direction générale des Finances publiques",
               "isDeprecated": false,
               "deprecationReason": null
             }

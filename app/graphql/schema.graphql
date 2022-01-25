@@ -2039,6 +2039,11 @@ enum TypeDeChamp {
   departements
 
   """
+  Données de la Direction générale des Finances publiques
+  """
+  dgfip
+
+  """
   Lien vers un autre dossier
   """
   dossier_link
