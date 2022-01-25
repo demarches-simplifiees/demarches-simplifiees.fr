@@ -9,19 +9,12 @@ en:
           code_postal_notice: It is usually composed of 5 digits.
       header:
         expires_at:
-          brouillon: "Expires at %{date}"
-          en_construction: "Expires at %{date}"
+          brouillon: "Expires at %{date} (%{duree_conservation_totale} months after the creation of this file)"
+          en_construction: "Expires at %{date} (%{duree_conservation_totale} months after the last la edition of this file)"
           en_instruction: "This file is being instructed, the administration will answer as soon as possible"
-          accepte: "Expires at %{date}"
-          refuse: "Expires at %{date}"
-          sans_suite: "Expires at %{date}"
-        banner:
-          title: Your file will expire
-          states:
-            brouillon: Your file is still in draft and will soon expire. So it will be deleted soon without being instructed. If you want to pursue your procedure you can submit it now. Otherwise you are able to delay its expiration by clicking on the underneath button.
-            en_construction: Your file is pending for instruction. The maximum delay is 6 months, but your can extend the duration by a month by clicking on the underneath button.
-            termine: Your file had been processed and will soon expire.So it will be deleted soon. If you want to keep it, your can dowload a PDF file of it.
-          button_delay_expiration: "Delay deletion"
+          accepte: "Expires at %{date} (%{duree_conservation_totale} months after the acceptation of this file)"
+          refuse: "Expires at %{date} (%{duree_conservation_totale} months after the rejection of this file)"
+          sans_suite: "Expires at %{date} (%{duree_conservation_totale} months after this file had been closed)"
     champs:
       cnaf:
         show:

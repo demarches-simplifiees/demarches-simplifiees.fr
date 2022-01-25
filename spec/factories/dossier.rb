@@ -135,10 +135,12 @@ FactoryBot.define do
         if processed_at.present?
           dossier.en_construction_at ||= processed_at - 2.minutes
           dossier.en_instruction_at ||= processed_at - 1.minute
+          dossier.processed_at = processed_at
           dossier.traitements.accepter(motivation: evaluator.motivation, processed_at: processed_at)
         else
           dossier.en_construction_at ||= dossier.created_at + 1.minute
           dossier.en_instruction_at ||= dossier.en_construction_at + 1.minute
+          dossier.processed_at = dossier.en_instruction_at + 1.minute
           dossier.traitements.accepter(motivation: evaluator.motivation, processed_at: dossier.en_instruction_at + 1.minute)
         end
         dossier.save!

@@ -33,6 +33,7 @@
 #  monavis_embed                             :text
 #  organisation                              :string
 #  path                                      :string           not null
+#  procedure_expires_when_termine_enabled    :boolean          default(FALSE)
 #  published_at                              :datetime
 #  routing_criteria_name                     :text             default("Votre ville")
 #  routing_enabled                           :boolean
@@ -47,6 +48,7 @@
 #  parent_procedure_id                       :bigint
 #  published_revision_id                     :bigint
 #  service_id                                :bigint
+#  zone_id                                   :bigint
 #
 
 class Procedure < ApplicationRecord
@@ -84,6 +86,7 @@ class Procedure < ApplicationRecord
   belongs_to :parent_procedure, class_name: 'Procedure', optional: true
   belongs_to :canonical_procedure, class_name: 'Procedure', optional: true
   belongs_to :service, optional: true
+  belongs_to :zone, optional: true
 
   def active_revision
     brouillon? ? draft_revision : published_revision

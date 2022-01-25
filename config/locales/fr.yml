@@ -129,11 +129,13 @@ fr:
           edit_identity: "Modifier l’identité"
     instructeurs:
       dossiers:
+        archived_dossier: "Le dossier sera conservé 1 mois supplémentaire"
         deleted_by_user: "Dossier supprimé par l'usager"
       avis:
         introduction_file_explaination: "Fichier joint à la demande d’avis"
     users:
       dossiers:
+        archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
         autosave:
           autosave_draft: Votre brouillon est automatiquement enregistré.
           more_infos: En savoir plus
@@ -255,6 +257,8 @@ fr:
         << : *default_attributes
       super_admin:
         << : *default_attributes
+      procedure:
+        zone: Organisme qui met en œuvre la démarche
     errors:
       messages:
         not_a_phone: 'Numéro de téléphone invalide'
@@ -379,9 +383,9 @@ fr:
       one: demande de transfert
       other: demandes de transfert
     dossiers_close_to_expiration:
-      zero: dossier expirant
-      one: dossier expirant
-      other: dossiers expirant
+      zero: expirant
+      one: expirant
+      other: expirant
     dossier_trouve:
       zero: 0 dossier trouvé
       one: 1 dossier trouvé
@@ -404,13 +408,12 @@ fr:
       no_access: "Vous n’avez pas accès à ce dossier"
       no_longer_editable: "Votre dossier ne peut plus être modifié"
       verify_site: "Vérifiez que vous êtes sur "
+
       create_commentaire:
         message_send: "Votre message a bien été envoyé à l’instructeur en charge de votre dossier."
       ask_deletion:
         undergoingreview: "L’instruction de votre dossier a commencé, il n’est plus possible de supprimer votre dossier. Si vous souhaitez annuler l’instruction contactez votre administration par la messagerie de votre dossier."
         deleted_dossier: "Votre dossier a bien été supprimé."
-      extend_conservation:
-        archived_dossier: "Votre dossier sera conservé un mois supplémentaire"
       update_brouillon:
         draft_saved: "Votre brouillon a bien été sauvegardé."
       etablissement:

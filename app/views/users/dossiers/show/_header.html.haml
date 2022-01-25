@@ -10,7 +10,7 @@
         - if dossier.en_construction_at.present?
           = t('views.users.dossiers.show.header.submit_date', date_du_dossier: I18n.l(dossier.en_construction_at))
 
-      = render(partial: 'shared/dossiers/expiration_banner', locals: {dossier: dossier})
+      = render(partial: 'users/dossiers/expiration_banner', locals: {dossier: dossier})
 
 
     - if current_user.owns?(dossier)

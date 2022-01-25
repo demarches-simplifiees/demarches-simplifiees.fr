@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_26_150915) do
+ActiveRecord::Schema.define(version: 2021_12_01_135804) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -568,7 +568,7 @@ ActiveRecord::Schema.define(version: 2021_11_26_150915) do
   create_table "procedure_presentations", id: :serial, force: :cascade do |t|
     t.integer "assign_to_id"
     t.jsonb "sort", default: {"order"=>"desc", "table"=>"notifications", "column"=>"notifications"}, null: false
-    t.jsonb "filters", default: {"tous"=>[], "suivis"=>[], "traites"=>[], "a-suivre"=>[], "archives"=>[]}, null: false
+    t.jsonb "filters", default: {"tous"=>[], "suivis"=>[], "traites"=>[], "a-suivre"=>[], "archives"=>[], "expirant"=>[]}, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.jsonb "displayed_fields", default: [{"label"=>"Demandeur", "table"=>"user", "column"=>"email"}], null: false
@@ -639,6 +639,8 @@ ActiveRecord::Schema.define(version: 2021_11_26_150915) do
     t.jsonb "api_particulier_sources", default: {}
     t.boolean "routing_enabled"
     t.boolean "instructeurs_self_management_enabled"
+    t.boolean "procedure_expires_when_termine_enabled", default: false
+    t.bigint "zone_id"
     t.index ["api_particulier_sources"], name: "index_procedures_on_api_particulier_sources", using: :gin
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
     t.index ["draft_revision_id"], name: "index_procedures_on_draft_revision_id"
@@ -646,8 +648,10 @@ ActiveRecord::Schema.define(version: 2021_11_26_150915) do
     t.index ["parent_procedure_id"], name: "index_procedures_on_parent_procedure_id"
     t.index ["path", "closed_at", "hidden_at", "unpublished_at"], name: "procedure_path_uniqueness", unique: true
     t.index ["path", "closed_at", "hidden_at"], name: "index_procedures_on_path_and_closed_at_and_hidden_at", unique: true
+    t.index ["procedure_expires_when_termine_enabled"], name: "index_procedures_on_procedure_expires_when_termine_enabled"
     t.index ["published_revision_id"], name: "index_procedures_on_published_revision_id"
     t.index ["service_id"], name: "index_procedures_on_service_id"
+    t.index ["zone_id"], name: "index_procedures_on_zone_id"
   end
 
   create_table "received_mails", id: :serial, force: :cascade do |t|
@@ -745,6 +749,7 @@ ActiveRecord::Schema.define(version: 2021_11_26_150915) do
     t.datetime "processed_at"
     t.string "instructeur_email"
     t.boolean "process_expired"
+    t.boolean "process_expired_migrated", default: false
     t.index ["dossier_id"], name: "index_traitements_on_dossier_id"
     t.index ["process_expired"], name: "index_traitements_on_process_expired"
   end
@@ -833,6 +838,14 @@ ActiveRecord::Schema.define(version: 2021_11_26_150915) do
     t.index ["procedure_id"], name: "index_without_continuation_mails_on_procedure_id"
   end
 
+  create_table "zones", force: :cascade do |t|
+    t.string "acronym", null: false
+    t.string "label"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["acronym"], name: "index_zones_on_acronym", unique: true
+  end
+
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "archives_groupe_instructeurs", "archives"
   add_foreign_key "archives_groupe_instructeurs", "groupe_instructeurs"
@@ -868,6 +881,7 @@ ActiveRecord::Schema.define(version: 2021_11_26_150915) do
   add_foreign_key "procedures", "procedure_revisions", column: "draft_revision_id"
   add_foreign_key "procedures", "procedure_revisions", column: "published_revision_id"
   add_foreign_key "procedures", "services", name: "fk_procedures_services"
+  add_foreign_key "procedures", "zones"
   add_foreign_key "received_mails", "procedures"
   add_foreign_key "refused_mails", "procedures"
   add_foreign_key "services", "administrateurs"
