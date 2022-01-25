@@ -108,6 +108,7 @@ FactoryBot.define do
         dossier.state = Dossier.states.fetch(:en_construction)
         dossier.groupe_instructeur ||= dossier.procedure&.defaut_groupe_instructeur
         dossier.en_construction_at ||= dossier.created_at + 1.minute
+        dossier.depose_at ||= dossier.en_construction_at
         dossier.save!
       end
     end
@@ -117,6 +118,7 @@ FactoryBot.define do
         dossier.state = Dossier.states.fetch(:en_instruction)
         dossier.groupe_instructeur ||= dossier.procedure&.defaut_groupe_instructeur
         dossier.en_construction_at ||= dossier.created_at + 1.minute
+        dossier.depose_at ||= dossier.en_construction_at
         dossier.en_instruction_at ||= dossier.en_construction_at + 1.minute
         dossier.save!
       end
@@ -125,23 +127,22 @@ FactoryBot.define do
     trait :accepte do
       transient do
         motivation { nil }
-        processed_at { nil }
       end
 
       after(:create) do |dossier, evaluator|
         dossier.state = Dossier.states.fetch(:accepte)
         dossier.groupe_instructeur ||= dossier.procedure&.defaut_groupe_instructeur
-        processed_at = evaluator.processed_at
-        if processed_at.present?
-          dossier.en_construction_at ||= processed_at - 2.minutes
-          dossier.en_instruction_at ||= processed_at - 1.minute
-          dossier.processed_at = processed_at
-          dossier.traitements.accepter(motivation: evaluator.motivation, processed_at: processed_at)
+        if dossier.processed_at.present?
+          dossier.en_construction_at ||= dossier.processed_at - 2.minutes
+          dossier.depose_at ||= dossier.en_construction_at
+          dossier.en_instruction_at ||= dossier.processed_at - 1.minute
+          dossier.traitements.accepter(motivation: evaluator.motivation, processed_at: dossier.processed_at)
         else
           dossier.en_construction_at ||= dossier.created_at + 1.minute
+          dossier.depose_at ||= dossier.en_construction_at
           dossier.en_instruction_at ||= dossier.en_construction_at + 1.minute
           dossier.processed_at = dossier.en_instruction_at + 1.minute
-          dossier.traitements.accepter(motivation: evaluator.motivation, processed_at: dossier.en_instruction_at + 1.minute)
+          dossier.traitements.accepter(motivation: evaluator.motivation, processed_at: dossier.processed_at)
         end
         dossier.save!
       end
@@ -152,6 +153,7 @@ FactoryBot.define do
         dossier.state = Dossier.states.fetch(:refuse)
         dossier.groupe_instructeur ||= dossier.procedure&.defaut_groupe_instructeur
         dossier.en_construction_at ||= dossier.created_at + 1.minute
+        dossier.depose_at ||= dossier.en_construction_at
         dossier.en_instruction_at ||= dossier.en_construction_at + 1.minute
         dossier.traitements.refuser(processed_at: dossier.en_instruction_at + 1.minute)
         dossier.save!
@@ -163,6 +165,7 @@ FactoryBot.define do
         dossier.state = Dossier.states.fetch(:sans_suite)
         dossier.groupe_instructeur ||= dossier.procedure&.defaut_groupe_instructeur
         dossier.en_construction_at ||= dossier.created_at + 1.minute
+        dossier.depose_at ||= dossier.en_construction_at
         dossier.en_instruction_at ||= dossier.en_construction_at + 1.minute
         dossier.traitements.classer_sans_suite(processed_at: dossier.en_instruction_at + 1.minute)
         dossier.save!

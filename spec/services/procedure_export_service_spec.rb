@@ -98,10 +98,10 @@ describe ProcedureExportService do
         expect(etablissements_sheet.data.size).to eq(1)
 
         # SimpleXlsxReader is transforming datetimes in utc... It is only used in test so we just hack around.
-        offset = dossier.en_construction_at.utc_offset
-        en_construction_at = Time.zone.at(dossiers_sheet.data[0][8] - offset.seconds)
+        offset = dossier.depose_at.utc_offset
+        depose_at = Time.zone.at(dossiers_sheet.data[0][8] - offset.seconds)
         en_instruction_at = Time.zone.at(dossiers_sheet.data[0][9] - offset.seconds)
-        expect(en_construction_at).to eq(dossier.en_construction_at.round)
+        expect(depose_at).to eq(dossier.depose_at.round)
         expect(en_instruction_at).to eq(dossier.en_instruction_at.round)
         expect(dossiers_sheet.data[0][dossiers_sheet.headers.index('date')]).to be_a(Date)
         expect(dossiers_sheet.data[0][dossiers_sheet.headers.index('datetime')]).to be_a(Time)

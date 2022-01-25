@@ -356,15 +356,15 @@ describe Dossier do
     let(:service) { create(:service, nom: 'nom du service') }
     let(:procedure) { create(:procedure, libelle: "Démarche", organisation: "Organisme", service: service) }
 
-    context 'when the dossier has been en_construction' do
-      let(:dossier) { create :dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction), en_construction_at: "31/12/2010".to_date }
+    context 'when the dossier has been submitted' do
+      let(:dossier) { create :dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction), depose_at: "31/12/2010".to_date }
 
       subject { dossier.text_summary }
 
       it { is_expected.to eq("Dossier déposé le 31/12/2010 sur la démarche Démarche gérée par l’organisme nom du service") }
     end
 
-    context 'when the dossier has not been en_construction' do
+    context 'when the dossier has not been submitted' do
       let(:dossier) { create :dossier, procedure: procedure, state: Dossier.states.fetch(:brouillon) }
 
       subject { dossier.text_summary }
@@ -538,9 +538,9 @@ describe Dossier do
   describe '.downloadable_sorted' do
     let(:procedure) { create(:procedure) }
     let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:brouillon)) }
-    let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_construction), en_construction_at: Time.zone.parse('03/01/2010')) }
-    let!(:dossier3) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_instruction), en_construction_at: Time.zone.parse('01/01/2010')) }
-    let!(:dossier4) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_instruction), archived: true, en_construction_at: Time.zone.parse('02/01/2010')) }
+    let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_construction), depose_at: Time.zone.parse('03/01/2010')) }
+    let!(:dossier3) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_instruction), depose_at: Time.zone.parse('01/01/2010')) }
+    let!(:dossier4) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_instruction), archived: true, depose_at: Time.zone.parse('02/01/2010')) }
 
     subject { procedure.dossiers.downloadable_sorted }
 

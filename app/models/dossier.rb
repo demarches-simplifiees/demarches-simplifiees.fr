@@ -209,9 +209,9 @@ class Dossier < ApplicationRecord
   scope :not_hidden_by_user, -> { where(hidden_by_user_at: nil) }
 
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
-  scope :order_by_created_at, -> (order = :asc) { order(en_construction_at: order, created_at: order, id: order) }
+  scope :order_by_created_at, -> (order = :asc) { order(depose_at: order, created_at: order, id: order) }
   scope :updated_since,       -> (since) { where('dossiers.updated_at >= ?', since) }
-  scope :created_since,       -> (since) { where('dossiers.en_construction_at >= ?', since) }
+  scope :created_since,       -> (since) { where('dossiers.depose_at >= ?', since) }
 
   scope :with_type_de_champ, -> (stable_id) {
     joins('INNER JOIN champs ON champs.dossier_id = dossiers.id INNER JOIN types_de_champ ON types_de_champ.id = champs.type_de_champ_id')
@@ -250,7 +250,7 @@ class Dossier < ApplicationRecord
         ],
         avis: [:claimant, :expert],
         etablissement: :champ
-      ).order(en_construction_at: 'asc')
+      ).order(depose_at: 'asc')
   }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
@@ -460,11 +460,6 @@ class Dossier < ApplicationRecord
     traitement&.motivation || read_attribute(:motivation)
   end
 
-  def processed_at
-    return nil if !termine?
-    traitement&.processed_at || read_attribute(:processed_at)
-  end
-
   def update_search_terms
     self.search_terms = [
       user&.email,
@@ -637,7 +632,7 @@ class Dossier < ApplicationRecord
     else
       parts = [
         "Dossier déposé le ",
-        en_construction_at.strftime("%d/%m/%Y"),
+        depose_at.strftime("%d/%m/%Y"),
         " sur la démarche ",
         procedure.libelle,
         " gérée par l’organisme ",
@@ -1050,7 +1045,7 @@ class Dossier < ApplicationRecord
       ['Archivé', :archived],
       ['État du dossier', Dossier.human_attribute_name("state.#{state}")],
       ['Dernière mise à jour le', :updated_at],
-      ['Déposé le', :en_construction_at],
+      ['Déposé le', :depose_at],
       ['Passé en instruction le', :en_instruction_at],
       ['Traité le', :processed_at],
       ['Motivation de la décision', :motivation],

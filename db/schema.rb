@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_01_135804) do
+ActiveRecord::Schema.define(version: 2021_12_02_135804) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -581,6 +581,8 @@ ActiveRecord::Schema.define(version: 2021_12_01_135804) do
     t.integer "position", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "parent_id"
+    t.index ["parent_id"], name: "index_procedure_revision_types_de_champ_on_parent_id"
     t.index ["revision_id"], name: "index_procedure_revision_types_de_champ_on_revision_id"
     t.index ["type_de_champ_id"], name: "index_procedure_revision_types_de_champ_on_type_de_champ_id"
   end
@@ -776,6 +778,7 @@ ActiveRecord::Schema.define(version: 2021_12_01_135804) do
     t.bigint "stable_id"
     t.bigint "parent_id"
     t.bigint "revision_id"
+    t.boolean "migrated_parent"
     t.index ["parent_id"], name: "index_types_de_champ_on_parent_id"
     t.index ["private"], name: "index_types_de_champ_on_private"
     t.index ["revision_id"], name: "index_types_de_champ_on_revision_id"
@@ -875,6 +878,7 @@ ActiveRecord::Schema.define(version: 2021_12_01_135804) do
   add_foreign_key "initiated_mails", "procedures"
   add_foreign_key "merge_logs", "users"
   add_foreign_key "procedure_presentations", "assign_tos"
+  add_foreign_key "procedure_revision_types_de_champ", "procedure_revision_types_de_champ", column: "parent_id"
   add_foreign_key "procedure_revision_types_de_champ", "procedure_revisions", column: "revision_id"
   add_foreign_key "procedure_revision_types_de_champ", "types_de_champ"
   add_foreign_key "procedure_revisions", "procedures"
