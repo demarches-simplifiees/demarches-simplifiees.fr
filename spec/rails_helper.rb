@@ -89,6 +89,10 @@ RSpec.configure do |config|
     Geocoder.configure(lookup: :test)
   end
 
+  config.before(:each) do
+    Flipper.enable(:instructeur_bypass_email_login_token)
+  end
+
   # By default, forgery protection is disabled in the test environment.
   # (See `config.action_controller.allow_forgery_protection` in `config/test.rb`)
   #

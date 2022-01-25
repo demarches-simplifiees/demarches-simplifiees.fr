@@ -63,8 +63,8 @@ module TPS
     end
 
     config.middleware.use Rack::Attack
-    # Ensure we make maximum one call per feature per request.
-    config.middleware.use Flipper::Middleware::Memoizer
+    config.middleware.use Flipper::Middleware::Memoizer,
+      preload: [:instructeur_bypass_email_login_token]
 
     config.ds_env = ENV.fetch('DS_ENV', Rails.env)
 

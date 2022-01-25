@@ -110,10 +110,6 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
 
         bin/rspec --only-failures
 
-- Lancer un ou des tests systèmes avec un browser
-
-        NO_HEADLESS=1 bin/rspec spec/system
-
 ### Ajout de taches à exécuter au déploiement
 
         rails generate after_party:task task_name

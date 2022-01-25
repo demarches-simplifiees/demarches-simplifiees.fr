@@ -546,7 +546,7 @@ class Dossier < ApplicationRecord
   end
 
   def expirable?
-    [brouillon?, en_construction?, termine? && procedure.feature_enabled?(:procedure_process_expired_dossiers_termine)].any?
+    [brouillon?, en_construction?, termine?].any?
   end
 
   def approximative_expiration_date_reference
