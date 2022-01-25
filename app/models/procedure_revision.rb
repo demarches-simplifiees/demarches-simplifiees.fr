@@ -2,17 +2,15 @@
 #
 # Table name: procedure_revisions
 #
-#  id                      :bigint           not null, primary key
-#  published_at            :datetime
-#  created_at              :datetime         not null
-#  updated_at              :datetime         not null
-#  attestation_template_id :bigint
-#  procedure_id            :bigint           not null
+#  id           :bigint           not null, primary key
+#  published_at :datetime
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  procedure_id :bigint           not null
 #
 class ProcedureRevision < ApplicationRecord
   self.implicit_order_column = :created_at
   belongs_to :procedure, -> { with_discarded }, inverse_of: :revisions, optional: false
-  belongs_to :attestation_template, inverse_of: :revisions, optional: true, dependent: :destroy
 
   has_many :dossiers, inverse_of: :revision, foreign_key: :revision_id
 
@@ -125,10 +123,6 @@ class ProcedureRevision < ApplicationRecord
       champs_private: build_champs_private,
       groupe_instructeur: procedure.defaut_groupe_instructeur
     )
-  end
-
-  def attestation_template
-    super || procedure.attestation_template
   end
 
   private

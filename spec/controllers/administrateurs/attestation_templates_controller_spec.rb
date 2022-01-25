@@ -1,8 +1,8 @@
 include ActionDispatch::TestProcess
 
 describe Administrateurs::AttestationTemplatesController, type: :controller do
+  let!(:attestation_template) { create(:attestation_template) }
   let(:admin) { create(:administrateur) }
-  let(:attestation_template) { build(:attestation_template) }
   let!(:procedure) { create :procedure, administrateur: admin, attestation_template: attestation_template }
   let(:logo) { fixture_file_upload('spec/fixtures/files/white.png', 'image/png') }
   let(:logo2) { fixture_file_upload('spec/fixtures/files/white.png', 'image/png') }
@@ -41,7 +41,7 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
     end
 
     context 'if an attestation template exists on the procedure' do
-      after { procedure.draft_revision.attestation_template&.destroy }
+      after { procedure.attestation_template.destroy }
 
       context 'with images' do
         let!(:attestation_template) do
@@ -115,14 +115,14 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
         procedure.reload
       end
 
-      it { expect(procedure.draft_attestation_template).to have_attributes(attestation_params) }
-      it { expect(procedure.draft_attestation_template.activated).to be true }
-      it { expect(procedure.draft_attestation_template.logo.download).to eq(logo2.read) }
-      it { expect(procedure.draft_attestation_template.signature.download).to eq(signature2.read) }
+      it { expect(procedure.attestation_template).to have_attributes(attestation_params) }
+      it { expect(procedure.attestation_template.activated).to be true }
+      it { expect(procedure.attestation_template.logo.download).to eq(logo2.read) }
+      it { expect(procedure.attestation_template.signature.download).to eq(signature2.read) }
       it { expect(response).to redirect_to edit_admin_procedure_attestation_template_path(procedure) }
       it { expect(flash.notice).to eq("L'attestation a bien été sauvegardée") }
 
-      after { procedure.draft_attestation_template.destroy }
+      after { procedure.attestation_template.destroy }
     end
 
     context 'when something wrong happens in the attestation template creation' do
@@ -140,7 +140,7 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
 
       it { expect(response).to redirect_to edit_admin_procedure_attestation_template_path(procedure) }
       it { expect(flash.alert).to be_present }
-      it { expect(procedure.draft_attestation_template).to be nil }
+      it { expect(procedure.attestation_template).to be nil }
     end
   end
 
@@ -158,13 +158,13 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
         procedure.reload
       end
 
-      it { expect(procedure.draft_attestation_template).to have_attributes(attestation_params) }
-      it { expect(procedure.draft_attestation_template.logo.download).to eq(logo2.read) }
-      it { expect(procedure.draft_attestation_template.signature.download).to eq(signature2.read) }
+      it { expect(procedure.attestation_template).to have_attributes(attestation_params) }
+      it { expect(procedure.attestation_template.logo.download).to eq(logo2.read) }
+      it { expect(procedure.attestation_template.signature.download).to eq(signature2.read) }
       it { expect(response).to redirect_to edit_admin_procedure_attestation_template_path(procedure) }
       it { expect(flash.notice).to eq("L'attestation a bien été modifiée") }
 
-      after { procedure.draft_attestation_template&.destroy }
+      after { procedure.attestation_template.destroy }
     end
 
     context 'when something wrong happens in the attestation template creation' do
