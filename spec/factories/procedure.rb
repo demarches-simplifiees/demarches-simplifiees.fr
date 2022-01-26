@@ -23,7 +23,7 @@ FactoryBot.define do
       types_de_champ { [] }
       types_de_champ_private { [] }
       updated_at { nil }
-      attestation_template { }
+      attestation_template { nil }
     end
 
     after(:build) do |procedure, evaluator|
