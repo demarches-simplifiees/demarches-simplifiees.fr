@@ -53,7 +53,7 @@
 
     - if !@procedure.locked? || @procedure.feature_enabled?(:procedure_revisions)
       - @procedure.validate(:publication)
-      - error_messages = @procedure.errors.messages_for(:draft_revision).to_sentence
+      - error_messages = @procedure.errors.messages_for(:draft_types_de_champ).to_sentence
 
       = link_to champs_admin_procedure_path(@procedure), class: 'card-admin', title: error_messages do
         - if @procedure.draft_types_de_champ.count == 0
