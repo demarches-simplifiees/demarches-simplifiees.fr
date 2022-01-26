@@ -249,6 +249,10 @@ class Procedure < ApplicationRecord
     'revisions/no_empty_repetition': true,
     'revisions/no_empty_drop_down': true,
     if: :validate_for_publication?
+  validates :draft_types_de_champ_private,
+    'revisions/no_empty_repetition': true,
+    'revisions/no_empty_drop_down': true,
+    if: :validate_for_publication?
   validate :check_juridique
   validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,200}\z/ }, uniqueness: { scope: [:path, :closed_at, :hidden_at, :unpublished_at], case_sensitive: false }
   validates :duree_conservation_dossiers_dans_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_DUREE_CONSERVATION }
