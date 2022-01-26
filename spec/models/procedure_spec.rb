@@ -352,6 +352,23 @@ describe Procedure do
           expect(procedure.errors.full_messages_for(:draft_types_de_champ)).to include(invalid_drop_down_error_message)
         end
       end
+
+      context 'when the champ is private' do
+        let(:procedure) { create(:procedure, types_de_champ_private: [repetition, drop_down]) }
+
+        let(:invalid_repetition_error_message) { 'L’annotation privée « Enfants » doit comporter au moins un champ répétable' }
+        let(:invalid_drop_down_error_message) { 'L’annotation privée « Civilité » doit comporter au moins un choix sélectionnable' }
+
+        it 'validates that no repetition type de champ is empty' do
+          procedure.validate(:publication)
+          expect(procedure.errors.full_messages_for(:draft_types_de_champ_private)).to include(invalid_repetition_error_message)
+        end
+
+        it 'validates that no drop-down type de champ is empty' do
+          procedure.validate(:publication)
+          expect(procedure.errors.full_messages_for(:draft_types_de_champ_private)).to include(invalid_drop_down_error_message)
+        end
+      end
     end
   end
 

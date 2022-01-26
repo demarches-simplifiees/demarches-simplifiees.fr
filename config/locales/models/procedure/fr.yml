@@ -25,3 +25,5 @@ fr:
               invalid: 'n’a pas le bon format'
             draft_types_de_champ:
               format: 'Le champ %{message}'
+            draft_types_de_champ_private:
+              format: 'L’annotation privée %{message}'
