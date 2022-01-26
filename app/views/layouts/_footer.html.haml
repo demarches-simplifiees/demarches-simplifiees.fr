@@ -1,16 +1,16 @@
 #footer
   %p{ class: "copyright col-md-push-#{12-main_container_size} col-md-#{main_container_size} col-lg-push-#{12-main_container_size} col-lg-#{main_container_size} text-muted small" }
-    = link_to PROVIDER_NAME, PROVIDER_URL
+    = link_to t("links.provider.name"), t("links.provider.url")
     = Time.zone.now.year
     \-
-    = link_to 'Nouveautés', DOC_NOUVEAUTES_URL, target: '_blank'
+    = link_to t("links.footer.doc_nouveautes.label"), t("links.footer.doc_nouveautes.url"), title: t("links.footer.doc_nouveautes.title"), target: '_blank'
     \-
-    = link_to 'Statistiques', stats_path
+    = link_to t("links.footer.stats.label"), stats_path
     \-
-    = link_to 'CGU / Mentions légales', CGU_URL, target: '_blank'
+    = link_to "#{t("links.footer.cgu.label")} / #{t("links.footer.mentions_legales.label")}", t("links.footer.cgu.url"), title: t("links.footer.cgu.title"), target: '_blank'
     \-
-    = link_to 'Documentation', DOC_URL, target: '_blank'
+    = link_to t("links.footer.doc.label"), t("links.footer.doc.url"), title: t("links.footer.doc.title"), target: '_blank'
     \-
-    = link_to 'FAQ', FAQ_ADMIN_URL, target: '_blank'
+    = link_to t("links.footer.faq_admin.label"), t("links.footer.faq_admin.url"), title: t("links.footer.faq_admin.title"), target: '_blank'
     \-
-    = link_to 'Inscription ateliers en ligne', WEBINAIRE_URL, target: '_blank'
+    = link_to t("links.footer.webinaire.label"), t("links.footer.webinaire.url"), title: t("links.footer.webinaire.title"), target: '_blank'

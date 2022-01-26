@@ -35,3 +35,10 @@ yarn-debug.log*
 # Local Netlify folder
 .netlify
 
+# Custom locales
+/config/custom_locales/*
+!/config/custom_locales/.keep
+
+# Custom views
+/app/custom_views/*
+!/app/custom_views/.keep
