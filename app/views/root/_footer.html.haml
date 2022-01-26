@@ -6,44 +6,41 @@
         %ul.footer-logos
           %li.footer-text
             Un service fourni par
-            = link_to PROVIDED_BY, PROVIDER_URL, title: PROVIDER_TITLE
+            = link_to t("links.provider.provided_by"), t("links.provider.url"), title: t("links.provider.title")
             %br
           %li
-            = link_to PROVIDER_URL, title: PROVIDER_NAME, 'aria-label': PROVIDER_NAME do
-              %span.footer-logo{ role: 'img', 'aria-label': PROVIDER_LOGO_ALT }
-                = image_tag PROVIDER_LOGO_SRC, alt: PROVIDER_LOGO_ALT, width: PROVIDER_LOGO_WIDTH, height: PROVIDER_LOGO_HEIGHT, loading: 'lazy'
-            = link_to "https://beta.gouv.fr", title: "le site de Beta.gouv.fr", 'aria-label': 'beta.gouv.fr' do
-              %span.footer-logo.footer-logo-beta-gouv-fr{ role: 'img', 'aria-label': 'Logo beta.gouv.fr' }
+            = link_to t("links.provider.url"), title: t("links.provider.name"), 'aria-label': t("links.provider.name") do
+              %span.footer-logo{ role: 'img', 'aria-label': t("links.provider.logo.alt") }
+                = image_tag t("links.provider.logo.src"), alt: t("links.provider.logo.alt"), width: t("links.provider.logo.width"), height: t("links.provider.logo.height"), loading: 'lazy'
+            = link_to t("links.footer.betagouv.url"), title: t("links.footer.betagouv.title"), 'aria-label': t("links.footer.betagouv.label") do
+              %span.footer-logo.footer-logo-beta-gouv-fr{ role: 'img', 'aria-label': "Logo #{t('links.footer.betagouv.label')}" }
 
       %li.footer-column
         %ul.footer-links
           %li.footer-link
-            = link_to "Newsletter", "https://my.sendinblue.com/users/subscribe/js_id/3s2q1/id/1", :title => "Notre newsletter", :class => "footer-link", :target => "_blank", rel: "noopener"
+            = link_to t("links.footer.newsletter.label"), t("links.footer.newsletter.url"), title: t("links.footer.newsletter.title"), class: "footer-link", target: "_blank", rel: "noopener"
           %li.footer-link
-            -# haml-lint:disable ApplicationNameLinter
-            = link_to "Nouveautés", "https://github.com/betagouv/demarches-simplifiees.fr/releases", :class => "footer-link", :title => "Nos nouveautés"
-            -# haml-lint:enable ApplicationNameLinter
+            = link_to t("links.footer.releases.title"), t("links.footer.releases.url"), title: t("links.footer.releases.title"), class: "footer-link"
           %li.footer-link
-            = link_to "Statistiques", stats_path, :class => "footer-link"
+            = link_to t("links.footer.stats.label"), stats_path, title: t("links.footer.stats.title"), class: "footer-link"
           %li.footer-link
-            = link_to "CGU", CGU_URL, :class => "footer-link", :target => "_blank", rel: "noopener noreferrer"
+            = link_to t("links.footer.cgu.label"), t("links.footer.cgu.url"), title: t("links.footer.cgu.title"), class: "footer-link", target: "_blank", rel: "noopener noreferrer"
           %li.footer-link
-            = link_to "Mentions légales", MENTIONS_LEGALES_URL, :class => "footer-link", :target => "_blank", rel: "noopener noreferrer"
+            = link_to t("links.footer.mentions_legales.label"), t("links.footer.mentions_legales.url"), title: t("links.footer.mentions_legales.title"), class: "footer-link", target: "_blank", rel: "noopener noreferrer"
           %li.footer-link
-            = link_to "Suivi d’audience et vie privée", suivi_path, :class => "footer-link"
+            = link_to t("links.footer.suivi.label"), suivi_path, title: t("links.footer.suivi.title"), class: "footer-link"
 
       %li.footer-column
         %ul.footer-links
           %li.footer-link
-            = contact_link "Contact", class: "footer-link"
+            = contact_link t("links.footer.contact.label"), title: t("links.footer.contact.title"), class: "footer-link"
           %li.footer-link
-            = link_to "Documentation", DOC_URL, :class => "footer-link", :target => "_blank", rel: "noopener noreferrer"
+            = link_to t("links.footer.doc.label"), t("links.footer.doc.url"), title: t("links.footer.doc.title"), class: "footer-link", target: "_blank", rel: "noopener noreferrer"
           %li.footer-link
-            = link_to "Documentation de l'API", API_DOC_URL, :class => "footer-link", :target => "_blank", rel: "noopener noreferrer"
+            = link_to t("links.footer.api_doc.label"), t("links.footer.api_doc.url"), title: t("links.footer.api_doc.title"), class: "footer-link", target: "_blank", rel: "noopener noreferrer"
           %li.footer-link
-            = link_to "FAQ", FAQ_URL, :class => "footer-link", :target => "_blank", rel: "noopener noreferrer"
+            = link_to t("links.footer.faq.label"), t("links.footer.faq.url"), title: t("links.footer.faq.title"), class: "footer-link", target: "_blank", rel: "noopener noreferrer"
           %li.footer-link
-            = link_to ACCESSIBILITE_URL, :class => "footer-link", :target => "_blank", rel: "noopener noreferrer" do
-              Accessibilité&nbsp;: non conforme
+            = link_to t("links.footer.accessibilite.label"), t("links.footer.accessibilite.url"), title: t("links.footer.accessibilite.title"), class: "footer-link", target: "_blank", rel: "noopener noreferrer"
           %li.footer-link
-            = link_to "Disponibilité", STATUS_PAGE_URL, :class => "footer-link", :target => "_blank", rel: "noopener noreferrer"
+            = link_to t("links.footer.status_page.label"), t("links.footer.status_page.url"), title: t("links.footer.status_page.title"), class: "footer-link", target: "_blank", rel: "noopener noreferrer"
