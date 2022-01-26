@@ -68,19 +68,12 @@ footer {
   opacity: 0.8;
 }
 
-.footer-logo-dinum {
-  @include ie-compatible-background-image("footer/logo-dinum.png");
-
-  height: 150px;
-  width: 202px;
-  margin-bottom: 14px;
-}
-
 .footer-logo-beta-gouv-fr {
   @include ie-compatible-background-image("footer/logo-beta-gouv-fr.svg");
 
   width: 150px;
   height: 25px;
+  margin-top: 14px;
 }
 
 .footer-logo-france {
