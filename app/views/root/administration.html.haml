@@ -82,57 +82,7 @@
             %br
             à l'ensemble des services de l'État plateforme
 
-  .landing-panel
-    .container
-      %h2.landing-panel-title Ce que les utilisateurs pensent du service
-
-      %ul.quotes
-        %li.quote
-          %img.quote-quotation-mark{ :src => image_url("landing/testimonials/quotation-mark.svg"), alt: "" }
-          .quote-content-wrapper
-            %p.quote-content
-              Les échanges avec les usagers sont facilités, ce qui permet de réduire les délais d’instructions et de gagner en efficacité.
-
-            %p.quote-author
-              %span.quote-author-name Elodie Le Rhun
-              %br
-              Cheffe de bureau, DRIEA Ile-de-France
-
-        %li.quote
-          %img.quote-quotation-mark{ :src => image_url("landing/testimonials/quotation-mark.svg"), alt: "" }
-          .quote-content-wrapper
-            %p.quote-content
-              Un service qui garantit une économie de temps et beaucoup moins de manipulations des dossiers.
-
-            %p.quote-author
-              %span.quote-author-name Nadja Briki
-              %br
-              Déléguée de la Préfète du Pas-de-Calais
-
-      %ul.quotes
-        %li.quote
-          %img.quote-quotation-mark{ :src => image_url("landing/testimonials/quotation-mark.svg"), alt: "" }
-          .quote-content-wrapper
-            %p.quote-content
-              Parfait, cela fonctionne très bien ! Merci encore pour votre réactivité.
-
-            %p.quote-author
-              %span.quote-author-name Max A.
-              %br
-              à notre service support
-
-        %li.quote
-          %img.quote-quotation-mark{ :src => image_url("landing/testimonials/quotation-mark.svg"), alt: "" }
-          .quote-content-wrapper
-            %p.quote-content
-              ★★★★★
-              %br
-              Eh les cocos, il y a la télé-procédure
-
-            %p.quote-author
-              %span.quote-author-name Hisham M.
-              %br
-              sur le site de la DRIEA
+  = render partial: "root/testimonials" if LANDING_TESTIMONIALS_ENABLED
 
   - cache "numbers-panel", :expires_in => 3.hours do
     .landing-panel.numbers-panel
@@ -161,43 +111,7 @@
               %br<>
               des délais de traitement
 
-  .landing-panel.users-panel
-    .container
-      %h2.landing-panel-title Ils utilisent déjà #{APPLICATION_NAME}
-
-      %ul.users
-        %li.user
-          = link_to "https://www.ecologique-solidaire.gouv.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_url("landing/users/mtes.jpg"), alt: "Ministère de la Transition Écologique et Solidaire" }
-        %li.user
-          = link_to "https://www.iledefrance.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_url("landing/users/region-idf.jpg"), alt: "Région Île-de-France" }
-        %li.user
-          = link_to "http://www.artisanat.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_url("landing/users/chambres-de-metiers.jpg"), alt: "Chambres des Métiers et de l'Artisanat" }
-        %li.user
-          = link_to "http://www.cci.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_url("landing/users/cci.jpg"), alt: "CCI de France" }
-        %li.user
-          = link_to "http://www.driea.ile-de-france.developpement-durable.gouv.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_url("landing/users/driea-idf.jpg"), alt: "Direction Régionale et Interdépartementale de l'Équipement et de l'Aménagement" }
-
-      %ul.users
-        %li.user
-          = link_to "https://www.debatpublic.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_url("landing/users/cndp.jpg"), alt: "Commission Nationale du Débat Public" }
-        %li.user
-          = link_to "https://www.iledefrance.ars.sante.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_url("landing/users/ars-idf.jpg"), alt: "Agence Régionale de Santé d’Île-de-France" }
-        %li.user
-          = link_to "http://www.franceagrimer.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_url("landing/users/france-agrimer.jpg"), alt: "FranceAgrimer" }
-        %li.user
-          = link_to "http://www.rhone.gouv.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_url("landing/users/prefecture-rhone.jpg"), alt: "Préfecture de la région Rhône-Alpes" }
-        %li.user
-          = link_to "http://www.lillemetropole.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_url("landing/users/mel.jpg"), alt: "Métropole Européenne de Lille" }
+  = render partial: "root/users" if  LANDING_USERS_ENABLED
 
   .landing-panel.cta-panel-2
     .container
