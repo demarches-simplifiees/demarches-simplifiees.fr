@@ -299,7 +299,7 @@ describe Procedure do
       it_behaves_like 'duree de conservation'
     end
 
-    describe 'draft_revision' do
+    describe 'draft_types_de_champ validations' do
       let(:repetition) { build(:type_de_champ_repetition, libelle: 'Enfants') }
       let(:text_field) { build(:type_de_champ_text) }
       let(:invalid_repetition_error_message) { 'Le champ « Enfants » doit comporter au moins un champ répétable' }
@@ -310,7 +310,7 @@ describe Procedure do
       let(:procedure) { create(:procedure, types_de_champ: [repetition, drop_down]) }
 
       context 'on a draft procedure' do
-        it 'doesn’t validate the draft revision' do
+        it 'doesn’t validate the types de champs' do
           procedure.validate
           expect(procedure.errors[:draft_types_de_champ]).not_to be_present
         end
