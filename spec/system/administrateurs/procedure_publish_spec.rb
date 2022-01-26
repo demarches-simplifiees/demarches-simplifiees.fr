@@ -47,7 +47,7 @@ describe 'Publishing a procedure', js: true do
     end
 
     context 'when the procedure has invalid champs' do
-      let(:empty_repetition) { build(:type_de_champ_repetition, types_de_champ: []) }
+      let(:empty_repetition) { build(:type_de_champ_repetition, types_de_champ: [], libelle: 'Enfants') }
       let!(:procedure) do
         create(:procedure,
                :with_path,
@@ -59,7 +59,7 @@ describe 'Publishing a procedure', js: true do
 
       scenario 'an error message prevents the publication' do
         expect(page).to have_content('Des problèmes empêchent la publication de la démarche')
-        expect(page).to have_content("Le bloc répétable « #{empty_repetition.libelle} » doit comporter au moins un champ")
+        expect(page).to have_content("Le champ « Enfants » doit comporter au moins un champ répétable")
 
         expect(find_field('procedure_path').value).to eq procedure.path
         fill_in 'lien_site_web', with: 'http://some.website'

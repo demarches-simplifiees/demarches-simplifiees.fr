@@ -1,10 +1,6 @@
 class Revisions::NoEmptyDropDownValidator < ActiveModel::EachValidator
-  def validate_each(procedure, attribute, revision)
-    return if revision.nil?
-
-    tdcs = revision.types_de_champ + revision.types_de_champ_private
-    drop_downs = tdcs.filter(&:drop_down_list?)
-    drop_downs.each do |drop_down|
+  def validate_each(procedure, attribute, types_de_champ)
+    types_de_champ.filter(&:drop_down_list?).each do |drop_down|
       validate_drop_down_not_empty(procedure, attribute, drop_down)
     end
   end

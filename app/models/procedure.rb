@@ -245,7 +245,7 @@ class Procedure < ApplicationRecord
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validates :administrateurs, presence: true
   validates :lien_site_web, presence: true, if: :publiee?
-  validates :draft_revision,
+  validates :draft_types_de_champ,
     'revisions/no_empty_repetition': true,
     'revisions/no_empty_drop_down': true,
     if: :validate_for_publication?
