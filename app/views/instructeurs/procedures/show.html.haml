@@ -17,6 +17,7 @@
         suivis_count: @suivis_count,
         traites_count: @traites_count,
         tous_count: @tous_count,
+        supprimes_recemment_count: @supprimes_recemment_count,
         archives_count: @archives_count,
         expirant_count: @expirant_count,
         has_en_cours_notifications: @has_en_cours_notifications,
@@ -31,6 +32,8 @@
       %p.explication-onglet Les dossiers dans cet onglet sont terminés : ils ont été acceptés, refusés ou classés sans suite.
     - if @statut == 'tous'
       %p.explication-onglet Tous les dossiers qui ont été déposés sur cette démarche, quel que soit le statut.
+    - if @statut == 'supprimes_recemment'
+      %p.explication-onglet Tous les dossiers terminés et supprimés par les instructeurs sur cette démarche
     - if @statut == 'archives'
       %p.explication-onglet
         Les dossiers de cet onglet sont archivés : vous ne pouvez plus y répondre, et les demandeurs ne peuvent plus les modifier.
@@ -135,7 +138,8 @@
                             state: p.state,
                             archived: p.archived,
                             dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
-                            close_to_expiration: @statut == 'expirant' }
+                            close_to_expiration: @statut == 'expirant',
+                            supprimes_recemment: @statut == 'supprimes_recemment' }
 
       = pagination
     - else
