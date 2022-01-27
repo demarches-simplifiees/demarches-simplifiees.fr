@@ -89,6 +89,6 @@ describe ProcedureStatsConcern do
   private
 
   def create_dossier(construction_date:, instruction_date:, processed_date:)
-    dossier = create(:dossier, :accepte, procedure: procedure, en_construction_at: construction_date, en_instruction_at: instruction_date, processed_at: processed_date)
+    dossier = create(:dossier, :accepte, procedure: procedure, depose_at: construction_date, en_instruction_at: instruction_date, processed_at: processed_date)
   end
 end

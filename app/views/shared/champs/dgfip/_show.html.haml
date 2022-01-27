@@ -1,0 +1,30 @@
+- if champ.blank?
+  %p= t('.not_filled')
+- elsif champ.data.blank?
+  %p= t('.fetching_data',
+    numero_fiscal: champ.numero_fiscal,
+    reference_avis: champ.reference_avis)
+- else
+  - if profile == 'usager'
+    - sources = champ.procedure.api_particulier_sources['dgfip'].keys
+    - i18n_sources = sources.map { |s| I18n.t("#{s}.libelle", scope: 'api_particulier.providers.dgfip.scopes') }
+    %p= t('.data_fetched',
+      sources: i18n_sources.to_sentence,
+      numero_fiscal: champ.numero_fiscal,
+      reference_avis: champ.reference_avis)
+
+  - if profile == 'instructeur'
+    %p= t('.data_fetched_title')
+
+    - champ.data.slice('declarant1', 'declarant2', 'echeance_avis', 'foyer_fiscal', 'agregats_fiscaux', 'complements').keys.each do |scope|
+      - case scope
+      - when 'declarant1', 'declarant2'
+        = render partial: 'shared/champs/dgfip/declarant', locals: { scope: scope, declarant: champ.data[scope] }
+      - when 'echeance_avis'
+        = render partial: 'shared/champs/dgfip/echeance_avis', locals: { scope: scope, echeance_avis: champ.data[scope] }
+      - when 'foyer_fiscal'
+        = render partial: 'shared/champs/dgfip/foyer_fiscal', locals: { scope: scope, foyer_fiscal: champ.data[scope] }
+      - when 'agregats_fiscaux'
+        = render partial: 'shared/champs/dgfip/agregats_fiscaux', locals: { scope: scope, agregats_fiscaux: champ.data[scope] }
+      - when 'complements'
+        = render partial: 'shared/champs/dgfip/complements', locals: { scope: scope, complements: champ.data[scope] }

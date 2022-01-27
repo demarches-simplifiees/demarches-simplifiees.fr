@@ -1,0 +1,6 @@
+%table.dgfip
+  %caption #{t("api_particulier.providers.dgfip.scopes.#{scope}.libelle")} :
+  - foyer_fiscal.slice('annee', 'adresse', 'nombreParts', 'situationFamille', 'nombrePersonnesCharge').keys.each do |key|
+    %tr
+      %th= t("api_particulier.providers.dgfip.scopes.#{scope}.#{key}")
+      %td= foyer_fiscal[key]

@@ -135,11 +135,13 @@ en:
           edit_identity: "Edit identity data"
     instructeurs:
       dossiers:
+        archived_dossier: "This file will be kept for an additional month"
         deleted_by_user: "File deleted by user"
       avis:
         introduction_file_explaination: "File attached to the request for advice"
     users:
       dossiers:
+        archived_dossier: "Your file will be kept %{duree_conservation_dossiers_dans_ds} more months"
         autosave:
           autosave_draft: Your draft is automatically saved.
           more_infos: More informations
@@ -291,6 +293,12 @@ en:
               invalid: "must be a maximum of 7 digits"
             code_postal:
               invalid: "must be 5 characters long"
+        "champs/dgfip_champ":
+          attributes:
+            numero_fiscal:
+              invalid: "must be 13 or 14 characters long"
+            reference_avis:
+              invalid: "must be 13 or 14 characters long"
   errors:
     messages:
       dossier_not_found: "The file does not exist or you do not have access to it."
@@ -384,9 +392,7 @@ en:
         message_send: "Your message has been sent to the instructor in charge of your file."
       ask_deletion:
         undergoingreview: "Your file is undergoing review. It is no longer possible to delete your file. To cancel the undergoingreview contact the adminitration via the mailbox."
-        deleted_dossier: "Your file has been successfully deleted"
-      extend_conservation:
-        archived_dossier: "Your file will be archived for an additional month"
+        soft_deleted_dossier: "Your file has been successfully deleted from your interface"
       update_brouillon:
         draft_saved: "Your draft has been saved."
       etablissement:

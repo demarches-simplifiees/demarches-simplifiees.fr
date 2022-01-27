@@ -256,7 +256,7 @@ module Administrateurs
     end
 
     def procedure_params
-      editable_params = [:libelle, :description, :organisation, :direction, :lien_site_web, :cadre_juridique, :deliberation, :notice, :web_hook_url, :declarative_with_state, :logo, :auto_archive_on, :monavis_embed, :api_entreprise_token, :duree_conservation_dossiers_dans_ds]
+      editable_params = [:libelle, :description, :organisation, :direction, :lien_site_web, :cadre_juridique, :deliberation, :notice, :web_hook_url, :declarative_with_state, :logo, :auto_archive_on, :monavis_embed, :api_entreprise_token, :duree_conservation_dossiers_dans_ds, :zone_id]
       permited_params = if @procedure&.locked?
         params.require(:procedure).permit(*editable_params)
       else

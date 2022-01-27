@@ -107,16 +107,25 @@ describe Dossier do
         is_expected.to include(long_expired_dossier)
       end
     end
+    context 'when .termine_or_en_construction_close_to_expiration' do
+      subject { Dossier.termine_or_en_construction_close_to_expiration }
+      it do
+        is_expected.not_to include(young_dossier)
+        is_expected.to include(expiring_dossier)
+        is_expected.to include(just_expired_dossier)
+        is_expected.to include(long_expired_dossier)
+      end
+    end
   end
 
-  describe 'en_instruction_close_to_expiration' do
-    let(:procedure) { create(:procedure, :published, duree_conservation_dossiers_dans_ds: 6) }
-    let!(:young_dossier) { create(:dossier, procedure: procedure) }
-    let!(:expiring_dossier) { create(:dossier, :en_instruction, en_instruction_at: 175.days.ago, procedure: procedure) }
-    let!(:just_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: (6.months + 1.hour + 10.seconds).ago, procedure: procedure) }
-    let!(:long_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: 1.year.ago, procedure: procedure) }
+  describe 'termine_close_to_expiration' do
+    let(:procedure) { create(:procedure, :published, duree_conservation_dossiers_dans_ds: 6, procedure_expires_when_termine_enabled: true) }
+    let!(:young_dossier) { create(:dossier, state: :accepte, procedure: procedure, processed_at: 2.days.ago) }
+    let!(:expiring_dossier) { create(:dossier, state: :accepte, procedure: procedure, processed_at: 175.days.ago) }
+    let!(:just_expired_dossier) { create(:dossier, state: :accepte, procedure: procedure, processed_at: (6.months + 1.hour + 10.seconds).ago) }
+    let!(:long_expired_dossier) { create(:dossier, state: :accepte, procedure: procedure, processed_at: 1.year.ago) }
 
-    subject { Dossier.en_instruction_close_to_expiration }
+    subject { Dossier.termine_close_to_expiration }
 
     it do
       is_expected.not_to include(young_dossier)
@@ -134,26 +143,9 @@ describe Dossier do
         is_expected.to include(long_expired_dossier)
       end
     end
-  end
-
-  describe 'termine_close_to_expiration' do
-    let(:procedure) { create(:procedure, :published, duree_conservation_dossiers_dans_ds: 6) }
-    let!(:young_dossier) { create(:dossier, :accepte, procedure: procedure, traitements: [build(:traitement, :accepte)]) }
-    let!(:expiring_dossier) { create(:dossier, :accepte, procedure: procedure, traitements: [build(:traitement, :accepte, processed_at: 175.days.ago)]) }
-    let!(:just_expired_dossier) { create(:dossier, :accepte, procedure: procedure, traitements: [build(:traitement, :accepte, processed_at: (6.months + 1.hour + 10.seconds).ago)]) }
-    let!(:long_expired_dossier) { create(:dossier, :accepte, procedure: procedure, traitements: [build(:traitement, :accepte, processed_at: 1.year.ago)]) }
-
-    subject { Dossier.termine_close_to_expiration }
-
-    it do
-      is_expected.not_to include(young_dossier)
-      is_expected.to include(expiring_dossier)
-      is_expected.to include(just_expired_dossier)
-      is_expected.to include(long_expired_dossier)
-    end
 
     context 'when .close_to_expiration' do
-      subject { Dossier.close_to_expiration }
+      subject { Dossier.termine_or_en_construction_close_to_expiration }
       it do
         is_expected.not_to include(young_dossier)
         is_expected.to include(expiring_dossier)
@@ -364,15 +356,15 @@ describe Dossier do
     let(:service) { create(:service, nom: 'nom du service') }
     let(:procedure) { create(:procedure, libelle: "Démarche", organisation: "Organisme", service: service) }
 
-    context 'when the dossier has been en_construction' do
-      let(:dossier) { create :dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction), en_construction_at: "31/12/2010".to_date }
+    context 'when the dossier has been submitted' do
+      let(:dossier) { create :dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction), depose_at: "31/12/2010".to_date }
 
       subject { dossier.text_summary }
 
       it { is_expected.to eq("Dossier déposé le 31/12/2010 sur la démarche Démarche gérée par l’organisme nom du service") }
     end
 
-    context 'when the dossier has not been en_construction' do
+    context 'when the dossier has not been submitted' do
       let(:dossier) { create :dossier, procedure: procedure, state: Dossier.states.fetch(:brouillon) }
 
       subject { dossier.text_summary }
@@ -546,9 +538,9 @@ describe Dossier do
   describe '.downloadable_sorted' do
     let(:procedure) { create(:procedure) }
     let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:brouillon)) }
-    let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_construction), en_construction_at: Time.zone.parse('03/01/2010')) }
-    let!(:dossier3) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_instruction), en_construction_at: Time.zone.parse('01/01/2010')) }
-    let!(:dossier4) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_instruction), archived: true, en_construction_at: Time.zone.parse('02/01/2010')) }
+    let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_construction), depose_at: Time.zone.parse('03/01/2010')) }
+    let!(:dossier3) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_instruction), depose_at: Time.zone.parse('01/01/2010')) }
+    let!(:dossier4) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_instruction), archived: true, depose_at: Time.zone.parse('02/01/2010')) }
 
     subject { procedure.dossiers.downloadable_sorted }
 

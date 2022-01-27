@@ -75,8 +75,8 @@ class StatsController < ApplicationController
           "procedures.libelle",
           "users.id",
           "dossiers.state",
-          "dossiers.en_construction_at - dossiers.created_at",
-          "dossiers.en_instruction_at - dossiers.en_construction_at",
+          "dossiers.depose_at - dossiers.created_at",
+          "dossiers.en_instruction_at - dossiers.depose_at",
           "dossiers.processed_at - dossiers.en_instruction_at"
         )
     end
@@ -139,7 +139,7 @@ class StatsController < ApplicationController
         end_date = monthly_report[:end_date].to_time.localtime
         replies_count = monthly_report[:replies_sent]
 
-        dossiers_count = Dossier.where(en_construction_at: start_date..end_date).count
+        dossiers_count = Dossier.where(depose_at: start_date..end_date).count
 
         monthly_contact_percentage = replies_count.fdiv(dossiers_count || 1) * 100
         [I18n.l(start_date, format: '%b %y'), monthly_contact_percentage.round(1)]

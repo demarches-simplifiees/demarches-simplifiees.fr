@@ -3,11 +3,11 @@ namespace :after_party do
   task set_dossiers_processed_at: :environment do
     puts "Running deploy task 'set_dossiers_processed_at'"
 
-    dossiers = Dossier.termine.includes(:traitement)
+    dossiers = Dossier.with_discarded.state_termine.includes(:traitement)
     progress = ProgressReport.new(dossiers.count)
 
     dossiers.find_each do |dossier|
-      if dossier.processed_at != dossier.traitement.processed_at
+      if dossier.read_attribute(:processed_at) != dossier.traitement.processed_at
         dossier.update_column(:processed_at, dossier.traitement.processed_at)
       end
       progress.inc

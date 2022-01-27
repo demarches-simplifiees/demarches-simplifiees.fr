@@ -20,8 +20,8 @@
             = link_to(url_for_dossier(dossier), class: 'cell-link') do
               = procedure_libelle(dossier.procedure)
           - if dossiers.present?
-            %td.cell-link
-              = demandeur_dossier(dossier)
+            %td
+              %span.cell-link= demandeur_dossier(dossier)
           %td.status-col
             = status_badge(dossier.state)
           %td.updated-at-col.cell-link

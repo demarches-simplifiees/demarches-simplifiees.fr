@@ -12,6 +12,7 @@ FactoryBot.define do
     ask_birthday { false }
     lien_site_web { "https://mon-site.gouv" }
     path { SecureRandom.uuid }
+    association :zone
 
     groupe_instructeurs { [association(:groupe_instructeur, :default, procedure: instance, strategy: :build)] }
     administrateurs { administrateur.present? ? [administrateur] : [association(:administrateur)] }
@@ -208,6 +209,18 @@ FactoryBot.define do
     trait :with_cnaf do
       after(:build) do |procedure, _evaluator|
         build(:type_de_champ_cnaf, procedure: procedure)
+      end
+    end
+
+    trait :with_dgfip do
+      after(:build) do |procedure, _evaluator|
+        build(:type_de_champ_dgfip, procedure: procedure)
+      end
+    end
+
+    trait :with_pole_emploi do
+      after(:build) do |procedure, _evaluator|
+        build(:type_de_champ_pole_emploi, procedure: procedure)
       end
     end
 

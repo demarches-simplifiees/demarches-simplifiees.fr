@@ -70,6 +70,13 @@ describe DossierProjectionService do
           it { is_expected.to eq('17/10/2018') }
         end
 
+        context 'for depose_at column' do
+          let(:column) { 'depose_at' }
+          let(:dossier) { create(:dossier, :en_construction, depose_at: Time.zone.local(2018, 10, 17)) }
+
+          it { is_expected.to eq('17/10/2018') }
+        end
+
         context 'for updated_at column' do
           let(:column) { 'updated_at' }
           let(:dossier) { create(:dossier) }

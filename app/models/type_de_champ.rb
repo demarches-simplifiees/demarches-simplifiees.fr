@@ -2,19 +2,20 @@
 #
 # Table name: types_de_champ
 #
-#  id          :integer          not null, primary key
-#  description :text
-#  libelle     :string
-#  mandatory   :boolean          default(FALSE)
-#  options     :jsonb
-#  order_place :integer
-#  private     :boolean          default(FALSE), not null
-#  type_champ  :string
-#  created_at  :datetime
-#  updated_at  :datetime
-#  parent_id   :bigint
-#  revision_id :bigint
-#  stable_id   :bigint
+#  id              :integer          not null, primary key
+#  description     :text
+#  libelle         :string
+#  mandatory       :boolean          default(FALSE)
+#  migrated_parent :boolean
+#  options         :jsonb
+#  order_place     :integer
+#  private         :boolean          default(FALSE), not null
+#  type_champ      :string
+#  created_at      :datetime
+#  updated_at      :datetime
+#  parent_id       :bigint
+#  revision_id     :bigint
+#  stable_id       :bigint
 #
 class TypeDeChamp < ApplicationRecord
   enum type_champs: {
@@ -55,7 +56,9 @@ class TypeDeChamp < ApplicationRecord
     iban: 'iban',
     annuaire_education: 'annuaire_education',
     visa: 'visa',
-    cnaf: 'cnaf'
+    cnaf: 'cnaf',
+    dgfip: 'dgfip',
+    pole_emploi: 'pole_emploi'
   }
 
   belongs_to :revision, class_name: 'ProcedureRevision', optional: true
@@ -65,8 +68,9 @@ class TypeDeChamp < ApplicationRecord
   has_many :types_de_champ, -> { ordered }, foreign_key: :parent_id, class_name: 'TypeDeChamp', inverse_of: :parent, dependent: :destroy
 
   store_accessor :options, :cadastres, :old_pj, :drop_down_options, :skip_pj_validation, :skip_content_type_pj_validation, :drop_down_secondary_libelle, :drop_down_secondary_description, :drop_down_other, :parcelles, :batiments, :zones_manuelles, :min, :max, :level, :accredited_users
-  has_many :revision_types_de_champ, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
-  has_many :revisions, through: :revision_types_de_champ
+  has_many :revision_types_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
+  has_one :revision_type_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', inverse_of: false
+  has_many :revisions, -> { ordered }, through: :revision_types_de_champ
 
   delegate :tags_for_template, :libelle_for_export, to: :dynamic_type
 
@@ -360,6 +364,10 @@ class TypeDeChamp < ApplicationRecord
         has_legacy_number
       when TypeDeChamp.type_champs.fetch(:cnaf)
         procedure.cnaf_enabled?
+      when TypeDeChamp.type_champs.fetch(:dgfip)
+        procedure.dgfip_enabled?
+      when TypeDeChamp.type_champs.fetch(:pole_emploi)
+        procedure.pole_emploi_enabled?
       else
         true
       end
@@ -418,6 +426,17 @@ class TypeDeChamp < ApplicationRecord
     else
       super
     end
+  end
+
+  def migrate_parent!
+    if parent_id.present? && migrated_parent.nil?
+      ProcedureRevisionTypeDeChamp.create(parent: parent.revision_type_de_champ,
+        type_de_champ: self,
+        revision_id: parent.revision_type_de_champ.revision_id,
+        position: order_place)
+      update_column(:migrated_parent, true)
+    end
+    self
   end
 
   private
