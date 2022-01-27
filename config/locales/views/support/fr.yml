@@ -21,8 +21,8 @@ fr:
       product:
         question: J’ai une idée d’amélioration pour votre site
         answer_html: "<p>Une idée ? Pensez à consulter notre <strong>tableau de bord des améliorations</strong></p>
-        <p><ul><li>Votez pour vos améliorations prioritaires;</li>
-        <li>Proposez votre propre idée.</li></ul></p>
+        <ul><li>Votez pour vos améliorations prioritaires;</li>
+        <li>Proposez votre propre idée.</li></ul>
         <p><strong><a href=%{link_product}>➡ Accéder au tableau des améliorations</a></strong></p>"
       lost_user:
         question: Je ne trouve pas la démarche que je veux faire

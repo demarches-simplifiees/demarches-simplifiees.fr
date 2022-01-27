@@ -14,14 +14,15 @@
     vertical-align: middle;
   }
 
-  th {
+  th,
+  td.libelle {
     text-align: left;
     font-weight: bold;
     padding: (3 * $default-spacer) 2px;
-  }
 
-  th.padded {
-    padding-left: (2 * $default-spacer);
+    &.padded {
+      padding-left: (2 * $default-spacer);
+    }
   }
 
   &.hoverable {
@@ -38,7 +39,8 @@
       border-top: none;
     }
 
-    th {
+    th,
+    td.libelle {
       @include vertical-padding($default-spacer);
 
       &.header-section {

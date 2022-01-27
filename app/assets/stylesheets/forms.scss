@@ -723,3 +723,8 @@
     margin-bottom: 16px;
   }
 }
+
+input::placeholder,
+textarea::placeholder {
+  color: $dark-grey;
+}

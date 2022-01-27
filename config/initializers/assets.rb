@@ -13,7 +13,6 @@ end
 # Rails.application.config.assets.paths << Emoji.images_path
 # Add some node_modules folder to the asset load path.
 Rails.application.config.assets.paths << Rails.root.join('node_modules', 'trix', 'dist')
-Rails.application.config.assets.paths << Rails.root.join('node_modules', 'select2', 'dist', 'css')
 Rails.application.config.assets.paths << Rails.root.join('node_modules', 'mapbox-gl', 'dist')
 Rails.application.config.assets.paths << Rails.root.join('node_modules', '@reach', 'combobox')
 Rails.application.config.assets.paths << Rails.root.join('node_modules', '@mapbox', 'mapbox-gl-draw', 'dist')
