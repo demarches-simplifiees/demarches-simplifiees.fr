@@ -1,7 +1,7 @@
 name: Continuous Integration
 on:
   push:
-    branches: ['devpf', 'masterpf', 'issue/*', 'feature/*']
+    branches: ['devpf', 'masterpf', 'issue/*', 'feature/*', 'hotfix/*']
   pull_request:
     branches: ['devpf', 'masterpf', 'issue/*', 'feature/*']
 
