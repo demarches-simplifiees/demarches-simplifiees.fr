@@ -141,7 +141,7 @@
       }
 
       &:active {
-        border-color: darken($border-grey, 10);
+        border-color: $dark-border-grey;
       }
 
       &:first-child {

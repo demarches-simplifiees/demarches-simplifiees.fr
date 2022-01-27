@@ -80,5 +80,7 @@ module TPS
     # Custom Configuration
     # @see https://guides.rubyonrails.org/configuring.html#custom-configuration
     config.x.clamav.enabled = ENV.fetch("CLAMAV_ENABLED", "enabled") == "enabled"
+
+    config.custom_stylesheet = ENV["CUSTOM_STYLESHEET"]
   end
 end

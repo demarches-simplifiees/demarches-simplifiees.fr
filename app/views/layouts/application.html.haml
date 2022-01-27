@@ -20,6 +20,8 @@
     = preload_link_tag(asset_url("Muli-Bold.woff2"))
 
     = stylesheet_link_tag 'application', media: 'all'
+    - if Rails.configuration.custom_stylesheet.present?
+      = stylesheet_link_tag Rails.configuration.custom_stylesheet, media: 'all'
 
     = Gon::Base.render_data(camel_case: true, init: true, nonce:  request.content_security_policy_nonce)
 
