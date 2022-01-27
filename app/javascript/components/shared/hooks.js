@@ -1,4 +1,5 @@
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback, useMemo, useState } from 'react';
+import { fire } from '@utils';
 
 export function useDeferredSubmit(input) {
   const calledRef = useRef(false);
@@ -30,4 +31,36 @@ export function useDeferredSubmit(input) {
     calledRef.current = true;
   };
   return awaitFormSubmit;
+}
+
+export function groupId(id) {
+  return `#champ-${id.replace(/-input$/, '')}`;
+}
+
+export function useHiddenField(group, name = 'value') {
+  const hiddenField = useMemo(
+    () => selectInputInGroup(group, name),
+    [group, name]
+  );
+  const [value, setValue] = useState(() => hiddenField?.value);
+
+  return [
+    value,
+    (value) => {
+      if (hiddenField) {
+        hiddenField.setAttribute('value', value);
+        setValue(value);
+        fire(hiddenField, 'autosave:trigger');
+      }
+    },
+    hiddenField
+  ];
+}
+
+function selectInputInGroup(group, name) {
+  if (group) {
+    return document.querySelector(
+      `${group} input[type="hidden"][name$="[${name}]"], ${group} input[type="hidden"][name="${name}"]`
+    );
+  }
 }

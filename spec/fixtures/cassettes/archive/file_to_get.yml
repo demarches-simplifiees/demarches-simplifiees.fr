@@ -1,0 +1,51 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://file.to/get.ext
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Last-Modified:
+      - Thu, 16 Dec 2021 13:04:07 GMT
+      X-Trans-Id:
+      - tx62bf43b03d7e4b60b3f25-0061d45dbd
+      Accept-Ranges:
+      - bytes
+      Expires:
+      - Tue, 04 Jan 2022 15:20:54 GMT
+      X-Openstack-Request-Id:
+      - tx62bf43b03d7e4b60b3f25-0061d45dbd
+      Content-Type:
+      - image/png
+      Date:
+      - Tue, 04 Jan 2022 14:46:21 GMT
+      X-Iplb-Request-Id:
+      - 877D6D0C:B8E4_5762BBC9:01BB_61D45DBD_104936A5:293F4
+      X-Timestamp:
+      - '1639659846.52947'
+      Etag:
+      - 49961feab1c277af65fcb876c379cebf
+      X-Iplb-Instance:
+      - '42085'
+      Content-Length:
+      - '494761'
+      Content-Disposition:
+      - inline; filename="Screen Shot 2021-12-09 at 9.42.44 AM.png"; filename*=UTF-8''Screen%20Shot%202021-12-09%20at%209.42.44%20AM.png
+      Strict-Transport-Security:
+      - max-age=63072000
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+  recorded_at: Wed, 04 Mar 2020 23:00:00 GMT
+recorded_with: VCR 6.0.0

@@ -30,14 +30,14 @@ describe 'The routing', js: true do
     expect(page).to have_field('Nom du groupe', with: 'littéraire')
 
     # add victor to littéraire groupe
-    find("input[aria-label='email instructeur'").send_keys('victor@inst.com', :enter)
+    fill_in 'Emails', with: 'victor@inst.com'
     perform_enqueued_jobs { click_on 'Affecter' }
     expect(page).to have_text("L’instructeur victor@inst.com a été affecté au groupe « littéraire »")
 
     victor = User.find_by(email: 'victor@inst.com').instructeur
 
     # add superwoman to littéraire groupe
-    find("input[aria-label='email instructeur'").send_keys('superwoman@inst.com', :enter)
+    fill_in 'Emails', with: 'superwoman@inst.com'
     perform_enqueued_jobs { click_on 'Affecter' }
     expect(page).to have_text("L’instructeur superwoman@inst.com a été affecté au groupe « littéraire »")
 
@@ -50,14 +50,14 @@ describe 'The routing', js: true do
     expect(page).to have_text('Le groupe d’instructeurs « scientifique » a été créé.')
 
     # add marie to scientifique groupe
-    find("input[aria-label='email instructeur'").send_keys('marie@inst.com', :enter)
+    fill_in 'Emails', with: 'marie@inst.com'
     perform_enqueued_jobs { click_on 'Affecter' }
     expect(page).to have_text("L’instructeur marie@inst.com a été affecté")
 
     marie = User.find_by(email: 'marie@inst.com').instructeur
 
     # add superwoman to scientifique groupe
-    find("input[aria-label='email instructeur'").send_keys('superwoman@inst.com', :enter)
+    fill_in 'Emails', with: 'superwoman@inst.com'
     perform_enqueued_jobs { click_on 'Affecter' }
     expect(page).to have_text("L’instructeur superwoman@inst.com a été affecté")
 
@@ -112,7 +112,7 @@ describe 'The routing', js: true do
     click_on litteraire_user.dossiers.first.id.to_s
     click_on 'Modifier mon dossier'
 
-    fill_in 'dossier_champs_attributes_0_value', with: 'some value'
+    fill_in litteraire_user.dossiers.first.champs.first.libelle, with: 'some value'
     click_on 'Enregistrer les modifications du dossier'
     log_out
 

@@ -1,7 +1,7 @@
 %li{ class: (active ? 'active' : nil) }
   - if notification
     %span.notifications{ 'aria-label': 'notifications' }
-  = link_to(url) do
+  = link_to(url, 'aria-current': active ? 'page' : nil) do
     - if badge.present?
       %span.badge= badge
     = label

@@ -15,7 +15,8 @@
             - else
               %p.menu-item Le téléchargement des pièces jointes est désactivé pour les dossiers de plus de #{number_to_human_size Dossier::TAILLE_MAX_ZIP}.
 
-    %ul.tabs
-      = dynamic_tab_item('Demande', expert_avis_path(avis.procedure, avis))
-      = dynamic_tab_item('Avis', instruction_expert_avis_path(avis.procedure, avis), notification: avis.answer.blank?)
-      = dynamic_tab_item('Messagerie', messagerie_expert_avis_path(avis.procedure, avis))
+    %nav.tabs
+      %ul
+        = dynamic_tab_item('Demande', expert_avis_path(avis.procedure, avis))
+        = dynamic_tab_item('Avis', instruction_expert_avis_path(avis.procedure, avis), notification: avis.answer.blank?)
+        = dynamic_tab_item('Messagerie', messagerie_expert_avis_path(avis.procedure, avis))

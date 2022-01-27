@@ -30,6 +30,9 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  invisible_captcha:
+    custom_message: 'If you are a human, ignore this field'
+
   help: 'Help'
   utils:
     'yes': Yes

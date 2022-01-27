@@ -26,7 +26,8 @@
               = link_to t('views.users.dossiers.show.header.print_dossier'), dossier_path(dossier, format: :pdf), target: "_blank", rel: "noopener", class: "menu-item menu-link"
 
 
-    %ul.tabs
-      = dynamic_tab_item(t('views.users.dossiers.show.header.summary'), dossier_path(dossier))
-      = dynamic_tab_item(t('views.users.dossiers.show.header.request'), [demande_dossier_path(dossier), modifier_dossier_path(dossier)])
-      = dynamic_tab_item(t('views.users.dossiers.show.header.mailbox'), messagerie_dossier_path(dossier))
+    %nav.tabs
+      %ul
+        = dynamic_tab_item(t('views.users.dossiers.show.header.summary'), dossier_path(dossier))
+        = dynamic_tab_item(t('views.users.dossiers.show.header.request'), [demande_dossier_path(dossier), modifier_dossier_path(dossier)])
+        = dynamic_tab_item(t('views.users.dossiers.show.header.mailbox'), messagerie_dossier_path(dossier))

@@ -50,6 +50,7 @@ gem 'i18n_data'
 gem 'i18n-tasks', require: false
 gem 'iban-tools'
 gem 'image_processing'
+gem 'invisible_captcha'
 gem 'json_schemer'
 gem 'jwt'
 gem 'kaminari', '1.2.1' # Pagination
