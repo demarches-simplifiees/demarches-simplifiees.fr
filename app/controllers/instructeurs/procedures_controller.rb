@@ -18,6 +18,7 @@ module Instructeurs
       @dossiers_archived_count_per_procedure = dossiers.archived.group('groupe_instructeurs.procedure_id').count
       @dossiers_termines_count_per_procedure = dossiers.termine.visible_by_administration.group('groupe_instructeurs.procedure_id').reorder(nil).count
       @dossiers_expirant_count_per_procedure = dossiers.termine_or_en_construction_close_to_expiration.group('groupe_instructeurs.procedure_id').count
+      @dossiers_supprimes_recemment_count_per_procedure = dossiers.hidden_by_administration.group('groupe_instructeurs.procedure_id').reorder(nil).count
       groupe_ids = current_instructeur.groupe_instructeurs.pluck(:id)
 
       @followed_dossiers_count_per_procedure = current_instructeur
@@ -35,7 +36,8 @@ module Instructeurs
         'traités' => @dossiers_termines_count_per_procedure.sum { |_, v| v },
         'dossiers' => @dossiers_count_per_procedure.sum { |_, v| v },
         'expirant' => @dossiers_expirant_count_per_procedure.sum { |_, v| v },
-        'archivés' => @dossiers_archived_count_per_procedure.sum { |_, v| v }
+        'archivés' => @dossiers_archived_count_per_procedure.sum { |_, v| v },
+        'supprimes_recemment' => @dossiers_supprimes_recemment_count_per_procedure.sum { |_, v| v }
       }
 
       @procedure_ids_en_cours_with_notifications = current_instructeur.procedure_ids_with_notifications(:en_cours)
@@ -51,9 +53,9 @@ module Instructeurs
       @current_filters = current_filters
       @displayed_fields_options, @displayed_fields_selected = procedure_presentation.displayed_fields_for_select
 
-      @a_suivre_count, @suivis_count, @traites_count, @tous_count, @archives_count, @expirant_count = current_instructeur
+      @a_suivre_count, @suivis_count, @traites_count, @tous_count, @supprimes_recemment_count, @archives_count, @expirant_count = current_instructeur
         .dossiers_count_summary(groupe_instructeur_ids)
-        .fetch_values('a_suivre', 'suivis', 'traites', 'tous', 'archives', 'expirant')
+        .fetch_values('a_suivre', 'suivis', 'traites', 'tous', 'supprimes_recemment', 'archives', 'expirant')
 
       dossiers_visibles = Dossier
         .where(groupe_instructeur_id: groupe_instructeur_ids)
@@ -72,6 +74,7 @@ module Instructeurs
 
       @termines_dossiers = dossiers_visibles.termine.visible_by_administration
       @all_state_dossiers = dossiers_visibles.all_state.visible_by_administration
+      @supprimes_recemment_dossiers = dossiers_visibles.termine.hidden_by_administration
       @archived_dossiers = dossiers_visibles.archived
       @expirant_dossiers = dossiers_visibles.termine_or_en_construction_close_to_expiration
 
@@ -88,6 +91,9 @@ module Instructeurs
       when 'tous'
         dossiers_count = @tous_count
         @all_state_dossiers
+      when 'supprimes_recemment'
+        dossiers_count = @supprimes_recemment_count
+        @supprimes_recemment_dossiers
       when 'archives'
         dossiers_count = @archives_count
         @archived_dossiers
@@ -280,6 +286,13 @@ module Instructeurs
         piece_jointe: commentaire_params[:piece_jointe],
         groupe_instructeurs: email_usagers_groupe_instructeurs
       )
+    end
+
+    def restore
+      dossier = current_instructeur.dossiers.find(params[:dossier_id])
+      dossier.restore(current_instructeur)
+      flash.notice = t('instructeurs.dossiers.restore')
+      redirect_to instructeur_procedure_path(procedure)
     end
 
     private
