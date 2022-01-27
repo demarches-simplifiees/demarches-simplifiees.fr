@@ -229,6 +229,10 @@ FactoryBot.define do
       type_de_champ { association :type_de_champ_pole_emploi, procedure: dossier.procedure }
     end
 
+    factory :champ_mesri, class: 'Champs::MesriChamp' do
+      type_de_champ { association :type_de_champ_mesri, procedure: dossier.procedure }
+    end
+
     factory :champ_siret, class: 'Champs::SiretChamp' do
       type_de_champ { association :type_de_champ_siret, procedure: dossier.procedure }
       association :etablissement, factory: [:etablissement]

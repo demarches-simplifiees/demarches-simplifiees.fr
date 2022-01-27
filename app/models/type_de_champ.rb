@@ -58,7 +58,8 @@ class TypeDeChamp < ApplicationRecord
     visa: 'visa',
     cnaf: 'cnaf',
     dgfip: 'dgfip',
-    pole_emploi: 'pole_emploi'
+    pole_emploi: 'pole_emploi',
+    mesri: 'mesri'
   }
 
   belongs_to :revision, class_name: 'ProcedureRevision', optional: true
@@ -368,6 +369,8 @@ class TypeDeChamp < ApplicationRecord
         procedure.dgfip_enabled?
       when TypeDeChamp.type_champs.fetch(:pole_emploi)
         procedure.pole_emploi_enabled?
+      when TypeDeChamp.type_champs.fetch(:mesri)
+        procedure.mesri_enabled?
       else
         true
       end

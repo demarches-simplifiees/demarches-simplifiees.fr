@@ -1,0 +1,11 @@
+%table.mesri
+  %caption #{t("api_particulier.providers.mesri.scopes.#{scope}.libelle")} :
+  - inscriptions.each do |inscription|
+    - inscription.slice('statut', 'regime', 'dateDebutInscription', 'dateFinInscription', 'codeCommune').keys.each do |key|
+      %tr
+        %th= t("api_particulier.providers.mesri.scopes.#{scope}.#{key}")
+        - case key
+        - when 'dateDebutInscription', 'dateFinInscription'
+          %td= try_format_date(Date.strptime(inscription[key], "%Y-%m-%d"))
+        - else
+          %td= inscription[key]

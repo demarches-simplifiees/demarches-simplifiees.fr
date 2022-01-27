@@ -87,6 +87,7 @@ describe ProcedureExportService do
           "cnaf",
           "dgfip",
           "pole_emploi",
+          "mesri",
           "text"
         ]
       end
@@ -185,6 +186,7 @@ describe ProcedureExportService do
           "cnaf",
           "dgfip",
           "pole_emploi",
+          "mesri",
           "text"
         ]
       end
@@ -277,6 +279,7 @@ describe ProcedureExportService do
             "cnaf",
             "dgfip",
             "pole_emploi",
+            "mesri",
             "text"
           ]
         end

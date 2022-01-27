@@ -175,6 +175,9 @@ FactoryBot.define do
     factory :type_de_champ_pole_emploi do
       type_champ { TypeDeChamp.type_champs.fetch(:pole_emploi) }
     end
+    factory :type_de_champ_mesri do
+      type_champ { TypeDeChamp.type_champs.fetch(:mesri) }
+    end
     factory :type_de_champ_carte do
       type_champ { TypeDeChamp.type_champs.fetch(:carte) }
     end

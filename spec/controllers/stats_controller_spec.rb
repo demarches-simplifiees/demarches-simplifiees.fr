@@ -1,4 +1,7 @@
 describe StatsController, type: :controller do
+  before { Timecop.travel(Date.parse("2021/12/15")) }
+  after { Timecop.return }
+
   describe "#last_four_months_hash" do
     context "while a regular user is logged in" do
       before do
@@ -14,7 +17,7 @@ describe StatsController, type: :controller do
 
       let(:association) { Procedure.all }
 
-      subject { @controller.send(:last_four_months_hash, association, :updated_at) }
+      subject { @controller.send(:last_four_months_serie, association, :updated_at) }
 
       it do
         expect(subject).to eq({
@@ -29,7 +32,7 @@ describe StatsController, type: :controller do
     context "while a super admin is logged in" do
       before do
         create(:procedure, updated_at: 6.months.ago)
-        create(:procedure, updated_at: 2.months.ago)
+        create(:procedure, updated_at: 45.days.ago)
         create(:procedure, updated_at: 1.day.ago)
         create(:procedure, updated_at: 1.day.ago)
 
@@ -40,12 +43,12 @@ describe StatsController, type: :controller do
 
       let (:association) { Procedure.all }
 
-      subject { @controller.send(:last_four_months_hash, association, :updated_at) }
+      subject { @controller.send(:last_four_months_serie, association, :updated_at) }
 
       it do
         expect(subject).to eq({
           3.months.ago => 0,
-          2.months.ago => 1,
+          45.days.ago => 1,
           1.month.ago => 0,
           1.day.ago => 2
         }.transform_keys { |date| I18n.l(date, format: '%B %Y') })
@@ -70,7 +73,7 @@ describe StatsController, type: :controller do
     context "while a super admin is logged in" do
       before { allow(@controller).to receive(:super_admin_signed_in?).and_return(true) }
 
-      subject { @controller.send(:cumulative_hash, association, :updated_at) }
+      subject { @controller.send(:cumulative_month_serie, association, :updated_at) }
 
       it do
         expect(subject).to eq({
@@ -84,7 +87,7 @@ describe StatsController, type: :controller do
     context "while a super admin is not logged in" do
       before { allow(@controller).to receive(:super_admin_signed_in?).and_return(false) }
 
-      subject { @controller.send(:cumulative_hash, association, :updated_at) }
+      subject { @controller.send(:cumulative_month_serie, association, :updated_at) }
 
       it do
         expect(subject).to eq({
