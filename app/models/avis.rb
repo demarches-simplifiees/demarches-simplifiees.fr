@@ -50,7 +50,7 @@ class Avis < ApplicationRecord
   scope :updated_since?, -> (date) { where('avis.updated_at > ?', date) }
   scope :discarded_termine_expired, -> { unscope(:joins).where(dossier: Dossier.discarded_termine_expired) }
   scope :discarded_en_construction_expired, -> { unscope(:joins).where(dossier: Dossier.discarded_en_construction_expired) }
-
+  scope :not_hidden_by_administration, -> { where(dossiers: { hidden_by_administration_at: nil }) }
   # The form allows subtmitting avis requests to several emails at once,
   # hence this virtual attribute.
   attr_accessor :emails

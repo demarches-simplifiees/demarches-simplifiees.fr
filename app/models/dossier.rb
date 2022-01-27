@@ -16,6 +16,7 @@
 #  en_instruction_at                                  :datetime
 #  groupe_instructeur_updated_at                      :datetime
 #  hidden_at                                          :datetime
+#  hidden_by_administration_at                        :datetime
 #  hidden_by_user_at                                  :datetime
 #  identity_updated_at                                :datetime
 #  last_avis_updated_at                               :datetime
@@ -206,7 +207,9 @@ class Dossier < ApplicationRecord
 
   scope :archived,      -> { where(archived: true) }
   scope :not_archived,  -> { where(archived: false) }
+  scope :hidden_by_administration, -> { where.not(hidden_by_administration_at: nil) }
   scope :not_hidden_by_user, -> { where(hidden_by_user_at: nil) }
+  scope :not_hidden_by_administration, -> { where(hidden_by_administration_at: nil) }
 
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
   scope :order_by_created_at, -> (order = :asc) { order(depose_at: order, created_at: order, id: order) }
@@ -235,6 +238,7 @@ class Dossier < ApplicationRecord
   end
   scope :downloadable_sorted, -> {
     state_not_brouillon
+      .not_hidden_by_administration
       .includes(
         :user,
         :individual,
@@ -525,7 +529,7 @@ class Dossier < ApplicationRecord
   end
 
   def can_be_deleted_by_user?
-    brouillon? || en_construction?
+    brouillon? || en_construction? || termine?
   end
 
   def can_be_deleted_by_manager?
@@ -681,6 +685,22 @@ class Dossier < ApplicationRecord
     !procedure.brouillon? && !brouillon?
   end
 
+  def hidden_by_user?
+    hidden_by_user_at.present?
+  end
+
+  def hidden_by_administration?
+    hidden_by_administration_at.present?
+  end
+
+  def deleted_by_instructeur_and_user?
+    termine? && hidden_by_administration? && hidden_by_user?
+  end
+
+  def can_be_restored_by_manager?
+    hidden_by_administration? || discarded? && !procedure.discarded?
+  end
+
   def expose_legacy_carto_api?
     procedure.expose_legacy_carto_api?
   end
@@ -740,17 +760,30 @@ class Dossier < ApplicationRecord
   end
 
   def discard_and_keep_track!(author, reason)
+    author_is_user = author.is_a?(User)
+    author_is_administration = author.is_a?(Instructeur) || author.is_a?(Administrateur) || author.is_a?(SuperAdmin)
+
+    if termine? && author_is_administration
+      update(hidden_by_administration_at: Time.zone.now)
+    end
+
+    if termine? && author_is_user
+      update(hidden_by_user_at: Time.zone.now)
+    end
+
     user_email = user_deleted? ? nil : user_email_for(:notification)
     deleted_dossier = nil
 
     transaction do
-      if keep_track_on_deletion?
-        log_dossier_operation(author, :supprimer, self)
-        deleted_dossier = DeletedDossier.create_from_dossier(self, reason)
-      end
+      if deleted_by_instructeur_and_user? || en_construction? || brouillon?
+        if keep_track_on_deletion?
+          log_dossier_operation(author, :supprimer, self)
+          deleted_dossier = DeletedDossier.create_from_dossier(self, reason)
+        end
 
-      update!(dossier_transfer_id: nil)
-      discard!
+        update!(dossier_transfer_id: nil)
+        discard!
+      end
     end
 
     if deleted_dossier.present?
@@ -774,17 +807,13 @@ class Dossier < ApplicationRecord
   def restore(author)
     if discarded?
       transaction do
-        if undiscard && keep_track_on_deletion?
+        if hidden_by_administration?
+          update(hidden_by_administration_at: nil)
+        elsif undiscard && keep_track_on_deletion?
           deleted_dossier&.destroy!
           log_dossier_operation(author, :restaurer, self)
         end
       end
-    end
-  end
-
-  def restore_if_discarded_with_procedure(author)
-    if deleted_dossier&.procedure_removed?
-      restore(author)
     end
   end
 
@@ -847,6 +876,7 @@ class Dossier < ApplicationRecord
 
     create_missing_traitemets
 
+    self.hidden_by_user_at = nil
     self.archived = false
     self.termine_close_to_expiration_notice_sent_at = nil
     self.conservation_extension = 0.days
@@ -1128,10 +1158,6 @@ class Dossier < ApplicationRecord
       Avis.discarded_termine_expired.destroy_all
       discarded_termine_expired.destroy_all
     end
-  end
-
-  def hidden_by_user?
-    self.hidden_by_user_at.present?
   end
 
   private

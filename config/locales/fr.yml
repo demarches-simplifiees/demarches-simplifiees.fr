@@ -131,6 +131,7 @@ fr:
     instructeurs:
       dossiers:
         archived_dossier: "Le dossier sera conservé 1 mois supplémentaire"
+        delete_dossier: "Supprimer le dossier"
         deleted_by_user: "Dossier supprimé par l'usager"
       avis:
         introduction_file_explaination: "Fichier joint à la demande d’avis"
@@ -194,7 +195,6 @@ fr:
           edit_dossier: "Modifier le dossier"
           start_other_dossier: "Commencer un autre dossier"
           delete_dossier: "Supprimer le dossier"
-          hide_dossier: "Supprimer de votre interface"
           transfer_dossier: "Transferer le dossier"
           edit_draft: "Modifier le brouillon"
           actions: "Actions"
@@ -432,6 +432,10 @@ fr:
         identity_saved: "Identité enregistrée"
       attestation:
         no_longer_available: "L’attestation n'est plus disponible sur ce dossier."
+  instructeurs:
+    dossiers:
+       deleted_by_instructeur: "Le dossier a bien été supprimé de votre interface"
+       impossible_deletion: "Supression impossible : le dossier n'est pas traité"
   administrateurs:
     procedures:
       show:
