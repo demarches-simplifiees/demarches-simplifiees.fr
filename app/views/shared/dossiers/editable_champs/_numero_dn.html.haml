@@ -2,17 +2,20 @@
   %span
     = form.label :numero_dn, "DN"
   = form.text_field :numero_dn,
+    id: "#{champ.input_id}-dn",
     value: champ.numero_dn,
     required: champ.mandatory?,
     placeholder: '0123456',
     style: 'width: 7em',
     pattern: "[0-9]{3,7}",
     title: "Entrez votre numéro DN",
-    aria: { describedby: describedby_id(champ) },
+    aria: { describedby: champ.describedby_id },
     data: { dn: true, remote: true, debounce: true, url: champs_dn_path, spinner: true }
+
   %span
     = form.label :date_de_naissance, "Date de naissance"
   = form.date_field :date_de_naissance,
+    id: "#{champ.input_id}-ddn",
     value: champ.date_de_naissance,
     required: champ.mandatory?,
     title: "Date de naissance associée au numéro DN",

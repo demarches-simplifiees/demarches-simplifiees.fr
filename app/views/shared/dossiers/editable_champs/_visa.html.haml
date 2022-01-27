@@ -1,6 +1,11 @@
 .row
   = form.check_box :value,
-    { required: champ.mandatory?, disabled: !champ.user_accredited?(current_user), checked: champ.value.present?, data: { visa: "true" } },
+    { required: champ.mandatory?,
+      id: champ.input_id,
+      disabled: !champ.user_accredited?(current_user),
+      checked: champ.value.present?,
+      aria: { describedby: champ.describedby_id },
+      data: { visa: "true" } },
     current_user.email,
     ''
   .visa-info
