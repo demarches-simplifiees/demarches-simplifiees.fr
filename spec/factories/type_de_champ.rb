@@ -89,6 +89,9 @@ FactoryBot.define do
       trait :long do
         drop_down_list_value { "alpha\r\nbravo\r\n--separateur--\r\ncharly\r\ndelta\r\necho\r\nfox-trot\r\ngolf" }
       end
+      trait :without_selectable_values do
+        drop_down_list_value { "\r\n--separateur--\r\n--separateur 2--\r\n \r\n" }
+      end
     end
     factory :type_de_champ_multiple_drop_down_list do
       type_champ { TypeDeChamp.type_champs.fetch(:multiple_drop_down_list) }

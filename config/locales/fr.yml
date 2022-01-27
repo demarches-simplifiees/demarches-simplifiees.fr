@@ -337,6 +337,7 @@ fr:
         yahoo: Yahoo
       procedure_archived: "Cette démarche en ligne a été close, il n’est plus possible de déposer de dossier."
       empty_repetition: 'Le bloc répétable « %{value} » doit comporter au moins un champ'
+      empty_drop_down: 'La liste de choix « %{value} » doit comporter au moins un choix sélectionnable'
       # procedure_not_draft: "Cette démarche n’est maintenant plus en brouillon."
       cadastres_empty:
         one: "Aucune parcelle cadastrale sur la zone sélectionnée"
