@@ -142,8 +142,8 @@ describe ProcedureArchiveService do
             "procedure-#{procedure.id}/",
             "procedure-#{procedure.id}/dossier-#{dossier.id}/",
             "procedure-#{procedure.id}/dossier-#{dossier.id}/pieces_justificatives/",
-            "procedure-#{procedure.id}/dossier-#{dossier.id}/pieces_justificatives/attestation-dossier--05-03-2021-00-00-#{dossier.attestation.pdf.id % 10000}.pdf",
-            "procedure-#{procedure.id}/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2021-00-00-#{dossier.id}.pdf"
+            "procedure-#{procedure.id}/dossier-#{dossier.id}/pieces_justificatives/attestation-dossier-#{dossier.id}.pdf",
+            "procedure-#{procedure.id}/dossier-#{dossier.id}/export-#{dossier.id}.pdf"
           ]
           expect(files.map(&:filename)).to match_array(structure)
         end
@@ -174,6 +174,7 @@ describe ProcedureArchiveService do
         let(:documents) { [pj, bad_pj] }
         before do
           allow(PiecesJustificativesService).to receive(:liste_documents).and_return(documents)
+          allow(PiecesJustificativesService).to receive(:champs_zip_entries).and_return(documents.map { |pj| [pj, pj.filename] }) # pf
         end
 
         it 'collect files without raising exception' do
@@ -188,9 +189,10 @@ describe ProcedureArchiveService do
             structure = [
               "procedure-#{procedure.id}/",
               "procedure-#{procedure.id}/dossier-#{dossier.id}/",
-              "procedure-#{procedure.id}/dossier-#{dossier.id}/export-dossier-05-03-2020-00-00-1.pdf",
+              "procedure-#{procedure.id}/dossier-#{dossier.id}/export-dossier.pdf",
               "procedure-#{procedure.id}/dossier-#{dossier.id}/pieces_justificatives/",
-              "procedure-#{procedure.id}/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2021-00-00-#{dossier.id}.pdf",
+              "procedure-#{procedure.id}/dossier-#{dossier.id}/pieces_justificatives/attestation-dossier-#{dossier.id}.pdf", # pf
+              "procedure-#{procedure.id}/dossier-#{dossier.id}/export-#{dossier.id}.pdf",
               "procedure-#{procedure.id}/LISEZMOI.txt"
             ]
             expect(zip_entries.map(&:filename)).to match_array(structure)
@@ -222,12 +224,12 @@ describe ProcedureArchiveService do
             "procedure-#{procedure.id}/",
             "procedure-#{procedure.id}/dossier-#{dossier.id}/",
             "procedure-#{procedure.id}/dossier-#{dossier.id}/pieces_justificatives/",
-            "procedure-#{procedure.id}/dossier-#{dossier.id}/pieces_justificatives/attestation-dossier--05-03-2020-00-00-#{dossier.attestation.pdf.id % 10000}.pdf",
-            "procedure-#{procedure.id}/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2020-00-00-#{dossier.id}.pdf",
+            "procedure-#{procedure.id}/dossier-#{dossier.id}/pieces_justificatives/attestation-dossier-#{dossier.id}.pdf",
+            "procedure-#{procedure.id}/dossier-#{dossier.id}/export-#{dossier.id}.pdf",
             "procedure-#{procedure.id}/dossier-#{dossier_2020.id}/",
-            "procedure-#{procedure.id}/dossier-#{dossier_2020.id}/export-#{dossier_2020.id}-05-03-2020-00-00-#{dossier_2020.id}.pdf",
+            "procedure-#{procedure.id}/dossier-#{dossier_2020.id}/export-#{dossier_2020.id}.pdf",
             "procedure-#{procedure.id}/dossier-#{dossier_2020.id}/pieces_justificatives/",
-            "procedure-#{procedure.id}/dossier-#{dossier_2020.id}/pieces_justificatives/attestation-dossier--05-03-2020-00-00-#{dossier_2020.attestation.pdf.id % 10000}.pdf"
+            "procedure-#{procedure.id}/dossier-#{dossier_2020.id}/pieces_justificatives/attestation-dossier-#{dossier_2020.id}.pdf"
           ]
           expect(files.map(&:filename)).to match_array(structure)
         end
