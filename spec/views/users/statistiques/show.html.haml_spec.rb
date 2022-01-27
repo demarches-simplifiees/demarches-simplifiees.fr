@@ -8,9 +8,9 @@ describe 'users/statistiques/show.html.haml', type: :view do
   subject { render }
 
   it "display stats" do
-    expect(subject).to have_text("RÉPARTITION PAR SEMAINE")
-    expect(subject).to have_text("AVANCÉE DES DOSSIERS")
-    expect(subject).to have_text("TAUX D’ACCEPTATION")
+    expect(subject).to have_text("Répartition par semaine")
+    expect(subject).to have_text("Avancée des dossiers")
+    expect(subject).to have_text("Taux d’acceptation")
     expect(subject).to have_text(procedure.libelle)
   end
 end

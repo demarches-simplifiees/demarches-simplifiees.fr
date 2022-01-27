@@ -262,6 +262,16 @@ describe Procedure do
         let(:procedure) { build(:procedure, monavis_embed: monavis_bleu) }
         it { expect(procedure.valid?).to eq(true) }
       end
+
+      context 'Monavis embed code with voxusages is allowed' do
+        monavis_issue_phillipe = <<-MSG
+        <a href="https://voxusagers.numerique.gouv.fr/Demarches/3193?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=58e099a09c02abe629c14905ed2b055d">
+          <img src="https://monavis.numerique.gouv.fr/monavis-static/bouton-bleu.png" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche" />
+        </a>
+        MSG
+        let(:procedure) { build(:procedure, monavis_embed: monavis_issue_phillipe) }
+        it { expect(procedure.valid?).to eq(true) }
+      end
     end
 
     shared_examples 'duree de conservation' do
@@ -1122,7 +1132,7 @@ describe Procedure do
   end
 
   describe "#destroy" do
-    let(:procedure) { create(:procedure, :closed, :with_type_de_champ) }
+    let(:procedure) { create(:procedure, :closed, :with_type_de_champ, :with_bulk_message) }
 
     before do
       procedure.discard!

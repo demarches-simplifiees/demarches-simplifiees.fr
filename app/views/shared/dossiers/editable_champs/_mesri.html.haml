@@ -1,0 +1,7 @@
+.mesri-inputs
+  %div
+    = form.label :ine, t('.ine_label')
+    %p.notice= t('.ine_notice')
+    = form.text_field :ine,
+      required: champ.mandatory?,
+      aria: { describedby: describedby_id(champ) }

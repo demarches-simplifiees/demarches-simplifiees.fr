@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://demarches-simplifiees.fr/etudiants.schema.json",
+  "title": "statut étudiant",
+  "type": "object",
+  "properties": {
+    "ine": {
+      "type": "string"
+    },
+    "nom": {
+      "type": "string"
+    },
+    "prenom": {
+      "type": "string"
+    },
+    "dateNaissance": {
+      "format": "date",
+      "type": "string"
+    },
+    "inscriptions": {
+      "type": "array",
+      "items" : {
+        "type": "object",
+        "properties": {
+          "dateDebutInscription": {
+            "format": "date",
+            "type": "string"
+          },
+          "dateFinInscription": {
+            "format": "date",
+            "type": "string"
+          },
+          "statut": {
+            "enum": ["admis", "inscrit"]
+          },
+          "regime": {
+            "enum": ["formation initiale", "formation continue"]
+          },
+          "codeCommune": {
+            "type": "string"
+          },
+          "etablissement": {
+            "type": "object",
+            "properties": {
+              "uai": {
+                "type": "string"
+              },
+              "nom": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -60,6 +60,7 @@ $stat-card-half-horizontal-spacing: 4 * $default-space;
   font-size: 26px;
   font-weight: bold;
   width: 200px;
+  text-transform: uppercase;
 }
 
 .stat-card-details {
@@ -132,6 +133,7 @@ $big-number-card-padding: 2 * $segmented-control-item-border-radius;
   margin: 0 auto;
   margin-bottom: 20px;
   color: $light-grey;
+  text-transform: uppercase;
 
   &.long-title {
     margin-left: -30px;
