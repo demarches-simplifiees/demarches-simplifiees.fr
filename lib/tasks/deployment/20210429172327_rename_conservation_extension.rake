@@ -5,6 +5,9 @@ namespace :after_party do
 
     BATCH_SIZE = 20_000
 
+    ignored_columns = Dossier.ignored_columns.dup
+    Dossier.ignored_columns -= ["en_construction_conservation_extension"]
+
     dossiers = Dossier.state_en_construction.where.not(en_construction_conservation_extension: 0.days)
     progress = ProgressReport.new((dossiers.count.to_f / BATCH_SIZE).round)
     dossiers.in_batches(of: BATCH_SIZE) do |relation|
@@ -12,6 +15,8 @@ namespace :after_party do
       progress.inc
     end
     progress.finish
+
+    Dossier.ignored_columns = ignored_columns
 
     dossiers_without_conservation_extension = Dossier.where(conservation_extension: nil)
     progress = ProgressReport.new((dossiers_without_conservation_extension.count.to_f / BATCH_SIZE).round)
