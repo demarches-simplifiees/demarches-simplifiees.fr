@@ -15,6 +15,9 @@ en:
         pole_emploi:
           identifiant_label: Identifier
           identifiant_notice: It is usually composed of alphanumeric characters.
+        mesri:
+          ine_label: INE
+          ine_notice: Student National Number. It is usually composed of alphanumeric characters.
       header:
         expires_at:
           brouillon: "Expires at %{date} (%{duree_conservation_totale} months after the creation of this file)"
@@ -42,3 +45,9 @@ en:
           fetching_data: "Fetching data for identifier %{identifiant}."
           data_fetched: "Data concerning %{sources} linked to the identifier %{identifiant} has been received from Pôle emploi."
           data_fetched_title: "Data received from Pôle emploi"
+      mesri:
+        show:
+          not_filled: not filled
+          fetching_data: "Fetching data for INE %{ine}."
+          data_fetched: "Data concerning %{sources} linked to the INE %{ine} has been received from the MESRI."
+          data_fetched_title: "Data received from the MESRI"

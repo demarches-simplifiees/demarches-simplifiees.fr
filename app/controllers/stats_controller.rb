@@ -27,8 +27,8 @@ class StatsController < ApplicationController
       "Terminé" => stat.dossiers_termines
     }
 
-    @procedures_cumulative = cumulative_hash(procedures, :published_at)
-    @procedures_in_the_last_4_months = last_four_months_hash(procedures, :published_at)
+    @procedures_cumulative = cumulative_month_serie(procedures, :published_at)
+    @procedures_in_the_last_4_months = last_four_months_serie(procedures, :published_at)
 
     @dossiers_cumulative = stat.dossiers_cumulative
     @dossiers_in_the_last_4_months = stat.dossiers_in_the_last_4_months
@@ -57,9 +57,9 @@ class StatsController < ApplicationController
           "procedures.libelle",
           "users.id",
           "dossiers.state",
-          "dossiers.depose_at - dossiers.created_at",
-          "dossiers.en_instruction_at - dossiers.depose_at",
-          "dossiers.processed_at - dossiers.en_instruction_at"
+          Arel.sql("dossiers.depose_at - dossiers.created_at"),
+          Arel.sql("dossiers.en_instruction_at - dossiers.depose_at"),
+          Arel.sql("dossiers.processed_at - dossiers.en_instruction_at")
         )
     end
 
@@ -106,8 +106,8 @@ class StatsController < ApplicationController
   def contact_percentage
     number_of_months = 13
 
-    from = Time.zone.now.prev_month(number_of_months)
-    to = Time.zone.now.prev_month
+    from = Time.zone.today.prev_month(number_of_months)
+    to = Time.zone.today.prev_month
 
     adapter = Helpscout::UserConversationsAdapter.new(from, to)
     if !adapter.can_fetch_reports?
@@ -136,18 +136,18 @@ class StatsController < ApplicationController
     end
   end
 
-  def last_four_months_hash(association, date_attribute)
+  def last_four_months_serie(association, date_attribute)
     association
       .group_by_month(date_attribute, last: 4, current: super_admin_signed_in?)
       .count
-      .transform_keys { |k| l(k, format: "%B %Y") }
+      .transform_keys { |date| l(date, format: "%B %Y") }
   end
 
-  def cumulative_hash(association, date_attribute)
+  def cumulative_month_serie(association, date_attribute)
     sum = 0
     association
       .group_by_month(date_attribute, current: super_admin_signed_in?)
       .count
-      .transform_values { |v| sum += v }
+      .transform_values { |count| sum += count }
   end
 end

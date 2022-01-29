@@ -1,0 +1,83 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://particulier.api.gouv.fr/api/v2/etudiants?ine=090601811AB
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Accept:
+      - application/json
+      X-Api-Key:
+      - c6d23f3900b8fb4b3586c4804c051af79062f54b
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 16 Mar 2021 17:01:19 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '805'
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - timeout=5
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - Range,Content-Range,X-Content-Range,X-API-Key
+      Etag:
+      - W/"2eb-A0NiRd+gbJKIAT0y4tR4j9tjXb0"
+      Server:
+      - nginx
+      Strict-Transport-Security:
+      - max-age=15552000
+      - max-age=15552000
+      Vary:
+      - Origin, Accept
+      X-Gravitee-Request-Id:
+      - 7bfb7f99-ac2d-4443-bb7f-99ac2d0443c5
+      X-Gravitee-Transaction-Id:
+      - f5dca8b3-2ab7-4c9a-9ca8-b32ab70c9a2b
+    body:
+      encoding: ASCII-8BIT
+      string: '{
+        "ine": "090601811AB",
+        "nom": "DUBOIS",
+        "prenom": "Angela Claire Louise",
+        "dateNaissance": "1962-08-24",
+        "inscriptions": [
+          {
+            "statut": "admis",
+            "regime": "formation continue",
+            "dateDebutAdmission": "2021-09-01T00:00:00.000Z",
+            "dateFinAdmission": "2022-08-31T00:00:00.000Z",
+            "etablissement": {
+              "uai": "0751722P",
+              "nom": "Université Pierre et Marie Curie - UPCM (Paris 6)"
+            },
+            "codeCommune": "75106"
+          },
+          {
+            "statut": "inscrit",
+            "regime": "formation continue",
+            "dateDebutInscription": "2022-09-01",
+            "dateFinInscription": "2023-08-31",
+            "etablissement": {
+              "uai": "0751722P",
+              "nom": "Université Pierre et Marie Curie - UPCM (Paris 6)"
+            },
+            "codeCommune": "75106"
+          }
+        ]
+      }'
+  recorded_at: Tue, 16 Mar 2021 17:01:18 GMT
+recorded_with: VCR 6.0.0

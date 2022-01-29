@@ -750,6 +750,10 @@ class Procedure < ApplicationRecord
     api_particulier_sources['pole_emploi'].present?
   end
 
+  def mesri_enabled?
+    api_particulier_sources['mesri'].present?
+  end
+
   private
 
   #----- PF section start

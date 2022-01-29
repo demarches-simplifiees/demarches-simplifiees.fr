@@ -91,7 +91,7 @@ class Stat < ApplicationRecord
       timeseries = associations_with_date_attribute.map do |association, date_attribute|
         association.group_by_month(date_attribute, current: false).count
       end
-      pp timeseries
+
       cumulative_serie(sum_hashes(*timeseries))
     end
 
