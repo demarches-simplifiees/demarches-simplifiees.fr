@@ -1,6 +1,6 @@
 .numero-dn
   %span
-    = form.label :numero_dn, "DN"
+    = form.label :numero_dn, "DN", for: "#{champ.input_id}-dn"
   = form.text_field :numero_dn,
     id: "#{champ.input_id}-dn",
     value: champ.numero_dn,
@@ -13,13 +13,14 @@
     data: { dn: true, remote: true, debounce: true, url: champs_dn_path, spinner: true }
 
   %span
-    = form.label :date_de_naissance, "Date de naissance"
+    = form.label :date_de_naissance, "Date de naissance", for: "#{champ.input_id}-ddn"
   = form.date_field :date_de_naissance,
     id: "#{champ.input_id}-ddn",
     value: champ.date_de_naissance,
     required: champ.mandatory?,
     title: "Date de naissance associée au numéro DN",
     max: Date.today,
+    aria: { describedby: champ.describedby_id },
     data: { ddn: true, remote: true, debounce: true, url: champs_dn_path, spinner: true }
   .numero-dn-info
   .spinner.right.hidden
