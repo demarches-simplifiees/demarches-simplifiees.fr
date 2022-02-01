@@ -1,23 +1,14 @@
+
 class ActiveStorage::DownloadableFile
-  # https://edgeapi.rubyonrails.org/classes/ActiveStorage/Blob.html#method-i-download
-  def self.download(attachment:, destination_path:, in_chunk: true)
-    byte_written = 0
-
-    File.open(destination_path, mode: 'wb') do |fd| # we expact a path as string, so we can recreate the file (ex: failure/retry on former existing fd)
-      if in_chunk
-        attachment.download do |chunk|
-          byte_written += fd.write(chunk)
-        end
-      else
-        byte_written = fd.write(attachment.download)
-      end
-    end
-    byte_written
-  end
-
   def self.create_list_from_dossier(dossier, for_expert = false)
-    pjs = PiecesJustificativesService.zip_entries(dossier, for_expert)
-    pjs.map { |pj| [pj[0], "dossier-#{dossier.id}/" + pj[1]] }
+    dossier_export = PiecesJustificativesService.generate_dossier_export(dossier)
+    pjs = [dossier_export] + PiecesJustificativesService.liste_documents(dossier, for_expert)
+    pjs.map do |piece_justificative|
+      [
+        piece_justificative,
+        "dossier-#{dossier.id}/#{self.timestamped_filename(piece_justificative)}"
+      ]
+    end
   end
 
   private

@@ -7,12 +7,17 @@ if (enabled) {
   const trackerUrl = `${url}piwik.php`;
   const jsUrl = `${url}piwik.js`;
 
+  //
   // Configure Matomo analytics
   window._paq.push(['setCookieDomain', '*.mes-demarches.gov.pf']);
   window._paq.push(['setDomains', ['*.mes-demarches.gov.pf']]);
+  // Don’t store any cookies or send any tracking request when the "Do Not Track" browser setting is enabled.
   window._paq.push(['setDoNotTrack', true]);
+  // When enabling external link tracking, consider that it will also report links to attachments.
+  // You’ll want to exclude links to attachments from being tracked – for instance using Matomo's
+  // `setCustomRequestProcessing` callback.
+  // window._paq.push(['enableLinkTracking']);
   window._paq.push(['trackPageView']);
-  window._paq.push(['enableLinkTracking']);
 
   // Load script from Matomo
   window._paq.push(['setTrackerUrl', trackerUrl]);

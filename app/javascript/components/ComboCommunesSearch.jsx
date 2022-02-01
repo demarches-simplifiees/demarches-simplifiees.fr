@@ -1,10 +1,12 @@
-import React, { useState, useMemo } from 'react';
+import React from 'react';
 import { QueryClientProvider } from 'react-query';
 import { matchSorter } from 'match-sorter';
+import PropTypes from 'prop-types';
 
 import ComboSearch from './ComboSearch';
 import { queryClient } from './shared/queryClient';
 import { ComboDepartementsSearch } from './ComboDepartementsSearch';
+import { useHiddenField, groupId } from './shared/hooks';
 
 // Avoid hiding similar matches for precise queries (like "Sainte Marie")
 function searchResultsLimit(term) {
@@ -48,34 +50,18 @@ const [placeholderDepartement, placeholderCommune] =
     Math.floor(Math.random() * (placeholderDepartements.length - 1))
   ];
 
-function ComboCommunesSearch(params) {
-  const hiddenDepartementFieldId = `${params.hiddenFieldId}:departement`;
-  const hiddenDepartementField = useMemo(
-    () =>
-      document.querySelector(`input[data-attr="${hiddenDepartementFieldId}"]`),
-    [params.hiddenFieldId]
+function ComboCommunesSearch({ id, ...props }) {
+  const group = groupId(id);
+  const [departementValue, setDepartementValue] = useHiddenField(
+    group,
+    'departement'
   );
-  const hiddenCodeDepartementField = useMemo(
-    () =>
-      document.querySelector(
-        `input[data-attr="${params.hiddenFieldId}:code_departement"]`
-      ),
-    [params.hiddenFieldId]
+  const [codeDepartement, setCodeDepartement] = useHiddenField(
+    group,
+    'code_departement'
   );
-  const inputId = useMemo(
-    () =>
-      document.querySelector(`input[data-uuid="${params.hiddenFieldId}"]`)?.id,
-    [params.hiddenFieldId]
-  );
-  const [departementCode, setDepartementCode] = useState(
-    () => hiddenCodeDepartementField?.value
-  );
-  const departementValue = useMemo(
-    () => hiddenDepartementField?.value,
-    [hiddenDepartementField]
-  );
-  const departementDescribedBy = `${inputId}_departement_notice`;
-  const communeDescribedBy = `${inputId}_commune_notice`;
+  const departementDescribedBy = `${id}_departement_notice`;
+  const communeDescribedBy = `${id}_commune_notice`;
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -87,22 +73,19 @@ function ComboCommunesSearch(params) {
           </p>
         </div>
         <ComboDepartementsSearch
-          value={departementValue}
-          inputId={!departementCode ? inputId : null}
-          aria-describedby={departementDescribedBy}
+          {...props}
+          id={!codeDepartement ? id : null}
+          describedby={departementDescribedBy}
           placeholder={placeholderDepartement}
           addForeignDepartement={false}
-          required={params.mandatory}
+          value={departementValue}
           onChange={(_, result) => {
-            setDepartementCode(result?.code);
-            if (hiddenDepartementField && hiddenCodeDepartementField) {
-              hiddenDepartementField.setAttribute('value', result?.nom);
-              hiddenCodeDepartementField.setAttribute('value', result?.code);
-            }
+            setDepartementValue(result?.nom);
+            setCodeDepartement(result?.code);
           }}
         />
       </div>
-      {departementCode ? (
+      {codeDepartement ? (
         <div>
           <div className="notice" id={communeDescribedBy}>
             <p>
@@ -111,14 +94,12 @@ function ComboCommunesSearch(params) {
             </p>
           </div>
           <ComboSearch
-            autoFocus
-            inputId={inputId}
-            aria-describedby={communeDescribedBy}
+            {...props}
+            id={id}
+            describedby={communeDescribedBy}
             placeholder={placeholderCommune}
-            required={params.mandatory}
-            hiddenFieldId={params.hiddenFieldId}
             scope="communes"
-            scopeExtra={departementCode}
+            scopeExtra={codeDepartement}
             minimumInputLength={2}
             transformResult={({ code, nom, codesPostaux }) => [
               code,
@@ -131,5 +112,9 @@ function ComboCommunesSearch(params) {
     </QueryClientProvider>
   );
 }
+
+ComboCommunesSearch.propTypes = {
+  id: PropTypes.string
+};
 
 export default ComboCommunesSearch;

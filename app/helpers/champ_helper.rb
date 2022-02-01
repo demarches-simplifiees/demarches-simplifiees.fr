@@ -21,12 +21,6 @@ module ChampHelper
     simple_format(auto_linked_text, {}, sanitize: false)
   end
 
-  def describedby_id(champ)
-    if champ.description.present?
-      "desc-#{champ.type_de_champ.id}-#{champ.row}"
-    end
-  end
-
   def auto_attach_url(form, object)
     if object.is_a?(Champ) && object.persisted? && object.public?
       champs_piece_justificative_url(object.id)

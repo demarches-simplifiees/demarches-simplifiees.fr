@@ -4,7 +4,7 @@ class PingController < ApplicationController
       status_code = if File.file?(Rails.root.join("maintenance"))
         # See https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4.2-http-check%20disable-on-404
         :not_found
-      elsif (ActiveRecord::Base.connected?)
+      elsif (ActiveRecord::Base.connection.execute('select 1 as test;').first['test'] == 1)
         :ok
       else
         :internal_server_error

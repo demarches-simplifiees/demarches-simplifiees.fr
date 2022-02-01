@@ -15,27 +15,28 @@
 
     = render(partial: 'instructeurs/dossiers/expiration_banner', locals: {dossier: dossier})
 
-    %ul.tabs
-      - notifications_summary = current_instructeur.notifications_for_dossier(dossier)
+    %nav.tabs
+      %ul
+        - notifications_summary = current_instructeur.notifications_for_dossier(dossier)
 
-      = dynamic_tab_item('Demande',
-        instructeur_dossier_path(dossier.procedure, dossier),
-        notification: notifications_summary[:demande])
+        = dynamic_tab_item('Demande',
+          instructeur_dossier_path(dossier.procedure, dossier),
+          notification: notifications_summary[:demande])
 
-      = dynamic_tab_item('Annotations privées',
-        annotations_privees_instructeur_dossier_path(dossier.procedure, dossier),
-        notification: notifications_summary[:annotations_privees])
+        = dynamic_tab_item('Annotations privées',
+          annotations_privees_instructeur_dossier_path(dossier.procedure, dossier),
+          notification: notifications_summary[:annotations_privees])
 
-      = dynamic_tab_item('Avis externes',
-        avis_instructeur_dossier_path(dossier.procedure, dossier),
-        notification: notifications_summary[:avis])
+        = dynamic_tab_item('Avis externes',
+          avis_instructeur_dossier_path(dossier.procedure, dossier),
+          notification: notifications_summary[:avis])
 
-      = dynamic_tab_item('Messagerie',
-        messagerie_instructeur_dossier_path(dossier.procedure, dossier),
-        notification: notifications_summary[:messagerie])
+        = dynamic_tab_item('Messagerie',
+          messagerie_instructeur_dossier_path(dossier.procedure, dossier),
+          notification: notifications_summary[:messagerie])
 
-      = dynamic_tab_item('Personnes impliquées',
-        personnes_impliquees_instructeur_dossier_path(dossier.procedure, dossier))
+        = dynamic_tab_item('Personnes impliquées',
+          personnes_impliquees_instructeur_dossier_path(dossier.procedure, dossier))
 
 .container
   .print-header

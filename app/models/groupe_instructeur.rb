@@ -24,4 +24,21 @@ class GroupeInstructeur < ApplicationRecord
 
   scope :without_group, -> (group) { where.not(id: group) }
   scope :for_api_v2, -> { includes(procedure: [:administrateurs]) }
+
+  def add(instructeur)
+    return if in?(instructeur.groupe_instructeurs)
+
+    default_notification_settings = instructeur.notification_settings(procedure_id)
+    instructeur.assign_to.create(groupe_instructeur: self, **default_notification_settings)
+  end
+
+  def remove(instructeur)
+    return if !in?(instructeur.groupe_instructeurs)
+
+    instructeur.groupe_instructeurs.destroy(self)
+    instructeur.follows
+      .joins(:dossier)
+      .where(dossiers: { groupe_instructeur: self })
+      .update_all(unfollowed_at: Time.zone.now)
+  end
 end

@@ -140,9 +140,6 @@ module Instructeurs
 
     def repasser_en_instruction
       begin
-        if dossier.hidden_by_user_at.present?
-          dossier.update!(hidden_by_user_at: nil)
-        end
         flash.notice = "Le dossier #{dossier.id} a été repassé en instruction."
         dossier.repasser_en_instruction!(instructeur: current_instructeur)
       rescue AASM::InvalidTransition => e
@@ -235,10 +232,10 @@ module Instructeurs
     def delete_dossier
       if dossier.termine?
         dossier.discard_and_keep_track!(current_instructeur, :instructeur_request)
-        flash.notice = 'Le dossier a bien été supprimé'
+        flash.notice = t('instructeurs.dossiers.deleted_by_instructeur')
         redirect_to instructeur_procedure_path(procedure)
       else
-        flash.alert = "Suppression impossible : le dossier n’est pas traité"
+        flash.alert = t('instructeurs.dossiers.impossible_deletion')
         redirect_back(fallback_location: instructeur_procedures_url)
       end
     end

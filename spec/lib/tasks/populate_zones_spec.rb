@@ -3,6 +3,9 @@ describe 'populate_zones' do
   subject(:run_task) do
     rake_task.invoke
   end
+  after(:each) do
+    rake_task.reenable
+  end
 
   it 'populates zones' do
     run_task

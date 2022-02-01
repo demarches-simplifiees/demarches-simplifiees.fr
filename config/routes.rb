@@ -54,6 +54,8 @@ Rails.application.routes.draw do
 
     resources :super_admins, only: [:index, :show, :destroy]
 
+    resources :zones, only: [:index, :show]
+
     post 'demandes/create_administrateur'
     post 'demandes/refuse_administrateur'
 
@@ -278,8 +280,7 @@ Rails.application.routes.draw do
         get 'demande'
         get 'messagerie'
         post 'commentaire' => 'dossiers#create_commentaire'
-        post 'ask_deletion'
-        patch 'hide_dossier'
+        patch 'delete_dossier'
         get 'attestation'
         get 'qrcode/:created_at', action: 'qrcode', as: :qrcode
         get 'transferer', to: 'dossiers#transferer'

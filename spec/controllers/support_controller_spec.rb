@@ -51,30 +51,11 @@ describe SupportController, type: :controller do
 
     describe "send form" do
       subject do
-        post :create, params: { subject: 'bonjour', text: 'un message' }
+        post :create, params: params
       end
 
-      it 'creates a conversation on HelpScout' do
-        expect_any_instance_of(Helpscout::FormAdapter).to receive(:send_form).and_return(true)
-
-        expect { subject }.to change(Commentaire, :count).by(0)
-
-        expect(flash[:notice]).to match('Votre message a été envoyé.')
-        expect(response).to redirect_to root_path(formulaire_contact_general_submitted: true)
-      end
-
-      context 'when a drafted dossier is mentionned' do
-        let(:dossier) { create(:dossier) }
-        let(:user) { dossier.user }
-
-        subject do
-          post :create, params: {
-            dossier_id: dossier.id,
-            type: Helpscout::FormAdapter::TYPE_INSTRUCTION,
-            subject: 'bonjour',
-            text: 'un message'
-          }
-        end
+      context "when invisible captcha is ignored" do
+        let(:params) { { subject: 'bonjour', text: 'un message' } }
 
         it 'creates a conversation on HelpScout' do
           expect_any_instance_of(Helpscout::FormAdapter).to receive(:send_form).and_return(true)
@@ -84,33 +65,64 @@ describe SupportController, type: :controller do
           expect(flash[:notice]).to match('Votre message a été envoyé.')
           expect(response).to redirect_to root_path(formulaire_contact_general_submitted: true)
         end
-      end
 
-      context 'when a submitted dossier is mentionned' do
-        let(:dossier) { create(:dossier, :en_construction) }
-        let(:user) { dossier.user }
+        context 'when a drafted dossier is mentionned' do
+          let(:dossier) { create(:dossier) }
+          let(:user) { dossier.user }
 
-        subject do
-          post :create, params: {
-            dossier_id: dossier.id,
-            type: Helpscout::FormAdapter::TYPE_INSTRUCTION,
-            subject: 'bonjour',
-            text: 'un message'
-          }
+          subject do
+            post :create, params: {
+              dossier_id: dossier.id,
+              type: Helpscout::FormAdapter::TYPE_INSTRUCTION,
+              subject: 'bonjour',
+              text: 'un message'
+            }
+          end
+
+          it 'creates a conversation on HelpScout' do
+            expect_any_instance_of(Helpscout::FormAdapter).to receive(:send_form).and_return(true)
+
+            expect { subject }.to change(Commentaire, :count).by(0)
+
+            expect(flash[:notice]).to match('Votre message a été envoyé.')
+            expect(response).to redirect_to root_path(formulaire_contact_general_submitted: true)
+          end
         end
 
-        it 'posts the message to the dossier messagerie' do
-          expect_any_instance_of(Helpscout::FormAdapter).not_to receive(:send_form)
+        context 'when a submitted dossier is mentionned' do
+          let(:dossier) { create(:dossier, :en_construction) }
+          let(:user) { dossier.user }
 
-          expect { subject }.to change(Commentaire, :count).by(1)
+          subject do
+            post :create, params: {
+              dossier_id: dossier.id,
+              type: Helpscout::FormAdapter::TYPE_INSTRUCTION,
+              subject: 'bonjour',
+              text: 'un message'
+            }
+          end
 
-          expect(Commentaire.last.email).to eq(user.email)
-          expect(Commentaire.last.dossier).to eq(dossier)
-          expect(Commentaire.last.body).to include('[bonjour]')
-          expect(Commentaire.last.body).to include('un message')
+          it 'posts the message to the dossier messagerie' do
+            expect_any_instance_of(Helpscout::FormAdapter).not_to receive(:send_form)
 
-          expect(flash[:notice]).to match('Votre message a été envoyé sur la messagerie de votre dossier.')
-          expect(response).to redirect_to messagerie_dossier_path(dossier)
+            expect { subject }.to change(Commentaire, :count).by(1)
+
+            expect(Commentaire.last.email).to eq(user.email)
+            expect(Commentaire.last.dossier).to eq(dossier)
+            expect(Commentaire.last.body).to include('[bonjour]')
+            expect(Commentaire.last.body).to include('un message')
+
+            expect(flash[:notice]).to match('Votre message a été envoyé sur la messagerie de votre dossier.')
+            expect(response).to redirect_to messagerie_dossier_path(dossier)
+          end
+        end
+      end
+
+      context "when invisible captcha is filled" do
+        let(:params) { { subject: 'bonjour', text: 'un message', InvisibleCaptcha.honeypots.sample => 'boom' } }
+        it 'does not create a conversation on HelpScout' do
+          expect { subject }.not_to change(Commentaire, :count)
+          expect(flash[:alert]).to eq(I18n.t('invisible_captcha.custom_message'))
         end
       end
     end

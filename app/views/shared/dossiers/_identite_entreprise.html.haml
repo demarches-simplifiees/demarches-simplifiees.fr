@@ -5,62 +5,62 @@
         %td= t('warning_for_private_info', scope: 'views.shared.dossiers.identite_entreprise', etablissement: raison_sociale_or_name(etablissement))
     - else
       %tr
-        %th.libelle Dénomination :
+        %td.libelle Dénomination :
         %td= raison_sociale_or_name(etablissement)
       %tr
-        %th.libelle Numéro TAHITI :
+        %td.libelle Numéro TAHITI :
         %td= etablissement.siret
 
       - if etablissement.siret != etablissement.entreprise.siret_siege_social
         %tr
-          %th.libelle Numéro TAHITI du siège social:
+          %td.libelle Numéro TAHITI du siège social:
           %td= etablissement.entreprise.siret_siege_social
       %tr
         %th.libelle Nom commercial :
         %td= sanitize(etablissement.entreprise_nom_commercial)
       %tr
-        %th.libelle Forme juridique :
+        %td.libelle Forme juridique :
         %td= sanitize(etablissement.entreprise.forme_juridique)
       %tr
-        %th.libelle Libellé NAF :
+        %td.libelle Libellé NAF :
         %td= etablissement.libelle_naf
       %tr
-        %th.libelle Code NAF :
+        %td.libelle Code NAF :
         %td= etablissement.naf
       %tr
-        %th.libelle Date de création :
+        %td.libelle Date de création :
         %td= try_format_date(etablissement.entreprise.date_creation)
       - if profile == 'instructeur'
         %tr
-          %th.libelle
+          %td.libelle
             Effectif mensuel
             = try_format_mois_effectif(etablissement)
             (URSSAF) :
           %td= etablissement.entreprise_effectif_mensuel
         %tr
-          %th.libelle
+          %td.libelle
             Effectif moyen annuel
             = etablissement.entreprise_effectif_annuel_annee
             (URSSAF) :
           %td= etablissement.entreprise_effectif_annuel
       %tr
-        %th.libelle Effectif de l'organisation (INSEE) :
+        %td.libelle Effectif de l'organisation (INSEE) :
         %td
           = effectif(etablissement)
       %tr
-        %th.libelle Numéro de TVA intracommunautaire :
+        %td.libelle Numéro de TVA intracommunautaire :
         %td= etablissement.entreprise.numero_tva_intracommunautaire
       %tr
-        %th.libelle Adresse :
+        %td.libelle Adresse :
         %td
           - etablissement.adresse.split("\n").each do |line|
             = line
             %br
       %tr
-        %th.libelle Capital social :
+        %td.libelle Capital social :
         %td= pretty_currency(etablissement.entreprise.capital_social)
       %tr
-        %th.libelle Chiffre d’affaires :
+        %td.libelle Chiffre d’affaires :
         %td
           - if profile == 'instructeur'
             %details
@@ -86,7 +86,7 @@
           = render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
             locals: { libelle: 'Besoin en fonds de roulement', key: 'besoin_en_fonds_de_roulement', etablissement: etablissement }
           %tr
-            %th.libelle
+            %td.libelle
               Chiffres financiers clés (Banque de France)
               = "en #{pretty_currency_unit(etablissement.entreprise_bilans_bdf_monnaie)} :"
 
@@ -108,12 +108,12 @@
                 = link_to "au format ods", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'ods')
         - else
           %tr
-            %th.libelle
+            %td.libelle
               Bilans Banque de France :
             %td Les 3 derniers bilans connus de votre entreprise par la Banque de France ont été joints à votre dossier.
       - if etablissement.entreprise_attestation_sociale.attached?
         %tr
-          %th.libelle Attestation sociale :
+          %td.libelle Attestation sociale :
           - if profile == 'instructeur'
             %td= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_sociale)
           - else
@@ -121,7 +121,7 @@
 
       - if etablissement.entreprise_attestation_fiscale.attached?
         %tr
-          %th.libelle Attestation fiscale :
+          %td.libelle Attestation fiscale :
           - if profile == 'instructeur'
             %td= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_fiscale)
           - else
@@ -129,22 +129,22 @@
 
       - if etablissement.association?
         %tr
-          %th.libelle Numéro RNA :
+          %td.libelle Numéro RNA :
           %td= etablissement.association_rna
         %tr
-          %th.libelle Titre :
+          %td.libelle Titre :
           %td= etablissement.association_titre
         %tr
-          %th.libelle Objet :
+          %td.libelle Objet :
           %td= etablissement.association_objet
         %tr
-          %th.libelle Date de création :
+          %td.libelle Date de création :
           %td= try_format_date(etablissement.association_date_creation)
         %tr
-          %th.libelle Date de publication :
+          %td.libelle Date de publication :
           %td= try_format_date(etablissement.association_date_publication)
         %tr
-          %th.libelle Date de déclaration :
+          %td.libelle Date de déclaration :
           %td= try_format_date(etablissement.association_date_declaration)
 
 %p

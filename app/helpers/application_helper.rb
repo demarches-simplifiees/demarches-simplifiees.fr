@@ -50,7 +50,7 @@ module ApplicationHelper
   end
 
   def render_champ(champ)
-    champ_selector = ".editable-champ[data-champ-id=\"#{champ.id}\"]"
+    champ_selector = "##{champ.input_group_id}"
     form_html = render 'shared/dossiers/edit', dossier: champ.dossier, apercu: false
     champ_html = Nokogiri::HTML.fragment(form_html).at_css(champ_selector).to_s
     # rubocop:disable Rails/OutputSafety

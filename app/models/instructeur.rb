@@ -81,14 +81,13 @@ class Instructeur < ApplicationRecord
     end
   end
 
-  def remove_from_groupe_instructeur(groupe_instructeur)
-    if groupe_instructeur.in?(groupe_instructeurs)
-      groupe_instructeurs.destroy(groupe_instructeur)
-      follows
-        .joins(:dossier)
-        .where(dossiers: { groupe_instructeur: groupe_instructeur })
-        .update_all(unfollowed_at: Time.zone.now)
-    end
+  NOTIFICATION_SETTINGS = [:daily_email_notifications_enabled, :instant_email_dossier_notifications_enabled, :instant_email_message_notifications_enabled, :weekly_email_notifications_enabled]
+
+  def notification_settings(procedure_id)
+    assign_to
+      .joins(:groupe_instructeur)
+      .find_by(groupe_instructeurs: { procedure_id: procedure_id })
+      &.slice(*NOTIFICATION_SETTINGS) || {}
   end
 
   def last_week_overview
@@ -257,6 +256,7 @@ class Instructeur < ApplicationRecord
           ON  follows.dossier_id = dossiers.id
           AND follows.unfollowed_at IS NULL
       WHERE "dossiers"."hidden_at" IS NULL
+        AND "dossiers"."hidden_by_administration_at" IS NULL
         AND "dossiers"."state" != 'brouillon'
         AND "dossiers"."groupe_instructeur_id" in (:groupe_instructeur_ids)
     EOF
