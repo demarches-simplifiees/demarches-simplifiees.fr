@@ -24,13 +24,7 @@ Capybara.register_driver :headless_chrome do |app|
   options.add_preference('download.default_directory', download_path)
   options.add_preference(:download, default_directory: download_path)
 
-  Capybara::Selenium::Driver.new(app,
-    browser: :chrome,
-    desired_capabilities: capabilities,
-    options: options).tap do |driver|
-    # Set download dir for Chrome < 77
-    driver.browser.download_path = download_path
-  end
+  Capybara::Selenium::Driver.new(app, browser: :chrome, capabilities: [capabilities, options])
 end
 
 Capybara.register_driver :wsl do |app|
@@ -45,11 +39,7 @@ Capybara.register_driver :wsl do |app|
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
     "goog:chromeOptions" => { args: ['disable-dev-shm-usage', 'disable-software-rasterizer', 'mute-audio', 'window-size=1440,900'] }
   )
-  Capybara::Selenium::Driver.new(app,
-                                 browser:              :remote,
-                                 url:                  "http://localhost:4444/wd/hub",
-                                 desired_capabilities: capabilities,
-                                 options:              options)
+  Capybara::Selenium::Driver.new(app, browser: :remote, url: "http://localhost:4444/wd/hub", capabilities: [options, capabilities])
 end
 
 Capybara.default_max_wait_time = 2
