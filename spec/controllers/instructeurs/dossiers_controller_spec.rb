@@ -839,4 +839,25 @@ describe Instructeurs::DossiersController, type: :controller do
       end
     end
   end
+
+  describe '#restore' do
+    let(:instructeur) { create(:instructeur) }
+    let!(:gi_p1_1) { GroupeInstructeur.create(label: '1', procedure: procedure) }
+    let!(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
+    let!(:dossier) { create(:dossier, state: 'accepte', procedure: procedure, groupe_instructeur: procedure.groupe_instructeurs.first, hidden_by_administration_at: 1.hour.ago) }
+
+    before do
+      sign_in(instructeur.user)
+      instructeur.groupe_instructeurs << gi_p1_1
+      patch :restore,
+      params: {
+        procedure_id: procedure.id,
+        dossier_id: dossier.id
+      }
+    end
+
+    it "puts hidden_by_administration_at to nil" do
+      expect(dossier.reload.hidden_by_administration_at).to eq(nil)
+    end
+  end
 end

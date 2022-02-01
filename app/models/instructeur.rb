@@ -236,7 +236,8 @@ class Instructeur < ApplicationRecord
         COUNT(DISTINCT dossiers.id) FILTER (where not archived AND dossiers.state in ('en_construction', 'en_instruction') AND follows.instructeur_id = :instructeur_id) AS suivis,
         COUNT(DISTINCT dossiers.id) FILTER (where not archived AND dossiers.state in ('accepte', 'refuse', 'sans_suite')) AS traites,
         COUNT(DISTINCT dossiers.id) FILTER (where not archived AND NOT (dossiers.hidden_by_user_at IS NOT NULL AND state = 'en_construction')) AS tous,
-        COUNT(DISTINCT dossiers.id) FILTER (where archived)     AS archives,
+        COUNT(DISTINCT dossiers.id) FILTER (where not archived AND (dossiers.hidden_by_administration_at IS NOT NULL AND dossiers.state in ('accepte', 'refuse', 'sans_suite') )) AS supprimes_recemment,
+        COUNT(DISTINCT dossiers.id) FILTER (where archived) AS archives,
         COUNT(DISTINCT dossiers.id) FILTER (where
           procedures.procedure_expires_when_termine_enabled
           AND (
@@ -256,7 +257,6 @@ class Instructeur < ApplicationRecord
           ON  follows.dossier_id = dossiers.id
           AND follows.unfollowed_at IS NULL
       WHERE "dossiers"."hidden_at" IS NULL
-        AND "dossiers"."hidden_by_administration_at" IS NULL
         AND "dossiers"."state" != 'brouillon'
         AND "dossiers"."groupe_instructeur_id" in (:groupe_instructeur_ids)
     EOF
