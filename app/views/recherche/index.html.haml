@@ -20,7 +20,7 @@
           %th.action-col.follow-col
       %tbody
         - @projected_dossiers.each do |p|
-          - procedure_libelle, user_email, procedure_id = p.columns
+          - procedure_libelle, user_email, procedure_id, hidden_by_administration = p.columns
           - instructeur_dossier =  @instructeur_dossiers_ids.include?(p.dossier_id)
           - expert_dossier = @dossier_avis_ids_h[p.dossier_id].present?
           - instructeur_and_expert_dossier = instructeur_dossier && expert_dossier
@@ -83,7 +83,7 @@
                                                                       archived: p.archived,
                                                                       dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
                                                                       close_to_expiration: nil,
-                                                                      supprimes_recemment: @statut == 'supprimes_recemment' }
+                                                                      recently_deleted: hidden_by_administration.blank? }
 
             - else
               %td
