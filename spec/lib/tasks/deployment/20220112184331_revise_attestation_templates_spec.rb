@@ -11,8 +11,8 @@ describe '20220112184331_revise_attestation_templates' do
 
   after { rake_task.reenable }
 
-  context 'add attestation_template_id' do
-    it 'to revisions' do
+  describe 'revise_attestation_templates' do
+    it 'attaches the attestation_template to the latest revision (without removing the link between attestation_template and procedure for now)' do
       expect(attestation_template.procedure.revisions.first.attestation_template_id).to be_nil
       run_task
       expect(attestation_template.procedure_id).to eq(procedure.id)
