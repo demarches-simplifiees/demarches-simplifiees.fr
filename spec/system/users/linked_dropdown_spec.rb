@@ -30,13 +30,13 @@ describe 'linked dropdown lists' do
     select('Primary 2', from: 'linked dropdown')
 
     # Secondary menu reflects chosen primary value
-    expect(page).to have_select('linked dropdown : Précisez', options: ['', 'Secondary 2.1', 'Secondary 2.2', 'Secondary 2.3'])
+    expect(page).to have_select('linked dropdown : précisez', options: ['', 'Secondary 2.1', 'Secondary 2.2', 'Secondary 2.3'])
 
     # Select another primary value
     select('Primary 1', from: 'linked dropdown')
 
     # Secondary menu gets updated
-    expect(page).to have_select('linked dropdown : Précisez', options: ['', 'Secondary 1.1', 'Secondary 1.2'])
+    expect(page).to have_select('linked dropdown : précisez', options: ['', 'Secondary 1.1', 'Secondary 1.2'])
   end
 
   private
