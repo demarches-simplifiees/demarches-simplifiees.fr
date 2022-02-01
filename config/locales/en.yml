@@ -366,10 +366,14 @@ en:
       zero: guest file
       one: guest file
       other: guest files
-    dossiers_supprimes:
-      zero: deleted file
-      one: deleted file
-      other: deleted files
+    dossiers_supprimes_recemment:
+      zero: recently deleted file
+      one: recently deleted file
+      other: recently deleted files
+    dossiers_supprimes_definitivement:
+      zero: permanently deleted file
+      one: permanently deleted file
+      other: permanently deleted files
     dossiers_transferes:
       zero: transfer request
       one: transfer request
@@ -405,6 +409,7 @@ en:
       ask_deletion:
         undergoingreview: "Your file is undergoing review. It is no longer possible to delete your file. To cancel the undergoingreview contact the adminitration via the mailbox."
         soft_deleted_dossier: "Your file has been successfully deleted from your interface"
+      restore: "Your file has been successfully restored"
       update_brouillon:
         draft_saved: "Your draft has been saved."
       etablissement:
