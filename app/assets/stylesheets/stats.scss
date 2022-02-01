@@ -1,4 +1,6 @@
 @import "colors";
+@import "constants";
+
 $dark-grey: #333333;
 $light-grey: #999999;
 
@@ -152,6 +154,7 @@ $big-number-card-padding: 2 * $segmented-control-item-border-radius;
 
 .big-number-card-detail {
   display: block;
+  margin-top: $default-padding;
   text-align: center;
   color: $blue-france-500;
 }
