@@ -116,6 +116,7 @@ function ComboMultiple({
     }
     setTerm('');
     awaitFormSubmit.done();
+    hidePopover();
   };
 
   const onRemove = (label) => {
@@ -148,6 +149,18 @@ function ComboMultiple({
     }
   };
 
+  const hidePopover = () => {
+    document
+      .querySelector(`[data-reach-combobox-popover-id="${inputId}"]`)
+      ?.setAttribute('hidden', 'true');
+  };
+
+  const showPopover = () => {
+    document
+      .querySelector(`[data-reach-combobox-popover-id="${inputId}"]`)
+      ?.removeAttribute('hidden');
+  };
+
   const onBlur = () => {
     if (
       term &&
@@ -156,6 +169,10 @@ function ComboMultiple({
       awaitFormSubmit(() => {
         onSelect(term);
       });
+    } else {
+      setTimeout(() => {
+        hidePopover();
+      }, 200);
     }
   };
 
@@ -185,6 +202,7 @@ function ComboMultiple({
           onChange={handleChange}
           onKeyDown={onKeyDown}
           onBlur={onBlur}
+          onClick={showPopover}
           autocomplete={false}
           id={inputId}
           aria-label={label}
@@ -195,14 +213,25 @@ function ComboMultiple({
         />
       </ComboboxTokenLabel>
       {results && (results.length > 0 || !acceptNewValues) && (
-        <ComboboxPopover className="shadow-popup">
-          {results.length === 0 && (
-            <p>
-              Aucun résultat{' '}
-              <button onClick={() => setTerm('')}>Effacer</button>
-            </p>
-          )}
+        <ComboboxPopover
+          className="shadow-popup"
+          data-reach-combobox-popover-id={inputId}
+        >
           <ComboboxList>
+            {results.length === 0 && (
+              <li data-reach-combobox-no-results>
+                Aucun résultat{' '}
+                <button
+                  onClick={() => {
+                    setTerm('');
+                    inputRef.current?.focus();
+                  }}
+                  className="button"
+                >
+                  Effacer
+                </button>
+              </li>
+            )}
             {results.map(([label, value], index) => {
               if (label.startsWith('--')) {
                 return <ComboboxSeparator key={index} value={label} />;

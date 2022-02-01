@@ -1071,13 +1071,13 @@ describe Users::DossiersController, type: :controller do
         subject
       end
 
-      it "deletes the dossier" do
+      it "hide the dossier and create a deleted dossier" do
         procedure = dossier.procedure
         dossier_id = dossier.id
         subject
-        expect(Dossier.find_by(id: dossier_id)).to eq(nil)
+        expect(Dossier.find_by(id: dossier_id)).to be_present
+        expect(Dossier.find_by(id: dossier_id).hidden_by_user_at).to be_present
         expect(procedure.deleted_dossiers.count).to eq(1)
-        expect(procedure.deleted_dossiers.first.dossier_id).to eq(dossier_id)
       end
 
       it { is_expected.to redirect_to(dossiers_path) }
@@ -1104,6 +1104,21 @@ describe Users::DossiersController, type: :controller do
 
       it 'discard the dossier' do
         expect(dossier.reload.hidden_at).to be_present
+      end
+    end
+  end
+
+  describe '#restore' do
+    before { sign_in(user) }
+    subject { patch :restore, params: { id: dossier.id } }
+
+    context 'when the user want to restore his dossier' do
+      let!(:dossier) { create(:dossier, :with_individual, state: :accepte, en_construction_at: Time.zone.yesterday.beginning_of_day.utc, hidden_by_user_at: Time.zone.yesterday.beginning_of_day.utc, user: user, autorisation_donnees: true) }
+
+      before { subject }
+
+      it 'must have hidden_by_user_at nil' do
+        expect(dossier.reload.hidden_by_user_at).to be_nil
       end
     end
   end

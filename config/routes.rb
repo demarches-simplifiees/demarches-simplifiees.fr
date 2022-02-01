@@ -281,6 +281,7 @@ Rails.application.routes.draw do
         get 'messagerie'
         post 'commentaire' => 'dossiers#create_commentaire'
         patch 'delete_dossier'
+        patch 'restore', to: 'dossiers#restore'
         get 'attestation'
         get 'qrcode/:created_at', action: 'qrcode', as: :qrcode
         get 'transferer', to: 'dossiers#transferer'

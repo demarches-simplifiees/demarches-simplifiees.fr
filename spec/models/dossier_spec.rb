@@ -793,6 +793,7 @@ describe Dossier do
 
   describe "#discard_and_keep_track!" do
     let(:dossier) { create(:dossier, :en_construction) }
+    let(:user) { dossier.user }
     let(:deleted_dossier) { DeletedDossier.find_by(dossier_id: dossier.id) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let(:reason) { :user_request }
@@ -802,7 +803,7 @@ describe Dossier do
       allow(DossierMailer).to receive(:notify_deletion_to_administration).and_return(double(deliver_later: nil))
     end
 
-    subject! { dossier.discard_and_keep_track!(dossier.user, reason) }
+    subject! { dossier.discard_and_keep_track!(user, reason) }
 
     context 'brouillon' do
       let(:dossier) { create(:dossier) }
@@ -821,8 +822,9 @@ describe Dossier do
     end
 
     context 'en_construction' do
-      it 'hides the dossier' do
-        expect(dossier.hidden_at).to be_present
+      it 'hide the dossier but does not discard' do
+        expect(dossier.hidden_at).to be_nil
+        expect(dossier.hidden_by_user_at).to be_present
       end
 
       it 'creates a DeletedDossier record' do
@@ -872,6 +874,7 @@ describe Dossier do
       end
 
       context 'with reason: manager_request' do
+        let(:user) { dossier.procedure.administrateurs.first }
         let(:reason) { :manager_request }
 
         it 'hides the dossier' do
@@ -887,13 +890,12 @@ describe Dossier do
       context 'with reason: user_removed' do
         let(:reason) { :user_removed }
 
-        it 'hides the dossier' do
-          expect(dossier.discarded?).to be_truthy
+        it 'does not discard the dossier' do
+          expect(dossier.discarded?).to be_falsy
         end
 
-        it 'records the operation in the log' do
-          expect(last_operation.operation).to eq("supprimer")
-          expect(last_operation.automatic_operation?).to be_falsey
+        it 'hide the dossier' do
+          expect(dossier.hidden_by_user_at).to be_present
         end
       end
     end
