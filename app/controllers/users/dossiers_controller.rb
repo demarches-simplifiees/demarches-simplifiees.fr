@@ -228,16 +228,15 @@ module Users
       end
     end
 
-    def ask_deletion
+    def delete_dossier
       dossier = current_user.dossiers.includes(:user, procedure: :administrateurs).find(params[:id])
-
       if dossier.can_be_deleted_by_user?
         dossier.discard_and_keep_track!(current_user, :user_request)
-        flash.notice = t('.soft_deleted_dossier')
+        flash.notice = t('users.dossiers.ask_deletion.soft_deleted_dossier')
         redirect_to dossiers_path
       else
-        flash.notice = t('.undergoingreview')
-        redirect_to dossier_path(dossier)
+        flash.alert = t('users.dossiers.ask_deletion.undergoingreview')
+        redirect_to dossiers_path
       end
     end
 
@@ -302,13 +301,6 @@ module Users
 
     def transferer_all
       @transfer = DossierTransfer.new(dossiers: current_user.dossiers)
-    end
-
-    def hide_dossier
-      dossier = current_user.dossiers.includes(:user, procedure: :administrateurs).find(params[:id])
-      dossier.update(hidden_by_user_at: Time.zone.now)
-      flash.notice = t('users.dossiers.ask_deletion.soft_deleted_dossier')
-      redirect_to dossiers_path
     end
 
     private

@@ -1,16 +1,16 @@
 - if champ.options?
   = form.select :primary_value,
     champ.primary_options,
-    { required: champ.mandatory? },
-    { data: { secondary_options: champ.secondary_options } }
-  %span
-    = form.label :secondary_value do
-      = champ.drop_down_secondary_libelle.presence || (champ.libelle + ' : précisez')
-      - if champ.mandatory?
-        %span.mandatory *
-    - if champ.drop_down_secondary_description.present?
-      .notice= string_to_html(champ.drop_down_secondary_description)
+    {},
+    { data: { secondary_options: champ.secondary_options }, required: champ.mandatory?, id: champ.input_id, aria: { describedby: champ.describedby_id } }
+
+  = form.label :secondary_value, for: "#{champ.input_id}-secondary" do
+    = champ.drop_down_secondary_libelle.presence || (champ.libelle + ' : précisez')
+    - if champ.mandatory?
+      %span.mandatory *
+  - if champ.drop_down_secondary_description.present?
+    .notice{ id: "#{champ.describedby_id}-secondary" }= string_to_html(champ.drop_down_secondary_description)
   = form.select :secondary_value,
     champ.secondary_options[champ.primary_value],
-    { required: champ.mandatory? },
-    { data: { secondary: true } }
+    {},
+    { data: { secondary: true }, required: champ.mandatory?, id: "#{champ.input_id}-secondary", aria: { describedby: "#{champ.describedby_id}-secondary" } }

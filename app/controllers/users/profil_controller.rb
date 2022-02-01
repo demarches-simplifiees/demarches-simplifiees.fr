@@ -14,9 +14,7 @@ module Users
 
     def update_email
       requested_user = User.find_by(email: requested_email)
-
-      if requested_user.present?
-        current_user.ask_for_merge(requested_user)
+      if requested_user.present? && current_user.ask_for_merge(requested_user)
         current_user.update(unconfirmed_email: nil)
 
         flash.notice = t('devise.registrations.update_needs_confirmation')

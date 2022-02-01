@@ -12,13 +12,13 @@ module Experts
     DONNES_STATUS   = 'donnes'
 
     def index
-      avis = current_expert.avis.includes(dossier: [groupe_instructeur: :procedure])
+      avis = current_expert.avis.includes(dossier: [groupe_instructeur: :procedure]).not_hidden_by_administration
       @avis_by_procedure = avis.to_a.group_by(&:procedure)
     end
 
     def procedure
       @procedure = Procedure.find(params[:procedure_id])
-      expert_avis = current_expert.avis.includes(:dossier).where(dossiers: { groupe_instructeur: GroupeInstructeur.where(procedure: @procedure.id) })
+      expert_avis = current_expert.avis.includes(:dossier).not_hidden_by_administration.where(dossiers: { groupe_instructeur: GroupeInstructeur.where(procedure: @procedure.id) })
       @avis_a_donner = expert_avis.without_answer
       @avis_donnes = expert_avis.with_answer
 

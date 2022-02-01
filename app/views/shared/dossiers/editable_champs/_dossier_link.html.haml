@@ -1,5 +1,7 @@
 .dossier-link{ class: "dossier-link-#{form.index}" }
   = form.number_field :value,
+    id: champ.input_id,
+    aria: { describedby: champ.describedby_id },
     placeholder: "Numéro de dossier",
     autocomplete: 'off',
     required: champ.mandatory?,

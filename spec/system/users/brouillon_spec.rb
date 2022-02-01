@@ -28,13 +28,13 @@ describe 'The user' do
     check('val1')
     check('val3')
     select('bravo', from: form_id_for('simple_choice_drop_down_list_long'))
-    select_multi_combobox('multiple_choice_drop_down_list_long', 'alp', 'alpha')
-    select_multi_combobox('multiple_choice_drop_down_list_long', 'cha', 'charly')
+    select_combobox('multiple_choice_drop_down_list_long', 'alp', 'alpha')
+    select_combobox('multiple_choice_drop_down_list_long', 'cha', 'charly')
 
     select_combobox('pays', 'aust', 'Australie')
     select_combobox('regions', 'Ma', 'Martinique')
     select_combobox('departements', 'Ai', '02 - Aisne')
-    select_combobox('communes', 'Ai', '02 - Aisne')
+    select_combobox('communes', 'Ai', '02 - Aisne', check: false)
     select_combobox('communes', 'Ambl', 'Ambléon (01300)')
 
     select('Australienne', from: 'nationalites')
@@ -96,16 +96,16 @@ describe 'The user' do
     expect(page).to have_checked_field('val1')
     expect(page).to have_checked_field('val3')
     expect(page).to have_selected_value('simple_choice_drop_down_list_long', selected: 'bravo')
-    check_selected_values('multiple_choice_drop_down_list_long', ['alpha', 'charly'])
+    check_selected_value('multiple_choice_drop_down_list_long', with: ['alpha', 'charly'])
 
     expect(page).to have_selected_value('nationalites', selected: 'Australienne')
     expect(page).to have_selected_value('commune_de_polynesie', selected: 'Mahina - Tahiti - 98709')
     expect(page).to have_selected_value('code_postal_de_polynesie', selected: '98709 - Mahina - Tahiti')
 
-    expect(page).to have_hidden_field('pays', with: 'Australie')
-    expect(page).to have_hidden_field('regions', with: 'Martinique')
-    expect(page).to have_hidden_field('departements', with: '02 - Aisne')
-    expect(page).to have_hidden_field('communes', with: 'Ambléon (01300)')
+    check_selected_value('pays', with: 'Australie')
+    check_selected_value('regions', with: 'Martinique')
+    check_selected_value('departements', with: '02 - Aisne')
+    check_selected_value('communes', with: 'Ambléon (01300)')
     expect(page).to have_checked_field('engagement')
     expect(page).to have_field('dossier_link', with: '123')
     expect(page).to have_text('file.pdf')
@@ -349,10 +349,6 @@ describe 'The user' do
 
     expect(page).to have_content("Données d’identité")
     expect(page).to have_current_path(identite_dossier_path(user_dossier))
-  end
-
-  def form_id_for(libelle)
-    find(:xpath, ".//label[contains(text()[normalize-space()], '#{libelle}')]")[:for]
   end
 
   def form_id_for_datetime(libelle)

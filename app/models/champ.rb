@@ -142,6 +142,22 @@ class Champ < ApplicationRecord
     true
   end
 
+  def input_group_id
+    "champ-#{html_id}"
+  end
+
+  def input_id
+    "#{html_id}-input"
+  end
+
+  def labelledby_id
+    "#{html_id}-label"
+  end
+
+  def describedby_id
+    "#{html_id}-description" if description.present?
+  end
+
   def stable_id
     type_de_champ.stable_id
   end
@@ -161,6 +177,10 @@ class Champ < ApplicationRecord
   end
 
   private
+
+  def html_id
+    "#{stable_id}-#{id}"
+  end
 
   def needs_dossier_id?
     !dossier_id && parent_id

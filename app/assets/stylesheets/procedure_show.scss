@@ -62,7 +62,7 @@
     text-align: center;
   }
 
-  [data-react-class="ComboMultipleDropdownList"] {
+  [data-react-class^="ComboMultiple"] {
     margin-bottom: $default-fields-spacer;
 
     [data-reach-combobox-token-list] {
@@ -71,7 +71,7 @@
       width: 100%;
     }
 
-    [data-reach-combobox-token] {
+    [data-reach-combobox-token] button {
       border: solid 1px $border-grey;
       color: $black;
       margin: 0.25 * $default-padding;
@@ -83,14 +83,9 @@
       align-items: center;
     }
 
-    [data-reach-combobox-token]:focus {
+    [data-reach-combobox-token] button:focus {
       background-color: $black;
       color: $white;
-
-      [data-combobox-remove-token] {
-        background-color: $black;
-        color: $white;
-      }
     }
 
 
