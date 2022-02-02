@@ -139,7 +139,7 @@
                             archived: p.archived,
                             dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
                             close_to_expiration: @statut == 'expirant',
-                            supprimes_recemment: @statut == 'supprimes_recemment' }
+                            recently_deleted: @statut == 'supprimes_recemment' }
 
       = pagination
     - else
