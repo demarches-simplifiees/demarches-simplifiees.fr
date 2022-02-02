@@ -8,7 +8,7 @@ openstack:
   service: OpenStack
   container: "<%= ENV['FOG_ACTIVESTORAGE_DIRECTORY'] %>"
   credentials:
-    openstack_auth_url: "https://auth.cloud.ovh.net"
+    openstack_auth_url: "<%= ENV['FOG_OPENSTACK_AUTH_URL'] %>"
     openstack_api_key: "<%= ENV['FOG_OPENSTACK_API_KEY'] %>"
     openstack_username: "<%= ENV['FOG_OPENSTACK_USERNAME'] %>"
     openstack_region: "<%= ENV['FOG_OPENSTACK_REGION'] %>"
