@@ -57,24 +57,30 @@ describe Stat do
         create(:dossier, state: :en_construction, depose_at: i.months.ago)
         create(:deleted_dossier, dossier_id: i + 100, state: :en_construction, deleted_at: i.month.ago)
       end
-      rs = Stat.send(:cumulative_month_serie, [
-        [Dossier.state_not_brouillon, :depose_at],
-        [DeletedDossier.where.not(state: :brouillon), :deleted_at]
+      s = Stat.new({
+        dossiers_cumulative:
+                        Stat.send(:cumulative_month_serie, [
+                          [Dossier.state_not_brouillon, :depose_at],
+                          [DeletedDossier.where.not(state: :brouillon), :deleted_at]
+                        ])
+      })
+      s.save!
+      s.reload
+      # Use `Hash#to_a` to also test the key ordering
+      expect(s.dossiers_cumulative.to_a).to eq([
+        [formatted_n_months_ago(12), 2],
+        [formatted_n_months_ago(11), 4],
+        [formatted_n_months_ago(10), 6],
+        [formatted_n_months_ago(9), 8],
+        [formatted_n_months_ago(8), 10],
+        [formatted_n_months_ago(7), 12],
+        [formatted_n_months_ago(6), 14],
+        [formatted_n_months_ago(5), 16],
+        [formatted_n_months_ago(4), 18],
+        [formatted_n_months_ago(3), 20],
+        [formatted_n_months_ago(2), 22],
+        [formatted_n_months_ago(1), 24]
       ])
-      expect(rs).to eq({
-        12 => 2,
-        11 => 4,
-        10 => 6,
-        9 => 8,
-        8 => 10,
-        7 => 12,
-        6 => 14,
-        5 => 16,
-        4 => 18,
-        3 => 20,
-        2 => 22,
-        1 => 24
-      }.transform_keys { |i| i.months.ago.beginning_of_month.to_date })
     end
   end
 
@@ -85,16 +91,22 @@ describe Stat do
           create(:dossier, state: :en_construction, depose_at: i.months.ago)
           create(:deleted_dossier, dossier_id: i + 100, state: :en_construction, deleted_at: i.month.ago)
         end
-        rs = Stat.send(:last_four_months_serie, [
-          [Dossier.state_not_brouillon, :depose_at],
-          [DeletedDossier.where.not(state: :brouillon), :deleted_at]
-        ])
-        expect(rs).to eq({
-          "juillet 2021" => 2,
-          "août 2021" => 2,
-          "septembre 2021" => 2,
-          "octobre 2021" => 2
+        s = Stat.new({
+          dossiers_in_the_last_4_months:
+                                   Stat.send(:last_four_months_serie, [
+                                     [Dossier.state_not_brouillon, :depose_at],
+                                     [DeletedDossier.where.not(state: :brouillon), :deleted_at]
+                                   ])
         })
+        s.save!
+        s.reload
+        # Use `Hash#to_a` to also test the key ordering
+        expect(s.dossiers_in_the_last_4_months.to_a).to eq([
+          ['2021-07-01', 2],
+          ['2021-08-01', 2],
+          ['2021-09-01', 2],
+          ['2021-10-01', 2]
+        ])
       end
     end
   end
@@ -103,5 +115,9 @@ describe Stat do
     it 'sum up hashes keys' do
       expect(Stat.send(:sum_hashes, *[{ a: 1, b: 2, d: 5 }, { a: 2, b: 3, c: 5 }])).to eq({ a: 3, b: 5, c: 5, d: 5 })
     end
+  end
+
+  def formatted_n_months_ago(i)
+    i.months.ago.beginning_of_month.to_date.to_s
   end
 end
