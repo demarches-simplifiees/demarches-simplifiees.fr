@@ -31,7 +31,7 @@ class StatsController < ApplicationController
     @procedures_in_the_last_4_months = last_four_months_serie(procedures, :published_at)
 
     @dossiers_cumulative = stat.dossiers_cumulative
-    @dossiers_in_the_last_4_months = stat.dossiers_in_the_last_4_months
+    @dossiers_in_the_last_4_months = format_keys_as_months(stat.dossiers_in_the_last_4_months)
   end
 
   def download
@@ -136,11 +136,18 @@ class StatsController < ApplicationController
     end
   end
 
+  def format_keys_as_months(series)
+    series.transform_keys do |k|
+      date = k.is_a?(Date) ? k : (Date.parse(k) rescue k)
+      l(date, format: "%B %Y")
+    end
+  end
+
   def last_four_months_serie(association, date_attribute)
-    association
+    series = association
       .group_by_month(date_attribute, last: 4, current: super_admin_signed_in?)
       .count
-      .transform_keys { |date| l(date, format: "%B %Y") }
+    format_keys_as_months(series)
   end
 
   def cumulative_month_serie(association, date_attribute)
