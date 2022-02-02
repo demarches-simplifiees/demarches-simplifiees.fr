@@ -18,6 +18,13 @@ describe ApplicationHelper do
     end
   end
 
+  describe "#flash_class" do
+    it { expect(flash_class('notice')).to eq 'alert-success' }
+    it { expect(flash_class('alert', sticky: true, fixed: true)).to eq 'alert-danger sticky alert-fixed' }
+    it { expect(flash_class('error')).to eq 'alert-danger' }
+    it { expect(flash_class('unknown-level')).to eq '' }
+  end
+
   describe "#try_format_date" do
     subject { try_format_date(date) }
 

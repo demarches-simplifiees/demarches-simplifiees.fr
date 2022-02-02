@@ -128,12 +128,11 @@ describe ProcedureArchiveService do
       let(:archive) { create(:archive, time_span_type: 'monthly', status: 'pending', month: date_month) }
       let(:year) { 2021 }
       let(:mailer) { double('mailer', deliver_later: true) }
-      before do
-        allow_any_instance_of(ActiveStorage::Attached::One).to receive(:url).and_return("http://file.to/get.ext")
-      end
-      it 'collect files' do
+
+      it 'collects files with success' do
+        allow_any_instance_of(ActiveStorage::Attached::One).to receive(:url).and_return("https://opengraph.githubassets.com/d0e7862b24d8026a3c03516d865b28151eb3859029c6c6c2e86605891fbdcd7a/socketry/async-io")
         expect(InstructeurMailer).to receive(:send_archive).and_return(mailer)
-        VCR.use_cassette('archive/file_to_get') do
+        VCR.use_cassette('archive/new_file_to_get_200') do
           service.collect_files_archive(archive, instructeur)
         end
 
@@ -146,6 +145,26 @@ describe ProcedureArchiveService do
             "procedure-#{procedure.id}/dossier-#{dossier.id}/pieces_justificatives/",
             "procedure-#{procedure.id}/dossier-#{dossier.id}/pieces_justificatives/attestation-dossier-#{dossier.id}-05-03-2021-00-00-#{dossier.attestation.pdf.id % 10000}.pdf",
             "procedure-#{procedure.id}/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2021-00-00-#{dossier.id}.pdf"
+          ]
+          expect(files.map(&:filename)).to match_array(structure)
+        end
+        expect(archive.file.attached?).to be_truthy
+      end
+
+      it 'retry errors files with errors' do
+        allow_any_instance_of(ActiveStorage::Attached::One).to receive(:url).and_return("https://www.demarches-simplifiees.fr/error_1")
+        expect(InstructeurMailer).to receive(:send_archive).and_return(mailer)
+        VCR.use_cassette('archive/new_file_to_get_400.html') do
+          service.collect_files_archive(archive, instructeur)
+        end
+        archive.file.open do |f|
+          files = ZipTricks::FileReader.read_zip_structure(io: f)
+          structure = [
+            "procedure-#{procedure.id}/",
+            "procedure-#{procedure.id}/dossier-#{dossier.id}/",
+            "procedure-#{procedure.id}/dossier-#{dossier.id}/pieces_justificatives/",
+            "procedure-#{procedure.id}/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2021-00-00-#{dossier.id}.pdf",
+            "procedure-#{procedure.id}/LISEZMOI.txt"
           ]
           expect(files.map(&:filename)).to match_array(structure)
         end
@@ -211,14 +230,12 @@ describe ProcedureArchiveService do
     context 'for all months' do
       let(:archive) { create(:archive, time_span_type: 'everything', status: 'pending') }
       let(:mailer) { double('mailer', deliver_later: true) }
-      before do
-        allow_any_instance_of(ActiveStorage::Attached::One).to receive(:url).and_return("https://i.etsystatic.com/6212702/r/il/744d2c/470726480/il_1588xN.470726480_bpk5.jpg")
-      end
 
       it 'collect files' do
+        allow_any_instance_of(ActiveStorage::Attached::One).to receive(:url).and_return("https://opengraph.githubassets.com/5e61989aecb78e369c93674f877d7bf4ecde378850114a9563cdf8b6a2472536/typhoeus/typhoeus/issues/110")
         expect(InstructeurMailer).to receive(:send_archive).and_return(mailer)
 
-        VCR.use_cassette('archive/file_to_get_typhoeus') do
+        VCR.use_cassette('archive/old_file_to_get_200') do
           service.collect_files_archive(archive, instructeur)
         end
 

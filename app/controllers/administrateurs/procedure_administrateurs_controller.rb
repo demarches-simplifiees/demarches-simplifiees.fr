@@ -32,7 +32,8 @@ module Administrateurs
 
       # Prevent self-removal (Also enforced in the UI)
       if administrateur == current_administrateur
-        flash.error = "Vous ne pouvez pas vous retirer vous-même d’une démarche."
+        flash.alert = "Vous ne pouvez pas vous retirer vous-même d’une démarche."
+        return
       end
 
       # Actually remove the admin
