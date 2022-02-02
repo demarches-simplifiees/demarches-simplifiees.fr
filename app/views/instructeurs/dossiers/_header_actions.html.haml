@@ -29,7 +29,7 @@
             archived: dossier.archived,
             dossier_is_followed: current_instructeur&.follow?(dossier),
             close_to_expiration: dossier.close_to_expiration?,
-            supprimes_recemment: dossier.hidden_by_administration? }
+            recently_deleted: dossier.hidden_by_administration? }
 
 
 .state-button
