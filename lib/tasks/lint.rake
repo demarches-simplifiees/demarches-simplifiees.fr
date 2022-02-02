@@ -7,4 +7,5 @@ task :lint do
   sh "bundle exec i18n-tasks check-consistent-interpolations"
   sh "bundle exec brakeman --no-pager"
   sh "yarn lint:js"
+  sh "yarn lint:types"
 end
