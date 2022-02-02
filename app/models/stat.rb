@@ -80,11 +80,7 @@ class Stat < ApplicationRecord
         association.group_by_month(date_attribute, last: 4, current: false).count
       end
 
-      month_serie(sum_hashes(*timeseries))
-    end
-
-    def month_serie(date_serie)
-      date_serie.keys.sort.each_with_object({}) { |date, h| h[I18n.l(date, format: "%B %Y")] = date_serie[date] }
+      sum_hashes(*timeseries).sort.to_h
     end
 
     def cumulative_month_serie(associations_with_date_attribute)
