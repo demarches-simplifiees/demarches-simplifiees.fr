@@ -1,0 +1,89 @@
+- content_for(:title, t('.contact'))
+- content_for :footer do
+  = render partial: "root/footer"
+
+.suivi
+  %h1.new-h1 Budget
+
+  %p.new-p
+    Démarches Simplifiées est un service numérique porté par la DINUM. Il est financé par la DINUM ainsi que les ministères qui l'utilisent. Le budget prévisionnel 2022 est de 1 240 000€ (500 000€ DINUM + 740 000€ provenant des ministères).
+
+    Les contributions financières sont calculées pour 2022 selon la règle de 0,42€ par dossier déposé en 2021.
+
+  %table.table.hoverable
+    %thead
+      %tr
+        %th SG ministériel
+        %th Dossiers déposés 2020
+        %th Dossiers déposés 10 mois 2021
+        %th Contribution 2021 (base 0,55€)
+        %th Propositions 2022 (base 0,42€)
+    %tbody
+      %tr
+        %td Ministère de l'Agriculture et de l'Alimentation
+        %td 9008
+        %td 17850
+        %td Exempté
+        %td 7500
+
+      %tr
+        %td Ministère des Affaires Sociales
+        %td 200 400
+        %td 246 677
+        %td (prév 105 211) versé 45 571 (non prise en compte de la CNAF)
+        %td 103 604 (55 000 attendu, non prise en charge de la CNAF, convention à négocier)
+
+      %tr
+        %td Ministère de la Culture
+        %td 70 400
+        %td 103 841
+        %td 58 064 (dotation annuelle + convention 15K€)
+        %td 47 000
+      %tr
+        %td Ministère des finances
+        %td 64 542
+        %td 157 471
+        %td 21 655
+        %td 66 000
+      %tr
+        %td Ministère de l'Education Nationale, de la Jeunesse et des Sports / Ministère de l'Enseignement Supérieur et de la Recherche
+        %td 110 008
+        %td 164 838
+        %td 63 474
+        %td 66 123 (55 000 attendu sans ESR)
+      %tr
+        %td Ministère de l'Intérieur
+        %td 638 400
+        %td 828 820
+        %td 300 000
+        %td 350 000
+      %tr
+        %td Ministère des Armées
+        %td 17 596
+        %td 13 792
+        %td Contribution code
+        %td Contribution code
+      %tr
+        %td Ministère de la Transition Ecologique / Ministère de la Cohésion des Territoires et des Relations avec les Collectivités Territoriales
+        %td 167 777
+        %td 175 050
+        %td 55 344
+        %td 73 000
+      %tr
+        %td Premier Ministre
+        %td 6 859
+        %td 15 107
+        %td
+        %td 6 500
+      %tr
+        %td Ministère des Affaires Etrangères
+        %td
+        %td 486 231
+        %td (100 000)
+        %td 80 000
+      %tr
+        %td Total général
+        %td 1 285 105
+        %td 2 209 737
+        %td 644 098
+        %td 740 000
