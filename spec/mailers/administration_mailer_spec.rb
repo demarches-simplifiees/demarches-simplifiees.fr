@@ -45,4 +45,13 @@ RSpec.describe AdministrationMailer, type: :mailer do
 
     it { expect(subject.subject).not_to be_empty }
   end
+
+  describe '#processed_at_filling_report' do
+    let!(:valid_dossiers) { [create(:dossier, :en_construction), create(:dossier, :en_instruction), create(:dossier, :brouillon)] }
+    let!(:invalid_dossiers) { [create(:dossier, :accepte), create(:dossier, :refuse), create(:dossier, :sans_suite)] }
+    before { invalid_dossiers.each { |d| d.processed_at = nil; d.save } }
+    subject { described_class.processed_at_filling_report }
+
+    it { expect(subject.body.raw_source).to include('restants: 3') }
+  end
 end
