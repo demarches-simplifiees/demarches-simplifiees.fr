@@ -562,7 +562,7 @@ class Dossier < ApplicationRecord
     elsif en_construction?
       en_construction_at
     elsif termine?
-      processed_at
+      processed_at || Time.zone.now
     else
       fail "approximative_expiration_date_reference should not be called in state #{self.state}"
     end
