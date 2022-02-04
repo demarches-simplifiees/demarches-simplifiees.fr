@@ -50,6 +50,13 @@ class AdministrationMailer < ApplicationMailer
     mail(to: CONTACT_EMAIL, subject: "Statistiques de synchronisation")
   end
 
+  def processed_at_filling_report
+    @modified_dossier_count = Dossier.where(updated_at: [Time.zone.now.change(hour: 18, min: 0)..Time.zone.now]).count
+    @remaining_dossier_count = Dossier.where(state: ['accepte', 'refuse', 'sans_suite'], processed_at: nil).count
+    @first_remaining_dossiers = Dossier.where(state: ['accepte', 'refuse', 'sans_suite'], processed_at: nil).first(10).pluck(:id)
+    mail(to: CONTACT_EMAIL, subject: "Initialisation de processed_at dans les dossiers")
+  end
+
   private
 
   def to_array(tuples)

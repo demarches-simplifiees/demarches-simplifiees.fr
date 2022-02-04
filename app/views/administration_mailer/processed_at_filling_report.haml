@@ -1,0 +1,8 @@
+- content_for(:title, "Statistiques d'initialisation du champ processed_at des dossiers")
+
+%p
+  Nombre de dossiers modifiés (estimation): #{@modified_dossier_count}
+%p
+  Nombre de dossiers restants: #{@remaining_dossier_count}
+%p
+  10 premiers dossiers non initialisés: #{@first_remaining_dossiers.join(',')}
