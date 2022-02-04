@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_04_093401) do
+ActiveRecord::Schema.define(version: 2022_02_04_130722) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -275,6 +275,14 @@ ActiveRecord::Schema.define(version: 2022_02_04_093401) do
     t.index ["keep_until"], name: "index_dossier_operation_logs_on_keep_until"
   end
 
+  create_table "dossier_submitted_messages", force: :cascade do |t|
+    t.string "message_on_submit_by_usager"
+    t.bigint "procedure_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["procedure_id"], name: "index_dossier_submitted_messages_on_procedure_id"
+  end
+
   create_table "dossier_transfer_logs", force: :cascade do |t|
     t.string "from", null: false
     t.string "to", null: false
@@ -324,10 +332,10 @@ ActiveRecord::Schema.define(version: 2022_02_04_093401) do
     t.datetime "identity_updated_at"
     t.datetime "depose_at"
     t.datetime "hidden_by_user_at"
+    t.datetime "hidden_by_administration_at"
     t.string "hidden_by_reason"
     t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
     t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
-    t.datetime "hidden_by_administration_at"
     t.index ["archived"], name: "index_dossiers_on_archived"
     t.index ["dossier_transfer_id"], name: "index_dossiers_on_dossier_transfer_id"
     t.index ["groupe_instructeur_id"], name: "index_dossiers_on_groupe_instructeur_id"
@@ -594,8 +602,10 @@ ActiveRecord::Schema.define(version: 2022_02_04_093401) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "published_at"
+    t.bigint "dossier_submitted_message_id"
     t.bigint "attestation_template_id"
     t.index ["attestation_template_id"], name: "index_procedure_revisions_on_attestation_template_id"
+    t.index ["dossier_submitted_message_id"], name: "index_procedure_revisions_on_dossier_submitted_message_id"
     t.index ["procedure_id"], name: "index_procedure_revisions_on_procedure_id"
   end
 
@@ -876,6 +886,7 @@ ActiveRecord::Schema.define(version: 2022_02_04_093401) do
   add_foreign_key "procedure_revision_types_de_champ", "procedure_revisions", column: "revision_id"
   add_foreign_key "procedure_revision_types_de_champ", "types_de_champ"
   add_foreign_key "procedure_revisions", "attestation_templates"
+  add_foreign_key "procedure_revisions", "dossier_submitted_messages"
   add_foreign_key "procedure_revisions", "procedures"
   add_foreign_key "procedures", "procedure_revisions", column: "draft_revision_id"
   add_foreign_key "procedures", "procedure_revisions", column: "published_revision_id"
