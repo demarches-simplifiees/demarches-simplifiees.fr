@@ -4,8 +4,7 @@ class RechercheController < ApplicationController
   PROJECTIONS = [
     { "table" => 'procedure', "column" => 'libelle' },
     { "table" => 'user', "column" => 'email' },
-    { "table" => 'procedure', "column" => 'procedure_id' },
-    { "table" => 'dossier', "column" => 'hidden_by_administration_at' }
+    { "table" => 'procedure', "column" => 'procedure_id' }
   ]
 
   def index
