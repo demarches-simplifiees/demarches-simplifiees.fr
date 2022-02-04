@@ -137,7 +137,8 @@ fr:
         archived_dossier: "Le dossier sera conservé 1 mois supplémentaire"
         delete_dossier: "Supprimer le dossier"
         deleted_by_user: "Dossier supprimé par l'usager"
-        restore: "Restaurer le dossier"
+        deleted_by_administration: "Dossier supprimé par l'administration"
+        restore: "Restaurer"
       avis:
         introduction_file_explaination: "Fichier joint à la demande d’avis"
     users:
