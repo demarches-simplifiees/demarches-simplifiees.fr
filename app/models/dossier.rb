@@ -210,7 +210,7 @@ class Dossier < ApplicationRecord
   scope :hidden_by_user, -> { where.not(hidden_by_user_at: nil) }
   scope :hidden_by_administration, -> { where.not(hidden_by_administration_at: nil) }
   scope :visible_by_user, -> { where(hidden_by_user_at: nil) }
-  scope :visible_by_administration, -> { where("hidden_by_administration_at IS NULL AND NOT (hidden_by_user_at IS NOT NULL AND state = 'en_construction')") }
+  scope :visible_by_administration, -> { where("hidden_by_administration_at IS NULL AND NOT (hidden_by_user_at IS NOT NULL AND dossiers.state = 'en_construction')") }
 
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
   scope :order_by_created_at, -> (order = :asc) { order(depose_at: order, created_at: order, id: order) }
@@ -540,10 +540,6 @@ class Dossier < ApplicationRecord
     en_construction? || termine?
   end
 
-  def can_be_deleted_by_manager?
-    kept? && can_be_deleted_by_user?
-  end
-
   def messagerie_available?
     !brouillon? && !user_deleted? && !archived
   end
@@ -705,10 +701,6 @@ class Dossier < ApplicationRecord
     termine? && hidden_by_administration? && hidden_by_user?
   end
 
-  def can_be_restored_by_manager?
-    hidden_by_administration? || discarded? && !procedure.discarded?
-  end
-
   def expose_legacy_carto_api?
     procedure.expose_legacy_carto_api?
   end
@@ -789,7 +781,6 @@ class Dossier < ApplicationRecord
       update(hidden_by_user_at: Time.zone.now, dossier_transfer_id: nil)
     end
 
-    user_email = user_deleted? ? nil : user_email_for(:notification)
     deleted_dossier = nil
 
     transaction do
@@ -810,14 +801,6 @@ class Dossier < ApplicationRecord
         administration_emails = followers_instructeurs.present? ? followers_instructeurs.map(&:email) : procedure.administrateurs.map(&:email)
         administration_emails.each do |email|
           DossierMailer.notify_deletion_to_administration(deleted_dossier, email).deliver_later
-        end
-      end
-
-      if user_email.present?
-        if reason == :user_request
-          DossierMailer.notify_deletion_to_user(deleted_dossier, user_email).deliver_later
-        else
-          DossierMailer.notify_instructeur_deletion_to_user(deleted_dossier, user_email).deliver_later
         end
       end
     end

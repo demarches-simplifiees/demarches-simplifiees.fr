@@ -374,7 +374,7 @@ class Procedure < ApplicationRecord
   end
 
   def draft_changed?
-    publiee? && published_revision.changed?(draft_revision) && revision_changes.present?
+    publiee? && published_revision.different_from?(draft_revision) && revision_changes.present?
   end
 
   def revision_changes
@@ -650,7 +650,7 @@ class Procedure < ApplicationRecord
   end
 
   def can_be_deleted_by_administrateur?
-    brouillon? || dossiers.state_instruction_commencee.empty?
+    brouillon? || dossiers.state_en_instruction.empty?
   end
 
   def can_be_deleted_by_manager?
@@ -664,18 +664,25 @@ class Procedure < ApplicationRecord
       close!
     end
 
-    dossiers.each do |dossier|
+    dossiers.termine.visible_by_administration.each do |dossier|
       dossier.discard_and_keep_track!(author, :procedure_removed)
     end
 
     discard!
   end
 
+  def purge_discarded
+    if !dossiers.with_discarded.exists?
+      destroy
+    end
+  end
+
+  def self.purge_discarded
+    discarded_expired.find_each(&:purge_discarded)
+  end
+
   def restore(author)
     if discarded? && undiscard
-      dossiers.with_discarded.discarded.find_each do |dossier|
-        dossier.restore(author)
-      end
       dossiers.hidden_by_administration.find_each do |dossier|
         dossier.restore(author)
       end

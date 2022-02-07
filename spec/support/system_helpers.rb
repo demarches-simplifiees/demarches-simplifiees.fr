@@ -105,8 +105,7 @@ module SystemHelpers
 
   def select_combobox(libelle, fill_with, value, check: true)
     fill_in libelle, with: fill_with
-    selector = "li[data-option-value=\"#{value}\"]"
-    find(selector).click
+    find('li[role="option"]', text: value).click
     if check
       check_selected_value(libelle, with: value)
     end

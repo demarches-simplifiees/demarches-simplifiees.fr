@@ -1051,7 +1051,6 @@ describe Users::DossiersController, type: :controller do
     shared_examples_for "the dossier can not be deleted" do
       it "doesn’t notify the deletion" do
         expect(DossierMailer).not_to receive(:notify_deletion_to_administration)
-        expect(DossierMailer).not_to receive(:notify_deletion_to_user)
         subject
       end
 
@@ -1067,7 +1066,6 @@ describe Users::DossiersController, type: :controller do
 
       it "notifies the user and the admin of the deletion" do
         expect(DossierMailer).to receive(:notify_deletion_to_administration).with(kind_of(DeletedDossier), dossier.procedure.administrateurs.first.email).and_return(double(deliver_later: nil))
-        expect(DossierMailer).to receive(:notify_deletion_to_user).with(kind_of(DeletedDossier), dossier.user.email).and_return(double(deliver_later: nil))
         subject
       end
 

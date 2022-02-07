@@ -414,9 +414,21 @@ describe Administrateurs::ProceduresController, type: :controller do
       context 'when dossier is en_construction' do
         let(:dossier) { create(:dossier, :en_construction, procedure: procedure_published) }
 
-        it { expect(procedure.reload.close?).to be_truthy }
-        it { expect(procedure.reload.discarded?).to be_truthy }
-        it { expect(dossier.reload.discarded?).to be_truthy }
+        it do
+          expect(procedure.reload.close?).to be_truthy
+          expect(procedure.discarded?).to be_truthy
+          expect(dossier.reload.kept?).to be_truthy
+        end
+      end
+
+      context 'when dossier is accepte' do
+        let(:dossier) { create(:dossier, :accepte, procedure: procedure_published) }
+
+        it do
+          expect(procedure.reload.close?).to be_truthy
+          expect(procedure.discarded?).to be_truthy
+          expect(dossier.reload.hidden_by_administration?).to be_truthy
+        end
       end
     end
 
@@ -430,8 +442,19 @@ describe Administrateurs::ProceduresController, type: :controller do
       context 'when dossier is en_construction' do
         let(:dossier) { create(:dossier, :en_construction, procedure: procedure_published) }
 
-        it { expect(procedure.reload.discarded?).to be_truthy }
-        it { expect(dossier.reload.discarded?).to be_truthy }
+        it do
+          expect(procedure.reload.discarded?).to be_truthy
+          expect(dossier.reload.kept?).to be_truthy
+        end
+      end
+
+      context 'when dossier is accepte' do
+        let(:dossier) { create(:dossier, :accepte, procedure: procedure_published) }
+
+        it do
+          expect(procedure.reload.discarded?).to be_truthy
+          expect(dossier.reload.hidden_by_administration?).to be_truthy
+        end
       end
     end
 
