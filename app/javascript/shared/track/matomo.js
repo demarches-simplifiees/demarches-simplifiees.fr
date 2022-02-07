@@ -9,7 +9,7 @@ if (enabled) {
   //
   // Configure Matomo analytics
   //
-  
+
   window._paq.push(['setCookieDomain', '*.mes-demarches.gov.pf']);
   window._paq.push(['setDomains', ['*.mes-demarches.gov.pf']]);
   // Don’t store any cookies or send any tracking request when the "Do Not Track" browser setting is enabled.
