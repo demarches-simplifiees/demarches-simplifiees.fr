@@ -29,9 +29,9 @@ describe 'The user' do
     check('val3')
     select('bravo', from: form_id_for('simple_choice_drop_down_list_long'))
     select_combobox('multiple_choice_drop_down_list_long', 'alp', 'alpha')
-    select_combobox('multiple_choice_drop_down_list_long', 'cha', 'charly')
-
     select_combobox('pays', 'aust', 'Australie')
+    select_combobox('multiple_choice_drop_down_list_long', 'cha', 'charly') # pf Selenium::WebDriver::Error::ElementNotInteractableError
+
     select_combobox('regions', 'Ma', 'Martinique')
     select_combobox('departements', 'Ai', '02 - Aisne')
     select_combobox('communes', 'Ai', '02 - Aisne', check: false)
