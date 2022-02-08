@@ -1,7 +1,9 @@
 # rubocop:disable DS/ApplicationName
 # API URLs
+API_ADRESSE_URL = ENV.fetch("API_ADRESSE_URL", "https://api-adresse.data.gouv.fr")
 API_ENTREPRISE_URL = ENV.fetch("API_ENTREPRISE_URL", "https://entreprise.api.gouv.fr/v2")
 API_EDUCATION_URL = ENV.fetch("API_EDUCATION_URL", "https://data.education.gouv.fr/api/records/1.0")
+API_GEO_URL = ENV.fetch("API_GEO_URL", "https://geo.api.gouv.fr")
 API_PARTICULIER_URL = ENV.fetch("API_PARTICULIER_URL", "https://particulier.api.gouv.fr/api")
 HELPSCOUT_API_URL = ENV.fetch("HELPSCOUT_API_URL", "https://api.helpscout.net/v2")
 PIPEDRIVE_API_URL = ENV.fetch("PIPEDRIVE_API_URL", "https://api.pipedrive.com/v1")
@@ -11,7 +13,7 @@ UNIVERSIGN_API_URL = ENV.fetch("UNIVERSIGN_API_URL", "https://ws.universign.eu/t
 FEATURE_UPVOTE_URL = ENV.fetch("FEATURE_UPVOTE_URL", "https://demarches-simplifiees.featureupvote.com")
 
 # Internal URLs
-FOG_BASE_URL = "https://static.demarches-simplifiees.fr"
+FOG_OPENSTACK_URL = ENV.fetch("FOG_OPENSTACK_URL", "https://static.demarches-simplifiees.fr")
 
 # External services URLs
 WEBINAIRE_URL = "https://app.livestorm.co/demarches-simplifiees"
