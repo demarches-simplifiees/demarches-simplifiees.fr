@@ -1,20 +1,26 @@
 namespace :after_party do
   desc 'Deployment task: backfill_expert_id_on_avis_table'
   task backfill_experts_procedure_id_on_avis_table: :environment do
-    puts "Running deploy task 'backfill_expert_id_on_avis_table'"
+    puts "Running deploy task 'backfill_experts_procedure_id_on_avis_table'"
     # rubocop:disable DS/Unscoped
     # rubocop:disable Rails/PluckInWhere
 
-    Instructeur.includes(:user)
-      .where(id: Avis.unscoped.pluck(:instructeur_id))
-      .where.not(users: { instructeur_id: nil })
-      .find_each do |instructeur|
+    instructeurs = Instructeur.includes(:user).where.not(users: { instructeur_id: nil })
+
+    instructeurs =
+      if Avis.column_names.include?("instructeur_id")
+        instructeurs.where(id: Avis.unscoped.pluck(:instructeur_id))
+      else
+        instructeurs.where(id: Avis.unscoped.where(claimant_type: [nil, "Instructeur"]).pluck(:claimant_id))
+      end
+
+    instructeurs.find_each do |instructeur|
       user = instructeur.user
       User.create_or_promote_to_expert(user.email, SecureRandom.hex)
       user.reload
       # rubocop:enable DS/Unscoped
       # rubocop:enable Rails/PluckInWhere
-      instructeur.avis.each do |avis|
+      Avis.where(claimant: instructeur).each do |avis|
         experts_procedure = ExpertsProcedure.find_or_create_by(expert: user.expert, procedure: avis.procedure)
         avis.update_column(:experts_procedure_id, experts_procedure.id)
       end

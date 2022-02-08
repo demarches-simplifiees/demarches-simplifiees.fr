@@ -3,8 +3,19 @@ namespace :after_party do
   task backfill_experts_procedure_id_on_avis_table_again: :environment do
     puts "Running deploy task 'backfill_experts_procedure_id_on_avis_table_again'"
 
-    without_instructeur = Avis.where(experts_procedure_id: nil, instructeur_id: nil).where.not(email: nil)
-    with_instructeur = Avis.where(experts_procedure_id: nil, email: nil).where.not(instructeur_id: nil)
+    if Avis.column_names.include?("instructeur_id")
+      without_instructeur = Avis.where(experts_procedure_id: nil, instructeur_id: nil).where.not(email: nil)
+      with_instructeur = Avis.where(experts_procedure_id: nil, email: nil).where.not(instructeur_id: nil)
+    else
+      without_instructeur = Avis
+        .where(experts_procedure_id: nil, claimant_type: [nil, "Instructeur"])
+        .where.not(email: nil)
+
+      with_instructeur = Avis
+        .where(experts_procedure_id: nil, email: nil, claimant_type: [nil, "Instructeur"])
+        .where.not(claimant_id: nil)
+    end
+
     progress = ProgressReport.new(without_instructeur.count)
     progress2 = ProgressReport.new(with_instructeur.count)
 
@@ -22,7 +33,8 @@ namespace :after_party do
     progress.finish
 
     with_instructeur.find_each do |avis|
-      instructeur = avis.instructeur
+      instructeur = avis.respond_to?(:instructeur) ? avis.instructeur : avis.claimant
+
       if instructeur && instructeur.user
         user = User.create_or_promote_to_expert(instructeur.user.email, SecureRandom.hex)
         user.reload

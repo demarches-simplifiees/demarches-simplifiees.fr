@@ -5,7 +5,8 @@ namespace :after_party do
 
     BATCH_SIZE = 20000
 
-    with_dossiers = Avis.where(claimant_type: nil).includes(claimant: :assign_to).where.not(claimant: { assign_tos: { id: nil } })
+    without_assign_to_ids = Instructeur.includes(:assign_to).where(assign_tos: { id: nil }).pluck(:id)
+    with_dossiers = Avis.where(claimant_type: nil).where.not(claimant_id: without_assign_to_ids)
 
     ((with_dossiers.count / BATCH_SIZE).ceil + 1).times do
       with_dossiers
@@ -13,10 +14,9 @@ namespace :after_party do
         .update_all(claimant_type: 'Instructeur')
     end
 
-    without_dossiers = Avis.where(claimant_type: nil).includes(claimant: :assign_to).where(claimant: { assign_tos: { id: nil } })
+    without_dossiers = Avis.where(claimant_type: nil).where(claimant_id: without_assign_to_ids)
     without_dossiers.find_each do |avis|
-      claimant = avis.claimant.user
-      instructeur = avis.instructeur
+      instructeur = Instructeur.find(avis.claimant_id)
 
       if instructeur && avis.experts_procedure_id.blank?
         User.create_or_promote_to_expert(instructeur.user.email, SecureRandom.hex)
@@ -33,7 +33,7 @@ namespace :after_party do
       elsif avis.experts_procedure_id.present?
         avis.update_column(:claimant_type, 'Expert')
 
-      elsif claimant.blank?
+      elsif instructeur && instructeur.user.nil?
         avis.destroy
       end
     end

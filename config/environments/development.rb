@@ -75,40 +75,13 @@ Rails.application.configure do
   config.assets.raise_runtime_errors = true
 
   # Action Mailer settings
+  config.action_mailer.delivery_method = :letter_opener
 
-  if ENV['SENDINBLUE_ENABLED'] == 'enabled'
-    config.action_mailer.delivery_method = :smtp
-    config.action_mailer.smtp_settings = {
-      user_name: Rails.application.secrets.sendinblue[:username],
-      password: Rails.application.secrets.sendinblue[:smtp_key],
-      address: 'smtp-relay.sendinblue.com',
-      domain: 'smtp-relay.sendinblue.com',
-      port: '587',
-      authentication: :cram_md5
-    }
-  else
-    # https://usehelo.com
-    if ENV['HELO_ENABLED'] == 'enabled'
-      config.action_mailer.delivery_method = :smtp
-      config.action_mailer.smtp_settings = {
-        user_name: 'demarches-simplifiees',
-        password: '',
-        address: '127.0.0.1',
-        domain: '127.0.0.1',
-        port: ENV.fetch('HELO_PORT', '2525'),
-        authentication: :plain
-      }
-    else
-      config.action_mailer.delivery_method = :letter_opener_web
-    end
-
-    config.action_mailer.default_url_options = {
-      host: 'localhost',
-      port: 3000
-    }
-
-    config.action_mailer.asset_host = "http://" + ENV['APP_HOST']
-  end
+  config.action_mailer.default_url_options = {
+    host: 'localhost',
+    port: 3000
+  }
+  config.action_mailer.asset_host = "http://" + ENV['APP_HOST']
 
   Rails.application.routes.default_url_options = {
     host: 'localhost',
