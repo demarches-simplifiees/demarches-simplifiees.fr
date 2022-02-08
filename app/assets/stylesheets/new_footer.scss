@@ -29,9 +29,8 @@ footer {
   @extend %horizontal-list-item;
   font-size: 14px;
   vertical-align: top;
-  flex-grow: 1;
+  flex: 0 0 33.333333%;
   min-width: 280px;
-  margin: 0 20px;
   margin-bottom: 30px;
 
   @media (max-width: 550px) {
