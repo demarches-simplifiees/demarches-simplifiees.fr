@@ -1,4 +1,5 @@
 require "active_support/core_ext/integer/time"
+require Rails.root.join("app/lib/balancer_delivery_method")
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -76,25 +77,19 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   if ENV['MAILTRAP_ENABLED'] == 'enabled'
-    config.action_mailer.delivery_method = :smtp
-    config.action_mailer.smtp_settings = {
-      user_name: Rails.application.secrets.mailtrap[:username],
-      password: Rails.application.secrets.mailtrap[:password],
-      address: 'smtp.mailtrap.io',
-      domain: 'smtp.mailtrap.io',
-      port: '2525',
-      authentication: :cram_md5
+    config.action_mailer.delivery_method = :mailtrap
+
+  elsif ENV['SENDINBLUE_ENABLED'] == 'enabled' && ENV['SENDINBLUE_BALANCING'] == 'enabled'
+    ActionMailer::Base.add_delivery_method :balancer, BalancerDeliveryMethod
+    config.action_mailer.balancer_settings = {
+      sendinblue: ENV.fetch('SENDINBLUE_BALANCING_VALUE').to_i,
+      mailjet: 100 - ENV.fetch('SENDINBLUE_BALANCING_VALUE').to_i
     }
+    config.action_mailer.delivery_method = :balancer
+
   elsif ENV['SENDINBLUE_ENABLED'] == 'enabled'
-    config.action_mailer.delivery_method = :smtp
-    config.action_mailer.smtp_settings = {
-      user_name: Rails.application.secrets.sendinblue[:username],
-      password: Rails.application.secrets.sendinblue[:smtp_key],
-      address: 'smtp-relay.sendinblue.com',
-      domain: 'smtp-relay.sendinblue.com',
-      port: '587',
-      authentication: :cram_md5
-    }
+    config.action_mailer.delivery_method = :sendinblue
+
   else
     config.action_mailer.delivery_method = :mailjet
   end
