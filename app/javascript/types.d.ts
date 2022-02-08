@@ -1,4 +1,6 @@
-declare module '@tmcw/togeojson' {
+// This file contains type definitions for untyped packages. We are lucky to have only two ;)
+
+declare module '@tmcw/togeojson/dist/togeojson.es.js' {
   import { FeatureCollection, GeoJsonProperties, Geometry } from 'geojson';
 
   export function kml(doc: Document): FeatureCollection;

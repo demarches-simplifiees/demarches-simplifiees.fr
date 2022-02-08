@@ -1,17 +1,26 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
-import PropTypes from 'prop-types';
 
-export function FlashMessage({ message, level, sticky, fixed }) {
+export function FlashMessage({
+  message,
+  level,
+  sticky,
+  fixed
+}: {
+  message: string;
+  level: string;
+  sticky?: boolean;
+  fixed?: boolean;
+}) {
   return createPortal(
     <div className="flash_message center">
       <div className={flashClassName(level, sticky, fixed)}>{message}</div>
     </div>,
-    document.getElementById('flash_messages')
+    document.getElementById('flash_messages')!
   );
 }
 
-function flashClassName(level, sticky = false, fixed = false) {
+function flashClassName(level: string, sticky = false, fixed = false) {
   const className =
     level == 'notice' ? ['alert', 'alert-success'] : ['alert', 'alert-danger'];
 
@@ -23,10 +32,3 @@ function flashClassName(level, sticky = false, fixed = false) {
   }
   return className.join(' ');
 }
-
-FlashMessage.propTypes = {
-  message: PropTypes.string,
-  level: PropTypes.string,
-  sticky: PropTypes.bool,
-  fixed: PropTypes.bool
-};

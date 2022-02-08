@@ -1,4 +1,6 @@
-export default [
+import type { AnyLayer } from 'maplibre-gl';
+
+const layers: AnyLayer[] = [
   {
     id: 'photographies-aeriennes',
     type: 'raster',
@@ -2129,7 +2131,7 @@ export default [
           [10, 'point'],
           [11, 'line']
         ]
-      },
+      } as any,
       'symbol-spacing': 200,
       'text-field': '{ref}',
       'text-font': ['Noto Sans Regular'],
@@ -2160,7 +2162,7 @@ export default [
           [10, 'point'],
           [11, 'line']
         ]
-      },
+      } as any,
       'symbol-spacing': 200,
       'text-field': '{ref}',
       'text-font': ['Noto Sans Regular'],
@@ -2262,7 +2264,7 @@ export default [
       'text-letter-spacing': 0,
       'icon-padding': 2,
       'symbol-placement': 'point',
-      'symbol-z-order': 'auto',
+      'symbol-z-order': 'auto' as any,
       'text-line-height': 1.2,
       'text-allow-overlap': false,
       'text-ignore-placement': false,
@@ -2637,3 +2639,5 @@ export default [
     }
   }
 ];
+
+export default layers;
