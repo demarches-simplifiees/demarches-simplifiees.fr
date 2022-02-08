@@ -12,7 +12,7 @@ class TitreIdentiteWatermarkJob < ApplicationJob
 
   MAX_IMAGE_SIZE = 1500
   SCALE = 0.9
-  WATERMARK = Rails.root.join("app/assets/images/#{WATERMARK_FILE}")
+  WATERMARK = URI.parse(WATERMARK_FILE).is_a?(URI::HTTP) ? WATERMARK_FILE : Rails.root.join("app/assets/images/#{WATERMARK_FILE}")
 
   def perform(blob)
     if blob.virus_scanner.pending? then raise FileNotScannedYetError end
