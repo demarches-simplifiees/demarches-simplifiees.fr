@@ -18,7 +18,7 @@ FactoryBot.define do
     administrateurs { administrateur.present? ? [administrateur] : [association(:administrateur)] }
 
     transient do
-      administrateur { }
+      administrateur {}
       instructeurs { [] }
       types_de_champ { [] }
       types_de_champ_private { [] }

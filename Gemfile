@@ -111,7 +111,8 @@ group :development do
   gem 'rack-mini-profiler'
   gem 'rails-erd', require: false # generates `doc/database_models.pdf`
   gem 'rubocop', require: false
-  gem 'rubocop-rails_config'
+  gem 'rubocop-performance', require: false
+  gem 'rubocop-rails', require: false
   gem 'rubocop-rspec-focused', require: false
   gem 'scss_lint', require: false
   gem 'web-console'
