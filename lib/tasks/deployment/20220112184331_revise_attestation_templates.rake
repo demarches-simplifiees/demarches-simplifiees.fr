@@ -3,14 +3,16 @@ namespace :after_party do
   task revise_attestation_templates: :environment do
     rake_puts "Running deploy task 'revise_attestation_templates'"
 
-    attestation_templates = AttestationTemplate.where.not(procedure_id: nil)
-    progress = ProgressReport.new(attestation_templates.count)
+    revisions = ProcedureRevision
+      .joins(procedure: :attestation_template)
+      .where(attestation_template_id: nil)
 
-    attestation_templates.find_each do |attestation_template|
-      ProcedureRevision
-        .where(procedure_id: attestation_template.procedure_id, attestation_template_id: nil)
-        .update_all(attestation_template_id: attestation_template)
-      attestation_template.update_column(:procedure_id, nil)
+    progress = ProgressReport.new(revisions.count)
+
+    revisions.find_each do |revision|
+      attestation_template_id = revision.procedure.attestation_template.id
+      revision.update_column(:attestation_template_id, attestation_template_id)
+
       progress.inc
     end
     progress.finish
