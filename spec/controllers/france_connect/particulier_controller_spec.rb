@@ -149,6 +149,7 @@ describe FranceConnect::ParticulierController, type: :controller do
   RSpec.shared_examples "a method that needs a valid merge token" do
     context 'when the merge token is invalid' do
       before do
+        stub_const("APPLICATION_NAME", "demarches-simplifiees.fr")
         merge_token
         fci.update(merge_token_created_at: 2.years.ago)
       end
@@ -180,6 +181,10 @@ describe FranceConnect::ParticulierController, type: :controller do
 
     context 'when the merge token does not exist' do
       let(:merge_token) { 'i do not exist' }
+
+      before do
+        stub_const("APPLICATION_NAME", "demarches-simplifiees.fr")
+      end
 
       it do
         expect(subject).to redirect_to root_path
