@@ -446,7 +446,7 @@ en:
     procedures:
       stats:
         usual_processing_time: "Usual processing time"
-        processing_time_description: "%{percentile}% of submitted files in the last %{span} days were processed in less than %{days} days."
+        processing_time_description: "%{percentile}% of submitted files in the last %{span} days were processed in less than %{days}."
         processing_time: "Processing time"
         since_procedure_creation: "since the procedure was created"
         nb_days: "Nb Days"
