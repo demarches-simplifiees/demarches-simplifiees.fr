@@ -1,29 +1,37 @@
 import { gpx, kml } from '@tmcw/togeojson/dist/togeojson.es.js';
-import { generateId } from '../shared/mapbox/utils';
+import type { FeatureCollection, Feature } from 'geojson';
 
-export function readGeoFile(file) {
+import { generateId } from '../shared/maplibre/utils';
+
+export function readGeoFile(file: File) {
   const isGpxFile = file.name.includes('.gpx');
   const reader = new FileReader();
 
-  return new Promise((resolve) => {
-    reader.onload = (event) => {
-      const xml = new DOMParser().parseFromString(
-        event.target.result,
-        'text/xml'
-      );
-      const featureCollection = normalizeFeatureCollection(
-        isGpxFile ? gpx(xml) : kml(xml),
-        file.name
-      );
+  return new Promise<ReturnType<typeof normalizeFeatureCollection>>(
+    (resolve) => {
+      reader.onload = (event: FileReaderEventMap['load']) => {
+        const result = event.target?.result;
+        const xml = new DOMParser().parseFromString(
+          result as string,
+          'text/xml'
+        );
+        const featureCollection = normalizeFeatureCollection(
+          isGpxFile ? gpx(xml) : kml(xml),
+          file.name
+        );
 
-      resolve(featureCollection);
-    };
-    reader.readAsText(file, 'UTF-8');
-  });
+        resolve(featureCollection);
+      };
+      reader.readAsText(file, 'UTF-8');
+    }
+  );
 }
 
-function normalizeFeatureCollection(featureCollection, filename) {
-  const features = [];
+function normalizeFeatureCollection(
+  featureCollection: FeatureCollection,
+  filename: string
+) {
+  const features: Feature[] = [];
   for (const feature of featureCollection.features) {
     switch (feature.geometry.type) {
       case 'MultiPoint':
@@ -76,13 +84,13 @@ function normalizeFeatureCollection(featureCollection, filename) {
     }
   }
 
-  featureCollection.filename = `${generateId()}-${filename}`;
+  const featureCollectionFilename = `${generateId()}-${filename}`;
   featureCollection.features = features.map((feature) => ({
     ...feature,
     properties: {
       ...feature.properties,
-      filename: featureCollection.filename
+      filename: featureCollectionFilename
     }
   }));
-  return featureCollection;
+  return { ...featureCollection, filename: featureCollectionFilename };
 }
