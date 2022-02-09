@@ -774,11 +774,8 @@ describe Instructeurs::DossiersController, type: :controller do
         expect(DossierOperationLog.where(dossier_id: dossier.id).last.operation).to eq('supprimer')
       end
 
-      it 'add a record into deleted_dossiers table' do
-        expect(DeletedDossier.where(dossier_id: dossier.id).count).to eq(1)
-        expect(DeletedDossier.where(dossier_id: dossier.id).first.revision_id).to eq(dossier.revision_id)
-        expect(DeletedDossier.where(dossier_id: dossier.id).first.user_id).to eq(dossier.user_id)
-        expect(DeletedDossier.where(dossier_id: dossier.id).first.groupe_instructeur_id).to eq(dossier.groupe_instructeur_id)
+      it 'does not add a record into deleted_dossiers table' do
+        expect(DeletedDossier.where(dossier_id: dossier.id).count).to eq(0)
       end
 
       it 'discard the dossier' do
@@ -803,6 +800,11 @@ describe Instructeurs::DossiersController, type: :controller do
 
       it 'does not discard the dossier' do
         expect(dossier.reload.hidden_at).to eq(nil)
+      end
+
+      it 'fill hidden by reason' do
+        expect(dossier.reload.hidden_by_reason).not_to eq(nil)
+        expect(dossier.reload.hidden_by_reason).to eq("instructeur_request")
       end
     end
 

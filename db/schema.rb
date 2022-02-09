@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_28_135056) do
+ActiveRecord::Schema.define(version: 2022_02_04_093401) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -324,6 +324,7 @@ ActiveRecord::Schema.define(version: 2022_01_28_135056) do
     t.datetime "identity_updated_at"
     t.datetime "depose_at"
     t.datetime "hidden_by_user_at"
+    t.string "hidden_by_reason"
     t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
     t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
     t.datetime "hidden_by_administration_at"
