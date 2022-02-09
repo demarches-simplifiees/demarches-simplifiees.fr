@@ -1,4 +1,6 @@
-export default [
+import { AnyLayer } from 'maplibre-gl';
+
+const layers: AnyLayer[] = [
   {
     id: 'batiments-line',
     type: 'line',
@@ -104,3 +106,5 @@ export default [
     }
   }
 ];
+
+export default layers;

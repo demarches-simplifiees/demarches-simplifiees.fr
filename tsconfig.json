@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "declaration": false,
+    "experimentalDecorators": true,
+    "lib": ["DOM", "DOM.Iterable", "ES2019"],
+    "module": "es6",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "target": "ES2019",
+    "jsx": "react",
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "paths": {
+      "~/*": ["./app/javascript/*"],
+      "@utils": ["./app/javascript/shared/utils.ts"]
+    }
+  },
+  "exclude": [
+    "**/*.spec.ts",
+    "node_modules",
+    "vendor",
+    "public"
+  ],
+  "compileOnSave": false
+}

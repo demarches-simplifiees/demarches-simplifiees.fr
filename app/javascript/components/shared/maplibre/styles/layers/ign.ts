@@ -1,4 +1,6 @@
-export default [
+import type { RasterLayer } from 'maplibre-gl';
+
+const layers: RasterLayer[] = [
   {
     id: 'ign',
     source: 'plan-ign',
@@ -6,3 +8,5 @@ export default [
     paint: { 'raster-resampling': 'linear' }
   }
 ];
+
+export default layers;

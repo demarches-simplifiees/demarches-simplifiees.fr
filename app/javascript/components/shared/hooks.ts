@@ -1,15 +1,18 @@
 import { useRef, useCallback, useMemo, useState } from 'react';
 import { fire } from '@utils';
 
-export function useDeferredSubmit(input) {
+export function useDeferredSubmit(input?: HTMLInputElement): {
+  (callback: () => void): void;
+  done: () => void;
+} {
   const calledRef = useRef(false);
   const awaitFormSubmit = useCallback(
-    (callback) => {
+    (callback: () => void) => {
       const form = input?.form;
       if (!form) {
         return;
       }
-      const interceptFormSubmit = (event) => {
+      const interceptFormSubmit = (event: Event) => {
         event.preventDefault();
         runCallback();
         form.submit();
@@ -27,17 +30,24 @@ export function useDeferredSubmit(input) {
     },
     [input]
   );
-  awaitFormSubmit.done = () => {
+  const done = () => {
     calledRef.current = true;
   };
-  return awaitFormSubmit;
+  return Object.assign(awaitFormSubmit, { done });
 }
 
-export function groupId(id) {
+export function groupId(id: string) {
   return `#champ-${id.replace(/-input$/, '')}`;
 }
 
-export function useHiddenField(group, name = 'value') {
+export function useHiddenField(
+  group?: string,
+  name = 'value'
+): [
+  value: string | undefined,
+  setValue: (value: string) => void,
+  input: HTMLInputElement | undefined
+] {
   const hiddenField = useMemo(
     () => selectInputInGroup(group, name),
     [group, name]
@@ -53,13 +63,16 @@ export function useHiddenField(group, name = 'value') {
         fire(hiddenField, 'autosave:trigger');
       }
     },
-    hiddenField
+    hiddenField ?? undefined
   ];
 }
 
-function selectInputInGroup(group, name) {
+function selectInputInGroup(
+  group: string | undefined,
+  name: string
+): HTMLInputElement | undefined | null {
   if (group) {
-    return document.querySelector(
+    return document.querySelector<HTMLInputElement>(
       `${group} input[type="hidden"][name$="[${name}]"], ${group} input[type="hidden"][name="${name}"]`
     );
   }

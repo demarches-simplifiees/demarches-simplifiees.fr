@@ -1,5 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import { Popover, RadioGroup } from '@headlessui/react';
 import { usePopper } from 'react-popper';
 import { MapIcon } from '@heroicons/react/outline';
@@ -7,7 +6,7 @@ import { Slider } from '@reach/slider';
 import { useId } from '@reach/auto-id';
 import '@reach/slider/styles.css';
 
-import { getMapStyle, getLayerName, NBS } from './styles';
+import { LayersMap, NBS } from './styles';
 
 const STYLES = {
   ortho: 'Satellite',
@@ -15,68 +14,22 @@ const STYLES = {
   ign: 'Carte IGN'
 };
 
-function optionalLayersMap(optionalLayers) {
-  return Object.fromEntries(
-    optionalLayers.map((layer) => [
-      layer,
-      {
-        configurable: layer != 'cadastres',
-        enabled: true,
-        opacity: 70,
-        name: getLayerName(layer)
-      }
-    ])
-  );
-}
-
-export function useMapStyle(
-  optionalLayers,
-  { onStyleChange, cadastreEnabled }
-) {
-  const [styleId, setStyle] = useState('ortho');
-  const [layers, setLayers] = useState(() => optionalLayersMap(optionalLayers));
-  const setLayerEnabled = (layer, enabled) =>
-    setLayers((optionalLayers) => {
-      optionalLayers[layer].enabled = enabled;
-      return { ...optionalLayers };
-    });
-  const setLayerOpacity = (layer, opacity) =>
-    setLayers((optionalLayers) => {
-      optionalLayers[layer].opacity = opacity;
-      return { ...optionalLayers };
-    });
-  const enabledLayers = Object.entries(layers).filter(
-    ([, { enabled }]) => enabled
-  );
-  const layerIds = enabledLayers.map(
-    ([layer, { opacity }]) => `${layer}-${opacity}`
-  );
-  const style = useMemo(
-    () =>
-      getMapStyle(
-        styleId,
-        enabledLayers.map(([layer]) => layer),
-        Object.fromEntries(
-          enabledLayers.map(([layer, { opacity }]) => [layer, opacity])
-        )
-      ),
-    [styleId, layerIds]
-  );
-
-  useEffect(() => onStyleChange(), [styleId, layerIds, cadastreEnabled]);
-
-  return { style, layers, setStyle, setLayerEnabled, setLayerOpacity };
-}
-
-function MapStyleControl({
-  style,
+export function StyleControl({
+  styleId,
   layers,
   setStyle,
   setLayerEnabled,
   setLayerOpacity
+}: {
+  styleId: string;
+  setStyle: (style: string) => void;
+  layers: LayersMap;
+  setLayerEnabled: (layer: string, enabled: boolean) => void;
+  setLayerOpacity: (layer: string, opacity: number) => void;
 }) {
-  const [buttonElement, setButtonElement] = useState();
-  const [panelElement, setPanelElement] = useState();
+  const [buttonElement, setButtonElement] =
+    useState<HTMLButtonElement | null>();
+  const [panelElement, setPanelElement] = useState<HTMLDivElement | null>();
   const { styles, attributes } = usePopper(buttonElement, panelElement, {
     placement: 'bottom-end'
   });
@@ -86,7 +39,10 @@ function MapStyleControl({
   const mapId = useId();
 
   return (
-    <div className="form map-style-control mapboxgl-ctrl-group">
+    <div
+      className="form map-style-control mapboxgl-ctrl-group"
+      style={{ zIndex: 10 }}
+    >
       <Popover>
         <Popover.Button
           ref={setButtonElement}
@@ -102,7 +58,7 @@ function MapStyleControl({
           {...attributes.popper}
         >
           <RadioGroup
-            value={style}
+            value={styleId}
             onChange={setStyle}
             className="styles-list"
             as="ul"
@@ -175,13 +131,3 @@ function MapStyleControl({
     </div>
   );
 }
-
-MapStyleControl.propTypes = {
-  style: PropTypes.string,
-  layers: PropTypes.object,
-  setStyle: PropTypes.func,
-  setLayerEnabled: PropTypes.func,
-  setLayerOpacity: PropTypes.func
-};
-
-export default MapStyleControl;
