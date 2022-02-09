@@ -17,6 +17,7 @@
 #  groupe_instructeur_updated_at                      :datetime
 #  hidden_at                                          :datetime
 #  hidden_by_administration_at                        :datetime
+#  hidden_by_reason                                   :string
 #  hidden_by_user_at                                  :datetime
 #  identity_updated_at                                :datetime
 #  last_avis_updated_at                               :datetime
@@ -761,26 +762,26 @@ class Dossier < ApplicationRecord
   end
 
   def restore_dossier_and_destroy_deleted_dossier(author)
-    deleted_dossier&.destroy!
+    if deleted_dossier.present?
+      deleted_dossier&.destroy!
+    end
+
     log_dossier_operation(author, :restaurer, self)
   end
 
   def discard_and_keep_track!(author, reason)
     if termine? && author_is_administration(author)
-      update(hidden_by_administration_at: Time.zone.now)
+      update(hidden_by_administration_at: Time.zone.now, hidden_by_reason: reason)
     end
 
     if can_be_hidden_by_user? && author_is_user(author)
-      update(hidden_by_user_at: Time.zone.now, dossier_transfer_id: nil)
+      update(hidden_by_user_at: Time.zone.now, dossier_transfer_id: nil, hidden_by_reason: reason)
     end
-
-    deleted_dossier = nil
 
     transaction do
       if deleted_by_instructeur_and_user? || en_construction? || brouillon?
         if keep_track_on_deletion?
           log_dossier_operation(author, :supprimer, self)
-          deleted_dossier = DeletedDossier.create_from_dossier(self, reason)
         end
 
         if !(en_construction? && author_is_user(author))
@@ -789,12 +790,11 @@ class Dossier < ApplicationRecord
       end
     end
 
-    if deleted_dossier.present?
-      if en_construction?
-        administration_emails = followers_instructeurs.present? ? followers_instructeurs.map(&:email) : procedure.administrateurs.map(&:email)
-        administration_emails.each do |email|
-          DossierMailer.notify_deletion_to_administration(deleted_dossier, email).deliver_later
-        end
+    if en_construction?
+      update(hidden_by_reason: reason)
+      administration_emails = followers_instructeurs.present? ? followers_instructeurs.map(&:email) : procedure.administrateurs.map(&:email)
+      administration_emails.each do |email|
+        DossierMailer.notify_en_construction_deletion_to_administration(self, email).deliver_later
       end
     end
   end
@@ -813,6 +813,8 @@ class Dossier < ApplicationRecord
     elsif author_is_user(author) && hidden_by_user?
       transaction do
         update(hidden_by_user_at: nil)
+        !hidden_by_administration? && update(hidden_by_reason: nil)
+
         if en_construction?
           restore_dossier_and_destroy_deleted_dossier(author)
         end
@@ -820,6 +822,7 @@ class Dossier < ApplicationRecord
     elsif author_is_administration(author) && hidden_by_administration?
       transaction do
         update(hidden_by_administration_at: nil)
+        !hidden_by_user? && update(hidden_by_reason: nil)
       end
     end
   end
@@ -1150,20 +1153,21 @@ class Dossier < ApplicationRecord
     user&.locale || I18n.default_locale
   end
 
+  def purge_discarded
+    transaction do
+      if keep_track_on_deletion?
+        DeletedDossier.create_from_dossier(self, hidden_by_reason)
+      end
+
+      dossier_operation_logs.not_deletion.destroy_all
+      destroy
+    end
+  end
+
   def self.purge_discarded
-    discarded_brouillon_expired.destroy_all
-
-    transaction do
-      DossierOperationLog.discarded_en_construction_expired.destroy_all
-      Avis.discarded_en_construction_expired.destroy_all
-      discarded_en_construction_expired.destroy_all
-    end
-
-    transaction do
-      DossierOperationLog.discarded_termine_expired.destroy_all
-      Avis.discarded_termine_expired.destroy_all
-      discarded_termine_expired.destroy_all
-    end
+    discarded_brouillon_expired.find_each(&:purge_discarded)
+    discarded_en_construction_expired.find_each(&:purge_discarded)
+    discarded_termine_expired.find_each(&:purge_discarded)
   end
 
   private

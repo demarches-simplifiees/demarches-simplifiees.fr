@@ -1,8 +1,11 @@
+import type { AnyLayer, Style, RasterLayer, RasterSource } from 'maplibre-gl';
+import invariant from 'tiny-invariant';
+
 import cadastreLayers from './layers/cadastre';
 
-const IGN_TOKEN = 'rc1egnbeoss72hxvd143tbyk';
+const IGN_TOKEN = 'rc1egnbeoss72hxvd143tbyk'; // ggignore
 
-function ignServiceURL(layer, format = 'image/png') {
+function ignServiceURL(layer: string, format = 'image/png') {
   const url = `https://wxs.ign.fr/${IGN_TOKEN}/geoportail/wmts`;
   const query =
     'service=WMTS&request=GetTile&version=1.0.0&tilematrixset=PM&tilematrix={z}&tilecol={x}&tilerow={y}&style=normal';
@@ -10,7 +13,7 @@ function ignServiceURL(layer, format = 'image/png') {
   return `${url}?${query}&layer=${layer}&format=${format}`;
 }
 
-const OPTIONAL_LAYERS = [
+const OPTIONAL_LAYERS: { label: string; id: string; layers: string[][] }[] = [
   {
     label: 'UNESCO',
     id: 'unesco',
@@ -127,7 +130,7 @@ function buildSources() {
   );
 }
 
-function rasterSource(tiles, attribution) {
+function rasterSource(tiles: string[], attribution: string): RasterSource {
   return {
     type: 'raster',
     tiles,
@@ -138,7 +141,7 @@ function rasterSource(tiles, attribution) {
   };
 }
 
-function rasterLayer(source, opacity) {
+function rasterLayer(source: string, opacity: number): RasterLayer {
   return {
     id: source,
     source,
@@ -147,10 +150,13 @@ function rasterLayer(source, opacity) {
   };
 }
 
-export function buildOptionalLayers(ids, opacity) {
+export function buildOptionalLayers(
+  ids: string[],
+  opacity: Record<string, number>
+): AnyLayer[] {
   return OPTIONAL_LAYERS.filter(({ id }) => ids.includes(id))
     .flatMap(({ layers, id }) =>
-      layers.map(([, code]) => [code, opacity[id] / 100])
+      layers.map(([, code]) => [code, opacity[id] / 100] as const)
     )
     .flatMap(([code, opacity]) =>
       code === 'CADASTRE'
@@ -159,16 +165,15 @@ export function buildOptionalLayers(ids, opacity) {
     );
 }
 
-export const NBS = ' ';
+export const NBS = ' ' as const;
 
-export function getLayerName(layer) {
-  return OPTIONAL_LAYERS.find(({ id }) => id == layer).label.replace(
-    /\s/g,
-    NBS
-  );
+export function getLayerName(layer: string): string {
+  const name = OPTIONAL_LAYERS.find(({ id }) => id == layer);
+  invariant(name, `Layer "${layer}" not found`);
+  return name.label.replace(/\s/g, NBS);
 }
 
-function getLayerCode(code) {
+function getLayerCode(code: string) {
   return code.toLowerCase().replace(/\./g, '-');
 }
 
@@ -220,4 +225,4 @@ export default {
   },
   sprite: 'https://openmaptiles.github.io/osm-bright-gl-style/sprite',
   glyphs: 'https://openmaptiles.geo.data.gouv.fr/fonts/{fontstack}/{range}.pbf'
-};
+} as Style;

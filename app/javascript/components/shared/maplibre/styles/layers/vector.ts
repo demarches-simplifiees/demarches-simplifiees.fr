@@ -1,4 +1,6 @@
-export default [
+import type { AnyLayer } from 'maplibre-gl';
+
+const layers: AnyLayer[] = [
   {
     id: 'background',
     type: 'background',
@@ -113,7 +115,7 @@ export default [
           [0, false],
           [9, true]
         ]
-      },
+      } as any,
       'fill-color': '#6a4',
       'fill-opacity': 0.1,
       'fill-outline-color': 'hsla(0, 0%, 0%, 0.03)'
@@ -324,7 +326,7 @@ export default [
           [6, [2, 0]],
           [8, [0, 0]]
         ]
-      }
+      } as any
     }
   },
   {
@@ -427,7 +429,7 @@ export default [
           [14, [0, 0]],
           [16, [-2, -2]]
         ]
-      }
+      } as any
     }
   },
   {
@@ -2322,7 +2324,7 @@ export default [
           [10, 'point'],
           [11, 'line']
         ]
-      },
+      } as any,
       'symbol-spacing': 200,
       'text-field': '{ref}',
       'text-font': ['Noto Sans Regular'],
@@ -2354,7 +2356,7 @@ export default [
           [7, 'line'],
           [8, 'line']
         ]
-      },
+      } as any,
       'symbol-spacing': 200,
       'text-field': '{ref}',
       'text-font': ['Noto Sans Regular'],
@@ -2385,7 +2387,7 @@ export default [
           [10, 'point'],
           [11, 'line']
         ]
-      },
+      } as any,
       'symbol-spacing': 200,
       'text-field': '{ref}',
       'text-font': ['Noto Sans Regular'],
@@ -2837,3 +2839,5 @@ export default [
     }
   }
 ];
+
+export default layers;

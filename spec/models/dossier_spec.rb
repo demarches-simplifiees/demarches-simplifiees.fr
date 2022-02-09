@@ -794,7 +794,6 @@ describe Dossier do
   describe "#discard_and_keep_track!" do
     let(:dossier) { create(:dossier, :en_construction) }
     let(:user) { dossier.user }
-    let(:deleted_dossier) { DeletedDossier.find_by(dossier_id: dossier.id) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let(:reason) { :user_request }
 
@@ -811,10 +810,6 @@ describe Dossier do
         expect(dossier.discarded?).to be_truthy
       end
 
-      it 'do not creates a DeletedDossier record' do
-        expect(deleted_dossier).to be_nil
-      end
-
       it 'do not records the operation in the log' do
         expect(last_operation).to be_nil
       end
@@ -824,14 +819,6 @@ describe Dossier do
       it 'hide the dossier but does not discard' do
         expect(dossier.hidden_at).to be_nil
         expect(dossier.hidden_by_user_at).to be_present
-      end
-
-      it 'creates a DeletedDossier record' do
-        expect(deleted_dossier.reason).to eq DeletedDossier.reasons.fetch(reason)
-        expect(deleted_dossier.dossier_id).to eq dossier.id
-        expect(deleted_dossier.procedure).to eq dossier.procedure
-        expect(deleted_dossier.state).to eq dossier.state
-        expect(deleted_dossier.deleted_at).to be_present
       end
 
       it 'records the operation in the log' do
@@ -845,19 +832,6 @@ describe Dossier do
           non_following_instructeur = create(:instructeur)
           non_following_instructeur.groupe_instructeurs << dossier.procedure.defaut_groupe_instructeur
           non_following_instructeur
-        end
-
-        it 'notifies the following instructeurs' do
-          expect(DossierMailer).to have_received(:notify_deletion_to_administration).once
-          expect(DossierMailer).to have_received(:notify_deletion_to_administration).with(deleted_dossier, dossier.followers_instructeurs.first.email)
-        end
-      end
-
-      context 'when there are no following instructeurs' do
-        let(:dossier) { create(:dossier, :en_construction) }
-        it 'notifies the procedure administrateur' do
-          expect(DossierMailer).to have_received(:notify_deletion_to_administration).once
-          expect(DossierMailer).to have_received(:notify_deletion_to_administration).with(deleted_dossier, dossier.procedure.administrateurs.first.email)
         end
       end
 
@@ -892,6 +866,19 @@ describe Dossier do
         it 'hide the dossier' do
           expect(dossier.hidden_by_user_at).to be_present
         end
+      end
+    end
+
+    context 'termine' do
+      let(:dossier) { create(:dossier, state: "accepte", hidden_by_administration_at: 1.hour.ago) }
+      before { subject }
+
+      it 'affect the right deletion reason to the dossier' do
+        expect(dossier.hidden_by_reason).to eq("user_request")
+      end
+
+      it 'discard the dossier' do
+        expect(dossier.discarded?).to be_truthy
       end
     end
   end
