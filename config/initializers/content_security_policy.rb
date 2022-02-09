@@ -7,7 +7,7 @@
 Rails.application.config.content_security_policy do |policy|
   # Whitelist image
   images_whitelist = ["*.openstreetmap.org", "*.cloud.ovh.net", "*"]
-  images_whitelist << URI(FOG_OPENSTACK_URL).host if FOG_OPENSTACK_URL.present?
+  images_whitelist << URI(DS_PROXY_URL).host if DS_PROXY_URL.present?
   images_whitelist << URI(MATOMO_IFRAME_URL).host if MATOMO_IFRAME_URL.present?
   policy.img_src(:self, :data, :blob, *images_whitelist)
 
@@ -23,16 +23,17 @@ Rails.application.config.content_security_policy do |policy|
   policy.style_src(:self, "*.crisp.chat", "crisp.chat", 'cdn.jsdelivr.net', 'maxcdn.bootstrapcdn.com', :unsafe_inline)
 
   connect_whitelist = ["wss://*.crisp.chat", "*.crisp.chat", "in-automate.sendinblue.com", "app.franceconnect.gouv.fr", "sentry.io", "openmaptiles.geo.data.gouv.fr", "openmaptiles.github.io", "tiles.geo.api.gouv.fr", "wxs.ign.fr"]
+  connect_whitelist << ENV.fetch('APP_HOST')
+  connect_whitelist << URI(DS_PROXY_URL).host if DS_PROXY_URL.present?
   connect_whitelist << URI(API_ADRESSE_URL).host if API_ADRESSE_URL.present?
   connect_whitelist << URI(API_EDUCATION_URL).host if API_EDUCATION_URL.present?
   connect_whitelist << URI(API_GEO_URL).host if API_GEO_URL.present?
-  connect_whitelist << "*.#{ENV.fetch('APP_HOST', 'localhost:3000')}"
   policy.connect_src(:self, *connect_whitelist)
 
   # Pour tout le reste, par défaut on accepte uniquement ce qui vient de chez nous
   # et dans la notification on inclue la source de l'erreur
   default_whitelist = ["fonts.gstatic.com", "in-automate.sendinblue.com", "player.vimeo.com", "app.franceconnect.gouv.fr", "sentry.io", "*.crisp.chat", "crisp.chat", "*.crisp.help", "*.sibautomation.com", "sibautomation.com", "data"]
-  default_whitelist << URI(FOG_OPENSTACK_URL).host if FOG_OPENSTACK_URL.present?
+  default_whitelist << URI(DS_PROXY_URL).host if DS_PROXY_URL.present?
   policy.default_src(:self, :data, :blob, :report_sample, *default_whitelist)
 
   if Rails.env.development?
