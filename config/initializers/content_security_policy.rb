@@ -42,6 +42,8 @@ Rails.application.config.content_security_policy do |policy|
     policy.report_uri "http://#{ENV.fetch('APP_HOST')}/csp/"
     # En développement, quand bin/webpack-dev-server est utilisé, on autorise les requêtes faites par le live-reload
     policy.connect_src(*policy.connect_src, "ws://localhost:3035", "http://localhost:3035")
+  else
+    policy.report_uri CSP_REPORT_URI if CSP_REPORT_URI.present?
   end
 end
 
