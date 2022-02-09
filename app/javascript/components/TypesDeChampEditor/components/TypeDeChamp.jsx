@@ -82,7 +82,7 @@ const TypeDeChamp = sortableElement(
               }}
             >
               <TrashIcon className="icon-size" />
-              <span className="screen-reader-text">Supprimer</span>
+              <span className="sr-only">Supprimer</span>
             </button>
           </div>
         </div>

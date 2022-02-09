@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { useDebounce } from 'use-debounce';
 import { useQuery } from 'react-query';
-import PropTypes from 'prop-types';
 import {
   Combobox,
   ComboboxInput,
@@ -14,11 +13,33 @@ import invariant from 'tiny-invariant';
 
 import { useDeferredSubmit, useHiddenField, groupId } from './shared/hooks';
 
-function defaultTransformResults(_, results) {
-  return results;
-}
+type TransformResults<Result> = (term: string, results: unknown) => Result[];
+type TransformResult<Result> = (
+  result: Result
+) => [key: string, value: string, label: string];
 
-function ComboSearch({
+export type ComboSearchProps<Result> = {
+  onChange?: (value: string | null, result?: Result) => void;
+  value?: string;
+  scope: string;
+  scopeExtra?: string;
+  minimumInputLength: number;
+  transformResults: TransformResults<Result>;
+  transformResult: TransformResult<Result>;
+  allowInputValues?: boolean;
+  id?: string;
+  describedby?: string;
+  className?: string;
+  placeholder?: string;
+};
+
+type QueryKey = readonly [
+  scope: string,
+  term: string,
+  extra: string | undefined
+];
+
+function ComboSearch<Result>({
   onChange,
   value: controlledValue,
   scope,
@@ -26,26 +47,28 @@ function ComboSearch({
   minimumInputLength,
   transformResult,
   allowInputValues = false,
-  transformResults = defaultTransformResults,
+  transformResults = (_, results) => results as Result[],
   id,
   describedby,
   ...props
-}) {
+}: ComboSearchProps<Result>) {
   invariant(id || onChange, 'ComboSearch: `id` or `onChange` are required');
 
-  const group = !onChange ? groupId(id) : null;
+  const group = !onChange && id ? groupId(id) : undefined;
   const [externalValue, setExternalValue, hiddenField] = useHiddenField(group);
   const [, setExternalId] = useHiddenField(group, 'external_id');
   const initialValue = externalValue ? externalValue : controlledValue;
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm] = useDebounce(searchTerm, 300);
   const [value, setValue] = useState(initialValue);
-  const resultsMap = useRef({});
-  const getLabel = (result) => {
+  const resultsMap = useRef<
+    Record<string, { key: string; value: string; result: Result }>
+  >({});
+  const getLabel = (result: Result) => {
     const [, value, label] = transformResult(result);
     return label ?? value;
   };
-  const setExternalValueAndId = useCallback((label) => {
+  const setExternalValueAndId = useCallback((label: string) => {
     const { key, value, result } = resultsMap.current[label];
     if (onChange) {
       onChange(value, result);
@@ -77,22 +100,22 @@ function ComboSearch({
     [minimumInputLength]
   );
 
-  const handleOnSelect = useCallback((value) => {
+  const handleOnSelect = useCallback((value: string) => {
     setExternalValueAndId(value);
     setValue(value);
     setSearchTerm('');
     awaitFormSubmit.done();
   }, []);
 
-  const { isSuccess, data } = useQuery(
+  const { isSuccess, data } = useQuery<void, void, unknown, QueryKey>(
     [scope, debouncedSearchTerm, scopeExtra],
     {
       enabled: !!debouncedSearchTerm,
-      notifyOnStatusChange: false,
       refetchOnMount: false
     }
   );
-  const results = isSuccess ? transformResults(debouncedSearchTerm, data) : [];
+  const results =
+    isSuccess && data ? transformResults(debouncedSearchTerm, data) : [];
 
   const onBlur = useCallback(() => {
     if (!allowInputValues && isSuccess && results[0]) {
@@ -135,19 +158,5 @@ function ComboSearch({
     </Combobox>
   );
 }
-
-ComboSearch.propTypes = {
-  value: PropTypes.string,
-  scope: PropTypes.string,
-  minimumInputLength: PropTypes.number,
-  transformResult: PropTypes.func,
-  transformResults: PropTypes.func,
-  allowInputValues: PropTypes.bool,
-  onChange: PropTypes.func,
-  scopeExtra: PropTypes.string,
-  mandatory: PropTypes.bool,
-  id: PropTypes.string,
-  describedby: PropTypes.string
-};
 
 export default ComboSearch;

@@ -5,6 +5,7 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import 'dom4';
 import 'intersection-observer';
+import 'whatwg-fetch';
 
 import './polyfills/insertAdjacentElement';
 import './polyfills/dataset';
