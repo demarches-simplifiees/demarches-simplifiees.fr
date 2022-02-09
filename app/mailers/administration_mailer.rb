@@ -39,13 +39,14 @@ class AdministrationMailer < ApplicationMailer
     mail(to: EQUIPE_EMAIL, subject: subject)
   end
 
-  def s3_synchronization_report
+  def s3_synchronization_report(log)
     uploaded_stats = S3Synchronization.uploaded_stats
     @uploaded_stats = to_array(uploaded_stats)
     checked_stats = S3Synchronization.checked_stats
     @checked_stats = to_array(checked_stats)
 
     @status = S3Synchronization.blob_status
+    @log = log
 
     mail(to: CONTACT_EMAIL, subject: "Statistiques de synchronisation")
   end
