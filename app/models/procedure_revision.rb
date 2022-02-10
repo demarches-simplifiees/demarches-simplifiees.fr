@@ -108,13 +108,16 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def different_from?(revision)
-    types_de_champ != revision.types_de_champ || types_de_champ_private != revision.types_de_champ_private
+    types_de_champ != revision.types_de_champ ||
+      types_de_champ_private != revision.types_de_champ_private ||
+      attestation_template != revision.attestation_template
   end
 
   def compare(revision)
     changes = []
     changes += compare_types_de_champ(types_de_champ, revision.types_de_champ)
     changes += compare_types_de_champ(types_de_champ_private, revision.types_de_champ_private)
+    changes += compare_attestation_template(attestation_template, revision.attestation_template)
     changes
   end
 
@@ -127,11 +130,64 @@ class ProcedureRevision < ApplicationRecord
     )
   end
 
-  def attestation_template
-    super || procedure.attestation_template
-  end
-
   private
+
+  def compare_attestation_template(from_at, to_at)
+    changes = []
+    if from_at.nil? && to_at.present?
+      changes << {
+        model: :attestation_template,
+        op: :add
+      }
+    elsif to_at.present?
+      if from_at.title != to_at.title
+        changes << {
+          model: :attestation_template,
+          op: :update,
+          attribute: :title,
+          from: from_at.title,
+          to: to_at.title
+        }
+      end
+      if from_at.body != to_at.body
+        changes << {
+          model: :attestation_template,
+          op: :update,
+          attribute: :body,
+          from: from_at.body,
+          to: to_at.body
+        }
+      end
+      if from_at.footer != to_at.footer
+        changes << {
+          model: :attestation_template,
+          op: :update,
+          attribute: :footer,
+          from: from_at.footer,
+          to: to_at.footer
+        }
+      end
+      if from_at.logo_checksum != to_at.logo_checksum
+        changes << {
+          model: :attestation_template,
+          op: :update,
+          attribute: :logo,
+          from: from_at.logo_filename,
+          to: to_at.logo_filename
+        }
+      end
+      if from_at.signature_checksum != to_at.signature_checksum
+        changes << {
+          model: :attestation_template,
+          op: :update,
+          attribute: :signature,
+          from: from_at.signature_filename,
+          to: to_at.signature_filename
+        }
+      end
+    end
+    changes
+  end
 
   def compare_types_de_champ(from_tdc, to_tdc)
     if from_tdc == to_tdc
@@ -144,11 +200,11 @@ class ProcedureRevision < ApplicationRecord
       to_sids = to_h.keys
 
       removed = (from_sids - to_sids).map do |sid|
-        { op: :remove, label: from_h[sid].libelle, private: from_h[sid].private?, position: from_sids.index(sid), stable_id: sid }
+        { model: :type_de_champ, op: :remove, label: from_h[sid].libelle, private: from_h[sid].private?, position: from_sids.index(sid), stable_id: sid }
       end
 
       added = (to_sids - from_sids).map do |sid|
-        { op: :add, label: to_h[sid].libelle, private: to_h[sid].private?, position: to_sids.index(sid), stable_id: sid }
+        { model: :type_de_champ, op: :add, label: to_h[sid].libelle, private: to_h[sid].private?, position: to_sids.index(sid), stable_id: sid }
       end
 
       kept = from_sids.intersection(to_sids)
@@ -157,7 +213,7 @@ class ProcedureRevision < ApplicationRecord
         .map { |sid| [sid, from_sids.index(sid), to_sids.index(sid)] }
         .filter { |_, from_index, to_index| from_index != to_index }
         .map do |sid, from_index, to_index|
-        { op: :move, label: from_h[sid].libelle, private: from_h[sid].private?, from: from_index, to: to_index, position: to_index, stable_id: sid }
+        { model: :type_de_champ, op: :move, label: from_h[sid].libelle, private: from_h[sid].private?, from: from_index, to: to_index, position: to_index, stable_id: sid }
       end
 
       changed = kept
@@ -177,6 +233,7 @@ class ProcedureRevision < ApplicationRecord
     changes = []
     if from_type_de_champ.type_champ != to_type_de_champ.type_champ
       changes << {
+        model: :type_de_champ,
         op: :update,
         attribute: :type_champ,
         label: from_type_de_champ.libelle,
@@ -188,6 +245,7 @@ class ProcedureRevision < ApplicationRecord
     end
     if from_type_de_champ.libelle != to_type_de_champ.libelle
       changes << {
+        model: :type_de_champ,
         op: :update,
         attribute: :libelle,
         label: from_type_de_champ.libelle,
@@ -199,6 +257,7 @@ class ProcedureRevision < ApplicationRecord
     end
     if from_type_de_champ.description != to_type_de_champ.description
       changes << {
+        model: :type_de_champ,
         op: :update,
         attribute: :description,
         label: from_type_de_champ.libelle,
@@ -210,6 +269,7 @@ class ProcedureRevision < ApplicationRecord
     end
     if from_type_de_champ.mandatory? != to_type_de_champ.mandatory?
       changes << {
+        model: :type_de_champ,
         op: :update,
         attribute: :mandatory,
         label: from_type_de_champ.libelle,
@@ -222,6 +282,7 @@ class ProcedureRevision < ApplicationRecord
     if to_type_de_champ.drop_down_list?
       if from_type_de_champ.drop_down_list_options != to_type_de_champ.drop_down_list_options
         changes << {
+          model: :type_de_champ,
           op: :update,
           attribute: :drop_down_options,
           label: from_type_de_champ.libelle,
@@ -234,6 +295,7 @@ class ProcedureRevision < ApplicationRecord
       if to_type_de_champ.linked_drop_down_list?
         if from_type_de_champ.drop_down_secondary_libelle != to_type_de_champ.drop_down_secondary_libelle
           changes << {
+            model: :type_de_champ,
             op: :update,
             attribute: :drop_down_secondary_libelle,
             label: from_type_de_champ.libelle,
@@ -244,6 +306,7 @@ class ProcedureRevision < ApplicationRecord
         end
         if from_type_de_champ.drop_down_secondary_description != to_type_de_champ.drop_down_secondary_description
           changes << {
+            model: :type_de_champ,
             op: :update,
             attribute: :drop_down_secondary_description,
             label: from_type_de_champ.libelle,
@@ -255,6 +318,7 @@ class ProcedureRevision < ApplicationRecord
       end
       if from_type_de_champ.drop_down_other != to_type_de_champ.drop_down_other
         changes << {
+          model: :type_de_champ,
           op: :update,
           attribute: :drop_down_other,
           label: from_type_de_champ.libelle,
@@ -267,6 +331,7 @@ class ProcedureRevision < ApplicationRecord
     elsif to_type_de_champ.carte?
       if from_type_de_champ.carte_optional_layers != to_type_de_champ.carte_optional_layers
         changes << {
+          model: :type_de_champ,
           op: :update,
           attribute: :carte_layers,
           label: from_type_de_champ.libelle,
@@ -279,6 +344,7 @@ class ProcedureRevision < ApplicationRecord
     elsif to_type_de_champ.piece_justificative?
       if from_type_de_champ.piece_justificative_template_checksum != to_type_de_champ.piece_justificative_template_checksum
         changes << {
+          model: :type_de_champ,
           op: :update,
           attribute: :piece_justificative_template,
           label: from_type_de_champ.libelle,

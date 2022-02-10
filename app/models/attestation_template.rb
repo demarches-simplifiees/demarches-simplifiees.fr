@@ -122,6 +122,22 @@ class AttestationTemplate < ApplicationRecord
     revisions.last&.procedure
   end
 
+  def logo_checksum
+    logo.attached? ? logo.checksum : nil
+  end
+
+  def signature_checksum
+    signature.attached? ? signature.checksum : nil
+  end
+
+  def logo_filename
+    logo.attached? ? logo.filename : nil
+  end
+
+  def signature_filename
+    signature.attached? ? signature.filename : nil
+  end
+
   private
 
   def used_tags
