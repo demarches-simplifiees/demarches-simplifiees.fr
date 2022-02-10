@@ -26,3 +26,7 @@
 %p
   statistiques de vérification des fichiers transférés
 = render partial: "stat_table", locals: { stats: @checked_stats }
+%p
+  Traces
+%pre
+  = @log
