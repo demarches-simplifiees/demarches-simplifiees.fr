@@ -1,61 +1,8 @@
 %ul.revision-changes
-  - changes.each do |change|
-    - postfix = change[:private] ? '_private' : ''
-    - case change[:op]
-    - when :add
-      %li.mb-1= t("add#{postfix}", label: change[:label], scope: [:administrateurs, :revision_changes])
-    - when :remove
-      %li.mb-1= t("remove#{postfix}", label: change[:label], scope: [:administrateurs, :revision_changes])
-    - when :update
-      - case change[:attribute]
-      - when :libelle
-        %li.mb-1= t("update_libelle#{postfix}", label: change[:label], to: change[:to], scope: [:administrateurs, :revision_changes])
-      - when :type_champ
-        %li.mb-1= t("update_type_champ#{postfix}", label: change[:label], to: t("activerecord.attributes.type_de_champ.type_champs.#{change[:to]}"), scope: [:administrateurs, :revision_changes])
-      - when :description
-        %li.mb-1= t("update_description#{postfix}", label: change[:label], to: change[:to], scope: [:administrateurs, :revision_changes])
-      - when :drop_down_secondary_libelle
-        %li.mb-1= t("update_drop_down_secondary_libelle#{postfix}", label: change[:label], to: change[:to], scope: [:administrateurs, :revision_changes])
-      - when :drop_down_secondary_description
-        %li.mb-1= t("update_drop_down_secondary_description#{postfix}", label: change[:label], to: change[:to], scope: [:administrateurs, :revision_changes])
-      - when :mandatory
-        - if change[:from] == false
-          -# i18n-tasks-use t('administrateurs.revision_changes.update_mandatory.enabled')
-          -# i18n-tasks-use t('administrateurs.revision_changes.update_mandatory_private.enabled')
-          %li.mb-1= t("administrateurs.revision_changes.update_mandatory#{postfix}.enabled", label: change[:label])
-        - else
-          -# i18n-tasks-use t('administrateurs.revision_changes.update_mandatory.disabled')
-          -# i18n-tasks-use t('administrateurs.revision_changes.update_mandatory_private.disabled')
-          %li.mb-1= t("administrateurs.revision_changes.update_mandatory#{postfix}.disabled", label: change[:label])
-      - when :piece_justificative_template
-        -# i18n-tasks-use t('administrateurs.revision_changes.update_piece_justificative_template')
-        -# i18n-tasks-use t('administrateurs.revision_changes.update_piece_justificative_template_private')
-        %li.mb-1= t("administrateurs.revision_changes.update_piece_justificative_template#{postfix}", label: change[:label])
-      - when :drop_down_options
-        - added = change[:to].sort - change[:from].sort
-        - removed = change[:from].sort - change[:to].sort
-        %li.mb-1
-          = t("update_drop_down_options#{postfix}", scope: [:administrateurs, :revision_changes], label: change[:label])
-          %ul
-            - if added.present?
-              %li= t(:add_option, scope: [:administrateurs, :revision_changes], items: added.map{ |term| "« #{term.strip} »" }.join(", "))
-            - if removed.present?
-              %li= t(:remove_option, scope: [:administrateurs, :revision_changes], items: removed.map{ |term| "« #{term.strip} »" }.join(", "))
-      - when :drop_down_other
-        - if change[:from] == false
-          %li.mb-1= t("administrateurs.revision_changes.update_drop_down_other#{postfix}.enabled", label: change[:label])
-        - else
-          %li.mb-1= t("administrateurs.revision_changes.update_drop_down_other#{postfix}.disabled", label: change[:label])
-      - when :carte_layers
-        - added = change[:to].sort - change[:from].sort
-        - removed = change[:from].sort - change[:to].sort
-        %li.mb-1
-          = t("update_carte_layers#{postfix}", scope: [:administrateurs, :revision_changes], label: change[:label])
-          %ul
-            - if added.present?
-              %li= t(:add_option, scope: [:administrateurs, :revision_changes], items: added.map{ |term| "« #{t(term, scope: [:administrateurs, :carte_layers])} »" }.join(", "))
-            - if removed.present?
-              %li= t(:remove_option, scope: [:administrateurs, :revision_changes], items: removed.map{ |term| "« #{t(term, scope: [:administrateurs, :carte_layers])} »" }.join(", "))
+  - changes.filter { |change| change[:model] == :attestation_template }.each do |change|
+    = render partial: 'administrateurs/procedures/revision_change_attestation_template', locals: { change: change }
+  - changes.filter { |change| change[:model] == :type_de_champ }.each do |change|
+    = render partial: 'administrateurs/procedures/revision_change_type_de_champ', locals: { change: change }
   - move_changes, move_private_changes = changes.filter { |change| change[:op] == :move }.partition { |change| !change[:private] }
   - if move_changes.size != 0
     %li.mb-1= t(:move, scope: [:administrateurs, :revision_changes], count: move_changes.size)
