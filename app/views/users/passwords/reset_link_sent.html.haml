@@ -25,7 +25,7 @@
         = t('views.users.passwords.reset_link_sent.check_spams')
       %li
         = t('views.users.passwords.reset_link_sent.check_account', email: @email, application_name: APPLICATION_NAME)
-      - if FranceConnectService.enabled?
+      - if france_connect_enabled?
         %li
           = t('views.users.passwords.reset_link_sent.check_france_connect_html', href: france_connect_particulier_path)
     %p
