@@ -3,7 +3,7 @@ include ActionDispatch::TestProcess
 describe Administrateurs::AttestationTemplatesController, type: :controller do
   let(:admin) { create(:administrateur) }
   let(:attestation_template) { build(:attestation_template) }
-  let!(:procedure) { create :procedure, administrateur: admin, attestation_template: attestation_template }
+  let(:procedure) { create :procedure, administrateur: admin, attestation_template: attestation_template }
   let(:logo) { fixture_file_upload('spec/fixtures/files/white.png', 'image/png') }
   let(:logo2) { fixture_file_upload('spec/fixtures/files/white.png', 'image/png') }
   let(:signature) { fixture_file_upload('spec/fixtures/files/black.png', 'image/png') }
@@ -13,6 +13,7 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
   let(:invalid_logo) { fixture_file_upload('spec/fixtures/files/invalid_file_format.json', 'application/json') }
 
   before do
+    procedure
     sign_in(admin.user)
     Timecop.freeze(Time.zone.now)
   end
@@ -142,6 +143,42 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
       it { expect(flash.alert).to be_present }
       it { expect(procedure.draft_attestation_template).to be nil }
     end
+
+    context 'when procedure is published' do
+      let(:procedure) { create(:procedure, :published, administrateur: admin, attestation_template: attestation_template) }
+      let(:attestation_template) { nil }
+      let(:attestation_params) { { title: 't', body: 'b', footer: '', activated: true } }
+      let(:revisions_enabled) { false }
+
+      before do
+        if revisions_enabled
+          Flipper.enable(:procedure_revisions, procedure)
+        end
+
+        post :create,
+          params: {
+            procedure_id: procedure.id,
+            attestation_template: attestation_params
+          }
+        procedure.reload
+      end
+
+      context 'and revisions are not activated' do
+        it do
+          expect(procedure.draft_attestation_template).to eq(procedure.published_attestation_template)
+          expect(procedure.draft_attestation_template.title).to eq('t')
+        end
+      end
+
+      context 'and revisions are activated' do
+        let(:revisions_enabled) { true }
+        it do
+          expect(procedure.draft_attestation_template).not_to eq(procedure.published_attestation_template)
+          expect(procedure.draft_attestation_template.title).to eq('t')
+          expect(procedure.published_attestation_template).to be_nil
+        end
+      end
+    end
   end
 
   describe 'PATCH #update' do
@@ -183,6 +220,42 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
 
       it { expect(response).to redirect_to edit_admin_procedure_attestation_template_path(procedure) }
       it { expect(flash.alert).to eq('nop') }
+    end
+
+    context 'when procedure is published' do
+      let(:procedure) { create(:procedure, :published, administrateur: admin, attestation_template: attestation_template) }
+      let(:attestation_template) { create(:attestation_template, title: 'a') }
+      let(:attestation_params) { { title: 't', body: 'b', footer: '', activated: true } }
+      let(:revisions_enabled) { false }
+
+      before do
+        if revisions_enabled
+          Flipper.enable(:procedure_revisions, procedure)
+        end
+
+        patch :update,
+          params: {
+            procedure_id: procedure.id,
+            attestation_template: attestation_params
+          }
+        procedure.reload
+      end
+
+      context 'and revisions are not activated' do
+        it do
+          expect(procedure.draft_attestation_template).to eq(procedure.published_attestation_template)
+          expect(procedure.draft_attestation_template.title).to eq('t')
+        end
+      end
+
+      context 'and revisions are activated' do
+        let(:revisions_enabled) { true }
+        it do
+          expect(procedure.draft_attestation_template).not_to eq(procedure.published_attestation_template)
+          expect(procedure.draft_attestation_template.title).to eq('t')
+          expect(procedure.published_attestation_template.title).to eq('a')
+        end
+      end
     end
   end
 end

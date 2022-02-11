@@ -14,7 +14,9 @@ module DossierRebaseConcern
   def rebase
     attachments_to_purge = []
     geo_areas_to_delete = []
-    changes_by_type_de_champ = revision.compare(procedure.published_revision).group_by { |change| change[:stable_id] }
+    changes_by_type_de_champ = revision.compare(procedure.published_revision)
+      .filter { |change| change[:model] == :type_de_champ }
+      .group_by { |change| change[:stable_id] }
 
     changes_by_type_de_champ.each do |stable_id, changes|
       type_de_champ = find_type_de_champ_by_stable_id(stable_id)

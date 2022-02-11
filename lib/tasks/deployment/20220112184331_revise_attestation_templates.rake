@@ -4,13 +4,13 @@ namespace :after_party do
     rake_puts "Running deploy task 'revise_attestation_templates'"
 
     revisions = ProcedureRevision
-      .joins(procedure: :attestation_template)
+      .joins(procedure: :legacy_attestation_template)
       .where(attestation_template_id: nil)
 
     progress = ProgressReport.new(revisions.count)
 
     revisions.find_each do |revision|
-      attestation_template_id = revision.procedure.attestation_template.id
+      attestation_template_id = revision.procedure.legacy_attestation_template.id
       revision.update_column(:attestation_template_id, attestation_template_id)
 
       progress.inc

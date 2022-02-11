@@ -7,7 +7,7 @@ module Administrateurs
     end
 
     def update
-      attestation_template = @procedure.draft_attestation_template.revise!
+      attestation_template = @procedure.draft_attestation_template.find_or_revise!
 
       if attestation_template.update(activated_attestation_params)
         AttestationTemplate
@@ -26,6 +26,11 @@ module Administrateurs
       attestation_template = build_attestation(activated_attestation_params)
 
       if attestation_template.save
+        if @procedure.publiee? && !@procedure.feature_enabled?(:procedure_revisions)
+          # If revisions support is not enabled and procedure is published
+          # attach the same attestation template to published revision.
+          @procedure.published_revision.update(attestation_template: attestation_template)
+        end
         flash.notice = "L'attestation a bien été sauvegardée"
       else
         flash.alert = attestation_template.errors.full_messages.join('<br>')
