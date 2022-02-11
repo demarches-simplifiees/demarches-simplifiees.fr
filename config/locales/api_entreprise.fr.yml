@@ -1,0 +1,4 @@
+fr:
+  api_entreprise:
+    errors:
+      missing_token: "le jeton API Entreprise ne peut être vide"
