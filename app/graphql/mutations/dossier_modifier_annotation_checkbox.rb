@@ -11,8 +11,8 @@ module Mutations
         annotation_id,
         instructeur,
         value
-      ) do |type_champ, value|
-        if type_champ == TypeDeChamp.type_champs.fetch(:yes_no)
+      ) do |annotation, value|
+        annotation.value = if annotation.type_champ == TypeDeChamp.type_champs.fetch(:yes_no)
           value ? 'true' : 'false'
         else
           value ? 'on' : 'off'
