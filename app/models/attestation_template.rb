@@ -15,7 +15,6 @@ class AttestationTemplate < ApplicationRecord
   include ActionView::Helpers::NumberHelper
   include TagsSubstitutionConcern
 
-  belongs_to :procedure, optional: true
   has_many :revisions, class_name: 'ProcedureRevision', inverse_of: :attestation_template, dependent: :nullify
 
   has_one_attached :logo
@@ -120,7 +119,7 @@ class AttestationTemplate < ApplicationRecord
   end
 
   def procedure
-    revisions.last&.procedure || super
+    revisions.last&.procedure
   end
 
   private
