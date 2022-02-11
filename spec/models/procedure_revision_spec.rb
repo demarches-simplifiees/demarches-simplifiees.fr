@@ -172,6 +172,7 @@ describe ProcedureRevision do
         expect(procedure.active_revision.different_from?(new_revision)).to be_truthy
         expect(procedure.active_revision.compare(new_revision)).to eq([
           {
+            model: :type_de_champ,
             op: :add,
             label: "Un champ text",
             private: false,
@@ -182,6 +183,7 @@ describe ProcedureRevision do
         new_revision.find_or_clone_type_de_champ(new_revision.types_de_champ.first.stable_id).update(libelle: 'modifier le libelle')
         expect(procedure.active_revision.compare(new_revision.reload)).to eq([
           {
+            model: :type_de_champ,
             op: :update,
             attribute: :libelle,
             label: type_de_champ_first.libelle,
@@ -191,6 +193,7 @@ describe ProcedureRevision do
             stable_id: type_de_champ_first.stable_id
           },
           {
+            model: :type_de_champ,
             op: :add,
             label: "Un champ text",
             private: false,
@@ -202,6 +205,7 @@ describe ProcedureRevision do
         new_revision.move_type_de_champ(new_revision.types_de_champ.second.stable_id, 2)
         expect(procedure.active_revision.compare(new_revision.reload)).to eq([
           {
+            model: :type_de_champ,
             op: :update,
             attribute: :libelle,
             label: type_de_champ_first.libelle,
@@ -211,12 +215,14 @@ describe ProcedureRevision do
             stable_id: type_de_champ_first.stable_id
           },
           {
+            model: :type_de_champ,
             op: :add,
             label: "Un champ text",
             private: false,
             stable_id: new_type_de_champ.stable_id
           },
           {
+            model: :type_de_champ,
             op: :move,
             label: type_de_champ_second.libelle,
             private: false,
@@ -230,12 +236,14 @@ describe ProcedureRevision do
         new_revision.remove_type_de_champ(new_revision.types_de_champ.first.stable_id)
         expect(procedure.active_revision.compare(new_revision.reload)).to eq([
           {
+            model: :type_de_champ,
             op: :remove,
             label: type_de_champ_first.libelle,
             private: false,
             stable_id: type_de_champ_first.stable_id
           },
           {
+            model: :type_de_champ,
             op: :add,
             label: "Un champ text",
             private: false,
@@ -247,18 +255,21 @@ describe ProcedureRevision do
         new_revision.find_or_clone_type_de_champ(new_revision.types_de_champ.last.stable_id).update(mandatory: true)
         expect(procedure.active_revision.compare(new_revision.reload)).to eq([
           {
+            model: :type_de_champ,
             op: :remove,
             label: type_de_champ_first.libelle,
             private: false,
             stable_id: type_de_champ_first.stable_id
           },
           {
+            model: :type_de_champ,
             op: :add,
             label: "Un champ text",
             private: false,
             stable_id: new_type_de_champ.stable_id
           },
           {
+            model: :type_de_champ,
             op: :update,
             attribute: :description,
             label: type_de_champ_second.libelle,
@@ -268,6 +279,7 @@ describe ProcedureRevision do
             stable_id: type_de_champ_second.stable_id
           },
           {
+            model: :type_de_champ,
             op: :update,
             attribute: :mandatory,
             label: type_de_champ_second.libelle,
@@ -282,18 +294,21 @@ describe ProcedureRevision do
         new_revision.find_or_clone_type_de_champ(new_revision.types_de_champ.last.types_de_champ.first.stable_id).update(drop_down_options: ['one', 'two'])
         expect(procedure.active_revision.compare(new_revision.reload)).to eq([
           {
+            model: :type_de_champ,
             op: :remove,
             label: type_de_champ_first.libelle,
             private: false,
             stable_id: type_de_champ_first.stable_id
           },
           {
+            model: :type_de_champ,
             op: :add,
             label: "Un champ text",
             private: false,
             stable_id: new_type_de_champ.stable_id
           },
           {
+            model: :type_de_champ,
             op: :update,
             attribute: :description,
             label: type_de_champ_second.libelle,
@@ -303,6 +318,7 @@ describe ProcedureRevision do
             stable_id: type_de_champ_second.stable_id
           },
           {
+            model: :type_de_champ,
             op: :update,
             attribute: :mandatory,
             label: type_de_champ_second.libelle,
@@ -312,6 +328,7 @@ describe ProcedureRevision do
             stable_id: type_de_champ_second.stable_id
           },
           {
+            model: :type_de_champ,
             op: :update,
             attribute: :type_champ,
             label: "sub type de champ",
@@ -321,6 +338,7 @@ describe ProcedureRevision do
             stable_id: new_revision.types_de_champ.last.types_de_champ.first.stable_id
           },
           {
+            model: :type_de_champ,
             op: :update,
             attribute: :drop_down_options,
             label: "sub type de champ",
@@ -335,18 +353,21 @@ describe ProcedureRevision do
         new_revision.find_or_clone_type_de_champ(new_revision.types_de_champ.last.types_de_champ.first.stable_id).update(options: { cadastres: true, znieff: true })
         expect(procedure.active_revision.compare(new_revision.reload)).to eq([
           {
+            model: :type_de_champ,
             op: :remove,
             label: type_de_champ_first.libelle,
             private: false,
             stable_id: type_de_champ_first.stable_id
           },
           {
+            model: :type_de_champ,
             op: :add,
             label: "Un champ text",
             private: false,
             stable_id: new_type_de_champ.stable_id
           },
           {
+            model: :type_de_champ,
             op: :update,
             attribute: :description,
             label: type_de_champ_second.libelle,
@@ -356,6 +377,7 @@ describe ProcedureRevision do
             stable_id: type_de_champ_second.stable_id
           },
           {
+            model: :type_de_champ,
             op: :update,
             attribute: :mandatory,
             label: type_de_champ_second.libelle,
@@ -365,6 +387,7 @@ describe ProcedureRevision do
             stable_id: type_de_champ_second.stable_id
           },
           {
+            model: :type_de_champ,
             op: :update,
             attribute: :type_champ,
             label: "sub type de champ",
@@ -374,6 +397,7 @@ describe ProcedureRevision do
             stable_id: new_revision.types_de_champ.last.types_de_champ.first.stable_id
           },
           {
+            model: :type_de_champ,
             op: :update,
             attribute: :carte_layers,
             label: "sub type de champ",
