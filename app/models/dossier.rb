@@ -137,6 +137,7 @@ class Dossier < ApplicationRecord
   belongs_to :user, optional: true
   has_one :france_connect_information, through: :user
 
+  has_one :attestation_template, through: :revision
   has_one :procedure, through: :revision
   has_many :types_de_champ, through: :revision
   has_many :types_de_champ_private, through: :revision
@@ -384,7 +385,7 @@ class Dossier < ApplicationRecord
       .where.not(user: users_who_submitted)
   end
 
-  scope :for_api_v2, -> { includes(procedure: [:administrateurs, :attestation_template], etablissement: [], individual: [], traitement: []) }
+  scope :for_api_v2, -> { includes(procedure: [:administrateurs], revision: [:attestation_template], etablissement: [], individual: [], traitement: []) }
 
   scope :with_notifications, -> do
     joins(:follows)
@@ -721,10 +722,6 @@ class Dossier < ApplicationRecord
     { lon: lon, lat: lat, zoom: zoom }
   end
 
-  def attestation_template
-    revision.attestation_template
-  end
-
   def unspecified_attestation_champs
     if attestation_template&.activated?
       attestation_template.unspecified_champs_for_dossier(self)
@@ -828,7 +825,7 @@ class Dossier < ApplicationRecord
   end
 
   def attestation_activated?
-    termine? && procedure.attestation_template&.activated?
+    termine? && attestation_template&.activated?
   end
 
   def after_passer_en_construction
