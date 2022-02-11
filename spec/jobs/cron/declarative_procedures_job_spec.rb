@@ -5,8 +5,8 @@ RSpec.describe Cron::DeclarativeProceduresJob, type: :job do
 
     let(:state) { nil }
     let(:procedure) { create(:procedure, :published, :for_individual, :with_instructeur, declarative_with_state: state) }
-    let(:nouveau_dossier1) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
-    let(:nouveau_dossier2) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
+    let(:nouveau_dossier1) { create(:dossier, :en_construction, :with_individual, :with_attestation, procedure: procedure) }
+    let(:nouveau_dossier2) { create(:dossier, :en_construction, :with_individual, :with_attestation, procedure: procedure) }
     let(:dossier_recu) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
     let(:dossier_brouillon) { create(:dossier, procedure: procedure) }
     let(:dossier_repasse_en_construction) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
@@ -22,7 +22,6 @@ RSpec.describe Cron::DeclarativeProceduresJob, type: :job do
         dossier_repasse_en_construction
       ]
 
-      create(:attestation_template, procedure: procedure)
       Cron::DeclarativeProceduresJob.new.perform
 
       dossiers.each(&:reload)

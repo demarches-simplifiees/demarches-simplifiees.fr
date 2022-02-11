@@ -40,7 +40,8 @@ describe Procedure do
   end
 
   describe 'closed mail template body' do
-    let(:procedure) { create(:procedure) }
+    let(:procedure) { create(:procedure, attestation_template: attestation_template) }
+    let(:attestation_template) { nil }
 
     subject { procedure.closed_mail_template.rich_body.body.to_html }
 
@@ -49,7 +50,7 @@ describe Procedure do
     end
 
     context 'for procedures with an attestation' do
-      before { create(:attestation_template, procedure: procedure, activated: activated) }
+      let(:attestation_template) { build(:attestation_template, activated: activated) }
 
       context 'when the attestation is inactive' do
         let(:activated) { false }
@@ -414,7 +415,16 @@ describe Procedure do
 
   describe 'clone' do
     let(:service) { create(:service) }
-    let(:procedure) { create(:procedure, received_mail: received_mail, service: service, types_de_champ: [type_de_champ_0, type_de_champ_1, type_de_champ_2, type_de_champ_pj, type_de_champ_repetition], types_de_champ_private: [type_de_champ_private_0, type_de_champ_private_1, type_de_champ_private_2, type_de_champ_private_repetition], api_particulier_token: '123456789012345', api_particulier_scopes: ['cnaf_famille']) }
+    let(:procedure) do
+      create(:procedure,
+        received_mail: received_mail,
+        service: service,
+        attestation_template: build(:attestation_template, logo: logo, signature: signature),
+        types_de_champ: [type_de_champ_0, type_de_champ_1, type_de_champ_2, type_de_champ_pj, type_de_champ_repetition],
+        types_de_champ_private: [type_de_champ_private_0, type_de_champ_private_1, type_de_champ_private_2, type_de_champ_private_repetition],
+        api_particulier_token: '123456789012345',
+        api_particulier_scopes: ['cnaf_famille'])
+    end
     let(:type_de_champ_0) { build(:type_de_champ, position: 0) }
     let(:type_de_champ_1) { build(:type_de_champ, position: 1) }
     let(:type_de_champ_2) { build(:type_de_champ_drop_down_list, position: 2) }
@@ -427,6 +437,8 @@ describe Procedure do
     let(:received_mail) { build(:received_mail) }
     let(:from_library) { false }
     let(:administrateur) { procedure.administrateurs.first }
+    let(:logo) { Rack::Test::UploadedFile.new('spec/fixtures/files/white.png', 'image/png') }
+    let(:signature) { Rack::Test::UploadedFile.new('spec/fixtures/files/black.png', 'image/png') }
 
     let(:groupe_instructeur_1) { create(:groupe_instructeur, procedure: procedure, label: "groupe_1") }
     let(:instructeur_1) { create(:instructeur) }
@@ -435,9 +447,6 @@ describe Procedure do
     let!(:assign_to_2) { create(:assign_to, procedure: procedure, groupe_instructeur: groupe_instructeur_1, instructeur: instructeur_2) }
 
     before do
-      @logo = Rack::Test::UploadedFile.new('spec/fixtures/files/white.png', 'image/png')
-      @signature = Rack::Test::UploadedFile.new('spec/fixtures/files/black.png', 'image/png')
-      @attestation_template = create(:attestation_template, procedure: procedure, logo: @logo, signature: @signature)
       @procedure = procedure.clone(administrateur, from_library)
       @procedure.save
     end
