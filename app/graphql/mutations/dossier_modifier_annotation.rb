@@ -11,7 +11,7 @@ module Mutations
       annotation = find_annotation(dossier, type, annotation_id)
 
       if block_given?
-        annotation.value = yield annotation.type_champ, value
+        yield annotation, value
       else
         annotation.value = value
       end
@@ -60,6 +60,8 @@ module Mutations
         TypeDeChamp.type_champs.fetch(:datetime)
       when :integer_number
         TypeDeChamp.type_champs.fetch(:integer_number)
+      when :piece_justificative
+        TypeDeChamp.type_champs.fetch(:piece_justificative)
       end
     end
   end
