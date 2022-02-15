@@ -276,7 +276,7 @@ class ApplicationController < ActionController::Base
     matomo = Rails.application.secrets.matomo
 
     {
-      cookie_domain: matomo[:cookie_domain],
+      cookieDomain: matomo[:cookie_domain],
       domain: matomo[:domain],
       enabled: matomo[:enabled],
       host: matomo[:host],
