@@ -89,7 +89,8 @@ Rails.application.configure do
 
   elsif ENV['SENDINBLUE_ENABLED'] == 'enabled'
     config.action_mailer.delivery_method = :sendinblue
-
+  elsif ENV['MAILCATCHER_ENABLED'] == 'enabled'
+    config.action_mailer.delivery_method = :mailcatcher
   else
     config.action_mailer.delivery_method = :mailjet
   end
