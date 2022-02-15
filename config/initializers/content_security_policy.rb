@@ -31,6 +31,10 @@ Rails.application.config.content_security_policy do |policy|
   connect_whitelist << Rails.application.secrets.matomo[:host] if Rails.application.secrets.matomo[:enabled]
   policy.connect_src(:self, *connect_whitelist)
 
+  frame_whitelist = []
+  frame_whitelist << URI(MATOMO_IFRAME_URL).host if Rails.application.secrets.matomo[:enabled]
+  policy.frame_src(:self, *frame_whitelist)
+
   # Pour tout le reste, par défaut on accepte uniquement ce qui vient de chez nous
   # et dans la notification on inclue la source de l'erreur
   default_whitelist = ["fonts.gstatic.com", "in-automate.sendinblue.com", "player.vimeo.com", "app.franceconnect.gouv.fr", "sentry.io", "*.crisp.chat", "crisp.chat", "*.crisp.help", "*.sibautomation.com", "sibautomation.com", "data"]
