@@ -23,6 +23,16 @@ describe 'instructeur/dossiers/expiration_banner.html.haml', type: :view do
     it 'render estimated expiration date' do
       expect(subject).not_to have_selector('.expires_at')
     end
+
+    context 'with dossier.en_instruction?' do
+      let(:state) { :en_instruction }
+      let(:attributes) { {} }
+
+      it 'does not render estimated expiration date' do
+        expect(subject).not_to have_selector('p.expires_at_en_instruction',
+                                             text: I18n.t("shared.dossiers.header.expires_at.en_instruction"))
+      end
+    end
   end
 
   context 'with procedure having procedure_expires_when_termine_enabled enabled' do
