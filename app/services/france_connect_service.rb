@@ -6,7 +6,7 @@ class FranceConnectService
   end
 
   def self.enabled?
-    Rails.configuration.x.france_connect.enabled
+    Flipper.enabled?(:france_connect)
   end
 
   def authorization_uri

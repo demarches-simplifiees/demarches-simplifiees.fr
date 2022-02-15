@@ -1,6 +1,6 @@
 module FranceConnectHelper
   def france_connect_enabled?(procedure: nil)
-    return false if !FranceConnectService.enabled?
+    return false if !Flipper.enabled?(:france_connect, current_user)
 
     procedure&.fc_particulier_validated? || Rails.application.secrets.france_connect_particulier.present?
   end

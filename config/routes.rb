@@ -128,7 +128,7 @@ Rails.application.routes.draw do
     get 'callback' => 'agent#callback'
   end
 
-  if Rails.configuration.x.france_connect.enabled
+  constraints(lambda { |_request| FranceConnectService.enabled? }) do
     namespace :france_connect do
       get 'particulier' => 'particulier#login'
       get 'particulier/callback' => 'particulier#callback'
@@ -258,10 +258,7 @@ Rails.application.routes.draw do
       get '/:path/dossier_vide', action: 'dossier_vide_pdf', as: :dossier_vide
       get '/:path/sign_in', action: 'sign_in', as: :sign_in
       get '/:path/sign_up', action: 'sign_up', as: :sign_up
-
-      if Rails.configuration.x.france_connect.enabled
-        get '/:path/france_connect', action: 'france_connect', as: :france_connect
-      end
+      get '/:path/france_connect', action: 'france_connect', as: :france_connect, constraints: lambda { |_request| FranceConnectService.enabled? }
     end
 
     resources :dossiers, only: [:index, :show, :new] do

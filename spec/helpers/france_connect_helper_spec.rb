@@ -1,15 +1,17 @@
 describe FranceConnectHelper, type: :helper do
+  let!(:current_user) { create(:user) }
+
   describe ".france_connect_enabled?" do
     subject { france_connect_enabled?(procedure: procedure) }
 
     context "when FranceConnect service is disabled" do
       before do
-        @fc_enabled = Rails.configuration.x.france_connect.enabled
-        Rails.configuration.x.france_connect.enabled = false
+        @fc_enabled = Flipper.enabled?(:france_connect)
+        Flipper.disable(:france_connect) if @fc_enabled
       end
 
       after do
-        Rails.configuration.x.france_connect.enabled = @fc_enabled
+        Flipper.enable(:france_connect) if @fc_enabled
       end
 
       let(:procedure) { nil }
@@ -19,12 +21,12 @@ describe FranceConnectHelper, type: :helper do
 
     context "when FranceConnect service is enabled" do
       before do
-        @fc_enabled = Rails.configuration.x.france_connect.enabled
-        Rails.configuration.x.france_connect.enabled = true
+        @fc_enabled = Flipper.enabled?(:france_connect)
+        Flipper.enable(:france_connect) if !@fc_enabled
       end
 
       after do
-        Rails.configuration.x.france_connect.enabled = @fc_enabled
+        Flipper.disable(:france_connect) if !@fc_enabled
       end
 
       context "and no given procedure" do

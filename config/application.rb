@@ -80,7 +80,6 @@ module TPS
     # Custom Configuration
     # @see https://guides.rubyonrails.org/configuring.html#custom-configuration
     config.x.clamav.enabled = ENV.fetch("CLAMAV_ENABLED", "enabled") == "enabled"
-    config.x.france_connect.enabled = ENV.fetch("FRANCE_CONNECT_ENABLED", "enabled") == "enabled"
     config.x.france_connect.particulier = config_for(:france_connect)
     config.x.france_connect.particulier.scopes = config.x.france_connect.particulier.scopes.split(',').map(&:to_sym)
     config.x.fcp = config.x.france_connect.particulier

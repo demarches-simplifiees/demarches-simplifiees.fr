@@ -22,11 +22,12 @@ describe 'France Connect Particulier Connexion' do
 
   context 'when user is on login page' do
     before(:all) do
-      Rails.configuration.x.france_connect.enabled = true
+      @fc_enabled = Flipper.enabled?(:france_connect)
+      Flipper.enable(:france_connect) if !@fc_enabled
     end
 
     after(:all) do
-      Rails.configuration.x.france_connect.enabled = false
+      Flipper.disable(:france_connect) if !@fc_enabled
     end
 
     before do

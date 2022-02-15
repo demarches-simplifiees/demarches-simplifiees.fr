@@ -1,6 +1,6 @@
 class FranceConnectCredentialsService
   def call(procedure_url_path = nil)
-    return {} unless Rails.configuration.x.france_connect.enabled
+    return {} unless FranceConnectService.enabled?
 
     procedure = procedure_by_url(procedure_url_path)
 
