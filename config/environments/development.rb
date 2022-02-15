@@ -40,7 +40,7 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = false
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = ENV['FOG_ENABLED'] == 'enabled' ? :openstack : :local
+  config.active_storage.service = ENV.fetch("ACTIVE_STORAGE_SERVICE").to_sym
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
@@ -77,15 +77,12 @@ Rails.application.configure do
   # Action Mailer settings
   config.action_mailer.delivery_method = :letter_opener
 
-  config.action_mailer.default_url_options = {
-    host: 'localhost',
-    port: 3000
-  }
-  config.action_mailer.asset_host = "http://" + ENV['APP_HOST']
+  config.action_mailer.default_url_options = { host: ENV.fetch("APP_HOST") }
+  config.action_mailer.asset_host = "http://" + ENV.fetch("APP_HOST")
 
   Rails.application.routes.default_url_options = {
-    host: 'localhost',
-    port: 3000
+    host: ENV.fetch("APP_HOST"),
+    protocol: :http
   }
 
   # Use Content-Security-Policy-Report-Only headers
@@ -111,4 +108,6 @@ Rails.application.configure do
   if ENV['IGN_CARTE_REFERER']
     config.hosts << ENV['IGN_CARTE_REFERER']
   end
+
+  config.hosts << ENV.fetch("APP_HOST")
 end
