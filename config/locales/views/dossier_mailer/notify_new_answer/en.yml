@@ -8,6 +8,7 @@ en:
         To read the message and answer it, select the following link:
       body_draft_html: |
         You received <b>a new message</b> from the service in charge of reviewing the file you started a draft for on the procedure « %{libelle_demarche} ».
-      contact: If you chose to contact the service, please use the email available below in the page.
+      contact_html: "If you chose to contact the service, please send an email directly to this address: <a href=\"mailto:%{email}\">%{email}</a>"
+      contact_no_email: If you chose to contact the service, please use the contact infos available below.
       access_message: Read the message
       access_file: Open file
