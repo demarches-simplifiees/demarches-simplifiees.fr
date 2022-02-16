@@ -27,15 +27,23 @@ RSpec.describe DossierMailer, type: :mailer do
   end
 
   describe '.notify_new_answer with dossier brouillon' do
-    let(:dossier) { create(:dossier, procedure: create(:simple_procedure)) }
+    let(:service) { build(:service) }
+    let(:procedure) { create(:simple_procedure, service: service) }
+    let(:dossier) { create(:dossier, procedure: procedure) }
     let(:commentaire) { create(:commentaire, dossier: dossier) }
     subject { described_class.with(commentaire: commentaire).notify_new_answer }
 
     it { expect(subject.subject).to include("Nouveau message") }
     it { expect(subject.subject).to include(dossier.id.to_s) }
+    it { expect(subject.body).to include(dossier.procedure.service.email) }
     it { expect(subject.body).not_to include(messagerie_dossier_url(dossier)) }
 
     it_behaves_like 'a dossier notification'
+
+    context 'when there is no associated service' do
+      let(:service) { nil }
+      it { expect { subject }.not_to raise_error }
+    end
   end
 
   describe '.notify_new_answer with dossier en construction' do

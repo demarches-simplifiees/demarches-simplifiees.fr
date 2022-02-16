@@ -7,7 +7,10 @@
   %p= t('.body_draft_html', libelle_demarche: @dossier.procedure.libelle)
   %p{ style: "padding: 8px; color: #333333; background-color: #EEEEEE; font-size: 14px;" }
     = @body
-  %p= t('.contact')
+  - if @service&.email.present?
+    %p= t('.contact_html', email: @service.email)
+  - else
+    %p= t('.contact_no_email')
   = round_button(t('.access_file'), dossier_url(@dossier), :primary)
 - else
   %p= t('.body_html', libelle_demarche: @dossier.procedure.libelle)
