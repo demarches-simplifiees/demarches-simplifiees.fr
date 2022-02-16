@@ -7,7 +7,7 @@ fr:
       link: |
         Pour consulter le message et y répondre, cliquez sur le bouton ci-dessous :
       body_draft_html: |
-        Vous avez reçu un <b>nouveau message</b>du service pour lequel votre dossier est en brouillon pour la démarche « %{libelle_demarche} ».
+        Vous avez reçu un <b>nouveau message</b> du service pour lequel votre dossier est en brouillon pour la démarche « %{libelle_demarche} ».
       contact: Si vous souhaitez contacter le service, merci de le faire directement à l'aide de l'email en bas de page.
       access_message: Lire le message
       access_file: Voir le dossier
