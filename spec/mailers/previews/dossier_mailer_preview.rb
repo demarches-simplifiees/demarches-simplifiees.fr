@@ -5,7 +5,7 @@ class DossierMailerPreview < ActionMailer::Preview
   end
 
   def notify_new_answer
-    DossierMailer.notify_new_answer(dossier)
+    DossierMailer.with(commentaire: commentaire(on: draft)).notify_new_answer
   end
 
   def notify_revert_to_instruction
@@ -88,7 +88,7 @@ class DossierMailerPreview < ActionMailer::Preview
   end
 
   def draft
-    Dossier.new(id: 47882, procedure: procedure, user: user)
+    Dossier.new(id: 47882, state: :brouillon, procedure: procedure, user: user)
   end
 
   def dossier
@@ -118,5 +118,10 @@ class DossierMailerPreview < ActionMailer::Preview
 
   def transfer
     DossierTransfer.new(email: usager_email, dossiers: [dossier, dossier_accepte])
+  end
+
+  def commentaire(on:)
+    dossier = on
+    Commentaire.new(id: 7726, body: "Bonjour, Vous avez commencé le dépôt d’un dossier pour une subvention DETR /DSIL. Dans le cas où votre opération n’aurait pas connu un commencement d’exécution, vous êtes encouragé(e) à redéposer un nouveau dossier sur le formulaire de cette année.\nLa DDT", dossier: dossier)
   end
 end
