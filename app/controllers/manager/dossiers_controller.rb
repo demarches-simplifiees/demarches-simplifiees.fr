@@ -9,10 +9,10 @@ module Manager
     def scoped_resource
       if unfiltered_list?
         # Don't display discarded dossiers in the unfiltered list…
-        Dossier.kept
+        Dossier.visible_by_administration
       else
         # … but allow them to be searched and displayed.
-        Dossier.with_discarded
+        Dossier
       end
     end
 

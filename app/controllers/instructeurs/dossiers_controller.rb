@@ -228,7 +228,7 @@ module Instructeurs
 
     def delete_dossier
       if dossier.termine?
-        dossier.discard_and_keep_track!(current_instructeur, :instructeur_request)
+        dossier.delete_and_keep_track!(current_instructeur, :instructeur_request)
         flash.notice = t('instructeurs.dossiers.deleted_by_instructeur')
         redirect_to instructeur_procedure_path(procedure)
       else

@@ -216,7 +216,7 @@ module Users
     def delete_dossier
       dossier = current_user.dossiers.includes(:user, procedure: :administrateurs).find(params[:id])
       if dossier.can_be_deleted_by_user?
-        dossier.discard_and_keep_track!(current_user, :user_request)
+        dossier.delete_and_keep_track!(current_user, :user_request)
         flash.notice = t('users.dossiers.ask_deletion.soft_deleted_dossier')
         redirect_to dossiers_path
       else
