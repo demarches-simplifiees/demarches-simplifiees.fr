@@ -778,8 +778,8 @@ describe Instructeurs::DossiersController, type: :controller do
         expect(DeletedDossier.where(dossier_id: dossier.id).count).to eq(0)
       end
 
-      it 'discard the dossier' do
-        expect(dossier.reload.hidden_at).not_to eq(nil)
+      it 'is not visible by administration' do
+        expect(dossier.reload.visible_by_administration?).to be_falsy
       end
     end
 
