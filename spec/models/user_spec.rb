@@ -316,12 +316,12 @@ describe User, type: :model do
         end
       end
 
-      context 'with a discarded dossier' do
-        let(:dossier_to_discard) { create(:dossier, :en_construction, user: user) }
+      context 'with a deleted dossier' do
+        let(:dossier_to_delete) { create(:dossier, :en_construction, user: user) }
         let!(:dossier_from_another_user) { create(:dossier, :en_construction, user: create(:user)) }
 
         it "keep track of dossiers and delete user" do
-          dossier_to_discard.discard_and_keep_track!(super_admin, :user_request)
+          dossier_to_delete.delete_and_keep_track!(super_admin, :user_request)
           user.delete_and_keep_track_dossiers(super_admin)
 
           expect(DeletedDossier.find_by(dossier_id: dossier_en_construction)).to be_nil
@@ -426,14 +426,14 @@ describe User, type: :model do
 
     context 'and the old account has some stuff' do
       let!(:dossier) { create(:dossier, user: old_user) }
-      let!(:hidden_dossier) { create(:dossier, user: old_user, hidden_at: Time.zone.now) }
+      let!(:hidden_dossier) { create(:dossier, user: old_user, hidden_by_user_at: 1.hour.ago) }
       let!(:invite) { create(:invite, user: old_user) }
       let!(:merge_log) { MergeLog.create(user: old_user, from_user_id: 1, from_user_email: 'a') }
 
       it 'transfers the dossier' do
         subject
 
-        expect(targeted_user.dossiers.with_discarded).to contain_exactly(dossier, hidden_dossier)
+        expect(targeted_user.dossiers).to contain_exactly(dossier, hidden_dossier)
         expect(targeted_user.invites).to match([invite])
         expect(targeted_user.merge_logs.first).to eq(merge_log)
 

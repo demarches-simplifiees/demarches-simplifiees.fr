@@ -231,9 +231,9 @@ class Instructeur < ApplicationRecord
   def dossiers_count_summary(groupe_instructeur_ids)
     query = <<~EOF
       SELECT
-        COUNT(DISTINCT dossiers.id) FILTER (where not archived AND NOT (dossiers.hidden_by_user_at IS NOT NULL AND state = 'en_construction') AND dossiers.state in ('en_construction', 'en_instruction') AND follows.id IS NULL) AS a_suivre,
+        COUNT(DISTINCT dossiers.id) FILTER (where not archived AND NOT (dossiers.hidden_by_user_at IS NOT NULL AND dossiers.state = 'en_construction')  AND dossiers.state in ('en_construction', 'en_instruction') AND follows.id IS NULL) AS a_suivre,
         COUNT(DISTINCT dossiers.id) FILTER (where not archived AND dossiers.state in ('en_construction', 'en_instruction') AND follows.instructeur_id = :instructeur_id) AS suivis,
-        COUNT(DISTINCT dossiers.id) FILTER (where not archived AND dossiers.state in ('accepte', 'refuse', 'sans_suite')) AS traites,
+        COUNT(DISTINCT dossiers.id) FILTER (where not archived AND NOT (dossiers.hidden_by_administration_at IS NOT NULL) AND dossiers.state in ('accepte', 'refuse', 'sans_suite')) AS traites,
         COUNT(DISTINCT dossiers.id) FILTER (where not archived AND NOT (dossiers.hidden_by_user_at IS NOT NULL AND state = 'en_construction') AND NOT (dossiers.hidden_by_administration_at IS NOT NULL)) AS tous,
         COUNT(DISTINCT dossiers.id) FILTER (where not archived AND (dossiers.hidden_by_administration_at IS NOT NULL AND dossiers.state in ('accepte', 'refuse', 'sans_suite') )) AS supprimes_recemment,
         COUNT(DISTINCT dossiers.id) FILTER (where archived) AS archives,
@@ -255,8 +255,7 @@ class Instructeur < ApplicationRecord
         LEFT OUTER JOIN follows
           ON  follows.dossier_id = dossiers.id
           AND follows.unfollowed_at IS NULL
-      WHERE "dossiers"."hidden_at" IS NULL
-        AND "dossiers"."state" != 'brouillon'
+      WHERE "dossiers"."state" != 'brouillon'
         AND "dossiers"."groupe_instructeur_id" in (:groupe_instructeur_ids)
     EOF
 

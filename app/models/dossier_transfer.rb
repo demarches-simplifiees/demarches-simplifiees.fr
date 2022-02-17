@@ -14,7 +14,7 @@ class DossierTransfer < ApplicationRecord
 
   scope :pending, -> { where('created_at > ?', (Time.zone.now - EXPIRATION_LIMIT)) }
   scope :stale, -> { where('created_at < ?', (Time.zone.now - EXPIRATION_LIMIT)) }
-  scope :with_dossiers, -> { joins(:dossiers) }
+  scope :with_dossiers, -> { joins(:dossiers).where(dossiers: { hidden_by_user_at: nil }) }
 
   after_create_commit :send_notification
 
@@ -48,7 +48,7 @@ class DossierTransfer < ApplicationRecord
   def destroy_and_nullify
     transaction do
       # Rails cascading is not working with default scopes. Doing nullify cascade manually.
-      dossiers.with_discarded.update_all(dossier_transfer_id: nil)
+      dossiers.update_all(dossier_transfer_id: nil)
       destroy
     end
   end
@@ -56,7 +56,7 @@ class DossierTransfer < ApplicationRecord
   def self.destroy_stale
     transaction do
       # Rails cascading is not working with default scopes. Doing nullify cascade manually.
-      Dossier.with_discarded.where(transfer: stale).update_all(dossier_transfer_id: nil)
+      Dossier.where(transfer: stale).update_all(dossier_transfer_id: nil)
       stale.destroy_all
     end
   end

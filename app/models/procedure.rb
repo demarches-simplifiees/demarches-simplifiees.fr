@@ -682,15 +682,15 @@ class Procedure < ApplicationRecord
       close!
     end
 
-    dossiers.termine.visible_by_administration.each do |dossier|
-      dossier.discard_and_keep_track!(author, :procedure_removed)
+    dossiers.visible_by_administration.each do |dossier|
+      dossier.delete_and_keep_track!(author, :procedure_removed)
     end
 
     discard!
   end
 
   def purge_discarded
-    if !dossiers.with_discarded.exists?
+    if !dossiers.exists?
       destroy
     end
   end
