@@ -9,7 +9,6 @@ FactoryBot.define do
     transient do
       procedure { nil }
       position { nil }
-      parent { nil }
       types_de_champ { nil }
     end
 
@@ -19,24 +18,35 @@ FactoryBot.define do
         revision_type_de_champ = build(:procedure_revision_type_de_champ,
           position: evaluator.position,
           revision: revision,
-          parent: evaluator.parent,
           type_de_champ: type_de_champ)
 
         if evaluator.types_de_champ.present?
+          association = revision_type_de_champ.association(:revision_types_de_champ)
           evaluator.types_de_champ.each.with_index do |type_de_champ, index|
-            revision_type_de_champ.revision_types_de_champ << build(:procedure_revision_type_de_champ,
+            procedure_revision_type_de_champ = build(:procedure_revision_type_de_champ,
               position: index,
               revision: revision,
               parent: revision_type_de_champ,
               type_de_champ: type_de_champ)
+            revision_type_de_champ.revision_types_de_champ << procedure_revision_type_de_champ
+            #association.set_inverse_instance(procedure_revision_type_de_champ)
           end
+          # revision_type_de_champ.association(:types_de_champ).target = evaluator.types_de_champ
+          # type_de_champ.association(:types_de_champ).target = evaluator.types_de_champ
+          # pp revision_type_de_champ.types_de_champ
+          # pp type_de_champ.types_de_champ
         end
 
+        #type_de_champ.association(:revision_type_de_champ).target = revision_type_de_champ
+        #type_de_champ.association(:draft_revision_type_de_champ).target = revision_type_de_champ
+
         if type_de_champ.private?
-          revision.types_de_champ_private << type_de_champ
+          revision.revision_types_de_champ_private << revision_type_de_champ
         else
-          revision.types_de_champ << type_de_champ
+          revision.revision_types_de_champ << revision_type_de_champ
         end
+      elsif evaluator.types_de_champ.present?
+        raise "A type de champ repetition can only be created with procedure"
       end
     end
 

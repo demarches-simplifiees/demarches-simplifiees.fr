@@ -304,7 +304,16 @@ describe Procedure do
       let(:drop_down) { build(:type_de_champ_drop_down_list, :without_selectable_values, libelle: 'Civilité') }
       let(:invalid_drop_down_error_message) { 'Le champ « Civilité » doit comporter au moins un choix sélectionnable' }
 
-      let(:procedure) { create(:procedure, types_de_champ: [repetition, drop_down]) }
+      let(:procedure) do
+        procedure = create(:procedure, types_de_champ: [repetition, drop_down])
+        types_de_champ.each do |type_de_champ|
+          create(:procedure_revision_type_de_champ,
+            revision: procedure.active_revision,
+            type_de_champ: type_de_champ,
+            parent: repetition.draft_revision_type_de_champ)
+        end
+        procedure
+      end
 
       context 'on a draft procedure' do
         it 'doesn’t validate the types de champs' do
@@ -480,8 +489,8 @@ describe Procedure do
         expect(stc.revision).to eq(subject.draft_revision)
       end
 
-      procedure.draft_types_de_champ.repetition.flat_map(&:draft_types_de_champ)
-        .zip(subject.draft_types_de_champ.repetition.flat_map(&:draft_types_de_champ))
+      procedure.draft_types_de_champ.repetition.flat_map(&:types_de_champ)
+        .zip(subject.draft_types_de_champ.repetition.flat_map(&:types_de_champ))
         .each do |ptc, stc|
           expect(stc).to have_same_attributes_as(ptc)
           expect(stc.revision).to eq(subject.draft_revision)
@@ -492,8 +501,8 @@ describe Procedure do
         expect(stc.revision).to eq(subject.draft_revision)
       end
 
-      procedure.draft_types_de_champ_private.repetition.flat_map(&:draft_types_de_champ)
-        .zip(subject.draft_types_de_champ_private.repetition.flat_map(&:draft_types_de_champ))
+      procedure.draft_types_de_champ_private.repetition.flat_map(&:types_de_champ)
+        .zip(subject.draft_types_de_champ_private.repetition.flat_map(&:types_de_champ))
         .each do |ptc, stc|
           expect(stc).to have_same_attributes_as(ptc)
           expect(stc.revision).to eq(subject.draft_revision)

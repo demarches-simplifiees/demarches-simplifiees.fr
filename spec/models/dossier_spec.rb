@@ -28,7 +28,13 @@ describe Dossier do
   end
 
   describe 'with_champs' do
-    let(:procedure) { create(:procedure, types_de_champ: [build(:type_de_champ, libelle: 'l1', position: 1), build(:type_de_champ, libelle: 'l3', position: 3), build(:type_de_champ, libelle: 'l2', position: 2)]) }
+    let(:procedure) do
+      procedure = create(:procedure)
+      create(:procedure_revision_type_de_champ, revision: procedure.draft_revision, position: 1, type_de_champ: build(:type_de_champ, libelle: 'l1'))
+      create(:procedure_revision_type_de_champ, revision: procedure.draft_revision, position: 3, type_de_champ: build(:type_de_champ, libelle: 'l3'))
+      create(:procedure_revision_type_de_champ, revision: procedure.draft_revision, position: 2, type_de_champ: build(:type_de_champ, libelle: 'l2'))
+      procedure
+    end
     let(:dossier) { create(:dossier, procedure: procedure) }
 
     it do
@@ -338,14 +344,26 @@ describe Dossier do
   end
 
   describe '#champs' do
-    let(:procedure) { create(:procedure, types_de_champ: [build(:type_de_champ, :private, libelle: 'l1', position: 1), build(:type_de_champ, :private, libelle: 'l3', position: 3), build(:type_de_champ, :private, libelle: 'l2', position: 2)]) }
+    let(:procedure) do
+      procedure = create(:procedure)
+      create(:procedure_revision_type_de_champ, revision: procedure.draft_revision, position: 1, type_de_champ: build(:type_de_champ, libelle: 'l1'))
+      create(:procedure_revision_type_de_champ, revision: procedure.draft_revision, position: 3, type_de_champ: build(:type_de_champ, libelle: 'l3'))
+      create(:procedure_revision_type_de_champ, revision: procedure.draft_revision, position: 2, type_de_champ: build(:type_de_champ, libelle: 'l2'))
+      procedure
+    end
     let(:dossier) { create(:dossier, procedure: procedure) }
 
     it { expect(dossier.champs.pluck(:libelle)).to match(['l1', 'l2', 'l3']) }
   end
 
   describe '#champs_private' do
-    let(:procedure) { create(:procedure, types_de_champ_private: [build(:type_de_champ, :private, libelle: 'l1', position: 1), build(:type_de_champ, :private, libelle: 'l3', position: 3), build(:type_de_champ, :private, libelle: 'l2', position: 2)]) }
+    let(:procedure) do
+      procedure = create(:procedure)
+      create(:procedure_revision_type_de_champ, revision: procedure.draft_revision, position: 1, type_de_champ: build(:type_de_champ, :private, libelle: 'l1'))
+      create(:procedure_revision_type_de_champ, revision: procedure.draft_revision, position: 3, type_de_champ: build(:type_de_champ, :private, libelle: 'l3'))
+      create(:procedure_revision_type_de_champ, revision: procedure.draft_revision, position: 2, type_de_champ: build(:type_de_champ, :private, libelle: 'l2'))
+      procedure
+    end
     let(:dossier) { create(:dossier, procedure: procedure) }
 
     it { expect(dossier.champs_private.pluck(:libelle)).to match(['l1', 'l2', 'l3']) }
@@ -1127,11 +1145,11 @@ describe Dossier do
     end
 
     context "with champ repetition" do
-      let(:procedure) { create(:procedure, types_de_champ: [type_de_champ_repetition]) }
-      let(:type_de_champ_repetition) { build(:type_de_champ_repetition, mandatory: true) }
-
-      before do
-        create(:type_de_champ_text, mandatory: true, parent: type_de_champ_repetition.draft_revision_type_de_champ)
+      let(:procedure) do
+        procedure = create(:procedure)
+        parent = create(:procedure_revision_type_de_champ, revision: procedure.draft_revision, type_de_champ: build(:type_de_champ_repetition, mandatory: true))
+        create(:procedure_revision_type_de_champ, revision: procedure.draft_revision, parent: parent, type_de_champ: build(:type_de_champ_text, mandatory: true))
+        procedure
       end
 
       context "when no champs" do

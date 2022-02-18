@@ -8,7 +8,7 @@ describe TagsSubstitutionConcern, type: :model do
 
   let(:procedure) do
     create(:procedure,
-      :published,
+      #:published,
       libelle: 'Une magnifique démarche',
       types_de_champ: types_de_champ,
       types_de_champ_private: types_de_champ_private,

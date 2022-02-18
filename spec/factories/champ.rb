@@ -216,27 +216,38 @@ FactoryBot.define do
 
       after(:build) do |champ_repetition, evaluator|
         types_de_champ = champ_repetition.type_de_champ.types_de_champ
+        revision_type_de_champ = champ_repetition.type_de_champ.draft_revision_type_de_champ
+
         existing_type_de_champ_text = types_de_champ.find { |tdc| tdc.libelle == 'Nom' }
         type_de_champ_text = existing_type_de_champ_text || build(
           :type_de_champ_text,
-          position: 0,
-          parent: champ_repetition.type_de_champ.draft_revision_type_de_champ,
           libelle: 'Nom'
         )
 
         existing_type_de_champ_number = types_de_champ.find { |tdc| tdc.libelle == 'Age' }
         type_de_champ_number = existing_type_de_champ_number || build(
           :type_de_champ_number,
-          position: 1,
-          parent: champ_repetition.type_de_champ.draft_revision_type_de_champ,
           libelle: 'Age'
         )
 
-        champ_repetition.type_de_champ.types_de_champ << [type_de_champ_text, type_de_champ_number]
+        revision_type_de_champ.revision_types_de_champ << build(:procedure_revision_type_de_champ,
+          position: 0,
+          revision: revision_type_de_champ.revision,
+          parent: revision_type_de_champ,
+          type_de_champ: type_de_champ_text)
+
+        revision_type_de_champ.revision_types_de_champ << build(:procedure_revision_type_de_champ,
+          position: 1,
+          revision: revision_type_de_champ.revision,
+          parent: revision_type_de_champ,
+          type_de_champ: type_de_champ_number)
+
+        champ_repetition.type_de_champ.association(:types_de_champ).target = [type_de_champ_text, type_de_champ_number]
+
         evaluator.rows.times do |row|
           champ_repetition.champs << [
-            build(:champ_text, dossier: champ_repetition.dossier, row: row, type_de_champ: type_de_champ_text, parent: champ_repetition.draft_revision_type_de_champ),
-            build(:champ_number, dossier: champ_repetition.dossier, row: row, type_de_champ: type_de_champ_number, parent: champ_repetition.draft_revision_type_de_champ)
+            build(:champ_text, dossier: champ_repetition.dossier, row: row, type_de_champ: type_de_champ_text, parent: champ_repetition),
+            build(:champ_number, dossier: champ_repetition.dossier, row: row, type_de_champ: type_de_champ_number, parent: champ_repetition)
           ]
         end
       end
