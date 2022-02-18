@@ -120,7 +120,7 @@ end
 
 group :development, :test do
   gem 'graphql-schema_comparator'
-  gem 'mina', git: 'https://github.com/mina-deploy/mina.git', require: false # Deploy
+  gem 'mina', require: false # Deploy
   gem 'pry-byebug' # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'rspec-rails'
   gem 'simple_xlsx_reader'
