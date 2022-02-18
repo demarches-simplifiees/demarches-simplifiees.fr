@@ -2,19 +2,57 @@ module DossierRebaseConcern
   extend ActiveSupport::Concern
 
   def rebase!
-    if brouillon? && revision != procedure.published_revision
+    if can_rebase?
       transaction do
         rebase
       end
     end
   end
 
+  def can_rebase?
+    revision != procedure.published_revision &&
+      (brouillon? || accepted_en_construction_changes? || accepted_en_instruction_changes?)
+  end
+
+  def pending_changes
+    revision.compare(procedure.published_revision)
+  end
+
   private
+
+  def accepted_en_construction_changes?
+    en_construction? && pending_changes.all? { |change| accepted_en_construction_change?(change) }
+  end
+
+  def accepted_en_instruction_changes?
+    en_instruction? && pending_changes.all? { |change| accepted_en_instruction_change?(change) }
+  end
+
+  def accepted_en_construction_change?(change)
+    if change[:model] == :attestation_template || change[:op] == :move || change[:op] == :remove
+      true
+    elsif change[:op] == :update
+      case change[:attribute]
+      when :carte_layers
+        true
+      when :mandatory
+        change[:from] && !change[:to]
+      else
+        false
+      end
+    else
+      false
+    end
+  end
+
+  def accepted_en_instruction_change?(change)
+    change[:model] == :attestation_template
+  end
 
   def rebase
     attachments_to_purge = []
     geo_areas_to_delete = []
-    changes_by_type_de_champ = revision.compare(procedure.published_revision)
+    changes_by_type_de_champ = pending_changes
       .filter { |change| change[:model] == :type_de_champ }
       .group_by { |change| change[:stable_id] }
 
@@ -51,7 +89,9 @@ module DossierRebaseConcern
           when :drop_down_options
             update[:value] = nil
           when :carte_layers
-            geo_areas_to_delete += champ.geo_areas
+            if change[:from].include?(:cadastres) && !change[:to].include?(:cadastres)
+              geo_areas_to_delete += champ.cadastres
+            end
           end
           update[:rebased_at] = Time.zone.now
         end
