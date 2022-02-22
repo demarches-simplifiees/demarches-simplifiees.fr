@@ -41,11 +41,22 @@ Rails.application.config.content_security_policy do |policy|
   policy.default_src(:self, :data, :blob, :report_sample, *default_whitelist)
 
   if Rails.env.development?
+    # Allow LiveReload requests
+    policy.connect_src(*policy.connect_src, "ws://localhost:3035", "http://localhost:3035")
+
     # CSP are not enforced in development (see content_security_policy_report_only in development.rb)
     # However we notify a random local URL, to see breakage in the DevTools when adding a new external resource.
     policy.report_uri "http://#{ENV.fetch('APP_HOST')}/csp/"
-    # Allow LiveReload requests
-    policy.connect_src(*policy.connect_src, "ws://localhost:3035", "http://localhost:3035")
+
+  elsif Rails.env.test?
+    # Disallow all connections to external domains during tests
+    policy.img_src(:self, :data, :blob)
+    policy.script_src(:self, :unsafe_eval, :unsafe_inline, :blob)
+    policy.style_src(:self)
+    policy.connect_src(:self)
+    policy.frame_src(:self)
+    policy.default_src(:self, :data, :blob)
+
   else
     policy.report_uri CSP_REPORT_URI if CSP_REPORT_URI.present?
   end
