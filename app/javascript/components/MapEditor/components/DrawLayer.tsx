@@ -68,7 +68,9 @@ export function DrawLayer({
         drawRef.current = null;
       }
     };
-  }, [enabled]);
+    // We only want to rerender draw layer on component mount or when the layer is toggled.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [map, enabled]);
 
   const onSetId = useCallback(({ detail }) => {
     drawRef.current?.setFeatureProperty(detail.lid, 'id', detail.id);
@@ -167,7 +169,9 @@ function useExternalEvents(
 
   useEffect(() => {
     fitBounds(featureCollection.bbox as LngLatBoundsLike);
-  }, []);
+    // We only want to zoom on bbox on component mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fitBounds]);
 
   useEvent('map:feature:focus', onFeatureFocus);
   useEvent('map:feature:create', onFeatureCreate);

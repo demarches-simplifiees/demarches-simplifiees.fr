@@ -28,35 +28,41 @@ export function CadastreLayer({
   const map = useMapLibre();
   const selectedCadastresRef = useRef(new Set<string>());
 
-  const highlightFeature = useCallback((cid: string, highlight: boolean) => {
-    if (highlight) {
-      selectedCadastresRef.current.add(cid);
-    } else {
-      selectedCadastresRef.current.delete(cid);
-    }
-    if (selectedCadastresRef.current.size == 0) {
-      map.setFilter('parcelle-highlighted', ['in', 'id', '']);
-    } else {
-      map.setFilter('parcelle-highlighted', [
-        'in',
-        'id',
-        ...selectedCadastresRef.current
-      ]);
-    }
-  }, []);
+  const highlightFeature = useCallback(
+    (cid: string, highlight: boolean) => {
+      if (highlight) {
+        selectedCadastresRef.current.add(cid);
+      } else {
+        selectedCadastresRef.current.delete(cid);
+      }
+      if (selectedCadastresRef.current.size == 0) {
+        map.setFilter('parcelle-highlighted', ['in', 'id', '']);
+      } else {
+        map.setFilter('parcelle-highlighted', [
+          'in',
+          'id',
+          ...selectedCadastresRef.current
+        ]);
+      }
+    },
+    [map]
+  );
 
-  const hoverFeature = useCallback((feature: Feature, hover: boolean) => {
-    if (!selectedCadastresRef.current.has(feature.properties?.id)) {
-      map.setFeatureState(
-        {
-          source: 'cadastre',
-          sourceLayer: 'parcelles',
-          id: String(feature.id)
-        },
-        { hover }
-      );
-    }
-  }, []);
+  const hoverFeature = useCallback(
+    (feature: Feature, hover: boolean) => {
+      if (!selectedCadastresRef.current.has(feature.properties?.id)) {
+        map.setFeatureState(
+          {
+            source: 'cadastre',
+            sourceLayer: 'parcelles',
+            id: String(feature.id)
+          },
+          { hover }
+        );
+      }
+    },
+    [map]
+  );
 
   useCadastres(featureCollection, {
     hoverFeature,
