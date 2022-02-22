@@ -26,6 +26,19 @@ import { useDeferredSubmit, useHiddenField } from './shared/hooks';
 
 const Context = createContext();
 
+const optionValueByLabel = (values, options, label) => {
+  const maybeOption = values.includes(label)
+    ? [label, label]
+    : options.find(([optionLabel]) => optionLabel == label);
+  return maybeOption ? maybeOption[1] : undefined;
+};
+const optionLabelByValue = (values, options, value) => {
+  const maybeOption = values.includes(value)
+    ? [value, value]
+    : options.find(([, optionValue]) => optionValue == value);
+  return maybeOption ? maybeOption[0] : undefined;
+};
+
 function ComboMultiple({
   options,
   id,
@@ -40,9 +53,6 @@ function ComboMultiple({
   invariant(id || label, 'ComboMultiple: `id` or a `label` are required');
   invariant(group, 'ComboMultiple: `group` is required');
 
-  if (!Array.isArray(options[0])) {
-    options = options.filter((o) => o).map((o) => [o, o]);
-  }
   const inputRef = useRef();
   const [term, setTerm] = useState('');
   const [selections, setSelections] = useState(selected);
@@ -51,25 +61,22 @@ function ComboMultiple({
   const removedLabelledby = `${inputId}-remove`;
   const selectedLabelledby = `${inputId}-selected`;
 
-  const optionValueByLabel = (label) => {
-    const maybeOption = newValues.includes(label)
-      ? [label, label]
-      : options.find(([optionLabel]) => optionLabel == label);
-    return maybeOption ? maybeOption[1] : undefined;
-  };
-  const optionLabelByValue = (value) => {
-    const maybeOption = newValues.includes(value)
-      ? [value, value]
-      : options.find(([, optionValue]) => optionValue == value);
-    return maybeOption ? maybeOption[0] : undefined;
-  };
-
+  const optionsWithLabels = useMemo(
+    () =>
+      Array.isArray(options[0])
+        ? options
+        : options.filter((o) => o).map((o) => [o, o]),
+    [options]
+  );
   const extraOptions = useMemo(
     () =>
-      acceptNewValues && term && term.length > 2 && !optionLabelByValue(term)
+      acceptNewValues &&
+      term &&
+      term.length > 2 &&
+      !optionLabelByValue(newValues, optionsWithLabels, term)
         ? [[term, term]]
         : [],
-    [acceptNewValues, term, newValues.join(',')]
+    [acceptNewValues, term, optionsWithLabels, newValues]
   );
   const results = useMemo(
     () =>
@@ -77,12 +84,12 @@ function ComboMultiple({
         ...extraOptions,
         ...(term
           ? matchSorter(
-              options.filter(([label]) => !label.startsWith('--')),
+              optionsWithLabels.filter(([label]) => !label.startsWith('--')),
               term
             )
-          : options)
+          : optionsWithLabels)
       ].filter(([, value]) => !selections.includes(value)),
-    [term, selections.join(','), newValues.join(',')]
+    [term, selections, extraOptions, optionsWithLabels]
   );
   const [, setHiddenFieldValue, hiddenField] = useHiddenField(group, name);
   const awaitFormSubmit = useDeferredSubmit(hiddenField);
@@ -100,7 +107,7 @@ function ComboMultiple({
   };
 
   const onSelect = (value) => {
-    const maybeValue = [...extraOptions, ...options].find(
+    const maybeValue = [...extraOptions, ...optionsWithLabels].find(
       ([val]) => val == value
     );
     const selectedValue = maybeValue && maybeValue[1];
@@ -128,7 +135,7 @@ function ComboMultiple({
   };
 
   const onRemove = (label) => {
-    const optionValue = optionValueByLabel(label);
+    const optionValue = optionValueByLabel(newValues, options, label);
     if (optionValue) {
       saveSelection((selections) =>
         selections.filter((value) => value != optionValue)
@@ -149,7 +156,9 @@ function ComboMultiple({
     ) {
       if (
         term &&
-        [...extraOptions, ...options].map(([label]) => label).includes(term)
+        [...extraOptions, ...optionsWithLabels]
+          .map(([label]) => label)
+          .includes(term)
       ) {
         event.preventDefault();
         onSelect(term);
@@ -172,7 +181,9 @@ function ComboMultiple({
   const onBlur = () => {
     const shouldSelect =
       term &&
-      [...extraOptions, ...options].map(([label]) => label).includes(term);
+      [...extraOptions, ...optionsWithLabels]
+        .map(([label]) => label)
+        .includes(term);
 
     awaitFormSubmit(() => {
       if (shouldSelect) {
@@ -199,7 +210,7 @@ function ComboMultiple({
             <ComboboxToken
               key={selection}
               describedby={removedLabelledby}
-              value={optionLabelByValue(selection)}
+              value={optionLabelByValue(newValues, options, selection)}
             />
           ))}
         </ul>
