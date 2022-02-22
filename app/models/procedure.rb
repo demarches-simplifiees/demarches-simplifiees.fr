@@ -34,7 +34,7 @@
 #  monavis_embed                             :text
 #  organisation                              :string
 #  path                                      :string           not null
-#  procedure_expires_when_termine_enabled    :boolean          default(FALSE)
+#  procedure_expires_when_termine_enabled    :boolean          default(TRUE)
 #  published_at                              :datetime
 #  routing_criteria_name                     :text             default("Votre ville")
 #  routing_enabled                           :boolean

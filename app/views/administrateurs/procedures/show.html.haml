@@ -43,6 +43,8 @@
         = t(:has_changes, scope: [:administrateurs, :revision_changes])
       = render partial: 'revision_changes', locals: { changes: @procedure.revision_changes }
 
+- if !@procedure.procedure_expires_when_termine_enabled?
+  = render partial: 'administrateurs/procedures/suggest_expires_when_termine', locals: { procedure: @procedure }
 .container
   %h2.procedure-admin-explanation Indispensable avant publication
   .procedure-grid

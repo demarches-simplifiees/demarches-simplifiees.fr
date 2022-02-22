@@ -57,4 +57,24 @@ describe 'administrateurs/procedures/show.html.haml', type: :view do
       it { expect(rendered).to have_content('Réactiver') }
     end
   end
+
+  describe 'procedure with expiration disabled' do
+    let(:procedure) { create(:procedure, procedure_expires_when_termine_enabled: true) }
+    before do
+      render
+    end
+    it 'does not render partial to enable procedure_expires_when_termine_enabled' do
+      expect(rendered).not_to have_css("div[data-test-suggest_expires_when_termine]")
+    end
+  end
+
+  describe 'procedure with expiration enabled' do
+    let(:procedure) { create(:procedure, procedure_expires_when_termine_enabled: false) }
+    before do
+      render
+    end
+    it 'renders a partial to enable procedure_expires_when_termine_enabled' do
+      expect(rendered).to have_css("div[data-test-suggest_expires_when_termine]")
+    end
+  end
 end
