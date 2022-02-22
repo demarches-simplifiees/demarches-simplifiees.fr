@@ -1,5 +1,6 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
+import invariant from 'tiny-invariant';
 
 export function FlashMessage({
   message,
@@ -12,11 +13,13 @@ export function FlashMessage({
   sticky?: boolean;
   fixed?: boolean;
 }) {
+  const element = document.getElementById('flash_messages');
+  invariant(element, 'Flash messages root element not found');
   return createPortal(
     <div className="flash_message center">
       <div className={flashClassName(level, sticky, fixed)}>{message}</div>
     </div>,
-    document.getElementById('flash_messages')!
+    element
   );
 }
 
