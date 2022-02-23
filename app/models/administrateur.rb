@@ -12,8 +12,7 @@ class Administrateur < ApplicationRecord
   include ActiveRecord::SecureToken
 
   has_and_belongs_to_many :instructeurs
-  has_many :administrateurs_procedures
-  has_many :procedures, through: :administrateurs_procedures
+  has_and_belongs_to_many :procedures
   has_many :services
 
   has_one :user, dependent: :nullify
