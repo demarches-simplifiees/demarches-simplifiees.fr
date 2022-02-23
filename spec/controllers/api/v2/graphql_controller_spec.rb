@@ -1458,6 +1458,59 @@ describe API::V2::GraphqlController do
           end
         end
 
+        describe 'piece_justificative' do
+          let(:query) do
+            "mutation {
+              dossierModifierAnnotationPieceJustificative(input: {
+                dossierId: \"#{dossier.to_typed_id}\",
+                annotationId: \"#{dossier.champs_private.find { |c| c.type_champ == 'piece_justificative' }.to_typed_id}\",
+                instructeurId: \"#{instructeur.to_typed_id}\",
+                attachment: \"#{blob_id}\"
+              }) {
+                annotation {
+                  ... on PieceJustificativeChamp {
+                    file {
+                      filename
+                    }
+                  }
+                }
+                errors {
+                  message
+                }
+              }
+            }"
+          end
+
+          context "success" do
+            let(:blob_id) { blob.signed_id }
+
+            it 'should be a success' do
+              expect(gql_errors).to eq(nil)
+
+              expect(gql_data).to eq(dossierModifierAnnotationPieceJustificative: {
+                annotation: {
+                  file: {
+                    filename: blob_info[:filename]
+                  }
+                },
+                errors: nil
+              })
+            end
+          end
+
+          context 'upload error' do
+            let(:blob_id) { 'fake' }
+
+            it "should fail" do
+              expect(gql_errors).to eq(nil)
+              expect(gql_data).to eq(dossierModifierAnnotationPieceJustificative: {
+                annotation: nil,
+                errors: [{ message: "L’identifiant du fichier téléversé est invalide" }]
+              })
+            end
+          end
+        end
+
         describe 'checkbox' do
           let(:value) { 'true' }
 

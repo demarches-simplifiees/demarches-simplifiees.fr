@@ -27,29 +27,47 @@ class S3Synchronization < ApplicationRecord
       ActiveRecord::Base.connection.reset_pk_sequence!(:S3Synchronisations)
     end
 
-    def synchronize(under_rake, until_time)
-      if ['1', '2', '3'].include?(ENV.fetch('OUTSCALE_STEP', ''))
-        upload(:local, :s3, under_rake, until_time)
+    def perform_step(step, until_time)
+      case step
+      when '-1' # cancel
+        upload(:s3, :local, false, until_time)
+        S3Synchronization.switch_service(:s3, :local, until_time)
+        S3Synchronization.switch_service(:s3_mirror, :local, until_time)
+        S3Synchronization.switch_service(:local_mirror, :local, until_time)
+      when '0' # init
+        S3Synchronization.reset
+      when '1', '2' # upload blobs
+        upload(:local, :s3, false, until_time)
+      when '3' # switch to s3_mirror : cancel possible
+        S3Synchronization.switch_service(:local, :s3_mirror, until_time)
+        S3Synchronization.switch_service(:local_mirror, :s3_mirror, until_time)
+      when '4' # switch to s3, cancel not possible
+        S3Synchronization.switch_service(:s3_mirror, :s3, until_time)
+      else
       end
-      if ['-1', '3'].include?(ENV.fetch('OUTSCALE_STEP', ''))
-        upload(:s3, :local, under_rake, until_time)
-      end
-      AdministrationMailer.s3_synchronization_report.deliver_now if transfer_has_occured
     end
 
     def transfer_has_occured
       S3Synchronization.where('updated_at > ?', 1.minute.ago).count > 0
     end
 
-    def switch_service(from_service, to_service)
+    def switch_service(from_service, to_service, until_time)
+      return if until_time.present? && Time.zone.now > until_time
+
       if blobs_to_switch(from_service).any?
-        blobs_to_switch(from_service).update_all(service_name: to_service)
-        AdministrationMailer.s3_synchronization_report.deliver_now
+        blobs_to_switch(from_service).in_batches do |relation|
+          break if until_time.present? && Time.zone.now > until_time
+          relation.update_all(service_name: to_service)
+          sleep(2)
+        end
+        AdministrationMailer.s3_synchronization_report('').deliver_now
       end
     end
 
     def upload(from, to, under_rake, until_time)
-      puts "Synchronizing from #{from} to #{to}#{until_time ? ' until ' + until_time.to_s : ''}."
+      @logio = StringIO.new
+      @logger = Logger.new @logio
+      @logger.info "Synchronizing from #{from} to #{to}#{until_time ? ' until ' + until_time.to_s : ''}."
       ActiveStorage::Blob.service
       configs = Rails.configuration.active_storage.service_configurations
       from_service = ActiveStorage::Service.configure from, configs
@@ -70,6 +88,7 @@ class S3Synchronization < ApplicationRecord
       pool.shutdown
       pool.wait_for_termination
       progress.finish if progress
+      AdministrationMailer.s3_synchronization_report(@logio.string).deliver_now if transfer_has_occured
     end
 
     def blob_status
@@ -83,6 +102,7 @@ class S3Synchronization < ApplicationRecord
 
     def enqueue(pool, &block)
       if pool.queue_length > 2 * POOL_SIZE
+        yield
         yield
       else
         pool.post(&block)
@@ -115,11 +135,11 @@ class S3Synchronization < ApplicationRecord
           upload_blob(blob, file, configs, to, progress)
         end
       else
-        puts "\nFichier non présent à la source : #{blob.key}"
+        @logger.info "Fichier non présent à la source : #{blob.key}"
       end
     rescue => e
-      puts "\nErreur inconnue #{blob.key} #{e} #{e.message}"
-      e.backtrace.each { |line| puts line }
+      @logger.error "Erreur inconnue #{blob.key} #{e} #{e.message}"
+      e.backtrace.each { |line| @logger.error line if /\/app\//.match?(line) }
     end
 
     def upload_blob(blob, file, configs, to, progress, &block)
@@ -141,10 +161,10 @@ class S3Synchronization < ApplicationRecord
 
     def upload_file(to_service, blob, file)
       begin
-        puts "\nUploading file #{blob.id}\t#{blob.key} #{blob.byte_size}"
+        # @logger.info "Uploading file #{blob.id}\t#{blob.key} #{blob.byte_size}"
         to_service.upload(blob.key, file, checksum: blob.checksum)
       rescue SystemExit, Interrupt
-        puts "\nCanceling upload of #{blob.key}"
+        @logger.error "Canceling upload of #{blob.key}"
         to_service.delete blob.key
         raise
       end
@@ -156,13 +176,14 @@ class S3Synchronization < ApplicationRecord
       synchronization = S3Synchronization.find_or_create_by(target: to, active_storage_blob_id: blob.id)
       check_integrity(to_service, blob, synchronization)
       unless synchronization.checked
+        @logger.info "Trying re uploading #{blob.key}"
         blob.open do |file|
           upload_and_verify(to_service, blob, file, synchronization)
         end
       end
     rescue => e
-      puts "\nErreur inconnue #{blob.key} #{e} #{e.message}"
-      e.backtrace.each { |line| puts line }
+      @logger.error "Erreur inconnue #{blob.key}, #{e}, #{e.message}"
+      e.backtrace.each { |line| @logger.error line if /\/app\//.match?(line) }
     end
 
     def check_integrity(to_service, blob, synchronization)
@@ -172,7 +193,7 @@ class S3Synchronization < ApplicationRecord
         synchronization.checked = true
         synchronization.save
       rescue => e
-        puts "\nIntegrity error on #{blob.key} #{e} #{e.message}"
+        @logger.error "Integrity error reading #{blob.key}, #{e}, #{e.message}"
       end
     end
   end
