@@ -56,7 +56,8 @@ module.exports = {
       rules: {
         'prettier/prettier': 'error',
         'react-hooks/rules-of-hooks': 'error',
-        'react-hooks/exhaustive-deps': 'error'
+        'react-hooks/exhaustive-deps': 'error',
+        '@typescript-eslint/no-explicit-any': 'error'
       }
     }
   ]
