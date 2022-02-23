@@ -70,8 +70,9 @@ const defaultQueryFn: QueryFunction<unknown, QueryKey> = async ({
     }
     throw new Error(`Error fetching from "${scope}" API`);
   });
-  (promise as any).cancel = () => controller && controller.abort();
-  return promise;
+  return Object.assign(promise, {
+    cancel: () => controller && controller.abort()
+  });
 };
 
 let paysCache: { label: string }[];
