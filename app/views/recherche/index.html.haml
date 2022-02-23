@@ -20,13 +20,14 @@
           %th.action-col.follow-col
       %tbody
         - @projected_dossiers.each do |p|
-          - procedure_libelle, user_email, procedure_id, hidden_by_administration = p.columns
+          - procedure_libelle, user_email, procedure_id = p.columns
           - instructeur_dossier =  @instructeur_dossiers_ids.include?(p.dossier_id)
           - expert_dossier = @dossier_avis_ids_h[p.dossier_id].present?
+          - hidden_by_administration = p.hidden_by_administration_at.present?
           - instructeur_and_expert_dossier = instructeur_dossier && expert_dossier
           - path = instructeur_dossier ? instructeur_dossier_path(procedure_id, p.dossier_id) : expert_avis_path(procedure_id, @dossier_avis_ids_h[p.dossier_id])
 
-          %tr
+          %tr{ class: [p.hidden_by_administration_at.present? && "file-hidden-by-user"] }
             - if instructeur_and_expert_dossier
               %td.folder-col.cell-link
                 %span.icon.folder
@@ -39,7 +40,11 @@
               %td.status-col
                 .cell-link= status_badge(p.state)
 
+            - elsif hidden_by_administration
+              = render partial: "recherche/hidden_dossier", locals: {p: p, procedure_libelle: procedure_libelle, user_email: user_email}
+
             - else
+
               %td.folder-col
                 %a.cell-link{ href: path }
                   %span.icon.folder
@@ -76,14 +81,19 @@
                             Donner mon avis
 
             - elsif instructeur_dossier
-              %td.action-col.follow-col= render partial: "instructeurs/procedures/dossier_actions",
+              - if hidden_by_administration
+                %td.action-col.follow-col
+                  = link_to restore_instructeur_dossier_path(procedure_id, p.dossier_id), method: :patch, class: "button primary" do
+                    = t('views.instructeurs.dossiers.restore')
+
+              - else
+                %td.action-col.follow-col= render partial: "instructeurs/procedures/dossier_actions",
                                                             locals: { procedure_id: procedure_id,
                                                                       dossier_id: p.dossier_id,
                                                                       state: p.state,
                                                                       archived: p.archived,
                                                                       dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
-                                                                      close_to_expiration: nil,
-                                                                      recently_deleted: hidden_by_administration.blank? }
+                                                                      close_to_expiration: nil }
 
             - else
               %td
