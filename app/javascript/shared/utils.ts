@@ -125,8 +125,9 @@ export function on(
   );
 }
 
-export function isNumeric(n: string) {
-  return !isNaN(parseFloat(n)) && isFinite(n as any as number);
+export function isNumeric(s: string) {
+  const n = parseFloat(s);
+  return !isNaN(n) && isFinite(n);
 }
 
 function offset(element: HTMLElement) {
