@@ -18,6 +18,7 @@ FileUtils.chdir APP_ROOT do
   system('bundle check') || system!('bundle install')
 
   # Install JavaScript dependencies
+  system! 'node --version'
   system! 'bin/yarn install'
 
   puts "\n== Updating webdrivers =="

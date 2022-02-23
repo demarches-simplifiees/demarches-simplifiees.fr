@@ -54,6 +54,7 @@
     "@typescript-eslint/eslint-plugin": "^5.8.1",
     "@typescript-eslint/parser": "^5.8.1",
     "babel-eslint": "^10.1.0",
+    "del-cli": "^4.0.1",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
@@ -66,6 +67,7 @@
     "webpack-dev-server": "^4.6.0"
   },
   "scripts": {
+    "clean": "del tmp public/packs public/packs-test",
     "lint:js": "eslint --ext .js,.jsx,.ts,.tsx ./app/javascript ./config/webpack",
     "webpack:build": "NODE_ENV=production bin/webpack",
     "lint:types": "tsc",
