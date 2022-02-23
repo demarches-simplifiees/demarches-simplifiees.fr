@@ -97,6 +97,8 @@ async function getPays(): Promise<{ label: string }[]> {
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      // we don't really care about global queryFn type
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       queryFn: defaultQueryFn as any
     }
   }
