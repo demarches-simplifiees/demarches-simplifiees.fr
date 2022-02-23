@@ -824,6 +824,10 @@ class Dossier < ApplicationRecord
           restore_dossier_and_destroy_deleted_dossier(author)
         end
       end
+    elsif author_is_administration(author) && hidden_by_administration?
+      transaction do
+        update(hidden_by_administration_at: nil)
+      end
     end
   end
 

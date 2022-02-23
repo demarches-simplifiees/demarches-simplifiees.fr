@@ -299,20 +299,20 @@ describe Procedure do
       it_behaves_like 'duree de conservation'
     end
 
-    describe 'draft_revision' do
+    describe 'draft_types_de_champ validations' do
       let(:repetition) { build(:type_de_champ_repetition, libelle: 'Enfants') }
       let(:text_field) { build(:type_de_champ_text) }
-      let(:invalid_repetition_error_message) { 'Le bloc répétable « Enfants » doit comporter au moins un champ' }
+      let(:invalid_repetition_error_message) { 'Le champ « Enfants » doit comporter au moins un champ répétable' }
 
       let(:drop_down) { build(:type_de_champ_drop_down_list, :without_selectable_values, libelle: 'Civilité') }
-      let(:invalid_drop_down_error_message) { 'La liste de choix « Civilité » doit comporter au moins un choix sélectionnable' }
+      let(:invalid_drop_down_error_message) { 'Le champ « Civilité » doit comporter au moins un choix sélectionnable' }
 
       let(:procedure) { create(:procedure, types_de_champ: [repetition, drop_down]) }
 
       context 'on a draft procedure' do
-        it 'doesn’t validate the draft revision' do
+        it 'doesn’t validate the types de champs' do
           procedure.validate
-          expect(procedure.errors[:draft_revision]).not_to be_present
+          expect(procedure.errors[:draft_types_de_champ]).not_to be_present
         end
       end
 
@@ -321,35 +321,52 @@ describe Procedure do
 
         it 'validates that no repetition type de champ is empty' do
           procedure.validate
-          expect(procedure.errors.full_messages_for(:draft_revision)).to include(invalid_repetition_error_message)
+          expect(procedure.errors.full_messages_for(:draft_types_de_champ)).to include(invalid_repetition_error_message)
 
           text_field.revision = repetition.revision
           text_field.order_place = repetition.types_de_champ.size
-          procedure.draft_revision.types_de_champ.find(&:repetition?).types_de_champ << text_field
+          procedure.draft_types_de_champ.find(&:repetition?).types_de_champ << text_field
 
           procedure.validate
-          expect(procedure.errors.full_messages_for(:draft_revision)).not_to include(invalid_repetition_error_message)
+          expect(procedure.errors.full_messages_for(:draft_types_de_champ)).not_to include(invalid_repetition_error_message)
         end
 
         it 'validates that no drop-down type de champ is empty' do
           procedure.validate
-          expect(procedure.errors.full_messages_for(:draft_revision)).to include(invalid_drop_down_error_message)
+          expect(procedure.errors.full_messages_for(:draft_types_de_champ)).to include(invalid_drop_down_error_message)
 
           drop_down.update!(drop_down_list_value: "--title--\r\nsome value")
           procedure.reload.validate
-          expect(procedure.errors.full_messages_for(:draft_revision)).not_to include(invalid_drop_down_error_message)
+          expect(procedure.errors.full_messages_for(:draft_types_de_champ)).not_to include(invalid_drop_down_error_message)
         end
       end
 
       context 'when validating for publication' do
         it 'validates that no repetition type de champ is empty' do
           procedure.validate(:publication)
-          expect(procedure.errors.full_messages_for(:draft_revision)).to include(invalid_repetition_error_message)
+          expect(procedure.errors.full_messages_for(:draft_types_de_champ)).to include(invalid_repetition_error_message)
         end
 
         it 'validates that no drop-down type de champ is empty' do
           procedure.validate(:publication)
-          expect(procedure.errors.full_messages_for(:draft_revision)).to include(invalid_drop_down_error_message)
+          expect(procedure.errors.full_messages_for(:draft_types_de_champ)).to include(invalid_drop_down_error_message)
+        end
+      end
+
+      context 'when the champ is private' do
+        let(:procedure) { create(:procedure, types_de_champ_private: [repetition, drop_down]) }
+
+        let(:invalid_repetition_error_message) { 'L’annotation privée « Enfants » doit comporter au moins un champ répétable' }
+        let(:invalid_drop_down_error_message) { 'L’annotation privée « Civilité » doit comporter au moins un choix sélectionnable' }
+
+        it 'validates that no repetition type de champ is empty' do
+          procedure.validate(:publication)
+          expect(procedure.errors.full_messages_for(:draft_types_de_champ_private)).to include(invalid_repetition_error_message)
+        end
+
+        it 'validates that no drop-down type de champ is empty' do
+          procedure.validate(:publication)
+          expect(procedure.errors.full_messages_for(:draft_types_de_champ_private)).to include(invalid_drop_down_error_message)
         end
       end
     end

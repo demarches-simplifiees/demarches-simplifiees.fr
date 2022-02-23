@@ -244,9 +244,13 @@ class Procedure < ApplicationRecord
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validates :administrateurs, presence: true
   validates :lien_site_web, presence: true, if: :publiee?
-  validates :draft_revision,
-    'revisions/no_empty_repetition': true,
-    'revisions/no_empty_drop_down': true,
+  validates :draft_types_de_champ,
+    'types_de_champ/no_empty_repetition': true,
+    'types_de_champ/no_empty_drop_down': true,
+    if: :validate_for_publication?
+  validates :draft_types_de_champ_private,
+    'types_de_champ/no_empty_repetition': true,
+    'types_de_champ/no_empty_drop_down': true,
     if: :validate_for_publication?
   validate :check_juridique
   validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,200}\z/ }, uniqueness: { scope: [:path, :closed_at, :hidden_at, :unpublished_at], case_sensitive: false }
