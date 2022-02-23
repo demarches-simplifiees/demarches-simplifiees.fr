@@ -50,12 +50,16 @@ export function useMapEvent(
   const map = useMapLibre();
   return useEffect(() => {
     if (target) {
+      // event typing is hard
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       map.on(eventName as keyof MapLayerEventType, target, callback as any);
     } else {
       map.on(eventName, callback);
     }
     return () => {
       if (target) {
+        // event typing is hard
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         map.off(eventName as keyof MapLayerEventType, target, callback as any);
       } else {
         map.off(eventName, callback);
