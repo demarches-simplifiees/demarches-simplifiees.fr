@@ -48,6 +48,8 @@ export function DrawLayer({
           trash: true
         }
       });
+      // We use mapbox-draw plugin with maplibre. They are compatible but types are not.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       map.addControl(draw as any, 'top-left');
       draw.set(
         filterFeatureCollection(featureCollection, SOURCE_SELECTION_UTILISATEUR)
@@ -64,6 +66,8 @@ export function DrawLayer({
 
     return () => {
       if (drawRef.current) {
+        // We use mapbox-draw plugin with maplibre. They are compatible but types are not.
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         map.removeControl(drawRef.current as any);
         drawRef.current = null;
       }
