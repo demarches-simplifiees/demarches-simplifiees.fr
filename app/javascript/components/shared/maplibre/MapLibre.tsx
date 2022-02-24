@@ -5,7 +5,8 @@ import React, {
   useEffect,
   useMemo,
   ReactNode,
-  createContext
+  createContext,
+  useCallback
 } from 'react';
 import maplibre, { Map, Style, NavigationControl } from 'maplibre-gl';
 
@@ -37,11 +38,14 @@ export function MapLibre({ children, header, footer, layers }: MapLibreProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<Map | null>();
 
-  const onStyleChange = (style: Style) => {
-    if (map) {
-      map.setStyle(style);
-    }
-  };
+  const onStyleChange = useCallback(
+    (style: Style) => {
+      if (map) {
+        map.setStyle(style);
+      }
+    },
+    [map]
+  );
   const { style, ...mapStyleProps } = useStyle(layers, onStyleChange);
 
   useEffect(() => {
@@ -56,7 +60,7 @@ export function MapLibre({ children, header, footer, layers }: MapLibreProps) {
         setMap(map);
       });
     }
-  }, []);
+  }, [map, style, isSupported]);
 
   if (!isSupported) {
     return (

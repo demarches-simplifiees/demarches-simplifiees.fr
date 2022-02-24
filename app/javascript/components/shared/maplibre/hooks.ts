@@ -12,16 +12,22 @@ import { useMapLibre } from './MapLibre';
 
 export function useFitBounds() {
   const map = useMapLibre();
-  return useCallback((bbox: LngLatBoundsLike) => {
-    map.fitBounds(bbox, { padding: 100 });
-  }, []);
+  return useCallback(
+    (bbox: LngLatBoundsLike) => {
+      map.fitBounds(bbox, { padding: 100 });
+    },
+    [map]
+  );
 }
 
 export function useFlyTo() {
   const map = useMapLibre();
-  return useCallback((zoom: number, center: [number, number]) => {
-    map.flyTo({ zoom, center });
-  }, []);
+  return useCallback(
+    (zoom: number, center: [number, number]) => {
+      map.flyTo({ zoom, center });
+    },
+    [map]
+  );
 }
 
 export function useEvent(eventName: string, callback: EventListener) {
@@ -44,12 +50,16 @@ export function useMapEvent(
   const map = useMapLibre();
   return useEffect(() => {
     if (target) {
+      // event typing is hard
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       map.on(eventName as keyof MapLayerEventType, target, callback as any);
     } else {
       map.on(eventName, callback);
     }
     return () => {
       if (target) {
+        // event typing is hard
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         map.off(eventName as keyof MapLayerEventType, target, callback as any);
       } else {
         map.off(eventName, callback);
@@ -104,7 +114,7 @@ export function useStyle(
     [styleId, enabledLayers]
   );
 
-  useEffect(() => onStyleChange(style), [style]);
+  useEffect(() => onStyleChange(style), [onStyleChange, style]);
 
   return { style, layers, setStyle, setLayerEnabled, setLayerOpacity };
 }
