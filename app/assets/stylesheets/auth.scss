@@ -16,6 +16,10 @@
       display: none;
     }
   }
+
+  .column {
+    padding-top: 2 * $default-spacer;
+  }
 }
 
 .auth-form {
@@ -55,6 +59,10 @@
 }
 
 .sign-in-form .form {
+  input[type="email"] {
+    margin-bottom: $default-padding;
+  }
+
   input[type="password"] {
     margin-bottom: $default-spacer;
   }
