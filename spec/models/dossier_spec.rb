@@ -1392,15 +1392,17 @@ describe Dossier do
     let!(:dossier_on_closed_procedure) { create(:dossier, procedure: closed_procedure) }
     let!(:dossier_on_unpublished_procedure) { create(:dossier, procedure: unpublished_procedure) }
 
-    let(:notify_on_closed) { false }
-    let(:dossiers) { Dossier.with_notifiable_procedure(notify_on_closed: notify_on_closed) }
+    let(:to) { :user }
+    let(:state) { :en_construction }
+    let(:action) { :near_expiration }
+    let(:dossiers) { Dossier.with_notifiable_procedure(to: to, state: state, action: action) }
 
     it 'should find dossiers with notifiable procedure' do
       expect(dossiers).to match_array([dossier_on_published_procedure, dossier_on_unpublished_procedure])
     end
 
-    context 'when notify on closed is true' do
-      let(:notify_on_closed) { true }
+    context 'when notifying administration' do
+      let(:to) { :administration }
 
       it 'should find dossiers with notifiable procedure' do
         expect(dossiers).to match_array([dossier_on_published_procedure, dossier_on_closed_procedure, dossier_on_unpublished_procedure])

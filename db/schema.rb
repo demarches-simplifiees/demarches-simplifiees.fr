@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_04_093401) do
+ActiveRecord::Schema.define(version: 2022_02_05_093401) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -644,6 +644,17 @@ ActiveRecord::Schema.define(version: 2022_02_04_093401) do
     t.text "api_particulier_scopes", default: [], array: true
     t.jsonb "api_particulier_sources", default: {}
     t.boolean "instructeurs_self_management_enabled"
+    t.boolean "brouillon_close_to_expiration_notification_enabled_for_user", default: true
+    t.boolean "en_construction_close_to_expiration_notification_enabled_for_us", default: true
+    t.boolean "termine_close_to_expiration_notification_enabled_for_user", default: true
+    t.boolean "en_construction_close_to_expiration_notification_enabled_for_ad", default: true
+    t.boolean "termine_close_to_expiration_notification_enabled_for_administra", default: true
+    t.boolean "brouillon_expired_destroy_notification_enabled_for_user", default: true
+    t.boolean "en_construction_expired_destroy_notification_enabled_for_user", default: true
+    t.boolean "termine_expired_destroy_notification_enabled_for_user", default: true
+    t.boolean "en_construction_expired_destroy_notification_enabled_for_admini", default: true
+    t.boolean "termine_expired_destroy_notification_enabled_for_administration", default: true
+    t.boolean "brouillon_near_closing_date_notification_enabled_for_user", default: true
     t.boolean "routing_enabled"
     t.boolean "procedure_expires_when_termine_enabled", default: false
     t.bigint "zone_id"

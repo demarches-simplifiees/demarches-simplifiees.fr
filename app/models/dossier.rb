@@ -288,10 +288,24 @@ class Dossier < ApplicationRecord
       user: [])
   }
 
-  scope :with_notifiable_procedure, -> (opts = { notify_on_closed: false }) do
-    states = opts[:notify_on_closed] ? [:publiee, :close, :depubliee] : [:publiee, :depubliee]
+  scope :with_notifiable_procedure, -> (to:, state:, action:) do
+    states = [:publiee, :depubliee]
+    if state == :termine || to == :administration
+      states << :close
+    end
+    flag = case action
+    when :near_expiration
+      "#{state}_close_to_expiration_notification_enabled_for_#{to}"
+    when :expired_destroy
+      "#{state}_expired_destroy_notification_enabled_for_#{to}"
+    when :near_closing_date
+      "brouillon_near_closing_date_notification_enabled_for_user"
+    else
+      raise "Unknown action '#{action}'"
+    end.to_sym
+
     joins(:procedure)
-      .where(procedures: { aasm_state: states })
+      .where(procedures: { aasm_state: states, flag => true })
       .where.not(user_id: nil)
   end
 
@@ -380,7 +394,7 @@ class Dossier < ApplicationRecord
         .select(:user_id)
     # select dossier in brouillon where procedure closes in two days and for which the user has not submitted a Dossier
     state_brouillon
-      .with_notifiable_procedure
+      .with_notifiable_procedure(to: :user, state: :brouillon, action: :near_closing_date)
       .where("procedures.auto_archive_on - INTERVAL :before_closing = :now", { now: Time.zone.today, before_closing: INTERVAL_BEFORE_CLOSING })
       .where.not(user: users_who_submitted)
   end
