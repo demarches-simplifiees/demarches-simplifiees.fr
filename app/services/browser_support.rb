@@ -1,6 +1,5 @@
 class BrowserSupport
   def self.supported?(browser)
-    # See .browserslistrc
     [
       browser.chrome? && browser.version.to_i >= 50 && !browser.platform.ios?,
       browser.edge? && browser.version.to_i >= 14 && !browser.compatibility_view?,
