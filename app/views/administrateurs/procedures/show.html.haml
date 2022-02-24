@@ -53,7 +53,7 @@
 
     - if !@procedure.locked? || @procedure.feature_enabled?(:procedure_revisions)
       - @procedure.validate(:publication)
-      - error_messages = @procedure.errors.messages_for(:draft_revision).to_sentence
+      - error_messages = @procedure.errors.messages_for(:draft_types_de_champ).to_sentence
 
       = link_to champs_admin_procedure_path(@procedure), class: 'card-admin', title: error_messages do
         - if @procedure.draft_types_de_champ.count == 0
@@ -171,11 +171,18 @@
       %p.button Modifier
 
     - if !@procedure.locked? || @procedure.feature_enabled?(:procedure_revisions)
-      = link_to annotations_admin_procedure_path(@procedure), class: 'card-admin' do
+      - @procedure.validate(:publication)
+      - error_messages = @procedure.errors.messages_for(:draft_types_de_champ_private).to_sentence
+
+      = link_to annotations_admin_procedure_path(@procedure), class: 'card-admin', title: error_messages do
         - if @procedure.draft_types_de_champ_private.present?
           %div
             %span.icon.accept
             %p.card-admin-status-accept Validé
+        - elsif error_messages.present?
+          %div
+            %span.icon.refuse
+            %p.card-admin-status-error À modifier
         - else
           %div
             %span.icon.clock

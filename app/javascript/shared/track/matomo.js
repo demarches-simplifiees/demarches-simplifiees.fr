@@ -1,14 +1,15 @@
-const { key, enabled } = gon.matomo || {};
+const { enabled, host, key } = gon.matomo || {};
 
 if (enabled) {
   window._paq = window._paq || [];
 
-  const url = 'https://beta.mes-demarches.gov.pf/matomo/';
-  const trackerUrl = `${url}piwik.php`;
-  const jsUrl = `${url}piwik.js`;
+  const jsUrl = `//${host}/piwik.js`;
+  const trackerUrl = `//${host}/piwik.php`;
 
   //
   // Configure Matomo analytics
+  //
+
   window._paq.push(['setCookieDomain', '*.mes-demarches.gov.pf']);
   window._paq.push(['setDomains', ['*.mes-demarches.gov.pf']]);
   // Don’t store any cookies or send any tracking request when the "Do Not Track" browser setting is enabled.

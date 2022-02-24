@@ -105,7 +105,7 @@ class ProcedureRevision < ApplicationRecord
     !draft?
   end
 
-  def changed?(revision)
+  def different_from?(revision)
     types_de_champ != revision.types_de_champ || types_de_champ_private != revision.types_de_champ_private
   end
 

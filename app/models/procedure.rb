@@ -244,9 +244,13 @@ class Procedure < ApplicationRecord
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validates :administrateurs, presence: true
   validates :lien_site_web, presence: true, if: :publiee?
-  validates :draft_revision,
-    'revisions/no_empty_repetition': true,
-    'revisions/no_empty_drop_down': true,
+  validates :draft_types_de_champ,
+    'types_de_champ/no_empty_repetition': true,
+    'types_de_champ/no_empty_drop_down': true,
+    if: :validate_for_publication?
+  validates :draft_types_de_champ_private,
+    'types_de_champ/no_empty_repetition': true,
+    'types_de_champ/no_empty_drop_down': true,
     if: :validate_for_publication?
   validate :check_juridique
   validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,200}\z/ }, uniqueness: { scope: [:path, :closed_at, :hidden_at, :unpublished_at], case_sensitive: false }
@@ -374,7 +378,7 @@ class Procedure < ApplicationRecord
   end
 
   def draft_changed?
-    publiee? && published_revision.changed?(draft_revision) && revision_changes.present?
+    publiee? && published_revision.different_from?(draft_revision) && revision_changes.present?
   end
 
   def revision_changes
@@ -650,7 +654,7 @@ class Procedure < ApplicationRecord
   end
 
   def can_be_deleted_by_administrateur?
-    brouillon? || dossiers.state_instruction_commencee.empty?
+    brouillon? || dossiers.state_en_instruction.empty?
   end
 
   def can_be_deleted_by_manager?
@@ -664,18 +668,25 @@ class Procedure < ApplicationRecord
       close!
     end
 
-    dossiers.each do |dossier|
+    dossiers.termine.visible_by_administration.each do |dossier|
       dossier.discard_and_keep_track!(author, :procedure_removed)
     end
 
     discard!
   end
 
+  def purge_discarded
+    if !dossiers.with_discarded.exists?
+      destroy
+    end
+  end
+
+  def self.purge_discarded
+    discarded_expired.find_each(&:purge_discarded)
+  end
+
   def restore(author)
     if discarded? && undiscard
-      dossiers.with_discarded.discarded.find_each do |dossier|
-        dossier.restore(author)
-      end
       dossiers.hidden_by_administration.find_each do |dossier|
         dossier.restore(author)
       end
