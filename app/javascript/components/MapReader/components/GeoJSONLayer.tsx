@@ -44,13 +44,13 @@ export function GeoJSONLayer({
         popup.remove();
       }
     },
-    [popup]
+    [map, popup]
   );
 
   const onMouseLeave = useCallback(() => {
     map.getCanvas().style.cursor = '';
     popup.remove();
-  }, [popup]);
+  }, [map, popup]);
 
   useExternalEvents(featureCollection);
 
@@ -99,17 +99,22 @@ export function GeoJSONLayer({
 
 function useExternalEvents(featureCollection: FeatureCollection) {
   const fitBounds = useFitBounds();
-  const onFeatureFocus = useCallback(({ detail }) => {
-    const { id } = detail;
-    const feature = findFeature(featureCollection, id);
-    if (feature) {
-      fitBounds(getBounds(feature.geometry));
-    }
-  }, []);
+  const onFeatureFocus = useCallback(
+    ({ detail }) => {
+      const { id } = detail;
+      const feature = findFeature(featureCollection, id);
+      if (feature) {
+        fitBounds(getBounds(feature.geometry));
+      }
+    },
+    [featureCollection, fitBounds]
+  );
 
   useEffect(() => {
     fitBounds(featureCollection.bbox as LngLatBoundsLike);
-  }, []);
+    // We only want to zoom on bbox on component mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fitBounds]);
 
   useEvent('map:feature:focus', onFeatureFocus);
 }
@@ -139,7 +144,7 @@ function LineStringLayer({
         type: 'line',
         paint: lineStringSelectionLine
       });
-  }, []);
+  }, [map, layerId, sourceId, feature]);
 
   useMapEvent('mouseenter', onMouseEnter, layerId);
   useMapEvent('mouseleave', onMouseLeave, layerId);
@@ -172,7 +177,7 @@ function PointLayer({
         type: 'circle',
         paint: pointSelectionCircle
       });
-  }, []);
+  }, [map, layerId, sourceId, feature]);
 
   useMapEvent('mouseenter', onMouseEnter, layerId);
   useMapEvent('mouseleave', onMouseLeave, layerId);
@@ -212,7 +217,7 @@ function PolygonLayer({
         type: 'fill',
         paint: polygonSelectionFill
       });
-  }, []);
+  }, [map, layerId, lineLayerId, sourceId, feature]);
 
   useMapEvent('mouseenter', onMouseEnter, layerId);
   useMapEvent('mouseleave', onMouseLeave, layerId);

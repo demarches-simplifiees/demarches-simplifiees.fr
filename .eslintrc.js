@@ -23,6 +23,7 @@ module.exports = {
   rules: {
     'prettier/prettier': 'error',
     'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'error',
     'react/prop-types': 'off'
   },
   settings: {
@@ -51,7 +52,13 @@ module.exports = {
         'plugin:@typescript-eslint/recommended',
         'plugin:react-hooks/recommended',
         'prettier'
-      ]
+      ],
+      rules: {
+        'prettier/prettier': 'error',
+        'react-hooks/rules-of-hooks': 'error',
+        'react-hooks/exhaustive-deps': 'error',
+        '@typescript-eslint/no-explicit-any': 'error'
+      }
     }
   ]
 };

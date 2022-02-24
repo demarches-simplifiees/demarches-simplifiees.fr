@@ -88,6 +88,15 @@ export function ajax(options: Rails.AjaxOptions) {
   });
 }
 
+class ResponseError extends Error {
+  response: Response;
+
+  constructor(response: Response) {
+    super(String(response.statusText || response.status));
+    this.response = response;
+  }
+}
+
 export function getJSON(url: string, data: unknown, method = 'GET') {
   const { query, ...options } = fetchOptions(data, method);
 
@@ -98,9 +107,7 @@ export function getJSON(url: string, data: unknown, method = 'GET') {
       }
       return response.json();
     }
-    const error = new Error(String(response.statusText || response.status));
-    (error as any).response = response;
-    throw error;
+    throw new ResponseError(response);
   });
 }
 
@@ -125,8 +132,9 @@ export function on(
   );
 }
 
-export function isNumeric(n: string) {
-  return !isNaN(parseFloat(n)) && isFinite(n as any as number);
+export function isNumeric(s: string) {
+  const n = parseFloat(s);
+  return !isNaN(n) && isFinite(n);
 }
 
 function offset(element: HTMLElement) {
