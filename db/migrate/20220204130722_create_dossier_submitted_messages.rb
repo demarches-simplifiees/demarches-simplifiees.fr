@@ -6,5 +6,6 @@ class CreateDossierSubmittedMessages < ActiveRecord::Migration[6.1]
       t.timestamps
     end
     add_reference :procedure_revisions, :dossier_submitted_message, foreign_key: { to_table: :dossier_submitted_messages }, null: true, index: true
+    add_foreign_key :dossier_submitted_messages, :procedures
   end
 end
