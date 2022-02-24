@@ -122,13 +122,7 @@ function ComboSearch({
                 const label = getLabel(result);
                 const [key, value] = transformResult(result);
                 resultsMap.current[label] = { key, value, result };
-                return (
-                  <ComboboxOption
-                    key={`${key}-${index}`}
-                    value={label}
-                    data-option-value={value}
-                  />
-                );
+                return <ComboboxOption key={`${key}-${index}`} value={label} />;
               })}
             </ComboboxList>
           ) : (

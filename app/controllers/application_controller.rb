@@ -276,8 +276,9 @@ class ApplicationController < ActionController::Base
     matomo = Rails.application.secrets.matomo
 
     {
-      key: matomo[:client_key],
-      enabled: matomo[:enabled]
+      enabled: matomo[:enabled],
+      host: matomo[:host],
+      key: matomo[:client_key]
     }
   end
 

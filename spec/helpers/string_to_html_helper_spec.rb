@@ -28,7 +28,7 @@ RSpec.describe StringToHtmlHelper, type: :helper do
     context "with empty decription" do
       let(:description) { nil }
 
-      it { is_expected.to eq('<p></p>') }
+      it { is_expected.to eq nil }
     end
 
     context "with a bad script" do

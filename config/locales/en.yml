@@ -141,6 +141,8 @@ en:
         archived_dossier: "This file will be kept for an additional month"
         delete_dossier: "Delete file"
         deleted_by_user: "File deleted by user"
+        deleted_by_administration: "File deleted by administration"
+        restore: "Restore"
       avis:
         introduction_file_explaination: "File attached to the request for advice"
     users:
@@ -422,6 +424,7 @@ en:
     dossiers:
        deleted_by_instructeur: "The folder has been deleted"
        impossible_deletion: "Unable to delete : the folder is not processed"
+       restore: "The folder has been restored"
   france_connect:
     particulier:
       password_confirmation:

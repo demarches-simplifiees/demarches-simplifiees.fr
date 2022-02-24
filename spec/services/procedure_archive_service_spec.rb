@@ -5,6 +5,11 @@ describe ProcedureArchiveService do
   let(:year) { 2020 }
   let(:month) { 3 }
   let(:date_month) { Date.strptime("#{year}-#{month}", "%Y-%m") }
+  let(:groupe_instructeurs) { instructeur.groupe_instructeurs }
+
+  before do
+    procedure.defaut_groupe_instructeur.add(instructeur)
+  end
 
   describe '#create_pending_archive' do
     context 'for a specific month' do
@@ -37,7 +42,7 @@ describe ProcedureArchiveService do
     after { Timecop.return }
 
     context 'for a specific month' do
-      let(:archive) { create(:archive, time_span_type: 'monthly', status: 'pending', month: date_month) }
+      let(:archive) { create(:archive, time_span_type: 'monthly', status: 'pending', month: date_month, groupe_instructeurs: groupe_instructeurs) }
       let(:year) { 2021 }
       let(:mailer) { double('mailer', deliver_later: true) }
 
@@ -99,7 +104,7 @@ describe ProcedureArchiveService do
     end
 
     context 'for all months' do
-      let(:archive) { create(:archive, time_span_type: 'everything', status: 'pending') }
+      let(:archive) { create(:archive, time_span_type: 'everything', status: 'pending', groupe_instructeurs: groupe_instructeurs) }
       let(:mailer) { double('mailer', deliver_later: true) }
 
       it 'collect files' do
@@ -125,7 +130,7 @@ describe ProcedureArchiveService do
     after { Timecop.return }
 
     context 'for a specific month' do
-      let(:archive) { create(:archive, time_span_type: 'monthly', status: 'pending', month: date_month) }
+      let(:archive) { create(:archive, time_span_type: 'monthly', status: 'pending', month: date_month, groupe_instructeurs: groupe_instructeurs) }
       let(:year) { 2021 }
       let(:mailer) { double('mailer', deliver_later: true) }
 
@@ -228,7 +233,7 @@ describe ProcedureArchiveService do
     end
 
     context 'for all months' do
-      let(:archive) { create(:archive, time_span_type: 'everything', status: 'pending') }
+      let(:archive) { create(:archive, time_span_type: 'everything', status: 'pending', groupe_instructeurs: groupe_instructeurs) }
       let(:mailer) { double('mailer', deliver_later: true) }
 
       it 'collect files' do

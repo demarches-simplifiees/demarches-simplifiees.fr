@@ -169,7 +169,7 @@ describe ProcedureRevision do
         expect(new_revision.revision_types_de_champ.last.position).to eq(2)
         expect(new_revision.revision_types_de_champ.last.type_de_champ).to eq(new_type_de_champ)
         expect(new_revision.revision_types_de_champ.last.type_de_champ.revision).to eq(new_revision)
-        expect(procedure.active_revision.changed?(new_revision)).to be_truthy
+        expect(procedure.active_revision.different_from?(new_revision)).to be_truthy
         expect(procedure.active_revision.compare(new_revision)).to eq([
           {
             op: :add,

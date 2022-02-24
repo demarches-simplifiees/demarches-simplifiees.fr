@@ -24,11 +24,13 @@ class ProcedureArchiveService
   end
 
   def new_collect_files_archive(archive, instructeur)
-    ## faux, ca ne doit prendre que certains groupe instructeur ?
-    if archive.time_span_type == 'everything'
-      dossiers = @procedure.dossiers.state_termine
+    dossiers = Dossier.visible_by_administration
+      .where(groupe_instructeur: archive.groupe_instructeurs)
+
+    dossiers = if archive.time_span_type == 'everything'
+      dossiers.state_termine
     else
-      dossiers = @procedure.dossiers.processed_in_month(archive.month)
+      dossiers.processed_in_month(archive.month)
     end
 
     attachments = create_list_of_attachments(dossiers)
@@ -44,10 +46,13 @@ class ProcedureArchiveService
   end
 
   def old_collect_files_archive(archive, instructeur)
-    if archive.time_span_type == 'everything'
-      dossiers = @procedure.dossiers.state_termine
+    dossiers = Dossier.visible_by_administration
+      .where(groupe_instructeur: archive.groupe_instructeurs)
+
+    dossiers = if archive.time_span_type == 'everything'
+      dossiers.state_termine
     else
-      dossiers = @procedure.dossiers.processed_in_month(archive.month)
+      dossiers.processed_in_month(archive.month)
     end
 
     files = create_list_of_attachments(dossiers)

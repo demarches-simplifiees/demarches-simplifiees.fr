@@ -766,17 +766,12 @@ describe Instructeurs::DossiersController, type: :controller do
       before do
         dossier.accepter!(instructeur: instructeur, motivation: "le dossier est correct")
         dossier.update!(hidden_by_user_at: Time.zone.now.beginning_of_day.utc)
-        allow(DossierMailer).to receive(:notify_instructeur_deletion_to_user).and_return(double(deliver_later: nil))
         subject
       end
 
       it 'deletes previous logs and add a suppression log' do
         expect(DossierOperationLog.where(dossier_id: dossier.id).count).to eq(3)
         expect(DossierOperationLog.where(dossier_id: dossier.id).last.operation).to eq('supprimer')
-      end
-
-      it 'send an email to the user' do
-        expect(DossierMailer).to have_received(:notify_instructeur_deletion_to_user).with(DeletedDossier.where(dossier_id: dossier.id).first, dossier.user.email)
       end
 
       it 'add a record into deleted_dossiers table' do
@@ -794,17 +789,12 @@ describe Instructeurs::DossiersController, type: :controller do
     context 'when the instructeur want to delete a dossier with a decision and not hidden by user' do
       before do
         dossier.accepter!(instructeur: instructeur, motivation: "le dossier est correct")
-        allow(DossierMailer).to receive(:notify_instructeur_deletion_to_user).and_return(double(deliver_later: nil))
         subject
       end
 
       it 'does not deletes previous logs and does not add a suppression log' do
         expect(DossierOperationLog.where(dossier_id: dossier.id).count).to eq(2)
         expect(DossierOperationLog.where(dossier_id: dossier.id).last.operation).not_to eq('supprimer')
-      end
-
-      it 'does not send an email to the user' do
-        expect(DossierMailer).not_to have_received(:notify_instructeur_deletion_to_user).with(DeletedDossier.where(dossier_id: dossier.id).first, dossier.user.email)
       end
 
       it 'add a record into deleted_dossiers table' do
@@ -847,6 +837,27 @@ describe Instructeurs::DossiersController, type: :controller do
         subject
         expect(flash[:notice]).to eq(I18n.t('views.instructeurs.dossiers.archived_dossier'))
       end
+    end
+  end
+
+  describe '#restore' do
+    let(:instructeur) { create(:instructeur) }
+    let!(:gi_p1_1) { GroupeInstructeur.create(label: '1', procedure: procedure) }
+    let!(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
+    let!(:dossier) { create(:dossier, state: 'accepte', procedure: procedure, groupe_instructeur: procedure.groupe_instructeurs.first, hidden_by_administration_at: 1.hour.ago) }
+
+    before do
+      sign_in(instructeur.user)
+      instructeur.groupe_instructeurs << gi_p1_1
+      patch :restore,
+      params: {
+        procedure_id: procedure.id,
+        dossier_id: dossier.id
+      }
+    end
+
+    it "puts hidden_by_administration_at to nil" do
+      expect(dossier.reload.hidden_by_administration_at).to eq(nil)
     end
   end
 end
