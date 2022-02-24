@@ -3,14 +3,16 @@
 @import "placeholders";
 @import "mixins";
 
-#auth {
+#auth,
+#agentconnect {
   // On small screens, hide the procedure description text on auth pages.
   // It avoids pushing the sign-in/sign-up form out of the viewport.
   //
   // The procedure description can still be read from the /commencer
   // pages.
   @media (max-width: $two-columns-breakpoint) {
-    .procedure-preview {
+    .procedure-preview,
+    .agent-intro {
       display: none;
     }
   }
