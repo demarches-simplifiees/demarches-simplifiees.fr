@@ -1,10 +1,6 @@
 module.exports = {
   root: true,
-  parser: 'babel-eslint',
-  parserOptions: {
-    ecmaVersion: 2017,
-    sourceType: 'module'
-  },
+  parser: '@typescript-eslint/parser',
   globals: {
     process: true,
     gon: true
@@ -27,25 +23,15 @@ module.exports = {
     'react/prop-types': 'off'
   },
   settings: {
-    react: {
-      version: 'detect'
-    }
+    react: { version: 'detect' }
   },
   overrides: [
     {
-      files: [
-        '.eslintrc.js',
-        'config/webpack/**/*.js',
-        'babel.config.js',
-        'postcss.config.js'
-      ],
-      env: {
-        node: true
-      }
+      files: ['.eslintrc.js', 'vite.config.ts'],
+      env: { node: true }
     },
     {
       files: ['**/*.ts', '**/*.tsx'],
-      parser: '@typescript-eslint/parser',
       plugins: ['@typescript-eslint'],
       extends: [
         'eslint:recommended',

@@ -1,7 +1,6 @@
 import '../shared/polyfills';
 import Rails from '@rails/ujs';
 import * as ActiveStorage from '@rails/activestorage';
-import 'whatwg-fetch'; // window.fetch polyfill
 
 import '../shared/page-update-event';
 import '../shared/activestorage/ujs';
@@ -96,8 +95,10 @@ const DS = {
 };
 
 // Start Rails helpers
-Rails.start();
 ActiveStorage.start();
 
 // Expose globals
 window.DS = window.DS || DS;
+
+import('../shared/track/matomo');
+import('../shared/track/sentry');

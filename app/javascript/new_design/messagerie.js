@@ -1,4 +1,4 @@
-import { scrollTo, scrollToBottom } from '@utils';
+import { scrollToElement, scrollToBottom } from '@utils';
 
 function scrollMessagerie() {
   const ul = document.querySelector('.messagerie ul');
@@ -7,7 +7,7 @@ function scrollMessagerie() {
     const elementToScroll = document.querySelector('.date.highlighted');
 
     if (elementToScroll) {
-      scrollTo(ul, elementToScroll);
+      scrollToElement(ul, elementToScroll);
     } else {
       scrollToBottom(ul);
     }
