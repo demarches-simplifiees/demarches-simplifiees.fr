@@ -869,6 +869,7 @@ ActiveRecord::Schema.define(version: 2022_02_04_130722) do
   add_foreign_key "commentaires", "experts"
   add_foreign_key "dossier_operation_logs", "bill_signatures"
   add_foreign_key "dossier_operation_logs", "instructeurs"
+  add_foreign_key "dossier_submitted_messages", "procedures"
   add_foreign_key "dossier_transfer_logs", "dossiers"
   add_foreign_key "dossiers", "dossier_transfers"
   add_foreign_key "dossiers", "groupe_instructeurs"
