@@ -31,7 +31,7 @@ module Administrateurs
 
     # for now, only works on active revision no matter the procedure_revision_policy
     def build_dossier_submitted_message(attributes = {})
-      dossier_submitted_message = @procedure.active_revision.dossier_submitted_message || @procedure.active_revision.build_dossier_submitted_message(procedure_id: @procedure.id)
+      dossier_submitted_message = @procedure.active_revision.dossier_submitted_message || @procedure.active_revision.build_dossier_submitted_message
 
       dossier_submitted_message.attributes = attributes unless attributes.empty?
       dossier_submitted_message
