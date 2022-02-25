@@ -277,10 +277,8 @@ ActiveRecord::Schema.define(version: 2022_02_04_130722) do
 
   create_table "dossier_submitted_messages", force: :cascade do |t|
     t.string "message_on_submit_by_usager"
-    t.bigint "procedure_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["procedure_id"], name: "index_dossier_submitted_messages_on_procedure_id"
   end
 
   create_table "dossier_transfer_logs", force: :cascade do |t|
@@ -602,8 +600,8 @@ ActiveRecord::Schema.define(version: 2022_02_04_130722) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "published_at"
-    t.bigint "dossier_submitted_message_id"
     t.bigint "attestation_template_id"
+    t.bigint "dossier_submitted_message_id"
     t.index ["attestation_template_id"], name: "index_procedure_revisions_on_attestation_template_id"
     t.index ["dossier_submitted_message_id"], name: "index_procedure_revisions_on_dossier_submitted_message_id"
     t.index ["procedure_id"], name: "index_procedure_revisions_on_procedure_id"
@@ -869,7 +867,6 @@ ActiveRecord::Schema.define(version: 2022_02_04_130722) do
   add_foreign_key "commentaires", "experts"
   add_foreign_key "dossier_operation_logs", "bill_signatures"
   add_foreign_key "dossier_operation_logs", "instructeurs"
-  add_foreign_key "dossier_submitted_messages", "procedures"
   add_foreign_key "dossier_transfer_logs", "dossiers"
   add_foreign_key "dossiers", "dossier_transfers"
   add_foreign_key "dossiers", "groupe_instructeurs"

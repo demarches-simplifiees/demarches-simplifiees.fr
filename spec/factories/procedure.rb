@@ -323,7 +323,7 @@ FactoryBot.define do
 
     trait :with_dossier_submitted_message do
       after(:build) do |procedure, _evaluator|
-        build(:dossier_submitted_message, procedure: procedure, revisions: [procedure.active_revision])
+        build(:dossier_submitted_message, revisions: [procedure.active_revision])
       end
     end
   end
