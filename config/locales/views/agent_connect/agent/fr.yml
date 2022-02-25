@@ -2,10 +2,21 @@ fr:
   agent_connect:
     agent:
       index:
-        connect: Connectez-vous avec AgentConnect
-        intro_html: |
-          AgentConnect permet aux <b class='bold'>instructeurs et administrateurs</b> d’utiliser leurs identifiants habituels pour se connecter à %{app_name}.
-          <br />
-          <br />
-          Seul les agents du <b class='bold'>ministère de la Transition écologique</b> peuvent actuellement en bénéficier.
         cta: S’identifier avec AgentConnect
+        you_are_an_agent: Vous êtes agent de la fonction publique dʼÉtat ou dʼun opérateur de lʼÉtat ?
+        in_progress_html: |
+          <p>
+            <b class="bold">AgentConnect est en cours de déploiement.</b>
+            <br>
+            Les ministères et opérateurs qui peuvent l'utiliser à ce jour sont&nbsp;:
+          </p>
+          <ul>
+            <li>le ministère de la Transition écologique</li>
+          </ul>
+        you_are_a_citizen: Vous êtes un particulier ?
+        citizen_page: Accéder à notre page dédiée
+        connect_html: |
+          <h1 class="mt-2 mb-2">Connectez-vous</h1>
+          <p><b class="bold">Avec AgentConnect</b></p>
+        whats_agentconnect: 'Quʼest ce quʼAgentConnect ?'
+        pro_email: Email professionnel (nom@site.com)
