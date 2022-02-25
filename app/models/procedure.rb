@@ -18,7 +18,6 @@
 #  description                               :string
 #  direction                                 :string
 #  duree_conservation_dossiers_dans_ds       :integer
-#  duree_conservation_dossiers_hors_ds       :integer
 #  durees_conservation_required              :boolean          default(TRUE)
 #  encrypted_api_particulier_token           :string
 #  euro_flag                                 :boolean          default(FALSE)
@@ -80,6 +79,10 @@ class Procedure < ApplicationRecord
   has_one :draft_attestation_template, through: :draft_revision, source: :attestation_template
   has_one :published_attestation_template, through: :published_revision, source: :attestation_template
 
+  has_one :published_dossier_submitted_message, dependent: :destroy, through: :published_revision, source: :dossier_submitted_message
+  has_one :draft_dossier_submitted_message, dependent: :destroy, through: :draft_revision, source: :dossier_submitted_message
+  has_many :dossier_submitted_messages, through: :revisions, source: :dossier_submitted_message
+
   has_many :experts_procedures, dependent: :destroy
   has_many :experts, through: :experts_procedures
 
@@ -91,6 +94,10 @@ class Procedure < ApplicationRecord
   belongs_to :canonical_procedure, class_name: 'Procedure', optional: true
   belongs_to :service, optional: true
   belongs_to :zone, optional: true
+
+  def active_dossier_submitted_message
+    published_dossier_submitted_message || draft_dossier_submitted_message
+  end
 
   def active_revision
     brouillon? ? draft_revision : published_revision
@@ -441,7 +448,8 @@ class Procedure < ApplicationRecord
         revision_types_de_champ_private: {
           type_de_champ: :types_de_champ
         },
-        attestation_template: []
+        attestation_template: [],
+        dossier_submitted_message: []
       }
     }
     include_list[:groupe_instructeurs] = :instructeurs if !is_different_admin

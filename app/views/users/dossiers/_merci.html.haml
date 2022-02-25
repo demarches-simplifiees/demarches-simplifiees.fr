@@ -1,0 +1,26 @@
+.merci.text-center.mb-7
+  .container
+    = image_tag('user/envoi-dossier.svg', alt: '', class: 'mt-8')
+    %h1.mt-4.mb-3.mx-0= t('views.users.dossiers.merci.thanks')
+    %p.send.m-2.text-lg
+      = t('views.users.dossiers.merci.dossier_send_l1')
+      %strong= procedure.libelle
+      = t('views.users.dossiers.merci.dossier_send_l2')
+    %p.m-2
+      = t('views.users.dossiers.merci.dossier_acces_l1')
+      %strong= t('views.users.dossiers.merci.dossier_acces_l2')
+    %p.m-2
+      = t('views.users.dossiers.merci.dossier_edit_l1')
+      - if !dossier&.read_only?
+        %strong= t('views.users.dossiers.merci.dossier_edit_l2')
+        = t('views.users.dossiers.merci.dossier_edit_l3')
+      %strong= t('views.users.dossiers.merci.dossier_edit_l4')
+    - if procedure.active_dossier_submitted_message
+      %p.m-2= procedure.active_dossier_submitted_message.message_on_submit_by_usager
+
+    .flex.column.align-center
+      = link_to t('views.users.dossiers.merci.acces_dossier'), dossier ? dossier_path(dossier) : "#dossier" , class: 'button large primary mt-4'
+      = link_to t('views.users.dossiers.merci.submit_dossier'), procedure_lien(procedure), class: 'mt-4'
+
+      .monavis
+        != procedure.monavis_embed
