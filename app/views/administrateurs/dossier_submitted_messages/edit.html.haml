@@ -1,0 +1,34 @@
+- content_for(:root_class, 'scroll-margins-for-sticky-footer')
+
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [link_to('Démarches', admin_procedures_path),
+                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
+                    'Fin de dépot'] }
+
+.procedure-form
+  .procedure-form__columns.container
+    = form_for @dossier_submitted_message,
+      url: url_for({ controller: 'administrateurs/dossier_submitted_messages', action: :update, id: @procedure.id }),
+      html: { class: 'form procedure-form__column--form' } do |f|
+
+      %h1.page-title
+        Fin du dépot
+      %p.notice
+        L'utilisateur se vera afficher ce message une fois le dossier envoyé
+
+      = render partial: 'administrateurs/dossier_submitted_messages/informations', locals: { f: f }
+
+
+      .procedure-form__actions
+        .actions-left
+          = f.submit 'Enregistrer', class: 'button primary send'
+
+    .procedure-form__column--preview
+      %h3
+        .procedure-form__preview-title
+          Aperçu
+          .notice
+            Cet aperçu est mis à jour après chaque sauvegarde.
+
+      .procedure-preview
+        = render partial: 'users/dossiers/merci', locals: { procedure: @procedure, dossier: nil}
