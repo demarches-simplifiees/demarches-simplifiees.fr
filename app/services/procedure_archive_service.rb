@@ -34,12 +34,9 @@ class ProcedureArchiveService
     end
 
     attachments = create_list_of_attachments(dossiers)
-    download_and_zip(attachments) do |zip_file|
-      archive.file.attach(
-        io: File.open(zip_file),
-        filename: archive.filename(@procedure),
-        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
-      )
+    download_and_zip(attachments) do |zip_filepath|
+      ArchiveUploader.new(procedure: @procedure, archive: archive, filepath: zip_filepath)
+        .upload
     end
     archive.make_available!
     InstructeurMailer.send_archive(instructeur, @procedure, archive).deliver_later
