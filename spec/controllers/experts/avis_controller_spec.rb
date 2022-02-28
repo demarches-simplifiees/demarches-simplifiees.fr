@@ -25,17 +25,30 @@ describe Experts::AvisController, type: :controller do
     end
 
     describe '#procedure' do
-      before { get :procedure, params: { procedure_id: procedure.id } }
+      context 'without filter' do
+        before { get :procedure, params: { procedure_id: procedure.id } }
 
-      it { expect(response).to have_http_status(:success) }
-      it { expect(assigns(:avis_a_donner)).to match([avis_without_answer]) }
-      it { expect(assigns(:avis_donnes)).to match([avis_with_answer]) }
-      it { expect(assigns(:statut)).to eq('a-donner') }
+        it { expect(response).to have_http_status(:success) }
+        it { expect(assigns(:avis_a_donner)).to match([avis_without_answer]) }
+        it { expect(assigns(:avis_donnes)).to match([avis_with_answer]) }
+        it { expect(assigns(:statut)).to eq('a-donner') }
+      end
 
       context 'with a statut equal to donnes' do
         before { get :procedure, params: { statut: 'donnes', procedure_id: procedure.id } }
 
         it { expect(assigns(:statut)).to eq('donnes') }
+      end
+
+      context 'with different procedure' do
+        subject { get :procedure, params: { statut: 'donnes', procedure_id: procedure.id } }
+
+        it 'fails' do
+          sign_in(create(:expert).user)
+          subject
+          expect(response).to redirect_to(expert_all_avis_path)
+          expect(flash.alert).to eq("Vous n’avez pas accès à cette démarche.")
+        end
       end
     end
 
@@ -64,22 +77,52 @@ describe Experts::AvisController, type: :controller do
           expect(response).to redirect_to(root_path)
         end
       end
+
+      context 'with an avis that does not belongs to current_expert' do
+        it "refuse l'accès au dossier" do
+          sign_in(create(:expert).user)
+          subject
+          expect(response).to redirect_to(expert_all_avis_path)
+          expect(flash.alert).to eq("Vous n’avez pas accès à cet avis.")
+        end
+      end
     end
 
     describe '#instruction' do
-      before { get :instruction, params: { id: avis_without_answer.id, procedure_id: procedure.id } }
-
-      it { expect(response).to have_http_status(:success) }
-      it { expect(assigns(:avis)).to eq(avis_without_answer) }
-      it { expect(assigns(:dossier)).to eq(dossier) }
+      subject { get :instruction, params: { id: avis_without_answer.id, procedure_id: procedure.id } }
+      context 'with valid avis' do
+        before { subject }
+        it { expect(response).to have_http_status(:success) }
+        it { expect(assigns(:avis)).to eq(avis_without_answer) }
+        it { expect(assigns(:dossier)).to eq(dossier) }
+      end
+      context 'with an avis that does not belongs to current_expert' do
+        it "refuse l'accès au dossier" do
+          sign_in(create(:expert).user)
+          subject
+          expect(response).to redirect_to(expert_all_avis_path)
+          expect(flash.alert).to eq("Vous n’avez pas accès à cet avis.")
+        end
+      end
     end
 
     describe '#messagerie' do
-      before { get :messagerie, params: { id: avis_without_answer.id, procedure_id: procedure.id } }
+      subject { get :messagerie, params: { id: avis_without_answer.id, procedure_id: procedure.id } }
+      context 'with valid avis' do
+        before { subject }
 
-      it { expect(response).to have_http_status(:success) }
-      it { expect(assigns(:avis)).to eq(avis_without_answer) }
-      it { expect(assigns(:dossier)).to eq(dossier) }
+        it { expect(response).to have_http_status(:success) }
+        it { expect(assigns(:avis)).to eq(avis_without_answer) }
+        it { expect(assigns(:dossier)).to eq(dossier) }
+      end
+      context 'with an avis that does not belongs to current_expert' do
+        it "refuse l'accès au dossier" do
+          sign_in(create(:expert).user)
+          subject
+          expect(response).to redirect_to(expert_all_avis_path)
+          expect(flash.alert).to eq("Vous n’avez pas accès à cet avis.")
+        end
+      end
     end
 
     describe '#update' do
@@ -116,6 +159,14 @@ describe Experts::AvisController, type: :controller do
           expect(avis_without_answer.answer).to eq('answer')
           expect(avis_without_answer.piece_justificative_file).to be_attached
           expect(flash.notice).to eq('Votre réponse est enregistrée.')
+        end
+      end
+      context 'with an avis that does not belongs to current_expert' do
+        it "refuse l'accès au dossier" do
+          sign_in(create(:expert).user)
+          patch :update, params: { id: avis_without_answer.id, procedure_id: procedure.id, avis: { answer: 'answer' } }
+          expect(response).to redirect_to(expert_all_avis_path)
+          expect(flash.alert).to eq("Vous n’avez pas accès à cet avis.")
         end
       end
     end
