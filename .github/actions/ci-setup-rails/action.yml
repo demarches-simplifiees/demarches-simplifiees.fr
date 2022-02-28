@@ -12,11 +12,12 @@ runs:
     - name: Setup Node
       uses: actions/setup-node@v2
       with:
-        node-version: '14'
         cache: 'yarn'
 
     - name: Install Node modules
-      run: yarn install --frozen-lockfile
+      run: |
+        node --version
+        yarn install --frozen-lockfile
       shell: bash
 
     - name: Setup environment variables

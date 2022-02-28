@@ -66,8 +66,8 @@ Rails.application.configure do
     protocol: :http
   }
 
-  # Use Content-Security-Policy-Report-Only headers
-  config.content_security_policy_report_only = true
+  # Disallow all connections to external domains during tests
+  config.content_security_policy_report_only = false
 
   config.active_job.queue_adapter = :test
   config.active_storage.service = :test

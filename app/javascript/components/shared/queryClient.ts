@@ -2,6 +2,17 @@ import { QueryClient, QueryFunction } from 'react-query';
 import { getJSON, isNumeric } from '@utils';
 import { matchSorter } from 'match-sorter';
 
+type Gon = {
+  gon: {
+    autocomplete?: {
+      api_geo_url?: string;
+      api_adresse_url?: string;
+      api_education_url?: string;
+    };
+  };
+};
+declare const window: Window & typeof globalThis & Gon;
+
 const API_EDUCATION_QUERY_LIMIT = 5;
 const API_GEO_QUERY_LIMIT = 5;
 const API_ADRESSE_QUERY_LIMIT = 5;
@@ -16,7 +27,7 @@ const API_ADRESSE_QUERY_LIMIT = 5;
 const API_GEO_COMMUNES_QUERY_LIMIT = 60;
 
 const { api_geo_url, api_adresse_url, api_education_url } =
-  (window as any).gon.autocomplete || {};
+  window.gon.autocomplete || {};
 
 type QueryKey = readonly [
   scope: string,
@@ -70,8 +81,9 @@ const defaultQueryFn: QueryFunction<unknown, QueryKey> = async ({
     }
     throw new Error(`Error fetching from "${scope}" API`);
   });
-  (promise as any).cancel = () => controller && controller.abort();
-  return promise;
+  return Object.assign(promise, {
+    cancel: () => controller && controller.abort()
+  });
 };
 
 let paysCache: { label: string }[];
@@ -85,6 +97,8 @@ async function getPays(): Promise<{ label: string }[]> {
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      // we don't really care about global queryFn type
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       queryFn: defaultQueryFn as any
     }
   }

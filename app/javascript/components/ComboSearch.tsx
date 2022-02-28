@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useRef, ChangeEventHandler } from 'react';
 import { useDebounce } from 'use-debounce';
 import { useQuery } from 'react-query';
 import {
@@ -68,7 +68,7 @@ function ComboSearch<Result>({
     const [, value, label] = transformResult(result);
     return label ?? value;
   };
-  const setExternalValueAndId = useCallback((label: string) => {
+  const setExternalValueAndId = (label: string) => {
     const { key, value, result } = resultsMap.current[label];
     if (onChange) {
       onChange(value, result);
@@ -76,36 +76,35 @@ function ComboSearch<Result>({
       setExternalId(key);
       setExternalValue(value);
     }
-  }, []);
+  };
   const awaitFormSubmit = useDeferredSubmit(hiddenField);
 
-  const handleOnChange = useCallback(
-    ({ target: { value } }) => {
-      setValue(value);
-      if (!value) {
-        if (onChange) {
-          onChange(null);
-        } else {
-          setExternalId('');
-          setExternalValue('');
-        }
-      } else if (value.length >= minimumInputLength) {
-        setSearchTerm(value.trim());
-        if (allowInputValues) {
-          setExternalId('');
-          setExternalValue(value);
-        }
+  const handleOnChange: ChangeEventHandler<HTMLInputElement> = ({
+    target: { value }
+  }) => {
+    setValue(value);
+    if (!value) {
+      if (onChange) {
+        onChange(null);
+      } else {
+        setExternalId('');
+        setExternalValue('');
       }
-    },
-    [minimumInputLength]
-  );
+    } else if (value.length >= minimumInputLength) {
+      setSearchTerm(value.trim());
+      if (allowInputValues) {
+        setExternalId('');
+        setExternalValue(value);
+      }
+    }
+  };
 
-  const handleOnSelect = useCallback((value: string) => {
+  const handleOnSelect = (value: string) => {
     setExternalValueAndId(value);
     setValue(value);
     setSearchTerm('');
     awaitFormSubmit.done();
-  }, []);
+  };
 
   const { isSuccess, data } = useQuery<void, void, unknown, QueryKey>(
     [scope, debouncedSearchTerm, scopeExtra],
@@ -117,14 +116,14 @@ function ComboSearch<Result>({
   const results =
     isSuccess && data ? transformResults(debouncedSearchTerm, data) : [];
 
-  const onBlur = useCallback(() => {
+  const onBlur = () => {
     if (!allowInputValues && isSuccess && results[0]) {
       const label = getLabel(results[0]);
       awaitFormSubmit(() => {
         handleOnSelect(label);
       });
     }
-  }, [data]);
+  };
 
   return (
     <Combobox onSelect={handleOnSelect}>
