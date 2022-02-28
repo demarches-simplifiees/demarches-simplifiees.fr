@@ -3,7 +3,7 @@
 # Table name: zones
 #
 #  id         :bigint           not null, primary key
-#  acronym    :string
+#  acronym    :string           not null
 #  label      :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
