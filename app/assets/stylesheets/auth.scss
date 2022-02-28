@@ -3,16 +3,22 @@
 @import "placeholders";
 @import "mixins";
 
-#auth {
+#auth,
+#agentconnect {
   // On small screens, hide the procedure description text on auth pages.
   // It avoids pushing the sign-in/sign-up form out of the viewport.
   //
   // The procedure description can still be read from the /commencer
   // pages.
   @media (max-width: $two-columns-breakpoint) {
-    .procedure-preview {
+    .procedure-preview,
+    .agent-intro {
       display: none;
     }
+  }
+
+  .column {
+    padding-top: 2 * $default-spacer;
   }
 }
 
@@ -53,11 +59,22 @@
 }
 
 .sign-in-form .form {
+  input[type="email"] {
+    margin-bottom: $default-padding;
+  }
+
   input[type="password"] {
     margin-bottom: $default-spacer;
   }
 
   input[type="checkbox"] {
     margin-bottom: 0;
+  }
+}
+
+#session-new {
+  .important-header {
+    font-weight: bold;
+    font-size: 18px;
   }
 }

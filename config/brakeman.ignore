@@ -3,6 +3,47 @@
     {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
+      "fingerprint": "1b805585567775589825c0eda58cb84c074fc760d0a7afb101c023a51427f2b5",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/users/dossiers/_merci.html.haml",
+      "line": 26,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "current_user.dossiers.includes(:procedure).find(params[:id]).procedure.monavis_embed",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Users::DossiersController",
+          "method": "merci",
+          "line": 196,
+          "file": "app/controllers/users/dossiers_controller.rb",
+          "rendered": {
+            "name": "users/dossiers/merci",
+            "file": "app/views/users/dossiers/merci.html.haml"
+          }
+        },
+        {
+          "type": "template",
+          "name": "users/dossiers/merci",
+          "line": 6,
+          "file": "app/views/users/dossiers/merci.html.haml",
+          "rendered": {
+            "name": "users/dossiers/_merci",
+            "file": "app/views/users/dossiers/_merci.html.haml"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "users/dossiers/_merci"
+      },
+      "user_input": "current_user.dossiers.includes(:procedure)",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
       "fingerprint": "42099f4550a8377f455e830e8ab645cecd5806248481c5c646b4e17548c3cb07",
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
@@ -38,7 +79,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/traitement.rb",
-      "line": 51,
+      "line": 52,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "ActiveRecord::Base.connection.execute(\"select date_trunc('month', r1.processed_at::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.formatted_offset}'::INTERVAL) as month, count(r1.processed_at)\\nfrom (#{Traitement.select(\"max(traitements.processed_at) as processed_at\").termine.where(:dossier => Dossier.state_termine.where(:groupe_instructeur => groupe_instructeurs)).group(:dossier_id).to_sql}) as r1\\ngroup by date_trunc('month', r1.processed_at::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.formatted_offset}'::INTERVAL)\\norder by month desc\\n\")",
       "render_path": null,
@@ -49,37 +90,6 @@
       },
       "user_input": "Time.zone.formatted_offset",
       "confidence": "Medium",
-      "note": ""
-    },
-    {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 2,
-      "fingerprint": "483ae8c038244eb3ed709e89846335e2c8ff6579260348ec31d3d03d1c94ad64",
-      "check_name": "CrossSiteScripting",
-      "message": "Unescaped model attribute",
-      "file": "app/views/users/dossiers/merci.html.haml",
-      "line": 28,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "current_user.dossiers.includes(:procedure).find(params[:id]).procedure.monavis_embed",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "Users::DossiersController",
-          "method": "merci",
-          "line": 195,
-          "file": "app/controllers/users/dossiers_controller.rb",
-          "rendered": {
-            "name": "users/dossiers/merci",
-            "file": "app/views/users/dossiers/merci.html.haml"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "users/dossiers/merci"
-      },
-      "user_input": "current_user.dossiers.includes(:procedure)",
-      "confidence": "Weak",
       "note": ""
     },
     {
@@ -103,33 +113,13 @@
       "note": "The table and column are escaped, which should make this safe"
     },
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "c0f93612a68c32da58f327e0b5fa33dd42fd8beb2984cf023338c5aadbbdacca",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/stat.rb",
-      "line": 83,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "association.where(date_attribute => ((3.months.ago.beginning_of_month..max_date))).group(\"DATE_TRUNC('month', #{date_attribute}::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.formatted_offset}'::INTERVAL)\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Stat",
-        "method": "last_four_months_hash"
-      },
-      "user_input": "date_attribute",
-      "confidence": "Weak",
-      "note": ""
-    },
-    {
       "warning_type": "Redirect",
       "warning_code": 18,
       "fingerprint": "c46b5c9cd6474ffae789f39a2280ba6b5a5a74d3ffa8a38cf8a409f9a027ed0e",
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/instructeurs/procedures_controller.rb",
-      "line": 195,
+      "line": 202,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Export.find_or_create_export(params[:export_format], (params[:time_span_type] or \"everything\"), current_instructeur.groupe_instructeurs.where(:procedure => procedure)).file.service_url)",
       "render_path": null,
@@ -141,28 +131,8 @@
       "user_input": "Export.find_or_create_export(params[:export_format], (params[:time_span_type] or \"everything\"), current_instructeur.groupe_instructeurs.where(:procedure => procedure)).file.service_url",
       "confidence": "High",
       "note": ""
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "f2bb9bc6a56e44ab36ee18152c657395841cff354baed0a302b8d18650551529",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/stat.rb",
-      "line": 97,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "association.where(\"#{date_attribute} < ?\", max_date).group(\"DATE_TRUNC('month', #{date_attribute}::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.formatted_offset}'::INTERVAL)\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Stat",
-        "method": "cumulative_hash"
-      },
-      "user_input": "date_attribute",
-      "confidence": "Weak",
-      "note": ""
     }
   ],
-  "updated": "2021-12-01 17:39:08 -1000",
+  "updated": "2022-02-22 15:46:39 +0100",
   "brakeman_version": "5.1.1"
 }

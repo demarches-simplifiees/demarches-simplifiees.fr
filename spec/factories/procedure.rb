@@ -24,10 +24,11 @@ FactoryBot.define do
       types_de_champ_private { [] }
       updated_at { nil }
       attestation_template { nil }
+      dossier_submitted_message { nil }
     end
 
     after(:build) do |procedure, evaluator|
-      initial_revision = build(:procedure_revision, procedure: procedure, attestation_template: evaluator.attestation_template)
+      initial_revision = build(:procedure_revision, procedure: procedure, attestation_template: evaluator.attestation_template, dossier_submitted_message: evaluator.dossier_submitted_message)
       add_types_de_champs(evaluator.types_de_champ, to: initial_revision, scope: :public)
       add_types_de_champs(evaluator.types_de_champ_private, to: initial_revision, scope: :private)
 
@@ -317,6 +318,12 @@ FactoryBot.define do
           end
           build(:"type_de_champ_#{type_champ}", procedure: procedure, private: true, libelle: libelle, position: index)
         end
+      end
+    end
+
+    trait :with_dossier_submitted_message do
+      after(:build) do |procedure, _evaluator|
+        build(:dossier_submitted_message, revisions: [procedure.active_revision])
       end
     end
   end

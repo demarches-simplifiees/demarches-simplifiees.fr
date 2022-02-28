@@ -433,7 +433,7 @@ describe User, type: :model do
       it 'transfers the dossier' do
         subject
 
-        expect(targeted_user.dossiers.with_discarded).to match([dossier, hidden_dossier])
+        expect(targeted_user.dossiers.with_discarded).to contain_exactly(dossier, hidden_dossier)
         expect(targeted_user.invites).to match([invite])
         expect(targeted_user.merge_logs.first).to eq(merge_log)
 
