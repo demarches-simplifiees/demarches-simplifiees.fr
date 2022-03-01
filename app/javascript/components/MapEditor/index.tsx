@@ -46,19 +46,11 @@ export default function MapEditor({
         </p>
       </div>
       {error && <FlashMessage message={error} level="alert" fixed={true} />}
-      <MapLibre
-        layers={options.layers}
-        header={
-          <>
-            <ImportFileInput
-              featureCollection={featureCollection}
-              {...actions}
-            />
-            <AddressInput />
-          </>
-        }
-        footer={<PointInput />}
-      >
+
+      <ImportFileInput featureCollection={featureCollection} {...actions} />
+      <AddressInput />
+
+      <MapLibre layers={options.layers}>
         <DrawLayer
           featureCollection={featureCollection}
           {...actions}
@@ -86,6 +78,7 @@ export default function MapEditor({
           </>
         ) : null}
       </MapLibre>
+      <PointInput />
     </>
   );
 }

@@ -7,7 +7,8 @@ import {
   useFitBounds,
   useEvent,
   EventHandler,
-  useMapEvent
+  useMapEvent,
+  useFlyTo
 } from '../../shared/maplibre/hooks';
 import {
   filterFeatureCollection,
@@ -99,6 +100,7 @@ export function GeoJSONLayer({
 
 function useExternalEvents(featureCollection: FeatureCollection) {
   const fitBounds = useFitBounds();
+  const flyTo = useFlyTo();
   const onFeatureFocus = useCallback(
     ({ detail }) => {
       const { id } = detail;
@@ -109,6 +111,15 @@ function useExternalEvents(featureCollection: FeatureCollection) {
     },
     [featureCollection, fitBounds]
   );
+  const onZoomFocus = useCallback(
+    ({ detail }) => {
+      const { feature } = detail;
+      if (feature) {
+        flyTo(17, feature.geometry.coordinates);
+      }
+    },
+    [flyTo]
+  );
 
   useEffect(() => {
     fitBounds(featureCollection.bbox as LngLatBoundsLike);
@@ -117,6 +128,7 @@ function useExternalEvents(featureCollection: FeatureCollection) {
   }, [fitBounds]);
 
   useEvent('map:feature:focus', onFeatureFocus);
+  useEvent('map:zoom', onZoomFocus);
 }
 
 function LineStringLayer({
