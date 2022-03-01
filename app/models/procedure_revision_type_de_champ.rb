@@ -16,26 +16,36 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
 
   belongs_to :parent, class_name: 'ProcedureRevisionTypeDeChamp', optional: true
   has_many :revision_types_de_champ, -> { ordered }, foreign_key: :parent_id, class_name: 'ProcedureRevisionTypeDeChamp', inverse_of: :parent, dependent: :destroy
+  has_many :types_de_champ, through: :revision_types_de_champ, source: :type_de_champ
+
   scope :root, -> { where(parent: nil) }
   scope :ordered, -> { order(:position) }
-  scope :revision_ordered, -> { order(:revision_id) }
+  scope :parent_ordered, -> { order(:parent_id, :position) }
   scope :public_only, -> { joins(:type_de_champ).where(types_de_champ: { private: false }) }
   scope :private_only, -> { joins(:type_de_champ).where(types_de_champ: { private: true }) }
 
+  delegate :stable_id, :libelle, :private?, to: :type_de_champ
+
   before_create :set_position
 
-  def private?
-    type_de_champ.private?
+  def child?
+    parent_id.present?
   end
 
   private
 
   def set_position
     self.position ||= begin
-      types_de_champ = (private? ? revision.revision_types_de_champ_private : revision.revision_types_de_champ).filter(&:persisted?)
+      revision_types_de_champ = if child?
+        parent.revision_types_de_champ
+      elsif private?
+        revision.revision_types_de_champ_private
+      else
+        revision.revision_types_de_champ
+      end.filter(&:persisted?)
 
-      if types_de_champ.present?
-        types_de_champ.last.position + 1
+      if revision_types_de_champ.present?
+        revision_types_de_champ.last.position + 1
       else
         0
       end

@@ -353,10 +353,15 @@ describe ProcedureExportService do
 
       context 'with cloned procedure' do
         let(:other_parent) { create(:type_de_champ_repetition, stable_id: champ_repetition.stable_id) }
+        let(:revision) { create(:procedure).active_revision }
 
         before do
-          create(:procedure_revision_type_de_champ, type_de_champ: other_parent, revision: create(:procedure).active_revision)
-          create(:type_de_champ, parent: other_parent)
+          create(:procedure_revision_type_de_champ,
+            type_de_champ: build(:type_de_champ),
+            parent: build(:procedure_revision_type_de_champ,
+              type_de_champ: other_parent,
+              revision: revision),
+            revision: revision)
         end
 
         it 'should have headers' do

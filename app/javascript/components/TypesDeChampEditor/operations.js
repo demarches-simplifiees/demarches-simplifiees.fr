@@ -1,4 +1,6 @@
 export function createTypeDeChampOperation(typeDeChamp, queue) {
+  typeDeChamp = { ...typeDeChamp };
+  delete typeDeChamp.types_de_champ;
   return queue
     .enqueue({
       path: '',
@@ -27,9 +29,16 @@ export function moveTypeDeChampOperation(typeDeChamp, index, queue) {
 }
 
 export function updateTypeDeChampOperation(typeDeChamp, queue) {
+  const path = `/${typeDeChamp.id}`;
+  typeDeChamp = { ...typeDeChamp };
+  delete typeDeChamp.id;
+  delete typeDeChamp.private;
+  delete typeDeChamp.types_de_champ;
+  delete typeDeChamp.piece_justificative_template_filename;
+  delete typeDeChamp.piece_justificative_template_url;
   return queue
     .enqueue({
-      path: `/${typeDeChamp.id}`,
+      path,
       method: 'patch',
       payload: { type_de_champ: typeDeChamp }
     })

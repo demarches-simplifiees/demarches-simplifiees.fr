@@ -1,5 +1,5 @@
 class TypesDeChamp::RepetitionTypeDeChamp < TypesDeChamp::TypeDeChampBase
-  def build_champ
+  def build_champ(dossier: nil, row: nil)
     champ = super
     champ.add_row
     champ

@@ -548,8 +548,8 @@ describe Champ do
         expect(second_row.first.dossier).to eq(dossier)
 
         # Make champs ordered
-        champ_integer.type_de_champ.update(order_place: 0)
-        champ_text.type_de_champ.update(order_place: 1)
+        champ_integer.type_de_champ.for_revision(dossier.revision).update(position: 0)
+        champ_text.type_de_champ.for_revision(dossier.revision).update(position: 1)
 
         champ.champs << champ_integer
         first_row = champ.reload.rows.first

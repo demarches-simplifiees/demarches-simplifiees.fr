@@ -262,7 +262,7 @@ module TagsSubstitutionConcern
   end
 
   def normalize_tags(text)
-    tags = types_de_champ_tags(procedure.types_de_champ_for_tags, Dossier::SOUMIS) + types_de_champ_tags(procedure.types_de_champ_private_for_tags, Dossier::INSTRUCTION_COMMENCEE)
+    tags = types_de_champ_tags(procedure.types_de_champ_for_tags.public_only, Dossier::SOUMIS) + types_de_champ_tags(procedure.types_de_champ_for_tags.private_only, Dossier::INSTRUCTION_COMMENCEE)
     filter_tags(tags).reduce(text) { |text, tag| normalize_tag(text, tag) }
   end
 

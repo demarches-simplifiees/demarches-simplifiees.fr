@@ -72,8 +72,7 @@ describe DossierSerializer do
             "id" => original_pj_id,
             "libelle" => cloned_type_de_champ.libelle,
             "description" => 'Pour optimiser vos chances, soignez la chorégraphie et privilégiez le chant polyphonique.',
-            "lien_demarche" => 'https://www.dance-academy.gouv.fr',
-            "order_place" => cloned_type_de_champ.order_place
+            "lien_demarche" => 'https://www.dance-academy.gouv.fr'
           }
         ],
         pieces_justificatives: [

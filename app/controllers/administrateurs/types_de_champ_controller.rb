@@ -8,7 +8,7 @@ module Administrateurs
 
       if type_de_champ.valid?
         reset_procedure
-        render json: serialize_type_de_champ(type_de_champ), status: :created
+        render json: { type_de_champ: type_de_champ.as_json_for_editor }, status: :created
       else
         render json: { errors: type_de_champ.errors.full_messages }, status: :unprocessable_entity
       end
@@ -19,14 +19,14 @@ module Administrateurs
 
       if type_de_champ.update(type_de_champ_update_params)
         reset_procedure
-        render json: serialize_type_de_champ(type_de_champ)
+        render json: { type_de_champ: type_de_champ.as_json_for_editor }
       else
         render json: { errors: type_de_champ.errors.full_messages }, status: :unprocessable_entity
       end
     end
 
     def move
-      @procedure.draft_revision.move_type_de_champ(params[:id], (params[:position] || params[:order_place]).to_i)
+      @procedure.draft_revision.move_type_de_champ(params[:id], params[:position].to_i)
 
       head :no_content
     end
@@ -39,34 +39,6 @@ module Administrateurs
     end
 
     private
-
-    def serialize_type_de_champ(type_de_champ)
-      {
-        type_de_champ: type_de_champ.as_json(
-          except: [
-            :created_at,
-            :options,
-            :order_place,
-            :parent_id,
-            :private,
-            :procedure_id,
-            :revision_id,
-            :stable_id,
-            :type,
-            :updated_at
-          ],
-          methods: [
-            :drop_down_list_value,
-            :drop_down_other,
-            :drop_down_secondary_libelle,
-            :drop_down_secondary_description,
-            :piece_justificative_template_filename,
-            :piece_justificative_template_url,
-            :editable_options
-          ]
-        )
-      }
-    end
 
     def type_de_champ_create_params
       params.required(:type_de_champ).permit(:type_champ,

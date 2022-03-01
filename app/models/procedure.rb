@@ -111,69 +111,33 @@ class Procedure < ApplicationRecord
     brouillon? ? draft_types_de_champ_private : published_types_de_champ_private
   end
 
+  def types_de_champ_for_export(parent_id: nil)
+    # fetch all type_de_champ.stable_id for all the revisions and for each
+    # stable_id take the bigger (more recent) type_de_champ.id
+    types_de_champ = types_de_champ_with_active_revisions(parent_id: parent_id)
+      .fillable
+      .group(:stable_id)
+      .select('MAX(types_de_champ.id)')
+
+    # fetch the more recent procedure_revision_types_de_champ
+    # which includes types_de_champ
+    revision_types_de_champ = ProcedureRevisionTypeDeChamp
+      .where(type_de_champ: types_de_champ)
+      .group(:type_de_champ_id)
+      .select('MAX(id)')
+
+    TypeDeChamp
+      .joins(:revision_types_de_champ)
+      .where(revision_types_de_champ: { id: revision_types_de_champ })
+      .order(:private, :position, 'revision_types_de_champ.revision_id': :desc)
+  end
+
   def types_de_champ_for_procedure_presentation
-    if brouillon?
-      TypeDeChamp.fillable
-        .joins(:revision_types_de_champ)
-        .where(revision_types_de_champ: { revision: draft_revision, parent_id: nil })
-        .order(:private, :position)
-    else
-      # fetch all type_de_champ.stable_id for all the revisions expect draft
-      # and for each stable_id take the bigger (more recent) type_de_champ.id
-      recent_ids = TypeDeChamp.fillable
-        .joins(:revisions)
-        .where(procedure_revisions: { procedure_id: id })
-        .where.not(procedure_revisions: { id: draft_revision_id })
-        .where(revision_types_de_champ: { parent_id: nil })
-        .group(:stable_id)
-        .select('MAX(types_de_champ.id)')
-
-      # fetch the more recent procedure_revision_types_de_champ
-      # which includes recents_ids
-      recents_prtdc = ProcedureRevisionTypeDeChamp
-        .root
-        .where(type_de_champ_id: recent_ids)
-        .where.not(revision_id: draft_revision_id)
-        .group(:type_de_champ_id)
-        .select('MAX(id)')
-
-      TypeDeChamp
-        .joins(:revision_types_de_champ)
-        .where(revision_types_de_champ: { id: recents_prtdc })
-        .order(:private, :position, 'revision_types_de_champ.revision_id': :desc)
-    end
+    types_de_champ_for_export
   end
 
   def types_de_champ_for_tags
-    if brouillon?
-      draft_types_de_champ
-    else
-      TypeDeChamp.root
-        .public_only
-        .fillable
-        .joins(:revisions)
-        .where(procedure_revisions: { procedure_id: id })
-        .where.not(procedure_revisions: { id: draft_revision_id })
-        .where(revision_types_de_champ: { parent_id: nil })
-        .order(:created_at)
-        .uniq
-    end
-  end
-
-  def types_de_champ_private_for_tags
-    if brouillon?
-      draft_types_de_champ_private
-    else
-      TypeDeChamp.root
-        .private_only
-        .fillable
-        .joins(:revisions)
-        .where(procedure_revisions: { procedure_id: id })
-        .where.not(procedure_revisions: { id: draft_revision_id })
-        .where(revision_types_de_champ: { parent_id: nil })
-        .order(:created_at)
-        .uniq
-    end
+    types_de_champ_with_active_revisions.fillable.order(:id)
   end
 
   has_many :administrateurs_procedures, dependent: :delete_all
@@ -439,21 +403,15 @@ class Procedure < ApplicationRecord
   def clone(admin, from_library)
     is_different_admin = !admin.owns?(self)
 
-    populate_champ_stable_ids
     include_list = {
       draft_revision: {
-        revision_types_de_champ: {
-          type_de_champ: :types_de_champ
-        },
-        revision_types_de_champ_private: {
-          type_de_champ: :types_de_champ
-        },
-        attestation_template: [],
+        revision_types_de_champ_all: [:type_de_champ],
+        attestation_template: []
         dossier_submitted_message: []
       }
     }
     include_list[:groupe_instructeurs] = :instructeurs if !is_different_admin
-    procedure = self.deep_clone(include: include_list) do |original, kopy|
+    procedure = self.deep_clone(include: include_list, use_dictionary: true) do |original, kopy|
       PiecesJustificativesService.clone_attachments(original, kopy)
     end
     procedure.path = SecureRandom.uuid
@@ -492,11 +450,6 @@ class Procedure < ApplicationRecord
     end
 
     procedure.save
-    procedure.draft_types_de_champ.update_all(revision_id: procedure.draft_revision.id)
-    procedure.draft_types_de_champ_private.update_all(revision_id: procedure.draft_revision.id)
-    types_de_champ_in_repetition = TypeDeChamp.where(parent: procedure.draft_types_de_champ.repetition + procedure.draft_types_de_champ_private.repetition)
-    types_de_champ_in_repetition.update_all(revision_id: procedure.draft_revision.id)
-    types_de_champ_in_repetition.each(&:migrate_parent!)
 
     if is_different_admin || from_library
       procedure.draft_types_de_champ.each { |tdc| tdc.options&.delete(:old_pj) }
@@ -580,15 +533,6 @@ class Procedure < ApplicationRecord
         :extraneous_tag
       end
     end
-  end
-
-  def populate_champ_stable_ids
-    TypeDeChamp
-      .joins(:revisions)
-      .where(procedure_revisions: { procedure_id: id }, stable_id: nil)
-      .find_each do |type_de_champ|
-        type_de_champ.update_column(:stable_id, type_de_champ.id)
-      end
   end
 
   def missing_steps
@@ -707,9 +651,7 @@ class Procedure < ApplicationRecord
   end
 
   def create_new_revision
-    draft_revision
-      .deep_clone(include: [:revision_types_de_champ, :revision_types_de_champ_private])
-      .tap(&:save!)
+    draft_revision.deep_clone(include: :revision_types_de_champ_all, use_dictionary: true).tap(&:save!)
   end
 
   def average_dossier_weight
@@ -751,6 +693,20 @@ class Procedure < ApplicationRecord
   end
 
   private
+
+  def types_de_champ_with_active_revisions(parent_id: nil)
+    if brouillon?
+      TypeDeChamp
+        .joins(:revision_types_de_champ)
+        .where(revision_types_de_champ: { parent_id: parent_id, revision_id: draft_revision_id })
+    else
+      TypeDeChamp
+        .joins(:revisions)
+        .where(procedure_revisions: { procedure_id: id })
+        .where(revision_types_de_champ: { parent_id: parent_id })
+        .where.not(revision_types_de_champ: { revision_id: draft_revision_id })
+    end
+  end
 
   def validate_for_publication?
     validation_context == :publication || publiee?

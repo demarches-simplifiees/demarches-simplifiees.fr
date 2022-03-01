@@ -35,13 +35,13 @@ describe ProcedureRevision do
     end
 
     it 'type_de_champ_repetition' do
-      expect(type_de_champ_repetition.types_de_champ.size).to eq(1)
+      expect(type_de_champ_repetition.draft_types_de_champ.size).to eq(1)
       revision.add_type_de_champ({
         type_champ: TypeDeChamp.type_champs.fetch(:text),
         libelle: "Un champ text",
         parent_id: type_de_champ_repetition.stable_id
       })
-      expect(type_de_champ_repetition.types_de_champ.size).to eq(2)
+      expect(type_de_champ_repetition.draft_types_de_champ.size).to eq(2)
     end
   end
 
@@ -51,7 +51,6 @@ describe ProcedureRevision do
 
     it 'move down' do
       expect(revision.types_de_champ.index(type_de_champ)).to eq(0)
-      type_de_champ.update(order_place: nil)
       revision.move_type_de_champ(type_de_champ.stable_id, 2)
       revision.reload
       expect(revision.types_de_champ.index(type_de_champ)).to eq(2)
@@ -61,7 +60,6 @@ describe ProcedureRevision do
 
     it 'move up' do
       expect(revision.types_de_champ.index(last_type_de_champ)).to eq(3)
-      last_type_de_champ.update(order_place: nil)
       revision.move_type_de_champ(last_type_de_champ.stable_id, 0)
       revision.reload
       expect(revision.types_de_champ.index(last_type_de_champ)).to eq(0)
@@ -71,8 +69,8 @@ describe ProcedureRevision do
 
     context 'repetition' do
       let(:procedure) { create(:procedure, :with_repetition) }
-      let(:type_de_champ) { type_de_champ_repetition.types_de_champ.first }
-      let(:last_type_de_champ) { type_de_champ_repetition.types_de_champ.last }
+      let(:type_de_champ) { type_de_champ_repetition.draft_types_de_champ.first }
+      let(:last_type_de_champ) { type_de_champ_repetition.draft_types_de_champ.last }
 
       before do
         revision.add_type_de_champ({
@@ -89,17 +87,17 @@ describe ProcedureRevision do
       end
 
       it 'move down' do
-        expect(type_de_champ_repetition.types_de_champ.index(type_de_champ)).to eq(0)
+        expect(type_de_champ_repetition.draft_types_de_champ.index(type_de_champ)).to eq(0)
         revision.move_type_de_champ(type_de_champ.stable_id, 2)
         type_de_champ_repetition.reload
-        expect(type_de_champ_repetition.types_de_champ.index(type_de_champ)).to eq(2)
+        expect(type_de_champ_repetition.draft_types_de_champ.index(type_de_champ)).to eq(2)
       end
 
       it 'move up' do
-        expect(type_de_champ_repetition.types_de_champ.index(last_type_de_champ)).to eq(2)
+        expect(type_de_champ_repetition.draft_types_de_champ.index(last_type_de_champ)).to eq(2)
         revision.move_type_de_champ(last_type_de_champ.stable_id, 0)
         type_de_champ_repetition.reload
-        expect(type_de_champ_repetition.types_de_champ.index(last_type_de_champ)).to eq(0)
+        expect(type_de_champ_repetition.draft_types_de_champ.index(last_type_de_champ)).to eq(0)
       end
     end
   end
@@ -108,7 +106,6 @@ describe ProcedureRevision do
     it 'type_de_champ' do
       expect(revision.types_de_champ.size).to eq(2)
       revision.remove_type_de_champ(type_de_champ.stable_id)
-      procedure.reload
       expect(revision.types_de_champ.size).to eq(1)
     end
 
@@ -119,11 +116,10 @@ describe ProcedureRevision do
     end
 
     it 'type_de_champ_repetition' do
-      expect(type_de_champ_repetition.types_de_champ.size).to eq(1)
+      expect(type_de_champ_repetition.draft_types_de_champ.size).to eq(1)
       expect(revision.types_de_champ.size).to eq(2)
-      revision.remove_type_de_champ(type_de_champ_repetition.types_de_champ.first.stable_id)
-      type_de_champ_repetition.reload
-      expect(type_de_champ_repetition.types_de_champ.size).to eq(0)
+      revision.remove_type_de_champ(type_de_champ_repetition.draft_types_de_champ.first.stable_id)
+      expect(type_de_champ_repetition.draft_types_de_champ.size).to eq(0)
       expect(revision.types_de_champ.size).to eq(2)
     end
   end
@@ -290,8 +286,8 @@ describe ProcedureRevision do
           }
         ])
 
-        new_revision.find_or_clone_type_de_champ(new_revision.types_de_champ.last.types_de_champ.first.stable_id).update(type_champ: :drop_down_list)
-        new_revision.find_or_clone_type_de_champ(new_revision.types_de_champ.last.types_de_champ.first.stable_id).update(drop_down_options: ['one', 'two'])
+        new_revision.find_or_clone_type_de_champ(new_revision.types_de_champ.last.draft_types_de_champ.first.stable_id).update(type_champ: :drop_down_list)
+        new_revision.find_or_clone_type_de_champ(new_revision.types_de_champ.last.draft_types_de_champ.first.stable_id).update(drop_down_options: ['one', 'two'])
         expect(procedure.active_revision.compare(new_revision.reload)).to eq([
           {
             model: :type_de_champ,
@@ -349,8 +345,8 @@ describe ProcedureRevision do
           }
         ])
 
-        new_revision.find_or_clone_type_de_champ(new_revision.types_de_champ.last.types_de_champ.first.stable_id).update(type_champ: :carte)
-        new_revision.find_or_clone_type_de_champ(new_revision.types_de_champ.last.types_de_champ.first.stable_id).update(options: { cadastres: true, znieff: true })
+        new_revision.find_or_clone_type_de_champ(new_revision.types_de_champ.last.draft_types_de_champ.first.stable_id).update(type_champ: :carte)
+        new_revision.find_or_clone_type_de_champ(new_revision.types_de_champ.last.draft_types_de_champ.first.stable_id).update(options: { cadastres: true, znieff: true })
         expect(procedure.active_revision.compare(new_revision.reload)).to eq([
           {
             model: :type_de_champ,

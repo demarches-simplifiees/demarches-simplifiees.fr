@@ -75,6 +75,7 @@ class Dossier < ApplicationRecord
 
   has_many :champs, -> { root.public_ordered }, inverse_of: false, dependent: :destroy
   has_many :champs_private, -> { root.private_ordered }, class_name: 'Champ', inverse_of: false, dependent: :destroy
+  has_many :champs_all, class_name: 'Champ', inverse_of: false
   has_many :commentaires, inverse_of: :dossier, dependent: :destroy
   has_many :invites, dependent: :destroy
   has_many :follows, -> { active }, inverse_of: :dossier
@@ -501,11 +502,11 @@ class Dossier < ApplicationRecord
   end
 
   def build_default_champs
-    revision.build_champs.each do |champ|
-      champs << champ
+    revision.types_de_champ.each do |type_de_champ|
+      champs << type_de_champ.build_champ(dossier: self)
     end
-    revision.build_champs_private.each do |champ|
-      champs_private << champ
+    revision.types_de_champ_private.each do |type_de_champ|
+      champs_private << type_de_champ.build_champ(dossier: self)
     end
   end
 

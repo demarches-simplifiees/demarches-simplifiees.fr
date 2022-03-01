@@ -40,13 +40,13 @@ class ProcedureExportService
   end
 
   def champs_repetables_options
-    revision = @procedure.active_revision
     champs_by_stable_id = dossiers
       .flat_map { |dossier| (dossier.champs + dossier.champs_private).filter(&:repetition?) }
       .group_by(&:stable_id)
 
-    @procedure.types_de_champ_for_procedure_presentation.repetition
-      .map { |type_de_champ_repetition| [type_de_champ_repetition, type_de_champ_repetition.types_de_champ_for_revision(revision).to_a] }
+    @procedure.types_de_champ_for_procedure_presentation
+      .repetition
+      .map { |type_de_champ_repetition| [type_de_champ_repetition, type_de_champ_repetition.types_de_champ_for_export(@procedure).to_a] }
       .filter { |(_, types_de_champ)| types_de_champ.present? }
       .map do |(type_de_champ_repetition, types_de_champ)|
         {

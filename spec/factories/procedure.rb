@@ -335,12 +335,12 @@ def add_types_de_champs(types_de_champ, to: nil, scope: :public)
   revision = to
   association_name = scope == :private ? :revision_types_de_champ_private : :revision_types_de_champ
 
-  types_de_champ.each do |type_de_champ|
+  types_de_champ.each.with_index do |type_de_champ, index|
     type_de_champ.revision = revision
     type_de_champ.private = (scope == :private)
     type_de_champ.revision.public_send(association_name) << build(:procedure_revision_type_de_champ,
                                                                   revision: revision,
-                                                                  position: type_de_champ.order_place,
+                                                                  position: index,
                                                                   type_de_champ: type_de_champ)
   end
 end

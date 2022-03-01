@@ -339,6 +339,8 @@ describe Procedure do
       end
 
       context 'when validating for publication' do
+        let(:types_de_champ) { [] }
+
         it 'validates that no repetition type de champ is empty' do
           procedure.validate(:publication)
           expect(procedure.errors.full_messages_for(:draft_types_de_champ)).to include(invalid_repetition_error_message)
@@ -474,24 +476,28 @@ describe Procedure do
       expect(subject.draft_types_de_champ_private.size).to eq(procedure.draft_types_de_champ_private.size)
 
       procedure.draft_types_de_champ.zip(subject.draft_types_de_champ).each do |ptc, stc|
-        expect(stc).to have_same_attributes_as(ptc, except: ["revision_id"])
+        expect(stc).to have_same_attributes_as(ptc)
         expect(stc.revision).to eq(subject.draft_revision)
       end
 
-      TypeDeChamp.where(parent: procedure.draft_types_de_champ.repetition).zip(TypeDeChamp.where(parent: subject.draft_types_de_champ.repetition)).each do |ptc, stc|
-        expect(stc).to have_same_attributes_as(ptc, except: ["revision_id", "parent_id", "migrated_parent"])
-        expect(stc.revision).to eq(subject.draft_revision)
-      end
+      procedure.draft_types_de_champ.repetition.flat_map(&:draft_types_de_champ)
+        .zip(subject.draft_types_de_champ.repetition.flat_map(&:draft_types_de_champ))
+        .each do |ptc, stc|
+          expect(stc).to have_same_attributes_as(ptc)
+          expect(stc.revision).to eq(subject.draft_revision)
+        end
 
       procedure.draft_types_de_champ_private.zip(subject.draft_types_de_champ_private).each do |ptc, stc|
-        expect(stc).to have_same_attributes_as(ptc, except: ["revision_id"])
+        expect(stc).to have_same_attributes_as(ptc)
         expect(stc.revision).to eq(subject.draft_revision)
       end
 
-      TypeDeChamp.where(parent: procedure.draft_types_de_champ_private.repetition).zip(TypeDeChamp.where(parent: subject.draft_types_de_champ_private.repetition)).each do |ptc, stc|
-        expect(stc).to have_same_attributes_as(ptc, except: ["revision_id", "parent_id", "migrated_parent"])
-        expect(stc.revision).to eq(subject.draft_revision)
-      end
+      procedure.draft_types_de_champ_private.repetition.flat_map(&:draft_types_de_champ)
+        .zip(subject.draft_types_de_champ_private.repetition.flat_map(&:draft_types_de_champ))
+        .each do |ptc, stc|
+          expect(stc).to have_same_attributes_as(ptc)
+          expect(stc.revision).to eq(subject.draft_revision)
+        end
 
       expect(subject.attestation_template.title).to eq(procedure.attestation_template.title)
 

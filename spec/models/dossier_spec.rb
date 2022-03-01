@@ -1131,7 +1131,7 @@ describe Dossier do
       let(:type_de_champ_repetition) { build(:type_de_champ_repetition, mandatory: true) }
 
       before do
-        create(:type_de_champ_text, mandatory: true, parent: type_de_champ_repetition)
+        create(:type_de_champ_text, mandatory: true, parent: type_de_champ_repetition.draft_revision_type_de_champ)
       end
 
       context "when no champs" do

@@ -2,22 +2,20 @@
 #
 # Table name: types_de_champ
 #
-#  id              :integer          not null, primary key
-#  description     :text
-#  libelle         :string
-#  mandatory       :boolean          default(FALSE)
-#  migrated_parent :boolean
-#  options         :jsonb
-#  order_place     :integer
-#  private         :boolean          default(FALSE), not null
-#  type_champ      :string
-#  created_at      :datetime
-#  updated_at      :datetime
-#  parent_id       :bigint
-#  revision_id     :bigint
-#  stable_id       :bigint
+#  id          :integer          not null, primary key
+#  description :text
+#  libelle     :string
+#  mandatory   :boolean          default(FALSE)
+#  options     :jsonb
+#  private     :boolean          default(FALSE), not null
+#  type_champ  :string
+#  created_at  :datetime
+#  updated_at  :datetime
+#  stable_id   :bigint
 #
 class TypeDeChamp < ApplicationRecord
+  self.ignored_columns = [:order_place, :parent_id, :revision_id, :migrated_parent, :procedure_id]
+
   enum type_champs: {
     text: 'text',
     textarea: 'textarea',
@@ -56,16 +54,24 @@ class TypeDeChamp < ApplicationRecord
     mesri: 'mesri'
   }
 
-  belongs_to :revision, class_name: 'ProcedureRevision', optional: true
-  has_one :procedure, through: :revision
+  store_accessor :options,
+    :cadastres,
+    :old_pj,
+    :drop_down_options,
+    :skip_pj_validation,
+    :skip_content_type_pj_validation,
+    :drop_down_secondary_libelle,
+    :drop_down_secondary_description,
+    :drop_down_other
 
-  belongs_to :parent, class_name: 'TypeDeChamp', optional: true
-  has_many :types_de_champ, -> { ordered }, foreign_key: :parent_id, class_name: 'TypeDeChamp', inverse_of: :parent, dependent: :destroy
+  has_many :revision_types_de_champ, -> { order(:id) }, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
+  has_many :revisions, through: :revision_types_de_champ
 
-  store_accessor :options, :cadastres, :old_pj, :drop_down_options, :skip_pj_validation, :skip_content_type_pj_validation, :drop_down_secondary_libelle, :drop_down_secondary_description, :drop_down_other
-  has_many :revision_types_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
-  has_one :revision_type_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', inverse_of: false
-  has_many :revisions, -> { ordered }, through: :revision_types_de_champ
+  has_one :revision_type_de_champ, -> { order(:id) }, class_name: 'ProcedureRevisionTypeDeChamp', inverse_of: false
+  has_one :draft_revision_type_de_champ, -> { order(id: 'desc') }, class_name: 'ProcedureRevisionTypeDeChamp', inverse_of: false
+  has_one :revision, through: :revision_type_de_champ
+  has_one :draft_revision, through: :draft_revision_type_de_champ, source: :revision
+  has_many :types_de_champ, through: :draft_revision_type_de_champ, source: :types_de_champ
 
   delegate :tags_for_template, :libelle_for_export, to: :dynamic_type
 
@@ -88,8 +94,6 @@ class TypeDeChamp < ApplicationRecord
 
   scope :public_only, -> { where(private: false) }
   scope :private_only, -> { where(private: true) }
-  scope :ordered, -> { order(order_place: :asc) }
-  scope :root, -> { where(parent_id: nil) }
   scope :repetition, -> { where(type_champ: type_champs.fetch(:repetition)) }
   scope :not_repetition, -> { where.not(type_champ: type_champs.fetch(:repetition)) }
   scope :fillable, -> { where.not(type_champ: [type_champs.fetch(:header_section), type_champs.fetch(:explication)]) }
@@ -105,8 +109,6 @@ class TypeDeChamp < ApplicationRecord
   end
 
   has_one_attached :piece_justificative_template
-
-  accepts_nested_attributes_for :types_de_champ, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :type_champ, presence: true, allow_blank: false, allow_nil: false
@@ -147,8 +149,8 @@ class TypeDeChamp < ApplicationRecord
     }
   end
 
-  def build_champ
-    dynamic_type.build_champ
+  def build_champ(dossier: nil, row: nil)
+    dynamic_type.build_champ(dossier: dossier, row: row)
   end
 
   def check_mandatory
@@ -294,21 +296,19 @@ class TypeDeChamp < ApplicationRecord
     options.slice(*TypesDeChamp::CarteTypeDeChamp::LAYERS)
   end
 
-  def types_de_champ_for_revision(revision)
-    if revision.draft?
-      # if we are asking for children on a draft revision, just use current child types_de_champ
-      types_de_champ.fillable
-    else
-      # otherwise return all types_de_champ in their latest state
-      types_de_champ = TypeDeChamp
-        .fillable
-        .joins(parent: :revision_types_de_champ)
-        .where(parent: { stable_id: stable_id }, revision_types_de_champ: { revision_id: revision })
-
-      TypeDeChamp
-        .where(id: types_de_champ.group(:stable_id).select('MAX(types_de_champ.id)'))
-        .order(:order_place, id: :desc)
+  def for_revision(revision)
+    revision_types_de_champ.find do |revision_type_de_champ|
+      revision_type_de_champ.revision == revision
     end
+  end
+
+  def types_de_champ_for_revision(revision)
+    for_revision(revision).types_de_champ
+  end
+
+  def types_de_champ_for_export(procedure)
+    parent_id = for_revision(revision).id
+    procedure.types_de_champ_for_export(parent_id: parent_id)
   end
 
   FEATURE_FLAGS = {}
@@ -346,34 +346,47 @@ class TypeDeChamp < ApplicationRecord
       .sort_by(&:first)
   end
 
-  TYPES_DE_CHAMP_BASE = {
-    except: [
+  def as_json_for_editor
+    as_json(except: [
       :created_at,
       :options,
-      :order_place,
-      :parent_id,
       :private,
-      :procedure_id,
-      :revision_id,
       :stable_id,
       :type,
-      :updated_at
+      :updated_at,
+      :type_champs
     ],
     methods: [
       :drop_down_list_value,
       :drop_down_other,
+      :drop_down_secondary_libelle,
+      :drop_down_secondary_description,
+      :piece_justificative_template_filename,
+      :piece_justificative_template_url,
+      :editable_options
+    ])
+  end
+
+  def self.as_json_for_editor
+    includes(piece_justificative_template_attachment: :blob).as_json(except: [
+      :created_at,
+      :options,
+      :private,
+      :stable_id,
+      :type,
+      :updated_at,
+      :type_champs
+    ],
+    methods: [
+      :drop_down_list_value,
+      :drop_down_other,
+      :drop_down_secondary_libelle,
+      :drop_down_secondary_description,
       :piece_justificative_template_filename,
       :piece_justificative_template_url,
       :editable_options,
-      :drop_down_secondary_libelle,
-      :drop_down_secondary_description
-    ]
-  }
-  TYPES_DE_CHAMP = TYPES_DE_CHAMP_BASE
-    .merge(include: { types_de_champ: TYPES_DE_CHAMP_BASE })
-
-  def self.as_json_for_editor
-    includes(piece_justificative_template_attachment: :blob, types_de_champ: [piece_justificative_template_attachment: :blob]).as_json(TYPES_DE_CHAMP)
+      :types_de_champ
+    ])
   end
 
   def read_attribute_for_serialization(name)
@@ -382,17 +395,6 @@ class TypeDeChamp < ApplicationRecord
     else
       super
     end
-  end
-
-  def migrate_parent!
-    if parent_id.present? && migrated_parent.nil?
-      ProcedureRevisionTypeDeChamp.create(parent: parent.revision_type_de_champ,
-        type_de_champ: self,
-        revision_id: parent.revision_type_de_champ.revision_id,
-        position: order_place)
-      update_column(:migrated_parent, true)
-    end
-    self
   end
 
   private

@@ -3,7 +3,6 @@ FactoryBot.define do
     sequence(:libelle) { |n| "Libelle du champ #{n}" }
     sequence(:description) { |n| "description du champ #{n}" }
     type_champ { TypeDeChamp.type_champs.fetch(:text) }
-    order_place { 1 }
     mandatory { false }
     add_attribute(:private) { false }
 
@@ -11,28 +10,33 @@ FactoryBot.define do
       procedure { nil }
       position { nil }
       parent { nil }
+      types_de_champ { nil }
     end
 
     after(:build) do |type_de_champ, evaluator|
-      if evaluator.procedure
-        type_de_champ.revision = evaluator.procedure.active_revision
-
-        build(:procedure_revision_type_de_champ,
+      if evaluator.procedure.present?
+        revision = evaluator.procedure.active_revision
+        revision_type_de_champ = build(:procedure_revision_type_de_champ,
           position: evaluator.position,
-          revision: evaluator.procedure.active_revision,
+          revision: revision,
+          parent: evaluator.parent,
           type_de_champ: type_de_champ)
 
-        if type_de_champ.private?
-          type_de_champ.revision.types_de_champ_private << type_de_champ
-        else
-          type_de_champ.revision.types_de_champ << type_de_champ
+        if evaluator.types_de_champ.present?
+          evaluator.types_de_champ.each.with_index do |type_de_champ, index|
+            revision_type_de_champ.revision_types_de_champ << build(:procedure_revision_type_de_champ,
+              position: index,
+              revision: revision,
+              parent: revision_type_de_champ,
+              type_de_champ: type_de_champ)
+          end
         end
-      elsif evaluator.parent
-        type_de_champ.revision = evaluator.parent.revision
-        type_de_champ.order_place = evaluator.position || evaluator.parent.types_de_champ.size
-        evaluator.parent.types_de_champ << type_de_champ
-      else
-        type_de_champ.order_place = evaluator.position
+
+        if type_de_champ.private?
+          revision.types_de_champ_private << type_de_champ
+        else
+          revision.types_de_champ << type_de_champ
+        end
       end
     end
 
@@ -172,22 +176,8 @@ FactoryBot.define do
     factory :type_de_champ_repetition do
       type_champ { TypeDeChamp.type_champs.fetch(:repetition) }
 
-      transient do
-        types_de_champ { [] }
-      end
-
-      after(:build) do |type_de_champ_repetition, evaluator|
-        evaluator.types_de_champ.each do |type_de_champ|
-          type_de_champ.revision = type_de_champ_repetition.revision
-          type_de_champ.order_place = type_de_champ_repetition.types_de_champ.size
-          type_de_champ_repetition.types_de_champ << type_de_champ
-        end
-      end
-
       trait :with_types_de_champ do
-        after(:build) do |type_de_champ, _evaluator|
-          build(:type_de_champ, libelle: 'sub type de champ', parent: type_de_champ)
-        end
+        types_de_champ { [build(:type_de_champ, libelle: 'sub type de champ')] }
       end
     end
   end

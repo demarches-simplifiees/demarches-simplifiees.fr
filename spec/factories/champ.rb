@@ -220,7 +220,7 @@ FactoryBot.define do
         type_de_champ_text = existing_type_de_champ_text || build(
           :type_de_champ_text,
           position: 0,
-          parent: champ_repetition.type_de_champ,
+          parent: champ_repetition.type_de_champ.draft_revision_type_de_champ,
           libelle: 'Nom'
         )
 
@@ -228,15 +228,15 @@ FactoryBot.define do
         type_de_champ_number = existing_type_de_champ_number || build(
           :type_de_champ_number,
           position: 1,
-          parent: champ_repetition.type_de_champ,
+          parent: champ_repetition.type_de_champ.draft_revision_type_de_champ,
           libelle: 'Age'
         )
 
         champ_repetition.type_de_champ.types_de_champ << [type_de_champ_text, type_de_champ_number]
         evaluator.rows.times do |row|
           champ_repetition.champs << [
-            build(:champ_text, dossier: champ_repetition.dossier, row: row, type_de_champ: type_de_champ_text, parent: champ_repetition),
-            build(:champ_number, dossier: champ_repetition.dossier, row: row, type_de_champ: type_de_champ_number, parent: champ_repetition)
+            build(:champ_text, dossier: champ_repetition.dossier, row: row, type_de_champ: type_de_champ_text, parent: champ_repetition.draft_revision_type_de_champ),
+            build(:champ_number, dossier: champ_repetition.dossier, row: row, type_de_champ: type_de_champ_number, parent: champ_repetition.draft_revision_type_de_champ)
           ]
         end
       end
@@ -254,11 +254,11 @@ FactoryBot.define do
       after(:build) do |champ_repetition, _evaluator|
         type_de_champ_pj0 = build(:type_de_champ_piece_justificative,
           position: 0,
-          parent: champ_repetition.type_de_champ,
+          parent: champ_repetition.type_de_champ.draft_revision_type_de_champ,
           libelle: 'Justificatif de domicile')
         type_de_champ_pj1 = build(:type_de_champ_piece_justificative,
           position: 1,
-          parent: champ_repetition.type_de_champ,
+          parent: champ_repetition.type_de_champ.draft_revision_type_de_champ,
           libelle: 'Carte d\'identité')
 
         champ_repetition.champs << [

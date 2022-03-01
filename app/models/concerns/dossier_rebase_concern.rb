@@ -58,23 +58,24 @@ module DossierRebaseConcern
 
     changes_by_type_de_champ.each do |stable_id, changes|
       type_de_champ = find_type_de_champ_by_stable_id(stable_id)
-      published_type_de_champ = find_type_de_champ_by_stable_id(stable_id, published: true)
+      published_revision_type_de_champ = find_published_revision_types_de_champ_by_stable_id(stable_id)
 
       changes.each do |change|
         case change[:op]
         when :add
-          add_new_champs_for_revision(published_type_de_champ)
+          add_new_champs_for_revision(published_revision_type_de_champ)
         when :remove
           delete_champs_for_revision(type_de_champ)
         end
       end
     end
 
-    flattened_all_champs.each do |champ|
+    champs_all.each do |champ|
       changes_by_stable_id = (changes_by_type_de_champ[champ.stable_id] || [])
         .filter { |change| change[:op] == :update }
+      published_revision_type_de_champ = find_published_revision_types_de_champ_by_stable_id(champ.stable_id)
 
-      update_champ_for_revision(champ) do |update|
+      update_champ_for_revision(champ, published_revision_type_de_champ&.type_de_champ) do |update|
         changes_by_stable_id.each do |change|
           case change[:attribute]
           when :type_champ
@@ -103,29 +104,27 @@ module DossierRebaseConcern
     geo_areas_to_delete.each(&:destroy)
   end
 
-  def add_new_champs_for_revision(published_type_de_champ)
-    if published_type_de_champ.parent
-      find_champs_by_stable_id(published_type_de_champ.parent.stable_id).each do |champ_repetition|
-        champ_repetition.champs.map(&:row).uniq.each do |row|
-          champ = published_type_de_champ.champ.build(row: row)
-          champ_repetition.champs << champ
+  def add_new_champs_for_revision(revision_type_de_champ)
+    published_type_de_champ = revision_type_de_champ.type_de_champ
+    if revision_type_de_champ.child?
+      find_champs_by_stable_id(revision_type_de_champ.parent.stable_id).each do |champ_repetition|
+        champ_repetition.champs << champ_repetition.champs.map(&:row).uniq.map do |row|
+          published_type_de_champ.build_champ(row: row)
         end
       end
     else
-      champ = published_type_de_champ.build_champ
-      self.champs << champ
+      self.champs << published_type_de_champ.build_champ(dossier: self)
     end
   end
 
-  def update_champ_for_revision(champ)
-    published_type_de_champ = find_type_de_champ_by_stable_id(champ.stable_id, published: true)
+  def update_champ_for_revision(champ, published_type_de_champ)
     return if !published_type_de_champ
 
     update = {}
 
     yield update
 
-    if champ.type_de_champ != published_type_de_champ
+    if champ.type_de_champ_id != published_type_de_champ.id
       update[:type_de_champ_id] = published_type_de_champ.id
     end
 
@@ -135,29 +134,35 @@ module DossierRebaseConcern
   end
 
   def delete_champs_for_revision(published_type_de_champ)
-    Champ.where(id: find_champs_by_stable_id(published_type_de_champ.stable_id).map(&:id))
+    Champ.where(id: find_champs_by_stable_id(published_type_de_champ.stable_id))
       .destroy_all
   end
 
-  def flattened_all_types_de_champ(published: false)
-    revision = published ? procedure.published_revision : self.revision
-    types_de_champ = revision.types_de_champ + revision.types_de_champ_private
-    (types_de_champ + types_de_champ.filter(&:repetition?).flat_map(&:types_de_champ))
-      .index_by(&:stable_id)
+  def find_type_de_champ_by_stable_id(stable_id)
+    all_types_de_champ_by_stable_id[stable_id]
   end
 
-  def flattened_all_champs
-    all_champs = (champs + champs_private)
-    all_champs + all_champs.filter(&:repetition?).flat_map(&:champs)
-  end
-
-  def find_type_de_champ_by_stable_id(stable_id, published: false)
-    flattened_all_types_de_champ(published: published)[stable_id]
+  def find_published_revision_types_de_champ_by_stable_id(stable_id)
+    all_published_revision_types_de_champ_by_stable_id[stable_id]
   end
 
   def find_champs_by_stable_id(stable_id)
-    flattened_all_champs.filter do |champ|
-      champ.stable_id == stable_id
-    end
+    all_champs_by_stable_id[stable_id]
+  end
+
+  def all_champs_by_stable_id
+    @all_champs_by_stable_id ||= champs_all.group_by(&:stable_id)
+  end
+
+  def all_published_revision_types_de_champ_by_stable_id
+    @all_published_revision_types_de_champ_by_stable_id ||= procedure.published_revision
+      .revision_types_de_champ_all
+      .index_by(&:stable_id)
+  end
+
+  def all_types_de_champ_by_stable_id
+    @all_types_de_champ_by_stable_id ||= revision
+      .types_de_champ_all
+      .index_by(&:stable_id)
   end
 end

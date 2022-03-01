@@ -18,34 +18,26 @@ class ProcedureRevision < ApplicationRecord
 
   has_many :dossiers, inverse_of: :revision, foreign_key: :revision_id
 
-  has_many :revision_types_de_champ, -> { root.public_only.ordered }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
-  has_many :revision_types_de_champ_private, -> { root.private_only.ordered }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
+  has_many :revision_types_de_champ, -> { root.public_only.ordered }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, inverse_of: false
+  has_many :revision_types_de_champ_private, -> { root.private_only.ordered }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, inverse_of: false
+  has_many :revision_types_de_champ_all, -> { parent_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
   has_many :types_de_champ, through: :revision_types_de_champ, source: :type_de_champ
   has_many :types_de_champ_private, through: :revision_types_de_champ_private, source: :type_de_champ
+  has_many :types_de_champ_all, through: :revision_types_de_champ_all, source: :type_de_champ
 
-  has_many :owned_types_de_champ, class_name: 'TypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
   has_one :draft_procedure, -> { with_discarded }, class_name: 'Procedure', foreign_key: :draft_revision_id, dependent: :nullify, inverse_of: :draft_revision
   has_one :published_procedure, -> { with_discarded }, class_name: 'Procedure', foreign_key: :published_revision_id, dependent: :nullify, inverse_of: :published_revision
 
   scope :ordered, -> { order(:created_at) }
 
-  def build_champs
-    types_de_champ.map(&:build_champ)
-  end
-
-  def build_champs_private
-    types_de_champ_private.map(&:build_champ)
-  end
-
   def add_type_de_champ(params)
-    params[:revision] = self
-
     if params[:parent_id]
-      find_or_clone_type_de_champ(params.delete(:parent_id))
-        .types_de_champ
-        .tap do |types_de_champ|
-          params[:order_place] = types_de_champ.present? ? types_de_champ.last.order_place + 1 : 0
-        end.create(params).migrate_parent!
+      parent_id = params.delete(:parent_id)
+      type_de_champ = TypeDeChamp.new(params)
+      find_revision_type_de_champ_by_stable_id(parent_id)
+        .revision_types_de_champ
+        .create(type_de_champ: type_de_champ, revision: self)
+      type_de_champ
     elsif params[:private]
       types_de_champ_private.create(params)
     else
@@ -53,51 +45,57 @@ class ProcedureRevision < ApplicationRecord
     end
   end
 
-  def find_or_clone_type_de_champ(id)
-    type_de_champ = find_type_de_champ_by_id(id)
+  def find_or_clone_type_de_champ(stable_id)
+    revision_type_de_champ = find_revision_type_de_champ_by_stable_id(stable_id)
+    type_de_champ = revision_type_de_champ.type_de_champ
 
     if type_de_champ.revision == self
       type_de_champ
-    elsif type_de_champ.parent.present?
-      find_or_clone_type_de_champ(type_de_champ.parent.stable_id).types_de_champ.find_by!(stable_id: id)
     else
-      revise_type_de_champ(type_de_champ)
+      revise_type_de_champ(revision_type_de_champ)
     end
   end
 
-  def move_type_de_champ(id, position)
-    type_de_champ = find_type_de_champ_by_id(id)
-
-    if type_de_champ.parent.present?
-      repetition_type_de_champ = find_or_clone_type_de_champ(id).parent
-
-      move_type_de_champ_hash(repetition_type_de_champ.types_de_champ.to_a, type_de_champ, position).each do |(id, position)|
-        type_de_champ = repetition_type_de_champ.types_de_champ.find(id)
-        type_de_champ.update!(order_place: position)
-        type_de_champ.revision_type_de_champ&.update!(position: position)
-      end
-    elsif type_de_champ.private?
-      move_type_de_champ_hash(types_de_champ_private.to_a, type_de_champ, position).each do |(id, position)|
-        revision_types_de_champ_private.find_by!(type_de_champ_id: id).update!(position: position)
-      end
-    else
-      move_type_de_champ_hash(types_de_champ.to_a, type_de_champ, position).each do |(id, position)|
-        revision_types_de_champ.find_by!(type_de_champ_id: id).update!(position: position)
-      end
-    end
-  end
-
-  def remove_type_de_champ(id)
-    type_de_champ = find_type_de_champ_by_id(id)
+  def remove_type_de_champ(stable_id)
+    revision_type_de_champ = find_revision_type_de_champ_by_stable_id(stable_id)
+    type_de_champ = revision_type_de_champ.type_de_champ
 
     if type_de_champ.revision == self
       type_de_champ.destroy
-    elsif type_de_champ.parent.present?
-      find_or_clone_type_de_champ(id).destroy
-    elsif type_de_champ.private?
-      types_de_champ_private.delete(type_de_champ)
     else
-      types_de_champ.delete(type_de_champ)
+      revision_type_de_champ.destroy
+    end
+
+    updates = if revision_type_de_champ.child?
+      revision_type_de_champ.revision_types_de_champ
+    elsif type_de_champ.private?
+      revision_types_de_champ_private
+    else
+      revision_types_de_champ
+    end.map.with_index do |revision_type_de_champ, index|
+      [revision_type_de_champ.id, { position: index }]
+    end.to_h
+
+    ProcedureRevisionTypeDeChamp.update(updates.keys, updates.values)
+  end
+
+  def move_type_de_champ(stable_id, position)
+    revision_type_de_champ = find_revision_type_de_champ_by_stable_id(stable_id)
+
+    ids = if revision_type_de_champ.child?
+      revision_type_de_champ.parent.revision_types_de_champ
+    elsif revision_type_de_champ.private?
+      revision_types_de_champ_private
+    else
+      revision_types_de_champ
+    end.pluck(:id)
+
+    if ids.delete_at(ids.index(revision_type_de_champ.id))
+      updates = ids.insert(position, revision_type_de_champ.id)
+        .map.with_index { |id, index| [id, { position: index }] }
+        .to_h
+
+      ProcedureRevisionTypeDeChamp.update(updates.keys, updates.values)
     end
   end
 
@@ -110,26 +108,21 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def different_from?(revision)
-    types_de_champ != revision.types_de_champ ||
-      types_de_champ_private != revision.types_de_champ_private ||
+    revision_types_de_champ_all != revision.revision_types_de_champ_all ||
       attestation_template != revision.attestation_template
   end
 
   def compare(revision)
     changes = []
-    changes += compare_types_de_champ(types_de_champ, revision.types_de_champ)
-    changes += compare_types_de_champ(types_de_champ_private, revision.types_de_champ_private)
+    changes += compare_types_de_champ(revision_types_de_champ_all, revision.revision_types_de_champ_all)
     changes += compare_attestation_template(attestation_template, revision.attestation_template)
     changes
   end
 
   def new_dossier
-    Dossier.new(
-      revision: self,
-      champs: build_champs,
-      champs_private: build_champs_private,
-      groupe_instructeur: procedure.defaut_groupe_instructeur
-    )
+    dossier = dossiers.build(groupe_instructeur: procedure.defaut_groupe_instructeur)
+    dossier.build_default_champs
+    dossier
   end
 
   private
@@ -212,16 +205,16 @@ class ProcedureRevision < ApplicationRecord
       kept = from_sids.intersection(to_sids)
 
       moved = kept
-        .map { |sid| [sid, from_sids.index(sid), to_sids.index(sid)] }
-        .filter { |_, from_index, to_index| from_index != to_index }
-        .map do |sid, from_index, to_index|
-        { model: :type_de_champ, op: :move, label: from_h[sid].libelle, private: from_h[sid].private?, from: from_index, to: to_index, position: to_index, stable_id: sid }
+        .map { |sid| [sid, from_h[sid], to_h[sid]] }
+        .filter { |_, from, to| from.position != to.position }
+        .map do |sid, from, to|
+        { model: :type_de_champ, op: :move, label: from.libelle, private: from.private?, from: from.position, to: to.position, position: to_sids.index(sid), stable_id: sid }
       end
 
       changed = kept
         .map { |sid| [sid, from_h[sid], to_h[sid]] }
         .flat_map do |sid, from, to|
-        compare_type_de_champ(from, to)
+        compare_type_de_champ(from.type_de_champ, to.type_de_champ)
           .each { |h| h[:position] = to_sids.index(sid) }
       end
 
@@ -356,47 +349,22 @@ class ProcedureRevision < ApplicationRecord
           stable_id: from_type_de_champ.stable_id
         }
       end
-    elsif to_type_de_champ.repetition?
-      if from_type_de_champ.types_de_champ != to_type_de_champ.types_de_champ
-        changes += compare_types_de_champ(from_type_de_champ.types_de_champ, to_type_de_champ.types_de_champ)
-      end
     end
     changes
   end
 
-  def revise_type_de_champ(type_de_champ)
-    types_de_champ_association = type_de_champ.private? ? :revision_types_de_champ_private : :revision_types_de_champ
-    association = send(types_de_champ_association).find_by!(type_de_champ: type_de_champ)
-    cloned_type_de_champ = type_de_champ.deep_clone(include: [:types_de_champ]) do |original, kopy|
+  def revise_type_de_champ(revision_type_de_champ)
+    cloned_type_de_champ = revision_type_de_champ.type_de_champ.deep_clone do |original, kopy|
       PiecesJustificativesService.clone_attachments(original, kopy)
     end
-    cloned_type_de_champ.revision = self
-    association.update!(type_de_champ: cloned_type_de_champ)
-    cloned_type_de_champ.types_de_champ.each(&:migrate_parent!)
+    revision_type_de_champ.update!(type_de_champ: cloned_type_de_champ)
     cloned_type_de_champ
   end
 
-  def find_type_de_champ_by_id(id)
-    types_de_champ.find_by(stable_id: id) ||
-      types_de_champ_private.find_by(stable_id: id) ||
-      types_de_champ_in_repetition.find_by!(stable_id: id)
-  end
-
-  def types_de_champ_in_repetition
-    parent_ids = types_de_champ.repetition.ids + types_de_champ_private.repetition.ids
-    TypeDeChamp.where(parent_id: parent_ids)
-  end
-
-  def move_type_de_champ_hash(types_de_champ, type_de_champ, new_index)
-    old_index = types_de_champ.index(type_de_champ)
-
-    if types_de_champ.delete_at(old_index)
-      types_de_champ.insert(new_index, type_de_champ)
-        .map.with_index do |type_de_champ, index|
-          [type_de_champ.id, index]
-        end
-    else
-      []
-    end
+  def find_revision_type_de_champ_by_stable_id(stable_id)
+    revision_types_de_champ_all
+      .joins(:type_de_champ)
+      .includes(parent: :revision_types_de_champ, type_de_champ: :revision)
+      .find_by!(type_de_champ: { stable_id: stable_id })
   end
 end

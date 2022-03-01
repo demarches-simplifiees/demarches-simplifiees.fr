@@ -164,8 +164,8 @@ describe TagsSubstitutionConcern, type: :model do
       let(:types_de_champ) do
         [
           build(:type_de_champ_repetition, libelle: 'Répétition', types_de_champ: [
-            build(:type_de_champ_text, libelle: 'Nom', order_place: 1),
-            build(:type_de_champ_text, libelle: 'Prénom', order_place: 2)
+            build(:type_de_champ_text, libelle: 'Nom'),
+            build(:type_de_champ_text, libelle: 'Prénom')
           ])
         ]
       end

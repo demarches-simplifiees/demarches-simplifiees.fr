@@ -31,13 +31,11 @@ describe ChampSerializer do
           description: serialized_description,
           id: serialized_id,
           libelle: serialized_libelle,
-          order_place: serialized_order_place,
           type_champ: serialized_type_champ
         }
       }
       let(:serialized_id) { -1 }
       let(:serialized_description) { "" }
-      let(:serialized_order_place) { -1 }
       let(:serialized_value) { geo_json }
 
       context 'and geo_area is selection_utilisateur' do
@@ -65,7 +63,6 @@ describe ChampSerializer do
           }
           let(:serialized_id) { champ.type_de_champ.stable_id }
           let(:serialized_description) { champ.description }
-          let(:serialized_order_place) { champ.order_place }
           let(:serialized_libelle) { champ.libelle }
           let(:serialized_type_champ) { champ.type_champ }
           let(:serialized_value) { nil }

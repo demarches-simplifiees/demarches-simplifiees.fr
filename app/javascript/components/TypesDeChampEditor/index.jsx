@@ -14,7 +14,7 @@ class TypesDeChampEditor extends Component {
       private: props.isAnnotation,
       libelle: `${
         props.isAnnotation ? 'Nouvelle annotation' : 'Nouveau champ'
-      } ${props.typeDeChampsTypes[0][0]}`
+      } ${props.typeDeChampsTypes.find(([, type]) => type == 'text')[0]}`
     };
     this.state = {
       flash: new Flash(props.isAnnotation),

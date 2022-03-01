@@ -10,6 +10,7 @@ FactoryBot.define do
 
         revision_type_de_champ.type_de_champ = original.type_de_champ
         revision_type_de_champ.position      = original.position
+        revision_type_de_champ.parent        = original.parent
       end
     end
   end

@@ -25,8 +25,8 @@ class TypesDeChamp::TypeDeChampBase
     libelle
   end
 
-  def build_champ
-    @type_de_champ.champ.build
+  def build_champ(dossier: nil, row: nil)
+    @type_de_champ.champ.build(dossier: dossier, row: row)
   end
 
   def filter_to_human(filter_value)
