@@ -22,6 +22,10 @@ describe Champs::PhoneChamp do
       expect(champ_with_value("+1(0) - 123456789")).to be_valid
       expect(champ_with_value("+49 2109 87654321")).to be_valid
       expect(champ_with_value("012345678")).to be_valid
+      # DROM numbers should be valid
+      expect(champ_with_value("06 96 04 78 07")).to be_valid
+      expect(champ_with_value("05 94 22 31 31")).to be_valid
+      expect(champ_with_value("+594 5 94 22 31 31")).to be_valid
       # polynesian numbers should not return errors in any way
       ## landline numbers start with 40 or 45
       expect(champ_with_value("45187272")).to be_valid
