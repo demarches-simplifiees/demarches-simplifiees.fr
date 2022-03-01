@@ -50,6 +50,13 @@ class Champs::PhoneChamp < Champs::TextChamp
 
   def to_s
     return '' if value.blank?
-    Phonelib.parse_for_countries(value, DEFAULT_COUNTRY_CODES).full_national
+
+    if Phonelib.valid_for_countries?(value, DEFAULT_COUNTRY_CODES)
+      Phonelib.parse_for_countries(value, DEFAULT_COUNTRY_CODES).full_national
+    else
+      # When he phone number is possible for the default countries, but not strictly valid,
+      # `full_national` could mess up the formatting. In this case just return the original.
+      value
+    end
   end
 end
