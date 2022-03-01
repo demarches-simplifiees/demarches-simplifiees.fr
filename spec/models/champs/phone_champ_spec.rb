@@ -52,6 +52,12 @@ describe Champs::PhoneChamp do
         expect(champ_with_value("45187272").to_s).to eq("45187272")
       end
     end
+
+    context 'for possible (but not valid) phone numbers' do
+      it 'returns the original' do
+        expect(champ_with_value("1234").to_s).to eq("1234")
+      end
+    end
   end
 
   def champ_with_value(number)
