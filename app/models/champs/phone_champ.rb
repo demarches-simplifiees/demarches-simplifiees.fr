@@ -49,6 +49,7 @@ class Champs::PhoneChamp < Champs::TextChamp
     }, unless: -> { Phonelib.valid_for_countries?(value, DEFAULT_COUNTRY_CODES) }
 
   def to_s
-    value.present? ? Phonelib.parse(value).full_national : ''
+    return '' if value.blank?
+    Phonelib.parse_for_countries(value, DEFAULT_COUNTRY_CODES).full_national
   end
 end

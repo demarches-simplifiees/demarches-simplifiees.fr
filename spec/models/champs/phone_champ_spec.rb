@@ -40,9 +40,21 @@ describe Champs::PhoneChamp do
       expect(champ_with_value("88473500")).to be_valid
       expect(champ_with_value("89473500")).to be_valid
     end
+  end
 
-    def champ_with_value(number)
-      phone_champ.tap { |c| c.value = number }
+  describe '#to_s' do
+    context 'for valid phone numbers' do
+      it 'returns the national part of the number, formatted nicely' do
+        expect(champ_with_value("0115789055").to_s).to eq("01 15 78 90 55")
+        expect(champ_with_value("+33115789055").to_s).to eq("01 15 78 90 55")
+        # DROM phone numbers are formatted differently – but still formatted
+        expect(champ_with_value("0696047807").to_s).to eq("0696 04 78 07")
+        expect(champ_with_value("45187272").to_s).to eq("45187272")
+      end
     end
+  end
+
+  def champ_with_value(number)
+    phone_champ.tap { |c| c.value = number }
   end
 end
