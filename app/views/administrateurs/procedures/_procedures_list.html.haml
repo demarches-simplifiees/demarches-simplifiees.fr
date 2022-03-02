@@ -26,7 +26,7 @@
           %span.badge.baseline= procedure.instructeurs.count
 
         %span.icon.folder
-        %span.badge.baseline= procedure.dossiers.count
+        %span.badge.baseline= procedure.dossiers.state_not_brouillon.visible_by_administration.count
 
       %div
         = link_to admin_procedure_path(procedure), class: 'button mr-1 edit-procedure' do
