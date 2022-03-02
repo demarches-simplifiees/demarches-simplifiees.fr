@@ -12,6 +12,10 @@ describe Instructeur, type: :model do
     procedure_3
   end
 
+  describe 'associations' do
+    it { is_expected.to have_and_belong_to_many(:administrateurs) }
+  end
+
   describe 'follow' do
     let(:dossier) { create :dossier }
     let(:already_followed_dossier) { create :dossier }
