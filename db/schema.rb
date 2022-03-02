@@ -854,6 +854,7 @@ ActiveRecord::Schema.define(version: 2022_03_02_101337) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "administrateurs_instructeurs", "administrateurs"
   add_foreign_key "administrateurs_instructeurs", "instructeurs"
+  add_foreign_key "administrateurs_procedures", "administrateurs"
   add_foreign_key "archives_groupe_instructeurs", "archives"
   add_foreign_key "archives_groupe_instructeurs", "groupe_instructeurs"
   add_foreign_key "assign_tos", "groupe_instructeurs"
