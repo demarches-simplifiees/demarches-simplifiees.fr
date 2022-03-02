@@ -22,6 +22,10 @@ describe Champs::PhoneChamp do
       expect(champ_with_value("+1(0) - 123456789")).to be_valid
       expect(champ_with_value("+49 2109 87654321")).to be_valid
       expect(champ_with_value("012345678")).to be_valid
+      # DROM numbers should be valid
+      expect(champ_with_value("06 96 04 78 07")).to be_valid
+      expect(champ_with_value("05 94 22 31 31")).to be_valid
+      expect(champ_with_value("+594 5 94 22 31 31")).to be_valid
       # polynesian numbers should not return errors in any way
       ## landline numbers start with 40 or 45
       expect(champ_with_value("45187272")).to be_valid
@@ -36,9 +40,27 @@ describe Champs::PhoneChamp do
       expect(champ_with_value("88473500")).to be_valid
       expect(champ_with_value("89473500")).to be_valid
     end
+  end
 
-    def champ_with_value(number)
-      phone_champ.tap { |c| c.value = number }
+  describe '#to_s' do
+    context 'for valid phone numbers' do
+      it 'returns the national part of the number, formatted nicely' do
+        expect(champ_with_value("0115789055").to_s).to eq("01 15 78 90 55")
+        expect(champ_with_value("+33115789055").to_s).to eq("01 15 78 90 55")
+        # DROM phone numbers are formatted differently – but still formatted
+        expect(champ_with_value("0696047807").to_s).to eq("0696 04 78 07")
+        expect(champ_with_value("45187272").to_s).to eq("45187272")
+      end
     end
+
+    context 'for possible (but not valid) phone numbers' do
+      it 'returns the original' do
+        expect(champ_with_value("1234").to_s).to eq("1234")
+      end
+    end
+  end
+
+  def champ_with_value(number)
+    phone_champ.tap { |c| c.value = number }
   end
 end
