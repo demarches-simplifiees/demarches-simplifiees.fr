@@ -362,7 +362,7 @@ module Users
       Dossier.with_champs.find(params[:id])
     end
 
-    def change_groupe_instructeur?
+    def should_change_groupe_instructeur?
       if params[:dossier].key?(:groupe_instructeur_id)
         groupe_instructeur_id = params[:dossier][:groupe_instructeur_id]
         if groupe_instructeur_id.nil?
@@ -378,6 +378,14 @@ module Users
       if groupe_instructeur_id.present?
         @dossier.procedure.groupe_instructeurs.find(groupe_instructeur_id)
       end
+    end
+
+    def should_fill_groupe_instructeur?
+      !@dossier.procedure.routee? && @dossier.groupe_instructeur_id.nil?
+    end
+
+    def defaut_groupe_instructeur
+      @dossier.procedure.defaut_groupe_instructeur
     end
 
     def update_dossier_and_compute_errors
@@ -396,9 +404,13 @@ module Users
 
         if !@dossier.save(**validation_options)
           errors += @dossier.errors.full_messages
-        elsif change_groupe_instructeur?
+        elsif should_change_groupe_instructeur?
           @dossier.assign_to_groupe_instructeur(groupe_instructeur_from_params)
         end
+      end
+
+      if should_fill_groupe_instructeur?
+        @dossier.assign_to_groupe_instructeur(defaut_groupe_instructeur)
       end
 
       if !save_draft?
