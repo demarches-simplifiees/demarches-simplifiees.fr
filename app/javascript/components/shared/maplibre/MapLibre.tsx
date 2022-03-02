@@ -19,8 +19,6 @@ const Context = createContext<{ map?: Map | null }>({});
 
 type MapLibreProps = {
   layers: string[];
-  header?: ReactNode;
-  footer?: ReactNode;
   children: ReactNode;
 };
 
@@ -30,7 +28,7 @@ export function useMapLibre() {
   return context.map;
 }
 
-export function MapLibre({ children, header, footer, layers }: MapLibreProps) {
+export function MapLibre({ children, layers }: MapLibreProps) {
   const isSupported = useMemo(
     () => maplibre.supported({ failIfMajorPerformanceCaveat: true }) && !isIE(),
     []
@@ -90,12 +88,10 @@ export function MapLibre({ children, header, footer, layers }: MapLibreProps) {
 
   return (
     <Context.Provider value={{ map }}>
-      {map ? header : null}
       <div ref={containerRef} style={{ height: '500px' }}>
         <StyleControl styleId={style.id} {...mapStyleProps} />
         {map ? children : null}
       </div>
-      {map ? footer : null}
     </Context.Provider>
   );
 }
