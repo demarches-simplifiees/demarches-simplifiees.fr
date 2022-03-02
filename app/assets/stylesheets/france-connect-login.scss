@@ -36,8 +36,8 @@
   align-items: center;
   color: $black;
   text-transform: uppercase;
-  padding-bottom: $default-padding;
-  padding-top: $default-padding;
+  padding-bottom: $default-spacer;
+  padding-top: $default-spacer;
 
   &::before,
   &::after {
