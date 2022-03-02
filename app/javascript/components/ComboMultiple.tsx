@@ -5,9 +5,12 @@ import React, {
   useContext,
   createContext,
   useEffect,
-  useLayoutEffect
+  useLayoutEffect,
+  MutableRefObject,
+  ReactNode,
+  ChangeEventHandler,
+  KeyboardEventHandler
 } from 'react';
-import PropTypes from 'prop-types';
 import {
   Combobox,
   ComboboxInput,
@@ -24,22 +27,51 @@ import invariant from 'tiny-invariant';
 
 import { useDeferredSubmit, useHiddenField } from './shared/hooks';
 
-const Context = createContext();
+const Context = createContext<{
+  selectionsRef: MutableRefObject<string[]>;
+  onRemove: (value: string) => void;
+} | null>(null);
 
-const optionValueByLabel = (values, options, label) => {
-  const maybeOption = values.includes(label)
+type Option = [label: string, value: string];
+
+function isOptions(options: string[] | Option[]): options is Option[] {
+  return Array.isArray(options[0]);
+}
+
+const optionValueByLabel = (
+  values: string[],
+  options: Option[],
+  label: string
+): string => {
+  const maybeOption: Option | undefined = values.includes(label)
     ? [label, label]
     : options.find(([optionLabel]) => optionLabel == label);
-  return maybeOption ? maybeOption[1] : undefined;
+  return maybeOption ? maybeOption[1] : '';
 };
-const optionLabelByValue = (values, options, value) => {
-  const maybeOption = values.includes(value)
+const optionLabelByValue = (
+  values: string[],
+  options: Option[],
+  value: string
+): string => {
+  const maybeOption: Option | undefined = values.includes(value)
     ? [value, value]
     : options.find(([, optionValue]) => optionValue == value);
-  return maybeOption ? maybeOption[0] : undefined;
+  return maybeOption ? maybeOption[0] : '';
 };
 
-function ComboMultiple({
+export type ComboMultipleProps = {
+  options: string[] | Option[];
+  id: string;
+  labelledby: string;
+  describedby: string;
+  label: string;
+  group: string;
+  name?: string;
+  selected: string[];
+  acceptNewValues?: boolean;
+};
+
+export default function ComboMultiple({
   options,
   id,
   labelledby,
@@ -49,21 +81,21 @@ function ComboMultiple({
   name = 'value',
   selected,
   acceptNewValues = false
-}) {
+}: ComboMultipleProps) {
   invariant(id || label, 'ComboMultiple: `id` or a `label` are required');
   invariant(group, 'ComboMultiple: `group` is required');
 
-  const inputRef = useRef();
+  const inputRef = useRef<HTMLInputElement>(null);
   const [term, setTerm] = useState('');
   const [selections, setSelections] = useState(selected);
-  const [newValues, setNewValues] = useState([]);
+  const [newValues, setNewValues] = useState<string[]>([]);
   const inputId = useId(id);
   const removedLabelledby = `${inputId}-remove`;
   const selectedLabelledby = `${inputId}-selected`;
 
-  const optionsWithLabels = useMemo(
+  const optionsWithLabels = useMemo<Option[]>(
     () =>
-      Array.isArray(options[0])
+      isOptions(options)
         ? options
         : options.filter((o) => o).map((o) => [o, o]),
     [options]
@@ -94,11 +126,11 @@ function ComboMultiple({
   const [, setHiddenFieldValue, hiddenField] = useHiddenField(group, name);
   const awaitFormSubmit = useDeferredSubmit(hiddenField);
 
-  const handleChange = (event) => {
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     setTerm(event.target.value);
   };
 
-  const saveSelection = (fn) => {
+  const saveSelection = (fn: (selections: string[]) => string[]) => {
     setSelections((selections) => {
       selections = fn(selections);
       setHiddenFieldValue(JSON.stringify(selections));
@@ -106,7 +138,7 @@ function ComboMultiple({
     });
   };
 
-  const onSelect = (value) => {
+  const onSelect = (value: string) => {
     const maybeValue = [...extraOptions, ...optionsWithLabels].find(
       ([val]) => val == value
     );
@@ -134,8 +166,8 @@ function ComboMultiple({
     hidePopover();
   };
 
-  const onRemove = (label) => {
-    const optionValue = optionValueByLabel(newValues, options, label);
+  const onRemove = (label: string) => {
+    const optionValue = optionValueByLabel(newValues, optionsWithLabels, label);
     if (optionValue) {
       saveSelection((selections) =>
         selections.filter((value) => value != optionValue)
@@ -144,10 +176,10 @@ function ComboMultiple({
         newValues.filter((value) => value != optionValue)
       );
     }
-    inputRef.current.focus();
+    inputRef.current?.focus();
   };
 
-  const onKeyDown = (event) => {
+  const onKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
     if (
       isHotkey('enter', event) ||
       isHotkey(' ', event) ||
@@ -210,7 +242,11 @@ function ComboMultiple({
             <ComboboxToken
               key={selection}
               describedby={removedLabelledby}
-              value={optionLabelByValue(newValues, options, selection)}
+              value={optionLabelByValue(
+                newValues,
+                optionsWithLabels,
+                selection
+              )}
             />
           ))}
         </ul>
@@ -263,31 +299,35 @@ function ComboMultiple({
   );
 }
 
-function ComboboxTokenLabel({ onRemove, ...props }) {
-  const selectionsRef = useRef([]);
+function ComboboxTokenLabel({
+  onRemove,
+  children
+}: {
+  onRemove: (value: string) => void;
+  children: ReactNode;
+}) {
+  const selectionsRef = useRef<string[]>([]);
 
   useLayoutEffect(() => {
     selectionsRef.current = [];
-    return () => (selectionsRef.current = []);
-  });
-
-  const context = {
-    onRemove,
-    selectionsRef
-  };
+    return () => {
+      selectionsRef.current = [];
+    };
+  }, []);
 
   return (
-    <Context.Provider value={context}>
-      <div data-reach-combobox-token-label {...props} />
+    <Context.Provider
+      value={{
+        onRemove,
+        selectionsRef
+      }}
+    >
+      <div data-reach-combobox-token-label>{children}</div>
     </Context.Provider>
   );
 }
 
-ComboboxTokenLabel.propTypes = {
-  onRemove: PropTypes.func
-};
-
-function ComboboxSeparator({ value }) {
+function ComboboxSeparator({ value }: { value: string }) {
   return (
     <li aria-disabled="true" role="option" data-reach-combobox-separator>
       {value.slice(2, -2)}
@@ -295,12 +335,17 @@ function ComboboxSeparator({ value }) {
   );
 }
 
-ComboboxSeparator.propTypes = {
-  value: PropTypes.string
-};
-
-function ComboboxToken({ value, describedby, ...props }) {
-  const { selectionsRef, onRemove } = useContext(Context);
+function ComboboxToken({
+  value,
+  describedby,
+  ...props
+}: {
+  value: string;
+  describedby: string;
+}) {
+  const context = useContext(Context);
+  invariant(context, 'invalid context');
+  const { selectionsRef, onRemove } = context;
   useEffect(() => {
     selectionsRef.current.push(value);
   });
@@ -325,31 +370,3 @@ function ComboboxToken({ value, describedby, ...props }) {
     </li>
   );
 }
-
-ComboboxToken.propTypes = {
-  value: PropTypes.string,
-  describedby: PropTypes.string
-};
-
-ComboMultiple.propTypes = {
-  options: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.string),
-    PropTypes.arrayOf(
-      PropTypes.arrayOf(
-        PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-      )
-    )
-  ]),
-  selected: PropTypes.arrayOf(PropTypes.string),
-  arraySelected: PropTypes.arrayOf(PropTypes.array),
-  acceptNewValues: PropTypes.bool,
-  mandatory: PropTypes.bool,
-  id: PropTypes.string,
-  group: PropTypes.string,
-  name: PropTypes.string,
-  labelledby: PropTypes.string,
-  describedby: PropTypes.string,
-  label: PropTypes.string
-};
-
-export default ComboMultiple;
