@@ -18,7 +18,15 @@
   }
 
   .column {
-    padding-top: 2 * $default-spacer;
+    padding-top: $default-spacer;
+  }
+
+  h1 {
+    margin-bottom: $default-spacer;
+  }
+
+  .form label {
+    margin-bottom: $default-spacer / 2;
   }
 }
 
@@ -26,7 +34,7 @@
   .auth-options {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 4 * $default-spacer;
+    margin-bottom: 2 * $default-spacer;
   }
 
   .remember-me {
@@ -60,7 +68,7 @@
 
 .sign-in-form .form {
   input[type="email"] {
-    margin-bottom: $default-padding;
+    margin-bottom: $default-spacer;
   }
 
   input[type="password"] {
