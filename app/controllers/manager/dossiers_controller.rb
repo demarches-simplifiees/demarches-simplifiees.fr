@@ -12,7 +12,7 @@ module Manager
         Dossier.kept
       else
         # … but allow them to be searched and displayed.
-        Dossier.with_discarded
+        Dossier
       end
     end
 

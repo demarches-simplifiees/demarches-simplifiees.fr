@@ -690,7 +690,7 @@ class Procedure < ApplicationRecord
   end
 
   def purge_discarded
-    if !dossiers.with_discarded.exists?
+    if !dossiers.exists?
       destroy
     end
   end
