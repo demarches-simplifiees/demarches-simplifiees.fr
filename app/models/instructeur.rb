@@ -232,7 +232,7 @@ class Instructeur < ApplicationRecord
     query = <<~EOF
       SELECT
         COUNT(DISTINCT dossiers.id) FILTER (where not archived AND NOT (dossiers.hidden_by_user_at IS NOT NULL AND dossiers.state = 'en_construction')  AND dossiers.state in ('en_construction', 'en_instruction') AND follows.id IS NULL) AS a_suivre,
-        COUNT(DISTINCT dossiers.id) FILTER (where not archived AND dossiers.state in ('en_construction', 'en_instruction') AND follows.instructeur_id = :instructeur_id) AS suivis,
+        COUNT(DISTINCT dossiers.id) FILTER (where not archived AND dossiers.state in ('en_construction', 'en_instruction')AND NOT (dossiers.hidden_by_user_at IS NOT NULL AND dossiers.state = 'en_construction') AND follows.instructeur_id = :instructeur_id) AS suivis,
         COUNT(DISTINCT dossiers.id) FILTER (where not archived AND NOT (dossiers.hidden_by_administration_at IS NOT NULL) AND dossiers.state in ('accepte', 'refuse', 'sans_suite')) AS traites,
         COUNT(DISTINCT dossiers.id) FILTER (where not archived AND NOT (dossiers.hidden_by_user_at IS NOT NULL AND state = 'en_construction') AND NOT (dossiers.hidden_by_administration_at IS NOT NULL)) AS tous,
         COUNT(DISTINCT dossiers.id) FILTER (where not archived AND (dossiers.hidden_by_administration_at IS NOT NULL AND dossiers.state in ('accepte', 'refuse', 'sans_suite') )) AS supprimes_recemment,

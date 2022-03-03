@@ -26,6 +26,7 @@ module Instructeurs
         .joins(:groupe_instructeur)
         .en_cours
         .where(groupe_instructeur_id: groupe_ids)
+        .visible_by_administration
         .group('groupe_instructeurs.procedure_id')
         .reorder(nil)
         .count
@@ -68,6 +69,7 @@ module Instructeurs
       @followed_dossiers = current_instructeur
         .followed_dossiers
         .where(groupe_instructeur_id: groupe_instructeur_ids)
+        .visible_by_administration
         .en_cours
 
       @followed_dossiers_id = @followed_dossiers.pluck(:id)
