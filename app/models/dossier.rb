@@ -42,10 +42,6 @@ class Dossier < ApplicationRecord
   include DossierFilteringConcern
   include DossierRebaseConcern
 
-  include Discard::Model
-  self.discard_column = :hidden_at
-  default_scope -> { kept }
-
   enum state: {
     brouillon:       'brouillon',
     en_construction: 'en_construction',
