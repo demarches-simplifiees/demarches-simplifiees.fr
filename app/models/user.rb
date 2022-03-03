@@ -190,12 +190,14 @@ class User < ApplicationRecord
     end
 
     transaction do
-      Invite.where(dossier: dossiers.with_discarded).destroy_all
-      dossiers.state_en_construction.each do |dossier|
-        dossier.discard_and_keep_track!(administration, :user_removed)
+      Invite.where(dossier: dossiers).destroy_all
+      dossiers.state_brouillon.destroy_all
+      dossiers.state_en_construction.destroy_all
+      dossiers.state_termine.each do |dossier|
+        dossier.delete_and_keep_track!(dossier.user, :user_removed)
       end
-      DossierOperationLog.where(dossier: dossiers.with_discarded.discarded).not_deletion.destroy_all
-      dossiers.with_discarded.discarded.destroy_all
+
+      DossierOperationLog.where(dossier: dossiers.hidden_by_user).not_deletion.destroy_all
       dossiers.update_all(deleted_user_email_never_send: email, user_id: nil, dossier_transfer_id: nil)
       destroy!
     end

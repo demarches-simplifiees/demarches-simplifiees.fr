@@ -345,26 +345,23 @@ class Dossier < ApplicationRecord
   scope :without_en_construction_expiration_notice_sent, -> { where(en_construction_close_to_expiration_notice_sent_at: nil) }
   scope :without_termine_expiration_notice_sent, -> { where(termine_close_to_expiration_notice_sent_at: nil) }
 
-  scope :discarded_expired, -> { discarded.where('dossiers.hidden_at < ?', 1.week.ago) }
-  scope :discarded_by_user_expired, -> { discarded.where('dossiers.hidden_by_user_at < ?', 1.week.ago) }
-  scope :discarded_by_administration_expired, -> { discarded.where('dossiers.hidden_by_administration_at < ?', 1.week.ago) }
-  scope :discarded_brouillon_expired, -> do
-    with_discarded
-      .state_brouillon
-      .discarded_expired
-      .or(state_brouillon.discarded_by_user_expired)
+  scope :expired, -> { where('dossiers.hidden_at < ?', 1.week.ago) }
+  scope :deleted_by_user_expired, -> { where('dossiers.hidden_by_user_at < ?', 1.week.ago) }
+  scope :deleted_by_administration_expired, -> { where('dossiers.hidden_by_administration_at < ?', 1.week.ago) }
+  scope :en_brouillon_expired_to_delete, -> do
+    state_brouillon
+      .expired
+      .or(state_brouillon.deleted_by_user_expired)
   end
-  scope :discarded_en_construction_expired, -> do
-    with_discarded
-      .state_en_construction
-      .discarded_expired
-      .or(state_en_construction.discarded_by_user_expired)
+  scope :en_construction_expired_to_delete, -> do
+    state_en_construction
+      .expired
+      .or(state_en_construction.deleted_by_user_expired)
   end
-  scope :discarded_termine_expired, -> do
-    with_discarded
-      .state_termine
-      .discarded_expired
-      .or(state_termine.discarded_by_user_expired.discarded_by_administration_expired)
+  scope :termine_expired_to_delete, -> do
+    state_termine
+      .expired
+      .or(state_termine.deleted_by_user_expired.deleted_by_administration_expired)
   end
 
   scope :brouillon_near_procedure_closing_date, -> do
@@ -534,7 +531,7 @@ class Dossier < ApplicationRecord
   end
 
   def can_be_hidden_by_user?
-    en_construction? || termine?
+    brouillon? || en_construction? || termine?
   end
 
   def messagerie_available?
@@ -679,7 +676,7 @@ class Dossier < ApplicationRecord
   end
 
   def log_operations?
-    !procedure.brouillon? && !brouillon?
+    !procedure.brouillon?
   end
 
   def keep_track_on_deletion?
@@ -754,6 +751,10 @@ class Dossier < ApplicationRecord
     author.is_a?(Instructeur) || author.is_a?(Administrateur) || author.is_a?(SuperAdmin)
   end
 
+  def visible_by_administration?
+    (!hidden_by_administration? && (!hidden_by_user? && en_construction?)) || (!hidden_by_administration? && en_instruction?) || (!hidden_by_administration? && termine?)
+  end
+
   def restore_dossier_and_destroy_deleted_dossier(author)
     if deleted_dossier.present?
       deleted_dossier&.destroy!
@@ -762,8 +763,8 @@ class Dossier < ApplicationRecord
     log_dossier_operation(author, :restaurer, self)
   end
 
-  def discard_and_keep_track!(author, reason)
-    if termine? && author_is_administration(author)
+  def delete_and_keep_track!(author, reason)
+    if author_is_administration(author) && (termine? || reason == :procedure_removed)
       update(hidden_by_administration_at: Time.zone.now, hidden_by_reason: reason)
     end
 
@@ -775,10 +776,6 @@ class Dossier < ApplicationRecord
       if deleted_by_instructeur_and_user? || en_construction? || brouillon?
         if keep_track_on_deletion?
           log_dossier_operation(author, :supprimer, self)
-        end
-
-        if !(en_construction? && author_is_user(author))
-          discard!
         end
       end
     end
@@ -793,17 +790,13 @@ class Dossier < ApplicationRecord
   end
 
   def restore(author)
-    if discarded?
-      transaction do
-        if author_is_administration(author) && hidden_by_administration?
-          update(hidden_by_administration_at: nil)
-        end
-
-        if undiscard && keep_track_on_deletion?
-          restore_dossier_and_destroy_deleted_dossier(author)
-        end
+    transaction do
+      if author_is_administration(author) && hidden_by_administration?
+        update(hidden_by_administration_at: nil)
       end
-    elsif author_is_user(author) && hidden_by_user?
+    end
+
+    if author_is_user(author) && hidden_by_user?
       transaction do
         update(hidden_by_user_at: nil)
         !hidden_by_administration? && update(hidden_by_reason: nil)
@@ -1158,9 +1151,9 @@ class Dossier < ApplicationRecord
   end
 
   def self.purge_discarded
-    discarded_brouillon_expired.find_each(&:purge_discarded)
-    discarded_en_construction_expired.find_each(&:purge_discarded)
-    discarded_termine_expired.find_each(&:purge_discarded)
+    en_brouillon_expired_to_delete.find_each(&:purge_discarded)
+    en_construction_expired_to_delete.find_each(&:purge_discarded)
+    termine_expired_to_delete.find_each(&:purge_discarded)
   end
 
   private
@@ -1239,7 +1232,7 @@ class Dossier < ApplicationRecord
     followers_instructeurs.each do |instructeur|
       if instructeur.groupe_instructeurs.exclude?(groupe_instructeur)
         instructeur.unfollow(self)
-        if kept?
+        if visible_by_administration?
           DossierMailer.notify_groupe_instructeur_changed(instructeur, self).deliver_later
         end
       end

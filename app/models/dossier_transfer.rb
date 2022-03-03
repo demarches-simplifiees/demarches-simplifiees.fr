@@ -14,7 +14,7 @@ class DossierTransfer < ApplicationRecord
 
   scope :pending, -> { where('created_at > ?', (Time.zone.now - EXPIRATION_LIMIT)) }
   scope :stale, -> { where('created_at < ?', (Time.zone.now - EXPIRATION_LIMIT)) }
-  scope :with_dossiers, -> { joins(:dossiers) }
+  scope :with_dossiers, -> { joins(:dossiers).where(dossiers: { hidden_by_user_at: nil }) }
 
   after_create_commit :send_notification
 
