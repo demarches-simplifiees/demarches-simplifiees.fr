@@ -239,6 +239,7 @@ class Instructeur < ApplicationRecord
         COUNT(DISTINCT dossiers.id) FILTER (where archived) AS archives,
         COUNT(DISTINCT dossiers.id) FILTER (where
           procedures.procedure_expires_when_termine_enabled
+          AND dossiers.hidden_by_administration_at IS NULL
           AND (
             dossiers.state in ('accepte', 'refuse', 'sans_suite')
               AND dossiers.processed_at + dossiers.conservation_extension + (procedures.duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now
