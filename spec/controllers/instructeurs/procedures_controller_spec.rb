@@ -341,6 +341,7 @@ describe Instructeurs::ProceduresController, type: :controller do
 
       context 'with an archived dossier' do
         let!(:archived_dossier) { create(:dossier, :en_instruction, procedure: procedure, archived: true) }
+        let!(:archived_dossier_deleted) { create(:dossier, :en_instruction, procedure: procedure, archived: true, hidden_by_administration_at: 2.days.ago) }
 
         before { subject }
 
