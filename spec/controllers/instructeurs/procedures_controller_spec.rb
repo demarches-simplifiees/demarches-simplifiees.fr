@@ -223,7 +223,7 @@ describe Instructeurs::ProceduresController, type: :controller do
 
   describe "#show" do
     let(:instructeur) { create(:instructeur) }
-    let!(:procedure) { create(:procedure, instructeurs: [instructeur]) }
+    let!(:procedure) { create(:procedure, :expirable, instructeurs: [instructeur]) }
     let!(:gi_2) { procedure.groupe_instructeurs.create(label: '2') }
     let!(:gi_3) { procedure.groupe_instructeurs.create(label: '3') }
     let(:statut) { nil }
@@ -359,6 +359,16 @@ describe Instructeurs::ProceduresController, type: :controller do
 
           it { expect(assigns(:archived_dossiers)).to match_array([archived_dossier, archived_dossier_on_gi_2]) }
         end
+      end
+
+      context 'with an expirants dossier' do
+        let!(:expiring_dossier_termine_deleted) { create(:dossier, :accepte, procedure: procedure, processed_at: 175.days.ago, hidden_by_administration_at: 2.days.ago) }
+        let!(:expiring_dossier_termine) { create(:dossier, :accepte, procedure: procedure, processed_at: 175.days.ago) }
+        let!(:expiring_dossier_en_construction) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: 175.days.ago) }
+
+        before { subject }
+
+        it { expect(assigns(:expirant_dossiers)).to match_array([expiring_dossier_termine, expiring_dossier_en_construction]) }
       end
 
       describe 'statut' do

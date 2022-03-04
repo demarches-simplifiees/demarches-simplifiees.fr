@@ -78,7 +78,7 @@ module Instructeurs
       @all_state_dossiers = dossiers_visibles.all_state.visible_by_administration
       @supprimes_recemment_dossiers = dossiers_visibles.termine.hidden_by_administration
       @archived_dossiers = dossiers_visibles.visible_by_administration.archived
-      @expirant_dossiers = dossiers_visibles.termine_or_en_construction_close_to_expiration
+      @expirant_dossiers = dossiers_visibles.termine_or_en_construction_close_to_expiration.visible_by_administration
 
       @dossiers = case statut
       when 'a-suivre'
