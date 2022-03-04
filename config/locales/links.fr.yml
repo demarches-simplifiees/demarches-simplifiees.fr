@@ -11,63 +11,83 @@ fr:
       title: "Direction Interministérielle au Numérique"
       url: "https://numerique.gouv.fr"
     footer:
-      accessibilite:
-        label: "Accessibilité : non conforme"
-        title: "Accessibilité : non conforme"
-        url: "https://doc.demarches-simplifiees.fr/declaration-daccessibilite"
-      api_doc:
-        label: "Documentation de l'API"
-        title: "Documentation de l'API"
-        url: "https://doc.demarches-simplifiees.fr/pour-aller-plus-loin/graphql"
+      contact:
+        label: "Contact"
+        title: "Contact"
+      col1:
+        - {
+          label: "Newsletter",
+          url: "https://my.sendinblue.com/users/subscribe/js_id/3s2q1/id/1",
+          attributes: { target: '_blank', rel: "noopener", title: "Notre newsletter" }
+        }
+        - {
+          label: "Nouveautés",
+          url: "https://github.com/betagouv/demarches-simplifiees.fr/releases",
+          attributes: {rel: "noopener noreferrer", title: "Nos nouveautés" }
+        }
+        - {
+          label: "Statistiques",
+          url: '/statistiques',
+          attributes: { title: "Statistiques" }
+        }
+        - {
+          label: "CGU",
+          url: "https://doc.demarches-simplifiees.fr/cgu",
+          attributes: { title: "Conditions Générales d'Utilisation", target: "_blank", rel: "noopener noreferrer" },
+        }
+        - {
+          label: "Mentions légales",
+          url: "https//doc.demarches-simplifiees.fr/mentions-legales",
+          attributes: { target: "_blank", rel: "noopener noreferrer", title: "Mentions légales" }
+        }
+        - {
+          label: "Suivi d'audience et vie privée",
+          url: '/suivi',
+          attributes: { title: "Suivi d'audience et vie privée" }
+        }
+      col2:
+        - {
+          label: "Documentation",
+          url: "https://doc.demarches-simplifiees.fr",
+          attributes: { title: "Documentation", target: "_blank", rel: "noopener noreferrer" }
+        }
+        - {
+          label: "Documentation de l'API",
+          url: "https://doc.demarches-simplifiees.fr/pour-aller-plus-loin/graphql",
+          attributes: {title: "Documentation de l'API", target: "_blank", rel: "noopener noreferrer" }
+        }
+        - {
+          label: "FAQ",
+          url: "https://faq.demarches-simplifiees.fr",
+          attributes: {title: "Foire aux Questions", target: "_blank", rel: "noopener noreferrer" }
+        }
+        - {
+          label: "Accessibilité : non conforme",
+          url: "https://doc.demarches-simplifiees.fr/declaration-daccessibilite",
+          attributes: {title: "Accessibilité : non conforme", target: "_blank", rel: "noopener noreferrer" }
+        }
+        - {
+          label: "Disponibilité",
+          url: "https://status.demarches-simplifiees.fr",
+          attributes: { title: "Disponibilité", target: "_blank", rel: "noopener noreferrer" }
+        }
+
       betagouv:
         label: "Beta.gouv.fr"
         title: "Le site de Beta.gouv.fr"
         url: "https://beta.gouv.fr"
-      cgu:
-        label: "CGU"
-        title: "Conditions Générales d'Utilisation"
-        url: "https://doc.demarches-simplifiees.fr/cgu"
-      contact:
-        label: "Contact"
-        title: "Contact"
-      doc:
-        label: "Documentation"
-        title: "Documentation"
-        url: "https://doc.demarches-simplifiees.fr"
       doc_nouveautes:
         label: "Nouveautés"
         title: "Nouveautés"
         url: "https://doc.demarches-simplifiees.fr/nouveautes"
-      faq:
-        label: "FAQ"
-        title: "Foire aux Questions"
-        url: "https://faq.demarches-simplifiees.fr"
       faq_admin:
         label: "FAQ"
         title: "Foire aux Questions"
         url: "https:///faq.demarches-simplifiees.fr/collection/1-administrateur-creation-dun-formulaire"
-      mentions_legales:
-        label: "Mentions légales"
-        title: "Mentions légales"
-        url: "https//doc.demarches-simplifiees.fr/mentions-legales"
-      newsletter:
-        label: "Newsletter"
-        title: "Notre newsletter"
-        url: "https://my.sendinblue.com/users/subscribe/js_id/3s2q1/id/1"
       releases:
         label: "Nouveautés"
         title: "Nos nouveautés"
         url: "https://github.com/betagouv/demarches-simplifiees.fr/releases"
-      stats:
-        label: "Statistiques"
-        title: "Statistiques"
-      status_page:
-        label: "Disponibilité"
-        title: "Disponibilité"
-        url: "https://status.demarches-simplifiees.fr"
-      suivi:
-        label: "Suivi d'audience et vie privée"
-        title: "Suivi d'audience et vie privée"
       webinaire:
         label: "Inscription ateliers en ligne"
         title: "Inscription ateliers en ligne"
