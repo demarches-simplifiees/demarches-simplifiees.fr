@@ -1,4 +1,4 @@
-import { QueryClient } from 'react-query';
+import { QueryClient, QueryFunction } from 'react-query';
 import { getJSON, isNumeric } from '@utils';
 import { matchSorter } from 'match-sorter';
 
@@ -16,17 +16,15 @@ const API_ADRESSE_QUERY_LIMIT = 5;
 const API_GEO_COMMUNES_QUERY_LIMIT = 60;
 
 const { api_geo_url, api_adresse_url, api_education_url } =
-  gon.autocomplete || {};
+  (window as any).gon.autocomplete || {};
 
-export const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      queryFn: defaultQueryFn
-    }
-  }
-});
+type QueryKey = readonly [
+  scope: string,
+  term: string,
+  extra: string | undefined
+];
 
-function buildURL(scope, term, extra) {
+function buildURL(scope: string, term: string, extra?: string) {
   term = encodeURIComponent(term.replace(/\(|\)/g, ''));
   if (scope === 'adresse') {
     return `${api_adresse_url}/search?q=${term}&limit=${API_ADRESSE_QUERY_LIMIT}`;
@@ -48,7 +46,7 @@ function buildURL(scope, term, extra) {
   return `${api_geo_url}/${scope}?nom=${term}&limit=${API_GEO_QUERY_LIMIT}`;
 }
 
-function buildOptions() {
+function buildOptions(): [RequestInit, AbortController | null] {
   if (window.AbortController) {
     const controller = new AbortController();
     const signal = controller.signal;
@@ -57,7 +55,9 @@ function buildOptions() {
   return [{}, null];
 }
 
-async function defaultQueryFn({ queryKey: [scope, term, extra] }) {
+const defaultQueryFn: QueryFunction<unknown, QueryKey> = async ({
+  queryKey: [scope, term, extra]
+}) => {
   if (scope == 'pays') {
     return matchSorter(await getPays(), term, { keys: ['label'] });
   }
@@ -70,14 +70,22 @@ async function defaultQueryFn({ queryKey: [scope, term, extra] }) {
     }
     throw new Error(`Error fetching from "${scope}" API`);
   });
-  promise.cancel = () => controller && controller.abort();
+  (promise as any).cancel = () => controller && controller.abort();
   return promise;
-}
+};
 
-let paysCache;
-async function getPays() {
+let paysCache: { label: string }[];
+async function getPays(): Promise<{ label: string }[]> {
   if (!paysCache) {
     paysCache = await getJSON('/api/pays', null);
   }
   return paysCache;
 }
+
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      queryFn: defaultQueryFn as any
+    }
+  }
+});

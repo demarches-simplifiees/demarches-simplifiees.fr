@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, createElement } from 'react';
+import React, { Suspense, lazy, createElement, ComponentClass } from 'react';
 import { render } from 'react-dom';
 
 // This attribute holds the name of component which should be mounted
@@ -13,12 +13,12 @@ const CLASS_NAME_SELECTOR = `[${CLASS_NAME_ATTR}]`;
 
 // helper method for the mount and unmount methods to find the
 // `data-react-class` DOM elements
-function findDOMNodes(searchSelector) {
+function findDOMNodes(searchSelector?: string): NodeListOf<HTMLDivElement> {
   const [selector, parent] = getSelector(searchSelector);
-  return parent.querySelectorAll(selector);
+  return parent.querySelectorAll<HTMLDivElement>(selector);
 }
 
-function getSelector(searchSelector) {
+function getSelector(searchSelector?: string): [string, Document] {
   switch (typeof searchSelector) {
     case 'undefined':
       return [CLASS_NAME_SELECTOR, document];
@@ -39,15 +39,15 @@ function getSelector(searchSelector) {
 class ReactComponentRegistry {
   #components;
 
-  constructor(components) {
+  constructor(components: Record<string, ComponentClass>) {
     this.#components = components;
   }
 
-  getConstructor(className) {
-    return this.#components[className];
+  getConstructor(className: string | null) {
+    return className ? this.#components[className] : null;
   }
 
-  mountComponents(searchSelector) {
+  mountComponents(searchSelector?: string) {
     const nodes = findDOMNodes(searchSelector);
 
     for (const node of nodes) {
@@ -76,10 +76,10 @@ class ReactComponentRegistry {
 
 const Loader = () => <div className="spinner left" />;
 
-export function Loadable(loader) {
+export function Loadable(loader: () => Promise<{ default: ComponentClass }>) {
   const LazyComponent = lazy(loader);
 
-  return function PureComponent(props) {
+  return function PureComponent(props: Record<string, unknown>) {
     return (
       <Suspense fallback={<Loader />}>
         <LazyComponent {...props} />
@@ -88,7 +88,9 @@ export function Loadable(loader) {
   };
 }
 
-export function registerReactComponents(components) {
+export function registerReactComponents(
+  components: Record<string, ComponentClass>
+) {
   const registry = new ReactComponentRegistry(components);
 
   addEventListener('ds:page:update', () => registry.mountComponents());

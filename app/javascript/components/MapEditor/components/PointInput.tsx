@@ -1,0 +1,92 @@
+import React, { useState } from 'react';
+import { fire } from '@utils';
+import type { Feature } from 'geojson';
+import { PlusIcon, LocationMarkerIcon } from '@heroicons/react/outline';
+import { useId } from '@reach/auto-id';
+import CoordinateInput from 'react-coordinate-input';
+
+import { useFlyTo } from '../../shared/maplibre/hooks';
+
+export function PointInput() {
+  const flyTo = useFlyTo();
+
+  const inputId = useId();
+  const [value, setValue] = useState('');
+  const [feature, setFeature] = useState<Feature | null>(null);
+  const getCurrentPosition = () => {
+    navigator.geolocation &&
+      navigator.geolocation.getCurrentPosition(({ coords }) => {
+        setValue(
+          `${coords.latitude.toPrecision(6)}, ${coords.longitude.toPrecision(
+            6
+          )}`
+        );
+      });
+  };
+  const addPoint = () => {
+    if (feature) {
+      fire(document, 'map:feature:create', feature);
+      setValue('');
+      setFeature(null);
+    }
+  };
+
+  return (
+    <>
+      <label
+        className="areas-title mt-1"
+        htmlFor={inputId}
+        style={{ fontSize: '16px' }}
+      >
+        Ajouter un point sur la carte
+      </label>
+      <div className="flex align-center mt-1 mb-2">
+        {navigator.geolocation ? (
+          <button
+            type="button"
+            className="button mr-1"
+            onClick={getCurrentPosition}
+            title="Localiser votre position"
+          >
+            <span className="sr-only">Localiser votre position</span>
+            <LocationMarkerIcon className="icon-size-big" aria-hidden />
+          </button>
+        ) : null}
+        <CoordinateInput
+          id={inputId}
+          className="m-0 mr-1"
+          value={value}
+          onChange={(value: string, { dd }: { dd: [number, number] }) => {
+            setValue(value);
+            if (dd.length) {
+              const coordinates: [number, number] = [dd[1], dd[0]];
+              setFeature({
+                type: 'Feature',
+                geometry: {
+                  type: 'Point',
+                  coordinates
+                },
+                properties: {}
+              });
+              flyTo(17, coordinates);
+            } else {
+              setFeature(null);
+            }
+          }}
+        />
+        <button
+          type="button"
+          className="button"
+          onClick={addPoint}
+          disabled={!feature}
+          title="Ajouter le point avec les coordonnées saisies sur la carte"
+        >
+          <span className="sr-only">
+            Ajouter le point avec les coordonnées saisies sur la carte
+          </span>
+          <PlusIcon className="icon-size-big" aria-hidden />
+        </button>
+      </div>
+    </>
+  );
+}

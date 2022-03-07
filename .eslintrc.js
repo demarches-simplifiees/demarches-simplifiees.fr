@@ -6,18 +6,24 @@ module.exports = {
     sourceType: 'module'
   },
   globals: {
-    'process': true,
-    'gon': true
+    process: true,
+    gon: true
   },
   plugins: ['prettier', 'react-hooks'],
-  extends: ['eslint:recommended', 'prettier', 'plugin:react/recommended'],
+  extends: [
+    'eslint:recommended',
+    'prettier',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended'
+  ],
   env: {
     es6: true,
     browser: true
   },
   rules: {
     'prettier/prettier': 'error',
-    'react-hooks/rules-of-hooks': 'error'
+    'react-hooks/rules-of-hooks': 'error',
+    'react/prop-types': 'off'
   },
   settings: {
     react: {
@@ -26,10 +32,26 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['config/webpack/**/*.js', 'babel.config.js', 'postcss.config.js'],
+      files: [
+        '.eslintrc.js',
+        'config/webpack/**/*.js',
+        'babel.config.js',
+        'postcss.config.js'
+      ],
       env: {
         node: true
       }
+    },
+    {
+      files: ['**/*.ts', '**/*.tsx'],
+      parser: '@typescript-eslint/parser',
+      plugins: ['@typescript-eslint'],
+      extends: [
+        'eslint:recommended',
+        'plugin:@typescript-eslint/recommended',
+        'plugin:react-hooks/recommended',
+        'prettier'
+      ]
     }
   ]
 };
