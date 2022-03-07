@@ -310,7 +310,7 @@ describe User, type: :model do
         it "keep track of dossiers and delete user" do
           user.delete_and_keep_track_dossiers(super_admin)
 
-          expect(DeletedDossier.find_by(dossier_id: dossier_en_construction)).to be_present
+          expect(DeletedDossier.find_by(dossier_id: dossier_en_construction)).to be_nil
           expect(DeletedDossier.find_by(dossier_id: dossier_brouillon)).to be_nil
           expect(User.find_by(id: user.id)).to be_nil
         end
@@ -324,7 +324,7 @@ describe User, type: :model do
           dossier_to_discard.discard_and_keep_track!(super_admin, :user_request)
           user.delete_and_keep_track_dossiers(super_admin)
 
-          expect(DeletedDossier.find_by(dossier_id: dossier_en_construction)).to be_present
+          expect(DeletedDossier.find_by(dossier_id: dossier_en_construction)).to be_nil
           expect(DeletedDossier.find_by(dossier_id: dossier_brouillon)).to be_nil
           expect(Dossier.find_by(id: dossier_from_another_user.id)).to be_present
           expect(User.find_by(id: user.id)).to be_nil

@@ -293,7 +293,6 @@ $users-breakpoint: 950px;
   font-size: 24px;
   font-weight: bold;
   margin-top: 13px;
-  color: #FFFFFF;
 
   &.grey {
     color: $g700;
@@ -301,13 +300,17 @@ $users-breakpoint: 950px;
 }
 
 .cta-panel-explanation {
-  font-size: 24px;
+  font-size: 22px;
   margin-bottom: 10px;
-  color: #FFFFFF;
 
   &.grey {
     color: $g700;
   }
+}
+
+.half .cta-panel-title,
+.half .cta-panel-explanation {
+  text-align: center;
 }
 
 .role-panel-title {
@@ -355,7 +358,7 @@ $cta-panel-button-border-size: 2px;
   @include vertical-padding(15px);
   display: block;
   border-radius: 100px;
-  font-size: 24px;
+  font-size: 22px;
   text-align: center;
   cursor: pointer;
   margin-top: 20px;

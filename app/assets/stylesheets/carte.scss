@@ -41,7 +41,7 @@
   }
 
   .map-style-panel {
-    z-index: 99;
+    z-index: 1;
     padding: $default-spacer;
     margin-bottom: $default-spacer;
 
@@ -60,6 +60,7 @@
 }
 
 .cadastres-selection-control {
+  z-index: 1;
   position: absolute;
   top: 135px;
   left: 10px;

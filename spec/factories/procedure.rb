@@ -18,15 +18,16 @@ FactoryBot.define do
     administrateurs { administrateur.present? ? [administrateur] : [association(:administrateur)] }
 
     transient do
-      administrateur { }
+      administrateur {}
       instructeurs { [] }
       types_de_champ { [] }
       types_de_champ_private { [] }
       updated_at { nil }
+      attestation_template { nil }
     end
 
     after(:build) do |procedure, evaluator|
-      initial_revision = build(:procedure_revision, procedure: procedure)
+      initial_revision = build(:procedure_revision, procedure: procedure, attestation_template: evaluator.attestation_template)
       add_types_de_champs(evaluator.types_de_champ, to: initial_revision, scope: :public)
       add_types_de_champs(evaluator.types_de_champ_private, to: initial_revision, scope: :private)
 
