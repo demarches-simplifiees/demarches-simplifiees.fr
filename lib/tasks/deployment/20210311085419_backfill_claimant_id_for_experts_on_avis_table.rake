@@ -3,7 +3,8 @@ namespace :after_party do
   task backfill_claimant_id_for_experts_on_avis_table: :environment do
     puts "Running deploy task 'backfill_claimant_id_for_experts_on_avis_table'"
 
-    avis_experts_claimant = Avis.where(claimant_type: 'Expert', tmp_expert_migrated: false)
+    avis_experts_claimant = Avis.where(claimant_type: 'Expert')
+    avis_experts_claimant = avis_experts_claimant.where(tmp_expert_migrated: false) if Avis.column_names.include?("tmp_expert_migrated")
     progress = ProgressReport.new(avis_experts_claimant.count)
 
     avis_experts_claimant.find_each do |avis|
@@ -15,7 +16,10 @@ namespace :after_party do
           claimant_expert = claimant_instructeur.reload.user.expert
           ExpertsProcedure.find_or_create_by(procedure: avis.procedure, expert: claimant_expert)
         end
-        avis.update_columns(claimant_id: claimant_expert.id, tmp_expert_migrated: true)
+
+        if Avis.column_names.include?("tmp_expert_migrated")
+          avis.update_columns(claimant_id: claimant_expert.id, tmp_expert_migrated: true)
+        end
       else
         # Avis associated to an Instructeur with no user are bad data: delete it
         avis.destroy!
@@ -23,6 +27,7 @@ namespace :after_party do
       progress.inc
     end
     progress.finish
+
     # Update task as completed.  If you remove the line below, the task will
     # run with every deploy (or every time you call after_party:run).
     AfterParty::TaskRecord

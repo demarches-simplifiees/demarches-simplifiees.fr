@@ -164,7 +164,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       it { expect(gi_1_2.dossiers.with_discarded.count).to be(2) }
       it { expect(gi_1_2.dossiers.last.id).to be(dossier12.id) }
       it { expect(dossier12.groupe_instructeur.id).to be(gi_1_2.id) }
-      it { expect(bulk_message.groupe_instructeurs).to eq([gi_1_2, gi_1_3]) }
+      it { expect(bulk_message.groupe_instructeurs).to contain_exactly(gi_1_2, gi_1_3) }
     end
 
     describe 'when the target group is not a possible group' do

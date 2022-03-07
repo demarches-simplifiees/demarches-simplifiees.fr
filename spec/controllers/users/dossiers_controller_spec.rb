@@ -1050,7 +1050,7 @@ describe Users::DossiersController, type: :controller do
 
     shared_examples_for "the dossier can not be deleted" do
       it "doesn’t notify the deletion" do
-        expect(DossierMailer).not_to receive(:notify_deletion_to_administration)
+        expect(DossierMailer).not_to receive(:notify_en_construction_deletion_to_administration)
         subject
       end
 
@@ -1065,17 +1065,23 @@ describe Users::DossiersController, type: :controller do
       let(:dossier) { create(:dossier, :en_construction, user: user, autorisation_donnees: true) }
 
       it "notifies the user and the admin of the deletion" do
-        expect(DossierMailer).to receive(:notify_deletion_to_administration).with(kind_of(DeletedDossier), dossier.procedure.administrateurs.first.email).and_return(double(deliver_later: nil))
+        expect(DossierMailer).to receive(:notify_en_construction_deletion_to_administration).with(kind_of(Dossier), dossier.procedure.administrateurs.first.email).and_return(double(deliver_later: nil))
         subject
       end
 
-      it "hide the dossier and create a deleted dossier" do
+      it "hide the dossier and does not create a deleted dossier" do
         procedure = dossier.procedure
         dossier_id = dossier.id
         subject
         expect(Dossier.find_by(id: dossier_id)).to be_present
         expect(Dossier.find_by(id: dossier_id).hidden_by_user_at).to be_present
-        expect(procedure.deleted_dossiers.count).to eq(1)
+        expect(procedure.deleted_dossiers.count).to eq(0)
+      end
+
+      it "fill hidden by reason" do
+        subject
+        expect(dossier.reload.hidden_by_reason).not_to eq(nil)
+        expect(dossier.reload.hidden_by_reason).to eq("user_request")
       end
 
       it { is_expected.to redirect_to(dossiers_path) }

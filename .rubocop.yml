@@ -1,15 +1,15 @@
 require:
-  - rubocop/rspec/focused
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-rspec
   - ./lib/cops/add_concurrent_index.rb
   - ./lib/cops/application_name.rb
   - ./lib/cops/unscoped.rb
 
-inherit_gem:
-  rubocop-rails_config:
-    - config/rails.yml
-
 AllCops:
-  TargetRubyVersion: 2.7
+  TargetRubyVersion: 3.0
+  DisabledByDefault: true
+  SuggestExtensions: false
   Exclude:
     - "db/schema.rb"
     - "db/migrate/20190730153555_recreate_structure.rb"
@@ -645,6 +645,9 @@ Performance/RedundantMatch:
 Performance/RedundantMerge:
   Enabled: true
 
+Style/HashTransformValues:
+    Enabled: true
+
 Style/RedundantSortBy:
   Enabled: true
 
@@ -675,13 +678,22 @@ Performance/UnfreezeString:
 Performance/UriDefaultParser:
   Enabled: true
 
+Rails:
+  Enabled: true
+
 Rails/ActionFilter:
   Enabled: true
 
 Rails/ActiveRecordAliases:
   Enabled: true
 
+Rails/ActiveRecordCallbacksOrder:
+  Enabled: false
+
 Rails/ActiveSupportAliases:
+  Enabled: true
+
+Rails/AfterCommitOverride:
   Enabled: true
 
 Rails/ApplicationJob:
@@ -693,8 +705,8 @@ Rails/ApplicationRecord:
 Rails/ApplicationController:
   Enabled: false
 
-Rails/RakeEnvironment:
-  Enabled: false
+Rails/AttributeDefaultBlockValue:
+  Enabled: true
 
 Rails/Blank:
   Enabled: true
@@ -740,6 +752,9 @@ Rails/FilePath:
 Rails/FindBy:
   Enabled: true
 
+Rails/FindById:
+  Enabled: true
+
 Rails/FindEach:
   Enabled: true
 
@@ -755,10 +770,22 @@ Rails/HttpPositionalArguments:
 Rails/HttpStatus:
   Enabled: false
 
+Rails/Inquiry:
+  Enabled: true
+
 Rails/InverseOf:
   Enabled: true
 
 Rails/LexicallyScopedActionFilter:
+  Enabled: false
+
+Rails/MailerName:
+  Enabled: true
+
+Rails/MatchRoute:
+  Enabled: true
+
+Rails/NegateInclude:
   Enabled: false
 
 Rails/NotNullColumn:
@@ -770,6 +797,12 @@ Rails/Output:
 Rails/OutputSafety:
   Enabled: true
 
+Rails/Pluck:
+  Enabled: false
+
+Rails/PluckInWhere:
+  Enabled: true
+
 Rails/PluralizationGrammar:
   Enabled: true
 
@@ -778,6 +811,9 @@ Rails/Presence:
 
 Rails/Present:
   Enabled: true
+
+Rails/RakeEnvironment:
+  Enabled: false
 
 Rails/ReadWriteAttribute:
   Enabled: false
@@ -789,6 +825,12 @@ Rails/RedundantReceiverInWithOptions:
   Enabled: true
 
 Rails/RelativeDateConstant:
+  Enabled: true
+
+Rails/RenderInline:
+  Enabled: true
+
+Rails/RenderPlainText:
   Enabled: true
 
 Rails/RequestReferer:
@@ -803,8 +845,14 @@ Rails/SaveBang:
 Rails/ScopeArgs:
   Enabled: true
 
+Rails/ShortI18n:
+  Enabled: true
+
 Rails/SkipsModelValidations:
   Enabled: false
+
+Rails/SquishedSQLHeredocs:
+  Enabled: true
 
 Rails/TimeZone:
   EnforcedStyle: strict
@@ -821,10 +869,16 @@ Rails/UnknownEnv:
 Rails/Validation:
   Enabled: true
 
-Rails:
+Rails/WhereEquals:
   Enabled: true
 
-RSpec/Focused:
+Rails/WhereExists:
+  Enabled: true
+
+Rails/WhereNot:
+  Enabled: true
+
+RSpec/Focus:
   Enabled: true
 
 Security/Eval:
@@ -1322,39 +1376,4 @@ Style/YodaCondition:
   Enabled: true
 
 Style/ZeroLengthPredicate:
-  Enabled: true
-
-Rails/ActiveRecordCallbacksOrder:
-  Enabled: false
-Rails/AfterCommitOverride:
-  Enabled: true
-Rails/AttributeDefaultBlockValue:
-  Enabled: true
-Rails/FindById:
-  Enabled: true
-Rails/Inquiry:
-  Enabled: true
-Rails/MailerName:
-  Enabled: true
-Rails/MatchRoute:
-  Enabled: true
-Rails/NegateInclude:
-  Enabled: false
-Rails/Pluck:
-  Enabled: false
-Rails/PluckInWhere:
-  Enabled: true
-Rails/RenderInline:
-  Enabled: true
-Rails/RenderPlainText:
-  Enabled: true
-Rails/ShortI18n:
-  Enabled: true
-Rails/SquishedSQLHeredocs:
-  Enabled: true
-Rails/WhereEquals:
-  Enabled: true
-Rails/WhereExists:
-  Enabled: true
-Rails/WhereNot:
   Enabled: true

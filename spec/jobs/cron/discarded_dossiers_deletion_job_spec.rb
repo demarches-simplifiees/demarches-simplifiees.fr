@@ -8,6 +8,7 @@ RSpec.describe Cron::DiscardedDossiersDeletionJob, type: :job do
       dossier.send(:log_dossier_operation, instructeur, :passer_en_instruction, dossier)
       dossier.send(:log_dossier_operation, instructeur, :supprimer, dossier)
       dossier.update_column(:hidden_at, hidden_at)
+      dossier.update_column(:hidden_by_reason, "user_request")
 
       Cron::DiscardedDossiersDeletionJob.perform_now
     end
@@ -42,7 +43,6 @@ RSpec.describe Cron::DiscardedDossiersDeletionJob, type: :job do
 
         context 'not hidden' do
           let(:hidden_at) { nil }
-
           include_examples "does not delete"
         end
 
@@ -60,7 +60,6 @@ RSpec.describe Cron::DiscardedDossiersDeletionJob, type: :job do
 
         context 'hidden long ago' do
           let(:hidden_at) { 1.week.ago - 1.hour }
-
           include_examples "does delete"
         end
       end

@@ -24,7 +24,7 @@ if (!Array.isArray(nodeModulesLoader.exclude)) {
     nodeModulesLoader.exclude == null ? [] : [nodeModulesLoader.exclude];
 }
 nodeModulesLoader.exclude.push(
-  path.resolve(__dirname, '..', '..', 'node_modules/mapbox-gl')
+  path.resolve(__dirname, '..', '..', 'node_modules/maplibre-gl')
 );
 
 // Uncoment next lines to run webpack-bundle-analyzer
