@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_27_135056) do
+ActiveRecord::Schema.define(version: 2022_01_28_135056) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -593,6 +593,8 @@ ActiveRecord::Schema.define(version: 2022_01_27_135056) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "published_at"
+    t.bigint "attestation_template_id"
+    t.index ["attestation_template_id"], name: "index_procedure_revisions_on_attestation_template_id"
     t.index ["procedure_id"], name: "index_procedure_revisions_on_procedure_id"
   end
 
@@ -882,6 +884,7 @@ ActiveRecord::Schema.define(version: 2022_01_27_135056) do
   add_foreign_key "procedure_revision_types_de_champ", "procedure_revision_types_de_champ", column: "parent_id"
   add_foreign_key "procedure_revision_types_de_champ", "procedure_revisions", column: "revision_id"
   add_foreign_key "procedure_revision_types_de_champ", "types_de_champ"
+  add_foreign_key "procedure_revisions", "attestation_templates"
   add_foreign_key "procedure_revisions", "procedures"
   add_foreign_key "procedures", "procedure_revisions", column: "draft_revision_id"
   add_foreign_key "procedures", "procedure_revisions", column: "published_revision_id"

@@ -1,15 +1,15 @@
 require:
-  - rubocop/rspec/focused
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-rspec
   - ./lib/cops/add_concurrent_index.rb
   - ./lib/cops/application_name.rb
   - ./lib/cops/unscoped.rb
 
-inherit_gem:
-  rubocop-rails_config:
-    - config/rails.yml
-
 AllCops:
-  TargetRubyVersion: 2.7
+  TargetRubyVersion: 3.0
+  DisabledByDefault: true
+  SuggestExtensions: false
   Exclude:
     - "db/schema.rb"
     - "db/migrate/20190730153555_recreate_structure.rb"
@@ -645,6 +645,9 @@ Performance/RedundantMatch:
 Performance/RedundantMerge:
   Enabled: true
 
+Style/HashTransformValues:
+    Enabled: true
+
 Style/RedundantSortBy:
   Enabled: true
 
@@ -875,7 +878,7 @@ Rails/WhereExists:
 Rails/WhereNot:
   Enabled: true
 
-RSpec/Focused:
+RSpec/Focus:
   Enabled: true
 
 Security/Eval:
@@ -1374,4 +1377,3 @@ Style/YodaCondition:
 
 Style/ZeroLengthPredicate:
   Enabled: true
-

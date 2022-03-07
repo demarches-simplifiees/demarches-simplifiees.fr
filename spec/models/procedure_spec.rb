@@ -66,16 +66,12 @@ describe Procedure do
   end
 
   describe '#closed_mail_template_attestation_inconsistency_state' do
-    let(:procedure_without_attestation) { create(:procedure, closed_mail: closed_mail) }
+    let(:procedure_without_attestation) { create(:procedure, closed_mail: closed_mail, attestation_template: nil) }
     let(:procedure_with_active_attestation) do
-      procedure = create(:procedure, closed_mail: closed_mail)
-      create(:attestation_template, procedure: procedure, activated: true)
-      procedure
+      create(:procedure, closed_mail: closed_mail, attestation_template: build(:attestation_template, activated: true))
     end
     let(:procedure_with_inactive_attestation) do
-      procedure = create(:procedure, closed_mail: closed_mail)
-      create(:attestation_template, procedure: procedure, activated: false)
-      procedure
+      create(:procedure, closed_mail: closed_mail, attestation_template: build(:attestation_template, activated: false))
     end
 
     subject { procedure.closed_mail_template_attestation_inconsistency_state }
