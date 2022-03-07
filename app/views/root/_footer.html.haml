@@ -5,12 +5,13 @@
       %li.footer-column
         %ul.footer-logos
           %li.footer-text
-            Un service fourni par la
-            = link_to "DINUM", "https://numerique.gouv.fr/", title: "Direction Interministérielle au Numérique"
+            Un service fourni par
+            = link_to PROVIDED_BY, PROVIDER_URL, title: PROVIDER_TITLE
             %br
           %li
-            = link_to "https://numerique.gouv.fr/", title: "DINUM", 'aria-label': 'DINUM' do
-              %span.footer-logo.footer-logo-dinum{ role: 'img', 'aria-label': 'Logo DINUM' }
+            = link_to PROVIDER_URL, title: PROVIDER_NAME, 'aria-label': PROVIDER_NAME do
+              %span.footer-logo{ role: 'img', 'aria-label': PROVIDER_LOGO_ALT }
+                = image_tag PROVIDER_LOGO_SRC, alt: PROVIDER_LOGO_ALT, width: PROVIDER_LOGO_WIDTH, height: PROVIDER_LOGO_HEIGHT, loading: 'lazy'
             = link_to "http://www.net.pf/", title: "Net.pf", 'aria-label': 'net.pf' do
               %span.footer-logo.footer-logo-netpf{ role: 'img', 'aria-label': 'Net.pf' }
           %li

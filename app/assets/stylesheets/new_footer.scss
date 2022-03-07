@@ -29,9 +29,8 @@ footer {
   @extend %horizontal-list-item;
   font-size: 14px;
   vertical-align: top;
-  flex-grow: 1;
+  flex: 0 0 33.333333%;
   min-width: 280px;
-  margin: 0 20px;
   margin-bottom: 30px;
 
   @media (max-width: 550px) {
@@ -68,20 +67,11 @@ footer {
   opacity: 0.8;
 }
 
-.footer-logo-dinum {
-  @include ie-compatible-background-image("footer/logo-dinum.png");
-
-  height: 150px;
-  width: 202px;
-  margin-bottom: 14px;
-}
-
 .footer-logo-netpf {
   @include ie-compatible-background-image("footer/logo-netpf.svg");
 
   height: 104px;
   width: 125px;
-  margin-bottom: 14px;
 }
 
 .footer-logo-beta-gouv-fr {
@@ -89,6 +79,7 @@ footer {
 
   width: 150px;
   height: 25px;
+  margin-top: 14px;
 }
 
 .footer-logo-france {
