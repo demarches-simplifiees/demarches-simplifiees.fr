@@ -13,6 +13,6 @@ module DateEncodingConcern
 
   def encoded_date(field)
     datetime = send(field)
-    datetime.to_i.to_s(16) + '-' + datetime.nsec.to_s(16)
+    datetime.to_i.to_s(16) + '-' + datetime.nsec.to_s(16) if datetime
   end
 end

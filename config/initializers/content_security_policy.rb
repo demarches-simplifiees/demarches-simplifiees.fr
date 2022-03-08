@@ -4,34 +4,51 @@
 # For further information see the following documentation
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
 
-# rubocop:disable DS/ApplicationName
 Rails.application.config.content_security_policy do |policy|
   # Whitelist image
-  policy.img_src :self, "*.openstreetmap.org", "static.#{FR_SITE}", "*.cloud.ovh.net", "*", :data, :blob
+  images_whitelist = ["*.openstreetmap.org", "*.cloud.ovh.net", "*"]
+  images_whitelist << URI(DS_PROXY_URL).host if DS_PROXY_URL.present?
+  images_whitelist << URI(MATOMO_IFRAME_URL).host if MATOMO_IFRAME_URL.present?
+  policy.img_src(:self, :data, :blob, *images_whitelist)
+
   # Whitelist JS: nous, sendinblue et matomo
   # miniprofiler et nous avons quelques boutons inline :(
-  policy.script_src :self, "stats.data.gouv.fr", "*.sendinblue.com", "*.crisp.chat", "crisp.chat", "beta.mes-demarches.gov.pf", "*.sibautomation.com", "sibautomation.com", 'cdn.jsdelivr.net', 'maxcdn.bootstrapcdn.com', 'code.jquery.com', :unsafe_eval, :unsafe_inline, :blob
+  scripts_whitelist = ["*.sendinblue.com", "*.crisp.chat", "crisp.chat", "*.sibautomation.com", "sibautomation.com", "cdn.jsdelivr.net", "maxcdn.bootstrapcdn.com", "code.jquery.com"]
+  scripts_whitelist << URI(MATOMO_IFRAME_URL).host if MATOMO_IFRAME_URL.present?
+  policy.script_src(:self, :unsafe_eval, :unsafe_inline, :blob, *scripts_whitelist)
+
   # Pour les CSS, on a beaucoup de style inline et quelques balises <style>
   # c'est trop compliqué pour être rectifié immédiatement (et sans valeur ajoutée:
   # c'est hardcodé dans les vues, donc pas injectable).
-  policy.style_src :self, "*.crisp.chat", "crisp.chat", 'cdn.jsdelivr.net', 'maxcdn.bootstrapcdn.com', :unsafe_inline
-  policy.connect_src :self, "wss://*.crisp.chat", "*.crisp.chat", "*.demarches-simplifiees.fr", "in-automate.sendinblue.com", "app.franceconnect.gouv.fr", "sentry.io", "geo.api.gouv.fr", "api-adresse.data.gouv.fr", "openmaptiles.geo.data.gouv.fr", "openmaptiles.github.io", "tiles.geo.api.gouv.fr", "wxs.ign.fr", "data.education.gouv.fr"
+  policy.style_src(:self, "*.crisp.chat", "crisp.chat", 'cdn.jsdelivr.net', 'maxcdn.bootstrapcdn.com', :unsafe_inline)
+
+  connect_whitelist = ["wss://*.crisp.chat", "*.crisp.chat", "in-automate.sendinblue.com", "app.franceconnect.gouv.fr", "sentry.io", "openmaptiles.geo.data.gouv.fr", "openmaptiles.github.io", "tiles.geo.api.gouv.fr", "wxs.ign.fr"]
+  connect_whitelist << ENV.fetch('APP_HOST')
+  connect_whitelist << URI(DS_PROXY_URL).host if DS_PROXY_URL.present?
+  connect_whitelist << URI(API_ADRESSE_URL).host if API_ADRESSE_URL.present?
+  connect_whitelist << URI(API_EDUCATION_URL).host if API_EDUCATION_URL.present?
+  connect_whitelist << URI(API_GEO_URL).host if API_GEO_URL.present?
+  policy.connect_src(:self, *connect_whitelist)
+
   # Pour tout le reste, par défaut on accepte uniquement ce qui vient de chez nous
   # et dans la notification on inclue la source de l'erreur
-  policy.default_src :self, :data, :blob, :report_sample, "fonts.gstatic.com", "in-automate.sendinblue.com", "player.vimeo.com", "app.franceconnect.gouv.fr", "sentry.io", "static.demarches-simplifiees.fr", "*.crisp.chat", "crisp.chat", "*.crisp.help", "*.sibautomation.com", "sibautomation.com", "data"
+  default_whitelist = ["fonts.gstatic.com", "in-automate.sendinblue.com", "player.vimeo.com", "app.franceconnect.gouv.fr", "sentry.io", "*.crisp.chat", "crisp.chat", "*.crisp.help", "*.sibautomation.com", "sibautomation.com", "data"]
+  default_whitelist << URI(DS_PROXY_URL).host if DS_PROXY_URL.present?
+  policy.default_src(:self, :data, :blob, :report_sample, *default_whitelist)
+
   if Rails.env.development?
     # Les CSP ne sont pas appliquées en dev: on notifie cependant une url quelconque de la violation
     # pour détecter les erreurs lors de l'ajout d'une nouvelle brique externe durant le développement
-    # policy.report_uri "http://#{ENV['APP_HOST']}/csp/"
+    policy.report_uri "http://#{ENV.fetch('APP_HOST')}/csp/"
     # En développement, quand bin/webpack-dev-server est utilisé, on autorise les requêtes faites par le live-reload
     policy.connect_src(*policy.connect_src, "ws://localhost:3035", "http://localhost:3035")
+  else
+    policy.report_uri CSP_REPORT_URI if CSP_REPORT_URI.present?
   end
   # polynesian configurations
-  policy.img_src(*policy.img_src, "beta.mes-demarches.gov.pf")
   policy.connect_src(*policy.connect_src, "www.tefenua.gov.pf", "oos.eu-west-2.outscale.com", "osu.cloudgouv-eu-west-1.outscale.com")
   policy.default_src(*policy.default_src, "oos.eu-west-2.outscale.com", "osu.cloudgouv-eu-west-1.outscale.com")
 end
-# rubocop:enable DS/ApplicationName
 
 # If you are using UJS then enable automatic nonce generation
 # Rails.application.config.content_security_policy_nonce_generator = -> request { SecureRandom.base64(16) }
