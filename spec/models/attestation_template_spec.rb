@@ -95,7 +95,8 @@ describe AttestationTemplate, type: :model do
       create(:procedure,
         types_de_champ: types_de_champ,
         types_de_champ_private: types_de_champ_private,
-        for_individual: for_individual)
+        for_individual: for_individual,
+        attestation_template: attestation_template)
     end
     let(:for_individual) { false }
     let(:individual) { nil }
@@ -106,7 +107,7 @@ describe AttestationTemplate, type: :model do
     let(:template_title) { 'title' }
     let(:template_body) { 'body' }
     let(:attestation_template) do
-      build(:attestation_template, procedure: procedure,
+      build(:attestation_template,
         title: template_title,
         body: template_body,
         logo: @logo,

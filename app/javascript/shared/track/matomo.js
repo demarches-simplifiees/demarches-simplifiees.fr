@@ -1,4 +1,4 @@
-const { enabled, host, key } = gon.matomo || {};
+const { cookieDomain, domain, enabled, host, key } = gon.matomo || {};
 
 if (enabled) {
   window._paq = window._paq || [];
@@ -10,8 +10,8 @@ if (enabled) {
   // Configure Matomo analytics
   //
 
-  window._paq.push(['setCookieDomain', '*.mes-demarches.gov.pf']);
-  window._paq.push(['setDomains', ['*.mes-demarches.gov.pf']]);
+  window._paq.push(['setCookieDomain', cookieDomain]);
+  window._paq.push(['setDomains', [domain]]);
   // Don’t store any cookies or send any tracking request when the "Do Not Track" browser setting is enabled.
   window._paq.push(['setDoNotTrack', true]);
   // When enabling external link tracking, consider that it will also report links to attachments.
