@@ -1,12 +1,9 @@
 class AddAdministrateurForeignKeyToAdministrateursProcedure < ActiveRecord::Migration[6.1]
-  def up
-    # Sanity check
-    say_with_time 'Removing AdministrateursProcedures where the associated Administrateur no longer exists ' do
-      deleted_administrateur_ids = AdministrateursProcedure.where.missing(:administrateur).pluck(:administrateur_id)
-      AdministrateursProcedure.where(administrateur_id: deleted_administrateur_ids).delete_all
-    end
+  include Database::MigrationHelpers
 
-    add_foreign_key :administrateurs_procedures, :administrateurs
+  def up
+    delete_orphans :administrateurs_procedures, :administrateurs_procedures
+    add_foreign_key :administrateurs_procedures, :administrateurs_procedures
   end
 
   def down
