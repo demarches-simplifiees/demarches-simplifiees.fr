@@ -176,7 +176,7 @@ class Procedure < ApplicationRecord
     end
   end
 
-  has_many :administrateurs_procedures
+  has_many :administrateurs_procedures, dependent: :delete_all
   has_many :administrateurs, through: :administrateurs_procedures, after_remove: -> (procedure, _admin) { procedure.validate! }
   has_many :groupe_instructeurs, dependent: :destroy
   has_many :instructeurs, through: :groupe_instructeurs
