@@ -7,6 +7,7 @@
 #  encrypted_token :string
 #  created_at      :datetime
 #  updated_at      :datetime
+#  user_id         :bigint
 #
 class Administrateur < ApplicationRecord
   include ActiveRecord::SecureToken
