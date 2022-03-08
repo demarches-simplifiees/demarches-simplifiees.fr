@@ -53,6 +53,7 @@ RUN yarn install --production
 RUN rm -fr .git
 
 ENV \
+    ACTIVE_STORAGE_SERVICE="local"\
     AGENT_CONNECT_ENABLED=""\
     AGENT_CONNECT_ID=""\
     AGENT_CONNECT_SECRET=""\
@@ -120,6 +121,9 @@ ENV \
     INVISIBLE_CAPTCHA_SECRET="pwd"\
     LOGRAGE_ENABLED="disabled"\
     LOGRAGE_SOURCE=""\
+    MAILCATCHER_ENABLED="disabled"\
+    MAILCATCHER_HOST=""\
+    MAILCATCHER_PORT=""\
     MAILER_LOGO_SRC="header/logo-md-wide.png"\
     MAILJET_API_KEY=""\
     MAILJET_SECRET_KEY=""\
@@ -127,7 +131,9 @@ ENV \
     MAILTRAP_PASSWORD=""\
     MAILTRAP_USERNAME=""\
     MATOMO_ENABLED="disabled"\
-    MATOMO_HOST=""\
+    MATOMO_COOKIE_DOMAIN="*.mes-demarches.gov.pf"
+    MATOMO_DOMAIN="*.mes-demarches.gov.pf"
+    MATOMO_HOST="beta.mes-demarches.gov.pf"\
     MATOMO_ID="1"\
     MATOMO_IFRAME_URL=""\
     MICROSOFT_CLIENT_ID=""\
