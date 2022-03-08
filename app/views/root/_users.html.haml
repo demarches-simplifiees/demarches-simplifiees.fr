@@ -4,17 +4,34 @@
 
     %ul.users
       %li.user
+        = link_to "http://artisanat.pf/", target: :blank, rel: "noopener noreferrer" do
+          %img.user-image{ :src => image_url("landing/users/artisanat.svg"), alt: "Service de l'artisanat" }
+      %li.user
+        = link_to "https://www.service-public.pf/voir/annuaire/deq-direction-de-lequipement", target: :blank, rel: "noopener noreferrer" do
+          %img.user-image{ :src => image_url("landing/users/gegdp.svg"), alt: "Groupement d'Etude et de Gestion du Domaine Public, Direction de l'Equipement" }
+      %li.user
+        = link_to "http://www.fonction-publique.gov.pf", target: :blank, rel: "noopener noreferrer" do
+          %img.user-image{ :src => image_url("landing/users/dgrh01.jpg"), alt: "Direction Générale des Ressources Humaines" }
+      %li.user
+        = link_to "https://www.service-public.pf/djs/", target: :blank, rel: "noopener noreferrer" do
+          %img.user-image{ :src => image_url("landing/users/djs.png"), alt: "Direction de la Jeunesse et des Sports" }
+      %li.user
+        = link_to "http://www.transports-terrestres.pf", target: :blank, rel: "noopener noreferrer" do
+          %img.user-image{ :src => image_url("landing/users/dtt.jpg"), alt: "Chambres des Métiers et de l'Artisanat" }
+
+    %ul.users
+      %li.user
+        = link_to "https://www.education.pf", target: :blank, rel: "noopener noreferrer" do
+          %img.user-image{ :src => image_url("landing/users/dgee.svg"), alt: "Direction Générale de l'Education et des Enseignements" }
+      %li.user
+        = link_to "https://www.service-public.pf/voir/annuaire/sio-service-imprimerie-officielle/", target: :blank, rel: "noopener noreferrer" do
+          %img.user-image{ :src => image_url("landing/users/sio.svg"), alt: "Service de l'Imprimerie Officielle" }
+      %li.user
         = link_to "https://www.ecologique-solidaire.gouv.fr/", target: :blank, rel: "noopener noreferrer" do
           %img.user-image{ :src => image_url("landing/users/mtes.jpg"), alt: "Ministère de la Transition Écologique et Solidaire" }
       %li.user
-        = link_to "https://www.iledefrance.fr/", target: :blank, rel: "noopener noreferrer" do
-          %img.user-image{ :src => image_url("landing/users/region-idf.jpg"), alt: "Région Île-de-France" }
-      %li.user
         = link_to "http://www.artisanat.fr/", target: :blank, rel: "noopener noreferrer" do
           %img.user-image{ :src => image_url("landing/users/chambres-de-metiers.jpg"), alt: "Chambres des Métiers et de l'Artisanat" }
-      %li.user
-        = link_to "http://www.cci.fr/", target: :blank, rel: "noopener noreferrer" do
-          %img.user-image{ :src => image_url("landing/users/cci.jpg"), alt: "CCI de France" }
       %li.user
         = link_to "http://www.driea.ile-de-france.developpement-durable.gouv.fr/", target: :blank, rel: "noopener noreferrer" do
           %img.user-image{ :src => image_url("landing/users/driea-idf.jpg"), alt: "Direction Régionale et Interdépartementale de l'Équipement et de l'Aménagement" }
