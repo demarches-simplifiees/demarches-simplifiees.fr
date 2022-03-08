@@ -1,4 +1,4 @@
-# Some of this file is lifted from Gitlab's `lib/gitlab/database/migration_helpers.rb``
+# Some of this file is lifted from Gitlab's `lib/gitlab/database/migration_helpers.rb`
 
 # Copyright (c) 2011-present GitLab B.V.
 #
@@ -100,6 +100,34 @@ module Database::MigrationHelpers
 
     disable_statement_timeout do
       add_index(table_name, column_name, **options)
+    end
+  end
+
+  # Delete records from `from_table` having a reference to a missing record in `to_table`.
+  # This is useful to rectify data before adding a proper foreign_key.
+  #
+  # Example:
+  #
+  #     delete_orphans :appointments, :physicians
+  #
+  def delete_orphans(from_table, to_table)
+    say_with_time "Deleting records from #{from_table} where the associated #{to_table.to_s.singularize} no longer exists" do
+      from_table = Arel::Table.new(from_table)
+      to_table = Arel::Table.new(to_table)
+      foreign_key_column = foreign_key_column_for(to_table.name)
+
+      # Select the ids of orphan records
+      arel_select = from_table
+        .join(to_table, Arel::Nodes::OuterJoin).on(to_table[:id].eq(from_table[foreign_key_column]))
+        .where(to_table[:id].eq(nil))
+        .project(from_table[foreign_key_column])
+      missing_record_ids = query_values(arel_select.to_sql)
+
+      # Delete the records having ids referencing missing data
+      arel_delete = Arel::DeleteManager.new()
+        .from(from_table)
+        .where(from_table[foreign_key_column].in(missing_record_ids.uniq))
+      exec_delete(arel_delete.to_sql)
     end
   end
 
