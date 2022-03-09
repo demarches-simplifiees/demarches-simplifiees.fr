@@ -7,7 +7,7 @@ RSpec.describe Cron::DiscardedDossiersDeletionJob, type: :job do
       # hack to add passer_en_instruction and supprimer to dossier.dossier_operation_logs
       dossier.send(:log_dossier_operation, instructeur, :passer_en_instruction, dossier)
       dossier.send(:log_dossier_operation, instructeur, :supprimer, dossier)
-      dossier.update_column(:hidden_at, hidden_at)
+      dossier.update_columns(hidden_by_user_at: hidden_at, hidden_by_administration_at: hidden_at)
       dossier.update_column(:hidden_by_reason, "user_request")
 
       Cron::DiscardedDossiersDeletionJob.perform_now

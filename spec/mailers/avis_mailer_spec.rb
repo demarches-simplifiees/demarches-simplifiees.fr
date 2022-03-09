@@ -2,7 +2,7 @@ RSpec.describe AvisMailer, type: :mailer do
   describe '.avis_invitation' do
     let(:claimant) { create(:instructeur) }
     let(:expert) { create(:expert) }
-    let(:dossier) { create(:dossier) }
+    let(:dossier) { create(:dossier, :en_construction) }
     let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: dossier.procedure) }
     let(:avis) { create(:avis, dossier: dossier, claimant: claimant, experts_procedure: experts_procedure, introduction: 'intro') }
 
@@ -18,7 +18,7 @@ RSpec.describe AvisMailer, type: :mailer do
     end
 
     context 'when the dossier has been deleted before the avis was sent' do
-      before { dossier.update(hidden_at: Time.zone.now) }
+      before { dossier.update(hidden_by_user_at: 1.hour.ago) }
 
       it 'doesn’t send the email' do
        expect(subject.body).to be_blank

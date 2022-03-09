@@ -1069,15 +1069,6 @@ describe Users::DossiersController, type: :controller do
       it_behaves_like "the dossier can not be deleted"
       it { is_expected.to redirect_to(root_path) }
     end
-
-    context 'when the dossier is already deleted by instructeur' do
-      let!(:dossier) { create(:dossier, :with_individual, state: :accepte, en_construction_at: Time.zone.yesterday.beginning_of_day.utc, user: user, autorisation_donnees: true, hidden_by_administration_at: Time.zone.now.beginning_of_day.utc) }
-      before { subject }
-
-      it 'discard the dossier' do
-        expect(dossier.reload.hidden_at).to be_present
-      end
-    end
   end
 
   describe '#restore' do
