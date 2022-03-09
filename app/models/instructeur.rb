@@ -231,14 +231,13 @@ class Instructeur < ApplicationRecord
   def dossiers_count_summary(groupe_instructeur_ids)
     query = <<~EOF
       SELECT
-        COUNT(DISTINCT dossiers.id) FILTER (where not archived AND NOT (dossiers.hidden_by_user_at IS NOT NULL AND state = 'en_construction') AND dossiers.state in ('en_construction', 'en_instruction') AND follows.id IS NULL) AS a_suivre,
-        COUNT(DISTINCT dossiers.id) FILTER (where not archived AND dossiers.state in ('en_construction', 'en_instruction') AND follows.instructeur_id = :instructeur_id) AS suivis,
-        COUNT(DISTINCT dossiers.id) FILTER (where not archived AND dossiers.state in ('accepte', 'refuse', 'sans_suite')) AS traites,
-        COUNT(DISTINCT dossiers.id) FILTER (where not archived AND NOT (dossiers.hidden_by_user_at IS NOT NULL AND state = 'en_construction') AND NOT (dossiers.hidden_by_administration_at IS NOT NULL)) AS tous,
-        COUNT(DISTINCT dossiers.id) FILTER (where not archived AND (dossiers.hidden_by_administration_at IS NOT NULL AND dossiers.state in ('accepte', 'refuse', 'sans_suite') )) AS supprimes_recemment,
-        COUNT(DISTINCT dossiers.id) FILTER (where archived) AS archives,
-        COUNT(DISTINCT dossiers.id) FILTER (where
-          procedures.procedure_expires_when_termine_enabled
+        COUNT(DISTINCT dossiers.id) FILTER (where dossiers.hidden_by_administration_at IS NULL AND not archived AND dossiers.state in ('en_construction', 'en_instruction') AND follows.id IS NULL) AS a_suivre,
+        COUNT(DISTINCT dossiers.id) FILTER (where dossiers.hidden_by_administration_at IS NULL AND not archived AND dossiers.state in ('en_construction', 'en_instruction') AND follows.instructeur_id = :instructeur_id) AS suivis,
+        COUNT(DISTINCT dossiers.id) FILTER (where dossiers.hidden_by_administration_at IS NULL AND not archived AND dossiers.state in ('accepte', 'refuse', 'sans_suite')) AS traites,
+        COUNT(DISTINCT dossiers.id) FILTER (where dossiers.hidden_by_administration_at IS NULL AND not archived) AS tous,
+        COUNT(DISTINCT dossiers.id) FILTER (where dossiers.hidden_by_administration_at IS NULL AND archived) AS archives,
+        COUNT(DISTINCT dossiers.id) FILTER (where dossiers.hidden_by_administration_at IS NOT NULL AND not archived AND dossiers.state in ('accepte', 'refuse', 'sans_suite')) AS supprimes_recemment,
+        COUNT(DISTINCT dossiers.id) FILTER (where dossiers.hidden_by_administration_at IS NULL AND procedures.procedure_expires_when_termine_enabled
           AND (
             dossiers.state in ('accepte', 'refuse', 'sans_suite')
               AND dossiers.processed_at + dossiers.conservation_extension + (procedures.duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now
@@ -247,17 +246,18 @@ class Instructeur < ApplicationRecord
               AND dossiers.en_construction_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now
           )
         ) AS expirant
-      FROM "dossiers"
-        INNER JOIN "procedure_revisions"
-          ON "procedure_revisions"."id" = "dossiers"."revision_id"
-        INNER JOIN "procedures"
-          ON "procedures"."id" = "procedure_revisions"."procedure_id"
+      FROM dossiers
+        INNER JOIN procedure_revisions
+          ON procedure_revisions.id = dossiers.revision_id
+        INNER JOIN procedures
+          ON procedures.id = procedure_revisions.procedure_id
         LEFT OUTER JOIN follows
           ON  follows.dossier_id = dossiers.id
           AND follows.unfollowed_at IS NULL
-      WHERE "dossiers"."hidden_at" IS NULL
-        AND "dossiers"."state" != 'brouillon'
-        AND "dossiers"."groupe_instructeur_id" in (:groupe_instructeur_ids)
+      WHERE dossiers.state != 'brouillon'
+        AND dossiers.groupe_instructeur_id in (:groupe_instructeur_ids)
+        AND dossiers.hidden_at IS NULL
+        AND NOT (dossiers.hidden_by_user_at IS NOT NULL AND dossiers.state = 'en_construction')
     EOF
 
     sanitized_query = ActiveRecord::Base.sanitize_sql([
