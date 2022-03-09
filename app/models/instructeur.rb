@@ -256,8 +256,7 @@ class Instructeur < ApplicationRecord
           AND follows.unfollowed_at IS NULL
       WHERE dossiers.state != 'brouillon'
         AND dossiers.groupe_instructeur_id in (:groupe_instructeur_ids)
-        AND dossiers.hidden_at IS NULL
-        AND NOT (dossiers.hidden_by_user_at IS NOT NULL AND dossiers.state = 'en_construction')
+        AND (dossiers.hidden_by_user_at IS NULL OR dossiers.state != 'en_construction')
     EOF
 
     sanitized_query = ActiveRecord::Base.sanitize_sql([
