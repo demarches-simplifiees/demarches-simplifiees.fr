@@ -778,8 +778,8 @@ describe Instructeurs::DossiersController, type: :controller do
         expect(DeletedDossier.where(dossier_id: dossier.id).count).to eq(0)
       end
 
-      it 'discard the dossier' do
-        expect(dossier.reload.hidden_at).not_to eq(nil)
+      it 'is not visible by administration' do
+        expect(dossier.reload.visible_by_administration?).to be_falsy
       end
     end
 
@@ -789,9 +789,9 @@ describe Instructeurs::DossiersController, type: :controller do
         subject
       end
 
-      it 'does not deletes previous logs and does not add a suppression log' do
-        expect(DossierOperationLog.where(dossier_id: dossier.id).count).to eq(2)
-        expect(DossierOperationLog.where(dossier_id: dossier.id).last.operation).not_to eq('supprimer')
+      it 'does not deletes previous logs and adds a suppression log' do
+        expect(DossierOperationLog.where(dossier_id: dossier.id).count).to eq(3)
+        expect(DossierOperationLog.where(dossier_id: dossier.id).last.operation).to eq('supprimer')
       end
 
       it 'add a record into deleted_dossiers table' do
@@ -845,8 +845,8 @@ describe Instructeurs::DossiersController, type: :controller do
   describe '#restore' do
     let(:instructeur) { create(:instructeur) }
     let!(:gi_p1_1) { GroupeInstructeur.create(label: '1', procedure: procedure) }
-    let!(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
-    let!(:dossier) { create(:dossier, state: 'accepte', procedure: procedure, groupe_instructeur: procedure.groupe_instructeurs.first, hidden_by_administration_at: 1.hour.ago) }
+    let!(:procedure) { create(:procedure, :published, :for_individual, instructeurs: [instructeur]) }
+    let!(:dossier) { create(:dossier, :accepte, :with_individual, procedure: procedure, groupe_instructeur: procedure.groupe_instructeurs.first, hidden_by_administration_at: 1.hour.ago) }
 
     before do
       sign_in(instructeur.user)
