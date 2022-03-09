@@ -190,20 +190,34 @@ class User < ApplicationRecord
     end
 
     transaction do
-      Invite.where(dossier: dossiers.with_discarded).destroy_all
-      dossiers.state_en_construction.each do |dossier|
-        dossier.discard_and_keep_track!(administration, :user_removed)
+      # delete invites
+      Invite.where(dossier: dossiers).destroy_all
+
+      # delete dossiers brouillon
+      dossiers.state_brouillon.each do |dossier|
+        dossier.hide_and_keep_track!(dossier.user, :user_removed)
       end
-      DossierOperationLog.where(dossier: dossiers.with_discarded.discarded).not_deletion.destroy_all
-      dossiers.with_discarded.discarded.destroy_all
+      dossiers.state_brouillon.find_each(&:purge_discarded)
+
+      # delete dossiers en_construction
+      dossiers.state_en_construction.each do |dossier|
+        dossier.hide_and_keep_track!(dossier.user, :user_removed)
+      end
+      dossiers.state_en_construction.find_each(&:purge_discarded)
+
+      # delete dossiers terminé
+      dossiers.state_termine.each do |dossier|
+        dossier.hide_and_keep_track!(dossier.user, :user_removed)
+      end
       dossiers.update_all(deleted_user_email_never_send: email, user_id: nil, dossier_transfer_id: nil)
+
       destroy!
     end
   end
 
   def merge(old_user)
     transaction do
-      old_user.dossiers.with_discarded.update_all(user_id: id)
+      old_user.dossiers.update_all(user_id: id)
       old_user.invites.update_all(user_id: id)
       old_user.merge_logs.update_all(user_id: id)
 
