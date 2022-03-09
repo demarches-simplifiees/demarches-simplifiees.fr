@@ -1,4 +1,6 @@
-<%= render_to_element('.procedure-actions', partial: "download_dossiers",  locals: { procedure: @procedure, exports: @exports, dossier_count: @dossier_count }) %>
+<% if @can_download_dossiers %>
+  <%= render_to_element('.procedure-actions', partial: "download_dossiers",  locals: { procedure: @procedure, exports: @exports }) %>
+<% end %>
 
 <% @exports.each do |format, exports| %>
   <% exports.each do |time_span_type, export| %>
