@@ -4,6 +4,7 @@ namespace :after_party do
     puts "Running deploy task 'seed_hidden_at_dossiers'"
 
     Dossier
+      .with_discarded
       .where.not(hidden_at: nil)
       .where(hidden_by_user_at: nil, hidden_by_administration_at: nil)
       .update_all('hidden_by_user_at = hidden_at, hidden_by_administration_at = hidden_at')
