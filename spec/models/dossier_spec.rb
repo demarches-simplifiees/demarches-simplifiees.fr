@@ -6,7 +6,6 @@ describe Dossier do
   describe 'scopes' do
     describe '.default_scope' do
       let!(:dossier) { create(:dossier) }
-      let!(:discarded_dossier) { create(:dossier, :discarded) }
 
       subject { Dossier.all }
 
@@ -791,7 +790,7 @@ describe Dossier do
     end
   end
 
-  describe "#discard_and_keep_track!" do
+  describe "#hide_and_keep_track!" do
     let(:dossier) { create(:dossier, :en_construction) }
     let(:user) { dossier.user }
     let(:last_operation) { dossier.dossier_operation_logs.last }
@@ -801,17 +800,17 @@ describe Dossier do
       allow(DossierMailer).to receive(:notify_deletion_to_administration).and_return(double(deliver_later: nil))
     end
 
-    subject! { dossier.discard_and_keep_track!(user, reason) }
+    subject! { dossier.hide_and_keep_track!(user, reason) }
 
     context 'brouillon' do
       let(:dossier) { create(:dossier) }
 
-      it 'hides the dossier' do
-        expect(dossier.discarded?).to be_truthy
+      it 'hide the dossier' do
+        expect(dossier.reload.hidden_by_user_at).to be_present
       end
 
-      it 'do not records the operation in the log' do
-        expect(last_operation).to be_nil
+      it 'does not records operation in the log' do
+        expect(dossier.reload.dossier_operation_logs.last).to eq(nil)
       end
     end
 
@@ -842,29 +841,15 @@ describe Dossier do
         end
       end
 
-      context 'with reason: manager_request' do
-        let(:user) { dossier.procedure.administrateurs.first }
-        let(:reason) { :manager_request }
-
-        it 'hides the dossier' do
-          expect(dossier.discarded?).to be_truthy
-        end
-
-        it 'records the operation in the log' do
-          expect(last_operation.operation).to eq("supprimer")
-          expect(last_operation.automatic_operation?).to be_falsey
-        end
-      end
-
       context 'with reason: user_removed' do
         let(:reason) { :user_removed }
 
-        it 'does not discard the dossier' do
-          expect(dossier.discarded?).to be_falsy
-        end
-
         it 'hide the dossier' do
           expect(dossier.hidden_by_user_at).to be_present
+        end
+
+        it 'write the good reason to hidden_by_reason' do
+          expect(dossier.hidden_by_reason).to eq("user_removed")
         end
       end
     end
@@ -875,10 +860,6 @@ describe Dossier do
 
       it 'affect the right deletion reason to the dossier' do
         expect(dossier.hidden_by_reason).to eq("user_request")
-      end
-
-      it 'discard the dossier' do
-        expect(dossier.discarded?).to be_truthy
       end
     end
   end
@@ -1308,7 +1289,7 @@ describe Dossier do
     end
   end
 
-  describe 'discarded_brouillon_expired and discarded_en_construction_expired' do
+  describe 'brouillon_expired and en_construction_expired' do
     let(:administrateur) { create(:administrateur) }
     let(:user) { administrateur.user }
     let(:reason) { DeletedDossier.reasons.fetch(:user_request) }
@@ -1316,24 +1297,25 @@ describe Dossier do
     before do
       create(:dossier, user: user)
       create(:dossier, :en_construction, user: user)
-      create(:dossier, user: user).discard_and_keep_track!(user, reason)
-      create(:dossier, :en_construction, user: user).discard_and_keep_track!(user, reason)
+      create(:dossier, user: user).hide_and_keep_track!(user, reason)
+      create(:dossier, :en_construction, user: user).hide_and_keep_track!(user, reason)
 
       Timecop.travel(2.months.ago) do
-        create(:dossier, user: user).discard_and_keep_track!(user, reason)
-        create(:dossier, :en_construction, user: user).discard_and_keep_track!(user, reason)
+        create(:dossier, user: user).hide_and_keep_track!(user, reason)
+        create(:dossier, :en_construction, user: user).hide_and_keep_track!(user, reason)
 
         create(:dossier, user: user).procedure.discard_and_keep_track!(administrateur)
         create(:dossier, :en_construction, user: user).procedure.discard_and_keep_track!(administrateur)
       end
+
       Timecop.travel(1.week.ago) do
-        create(:dossier, user: user).discard_and_keep_track!(user, reason)
-        create(:dossier, :en_construction, user: user).discard_and_keep_track!(user, reason)
+        create(:dossier, user: user).hide_and_keep_track!(user, reason)
+        create(:dossier, :en_construction, user: user).hide_and_keep_track!(user, reason)
       end
     end
 
-    it { expect(Dossier.discarded_brouillon_expired.count).to eq(2) }
-    it { expect(Dossier.discarded_en_construction_expired.count).to eq(0) }
+    it { expect(Dossier.en_brouillon_expired_to_delete.count).to eq(2) }
+    it { expect(Dossier.en_construction_expired_to_delete.count).to eq(2) }
   end
 
   describe "discarded procedure dossier should be able to access it's procedure" do
@@ -1528,42 +1510,6 @@ describe Dossier do
     it "can destroy dossier with two attestations" do
       expect(dossier.destroy).to be_truthy
       expect(transfer.reload).not_to be_nil
-    end
-
-    context 'discarded' do
-      context 'en_construction' do
-        let(:dossier) { create(:dossier, :en_construction) }
-
-        before do
-          create(:avis, dossier: dossier)
-          Timecop.travel(2.weeks.ago) do
-            dossier.discard!
-          end
-          dossier.reload
-        end
-
-        it "can destroy dossier with avis" do
-          Avis.discarded_en_construction_expired.destroy_all
-          expect(dossier.destroy).to be_truthy
-        end
-      end
-
-      context 'termine' do
-        let(:dossier) { create(:dossier, :accepte) }
-
-        before do
-          create(:avis, dossier: dossier)
-          Timecop.travel(2.weeks.ago) do
-            dossier.discard!
-          end
-          dossier.reload
-        end
-
-        it "can destroy dossier with avis" do
-          Avis.discarded_termine_expired.destroy_all
-          expect(dossier.destroy).to be_truthy
-        end
-      end
     end
   end
 

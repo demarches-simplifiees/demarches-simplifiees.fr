@@ -40,8 +40,8 @@ RSpec.describe DossierTransfer, type: :model do
 
       it { expect(DossierTransfer.with_dossiers.count).to eq(1) }
 
-      context "when dossier discarded" do
-        before { dossier.discard! }
+      context "when dossier deleted" do
+        before { dossier.update(hidden_by_user_at: 1.hour.ago) }
 
         it { expect(DossierTransfer.with_dossiers.count).to eq(0) }
       end
@@ -51,10 +51,10 @@ RSpec.describe DossierTransfer, type: :model do
   describe '#destroy_and_nullify' do
     let(:transfer) { create(:dossier_transfer) }
     let(:dossier) { create(:dossier, user: user, transfer: transfer) }
-    let(:discarded_dossier) { create(:dossier, user: user, transfer: dossier.transfer) }
+    let(:deleted_dossier) { create(:dossier, user: user, transfer: dossier.transfer) }
 
     before do
-      discarded_dossier.discard!
+      deleted_dossier.update(hidden_by_user_at: 1.hour.ago)
     end
 
     it 'nullify transfer relationship on dossier' do
@@ -67,10 +67,10 @@ RSpec.describe DossierTransfer, type: :model do
   describe '#destroy_stale' do
     let(:transfer) { create(:dossier_transfer, created_at: 1.month.ago) }
     let(:dossier) { create(:dossier, user: user, transfer: transfer) }
-    let(:discarded_dossier) { create(:dossier, user: user, transfer: dossier.transfer) }
+    let(:deleted_dossier) { create(:dossier, user: user, transfer: dossier.transfer) }
 
     before do
-      discarded_dossier.discard!
+      deleted_dossier.update(hidden_by_user_at: 1.hour.ago)
     end
 
     it 'nullify the transfer on discarded dossier' do

@@ -6,5 +6,17 @@ FactoryBot.define do
     deleted_at  { Time.zone.now }
 
     association :procedure, :published
+
+    transient do
+      dossier { nil }
+    end
+
+    after(:build) do |deleted_dossier, evaluator|
+      if evaluator.dossier
+        deleted_dossier.dossier_id = evaluator.dossier.id
+        deleted_dossier.state = evaluator.dossier.state
+        deleted_dossier.procedure = evaluator.dossier.procedure
+      end
+    end
   end
 end

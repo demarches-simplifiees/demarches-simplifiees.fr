@@ -117,9 +117,10 @@ RSpec.describe DossierMailer, type: :mailer do
   end
 
   describe '.notify_automatic_deletion_to_user' do
+    let(:deleted_dossier) { create(:deleted_dossier, dossier: dossier, reason: :expired) }
+
     describe 'en_construction' do
       let(:dossier) { create(:dossier, :en_construction) }
-      let(:deleted_dossier) { DeletedDossier.create_from_dossier(dossier, :expired) }
 
       subject { described_class.notify_automatic_deletion_to_user([deleted_dossier], dossier.user.email) }
 
@@ -132,7 +133,6 @@ RSpec.describe DossierMailer, type: :mailer do
 
     describe 'termine' do
       let(:dossier) { create(:dossier, :accepte) }
-      let(:deleted_dossier) { DeletedDossier.create_from_dossier(dossier, :expired) }
 
       subject { described_class.notify_automatic_deletion_to_user([deleted_dossier], dossier.user.email) }
 
@@ -145,8 +145,8 @@ RSpec.describe DossierMailer, type: :mailer do
   end
 
   describe '.notify_automatic_deletion_to_administration' do
-    let(:dossier) { create(:dossier) }
-    let(:deleted_dossier) { DeletedDossier.create_from_dossier(dossier, :expired) }
+    let(:dossier) { create(:dossier, :en_construction) }
+    let(:deleted_dossier) { create(:deleted_dossier, dossier: dossier, reason: :expired) }
 
     subject { described_class.notify_automatic_deletion_to_administration([deleted_dossier], dossier.user.email) }
 
