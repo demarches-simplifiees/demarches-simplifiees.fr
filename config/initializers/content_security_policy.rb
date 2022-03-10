@@ -20,6 +20,10 @@ Rails.application.config.content_security_policy do |policy|
   # It's too complicated to be fixed right now (and it wouldn't add value: this is hardcoded in views, so not subject to injections)
   policy.style_src(:self, :unsafe_inline, "*.crisp.chat", "crisp.chat", 'cdn.jsdelivr.net', 'maxcdn.bootstrapcdn.com')
 
+  # Allow custom stylesheet URL
+  custom_stylesheet_uri = URI(Rails.configuration.custom_stylesheet.to_s)
+  policy.style_src(custom_stylesheet_uri) if custom_stylesheet_uri.is_a?(URI::HTTP)
+
   connect_whitelist = ["wss://*.crisp.chat", "*.crisp.chat", "in-automate.sendinblue.com", "app.franceconnect.gouv.fr", "sentry.io", "openmaptiles.geo.data.gouv.fr", "openmaptiles.github.io", "tiles.geo.api.gouv.fr", "wxs.ign.fr"]
   connect_whitelist << ENV.fetch('APP_HOST')
   connect_whitelist << URI(DS_PROXY_URL).host if DS_PROXY_URL.present?
