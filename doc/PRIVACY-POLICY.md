@@ -31,4 +31,6 @@ Depending on your local regulations/laws, **beware** : you can't collect some da
 
 ## Data expirations :
 
-Data retention **mist not exceed 36 months**. Depending on your instance configuration, you should check that all records of the `procedures` table have the column `procedure_expires_when_termine_enabled` set to `true`. Also make sure the default value of `procedures.procedure_expires_when_termine_enabled` is true.
+Data retention **must not exceed 36 months**. Depending on your instance configuration, you should check that all records of the `procedures` table have the column `procedure_expires_when_termine_enabled` set to `true`. Also make sure the default value of `procedures.procedure_expires_when_termine_enabled` is true.
+
+This flag ensures that processed file will be deleted when expired.
