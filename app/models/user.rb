@@ -65,21 +65,6 @@ class User < ApplicationRecord
 
   validate :does_not_merge_on_self, if: :requested_merge_into_id_changed?
 
-  # Temporary code for double writing the admin, instructeur and expert id to the foreign key
-  after_save do
-    if saved_change_to_attribute?(:administrateur_id) && administrateur_id.present?
-      Administrateur.find(administrateur_id).update!(user_id: id)
-    end
-
-    if saved_change_to_attribute?(:instructeur_id) && instructeur_id.present?
-      Instructeur.find(instructeur_id).update!(user_id: id)
-    end
-
-    if saved_change_to_attribute?(:expert_id) && expert_id.present?
-      Expert.find(expert_id).update!(user_id: id)
-    end
-  end
-
   def validate_password_complexity?
     administrateur?
   end
