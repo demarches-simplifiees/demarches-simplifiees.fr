@@ -18,7 +18,7 @@ class DossierSearchService
   def self.dossier_by_exact_id(dossiers, search_terms)
     id = search_terms.to_i
     if id != 0 && id_compatible?(id) # Sometimes instructeur is searching dossiers with a big number (ex: SIRET), ActiveRecord can't deal with them and throws ActiveModel::RangeError. id_compatible? prevents this.
-      dossiers.where(id: id).ids
+      dossiers.visible_by_administration.where(id: id).ids
     else
       []
     end
@@ -29,6 +29,7 @@ class DossierSearchService
     ts_query = "to_tsquery('french', #{Dossier.connection.quote(to_tsquery(search_terms))})"
 
     dossiers
+      .visible_by_administration
       .where("#{ts_vector} @@ #{ts_query}")
       .order(Arel.sql("COALESCE(ts_rank(#{ts_vector}, #{ts_query}), 0) DESC"))
       .pluck('id')
@@ -40,6 +41,7 @@ class DossierSearchService
     ts_query = "to_tsquery('french', #{Dossier.connection.quote(to_tsquery(search_terms))})"
 
     dossiers
+      .visible_by_user
       .where("#{ts_vector} @@ #{ts_query}")
       .order(Arel.sql("COALESCE(ts_rank(#{ts_vector}, #{ts_query}), 0) DESC"))
   end
@@ -47,7 +49,7 @@ class DossierSearchService
   def self.dossier_by_exact_id_for_user(search_terms, user)
     id = search_terms.to_i
     if id != 0 && id_compatible?(id) # Sometimes user is searching dossiers with a big number (ex: SIRET), ActiveRecord can't deal with them and throws ActiveModel::RangeError. id_compatible? prevents this.
-      Dossier.where(id: user.dossiers.where(id: id) + user.dossiers_invites.where(id: id)).distinct
+      Dossier.where(id: user.dossiers.visible_by_user.where(id: id) + user.dossiers_invites.visible_by_user.where(id: id)).distinct
     else
       Dossier.none
     end

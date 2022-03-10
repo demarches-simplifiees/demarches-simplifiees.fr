@@ -5,10 +5,12 @@ module Users
     layout 'procedure_context', only: [:identite, :update_identite, :siret, :update_siret]
 
     ACTIONS_ALLOWED_TO_ANY_USER = [:index, :recherche, :new, :transferer_all]
-    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :demande, :messagerie, :brouillon, :update_brouillon, :modifier, :update, :create_commentaire, :restore]
+    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :demande, :messagerie, :brouillon, :update_brouillon, :modifier, :update, :create_commentaire]
+    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE_HIDDEN = [:restore]
 
-    before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
+    before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE_HIDDEN
     before_action :ensure_ownership_or_invitation!, only: ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
+    before_action :ensure_ownership_or_invitation_hidden!, only: ACTIONS_ALLOWED_TO_OWNER_OR_INVITE_HIDDEN
     before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_brouillon, :modifier, :update]
     before_action :forbid_invite_submission!, only: [:update_brouillon]
     before_action :forbid_closed_submission!, only: [:update_brouillon]
@@ -16,17 +18,20 @@ module Users
     before_action :store_user_location!, only: :new
 
     def index
-      @user_dossiers = current_user.dossiers.includes(:procedure).state_not_termine.visible_by_user.order_by_updated_at.page(page)
-      @dossiers_traites = current_user.dossiers.includes(:procedure).state_termine.visible_by_user.order_by_updated_at.page(page)
-      @dossiers_invites = current_user.dossiers_invites.includes(:procedure).order_by_updated_at.page(page)
-      @dossiers_supprimes_recemment = current_user.dossiers.hidden_by_user.order_by_updated_at.page(page)
+      dossiers = Dossier.includes(:procedure).order_by_updated_at.page(page)
+      dossiers_visibles = dossiers.visible_by_user
+
+      @user_dossiers = current_user.dossiers.state_not_termine.merge(dossiers_visibles)
+      @dossiers_traites = current_user.dossiers.state_termine.merge(dossiers_visibles)
+      @dossiers_close_to_expiration = current_user.dossiers.close_to_expiration.merge(dossiers_visibles)
+      @dossiers_invites = current_user.dossiers_invites.merge(dossiers_visibles)
+      @dossiers_supprimes_recemment = current_user.dossiers.hidden_by_user.merge(dossiers)
       @dossiers_supprimes_definitivement = current_user.deleted_dossiers.order_by_updated_at.page(page)
       @dossier_transfers = DossierTransfer
         .includes(dossiers: :user)
         .with_dossiers
         .where(email: current_user.email)
         .page(page)
-      @dossiers_close_to_expiration = current_user.dossiers.close_to_expiration.page(page)
       @statut = statut(@user_dossiers, @dossiers_traites, @dossiers_invites, @dossiers_supprimes_recemment, @dossiers_supprimes_definitivement, @dossier_transfers, @dossiers_close_to_expiration, params[:statut])
     end
 
@@ -214,9 +219,8 @@ module Users
     end
 
     def delete_dossier
-      dossier = current_user.dossiers.includes(:user, procedure: :administrateurs).find(params[:id])
       if dossier.can_be_deleted_by_user?
-        dossier.discard_and_keep_track!(current_user, :user_request)
+        dossier.hide_and_keep_track!(current_user, :user_request)
         flash.notice = t('users.dossiers.ask_deletion.soft_deleted_dossier')
         redirect_to dossiers_path
       else
@@ -277,7 +281,7 @@ module Users
 
     def dossier_for_help
       dossier_id = params[:id] || params[:dossier_id]
-      @dossier || (dossier_id.present? && Dossier.find_by(id: dossier_id.to_i))
+      @dossier || (dossier_id.present? && Dossier.visible_by_user.find_by(id: dossier_id.to_i))
     end
 
     def transferer
@@ -289,7 +293,7 @@ module Users
     end
 
     def restore
-      dossier.restore(current_user)
+      hidden_dossier.restore(current_user)
       flash.notice = t('users.dossiers.restore')
       redirect_to dossiers_path
     end
@@ -355,11 +359,15 @@ module Users
     end
 
     def dossier
-      @dossier ||= Dossier.find(params[:id] || params[:dossier_id])
+      @dossier ||= Dossier.visible_by_user.find(params[:id] || params[:dossier_id])
+    end
+
+    def hidden_dossier
+      @hidden_dossier ||= Dossier.hidden_by_user.find(params[:id] || params[:dossier_id])
     end
 
     def dossier_with_champs
-      Dossier.with_champs.find(params[:id])
+      Dossier.with_champs.visible_by_user.find(params[:id])
     end
 
     def should_change_groupe_instructeur?
@@ -432,6 +440,12 @@ module Users
 
     def ensure_ownership_or_invitation!
       if !current_user.owns_or_invite?(dossier)
+        forbidden!
+      end
+    end
+
+    def ensure_ownership_or_invitation_hidden!
+      if !current_user.owns_or_invite?(hidden_dossier)
         forbidden!
       end
     end

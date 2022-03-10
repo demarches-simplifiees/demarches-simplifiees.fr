@@ -1,21 +1,20 @@
-- if dossier_count > 0
-  %span.dropdown
-    %button.button.dropdown-button{ 'aria-expanded' => 'false', 'aria-controls' => 'download-menu' }
-      Télécharger tous les dossiers
-    #download-menu.dropdown-content.fade-in-down{ style: 'width: 450px' }
-      %ul.dropdown-items
-        - exports_list(exports).each do |(format, time_span_type, export)|
-          %li
-            - if export.nil?
-              = link_to t("#{time_span_type}_#{format}_html", scope: [:instructeurs, :procedure, :export_stale]), download_export_instructeur_procedure_path(procedure, time_span_type: time_span_type, export_format: format), remote: true
-            - elsif export.ready?
-              = link_to t("export_#{time_span_type}_ready_html", export_time: time_ago_in_words(export.updated_at), export_format: ".#{format}", scope: [:instructeurs, :procedure]), export.file.service_url, target: "_blank", rel: "noopener"
-              - if export.old?
-                = button_to download_export_instructeur_procedure_path(procedure, export_format: format, time_span_type: time_span_type, force_export: true), class: "button small", style: "padding-right: 2px", title: t("#{time_span_type}_short", export_format: ".#{format}", scope: [:instructeurs, :procedure, :export_stale]), remote: true, method: :get, params: { export_format: format, time_span_type: time_span_type, force_export: true } do
-                  .icon.retry
-            - else
-              %span{ 'data-export-poll-url': download_export_instructeur_procedure_path(procedure, export_format: format, no_progress_notification: true) }
-                = t("export_#{time_span_type}_pending_html", export_time: time_ago_in_words(export.created_at), export_format: ".#{format}", scope: [:instructeurs, :procedure])
-        - if procedure.feature_enabled?(:archive_zip_globale)
-          %li
-            = link_to t(:download_archive, scope: [:instructeurs, :procedure]), instructeur_archives_path(procedure)
+%span.dropdown
+  %button.button.dropdown-button{ 'aria-expanded' => 'false', 'aria-controls' => 'download-menu' }
+    Télécharger tous les dossiers
+  #download-menu.dropdown-content.fade-in-down{ style: 'width: 450px' }
+    %ul.dropdown-items
+      - exports_list(exports).each do |(format, time_span_type, export)|
+        %li
+          - if export.nil?
+            = link_to t("#{time_span_type}_#{format}_html", scope: [:instructeurs, :procedure, :export_stale]), download_export_instructeur_procedure_path(procedure, time_span_type: time_span_type, export_format: format), remote: true
+          - elsif export.ready?
+            = link_to t("export_#{time_span_type}_ready_html", export_time: time_ago_in_words(export.updated_at), export_format: ".#{format}", scope: [:instructeurs, :procedure]), export.file.service_url, target: "_blank", rel: "noopener"
+            - if export.old?
+              = button_to download_export_instructeur_procedure_path(procedure, export_format: format, time_span_type: time_span_type, force_export: true), class: "button small", style: "padding-right: 2px", title: t("#{time_span_type}_short", export_format: ".#{format}", scope: [:instructeurs, :procedure, :export_stale]), remote: true, method: :get, params: { export_format: format, time_span_type: time_span_type, force_export: true } do
+                .icon.retry
+          - else
+            %span{ 'data-export-poll-url': download_export_instructeur_procedure_path(procedure, export_format: format, no_progress_notification: true) }
+              = t("export_#{time_span_type}_pending_html", export_time: time_ago_in_words(export.created_at), export_format: ".#{format}", scope: [:instructeurs, :procedure])
+      - if procedure.feature_enabled?(:archive_zip_globale)
+        %li
+          = link_to t(:download_archive, scope: [:instructeurs, :procedure]), instructeur_archives_path(procedure)
