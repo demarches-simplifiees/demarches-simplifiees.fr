@@ -76,7 +76,7 @@ describe Instructeurs::ProceduresController, type: :controller do
       end
 
       context "with dossiers" do
-        let(:procedure) { create(:procedure, :published) }
+        let(:procedure) { create(:procedure, :published, :expirable) }
         let(:dossier) { create(:dossier, state: state, procedure: procedure) }
 
         before do
@@ -93,37 +93,54 @@ describe Instructeurs::ProceduresController, type: :controller do
           it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure.id]).to eq(nil) }
           it { expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(nil) }
           it { expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_expirant_count_per_procedure)[procedure.id]).to eq(nil) }
 
           it { expect(assigns(:all_dossiers_counts)['à suivre']).to eq(0) }
           it { expect(assigns(:all_dossiers_counts)['suivis']).to eq(0) }
           it { expect(assigns(:all_dossiers_counts)['traités']).to eq(0) }
           it { expect(assigns(:all_dossiers_counts)['dossiers']).to eq(0) }
           it { expect(assigns(:all_dossiers_counts)['archivés']).to eq(0) }
+          it { expect(assigns(:all_dossiers_counts)['expirant']).to eq(0) }
         end
 
         context "with not draft state on multiple procedures" do
-          let(:procedure2) { create(:procedure, :published) }
+          let(:procedure2) { create(:procedure, :published, :expirable) }
           let(:state) { Dossier.states.fetch(:en_construction) }
 
           before do
             create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction))
             create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction), hidden_by_user_at: 1.hour.ago)
             create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction))
+
             create(:dossier, procedure: procedure, state: Dossier.states.fetch(:sans_suite), archived: true)
+            create(:dossier, procedure: procedure, state: Dossier.states.fetch(:sans_suite), archived: true,
+                             hidden_by_administration_at: 1.day.ago)
 
             instructeur.groupe_instructeurs << procedure2.defaut_groupe_instructeur
             create(:dossier, :followed, procedure: procedure2, state: Dossier.states.fetch(:en_construction))
             create(:dossier, procedure: procedure2, state: Dossier.states.fetch(:accepte))
             instructeur.followed_dossiers << create(:dossier, procedure: procedure2, state: Dossier.states.fetch(:en_instruction))
 
+            create(:dossier, procedure: procedure,
+                             state: Dossier.states.fetch(:sans_suite),
+                             processed_at: 8.months.ago) # counted as expirable
+            create(:dossier, procedure: procedure,
+                             state: Dossier.states.fetch(:sans_suite),
+                             processed_at: 8.months.ago,
+                             hidden_by_administration_at: 1.day.ago) # not counted as expirable since its removed by instructeur
+            create(:dossier, procedure: procedure,
+                             state: Dossier.states.fetch(:sans_suite),
+                             processed_at: 8.months.ago,
+                             hidden_by_user_at: 1.day.ago) # counted as expirable because even if user remove it, instructeur see it
             subject
           end
 
-          it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(3) }
+          it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(5) }
           it { expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure.id]).to eq(3) }
           it { expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(nil) }
           it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure.id]).to eq(1) }
-          it { expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(2) }
+          it { expect(assigns(:dossiers_expirant_count_per_procedure)[procedure.id]).to eq(2) }
 
           it { expect(assigns(:dossiers_count_per_procedure)[procedure2.id]).to eq(3) }
           it { expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure2.id]).to eq(nil) }
@@ -133,9 +150,10 @@ describe Instructeurs::ProceduresController, type: :controller do
 
           it { expect(assigns(:all_dossiers_counts)['à suivre']).to eq(3 + 0) }
           it { expect(assigns(:all_dossiers_counts)['suivis']).to eq(0 + 1) }
-          it { expect(assigns(:all_dossiers_counts)['traités']).to eq(0 + 1) }
-          it { expect(assigns(:all_dossiers_counts)['dossiers']).to eq(3 + 3) }
+          it { expect(assigns(:all_dossiers_counts)['traités']).to eq(2 + 1) }
+          it { expect(assigns(:all_dossiers_counts)['dossiers']).to eq(5 + 3) }
           it { expect(assigns(:all_dossiers_counts)['archivés']).to eq(1 + 0) }
+          it { expect(assigns(:all_dossiers_counts)['expirant']).to eq(2 + 0) }
         end
       end
 
@@ -205,7 +223,7 @@ describe Instructeurs::ProceduresController, type: :controller do
 
   describe "#show" do
     let(:instructeur) { create(:instructeur) }
-    let!(:procedure) { create(:procedure, instructeurs: [instructeur]) }
+    let!(:procedure) { create(:procedure, :expirable, instructeurs: [instructeur]) }
     let!(:gi_2) { procedure.groupe_instructeurs.create(label: '2') }
     let!(:gi_3) { procedure.groupe_instructeurs.create(label: '3') }
     let(:statut) { nil }
@@ -323,6 +341,7 @@ describe Instructeurs::ProceduresController, type: :controller do
 
       context 'with an archived dossier' do
         let!(:archived_dossier) { create(:dossier, :en_instruction, procedure: procedure, archived: true) }
+        let!(:archived_dossier_deleted) { create(:dossier, :en_instruction, procedure: procedure, archived: true, hidden_by_administration_at: 2.days.ago) }
 
         before { subject }
 
@@ -340,6 +359,16 @@ describe Instructeurs::ProceduresController, type: :controller do
 
           it { expect(assigns(:archived_dossiers)).to match_array([archived_dossier, archived_dossier_on_gi_2]) }
         end
+      end
+
+      context 'with an expirants dossier' do
+        let!(:expiring_dossier_termine_deleted) { create(:dossier, :accepte, procedure: procedure, processed_at: 175.days.ago, hidden_by_administration_at: 2.days.ago) }
+        let!(:expiring_dossier_termine) { create(:dossier, :accepte, procedure: procedure, processed_at: 175.days.ago) }
+        let!(:expiring_dossier_en_construction) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: 175.days.ago) }
+
+        before { subject }
+
+        it { expect(assigns(:expirant_dossiers)).to match_array([expiring_dossier_termine, expiring_dossier_en_construction]) }
       end
 
       describe 'statut' do

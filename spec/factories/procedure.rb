@@ -81,7 +81,9 @@ FactoryBot.define do
     trait :with_logo do
       logo { Rack::Test::UploadedFile.new('spec/fixtures/files/logo_test_procedure.png', 'image/png') }
     end
-
+    trait :expirable do
+      procedure_expires_when_termine_enabled { true }
+    end
     trait :with_path do
       path { generate(:published_path) }
     end
