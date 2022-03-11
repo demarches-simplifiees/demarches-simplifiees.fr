@@ -96,24 +96,24 @@ module Instructeurs
     def follow
       current_instructeur.follow(dossier)
       flash.notice = 'Dossier suivi'
-      redirect_back(fallback_location: instructeur_procedures_url)
+      redirect_back(fallback_location: instructeur_procedure_path(procedure))
     end
 
     def unfollow
       current_instructeur.unfollow(dossier)
       flash.notice = "Vous ne suivez plus le dossier nº #{dossier.id}"
 
-      redirect_back(fallback_location: instructeur_procedures_url)
+      redirect_back(fallback_location: instructeur_procedure_path(procedure))
     end
 
     def archive
       dossier.archiver!(current_instructeur)
-      redirect_back(fallback_location: instructeur_procedures_url)
+      redirect_back(fallback_location: instructeur_procedure_path(procedure))
     end
 
     def unarchive
       dossier.desarchiver!(current_instructeur)
-      redirect_back(fallback_location: instructeur_procedures_url)
+      redirect_back(fallback_location: instructeur_procedure_path(procedure))
     end
 
     def passer_en_instruction
