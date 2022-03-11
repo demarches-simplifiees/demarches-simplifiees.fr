@@ -740,9 +740,9 @@ describe Instructeurs::DossiersController, type: :controller do
     end
   end
 
-  describe "#delete_dossier" do
+  describe "#destroy" do
     subject do
-      patch :delete_dossier, params: {
+      delete :destroy, params: {
         procedure_id: procedure.id,
         dossier_id: dossier.id
       }

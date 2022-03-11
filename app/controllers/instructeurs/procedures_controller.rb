@@ -278,6 +278,8 @@ module Instructeurs
       redirect_to instructeur_procedure_path(@procedure)
     end
 
+    private
+
     def create_bulk_message_mail(dossier_count, dossier_state)
       BulkMessage.create(
         dossier_count: dossier_count,
@@ -289,15 +291,6 @@ module Instructeurs
         groupe_instructeurs: email_usagers_groupe_instructeurs
       )
     end
-
-    def restore
-      dossier = current_instructeur.dossiers.find(params[:dossier_id])
-      dossier.restore(current_instructeur)
-      flash.notice = t('instructeurs.dossiers.restore')
-      redirect_to instructeur_procedure_path(procedure)
-    end
-
-    private
 
     def assign_to_params
       params.require(:assign_to)
