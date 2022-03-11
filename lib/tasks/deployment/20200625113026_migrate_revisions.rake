@@ -3,17 +3,23 @@ namespace :after_party do
   task migrate_revisions: :environment do
     puts "Running deploy task 'migrate_revisions'"
 
-    procedures = Procedure.with_discarded.where(draft_revision_id: nil)
-    progress = ProgressReport.new(procedures.count)
+    if defined?(TmpDossiersMigrateRevisionsJob)
+      procedures = Procedure.with_discarded.where(draft_revision_id: nil)
+      progress = ProgressReport.new(procedures.count)
 
-    puts "Processing procedures"
-    procedures.find_each do |procedure|
-      RevisionsMigration.add_revisions(procedure)
-      progress.inc
+      puts "Processing procedures"
+
+      procedures.find_each do |procedure|
+        RevisionsMigration.add_revisions(procedure)
+        progress.inc
+      end
+
+      progress.finish
+
+      TmpDossiersMigrateRevisionsJob.perform_later([])
+    else
+      puts "Skip deploy task."
     end
-    progress.finish
-
-    TmpDossiersMigrateRevisionsJob.perform_later([])
 
     # Update task as completed.  If you remove the line below, the task will
     # run with every deploy (or every time you call after_party:run).
