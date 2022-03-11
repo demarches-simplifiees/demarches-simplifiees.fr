@@ -19,7 +19,7 @@ describe 'instructeurs/dossiers/state_button_motivation.html.haml', type: :view 
   end
 
   context 'with an attestation' do
-    let(:dossier) { create :dossier, :accepte, :with_attestation }
+    let(:dossier) { create :dossier, :en_instruction, :with_attestation }
 
     it 'includes a link to preview the attestation' do
       expect(subject).to have_link(href: apercu_attestation_instructeur_dossier_path(dossier.procedure, dossier))

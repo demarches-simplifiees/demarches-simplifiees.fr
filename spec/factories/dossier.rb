@@ -188,8 +188,8 @@ FactoryBot.define do
 
     trait :with_attestation do
       after(:create) do |dossier, _evaluator|
-        dossier.revision.attestation_template ||= build(:attestation_template)
-        dossier.association(:attestation_template).target = dossier.revision.attestation_template
+        dossier.revision.attestation_template ||= create(:attestation_template)
+        dossier.revision.save
         dossier.attestation = dossier.build_attestation
       end
     end

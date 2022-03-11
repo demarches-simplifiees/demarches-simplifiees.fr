@@ -180,7 +180,7 @@ describe Users::DossiersController, type: :controller do
         after { sign_in(user) }
 
         it 'returns the attestation pdf' do
-          attestation_template = dossier.procedure.attestation_template
+          attestation_template = dossier.attestation_template
           attestation_template.activated = false
           attestation_template.save
 
