@@ -1122,6 +1122,20 @@ class Dossier < ApplicationRecord
     termine_expired_to_delete.find_each(&:purge_discarded)
   end
 
+  def sections_for(champ)
+    @sections = Hash.new do |hash, parent|
+      case parent
+      when :public
+        hash[parent] = champs.filter(&:header_section?)
+      when :private
+        hash[parent] = champs_private.filter(&:header_section?)
+      else
+        hash[parent] = parent.champs.filter(&:header_section?)
+      end
+    end
+    @sections[champ.parent || (champ.public? ? :public : :private)]
+  end
+
   private
 
   def create_missing_traitemets
