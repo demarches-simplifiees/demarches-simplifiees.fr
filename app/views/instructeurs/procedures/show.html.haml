@@ -10,7 +10,8 @@
       = render partial: 'header', locals: { procedure: @procedure, statut: @statut }
 
       .procedure-actions
-        = render partial: "download_dossiers", locals: { procedure: @procedure, exports: @exports, dossier_count: @tous_count + @archives_count }
+        - if @can_download_dossiers
+          = render partial: "download_dossiers", locals: { procedure: @procedure, exports: @exports }
     .container.flex= render partial: "tabs", locals: { procedure: @procedure,
         statut: @statut,
         a_suivre_count: @a_suivre_count,

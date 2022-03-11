@@ -30,6 +30,8 @@ class DeletedDossier < ApplicationRecord
   }
 
   def self.create_from_dossier(dossier, reason)
+    return if !dossier.log_operations?
+
     # We have some bad data because of partially deleted dossiers in the past.
     # For now use find_or_create_by! to avoid errors.
     create_with(
