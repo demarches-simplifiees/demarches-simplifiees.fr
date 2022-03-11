@@ -8,9 +8,9 @@ module ProcedureHelper
   end
 
   def procedure_libelle(procedure)
-    parts = procedure.brouillon? ? [tag.span(t('helpers.procedure.testing_procedure'), class: 'badge')] : []
+    parts = procedure.brouillon? ? [tag.span(t('helpers.procedure.testing_procedure'), class: 'badge flex align-center mr-1')] : []
     parts << procedure.libelle
-    safe_join(parts, ' ')
+    tag.span(safe_join(parts, ' '), class: 'flex align-center')
   end
 
   def procedure_publish_label(procedure, key)
