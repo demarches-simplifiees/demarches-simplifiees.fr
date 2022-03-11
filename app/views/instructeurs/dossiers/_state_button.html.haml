@@ -114,8 +114,7 @@
               L’usager a supprimé son compte. Vous pouvez archiver puis supprimer le dossier.
 
         %li
-          = link_to supprimer_dossier_instructeur_dossier_path(dossier.procedure, dossier), method: :patch, data: { confirm: "Voulez vous vraiment supprimer le dossier #{dossier.id} ? Cette action est irréversible. \nNous vous suggérons de télécharger le dossier au format PDF au préalable." } do
+          = link_to instructeur_dossier_path(dossier.procedure, dossier), method: :delete do
             %span.icon.delete
             .dropdown-description
               %h4 Supprimer le dossier
-              L’usager sera notifié que son dossier est supprimé.

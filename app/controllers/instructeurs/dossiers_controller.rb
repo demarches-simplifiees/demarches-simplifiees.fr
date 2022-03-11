@@ -226,14 +226,25 @@ module Instructeurs
       zipline(files, "dossier-#{dossier.id}.zip")
     end
 
-    def delete_dossier
+    def destroy
       if dossier.termine?
         dossier.hide_and_keep_track!(current_instructeur, :instructeur_request)
         flash.notice = t('instructeurs.dossiers.deleted_by_instructeur')
-        redirect_to instructeur_procedure_path(procedure)
       else
         flash.alert = t('instructeurs.dossiers.impossible_deletion')
-        redirect_back(fallback_location: instructeur_procedures_url)
+      end
+      redirect_back(fallback_location: instructeur_procedure_path(procedure))
+    end
+
+    def restore
+      dossier = current_instructeur.dossiers.find(params[:dossier_id])
+      dossier.restore(current_instructeur)
+      flash.notice = t('instructeurs.dossiers.restore')
+
+      if dossier.termine?
+        redirect_to instructeur_procedure_path(procedure, statut: :traites)
+      else
+        redirect_back(fallback_location: instructeur_procedure_path(procedure))
       end
     end
 
