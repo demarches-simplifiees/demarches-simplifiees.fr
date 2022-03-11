@@ -82,6 +82,7 @@ ENV \
     BASIC_AUTH_PASSWORD=""\
     BASIC_AUTH_USERNAME=""\
     CARRIERWAVE_CACHE_DIR="$APP_PATH/tmp/carrierwave"\
+    CLAMAV_ENABLED='disabled'\
     CRISP_CLIENT_KEY=""\
     CRISP_ENABLED="disabled"\
     DB_DATABASE="tps"\
@@ -131,8 +132,8 @@ ENV \
     MAILTRAP_PASSWORD=""\
     MAILTRAP_USERNAME=""\
     MATOMO_ENABLED="disabled"\
-    MATOMO_COOKIE_DOMAIN="*.mes-demarches.gov.pf"
-    MATOMO_DOMAIN="*.mes-demarches.gov.pf"
+    MATOMO_COOKIE_DOMAIN="*.mes-demarches.gov.pf"\
+    MATOMO_DOMAIN="*.mes-demarches.gov.pf"\
     MATOMO_HOST="beta.mes-demarches.gov.pf"\
     MATOMO_ID="1"\
     MATOMO_IFRAME_URL=""\
