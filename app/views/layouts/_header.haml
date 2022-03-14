@@ -65,7 +65,7 @@
         %li
           = render partial: 'layouts/account_dropdown', locals: { nav_bar_profile: nav_bar_profile }
 
-      - elsif request.path != new_user_session_path
+      - elsif (request.path != new_user_session_path && request.path != agent_connect_path)
         - if request.path == new_user_registration_path
           %li.header-text
             = t('views.shared.account.already_user_question')
