@@ -76,5 +76,9 @@ module TPS
     }
 
     config.skylight.probes += [:graphql]
+
+    # Custom Configuration
+    # @see https://guides.rubyonrails.org/configuring.html#custom-configuration
+    config.x.clamav.enabled = ENV.fetch("CLAMAV_ENABLED", "enabled") == "enabled"
   end
 end

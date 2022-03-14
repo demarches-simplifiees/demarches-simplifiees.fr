@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'users/dossiers/qrcode.html.haml', type: :view do
   let(:dossier) { create(:dossier, :with_attestation) }
-  let(:attestation) { dossier.procedure.attestation_template.render_attributes_for(dossier: dossier) }
+  let(:attestation) { dossier.attestation_template.render_attributes_for(dossier: dossier) }
 
   before do
     sign_in dossier.user
