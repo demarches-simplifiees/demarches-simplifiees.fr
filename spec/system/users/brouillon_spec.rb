@@ -23,6 +23,7 @@ describe 'The user' do
     choose('Madame')
     fill_in('email', with: 'loulou@yopmail.com')
     fill_in('phone', with: '0123456789')
+    scroll_to(find_field('Non'), align: :center)
     choose('Non')
     choose('val2')
     check('val1')
