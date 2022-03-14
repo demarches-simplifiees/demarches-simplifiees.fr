@@ -48,6 +48,8 @@ export function DrawLayer({
           trash: true
         }
       });
+      // We use mapbox-draw plugin with maplibre. They are compatible but types are not.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       map.addControl(draw as any, 'top-left');
       draw.set(
         filterFeatureCollection(featureCollection, SOURCE_SELECTION_UTILISATEUR)
@@ -64,11 +66,15 @@ export function DrawLayer({
 
     return () => {
       if (drawRef.current) {
+        // We use mapbox-draw plugin with maplibre. They are compatible but types are not.
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         map.removeControl(drawRef.current as any);
         drawRef.current = null;
       }
     };
-  }, [enabled]);
+    // We only want to rerender draw layer on component mount or when the layer is toggled.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [map, enabled]);
 
   const onSetId = useCallback(({ detail }) => {
     drawRef.current?.setFeatureProperty(detail.lid, 'id', detail.id);
@@ -167,7 +173,9 @@ function useExternalEvents(
 
   useEffect(() => {
     fitBounds(featureCollection.bbox as LngLatBoundsLike);
-  }, []);
+    // We only want to zoom on bbox on component mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fitBounds]);
 
   useEvent('map:feature:focus', onFeatureFocus);
   useEvent('map:feature:create', onFeatureCreate);

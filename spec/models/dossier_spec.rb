@@ -1573,6 +1573,158 @@ describe Dossier do
     it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["État du dossier", "Brouillon"]) }
   end
 
+  describe '#can_rebase?' do
+    let(:procedure) { create(:procedure, :with_type_de_champ_mandatory, :with_yes_no, attestation_template: build(:attestation_template)) }
+    let(:attestation_template) { procedure.draft_revision.attestation_template.find_or_revise! }
+    let(:type_de_champ) { procedure.types_de_champ.find { |tdc| !tdc.mandatory? } }
+    let(:mandatory_type_de_champ) { procedure.types_de_champ.find(&:mandatory?) }
+
+    before { Flipper.enable(:procedure_revisions, procedure) }
+
+    context 'en_construction' do
+      let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+
+      before do
+        procedure.publish!
+        procedure.reload
+        dossier
+      end
+
+      context 'with added type de champ' do
+        before do
+          procedure.draft_revision.add_type_de_champ({
+            type_champ: TypeDeChamp.type_champs.fetch(:text),
+            libelle: "Un champ text"
+          })
+          procedure.publish_revision!
+          dossier.reload
+        end
+
+        it 'should be false' do
+          expect(dossier.pending_changes).not_to be_empty
+          expect(dossier.can_rebase?).to be_falsey
+        end
+      end
+
+      context 'with type de champ made optional' do
+        before do
+          procedure.draft_revision.find_or_clone_type_de_champ(mandatory_type_de_champ.stable_id).update(mandatory: false)
+          procedure.publish_revision!
+          dossier.reload
+        end
+
+        it 'should be true' do
+          expect(dossier.pending_changes).not_to be_empty
+          expect(dossier.can_rebase?).to be_truthy
+        end
+      end
+
+      context 'with type de champ made mandatory' do
+        before do
+          procedure.draft_revision.find_or_clone_type_de_champ(type_de_champ.stable_id).update(mandatory: true)
+          procedure.publish_revision!
+          dossier.reload
+        end
+
+        it 'should be false' do
+          expect(dossier.pending_changes).not_to be_empty
+          expect(dossier.can_rebase?).to be_falsey
+        end
+      end
+
+      context 'with removed type de champ' do
+        before do
+          procedure.draft_revision.remove_type_de_champ(type_de_champ.stable_id)
+          procedure.publish_revision!
+          dossier.reload
+        end
+
+        it 'should be true' do
+          expect(dossier.pending_changes).not_to be_empty
+          expect(dossier.can_rebase?).to be_truthy
+        end
+      end
+
+      context 'with attestation template changes' do
+        before do
+          attestation_template.update(title: "Test")
+          procedure.publish_revision!
+          dossier.reload
+        end
+
+        it 'should be true' do
+          expect(dossier.pending_changes).not_to be_empty
+          expect(dossier.can_rebase?).to be_truthy
+        end
+      end
+    end
+
+    context 'en_instruction' do
+      let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+
+      before do
+        procedure.publish!
+        procedure.reload
+        dossier
+      end
+
+      context 'with added type de champ' do
+        before do
+          procedure.draft_revision.add_type_de_champ({
+            type_champ: TypeDeChamp.type_champs.fetch(:text),
+            libelle: "Un champ text"
+          })
+          procedure.publish_revision!
+          dossier.reload
+        end
+
+        it 'should be false' do
+          expect(dossier.pending_changes).not_to be_empty
+          expect(dossier.can_rebase?).to be_falsey
+        end
+      end
+
+      context 'with removed type de champ' do
+        before do
+          procedure.draft_revision.remove_type_de_champ(type_de_champ.stable_id)
+          procedure.publish_revision!
+          dossier.reload
+        end
+
+        it 'should be false' do
+          expect(dossier.pending_changes).not_to be_empty
+          expect(dossier.can_rebase?).to be_falsey
+        end
+      end
+
+      context 'with attestation template changes' do
+        before do
+          attestation_template.update(title: "Test")
+          procedure.publish_revision!
+          dossier.reload
+        end
+
+        it 'should be true' do
+          expect(dossier.pending_changes).not_to be_empty
+          expect(dossier.can_rebase?).to be_truthy
+        end
+      end
+
+      context 'with type de champ made optional' do
+        before do
+          procedure.draft_revision.find_or_clone_type_de_champ(mandatory_type_de_champ.stable_id).update(mandatory: false)
+          procedure.publish_revision!
+          dossier.reload
+        end
+
+        it 'should be false' do
+          expect(dossier.pending_changes).not_to be_empty
+          expect(dossier.can_rebase?).to be_falsey
+        end
+      end
+    end
+  end
+
   describe "#rebase" do
     let(:procedure) { create(:procedure, :with_type_de_champ_mandatory, :with_yes_no, :with_repetition, :with_datetime) }
     let(:dossier) { create(:dossier, procedure: procedure) }

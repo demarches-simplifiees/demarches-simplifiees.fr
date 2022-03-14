@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_04_093401) do
+ActiveRecord::Schema.define(version: 2022_02_04_130722) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -273,6 +273,12 @@ ActiveRecord::Schema.define(version: 2022_02_04_093401) do
     t.index ["dossier_id"], name: "index_dossier_operation_logs_on_dossier_id"
     t.index ["instructeur_id"], name: "index_dossier_operation_logs_on_instructeur_id"
     t.index ["keep_until"], name: "index_dossier_operation_logs_on_keep_until"
+  end
+
+  create_table "dossier_submitted_messages", force: :cascade do |t|
+    t.string "message_on_submit_by_usager"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "dossier_transfer_logs", force: :cascade do |t|
@@ -595,7 +601,9 @@ ActiveRecord::Schema.define(version: 2022_02_04_093401) do
     t.datetime "updated_at", null: false
     t.datetime "published_at"
     t.bigint "attestation_template_id"
+    t.bigint "dossier_submitted_message_id"
     t.index ["attestation_template_id"], name: "index_procedure_revisions_on_attestation_template_id"
+    t.index ["dossier_submitted_message_id"], name: "index_procedure_revisions_on_dossier_submitted_message_id"
     t.index ["procedure_id"], name: "index_procedure_revisions_on_procedure_id"
   end
 
@@ -886,6 +894,7 @@ ActiveRecord::Schema.define(version: 2022_02_04_093401) do
   add_foreign_key "procedure_revision_types_de_champ", "procedure_revisions", column: "revision_id"
   add_foreign_key "procedure_revision_types_de_champ", "types_de_champ"
   add_foreign_key "procedure_revisions", "attestation_templates"
+  add_foreign_key "procedure_revisions", "dossier_submitted_messages"
   add_foreign_key "procedure_revisions", "procedures"
   add_foreign_key "procedures", "procedure_revisions", column: "draft_revision_id"
   add_foreign_key "procedures", "procedure_revisions", column: "published_revision_id"

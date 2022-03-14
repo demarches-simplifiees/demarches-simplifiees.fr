@@ -825,13 +825,15 @@ describe Procedure do
     context 'when the procedure has dossiers' do
       let(:dossier_draft) { create(:dossier, :brouillon, procedure: procedure) }
       let(:dossier_submitted) { create(:dossier, :en_construction, procedure: procedure) }
+      let(:dossier_termine) { create(:dossier, :accepte, procedure: procedure) }
 
-      before { [dossier_draft, dossier_submitted] }
+      before { [dossier_draft, dossier_submitted, dossier_termine] }
 
       it 'enqueues rebase jobs for draft dossiers' do
         subject
         expect(DossierRebaseJob).to have_been_enqueued.with(dossier_draft)
-        expect(DossierRebaseJob).not_to have_been_enqueued.with(dossier_submitted)
+        expect(DossierRebaseJob).to have_been_enqueued.with(dossier_submitted)
+        expect(DossierRebaseJob).not_to have_been_enqueued.with(dossier_termine)
       end
     end
   end
