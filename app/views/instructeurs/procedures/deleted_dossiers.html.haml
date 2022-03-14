@@ -7,13 +7,21 @@
       .procedure-logo{ style: "background-image: url(#{@procedure.logo_url})",
         role: 'img', 'aria-label': "logo de la démarche #{@procedure.libelle}" }
 
-      = render partial: 'header', locals: { procedure: @procedure,
+      = render partial: 'header', locals: { procedure: @procedure, statut: @statut }
+
+      .procedure-actions
+        - if @can_download_dossiers
+          = render partial: "download_dossiers", locals: { procedure: @procedure, exports: @exports }
+
+    .container.flex= render partial: "tabs", locals: { procedure: @procedure,
         statut: @statut,
         a_suivre_count: @a_suivre_count,
         suivis_count: @suivis_count,
         traites_count: @traites_count,
         tous_count: @tous_count,
+        supprimes_recemment_count: @supprimes_recemment_count,
         archives_count: @archives_count,
+        expirant_count: @expirant_count,
         has_en_cours_notifications: @has_en_cours_notifications,
         has_termine_notifications: @has_termine_notifications }
 
