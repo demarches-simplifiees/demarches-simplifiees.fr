@@ -1,7 +1,9 @@
 # rubocop:disable DS/ApplicationName
 # API URLs
+API_ADRESSE_URL = ENV.fetch("API_ADRESSE_URL", "https://api-adresse.data.gouv.fr")
 API_ENTREPRISE_URL = ENV.fetch("API_ENTREPRISE_URL", "https://entreprise.api.gouv.fr/v2")
 API_EDUCATION_URL = ENV.fetch("API_EDUCATION_URL", "https://data.education.gouv.fr/api/records/1.0")
+API_GEO_URL = ENV.fetch("API_GEO_URL", "https://geo.api.gouv.fr")
 API_PARTICULIER_URL = ENV.fetch("API_PARTICULIER_URL", "https://particulier.api.gouv.fr/api")
 HELPSCOUT_API_URL = ENV.fetch("HELPSCOUT_API_URL", "https://api.helpscout.net/v2")
 PIPEDRIVE_API_URL = ENV.fetch("PIPEDRIVE_API_URL", "https://api.pipedrive.com/v1")
@@ -11,12 +13,14 @@ UNIVERSIGN_API_URL = ENV.fetch("UNIVERSIGN_API_URL", "https://ws.universign.eu/t
 FEATURE_UPVOTE_URL = ENV.fetch("FEATURE_UPVOTE_URL", "https://demarches-simplifiees.featureupvote.com")
 
 # Internal URLs
-FOG_BASE_URL = "https://static.#{FR_SITE}"
+FOG_OPENSTACK_URL = ENV.fetch("FOG_OPENSTACK_URL", "https://auth.cloud.ovh.net")
+DS_PROXY_URL = ENV.fetch("DS_PROXY_URL", "")
 
 # External services URLs
 WEBINAIRE_URL = "https://app.livestorm.co/demarches-simplifiees"
 CALENDLY_URL = "https://calendly.com/demarches-simplifiees/accompagnement-administrateur-demarches-simplifiees-fr"
 
+FR_SITE = 'demarches-simplifiees.fr'
 FR_DOC_URL = "https://doc.#{FR_SITE}"
 DOC_URL = ENV.fetch("DOC_URL", "https://mes-demarches.gitbook.io/documentation")
 DOC_NOUVEAUTES_URL = [DOC_URL, "nouveautes"].join("/")
@@ -48,6 +52,7 @@ FAQ_ERREUR_SIRET_URL = "https://doc.projet.gov.pf/pages/viewpage.action?pageId=1
 STATUS_PAGE_URL = ENV.fetch("STATUS_PAGE_URL", "https://updown.io/cugq")
 DEMANDE_INSCRIPTION_ADMIN_PAGE_URL = ENV.fetch("DEMANDE_INSCRIPTION_ADMIN_PAGE_URL", "https://www.demarches-simplifiees.fr/commencer/demande-d-inscription-a-demarches-simplifiees")
 MATOMO_IFRAME_URL = ENV.fetch("MATOMO_IFRAME_URL", "https://#{ENV.fetch('MATOMO_HOST', 'stats.data.gouv.fr')}/index.php?module=CoreAdminHome&action=optOut&language=fr&&fontColor=333333&fontSize=16px&fontFamily=Muli")
+CSP_REPORT_URI = ENV.fetch("CSP_REPORT_URI", "")
 
 #----- Polynesian variables
 

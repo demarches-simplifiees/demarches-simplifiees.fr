@@ -83,7 +83,7 @@ class Procedure < ApplicationRecord
   has_many :experts, through: :experts_procedures
 
   has_one :module_api_carto, dependent: :destroy
-  has_one :attestation_template, dependent: :destroy
+  has_one :legacy_attestation_template, class_name: 'AttestationTemplate', dependent: :destroy
   has_many :attestation_templates, through: :revisions, source: :attestation_template
 
   belongs_to :parent_procedure, class_name: 'Procedure', optional: true
@@ -435,7 +435,6 @@ class Procedure < ApplicationRecord
 
     populate_champ_stable_ids
     include_list = {
-      attestation_template: [],
       draft_revision: {
         revision_types_de_champ: {
           type_de_champ: :types_de_champ
@@ -581,7 +580,7 @@ class Procedure < ApplicationRecord
     touch(:whitelisted_at)
   end
 
-  def active_attestation_template
+  def attestation_template
     published_attestation_template || draft_attestation_template
   end
 
@@ -589,9 +588,9 @@ class Procedure < ApplicationRecord
     # As an optimization, don’t check the predefined templates (they are presumed correct)
     if closed_mail.present?
       tag_present = closed_mail.body.to_s.include?("--lien attestation--")
-      if active_attestation_template&.activated? && !tag_present
+      if attestation_template&.activated? && !tag_present
         :missing_tag
-      elsif !active_attestation_template&.activated? && tag_present
+      elsif !attestation_template&.activated? && tag_present
         :extraneous_tag
       end
     end

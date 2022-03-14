@@ -15,7 +15,6 @@ class AttestationTemplate < ApplicationRecord
   include ActionView::Helpers::NumberHelper
   include TagsSubstitutionConcern
 
-  belongs_to :procedure, optional: true
   has_many :revisions, class_name: 'ProcedureRevision', inverse_of: :attestation_template, dependent: :nullify
 
   has_one_attached :logo
@@ -105,23 +104,41 @@ class AttestationTemplate < ApplicationRecord
     }
   end
 
-  def revise!
-    if revisions.size > 1
+  def find_or_revise!
+    if revisions.size > 1 && procedure.feature_enabled?(:procedure_revisions)
+      # If attestation template belongs to more then one revision
+      # and procedure has revisions enabled – revise attestation template.
       attestation_template = dup
       attestation_template.save!
-      revisions
-        .last
-        .procedure
-        .draft_revision
-        .update!(attestation_template: attestation_template)
+      procedure.draft_revision.update!(attestation_template: attestation_template)
       attestation_template
     else
+      # If procedure has only one revision or revisions are not supported
+      # apply updates directly to the attestation template.
+      # If it is a published procedure with revisions disabled,
+      # draft and published attestation template will be the same.
       self
     end
   end
 
   def procedure
-    revisions.last&.procedure || super
+    revisions.last&.procedure
+  end
+
+  def logo_checksum
+    logo.attached? ? logo.checksum : nil
+  end
+
+  def signature_checksum
+    signature.attached? ? signature.checksum : nil
+  end
+
+  def logo_filename
+    logo.attached? ? logo.filename : nil
+  end
+
+  def signature_filename
+    signature.attached? ? signature.filename : nil
   end
 
   private

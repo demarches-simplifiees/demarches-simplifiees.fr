@@ -45,7 +45,7 @@ async function handleError({ response, message }, reject) {
     try {
       const {
         errors: [message]
-      } = await response.json();
+      } = await response.clone().json();
       reject(message);
     } catch {
       reject(await response.text());

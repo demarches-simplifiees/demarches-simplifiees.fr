@@ -45,12 +45,13 @@ services:
     ports:
       - ${PORT}:3000
     environment:
+      - ACTIVE_STORAGE_SERVICE
+      - AGENT_CONNECT_BASE_URL
       - AGENT_CONNECT_ENABLED
       - AGENT_CONNECT_ID
-      - AGENT_CONNECT_SECRET
-      - AGENT_CONNECT_BASE_URL
       - AGENT_CONNECT_JWKS
       - AGENT_CONNECT_REDIRECT
+      - AGENT_CONNECT_SECRET
       - API_ADRESSE_URL
       - API_CPS_AUTH
       - API_CPS_CLIENT_ID
@@ -97,6 +98,11 @@ services:
       - HELPSCOUT_WEBHOOK_SECRET
       - INVISIBLE_CAPTCHA_SECRET
       - MAILER_LOGO_SRC
+      - MAILCATCHER_ENABLED
+      - MAILCATCHER_HOST
+      - MAILCATCHER_PORT
+      - MATOMO_COOKIE_DOMAIN
+      - MATOMO_DOMAIN
       - MATOMO_ENABLED
       - MATOMO_HOST
       - MATOMO_ID
@@ -111,8 +117,8 @@ services:
       - S3_ENDPOINT
       - S3_REGION
       - S3_SECRET_KEY
-      - SAML_IDP_ENABLED
       - SAML_IDP_CERTIFICATE
+      - SAML_IDP_ENABLED
       - SAML_IDP_SECRET_KEY
       - SENDINBLUE_API_V3_KEY
       - SENDINBLUE_BALANCING
@@ -128,8 +134,6 @@ services:
       - SIPF_CLIENT_BASE_URL
       - SIPF_CLIENT_ID
       - SIPF_CLIENT_SECRET
-      - STORAGE
-      - STORAGE_SWITCH
       - TATOU_BASE_URL
       - TATOU_CLIENT_ID
       - TATOU_CLIENT_SECRET
@@ -152,6 +156,7 @@ services:
     container_name: worker-${ENV:-dev}
     restart: always
     environment:
+      - ACTIVE_STORAGE_SERVICE
       - APPLICATION_BASE_URL
       - APPLICATION_NAME
       - APP_HOST
@@ -167,8 +172,11 @@ services:
       - MAILER_LOGO_SRC
       - MAILJET_API_KEY
       - MAILJET_SECRET_KEY
-      - PROCEDURE_DEFAULT_LOGO_SRC
+      - MAILCATCHER_ENABLED
+      - MAILCATCHER_HOST
+      - MAILCATCHER_PORT
       - OUTSCALE_STEP=3
+      - PROCEDURE_DEFAULT_LOGO_SRC
       - S3_ACCESS_KEY
       - S3_BUCKET
       - S3_ENDPOINT
@@ -184,8 +192,6 @@ services:
       - SENTRY_DSN_JS
       - SENTRY_DSN_RAILS
       - SENTRY_ENABLED
-      - STORAGE
-      - STORAGE_SWITCH
       - UNIVERSIGN_API_URL
       - UNIVERSIGN_USERPWD
       - WATERMARK_FILE
