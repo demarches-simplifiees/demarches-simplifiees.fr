@@ -74,6 +74,8 @@ class SerializerService
       datePassageEnConstruction
       datePassageEnInstruction
       dateTraitement
+      dateSuppressionParUsager
+      dateSuppressionParAdministration
       instructeurs {
         email
       }
