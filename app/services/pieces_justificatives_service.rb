@@ -73,34 +73,6 @@ class PiecesJustificativesService
     end
   end
 
-  class FakeAttachment < Hashie::Dash
-    property :filename
-    property :name
-    property :file
-    property :id
-    property :created_at
-
-    def download
-      file.read
-    end
-
-    def read(*args)
-      file.read(*args)
-    end
-
-    def close
-      file.close
-    end
-
-    def attached?
-      true
-    end
-
-    def record_type
-      'Fake'
-    end
-  end
-
   def self.generate_dossier_export(dossier)
     pdf = ApplicationController
       .render(template: 'dossiers/show', formats: [:pdf],
@@ -109,7 +81,7 @@ class PiecesJustificativesService
                 dossier: dossier
               })
 
-    FakeAttachment.new(
+    ActiveStorage::FakeAttachment.new(
       file: StringIO.new(pdf),
       filename: "export-#{dossier.id}.pdf",
       name: 'pdf_export_for_instructeur',
@@ -149,7 +121,7 @@ class PiecesJustificativesService
     if !for_expert
       bill_signatures = dossier.dossier_operation_logs.filter_map(&:bill_signature).uniq
       pjs += [
-        dossier.dossier_operation_logs.map(&:serialized),
+        dossier.dossier_operation_logs.map(&:json_file).compact,
         bill_signatures.map(&:serialized),
         bill_signatures.map(&:signature)
       ].flatten.compact

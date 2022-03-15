@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_08_110720) do
+ActiveRecord::Schema.define(version: 2022_03_15_102928) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -269,6 +269,7 @@ ActiveRecord::Schema.define(version: 2022_03_08_110720) do
     t.datetime "executed_at"
     t.text "digest"
     t.bigint "bill_signature_id"
+    t.jsonb "data"
     t.index ["bill_signature_id"], name: "index_dossier_operation_logs_on_bill_signature_id"
     t.index ["dossier_id"], name: "index_dossier_operation_logs_on_dossier_id"
     t.index ["instructeur_id"], name: "index_dossier_operation_logs_on_instructeur_id"

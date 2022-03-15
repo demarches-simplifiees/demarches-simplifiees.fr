@@ -13,7 +13,7 @@ describe DownloadManager::ParallelDownloadQueue do
 
     let(:destination) { 'lol.png' }
     let(:attachment) do
-      PiecesJustificativesService::FakeAttachment.new(
+      ActiveStorage::FakeAttachment.new(
         file: StringIO.new('coucou'),
         filename: "export-dossier.pdf",
         name: 'pdf_export_for_instructeur',
@@ -22,7 +22,7 @@ describe DownloadManager::ParallelDownloadQueue do
       )
     end
 
-    context 'with a PiecesJustificativesService::FakeAttachment and it works' do
+    context 'with a ActiveStorage::FakeAttachment and it works' do
       it 'write attachment.file to disk' do
         target = File.join(download_to_dir, destination)
         expect { subject }.to change { File.exist?(target) }
@@ -31,7 +31,7 @@ describe DownloadManager::ParallelDownloadQueue do
       end
     end
 
-    context 'with a PiecesJustificativesService::FakeAttachment and it fails' do
+    context 'with a ActiveStorage::FakeAttachment and it fails' do
       it 'write attachment.file to disk' do
         expect(attachment.file).to receive(:read).and_raise("boom")
         target = File.join(download_to_dir, destination)

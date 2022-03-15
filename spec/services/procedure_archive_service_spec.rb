@@ -62,7 +62,7 @@ describe ProcedureArchiveService do
 
       context 'with a missing file' do
         let(:pj) do
-          PiecesJustificativesService::FakeAttachment.new(
+          ActiveStorage::FakeAttachment.new(
             file: StringIO.new('coucou'),
             filename: "export-dossier.pdf",
             name: 'pdf_export_for_instructeur',
@@ -72,7 +72,7 @@ describe ProcedureArchiveService do
         end
 
         let(:bad_pj) do
-          PiecesJustificativesService::FakeAttachment.new(
+          ActiveStorage::FakeAttachment.new(
             file: nil,
             filename: "cni.png",
             name: 'cni.png',
@@ -178,7 +178,7 @@ describe ProcedureArchiveService do
 
       context 'with a missing file' do
         let(:pj) do
-          PiecesJustificativesService::FakeAttachment.new(
+          ActiveStorage::FakeAttachment.new(
             file: StringIO.new('coucou'),
             filename: "export-dossier.pdf",
             name: 'pdf_export_for_instructeur',
@@ -188,7 +188,7 @@ describe ProcedureArchiveService do
         end
 
         let(:bad_pj) do
-          PiecesJustificativesService::FakeAttachment.new(
+          ActiveStorage::FakeAttachment.new(
             file: nil,
             filename: "cni.png",
             name: 'cni.png',
