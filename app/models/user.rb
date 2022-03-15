@@ -221,6 +221,7 @@ class User < ApplicationRecord
       old_user.invites.update_all(user_id: id)
       old_user.merge_logs.update_all(user_id: id)
 
+      # Move or merge old user's roles to the user
       [
         [old_user.instructeur, instructeur],
         [old_user.expert, expert],
@@ -232,6 +233,8 @@ class User < ApplicationRecord
           targeted_role.merge(old_role)
         end
       end
+      # (Ensure the old user doesn't reference its former roles anymore)
+      old_user.reload
 
       merge_logs.create(from_user_id: old_user.id, from_user_email: old_user.email)
       old_user.destroy
