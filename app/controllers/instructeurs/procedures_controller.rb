@@ -39,7 +39,7 @@ module Instructeurs
         'dossiers' => @dossiers_count_per_procedure.sum { |_, v| v },
         'expirant' => @dossiers_expirant_count_per_procedure.sum { |_, v| v },
         'archivés' => @dossiers_archived_count_per_procedure.sum { |_, v| v },
-        'supprimes_recemment' => @dossiers_supprimes_recemment_count_per_procedure.sum { |_, v| v }
+        'supprimés récemment' => @dossiers_supprimes_recemment_count_per_procedure.sum { |_, v| v }
       }
 
       @procedure_ids_en_cours_with_notifications = current_instructeur.procedure_ids_with_notifications(:en_cours)
@@ -137,15 +137,18 @@ module Instructeurs
         .order(:dossier_id)
         .page params[:page]
 
-      @a_suivre_count, @suivis_count, @traites_count, @tous_count, @archives_count = current_instructeur
+      @a_suivre_count, @suivis_count, @traites_count, @tous_count, @archives_count, @supprimes_recemment_count, @expirant_count = current_instructeur
         .dossiers_count_summary(groupe_instructeur_ids)
-        .fetch_values('a_suivre', 'suivis', 'traites', 'tous', 'archives')
+        .fetch_values('a_suivre', 'suivis', 'traites', 'tous', 'archives', 'supprimes_recemment', 'expirant')
+      @can_download_dossiers = (@tous_count + @archives_count) > 0
 
       notifications = current_instructeur.notifications_for_groupe_instructeurs(groupe_instructeur_ids)
       @has_en_cours_notifications = notifications[:en_cours].present?
       @has_termine_notifications = notifications[:termines].present?
 
       @statut = 'supprime'
+
+      assign_exports
     end
 
     def update_displayed_fields
@@ -278,6 +281,8 @@ module Instructeurs
       redirect_to instructeur_procedure_path(@procedure)
     end
 
+    private
+
     def create_bulk_message_mail(dossier_count, dossier_state)
       BulkMessage.create(
         dossier_count: dossier_count,
@@ -289,15 +294,6 @@ module Instructeurs
         groupe_instructeurs: email_usagers_groupe_instructeurs
       )
     end
-
-    def restore
-      dossier = current_instructeur.dossiers.find(params[:dossier_id])
-      dossier.restore(current_instructeur)
-      flash.notice = t('instructeurs.dossiers.restore')
-      redirect_to instructeur_procedure_path(procedure)
-    end
-
-    private
 
     def assign_to_params
       params.require(:assign_to)

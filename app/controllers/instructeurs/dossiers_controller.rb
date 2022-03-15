@@ -43,7 +43,7 @@ module Instructeurs
     end
 
     def show
-      @demande_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.demande_seen_at
+      @demande_seen_at = current_instructeur.follows.find_by(dossier: dossier_with_champs)&.demande_seen_at
 
       respond_to do |format|
         format.pdf do
@@ -96,24 +96,24 @@ module Instructeurs
     def follow
       current_instructeur.follow(dossier)
       flash.notice = 'Dossier suivi'
-      redirect_back(fallback_location: instructeur_procedures_url)
+      redirect_back(fallback_location: instructeur_procedure_path(procedure))
     end
 
     def unfollow
       current_instructeur.unfollow(dossier)
       flash.notice = "Vous ne suivez plus le dossier nº #{dossier.id}"
 
-      redirect_back(fallback_location: instructeur_procedures_url)
+      redirect_back(fallback_location: instructeur_procedure_path(procedure))
     end
 
     def archive
       dossier.archiver!(current_instructeur)
-      redirect_back(fallback_location: instructeur_procedures_url)
+      redirect_back(fallback_location: instructeur_procedure_path(procedure))
     end
 
     def unarchive
       dossier.desarchiver!(current_instructeur)
-      redirect_back(fallback_location: instructeur_procedures_url)
+      redirect_back(fallback_location: instructeur_procedure_path(procedure))
     end
 
     def passer_en_instruction
@@ -226,14 +226,25 @@ module Instructeurs
       zipline(files, "dossier-#{dossier.id}.zip")
     end
 
-    def delete_dossier
+    def destroy
       if dossier.termine?
         dossier.hide_and_keep_track!(current_instructeur, :instructeur_request)
         flash.notice = t('instructeurs.dossiers.deleted_by_instructeur')
-        redirect_to instructeur_procedure_path(procedure)
       else
         flash.alert = t('instructeurs.dossiers.impossible_deletion')
-        redirect_back(fallback_location: instructeur_procedures_url)
+      end
+      redirect_back(fallback_location: instructeur_procedure_path(procedure))
+    end
+
+    def restore
+      dossier = current_instructeur.dossiers.find(params[:dossier_id])
+      dossier.restore(current_instructeur)
+      flash.notice = t('instructeurs.dossiers.restore')
+
+      if dossier.termine?
+        redirect_to instructeur_procedure_path(procedure, statut: :traites)
+      else
+        redirect_back(fallback_location: instructeur_procedure_path(procedure))
       end
     end
 
@@ -243,7 +254,15 @@ module Instructeurs
       @dossier ||= current_instructeur
         .dossiers
         .visible_by_administration
-        .includes(champs: :type_de_champ)
+        .find(params[:dossier_id])
+    end
+
+    def dossier_with_champs
+      @dossier ||= current_instructeur
+        .dossiers
+        .visible_by_administration
+        .with_champs
+        .with_annotations
         .find(params[:dossier_id])
     end
 
@@ -259,19 +278,19 @@ module Instructeurs
     end
 
     def mark_demande_as_read
-      current_instructeur.mark_tab_as_seen(dossier, :demande)
+      current_instructeur.mark_tab_as_seen(@dossier, :demande)
     end
 
     def mark_messagerie_as_read
-      current_instructeur.mark_tab_as_seen(dossier, :messagerie)
+      current_instructeur.mark_tab_as_seen(@dossier, :messagerie)
     end
 
     def mark_avis_as_read
-      current_instructeur.mark_tab_as_seen(dossier, :avis)
+      current_instructeur.mark_tab_as_seen(@dossier, :avis)
     end
 
     def mark_annotations_privees_as_read
-      current_instructeur.mark_tab_as_seen(dossier, :annotations_privees)
+      current_instructeur.mark_tab_as_seen(@dossier, :annotations_privees)
     end
 
     def aasm_error_message(exception, target_state:)

@@ -261,32 +261,33 @@ class Dossier < ApplicationRecord
   }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
-  scope :with_champs,                 -> { includes(champs: :type_de_champ) }
+  scope :with_champs, -> {
+    includes(champs: [
+      :type_de_champ,
+      :geo_areas,
+      piece_justificative_file_attachment: :blob,
+      champs: [:type_de_champ, piece_justificative_file_attachment: :blob]
+    ])
+  }
+  scope :with_annotations, -> {
+    includes(champs_private: [
+      :type_de_champ,
+      :geo_areas,
+      piece_justificative_file_attachment: :blob,
+      champs: [:type_de_champ, piece_justificative_file_attachment: :blob]
+    ])
+  }
   scope :for_api, -> {
-    includes(commentaires: { piece_jointe_attachment: :blob },
-      champs: [
-        :geo_areas,
-        :etablissement,
-        piece_justificative_file_attachment: :blob,
-        champs: [
-          piece_justificative_file_attachment: :blob
-        ]
-      ],
-      champs_private: [
-        :geo_areas,
-        :etablissement,
-        piece_justificative_file_attachment: :blob,
-        champs: [
-          piece_justificative_file_attachment: :blob
-        ]
-      ],
-      justificatif_motivation_attachment: :blob,
-      attestation: [],
-      avis: { piece_justificative_file_attachment: :blob },
-      traitement: [],
-      etablissement: [],
-      individual: [],
-      user: [])
+    with_champs
+      .with_annotations
+      .includes(commentaires: { piece_jointe_attachment: :blob },
+        justificatif_motivation_attachment: :blob,
+        attestation: [],
+        avis: { piece_justificative_file_attachment: :blob },
+        traitement: [],
+        etablissement: [],
+        individual: [],
+        user: [])
   }
 
   scope :with_notifiable_procedure, -> (opts = { notify_on_closed: false }) do
@@ -1122,6 +1123,20 @@ class Dossier < ApplicationRecord
     termine_expired_to_delete.find_each(&:purge_discarded)
   end
 
+  def sections_for(champ)
+    @sections = Hash.new do |hash, parent|
+      case parent
+      when :public
+        hash[parent] = champs.filter(&:header_section?)
+      when :private
+        hash[parent] = champs_private.filter(&:header_section?)
+      else
+        hash[parent] = parent.champs.filter(&:header_section?)
+      end
+    end
+    @sections[champ.parent || (champ.public? ? :public : :private)]
+  end
+
   private
 
   def create_missing_traitemets
@@ -1143,7 +1158,7 @@ class Dossier < ApplicationRecord
   end
 
   def geo_areas
-    champs.includes(:geo_areas).flat_map(&:geo_areas) + champs_private.includes(:geo_areas).flat_map(&:geo_areas)
+    champs.flat_map(&:geo_areas) + champs_private.flat_map(&:geo_areas)
   end
 
   def bounding_box
