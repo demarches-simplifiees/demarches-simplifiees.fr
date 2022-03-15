@@ -43,7 +43,7 @@ module Instructeurs
     end
 
     def show
-      @demande_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.demande_seen_at
+      @demande_seen_at = current_instructeur.follows.find_by(dossier: dossier_with_champs)&.demande_seen_at
 
       respond_to do |format|
         format.pdf do
@@ -254,7 +254,15 @@ module Instructeurs
       @dossier ||= current_instructeur
         .dossiers
         .visible_by_administration
-        .includes(champs: :type_de_champ)
+        .find(params[:dossier_id])
+    end
+
+    def dossier_with_champs
+      @dossier ||= current_instructeur
+        .dossiers
+        .visible_by_administration
+        .with_champs
+        .with_annotations
         .find(params[:dossier_id])
     end
 
@@ -270,19 +278,19 @@ module Instructeurs
     end
 
     def mark_demande_as_read
-      current_instructeur.mark_tab_as_seen(dossier, :demande)
+      current_instructeur.mark_tab_as_seen(@dossier, :demande)
     end
 
     def mark_messagerie_as_read
-      current_instructeur.mark_tab_as_seen(dossier, :messagerie)
+      current_instructeur.mark_tab_as_seen(@dossier, :messagerie)
     end
 
     def mark_avis_as_read
-      current_instructeur.mark_tab_as_seen(dossier, :avis)
+      current_instructeur.mark_tab_as_seen(@dossier, :avis)
     end
 
     def mark_annotations_privees_as_read
-      current_instructeur.mark_tab_as_seen(dossier, :annotations_privees)
+      current_instructeur.mark_tab_as_seen(@dossier, :annotations_privees)
     end
 
     def aasm_error_message(exception, target_state:)
