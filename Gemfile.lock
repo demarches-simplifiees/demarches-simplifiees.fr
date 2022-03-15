@@ -691,6 +691,8 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
+    strong_migrations (0.8.0)
+      activerecord (>= 5.2)
     swd (1.3.0)
       activesupport (>= 3)
       attr_required (>= 0.0.5)
@@ -875,6 +877,7 @@ DEPENDENCIES
   spreadsheet_architect
   spring
   spring-commands-rspec
+  strong_migrations
   timecop
   typhoeus
   vcr
