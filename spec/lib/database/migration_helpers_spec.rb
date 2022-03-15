@@ -5,11 +5,7 @@ describe Database::MigrationHelpers do
 
     before(:all) do
       ActiveRecord::Migration.suppress_messages do
-        ActiveRecord::Migration.create_table "test_labels", force: true do |t|
-          t.string :label
-          t.integer :user_id
-        end
-        ActiveRecord::Migration.create_table "test_labels", force: true do |t|
+        ActiveRecord::Migration.create_table "test_labels" do |t|
           t.string :label
           t.integer :user_id
         end
@@ -103,13 +99,13 @@ describe Database::MigrationHelpers do
 
     before(:all) do
       ActiveRecord::Migration.suppress_messages do
-        ActiveRecord::Migration.create_table "test_physicians", force: true do |t|
+        ActiveRecord::Migration.create_table "test_physicians" do |t|
           t.string :name
         end
-        ActiveRecord::Migration.create_table "test_patients", force: true do |t|
+        ActiveRecord::Migration.create_table "test_patients" do |t|
           t.string :name
         end
-        ActiveRecord::Migration.create_table "test_appointments", id: false, force: true do |t|
+        ActiveRecord::Migration.create_table "test_appointments", id: false do |t|
           t.integer  :test_physician_id
           t.integer  :test_patient_id
           t.datetime :datetime
