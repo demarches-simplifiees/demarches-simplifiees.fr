@@ -14,6 +14,8 @@ RSpec.describe Types::DossierType, type: :graphql do
     let(:variables) { { number: dossier.id } }
 
     it { expect(data[:dossier][:attestation]).not_to be_nil }
+    it { expect(data[:dossier][:traitements]).to eq([{ state: 'accepte' }]) }
+    it { expect(data[:dossier][:dateExpiration]).not_to be_nil }
 
     context 'when attestation is nil' do
       before do
@@ -39,6 +41,10 @@ RSpec.describe Types::DossierType, type: :graphql do
       attestation {
         url
       }
+      traitements {
+        state
+      }
+      dateExpiration
     }
   }
   GRAPHQL

@@ -20,6 +20,10 @@ module Types
     field :date_traitement, GraphQL::Types::ISO8601DateTime, "Date du dernier traitement.", null: true, method: :processed_at
     field :date_derniere_modification, GraphQL::Types::ISO8601DateTime, "Date de la dernière modification.", null: false, method: :updated_at
 
+    field :date_suppression_par_usager, GraphQL::Types::ISO8601DateTime, "Date de la suppression par l’usager.", null: true, method: :hidden_by_user_at
+    field :date_suppression_par_administration, GraphQL::Types::ISO8601DateTime, "Date de la suppression par l’administration.", null: true, method: :hidden_by_administration_at
+    field :date_expiration, GraphQL::Types::ISO8601DateTime, "Date d’expiration.", null: true
+
     field :archived, Boolean, null: false
 
     field :motivation, String, null: true
@@ -51,9 +55,16 @@ module Types
     field :annotations, [Types::ChampType], null: false do
       argument :id, ID, required: false
     end
+    field :traitements, [Types::TraitementType], null: false
 
     def state
       object.state
+    end
+
+    def date_expiration
+      if !object.en_instruction?
+        object.expiration_date.presence || object.approximative_expiration_date
+      end
     end
 
     def usager
@@ -82,6 +93,10 @@ module Types
 
     def instructeurs
       Loaders::Association.for(object.class, :followers_instructeurs).load(object)
+    end
+
+    def traitements
+      Loaders::Association.for(object.class, :traitements).load(object)
     end
 
     def messages(id: nil)

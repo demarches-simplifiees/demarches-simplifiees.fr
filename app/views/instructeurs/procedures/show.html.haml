@@ -12,6 +12,7 @@
       .procedure-actions
         - if @can_download_dossiers
           = render partial: "download_dossiers", locals: { procedure: @procedure, exports: @exports }
+
     .container.flex= render partial: "tabs", locals: { procedure: @procedure,
         statut: @statut,
         a_suivre_count: @a_suivre_count,
@@ -116,36 +117,46 @@
             - path = instructeur_dossier_path(@procedure, p.dossier_id)
             %tr{ class: [p.hidden_by_user_at.present? && "file-hidden-by-user"] }
               %td.folder-col
-                %a.cell-link{ href: path }
-                  %span.icon.folder
-                    - if @not_archived_notifications_dossier_ids.include?(p.dossier_id)
-                      %span.notifications{ 'aria-label': 'notifications' }
+                - if p.hidden_by_administration_at.present?
+                  %span.cell-link
+                    %span.icon.folder
+                - else
+                  %a.cell-link{ href: path }
+                    %span.icon.folder
+                      - if @not_archived_notifications_dossier_ids.include?(p.dossier_id)
+                        %span.notifications{ 'aria-label': 'notifications' }
 
               %td.number-col
-                %a.cell-link{ href: path }= p.dossier_id
+                - if p.hidden_by_administration_at.present?
+                  %span.cell-link= p.dossier_id
+                - else
+                  %a.cell-link{ href: path }= p.dossier_id
 
               - p.columns.each do |column|
                 %td
-                  %a.cell-link{ href: path }
-                    = column
-                    = "- #{t('views.instructeurs.dossiers.deleted_by_user')}" if p.hidden_by_user_at.present?
+                  - if p.hidden_by_administration_at.present?
+                    %span.cell-link
+                      = column
+                      = "- #{t('views.instructeurs.dossiers.deleted_by_user')}" if p.hidden_by_user_at.present?
+                  - else
+                    %a.cell-link{ href: path }
+                      = column
+                      = "- #{t('views.instructeurs.dossiers.deleted_by_user')}" if p.hidden_by_user_at.present?
 
               %td.status-col
-                %a.cell-link{ href: path }= status_badge(p.state)
+                - if p.hidden_by_administration_at.present?
+                  %span.cell-link= status_badge(p.state)
+                - else
+                  %a.cell-link{ href: path }= status_badge(p.state)
 
-              - if @statut == 'supprimes_recemment'
-                %td.action-col.follow-col
-                  = link_to restore_instructeur_dossier_path(@procedure, p.dossier_id), method: :patch, class: "button primary" do
-                    = t('views.instructeurs.dossiers.restore')
-
-              - else
-                %td.action-col.follow-col= render partial: 'dossier_actions',
-                    locals: { procedure_id: @procedure.id,
-                              dossier_id: p.dossier_id,
-                              state: p.state,
-                              archived: p.archived,
-                              dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
-                              close_to_expiration: @statut == 'expirant' }
+              %td.action-col.follow-col= render partial: 'dossier_actions',
+                locals: { procedure_id: @procedure.id,
+                          dossier_id: p.dossier_id,
+                          state: p.state,
+                          archived: p.archived,
+                          dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
+                          close_to_expiration: @statut == 'expirant',
+                          hidden_by_administration: @statut == 'supprimes_recemment' }
 
       = pagination
     - else

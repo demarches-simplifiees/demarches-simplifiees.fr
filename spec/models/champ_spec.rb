@@ -69,19 +69,32 @@ describe Champ do
     end
   end
 
-  describe '#siblings' do
-    let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :with_repetition, types_de_champ_count: 1, types_de_champ_private_count: 1) }
+  describe '#sections' do
+    let(:procedure) do
+      create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :with_repetition, types_de_champ_count: 1, types_de_champ_private_count: 1).tap do |procedure|
+        create(:type_de_champ_header_section, procedure: procedure)
+        create(:type_de_champ_header_section, procedure: procedure, private: true)
+        create(:type_de_champ_header_section, parent: procedure.types_de_champ.find(&:repetition?))
+      end
+    end
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:public_champ) { dossier.champs.first }
     let(:private_champ) { dossier.champs_private.first }
     let(:champ_in_repetition) { dossier.champs.find(&:repetition?).champs.first }
-    let(:standalone_champ) { build(:champ, type_de_champ: build(:type_de_champ), dossier: nil) }
+    let(:standalone_champ) { build(:champ, type_de_champ: build(:type_de_champ), dossier: build(:dossier)) }
+    let(:public_sections) { dossier.champs.filter(&:header_section?) }
+    let(:private_sections) { dossier.champs_private.filter(&:header_section?) }
+    let(:sections_in_repetition) { champ_in_repetition.parent.champs.filter(&:header_section?) }
 
-    it 'returns the sibling champs of a champ' do
-      expect(public_champ.siblings).to eq(dossier.champs)
-      expect(private_champ.siblings).to eq(dossier.champs_private)
-      expect(champ_in_repetition.siblings).to eq(champ_in_repetition.parent.champs)
-      expect(standalone_champ.siblings).to be_nil
+    it 'returns the sibling sections of a champ' do
+      expect(public_sections).not_to be_empty
+      expect(private_sections).not_to be_empty
+      expect(sections_in_repetition).not_to be_empty
+
+      expect(public_champ.sections).to eq(public_sections)
+      expect(private_champ.sections).to eq(private_sections)
+      expect(champ_in_repetition.sections).to eq(sections_in_repetition)
+      expect(standalone_champ.sections).to eq([])
     end
   end
 
