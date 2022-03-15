@@ -124,7 +124,7 @@ class ProcedurePresentation < ApplicationRecord
       # LEFT OUTER JOIN allows to keep dossiers without assignated instructeurs yet
       dossiers
         .includes(:followers_instructeurs)
-        .joins('LEFT OUTER JOIN users instructeurs_users ON instructeurs_users.instructeur_id = instructeurs.id')
+        .joins('LEFT OUTER JOIN users instructeurs_users ON instructeurs_users.id = instructeurs.user_id')
         .order("instructeurs_users.email #{order}")
         .pluck(:id)
         .uniq
@@ -167,7 +167,7 @@ class ProcedurePresentation < ApplicationRecord
         assert_supported_column(table, column)
         dossiers
           .includes(:followers_instructeurs)
-          .joins('INNER JOIN users instructeurs_users ON instructeurs_users.instructeur_id = instructeurs.id')
+          .joins('INNER JOIN users instructeurs_users ON instructeurs_users.id = instructeurs.user_id')
           .filter_ilike('instructeurs_users', :email, values)
       when 'user', 'individual'
         dossiers

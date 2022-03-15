@@ -25,9 +25,6 @@
 #  unlock_token                 :string
 #  created_at                   :datetime
 #  updated_at                   :datetime
-#  administrateur_id            :bigint
-#  expert_id                    :bigint
-#  instructeur_id               :bigint
 #  requested_merge_into_id      :bigint
 #
 class User < ApplicationRecord
@@ -52,9 +49,9 @@ class User < ApplicationRecord
   has_many :requested_merge_from, class_name: 'User', dependent: :nullify, inverse_of: :requested_merge_into, foreign_key: :requested_merge_into_id
 
   has_one :france_connect_information, dependent: :destroy
-  belongs_to :instructeur, optional: true, dependent: :destroy
-  belongs_to :administrateur, optional: true, dependent: :destroy
-  belongs_to :expert, optional: true, dependent: :destroy
+  has_one :instructeur, dependent: :destroy
+  has_one :administrateur, dependent: :destroy
+  has_one :expert, dependent: :destroy
   belongs_to :requested_merge_into, class_name: 'User', optional: true
 
   accepts_nested_attributes_for :france_connect_information
@@ -120,7 +117,7 @@ class User < ApplicationRecord
       .find_or_create_by(email: email)
 
     if user.valid?
-      if user.instructeur_id.nil?
+      if user.instructeur.nil?
         user.create_instructeur!
         user.update(france_connect_information: nil)
       end
@@ -134,7 +131,7 @@ class User < ApplicationRecord
   def self.create_or_promote_to_administrateur(email, password)
     user = User.create_or_promote_to_instructeur(email, password)
 
-    if user.valid? && user.administrateur_id.nil?
+    if user.valid? && user.administrateur.nil?
       user.create_administrateur!
       user.update(france_connect_information: nil)
     end
@@ -148,7 +145,7 @@ class User < ApplicationRecord
       .find_or_create_by(email: email)
 
     if user.valid?
-      if user.expert_id.nil?
+      if user.expert.nil?
         user.create_expert!
       end
     end
@@ -165,15 +162,15 @@ class User < ApplicationRecord
   end
 
   def administrateur?
-    administrateur_id.present?
+    administrateur.present?
   end
 
   def instructeur?
-    instructeur_id.present?
+    instructeur.present?
   end
 
   def expert?
-    expert_id.present?
+    expert.present?
   end
 
   def can_france_connect?

@@ -372,7 +372,7 @@ describe User, type: :model do
     end
 
     context 'for administrateurs' do
-      let(:user) { build(:user, email: 'admin@exemple.fr', password: password, administrateur: create(:administrateur, user: nil)) }
+      let(:user) { build(:user, email: 'admin@exemple.fr', password: password, administrateur: build(:administrateur, user: nil)) }
 
       context 'when the password is too short' do
         let(:password) { 's' * (PASSWORD_MIN_LENGTH - 1) }
@@ -453,8 +453,8 @@ describe User, type: :model do
         targeted_user.reload
 
         expect(targeted_user.instructeur).to match(instructeur)
-        expect(targeted_user.expert).to match(expert)
         expect(targeted_user.administrateur).to match(administrateur)
+        expect(targeted_user.expert).to match(expert)
       end
 
       context 'and the targeted account owns an instructeur and expert as well' do
