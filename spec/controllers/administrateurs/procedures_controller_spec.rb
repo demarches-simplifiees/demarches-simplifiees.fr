@@ -14,7 +14,9 @@ describe Administrateurs::ProceduresController, type: :controller do
   let(:lien_site_web) { 'http://mon-site.gouv.fr' }
 
   describe '#apercu' do
-    let(:procedure) { create(:procedure) }
+    render_views
+
+    let(:procedure) { create(:procedure, :with_all_champs) }
 
     before do
       sign_in(admin.user)
