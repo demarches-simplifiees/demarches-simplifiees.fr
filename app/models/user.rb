@@ -65,6 +65,21 @@ class User < ApplicationRecord
 
   validate :does_not_merge_on_self, if: :requested_merge_into_id_changed?
 
+  # Temporary code for double writing the admin, instructeur and expert id to the foreign key
+  after_save do
+    if saved_change_to_attribute?(:administrateur_id) && administrateur_id.present?
+      Administrateur.find(administrateur_id).update!(user_id: id)
+    end
+
+    if saved_change_to_attribute?(:instructeur_id) && instructeur_id.present?
+      Instructeur.find(instructeur_id).update!(user_id: id)
+    end
+
+    if saved_change_to_attribute?(:expert_id) && expert_id.present?
+      Expert.find(expert_id).update!(user_id: id)
+    end
+  end
+
   def validate_password_complexity?
     administrateur?
   end
@@ -221,6 +236,7 @@ class User < ApplicationRecord
       old_user.invites.update_all(user_id: id)
       old_user.merge_logs.update_all(user_id: id)
 
+      # Move or merge old user's roles to the user
       [
         [old_user.instructeur, instructeur],
         [old_user.expert, expert],
@@ -232,6 +248,8 @@ class User < ApplicationRecord
           targeted_role.merge(old_role)
         end
       end
+      # (Ensure the old user doesn't reference its former roles anymore)
+      old_user.reload
 
       merge_logs.create(from_user_id: old_user.id, from_user_email: old_user.email)
       old_user.destroy

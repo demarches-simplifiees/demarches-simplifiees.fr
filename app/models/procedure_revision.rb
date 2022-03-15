@@ -2,11 +2,11 @@
 #
 # Table name: procedure_revisions
 #
-#  id                      :bigint           not null, primary key
-#  published_at            :datetime
-#  created_at              :datetime         not null
-#  updated_at              :datetime         not null
-#  attestation_template_id :bigint
+#  id                           :bigint           not null, primary key
+#  published_at                 :datetime
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
+#  attestation_template_id      :bigint
 #  dossier_submitted_message_id :bigint
 #  procedure_id                 :bigint           not null
 #
