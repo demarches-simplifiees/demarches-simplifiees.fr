@@ -6,17 +6,21 @@ class APIEntrepriseToken
   end
 
   def token
-    raise TokenError, I18n.t("api_entreprise.errors.missing_token") if @token.blank?
+    # Pf: token entreprise not initialized
+    # raise TokenError, I18n.t("api_entreprise.errors.missing_token") if @token.blank?
+    Rails.logger.warning(I18n.t("api_entreprise.errors.missing_token")) if @token.blank?
 
     @token
   end
 
   def expired?
-    decoded_token.key?("exp") && decoded_token["exp"] <= Time.zone.now.to_i
+    # Pf: check if token is present
+    token.present? && decoded_token.key?("exp") && decoded_token["exp"] <= Time.zone.now.to_i
   end
 
   def role?(role)
-    roles.present? && roles.include?(role)
+    # Pf check if token is present
+    token.present? && roles.present? && roles.include?(role)
   end
 
   private
