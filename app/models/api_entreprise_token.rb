@@ -8,7 +8,7 @@ class APIEntrepriseToken
   def token
     # Pf: token entreprise not initialized
     # raise TokenError, I18n.t("api_entreprise.errors.missing_token") if @token.blank?
-    Rails.logger.warning(I18n.t("api_entreprise.errors.missing_token")) if @token.blank?
+    Rails.logger.warn(I18n.t("api_entreprise.errors.missing_token")) if @token.blank?
 
     @token
   end
