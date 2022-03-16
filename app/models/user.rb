@@ -41,6 +41,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable, :async,
     :recoverable, :rememberable, :trackable, :validatable, :confirmable, :lockable
 
+  self.ignored_columns = [:administrateur_id, :instructeur_id, :expert_id]
+
   has_many :dossiers, dependent: :destroy
   has_many :invites, dependent: :destroy
   has_many :dossiers_invites, through: :invites, source: :dossier
