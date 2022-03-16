@@ -3,26 +3,4 @@
 - content_for :footer do
   = render partial: "users/procedure_footer", locals: { procedure: @dossier.procedure, dossier: @dossier }
 
-.merci
-  .container
-    = image_tag('user/envoi-dossier.svg', alt: '')
-    %h1= t('views.users.dossiers.merci.thanks')
-    %p.send
-      = t('views.users.dossiers.merci.dossier_send_l1')
-      %b= @dossier.procedure.libelle
-      = t('views.users.dossiers.merci.dossier_send_l2')
-    %p
-      = t('views.users.dossiers.merci.dossier_acces_l1')
-      %b= t('views.users.dossiers.merci.dossier_acces_l2')
-    %p
-      = t('views.users.dossiers.merci.dossier_edit_l1')
-      - if !@dossier.read_only?
-        %b= t('views.users.dossiers.merci.dossier_edit_l2')
-        = t('views.users.dossiers.merci.dossier_edit_l3')
-      %b= t('views.users.dossiers.merci.dossier_edit_l4')
-
-    .flex.column.align-center
-      = link_to t('views.users.dossiers.merci.acces_dossier'), dossier_path(@dossier), class: 'button large primary'
-      = link_to t('views.users.dossiers.merci.submit_dossier'), procedure_lien(@dossier.procedure)
-      .monavis
-        != @dossier.procedure.monavis_embed
+= render partial: 'users/dossiers/merci', locals: { dossier: @dossier, procedure: @dossier.procedure}

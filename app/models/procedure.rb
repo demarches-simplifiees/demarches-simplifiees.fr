@@ -79,6 +79,10 @@ class Procedure < ApplicationRecord
   has_one :draft_attestation_template, through: :draft_revision, source: :attestation_template
   has_one :published_attestation_template, through: :published_revision, source: :attestation_template
 
+  has_one :published_dossier_submitted_message, dependent: :destroy, through: :published_revision, source: :dossier_submitted_message
+  has_one :draft_dossier_submitted_message, dependent: :destroy, through: :draft_revision, source: :dossier_submitted_message
+  has_many :dossier_submitted_messages, through: :revisions, source: :dossier_submitted_message
+
   has_many :experts_procedures, dependent: :destroy
   has_many :experts, through: :experts_procedures
 
@@ -90,6 +94,10 @@ class Procedure < ApplicationRecord
   belongs_to :canonical_procedure, class_name: 'Procedure', optional: true
   belongs_to :service, optional: true
   belongs_to :zone, optional: true
+
+  def active_dossier_submitted_message
+    published_dossier_submitted_message || draft_dossier_submitted_message
+  end
 
   def active_revision
     brouillon? ? draft_revision : published_revision
@@ -442,7 +450,8 @@ class Procedure < ApplicationRecord
         revision_types_de_champ_private: {
           type_de_champ: :types_de_champ
         },
-        attestation_template: []
+        attestation_template: [],
+        dossier_submitted_message: []
       }
     }
     include_list[:groupe_instructeurs] = :instructeurs if !is_different_admin
@@ -754,9 +763,9 @@ class Procedure < ApplicationRecord
   def publish_revision!
     update!(draft_revision: create_new_revision, published_revision: draft_revision)
     published_revision.touch(:published_at)
-    dossiers.state_brouillon.find_each do |dossier|
-      DossierRebaseJob.perform_later(dossier)
-    end
+    dossiers
+      .state_not_termine
+      .find_each { |dossier| DossierRebaseJob.perform_later(dossier) }
   end
 
   def cnaf_enabled?

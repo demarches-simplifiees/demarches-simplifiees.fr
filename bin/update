@@ -15,7 +15,9 @@ FileUtils.chdir APP_ROOT do
   puts '== Installing dependencies =='
   system! 'gem install bundler --conservative'
   system('bundle check') || system!('bundle install')
+  system! 'node --version'
   system! 'bin/yarn install'
+  system! 'bin/yarn clean'
 
   #puts "\n== Updating webdrivers =="
   #system! 'RAILS_ENV=test bin/rails webdrivers:chromedriver:update'
