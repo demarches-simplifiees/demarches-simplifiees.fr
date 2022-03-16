@@ -121,7 +121,7 @@ class ProcedurePresentation < ApplicationRecord
       end
     when 'followers_instructeurs'
       assert_supported_column(table, column)
-      # LEFT OUTER JOIN allows to keep dossiers without assignated instructeurs yet
+      # LEFT OUTER JOIN allows to keep dossiers without assigned instructeurs yet
       dossiers
         .includes(:followers_instructeurs)
         .joins('LEFT OUTER JOIN users instructeurs_users ON instructeurs_users.id = instructeurs.user_id')
