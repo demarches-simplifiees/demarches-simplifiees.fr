@@ -13,7 +13,7 @@
 class Archive < ApplicationRecord
   include AASM
 
-  RETENTION_DURATION = 1.week
+  RETENTION_DURATION = 4.days
 
   has_and_belongs_to_many :groupe_instructeurs
 
