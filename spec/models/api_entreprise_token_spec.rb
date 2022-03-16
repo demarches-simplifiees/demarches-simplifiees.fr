@@ -6,14 +6,16 @@ describe APIEntrepriseToken, type: :model do
 
     context "without token" do
       let(:token) { nil }
-
-      it { expect { subject }.to raise_exception(APIEntrepriseToken::TokenError) }
+      # Pf : do not raise exception as api_entreprise_token is not defined
+      # it { expect { subject }.to raise_exception(APIEntrepriseToken::TokenError) }
+      it { expect(subject).to be_nil }
     end
 
     context "with a blank token" do
       let(:token) { "" }
-
-      it { expect { subject }.to raise_exception(APIEntrepriseToken::TokenError) }
+      # Pf : do not raise exception as api_entreprise_token is not defined
+      # it { expect { subject }.to.not raise_exception(APIEntrepriseToken::TokenError) }
+      it { expect(subject).to equal(token) }
     end
 
     context "with an invalid token" do
@@ -36,14 +38,18 @@ describe APIEntrepriseToken, type: :model do
       let(:token) { nil }
       let(:role) { "actes_inpi" }
 
-      it { expect { subject }.to raise_exception(APIEntrepriseToken::TokenError) }
+      # Pf : do not raise exception as api_entreprise_token is not defined
+      # it { expect { subject }.to raise_exception(APIEntrepriseToken::TokenError) }
+      it { expect(subject).to be_falsey }
     end
 
     context "with a blank token" do
       let(:token) { "" }
       let(:role) { "actes_inpi" }
 
-      it { expect { subject }.to raise_exception(APIEntrepriseToken::TokenError) }
+      # Pf : do not raise exception as api_entreprise_token is not defined
+      # it { expect { subject }.to raise_exception(APIEntrepriseToken::TokenError) }
+      it { expect(subject).to be_falsey }
     end
 
     context "with an invalid token" do
@@ -76,13 +82,17 @@ describe APIEntrepriseToken, type: :model do
     context "without token" do
       let(:token) { nil }
 
-      it { expect { subject }.to raise_exception(APIEntrepriseToken::TokenError) }
+      # Pf : do not raise exception as api_entreprise_token is not defined
+      # it { expect { subject }.to raise_exception(APIEntrepriseToken::TokenError) }
+      it { expect(subject).to be_falsey }
     end
 
     context "with a blank token" do
       let(:token) { "" }
 
-      it { expect { subject }.to raise_exception(APIEntrepriseToken::TokenError) }
+      # Pf : do not raise exception as api_entreprise_token is not defined
+      # it { expect { subject }.to.not raise_exception(APIEntrepriseToken::TokenError) }
+      it { expect(subject).to be_falsey }
     end
 
     context "with an invalid token" do
