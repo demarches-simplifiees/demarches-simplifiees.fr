@@ -7,7 +7,8 @@ import { useMapLibre } from '../../shared/maplibre/MapLibre';
 import {
   useFitBounds,
   useEvent,
-  useMapEvent
+  useMapEvent,
+  useFlyTo
 } from '../../shared/maplibre/hooks';
 import {
   filterFeatureCollection,
@@ -116,6 +117,7 @@ function useExternalEvents(
   }
 ) {
   const fitBounds = useFitBounds();
+  const flyTo = useFlyTo();
 
   const onFeatureFocus = useCallback(
     ({ detail }) => {
@@ -130,6 +132,16 @@ function useExternalEvents(
       }
     },
     [featureCollection, fitBounds]
+  );
+
+  const onZoomFocus = useCallback(
+    ({ detail }) => {
+      const { feature } = detail;
+      if (feature) {
+        flyTo(17, feature.geometry.coordinates);
+      }
+    },
+    [flyTo]
   );
 
   const onFeatureCreate = useCallback(
@@ -181,6 +193,7 @@ function useExternalEvents(
   useEvent('map:feature:create', onFeatureCreate);
   useEvent('map:feature:update', onFeatureUpdate);
   useEvent('map:feature:delete', onFeatureDelete);
+  useEvent('map:zoom', onZoomFocus);
 }
 
 const translations = [

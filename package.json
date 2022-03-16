@@ -48,6 +48,7 @@
     "@2fd/graphdoc": "^2.4.0",
     "@types/debounce": "^1.2.1",
     "@types/geojson": "^7946.0.8",
+    "@types/is-hotkey": "^0.1.7",
     "@types/mapbox__mapbox-gl-draw": "^1.2.3",
     "@types/rails__ujs": "^6.0.1",
     "@types/react": "^17.0.38",

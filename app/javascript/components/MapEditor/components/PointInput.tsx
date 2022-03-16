@@ -5,11 +5,7 @@ import { PlusIcon, LocationMarkerIcon } from '@heroicons/react/outline';
 import { useId } from '@reach/auto-id';
 import CoordinateInput from 'react-coordinate-input';
 
-import { useFlyTo } from '../../shared/maplibre/hooks';
-
 export function PointInput() {
-  const flyTo = useFlyTo();
-
   const inputId = useId();
   const [value, setValue] = useState('');
   const [feature, setFeature] = useState<Feature | null>(null);
@@ -60,15 +56,13 @@ export function PointInput() {
             setValue(value);
             if (dd.length) {
               const coordinates: [number, number] = [dd[1], dd[0]];
-              setFeature({
-                type: 'Feature',
-                geometry: {
-                  type: 'Point',
-                  coordinates
-                },
+              const feature = {
+                type: 'Feature' as const,
+                geometry: { type: 'Point' as const, coordinates },
                 properties: {}
-              });
-              flyTo(17, coordinates);
+              };
+              setFeature(feature);
+              fire(document, 'map:zoom', { feature });
             } else {
               setFeature(null);
             }
