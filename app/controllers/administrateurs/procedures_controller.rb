@@ -1,7 +1,7 @@
 module Administrateurs
   class ProceduresController < AdministrateurController
-    before_action :retrieve_procedure, only: [:champs, :annotations, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :allow_expert_review, :experts_require_administrateur_invitation]
-    before_action :procedure_revisable?, only: [:champs, :annotations]
+    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :allow_expert_review, :experts_require_administrateur_invitation]
+    before_action :procedure_revisable?, only: [:champs, :annotations, :modifications]
 
     ITEMS_PER_PAGE = 25
 
@@ -170,6 +170,9 @@ module Administrateurs
     end
 
     def jeton
+    end
+
+    def modifications
     end
 
     def update_jeton
