@@ -8,7 +8,8 @@ import React, {
   createContext,
   useCallback
 } from 'react';
-import maplibre, { Map, Style, NavigationControl } from 'maplibre-gl';
+import maplibre, { Map, NavigationControl } from 'maplibre-gl';
+import type { Style } from 'maplibre-gl';
 
 import invariant from 'tiny-invariant';
 
