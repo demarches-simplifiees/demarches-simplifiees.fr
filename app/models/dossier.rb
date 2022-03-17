@@ -528,7 +528,7 @@ class Dossier < ApplicationRecord
   end
 
   def messagerie_available?
-    !brouillon? && !user_deleted? && !archived
+    visible_by_administration? && !hidden_by_user? && !user_deleted? && !archived
   end
 
   def expirable?
