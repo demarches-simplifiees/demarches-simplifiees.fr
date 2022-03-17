@@ -1,4 +1,4 @@
-import { AnyLayer } from 'maplibre-gl';
+import type { AnyLayer } from 'maplibre-gl';
 
 const layers: AnyLayer[] = [
   {

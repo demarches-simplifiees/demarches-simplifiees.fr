@@ -408,6 +408,7 @@ Rails.application.routes.draw do
         get 'apercu'
         get 'champs'
         get 'annotations'
+        get 'modifications'
         get 'monavis'
         patch 'update_monavis'
         get 'jeton'
