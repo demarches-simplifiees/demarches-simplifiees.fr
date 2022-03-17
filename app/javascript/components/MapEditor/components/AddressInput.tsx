@@ -1,12 +1,9 @@
 import React from 'react';
-import type { Point } from 'geojson';
+import { fire } from '@utils';
 
 import ComboAdresseSearch from '../../ComboAdresseSearch';
-import { useFlyTo } from '../../shared/maplibre/hooks';
 
 export function AddressInput() {
-  const flyTo = useFlyTo();
-
   return (
     <div
       style={{
@@ -17,9 +14,8 @@ export function AddressInput() {
         className="no-margin"
         placeholder="Rechercher une adresse : saisissez au moins 2 caractères"
         allowInputValues={false}
-        onChange={(_, result) => {
-          const geometry = result?.geometry as Point;
-          flyTo(17, geometry.coordinates as [number, number]);
+        onChange={(_, feature) => {
+          fire(document, 'map:zoom', { feature });
         }}
       />
     </div>
