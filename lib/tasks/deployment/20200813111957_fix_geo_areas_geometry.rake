@@ -18,7 +18,7 @@ namespace :after_party do
     geometry_collections.find_each do |geometry_collection|
       geometry_collection.geometry['geometries'].each do |geometry|
         if valid_geometry?(geometry)
-          geometry_collection.champ.geo_areas.create!(geometry: geometry, source: 'selection_utilisateur')
+          geometry_collection.champ.geo_areas.find_or_create_by!(geometry: geometry, source: 'selection_utilisateur')
         end
       end
 
@@ -36,7 +36,7 @@ namespace :after_party do
         }
 
         if valid_geometry?(geometry)
-          multi_line_string.champ.geo_areas.create!(geometry: geometry, source: 'selection_utilisateur')
+          multi_line_string.champ.geo_areas.find_or_create_by!(geometry: geometry, source: 'selection_utilisateur')
         end
       end
 
@@ -54,7 +54,7 @@ namespace :after_party do
         }
 
         if valid_geometry?(geometry)
-          multi_polygon.champ.geo_areas.create!(geometry: geometry, source: 'selection_utilisateur')
+          multi_polygon.champ.geo_areas.find_or_create_by!(geometry: geometry, source: 'selection_utilisateur')
         end
       end
 
