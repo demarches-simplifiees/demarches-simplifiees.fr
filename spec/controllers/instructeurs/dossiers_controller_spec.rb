@@ -457,6 +457,20 @@ describe Instructeurs::DossiersController, type: :controller do
         expect(flash.notice).to be_present
       end
     end
+
+    context "when the dossier is deleted by user" do
+      let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
+
+      before do
+        dossier.update!(hidden_by_user_at: 1.hour.ago)
+        subject
+      end
+
+      it "does not create a commentaire" do
+        expect { subject }.to change(Commentaire, :count).by(0)
+        expect(flash.alert).to be_present
+      end
+    end
   end
 
   describe "#create_avis" do
