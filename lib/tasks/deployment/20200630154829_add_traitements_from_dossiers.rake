@@ -6,7 +6,7 @@ namespace :after_party do
     dossiers_termines = Dossier.state_termine
     progress = ProgressReport.new(dossiers_termines.count)
     dossiers_termines.find_each do |dossier|
-      dossier.traitements.create!(state: dossier.state, motivation: dossier.motivation, processed_at: dossier.processed_at)
+      dossier.traitements.find_or_create_by!(state: dossier.state, motivation: dossier.motivation, processed_at: dossier.processed_at)
       progress.inc
     end
     progress.finish
