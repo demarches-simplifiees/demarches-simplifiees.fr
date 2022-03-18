@@ -203,8 +203,7 @@ module Instructeurs
     end
 
     def update_annotations
-      dossier = current_instructeur.dossiers.includes(champs_private: :type_de_champ).find(params[:dossier_id])
-      dossier.assign_attributes(champs_private_params)
+      dossier_with_champs.assign_attributes(champs_private_params)
       if dossier.champs_private.any?(&:changed?)
         dossier.last_champ_private_updated_at = Time.zone.now
       end
@@ -278,19 +277,19 @@ module Instructeurs
     end
 
     def mark_demande_as_read
-      current_instructeur.mark_tab_as_seen(@dossier, :demande)
+      current_instructeur.mark_tab_as_seen(dossier, :demande)
     end
 
     def mark_messagerie_as_read
-      current_instructeur.mark_tab_as_seen(@dossier, :messagerie)
+      current_instructeur.mark_tab_as_seen(dossier, :messagerie)
     end
 
     def mark_avis_as_read
-      current_instructeur.mark_tab_as_seen(@dossier, :avis)
+      current_instructeur.mark_tab_as_seen(dossier, :avis)
     end
 
     def mark_annotations_privees_as_read
-      current_instructeur.mark_tab_as_seen(@dossier, :annotations_privees)
+      current_instructeur.mark_tab_as_seen(dossier, :annotations_privees)
     end
 
     def aasm_error_message(exception, target_state:)
