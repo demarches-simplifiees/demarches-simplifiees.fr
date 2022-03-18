@@ -144,20 +144,24 @@ function LineStringLayer({
   const sourceId = String(feature.properties?.id);
   const layerId = `${sourceId}-layer`;
 
-  useEffect(() => {
-    map
-      .addSource(sourceId, {
-        type: 'geojson',
-        data: feature
-      })
-      .addLayer({
-        id: layerId,
-        source: sourceId,
-        type: 'line',
-        paint: lineStringSelectionLine
-      });
-  }, [map, layerId, sourceId, feature]);
+  const render = () => {
+    if (!map.getSource(sourceId)) {
+      map
+        .addSource(sourceId, {
+          type: 'geojson',
+          data: feature
+        })
+        .addLayer({
+          id: layerId,
+          source: sourceId,
+          type: 'line',
+          paint: lineStringSelectionLine
+        });
+    }
+  };
 
+  useEffect(render, [map, layerId, sourceId, feature]);
+  useMapEvent('styledata', render);
   useMapEvent('mouseenter', onMouseEnter, layerId);
   useMapEvent('mouseleave', onMouseLeave, layerId);
 
@@ -177,20 +181,24 @@ function PointLayer({
   const sourceId = String(feature.properties?.id);
   const layerId = `${sourceId}-layer`;
 
-  useEffect(() => {
-    map
-      .addSource(sourceId, {
-        type: 'geojson',
-        data: feature
-      })
-      .addLayer({
-        id: layerId,
-        source: sourceId,
-        type: 'circle',
-        paint: pointSelectionCircle
-      });
-  }, [map, layerId, sourceId, feature]);
+  const render = () => {
+    if (!map.getSource(sourceId)) {
+      map
+        .addSource(sourceId, {
+          type: 'geojson',
+          data: feature
+        })
+        .addLayer({
+          id: layerId,
+          source: sourceId,
+          type: 'circle',
+          paint: pointSelectionCircle
+        });
+    }
+  };
 
+  useEffect(render, [map, layerId, sourceId, feature]);
+  useMapEvent('styledata', render);
   useMapEvent('mouseenter', onMouseEnter, layerId);
   useMapEvent('mouseleave', onMouseLeave, layerId);
 
@@ -211,26 +219,30 @@ function PolygonLayer({
   const layerId = `${sourceId}-layer`;
   const lineLayerId = `${sourceId}-line-layer`;
 
-  useEffect(() => {
-    map
-      .addSource(sourceId, {
-        type: 'geojson',
-        data: feature
-      })
-      .addLayer({
-        id: lineLayerId,
-        source: sourceId,
-        type: 'line',
-        paint: polygonSelectionLine
-      })
-      .addLayer({
-        id: layerId,
-        source: sourceId,
-        type: 'fill',
-        paint: polygonSelectionFill
-      });
-  }, [map, layerId, lineLayerId, sourceId, feature]);
+  const render = () => {
+    if (!map.getSource(sourceId)) {
+      map
+        .addSource(sourceId, {
+          type: 'geojson',
+          data: feature
+        })
+        .addLayer({
+          id: lineLayerId,
+          source: sourceId,
+          type: 'line',
+          paint: polygonSelectionLine
+        })
+        .addLayer({
+          id: layerId,
+          source: sourceId,
+          type: 'fill',
+          paint: polygonSelectionFill
+        });
+    }
+  };
 
+  useEffect(render, [map, layerId, lineLayerId, sourceId, feature]);
+  useMapEvent('styledata', render);
   useMapEvent('mouseenter', onMouseEnter, layerId);
   useMapEvent('mouseleave', onMouseLeave, layerId);
 
