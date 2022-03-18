@@ -15,6 +15,5 @@
           - else
             %span{ 'data-export-poll-url': download_export_instructeur_procedure_path(procedure, export_format: format, no_progress_notification: true) }
               = t("export_#{time_span_type}_pending_html", export_time: time_ago_in_words(export.created_at), export_format: ".#{format}", scope: [:instructeurs, :procedure])
-      - if procedure.feature_enabled?(:archive_zip_globale)
-        %li
-          = link_to t(:download_archive, scope: [:instructeurs, :procedure]), instructeur_archives_path(procedure)
+      %li
+        = link_to t(:download_archive, scope: [:instructeurs, :procedure]), instructeur_archives_path(procedure)
