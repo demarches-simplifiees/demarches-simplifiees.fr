@@ -16,14 +16,6 @@ class ProcedureArchiveService
   end
 
   def collect_files_archive(archive, instructeur)
-    if Flipper.enabled?(:zip_using_binary, @procedure)
-      new_collect_files_archive(archive, instructeur)
-    else
-      old_collect_files_archive(archive, instructeur)
-    end
-  end
-
-  def new_collect_files_archive(archive, instructeur)
     dossiers = Dossier.visible_by_administration
       .where(groupe_instructeur: archive.groupe_instructeurs)
 
@@ -38,47 +30,6 @@ class ProcedureArchiveService
       ArchiveUploader.new(procedure: @procedure, archive: archive, filepath: zip_filepath)
         .upload
     end
-    archive.make_available!
-    InstructeurMailer.send_archive(instructeur, @procedure, archive).deliver_later
-  end
-
-  def old_collect_files_archive(archive, instructeur)
-    dossiers = Dossier.visible_by_administration
-      .where(groupe_instructeur: archive.groupe_instructeurs)
-
-    dossiers = if archive.time_span_type == 'everything'
-      dossiers.state_termine
-    else
-      dossiers.processed_in_month(archive.month)
-    end
-
-    files = create_list_of_attachments(dossiers)
-
-    tmp_file = Tempfile.new(['tc', '.zip'])
-
-    Zip::OutputStream.open(tmp_file) do |zipfile|
-      bug_reports = ''
-      files.each do |attachment, pj_filename|
-        zipfile.put_next_entry("#{zip_root_folder}/#{pj_filename}")
-        begin
-          zipfile.puts(attachment.download)
-        rescue
-          bug_reports += "Impossible de récupérer le fichier #{pj_filename}\n"
-        end
-      end
-      if !bug_reports.empty?
-        zipfile.put_next_entry("#{zip_root_folder}/LISEZMOI.txt")
-        zipfile.puts(bug_reports)
-      end
-    end
-
-    archive.file.attach(
-      io: File.open(tmp_file),
-      filename: archive.filename(@procedure),
-      # we don't want to run virus scanner on this file
-      metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
-    )
-    tmp_file.delete
     archive.make_available!
     InstructeurMailer.send_archive(instructeur, @procedure, archive).deliver_later
   end
