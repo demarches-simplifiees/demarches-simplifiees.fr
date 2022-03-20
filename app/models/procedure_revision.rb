@@ -132,6 +132,11 @@ class ProcedureRevision < ApplicationRecord
     )
   end
 
+  def attestation_template_has_changes_from_published_revision?
+    attestation_template != procedure.published_attestation_template &&
+      compare(procedure.published_revision).any? { |change| change[:model] == :attestation_template }
+  end
+
   private
 
   def compare_attestation_template(from_at, to_at)

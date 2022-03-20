@@ -712,8 +712,12 @@ class Dossier < ApplicationRecord
     { lon: lon, lat: lat, zoom: zoom }
   end
 
+  def attestation_template_has_changes_from_published_revision?
+    attestation_activated? && !revision.draft? && revision.attestation_template_has_changes_from_published_revision?
+  end
+
   def unspecified_attestation_champs
-    if attestation_template&.activated?
+    if attestation_activated?
       attestation_template.unspecified_champs_for_dossier(self)
     else
       []
@@ -721,7 +725,7 @@ class Dossier < ApplicationRecord
   end
 
   def build_attestation
-    if attestation_template&.activated?
+    if attestation_activated?
       attestation_template.attestation_for(self)
     end
   end
@@ -784,7 +788,7 @@ class Dossier < ApplicationRecord
   end
 
   def attestation_activated?
-    termine? && attestation_template&.activated?
+    attestation_template&.activated?
   end
 
   def after_passer_en_construction
