@@ -507,6 +507,17 @@ describe Users::DossiersController, type: :controller do
         end
       end
 
+      context "when the dossier was created on a routee procedure, but routage was later disabled" do
+        let(:dossier) { create(:dossier, groupe_instructeur: nil, user: user) }
+
+        it "sets a default groupe_instructeur" do
+          subject
+
+          expect(response).to redirect_to(merci_dossier_path(dossier))
+          expect(dossier.reload.groupe_instructeur).to eq(dossier.procedure.defaut_groupe_instructeur)
+        end
+      end
+
       context "on an closed procedure" do
         before { dossier.procedure.close! }
 
