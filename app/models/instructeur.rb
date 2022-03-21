@@ -11,8 +11,7 @@
 #  agent_connect_id         :string
 #
 class Instructeur < ApplicationRecord
-  has_many :administrateurs_instructeurs
-  has_many :administrateurs, through: :administrateurs_instructeurs
+  has_and_belongs_to_many :administrateurs
 
   has_many :assign_to, dependent: :destroy
   has_many :groupe_instructeurs, through: :assign_to
