@@ -2,10 +2,14 @@
 @import "constants";
 
 .france-connect-agent-login-button {
-  background-image: image-url("logo-agent-connect.png");
+  background-image: image-url("agentconnect-btn-principal.svg"), image-url("agentconnect-btn-principal-hover.svg");
   display: block;
   height: 60px;
-  width: 230px;
+  width: 206px;
   margin: 20px auto;
   font-size: 0;
+
+  &:hover {
+    background-image: image-url("agentconnect-btn-principal-hover.svg");
+  }
 }
