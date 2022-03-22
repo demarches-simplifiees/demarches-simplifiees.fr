@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_22_110900) do
+ActiveRecord::Schema.define(version: 2022_03_23_113327) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,7 +60,8 @@ ActiveRecord::Schema.define(version: 2022_03_22_110900) do
     t.datetime "created_at"
     t.string "encrypted_token"
     t.datetime "updated_at"
-    t.bigint "user_id"
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_administrateurs_on_user_id"
   end
 
   create_table "administrateurs_instructeurs", id: false, force: :cascade do |t|
@@ -410,7 +411,8 @@ ActiveRecord::Schema.define(version: 2022_03_22_110900) do
   create_table "experts", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "user_id"
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_experts_on_user_id"
   end
 
   create_table "experts_procedures", force: :cascade do |t|
@@ -539,8 +541,9 @@ ActiveRecord::Schema.define(version: 2022_03_22_110900) do
     t.text "encrypted_login_token"
     t.datetime "login_token_created_at"
     t.datetime "updated_at"
-    t.bigint "user_id"
+    t.bigint "user_id", null: false
     t.index ["agent_connect_id"], name: "index_instructeurs_on_agent_connect_id", unique: true
+    t.index ["user_id"], name: "index_instructeurs_on_user_id"
   end
 
   create_table "invites", id: :serial, force: :cascade do |t|
@@ -852,6 +855,7 @@ ActiveRecord::Schema.define(version: 2022_03_22_110900) do
   end
 
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "administrateurs", "users"
   add_foreign_key "administrateurs_instructeurs", "administrateurs"
   add_foreign_key "administrateurs_instructeurs", "instructeurs"
   add_foreign_key "administrateurs_procedures", "administrateurs"
@@ -876,12 +880,14 @@ ActiveRecord::Schema.define(version: 2022_03_22_110900) do
   add_foreign_key "dossiers", "groupe_instructeurs"
   add_foreign_key "dossiers", "procedure_revisions", column: "revision_id"
   add_foreign_key "dossiers", "users"
+  add_foreign_key "experts", "users"
   add_foreign_key "experts_procedures", "experts"
   add_foreign_key "experts_procedures", "procedures"
   add_foreign_key "france_connect_informations", "users"
   add_foreign_key "geo_areas", "champs"
   add_foreign_key "groupe_instructeurs", "procedures"
   add_foreign_key "initiated_mails", "procedures"
+  add_foreign_key "instructeurs", "users"
   add_foreign_key "merge_logs", "users"
   add_foreign_key "procedure_presentations", "assign_tos"
   add_foreign_key "procedure_revision_types_de_champ", "procedure_revision_types_de_champ", column: "parent_id"
