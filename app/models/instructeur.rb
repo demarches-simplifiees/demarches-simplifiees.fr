@@ -31,7 +31,7 @@ class Instructeur < ApplicationRecord
   has_many :archives
   has_many :bulk_messages, dependent: :destroy
 
-  has_one :user, dependent: :nullify
+  belongs_to :user
 
   scope :with_instant_email_message_notifications, -> {
     includes(:assign_to).where(assign_tos: { instant_email_message_notifications_enabled: true })

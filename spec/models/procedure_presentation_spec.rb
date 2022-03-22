@@ -347,14 +347,14 @@ describe ProcedurePresentation do
       let(:table) { 'followers_instructeurs' }
       let(:order) { 'asc' } # Desc works the same, no extra test required
 
-      let!(:dossier_a) { create(:dossier, :en_construction, procedure: procedure) }
       let!(:dossier_z) { create(:dossier, :en_construction, procedure: procedure) }
+      let!(:dossier_a) { create(:dossier, :en_construction, procedure: procedure) }
       let!(:dossier_without_instructeur) { create(:dossier, :en_construction, procedure: procedure) }
 
       before do
+        create(:follow, dossier: dossier_z, instructeur: create(:instructeur, email: 'zythum@exemple.fr'))
         create(:follow, dossier: dossier_a, instructeur: create(:instructeur, email: 'abaca@exemple.fr'))
         create(:follow, dossier: dossier_a, instructeur: create(:instructeur, email: 'abaca2@exemple.fr'))
-        create(:follow, dossier: dossier_z, instructeur: create(:instructeur, email: 'zythum@exemple.fr'))
       end
 
       context 'for email column' do
