@@ -84,18 +84,8 @@ class Champ < ApplicationRecord
     !private?
   end
 
-  def siblings
-    if parent
-      parent&.champs
-    elsif public?
-      dossier&.champs
-    else
-      dossier&.champs_private
-    end
-  end
-
   def sections
-    siblings&.filter(&:header_section?)
+    @sections ||= dossier.sections_for(self)
   end
 
   def mandatory_and_blank?

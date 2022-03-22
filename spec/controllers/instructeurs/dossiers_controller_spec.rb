@@ -56,7 +56,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
     it { expect(instructeur.followed_dossiers).to match([dossier]) }
     it { expect(flash.notice).to eq('Dossier suivi') }
-    it { expect(response).to redirect_to(instructeur_procedures_url) }
+    it { expect(response).to redirect_to(instructeur_procedure_path(dossier.procedure)) }
   end
 
   describe '#unfollow' do
@@ -68,7 +68,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
     it { expect(instructeur.followed_dossiers).to match([]) }
     it { expect(flash.notice).to eq("Vous ne suivez plus le dossier nº #{dossier.id}") }
-    it { expect(response).to redirect_to(instructeur_procedures_url) }
+    it { expect(response).to redirect_to(instructeur_procedure_path(dossier.procedure)) }
   end
 
   describe '#archive' do
@@ -80,7 +80,7 @@ describe Instructeurs::DossiersController, type: :controller do
     end
 
     it { expect(dossier.archived).to be true }
-    it { expect(response).to redirect_to(instructeur_procedures_url) }
+    it { expect(response).to redirect_to(instructeur_procedure_path(dossier.procedure)) }
   end
 
   describe '#unarchive' do
@@ -91,7 +91,7 @@ describe Instructeurs::DossiersController, type: :controller do
     end
 
     it { expect(dossier.archived).to be false }
-    it { expect(response).to redirect_to(instructeur_procedures_url) }
+    it { expect(response).to redirect_to(instructeur_procedure_path(dossier.procedure)) }
   end
 
   describe '#passer_en_instruction' do
@@ -740,9 +740,9 @@ describe Instructeurs::DossiersController, type: :controller do
     end
   end
 
-  describe "#delete_dossier" do
+  describe "#destroy" do
     subject do
-      patch :delete_dossier, params: {
+      delete :destroy, params: {
         procedure_id: procedure.id,
         dossier_id: dossier.id
       }

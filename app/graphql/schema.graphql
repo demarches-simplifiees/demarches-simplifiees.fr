@@ -728,6 +728,11 @@ type Dossier {
   dateDerniereModification: ISO8601DateTime!
 
   """
+  Date d’expiration.
+  """
+  dateExpiration: ISO8601DateTime
+
+  """
   Date du dernier passage en construction.
   """
   datePassageEnConstruction: ISO8601DateTime!
@@ -736,6 +741,16 @@ type Dossier {
   Date du dernier passage en instruction.
   """
   datePassageEnInstruction: ISO8601DateTime
+
+  """
+  Date de la suppression par l’administration.
+  """
+  dateSuppressionParAdministration: ISO8601DateTime
+
+  """
+  Date de la suppression par l’usager.
+  """
+  dateSuppressionParUsager: ISO8601DateTime
 
   """
   Date du dernier traitement.
@@ -770,7 +785,7 @@ type Dossier {
   L’état du dossier.
   """
   state: DossierState!
-  traitements(id: ID): [Traitement!]!
+  traitements: [Traitement!]!
   usager: Profile!
 }
 
@@ -1998,26 +2013,10 @@ enum TitreIdentiteGrantType {
 }
 
 type Traitement {
+  dateTraitement: ISO8601DateTime!
+  emailAgentTraitant: String
   id: ID!
-
-  """
-  L'instructeur ayant pris la décision.
-  """
-  instructeurEmail: String
-
-  """
-  La motivation de la décision.
-  """
-  motivation: String!
-
-  """
-  La date de la décision
-  """
-  processedAt: ISO8601DateTime!
-
-  """
-  La décision sur le dossier.
-  """
+  motivation: String
   state: DossierState!
 }
 

@@ -93,7 +93,8 @@
                                                                       state: p.state,
                                                                       archived: p.archived,
                                                                       dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
-                                                                      close_to_expiration: nil }
+                                                                      close_to_expiration: nil,
+                                                                      hidden_by_administration: nil }
 
             - else
               %td
