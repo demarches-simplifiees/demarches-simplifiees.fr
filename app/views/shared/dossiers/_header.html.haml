@@ -8,7 +8,8 @@
 
   = render(partial: 'users/dossiers/expiration_banner', locals: {dossier: dossier})
 
-  .header-actions
-    - if current_user.owns?(dossier)
+  - if current_user.owns?(dossier) && !dossier.procedure.discarded? && !dossier.procedure.close?
+    .header-actions
       = render partial: 'invites/dropdown', locals: { dossier: dossier }
-
+  - else
+    = render(partial: 'users/dossiers/procedure_removed_banner', locals: { dossier: dossier })

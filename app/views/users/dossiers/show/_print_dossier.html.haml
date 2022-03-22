@@ -1,0 +1,6 @@
+%span.dropdown.print-menu-opener
+  %button.button.dropdown-button.icon-only{ title: t('views.users.dossiers.show.header.print'), 'aria-label': 'imprimer', 'aria-expanded' => 'false', 'aria-controls' => 'print-menu' }
+    %span.icon.printer
+  %ul#print-menu.print-menu.dropdown-content
+    %li
+      = link_to t('views.users.dossiers.show.header.print_dossier'), dossier_path(dossier, format: :pdf), target: "_blank", rel: "noopener", class: "menu-item menu-link"
