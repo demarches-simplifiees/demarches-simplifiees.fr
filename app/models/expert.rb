@@ -8,7 +8,7 @@
 #  user_id    :bigint
 #
 class Expert < ApplicationRecord
-  has_one :user
+  belongs_to :user
   has_many :experts_procedures
   has_many :procedures, through: :experts_procedures
   has_many :avis, through: :experts_procedures
