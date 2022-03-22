@@ -2013,10 +2013,25 @@ enum TitreIdentiteGrantType {
 }
 
 type Traitement {
+  """
+  La date de la décision
+  """
   dateTraitement: ISO8601DateTime!
+
+  """
+  L'instructeur ayant pris la décision.
+  """
   emailAgentTraitant: String
   id: ID!
+
+  """
+  La motivation de la décision.
+  """
   motivation: String
+
+  """
+  La décision sur le dossier.
+  """
   state: DossierState!
 }
 

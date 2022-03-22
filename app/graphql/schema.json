@@ -3164,6 +3164,20 @@
               "deprecationReason": null
             },
             {
+              "name": "dateExpiration",
+              "description": "Date d’expiration.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "ISO8601DateTime",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "datePassageEnConstruction",
               "description": "Date du dernier passage en construction.",
               "args": [
@@ -3184,6 +3198,34 @@
             {
               "name": "datePassageEnInstruction",
               "description": "Date du dernier passage en instruction.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "ISO8601DateTime",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "dateSuppressionParAdministration",
+              "description": "Date de la suppression par l’administration.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "ISO8601DateTime",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "dateSuppressionParUsager",
+              "description": "Date de la suppression par l’usager.",
               "args": [
 
               ],
@@ -3458,18 +3500,7 @@
               "name": "traitements",
               "description": null,
               "args": [
-                {
-                  "name": "id",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "ID",
-                    "ofType": null
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                }
+
               ],
               "type": {
                 "kind": "NON_NULL",
@@ -9336,6 +9367,38 @@
           "description": null,
           "fields": [
             {
+              "name": "dateTraitement",
+              "description": "La date de la décision",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ISO8601DateTime",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "emailAgentTraitant",
+              "description": "L'instructeur ayant pris la décision.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "id",
               "description": null,
               "args": [
@@ -9354,8 +9417,8 @@
               "deprecationReason": null
             },
             {
-              "name": "instructeurEmail",
-              "description": "L'instructeur ayant pris la décision.",
+              "name": "motivation",
+              "description": "La motivation de la décision.",
               "args": [
 
               ],
@@ -9363,42 +9426,6 @@
                 "kind": "SCALAR",
                 "name": "String",
                 "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "motivation",
-              "description": "La motivation de la décision.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "processedAt",
-              "description": "La date de la décision",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "ISO8601DateTime",
-                  "ofType": null
-                }
               },
               "isDeprecated": false,
               "deprecationReason": null
