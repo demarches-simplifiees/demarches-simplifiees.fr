@@ -13,19 +13,21 @@ module Instructeurs
         .order(closed_at: :desc, unpublished_at: :desc, published_at: :desc, created_at: :desc)
 
       dossiers = current_instructeur.dossiers.joins(:groupe_instructeur)
-      @dossiers_count_per_procedure = dossiers.all_state.visible_by_administration.group('groupe_instructeurs.procedure_id').reorder(nil).count
-      @dossiers_a_suivre_count_per_procedure = dossiers.without_followers.en_cours.visible_by_administration.group('groupe_instructeurs.procedure_id').reorder(nil).count
-      @dossiers_archived_count_per_procedure = dossiers.archived.group('groupe_instructeurs.procedure_id').count
-      @dossiers_termines_count_per_procedure = dossiers.termine.visible_by_administration.group('groupe_instructeurs.procedure_id').reorder(nil).count
-      @dossiers_expirant_count_per_procedure = dossiers.termine_or_en_construction_close_to_expiration.group('groupe_instructeurs.procedure_id').count
+      dossiers_visibles = dossiers.visible_by_administration
+      @dossiers_count_per_procedure = dossiers_visibles.all_state.group('groupe_instructeurs.procedure_id').reorder(nil).count
+      @dossiers_a_suivre_count_per_procedure = dossiers_visibles.without_followers.en_cours.group('groupe_instructeurs.procedure_id').reorder(nil).count
+      @dossiers_archived_count_per_procedure = dossiers_visibles.archived.group('groupe_instructeurs.procedure_id').count
+      @dossiers_termines_count_per_procedure = dossiers_visibles.termine.group('groupe_instructeurs.procedure_id').reorder(nil).count
+      @dossiers_expirant_count_per_procedure = dossiers_visibles.termine_or_en_construction_close_to_expiration.group('groupe_instructeurs.procedure_id').count
       @dossiers_supprimes_recemment_count_per_procedure = dossiers.hidden_by_administration.group('groupe_instructeurs.procedure_id').reorder(nil).count
-      groupe_ids = current_instructeur.groupe_instructeurs.pluck(:id)
 
+      groupe_ids = current_instructeur.groupe_instructeurs.pluck(:id)
       @followed_dossiers_count_per_procedure = current_instructeur
         .followed_dossiers
         .joins(:groupe_instructeur)
         .en_cours
         .where(groupe_instructeur_id: groupe_ids)
+        .visible_by_administration
         .group('groupe_instructeurs.procedure_id')
         .reorder(nil)
         .count
@@ -56,27 +58,27 @@ module Instructeurs
       @a_suivre_count, @suivis_count, @traites_count, @tous_count, @supprimes_recemment_count, @archives_count, @expirant_count = current_instructeur
         .dossiers_count_summary(groupe_instructeur_ids)
         .fetch_values('a_suivre', 'suivis', 'traites', 'tous', 'supprimes_recemment', 'archives', 'expirant')
+      @can_download_dossiers = (@tous_count + @archives_count) > 0
 
-      dossiers_visibles = Dossier
-        .where(groupe_instructeur_id: groupe_instructeur_ids)
+      dossiers = Dossier.where(groupe_instructeur_id: groupe_instructeur_ids)
+      dossiers_visibles = dossiers.visible_by_administration
 
       @a_suivre_dossiers = dossiers_visibles
         .without_followers
         .en_cours
-        .visible_by_administration
 
       @followed_dossiers = current_instructeur
         .followed_dossiers
-        .where(groupe_instructeur_id: groupe_instructeur_ids)
         .en_cours
+        .merge(dossiers_visibles)
 
       @followed_dossiers_id = @followed_dossiers.pluck(:id)
 
-      @termines_dossiers = dossiers_visibles.termine.visible_by_administration
-      @all_state_dossiers = dossiers_visibles.all_state.visible_by_administration
-      @supprimes_recemment_dossiers = dossiers_visibles.termine.hidden_by_administration
+      @termines_dossiers = dossiers_visibles.termine
+      @all_state_dossiers = dossiers_visibles.all_state
       @archived_dossiers = dossiers_visibles.archived
       @expirant_dossiers = dossiers_visibles.termine_or_en_construction_close_to_expiration
+      @supprimes_recemment_dossiers = dossiers.hidden_by_administration.termine
 
       @dossiers = case statut
       when 'a-suivre'
@@ -178,10 +180,10 @@ module Instructeurs
         .groupe_instructeurs
         .where(procedure: procedure)
 
-      @dossier_count = current_instructeur
-        .dossiers_count_summary(groupe_instructeur_ids)
-        .fetch_values('tous', 'archives')
-        .sum
+      @can_download_dossiers = current_instructeur
+        .dossiers
+        .visible_by_administration
+        .exists?(groupe_instructeur_id: groupe_instructeur_ids)
 
       export = Export.find_or_create_export(export_format, time_span_type, groupe_instructeurs)
 

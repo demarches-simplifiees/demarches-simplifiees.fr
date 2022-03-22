@@ -56,18 +56,18 @@ describe Invite do
   end
 
   describe "#default_scope" do
-    let(:dossier) { create(:dossier, hidden_at: hidden_at) }
+    let!(:dossier) { create(:dossier, hidden_by_user_at: hidden_by_user_at) }
     let!(:invite) { create(:invite, email: "email@totor.com", dossier: dossier) }
 
     context "when dossier is not discarded" do
-      let(:hidden_at) { nil }
+      let(:hidden_by_user_at) { nil }
 
       it { expect(Invite.count).to eq(1) }
       it { expect(Invite.all).to include(invite) }
     end
 
     context "when dossier is discarded" do
-      let(:hidden_at) { 1.day.ago }
+      let(:hidden_by_user_at) { 1.hour.ago }
 
       it { expect(Invite.count).to eq(0) }
     end
