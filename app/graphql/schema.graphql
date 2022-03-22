@@ -2025,9 +2025,19 @@ type Traitement {
   id: ID!
 
   """
+  L'instructeur ayant pris la décision.
+  """
+  instructeurEmail: String
+
+  """
   La motivation de la décision.
   """
   motivation: String
+
+  """
+  La date de la décision
+  """
+  processedAt: ISO8601DateTime!
 
   """
   La décision sur le dossier.

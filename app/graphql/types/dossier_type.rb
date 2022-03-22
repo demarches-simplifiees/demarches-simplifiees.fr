@@ -139,16 +139,6 @@ module Types
       end
     end
 
-    def traitements(id: nil)
-      if id.present?
-        Loaders::Champ
-          .for(object, private: true)
-          .load(ApplicationRecord.id_from_typed_id(id))
-      else
-        Loaders::Association.for(object.class, :traitements).load(object)
-      end
-    end
-
     def pdf
       sgid = object.to_sgid(expires_in: 1.hour, for: 'api_v2')
       {
