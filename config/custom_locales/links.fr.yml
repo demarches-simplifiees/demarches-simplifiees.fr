@@ -24,6 +24,7 @@ fr:
       faq:
         url: "https://mes-demarches.gitbook.io/documentation/questions-frequentes"
       mentions_legales:
+        url: "https://mes-demarches.gitbook.io/documentation/cgu#mentions-legales"
       releases:
         url: "https://github.com/maatinito/mes-demarches/releases"
       status_page:
