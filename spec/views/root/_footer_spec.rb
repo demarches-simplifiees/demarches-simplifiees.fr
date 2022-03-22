@@ -2,12 +2,11 @@ describe 'root/_footer.html.haml', type: :view do
   subject { render }
 
   it "should contains polynesian links" do
-    expect(subject).to have_link('DINUM', href: 'https://numerique.gouv.fr/')
+    expect(subject).to have_link('DMRA', href: 'https://www.service-public.pf/voir/annuaire/dmra-direction-modernisation-et-reformes-administration/')
     expect(subject).to have_link('CGU', href: CGU_URL)
     expect(subject).to have_link('Données personnelles', href: RGPD_URL)
     expect(subject).to have_link('Mentions légales', href: MENTIONS_LEGALES_URL)
     expect(subject).to have_link('Documentation', href: DOC_URL)
-    expect(subject).to have_css('.footer-logo-netpf')
     expect(CGU_URL).to include('mes-demarches.gitbook.io')
     expect(RGPD_URL).to include('mes-demarches.gitbook.io')
     expect(MENTIONS_LEGALES_URL).to include('mes-demarches.gitbook.io')
