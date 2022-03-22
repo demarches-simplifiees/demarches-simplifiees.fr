@@ -504,7 +504,7 @@ class Dossier < ApplicationRecord
   end
 
   def read_only?
-    en_instruction? || accepte? || refuse? || sans_suite?
+    en_instruction? || accepte? || refuse? || sans_suite? || procedure.discarded? || procedure.close? && brouillon?
   end
 
   def can_transition_to_en_construction?
