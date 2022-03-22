@@ -408,8 +408,9 @@ describe Instructeurs::DossiersController, type: :controller do
   end
 
   describe '#messagerie' do
+    before { expect(controller.current_instructeur).to receive(:mark_tab_as_seen).with(dossier, :messagerie) }
     subject { get :messagerie, params: { procedure_id: procedure.id, dossier_id: dossier.id } }
-    it { expect(response).to have_http_status(:ok) }
+    it { expect(subject).to have_http_status(:ok) }
   end
 
   describe "#create_commentaire" do
@@ -431,6 +432,7 @@ describe Instructeurs::DossiersController, type: :controller do
     }
 
     before do
+      expect(controller.current_instructeur).to receive(:mark_tab_as_seen).with(dossier, :messagerie)
       allow(ClamavService).to receive(:safe_file?).and_return(scan_result)
       Timecop.freeze(now)
     end
@@ -479,6 +481,10 @@ describe Instructeurs::DossiersController, type: :controller do
     let(:invite_linked_dossiers) { false }
     let(:saved_avis) { dossier.avis.first }
     let!(:old_avis_count) { Avis.count }
+
+    before do
+      expect(controller.current_instructeur).to receive(:mark_tab_as_seen).with(dossier, :avis)
+    end
 
     subject do
       post :create_avis, params: {
@@ -617,7 +623,10 @@ describe Instructeurs::DossiersController, type: :controller do
         }
       end
 
-      before { subject }
+      before do
+        expect(controller.current_instructeur).to receive(:mark_tab_as_seen).with(dossier, :demande)
+        subject
+      end
 
       it { expect(assigns(:include_infos_administration)).to eq(true) }
       it { expect(response).to render_template 'dossiers/show' }
@@ -654,6 +663,7 @@ describe Instructeurs::DossiersController, type: :controller do
     end
 
     before do
+      expect(controller.current_instructeur).to receive(:mark_tab_as_seen).with(dossier, :annotations_privees)
       another_instructeur.follow(dossier)
       Timecop.freeze(now)
       patch :update_annotations, params: params
