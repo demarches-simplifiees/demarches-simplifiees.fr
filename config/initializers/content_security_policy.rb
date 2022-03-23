@@ -47,7 +47,6 @@ Rails.application.config.content_security_policy do |policy|
     # Allow Vite.js
     policy.connect_src(*policy.connect_src, "ws://#{ViteRuby.config.host_with_port}")
     policy.script_src(*policy.script_src, :unsafe_eval, "http://#{ViteRuby.config.host_with_port}")
-    policy.style_src(*policy.style_src, :unsafe_inline)
 
     # CSP are not enforced in development (see content_security_policy_report_only in development.rb)
     # However we notify a random local URL, to see breakage in the DevTools when adding a new external resource.
