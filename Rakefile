@@ -4,3 +4,6 @@
 require File.expand_path('config/application', __dir__)
 
 Rails.application.load_tasks
+
+# Alphabetize schema.rb
+task 'db:schema:dump': 'strong_migrations:alphabetize_columns'

@@ -34,9 +34,9 @@ class ProgressReport
     set_progress(total: total, count: 0)
   end
 
-  def inc
-    set_progress(count: @count + 1)
-    if Time.zone.now - @last_progress >= 1.second
+  def inc(amount = 1)
+    set_progress(count: @count + amount)
+    if @per_10_000 % 10 == 0
       print_progress
       @last_progress = Time.zone.now
     end
