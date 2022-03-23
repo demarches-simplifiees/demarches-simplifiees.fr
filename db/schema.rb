@@ -333,6 +333,8 @@ ActiveRecord::Schema.define(version: 2022_03_15_113510) do
     t.datetime "termine_close_to_expiration_notice_sent_at"
     t.datetime "updated_at"
     t.integer "user_id"
+    t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
+    t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
     t.index ["archived"], name: "index_dossiers_on_archived"
     t.index ["dossier_transfer_id"], name: "index_dossiers_on_dossier_transfer_id"
     t.index ["groupe_instructeur_id"], name: "index_dossiers_on_groupe_instructeur_id"
@@ -441,11 +443,11 @@ ActiveRecord::Schema.define(version: 2022_03_15_113510) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "flipper_features", id: false, force: :cascade do |t|
+  create_table "flipper_features", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.bigserial "id", null: false
     t.string "key", null: false
     t.datetime "updated_at", null: false
+    t.index ["key"], name: "index_flipper_features_on_key", unique: true
   end
 
   create_table "flipper_gates", force: :cascade do |t|
@@ -688,10 +690,10 @@ ActiveRecord::Schema.define(version: 2022_03_15_113510) do
   end
 
   create_table "s3_synchronizations", force: :cascade do |t|
-    t.string "target"
     t.bigint "active_storage_blob_id"
     t.boolean "checked"
     t.datetime "created_at", precision: 6, null: false
+    t.string "target"
     t.datetime "updated_at", precision: 6, null: false
     t.index ["active_storage_blob_id"], name: "index_s3_synchronizations_on_active_storage_blob_id"
     t.index ["target", "active_storage_blob_id"], name: "index_s3_synchronizations_on_target_and_active_storage_blob_id", unique: true
@@ -775,6 +777,7 @@ ActiveRecord::Schema.define(version: 2022_03_15_113510) do
     t.string "token", null: false
     t.datetime "updated_at", null: false
     t.index ["instructeur_id"], name: "index_trusted_device_tokens_on_instructeur_id"
+    t.index ["token"], name: "index_trusted_device_tokens_on_token", unique: true
   end
 
   create_table "types_de_champ", id: :serial, force: :cascade do |t|
