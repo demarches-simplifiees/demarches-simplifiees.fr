@@ -63,7 +63,7 @@ module Administrateurs
     end
 
     def destroy
-      if !groupe_instructeur.dossiers.with_discarded.empty?
+      if !groupe_instructeur.dossiers.empty?
         flash[:alert] = "Impossible de supprimer un groupe avec des dossiers. Il faut le réaffecter avant"
       elsif procedure.groupe_instructeurs.one?
         flash[:alert] = "Suppression impossible : il doit y avoir au moins un groupe instructeur sur chaque procédure"
@@ -95,7 +95,7 @@ module Administrateurs
     def reaffecter
       target_group = procedure.groupe_instructeurs.find(params[:target_group])
       reaffecter_bulk_messages(target_group)
-      groupe_instructeur.dossiers.with_discarded.find_each do |dossier|
+      groupe_instructeur.dossiers.find_each do |dossier|
         dossier.assign_to_groupe_instructeur(target_group, current_administrateur)
       end
 

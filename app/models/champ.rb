@@ -20,7 +20,7 @@
 #  type_de_champ_id               :integer
 #
 class Champ < ApplicationRecord
-  belongs_to :dossier, -> { with_discarded }, inverse_of: false, touch: true, optional: false
+  belongs_to :dossier, inverse_of: false, touch: true, optional: false
   belongs_to :type_de_champ, inverse_of: :champ, optional: false
   belongs_to :parent, class_name: 'Champ', optional: true
   has_one_attached :piece_justificative_file
@@ -84,18 +84,8 @@ class Champ < ApplicationRecord
     !private?
   end
 
-  def siblings
-    if parent
-      parent&.champs
-    elsif public?
-      dossier&.champs
-    else
-      dossier&.champs_private
-    end
-  end
-
   def sections
-    siblings&.filter(&:header_section?)
+    @sections ||= dossier.sections_for(self)
   end
 
   def mandatory_and_blank?

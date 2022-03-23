@@ -70,9 +70,7 @@ describe 'Instructing a dossier:', js: true do
     click_on procedure.libelle
     click_on 'traité'
     click_on 'Actions'
-    accept_confirm do
-      click_on 'Supprimer le dossier'
-    end
+    click_on 'Supprimer le dossier'
     click_on 'traité'
     expect(page).not_to have_button('Actions')
   end

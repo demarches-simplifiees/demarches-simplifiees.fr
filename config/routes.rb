@@ -372,7 +372,7 @@ Rails.application.routes.draw do
         get 'email_usagers'
         post 'create_multiple_commentaire'
 
-        resources :dossiers, only: [:show], param: :dossier_id do
+        resources :dossiers, only: [:show, :destroy], param: :dossier_id do
           member do
             resources :commentaires, only: [:destroy]
             post 'repousser-expiration' => 'dossiers#extend_conservation'
@@ -388,7 +388,7 @@ Rails.application.routes.draw do
             patch 'unfollow'
             patch 'archive'
             patch 'unarchive'
-            patch 'supprimer-dossier' => 'dossiers#delete_dossier'
+            patch 'restore'
             patch 'annotations' => 'dossiers#update_annotations'
             post 'commentaire' => 'dossiers#create_commentaire'
             post 'passer-en-instruction' => 'dossiers#passer_en_instruction'
@@ -399,7 +399,6 @@ Rails.application.routes.draw do
             post 'avis' => 'dossiers#create_avis'
             get 'print' => 'dossiers#print'
             get 'telecharger_pjs' => 'dossiers#telecharger_pjs'
-            patch 'restore'
           end
         end
 

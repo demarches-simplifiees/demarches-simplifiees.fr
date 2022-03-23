@@ -36,6 +36,14 @@ vendor/*
 
 # Local Netlify folder
 .netlify
-*.xcf
 /cors.json
 /cors-prod.json
+/app/assets/images/header/logo-md-wide.xcf
+
+# Custom locales
+# /config/custom_locales/*
+# !/config/custom_locales/.keep
+
+# Custom views
+# /app/custom_views/*
+# !/app/custom_views/.keep

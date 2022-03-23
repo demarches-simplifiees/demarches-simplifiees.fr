@@ -15,7 +15,8 @@ class DossierDashboard < Administrate::BaseDashboard
     text_summary: Field::String.with_options(searchable: false),
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
-    hidden_at: Field::DateTime,
+    hidden_by_user_at: Field::DateTime,
+    hidden_by_administration_at: Field::DateTime,
     champs: ChampCollectionField
   }.freeze
 
@@ -41,7 +42,8 @@ class DossierDashboard < Administrate::BaseDashboard
     :champs,
     :created_at,
     :updated_at,
-    :hidden_at
+    :hidden_by_user_at,
+    :hidden_by_administration_at
   ].freeze
 
   # FORM_ATTRIBUTES

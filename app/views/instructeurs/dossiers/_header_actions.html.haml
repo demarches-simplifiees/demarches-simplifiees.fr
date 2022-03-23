@@ -28,7 +28,8 @@
             state: dossier.state,
             archived: dossier.archived,
             dossier_is_followed: current_instructeur&.follow?(dossier),
-            close_to_expiration: dossier.close_to_expiration? }
+            close_to_expiration: dossier.close_to_expiration?,
+            hidden_by_administration: dossier.hidden_by_administration? }
 
 
 .state-button

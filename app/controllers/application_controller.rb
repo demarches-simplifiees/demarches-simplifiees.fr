@@ -17,6 +17,7 @@ class ApplicationController < ActionController::Base
   before_action :set_active_storage_host
   before_action :setup_javascript_settings
   before_action :setup_tracking
+  before_action :set_customizable_view_path
 
   around_action :switch_locale
 
@@ -358,5 +359,9 @@ class ApplicationController < ActionController::Base
     if localization_enabled?
       http_accept_language.compatible_language_from(I18n.available_locales)
     end
+  end
+
+  def set_customizable_view_path
+    prepend_view_path "app/custom_views"
   end
 end
