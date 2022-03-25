@@ -26,14 +26,9 @@ class Invite < ApplicationRecord
 
   validates :email, format: { with: Devise.email_regexp, message: "n'est pas valide" }, allow_nil: true
 
-  # #1619 When an administrateur deletes a `Procedure`, its `hidden_at` field, and
-  # the `hidden_at` field of its `Dossier`s, get set, effectively removing the Procedure
-  # and Dossier from their respective `default_scope`s.
-  # Therefore, we also remove `Invite`s for such effectively deleted `Dossier`s
-  # from their default scope.
-  scope :kept, -> { joins(:dossier).merge(Dossier.kept) }
+  scope :with_dossiers, -> { joins(:dossier).merge(Dossier.visible_by_user) }
 
-  default_scope { kept }
+  default_scope { with_dossiers }
 
   def send_notification
     if self.user.present?

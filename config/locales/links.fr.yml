@@ -1,0 +1,85 @@
+fr:
+  links:
+    provider:
+      logo:
+        src: "footer/logo-dinum.png"
+        alt: "Logo DINUM"
+        height: 161
+        width: 138
+      name: "DINUM"
+      provided_by: "la DINUM"
+      title: "Direction Interministérielle au Numérique"
+      url: "https://numerique.gouv.fr"
+    footer:
+      accessibilite:
+        label: "Accessibilité : non conforme"
+        title: "Accessibilité : non conforme"
+        url: "https://doc.demarches-simplifiees.fr/declaration-daccessibilite"
+      aide:
+        label: "Aide"
+        title: "Foire aux Questions"
+        url: "https://faq.demarches-simplifiees.fr"
+      api_doc:
+        label: "Documentation de l'API"
+        title: "Documentation de l'API"
+        url: "https://doc.demarches-simplifiees.fr/pour-aller-plus-loin/graphql"
+      betagouv:
+        label: "Beta.gouv.fr"
+        title: "Le site de Beta.gouv.fr"
+        url: "https://beta.gouv.fr"
+      cgu:
+        label: "CGU"
+        title: "Conditions Générales d'Utilisation"
+        url: "https://doc.demarches-simplifiees.fr/cgu"
+      rgpd:
+        label: "Données personnelles"
+        title: "Données personnelles"
+        url: "https://mes-demarches.gitbook.io/documentation/cgu#rgpd"
+      contact:
+        label: "Contact"
+        title: "Contact"
+      contact_technique:
+        label: "Contact technique"
+        title: "Contact technique"
+      doc:
+        label: "Documentation"
+        title: "Documentation"
+        url: "https://doc.demarches-simplifiees.fr"
+      doc_nouveautes:
+        label: "Nouveautés"
+        title: "Nouveautés"
+        url: "https://doc.demarches-simplifiees.fr/nouveautes"
+      faq:
+        label: "FAQ"
+        title: "Foire aux Questions"
+        url: "https://faq.demarches-simplifiees.fr"
+      faq_admin:
+        label: "FAQ"
+        title: "Foire aux Questions"
+        url: "https:///faq.demarches-simplifiees.fr/collection/1-administrateur-creation-dun-formulaire"
+      mentions_legales:
+        label: "Mentions légales"
+        title: "Mentions légales"
+        url: "https//doc.demarches-simplifiees.fr/mentions-legales"
+      #      newsletter:
+      #        label: "Newsletter"
+      #        title: "Notre newsletter"
+      #        url: "https://my.sendinblue.com/users/subscribe/js_id/3s2q1/id/1"
+      releases:
+        label: "Nouveautés"
+        title: "Nos nouveautés"
+        url: "https://github.com/betagouv/demarches-simplifiees.fr/releases"
+      stats:
+        label: "Statistiques"
+        title: "Statistiques"
+      status_page:
+        label: "Disponibilité"
+        title: "Disponibilité"
+        url: "https://status.demarches-simplifiees.fr"
+      suivi:
+        label: "Suivi d'audience et vie privée"
+        title: "Suivi d'audience et vie privée"
+#      webinaire:
+#        label: "Inscription ateliers en ligne"
+#        title: "Inscription ateliers en ligne"
+#        url: "https://app.livestorm.co/demarches-simplifiees"

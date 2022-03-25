@@ -390,12 +390,8 @@ describe Administrateurs::ProceduresController, type: :controller do
 
       before { subject }
 
-      it 'discard the procedure' do
-        expect(procedure.reload.discarded?).to be_truthy
-      end
-
       it 'deletes associated dossiers' do
-        expect(procedure.dossiers.with_discarded.count).to eq(0)
+        expect(procedure.dossiers.count).to eq(0)
       end
 
       it 'redirects to the procedure drafts page' do
@@ -417,7 +413,7 @@ describe Administrateurs::ProceduresController, type: :controller do
         it do
           expect(procedure.reload.close?).to be_truthy
           expect(procedure.discarded?).to be_truthy
-          expect(dossier.reload.kept?).to be_truthy
+          expect(dossier.reload.visible_by_administration?).to be_falsy
         end
       end
 
@@ -444,7 +440,7 @@ describe Administrateurs::ProceduresController, type: :controller do
 
         it do
           expect(procedure.reload.discarded?).to be_truthy
-          expect(dossier.reload.kept?).to be_truthy
+          expect(dossier.reload.visible_by_administration?).to be_falsy
         end
       end
 

@@ -1,4 +1,7 @@
-- if close_to_expiration || Dossier::TERMINE.include?(state)
+- if hidden_by_administration
+  = link_to restore_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: "button" do
+    = t('views.instructeurs.dossiers.restore')
+- elsif close_to_expiration || Dossier::TERMINE.include?(state)
   .dropdown.user-dossier-actions
     %button.button.dropdown-button{ 'aria-expanded' => 'false', 'aria-controls' => 'actions-menu' }
       Actions
@@ -23,7 +26,7 @@
                 Archiver le dossier
 
           %li.danger
-            = link_to supprimer_dossier_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, data: { confirm: "Voulez vous vraiment supprimer le dossier #{dossier_id} ? Cette action est irréversible. \nNous vous suggérons de télécharger le dossier au format PDF au préalable." } do
+            = link_to instructeur_dossier_path(procedure_id, dossier_id), method: :delete do
               %span.icon.delete
               .dropdown-description
                 = t('views.instructeurs.dossiers.delete_dossier')

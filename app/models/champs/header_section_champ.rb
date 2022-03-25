@@ -44,8 +44,7 @@ class Champs::HeaderSectionChamp < Champ
   end
 
   def section_index
-    siblings
-      .filter { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:header_section) }
+    sections
       .take_while { |c| c != self }
       .push(self)
       .reduce([0, 0, 0]) do |index, c|
