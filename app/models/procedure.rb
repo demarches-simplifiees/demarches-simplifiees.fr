@@ -655,6 +655,10 @@ class Procedure < ApplicationRecord
     !AssignTo.exists?(groupe_instructeur: groupe_instructeurs)
   end
 
+  def revised?
+    feature_enabled?(:procedure_revisions) && revisions.size > 2
+  end
+
   def routee?
     routing_enabled? || groupe_instructeurs.size > 1
   end
