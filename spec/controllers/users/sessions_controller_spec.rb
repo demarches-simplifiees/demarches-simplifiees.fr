@@ -252,9 +252,14 @@ describe Users::SessionsController, type: :controller do
     end
 
     context 'when the email is evil' do
-      let(:link_email) { 'Hello, I am an evil email' }
+      [
+        'Hello, I am an evil email',
+        'a@a%C2%A0evil%C2%A0text%C2%A0with%C2%A0spaces'
+      ].each do |evil_attempt|
+        let(:link_email) { evil_attempt }
 
-      it { expect(response).to redirect_to(root_path) }
+        it { expect(response).to redirect_to(root_path) }
+      end
     end
   end
 end

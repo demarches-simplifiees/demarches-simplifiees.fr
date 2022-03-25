@@ -34,17 +34,17 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
     context 'when the routage is not activated on the procedure' do
       let(:procedure) { create :procedure, administrateur: admin, instructeurs: [instructeur_assigned_1, instructeur_assigned_2] }
-      let!(:instructeur_assigned_1) { create :instructeur, email: 'instructeur_1@ministere_a.gouv.fr', administrateurs: [admin] }
-      let!(:instructeur_assigned_2) { create :instructeur, email: 'instructeur_2@ministere_b.gouv.fr', administrateurs: [admin] }
-      let!(:instructeur_not_assigned_1) { create :instructeur, email: 'instructeur_3@ministere_a.gouv.fr', administrateurs: [admin] }
-      let!(:instructeur_not_assigned_2) { create :instructeur, email: 'instructeur_4@ministere_b.gouv.fr', administrateurs: [admin] }
+      let!(:instructeur_assigned_1) { create :instructeur, email: 'instructeur_1@ministere-a.gouv.fr', administrateurs: [admin] }
+      let!(:instructeur_assigned_2) { create :instructeur, email: 'instructeur_2@ministere-b.gouv.fr', administrateurs: [admin] }
+      let!(:instructeur_not_assigned_1) { create :instructeur, email: 'instructeur_3@ministere-a.gouv.fr', administrateurs: [admin] }
+      let!(:instructeur_not_assigned_2) { create :instructeur, email: 'instructeur_4@ministere-b.gouv.fr', administrateurs: [admin] }
       subject! { get :show, params: { procedure_id: procedure.id, id: gi_1_1.id } }
 
       it { expect(response.status).to eq(200) }
 
       it 'sets the assigned and not assigned instructeurs' do
         expect(assigns(:instructeurs)).to match_array([instructeur_assigned_1, instructeur_assigned_2])
-        expect(assigns(:available_instructeur_emails)).to match_array(['instructeur_3@ministere_a.gouv.fr', 'instructeur_4@ministere_b.gouv.fr'])
+        expect(assigns(:available_instructeur_emails)).to match_array(['instructeur_3@ministere-a.gouv.fr', 'instructeur_4@ministere-b.gouv.fr'])
       end
     end
   end
@@ -331,9 +331,9 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
   describe '#remove_instructeur_procedure_non_routee' do
     let(:procedure) { create :procedure, administrateur: admin, instructeurs: [instructeur_assigned_1, instructeur_assigned_2] }
-    let!(:instructeur_assigned_1) { create :instructeur, email: 'instructeur_1@ministere_a.gouv.fr', administrateurs: [admin] }
-    let!(:instructeur_assigned_2) { create :instructeur, email: 'instructeur_2@ministere_b.gouv.fr', administrateurs: [admin] }
-    let!(:instructeur_assigned_3) { create :instructeur, email: 'instructeur_3@ministere_a.gouv.fr', administrateurs: [admin] }
+    let!(:instructeur_assigned_1) { create :instructeur, email: 'instructeur_1@ministere-a.gouv.fr', administrateurs: [admin] }
+    let!(:instructeur_assigned_2) { create :instructeur, email: 'instructeur_2@ministere-b.gouv.fr', administrateurs: [admin] }
+    let!(:instructeur_assigned_3) { create :instructeur, email: 'instructeur_3@ministere-a.gouv.fr', administrateurs: [admin] }
     subject! { get :show, params: { procedure_id: procedure.id, id: gi_1_1.id } }
     it 'sets the assigned instructeurs' do
       expect(assigns(:instructeurs)).to match_array([instructeur_assigned_1, instructeur_assigned_2])
@@ -425,8 +425,8 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
   describe '#export_groupe_instructeurs' do
     let(:procedure) { create(:procedure, :published) }
     let(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 1 2') }
-    let(:instructeur_assigned_1) { create :instructeur, email: 'instructeur_1@ministere_a.gouv.fr', administrateurs: [admin] }
-    let(:instructeur_assigned_2) { create :instructeur, email: 'instructeur_2@ministere_b.gouv.fr', administrateurs: [admin] }
+    let(:instructeur_assigned_1) { create :instructeur, email: 'instructeur_1@ministere-a.gouv.fr', administrateurs: [admin] }
+    let(:instructeur_assigned_2) { create :instructeur, email: 'instructeur_2@ministere-b.gouv.fr', administrateurs: [admin] }
 
     subject do
       get :export_groupe_instructeurs, params: { procedure_id: procedure.id, format: :csv }
