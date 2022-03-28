@@ -20,4 +20,4 @@ PROCEDURE_DEFAULT_LOGO_SRC = ENV.fetch("PROCEDURE_DEFAULT_LOGO_SRC", "republique
 DOSSIER_DEPOSIT_RECEIPT_LOGO_SRC = ENV.fetch("DOSSIER_DEPOSIT_RECEIPT_LOGO_SRC", "app/assets/images/republique-francaise-logo.svg")
 
 # Logo in PDF export of a "Dossier"
-DOSSIER_PDF_EXPORT_LOGO_SRC = ENV.fetch("DOSSIER_PDF_EXPORT_LOGO_SRC", "app/assets/images/header/logo-ds-wide.svg")
+DOSSIER_PDF_EXPORT_LOGO_SRC = ENV.fetch("DOSSIER_PDF_EXPORT_LOGO_SRC", "app/assets/images/header/logo-ds-wide.png")

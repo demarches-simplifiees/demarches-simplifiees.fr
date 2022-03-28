@@ -26,7 +26,7 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
   black = '333333'
 
   pdf.float do
-    pdf.svg IO.read(DOSSIER_DEPOSIT_RECEIPT_LOGO_SRC), height: 64
+    pdf.image DOSSIER_PDF_EXPORT_LOGO_SRC, height: 64
   end
 
   pdf.bounding_box([110, pdf.cursor - 18], width: header_width - 200) do
