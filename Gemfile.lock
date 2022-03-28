@@ -459,9 +459,6 @@ GEM
       prawn
       prawn-table
       rails (>= 3.1.0)
-    prawn-svg (0.31.0)
-      css_parser (~> 1.6)
-      prawn (>= 0.11.1, < 3)
     prawn-table (0.2.2)
       prawn (>= 1.3.0, < 3.0.0)
     premailer (1.14.2)
@@ -840,7 +837,6 @@ DEPENDENCIES
   pg
   phonelib
   prawn-rails
-  prawn-svg
   premailer-rails
   pry-byebug
   puma
