@@ -9,7 +9,7 @@
 #  created_at               :datetime
 #  updated_at               :datetime
 #  agent_connect_id         :string
-#  user_id                  :bigint
+#  user_id                  :bigint           not null
 #
 class Instructeur < ApplicationRecord
   has_and_belongs_to_many :administrateurs
