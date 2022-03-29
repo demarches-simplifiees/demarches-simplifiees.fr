@@ -1,0 +1,22 @@
+.card.warning.mb-3.no-list
+  - if dossier.procedure.discarded?
+    .flex.justify-between
+      .card-title= t('users.dossiers.header.banner.procedure_deleted_title')
+      = render(partial: 'users/dossiers/show/print_dossier', locals: { dossier: dossier}) if !dossier.brouillon?
+    - if dossier.termine?
+      %p
+        = t('users.dossiers.header.banner.procedure_deleted_dossier_termine_content')
+    - elsif dossier.brouillon?
+      %p
+        = t('users.dossiers.header.banner.procedure_close_content')
+    - else
+      %p
+        = t('users.dossiers.header.banner.procedure_deleted_dossier_en_cours_content')
+
+  - else
+    .flex.justify-between
+      .card-title= t('users.dossiers.header.banner.procedure_close_title')
+      = render(partial: 'users/dossiers/show/print_dossier', locals: { dossier: dossier }) if !dossier.brouillon?
+    %p
+      = t('users.dossiers.header.banner.procedure_close_content')
+
