@@ -12,19 +12,15 @@
 
       = render(partial: 'users/dossiers/expiration_banner', locals: {dossier: dossier})
 
-
-    - if current_user.owns?(dossier)
+    - if (current_user.owns?(dossier) && !dossier.procedure.discarded?) || (!dossier.procedure.discarded? && !dossier.procedure.close? && !dossier.en_construction?)
       .header-actions
         = render partial: 'invites/dropdown', locals: { dossier: dossier }
         - if dossier.can_be_updated_by_user? && !current_page?(modifier_dossier_path(dossier))
           = link_to t('views.users.dossiers.show.header.edit_dossier'), modifier_dossier_path(dossier), class: 'button accepted edit-form', 'title'=> "Vous pouvez modifier votre dossier tant qu'il n'est passé en instruction"
-        %span.dropdown.print-menu-opener
-          %button.button.dropdown-button.icon-only{ title: t('views.users.dossiers.show.header.print'), 'aria-label': 'imprimer', 'aria-expanded' => 'false', 'aria-controls' => 'print-menu' }
-            %span.icon.printer
-          %ul#print-menu.print-menu.dropdown-content
-            %li
-              = link_to t('views.users.dossiers.show.header.print_dossier'), dossier_path(dossier, format: :pdf), target: "_blank", rel: "noopener", class: "menu-item menu-link"
+        = render(partial: 'users/dossiers/show/print_dossier', locals: { dossier: dossier })
 
+    - else
+      = render(partial: 'users/dossiers/procedure_removed_banner', locals: { dossier: dossier })
 
     %nav.tabs
       %ul
