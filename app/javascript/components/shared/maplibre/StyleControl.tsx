@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useId } from 'react';
 import { Popover, RadioGroup } from '@headlessui/react';
 import { usePopper } from 'react-popper';
 import { MapIcon } from '@heroicons/react/outline';
 import { Slider } from '@reach/slider';
-import { useId } from '@reach/auto-id';
 import '@reach/slider/styles.css';
 
 import { LayersMap, NBS } from './styles';
