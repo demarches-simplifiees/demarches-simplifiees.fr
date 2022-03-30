@@ -53,7 +53,10 @@ class API::V1::DossiersController < APIController
     end
 
     order = ORDER_DIRECTIONS.fetch(params[:order], :asc)
-    @dossiers = @procedure.dossiers.state_not_brouillon.order_by_created_at(order)
+    @dossiers = @procedure
+      .dossiers
+      .visible_by_administration
+      .order_by_created_at(order)
 
   rescue ActiveRecord::RecordNotFound
     render json: {}, status: :not_found
