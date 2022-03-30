@@ -161,6 +161,7 @@ class Instructeur < ApplicationRecord
     groupe_instructeur_ids = Dossier
       .send(scope) # :en_cours or :termine (or any other Dossier scope)
       .merge(followed_dossiers)
+      .visible_by_administration
       .with_notifications
       .select(:groupe_instructeur_id)
 
