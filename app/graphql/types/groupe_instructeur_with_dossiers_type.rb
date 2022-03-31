@@ -10,7 +10,10 @@ module Types
     end
 
     def dossiers(updated_since: nil, created_since: nil, state: nil, order:)
-      dossiers = object.dossiers.state_not_brouillon.for_api_v2
+      dossiers = object
+        .dossiers
+        .visible_by_administration
+        .for_api_v2
 
       if state.present?
         dossiers = dossiers.where(state: state)
