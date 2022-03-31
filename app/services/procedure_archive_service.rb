@@ -26,7 +26,7 @@ class ProcedureArchiveService
     end
 
     attachments = create_list_of_attachments(dossiers)
-    download_and_zip(attachments) do |zip_filepath|
+    download_and_zip(archive, attachments) do |zip_filepath|
       ArchiveUploader.new(procedure: @procedure, archive: archive, filepath: zip_filepath)
         .upload
     end
@@ -46,10 +46,10 @@ class ProcedureArchiveService
 
   private
 
-  def download_and_zip(attachments, &block)
+  def download_and_zip(archive, attachments, &block)
     Dir.mktmpdir(nil, ARCHIVE_CREATION_DIR) do |tmp_dir|
-      archive_dir = File.join(tmp_dir, zip_root_folder)
-      zip_path = File.join(ARCHIVE_CREATION_DIR, "#{zip_root_folder}.zip")
+      archive_dir = File.join(tmp_dir, zip_root_folder(archive))
+      zip_path = File.join(ARCHIVE_CREATION_DIR, "#{zip_root_folder(archive)}.zip")
 
       begin
         FileUtils.remove_entry_secure(archive_dir) if Dir.exist?(archive_dir)
@@ -60,7 +60,7 @@ class ProcedureArchiveService
 
         Dir.chdir(tmp_dir) do
           File.delete(zip_path) if File.exist?(zip_path)
-          system 'zip', '-0', '-r', zip_path, zip_root_folder
+          system 'zip', '-0', '-r', zip_path, zip_root_folder(archive)
         end
         yield(zip_path)
       ensure
@@ -70,8 +70,8 @@ class ProcedureArchiveService
     end
   end
 
-  def zip_root_folder
-    "procedure-#{@procedure.id}"
+  def zip_root_folder(archive)
+    "procedure-#{@procedure.id}-#{archive.id}"
   end
 
   def create_list_of_attachments(dossiers)

@@ -10,51 +10,53 @@
   .card.featured
     .card-title Gestion de vos archives
     %p
-      Vous pouvez télécharger les archives des dossiers terminés depuis la publication de la procédure au format Zip.
+      L'archivage de votre démarche se fait mensuellement. Ainsi pour chaque mois depuis la publication de votre démarche vous pouvez faire une demande de création d'archive.
 
     %p
-      Cet export contient les demande déposée par l'usager et la liste des pièces justificatives transmises.
+      Cette archive contient uniquement les dossiers terminés, les demandes déposées par l'usager et la liste des pièces justificatives transmises.
 
     %p
-      Cet export n’est pas possible pour le moment pour les démarches à forte volumétrie.
+      Les archives dont le poid est estimé à plus de #{number_to_human_size(Archive::MAX_SIZE)} ne sont pas supportées.
       Nous vous invitons à regarder
       = link_to 'la documentation', ARCHIVAGE_DOC_URL
       afin de voir les options à votre disposition pour mettre en place un système d’archive.
+  - if @procedure.feature_enabled?(:archive_zip_globale)
+    %table.table.hoverable.archive-table
+      %thead
+        %tr
+          %th &nbsp;
+          %th.text-right Nombre de dossiers terminés
+          %th.text-right Poids estimé
+          %th.center Télécharger
 
-  %table.table.hoverable.archive-table
-    %thead
-      %tr
-        %th &nbsp;
-        %th.text-right Nombre de dossiers terminés
-        %th.text-right Poids estimé
-        %th.center Télécharger
+      %tbody
+      - @count_dossiers_termines_by_month.each do |count_by_month|
+        - month = count_by_month["month"].to_date
+        - nb_dossiers_termines = count_by_month["count"]
+        - matching_archive = @archives.find { |archive| archive.time_span_type == 'monthly' && archive.month == month }
+        - weight = estimate_weight(matching_archive, nb_dossiers_termines, @average_dossier_weight)
 
-    %tbody
-    - @count_dossiers_termines_by_month.each do |count_by_month|
-      - month = count_by_month["month"].to_date
-      - nb_dossiers_termines = count_by_month["count"]
-      - matching_archive = @archives.find { |archive| archive.time_span_type == 'monthly' && archive.month == month }
-      - weight = estimate_weight(matching_archive, nb_dossiers_termines, @average_dossier_weight)
-
-      %tr
-        %td
-          = I18n.l(month, format: "%B %Y").capitalize
-        %td.text-right
-          = nb_dossiers_termines
-        %td.text-right
-          = number_to_human_size(weight)
-        %td.center
-          - if matching_archive.present?
-            - if matching_archive.status == 'generated' && matching_archive.file.attached?
-              = link_to url_for(matching_archive.file), class: 'button primary' do
-                %span.icon.download-white
-                = t(:archive_ready_html, scope: [:instructeurs, :procedure], generated_period: time_ago_in_words(matching_archive.updated_at))
+        %tr
+          %td
+            = I18n.l(month, format: "%B %Y").capitalize
+          %td.text-right
+            = nb_dossiers_termines
+          %td.text-right
+            = number_to_human_size(weight)
+          %td.center
+            - if matching_archive.present?
+              - if matching_archive.status == 'generated' && matching_archive.file.attached?
+                = link_to url_for(matching_archive.file), class: 'button primary' do
+                  %span.icon.download-white
+                  = t(:archive_ready_html, scope: [:instructeurs, :procedure], generated_period: time_ago_in_words(matching_archive.updated_at))
+              - else
+                %span.icon.retry
+                = t(:archive_pending_html, scope: [:instructeurs, :procedure], created_period: time_ago_in_words(matching_archive.created_at))
+            - elsif weight < Archive::MAX_SIZE
+              = link_to instructeur_archives_path(@procedure, type:'monthly', month: month.strftime('%Y-%m')), method: :post, class: "button" do
+                %span.icon.new-folder
+                Demander la création
             - else
-              %span.icon.retry
-              = t(:archive_pending_html, scope: [:instructeurs, :procedure], created_period: time_ago_in_words(matching_archive.created_at))
-          - elsif weight < 1.gigabyte
-            = link_to instructeur_archives_path(@procedure, type:'monthly', month: month.strftime('%Y-%m')), method: :post, class: "button" do
-              %span.icon.new-folder
-              Demander la création
-          - else
-            Archive trop volumineuse
+              Archive trop volumineuse
+  - else
+    %p Cet fonctionnalité est en cours de deploiement, merci de faire une demande à notre support pour que nous l'activions pour votre démarche

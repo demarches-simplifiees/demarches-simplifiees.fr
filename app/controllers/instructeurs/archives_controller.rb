@@ -1,6 +1,6 @@
 module Instructeurs
   class ArchivesController < InstructeurController
-    before_action :ensure_procedure_enabled
+    before_action :ensure_procedure_enabled, only: [:create]
 
     def index
       @procedure = procedure
