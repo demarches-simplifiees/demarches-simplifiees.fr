@@ -63,47 +63,29 @@ module Instructeurs
       @can_download_dossiers = (@tous_count + @archives_count) > 0
 
       dossiers = Dossier.where(groupe_instructeur_id: groupe_instructeur_ids)
-      dossiers_visibles = dossiers.visible_by_administration
 
-      @a_suivre_dossiers = dossiers_visibles
-        .without_followers
-        .en_cours
-
-      @followed_dossiers = current_instructeur
+      @followed_dossiers_id = current_instructeur
         .followed_dossiers
         .en_cours
-        .merge(dossiers_visibles)
+        .merge(dossiers.visible_by_administration)
+        .pluck(:id)
 
-      @followed_dossiers_id = @followed_dossiers.pluck(:id)
-
-      @termines_dossiers = dossiers_visibles.termine
-      @all_state_dossiers = dossiers_visibles.all_state
-      @archived_dossiers = dossiers_visibles.archived
-      @expirant_dossiers = dossiers_visibles.termine_or_en_construction_close_to_expiration
-      @supprimes_recemment_dossiers = dossiers.hidden_by_administration.termine
-
-      @dossiers = case statut
+      @dossiers = dossiers.by_statut(current_instructeur, statut)
+      dossiers_count = case statut
       when 'a-suivre'
-        dossiers_count = @a_suivre_count
-        @a_suivre_dossiers
+        @a_suivre_count
       when 'suivis'
-        dossiers_count = @suivis_count
-        @followed_dossiers
+        @suivis_count
       when 'traites'
-        dossiers_count = @traites_count
-        @termines_dossiers
+        @traites_count
       when 'tous'
-        dossiers_count = @tous_count
-        @all_state_dossiers
+        @tous_count
       when 'supprimes_recemment'
-        dossiers_count = @supprimes_recemment_count
-        @supprimes_recemment_dossiers
+        @supprimes_recemment_count
       when 'archives'
-        dossiers_count = @archives_count
-        @archived_dossiers
+        @archives_count
       when 'expirant'
-        dossiers_count = @expirant_count
-        @expirant_dossiers
+        @expirant_count
       end
 
       notifications = current_instructeur.notifications_for_groupe_instructeurs(groupe_instructeur_ids)
