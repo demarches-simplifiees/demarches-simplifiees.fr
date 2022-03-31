@@ -180,6 +180,17 @@ class ProcedurePresentation < ApplicationRecord
     end.reduce(:&)
   end
 
+  def filtered_sorted_ids(dossiers, count, statut)
+    dossiers_by_statut = dossiers.by_statut(instructeur, statut)
+    dossiers_sorted_ids = self.sorted_ids(dossiers_by_statut, count)
+
+    if filters[statut].present?
+      filtered_ids(dossiers_by_statut, statut).intersection(dossiers_sorted_ids)
+    else
+      dossiers_sorted_ids
+    end
+  end
+
   def human_value_for_filter(filter)
     case filter[TABLE]
     when TYPE_DE_CHAMP, TYPE_DE_CHAMP_PRIVATE
