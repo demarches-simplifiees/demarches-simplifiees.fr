@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useId } from 'react';
 import { fire } from '@utils';
 import type { Feature } from 'geojson';
 import { PlusIcon, LocationMarkerIcon } from '@heroicons/react/outline';
-import { useId } from '@reach/auto-id';
 import CoordinateInput from 'react-coordinate-input';
 
 export function PointInput() {
