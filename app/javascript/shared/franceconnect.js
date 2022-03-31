@@ -2,6 +2,7 @@ const fconnect = {
   tracesUrl: '/traces',
   aboutUrl: ''
 };
+const document = window.document;
 
 function init() {
   fconnect.currentHost = 'fcp.integ01.dev-franceconnect.fr';
