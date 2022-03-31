@@ -274,38 +274,34 @@ describe Instructeurs::ProceduresController, type: :controller do
         let!(:new_unfollow_dossier) { create(:dossier, :en_instruction, procedure: procedure) }
 
         before { subject }
-        it { expect(assigns(:a_suivre_dossiers)).to match_array([new_unfollow_dossier]) }
-        it { expect(assigns(:followed_dossiers)).to be_empty }
-        it { expect(assigns(:termines_dossiers)).to be_empty }
-        it { expect(assigns(:all_state_dossiers)).to match_array([new_unfollow_dossier]) }
-        it { expect(assigns(:archived_dossiers)).to be_empty }
+        it { expect(assigns(:dossiers)).to match_array([new_unfollow_dossier]) }
 
         context 'with a dossier en contruction hidden by user' do
-          let!(:hidden_dossier) { create(:dossier, groupe_instructeur: gi_2, state: Dossier.states.fetch(:en_construction), hidden_by_user_at: 1.hour.ago) }
+          let!(:hidden_dossier) { create(:dossier, :en_construction, groupe_instructeur: gi_2, hidden_by_user_at: 1.hour.ago) }
           before { subject }
 
-          it { expect(assigns(:all_state_dossiers)).to match_array([new_unfollow_dossier]) }
+          it { expect(assigns(:dossiers)).to match_array([new_unfollow_dossier]) }
         end
 
         context 'with a dossier en contruction not hidden by user' do
-          let!(:en_construction_dossier) { create(:dossier, groupe_instructeur: gi_2, state: Dossier.states.fetch(:en_construction)) }
+          let!(:en_construction_dossier) { create(:dossier, :en_construction, groupe_instructeur: gi_2) }
           before { subject }
 
-          it { expect(assigns(:all_state_dossiers)).to match_array([new_unfollow_dossier, en_construction_dossier]) }
+          it { expect(assigns(:dossiers)).to match_array([new_unfollow_dossier, en_construction_dossier]) }
         end
 
         context 'and dossiers without follower on each of the others groups' do
-          let!(:new_unfollow_dossier_on_gi_2) { create(:dossier, groupe_instructeur: gi_2, state: Dossier.states.fetch(:en_instruction)) }
-          let!(:new_unfollow_dossier_on_gi_3) { create(:dossier, groupe_instructeur: gi_3, state: Dossier.states.fetch(:en_instruction)) }
+          let!(:new_unfollow_dossier_on_gi_2) { create(:dossier, :en_instruction, groupe_instructeur: gi_2) }
+          let!(:new_unfollow_dossier_on_gi_3) { create(:dossier, :en_instruction, groupe_instructeur: gi_3) }
 
           before { subject }
 
-          it { expect(assigns(:a_suivre_dossiers)).to match_array([new_unfollow_dossier, new_unfollow_dossier_on_gi_2]) }
-          it { expect(assigns(:all_state_dossiers)).to match_array([new_unfollow_dossier, new_unfollow_dossier_on_gi_2]) }
+          it { expect(assigns(:dossiers)).to match_array([new_unfollow_dossier, new_unfollow_dossier_on_gi_2]) }
         end
       end
 
       context 'with a new dossier with a follower' do
+        let(:statut) { 'suivis' }
         let!(:new_followed_dossier) { create(:dossier, :en_instruction, procedure: procedure) }
 
         before do
@@ -313,15 +309,11 @@ describe Instructeurs::ProceduresController, type: :controller do
           subject
         end
 
-        it { expect(assigns(:a_suivre_dossiers)).to be_empty }
-        it { expect(assigns(:followed_dossiers)).to match_array([new_followed_dossier]) }
-        it { expect(assigns(:termines_dossiers)).to be_empty }
-        it { expect(assigns(:all_state_dossiers)).to match_array([new_followed_dossier]) }
-        it { expect(assigns(:archived_dossiers)).to be_empty }
+        it { expect(assigns(:dossiers)).to match_array([new_followed_dossier]) }
 
         context 'and dossier with a follower on each of the others groups' do
-          let!(:new_follow_dossier_on_gi_2) { create(:dossier, groupe_instructeur: gi_2, state: Dossier.states.fetch(:en_instruction)) }
-          let!(:new_follow_dossier_on_gi_3) { create(:dossier, groupe_instructeur: gi_3, state: Dossier.states.fetch(:en_instruction)) }
+          let!(:new_follow_dossier_on_gi_2) { create(:dossier, :en_instruction, groupe_instructeur: gi_2) }
+          let!(:new_follow_dossier_on_gi_3) { create(:dossier, :en_instruction, groupe_instructeur: gi_3) }
 
           before do
             instructeur.followed_dossiers << new_follow_dossier_on_gi_2 << new_follow_dossier_on_gi_3
@@ -329,44 +321,36 @@ describe Instructeurs::ProceduresController, type: :controller do
           end
 
           # followed dossiers on another groupe should not be displayed
-          it { expect(assigns(:followed_dossiers)).to contain_exactly(new_followed_dossier, new_follow_dossier_on_gi_2) }
-          it { expect(assigns(:all_state_dossiers)).to contain_exactly(new_followed_dossier, new_follow_dossier_on_gi_2) }
+          it { expect(assigns(:dossiers)).to contain_exactly(new_followed_dossier, new_follow_dossier_on_gi_2) }
         end
       end
 
       context 'with a termine dossier with a follower' do
+        let(:statut) { 'traites' }
         let!(:termine_dossier) { create(:dossier, :accepte, procedure: procedure) }
 
         before { subject }
 
-        it { expect(assigns(:a_suivre_dossiers)).to be_empty }
-        it { expect(assigns(:followed_dossiers)).to be_empty }
-        it { expect(assigns(:termines_dossiers)).to match_array([termine_dossier]) }
-        it { expect(assigns(:all_state_dossiers)).to match_array([termine_dossier]) }
-        it { expect(assigns(:archived_dossiers)).to be_empty }
+        it { expect(assigns(:dossiers)).to match_array([termine_dossier]) }
 
         context 'and terminer dossiers on each of the others groups' do
-          let!(:termine_dossier_on_gi_2) { create(:dossier, groupe_instructeur: gi_2, state: Dossier.states.fetch(:accepte)) }
-          let!(:termine_dossier_on_gi_3) { create(:dossier, groupe_instructeur: gi_3, state: Dossier.states.fetch(:accepte)) }
+          let!(:termine_dossier_on_gi_2) { create(:dossier, :accepte, groupe_instructeur: gi_2) }
+          let!(:termine_dossier_on_gi_3) { create(:dossier, :accepte, groupe_instructeur: gi_3) }
 
           before { subject }
 
-          it { expect(assigns(:termines_dossiers)).to match_array([termine_dossier, termine_dossier_on_gi_2]) }
-          it { expect(assigns(:all_state_dossiers)).to match_array([termine_dossier, termine_dossier_on_gi_2]) }
+          it { expect(assigns(:dossiers)).to match_array([termine_dossier, termine_dossier_on_gi_2]) }
         end
       end
 
       context 'with an archived dossier' do
+        let(:statut) { 'archives' }
         let!(:archived_dossier) { create(:dossier, :en_instruction, procedure: procedure, archived: true) }
         let!(:archived_dossier_deleted) { create(:dossier, :en_instruction, procedure: procedure, archived: true, hidden_by_administration_at: 2.days.ago) }
 
         before { subject }
 
-        it { expect(assigns(:a_suivre_dossiers)).to be_empty }
-        it { expect(assigns(:followed_dossiers)).to be_empty }
-        it { expect(assigns(:termines_dossiers)).to be_empty }
-        it { expect(assigns(:all_state_dossiers)).to be_empty }
-        it { expect(assigns(:archived_dossiers)).to match_array([archived_dossier]) }
+        it { expect(assigns(:dossiers)).to match_array([archived_dossier]) }
 
         context 'and terminer dossiers on each of the others groups' do
           let!(:archived_dossier_on_gi_2) { create(:dossier, :en_instruction, groupe_instructeur: gi_2, archived: true) }
@@ -374,22 +358,23 @@ describe Instructeurs::ProceduresController, type: :controller do
 
           before { subject }
 
-          it { expect(assigns(:archived_dossiers)).to match_array([archived_dossier, archived_dossier_on_gi_2]) }
+          it { expect(assigns(:dossiers)).to match_array([archived_dossier, archived_dossier_on_gi_2]) }
         end
       end
 
       context 'with an expirants dossier' do
+        let(:statut) { 'expirant' }
         let!(:expiring_dossier_termine_deleted) { create(:dossier, :accepte, procedure: procedure, processed_at: 175.days.ago, hidden_by_administration_at: 2.days.ago) }
         let!(:expiring_dossier_termine) { create(:dossier, :accepte, procedure: procedure, processed_at: 175.days.ago) }
         let!(:expiring_dossier_en_construction) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: 175.days.ago) }
 
         before { subject }
 
-        it { expect(assigns(:expirant_dossiers)).to match_array([expiring_dossier_termine, expiring_dossier_en_construction]) }
+        it { expect(assigns(:dossiers)).to match_array([expiring_dossier_termine, expiring_dossier_en_construction]) }
       end
 
       describe 'statut' do
-        let!(:a_suivre__dossier) { Timecop.freeze(1.day.ago) { create(:dossier, :en_instruction, procedure: procedure) } }
+        let!(:a_suivre_dossier) { Timecop.freeze(1.day.ago) { create(:dossier, :en_instruction, procedure: procedure) } }
         let!(:new_followed_dossier) { Timecop.freeze(2.days.ago) { create(:dossier, :en_instruction, procedure: procedure) } }
         let!(:termine_dossier) { Timecop.freeze(3.days.ago) { create(:dossier, :accepte, procedure: procedure) } }
         let!(:archived_dossier) { Timecop.freeze(4.days.ago) { create(:dossier, :en_instruction, procedure: procedure, archived: true) } }
@@ -402,7 +387,7 @@ describe Instructeurs::ProceduresController, type: :controller do
         context 'when statut is empty' do
           let(:statut) { nil }
 
-          it { expect(assigns(:dossiers)).to match_array([a_suivre__dossier]) }
+          it { expect(assigns(:dossiers)).to match_array([a_suivre_dossier]) }
           it { expect(assigns(:statut)).to eq('a-suivre') }
         end
 
@@ -410,7 +395,7 @@ describe Instructeurs::ProceduresController, type: :controller do
           let(:statut) { 'a-suivre' }
 
           it { expect(assigns(:statut)).to eq('a-suivre') }
-          it { expect(assigns(:dossiers)).to match_array([a_suivre__dossier]) }
+          it { expect(assigns(:dossiers)).to match_array([a_suivre_dossier]) }
         end
 
         context 'when statut is suivis' do
@@ -431,7 +416,7 @@ describe Instructeurs::ProceduresController, type: :controller do
           let(:statut) { 'tous' }
 
           it { expect(assigns(:statut)).to eq('tous') }
-          it { expect(assigns(:dossiers)).to match_array([a_suivre__dossier, new_followed_dossier, termine_dossier]) }
+          it { expect(assigns(:dossiers)).to match_array([a_suivre_dossier, new_followed_dossier, termine_dossier]) }
         end
 
         context 'when statut is archives' do
