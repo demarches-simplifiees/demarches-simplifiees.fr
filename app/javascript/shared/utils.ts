@@ -111,7 +111,7 @@ export function getJSON(url: string, data: unknown, method = 'GET') {
   });
 }
 
-export function scrollToElement(container: HTMLElement, scrollTo: HTMLElement) {
+export function scrollTo(container: HTMLElement, scrollTo: HTMLElement) {
   container.scrollTop =
     offset(scrollTo).top - offset(container).top + container.scrollTop;
 }
