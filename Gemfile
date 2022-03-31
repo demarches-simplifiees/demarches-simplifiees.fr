@@ -82,9 +82,8 @@ gem 'skylight'
 gem 'spreadsheet_architect'
 gem 'strong_migrations' # lint database migrations
 gem 'typhoeus'
-gem 'vite_plugin_legacy'
-gem 'vite_rails'
 gem 'warden'
+gem 'webpacker'
 gem 'zipline'
 gem 'zxcvbn-ruby', require: 'zxcvbn'
 
