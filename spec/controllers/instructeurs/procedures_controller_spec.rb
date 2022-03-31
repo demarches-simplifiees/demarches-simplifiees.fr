@@ -482,7 +482,7 @@ describe Instructeurs::ProceduresController, type: :controller do
     let(:instructeur) { create(:instructeur) }
     let!(:procedure) { create(:procedure) }
     let!(:gi_0) { procedure.defaut_groupe_instructeur }
-    let!(:gi_1) { GroupeInstructeur.create(label: 'gi_1', procedure: procedure, instructeurs: [instructeur]) }
+    let!(:gi_1) { create(:groupe_instructeur, label: 'gi_1', procedure: procedure, instructeurs: [instructeur]) }
 
     before { sign_in(instructeur.user) }
 
@@ -511,7 +511,7 @@ describe Instructeurs::ProceduresController, type: :controller do
     end
 
     context 'when the export is ready' do
-      let!(:export) { create(:export, groupe_instructeurs: [gi_1]) }
+      let(:export) { create(:export, groupe_instructeurs: [gi_1]) }
 
       before do
         export.file.attach(io: StringIO.new('export'), filename: 'file.csv')
@@ -524,7 +524,7 @@ describe Instructeurs::ProceduresController, type: :controller do
     end
 
     context 'when another export is ready' do
-      let!(:export) { create(:export, groupe_instructeurs: [gi_0, gi_1]) }
+      let(:export) { create(:export, groupe_instructeurs: [gi_0, gi_1]) }
 
       before do
         export.file.attach(io: StringIO.new('export'), filename: 'file.csv')
