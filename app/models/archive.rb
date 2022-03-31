@@ -35,15 +35,23 @@ class Archive < ApplicationRecord
 
   enum status: {
     pending: 'pending',
-    generated: 'generated'
+    generated: 'generated',
+    failed: 'failed'
   }
 
   aasm whiny_persistence: true, column: :status, enum: true do
     state :pending, initial: true
     state :generated
+    state :failed
 
     event :make_available do
       transitions from: :pending, to: :generated
+    end
+    event :restart do
+      transitions from: :failed, to: :pending
+    end
+    event :fail do
+      transitions from: :pending, to: :failed
     end
   end
 
