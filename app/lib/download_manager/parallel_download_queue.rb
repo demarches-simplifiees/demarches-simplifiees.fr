@@ -36,11 +36,12 @@ module DownloadManager
         File.write(attachment_path, attachment.file.read, mode: 'wb')
       else
         request = Typhoeus::Request.new(attachment.url)
-        request.on_body do |chunk|
-          File.write(attachment_path, chunk, mode: 'a+b')
-        end
         request.on_complete do |response|
-          unless response.success?
+          if response.success?
+            File.open(attachment_path, mode: "wb") do |fd|
+              fd.write(response.body)
+            end
+          else
             File.delete(attachment_path) if File.exist?(attachment_path) # -> case of retries failed, must cleanup partialy downloaded file
             on_error.call(attachment, path_in_download_dir, response.code)
           end
