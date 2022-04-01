@@ -4,14 +4,14 @@ class PiecesJustificativesService
     pjs_commentaires = pjs_for_commentaires(dossier)
     pjs_dossier = pjs_for_dossier(dossier, for_expert)
 
-    pjs_champs + (pjs_commentaires + pjs_dossier).filter(&:attached?)
+    pjs_champs + pjs_commentaires + pjs_dossier.filter(&:attached?)
   end
 
   def self.liste_pieces_justificatives(dossier)
     pjs_champs = pjs_for_champs(dossier)
     pjs_commentaires = pjs_for_commentaires(dossier)
 
-    pjs_champs + pjs_commentaires.filter(&:attached?)
+    pjs_champs + pjs_commentaires
   end
 
   def self.pieces_justificatives_total_size(dossier)
@@ -133,9 +133,13 @@ class PiecesJustificativesService
   end
 
   def self.pjs_for_commentaires(dossier)
-    dossier
-      .commentaires
-      .map(&:piece_jointe)
+    commentaires = Commentaire
+      .joins(:piece_jointe_attachment)
+      .where(dossier: dossier)
+
+    ActiveStorage::Attachment
+      .includes(:blob)
+      .where(record_type: "Commentaire", record_id: commentaires.ids)
   end
 
   def self.pjs_for_dossier(dossier, for_expert = false)
