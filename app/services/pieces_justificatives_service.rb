@@ -146,13 +146,19 @@ class PiecesJustificativesService
     ].flatten.compact
 
     if !for_expert
-      bill_signatures = dossier.dossier_operation_logs.filter_map(&:bill_signature).uniq
-      pjs += [
-        dossier.dossier_operation_logs.map(&:serialized),
-        bill_signatures.map(&:serialized),
-        bill_signatures.map(&:signature)
-      ].flatten.compact
+      pjs += operation_logs_and_signatures(dossier)
     end
+
     pjs
+  end
+
+  def self.operation_logs_and_signatures(dossier)
+    bill_signatures = dossier.dossier_operation_logs.filter_map(&:bill_signature).uniq
+
+    [
+      dossier.dossier_operation_logs.map(&:serialized),
+      bill_signatures.map(&:serialized),
+      bill_signatures.map(&:signature)
+    ].flatten.compact
   end
 end
