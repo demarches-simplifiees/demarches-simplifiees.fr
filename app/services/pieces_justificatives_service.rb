@@ -4,16 +4,14 @@ class PiecesJustificativesService
     pjs_commentaires = pjs_for_commentaires(dossier)
     pjs_dossier = pjs_for_dossier(dossier, for_expert)
 
-    (pjs_champs + pjs_commentaires + pjs_dossier)
-      .filter(&:attached?)
+    pjs_champs + (pjs_commentaires + pjs_dossier).filter(&:attached?)
   end
 
   def self.liste_pieces_justificatives(dossier)
     pjs_champs = pjs_for_champs(dossier)
     pjs_commentaires = pjs_for_commentaires(dossier)
 
-    (pjs_champs + pjs_commentaires)
-      .filter(&:attached?)
+    pjs_champs + pjs_commentaires.filter(&:attached?)
   end
 
   def self.pieces_justificatives_total_size(dossier)
@@ -121,15 +119,17 @@ class PiecesJustificativesService
   private
 
   def self.pjs_for_champs(dossier, for_expert = false)
-    allowed_champs = for_expert ? dossier.champs : dossier.champs + dossier.champs_private
+    champs = Champ
+      .joins(:piece_justificative_file_attachment)
+      .where(type: "Champs::PieceJustificativeChamp", dossier: dossier)
 
-    allowed_child_champs = allowed_champs
-      .filter { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) }
-      .flat_map(&:champs)
+    if for_expert
+      champs = champs.where(private: false)
+    end
 
-    (allowed_champs + allowed_child_champs)
-      .filter { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative) }
-      .map(&:piece_justificative_file)
+    ActiveStorage::Attachment
+      .includes(:blob)
+      .where(record_type: "Champ", record_id: champs.ids)
   end
 
   def self.pjs_for_commentaires(dossier)
