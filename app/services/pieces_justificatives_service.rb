@@ -153,12 +153,21 @@ class PiecesJustificativesService
   end
 
   def self.operation_logs_and_signatures(dossier)
-    bill_signatures = dossier.dossier_operation_logs.filter_map(&:bill_signature).uniq
+    dol_ids_bill_id = DossierOperationLog
+      .where(dossier: dossier)
+      .pluck(:id, :bill_signature_id)
 
-    [
-      dossier.dossier_operation_logs.map(&:serialized),
-      bill_signatures.map(&:serialized),
-      bill_signatures.map(&:signature)
-    ].flatten.compact
+    dol_ids = dol_ids_bill_id.map(&:first)
+    bill_ids = dol_ids_bill_id.map(&:second).uniq.compact
+
+    serialized_dols = ActiveStorage::Attachment
+      .includes(:blob)
+      .where(record_type: "DossierOperationLog", record_id: dol_ids)
+
+    bill_docs = ActiveStorage::Attachment
+      .includes(:blob)
+      .where(record_type: "BillSignature", record_id: bill_ids)
+
+    serialized_dols + bill_docs
   end
 end
