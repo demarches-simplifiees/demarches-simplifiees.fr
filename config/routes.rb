@@ -310,6 +310,7 @@ Rails.application.routes.draw do
             get 'instruction'
             get 'messagerie'
             post 'commentaire' => 'avis#create_commentaire'
+            delete 'delete_commentaire' => 'avis#delete_commentaire'
             post 'avis' => 'avis#create_avis'
             get 'bilans_bdf'
             get 'telecharger_pjs' => 'avis#telecharger_pjs'
