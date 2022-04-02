@@ -1731,13 +1731,6 @@ describe Dossier do
       end
     end
 
-    context 'given a date' do
-      let(:archive_date) { Date.new(2022, 3, 1) }
-      it 'includes a dossier processed_at at last day of month' do
-        expect(Dossier.processed_in_month(archive_date).count).to eq(1)
-      end
-    end
-
     context 'given a datetime' do
       let(:archive_date) { DateTime.new(2022, 3, 1, 12, 0) }
       it 'includes a dossier processed_at at last day of month' do
