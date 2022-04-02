@@ -120,6 +120,8 @@ group :development do
 end
 
 group :development, :test do
+  gem 'sorbet'
+  gem 'sorbet-runtime'
   gem 'graphql-schema_comparator'
   gem 'mina', require: false # Deploy
   gem 'pry-byebug' # Call 'byebug' anywhere in the code to stop execution and get a debugger console
