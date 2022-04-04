@@ -3,16 +3,18 @@ class ActiveStorage::DownloadableFile
     dossiers.flat_map do |dossier|
       dossier_export = PiecesJustificativesService.generate_dossier_export(dossier)
       pjs = [dossier_export] + PiecesJustificativesService.liste_documents(dossier, for_expert)
-      pjs.map do |piece_justificative|
-        [
-          piece_justificative,
-          "dossier-#{dossier.id}/#{self.timestamped_filename(piece_justificative)}"
-        ]
-      end
+      pjs.map { |piece_justificative| pj_and_path(dossier, piece_justificative) }
     end
   end
 
   private
+
+  def self.pj_and_path(dossier, pj)
+    [
+      pj,
+      "dossier-#{dossier.id}/#{self.timestamped_filename(pj)}"
+    ]
+  end
 
   def self.timestamped_filename(attachment)
     # we pad the original file name with a timestamp
