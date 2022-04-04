@@ -1,12 +1,15 @@
 class PiecesJustificativesService
   def self.liste_documents(dossiers, for_expert)
-    dossiers.flat_map do |dossier|
-      pjs = pjs_for_champs(dossier, for_expert) +
-        pjs_for_commentaires(dossier) +
+    pj_and_paths = pjs_for_champs(dossiers, for_expert)
+
+    pj_and_paths += dossiers.flat_map do |dossier|
+      pjs = pjs_for_commentaires(dossier) +
         pjs_for_dossier(dossier, for_expert)
 
       pjs.map { |piece_justificative| ActiveStorage::DownloadableFile.pj_and_path(dossier.id, piece_justificative) }
     end
+
+    pj_and_paths
   end
 
   def self.serialize_types_de_champ_as_type_pj(revision)
@@ -108,18 +111,26 @@ class PiecesJustificativesService
 
   private
 
-  def self.pjs_for_champs(dossier, for_expert = false)
+  def self.pjs_for_champs(dossiers, for_expert = false)
     champs = Champ
       .joins(:piece_justificative_file_attachment)
-      .where(type: "Champs::PieceJustificativeChamp", dossier: dossier)
+      .where(type: "Champs::PieceJustificativeChamp", dossier: dossiers)
 
     if for_expert
       champs = champs.where(private: false)
     end
 
+    champ_id_dossier_id = champs
+      .pluck(:id, :dossier_id)
+      .to_h
+
     ActiveStorage::Attachment
       .includes(:blob)
-      .where(record_type: "Champ", record_id: champs.ids)
+      .where(record_type: "Champ", record_id: champ_id_dossier_id.keys)
+      .map do |a|
+        dossier_id = champ_id_dossier_id[a.record_id]
+        ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
+      end
   end
 
   def self.pjs_for_commentaires(dossier)
