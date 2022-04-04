@@ -7,13 +7,6 @@ class PiecesJustificativesService
     pjs_champs + pjs_commentaires + pjs_dossier
   end
 
-  def self.liste_pieces_justificatives(dossier)
-    pjs_champs = pjs_for_champs(dossier)
-    pjs_commentaires = pjs_for_commentaires(dossier)
-
-    pjs_champs + pjs_commentaires
-  end
-
   def self.serialize_types_de_champ_as_type_pj(revision)
     tdcs = revision.types_de_champ.filter { |type_champ| type_champ.old_pj.present? }
     tdcs.map.with_index do |type_champ, order_place|
