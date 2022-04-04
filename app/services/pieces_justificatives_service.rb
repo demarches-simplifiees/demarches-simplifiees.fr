@@ -4,7 +4,7 @@ class PiecesJustificativesService
     pjs_commentaires = pjs_for_commentaires(dossier)
     pjs_dossier = pjs_for_dossier(dossier, for_expert)
 
-    pjs_champs + pjs_commentaires + pjs_dossier.filter(&:attached?)
+    pjs_champs + pjs_commentaires + pjs_dossier
   end
 
   def self.liste_pieces_justificatives(dossier)
@@ -138,18 +138,39 @@ class PiecesJustificativesService
   end
 
   def self.pjs_for_dossier(dossier, for_expert = false)
-    pjs = [
-      dossier.justificatif_motivation,
-      dossier.attestation&.pdf,
-      dossier.etablissement&.entreprise_attestation_sociale,
-      dossier.etablissement&.entreprise_attestation_fiscale
-    ].flatten.compact
+    pjs = motivation(dossier) +
+      attestation(dossier) +
+      etablissement(dossier)
 
     if !for_expert
       pjs += operation_logs_and_signatures(dossier)
     end
 
     pjs
+  end
+
+  def self.etablissement(dossier)
+    etablissement = Etablissement.where(dossier: dossier)
+
+    ActiveStorage::Attachment
+      .includes(:blob)
+      .where(record_type: "Etablissement", record_id: etablissement)
+  end
+
+  def self.motivation(dossier)
+    ActiveStorage::Attachment
+      .includes(:blob)
+      .where(record_type: "Dossier", name: "justificatif_motivation", record_id: dossier)
+  end
+
+  def self.attestation(dossier)
+    attestation = Attestation
+      .joins(:pdf_attachment)
+      .where(dossier: dossier)
+
+    ActiveStorage::Attachment
+      .includes(:blob)
+      .where(record_type: "Attestation", record_id: attestation)
   end
 
   def self.operation_logs_and_signatures(dossier)
