@@ -1,8 +1,10 @@
 class PiecesJustificativesService
   def self.liste_documents(dossiers, for_expert)
-    pjs_for_champs(dossiers, for_expert) +
-      pjs_for_commentaires(dossiers) +
-      pjs_for_dossier(dossiers, for_expert)
+    dossiers.in_batches.flat_map do |batch|
+      pjs_for_champs(batch, for_expert) +
+        pjs_for_commentaires(batch) +
+        pjs_for_dossier(batch, for_expert)
+    end
   end
 
   def self.serialize_types_de_champ_as_type_pj(revision)
