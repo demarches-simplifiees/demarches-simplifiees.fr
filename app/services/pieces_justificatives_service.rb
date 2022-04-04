@@ -1,10 +1,12 @@
 class PiecesJustificativesService
-  def self.liste_documents(dossier, for_expert)
-    pjs_champs = pjs_for_champs(dossier, for_expert)
-    pjs_commentaires = pjs_for_commentaires(dossier)
-    pjs_dossier = pjs_for_dossier(dossier, for_expert)
+  def self.liste_documents(dossiers, for_expert)
+    dossiers.flat_map do |dossier|
+      pjs = pjs_for_champs(dossier, for_expert) +
+        pjs_for_commentaires(dossier) +
+        pjs_for_dossier(dossier, for_expert)
 
-    pjs_champs + pjs_commentaires + pjs_dossier
+      pjs.map { |piece_justificative| ActiveStorage::DownloadableFile.pj_and_path(dossier, piece_justificative) }
+    end
   end
 
   def self.serialize_types_de_champ_as_type_pj(revision)

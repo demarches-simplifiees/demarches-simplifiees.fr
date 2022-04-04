@@ -16,15 +16,15 @@ describe PiecesJustificativesService do
   end
 
   describe '.liste_documents' do
-    subject { PiecesJustificativesService.liste_documents(dossier, false) }
+    subject { PiecesJustificativesService.liste_documents(Dossier.where(id: dossier.id), false) }
 
     it "doesn't return sensitive documents like titre_identite" do
       expect(champ_identite.piece_justificative_file).to be_attached
-      expect(subject.any? { |piece| piece.name == 'piece_justificative_file' }).to be_falsy
+      expect(subject.any? { |piece, _| piece.name == 'piece_justificative_file' }).to be_falsy
     end
 
     it "returns operation logs of the dossier" do
-      expect(subject.any? { |piece| piece.name == 'serialized' }).to be_truthy
+      expect(subject.any? { |piece, _| piece.name == 'serialized' }).to be_truthy
     end
   end
 
