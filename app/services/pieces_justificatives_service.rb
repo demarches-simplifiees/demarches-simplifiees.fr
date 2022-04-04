@@ -1,12 +1,11 @@
 class PiecesJustificativesService
   def self.liste_documents(dossiers, for_expert)
-    pj_and_paths = pjs_for_champs(dossiers, for_expert)
+    pj_and_paths = pjs_for_champs(dossiers, for_expert) +
+      pjs_for_commentaires(dossiers)
 
     pj_and_paths += dossiers.flat_map do |dossier|
-      pjs = pjs_for_commentaires(dossier) +
-        pjs_for_dossier(dossier, for_expert)
-
-      pjs.map { |piece_justificative| ActiveStorage::DownloadableFile.pj_and_path(dossier.id, piece_justificative) }
+      pjs_for_dossier(dossier, for_expert)
+        .map { |piece_justificative| ActiveStorage::DownloadableFile.pj_and_path(dossier.id, piece_justificative) }
     end
 
     pj_and_paths
@@ -133,14 +132,20 @@ class PiecesJustificativesService
       end
   end
 
-  def self.pjs_for_commentaires(dossier)
-    commentaires = Commentaire
+  def self.pjs_for_commentaires(dossiers)
+    commentaire_id_dossier_id = Commentaire
       .joins(:piece_jointe_attachment)
-      .where(dossier: dossier)
+      .where(dossier: dossiers)
+      .pluck(:id, :dossier_id)
+      .to_h
 
     ActiveStorage::Attachment
       .includes(:blob)
-      .where(record_type: "Commentaire", record_id: commentaires.ids)
+      .where(record_type: "Commentaire", record_id: commentaire_id_dossier_id.keys)
+      .map do |a|
+        dossier_id = commentaire_id_dossier_id[a.record_id]
+        ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
+      end
   end
 
   def self.pjs_for_dossier(dossier, for_expert = false)
