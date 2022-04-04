@@ -155,6 +155,23 @@ describe Instructeurs::ProceduresController, type: :controller do
           it { expect(assigns(:all_dossiers_counts)['archivés']).to eq(1 + 0) }
           it { expect(assigns(:all_dossiers_counts)['expirant']).to eq(2 + 0) }
         end
+
+        context 'with not draft state on discarded procedure' do
+          let(:discarded_procedure) { create(:procedure, :discarded, :expirable) }
+          let(:state) { Dossier.states.fetch(:en_construction) }
+          before do
+            create(:dossier, procedure: discarded_procedure, state: Dossier.states.fetch(:en_construction))
+            instructeur.groupe_instructeurs << discarded_procedure.defaut_groupe_instructeur
+            subject
+          end
+
+          it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(1) }
+          it { expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure.id]).to eq(1) }
+
+          it { expect(assigns(:dossiers_count_per_procedure)[discarded_procedure.id]).to be_nil }
+
+          it { expect(assigns(:all_dossiers_counts)['à suivre']).to eq(1) }
+        end
       end
 
       context "with a routed procedure" do
