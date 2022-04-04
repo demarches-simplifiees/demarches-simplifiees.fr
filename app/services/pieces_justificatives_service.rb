@@ -5,7 +5,7 @@ class PiecesJustificativesService
         pjs_for_commentaires(dossier) +
         pjs_for_dossier(dossier, for_expert)
 
-      pjs.map { |piece_justificative| ActiveStorage::DownloadableFile.pj_and_path(dossier, piece_justificative) }
+      pjs.map { |piece_justificative| ActiveStorage::DownloadableFile.pj_and_path(dossier.id, piece_justificative) }
     end
   end
 

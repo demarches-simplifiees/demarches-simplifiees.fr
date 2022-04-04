@@ -1,16 +1,16 @@
 class ActiveStorage::DownloadableFile
   def self.create_list_from_dossiers(dossiers, for_expert = false)
     dossiers
-      .map { |d| pj_and_path(d, PiecesJustificativesService.generate_dossier_export(d)) } +
+      .map { |d| pj_and_path(d.id, PiecesJustificativesService.generate_dossier_export(d)) } +
     PiecesJustificativesService.liste_documents(dossiers, for_expert)
   end
 
   private
 
-  def self.pj_and_path(dossier, pj)
+  def self.pj_and_path(dossier_id, pj)
     [
       pj,
-      "dossier-#{dossier.id}/#{self.timestamped_filename(pj)}"
+      "dossier-#{dossier_id}/#{self.timestamped_filename(pj)}"
     ]
   end
 

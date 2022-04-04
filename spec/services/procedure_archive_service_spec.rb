@@ -106,7 +106,7 @@ describe ProcedureArchiveService do
           )
         end
 
-        let(:documents) { [pj, bad_pj].map { |p| ActiveStorage::DownloadableFile.pj_and_path(dossier, p) } }
+        let(:documents) { [pj, bad_pj].map { |p| ActiveStorage::DownloadableFile.pj_and_path(dossier.id, p) } }
         before do
           allow(PiecesJustificativesService).to receive(:liste_documents).and_return(documents)
         end
