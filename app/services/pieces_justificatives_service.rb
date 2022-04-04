@@ -1,14 +1,8 @@
 class PiecesJustificativesService
   def self.liste_documents(dossiers, for_expert)
-    pj_and_paths = pjs_for_champs(dossiers, for_expert) +
-      pjs_for_commentaires(dossiers)
-
-    pj_and_paths += dossiers.flat_map do |dossier|
-      pjs_for_dossier(dossier, for_expert)
-        .map { |piece_justificative| ActiveStorage::DownloadableFile.pj_and_path(dossier.id, piece_justificative) }
-    end
-
-    pj_and_paths
+    pjs_for_champs(dossiers, for_expert) +
+      pjs_for_commentaires(dossiers) +
+      pjs_for_dossier(dossiers, for_expert)
   end
 
   def self.serialize_types_de_champ_as_type_pj(revision)
@@ -148,57 +142,82 @@ class PiecesJustificativesService
       end
   end
 
-  def self.pjs_for_dossier(dossier, for_expert = false)
-    pjs = motivation(dossier) +
-      attestation(dossier) +
-      etablissement(dossier)
+  def self.pjs_for_dossier(dossiers, for_expert = false)
+    pjs = motivations(dossiers) +
+      attestations(dossiers) +
+      etablissements(dossiers)
 
     if !for_expert
-      pjs += operation_logs_and_signatures(dossier)
+      pjs += operation_logs_and_signatures(dossiers)
     end
 
     pjs
   end
 
-  def self.etablissement(dossier)
-    etablissement = Etablissement.where(dossier: dossier)
+  def self.etablissements(dossiers)
+    etablissement_id_dossier_id = Etablissement
+      .where(dossier: dossiers)
+      .pluck(:id, :dossier_id)
+      .to_h
 
     ActiveStorage::Attachment
       .includes(:blob)
-      .where(record_type: "Etablissement", record_id: etablissement)
+      .where(record_type: "Etablissement", record_id: etablissement_id_dossier_id.keys)
+      .map do |a|
+        dossier_id = etablissement_id_dossier_id[a.record_id]
+        ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
+      end
   end
 
-  def self.motivation(dossier)
+  def self.motivations(dossiers)
     ActiveStorage::Attachment
       .includes(:blob)
-      .where(record_type: "Dossier", name: "justificatif_motivation", record_id: dossier)
+      .where(record_type: "Dossier", name: "justificatif_motivation", record_id: dossiers)
+      .map do |a|
+        dossier_id = a.record_id
+        ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
+      end
   end
 
-  def self.attestation(dossier)
-    attestation = Attestation
+  def self.attestations(dossiers)
+    attestation_id_dossier_id = Attestation
       .joins(:pdf_attachment)
-      .where(dossier: dossier)
+      .where(dossier: dossiers)
+      .pluck(:id, :dossier_id)
+      .to_h
 
     ActiveStorage::Attachment
       .includes(:blob)
-      .where(record_type: "Attestation", record_id: attestation)
+      .where(record_type: "Attestation", record_id: attestation_id_dossier_id.keys)
+      .map do |a|
+        dossier_id = attestation_id_dossier_id[a.record_id]
+        ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
+      end
   end
 
-  def self.operation_logs_and_signatures(dossier)
-    dol_ids_bill_id = DossierOperationLog
-      .where(dossier: dossier)
-      .pluck(:id, :bill_signature_id)
+  def self.operation_logs_and_signatures(dossiers)
+    dol_id_dossier_id_bill_id = DossierOperationLog
+      .where(dossier: dossiers)
+      .pluck(:id, :dossier_id, :bill_signature_id)
 
-    dol_ids = dol_ids_bill_id.map(&:first)
-    bill_ids = dol_ids_bill_id.map(&:second).uniq.compact
+    dol_id_dossier_id = dol_id_dossier_id_bill_id
+      .map { |dol_id, dossier_id, _| [dol_id, dossier_id] }
+      .to_h
+
+    bill_ids = dol_id_dossier_id_bill_id.map(&:third).uniq.compact
 
     serialized_dols = ActiveStorage::Attachment
       .includes(:blob)
-      .where(record_type: "DossierOperationLog", record_id: dol_ids)
+      .where(record_type: "DossierOperationLog", record_id: dol_id_dossier_id.keys)
+      .map do |a|
+        dossier_id = dol_id_dossier_id[a.record_id]
+        ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
+      end
 
     bill_docs = ActiveStorage::Attachment
       .includes(:blob)
       .where(record_type: "BillSignature", record_id: bill_ids)
+      .map { |bill| ActiveStorage::DownloadableFile.bill_and_path(bill) }
 
     serialized_dols + bill_docs
   end
