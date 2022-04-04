@@ -1190,30 +1190,6 @@ describe Dossier do
     after { Timecop.return }
   end
 
-  describe '#export_and_attachments_downloadable?' do
-    let(:dossier) { create(:dossier, user: user) }
-
-    context "no attachments" do
-      it {
-        expect(dossier.export_and_attachments_downloadable?).to be true
-      }
-    end
-
-    context "with a small attachment" do
-      it {
-        expect(PiecesJustificativesService).to receive(:pieces_justificatives_total_size).and_return(4.megabytes)
-        expect(dossier.export_and_attachments_downloadable?).to be true
-      }
-    end
-
-    context "with a too large attachment" do
-      it {
-        expect(PiecesJustificativesService).to receive(:pieces_justificatives_total_size).and_return(100.megabytes)
-        expect(dossier.export_and_attachments_downloadable?).to be false
-      }
-    end
-  end
-
   describe '#notify_draft_not_submitted' do
     let!(:user1) { create(:user) }
     let!(:user2) { create(:user) }
