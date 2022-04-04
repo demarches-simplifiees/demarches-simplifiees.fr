@@ -46,8 +46,4 @@ class ActiveStorage::DownloadableFile
       'pieces_justificatives/'
     end
   end
-
-  def using_local_backend?
-    [:local, :local_test, :test].include?(Rails.application.config.active_storage.service)
-  end
 end
