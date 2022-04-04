@@ -56,8 +56,6 @@ class Dossier < ApplicationRecord
   INSTRUCTION_COMMENCEE = TERMINE + [states.fetch(:en_instruction)]
   SOUMIS = EN_CONSTRUCTION_OU_INSTRUCTION + TERMINE
 
-  TAILLE_MAX_ZIP = 100.megabytes
-
   REMAINING_DAYS_BEFORE_CLOSING = 2
   INTERVAL_BEFORE_CLOSING = "#{REMAINING_DAYS_BEFORE_CLOSING} days"
   REMAINING_WEEKS_BEFORE_EXPIRATION = 2
@@ -1082,10 +1080,6 @@ class Dossier < ApplicationRecord
         [type_de_champ.libelle_for_export(index), champ_value]
       end
     end
-  end
-
-  def export_and_attachments_downloadable?
-    PiecesJustificativesService.pieces_justificatives_total_size(self) < Dossier::TAILLE_MAX_ZIP
   end
 
   def linked_dossiers_for(instructeur_or_expert)
