@@ -12,7 +12,8 @@
 
   .message-extras.flex.justify-start
     - if commentaire.soft_deletable?(connected_user)
-      = button_to  instructeur_commentaire_path(commentaire.dossier.procedure, commentaire.dossier, commentaire), method: :delete, class: 'button danger', data: { confirm: t('views.shared.commentaires.destroy.confirm') } do
+      - path = connected_user.is_a?(Instructeur) ? instructeur_commentaire_path(commentaire.dossier.procedure, commentaire.dossier, commentaire) : delete_commentaire_expert_avis_path(@avis.procedure, @avis, commentaire: commentaire)
+      = button_to path, method: :delete, class: 'button danger', data: { confirm: t('views.shared.commentaires.destroy.confirm') } do
         %span.icon.delete
         = t('views.shared.commentaires.destroy.button')
 
