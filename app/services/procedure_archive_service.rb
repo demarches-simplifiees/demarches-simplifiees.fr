@@ -25,7 +25,8 @@ class ProcedureArchiveService
       dossiers.processed_in_month(archive.month)
     end
 
-    attachments = create_list_of_attachments(dossiers)
+    attachments = ActiveStorage::DownloadableFile.create_list_from_dossiers(dossiers)
+
     download_and_zip(archive, attachments) do |zip_filepath|
       ArchiveUploader.new(procedure: @procedure, archive: archive, filepath: zip_filepath)
         .upload
@@ -70,12 +71,6 @@ class ProcedureArchiveService
 
   def zip_root_folder(archive)
     "procedure-#{@procedure.id}-#{archive.id}"
-  end
-
-  def create_list_of_attachments(dossiers)
-    dossiers.flat_map do |dossier|
-      ActiveStorage::DownloadableFile.create_list_from_dossier(dossier)
-    end
   end
 
   def self.attachments_from_champs_piece_justificative(champs)
