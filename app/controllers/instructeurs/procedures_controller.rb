@@ -12,7 +12,9 @@ module Instructeurs
         .includes(:defaut_groupe_instructeur)
         .order(closed_at: :desc, unpublished_at: :desc, published_at: :desc, created_at: :desc)
 
-      dossiers = current_instructeur.dossiers.joins(:groupe_instructeur)
+      dossiers = current_instructeur.dossiers
+        .joins(groupe_instructeur: :procedure)
+        .where(procedures: { hidden_at: nil })
       dossiers_visibles = dossiers.visible_by_administration
       @dossiers_count_per_procedure = dossiers_visibles.all_state.group('groupe_instructeurs.procedure_id').reorder(nil).count
       @dossiers_a_suivre_count_per_procedure = dossiers_visibles.without_followers.en_cours.group('groupe_instructeurs.procedure_id').reorder(nil).count
