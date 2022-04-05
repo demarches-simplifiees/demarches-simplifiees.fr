@@ -22,7 +22,7 @@ class ProcedureArchiveService
     dossiers = if archive.time_span_type == 'everything'
       dossiers.state_termine
     else
-      dossiers.processed_in_month(archive.month.to_datetime)
+      dossiers.processed_in_month(archive.month)
     end
 
     attachments = ActiveStorage::DownloadableFile.create_list_from_dossiers(dossiers)
