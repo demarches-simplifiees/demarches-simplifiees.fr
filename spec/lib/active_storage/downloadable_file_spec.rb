@@ -1,9 +1,9 @@
 describe ActiveStorage::DownloadableFile do
   let(:dossier) { create(:dossier, :en_construction) }
 
-  subject(:list) { ActiveStorage::DownloadableFile.create_list_from_dossier(dossier) }
+  subject(:list) { ActiveStorage::DownloadableFile.create_list_from_dossiers(Dossier.where(id: dossier.id)) }
 
-  describe 'create_list_from_dossier' do
+  describe 'create_list_from_dossiers' do
     context 'when no piece_justificative is present' do
       it { expect(list.length).to eq 1 }
       it { expect(list.first[0].name).to eq "pdf_export_for_instructeur" }
@@ -60,7 +60,7 @@ describe ActiveStorage::DownloadableFile do
       let(:champ) { dossier.champs.first }
       let(:avis) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure, confidentiel: true) }
 
-      subject(:list) { ActiveStorage::DownloadableFile.create_list_from_dossier(dossier, true) }
+      subject(:list) { ActiveStorage::DownloadableFile.create_list_from_dossiers(Dossier.where(id: dossier.id), true) }
 
       before do
         dossier.champs_private << create(:champ_piece_justificative, :with_piece_justificative_file, private: true, dossier: dossier)
