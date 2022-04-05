@@ -1,9 +1,15 @@
 class PiecesJustificativesService
   def self.liste_documents(dossiers, for_expert)
     dossiers.in_batches.flat_map do |batch|
-      pjs_for_champs(batch, for_expert) +
+      pjs = pjs_for_champs(batch, for_expert) +
         pjs_for_commentaires(batch) +
-        pjs_for_dossier(batch, for_expert)
+        pjs_for_dossier(batch)
+
+      if !for_expert
+        pjs += operation_logs_and_signatures(dossiers)
+      end
+
+      pjs
     end
   end
 
@@ -144,16 +150,10 @@ class PiecesJustificativesService
       end
   end
 
-  def self.pjs_for_dossier(dossiers, for_expert = false)
-    pjs = motivations(dossiers) +
+  def self.pjs_for_dossier(dossiers)
+    motivations(dossiers) +
       attestations(dossiers) +
       etablissements(dossiers)
-
-    if !for_expert
-      pjs += operation_logs_and_signatures(dossiers)
-    end
-
-    pjs
   end
 
   def self.etablissements(dossiers)
