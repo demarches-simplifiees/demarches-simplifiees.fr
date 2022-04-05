@@ -48,11 +48,11 @@ class ArchiveUploader
     params =  blob_default_params(filepath).merge(byte_size: File.size(filepath),
                                                   checksum: Digest::SHA256.file(filepath).hexdigest)
     blob = ActiveStorage::Blob.create_before_direct_upload!(**params)
-    if syscall_to_custom_uploader(blob)
+    if retryable_syscall_to_custom_uploader(blob)
       return blob
     else
       blob.purge
-      fail "custom archive attachment failed, should it be retried ?"
+      fail "custom archive attachment failed twice, retry later"
     end
   end
 
@@ -71,6 +71,18 @@ class ArchiveUploader
   # explicitely memoize so it keeps its consistency across many calls (Ex: retry)
   def namespaced_object_key
     @namespaced_object_key ||= "archives/#{Date.today.strftime("%Y-%m-%d")}/#{SecureRandom.uuid}"
+  end
+
+  def retryable_syscall_to_custom_uploader(blob)
+    limit_to_retry = 1
+    begin
+      syscall_to_custom_uploader(blob)
+    rescue
+      if limit_to_retry > 0
+        limit_to_retry = limit_to_retry - 1
+        retry
+      end
+    end
   end
 
   def syscall_to_custom_uploader(blob)
