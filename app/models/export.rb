@@ -2,14 +2,15 @@
 #
 # Table name: exports
 #
-#  id                        :bigint           not null, primary key
-#  format                    :string           not null
-#  key                       :text             not null
-#  statut                    :string           default("tous")
-#  time_span_type            :string           default("everything"), not null
-#  created_at                :datetime         not null
-#  updated_at                :datetime         not null
-#  procedure_presentation_id :bigint
+#  id                              :bigint           not null, primary key
+#  format                          :string           not null
+#  key                             :text             not null
+#  procedure_presentation_snapshot :jsonb
+#  statut                          :string           default("tous")
+#  time_span_type                  :string           default("everything"), not null
+#  created_at                      :datetime         not null
+#  updated_at                      :datetime         not null
+#  procedure_presentation_id       :bigint
 #
 class Export < ApplicationRecord
   MAX_DUREE_CONSERVATION_EXPORT = 3.hours
@@ -60,6 +61,8 @@ class Export < ApplicationRecord
   end
 
   def compute
+    load_snapshot!
+
     file.attach(
       io: io,
       filename: filename,
@@ -78,7 +81,11 @@ class Export < ApplicationRecord
   end
 
   def old?
-    updated_at < 20.minutes.ago
+    updated_at < 20.minutes.ago || filters_changed?
+  end
+
+  def filters_changed?
+    procedure_presentation&.snapshot != procedure_presentation_snapshot
   end
 
   def filtered?
@@ -98,7 +105,7 @@ class Export < ApplicationRecord
   end
 
   def self.find_or_create_export(format, groupe_instructeurs, time_span_type: time_span_types.fetch(:everything), statut: statuts.fetch(:tous), procedure_presentation: nil)
-    create_with(groupe_instructeurs: groupe_instructeurs, procedure_presentation: procedure_presentation)
+    create_with(groupe_instructeurs: groupe_instructeurs, procedure_presentation: procedure_presentation, procedure_presentation_snapshot: procedure_presentation&.snapshot)
       .includes(:procedure_presentation)
       .create_or_find_by(format: format,
         time_span_type: time_span_type,
@@ -146,6 +153,12 @@ class Export < ApplicationRecord
   end
 
   private
+
+  def load_snapshot!
+    if procedure_presentation_snapshot.present?
+      procedure_presentation.attributes = procedure_presentation_snapshot
+    end
+  end
 
   def dossiers_for_export
     @dossiers_for_export ||= begin

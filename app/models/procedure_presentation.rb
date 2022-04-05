@@ -263,6 +263,10 @@ class ProcedurePresentation < ApplicationRecord
     })
   end
 
+  def snapshot
+    slice(:filters, :sort, :displayed_fields)
+  end
+
   private
 
   def field_id(field)
