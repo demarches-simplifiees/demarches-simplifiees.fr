@@ -1720,4 +1720,22 @@ describe Dossier do
       expect(rebased_datetime_champ.rebased_at).not_to be_nil
     end
   end
+
+  describe '#processed_in_month' do
+    include ActiveSupport::Testing::TimeHelpers
+
+    let(:dossier_accepte_at) { DateTime.new(2022, 3, 31, 12, 0) }
+    before do
+      travel_to(dossier_accepte_at) do
+        dossier = create(:dossier, :accepte)
+      end
+    end
+
+    context 'given a datetime' do
+      let(:archive_date) { DateTime.new(2022, 3, 1, 12, 0) }
+      it 'includes a dossier processed_at at last day of month' do
+        expect(Dossier.processed_in_month(archive_date).count).to eq(1)
+      end
+    end
+  end
 end
