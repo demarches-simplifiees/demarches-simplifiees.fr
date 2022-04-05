@@ -25,6 +25,8 @@ class ProcedurePresentation < ApplicationRecord
   FILTERS_VALUE_MAX_LENGTH = 100
 
   belongs_to :assign_to, optional: false
+  has_many :exports, dependent: :destroy
+
   delegate :procedure, :instructeur, to: :assign_to
 
   validate :check_allowed_displayed_fields

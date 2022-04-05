@@ -2,12 +2,14 @@
 #
 # Table name: exports
 #
-#  id             :bigint           not null, primary key
-#  format         :string           not null
-#  key            :text             not null
-#  time_span_type :string           default("everything"), not null
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
+#  id                        :bigint           not null, primary key
+#  format                    :string           not null
+#  key                       :text             not null
+#  statut                    :string           default("tous")
+#  time_span_type            :string           default("everything"), not null
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  procedure_presentation_id :bigint
 #
 class Export < ApplicationRecord
   MAX_DUREE_CONSERVATION_EXPORT = 3.hours
@@ -23,7 +25,18 @@ class Export < ApplicationRecord
     monthly:    'monthly'
   }
 
+  enum statut: {
+    'a-suivre': 'a-suivre',
+    suivis: 'suivis',
+    traites: 'traites',
+    tous: 'tous',
+    supprimes_recemment: 'supprimes_recemment',
+    archives: 'archives',
+    expirant: 'expirant'
+  }
+
   has_and_belongs_to_many :groupe_instructeurs
+  belongs_to :procedure_presentation, optional: true
 
   has_one_attached :file
 
