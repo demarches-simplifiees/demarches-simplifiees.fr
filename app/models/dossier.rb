@@ -393,6 +393,30 @@ class Dossier < ApplicationRecord
       .distinct
   end
 
+  scope :by_statut, -> (instructeur, statut = 'tous') do
+    case statut
+    when 'a-suivre'
+      visible_by_administration
+        .without_followers
+        .en_cours
+    when 'suivis'
+      instructeur
+        .followed_dossiers
+        .en_cours
+        .merge(visible_by_administration)
+    when 'traites'
+      visible_by_administration.termine
+    when 'tous'
+      visible_by_administration.all_state
+    when 'supprimes_recemment'
+      hidden_by_administration.termine
+    when 'archives'
+      visible_by_administration.archived
+    when 'expirant'
+      visible_by_administration.termine_or_en_construction_close_to_expiration
+    end
+  end
+
   accepts_nested_attributes_for :individual
 
   delegate :siret, :siren, to: :etablissement, allow_nil: true
