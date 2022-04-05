@@ -1059,17 +1059,6 @@ describe Procedure do
     it { expect(Procedure.default_sort).to eq({ "table" => "self", "column" => "id", "order" => "desc" }) }
   end
 
-  describe "#export_filename" do
-    before { Timecop.freeze(Time.zone.local(2018, 1, 2, 23, 11, 14)) }
-    after { Timecop.return }
-
-    subject { procedure.export_filename(:csv) }
-
-    let(:procedure) { create(:procedure, :published) }
-
-    it { is_expected.to eq("dossiers_#{procedure.path}_2018-01-02_23-11.csv") }
-  end
-
   describe '#new_dossier' do
     let(:procedure) do
       create(:procedure,

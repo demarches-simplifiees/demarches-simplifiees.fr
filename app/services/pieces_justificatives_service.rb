@@ -4,19 +4,7 @@ class PiecesJustificativesService
     pjs_commentaires = pjs_for_commentaires(dossier)
     pjs_dossier = pjs_for_dossier(dossier, for_expert)
 
-    pjs_champs + pjs_commentaires + pjs_dossier.filter(&:attached?)
-  end
-
-  def self.liste_pieces_justificatives(dossier)
-    pjs_champs = pjs_for_champs(dossier)
-    pjs_commentaires = pjs_for_commentaires(dossier)
-
-    pjs_champs + pjs_commentaires
-  end
-
-  def self.pieces_justificatives_total_size(dossier)
-    liste_pieces_justificatives(dossier)
-      .sum(&:byte_size)
+    pjs_champs + pjs_commentaires + pjs_dossier
   end
 
   def self.serialize_types_de_champ_as_type_pj(revision)
@@ -143,21 +131,57 @@ class PiecesJustificativesService
   end
 
   def self.pjs_for_dossier(dossier, for_expert = false)
-    pjs = [
-      dossier.justificatif_motivation,
-      dossier.attestation&.pdf,
-      dossier.etablissement&.entreprise_attestation_sociale,
-      dossier.etablissement&.entreprise_attestation_fiscale
-    ].flatten.compact
+    pjs = motivation(dossier) +
+      attestation(dossier) +
+      etablissement(dossier)
 
     if !for_expert
-      bill_signatures = dossier.dossier_operation_logs.filter_map(&:bill_signature).uniq
-      pjs += [
-        dossier.dossier_operation_logs.map(&:serialized),
-        bill_signatures.map(&:serialized),
-        bill_signatures.map(&:signature)
-      ].flatten.compact
+      pjs += operation_logs_and_signatures(dossier)
     end
+
     pjs
+  end
+
+  def self.etablissement(dossier)
+    etablissement = Etablissement.where(dossier: dossier)
+
+    ActiveStorage::Attachment
+      .includes(:blob)
+      .where(record_type: "Etablissement", record_id: etablissement)
+  end
+
+  def self.motivation(dossier)
+    ActiveStorage::Attachment
+      .includes(:blob)
+      .where(record_type: "Dossier", name: "justificatif_motivation", record_id: dossier)
+  end
+
+  def self.attestation(dossier)
+    attestation = Attestation
+      .joins(:pdf_attachment)
+      .where(dossier: dossier)
+
+    ActiveStorage::Attachment
+      .includes(:blob)
+      .where(record_type: "Attestation", record_id: attestation)
+  end
+
+  def self.operation_logs_and_signatures(dossier)
+    dol_ids_bill_id = DossierOperationLog
+      .where(dossier: dossier)
+      .pluck(:id, :bill_signature_id)
+
+    dol_ids = dol_ids_bill_id.map(&:first)
+    bill_ids = dol_ids_bill_id.map(&:second).uniq.compact
+
+    serialized_dols = ActiveStorage::Attachment
+      .includes(:blob)
+      .where(record_type: "DossierOperationLog", record_id: dol_ids)
+
+    bill_docs = ActiveStorage::Attachment
+      .includes(:blob)
+      .where(record_type: "BillSignature", record_id: bill_ids)
+
+    serialized_dols + bill_docs
   end
 end

@@ -1190,30 +1190,6 @@ describe Dossier do
     after { Timecop.return }
   end
 
-  describe '#export_and_attachments_downloadable?' do
-    let(:dossier) { create(:dossier, user: user) }
-
-    context "no attachments" do
-      it {
-        expect(dossier.export_and_attachments_downloadable?).to be true
-      }
-    end
-
-    context "with a small attachment" do
-      it {
-        expect(PiecesJustificativesService).to receive(:pieces_justificatives_total_size).and_return(4.megabytes)
-        expect(dossier.export_and_attachments_downloadable?).to be true
-      }
-    end
-
-    context "with a too large attachment" do
-      it {
-        expect(PiecesJustificativesService).to receive(:pieces_justificatives_total_size).and_return(100.megabytes)
-        expect(dossier.export_and_attachments_downloadable?).to be false
-      }
-    end
-  end
-
   describe '#notify_draft_not_submitted' do
     let!(:user1) { create(:user) }
     let!(:user2) { create(:user) }
@@ -1742,6 +1718,31 @@ describe Dossier do
       expect(rebased_repetition_champ.rows[1].size).to eq(2)
       expect(rebased_text_champ.rebased_at).not_to be_nil
       expect(rebased_datetime_champ.rebased_at).not_to be_nil
+    end
+  end
+
+  describe '#processed_in_month' do
+    include ActiveSupport::Testing::TimeHelpers
+
+    let(:dossier_accepte_at) { DateTime.new(2022, 3, 31, 12, 0) }
+    before do
+      travel_to(dossier_accepte_at) do
+        dossier = create(:dossier, :accepte)
+      end
+    end
+
+    context 'given a date' do
+      let(:archive_date) { Date.new(2022, 3, 1) }
+      it 'includes a dossier processed_at at last day of month' do
+        expect(Dossier.processed_in_month(archive_date).count).to eq(1)
+      end
+    end
+
+    context 'given a datetime' do
+      let(:archive_date) { DateTime.new(2022, 3, 1, 12, 0) }
+      it 'includes a dossier processed_at at last day of month' do
+        expect(Dossier.processed_in_month(archive_date).count).to eq(1)
+      end
     end
   end
 end
