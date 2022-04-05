@@ -1,16 +1,30 @@
 class PiecesJustificativesService
   def self.liste_documents(dossiers, for_expert)
-    dossiers.in_batches.flat_map do |batch|
+    bill_ids = []
+
+    docs = dossiers.in_batches.flat_map do |batch|
       pjs = pjs_for_champs(batch, for_expert) +
         pjs_for_commentaires(batch) +
         pjs_for_dossier(batch)
 
       if !for_expert
-        pjs += operation_logs_and_signatures(dossiers)
+        # some bills are shared among operations
+        # so first, all the bill_ids are fetched
+        operation_logs, some_bill_ids = operation_logs_and_signature_ids(batch)
+
+        pjs += operation_logs
+        bill_ids += some_bill_ids
       end
 
       pjs
     end
+
+    if !for_expert
+      # then the bills are retrieved without duplication
+      docs += signatures(bill_ids.uniq)
+    end
+
+    docs
   end
 
   def self.serialize_types_de_champ_as_type_pj(revision)
@@ -197,7 +211,7 @@ class PiecesJustificativesService
       end
   end
 
-  def self.operation_logs_and_signatures(dossiers)
+  def self.operation_logs_and_signature_ids(dossiers)
     dol_id_dossier_id_bill_id = DossierOperationLog
       .where(dossier: dossiers)
       .pluck(:id, :dossier_id, :bill_signature_id)
@@ -216,11 +230,13 @@ class PiecesJustificativesService
         ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
       end
 
-    bill_docs = ActiveStorage::Attachment
+    [serialized_dols, bill_ids]
+  end
+
+  def self.signatures(bill_ids)
+    ActiveStorage::Attachment
       .includes(:blob)
       .where(record_type: "BillSignature", record_id: bill_ids)
       .map { |bill| ActiveStorage::DownloadableFile.bill_and_path(bill) }
-
-    serialized_dols + bill_docs
   end
 end
