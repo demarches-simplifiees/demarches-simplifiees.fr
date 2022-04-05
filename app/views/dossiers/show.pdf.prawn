@@ -205,6 +205,7 @@ def add_etats_dossier(pdf, dossier)
 end
 
 prawn_document(page_size: "A4") do |pdf|
+  @procedure ||= @dossier.procedure
   pdf.font_families.update( 'marianne' => {
     normal: Rails.root.join('lib/prawn/fonts/marianne/marianne-regular.ttf' ),
     bold: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf' ),
@@ -216,8 +217,8 @@ prawn_document(page_size: "A4") do |pdf|
   end
 
   format_in_2_columns(pdf, 'Dossier Nº', @dossier.id.to_s)
-  format_in_2_columns(pdf, 'Démarche', @dossier.procedure.libelle)
-  format_in_2_columns(pdf, 'Organisme', @dossier.procedure.organisation_name)
+  format_in_2_columns(pdf, 'Démarche', @procedure.libelle)
+  format_in_2_columns(pdf, 'Organisme', @procedure.organisation_name)
 
   add_etat_dossier(pdf, @dossier)
 
