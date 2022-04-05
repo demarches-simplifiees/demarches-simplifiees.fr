@@ -108,14 +108,19 @@ class PiecesJustificativesService
   end
 
   def self.generate_dossier_export(dossiers)
+    return [] if dossiers.empty?
+
     pdfs = []
+
+    procedure = dossiers.first.procedure
 
     dossiers.find_each do |dossier|
       pdf = ApplicationController
         .render(template: 'dossiers/show', formats: [:pdf],
                 assigns: {
                   include_infos_administration: true,
-                  dossier: dossier
+                  dossier: dossier,
+                  procedure: procedure
                 })
 
       a = FakeAttachment.new(
