@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_23_120846) do
+ActiveRecord::Schema.define(version: 2022_04_05_100354) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -134,7 +134,7 @@ ActiveRecord::Schema.define(version: 2022_03_23_120846) do
     t.integer "dossier_id", null: false
     t.string "title"
     t.datetime "updated_at", null: false
-    t.index ["dossier_id"], name: "index_attestations_on_dossier_id"
+    t.index ["dossier_id"], name: "index_attestations_on_dossier_id", unique: true
   end
 
   create_table "avis", id: :serial, force: :cascade do |t|
