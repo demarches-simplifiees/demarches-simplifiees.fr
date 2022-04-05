@@ -82,7 +82,7 @@ describe ProcedureArchiveService do
       it 'does not retry more than once' do
         expect(uploader).to receive(:syscall_to_custom_uploader).with(anything).twice.and_raise(StandardError, "BOOM")
         expect { uploader.send(:upload_with_chunking_wrapper) }
-          .to raise_error(StandardError, "BOOM")
+          .to raise_error(RuntimeError, "custom archive attachment failed twice, retry later")
       end
     end
   end
