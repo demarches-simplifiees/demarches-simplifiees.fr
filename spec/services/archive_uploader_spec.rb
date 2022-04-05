@@ -57,14 +57,33 @@ describe ProcedureArchiveService do
     let(:fake_blob_bytesize) { 100.gigabytes }
 
     before do
-      expect(uploader).to receive(:syscall_to_custom_uploader).and_return(true)
       expect(File).to receive(:size).with(file.path).and_return(fake_blob_bytesize)
       expect(Digest::SHA256).to receive(:file).with(file.path).and_return(double(hexdigest: fake_blob_checksum.hexdigest))
     end
 
-    it 'creates a blob' do
-      expect { uploader.send(:upload_with_chunking_wrapper) }
-        .to change { ActiveStorage::Blob.where(checksum: fake_blob_checksum.hexdigest, byte_size: fake_blob_bytesize).count }.by(1)
+    context 'when it just works' do
+      it 'creates a blob' do
+        expect(uploader).to receive(:syscall_to_custom_uploader).and_return(true)
+        expect { uploader.send(:upload_with_chunking_wrapper) }
+          .to change { ActiveStorage::Blob.where(checksum: fake_blob_checksum.hexdigest, byte_size: fake_blob_bytesize).count }.by(1)
+      end
+    end
+
+    context 'when it fails once (DS proxy a bit flacky with archive ±>20Go, fails once, accept other call' do
+      it 'retries' do
+        expect(uploader).to receive(:syscall_to_custom_uploader).with(anything).once.and_raise(StandardError, "BOOM")
+        expect(uploader).to receive(:syscall_to_custom_uploader).with(anything).once.and_return(true)
+        expect { uploader.send(:upload_with_chunking_wrapper) }
+          .to change { ActiveStorage::Blob.where(checksum: fake_blob_checksum.hexdigest, byte_size: fake_blob_bytesize).count }.by(1)
+      end
+    end
+
+    context 'when it fails twice' do
+      it 'does not retry more than once' do
+        expect(uploader).to receive(:syscall_to_custom_uploader).with(anything).twice.and_raise(StandardError, "BOOM")
+        expect { uploader.send(:upload_with_chunking_wrapper) }
+          .to raise_error(StandardError, "BOOM")
+      end
     end
   end
 end
