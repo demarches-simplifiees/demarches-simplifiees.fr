@@ -1,3 +1,4 @@
+# typed: true
 # == Schema Information
 #
 # Table name: dossiers
@@ -38,6 +39,7 @@
 #  user_id                                            :integer
 #
 class Dossier < ApplicationRecord
+  extend T::Sig
   self.ignored_columns = [:en_construction_conservation_extension]
   include DossierFilteringConcern
   include DossierRebaseConcern
@@ -233,10 +235,11 @@ class Dossier < ApplicationRecord
   scope :en_instruction,              -> { not_archived.state_en_instruction }
   scope :termine,                     -> { not_archived.state_termine }
 
-  scope :processed_in_month, -> (month) do
+  sig { params(args: DateTime).returns(T.untyped) }
+  scope :processed_in_month, -> (date) do
     state_termine
       .joins(:traitements)
-      .where(traitements: { processed_at: month.beginning_of_month..month.end_of_month })
+      .where(traitements: { processed_at: date.beginning_of_month..date.end_of_month })
   end
   scope :downloadable_sorted, -> {
     state_not_brouillon
