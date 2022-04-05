@@ -1480,12 +1480,10 @@ describe Dossier do
     before do
       create(:dossier, transfer: transfer)
       create(:attestation, dossier: dossier)
-      create(:attestation, dossier: dossier)
     end
 
-    it "can destroy dossier with two attestations" do
+    it "can destroy dossier" do
       expect(dossier.destroy).to be_truthy
-      expect(transfer.reload).not_to be_nil
     end
   end
 
