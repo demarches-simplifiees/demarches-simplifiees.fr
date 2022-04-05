@@ -10,9 +10,9 @@ class ActiveStorage::DownloadableFile
     end
   end
 
-  def self.create_list_from_dossiers(dossiers)
+  def self.create_list_from_dossiers(dossiers, for_expert = false)
     dossiers.flat_map do |dossier|
-      create_list_from_dossier(dossier)
+      create_list_from_dossier(dossier, for_expert)
     end
   end
 
