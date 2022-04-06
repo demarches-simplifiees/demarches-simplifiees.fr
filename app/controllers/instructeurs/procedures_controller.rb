@@ -76,10 +76,11 @@ module Instructeurs
       @has_termine_notifications = notifications[:termines].present?
       @not_archived_notifications_dossier_ids = notifications[:en_cours] + notifications[:termines]
 
-      filtered_sorted_ids = procedure_presentation.filtered_sorted_ids(dossiers, dossiers_count, statut)
+      filtered_sorted_ids = procedure_presentation.filtered_sorted_ids(dossiers, statut, count: dossiers_count)
 
       page = params[:page].presence || 1
 
+      @dossiers_count = filtered_sorted_ids.size
       @filtered_sorted_paginated_ids = Kaminari
         .paginate_array(filtered_sorted_ids)
         .page(page)
@@ -137,8 +138,6 @@ module Instructeurs
     end
 
     def download_export
-      export_format = params[:export_format]
-      time_span_type = params[:time_span_type] || Export.time_span_types.fetch(:everything)
       groupe_instructeurs = current_instructeur
         .groupe_instructeurs
         .where(procedure: procedure)
@@ -148,17 +147,19 @@ module Instructeurs
         .visible_by_administration
         .exists?(groupe_instructeur_id: groupe_instructeur_ids)
 
-      export = Export.find_or_create_export(export_format, time_span_type, groupe_instructeurs)
+      export = Export.find_or_create_export(export_format, groupe_instructeurs, **export_options)
 
-      if export.ready? && export.old? && params[:force_export]
+      if export.ready? && export.old? && force_export?
         export.destroy
-        export = Export.find_or_create_export(export_format, time_span_type, groupe_instructeurs)
+        export = Export.find_or_create_export(export_format, groupe_instructeurs, **export_options)
       end
 
       if export.ready?
         respond_to do |format|
           format.js do
             @procedure = procedure
+            @statut = export_options[:statut]
+            @dossiers_count = export.count
             assign_exports
             flash.notice = "L’export au format \"#{export_format}\" est prêt. Vous pouvez le <a href=\"#{export.file.service_url}\">télécharger</a>"
           end
@@ -173,6 +174,8 @@ module Instructeurs
 
           format.js do
             @procedure = procedure
+            @statut = export_options[:statut]
+            @dossiers_count = export.count
             assign_exports
             if !params[:no_progress_notification]
               flash.notice = notice_message
@@ -261,7 +264,7 @@ module Instructeurs
     end
 
     def assign_exports
-      @exports = Export.find_for_groupe_instructeurs(groupe_instructeur_ids)
+      @exports = Export.find_for_groupe_instructeurs(groupe_instructeur_ids, procedure_presentation)
     end
 
     def assign_tos
@@ -278,6 +281,22 @@ module Instructeurs
 
     def statut
       @statut ||= (params[:statut].presence || 'a-suivre')
+    end
+
+    def export_format
+      @export_format ||= params[:export_format]
+    end
+
+    def force_export?
+      @force_export ||= params[:force_export].present?
+    end
+
+    def export_options
+      @export_options ||= {
+        time_span_type: params[:time_span_type],
+        statut: params[:statut],
+        procedure_presentation: params[:statut].present? ? procedure_presentation : nil
+      }.compact
     end
 
     def procedure_id
