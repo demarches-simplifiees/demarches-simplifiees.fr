@@ -63,7 +63,7 @@ module Instructeurs
       @can_download_dossiers = (@counts[:tous] + @counts[:archives]) > 0
 
       dossiers = Dossier.where(groupe_instructeur_id: groupe_instructeur_ids)
-      @dossiers_count = @counts[statut.underscore.to_sym]
+      dossiers_count = @counts[statut.underscore.to_sym]
 
       @followed_dossiers_id = current_instructeur
         .followed_dossiers
@@ -76,10 +76,11 @@ module Instructeurs
       @has_termine_notifications = notifications[:termines].present?
       @not_archived_notifications_dossier_ids = notifications[:en_cours] + notifications[:termines]
 
-      filtered_sorted_ids = procedure_presentation.filtered_sorted_ids(dossiers, statut, count: @dossiers_count)
+      filtered_sorted_ids = procedure_presentation.filtered_sorted_ids(dossiers, statut, count: dossiers_count)
 
       page = params[:page].presence || 1
 
+      @dossiers_count = filtered_sorted_ids.size
       @filtered_sorted_paginated_ids = Kaminari
         .paginate_array(filtered_sorted_ids)
         .page(page)
