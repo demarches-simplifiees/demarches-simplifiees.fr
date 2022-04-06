@@ -512,7 +512,7 @@ describe Instructeurs::DossiersController, type: :controller do
     context 'as an instructeur, i auto follow the dossier so I get the notifications' do
       it 'works' do
         subject
-        expect(instructeur.follows.where(dossier: dossier).count).to eq(1)
+        expect(instructeur.followed_dossiers).to match_array([dossier])
       end
     end
 
