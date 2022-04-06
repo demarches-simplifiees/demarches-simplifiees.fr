@@ -451,8 +451,8 @@ describe User, type: :model do
         targeted_user.reload
 
         expect(targeted_user.instructeur).to match(instructeur)
-        expect(targeted_user.expert).to match(expert)
         expect(targeted_user.administrateur).to match(administrateur)
+        expect(targeted_user.expert).to match(expert)
       end
 
       context 'and the targeted account owns an instructeur and expert as well' do
