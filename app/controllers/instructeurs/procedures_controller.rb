@@ -76,7 +76,7 @@ module Instructeurs
       @has_termine_notifications = notifications[:termines].present?
       @not_archived_notifications_dossier_ids = notifications[:en_cours] + notifications[:termines]
 
-      filtered_sorted_ids = procedure_presentation.filtered_sorted_ids(dossiers, @dossiers_count, statut)
+      filtered_sorted_ids = procedure_presentation.filtered_sorted_ids(dossiers, statut, count: @dossiers_count)
 
       page = params[:page].presence || 1
 

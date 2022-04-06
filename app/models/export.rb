@@ -168,7 +168,7 @@ class Export < ApplicationRecord
         dossiers.visible_by_administration.where('dossiers.depose_at > ?', since)
       elsif procedure_presentation.present?
         filtered_sorted_ids = procedure_presentation
-          .filtered_sorted_ids(dossiers, dossiers.size, statut)
+          .filtered_sorted_ids(dossiers, statut)
 
         dossiers.where(id: filtered_sorted_ids)
       else
