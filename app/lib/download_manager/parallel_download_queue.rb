@@ -26,7 +26,6 @@ module DownloadManager
       hydra.run
     end
 
-    # rubocop:disable Style/AutoResourceCleanup
     # can't be used with typhoeus, otherwise block is closed before the request is run by hydra
     def download_one(attachment:, path_in_download_dir:, http_client:)
       attachment_path = File.join(destination, path_in_download_dir)
@@ -37,12 +36,10 @@ module DownloadManager
         File.write(attachment_path, attachment.file.read, mode: 'wb')
       else
         request = Typhoeus::Request.new(attachment.url)
-        fd = File.open(attachment_path, mode: 'wb')
         request.on_body do |chunk|
-          fd.write(chunk)
+          File.write(attachment_path, chunk, mode: 'a+b')
         end
         request.on_complete do |response|
-          fd.close
           unless response.success?
             File.delete(attachment_path) if File.exist?(attachment_path) # -> case of retries failed, must cleanup partialy downloaded file
             on_error.call(attachment, path_in_download_dir, response.code)
@@ -51,6 +48,5 @@ module DownloadManager
         http_client.queue(request)
       end
     end
-    # rubocop:enable Style/AutoResourceCleanup
   end
 end

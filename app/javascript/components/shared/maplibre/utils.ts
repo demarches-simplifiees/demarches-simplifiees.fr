@@ -1,10 +1,6 @@
-import {
-  LngLatBounds,
-  LngLat,
-  LngLatLike,
-  LngLatBoundsLike
-} from 'maplibre-gl';
+import type { LngLat, LngLatLike, LngLatBoundsLike } from 'maplibre-gl';
 import type { Geometry, FeatureCollection, Feature } from 'geojson';
+import { LngLatBounds } from 'maplibre-gl';
 import invariant from 'tiny-invariant';
 
 export function getBounds(geometry: Geometry): LngLatBoundsLike {

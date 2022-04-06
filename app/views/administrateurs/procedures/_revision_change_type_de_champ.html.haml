@@ -36,9 +36,9 @@
       = t("update_drop_down_options#{postfix}", scope: [:administrateurs, :revision_changes], label: change[:label])
       %ul
         - if added.present?
-          %li= t(:add_option, scope: [:administrateurs, :revision_changes], items: added.map{ |term| "« #{term.strip} »" }.join(", "))
+          %li= t(:add_option, scope: [:administrateurs, :revision_changes], items: added.map{ |term| "« #{term.strip} »" }.join(", "))
         - if removed.present?
-          %li= t(:remove_option, scope: [:administrateurs, :revision_changes], items: removed.map{ |term| "« #{term.strip} »" }.join(", "))
+          %li= t(:remove_option, scope: [:administrateurs, :revision_changes], items: removed.map{ |term| "« #{term.strip} »" }.join(", "))
   - when :drop_down_other
     - if change[:from] == false
       %li.mb-1= t("administrateurs.revision_changes.update_drop_down_other#{postfix}.enabled", label: change[:label])
@@ -51,6 +51,6 @@
       = t("update_carte_layers#{postfix}", scope: [:administrateurs, :revision_changes], label: change[:label])
       %ul
         - if added.present?
-          %li= t(:add_option, scope: [:administrateurs, :revision_changes], items: added.map{ |term| "« #{t(term, scope: [:administrateurs, :carte_layers])} »" }.join(", "))
+          %li= t(:add_option, scope: [:administrateurs, :revision_changes], items: added.map{ |term| "« #{t(term, scope: [:administrateurs, :carte_layers])} »" }.join(", "))
         - if removed.present?
-          %li= t(:remove_option, scope: [:administrateurs, :revision_changes], items: removed.map{ |term| "« #{t(term, scope: [:administrateurs, :carte_layers])} »" }.join(", "))
+          %li= t(:remove_option, scope: [:administrateurs, :revision_changes], items: removed.map{ |term| "« #{t(term, scope: [:administrateurs, :carte_layers])} »" }.join(", "))
