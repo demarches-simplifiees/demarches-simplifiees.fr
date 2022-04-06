@@ -182,9 +182,9 @@ class ProcedurePresentation < ApplicationRecord
     end.reduce(:&)
   end
 
-  def filtered_sorted_ids(dossiers, count, statut)
+  def filtered_sorted_ids(dossiers, statut, count: nil)
     dossiers_by_statut = dossiers.by_statut(instructeur, statut)
-    dossiers_sorted_ids = self.sorted_ids(dossiers_by_statut, count)
+    dossiers_sorted_ids = self.sorted_ids(dossiers_by_statut, count || dossiers_by_statut.size)
 
     if filters[statut].present?
       filtered_ids(dossiers_by_statut, statut).intersection(dossiers_sorted_ids)
