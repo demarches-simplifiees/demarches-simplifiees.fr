@@ -26,18 +26,18 @@ shared_dirs = [
   'vendor/bundle'
 ]
 
-set :domain, ENV.fetch('domain')
+set :domain, ENV.fetch('DOMAINS')
 set :deploy_to, deploy_to
 # rubocop:disable DS/ApplicationName
 set :repository, 'https://github.com/betagouv/demarches-simplifiees.fr.git'
 # rubocop:enable DS/ApplicationName
-set :branch, ENV.fetch('branch')
+set :branch, ENV.fetch('BRANCH')
 set :forward_agent, true
 set :user, 'ds'
 set :shared_dirs, shared_dirs
 set :rbenv_path, "/home/ds/.rbenv/bin/rbenv"
 
-puts "Deploy to #{ENV.fetch('domain')}, branch: #{ENV.fetch('branch')}"
+puts "Deploy to #{ENV.fetch('DOMAINS')}, branch: #{ENV.fetch('BRANCH')}"
 
 # This task is the environment that is loaded for most commands, such as
 # `mina deploy` or `mina rake`.
