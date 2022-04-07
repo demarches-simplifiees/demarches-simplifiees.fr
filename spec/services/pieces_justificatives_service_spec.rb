@@ -1,7 +1,5 @@
 describe PiecesJustificativesService do
   describe '.liste_documents' do
-    let(:procedure) { create(:procedure) }
-    let(:dossier) { create(:dossier, procedure: procedure) }
     let(:for_expert) { false }
 
     subject do
@@ -12,21 +10,33 @@ describe PiecesJustificativesService do
 
     context 'with a pj champ' do
       let(:procedure) { create(:procedure, :with_piece_justificative) }
-      let(:pj_champ) { dossier.champs.find { |c| c.type == 'Champs::PieceJustificativeChamp' } }
+      let(:dossier) { create(:dossier, procedure: procedure) }
+      let(:witness) { create(:dossier, procedure: procedure) }
 
-      before { attach_file_to_champ(pj_champ) }
+      let(:pj_champ) { -> (d) { d.champs.find { |c| c.type == 'Champs::PieceJustificativeChamp' } } }
 
-      it { expect(subject).to match_array([pj_champ.piece_justificative_file.attachment]) }
+      before do
+        attach_file_to_champ(pj_champ.call(dossier))
+        attach_file_to_champ(pj_champ.call(witness))
+      end
+
+      it { expect(subject).to match_array([pj_champ.call(dossier).piece_justificative_file.attachment]) }
     end
 
     context 'with a private pj champ' do
       let(:procedure) { create(:procedure) }
+      let(:dossier) { create(:dossier, procedure: procedure) }
+      let(:witness) { create(:dossier, procedure: procedure) }
+
       let!(:private_pj) { create(:type_de_champ_piece_justificative, procedure: procedure, private: true) }
-      let(:private_pj_champ) { dossier.champs_private.find { |c| c.type == 'Champs::PieceJustificativeChamp' } }
+      let(:private_pj_champ) { -> (d) { d.champs_private.find { |c| c.type == 'Champs::PieceJustificativeChamp' } } }
 
-      before { attach_file_to_champ(private_pj_champ) }
+      before do
+        attach_file_to_champ(private_pj_champ.call(dossier))
+        attach_file_to_champ(private_pj_champ.call(witness))
+      end
 
-      it { expect(subject).to match_array([private_pj_champ.piece_justificative_file.attachment]) }
+      it { expect(subject).to match_array([private_pj_champ.call(dossier).piece_justificative_file.attachment]) }
 
       context 'for expert' do
         let(:for_expert) { true }
@@ -37,6 +47,9 @@ describe PiecesJustificativesService do
 
     context 'with a identite champ pj' do
       let(:procedure) { create(:procedure, :with_titre_identite) }
+      let(:dossier) { create(:dossier, procedure: procedure) }
+      let(:witness) { create(:dossier, procedure: procedure) }
+
       let(:champ_identite) { dossier.champs.find { |c| c.type == 'Champs::TitreIdentiteChamp' } }
 
       before { attach_file_to_champ(champ_identite) }
@@ -48,19 +61,25 @@ describe PiecesJustificativesService do
     end
 
     context 'with a pj on an commentaire' do
+      let(:dossier) { create(:dossier) }
+      let(:witness) { create(:dossier) }
+
       let!(:commentaire) { create(:commentaire, :with_file, dossier: dossier) }
+      let!(:witness_commentaire) { create(:commentaire, :with_file, dossier: witness) }
 
       it { expect(subject).to match_array(dossier.commentaires.first.piece_jointe.attachment) }
     end
 
     context 'with a motivation' do
       let(:dossier) { create(:dossier, :with_justificatif) }
+      let!(:witness) { create(:dossier, :with_justificatif) }
 
       it { expect(subject).to match_array(dossier.justificatif_motivation.attachment) }
     end
 
     context 'with an attestation' do
       let(:dossier) { create(:dossier, :with_attestation) }
+      let!(:witness) { create(:dossier, :with_attestation) }
 
       it { expect(subject).to match_array(dossier.attestation.pdf.attachment) }
     end
@@ -69,6 +88,10 @@ describe PiecesJustificativesService do
       let(:dossier) { create(:dossier, :with_entreprise) }
       let(:attestation_sociale) { dossier.etablissement.entreprise_attestation_sociale }
       let(:attestation_fiscale) { dossier.etablissement.entreprise_attestation_fiscale }
+
+      let!(:witness) { create(:dossier, :with_entreprise) }
+      let!(:witness_attestation_sociale) { witness.etablissement.entreprise_attestation_sociale }
+      let!(:witness_attestation_fiscale) { witness.etablissement.entreprise_attestation_fiscale }
 
       before do
         attach_file(attestation_sociale)
@@ -79,13 +102,25 @@ describe PiecesJustificativesService do
     end
 
     context 'with a bill' do
+      let(:dossier) { create(:dossier) }
+      let(:witness) { create(:dossier) }
+
       let(:bill_signature) do
         bs = build(:bill_signature, :with_serialized, :with_signature)
         bs.save(validate: false)
         bs
       end
 
-      before { create(:dossier_operation_log, dossier: dossier, bill_signature: bill_signature) }
+      let(:witness_bill_signature) do
+        bs = build(:bill_signature, :with_serialized, :with_signature)
+        bs.save(validate: false)
+        bs
+      end
+
+      before do
+        create(:dossier_operation_log, dossier: dossier, bill_signature: bill_signature)
+        create(:dossier_operation_log, dossier: witness, bill_signature: witness_bill_signature)
+      end
 
       let(:dossier_bs) { dossier.dossier_operation_logs.first.bill_signature }
 
@@ -101,9 +136,16 @@ describe PiecesJustificativesService do
     end
 
     context 'with a dol' do
-      let(:dol) { create(:dossier_operation_log, dossier: dossier) }
+      let(:dossier) { create(:dossier) }
+      let(:witness) { create(:dossier) }
 
-      before { attach_file(dol.serialized) }
+      let(:dol) { create(:dossier_operation_log, dossier: dossier) }
+      let(:witness_dol) { create(:dossier_operation_log, dossier: witness) }
+
+      before do
+        attach_file(dol.serialized)
+        attach_file(witness_dol.serialized)
+      end
 
       it { expect(subject).to match_array(dol.serialized.attachment) }
 
