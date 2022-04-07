@@ -113,6 +113,11 @@ class PiecesJustificativesService
     pdfs = []
 
     procedure = dossiers.first.procedure
+    tdc_by_id = TypeDeChamp
+      .joins(:revisions)
+      .where(revisions: { id: procedure.revisions })
+      .to_a
+      .group_by(&:id)
 
     dossiers
       .includes(:champs, :champs_private, :commentaires, :individual,
@@ -124,7 +129,8 @@ class PiecesJustificativesService
                 assigns: {
                   include_infos_administration: true,
                   dossier: dossier,
-                  procedure: procedure
+                  procedure: procedure,
+                  tdc_by_id: tdc_by_id
                 })
 
       a = FakeAttachment.new(
