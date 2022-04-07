@@ -1,23 +1,25 @@
-
 class ActiveStorage::DownloadableFile
-  def self.create_list_from_dossier(dossier, for_expert = false)
-    dossier_export = PiecesJustificativesService.generate_dossier_export(dossier)
-    pjs = [dossier_export] + PiecesJustificativesService.liste_documents(dossier, for_expert)
-    pjs.map do |piece_justificative|
-      [
-        piece_justificative,
-        "dossier-#{dossier.id}/#{self.timestamped_filename(piece_justificative)}"
-      ]
-    end
-  end
-
-  def self.create_list_from_dossiers(dossiers)
-    dossiers.flat_map do |dossier|
-      create_list_from_dossier(dossier)
-    end
+  def self.create_list_from_dossiers(dossiers, for_expert = false)
+    dossiers
+      .map { |d| pj_and_path(d.id, PiecesJustificativesService.generate_dossier_export(d)) } +
+    PiecesJustificativesService.liste_documents(dossiers, for_expert)
   end
 
   private
+
+  def self.bill_and_path(bill)
+    [
+      bill,
+      "bills/#{self.timestamped_filename(bill)}"
+    ]
+  end
+
+  def self.pj_and_path(dossier_id, pj)
+    [
+      pj,
+      "dossier-#{dossier_id}/#{self.timestamped_filename(pj)}"
+    ]
+  end
 
   def self.timestamped_filename(attachment)
     # we pad the original file name with a timestamp
@@ -46,9 +48,5 @@ class ActiveStorage::DownloadableFile
     else
       'pieces_justificatives/'
     end
-  end
-
-  def using_local_backend?
-    [:local, :local_test, :test].include?(Rails.application.config.active_storage.service)
   end
 end

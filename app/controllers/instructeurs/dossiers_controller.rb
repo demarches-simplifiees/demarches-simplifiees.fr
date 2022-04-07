@@ -218,7 +218,7 @@ module Instructeurs
     end
 
     def telecharger_pjs
-      files = ActiveStorage::DownloadableFile.create_list_from_dossier(dossier)
+      files = ActiveStorage::DownloadableFile.create_list_from_dossiers(Dossier.where(id: dossier.id))
 
       zipline(files, "dossier-#{dossier.id}.zip")
     end
