@@ -17,6 +17,9 @@ module CreateAvisConcern
       allowed_dossiers += dossier.linked_dossiers_for(instructeur_or_expert)
     end
 
+    if (instructeur_or_expert.is_a?(Instructeur)) && !instructeur_or_expert.follows.exists?(dossier: dossier)
+      instructeur_or_expert.follow(dossier)
+    end
     create_results = Avis.create(
       expert_emails.flat_map do |email|
         user = User.create_or_promote_to_expert(email, SecureRandom.hex)
