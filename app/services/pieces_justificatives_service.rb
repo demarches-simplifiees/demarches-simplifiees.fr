@@ -114,7 +114,11 @@ class PiecesJustificativesService
 
     procedure = dossiers.first.procedure
 
-    dossiers.find_each do |dossier|
+    dossiers
+      .includes(:champs, :champs_private, :commentaires, :individual,
+                :traitement, :etablissement,
+                user: :france_connect_information, avis: :expert)
+      .find_each do |dossier|
       pdf = ApplicationController
         .render(template: 'dossiers/show', formats: [:pdf],
                 assigns: {
