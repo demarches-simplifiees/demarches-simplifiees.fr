@@ -1,6 +1,14 @@
-export default class Flash {
-  constructor(isAnnotation) {
-    this.element = document.querySelector('#flash_messages');
+import invariant from 'tiny-invariant';
+
+export class Flash {
+  element: HTMLDivElement;
+  isAnnotation: boolean;
+  timeout?: number;
+
+  constructor(isAnnotation: boolean) {
+    const element = document.querySelector<HTMLDivElement>('#flash_messages');
+    invariant(element, 'Flash element is required');
+    this.element = element;
     this.isAnnotation = isAnnotation;
   }
   success() {
@@ -10,13 +18,13 @@ export default class Flash {
       this.add('Formulaire enregistré.');
     }
   }
-  error(message) {
+  error(message: string) {
     this.add(message, true);
   }
   clear() {
     this.element.innerHTML = '';
   }
-  add(message, isError) {
+  add(message: string, isError = false) {
     const html = `<div id="flash_message" class="center">
       <div class="alert alert-fixed ${
         isError ? 'alert-danger' : 'alert-success'

@@ -1,9 +1,21 @@
 import { getJSON } from '@utils';
+import invariant from 'tiny-invariant';
 
-export default class OperationsQueue {
-  constructor(baseUrl) {
+type Operation = {
+  path: string;
+  method: string;
+  payload: unknown;
+  resolve: (value: unknown) => void;
+  reject: () => void;
+};
+
+export class OperationsQueue {
+  queue: Operation[];
+  isRunning = false;
+  baseUrl: string;
+
+  constructor(baseUrl: string) {
     this.queue = [];
-    this.isRunning = false;
     this.baseUrl = baseUrl;
   }
 
@@ -11,6 +23,7 @@ export default class OperationsQueue {
     if (this.queue.length > 0) {
       this.isRunning = true;
       const operation = this.queue.shift();
+      invariant(operation, 'Operation is required');
       await this.exec(operation);
       this.run();
     } else {
@@ -18,7 +31,7 @@ export default class OperationsQueue {
     }
   }
 
-  enqueue(operation) {
+  enqueue(operation: Omit<Operation, 'resolve' | 'reject'>) {
     return new Promise((resolve, reject) => {
       this.queue.push({ ...operation, resolve, reject });
       if (!this.isRunning) {
@@ -27,7 +40,7 @@ export default class OperationsQueue {
     });
   }
 
-  async exec(operation) {
+  async exec(operation: Operation) {
     const { path, method, payload, resolve, reject } = operation;
     const url = `${this.baseUrl}${path}`;
 
@@ -35,12 +48,19 @@ export default class OperationsQueue {
       const data = await getJSON(url, payload, method);
       resolve(data);
     } catch (e) {
-      handleError(e, reject);
+      handleError(e as OperationError, reject);
     }
   }
 }
 
-async function handleError({ response, message }, reject) {
+class OperationError extends Error {
+  response?: Response;
+}
+
+async function handleError(
+  { response, message }: OperationError,
+  reject: (error: string) => void
+) {
   if (response) {
     try {
       const {

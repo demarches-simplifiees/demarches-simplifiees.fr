@@ -1,7 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-function MandatoryInput({ isVisible, handler }) {
+import type { Handler } from '../types';
+
+export function MandatoryInput({
+  isVisible,
+  handler
+}: {
+  isVisible: boolean;
+  handler: Handler<HTMLInputElement>;
+}) {
   if (isVisible) {
     return (
       <div className="cell">
@@ -19,10 +26,3 @@ function MandatoryInput({ isVisible, handler }) {
   }
   return null;
 }
-
-MandatoryInput.propTypes = {
-  handler: PropTypes.object,
-  isVisible: PropTypes.bool
-};
-
-export default MandatoryInput;
