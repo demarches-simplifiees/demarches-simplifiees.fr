@@ -192,7 +192,7 @@ describe PiecesJustificativesService do
   describe '.generate_dossier_export' do
     let(:dossier) { create(:dossier) }
 
-    subject { PiecesJustificativesService.generate_dossier_export(dossier) }
+    subject { PiecesJustificativesService.generate_dossier_export(Dossier.where(id: dossier.id)) }
 
     it "doesn't update dossier" do
       expect { subject }.not_to change { dossier.updated_at }

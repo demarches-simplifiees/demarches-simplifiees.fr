@@ -107,21 +107,29 @@ class PiecesJustificativesService
     end
   end
 
-  def self.generate_dossier_export(dossier)
-    pdf = ApplicationController
-      .render(template: 'dossiers/show', formats: [:pdf],
-              assigns: {
-                include_infos_administration: true,
-                dossier: dossier
-              })
+  def self.generate_dossier_export(dossiers)
+    pdfs = []
 
-    FakeAttachment.new(
-      file: StringIO.new(pdf),
-      filename: "export-#{dossier.id}.pdf",
-      name: 'pdf_export_for_instructeur',
-      id: dossier.id,
-      created_at: dossier.updated_at
-    )
+    dossiers.find_each do |dossier|
+      pdf = ApplicationController
+        .render(template: 'dossiers/show', formats: [:pdf],
+                assigns: {
+                  include_infos_administration: true,
+                  dossier: dossier
+                })
+
+      a = FakeAttachment.new(
+        file: StringIO.new(pdf),
+        filename: "export-#{dossier.id}.pdf",
+        name: 'pdf_export_for_instructeur',
+        id: dossier.id,
+        created_at: dossier.updated_at
+      )
+
+      pdfs << ActiveStorage::DownloadableFile.pj_and_path(dossier.id, a)
+    end
+
+    pdfs
   end
 
   private
