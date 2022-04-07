@@ -544,7 +544,7 @@ class Dossier < ApplicationRecord
   end
 
   def can_transition_to_en_construction?
-    brouillon? && procedure.dossier_can_transition_to_en_construction?
+    brouillon? && procedure.dossier_can_transition_to_en_construction? && !for_procedure_preview?
   end
 
   def can_repasser_en_instruction?
@@ -1246,7 +1246,7 @@ class Dossier < ApplicationRecord
   end
 
   def send_draft_notification_email
-    if brouillon? && !procedure.declarative?
+    if brouillon? && !procedure.declarative? && !for_procedure_preview?
       DossierMailer.notify_new_draft(self).deliver_later
     end
   end
