@@ -25,9 +25,6 @@
 #  unlock_token                 :string
 #  created_at                   :datetime
 #  updated_at                   :datetime
-#  administrateur_id            :bigint
-#  expert_id                    :bigint
-#  instructeur_id               :bigint
 #  requested_merge_into_id      :bigint
 #
 class User < ApplicationRecord
@@ -50,6 +47,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable, :async,
     :recoverable, :rememberable, :trackable, :validatable, :confirmable, :lockable
 
+  self.ignored_columns = [:administrateur_id, :instructeur_id, :expert_id]
+
   has_many :dossiers, dependent: :destroy
   has_many :invites, dependent: :destroy
   has_many :dossiers_invites, through: :invites, source: :dossier
@@ -58,9 +57,9 @@ class User < ApplicationRecord
   has_many :requested_merge_from, class_name: 'User', dependent: :nullify, inverse_of: :requested_merge_into, foreign_key: :requested_merge_into_id
 
   has_one :france_connect_information, dependent: :destroy
-  belongs_to :instructeur, optional: true, dependent: :destroy
-  belongs_to :administrateur, optional: true, dependent: :destroy
-  belongs_to :expert, optional: true, dependent: :destroy
+  has_one :instructeur, dependent: :destroy
+  has_one :administrateur, dependent: :destroy
+  has_one :expert, dependent: :destroy
   belongs_to :requested_merge_into, class_name: 'User', optional: true
 
   accepts_nested_attributes_for :france_connect_information
@@ -70,21 +69,6 @@ class User < ApplicationRecord
   before_validation -> { sanitize_email(:email) }
 
   validate :does_not_merge_on_self, if: :requested_merge_into_id_changed?
-
-  # Temporary code for double writing the admin, instructeur and expert id to the foreign key
-  after_save do
-    if saved_change_to_attribute?(:administrateur_id) && administrateur_id.present?
-      Administrateur.find(administrateur_id).update!(user_id: id)
-    end
-
-    if saved_change_to_attribute?(:instructeur_id) && instructeur_id.present?
-      Instructeur.find(instructeur_id).update!(user_id: id)
-    end
-
-    if saved_change_to_attribute?(:expert_id) && expert_id.present?
-      Expert.find(expert_id).update!(user_id: id)
-    end
-  end
 
   def validate_password_complexity?
     min_password_complexity.positive?
@@ -151,7 +135,7 @@ class User < ApplicationRecord
       .find_or_create_by(email: email)
 
     if user.valid?
-      if user.instructeur_id.nil?
+      if user.instructeur.nil?
         user.create_instructeur!
         user.update(france_connect_information: nil)
       end
@@ -165,7 +149,7 @@ class User < ApplicationRecord
   def self.create_or_promote_to_administrateur(email, password)
     user = User.create_or_promote_to_instructeur(email, password)
 
-    if user.valid? && user.administrateur_id.nil?
+    if user.valid? && user.administrateur.nil?
       user.create_administrateur!
       user.update(france_connect_information: nil)
     end
@@ -179,7 +163,7 @@ class User < ApplicationRecord
       .find_or_create_by(email: email)
 
     if user.valid?
-      if user.expert_id.nil?
+      if user.expert.nil?
         user.create_expert!
       end
     end
@@ -196,15 +180,15 @@ class User < ApplicationRecord
   end
 
   def administrateur?
-    administrateur_id.present?
+    administrateur.present?
   end
 
   def instructeur?
-    instructeur_id.present?
+    instructeur.present?
   end
 
   def expert?
-    expert_id.present?
+    expert.present?
   end
 
   def can_france_connect?

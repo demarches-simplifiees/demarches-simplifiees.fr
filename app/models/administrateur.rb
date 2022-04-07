@@ -16,7 +16,7 @@ class Administrateur < ApplicationRecord
   has_and_belongs_to_many :procedures
   has_many :services
 
-  has_one :user, dependent: :nullify
+  belongs_to :user
 
   default_scope { eager_load(:user) }
 

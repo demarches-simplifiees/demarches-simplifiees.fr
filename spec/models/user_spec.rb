@@ -396,14 +396,14 @@ describe User, type: :model do
 
     context 'for administrateurs' do
       it_should_behave_like 'password_spec', PASSWORD_COMPLEXITY_FOR_ADMIN do
-        let(:user) { build(:user, email: 'admin@exemple.fr', password: password, administrateur: create(:administrateur, user: nil)) }
+        let(:user) { build(:user, email: 'admin@exemple.fr', password: password, administrateur: build(:administrateur, user: nil)) }
         let(:min_complexity) { PASSWORD_COMPLEXITY_FOR_ADMIN }
       end
     end
 
     context 'for instructeurs' do
       it_should_behave_like 'password_spec', PASSWORD_COMPLEXITY_FOR_INSTRUCTEUR do
-        let(:user) { build(:user, email: 'instructeur@exemple.fr', password: password, instructeur: create(:instructeur, user: nil)) }
+        let(:user) { build(:user, email: 'instructeur@exemple.fr', password: password, instructeur: build(:instructeur, user: nil)) }
         let(:min_complexity) { PASSWORD_COMPLEXITY_FOR_INSTRUCTEUR }
       end
     end
@@ -451,8 +451,8 @@ describe User, type: :model do
         targeted_user.reload
 
         expect(targeted_user.instructeur).to match(instructeur)
-        expect(targeted_user.expert).to match(expert)
         expect(targeted_user.administrateur).to match(administrateur)
+        expect(targeted_user.expert).to match(expert)
       end
 
       context 'and the targeted account owns an instructeur and expert as well' do
