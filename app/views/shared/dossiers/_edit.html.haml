@@ -1,7 +1,7 @@
 .dossier-edit.container
   = render partial: "shared/dossiers/submit_is_over", locals: { dossier: dossier }
 
-  - if apercu
+  - if dossier.for_procedure_preview?
     - form_options = { url: '', method: :get }
   - elsif dossier.brouillon?
     - form_options = { url: brouillon_dossier_url(dossier), method: :patch }
@@ -18,7 +18,7 @@
             = t('views.shared.dossiers.edit.autosave')
           - else
             Pour enregistrer votre dossier et le reprendre plus tard, cliquez sur le bouton « Enregistrer le brouillon » en bas à gauche du formulaire.
-      - if !apercu && dossier.france_connect_information.present?
+      - if dossier.france_connect_information.present?
         = render partial: "shared/dossiers/france_connect_informations", locals: { user_information: dossier.france_connect_information }
       - if notice_url(dossier.procedure).present?
         = link_to notice_url(dossier.procedure), target: '_blank', rel: 'noopener', class: 'button notice', title: "Pour vous aider à remplir votre dossier, vous pouvez consulter le guide de cette démarche." do
@@ -40,7 +40,7 @@
       = render partial: "shared/dossiers/editable_champs/editable_champ",
         locals: { champ: champ, form: champ_form }
 
-    - if !apercu
+    - if !dossier.for_procedure_preview?
       .dossier-edit-sticky-footer
         .send-dossier-actions-bar
           - if dossier.brouillon?

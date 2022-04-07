@@ -62,7 +62,7 @@ module ApplicationHelper
 
   def render_champ(champ)
     champ_selector = "##{champ.input_group_id}"
-    form_html = render 'shared/dossiers/edit', dossier: champ.dossier, apercu: false
+    form_html = render 'shared/dossiers/edit', dossier: champ.dossier
     champ_html = Nokogiri::HTML.fragment(form_html).at_css(champ_selector).to_s
     # rubocop:disable Rails/OutputSafety
     raw("document.querySelector('#{champ_selector}').outerHTML = \"#{escape_javascript(champ_html)}\";")
