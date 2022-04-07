@@ -1,6 +1,4 @@
-- preview = !champ.persisted?
-- url = champs_carte_features_path(preview ? 'preview' : champ)
-= react_component("MapEditor", { featureCollection: champ.to_feature_collection, url: url, preview: preview, options: champ.render_options }, class: "carte-#{champ.id}")
+= react_component("MapEditor", { featureCollection: champ.to_feature_collection, url: champs_carte_features_path(champ), options: champ.render_options }, class: "carte-#{champ.id}")
 
 .geo-areas
   = render partial: 'shared/champs/carte/geo_areas', locals: { champ: champ, editing: true }
