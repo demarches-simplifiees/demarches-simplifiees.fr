@@ -15,13 +15,13 @@ const COMPLETE_CLASS = 'direct-upload--complete';
   be found.
   */
 export default class ProgressBar {
-  static init(input, id, file) {
+  static init(input: HTMLInputElement, id: string, file: File) {
     clearErrors(input);
     const html = this.render(id, file.name);
     input.insertAdjacentHTML('beforebegin', html);
   }
 
-  static start(id) {
+  static start(id: string) {
     const element = getDirectUploadElement(id);
     if (element) {
       element.classList.remove(PENDING_CLASS);
@@ -29,15 +29,15 @@ export default class ProgressBar {
     }
   }
 
-  static progress(id, progress) {
+  static progress(id: string, progress: number) {
     const element = getDirectUploadProgressElement(id);
     if (element) {
       element.style.width = `${progress}%`;
-      element.setAttribute('aria-valuenow', progress);
+      element.setAttribute('aria-valuenow', `${progress}`);
     }
   }
 
-  static error(id, error) {
+  static error(id: string, error: string) {
     const element = getDirectUploadElement(id);
     if (element) {
       element.classList.add(ERROR_CLASS);
@@ -45,60 +45,63 @@ export default class ProgressBar {
     }
   }
 
-  static end(id) {
+  static end(id: string) {
     const element = getDirectUploadElement(id);
     if (element) {
       element.classList.add(COMPLETE_CLASS);
     }
   }
 
-  static render(id, filename) {
+  static render(id: string, filename: string) {
     return `<div id="direct-upload-${id}" class="direct-upload ${PENDING_CLASS}" data-direct-upload-id="${id}">
       <div role="progressbar" aria-valuemin="0" aria-valuemax="100" class="direct-upload__progress" style="width: 0%"></div>
       <span class="direct-upload__filename">${filename}</span>
     </div>`;
   }
 
-  constructor(input, id, file) {
-    this.constructor.init(input, id, file);
+  id: string;
+
+  constructor(input: HTMLInputElement, id: string, file: File) {
+    ProgressBar.init(input, id, file);
     this.id = id;
   }
 
   start() {
-    this.constructor.start(this.id);
+    ProgressBar.start(this.id);
   }
 
-  progress(progress) {
-    this.constructor.progress(this.id, progress);
+  progress(progress: number) {
+    ProgressBar.progress(this.id, progress);
   }
 
-  error(error) {
-    this.constructor.error(this.id, error);
+  error(error: string) {
+    ProgressBar.error(this.id, error);
   }
 
   end() {
-    this.constructor.end(this.id);
+    ProgressBar.end(this.id);
   }
 
   destroy() {
     const element = getDirectUploadElement(this.id);
+    element?.remove();
+  }
+}
+
+function clearErrors(input: HTMLInputElement) {
+  const errorElements =
+    input.parentElement?.querySelectorAll(`.${ERROR_CLASS}`) ?? [];
+  for (const element of errorElements) {
     element.remove();
   }
 }
 
-function clearErrors(input) {
-  const errorElements = input.parentElement.querySelectorAll(`.${ERROR_CLASS}`);
-  for (let element of errorElements) {
-    element.remove();
-  }
+function getDirectUploadElement(id: string) {
+  return document.querySelector<HTMLDivElement>(`#direct-upload-${id}`);
 }
 
-function getDirectUploadElement(id) {
-  return document.getElementById(`direct-upload-${id}`);
-}
-
-function getDirectUploadProgressElement(id) {
-  return document.querySelector(
+function getDirectUploadProgressElement(id: string) {
+  return document.querySelector<HTMLDivElement>(
     `#direct-upload-${id} .direct-upload__progress`
   );
 }

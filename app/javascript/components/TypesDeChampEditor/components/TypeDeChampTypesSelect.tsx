@@ -1,7 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-function TypeDeChampTypesSelect({ handler, options }) {
+import type { Handler } from '../types';
+
+export function TypeDeChampTypesSelect({
+  handler,
+  options
+}: {
+  handler: Handler<HTMLSelectElement>;
+  options: [label: string, type: string][];
+}) {
   return (
     <div className="cell">
       <select
@@ -20,10 +27,3 @@ function TypeDeChampTypesSelect({ handler, options }) {
     </div>
   );
 }
-
-TypeDeChampTypesSelect.propTypes = {
-  handler: PropTypes.object,
-  options: PropTypes.array
-};
-
-export default TypeDeChampTypesSelect;
