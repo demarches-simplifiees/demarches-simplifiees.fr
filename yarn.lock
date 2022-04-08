@@ -2459,6 +2459,11 @@
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.5.tgz#75a2a8e7d8ab4b230414505d92335d1dcb53a6df"
   integrity sha512-L28j2FcJfSZOnL1WBjDYp2vUHCeIFlyYI/53EwD/rKUBQ7MtUUfbQWiyKJGpcnv4/WgrhWsFKrcPstcAt/J0tQ==
 
+"@types/rails__activestorage@^7.0.1":
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/@types/rails__activestorage/-/rails__activestorage-7.0.1.tgz#7e60320fdb376d34051733e3f8f0df0a8ff24077"
+  integrity sha512-H8mjwqFNweMfvgg8U+rdsonqjouETdqZxEOfzARiA4ag8jtLHFhjfAgFF6gWMnzVpXgQPrJw1boiknx9rV23Eg==
+
 "@types/rails__ujs@^6.0.1":
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/@types/rails__ujs/-/rails__ujs-6.0.1.tgz#83c5aa1dad88ca869de05a9523eff58041ab307a"
@@ -11294,10 +11299,10 @@ react-query@^3.34.19:
     broadcast-channel "^3.4.1"
     match-sorter "^6.0.2"
 
-react-sortable-hoc@^1.11.0:
-  version "1.11.0"
-  resolved "https://registry.yarnpkg.com/react-sortable-hoc/-/react-sortable-hoc-1.11.0.tgz#fe4022362bbafc4b836f5104b9676608a40a278f"
-  integrity sha512-v1CDCvdfoR3zLGNp6qsBa4J1BWMEVH25+UKxF/RvQRh+mrB+emqtVHMgZ+WreUiKJoEaiwYoScaueIKhMVBHUg==
+react-sortable-hoc@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-sortable-hoc/-/react-sortable-hoc-2.0.0.tgz#f6780d8aa4b922a21f3e754af542f032677078b7"
+  integrity sha512-JZUw7hBsAHXK7PTyErJyI7SopSBFRcFHDjWW5SWjcugY0i6iH7f+eJkY8cJmGMlZ1C9xz1J3Vjz0plFpavVeRg==
   dependencies:
     "@babel/runtime" "^7.2.0"
     invariant "^2.2.4"

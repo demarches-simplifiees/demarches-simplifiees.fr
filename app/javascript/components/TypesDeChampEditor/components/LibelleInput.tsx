@@ -1,7 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-function LibelleInput({ isVisible, handler }) {
+import type { Handler } from '../types';
+
+export function LibelleInput({
+  isVisible,
+  handler
+}: {
+  isVisible: boolean;
+  handler: Handler<HTMLInputElement>;
+}) {
   if (isVisible) {
     return (
       <div className="cell libelle">
@@ -19,10 +26,3 @@ function LibelleInput({ isVisible, handler }) {
   }
   return null;
 }
-
-LibelleInput.propTypes = {
-  handler: PropTypes.object,
-  isVisible: PropTypes.bool
-};
-
-export default LibelleInput;

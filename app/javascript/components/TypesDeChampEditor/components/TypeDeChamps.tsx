@@ -1,12 +1,20 @@
 import React, { useReducer } from 'react';
-import PropTypes from 'prop-types';
 import { PlusIcon, ArrowCircleDownIcon } from '@heroicons/react/outline';
 
 import { SortableContainer, addChampLabel } from '../utils';
-import TypeDeChamp from './TypeDeChamp';
+import { TypeDeChampComponent } from './TypeDeChamp';
 import typeDeChampsReducer from '../typeDeChampsReducer';
+import type { TypeDeChamp, State } from '../types';
 
-function TypeDeChamps({ state: rootState, typeDeChamps }) {
+type TypeDeChampsProps = {
+  state: State;
+  typeDeChamps: TypeDeChamp[];
+};
+
+export function TypeDeChamps({
+  state: rootState,
+  typeDeChamps
+}: TypeDeChampsProps) {
   const [state, dispatch] = useReducer(typeDeChampsReducer, {
     ...rootState,
     typeDeChamps
@@ -24,7 +32,7 @@ function TypeDeChamps({ state: rootState, typeDeChamps }) {
         useDragHandle
       >
         {state.typeDeChamps.map((typeDeChamp, index) => (
-          <TypeDeChamp
+          <TypeDeChampComponent
             dispatch={dispatch}
             idx={index}
             index={index}
@@ -67,10 +75,3 @@ function TypeDeChamps({ state: rootState, typeDeChamps }) {
     </div>
   );
 }
-
-TypeDeChamps.propTypes = {
-  state: PropTypes.object,
-  typeDeChamps: PropTypes.array
-};
-
-export default TypeDeChamps;
