@@ -63,13 +63,7 @@ class Export < ApplicationRecord
   def compute
     load_snapshot!
 
-    file.attach(
-      io: io,
-      filename: filename,
-      content_type: content_type,
-      # We generate the exports ourselves, so they are safe
-      metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
-    )
+    file.attach(blob)
   end
 
   def since
@@ -177,32 +171,16 @@ class Export < ApplicationRecord
     end
   end
 
-  def filename
-    procedure_identifier = procedure.path || "procedure-#{procedure.id}"
-    "dossiers_#{procedure_identifier}_#{statut}_#{Time.zone.now.strftime('%Y-%m-%d_%H-%M')}.#{format}"
-  end
-
-  def io
+  def blob
     service = ProcedureExportService.new(procedure, dossiers_for_export)
 
     case format.to_sym
     when :csv
-      StringIO.new(service.to_csv)
+      service.to_csv
     when :xlsx
-      StringIO.new(service.to_xlsx)
+      service.to_xlsx
     when :ods
-      StringIO.new(service.to_ods)
-    end
-  end
-
-  def content_type
-    case format.to_sym
-    when :csv
-      'text/csv'
-    when :xlsx
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    when :ods
-      'application/vnd.oasis.opendocument.spreadsheet'
+      service.to_ods
     end
   end
 

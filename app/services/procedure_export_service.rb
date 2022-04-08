@@ -8,24 +8,62 @@ class ProcedureExportService
   end
 
   def to_csv
-    SpreadsheetArchitect.to_csv(options_for(:dossiers, :csv))
+    io = StringIO.new(SpreadsheetArchitect.to_csv(options_for(:dossiers, :csv)))
+    create_blob(io, :csv)
   end
 
   def to_xlsx
     # We recursively build multi page spreadsheet
-    @tables.reduce(nil) do |package, table|
+    io = @tables.reduce(nil) do |package, table|
       SpreadsheetArchitect.to_axlsx_package(options_for(table, :xlsx), package)
-    end.to_stream.read
+    end.to_stream
+    create_blob(io, :xlsx)
   end
 
   def to_ods
     # We recursively build multi page spreadsheet
-    @tables.reduce(nil) do |spreadsheet, table|
+    io = StringIO.new(@tables.reduce(nil) do |spreadsheet, table|
       SpreadsheetArchitect.to_rodf_spreadsheet(options_for(table, :ods), spreadsheet)
-    end.bytes
+    end.bytes)
+    create_blob(io, :ods)
+  end
   end
 
   private
+
+  def create_blob(io, format)
+    ActiveStorage::Blob.create_and_upload!(
+      io: io,
+      filename: filename(format),
+      content_type: content_type(format),
+      identify: false,
+      # We generate the exports ourselves, so they are safe
+      metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+    )
+  end
+
+  def base_filename
+    @base_filename ||= "dossiers_#{procedure_identifier}_#{Time.zone.now.strftime('%Y-%m-%d_%H-%M')}"
+  end
+
+  def filename(format)
+    "#{base_filename}.#{format}"
+  end
+
+  def procedure_identifier
+    procedure.path || "procedure-#{procedure.id}"
+  end
+
+  def content_type(format)
+    case format
+    when :csv
+      'text/csv'
+    when :xlsx
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    when :ods
+      'application/vnd.oasis.opendocument.spreadsheet'
+    end
+  end
 
   def etablissements
     @etablissements ||= dossiers.flat_map do |dossier|
