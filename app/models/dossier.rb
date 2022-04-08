@@ -573,7 +573,7 @@ class Dossier < ApplicationRecord
     ].any?
   end
 
-  def approximative_expiration_date_reference
+  def expiration_date_reference
     if brouillon?
       created_at
     elsif en_construction?
@@ -581,24 +581,28 @@ class Dossier < ApplicationRecord
     elsif termine?
       processed_at
     else
-      fail "approximative_expiration_date_reference should not be called in state #{self.state}"
+      fail "expiration_date_reference should not be called in state #{self.state}"
     end
   end
 
-  def approximative_expiration_date
+  def expiration_date_with_extention
     [
-      approximative_expiration_date_reference,
+      expiration_date_reference,
       conservation_extension,
       procedure.duree_conservation_dossiers_dans_ds.months
-    ].sum - REMAINING_WEEKS_BEFORE_EXPIRATION.weeks
+    ].sum
+  end
+
+  def expiration_notification_date
+    expiration_date_with_extention - REMAINING_WEEKS_BEFORE_EXPIRATION.weeks
   end
 
   def close_to_expiration?
     return false if en_instruction?
-    approximative_expiration_date < Time.zone.now
+    expiration_notification_date < Time.zone.now
   end
 
-  def expiration_date
+  def after_notification_expiration_date
     if brouillon? && brouillon_close_to_expiration_notice_sent_at.present?
       brouillon_close_to_expiration_notice_sent_at + duration_after_notice
     elsif en_construction? && en_construction_close_to_expiration_notice_sent_at.present?
@@ -608,12 +612,23 @@ class Dossier < ApplicationRecord
     end
   end
 
+  def expiration_date
+    after_notification_expiration_date.presence || expiration_date_with_extention
+  end
+
   def duration_after_notice
     MONTHS_AFTER_EXPIRATION.month + DAYS_AFTER_EXPIRATION.days
   end
 
   def expiration_can_be_extended?
     brouillon? || en_construction?
+  end
+
+  def extend_conservation(conservation_extension)
+    update(conservation_extension: self.conservation_extension + conservation_extension,
+      brouillon_close_to_expiration_notice_sent_at: nil,
+      en_construction_close_to_expiration_notice_sent_at: nil,
+      termine_close_to_expiration_notice_sent_at: nil)
   end
 
   def show_groupe_instructeur_details?

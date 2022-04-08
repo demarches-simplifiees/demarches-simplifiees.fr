@@ -1,43 +1,178 @@
 describe PiecesJustificativesService do
-  let(:procedure) { create(:procedure, :with_titre_identite) }
-  let(:dossier) { create(:dossier, procedure: procedure) }
-  let(:champ_identite) { dossier.champs.find { |c| c.type == 'Champs::TitreIdentiteChamp' } }
-  let(:bill_signature) do
-    bs = build(:bill_signature, :with_serialized, :with_signature)
-    bs.save(validate: false)
-    bs
-  end
-
-  before do
-    champ_identite
-      .piece_justificative_file
-      .attach(io: StringIO.new("toto"), filename: "toto.png", content_type: "image/png")
-    create(:dossier_operation_log, dossier: dossier, bill_signature: bill_signature)
-  end
-
   describe '.liste_documents' do
-    subject { PiecesJustificativesService.liste_documents(dossier, false) }
+    let(:for_expert) { false }
 
-    it "doesn't return sensitive documents like titre_identite" do
-      expect(champ_identite.piece_justificative_file).to be_attached
-      expect(subject.any? { |piece| piece.name == 'piece_justificative_file' }).to be_falsy
+    subject do
+      PiecesJustificativesService
+        .liste_documents(Dossier.where(id: dossier.id), for_expert)
+        .map(&:first)
     end
 
-    it "returns operation logs of the dossier" do
-      expect(subject.any? { |piece| piece.name == 'serialized' }).to be_truthy
+    context 'with a pj champ' do
+      let(:procedure) { create(:procedure, :with_piece_justificative) }
+      let(:dossier) { create(:dossier, procedure: procedure) }
+      let(:witness) { create(:dossier, procedure: procedure) }
+
+      let(:pj_champ) { -> (d) { d.champs.find { |c| c.type == 'Champs::PieceJustificativeChamp' } } }
+
+      before do
+        attach_file_to_champ(pj_champ.call(dossier))
+        attach_file_to_champ(pj_champ.call(witness))
+      end
+
+      it { expect(subject).to match_array([pj_champ.call(dossier).piece_justificative_file.attachment]) }
+    end
+
+    context 'with a private pj champ' do
+      let(:procedure) { create(:procedure) }
+      let(:dossier) { create(:dossier, procedure: procedure) }
+      let(:witness) { create(:dossier, procedure: procedure) }
+
+      let!(:private_pj) { create(:type_de_champ_piece_justificative, procedure: procedure, private: true) }
+      let(:private_pj_champ) { -> (d) { d.champs_private.find { |c| c.type == 'Champs::PieceJustificativeChamp' } } }
+
+      before do
+        attach_file_to_champ(private_pj_champ.call(dossier))
+        attach_file_to_champ(private_pj_champ.call(witness))
+      end
+
+      it { expect(subject).to match_array([private_pj_champ.call(dossier).piece_justificative_file.attachment]) }
+
+      context 'for expert' do
+        let(:for_expert) { true }
+
+        it { expect(subject).to be_empty }
+      end
+    end
+
+    context 'with a identite champ pj' do
+      let(:procedure) { create(:procedure, :with_titre_identite) }
+      let(:dossier) { create(:dossier, procedure: procedure) }
+      let(:witness) { create(:dossier, procedure: procedure) }
+
+      let(:champ_identite) { dossier.champs.find { |c| c.type == 'Champs::TitreIdentiteChamp' } }
+
+      before { attach_file_to_champ(champ_identite) }
+
+      it "doesn't return sensitive documents like titre_identite" do
+        expect(champ_identite.piece_justificative_file).to be_attached
+        expect(subject).to be_empty
+      end
+    end
+
+    context 'with a pj on an commentaire' do
+      let(:dossier) { create(:dossier) }
+      let(:witness) { create(:dossier) }
+
+      let!(:commentaire) { create(:commentaire, :with_file, dossier: dossier) }
+      let!(:witness_commentaire) { create(:commentaire, :with_file, dossier: witness) }
+
+      it { expect(subject).to match_array(dossier.commentaires.first.piece_jointe.attachment) }
+    end
+
+    context 'with a motivation' do
+      let(:dossier) { create(:dossier, :with_justificatif) }
+      let!(:witness) { create(:dossier, :with_justificatif) }
+
+      it { expect(subject).to match_array(dossier.justificatif_motivation.attachment) }
+    end
+
+    context 'with an attestation' do
+      let(:dossier) { create(:dossier, :with_attestation) }
+      let!(:witness) { create(:dossier, :with_attestation) }
+
+      it { expect(subject).to match_array(dossier.attestation.pdf.attachment) }
+    end
+
+    context 'with an etablissement' do
+      let(:dossier) { create(:dossier, :with_entreprise) }
+      let(:attestation_sociale) { dossier.etablissement.entreprise_attestation_sociale }
+      let(:attestation_fiscale) { dossier.etablissement.entreprise_attestation_fiscale }
+
+      let!(:witness) { create(:dossier, :with_entreprise) }
+      let!(:witness_attestation_sociale) { witness.etablissement.entreprise_attestation_sociale }
+      let!(:witness_attestation_fiscale) { witness.etablissement.entreprise_attestation_fiscale }
+
+      before do
+        attach_file(attestation_sociale)
+        attach_file(attestation_fiscale)
+      end
+
+      it { expect(subject).to match_array([attestation_sociale.attachment, attestation_fiscale.attachment]) }
+    end
+
+    context 'with a bill' do
+      let(:dossier) { create(:dossier) }
+      let(:witness) { create(:dossier) }
+
+      let(:bill_signature) do
+        bs = build(:bill_signature, :with_serialized, :with_signature)
+        bs.save(validate: false)
+        bs
+      end
+
+      let(:witness_bill_signature) do
+        bs = build(:bill_signature, :with_serialized, :with_signature)
+        bs.save(validate: false)
+        bs
+      end
+
+      before do
+        create(:dossier_operation_log, dossier: dossier, bill_signature: bill_signature)
+        create(:dossier_operation_log, dossier: witness, bill_signature: witness_bill_signature)
+      end
+
+      let(:dossier_bs) { dossier.dossier_operation_logs.first.bill_signature }
+
+      it "returns serialized bill and signature" do
+        expect(subject).to match_array([dossier_bs.serialized.attachment, dossier_bs.signature.attachment])
+      end
+
+      context 'for expert' do
+        let(:for_expert) { true }
+
+        it { expect(subject).to be_empty }
+      end
+    end
+
+    context 'with a dol' do
+      let(:dossier) { create(:dossier) }
+      let(:witness) { create(:dossier) }
+
+      let(:dol) { create(:dossier_operation_log, dossier: dossier) }
+      let(:witness_dol) { create(:dossier_operation_log, dossier: witness) }
+
+      before do
+        attach_file(dol.serialized)
+        attach_file(witness_dol.serialized)
+      end
+
+      it { expect(subject).to match_array(dol.serialized.attachment) }
+
+      context 'for expert' do
+        let(:for_expert) { true }
+
+        it { expect(subject).to be_empty }
+      end
     end
   end
 
   describe '.generate_dossier_export' do
+    let(:dossier) { create(:dossier) }
+
     subject { PiecesJustificativesService.generate_dossier_export(dossier) }
-    it "generates pdf export for instructeur" do
-      subject
-    end
 
     it "doesn't update dossier" do
-      before_export = Time.zone.now
-      subject
-      expect(dossier.updated_at).to be <= before_export
+      expect { subject }.not_to change { dossier.updated_at }
     end
+  end
+
+  def attach_file_to_champ(champ)
+    attach_file(champ.piece_justificative_file)
+  end
+
+  def attach_file(attachable)
+    attachable
+      .attach(io: StringIO.new("toto"), filename: "toto.png", content_type: "image/png")
   end
 end
