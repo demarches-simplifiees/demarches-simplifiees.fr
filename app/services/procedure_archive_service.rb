@@ -25,9 +25,9 @@ class ProcedureArchiveService
 
     attachments = ActiveStorage::DownloadableFile.create_list_from_dossiers(dossiers)
 
-      ArchiveUploader.new(procedure: @procedure, archive: archive, filepath: zip_filepath)
-        .upload
     DownloadableFileService.download_and_zip(@procedure, attachments, zip_root_folder(archive)) do |zip_filepath|
+      ArchiveUploader.new(procedure: @procedure, filename: archive.filename(@procedure), filepath: zip_filepath)
+        .upload(archive)
     end
   end
 
