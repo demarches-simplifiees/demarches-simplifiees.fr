@@ -1,5 +1,5 @@
 class ProcedureExportService
-  attr_reader :dossiers
+  attr_reader :procedure, :dossiers
 
   def initialize(procedure, dossiers)
     @procedure = procedure
@@ -40,12 +40,12 @@ class ProcedureExportService
   end
 
   def champs_repetables_options
-    revision = @procedure.active_revision
+    revision = procedure.active_revision
     champs_by_stable_id = dossiers
       .flat_map { |dossier| (dossier.champs + dossier.champs_private).filter(&:repetition?) }
       .group_by(&:stable_id)
 
-    @procedure.types_de_champ_for_procedure_presentation.repetition
+    procedure.types_de_champ_for_procedure_presentation.repetition
       .map { |type_de_champ_repetition| [type_de_champ_repetition, type_de_champ_repetition.types_de_champ_for_revision(revision).to_a] }
       .filter { |(_, types_de_champ)| types_de_champ.present? }
       .map do |(type_de_champ_repetition, types_de_champ)|
@@ -85,7 +85,7 @@ class ProcedureExportService
   end
 
   def spreadsheet_columns(format)
-    types_de_champ = @procedure.types_de_champ_for_procedure_presentation.not_repetition.to_a
+    types_de_champ = procedure.types_de_champ_for_procedure_presentation.not_repetition.to_a
 
     Proc.new do |instance|
       instance.send(:"spreadsheet_columns_#{format}", types_de_champ: types_de_champ)
