@@ -63,7 +63,7 @@ module Types
 
     def date_expiration
       if !object.en_instruction?
-        object.expiration_date.presence || object.approximative_expiration_date
+        object.expiration_date
       end
     end
 

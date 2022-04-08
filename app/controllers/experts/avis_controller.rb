@@ -139,7 +139,7 @@ module Experts
     end
 
     def telecharger_pjs
-      files = ActiveStorage::DownloadableFile.create_list_from_dossier(@dossier, true)
+      files = ActiveStorage::DownloadableFile.create_list_from_dossiers(Dossier.where(id: @dossier.id), true)
 
       zipline(files, "dossier-#{@dossier.id}.zip")
     end
