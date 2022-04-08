@@ -18,7 +18,10 @@ export const FAILURE_CONNECTIVITY = 'file-upload-failure-connectivity';
   Represent an error during a file upload.
   */
 export default class FileUploadError extends Error {
-  constructor(message, status, code) {
+  status?: number;
+  code?: string;
+
+  constructor(message: string, status: number | undefined, code?: string) {
     super(message);
 
     this.name = 'FileUploadError';
@@ -27,9 +30,9 @@ export default class FileUploadError extends Error {
 
     // Prevent the constructor stacktrace from being included.
     // (it messes up with Sentry issues grouping)
-    if (Error.captureStackTrace) {
+    if ('captureStackTrace' in Error) {
       // V8-only
-      Error.captureStackTrace(this, this.constructor);
+      //Error.captureStackTrace(this, this.constructor);
     } else {
       this.stack = new Error().stack;
     }
@@ -40,7 +43,7 @@ export default class FileUploadError extends Error {
     See FAILURE_* constants for values.
     */
   get failureReason() {
-    let isNetworkError = this.code && this.code != ERROR_CODE_READ;
+    const isNetworkError = this.code && this.code != ERROR_CODE_READ;
 
     if (isNetworkError && this.status != 0) {
       return FAILURE_SERVER;
@@ -60,9 +63,9 @@ export default class FileUploadError extends Error {
 // 2. Create each kind of error on a different line
 //   (so that Sentry knows they are different kind of errors, from
 //   the line they were created.)
-export function errorFromDirectUploadMessage(message) {
-  let matches = message.match(/ Status: ([0-9]{1,3})/);
-  let status = matches ? parseInt(matches[1], 10) : undefined;
+export function errorFromDirectUploadMessage(message: string) {
+  const matches = message.match(/ Status: ([0-9]{1,3})/);
+  const status = matches ? parseInt(matches[1], 10) : undefined;
 
   // prettier-ignore
   if (message.includes('Error reading')) {

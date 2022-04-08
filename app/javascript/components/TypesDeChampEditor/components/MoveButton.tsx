@@ -1,8 +1,17 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { MouseEventHandler } from 'react';
 import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/react/solid';
 
-function MoveButton({ isEnabled, icon, title, onClick }) {
+export function MoveButton({
+  isEnabled,
+  icon,
+  title,
+  onClick
+}: {
+  isEnabled: boolean;
+  icon: string;
+  title: string;
+  onClick: MouseEventHandler<HTMLButtonElement>;
+}) {
   return (
     <button
       className="button small move"
@@ -18,12 +27,3 @@ function MoveButton({ isEnabled, icon, title, onClick }) {
     </button>
   );
 }
-
-MoveButton.propTypes = {
-  isEnabled: PropTypes.bool,
-  icon: PropTypes.string,
-  title: PropTypes.string,
-  onClick: PropTypes.func
-};
-
-export default MoveButton;
