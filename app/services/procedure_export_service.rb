@@ -27,6 +27,13 @@ class ProcedureExportService
     end.bytes)
     create_blob(io, :ods)
   end
+
+  def to_zip
+    attachments = ActiveStorage::DownloadableFile.create_list_from_dossiers(dossiers, true)
+
+    DownloadableFileService.download_and_zip(procedure, attachments, base_filename) do |zip_filepath|
+      ArchiveUploader.new(procedure: procedure, filename: filename(:zip), filepath: zip_filepath).blob
+    end
   end
 
   private
@@ -62,6 +69,8 @@ class ProcedureExportService
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     when :ods
       'application/vnd.oasis.opendocument.spreadsheet'
+    when :zip
+      'application/zip'
     end
   end
 

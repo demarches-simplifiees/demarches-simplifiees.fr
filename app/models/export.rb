@@ -18,8 +18,9 @@ class Export < ApplicationRecord
   enum format: {
     csv: 'csv',
     ods: 'ods',
-    xlsx: 'xlsx'
-  }
+    xlsx: 'xlsx',
+    zip: 'zip'
+  }, _prefix: true
 
   enum time_span_type: {
     everything: 'everything',
@@ -52,7 +53,7 @@ class Export < ApplicationRecord
       { format: format, time_span_type: time_span_type }
     end
   end
-  FORMATS = [:xlsx, :ods, :csv].map do |format|
+  FORMATS = [:xlsx, :ods, :csv, :zip].map do |format|
     { format: format }
   end
 
@@ -98,6 +99,10 @@ class Export < ApplicationRecord
     format == self.class.formats.fetch(:csv)
   end
 
+  def zip?
+    format == self.class.formats.fetch(:zip)
+  end
+
   def self.find_or_create_export(format, groupe_instructeurs, time_span_type: time_span_types.fetch(:everything), statut: statuts.fetch(:tous), procedure_presentation: nil)
     create_with(groupe_instructeurs: groupe_instructeurs, procedure_presentation: procedure_presentation, procedure_presentation_snapshot: procedure_presentation&.snapshot)
       .includes(:procedure_presentation)
@@ -128,6 +133,10 @@ class Export < ApplicationRecord
       csv: {
         time_span_type: not_filtered.filter(&:csv?).index_by(&:time_span_type),
         statut: filtered.filter(&:csv?).index_by(&:statut)
+      },
+      zip: {
+        time_span_type: {},
+        statut: filtered.filter(&:zip?).index_by(&:statut)
       }
     }
   end
@@ -181,6 +190,8 @@ class Export < ApplicationRecord
       service.to_xlsx
     when :ods
       service.to_ods
+    when :zip
+      service.to_zip
     end
   end
 
