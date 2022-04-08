@@ -49,11 +49,11 @@ class Export < ApplicationRecord
 
   FORMATS_WITH_TIME_SPAN = [:xlsx, :ods, :csv].flat_map do |format|
     time_span_types.keys.map do |time_span_type|
-      { format: format.to_sym, time_span_type: time_span_type }
+      { format: format, time_span_type: time_span_type }
     end
   end
   FORMATS = [:xlsx, :ods, :csv].map do |format|
-    { format: format.to_sym }
+    { format: format }
   end
 
   def compute_async
