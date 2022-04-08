@@ -1,8 +1,6 @@
 require 'tempfile'
 
 class ProcedureArchiveService
-  ARCHIVE_CREATION_DIR = ENV.fetch('ARCHIVE_CREATION_DIR') { '/tmp' }
-
   def initialize(procedure)
     @procedure = procedure
   end
@@ -27,9 +25,9 @@ class ProcedureArchiveService
 
     attachments = ActiveStorage::DownloadableFile.create_list_from_dossiers(dossiers)
 
-    download_and_zip(archive, attachments) do |zip_filepath|
       ArchiveUploader.new(procedure: @procedure, archive: archive, filepath: zip_filepath)
         .upload
+    DownloadableFileService.download_and_zip(@procedure, attachments, zip_root_folder(archive)) do |zip_filepath|
     end
   end
 
@@ -44,30 +42,6 @@ class ProcedureArchiveService
   end
 
   private
-
-  def download_and_zip(archive, attachments, &block)
-    Dir.mktmpdir(nil, ARCHIVE_CREATION_DIR) do |tmp_dir|
-      archive_dir = File.join(tmp_dir, zip_root_folder(archive))
-      zip_path = File.join(ARCHIVE_CREATION_DIR, "#{zip_root_folder(archive)}.zip")
-
-      begin
-        FileUtils.remove_entry_secure(archive_dir) if Dir.exist?(archive_dir)
-        Dir.mkdir(archive_dir)
-
-        download_manager = DownloadManager::ProcedureAttachmentsExport.new(@procedure, attachments, archive_dir)
-        download_manager.download_all
-
-        Dir.chdir(tmp_dir) do
-          File.delete(zip_path) if File.exist?(zip_path)
-          system 'zip', '-0', '-r', zip_path, zip_root_folder(archive)
-        end
-        yield(zip_path)
-      ensure
-        FileUtils.remove_entry_secure(archive_dir) if Dir.exist?(archive_dir)
-        File.delete(zip_path) if File.exist?(zip_path)
-      end
-    end
-  end
 
   def zip_root_folder(archive)
     "procedure-#{@procedure.id}-#{archive.id}"
