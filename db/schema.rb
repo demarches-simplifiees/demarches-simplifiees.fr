@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_15_113510) do
+ActiveRecord::Schema.define(version: 2022_03_22_110900) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,9 +64,9 @@ ActiveRecord::Schema.define(version: 2022_03_15_113510) do
   end
 
   create_table "administrateurs_instructeurs", id: false, force: :cascade do |t|
-    t.integer "administrateur_id"
+    t.integer "administrateur_id", null: false
     t.datetime "created_at"
-    t.integer "instructeur_id"
+    t.integer "instructeur_id", null: false
     t.datetime "updated_at"
     t.index ["administrateur_id"], name: "index_administrateurs_instructeurs_on_administrateur_id"
     t.index ["instructeur_id", "administrateur_id"], name: "unique_couple_administrateur_instructeur", unique: true
