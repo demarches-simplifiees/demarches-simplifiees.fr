@@ -4,20 +4,23 @@ class AgentConnect::AgentController < ApplicationController
   before_action :check_state, only: [:callback]
 
   STATE_COOKIE_NAME = :agentConnect_state
+  NONCE_COOKIE_NAME = :agentConnect_nonce
 
   def index
   end
 
   def login
-    uri, state = AgentConnectService.authorization_uri
+    uri, state, nonce = AgentConnectService.authorization_uri
 
     cookies.encrypted[STATE_COOKIE_NAME] = state
+    cookies.encrypted[NONCE_COOKIE_NAME] = nonce
 
     redirect_to uri
   end
 
   def callback
-    user_info = AgentConnectService.user_info(params[:code])
+    user_info = AgentConnectService.user_info(params[:code], cookies.encrypted[NONCE_COOKIE_NAME])
+    cookies.encrypted[NONCE_COOKIE_NAME] = nil
 
     instructeur = Instructeur.find_by(agent_connect_id: user_info['sub'])
 
