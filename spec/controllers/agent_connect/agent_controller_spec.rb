@@ -2,15 +2,22 @@ describe AgentConnect::AgentController, type: :controller do
   describe '#login' do
     before { get :login }
 
-    it { expect(state_cookie).not_to be_nil }
+    it do
+      expect(state_cookie).not_to be_nil
+      expect(nonce_cookie).not_to be_nil
+    end
   end
 
   describe '#callback' do
     let(:email) { 'i@email.com' }
     let(:original_state) { 'original_state' }
+    let(:nonce) { 'nonce' }
     subject { get :callback, params: { code: code, state: state } }
 
-    before { cookies.encrypted[controller.class::STATE_COOKIE_NAME] = original_state }
+    before do
+      cookies.encrypted[controller.class::STATE_COOKIE_NAME] = original_state
+      cookies.encrypted[controller.class::NONCE_COOKIE_NAME] = nonce
+    end
 
     context 'when the callback code is correct' do
       let(:code) { 'correct' }
@@ -19,7 +26,7 @@ describe AgentConnect::AgentController, type: :controller do
 
       context 'and user_info returns some info' do
         before do
-          expect(AgentConnectService).to receive(:user_info).and_return(user_info)
+          expect(AgentConnectService).to receive(:user_info).with(code, nonce).and_return(user_info)
         end
 
         context 'and the instructeur does not have an account yet' do
@@ -37,6 +44,7 @@ describe AgentConnect::AgentController, type: :controller do
             expect(last_user.instructeur.agent_connect_id).to eq('sub')
             expect(response).to redirect_to(instructeur_procedures_path)
             expect(state_cookie).to be_nil
+            expect(nonce_cookie).to be_nil
           end
         end
 
@@ -115,5 +123,9 @@ describe AgentConnect::AgentController, type: :controller do
 
   def state_cookie
     cookies.encrypted[controller.class::STATE_COOKIE_NAME]
+  end
+
+  def nonce_cookie
+    cookies.encrypted[controller.class::NONCE_COOKIE_NAME]
   end
 end
