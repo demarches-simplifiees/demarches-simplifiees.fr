@@ -6,12 +6,16 @@ class AgentConnectService
   def self.authorization_uri
     client = AgentConnectClient.new
 
-    client.authorization_uri(
+    state = SecureRandom.hex(16)
+
+    uri = client.authorization_uri(
       scope: [:openid, :email],
-      state: SecureRandom.hex(16),
+      state: state,
       nonce: SecureRandom.hex(16),
       acr_values: 'eidas1'
     )
+
+    [uri, state]
   end
 
   def self.user_info(code)
