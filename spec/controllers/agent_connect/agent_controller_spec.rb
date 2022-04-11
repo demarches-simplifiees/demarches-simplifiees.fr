@@ -1,10 +1,18 @@
 describe AgentConnect::AgentController, type: :controller do
   describe '#login' do
-    before { get :login }
+    let(:uri) { 'https://agent-connect.fr' }
+    let(:state) { 'state' }
+    let(:nonce) { 'nonce' }
+
+    before do
+      expect(AgentConnectService).to receive(:authorization_uri).and_return([uri, state, nonce])
+      get :login
+    end
 
     it do
-      expect(state_cookie).not_to be_nil
-      expect(nonce_cookie).not_to be_nil
+      expect(state_cookie).to eq(state)
+      expect(nonce_cookie).to eq(nonce)
+      expect(response).to redirect_to(uri)
     end
   end
 
