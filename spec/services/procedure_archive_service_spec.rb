@@ -172,37 +172,6 @@ describe ProcedureArchiveService do
     end
   end
 
-  describe '#download_and_zip' do
-    let(:archive) { build(:archive, id: '3') }
-    it 'create a tmpdir while block is running' do
-      previous_dir_list = Dir.entries(ProcedureArchiveService::ARCHIVE_CREATION_DIR)
-
-      service.send(:download_and_zip, archive, []) do |_zip_file|
-        new_dir_list = Dir.entries(ProcedureArchiveService::ARCHIVE_CREATION_DIR)
-        expect(previous_dir_list).not_to eq(new_dir_list)
-      end
-    end
-
-    it 'cleans up its tmpdir after block execution' do
-      expect { service.send(:download_and_zip, archive, []) { |zip_file| } }
-        .not_to change { Dir.entries(ProcedureArchiveService::ARCHIVE_CREATION_DIR) }
-    end
-
-    it 'creates a zip with zip utility' do
-      expected_zip_path = File.join(ProcedureArchiveService::ARCHIVE_CREATION_DIR, "#{service.send(:zip_root_folder, archive)}.zip")
-      expect(service).to receive(:system).with('zip', '-0', '-r', expected_zip_path, an_instance_of(String))
-      service.send(:download_and_zip, archive, []) { |zip_path| }
-    end
-
-    it 'cleans up its generated zip' do
-      expected_zip_path = File.join(ProcedureArchiveService::ARCHIVE_CREATION_DIR, "#{service.send(:zip_root_folder, archive)}.zip")
-      service.send(:download_and_zip, archive, []) do |_zip_path|
-        expect(File.exist?(expected_zip_path)).to be_truthy
-      end
-      expect(File.exist?(expected_zip_path)).to be_falsey
-    end
-  end
-
   private
 
   def create_dossier_for_month(year, month)

@@ -1,5 +1,5 @@
 class ProcedureExportService
-  attr_reader :dossiers
+  attr_reader :procedure, :dossiers
 
   def initialize(procedure, dossiers)
     @procedure = procedure
@@ -8,24 +8,71 @@ class ProcedureExportService
   end
 
   def to_csv
-    SpreadsheetArchitect.to_csv(options_for(:dossiers, :csv))
+    io = StringIO.new(SpreadsheetArchitect.to_csv(options_for(:dossiers, :csv)))
+    create_blob(io, :csv)
   end
 
   def to_xlsx
     # We recursively build multi page spreadsheet
-    @tables.reduce(nil) do |package, table|
+    io = @tables.reduce(nil) do |package, table|
       SpreadsheetArchitect.to_axlsx_package(options_for(table, :xlsx), package)
-    end.to_stream.read
+    end.to_stream
+    create_blob(io, :xlsx)
   end
 
   def to_ods
     # We recursively build multi page spreadsheet
-    @tables.reduce(nil) do |spreadsheet, table|
+    io = StringIO.new(@tables.reduce(nil) do |spreadsheet, table|
       SpreadsheetArchitect.to_rodf_spreadsheet(options_for(table, :ods), spreadsheet)
-    end.bytes
+    end.bytes)
+    create_blob(io, :ods)
+  end
+
+  def to_zip
+    attachments = ActiveStorage::DownloadableFile.create_list_from_dossiers(dossiers, true)
+
+    DownloadableFileService.download_and_zip(procedure, attachments, base_filename) do |zip_filepath|
+      ArchiveUploader.new(procedure: procedure, filename: filename(:zip), filepath: zip_filepath).blob
+    end
   end
 
   private
+
+  def create_blob(io, format)
+    ActiveStorage::Blob.create_and_upload!(
+      io: io,
+      filename: filename(format),
+      content_type: content_type(format),
+      identify: false,
+      # We generate the exports ourselves, so they are safe
+      metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+    )
+  end
+
+  def base_filename
+    @base_filename ||= "dossiers_#{procedure_identifier}_#{Time.zone.now.strftime('%Y-%m-%d_%H-%M')}"
+  end
+
+  def filename(format)
+    "#{base_filename}.#{format}"
+  end
+
+  def procedure_identifier
+    procedure.path || "procedure-#{procedure.id}"
+  end
+
+  def content_type(format)
+    case format
+    when :csv
+      'text/csv'
+    when :xlsx
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    when :ods
+      'application/vnd.oasis.opendocument.spreadsheet'
+    when :zip
+      'application/zip'
+    end
+  end
 
   def etablissements
     @etablissements ||= dossiers.flat_map do |dossier|
@@ -40,12 +87,12 @@ class ProcedureExportService
   end
 
   def champs_repetables_options
-    revision = @procedure.active_revision
+    revision = procedure.active_revision
     champs_by_stable_id = dossiers
       .flat_map { |dossier| (dossier.champs + dossier.champs_private).filter(&:repetition?) }
       .group_by(&:stable_id)
 
-    @procedure.types_de_champ_for_procedure_presentation.repetition
+    procedure.types_de_champ_for_procedure_presentation.repetition
       .map { |type_de_champ_repetition| [type_de_champ_repetition, type_de_champ_repetition.types_de_champ_for_revision(revision).to_a] }
       .filter { |(_, types_de_champ)| types_de_champ.present? }
       .map do |(type_de_champ_repetition, types_de_champ)|
@@ -85,7 +132,7 @@ class ProcedureExportService
   end
 
   def spreadsheet_columns(format)
-    types_de_champ = @procedure.types_de_champ_for_procedure_presentation.not_repetition.to_a
+    types_de_champ = procedure.types_de_champ_for_procedure_presentation.not_repetition.to_a
 
     Proc.new do |instance|
       instance.send(:"spreadsheet_columns_#{format}", types_de_champ: types_de_champ)
