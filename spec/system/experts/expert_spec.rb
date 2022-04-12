@@ -90,8 +90,22 @@ describe 'Inviting an expert:' do
       let(:commentaire) { create(:commentaire, instructeur: instructeur, dossier: dossier) }
 
       before do
-        champ.piece_justificative_file.attach(io: File.open(path), filename: "piece_justificative_0.pdf", content_type: "application/pdf")
-        dossier.champs_private << create(:champ_piece_justificative, :with_piece_justificative_file, private: true, dossier: dossier)
+        champ
+          .piece_justificative_file
+          .attach(io: File.open(path),
+                  filename: "piece_justificative_0.pdf",
+                  content_type: "application/pdf",
+                  metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE })
+
+        dossier.champs_private << create(:champ_piece_justificative, private: true, dossier: dossier)
+
+        dossier.champs_private
+          .first
+          .piece_justificative_file
+          .attach(io: File.open(path),
+                  filename: "piece_justificative_0.pdf",
+                  content_type: "application/pdf",
+                  metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE })
       end
 
       scenario 'An Expert can download an archive containing attachments without any private champ, bill signature and operations logs' do
@@ -102,7 +116,7 @@ describe 'Inviting an expert:' do
         click_on '1 avis à donner'
         click_on avis.dossier.user.email
 
-        find(:css, '.attached').click
+        find(:css, '[aria-controls=print-pj-menu]').click
         click_on 'Télécharger le dossier et toutes ses pièces jointes'
         # For some reason, clicking the download link does not trigger the download in the headless browser ;
         # So we need to go to the download link directly
