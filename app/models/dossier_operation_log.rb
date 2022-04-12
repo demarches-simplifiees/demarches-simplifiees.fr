@@ -12,6 +12,7 @@
 #  updated_at          :datetime         not null
 #  bill_signature_id   :bigint
 #  dossier_id          :bigint
+#  instructeur_id      :bigint
 #
 class DossierOperationLog < ApplicationRecord
   enum operation: {
