@@ -485,8 +485,9 @@ class Dossier < ApplicationRecord
   end
 
   def motivation
-    return nil if !termine?
-    traitement&.motivation || read_attribute(:motivation)
+    if termine?
+      traitement&.motivation || read_attribute(:motivation)
+    end
   end
 
   def update_search_terms
