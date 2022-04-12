@@ -1,10 +1,10 @@
 module Types
   class AddressType < Types::BaseObject
     class AddressTypeType < Types::BaseEnum
-      value(:housenumber, "numéro « à la plaque »", value: :housenumber)
-      value(:street, "position « à la voie », placé approximativement au centre de celle-ci", value: :street)
-      value(:municipality, "numéro « à la commune »", value: :municipality)
-      value(:locality, "lieu-dit", value: :locality)
+      value(:housenumber, "numéro « à la plaque »", value: "housenumber")
+      value(:street, "position « à la voie », placé approximativement au centre de celle-ci", value: "street")
+      value(:municipality, "numéro « à la commune »", value: "municipality")
+      value(:locality, "lieu-dit", value: "locality")
     end
 
     field :label, String, "libellé complet de l’adresse", null: false

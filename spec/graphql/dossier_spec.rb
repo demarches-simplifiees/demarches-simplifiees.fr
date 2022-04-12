@@ -31,6 +31,26 @@ RSpec.describe Types::DossierType, type: :graphql do
     let(:dossier) { create(:dossier, :accepte, :with_populated_champs, procedure: procedure) }
     let(:query) { DOSSIER_WITH_CHAMPS_QUERY }
     let(:variables) { { number: dossier.id } }
+    let(:address) do
+      {
+        "type" => "housenumber",
+        "label" => "33 Rue Rébeval 75019 Paris",
+        "city_code" => "75119",
+        "city_name" => "Paris",
+        "postal_code" => "75019",
+        "region_code" => "11",
+        "region_name" => "Île-de-France",
+        "street_name" => "Rue Rébeval",
+        "street_number" => "33",
+        "street_address" => "33 Rue Rébeval",
+        "department_code" => "75",
+        "department_name" => "Paris"
+      }
+    end
+
+    before do
+      dossier.champs.second.update(data: address)
+    end
 
     it { expect(data[:dossier][:champs][0][:__typename]).to eq "CommuneChamp" }
     it { expect(data[:dossier][:champs][1][:__typename]).to eq "AddressChamp" }
@@ -86,7 +106,12 @@ RSpec.describe Types::DossierType, type: :graphql do
     code
   }
   fragment AddressFragment on Address {
+    type
+    label
     cityName
+    cityCode
+    streetName
+    streetNumber
   }
   GRAPHQL
 end

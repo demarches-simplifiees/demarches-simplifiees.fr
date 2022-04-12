@@ -4,18 +4,18 @@ describe ProcedureArchiveService do
   let(:file) { Tempfile.new }
   let(:fixture_blob) { ActiveStorage::Blob.create_before_direct_upload!(filename: File.basename(file.path), byte_size: file.size, checksum: 'osf') }
 
-  let(:uploader) { ArchiveUploader.new(procedure: procedure, archive: archive, filepath: file.path) }
+  let(:uploader) { ArchiveUploader.new(procedure: procedure, filename: archive.filename(procedure), filepath: file.path) }
 
   describe '.upload' do
     context 'when active storage service is local' do
       it 'uploads with upload_with_active_storage' do
         expect(uploader).to receive(:active_storage_service_local?).and_return(true)
         expect(uploader).to receive(:upload_with_active_storage).and_return(fixture_blob)
-        uploader.upload
+        uploader.upload(archive)
       end
 
       it 'link the created blob as an attachment to the current archive instance' do
-        expect { uploader.upload }
+        expect { uploader.upload(archive) }
           .to change { ActiveStorage::Attachment.where(name: 'file', record_type: 'Archive', record_id: archive.id).count }.by(1)
       end
     end
@@ -31,7 +31,7 @@ describe ProcedureArchiveService do
 
         it 'uploads with upload_with_active_storage' do
           expect(uploader).to receive(:upload_with_active_storage).and_return(fixture_blob)
-          uploader.upload
+          uploader.upload(archive)
         end
       end
 
@@ -40,12 +40,12 @@ describe ProcedureArchiveService do
 
         it 'uploads with upload_with_chunking_wrapper' do
           expect(uploader).to receive(:upload_with_chunking_wrapper).and_return(fixture_blob)
-          uploader.upload
+          uploader.upload(archive)
         end
 
         it 'link the created blob as an attachment to the current archive instance' do
           expect(uploader).to receive(:upload_with_chunking_wrapper).and_return(fixture_blob)
-          expect { uploader.upload }
+          expect { uploader.upload(archive) }
             .to change { ActiveStorage::Attachment.where(name: 'file', record_type: 'Archive', record_id: archive.id).count }.by(1)
         end
       end
