@@ -87,22 +87,6 @@ class Export < ApplicationRecord
     procedure_presentation_id.present?
   end
 
-  def xlsx?
-    format == self.class.formats.fetch(:xlsx)
-  end
-
-  def ods?
-    format == self.class.formats.fetch(:ods)
-  end
-
-  def csv?
-    format == self.class.formats.fetch(:csv)
-  end
-
-  def zip?
-    format == self.class.formats.fetch(:zip)
-  end
-
   def self.find_or_create_export(format, groupe_instructeurs, time_span_type: time_span_types.fetch(:everything), statut: statuts.fetch(:tous), procedure_presentation: nil)
     create_with(groupe_instructeurs: groupe_instructeurs, procedure_presentation: procedure_presentation, procedure_presentation_snapshot: procedure_presentation&.snapshot)
       .includes(:procedure_presentation)
@@ -123,20 +107,20 @@ class Export < ApplicationRecord
 
     {
       xlsx: {
-        time_span_type: not_filtered.filter(&:xlsx?).index_by(&:time_span_type),
-        statut: filtered.filter(&:xlsx?).index_by(&:statut)
+        time_span_type: not_filtered.filter(&:format_xlsx?).index_by(&:time_span_type),
+        statut: filtered.filter(&:format_xlsx?).index_by(&:statut)
       },
       ods: {
-        time_span_type: not_filtered.filter(&:ods?).index_by(&:time_span_type),
-        statut: filtered.filter(&:ods?).index_by(&:statut)
+        time_span_type: not_filtered.filter(&:format_ods?).index_by(&:time_span_type),
+        statut: filtered.filter(&:format_ods?).index_by(&:statut)
       },
       csv: {
-        time_span_type: not_filtered.filter(&:csv?).index_by(&:time_span_type),
-        statut: filtered.filter(&:csv?).index_by(&:statut)
+        time_span_type: not_filtered.filter(&:format_csv?).index_by(&:time_span_type),
+        statut: filtered.filter(&:format_csv?).index_by(&:statut)
       },
       zip: {
         time_span_type: {},
-        statut: filtered.filter(&:zip?).index_by(&:statut)
+        statut: filtered.filter(&:format_zip?).index_by(&:statut)
       }
     }
   end
