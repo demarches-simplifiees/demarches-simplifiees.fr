@@ -11,9 +11,18 @@ import FileUploadError, {
   used to track lifecycle and progress of an upload.
   */
 export default class Uploader {
-  constructor(input, file, directUploadUrl, autoAttachUrl) {
+  directUpload: DirectUpload;
+  progressBar: ProgressBar;
+  autoAttachUrl?: string;
+
+  constructor(
+    input: HTMLInputElement,
+    file: File,
+    directUploadUrl: string,
+    autoAttachUrl?: string
+  ) {
     this.directUpload = new DirectUpload(file, directUploadUrl, this);
-    this.progressBar = new ProgressBar(input, this.directUpload.id, file);
+    this.progressBar = new ProgressBar(input, this.directUpload.id + '', file);
     this.autoAttachUrl = autoAttachUrl;
   }
 
@@ -26,10 +35,10 @@ export default class Uploader {
     this.progressBar.start();
 
     try {
-      let blobSignedId = await this._upload();
+      const blobSignedId = await this._upload();
 
       if (this.autoAttachUrl) {
-        await this._attach(blobSignedId);
+        await this._attach(blobSignedId, this.autoAttachUrl);
         // On response, the attachment HTML fragment will replace the progress bar.
       } else {
         this.progressBar.end();
@@ -38,7 +47,7 @@ export default class Uploader {
 
       return blobSignedId;
     } catch (error) {
-      this.progressBar.error(error.message);
+      this.progressBar.error((error as Error).message);
       throw error;
     }
   }
@@ -47,11 +56,11 @@ export default class Uploader {
     Upload the file using the DirectUpload instance, and return the blob signed_id.
     Throws a FileUploadError on failure.
     */
-  async _upload() {
+  async _upload(): Promise<string> {
     return new Promise((resolve, reject) => {
       this.directUpload.create((errorMsg, attributes) => {
         if (errorMsg) {
-          let error = errorFromDirectUploadMessage(errorMsg);
+          const error = errorFromDirectUploadMessage(errorMsg.message);
           reject(error);
         } else {
           resolve(attributes.signed_id);
@@ -65,9 +74,9 @@ export default class Uploader {
     Throws a FileUploadError on failure (containing the first validation
     error message, if any).
     */
-  async _attach(blobSignedId) {
+  async _attach(blobSignedId: string, autoAttachUrl: string) {
     const attachmentRequest = {
-      url: this.autoAttachUrl,
+      url: autoAttachUrl,
       type: 'PUT',
       data: `blob_signed_id=${blobSignedId}`
     };
@@ -75,23 +84,27 @@ export default class Uploader {
     try {
       await ajax(attachmentRequest);
     } catch (e) {
-      let message = e.response && e.response.errors && e.response.errors[0];
+      const error = e as {
+        response?: { errors: string[] };
+        xhr?: XMLHttpRequest;
+      };
+      const message = error.response?.errors && error.response.errors[0];
       throw new FileUploadError(
         message || 'Error attaching file.',
-        e.xhr.status,
+        error.xhr?.status,
         ERROR_CODE_ATTACH
       );
     }
   }
 
-  uploadRequestDidProgress(event) {
+  uploadRequestDidProgress(event: ProgressEvent) {
     const progress = (event.loaded / event.total) * 100;
     if (progress) {
       this.progressBar.progress(progress);
     }
   }
 
-  directUploadWillStoreFileWithXHR(xhr) {
+  directUploadWillStoreFileWithXHR(xhr: XMLHttpRequest) {
     xhr.upload.addEventListener('progress', (event) =>
       this.uploadRequestDidProgress(event)
     );

@@ -1,15 +1,19 @@
 import React, { useReducer } from 'react';
-import PropTypes from 'prop-types';
 import { PlusIcon } from '@heroicons/react/outline';
 
 import { SortableContainer, addChampLabel } from '../utils';
-import TypeDeChamp from './TypeDeChamp';
+import { TypeDeChampComponent } from './TypeDeChamp';
 import typeDeChampsReducer from '../typeDeChampsReducer';
+import type { State, TypeDeChamp } from '../types';
 
-function TypeDeChampRepetitionOptions({
+export function TypeDeChampRepetitionOptions({
   isVisible,
   state: parentState,
   typeDeChamp
+}: {
+  isVisible: boolean;
+  state: State;
+  typeDeChamp: TypeDeChamp;
 }) {
   const [state, dispatch] = useReducer(typeDeChampsReducer, parentState);
 
@@ -23,7 +27,7 @@ function TypeDeChampRepetitionOptions({
           useDragHandle
         >
           {state.typeDeChamps.map((typeDeChamp, index) => (
-            <TypeDeChamp
+            <TypeDeChampComponent
               dispatch={dispatch}
               idx={index}
               index={index}
@@ -54,11 +58,3 @@ function TypeDeChampRepetitionOptions({
   }
   return null;
 }
-
-TypeDeChampRepetitionOptions.propTypes = {
-  isVisible: PropTypes.bool,
-  state: PropTypes.object,
-  typeDeChamp: PropTypes.object
-};
-
-export default TypeDeChampRepetitionOptions;

@@ -1,7 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-function DescriptionInput({ isVisible, handler }) {
+import type { Handler } from '../types';
+
+export function DescriptionInput({
+  isVisible,
+  handler
+}: {
+  isVisible: boolean;
+  handler: Handler<HTMLTextAreaElement>;
+}) {
   if (isVisible) {
     return (
       <div className="cell">
@@ -20,10 +27,3 @@ function DescriptionInput({ isVisible, handler }) {
   }
   return null;
 }
-
-DescriptionInput.propTypes = {
-  isVisible: PropTypes.bool,
-  handler: PropTypes.object
-};
-
-export default DescriptionInput;

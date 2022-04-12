@@ -1,16 +1,26 @@
 # doc: https://github.com/france-connect/Documentation-AgentConnect
 class AgentConnect::AgentController < ApplicationController
   before_action :redirect_to_login_if_fc_aborted, only: [:callback]
+  before_action :check_state, only: [:callback]
+
+  STATE_COOKIE_NAME = :agentConnect_state
+  NONCE_COOKIE_NAME = :agentConnect_nonce
 
   def index
   end
 
   def login
-    redirect_to AgentConnectService.authorization_uri
+    uri, state, nonce = AgentConnectService.authorization_uri
+
+    cookies.encrypted[STATE_COOKIE_NAME] = state
+    cookies.encrypted[NONCE_COOKIE_NAME] = nonce
+
+    redirect_to uri
   end
 
   def callback
-    user_info = AgentConnectService.user_info(params[:code])
+    user_info = AgentConnectService.user_info(params[:code], cookies.encrypted[NONCE_COOKIE_NAME])
+    cookies.encrypted[NONCE_COOKIE_NAME] = nil
 
     instructeur = Instructeur.find_by(agent_connect_id: user_info['sub'])
 
@@ -49,5 +59,14 @@ class AgentConnect::AgentController < ApplicationController
   def redirect_france_connect_error_connection
     flash.alert = t('errors.messages.france_connect.connexion')
     redirect_to(new_user_session_path)
+  end
+
+  def check_state
+    if cookies.encrypted[STATE_COOKIE_NAME] != params[:state]
+      flash.alert = t('errors.messages.france_connect.connexion')
+      redirect_to(new_user_session_path)
+    else
+      cookies.encrypted[STATE_COOKIE_NAME] = nil
+    end
   end
 end

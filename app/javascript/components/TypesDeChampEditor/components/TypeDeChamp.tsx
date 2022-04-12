@@ -1,24 +1,40 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { sortableElement, sortableHandle } from 'react-sortable-hoc';
+import React, { Dispatch } from 'react';
+import { SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { useInView } from 'react-intersection-observer';
 import { TrashIcon } from '@heroicons/react/outline';
 
-import DescriptionInput from './DescriptionInput';
-import LibelleInput from './LibelleInput';
-import MandatoryInput from './MandatoryInput';
-import MoveButton from './MoveButton';
-import TypeDeChampCarteOption from './TypeDeChampCarteOption';
-import TypeDeChampCarteOptions from './TypeDeChampCarteOptions';
-import TypeDeChampDropDownOptions from './TypeDeChampDropDownOptions';
-import TypeDeChampDropDownOther from './TypeDeChampDropDownOther';
-import TypeDeChampPieceJustificative from './TypeDeChampPieceJustificative';
-import TypeDeChampRepetitionOptions from './TypeDeChampRepetitionOptions';
-import TypeDeChampTypesSelect from './TypeDeChampTypesSelect';
-import TypeDeChampDropDownSecondary from './TypeDeChampDropDownSecondary';
+import type { Action, TypeDeChamp, State, Handler } from '../types';
+import { DescriptionInput } from './DescriptionInput';
+import { LibelleInput } from './LibelleInput';
+import { MandatoryInput } from './MandatoryInput';
+import { MoveButton } from './MoveButton';
+import { TypeDeChampCarteOption } from './TypeDeChampCarteOption';
+import { TypeDeChampCarteOptions } from './TypeDeChampCarteOptions';
+import { TypeDeChampDropDownOptions } from './TypeDeChampDropDownOptions';
+import { TypeDeChampDropDownOther } from './TypeDeChampDropDownOther';
+import { TypeDeChampPieceJustificative } from './TypeDeChampPieceJustificative';
+import { TypeDeChampRepetitionOptions } from './TypeDeChampRepetitionOptions';
+import { TypeDeChampTypesSelect } from './TypeDeChampTypesSelect';
+import { TypeDeChampDropDownSecondary } from './TypeDeChampDropDownSecondary';
 
-const TypeDeChamp = sortableElement(
-  ({ typeDeChamp, dispatch, idx: index, isFirstItem, isLastItem, state }) => {
+type TypeDeChampProps = {
+  typeDeChamp: TypeDeChamp;
+  dispatch: Dispatch<Action>;
+  idx: number;
+  isFirstItem: boolean;
+  isLastItem: boolean;
+  state: State;
+};
+
+export const TypeDeChampComponent = SortableElement<TypeDeChampProps>(
+  ({
+    typeDeChamp,
+    dispatch,
+    idx: index,
+    isFirstItem,
+    isLastItem,
+    state
+  }: TypeDeChampProps) => {
     const isDropDown = [
       'drop_down_list',
       'multiple_drop_down_list',
@@ -175,23 +191,25 @@ const TypeDeChamp = sortableElement(
   }
 );
 
-TypeDeChamp.propTypes = {
-  dispatch: PropTypes.func,
-  idx: PropTypes.number,
-  isFirstItem: PropTypes.bool,
-  isLastItem: PropTypes.bool,
-  state: PropTypes.object,
-  typeDeChamp: PropTypes.object
-};
-
-const DragHandle = sortableHandle(() => (
+const DragHandle = SortableHandle(() => (
   <div
     className="handle small icon-only icon move-handle"
     title="Déplacer le champ vers le haut ou vers le bas"
   />
 ));
 
-function createUpdateHandler(dispatch, typeDeChamp, field, index, prefix) {
+type HandlerInputElement =
+  | HTMLInputElement
+  | HTMLTextAreaElement
+  | HTMLSelectElement;
+
+function createUpdateHandler(
+  dispatch: Dispatch<Action>,
+  typeDeChamp: TypeDeChamp,
+  field: keyof TypeDeChamp,
+  index: number,
+  prefix?: string
+): Handler<HandlerInputElement> {
   return {
     id: `${prefix ? `${prefix}-` : ''}champ-${index}-${field}`,
     name: field,
@@ -209,25 +227,22 @@ function createUpdateHandler(dispatch, typeDeChamp, field, index, prefix) {
   };
 }
 
-function getValue(obj, path) {
-  const [, optionsPath] = path.split('.');
-  if (optionsPath) {
-    return (obj.editable_options || {})[optionsPath];
-  }
-  return obj[path];
-}
-
-function createUpdateHandlers(dispatch, typeDeChamp, index, prefix) {
+function createUpdateHandlers(
+  dispatch: Dispatch<Action>,
+  typeDeChamp: TypeDeChamp,
+  index: number,
+  prefix?: string
+) {
   return FIELDS.reduce((handlers, field) => {
     handlers[field] = createUpdateHandler(
       dispatch,
       typeDeChamp,
-      field,
+      field as keyof TypeDeChamp,
       index,
       prefix
     );
     return handlers;
-  }, {});
+  }, {} as Record<string, Handler<HandlerInputElement>>);
 }
 
 const OPTIONS_FIELDS = {
@@ -242,7 +257,7 @@ const OPTIONS_FIELDS = {
   'options.natura_2000': 'Natura 2000',
   'options.zones_humides': 'Zones humides d’importance internationale',
   'options.znieff': 'ZNIEFF'
-};
+} as const;
 
 export const FIELDS = [
   'description',
@@ -257,10 +272,20 @@ export const FIELDS = [
   'drop_down_secondary_libelle',
   'drop_down_secondary_description',
   ...Object.keys(OPTIONS_FIELDS)
-];
+] as const;
 
-function readValue(input) {
-  return input.type === 'checkbox' ? input.checked : input.value;
+function getValue(obj: TypeDeChamp, path: string) {
+  const [, optionsPath] = path.split('.');
+  if (optionsPath) {
+    return (obj.editable_options || {})[optionsPath];
+  }
+  return obj[path as keyof TypeDeChamp] as string;
+}
+
+function readValue(input: HandlerInputElement) {
+  return input.type === 'checkbox' && 'checked' in input
+    ? input.checked
+    : input.value;
 }
 
 const EXCLUDE_FROM_REPETITION = [
@@ -269,5 +294,3 @@ const EXCLUDE_FROM_REPETITION = [
   'repetition',
   'siret'
 ];
-
-export default TypeDeChamp;
