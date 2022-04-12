@@ -1,10 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-export default function TypeDeChampDropDownSecondary({
+import type { Handler } from '../types';
+
+export function TypeDeChampDropDownSecondary({
   isVisible,
   libelleHandler,
   descriptionHandler
+}: {
+  isVisible: boolean;
+  libelleHandler: Handler<HTMLInputElement>;
+  descriptionHandler: Handler<HTMLTextAreaElement>;
 }) {
   if (isVisible) {
     return (
@@ -33,9 +38,3 @@ export default function TypeDeChampDropDownSecondary({
   }
   return null;
 }
-
-TypeDeChampDropDownSecondary.propTypes = {
-  isVisible: PropTypes.bool,
-  libelleHandler: PropTypes.object,
-  descriptionHandler: PropTypes.object
-};

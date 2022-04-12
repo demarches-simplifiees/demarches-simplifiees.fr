@@ -1,13 +1,20 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Uploader from '../../../shared/activestorage/uploader';
+import React, { ChangeEvent } from 'react';
 
-function TypeDeChampPieceJustificative({
+import Uploader from '../../../shared/activestorage/uploader';
+import type { Handler } from '../types';
+
+export function TypeDeChampPieceJustificative({
   isVisible,
   url,
   filename,
   handler,
   directUploadUrl
+}: {
+  isVisible: boolean;
+  url?: string;
+  filename?: string;
+  handler: Handler<HTMLInputElement>;
+  directUploadUrl: string;
 }) {
   if (isVisible) {
     const hasFile = !!filename;
@@ -28,15 +35,15 @@ function TypeDeChampPieceJustificative({
   return null;
 }
 
-TypeDeChampPieceJustificative.propTypes = {
-  isVisible: PropTypes.bool,
-  url: PropTypes.string,
-  filename: PropTypes.string,
-  handler: PropTypes.object,
-  directUploadUrl: PropTypes.string
-};
-
-function FileInformation({ isVisible, url, filename }) {
+function FileInformation({
+  isVisible,
+  url,
+  filename
+}: {
+  isVisible: boolean;
+  url?: string;
+  filename?: string;
+}) {
   if (isVisible) {
     return (
       <>
@@ -50,32 +57,29 @@ function FileInformation({ isVisible, url, filename }) {
   return null;
 }
 
-FileInformation.propTypes = {
-  isVisible: PropTypes.bool,
-  url: PropTypes.string,
-  filename: PropTypes.string
-};
-
-function onFileChange(handler, directUploadUrl) {
+function onFileChange(
+  handler: Handler<HTMLInputElement>,
+  directUploadUrl: string
+): (event: ChangeEvent<HTMLInputElement>) => void {
   return async ({ target }) => {
-    const file = target.files[0];
+    const file = (target.files ?? [])[0];
     if (file) {
       const signedId = await uploadFile(target, file, directUploadUrl);
       handler.onChange({
-        target: {
-          value: signedId
-        }
-      });
+        target: { value: signedId }
+      } as ChangeEvent<HTMLInputElement>);
     }
   };
 }
 
-function uploadFile(input, file, directUploadUrl) {
+function uploadFile(
+  input: HTMLInputElement,
+  file: File,
+  directUploadUrl: string
+) {
   const controller = new Uploader(input, file, directUploadUrl);
   return controller.start().then((signedId) => {
-    input.value = null;
+    input.value = '';
     return signedId;
   });
 }
-
-export default TypeDeChampPieceJustificative;

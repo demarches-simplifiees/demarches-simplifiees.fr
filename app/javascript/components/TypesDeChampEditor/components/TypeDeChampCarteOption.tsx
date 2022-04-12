@@ -1,7 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-function TypeDeChampCarteOption({ label, handler }) {
+import type { Handler } from '../types';
+
+export function TypeDeChampCarteOption({
+  label,
+  handler
+}: {
+  label: string;
+  handler: Handler<HTMLInputElement>;
+}) {
   return (
     <label htmlFor={handler.id}>
       <input
@@ -16,10 +23,3 @@ function TypeDeChampCarteOption({ label, handler }) {
     </label>
   );
 }
-
-TypeDeChampCarteOption.propTypes = {
-  label: PropTypes.string,
-  handler: PropTypes.object
-};
-
-export default TypeDeChampCarteOption;
