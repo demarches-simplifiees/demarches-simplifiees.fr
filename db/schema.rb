@@ -267,13 +267,11 @@ ActiveRecord::Schema.define(version: 2022_04_07_081538) do
     t.text "digest"
     t.bigint "dossier_id"
     t.datetime "executed_at"
-    t.bigint "instructeur_id"
     t.datetime "keep_until"
     t.string "operation", null: false
     t.datetime "updated_at", null: false
     t.index ["bill_signature_id"], name: "index_dossier_operation_logs_on_bill_signature_id"
     t.index ["dossier_id"], name: "index_dossier_operation_logs_on_dossier_id"
-    t.index ["instructeur_id"], name: "index_dossier_operation_logs_on_instructeur_id"
     t.index ["keep_until"], name: "index_dossier_operation_logs_on_keep_until"
   end
 
@@ -872,7 +870,6 @@ ActiveRecord::Schema.define(version: 2022_04_07_081538) do
   add_foreign_key "commentaires", "dossiers"
   add_foreign_key "commentaires", "experts"
   add_foreign_key "dossier_operation_logs", "bill_signatures"
-  add_foreign_key "dossier_operation_logs", "instructeurs"
   add_foreign_key "dossier_transfer_logs", "dossiers"
   add_foreign_key "dossiers", "dossier_transfers"
   add_foreign_key "dossiers", "groupe_instructeurs"
