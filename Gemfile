@@ -55,6 +55,7 @@ gem 'listen' # Required by ActiveSupport::EventedFileUpdateChecker
 gem 'lograge'
 gem 'logstash-event'
 gem 'mailjet', require: false
+gem 'net-smtp', require: false # See https://github.com/mikel/mail/pull/1439
 gem 'openid_connect'
 gem 'pg'
 gem 'phonelib'
