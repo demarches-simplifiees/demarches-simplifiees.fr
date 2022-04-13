@@ -217,6 +217,7 @@ GEM
       railties (< 7.1)
       rotp (~> 6.0)
     diff-lcs (1.4.4)
+    digest (3.1.0)
     discard (1.2.0)
       activerecord (>= 4.2, < 7)
     domain_name (0.5.20190701)
@@ -441,6 +442,14 @@ GEM
     multipart-post (2.1.1)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
+    net-imap (0.2.3)
+      digest
+      net-protocol
+      strscan
+    net-pop (0.1.1)
+      digest
+      net-protocol
+      timeout
     net-protocol (0.1.1)
       io-wait
       timeout
@@ -711,6 +720,7 @@ GEM
       sprockets (>= 3.0.0)
     strong_migrations (0.8.0)
       activerecord (>= 5.2)
+    strscan (3.0.1)
     swd (1.3.0)
       activesupport (>= 3)
       attr_required (>= 0.0.5)
@@ -856,6 +866,8 @@ DEPENDENCIES
   mailjet
   matrix
   mina
+  net-imap
+  net-pop
   net-smtp
   openid_connect
   pg
