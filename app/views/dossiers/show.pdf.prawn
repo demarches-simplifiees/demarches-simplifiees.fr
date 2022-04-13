@@ -130,7 +130,7 @@ def add_identite_etablissement(pdf, etablissement)
 end
 
 def add_single_champ(pdf, champ)
-  tdc = @tdc_by_id[champ.type_de_champ_id].first
+  tdc = @tdc_by_id[champ.type_de_champ_id]
 
   case champ.type
   when 'Champs::PieceJustificativeChamp', 'Champs::TitreIdentiteChamp'
@@ -208,7 +208,7 @@ end
 
 prawn_document(page_size: "A4") do |pdf|
   @procedure ||= @dossier.procedure
-  @tdc_by_id ||= @dossier.champs.map(&:type_de_champ).group_by(&:id)
+  @tdc_by_id ||= @dossier.revision.types_de_champ.index_by(&:id)
 
   pdf.font_families.update( 'marianne' => {
     normal: Rails.root.join('lib/prawn/fonts/marianne/marianne-regular.ttf' ),
