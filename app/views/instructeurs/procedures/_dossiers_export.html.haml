@@ -8,6 +8,10 @@
         - export = item[:export]
         %li
           - if export.nil?
+            // i18n-tasks-use t('.everything_csv_html')
+            // i18n-tasks-use t('.everything_xlsx_html')
+            // i18n-tasks-use t('.everything_ods_html')
+            // i18n-tasks-use t('.everything_zip_html')
             = link_to t(".everything_#{format}_html"), download_export_instructeur_procedure_path(procedure, statut: statut, export_format: format), remote: true
           - elsif export.ready?
             = link_to t(".everything_ready_html", export_time: time_ago_in_words(export.updated_at), export_format: ".#{format}"), export.file.service_url, target: "_blank", rel: "noopener"
