@@ -55,6 +55,10 @@ gem 'listen' # Required by ActiveSupport::EventedFileUpdateChecker
 gem 'lograge'
 gem 'logstash-event'
 gem 'mailjet', require: false
+gem 'matrix' # needed by prawn and not default in ruby 3.1
+gem 'net-imap', require: false # See https://github.com/mikel/mail/pull/1439
+gem 'net-pop', require: false # same
+gem 'net-smtp', require: false # same
 gem 'openid_connect'
 gem 'pg'
 gem 'phonelib'
