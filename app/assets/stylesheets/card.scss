@@ -53,6 +53,12 @@
     }
   }
 
+  &.no-list {
+    ul {
+      list-style: none !important;
+    }
+  }
+
   ul {
     list-style-type: disc;
     list-style-position: inside;
