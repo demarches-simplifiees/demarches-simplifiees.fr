@@ -75,12 +75,8 @@
             - else
               %th.notification-col
 
-            = render partial: "header_field", locals: { field: { "label" => "Nº dossier", "table" => "self", "column" => "id" }, classname: "number-col" }
-
-            - @procedure_presentation.displayed_fields.each do |field|
-              = render partial: "header_field", locals: { field: field, classname: "" }
-
-            = render partial: "header_field", locals: { field: { "label" => "Statut", "table" => "self", "column" => "state" },  classname: "status-col" }
+            - @procedure_presentation.displayed_fields_for_headers.each do |field|
+              = render partial: "header_field", locals: { field: field, classname: field['classname'] }
 
             %th.action-col.follow-col
               %span.dropdown
