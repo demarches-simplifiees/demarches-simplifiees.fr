@@ -27,18 +27,23 @@
 
   .container
     - if @statut == 'a-suivre'
-      %p.explication-onglet Aucun instructeur n’est affecté au suivi de ces dossiers. Soyez le premier !
+      %p.explication-onglet
+        = t('views.instructeurs.dossiers.tab_explainations.a_suivre')
     - if @statut == 'suivis'
-      %p.explication-onglet Les dossiers qui sont dans cet onglet sont uniquement ceux que vous suivez. Vous pouvez échanger avec le demandeur jusqu'à pouvoir les accepter, les refuser ou les classer sans suite.
+      %p.explication-onglet
+        = t('views.instructeurs.dossiers.tab_explainations.suivis')
     - if @statut == 'traites'
-      %p.explication-onglet Les dossiers dans cet onglet sont terminés : ils ont été acceptés, refusés ou classés sans suite.
+      %p.explication-onglet
+        = t('views.instructeurs.dossiers.tab_explainations.traites')
     - if @statut == 'tous'
-      %p.explication-onglet Tous les dossiers qui ont été déposés sur cette démarche, quel que soit le statut.
+      %p.explication-onglet
+        = t('views.instructeurs.dossiers.tab_explainations.tous')
     - if @statut == 'supprimes_recemment'
-      %p.explication-onglet Tous les dossiers terminés et supprimés par les instructeurs sur cette démarche
+      %p.explication-onglet
+        = t('views.instructeurs.dossiers.tab_explainations.supprimes_recemment')
     - if @statut == 'archives'
       %p.explication-onglet
-        Les dossiers de cet onglet sont archivés : vous ne pouvez plus y répondre, et les demandeurs ne peuvent plus les modifier.
+        = t('views.instructeurs.dossiers.tab_explainations.archives')
         %br
         Ces dossiers seront supprimés lorsque leur délai de conservation dans Démarches-simplifiées
         - if @procedure.duree_conservation_dossiers_dans_ds
@@ -50,8 +55,8 @@
           %span.icon.delete
           Afficher les dossiers supprimés
     - if @statut == 'expirant'
-      %p.explication-onglet Les dossiers n'expireront pas avant la période de conservation des données.
-
+      %p.explication-onglet
+        = t('views.instructeurs.dossiers.tab_explainations.expirant')
     - if @filtered_sorted_paginated_ids.present? || @current_filters.count > 0
       - pagination =  paginate @filtered_sorted_paginated_ids
       = pagination
@@ -70,17 +75,13 @@
             - else
               %th.notification-col
 
-            = render partial: "header_field", locals: { field: { "label" => "Nº dossier", "table" => "self", "column" => "id" }, classname: "number-col" }
-
-            - @procedure_presentation.displayed_fields.each do |field|
-              = render partial: "header_field", locals: { field: field, classname: "" }
-
-            = render partial: "header_field", locals: { field: { "label" => "Statut", "table" => "self", "column" => "state" },  classname: "status-col" }
+            - @procedure_presentation.displayed_fields_for_headers.each do |field|
+              = render partial: "header_field", locals: { field: field, classname: field['classname'] }
 
             %th.action-col.follow-col
               %span.dropdown
                 %button.button.dropdown-button{ 'aria-expanded' => 'false', 'aria-controls' => 'custom-menu' }
-                  Personnaliser
+                  = t('views.instructeurs.dossiers.personalize')
                 #custom-menu.dropdown-content.fade-in-down
                   = form_tag update_displayed_fields_instructeur_procedure_path(@procedure), method: :patch, class: 'dropdown-form large columns-form' do
                     = hidden_field_tag :values, nil
@@ -92,7 +93,7 @@
                       group: '.columns-form',
                       name: 'values')
 
-                    = submit_tag "Enregistrer", class: 'button'
+                    = submit_tag t('views.instructeurs.dossiers.save'), class: 'button'
 
         %tbody
           - @projected_dossiers.each do |p|
@@ -142,4 +143,5 @@
 
       = pagination
     - else
-      %h2.empty-text Aucun dossier
+      %h2.empty-text
+        = t('views.instructeurs.dossiers.no_file')

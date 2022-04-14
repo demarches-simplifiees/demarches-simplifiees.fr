@@ -35,8 +35,8 @@
   - if dossier_is_followed
     = link_to unfollow_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: 'button' do
       %span.icon.unfollow>
-      Ne plus suivre
+      = t('views.instructeurs.dossiers.stop_follow')
   - else
     = link_to follow_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: 'button' do
       %span.icon.follow>
-      Suivre le dossier
+      = t('views.instructeurs.dossiers.follow_file')
