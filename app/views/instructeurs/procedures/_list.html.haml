@@ -15,7 +15,7 @@
                 .stats-number
                   = number_with_html_delimiter(a_suivre_count)
                 .stats-legend
-                  à suivre
+                  = t('instructeurs.dossiers.labels.to_follow')
           %li
             %object
               = link_to(instructeur_procedure_path(p, statut: 'suivis')) do

@@ -7,8 +7,8 @@
   %p.autosave-status.succeeded
     %span.autosave-icon.icon.accept
     %span.autosave-label
-      Brouillon enregistré
-    = link_to 'En savoir plus', FAQ_AUTOSAVE_URL, target: '_blank', rel: 'noopener', class: 'autosave-more-infos'
+      = t('views.users.dossiers.autosave.autosave_confirmation')
+    = link_to t('views.users.dossiers.autosave.more_information'), FAQ_AUTOSAVE_URL, target: '_blank', rel: 'noopener', class: 'autosave-more-infos'
 
   %p.autosave-status.failed
     %span.autosave-icon ⚠️
