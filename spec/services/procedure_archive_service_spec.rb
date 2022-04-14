@@ -163,7 +163,7 @@ describe ProcedureArchiveService do
             "procedure-#{procedure.id}-#{archive.id}/dossier-#{dossier_2020.id}/",
             "procedure-#{procedure.id}-#{archive.id}/dossier-#{dossier_2020.id}/export-#{dossier_2020.id}-05-03-2020-00-00-#{dossier_2020.id}.pdf",
             "procedure-#{procedure.id}-#{archive.id}/dossier-#{dossier_2020.id}/pieces_justificatives/",
-            "procedure-#{procedure.id}-#{archive.id}/dossier-#{dossier_2020.id}/pieces_justificatives/attestation-dossier-#{dossier.id}-05-03-2020-00-00-#{dossier_2020.attestation.pdf.id % 10000}.pdf"
+            "procedure-#{procedure.id}-#{archive.id}/dossier-#{dossier_2020.id}/pieces_justificatives/attestation-dossier-#{dossier_2020.id}-05-03-2020-00-00-#{dossier_2020.attestation.pdf.id % 10000}.pdf"
           ]
           expect(files.map(&:filename)).to match_array(structure)
         end
