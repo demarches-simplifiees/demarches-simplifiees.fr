@@ -43,7 +43,8 @@
     "use-debounce": "^5.2.0",
     "webpack": "^4.46.0",
     "webpack-cli": "^3.3.12",
-    "whatwg-fetch": "^3.0.0"
+    "whatwg-fetch": "^3.0.0",
+    "zod": "^3.14.4"
   },
   "devDependencies": {
     "@2fd/graphdoc": "^2.4.0",
