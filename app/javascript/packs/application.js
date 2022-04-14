@@ -18,6 +18,7 @@ import {
   ReactController,
   registerComponents
 } from '../controllers/react_controller';
+import { TurboEventController } from '../controllers/turbo_event_controller';
 
 import '../new_design/dropdown';
 import '../new_design/form-validation';
@@ -94,6 +95,7 @@ Turbo.session.drive = false;
 
 const Stimulus = Application.start();
 Stimulus.register('react', ReactController);
+Stimulus.register('turbo-event', TurboEventController);
 
 // Expose globals
 window.DS = window.DS || DS;
