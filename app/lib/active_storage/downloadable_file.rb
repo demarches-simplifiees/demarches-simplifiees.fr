@@ -11,6 +11,12 @@ class ActiveStorage::DownloadableFile
     end
   end
 
+  def self.create_list_from_dossiers(dossiers)
+    dossiers.flat_map do |dossier|
+      create_list_from_dossier(dossier)
+    end
+  end
+
   private
 
   def self.timestamped_filename(attachment)

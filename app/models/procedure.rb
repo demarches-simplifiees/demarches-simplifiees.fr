@@ -515,27 +515,6 @@ class Procedure < ApplicationRecord
     self.dossiers.state_not_brouillon.size
   end
 
-  def export_filename(format)
-    procedure_identifier = path || "procedure-#{id}"
-    "dossiers_#{procedure_identifier}_#{Time.zone.now.strftime('%Y-%m-%d_%H-%M')}.#{format}"
-  end
-
-  def export(dossiers)
-    ProcedureExportService.new(self, dossiers)
-  end
-
-  def to_csv(dossiers)
-    export(dossiers).to_csv
-  end
-
-  def to_xlsx(dossiers)
-    export(dossiers).to_xlsx
-  end
-
-  def to_ods(dossiers)
-    export(dossiers).to_ods
-  end
-
   def procedure_overview(start_date, groups)
     ProcedureOverview.new(self, start_date, groups)
   end

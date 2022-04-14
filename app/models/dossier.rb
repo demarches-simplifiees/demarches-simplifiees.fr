@@ -57,8 +57,6 @@ class Dossier < ApplicationRecord
   INSTRUCTION_COMMENCEE = TERMINE + [states.fetch(:en_instruction)]
   SOUMIS = EN_CONSTRUCTION_OU_INSTRUCTION + TERMINE
 
-  TAILLE_MAX_ZIP = 100.megabytes
-
   REMAINING_DAYS_BEFORE_CLOSING = 2
   INTERVAL_BEFORE_CLOSING = "#{REMAINING_DAYS_BEFORE_CLOSING} days"
   REMAINING_WEEKS_BEFORE_EXPIRATION = 2
@@ -236,10 +234,11 @@ class Dossier < ApplicationRecord
   scope :en_instruction,              -> { not_archived.state_en_instruction }
   scope :termine,                     -> { not_archived.state_termine }
 
-  scope :processed_in_month, -> (month) do
+  scope :processed_in_month, -> (date) do
+    date = date.to_datetime
     state_termine
       .joins(:traitements)
-      .where(traitements: { processed_at: month.beginning_of_month..month.end_of_month })
+      .where(traitements: { processed_at: date.beginning_of_month..date.end_of_month })
   end
   scope :downloadable_sorted, -> {
     state_not_brouillon
@@ -302,18 +301,18 @@ class Dossier < ApplicationRecord
   scope :interval_brouillon_close_to_expiration, -> do
     state_brouillon
       .visible_by_user
-      .where("dossiers.created_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+      .where("dossiers.created_at + dossiers.conservation_extension + (procedures.duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   end
   scope :interval_en_construction_close_to_expiration, -> do
     state_en_construction
       .visible_by_user_or_administration
-      .where("dossiers.en_construction_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+      .where("dossiers.en_construction_at + dossiers.conservation_extension + (procedures.duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   end
   scope :interval_termine_close_to_expiration, -> do
     state_termine
       .visible_by_user_or_administration
       .where(procedures: { procedure_expires_when_termine_enabled: true })
-      .where("dossiers.processed_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+      .where("dossiers.processed_at + dossiers.conservation_extension + (procedures.duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   end
 
   scope :brouillon_close_to_expiration, -> do
@@ -394,6 +393,30 @@ class Dossier < ApplicationRecord
       ' OR last_avis_updated_at > follows.avis_seen_at' \
       ' OR last_commentaire_updated_at > follows.messagerie_seen_at')
       .distinct
+  end
+
+  scope :by_statut, -> (instructeur, statut = 'tous') do
+    case statut
+    when 'a-suivre'
+      visible_by_administration
+        .without_followers
+        .en_cours
+    when 'suivis'
+      instructeur
+        .followed_dossiers
+        .en_cours
+        .merge(visible_by_administration)
+    when 'traites'
+      visible_by_administration.termine
+    when 'tous'
+      visible_by_administration.all_state
+    when 'supprimes_recemment'
+      hidden_by_administration.termine
+    when 'archives'
+      visible_by_administration.archived
+    when 'expirant'
+      visible_by_administration.termine_or_en_construction_close_to_expiration
+    end
   end
 
   accepts_nested_attributes_for :individual
@@ -1092,10 +1115,6 @@ class Dossier < ApplicationRecord
         [type_de_champ.libelle_for_export(index), champ_value]
       end
     end
-  end
-
-  def export_and_attachments_downloadable?
-    PiecesJustificativesService.pieces_justificatives_total_size(self) < Dossier::TAILLE_MAX_ZIP
   end
 
   def linked_dossiers_for(instructeur_or_expert)

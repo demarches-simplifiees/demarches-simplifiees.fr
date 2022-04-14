@@ -25,8 +25,7 @@ class ProcedurePresentation < ApplicationRecord
   FILTERS_VALUE_MAX_LENGTH = 100
 
   belongs_to :assign_to, optional: false
-
-  delegate :procedure, to: :assign_to
+  delegate :procedure, :instructeur, to: :assign_to
 
   validate :check_allowed_displayed_fields
   validate :check_allowed_sort_column
@@ -84,7 +83,7 @@ class ProcedurePresentation < ApplicationRecord
     ]
   end
 
-  def sorted_ids(dossiers, count, instructeur)
+  def sorted_ids(dossiers, count)
     table, column, order = sort.values_at(TABLE, COLUMN, 'order')
 
     case table

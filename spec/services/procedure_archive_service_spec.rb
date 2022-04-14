@@ -44,7 +44,7 @@ describe ProcedureArchiveService do
       let(:year) { 2021 }
 
       it 'collects files with success' do
-        allow_any_instance_of(ActiveStorage::Attached::One).to receive(:url).and_return("https://opengraph.githubassets.com/d0e7862b24d8026a3c03516d865b28151eb3859029c6c6c2e86605891fbdcd7a/socketry/async-io")
+        allow_any_instance_of(ActiveStorage::Attachment).to receive(:url).and_return("https://opengraph.githubassets.com/d0e7862b24d8026a3c03516d865b28151eb3859029c6c6c2e86605891fbdcd7a/socketry/async-io")
 
         VCR.use_cassette('archive/new_file_to_get_200') do
           service.make_and_upload_archive(archive, instructeur)
@@ -145,7 +145,7 @@ describe ProcedureArchiveService do
       let(:archive) { create(:archive, time_span_type: 'everything', status: 'pending', groupe_instructeurs: groupe_instructeurs) }
 
       it 'collect files' do
-        allow_any_instance_of(ActiveStorage::Attached::One).to receive(:url).and_return("https://opengraph.githubassets.com/5e61989aecb78e369c93674f877d7bf4ecde378850114a9563cdf8b6a2472536/typhoeus/typhoeus/issues/110")
+        allow_any_instance_of(ActiveStorage::Attachment).to receive(:url).and_return("https://opengraph.githubassets.com/5e61989aecb78e369c93674f877d7bf4ecde378850114a9563cdf8b6a2472536/typhoeus/typhoeus/issues/110")
 
         VCR.use_cassette('archive/old_file_to_get_200') do
           service.make_and_upload_archive(archive, instructeur)

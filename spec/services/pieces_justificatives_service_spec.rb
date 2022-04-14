@@ -15,23 +15,6 @@ describe PiecesJustificativesService do
     create(:dossier_operation_log, dossier: dossier, bill_signature: bill_signature)
   end
 
-  describe '.liste_pieces_justificatives' do
-    subject { PiecesJustificativesService.liste_pieces_justificatives(dossier) }
-
-    it "doesn't return sensitive documents like titre_identite" do
-      expect(champ_identite.piece_justificative_file).to be_attached
-      expect(subject.any? { |piece| piece.name == 'piece_justificative_file' }).to be_falsy
-    end
-
-    it "doesn't return export pdf of the dossier" do
-      expect(subject.any? { |piece| piece.name == 'pdf_export_for_instructeur' }).to be_falsy
-    end
-
-    it "doesn't return operation logs of the dossier" do
-      expect(subject.any? { |piece| piece.name == 'serialized' }).to be_falsy
-    end
-  end
-
   describe '.liste_documents' do
     subject { PiecesJustificativesService.liste_documents(dossier, false) }
 
