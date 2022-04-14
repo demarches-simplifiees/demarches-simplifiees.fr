@@ -133,7 +133,7 @@ describe ProcedurePresentation do
     let(:sort) { { 'table' => table, 'column' => column, 'order' => order } }
     let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to, sort: sort) }
 
-    subject { procedure_presentation.sorted_ids(procedure.dossiers, procedure.dossiers.count, instructeur) }
+    subject { procedure_presentation.sorted_ids(procedure.dossiers, procedure.dossiers.count) }
 
     context 'for notifications table' do
       let(:table) { 'notifications' }

@@ -12,6 +12,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "strict": true,
+    "types": ["react/next", "react-dom/next"],
     "paths": {
       "~/*": ["./app/javascript/*"],
       "@utils": ["./app/javascript/shared/utils.ts"]

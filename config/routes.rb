@@ -20,6 +20,8 @@ Rails.application.routes.draw do
       get 'export_mail_brouillons', on: :member
     end
 
+    resources :archives, only: [:index, :show]
+
     resources :dossiers, only: [:index, :show] do
       post 'discard', on: :member
       post 'restore', on: :member
@@ -321,6 +323,7 @@ Rails.application.routes.draw do
             get 'instruction'
             get 'messagerie'
             post 'commentaire' => 'avis#create_commentaire'
+            delete 'delete_commentaire' => 'avis#delete_commentaire'
             post 'avis' => 'avis#create_avis'
             get 'bilans_bdf'
             get 'telecharger_pjs' => 'avis#telecharger_pjs'

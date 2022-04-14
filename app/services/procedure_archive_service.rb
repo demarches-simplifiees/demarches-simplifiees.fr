@@ -15,7 +15,7 @@ class ProcedureArchiveService
     Archive.find_or_create_archive(type, month, groupe_instructeurs)
   end
 
-  def collect_files_archive(archive, instructeur)
+  def make_and_upload_archive(archive, instructeur)
     dossiers = Dossier.visible_by_administration
       .where(groupe_instructeur: archive.groupe_instructeurs)
 
@@ -25,13 +25,12 @@ class ProcedureArchiveService
       dossiers.processed_in_month(archive.month)
     end
 
-    attachments = create_list_of_attachments(dossiers)
-    download_and_zip(attachments) do |zip_filepath|
+    attachments = ActiveStorage::DownloadableFile.create_list_from_dossiers(dossiers)
+
+    download_and_zip(archive, attachments) do |zip_filepath|
       ArchiveUploader.new(procedure: @procedure, archive: archive, filepath: zip_filepath)
         .upload
     end
-    archive.make_available!
-    InstructeurMailer.send_archive(instructeur, @procedure, archive).deliver_later
   end
 
   def self.procedure_files_size(procedure)
@@ -46,10 +45,10 @@ class ProcedureArchiveService
 
   private
 
-  def download_and_zip(attachments, &block)
+  def download_and_zip(archive, attachments, &block)
     Dir.mktmpdir(nil, ARCHIVE_CREATION_DIR) do |tmp_dir|
-      archive_dir = File.join(tmp_dir, zip_root_folder)
-      zip_path = File.join(ARCHIVE_CREATION_DIR, "#{zip_root_folder}.zip")
+      archive_dir = File.join(tmp_dir, zip_root_folder(archive))
+      zip_path = File.join(ARCHIVE_CREATION_DIR, "#{zip_root_folder(archive)}.zip")
 
       begin
         FileUtils.remove_entry_secure(archive_dir) if Dir.exist?(archive_dir)
@@ -60,7 +59,7 @@ class ProcedureArchiveService
 
         Dir.chdir(tmp_dir) do
           File.delete(zip_path) if File.exist?(zip_path)
-          system 'zip', '-0', '-r', zip_path, zip_root_folder
+          system 'zip', '-0', '-r', zip_path, zip_root_folder(archive)
         end
         yield(zip_path)
       ensure
@@ -70,14 +69,8 @@ class ProcedureArchiveService
     end
   end
 
-  def zip_root_folder
-    "procedure-#{@procedure.id}"
-  end
-
-  def create_list_of_attachments(dossiers)
-    dossiers.flat_map do |dossier|
-      ActiveStorage::DownloadableFile.create_list_from_dossier(dossier)
-    end
+  def zip_root_folder(archive)
+    "procedure-#{@procedure.id}-#{archive.id}"
   end
 
   def self.attachments_from_champs_piece_justificative(champs)

@@ -110,7 +110,11 @@ class Instructeur < ApplicationRecord
   end
 
   def procedure_presentation_and_errors_for_procedure_id(procedure_id)
-    assign_to.joins(:groupe_instructeur).find_by(groupe_instructeurs: { procedure_id: procedure_id }).procedure_presentation_or_default_and_errors
+    assign_to
+      .joins(:groupe_instructeur)
+      .includes(:instructeur, :procedure)
+      .find_by(groupe_instructeurs: { procedure_id: procedure_id })
+      .procedure_presentation_or_default_and_errors
   end
 
   def notifications_for_dossier(dossier)
@@ -161,6 +165,7 @@ class Instructeur < ApplicationRecord
     groupe_instructeur_ids = Dossier
       .send(scope) # :en_cours or :termine (or any other Dossier scope)
       .merge(followed_dossiers)
+      .visible_by_administration
       .with_notifications
       .select(:groupe_instructeur_id)
 
