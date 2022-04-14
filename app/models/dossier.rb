@@ -214,6 +214,7 @@ class Dossier < ApplicationRecord
       .where(hidden_by_administration_at: nil)
       .merge(visible_by_user.or(state_not_en_construction))
   }
+  scope :visible_by_user_or_administration, -> { visible_by_user.or(visible_by_administration) }
 
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
   scope :order_by_created_at, -> (order = :asc) { order(depose_at: order, created_at: order, id: order) }
@@ -299,13 +300,18 @@ class Dossier < ApplicationRecord
   end
 
   scope :interval_brouillon_close_to_expiration, -> do
-    state_brouillon.where("dossiers.created_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+    state_brouillon
+      .visible_by_user
+      .where("dossiers.created_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   end
   scope :interval_en_construction_close_to_expiration, -> do
-    state_en_construction.where("dossiers.en_construction_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+    state_en_construction
+      .visible_by_user_or_administration
+      .where("dossiers.en_construction_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   end
   scope :interval_termine_close_to_expiration, -> do
     state_termine
+      .visible_by_user_or_administration
       .where(procedures: { procedure_expires_when_termine_enabled: true })
       .where("dossiers.processed_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   end
@@ -337,14 +343,17 @@ class Dossier < ApplicationRecord
 
   scope :brouillon_expired, -> do
     state_brouillon
+      .visible_by_user
       .where("brouillon_close_to_expiration_notice_sent_at + INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_EXPIRATION })
   end
   scope :en_construction_expired, -> do
     state_en_construction
+      .visible_by_user_or_administration
       .where("en_construction_close_to_expiration_notice_sent_at + INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_EXPIRATION })
   end
   scope :termine_expired, -> do
     state_termine
+      .visible_by_user_or_administration
       .where("termine_close_to_expiration_notice_sent_at + INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_EXPIRATION })
   end
 
@@ -362,11 +371,13 @@ class Dossier < ApplicationRecord
     # select users who have submitted dossier for the given 'procedures.id'
     users_who_submitted =
       state_not_brouillon
+        .visible_by_user
         .joins(:revision)
         .where("procedure_revisions.procedure_id = procedures.id")
         .select(:user_id)
     # select dossier in brouillon where procedure closes in two days and for which the user has not submitted a Dossier
     state_brouillon
+      .visible_by_user
       .with_notifiable_procedure
       .where("procedures.auto_archive_on - INTERVAL :before_closing = :now", { now: Time.zone.today, before_closing: INTERVAL_BEFORE_CLOSING })
       .where.not(user: users_who_submitted)
