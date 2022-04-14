@@ -87,8 +87,8 @@ class ProcedurePresentation < ApplicationRecord
 
   def displayed_fields_for_headers
     [
-      *displayed_fields,
       field_hash('self', 'id', classname: 'number-col'),
+      *displayed_fields,
       field_hash('self', 'state', classname: 'state-col')
     ]
   end
