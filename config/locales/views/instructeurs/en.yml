@@ -1,0 +1,5 @@
+en:
+  instructeurs:
+    procedure:
+      archive_pending_html: Archive creation pending<br>(requested %{created_period} ago)
+      archive_ready_html: Download archive<br>(requested %{generated_period} ago)

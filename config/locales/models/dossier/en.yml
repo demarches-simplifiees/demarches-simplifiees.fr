@@ -1,0 +1,20 @@
+en:
+  activerecord:
+    models:
+      dossier:
+        one: "File"
+        other: "Files"
+    attributes:
+      dossier:
+        state: "State"
+      dossier/state: &state
+        brouillon: "Draft"
+        en_construction: "In progress"
+        en_instruction: "Processing"
+        accepte: "Accepted"
+        refuse: "Refused"
+        sans_suite: "No further action"
+      traitement:
+        state: "State"
+      traitement/state:
+        <<: *state
