@@ -1,8 +1,9 @@
 describe 'users/dossiers/show/header.html.haml', type: :view do
   let(:dossier) { create(:dossier, :en_construction, procedure: create(:procedure)) }
+  let(:user) { dossier.user }
 
   before do
-    sign_in dossier.user
+    sign_in user
   end
 
   subject! { render 'users/dossiers/show/header.html.haml', dossier: dossier }
@@ -55,6 +56,26 @@ describe 'users/dossiers/show/header.html.haml', type: :view do
 
     it 'can download the dossier' do
       expect(rendered).to have_text("Tout le dossier")
+    end
+  end
+
+  context "when user is invited" do
+    context "when the procedure is closed with a dossier en construction" do
+      let(:procedure) { create(:procedure, :closed) }
+      let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+      let(:user) { create(:user) }
+
+      before do
+        create(:invite, user: user, dossier: dossier)
+      end
+
+      it "n'affiche pas de banner" do
+        expect(rendered).not_to have_text("La démarche liée à votre dossier est close")
+      end
+
+      it 'can not download the dossier' do
+        expect(rendered).not_to have_text("Tout le dossier")
+      end
     end
   end
 end
