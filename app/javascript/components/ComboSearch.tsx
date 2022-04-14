@@ -1,5 +1,9 @@
-import React, { useState, useRef, ChangeEventHandler } from 'react';
-import { useDebounce } from 'use-debounce';
+import React, {
+  useState,
+  useRef,
+  useDeferredValue,
+  ChangeEventHandler
+} from 'react';
 import { useQuery } from 'react-query';
 import {
   Combobox,
@@ -59,7 +63,7 @@ function ComboSearch<Result>({
   const [, setExternalId] = useHiddenField(group, 'external_id');
   const initialValue = externalValue ? externalValue : controlledValue;
   const [searchTerm, setSearchTerm] = useState('');
-  const [debouncedSearchTerm] = useDebounce(searchTerm, 300);
+  const debouncedSearchTerm = useDeferredValue(searchTerm);
   const [value, setValue] = useState(initialValue);
   const resultsMap = useRef<
     Record<string, { key: string; value: string; result: Result }>

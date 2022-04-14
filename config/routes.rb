@@ -20,6 +20,8 @@ Rails.application.routes.draw do
       get 'export_mail_brouillons', on: :member
     end
 
+    resources :archives, only: [:index, :show]
+
     resources :dossiers, only: [:index, :show] do
       post 'discard', on: :member
       post 'restore', on: :member

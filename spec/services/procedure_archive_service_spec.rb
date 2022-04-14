@@ -33,7 +33,7 @@ describe ProcedureArchiveService do
     end
   end
 
-  describe '#collect_files_archive' do
+  describe '#make_and_upload_archive' do
     let!(:dossier) { create_dossier_for_month(year, month) }
     let!(:dossier_2020) { create_dossier_for_month(2020, month) }
 
@@ -42,13 +42,12 @@ describe ProcedureArchiveService do
     context 'for a specific month' do
       let(:archive) { create(:archive, time_span_type: 'monthly', status: 'pending', month: date_month, groupe_instructeurs: groupe_instructeurs) }
       let(:year) { 2021 }
-      let(:mailer) { double('mailer', deliver_later: true) }
 
       it 'collects files with success' do
         allow_any_instance_of(ActiveStorage::Attached::One).to receive(:url).and_return("https://opengraph.githubassets.com/d0e7862b24d8026a3c03516d865b28151eb3859029c6c6c2e86605891fbdcd7a/socketry/async-io")
-        expect(InstructeurMailer).to receive(:send_archive).and_return(mailer)
+
         VCR.use_cassette('archive/new_file_to_get_200') do
-          service.collect_files_archive(archive, instructeur)
+          service.make_and_upload_archive(archive, instructeur)
         end
 
         archive.file.open do |f|
@@ -68,9 +67,9 @@ describe ProcedureArchiveService do
 
       it 'retry errors files with errors' do
         allow_any_instance_of(ActiveStorage::Attached::One).to receive(:url).and_return("https://www.demarches-simplifiees.fr/error_1")
-        expect(InstructeurMailer).to receive(:send_archive).and_return(mailer)
+
         VCR.use_cassette('archive/new_file_to_get_400.html') do
-          service.collect_files_archive(archive, instructeur)
+          service.make_and_upload_archive(archive, instructeur)
         end
         archive.file.open do |f|
           files = ZipTricks::FileReader.read_zip_structure(io: f)
@@ -113,11 +112,11 @@ describe ProcedureArchiveService do
         end
 
         it 'collect files without raising exception' do
-          expect { service.collect_files_archive(archive, instructeur) }.not_to raise_exception
+          expect { service.make_and_upload_archive(archive, instructeur) }.not_to raise_exception
         end
 
         it 'add bug report to archive' do
-          service.collect_files_archive(archive, instructeur)
+          service.make_and_upload_archive(archive, instructeur)
 
           archive.file.open do |f|
             zip_entries = ZipTricks::FileReader.read_zip_structure(io: f)
@@ -144,14 +143,12 @@ describe ProcedureArchiveService do
 
     context 'for all months' do
       let(:archive) { create(:archive, time_span_type: 'everything', status: 'pending', groupe_instructeurs: groupe_instructeurs) }
-      let(:mailer) { double('mailer', deliver_later: true) }
 
       it 'collect files' do
         allow_any_instance_of(ActiveStorage::Attached::One).to receive(:url).and_return("https://opengraph.githubassets.com/5e61989aecb78e369c93674f877d7bf4ecde378850114a9563cdf8b6a2472536/typhoeus/typhoeus/issues/110")
-        expect(InstructeurMailer).to receive(:send_archive).and_return(mailer)
 
         VCR.use_cassette('archive/old_file_to_get_200') do
-          service.collect_files_archive(archive, instructeur)
+          service.make_and_upload_archive(archive, instructeur)
         end
 
         archive = Archive.last

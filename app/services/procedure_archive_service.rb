@@ -15,7 +15,7 @@ class ProcedureArchiveService
     Archive.find_or_create_archive(type, month, groupe_instructeurs)
   end
 
-  def collect_files_archive(archive, instructeur)
+  def make_and_upload_archive(archive, instructeur)
     dossiers = Dossier.visible_by_administration
       .where(groupe_instructeur: archive.groupe_instructeurs)
 
@@ -30,8 +30,6 @@ class ProcedureArchiveService
       ArchiveUploader.new(procedure: @procedure, archive: archive, filepath: zip_filepath)
         .upload
     end
-    archive.make_available!
-    InstructeurMailer.send_archive(instructeur, @procedure, archive).deliver_later
   end
 
   def self.procedure_files_size(procedure)
