@@ -80,7 +80,7 @@ class Commentaire < ApplicationRecord
   end
 
   def soft_deletable?(connected_user)
-    sent_by?(connected_user) && sent_by_instructeur? && !discarded?
+    sent_by?(connected_user) && (sent_by_instructeur? || sent_by_expert?) && !discarded?
   end
 
   def file_url
@@ -97,10 +97,8 @@ class Commentaire < ApplicationRecord
     # - If a user or an invited user posted a commentaire, do nothing,
     #   the notification system will properly
     # - Otherwise, a instructeur posted a commentaire, we need to notify the user
-    if sent_by_instructeur?
+    if sent_by_instructeur? || sent_by_expert?
       notify_user(wait: 5.minutes)
-    elsif sent_by_expert?
-      notify_user
     end
   end
 

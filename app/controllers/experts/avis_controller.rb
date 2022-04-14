@@ -6,7 +6,7 @@ module Experts
     before_action :authenticate_expert!, except: [:sign_up, :update_expert]
     before_action :check_if_avis_revoked, only: [:show]
     before_action :redirect_if_no_sign_up_needed, only: [:sign_up, :update_expert]
-    before_action :set_avis_and_dossier, only: [:show, :instruction, :messagerie, :create_commentaire, :update, :telecharger_pjs]
+    before_action :set_avis_and_dossier, only: [:show, :instruction, :messagerie, :create_commentaire, :delete_commentaire, :update, :telecharger_pjs]
 
     A_DONNER_STATUS = 'a-donner'
     DONNES_STATUS   = 'donnes'
@@ -111,6 +111,22 @@ module Experts
         flash.alert = @commentaire.errors.full_messages
         render :messagerie
       end
+    end
+
+    def delete_commentaire
+      commentaire = avis.dossier.commentaires.find(params[:commentaire])
+      if commentaire.sent_by?(current_expert)
+        commentaire.piece_jointe.purge_later if commentaire.piece_jointe.attached?
+        commentaire.discard!
+        commentaire.update!(body: '')
+        flash[:notice] = t('views.shared.commentaires.destroy.notice')
+      else
+        flash[:alert] = I18n.t('views.shared.commentaires.destroy.alert_reasons.acl')
+      end
+      redirect_to(messagerie_expert_avis_path(avis.procedure, avis))
+    rescue Discard::RecordNotDiscarded
+      flash[:alert] = I18n.t('views.shared.commentaires.destroy.alert_reasons.already_discarded')
+      redirect_to(messagerie_expert_avis_path(avis.procedure, avis))
     end
 
     def bilans_bdf
