@@ -768,4 +768,32 @@ describe ProcedurePresentation do
       end
     end
   end
+
+  describe '#filtered_sorted_ids' do
+    let(:dossier_1) { create(:dossier) }
+    let(:dossier_2) { create(:dossier) }
+    let(:dossier_3) { create(:dossier) }
+    let(:dossiers) { Dossier.where(id: [dossier_1, dossier_2, dossier_3].map(&:id)) }
+
+    let(:sorted_ids) { [dossier_2, dossier_3, dossier_1].map(&:id) }
+
+    subject { procedure_presentation.filtered_sorted_ids(dossiers, 'tous') }
+
+    before do
+      expect(procedure_presentation).to receive(:sorted_ids).and_return(sorted_ids)
+    end
+
+    it { is_expected.to eq(sorted_ids) }
+
+    context 'when a filter is present' do
+      let(:filtered_ids) { [dossier_1, dossier_2, dossier_3].map(&:id) }
+
+      before do
+        procedure_presentation.filters['tous'] = 'some_filter'
+        expect(procedure_presentation).to receive(:filtered_ids).and_return(filtered_ids)
+      end
+
+      it { is_expected.to eq(sorted_ids) }
+    end
+  end
 end
