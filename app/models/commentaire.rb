@@ -89,6 +89,12 @@ class Commentaire < ApplicationRecord
     end
   end
 
+  def soft_delete!
+    piece_jointe.purge_later if piece_jointe.attached?
+    discard!
+    update! body: ''
+  end
+
   private
 
   def notify

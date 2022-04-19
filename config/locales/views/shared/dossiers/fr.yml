@@ -1,0 +1,9 @@
+fr:
+  shared:
+    dossiers:
+      messages:
+        message:
+          reply: Répondre
+          guest: Invité
+          delete_button: Supprimer le message
+          confirm: Êtes-vous sûr de vouloir supprimer ce message ?

@@ -1,0 +1,9 @@
+en:
+  shared:
+    dossiers:
+      messages:
+        message:
+          reply: Reply
+          guest: Guest
+          delete_button: Delete this message
+          confirm: Are you sure you want to delete this message ?
