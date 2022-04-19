@@ -22,10 +22,4 @@ en:
         signin: 'Sign in'
       commentaires:
         destroy:
-          button: 'Destroy this message'
-          confirm: "Are you sure you want to destroy this message ?"
           deleted_body: Message deleted
-          notice: 'Your message had been deleted'
-          alert_reasons:
-            acl: "Can not destroy message: it does not belong to you"
-            already_discarded: "Can not destroy message: it was already destroyed"

@@ -125,9 +125,6 @@ fr:
           message_issuer:
             automatic_email: "Email automatique"
             you: "Vous"
-          message:
-            reply: "Répondre"
-            guest: "Invité"
           form:
             send_message: "Envoyer le message"
             attachment_size: "(taille max : 20 Mo)"
