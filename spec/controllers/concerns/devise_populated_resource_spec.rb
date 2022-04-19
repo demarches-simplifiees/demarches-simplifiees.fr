@@ -1,6 +1,7 @@
 describe DevisePopulatedResource, type: :controller do
   controller(Devise::PasswordsController) do
     include DevisePopulatedResource
+    layout false
   end
 
   let(:user) { create(:user) }
