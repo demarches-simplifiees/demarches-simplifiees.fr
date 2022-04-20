@@ -15,13 +15,13 @@
 
     .container.flex= render partial: "tabs", locals: { procedure: @procedure,
         statut: @statut,
-        a_suivre_count: @a_suivre_count,
-        suivis_count: @suivis_count,
-        traites_count: @traites_count,
-        tous_count: @tous_count,
-        supprimes_recemment_count: @supprimes_recemment_count,
-        archives_count: @archives_count,
-        expirant_count: @expirant_count,
+        a_suivre_count: @counts[:a_suivre],
+        suivis_count: @counts[:suivis],
+        traites_count: @counts[:traites],
+        tous_count: @counts[:tous],
+        supprimes_recemment_count: @counts[:supprimes_recemment],
+        archives_count: @counts[:archives],
+        expirant_count: @counts[:expirant],
         has_en_cours_notifications: @has_en_cours_notifications,
         has_termine_notifications: @has_termine_notifications }
 

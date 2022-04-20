@@ -273,21 +273,24 @@ describe Instructeurs::ProceduresController, type: :controller do
       context 'with a new dossier without follower' do
         let!(:new_unfollow_dossier) { create(:dossier, :en_instruction, procedure: procedure) }
 
-        before { subject }
-        it { expect(assigns(:dossiers)).to match_array([new_unfollow_dossier]) }
+        context do
+          before { subject }
+
+          it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([new_unfollow_dossier].map(&:id)) }
+        end
 
         context 'with a dossier en contruction hidden by user' do
           let!(:hidden_dossier) { create(:dossier, :en_construction, groupe_instructeur: gi_2, hidden_by_user_at: 1.hour.ago) }
           before { subject }
 
-          it { expect(assigns(:dossiers)).to match_array([new_unfollow_dossier]) }
+          it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([new_unfollow_dossier].map(&:id)) }
         end
 
         context 'with a dossier en contruction not hidden by user' do
           let!(:en_construction_dossier) { create(:dossier, :en_construction, groupe_instructeur: gi_2) }
           before { subject }
 
-          it { expect(assigns(:dossiers)).to match_array([new_unfollow_dossier, en_construction_dossier]) }
+          it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([new_unfollow_dossier, en_construction_dossier].map(&:id)) }
         end
 
         context 'and dossiers without follower on each of the others groups' do
@@ -296,32 +299,27 @@ describe Instructeurs::ProceduresController, type: :controller do
 
           before { subject }
 
-          it { expect(assigns(:dossiers)).to match_array([new_unfollow_dossier, new_unfollow_dossier_on_gi_2]) }
+          it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([new_unfollow_dossier, new_unfollow_dossier_on_gi_2].map(&:id)) }
         end
       end
 
       context 'with a new dossier with a follower' do
         let(:statut) { 'suivis' }
-        let!(:new_followed_dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+        let!(:new_followed_dossier) { create(:dossier, :en_instruction, procedure: procedure, followers_instructeurs: [instructeur]) }
 
-        before do
-          instructeur.followed_dossiers << new_followed_dossier
-          subject
+        context do
+          before { subject }
+
+          it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([new_followed_dossier].map(&:id)) }
         end
 
-        it { expect(assigns(:dossiers)).to match_array([new_followed_dossier]) }
-
         context 'and dossier with a follower on each of the others groups' do
-          let!(:new_follow_dossier_on_gi_2) { create(:dossier, :en_instruction, groupe_instructeur: gi_2) }
-          let!(:new_follow_dossier_on_gi_3) { create(:dossier, :en_instruction, groupe_instructeur: gi_3) }
+          let!(:new_follow_dossier_on_gi_2) { create(:dossier, :en_instruction, groupe_instructeur: gi_2, followers_instructeurs: [instructeur]) }
+          let!(:new_follow_dossier_on_gi_3) { create(:dossier, :en_instruction, groupe_instructeur: gi_3, followers_instructeurs: [instructeur]) }
 
-          before do
-            instructeur.followed_dossiers << new_follow_dossier_on_gi_2 << new_follow_dossier_on_gi_3
-            subject
-          end
+          before { subject }
 
-          # followed dossiers on another groupe should not be displayed
-          it { expect(assigns(:dossiers)).to contain_exactly(new_followed_dossier, new_follow_dossier_on_gi_2) }
+          it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([new_followed_dossier, new_follow_dossier_on_gi_2].map(&:id)) }
         end
       end
 
@@ -329,9 +327,11 @@ describe Instructeurs::ProceduresController, type: :controller do
         let(:statut) { 'traites' }
         let!(:termine_dossier) { create(:dossier, :accepte, procedure: procedure) }
 
-        before { subject }
+        context do
+          before { subject }
 
-        it { expect(assigns(:dossiers)).to match_array([termine_dossier]) }
+          it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([termine_dossier].map(&:id)) }
+        end
 
         context 'and terminer dossiers on each of the others groups' do
           let!(:termine_dossier_on_gi_2) { create(:dossier, :accepte, groupe_instructeur: gi_2) }
@@ -339,7 +339,7 @@ describe Instructeurs::ProceduresController, type: :controller do
 
           before { subject }
 
-          it { expect(assigns(:dossiers)).to match_array([termine_dossier, termine_dossier_on_gi_2]) }
+          it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([termine_dossier, termine_dossier_on_gi_2].map(&:id)) }
         end
       end
 
@@ -348,9 +348,11 @@ describe Instructeurs::ProceduresController, type: :controller do
         let!(:archived_dossier) { create(:dossier, :en_instruction, procedure: procedure, archived: true) }
         let!(:archived_dossier_deleted) { create(:dossier, :en_instruction, procedure: procedure, archived: true, hidden_by_administration_at: 2.days.ago) }
 
-        before { subject }
+        context do
+          before { subject }
 
-        it { expect(assigns(:dossiers)).to match_array([archived_dossier]) }
+          it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([archived_dossier].map(&:id)) }
+        end
 
         context 'and terminer dossiers on each of the others groups' do
           let!(:archived_dossier_on_gi_2) { create(:dossier, :en_instruction, groupe_instructeur: gi_2, archived: true) }
@@ -358,7 +360,7 @@ describe Instructeurs::ProceduresController, type: :controller do
 
           before { subject }
 
-          it { expect(assigns(:dossiers)).to match_array([archived_dossier, archived_dossier_on_gi_2]) }
+          it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([archived_dossier, archived_dossier_on_gi_2].map(&:id)) }
         end
       end
 
@@ -370,7 +372,7 @@ describe Instructeurs::ProceduresController, type: :controller do
 
         before { subject }
 
-        it { expect(assigns(:dossiers)).to match_array([expiring_dossier_termine, expiring_dossier_en_construction]) }
+        it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([expiring_dossier_termine, expiring_dossier_en_construction].map(&:id)) }
       end
 
       describe 'statut' do
@@ -387,7 +389,7 @@ describe Instructeurs::ProceduresController, type: :controller do
         context 'when statut is empty' do
           let(:statut) { nil }
 
-          it { expect(assigns(:dossiers)).to match_array([a_suivre_dossier]) }
+          it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([a_suivre_dossier].map(&:id)) }
           it { expect(assigns(:statut)).to eq('a-suivre') }
         end
 
@@ -395,35 +397,35 @@ describe Instructeurs::ProceduresController, type: :controller do
           let(:statut) { 'a-suivre' }
 
           it { expect(assigns(:statut)).to eq('a-suivre') }
-          it { expect(assigns(:dossiers)).to match_array([a_suivre_dossier]) }
+          it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([a_suivre_dossier].map(&:id)) }
         end
 
         context 'when statut is suivis' do
           let(:statut) { 'suivis' }
 
           it { expect(assigns(:statut)).to eq('suivis') }
-          it { expect(assigns(:dossiers)).to match_array([new_followed_dossier]) }
+          it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([new_followed_dossier].map(&:id)) }
         end
 
         context 'when statut is traites' do
           let(:statut) { 'traites' }
 
           it { expect(assigns(:statut)).to eq('traites') }
-          it { expect(assigns(:dossiers)).to match_array([termine_dossier]) }
+          it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([termine_dossier].map(&:id)) }
         end
 
         context 'when statut is tous' do
           let(:statut) { 'tous' }
 
           it { expect(assigns(:statut)).to eq('tous') }
-          it { expect(assigns(:dossiers)).to match_array([a_suivre_dossier, new_followed_dossier, termine_dossier]) }
+          it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([a_suivre_dossier, new_followed_dossier, termine_dossier].map(&:id)) }
         end
 
         context 'when statut is archives' do
           let(:statut) { 'archives' }
 
           it { expect(assigns(:statut)).to eq('archives') }
-          it { expect(assigns(:dossiers)).to match_array([archived_dossier]) }
+          it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([archived_dossier].map(&:id)) }
         end
       end
     end

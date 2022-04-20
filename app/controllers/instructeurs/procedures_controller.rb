@@ -57,12 +57,13 @@ module Instructeurs
       @current_filters = current_filters
       @displayed_fields_options, @displayed_fields_selected = procedure_presentation.displayed_fields_for_select
 
-      @a_suivre_count, @suivis_count, @traites_count, @tous_count, @supprimes_recemment_count, @archives_count, @expirant_count = current_instructeur
+      @counts = current_instructeur
         .dossiers_count_summary(groupe_instructeur_ids)
-        .fetch_values('a_suivre', 'suivis', 'traites', 'tous', 'supprimes_recemment', 'archives', 'expirant')
-      @can_download_dossiers = (@tous_count + @archives_count) > 0
+        .symbolize_keys
+      @can_download_dossiers = (@counts[:tous] + @counts[:archives]) > 0
 
       dossiers = Dossier.where(groupe_instructeur_id: groupe_instructeur_ids)
+      dossiers_count = @counts[statut.underscore.to_sym]
 
       @followed_dossiers_id = current_instructeur
         .followed_dossiers
@@ -70,37 +71,12 @@ module Instructeurs
         .merge(dossiers.visible_by_administration)
         .pluck(:id)
 
-      @dossiers = dossiers.by_statut(current_instructeur, statut)
-      dossiers_count = case statut
-      when 'a-suivre'
-        @a_suivre_count
-      when 'suivis'
-        @suivis_count
-      when 'traites'
-        @traites_count
-      when 'tous'
-        @tous_count
-      when 'supprimes_recemment'
-        @supprimes_recemment_count
-      when 'archives'
-        @archives_count
-      when 'expirant'
-        @expirant_count
-      end
-
       notifications = current_instructeur.notifications_for_groupe_instructeurs(groupe_instructeur_ids)
       @has_en_cours_notifications = notifications[:en_cours].present?
       @has_termine_notifications = notifications[:termines].present?
       @not_archived_notifications_dossier_ids = notifications[:en_cours] + notifications[:termines]
 
-      sorted_ids = procedure_presentation.sorted_ids(@dossiers, dossiers_count)
-
-      if @current_filters.count > 0
-        filtered_ids = procedure_presentation.filtered_ids(@dossiers, statut)
-        filtered_sorted_ids = sorted_ids.filter { |id| filtered_ids.include?(id) }
-      else
-        filtered_sorted_ids = sorted_ids
-      end
+      filtered_sorted_ids = procedure_presentation.filtered_sorted_ids(dossiers, dossiers_count, statut)
 
       page = params[:page].presence || 1
 
