@@ -25,6 +25,8 @@ class ProcedurePresentation < ApplicationRecord
   FILTERS_VALUE_MAX_LENGTH = 100
 
   belongs_to :assign_to, optional: false
+  has_many :exports, dependent: :destroy
+
   delegate :procedure, :instructeur, to: :assign_to
 
   validate :check_allowed_displayed_fields
@@ -180,9 +182,9 @@ class ProcedurePresentation < ApplicationRecord
     end.reduce(:&)
   end
 
-  def filtered_sorted_ids(dossiers, count, statut)
+  def filtered_sorted_ids(dossiers, statut, count: nil)
     dossiers_by_statut = dossiers.by_statut(instructeur, statut)
-    dossiers_sorted_ids = self.sorted_ids(dossiers_by_statut, count)
+    dossiers_sorted_ids = self.sorted_ids(dossiers_by_statut, count || dossiers_by_statut.size)
 
     if filters[statut].present?
       filtered_ids(dossiers_by_statut, statut).intersection(dossiers_sorted_ids)
@@ -259,6 +261,10 @@ class ProcedurePresentation < ApplicationRecord
       COLUMN => column,
       'order' => order
     })
+  end
+
+  def snapshot
+    slice(:filters, :sort, :displayed_fields)
   end
 
   private
