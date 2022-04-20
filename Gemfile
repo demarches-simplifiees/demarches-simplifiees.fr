@@ -71,7 +71,6 @@ gem 'rack-attack'
 gem 'rails'
 gem 'rails-i18n' # Locales par défaut
 gem 'rake-progressbar', require: false
-gem 'react-rails'
 gem 'rexml' # add missing gem due to ruby3 (https://github.com/Shopify/bootsnap/issues/325)
 gem 'rgeo-geojson'
 gem 'rqrcode'
