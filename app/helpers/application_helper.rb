@@ -26,6 +26,10 @@ module ApplicationHelper
     class_names.join(' ')
   end
 
+  def react_component(name, props = {}, html = {})
+    tag.div(**html.merge(data: { controller: 'react', react_component_value: name, react_props_value: props.to_json }))
+  end
+
   def render_to_element(selector, partial:, outer: false, locals: {})
     method = outer ? 'outerHTML' : 'innerHTML'
     html = escape_javascript(render partial: partial, locals: locals)
