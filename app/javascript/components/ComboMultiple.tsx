@@ -5,6 +5,7 @@ import React, {
   useContext,
   createContext,
   useEffect,
+  useId,
   useLayoutEffect,
   MutableRefObject,
   ReactNode,
@@ -18,7 +19,6 @@ import {
   ComboboxOption,
   ComboboxPopover
 } from '@reach/combobox';
-import { useId } from '@reach/auto-id';
 import '@reach/combobox/styles.css';
 import { matchSorter } from 'match-sorter';
 import { XIcon } from '@heroicons/react/outline';
@@ -89,7 +89,8 @@ export default function ComboMultiple({
   const [term, setTerm] = useState('');
   const [selections, setSelections] = useState(selected);
   const [newValues, setNewValues] = useState<string[]>([]);
-  const inputId = useId(id);
+  const internalId = useId();
+  const inputId = id ?? internalId;
   const removedLabelledby = `${inputId}-remove`;
   const selectedLabelledby = `${inputId}-selected`;
 
