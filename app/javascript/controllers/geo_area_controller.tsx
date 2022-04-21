@@ -1,16 +1,12 @@
-import { Controller } from '@hotwired/stimulus';
-import { debounce } from '@utils';
+import { ApplicationController } from './application_controller';
 
-type Detail = Record<string, unknown>;
-
-export class GeoAreaController extends Controller {
+export class GeoAreaController extends ApplicationController {
   static values = {
-    id: String,
-    description: String
+    id: Number
   };
   static targets = ['description'];
 
-  declare readonly idValue: string;
+  declare readonly idValue: number;
   declare readonly descriptionTarget: HTMLInputElement;
 
   onFocus() {
@@ -30,24 +26,6 @@ export class GeoAreaController extends Controller {
     this.globalDispatch('map:feature:update', {
       id: this.idValue,
       properties: { description: this.descriptionTarget.value.trim() }
-    });
-  }
-
-  #debounced = new Map<() => void, () => void>();
-  private debounce(fn: () => void, interval: number): void {
-    let debounced = this.#debounced.get(fn);
-    if (!debounced) {
-      debounced = debounce(fn.bind(this), interval);
-      this.#debounced.set(fn, debounced);
-    }
-    debounced();
-  }
-
-  private globalDispatch(type: string, detail: Detail): void {
-    this.dispatch(type, {
-      detail,
-      prefix: '',
-      target: document.documentElement
     });
   }
 }
