@@ -39,7 +39,7 @@
       - if nav_bar_profile == :user
         %ul.header-tabs
           %li
-            = active_link_to "Dossiers", dossiers_path, active: :inclusive, class: 'tab-link'
+            = active_link_to t('.files'), dossiers_path, active: :inclusive, class: 'tab-link'
           - if current_user.expert && current_expert.avis_summary[:total] > 0
             = render partial: 'layouts/header/avis_tab', locals: { current_expert: current_expert }
 

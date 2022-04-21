@@ -5,74 +5,75 @@
                     'Notifications'] }
 
 .container
-  %h1 Notifications par email
+  %h1
+    = t('.title')
 
   = form_for @assign_to, url: update_email_notifications_instructeur_procedure_path(@procedure), html: { class: 'form' } do |form|
     .explication
-      Configurez sur cette page les notifications que vous souhaitez recevoir par email pour cette démarche.
+      = t('.subtitle')
 
-    = form.label :email_notification, "Recevoir une notification à chaque dossier déposé"
+    = form.label :email_notification, t('.for_each_file_submitted.title')
 
     %p.notice
-      Cet email vous signale le dépôt d’un nouveau dossier.
+      = t('.for_each_file_submitted.notice_1')
     %p.notice
-      Il est envoyé à chaque fois qu'un usager dépose un dossier.
+      = t('.for_each_file_submitted.notice_2')
 
     .radios
       %label
         = form.radio_button :instant_email_dossier_notifications_enabled, true
-        Oui
+        = t('.utils.positive')
 
       %label
         = form.radio_button :instant_email_dossier_notifications_enabled, false
-        Non
+        = t('.utils.negative')
 
-    = form.label :email_notification, "Recevoir une notification à chaque message déposé"
+    = form.label :email_notification, t('.for_each_message_submitted.title')
 
     %p.notice
-      Cet email vous signale le dépôt d’un nouveau message sur vos dossiers suivis.
+      = t('.for_each_message_submitted.notice_1')
     %p.notice
-      Il est envoyé à chaque fois qu'un usager dépose un message.
+      = t('.for_each_message_submitted.notice_2')
 
     .radios
       %label
         = form.radio_button :instant_email_message_notifications_enabled, true
-        Oui
+        = t('.utils.positive')
 
       %label
         = form.radio_button :instant_email_message_notifications_enabled, false
-        Non
+        = t('.utils.negative')
 
-    = form.label :email_notification, "Recevoir une notification quotidienne"
+    = form.label :email_notification, t('.daily_notifications.title')
 
     %p.notice
-      Cet email vous signale le dépôt de nouveaux dossiers sur cette démarche, ou des changements sur vos dossiers suivis.
+      = t('.daily_notifications.notice_1')
     %p.notice
-      Il est envoyé une fois par jour, du lundi au samedi, vers 10 h du matin.
+      = t('.daily_notifications.notice_2')
 
     .radios
       %label
         = form.radio_button :daily_email_notifications_enabled, true
-        Oui
+        = t('.utils.positive')
 
       %label
         = form.radio_button :daily_email_notifications_enabled, false
-        Non
+        = t('.utils.negative')
 
-    = form.label :email_notification, "Recevoir un récapitulatif hebdomadaire"
+    = form.label :email_notification, t('.hebdo_recap.title')
     %p.notice
-      Cet email récapitule l’activité de la semaine sur l’ensemble de vos démarches.
+      = t('.hebdo_recap.notice_1')
     %p.notice
-      Il est envoyé chaque semaine le lundi matin.
+      = t('.hebdo_recap.notice_2')
 
     .radios
       %label
         = form.radio_button :weekly_email_notifications_enabled, true
-        Oui
+        = t('.utils.positive')
       %label
         = form.radio_button :weekly_email_notifications_enabled, false
-        Non
+        = t('.utils.negative')
 
     .send-wrapper
-      = link_to "Revenir à la procédure", instructeur_procedure_path(@procedure), class: 'button mr-1'
-      = form.submit "Enregistrer", class: "button primary"
+      = link_to t('.buttons.back_to_procedure'), instructeur_procedure_path(@procedure), class: 'button mr-1'
+      = form.submit t('.buttons.save'), class: "button primary"
