@@ -3,6 +3,7 @@ import Rails from '@rails/ujs';
 import * as ActiveStorage from '@rails/activestorage';
 import 'whatwg-fetch'; // window.fetch polyfill
 import { Application } from '@hotwired/stimulus';
+import { Turbo } from '@hotwired/turbo-rails';
 
 import '../shared/page-update-event';
 import '../shared/activestorage/ujs';
@@ -17,6 +18,7 @@ import {
   ReactController,
   registerComponents
 } from '../controllers/react_controller';
+import { TurboEventController } from '../controllers/turbo_event_controller';
 
 import '../new_design/dropdown';
 import '../new_design/form-validation';
@@ -89,9 +91,11 @@ const DS = {
 // Start Rails helpers
 Rails.start();
 ActiveStorage.start();
+Turbo.session.drive = false;
 
 const Stimulus = Application.start();
 Stimulus.register('react', ReactController);
+Stimulus.register('turbo-event', TurboEventController);
 
 // Expose globals
 window.DS = window.DS || DS;

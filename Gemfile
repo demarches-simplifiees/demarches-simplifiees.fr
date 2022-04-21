@@ -84,6 +84,7 @@ gem 'sib-api-v3-sdk'
 gem 'skylight'
 gem 'spreadsheet_architect'
 gem 'strong_migrations' # lint database migrations
+gem 'turbo-rails'
 gem 'typhoeus'
 gem 'warden'
 gem 'webpacker'
