@@ -54,5 +54,5 @@ function saveMessageContent() {
   }
 }
 
-addEventListener('ds:page:update', scrollMessagerie);
-addEventListener('ds:page:update', saveMessageContent);
+addEventListener('DOMContentLoaded', scrollMessagerie);
+addEventListener('DOMContentLoaded', saveMessageContent);
