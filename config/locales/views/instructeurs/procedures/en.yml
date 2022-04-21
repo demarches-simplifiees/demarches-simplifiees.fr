@@ -35,3 +35,8 @@ en:
         export_monthly_pending_html: An export of the last 30 days in the format %{export_format} is being generated<br>(asked %{export_time} ago)
         download_archive: Download a .zip archive of all files and their attachments
         download: Download all files
+      email_usagers:
+        contact_users: Contact users (draft)
+        notice: "You will send a message to %{dossiers_count} whose files are in draft, in the instructor groups : %{groupe_instructeurs}."
+      stats: 
+        title: Statistics

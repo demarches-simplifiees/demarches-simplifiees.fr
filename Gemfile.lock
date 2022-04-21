@@ -121,10 +121,6 @@ GEM
     axlsx_styler (1.1.0)
       activesupport (>= 3.1)
       caxlsx (>= 2.0.2)
-    babel-source (5.8.35)
-    babel-transpiler (0.7.0)
-      babel-source (>= 4.0, < 6)
-      execjs (~> 2.0)
     bcrypt (3.1.16)
     better_html (1.0.16)
       actionview (>= 4.0)
@@ -173,7 +169,6 @@ GEM
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
     concurrent-ruby (1.1.10)
-    connection_pool (2.2.3)
     content_disposition (1.0.0)
     crack (0.4.5)
       rexml
@@ -238,7 +233,6 @@ GEM
     ethon (0.15.0)
       ffi (>= 1.15.0)
     excon (0.79.0)
-    execjs (2.7.0)
     factory_bot (6.1.0)
       activesupport (>= 5.0.0)
     faraday (1.8.0)
@@ -572,12 +566,6 @@ GEM
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    react-rails (2.6.1)
-      babel-transpiler (>= 0.7.0)
-      connection_pool
-      execjs
-      railties (>= 3.2)
-      tilt
     regexp_parser (2.1.0)
     request_store (1.5.0)
       rack (>= 1.4)
@@ -885,7 +873,6 @@ DEPENDENCIES
   rails-erd
   rails-i18n
   rake-progressbar
-  react-rails
   rexml
   rgeo-geojson
   rqrcode
