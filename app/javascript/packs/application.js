@@ -5,7 +5,6 @@ import 'whatwg-fetch'; // window.fetch polyfill
 import { Application } from '@hotwired/stimulus';
 import { Turbo } from '@hotwired/turbo-rails';
 
-import '../shared/page-update-event';
 import '../shared/activestorage/ujs';
 import '../shared/remote-poller';
 import '../shared/safari-11-file-xhr-workaround';
