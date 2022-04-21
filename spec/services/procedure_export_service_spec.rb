@@ -410,13 +410,44 @@ describe ProcedureExportService do
   end
 
   describe 'to_zip' do
-    subject do
-      service
-        .to_zip
+    subject { service.to_zip }
+    context 'without files' do
+      it 'does not raises in_batches' do
+        expect { subject }.not_to raise_error(NoMethodError)
+      end
+
+      it 'returns an empty blob' do
+        expect(subject).to be_an_instance_of(ActiveStorage::Blob)
+      end
     end
 
-    it 'does not raises in_batches' do
-      expect(subject).not_to raise_error(NoMethodError)
+    context 'with files (and http calls)' do
+      let!(:dossier) { create(:dossier, :accepte, :with_populated_champs, :with_individual, procedure: procedure) }
+
+      before do
+        allow_any_instance_of(ActiveStorage::Attachment).to receive(:url).and_return("https://opengraph.githubassets.com/d0e7862b24d8026a3c03516d865b28151eb3859029c6c6c2e86605891fbdcd7a/socketry/async-io")
+      end
+
+      it 'returns a blob with valid files' do
+        VCR.use_cassette('archive/new_file_to_get_200') do
+          subject
+
+          File.write('tmp.zip', subject.download, mode: 'wb')
+          File.open('tmp.zip') do |fd|
+            files = ZipTricks::FileReader.read_zip_structure(io: fd)
+            structure = [
+              "#{service.send(:base_filename)}/",
+              "#{service.send(:base_filename)}/dossier-#{dossier.id}/",
+              "#{service.send(:base_filename)}/dossier-#{dossier.id}/pieces_justificatives/",
+              "#{service.send(:base_filename)}/dossier-#{dossier.id}/#{ActiveStorage::DownloadableFile.timestamped_filename(ActiveStorage::Attachment.where(record_type: "Champ").first)}",
+              "#{service.send(:base_filename)}/dossier-#{dossier.id}/#{ActiveStorage::DownloadableFile.timestamped_filename(PiecesJustificativesService.generate_dossier_export(dossier))}"
+            ]
+            expect(files.size).to eq(structure.size)
+            expect(files.map(&:filename)).to match_array(structure)
+          end
+          FileUtils.remove_entry_secure('tmp.zip')
+        end
+      end
     end
   end
 end
