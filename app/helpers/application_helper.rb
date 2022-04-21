@@ -1,6 +1,10 @@
 module ApplicationHelper
   include SanitizeUrl
 
+  def html_lang
+    I18n.locale.to_s
+  end
+
   def sanitize_url(url)
     if !url.nil?
       super(url, schemes: ['http', 'https'], replace_evil_with: root_url)
