@@ -1,10 +1,12 @@
 require 'csv'
 
 describe ProcedureExportService do
-  describe 'to_data' do
-    let(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs) }
+  let(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs) }
+  let(:service) { ProcedureExportService.new(procedure, procedure.dossiers) }
+
+  describe 'to_xlsx' do
     subject do
-      ProcedureExportService.new(procedure, procedure.dossiers)
+      service
         .to_xlsx
         .open { |f| SimpleXlsxReader.open(f.path) }
     end
@@ -404,6 +406,17 @@ describe ProcedureExportService do
           expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', champ_repetition.libelle_for_export, another_champ_repetition.libelle_for_export])
         end
       end
+    end
+  end
+
+  describe 'to_zip' do
+    subject do
+      service
+        .to_zip
+    end
+
+    it 'does not raises in_batches' do
+      expect(subject).not_to raise_error(NoMethodError)
     end
   end
 end
