@@ -35,3 +35,8 @@ fr:
         export_monthly_pending_html: Un export des 30 derniers jours au format %{export_format} est en train d’être généré<br>(demandé il y a %{export_time})
         download_archive: Télécharger une archive au format .zip de tous les dossiers et leurs pièces jointes
         download: Télécharger tous les dossiers
+      email_usagers:
+        contact_users: Contacter les usagers (brouillon)
+        notice: "Vous allez envoyer un message à %{dossiers_count} dont les dossiers sont en brouillon, dans les groupes instructeurs : %{groupe_instructeurs}."
+      stats:
+        title: Statistiques
