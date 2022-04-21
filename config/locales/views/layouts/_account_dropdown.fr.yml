@@ -1,5 +1,7 @@
 fr:
   layouts:
+    header:
+      files: Dossiers
     go_superadmin: "Passer en super-admin"
     go_user: "Passer en usager"
     go_instructor: "Passer en instructeur"

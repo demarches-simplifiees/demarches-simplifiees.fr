@@ -2,10 +2,12 @@
 
 = render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [link_to(@procedure.libelle, instructeur_procedure_path(@procedure)),
-                    'Contacter les usagers (brouillon)'] }
+                    t('.contact_users')] }
 .messagerie.container
   - if @email_usagers_dossiers.present?
-    %p.notice.mb-2.mt-4 Vous allez envoyer un message à #{pluralize(@dossiers_count, 'personne')} dont les dossiers sont en brouillon, dans les groupes instructeurs : #{@groupe_instructeurs.join(', ')}.
+    %p.notice.mb-2.mt-4
+      = t('.notice', dossiers_count: pluralize(@dossiers_count, 'personne'), groupe_instructeurs: @groupe_instructeurs.join(', '))
+
     = render partial: 'shared/dossiers/messages/form', locals: { commentaire: @commentaire, form_url: create_multiple_commentaire_instructeur_procedure_path(@procedure), disable_piece_jointe: true }
 
     - if @bulk_messages.present?
