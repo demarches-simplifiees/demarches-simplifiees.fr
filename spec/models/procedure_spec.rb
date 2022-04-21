@@ -603,12 +603,13 @@ describe Procedure do
     end
 
     describe 'procedure status is reset' do
-      let(:procedure) { create(:procedure, :closed, received_mail: received_mail, service: service) }
+      let(:procedure) { create(:procedure, :closed, received_mail: received_mail, service: service, auto_archive_on: 3.weeks.from_now) }
 
       it 'Not published nor closed' do
         expect(subject.closed_at).to be_nil
         expect(subject.published_at).to be_nil
         expect(subject.unpublished_at).to be_nil
+        expect(subject.auto_archive_on).to be_nil
         expect(subject.aasm_state).to eq "brouillon"
         expect(subject.path).not_to be_nil
       end

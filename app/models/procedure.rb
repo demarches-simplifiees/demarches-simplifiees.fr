@@ -464,6 +464,7 @@ class Procedure < ApplicationRecord
     procedure.closed_at = nil
     procedure.unpublished_at = nil
     procedure.published_at = nil
+    procedure.auto_archive_on = nil
     procedure.lien_notice = nil
     procedure.published_revision = nil
     procedure.draft_revision.procedure = procedure
