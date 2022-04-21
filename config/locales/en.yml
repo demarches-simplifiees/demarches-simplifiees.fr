@@ -34,6 +34,11 @@ en:
     custom_message: 'If you are a human, ignore this field'
 
   help: 'Help'
+  help_dropdown:
+    problem_title: A problem with the website ?
+    problem_description: Find your answer in the online help.
+    technical_contact_title: Technical contact
+    technical_contact_description: Send us a message to %{contact_email}.
   utils:
     'yes': Yes
     'no': No

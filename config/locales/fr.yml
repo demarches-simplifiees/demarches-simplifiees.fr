@@ -22,8 +22,12 @@
 fr:
   invisible_captcha:
     custom_message: 'Si vous êtes un humain, veuillez ignorer ce champs'
-
   help: 'Aide'
+  help_dropdown:
+    problem_title: Un problème avec le site ?
+    problem_description: Trouvez votre réponse dans l’aide en ligne.
+    technical_contact_title: Contact technique
+    technical_contact_description: Envoyez nous un message à %{contact_email}.
   utils:
     'yes': Oui
     'no': Non
