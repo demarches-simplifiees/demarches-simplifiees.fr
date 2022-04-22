@@ -1,10 +1,10 @@
-%li{ class: editing ? 'mb-1' : 'flex column mb-2' }
+%li{ class: editing ? 'mb-1' : 'flex column mb-2', data: { controller: 'geo-area', geo_area_id_value: geo_area.id } }
   - if editing
-    = link_to '#', data: { geo_area: geo_area.id } do
+    = link_to '#', data: { action: 'geo-area#onClick' } do
       = geo_area_label(geo_area)
-    = text_field_tag :description, geo_area.description, data: { geo_area: geo_area.id }, placeholder: 'Description', class: 'no-margin'
+    = text_field_tag :description, geo_area.description, data: { action: 'focus->geo-area#onFocus input->geo-area#onInput', geo_area_target: 'description' }, placeholder: 'Description', class: 'no-margin'
   - else
-    = link_to '#', data: { geo_area: geo_area.id } do
+    = link_to '#', data: { action: 'geo-area#onClick' } do
       = geo_area_label(geo_area)
     - if geo_area.description.present?
       %span
