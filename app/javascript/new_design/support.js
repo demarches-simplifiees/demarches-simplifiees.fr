@@ -101,7 +101,7 @@ class ButtonExpand {
 
 if (document.querySelector('#contact-form')) {
   window.addEventListener(
-    'ds:page:update',
+    'DOMContentLoaded',
     function () {
       var buttons = document.querySelectorAll(
         'button[aria-expanded][aria-controls], button.button-without-hint'

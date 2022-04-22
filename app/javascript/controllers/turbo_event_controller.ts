@@ -1,10 +1,9 @@
-import { Controller } from '@hotwired/stimulus';
 import invariant from 'tiny-invariant';
 import { z } from 'zod';
 
-type Detail = Record<string, unknown>;
+import { ApplicationController, Detail } from './application_controller';
 
-export class TurboEventController extends Controller {
+export class TurboEventController extends ApplicationController {
   static values = {
     type: String,
     detail: Object
@@ -16,14 +15,6 @@ export class TurboEventController extends Controller {
   connect(): void {
     this.globalDispatch(this.typeValue, this.detailValue);
     this.element.remove();
-  }
-
-  private globalDispatch(type: string, detail: Detail): void {
-    this.dispatch(type, {
-      detail,
-      prefix: '',
-      target: document.documentElement
-    });
   }
 }
 
