@@ -509,6 +509,13 @@ describe Instructeurs::DossiersController, type: :controller do
       end
     end
 
+    context 'as an instructeur, i auto follow the dossier so I get the notifications' do
+      it 'works' do
+        subject
+        expect(instructeur.followed_dossiers).to match_array([dossier])
+      end
+    end
+
     context 'email sending' do
       before do
         subject
