@@ -60,7 +60,7 @@ export default class Uploader {
     return new Promise((resolve, reject) => {
       this.directUpload.create((errorMsg, attributes) => {
         if (errorMsg) {
-          const error = errorFromDirectUploadMessage(errorMsg.message);
+          const error = errorFromDirectUploadMessage(errorMsg);
           reject(error);
         } else {
           resolve(attributes.signed_id);
