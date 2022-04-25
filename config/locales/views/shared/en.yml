@@ -20,6 +20,3 @@ en:
         already_user: "I already have an account"
         create: 'Create an account'
         signin: 'Sign in'
-      commentaires:
-        destroy:
-          deleted_body: Message deleted

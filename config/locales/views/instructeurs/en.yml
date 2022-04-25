@@ -1,7 +1,5 @@
 en:
   instructeurs:
-    commentaires_controller:
-      alert_already_discarded: "Can not destroy message: it was already destroyed"
     procedure:
       archive_pending_html: Archive creation pending<br>(requested %{created_period} ago)
       archive_ready_html: Download archive<br>(requested %{generated_period} ago)
