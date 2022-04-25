@@ -160,4 +160,41 @@ describe Users::CommencerController, type: :controller do
       end
     end
   end
+
+  describe '#dossier_vide_pdf' do
+    before { get :dossier_vide_pdf, params: { path: procedure.path } }
+
+    context 'published procedure' do
+      let(:procedure) { create(:procedure, :published, :with_service, :with_path) }
+
+      it 'works' do
+        expect(response).to have_http_status(:success)
+      end
+    end
+    context 'not published procedure' do
+      let(:procedure) { create(:procedure, :with_service, :with_path) }
+
+      it 'redirects to procedure not found' do
+        expect(response).to have_http_status(302)
+      end
+    end
+  end
+
+  describe '#dossier_vide_test_pdf' do
+    before { get :dossier_vide_pdf_test, params: { path: procedure.path } }
+
+    context 'not published procedure' do
+      let(:procedure) { create(:procedure, :with_service, :with_path) }
+
+      it 'works' do
+        expect(response).to have_http_status(:success)
+      end
+    end
+    context 'published procedure' do
+      let(:procedure) { create(:procedure, :published, :with_service, :with_path) }
+      it 'redirect to procedure not found' do
+        expect(response).to have_http_status(302)
+      end
+    end
+  end
 end
