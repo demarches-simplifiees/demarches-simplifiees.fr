@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_05_100354) do
+ActiveRecord::Schema.define(version: 2022_04_07_081538) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -433,9 +433,13 @@ ActiveRecord::Schema.define(version: 2022_04_05_100354) do
     t.datetime "created_at", null: false
     t.string "format", null: false
     t.text "key", null: false
+    t.bigint "procedure_presentation_id"
+    t.jsonb "procedure_presentation_snapshot"
+    t.string "statut", default: "tous"
     t.string "time_span_type", default: "everything", null: false
     t.datetime "updated_at", null: false
-    t.index ["format", "time_span_type", "key"], name: "index_exports_on_format_and_time_span_type_and_key", unique: true
+    t.index ["format", "time_span_type", "statut", "key"], name: "index_exports_on_format_and_time_span_type_and_statut_and_key", unique: true
+    t.index ["procedure_presentation_id"], name: "index_exports_on_procedure_presentation_id"
   end
 
   create_table "exports_groupe_instructeurs", force: :cascade do |t|
