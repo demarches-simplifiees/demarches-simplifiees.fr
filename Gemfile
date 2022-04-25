@@ -86,6 +86,7 @@ gem 'spreadsheet_architect'
 gem 'strong_migrations' # lint database migrations
 gem 'turbo-rails'
 gem 'typhoeus'
+gem 'view_component'
 gem 'warden'
 gem 'webpacker'
 gem 'zipline'
