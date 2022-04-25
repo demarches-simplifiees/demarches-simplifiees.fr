@@ -40,6 +40,7 @@ describe Dossier do
     let(:procedure) { create(:procedure, :published, duree_conservation_dossiers_dans_ds: 6) }
     let!(:young_dossier) { create(:dossier, :en_construction, procedure: procedure) }
     let!(:expiring_dossier) { create(:dossier, created_at: 175.days.ago, procedure: procedure) }
+    let!(:expiring_dossier_with_notification) { create(:dossier, created_at: 175.days.ago, brouillon_close_to_expiration_notice_sent_at: Time.zone.now, procedure: procedure) }
     let!(:just_expired_dossier) { create(:dossier, created_at: (6.months + 1.hour + 10.seconds).ago, procedure: procedure) }
     let!(:long_expired_dossier) { create(:dossier, created_at: 1.year.ago, procedure: procedure) }
 
@@ -52,13 +53,27 @@ describe Dossier do
       is_expected.to include(long_expired_dossier)
     end
 
+    it do
+      expect(expiring_dossier.close_to_expiration?).to be_truthy
+      expect(expiring_dossier_with_notification.close_to_expiration?).to be_truthy
+    end
+
     context 'does not include an expiring dossier that has been postponed' do
       before do
-        expiring_dossier.update(conservation_extension: 1.month)
+        expiring_dossier.extend_conservation(1.month)
+        expiring_dossier_with_notification.extend_conservation(1.month)
         expiring_dossier.reload
+        expiring_dossier_with_notification.reload
       end
 
       it { is_expected.not_to include(expiring_dossier) }
+      it do
+        expect(expiring_dossier.close_to_expiration?).to be_falsey
+        expect(expiring_dossier_with_notification.close_to_expiration?).to be_falsey
+
+        expect(expiring_dossier.expiration_date).to eq(expiring_dossier.expiration_date_with_extention)
+        expect(expiring_dossier_with_notification.expiration_date).to eq(expiring_dossier_with_notification.expiration_date_with_extention)
+      end
     end
 
     context 'when .close_to_expiration' do
@@ -76,6 +91,7 @@ describe Dossier do
     let(:procedure) { create(:procedure, :published, duree_conservation_dossiers_dans_ds: 6) }
     let!(:young_dossier) { create(:dossier, procedure: procedure) }
     let!(:expiring_dossier) { create(:dossier, :en_construction, en_construction_at: 175.days.ago, procedure: procedure) }
+    let!(:expiring_dossier_with_notification) { create(:dossier, :en_construction, en_construction_at: 175.days.ago, en_construction_close_to_expiration_notice_sent_at: Time.zone.now, procedure: procedure) }
     let!(:just_expired_dossier) { create(:dossier, :en_construction, en_construction_at: (6.months + 1.hour + 10.seconds).ago, procedure: procedure) }
     let!(:long_expired_dossier) { create(:dossier, :en_construction, en_construction_at: 1.year.ago, procedure: procedure) }
 
@@ -88,13 +104,27 @@ describe Dossier do
       is_expected.to include(long_expired_dossier)
     end
 
+    it do
+      expect(expiring_dossier.close_to_expiration?).to be_truthy
+      expect(expiring_dossier_with_notification.close_to_expiration?).to be_truthy
+    end
+
     context 'does not include an expiring dossier that has been postponed' do
       before do
-        expiring_dossier.update(conservation_extension: 1.month)
+        expiring_dossier.extend_conservation(1.month)
+        expiring_dossier_with_notification.extend_conservation(1.month)
         expiring_dossier.reload
+        expiring_dossier_with_notification.reload
       end
 
       it { is_expected.not_to include(expiring_dossier) }
+      it do
+        expect(expiring_dossier.close_to_expiration?).to be_falsey
+        expect(expiring_dossier_with_notification.close_to_expiration?).to be_falsey
+
+        expect(expiring_dossier.expiration_date).to eq(expiring_dossier.expiration_date_with_extention)
+        expect(expiring_dossier_with_notification.expiration_date).to eq(expiring_dossier_with_notification.expiration_date_with_extention)
+      end
     end
 
     context 'when .close_to_expiration' do
@@ -121,6 +151,7 @@ describe Dossier do
     let(:procedure) { create(:procedure, :published, duree_conservation_dossiers_dans_ds: 6, procedure_expires_when_termine_enabled: true) }
     let!(:young_dossier) { create(:dossier, state: :accepte, procedure: procedure, processed_at: 2.days.ago) }
     let!(:expiring_dossier) { create(:dossier, state: :accepte, procedure: procedure, processed_at: 175.days.ago) }
+    let!(:expiring_dossier_with_notification) { create(:dossier, state: :accepte, procedure: procedure, processed_at: 175.days.ago, termine_close_to_expiration_notice_sent_at: Time.zone.now) }
     let!(:just_expired_dossier) { create(:dossier, state: :accepte, procedure: procedure, processed_at: (6.months + 1.hour + 10.seconds).ago) }
     let!(:long_expired_dossier) { create(:dossier, state: :accepte, procedure: procedure, processed_at: 1.year.ago) }
 
@@ -131,6 +162,29 @@ describe Dossier do
       is_expected.to include(expiring_dossier)
       is_expected.to include(just_expired_dossier)
       is_expected.to include(long_expired_dossier)
+    end
+
+    it do
+      expect(expiring_dossier.close_to_expiration?).to be_truthy
+      expect(expiring_dossier_with_notification.close_to_expiration?).to be_truthy
+    end
+
+    context 'does not include an expiring dossier that has been postponed' do
+      before do
+        expiring_dossier.extend_conservation(1.month)
+        expiring_dossier_with_notification.extend_conservation(1.month)
+        expiring_dossier.reload
+        expiring_dossier_with_notification.reload
+      end
+
+      it { is_expected.not_to include(expiring_dossier) }
+      it do
+        expect(expiring_dossier.close_to_expiration?).to be_falsey
+        expect(expiring_dossier_with_notification.close_to_expiration?).to be_falsey
+
+        expect(expiring_dossier.expiration_date).to eq(expiring_dossier.expiration_date_with_extention)
+        expect(expiring_dossier_with_notification.expiration_date).to eq(expiring_dossier_with_notification.expiration_date_with_extention)
+      end
     end
 
     context 'when .close_to_expiration' do
