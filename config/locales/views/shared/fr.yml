@@ -20,6 +20,3 @@ fr:
         already_user: 'J’ai déjà un compte'
         create: 'Créer un compte'
         signin: 'Connexion'
-      commentaires:
-        destroy:
-          deleted_body: Message supprimé

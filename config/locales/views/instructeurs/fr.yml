@@ -1,7 +1,5 @@
 fr:
   instructeurs:
-    commentaires_controller:
-      alert_already_discarded: Ce message a déjà été supprimé
     procedure:
       archive_pending_html: Archive en cours de création<br>(demandée il y a %{created_period})
       archive_ready_html: Télécharger l’archive<br>(demandée il y a %{generated_period})

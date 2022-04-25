@@ -1,2 +1,3 @@
 - if @commentaire.discarded?
-  = turbo_stream.update @commentaire, partial: "shared/dossiers/messages/message", locals: { commentaire: @commentaire, connected_user: @commentaire.instructeur || @commentaire.expert, messagerie_seen_at: nil, show_reply_button: false }
+  = turbo_stream.update @commentaire do
+    = render Dossiers::MessageComponent.new(commentaire: @commentaire, connected_user: @commentaire.instructeur || @commentaire.expert)
