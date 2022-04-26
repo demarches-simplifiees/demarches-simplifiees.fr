@@ -1,6 +1,0 @@
-- if commentaire.sent_by_system?
-  = t('views.shared.dossiers.messages.message_issuer.automatic_email')
-- elsif commentaire.sent_by?(connected_user)
-  = t('views.shared.dossiers.messages.message_issuer.you')
-- else
-  = commentaire.redacted_email
