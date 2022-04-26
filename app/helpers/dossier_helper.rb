@@ -99,8 +99,7 @@ module DossierHelper
   end
 
   def safe_expiration_date(dossier)
-    date =  dossier.expiration_date.presence || dossier.approximative_expiration_date
-    l(date, format: '%d/%m/%Y')
+    l(dossier.expiration_date, format: '%d/%m/%Y')
   end
 
   def annuaire_link(siren)

@@ -20,7 +20,7 @@ module Instructeurs
     end
 
     def extend_conservation
-      dossier.update(conservation_extension: dossier.conservation_extension + 1.month)
+      dossier.extend_conservation(1.month)
       flash[:notice] = t('views.instructeurs.dossiers.archived_dossier')
       redirect_back(fallback_location: instructeur_dossier_path(@dossier.procedure, @dossier))
     end
@@ -221,7 +221,7 @@ module Instructeurs
     end
 
     def telecharger_pjs
-      files = ActiveStorage::DownloadableFile.create_list_from_dossier(dossier)
+      files = ActiveStorage::DownloadableFile.create_list_from_dossiers(Dossier.where(id: dossier.id))
 
       zipline(files, "dossier-#{dossier.id}.zip")
     end
