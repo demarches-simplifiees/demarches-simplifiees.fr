@@ -62,7 +62,8 @@ module Manager
 
       email_services = [
         Mailjet::API.new,
-        Sendinblue::API.new
+        Sendinblue::API.new,
+        Dolist::API.new
       ]
 
       @sent_mails = email_services
