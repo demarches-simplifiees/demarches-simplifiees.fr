@@ -4,11 +4,9 @@ describe ProcedureExportService do
   describe 'to_data' do
     let(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs) }
     subject do
-      Tempfile.create do |f|
-        f << ProcedureExportService.new(procedure, procedure.dossiers).to_xlsx
-        f.rewind
-        SimpleXlsxReader.open(f.path)
-      end
+      ProcedureExportService.new(procedure, procedure.dossiers)
+        .to_xlsx
+        .open { |f| SimpleXlsxReader.open(f.path) }
     end
 
     let(:dossiers_sheet) { subject.sheets.first }
@@ -193,11 +191,9 @@ describe ProcedureExportService do
 
       context 'as csv' do
         subject do
-          Tempfile.create do |f|
-            f << ProcedureExportService.new(procedure, procedure.dossiers).to_csv
-            f.rewind
-            CSV.read(f.path)
-          end
+          ProcedureExportService.new(procedure, procedure.dossiers)
+            .to_csv
+            .open { |f| CSV.read(f.path) }
         end
 
         let(:nominal_headers) do

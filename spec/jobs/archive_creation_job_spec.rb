@@ -11,7 +11,7 @@ describe ArchiveCreationJob, type: :job do
       before { expect(InstructeurMailer).not_to receive(:send_archive) }
 
       it 'does not send email and forward error for retry' do
-        allow_any_instance_of(ProcedureArchiveService).to receive(:download_and_zip).and_raise(StandardError, "kaboom")
+        allow(DownloadableFileService).to receive(:download_and_zip).and_raise(StandardError, "kaboom")
         expect { job.perform_now }.to raise_error(StandardError, "kaboom")
         expect(archive.reload.failed?).to eq(true)
       end
@@ -20,7 +20,7 @@ describe ArchiveCreationJob, type: :job do
     context 'when it works' do
       let(:mailer) { double('mailer', deliver_later: true) }
       before do
-        allow_any_instance_of(ProcedureArchiveService).to receive(:download_and_zip).and_return(true)
+        allow(DownloadableFileService).to receive(:download_and_zip).and_return(true)
         expect(InstructeurMailer).to receive(:send_archive).and_return(mailer)
       end
 

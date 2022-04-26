@@ -104,7 +104,7 @@ module Types
     def address
       {
         label: object.adresse,
-        type: :housenumber,
+        type: "housenumber",
         street_number: object.numero_voie,
         street_name: object.nom_voie,
         street_address: object.nom_voie.present? ? [object.numero_voie, object.type_voie, object.nom_voie].compact.join(' ') : nil,
