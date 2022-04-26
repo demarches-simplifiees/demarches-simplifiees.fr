@@ -107,21 +107,44 @@ class PiecesJustificativesService
     end
   end
 
-  def self.generate_dossier_export(dossier)
-    pdf = ApplicationController
-      .render(template: 'dossiers/show', formats: [:pdf],
-              assigns: {
-                include_infos_administration: true,
-                dossier: dossier
-              })
+  def self.generate_dossier_export(dossiers)
+    return [] if dossiers.empty?
 
-    FakeAttachment.new(
-      file: StringIO.new(pdf),
-      filename: "export-#{dossier.id}.pdf",
-      name: 'pdf_export_for_instructeur',
-      id: dossier.id,
-      created_at: dossier.updated_at
-    )
+    pdfs = []
+
+    procedure = dossiers.first.procedure
+    tdc_by_id = TypeDeChamp
+      .joins(:revisions)
+      .where(revisions: { id: procedure.revisions })
+      .to_a
+      .group_by(&:id)
+
+    dossiers
+      .includes(:champs, :champs_private, :commentaires, :individual,
+                :traitement, :etablissement,
+                user: :france_connect_information, avis: :expert)
+      .find_each do |dossier|
+      pdf = ApplicationController
+        .render(template: 'dossiers/show', formats: [:pdf],
+                assigns: {
+                  include_infos_administration: true,
+                  dossier: dossier,
+                  procedure: procedure,
+                  tdc_by_id: tdc_by_id
+                })
+
+      a = FakeAttachment.new(
+        file: StringIO.new(pdf),
+        filename: "export-#{dossier.id}.pdf",
+        name: 'pdf_export_for_instructeur',
+        id: dossier.id,
+        created_at: dossier.updated_at
+      )
+
+      pdfs << ActiveStorage::DownloadableFile.pj_and_path(dossier.id, a)
+    end
+
+    pdfs
   end
 
   private
@@ -142,6 +165,7 @@ class PiecesJustificativesService
     ActiveStorage::Attachment
       .includes(:blob)
       .where(record_type: "Champ", record_id: champ_id_dossier_id.keys)
+      .filter { |a| safe_attachment(a) }
       .map do |a|
         dossier_id = champ_id_dossier_id[a.record_id]
         ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
@@ -158,6 +182,7 @@ class PiecesJustificativesService
     ActiveStorage::Attachment
       .includes(:blob)
       .where(record_type: "Commentaire", record_id: commentaire_id_dossier_id.keys)
+      .filter { |a| safe_attachment(a) }
       .map do |a|
         dossier_id = commentaire_id_dossier_id[a.record_id]
         ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
@@ -189,6 +214,7 @@ class PiecesJustificativesService
     ActiveStorage::Attachment
       .includes(:blob)
       .where(record_type: "Dossier", name: "justificatif_motivation", record_id: dossiers)
+      .filter { |a| safe_attachment(a) }
       .map do |a|
         dossier_id = a.record_id
         ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
@@ -238,5 +264,11 @@ class PiecesJustificativesService
       .includes(:blob)
       .where(record_type: "BillSignature", record_id: bill_ids)
       .map { |bill| ActiveStorage::DownloadableFile.bill_and_path(bill) }
+  end
+
+  def self.safe_attachment(attachment)
+    attachment
+      .blob
+      .metadata[:virus_scan_result] == ActiveStorage::VirusScanner::SAFE
   end
 end

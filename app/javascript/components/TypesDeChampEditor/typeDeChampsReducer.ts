@@ -5,36 +5,103 @@ import {
   moveTypeDeChampOperation,
   updateTypeDeChampOperation
 } from './operations';
+import type { TypeDeChamp, State, Flash, OperationsQueue } from './types';
 
-export default function typeDeChampsReducer(state, { type, params, done }) {
-  switch (type) {
+type AddNewTypeDeChampAction = {
+  type: 'addNewTypeDeChamp';
+  done: () => void;
+};
+
+type AddNewRepetitionTypeDeChampAction = {
+  type: 'addNewRepetitionTypeDeChamp';
+  params: { typeDeChamp: TypeDeChamp };
+  done: () => void;
+};
+
+type UpdateTypeDeChampAction = {
+  type: 'updateTypeDeChamp';
+  params: {
+    typeDeChamp: TypeDeChamp;
+    field: keyof TypeDeChamp;
+    value: string | boolean;
+  };
+  done: () => void;
+};
+
+type RemoveTypeDeChampAction = {
+  type: 'removeTypeDeChamp';
+  params: { typeDeChamp: TypeDeChamp };
+};
+
+type MoveTypeDeChampUpAction = {
+  type: 'moveTypeDeChampUp';
+  params: { typeDeChamp: TypeDeChamp };
+};
+
+type MoveTypeDeChampDownAction = {
+  type: 'moveTypeDeChampDown';
+  params: { typeDeChamp: TypeDeChamp };
+};
+
+type OnSortTypeDeChampsAction = {
+  type: 'onSortTypeDeChamps';
+  params: { oldIndex: number; newIndex: number };
+};
+
+type RefreshAction = {
+  type: 'refresh';
+};
+
+export type Action =
+  | AddNewTypeDeChampAction
+  | AddNewRepetitionTypeDeChampAction
+  | UpdateTypeDeChampAction
+  | RemoveTypeDeChampAction
+  | MoveTypeDeChampUpAction
+  | MoveTypeDeChampDownAction
+  | OnSortTypeDeChampsAction
+  | RefreshAction;
+
+export default function typeDeChampsReducer(
+  state: State,
+  action: Action
+): State {
+  switch (action.type) {
     case 'addNewTypeDeChamp':
-      return addNewTypeDeChamp(state, state.typeDeChamps, done);
+      return addNewTypeDeChamp(state, state.typeDeChamps, action.done);
     case 'addNewRepetitionTypeDeChamp':
       return addNewRepetitionTypeDeChamp(
         state,
         state.typeDeChamps,
-        params.typeDeChamp,
-        done
+        action.params,
+        action.done
       );
     case 'updateTypeDeChamp':
-      return updateTypeDeChamp(state, state.typeDeChamps, params, done);
+      return updateTypeDeChamp(
+        state,
+        state.typeDeChamps,
+        action.params,
+        action.done
+      );
     case 'removeTypeDeChamp':
-      return removeTypeDeChamp(state, state.typeDeChamps, params);
+      return removeTypeDeChamp(state, state.typeDeChamps, action.params);
     case 'moveTypeDeChampUp':
-      return moveTypeDeChampUp(state, state.typeDeChamps, params);
+      return moveTypeDeChampUp(state, state.typeDeChamps, action.params);
     case 'moveTypeDeChampDown':
-      return moveTypeDeChampDown(state, state.typeDeChamps, params);
+      return moveTypeDeChampDown(state, state.typeDeChamps, action.params);
     case 'onSortTypeDeChamps':
-      return onSortTypeDeChamps(state, state.typeDeChamps, params);
+      return onSortTypeDeChamps(state, state.typeDeChamps, action.params);
     case 'refresh':
       return { ...state, typeDeChamps: [...state.typeDeChamps] };
-    default:
-      throw new Error(`Unknown action "${type}"`);
   }
 }
 
-function addTypeDeChamp(state, typeDeChamps, insertAfter, done) {
+function addTypeDeChamp(
+  state: State,
+  typeDeChamps: TypeDeChamp[],
+  insertAfter: { index: number; target: HTMLDivElement } | null,
+  done: () => void
+) {
   const typeDeChamp = {
     ...state.defaultTypeDeChampAttributes
   };
@@ -44,7 +111,7 @@ function addTypeDeChamp(state, typeDeChamps, insertAfter, done) {
       if (insertAfter) {
         // Move the champ to the correct position server-side
         await moveTypeDeChampOperation(
-          typeDeChamp,
+          typeDeChamp as TypeDeChamp,
           insertAfter.index,
           state.queue
         );
@@ -52,7 +119,7 @@ function addTypeDeChamp(state, typeDeChamps, insertAfter, done) {
       state.flash.success();
       done();
       if (insertAfter) {
-        insertAfter.target.nextElementSibling.scrollIntoView({
+        insertAfter.target.nextElementSibling?.scrollIntoView({
           behavior: 'smooth',
           block: 'start',
           inline: 'nearest'
@@ -61,7 +128,10 @@ function addTypeDeChamp(state, typeDeChamps, insertAfter, done) {
     })
     .catch((message) => state.flash.error(message));
 
-  let newTypeDeChamps = [...typeDeChamps, typeDeChamp];
+  let newTypeDeChamps: TypeDeChamp[] = [
+    ...typeDeChamps,
+    typeDeChamp as TypeDeChamp
+  ];
   if (insertAfter) {
     // Move the champ to the correct position client-side
     newTypeDeChamps = arrayMove(
@@ -77,11 +147,20 @@ function addTypeDeChamp(state, typeDeChamps, insertAfter, done) {
   };
 }
 
-function addNewTypeDeChamp(state, typeDeChamps, done) {
+function addNewTypeDeChamp(
+  state: State,
+  typeDeChamps: TypeDeChamp[],
+  done: () => void
+) {
   return addTypeDeChamp(state, typeDeChamps, findItemToInsertAfter(), done);
 }
 
-function addNewRepetitionTypeDeChamp(state, typeDeChamps, typeDeChamp, done) {
+function addNewRepetitionTypeDeChamp(
+  state: State,
+  typeDeChamps: TypeDeChamp[],
+  { typeDeChamp }: AddNewRepetitionTypeDeChampAction['params'],
+  done: () => void
+) {
   return addTypeDeChamp(
     {
       ...state,
@@ -97,10 +176,10 @@ function addNewRepetitionTypeDeChamp(state, typeDeChamps, typeDeChamp, done) {
 }
 
 function updateTypeDeChamp(
-  state,
-  typeDeChamps,
-  { typeDeChamp, field, value },
-  done
+  state: State,
+  typeDeChamps: TypeDeChamp[],
+  { typeDeChamp, field, value }: UpdateTypeDeChampAction['params'],
+  done: () => void
 ) {
   if (field == 'type_champ' && !typeDeChamp.drop_down_list_value) {
     switch (value) {
@@ -117,9 +196,9 @@ function updateTypeDeChamp(
   if (field.startsWith('options.')) {
     const [, optionsField] = field.split('.');
     typeDeChamp.editable_options = typeDeChamp.editable_options || {};
-    typeDeChamp.editable_options[optionsField] = value;
+    typeDeChamp.editable_options[optionsField] = value as string;
   } else {
-    typeDeChamp[field] = value;
+    Object.assign(typeDeChamp, { [field]: value });
   }
 
   getUpdateHandler(typeDeChamp, state)(done);
@@ -130,7 +209,11 @@ function updateTypeDeChamp(
   };
 }
 
-function removeTypeDeChamp(state, typeDeChamps, { typeDeChamp }) {
+function removeTypeDeChamp(
+  state: State,
+  typeDeChamps: TypeDeChamp[],
+  { typeDeChamp }: RemoveTypeDeChampAction['params']
+) {
   destroyTypeDeChampOperation(typeDeChamp, state.queue)
     .then(() => state.flash.success())
     .catch((message) => state.flash.error(message));
@@ -141,7 +224,11 @@ function removeTypeDeChamp(state, typeDeChamps, { typeDeChamp }) {
   };
 }
 
-function moveTypeDeChampUp(state, typeDeChamps, { typeDeChamp }) {
+function moveTypeDeChampUp(
+  state: State,
+  typeDeChamps: TypeDeChamp[],
+  { typeDeChamp }: MoveTypeDeChampUpAction['params']
+) {
   const oldIndex = typeDeChamps.indexOf(typeDeChamp);
   const newIndex = oldIndex - 1;
 
@@ -155,7 +242,11 @@ function moveTypeDeChampUp(state, typeDeChamps, { typeDeChamp }) {
   };
 }
 
-function moveTypeDeChampDown(state, typeDeChamps, { typeDeChamp }) {
+function moveTypeDeChampDown(
+  state: State,
+  typeDeChamps: TypeDeChamp[],
+  { typeDeChamp }: MoveTypeDeChampDownAction['params']
+) {
   const oldIndex = typeDeChamps.indexOf(typeDeChamp);
   const newIndex = oldIndex + 1;
 
@@ -169,7 +260,11 @@ function moveTypeDeChampDown(state, typeDeChamps, { typeDeChamp }) {
   };
 }
 
-function onSortTypeDeChamps(state, typeDeChamps, { oldIndex, newIndex }) {
+function onSortTypeDeChamps(
+  state: State,
+  typeDeChamps: TypeDeChamp[],
+  { oldIndex, newIndex }: OnSortTypeDeChampsAction['params']
+) {
   moveTypeDeChampOperation(typeDeChamps[oldIndex], newIndex, state.queue)
     .then(() => state.flash.success())
     .catch((message) => state.flash.error(message));
@@ -180,24 +275,27 @@ function onSortTypeDeChamps(state, typeDeChamps, { oldIndex, newIndex }) {
   };
 }
 
-function arrayRemove(array, item) {
+function arrayRemove<T>(array: T[], item: T) {
   array = Array.from(array);
   array.splice(array.indexOf(item), 1);
   return array;
 }
 
-function arrayMove(array, from, to) {
+function arrayMove<T>(array: T[], from: number, to: number) {
   array = Array.from(array);
   array.splice(to < 0 ? array.length + to : to, 0, array.splice(from, 1)[0]);
   return array;
 }
 
 const updateHandlers = new WeakMap();
-function getUpdateHandler(typeDeChamp, { queue, flash }) {
+function getUpdateHandler(
+  typeDeChamp: TypeDeChamp,
+  { queue, flash }: { queue: OperationsQueue; flash: Flash }
+) {
   let handler = updateHandlers.get(typeDeChamp);
   if (!handler) {
     handler = debounce(
-      (done) =>
+      (done: () => void) =>
         updateTypeDeChampOperation(typeDeChamp, queue)
           .then(() => {
             flash.success();
@@ -217,7 +315,7 @@ function findItemToInsertAfter() {
   if (target) {
     return {
       target,
-      index: parseInt(target.dataset.index) + 1
+      index: parseInt(target.dataset.index ?? '0') + 1
     };
   } else {
     return null;
@@ -225,11 +323,12 @@ function findItemToInsertAfter() {
 }
 
 function getLastVisibleTypeDeChamp() {
-  const typeDeChamps = document.querySelectorAll('[data-in-view]');
+  const typeDeChamps =
+    document.querySelectorAll<HTMLDivElement>('[data-in-view]');
   const target = typeDeChamps[typeDeChamps.length - 1];
 
   if (target) {
-    const parentTarget = target.closest('[data-repetition]');
+    const parentTarget = target.closest<HTMLDivElement>('[data-repetition]');
     if (parentTarget) {
       return parentTarget;
     }

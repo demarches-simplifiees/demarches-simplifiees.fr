@@ -1,7 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-function TypeDeChampDropDownOptions({ isVisible, handler }) {
+import type { Handler } from '../types';
+
+export function TypeDeChampDropDownOptions({
+  isVisible,
+  handler
+}: {
+  isVisible: boolean;
+  handler: Handler<HTMLTextAreaElement>;
+}) {
   if (isVisible) {
     return (
       <div className="cell">
@@ -42,11 +49,3 @@ function TypeDeChampDropDownOptions({ isVisible, handler }) {
   }
   return null;
 }
-
-TypeDeChampDropDownOptions.propTypes = {
-  isVisible: PropTypes.bool,
-  value: PropTypes.string,
-  handler: PropTypes.object
-};
-
-export default TypeDeChampDropDownOptions;

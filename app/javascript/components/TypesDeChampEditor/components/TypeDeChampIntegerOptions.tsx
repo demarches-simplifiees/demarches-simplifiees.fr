@@ -1,11 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-function TypeDeChampHeaderSectionOptions({ isVisible, children }) {
+export function TypeDeChampIntegerOptions({
+  isVisible,
+  children
+}: {
+  isVisible: boolean,
+  children: JSX.Element[]
+}) {
   if (isVisible) {
     return (
       <div className="flex justify-start cell constraints">
-        <label>Options</label>
+        <label>Bornes</label>
         {children}
       </div>
     );
@@ -13,9 +18,9 @@ function TypeDeChampHeaderSectionOptions({ isVisible, children }) {
   return null;
 }
 
-TypeDeChampHeaderSectionOptions.propTypes = {
+TypeDeChampIntegerOptions.propTypes = {
   isVisible: PropTypes.bool,
   children: PropTypes.array
 };
 
-export default TypeDeChampHeaderSectionOptions;
+export default TypeDeChampIntegerOptions;
