@@ -3,7 +3,7 @@ require 'prawn/measurement_extensions'
 def prawn_text(message)
   tags = ['a', 'b', 'br', 'color', 'font', 'i', 'strong', 'sub', 'sup', 'u']
   atts = ['alt', 'character_spacing', 'href', 'name', 'rel', 'rgb', 'size', 'src', 'target']
-  text = ActionView::Base.safe_list_sanitizer.sanitize(message.to_s, tags: tags, attributes: atts)
+  ActionView::Base.safe_list_sanitizer.sanitize(message.to_s, tags: tags, attributes: atts)
 end
 
 def format_in_2_lines(pdf, label, text)
@@ -134,7 +134,7 @@ def add_identite_etablissement(pdf, etablissement)
 end
 
 def add_single_champ(pdf, champ)
-  tdc = @tdc_by_id[champ.type_de_champ_id].first
+  tdc = @tdc_by_id[champ.type_de_champ_id]
 
   case champ.type
   when 'Champs::PieceJustificativeChamp', 'Champs::TitreIdentiteChamp'
@@ -175,10 +175,12 @@ end
 def add_champs(pdf, champs)
   champs.each do |champ|
     if champ.type == 'Champs::RepetitionChamp'
+      add_section_title(pdf, champ.libelle)
       champ.rows.each do |row|
         row.each do |inner_champ|
           add_single_champ(pdf, inner_champ)
         end
+        pdf.move_down(default_margin)
       end
     else
       add_single_champ(pdf, champ)
@@ -222,7 +224,9 @@ end
 
 prawn_document(page_size: "A4") do |pdf|
   @procedure ||= @dossier.procedure
-  @tdc_by_id ||= @dossier.champs.map(&:type_de_champ).group_by(&:id)
+  @tdc_by_id ||= (@dossier.champs + @dossier.champs_private +
+    @dossier.champs.flat_map(&:champs) +
+    @dossier.champs_private.flat_map(&:champs)).map(&:type_de_champ).to_h { |c| [c.id, c] }
 
   pdf.font_families.update('marianne' => {
     normal: Rails.root.join('lib/prawn/fonts/marianne/marianne-regular.ttf'),
