@@ -18,8 +18,9 @@ class Export < ApplicationRecord
   enum format: {
     csv: 'csv',
     ods: 'ods',
-    xlsx: 'xlsx'
-  }
+    xlsx: 'xlsx',
+    zip: 'zip'
+  }, _prefix: true
 
   enum time_span_type: {
     everything: 'everything',
@@ -49,11 +50,11 @@ class Export < ApplicationRecord
 
   FORMATS_WITH_TIME_SPAN = [:xlsx, :ods, :csv].flat_map do |format|
     time_span_types.keys.map do |time_span_type|
-      { format: format.to_sym, time_span_type: time_span_type }
+      { format: format, time_span_type: time_span_type }
     end
   end
-  FORMATS = [:xlsx, :ods, :csv].map do |format|
-    { format: format.to_sym }
+  FORMATS = [:xlsx, :ods, :csv, :zip].map do |format|
+    { format: format }
   end
 
   def compute_async
@@ -63,13 +64,7 @@ class Export < ApplicationRecord
   def compute
     load_snapshot!
 
-    file.attach(
-      io: io,
-      filename: filename,
-      content_type: content_type,
-      # We generate the exports ourselves, so they are safe
-      metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
-    )
+    file.attach(blob)
   end
 
   def since
@@ -92,18 +87,6 @@ class Export < ApplicationRecord
     procedure_presentation_id.present?
   end
 
-  def xlsx?
-    format == self.class.formats.fetch(:xlsx)
-  end
-
-  def ods?
-    format == self.class.formats.fetch(:ods)
-  end
-
-  def csv?
-    format == self.class.formats.fetch(:csv)
-  end
-
   def self.find_or_create_export(format, groupe_instructeurs, time_span_type: time_span_types.fetch(:everything), statut: statuts.fetch(:tous), procedure_presentation: nil)
     create_with(groupe_instructeurs: groupe_instructeurs, procedure_presentation: procedure_presentation, procedure_presentation_snapshot: procedure_presentation&.snapshot)
       .includes(:procedure_presentation)
@@ -124,16 +107,20 @@ class Export < ApplicationRecord
 
     {
       xlsx: {
-        time_span_type: not_filtered.filter(&:xlsx?).index_by(&:time_span_type),
-        statut: filtered.filter(&:xlsx?).index_by(&:statut)
+        time_span_type: not_filtered.filter(&:format_xlsx?).index_by(&:time_span_type),
+        statut: filtered.filter(&:format_xlsx?).index_by(&:statut)
       },
       ods: {
-        time_span_type: not_filtered.filter(&:ods?).index_by(&:time_span_type),
-        statut: filtered.filter(&:ods?).index_by(&:statut)
+        time_span_type: not_filtered.filter(&:format_ods?).index_by(&:time_span_type),
+        statut: filtered.filter(&:format_ods?).index_by(&:statut)
       },
       csv: {
-        time_span_type: not_filtered.filter(&:csv?).index_by(&:time_span_type),
-        statut: filtered.filter(&:csv?).index_by(&:statut)
+        time_span_type: not_filtered.filter(&:format_csv?).index_by(&:time_span_type),
+        statut: filtered.filter(&:format_csv?).index_by(&:statut)
+      },
+      zip: {
+        time_span_type: {},
+        statut: filtered.filter(&:format_zip?).index_by(&:statut)
       }
     }
   end
@@ -177,32 +164,18 @@ class Export < ApplicationRecord
     end
   end
 
-  def filename
-    procedure_identifier = procedure.path || "procedure-#{procedure.id}"
-    "dossiers_#{procedure_identifier}_#{statut}_#{Time.zone.now.strftime('%Y-%m-%d_%H-%M')}.#{format}"
-  end
-
-  def io
+  def blob
     service = ProcedureExportService.new(procedure, dossiers_for_export)
 
     case format.to_sym
     when :csv
-      StringIO.new(service.to_csv)
+      service.to_csv
     when :xlsx
-      StringIO.new(service.to_xlsx)
+      service.to_xlsx
     when :ods
-      StringIO.new(service.to_ods)
-    end
-  end
-
-  def content_type
-    case format.to_sym
-    when :csv
-      'text/csv'
-    when :xlsx
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    when :ods
-      'application/vnd.oasis.opendocument.spreadsheet'
+      service.to_ods
+    when :zip
+      service.to_zip
     end
   end
 

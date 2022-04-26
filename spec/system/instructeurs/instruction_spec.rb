@@ -194,14 +194,18 @@ describe 'Instructing a dossier:', js: true do
 
     before do
       dossier.passer_en_instruction!(instructeur: instructeur)
-      champ.piece_justificative_file.attach(io: File.open(path), filename: "piece_justificative_0.pdf", content_type: "application/pdf")
+      champ.piece_justificative_file
+        .attach(io: File.open(path),
+                filename: "piece_justificative_0.pdf",
+                content_type: "application/pdf",
+                metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE })
 
       log_in(instructeur.email, password)
       visit instructeur_dossier_path(procedure, dossier)
     end
 
     scenario 'A instructeur can download an archive containing a single attachment' do
-      find(:css, '.attached').click
+      find(:css, '[aria-controls=print-pj-menu]').click
       click_on 'Télécharger le dossier et toutes ses pièces jointes'
       # For some reason, clicking the download link does not trigger the download in the headless browser ;
       # So we need to go to the download link directly
@@ -219,7 +223,12 @@ describe 'Instructing a dossier:', js: true do
     end
 
     scenario 'A instructeur can download an archive containing several identical attachments' do
-      commentaire.piece_jointe.attach(io: File.open(path), filename: "piece_justificative_0.pdf", content_type: "application/pdf")
+      commentaire
+        .piece_jointe
+        .attach(io: File.open(path),
+                filename: "piece_justificative_0.pdf",
+                content_type: "application/pdf",
+                metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE })
 
       visit telecharger_pjs_instructeur_dossier_path(procedure, dossier)
       DownloadHelpers.wait_for_download

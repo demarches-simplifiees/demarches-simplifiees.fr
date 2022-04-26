@@ -1,13 +1,14 @@
 class API::V2::Context < GraphQL::Query::Context
-  def has_fragment?(name)
-    if self["has_fragment_#{name}"]
-      true
-    else
-      visitor = HasFragment.new(self.query.selected_operation, name)
+  # This method is used to check if a given fragment is used in the given query.
+  # We need that in order to maintain backward compatibility for Types de Champ
+  # that we extended in later iterations of our schema.
+  def has_fragment?(fragment_name)
+    self[:has_fragment] ||= Hash.new do |hash, fragment_name|
+      visitor = HasFragment.new(query.document, fragment_name)
       visitor.visit
-      self["has_fragment_#{name}"] = visitor.found
-      self["has_fragment_#{name}"]
+      hash[fragment_name] = visitor.found
     end
+    self[:has_fragment][fragment_name]
   end
 
   def internal_use?
@@ -36,17 +37,28 @@ class API::V2::Context < GraphQL::Query::Context
     self[:authorized][demarche.id]
   end
 
+  # This is a query AST visitor that we use to check
+  # if a fragment with a given name is used in the given document.
+  # We check for both inline and standalone fragments.
   class HasFragment < GraphQL::Language::Visitor
-    def initialize(document, name)
+    def initialize(document, fragment_name)
       super(document)
-      @name = name.to_s
+      @fragment_name = fragment_name.to_s
       @found = false
     end
 
     attr_reader :found
 
     def on_inline_fragment(node, parent)
-      if node.type.name == @name
+      if node.type.name == @fragment_name
+        @found = true
+      end
+
+      super
+    end
+
+    def on_fragment_definition(node, parent)
+      if node.type.name == @fragment_name
         @found = true
       end
 

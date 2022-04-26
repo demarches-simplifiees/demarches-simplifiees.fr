@@ -4,7 +4,7 @@ class ArchiveUploader
   # when file size is bigger, active storage expects the chunks + a manifest.
   MAX_FILE_SIZE_FOR_BACKEND_BEFORE_CHUNKING = ENV.fetch('ACTIVE_STORAGE_FILE_SIZE_THRESHOLD_BEFORE_CUSTOM_UPLOAD') { 4.gigabytes }.to_i
 
-  def upload
+  def upload(archive)
     uploaded_blob = create_and_upload_blob
     begin
       archive.file.purge if archive.file.attached?
@@ -21,9 +21,13 @@ class ArchiveUploader
     )
   end
 
+  def blob
+    create_and_upload_blob
+  end
+
   private
 
-  attr_reader :procedure, :archive, :filepath
+  attr_reader :procedure, :filename, :filepath
 
   def create_and_upload_blob
     if active_storage_service_local? || File.size(filepath) < MAX_FILE_SIZE_FOR_BACKEND_BEFORE_CHUNKING
@@ -62,7 +66,7 @@ class ArchiveUploader
   def blob_default_params(filepath)
     {
       key: namespaced_object_key,
-      filename: archive.filename(procedure),
+      filename: filename,
       content_type: 'application/zip',
       metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
     }
@@ -89,9 +93,9 @@ class ArchiveUploader
     system(ENV.fetch('ACTIVE_STORAGE_BIG_FILE_UPLOADER_WITH_ENCRYPTION_PATH').to_s, filepath, blob.key, exception: true)
   end
 
-  def initialize(procedure:, archive:, filepath:)
+  def initialize(procedure:, filename:, filepath:)
     @procedure = procedure
-    @archive = archive
+    @filename = filename
     @filepath = filepath
   end
 end
