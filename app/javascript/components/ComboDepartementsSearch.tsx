@@ -1,14 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { QueryClientProvider } from 'react-query';
 import { matchSorter } from 'match-sorter';
 
-import ComboSearch from './ComboSearch';
+import ComboSearch, { ComboSearchProps } from './ComboSearch';
 import { queryClient } from './shared/queryClient';
+
+type DepartementResult = { code: string; nom: string };
 
 const extraTerms = [{ code: '99', nom: 'Etranger' }];
 
-function expandResultsWithForeignDepartement(term, results) {
+function expandResultsWithForeignDepartement(term: string, result: unknown) {
+  const results = result as DepartementResult[];
   return [
     ...results,
     ...matchSorter(extraTerms, term, {
@@ -17,10 +19,17 @@ function expandResultsWithForeignDepartement(term, results) {
   ];
 }
 
+type ComboDepartementsSearchProps = Omit<
+  ComboSearchProps<DepartementResult> & {
+    addForeignDepartement: boolean;
+  },
+  'transformResult' | 'transformResults'
+>;
+
 export function ComboDepartementsSearch({
   addForeignDepartement = true,
   ...props
-}) {
+}: ComboDepartementsSearchProps) {
   return (
     <ComboSearch
       {...props}
@@ -34,17 +43,12 @@ export function ComboDepartementsSearch({
   );
 }
 
-function ComboDepartementsSearchDefault(params) {
+export default function ComboDepartementsSearchDefault(
+  params: ComboDepartementsSearchProps
+) {
   return (
     <QueryClientProvider client={queryClient}>
       <ComboDepartementsSearch {...params} />
     </QueryClientProvider>
   );
 }
-
-ComboDepartementsSearch.propTypes = {
-  ...ComboSearch.propTypes,
-  addForeignDepartement: PropTypes.bool
-};
-
-export default ComboDepartementsSearchDefault;

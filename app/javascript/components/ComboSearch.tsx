@@ -20,7 +20,7 @@ import { useDeferredSubmit, useHiddenField, groupId } from './shared/hooks';
 type TransformResults<Result> = (term: string, results: unknown) => Result[];
 type TransformResult<Result> = (
   result: Result
-) => [key: string, value: string, label: string];
+) => [key: string, value: string, label?: string];
 
 export type ComboSearchProps<Result> = {
   onChange?: (value: string | null, result?: Result) => void;
@@ -28,7 +28,7 @@ export type ComboSearchProps<Result> = {
   scope: string;
   scopeExtra?: string;
   minimumInputLength: number;
-  transformResults: TransformResults<Result>;
+  transformResults?: TransformResults<Result>;
   transformResult: TransformResult<Result>;
   allowInputValues?: boolean;
   id?: string;
