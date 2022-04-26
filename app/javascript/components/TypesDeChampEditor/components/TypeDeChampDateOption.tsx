@@ -1,7 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-function TypeDeChampDateOption({ label, handler }) {
+import type { Handler } from '../types';
+
+export function TypeDeChampDateOption({
+  label,
+  handler
+}: {
+  label: string;
+  handler: Handler<HTMLInputElement>;
+}) {
   return (
     <div className="constraints">
       <label htmlFor={handler.id}>
@@ -18,10 +25,3 @@ function TypeDeChampDateOption({ label, handler }) {
     </div>
   );
 }
-
-TypeDeChampDateOption.propTypes = {
-  label: PropTypes.string,
-  handler: PropTypes.object
-};
-
-export default TypeDeChampDateOption;

@@ -4,8 +4,8 @@ export function TypeDeChampIntegerOptions({
   isVisible,
   children
 }: {
-  isVisible: boolean,
-  children: JSX.Element[]
+  isVisible: boolean;
+  children: JSX.Element[];
 }) {
   if (isVisible) {
     return (
@@ -17,10 +17,3 @@ export function TypeDeChampIntegerOptions({
   }
   return null;
 }
-
-TypeDeChampIntegerOptions.propTypes = {
-  isVisible: PropTypes.bool,
-  children: PropTypes.array
-};
-
-export default TypeDeChampIntegerOptions;

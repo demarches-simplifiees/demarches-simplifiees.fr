@@ -1,7 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { Handler } from '~/components/TypesDeChampEditor/types';
 
-function TypeDeChampEmailList({ isVisible, handler }) {
+export function TypeDeChampEmailList({
+  isVisible,
+  handler
+}: {
+  isVisible: boolean;
+  handler: Handler<HTMLTextAreaElement>;
+}) {
   if (isVisible) {
     return (
       <div className="cell">
@@ -28,13 +34,6 @@ function TypeDeChampEmailList({ isVisible, handler }) {
       </div>
     );
   }
+
   return null;
 }
-
-TypeDeChampEmailList.propTypes = {
-  isVisible: PropTypes.bool,
-  value: PropTypes.string,
-  handler: PropTypes.object
-};
-
-export default TypeDeChampEmailList;

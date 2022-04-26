@@ -5,8 +5,8 @@ export function TypeDeChampHeaderSectionOptions({
   isVisible,
   children
 }: {
-  isVisible: boolean,
-  children: JSX.Element
+  isVisible: boolean;
+  children: JSX.Element;
 }) {
   if (isVisible) {
     return (

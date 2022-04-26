@@ -1,7 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-function TypeDeChampTeFenuaOptions({ isVisible, children }) {
+export function TypeDeChampTeFenuaOptions({
+  isVisible,
+  children
+}: {
+  isVisible: boolean;
+  children: JSX.Element[];
+}) {
   if (isVisible) {
     return (
       <div className="cell">
@@ -12,10 +17,3 @@ function TypeDeChampTeFenuaOptions({ isVisible, children }) {
   }
   return null;
 }
-
-TypeDeChampTeFenuaOptions.propTypes = {
-  isVisible: PropTypes.bool,
-  children: PropTypes.array
-};
-
-export default TypeDeChampTeFenuaOptions;

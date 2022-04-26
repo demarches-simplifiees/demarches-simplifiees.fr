@@ -1,7 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Handler } from '~/components/TypesDeChampEditor/types';
 
-function TypeDeChampLevelOption({ label, handler }) {
+export function TypeDeChampLevelOption({
+  label,
+  handler
+}: {
+  label: string;
+  handler: Handler<HTMLInputElement>;
+}) {
   return (
     <label htmlFor={handler.id}>
       {label}
@@ -18,10 +25,3 @@ function TypeDeChampLevelOption({ label, handler }) {
     </label>
   );
 }
-
-TypeDeChampLevelOption.propTypes = {
-  label: PropTypes.string,
-  handler: PropTypes.object
-};
-
-export default TypeDeChampLevelOption;

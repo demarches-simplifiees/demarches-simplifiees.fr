@@ -1,7 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { Handler } from '~/components/TypesDeChampEditor/types';
 
-function TypeDeChampTeFenuaOption({ label, handler }) {
+export function TypeDeChampTeFenuaOption({
+  label,
+  handler
+}: {
+  label: string;
+  handler: Handler<HTMLInputElement>;
+}) {
   return (
     <label htmlFor={handler.id}>
       <input
@@ -16,10 +22,3 @@ function TypeDeChampTeFenuaOption({ label, handler }) {
     </label>
   );
 }
-
-TypeDeChampTeFenuaOption.propTypes = {
-  label: PropTypes.string,
-  handler: PropTypes.object
-};
-
-export default TypeDeChampTeFenuaOption;

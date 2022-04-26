@@ -1,7 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-function TypeDeChampDateOptions({ isVisible, children }) {
+export function TypeDeChampDateOptions({
+  isVisible,
+  children
+}: {
+  isVisible: boolean;
+  children: JSX.Element[];
+}) {
   if (isVisible) {
     return (
       <div className="flex justify-start cell constraints">
@@ -12,10 +17,3 @@ function TypeDeChampDateOptions({ isVisible, children }) {
   }
   return null;
 }
-
-TypeDeChampDateOptions.propTypes = {
-  isVisible: PropTypes.bool,
-  children: PropTypes.array
-};
-
-export default TypeDeChampDateOptions;

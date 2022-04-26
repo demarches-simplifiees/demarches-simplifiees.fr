@@ -1,7 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Handler } from '~/components/TypesDeChampEditor/types';
 
-function TypeDeChampIntegerOption({ label, handler }) {
+export function TypeDeChampIntegerOption({
+  label,
+  handler
+}: {
+  label: string;
+  handler: Handler<HTMLInputElement>;
+}) {
   return (
     <label htmlFor={handler.id}>
       {label}
@@ -16,10 +23,3 @@ function TypeDeChampIntegerOption({ label, handler }) {
     </label>
   );
 }
-
-TypeDeChampIntegerOption.propTypes = {
-  label: PropTypes.string,
-  handler: PropTypes.object
-};
-
-export default TypeDeChampIntegerOption;
