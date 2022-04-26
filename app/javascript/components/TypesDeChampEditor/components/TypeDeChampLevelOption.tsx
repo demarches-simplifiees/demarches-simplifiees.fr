@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Handler } from '~/components/TypesDeChampEditor/types';
 
 export function TypeDeChampLevelOption({
