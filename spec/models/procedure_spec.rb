@@ -1185,6 +1185,13 @@ describe Procedure do
     end
   end
 
+  describe 'lien_dpo' do
+    it { expect(build(:procedure).valid?).to be(true) }
+    it { expect(build(:procedure, lien_dpo: 'dpo@ministere.amere').valid?).to be(true) }
+    it { expect(build(:procedure, lien_dpo: 'https://legal.fr/contact_dpo').valid?).to be(true) }
+    it { expect(build(:procedure, lien_dpo: 'askjdlad l akdj asd ').valid?).to be(false) }
+  end
+
   private
 
   def create_dossier_with_pj_of_size(size, procedure)

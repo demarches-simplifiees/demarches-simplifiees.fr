@@ -57,6 +57,13 @@
 = f.label :deliberation, 'Importer le texte'
 = text_upload_and_render f, @procedure.deliberation
 
+%h3.header-subsection
+  RGPD
+%p.notice
+  Pour certaines démarches, veuillez indiquer soit un mail le mail de contact de votre délégué à la protection des données, soit un lien web pointant vers les informations
+
+= f.label :lien_dpo, 'Lien ou email pour contacter le Délégué à la Protection des Données (DPO)'
+= f.text_field :lien_dpo, class: 'form-control'
 %h3.header-subsection Notice explicative de la démarche
 
 %p.notice
