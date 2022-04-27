@@ -63,7 +63,9 @@ export default class FileUploadError extends Error {
 // 2. Create each kind of error on a different line
 //   (so that Sentry knows they are different kind of errors, from
 //   the line they were created.)
-export function errorFromDirectUploadMessage(message: string) {
+export function errorFromDirectUploadMessage(messageOrError: string | Error) {
+  const message =
+    typeof messageOrError == 'string' ? messageOrError : messageOrError.message;
   const matches = message.match(/ Status: ([0-9]{1,3})/);
   const status = matches ? parseInt(matches[1], 10) : undefined;
 

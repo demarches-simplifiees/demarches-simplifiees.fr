@@ -1,0 +1,24 @@
+fr:
+  users:
+    procedure_footer:
+      managed_by:
+        header: 'Cette démarche est gérée par :'
+      contact:
+        header: 'Poser une question sur votre dossier :'
+        in_app_mail:
+          prefix: 'Directement :'
+          link: "par la messagerie"
+        email:
+          prefix: 'Par email :'
+        phone:
+          prefix: 'Par téléphone :'
+        schedule:
+          prefix: 'Horaires : '
+        stats:
+          prefix: 'Statistiques :'
+          cta: "voir les statistiques de la démarche"
+      legals:
+        header: "Cadre juridique :"
+        data_retention: "Dans %{application_name} : %{duree_conservation_dossiers_dans_ds} mois"
+        terms: "Texte cadrant la demande d'information"
+        dpo: "Contacter le Délégué à la Protection des Données"

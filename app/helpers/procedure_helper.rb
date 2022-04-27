@@ -74,4 +74,12 @@ module ProcedureHelper
       .includes(:groupe_instructeur)
       .exists?(groupe_instructeur: current_instructeur.groupe_instructeurs)
   end
+
+  def url_or_email_to_lien_dpo(procedure)
+    URI::MailTo.build([procedure.lien_dpo, "subject="]).to_s
+  rescue URI::InvalidComponentError
+    uri = URI.parse(procedure.lien_dpo)
+    return "//#{uri}" if uri.scheme.nil?
+    uri.to_s
+  end
 end

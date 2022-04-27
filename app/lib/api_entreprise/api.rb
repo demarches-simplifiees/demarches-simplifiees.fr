@@ -120,7 +120,7 @@ class APIEntreprise::API
     # rubocop:disable DS/ApplicationName
     params = {
       context: "demarches-simplifiees.fr",
-      recipient: siret_or_siren,
+      recipient: ENV.fetch('API_ENTREPRISE_DEFAULT_SIRET'),
       object: "procedure_id: #{procedure_id}",
       non_diffusables: true
     }

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_07_081538) do
+ActiveRecord::Schema.define(version: 2022_04_25_140107) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -645,6 +645,7 @@ ActiveRecord::Schema.define(version: 2022_04_07_081538) do
     t.boolean "juridique_required", default: true
     t.string "libelle"
     t.string "lien_demarche"
+    t.string "lien_dpo"
     t.string "lien_notice"
     t.string "lien_site_web"
     t.text "monavis_embed"

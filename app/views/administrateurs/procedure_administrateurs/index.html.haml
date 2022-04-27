@@ -10,8 +10,8 @@
       %th= 'Adresse email'
       %th= 'Enregistré le'
       %th= 'État'
-    %tbody{ id: "procedure-#{@procedure.id}-administrateurs" }
-      = render partial: 'administrateur', collection: @procedure.administrateurs.order('users.email')
+    %tbody#administrateurs
+      = render partial: 'administrateur', collection: @procedure.administrateurs.order('users.email'), locals: { procedure: @procedure }
     %tfoot
       %tr
         %th{ colspan: 4 }

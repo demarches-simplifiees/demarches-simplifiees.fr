@@ -7,7 +7,9 @@ module ConservationDeDonneesHelper
 
   def conservation_dans_ds(procedure)
     if procedure.duree_conservation_dossiers_dans_ds.present?
-      "Dans #{APPLICATION_NAME} : #{procedure.duree_conservation_dossiers_dans_ds} mois"
+      I18n.t('users.procedure_footer.legals.data_retention',
+             application_name: APPLICATION_NAME,
+             duree_conservation_dossiers_dans_ds: procedure.duree_conservation_dossiers_dans_ds)
     end
   end
 end

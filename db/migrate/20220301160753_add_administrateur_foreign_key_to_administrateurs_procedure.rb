@@ -2,8 +2,8 @@ class AddAdministrateurForeignKeyToAdministrateursProcedure < ActiveRecord::Migr
   include Database::MigrationHelpers
 
   def up
-    delete_orphans :administrateurs_procedures, :administrateurs_procedures
-    add_foreign_key :administrateurs_procedures, :administrateurs_procedures
+    delete_orphans :administrateurs_procedures, :administrateurs
+    add_foreign_key :administrateurs_procedures, :administrateurs
   end
 
   def down

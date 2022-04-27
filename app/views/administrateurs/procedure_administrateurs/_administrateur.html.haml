@@ -1,4 +1,4 @@
-%tr{ id: "procedure-#{@procedure.id}-administrateur-#{administrateur.id}" }
+%tr{ id: dom_id(administrateur) }
   %td= administrateur.email
   %td= try_format_datetime(administrateur.created_at)
   %td= administrateur.registration_state
@@ -6,8 +6,8 @@
     - if administrateur == current_administrateur
       C’est vous !
     - else
-      = link_to 'Retirer',
-        admin_procedure_administrateur_path(@procedure, administrateur),
+      = button_to 'Retirer',
+        admin_procedure_administrateur_path(procedure, administrateur),
         method: :delete,
-        'data-confirm': "Retirer « #{administrateur.email} » des administrateurs de « #{@procedure.libelle} » ?",
-        remote: true
+        class: 'button',
+        form: { data: { turbo: true, turbo_confirm: "Retirer « #{administrateur.email} » des administrateurs de « #{procedure.libelle} » ?" } }

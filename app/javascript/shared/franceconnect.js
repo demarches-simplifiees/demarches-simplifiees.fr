@@ -20,7 +20,7 @@ function init() {
   }
 }
 
-addEventListener('ds:page:update', init);
+addEventListener('DOMContentLoaded', init);
 
 function toggleElement(event) {
   event.preventDefault();

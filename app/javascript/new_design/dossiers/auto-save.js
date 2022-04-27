@@ -10,8 +10,9 @@ import {
   removeClass
 } from '@utils';
 
-const AUTOSAVE_DEBOUNCE_DELAY = gon.autosave.debounce_delay;
-const AUTOSAVE_STATUS_VISIBLE_DURATION = gon.autosave.status_visible_duration;
+const AUTOSAVE_DEBOUNCE_DELAY = window?.gon?.autosave?.debounce_delay;
+const AUTOSAVE_STATUS_VISIBLE_DURATION =
+  window?.gon?.autosave?.status_visible_duration;
 
 // Create a controller responsible for queuing autosave operations.
 const autoSaveController = new AutoSaveController();
