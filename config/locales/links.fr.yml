@@ -12,8 +12,8 @@ fr:
       url: "https://numerique.gouv.fr"
     footer:
       accessibilite:
-        label: "Accessibilité : non conforme"
-        title: "Accessibilité : non conforme"
+        label: "Accessibilité : partiellement conforme"
+        title: "Accessibilité : partiellement conforme"
         url: "https://doc.demarches-simplifiees.fr/declaration-daccessibilite"
       aide:
         label: "Aide"
