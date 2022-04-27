@@ -94,6 +94,11 @@ class TypeDeChamp < ApplicationRecord
   scope :not_repetition, -> { where.not(type_champ: type_champs.fetch(:repetition)) }
   scope :fillable, -> { where.not(type_champ: [type_champs.fetch(:header_section), type_champs.fetch(:explication)]) }
 
+  scope :dubious, -> {
+    where("unaccent(types_de_champ.libelle) ~* unaccent(?)", Cron::FindDubiousProceduresJob.forbidden_regexp)
+      .where(type_champ: [TypeDeChamp.type_champs.fetch(:text), TypeDeChamp.type_champs.fetch(:textarea)])
+  }
+
   has_many :champ, inverse_of: :type_de_champ, dependent: :destroy do
     def build(params = {})
       super(params.merge(proxy_association.owner.params_for_champ))
