@@ -122,4 +122,32 @@ describe 'Publishing a procedure', js: true do
       expect(page).to have_selector('#preview-procedure')
     end
   end
+
+  context 'when a procedure has dubious champs' do
+    let(:dubious_champs) do
+      [
+        build(:type_de_champ_text, libelle: 'NIR'),
+        build(:type_de_champ_text, libelle: 'carte bancaire')
+      ]
+    end
+    let(:not_dubious_champs) do
+      [build(:type_de_champ_text, libelle: 'Prénom')]
+    end
+    let!(:procedure) do
+      create(:procedure,
+               :with_service,
+               instructeurs: instructeurs,
+               administrateur: administrateur,
+               types_de_champ: not_dubious_champs + dubious_champs)
+    end
+
+    scenario 'an admin can publish it, but a warning appears' do
+      visit admin_procedures_path(statut: "brouillons")
+      click_on procedure.libelle
+      find('#publish-procedure-link').click
+
+      expect(page).to have_content("Attention, certains champs ne peuvent être demandé par l'administration.")
+      expect(page).to have_selector(".dubious-champs", count: dubious_champs.size)
+    end
+  end
 end
