@@ -1,19 +1,21 @@
 import React from 'react';
 import { QueryClientProvider } from 'react-query';
 import { matchSorter } from 'match-sorter';
-import PropTypes from 'prop-types';
 
-import ComboSearch from './ComboSearch';
+import ComboSearch, { ComboSearchProps } from './ComboSearch';
 import { queryClient } from './shared/queryClient';
 import { ComboDepartementsSearch } from './ComboDepartementsSearch';
 import { useHiddenField, groupId } from './shared/hooks';
 
+type CommuneResult = { code: string; nom: string; codesPostaux: string[] };
+
 // Avoid hiding similar matches for precise queries (like "Sainte Marie")
-function searchResultsLimit(term) {
+function searchResultsLimit(term: string) {
   return term.length > 5 ? 10 : 5;
 }
 
-function expandResultsWithMultiplePostalCodes(term, results) {
+function expandResultsWithMultiplePostalCodes(term: string, result: unknown) {
+  const results = result as CommuneResult[];
   // A single result may have several associated postal codes.
   // To make the search results more precise, we want to generate
   // an actual result for each postal code.
@@ -44,13 +46,16 @@ const placeholderDepartements = [
   ['77 – Seine-et-Marne', 'Melun'],
   ['22 – Côtes d’Armor', 'Saint-Brieuc'],
   ['47 – Lot-et-Garonne', 'Agen']
-];
+] as const;
 const [placeholderDepartement, placeholderCommune] =
   placeholderDepartements[
     Math.floor(Math.random() * (placeholderDepartements.length - 1))
   ];
 
-function ComboCommunesSearch({ id, ...props }) {
+export default function ComboCommunesSearch({
+  id,
+  ...props
+}: ComboSearchProps<CommuneResult> & { id: string }) {
   const group = groupId(id);
   const [departementValue, setDepartementValue] = useHiddenField(
     group,
@@ -74,14 +79,14 @@ function ComboCommunesSearch({ id, ...props }) {
         </div>
         <ComboDepartementsSearch
           {...props}
-          id={!codeDepartement ? id : null}
+          id={!codeDepartement ? id : undefined}
           describedby={departementDescribedBy}
           placeholder={placeholderDepartement}
           addForeignDepartement={false}
           value={departementValue}
           onChange={(_, result) => {
-            setDepartementValue(result?.nom);
-            setCodeDepartement(result?.code);
+            setDepartementValue(result?.nom ?? '');
+            setCodeDepartement(result?.code ?? '');
           }}
         />
       </div>
@@ -112,9 +117,3 @@ function ComboCommunesSearch({ id, ...props }) {
     </QueryClientProvider>
   );
 }
-
-ComboCommunesSearch.propTypes = {
-  id: PropTypes.string
-};
-
-export default ComboCommunesSearch;

@@ -16,6 +16,6 @@
           %br
           Certaines parties du site ne fonctionneront pas correctement.
       .site-banner-actions
-        = button_to 'Ignorer', dismiss_outdated_browser_path, method: :post, remote: true, class: 'button btn', title: 'Ne plus afficher cet avertissement pendant une semaine'
+        = button_to 'Ignorer', dismiss_outdated_browser_path, method: :post, form: { data: { turbo: true } }, class: 'button btn', title: 'Ne plus afficher cet avertissement pendant une semaine'
         %a.btn.button.primary{ href: "https://browser-update.org/fr/update.html", target: "_blank", rel: "noopener" }
           Mettre à jour mon navigateur
