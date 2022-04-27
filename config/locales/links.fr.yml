@@ -65,6 +65,10 @@ fr:
         label: "Nouveautés"
         title: "Nos nouveautés"
         url: "https://github.com/betagouv/demarches-simplifiees.fr/releases"
+      security:
+        label: "Sécurité"
+        title: "Sécurité"
+        url: "https://github.com/betagouv/demarches-simplifiees.fr/blob/main/SECURITY.md"
       stats:
         label: "Statistiques"
         title: "Statistiques"
