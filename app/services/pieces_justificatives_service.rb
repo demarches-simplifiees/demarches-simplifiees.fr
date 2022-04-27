@@ -142,6 +142,7 @@ class PiecesJustificativesService
     ActiveStorage::Attachment
       .includes(:blob)
       .where(record_type: "Champ", record_id: champ_id_dossier_id.keys)
+      .filter { |a| safe_attachment(a) }
       .map do |a|
         dossier_id = champ_id_dossier_id[a.record_id]
         ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
@@ -158,6 +159,7 @@ class PiecesJustificativesService
     ActiveStorage::Attachment
       .includes(:blob)
       .where(record_type: "Commentaire", record_id: commentaire_id_dossier_id.keys)
+      .filter { |a| safe_attachment(a) }
       .map do |a|
         dossier_id = commentaire_id_dossier_id[a.record_id]
         ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
@@ -189,6 +191,7 @@ class PiecesJustificativesService
     ActiveStorage::Attachment
       .includes(:blob)
       .where(record_type: "Dossier", name: "justificatif_motivation", record_id: dossiers)
+      .filter { |a| safe_attachment(a) }
       .map do |a|
         dossier_id = a.record_id
         ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
@@ -238,5 +241,11 @@ class PiecesJustificativesService
       .includes(:blob)
       .where(record_type: "BillSignature", record_id: bill_ids)
       .map { |bill| ActiveStorage::DownloadableFile.bill_and_path(bill) }
+  end
+
+  def self.safe_attachment(attachment)
+    attachment
+      .blob
+      .metadata[:virus_scan_result] == ActiveStorage::VirusScanner::SAFE
   end
 end

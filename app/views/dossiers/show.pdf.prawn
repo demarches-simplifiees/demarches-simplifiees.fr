@@ -3,7 +3,7 @@ require 'prawn/measurement_extensions'
 def prawn_text(message)
   tags = ['a', 'b', 'br', 'color', 'font', 'i', 'strong', 'sub', 'sup', 'u']
   atts = ['alt', 'character_spacing', 'href', 'name', 'rel', 'rgb', 'size', 'src', 'target']
-  text = ActionView::Base.safe_list_sanitizer.sanitize(message.to_s, tags: tags, attributes: atts)
+  ActionView::Base.safe_list_sanitizer.sanitize(message.to_s, tags: tags, attributes: atts)
 end
 
 def format_in_2_lines(pdf, label, text)
@@ -151,7 +151,7 @@ def add_single_champ(pdf, champ)
   when 'Champs::HeaderSectionChamp'
     add_section_title(pdf, champ.libelle)
   when 'Champs::ExplicationChamp'
-    format_in_2_columns(pdf, champ.libelle, champ.description)
+    format_in_2_lines(pdf, champ.libelle, champ.description)
   when 'Champs::CarteChamp'
     format_in_2_lines(pdf, champ.libelle, champ.to_feature_collection.to_json)
   when 'Champs::SiretChamp'
@@ -173,10 +173,12 @@ end
 def add_champs(pdf, champs)
   champs.each do |champ|
     if champ.type == 'Champs::RepetitionChamp'
+      add_section_title(pdf, champ.libelle)
       champ.rows.each do |row|
         row.each do |inner_champ|
           add_single_champ(pdf, inner_champ)
         end
+        pdf.move_down(default_margin)
       end
     else
       add_single_champ(pdf, champ)

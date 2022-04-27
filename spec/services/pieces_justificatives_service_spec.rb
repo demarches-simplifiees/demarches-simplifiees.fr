@@ -23,6 +23,16 @@ describe PiecesJustificativesService do
       it { expect(subject).to match_array([pj_champ.call(dossier).piece_justificative_file.attachment]) }
     end
 
+    context 'with a pj not safe on a champ' do
+      let(:procedure) { create(:procedure, :with_piece_justificative) }
+      let(:dossier) { create(:dossier, procedure: procedure) }
+      let(:pj_champ) { -> (d) { d.champs.find { |c| c.type == 'Champs::PieceJustificativeChamp' } } }
+
+      before { attach_file_to_champ(pj_champ.call(dossier), safe = false) }
+
+      it { expect(subject).to be_empty }
+    end
+
     context 'with a private pj champ' do
       let(:procedure) { create(:procedure) }
       let(:dossier) { create(:dossier, procedure: procedure) }
@@ -64,10 +74,24 @@ describe PiecesJustificativesService do
       let(:dossier) { create(:dossier) }
       let(:witness) { create(:dossier) }
 
-      let!(:commentaire) { create(:commentaire, :with_file, dossier: dossier) }
-      let!(:witness_commentaire) { create(:commentaire, :with_file, dossier: witness) }
+      let!(:commentaire) { create(:commentaire, dossier: dossier) }
+      let!(:witness_commentaire) { create(:commentaire, dossier: witness) }
+
+      before do
+        attach_file(commentaire.piece_jointe)
+        attach_file(witness_commentaire.piece_jointe)
+      end
 
       it { expect(subject).to match_array(dossier.commentaires.first.piece_jointe.attachment) }
+    end
+
+    context 'with a pj not safe on a commentaire' do
+      let(:dossier) { create(:dossier) }
+      let!(:commentaire) { create(:commentaire, dossier: dossier) }
+
+      before { attach_file(commentaire.piece_jointe, safe = false) }
+
+      it { expect(subject).to be_empty }
     end
 
     context 'with a motivation' do
@@ -75,6 +99,14 @@ describe PiecesJustificativesService do
       let!(:witness) { create(:dossier, :with_justificatif) }
 
       it { expect(subject).to match_array(dossier.justificatif_motivation.attachment) }
+    end
+
+    context 'with a motivation not safe' do
+      let(:dossier) { create(:dossier) }
+
+      before { attach_file(dossier.justificatif_motivation, safe = false) }
+
+      it { expect(subject).to be_empty }
     end
 
     context 'with an attestation' do
@@ -167,12 +199,20 @@ describe PiecesJustificativesService do
     end
   end
 
-  def attach_file_to_champ(champ)
-    attach_file(champ.piece_justificative_file)
+  def attach_file_to_champ(champ, safe = true)
+    attach_file(champ.piece_justificative_file, safe)
   end
 
-  def attach_file(attachable)
-    attachable
-      .attach(io: StringIO.new("toto"), filename: "toto.png", content_type: "image/png")
+  def attach_file(attachable, safe = true)
+    to_be_attached = {
+      io: StringIO.new("toto"),
+      filename: "toto.png", content_type: "image/png"
+    }
+
+    if safe
+      to_be_attached[:metadata] = { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+    end
+
+    attachable.attach(to_be_attached)
   end
 end
