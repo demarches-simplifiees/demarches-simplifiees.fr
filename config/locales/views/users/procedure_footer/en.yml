@@ -1,0 +1,24 @@
+en:
+  users:
+    procedure_footer:
+      managed_by:
+        header: 'This procedure is managed by :'
+      contact:
+        header: 'Ask a question about your file :'
+        in_app_mail:
+          prefix: 'Directly :'
+          link: "via the chat"
+        email:
+          prefix: 'By mail :'
+        phone:
+          prefix: 'By phone :'
+        schedule:
+          prefix: 'Hours : '
+        stats:
+          prefix: 'Stats :'
+          cta: "see the procedure's stats"
+      legals:
+        header: "Legals :"
+        data_retention: "Within %{application_name} : %{duree_conservation_dossiers_dans_ds} months"
+        terms: "Laws regarding this data collection"
+        dpo: "Contact the Data Protection Officer"

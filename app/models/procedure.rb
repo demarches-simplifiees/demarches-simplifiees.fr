@@ -28,6 +28,7 @@
 #  juridique_required                        :boolean          default(TRUE)
 #  libelle                                   :string
 #  lien_demarche                             :string
+#  lien_dpo                                  :string
 #  lien_notice                               :string
 #  lien_site_web                             :string
 #  monavis_embed                             :text
@@ -266,6 +267,7 @@ class Procedure < ApplicationRecord
   validate :check_juridique
   validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,200}\z/ }, uniqueness: { scope: [:path, :closed_at, :hidden_at, :unpublished_at], case_sensitive: false }
   validates :duree_conservation_dossiers_dans_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_DUREE_CONSERVATION }
+  validates :lien_dpo, email_or_link: true, allow_nil: true
   validates_with MonAvisEmbedValidator
 
   FILE_MAX_SIZE = 20.megabytes
