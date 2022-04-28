@@ -27,7 +27,7 @@
 class SuperAdmin < ApplicationRecord
   include PasswordComplexityConcern
 
-  devise :rememberable, :trackable, :validatable, :lockable, :async, :recoverable,
+  devise :rememberable, :trackable, :validatable, :lockable, :recoverable,
     :two_factor_authenticatable, :otp_secret_encryption_key => Rails.application.secrets.otp_secret_key
 
   def enable_otp!
@@ -57,5 +57,9 @@ class SuperAdmin < ApplicationRecord
     end
 
     user
+  end
+
+  def send_devise_notification(notification, *args)
+    devise_mailer.send(notification, self, *args).deliver_later
   end
 end
