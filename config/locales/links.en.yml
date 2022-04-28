@@ -27,6 +27,10 @@ en:
         label: "Beta.gouv.fr"
         title: "The Beta.gouv.fr website"
         url: "https://beta.gouv.fr"
+      code:
+        label: "Source code"
+        title: "Source code"
+        url: "https://github.com/betagouv/demarches-simplifiees.fr"
       cgu:
         label: "ToS"
         title: "Terms of Service"
