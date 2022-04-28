@@ -1,4 +1,4 @@
-import { ajax, delegate } from '@utils';
+import { httpRequest, delegate } from '@utils';
 
 addEventListener('DOMContentLoaded', () => {
   attachementPoller.deactivate();
@@ -69,7 +69,9 @@ class RemotePoller {
     for (let url of urls) {
       // Start the request. The JS payload in the response will update the page.
       // (Errors are ignored, because background tasks shouldn't report errors to the user.)
-      ajax({ url, type: 'get' }).catch(() => {});
+      httpRequest(url)
+        .js()
+        .catch(() => {});
     }
   }
 

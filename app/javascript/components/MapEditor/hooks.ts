@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { getJSON, ajax, fire } from '@utils';
+import { httpRequest, fire } from '@utils';
 import type { Feature, FeatureCollection, Geometry } from 'geojson';
 
 export const SOURCE_SELECTION_UTILISATEUR = 'selection_utilisateur';
@@ -37,7 +37,9 @@ export function useFeatureCollection(
         type: 'FeatureCollection',
         features: callback(features)
       }));
-      ajax({ url, type: 'GET' }).catch(() => null);
+      httpRequest(url)
+        .js()
+        .catch(() => null);
     },
     [url, setFeatureCollection]
   );
@@ -99,7 +101,10 @@ export function useFeatureCollection(
       try {
         const newFeatures: Feature[] = [];
         for (const feature of features) {
-          const data = await getJSON(url, { feature, source }, 'post');
+          const data = await httpRequest(url, {
+            method: 'post',
+            json: { feature, source }
+          }).json<{ feature: Feature & { lid?: string | number } }>();
           if (data) {
             if (source == SOURCE_SELECTION_UTILISATEUR) {
               data.feature.lid = feature.id;
@@ -128,9 +133,15 @@ export function useFeatureCollection(
         for (const feature of features) {
           const id = feature.properties?.id;
           if (id) {
-            await getJSON(`${url}/${id}`, { feature }, 'patch');
+            await httpRequest(`${url}/${id}`, {
+              method: 'patch',
+              json: { feature }
+            }).json();
           } else {
-            const data = await getJSON(url, { feature, source }, 'post');
+            const data = await httpRequest(url, {
+              method: 'post',
+              json: { feature, source }
+            }).json<{ feature: Feature & { lid?: string | number } }>();
             if (data) {
               if (source == SOURCE_SELECTION_UTILISATEUR) {
                 data.feature.lid = feature.id;
@@ -157,7 +168,7 @@ export function useFeatureCollection(
         const deletedFeatures = [];
         for (const feature of features) {
           const id = feature.properties?.id;
-          await getJSON(`${url}/${id}`, null, 'delete');
+          await httpRequest(`${url}/${id}`, { method: 'delete' }).json();
           deletedFeatures.push(feature);
         }
         removeFeatures(deletedFeatures, external);
