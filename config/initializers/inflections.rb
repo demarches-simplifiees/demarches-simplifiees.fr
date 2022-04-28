@@ -18,6 +18,7 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.irregular 'type_de_champ_private', 'types_de_champ_private'
   inflect.irregular 'procedure_revision_type_de_champ', 'procedure_revision_types_de_champ'
   inflect.irregular 'revision_type_de_champ', 'revision_types_de_champ'
+  inflect.irregular 'revision_type_de_champ_public', 'revision_types_de_champ_public'
   inflect.irregular 'revision_type_de_champ_private', 'revision_types_de_champ_private'
   inflect.irregular 'assign_to', 'assign_tos'
   inflect.uncountable(['avis', 'pays'])

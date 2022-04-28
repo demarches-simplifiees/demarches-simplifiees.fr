@@ -48,7 +48,7 @@ describe ProcedurePresentation do
         it { is_expected.to match(['libelle 2', 'libelle 1']) }
 
         context 'and finally, when this tdc is removed' do
-          let!(:previous_tdc2) { procedure.published_revision.types_de_champ.find_by(libelle: 'libelle 2') }
+          let!(:previous_tdc2) { procedure.published_revision.types_de_champ_public.find_by(libelle: 'libelle 2') }
 
           before do
             procedure.draft_revision.remove_type_de_champ(previous_tdc2.stable_id)
@@ -61,7 +61,7 @@ describe ProcedurePresentation do
       end
 
       context 'when there is another published revision with a renamed tdc' do
-        let!(:previous_tdc) { procedure.published_revision.types_de_champ.first }
+        let!(:previous_tdc) { procedure.published_revision.types_de_champ_public.first }
         let!(:changed_tdc) { { type_champ: :number, libelle: 'changed libelle 1' } }
 
         before do
@@ -75,7 +75,7 @@ describe ProcedurePresentation do
       end
 
       context 'when there is another published which removes a previous tdc' do
-        let!(:previous_tdc) { procedure.published_revision.types_de_champ.first }
+        let!(:previous_tdc) { procedure.published_revision.types_de_champ_public.first }
 
         before do
           type_de_champ = procedure.draft_revision.remove_type_de_champ(previous_tdc.id)
