@@ -1,22 +1,26 @@
 describe Champs::DossierLinkController, type: :controller do
   let(:user) { create(:user) }
-  let(:procedure) { create(:procedure, :published) }
+  let(:procedure) { create(:procedure, :published, :with_dossier_link) }
 
   describe '#show' do
     let(:dossier) { create(:dossier, user: user, procedure: procedure) }
+    let(:champ) { dossier.champs.first }
 
     context 'when user is connected' do
       render_views
       before { sign_in user }
 
+      let(:champs_attributes) do
+        champ_attributes = []
+        champ_attributes[champ.id] = { value: dossier_id }
+        champ_attributes
+      end
       let(:params) do
         {
+          champ_id: champ.id,
           dossier: {
-            champs_attributes: {
-              '1' => { value: dossier_id.to_s }
-            }
-          },
-          position: '1'
+            champs_attributes: champs_attributes
+          }
         }
       end
       let(:dossier_id) { dossier.id }
@@ -30,7 +34,7 @@ describe Champs::DossierLinkController, type: :controller do
           expect(response.body).to include('Dossier en brouillon')
           expect(response.body).to include(procedure.libelle)
           expect(response.body).to include(procedure.organisation)
-          expect(response.body).to include('.dossier-link-1 .help-block')
+          expect(response.body).to include("##{champ.input_group_id} .help-block")
         end
       end
 
@@ -42,14 +46,14 @@ describe Champs::DossierLinkController, type: :controller do
 
         it 'renders error message' do
           expect(response.body).to include('Ce dossier est inconnu')
-          expect(response.body).to include('.dossier-link-1 .help-block')
+          expect(response.body).to include("##{champ.input_group_id} .help-block")
         end
       end
     end
 
     context 'when user is not connected' do
       before do
-        get :show, params: { position: '1' }, format: :js, xhr: true
+        get :show, params: { champ_id: champ.id }, format: :js, xhr: true
       end
 
       it { expect(response.code).to eq('401') }
