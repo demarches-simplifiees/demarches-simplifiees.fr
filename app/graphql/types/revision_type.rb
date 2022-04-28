@@ -8,7 +8,7 @@ module Types
     field :annotation_descriptors, [Types::ChampDescriptorType], null: false
 
     def champ_descriptors
-      Loaders::Association.for(object.class, :types_de_champ).load(object)
+      Loaders::Association.for(object.class, :types_de_champ_public).load(object)
     end
 
     def annotation_descriptors

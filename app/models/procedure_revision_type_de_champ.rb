@@ -32,7 +32,7 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
 
   def set_position
     self.position ||= begin
-      types_de_champ = (private? ? revision.revision_types_de_champ_private : revision.revision_types_de_champ).filter(&:persisted?)
+      types_de_champ = (private? ? revision.revision_types_de_champ_private : revision.revision_types_de_champ_public).filter(&:persisted?)
 
       if types_de_champ.present?
         types_de_champ.last.position + 1
