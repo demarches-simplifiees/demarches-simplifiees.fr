@@ -9,17 +9,18 @@ class Cron::FindDubiousProceduresJob < Cron::CronJob
     'médical', 'handicap', 'maladie', 'allergie', 'hospitalisé', 'RQTH', 'vaccin'
   ]
 
-  def perform(*args)
-    # \\y is a word boundary
-    forbidden_regexp = FORBIDDEN_KEYWORDS
-      .map { |keyword| "\\y#{keyword}\\y" }
+  # \\y is a word boundary
+  def self.forbidden_regexp
+    FORBIDDEN_KEYWORDS.map { |keyword| "\\y#{keyword}\\y" }
       .join('|')
+  end
 
+  def perform(*args)
     # ~* -> case insensitive regexp match
     # https://www.postgresql.org/docs/current/static/functions-matching.html#FUNCTIONS-POSIX-REGEXP
     forbidden_tdcs = TypeDeChamp
       .joins(:procedure)
-      .where("unaccent(types_de_champ.libelle) ~* unaccent(?)", forbidden_regexp)
+      .where("unaccent(types_de_champ.libelle) ~* unaccent(?)", Cron::FindDubiousProceduresJob.forbidden_regexp)
       .where(type_champ: [TypeDeChamp.type_champs.fetch(:text), TypeDeChamp.type_champs.fetch(:textarea)])
       .where(procedures: { closed_at: nil, whitelisted_at: nil })
 
