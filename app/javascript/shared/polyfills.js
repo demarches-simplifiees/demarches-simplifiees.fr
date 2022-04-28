@@ -6,6 +6,8 @@ import 'regenerator-runtime/runtime';
 import 'dom4';
 import 'intersection-observer';
 import 'whatwg-fetch';
+import '@webcomponents/webcomponentsjs';
+import '@stimulus/polyfills';
 
 import './polyfills/insertAdjacentElement';
 import './polyfills/dataset';
