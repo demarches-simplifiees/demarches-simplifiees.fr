@@ -2,11 +2,11 @@
   id: champ.input_id,
   aria: { describedby: champ.describedby_id },
   placeholder: champ.libelle,
-  data: { remote: true, debounce: true, url: champs_siret_path(form.index), params: { champ_id: champ&.id }.to_query, spinner: true },
+  data: { remote: true, debounce: true, url: champs_siret_path(champ.id), spinner: true },
   required: champ.mandatory?,
   pattern: "[0-9]{14}",
   title: "Le numéro de SIRET doit comporter exactement 14 chiffres"
 .spinner.right.hidden
-.siret-info{ class: "siret-info-#{form.index}" }
+.siret-info
   - if champ.etablissement.present?
     = render partial: 'shared/dossiers/editable_champs/etablissement_titre', locals: { etablissement: champ.etablissement }

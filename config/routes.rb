@@ -141,9 +141,9 @@ Rails.application.routes.draw do
   end
 
   namespace :champs do
-    get ':position/siret', to: 'siret#show', as: :siret
     get ':position/dossier_link', to: 'dossier_link#show', as: :dossier_link
     post ':position/carte', to: 'carte#show', as: :carte
+    get ':champ_id/siret', to: 'siret#show', as: :siret
 
     get ':champ_id/carte/features', to: 'carte#index', as: :carte_features
     post ':champ_id/carte/features', to: 'carte#create'
