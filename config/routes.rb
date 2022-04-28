@@ -142,12 +142,11 @@ Rails.application.routes.draw do
 
   namespace :champs do
     get ':position/dossier_link', to: 'dossier_link#show', as: :dossier_link
-    post ':position/carte', to: 'carte#show', as: :carte
     get ':champ_id/siret', to: 'siret#show', as: :siret
+    post ':champ_id/carte', to: 'carte#show', as: :carte
 
     get ':champ_id/carte/features', to: 'carte#index', as: :carte_features
     post ':champ_id/carte/features', to: 'carte#create'
-    post ':champ_id/carte/features/import', to: 'carte#import'
     patch ':champ_id/carte/features/:id', to: 'carte#update'
     delete ':champ_id/carte/features/:id', to: 'carte#destroy'
 
