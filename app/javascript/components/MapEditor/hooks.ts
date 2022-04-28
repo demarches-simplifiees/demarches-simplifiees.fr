@@ -23,7 +23,7 @@ export type DeleteFeatures = (params: {
 
 export function useFeatureCollection(
   initialFeatureCollection: FeatureCollection,
-  { url, enabled = true }: { url: string; enabled: boolean }
+  { url }: { url: string }
 ) {
   const [error, onError] = useError();
   const [featureCollection, setFeatureCollection] = useState(
@@ -96,9 +96,6 @@ export function useFeatureCollection(
       source = SOURCE_SELECTION_UTILISATEUR,
       external = false
     }) => {
-      if (!enabled) {
-        return;
-      }
       try {
         const newFeatures: Feature[] = [];
         for (const feature of features) {
@@ -117,7 +114,7 @@ export function useFeatureCollection(
         onError('Le polygone dessiné n’est pas valide.');
       }
     },
-    [enabled, url, updateFeatureCollection, addFeatures, onError]
+    [url, updateFeatureCollection, addFeatures, onError]
   );
 
   const updateFeatures = useCallback<UpdateFatures>(
@@ -126,9 +123,6 @@ export function useFeatureCollection(
       source = SOURCE_SELECTION_UTILISATEUR,
       external = false
     }) => {
-      if (!enabled) {
-        return;
-      }
       try {
         const newFeatures: Feature[] = [];
         for (const feature of features) {
@@ -154,14 +148,11 @@ export function useFeatureCollection(
         onError('Le polygone dessiné n’est pas valide.');
       }
     },
-    [enabled, url, updateFeatureCollection, addFeatures, onError]
+    [url, updateFeatureCollection, addFeatures, onError]
   );
 
   const deleteFeatures = useCallback<DeleteFeatures>(
     async ({ features, external = false }) => {
-      if (!enabled) {
-        return;
-      }
       try {
         const deletedFeatures = [];
         for (const feature of features) {
@@ -183,7 +174,7 @@ export function useFeatureCollection(
         onError('Le polygone n’a pas pu être supprimé.');
       }
     },
-    [enabled, url, updateFeatureCollection, removeFeatures, onError]
+    [url, updateFeatureCollection, removeFeatures, onError]
   );
 
   return {

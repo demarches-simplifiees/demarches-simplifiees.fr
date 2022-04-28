@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import React, { lazy, Suspense, FunctionComponent, StrictMode } from 'react';
+import React, { lazy, Suspense, FunctionComponent } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 import invariant from 'tiny-invariant';
 
@@ -44,12 +44,7 @@ export class ReactController extends Controller {
       Component,
       `Cannot find a React component with class "${componentName}"`
     );
-    render(
-      <StrictMode>
-        <Component {...props} />
-      </StrictMode>,
-      node
-    );
+    render(<Component {...props} />, node);
   }
 
   private getComponent(componentName: string): FunctionComponent<Props> | null {
