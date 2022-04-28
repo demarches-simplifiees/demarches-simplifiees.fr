@@ -13,7 +13,7 @@
             active: @tab == 'annotations-privees')
 
 - if @tab == 'dossier'
-  = render partial: "shared/dossiers/edit", locals: { dossier: @dossier, apercu: true }
+  = render partial: "shared/dossiers/edit", locals: { dossier: @dossier }
 - else
   .container
     = form_for @dossier, url: '', method: :get, html: { class: 'form' } do |f|
