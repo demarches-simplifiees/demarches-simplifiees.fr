@@ -1,8 +1,10 @@
 describe WebhookController, type: :controller do
   describe '#helpscout' do
+    let(:sent_email) { OpenStruct.new(delivered_at: 1.day.ago, subject: "subject", status: "opened") }
     before do
       allow(controller).to receive(:verify_signature!).and_return(true)
       allow(controller).to receive(:verify_authenticity_token)
+      allow_any_instance_of(Sendinblue::API).to receive(:sent_mails).and_return([sent_email])
     end
 
     subject(:response) { get :helpscout, params: { customer: { email: customer_email } } }
@@ -27,6 +29,7 @@ describe WebhookController, type: :controller do
     context 'when there is a matching user' do
       let(:user) { create(:user, :with_strong_password) }
       let(:customer_email) { user.email }
+      let!(:dossier) { create(:dossier, user: user) }
 
       it 'returns a 200 response' do
         expect(subject.status).to eq(200)
@@ -36,6 +39,11 @@ describe WebhookController, type: :controller do
       it 'returns a link to the User profile in the Manager' do
         expect(payload).to have_key('html')
         expect(payload['html']).to have_selector("a[href='#{manager_user_url(user)}']")
+        expect(payload['html']).to include("Créé le:")
+        expect(payload['html']).to include("Confirmé le:")
+        expect(payload['html']).to include("Drnr. connexion le: indéfini")
+        expect(payload['html']).to include("#{sent_email.status} : #{sent_email.subject}")
+        expect(payload['html']).to have_selector("a[href='#{instructeur_dossier_url(dossier.procedure.id, dossier)}']")
       end
 
       context 'when there are an associated Instructeur and Administrateur' do
