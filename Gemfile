@@ -23,7 +23,6 @@ gem 'delayed_cron_job' # Cron jobs
 gem 'delayed_job_active_record'
 gem 'delayed_job_web', '>= 1.4.4'
 gem 'devise' # Gestion des comptes utilisateurs
-gem 'devise-async'
 gem 'devise-i18n'
 gem 'devise-two-factor'
 gem 'discard'
