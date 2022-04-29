@@ -5,7 +5,7 @@
     "@headlessui/react": "^1.5.0",
     "@heroicons/react": "^1.0.6",
     "@hotwired/stimulus": "^3.0.1",
-    "@hotwired/turbo-rails": "^7.1.1",
+    "@hotwired/turbo": "^7.1.0",
     "@mapbox/mapbox-gl-draw": "^1.3.0",
     "@popperjs/core": "^2.11.4",
     "@rails/actiontext": "^6.1.4-1",
@@ -70,6 +70,7 @@
     "eslint-plugin-react": "^7.25.1",
     "eslint-plugin-react-hooks": "^4.2.0",
     "netlify-cli": "^8.3.0",
+    "patch-package": "^6.4.7",
     "prettier": "^2.3.2",
     "typescript": "^4.5.5",
     "webpack-bundle-analyzer": "^3.7.0",
@@ -82,7 +83,8 @@
     "lint:types": "tsc",
     "graphql:docs:build": "graphdoc --force",
     "graphql:docs:deploy": "netlify deploy -d ./docs/graphql --prod",
-    "graphql:docs:publish": "yarn graphql:docs:build && yarn graphql:docs:deploy"
+    "graphql:docs:publish": "yarn graphql:docs:build && yarn graphql:docs:deploy",
+    "postinstall": "patch-package"
   },
   "engines": {
     "node": ">= 12.*"
