@@ -35,7 +35,9 @@
 
             - if p.close?
               .procedure-status
-                %span.label Close
+                %span.label
+                  = t('helpers.procedure.close')
             - elsif p.depubliee?
               .procedure-status
-                %span.label Dépubliée
+                %span.label
+                  = t('helpers.procedure.unpublished')

@@ -632,6 +632,10 @@ class Dossier < ApplicationRecord
       termine_close_to_expiration_notice_sent_at: nil)
   end
 
+  def show_procedure_state_warning?
+    procedure.discarded? || (brouillon? && !procedure.dossier_can_transition_to_en_construction?)
+  end
+
   def show_groupe_instructeur_details?
     procedure.routee? && groupe_instructeur.present? && (!procedure.feature_enabled?(:procedure_routage_api) || !defaut_groupe_instructeur?)
   end

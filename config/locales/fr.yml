@@ -35,9 +35,12 @@ fr:
     subject: Sujet
     message: Message
     send_mail: Envoyer le message
+    procedure: Démarches
   helpers:
     procedure:
       testing_procedure: démarche en test
+      close: Close
+      unpublished: Dépubliée
     commentaire:
       send_message_to_instructeur: "Envoyer un message à l’instructeur"
       reply_in_mailbox: "Répondre dans la messagerie."
@@ -55,7 +58,6 @@ fr:
         access: Consulter mon dossier
         question: J’ai une question
         reply: Répondre à ce message
-
   views:
     commencer:
       show:
@@ -134,11 +136,39 @@ fr:
           edit_identity: "Modifier l’identité"
     instructeurs:
       dossiers:
+        tab_steps:
+          to_follow: à suivre
+          total: au total
+          request: Demande
+          private_annotations: Annotations privées
+          external_opinion: Avis externes
+          messaging: Messagerie
+          involved_persons: Personnes impliquées
+        tab_explainations:
+          a_suivre: Aucun instructeur n’est affecté au suivi de ces dossiers. Soyez le premier !
+          suivis: Les dossiers qui sont dans cet onglet sont uniquement ceux que vous suivez. Vous pouvez échanger avec le demandeur jusqu'à pouvoir les accepter, les refuser ou les classer sans suite.
+          traites: "Les dossiers dans cet onglet sont terminés : ils ont été acceptés, refusés ou classés sans suite."
+          tous: Tous les dossiers qui ont été déposés sur cette démarche, quel que soit le statut.
+          supprimes_recemment: Tous les dossiers terminés et supprimés par les instructeurs sur cette démarche
+          archives:  "Les dossiers de cet onglet sont archivés : vous ne pouvez plus y répondre, et les demandeurs ne peuvent plus les modifier."
+          expirant: Les dossiers n'expireront pas avant la période de conservation des données.
         archived_dossier: "Le dossier sera conservé 1 mois supplémentaire"
         delete_dossier: "Supprimer le dossier"
         deleted_by_user: "Dossier supprimé par l'usager"
         deleted_by_administration: "Dossier supprimé par l'administration"
         restore: "Restaurer"
+        filters:
+          column: Colonne
+          value: Valeur
+          add_filter: Ajouter le filtre
+          title: Filtrer
+        personalize: Personnaliser
+        download: Télécharger un dossier
+        follow_file: Suivre le dossier
+        stop_follow: Ne plus suivre
+        save: Enregistrer
+        no_file: Aucun dossier
+        dossier_synthesis: Synthèse des dossiers
       avis:
         introduction_file_explaination: "Fichier joint à la demande d’avis"
     users:
@@ -146,9 +176,15 @@ fr:
         archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
         autosave:
           autosave_draft: Votre brouillon est automatiquement enregistré.
+          autosave_confirmation: Brouillon enregistré
+          more_information: More informations
           more_infos: En savoir plus
         identite:
           identity_data: Données d’identité
+          civility: Civilité
+          first_name: Prénom
+          last_name: Nom
+          birthdate: Date de naissance
           complete_data: Merci de remplir vos informations personnelles pour accéder à la démarche.
           continue: Continuer
         merci:
@@ -188,6 +224,8 @@ fr:
           mailbox: "La messagerie vous permet de contacter l’instructeur en charge de votre dossier."
         demande:
           edit_dossier: "Modifier le dossier"
+        search:
+          search_file: Rechercher un dossier
         index:
           dossiers: "Dossiers"
         dossiers_list:
@@ -447,6 +485,9 @@ fr:
        deleted_by_instructeur: "Le dossier a bien été supprimé de votre interface"
        impossible_deletion: "Supression impossible : le dossier n'est pas traité"
        restore: "Le dossier a bien été restauré"
+       labels:
+        to_follow: à suivre
+        total: dossiers
   administrateurs:
     procedures:
       show:
