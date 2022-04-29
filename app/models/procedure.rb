@@ -456,7 +456,10 @@ class Procedure < ApplicationRecord
     }
     include_list[:groupe_instructeurs] = :instructeurs if !is_different_admin
     procedure = self.deep_clone(include: include_list) do |original, kopy|
-      PiecesJustificativesService.clone_attachments(original, kopy)
+      begin
+        PiecesJustificativesService.clone_attachments(original, kopy)
+      rescue ActiveStorage::FileNotFoundError
+      end
     end
     procedure.path = SecureRandom.uuid
     procedure.aasm_state = :brouillon

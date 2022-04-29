@@ -647,6 +647,16 @@ describe Procedure do
         expect(subject.canonical_procedure).to be_nil
       end
     end
+
+    context 'with an pj not found' do
+      let(:procedure) { create(:procedure) }
+
+      before do
+        expect(PiecesJustificativesService).to receive(:clone_attachments).at_least(:once).and_raise(ActiveStorage::FileNotFoundError)
+      end
+
+      it { expect { procedure.clone(administrateur, false) }.not_to raise_error }
+    end
   end
 
   describe '#publish!' do
