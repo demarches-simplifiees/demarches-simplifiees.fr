@@ -25,8 +25,8 @@ fr:
             entreprise_forme_juridique: Forme juridique
             entreprise_nom_commercial: Nom commercial
             entreprise_raison_sociale: Raison sociale
-            entreprise_siret_siege_social: SIRET siège social
+            entreprise_siret_siege_social: Numéro TAHITI siège social
             entreprise_date_creation: Date de création
-            siret: SIRET
+            siret: Numéro TAHITI
             libelle_naf: Libellé NAF
             code_postal: Code postal

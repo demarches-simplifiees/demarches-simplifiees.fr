@@ -150,7 +150,7 @@ fr:
           traites: "Les dossiers dans cet onglet sont terminés : ils ont été acceptés, refusés ou classés sans suite."
           tous: Tous les dossiers qui ont été déposés sur cette démarche, quel que soit le statut.
           supprimes_recemment: Tous les dossiers terminés et supprimés par les instructeurs sur cette démarche
-          archives:  "Les dossiers de cet onglet sont archivés : vous ne pouvez plus y répondre, et les demandeurs ne peuvent plus les modifier."
+          archives: "Les dossiers de cet onglet sont archivés : vous ne pouvez plus y répondre, et les demandeurs ne peuvent plus les modifier."
           expirant: Les dossiers n'expireront pas avant la période de conservation des données.
         archived_dossier: "Le dossier sera conservé 1 mois supplémentaire"
         delete_dossier: "Supprimer le dossier"
@@ -368,7 +368,7 @@ fr:
       procedure_not_found: "La démarche n’existe pas"
       siret_unknown: 'Désolé, nous n’avons pas trouvé d’établissement enregistré correspondant à ce numéro TAHITI.'
       siret_network_error: 'Désolé, la récupération des informations des numéros TAHITI est temporairement indisponible. Veuillez réessayer dans quelques instants.'
-      siret_not_found: 'Nous n’avons pas trouvé d’établissement correspondant à ce numéro de SIRET.'
+      siret_not_found: 'Nous n’avons pas trouvé d’établissement correspondant à ce numéro TAHITI.'
       # etablissement_fail: 'Désolé, nous n’avons pas réussi à enregistrer l’établissement correspondant à ce numéro SIRET'
       cps_network_error: 'Désolé, la vérification du numéro DN auprès de la CPS est temporairement indisponible. Vérifiez bien vos informations'
       france_connect:
@@ -482,10 +482,10 @@ fr:
         no_longer_available: "L’attestation n'est plus disponible sur ce dossier."
   instructeurs:
     dossiers:
-       deleted_by_instructeur: "Le dossier a bien été supprimé de votre interface"
-       impossible_deletion: "Supression impossible : le dossier n'est pas traité"
-       restore: "Le dossier a bien été restauré"
-       labels:
+      deleted_by_instructeur: "Le dossier a bien été supprimé de votre interface"
+      impossible_deletion: "Supression impossible : le dossier n'est pas traité"
+      restore: "Le dossier a bien été restauré"
+      labels:
         to_follow: à suivre
         total: dossiers
   administrateurs:

@@ -354,11 +354,11 @@ en:
     messages:
       dossier_not_found: "The file does not exist or you do not have access to it."
       # # dossier_map_not_activated: "The file does not have access to the map."
-      invalid_siret: "The SIRET is incorrect"
+      invalid_siret: "The Tahiti number is incorrect"
       procedure_not_found: "The procedure does not exist"
       siret_unknown: 'Sorry, we did not find any establishment registered under this TAHITI number.'
       siret_network_error: 'Désolé, la récupération des informations des numéros TAHITI est temporairement indisponible. Veuillez réessayer dans quelques instants.'
-      siret_not_found: 'Nous n’avons pas trouvé d’établissement correspondant à ce numéro de SIRET.'
+      siret_not_found: 'Nous n’avons pas trouvé d’établissement correspondant à ce numéro TAHITI.'
       # # etablissement_fail: 'Désolé, nous n’avons pas réussi à enregistrer l’établissement correspondant à ce numéro SIRET'
       france_connect:
         connexion: "Error trying to connect to France Connect."
@@ -459,11 +459,11 @@ en:
         no_longer_available: "The certificate is no longer available on this file."
   instructeurs:
     dossiers:
-       deleted_by_instructeur: "The folder has been deleted"
-       impossible_deletion: "Unable to delete : the folder is not processed"
-       restore: "The folder has been restored"
-       labels:
-          to_follow: to follow
+      deleted_by_instructeur: "The folder has been deleted"
+      impossible_deletion: "Unable to delete : the folder is not processed"
+      restore: "The folder has been restored"
+      labels:
+        to_follow: to follow
   france_connect:
     particulier:
       password_confirmation:
