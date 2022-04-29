@@ -2,5 +2,7 @@
   = mail_to CONTACT_EMAIL do
     %span.icon.mail
     .dropdown-description
-      %span.help-dropdown-title Contact technique
-      %p Envoyez nous un message à #{CONTACT_EMAIL}.
+      %span.help-dropdown-title
+        = t('help_dropdown.technical_contact_title')
+      %p
+        = t('help_dropdown.technical_contact_description', contact_email: CONTACT_EMAIL)

@@ -646,13 +646,13 @@
   }
 }
 
-[data-react-class]:not([data-react-class^="ComboMultiple"]) {
+[data-react-component-value]:not([data-react-component-value^="ComboMultiple"]) {
   [data-reach-combobox-input]:not(.no-margin) {
     margin-bottom: $default-fields-spacer;
   }
 }
 
-[data-react-class^="ComboMultiple"] {
+[data-react-component-value^="ComboMultiple"] {
   margin-bottom: $default-fields-spacer;
 
   [data-reach-combobox-input] {

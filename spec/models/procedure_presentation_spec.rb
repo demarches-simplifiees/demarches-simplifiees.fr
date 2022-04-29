@@ -58,26 +58,26 @@ describe ProcedurePresentation do
       let(:tdc_private_2) { procedure.types_de_champ_private[1] }
       let(:expected) {
         [
-          { "label" => 'Créé le', "table" => 'self', "column" => 'created_at' },
-          { "label" => 'En construction le', "table" => 'self', "column" => 'en_construction_at' },
-          { "label" => 'Déposé le', "table" => 'self', "column" => 'depose_at' },
-          { "label" => 'Mis à jour le', "table" => 'self', "column" => 'updated_at' },
-          { "label" => 'Demandeur', "table" => 'user', "column" => 'email' },
-          { "label" => 'Email instructeur', "table" => 'followers_instructeurs', "column" => 'email' },
-          { "label" => 'Groupe instructeur', "table" => 'groupe_instructeur', "column" => 'label' },
-          { "label" => 'SIREN', "table" => 'etablissement', "column" => 'entreprise_siren' },
-          { "label" => 'Forme juridique', "table" => 'etablissement', "column" => 'entreprise_forme_juridique' },
-          { "label" => 'Nom commercial', "table" => 'etablissement', "column" => 'entreprise_nom_commercial' },
-          { "label" => 'Raison sociale', "table" => 'etablissement', "column" => 'entreprise_raison_sociale' },
-          { "label" => 'Numéro TAHITI siège social', "table" => 'etablissement', "column" => 'entreprise_siret_siege_social' },
-          { "label" => 'Date de création', "table" => 'etablissement', "column" => 'entreprise_date_creation' },
-          { "label" => 'Numéro TAHITI', "table" => 'etablissement', "column" => 'siret' },
-          { "label" => 'Libellé NAF', "table" => 'etablissement', "column" => 'libelle_naf' },
-          { "label" => 'Code postal', "table" => 'etablissement', "column" => 'code_postal' },
-          { "label" => tdc_1.libelle, "table" => 'type_de_champ', "column" => tdc_1.stable_id.to_s },
-          { "label" => tdc_2.libelle, "table" => 'type_de_champ', "column" => tdc_2.stable_id.to_s },
-          { "label" => tdc_private_1.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_1.stable_id.to_s },
-          { "label" => tdc_private_2.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_2.stable_id.to_s }
+          { "label" => 'Créé le', "table" => 'self', "column" => 'created_at', 'classname' => '' },
+          { "label" => 'En construction le', "table" => 'self', "column" => 'en_construction_at', 'classname' => '' },
+          { "label" => 'Déposé le', "table" => 'self', "column" => 'depose_at', 'classname' => '' },
+          { "label" => 'Mis à jour le', "table" => 'self', "column" => 'updated_at', 'classname' => '' },
+          { "label" => 'Demandeur', "table" => 'user', "column" => 'email', 'classname' => '' },
+          { "label" => 'Email instructeur', "table" => 'followers_instructeurs', "column" => 'email', 'classname' => '' },
+          { "label" => 'Groupe instructeur', "table" => 'groupe_instructeur', "column" => 'label', 'classname' => '' },
+          { "label" => 'SIREN', "table" => 'etablissement', "column" => 'entreprise_siren', 'classname' => '' },
+          { "label" => 'Forme juridique', "table" => 'etablissement', "column" => 'entreprise_forme_juridique', 'classname' => '' },
+          { "label" => 'Nom commercial', "table" => 'etablissement', "column" => 'entreprise_nom_commercial', 'classname' => '' },
+          { "label" => 'Raison sociale', "table" => 'etablissement', "column" => 'entreprise_raison_sociale', 'classname' => '' },
+          { "label" => 'Numéro TAHITI siège social', "table" => 'etablissement', "column" => 'entreprise_siret_siege_social', 'classname' => '' },
+          { "label" => 'Date de création', "table" => 'etablissement', "column" => 'entreprise_date_creation', 'classname' => '' },
+          { "label" => 'Numéro TAHITI', "table" => 'etablissement', "column" => 'siret', 'classname' => '' },
+          { "label" => 'Libellé NAF', "table" => 'etablissement', "column" => 'libelle_naf', 'classname' => '' },
+          { "label" => 'Code postal', "table" => 'etablissement', "column" => 'code_postal', 'classname' => '' },
+          { "label" => tdc_1.libelle, "table" => 'type_de_champ', "column" => tdc_1.stable_id.to_s, 'classname' => '' },
+          { "label" => tdc_2.libelle, "table" => 'type_de_champ', "column" => tdc_2.stable_id.to_s, 'classname' => '' },
+          { "label" => tdc_private_1.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_1.stable_id.to_s, 'classname' => '' },
+          { "label" => tdc_private_2.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_2.stable_id.to_s, 'classname' => '' }
         ]
       }
 
@@ -94,9 +94,9 @@ describe ProcedurePresentation do
     end
 
     context 'when the procedure is for individuals' do
-      let(:name_field) { { "label" => "Prénom", "table" => "individual", "column" => "prenom" } }
-      let(:surname_field) { { "label" => "Nom", "table" => "individual", "column" => "nom" } }
-      let(:gender_field) { { "label" => "Civilité", "table" => "individual", "column" => "gender" } }
+      let(:name_field) { { "label" => "Prénom", "table" => "individual", "column" => "prenom", 'classname' => '' } }
+      let(:surname_field) { { "label" => "Nom", "table" => "individual", "column" => "nom", 'classname' => '' } }
+      let(:gender_field) { { "label" => "Civilité", "table" => "individual", "column" => "gender", 'classname' => '' } }
       let(:procedure) { create(:procedure, :for_individual) }
       let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to) }
 
@@ -766,6 +766,34 @@ describe ProcedurePresentation do
           ]
         })
       end
+    end
+  end
+
+  describe '#filtered_sorted_ids' do
+    let(:dossier_1) { create(:dossier) }
+    let(:dossier_2) { create(:dossier) }
+    let(:dossier_3) { create(:dossier) }
+    let(:dossiers) { Dossier.where(id: [dossier_1, dossier_2, dossier_3].map(&:id)) }
+
+    let(:sorted_ids) { [dossier_2, dossier_3, dossier_1].map(&:id) }
+
+    subject { procedure_presentation.filtered_sorted_ids(dossiers, 'tous') }
+
+    before do
+      expect(procedure_presentation).to receive(:sorted_ids).and_return(sorted_ids)
+    end
+
+    it { is_expected.to eq(sorted_ids) }
+
+    context 'when a filter is present' do
+      let(:filtered_ids) { [dossier_1, dossier_2, dossier_3].map(&:id) }
+
+      before do
+        procedure_presentation.filters['tous'] = 'some_filter'
+        expect(procedure_presentation).to receive(:filtered_ids).and_return(filtered_ids)
+      end
+
+      it { is_expected.to eq(sorted_ids) }
     end
   end
 end
