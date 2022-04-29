@@ -31,6 +31,10 @@ fr:
         label: "CGU"
         title: "Conditions Générales d'Utilisation"
         url: "https://doc.demarches-simplifiees.fr/cgu"
+      code:
+        label: "Code source"
+        title: "Code source"
+        url: "https://github.com/betagouv/demarches-simplifiees.fr"
       contact:
         label: "Contact"
         title: "Contact"
@@ -65,6 +69,10 @@ fr:
         label: "Nouveautés"
         title: "Nos nouveautés"
         url: "https://github.com/betagouv/demarches-simplifiees.fr/releases"
+      security:
+        label: "Sécurité"
+        title: "Sécurité"
+        url: "https://github.com/betagouv/demarches-simplifiees.fr/blob/main/SECURITY.md"
       stats:
         label: "Statistiques"
         title: "Statistiques"
