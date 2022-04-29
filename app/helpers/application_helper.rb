@@ -1,6 +1,10 @@
 module ApplicationHelper
   include SanitizeUrl
 
+  def html_lang
+    I18n.locale.to_s
+  end
+
   def sanitize_url(url)
     if !url.nil?
       super(url, schemes: ['http', 'https'], replace_evil_with: root_url)
@@ -24,6 +28,10 @@ module ApplicationHelper
       class_names << 'alert-fixed'
     end
     class_names.join(' ')
+  end
+
+  def react_component(name, props = {}, html = {})
+    tag.div(**html.merge(data: { controller: 'react', react_component_value: name, react_props_value: props.to_json }))
   end
 
   def render_to_element(selector, partial:, outer: false, locals: {})

@@ -14,7 +14,7 @@ class WebhookController < ActionController::Base
       administrateur = user.administrateur
 
       url = manager_user_url(user)
-      html = [link_to_manager(user, url)]
+      html = [*attributes(user), link_to_manager(user, url)]
 
       if instructeur
         url = manager_instructeur_url(instructeur)
@@ -41,6 +41,20 @@ class WebhookController < ActionController::Base
   def email_link_to_manager(user)
     url = emails_manager_user_url(user)
     "<a target='_blank' href='#{url}' rel='noopener'>Emails##{user.id}</a>"
+  end
+
+  def attributes(user)
+    mails = Sendinblue::API.new.sent_mails(user.email)
+    html_mails = mails.first(5).map { |em| "Le #{em.delivered_at.strftime('%d/%m à %H:%M')} #{em.status} : #{em.subject}" }
+    dossiers = user.dossiers.order(:updated_at).last(2).map { |dossier| "Dossier #{dossier.procedure.libelle} <a target='_blank' href='#{instructeur_dossier_url(dossier.procedure.id, dossier)}' rel='noopener'>#{dossier.id}</a>" }
+
+    [
+      "Créé le: #{user.created_at.strftime("%d/%m/%Y à %H:%M").presence || 'indéfini'}",
+      "Confirmé le: #{user.confirmed_at.strftime("%d/%m/%Y à %H:%M").presence || 'indéfini'}",
+      "Drnr. connexion le: #{user.last_sign_in_at&.strftime("%d/%m/%Y à %H:%M").presence || 'indéfini'}",
+      *dossiers,
+      *html_mails
+    ]
   end
 
   def verify_signature!

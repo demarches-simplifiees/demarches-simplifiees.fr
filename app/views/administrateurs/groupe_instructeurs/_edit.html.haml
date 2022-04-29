@@ -5,37 +5,44 @@
     html: { class: 'form' } do |f|
 
     = f.label :routing_criteria_name do
-      Libellé du routage
-    %p.notice Ce texte apparaitra sur le formulaire usager comme le libellé d’une liste
-    = f.text_field :routing_criteria_name, placeholder: 'ex. Votre ville', required: true
-    = f.submit 'Renommer', class: 'button primary send'
+      = t('.routing.title')
+    %p.notice
+      = t('.routing.notice')
+    = f.text_field :routing_criteria_name, placeholder: t('.add_a_group.placeholder'), required: true
+    = f.submit t('.button.rename'), class: 'button primary send'
 
 .card
-  .card-title Gestion des Groupes
+  .card-title
+    = t('.group_management.title')
 
   = form_for :groupe_instructeur, html: { class: 'form' } do |f|
     = f.label :label do
-      Ajouter un groupe
-    %p.notice Ce groupe sera un choix de la liste « #{procedure.routing_criteria_name} » .
-    = f.text_field :label, placeholder: 'ex. Ville de Bordeaux', required: true
-    = f.submit 'Ajouter le groupe', class: "button primary send"
+      = t('.add_a_group.title')
+    %p.notice
+      = t('.add_a_group.notice', routing_criteria_name: procedure.routing_criteria_name)
+    = f.text_field :label, placeholder: t('.add_a_group.placeholder'), required: true
+    = f.submit t('.button.add_group'), class: "button primary send"
 
   - csv_max_size = Administrateurs::GroupeInstructeursController::CSV_MAX_SIZE
   - if procedure.publiee?
     = form_tag import_admin_procedure_groupe_instructeurs_path(procedure), method: :post, multipart: true, class: "mt-4 form" do
-      = label_tag "Importer par fichier CSV"
-      %p.notice Le fichier csv doit comporter 2 colonnes (Groupe, Email) et être séparé par des virgules. L'import n'écrase pas les groupes et les instructeurs existants.
-      %p.notice Le poids du fichier doit être inférieur à #{number_to_human_size(csv_max_size)}
-      %p.mt-2.mb-2= link_to "Télécharger l'exemple de fichier CSV", "/csv/#{I18n.locale}/import-groupe-test.csv"
+      = label_tag t('.csv_import.title')
+      %p.notice
+        = t('.csv_import.notice_1')
+      %p.notice
+        = t('.csv_import.notice_2', csv_max_size: number_to_human_size(csv_max_size))
+      %p.mt-2.mb-2= link_to t('.csv_import.download_exemple'), "/csv/#{I18n.locale}/import-groupe-test.csv"
       = file_field_tag :group_csv_file, required: true, accept: 'text/csv', size: "1"
-      = submit_tag "Importer le fichier", class: 'button primary send', data: { disable_with: "Envoi..." }
+      = submit_tag t('.csv_import.import_file'), class: 'button primary send', data: { disable_with: "Envoi..." }
   - else
-    %p.mt-4.form.bold.mb-2.text-lg Importer par fichier CSV
-    %p.notice L’import d’instructeurs par fichier CSV est disponible une fois la démarche publiée
-
+    %p.mt-4.form.bold.mb-2.text-lg
+      = t('.csv_import.title')
+    %p.notice
+      = t('.csv_import.import_file_procedure_not_published')
   %table.table.mt-2
     %thead
       %tr
+        // i18n-tasks-use t('.existing_groupe')
         %th{ colspan: 2 }= t(".existing_groupe", count: groupes_instructeurs.total_count)
         %th
           - if groupe_instructeurs_count > 1
@@ -44,18 +51,18 @@
       - groupes_instructeurs.each do |group|
         %tr
           %td= group.label
-          %td.actions= link_to "voir", admin_procedure_groupe_instructeur_path(procedure, group)
+          %td.actions= link_to t('.view'), admin_procedure_groupe_instructeur_path(procedure, group)
           - if groupes_instructeurs.many?
             - if group.dossiers.empty?
               %td.actions
-                = link_to admin_procedure_groupe_instructeur_path(procedure, group), { method: :delete, class: 'button', data: { confirm: "Êtes-vous sûr de vouloir supprimer le groupe « #{group.label} » ?" }} do
+                = link_to admin_procedure_groupe_instructeur_path(procedure, group), { method: :delete, class: 'button', data: { confirm: t('.group_management.delete_confirmation', group_name: group.label) }} do
                   %span.icon.delete
-                  supprimer ce groupe
+                  = t('.group_management.delete')
             - else
               %td.actions
-                = link_to reaffecter_dossiers_admin_procedure_groupe_instructeur_path(procedure, group), class: 'button', title:'Réaffecter les dossiers à un autre groupe afin de pouvoir le supprimer' do
+                = link_to reaffecter_dossiers_admin_procedure_groupe_instructeur_path(procedure, group), class: 'button', title: t('.group_management.move_folders_confirmation') do
                   %span.icon.follow
-                  déplacer les dossiers
+                  = t('.group_management.move_folders')
 
 
   = paginate groupes_instructeurs

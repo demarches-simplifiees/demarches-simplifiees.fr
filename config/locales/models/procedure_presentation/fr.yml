@@ -1,0 +1,32 @@
+fr:
+  activerecord:
+    attributes:
+      procedure_presentation:
+        fields:
+          self:
+            id: Nº dossier
+            state: Statut
+            created_at: Créé le
+            en_construction_at: En construction le
+            depose_at: Déposé le
+            updated_at: Mis à jour le
+          user:
+            email: Demandeur
+          followers_instructeurs:
+            email: Email instructeur
+          groupe_instructeur:
+            label: Groupe instructeur
+          individual:
+            prenom: Prénom
+            nom: Nom
+            gender: Civilité
+          etablissement:
+            entreprise_siren: SIREN
+            entreprise_forme_juridique: Forme juridique
+            entreprise_nom_commercial: Nom commercial
+            entreprise_raison_sociale: Raison sociale
+            entreprise_siret_siege_social: Numéro TAHITI siège social
+            entreprise_date_creation: Date de création
+            siret: Numéro TAHITI
+            libelle_naf: Libellé NAF
+            code_postal: Code postal
