@@ -15,8 +15,3 @@ import 'yet-another-abortcontroller-polyfill';
 
 import './polyfills/insertAdjacentElement';
 import './polyfills/dataset';
-
-// IE 11 has no baseURI
-if (document.baseURI == undefined) {
-  document.baseURI = document.URL;
-}
