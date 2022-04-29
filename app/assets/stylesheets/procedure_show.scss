@@ -62,7 +62,7 @@
     text-align: center;
   }
 
-  [data-react-class^="ComboMultiple"] {
+  [data-react-component-value^="ComboMultiple"] {
     margin-bottom: $default-fields-spacer;
 
     [data-reach-combobox-token-list] {

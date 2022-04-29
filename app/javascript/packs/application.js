@@ -2,6 +2,7 @@ import '../shared/polyfills';
 import Rails from '@rails/ujs';
 import * as ActiveStorage from '@rails/activestorage';
 import 'whatwg-fetch'; // window.fetch polyfill
+import { Application } from '@hotwired/stimulus';
 
 import '../shared/page-update-event';
 import '../shared/activestorage/ujs';
@@ -11,6 +12,11 @@ import '../shared/remote-input';
 import '../shared/franceconnect';
 import '../shared/toggle-target';
 import '../shared/ujs-error-handling';
+
+import {
+  ReactController,
+  registerComponents
+} from '../controllers/react_controller';
 
 import '../new_design/dropdown';
 import '../new_design/form-validation';
@@ -50,37 +56,23 @@ import {
   showNewAccountPasswordConfirmation
 } from '../new_design/fc-fusion';
 
-import {
-  registerReactComponents,
-  Loadable
-} from '../shared/register-react-components';
-
-registerReactComponents({
-  Chartkick: Loadable(() => import('../components/Chartkick')),
-  ComboAdresseSearch: Loadable(() =>
-    import('../components/ComboAdresseSearch')
-  ),
-  ComboAnnuaireEducationSearch: Loadable(() =>
-    import('../components/ComboAnnuaireEducationSearch')
-  ),
-  ComboCommunesSearch: Loadable(() =>
-    import('../components/ComboCommunesSearch')
-  ),
-  ComboDepartementsSearch: Loadable(() =>
-    import('../components/ComboDepartementsSearch')
-  ),
-  ComboMultipleDropdownList: Loadable(() =>
-    import('../components/ComboMultipleDropdownList')
-  ),
-  ComboMultiple: Loadable(() => import('../components/ComboMultiple')),
-  ComboPaysSearch: Loadable(() => import('../components/ComboPaysSearch')),
-  ComboRegionsSearch: Loadable(() =>
-    import('../components/ComboRegionsSearch')
-  ),
-  MapEditor: Loadable(() => import('../components/MapEditor')),
-  MapReader: Loadable(() => import('../components/MapReader')),
-  Trix: Loadable(() => import('../components/Trix')),
-  TypesDeChampEditor: Loadable(() => import('../components/TypesDeChampEditor'))
+registerComponents({
+  Chartkick: () => import('../components/Chartkick'),
+  ComboAdresseSearch: () => import('../components/ComboAdresseSearch'),
+  ComboAnnuaireEducationSearch: () =>
+    import('../components/ComboAnnuaireEducationSearch'),
+  ComboCommunesSearch: () => import('../components/ComboCommunesSearch'),
+  ComboDepartementsSearch: () =>
+    import('../components/ComboDepartementsSearch'),
+  ComboMultipleDropdownList: () =>
+    import('../components/ComboMultipleDropdownList'),
+  ComboMultiple: () => import('../components/ComboMultiple'),
+  ComboPaysSearch: () => import('../components/ComboPaysSearch'),
+  ComboRegionsSearch: () => import('../components/ComboRegionsSearch'),
+  MapEditor: () => import('../components/MapEditor'),
+  MapReader: () => import('../components/MapReader'),
+  Trix: () => import('../components/Trix'),
+  TypesDeChampEditor: () => import('../components/TypesDeChampEditor')
 });
 
 // This is the global application namespace where we expose helpers used from rails views
@@ -101,6 +93,9 @@ const DS = {
 // Start Rails helpers
 Rails.start();
 ActiveStorage.start();
+
+const Stimulus = Application.start();
+Stimulus.register('react', ReactController);
 
 // Expose globals
 window.DS = window.DS || DS;
