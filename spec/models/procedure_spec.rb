@@ -810,6 +810,7 @@ describe Procedure do
 
     before do
       procedure.draft_revision.add_type_de_champ(tdc_attributes)
+      procedure.reload
     end
 
     subject do
