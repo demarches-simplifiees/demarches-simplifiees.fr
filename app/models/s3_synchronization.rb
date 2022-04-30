@@ -43,12 +43,27 @@ class S3Synchronization < ApplicationRecord
         S3Synchronization.switch_service(:local_mirror, :s3_mirror, until_time)
       when '4' # switch to s3, cancel not possible
         S3Synchronization.switch_service(:s3_mirror, :s3, until_time)
+      when '5' # delete local file stored on s3
+        S3Synchronization.delete_mirrored_files(:s3, :local, until_time)
       else
       end
     end
 
     def transfer_has_occured
       S3Synchronization.where('updated_at > ?', 1.minute.ago).count > 0
+    end
+
+    def delete_mirrored_files(main_service_name, mirror_service_name, until_time)
+      configs = active_storage_configs
+      mirror_service = ActiveStorage::Service.configure mirror_service_name, configs
+      blob_keys(main_service_name, until_time) do |key|
+        f = mirror_service.path_for(key)
+        File.delete(f) if File.exist?(f)
+        dir = File.dirname(f)
+        Dir.delete(dir) if Dir.exist?(dir) && Dir.empty?(dir)
+        dir = File.dirname(dir)
+        Dir.delete(dir) if Dir.exist?(dir) && Dir.empty?(dir)
+      end
     end
 
     def switch_service(from_service, to_service, until_time)
@@ -66,10 +81,9 @@ class S3Synchronization < ApplicationRecord
 
     def upload(from, to, under_rake, until_time)
       @logio = StringIO.new
-      @logger = Logger.new @logio
+      @logger = Rails.logger # Logger.new @logio
       @logger.info "Synchronizing from #{from} to #{to}#{until_time ? ' until ' + until_time.to_s : ''}."
-      ActiveStorage::Blob.service
-      configs = Rails.configuration.active_storage.service_configurations
+      configs = active_storage_configs
       from_service = ActiveStorage::Service.configure from, configs
 
       ActiveStorage::Blob.service = from_service
@@ -100,9 +114,22 @@ class S3Synchronization < ApplicationRecord
 
     private
 
+    def blob_keys(main_service_name, until_time)
+      ActiveStorage::Blob.where(service_name: main_service_name).in_batches(of: 300) do |relation|
+        break if until_time.present? && Time.zone.now > until_time
+        relation.pluck(:key).each do |key|
+          yield key
+        end
+      end
+    end
+
+    def active_storage_configs
+      ActiveStorage::Blob.service
+      Rails.configuration.active_storage.service_configurations
+    end
+
     def enqueue(pool, &block)
       if pool.queue_length > 2 * POOL_SIZE
-        yield
         yield
       else
         pool.post(&block)
@@ -122,10 +149,11 @@ class S3Synchronization < ApplicationRecord
     end
 
     def blobs(from_service, checked)
-      ActiveStorage::Blob
-        .joins('left join s3_synchronizations on  s3_synchronizations.active_storage_blob_id = active_storage_blobs.id')
+      base = ActiveStorage::Blob.where(service_name: from_service)
+      return base if from_service.to_s.ends_with?('mirror')
+
+      base.joins('left join s3_synchronizations on  s3_synchronizations.active_storage_blob_id = active_storage_blobs.id')
         .where(s3_synchronizations: { checked: checked })
-        .where(service_name: from_service)
     end
 
     def upload_blob_if_present(from_service, configs, to, progress, until_time, blob)

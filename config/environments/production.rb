@@ -120,6 +120,8 @@ Rails.application.configure do
     :local_mirror
   when '4'
     :s3
+  when '5'
+    :s3
   else
     ENV.fetch("ACTIVE_STORAGE_SERVICE", 'local').to_sym
   end
