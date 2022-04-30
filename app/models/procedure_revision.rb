@@ -48,10 +48,8 @@ class ProcedureRevision < ApplicationRecord
         .tap do |types_de_champ|
           params[:order_place] = types_de_champ.present? ? types_de_champ.last.order_place + 1 : 0
         end.create(params).migrate_parent!
-    elsif params[:private]
-      types_de_champ_private.create(params)
     else
-      types_de_champ_public.create(params)
+      types_de_champ.create(params)
     end
   end
 
