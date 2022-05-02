@@ -73,18 +73,6 @@ describe ProcedurePresentation do
 
         it { is_expected.to match(['changed libelle 1']) }
       end
-
-      context 'when there is another published which removes a previous tdc' do
-        let!(:previous_tdc) { procedure.published_revision.types_de_champ_public.first }
-
-        before do
-          type_de_champ = procedure.draft_revision.remove_type_de_champ(previous_tdc.id)
-
-          procedure.publish_revision!
-        end
-
-        it { is_expected.to match(['libelle 1']) }
-      end
     end
   end
 end
