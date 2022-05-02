@@ -78,21 +78,35 @@ Rails.application.configure do
 
   if ENV['MAILTRAP_ENABLED'] == 'enabled'
     config.action_mailer.delivery_method = :mailtrap
-
-  elsif ENV['SENDINBLUE_ENABLED'] == 'enabled' && ENV['SENDINBLUE_BALANCING'] == 'enabled'
-    ActionMailer::Base.add_delivery_method :balancer, BalancerDeliveryMethod
-    config.action_mailer.balancer_settings = {
-      sendinblue: ENV.fetch('SENDINBLUE_BALANCING_VALUE').to_i,
-      mailjet: 100 - ENV.fetch('SENDINBLUE_BALANCING_VALUE').to_i
-    }
-    config.action_mailer.delivery_method = :balancer
-
-  elsif ENV['SENDINBLUE_ENABLED'] == 'enabled'
-    config.action_mailer.delivery_method = :sendinblue
   elsif ENV['MAILCATCHER_ENABLED'] == 'enabled'
     config.action_mailer.delivery_method = :mailcatcher
   else
-    config.action_mailer.delivery_method = :mailjet
+
+    sendinblue_weigth = case [ENV['SENDINBLUE_ENABLED'] == 'enabled', ENV['SENDINBLUE_BALANCING'] == 'enabled']
+      in [false, _]
+        0
+      in [true, false]
+        100
+      else
+        ENV.fetch('SENDINBLUE_BALANCING_VALUE').to_i
+      end
+
+    dolist_weigth = case [ENV['DOLIST_ENABLED'] == 'enabled', ENV['DOLIST_BALANCING'] == 'enabled']
+      in [false, _]
+        0
+      in [true, false]
+        100
+      else
+        ENV.fetch('DOLIST_BALANCING_VALUE').to_i
+      end
+
+    ActionMailer::Base.add_delivery_method :balancer, BalancerDeliveryMethod
+    config.action_mailer.balancer_settings = {
+      sendinblue: sendinblue_weigth,
+      dolist: dolist_weigth,
+      mailjet: 100 - (sendinblue_weigth + dolist_weigth)
+    }
+    config.action_mailer.delivery_method = :balancer
   end
 
   # Configure default root URL for generating URLs to routes
