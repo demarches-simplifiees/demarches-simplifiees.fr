@@ -714,7 +714,7 @@ class Procedure < ApplicationRecord
 
   def create_new_revision
     draft_revision
-      .deep_clone(include: [:revision_types_de_champ_public, :revision_types_de_champ_private])
+      .deep_clone(include: [:revision_types_de_champ])
       .tap(&:save!)
   end
 
