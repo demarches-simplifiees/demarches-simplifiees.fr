@@ -822,15 +822,15 @@ describe Procedure do
       subject
       expect(procedure.published_revision).to be_present
       expect(procedure.published_revision.published_at).to eq(publication_date)
-      expect(procedure.published_revision.types_de_champ.first.libelle).to eq('libelle 1')
+      expect(procedure.published_revision.types_de_champ_public.first.libelle).to eq('libelle 1')
     end
 
     it 'creates a new draft revision' do
       expect { subject }.to change(ProcedureRevision, :count).by(1)
       expect(procedure.draft_revision).to be_present
-      expect(procedure.draft_revision.revision_types_de_champ).to be_present
-      expect(procedure.draft_revision.types_de_champ).to be_present
-      expect(procedure.draft_revision.types_de_champ.first.libelle).to eq('libelle 1')
+      expect(procedure.draft_revision.revision_types_de_champ_public).to be_present
+      expect(procedure.draft_revision.types_de_champ_public).to be_present
+      expect(procedure.draft_revision.types_de_champ_public.first.libelle).to eq('libelle 1')
     end
 
     context 'when the procedure has dossiers' do
