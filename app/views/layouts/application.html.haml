@@ -24,7 +24,7 @@
     = Gon::Base.render_data(camel_case: true, init: true, nonce:  request.content_security_policy_nonce)
 
   %body{ id: content_for(:page_id), class: browser.platform.ios? ? 'ios' : nil }
-    .page-wrapper
+    .page-wrapper{ data: { turbo: "false" } }
       = render partial: "layouts/outdated_browser_banner"
       = render partial: 'layouts/pre_maintenance'
 

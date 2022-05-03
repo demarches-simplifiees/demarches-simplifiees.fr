@@ -3,7 +3,7 @@ import Rails from '@rails/ujs';
 import * as ActiveStorage from '@rails/activestorage';
 import 'whatwg-fetch'; // window.fetch polyfill
 import { Application } from '@hotwired/stimulus';
-import * as Turbo from '@hotwired/turbo';
+import '@hotwired/turbo';
 
 import '../shared/activestorage/ujs';
 import '../shared/remote-poller';
@@ -90,7 +90,6 @@ const DS = {
 // Start Rails helpers
 Rails.start();
 ActiveStorage.start();
-Turbo.session.drive = false;
 
 const Stimulus = Application.start();
 Stimulus.register('react', ReactController);
