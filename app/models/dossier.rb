@@ -134,7 +134,7 @@ class Dossier < ApplicationRecord
 
   has_one :attestation_template, through: :revision
   has_one :procedure, through: :revision
-  has_many :types_de_champ, through: :revision
+  has_many :types_de_champ, through: :revision, source: :types_de_champ_public
   has_many :types_de_champ_private, through: :revision
 
   belongs_to :transfer, class_name: 'DossierTransfer', foreign_key: 'dossier_transfer_id', optional: true, inverse_of: :dossiers
