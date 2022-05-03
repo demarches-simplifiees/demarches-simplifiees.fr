@@ -141,7 +141,7 @@ module DossierRebaseConcern
 
   def flattened_all_types_de_champ(published: false)
     revision = published ? procedure.published_revision : self.revision
-    types_de_champ = revision.types_de_champ + revision.types_de_champ_private
+    types_de_champ = revision.types_de_champ_public + revision.types_de_champ_private
     (types_de_champ + types_de_champ.filter(&:repetition?).flat_map(&:types_de_champ))
       .index_by(&:stable_id)
   end
