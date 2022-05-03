@@ -25,7 +25,7 @@ FactoryBot.define do
         if type_de_champ.private?
           type_de_champ.revision.types_de_champ_private << type_de_champ
         else
-          type_de_champ.revision.types_de_champ << type_de_champ
+          type_de_champ.revision.types_de_champ_public << type_de_champ
         end
       elsif evaluator.parent
         type_de_champ.revision = evaluator.parent.revision
