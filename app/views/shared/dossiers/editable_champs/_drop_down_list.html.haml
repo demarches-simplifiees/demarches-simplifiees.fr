@@ -19,4 +19,4 @@
     = form.select :value, champ.options, { selected: champ.selected}, required: champ.mandatory?, id: champ.input_id, aria: { describedby: champ.describedby_id }
 
   - if champ.drop_down_other?
-    = render partial: "shared/dossiers/drop_down_other_input", locals: { form: form, champ: champ }
+    = render partial: "shared/dossiers/editable_champs/drop_down_other_input", locals: { form: form, champ: champ }

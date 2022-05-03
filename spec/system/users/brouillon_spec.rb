@@ -113,7 +113,7 @@ describe 'The user' do
 
     click_on 'Ajouter un élément pour'
 
-    within '.row-1' do
+    within '.repetition .row:first-child' do
       fill_in('sub type de champ', with: 'un autre texte')
     end
 
@@ -124,7 +124,7 @@ describe 'The user' do
 
     expect(page).to have_content('Supprimer', count: 2)
 
-    within '.row-1' do
+    within '.repetition .row:first-child' do
       click_on 'Supprimer l’élément'
     end
 

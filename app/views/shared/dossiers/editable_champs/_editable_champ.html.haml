@@ -8,5 +8,6 @@
     = render partial: 'shared/dossiers/editable_champs/champ_label', locals: { form: form, champ: champ, seen_at: defined?(seen_at) ? seen_at : nil }
   - if champ.type_champ == "titre_identite"
     %p.notice  Carte nationale d’identité (uniquement le recto), passeport, titre de séjour ou autre justificatif d’identité. Formats acceptés : jpg/png
-  = render partial: "shared/dossiers/editable_champs/#{champ.type_champ}",
-    locals: { champ: champ, form: form }
+
+  = form.hidden_field :id, value: champ.id
+  = render partial: "shared/dossiers/editable_champs/#{champ.type_champ}", locals: { form: form, champ: champ }

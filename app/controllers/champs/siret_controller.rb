@@ -2,9 +2,9 @@ class Champs::SiretController < ApplicationController
   before_action :authenticate_logged_user!
 
   def show
-    @position = params[:position]
-    extract_siret
-    find_etablisement
+    @champ = policy_scope(Champ).find(params[:champ_id])
+    @siret = read_param_value(@champ.input_name, 'value')
+    @etablissement = @champ.etablissement
 
     if @siret.empty?
       return clear_siret_and_etablissement
@@ -33,22 +33,6 @@ class Champs::SiretController < ApplicationController
   end
 
   private
-
-  def extract_siret
-    if params[:dossier].key?(:champs_attributes)
-      @siret = params[:dossier][:champs_attributes][@position][:value]
-      @attribute = "dossier[champs_attributes][#{@position}][etablissement_attributes]"
-    else
-      @siret = params[:dossier][:champs_private_attributes][@position][:value]
-      @attribute = "dossier[champs_private_attributes][#{@position}][etablissement_attributes]"
-    end
-  end
-
-  def find_etablisement
-    @champ = policy_scope(Champ).find(params[:champ_id])
-    @etablissement = @champ.etablissement
-    @procedure_id = @champ.dossier.procedure.id
-  end
 
   def find_etablissement_with_siret
     APIEntrepriseService.create_etablissement(@champ, @siret, current_user.id)
