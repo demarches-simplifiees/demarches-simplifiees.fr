@@ -22,7 +22,7 @@ as well as a link to its edit page.
 <header class="main-content__header" role="banner">
   <h1 class="main-content__page-title">
     <%= content_for(:title) %>
-    <% if dossier.hidden_for_administration? %>
+    <% if dossier.hidden_for_administration? && !dossier.brouillon? %>
       (Supprimé)
     <% end %>
   </h1>
