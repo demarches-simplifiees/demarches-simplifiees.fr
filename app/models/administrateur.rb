@@ -12,6 +12,8 @@
 class Administrateur < ApplicationRecord
   include ActiveRecord::SecureToken
 
+  UNUSED_ADMIN_THRESHOLD = 6.months
+
   has_and_belongs_to_many :instructeurs
   has_and_belongs_to_many :procedures
   has_many :services
@@ -22,6 +24,14 @@ class Administrateur < ApplicationRecord
 
   scope :inactive, -> { joins(:user).where(users: { last_sign_in_at: nil }) }
   scope :with_publiees_ou_closes, -> { joins(:procedures).where(procedures: { aasm_state: [:publiee, :close, :depubliee] }) }
+
+  scope :unused, -> do
+    joins(:user)
+      .where.missing(:services)
+      .left_outer_joins(:administrateurs_procedures) # needed to bypass procedure hidden default scope
+      .where(administrateurs_procedures: { procedure_id: nil })
+      .where("users.last_sign_in_at < ? ", UNUSED_ADMIN_THRESHOLD.ago)
+  end
 
   def self.by_email(email)
     Administrateur.find_by(users: { email: email })
