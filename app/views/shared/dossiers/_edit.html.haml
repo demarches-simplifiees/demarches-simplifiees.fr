@@ -35,10 +35,9 @@
         dossier.procedure.groupe_instructeurs.order(:label).map { |gi| [gi.label, gi.id] },
         { include_blank: dossier.brouillon? }
 
-    = f.fields_for :champs, dossier.champs do |champ_form|
-      - champ = champ_form.object
-      = render partial: "shared/dossiers/editable_champs/editable_champ",
-        locals: { champ: champ, form: champ_form }
+    - dossier.champs.each do |champ|
+      = fields_for champ.input_name, champ do |form|
+        = render partial: "shared/dossiers/editable_champs/editable_champ", locals: { form: form, champ: champ }
 
     - if !dossier.for_procedure_preview?
       .dossier-edit-sticky-footer
