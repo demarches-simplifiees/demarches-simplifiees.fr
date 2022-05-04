@@ -22,4 +22,19 @@ export class ApplicationController extends Controller {
       target: document.documentElement
     });
   }
+
+  protected on<HandlerEvent extends Event = Event>(
+    eventName: string,
+    handler: (event: HandlerEvent) => void
+  ): void {
+    const disconnect = this.disconnect;
+    const callback = (event: Event): void => {
+      handler(event as HandlerEvent);
+    };
+    this.element.addEventListener(eventName, callback);
+    this.disconnect = () => {
+      this.element.removeEventListener(eventName, callback);
+      disconnect.call(this);
+    };
+  }
 }
