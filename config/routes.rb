@@ -273,6 +273,7 @@ Rails.application.routes.draw do
         patch 'restore', to: 'dossiers#restore'
         get 'attestation'
         get 'transferer', to: 'dossiers#transferer'
+        get 'papertrail', format: :pdf
       end
 
       collection do

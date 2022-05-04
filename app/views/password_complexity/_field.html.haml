@@ -1,4 +1,4 @@
-= form.password_field :password, autofocus: true, autocomplete: 'off', placeholder: 'Mot de passe', data: { remote: test_complexity, url: show_password_complexity_path }
+= form.password_field :password, autofocus: true, autocomplete: 'off', placeholder: 'Mot de passe', data: { controller: test_complexity ? 'turbo-input' : false, turbo_input_url_value: show_password_complexity_path }
 
 - if test_complexity
   #complexity-bar.password-complexity
