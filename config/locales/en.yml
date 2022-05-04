@@ -453,6 +453,20 @@ en:
         identity_saved: "Identity data is registred"
       attestation:
         no_longer_available: "The certificate is no longer available on this file."
+      papertrail:
+        receipt: "Deposit receipt"
+        description: "This document attests that on the %{date}, %{user_name} submitted a file on the procedure “%{procedure}”."
+        file_submitted_at: "File submission date"
+        dossier_state: "File status"
+        states:
+          en_construction: "submitted, pending processing"
+          en_instruction: "processing"
+          accepte: "accepted"
+          refuse: "declined"
+          sans suite: "closed, no further action"
+        administrative_service: "Administrative department"
+        generated_at: "Made on %{date},"
+        signature: "%{app_name}"
   instructeurs:
     dossiers:
        deleted_by_instructeur: "The folder has been deleted"
