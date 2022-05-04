@@ -453,6 +453,10 @@ en:
         identity_saved: "Identity data is registred"
       attestation:
         no_longer_available: "The certificate is no longer available on this file."
+      show:
+        papertrail:
+          get_papertrail: "Get a deposit receipt"
+          filename: "deposit-receipt.pdf"
       papertrail:
         receipt: "Deposit receipt"
         description: "This document attests that on the %{date}, %{user_name} submitted a file on the procedure “%{procedure}”."

@@ -475,6 +475,10 @@ fr:
         administrative_service: "Service administratif"
         generated_at: "Fait le %{date},"
         signature: "La direction de %{app_name}"
+      show:
+        papertrail:
+          get_papertrail: "Obtenir une attestation de dépôt de dossier"
+          filename: "attestation-de-depot.pdf"
   instructeurs:
     dossiers:
        deleted_by_instructeur: "Le dossier a bien été supprimé de votre interface"
