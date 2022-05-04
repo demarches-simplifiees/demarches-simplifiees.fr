@@ -1,0 +1,4 @@
+.papertrail.mb-2
+  = link_to papertrail_dossier_url(dossier, format: :pdf), class: "button", download: t('.filename'), target: "_blank" do
+    %span.icon.justificatif
+    = t('.get_papertrail')
