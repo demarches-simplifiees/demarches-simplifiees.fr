@@ -2,6 +2,11 @@ describe DownloadableFileService do
   let(:procedure) { create(:procedure, :published) }
   let(:service) { ProcedureArchiveService.new(procedure) }
 
+  before do
+    FileUtils.mkdir_p('/tmp/test_archive_creation')
+    stub_const("DownloadableFileService::ARCHIVE_CREATION_DIR", '/tmp/test_archive_creation')
+  end
+
   describe '#download_and_zip' do
     let(:archive) { build(:archive, id: '3') }
     let(:filename) { service.send(:zip_root_folder, archive) }
