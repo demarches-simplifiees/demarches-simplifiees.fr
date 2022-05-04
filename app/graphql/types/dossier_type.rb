@@ -69,7 +69,7 @@ module Types
 
     def usager
       if object.user_deleted?
-        { email: object.user_email_for(:display), id: -1 }
+        { email: object.user_email_for(:display), id: '<deleted>' }
       else
         Loaders::Record.for(User).load(object.user_id)
       end
