@@ -47,7 +47,7 @@ class ProcedureRevision < ApplicationRecord
         .types_de_champ
         .tap do |types_de_champ|
           params[:order_place] = types_de_champ.present? ? types_de_champ.last.order_place + 1 : 0
-        end.create(params).migrate_parent!
+        end.create(params)
     else
       types_de_champ.create(params)
     end
@@ -380,7 +380,6 @@ class ProcedureRevision < ApplicationRecord
     end
     cloned_type_de_champ.revision = self
     association.update!(type_de_champ: cloned_type_de_champ)
-    cloned_type_de_champ.types_de_champ.each(&:migrate_parent!)
     cloned_type_de_champ
   end
 

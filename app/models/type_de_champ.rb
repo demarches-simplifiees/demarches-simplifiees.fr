@@ -389,17 +389,6 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  def migrate_parent!
-    if parent_id.present? && migrated_parent.nil?
-      ProcedureRevisionTypeDeChamp.create(parent: parent.revision_type_de_champ,
-        type_de_champ: self,
-        revision_id: parent.revision_type_de_champ.revision_id,
-        position: order_place)
-      update_column(:migrated_parent, true)
-    end
-    self
-  end
-
   private
 
   def parse_drop_down_list_value(value)
