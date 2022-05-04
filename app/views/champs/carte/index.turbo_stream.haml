@@ -1,0 +1,4 @@
+= turbo_stream.update dom_id(@champ, :geo_areas), partial: 'shared/champs/carte/geo_areas', locals: { champ: @champ, editing: true }
+
+- if @focus
+  = turbo_stream.dispatch 'map:feature:focus', bbox: @champ.bounding_box
