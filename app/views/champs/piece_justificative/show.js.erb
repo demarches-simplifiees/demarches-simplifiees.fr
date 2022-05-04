@@ -1,4 +1,6 @@
-<%= render_champ(@champ) %>
+<%= fields_for @champ.input_name, @champ do |form| %>
+  <%= render_to_element("##{@champ.input_group_id}", partial: "shared/dossiers/editable_champs/editable_champ", locals: { champ: @champ, form: form }, outer: true) %>
+<% end %>
 
 <% attachment = @champ.piece_justificative_file.attachment %>
 <% if attachment.virus_scanner.pending? %>

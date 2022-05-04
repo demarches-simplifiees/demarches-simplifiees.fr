@@ -2,12 +2,7 @@ class Champs::DossierLinkController < ApplicationController
   before_action :authenticate_logged_user!
 
   def show
-    @position = params[:position]
-
-    if params[:dossier].key?(:champs_attributes)
-      @dossier_id = params[:dossier][:champs_attributes][params[:position]][:value]
-    else
-      @dossier_id = params[:dossier][:champs_private_attributes][params[:position]][:value]
-    end
+    @champ = policy_scope(Champ).find(params[:champ_id])
+    @linked_dossier_id = read_param_value(@champ.input_name, 'value')
   end
 end

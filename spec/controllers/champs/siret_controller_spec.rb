@@ -1,23 +1,22 @@
 describe Champs::SiretController, type: :controller do
   let(:user) { create(:user) }
-  let(:procedure) do
-    tdc_siret = build(:type_de_champ_siret, procedure: nil)
-    create(:procedure, :published, types_de_champ: [tdc_siret])
-  end
+  let(:procedure) { create(:procedure, :published, :with_siret) }
 
   describe '#show' do
     let(:dossier) { create(:dossier, user: user, procedure: procedure) }
     let(:champ) { dossier.champs.first }
 
+    let(:champs_attributes) do
+      champ_attributes = []
+      champ_attributes[champ.id] = { value: siret }
+      champ_attributes
+    end
     let(:params) do
       {
         champ_id: champ.id,
         dossier: {
-          champs_attributes: {
-            '1' => { value: siret.to_s }
-          }
-        },
-        position: '1'
+          champs_attributes: champs_attributes
+        }
       }
     end
     let(:siret) { '' }
@@ -47,7 +46,7 @@ describe Champs::SiretController, type: :controller do
         end
 
         it 'clears any information or error message' do
-          expect(response.body).to include('.siret-info-1')
+          expect(response.body).to include("##{champ.input_group_id} .siret-info")
           expect(response.body).to include('innerHTML = ""')
         end
       end
@@ -120,7 +119,7 @@ describe Champs::SiretController, type: :controller do
     end
 
     context 'when user is not signed in' do
-      subject! { get :show, params: { position: '1' }, format: :js, xhr: true }
+      subject! { get :show, params: { champ_id: champ.id }, format: :js, xhr: true }
 
       it { expect(response.code).to eq('401') }
     end
