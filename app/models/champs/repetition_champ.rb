@@ -28,12 +28,15 @@ class Champs::RepetitionChamp < Champ
   end
 
   def add_row
+    added_champs = []
     transaction do
       row = (blank? ? -1 : champs.last.row) + 1
       type_de_champ.types_de_champ.each do |type_de_champ|
-        self.champs << type_de_champ.champ.build(row: row)
+        added_champs << type_de_champ.champ.build(row: row)
       end
+      self.champs << added_champs
     end
+    added_champs
   end
 
   def blank?

@@ -141,18 +141,17 @@ Rails.application.routes.draw do
   end
 
   namespace :champs do
-    get ':position/siret', to: 'siret#show', as: :siret
-    get ':position/dossier_link', to: 'dossier_link#show', as: :dossier_link
-    post ':position/carte', to: 'carte#show', as: :carte
+    get ':champ_id/siret', to: 'siret#show', as: :siret
+    get ':champ_id/dossier_link', to: 'dossier_link#show', as: :dossier_link
+    post ':champ_id/carte', to: 'carte#show', as: :carte
+    post ':champ_id/repetition', to: 'repetition#show', as: :repetition
 
     get ':champ_id/carte/features', to: 'carte#index', as: :carte_features
     post ':champ_id/carte/features', to: 'carte#create'
-    post ':champ_id/carte/features/import', to: 'carte#import'
     patch ':champ_id/carte/features/:id', to: 'carte#update'
     delete ':champ_id/carte/features/:id', to: 'carte#destroy'
 
-    post ':position/repetition', to: 'repetition#show', as: :repetition
-    put 'piece_justificative/:champ_id', to: 'piece_justificative#update', as: :piece_justificative
+    put ':champ_id/piece_justificative', to: 'piece_justificative#update', as: :piece_justificative
   end
 
   resources :attachments, only: [:show, :destroy]

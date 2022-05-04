@@ -154,6 +154,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_siret do
+      after(:build) do |procedure, _evaluator|
+        build(:type_de_champ_siret, procedure: procedure)
+      end
+    end
+
     trait :with_yes_no do
       after(:build) do |procedure, _evaluator|
         build(:type_de_champ_yes_no, procedure: procedure)
