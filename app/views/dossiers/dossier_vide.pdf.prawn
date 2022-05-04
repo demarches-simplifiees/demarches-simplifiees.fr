@@ -1,9 +1,20 @@
 require 'prawn/measurement_extensions'
 
+# Render text in a box that expands vertically, then move the cursor down to the end of the rendered text
+def render_expanding_text_box(pdf, text, options)
+  box = Prawn::Text::Box.new(text, options.merge(document: pdf, overflow: :expand))
+
+  box.render(dry_run: true)
+  vertical_space_used = box.height
+
+  box.render
+  pdf.move_down(vertical_space_used)
+end
+
 def render_in_2_columns(pdf, label, text)
   pdf.text_box label, width: 200, height: 100, overflow: :expand, at: [0, pdf.cursor]
   pdf.text_box ":", width: 10, height: 100, overflow: :expand, at: [100, pdf.cursor]
-  pdf.text_box text, width: 420, height: 100, overflow: :expand, at: [110, pdf.cursor]
+  render_expanding_text_box(pdf, text, width: 420, height: 100, at: [110, pdf.cursor])
   pdf.text "\n"
 end
 
