@@ -37,9 +37,7 @@ export function useFeatureCollection(
         type: 'FeatureCollection',
         features: callback(features)
       }));
-      ajax({ url, type: 'GET' })
-        .then(() => fire(document, 'ds:page:update'))
-        .catch(() => null);
+      ajax({ url, type: 'GET' }).catch(() => null);
     },
     [url, setFeatureCollection]
   );

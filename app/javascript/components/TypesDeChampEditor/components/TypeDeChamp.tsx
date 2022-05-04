@@ -182,6 +182,7 @@ export const TypeDeChampComponent = SortableElement<TypeDeChampProps>(
           />
           <TypeDeChampPieceJustificative
             isVisible={isFile}
+            isTitreIdentite={isTitreIdentite}
             directUploadUrl={state.directUploadUrl}
             filename={typeDeChamp.piece_justificative_template_filename}
             handler={updateHandlers.piece_justificative_template}

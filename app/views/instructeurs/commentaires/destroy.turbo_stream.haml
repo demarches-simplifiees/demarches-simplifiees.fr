@@ -1,0 +1,3 @@
+- if @commentaire.discarded?
+  = turbo_stream.update @commentaire do
+    = render Dossiers::MessageComponent.new(commentaire: @commentaire, connected_user: @commentaire.instructeur || @commentaire.expert)
