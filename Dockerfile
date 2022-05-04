@@ -68,6 +68,7 @@ ENV \
     API_CPS_URL=""\
     API_CPS_USERNAME=""\
     API_EDUCATION_URL="https://data.education.gouv.fr/api/records/1.0"\
+    API_ENTREPRISE_DEFAULT_SIRET=""\
     API_ENTREPRISE_KEY=""\
     API_ENTREPRISE_PF_AUTH=""\
     API_ENTREPRISE_PF_URL=""\
