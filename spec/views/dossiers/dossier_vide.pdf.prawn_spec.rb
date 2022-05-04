@@ -1,5 +1,5 @@
 describe 'dossiers/dossier_vide.pdf.prawn', type: :view do
-  let(:procedure) { create(:procedure, :with_all_champs) }
+  let(:procedure) { create(:procedure, :with_all_champs, :with_drop_down_list) }
   let(:dossier) { create(:dossier, procedure: procedure) }
 
   before do

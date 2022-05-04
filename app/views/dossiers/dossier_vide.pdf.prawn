@@ -26,7 +26,10 @@ def format_in_2_columns(pdf, label)
   pdf.text "\n"
 end
 
-def format_with_checkbox(pdf, label, offset = 0)
+def format_with_checkbox(pdf, option, offset = 0)
+  # Option is a [text, value] pair, or a string used for both.
+  label = option.is_a?(String) ? option : option.first
+
   pdf.font 'marianne', size: 9 do
     pdf.stroke_rectangle [0 + offset, pdf.cursor], 10, 10
     pdf.text_box label, at: [15 + offset, pdf.cursor]

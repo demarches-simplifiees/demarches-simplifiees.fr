@@ -202,6 +202,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_drop_down_list do
+      after(:build) do |procedure, _evaluator|
+        build(:type_de_champ_drop_down_list, :with_other, procedure: procedure)
+      end
+    end
+
     trait :with_address do
       after(:build) do |procedure, _evaluator|
         build(:type_de_champ_address, procedure: procedure)
