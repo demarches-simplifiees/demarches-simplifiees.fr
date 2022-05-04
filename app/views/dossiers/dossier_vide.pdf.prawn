@@ -29,10 +29,21 @@ end
 def format_with_checkbox(pdf, option, offset = 0)
   # Option is a [text, value] pair, or a string used for both.
   label = option.is_a?(String) ? option : option.first
+  value = option.is_a?(String) ? option : option.last
+
+  if value == Champs::DropDownListChamp::OTHER
+    label += " : "
+  end
 
   pdf.font 'marianne', size: 9 do
     pdf.stroke_rectangle [0 + offset, pdf.cursor], 10, 10
-    pdf.text_box label, at: [15 + offset, pdf.cursor]
+    pdf.text_box label, at: [15 + offset, pdf.cursor - 1]
+
+    if value == Champs::DropDownListChamp::OTHER
+      pdf.bounding_box([110, pdf.cursor + 3],:width => 350,:height => 20) do
+        pdf.stroke_bounds
+      end
+    end
   end
   pdf.text "\n"
 end
