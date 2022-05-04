@@ -1,0 +1,11 @@
+en:
+  activerecord:
+    models:
+      service:
+        one: 'Service'
+        other: 'Services'
+    attributes:
+      service:
+        adresse: 'Mail address'
+        email: 'Email'
+        telephone: 'Phone'

@@ -27,33 +27,33 @@ describe Champs::DossierLinkController, type: :controller do
 
       context 'when the dossier exist' do
         before do
-          get :show, params: params, format: :js, xhr: true
+          get :show, params: params, format: :turbo_stream
         end
 
         it 'renders the procedure name' do
           expect(response.body).to include('Dossier en brouillon')
           expect(response.body).to include(procedure.libelle)
           expect(response.body).to include(procedure.organisation)
-          expect(response.body).to include("##{champ.input_group_id} .help-block")
+          expect(response.body).to include(ActionView::RecordIdentifier.dom_id(champ, :help_block))
         end
       end
 
       context 'when the dossier does not exist' do
         let(:dossier_id) { '13' }
         before do
-          get :show, params: params, format: :js, xhr: true
+          get :show, params: params, format: :turbo_stream
         end
 
         it 'renders error message' do
           expect(response.body).to include('Ce dossier est inconnu')
-          expect(response.body).to include("##{champ.input_group_id} .help-block")
+          expect(response.body).to include(ActionView::RecordIdentifier.dom_id(champ, :help_block))
         end
       end
     end
 
     context 'when user is not connected' do
       before do
-        get :show, params: { champ_id: champ.id }, format: :js, xhr: true
+        get :show, params: { champ_id: champ.id }, format: :turbo_stream
       end
 
       it { expect(response.code).to eq('401') }
