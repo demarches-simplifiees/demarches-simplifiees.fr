@@ -151,7 +151,7 @@ class Champ < ApplicationRecord
   # predictable input name.
   def input_name
     if parent_id
-      "#{parent.input_name}[#{champs_attributes_accessor}][#{id}]"
+      "#{parent.input_name}[champs_attributes][#{id}]"
     else
       "dossier[#{champs_attributes_accessor}][#{id}]"
     end
