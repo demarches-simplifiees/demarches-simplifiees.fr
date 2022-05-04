@@ -1,9 +1,20 @@
 require 'prawn/measurement_extensions'
 
+# Render text in a box that expands vertically, then move the cursor down to the end of the rendered text
+def render_expanding_text_box(pdf, text, options)
+  box = Prawn::Text::Box.new(text, options.merge(document: pdf, overflow: :expand))
+
+  box.render(dry_run: true)
+  vertical_space_used = box.height
+
+  box.render
+  pdf.move_down(vertical_space_used)
+end
+
 def render_in_2_columns(pdf, label, text)
   pdf.text_box label, width: 200, height: 100, overflow: :expand, at: [0, pdf.cursor]
   pdf.text_box ":", width: 10, height: 100, overflow: :expand, at: [100, pdf.cursor]
-  pdf.text_box text, width: 420, height: 100, overflow: :expand, at: [110, pdf.cursor]
+  render_expanding_text_box(pdf, text, width: 420, height: 100, at: [110, pdf.cursor])
   pdf.text "\n"
 end
 
@@ -29,10 +40,21 @@ end
 def format_with_checkbox(pdf, option, offset = 0)
   # Option is a [text, value] pair, or a string used for both.
   label = option.is_a?(String) ? option : option.first
+  value = option.is_a?(String) ? option : option.last
+
+  if value == Champs::DropDownListChamp::OTHER
+    label += " : "
+  end
 
   pdf.font 'marianne', size: 9 do
     pdf.stroke_rectangle [0 + offset, pdf.cursor], 10, 10
-    pdf.text_box label, at: [15 + offset, pdf.cursor]
+    pdf.text_box label, at: [15 + offset, pdf.cursor - 1]
+
+    if value == Champs::DropDownListChamp::OTHER
+      pdf.bounding_box([110, pdf.cursor + 3],:width => 350,:height => 20) do
+        pdf.stroke_bounds
+      end
+    end
   end
   pdf.text "\n"
 end
