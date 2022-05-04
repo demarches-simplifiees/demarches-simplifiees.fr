@@ -31,7 +31,6 @@ import '../new_design/dossiers/auto-save';
 import '../new_design/dossiers/auto-upload';
 
 import '../new_design/champs/linked-drop-down-list';
-import '../new_design/champs/repetition';
 import '../new_design/champs/drop-down-list';
 
 import {
