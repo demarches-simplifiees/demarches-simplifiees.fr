@@ -164,6 +164,7 @@ describe ProcedureRevision do
           libelle: "Un champ text"
         })
         revision.reload
+        new_revision.reload
         expect(new_revision.types_de_champ_public.size).to eq(3)
         expect(new_revision.types_de_champ_public.last).to eq(new_type_de_champ)
         expect(new_revision.revision_types_de_champ_public.last.position).to eq(2)
