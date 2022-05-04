@@ -6,6 +6,7 @@ en:
         other: "Files"
     attributes:
       dossier:
+        id: "File number"
         state: "State"
       dossier/state: &state
         brouillon: "Draft"
