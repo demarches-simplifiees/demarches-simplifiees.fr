@@ -56,11 +56,49 @@ RSpec.describe Types::DossierType, type: :graphql do
     it { expect(data[:dossier][:champs][1][:__typename]).to eq "AddressChamp" }
   end
 
+  describe 'dossier with user' do
+    let(:dossier) { create(:dossier, :en_construction) }
+    let(:query) { DOSSIER_WITH_USAGER_QUERY }
+    let(:variables) { { number: dossier.id } }
+
+    it { expect(data[:dossier][:usager]).not_to be_nil }
+  end
+
+  describe 'dossier with deleted user' do
+    let(:dossier) { create(:dossier, :en_construction) }
+    let(:query) { DOSSIER_WITH_USAGER_QUERY }
+    let(:variables) { { number: dossier.id } }
+    let(:email) { dossier.user.email }
+
+    before do
+      dossier.update(user_id: nil, deleted_user_email_never_send: email)
+    end
+
+    it {
+      expect(data[:dossier][:usager]).not_to be_nil
+      expect(data[:dossier][:usager][:email]).to eq(email)
+      expect(data[:dossier][:usager][:id]).to eq('<deleted>')
+    }
+  end
+
   DOSSIER_QUERY = <<-GRAPHQL
   query($number: Int!) {
     dossier(number: $number) {
       id
       number
+    }
+  }
+  GRAPHQL
+
+  DOSSIER_WITH_USAGER_QUERY = <<-GRAPHQL
+  query($number: Int!) {
+    dossier(number: $number) {
+      id
+      number
+      usager {
+        id
+        email
+      }
     }
   }
   GRAPHQL
