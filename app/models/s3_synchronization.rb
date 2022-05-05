@@ -56,14 +56,23 @@ class S3Synchronization < ApplicationRecord
     def delete_mirrored_files(main_service_name, mirror_service_name, until_time)
       configs = active_storage_configs
       mirror_service = ActiveStorage::Service.configure mirror_service_name, configs
+      save_dir = Rails.root.join("storage/backup")
+      count = 0
       blob_keys(main_service_name, until_time) do |key|
-        f = mirror_service.path_for(key)
-        File.delete(f) if File.exist?(f)
-        dir = File.dirname(f)
-        Dir.delete(dir) if Dir.exist?(dir) && Dir.empty?(dir)
-        dir = File.dirname(dir)
-        Dir.delete(dir) if Dir.exist?(dir) && Dir.empty?(dir)
+        f = Pathname(mirror_service.path_for(key))
+        move(key, f, save_dir) if File.exist?(f)
+        dir = f.dirname
+        dir.delete if dir.exist? && dir.empty?
+        dir = dir.dirname
+        dir.delete if dir.exist? && dir.empty?
       end
+      AdministrationMailer.s3_synchronization_report("Archived #{count} files from '#{mirror_service_name}' storage service.").deliver_now
+    end
+
+    def move(key, filename, save_dir)
+      to_dir = Pathname(save_dir) / key[0..1] / key[2..3]
+      to_dir.mkpath
+      FileUtils.move(filename.to_s, to_dir.to_s)
     end
 
     def switch_service(from_service, to_service, until_time)
@@ -81,7 +90,7 @@ class S3Synchronization < ApplicationRecord
 
     def upload(from, to, under_rake, until_time)
       @logio = StringIO.new
-      @logger = Rails.logger # Logger.new @logio
+      @logger = Logger.new @logio
       @logger.info "Synchronizing from #{from} to #{to}#{until_time ? ' until ' + until_time.to_s : ''}."
       configs = active_storage_configs
       from_service = ActiveStorage::Service.configure from, configs
