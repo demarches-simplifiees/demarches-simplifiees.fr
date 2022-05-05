@@ -4,6 +4,12 @@
                     link_to(@procedure.libelle, admin_procedure_path(@procedure)),
                     'Publication'] }
 .container
+  - if @procedure.draft_types_de_champ.dubious.present?
+    .card.warning.mb-3
+      .card-title Attention, certains champs ne peuvent être demandé par l'administration. Voici les champs qui nous semblent suspect :
+      %ul
+        - @procedure.draft_types_de_champ.dubious.each do |dubious_champs|
+          %li.dubious-champs= "#{dubious_champs.libelle} (#{dubious_champs.description})"
   .lien-demarche
     %h1
       - if @procedure.brouillon?
