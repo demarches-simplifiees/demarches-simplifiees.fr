@@ -26,7 +26,11 @@ describe Administrateurs::ProceduresController, type: :controller do
       get :apercu, params: base_params.merge({ id: procedure.id })
     end
 
-    it { expect(response).to have_http_status(:ok) }
+    it do
+      expect(response).to have_http_status(:ok)
+      expect(procedure.dossiers.visible_by_user).to be_empty
+      expect(procedure.dossiers.for_procedure_preview).not_to be_empty
+    end
   end
 
   let(:procedure_params) {

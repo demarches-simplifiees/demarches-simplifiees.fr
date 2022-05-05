@@ -44,7 +44,7 @@ module Administrateurs
     end
 
     def apercu
-      @dossier = procedure_without_control.draft_revision.new_dossier
+      @dossier = procedure_without_control.draft_revision.dossier_for_preview(current_user)
       @tab = apercu_tab
     end
 

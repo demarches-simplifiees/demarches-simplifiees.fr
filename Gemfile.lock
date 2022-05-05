@@ -217,9 +217,6 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
-    devise-async (1.0.0)
-      activejob (>= 5.0)
-      devise (>= 4.0)
     devise-i18n (1.9.2)
       devise (>= 4.7.1)
     devise-two-factor (4.0.2)
@@ -849,7 +846,6 @@ DEPENDENCIES
   delayed_job_active_record
   delayed_job_web (>= 1.4.4)
   devise
-  devise-async
   devise-i18n
   devise-two-factor
   discard
