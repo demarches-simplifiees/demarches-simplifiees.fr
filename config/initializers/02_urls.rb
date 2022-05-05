@@ -33,6 +33,7 @@ API_DOC_URL = [DOC_URL, "pour-aller-plus-loin", "graphql"].join("/")
 WEBHOOK_DOC_URL = [DOC_URL, "pour-aller-plus-loin", "webhook"].join("/")
 ARCHIVAGE_DOC_URL = [DOC_URL, "pour-aller-plus-loin", "archivage-longue-duree-des-demarches"].join("/")
 DOC_INTEGRATION_MONAVIS_URL = [DOC_URL, "tutoriels", "integration-du-bouton-mon-avis"].join("/")
+DOC_PROCEDURE_EXPIRES_URL = [DOC_URL, "expiration-et-suppression-des-dossiers"].join("/")
 
 FAQ_URL = ENV.fetch("FAQ_URL", "https://faq.demarches-simplifiees.fr")
 FAQ_ADMIN_URL = [FAQ_URL, "collection", "1-administrateur-creation-dun-formulaire"].join("/")
