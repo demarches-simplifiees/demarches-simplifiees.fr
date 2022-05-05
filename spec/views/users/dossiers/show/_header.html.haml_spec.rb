@@ -47,7 +47,7 @@ describe 'users/dossiers/show/header.html.haml', type: :view do
 
   context "when the procedure is discarded with a dossier terminé" do
     let(:procedure) { create(:procedure, :discarded) }
-    let(:dossier) { create(:dossier, state: "accepte", procedure: procedure) }
+    let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
 
     it 'affiche que la démarche est supprimée' do
       expect(rendered).to have_text("La démarche liée à votre dossier est supprimée")

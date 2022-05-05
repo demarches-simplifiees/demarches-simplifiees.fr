@@ -11,7 +11,6 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(version: 2022_04_26_140107) do
-
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -651,7 +650,7 @@ ActiveRecord::Schema.define(version: 2022_04_26_140107) do
     t.string "organisation"
     t.bigint "parent_procedure_id"
     t.string "path", null: false
-    t.boolean "procedure_expires_when_termine_enabled", default: false
+    t.boolean "procedure_expires_when_termine_enabled", default: true
     t.datetime "published_at"
     t.bigint "published_revision_id"
     t.text "routing_criteria_name", default: "Votre ville"
