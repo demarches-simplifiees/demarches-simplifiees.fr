@@ -1,5 +1,4 @@
 describe ProcedureRevision do
-  let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :with_repetition) }
   let(:revision) { procedure.active_revision }
   let(:type_de_champ_public) { revision.types_de_champ_public.first }
   let(:type_de_champ_private) { revision.types_de_champ_private.first }
@@ -10,6 +9,8 @@ describe ProcedureRevision do
   end
 
   describe '#add_type_de_champ' do
+    let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :with_repetition) }
+
     it 'type_de_champ' do
       expect(revision.types_de_champ_public.size).to eq(2)
       new_type_de_champ = revision.add_type_de_champ({
@@ -49,28 +50,30 @@ describe ProcedureRevision do
     let(:procedure) { create(:procedure, :with_type_de_champ, types_de_champ_count: 4) }
     let(:last_type_de_champ) { revision.types_de_champ_public.last }
 
-    it 'move down' do
-      expect(revision.types_de_champ_public.index(type_de_champ_public)).to eq(0)
-      type_de_champ_public.update(order_place: nil)
-      revision.move_type_de_champ(type_de_champ_public.stable_id, 2)
-      revision.reload
-      expect(revision.types_de_champ_public.index(type_de_champ_public)).to eq(2)
-      expect(revision.procedure.types_de_champ.index(type_de_champ_public)).to eq(2)
-      expect(revision.procedure.types_de_champ_for_procedure_presentation.not_repetition.index(type_de_champ_public)).to eq(2)
+    context 'with 4 types de champ publiques' do
+      it 'move down' do
+        expect(revision.types_de_champ_public.index(type_de_champ_public)).to eq(0)
+        type_de_champ_public.update(order_place: nil)
+        revision.move_type_de_champ(type_de_champ_public.stable_id, 2)
+        revision.reload
+        expect(revision.types_de_champ_public.index(type_de_champ_public)).to eq(2)
+        expect(revision.procedure.types_de_champ.index(type_de_champ_public)).to eq(2)
+        expect(revision.procedure.types_de_champ_for_procedure_presentation.not_repetition.index(type_de_champ_public)).to eq(2)
+      end
+
+      it 'move up' do
+        expect(revision.types_de_champ_public.index(last_type_de_champ)).to eq(3)
+        last_type_de_champ.update(order_place: nil)
+        revision.move_type_de_champ(last_type_de_champ.stable_id, 0)
+        revision.reload
+        expect(revision.types_de_champ_public.index(last_type_de_champ)).to eq(0)
+        expect(revision.procedure.types_de_champ.index(last_type_de_champ)).to eq(0)
+        expect(revision.procedure.types_de_champ_for_procedure_presentation.not_repetition.index(last_type_de_champ)).to eq(0)
+      end
     end
 
-    it 'move up' do
-      expect(revision.types_de_champ_public.index(last_type_de_champ)).to eq(3)
-      last_type_de_champ.update(order_place: nil)
-      revision.move_type_de_champ(last_type_de_champ.stable_id, 0)
-      revision.reload
-      expect(revision.types_de_champ_public.index(last_type_de_champ)).to eq(0)
-      expect(revision.procedure.types_de_champ.index(last_type_de_champ)).to eq(0)
-      expect(revision.procedure.types_de_champ_for_procedure_presentation.not_repetition.index(last_type_de_champ)).to eq(0)
-    end
-
-    context 'repetition' do
-      let!(:procedure) { create(:procedure, :with_repetition) }
+    context 'with a champ repetition repetition' do
+      let(:procedure) { create(:procedure, :with_repetition) }
 
       let!(:second_child) do
         revision.add_type_de_champ({
@@ -105,6 +108,8 @@ describe ProcedureRevision do
   end
 
   describe '#remove_type_de_champ' do
+    let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :with_repetition) }
+
     it 'type_de_champ' do
       revision.remove_type_de_champ(type_de_champ_public.stable_id)
 
@@ -126,6 +131,7 @@ describe ProcedureRevision do
   end
 
   describe '#create_new_revision' do
+    let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :with_repetition) }
     let(:new_revision) { procedure.create_new_revision }
 
     before { new_revision.save }
