@@ -1458,6 +1458,17 @@ describe Dossier do
         expect(repetition_second_revision_champs_for_export.map { |(libelle)| libelle }).to eq(procedure.types_de_champ_for_procedure_presentation.repetition.map(&:libelle_for_export))
         expect(repetition_second_revision_champs_for_export.first.size).to eq(2)
       end
+
+      context 'within a repition having a type de champs commune (multiple values for export)' do
+        it 'works' do
+          proc_test = create(:procedure, :with_repetition_commune)
+          dossier_test = create(:dossier, procedure: proc_test)
+          repetition = proc_test.types_de_champ_for_procedure_presentation.repetition.first
+          type_champs = repetition.types_de_champ_for_revision(proc_test.active_revision).to_a
+          expect(type_champs.size).to eq(1)
+          expect(Dossier.champs_for_export(dossier.champs, type_champs).size).to eq(2)
+        end
+      end
     end
 
     context "when procedure brouillon" do
