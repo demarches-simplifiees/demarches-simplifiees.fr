@@ -126,11 +126,13 @@ describe ProcedureRevision do
 
     context 'for a type_de_champ_repetition' do
       let(:procedure) { create(:procedure, :with_repetition) }
+      let!(:child) { child = draft.children_of(type_de_champ_repetition).first }
 
       it 'can remove its children' do
-        draft.remove_type_de_champ(type_de_champ_repetition.types_de_champ.first.stable_id)
+        draft.remove_type_de_champ(child.stable_id)
 
         expect(type_de_champ_repetition.types_de_champ).to be_empty
+        expect { child.reload }.to raise_error ActiveRecord::RecordNotFound
         expect(draft.types_de_champ_public.size).to eq(1)
       end
     end
