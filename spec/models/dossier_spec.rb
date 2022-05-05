@@ -1459,7 +1459,7 @@ describe Dossier do
         expect(repetition_second_revision_champs_for_export.first.size).to eq(2)
       end
 
-      context 'within a repition having a type de champs commune (multiple values for export)' do
+      context 'within a repetition having a type de champs commune (multiple values for export)' do
         it 'works' do
           proc_test = create(:procedure, :with_repetition_commune)
           dossier_test = create(:dossier, procedure: proc_test)
