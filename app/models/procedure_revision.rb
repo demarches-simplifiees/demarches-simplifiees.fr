@@ -87,14 +87,7 @@ class ProcedureRevision < ApplicationRecord
 
   def remove_type_de_champ(id)
     type_de_champ = find_type_de_champ_by_id(id)
-
-    if type_de_champ.revision == self
-      type_de_champ.destroy
-    elsif type_de_champ.parent.present?
-      find_or_clone_type_de_champ(id).destroy
-    else
-      types_de_champ.delete(type_de_champ)
-    end
+    type_de_champ.destroy
   end
 
   def draft?
