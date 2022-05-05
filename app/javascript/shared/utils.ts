@@ -138,7 +138,7 @@ export function httpRequest(
     controller?: AbortController;
   } = {}
 ) {
-  const headers = new Headers(init.headers);
+  const headers = init.headers ? new Headers(init.headers) : new Headers();
   if (csrf) {
     headers.set('x-csrf-token', csrfToken() ?? '');
     headers.set('x-requested-with', 'XMLHttpRequest');
