@@ -1,12 +1,12 @@
 describe ProcedureRevision do
   let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :with_repetition) }
   let(:revision) { procedure.active_revision }
-  let(:type_de_champ) { revision.types_de_champ_public.first }
+  let(:type_de_champ_public) { revision.types_de_champ_public.first }
   let(:type_de_champ_private) { revision.types_de_champ_private.first }
   let(:type_de_champ_repetition) do
-    type_de_champ = revision.types_de_champ_public.repetition.first
-    type_de_champ.update(stable_id: 3333)
-    type_de_champ
+    repetition = revision.types_de_champ_public.repetition.first
+    repetition.update(stable_id: 3333)
+    repetition
   end
 
   describe '#add_type_de_champ' do
@@ -50,13 +50,13 @@ describe ProcedureRevision do
     let(:last_type_de_champ) { revision.types_de_champ_public.last }
 
     it 'move down' do
-      expect(revision.types_de_champ_public.index(type_de_champ)).to eq(0)
-      type_de_champ.update(order_place: nil)
-      revision.move_type_de_champ(type_de_champ.stable_id, 2)
+      expect(revision.types_de_champ_public.index(type_de_champ_public)).to eq(0)
+      type_de_champ_public.update(order_place: nil)
+      revision.move_type_de_champ(type_de_champ_public.stable_id, 2)
       revision.reload
-      expect(revision.types_de_champ_public.index(type_de_champ)).to eq(2)
-      expect(revision.procedure.types_de_champ.index(type_de_champ)).to eq(2)
-      expect(revision.procedure.types_de_champ_for_procedure_presentation.not_repetition.index(type_de_champ)).to eq(2)
+      expect(revision.types_de_champ_public.index(type_de_champ_public)).to eq(2)
+      expect(revision.procedure.types_de_champ.index(type_de_champ_public)).to eq(2)
+      expect(revision.procedure.types_de_champ_for_procedure_presentation.not_repetition.index(type_de_champ_public)).to eq(2)
     end
 
     it 'move up' do
@@ -70,59 +70,56 @@ describe ProcedureRevision do
     end
 
     context 'repetition' do
-      let(:procedure) { create(:procedure, :with_repetition) }
-      let(:type_de_champ) { type_de_champ_repetition.types_de_champ.first }
-      let(:last_type_de_champ) { type_de_champ_repetition.types_de_champ.last }
+      let!(:procedure) { create(:procedure, :with_repetition) }
 
-      before do
+      let!(:second_child) do
         revision.add_type_de_champ({
           type_champ: TypeDeChamp.type_champs.fetch(:text),
-          libelle: "Un champ text",
+          libelle: "second child",
           parent_id: type_de_champ_repetition.stable_id
         })
+      end
+
+      let!(:last_child) do
         revision.add_type_de_champ({
           type_champ: TypeDeChamp.type_champs.fetch(:text),
-          libelle: "Un champ text",
+          libelle: "last child",
           parent_id: type_de_champ_repetition.stable_id
         })
-        type_de_champ_repetition.reload
       end
 
       it 'move down' do
-        expect(type_de_champ_repetition.types_de_champ.index(type_de_champ)).to eq(0)
-        revision.move_type_de_champ(type_de_champ.stable_id, 2)
+        expect(type_de_champ_repetition.types_de_champ.index(second_child)).to eq(1)
+        revision.move_type_de_champ(second_child.stable_id, 2)
         type_de_champ_repetition.reload
-        expect(type_de_champ_repetition.types_de_champ.index(type_de_champ)).to eq(2)
+        expect(type_de_champ_repetition.types_de_champ.index(second_child)).to eq(2)
       end
 
       it 'move up' do
-        expect(type_de_champ_repetition.types_de_champ.index(last_type_de_champ)).to eq(2)
-        revision.move_type_de_champ(last_type_de_champ.stable_id, 0)
+        expect(type_de_champ_repetition.types_de_champ.index(last_child)).to eq(2)
+        revision.move_type_de_champ(last_child.stable_id, 0)
         type_de_champ_repetition.reload
-        expect(type_de_champ_repetition.types_de_champ.index(last_type_de_champ)).to eq(0)
+        expect(type_de_champ_repetition.types_de_champ.index(last_child)).to eq(0)
       end
     end
   end
 
   describe '#remove_type_de_champ' do
     it 'type_de_champ' do
-      expect(revision.types_de_champ_public.size).to eq(2)
-      revision.remove_type_de_champ(type_de_champ.stable_id)
-      procedure.reload
+      revision.remove_type_de_champ(type_de_champ_public.stable_id)
+
       expect(revision.types_de_champ_public.size).to eq(1)
     end
 
     it 'type_de_champ_private' do
-      expect(revision.types_de_champ_private.size).to eq(1)
       revision.remove_type_de_champ(type_de_champ_private.stable_id)
+
       expect(revision.types_de_champ_private.size).to eq(0)
     end
 
     it 'type_de_champ_repetition' do
-      expect(type_de_champ_repetition.types_de_champ.size).to eq(1)
-      expect(revision.types_de_champ_public.size).to eq(2)
       revision.remove_type_de_champ(type_de_champ_repetition.types_de_champ.first.stable_id)
-      type_de_champ_repetition.reload
+
       expect(type_de_champ_repetition.types_de_champ.size).to eq(0)
       expect(revision.types_de_champ_public.size).to eq(2)
     end
