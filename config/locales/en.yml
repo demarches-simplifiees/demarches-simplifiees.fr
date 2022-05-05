@@ -128,12 +128,6 @@ en:
           submit_dossier: Submit the file
           save_changes: Save the changes of the file
         messages:
-          message_issuer:
-            automatic_email: "Automatic email"
-            you: "You"
-          message:
-            reply: "Reply"
-            guest: "Guest"
           form:
             send_message: "Send message"
             attachment_size: "(attachment size max : 10 Mo)"

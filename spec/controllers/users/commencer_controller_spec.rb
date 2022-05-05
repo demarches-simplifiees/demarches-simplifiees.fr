@@ -67,39 +67,38 @@ describe Users::CommencerController, type: :controller do
     end
   end
 
-  # describe '#sign_in' do
-  #   context 'for a published procedure' do
-  #     subject { get :sign_in, params: { path: published_procedure.path } }
-  #
-  #     it 'set the path to return after sign-in to the procedure start page' do
-  #       subject
-  #       expect(controller.stored_location_for(:user)).to eq(commencer_path(path: published_procedure.path))
-  #     end
-  #
-  #     it { expect(subject).to redirect_to(new_user_session_path) }
-  #   end
-  #
-  #   context 'for a draft procedure' do
-  #     subject { get :sign_in, params: { path: draft_procedure.path } }
-  #
-  #     it 'set the path to return after sign-in to the draft procedure start page' do
-  #       subject
-  #       expect(controller.stored_location_for(:user)).to eq(commencer_test_path(path: draft_procedure.path))
-  #     end
-  #
-  #     it { expect(subject).to redirect_to(new_user_session_path) }
-  #   end
-  #
-  #   context 'when the path doesn’t exist' do
-  #     subject { get :sign_in, params: { path: 'hello' } }
-  #
-  #     it 'redirects with an error message' do
-  #       expect(subject).to redirect_to(root_path)
-  #     end
-  #   end
-  # end
+  describe '#sign_in' do
+    context 'for a published procedure' do
+      subject { get :sign_in, params: { path: published_procedure.path } }
 
-  # sign_up action no longer needed since connection through GMY
+      it 'set the path to return after sign-in to the procedure start page' do
+        subject
+        expect(controller.stored_location_for(:user)).to eq(commencer_path(path: published_procedure.path))
+      end
+
+      it { expect(subject).to redirect_to(new_user_session_path) }
+    end
+
+    context 'for a draft procedure' do
+      subject { get :sign_in, params: { path: draft_procedure.path } }
+
+      it 'set the path to return after sign-in to the draft procedure start page' do
+        subject
+        expect(controller.stored_location_for(:user)).to eq(commencer_test_path(path: draft_procedure.path))
+      end
+
+      it { expect(subject).to redirect_to(new_user_session_path) }
+    end
+
+    context 'when the path doesn’t exist' do
+      subject { get :sign_in, params: { path: 'hello' } }
+
+      it 'redirects with an error message' do
+        expect(subject).to redirect_to(root_path)
+      end
+    end
+  end
+
   # describe '#sign_up' do
   #   context 'for a published procedure' do
   #     subject { get :sign_up, params: { path: published_procedure.path } }
@@ -163,4 +162,41 @@ describe Users::CommencerController, type: :controller do
   #     end
   #   end
   # end
+
+  describe '#dossier_vide_pdf' do
+    before { get :dossier_vide_pdf, params: { path: procedure.path } }
+
+    context 'published procedure' do
+      let(:procedure) { create(:procedure, :published, :with_service, :with_path) }
+
+      it 'works' do
+        expect(response).to have_http_status(:success)
+      end
+    end
+    context 'not published procedure' do
+      let(:procedure) { create(:procedure, :with_service, :with_path) }
+
+      it 'redirects to procedure not found' do
+        expect(response).to have_http_status(302)
+      end
+    end
+  end
+
+  describe '#dossier_vide_test_pdf' do
+    before { get :dossier_vide_pdf_test, params: { path: procedure.path } }
+
+    context 'not published procedure' do
+      let(:procedure) { create(:procedure, :with_service, :with_path) }
+
+      it 'works' do
+        expect(response).to have_http_status(:success)
+      end
+    end
+    context 'published procedure' do
+      let(:procedure) { create(:procedure, :published, :with_service, :with_path) }
+      it 'redirect to procedure not found' do
+        expect(response).to have_http_status(302)
+      end
+    end
+  end
 end

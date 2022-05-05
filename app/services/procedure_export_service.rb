@@ -3,16 +3,18 @@ class ProcedureExportService
 
   def initialize(procedure, dossiers)
     @procedure = procedure
-    @dossiers = dossiers.downloadable_sorted_batch
+    @dossiers = dossiers
     @tables = [:dossiers, :etablissements, :avis] + champs_repetables_options
   end
 
   def to_csv
+    @dossiers = @dossiers.downloadable_sorted_batch
     io = StringIO.new(SpreadsheetArchitect.to_csv(options_for(:dossiers, :csv)))
     create_blob(io, :csv)
   end
 
   def to_xlsx
+    @dossiers = @dossiers.downloadable_sorted_batch
     # We recursively build multi page spreadsheet
     io = @tables.reduce(nil) do |package, table|
       SpreadsheetArchitect.to_axlsx_package(options_for(table, :xlsx), package)
@@ -21,6 +23,7 @@ class ProcedureExportService
   end
 
   def to_ods
+    @dossiers = @dossiers.downloadable_sorted_batch
     # We recursively build multi page spreadsheet
     io = StringIO.new(@tables.reduce(nil) do |spreadsheet, table|
       SpreadsheetArchitect.to_rodf_spreadsheet(options_for(table, :ods), spreadsheet)

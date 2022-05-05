@@ -27,12 +27,3 @@ fr:
         create: 'Créer un compte'
         signin: 'Connexion'
         title: "via un compte %{name}"
-      commentaires:
-        destroy:
-          button: 'Supprimer le message'
-          confirm: "Êtes-vous sûr de vouloir supprimer ce message ?"
-          deleted_body: Message supprimé
-          notice: 'Votre message a été supprimé'
-          alert_reasons:
-            acl: "Impossible de supprimer le message, celui ci ne vous appartient pas"
-            already_discarded: "Ce message a déjà été supprimé"
