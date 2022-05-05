@@ -125,9 +125,14 @@ describe ProcedureRevision do
     end
 
     it 'type_de_champ_repetition' do
-      draft.remove_type_de_champ(type_de_champ_repetition.types_de_champ.first.stable_id)
+      children = draft.children_of(type_de_champ_repetition)
+      expect(children.size).to eq(1)
+      child = children.first
 
-      expect(type_de_champ_repetition.types_de_champ.size).to eq(0)
+      draft.remove_type_de_champ(child.stable_id)
+
+      expect(draft.children_of(type_de_champ_repetition).size).to eq(0)
+      expect { child.reload }.to raise_error ActiveRecord::RecordNotFound
       expect(draft.types_de_champ_public.size).to eq(2)
     end
   end
