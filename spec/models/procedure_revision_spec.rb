@@ -108,18 +108,20 @@ describe ProcedureRevision do
   end
 
   describe '#remove_type_de_champ' do
-    let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :with_repetition) }
+    context 'for a classic tdc' do
+      let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
 
-    it 'type_de_champ' do
-      draft.remove_type_de_champ(type_de_champ_public.stable_id)
+      it 'type_de_champ' do
+        draft.remove_type_de_champ(type_de_champ_public.stable_id)
 
-      expect(draft.types_de_champ_public.size).to eq(1)
-    end
+        expect(draft.types_de_champ_public).to be_empty
+      end
 
-    it 'type_de_champ_private' do
-      draft.remove_type_de_champ(type_de_champ_private.stable_id)
+      it 'type_de_champ_private' do
+        draft.remove_type_de_champ(type_de_champ_private.stable_id)
 
-      expect(draft.types_de_champ_private.size).to eq(0)
+        expect(draft.types_de_champ_private).to be_empty
+      end
     end
 
     it 'type_de_champ_repetition' do
