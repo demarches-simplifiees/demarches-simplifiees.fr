@@ -385,8 +385,7 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def find_type_de_champ_by_id(id)
-    types_de_champ.find_by(stable_id: id) ||
-      types_de_champ_in_repetition.find_by!(stable_id: id)
+    types_de_champ.find_by(stable_id: id)
   end
 
   def types_de_champ_in_repetition
