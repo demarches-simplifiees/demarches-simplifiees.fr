@@ -56,7 +56,7 @@ class ProcedureRevision < ApplicationRecord
   def find_or_clone_type_de_champ(id)
     type_de_champ = find_type_de_champ_by_id(id)
 
-    if type_de_champ.revision == self
+    if type_de_champ.only_present_on_draft?
       type_de_champ
     elsif type_de_champ.parent.present?
       find_or_clone_type_de_champ(type_de_champ.parent.stable_id).types_de_champ.find_by!(stable_id: id)
@@ -88,7 +88,7 @@ class ProcedureRevision < ApplicationRecord
   def remove_type_de_champ(id)
     type_de_champ = find_type_de_champ_by_id(id)
 
-    if type_de_champ.revision == self
+    if type_de_champ.only_present_on_draft?
       type_de_champ.destroy
     elsif type_de_champ.parent.present?
       find_or_clone_type_de_champ(id).destroy
