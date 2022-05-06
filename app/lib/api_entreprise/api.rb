@@ -119,7 +119,7 @@ class APIEntreprise::API
   def self.params(siret_or_siren, procedure_id, user_id)
     params = {
       context: (FR_SITE).to_s,
-      recipient: siret_or_siren,
+      recipient: ENV.fetch('API_ENTREPRISE_DEFAULT_SIRET'),
       object: "procedure_id: #{procedure_id}",
       non_diffusables: true
     }

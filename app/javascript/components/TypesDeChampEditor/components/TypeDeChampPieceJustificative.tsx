@@ -5,12 +5,14 @@ import type { Handler } from '../types';
 
 export function TypeDeChampPieceJustificative({
   isVisible,
+  isTitreIdentite,
   url,
   filename,
   handler,
   directUploadUrl
 }: {
   isVisible: boolean;
+  isTitreIdentite: boolean;
   url?: string;
   filename?: string;
   handler: Handler<HTMLInputElement>;
@@ -29,6 +31,17 @@ export function TypeDeChampPieceJustificative({
           onChange={onFileChange(handler, directUploadUrl)}
           className="small-margin small"
         />
+      </div>
+    );
+  }
+
+  if (isTitreIdentite) {
+    return (
+      <div className="cell">
+        <p id={`${handler.id}-description`}>
+          Dans le cadre de la RGPD, le titre d&apos;identité sera supprimé lors
+          de l&apos;acceptation du dossier
+        </p>
       </div>
     );
   }

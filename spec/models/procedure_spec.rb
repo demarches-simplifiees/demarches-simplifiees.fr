@@ -603,12 +603,13 @@ describe Procedure do
     end
 
     describe 'procedure status is reset' do
-      let(:procedure) { create(:procedure, :closed, received_mail: received_mail, service: service) }
+      let(:procedure) { create(:procedure, :closed, received_mail: received_mail, service: service, auto_archive_on: 3.weeks.from_now) }
 
       it 'Not published nor closed' do
         expect(subject.closed_at).to be_nil
         expect(subject.published_at).to be_nil
         expect(subject.unpublished_at).to be_nil
+        expect(subject.auto_archive_on).to be_nil
         expect(subject.aasm_state).to eq "brouillon"
         expect(subject.path).not_to be_nil
       end
@@ -1189,6 +1190,13 @@ describe Procedure do
     it 'estimates average dossier weight' do
       expect(procedure.reload.average_dossier_weight).to eq(5 + Procedure::MIN_WEIGHT)
     end
+  end
+
+  describe 'lien_dpo' do
+    it { expect(build(:procedure).valid?).to be(true) }
+    it { expect(build(:procedure, lien_dpo: 'dpo@ministere.amere').valid?).to be(true) }
+    it { expect(build(:procedure, lien_dpo: 'https://legal.fr/contact_dpo').valid?).to be(true) }
+    it { expect(build(:procedure, lien_dpo: 'askjdlad l akdj asd ').valid?).to be(false) }
   end
 
   private

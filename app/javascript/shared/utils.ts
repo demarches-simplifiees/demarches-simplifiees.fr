@@ -42,15 +42,20 @@ export function removeClass(el: HTMLElement, cssClass: string) {
   el && el.classList.remove(cssClass);
 }
 
-export function delegate(
+export function delegate<E extends Event = Event>(
   eventNames: string,
   selector: string,
-  callback: () => void
+  callback: (event: E) => void
 ) {
   eventNames
     .split(' ')
     .forEach((eventName) =>
-      Rails.delegate(document, selector, eventName, callback)
+      Rails.delegate(
+        document,
+        selector,
+        eventName,
+        callback as (event: Event) => void
+      )
     );
 }
 

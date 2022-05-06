@@ -84,7 +84,7 @@ class RootController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_back(fallback_location: root_path) }
-      format.js { render js: helpers.remove_element('#outdated-browser-banner') }
+      format.turbo_stream
     end
   end
 
