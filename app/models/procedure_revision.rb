@@ -86,14 +86,13 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def remove_type_de_champ(id)
-    type_de_champ = find_type_de_champ_by_id(id)
+    coordinate = revision_types_de_champ.find_by(type_de_champ_id: id)
+    tdc = coordinate.type_de_champ
 
-    if type_de_champ.revision == self
-      type_de_champ.destroy
-    elsif type_de_champ.parent.present?
-      find_or_clone_type_de_champ(id).destroy
-    else
-      types_de_champ.delete(type_de_champ)
+    coordinate.destroy
+
+    if tdc.revision_types_de_champ.empty?
+      tdc.destroy
     end
   end
 
