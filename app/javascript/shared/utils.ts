@@ -60,40 +60,6 @@ export function delegate<E extends Event = Event>(
     );
 }
 
-// A promise-based wrapper for Rails.ajax().
-//
-// Returns a Promise that is either:
-// - resolved in case of a 20* HTTP response code,
-// - rejected with an Error object otherwise.
-//
-// See Rails.ajax() code for more details.
-export function ajax(options: Rails.AjaxOptions) {
-  return new Promise((resolve, reject) => {
-    Object.assign(options, {
-      success: (
-        response: unknown,
-        statusText: string,
-        xhr: { status: number }
-      ) => {
-        resolve({ response, statusText, xhr });
-      },
-      error: (
-        response: unknown,
-        statusText: string,
-        xhr: { status: number }
-      ) => {
-        // NB: on HTTP/2 connections, statusText is always empty.
-        const error = new Error(
-          `Erreur ${xhr.status}` + (statusText ? ` : ${statusText}` : '')
-        );
-        Object.assign(error, { response, statusText, xhr });
-        reject(error);
-      }
-    });
-    Rails.ajax(options);
-  });
-}
-
 export class ResponseError extends Error {
   response: Response;
 
@@ -118,10 +84,6 @@ const FETCH_TIMEOUT = 30 * 1000; // 30 sec
 //
 // Execute a GET request, and apply the Turbo stream in the Response
 // await httpRequest(url).turbo();
-//
-// Execute a GET request, and interpret the JavaScript code in the Response
-// DEPRECATED: Don't use this in new code; instead let the server respond with a turbo stream
-// await httpRequest(url).js();
 //
 export function httpRequest(
   url: string,
@@ -199,19 +161,6 @@ export function httpRequest(
         const stream = await response.text();
         session.renderStreamMessage(stream);
       }
-    },
-    async js(): Promise<void> {
-      const response = await request(init, 'text/javascript');
-      if (response.status != 204) {
-        const script = document.createElement('script');
-        const nonce = cspNonce();
-        if (nonce) {
-          script.setAttribute('nonce', nonce);
-        }
-        script.text = await response.text();
-        document.head.appendChild(script);
-        document.head.removeChild(script);
-      }
     }
   };
 }
@@ -234,18 +183,6 @@ export function scrollToBottom(container: HTMLElement) {
   container.scrollTop = container.scrollHeight;
 }
 
-export function on(
-  selector: string,
-  eventName: string,
-  fn: (event: Event, detail: unknown) => void
-) {
-  [...document.querySelectorAll(selector)].forEach((element) =>
-    element.addEventListener(eventName, (event) =>
-      fn(event, (event as CustomEvent).detail)
-    )
-  );
-}
-
 export function isNumeric(s: string) {
   const n = parseFloat(s);
   return !isNaN(n) && isFinite(n);
@@ -257,17 +194,4 @@ function offset(element: HTMLElement) {
     top: rect.top + document.body.scrollTop,
     left: rect.left + document.body.scrollLeft
   };
-}
-
-// Takes a promise, and return a promise that times out after the given delay.
-export function timeoutable<T>(
-  promise: Promise<T>,
-  timeoutDelay: number
-): Promise<T> {
-  const timeoutPromise = new Promise<T>((resolve, reject) => {
-    setTimeout(() => {
-      reject(new Error(`Promise timed out after ${timeoutDelay}ms`));
-    }, timeoutDelay);
-  });
-  return Promise.race([promise, timeoutPromise]);
 }
