@@ -5,42 +5,42 @@ import { session } from '@hotwired/turbo';
 export { debounce };
 export const { fire, csrfToken, cspNonce } = Rails;
 
-export function show(el: HTMLElement) {
-  el && el.classList.remove('hidden');
+export function show(el: HTMLElement | null) {
+  el?.classList.remove('hidden');
 }
 
-export function hide(el: HTMLElement) {
-  el && el.classList.add('hidden');
+export function hide(el: HTMLElement | null) {
+  el?.classList.add('hidden');
 }
 
-export function toggle(el: HTMLElement, force?: boolean) {
+export function toggle(el: HTMLElement | null, force?: boolean) {
   if (force == undefined) {
-    el && el.classList.toggle('hidden');
+    el?.classList.toggle('hidden');
   } else if (force) {
-    el && el.classList.remove('hidden');
+    el?.classList.remove('hidden');
   } else {
-    el && el.classList.add('hidden');
+    el?.classList.add('hidden');
   }
 }
 
-export function enable(el: HTMLInputElement) {
+export function enable(el: HTMLInputElement | HTMLButtonElement | null) {
   el && (el.disabled = false);
 }
 
-export function disable(el: HTMLInputElement) {
+export function disable(el: HTMLInputElement | HTMLButtonElement | null) {
   el && (el.disabled = true);
 }
 
-export function hasClass(el: HTMLElement, cssClass: string) {
-  return el && el.classList.contains(cssClass);
+export function hasClass(el: HTMLElement | null, cssClass: string) {
+  return el?.classList.contains(cssClass);
 }
 
-export function addClass(el: HTMLElement, cssClass: string) {
-  el && el.classList.add(cssClass);
+export function addClass(el: HTMLElement | null, cssClass: string) {
+  el?.classList.add(cssClass);
 }
 
-export function removeClass(el: HTMLElement, cssClass: string) {
-  el && el.classList.remove(cssClass);
+export function removeClass(el: HTMLElement | null, cssClass: string) {
+  el?.classList.remove(cssClass);
 }
 
 export function delegate<E extends Event = Event>(
