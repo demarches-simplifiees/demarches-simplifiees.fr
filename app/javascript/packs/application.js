@@ -26,8 +26,6 @@ import '../new_design/procedure-form';
 import '../new_design/spinner';
 import '../new_design/support';
 import '../new_design/messagerie';
-import '../new_design/dossiers/auto-save';
-import '../new_design/dossiers/auto-upload';
 
 import '../new_design/champs/linked-drop-down-list';
 import '../new_design/champs/drop-down-list';
