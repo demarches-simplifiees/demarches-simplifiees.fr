@@ -25,7 +25,7 @@
           = tag[:description]
 
 %h3.header-subsection Logo de l'attestation
-= image_upload_and_render f, @attestation_template.logo, false
+= render Attachment::EditComponent.image(f, @attestation_template.logo, false)
 
 %p.notice
   Formats acceptés : JPG / JPEG / PNG.
@@ -33,7 +33,7 @@
   Dimensions conseillées : au minimum 500 px de largeur ou de hauteur, poids maximum : 0,5 Mo.
 
 %h3.header-subsection Tampon de l'attestation
-= image_upload_and_render f, @attestation_template.signature, false
+= render Attachment::EditComponent.image(f, @attestation_template.signature, false)
 
 %p.notice
   Formats acceptés : JPG / JPEG / PNG.
