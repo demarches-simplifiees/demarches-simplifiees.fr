@@ -124,16 +124,25 @@ describe ProcedureRevision do
       end
     end
 
-    it 'type_de_champ_repetition' do
-      children = draft.children_of(type_de_champ_repetition)
-      expect(children.size).to eq(1)
-      child = children.first
+    context 'for a type_de_champ_repetition' do
+      let(:procedure) { create(:procedure, :with_repetition) }
+      let!(:child) { draft.children_of(type_de_champ_repetition).first }
 
-      draft.remove_type_de_champ(child.stable_id)
+      it 'can remove its children' do
+        draft.remove_type_de_champ(child.id)
 
-      expect(draft.children_of(type_de_champ_repetition).size).to eq(0)
-      expect { child.reload }.to raise_error ActiveRecord::RecordNotFound
-      expect(draft.types_de_champ_public.size).to eq(2)
+        expect(draft.children_of(type_de_champ_repetition).size).to eq(0)
+        expect { child.reload }.to raise_error ActiveRecord::RecordNotFound
+        expect(draft.types_de_champ_public.size).to eq(1)
+      end
+
+      it 'can remove the parent' do
+        draft.remove_type_de_champ(type_de_champ_repetition.id)
+
+        expect { child.reload }.to raise_error ActiveRecord::RecordNotFound
+        expect { type_de_champ_repetition.reload }.to raise_error ActiveRecord::RecordNotFound
+        expect(draft.types_de_champ_public).to be_empty
+      end
     end
   end
 
