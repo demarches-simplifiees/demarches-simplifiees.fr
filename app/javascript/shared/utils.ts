@@ -61,11 +61,15 @@ export function delegate<E extends Event = Event>(
 }
 
 export class ResponseError extends Error {
-  response: Response;
+  readonly response: Response;
+  readonly jsonBody?: unknown;
+  readonly textBody?: string;
 
-  constructor(response: Response) {
+  constructor(response: Response, jsonBody?: unknown, textBody?: string) {
     super(String(response.statusText || response.status));
     this.response = response;
+    this.jsonBody = jsonBody;
+    this.textBody = textBody;
   }
 }
 
@@ -125,26 +129,42 @@ export function httpRequest(
     }
   }
 
-  const request = (init: RequestInit, accept?: string): Promise<Response> => {
+  const request = async (
+    init: RequestInit,
+    accept?: string
+  ): Promise<Response> => {
     if (accept && init.headers instanceof Headers) {
       init.headers.set('accept', accept);
     }
-    return fetch(url, init)
-      .then((response) => {
-        clearTimeout(timer);
+    try {
+      const response = await fetch(url, init);
 
-        if (response.ok) {
-          return response;
-        } else if (response.status == 401) {
-          location.reload(); // reload whole page so Devise will redirect to sign-in
+      if (response.ok) {
+        return response;
+      } else if (response.status == 401) {
+        location.reload(); // reload whole page so Devise will redirect to sign-in
+      }
+
+      const contentType = response.headers.get('content-type');
+      let jsonBody: unknown;
+      let textBody: string | undefined;
+      try {
+        if (contentType?.match('json')) {
+          jsonBody = await response.json();
+        } else {
+          textBody = await response.text();
         }
-        throw new ResponseError(response);
-      })
-      .catch((error) => {
-        clearTimeout(timer);
+      } catch {
+        // ignore
+      }
+      throw new ResponseError(response, jsonBody, textBody);
+    } catch (error) {
+      clearTimeout(timer);
 
-        throw error;
-      });
+      throw error;
+    } finally {
+      clearTimeout(timer);
+    }
   };
 
   return {
