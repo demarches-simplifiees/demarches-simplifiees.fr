@@ -137,32 +137,36 @@ describe ProcedureRevision do
   end
 
   describe '#create_new_revision' do
-    let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :with_repetition) }
     let(:new_draft) { procedure.create_new_revision }
 
-    before { new_draft.save }
+    context 'from a simple procedure' do
+      let(:procedure) { create(:procedure) }
 
-    it 'should be part of procedure' do
-      expect(new_draft.procedure).to eq(draft.procedure)
-      expect(procedure.revisions.count).to eq(2)
-      expect(procedure.revisions).to eq([draft, new_draft])
+      it 'should be part of procedure' do
+        expect(new_draft.procedure).to eq(draft.procedure)
+        expect(procedure.revisions.count).to eq(2)
+        expect(procedure.revisions).to eq([draft, new_draft])
+      end
     end
 
-    it 'should have types_de_champ' do
-      expect(new_draft.types_de_champ_public.count).to eq(2)
-      expect(new_draft.types_de_champ_private.count).to eq(1)
-      expect(new_draft.types_de_champ_public).to eq(draft.types_de_champ_public)
-      expect(new_draft.types_de_champ_private).to eq(draft.types_de_champ_private)
+    context 'with simple tdc' do
+      let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
 
-      expect(new_draft.revision_types_de_champ_public.count).to eq(2)
-      expect(new_draft.revision_types_de_champ_private.count).to eq(1)
-      expect(new_draft.revision_types_de_champ_public.count).to eq(draft.revision_types_de_champ_public.count)
-      expect(new_draft.revision_types_de_champ_private.count).to eq(draft.revision_types_de_champ_private.count)
-      expect(new_draft.revision_types_de_champ_public).not_to eq(draft.revision_types_de_champ_public)
-      expect(new_draft.revision_types_de_champ_private).not_to eq(draft.revision_types_de_champ_private)
+      it 'should have the same tdcs with different links' do
+        expect(new_draft.types_de_champ_public.count).to eq(1)
+        expect(new_draft.types_de_champ_private.count).to eq(1)
+        expect(new_draft.types_de_champ_public).to eq(draft.types_de_champ_public)
+        expect(new_draft.types_de_champ_private).to eq(draft.types_de_champ_private)
+
+        expect(new_draft.revision_types_de_champ_public.count).to eq(1)
+        expect(new_draft.revision_types_de_champ_private.count).to eq(1)
+        expect(new_draft.revision_types_de_champ_public).not_to eq(draft.revision_types_de_champ_public)
+        expect(new_draft.revision_types_de_champ_private).not_to eq(draft.revision_types_de_champ_private)
+      end
     end
 
     describe '#compare' do
+      let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :with_repetition) }
       let(:type_de_champ_first) { draft.types_de_champ_public.first }
       let(:type_de_champ_second) { draft.types_de_champ_public.second }
 
