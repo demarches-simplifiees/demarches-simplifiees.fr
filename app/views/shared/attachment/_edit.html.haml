@@ -30,7 +30,7 @@
         Une erreur s’est produite pendant l’envoi du fichier.
       %p.attachment-error-description
         Une erreur inconnue s'est produite pendant l'envoi du fichier
-    = button_tag type: 'button', class: 'button attachment-error-retry', data: { 'input-target': ".attachment-input-#{attachment_id}" } do
+    = button_tag type: 'button', class: 'button attachment-error-retry', data: { 'input-target': ".attachment-input-#{attachment_id}", action: 'autosave#onClickRetryButton' } do
       %span.icon.retry
       Ré-essayer
 
