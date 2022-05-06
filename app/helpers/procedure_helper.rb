@@ -30,28 +30,6 @@ module ProcedureHelper
     procedure.errors.to_hash(full_messages: true).except(:path)
   end
 
-  def types_de_champ_data(procedure)
-    {
-      isAnnotation: false,
-      typeDeChampsTypes: TypeDeChamp.type_de_champ_types_for(procedure, current_user),
-      typeDeChamps: (procedure.draft_revision ? procedure.draft_revision : procedure).types_de_champ_public.as_json_for_editor,
-      baseUrl: admin_procedure_types_de_champ_path(procedure),
-      directUploadUrl: rails_direct_uploads_url,
-      continuerUrl: admin_procedure_path(procedure)
-    }
-  end
-
-  def types_de_champ_private_data(procedure)
-    {
-      isAnnotation: true,
-      typeDeChampsTypes: TypeDeChamp.type_de_champ_types_for(procedure, current_user),
-      typeDeChamps: (procedure.draft_revision ? procedure.draft_revision : procedure).types_de_champ_private.as_json_for_editor,
-      baseUrl: admin_procedure_types_de_champ_path(procedure),
-      directUploadUrl: rails_direct_uploads_url,
-      continuerUrl: admin_procedure_path(procedure)
-    }
-  end
-
   def procedure_auto_archive_date(procedure)
     I18n.l(procedure.auto_archive_on - 1.day, format: '%-d %B %Y')
   end

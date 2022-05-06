@@ -322,69 +322,6 @@ class TypeDeChamp < ApplicationRecord
 
   FEATURE_FLAGS = {}
 
-  def self.type_de_champ_types_for(procedure, user)
-    has_legacy_number = (procedure.types_de_champ + procedure.types_de_champ_private).any?(&:legacy_number?)
-
-    filter_featured_tdc = -> (tdc) do
-      feature_name = FEATURE_FLAGS[tdc]
-      feature_name.blank? || Flipper.enabled?(feature_name, user)
-    end
-
-    filter_tdc = -> (tdc) do
-      case tdc
-      when TypeDeChamp.type_champs.fetch(:number)
-        has_legacy_number
-      when TypeDeChamp.type_champs.fetch(:cnaf)
-        procedure.cnaf_enabled?
-      when TypeDeChamp.type_champs.fetch(:dgfip)
-        procedure.dgfip_enabled?
-      when TypeDeChamp.type_champs.fetch(:pole_emploi)
-        procedure.pole_emploi_enabled?
-      when TypeDeChamp.type_champs.fetch(:mesri)
-        procedure.mesri_enabled?
-      else
-        true
-      end
-    end
-
-    type_champs
-      .keys
-      .filter(&filter_tdc)
-      .filter(&filter_featured_tdc)
-      .map { |tdc| [I18n.t("activerecord.attributes.type_de_champ.type_champs.#{tdc}"), tdc] }
-      .sort_by(&:first)
-  end
-
-  TYPES_DE_CHAMP_BASE = {
-    except: [
-      :created_at,
-      :options,
-      :order_place,
-      :parent_id,
-      :private,
-      :procedure_id,
-      :revision_id,
-      :stable_id,
-      :type,
-      :updated_at
-    ],
-    methods: [
-      :drop_down_list_value,
-      :drop_down_other,
-      :piece_justificative_template_filename,
-      :piece_justificative_template_url,
-      :editable_options,
-      :drop_down_secondary_libelle,
-      :drop_down_secondary_description
-    ]
-  }
-  TYPES_DE_CHAMP = TYPES_DE_CHAMP_BASE
-    .merge(include: { types_de_champ: TYPES_DE_CHAMP_BASE })
-
-  def self.as_json_for_editor
-    includes(piece_justificative_template_attachment: :blob, types_de_champ: [piece_justificative_template_attachment: :blob]).as_json(TYPES_DE_CHAMP)
-  end
-
   def read_attribute_for_serialization(name)
     if name == 'id'
       stable_id
