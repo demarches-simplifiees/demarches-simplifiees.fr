@@ -1,4 +1,5 @@
-.editable-champ{ class: "editable-champ-#{champ.type_champ}", id: champ.input_group_id }
+- autosave_controller = autosave_available?(champ.dossier) && !champ.repetition? ? { controller: 'autosave', autosave_url_value: brouillon_dossier_path(champ.dossier) } : {}
+.editable-champ{ class: "editable-champ-#{champ.type_champ}", id: champ.input_group_id, data: autosave_controller }
   - if champ.repetition?
     %h3.header-subsection= champ.libelle
     - if champ.description.present?
@@ -9,5 +10,5 @@
   - if champ.type_champ == "titre_identite"
     %p.notice  Carte nationale d’identité (uniquement le recto), passeport, titre de séjour ou autre justificatif d’identité. Formats acceptés : jpg/png
 
-  = form.hidden_field :id, value: champ.id
+  = form.hidden_field :id, value: champ.id, data: champ.repetition? ? { id: true } : {}
   = render partial: "shared/dossiers/editable_champs/#{champ.type_champ}", locals: { form: form, champ: champ }
