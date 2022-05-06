@@ -143,6 +143,27 @@ describe ProcedureRevision do
         expect { type_de_champ_repetition.reload }.to raise_error ActiveRecord::RecordNotFound
         expect(draft.types_de_champ_public).to be_empty
       end
+
+      context 'when there already is a revision with this child' do
+        let!(:new_draft) { procedure.create_new_revision }
+
+        it 'can remove its children only in the new revision' do
+          new_draft.remove_type_de_champ(child.id)
+
+          expect { child.reload }.not_to raise_error
+          expect(draft.children_of(type_de_champ_repetition).size).to eq(1)
+          expect(new_draft.children_of(type_de_champ_repetition)).to be_empty
+        end
+
+        it 'can remove the parent only in the new revision' do
+          new_draft.remove_type_de_champ(type_de_champ_repetition.id)
+
+          expect { child.reload }.not_to raise_error
+          expect { type_de_champ_repetition.reload }.not_to raise_error
+          expect(draft.types_de_champ_public.size).to eq(1)
+          expect(new_draft.types_de_champ_public).to be_empty
+        end
+      end
     end
   end
 
