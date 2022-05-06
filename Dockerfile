@@ -1,4 +1,4 @@
-FROM ruby:3.0.3-slim AS base
+FROM ruby:3.1.2-slim AS base
 
 #------------ intermediate container with specific dev tools
 FROM base AS builder
