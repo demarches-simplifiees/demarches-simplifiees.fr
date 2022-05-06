@@ -135,6 +135,14 @@ describe ProcedureRevision do
         expect { child.reload }.to raise_error ActiveRecord::RecordNotFound
         expect(draft.types_de_champ_public.size).to eq(1)
       end
+
+      it 'can remove the parent' do
+        draft.remove_type_de_champ(type_de_champ_repetition.stable_id)
+
+        expect { child.reload }.to raise_error ActiveRecord::RecordNotFound
+        expect { type_de_champ_repetition.reload }.to raise_error ActiveRecord::RecordNotFound
+        expect(draft.types_de_champ_public).to be_empty
+      end
     end
   end
 
