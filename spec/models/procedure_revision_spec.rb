@@ -165,6 +165,22 @@ describe ProcedureRevision do
       end
     end
 
+    context 'with repetition_type_de_champ' do
+      let(:procedure) { create(:procedure, :with_repetition) }
+
+      it 'should have the same tdcs with different links' do
+        expect(new_draft.types_de_champ.count).to eq(2)
+        expect(new_draft.types_de_champ).to eq(draft.types_de_champ)
+
+        new_repetition, new_child = new_draft.types_de_champ.partition(&:repetition?).map(&:first)
+
+        parent = new_draft.revision_types_de_champ.find_by(type_de_champ: new_repetition)
+        child = new_draft.revision_types_de_champ.find_by(type_de_champ: new_child)
+
+        expect(child.parent_id).to eq(parent.id)
+      end
+    end
+
     describe '#compare' do
       let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :with_repetition) }
       let(:type_de_champ_first) { draft.types_de_champ_public.first }
