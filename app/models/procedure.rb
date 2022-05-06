@@ -713,9 +713,20 @@ class Procedure < ApplicationRecord
   end
 
   def create_new_revision
-    draft_revision
+    new_draft = draft_revision
       .deep_clone(include: [:revision_types_de_champ])
       .tap(&:save!)
+
+    children = new_draft.revision_types_de_champ.where.not(parent_id: nil)
+    children.each do |child|
+      old_parent = draft_revision.revision_types_de_champ.find(child.parent_id)
+      new_parent = new_draft.revision_types_de_champ.find_by(type_de_champ_id: old_parent.type_de_champ_id)
+      child.update!(parent_id: new_parent.id)
+    end
+
+    new_draft.revision_types_de_champ.reload
+
+    new_draft
   end
 
   def average_dossier_weight
