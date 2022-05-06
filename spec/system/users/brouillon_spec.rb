@@ -42,7 +42,9 @@ describe 'The user' do
     select('Mahina - Tahiti - 98709', from: 'commune_de_polynesie')
     select('98709 - Mahina - Tahiti', from: 'code_postal_de_polynesie')
 
+    execute_script "arguments[0].scrollIntoView();", find_field('engagement')
     check('engagement')
+    execute_script "arguments[0].scrollIntoView();", find_field('dossier_link')
     fill_in('dossier_link', with: '123')
     find('.editable-champ-piece_justificative input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
 
