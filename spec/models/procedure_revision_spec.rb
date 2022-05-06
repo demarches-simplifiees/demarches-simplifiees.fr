@@ -112,13 +112,13 @@ describe ProcedureRevision do
       let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
 
       it 'type_de_champ' do
-        draft.remove_type_de_champ(type_de_champ_public.stable_id)
+        draft.remove_type_de_champ(type_de_champ_public.id)
 
         expect(draft.types_de_champ_public).to be_empty
       end
 
       it 'type_de_champ_private' do
-        draft.remove_type_de_champ(type_de_champ_private.stable_id)
+        draft.remove_type_de_champ(type_de_champ_private.id)
 
         expect(draft.types_de_champ_private).to be_empty
       end
@@ -239,7 +239,7 @@ describe ProcedureRevision do
         ])
         expect(new_draft.types_de_champ_public.last.revision).to eq(draft)
 
-        new_draft.remove_type_de_champ(new_draft.types_de_champ_public.first.stable_id)
+        new_draft.remove_type_de_champ(new_draft.types_de_champ_public.first.id)
         expect(procedure.active_revision.compare(new_draft.reload)).to eq([
           {
             model: :type_de_champ,
