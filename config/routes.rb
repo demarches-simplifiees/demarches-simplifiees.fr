@@ -459,6 +459,8 @@ Rails.application.routes.draw do
       resources :types_de_champ, only: [:create, :update, :destroy] do
         member do
           patch :move
+          patch :move_up
+          patch :move_down
         end
       end
 

@@ -83,6 +83,22 @@ class ProcedureRevision < ApplicationRecord
         revision_types_de_champ.find_by!(type_de_champ_id: id).update!(position: position)
       end
     end
+
+    type_de_champ
+  end
+
+  def move_up_type_de_champ(stable_id)
+    type_de_champ = find_type_de_champ_by_stable_id(stable_id)
+    position = revision_types_de_champ.find_by!(type_de_champ: type_de_champ).position
+    move_type_de_champ(id, position - 1)
+    type_de_champ
+  end
+
+  def move_down_type_de_champ(stable_id)
+    type_de_champ = find_type_de_champ_by_stable_id(stable_id)
+    position = revision_types_de_champ.find_by!(type_de_champ: type_de_champ).position
+    move_type_de_champ(id, position + 1)
+    type_de_champ
   end
 
   def remove_type_de_champ(stable_id)
@@ -95,6 +111,8 @@ class ProcedureRevision < ApplicationRecord
     else
       types_de_champ.delete(type_de_champ)
     end
+
+    type_de_champ
   end
 
   def draft?
