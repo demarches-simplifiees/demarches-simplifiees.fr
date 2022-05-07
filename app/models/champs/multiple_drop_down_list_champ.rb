@@ -68,6 +68,19 @@ class Champs::MultipleDropDownListChamp < Champ
     selected_options.blank?
   end
 
+  def eval_condition(operator, value)
+    case operator
+    when 'is'
+      value.in?(selected_options)
+    when 'is_not'
+      !value.in?(selected_options)
+    when 'is_blank'
+      blank?
+    when 'is_not_blank'
+      !blank?
+    end
+  end
+
   private
 
   def format_before_save

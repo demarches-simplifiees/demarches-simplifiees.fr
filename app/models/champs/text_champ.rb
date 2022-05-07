@@ -20,4 +20,18 @@
 #  type_de_champ_id               :integer
 #
 class Champs::TextChamp < Champ
+  def eval_condition(operator, value)
+    case operator
+    when 'is'
+      for_api_v2 == value
+    when 'is_not'
+      for_api_v2 != value
+    when 'contains'
+      for_api_v2.match(value)
+    when 'is_blank'
+      blank?
+    when 'is_not_blank'
+      !blank?
+    end
+  end
 end

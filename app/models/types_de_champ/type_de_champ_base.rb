@@ -36,4 +36,20 @@ class TypesDeChamp::TypeDeChampBase
   def human_to_filter(human_value)
     human_value
   end
+
+  def condition_operators
+    []
+  end
+
+  def condition_values
+    []
+  end
+
+  def default_condition_operator
+    condition_operators.first&.last
+  end
+
+  def default_condition_value
+    condition_values.first&.last
+  end
 end

@@ -137,6 +137,22 @@ class Champ < ApplicationRecord
     "#{html_id}-input"
   end
 
+  def conditional_logic_enabled_and_valid?
+    type_de_champ.conditional_logic_enabled_and_valid?
+  end
+
+  def visible_under_current_conditions?
+    if conditional_logic_enabled_and_valid?
+      type_de_champ.visible_under_current_conditions?(dossier)
+    else
+      true
+    end
+  end
+
+  def eval_condition(operator, value)
+    true
+  end
+
   # A predictable string to use when generating an input name for this champ.
   #
   # Rail's FormBuilder can auto-generate input names, using the form "dossier[champs_attributes][5]",

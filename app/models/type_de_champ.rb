@@ -62,12 +62,31 @@ class TypeDeChamp < ApplicationRecord
   belongs_to :parent, class_name: 'TypeDeChamp', optional: true
   has_many :types_de_champ, -> { ordered }, foreign_key: :parent_id, class_name: 'TypeDeChamp', inverse_of: :parent, dependent: :destroy
 
-  store_accessor :options, :cadastres, :old_pj, :drop_down_options, :skip_pj_validation, :skip_content_type_pj_validation, :drop_down_secondary_libelle, :drop_down_secondary_description, :drop_down_other
+  store_accessor :options,
+    :cadastres,
+    :old_pj,
+    :drop_down_options,
+    :skip_pj_validation,
+    :skip_content_type_pj_validation,
+    :drop_down_secondary_libelle,
+    :drop_down_secondary_description,
+    :drop_down_other,
+    :conditional_logic,
+    :condition_source,
+    :condition_operator,
+    :condition_value,
+    :contextual_help
   has_many :revision_types_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
   has_one :revision_type_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', inverse_of: false
   has_many :revisions, -> { ordered }, through: :revision_types_de_champ
 
-  delegate :tags_for_template, :libelle_for_export, to: :dynamic_type
+  delegate :tags_for_template,
+    :libelle_for_export,
+    :condition_operators,
+    :condition_values,
+    :default_condition_operator,
+    :default_condition_value,
+    to: :dynamic_type
 
   class WithIndifferentAccess
     def self.load(options)
@@ -121,6 +140,9 @@ class TypeDeChamp < ApplicationRecord
   before_save :remove_drop_down_list, if: -> { type_champ_changed? }
   before_save :remove_repetition, if: -> { type_champ_changed? }
 
+  before_save :setup_conditional_logic, if: -> { conditional_logic_changed? }
+  before_save :setup_condition_source, if: -> { condition_source_changed? }
+
   after_save if: -> { @remove_piece_justificative_template } do
     piece_justificative_template.purge_later
   end
@@ -164,6 +186,93 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
+  def conditional_logic_enabled_and_valid?
+    conditional_logic_enabled? && conditional_logic_valid?
+  end
+
+  def conditional_logic_enabled?
+    conditional_logic.present? && conditional_logic == '1'
+  end
+
+  def conditional_logic_valid?
+    condition_source_valid? && condition_operator.present? && condition_value_valid?
+  end
+
+  def condition_source_valid?
+    if condition_source.present?
+      siblings_that_can_have_conditional_logic.map(&:stable_id).include?(condition_source.to_i)
+    end
+  end
+
+  def condition_value_valid?
+    if condition_value.present?
+      condition_values = condition_source_type_de_champ&.condition_values
+      condition_values.is_a?(Array) ? condition_values.find { |_, value| value.to_s == condition_value.to_s } : true
+    else
+      true
+    end
+  end
+
+  def siblings
+    if parent_id.present?
+      parent.types_de_champ
+    elsif private?
+      procedure.types_de_champ_private
+    else
+      procedure.types_de_champ
+    end
+  end
+
+  def siblings_before
+    index = siblings.index(self)
+    if index > 0
+      siblings[0..index-1]
+    else
+      []
+    end
+  end
+
+  def siblings_that_can_have_conditional_logic
+    siblings_before.filter(&:can_act_as_condition_source?)
+  end
+
+  def can_have_conditional_logic?
+    siblings_that_can_have_conditional_logic.present?
+  end
+
+  def visible_under_current_conditions?(dossier)
+    source_type_de_champ = dossier.revision.types_de_champ.find_by(stable_id: condition_source)
+    source_champ = Champ.find_by(type_de_champ: source_type_de_champ, dossier: dossier)
+    if source_champ&.visible_under_current_conditions?
+      source_champ.eval_condition(condition_operator, condition_value)
+    end
+  end
+
+  def setup_conditional_logic
+    if conditional_logic_enabled?
+      if condition_source.blank?
+        type_de_champ = siblings_that_can_have_conditional_logic.first
+        self.condition_source = type_de_champ.stable_id
+        self.condition_operator = type_de_champ.default_condition_operator
+        self.condition_value = type_de_champ.default_condition_value
+      end
+    else
+      self.condition_source = nil
+      self.condition_operator = nil
+      self.condition_value = nil
+    end
+  end
+
+  def setup_condition_source
+    self.condition_value = condition_source_type_de_champ&.default_condition_value
+  end
+
+  def condition_source_type_de_champ
+    if condition_source.present?
+      revisions.last.types_de_champ.find_by(stable_id: condition_source)
+    end
+  end
+
   def only_present_on_draft?
     revisions.size == 1
   end
@@ -188,6 +297,17 @@ class TypeDeChamp < ApplicationRecord
       TypeDeChamp.type_champs.fetch(:drop_down_list),
       TypeDeChamp.type_champs.fetch(:multiple_drop_down_list),
       TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
+    ])
+  end
+
+  def can_act_as_condition_source?
+    type_champ.in?([
+      TypeDeChamp.type_champs.fetch(:decimal_number),
+      TypeDeChamp.type_champs.fetch(:integer_number),
+      TypeDeChamp.type_champs.fetch(:checkbox),
+      TypeDeChamp.type_champs.fetch(:yes_no),
+      TypeDeChamp.type_champs.fetch(:drop_down_list),
+      TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)
     ])
   end
 

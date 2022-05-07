@@ -72,4 +72,17 @@ class Champs::DropDownListChamp < Champ
   def value_other
     other_value_present? ? value : ""
   end
+
+  def eval_condition(operator, value)
+    case operator
+    when 'is'
+      selected == value
+    when 'is_not'
+      selected != value
+    when 'is_blank'
+      blank?
+    when 'is_not_blank'
+      !blank?
+    end
+  end
 end
