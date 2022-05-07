@@ -295,6 +295,20 @@ class TypeDeChamp < ApplicationRecord
     GraphQL::Schema::UniqueWithinType.encode('Champ', stable_id)
   end
 
+  def stable_self
+    OpenStruct.new(to_key: [stable_id],
+      model_name: OpenStruct.new(param_key: model_name.param_key))
+  end
+
+  def stable_parent
+    if parent.present?
+      OpenStruct.new(to_key: [parent.stable_id],
+        model_name: OpenStruct.new(param_key: model_name.param_key))
+    else
+      procedure
+    end
+  end
+
   def editable_options=(options)
     self.options.merge!(options)
   end
