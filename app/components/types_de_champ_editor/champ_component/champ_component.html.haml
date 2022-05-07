@@ -29,7 +29,7 @@
         .cell.flex.align-center
           = form.label :contextual_help, "Aide contextuelle"
           = form.check_box :contextual_help, class: 'small-margin small'
-        .cell.flex.align-center
+        .cell.flex.align-center{ id: dom_id(type_de_champ.stable_self, :types_de_champ_editor_conditional_logic_switch), class: type_de_champ.can_have_conditional_logic? ? '' : 'hidden' }
           = form.label :conditional_logic, "Logique conditionelle"
           = form.check_box :conditional_logic, class: 'small-margin small', data: { should_update: 'true' }
   .flex.justify-start

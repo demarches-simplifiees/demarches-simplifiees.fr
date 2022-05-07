@@ -1,3 +1,9 @@
 - siblings.filter(&:conditional_logic_enabled?).each do |type_de_champ|
-  = turbo_stream.replace dom_id(type_de_champ.stable_self, :types_de_champ_editor_conditional_logic) do
+  = turbo_stream.morph dom_id(type_de_champ.stable_self, :types_de_champ_editor_conditional_logic) do
     = render TypesDeChampEditor::ConditionalLogicComponent.new(type_de_champ: type_de_champ)
+
+- siblings.each do |type_de_champ|
+  - if type_de_champ.can_have_conditional_logic?
+    = turbo_stream.show dom_id(type_de_champ.stable_self, :types_de_champ_editor_conditional_logic_switch)
+  - else
+    = turbo_stream.hide dom_id(type_de_champ.stable_self, :types_de_champ_editor_conditional_logic_switch)
