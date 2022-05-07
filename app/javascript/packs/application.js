@@ -18,6 +18,8 @@ import {
 import { TurboEventController } from '../controllers/turbo_event_controller';
 import { GeoAreaController } from '../controllers/geo_area_controller';
 import { TurboInputController } from '../controllers/turbo_input_controller';
+import { SortableController } from '../controllers/sortable_controller';
+import { SubmitController } from '../controllers/submit_controller';
 
 import '../new_design/dropdown';
 import '../new_design/form-validation';
@@ -94,6 +96,8 @@ Stimulus.register('react', ReactController);
 Stimulus.register('turbo-event', TurboEventController);
 Stimulus.register('geo-area', GeoAreaController);
 Stimulus.register('turbo-input', TurboInputController);
+Stimulus.register('sortable', SortableController);
+Stimulus.register('submit', SubmitController);
 
 // Expose globals
 window.DS = window.DS || DS;
