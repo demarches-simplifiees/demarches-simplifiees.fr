@@ -1,4 +1,4 @@
-import { ajax, fire, timeoutable } from '@utils';
+import { fire, timeoutable, httpRequest } from '@utils';
 
 // Manages a queue of Autosave operations,
 // and sends `autosave:*` events to indicate the state of the requests:
@@ -39,16 +39,28 @@ export default class AutoSaveController {
         return reject(formDataError);
       }
 
-      const params = {
-        url: form.action,
-        type: form.method,
-        data: formData,
-        dataType: 'script'
-      };
+      // const params = {
+      //   url: form.action,
+      //   type: form.method,
+      //   data: formData,
+      //   dataType: 'script'
+      // };
 
-      return ajax(params)
-        .then(({ response }) => {
-          resolve(response);
+      // return ajax(params)
+      //   .then(({ response }) => {
+      //     resolve(response);
+      //   })
+      //   .catch((error) => {
+      //     reject(error);
+      //   });
+
+      return httpRequest(form.action, {
+        method: form.method,
+        body: formData
+      })
+        .turbo()
+        .then(() => {
+          resolve();
         })
         .catch((error) => {
           reject(error);
