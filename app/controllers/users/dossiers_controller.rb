@@ -363,8 +363,16 @@ module Users
       })
     end
 
+    def dossier_scope
+      if action_name == 'update_brouillon'
+        Dossier.visible_by_user.or(Dossier.for_procedure_preview)
+      else
+        Dossier.visible_by_user
+      end
+    end
+
     def dossier
-      @dossier ||= Dossier.visible_by_user.find(params[:id] || params[:dossier_id])
+      @dossier ||= dossier_scope.find(params[:id] || params[:dossier_id])
     end
 
     def hidden_dossier
@@ -372,7 +380,7 @@ module Users
     end
 
     def dossier_with_champs
-      Dossier.with_champs.visible_by_user.find(params[:id])
+      dossier_scope.with_champs.find(params[:id])
     end
 
     def should_change_groupe_instructeur?
