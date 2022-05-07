@@ -14,6 +14,7 @@ jobs:
         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
         SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        SENTRY_LOG_LEVEL: debug
       with:
         environment: production
         version: ${{ github.ref }}
