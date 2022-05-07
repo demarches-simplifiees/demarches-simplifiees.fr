@@ -1,9 +1,7 @@
 .dossier-edit.container
   = render partial: "shared/dossiers/submit_is_over", locals: { dossier: dossier }
 
-  - if dossier.for_procedure_preview?
-    - form_options = { url: '', method: :get }
-  - elsif dossier.brouillon?
+  - if dossier.brouillon?
     - form_options = { url: brouillon_dossier_url(dossier), method: :patch }
   - else
     - form_options = { url: modifier_dossier_url(dossier), method: :patch }
