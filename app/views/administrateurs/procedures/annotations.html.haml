@@ -7,4 +7,8 @@
   %h1 Configuration des annotations privées
   %br
 
-  = react_component("TypesDeChampEditor", types_de_champ_private_data(@procedure))
+  .champs-editor{ 'data-turbo': 'true' }
+    = render TypesDeChampEditor::BlockComponent.new(id: dom_id(@procedure, :types_de_champ_editor_block), types_de_champ: @procedure.types_de_champ_private)
+    .footer
+    .buttons
+      = render TypesDeChampEditor::AddChampButtonComponent.new(procedure: @procedure)

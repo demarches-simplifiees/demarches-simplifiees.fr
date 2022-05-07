@@ -1,0 +1,18 @@
+.flex.justify-start.section.hr.w-full{ id: dom_id(type_de_champ.stable_self, :types_de_champ_editor_conditional_logic) }
+  = form_for(type_de_champ, **form_options(class_name: "flex justify-start w-full")) do |form|
+    .cell.flex.align-center
+      = label_tag "Afficher si"
+    .cell
+      = form.label :condition_source, "Choisir le champ"
+      = form.select :condition_source, types_de_champ_before, {}, class: "small-margin small inline w-full #{invalid_source_class}", data: { should_update: 'true' }
+    .cell
+      = form.label :condition_operator, "Choisir la condition"
+      = form.select :condition_operator, operators, {}, class: 'small-margin small inline w-full', data: { should_update: 'true' }
+    .cell
+      = form.label :condition_value, "Choisir la valeur"
+      - if values == :text
+        = form.text_field :condition_value, class: 'small-margin small inline w-full'
+      - elsif values == :number
+        = form.number_field :condition_value, class: 'small-margin small inline w-full'
+      - else
+        = form.select :condition_value, values, {}, class: "small-margin small inline w-full #{invalid_value_class}"

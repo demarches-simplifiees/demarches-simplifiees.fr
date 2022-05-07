@@ -72,7 +72,7 @@ module TPS
     config.ds_weekly_overview = Rails.env.production? && config.ds_env != 'staging'
 
     config.ds_autosave = {
-      debounce_delay: 3000,
+      debounce_delay: 300,
       status_visible_duration: 6000
     }
 
@@ -89,5 +89,6 @@ module TPS
     config.view_component.show_previews_source = true
     config.view_component.default_preview_layout = 'component_preview'
     config.view_component.preview_paths << "#{Rails.root}/spec/components/previews"
+    config.view_component.use_global_output_buffer = true
   end
 end

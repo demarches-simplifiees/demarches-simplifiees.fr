@@ -25,18 +25,31 @@
     }
   }
 
+  &:first-child .move.up:not(:disabled) {
+    display: none;
+  }
+  &:not(:first-child) .move.up:disabled {
+    display: none;
+  }
+  &:last-child .move.down:not(:disabled) {
+    display: none;
+  }
+  &:not(:last-child) .move.down:disabled {
+    display: none;
+  }
+
   .move {
     height: 44px;
     border-radius: 25px;
     margin-right: 10px;
 
-    &:first-of-type {
+    &.up {
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
       margin-bottom: -1px;
     }
 
-    &:last-of-type {
+    &.down {
       border-top-left-radius: 0;
       border-top-right-radius: 0;
     }

@@ -224,7 +224,7 @@
       box-shadow: none;
     }
 
-    &.touched:invalid {
+    &.touched:invalid, &.invalid {
       border: 1px solid $dark-red;
       box-shadow: 0px 0px 2px 1px $dark-red;
     }

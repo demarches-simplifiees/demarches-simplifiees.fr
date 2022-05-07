@@ -1,0 +1,3 @@
+%ul{ id: id, data: { controller: 'sortable', sortable_handle_value: '.handle' } }
+  - types_de_champ.each do |type_de_champ|
+    = render TypesDeChampEditor::ChampComponent.new(type_de_champ: type_de_champ)
