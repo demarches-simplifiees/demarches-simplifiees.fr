@@ -8,11 +8,12 @@
     .cell
       = form.label :condition_operator, "Choisir la condition"
       = form.select :condition_operator, operators, {}, class: 'small-margin small inline w-full', data: { should_update: 'true' }
-    .cell
-      = form.label :condition_value, "Choisir la valeur"
-      - if values == :text
-        = form.text_field :condition_value, class: 'small-margin small inline w-full'
-      - elsif values == :number
-        = form.number_field :condition_value, class: 'small-margin small inline w-full'
-      - else
-        = form.select :condition_value, values, {}, class: "small-margin small inline w-full #{invalid_value_class}"
+    - if condition_needs_value?
+      .cell
+        = form.label :condition_value, "Choisir la valeur"
+        - if values == :text
+          = form.text_field :condition_value, class: 'small-margin small inline w-full'
+        - elsif values == :number
+          = form.number_field :condition_value, class: 'small-margin small inline w-full'
+        - else
+          = form.select :condition_value, values, {}, class: "small-margin small inline w-full #{invalid_value_class}"

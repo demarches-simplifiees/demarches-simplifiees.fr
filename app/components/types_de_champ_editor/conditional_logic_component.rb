@@ -38,6 +38,10 @@ class TypesDeChampEditor::ConditionalLogicComponent < ApplicationComponent
     end
   end
 
+  def condition_needs_value?
+    !@type_de_champ.condition_operator.in?(['is_blank', 'is_not_blank'])
+  end
+
   def type_de_champ_path
     admin_procedure_type_de_champ_path(type_de_champ.procedure, type_de_champ.stable_id)
   end
