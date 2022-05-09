@@ -85,6 +85,18 @@ class ProcedureRevision < ApplicationRecord
     end
   end
 
+  def rebase_champs_repetable_parent_id
+    revision_types_de_champ.where.not(parent_id: nil).find_each do |champ_repetable|
+      if !revision_types_de_champ.exists?(id: champ_repetable.parent_id)
+        type_de_champ_stable_id = champ_repetable.parent.type_de_champ.stable_id
+        new_revision_type_de_champs_parent_id = revision_types_de_champ.joins(:type_de_champ).where(type_de_champ: { stable_id: type_de_champ_stable_id }).first&.id
+        if !new_revision_type_de_champs_parent_id.nil?
+          champ_repetable.update(parent_id: new_revision_type_de_champs_parent_id)
+        end
+      end
+    end
+  end
+
   def remove_type_de_champ(stable_id)
     type_de_champ = find_type_de_champ_by_stable_id(stable_id)
 
