@@ -9,7 +9,7 @@
         %button.button.dropdown-button.icon-only{ 'aria-expanded' => 'false', 'aria-controls' => 'print-pj-menu' }
           %span.icon.attached
         %ul#print-pj-menu.print-menu.dropdown-content
-          %li= link_to "Télécharger le dossier et toutes ses pièces jointes", telecharger_pjs_expert_avis_path(avis), target: "_blank", rel: "noopener", class: "menu-item menu-link"
+          %li= link_to "Télécharger le dossier et toutes ses pièces jointes", telecharger_pjs_expert_avis_path(avis.procedure, avis), target: "_blank", rel: "noopener", class: "menu-item menu-link"
 
     %nav.tabs
       %ul
