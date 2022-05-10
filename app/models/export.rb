@@ -159,7 +159,7 @@ class Export < ApplicationRecord
 
         dossiers.where(id: filtered_sorted_ids)
       else
-        dossiers
+        dossiers.visible_by_administration
       end
     end
   end
