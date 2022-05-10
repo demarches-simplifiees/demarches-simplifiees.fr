@@ -761,4 +761,17 @@ describe Administrateurs::ProceduresController, type: :controller do
       it { expect(procedure.allow_expert_review).to be_truthy }
     end
   end
+
+  describe 'PUT #restore' do
+    let(:procedure) { create :procedure, :discarded, administrateur: admin }
+
+    context 'when the admin wants to restore a procedure' do
+      before do
+        put :restore, params: { id: procedure.id }
+        procedure.reload
+      end
+
+      it { expect(procedure.discarded?).to be_falsy }
+    end
+  end
 end
