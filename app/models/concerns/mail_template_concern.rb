@@ -21,6 +21,10 @@ module MailTemplateConcern
     [MailTemplateConcern::Actions::SHOW, MailTemplateConcern::Actions::ASK_QUESTION]
   end
 
+  def attachment_for_dossier(dossier)
+    nil
+  end
+
   def update_rich_body
     self.rich_body = self.body
   end
