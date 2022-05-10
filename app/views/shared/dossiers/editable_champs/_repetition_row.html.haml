@@ -5,5 +5,5 @@
       = render partial: 'shared/dossiers/editable_champs/editable_champ', locals: { form: form, champ: champ }
 
   .flex.row-reverse{ 'data-turbo': 'true' }
-    = button_tag type: :submit, form: :turbo_form, formaction: champs_repetition_path(champ.id, champ_ids: row.map(&:id), row_id: row_dom_id), formmethod: :delete, class: 'button danger remove-row' do
+    = link_to champs_repetition_path(champ.id, champ_ids: row.map(&:id), row_id: row_dom_id), data: { turbo_method: :delete }, class: 'button danger remove-row' do
       Supprimer l’élément
