@@ -53,4 +53,24 @@ RSpec.describe Export, type: :model do
       it { expect(Export.find_for_groupe_instructeurs([gi_1.id, gi_2.id, gi_3.id], nil)).to eq({ csv: { statut: {}, time_span_type: {} }, xlsx: { statut: {}, time_span_type: {} }, ods: { statut: {}, time_span_type: {} }, zip: { statut: {}, time_span_type: {} } }) }
     end
   end
+
+  describe '.dossiers_for_export' do
+    let!(:procedure) { create(:procedure, :published) }
+
+    let!(:dossier_brouillon) { create(:dossier, :brouillon, procedure: procedure) }
+    let!(:dossier_en_construction) { create(:dossier, :en_construction, procedure: procedure) }
+    let!(:dossier_en_instruction) { create(:dossier, :en_instruction, procedure: procedure) }
+    let!(:dossier_accepte) { create(:dossier, :accepte, procedure: procedure) }
+
+    let(:export) { create(:export, groupe_instructeurs: [procedure.groupe_instructeurs.first]) }
+
+    context 'without procedure_presentation or since' do
+      it 'does not includes brouillons' do
+        expect(export.send(:dossiers_for_export)).to include(dossier_en_construction)
+        expect(export.send(:dossiers_for_export)).to include(dossier_en_instruction)
+        expect(export.send(:dossiers_for_export)).to include(dossier_accepte)
+        expect(export.send(:dossiers_for_export)).not_to include(dossier_brouillon)
+      end
+    end
+  end
 end
