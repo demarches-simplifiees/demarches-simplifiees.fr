@@ -66,15 +66,23 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def move_type_de_champ(stable_id, position)
-    coordinate = revision_types_de_champ
-      .joins(:type_de_champ)
-      .find_by(type_de_champ: { stable_id: stable_id })
+    type_de_champ = find_type_de_champ_by_stable_id(stable_id)
 
-    siblings = coordinate.siblings.to_a
+    if type_de_champ.parent.present?
+      repetition_type_de_champ = find_or_clone_type_de_champ(stable_id).parent
 
-    siblings.insert(position, siblings.delete_at(siblings.index(coordinate)))
+      move_type_de_champ_hash(repetition_type_de_champ.types_de_champ.to_a, type_de_champ, position).each do |(id, position)|
+        type_de_champ = repetition_type_de_champ.types_de_champ.find(id)
+        type_de_champ.update!(order_place: position)
+        type_de_champ.revision_type_de_champ&.update!(position: position)
+      end
+    else
+      liste = type_de_champ.private? ? types_de_champ_private : types_de_champ_public
 
-    reorder(siblings)
+      move_type_de_champ_hash(liste.to_a, type_de_champ, position).each do |(id, position)|
+        revision_types_de_champ.find_by!(type_de_champ_id: id).update!(position: position)
+      end
+    end
   end
 
   def remove_type_de_champ(stable_id)
@@ -147,14 +155,10 @@ class ProcedureRevision < ApplicationRecord
   private
 
   def reorder(siblings)
-    siblings.to_a.compact.each.with_index do |sibling, position|
-        sibling.update(position: position)
-
-        # FIXME: to remove when order_place is no longer used
-        if sibling.parent_id.present?
-          sibling.type_de_champ.update!(order_place: position)
-        end
-      end
+    siblings.to_a.compact.each.with_index do |e, position|
+      e.update(position: position)
+      e.type_de_champ.update!(order_place: position)
+    end
   end
 
   def compare_attestation_template(from_at, to_at)

@@ -53,21 +53,21 @@ describe ProcedureRevision do
     context 'with 4 types de champ publiques' do
       it 'move down' do
         expect(draft.types_de_champ_public.index(type_de_champ_public)).to eq(0)
-
+        type_de_champ_public.update(order_place: nil)
         draft.move_type_de_champ(type_de_champ_public.stable_id, 2)
         draft.reload
-
         expect(draft.types_de_champ_public.index(type_de_champ_public)).to eq(2)
+        expect(draft.procedure.types_de_champ.index(type_de_champ_public)).to eq(2)
         expect(draft.procedure.types_de_champ_for_procedure_presentation.not_repetition.index(type_de_champ_public)).to eq(2)
       end
 
       it 'move up' do
         expect(draft.types_de_champ_public.index(last_type_de_champ)).to eq(3)
-
+        last_type_de_champ.update(order_place: nil)
         draft.move_type_de_champ(last_type_de_champ.stable_id, 0)
         draft.reload
-
         expect(draft.types_de_champ_public.index(last_type_de_champ)).to eq(0)
+        expect(draft.procedure.types_de_champ.index(last_type_de_champ)).to eq(0)
         expect(draft.procedure.types_de_champ_for_procedure_presentation.not_repetition.index(last_type_de_champ)).to eq(0)
       end
     end
@@ -92,19 +92,17 @@ describe ProcedureRevision do
       end
 
       it 'move down' do
-        expect(draft.children_of(type_de_champ_repetition).index(second_child)).to eq(1)
-
+        expect(type_de_champ_repetition.types_de_champ.index(second_child)).to eq(1)
         draft.move_type_de_champ(second_child.stable_id, 2)
-
-        expect(draft.children_of(type_de_champ_repetition).index(second_child)).to eq(2)
+        type_de_champ_repetition.reload
+        expect(type_de_champ_repetition.types_de_champ.index(second_child)).to eq(2)
       end
 
       it 'move up' do
-        expect(draft.children_of(type_de_champ_repetition).index(last_child)).to eq(2)
-
+        expect(type_de_champ_repetition.types_de_champ.index(last_child)).to eq(2)
         draft.move_type_de_champ(last_child.stable_id, 0)
-
-        expect(draft.children_of(type_de_champ_repetition).index(last_child)).to eq(0)
+        type_de_champ_repetition.reload
+        expect(type_de_champ_repetition.types_de_champ.index(last_child)).to eq(0)
       end
     end
   end
