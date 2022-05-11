@@ -28,6 +28,16 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
     type_de_champ.private?
   end
 
+  def siblings
+    if parent_id.present?
+      revision.revision_types_de_champ.where(parent_id: parent_id).ordered
+    elsif private?
+      revision.revision_types_de_champ_private
+    else
+      revision.revision_types_de_champ_public
+    end
+  end
+
   private
 
   def set_position
