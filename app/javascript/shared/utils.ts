@@ -181,6 +181,19 @@ export function httpRequest(
         const stream = await response.text();
         session.renderStreamMessage(stream);
       }
+    },
+    async js(): Promise<void> {
+      const response = await request(init, 'text/javascript');
+      if (response.status != 204) {
+        const script = document.createElement('script');
+        const nonce = cspNonce();
+        if (nonce) {
+          script.setAttribute('nonce', nonce);
+        }
+        script.text = await response.text();
+        document.head.appendChild(script);
+        document.head.removeChild(script);
+      }
     }
   };
 }
