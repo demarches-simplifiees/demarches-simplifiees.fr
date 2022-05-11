@@ -119,7 +119,7 @@ class Procedure < ApplicationRecord
         .where(revision_types_de_champ: { revision: draft_revision, parent_id: nil })
         .order(:private, :position)
     else
-      # fetch all type_de_champ.stable_id for all the revisions expect draft
+      # fetch all type_de_champ.stable_id for all the revisions except draft
       # and for each stable_id take the bigger (more recent) type_de_champ.id
       recent_ids = TypeDeChamp.fillable
         .joins(:revisions)
@@ -141,7 +141,7 @@ class Procedure < ApplicationRecord
       TypeDeChamp
         .joins(:revision_types_de_champ)
         .where(revision_types_de_champ: { id: recents_prtdc })
-        .order(:private, :position, 'revision_types_de_champ.revision_id': :desc)
+        .order(:private, 'revision_types_de_champ.position', 'revision_types_de_champ.revision_id': :desc)
     end
   end
 
