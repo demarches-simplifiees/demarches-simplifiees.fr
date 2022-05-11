@@ -33,10 +33,10 @@
           = link_to admin_procedure_path(procedure), class: 'button mr-1 edit-procedure' do
             %span.icon.edit
             Modifier
-        .dropdown
-          .button.dropdown-button.procedures-actions-btn{ 'aria-expanded' => 'false', 'aria-controls' => 'actions-menu' }
+        .dropdown{ data: { controller: 'menu-button' } }
+          .button.dropdown-button.procedures-actions-btn{ data: { menu_button_target: 'button' } }
             Actions
-          #actions-menu.dropdown-content.fade-in-down
+          #actions-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
             %ul.dropdown-items.pl-0
               - if !procedure.close? && !procedure.discarded?
                 %li
