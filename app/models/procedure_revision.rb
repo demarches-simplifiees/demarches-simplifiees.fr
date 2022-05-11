@@ -147,10 +147,14 @@ class ProcedureRevision < ApplicationRecord
   private
 
   def reorder(siblings)
-    siblings.to_a.compact.each.with_index do |e, position|
-      e.update(position: position)
-      e.type_de_champ.update!(order_place: position)
-    end
+    siblings.to_a.compact.each.with_index do |sibling, position|
+        sibling.update(position: position)
+
+        # FIXME: to remove when order_place is no longer used
+        if sibling.parent_id.present?
+          sibling.type_de_champ.update!(order_place: position)
+        end
+      end
   end
 
   def compare_attestation_template(from_at, to_at)
