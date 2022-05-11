@@ -1,0 +1,3 @@
+- if @can_download_dossiers
+  = turbo_stream.update_all '.dossiers-export' do
+    = render Dossiers::ExportComponent.new(procedure: @procedure, exports: @exports, statut: @statut, count: @dossiers_count)
