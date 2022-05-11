@@ -15,7 +15,7 @@ export class ApplicationController extends Controller {
     debounced();
   }
 
-  protected globalDispatch(type: string, detail: Detail): void {
+  protected globalDispatch<T = Detail>(type: string, detail?: T): void {
     this.dispatch(type, {
       detail,
       prefix: '',
@@ -27,13 +27,28 @@ export class ApplicationController extends Controller {
     eventName: string,
     handler: (event: HandlerEvent) => void
   ): void {
+    this.onTarget(this.element, eventName, handler);
+  }
+
+  protected onGlobal<HandlerEvent extends Event = Event>(
+    eventName: string,
+    handler: (event: HandlerEvent) => void
+  ): void {
+    this.onTarget(document.documentElement, eventName, handler);
+  }
+
+  private onTarget<HandlerEvent extends Event = Event>(
+    target: EventTarget,
+    eventName: string,
+    handler: (event: HandlerEvent) => void
+  ): void {
     const disconnect = this.disconnect;
     const callback = (event: Event): void => {
       handler(event as HandlerEvent);
     };
-    this.element.addEventListener(eventName, callback);
+    target.addEventListener(eventName, callback);
     this.disconnect = () => {
-      this.element.removeEventListener(eventName, callback);
+      target.removeEventListener(eventName, callback);
       disconnect.call(this);
     };
   }

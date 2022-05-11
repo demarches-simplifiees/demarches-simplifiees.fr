@@ -1,7 +1,8 @@
 import { DirectUpload } from '@rails/activestorage';
-import { ajax } from '@utils';
+import { httpRequest, ResponseError } from '@utils';
 import ProgressBar from './progress-bar';
-import FileUploadError, {
+import {
+  FileUploadError,
   errorFromDirectUploadMessage,
   ERROR_CODE_ATTACH
 } from './file-upload-error';
@@ -35,10 +36,10 @@ export default class Uploader {
     this.progressBar.start();
 
     try {
-      const blobSignedId = await this._upload();
+      const blobSignedId = await this.upload();
 
       if (this.autoAttachUrl) {
-        await this._attach(blobSignedId, this.autoAttachUrl);
+        await this.attach(blobSignedId, this.autoAttachUrl);
         // On response, the attachment HTML fragment will replace the progress bar.
       } else {
         this.progressBar.end();
@@ -56,7 +57,7 @@ export default class Uploader {
     Upload the file using the DirectUpload instance, and return the blob signed_id.
     Throws a FileUploadError on failure.
     */
-  async _upload(): Promise<string> {
+  private async upload(): Promise<string> {
     return new Promise((resolve, reject) => {
       this.directUpload.create((errorMsg, attributes) => {
         if (errorMsg) {
@@ -74,24 +75,22 @@ export default class Uploader {
     Throws a FileUploadError on failure (containing the first validation
     error message, if any).
     */
-  async _attach(blobSignedId: string, autoAttachUrl: string) {
-    const attachmentRequest = {
-      url: autoAttachUrl,
-      type: 'PUT',
-      data: `blob_signed_id=${blobSignedId}`
-    };
+  private async attach(blobSignedId: string, autoAttachUrl: string) {
+    const formData = new FormData();
+    formData.append('blob_signed_id', blobSignedId);
 
     try {
-      await ajax(attachmentRequest);
+      await httpRequest(autoAttachUrl, {
+        method: 'put',
+        body: formData
+      }).turbo();
     } catch (e) {
-      const error = e as {
-        response?: { errors: string[] };
-        xhr?: XMLHttpRequest;
-      };
-      const message = error.response?.errors && error.response.errors[0];
+      const error = e as ResponseError;
+      const errors = (error.jsonBody as { errors: string[] })?.errors;
+      const message = errors && errors[0];
       throw new FileUploadError(
         message || 'Error attaching file.',
-        error.xhr?.status,
+        error.response?.status,
         ERROR_CODE_ATTACH
       );
     }

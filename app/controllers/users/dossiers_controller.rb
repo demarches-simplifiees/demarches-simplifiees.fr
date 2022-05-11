@@ -174,7 +174,7 @@ module Users
 
       respond_to do |format|
         format.html { render :brouillon }
-        format.js
+        format.turbo_stream
       end
     end
 
