@@ -1,0 +1,27 @@
+.attachment
+  - if template&.attached?
+    %p.mb-1
+      Veuillez télécharger, remplir et joindre
+      = link_to('le modèle suivant', url_for(template), target: '_blank', rel: 'noopener')
+
+  - if persisted?
+    .attachment-actions{ id: dom_id(attachment, :actions) }
+      .attachment-action
+        = render Attachment::ShowComponent.new(attachment: attachment, user_can_upload: true)
+      - if user_can_destroy?
+        .attachment-action{ "data-turbo": "true" }
+          = link_to('Supprimer', attachment_path, **remove_button_options)
+      .attachment-action
+        = button_tag('Remplacer', **replace_button_options)
+
+  .attachment-error.hidden
+    .attachment-error-message
+      %p.attachment-error-title
+        Une erreur s’est produite pendant l’envoi du fichier.
+      %p.attachment-error-description
+        Une erreur inconnue s'est produite pendant l'envoi du fichier
+    = button_tag(**retry_button_options) do
+      %span.icon.retry
+      Ré-essayer
+
+  = form.file_field(file_field_name, **file_field_options)
