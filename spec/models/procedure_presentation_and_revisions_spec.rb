@@ -41,7 +41,7 @@ describe ProcedurePresentation do
 
         before do
           created_tdc0 = procedure.draft_revision.add_type_de_champ(tdc0)
-          procedure.draft_revision.move_type_de_champ(created_tdc0.stable_id, 0)
+          procedure.draft_revision.reload.move_type_de_champ(created_tdc0.stable_id, 0)
           procedure.publish_revision!
         end
 
