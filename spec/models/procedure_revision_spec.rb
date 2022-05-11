@@ -124,6 +124,52 @@ describe ProcedureRevision do
       end
     end
 
+    context 'with multiple tdc' do
+      context 'in public tdc' do
+        let(:procedure) { create(:procedure, :with_type_de_champ, types_de_champ_count: 3) }
+
+        it 'reorders' do
+          expect(draft.revision_types_de_champ_public.pluck(:position)).to eq([0, 1, 2])
+
+          draft.remove_type_de_champ(draft.types_de_champ_public[1].stable_id)
+
+          expect(draft.revision_types_de_champ_public.pluck(:position)).to eq([0, 1])
+        end
+      end
+
+      context 'in repetition tdc' do
+        let(:procedure) { create(:procedure, :with_repetition) }
+        let!(:second_child) do
+          draft.add_type_de_champ({
+            type_champ: TypeDeChamp.type_champs.fetch(:text),
+            libelle: "second child",
+            parent_id: type_de_champ_repetition.stable_id
+          })
+        end
+
+        let!(:last_child) do
+          draft.add_type_de_champ({
+            type_champ: TypeDeChamp.type_champs.fetch(:text),
+            libelle: "last child",
+            parent_id: type_de_champ_repetition.stable_id
+          })
+        end
+
+        it 'reorders' do
+          children = draft.children_of(type_de_champ_repetition)
+          expect(children.pluck(:position)).to eq([0, 1, 2])
+          expect(children.pluck(:order_place)).to eq([0, 1, 2])
+
+          draft.remove_type_de_champ(children[1].stable_id)
+
+          children.reload
+
+          expect(children.pluck(:position)).to eq([0, 1])
+          expect(children.pluck(:order_place)).to eq([0, 1])
+        end
+      end
+    end
+
     context 'for a type_de_champ_repetition' do
       let(:procedure) { create(:procedure, :with_repetition) }
       let!(:child) { child = draft.children_of(type_de_champ_repetition).first }

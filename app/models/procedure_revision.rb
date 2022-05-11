@@ -97,6 +97,8 @@ class ProcedureRevision < ApplicationRecord
     if tdc.revision_types_de_champ.empty?
       tdc.destroy
     end
+
+    reorder(coordinate.siblings)
   end
 
   def draft?
@@ -151,6 +153,13 @@ class ProcedureRevision < ApplicationRecord
   end
 
   private
+
+  def reorder(siblings)
+    siblings.to_a.compact.each.with_index do |e, position|
+      e.update(position: position)
+      e.type_de_champ.update!(order_place: position)
+    end
+  end
 
   def compare_attestation_template(from_at, to_at)
     changes = []
