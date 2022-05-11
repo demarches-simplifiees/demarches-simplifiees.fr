@@ -1,7 +1,7 @@
-%span.dropdown
-  %button.button.dropdown-button{ 'aria-expanded' => 'false', 'aria-controls' => 'filter-menu' }
+%span.dropdown{ data: { controller: 'menu-button', popover: 'true' } }
+  %button.button.dropdown-button{ data: { menu_button_target: 'button' } }
     = t('views.instructeurs.dossiers.filters.title')
-  #filter-menu.dropdown-content.left-aligned.fade-in-down
+  #filter-menu.dropdown-content.left-aligned.fade-in-down{ data: { menu_button_target: 'menu' } }
     = form_tag add_filter_instructeur_procedure_path(procedure), method: :post, class: 'dropdown-form large' do
       = label_tag :field,  t('views.instructeurs.dossiers.filters.column')
       = select_tag :field, options_for_select(displayed_fields_options)
