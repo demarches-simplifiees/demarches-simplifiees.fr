@@ -2,10 +2,10 @@
   = link_to restore_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: "button" do
     = t('views.instructeurs.dossiers.restore')
 - elsif close_to_expiration || Dossier::TERMINE.include?(state)
-  .dropdown.user-dossier-actions
-    %button.button.dropdown-button{ 'aria-expanded' => 'false', 'aria-controls' => 'actions-menu' }
+  .dropdown.user-dossier-actions{ data: { controller: 'menu-button' } }
+    %button.button.dropdown-button{ data: { menu_button_target: 'button' } }
       Actions
-    #actions-menu.dropdown-content.fade-in-down
+    #actions-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
       %ul.dropdown-items
         - if close_to_expiration
           %li
