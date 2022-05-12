@@ -17,16 +17,13 @@ FactoryBot.define do
       if evaluator.procedure
         revision = evaluator.procedure.active_revision
 
-        build(:procedure_revision_type_de_champ,
-          position: evaluator.position,
+        evaluator.procedure.save
+
+        create(:procedure_revision_type_de_champ,
+          position: evaluator.position || 0,
           revision: revision,
           type_de_champ: type_de_champ)
 
-        if type_de_champ.private?
-          revision.types_de_champ_private << type_de_champ
-        else
-          revision.types_de_champ_public << type_de_champ
-        end
       elsif evaluator.parent
         type_de_champ.order_place = evaluator.position || evaluator.parent.types_de_champ.size
         evaluator.parent.types_de_champ << type_de_champ
