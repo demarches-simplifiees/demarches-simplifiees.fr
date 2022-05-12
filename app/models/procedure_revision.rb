@@ -398,25 +398,7 @@ class ProcedureRevision < ApplicationRecord
     cloned_type_de_champ
   end
 
-  def find_type_de_champ_by_stable_id(stable_id)
-    types_de_champ.find_by(stable_id: stable_id) || types_de_champ_in_repetition.find_by(stable_id: stable_id)
-  end
 
-  def types_de_champ_in_repetition
-    parent_ids = types_de_champ.repetition.ids
-    TypeDeChamp.where(parent_id: parent_ids)
-  end
-
-  def move_type_de_champ_hash(types_de_champ, type_de_champ, new_index)
-    old_index = types_de_champ.index(type_de_champ)
-
-    if types_de_champ.delete_at(old_index)
-      types_de_champ.insert(new_index, type_de_champ)
-        .map.with_index do |type_de_champ, index|
-          [type_de_champ.id, index]
-        end
-    else
-      []
     end
   end
 end
