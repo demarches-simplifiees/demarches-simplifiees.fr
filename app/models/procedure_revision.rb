@@ -54,7 +54,7 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def find_or_clone_type_de_champ(stable_id)
-    type_de_champ = find_type_de_champ_by_stable_id(stable_id)
+    type_de_champ = types_de_champ.find_by!(stable_id: stable_id)
 
     if type_de_champ.only_present_on_draft?
       type_de_champ
@@ -66,6 +66,9 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def move_type_de_champ(stable_id, position)
+    # Ensure that if this is a child, it's parent is cloned to the new revision
+    clone_parent_to_draft_revision(stable_id)
+
     coordinate = revision_types_de_champ
       .joins(:type_de_champ)
       .find_by(type_de_champ: { stable_id: stable_id })
@@ -78,6 +81,9 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def remove_type_de_champ(stable_id)
+    # Ensure that if this is a child, it's parent is cloned to the new revision
+    clone_parent_to_draft_revision(stable_id)
+
     coordinate = revision_types_de_champ
       .joins(:type_de_champ)
       .find_by(type_de_champ: { stable_id: stable_id })
@@ -398,7 +404,11 @@ class ProcedureRevision < ApplicationRecord
     cloned_type_de_champ
   end
 
+  def clone_parent_to_draft_revision(stable_id)
+    type_de_champ = types_de_champ.find_by!(stable_id: stable_id)
 
+    if type_de_champ.parent_id.present? && type_de_champ.only_present_on_draft?
+      find_or_clone_type_de_champ(type_de_champ.parent.stable_id)
     end
   end
 end
