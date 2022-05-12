@@ -732,6 +732,13 @@ class Procedure < ApplicationRecord
 
     new_draft.revision_types_de_champ.reload
 
+    # Some revisions do not have links to children types de champ
+    new_draft
+      .types_de_champ
+      .filter(&:repetition?)
+      .flat_map(&:types_de_champ)
+      .each(&:migrate_parent!)
+
     new_draft
   end
 
