@@ -17,8 +17,8 @@ module Mails
 
     SLUG = "initiated_mail"
     DEFAULT_TEMPLATE_NAME = "notification_mailer/default_templates/initiated_mail"
-    DISPLAYED_NAME = 'Accusé de réception'
-    DEFAULT_SUBJECT = 'Votre dossier nº --numéro du dossier-- a bien été déposé (--libellé démarche--)'
+    DISPLAYED_NAME = I18n.t('activerecord.models.mail.initiated_mail.proof_of_receipt')
+    DEFAULT_SUBJECT = I18n.t('activerecord.models.mail.initiated_mail.default_subject', dossier_number: '--numéro du dossier--', procedure_libelle: '--libellé démarche--')
     DOSSIER_STATE = Dossier.states.fetch(:en_construction)
   end
 end
