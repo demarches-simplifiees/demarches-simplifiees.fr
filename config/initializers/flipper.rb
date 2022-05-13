@@ -1,9 +1,3 @@
-Flipper.configure do |config|
-  config.default do
-    Flipper.new(Flipper::Adapters::ActiveRecord.new)
-  end
-end
-
 Flipper.register('Administrateurs') do |user|
   user.administrateur_id.present?
 end
