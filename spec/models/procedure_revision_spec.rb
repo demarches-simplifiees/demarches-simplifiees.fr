@@ -262,262 +262,201 @@ describe ProcedureRevision do
   end
 
   describe '#compare' do
-    let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :with_repetition) }
-    let(:type_de_champ_first) { draft.types_de_champ_public.first }
-    let(:type_de_champ_second) { draft.types_de_champ_public.second }
+    let(:first_tdc) { draft.types_de_champ_public.first }
     let(:new_draft) { procedure.create_new_revision }
 
-    it 'type_de_champ' do
-      expect(new_draft.types_de_champ_public.size).to eq(2)
-      new_type_de_champ = new_draft.add_type_de_champ({
-        type_champ: TypeDeChamp.type_champs.fetch(:text),
-        libelle: "Un champ text"
-      })
-      draft.reload
-      new_draft.reload
-      expect(new_draft.types_de_champ_public.size).to eq(3)
-      expect(new_draft.types_de_champ_public.last).to eq(new_type_de_champ)
-      expect(new_draft.revision_types_de_champ_public.last.position).to eq(2)
-      expect(new_draft.revision_types_de_champ_public.last.type_de_champ).to eq(new_type_de_champ)
-      expect(new_draft.revision_types_de_champ_public.last.type_de_champ.revision).to eq(new_draft)
-      expect(procedure.active_revision.different_from?(new_draft)).to be_truthy
-      expect(procedure.active_revision.compare(new_draft)).to eq([
-        {
-          model: :type_de_champ,
-          op: :add,
-          label: "Un champ text",
-          private: false,
-          stable_id: new_type_de_champ.stable_id
-        }
-      ])
+    subject { procedure.active_revision.compare(new_draft) }
 
-      new_draft.find_or_clone_type_de_champ(new_draft.types_de_champ_public.first.stable_id).update(libelle: 'modifier le libelle')
-      expect(procedure.active_revision.compare(new_draft.reload)).to eq([
-        {
-          model: :type_de_champ,
-          op: :update,
-          attribute: :libelle,
-          label: type_de_champ_first.libelle,
-          private: false,
-          from: type_de_champ_first.libelle,
-          to: "modifier le libelle",
-          stable_id: type_de_champ_first.stable_id
-        },
-        {
-          model: :type_de_champ,
-          op: :add,
-          label: "Un champ text",
-          private: false,
-          stable_id: new_type_de_champ.stable_id
-        }
-      ])
-      expect(new_draft.types_de_champ_public.first.revision).to eq(new_draft)
+    context 'when a type de champ is added' do
+      let(:procedure) { create(:procedure) }
+      let(:new_tdc) do
+        new_draft.add_type_de_champ(
+          type_champ: TypeDeChamp.type_champs.fetch(:text),
+          libelle: "Un champ text"
+        )
+      end
 
-      new_draft.move_type_de_champ(new_draft.types_de_champ_public.second.stable_id, 2)
-      expect(procedure.active_revision.compare(new_draft.reload)).to eq([
-        {
-          model: :type_de_champ,
-          op: :update,
-          attribute: :libelle,
-          label: type_de_champ_first.libelle,
-          private: false,
-          from: type_de_champ_first.libelle,
-          to: "modifier le libelle",
-          stable_id: type_de_champ_first.stable_id
-        },
-        {
-          model: :type_de_champ,
-          op: :add,
-          label: "Un champ text",
-          private: false,
-          stable_id: new_type_de_champ.stable_id
-        },
-        {
-          model: :type_de_champ,
-          op: :move,
-          label: type_de_champ_second.libelle,
-          private: false,
-          from: 1,
-          to: 2,
-          stable_id: type_de_champ_second.stable_id
-        }
-      ])
-      expect(new_draft.types_de_champ_public.last.revision).to eq(draft)
+      before { new_tdc }
 
-      new_draft.remove_type_de_champ(new_draft.types_de_champ_public.first.stable_id)
-      expect(procedure.active_revision.compare(new_draft.reload)).to eq([
-        {
-          model: :type_de_champ,
-          op: :remove,
-          label: type_de_champ_first.libelle,
-          private: false,
-          stable_id: type_de_champ_first.stable_id
-        },
-        {
-          model: :type_de_champ,
-          op: :add,
-          label: "Un champ text",
-          private: false,
-          stable_id: new_type_de_champ.stable_id
-        }
-      ])
+      it do
+        is_expected.to eq([
+          {
+            model: :type_de_champ,
+            op: :add,
+            label: "Un champ text",
+            private: false,
+            stable_id: new_tdc.stable_id
+          }
+        ])
+      end
+    end
 
-      new_draft.find_or_clone_type_de_champ(new_draft.types_de_champ_public.last.stable_id).update(description: 'une description')
-      new_draft.find_or_clone_type_de_champ(new_draft.types_de_champ_public.last.stable_id).update(mandatory: true)
-      expect(procedure.active_revision.compare(new_draft.reload)).to eq([
-        {
-          model: :type_de_champ,
-          op: :remove,
-          label: type_de_champ_first.libelle,
-          private: false,
-          stable_id: type_de_champ_first.stable_id
-        },
-        {
-          model: :type_de_champ,
-          op: :add,
-          label: "Un champ text",
-          private: false,
-          stable_id: new_type_de_champ.stable_id
-        },
-        {
-          model: :type_de_champ,
-          op: :update,
-          attribute: :description,
-          label: type_de_champ_second.libelle,
-          private: false,
-          from: type_de_champ_second.description,
-          to: "une description",
-          stable_id: type_de_champ_second.stable_id
-        },
-        {
-          model: :type_de_champ,
-          op: :update,
-          attribute: :mandatory,
-          label: type_de_champ_second.libelle,
-          private: false,
-          from: false,
-          to: true,
-          stable_id: type_de_champ_second.stable_id
-        }
-      ])
+    context 'when a type de champ is changed' do
+      let(:procedure) { create(:procedure, :with_type_de_champ) }
 
-      new_draft.find_or_clone_type_de_champ(new_draft.types_de_champ_public.last.types_de_champ.first.stable_id).update(type_champ: :drop_down_list)
-      new_draft.find_or_clone_type_de_champ(new_draft.types_de_champ_public.last.types_de_champ.first.stable_id).update(drop_down_options: ['one', 'two'])
-      expect(procedure.active_revision.compare(new_draft.reload)).to eq([
-        {
-          model: :type_de_champ,
-          op: :remove,
-          label: type_de_champ_first.libelle,
-          private: false,
-          stable_id: type_de_champ_first.stable_id
-        },
-        {
-          model: :type_de_champ,
-          op: :add,
-          label: "Un champ text",
-          private: false,
-          stable_id: new_type_de_champ.stable_id
-        },
-        {
-          model: :type_de_champ,
-          op: :update,
-          attribute: :description,
-          label: type_de_champ_second.libelle,
-          private: false,
-          from: type_de_champ_second.description,
-          to: "une description",
-          stable_id: type_de_champ_second.stable_id
-        },
-        {
-          model: :type_de_champ,
-          op: :update,
-          attribute: :mandatory,
-          label: type_de_champ_second.libelle,
-          private: false,
-          from: false,
-          to: true,
-          stable_id: type_de_champ_second.stable_id
-        },
-        {
-          model: :type_de_champ,
-          op: :update,
-          attribute: :type_champ,
-          label: "sub type de champ",
-          private: false,
-          from: "text",
-          to: "drop_down_list",
-          stable_id: new_draft.types_de_champ_public.last.types_de_champ.first.stable_id
-        },
-        {
-          model: :type_de_champ,
-          op: :update,
-          attribute: :drop_down_options,
-          label: "sub type de champ",
-          private: false,
-          from: [],
-          to: ["one", "two"],
-          stable_id: new_draft.types_de_champ_public.last.types_de_champ.first.stable_id
-        }
-      ])
+      before do
+        updated_tdc = new_draft.find_or_clone_type_de_champ(first_tdc.stable_id)
 
-      new_draft.find_or_clone_type_de_champ(new_draft.types_de_champ_public.last.types_de_champ.first.stable_id).update(type_champ: :carte)
-      new_draft.find_or_clone_type_de_champ(new_draft.types_de_champ_public.last.types_de_champ.first.stable_id).update(options: { cadastres: true, znieff: true })
-      expect(procedure.active_revision.compare(new_draft.reload)).to eq([
-        {
-          model: :type_de_champ,
-          op: :remove,
-          label: type_de_champ_first.libelle,
-          private: false,
-          stable_id: type_de_champ_first.stable_id
-        },
-        {
-          model: :type_de_champ,
-          op: :add,
-          label: "Un champ text",
-          private: false,
-          stable_id: new_type_de_champ.stable_id
-        },
-        {
-          model: :type_de_champ,
-          op: :update,
-          attribute: :description,
-          label: type_de_champ_second.libelle,
-          private: false,
-          from: type_de_champ_second.description,
-          to: "une description",
-          stable_id: type_de_champ_second.stable_id
-        },
-        {
-          model: :type_de_champ,
-          op: :update,
-          attribute: :mandatory,
-          label: type_de_champ_second.libelle,
-          private: false,
-          from: false,
-          to: true,
-          stable_id: type_de_champ_second.stable_id
-        },
-        {
-          model: :type_de_champ,
-          op: :update,
-          attribute: :type_champ,
-          label: "sub type de champ",
-          private: false,
-          from: "text",
-          to: "carte",
-          stable_id: new_draft.types_de_champ_public.last.types_de_champ.first.stable_id
-        },
-        {
-          model: :type_de_champ,
-          op: :update,
-          attribute: :carte_layers,
-          label: "sub type de champ",
-          private: false,
-          from: [],
-          to: [:cadastres, :znieff],
-          stable_id: new_draft.types_de_champ_public.last.types_de_champ.first.stable_id
-        }
-      ])
+        updated_tdc.update(libelle: 'modifier le libelle', description: 'une description', mandatory: !updated_tdc.mandatory)
+      end
+
+      it do
+        is_expected.to eq([
+          {
+            model: :type_de_champ,
+            op: :update,
+            attribute: :libelle,
+            label: first_tdc.libelle,
+            private: false,
+            from: first_tdc.libelle,
+            to: "modifier le libelle",
+            stable_id: first_tdc.stable_id
+          },
+          {
+            model: :type_de_champ,
+            op: :update,
+            attribute: :description,
+            label: first_tdc.libelle,
+            private: false,
+            from: first_tdc.description,
+            to: "une description",
+            stable_id: first_tdc.stable_id
+          },
+          {
+            model: :type_de_champ,
+            op: :update,
+            attribute: :mandatory,
+            label: first_tdc.libelle,
+            private: false,
+            from: false,
+            to: true,
+            stable_id: first_tdc.stable_id
+          }
+        ])
+      end
+    end
+
+    context 'when a type de champ is moved' do
+      let(:procedure) { create(:procedure, :with_type_de_champ, types_de_champ_count: 3) }
+      let(:new_draft_second_tdc) { new_draft.types_de_champ_public.second }
+      let(:new_draft_third_tdc) { new_draft.types_de_champ_public.third }
+
+      before do
+        new_draft_second_tdc
+        new_draft_third_tdc
+        new_draft.move_type_de_champ(new_draft_second_tdc.stable_id, 2)
+      end
+
+      it do
+        is_expected.to eq([
+          {
+            model: :type_de_champ,
+            op: :move,
+            label: new_draft_third_tdc.libelle,
+            private: false,
+            from: 2,
+            to: 1,
+            stable_id: new_draft_third_tdc.stable_id
+          },
+          {
+            model: :type_de_champ,
+            op: :move,
+            label: new_draft_second_tdc.libelle,
+            private: false,
+            from: 1,
+            to: 2,
+            stable_id: new_draft_second_tdc.stable_id
+          }
+        ])
+      end
+    end
+
+    context 'when a type de champ is removed' do
+      let(:procedure) { create(:procedure, :with_type_de_champ) }
+
+      before do
+        new_draft.remove_type_de_champ(first_tdc.stable_id)
+      end
+
+      it do
+        is_expected.to eq([
+          {
+            model: :type_de_champ,
+            op: :remove,
+            label: first_tdc.libelle,
+            private: false,
+            stable_id: first_tdc.stable_id
+          }
+        ])
+      end
+    end
+
+    context 'when a child type de champ is transformed into a drop_down_list' do
+      let(:procedure) { create(:procedure, :with_repetition) }
+
+      before do
+        child = new_draft.types_de_champ_public.last.types_de_champ.first
+        new_draft.find_or_clone_type_de_champ(child.stable_id).update(type_champ: :drop_down_list, drop_down_options: ['one', 'two'])
+      end
+
+      it do
+        is_expected.to eq([
+          {
+            model: :type_de_champ,
+            op: :update,
+            attribute: :type_champ,
+            label: "sub type de champ",
+            private: false,
+            from: "text",
+            to: "drop_down_list",
+            stable_id: new_draft.types_de_champ_public.last.types_de_champ.first.stable_id
+          },
+          {
+            model: :type_de_champ,
+            op: :update,
+            attribute: :drop_down_options,
+            label: "sub type de champ",
+            private: false,
+            from: [],
+            to: ["one", "two"],
+            stable_id: new_draft.types_de_champ_public.last.types_de_champ.first.stable_id
+          }
+        ])
+      end
+    end
+
+    context 'when a child type de champ is transformed into a map' do
+      let(:procedure) { create(:procedure, :with_repetition) }
+
+      before do
+        child = new_draft.types_de_champ_public.last.types_de_champ.first
+        new_draft.find_or_clone_type_de_champ(child.stable_id).update(type_champ: :carte, options: { cadastres: true, znieff: true })
+      end
+
+      it do
+        is_expected.to eq([
+          {
+            model: :type_de_champ,
+            op: :update,
+            attribute: :type_champ,
+            label: "sub type de champ",
+            private: false,
+            from: "text",
+            to: "carte",
+            stable_id: new_draft.types_de_champ_public.last.types_de_champ.first.stable_id
+          },
+          {
+            model: :type_de_champ,
+            op: :update,
+            attribute: :carte_layers,
+            label: "sub type de champ",
+            private: false,
+            from: [],
+            to: [:cadastres, :znieff],
+            stable_id: new_draft.types_de_champ_public.last.types_de_champ.first.stable_id
+          }
+        ])
+      end
     end
   end
 
