@@ -1,7 +1,16 @@
 diff --git a/node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js b/node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js
-index 963422f..65364f1 100644
+index 963422f..a4113bf 100644
 --- a/node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js
 +++ b/node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js
+@@ -2609,7 +2609,7 @@ class Session {
+         const linkMethod = link.getAttribute("data-turbo-method");
+         if (linkMethod) {
+             const form = document.createElement("form");
+-            form.method = linkMethod;
++            form.setAttribute('method', linkMethod);
+             form.action = link.getAttribute("href") || "undefined";
+             form.hidden = true;
+             if (link.hasAttribute("data-turbo-confirm")) {
 @@ -2621,9 +2621,9 @@ class Session {
                  form.addEventListener("turbo:submit-start", () => form.remove());
              }
@@ -15,9 +24,18 @@ index 963422f..65364f1 100644
          }
          else {
 diff --git a/node_modules/@hotwired/turbo/dist/turbo.es2017-umd.js b/node_modules/@hotwired/turbo/dist/turbo.es2017-umd.js
-index 101db1f..ce43031 100644
+index 101db1f..7d9cda6 100644
 --- a/node_modules/@hotwired/turbo/dist/turbo.es2017-umd.js
 +++ b/node_modules/@hotwired/turbo/dist/turbo.es2017-umd.js
+@@ -2615,7 +2615,7 @@ Copyright © 2021 Basecamp, LLC
+             const linkMethod = link.getAttribute("data-turbo-method");
+             if (linkMethod) {
+                 const form = document.createElement("form");
+-                form.method = linkMethod;
++                form.setAttribute('method', linkMethod);
+                 form.action = link.getAttribute("href") || "undefined";
+                 form.hidden = true;
+                 if (link.hasAttribute("data-turbo-confirm")) {
 @@ -2627,9 +2627,9 @@ Copyright © 2021 Basecamp, LLC
                      form.addEventListener("turbo:submit-start", () => form.remove());
                  }
