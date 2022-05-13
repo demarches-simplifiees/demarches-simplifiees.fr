@@ -150,18 +150,14 @@ export function httpRequest(
       let textBody: string | undefined;
       try {
         if (contentType?.match('json')) {
-          jsonBody = await response.json();
+          jsonBody = await response.clone().json();
         } else {
-          textBody = await response.text();
+          textBody = await response.clone().text();
         }
       } catch {
         // ignore
       }
       throw new ResponseError(response, jsonBody, textBody);
-    } catch (error) {
-      clearTimeout(timer);
-
-      throw error;
     } finally {
       clearTimeout(timer);
     }
