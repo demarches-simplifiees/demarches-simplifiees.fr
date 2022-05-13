@@ -31,11 +31,11 @@ class ProcedureRevision < ApplicationRecord
   scope :ordered, -> { order(:created_at) }
 
   def build_champs
-    types_de_champ_public.map(&:build_champ)
+    types_de_champ_public.map { |tdc| tdc.build_champ(revision: self) }
   end
 
   def build_champs_private
-    types_de_champ_private.map(&:build_champ)
+    types_de_champ_private.map { |tdc| tdc.build_champ(revision: self) }
   end
 
   def add_type_de_champ(params)
