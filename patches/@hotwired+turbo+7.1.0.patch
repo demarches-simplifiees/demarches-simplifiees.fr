@@ -1,8 +1,22 @@
 diff --git a/node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js b/node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js
-index 963422f..65364f1 100644
+index 963422f..229804c 100644
 --- a/node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js
 +++ b/node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js
-@@ -2621,9 +2621,9 @@ class Session {
+@@ -2609,7 +2609,12 @@ class Session {
+         const linkMethod = link.getAttribute("data-turbo-method");
+         if (linkMethod) {
+             const form = document.createElement("form");
+-            form.method = linkMethod;
++            const inputMethod = document.createElement('input')
++            inputMethod.type = 'hidden';
++            inputMethod.value = linkMethod;
++            inputMethod.name = '_method'
++            form.appendChild(inputMethod)
++            form.method = /get/i.test(linkMethod) ? 'get' : 'post';
+             form.action = link.getAttribute("href") || "undefined";
+             form.hidden = true;
+             if (link.hasAttribute("data-turbo-confirm")) {
+@@ -2621,9 +2626,9 @@ class Session {
                  form.addEventListener("turbo:submit-start", () => form.remove());
              }
              else {
@@ -15,10 +29,24 @@ index 963422f..65364f1 100644
          }
          else {
 diff --git a/node_modules/@hotwired/turbo/dist/turbo.es2017-umd.js b/node_modules/@hotwired/turbo/dist/turbo.es2017-umd.js
-index 101db1f..ce43031 100644
+index 101db1f..8632565 100644
 --- a/node_modules/@hotwired/turbo/dist/turbo.es2017-umd.js
 +++ b/node_modules/@hotwired/turbo/dist/turbo.es2017-umd.js
-@@ -2627,9 +2627,9 @@ Copyright © 2021 Basecamp, LLC
+@@ -2615,7 +2615,12 @@ Copyright © 2021 Basecamp, LLC
+             const linkMethod = link.getAttribute("data-turbo-method");
+             if (linkMethod) {
+                 const form = document.createElement("form");
+-                form.method = linkMethod;
++                const inputMethod = document.createElement('input')
++                inputMethod.type = 'hidden';
++                inputMethod.value = linkMethod;
++                inputMethod.name = '_method'
++                form.appendChild(inputMethod)
++                form.method = /get/i.test(linkMethod) ? 'get' : 'post';
+                 form.action = link.getAttribute("href") || "undefined";
+                 form.hidden = true;
+                 if (link.hasAttribute("data-turbo-confirm")) {
+@@ -2627,9 +2632,9 @@ Copyright © 2021 Basecamp, LLC
                      form.addEventListener("turbo:submit-start", () => form.remove());
                  }
                  else {
