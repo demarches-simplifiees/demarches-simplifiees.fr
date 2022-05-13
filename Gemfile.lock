@@ -514,7 +514,7 @@ GEM
       httpclient
       json-jwt (>= 1.11.0)
       rack (>= 2.1.0)
-    rack-protection (2.1.0)
+    rack-protection (2.2.0)
       rack
     rack-proxy (0.7.0)
       rack
@@ -685,10 +685,10 @@ GEM
     simple_xlsx_reader (1.0.4)
       nokogiri
       rubyzip
-    sinatra (2.1.0)
+    sinatra (2.2.0)
       mustermann (~> 1.0)
       rack (~> 2.2)
-      rack-protection (= 2.1.0)
+      rack-protection (= 2.2.0)
       tilt (~> 2.0)
     skylight (5.0.1)
       activesupport (>= 5.2.0)
