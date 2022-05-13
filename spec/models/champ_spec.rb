@@ -74,7 +74,12 @@ describe Champ do
       create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :with_repetition, types_de_champ_count: 1, types_de_champ_private_count: 1).tap do |procedure|
         create(:type_de_champ_header_section, procedure: procedure)
         create(:type_de_champ_header_section, procedure: procedure, private: true)
-        create(:type_de_champ_header_section, parent: procedure.types_de_champ.find(&:repetition?))
+
+        procedure.active_revision.add_type_de_champ(
+          libelle: 'header',
+          type_champ: 'header_section',
+          parent_id: procedure.types_de_champ.find(&:repetition?).stable_id
+        )
       end
     end
     let(:dossier) { create(:dossier, procedure: procedure) }
@@ -508,11 +513,9 @@ describe Champ do
   end
 
   describe 'repetition' do
-    let(:procedure) { create(:procedure, :published, :with_type_de_champ, :with_type_de_champ_private, types_de_champ: [build(:type_de_champ_repetition, types_de_champ: [tdc_text, tdc_integer])]) }
-    let(:revision) { procedure.published_revision }
-    let(:rtdc_repetition) { revision.revision_types_de_champ.find { |rtdc| rtdc.type_de_champ.repetition? } }
-    let(:tdc_text) { build(:type_de_champ_text) }
-    let(:tdc_integer) { build(:type_de_champ_integer_number) }
+    let(:procedure) { create(:procedure, :published, :with_type_de_champ, :with_type_de_champ_private, :with_repetition) }
+    let(:tdc_repetition) { procedure.types_de_champ.find(&:repetition?) }
+    let(:tdc_text) { procedure.active_revision.children_of(tdc_repetition).first }
 
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:champ) { dossier.champs.find(&:repetition?) }
@@ -521,8 +524,7 @@ describe Champ do
     let(:champ_text_attrs) { attributes_for(:champ_text, type_de_champ: tdc_text, row: 1) }
 
     before do
-      create(:procedure_revision_type_de_champ, revision: revision, type_de_champ: tdc_text, parent: rtdc_repetition, position: 1)
-      create(:procedure_revision_type_de_champ, revision: revision, type_de_champ: tdc_integer, parent: rtdc_repetition, position: 0)
+      procedure.active_revision.add_type_de_champ(libelle: 'sub integer', type_champ: 'integer_number', parent_id: tdc_repetition.stable_id)
     end
 
     context 'when creating the model directly' do
@@ -557,12 +559,12 @@ describe Champ do
         champ.champs << champ_integer
         first_row = champ.reload.rows.first
         expect(first_row.size).to eq(2)
-        expect(first_row.first).to eq(champ_integer)
+        expect(first_row.second).to eq(champ_integer)
 
         champ.champs << champ_text
         first_row = champ.reload.rows.first
         expect(first_row.size).to eq(2)
-        expect(first_row.second).to eq(champ_text)
+        expect(first_row.first).to eq(champ_text)
 
         expect(champ.rows.size).to eq(2)
       end
