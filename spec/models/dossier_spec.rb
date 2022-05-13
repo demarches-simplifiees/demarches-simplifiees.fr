@@ -1190,11 +1190,13 @@ describe Dossier do
     end
 
     context "with champ repetition" do
-      let(:procedure) { create(:procedure, types_de_champ: [type_de_champ_repetition]) }
-      let(:type_de_champ_repetition) { build(:type_de_champ_repetition, mandatory: true) }
+      let(:procedure) { create(:procedure, :with_repetition) }
+      let(:revision) { procedure.active_revision }
+      let(:type_de_champ_repetition) { revision.types_de_champ.first }
 
       before do
-        create(:type_de_champ_text, mandatory: true, parent: type_de_champ_repetition)
+        type_de_champ_repetition.update(mandatory: true)
+        revision.children_of(type_de_champ_repetition).first.update(mandatory: true)
       end
 
       context "when no champs" do
@@ -1215,7 +1217,7 @@ describe Dossier do
         let(:champ_with_error) { dossier.champs.first.champs.first }
 
         before do
-          dossier.champs.first.add_row
+          dossier.champs.first.add_row(dossier.revision)
         end
 
         it 'should have errors' do
@@ -1757,8 +1759,8 @@ describe Dossier do
       datetime_champ.update(value: Date.today.to_s)
       text_champ.update(value: 'bonjour')
       # Add two rows then remove previous to last row in order to create a "hole" in the sequence
-      repetition_champ.add_row
-      repetition_champ.add_row
+      repetition_champ.add_row(repetition_champ.dossier.revision)
+      repetition_champ.add_row(repetition_champ.dossier.revision)
       repetition_champ.champs.where(row: repetition_champ.champs.last.row - 1).destroy_all
       repetition_champ.reload
     end
