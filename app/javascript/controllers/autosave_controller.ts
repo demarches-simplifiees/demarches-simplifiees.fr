@@ -1,4 +1,3 @@
-import invariant from 'tiny-invariant';
 import { httpRequest, ResponseError } from '@utils';
 import { z } from 'zod';
 
@@ -131,9 +130,14 @@ export class AutosaveController extends ApplicationController {
   // Returns a promise fulfilled when the request completes.
   private sendAutosaveRequest(): Promise<void> {
     this.#abortController = new AbortController();
+    const { form, inputs } = this;
+
+    if (!form || inputs.length == 0) {
+      return Promise.resolve();
+    }
 
     const formData = new FormData();
-    for (const input of this.inputs) {
+    for (const input of inputs) {
       if (input.type == 'checkbox') {
         formData.append(input.name, input.checked ? input.value : '');
       } else if (input.type == 'radio') {
@@ -145,7 +149,7 @@ export class AutosaveController extends ApplicationController {
       }
     }
 
-    return httpRequest(this.form.action, {
+    return httpRequest(form.action, {
       method: 'patch',
       body: formData,
       signal: this.#abortController.signal,
@@ -154,9 +158,7 @@ export class AutosaveController extends ApplicationController {
   }
 
   private get form() {
-    const form = this.element.closest('form');
-    invariant(form, 'Could not find the form element.');
-    return form;
+    return this.element.closest('form');
   }
 
   private get inputs() {
