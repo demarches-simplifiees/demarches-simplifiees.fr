@@ -85,6 +85,7 @@ describe 'Instructing a dossier:', js: true do
     within '.user-dossier-actions' do
       click_on 'Supprimer le dossier'
     end
+    expect(page).to have_current_path(instructeur_procedure_path(procedure))
   end
 
   scenario 'A instructeur can follow/unfollow a dossier' do

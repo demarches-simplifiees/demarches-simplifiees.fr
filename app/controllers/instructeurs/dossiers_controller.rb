@@ -230,7 +230,19 @@ module Instructeurs
       else
         flash.alert = t('instructeurs.dossiers.impossible_deletion')
       end
-      redirect_back(fallback_location: instructeur_procedure_path(procedure))
+      fallback_location = instructeur_procedure_path(procedure)
+
+      if can_redirect_back?(request, dossier)
+        redirect_back(fallback_location: fallback_location)
+      else
+        redirect_to(fallback_location)
+      end
+    end
+
+    def can_redirect_back?(request, dossier)
+      return false if request.referer.nil?
+      referer_path = URI(request.referer).path
+      referer_path != instructeur_dossier_path(dossier.procedure, dossier)
     end
 
     def restore
