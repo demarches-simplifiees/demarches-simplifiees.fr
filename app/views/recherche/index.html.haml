@@ -63,10 +63,10 @@
 
             - if instructeur_dossier && expert_dossier
               %td.action-col.follow-col
-                .dropdown
-                  .button.dropdown-button
+                .dropdown{ data: { controller: 'menu-button' } }
+                  %button.button.dropdown-button{ data: { menu_button_target: 'button' } }
                     Actions
-                  .dropdown-content.fade-in-down
+                  .dropdown-content{ data: { menu_button_target: 'menu' } }
                     %ul.dropdown-items
                       %li
                         = link_to(instructeur_dossier_path(procedure_id, p.dossier_id)) do
