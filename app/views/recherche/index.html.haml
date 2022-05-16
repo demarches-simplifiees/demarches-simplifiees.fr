@@ -1,13 +1,12 @@
 - content_for(:title, "Recherche : #{@search_terms}")
-- pagination =  paginate @paginated_ids
 
 .container
   .page-title
     Résultat de la recherche :
     = t('pluralize.dossier_trouve', count: @dossiers_count)
 
-  = pagination
   - if @projected_dossiers.present?
+    = paginate @paginated_ids
     %table.table.dossiers-table.hoverable
       %thead
         %tr
@@ -97,8 +96,7 @@
 
             - else
               %td
-
-          = pagination
+    = paginate @paginated_ids
 
   - else
     %h2 Aucun dossier correspondant à votre recherche n’a été trouvé
