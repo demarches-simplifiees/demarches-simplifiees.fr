@@ -20,12 +20,4 @@ class AdministrationMailer < ApplicationMailer
       subject: subject,
       reply_to: CONTACT_EMAIL)
   end
-
-  def dubious_procedures(procedures_and_type_de_champs)
-    @procedures_and_type_de_champs = procedures_and_type_de_champs
-    subject = "[RGS] De nouvelles démarches comportent des champs interdits"
-
-    mail(to: EQUIPE_EMAIL,
-      subject: subject)
-  end
 end
