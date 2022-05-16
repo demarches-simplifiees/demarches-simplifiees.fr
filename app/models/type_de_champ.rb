@@ -94,7 +94,7 @@ class TypeDeChamp < ApplicationRecord
   scope :fillable, -> { where.not(type_champ: [type_champs.fetch(:header_section), type_champs.fetch(:explication)]) }
 
   scope :dubious, -> {
-    where("unaccent(types_de_champ.libelle) ~* unaccent(?)", Cron::FindDubiousProceduresJob.forbidden_regexp)
+    where("unaccent(types_de_champ.libelle) ~* unaccent(?)", DubiousProcedure.forbidden_regexp)
       .where(type_champ: [TypeDeChamp.type_champs.fetch(:text), TypeDeChamp.type_champs.fetch(:textarea)])
   }
 
