@@ -64,8 +64,6 @@ module TPS
     end
 
     config.middleware.use Rack::Attack
-    # Ensure we make maximum one call per feature per request.
-    config.middleware.use Flipper::Middleware::Memoizer
 
     config.ds_env = ENV.fetch('DS_ENV', Rails.env)
 
