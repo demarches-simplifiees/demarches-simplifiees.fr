@@ -1,6 +1,6 @@
 module Administrateurs
   class TypesDeChampController < AdministrateurController
-    before_action :retrieve_procedure, only: [:create, :update, :move, :destroy]
+    before_action :retrieve_procedure, only: [:create, :update, :move, :estimate_fill_duration, :destroy]
     before_action :procedure_revisable?, only: [:create, :update, :move, :destroy]
 
     def create
@@ -29,6 +29,15 @@ module Administrateurs
       @procedure.draft_revision.move_type_de_champ(params[:id], (params[:position] || params[:order_place]).to_i)
 
       head :no_content
+    end
+
+    def estimate_fill_duration
+      estimate = if @procedure.feature_enabled?(:procedure_estimated_fill_duration)
+        @procedure.draft_revision.estimated_fill_duration
+      else
+        0
+      end
+      render json: { estimated_fill_duration: estimate }
     end
 
     def destroy
