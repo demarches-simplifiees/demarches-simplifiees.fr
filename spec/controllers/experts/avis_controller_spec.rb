@@ -104,17 +104,6 @@ describe Experts::AvisController, type: :controller do
           expect(flash.alert).to eq("Vous n’avez pas accès à cet avis.")
         end
       end
-      context 'with merged instructeur who was claimant' do
-        render_views
-        it 'does not raise' do
-          old_claimant = create(:instructeur)
-          avis_with_merged_instructeur = create(:avis, dossier: dossier, claimant: old_claimant, experts_procedure: experts_procedure)
-          instructeur.user.merge(old_claimant.user)
-          sign_in(avis_with_merged_instructeur.expert.user)
-          get :instruction, params: { id: avis_with_merged_instructeur.id, procedure_id: procedure.id }
-          expect(response).to have_http_status(200)
-        end
-      end
     end
 
     describe '#messagerie' do
