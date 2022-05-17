@@ -828,6 +828,18 @@ describe Instructeur, type: :model do
         expect(administrateur.reload.instructeurs).to match_array(new_instructeur)
       end
     end
+
+    context 'when old instructeur has avis' do
+      let(:avis) { create(:avis, claimant: old_instructeur) }
+      before do
+        avis
+        subject
+      end
+      it 'reassign avis to new_instructeur' do
+        avis.reload
+        expect(avis.claimant).to eq(new_instructeur)
+      end
+    end
   end
 
   private
