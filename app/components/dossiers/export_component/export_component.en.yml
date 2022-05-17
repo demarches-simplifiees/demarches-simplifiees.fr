@@ -7,6 +7,7 @@ en:
   everything_short: Ask an export in format%{export_format}
   everything_pending_html: Ask an export in format %{export_format} is being generated<br>(ask %{export_time} ago)
   everything_ready_html: Download the export in format %{export_format}<br>(generated %{export_time} ago)
+  download_all: Download all files
   download:
     one: Download a file
     other: Download %{count} files
