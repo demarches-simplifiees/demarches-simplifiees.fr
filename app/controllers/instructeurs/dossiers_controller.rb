@@ -8,6 +8,7 @@ module Instructeurs
     include ActionController::Streaming
     include Zipline
 
+    before_action :redirect_on_dossier_not_found, only: :show
     after_action :mark_demande_as_read, only: :show
     after_action :mark_messagerie_as_read, only: [:messagerie, :create_commentaire]
     after_action :mark_avis_as_read, only: [:avis, :create_avis]
@@ -299,6 +300,12 @@ module Instructeurs
         "Le dossier est déjà #{dossier_display_state(target_state, lower: true)}."
       else
         "Le dossier est en ce moment #{dossier_display_state(exception.originating_state, lower: true)} : il n’est pas possible de le passer #{dossier_display_state(target_state, lower: true)}."
+      end
+    end
+
+    def redirect_on_dossier_not_found
+      if !current_instructeur.dossiers.visible_by_administration.exists?(id: params[:dossier_id])
+        redirect_to instructeur_procedure_path(procedure)
       end
     end
   end
