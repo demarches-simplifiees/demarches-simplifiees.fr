@@ -25,7 +25,6 @@ class ProcedureRevision < ApplicationRecord
   has_many :types_de_champ_public, through: :revision_types_de_champ_public, source: :type_de_champ
   has_many :types_de_champ_private, through: :revision_types_de_champ_private, source: :type_de_champ
 
-  has_many :owned_types_de_champ, class_name: 'TypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
   has_one :draft_procedure, -> { with_discarded }, class_name: 'Procedure', foreign_key: :draft_revision_id, dependent: :nullify, inverse_of: :draft_revision
   has_one :published_procedure, -> { with_discarded }, class_name: 'Procedure', foreign_key: :published_revision_id, dependent: :nullify, inverse_of: :published_revision
 
@@ -40,8 +39,6 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def add_type_de_champ(params)
-    params[:revision] = self
-
     if params[:parent_id]
       find_or_clone_type_de_champ(params.delete(:parent_id))
         .types_de_champ
@@ -398,7 +395,6 @@ class ProcedureRevision < ApplicationRecord
     cloned_type_de_champ = type_de_champ.deep_clone(include: [:types_de_champ]) do |original, kopy|
       PiecesJustificativesService.clone_attachments(original, kopy)
     end
-    cloned_type_de_champ.revision = self
     revision_type_de_champ.update!(type_de_champ: cloned_type_de_champ)
     cloned_type_de_champ.types_de_champ.each(&:migrate_parent!)
     cloned_type_de_champ
