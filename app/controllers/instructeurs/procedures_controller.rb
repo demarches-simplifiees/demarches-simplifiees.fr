@@ -156,7 +156,7 @@ module Instructeurs
 
       if export.ready?
         respond_to do |format|
-          format.js do
+          format.turbo_stream do
             @procedure = procedure
             @statut = export_options[:statut]
             @dossiers_count = export.count
@@ -172,7 +172,7 @@ module Instructeurs
         respond_to do |format|
           notice_message = "Nous générons cet export. Veuillez revenir dans quelques minutes pour le télécharger."
 
-          format.js do
+          format.turbo_stream do
             @procedure = procedure
             @statut = export_options[:statut]
             @dossiers_count = export.count

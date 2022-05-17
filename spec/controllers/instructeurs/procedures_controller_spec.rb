@@ -523,15 +523,15 @@ describe Instructeurs::ProceduresController, type: :controller do
       end
     end
 
-    context 'when the js format is used' do
+    context 'when the turbo_stream format is used' do
       before do
         post :download_export,
           params: { export_format: :csv, procedure_id: procedure.id },
-          format: :js
+          format: :turbo_stream
       end
 
       it 'responds in the correct format' do
-        expect(response.media_type).to eq('text/javascript')
+        expect(response.media_type).to eq('text/vnd.turbo-stream.html')
         expect(response).to have_http_status(:ok)
       end
     end
