@@ -54,7 +54,7 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def find_or_clone_type_de_champ(stable_id)
-    type_de_champ = find_type_de_champ_by_stable_id(stable_id)
+    type_de_champ = types_de_champ.find_by!(stable_id: stable_id)
 
     if type_de_champ.only_present_on_draft?
       type_de_champ
@@ -66,35 +66,37 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def move_type_de_champ(stable_id, position)
-    type_de_champ = find_type_de_champ_by_stable_id(stable_id)
+    # Ensure that if this is a child, it's parent is cloned to the new revision
+    clone_parent_to_draft_revision(stable_id)
 
-    if type_de_champ.parent.present?
-      repetition_type_de_champ = find_or_clone_type_de_champ(stable_id).parent
+    coordinate = revision_types_de_champ
+      .joins(:type_de_champ)
+      .find_by(type_de_champ: { stable_id: stable_id })
 
-      move_type_de_champ_hash(repetition_type_de_champ.types_de_champ.to_a, type_de_champ, position).each do |(id, position)|
-        type_de_champ = repetition_type_de_champ.types_de_champ.find(id)
-        type_de_champ.update!(order_place: position)
-        type_de_champ.revision_type_de_champ&.update!(position: position)
-      end
-    else
-      liste = type_de_champ.private? ? types_de_champ_private : types_de_champ_public
+    siblings = coordinate.siblings.to_a
 
-      move_type_de_champ_hash(liste.to_a, type_de_champ, position).each do |(id, position)|
-        revision_types_de_champ.find_by!(type_de_champ_id: id).update!(position: position)
-      end
-    end
+    siblings.insert(position, siblings.delete_at(siblings.index(coordinate)))
+
+    reorder(siblings)
   end
 
   def remove_type_de_champ(stable_id)
-    type_de_champ = find_type_de_champ_by_stable_id(stable_id)
+    # Ensure that if this is a child, it's parent is cloned to the new revision
+    clone_parent_to_draft_revision(stable_id)
 
-    if type_de_champ.only_present_on_draft?
-      type_de_champ.destroy
-    elsif type_de_champ.parent.present?
-      find_or_clone_type_de_champ(stable_id).destroy
-    else
-      types_de_champ.delete(type_de_champ)
+    coordinate = revision_types_de_champ
+      .joins(:type_de_champ)
+      .find_by(type_de_champ: { stable_id: stable_id })
+
+    tdc = coordinate.type_de_champ
+
+    coordinate.destroy
+
+    if tdc.revision_types_de_champ.empty?
+      tdc.destroy
     end
+
+    reorder(coordinate.siblings)
   end
 
   def draft?
@@ -149,6 +151,17 @@ class ProcedureRevision < ApplicationRecord
   end
 
   private
+
+  def reorder(siblings)
+    siblings.to_a.compact.each.with_index do |sibling, position|
+        sibling.update(position: position)
+
+        # FIXME: to remove when order_place is no longer used
+        if sibling.parent_id.present?
+          sibling.type_de_champ.update!(order_place: position)
+        end
+      end
+  end
 
   def compare_attestation_template(from_at, to_at)
     changes = []
@@ -391,25 +404,11 @@ class ProcedureRevision < ApplicationRecord
     cloned_type_de_champ
   end
 
-  def find_type_de_champ_by_stable_id(stable_id)
-    types_de_champ.find_by(stable_id: stable_id) || types_de_champ_in_repetition.find_by(stable_id: stable_id)
-  end
+  def clone_parent_to_draft_revision(stable_id)
+    type_de_champ = types_de_champ.find_by!(stable_id: stable_id)
 
-  def types_de_champ_in_repetition
-    parent_ids = types_de_champ.repetition.ids
-    TypeDeChamp.where(parent_id: parent_ids)
-  end
-
-  def move_type_de_champ_hash(types_de_champ, type_de_champ, new_index)
-    old_index = types_de_champ.index(type_de_champ)
-
-    if types_de_champ.delete_at(old_index)
-      types_de_champ.insert(new_index, type_de_champ)
-        .map.with_index do |type_de_champ, index|
-          [type_de_champ.id, index]
-        end
-    else
-      []
+    if type_de_champ.parent_id.present? && type_de_champ.only_present_on_draft?
+      find_or_clone_type_de_champ(type_de_champ.parent.stable_id)
     end
   end
 end
