@@ -116,6 +116,18 @@ describe 'Instructing a dossier:', js: true do
     test_statut_bar(a_suivre: 1, tous_les_dossiers: 1)
     assert_performed_jobs 1
 
+    click_on "Télécharger tous les dossiers"
+    within(:css, '.procedure-actions') do
+      click_on "Demander un export au format .xlsx"
+    end
+    expect(page).to have_text('Nous générons cet export.')
+    expect(page).to have_text('Un export au format .xlsx est en train d’être généré')
+
+    click_on "Télécharger tous les dossiers"
+    click_on "Demander un export des 30 derniers jours au format .xlsx"
+    expect(page).to have_text('Nous générons cet export.')
+    expect(page).to have_text('Un export des 30 derniers jours au format .xlsx est en train d’être généré')
+
     click_on "Télécharger un dossier"
     within(:css, '.dossiers-export') do
       click_on "Demander un export au format .csv"
@@ -124,11 +136,17 @@ describe 'Instructing a dossier:', js: true do
     expect(page).to have_text('Un export au format .csv est en train d’être généré')
 
     perform_enqueued_jobs(only: ExportJob)
-    assert_performed_jobs 2
+    assert_performed_jobs 4
     page.driver.browser.navigate.refresh
 
+    click_on "Télécharger tous les dossiers"
+    expect(page).to have_text('Télécharger l’export au format .xlsx')
+    expect(page).to have_text('Télécharger l’export des 30 derniers jours au format .xlsx')
+    # close dropdown menu
+    click_on "Télécharger tous les dossiers"
+
     click_on "Télécharger un dossier"
-    expect(page).to have_text('Télécharger l’export au format .csv')
+    expect(page).to have_text('Télécharger l’export au format .xlsx')
   end
 
   scenario 'A instructeur can see the personnes impliquées' do

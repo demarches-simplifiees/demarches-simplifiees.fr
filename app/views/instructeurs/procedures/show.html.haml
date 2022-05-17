@@ -10,6 +10,8 @@
       = render partial: 'header', locals: { procedure: @procedure, statut: @statut }
 
       .procedure-actions
+        - if @can_download_dossiers
+          = render partial: "download_dossiers", locals: { procedure: @procedure, exports: @exports }
 
     .container.flex= render partial: "tabs", locals: { procedure: @procedure,
         statut: @statut,
@@ -32,7 +34,7 @@
         = t('views.instructeurs.dossiers.tab_explainations.suivis')
     - if @statut == 'traites'
       %p.explication-onglet
-        = t('views.instructeurs.dossiers.tab_explainations.traites_html', archives_path: instructeur_archives_path(@procedure))
+        = t('views.instructeurs.dossiers.tab_explainations.traites')
     - if @statut == 'tous'
       %p.explication-onglet
         = t('views.instructeurs.dossiers.tab_explainations.tous')
