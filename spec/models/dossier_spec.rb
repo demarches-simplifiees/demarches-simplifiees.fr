@@ -1602,9 +1602,43 @@ describe Dossier do
           dossier.reload
         end
 
+        it 'should be true' do
+          expect(dossier.pending_changes).not_to be_empty
+          expect(dossier.can_rebase?).to be_truthy
+        end
+      end
+
+      context 'with added type de champ (mandatory)' do
+        before do
+          procedure.draft_revision.add_type_de_champ({
+            type_champ: TypeDeChamp.type_champs.fetch(:text),
+            libelle: "Un champ text",
+            mandatory: true
+          })
+          procedure.publish_revision!
+          dossier.reload
+        end
+
         it 'should be false' do
           expect(dossier.pending_changes).not_to be_empty
           expect(dossier.can_rebase?).to be_falsey
+        end
+      end
+
+      context 'with added type de champ (private)' do
+        before do
+          procedure.draft_revision.add_type_de_champ({
+            type_champ: TypeDeChamp.type_champs.fetch(:text),
+            libelle: "Un champ text",
+            private: true
+          })
+          procedure.publish_revision!
+          dossier.reload
+        end
+
+        it 'should be true' do
+          expect(dossier.pending_changes).not_to be_empty
+          expect(dossier.can_rebase?).to be_truthy
         end
       end
 
@@ -1680,9 +1714,9 @@ describe Dossier do
           dossier.reload
         end
 
-        it 'should be false' do
+        it 'should be true' do
           expect(dossier.pending_changes).not_to be_empty
-          expect(dossier.can_rebase?).to be_falsey
+          expect(dossier.can_rebase?).to be_truthy
         end
       end
 
@@ -1693,9 +1727,9 @@ describe Dossier do
           dossier.reload
         end
 
-        it 'should be false' do
+        it 'should be true' do
           expect(dossier.pending_changes).not_to be_empty
-          expect(dossier.can_rebase?).to be_falsey
+          expect(dossier.can_rebase?).to be_truthy
         end
       end
 
@@ -1719,9 +1753,9 @@ describe Dossier do
           dossier.reload
         end
 
-        it 'should be false' do
+        it 'should be true' do
           expect(dossier.pending_changes).not_to be_empty
-          expect(dossier.can_rebase?).to be_falsey
+          expect(dossier.can_rebase?).to be_truthy
         end
       end
     end

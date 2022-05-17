@@ -88,6 +88,15 @@ class Champ < ApplicationRecord
     value.blank?
   end
 
+  # linter prevents us from having !blank? so we alias it as empty?
+  def empty?
+    blank?
+  end
+
+  def filled?
+    !empty?
+  end
+
   def search_terms
     [to_s]
   end

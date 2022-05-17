@@ -29,24 +29,40 @@ module DossierRebaseConcern
   end
 
   def accepted_en_construction_change?(change)
-    if change[:model] == :attestation_template || change[:op] == :move || change[:op] == :remove
-      true
-    elsif change[:op] == :update
-      case change[:attribute]
-      when :carte_layers
-        true
-      when :mandatory
-        change[:from] && !change[:to]
-      else
-        false
-      end
-    else
-      false
-    end
+    accepted_change?(change)
   end
 
   def accepted_en_instruction_change?(change)
-    change[:model] == :attestation_template
+    accepted_change?(change)
+  end
+
+  def accepted_change?(change)
+    if change[:model] == :type_de_champ && change[:private]
+      true
+    elsif change[:op] == :update
+      case change[:attribute]
+      when :drop_down_options
+        drop_down_options_safe_change?(change)
+      when :mandatory
+        change[:from] && !change[:to]
+      when :type_champ
+        false
+      else
+        true
+      end
+    elsif change[:op] == :add
+      if change[:model] == :attestation_template
+        true
+      else
+        !change[:mandatory]
+      end
+    else
+      true
+    end
+  end
+
+  def drop_down_options_safe_change?(change)
+    (change[:from] - change[:to]).empty?
   end
 
   def rebase
@@ -79,21 +95,28 @@ module DossierRebaseConcern
           case change[:attribute]
           when :type_champ
             update[:type] = "Champs::#{change[:to].classify}Champ"
-            update[:value] = nil
-            update[:external_id] = nil
-            update[:data] = nil
-            geo_areas_to_delete += champ.geo_areas
-            if champ.piece_justificative_file.attached?
-              attachments_to_purge << champ.piece_justificative_file
+            if champ.filled?
+              update[:value] = nil
+              update[:value_json] = nil
+              update[:external_id] = nil
+              update[:data] = nil
+              geo_areas_to_delete += champ.geo_areas
+              if champ.piece_justificative_file.attached?
+                attachments_to_purge << champ.piece_justificative_file
+              end
             end
           when :drop_down_options
-            update[:value] = nil
+            if !drop_down_options_safe_change?(change) && champ.filled?
+              update[:value] = nil
+            end
           when :carte_layers
             if change[:from].include?(:cadastres) && !change[:to].include?(:cadastres)
               geo_areas_to_delete += champ.cadastres
             end
           end
-          update[:rebased_at] = Time.zone.now
+          if !champ.private?
+            update[:rebased_at] = Time.zone.now
+          end
         end
       end
     end
@@ -109,11 +132,17 @@ module DossierRebaseConcern
         champ_repetition.champs.map(&:row).uniq.each do |row|
           champ = published_type_de_champ.champ.build(row: row)
           champ_repetition.champs << champ
+          if !champ_repetition.private?
+            champ.update_column(:rebased_at, Time.zone.now)
+          end
         end
       end
     else
       champ = published_type_de_champ.build_champ(revision: procedure.published_revision)
       self.champs << champ
+      if !champ.private?
+        champ.update_column(:rebased_at, Time.zone.now)
+      end
     end
   end
 
@@ -141,9 +170,7 @@ module DossierRebaseConcern
 
   def flattened_all_types_de_champ(published: false)
     revision = published ? procedure.published_revision : self.revision
-    types_de_champ = revision.types_de_champ_public + revision.types_de_champ_private
-    (types_de_champ + types_de_champ.filter(&:repetition?).flat_map(&:types_de_champ))
-      .index_by(&:stable_id)
+    revision.types_de_champ.index_by(&:stable_id)
   end
 
   def flattened_all_champs

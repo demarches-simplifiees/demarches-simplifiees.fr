@@ -889,6 +889,8 @@ class Dossier < ApplicationRecord
       .processed_at
     save!
     log_dossier_operation(instructeur, :repasser_en_construction)
+
+    rebase!
   end
 
   def after_repasser_en_instruction(h)

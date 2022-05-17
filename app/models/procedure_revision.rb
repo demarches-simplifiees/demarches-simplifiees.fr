@@ -256,11 +256,26 @@ class ProcedureRevision < ApplicationRecord
       to_sids = to_h.keys
 
       removed = (from_sids - to_sids).map do |sid|
-        { model: :type_de_champ, op: :remove, label: from_h[sid].libelle, private: from_h[sid].private?, position: from_sids.index(sid), stable_id: sid }
+        {
+          model: :type_de_champ,
+          op: :remove,
+          label: from_h[sid].libelle,
+          private: from_h[sid].private?,
+          position: from_sids.index(sid),
+          stable_id: sid
+        }
       end
 
       added = (to_sids - from_sids).map do |sid|
-        { model: :type_de_champ, op: :add, label: to_h[sid].libelle, private: to_h[sid].private?, position: to_sids.index(sid), stable_id: sid }
+        {
+          model: :type_de_champ,
+          op: :add,
+          label: to_h[sid].libelle,
+          mandatory: to_h[sid].mandatory?,
+          private: to_h[sid].private?,
+          position: to_sids.index(sid),
+          stable_id: sid
+        }
       end
 
       kept = from_sids.intersection(to_sids)

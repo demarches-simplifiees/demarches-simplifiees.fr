@@ -320,6 +320,7 @@ describe ProcedureRevision do
             op: :add,
             label: "Un champ text",
             private: false,
+            mandatory: false,
             stable_id: new_tdc.stable_id
           }
         ])
