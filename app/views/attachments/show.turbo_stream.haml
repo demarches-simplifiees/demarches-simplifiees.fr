@@ -1,0 +1,2 @@
+= turbo_stream.replace dom_id(@attachment, :show) do
+  = render Attachment::ShowComponent.new(attachment: @attachment, user_can_upload: @user_can_upload)
