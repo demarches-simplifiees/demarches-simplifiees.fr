@@ -1,5 +1,5 @@
 class Dossiers::ExportComponent < ApplicationComponent
-  def initialize(procedure:, exports:, statut:, count:)
+  def initialize(procedure:, exports:, statut: nil, count: nil)
     @procedure = procedure
     @exports = exports
     @statut = statut
