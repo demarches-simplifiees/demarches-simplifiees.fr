@@ -1,7 +1,8 @@
 class TypesDeChamp::RepetitionTypeDeChamp < TypesDeChamp::TypeDeChampBase
-  def build_champ
+  def build_champ(params)
+    revision = params[:revision]
     champ = super
-    champ.add_row
+    champ.add_row(revision)
     champ
   end
 
