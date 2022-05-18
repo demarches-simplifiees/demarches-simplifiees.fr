@@ -1481,7 +1481,7 @@ describe Dossier do
 
           dossier_test = create(:dossier, procedure: proc_test)
           repetition = proc_test.types_de_champ_for_procedure_presentation.repetition.first
-          type_champs = repetition.types_de_champ_for_revision(proc_test.active_revision).to_a
+          type_champs = proc_test.types_de_champ_for_procedure_presentation(repetition).to_a
           expect(type_champs.size).to eq(1)
           expect(Dossier.champs_for_export(dossier.champs, type_champs).size).to eq(2)
         end

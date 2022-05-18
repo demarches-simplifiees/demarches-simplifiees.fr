@@ -304,23 +304,6 @@ class TypeDeChamp < ApplicationRecord
     options.slice(*TypesDeChamp::CarteTypeDeChamp::LAYERS)
   end
 
-  def types_de_champ_for_revision(revision)
-    if revision.draft?
-      # if we are asking for children on a draft revision, just use current child types_de_champ
-      revision.children_of(self).fillable
-    else
-      # otherwise return all types_de_champ in their latest state
-      types_de_champ = TypeDeChamp
-        .fillable
-        .joins(parent: :revision_types_de_champ)
-        .where(parent: { stable_id: stable_id }, revision_types_de_champ: { revision_id: revision })
-
-      TypeDeChamp
-        .where(id: types_de_champ.group(:stable_id).select('MAX(types_de_champ.id)'))
-        .order(:order_place, id: :desc)
-    end
-  end
-
   FEATURE_FLAGS = {}
 
   def self.type_de_champ_types_for(procedure, user)
