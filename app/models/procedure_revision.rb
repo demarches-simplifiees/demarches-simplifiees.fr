@@ -44,6 +44,7 @@ class ProcedureRevision < ApplicationRecord
     coordinate = {}
 
     if parent_stable_id.present?
+      # Ensure that if this is a child, it's parent is cloned to the new revision
       clone_parent_to_draft_revision(parent_stable_id)
 
       parent_coordinate, parent = coordinate_and_tdc(parent_stable_id)
@@ -72,14 +73,15 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def find_or_clone_type_de_champ(stable_id)
-    type_de_champ = types_de_champ.find_by!(stable_id: stable_id)
+    # Ensure that if this is a child, it's parent is cloned to the new revision
+    clone_parent_to_draft_revision(stable_id)
 
-    if type_de_champ.only_present_on_draft?
-      type_de_champ
-    elsif type_de_champ.parent.present?
-      find_or_clone_type_de_champ(type_de_champ.parent.stable_id).types_de_champ.find_by!(stable_id: stable_id)
+    coordinate, tdc = coordinate_and_tdc(stable_id)
+
+    if tdc.only_present_on_draft?
+      tdc
     else
-      revise_type_de_champ(type_de_champ)
+      revise_type_de_champ(coordinate)
     end
   end
 
@@ -413,21 +415,27 @@ class ProcedureRevision < ApplicationRecord
     changes
   end
 
-  def revise_type_de_champ(type_de_champ)
-    revision_type_de_champ = revision_types_de_champ.find_by!(type_de_champ: type_de_champ)
-    cloned_type_de_champ = type_de_champ.deep_clone(include: [:types_de_champ]) do |original, kopy|
+  def revise_type_de_champ(coordinate)
+    cloned_type_de_champ = coordinate.type_de_champ.deep_clone(include: [:types_de_champ]) do |original, kopy|
       PiecesJustificativesService.clone_attachments(original, kopy)
     end
-    revision_type_de_champ.update!(type_de_champ: cloned_type_de_champ)
-    cloned_type_de_champ.types_de_champ.each(&:migrate_parent!)
+    cloned_child_types_de_champ = cloned_type_de_champ.types_de_champ
+    coordinate.update!(type_de_champ: cloned_type_de_champ)
+
+    # sync old and new system
+    revision_types_de_champ.where(parent: coordinate).find_each do |coordinate|
+      cloned_child_type_de_champ = cloned_child_types_de_champ.find { |tdc| tdc.stable_id == coordinate.type_de_champ.stable_id }
+      coordinate.update!(type_de_champ: cloned_child_type_de_champ)
+    end
+
     cloned_type_de_champ
   end
 
   def clone_parent_to_draft_revision(stable_id)
-    type_de_champ = types_de_champ.find_by!(stable_id: stable_id)
+    coordinate, tdc = coordinate_and_tdc(stable_id)
 
-    if type_de_champ.parent_id.present? && type_de_champ.only_present_on_draft?
-      find_or_clone_type_de_champ(type_de_champ.parent.stable_id)
+    if coordinate.child? && !tdc.only_present_on_draft?
+      revise_type_de_champ(coordinate.parent)
     end
   end
 end

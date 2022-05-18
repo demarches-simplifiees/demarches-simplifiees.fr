@@ -26,6 +26,10 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
     type_de_champ.private?
   end
 
+  def child?
+    parent_id.present?
+  end
+
   def siblings
     if parent_id.present?
       revision.revision_types_de_champ.where(parent_id: parent_id).ordered
