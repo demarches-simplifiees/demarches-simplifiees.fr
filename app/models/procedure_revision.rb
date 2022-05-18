@@ -39,15 +39,36 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def add_type_de_champ(params)
-    if params[:parent_id]
-      find_or_clone_type_de_champ(params.delete(:parent_id))
-        .types_de_champ
-        .tap do |types_de_champ|
-          params[:order_place] = types_de_champ.present? ? types_de_champ.last.order_place + 1 : 0
-        end.create(params).migrate_parent!
+    parent_stable_id = params[:parent_id]
+
+    coordinate = {}
+
+    if parent_stable_id.present?
+      clone_parent_to_draft_revision(parent_stable_id)
+
+      parent_coordinate, parent = coordinate_and_tdc(parent_stable_id)
+
+      coordinate[:parent_id] = parent_coordinate.id
+      coordinate[:position] = children_of(parent).count
+
+      # old system
+      params[:order_place] = coordinate[:position]
+      params[:parent_id] = parent.id
+    elsif params[:private]
+      coordinate[:position] = revision_types_de_champ_private.count
     else
-      types_de_champ.create(params)
+      coordinate[:position] = revision_types_de_champ_public.count
     end
+
+    tdc = TypeDeChamp.new(params)
+    if tdc.save
+      coordinate[:type_de_champ] = tdc
+      revision_types_de_champ.create!(coordinate)
+    end
+
+    tdc
+  rescue => e
+    TypeDeChamp.new.tap { |tdc| tdc.errors.add(:base, e.message) }
   end
 
   def find_or_clone_type_de_champ(stable_id)
@@ -66,9 +87,7 @@ class ProcedureRevision < ApplicationRecord
     # Ensure that if this is a child, it's parent is cloned to the new revision
     clone_parent_to_draft_revision(stable_id)
 
-    coordinate = revision_types_de_champ
-      .joins(:type_de_champ)
-      .find_by(type_de_champ: { stable_id: stable_id })
+    coordinate, _ = coordinate_and_tdc(stable_id)
 
     siblings = coordinate.siblings.to_a
 
@@ -81,11 +100,7 @@ class ProcedureRevision < ApplicationRecord
     # Ensure that if this is a child, it's parent is cloned to the new revision
     clone_parent_to_draft_revision(stable_id)
 
-    coordinate = revision_types_de_champ
-      .joins(:type_de_champ)
-      .find_by(type_de_champ: { stable_id: stable_id })
-
-    tdc = coordinate.type_de_champ
+    coordinate, tdc = coordinate_and_tdc(stable_id)
 
     coordinate.destroy
 
@@ -148,6 +163,14 @@ class ProcedureRevision < ApplicationRecord
   end
 
   private
+
+  def coordinate_and_tdc(stable_id)
+    coordinate = revision_types_de_champ
+      .joins(:type_de_champ)
+      .find_by(type_de_champ: { stable_id: stable_id })
+
+    [coordinate, coordinate.type_de_champ]
+  end
 
   def reorder(siblings)
     siblings.to_a.compact.each.with_index do |sibling, position|
