@@ -3,7 +3,7 @@ import Rails from '@rails/ujs';
 import * as ActiveStorage from '@rails/activestorage';
 import 'whatwg-fetch'; // window.fetch polyfill
 import { Application } from '@hotwired/stimulus';
-import { Turbo } from '@hotwired/turbo-rails';
+import * as Turbo from '@hotwired/turbo';
 
 import '../shared/activestorage/ujs';
 import '../shared/remote-poller';

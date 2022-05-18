@@ -314,6 +314,7 @@ ActiveRecord::Schema.define(version: 2022_04_25_140107) do
     t.datetime "en_construction_close_to_expiration_notice_sent_at"
     t.interval "en_construction_conservation_extension", default: "PT0S"
     t.datetime "en_instruction_at"
+    t.boolean "for_procedure_preview", default: false
     t.bigint "groupe_instructeur_id"
     t.datetime "groupe_instructeur_updated_at"
     t.datetime "hidden_at"

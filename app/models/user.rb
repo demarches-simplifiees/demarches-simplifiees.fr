@@ -44,7 +44,7 @@ class User < ApplicationRecord
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable, :async,
+  devise :database_authenticatable, :registerable,
     :recoverable, :rememberable, :trackable, :validatable, :confirmable, :lockable
 
   self.ignored_columns = [:administrateur_id, :instructeur_id, :expert_id]
@@ -263,6 +263,10 @@ class User < ApplicationRecord
     else
       return false
     end
+  end
+
+  def send_devise_notification(notification, *args)
+    devise_mailer.send(notification, self, *args).deliver_later
   end
 
   private

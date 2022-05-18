@@ -132,6 +132,19 @@ class ProcedureRevision < ApplicationRecord
     )
   end
 
+  def dossier_for_preview(user)
+    dossier = Dossier
+      .create_with(groupe_instructeur: procedure.defaut_groupe_instructeur_for_new_dossier)
+      .find_or_initialize_by(revision: self, user: user, for_procedure_preview: true, state: Dossier.states.fetch(:brouillon))
+
+    if dossier.new_record?
+      dossier.build_default_individual
+      dossier.save!
+    end
+
+    dossier
+  end
+
   private
 
   def compare_attestation_template(from_at, to_at)

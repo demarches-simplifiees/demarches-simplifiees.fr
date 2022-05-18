@@ -90,8 +90,8 @@ module Users
 
     def generate_empty_pdf(revision)
       @dossier = revision.new_dossier
-      s = render_to_string(template: 'dossiers/dossier_vide', formats: [:pdf])
-      send_data(s, :filename => "#{revision.procedure.libelle}.pdf")
+      data = render_to_string(template: 'dossiers/dossier_vide', formats: [:pdf])
+      send_data(data, filename: "#{revision.procedure.libelle}.pdf")
     end
   end
 end

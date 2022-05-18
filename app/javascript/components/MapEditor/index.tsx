@@ -16,19 +16,17 @@ import { FlashMessage } from '../shared/FlashMessage';
 export default function MapEditor({
   featureCollection: initialFeatureCollection,
   url,
-  options,
-  preview
+  options
 }: {
   featureCollection: FeatureCollection;
   url: string;
-  preview: boolean;
   options: { layers: string[] };
 }) {
   const [cadastreEnabled, setCadastreEnabled] = useState(false);
 
   const { featureCollection, error, ...actions } = useFeatureCollection(
     initialFeatureCollection,
-    { url, enabled: !preview }
+    { url }
   );
 
   return (
@@ -54,14 +52,14 @@ export default function MapEditor({
         <DrawLayer
           featureCollection={featureCollection}
           {...actions}
-          enabled={!preview && !cadastreEnabled}
+          enabled={!cadastreEnabled}
         />
         {options.layers.includes('cadastres') ? (
           <>
             <CadastreLayer
               featureCollection={featureCollection}
               {...actions}
-              enabled={!preview && cadastreEnabled}
+              enabled={cadastreEnabled}
             />
             <div className="cadastres-selection-control mapboxgl-ctrl-group">
               <button
