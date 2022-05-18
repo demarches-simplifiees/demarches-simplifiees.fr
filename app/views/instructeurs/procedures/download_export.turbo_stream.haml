@@ -1,0 +1,7 @@
+- if @can_download_dossiers
+  - if @statut.nil?
+    = turbo_stream.update_all '.procedure-actions' do
+      = render Dossiers::ExportComponent.new(procedure: @procedure, exports: @exports)
+  - else
+    = turbo_stream.update_all '.dossiers-export' do
+      = render Dossiers::ExportComponent.new(procedure: @procedure, exports: @exports, statut: @statut, count: @dossiers_count)
