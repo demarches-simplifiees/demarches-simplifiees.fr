@@ -52,112 +52,134 @@ module DossierRebaseConcern
   def rebase
     attachments_to_purge = []
     geo_areas_to_delete = []
-    changes_by_type_de_champ = pending_changes
+    champs_to_delete = []
+
+    # revision we are rebasing to
+    target_revision = procedure.published_revision
+
+    # group changes by stable_id
+    changes_by_stable_id = pending_changes
       .filter { |change| change[:model] == :type_de_champ }
       .group_by { |change| change[:stable_id] }
 
-    changes_by_type_de_champ.each do |stable_id, changes|
-      type_de_champ = find_type_de_champ_by_stable_id(stable_id)
-      published_type_de_champ = find_type_de_champ_by_stable_id(stable_id, published: true)
+    # group current revision types de champ by stable_id
+    current_types_de_champ_by_stable_id = revision.types_de_champ.index_by(&:stable_id)
+
+    # group published types de champ coordinates by stable_id
+    published_coordinates_by_stable_id = target_revision
+      .revision_types_de_champ
+      .includes(:type_de_champ, :parent)
+      .index_by(&:stable_id)
+
+    # add and remove champs
+    changes_by_stable_id.each do |stable_id, changes|
+      type_de_champ = current_types_de_champ_by_stable_id[stable_id]
+      published_coordinate = published_coordinates_by_stable_id[stable_id]
 
       changes.each do |change|
         case change[:op]
         when :add
-          add_new_champs_for_revision(published_type_de_champ)
+          add_new_champs_for_revision(published_coordinate)
         when :remove
           delete_champs_for_revision(type_de_champ)
         end
       end
     end
 
-    flattened_all_champs.each do |champ|
-      changes_by_stable_id = (changes_by_type_de_champ[champ.stable_id] || [])
-        .filter { |change| change[:op] == :update }
+    # find all champs with respective update changes and the published type de champ
+    champs_with_changes = Champ.where(dossier: self).includes(:type_de_champ).filter_map do |champ|
+      # type de champ from published revision
+      type_de_champ = published_coordinates_by_stable_id[champ.stable_id]&.type_de_champ
+      # only update op changes
+      changes = (changes_by_stable_id[champ.stable_id] || []).filter { |change| change[:op] == :update }
 
-      update_champ_for_revision(champ) do |update|
-        changes_by_stable_id.each do |change|
-          case change[:attribute]
-          when :type_champ
-            update[:type] = "Champs::#{change[:to].classify}Champ"
-            update[:value] = nil
-            update[:external_id] = nil
-            update[:data] = nil
-            geo_areas_to_delete += champ.geo_areas
-            if champ.piece_justificative_file.attached?
-              attachments_to_purge << champ.piece_justificative_file
-            end
-          when :drop_down_options
-            update[:value] = nil
-          when :carte_layers
-            if change[:from].include?(:cadastres) && !change[:to].include?(:cadastres)
-              geo_areas_to_delete += champ.cadastres
-            end
-          end
-          update[:rebased_at] = Time.zone.now
-        end
+      if type_de_champ
+        [champ, type_de_champ, changes]
       end
     end
 
-    self.update_column(:revision_id, procedure.published_revision_id)
+    # apply changes to existing champs and reset values when needed
+    update_champs_for_revision(champs_with_changes) do |champ, change, update|
+      case change[:attribute]
+      when :type_champ
+        update[:type] = "Champs::#{change[:to].classify}Champ"
+        update[:value] = nil
+        update[:external_id] = nil
+        update[:data] = nil
+        geo_areas_to_delete += champ.geo_areas
+        champs_to_delete += champ.champs
+        if champ.piece_justificative_file.attached?
+          attachments_to_purge << champ.piece_justificative_file
+        end
+      when :drop_down_options
+        update[:value] = nil
+      when :carte_layers
+        # if we are removing cadastres layer, we need to remove cadastre geo areas
+        if change[:from].include?(:cadastres) && !change[:to].include?(:cadastres)
+          geo_areas_to_delete += champ.cadastres
+        end
+      end
+      update[:rebased_at] = Time.zone.now
+    end
+
+    # update dossier revision
+    self.update_column(:revision_id, target_revision.id)
+
+    # clear orphaned data
     attachments_to_purge.each(&:purge_later)
     geo_areas_to_delete.each(&:destroy)
+    champs_to_delete.each(&:destroy)
   end
 
-  def add_new_champs_for_revision(published_type_de_champ)
-    if published_type_de_champ.parent
-      find_champs_by_stable_id(published_type_de_champ.parent.stable_id).each do |champ_repetition|
+  def add_new_champs_for_revision(published_coordinate)
+    if published_coordinate.child?
+      # If this type de champ is a child, we create a new champ for each row of the parent
+      parent_stable_id = published_coordinate.parent.stable_id
+      champs_repetition = Champ
+        .includes(:champs, :type_de_champ)
+        .where(dossier: self, type_de_champ: { stable_id: parent_stable_id })
+
+      champs_repetition.each do |champ_repetition|
         champ_repetition.champs.map(&:row).uniq.each do |row|
-          champ = published_type_de_champ.champ.build(row: row)
-          champ_repetition.champs << champ
+          create_champ(published_coordinate, champ_repetition, row: row)
         end
       end
     else
-      champ = published_type_de_champ.build_champ(revision: procedure.published_revision)
-      self.champs << champ
+      create_champ(published_coordinate, self)
     end
   end
 
-  def update_champ_for_revision(champ)
-    published_type_de_champ = find_type_de_champ_by_stable_id(champ.stable_id, published: true)
-    return if !published_type_de_champ
+  def create_champ(published_coordinate, parent, row: nil)
+    params = { revision: published_coordinate.revision }
+    params[:row] = row if row
+    champ = published_coordinate
+      .type_de_champ
+      .build_champ(params)
+    parent.champs << champ
+  end
 
-    update = {}
+  def update_champs_for_revision(champs_with_changes)
+    champs_with_changes.each do |champ, type_de_champ, changes|
+      update = {}
 
-    yield update
+      changes.each do |change|
+        yield champ, change, update
+      end
 
-    if champ.type_de_champ != published_type_de_champ
-      update[:type_de_champ_id] = published_type_de_champ.id
-    end
+      # update type de champ to reflect new revision
+      if champ.type_de_champ != type_de_champ
+        update[:type_de_champ_id] = type_de_champ.id
+      end
 
-    if update.present?
-      champ.update_columns(update)
+      if update.present?
+        champ.update_columns(update)
+      end
     end
   end
 
-  def delete_champs_for_revision(published_type_de_champ)
-    Champ.where(id: find_champs_by_stable_id(published_type_de_champ.stable_id).map(&:id))
+  def delete_champs_for_revision(type_de_champ)
+    Champ
+      .where(dossier: self, type_de_champ: type_de_champ)
       .destroy_all
-  end
-
-  def flattened_all_types_de_champ(published: false)
-    revision = published ? procedure.published_revision : self.revision
-    types_de_champ = revision.types_de_champ_public + revision.types_de_champ_private
-    (types_de_champ + types_de_champ.filter(&:repetition?).flat_map(&:types_de_champ))
-      .index_by(&:stable_id)
-  end
-
-  def flattened_all_champs
-    all_champs = (champs + champs_private)
-    all_champs + all_champs.filter(&:repetition?).flat_map(&:champs)
-  end
-
-  def find_type_de_champ_by_stable_id(stable_id, published: false)
-    flattened_all_types_de_champ(published: published)[stable_id]
-  end
-
-  def find_champs_by_stable_id(stable_id)
-    flattened_all_champs.filter do |champ|
-      champ.stable_id == stable_id
-    end
   end
 end
