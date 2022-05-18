@@ -423,9 +423,11 @@ class ProcedureRevision < ApplicationRecord
     coordinate.update!(type_de_champ: cloned_type_de_champ)
 
     # sync old and new system
-    revision_types_de_champ.where(parent: coordinate).find_each do |coordinate|
-      cloned_child_type_de_champ = cloned_child_types_de_champ.find { |tdc| tdc.stable_id == coordinate.type_de_champ.stable_id }
-      coordinate.update!(type_de_champ: cloned_child_type_de_champ)
+    children_coordinates = revision_types_de_champ.where(parent: coordinate)
+
+    children_coordinates.find_each do |child_coordinate|
+      cloned_child_type_de_champ = cloned_child_types_de_champ.find { |tdc| tdc.stable_id == child_coordinate.type_de_champ.stable_id }
+      child_coordinate.update!(type_de_champ: cloned_child_type_de_champ)
     end
 
     cloned_type_de_champ
