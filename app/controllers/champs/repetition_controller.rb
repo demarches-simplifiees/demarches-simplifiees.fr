@@ -3,7 +3,7 @@ class Champs::RepetitionController < ApplicationController
 
   def add
     @champ = policy_scope(Champ).includes(:champs).find(params[:champ_id])
-    @champs = @champ.add_row
+    @champs = @champ.add_row(@champ.dossier.revision)
   end
 
   def remove
