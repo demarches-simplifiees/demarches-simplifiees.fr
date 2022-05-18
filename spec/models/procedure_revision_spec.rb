@@ -409,7 +409,7 @@ describe ProcedureRevision do
       let(:procedure) { create(:procedure, :with_repetition) }
 
       before do
-        child = new_draft.types_de_champ_public.last.types_de_champ.first
+        child = new_draft.children_of(new_draft.types_de_champ_public.last).first
         new_draft.find_or_clone_type_de_champ(child.stable_id).update(type_champ: :drop_down_list, drop_down_options: ['one', 'two'])
       end
 
