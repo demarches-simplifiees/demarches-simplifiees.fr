@@ -81,7 +81,7 @@ class ProcedureRevision < ApplicationRecord
     if tdc.only_present_on_draft?
       tdc
     else
-      revise_type_de_champ(coordinate)
+      replace_tdc_and_children_by_clones(coordinate)
     end
   end
 
@@ -415,7 +415,7 @@ class ProcedureRevision < ApplicationRecord
     changes
   end
 
-  def revise_type_de_champ(coordinate)
+  def replace_tdc_and_children_by_clones(coordinate)
     cloned_type_de_champ = coordinate.type_de_champ.deep_clone(include: [:types_de_champ]) do |original, kopy|
       PiecesJustificativesService.clone_attachments(original, kopy)
     end
@@ -437,7 +437,7 @@ class ProcedureRevision < ApplicationRecord
     coordinate, tdc = coordinate_and_tdc(stable_id)
 
     if coordinate.child? && !tdc.only_present_on_draft?
-      revise_type_de_champ(coordinate.parent)
+      replace_tdc_and_children_by_clones(coordinate.parent)
     end
   end
 end
