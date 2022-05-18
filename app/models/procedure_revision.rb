@@ -72,6 +72,7 @@ class ProcedureRevision < ApplicationRecord
     TypeDeChamp.new.tap { |tdc| tdc.errors.add(:base, e.message) }
   end
 
+  # Only called by by controller update
   def find_or_clone_type_de_champ(stable_id)
     coordinate, tdc = coordinate_and_tdc(stable_id)
 
@@ -84,6 +85,7 @@ class ProcedureRevision < ApplicationRecord
 
   def move_type_de_champ(stable_id, position)
     # Ensure that if this is a child, it's parent is cloned to the new revision
+    # Needed because the order could be based on the ancient system
     clone_parent_to_draft_revision(stable_id)
 
     coordinate, _ = coordinate_and_tdc(stable_id)
@@ -97,6 +99,7 @@ class ProcedureRevision < ApplicationRecord
 
   def remove_type_de_champ(stable_id)
     # Ensure that if this is a child, it's parent is cloned to the new revision
+    # Needed because the order could be based on the ancient system
     clone_parent_to_draft_revision(stable_id)
 
     coordinate, tdc = coordinate_and_tdc(stable_id)
