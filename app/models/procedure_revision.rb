@@ -157,9 +157,13 @@ class ProcedureRevision < ApplicationRecord
   def children_of(tdc)
     parent_revision_type_de_champ = revision_types_de_champ.find_by(type_de_champ: tdc)
 
-    types_de_champ
-      .where(procedure_revision_types_de_champ: { parent_id: parent_revision_type_de_champ.id })
-      .order("procedure_revision_types_de_champ.position")
+    if parent_revision_type_de_champ.present?
+      types_de_champ
+        .where(procedure_revision_types_de_champ: { parent_id: parent_revision_type_de_champ.id })
+        .order("procedure_revision_types_de_champ.position")
+    else
+      TypeDeChamp.none
+    end
   end
 
   private

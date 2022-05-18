@@ -433,8 +433,11 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def remove_repetition
-    if !repetition?
-      types_de_champ.destroy_all
+    if !repetition? && procedure.present?
+      procedure
+        .draft_revision # action occurs only on draft
+        .children_of(self)
+        .destroy_all
     end
   end
 end
