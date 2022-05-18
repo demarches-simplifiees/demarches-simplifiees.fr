@@ -307,7 +307,7 @@ class TypeDeChamp < ApplicationRecord
   def types_de_champ_for_revision(revision)
     if revision.draft?
       # if we are asking for children on a draft revision, just use current child types_de_champ
-      types_de_champ.fillable
+      revision.children_of(self).fillable
     else
       # otherwise return all types_de_champ in their latest state
       types_de_champ = TypeDeChamp
