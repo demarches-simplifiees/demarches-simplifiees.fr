@@ -581,6 +581,25 @@ describe Users::DossiersController, type: :controller do
         it { expect(flash.alert).to eq("Vous n’avez pas accès à ce dossier") }
       end
     end
+
+    context 'when the value contain a null char' do
+      let(:value_with_null_char) { "\0 <- the \0 is a null char" }
+      let(:submit_payload) do
+        {
+          id: dossier.id,
+          dossier: {
+            groupe_instructeur_id: dossier.groupe_instructeur_id,
+            champs_attributes: {
+              id: first_champ.id,
+              value: value_with_null_char
+            }
+          }
+        }
+      end
+      it 'works' do
+        expect { subject }.to change { first_champ.value }.to(value_with_null_char)
+      end
+    end
   end
 
   describe '#update' do
