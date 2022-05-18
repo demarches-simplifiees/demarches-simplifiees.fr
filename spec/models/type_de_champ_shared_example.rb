@@ -101,7 +101,7 @@ shared_examples 'type_de_champ_spec' do
         let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:text) }
 
         it 'removes the children types de champ' do
-          expect(tdc.types_de_champ).to be_empty
+          expect(procedure.draft_revision.children_of(tdc)).to be_empty
         end
       end
     end
