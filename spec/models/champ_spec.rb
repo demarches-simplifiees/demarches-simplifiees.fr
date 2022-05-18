@@ -509,6 +509,8 @@ describe Champ do
 
   describe 'repetition' do
     let(:procedure) { create(:procedure, :published, :with_type_de_champ, :with_type_de_champ_private, types_de_champ: [build(:type_de_champ_repetition, types_de_champ: [tdc_text, tdc_integer])]) }
+    let(:revision) { procedure.published_revision }
+    let(:rtdc_repetition) { revision.revision_types_de_champ.find { |rtdc| rtdc.type_de_champ.repetition? } }
     let(:tdc_text) { build(:type_de_champ_text) }
     let(:tdc_integer) { build(:type_de_champ_integer_number) }
 
@@ -517,6 +519,11 @@ describe Champ do
     let(:champ_text) { champ.champs.find { |c| c.type_champ == 'text' } }
     let(:champ_integer) { champ.champs.find { |c| c.type_champ == 'integer_number' } }
     let(:champ_text_attrs) { attributes_for(:champ_text, type_de_champ: tdc_text, row: 1) }
+
+    before do
+      create(:procedure_revision_type_de_champ, revision: revision, type_de_champ: tdc_text, parent: rtdc_repetition, position: 1)
+      create(:procedure_revision_type_de_champ, revision: revision, type_de_champ: tdc_integer, parent: rtdc_repetition, position: 0)
+    end
 
     context 'when creating the model directly' do
       let(:champ_text_row_1) { create(:champ_text, type_de_champ: tdc_text, row: 2, parent: champ, dossier: nil) }
@@ -546,10 +553,6 @@ describe Champ do
         second_row = champ.rows.second
         expect(second_row.size).to eq(1)
         expect(second_row.first.dossier).to eq(dossier)
-
-        # Make champs ordered
-        champ_integer.type_de_champ.update(order_place: 0)
-        champ_text.type_de_champ.update(order_place: 1)
 
         champ.champs << champ_integer
         first_row = champ.reload.rows.first
