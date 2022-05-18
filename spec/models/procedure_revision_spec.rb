@@ -300,7 +300,7 @@ describe ProcedureRevision do
     let(:first_tdc) { draft.types_de_champ_public.first }
     let(:new_draft) { procedure.create_new_revision }
 
-    subject { procedure.active_revision.compare(new_draft) }
+    subject { procedure.active_revision.compare(new_draft.reload) }
 
     context 'when a type de champ is added' do
       let(:procedure) { create(:procedure) }
