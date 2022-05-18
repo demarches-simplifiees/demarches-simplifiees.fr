@@ -1470,7 +1470,13 @@ describe Dossier do
 
       context 'within a repetition having a type de champs commune (multiple values for export)' do
         it 'works' do
-          proc_test = create(:procedure, :with_repetition_commune)
+          proc_test = create(:procedure)
+
+          draft = proc_test.draft_revision
+
+          tdc_repetition = draft.add_type_de_champ(type_champ: :repetition, libelle: "repetition")
+          draft.add_type_de_champ(type_champ: :communes, libelle: "communes", parent_id: tdc_repetition.stable_id)
+
           dossier_test = create(:dossier, procedure: proc_test)
           repetition = proc_test.types_de_champ_for_procedure_presentation.repetition.first
           type_champs = repetition.types_de_champ_for_revision(proc_test.active_revision).to_a
@@ -1734,7 +1740,7 @@ describe Dossier do
     let(:rebased_datetime_champ) { dossier.champs.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:date) } }
 
     let(:repetition_type_de_champ) { procedure.types_de_champ.find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
-    let(:repetition_text_type_de_champ) { repetition_type_de_champ.types_de_champ.find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
+    let(:repetition_text_type_de_champ) { procedure.active_revision.children_of(repetition_type_de_champ).find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
     let(:repetition_champ) { dossier.champs.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
     let(:rebased_repetition_champ) { dossier.champs.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
 
