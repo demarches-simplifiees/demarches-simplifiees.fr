@@ -73,9 +73,6 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def find_or_clone_type_de_champ(stable_id)
-    # Ensure that if this is a child, it's parent is cloned to the new revision
-    clone_parent_to_draft_revision(stable_id)
-
     coordinate, tdc = coordinate_and_tdc(stable_id)
 
     if tdc.only_present_on_draft?
