@@ -14,6 +14,7 @@
 #  en_construction_at                                 :datetime
 #  en_construction_close_to_expiration_notice_sent_at :datetime
 #  en_instruction_at                                  :datetime
+#  for_procedure_preview                              :boolean          default(FALSE)
 #  groupe_instructeur_updated_at                      :datetime
 #  hidden_at                                          :datetime
 #  hidden_by_administration_at                        :datetime
@@ -26,7 +27,6 @@
 #  last_commentaire_updated_at                        :datetime
 #  motivation                                         :text
 #  private_search_terms                               :text
-#  for_procedure_preview                              :boolean
 #  processed_at                                       :datetime
 #  search_terms                                       :text
 #  state                                              :string

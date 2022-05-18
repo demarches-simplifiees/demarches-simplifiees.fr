@@ -2,20 +2,18 @@
 #
 # Table name: types_de_champ
 #
-#  id              :integer          not null, primary key
-#  description     :text
-#  libelle         :string
-#  mandatory       :boolean          default(FALSE)
-#  migrated_parent :boolean
-#  options         :jsonb
-#  order_place     :integer
-#  private         :boolean          default(FALSE), not null
-#  type_champ      :string
-#  created_at      :datetime
-#  updated_at      :datetime
-#  parent_id       :bigint
-#  revision_id     :bigint
-#  stable_id       :bigint
+#  id          :integer          not null, primary key
+#  description :text
+#  libelle     :string
+#  mandatory   :boolean          default(FALSE)
+#  options     :jsonb
+#  order_place :integer
+#  private     :boolean          default(FALSE), not null
+#  type_champ  :string
+#  created_at  :datetime
+#  updated_at  :datetime
+#  parent_id   :bigint
+#  stable_id   :bigint
 #
 class TypeDeChamp < ApplicationRecord
   self.ignored_columns = [:migrated_parent, :revision_id]
@@ -102,10 +100,12 @@ class TypeDeChamp < ApplicationRecord
 
   has_many :champ, inverse_of: :type_de_champ, dependent: :destroy do
     def build(params = {})
+      params.delete(:revision)
       super(params.merge(proxy_association.owner.params_for_champ))
     end
 
     def create(params = {})
+      params.delete(:revision)
       super(params.merge(proxy_association.owner.params_for_champ))
     end
   end
@@ -153,8 +153,8 @@ class TypeDeChamp < ApplicationRecord
     }
   end
 
-  def build_champ
-    dynamic_type.build_champ
+  def build_champ(params)
+    dynamic_type.build_champ(params)
   end
 
   def check_mandatory
@@ -307,7 +307,7 @@ class TypeDeChamp < ApplicationRecord
   def types_de_champ_for_revision(revision)
     if revision.draft?
       # if we are asking for children on a draft revision, just use current child types_de_champ
-      types_de_champ.fillable
+      revision.children_of(self).fillable
     else
       # otherwise return all types_de_champ in their latest state
       types_de_champ = TypeDeChamp
@@ -433,8 +433,11 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def remove_repetition
-    if !repetition?
-      types_de_champ.destroy_all
+    if !repetition? && procedure.present?
+      procedure
+        .draft_revision # action occurs only on draft
+        .children_of(self)
+        .destroy_all
     end
   end
 end
