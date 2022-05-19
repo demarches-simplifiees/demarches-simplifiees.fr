@@ -73,9 +73,9 @@ class Procedure < ApplicationRecord
   belongs_to :published_revision, class_name: 'ProcedureRevision', optional: true
   has_many :deleted_dossiers, dependent: :destroy
 
-  has_many :published_types_de_champ, through: :published_revision, source: :types_de_champ
+  has_many :published_types_de_champ, through: :published_revision, source: :types_de_champ_public
   has_many :published_types_de_champ_private, through: :published_revision, source: :types_de_champ_private
-  has_many :draft_types_de_champ, through: :draft_revision, source: :types_de_champ
+  has_many :draft_types_de_champ, through: :draft_revision, source: :types_de_champ_public
   has_many :draft_types_de_champ_private, through: :draft_revision, source: :types_de_champ_private
   has_one :draft_attestation_template, through: :draft_revision, source: :attestation_template
   has_one :published_attestation_template, through: :published_revision, source: :attestation_template
@@ -220,11 +220,11 @@ class Procedure < ApplicationRecord
       :module_api_carto,
       published_revision: [
         :types_de_champ_private,
-        :types_de_champ
+        :types_de_champ_public
       ],
       draft_revision: [
         :types_de_champ_private,
-        :types_de_champ
+        :types_de_champ_public
       ]
     )
   }
@@ -446,7 +446,7 @@ class Procedure < ApplicationRecord
     populate_champ_stable_ids
     include_list = {
       draft_revision: {
-        revision_types_de_champ: {
+        revision_types_de_champ_public: {
           type_de_champ: :types_de_champ
         },
         revision_types_de_champ_private: {
@@ -716,7 +716,7 @@ class Procedure < ApplicationRecord
 
   def create_new_revision
     draft_revision
-      .deep_clone(include: [:revision_types_de_champ, :revision_types_de_champ_private])
+      .deep_clone(include: [:revision_types_de_champ_public, :revision_types_de_champ_private])
       .tap(&:save!)
   end
 
