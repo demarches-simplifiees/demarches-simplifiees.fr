@@ -14,6 +14,7 @@
 #  en_construction_at                                 :datetime
 #  en_construction_close_to_expiration_notice_sent_at :datetime
 #  en_instruction_at                                  :datetime
+#  for_procedure_preview                              :boolean          default(FALSE)
 #  groupe_instructeur_updated_at                      :datetime
 #  hidden_at                                          :datetime
 #  hidden_by_administration_at                        :datetime
@@ -206,13 +207,14 @@ class Dossier < ApplicationRecord
   scope :not_archived,  -> { where(archived: false) }
   scope :hidden_by_user, -> { where.not(hidden_by_user_at: nil) }
   scope :hidden_by_administration, -> { where.not(hidden_by_administration_at: nil) }
-  scope :visible_by_user, -> { where(hidden_by_user_at: nil) }
+  scope :visible_by_user, -> { where(for_procedure_preview: false).or(where(for_procedure_preview: nil)).where(hidden_by_user_at: nil) }
   scope :visible_by_administration, -> {
     state_not_brouillon
       .where(hidden_by_administration_at: nil)
       .merge(visible_by_user.or(state_not_en_construction))
   }
   scope :visible_by_user_or_administration, -> { visible_by_user.or(visible_by_administration) }
+  scope :for_procedure_preview, -> { where(for_procedure_preview: true) }
 
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
   scope :order_by_created_at, -> (order = :asc) { order(depose_at: order, created_at: order, id: order) }
@@ -543,7 +545,7 @@ class Dossier < ApplicationRecord
   end
 
   def can_transition_to_en_construction?
-    brouillon? && procedure.dossier_can_transition_to_en_construction?
+    brouillon? && procedure.dossier_can_transition_to_en_construction? && !for_procedure_preview?
   end
 
   def can_repasser_en_instruction?
@@ -1254,7 +1256,7 @@ class Dossier < ApplicationRecord
   end
 
   def send_draft_notification_email
-    if brouillon? && !procedure.declarative?
+    if brouillon? && !procedure.declarative? && !for_procedure_preview?
       DossierMailer.notify_new_draft(self).deliver_later
     end
   end

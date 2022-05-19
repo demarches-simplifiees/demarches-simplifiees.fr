@@ -45,11 +45,9 @@ class Champs::SiretController < ApplicationController
   end
 
   def find_etablisement
-    if params[:champ_id].present?
-      @champ = policy_scope(Champ).find(params[:champ_id])
-      @etablissement = @champ&.etablissement
-    end
-    @procedure_id = @champ&.dossier&.procedure&.id || 'aperçu'
+    @champ = policy_scope(Champ).find(params[:champ_id])
+    @etablissement = @champ.etablissement
+    @procedure_id = @champ.dossier.procedure.id
   end
 
   def find_etablissement_with_siret
@@ -57,7 +55,7 @@ class Champs::SiretController < ApplicationController
   end
 
   def clear_siret_and_etablissement
-    @champ&.update!(value: '')
+    @champ.update!(value: '')
     @etablissement&.destroy
   end
 

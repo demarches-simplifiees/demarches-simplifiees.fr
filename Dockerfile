@@ -1,4 +1,4 @@
-FROM ruby:3.0.3-slim AS base
+FROM ruby:3.1.2-slim AS base
 
 #------------ intermediate container with specific dev tools
 FROM base AS builder
@@ -11,8 +11,9 @@ RUN apt-get update && apt-get install -y \
 
 ENV INSTALL_PATH /app
 RUN mkdir -p ${INSTALL_PATH}
-COPY Gemfile Gemfile.lock package.json yarn.lock  ${INSTALL_PATH}/
 WORKDIR ${INSTALL_PATH}
+COPY Gemfile Gemfile.lock package.json yarn.lock  ./
+COPY patches ./patches/
 
 # sassc https://github.com/sass/sassc-ruby/issues/146#issuecomment-608489863
 RUN bundle config specific_platform x86_64-linux \

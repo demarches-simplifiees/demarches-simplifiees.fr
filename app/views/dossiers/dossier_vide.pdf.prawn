@@ -185,7 +185,7 @@ prawn_document(page_size: "A4") do |pdf|
   pdf.move_down(40)
 
   render_in_2_columns(pdf, 'Démarche', @dossier.procedure.libelle)
-  render_in_2_columns(pdf, 'Organisme', @dossier.procedure.organisation_name)
+  render_in_2_columns(pdf, 'Organisme', @dossier.procedure.organisation_name || "En attente de saisi")
   pdf.text "\n"
 
   add_title(pdf, "Identité du demandeur")
