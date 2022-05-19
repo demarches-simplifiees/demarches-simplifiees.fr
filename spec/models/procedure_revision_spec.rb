@@ -275,6 +275,27 @@ describe ProcedureRevision do
     end
   end
 
+  describe '#update_type_de_champ' do
+    let(:procedure) { create(:procedure, :with_repetition) }
+    let(:last_coordinate) { draft.revision_types_de_champ.last }
+    let(:last_type_de_champ) { last_coordinate.type_de_champ }
+
+    context 'bug with duplicated repetition child' do
+      before do
+        procedure.publish!
+        procedure.reload
+        draft.find_or_clone_type_de_champ(last_type_de_champ.stable_id).update(libelle: 'new libelle')
+        procedure.reload
+        draft.reload
+      end
+
+      it do
+        expect(procedure.revisions.size).to eq(2)
+        expect(draft.revision_types_de_champ.where.not(parent_id: nil).size).to eq(1)
+      end
+    end
+  end
+
   describe '#compare' do
     let(:first_tdc) { draft.types_de_champ_public.first }
     let(:new_draft) { procedure.create_new_revision }
