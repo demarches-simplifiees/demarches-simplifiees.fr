@@ -18,9 +18,9 @@ class ProcedureRevision < ApplicationRecord
 
   has_many :dossiers, inverse_of: :revision, foreign_key: :revision_id
 
-  has_many :revision_types_de_champ, -> { root.public_only.ordered }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
+  has_many :revision_types_de_champ_public, -> { root.public_only.ordered }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
   has_many :revision_types_de_champ_private, -> { root.private_only.ordered }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
-  has_many :types_de_champ, through: :revision_types_de_champ, source: :type_de_champ
+  has_many :types_de_champ_public, through: :revision_types_de_champ_public, source: :type_de_champ
   has_many :types_de_champ_private, through: :revision_types_de_champ_private, source: :type_de_champ
 
   has_many :owned_types_de_champ, class_name: 'TypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
@@ -30,7 +30,7 @@ class ProcedureRevision < ApplicationRecord
   scope :ordered, -> { order(:created_at) }
 
   def build_champs
-    types_de_champ.map(&:build_champ)
+    types_de_champ_public.map(&:build_champ)
   end
 
   def build_champs_private
@@ -49,7 +49,7 @@ class ProcedureRevision < ApplicationRecord
     elsif params[:private]
       types_de_champ_private.create(params)
     else
-      types_de_champ.create(params)
+      types_de_champ_public.create(params)
     end
   end
 
@@ -81,8 +81,8 @@ class ProcedureRevision < ApplicationRecord
         revision_types_de_champ_private.find_by!(type_de_champ_id: id).update!(position: position)
       end
     else
-      move_type_de_champ_hash(types_de_champ.to_a, type_de_champ, position).each do |(id, position)|
-        revision_types_de_champ.find_by!(type_de_champ_id: id).update!(position: position)
+      move_type_de_champ_hash(types_de_champ_public.to_a, type_de_champ, position).each do |(id, position)|
+        revision_types_de_champ_public.find_by!(type_de_champ_id: id).update!(position: position)
       end
     end
   end
@@ -97,7 +97,7 @@ class ProcedureRevision < ApplicationRecord
     elsif type_de_champ.private?
       types_de_champ_private.delete(type_de_champ)
     else
-      types_de_champ.delete(type_de_champ)
+      types_de_champ_public.delete(type_de_champ)
     end
   end
 
@@ -110,14 +110,14 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def different_from?(revision)
-    types_de_champ != revision.types_de_champ ||
+    types_de_champ_public != revision.types_de_champ_public ||
       types_de_champ_private != revision.types_de_champ_private ||
       attestation_template != revision.attestation_template
   end
 
   def compare(revision)
     changes = []
-    changes += compare_types_de_champ(types_de_champ, revision.types_de_champ)
+    changes += compare_types_de_champ(types_de_champ_public, revision.types_de_champ_public)
     changes += compare_types_de_champ(types_de_champ_private, revision.types_de_champ_private)
     changes += compare_attestation_template(attestation_template, revision.attestation_template)
     changes
@@ -378,7 +378,7 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def revise_type_de_champ(type_de_champ)
-    types_de_champ_association = type_de_champ.private? ? :revision_types_de_champ_private : :revision_types_de_champ
+    types_de_champ_association = type_de_champ.private? ? :revision_types_de_champ_private : :revision_types_de_champ_public
     association = send(types_de_champ_association).find_by!(type_de_champ: type_de_champ)
     cloned_type_de_champ = type_de_champ.deep_clone(include: [:types_de_champ]) do |original, kopy|
       PiecesJustificativesService.clone_attachments(original, kopy)
@@ -390,13 +390,13 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def find_type_de_champ_by_id(id)
-    types_de_champ.find_by(stable_id: id) ||
+    types_de_champ_public.find_by(stable_id: id) ||
       types_de_champ_private.find_by(stable_id: id) ||
       types_de_champ_in_repetition.find_by!(stable_id: id)
   end
 
   def types_de_champ_in_repetition
-    parent_ids = types_de_champ.repetition.ids + types_de_champ_private.repetition.ids
+    parent_ids = types_de_champ_public.repetition.ids + types_de_champ_private.repetition.ids
     TypeDeChamp.where(parent_id: parent_ids)
   end
 
