@@ -67,7 +67,7 @@ module DossierRebaseConcern
     current_types_de_champ_by_stable_id = revision.types_de_champ.index_by(&:stable_id)
 
     # index published types de champ coordinates by stable_id
-    published_coordinates_by_stable_id = target_revision
+    target_coordinates_by_stable_id = target_revision
       .revision_types_de_champ
       .includes(:type_de_champ, :parent)
       .index_by(&:stable_id)
@@ -75,7 +75,7 @@ module DossierRebaseConcern
     # add and remove champs
     changes_by_stable_id.each do |stable_id, changes|
       type_de_champ = current_types_de_champ_by_stable_id[stable_id]
-      published_coordinate = published_coordinates_by_stable_id[stable_id]
+      published_coordinate = target_coordinates_by_stable_id[stable_id]
 
       changes.each do |change|
         case change[:op]
@@ -90,7 +90,7 @@ module DossierRebaseConcern
     # find all champs with respective update changes and the published type de champ
     champs_with_changes = Champ.where(dossier: self).includes(:type_de_champ).filter_map do |champ|
       # type de champ from published revision
-      type_de_champ = published_coordinates_by_stable_id[champ.stable_id]&.type_de_champ
+      type_de_champ = target_coordinates_by_stable_id[champ.stable_id]&.type_de_champ
       # only update op changes
       changes = (changes_by_stable_id[champ.stable_id] || []).filter { |change| change[:op] == :update }
 
