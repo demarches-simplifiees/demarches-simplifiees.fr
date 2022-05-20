@@ -9,7 +9,7 @@
     pattern: "[0-9]{3,7}",
     title: "Entrez votre numéro DN",
     aria: { describedby: champ.describedby_id },
-    data: { dn: true, remote: true, debounce: true, url: champs_dn_path, spinner: true }
+    data: { dn: true, remote: true, debounce: true, url: champs_dn_path(champ.id), spinner: true }
 
   %span
     = form.label :date_de_naissance, "Date de naissance", for: "#{form_id(form)}_date_de_naissance"
@@ -19,6 +19,6 @@
     title: "Date de naissance associée au numéro DN",
     max: Date.today,
     aria: { describedby: champ.describedby_id },
-    data: { ddn: true, remote: true, debounce: true, url: champs_dn_path, spinner: true }
+    data: { ddn: true, remote: true, debounce: true, url: champs_dn_path(champ.id), spinner: true }
   .numero-dn-info
   .spinner.right.hidden
