@@ -38,7 +38,7 @@ class Champs::PieceJustificativeController < ApplicationController
       end
     else
       flash.alert = "Le document demandé n'existe pas ou vous n'avez pas l'autorisation d'y accéder."
-      redirect_to :root
+      redirect_to :root, status: :bad_request
     end
   end
 
@@ -46,16 +46,9 @@ class Champs::PieceJustificativeController < ApplicationController
 
   def find_champ
     h = params[:h]
-    if h.present?
-      champ = Champ.find(params[:champ_id])
-      champ = nil unless champ&.match_encoded_date?(:created_at, h)
-    else
-      champ = read_scope.where(id: params[:champ_id]).first
-    end
-    champ
-  end
+    return if h.blank?
 
-  def read_scope
-    policy_scope(Champ, policy_scope_class: ChampPolicy::ReadScope)
+    champ = Champ.find(params[:champ_id])
+    champ&.match_encoded_date?(:created_at, h) ? champ : nil
   end
 end
