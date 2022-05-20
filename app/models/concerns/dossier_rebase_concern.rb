@@ -58,14 +58,15 @@ module DossierRebaseConcern
     target_revision = procedure.published_revision
 
     # group changes by stable_id
+    # { 12 : [ move, update_libelle, update_mandatory ]
     changes_by_stable_id = pending_changes
       .filter { |change| change[:model] == :type_de_champ }
       .group_by { |change| change[:stable_id] }
 
-    # group current revision types de champ by stable_id
+    # index current revision types de champ by stable_id
     current_types_de_champ_by_stable_id = revision.types_de_champ.index_by(&:stable_id)
 
-    # group published types de champ coordinates by stable_id
+    # index published types de champ coordinates by stable_id
     published_coordinates_by_stable_id = target_revision
       .revision_types_de_champ
       .includes(:type_de_champ, :parent)
