@@ -163,4 +163,34 @@ describe Administrateur, type: :model do
       end
     end
   end
+
+  describe 'unused' do
+    subject { Administrateur.unused }
+
+    let(:new_admin) { create(:administrateur) }
+    let(:unused_admin) { create(:administrateur) }
+
+    before do
+      new_admin.user.update(last_sign_in_at: (6.months - 1.day).ago)
+      unused_admin.user.update(last_sign_in_at: (6.months + 1.day).ago)
+    end
+
+    it { is_expected.to match([unused_admin]) }
+
+    context 'with a hidden procedure' do
+      let(:procedure) { create(:procedure, hidden_at: 1.month.ago) }
+
+      before { unused_admin.procedures << procedure }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'with a service' do
+      let(:service) { create(:service) }
+
+      before { unused_admin.services << service }
+
+      it { is_expected.to be_empty }
+    end
+  end
 end
