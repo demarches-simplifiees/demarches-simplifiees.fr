@@ -140,6 +140,9 @@ en:
           edit_identity: "Edit identity data"
     instructeurs:
       dossiers:
+        autosave:
+          autosave_draft: Your annotations are automatically saved.
+          autosave_confirmation: Annotations saved
         tab_steps:
           to_follow: to follow
           total: total

@@ -214,7 +214,11 @@ module Instructeurs
       end
       dossier.save
       dossier.log_modifier_annotations!(current_instructeur)
-      redirect_to annotations_privees_instructeur_dossier_path(procedure, dossier)
+
+      respond_to do |format|
+        format.html { redirect_to annotations_privees_instructeur_dossier_path(procedure, dossier) }
+        format.turbo_stream
+      end
     end
 
     def print
