@@ -345,8 +345,8 @@ FactoryBot.define do
           all_instructors_but_first = evaluator.instructeurs[1..-1]
           accredited_user_string = all_instructors_but_first.map(&:email).join("\n")
         end
-        build(:type_de_champ_visa, procedure: procedure, private: true, libelle: 'visa_to_test', position: procedure.active_revision.types_de_champ.size, accredited_user_string: accredited_user_string)
-        build(:type_de_champ_text, procedure: procedure, private: true, libelle: 'text_after_visa_to_test', position: procedure.active_revision.types_de_champ.size)
+        build(:type_de_champ_visa, procedure: procedure, private: true, libelle: 'visa_to_test', position: procedure.active_revision.types_de_champ_private.size, accredited_user_string: accredited_user_string)
+        build(:type_de_champ_text, procedure: procedure, private: true, libelle: 'text_after_visa_to_test', position: procedure.active_revision.types_de_champ_private.size)
       end
     end
 
