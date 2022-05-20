@@ -81,24 +81,8 @@ Rails.application.configure do
   elsif ENV['MAILCATCHER_ENABLED'] == 'enabled'
     config.action_mailer.delivery_method = :mailcatcher
   else
-
-    sendinblue_weigth = case [ENV['SENDINBLUE_ENABLED'] == 'enabled', ENV['SENDINBLUE_BALANCING'] == 'enabled']
-      in [false, _]
-        0
-      in [true, false]
-        100
-      else
-        ENV.fetch('SENDINBLUE_BALANCING_VALUE').to_i
-      end
-
-    dolist_weigth = case [ENV['DOLIST_ENABLED'] == 'enabled', ENV['DOLIST_BALANCING'] == 'enabled']
-      in [false, _]
-        0
-      in [true, false]
-        100
-      else
-        ENV.fetch('DOLIST_BALANCING_VALUE').to_i
-      end
+    sendinblue_weigth = ENV.fetch('SENDINBLUE_BALANCING_VALUE') { 0 }.to_i
+    dolist_weigth = ENV.fetch('DOLIST_BALANCING_VALUE') { 0 }.to_i
 
     ActionMailer::Base.add_delivery_method :balancer, BalancerDeliveryMethod
     config.action_mailer.balancer_settings = {
