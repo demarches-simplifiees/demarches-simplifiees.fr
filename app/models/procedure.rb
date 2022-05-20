@@ -25,6 +25,7 @@
 #  for_individual                            :boolean          default(FALSE)
 #  hidden_at                                 :datetime
 #  instructeurs_self_management_enabled      :boolean
+#  internal                                  :boolean          default(FALSE)
 #  juridique_required                        :boolean          default(TRUE)
 #  libelle                                   :string
 #  lien_demarche                             :string

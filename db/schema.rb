@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_20_173939) do
+ActiveRecord::Schema.define(version: 2022_05_20_183305) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -641,6 +641,7 @@ ActiveRecord::Schema.define(version: 2022_05_20_173939) do
     t.boolean "for_individual", default: false
     t.datetime "hidden_at"
     t.boolean "instructeurs_self_management_enabled"
+    t.boolean "internal", default: false
     t.boolean "juridique_required", default: true
     t.string "libelle"
     t.string "lien_demarche"

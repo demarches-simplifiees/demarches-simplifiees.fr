@@ -381,6 +381,14 @@ describe Procedure do
     end
   end
 
+  describe 'internal' do
+    let(:procedure) { create(:procedure) }
+
+    it 'is false by default' do
+      expect(procedure.internal).to be_falsy
+    end
+  end
+
   describe 'active' do
     let(:procedure) { create(:procedure) }
     subject { Procedure.active(procedure.id) }
