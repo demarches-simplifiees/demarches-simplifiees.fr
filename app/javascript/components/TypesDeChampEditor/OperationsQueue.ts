@@ -1,4 +1,4 @@
-import { getJSON } from '@utils';
+import { httpRequest } from '@utils';
 import invariant from 'tiny-invariant';
 
 type Operation = {
@@ -45,7 +45,7 @@ export class OperationsQueue {
     const url = `${this.baseUrl}${path}`;
 
     try {
-      const data = await getJSON(url, payload, method);
+      const data = await httpRequest(url, { method, json: payload }).json();
       resolve(data);
     } catch (e) {
       handleError(e as OperationError, reject);
