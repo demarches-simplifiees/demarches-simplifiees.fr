@@ -1000,6 +1000,92 @@ describe API::V2::GraphqlController do
         end
       end
 
+      describe 'dossierRepasserEnInstruction' do
+        let(:dossiers) { [dossier2, dossier1, dossier] }
+        let(:dossier) { create(:dossier, :refuse, :with_individual, procedure: procedure) }
+        let(:instructeur_id) { instructeur.to_typed_id }
+        let(:disable_notification) { false }
+        let(:query) do
+          "mutation {
+            dossierRepasserEnInstruction(input: {
+              dossierId: \"#{dossier.to_typed_id}\",
+              instructeurId: \"#{instructeur_id}\",
+              disableNotification: #{disable_notification}
+            }) {
+              dossier {
+                id
+                state
+                motivation
+              }
+              errors {
+                message
+              }
+            }
+          }"
+        end
+
+        context 'success' do
+          it "should repasser en instruction dossier" do
+            expect(gql_errors).to eq(nil)
+
+            expect(gql_data).to eq(dossierRepasserEnInstruction: {
+              dossier: {
+                id: dossier.to_typed_id,
+                state: "en_instruction",
+                motivation: nil
+              },
+              errors: nil
+            })
+
+            perform_enqueued_jobs
+            expect(ActionMailer::Base.deliveries.size).to eq(4)
+          end
+        end
+      end
+
+      describe 'dossierRepasserEnConstruction' do
+        let(:dossiers) { [dossier2, dossier1, dossier] }
+        let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
+        let(:instructeur_id) { instructeur.to_typed_id }
+        let(:disable_notification) { false }
+        let(:query) do
+          "mutation {
+            dossierRepasserEnConstruction(input: {
+              dossierId: \"#{dossier.to_typed_id}\",
+              instructeurId: \"#{instructeur_id}\",
+              disableNotification: #{disable_notification}
+            }) {
+              dossier {
+                id
+                state
+                motivation
+              }
+              errors {
+                message
+              }
+            }
+          }"
+        end
+
+        context 'success' do
+          it "should passer en instruction dossier" do
+            expect(gql_errors).to eq(nil)
+
+            expect(gql_data).to eq(dossierRepasserEnConstruction: {
+              dossier: {
+                id: dossier.to_typed_id,
+                state: "en_construction",
+                motivation: nil
+              },
+              errors: nil
+            })
+
+            perform_enqueued_jobs
+            expect(ActionMailer::Base.deliveries.size).to eq(3)
+          end
+        end
+      end
+
       describe 'dossierClasserSansSuite' do
         let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
         let(:query) do
