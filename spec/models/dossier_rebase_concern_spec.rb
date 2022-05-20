@@ -224,4 +224,115 @@ describe Dossier do
       expect(rebased_datetime_champ.rebased_at).not_to be_nil
     end
   end
+
+  context 'small grained' do
+    subject do
+      procedure.publish_revision!
+      perform_enqueued_jobs
+
+      dossier.reload
+    end
+
+    context 'with a procedure with 2 tdc' do
+      let!(:procedure) do
+        create(:procedure).tap do |p|
+          p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'l1')
+          p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'l2')
+          p.publish!
+        end
+      end
+      let!(:dossier) { create(:dossier, procedure: procedure) }
+
+      def champ_libelles = dossier.champs.map(&:libelle)
+
+      context 'when a tdc is added in the middle' do
+        before do
+          added_tdc = procedure.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'l3')
+          procedure.draft_revision.move_type_de_champ(added_tdc.stable_id, 1)
+        end
+
+        it { expect { subject }.to change { champ_libelles }.from(['l1', 'l2']).to(['l1', 'l3', 'l2']) }
+      end
+
+      context 'when the first tdc is removed' do
+        before do
+          tdc_to_remove = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
+          procedure.draft_revision.remove_type_de_champ(tdc_to_remove.stable_id)
+        end
+
+        it { expect { subject }.to change { champ_libelles }.from(['l1', 'l2']).to(['l2']) }
+      end
+
+      context 'when the first tdc libelle is updated' do
+        before do
+          tdc_to_update = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
+          tdc_to_update.update(libelle: 'l1 updated')
+        end
+
+        it { expect { subject }.to change { champ_libelles }.from(['l1', 'l2']).to(['l1 updated', 'l2']) }
+      end
+
+      context 'when the first tdc type is updated' do
+        before do
+          tdc_to_update = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
+          tdc_to_update.update(type_champ: :integer_number)
+        end
+
+        it { expect { subject }.to change { dossier.champs.map(&:type_champ) }.from(['text', 'text']).to(['integer_number', 'text']) }
+      end
+    end
+
+    context 'with a procedure with a repetition' do
+      let!(:procedure) do
+        create(:procedure).tap do |p|
+          repetition = p.draft_revision.add_type_de_champ(type_champ: :repetition, libelle: 'r1')
+          p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'c1', parent_id: repetition.stable_id)
+          p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'c2', parent_id: repetition.stable_id)
+          p.publish!
+        end
+      end
+      let!(:dossier) { create(:dossier, procedure: procedure) }
+      let(:repetition_stable_id) { procedure.draft_revision.types_de_champ.find(&:repetition?) }
+
+      def child_libelles = dossier.champs[0].champs.map(&:libelle)
+
+      context 'when a child tdc is added in the middle' do
+        before do
+          added_tdc = procedure.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'c3', parent_id: repetition_stable_id)
+          procedure.draft_revision.move_type_de_champ(added_tdc.stable_id, 1)
+        end
+
+        it { expect { subject }.to change { child_libelles }.from(['c1', 'c2']).to(['c1', 'c3', 'c2']) }
+      end
+
+      context 'when the first child tdc is removed' do
+        before do
+          tdc_to_remove = procedure.draft_revision.types_de_champ.find_by(libelle: 'c1')
+          procedure.draft_revision.remove_type_de_champ(tdc_to_remove.stable_id)
+        end
+
+        it { expect { subject }.to change { child_libelles }.from(['c1', 'c2']).to(['c2']) }
+      end
+
+      context 'when the first child libelle tdc is updated' do
+        before do
+          stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'c1')
+          tdc_to_update = procedure.draft_revision.find_or_clone_type_de_champ(stable_id)
+          tdc_to_update.update(libelle: 'c1 updated')
+        end
+
+        it { expect { subject }.to change { child_libelles }.from(['c1', 'c2']).to(['c1 updated', 'c2']) }
+      end
+
+      context 'when the first child tdc type is updated' do
+        before do
+          stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'c1')
+          tdc_to_update = procedure.draft_revision.find_or_clone_type_de_champ(stable_id)
+          tdc_to_update.update(type_champ: :integer_number)
+        end
+
+        it { expect { subject }.to change { dossier.champs[0].champs.map(&:type_champ) }.from(['text', 'text']).to(['integer_number', 'text']) }
+      end
+    end
+  end
 end
