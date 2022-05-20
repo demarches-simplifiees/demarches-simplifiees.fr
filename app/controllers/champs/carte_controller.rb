@@ -2,7 +2,6 @@ class Champs::CarteController < ApplicationController
   before_action :authenticate_logged_user!
 
   def index
-    @selector = ".carte-#{params[:champ_id]}"
     @champ = policy_scope(Champ).find(params[:champ_id])
     @focus = params[:focus].present?
   end

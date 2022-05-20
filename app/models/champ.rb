@@ -140,6 +140,23 @@ class Champ < ApplicationRecord
     "#{html_id}-input"
   end
 
+  # A predictable string to use when generating an input name for this champ.
+  #
+  # Rail's FormBuilder can auto-generate input names, using the form "dossier[champs_attributes][5]",
+  # where [5] is the index of the field in the form.
+  # However the field index makes it difficult to render a single field, independent from the ordering of the others.
+  #
+  # Luckily, this is only used to make the name unique, but the actual value is ignored when Rails parses nested
+  # attributes. So instead of the field index, this method uses the champ id; which gives us an independent and
+  # predictable input name.
+  def input_name
+    if parent_id
+      "#{parent.input_name}[#{champs_attributes_accessor}][#{id}]"
+    else
+      "dossier[#{champs_attributes_accessor}][#{id}]"
+    end
+  end
+
   def labelledby_id
     "#{html_id}-label"
   end
@@ -170,6 +187,14 @@ class Champ < ApplicationRecord
 
   def html_id
     "#{stable_id}-#{id}"
+  end
+
+  def champs_attributes_accessor
+    if private?
+      "champs_private_attributes"
+    else
+      "champs_attributes"
+    end
   end
 
   def needs_dossier_id?
