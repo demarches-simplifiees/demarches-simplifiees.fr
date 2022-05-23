@@ -1,0 +1,7 @@
+.autocomplete{ 'data-controller': "autocomplete" }
+  .input-wrapper{ **input_wrapper_html_options }
+    %input.autocomplete-input{ **input_html_options }
+  %ul.autocomplete-listbox.hidden{ **listbox_html_options }
+    - options.each.with_index do |option, index|
+      %li.autocomplete-option{ **option_html_options(index) }
+        = option
