@@ -356,34 +356,28 @@ class TypeDeChamp < ApplicationRecord
       .sort_by(&:first)
   end
 
-  TYPES_DE_CHAMP_BASE = {
-    except: [
-      :created_at,
-      :options,
-      :order_place,
-      :parent_id,
-      :private,
-      :procedure_id,
-      :revision_id,
-      :stable_id,
-      :type,
-      :updated_at
-    ],
-    methods: [
-      :drop_down_list_value,
-      :drop_down_other,
-      :piece_justificative_template_filename,
-      :piece_justificative_template_url,
-      :editable_options,
-      :drop_down_secondary_libelle,
-      :drop_down_secondary_description
-    ]
-  }
-  TYPES_DE_CHAMP = TYPES_DE_CHAMP_BASE
-    .merge(include: { types_de_champ: TYPES_DE_CHAMP_BASE })
-
-  def self.as_json_for_editor
-    includes(piece_justificative_template_attachment: :blob, types_de_champ: [piece_justificative_template_attachment: :blob]).as_json(TYPES_DE_CHAMP)
+  def as_json_for_editor
+    as_json(
+      except: [
+        :created_at,
+        :options,
+        :order_place,
+        :parent_id,
+        :private,
+        :stable_id,
+        :type,
+        :updated_at
+      ],
+      methods: [
+        :drop_down_list_value,
+        :drop_down_other,
+        :drop_down_secondary_libelle,
+        :drop_down_secondary_description,
+        :piece_justificative_template_filename,
+        :piece_justificative_template_url,
+        :editable_options
+      ]
+    )
   end
 
   def read_attribute_for_serialization(name)
