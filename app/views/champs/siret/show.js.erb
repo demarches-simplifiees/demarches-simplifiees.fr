@@ -1,6 +1,3 @@
-<%= render_to_element(".siret-info-#{@position}",
+<%= render_to_element("##{@champ.input_group_id} .siret-info",
   partial: 'shared/champs/siret/etablissement',
-  locals: {
-    siret: @siret,
-    attribute: @attribute,
-    etablissement: @etablissement }) %>
+  locals: { siret: @siret, etablissement: @etablissement }) %>

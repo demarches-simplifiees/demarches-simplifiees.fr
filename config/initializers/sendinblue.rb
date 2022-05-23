@@ -1,4 +1,4 @@
-if ENV.fetch('SENDINBLUE_ENABLED') == 'enabled'
+if ENV.key?('SENDINBLUE_BALANCING_VALUE')
   require 'sib-api-v3-sdk'
 
   ActiveSupport.on_load(:action_mailer) do

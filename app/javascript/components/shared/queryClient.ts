@@ -1,5 +1,5 @@
 import { QueryClient, QueryFunction } from 'react-query';
-import { getJSON, isNumeric } from '@utils';
+import { httpRequest, isNumeric } from '@utils';
 import { matchSorter } from 'match-sorter';
 
 type Gon = {
@@ -57,39 +57,27 @@ function buildURL(scope: string, term: string, extra?: string) {
   return `${api_geo_url}/${scope}?nom=${term}&limit=${API_GEO_QUERY_LIMIT}`;
 }
 
-function buildOptions(): [RequestInit, AbortController | null] {
-  if (window.AbortController) {
-    const controller = new AbortController();
-    const signal = controller.signal;
-    return [{ signal }, controller];
-  }
-  return [{}, null];
-}
-
 const defaultQueryFn: QueryFunction<unknown, QueryKey> = async ({
-  queryKey: [scope, term, extra]
+  queryKey: [scope, term, extra],
+  signal
 }) => {
   if (scope == 'pays') {
-    return matchSorter(await getPays(), term, { keys: ['label'] });
+    return matchSorter(await getPays(signal), term, { keys: ['label'] });
   }
 
   const url = buildURL(scope, term, extra);
-  const [options, controller] = buildOptions();
-  const promise = fetch(url, options).then((response) => {
-    if (response.ok) {
-      return response.json();
-    }
-    throw new Error(`Error fetching from "${scope}" API`);
-  });
-  return Object.assign(promise, {
-    cancel: () => controller && controller.abort()
-  });
+  return httpRequest(url, { csrf: false, signal }).json();
 };
 
 let paysCache: { label: string }[];
-async function getPays(): Promise<{ label: string }[]> {
+async function getPays(signal?: AbortSignal): Promise<{ label: string }[]> {
   if (!paysCache) {
-    paysCache = await getJSON('/api/pays', null);
+    const data = await httpRequest('/api/pays', { signal }).json<
+      typeof paysCache
+    >();
+    if (data) {
+      paysCache = data;
+    }
   }
   return paysCache;
 }
