@@ -203,8 +203,7 @@ module Instructeurs
     end
 
     def update_annotations
-      attributes = without_changes_forbidden_by_visa(without_empty_file, dossier.champs_private)
-      dossier_with_champs.assign_attributes(attributes)
+      dossier_with_champs.assign_attributes(remove_changes_forbidden_by_visa(champs_private_params, dossier.champs_private))
       if dossier.champs_private.any?(&:changed?)
         dossier.last_champ_private_updated_at = Time.zone.now
         flash.notice = 'Modifications sauvegardées'
@@ -251,15 +250,6 @@ module Instructeurs
 
     private
 
-    def without_empty_file
-      champs = champs_private_params
-      champs[:champs_private_attributes]&.reject! do |_k, champ|
-        champ[:champs_attributes]&.reject! { |_k, sous_champ| sous_champ[:piece_justificative_file] == "" }
-        champ[:piece_justificative_file] == ""
-      end
-      champs
-    end
-
     def checked_visa?(c)
       c.type_champ == 'visa' && c.value.present?
     end
@@ -291,7 +281,7 @@ module Instructeurs
       ])
     end
 
-    def without_changes_forbidden_by_visa(params, champs)
+    def remove_changes_forbidden_by_visa(params, champs)
       visa = champs.reverse_each.find { |c| checked_visa?(c) }
       if visa.present?
         switch_point = visa.id.to_s
