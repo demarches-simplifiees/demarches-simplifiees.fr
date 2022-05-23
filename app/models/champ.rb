@@ -57,7 +57,7 @@ class Champ < ApplicationRecord
   scope :public_only, -> { where(private: false) }
   scope :private_only, -> { where(private: true) }
   scope :ordered, -> { includes(:type_de_champ).order(:row, 'types_de_champ.order_place') }
-  scope :public_ordered, -> { public_only.joins(dossier: { revision: :revision_types_de_champ }).where('procedure_revision_types_de_champ.type_de_champ_id = champs.type_de_champ_id').order(:position) }
+  scope :public_ordered, -> { public_only.joins(dossier: { revision: :revision_types_de_champ_public }).where('procedure_revision_types_de_champ.type_de_champ_id = champs.type_de_champ_id').order(:position) }
   # we need to do private champs order as manual join to avoid conflicting join names
   scope :private_ordered, -> do
     private_only.joins('

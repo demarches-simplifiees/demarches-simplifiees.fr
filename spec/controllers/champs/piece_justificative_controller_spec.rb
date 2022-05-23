@@ -47,7 +47,7 @@ describe Champs::PieceJustificativeController, type: :controller do
     shared_examples_for "he can't download pdf" do
       it "it shouldn't be able to download a qrcoded pdf" do
         subject
-        expect(response.status).to eq(302)
+        expect(response.status).to eq(400)
         expect(response.location).to eq("#{ActiveStorage::Current.host}/")
       end
     end
@@ -65,9 +65,9 @@ describe Champs::PieceJustificativeController, type: :controller do
         before { Flipper.enable(:qrcoded_pdf, procedure) }
         it_behaves_like "he can download qrcoded pdf"
 
-        context 'when created_date is not given,' do
-          let(:params) { { champ_id: annotation.id.to_s } }
-          it_behaves_like "he can download qrcoded pdf"
+        context 'when created_date is wrong' do
+          let(:params) { { champ_id: annotation.id.to_s, h: 'x' } }
+          it_behaves_like "he can't download pdf"
         end
       end
     end
@@ -85,9 +85,9 @@ describe Champs::PieceJustificativeController, type: :controller do
         before { Flipper.enable(:qrcoded_pdf, procedure) }
         it_behaves_like "he can download qrcoded pdf"
 
-        context 'when created_date is not given,' do
-          let(:params) { { champ_id: annotation.id.to_s } }
-          it_behaves_like "he can download qrcoded pdf"
+        context 'when created_date is wrong,' do
+          let(:params) { { champ_id: annotation.id.to_s, h: 'x' } }
+          it_behaves_like "he can't download pdf"
         end
       end
     end
@@ -106,8 +106,8 @@ describe Champs::PieceJustificativeController, type: :controller do
         it_behaves_like "he can download qrcoded pdf"
       end
 
-      context 'when created_date is not given,' do
-        let(:params) { { champ_id: annotation.id.to_s } }
+      context 'when created_date is wrong,' do
+        let(:params) { { champ_id: annotation.id.to_s, h: 'x' } }
         before { Flipper.enable(:qrcoded_pdf, procedure) }
         it_behaves_like "he can't download pdf"
       end

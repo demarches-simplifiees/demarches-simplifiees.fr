@@ -65,6 +65,7 @@ class S3Synchronization < ApplicationRecord
         dir.delete if dir.exist? && dir.empty?
         dir = dir.dirname
         dir.delete if dir.exist? && dir.empty?
+        count += 1
       end
       AdministrationMailer.s3_synchronization_report("Archived #{count} files from '#{mirror_service_name}' storage service.").deliver_now
     end
