@@ -42,4 +42,8 @@
 
       = yield :charts_js
 
+      // Container for custom turbo-stream actions
       %turbo-events
+      // Container for turbo form that we can submit from inside other forms
+      %div{ 'data-turbo': 'true' }
+        = form_tag('', id: :turbo_form)

@@ -42,7 +42,7 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
     pdf.pad_top(40) { pdf.text @dossier.procedure.libelle, size: 14, character_spacing: -0.2, align: :center }
 
     pdf.fill_color grey
-    description = t('.description', user_name: papertrail_requester_identity(@dossier), procedure: @dossier.procedure.libelle, date: l(@dossier.created_at, format: '%e %B %Y'))
+    description = t('.description', user_name: papertrail_requester_identity(@dossier), procedure: @dossier.procedure.libelle, date: l(@dossier.depose_at, format: '%e %B %Y'))
     pdf.pad_top(30) { pdf.text description, size: 10, character_spacing: -0.2, align: :left }
 
     pdf.fill_color black
@@ -70,7 +70,7 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
     pdf.fill_color grey
     pdf.pad_top(7) do
       pdf.text "#{Dossier.human_attribute_name(:id)} : #{@dossier.id.to_s}", size: 10, character_spacing: -0.2, align: :justify
-      pdf.text t('.file_submitted_at') + ' : ' + l(@dossier.en_construction_at, format: '%e %B %Y'), size: 10, character_spacing: -0.2, align: :justify
+      pdf.text t('.file_submitted_at') + ' : ' + l(@dossier.depose_at, format: '%e %B %Y'), size: 10, character_spacing: -0.2, align: :justify
       pdf.text t('.dossier_state') + ' : ' + papertrail_dossier_state(@dossier), size: 10, character_spacing: -0.2, align: :justify
     end
 
