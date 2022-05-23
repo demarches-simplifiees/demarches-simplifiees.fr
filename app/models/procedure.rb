@@ -48,6 +48,7 @@
 #  draft_revision_id                         :bigint
 #  parent_procedure_id                       :bigint
 #  published_revision_id                     :bigint
+#  replaced_by_procedure_id                  :bigint
 #  service_id                                :bigint
 #  zone_id                                   :bigint
 #
@@ -86,6 +87,8 @@ class Procedure < ApplicationRecord
 
   has_many :experts_procedures, dependent: :destroy
   has_many :experts, through: :experts_procedures
+  has_many :replaced_procedures, -> { with_discarded }, inverse_of: :replaced_by_procedure, class_name: "Procedure",
+  foreign_key: "replaced_by_procedure_id", dependent: :nullify
 
   has_one :module_api_carto, dependent: :destroy
   has_one :legacy_attestation_template, class_name: 'AttestationTemplate', dependent: :destroy
@@ -93,6 +96,7 @@ class Procedure < ApplicationRecord
 
   belongs_to :parent_procedure, class_name: 'Procedure', optional: true
   belongs_to :canonical_procedure, class_name: 'Procedure', optional: true
+  belongs_to :replaced_by_procedure, -> { with_discarded }, inverse_of: :replaced_procedures, class_name: "Procedure", optional: true
   belongs_to :service, optional: true
   belongs_to :zone, optional: true
 
@@ -502,6 +506,7 @@ class Procedure < ApplicationRecord
     procedure.cloned_from_library = from_library
     procedure.parent_procedure = self
     procedure.canonical_procedure = nil
+    procedure.replaced_by_procedure = nil
 
     if from_library
       procedure.service = nil
