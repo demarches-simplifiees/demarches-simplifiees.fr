@@ -233,6 +233,50 @@ describe Dossier do
       dossier.reload
     end
 
+    context 'with a procedure with a dropdown tdc' do
+      let!(:procedure) do
+        create(:procedure).tap do |p|
+          p.draft_revision.add_type_de_champ(type_champ: :drop_down_list, libelle: 'l1', drop_down_list_value: 'option')
+          p.publish!
+        end
+      end
+      let!(:dossier) { create(:dossier, procedure: procedure) }
+
+      context 'when a dropdown option is changed' do
+        before do
+          dossier.champs.first.update(value: 'v1')
+
+          stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
+          tdc_to_update = procedure.draft_revision.find_or_clone_type_de_champ(stable_id)
+          tdc_to_update.update(drop_down_list_value: 'option updated')
+        end
+
+        it { expect { subject }.to change { dossier.champs.first.value }.from('v1').to(nil) }
+      end
+    end
+
+    context 'with a procedure with a carte tdc' do
+      let!(:procedure) do
+        create(:procedure).tap do |p|
+          champ = p.draft_revision.add_type_de_champ(type_champ: :carte, libelle: 'l1', cadastres: true)
+          p.publish!
+        end
+      end
+      let!(:dossier) { create(:dossier, procedure: procedure) }
+
+      context 'and the cadastre are removed' do
+        before do
+          dossier.champs.first.update(value: 'v1', geo_areas: [create(:geo_area, :cadastre)])
+
+          stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
+          tdc_to_update = procedure.draft_revision.find_or_clone_type_de_champ(stable_id)
+          tdc_to_update.update(cadastres: false)
+        end
+
+        it { expect { subject }.to change { dossier.champs.first.cadastres.count }.from(1).to(0) }
+      end
+    end
+
     context 'with a procedure with 2 tdc' do
       let!(:procedure) do
         create(:procedure).tap do |p|
@@ -256,16 +300,27 @@ describe Dossier do
 
       context 'when the first tdc is removed' do
         before do
-          tdc_to_remove = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
+          stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
+          tdc_to_remove = procedure.draft_revision.find_or_clone_type_de_champ(stable_id)
           procedure.draft_revision.remove_type_de_champ(tdc_to_remove.stable_id)
         end
 
         it { expect { subject }.to change { champ_libelles }.from(['l1', 'l2']).to(['l2']) }
       end
 
+      context 'when the second tdc is moved at the first place' do
+        before do
+          stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l2')
+          procedure.draft_revision.move_type_de_champ(stable_id, 0)
+        end
+
+        it { expect { subject }.to change { champ_libelles }.from(['l1', 'l2']).to(['l2', 'l1']) }
+      end
+
       context 'when the first tdc libelle is updated' do
         before do
-          tdc_to_update = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
+          stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
+          tdc_to_update = procedure.draft_revision.find_or_clone_type_de_champ(stable_id)
           tdc_to_update.update(libelle: 'l1 updated')
         end
 
@@ -273,19 +328,39 @@ describe Dossier do
       end
 
       context 'when the first tdc type is updated' do
+        def first_champ = dossier.champs.first
+
         before do
-          tdc_to_update = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
+          first_champ.update(value: 'v1', external_id: '123', geo_areas: [create(:geo_area)])
+          first_champ.update(data: { a: 1 })
+
+          first_champ.piece_justificative_file.attach(
+            io: StringIO.new("toto"),
+            filename: "toto.txt",
+            content_type: "text/plain",
+            # we don't want to run virus scanner on this file
+            metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+          )
+
+          stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
+          tdc_to_update = procedure.draft_revision.find_or_clone_type_de_champ(stable_id)
           tdc_to_update.update(type_champ: :integer_number)
         end
 
         it { expect { subject }.to change { dossier.champs.map(&:type_champ) }.from(['text', 'text']).to(['integer_number', 'text']) }
+        it { expect { subject }.to change { first_champ.class }.from(Champs::TextChamp).to(Champs::IntegerNumberChamp) }
+        it { expect { subject }.to change { first_champ.value }.from('v1').to(nil) }
+        it { expect { subject }.to change { first_champ.external_id }.from('123').to(nil) }
+        it { expect { subject }.to change { first_champ.data }.from({ 'a' => 1 }).to(nil) }
+        it { expect { subject }.to change { first_champ.geo_areas.count }.from(1).to(0) }
+        it { expect { subject }.to change { first_champ.piece_justificative_file.attached? }.from(true).to(false) }
       end
     end
 
     context 'with a procedure with a repetition' do
       let!(:procedure) do
         create(:procedure).tap do |p|
-          repetition = p.draft_revision.add_type_de_champ(type_champ: :repetition, libelle: 'r1')
+          repetition = p.draft_revision.add_type_de_champ(type_champ: :repetition, libelle: 'p1')
           p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'c1', parent_id: repetition.stable_id)
           p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'c2', parent_id: repetition.stable_id)
           p.publish!
@@ -332,6 +407,17 @@ describe Dossier do
         end
 
         it { expect { subject }.to change { dossier.champs[0].champs.map(&:type_champ) }.from(['text', 'text']).to(['integer_number', 'text']) }
+      end
+
+      context 'when the parents type is changed' do
+        before do
+          stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'p1')
+          parent = procedure.draft_revision.find_or_clone_type_de_champ(stable_id)
+          parent.update(type_champ: :integer_number)
+        end
+
+        it { expect { subject }.to change { dossier.champs[0].champs.count }.from(2).to(0) }
+        it { expect { subject }.to change { Champ.count }.from(3).to(1) }
       end
     end
   end
