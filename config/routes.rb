@@ -288,6 +288,7 @@ Rails.application.routes.draw do
         get 'attestation'
         get 'qrcode/:created_at', action: 'qrcode', as: :qrcode
         get 'transferer', to: 'dossiers#transferer'
+        get 'papertrail', format: :pdf
       end
 
       collection do

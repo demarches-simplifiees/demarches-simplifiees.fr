@@ -1,4 +1,14 @@
 fr:
+  activerecord:
+    models:
+      service:
+        one: 'Service'
+        other: 'Services'
+    attributes:
+      service:
+        adresse: 'Adresse postale'
+        email: 'Email de contact'
+        telephone: 'Téléphone'
   type_organisme:
     administration_centrale: 'Administration centrale'
     association: 'Association'

@@ -4,7 +4,7 @@ describe PasswordComplexityController, type: :controller do
       { complexity: 3, user: { password: 'moderately complex password' } }
     end
 
-    subject { get :show, format: :js, params: params, xhr: true }
+    subject { get :show, format: :turbo_stream, params: params }
 
     it 'computes a password score' do
       subject
@@ -27,8 +27,8 @@ describe PasswordComplexityController, type: :controller do
 
       it 'renders Javascript that updates the password complexity meter' do
         subject
-        expect(response.body).to include('#complexity-label')
-        expect(response.body).to include('#complexity-bar')
+        expect(response.body).to include('complexity-label')
+        expect(response.body).to include('complexity-bar')
       end
     end
   end

@@ -478,6 +478,24 @@ fr:
         identity_saved: "Identité enregistrée"
       attestation:
         no_longer_available: "L’attestation n'est plus disponible sur ce dossier."
+      papertrail:
+        receipt: "Accusé de dépôt"
+        description: "Ce document atteste que %{user_name} a déposé le %{date} un dossier sur la démarche « %{procedure} »."
+        file_submitted_at: "Dossier déposé le"
+        dossier_state: "État du dossier"
+        states:
+          en_construction: "déposé, en attente d’examen par l’administration"
+          en_instruction: "en cours d’instruction par l’administration"
+          accepte: "accepté"
+          refuse: "refusé"
+          sans suite: "classé sans suite"
+        administrative_service: "Service administratif"
+        generated_at: "Fait le %{date},"
+        signature: "La direction de %{app_name}"
+      show:
+        papertrail:
+          get_papertrail: "Obtenir une attestation de dépôt de dossier"
+          filename: "attestation-de-depot.pdf"
   instructeurs:
     dossiers:
       deleted_by_instructeur: "Le dossier a bien été supprimé de votre interface"

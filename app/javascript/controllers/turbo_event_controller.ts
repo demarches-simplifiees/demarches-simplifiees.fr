@@ -18,7 +18,7 @@ export class TurboEventController extends ApplicationController {
   }
 }
 
-const MutationAction = z.enum(['show', 'hide', 'focus']);
+const MutationAction = z.enum(['show', 'hide', 'focus', 'enable', 'disable']);
 type MutationAction = z.infer<typeof MutationAction>;
 const Mutation = z.union([
   z.object({
@@ -54,6 +54,16 @@ const Mutations: Record<MutationAction, (mutation: Mutation) => void> = {
   focus: (mutation) => {
     for (const element of findElements(mutation)) {
       element.focus();
+    }
+  },
+  disable: (mutation) => {
+    for (const element of findElements<HTMLInputElement>(mutation)) {
+      element.disabled = true;
+    }
+  },
+  enable: (mutation) => {
+    for (const element of findElements<HTMLInputElement>(mutation)) {
+      element.disabled = false;
     }
   }
 };

@@ -8,7 +8,6 @@ import * as Turbo from '@hotwired/turbo';
 import '../shared/activestorage/ujs';
 import '../shared/remote-poller';
 import '../shared/safari-11-file-xhr-workaround';
-import '../shared/remote-input';
 import '../shared/franceconnect';
 import '../shared/toggle-target';
 import '../shared/ujs-error-handling';
@@ -19,6 +18,7 @@ import {
 } from '../controllers/react_controller';
 import { TurboEventController } from '../controllers/turbo_event_controller';
 import { GeoAreaController } from '../controllers/geo_area_controller';
+import { TurboInputController } from '../controllers/turbo_input_controller';
 
 import '../new_design/dropdown';
 import '../new_design/form-validation';
@@ -100,6 +100,7 @@ const Stimulus = Application.start();
 Stimulus.register('react', ReactController);
 Stimulus.register('turbo-event', TurboEventController);
 Stimulus.register('geo-area', GeoAreaController);
+Stimulus.register('turbo-input', TurboInputController);
 
 // Expose globals
 window.DS = window.DS || DS;
