@@ -8,4 +8,8 @@ class TypeDeChampSerializer < ActiveModel::Serializer
   def id
     object.stable_id || object.id
   end
+
+  def order_place
+    -1
+  end
 end
