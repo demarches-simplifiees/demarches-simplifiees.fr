@@ -524,3 +524,5 @@ en:
         dossiers_count: "Nb files"
         weekly_distribution: "Weekly distribution"
         weekly_distribution_details: "in the last 6 months"
+    procedure_description:
+      estimated_fill_duration: "Estimated fill time: %{estimated_minutes} mn"

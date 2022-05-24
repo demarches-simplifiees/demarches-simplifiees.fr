@@ -575,3 +575,5 @@ fr:
         dossiers_count: "Nb dossiers"
         weekly_distribution: "Répartition par semaine"
         weekly_distribution_details: "au cours des 6 derniers mois"
+    procedure_description:
+      estimated_fill_duration: "Temps de remplissage estimé : %{estimated_minutes} mn"

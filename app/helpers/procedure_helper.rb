@@ -82,4 +82,9 @@ module ProcedureHelper
     return "//#{uri}" if uri.scheme.nil?
     uri.to_s
   end
+
+  def estimated_fill_duration_minutes(procedure)
+    minutes = (procedure.active_revision.estimated_fill_duration / 60.0).round
+    [1, minutes].max
+  end
 end

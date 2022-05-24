@@ -1,7 +1,7 @@
 class TypesDeChamp::TypeDeChampBase
   include ActiveModel::Validations
 
-  delegate :description, :libelle, :stable_id, to: :@type_de_champ
+  delegate :description, :libelle, :mandatory, :stable_id, to: :@type_de_champ
 
   FILL_DURATION_SHORT  = 10.seconds.in_seconds
   FILL_DURATION_MEDIUM = 1.minute.in_seconds
