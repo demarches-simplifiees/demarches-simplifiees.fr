@@ -433,6 +433,7 @@ Rails.application.routes.draw do
         patch 'update_jeton'
         put :allow_expert_review
         put :experts_require_administrateur_invitation
+        put :restore
       end
 
       get :api_particulier, controller: 'jeton_particulier'

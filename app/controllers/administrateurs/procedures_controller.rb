@@ -9,9 +9,11 @@ module Administrateurs
       @procedures_publiees = paginated_published_procedures
       @procedures_draft = paginated_draft_procedures
       @procedures_closed = paginated_closed_procedures
+      @procedures_deleted = paginated_deleted_procedures
       @procedures_publiees_count = current_administrateur.procedures.publiees.count
       @procedures_draft_count = current_administrateur.procedures.brouillons.count
       @procedures_closed_count = current_administrateur.procedures.closes.count
+      @procedures_deleted_count = current_administrateur.procedures.with_discarded.discarded.count
       @statut = params[:statut]
       @statut.blank? ? @statut = 'publiees' : @statut = params[:statut]
     end
@@ -38,6 +40,16 @@ module Administrateurs
       current_administrateur
         .procedures
         .closes
+        .page(params[:page])
+        .per(ITEMS_PER_PAGE)
+        .order(created_at: :desc)
+    end
+
+    def paginated_deleted_procedures
+      current_administrateur
+        .procedures
+        .with_discarded
+        .discarded
         .page(params[:page])
         .per(ITEMS_PER_PAGE)
         .order(created_at: :desc)
@@ -158,6 +170,13 @@ module Administrateurs
       else
         render json: {}, status: 403
       end
+    end
+
+    def restore
+      procedure = current_administrateur.procedures.with_discarded.discarded.find(params[:id])
+      procedure.restore_procedure
+      flash.notice = t('administrateurs.index.restored', procedure_id: procedure.id)
+      redirect_to admin_procedures_path
     end
 
     def monavis

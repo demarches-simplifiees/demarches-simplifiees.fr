@@ -698,6 +698,12 @@ class Procedure < ApplicationRecord
     end
   end
 
+  def restore_procedure
+    if discarded?
+      undiscard
+    end
+  end
+
   def flipper_id
     "Procedure;#{id}"
   end

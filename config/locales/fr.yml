@@ -457,6 +457,10 @@ fr:
       zero: Brouillon
       one: Brouillon
       other: Brouillons
+    deleted:
+      zero: Supprimée
+      one: Supprimée
+      other: Supprimées
   users:
     dossiers:
       test_procedure: "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l’administrateur (ajout d'un champ, publication de la démarche...) entraînera sa suppression."
@@ -505,6 +509,14 @@ fr:
         to_follow: à suivre
         total: dossiers
   administrateurs:
+    index:
+      restored: La démarche %{procedure_id} a été restaurée
+    dropdown_actions:
+      delete: Supprimer
+      restore: Restaurer
+      to_test: Tester
+      to_clone: Cloner
+      to_close: Clore
     procedures:
       show:
         ready: "Validé"

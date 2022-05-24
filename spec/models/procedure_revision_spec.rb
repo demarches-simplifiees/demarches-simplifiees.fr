@@ -440,4 +440,55 @@ describe ProcedureRevision do
       end
     end
   end
+
+  describe 'children_of' do
+    context 'with a simple tdc' do
+      let(:procedure) { create(:procedure, :with_type_de_champ) }
+
+      it { expect(draft.children_of(draft.types_de_champ.first)).to be_empty }
+    end
+
+    context 'with a repetition tdc' do
+      let(:procedure) { create(:procedure, :with_repetition) }
+      let!(:parent) { draft.types_de_champ.find(&:repetition?) }
+      let!(:child) { draft.types_de_champ.reject(&:repetition?).first }
+
+      it { expect(draft.children_of(parent)).to match([child]) }
+
+      context 'with multiple child' do
+        let(:child_position_2) { create(:type_de_champ_text) }
+        let(:child_position_1) { create(:type_de_champ_text) }
+
+        before do
+          parent_coordinate = draft.revision_types_de_champ.find_by(type_de_champ_id: parent.id)
+          draft.revision_types_de_champ.create(type_de_champ: child_position_2, position: 2, parent_id: parent_coordinate.id)
+          draft.revision_types_de_champ.create(type_de_champ: child_position_1, position: 1, parent_id: parent_coordinate.id)
+        end
+
+        it 'returns the children in order' do
+          expect(draft.children_of(parent)).to eq([child, child_position_1, child_position_2])
+        end
+      end
+
+      context 'with multiple revision' do
+        let(:new_child) { create(:type_de_champ_text) }
+        let(:new_draft) do
+          procedure.publish!
+          procedure.draft_revision
+        end
+
+        before do
+          new_draft
+            .revision_types_de_champ
+            .where(type_de_champ: child)
+            .update(type_de_champ: new_child)
+        end
+
+        it 'returns the children regarding the revision' do
+          expect(draft.children_of(parent)).to match([child])
+          expect(new_draft.children_of(parent)).to match([new_child])
+        end
+      end
+    end
+  end
 end
