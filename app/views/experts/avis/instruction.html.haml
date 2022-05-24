@@ -7,7 +7,7 @@
     %h1.tab-title Donner votre avis
     %h2.claimant
       Demandeur :
-      %span.email= @avis.claimant.email
+      %span.email= safe_claimant_email(@avis.claimant)
       %span.date Demande d’avis envoyée le #{l(@avis.created_at, format: '%d/%m/%y')}
     %p.introduction= @avis.introduction
 
