@@ -170,6 +170,10 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
+  def only_present_on_draft?
+    revisions.size == 1
+  end
+
   def non_fillable?
     type_champ.in?([
       TypeDeChamp.type_champs.fetch(:header_section),

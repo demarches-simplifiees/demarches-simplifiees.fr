@@ -76,7 +76,7 @@ module Users
       procedure = Procedure.find_by(path: params[:path])
 
       if procedure&.close?
-        flash.alert = t('errors.messages.procedure_archived')
+        flash.alert = t('errors.messages.procedure_archived', service_name: procedure.service.nom, service_phone_number: procedure.service.telephone, service_email: procedure.service.email)
       else
         flash.alert = t('errors.messages.procedure_not_found')
       end

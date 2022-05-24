@@ -8,7 +8,6 @@ import * as Turbo from '@hotwired/turbo';
 import '../shared/activestorage/ujs';
 import '../shared/remote-poller';
 import '../shared/safari-11-file-xhr-workaround';
-import '../shared/franceconnect';
 import '../shared/toggle-target';
 import '../shared/ujs-error-handling';
 

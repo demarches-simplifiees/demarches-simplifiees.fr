@@ -202,6 +202,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_repetition_commune do
+      after(:build) do |procedure, _evaluator|
+        build(:type_de_champ_repetition, types_de_champ: [build(:type_de_champ_communes)], procedure: procedure)
+      end
+    end
+
     trait :with_number do
       after(:build) do |procedure, _evaluator|
         build(:type_de_champ_number, procedure: procedure)
