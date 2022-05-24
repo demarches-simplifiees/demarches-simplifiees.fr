@@ -37,6 +37,7 @@ export class AutosaveController extends ApplicationController {
     this.#latestPromise = Promise.resolve();
     this.onGlobal('autosave:retry', () => this.didRequestRetry());
     this.on('change', (event) => this.onInputChange(event));
+    this.on('input', (event) => this.onInputChange(event));
   }
 
   disconnect() {
