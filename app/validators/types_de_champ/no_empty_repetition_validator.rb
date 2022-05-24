@@ -8,7 +8,7 @@ class TypesDeChamp::NoEmptyRepetitionValidator < ActiveModel::EachValidator
   private
 
   def validate_repetition_not_empty(procedure, attribute, repetition)
-    if repetition.types_de_champ.blank?
+    if procedure.draft_revision.children_of(repetition).empty?
       procedure.errors.add(
         attribute,
         procedure.errors.generate_message(attribute, :empty_repetition, { value: repetition.libelle })
