@@ -26,7 +26,7 @@ module Administrateurs
     end
 
     def move
-      @procedure.draft_revision.move_type_de_champ(params[:id], (params[:position] || params[:order_place]).to_i)
+      @procedure.draft_revision.move_type_de_champ(params[:id], params[:position].to_i)
 
       head :no_content
     end

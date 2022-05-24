@@ -165,7 +165,7 @@ class Procedure < ApplicationRecord
     if brouillon?
       draft_types_de_champ
     else
-      TypeDeChamp.root
+      TypeDeChamp
         .public_only
         .fillable
         .joins(:revisions)
@@ -181,7 +181,7 @@ class Procedure < ApplicationRecord
     if brouillon?
       draft_types_de_champ_private
     else
-      TypeDeChamp.root
+      TypeDeChamp
         .private_only
         .fillable
         .joins(:revisions)
@@ -460,12 +460,7 @@ class Procedure < ApplicationRecord
     populate_champ_stable_ids
     include_list = {
       draft_revision: {
-        revision_types_de_champ_public: {
-          type_de_champ: :types_de_champ
-        },
-        revision_types_de_champ_private: {
-          type_de_champ: :types_de_champ
-        },
+        revision_types_de_champ: [:type_de_champ],
         attestation_template: [],
         dossier_submitted_message: []
       }
@@ -515,7 +510,8 @@ class Procedure < ApplicationRecord
     end
 
     procedure.save
-    TypeDeChamp.where(parent: procedure.draft_revision.types_de_champ.repetition).find_each(&:migrate_parent!)
+
+    move_new_children_to_new_parent_coordinate(procedure.draft_revision)
 
     if is_different_admin || from_library
       procedure.draft_types_de_champ.each { |tdc| tdc.options&.delete(:old_pj) }
@@ -736,21 +732,7 @@ class Procedure < ApplicationRecord
       .deep_clone(include: [:revision_types_de_champ])
       .tap(&:save!)
 
-    children = new_draft.revision_types_de_champ.where.not(parent_id: nil)
-    children.each do |child|
-      old_parent = draft_revision.revision_types_de_champ.find(child.parent_id)
-      new_parent = new_draft.revision_types_de_champ.find_by(type_de_champ_id: old_parent.type_de_champ_id)
-      child.update!(parent_id: new_parent.id)
-    end
-
-    new_draft.revision_types_de_champ.reload
-
-    # Some revisions do not have links to children types de champ
-    new_draft
-      .types_de_champ
-      .filter(&:repetition?)
-      .flat_map(&:types_de_champ)
-      .each(&:migrate_parent!)
+    move_new_children_to_new_parent_coordinate(new_draft)
 
     new_draft
   end
@@ -794,6 +776,16 @@ class Procedure < ApplicationRecord
   end
 
   private
+
+  def move_new_children_to_new_parent_coordinate(new_draft)
+    children = new_draft.revision_types_de_champ.where.not(parent_id: nil)
+    children.each do |child|
+      old_parent = draft_revision.revision_types_de_champ.find(child.parent_id)
+      new_parent = new_draft.revision_types_de_champ.find_by(type_de_champ_id: old_parent.type_de_champ_id)
+      child.update!(parent_id: new_parent.id)
+    end
+    new_draft.revision_types_de_champ.reload
+  end
 
   def validate_for_publication?
     validation_context == :publication || publiee?
