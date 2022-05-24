@@ -17,6 +17,10 @@ class DossierDashboard < Administrate::BaseDashboard
     updated_at: Field::DateTime,
     hidden_by_user_at: Field::DateTime,
     hidden_by_administration_at: Field::DateTime,
+    depose_at: Field::DateTime,
+    en_construction_at: Field::DateTime,
+    en_instruction_at: Field::DateTime,
+    processed_at: Field::DateTime,
     champs: ChampCollectionField
   }.freeze
 
@@ -43,7 +47,11 @@ class DossierDashboard < Administrate::BaseDashboard
     :created_at,
     :updated_at,
     :hidden_by_user_at,
-    :hidden_by_administration_at
+    :hidden_by_administration_at,
+    :depose_at,
+    :en_construction_at,
+    :en_instruction_at,
+    :processed_at
   ].freeze
 
   # FORM_ATTRIBUTES
