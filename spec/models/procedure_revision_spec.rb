@@ -282,7 +282,7 @@ describe ProcedureRevision do
         ])
 
         new_draft.find_or_clone_type_de_champ(new_draft.types_de_champ_public.last.stable_id).update(description: 'une description')
-        new_draft.find_or_clone_type_de_champ(new_draft.types_de_champ_public.last.stable_id).update(mandatory: true)
+        new_draft.find_or_clone_type_de_champ(new_draft.types_de_champ_public.last.stable_id).update(mandatory: false)
         expect(procedure.active_revision.compare(new_draft.reload)).to eq([
           {
             model: :type_de_champ,
@@ -314,8 +314,8 @@ describe ProcedureRevision do
             attribute: :mandatory,
             label: type_de_champ_second.libelle,
             private: false,
-            from: false,
-            to: true,
+            from: true,
+            to: false,
             stable_id: type_de_champ_second.stable_id
           }
         ])
@@ -353,8 +353,8 @@ describe ProcedureRevision do
             attribute: :mandatory,
             label: type_de_champ_second.libelle,
             private: false,
-            from: false,
-            to: true,
+            from: true,
+            to: false,
             stable_id: type_de_champ_second.stable_id
           },
           {
@@ -412,8 +412,8 @@ describe ProcedureRevision do
             attribute: :mandatory,
             label: type_de_champ_second.libelle,
             private: false,
-            from: false,
-            to: true,
+            from: true,
+            to: false,
             stable_id: type_de_champ_second.stable_id
           },
           {
