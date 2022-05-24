@@ -26,8 +26,7 @@ features = [
   :hide_instructeur_email,
   :procedure_revisions,
   :procedure_routage_api,
-  :procedure_process_expired_dossiers_termine,
-  :procedure_dossier_papertrail
+  :procedure_process_expired_dossiers_termine
 ]
 
 def database_exists?
