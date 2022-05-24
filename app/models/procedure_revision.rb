@@ -180,6 +180,15 @@ class ProcedureRevision < ApplicationRecord
     tdcs_as_json
   end
 
+  # Estimated duration to fill the form, in seconds
+  def estimated_fill_duration
+    tdc_durations = types_de_champ_public.fillable.map do |tdc|
+      duration = tdc.estimated_fill_duration(self)
+      tdc.mandatory ? duration : duration / 2
+    end
+    tdc_durations.sum
+  end
+
   private
 
   def children_types_de_champ_as_json(tdcs_as_json, parent_tdcs)
