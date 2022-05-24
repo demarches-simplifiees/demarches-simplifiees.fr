@@ -93,7 +93,7 @@ module DossierRebaseConcern
   def apply(change, champs)
     case change[:attribute]
     when :type_champ
-      champs.each { |champ| champ.piece_justificative_file.purge_later }
+      champs.each { |champ| champ.piece_justificative_file.purge_later } # FIX ME: change updated_at
       GeoArea.where(champ: champs).destroy_all
 
       {

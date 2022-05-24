@@ -342,6 +342,8 @@ describe Dossier do
             metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
           )
 
+          first_champ.update_column('updated_at', Time.zone.parse('01/01/1901'))
+
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
           tdc_to_update = procedure.draft_revision.find_or_clone_type_de_champ(stable_id)
           tdc_to_update.update(type_champ: :integer_number)
@@ -354,6 +356,8 @@ describe Dossier do
         it { expect { subject }.to change { first_champ.data }.from({ 'a' => 1 }).to(nil) }
         it { expect { subject }.to change { first_champ.geo_areas.count }.from(1).to(0) }
         it { expect { subject }.to change { first_champ.piece_justificative_file.attached? }.from(true).to(false) }
+        # pb with pj.purge_later
+        xit { expect { subject }.not_to change { first_champ.updated_at }.from(Time.zone.parse('01/01/1901')) }
       end
     end
 
