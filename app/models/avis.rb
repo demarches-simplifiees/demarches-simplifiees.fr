@@ -60,14 +60,6 @@ class Avis < ApplicationRecord
     expert&.email
   end
 
-  def self.link_avis_to_instructeur(instructeur)
-    Avis.where(email: instructeur.email).update_all(email: nil, instructeur_id: instructeur.id)
-  end
-
-  def self.avis_exists_and_email_belongs_to_avis?(avis_id, email)
-    Avis.find_by(id: avis_id)&.email == email
-  end
-
   def spreadsheet_columns
     [
       ['Dossier ID', dossier_id.to_s],

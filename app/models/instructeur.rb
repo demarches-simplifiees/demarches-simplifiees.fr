@@ -302,9 +302,12 @@ class Instructeur < ApplicationRecord
     admin_with_new_instructeur.each do |admin|
       admin.instructeurs.delete(old_instructeur)
     end
-
     old_instructeur.commentaires.update_all(instructeur_id: id)
     old_instructeur.bulk_messages.update_all(instructeur_id: id)
+
+    Avis
+      .where(claimant_id: old_instructeur.id, claimant_type: Instructeur.name)
+      .update_all(claimant_id: id)
   end
 
   private
