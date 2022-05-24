@@ -592,5 +592,38 @@ describe ProcedureRevision do
         expect(subject).to eq row_duration * 2.5
       end
     end
+
+    describe 'caching behavior' do
+      let(:procedure) { create(:procedure, :published, types_de_champ: types_de_champ) }
+
+      before { Rails.cache = ActiveSupport::Cache::MemoryStore.new }
+      after { Rails.cache = ActiveSupport::Cache::NullStore.new }
+
+      context 'when a type de champ belonging to a draft revision is updated' do
+        let(:draft_revision) { procedure.draft_revision }
+
+        before do
+          draft_revision.estimated_fill_duration
+          draft_revision.types_de_champ.first.update!(type_champ: TypeDeChamp.type_champs.fetch(:piece_justificative))
+        end
+
+        it 'returns an up-to-date estimate' do
+          expect(draft_revision.estimated_fill_duration).to eq \
+              TypesDeChamp::TypeDeChampBase::FILL_DURATION_LONG \
+            + TypesDeChamp::TypeDeChampBase::FILL_DURATION_MEDIUM \
+            + TypesDeChamp::TypeDeChampBase::FILL_DURATION_LONG \
+        end
+      end
+
+      context 'when the revision is published (and thus immutable)' do
+        let(:published_revision) { procedure.published_revision }
+
+        it 'caches the estimate' do
+          expect(published_revision).to receive(:compute_estimated_fill_duration).once
+          published_revision.estimated_fill_duration
+          published_revision.estimated_fill_duration
+        end
+      end
+    end
   end
 end
