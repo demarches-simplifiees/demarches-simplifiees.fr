@@ -84,7 +84,8 @@ module ProcedureHelper
   end
 
   def estimated_fill_duration_minutes(procedure)
-    minutes = (procedure.active_revision.estimated_fill_duration / 60.0).round
+    seconds = procedure.active_revision.estimated_fill_duration
+    minutes = (seconds / 60.0).round
     [1, minutes].max
   end
 end
