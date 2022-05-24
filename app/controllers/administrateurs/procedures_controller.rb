@@ -106,10 +106,10 @@ module Administrateurs
       elsif @procedure.brouillon?
         reset_procedure
         flash.notice = 'Démarche modifiée. Tous les dossiers de cette démarche ont été supprimés.'
-        redirect_to edit_admin_procedure_path(id: @procedure.id)
+        redirect_to admin_procedure_path(id: @procedure.id)
       else
         flash.notice = 'Démarche modifiée.'
-        redirect_to edit_admin_procedure_path(id: @procedure.id)
+        redirect_to admin_procedure_path(id: @procedure.id)
       end
     end
 
@@ -259,7 +259,26 @@ module Administrateurs
     end
 
     def procedure_params
-      editable_params = [:libelle, :description, :organisation, :direction, :lien_site_web, :cadre_juridique, :deliberation, :notice, :web_hook_url, :declarative_with_state, :logo, :auto_archive_on, :monavis_embed, :api_entreprise_token, :duree_conservation_dossiers_dans_ds, :zone_id, :lien_dpo]
+      editable_params = [
+        :libelle,
+        :description,
+        :organisation,
+        :direction,
+        :lien_site_web,
+        :cadre_juridique,
+        :deliberation,
+        :notice,
+        :web_hook_url,
+        :declarative_with_state,
+        :logo,
+        :auto_archive_on,
+        :monavis_embed,
+        :api_entreprise_token,
+        :duree_conservation_dossiers_dans_ds,
+        :zone_id,
+        :lien_dpo,
+        :procedure_expires_when_termine_enabled
+      ]
       permited_params = if @procedure&.locked?
         params.require(:procedure).permit(*editable_params)
       else
