@@ -1,0 +1,7 @@
+fr:
+  administrateurs:
+    informations:
+      scope_procedure: Portée de la démarche
+      notice_public_scope_html: "Les démarches hébergées par Démarches Simplifiées sont par défaut à destination des usagers ou des personnes morales. En ce sens, le descriptif et les champs du formulaire qui constituent votre démarche sont <a href=\"https://guides.etalab.gouv.fr/juridique/opendata/#qu-est-ce-que-l-open-data\" target=\"_blank\">communicables à tous, et peuvent être mis à disposition en accès libre et gratuit</a>, sous un format numérique facilement réutilisable. Les valeurs saisies par les usagers restent evidemment confidentielles."
+      notice_internal_scope: Si votre démarche est réservée aux agents de votre administration, vous pouvez réduire sa portée ici.
+

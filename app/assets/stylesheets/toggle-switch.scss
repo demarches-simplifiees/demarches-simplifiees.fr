@@ -9,6 +9,7 @@
   height: 24px;
   margin: 0;
   margin-right: 15px;
+  margin-bottom: 40px;
 }
 
 // Hide default HTML checkbox
@@ -20,7 +21,7 @@
 }
 
 // The control
-.toggle-switch-control {
+%toggle-switch-control-placeholder {
   position: absolute;
   width: 47px;
   cursor: pointer;
@@ -31,31 +32,46 @@
   background-color: $border-grey;
   transition: 0.4s;
   border: 1px solid transparent;
+
+  &::before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 1px;
+    bottom: 1px;
+    background-color: $white;
+    transition: 0.4s;
+  }
+
+  input:focus + & {
+    border-color: $blue-france-500;
+    box-shadow: 0px 0px 2px 1px $blue-france-500;
+  }
+
+  input:checked + &::before {
+    transform: translateX(23px);
+  }
 }
 
-.toggle-switch-control::before {
-  position: absolute;
-  content: "";
-  height: 20px;
-  width: 20px;
-  left: 1px;
-  bottom: 1px;
-  background-color: $white;
-  transition: 0.4s;
+.toggle-switch-control {
+  @extend %toggle-switch-control-placeholder;
+  background-color: $border-grey;
+
+  input:checked + & {
+    background-color: $green;
+  }
 }
 
-input:checked + .toggle-switch-control {
+.toggle-switch-control-2 {
+  @extend %toggle-switch-control-placeholder;
   background-color: $green;
+
+  input:checked + & {
+    background-color: $dark-red;
+  }
 }
 
-input:focus + .toggle-switch-control {
-  border-color: $blue-france-500;
-  box-shadow: 0px 0px 2px 1px $blue-france-500;
-}
-
-input:checked + .toggle-switch-control::before {
-  transform: translateX(23px);
-}
 
 .toggle-switch-label {
   margin-left: 47px;
@@ -67,23 +83,38 @@ input:checked + .toggle-switch-control::before {
   color: $green;
 }
 
+.toggle-switch-label.on-2 {
+  color: $dark-red;
+}
+
 .toggle-switch-label.off {
   color: $grey;
 }
 
-.toggle-switch-checkbox:checked ~ .toggle-switch-label.off {
-  display: none;
+.toggle-switch-label.off-2 {
+  color: $green;
 }
 
-.toggle-switch-checkbox:not(:checked) ~ .toggle-switch-label.on {
+.toggle-switch-checkbox:checked ~ .toggle-switch-label.off,
+.toggle-switch-checkbox:checked ~ .toggle-switch-label.off-2,
+.toggle-switch-checkbox:not(:checked) ~ .toggle-switch-label.on,
+.toggle-switch-checkbox:not(:checked) ~ .toggle-switch-label.on-2 {
   display: none;
 }
 
 // Rounded control
-.toggle-switch-control.round {
+%toggle-switch-control-round-placeholder {
   border-radius: 24px;
+
+  &::before {
+    border-radius: 50%;
+  }
 }
 
-.toggle-switch-control.round::before {
-  border-radius: 50%;
+.toggle-switch-control.round {
+  @extend %toggle-switch-control-round-placeholder;
+}
+
+.toggle-switch-control-2.round {
+  @extend %toggle-switch-control-round-placeholder;
 }

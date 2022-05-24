@@ -64,6 +64,17 @@
 
 = f.label :lien_dpo, 'Lien ou email pour contacter le Délégué à la Protection des Données (DPO)'
 = f.text_field :lien_dpo, class: 'form-control'
+
+%h3.header-subsection= t(:scope_procedure, scope: [:administrateurs, :informations])
+%p.notice= t(:notice_public_scope_html, scope: [:administrateurs, :informations])
+%p.notice= t(:notice_internal_scope, scope: [:administrateurs, :informations])
+
+%label.toggle-switch
+  = f.check_box :internal, class: 'toggle-switch-checkbox'
+  %span.toggle-switch-control-2.round
+  %span.toggle-switch-label.on-2 Démarche réservée aux agents
+  %span.toggle-switch-label.off-2 Démarche publique
+
 %h3.header-subsection Notice explicative de la démarche
 
 %p.notice
