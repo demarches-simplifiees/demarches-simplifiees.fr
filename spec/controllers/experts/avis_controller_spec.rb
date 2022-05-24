@@ -4,9 +4,10 @@ describe Experts::AvisController, type: :controller do
 
     let(:now) { Time.zone.parse('01/02/2345') }
     let(:instructeur) { create(:instructeur) }
+    let(:another_instructeur) { create(:instructeur) }
     let(:claimant) { create(:expert) }
     let(:expert) { create(:expert) }
-    let(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
+    let(:procedure) { create(:procedure, :published, instructeurs: [instructeur, another_instructeur]) }
     let(:another_procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
     let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
@@ -103,6 +104,17 @@ describe Experts::AvisController, type: :controller do
           expect(response).to redirect_to(expert_all_avis_path)
           expect(flash.alert).to eq("Vous n’avez pas accès à cet avis.")
         end
+      end
+    end
+
+    context 'with destroyed claimant' do
+      render_views
+      it 'does not raise' do
+        avis_with_merged_instructeur = create(:avis, dossier: dossier, claimant: another_instructeur, experts_procedure: experts_procedure)
+        another_instructeur.user.destroy
+        sign_in(expert.user)
+        get :instruction, params: { id: avis_with_merged_instructeur.id, procedure_id: procedure.id }
+        expect(response).to have_http_status(200)
       end
     end
 
