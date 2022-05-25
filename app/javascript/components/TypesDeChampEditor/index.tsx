@@ -12,6 +12,7 @@ type TypesDeChampEditorProps = {
   isAnnotation: boolean;
   typeDeChamps: TypeDeChamp[];
   typeDeChampsTypes: [label: string, type: string][];
+  estimatedFillDuration: number;
 };
 
 export type State = Omit<TypesDeChampEditorProps, 'baseUrl'> & {
@@ -27,6 +28,7 @@ export type State = Omit<TypesDeChampEditorProps, 'baseUrl'> & {
     | 'mandatory'
   >;
   prefix?: string;
+  estimatedFillDuration?: number;
 };
 
 export default function TypesDeChampEditor(props: TypesDeChampEditorProps) {
@@ -47,7 +49,8 @@ export default function TypesDeChampEditor(props: TypesDeChampEditorProps) {
     typeDeChampsTypes: props.typeDeChampsTypes,
     directUploadUrl: props.directUploadUrl,
     isAnnotation: props.isAnnotation,
-    continuerUrl: props.continuerUrl
+    continuerUrl: props.continuerUrl,
+    estimatedFillDuration: props.estimatedFillDuration
   };
 
   return <TypeDeChamps state={state} typeDeChamps={props.typeDeChamps} />;
