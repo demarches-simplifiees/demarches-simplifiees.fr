@@ -1,0 +1,7 @@
+en:
+  activerecord:
+    models:
+      mail:
+        received_mail:
+          default_subject: Your file nº %{dossier_number} will be examined (%{procedure_libelle})
+          under_instruction: Acknowledgment of being under instruction

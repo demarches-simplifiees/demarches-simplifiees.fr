@@ -18,6 +18,8 @@
 #  stable_id       :bigint
 #
 class TypeDeChamp < ApplicationRecord
+  self.ignored_columns = [:migrated_parent]
+
   enum type_champs: {
     text: 'text',
     textarea: 'textarea',
@@ -441,12 +443,13 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def migrate_parent!
-    if parent_id.present? && migrated_parent.nil?
-      ProcedureRevisionTypeDeChamp.create(parent: parent.revision_type_de_champ,
-        type_de_champ: self,
-        revision_id: parent.revision_type_de_champ.revision_id,
-        position: order_place)
-      update_column(:migrated_parent, true)
+    if parent_id.present? && revision_types_de_champ.empty?
+      parent.revision_types_de_champ.each do |revision_type_de_champ|
+        ProcedureRevisionTypeDeChamp.create(parent: revision_type_de_champ,
+          type_de_champ: self,
+          revision_id: revision_type_de_champ.revision_id,
+          position: order_place)
+      end
     end
     self
   end
