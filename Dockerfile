@@ -93,6 +93,11 @@ ENV \
     DB_POOL="50"\
     DB_USERNAME="tps"\
     DEMANDE_INSCRIPTION_ADMIN_PAGE_URL="https://www.mes-demarches.gov.pf/commencer/dmra-devenir-administrateur-de-demarches-en-ligne"\
+    DOLIST_BALANCING_VALUE=""\
+    DOLIST_USERNAME=""\
+    DOLIST_PASSWORD=""\
+    DOLIST_ACCOUNT_ID=""\
+    DOLIST_API_KEY=""\
     DOC_URL="https://mes-demarches.gitbook.io/documentation"\
     DS_PROXY_URL=""\
     ENCRYPTION_SERVICE_SALT=""\
@@ -158,10 +163,8 @@ ENV \
     S3_SECRET_KEY="" \
     S3_REGION="" \
     SENDINBLUE_API_V3_KEY=""\
-    SENDINBLUE_BALANCING=""\
-    SENDINBLUE_BALANCING_VALUE=""\
+    SENDINBLUE_BALANCING_VALUE="100"\
     SENDINBLUE_CLIENT_KEY=""\
-    SENDINBLUE_ENABLED="disabled"\
     SENDINBLUE_LOGIN_URL=""\
     SENDINBLUE_SMTP_KEY=""\
     SENDINBLUE_USER_NAME=""\

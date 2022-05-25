@@ -712,8 +712,10 @@ describe Instructeurs::DossiersController, type: :controller do
               '3': {
                 id: champ_repetition.id,
                 champs_attributes: {
-                  id: champ_repetition.champs.first.id,
-                  value: 'text'
+                  '0' => {
+                    id: champ_repetition.champs.first.id,
+                    value: 'text'
+                  }
                 }
               }
             }
