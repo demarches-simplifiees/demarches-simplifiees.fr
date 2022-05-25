@@ -124,7 +124,8 @@ module Instructeurs
         flash.alert = aasm_error_message(e, target_state: :en_instruction)
       end
 
-      render partial: 'state_button_refresh', locals: { dossier: dossier }
+      @dossier = dossier
+      render :change_state
     end
 
     def repasser_en_construction
@@ -135,7 +136,8 @@ module Instructeurs
         flash.alert = aasm_error_message(e, target_state: :en_construction)
       end
 
-      render partial: 'state_button_refresh', locals: { dossier: dossier }
+      @dossier = dossier
+      render :change_state
     end
 
     def repasser_en_instruction
@@ -146,7 +148,8 @@ module Instructeurs
         flash.alert = aasm_error_message(e, target_state: :en_instruction)
       end
 
-      render partial: 'state_button_refresh', locals: { dossier: dossier }
+      @dossier = dossier
+      render :change_state
     end
 
     def terminer
@@ -174,7 +177,8 @@ module Instructeurs
         flash.alert = aasm_error_message(e, target_state: target_state)
       end
 
-      render partial: 'state_button_refresh', locals: { dossier: dossier }
+      @dossier = dossier
+      render :change_state
     end
 
     def create_commentaire

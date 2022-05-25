@@ -485,7 +485,7 @@ fr:
       attestation:
         no_longer_available: "L’attestation n'est plus disponible sur ce dossier."
       papertrail:
-        receipt: "Accusé de dépôt"
+        receipt: "Attestation de dépôt"
         description: "Ce document atteste que %{user_name} a déposé le %{date} un dossier sur la démarche « %{procedure} »."
         file_submitted_at: "Dossier déposé le"
         dossier_state: "État du dossier"
