@@ -180,7 +180,24 @@ class ProcedureRevision < ApplicationRecord
     tdcs_as_json
   end
 
+  # Estimated duration to fill the form, in seconds.
+  #
+  # If the revision is locked (i.e. published), the result is cached (because type de champs can no longer be mutated).
+  def estimated_fill_duration
+    Rails.cache.fetch("#{cache_key_with_version}/estimated_fill_duration", expires_in: 12.hours, force: !locked?) do
+      compute_estimated_fill_duration
+    end
+  end
+
   private
+
+  def compute_estimated_fill_duration
+    tdc_durations = types_de_champ_public.fillable.map do |tdc|
+      duration = tdc.estimated_fill_duration(self)
+      tdc.mandatory ? duration : duration / 2
+    end
+    tdc_durations.sum
+  end
 
   def children_types_de_champ_as_json(tdcs_as_json, parent_tdcs)
     parent_tdcs.each do |parent_tdc|
