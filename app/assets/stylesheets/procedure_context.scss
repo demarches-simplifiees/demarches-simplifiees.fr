@@ -44,15 +44,13 @@ $procedure-description-line-height: 22px;
     }
   }
 
-  .procedure-auto-archive {
-    cursor: pointer;
-
+  .procedure-configuration {
+    font-size: 20px;
     margin-bottom: 32px;
+  }
 
-    p {
-      padding-top: 8px;
-      font-size: 16px;
-    }
+  .procedure-configuration--auto-archive {
+    cursor: pointer;
 
     summary {
       font-size: 20px;
@@ -63,6 +61,11 @@ $procedure-description-line-height: 22px;
       &::-webkit-details-marker {
         display: none;
       }
+    }
+
+    p {
+      padding-top: 8px;
+      font-size: 16px;
     }
   }
 
