@@ -15,20 +15,19 @@ FactoryBot.define do
 
     after(:build) do |type_de_champ, evaluator|
       if evaluator.procedure
-        type_de_champ.revision = evaluator.procedure.active_revision
+        revision = evaluator.procedure.active_revision
 
         build(:procedure_revision_type_de_champ,
-              position: evaluator.position,
-              revision: evaluator.procedure.active_revision,
-              type_de_champ: type_de_champ)
+          position: evaluator.position,
+          revision: revision,
+          type_de_champ: type_de_champ)
 
         if type_de_champ.private?
-          type_de_champ.revision.types_de_champ_private << type_de_champ
+          revision.types_de_champ_private << type_de_champ
         else
-          type_de_champ.revision.types_de_champ_public << type_de_champ
+          revision.types_de_champ_public << type_de_champ
         end
       elsif evaluator.parent
-        type_de_champ.revision = evaluator.parent.revision
         type_de_champ.order_place = evaluator.position || evaluator.parent.types_de_champ.size
         evaluator.parent.types_de_champ << type_de_champ
       else
@@ -201,7 +200,6 @@ FactoryBot.define do
 
       after(:build) do |type_de_champ_repetition, evaluator|
         evaluator.types_de_champ.each do |type_de_champ|
-          type_de_champ.revision = type_de_champ_repetition.revision
           type_de_champ.order_place = type_de_champ_repetition.types_de_champ.size
           type_de_champ_repetition.types_de_champ << type_de_champ
         end

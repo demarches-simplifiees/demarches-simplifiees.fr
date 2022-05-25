@@ -20,7 +20,7 @@
   = f.select :zone_id, grouped_options_for_zone
 
 %h3.header-subsection Logo de la démarche
-= image_upload_and_render f, @procedure.logo
+= render Attachment::EditComponent.image(f, @procedure.logo)
 
 %h3.header-subsection Conservation des données
 = f.label :duree_conservation_dossiers_dans_ds do
@@ -55,7 +55,7 @@
 = f.text_field :cadre_juridique, class: 'form-control', placeholder: 'https://www.legifrance.gouv.fr/'
 
 = f.label :deliberation, 'Importer le texte'
-= text_upload_and_render f, @procedure.deliberation
+= render Attachment::EditComponent.text(f, @procedure.deliberation)
 
 %h3.header-subsection
   RGPD
@@ -73,7 +73,7 @@
 %p.notice
   Formats acceptés : .doc, .odt, .pdf, .ppt, .pptx
 - notice = @procedure.notice
-= text_upload_and_render f, @procedure.notice
+= render Attachment::EditComponent.text(f, @procedure.notice)
 
 - if !@procedure.locked?
   %h3.header-subsection À qui s’adresse ma démarche ?

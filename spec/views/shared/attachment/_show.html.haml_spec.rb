@@ -6,7 +6,7 @@ describe 'shared/attachment/_show.html.haml', type: :view do
     champ.piece_justificative_file.blob.update(metadata: champ.piece_justificative_file.blob.metadata.merge(virus_scan_result: virus_scan_result))
   end
 
-  subject { render 'shared/attachment/show', attachment: champ.piece_justificative_file.attachment }
+  subject { render Attachment::ShowComponent.new(attachment: champ.piece_justificative_file.attachment) }
 
   context 'when there is no anti-virus scan' do
     let(:virus_scan_result) { nil }

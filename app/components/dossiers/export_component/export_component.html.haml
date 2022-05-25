@@ -1,0 +1,21 @@
+%span.dropdown{ data: { controller: 'menu-button' } }
+  %button.button.dropdown-button{ data: { menu_button_target: 'button' } }
+    - if @count.nil?
+      = t(".download_all")
+    - else
+      = t(".download", count: @count)
+  #download-menu.dropdown-content.fade-in-down{ style: 'width: 450px', data: { menu_button_target: 'menu' } }
+    %ul.dropdown-items{ 'data-turbo': 'true' }
+      - exports.each do |item|
+        - export = item[:export]
+        %li
+          - if export.nil?
+            = link_to t(".everything_#{item[:format]}_html"), download_export_path(export_format: item[:format]), data: { turbo_method: :post }
+          - elsif export.ready?
+            = link_to ready_link_label(export), export.file.service_url, target: "_blank", rel: "noopener"
+            - if export.old?
+              = button_to download_export_path(export_format: export.format, force_export: true), **refresh_button_options(export) do
+                .icon.retry
+          - else
+            %span{ data: poll_controller_options(export) }
+              = pending_label(export)

@@ -320,7 +320,6 @@ describe Procedure do
           procedure.validate
           expect(procedure.errors.full_messages_for(:draft_types_de_champ)).to include(invalid_repetition_error_message)
 
-          text_field.revision = repetition.revision
           text_field.order_place = repetition.types_de_champ.size
           procedure.draft_types_de_champ.find(&:repetition?).types_de_champ << text_field
 

@@ -12,12 +12,12 @@
     %p.introduction= @avis.introduction
 
     - if @avis.introduction_file.attached?
-      = render partial: 'shared/attachment/show', locals: { attachment: @avis.introduction_file.attachment }
+      = render Attachment::ShowComponent.new(attachment: @avis.introduction_file.attachment)
     %br/
 
     = form_for @avis, url: expert_avis_path(@avis.procedure, @avis), html: { class: 'form', data: { persisted_content_id: @avis.id } } do |f|
       = f.text_area :answer, rows: 3, placeholder: 'Votre avis', required: true, class: 'persisted-input'
-      = text_upload_and_render f, @avis.piece_justificative_file
+      = render Attachment::EditComponent.text(f, @avis.piece_justificative_file)
 
       .flex.justify-between.align-baseline
         %p.confidentiel.flex

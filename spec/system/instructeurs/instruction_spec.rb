@@ -69,10 +69,22 @@ describe 'Instructing a dossier:', js: true do
 
     click_on procedure.libelle
     click_on 'traité'
-    click_on 'Actions'
+    click_on 'Actions' # destroy from list
     click_on 'Supprimer le dossier'
     click_on 'traité'
     expect(page).not_to have_button('Actions')
+  end
+
+  scenario 'An instructeur can destroy a dossier from view' do
+    log_in(instructeur.email, password)
+
+    dossier.passer_en_instruction(instructeur: instructeur)
+    dossier.accepter!(instructeur: instructeur)
+    visit instructeur_dossier_path(procedure, dossier)
+    click_on 'Actions' # destroy from view
+    within '.user-dossier-actions' do
+      click_on 'Supprimer le dossier'
+    end
   end
 
   scenario 'A instructeur can follow/unfollow a dossier' do

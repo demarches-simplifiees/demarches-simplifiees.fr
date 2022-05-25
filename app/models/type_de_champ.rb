@@ -17,7 +17,7 @@
 #  stable_id   :bigint
 #
 class TypeDeChamp < ApplicationRecord
-  self.ignored_columns = [:migrated_parent]
+  self.ignored_columns = [:migrated_parent, :revision_id]
 
   enum type_champs: {
     text: 'text',
@@ -63,9 +63,6 @@ class TypeDeChamp < ApplicationRecord
     mesri: 'mesri'
   }
 
-  belongs_to :revision, class_name: 'ProcedureRevision', optional: true
-  has_one :procedure, through: :revision
-
   belongs_to :parent, class_name: 'TypeDeChamp', optional: true
   has_many :types_de_champ, -> { ordered }, foreign_key: :parent_id, class_name: 'TypeDeChamp', inverse_of: :parent, dependent: :destroy
 
@@ -73,6 +70,8 @@ class TypeDeChamp < ApplicationRecord
   has_many :revision_types_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
   has_one :revision_type_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', inverse_of: false
   has_many :revisions, -> { ordered }, through: :revision_types_de_champ
+  has_one :revision, through: :revision_type_de_champ
+  has_one :procedure, through: :revision
 
   delegate :tags_for_template, :libelle_for_export, to: :dynamic_type
 
