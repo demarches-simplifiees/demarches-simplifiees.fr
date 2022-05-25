@@ -1,0 +1,9 @@
+fr:
+  activemodel:
+    models:
+      dubious_procedure:
+        other: Démarches douteuses
+    attributes:
+      dubious_procedure:
+        dubious_champs: Champs douteux
+        aasm_state: Etat
