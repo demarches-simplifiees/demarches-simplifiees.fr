@@ -33,39 +33,16 @@ description:
     awards:
       - Prix spécial du Jury Acteurs du Libre (CNLL)  2021
     shortDescription: |-
-      outil permettant aux usagers d’effectuer des démarches en ligne, et aux
-
-      agents administratifs d’instruire ces démarches.
+      outil permettant aux usagers d’effectuer des démarches en ligne, et aux agents administratifs d’instruire ces démarches.
     longDescription: |
-      Démarches Simplifiées est un outil permettant aux usagers d’effectuer des
-
-      démarches en ligne, et aux agents administratifs d’instruire ces
-
-      démarches.
-
-
+      Démarches Simplifiées est un outil permettant aux usagers d’effectuer des démarches en ligne, et aux agents administratifs d’instruire ces démarches.
 
       Il a pour objectif de :
-
-
-
       - faciliter la dématériarialisation de démarches,
-
-
       - simplifier le remplissage de dossiers,
-
-
       - améliorer les temps de traitement.
 
-
-
-      Il doit être générateur d’efficience, tout en garantissant l’autonomie
-
-      personnelle des utilisateurs. Le choix des priorités de développement est
-
-      donc guidé par les retours des ses utilisateurs (usagers et agents
-
-      administratifs).
+      Il doit être générateur d’efficience, tout en garantissant l’autonomie personnelle des utilisateurs. Le choix des priorités de développement est donc guidé par les retours des ses utilisateurs (usagers et agents administratifs).
     genericName: Générateur de formulaire
     features:
       - réaliser une démarche en ligne
