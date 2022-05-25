@@ -29,14 +29,6 @@ module DossierHelper
     new_dossier_url(procedure_id: revision.procedure.id, brouillon: revision.draft? ? true : nil)
   end
 
-  def dossier_form_class(dossier)
-    classes = ['form']
-    if autosave_available?(dossier)
-      classes << 'autosave-enabled'
-    end
-    classes.join(' ')
-  end
-
   def autosave_available?(dossier)
     dossier.brouillon?
   end

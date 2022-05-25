@@ -123,7 +123,7 @@ describe Champs::PieceJustificativeController, type: :controller do
         position: '1',
         champ_id: champ.id,
         blob_signed_id: file
-      }, format: 'js'
+      }, format: :turbo_stream
     end
 
     context 'when the file is valid' do
@@ -139,7 +139,7 @@ describe Champs::PieceJustificativeController, type: :controller do
       it 'renders the attachment template as Javascript' do
         subject
         expect(response.status).to eq(200)
-        expect(response.body).to include("##{champ.input_group_id}")
+        expect(response.body).to include("action=\"replace\" target=\"#{champ.input_group_id}\"")
       end
 
       it 'updates dossier.last_champ_updated_at' do

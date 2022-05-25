@@ -261,14 +261,18 @@ describe 'The user' do
     fill_individual
 
     # Test auto-upload failure
-    logout(:user) # Make the subsequent auto-upload request fail
+    # Make the subsequent auto-upload request fail
+    allow_any_instance_of(Champs::PieceJustificativeController).to receive(:update) do |instance|
+      instance.render json: { errors: ['Error'] }, status: :bad_request
+    end
     attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/file.pdf')
     expect(page).to have_text('Une erreur s’est produite pendant l’envoi du fichier')
     expect(page).to have_button('Ré-essayer', visible: true)
     expect(page).to have_button('Déposer le dossier', disabled: false)
 
+    allow_any_instance_of(Champs::PieceJustificativeController).to receive(:update).and_call_original
+
     # Test that retrying after a failure works
-    login_as(user, scope: :user) # Make the auto-upload request work again
     click_on('Ré-essayer', visible: true)
     expect(page).to have_text('analyse antivirus en cours')
     expect(page).to have_text('file.pdf')
