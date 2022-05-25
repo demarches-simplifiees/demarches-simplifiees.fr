@@ -284,7 +284,7 @@ describe ProcedureRevision do
       before do
         procedure.publish!
         procedure.reload
-        draft.find_or_clone_type_de_champ(last_type_de_champ.stable_id).update(libelle: 'new libelle')
+        draft.find_and_ensure_exclusive_use(last_type_de_champ.stable_id).update(libelle: 'new libelle')
         procedure.reload
         draft.reload
       end
@@ -330,7 +330,7 @@ describe ProcedureRevision do
       let(:procedure) { create(:procedure, :with_type_de_champ) }
 
       before do
-        updated_tdc = new_draft.find_or_clone_type_de_champ(first_tdc.stable_id)
+        updated_tdc = new_draft.find_and_ensure_exclusive_use(first_tdc.stable_id)
 
         updated_tdc.update(libelle: 'modifier le libelle', description: 'une description', mandatory: !updated_tdc.mandatory)
       end
@@ -431,7 +431,7 @@ describe ProcedureRevision do
 
       before do
         child = new_draft.children_of(new_draft.types_de_champ_public.last).first
-        new_draft.find_or_clone_type_de_champ(child.stable_id).update(type_champ: :drop_down_list, drop_down_options: ['one', 'two'])
+        new_draft.find_and_ensure_exclusive_use(child.stable_id).update(type_champ: :drop_down_list, drop_down_options: ['one', 'two'])
       end
 
       it do
@@ -465,7 +465,7 @@ describe ProcedureRevision do
 
       before do
         child = new_draft.types_de_champ_public.last.types_de_champ.first
-        new_draft.find_or_clone_type_de_champ(child.stable_id).update(type_champ: :carte, options: { cadastres: true, znieff: true })
+        new_draft.find_and_ensure_exclusive_use(child.stable_id).update(type_champ: :carte, options: { cadastres: true, znieff: true })
       end
 
       it do
