@@ -22,12 +22,10 @@ module Mails
     DOSSIER_STATE = Dossier.states.fetch(:en_construction)
 
     def attachment_for_dossier(dossier)
-      if procedure.feature_enabled?(:procedure_dossier_papertrail)
-        {
-          filename: I18n.t('users.dossiers.show.papertrail.filename'),
-          content: deposit_receipt_for_dossier(dossier)
-        }
-      end
+      {
+        filename: I18n.t('users.dossiers.show.papertrail.filename'),
+        content: deposit_receipt_for_dossier(dossier)
+      }
     end
 
     private

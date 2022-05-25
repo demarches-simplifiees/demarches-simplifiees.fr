@@ -300,7 +300,7 @@ describe ProcedureRevision do
     let(:first_tdc) { draft.types_de_champ_public.first }
     let(:new_draft) { procedure.create_new_revision }
 
-    subject { procedure.active_revision.compare(new_draft) }
+    subject { procedure.active_revision.compare(new_draft.reload) }
 
     context 'when a type de champ is added' do
       let(:procedure) { create(:procedure) }
@@ -541,6 +541,87 @@ describe ProcedureRevision do
         it 'returns the children regarding the revision' do
           expect(draft.children_of(parent)).to match([child])
           expect(new_draft.children_of(parent)).to match([new_child])
+        end
+      end
+    end
+  end
+
+  describe '#estimated_fill_duration' do
+    let(:mandatory) { true }
+    let(:types_de_champ) do
+      [
+        build(:type_de_champ_text, position: 1, mandatory: true),
+        build(:type_de_champ_siret, position: 2, mandatory: true),
+        build(:type_de_champ_piece_justificative, position: 3, mandatory: mandatory)
+      ]
+    end
+    let(:procedure) { create(:procedure, types_de_champ: types_de_champ) }
+
+    subject { procedure.active_revision.estimated_fill_duration }
+
+    it 'sums the durations of public champs' do
+      expect(subject).to eq \
+          TypesDeChamp::TypeDeChampBase::FILL_DURATION_SHORT \
+        + TypesDeChamp::TypeDeChampBase::FILL_DURATION_MEDIUM \
+        + TypesDeChamp::TypeDeChampBase::FILL_DURATION_LONG
+    end
+
+    context 'when some champs are optional' do
+      let(:mandatory) { false }
+
+      it 'estimates that half of optional champs will be filled' do
+        expect(subject).to eq \
+             TypesDeChamp::TypeDeChampBase::FILL_DURATION_SHORT \
+          + TypesDeChamp::TypeDeChampBase::FILL_DURATION_MEDIUM \
+          + TypesDeChamp::TypeDeChampBase::FILL_DURATION_LONG / 2
+      end
+    end
+
+    context 'when there are repetitions' do
+      let(:types_de_champ) do
+        [
+          build(:type_de_champ_repetition, position: 1, mandatory: true, types_de_champ: [
+            build(:type_de_champ_text, position: 1, mandatory: true),
+            build(:type_de_champ_piece_justificative, position: 2, mandatory: true)
+          ])
+        ]
+      end
+
+      it 'estimates that between 2 and 3 rows will be filled for each repetition' do
+        row_duration = TypesDeChamp::TypeDeChampBase::FILL_DURATION_SHORT + TypesDeChamp::TypeDeChampBase::FILL_DURATION_LONG
+        expect(subject).to eq row_duration * 2.5
+      end
+    end
+
+    describe 'caching behavior' do
+      let(:procedure) { create(:procedure, :published, types_de_champ: types_de_champ) }
+
+      before { Rails.cache = ActiveSupport::Cache::MemoryStore.new }
+      after { Rails.cache = ActiveSupport::Cache::NullStore.new }
+
+      context 'when a type de champ belonging to a draft revision is updated' do
+        let(:draft_revision) { procedure.draft_revision }
+
+        before do
+          draft_revision.estimated_fill_duration
+          draft_revision.types_de_champ.first.update!(type_champ: TypeDeChamp.type_champs.fetch(:piece_justificative))
+        end
+
+        it 'returns an up-to-date estimate' do
+          expect(draft_revision.estimated_fill_duration).to eq \
+              TypesDeChamp::TypeDeChampBase::FILL_DURATION_LONG \
+            + TypesDeChamp::TypeDeChampBase::FILL_DURATION_MEDIUM \
+            + TypesDeChamp::TypeDeChampBase::FILL_DURATION_LONG \
+        end
+      end
+
+      context 'when the revision is published (and thus immutable)' do
+        let(:published_revision) { procedure.published_revision }
+
+        it 'caches the estimate' do
+          expect(published_revision).to receive(:compute_estimated_fill_duration).once
+          published_revision.estimated_fill_duration
+          published_revision.estimated_fill_duration
         end
       end
     end

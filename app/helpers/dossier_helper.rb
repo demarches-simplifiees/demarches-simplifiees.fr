@@ -29,10 +29,6 @@ module DossierHelper
     new_dossier_url(procedure_id: revision.procedure.id, brouillon: revision.draft? ? true : nil)
   end
 
-  def autosave_available?(dossier)
-    dossier.brouillon?
-  end
-
   def dossier_submission_is_closed?(dossier)
     dossier.brouillon? && dossier.procedure.close?
   end

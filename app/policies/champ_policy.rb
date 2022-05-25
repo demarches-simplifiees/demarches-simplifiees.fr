@@ -37,7 +37,7 @@ class ChampPolicy < ApplicationPolicy
         resolved_scope = resolved_scope.or(instructeur_clause)
       end
 
-      resolved_scope
+      resolved_scope.or(joined_scope.where('dossiers.for_procedure_preview': true))
     end
   end
 end
