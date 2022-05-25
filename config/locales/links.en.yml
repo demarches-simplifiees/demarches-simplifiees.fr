@@ -30,7 +30,7 @@ en:
       code:
         label: "Source code"
         title: "Source code"
-        url: "https://github.com/betagouv/demarches-simplifiees.fr"
+        url: "https://github.com/govpf/mes-demarches"
       cgu:
         label: "ToS"
         title: "Terms of Service"
