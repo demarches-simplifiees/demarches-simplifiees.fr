@@ -40,3 +40,16 @@ const fragment = document.createDocumentFragment();
 if (fragment.children == undefined) {
   polyfillChildren(DocumentFragment.prototype);
 }
+
+// IE 11 has no isConnected on Node
+function polyfillIsConnected(proto) {
+  Object.defineProperty(proto, 'isConnected', {
+    get: function () {
+      return document.documentElement.contains(this);
+    }
+  });
+}
+
+if (!('isConnected' in Node.prototype)) {
+  polyfillIsConnected(Node.prototype);
+}

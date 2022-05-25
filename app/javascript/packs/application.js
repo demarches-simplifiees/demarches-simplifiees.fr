@@ -13,7 +13,6 @@ import '../shared/ujs-error-handling';
 import { registerComponents } from '../controllers/react_controller';
 import '../controllers';
 
-import '../new_design/dropdown';
 import '../new_design/form-validation';
 import '../new_design/procedure-context';
 import '../new_design/procedure-form';
