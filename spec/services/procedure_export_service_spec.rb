@@ -374,7 +374,7 @@ describe ProcedureExportService do
         let(:other_parent) { create(:type_de_champ_repetition, stable_id: champ_repetition.stable_id) }
 
         before do
-          create(:procedure_revision_type_de_champ, type_de_champ: other_parent, revision: create(:procedure).active_revision)
+          create(:procedure_revision_type_de_champ, type_de_champ: other_parent, revision: create(:procedure).active_revision, position: 0)
           create(:type_de_champ, parent: other_parent)
         end
 
@@ -424,7 +424,7 @@ describe ProcedureExportService do
         let!(:another_champ_repetition) { create(:champ_repetition, type_de_champ: type_de_champ_repetition, dossier: dossier) }
 
         it 'should have sheets' do
-          expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', champ_repetition.libelle_for_export, another_champ_repetition.libelle_for_export])
+          expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', another_champ_repetition.libelle_for_export, champ_repetition.libelle_for_export])
         end
       end
     end

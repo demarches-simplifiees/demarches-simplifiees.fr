@@ -1,7 +1,8 @@
 class TypesDeChamp::RepetitionTypeDeChamp < TypesDeChamp::TypeDeChampBase
-  def build_champ
+  def build_champ(params)
+    revision = params[:revision]
     champ = super
-    champ.add_row if @type_de_champ.mandatory?
+    champ.add_row(revision) if @type_de_champ.mandatory?
     champ
   end
 

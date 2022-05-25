@@ -74,7 +74,12 @@ describe Champ do
       create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :with_repetition, types_de_champ_count: 1, types_de_champ_private_count: 1).tap do |procedure|
         create(:type_de_champ_header_section, procedure: procedure)
         create(:type_de_champ_header_section, procedure: procedure, private: true)
-        create(:type_de_champ_header_section, parent: procedure.types_de_champ.find(&:repetition?))
+
+        procedure.active_revision.add_type_de_champ(
+          libelle: 'header',
+          type_champ: 'header_section',
+          parent_id: procedure.types_de_champ.find(&:repetition?).stable_id
+        )
       end
     end
     let(:dossier) { create(:dossier, procedure: procedure) }
@@ -543,15 +548,19 @@ describe Champ do
   end
 
   describe 'repetition' do
-    let(:procedure) { create(:procedure, :published, :with_type_de_champ, :with_type_de_champ_private, types_de_champ: [build(:type_de_champ_repetition, types_de_champ: [tdc_text, tdc_integer])]) }
-    let(:tdc_text) { build(:type_de_champ_text) }
-    let(:tdc_integer) { build(:type_de_champ_integer_number) }
+    let(:procedure) { create(:procedure, :published, :with_type_de_champ, :with_type_de_champ_private, :with_repetition) }
+    let(:tdc_repetition) { procedure.types_de_champ.find(&:repetition?) }
+    let(:tdc_text) { procedure.active_revision.children_of(tdc_repetition).first }
 
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:champ) { dossier.champs.find(&:repetition?) }
     let(:champ_text) { champ.champs.find { |c| c.type_champ == 'text' } }
     let(:champ_integer) { champ.champs.find { |c| c.type_champ == 'integer_number' } }
     let(:champ_text_attrs) { attributes_for(:champ_text, type_de_champ: tdc_text, row: 1) }
+
+    before do
+      procedure.active_revision.add_type_de_champ(libelle: 'sub integer', type_champ: 'integer_number', parent_id: tdc_repetition.stable_id)
+    end
 
     context 'when creating the model directly' do
       let(:champ_text_row_1) { create(:champ_text, type_de_champ: tdc_text, row: 2, parent: champ, dossier: nil) }
@@ -582,19 +591,15 @@ describe Champ do
         expect(second_row.size).to eq(1)
         expect(second_row.first.dossier).to eq(dossier)
 
-        # Make champs ordered
-        champ_integer.type_de_champ.update(order_place: 0)
-        champ_text.type_de_champ.update(order_place: 1)
-
         champ.champs << champ_integer
         first_row = champ.reload.rows.first
         expect(first_row.size).to eq(2)
-        expect(first_row.first).to eq(champ_integer)
+        expect(first_row.second).to eq(champ_integer)
 
         champ.champs << champ_text
         first_row = champ.reload.rows.first
         expect(first_row.size).to eq(2)
-        expect(first_row.second).to eq(champ_text)
+        expect(first_row.first).to eq(champ_text)
 
         expect(champ.rows.size).to eq(2)
       end
