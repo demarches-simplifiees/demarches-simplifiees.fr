@@ -58,6 +58,8 @@ Rails.application.routes.draw do
 
     resources :zones, only: [:index, :show]
 
+    resources :dubious_procedures, only: [:index]
+
     post 'demandes/create_administrateur'
     post 'demandes/refuse_administrateur'
 
