@@ -7,7 +7,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
     visit champs_admin_procedure_path(procedure)
   end
 
-  it "Add a new champ" do
+  scenario "adding a new champ" do
     add_champ
 
     fill_in 'champ-0-libelle', with: 'libellé de champ'
@@ -15,7 +15,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
     expect(page).to have_content('Formulaire enregistré')
   end
 
-  it "Add multiple champs" do
+  scenario "adding multiple champs" do
     # Champs are created when clicking the 'Add field' button
     add_champs(count: 3)
 
@@ -47,12 +47,13 @@ describe 'As an administrateur I can edit types de champ', js: true do
     expect(page).to have_content('Supprimer', count: 2)
   end
 
-  it "Remove champs" do
+  scenario "removing champs" do
     add_champ(remove_flash_message: true)
 
     fill_in 'champ-0-libelle', with: 'libellé de champ'
     blur
     expect(page).to have_content('Formulaire enregistré')
+
     page.refresh
 
     page.accept_alert do
@@ -65,7 +66,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
     expect(page).to have_content('Supprimer', count: 0)
   end
 
-  it "Only add valid champs" do
+  scenario "adding an invalid champ" do
     add_champ(remove_flash_message: true)
 
     fill_in 'champ-0-libelle', with: ''
@@ -78,7 +79,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
     expect(page).to have_content('Formulaire enregistré')
   end
 
-  it "Add repetition champ" do
+  scenario "adding a repetition champ" do
     add_champ(remove_flash_message: true)
 
     select('Bloc répétable', from: 'champ-0-type_champ')
@@ -109,7 +110,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
     expect(page).to have_content('Supprimer', count: 3)
   end
 
-  it "Add carte champ" do
+  scenario "adding a carte champ" do
     add_champ
 
     select('Carte', from: 'champ-0-type_champ')
@@ -128,7 +129,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
     end
   end
 
-  it "Add dropdown champ" do
+  scenario "adding a dropdown champ" do
     add_champ
 
     select('Choix parmi une liste', from: 'champ-0-type_champ')
