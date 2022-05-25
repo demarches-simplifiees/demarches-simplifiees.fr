@@ -13,7 +13,7 @@ describe Champs::PieceJustificativeController, type: :controller do
         position: '1',
         champ_id: annotation.id,
         blob_signed_id: file
-      }, format: 'js'
+      }, format: 'turbo_stream'
       sign_out instructeur.user
       sign_in current_user
     end
@@ -26,7 +26,7 @@ describe Champs::PieceJustificativeController, type: :controller do
       }
     end
     subject do
-      get :download, params: params, xhr: true
+      get :download, params: params
     end
 
     shared_examples_for "he can download qrcoded pdf" do
