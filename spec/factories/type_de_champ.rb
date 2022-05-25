@@ -92,6 +92,9 @@ FactoryBot.define do
       trait :without_selectable_values do
         drop_down_list_value { "\r\n--separateur--\r\n--separateur 2--\r\n \r\n" }
       end
+      trait :with_other do
+        drop_down_other { true }
+      end
     end
     factory :type_de_champ_multiple_drop_down_list do
       type_champ { TypeDeChamp.type_champs.fetch(:multiple_drop_down_list) }
@@ -205,8 +208,17 @@ FactoryBot.define do
       end
 
       trait :with_types_de_champ do
-        after(:build) do |type_de_champ, _evaluator|
-          build(:type_de_champ, libelle: 'sub type de champ', parent: type_de_champ)
+        after(:build) do |type_de_champ, evaluator|
+          tdc = build(:type_de_champ, libelle: 'sub type de champ', parent: type_de_champ)
+
+          evaluator.procedure.save
+
+          ProcedureRevisionTypeDeChamp.create!(
+            revision_id: evaluator.procedure.active_revision.id,
+            type_de_champ_id: tdc.id,
+            parent_id: tdc.parent.revision_type_de_champ.id,
+            position: 0
+          )
         end
       end
     end

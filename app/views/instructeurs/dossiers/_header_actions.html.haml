@@ -1,7 +1,7 @@
-%span.dropdown.print-menu-opener
-  %button.button.dropdown-button.icon-only{ title: 'imprimer', 'aria-label': 'imprimer', 'aria-expanded' => 'false', 'aria-controls' => 'print-menu' }
+%span.dropdown.print-menu-opener{ data: { controller: 'menu-button' } }
+  %button.button.dropdown-button.icon-only{ title: 'imprimer', 'aria-label': 'imprimer', data: { menu_button_target: 'button' } }
     %span.icon.printer
-  %ul#print-menu.print-menu.dropdown-content
+  %ul#print-menu.print-menu.dropdown-content{ data: { menu_button_target: 'menu' } }
     %li
       = link_to "Tout le dossier", print_instructeur_dossier_path(dossier.procedure, dossier), target: "_blank", rel: "noopener", class: "menu-item menu-link"
     %li
@@ -12,10 +12,10 @@
       %li
         = link_to "Export GeoJSON", geo_data_instructeur_dossier_path(dossier.procedure, dossier), target: "_blank", rel: "noopener", class: "menu-item menu-link"
 
-%span.dropdown.print-menu-opener
-  %button.button.dropdown-button.icon-only{ 'aria-expanded' => 'false', 'aria-controls' => 'print-pj-menu' }
+%span.dropdown.print-menu-opener{ data: { controller: 'menu-button' } }
+  %button.button.dropdown-button.icon-only{ data: { menu_button_target: 'button' } }
     %span.icon.attached
-  %ul#print-pj-menu.print-menu.dropdown-content
+  %ul#print-pj-menu.print-menu.dropdown-content{ data: { menu_button_target: 'menu' } }
     %li= link_to "Télécharger le dossier et toutes ses pièces jointes", telecharger_pjs_instructeur_dossier_path(dossier.procedure, dossier), target: "_blank", rel: "noopener", class: "menu-item menu-link"
 
 = render partial: "instructeurs/procedures/dossier_actions",

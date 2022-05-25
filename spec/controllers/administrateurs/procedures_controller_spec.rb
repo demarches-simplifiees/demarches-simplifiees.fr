@@ -218,7 +218,7 @@ describe Administrateurs::ProceduresController, type: :controller do
   end
 
   describe 'PUT #update' do
-    let!(:procedure) { create(:procedure, :with_type_de_champ, administrateur: admin) }
+    let!(:procedure) { create(:procedure, :with_type_de_champ, administrateur: admin, procedure_expires_when_termine_enabled: false) }
 
     context 'when administrateur is not connected' do
       before do
@@ -232,7 +232,7 @@ describe Administrateurs::ProceduresController, type: :controller do
 
     context 'when administrateur is connected' do
       def update_procedure
-        put :update, params: base_params.merge({ id: procedure.id, procedure: procedure_params })
+        put :update, params: base_params.merge({ id: procedure.id, procedure: procedure_params.merge(procedure_expires_when_termine_enabled: true) })
         procedure.reload
       end
 
@@ -242,6 +242,7 @@ describe Administrateurs::ProceduresController, type: :controller do
         let(:organisation) { 'plop' }
         let(:direction) { 'plap' }
         let(:duree_conservation_dossiers_dans_ds) { 7 }
+        let(:procedure_expires_when_termine_enabled) { true }
 
         before { update_procedure }
 
@@ -253,9 +254,10 @@ describe Administrateurs::ProceduresController, type: :controller do
           it { expect(subject.organisation).to eq(organisation) }
           it { expect(subject.direction).to eq(direction) }
           it { expect(subject.duree_conservation_dossiers_dans_ds).to eq(duree_conservation_dossiers_dans_ds) }
+          it { expect(subject.procedure_expires_when_termine_enabled).to eq(true) }
         end
 
-        it { is_expected.to redirect_to(edit_admin_procedure_path id: procedure.id) }
+        it { is_expected.to redirect_to(admin_procedure_path id: procedure.id) }
         it { expect(flash[:notice]).to be_present }
       end
 
@@ -768,6 +770,19 @@ describe Administrateurs::ProceduresController, type: :controller do
 
     context 'when admin accept to invite experts on this procedure (true by default)' do
       it { expect(procedure.allow_expert_review).to be_truthy }
+    end
+  end
+
+  describe 'PUT #restore' do
+    let(:procedure) { create :procedure, :discarded, administrateur: admin }
+
+    context 'when the admin wants to restore a procedure' do
+      before do
+        put :restore, params: { id: procedure.id }
+        procedure.reload
+      end
+
+      it { expect(procedure.discarded?).to be_falsy }
     end
   end
 end

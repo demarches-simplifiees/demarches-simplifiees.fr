@@ -12,6 +12,8 @@
     - else
       %p
         = t('users.dossiers.header.banner.procedure_deleted_dossier_en_cours_content')
+    %p
+      = t('users.dossiers.header.banner.contact_service', service_name: dossier.procedure.service.nom, service_phone_number: dossier.procedure.service.telephone, service_email: dossier.procedure.service.email)
 
   - else
     .flex.justify-between
@@ -19,4 +21,6 @@
       = render(partial: 'users/dossiers/show/print_dossier', locals: { dossier: dossier }) if !dossier.brouillon?
     %p
       = t('users.dossiers.header.banner.procedure_close_content')
+    %p
+      = t('users.dossiers.header.banner.contact_service', service_name: dossier.procedure.service.nom, service_phone_number: dossier.procedure.service.telephone, service_email: dossier.procedure.service.email)
 

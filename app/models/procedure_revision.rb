@@ -53,23 +53,23 @@ class ProcedureRevision < ApplicationRecord
     end
   end
 
-  def find_or_clone_type_de_champ(id)
-    type_de_champ = find_type_de_champ_by_id(id)
+  def find_or_clone_type_de_champ(stable_id)
+    type_de_champ = find_type_de_champ_by_stable_id(stable_id)
 
-    if type_de_champ.revision == self
+    if type_de_champ.only_present_on_draft?
       type_de_champ
     elsif type_de_champ.parent.present?
-      find_or_clone_type_de_champ(type_de_champ.parent.stable_id).types_de_champ.find_by!(stable_id: id)
+      find_or_clone_type_de_champ(type_de_champ.parent.stable_id).types_de_champ.find_by!(stable_id: stable_id)
     else
       revise_type_de_champ(type_de_champ)
     end
   end
 
-  def move_type_de_champ(id, position)
-    type_de_champ = find_type_de_champ_by_id(id)
+  def move_type_de_champ(stable_id, position)
+    type_de_champ = find_type_de_champ_by_stable_id(stable_id)
 
     if type_de_champ.parent.present?
-      repetition_type_de_champ = find_or_clone_type_de_champ(id).parent
+      repetition_type_de_champ = find_or_clone_type_de_champ(stable_id).parent
 
       move_type_de_champ_hash(repetition_type_de_champ.types_de_champ.to_a, type_de_champ, position).each do |(id, position)|
         type_de_champ = repetition_type_de_champ.types_de_champ.find(id)
@@ -85,13 +85,13 @@ class ProcedureRevision < ApplicationRecord
     end
   end
 
-  def remove_type_de_champ(id)
-    type_de_champ = find_type_de_champ_by_id(id)
+  def remove_type_de_champ(stable_id)
+    type_de_champ = find_type_de_champ_by_stable_id(stable_id)
 
-    if type_de_champ.revision == self
+    if type_de_champ.only_present_on_draft?
       type_de_champ.destroy
     elsif type_de_champ.parent.present?
-      find_or_clone_type_de_champ(id).destroy
+      find_or_clone_type_de_champ(stable_id).destroy
     else
       types_de_champ.delete(type_de_champ)
     end
@@ -138,6 +138,14 @@ class ProcedureRevision < ApplicationRecord
     end
 
     dossier
+  end
+
+  def children_of(tdc)
+    parent_revision_type_de_champ = revision_types_de_champ.find_by(type_de_champ: tdc)
+
+    types_de_champ
+      .where(procedure_revision_types_de_champ: { parent_id: parent_revision_type_de_champ.id })
+      .order("procedure_revision_types_de_champ.position")
   end
 
   private
@@ -384,9 +392,8 @@ class ProcedureRevision < ApplicationRecord
     cloned_type_de_champ
   end
 
-  def find_type_de_champ_by_id(id)
-    types_de_champ.find_by(stable_id: id) ||
-      types_de_champ_in_repetition.find_by!(stable_id: id)
+  def find_type_de_champ_by_stable_id(stable_id)
+    types_de_champ.find_by(stable_id: stable_id) || types_de_champ_in_repetition.find_by(stable_id: stable_id)
   end
 
   def types_de_champ_in_repetition

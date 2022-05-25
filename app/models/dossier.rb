@@ -1119,20 +1119,17 @@ class Dossier < ApplicationRecord
     if procedure.routee?
       columns << ['Groupe instructeur', groupe_instructeur.label]
     end
-
     columns + self.class.champs_for_export(champs + champs_private, types_de_champ)
   end
 
+  # Get all the champs values for the types de champ in the final list.
+  # Dossier might not have corresponding champ – display nil.
+  # To do so, we build a virtual champ when there is no value so we can call for_export with all indexes
   def self.champs_for_export(champs, types_de_champ)
-    # Index values by stable_id
-    values = champs.reject(&:exclude_from_export?)
-      .index_by(&:stable_id)
-      .transform_values(&:for_export)
-
-    # Get all the champs values for the types de champ in the final list.
-    # Dossier might not have corresponding champ – display nil.
     types_de_champ.flat_map do |type_de_champ|
-      Array.wrap(values[type_de_champ.stable_id] || [nil]).map.with_index do |champ_value, index|
+      champ_or_new = champs.find { |champ| champ.stable_id == type_de_champ.stable_id }
+      champ_or_new ||= type_de_champ.champ.build
+      Array.wrap(champ_or_new.for_export || [nil]).map.with_index do |champ_value, index|
         [type_de_champ.libelle_for_export(index), champ_value]
       end
     end

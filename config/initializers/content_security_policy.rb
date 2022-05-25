@@ -12,7 +12,7 @@ Rails.application.config.content_security_policy do |policy|
 
   # Javascript: allow us, SendInBlue and Matomo.
   # We need unsafe_inline because miniprofiler and us have some inline buttons :(
-  scripts_whitelist = ["*.sendinblue.com", "*.crisp.chat", "crisp.chat", "*.sibautomation.com", "sibautomation.com", "cdn.jsdelivr.net", "maxcdn.bootstrapcdn.com", "code.jquery.com"]
+  scripts_whitelist = ["*.crisp.chat", "crisp.chat", "cdn.jsdelivr.net", "maxcdn.bootstrapcdn.com", "code.jquery.com"]
   scripts_whitelist << URI(MATOMO_IFRAME_URL).host if MATOMO_IFRAME_URL.present?
   policy.script_src(:self, :unsafe_eval, :unsafe_inline, :blob, *scripts_whitelist)
 
@@ -20,7 +20,7 @@ Rails.application.config.content_security_policy do |policy|
   # It's too complicated to be fixed right now (and it wouldn't add value: this is hardcoded in views, so not subject to injections)
   policy.style_src(:self, :unsafe_inline, "*.crisp.chat", "crisp.chat", 'cdn.jsdelivr.net', 'maxcdn.bootstrapcdn.com')
 
-  connect_whitelist = ["wss://*.crisp.chat", "*.crisp.chat", "in-automate.sendinblue.com", "app.franceconnect.gouv.fr", "sentry.io", "openmaptiles.geo.data.gouv.fr", "openmaptiles.github.io", "tiles.geo.api.gouv.fr", "wxs.ign.fr"]
+  connect_whitelist = ["wss://*.crisp.chat", "*.crisp.chat", "app.franceconnect.gouv.fr", "sentry.io", "openmaptiles.geo.data.gouv.fr", "openmaptiles.github.io", "tiles.geo.api.gouv.fr", "wxs.ign.fr"]
   connect_whitelist << ENV.fetch('APP_HOST')
   connect_whitelist << URI(DS_PROXY_URL).host if DS_PROXY_URL.present?
   connect_whitelist << URI(API_ADRESSE_URL).host if API_ADRESSE_URL.present?

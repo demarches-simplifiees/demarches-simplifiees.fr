@@ -5,7 +5,7 @@ module Users
     layout 'procedure_context', only: [:identite, :update_identite, :siret, :update_siret]
 
     ACTIONS_ALLOWED_TO_ANY_USER = [:index, :recherche, :new, :qrcode, :transferer_all]
-    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :demande, :messagerie, :brouillon, :update_brouillon, :modifier, :update, :create_commentaire]
+    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :demande, :messagerie, :brouillon, :update_brouillon, :modifier, :update, :create_commentaire, :papertrail]
     ACTIONS_ALLOWED_TO_OWNER_OR_INVITE_HIDDEN = [:restore]
 
     before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE_HIDDEN
@@ -81,6 +81,11 @@ module Users
       else
         forbidden!
       end
+    end
+
+    def papertrail
+      raise ActionController::BadRequest if dossier.brouillon?
+      @dossier = dossier
     end
 
     def identite
@@ -185,7 +190,7 @@ module Users
 
       respond_to do |format|
         format.html { render :brouillon }
-        format.js { render :brouillon }
+        format.turbo_stream
       end
     end
 

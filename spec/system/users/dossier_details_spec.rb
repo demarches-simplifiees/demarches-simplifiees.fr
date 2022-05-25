@@ -16,6 +16,16 @@ describe 'Dossier details:' do
     expect(page).to have_text(dossier.commentaires.last.body)
   end
 
+  context 'when the deposit receipt feature is enabled' do
+    before { Flipper.enable(:procedure_dossier_papertrail, procedure) }
+    after { Flipper.disable(:procedure_dossier_papertrail, procedure) }
+
+    it 'displays a link to download a deposit receipt' do
+      visit dossier_path(dossier)
+      expect(page).to have_link("Obtenir une attestation de dépôt de dossier", href: %r{dossiers/#{dossier.id}/papertrail.pdf})
+    end
+  end
+
   describe "the user can see the mean time they are expected to wait" do
     let(:other_dossier) { create(:dossier, :accepte, :with_individual, procedure: procedure, depose_at: 10.days.ago, en_instruction_at: 9.days.ago, processed_at: Time.zone.now) }
 

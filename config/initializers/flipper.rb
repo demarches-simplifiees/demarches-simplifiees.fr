@@ -34,7 +34,8 @@ features = [
   :visa,
   :procedure_revisions,
   :procedure_routage_api,
-  :procedure_process_expired_dossiers_termine
+  :procedure_process_expired_dossiers_termine,
+  :procedure_dossier_papertrail
 ]
 
 def database_exists?

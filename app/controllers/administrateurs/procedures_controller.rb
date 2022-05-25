@@ -9,9 +9,11 @@ module Administrateurs
       @procedures_publiees = paginated_published_procedures
       @procedures_draft = paginated_draft_procedures
       @procedures_closed = paginated_closed_procedures
+      @procedures_deleted = paginated_deleted_procedures
       @procedures_publiees_count = current_administrateur.procedures.publiees.count
       @procedures_draft_count = current_administrateur.procedures.brouillons.count
       @procedures_closed_count = current_administrateur.procedures.closes.count
+      @procedures_deleted_count = current_administrateur.procedures.with_discarded.discarded.count
       @statut = params[:statut]
       @statut.blank? ? @statut = 'publiees' : @statut = params[:statut]
     end
@@ -38,6 +40,16 @@ module Administrateurs
       current_administrateur
         .procedures
         .closes
+        .page(params[:page])
+        .per(ITEMS_PER_PAGE)
+        .order(created_at: :desc)
+    end
+
+    def paginated_deleted_procedures
+      current_administrateur
+        .procedures
+        .with_discarded
+        .discarded
         .page(params[:page])
         .per(ITEMS_PER_PAGE)
         .order(created_at: :desc)
@@ -106,10 +118,10 @@ module Administrateurs
       elsif @procedure.brouillon?
         reset_procedure
         flash.notice = 'Démarche modifiée. Tous les dossiers de cette démarche ont été supprimés.'
-        redirect_to edit_admin_procedure_path(id: @procedure.id)
+        redirect_to admin_procedure_path(id: @procedure.id)
       else
         flash.notice = 'Démarche modifiée.'
-        redirect_to edit_admin_procedure_path(id: @procedure.id)
+        redirect_to admin_procedure_path(id: @procedure.id)
       end
     end
 
@@ -158,6 +170,13 @@ module Administrateurs
       else
         render json: {}, status: 403
       end
+    end
+
+    def restore
+      procedure = current_administrateur.procedures.with_discarded.discarded.find(params[:id])
+      procedure.restore_procedure
+      flash.notice = t('administrateurs.index.restored', procedure_id: procedure.id)
+      redirect_to admin_procedures_path
     end
 
     def monavis
@@ -259,7 +278,26 @@ module Administrateurs
     end
 
     def procedure_params
-      editable_params = [:libelle, :description, :organisation, :direction, :lien_site_web, :cadre_juridique, :deliberation, :notice, :web_hook_url, :declarative_with_state, :logo, :auto_archive_on, :monavis_embed, :api_entreprise_token, :duree_conservation_dossiers_dans_ds, :zone_id, :lien_dpo]
+      editable_params = [
+        :libelle,
+        :description,
+        :organisation,
+        :direction,
+        :lien_site_web,
+        :cadre_juridique,
+        :deliberation,
+        :notice,
+        :web_hook_url,
+        :declarative_with_state,
+        :logo,
+        :auto_archive_on,
+        :monavis_embed,
+        :api_entreprise_token,
+        :duree_conservation_dossiers_dans_ds,
+        :zone_id,
+        :lien_dpo,
+        :procedure_expires_when_termine_enabled
+      ]
       permited_params = if @procedure&.locked?
         params.require(:procedure).permit(*editable_params)
       else

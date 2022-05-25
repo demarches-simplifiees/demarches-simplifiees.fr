@@ -12,7 +12,7 @@ describe 'users/activate/new.html.haml', type: :view do
 
   it 'renders' do
     expect(rendered).to have_selector('#user_email[disabled]')
-    expect(rendered).to have_selector("input[id=user_password][data-url='#{show_password_complexity_path(3)}']")
+    expect(rendered).to have_selector("input[id=user_password][data-turbo-input-url-value='#{show_password_complexity_path(complexity)}']")
     expect(rendered).to have_selector('.explication')
     expect(rendered).to have_selector('#complexity-bar')
     expect(rendered).to have_selector('#complexity-label')

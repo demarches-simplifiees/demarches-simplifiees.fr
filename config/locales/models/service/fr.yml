@@ -1,16 +1,15 @@
 fr:
-  type_organisme:
-    administration_centrale: 'Administration centrale'
-    association: 'Association'
-    collectivite_territoriale: 'Collectivité territoriale'
-    etablissement_enseignement: 'Établissement d’enseignement'
-    operateur_d_etat: "Opérateur d’État"
-    service_deconcentre_de_l_etat: "Service déconcentré de l’État"
-    autre: 'Autre'
   activerecord:
+    models:
+      service:
+        one: 'Service'
+        other: 'Services'
     attributes:
       service:
         siret: "Numéro TAHITI"
+        adresse: 'Adresse postale'
+        email: 'Email de contact'
+        telephone: 'Téléphone'
     errors:
       models:
         service:
@@ -19,3 +18,11 @@ fr:
               format: 'doit commencer par une lettre ou un chiffre, suivi de 5 chiffres'
               invalid: 'ne correspond pas à un établissement existant'
               checksum: 'comporte une erreur, vérifiez les chiffres composant le numéro'
+  type_organisme:
+    administration_centrale: 'Administration centrale'
+    association: 'Association'
+    collectivite_territoriale: 'Collectivité territoriale'
+    etablissement_enseignement: 'Établissement d’enseignement'
+    operateur_d_etat: "Opérateur d’État"
+    service_deconcentre_de_l_etat: "Service déconcentré de l’État"
+    autre: 'Autre'
