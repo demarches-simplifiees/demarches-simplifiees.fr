@@ -3,19 +3,20 @@ import {
   createTypeDeChampOperation,
   destroyTypeDeChampOperation,
   moveTypeDeChampOperation,
-  updateTypeDeChampOperation
+  updateTypeDeChampOperation,
+  estimateFillDuration
 } from './operations';
 import type { TypeDeChamp, State, Flash, OperationsQueue } from './types';
 
 type AddNewTypeDeChampAction = {
   type: 'addNewTypeDeChamp';
-  done: () => void;
+  done: (estimatedFillDuration: number) => void;
 };
 
 type AddNewRepetitionTypeDeChampAction = {
   type: 'addNewRepetitionTypeDeChamp';
   params: { typeDeChamp: TypeDeChamp };
-  done: () => void;
+  done: (estimatedFillDuration: number) => void;
 };
 
 type UpdateTypeDeChampAction = {
@@ -25,12 +26,13 @@ type UpdateTypeDeChampAction = {
     field: keyof TypeDeChamp;
     value: string | boolean;
   };
-  done: () => void;
+  done: (estimatedFillDuration: number) => void;
 };
 
 type RemoveTypeDeChampAction = {
   type: 'removeTypeDeChamp';
   params: { typeDeChamp: TypeDeChamp };
+  done: (estimatedFillDuration: number) => void;
 };
 
 type MoveTypeDeChampUpAction = {
@@ -50,6 +52,7 @@ type OnSortTypeDeChampsAction = {
 
 type RefreshAction = {
   type: 'refresh';
+  params: { estimatedFillDuration: number };
 };
 
 export type Action =
@@ -84,7 +87,12 @@ export default function typeDeChampsReducer(
         action.done
       );
     case 'removeTypeDeChamp':
-      return removeTypeDeChamp(state, state.typeDeChamps, action.params);
+      return removeTypeDeChamp(
+        state,
+        state.typeDeChamps,
+        action.params,
+        action.done
+      );
     case 'moveTypeDeChampUp':
       return moveTypeDeChampUp(state, state.typeDeChamps, action.params);
     case 'moveTypeDeChampDown':
@@ -92,7 +100,11 @@ export default function typeDeChampsReducer(
     case 'onSortTypeDeChamps':
       return onSortTypeDeChamps(state, state.typeDeChamps, action.params);
     case 'refresh':
-      return { ...state, typeDeChamps: [...state.typeDeChamps] };
+      return {
+        ...state,
+        typeDeChamps: [...state.typeDeChamps],
+        estimatedFillDuration: action.params.estimatedFillDuration
+      };
   }
 }
 
@@ -100,7 +112,7 @@ function addTypeDeChamp(
   state: State,
   typeDeChamps: TypeDeChamp[],
   insertAfter: { index: number; target: HTMLDivElement } | null,
-  done: () => void
+  done: (estimatedFillDuration: number) => void
 ) {
   const typeDeChamp = {
     ...state.defaultTypeDeChampAttributes
@@ -117,7 +129,8 @@ function addTypeDeChamp(
         );
       }
       state.flash.success();
-      done();
+      const estimatedFillDuration = await estimateFillDuration(state.queue);
+      done(estimatedFillDuration);
       if (insertAfter) {
         insertAfter.target.nextElementSibling?.scrollIntoView({
           behavior: 'smooth',
@@ -150,7 +163,7 @@ function addTypeDeChamp(
 function addNewTypeDeChamp(
   state: State,
   typeDeChamps: TypeDeChamp[],
-  done: () => void
+  done: (estimatedFillDuration: number) => void
 ) {
   return addTypeDeChamp(state, typeDeChamps, findItemToInsertAfter(), done);
 }
@@ -159,7 +172,7 @@ function addNewRepetitionTypeDeChamp(
   state: State,
   typeDeChamps: TypeDeChamp[],
   { typeDeChamp }: AddNewRepetitionTypeDeChampAction['params'],
-  done: () => void
+  done: (estimatedFillDuration: number) => void
 ) {
   return addTypeDeChamp(
     {
@@ -179,7 +192,7 @@ function updateTypeDeChamp(
   state: State,
   typeDeChamps: TypeDeChamp[],
   { typeDeChamp, field, value }: UpdateTypeDeChampAction['params'],
-  done: () => void
+  done: (estimatedFillDuration: number) => void
 ) {
   if (field == 'type_champ' && !typeDeChamp.drop_down_list_value) {
     switch (value) {
@@ -212,10 +225,17 @@ function updateTypeDeChamp(
 function removeTypeDeChamp(
   state: State,
   typeDeChamps: TypeDeChamp[],
-  { typeDeChamp }: RemoveTypeDeChampAction['params']
+  { typeDeChamp }: RemoveTypeDeChampAction['params'],
+  done: (estimatedFillDuration: number) => void
 ) {
   destroyTypeDeChampOperation(typeDeChamp, state.queue)
-    .then(() => state.flash.success())
+    .then(() => {
+      state.flash.success();
+      return estimateFillDuration(state.queue);
+    })
+    .then((estimatedFillDuration: number) => {
+      done(estimatedFillDuration);
+    })
     .catch((message) => state.flash.error(message));
 
   return {
@@ -295,11 +315,14 @@ function getUpdateHandler(
   let handler = updateHandlers.get(typeDeChamp);
   if (!handler) {
     handler = debounce(
-      (done: () => void) =>
+      (done: (estimatedFillDuration: number) => void) =>
         updateTypeDeChampOperation(typeDeChamp, queue)
           .then(() => {
             flash.success();
-            done();
+            return estimateFillDuration(queue);
+          })
+          .then((estimatedFillDuration: number) => {
+            done(estimatedFillDuration);
           })
           .catch((message) => flash.error(message)),
       200

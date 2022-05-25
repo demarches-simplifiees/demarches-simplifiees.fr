@@ -93,7 +93,13 @@ export const TypeDeChampComponent = SortableElement<TypeDeChampProps>(
                 if (confirm('Êtes vous sûr de vouloir supprimer ce champ ?'))
                   dispatch({
                     type: 'removeTypeDeChamp',
-                    params: { typeDeChamp }
+                    params: { typeDeChamp },
+                    done: (estimatedFillDuration) => {
+                      dispatch({
+                        type: 'refresh',
+                        params: { estimatedFillDuration }
+                      });
+                    }
                   });
               }}
             >
@@ -223,7 +229,12 @@ function createUpdateHandler(
           field,
           value: readValue(target)
         },
-        done: () => dispatch({ type: 'refresh' })
+        done: (estimatedFillDuration: number) => {
+          return dispatch({
+            type: 'refresh',
+            params: { estimatedFillDuration }
+          });
+        }
       })
   };
 }
