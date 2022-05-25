@@ -149,7 +149,7 @@ describe API::V2::GraphqlController do
                 type: tdc.type_champ,
                 description: tdc.description,
                 required: tdc.mandatory?,
-                champDescriptors: tdc.repetition? ? tdc.reload.types_de_champ.map { |tdc| { id: tdc.to_typed_id, type: tdc.type_champ } } : nil,
+                champDescriptors: tdc.repetition? ? procedure.active_revision.children_of(tdc.reload).map { |tdc| { id: tdc.to_typed_id, type: tdc.type_champ } } : nil,
                 options: tdc.drop_down_list? ? tdc.drop_down_list_options.reject(&:empty?) : nil
               }
             end,
