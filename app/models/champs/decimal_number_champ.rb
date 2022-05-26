@@ -36,7 +36,28 @@ class Champs::DecimalNumberChamp < Champ
     processed_value
   end
 
+  def eval_condition(operator, value)
+    case operator
+    when 'is'
+      for_condition == value.to_f
+    when 'is_not'
+      for_condition != value.to_f
+    when 'gt'
+      for_condition > value.to_f
+    when 'gte'
+      for_condition >= value.to_f
+    when 'lt'
+      for_condition < value.to_f
+    when 'lte'
+      for_condition <= value.to_f
+    end
+  end
+
   private
+
+  def for_condition
+    processed_value || 0
+  end
 
   def processed_value
     value&.to_f

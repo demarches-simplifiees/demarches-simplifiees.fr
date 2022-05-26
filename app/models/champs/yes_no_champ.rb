@@ -46,6 +46,19 @@ class Champs::YesNoChamp < Champ
     true? ? 'true' : 'false'
   end
 
+  def eval_condition(operator, value)
+    case operator 
+    when 'is'
+      for_api_v2 == value.to_s
+    when 'is_not'
+      for_api_v2 != value.to_s
+    when 'is_blank'
+      blank?
+    when 'is_not_blank'
+      !blank?
+    end
+  end
+
   private
 
   def processed_value

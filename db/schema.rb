@@ -10,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_26_140107) do
+ActiveRecord::Schema.define(version: 2022_05_18_104956) do
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -773,7 +774,19 @@ ActiveRecord::Schema.define(version: 2022_04_26_140107) do
     t.index ["instructeur_id"], name: "index_trusted_device_tokens_on_instructeur_id"
   end
 
+  create_table "type_de_champ_conditions", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.string "operator", null: false
+    t.bigint "source_type_de_champ_stable_id", null: false
+    t.bigint "type_de_champ_id", null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "value"
+    t.index ["type_de_champ_id"], name: "index_type_de_champ_conditions_on_type_de_champ_id"
+  end
+
   create_table "types_de_champ", id: :serial, force: :cascade do |t|
+    t.string "conditional_logic_combinator", default: "AND"
+    t.boolean "conditional_logic_enabled", default: false
     t.datetime "created_at"
     t.text "description"
     t.string "libelle"
@@ -901,6 +914,7 @@ ActiveRecord::Schema.define(version: 2022_04_26_140107) do
   add_foreign_key "services", "administrateurs"
   add_foreign_key "traitements", "dossiers"
   add_foreign_key "trusted_device_tokens", "instructeurs"
+  add_foreign_key "type_de_champ_conditions", "types_de_champ"
   add_foreign_key "types_de_champ", "procedure_revisions", column: "revision_id"
   add_foreign_key "types_de_champ", "types_de_champ", column: "parent_id"
   add_foreign_key "users", "users", column: "requested_merge_into_id"

@@ -180,6 +180,10 @@ class ProcedureRevision < ApplicationRecord
     tdcs_as_json
   end
 
+  def coordinate_for(tdc)
+    revision_types_de_champ.find { |coordinate| coordinate.type_de_champ_id == tdc.id }
+  end
+
   # Estimated duration to fill the form, in seconds.
   #
   # If the revision is locked (i.e. published), the result is cached (because type de champs can no longer be mutated).

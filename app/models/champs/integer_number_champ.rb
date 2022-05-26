@@ -38,7 +38,28 @@ class Champs::IntegerNumberChamp < Champ
     processed_value
   end
 
+  def eval_condition(operator, value)
+    case operator
+    when 'is'
+      for_condition == value.to_i
+    when 'is_not'
+      for_condition != value.to_i
+    when 'gt'
+      for_condition > value.to_i
+    when 'gte'
+      for_condition >= value.to_i
+    when 'lt'
+      for_condition < value.to_i
+    when 'lte'
+      for_condition <= value.to_i
+    end
+  end
+
   private
+
+  def for_condition
+    processed_value || 0
+  end
 
   def processed_value
     value&.to_i

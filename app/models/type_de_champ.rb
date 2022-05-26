@@ -2,18 +2,20 @@
 #
 # Table name: types_de_champ
 #
-#  id          :integer          not null, primary key
-#  description :text
-#  libelle     :string
-#  mandatory   :boolean          default(FALSE)
-#  options     :jsonb
-#  order_place :integer
-#  private     :boolean          default(FALSE), not null
-#  type_champ  :string
-#  created_at  :datetime
-#  updated_at  :datetime
-#  parent_id   :bigint
-#  stable_id   :bigint
+#  id                           :integer          not null, primary key
+#  conditional_logic_combinator :string           default("AND")
+#  conditional_logic_enabled    :boolean          default(FALSE)
+#  description                  :text
+#  libelle                      :string
+#  mandatory                    :boolean          default(FALSE)
+#  options                      :jsonb
+#  order_place                  :integer
+#  private                      :boolean          default(FALSE), not null
+#  type_champ                   :string
+#  created_at                   :datetime
+#  updated_at                   :datetime
+#  parent_id                    :bigint
+#  stable_id                    :bigint
 #
 class TypeDeChamp < ApplicationRecord
   self.ignored_columns = [:migrated_parent, :revision_id]
@@ -65,8 +67,16 @@ class TypeDeChamp < ApplicationRecord
   has_many :revisions, -> { ordered }, through: :revision_types_de_champ
   has_one :revision, through: :revision_type_de_champ
   has_one :procedure, through: :revision
+  has_many :conditions, class_name: 'TypeDeChampCondition', dependent: :destroy, inverse_of: :type_de_champ
 
-  delegate :estimated_fill_duration, :tags_for_template, :libelle_for_export, to: :dynamic_type
+  delegate :estimated_fill_duration,
+    :tags_for_template,
+    :libelle_for_export,
+    :condition_operators,
+    :condition_values,
+    :default_condition_operator,
+    :default_condition_value,
+    to: :dynamic_type
 
   class WithIndifferentAccess
     def self.load(options)
@@ -165,6 +175,23 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
+  def conditional_logic_enabled_and_valid?(revision)
+    conditional_logic_enabled? && conditional_logic_valid?(revision)
+  end
+
+  def conditional_logic_valid?
+    conditions.all? do { |condition| condition.valid_for_revision?(revision) }
+  end
+
+  def visible_under_current_conditions?(dossier)
+    conditions.all? do |condition|
+      source_champ = Champ.find_by(type_de_champ: condition.source_type_de_champ(dossier.revision), dossier: dossier)
+      if source_champ&.visible_under_current_conditions?
+        source_champ.eval_condition(condition.operator, condition.value)
+      end
+    end
+  end
+
   def only_present_on_draft?
     revisions.size == 1
   end
@@ -189,6 +216,17 @@ class TypeDeChamp < ApplicationRecord
       TypeDeChamp.type_champs.fetch(:drop_down_list),
       TypeDeChamp.type_champs.fetch(:multiple_drop_down_list),
       TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
+    ])
+  end
+
+  def can_act_as_condition_source?
+    type_champ.in?([
+      TypeDeChamp.type_champs.fetch(:decimal_number),
+      TypeDeChamp.type_champs.fetch(:integer_number),
+      TypeDeChamp.type_champs.fetch(:checkbox),
+      TypeDeChamp.type_champs.fetch(:yes_no),
+      TypeDeChamp.type_champs.fetch(:drop_down_list),
+      TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)
     ])
   end
 
