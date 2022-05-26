@@ -47,16 +47,24 @@ class IntermediaryTerm < Term
   def self.from_h(h)
     self.new(Term.from_h(h['operand_1']), Term.from_h(h['operand_2']))
   end
+
+  def ids_involved
+    @operand_1.ids_involved + @operand_2.ids_involved
+  end
 end
 
 class ChampValue < LeafTerm
   def apply(champs)
     champs.find { |c| c.id == @operand_1 }.value
   end
+
+  def ids_involved = [@operand_1]
 end
 
 class Constant < LeafTerm
   def apply(_champs) = @operand_1
+
+  def ids_involved = []
 end
 
 class Eq < IntermediaryTerm
@@ -92,4 +100,9 @@ puts Term.from_h(predicat_3.to_h).apply(champs)
 predicat_4 = Eq.new(ChampValue.new(c1.id), Constant.new(1))
 puts Term.from_h(predicat_4.to_h).apply(champs)
 
-puts Eq.new(Eq.new(Constant.new(1), Constant.new(1)), Eq.new(Constant.new(2), Constant.new(1))).apply(champs)
+predicat_5 = Eq.new(Eq.new(Constant.new(1), Constant.new(1)), Eq.new(Constant.new(2), Constant.new(1)))
+
+puts predicat_5.apply(champs)
+byebug
+predicat_5.ids_involved
+puts 'toto'
