@@ -59,30 +59,40 @@ class ChampValue < LeafTerm
   end
 
   def ids_involved = [@operand_1]
+
+  def to_s = "champ Nº#{@operand_1}"
 end
 
 class Constant < LeafTerm
   def apply(_champs) = @operand_1
 
   def ids_involved = []
+
+  def to_s = "#{@operand_1}"
 end
 
 class Eq < IntermediaryTerm
   def apply(champs)
     @operand_1.apply(champs) == @operand_2.apply(champs)
   end
+
+  def to_s = "(#{@operand_1} == #{@operand_2})"
 end
 
 class Or < IntermediaryTerm
   def apply(champs)
     @operand_1.apply(champs) || @operand_2.apply(champs)
   end
+
+  def to_s = "(#{@operand_1} || #{@operand_2})"
 end
 
 class And < IntermediaryTerm
   def apply(champs)
     @operand_1.apply(champs) && @operand_2.apply(champs)
   end
+
+  def to_s = "(#{@operand_1} && #{@operand_2})"
 end
 
 c1 = Champ.new(1, 1) ; c2 = Champ.new(2, 2) ; c3 = Champ.new(3, 1)
@@ -90,6 +100,7 @@ champs = [c1, c2, c3]
 
 predicat_1 = Eq.new(ChampValue.new(c1.id), ChampValue.new(c3.id))
 puts Term.from_h(predicat_1.to_h).apply(champs)
+puts predicat_1.to_s
 
 predicat_2 = Eq.new(ChampValue.new(c1.id), ChampValue.new(c2.id))
 puts Term.from_h(predicat_2.to_h).apply(champs)
@@ -103,6 +114,5 @@ puts Term.from_h(predicat_4.to_h).apply(champs)
 predicat_5 = Eq.new(Eq.new(Constant.new(1), Constant.new(1)), Eq.new(Constant.new(2), Constant.new(1)))
 
 puts predicat_5.apply(champs)
-byebug
 predicat_5.ids_involved
-puts 'toto'
+puts predicat_5.to_s
