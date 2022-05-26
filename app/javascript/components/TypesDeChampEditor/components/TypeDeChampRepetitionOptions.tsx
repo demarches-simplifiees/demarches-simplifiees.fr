@@ -45,7 +45,8 @@ export function TypeDeChampRepetitionOptions({
             dispatch({
               type: 'addNewRepetitionTypeDeChamp',
               params: { typeDeChamp },
-              done: () => dispatch({ type: 'refresh' })
+              done: (estimatedFillDuration: number) =>
+                dispatch({ type: 'refresh', params: { estimatedFillDuration } })
             })
           }
         >
