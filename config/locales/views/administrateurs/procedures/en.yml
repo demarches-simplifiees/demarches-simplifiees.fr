@@ -1,0 +1,7 @@
+en:
+  administrateurs:
+    procedures:
+      close:
+        replacement_procedure_title: Is this procedure replaced by an existing one? If yes, please indicate the number of the new procedure
+        actions:
+          close_procedure: Close the procedure
