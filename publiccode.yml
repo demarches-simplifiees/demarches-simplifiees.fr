@@ -7,7 +7,7 @@ name: Démarches Simplifiéees
 url: 'https://github.com/betagouv/demarches-simplifiees.fr'
 landingURL: 'https://www.demarches-simplifiees.fr/'
 roadmap: 'https://github.com/betagouv/demarches-simplifiees.fr/wiki/Feuille-de-route'
-releaseDate: '2022-01-26'
+releaseDate: 'https://github.com/betagouv/demarches-simplifiees.fr/releases/latest'
 developmentStatus: beta
 softwareType: standalone/backend
 categories:
