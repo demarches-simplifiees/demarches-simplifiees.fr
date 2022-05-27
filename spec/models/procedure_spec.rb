@@ -439,6 +439,7 @@ describe Procedure do
       create(:procedure,
         received_mail: received_mail,
         service: service,
+        internal: internal,
         attestation_template: build(:attestation_template, logo: logo, signature: signature),
         types_de_champ: [type_de_champ_0, type_de_champ_1, type_de_champ_2, type_de_champ_pj, type_de_champ_repetition],
         types_de_champ_private: [type_de_champ_private_0, type_de_champ_private_1, type_de_champ_private_2, type_de_champ_private_repetition],
@@ -456,6 +457,7 @@ describe Procedure do
     let(:type_de_champ_private_repetition) { build(:type_de_champ_repetition, :private, position: 3, types_de_champ: [build(:type_de_champ, :private)]) }
     let(:received_mail) { build(:received_mail) }
     let(:from_library) { false }
+    let(:internal) { false }
     let(:administrateur) { procedure.administrateurs.first }
     let(:logo) { Rack::Test::UploadedFile.new('spec/fixtures/files/white.png', 'image/png') }
     let(:signature) { Rack::Test::UploadedFile.new('spec/fixtures/files/black.png', 'image/png') }
@@ -522,6 +524,13 @@ describe Procedure do
       expect(cloned_procedure).to have_same_attributes_as(procedure, except: ["path", "draft_revision_id"])
     end
 
+    context 'which is internal' do
+      let(:internal) { true }
+      it 'should keep internal for same admin' do
+        expect(subject.internal).to be_truthy
+      end
+    end
+
     context 'when the procedure is cloned from the library' do
       let(:from_library) { true }
 
@@ -562,6 +571,7 @@ describe Procedure do
 
     context 'when the procedure is cloned to another administrateur' do
       let(:administrateur) { create(:administrateur) }
+      let(:internal) { true }
 
       it 'should clone service' do
         expect(subject.service.id).not_to eq(service.id)
@@ -577,6 +587,10 @@ describe Procedure do
 
       it 'should discard specific api_entreprise_token' do
         expect(subject.read_attribute(:api_entreprise_token)).to be_nil
+      end
+
+      it 'should reset internal to false' do
+        expect(subject.internal).to be_falsey
       end
 
       it 'should have one administrateur' do
