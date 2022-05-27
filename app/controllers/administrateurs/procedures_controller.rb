@@ -216,9 +216,15 @@ module Administrateurs
       @procedure_lien_test = commencer_test_url(path: @procedure.path)
       @procedure.path = @procedure.suggested_path(current_administrateur)
       @current_administrateur = current_administrateur
+      @closed_procedures = current_administrateur.procedures.with_discarded.closes.map { |p| ["#{p.libelle} (#{p.id})", p.id] }.to_h
     end
 
     def publish
+      if params[:old_procedure].present?
+        old_procedure = current_administrateur.procedures.with_discarded.closes.find(params[:old_procedure])
+        old_procedure.update!(replaced_by_procedure_id: @procedure.id)
+      end
+
       @procedure.assign_attributes(publish_params)
 
       if @procedure.draft_changed?
