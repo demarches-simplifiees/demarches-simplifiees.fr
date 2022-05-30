@@ -1,0 +1,7 @@
+fr:
+  administrateurs:
+    procedures:
+      close:
+        replacement_procedure_title: Cette démarche est-elle remplacée par une existante ? Si oui, veuillez indiquer le n° de la nouvelle démarche
+        actions:
+          close_procedure: Clore la démarche
