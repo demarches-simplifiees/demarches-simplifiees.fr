@@ -1,6 +1,6 @@
 module Administrateurs
   class ProceduresController < AdministrateurController
-    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :allow_expert_review, :experts_require_administrateur_invitation]
+    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :allow_expert_review, :experts_require_administrateur_invitation]
     before_action :procedure_revisable?, only: [:champs, :annotations, :modifications]
 
     ITEMS_PER_PAGE = 25
@@ -146,6 +146,12 @@ module Administrateurs
 
     def archive
       procedure = current_administrateur.procedures.find(params[:procedure_id])
+
+      if params[:new_procedure].present?
+        new_procedure = current_administrateur.procedures.find(params[:new_procedure])
+        procedure.update!(replaced_by_procedure_id: new_procedure.id)
+      end
+
       procedure.close!
 
       flash.notice = "Démarche close"
@@ -241,6 +247,9 @@ module Administrateurs
     end
 
     def transfert
+    end
+
+    def close
     end
 
     def allow_expert_review
