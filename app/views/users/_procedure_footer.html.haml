@@ -2,61 +2,62 @@
   .container
     - service = procedure.service
     - if service.present?
-      .footer-row.footer-columns
-        .footer-column
-          %p.footer-header= I18n.t('users.procedure_footer.managed_by.header')
-          %ul
-            %li
-              = service.nom
-              %br
-              = service.organisme
-              %br
-              = string_to_html(service.adresse, wrapper_tag = 'span')
-
-        .footer-column
-          %p.footer-header= I18n.t('users.procedure_footer.contact.header')
-          %ul
-            %li
-              - if dossier.present? && dossier.messagerie_available?
-                = I18n.t('users.procedure_footer.contact.in_app_mail.prefix')
-                = link_to I18n.t('users.procedure_footer.contact.in_app_mail.link'), messagerie_dossier_path(dossier)
-              - else
-                = I18n.t('users.procedure_footer.contact.email.prefix')
-                = link_to service.email, "mailto:#{service.email}"
-
-            - if service.telephone.present?
-              %li
-                = I18n.t('users.procedure_footer.contact.phone.prefix')
-                = link_to service.telephone, service.telephone_url
-
-              %li
-                - horaires = "#{I18n.t('users.procedure_footer.contact.schedule.prefix')}#{formatted_horaires(service.horaires)}"
-                = simple_format(horaires, {}, wrapper_tag: 'span')
-
-              %li
-                = I18n.t('users.procedure_footer.contact.stats.prefix')
-                = link_to I18n.t('users.procedure_footer.contact.stats.cta'), statistiques_path(procedure.path)
-
-
-        - politiques = politiques_conservation_de_donnees(procedure)
-        - if politiques.present?
+      %nav{ 'aria-label': t('users.procedure_footer.aria_label', procedure_name: dossier.present? ? dossier.procedure.libelle : 'la procédure en ligne') }
+        .footer-row.footer-columns
           .footer-column
-            %p.footer-header= I18n.t('users.procedure_footer.legals.header')
+            %p.footer-header= I18n.t('users.procedure_footer.managed_by.header')
             %ul
-              - politiques.each do |politique|
-                %li= politique
-              - if procedure.deliberation.attached?
-                %li
-                  = link_to url_for(procedure.deliberation), target: '_blank', rel: 'noopener' do
-                    = I18n.t("users.procedure_footer.legals.terms")
-              - else
-                %li
-                  = link_to I18n.t("users.procedure_footer.legals.terms"), procedure.cadre_juridique, target: '_blank', rel: 'noopener'
+              %li
+                = service.nom
+                %br
+                = service.organisme
+                %br
+                = string_to_html(service.adresse, wrapper_tag = 'span')
 
-              - if procedure.lien_dpo.present?
+          .footer-column
+            %p.footer-header= I18n.t('users.procedure_footer.contact.header')
+            %ul
+              %li
+                - if dossier.present? && dossier.messagerie_available?
+                  = I18n.t('users.procedure_footer.contact.in_app_mail.prefix')
+                  = link_to I18n.t('users.procedure_footer.contact.in_app_mail.link'), messagerie_dossier_path(dossier)
+                - else
+                  = I18n.t('users.procedure_footer.contact.email.prefix')
+                  = link_to service.email, "mailto:#{service.email}"
+
+              - if service.telephone.present?
                 %li
-                  = link_to url_or_email_to_lien_dpo(procedure), target: '_blank', rel: 'noopener' do
-                    = I18n.t("users.procedure_footer.legals.dpo")
+                  = I18n.t('users.procedure_footer.contact.phone.prefix')
+                  = link_to service.telephone, service.telephone_url
+
+                %li
+                  - horaires = "#{I18n.t('users.procedure_footer.contact.schedule.prefix')}#{formatted_horaires(service.horaires)}"
+                  = simple_format(horaires, {}, wrapper_tag: 'span')
+
+                %li
+                  = I18n.t('users.procedure_footer.contact.stats.prefix')
+                  = link_to I18n.t('users.procedure_footer.contact.stats.cta'), statistiques_path(procedure.path)
+
+
+          - politiques = politiques_conservation_de_donnees(procedure)
+          - if politiques.present?
+            .footer-column
+              %p.footer-header= I18n.t('users.procedure_footer.legals.header')
+              %ul
+                - politiques.each do |politique|
+                  %li= politique
+                - if procedure.deliberation.attached?
+                  %li
+                    = link_to url_for(procedure.deliberation), target: '_blank', rel: 'noopener' do
+                      = I18n.t("users.procedure_footer.legals.terms")
+                - else
+                  %li
+                    = link_to I18n.t("users.procedure_footer.legals.terms"), procedure.cadre_juridique, target: '_blank', rel: 'noopener'
+
+                - if procedure.lien_dpo.present?
+                  %li
+                    = link_to url_or_email_to_lien_dpo(procedure), target: '_blank', rel: 'noopener' do
+                      = I18n.t("users.procedure_footer.legals.dpo")
 
     = render partial: 'users/general_footer_row', locals: { dossier: dossier }
 
