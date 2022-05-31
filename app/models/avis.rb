@@ -27,6 +27,8 @@ class Avis < ApplicationRecord
   has_one :expert, through: :experts_procedure
   has_one :procedure, through: :experts_procedure
 
+  has_many :targeted_user_links, dependent: :destroy, inverse_of: :target_model, foreign_key: 'target_model_id'
+
   FILE_MAX_SIZE = 20.megabytes
   validates :piece_justificative_file,
     content_type: AUTHORIZED_CONTENT_TYPES,

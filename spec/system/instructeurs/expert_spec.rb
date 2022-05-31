@@ -46,11 +46,10 @@ describe 'Inviting an expert:', js: true do
       expect(Avis.count).to eq(4)
       expect(emails_sent_to(expert.email.to_s).size).to eq(1)
       expect(emails_sent_to(expert2.email.to_s).size).to eq(1)
-
       invitation_email = open_email(expert.email.to_s)
-      avis = expert.avis.find_by(dossier: dossier)
-      sign_up_link = sign_up_expert_avis_path(avis.dossier.procedure, avis, email: avis.expert.email)
-      expect(invitation_email.body).to include(sign_up_link)
+      targeted_user_link = TargetedUserLink.joins(:user).where(user: { email: expert.email.to_s }).first
+      targeted_user_url = targeted_user_link_url(targeted_user_link)
+      expect(invitation_email.body).to include(targeted_user_url)
     end
 
     context 'when experts submitted their answer' do
