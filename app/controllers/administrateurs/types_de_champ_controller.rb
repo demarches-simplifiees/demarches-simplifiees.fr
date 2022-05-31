@@ -32,11 +32,7 @@ module Administrateurs
     end
 
     def estimate_fill_duration
-      estimate = if @procedure.feature_enabled?(:procedure_estimated_fill_duration)
-        @procedure.draft_revision.estimated_fill_duration
-      else
-        0
-      end
+      estimate = @procedure.draft_revision.estimated_fill_duration
       render json: { estimated_fill_duration: estimate }
     end
 
