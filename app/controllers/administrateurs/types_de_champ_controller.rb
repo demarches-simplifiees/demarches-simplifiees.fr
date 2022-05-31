@@ -15,7 +15,7 @@ module Administrateurs
     end
 
     def update
-      type_de_champ = @procedure.draft_revision.find_or_clone_type_de_champ(params[:id])
+      type_de_champ = @procedure.draft_revision.find_and_ensure_exclusive_use(params[:id])
 
       if type_de_champ.update(type_de_champ_update_params)
         reset_procedure
@@ -26,7 +26,7 @@ module Administrateurs
     end
 
     def move
-      @procedure.draft_revision.move_type_de_champ(params[:id], (params[:position] || params[:order_place]).to_i)
+      @procedure.draft_revision.move_type_de_champ(params[:id], params[:position].to_i)
 
       head :no_content
     end
