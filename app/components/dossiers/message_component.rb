@@ -15,7 +15,15 @@ class Dossiers::MessageComponent < ApplicationComponent
   end
 
   def highlight_if_unseen_class
-    helpers.highlight_if_unseen_class(@messagerie_seen_at, commentaire.created_at)
+    if highlight?
+      'highlighted'
+    end
+  end
+
+  def scroll_to_target
+    if highlight?
+      { scroll_to_target: 'to' }
+    end
   end
 
   def icon_path
@@ -54,5 +62,11 @@ class Dossiers::MessageComponent < ApplicationComponent
       body_formatted = commentaire.sent_by_system? ? commentaire.body : simple_format(commentaire.body)
       sanitize(body_formatted)
     end
+  end
+
+  private
+
+  def highlight?
+    commentaire.created_at.present? && @messagerie_seen_at&.<(commentaire.created_at)
   end
 end
