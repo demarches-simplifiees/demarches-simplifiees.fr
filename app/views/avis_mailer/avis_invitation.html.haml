@@ -1,9 +1,8 @@
 - content_for(:title, 'Invitation à donner votre avis')
-- avis_link = @avis.expert.user.active?.present? ? expert_avis_url(@avis.procedure, @avis) : sign_up_expert_avis_url(@avis.procedure, @avis.id, email: @avis.expert.email)
 
 - content_for(:footer) do
   Merci de ne pas répondre à cet email. Donnez votre avis
-  = link_to("sur #{APPLICATION_NAME}", avis_link)
+  = link_to("sur #{APPLICATION_NAME}", @url)
   ou
   = succeed '.' do
     = mail_to(@avis.claimant.email, "contactez la personne qui vous a invité")
@@ -25,9 +24,9 @@
 
 - if @avis.expert.user.active?.present?
   %p
-    = round_button("Donner votre avis", avis_link, :primary)
+    = round_button("Donner votre avis", @url, :primary)
 - else
   %p
-    = round_button("Inscrivez-vous pour donner votre avis", avis_link, :primary)
+    = round_button("Inscrivez-vous pour donner votre avis", @url, :primary)
 
 = render partial: "layouts/mailers/signature"
