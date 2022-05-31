@@ -11,4 +11,15 @@ describe TypeDeChamp do
       expect(procedure.types_de_champ_private.count).to eq(1)
     end
   end
+
+  describe 'condition' do
+    let(:type_de_champ) { create(:type_de_champ) }
+    let(:condition) { Logic::Eq.new(Logic::Constant.new(true), Logic::Constant.new(true)) }
+
+    it 'saves and reload the condition' do
+      type_de_champ.update(condition: condition)
+      type_de_champ.reload
+      expect(type_de_champ.condition).to eq(condition)
+    end
+  end
 end
