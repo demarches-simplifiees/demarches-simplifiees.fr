@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_20_173939) do
+ActiveRecord::Schema.define(version: 2022_05_31_100040) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -787,6 +787,7 @@ ActiveRecord::Schema.define(version: 2022_05_20_173939) do
   end
 
   create_table "types_de_champ", id: :serial, force: :cascade do |t|
+    t.jsonb "condition"
     t.datetime "created_at"
     t.text "description"
     t.string "libelle"
