@@ -8,7 +8,7 @@
         %td.cell-label Type de champ
         %td.cell-label Modifier le modèle
     %tbody
-      - field.data.order(:order_place).each do |type_de_champ|
+      - field.data.each do |type_de_champ|
         = render partial: 'fields/types_de_champ_collection_field/type_champ_line',
           locals: { type_de_champ: type_de_champ }
 

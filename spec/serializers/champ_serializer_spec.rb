@@ -65,7 +65,6 @@ describe ChampSerializer do
           }
           let(:serialized_id) { champ.type_de_champ.stable_id }
           let(:serialized_description) { champ.description }
-          let(:serialized_order_place) { champ.order_place }
           let(:serialized_libelle) { champ.libelle }
           let(:serialized_type_champ) { champ.type_champ }
           let(:serialized_value) { nil }
