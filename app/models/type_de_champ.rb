@@ -16,6 +16,8 @@
 class TypeDeChamp < ApplicationRecord
   self.ignored_columns = [:migrated_parent, :revision_id, :parent_id, :order_place]
 
+  FEATURE_FLAGS = {}
+
   enum type_champs: {
     text: 'text',
     textarea: 'textarea',
@@ -297,63 +299,6 @@ class TypeDeChamp < ApplicationRecord
 
   def editable_options
     options.slice(*TypesDeChamp::CarteTypeDeChamp::LAYERS)
-  end
-
-  FEATURE_FLAGS = {}
-
-  def self.type_de_champ_types_for(procedure, user)
-    has_legacy_number = (procedure.types_de_champ + procedure.types_de_champ_private).any?(&:legacy_number?)
-
-    filter_featured_tdc = -> (tdc) do
-      feature_name = FEATURE_FLAGS[tdc]
-      feature_name.blank? || Flipper.enabled?(feature_name, user)
-    end
-
-    filter_tdc = -> (tdc) do
-      case tdc
-      when TypeDeChamp.type_champs.fetch(:number)
-        has_legacy_number
-      when TypeDeChamp.type_champs.fetch(:cnaf)
-        procedure.cnaf_enabled?
-      when TypeDeChamp.type_champs.fetch(:dgfip)
-        procedure.dgfip_enabled?
-      when TypeDeChamp.type_champs.fetch(:pole_emploi)
-        procedure.pole_emploi_enabled?
-      when TypeDeChamp.type_champs.fetch(:mesri)
-        procedure.mesri_enabled?
-      else
-        true
-      end
-    end
-
-    type_champs
-      .keys
-      .filter(&filter_tdc)
-      .filter(&filter_featured_tdc)
-      .map { |tdc| [I18n.t("activerecord.attributes.type_de_champ.type_champs.#{tdc}"), tdc] }
-      .sort_by(&:first)
-  end
-
-  def as_json_for_editor
-    as_json(
-      except: [
-        :created_at,
-        :options,
-        :private,
-        :stable_id,
-        :type,
-        :updated_at
-      ],
-      methods: [
-        :drop_down_list_value,
-        :drop_down_other,
-        :drop_down_secondary_libelle,
-        :drop_down_secondary_description,
-        :piece_justificative_template_filename,
-        :piece_justificative_template_url,
-        :editable_options
-      ]
-    )
   end
 
   def read_attribute_for_serialization(name)
