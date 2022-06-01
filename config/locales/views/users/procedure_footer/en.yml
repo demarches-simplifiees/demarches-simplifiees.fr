@@ -1,6 +1,7 @@
 en:
   users:
     procedure_footer:
+      aria_label: "Know more about %{procedure_name}"
       managed_by:
         header: 'This procedure is managed by :'
       contact:

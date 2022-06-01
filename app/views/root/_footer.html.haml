@@ -1,50 +1,51 @@
 %footer.landing-footer{ role: 'contentinfo' }
   .container
-    %ul.footer-columns
+    %nav{ 'aria-label': t('links.footer.nav_aria', application_name: APPLICATION_NAME) }
+      %ul.footer-columns
+        %li.footer-column
+          %ul.footer-logos
+            %li.footer-text
+              Un service fourni par
+              = link_to t("links.provider.provided_by"), t("links.provider.url"), title: t("links.provider.title")
+              %br
+            %li
+              = link_to t("links.provider.url"), title: t("links.provider.title"), 'aria-label': t("links.provider.name") do
+                %span.footer-logo{ role: 'img', 'aria-label': t("links.provider.logo.alt") }
+                  = image_tag t("links.provider.logo.src"), alt: t("links.provider.logo.alt"), width: t("links.provider.logo.width"), height: t("links.provider.logo.height"), loading: 'lazy'
+              = link_to t("links.footer.betagouv.url"), title: t("links.footer.betagouv.title"), 'aria-label': t("links.footer.betagouv.label") do
+                %span.footer-logo.footer-logo-beta-gouv-fr{ role: 'img', 'aria-label': "Logo #{t('links.footer.betagouv.label')}" }
 
-      %li.footer-column
-        %ul.footer-logos
-          %li.footer-text
-            Un service fourni par
-            = link_to t("links.provider.provided_by"), t("links.provider.url"), title: t("links.provider.title")
-            %br
-          %li
-            = link_to t("links.provider.url"), title: t("links.provider.name"), 'aria-label': t("links.provider.name") do
-              %span.footer-logo{ role: 'img', 'aria-label': t("links.provider.logo.alt") }
-                = image_tag t("links.provider.logo.src"), alt: t("links.provider.logo.alt"), width: t("links.provider.logo.width"), height: t("links.provider.logo.height"), loading: 'lazy'
-            = link_to t("links.footer.betagouv.url"), title: t("links.footer.betagouv.title"), 'aria-label': t("links.footer.betagouv.label") do
-              %span.footer-logo.footer-logo-beta-gouv-fr{ role: 'img', 'aria-label': "Logo #{t('links.footer.betagouv.label')}" }
+        %li.footer-column
+          %ul.footer-links
+            %li.footer-link
+              = link_to t("links.footer.newsletter.label"), t("links.footer.newsletter.url"), title: t("links.footer.newsletter.title"), class: "footer-link", target: "_blank", rel: "noopener"
+            %li.footer-link
+              = link_to t("links.footer.releases.label"), t("links.footer.releases.url"), title: t("links.footer.releases.title"), class: "footer-link"
+            %li.footer-link
+              = link_to t("links.footer.stats.label"), stats_path, title: t("links.footer.stats.title"), class: "footer-link"
+            %li.footer-link
+              = link_to t("links.footer.cgu.label"), t("links.footer.cgu.url"), title: t("links.footer.cgu.title"), class: "footer-link", target: "_blank", rel: "noopener noreferrer"
+            %li.footer-link
+              = link_to t("links.footer.mentions_legales.label"), t("links.footer.mentions_legales.url"), title: t("links.footer.mentions_legales.title"), class: "footer-link", target: "_blank", rel: "noopener noreferrer"
+            %li.footer-link
+              = link_to t("links.footer.suivi.label"), suivi_path, title: t("links.footer.suivi.title"), class: "footer-link"
+            %li.footer-link
+              = link_to t("links.footer.code.label"), t("links.footer.code.url"), title: t("links.footer.code.title"), class: "footer-link", target: "_blank", rel: "noopener noreferrer"
 
-      %li.footer-column
-        %ul.footer-links
-          %li.footer-link
-            = link_to t("links.footer.newsletter.label"), t("links.footer.newsletter.url"), title: t("links.footer.newsletter.title"), class: "footer-link", target: "_blank", rel: "noopener"
-          %li.footer-link
-            = link_to t("links.footer.releases.label"), t("links.footer.releases.url"), title: t("links.footer.releases.title"), class: "footer-link"
-          %li.footer-link
-            = link_to t("links.footer.stats.label"), stats_path, title: t("links.footer.stats.title"), class: "footer-link"
-          %li.footer-link
-            = link_to t("links.footer.cgu.label"), t("links.footer.cgu.url"), title: t("links.footer.cgu.title"), class: "footer-link", target: "_blank", rel: "noopener noreferrer"
-          %li.footer-link
-            = link_to t("links.footer.mentions_legales.label"), t("links.footer.mentions_legales.url"), title: t("links.footer.mentions_legales.title"), class: "footer-link", target: "_blank", rel: "noopener noreferrer"
-          %li.footer-link
-            = link_to t("links.footer.suivi.label"), suivi_path, title: t("links.footer.suivi.title"), class: "footer-link"
-          %li.footer-link
-            = link_to t("links.footer.code.label"), t("links.footer.code.url"), title: t("links.footer.code.title"), class: "footer-link", target: "_blank", rel: "noopener noreferrer"
-
-      %li.footer-column
-        %ul.footer-links
-          %li.footer-link
-            = contact_link t("links.footer.contact.label"), title: t("links.footer.contact.title"), class: "footer-link"
-          %li.footer-link
-            = link_to t("links.footer.doc.label"), t("links.footer.doc.url"), title: t("links.footer.doc.title"), class: "footer-link", target: "_blank", rel: "noopener noreferrer"
-          %li.footer-link
-            = link_to t("links.footer.api_doc.label"), t("links.footer.api_doc.url"), title: t("links.footer.api_doc.title"), class: "footer-link", target: "_blank", rel: "noopener noreferrer"
-          %li.footer-link
-            = link_to t("links.footer.faq.label"), t("links.footer.faq.url"), title: t("links.footer.faq.title"), class: "footer-link", target: "_blank", rel: "noopener noreferrer"
-          %li.footer-link
-            = link_to t("links.footer.accessibilite.label"), t("links.footer.accessibilite.url"), title: t("links.footer.accessibilite.title"), class: "footer-link", target: "_blank", rel: "noopener noreferrer"
-          %li.footer-link
-            = link_to t("links.footer.status_page.label"), t("links.footer.status_page.url"), title: t("links.footer.status_page.title"), class: "footer-link", target: "_blank", rel: "noopener noreferrer"
-          %li.footer-link
-            = link_to t("links.footer.security.label"), t("links.footer.security.url"), title: t("links.footer.security.title"), class: "footer-link", target: "_blank", rel: "noopener noreferrer"
+        %li.footer-column
+          %ul.footer-links
+            %li.footer-link
+              = contact_link t("links.footer.contact.label"), title: t("links.footer.contact.title"), class: "footer-link"
+            %li.footer-link
+              = link_to t("links.footer.doc.label"), t("links.footer.doc.url"), title: t("links.footer.doc.title"), class: "footer-link", target: "_blank", rel: "noopener noreferrer"
+            %li.footer-link
+              = link_to t("links.footer.api_doc.label"), t("links.footer.api_doc.url"), title: t("links.footer.api_doc.title"), class: "footer-link", target: "_blank", rel: "noopener noreferrer"
+            %li.footer-link
+              = link_to t("links.footer.faq.label"), t("links.footer.faq.url"), title: t("links.footer.faq.title"), class: "footer-link", target: "_blank", rel: "noopener noreferrer"
+            %li.footer-link
+              = link_to t("links.footer.accessibilite.label"), t("links.footer.accessibilite.url"), title: t("links.footer.accessibilite.title"), class: "footer-link", target: "_blank", rel: "noopener noreferrer"
+            %li.footer-link
+              = link_to t("links.footer.status_page.label"), t("links.footer.status_page.url"), title: t("links.footer.status_page.title"), class: "footer-link", target: "_blank", rel: "noopener noreferrer"
+            %li.footer-link
+              = link_to t("links.footer.security.label"), t("links.footer.security.url"), title: t("links.footer.security.title"), class: "footer-link", target: "_blank", rel: "noopener noreferrer"
+    }
