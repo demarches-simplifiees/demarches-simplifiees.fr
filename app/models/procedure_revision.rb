@@ -33,11 +33,13 @@ class ProcedureRevision < ApplicationRecord
   validate :conditions_are_valid?
 
   def build_champs
-    types_de_champ_public.map { |tdc| tdc.build_champ(revision: self) }
+    # reload: it can be out of sync in test if some tdcs are added wihtout using add_tdc
+    types_de_champ_public.reload.map { |tdc| tdc.build_champ(revision: self) }
   end
 
   def build_champs_private
-    types_de_champ_private.map { |tdc| tdc.build_champ(revision: self) }
+    # reload: it can be out of sync in test if some tdcs are added wihtout using add_tdc
+    types_de_champ_private.reload.map { |tdc| tdc.build_champ(revision: self) }
   end
 
   def add_type_de_champ(params)
@@ -63,6 +65,10 @@ class ProcedureRevision < ApplicationRecord
       coordinate = revision_types_de_champ.create!(coordinate)
       reorder(coordinate.siblings)
     end
+
+    # they are not aware of the addition
+    types_de_champ_public.reset
+    types_de_champ_private.reset
 
     tdc
   rescue => e
@@ -100,6 +106,10 @@ class ProcedureRevision < ApplicationRecord
 
     children.each(&:destroy_if_orphan)
     tdc.destroy_if_orphan
+
+    # they are not aware of the removal
+    types_de_champ_public.reset
+    types_de_champ_private.reset
 
     reorder(coordinate.siblings)
 
