@@ -8,6 +8,7 @@ describe 'shared/_procedure_description.html.haml', type: :view do
     expect(rendered).to have_selector('.procedure-logos')
     expect(rendered).to have_text(procedure.libelle)
     expect(rendered).to have_text(procedure.description)
+    expect(rendered).to have_text('Temps de remplissage estimé')
   end
 
   it 'does not show empty date limite' do
@@ -21,12 +22,5 @@ describe 'shared/_procedure_description.html.haml', type: :view do
       subject
       expect(rendered).to have_text('Date limite')
     end
-  end
-
-  context 'when the procedure_estimated_fill_duration feature is enabled' do
-    before { Flipper.enable(:procedure_estimated_fill_duration) }
-    after { Flipper.disable(:procedure_estimated_fill_duration) }
-
-    it { is_expected.to have_text('Temps de remplissage estimé') }
   end
 end
