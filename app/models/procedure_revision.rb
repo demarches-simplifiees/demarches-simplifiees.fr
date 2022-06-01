@@ -153,20 +153,6 @@ class ProcedureRevision < ApplicationRecord
     end
   end
 
-  def types_de_champ_public_as_json
-    types_de_champ = types_de_champ_public.includes(piece_justificative_template_attachment: :blob)
-    tdcs_as_json = types_de_champ.map(&:as_json_for_editor)
-    children_types_de_champ_as_json(tdcs_as_json, types_de_champ.filter(&:repetition?))
-    tdcs_as_json
-  end
-
-  def types_de_champ_private_as_json
-    types_de_champ = types_de_champ_private.includes(piece_justificative_template_attachment: :blob)
-    tdcs_as_json = types_de_champ.map(&:as_json_for_editor)
-    children_types_de_champ_as_json(tdcs_as_json, types_de_champ.filter(&:repetition?))
-    tdcs_as_json
-  end
-
   # Estimated duration to fill the form, in seconds.
   #
   # If the revision is locked (i.e. published), the result is cached (because type de champs can no longer be mutated).
