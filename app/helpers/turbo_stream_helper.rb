@@ -4,7 +4,7 @@ module TurboStreamHelper
   end
 
   class TagBuilder < Turbo::Streams::TagBuilder
-    def dispatch(type, detail)
+    def dispatch(type, detail = {})
       append_all('turbo-events', partial: 'layouts/turbo_event', locals: { type: type, detail: detail })
     end
 
