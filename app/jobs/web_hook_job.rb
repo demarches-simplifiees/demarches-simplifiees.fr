@@ -3,12 +3,12 @@ class WebHookJob < ApplicationJob
 
   TIMEOUT = 10
 
-  def perform(procedure, dossier)
+  def perform(procedure_id, dossier_id, state, updated_at)
     body = {
-      procedure_id: procedure.id,
-      dossier_id: dossier.id,
-      state: dossier.state,
-      updated_at: dossier.updated_at
+      procedure_id: procedure_id,
+      dossier_id: dossier_id,
+      state: state,
+      updated_at: updated_at
     }
 
     Typhoeus.post(procedure.web_hook_url, body: body, timeout: TIMEOUT)
