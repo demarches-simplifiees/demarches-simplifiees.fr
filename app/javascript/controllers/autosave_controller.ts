@@ -176,6 +176,6 @@ export class AutosaveController extends ApplicationController {
         ...parent.querySelectorAll<HTMLInputElement>('input[data-id]')
       ];
     }
-    return inputs;
+    return inputs.filter((element) => !element.disabled);
   }
 }
