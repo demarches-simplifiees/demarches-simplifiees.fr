@@ -962,7 +962,7 @@ describe Dossier do
 
       expect {
         dossier.passer_en_construction!
-      }.to have_enqueued_job(WebHookJob)
+      }.to have_enqueued_job(WebHookJob).with(dossier.procedure.id, dossier.id, 'en_construction', anything)
 
       expect {
         dossier.update_column(:search_terms, 'bonjour2')
@@ -970,7 +970,7 @@ describe Dossier do
 
       expect {
         dossier.passer_en_instruction!(instructeur: instructeur)
-      }.to have_enqueued_job(WebHookJob)
+      }.to have_enqueued_job(WebHookJob).with(dossier.procedure.id, dossier.id, 'en_instruction', anything)
     end
   end
 
