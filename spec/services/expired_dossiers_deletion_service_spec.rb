@@ -8,6 +8,9 @@ describe ExpiredDossiersDeletionService do
   let(:reference_date) { Date.parse("March 8") }
 
   describe '#process_expired_dossiers_brouillon' do
+    before { Timecop.freeze(reference_date) }
+    after  { Timecop.return }
+
     let(:today) { Time.zone.now.at_beginning_of_day }
     let(:date_close_to_expiration) { today + 13.days - procedure.duree_conservation_dossiers_dans_ds.months }
     let(:date_expired) { today - 6.days - procedure.duree_conservation_dossiers_dans_ds.months }

@@ -22,23 +22,21 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
   scope :public_only, -> { joins(:type_de_champ).where(types_de_champ: { private: false }) }
   scope :private_only, -> { joins(:type_de_champ).where(types_de_champ: { private: true }) }
 
-  before_create :set_position
-
   def private?
     type_de_champ.private?
   end
 
-  private
+  def child?
+    parent_id.present?
+  end
 
-  def set_position
-    self.position ||= begin
-      types_de_champ = (private? ? revision.revision_types_de_champ_private : revision.revision_types_de_champ_public).filter(&:persisted?)
-
-      if types_de_champ.present?
-        types_de_champ.last.position + 1
-      else
-        0
-      end
+  def siblings
+    if parent_id.present?
+      revision.revision_types_de_champ.where(parent_id: parent_id).ordered
+    elsif private?
+      revision.revision_types_de_champ_private
+    else
+      revision.revision_types_de_champ_public
     end
   end
 end

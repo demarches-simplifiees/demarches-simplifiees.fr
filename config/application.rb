@@ -64,8 +64,6 @@ module TPS
     end
 
     config.middleware.use Rack::Attack
-    # Ensure we make maximum one call per feature per request.
-    config.middleware.use Flipper::Middleware::Memoizer
 
     config.ds_env = ENV.fetch('DS_ENV', Rails.env)
 
@@ -89,5 +87,8 @@ module TPS
     config.view_component.show_previews_source = true
     config.view_component.default_preview_layout = 'component_preview'
     config.view_component.preview_paths << "#{Rails.root}/spec/components/previews"
+
+    # see: https://viewcomponent.org/known_issues.html
+    config.view_component.use_global_output_buffer = true
   end
 end

@@ -15,20 +15,16 @@ FactoryBot.define do
 
     after(:build) do |type_de_champ, evaluator|
       if evaluator.procedure
-        type_de_champ.revision = evaluator.procedure.active_revision
+        revision = evaluator.procedure.active_revision
 
-        build(:procedure_revision_type_de_champ,
-              position: evaluator.position,
-              revision: evaluator.procedure.active_revision,
-              type_de_champ: type_de_champ)
+        evaluator.procedure.save
 
-        if type_de_champ.private?
-          type_de_champ.revision.types_de_champ_private << type_de_champ
-        else
-          type_de_champ.revision.types_de_champ_public << type_de_champ
-        end
+        create(:procedure_revision_type_de_champ,
+          position: evaluator.position || 0,
+          revision: revision,
+          type_de_champ: type_de_champ)
+
       elsif evaluator.parent
-        type_de_champ.revision = evaluator.parent.revision
         type_de_champ.order_place = evaluator.position || evaluator.parent.types_de_champ.size
         evaluator.parent.types_de_champ << type_de_champ
       else
@@ -200,25 +196,37 @@ FactoryBot.define do
       end
 
       after(:build) do |type_de_champ_repetition, evaluator|
+        evaluator.procedure&.save!
         evaluator.types_de_champ.each do |type_de_champ|
-          type_de_champ.revision = type_de_champ_repetition.revision
-          type_de_champ.order_place = type_de_champ_repetition.types_de_champ.size
+          revision = evaluator.procedure&.active_revision || build(:procedure_revision)
+          parent = revision.revision_types_de_champ.find { |rtdc| rtdc.type_de_champ == type_de_champ_repetition }
+          types_de_champ = revision.revision_types_de_champ.filter { |rtdc| rtdc.parent == parent }
+          position = types_de_champ.size
+
+          revision.revision_types_de_champ << build(:procedure_revision_type_de_champ,
+            revision: revision,
+            type_de_champ: type_de_champ,
+            parent: parent,
+            position: position)
+
+          # old system
+          type_de_champ.order_place = position
           type_de_champ_repetition.types_de_champ << type_de_champ
         end
       end
 
       trait :with_types_de_champ do
-        after(:build) do |type_de_champ, evaluator|
-          tdc = build(:type_de_champ, libelle: 'sub type de champ', parent: type_de_champ)
+        after(:build) do |type_de_champ_repetition, evaluator|
+          type_de_champ = build(:type_de_champ, libelle: 'sub type de champ', parent: type_de_champ_repetition)
+          revision = evaluator.procedure.active_revision
+          parent = revision.revision_types_de_champ.find { |rtdc| rtdc.type_de_champ == type_de_champ_repetition }
 
-          evaluator.procedure.save
-
-          ProcedureRevisionTypeDeChamp.create!(
-            revision_id: evaluator.procedure.active_revision.id,
-            type_de_champ_id: tdc.id,
-            parent_id: tdc.parent.revision_type_de_champ.id,
-            position: 0
-          )
+          evaluator.procedure.save!
+          revision.revision_types_de_champ << build(:procedure_revision_type_de_champ,
+            revision: revision,
+            type_de_champ: type_de_champ,
+            parent: parent,
+            position: 0)
         end
       end
     end

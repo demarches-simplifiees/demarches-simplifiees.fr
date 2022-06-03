@@ -41,11 +41,11 @@
                       |
                       = link_to(t('revoke', scope: 'helpers.label'), revoquer_instructeur_avis_path(avis.procedure, avis), data: { confirm: t('revoke', scope: 'helpers.confirmation', email: avis.expert.email) }, method: :patch)
               - if avis.introduction_file.attached?
-                = render partial: 'shared/attachment/show', locals: { attachment: avis.introduction_file.attachment }
+                = render Attachment::ShowComponent.new(attachment: avis.introduction_file.attachment)
                 .answer-body.mb-3
                   %p #{t('views.instructeurs.avis.introduction_file_explaination')} #{avis.claimant.email}
 
               - if avis.piece_justificative_file.attached?
-                = render partial: 'shared/attachment/show', locals: { attachment: avis.piece_justificative_file.attachment }
+                = render Attachment::ShowComponent.new(attachment: avis.piece_justificative_file.attachment)
               .answer-body
                 = simple_format(avis.answer)

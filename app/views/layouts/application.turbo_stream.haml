@@ -1,6 +1,6 @@
 - if flash.any?
   = turbo_stream.replace 'flash_messages', partial: 'layouts/flash_messages'
-  = turbo_stream.hide 'flash_messages', delay: 10000
+  = turbo_stream.hide 'flash_messages', delay: 30000
   - flash.clear
 
 = yield

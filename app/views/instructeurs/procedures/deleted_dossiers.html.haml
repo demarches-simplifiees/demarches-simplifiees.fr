@@ -10,6 +10,8 @@
       = render partial: 'header', locals: { procedure: @procedure, statut: @statut }
 
       .procedure-actions
+        - if @can_download_dossiers
+          = render Dossiers::ExportComponent.new(procedure: @procedure, exports: @exports)
 
     .container.flex= render partial: "tabs", locals: { procedure: @procedure,
         statut: @statut,

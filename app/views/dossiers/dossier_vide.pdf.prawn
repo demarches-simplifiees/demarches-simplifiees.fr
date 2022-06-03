@@ -48,7 +48,7 @@ def format_with_checkbox(pdf, option, offset = 0)
 
   pdf.font 'marianne', size: 9 do
     pdf.stroke_rectangle [0 + offset, pdf.cursor], 10, 10
-    pdf.text_box label, at: [15 + offset, pdf.cursor - 1]
+    render_expanding_text_box(pdf, label, at: [15, pdf.cursor])
 
     if value == Champs::DropDownListChamp::OTHER
       pdf.bounding_box([110, pdf.cursor + 3],:width => 350,:height => 20) do

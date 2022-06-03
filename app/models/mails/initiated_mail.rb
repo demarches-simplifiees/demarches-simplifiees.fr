@@ -17,8 +17,27 @@ module Mails
 
     SLUG = "initiated_mail"
     DEFAULT_TEMPLATE_NAME = "notification_mailer/default_templates/initiated_mail"
-    DISPLAYED_NAME = 'Accusé de réception'
-    DEFAULT_SUBJECT = 'Votre dossier nº --numéro du dossier-- a bien été déposé (--libellé démarche--)'
+    DISPLAYED_NAME = I18n.t('activerecord.models.mail.initiated_mail.proof_of_receipt')
+    DEFAULT_SUBJECT = I18n.t('activerecord.models.mail.initiated_mail.default_subject', dossier_number: '--numéro du dossier--', procedure_libelle: '--libellé démarche--')
     DOSSIER_STATE = Dossier.states.fetch(:en_construction)
+
+    def attachment_for_dossier(dossier)
+      if procedure.feature_enabled?(:procedure_dossier_papertrail)
+        {
+          filename: I18n.t('users.dossiers.show.papertrail.filename'),
+          content: deposit_receipt_for_dossier(dossier)
+        }
+      end
+    end
+
+    private
+
+    def deposit_receipt_for_dossier(dossier)
+      ApplicationController.render(
+        template: 'users/dossiers/papertrail',
+        formats: [:pdf],
+        assigns: { dossier: dossier }
+      )
+    end
   end
 end

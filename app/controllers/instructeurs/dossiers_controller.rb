@@ -8,6 +8,7 @@ module Instructeurs
     include ActionController::Streaming
     include Zipline
 
+    before_action :redirect_on_dossier_not_found, only: :show
     after_action :mark_demande_as_read, only: :show
     after_action :mark_messagerie_as_read, only: [:messagerie, :create_commentaire]
     after_action :mark_avis_as_read, only: [:avis, :create_avis]
@@ -124,7 +125,8 @@ module Instructeurs
         flash.alert = aasm_error_message(e, target_state: :en_instruction)
       end
 
-      render partial: 'state_button_refresh', locals: { dossier: dossier }
+      @dossier = dossier
+      render :change_state
     end
 
     def repasser_en_construction
@@ -135,7 +137,8 @@ module Instructeurs
         flash.alert = aasm_error_message(e, target_state: :en_construction)
       end
 
-      render partial: 'state_button_refresh', locals: { dossier: dossier }
+      @dossier = dossier
+      render :change_state
     end
 
     def repasser_en_instruction
@@ -146,7 +149,8 @@ module Instructeurs
         flash.alert = aasm_error_message(e, target_state: :en_instruction)
       end
 
-      render partial: 'state_button_refresh', locals: { dossier: dossier }
+      @dossier = dossier
+      render :change_state
     end
 
     def terminer
@@ -174,7 +178,8 @@ module Instructeurs
         flash.alert = aasm_error_message(e, target_state: target_state)
       end
 
-      render partial: 'state_button_refresh', locals: { dossier: dossier }
+      @dossier = dossier
+      render :change_state
     end
 
     def create_commentaire
@@ -314,6 +319,12 @@ module Instructeurs
         "Le dossier est déjà #{dossier_display_state(target_state, lower: true)}."
       else
         "Le dossier est en ce moment #{dossier_display_state(exception.originating_state, lower: true)} : il n’est pas possible de le passer #{dossier_display_state(target_state, lower: true)}."
+      end
+    end
+
+    def redirect_on_dossier_not_found
+      if !current_instructeur.dossiers.visible_by_administration.exists?(id: params[:dossier_id])
+        redirect_to instructeur_procedure_path(procedure)
       end
     end
   end

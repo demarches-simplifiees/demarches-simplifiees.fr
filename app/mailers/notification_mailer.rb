@@ -23,6 +23,7 @@ class NotificationMailer < ApplicationMailer
     @service = @dossier.procedure.service
     @logo_url = attach_logo(@dossier.procedure)
     @rendered_template = sanitize_html(@body)
+    attachments[@attachment[:filename]] = @attachment[:content] if @attachment.present?
 
     I18n.with_locale(@dossier.user_locale) do
       mail(subject: @subject, to: @email, template_name: 'send_notification')
@@ -64,6 +65,7 @@ class NotificationMailer < ApplicationMailer
         @subject = mail_template.subject_for_dossier(@dossier)
         @body = mail_template.body_for_dossier(@dossier)
         @actions = mail_template.actions_for_dossier(@dossier)
+        @attachment = mail_template.attachment_for_dossier(@dossier)
       end
     end
   end

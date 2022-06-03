@@ -1,7 +1,7 @@
 = render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [link_to('Démarches', admin_procedures_path),
-                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
-                    'choix du service'] }
+                    link_to(@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)),
+                    'Choix du service'] }
 
 #services-index.container
   %h1 Choix du service pour la démarche

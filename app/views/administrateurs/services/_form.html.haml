@@ -21,16 +21,18 @@
   %p.explication
     Votre démarche sera hébergée par #{APPLICATION_NAME} – mais nous ne pouvons pas assurer le support des démarches. Et malgré la dématérialisation, les usagers se poseront parfois des questions légitimes sur le processus administratif.
     %br
-    Il est donc important que les usagers puissent vous contacter s'ils ont des questions sur votre démarche.
     %br
-    Ces informations seront visibles par les utilisateurs de la démarche, affichées dans le menu "Aide", ainsi qu'en pied de page lors du dépot d’un dossier.
+    %strong Il est donc indispensable que les usagers puissent vous contacter
+    par le moyen de leur choix s’ils ont des questions sur votre démarche.
+    %br
+    %br
+    Ces informations de contact seront visibles par les utilisateurs de la démarche, affichées dans le menu « Aide », ainsi qu’en pied de page lors du dépôt d’un dossier. En cas d’informations invalides, #{APPLICATION_NAME} se réserve le droit de suspendre la publication de la démarche.
 
   = f.label :email do
     Adresse email
     %span.mandatory *
   %p.explication
-    Indiquer une adresse email <strong>valide</strong> est indispensable pour publier votre démarche.
-    Cette adresse email doit permettre de recevoir les questions des usagers.
+    Indiquez une adresse email <strong>valide</strong> qui permettra de recevoir et de réponse aux questions des usagers.
 
   = f.email_field :email, placeholder: 'secretariat@mon-service.gov.pf', required: true
 
@@ -55,4 +57,4 @@
     = hidden_field_tag :procedure_id, procedure_id
 
   .send-wrapper
-    = f.submit "Valider", class: 'button send'
+    = f.submit "Enregistrer", class: 'button primary send'

@@ -1,12 +1,5 @@
-- should_display_link = (attachment.virus_scanner.safe? || !attachment.virus_scanner.started?) && !attachment.watermark_pending?
-- user_can_upload = defined?(user_can_upload) ? user_can_upload : false
-- if should_display_link
-  - attachment_check_url = false
-- else
-  - attachment_check_url = attachment_url(attachment.id, { signed_id: attachment.blob.signed_id, user_can_upload: user_can_upload })
-
-.attachment-link{ 'data-attachment-id': attachment.id, 'data-attachment-poll-url': attachment_check_url }
-  - if should_display_link
+.attachment-link{ id: dom_id(attachment, :show) }
+  - if should_display_link?
     = link_to url_for(attachment.blob), target: '_blank', rel: 'noopener',  title: "Télécharger la pièce jointe" do
       %span.icon.attached
       = attachment.filename.to_s
@@ -14,22 +7,23 @@
       (ce fichier n’a pas été analysé par notre antivirus, téléchargez-le avec précaution)
 
   - else
+    %span{ data: poll_controller_options }
     = attachment.filename.to_s
     - if attachment.virus_scanner.pending?
       (analyse antivirus en cours
-      = link_to "rafraichir", request.path, data: { 'attachment-refresh': true }
+      = link_to "rafraichir", attachment_path, data: { action: 'turbo-poll#refresh' }
       )
     - elsif attachment.watermark_pending?
       (traitement de la pièce en cours
-      = link_to "rafraichir", request.path, data: { 'attachment-refresh': true }
+      = link_to "rafraichir", attachment_path, data: { action: 'turbo-poll#refresh' }
       )
     - elsif attachment.virus_scanner.infected?
-      - if user_can_upload
+      - if user_can_upload?
         (virus détecté, merci d’envoyer un autre fichier)
       - else
         (virus détecté, le téléchargement de ce fichier est bloqué)
     - elsif attachment.virus_scanner.corrupt?
-      - if user_can_upload
+      - if user_can_upload?
         (le fichier est corrompu, merci d’envoyer un autre fichier)
       - else
         (le fichier est corrompu, le téléchargement est bloqué)

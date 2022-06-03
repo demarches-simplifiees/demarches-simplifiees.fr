@@ -75,7 +75,7 @@
     "prettier": "^2.3.2",
     "typescript": "^4.5.5",
     "webpack-bundle-analyzer": "^3.7.0",
-    "webpack-dev-server": "^4.6.0"
+    "webpack-dev-server": "~3"
   },
   "scripts": {
     "clean": "del tmp public/packs public/packs-test",

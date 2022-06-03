@@ -1,0 +1,7 @@
+fr:
+  activerecord:
+    models:
+      mail:
+        received_mail:
+          default_subject: Votre dossier nº %{dossier_number} va être examiné (%{procedure_libelle})
+          under_instruction: Accusé de passage en instruction

@@ -25,76 +25,95 @@ class ProcedureRevision < ApplicationRecord
   has_many :types_de_champ_public, through: :revision_types_de_champ_public, source: :type_de_champ
   has_many :types_de_champ_private, through: :revision_types_de_champ_private, source: :type_de_champ
 
-  has_many :owned_types_de_champ, class_name: 'TypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
   has_one :draft_procedure, -> { with_discarded }, class_name: 'Procedure', foreign_key: :draft_revision_id, dependent: :nullify, inverse_of: :draft_revision
   has_one :published_procedure, -> { with_discarded }, class_name: 'Procedure', foreign_key: :published_revision_id, dependent: :nullify, inverse_of: :published_revision
 
   scope :ordered, -> { order(:created_at) }
 
   def build_champs
-    types_de_champ_public.map(&:build_champ)
+    types_de_champ_public.map { |tdc| tdc.build_champ(revision: self) }
   end
 
   def build_champs_private
-    types_de_champ_private.map(&:build_champ)
+    types_de_champ_private.map { |tdc| tdc.build_champ(revision: self) }
   end
 
   def add_type_de_champ(params)
-    params[:revision] = self
+    parent_stable_id = params[:parent_id]
 
-    if params[:parent_id]
-      find_or_clone_type_de_champ(params.delete(:parent_id))
-        .types_de_champ
-        .tap do |types_de_champ|
-          params[:order_place] = types_de_champ.present? ? types_de_champ.last.order_place + 1 : 0
-        end.create(params).migrate_parent!
+    coordinate = {}
+
+    if parent_stable_id.present?
+      # Ensure that if this is a child, it's parent is cloned to the new revision
+      clone_parent_to_draft_revision(parent_stable_id)
+
+      parent_coordinate, parent = coordinate_and_tdc(parent_stable_id)
+
+      coordinate[:parent_id] = parent_coordinate.id
+      coordinate[:position] = children_of(parent).count
+
+      # old system
+      params[:order_place] = coordinate[:position]
+      params[:parent_id] = parent.id
+    elsif params[:private]
+      coordinate[:position] = revision_types_de_champ_private.count
     else
-      types_de_champ.create(params)
+      coordinate[:position] = revision_types_de_champ_public.count
     end
+
+    tdc = TypeDeChamp.new(params)
+    if tdc.save
+      coordinate[:type_de_champ] = tdc
+      revision_types_de_champ.create!(coordinate)
+    end
+
+    tdc
+  rescue => e
+    TypeDeChamp.new.tap { |tdc| tdc.errors.add(:base, e.message) }
   end
 
+  # Only called by by controller update
   def find_or_clone_type_de_champ(stable_id)
-    type_de_champ = find_type_de_champ_by_stable_id(stable_id)
+    # Ensure that if this is a child, it's parent is cloned to the new revision
+    clone_parent_to_draft_revision(stable_id)
 
-    if type_de_champ.only_present_on_draft?
-      type_de_champ
-    elsif type_de_champ.parent.present?
-      find_or_clone_type_de_champ(type_de_champ.parent.stable_id).types_de_champ.find_by!(stable_id: stable_id)
+    coordinate, tdc = coordinate_and_tdc(stable_id)
+
+    if tdc.only_present_on_draft?
+      tdc
     else
-      revise_type_de_champ(type_de_champ)
+      replace_tdc_and_children_by_clones(coordinate)
     end
   end
 
   def move_type_de_champ(stable_id, position)
-    type_de_champ = find_type_de_champ_by_stable_id(stable_id)
+    # Ensure that if this is a child, it's parent is cloned to the new revision
+    # Needed because the order could be based on the ancient system
+    clone_parent_to_draft_revision(stable_id)
 
-    if type_de_champ.parent.present?
-      repetition_type_de_champ = find_or_clone_type_de_champ(stable_id).parent
+    coordinate, _ = coordinate_and_tdc(stable_id)
 
-      move_type_de_champ_hash(repetition_type_de_champ.types_de_champ.to_a, type_de_champ, position).each do |(id, position)|
-        type_de_champ = repetition_type_de_champ.types_de_champ.find(id)
-        type_de_champ.update!(order_place: position)
-        type_de_champ.revision_type_de_champ&.update!(position: position)
-      end
-    else
-      liste = type_de_champ.private? ? types_de_champ_private : types_de_champ_public
+    siblings = coordinate.siblings.to_a
 
-      move_type_de_champ_hash(liste.to_a, type_de_champ, position).each do |(id, position)|
-        revision_types_de_champ.find_by!(type_de_champ_id: id).update!(position: position)
-      end
-    end
+    siblings.insert(position, siblings.delete_at(siblings.index(coordinate)))
+
+    reorder(siblings)
   end
 
   def remove_type_de_champ(stable_id)
-    type_de_champ = find_type_de_champ_by_stable_id(stable_id)
+    # Ensure that if this is a child, it's parent is cloned to the new revision
+    # Needed because the order could be based on the ancient system
+    clone_parent_to_draft_revision(stable_id)
 
-    if type_de_champ.only_present_on_draft?
-      type_de_champ.destroy
-    elsif type_de_champ.parent.present?
-      find_or_clone_type_de_champ(stable_id).destroy
-    else
-      types_de_champ.delete(type_de_champ)
+    coordinate, tdc = coordinate_and_tdc(stable_id)
+
+    coordinate.destroy
+
+    if tdc.revision_types_de_champ.empty?
+      tdc.destroy
     end
+
+    reorder(coordinate.siblings)
   end
 
   def draft?
@@ -141,14 +160,33 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def children_of(tdc)
-    parent_revision_type_de_champ = revision_types_de_champ.find_by(type_de_champ: tdc)
+    parent_coordinate_id = revision_types_de_champ.where(type_de_champ: tdc).select(:id)
 
     types_de_champ
-      .where(procedure_revision_types_de_champ: { parent_id: parent_revision_type_de_champ.id })
+      .where(procedure_revision_types_de_champ: { parent_id: parent_coordinate_id })
       .order("procedure_revision_types_de_champ.position")
   end
 
   private
+
+  def coordinate_and_tdc(stable_id)
+    coordinate = revision_types_de_champ
+      .joins(:type_de_champ)
+      .find_by(type_de_champ: { stable_id: stable_id })
+
+    [coordinate, coordinate.type_de_champ]
+  end
+
+  def reorder(siblings)
+    siblings.to_a.compact.each.with_index do |sibling, position|
+        sibling.update(position: position)
+
+        # FIXME: to remove when order_place is no longer used
+        if sibling.parent_id.present?
+          sibling.type_de_champ.update!(order_place: position)
+        end
+      end
+  end
 
   def compare_attestation_template(from_at, to_at)
     changes = []
@@ -380,37 +418,29 @@ class ProcedureRevision < ApplicationRecord
     changes
   end
 
-  def revise_type_de_champ(type_de_champ)
-    types_de_champ_association = type_de_champ.private? ? :revision_types_de_champ_private : :revision_types_de_champ_public
-    association = send(types_de_champ_association).find_by!(type_de_champ: type_de_champ)
-    cloned_type_de_champ = type_de_champ.deep_clone(include: [:types_de_champ]) do |original, kopy|
+  def replace_tdc_and_children_by_clones(coordinate)
+    cloned_type_de_champ = coordinate.type_de_champ.deep_clone(include: [:types_de_champ]) do |original, kopy|
       PiecesJustificativesService.clone_attachments(original, kopy)
     end
-    cloned_type_de_champ.revision = self
-    association.update!(type_de_champ: cloned_type_de_champ)
-    cloned_type_de_champ.types_de_champ.each(&:migrate_parent!)
+    cloned_child_types_de_champ = cloned_type_de_champ.types_de_champ
+    coordinate.update!(type_de_champ: cloned_type_de_champ)
+
+    # sync old and new system
+    children_coordinates = revision_types_de_champ.where(parent: coordinate)
+
+    children_coordinates.find_each do |child_coordinate|
+      cloned_child_type_de_champ = cloned_child_types_de_champ.find { |tdc| tdc.stable_id == child_coordinate.type_de_champ.stable_id }
+      child_coordinate.update!(type_de_champ: cloned_child_type_de_champ)
+    end
+
     cloned_type_de_champ
   end
 
-  def find_type_de_champ_by_stable_id(stable_id)
-    types_de_champ.find_by(stable_id: stable_id) || types_de_champ_in_repetition.find_by(stable_id: stable_id)
-  end
+  def clone_parent_to_draft_revision(stable_id)
+    coordinate, tdc = coordinate_and_tdc(stable_id)
 
-  def types_de_champ_in_repetition
-    parent_ids = types_de_champ.repetition.ids
-    TypeDeChamp.where(parent_id: parent_ids)
-  end
-
-  def move_type_de_champ_hash(types_de_champ, type_de_champ, new_index)
-    old_index = types_de_champ.index(type_de_champ)
-
-    if types_de_champ.delete_at(old_index)
-      types_de_champ.insert(new_index, type_de_champ)
-        .map.with_index do |type_de_champ, index|
-          [type_de_champ.id, index]
-        end
-    else
-      []
+    if coordinate.child? && !tdc.only_present_on_draft?
+      replace_tdc_and_children_by_clones(coordinate.parent)
     end
   end
 end

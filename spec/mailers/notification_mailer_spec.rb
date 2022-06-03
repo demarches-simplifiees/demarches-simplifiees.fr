@@ -3,6 +3,31 @@ RSpec.describe NotificationMailer, type: :mailer do
   let(:user) { create(:user) }
   let(:procedure) { create(:simple_procedure) }
 
+  describe 'send_en_construction_notification' do
+    let(:dossier) { create(:dossier, :en_construction, :with_individual, :with_service, user: user, procedure: procedure) }
+    let(:email_template) { create(:initiated_mail, subject: 'Email subject', body: 'Your dossier was received. Thanks.') }
+
+    before do
+      dossier.procedure.initiated_mail = email_template
+    end
+
+    subject(:mail) { described_class.send_en_construction_notification(dossier) }
+
+    it 'renders the template' do
+      expect(mail.subject).to eq('Email subject')
+      expect((mail.html_part || mail).body).to include('Your dossier was received')
+    end
+
+    context 'when the deposit receipt feature is enabled' do
+      before { Flipper.enable(:procedure_dossier_papertrail, procedure) }
+      after { Flipper.disable(:procedure_dossier_papertrail, procedure) }
+
+      it 'attaches the deposit receipt' do
+        expect(mail.attachments.first.filename).to eq("attestation-de-depot.pdf")
+      end
+    end
+  end
+
   describe 'send_en_instruction_notification' do
     let(:dossier) { create(:dossier, :en_construction, :with_individual, :with_service, user: user, procedure: procedure) }
     let(:email_template) { create(:received_mail, subject: 'Email subject', body: 'Your dossier was processed. Thanks.') }

@@ -1,0 +1,13 @@
+en:
+  layouts:
+    mailers:
+      service_footer:
+        do_not_reply: Please do not reply to this email.
+        contact_admin: To contact your administration, go directly to the
+        file_messagerie: file mailbox
+        procedure_management: "This procedure is managed by:"
+        ask_question: "Ask a question about your file:"
+        by_messagerie: By messaging
+        by_email: "By email :"
+        by_phone: "By phone :"
+        schedule: "Schedule :"

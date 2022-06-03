@@ -500,11 +500,7 @@ class Procedure < ApplicationRecord
     end
 
     procedure.save
-    procedure.draft_types_de_champ.update_all(revision_id: procedure.draft_revision.id)
-    procedure.draft_types_de_champ_private.update_all(revision_id: procedure.draft_revision.id)
-    types_de_champ_in_repetition = TypeDeChamp.where(parent: procedure.draft_types_de_champ.repetition + procedure.draft_types_de_champ_private.repetition)
-    types_de_champ_in_repetition.update_all(revision_id: procedure.draft_revision.id)
-    types_de_champ_in_repetition.each(&:migrate_parent!)
+    TypeDeChamp.where(parent: procedure.draft_revision.types_de_champ.repetition).find_each(&:migrate_parent!)
 
     if is_different_admin || from_library
       procedure.draft_types_de_champ.each { |tdc| tdc.options&.delete(:old_pj) }
@@ -733,6 +729,13 @@ class Procedure < ApplicationRecord
     end
 
     new_draft.revision_types_de_champ.reload
+
+    # Some revisions do not have links to children types de champ
+    new_draft
+      .types_de_champ
+      .filter(&:repetition?)
+      .flat_map(&:types_de_champ)
+      .each(&:migrate_parent!)
 
     new_draft
   end

@@ -112,7 +112,7 @@ module DossierRebaseConcern
         end
       end
     else
-      champ = published_type_de_champ.build_champ
+      champ = published_type_de_champ.build_champ(revision: procedure.published_revision)
       self.champs << champ
     end
   end

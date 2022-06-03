@@ -247,25 +247,40 @@ FactoryBot.define do
       end
 
       after(:build) do |champ_repetition, evaluator|
-        types_de_champ = champ_repetition.type_de_champ.types_de_champ
+        revision = champ_repetition.type_de_champ.procedure&.active_revision || build(:procedure_revision)
+        parent = revision.revision_types_de_champ.find { |rtdc| rtdc.type_de_champ == champ_repetition.type_de_champ }
+        types_de_champ = revision.revision_types_de_champ.filter { |rtdc| rtdc.parent == parent }.map(&:type_de_champ)
 
-        existing_type_de_champ_text = types_de_champ.find { |tdc| tdc.libelle == 'Nom' }
-        type_de_champ_text = existing_type_de_champ_text || build(
-          :type_de_champ_text,
-          position: 0,
-          parent: champ_repetition.type_de_champ,
-          libelle: 'Nom'
-        )
+        type_de_champ_text = types_de_champ.find { |tdc| tdc.libelle == 'Nom' }
+        if !type_de_champ_text
+          type_de_champ_text = build(:type_de_champ_text,
+            position: 0,
+            parent: champ_repetition.type_de_champ,
+            libelle: 'Nom')
+          revision.revision_types_de_champ << build(:procedure_revision_type_de_champ,
+            revision: revision,
+            type_de_champ: type_de_champ_text,
+            parent: parent,
+            position: 0)
 
-        existing_type_de_champ_number = types_de_champ.find { |tdc| tdc.libelle == 'Age' }
-        type_de_champ_number = existing_type_de_champ_number || build(
-          :type_de_champ_number,
-          position: 1,
-          parent: champ_repetition.type_de_champ,
-          libelle: 'Age'
-        )
+          champ_repetition.type_de_champ.types_de_champ << type_de_champ_text
+        end
 
-        champ_repetition.type_de_champ.types_de_champ << [type_de_champ_text, type_de_champ_number]
+        type_de_champ_number = types_de_champ.find { |tdc| tdc.libelle == 'Age' }
+        if !type_de_champ_number
+          type_de_champ_number = build(:type_de_champ_number,
+            position: 1,
+            parent: champ_repetition.type_de_champ,
+            libelle: 'Age')
+          revision.revision_types_de_champ << build(:procedure_revision_type_de_champ,
+            revision: revision,
+            type_de_champ: type_de_champ_number,
+            parent: parent,
+            position: 1)
+
+          champ_repetition.type_de_champ.types_de_champ << type_de_champ_number
+        end
+
         evaluator.rows.times do |row|
           champ_repetition.champs << [
             build(:champ_text, dossier: champ_repetition.dossier, row: row, type_de_champ: type_de_champ_text, parent: champ_repetition),
