@@ -11,4 +11,8 @@ class TypesDeChamp::CarteTypeDeChamp < TypesDeChamp::TypeDeChampBase
     :znieff,
     :cadastres
   ]
+
+  def estimated_fill_duration(revision)
+    FILL_DURATION_LONG
+  end
 end

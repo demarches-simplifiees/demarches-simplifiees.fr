@@ -51,6 +51,7 @@ class Champ < ApplicationRecord
     :titre_identite?,
     :header_section?,
     :accredited_user_list,
+    :stable_id,
     to: :type_de_champ
 
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
@@ -158,10 +159,6 @@ class Champ < ApplicationRecord
 
   def describedby_id
     "#{html_id}-description" if description.present?
-  end
-
-  def stable_id
-    type_de_champ.stable_id
   end
 
   def log_fetch_external_data_exception(exception)

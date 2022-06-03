@@ -16,15 +16,7 @@ RSpec.describe NotificationMailer, type: :mailer do
     it 'renders the template' do
       expect(mail.subject).to eq('Email subject')
       expect((mail.html_part || mail).body).to include('Your dossier was received')
-    end
-
-    context 'when the deposit receipt feature is enabled' do
-      before { Flipper.enable(:procedure_dossier_papertrail, procedure) }
-      after { Flipper.disable(:procedure_dossier_papertrail, procedure) }
-
-      it 'attaches the deposit receipt' do
-        expect(mail.attachments.first.filename).to eq("attestation-de-depot.pdf")
-      end
+      expect(mail.attachments.first.filename).to eq("attestation-de-depot.pdf")
     end
   end
 

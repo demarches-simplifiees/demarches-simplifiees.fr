@@ -1,9 +1,7 @@
 .dossier-edit.container
   = render partial: "shared/dossiers/submit_is_over", locals: { dossier: dossier }
 
-  - if dossier.for_procedure_preview?
-    - form_options = { url: '', method: :get }
-  - elsif dossier.brouillon?
+  - if dossier.brouillon?
     - form_options = { url: brouillon_dossier_url(dossier), method: :patch }
   - else
     - form_options = { url: modifier_dossier_url(dossier), method: :patch }
@@ -14,10 +12,7 @@
       %p.mandatory-explanation= t('utils.asterisk_html')
       - if dossier.brouillon?
         %p.mandatory-explanation
-          - if autosave_available?(dossier)
-            = t('views.shared.dossiers.edit.autosave')
-          - else
-            Pour enregistrer votre dossier et le reprendre plus tard, cliquez sur le bouton « Enregistrer le brouillon » en bas à gauche du formulaire.
+          = t('views.shared.dossiers.edit.autosave')
       - if dossier.france_connect_information.present?
         = render partial: "shared/dossiers/france_connect_informations", locals: { user_information: dossier.france_connect_information, provider: dossier.user.loged_in_with_france_connect }
       - if notice_url(dossier.procedure).present?
@@ -32,7 +27,7 @@
     %button{ type: :submit, disabled: true, style: 'display: none' } BOUTON
 
     - if dossier.show_groupe_instructeur_selector?
-      %span{ data: autosave_available?(dossier) ? { controller: 'autosave', autosave_url_value: brouillon_dossier_path(dossier) } : {} }
+      %span{ data: dossier.brouillon? ? { controller: 'autosave', autosave_url_value: brouillon_dossier_path(dossier) } : {} }
         = f.label :groupe_instructeur_id do
           = dossier.procedure.routing_criteria_name
           %span.mandatory *
@@ -48,13 +43,7 @@
       .dossier-edit-sticky-footer
         .send-dossier-actions-bar
           - if dossier.brouillon?
-            - if autosave_available?(dossier)
-              = render partial: 'users/dossiers/autosave'
-            - else
-              = f.button 'Enregistrer le brouillon',
-                formnovalidate: true,
-                class: 'button send secondary',
-                data: { 'disable-with': "Envoi en cours…" }
+            = render partial: 'users/dossiers/autosave'
 
             - if dossier.can_transition_to_en_construction?
               = f.button t('views.shared.dossiers.edit.submit_dossier'),

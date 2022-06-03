@@ -5,7 +5,8 @@
       - dossier.invites.each do |invite|
         %li
           = invite.email
-          %small= link_to(t('views.invites.form.withdraw_permission'), invite_path(invite), data: { confirm: t('views.invites.form.want_to_withdraw_permission') }, method: :delete, remote: true)
+          %small{ 'data-turbo': 'true' }
+            = link_to t('views.invites.form.withdraw_permission'), invite_path(invite), data: { turbo_method: :delete, turbo_confirm: t('views.invites.form.want_to_withdraw_permission') }
     %p= t('views.invites.form.edit_dossier')
     - if dossier.brouillon?
       %p= t('views.invites.form.submit_dossier_yourself')
@@ -14,7 +15,7 @@
     %p= t('views.invites.form.invite_to_edit_line1')
     %p= t('views.invites.form.invite_to_edit_line2')
 
-  = form_tag dossier_invites_path(dossier), remote: true, method: :post, class: 'form' do
+  = form_tag dossier_invites_path(dossier), data: { turbo: true }, method: :post, class: 'form' do
     .row
       .col
         %span
