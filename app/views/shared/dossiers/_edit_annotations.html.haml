@@ -12,8 +12,10 @@
               .send-dossier-actions-bar
                 = render partial: 'autosave'
           - else
-            .send-wrapper
-              = f.submit 'Sauvegarder', class: 'button primary send', data: { disable: true }
+            .dossier-edit-sticky-footer
+              .send-dossier-actions-bar
+                .send-wrapper
+                  = f.submit 'Sauvegarder', class: 'button primary send', data: { disable: true }
 
   - else
     %h2.empty-text Aucune annotation privée
