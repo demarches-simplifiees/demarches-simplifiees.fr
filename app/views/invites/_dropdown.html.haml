@@ -1,5 +1,5 @@
-.dropdown.invite-user-action
-  %button.button.dropdown-button{ 'aria-expanded' => 'false', 'aria-controls' => 'invite-content' }
+.dropdown.invite-user-action{ data: { controller: 'menu-button', popover: 'true' } }
+  %button.button.dropdown-button{ data: { menu_button_target: 'button' } }
     %span.icon.person
     - if dossier.invites.count > 0
       = t('views.invites.dropdown.view_invited_people')
@@ -10,5 +10,5 @@
       - else
         = t('views.invites.dropdown.invite_to_edit')
 
-  #invite-content.dropdown-content.fade-in-down
+  #invite-content.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
     = render partial: "invites/form", locals: { dossier: dossier }

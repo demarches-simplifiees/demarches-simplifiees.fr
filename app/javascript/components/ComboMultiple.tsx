@@ -4,10 +4,7 @@ import React, {
   useRef,
   useContext,
   createContext,
-  useEffect,
   useId,
-  useLayoutEffect,
-  MutableRefObject,
   ReactNode,
   ChangeEventHandler,
   KeyboardEventHandler
@@ -28,7 +25,6 @@ import invariant from 'tiny-invariant';
 import { useDeferredSubmit, useHiddenField } from './shared/hooks';
 
 const Context = createContext<{
-  selectionsRef: MutableRefObject<string[]>;
   onRemove: (value: string) => void;
 } | null>(null);
 
@@ -38,16 +34,6 @@ function isOptions(options: string[] | Option[]): options is Option[] {
   return Array.isArray(options[0]);
 }
 
-const optionValueByLabel = (
-  values: string[],
-  options: Option[],
-  label: string
-): string => {
-  const maybeOption: Option | undefined = values.includes(label)
-    ? [label, label]
-    : options.find(([optionLabel]) => optionLabel == label);
-  return maybeOption ? maybeOption[1] : '';
-};
 const optionLabelByValue = (
   values: string[],
   options: Option[],
@@ -141,7 +127,7 @@ export default function ComboMultiple({
 
   const onSelect = (value: string) => {
     const maybeValue = [...extraOptions, ...optionsWithLabels].find(
-      ([val]) => val == value
+      ([, val]) => val == value
     );
     const selectedValue = maybeValue && maybeValue[1];
     if (selectedValue) {
@@ -167,8 +153,7 @@ export default function ComboMultiple({
     hidePopover();
   };
 
-  const onRemove = (label: string) => {
-    const optionValue = optionValueByLabel(newValues, optionsWithLabels, label);
+  const onRemove = (optionValue: string) => {
     if (optionValue) {
       saveSelection((selections) =>
         selections.filter((value) => value != optionValue)
@@ -242,13 +227,11 @@ export default function ComboMultiple({
           {selections.map((selection) => (
             <ComboboxToken
               key={selection}
+              value={selection}
               describedby={removedLabelledby}
-              value={optionLabelByValue(
-                newValues,
-                optionsWithLabels,
-                selection
-              )}
-            />
+            >
+              {optionLabelByValue(newValues, optionsWithLabels, selection)}
+            </ComboboxToken>
           ))}
         </ul>
         <ComboboxInput
@@ -287,11 +270,15 @@ export default function ComboMultiple({
                 </button>
               </li>
             )}
-            {results.map(([label], index) => {
+            {results.map(([label, value], index) => {
               if (label.startsWith('--')) {
                 return <ComboboxSeparator key={index} value={label} />;
               }
-              return <ComboboxOption key={index} value={label} />;
+              return (
+                <ComboboxOption key={index} value={value}>
+                  {label}
+                </ComboboxOption>
+              );
             })}
           </ComboboxList>
         </ComboboxPopover>
@@ -307,22 +294,8 @@ function ComboboxTokenLabel({
   onRemove: (value: string) => void;
   children: ReactNode;
 }) {
-  const selectionsRef = useRef<string[]>([]);
-
-  useLayoutEffect(() => {
-    selectionsRef.current = [];
-    return () => {
-      selectionsRef.current = [];
-    };
-  }, []);
-
   return (
-    <Context.Provider
-      value={{
-        onRemove,
-        selectionsRef
-      }}
-    >
+    <Context.Provider value={{ onRemove }}>
       <div data-reach-combobox-token-label>{children}</div>
     </Context.Provider>
   );
@@ -339,17 +312,16 @@ function ComboboxSeparator({ value }: { value: string }) {
 function ComboboxToken({
   value,
   describedby,
+  children,
   ...props
 }: {
   value: string;
   describedby: string;
+  children: ReactNode;
 }) {
   const context = useContext(Context);
   invariant(context, 'invalid context');
-  const { selectionsRef, onRemove } = context;
-  useEffect(() => {
-    selectionsRef.current.push(value);
-  });
+  const { onRemove } = context;
 
   return (
     <li data-reach-combobox-token {...props}>
@@ -366,7 +338,7 @@ function ComboboxToken({
         aria-describedby={describedby}
       >
         <XIcon className="icon-size mr-1" aria-hidden="true" />
-        {value}
+        {children}
       </button>
     </li>
   );

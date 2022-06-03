@@ -1,12 +1,8 @@
-.repetition
+.repetition{ id: dom_id(champ, :rows) }
   - champ.rows.each do |champs|
     = render partial: 'shared/dossiers/editable_champs/repetition_row', locals: { form: form, champ: champ, row: champs }
 
-- if champ.persisted?
-  = link_to champs_repetition_path(champ.id), class: 'button add-row', data: { remote: true, disable: true, method: 'POST' } do
-    %span.icon.add
-    Ajouter un élément pour « #{champ.libelle} »
-- else
-  %a.button.add-row
+.actions{ 'data-turbo': 'true' }
+  = link_to champs_repetition_path(champ.id), data: { turbo_method: :post }, class: 'button add-row' do
     %span.icon.add
     Ajouter un élément pour « #{champ.libelle} »

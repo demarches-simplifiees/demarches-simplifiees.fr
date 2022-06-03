@@ -26,7 +26,7 @@
                 %p= message.body
                 .answer.flex.align-start
                   - if message.piece_jointe.present?
-                    = render partial: 'shared/attachment/show', locals: { attachment: message.piece_jointe.attachment }
+                    = render Attachment::ShowComponent.new(attachment: message.piece_jointe.attachment)
   - else
     .page-title.center
       %h2 Il n'y a aucun dossier en brouillon dans vos groupes instructeurs

@@ -6,6 +6,7 @@ fr:
         other: "Dossiers"
     attributes:
       dossier:
+        id: "Numéro de dossier"
         montant_projet: 'Le montant du projet'
         montant_aide_demande: "Le montant d’aide demandée"
         date_previsionnelle: "La date de début prévisionnelle"

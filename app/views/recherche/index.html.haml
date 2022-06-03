@@ -1,14 +1,12 @@
 - content_for(:title, "Recherche : #{@search_terms}")
-- pagination =  paginate @paginated_ids
 
 .container
   .page-title
     Résultat de la recherche :
     = t('pluralize.dossier_trouve', count: @dossiers_count)
 
-  = pagination
-
   - if @projected_dossiers.present?
+    = paginate @paginated_ids
     %table.table.dossiers-table.hoverable
       %thead
         %tr
@@ -64,10 +62,10 @@
 
             - if instructeur_dossier && expert_dossier
               %td.action-col.follow-col
-                .dropdown
-                  .button.dropdown-button
+                .dropdown{ data: { controller: 'menu-button' } }
+                  %button.button.dropdown-button{ data: { menu_button_target: 'button' } }
                     Actions
-                  .dropdown-content.fade-in-down
+                  .dropdown-content{ data: { menu_button_target: 'menu' } }
                     %ul.dropdown-items
                       %li
                         = link_to(instructeur_dossier_path(procedure_id, p.dossier_id)) do
@@ -98,7 +96,7 @@
 
             - else
               %td
-    = pagination
+    = paginate @paginated_ids
 
   - else
     %h2 Aucun dossier correspondant à votre recherche n’a été trouvé

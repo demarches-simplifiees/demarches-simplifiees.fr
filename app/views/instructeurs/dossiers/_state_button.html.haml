@@ -1,10 +1,10 @@
-.dropdown
+.dropdown{ data: { controller: 'menu-button', popover: 'true' } }
   -# Dropdown button title
-  %button.button.primary.dropdown-button{ class: button_or_label_class(dossier), 'aria-expanded' => 'false', 'aria-controls' => 'state-menu' }
+  %button.button.primary.dropdown-button{ class: button_or_label_class(dossier), data: { menu_button_target: 'button' } }
     = dossier_display_state dossier
 
   -# Dropdown content
-  #state-menu.dropdown-content.fade-in-down
+  #state-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
 
     - if dossier.en_construction?
       -# ------------------------------------------------------
@@ -18,8 +18,8 @@
             %h4 En construction
             Vous permettez à l'usager de modifier ses réponses au formulaire
 
-        %li
-          = link_to passer_en_instruction_instructeur_dossier_path(dossier.procedure, dossier), method: :post, data: { remote: true, confirm: "Confirmez-vous le passage en instruction de ce dossier ?" } do
+        %li{ 'data-turbo': 'true' }
+          = link_to passer_en_instruction_instructeur_dossier_path(dossier.procedure, dossier), data: { turbo_method: :post, turbo_confirm: "Confirmez-vous le passage en instruction de ce dossier ?" } do
             %span.icon.in-progress
             .dropdown-description
               %h4 Passer en instruction
@@ -31,8 +31,8 @@
       -# ------------------------------------------------------
       %ul.dropdown-items
 
-        %li
-          = link_to repasser_en_construction_instructeur_dossier_path(dossier.procedure, dossier), method: :post, data: { remote:true, confirm: "Confirmez-vous le passage en construction de ce dossier ?" } do
+        %li{ 'data-turbo': 'true' }
+          = link_to repasser_en_construction_instructeur_dossier_path(dossier.procedure, dossier), data: { turbo_method: :post, turbo_confirm: "Confirmez-vous le passage en construction de ce dossier ?" } do
             %span.icon.edit
             .dropdown-description
               %h4 Repasser en construction
@@ -100,8 +100,8 @@
                 %p Cette attestation a été envoyée automatiquement au demandeur.
 
         - if dossier.can_repasser_en_instruction?
-          %li
-            = link_to repasser_en_instruction_instructeur_dossier_path(dossier.procedure, dossier), method: :post, data: { remote:true, confirm: "Voulez vous remettre le dossier #{dossier.id} en instruction ?" } do
+          %li{ 'data-turbo': 'true' }
+            = link_to repasser_en_instruction_instructeur_dossier_path(dossier.procedure, dossier), data: { turbo_method: :post, turbo_confirm: "Voulez vous remettre le dossier #{dossier.id} en instruction ?" } do
               %span.icon.in-progress
               .dropdown-description
                 %h4 Repasser en instruction

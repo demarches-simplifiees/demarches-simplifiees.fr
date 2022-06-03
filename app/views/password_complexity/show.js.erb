@@ -1,3 +1,0 @@
-<%= render_to_element('#complexity-label', partial: 'label', outer: true) %>
-<%= render_to_element('#complexity-bar', partial: 'bar', outer: true) %>
-<%= raw("document.querySelector('#submit-password').disabled = #{@score < @min_complexity || @length < @min_length};") %>

@@ -33,6 +33,6 @@
                   %span.waiting
                     = t('en_attente', scope: 'views.shared.avis')
               - if avis.piece_justificative_file.attached?
-                = render partial: 'shared/attachment/show', locals: { attachment: avis.piece_justificative_file.attachment }
+                = render Attachment::ShowComponent.new(attachment: avis.piece_justificative_file.attachment)
               .answer-body
                 = simple_format(avis.answer)

@@ -1,4 +1,4 @@
-.autosave.autosave-state-idle
+.autosave.autosave-state-idle{ data: { controller: 'autosave-status' } }
   %p.autosave-explanation
     %span.autosave-explanation-text
       = t('views.users.dossiers.autosave.autosave_draft')
@@ -13,7 +13,7 @@
   %p.autosave-status.failed
     %span.autosave-icon ⚠️
     %span.autosave-label Impossible d’enregistrer le brouillon
-    %button.button.small.autosave-retry
+    %button.button.small.autosave-retry{ type: :button, data: { action: 'autosave-status#onClickRetryButton', autosave_status_target: 'retryButton' } }
       %span.autosave-retry-label réessayer
       %span.autosave-retrying-label enregistrement en cours…
 

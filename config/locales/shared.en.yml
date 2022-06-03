@@ -20,12 +20,12 @@ en:
           ine_notice: Student National Number. It is usually composed of alphanumeric characters.
       header:
         expires_at:
-          brouillon: "Expires at %{date} (%{duree_conservation_totale} months after the creation of this file)"
-          en_construction: "Expires at %{date} (%{duree_conservation_totale} months after the last la edition of this file)"
+          brouillon: "Expires on %{date} (%{duree_conservation_totale} months after this file was created)"
+          en_construction: "Expires on %{date} (%{duree_conservation_totale} months after this file was last modified)"
           en_instruction: "This file is being instructed, the administration will answer as soon as possible"
-          accepte: "Expires at %{date} (%{duree_conservation_totale} months after the acceptation of this file)"
-          refuse: "Expires at %{date} (%{duree_conservation_totale} months after the rejection of this file)"
-          sans_suite: "Expires at %{date} (%{duree_conservation_totale} months after this file had been closed)"
+          accepte: "Expires on %{date} (%{duree_conservation_totale} months after this file was accepted)"
+          refuse: "Expires on %{date} (%{duree_conservation_totale} months after this file was rejected)"
+          sans_suite: "Expires on %{date} (%{duree_conservation_totale} months after this file was closed)"
     champs:
       cnaf:
         show:

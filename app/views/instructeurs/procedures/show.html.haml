@@ -11,7 +11,7 @@
 
       .procedure-actions
         - if @can_download_dossiers
-          = render partial: "download_dossiers", locals: { procedure: @procedure, exports: @exports }
+          = render Dossiers::ExportComponent.new(procedure: @procedure, exports: @exports)
 
     .container.flex= render partial: "tabs", locals: { procedure: @procedure,
         statut: @statut,
@@ -34,7 +34,7 @@
         = t('views.instructeurs.dossiers.tab_explainations.suivis')
     - if @statut == 'traites'
       %p.explication-onglet
-        = t('views.instructeurs.dossiers.tab_explainations.traites')
+        = t('views.instructeurs.dossiers.tab_explainations.traites_html', archives_path: instructeur_archives_path(@procedure))
     - if @statut == 'tous'
       %p.explication-onglet
         = t('views.instructeurs.dossiers.tab_explainations.tous')
@@ -65,7 +65,7 @@
           = render partial: "dossiers_filter", locals: { procedure: @procedure, procedure_presentation: @procedure_presentation, current_filters: @current_filters, statut: @statut, displayed_fields_options: @displayed_fields_options }
         - if @dossiers_count > 0
           .dossiers-export
-            = render partial: "dossiers_export", locals: { procedure: @procedure, exports: @exports, statut: @statut, count: @dossiers_count }
+            = render Dossiers::ExportComponent.new(procedure: @procedure, exports: @exports, statut: @statut, count: @dossiers_count)
 
       %table.table.dossiers-table.hoverable
         %thead
@@ -79,10 +79,10 @@
               = render partial: "header_field", locals: { field: field, classname: field['classname'] }
 
             %th.action-col.follow-col
-              %span.dropdown
-                %button.button.dropdown-button{ 'aria-expanded' => 'false', 'aria-controls' => 'custom-menu' }
+              %span.dropdown{ data: { controller: 'menu-button', popover: 'true' } }
+                %button.button.dropdown-button{ data: { menu_button_target: 'button' } }
                   = t('views.instructeurs.dossiers.personalize')
-                #custom-menu.dropdown-content.fade-in-down
+                #custom-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
                   = form_tag update_displayed_fields_instructeur_procedure_path(@procedure), method: :patch, class: 'dropdown-form large columns-form' do
                     = hidden_field_tag :values, nil
                     = react_component("ComboMultiple",

@@ -1054,6 +1054,31 @@ describe Users::DossiersController, type: :controller do
     end
   end
 
+  describe "#papertrail" do
+    before { sign_in(user) }
+
+    subject do
+      get :papertrail, format: :pdf, params: { id: dossier.id }
+    end
+
+    context 'when the dossier has been submitted' do
+      let(:dossier) { create(:dossier, :en_construction, user: user) }
+
+      it 'renders a PDF document' do
+        subject
+        expect(response).to render_template(:papertrail)
+      end
+    end
+
+    context 'when the dossier is still a draft' do
+      let(:dossier) { create(:dossier, :brouillon, user: user) }
+
+      it 'raises an error' do
+        expect { subject }.to raise_error(ActionController::BadRequest)
+      end
+    end
+  end
+
   describe '#delete_dossier' do
     before { sign_in(user) }
 

@@ -38,7 +38,7 @@ export function useFeatureCollection(
         features: callback(features)
       }));
       httpRequest(url)
-        .js()
+        .turbo()
         .catch(() => null);
     },
     [url, setFeatureCollection]

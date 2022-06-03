@@ -5,42 +5,42 @@ import { session } from '@hotwired/turbo';
 export { debounce };
 export const { fire, csrfToken, cspNonce } = Rails;
 
-export function show(el: HTMLElement) {
-  el && el.classList.remove('hidden');
+export function show(el: HTMLElement | null) {
+  el?.classList.remove('hidden');
 }
 
-export function hide(el: HTMLElement) {
-  el && el.classList.add('hidden');
+export function hide(el: HTMLElement | null) {
+  el?.classList.add('hidden');
 }
 
-export function toggle(el: HTMLElement, force?: boolean) {
+export function toggle(el: HTMLElement | null, force?: boolean) {
   if (force == undefined) {
-    el && el.classList.toggle('hidden');
+    el?.classList.toggle('hidden');
   } else if (force) {
-    el && el.classList.remove('hidden');
+    el?.classList.remove('hidden');
   } else {
-    el && el.classList.add('hidden');
+    el?.classList.add('hidden');
   }
 }
 
-export function enable(el: HTMLInputElement) {
+export function enable(el: HTMLInputElement | HTMLButtonElement | null) {
   el && (el.disabled = false);
 }
 
-export function disable(el: HTMLInputElement) {
+export function disable(el: HTMLInputElement | HTMLButtonElement | null) {
   el && (el.disabled = true);
 }
 
-export function hasClass(el: HTMLElement, cssClass: string) {
-  return el && el.classList.contains(cssClass);
+export function hasClass(el: HTMLElement | null, cssClass: string) {
+  return el?.classList.contains(cssClass);
 }
 
-export function addClass(el: HTMLElement, cssClass: string) {
-  el && el.classList.add(cssClass);
+export function addClass(el: HTMLElement | null, cssClass: string) {
+  el?.classList.add(cssClass);
 }
 
-export function removeClass(el: HTMLElement, cssClass: string) {
-  el && el.classList.remove(cssClass);
+export function removeClass(el: HTMLElement | null, cssClass: string) {
+  el?.classList.remove(cssClass);
 }
 
 export function delegate<E extends Event = Event>(
@@ -60,46 +60,16 @@ export function delegate<E extends Event = Event>(
     );
 }
 
-// A promise-based wrapper for Rails.ajax().
-//
-// Returns a Promise that is either:
-// - resolved in case of a 20* HTTP response code,
-// - rejected with an Error object otherwise.
-//
-// See Rails.ajax() code for more details.
-export function ajax(options: Rails.AjaxOptions) {
-  return new Promise((resolve, reject) => {
-    Object.assign(options, {
-      success: (
-        response: unknown,
-        statusText: string,
-        xhr: { status: number }
-      ) => {
-        resolve({ response, statusText, xhr });
-      },
-      error: (
-        response: unknown,
-        statusText: string,
-        xhr: { status: number }
-      ) => {
-        // NB: on HTTP/2 connections, statusText is always empty.
-        const error = new Error(
-          `Erreur ${xhr.status}` + (statusText ? ` : ${statusText}` : '')
-        );
-        Object.assign(error, { response, statusText, xhr });
-        reject(error);
-      }
-    });
-    Rails.ajax(options);
-  });
-}
-
 export class ResponseError extends Error {
-  response: Response;
+  readonly response: Response;
+  readonly jsonBody?: unknown;
+  readonly textBody?: string;
 
-  constructor(response: Response) {
+  constructor(response: Response, jsonBody?: unknown, textBody?: string) {
     super(String(response.statusText || response.status));
     this.response = response;
+    this.jsonBody = jsonBody;
+    this.textBody = textBody;
   }
 }
 
@@ -119,10 +89,6 @@ const FETCH_TIMEOUT = 30 * 1000; // 30 sec
 // Execute a GET request, and apply the Turbo stream in the Response
 // await httpRequest(url).turbo();
 //
-// Execute a GET request, and interpret the JavaScript code in the Response
-// DEPRECATED: Don't use this in new code; instead let the server respond with a turbo stream
-// await httpRequest(url).js();
-//
 export function httpRequest(
   url: string,
   {
@@ -138,7 +104,7 @@ export function httpRequest(
     controller?: AbortController;
   } = {}
 ) {
-  const headers = new Headers(init.headers);
+  const headers = init.headers ? new Headers(init.headers) : new Headers();
   if (csrf) {
     headers.set('x-csrf-token', csrfToken() ?? '');
     headers.set('x-requested-with', 'XMLHttpRequest');
@@ -163,26 +129,38 @@ export function httpRequest(
     }
   }
 
-  const request = (init: RequestInit, accept?: string): Promise<Response> => {
+  const request = async (
+    init: RequestInit,
+    accept?: string
+  ): Promise<Response> => {
     if (accept && init.headers instanceof Headers) {
       init.headers.set('accept', accept);
     }
-    return fetch(url, init)
-      .then((response) => {
-        clearTimeout(timer);
+    try {
+      const response = await fetch(url, init);
 
-        if (response.ok) {
-          return response;
-        } else if (response.status == 401) {
-          location.reload(); // reload whole page so Devise will redirect to sign-in
+      if (response.ok) {
+        return response;
+      } else if (response.status == 401) {
+        location.reload(); // reload whole page so Devise will redirect to sign-in
+      }
+
+      const contentType = response.headers.get('content-type');
+      let jsonBody: unknown;
+      let textBody: string | undefined;
+      try {
+        if (contentType?.match('json')) {
+          jsonBody = await response.clone().json();
+        } else {
+          textBody = await response.clone().text();
         }
-        throw new ResponseError(response);
-      })
-      .catch((error) => {
-        clearTimeout(timer);
-
-        throw error;
-      });
+      } catch {
+        // ignore
+      }
+      throw new ResponseError(response, jsonBody, textBody);
+    } finally {
+      clearTimeout(timer);
+    }
   };
 
   return {
@@ -234,18 +212,6 @@ export function scrollToBottom(container: HTMLElement) {
   container.scrollTop = container.scrollHeight;
 }
 
-export function on(
-  selector: string,
-  eventName: string,
-  fn: (event: Event, detail: unknown) => void
-) {
-  [...document.querySelectorAll(selector)].forEach((element) =>
-    element.addEventListener(eventName, (event) =>
-      fn(event, (event as CustomEvent).detail)
-    )
-  );
-}
-
 export function isNumeric(s: string) {
   const n = parseFloat(s);
   return !isNaN(n) && isFinite(n);
@@ -257,17 +223,4 @@ function offset(element: HTMLElement) {
     top: rect.top + document.body.scrollTop,
     left: rect.left + document.body.scrollLeft
   };
-}
-
-// Takes a promise, and return a promise that times out after the given delay.
-export function timeoutable<T>(
-  promise: Promise<T>,
-  timeoutDelay: number
-): Promise<T> {
-  const timeoutPromise = new Promise<T>((resolve, reject) => {
-    setTimeout(() => {
-      reject(new Error(`Promise timed out after ${timeoutDelay}ms`));
-    }, timeoutDelay);
-  });
-  return Promise.race([promise, timeoutPromise]);
 }

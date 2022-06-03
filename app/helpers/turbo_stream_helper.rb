@@ -31,5 +31,13 @@ module TurboStreamHelper
     def focus_all(targets)
       dispatch('dom:mutation', { action: :focus, targets: targets })
     end
+
+    def disable(target)
+      dispatch('dom:mutation', { action: :disable, target: target })
+    end
+
+    def enable(target)
+      dispatch('dom:mutation', { action: :enable, target: target })
+    end
   end
 end

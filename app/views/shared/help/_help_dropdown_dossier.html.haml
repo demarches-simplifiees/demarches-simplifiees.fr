@@ -1,7 +1,7 @@
-.dropdown.help-dropdown
-  %button.button.primary.dropdown-button{ 'aria-expanded' => 'false', 'aria-controls' => 'help-menu' }
+.dropdown.help-dropdown{ data: { controller: 'menu-button' } }
+  %button.button.primary.dropdown-button{ data: { menu_button_target: 'button' } }
     = t('help')
-  #help-menu.dropdown-content.fade-in-down
+  #help-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
     %ul.dropdown-items
       - title = dossier.brouillon? ? "Besoin d’aide pour remplir votre dossier ?" : "Une question sur votre dossier ?"
 

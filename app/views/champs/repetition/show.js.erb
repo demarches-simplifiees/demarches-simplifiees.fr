@@ -1,3 +1,0 @@
-<%= fields_for @champ.input_name, @champ do |form| %>
-  <%= append_to_element("##{@champ.input_group_id} .repetition", partial: 'shared/dossiers/editable_champs/repetition_row', locals: { form: form, champ: @champ, row: @champs }) %>
-<% end %>

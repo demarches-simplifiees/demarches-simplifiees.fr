@@ -1,8 +1,8 @@
-.dropdown.locale-dropdown.header-menu-opener
-  %button.button.dropdown-button.icon-only.header-menu-button{ title: t('.languages'), aria: { expanded: 'false', controls: 'locale_menu' } }
+.dropdown.locale-dropdown.header-menu-opener{ data: { controller: 'menu-button' } }
+  %button.button.dropdown-button.icon-only.header-menu-button{ title: t('.languages'), data: { menu_button_target: 'button' } }
     .hidden t('.languages')
     = image_tag "icons/translate-icon.svg", alt: t('.languages'), width: 24, height: 24, lazy: true, aria: { hidden: true }
-  %ul.header-menu.dropdown-content
+  %ul.header-menu.dropdown-content{ data: { menu_button_target: 'menu' } }
     %li
       = active_link_to save_locale_path(locale: :fr), method: :post, class: "menu-item menu-link", active: I18n.locale == :fr do
         Français

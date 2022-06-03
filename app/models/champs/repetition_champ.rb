@@ -28,11 +28,11 @@ class Champs::RepetitionChamp < Champ
     champs.group_by(&:row).values
   end
 
-  def add_row
+  def add_row(revision)
     added_champs = []
     transaction do
       row = (blank? ? -1 : champs.last.row) + 1
-      type_de_champ.types_de_champ.each do |type_de_champ|
+      revision.children_of(type_de_champ).each do |type_de_champ|
         added_champs << type_de_champ.champ.build(row: row)
       end
       self.champs << added_champs

@@ -8,33 +8,7 @@ fr:
         all: dossiers
         archived: archivés
         dossiers_close_to_expiration: expirant
-        dossiers_supprimes_recemment: supprimés 
-      dossiers_export:
-        everything_csv_html: Demander un export au format .csv<br>(uniquement les dossiers, sans les champs répétables)
-        everything_xlsx_html: Demander un export au format .xlsx
-        everything_ods_html: Demander un export au format .ods
-        everything_zip_html: Demander un export au format .zip
-        everything_short: Demander un export au format %{export_format}
-        everything_pending_html: Un export au format %{export_format} est en train d’être généré<br>(demandé il y a %{export_time})
-        everything_ready_html: Télécharger l’export au format %{export_format}<br>(généré il y a %{export_time})
-        download:
-          one: Télécharger un dossier
-          other: Télécharger %{count} dossiers
-      download_dossiers:
-        everything_short: Demander un export au format %{export_format}
-        everything_csv_html: Demander un export au format .csv<br>(uniquement les dossiers, sans les champs répétables)
-        everything_xlsx_html: Demander un export au format .xlsx
-        everything_ods_html: Demander un export au format .ods
-        monthly_short: Demander un export des 30 derniers jours au format %{export_format}
-        monthly_csv_html: Demander un export des 30 derniers jours au format .csv<br>(uniquement les dossiers, sans les champs répétables)
-        monthly_xlsx_html: Demander un export des 30 derniers jours au format .xlsx
-        monthly_ods_html: Demander un export des 30 derniers jours au format .ods
-        export_everything_ready_html: Télécharger l’export au format %{export_format}<br>(généré il y a %{export_time})
-        export_everything_pending_html: Un export au format %{export_format} est en train d’être généré<br>(demandé il y a %{export_time})
-        export_monthly_ready_html: Télécharger l’export des 30 derniers jours au format %{export_format}<br>(généré il y a %{export_time})
-        export_monthly_pending_html: Un export des 30 derniers jours au format %{export_format} est en train d’être généré<br>(demandé il y a %{export_time})
-        download_archive: Télécharger une archive au format .zip de tous les dossiers et leurs pièces jointes
-        download: Télécharger tous les dossiers
+        dossiers_supprimes_recemment: supprimés
       email_usagers:
         contact_users: Contacter les usagers (brouillon)
         notice: "Vous allez envoyer un message à %{dossiers_count} dont les dossiers sont en brouillon, dans les groupes instructeurs : %{groupe_instructeurs}."

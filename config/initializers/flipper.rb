@@ -1,9 +1,3 @@
-Flipper.configure do |config|
-  config.default do
-    Flipper.new(Flipper::Adapters::ActiveRecord.new)
-  end
-end
-
 Flipper.register('Administrateurs') do |user|
   user.administrateur_id.present?
 end
@@ -34,7 +28,8 @@ features = [
   :visa,
   :procedure_revisions,
   :procedure_routage_api,
-  :procedure_process_expired_dossiers_termine
+  :procedure_process_expired_dossiers_termine,
+  :procedure_dossier_papertrail
 ]
 
 def database_exists?

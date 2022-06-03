@@ -1,13 +1,9 @@
 - row_dom_id = "row-#{SecureRandom.hex(4)}"
 .row{ id: row_dom_id }
-  -# Tell the controller which DOM element should be removed once the row deletion is successful
-  = hidden_field_tag 'deleted_row_dom_ids[]', row_dom_id, disabled: true
-
   - row.each do |champ|
     = fields_for champ.input_name, champ do |form|
       = render partial: 'shared/dossiers/editable_champs/editable_champ', locals: { form: form, champ: champ }
-      = form.hidden_field :_destroy, disabled: true
 
-  .flex.row-reverse
-    %button.button.danger.remove-row{ type: :button }
+  .flex.row-reverse{ 'data-turbo': 'true' }
+    = link_to champs_repetition_path(champ.id, champ_ids: row.map(&:id), row_id: row_dom_id), data: { turbo_method: :delete }, class: 'button danger remove-row' do
       Supprimer l’élément

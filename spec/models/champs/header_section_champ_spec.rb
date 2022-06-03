@@ -23,11 +23,25 @@ describe Champs::HeaderSectionChamp do
     end
 
     context 'for repetition champs' do
-      let(:procedure) { create(:procedure, types_de_champ: [build(:type_de_champ_repetition, types_de_champ: types_de_champ)]) }
+      let(:procedure) { create(:procedure, :with_repetition) }
       let(:dossier) { create(:dossier, procedure: procedure) }
 
       let(:first_header)  { dossier.champs.first.champs[0] }
       let(:second_header) { dossier.champs.first.champs[3] }
+
+      before do
+        revision = procedure.active_revision
+        tdc_repetition = revision.types_de_champ_public.first
+        revision.remove_type_de_champ(revision.children_of(tdc_repetition))
+
+        types_de_champ.each do |tdc|
+          revision.add_type_de_champ(
+            libelle: tdc.libelle,
+            type_champ: tdc.type_champ,
+            parent_id: tdc_repetition.stable_id
+          )
+        end
+      end
 
       it 'returns the index of the section in the repetition (starting from 1)' do
         expect(first_header.section_index).to eq '1'

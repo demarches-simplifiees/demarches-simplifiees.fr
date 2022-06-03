@@ -87,7 +87,11 @@ fr:
       suivi:
         label: "Suivi d'audience et vie privée"
         title: "Suivi d'audience et vie privée"
-#      webinaire:
-#        label: "Inscription ateliers en ligne"
-#        title: "Inscription ateliers en ligne"
-#        url: "https://app.livestorm.co/demarches-simplifiees"
+      #      webinaire:
+      #        label: "Inscription ateliers en ligne"
+      #        title: "Inscription ateliers en ligne"
+      #        url: "https://app.livestorm.co/demarches-simplifiees"
+      solidarite_numerique:
+        label: "Besoin d'aide avec vos démarches en ligne ?"
+        title: "Avez-vous besoin d'aide concernant vos démarchez informatisées, essayez solidarite-numerique.fr"
+        url: "https://www.solidarite-numerique.fr/cartographie/"

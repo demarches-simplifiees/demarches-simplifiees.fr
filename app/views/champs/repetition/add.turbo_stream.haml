@@ -1,0 +1,2 @@
+= fields_for @champ.input_name, @champ do |form|
+  = turbo_stream.append dom_id(@champ, :rows), partial: 'shared/dossiers/editable_champs/repetition_row', locals: { form: form, champ: @champ, row: @champs }

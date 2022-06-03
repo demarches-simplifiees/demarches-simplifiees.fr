@@ -17,8 +17,8 @@ module Mails
 
     SLUG = "received_mail"
     DEFAULT_TEMPLATE_NAME = "notification_mailer/default_templates/received_mail"
-    DISPLAYED_NAME = 'Accusé de passage en instruction'
-    DEFAULT_SUBJECT = 'Votre dossier nº --numéro du dossier-- va être examiné (--libellé démarche--)'
+    DISPLAYED_NAME = I18n.t('activerecord.models.mail.received_mail.under_instruction')
+    DEFAULT_SUBJECT = I18n.t('activerecord.models.mail.received_mail.default_subject', dossier_number: '--numéro du dossier--', procedure_libelle: '--libellé démarche--')
     DOSSIER_STATE = Dossier.states.fetch(:en_instruction)
   end
 end

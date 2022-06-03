@@ -11,11 +11,11 @@ runs:
           public/assets
           public/packs-test
           tmp/cache/webpacker
-        key: asset-cache-${{ runner.os }}-${{ github.ref }}-${{ github.sha }}
+        key: asset-cache-${{ runner.os }}-${{ hashFiles('patches/**/*.patch') }}-${{ github.ref }}-${{ github.sha }}
         restore-keys: |
-          asset-cache-${{ runner.os }}-${{ github.ref }}-${{ github.sha }}
-          asset-cache-${{ runner.os }}-${{ github.ref }}-
-          asset-cache-${{ runner.os }}-
+          asset-cache-${{ runner.os }}-${{ hashFiles('patches/**/*.patch') }}-${{ github.ref }}-${{ github.sha }}
+          asset-cache-${{ runner.os }}-${{ hashFiles('patches/**/*.patch') }}-${{ github.ref }}-
+          asset-cache-${{ runner.os }}-${{ hashFiles('patches/**/*.patch') }}
 
     - name: Precompile assets
       env:

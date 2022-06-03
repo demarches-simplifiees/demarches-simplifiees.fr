@@ -8,4 +8,4 @@
       %td.libelle Justificatif :
       %td
         .action
-          = render partial: 'shared/attachment/show', locals: { attachment: dossier.justificatif_motivation.attachment }
+          = render Attachment::ShowComponent.new(attachment: dossier.justificatif_motivation.attachment)

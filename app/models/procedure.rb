@@ -34,7 +34,7 @@
 #  monavis_embed                             :text
 #  organisation                              :string
 #  path                                      :string           not null
-#  procedure_expires_when_termine_enabled    :boolean          default(FALSE)
+#  procedure_expires_when_termine_enabled    :boolean          default(TRUE)
 #  published_at                              :datetime
 #  routing_criteria_name                     :text             default("Votre ville")
 #  routing_enabled                           :boolean
@@ -500,11 +500,7 @@ class Procedure < ApplicationRecord
     end
 
     procedure.save
-    procedure.draft_types_de_champ.update_all(revision_id: procedure.draft_revision.id)
-    procedure.draft_types_de_champ_private.update_all(revision_id: procedure.draft_revision.id)
-    types_de_champ_in_repetition = TypeDeChamp.where(parent: procedure.draft_types_de_champ.repetition + procedure.draft_types_de_champ_private.repetition)
-    types_de_champ_in_repetition.update_all(revision_id: procedure.draft_revision.id)
-    types_de_champ_in_repetition.each(&:migrate_parent!)
+    TypeDeChamp.where(parent: procedure.draft_revision.types_de_champ.repetition).find_each(&:migrate_parent!)
 
     if is_different_admin || from_library
       procedure.draft_types_de_champ.each { |tdc| tdc.options&.delete(:old_pj) }
@@ -698,6 +694,12 @@ class Procedure < ApplicationRecord
     end
   end
 
+  def restore_procedure
+    if discarded?
+      undiscard
+    end
+  end
+
   def flipper_id
     "Procedure;#{id}"
   end
@@ -715,9 +717,27 @@ class Procedure < ApplicationRecord
   end
 
   def create_new_revision
-    draft_revision
+    new_draft = draft_revision
       .deep_clone(include: [:revision_types_de_champ])
       .tap(&:save!)
+
+    children = new_draft.revision_types_de_champ.where.not(parent_id: nil)
+    children.each do |child|
+      old_parent = draft_revision.revision_types_de_champ.find(child.parent_id)
+      new_parent = new_draft.revision_types_de_champ.find_by(type_de_champ_id: old_parent.type_de_champ_id)
+      child.update!(parent_id: new_parent.id)
+    end
+
+    new_draft.revision_types_de_champ.reload
+
+    # Some revisions do not have links to children types de champ
+    new_draft
+      .types_de_champ
+      .filter(&:repetition?)
+      .flat_map(&:types_de_champ)
+      .each(&:migrate_parent!)
+
+    new_draft
   end
 
   def column_styles(table)

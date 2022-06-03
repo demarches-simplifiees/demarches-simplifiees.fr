@@ -1,4 +1,4 @@
-import { httpRequest } from '@utils';
+import { httpRequest, ResponseError } from '@utils';
 import invariant from 'tiny-invariant';
 
 type Operation = {
@@ -48,28 +48,22 @@ export class OperationsQueue {
       const data = await httpRequest(url, { method, json: payload }).json();
       resolve(data);
     } catch (e) {
-      handleError(e as OperationError, reject);
+      handleError(e as ResponseError, reject);
     }
   }
 }
 
-class OperationError extends Error {
-  response?: Response;
-}
-
 async function handleError(
-  { response, message }: OperationError,
+  { message, textBody, jsonBody }: ResponseError,
   reject: (error: string) => void
 ) {
-  if (response) {
-    try {
-      const {
-        errors: [message]
-      } = await response.clone().json();
-      reject(message);
-    } catch {
-      reject(await response.text());
-    }
+  if (textBody) {
+    reject(textBody);
+  } else if (jsonBody) {
+    const {
+      errors: [message]
+    } = jsonBody as { errors: string[] };
+    reject(message);
   } else {
     reject(message);
   }

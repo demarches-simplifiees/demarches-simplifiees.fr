@@ -145,7 +145,7 @@ fr:
         tab_explainations:
           a_suivre: Aucun instructeur n’est affecté au suivi de ces dossiers. Soyez le premier !
           suivis: Les dossiers qui sont dans cet onglet sont uniquement ceux que vous suivez. Vous pouvez échanger avec le demandeur jusqu'à pouvoir les accepter, les refuser ou les classer sans suite.
-          traites: "Les dossiers dans cet onglet sont terminés : ils ont été acceptés, refusés ou classés sans suite."
+          traites_html: "Les dossiers dans cet onglet sont terminés : ils ont été acceptés, refusés ou classés sans suite. Vous pouvez <a href=%{archives_path}>télécharger</a> les archives au format zip des dossiers terminés et leurs pièces jointes."
           tous: Tous les dossiers qui ont été déposés sur cette démarche, quel que soit le statut.
           supprimes_recemment: Tous les dossiers terminés et supprimés par les instructeurs sur cette démarche
           archives: "Les dossiers de cet onglet sont archivés : vous ne pouvez plus y répondre, et les demandeurs ne peuvent plus les modifier."
@@ -380,7 +380,9 @@ fr:
         google: Google
         microsoft: Microsoft
         yahoo: Yahoo
-      procedure_archived: "Cette démarche en ligne a été close, il n’est plus possible de déposer de dossier."
+      procedure_archived:
+        with_service_and_phone_email: Cette démarche en ligne a été close, il n’est plus possible de déposer de dossier. Pour plus d'informations veuillez contacter le service %{service_name} au %{service_phone_number} ou par email à %{service_email}
+        with_organisation_only: Cette démarche en ligne a été close, il n’est plus possible de déposer de dossier. Pour plus d'informations veuillez contacter le service %{organisation_name}
       empty_repetition: '« %{value} » doit comporter au moins un champ répétable'
       empty_drop_down: '« %{value} » doit comporter au moins un choix sélectionnable'
       # procedure_not_draft: "Cette démarche n’est maintenant plus en brouillon."
@@ -457,6 +459,10 @@ fr:
       zero: Brouillon
       one: Brouillon
       other: Brouillons
+    deleted:
+      zero: Supprimée
+      one: Supprimée
+      other: Supprimées
   users:
     dossiers:
       test_procedure: "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l’administrateur (ajout d'un champ, publication de la démarche...) entraînera sa suppression."
@@ -478,6 +484,24 @@ fr:
         identity_saved: "Identité enregistrée"
       attestation:
         no_longer_available: "L’attestation n'est plus disponible sur ce dossier."
+      papertrail:
+        receipt: "Attestation de dépôt"
+        description: "Ce document atteste que %{user_name} a déposé le %{date} un dossier sur la démarche « %{procedure} »."
+        file_submitted_at: "Dossier déposé le"
+        dossier_state: "État du dossier"
+        states:
+          en_construction: "déposé, en attente d’examen par l’administration"
+          en_instruction: "en cours d’instruction par l’administration"
+          accepte: "accepté"
+          refuse: "refusé"
+          sans suite: "classé sans suite"
+        administrative_service: "Service administratif"
+        generated_at: "Fait le %{date},"
+        signature: "La direction de %{app_name}"
+      show:
+        papertrail:
+          get_papertrail: "Obtenir une attestation de dépôt de dossier"
+          filename: "attestation-de-depot.pdf"
   instructeurs:
     dossiers:
       deleted_by_instructeur: "Le dossier a bien été supprimé de votre interface"
@@ -487,6 +511,14 @@ fr:
         to_follow: à suivre
         total: dossiers
   administrateurs:
+    index:
+      restored: La démarche %{procedure_id} a été restaurée
+    dropdown_actions:
+      delete: Supprimer
+      restore: Restaurer
+      to_test: Tester
+      to_clone: Cloner
+      to_close: Clore
     procedures:
       show:
         ready: "Validé"

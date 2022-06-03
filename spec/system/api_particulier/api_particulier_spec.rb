@@ -246,12 +246,17 @@ describe 'fetch API Particulier Data', js: true do
     let(:api_particulier_token) { '29eb50b65f64e8e00c0847a8bbcbd150e1f847' }
 
     let(:procedure) do
-      create(:procedure, :for_individual, :with_service, :with_cnaf, :with_dgfip, :with_pole_emploi, :with_mesri, :published,
+      create(:procedure, :for_individual, :with_service, :published,
              libelle: 'libellé de la procédure',
              path: 'libelle-de-la-procedure',
              instructeurs: [instructeur],
              api_particulier_sources: expected_sources,
-             api_particulier_token: api_particulier_token)
+             api_particulier_token: api_particulier_token).tap do |p|
+               p.active_revision.add_type_de_champ(type_champ: :cnaf, libelle: 'cnaf')
+               p.active_revision.add_type_de_champ(type_champ: :dgfip, libelle: 'dgfip')
+               p.active_revision.add_type_de_champ(type_champ: :pole_emploi, libelle: 'pole_emploi')
+               p.active_revision.add_type_de_champ(type_champ: :mesri, libelle: 'mesri')
+             end
     end
 
     before { login_as user, scope: :user }

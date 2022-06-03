@@ -159,7 +159,6 @@ class ApplicationController < ActionController::Base
     gon.sentry = sentry_config
 
     if administrateur_signed_in?
-      gon.sendinblue = sendinblue_config
       gon.crisp = crisp_config
     end
   end
@@ -282,26 +281,6 @@ class ApplicationController < ActionController::Base
       enabled: matomo[:enabled],
       host: matomo[:host],
       key: matomo[:client_key]
-    }
-  end
-
-  def sendinblue_config
-    sendinblue = Rails.application.secrets.sendinblue
-
-    {
-      key: sendinblue[:client_key],
-      enabled: sendinblue[:enabled],
-      administrateur: {
-        email: current_user&.email,
-        payload: {
-          DS_SIGN_IN_COUNT: current_user&.sign_in_count,
-          DS_CREATED_AT: current_administrateur&.created_at,
-          DS_ACTIVE: current_user&.active?,
-          DS_ID: current_administrateur&.id,
-          DS_GESTIONNAIRE_ID: current_instructeur&.id,
-          DS_ROLES: current_user_roles
-        }
-      }
     }
   end
 

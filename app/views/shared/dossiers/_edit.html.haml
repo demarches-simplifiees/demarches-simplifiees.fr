@@ -8,7 +8,7 @@
   - else
     - form_options = { url: modifier_dossier_url(dossier), method: :patch }
 
-  = form_for dossier, form_options.merge({ html: { id: 'dossier-edit-form', class: dossier_form_class(dossier), multipart: true } }) do |f|
+  = form_for dossier, form_options.merge({ html: { id: 'dossier-edit-form', class: 'form', multipart: true } }) do |f|
 
     .prologue
       %p.mandatory-explanation= t('utils.asterisk_html')
@@ -32,12 +32,13 @@
     %button{ type: :submit, disabled: true, style: 'display: none' } BOUTON
 
     - if dossier.show_groupe_instructeur_selector?
-      = f.label :groupe_instructeur_id do
-        = dossier.procedure.routing_criteria_name
-        %span.mandatory *
-      = f.select :groupe_instructeur_id,
-        dossier.procedure.groupe_instructeurs.order(:label).map { |gi| [gi.label, gi.id] },
-        { include_blank: dossier.brouillon? }
+      %span{ data: autosave_available?(dossier) ? { controller: 'autosave', autosave_url_value: brouillon_dossier_path(dossier) } : {} }
+        = f.label :groupe_instructeur_id do
+          = dossier.procedure.routing_criteria_name
+          %span.mandatory *
+        = f.select :groupe_instructeur_id,
+          dossier.procedure.groupe_instructeurs.order(:label).map { |gi| [gi.label, gi.id] },
+          { include_blank: dossier.brouillon? }
 
     - dossier.champs.each do |champ|
       = fields_for champ.input_name, champ do |form|

@@ -2,40 +2,29 @@ import '../shared/polyfills';
 import Rails from '@rails/ujs';
 import * as ActiveStorage from '@rails/activestorage';
 import 'whatwg-fetch'; // window.fetch polyfill
-import { Application } from '@hotwired/stimulus';
 import * as Turbo from '@hotwired/turbo';
 
 import '../shared/activestorage/ujs';
 import '../shared/remote-poller';
 import '../shared/safari-11-file-xhr-workaround';
-import '../shared/remote-input';
-import '../shared/franceconnect';
 import '../shared/toggle-target';
 import '../shared/ujs-error-handling';
 
-import {
-  ReactController,
-  registerComponents
-} from '../controllers/react_controller';
-import { TurboEventController } from '../controllers/turbo_event_controller';
-import { GeoAreaController } from '../controllers/geo_area_controller';
+import { registerComponents } from '../controllers/react_controller';
+import '../controllers';
 
-import '../new_design/dropdown';
 import '../new_design/form-validation';
 import '../new_design/procedure-context';
 import '../new_design/procedure-form';
 import '../new_design/spinner';
 import '../new_design/support';
 import '../new_design/messagerie';
-import '../new_design/dossiers/auto-save';
-import '../new_design/dossiers/auto-upload';
 
 import '../new_design/champs/te_fenua';
 import '../new_design/champs/numero_dn';
 import '../new_design/champs/visa';
 
 import '../new_design/champs/linked-drop-down-list';
-import '../new_design/champs/repetition';
 import '../new_design/champs/drop-down-list';
 
 import {
@@ -95,11 +84,6 @@ const DS = {
 Rails.start();
 ActiveStorage.start();
 Turbo.session.drive = false;
-
-const Stimulus = Application.start();
-Stimulus.register('react', ReactController);
-Stimulus.register('turbo-event', TurboEventController);
-Stimulus.register('geo-area', GeoAreaController);
 
 // Expose globals
 window.DS = window.DS || DS;

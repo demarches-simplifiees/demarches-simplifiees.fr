@@ -9,5 +9,8 @@
   .container
     = render partial: 'users/dossiers/show/status_overview', locals: { dossier: @dossier }
 
+    - if @dossier.procedure.feature_enabled?(:procedure_dossier_papertrail)
+      = render partial: 'users/dossiers/show/papertrail', locals: { dossier: @dossier }
+
     - if !@dossier.termine?
       = render partial: 'users/dossiers/show/latest_message', locals: { dossier: @dossier }

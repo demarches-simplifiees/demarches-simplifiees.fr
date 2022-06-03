@@ -1,0 +1,6 @@
+= turbo_stream.replace 'complexity-label', partial: 'label'
+= turbo_stream.replace 'complexity-bar', partial: 'bar'
+- if @score < @min_complexity || @length < @min_length
+  = turbo_stream.disable 'submit-password'
+- else
+  = turbo_stream.enable 'submit-password'

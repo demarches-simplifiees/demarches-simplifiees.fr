@@ -60,7 +60,7 @@ export function useHiddenField(
       if (hiddenField) {
         hiddenField.setAttribute('value', value);
         setValue(value);
-        fire(hiddenField, 'autosave:trigger');
+        fire(hiddenField, 'change');
       }
     },
     hiddenField ?? undefined

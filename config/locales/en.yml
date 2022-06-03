@@ -152,7 +152,7 @@ en:
         tab_explainations:
           a_suivre: No instructor is assigned to follow up on these files. Be the first !
           suivis: The folders that are in this tab are only those that you follow. You can exchange with the requester until you can accept them, refuse them or classify them without follow-up.
-          traites: "The files in this tab are finished: they have been accepted, refused or closed without follow-up."
+          traites_html: "The files in this tab are finished: they have been accepted, refused or closed without follow-up. You can <a href=%{archives_path}>download</a> the zip archives of finished files and their attachments."
           tous: All the files that have been submitted on this approach, regardless of the status.
           supprimes_recemment: All files completed and deleted by the instructors on this approach.
           archives: "The files in this tab are archived: you can no longer reply to them, and requesters can no longer modify them."
@@ -361,7 +361,9 @@ en:
       # # etablissement_fail: 'Désolé, nous n’avons pas réussi à enregistrer l’établissement correspondant à ce numéro SIRET'
       france_connect:
         connexion: "Error trying to connect to France Connect."
-      procedure_archived: "This procedure has been closed, it is no longer possible to submit a file."
+      procedure_archived:
+        with_service_and_phone_email: This procedure has been closed, it is no longer possible to submit a file. For more information, please contact the service %{service_name}, available at %{service_phone_number} or by email %{service_email}
+        with_organisation_only: This procedure has been closed, it is no longer possible to submit a file. For more information, please contact the organisation %{organisation_name}
       # # procedure_not_draft: "This procedure is not a draft anymore."
       # cadastres_empty:
       #   one: "Aucune parcelle cadastrale sur la zone sélectionnée"
@@ -436,6 +438,10 @@ en:
       zero: Draft
       one: Draft
       other: Drafts
+    deleted:
+      zero: Deleted
+      one: Deleted
+      other: Deleted
   users:
     dossiers:
       test_procedure: "This file is submitted on a test procedure. Any modification of the procedure by the administrator (addition of a field, publication of the procedure, etc.) will result in the removal of the file."
@@ -456,6 +462,24 @@ en:
         identity_saved: "Identity data is registred"
       attestation:
         no_longer_available: "The certificate is no longer available on this file."
+      show:
+        papertrail:
+          get_papertrail: "Get a deposit receipt"
+          filename: "deposit-receipt.pdf"
+      papertrail:
+        receipt: "Deposit receipt"
+        description: "This document attests that on the %{date}, %{user_name} submitted a file on the procedure “%{procedure}”."
+        file_submitted_at: "File submission date"
+        dossier_state: "File status"
+        states:
+          en_construction: "submitted, pending processing"
+          en_instruction: "processing"
+          accepte: "accepted"
+          refuse: "declined"
+          sans suite: "closed, no further action"
+        administrative_service: "Administrative department"
+        generated_at: "Made on %{date},"
+        signature: "%{app_name}"
   instructeurs:
     dossiers:
       deleted_by_instructeur: "The folder has been deleted"

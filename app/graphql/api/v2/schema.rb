@@ -9,7 +9,11 @@ class API::V2::Schema < GraphQL::Schema
   context_class API::V2::Context
 
   def self.id_from_object(object, type_definition, ctx)
-    object.to_typed_id
+    if object.is_a?(Hash)
+      object[:id]
+    else
+      object.to_typed_id
+    end
   end
 
   def self.object_from_id(id, query_ctx)

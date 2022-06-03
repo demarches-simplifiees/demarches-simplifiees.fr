@@ -49,9 +49,7 @@ class Export < ApplicationRecord
   after_create_commit :compute_async
 
   FORMATS_WITH_TIME_SPAN = [:xlsx, :ods, :csv].flat_map do |format|
-    time_span_types.keys.map do |time_span_type|
-      { format: format, time_span_type: time_span_type }
-    end
+    [{ format: format, time_span_type: 'everything' }]
   end
   FORMATS = [:xlsx, :ods, :csv, :zip].map do |format|
     { format: format }
@@ -159,7 +157,7 @@ class Export < ApplicationRecord
 
         dossiers.where(id: filtered_sorted_ids)
       else
-        dossiers
+        dossiers.visible_by_administration
       end
     end
   end

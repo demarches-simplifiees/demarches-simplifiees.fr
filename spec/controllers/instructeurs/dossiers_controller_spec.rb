@@ -99,7 +99,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
     before do
       sign_in(instructeur.user)
-      post :passer_en_instruction, params: { procedure_id: procedure.id, dossier_id: dossier.id }, format: 'js'
+      post :passer_en_instruction, params: { procedure_id: procedure.id, dossier_id: dossier.id }, format: :turbo_stream
     end
 
     it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction)) }
@@ -113,7 +113,7 @@ describe Instructeurs::DossiersController, type: :controller do
       it 'warns about the error' do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction))
         expect(response).to have_http_status(:ok)
-        expect(response.body).to have_text('Le dossier est déjà en instruction.')
+        expect(response.body).to include('Le dossier est déjà en instruction.')
       end
     end
 
@@ -126,7 +126,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
       it 'warns about the error' do
         expect(response).to have_http_status(:ok)
-        expect(response.body).to have_text('Le dossier est en ce moment accepté : il n’est pas possible de le passer en instruction.')
+        expect(response.body).to include('Le dossier est en ce moment accepté : il n’est pas possible de le passer en instruction.')
       end
     end
   end
@@ -138,7 +138,7 @@ describe Instructeurs::DossiersController, type: :controller do
       sign_in(instructeur.user)
       post :repasser_en_construction,
         params: { procedure_id: procedure.id, dossier_id: dossier.id },
-        format: 'js'
+        format: :turbo_stream
     end
 
     it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction)) }
@@ -151,7 +151,7 @@ describe Instructeurs::DossiersController, type: :controller do
       it 'warns about the error' do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction))
         expect(response).to have_http_status(:ok)
-        expect(response.body).to have_text('Le dossier est déjà en construction.')
+        expect(response.body).to include('Le dossier est déjà en construction.')
       end
     end
   end
@@ -163,7 +163,7 @@ describe Instructeurs::DossiersController, type: :controller do
     subject do
       post :repasser_en_instruction,
       params: { procedure_id: procedure.id, dossier_id: dossier.id },
-      format: 'js'
+      format: :turbo_stream
     end
 
     before do
@@ -186,7 +186,7 @@ describe Instructeurs::DossiersController, type: :controller do
       it 'warns about the error' do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction))
         expect(response).to have_http_status(:ok)
-        expect(response.body).to have_text('Le dossier est déjà en instruction.')
+        expect(response.body).to include('Le dossier est déjà en instruction.')
       end
     end
 
@@ -224,7 +224,7 @@ describe Instructeurs::DossiersController, type: :controller do
       end
 
       context 'simple refusal' do
-        subject { post :terminer, params: { process_action: "refuser", procedure_id: procedure.id, dossier_id: dossier.id }, format: 'js' }
+        subject { post :terminer, params: { process_action: "refuser", procedure_id: procedure.id, dossier_id: dossier.id }, format: :turbo_stream }
 
         it 'change state to refuse' do
           subject
@@ -244,7 +244,7 @@ describe Instructeurs::DossiersController, type: :controller do
       end
 
       context 'refusal with a justificatif' do
-        subject { post :terminer, params: { process_action: "refuser", procedure_id: procedure.id, dossier_id: dossier.id, dossier: { justificatif_motivation: fake_justificatif } }, format: 'js' }
+        subject { post :terminer, params: { process_action: "refuser", procedure_id: procedure.id, dossier_id: dossier.id, dossier: { justificatif_motivation: fake_justificatif } }, format: :turbo_stream }
 
         it 'attachs a justificatif' do
           subject
@@ -264,7 +264,7 @@ describe Instructeurs::DossiersController, type: :controller do
         sign_in(instructeur.user)
       end
       context 'without attachment' do
-        subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure.id, dossier_id: dossier.id }, format: 'js' }
+        subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure.id, dossier_id: dossier.id }, format: :turbo_stream }
 
         it 'change state to sans_suite' do
           subject
@@ -286,7 +286,7 @@ describe Instructeurs::DossiersController, type: :controller do
       end
 
       context 'with attachment' do
-        subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure.id, dossier_id: dossier.id, dossier: { justificatif_motivation: fake_justificatif } }, format: 'js' }
+        subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure.id, dossier_id: dossier.id, dossier: { justificatif_motivation: fake_justificatif } }, format: :turbo_stream }
 
         it 'change state to sans_suite' do
           subject
@@ -312,7 +312,7 @@ describe Instructeurs::DossiersController, type: :controller do
         expect(NotificationMailer).to receive(:deliver_later)
       end
 
-      subject { post :terminer, params: { process_action: "accepter", procedure_id: procedure.id, dossier_id: dossier.id }, format: 'js' }
+      subject { post :terminer, params: { process_action: "accepter", procedure_id: procedure.id, dossier_id: dossier.id }, format: :turbo_stream }
 
       it 'change state to accepte' do
         subject
@@ -361,7 +361,7 @@ describe Instructeurs::DossiersController, type: :controller do
             procedure_id: procedure.id,
             dossier_id: dossier.id,
             dossier: { motivation: "Yallah" }
-          }, format: 'js'
+          }, format: :turbo_stream
         end
 
         before do
@@ -374,7 +374,7 @@ describe Instructeurs::DossiersController, type: :controller do
       end
 
       context 'with an attachment' do
-        subject { post :terminer, params: { process_action: "accepter", procedure_id: procedure.id, dossier_id: dossier.id, dossier: { justificatif_motivation: fake_justificatif } }, format: 'js' }
+        subject { post :terminer, params: { process_action: "accepter", procedure_id: procedure.id, dossier_id: dossier.id, dossier: { justificatif_motivation: fake_justificatif } }, format: :turbo_stream }
 
         it 'change state to accepte' do
           subject
@@ -393,7 +393,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
       before { allow(dossier).to receive(:after_accepter) }
 
-      subject { post :terminer, params: { process_action: "accepter", procedure_id: procedure.id, dossier_id: dossier.id, dossier: { justificatif_motivation: fake_justificatif } }, format: 'js' }
+      subject { post :terminer, params: { process_action: "accepter", procedure_id: procedure.id, dossier_id: dossier.id, dossier: { justificatif_motivation: fake_justificatif } }, format: :turbo_stream }
 
       it 'does not close it again' do
         subject
@@ -402,7 +402,7 @@ describe Instructeurs::DossiersController, type: :controller do
         expect(dossier.state).to eq(Dossier.states.fetch(:accepte))
 
         expect(response).to have_http_status(:ok)
-        expect(response.body).to have_text('Le dossier est déjà accepté.')
+        expect(response.body).to include('Le dossier est déjà accepté.')
       end
     end
   end
@@ -642,12 +642,15 @@ describe Instructeurs::DossiersController, type: :controller do
 
   describe "#update_annotations" do
     let(:procedure) do
-      create(:procedure, :published, types_de_champ_private: [
+      procedure = create(:procedure, :published, types_de_champ_private: [
         build(:type_de_champ_multiple_drop_down_list, position: 0),
         build(:type_de_champ_linked_drop_down_list, position: 1),
-        build(:type_de_champ_datetime, position: 2),
-        build(:type_de_champ_repetition, :with_types_de_champ, position: 3)
+        build(:type_de_champ_datetime, position: 2)
       ], instructeurs: instructeurs)
+
+      create(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure, position: 3, private: true)
+
+      procedure
     end
     let(:dossier) { create(:dossier, :en_construction, :with_populated_annotations, procedure: procedure) }
     let(:another_instructeur) { create(:instructeur) }
@@ -712,10 +715,8 @@ describe Instructeurs::DossiersController, type: :controller do
               '3': {
                 id: champ_repetition.id,
                 champs_attributes: {
-                  '0' => {
-                    id: champ_repetition.champs.first.id,
-                    value: 'text'
-                  }
+                  id: champ_repetition.champs.first.id,
+                  value: 'text'
                 }
               }
             }

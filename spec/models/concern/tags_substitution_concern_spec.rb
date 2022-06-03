@@ -161,19 +161,24 @@ describe TagsSubstitutionConcern, type: :model do
 
     context 'when the procedure has a type de champ repetition' do
       let(:template) { '--Répétition--' }
-      let(:types_de_champ) do
-        [
-          build(:type_de_champ_repetition, libelle: 'Répétition', types_de_champ: [
-            build(:type_de_champ_text, libelle: 'Nom', order_place: 1),
-            build(:type_de_champ_text, libelle: 'Prénom', order_place: 2)
-          ])
-        ]
+      let(:repetition) do
+        repetition_tdc = procedure.active_revision.add_type_de_champ(type_champ: 'repetition', libelle: 'Répétition')
+        procedure.active_revision.add_type_de_champ(type_champ: 'text', libelle: 'Nom', parent_id: repetition_tdc.stable_id)
+        procedure.active_revision.add_type_de_champ(type_champ: 'text', libelle: 'Prénom', parent_id: repetition_tdc.stable_id)
+
+        repetition_tdc
+      end
+
+      let(:dossier) do
+        repetition
+        create(:dossier, procedure: procedure)
       end
 
       before do
         repetition = dossier.champs
           .find { |champ| champ.libelle == 'Répétition' }
-        repetition.add_row
+        repetition.add_row(dossier.revision)
+        repetition.add_row(dossier.revision)
         paul_champs, pierre_champs = repetition.rows
 
         paul_champs.first.update(value: 'Paul')

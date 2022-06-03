@@ -23,7 +23,7 @@ gem 'daemons'
 gem 'deep_cloneable' # Enable deep clone of active record models
 gem 'delayed_cron_job' # Cron jobs
 gem 'delayed_job_active_record'
-gem 'delayed_job_web', '>= 1.4.4'
+gem 'delayed_job_web'
 gem 'devise' # Gestion des comptes utilisateurs
 gem 'devise-i18n'
 gem 'devise-two-factor'
@@ -52,7 +52,7 @@ gem 'image_processing'
 gem 'invisible_captcha'
 gem 'json_schemer'
 gem 'jwt'
-gem 'kaminari', '1.2.1' # Pagination
+gem 'kaminari'
 gem 'listen' # Required by ActiveSupport::EventedFileUpdateChecker
 gem 'lograge'
 gem 'logstash-event'

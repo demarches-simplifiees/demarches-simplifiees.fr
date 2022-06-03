@@ -28,7 +28,10 @@ describe Dossier do
   end
 
   describe 'with_champs' do
-    let(:procedure) { create(:procedure, types_de_champ: [build(:type_de_champ, libelle: 'l1', position: 1), build(:type_de_champ, libelle: 'l3', position: 3), build(:type_de_champ, libelle: 'l2', position: 2)]) }
+    let(:procedure) { create(:procedure) }
+    let!(:tdc_1) { create(:type_de_champ, libelle: 'l1', position: 1, procedure: procedure) }
+    let!(:tdc_3) { create(:type_de_champ, libelle: 'l3', position: 3, procedure: procedure) }
+    let!(:tdc_2) { create(:type_de_champ, libelle: 'l2', position: 2, procedure: procedure) }
     let(:dossier) { create(:dossier, procedure: procedure) }
 
     it do
@@ -392,14 +395,20 @@ describe Dossier do
   end
 
   describe '#champs' do
-    let(:procedure) { create(:procedure, types_de_champ: [build(:type_de_champ, :private, libelle: 'l1', position: 1), build(:type_de_champ, :private, libelle: 'l3', position: 3), build(:type_de_champ, :private, libelle: 'l2', position: 2)]) }
+    let(:procedure) { create(:procedure) }
+    let!(:tdc_1) { create(:type_de_champ, libelle: 'l1', position: 1, procedure: procedure) }
+    let!(:tdc_3) { create(:type_de_champ, libelle: 'l3', position: 3, procedure: procedure) }
+    let!(:tdc_2) { create(:type_de_champ, libelle: 'l2', position: 2, procedure: procedure) }
     let(:dossier) { create(:dossier, procedure: procedure) }
 
     it { expect(dossier.champs.pluck(:libelle)).to match(['l1', 'l2', 'l3']) }
   end
 
   describe '#champs_private' do
-    let(:procedure) { create(:procedure, types_de_champ_private: [build(:type_de_champ, :private, libelle: 'l1', position: 1), build(:type_de_champ, :private, libelle: 'l3', position: 3), build(:type_de_champ, :private, libelle: 'l2', position: 2)]) }
+    let(:procedure) { create(:procedure) }
+    let!(:tdc_1) { create(:type_de_champ, :private, libelle: 'l1', position: 1, procedure: procedure) }
+    let!(:tdc_3) { create(:type_de_champ, :private, libelle: 'l3', position: 3, procedure: procedure) }
+    let!(:tdc_2) { create(:type_de_champ, :private, libelle: 'l2', position: 2, procedure: procedure) }
     let(:dossier) { create(:dossier, procedure: procedure) }
 
     it { expect(dossier.champs_private.pluck(:libelle)).to match(['l1', 'l2', 'l3']) }
@@ -1181,11 +1190,13 @@ describe Dossier do
     end
 
     context "with champ repetition" do
-      let(:procedure) { create(:procedure, types_de_champ: [type_de_champ_repetition]) }
-      let(:type_de_champ_repetition) { build(:type_de_champ_repetition, mandatory: true) }
+      let(:procedure) { create(:procedure, :with_repetition) }
+      let(:revision) { procedure.active_revision }
+      let(:type_de_champ_repetition) { revision.types_de_champ.first }
 
       before do
-        create(:type_de_champ_text, mandatory: true, parent: type_de_champ_repetition)
+        type_de_champ_repetition.update(mandatory: true)
+        revision.children_of(type_de_champ_repetition).first.update(mandatory: true)
       end
 
       context "when no champs" do
@@ -1206,7 +1217,7 @@ describe Dossier do
         let(:champ_with_error) { dossier.champs.first.champs.first }
 
         before do
-          dossier.champs.first.add_row
+          dossier.champs.first.add_row(dossier.revision)
         end
 
         it 'should have errors' do
@@ -1453,10 +1464,27 @@ describe Dossier do
       it "should have champs from all revisions" do
         expect(dossier.types_de_champ.map(&:libelle)).to eq([text_type_de_champ.libelle, datetime_type_de_champ.libelle, "Yes/no", explication_type_de_champ.libelle, commune_type_de_champ.libelle, repetition_type_de_champ.libelle])
         expect(dossier_second_revision.types_de_champ.map(&:libelle)).to eq([datetime_type_de_champ.libelle, "Updated yes/no", explication_type_de_champ.libelle, 'Commune de naissance', "Repetition", "New text field"])
-        expect(dossier_champs_for_export.map { |(libelle)| libelle }).to eq([text_type_de_champ.libelle, datetime_type_de_champ.libelle, "Updated yes/no", "Commune de naissance", "Commune de naissance (Code insee)", "New text field"])
+        expect(dossier_champs_for_export.map { |(libelle)| libelle }).to eq([datetime_type_de_champ.libelle, text_type_de_champ.libelle, "Updated yes/no", "Commune de naissance", "Commune de naissance (Code insee)", "New text field"])
         expect(dossier_champs_for_export).to eq(dossier_second_revision_champs_for_export)
         expect(repetition_second_revision_champs_for_export.map { |(libelle)| libelle }).to eq(procedure.types_de_champ_for_procedure_presentation.repetition.map(&:libelle_for_export))
         expect(repetition_second_revision_champs_for_export.first.size).to eq(2)
+      end
+
+      context 'within a repetition having a type de champs commune (multiple values for export)' do
+        it 'works' do
+          proc_test = create(:procedure)
+
+          draft = proc_test.draft_revision
+
+          tdc_repetition = draft.add_type_de_champ(type_champ: :repetition, libelle: "repetition")
+          draft.add_type_de_champ(type_champ: :communes, libelle: "communes", parent_id: tdc_repetition.stable_id)
+
+          dossier_test = create(:dossier, procedure: proc_test)
+          repetition = proc_test.types_de_champ_for_procedure_presentation.repetition.first
+          type_champs = repetition.types_de_champ_for_revision(proc_test.active_revision).to_a
+          expect(type_champs.size).to eq(1)
+          expect(Dossier.champs_for_export(dossier.champs, type_champs).size).to eq(2)
+        end
       end
     end
 
@@ -1714,7 +1742,7 @@ describe Dossier do
     let(:rebased_datetime_champ) { dossier.champs.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:date) } }
 
     let(:repetition_type_de_champ) { procedure.types_de_champ.find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
-    let(:repetition_text_type_de_champ) { repetition_type_de_champ.types_de_champ.find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
+    let(:repetition_text_type_de_champ) { procedure.active_revision.children_of(repetition_type_de_champ).find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
     let(:repetition_champ) { dossier.champs.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
     let(:rebased_repetition_champ) { dossier.champs.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
 
@@ -1737,8 +1765,8 @@ describe Dossier do
       datetime_champ.update(value: Date.today.to_s)
       text_champ.update(value: 'bonjour')
       # Add two rows then remove previous to last row in order to create a "hole" in the sequence
-      repetition_champ.add_row
-      repetition_champ.add_row
+      repetition_champ.add_row(repetition_champ.dossier.revision)
+      repetition_champ.add_row(repetition_champ.dossier.revision)
       repetition_champ.champs.where(row: repetition_champ.champs.last.row - 1).destroy_all
       repetition_champ.reload
     end

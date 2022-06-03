@@ -33,6 +33,25 @@ describe Users::CommencerController, type: :controller do
         expect(subject).to redirect_to(root_path)
       end
     end
+
+    context 'when procedure without service is closed' do
+      it 'works' do
+        published_procedure.service = nil
+        published_procedure.organisation = "hello"
+        published_procedure.close!
+        get :commencer, params: { path: published_procedure.path }
+        expect(response).to redirect_to(root_path)
+      end
+    end
+
+    context 'when procedure with service is closed' do
+      it 'works' do
+        published_procedure.service = create(:service)
+        published_procedure.close!
+        get :commencer, params: { path: published_procedure.path }
+        expect(response).to redirect_to(root_path)
+      end
+    end
   end
 
   describe '#commencer_test' do

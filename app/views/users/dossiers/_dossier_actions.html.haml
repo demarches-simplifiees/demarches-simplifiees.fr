@@ -5,10 +5,10 @@
 - has_actions = has_edit_action || has_delete_action || has_new_dossier_action || has_transfer_action
 
 - if has_actions
-  .dropdown.user-dossier-actions
-    %button.button.dropdown-button{ 'aria-expanded' => 'false', 'aria-controls' => 'actions-menu' }
+  .dropdown.user-dossier-actions{ data: { controller: 'menu-button' } }
+    %button.button.dropdown-button{ data: { menu_button_target: 'button' } }
       = t('views.users.dossiers.dossier_action.actions')
-    #actions-menu.dropdown-content.fade-in-down
+    #actions-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
       %ul.dropdown-items
         - if has_edit_action
           - if dossier.brouillon?

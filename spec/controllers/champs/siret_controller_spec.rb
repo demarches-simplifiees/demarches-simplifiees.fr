@@ -37,7 +37,7 @@ describe Champs::SiretController, type: :controller do
       end
 
       context 'when the SIRET is empty' do
-        subject! { get :show, params: params, format: :js, xhr: true }
+        subject! { get :show, params: params, format: :turbo_stream }
 
         it 'clears the etablissement and SIRET on the model' do
           champ.reload
@@ -46,15 +46,14 @@ describe Champs::SiretController, type: :controller do
         end
 
         it 'clears any information or error message' do
-          expect(response.body).to include("##{champ.input_group_id} .siret-info")
-          expect(response.body).to include('innerHTML = ""')
+          expect(response.body).to include(ActionView::RecordIdentifier.dom_id(champ, :siret_info))
         end
       end
 
       context 'when the SIRET is invalid' do
         let(:siret) { '1234' }
 
-        subject! { get :show, params: params, format: :js, xhr: true }
+        subject! { get :show, params: params, format: :turbo_stream }
 
         it 'clears the etablissement and SIRET on the model' do
           champ.reload
@@ -71,7 +70,7 @@ describe Champs::SiretController, type: :controller do
         let(:siret) { '82161143100015' }
         let(:api_etablissement_status) { 503 }
 
-        subject! { get :show, params: params, format: :js, xhr: true }
+        subject! { get :show, params: params, format: :turbo_stream }
 
         it 'clears the etablissement and SIRET on the model' do
           champ.reload
@@ -88,7 +87,7 @@ describe Champs::SiretController, type: :controller do
         let(:siret) { '00000000000000' }
         let(:api_etablissement_status) { 404 }
 
-        subject! { get :show, params: params, format: :js, xhr: true }
+        subject! { get :show, params: params, format: :turbo_stream }
 
         it 'clears the etablissement and SIRET on the model' do
           champ.reload
@@ -105,7 +104,7 @@ describe Champs::SiretController, type: :controller do
         let(:siret) { '111111' }
         let(:api_etablissement_status) { 404 }
 
-        subject! { get :show, params: params, format: 'js', xhr: true }
+        subject! { get :show, params: params, format: :turbo_stream }
 
         it 'clears the etablissement and SIRET on the model' do
           champ.reload
@@ -123,7 +122,7 @@ describe Champs::SiretController, type: :controller do
         let(:api_etablissement_status) { 200 }
         let(:api_etablissement_body) { File.read('spec/fixtures/files/api_entreprise/etablissements.json') }
 
-        subject! { get :show, params: params, format: :js, xhr: true }
+        subject! { get :show, params: params, format: :turbo_stream }
 
         it 'populates the etablissement and SIRET on the model' do
           champ.reload
@@ -139,7 +138,7 @@ describe Champs::SiretController, type: :controller do
         let(:api_etablissement_status) { 200 }
         let(:api_etablissement_body) { File.read('spec/fixtures/files/api_entreprise/etablissements.json') }
 
-        subject! { get :show, params: params, format: 'js', xhr: true }
+        subject! { get :show, params: params, format: :turbo_stream }
 
         it 'populates the etablissement and SIRET on the model' do
           champ.reload
@@ -152,7 +151,7 @@ describe Champs::SiretController, type: :controller do
     end
 
     context 'when user is not signed in' do
-      subject! { get :show, params: { champ_id: champ.id }, format: :js, xhr: true }
+      subject! { get :show, params: { champ_id: champ.id }, format: :turbo_stream }
 
       it { expect(response.code).to eq('401') }
     end

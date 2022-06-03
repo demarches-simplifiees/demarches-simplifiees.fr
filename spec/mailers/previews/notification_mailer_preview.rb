@@ -26,8 +26,7 @@ class NotificationMailerPreview < ActionMailer::Preview
   end
 
   def dossier_with_image
-    procedure = Procedure.where(id: Mails::InitiatedMail.where("body like ?", "%<img%").pluck(:procedure_id).uniq).order("RANDOM()").first
-    procedure.dossiers.last
+    Dossier.joins(procedure: [:initiated_mail]).where("initiated_mails.body like ?", "%<img%").order('RANDOM()').first
   end
 
   def dossier_with_motivation

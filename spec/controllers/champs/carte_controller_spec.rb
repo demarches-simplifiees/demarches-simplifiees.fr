@@ -117,7 +117,7 @@ describe Champs::CarteController, type: :controller do
       render_views
 
       before do
-        get :index, params: params, format: :js, xhr: true
+        get :index, params: params, format: :turbo_stream
       end
 
       context 'without focus' do
@@ -126,7 +126,7 @@ describe Champs::CarteController, type: :controller do
         end
 
         it 'updates the list' do
-          expect(response.body).not_to include("DS.fire('map:feature:focus'")
+          expect(response.body).not_to include("map:feature:focus")
           expect(response.status).to eq 200
         end
       end
@@ -140,7 +140,8 @@ describe Champs::CarteController, type: :controller do
         end
 
         it 'updates the list and focuses the map' do
-          expect(response.body).to include("DS.fire('map:feature:focus'")
+          expect(response.body).to include(ActionView::RecordIdentifier.dom_id(champ, :geo_areas))
+          expect(response.body).to include("map:feature:focus")
           expect(response.status).to eq 200
         end
       end

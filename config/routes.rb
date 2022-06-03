@@ -151,7 +151,8 @@ Rails.application.routes.draw do
     get ':champ_id/dossier_link', to: 'dossier_link#show', as: :dossier_link
     get ':champ_id/dn', to: 'numero_dn#show', as: :dn
     post ':champ_id/carte', to: 'carte#show', as: :carte
-    post ':champ_id/repetition', to: 'repetition#show', as: :repetition
+    post ':champ_id/repetition', to: 'repetition#add', as: :repetition
+    delete ':champ_id/repetition', to: 'repetition#remove'
 
     get ':champ_id/carte/features', to: 'carte#index', as: :carte_features
     post ':champ_id/carte/features', to: 'carte#create'
@@ -288,6 +289,7 @@ Rails.application.routes.draw do
         get 'attestation'
         get 'qrcode/:created_at', action: 'qrcode', as: :qrcode
         get 'transferer', to: 'dossiers#transferer'
+        get 'papertrail', format: :pdf
       end
 
       collection do
@@ -368,6 +370,7 @@ Rails.application.routes.draw do
         post 'add_filter'
         get 'remove_filter' => 'procedures#remove_filter', as: 'remove_filter'
         get 'download_export'
+        post 'download_export'
         get 'stats'
         get 'email_notifications'
         patch 'update_email_notifications'
@@ -431,6 +434,7 @@ Rails.application.routes.draw do
         patch 'update_jeton'
         put :allow_expert_review
         put :experts_require_administrateur_invitation
+        put :restore
       end
 
       get :api_particulier, controller: 'jeton_particulier'

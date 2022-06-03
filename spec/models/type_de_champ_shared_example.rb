@@ -90,7 +90,8 @@ shared_examples 'type_de_champ_spec' do
     end
 
     describe 'changing the type_champ from a repetition' do
-      let(:tdc) { create(:type_de_champ_repetition, :with_types_de_champ) }
+      let!(:procedure) { create(:procedure) }
+      let(:tdc) { create(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure) }
 
       before do
         tdc.update_attribute('type_champ', target_type_champ)
@@ -100,7 +101,7 @@ shared_examples 'type_de_champ_spec' do
         let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:text) }
 
         it 'removes the children types de champ' do
-          expect(tdc.types_de_champ).to be_empty
+          expect(procedure.draft_revision.children_of(tdc)).to be_empty
         end
       end
     end

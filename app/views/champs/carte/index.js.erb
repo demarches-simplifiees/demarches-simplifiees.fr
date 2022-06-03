@@ -1,9 +1,0 @@
-<%= render_flash(timeout: 5000, fixed: true) %>
-
-<%= render_to_element("##{@champ.input_group_id} .geo-areas",
-  partial: 'shared/champs/carte/geo_areas',
-  locals: { champ: @champ, editing: true }) %>
-
-<% if @focus %>
-  <%= fire_event('map:feature:focus', { bbox: @champ.bounding_box }.to_json) %>
-<% end %>

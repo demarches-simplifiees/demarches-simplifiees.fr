@@ -17,7 +17,7 @@ export const FAILURE_CONNECTIVITY = 'file-upload-failure-connectivity';
 /**
   Represent an error during a file upload.
   */
-export default class FileUploadError extends Error {
+export class FileUploadError extends Error {
   status?: number;
   code?: string;
 

@@ -56,19 +56,14 @@ class Champ < ApplicationRecord
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
   scope :public_only, -> { where(private: false) }
   scope :private_only, -> { where(private: true) }
-  scope :ordered, -> { includes(:type_de_champ).order(:row, 'types_de_champ.order_place') }
-  scope :public_ordered, -> { public_only.joins(dossier: { revision: :revision_types_de_champ_public }).where('procedure_revision_types_de_champ.type_de_champ_id = champs.type_de_champ_id').order(:position) }
-  # we need to do private champs order as manual join to avoid conflicting join names
-  scope :private_ordered, -> do
-    private_only.joins('
-      INNER JOIN dossiers dossiers_private on dossiers_private.id = champs.dossier_id
-      INNER JOIN types_de_champ types_de_champ_private on types_de_champ_private.id = champs.type_de_champ_id
-      INNER JOIN procedure_revision_types_de_champ procedure_revision_types_de_champ_private
-      ON procedure_revision_types_de_champ_private.revision_id = dossiers_private.revision_id')
-      .where('procedure_revision_types_de_champ_private.type_de_champ_id = champs.type_de_champ_id')
-      .order(:position)
+  scope :ordered, -> do
+    includes(:type_de_champ)
+      .joins(dossier: { revision: :revision_types_de_champ })
+      .where('procedure_revision_types_de_champ.type_de_champ_id = champs.type_de_champ_id')
+      .order(:row, :position)
   end
-
+  scope :public_ordered, -> { public_only.ordered }
+  scope :private_ordered, -> { private_only.ordered }
   scope :root, -> { where(parent_id: nil) }
 
   before_create :set_dossier_id, if: :needs_dossier_id?
