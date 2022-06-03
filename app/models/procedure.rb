@@ -112,27 +112,39 @@ class Procedure < ApplicationRecord
     brouillon? ? draft_types_de_champ_private : published_types_de_champ_private
   end
 
-  def types_de_champ_for_procedure_presentation
+  def types_de_champ_for_procedure_presentation(parent = nil)
     if brouillon?
-      TypeDeChamp.fillable
-        .joins(:revision_types_de_champ)
-        .where(revision_types_de_champ: { revision: draft_revision, parent_id: nil })
-        .order(:private, :position)
+      if parent.nil?
+        TypeDeChamp.fillable
+          .joins(:revision_types_de_champ)
+          .where(revision_types_de_champ: { revision_id: draft_revision_id, parent_id: nil })
+          .order(:private, :position)
+      else
+        draft_revision.children_of(parent)
+      end
     else
+      # all published revisions
+      revision_ids = revisions.ids - [draft_revision_id]
+      # fetch all parent types de champ
+      parent_ids = if parent.present?
+        ProcedureRevisionTypeDeChamp
+          .where(revision_id: revision_ids)
+          .joins(:type_de_champ)
+          .where(type_de_champ: { stable_id: parent.stable_id })
+          .ids
+      end
+
       # fetch all type_de_champ.stable_id for all the revisions expect draft
       # and for each stable_id take the bigger (more recent) type_de_champ.id
-      recent_ids = TypeDeChamp.fillable
-        .joins(:revisions)
-        .where(procedure_revisions: { procedure_id: id })
-        .where.not(procedure_revisions: { id: draft_revision_id })
-        .where(revision_types_de_champ: { parent_id: nil })
-        .group(:stable_id)
-        .select('MAX(types_de_champ.id)')
+      recent_ids = TypeDeChamp
+        .fillable
+        .joins(:revision_types_de_champ)
+        .where(revision_types_de_champ: { revision_id: revision_ids, parent_id: parent_ids })
+        .group(:stable_id).select('MAX(types_de_champ.id)')
 
       # fetch the more recent procedure_revision_types_de_champ
       # which includes recents_ids
       recents_prtdc = ProcedureRevisionTypeDeChamp
-        .root
         .where(type_de_champ_id: recent_ids)
         .where.not(revision_id: draft_revision_id)
         .group(:type_de_champ_id)

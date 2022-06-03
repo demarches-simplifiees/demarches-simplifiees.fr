@@ -8,6 +8,8 @@ module Types
     field :dossier_classer_sans_suite, mutation: Mutations::DossierClasserSansSuite
     field :dossier_refuser, mutation: Mutations::DossierRefuser
     field :dossier_accepter, mutation: Mutations::DossierAccepter
+    field :dossier_repasser_en_instruction, mutation: Mutations::DossierRepasserEnInstruction
+    field :dossier_repasser_en_construction, mutation: Mutations::DossierRepasserEnConstruction
     field :dossier_archiver, mutation: Mutations::DossierArchiver
     field :dossier_changer_groupe_instructeur, mutation: Mutations::DossierChangerGroupeInstructeur
 

@@ -1003,7 +1003,8 @@ describe API::V2::GraphqlController do
       end
 
       describe 'dossierRepasserEnInstruction' do
-        let(:dossier) { create(:dossier, :accepte, :with_individual, procedure: procedure) }
+        let(:dossiers) { [dossier2, dossier1, dossier] }
+        let(:dossier) { create(:dossier, :refuse, :with_individual, procedure: procedure) }
         let(:instructeur_id) { instructeur.to_typed_id }
         let(:disable_notification) { false }
         let(:query) do
@@ -1027,49 +1028,6 @@ describe API::V2::GraphqlController do
 
         context 'success' do
           it "should repasser en instruction dossier" do
-            pp gql_errors
-            expect(gql_errors).to eq(nil)
-            expect(gql_data).to eq(dossierRepasserEnInstruction: {
-              dossier: {
-                id: dossier.to_typed_id,
-                state: "en_instruction",
-                motivation: nil
-              },
-              errors: nil
-            })
-
-            perform_enqueued_jobs
-            expect(ActionMailer::Base.deliveries.size).to eq(2)
-          end
-        end
-
-        context 'validation error' do
-          let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
-
-          it "should fail" do
-            expect(gql_errors).to eq(nil)
-            expect(gql_data).to eq(dossierRepasserEnInstruction: {
-              errors: [{ message: "Le dossier ne peut repasser en instruction lorsqu'il est en instruction" }],
-              dossier: nil
-            })
-          end
-        end
-
-        context 'instructeur error' do
-          let(:instructeur_id) { create(:instructeur).to_typed_id }
-
-          it "should fail" do
-            expect(gql_errors).to eq(nil)
-            expect(gql_data).to eq(dossierRepasserEnInstruction: {
-              errors: [{ message: 'L’instructeur n’a pas les droits d’accès à ce dossier' }],
-              dossier: nil
-            })
-          end
-        end
-
-        context 'disable notification' do
-          let(:disable_notification) { true }
-          it "should passer en instruction dossier without notification" do
             expect(gql_errors).to eq(nil)
 
             expect(gql_data).to eq(dossierRepasserEnInstruction: {
@@ -1082,7 +1040,50 @@ describe API::V2::GraphqlController do
             })
 
             perform_enqueued_jobs
-            expect(ActionMailer::Base.deliveries.size).to eq(1)
+            expect(ActionMailer::Base.deliveries.size).to eq(4)
+          end
+        end
+      end
+
+      describe 'dossierRepasserEnConstruction' do
+        let(:dossiers) { [dossier2, dossier1, dossier] }
+        let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
+        let(:instructeur_id) { instructeur.to_typed_id }
+        let(:disable_notification) { false }
+        let(:query) do
+          "mutation {
+            dossierRepasserEnConstruction(input: {
+              dossierId: \"#{dossier.to_typed_id}\",
+              instructeurId: \"#{instructeur_id}\",
+              disableNotification: #{disable_notification}
+            }) {
+              dossier {
+                id
+                state
+                motivation
+              }
+              errors {
+                message
+              }
+            }
+          }"
+        end
+
+        context 'success' do
+          it "should passer en instruction dossier" do
+            expect(gql_errors).to eq(nil)
+
+            expect(gql_data).to eq(dossierRepasserEnConstruction: {
+              dossier: {
+                id: dossier.to_typed_id,
+                state: "en_construction",
+                motivation: nil
+              },
+              errors: nil
+            })
+
+            perform_enqueued_jobs
+            expect(ActionMailer::Base.deliveries.size).to eq(3)
           end
         end
       end

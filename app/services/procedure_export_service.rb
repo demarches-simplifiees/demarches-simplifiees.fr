@@ -90,20 +90,23 @@ class ProcedureExportService
   end
 
   def champs_repetables_options
-    revision = procedure.active_revision
     champs_by_stable_id = dossiers
       .flat_map { |dossier| (dossier.champs + dossier.champs_private).filter(&:repetition?) }
       .group_by(&:stable_id)
 
-    procedure.types_de_champ_for_procedure_presentation.repetition
-      .map { |type_de_champ_repetition| [type_de_champ_repetition, type_de_champ_repetition.types_de_champ_for_revision(revision).to_a] }
-      .filter { |(_, types_de_champ)| types_de_champ.present? }
-      .map do |(type_de_champ_repetition, types_de_champ)|
-        {
-          sheet_name: type_de_champ_repetition.libelle_for_export,
-          instances: champs_by_stable_id.fetch(type_de_champ_repetition.stable_id, []).flat_map(&:rows_for_export),
-          spreadsheet_columns: Proc.new { |instance| instance.spreadsheet_columns(types_de_champ) }
-        }
+    procedure
+      .types_de_champ_for_procedure_presentation
+      .repetition
+      .filter_map do |type_de_champ_repetition|
+        types_de_champ = procedure.types_de_champ_for_procedure_presentation(type_de_champ_repetition).to_a
+
+        if types_de_champ.present?
+          {
+            sheet_name: type_de_champ_repetition.libelle_for_export,
+            instances: champs_by_stable_id.fetch(type_de_champ_repetition.stable_id, []).flat_map(&:rows_for_export),
+            spreadsheet_columns: Proc.new { |instance| instance.spreadsheet_columns(types_de_champ) }
+          }
+        end
       end
   end
 

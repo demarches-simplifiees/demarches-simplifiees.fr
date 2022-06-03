@@ -124,6 +124,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def authenticate_instructeur_or_expert!
+    if !instructeur_signed_in? && !expert_signed_in?
+      redirect_to new_user_session_path
+    end
+  end
+
   def authenticate_administrateur!
     if !administrateur_signed_in?
       redirect_to new_user_session_path

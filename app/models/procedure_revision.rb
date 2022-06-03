@@ -167,7 +167,28 @@ class ProcedureRevision < ApplicationRecord
       .order("procedure_revision_types_de_champ.position")
   end
 
+  def types_de_champ_public_as_json
+    types_de_champ = types_de_champ_public.includes(piece_justificative_template_attachment: :blob)
+    tdcs_as_json = types_de_champ.map(&:as_json_for_editor)
+    children_types_de_champ_as_json(tdcs_as_json, types_de_champ.filter(&:repetition?))
+    tdcs_as_json
+  end
+
+  def types_de_champ_private_as_json
+    types_de_champ = types_de_champ_private.includes(piece_justificative_template_attachment: :blob)
+    tdcs_as_json = types_de_champ.map(&:as_json_for_editor)
+    children_types_de_champ_as_json(tdcs_as_json, types_de_champ.filter(&:repetition?))
+    tdcs_as_json
+  end
+
   private
+
+  def children_types_de_champ_as_json(tdcs_as_json, parent_tdcs)
+    parent_tdcs.each do |parent_tdc|
+      tdc_as_json = tdcs_as_json.find { |json| json["id"] == parent_tdc.stable_id }
+      tdc_as_json&.merge!(types_de_champ: children_of(parent_tdc).includes(piece_justificative_template_attachment: :blob).map(&:as_json_for_editor))
+    end
+  end
 
   def coordinate_and_tdc(stable_id)
     coordinate = revision_types_de_champ
