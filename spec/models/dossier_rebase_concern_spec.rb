@@ -364,7 +364,7 @@ describe Dossier do
     context 'with a procedure with a repetition' do
       let!(:procedure) do
         create(:procedure).tap do |p|
-          repetition = p.draft_revision.add_type_de_champ(type_champ: :repetition, libelle: 'p1')
+          repetition = p.draft_revision.add_type_de_champ(type_champ: :repetition, libelle: 'p1', mandatory: true)
           p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'c1', parent_id: repetition.stable_id)
           p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'c2', parent_id: repetition.stable_id)
           p.publish!
@@ -377,7 +377,7 @@ describe Dossier do
 
       context 'when a child tdc is added in the middle' do
         before do
-          added_tdc = procedure.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'c3', parent_id: repetition_stable_id)
+          added_tdc = procedure.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'c3', parent_id: repetition_stable_id, mandatory: true)
           procedure.draft_revision.move_type_de_champ(added_tdc.stable_id, 1)
         end
 
