@@ -11,9 +11,10 @@ fr:
       title: "Direction Interministérielle au Numérique"
       url: "https://numerique.gouv.fr"
     footer:
+      nav_aria: "En savoir plus sur %{application_name}"
       accessibilite:
         label: "Accessibilité : partiellement conforme"
-        title: "Accessibilité : partiellement conforme"
+        title: "Consulter notre déclaration d'accessibilité"
         url: "https://doc.demarches-simplifiees.fr/declaration-daccessibilite"
       aide:
         label: "Aide"
@@ -21,7 +22,7 @@ fr:
         url: "https://faq.demarches-simplifiees.fr"
       api_doc:
         label: "Documentation de l'API"
-        title: "Documentation de l'API"
+        title: "Documentation graphql de l'API"
         url: "https://doc.demarches-simplifiees.fr/pour-aller-plus-loin/graphql"
       betagouv:
         label: "Beta.gouv.fr"
@@ -33,21 +34,21 @@ fr:
         url: "https://doc.demarches-simplifiees.fr/cgu"
       code:
         label: "Code source"
-        title: "Code source"
+        title: "Le code ouvert de demarches-simplifiees"
         url: "https://github.com/betagouv/demarches-simplifiees.fr"
       contact:
         label: "Contact"
-        title: "Contact"
+        title: "Nous contacter"
       contact_technique:
         label: "Contact technique"
-        title: "Contact technique"
+        title: "Contacter notre équipe technique"
       doc:
         label: "Documentation"
-        title: "Documentation"
+        title: "Documentation utilisateur"
         url: "https://doc.demarches-simplifiees.fr"
       doc_nouveautes:
         label: "Nouveautés"
-        title: "Nouveautés"
+        title: "Les dernière nouveautés"
         url: "https://doc.demarches-simplifiees.fr/nouveautes"
       faq:
         label: "FAQ"
@@ -59,30 +60,30 @@ fr:
         url: "https:///faq.demarches-simplifiees.fr/collection/1-administrateur-creation-dun-formulaire"
       mentions_legales:
         label: "Mentions légales"
-        title: "Mentions légales"
+        title: "Consulter nos Mentions légales"
         url: "https://doc.demarches-simplifiees.fr/mentions-legales"
       newsletter:
-        label: "Newsletter"
-        title: "Notre newsletter"
+        label: "Infolettres"
+        title: "S'abonner a notre infolettre"
         url: "https://my.sendinblue.com/users/subscribe/js_id/3s2q1/id/1"
       releases:
         label: "Nouveautés"
-        title: "Nos nouveautés"
+        title: "Les dernière mises à jour de la plateforme"
         url: "https://github.com/betagouv/demarches-simplifiees.fr/releases"
       security:
         label: "Sécurité"
-        title: "Sécurité"
+        title: "Vous avez identifié une faille, comment nous en informer"
         url: "https://github.com/betagouv/demarches-simplifiees.fr/blob/main/SECURITY.md"
       stats:
         label: "Statistiques"
-        title: "Statistiques"
+        title: "Statistiques d'usage"
       status_page:
         label: "Disponibilité"
-        title: "Disponibilité"
+        title: "Disponibilité du site demarches-simplifiees"
         url: "https://status.demarches-simplifiees.fr"
       suivi:
         label: "Suivi d'audience et vie privée"
-        title: "Suivi d'audience et vie privée"
+        title: "Consulter notre politique de respect de la vie privée"
       webinaire:
         label: "Inscription ateliers en ligne"
         title: "Inscription ateliers en ligne"

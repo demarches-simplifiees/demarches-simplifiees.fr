@@ -1,0 +1,27 @@
+%p.mb-4{ :class => ("mt-4" if procedure.close? && procedure.draft_changed?) } Publiez votre démarche, et partagez la à vos usagers.
+%p Personnalisez le lien public de la démarche pour en faciliter l’accès (<strong>obligatoire pour publier votre démarche</strong>) :
+%p.empty-text
+  = commencer_url(path: '')
+  = text_field_tag(:path, procedure.path,
+                  id: 'procedure_path',
+                  label: 'Adresse de diffusion',
+                  placeholder: 'chemin-de-la-démarche',
+                  required: true,
+                  class: 'form',
+                  pattern: '^[a-z0-9_-]{3,200}$',
+                  title: "De 3 à 200 caractères; minuscules, chiffres et tiret seulement",
+                  autocomplete: 'off',
+                  style: 'width: 300px; display: inline;')
+  .text-info.mb-4
+    Attention, diffusez toujours le <strong>lien complet</strong> affiché ci-dessus, et non pas un lien générique vers #{APPLICATION_NAME}. Ne dites pas non plus aux usagers de se rendre sur le site générique #{APPLICATION_NAME}, donnez-leur toujours le lien complet.
+  - if closed_procedures.present?
+    %h2.card-title Cette démarche remplace une close ? Si oui, veuillez indiquer le n° de la démarche remplacée
+    = select_tag :old_procedure, options_for_select(@closed_procedures), include_blank: true
+  %h2.card-title Diffusion de la démarche
+  %p Où les utilisateurs trouveront-ils le lien de la démarche ? Typiquement, il s’agit d’une page de votre site web.
+  %p.center
+    = text_field_tag(:lien_site_web, procedure.lien_site_web,
+                    required: true,
+                    class: 'form-control',
+                    autocomplete: 'off',
+                    placeholder: 'https://exemple.gouv.fr/ma_demarche')
