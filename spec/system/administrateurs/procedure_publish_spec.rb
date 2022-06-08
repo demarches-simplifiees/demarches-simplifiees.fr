@@ -98,10 +98,11 @@ describe 'Publishing a procedure', js: true do
     end
   end
 
-  context 'when a procedure is de-published' do
+  context 'when a procedure is closed with revision changes' do
+    let!(:tdc) { { type_champ: :text, libelle: 'nouveau champ' } }
     let!(:procedure) do
       create(:procedure_with_dossiers,
-        :unpublished,
+        :closed,
         :with_path,
         :with_type_de_champ,
         :with_service,
@@ -109,14 +110,20 @@ describe 'Publishing a procedure', js: true do
         administrateur: administrateur)
     end
 
+    before do
+      Flipper.enable(:procedure_revisions, procedure)
+      procedure.draft_revision.add_type_de_champ(tdc)
+    end
+
     scenario 'an admin can publish it again' do
       visit admin_procedures_path(statut: "archivees")
       click_on procedure.libelle
       find('#publish-procedure-link').click
 
+      expect(page).to have_text('Les modifications suivantes seront appliquées')
       expect(find_field('procedure_path').value).to eq procedure.path
       fill_in 'lien_site_web', with: 'http://some.website'
-      click_on 'Publier'
+      find('#publish').click
 
       expect(page).to have_text('Démarche publiée')
       expect(page).to have_selector('#preview-procedure')

@@ -25,7 +25,7 @@
   - if !@procedure.publiee? && !@procedure.close? && !@procedure.depubliee?
     = link_to 'Publier', admin_procedure_publication_path(@procedure), class: 'button primary', id: 'publish-procedure-link', data: { disable_with: "Publication..." }
 
-  - if @procedure.close? || @procedure.depubliee?
+  - if (@procedure.close? || @procedure.depubliee?) && !@procedure.draft_changed?
     = link_to 'Réactiver', admin_procedure_publication_path(@procedure), class: 'button primary', id: 'publish-procedure-link', data: { disable_with: "Publication..." }
 
   - if @procedure.locked? && !@procedure.close?
