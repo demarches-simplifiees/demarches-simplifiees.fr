@@ -405,7 +405,7 @@ class Procedure < ApplicationRecord
   end
 
   def draft_changed?
-    publiee? && published_revision.different_from?(draft_revision) && revision_changes.present?
+    !brouillon? && published_revision.different_from?(draft_revision) && revision_changes.present?
   end
 
   def revision_changes
