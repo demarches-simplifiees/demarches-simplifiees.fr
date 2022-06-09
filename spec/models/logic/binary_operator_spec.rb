@@ -1,7 +1,7 @@
 include Logic
 
 describe Logic::BinaryOperator do
-  let(:two_greater_than_one) { greater_than(constant(2), constant(1))}
+  let(:two_greater_than_one) { greater_than(constant(2), constant(1)) }
 
   describe '#type' do
     it { expect(two_greater_than_one.type).to eq(:boolean) }
