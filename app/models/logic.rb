@@ -12,6 +12,15 @@ module Logic
       .find { |c| c.name == name }
   end
 
+  def self.compatible_type?(left, right)
+    case [left.type, right.type]
+    in [a, ^a] # syntax for same type
+      true
+    else
+      false
+    end
+  end
+
   def ds_eq(left, right) = Logic::Eq.new(left, right)
 
   def greater_than(left, right) = Logic::GreaterThan.new(left, right)
