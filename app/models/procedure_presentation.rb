@@ -41,6 +41,8 @@ class ProcedurePresentation < ApplicationRecord
       field_hash('self', 'en_construction_at'),
       field_hash('self', 'depose_at'),
       field_hash('self', 'updated_at'),
+      field_hash('self', 'depose_since'),
+      field_hash('self', 'updated_since'),
       field_hash('user', 'email'),
       field_hash('followers_instructeurs', 'email'),
       field_hash('groupe_instructeur', 'label')
