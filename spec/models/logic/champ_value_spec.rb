@@ -41,6 +41,13 @@ describe Logic::ChampValue do
     it { is_expected.to eq(42.01) }
   end
 
+  context 'dropdown tdc' do
+    let(:champ) { create(:champ_drop_down_list, value: 'choix 1') }
+
+    it { expect(champ_value(champ.stable_id).type).to eq(:enum) }
+    it { is_expected.to eq('choix 1') }
+  end
+
   context 'checkbox tdc' do
     let(:champ) { create(:champ_checkbox, value: 'on') }
 
