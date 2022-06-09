@@ -12,6 +12,43 @@ module Logic
       .find { |c| c.name == name }
   end
 
+  def self.ensure_compatibility_from_left(condition)
+    left = condition.left
+    right = condition.right
+    operator_class = condition.class
+
+    case [left.type, condition]
+    in [:boolean, _]
+      operator_class = Eq
+    in [:empty, _]
+      operator_class = EmptyOperator
+    in [:enum, _]
+      operator_class = Eq
+    in [:number, EmptyOperator]
+      operator_class = Eq
+    in [:number, _]
+    in [:string, _]
+      operator_class = Eq
+    end
+
+    if !compatible_type?(left, right)
+      right = case left.type
+      when :boolean
+        Constant.new(true)
+      when :empty
+        Empty.new
+      when :enum
+        Constant.new(left.options.first)
+      when :number
+        Constant.new(0)
+      when :string
+        Constant.new('')
+      end
+    end
+
+    operator_class.new(left, right)
+  end
+
   def self.compatible_type?(left, right)
     case [left.type, right.type]
     in [a, ^a] # syntax for same type
