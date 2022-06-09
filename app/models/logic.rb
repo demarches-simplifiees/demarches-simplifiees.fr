@@ -8,10 +8,12 @@ module Logic
   end
 
   def self.class_from_name(name)
-    [Constant]
+    [Constant, Empty]
       .find { |c| c.name == name }
   end
 
   def constant(value) = Logic::Constant.new(value)
+
+  def empty = Logic::Empty.new
 
 end
