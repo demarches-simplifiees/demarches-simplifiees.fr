@@ -510,4 +510,11 @@ Rails.application.routes.draw do
   get 'backoffice' => redirect('/procedures')
   get 'backoffice/sign_in' => redirect('/users/sign_in')
   get 'backoffice/dossiers/procedure/:procedure_id' => redirect('/procedures/%{procedure_id}')
+
+  resources :conditions, only: [:show, :update] do
+    patch :add_row, on: :member
+    patch :delete_row, on: :member
+    patch :delete, on: :member
+    patch :change_champ, on: :member
+  end
 end
