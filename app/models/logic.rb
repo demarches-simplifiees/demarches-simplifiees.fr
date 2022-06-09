@@ -8,7 +8,7 @@ module Logic
   end
 
   def self.class_from_name(name)
-    [Constant, Empty, LessThan, LessThanEq, Eq, GreaterThanEq, GreaterThan, EmptyOperator]
+    [Constant, Empty, LessThan, LessThanEq, Eq, GreaterThanEq, GreaterThan, EmptyOperator, And, Or]
       .find { |c| c.name == name }
   end
 
@@ -36,4 +36,8 @@ module Logic
   def empty = Logic::Empty.new
 
   def empty_operator(left, right) = Logic::EmptyOperator.new(left, right)
+
+  def ds_or(operands) = Logic::Or.new(operands)
+
+  def ds_and(operands) = Logic::And.new(operands)
 end
