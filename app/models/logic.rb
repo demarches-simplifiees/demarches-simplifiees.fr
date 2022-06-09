@@ -16,6 +16,8 @@ module Logic
     case [left.type, right.type]
     in [a, ^a] # syntax for same type
       true
+    in [:enum, :string]
+      left.options.include?(right.value)
     else
       false
     end
