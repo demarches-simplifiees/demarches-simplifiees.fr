@@ -15,6 +15,48 @@ describe Logic do
       .to eq(ds_and([constant(true), constant(true), constant(false)]))
   end
 
+  describe '.ensure_compatibility_from_left' do
+    subject { Logic.ensure_compatibility_from_left(condition) }
+
+    context 'when it s fine' do
+      let(:condition) { greater_than(constant(1), constant(1)) }
+
+      it { is_expected.to eq(condition) }
+    end
+
+    context 'when empty equal true' do
+      let(:condition) { ds_eq(empty, constant(true)) }
+
+      it { is_expected.to eq(empty_operator(empty, empty)) }
+    end
+
+    context 'when true greater_than 1' do
+      let(:condition) { greater_than(constant(true), constant(0)) }
+
+      it { is_expected.to eq(ds_eq(constant(true), constant(true))) }
+    end
+
+    context 'when number empty operator true' do
+      let(:condition) { empty_operator(constant(1), constant(true)) }
+
+      it { is_expected.to eq(ds_eq(constant(1), constant(0))) }
+    end
+
+    context 'when string empty operator true' do
+      let(:condition) { empty_operator(constant('a'), constant(true)) }
+
+      it { is_expected.to eq(ds_eq(constant('a'), constant(''))) }
+    end
+
+    context 'when dropdown empty operator true' do
+      let(:drop_down) { create(:type_de_champ_drop_down_list) }
+      let(:first_option) { drop_down.drop_down_list_enabled_non_empty_options.first }
+      let(:condition) { empty_operator(champ_value(drop_down), constant(true)) }
+
+      it { is_expected.to eq(ds_eq(champ_value(drop_down), constant(first_option))) }
+    end
+  end
+
   describe '.compatible_type?' do
     it { expect(Logic.compatible_type?(constant(true), constant(true))).to be true }
     it { expect(Logic.compatible_type?(constant(1), constant(true))).to be false }
