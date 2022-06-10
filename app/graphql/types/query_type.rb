@@ -1,5 +1,7 @@
 module Types
   class QueryType < Types::BaseObject
+    field_class BaseField
+
     field :demarche, DemarcheType, null: false, description: "Informations concernant une démarche." do
       argument :number, Int, "Numéro de la démarche.", required: true
     end
@@ -12,7 +14,7 @@ module Types
       argument :number, Int, "Numéro du groupe instructeur.", required: true
     end
 
-    field :demarches_publiques, DemarcheDescriptorType.connection_type, null: false
+    field :demarches_publiques, DemarcheDescriptorType.connection_type, null: false, require_admin: true
 
     def demarches_publiques
       Procedure.publiques
