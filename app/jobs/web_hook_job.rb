@@ -10,7 +10,7 @@ class WebHookJob < ApplicationJob
       state: state,
       updated_at: updated_at
     }
-
+    procedure = Procedure.find(procedure_id)
     Typhoeus.post(procedure.web_hook_url, body: body, timeout: TIMEOUT)
   end
 end
