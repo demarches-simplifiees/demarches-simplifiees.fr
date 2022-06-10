@@ -785,7 +785,11 @@ describe Administrateurs::ProceduresController, type: :controller do
   end
 
   describe 'PUT #restore' do
-    let(:procedure) { create :procedure, :discarded, administrateur: admin }
+    let(:procedure) { create :procedure_with_dossiers, :with_service, :published, administrateur: admin }
+
+    before do
+      procedure.discard_and_keep_track!(admin)
+    end
 
     context 'when the admin wants to restore a procedure' do
       before do
@@ -794,6 +798,7 @@ describe Administrateurs::ProceduresController, type: :controller do
       end
 
       it { expect(procedure.discarded?).to be_falsy }
+      it { expect(procedure.dossiers.first.hidden_by_administration_at).to be_nil }
     end
   end
 end
