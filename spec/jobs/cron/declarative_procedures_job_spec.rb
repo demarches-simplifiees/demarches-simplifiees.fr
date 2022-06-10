@@ -81,4 +81,20 @@ RSpec.describe Cron::DeclarativeProceduresJob, type: :job do
       end
     end
   end
+
+  describe 'safer perform' do
+      let(:state) { Dossier.states.fetch(:en_instruction) }
+
+      it 'works no matter if one raise' do
+        procedure_1 = instance_double("Procedure")
+        expect(procedure_1).to receive(:process_dossiers!)
+        procedure_2 = instance_double("Procedure")
+        expect(procedure_2).to receive(:process_dossiers!).and_raise("boom")
+        procedure_3 = double(process_dossiers!: true)
+        expect(procedure_3).to receive(:process_dossiers!)
+
+        expect(Procedure).to receive_message_chain(:declarative, :find_each).and_yield(procedure_1).and_yield(procedure_2).and_yield(procedure_3)
+        Cron::DeclarativeProceduresJob.perform_now
+      end
+    end
 end
