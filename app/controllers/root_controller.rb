@@ -83,6 +83,10 @@ class RootController < ApplicationController
     end
   end
 
+  def patron_dsfr
+    render layout: 'application_dsfr'
+  end
+
   def suivi
   end
 

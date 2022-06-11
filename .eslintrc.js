@@ -27,7 +27,12 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['.eslintrc.js', 'vite.config.ts'],
+      files: [
+        '.eslintrc.js',
+        'vite.config.ts',
+        'tailwind.config.js',
+        'postcss.config.js'
+      ],
       env: { node: true }
     },
     {

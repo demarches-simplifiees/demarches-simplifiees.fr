@@ -1,0 +1,12 @@
+#flash_messages
+  - if flash.any?
+    #flash_message.center
+      - flash.each do |key, value|
+        - if value.is_a?(Array)
+          .alert
+            - value.each do |message|
+              = sanitize(message)
+              %br
+        - else
+          .alert
+            = sanitize(value)
