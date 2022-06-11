@@ -12,7 +12,7 @@ module Types
     field :number, Int, "Le numero du dossier.", null: false, method: :id
     field :state, DossierState, "L’état du dossier.", null: false
 
-    field :demarche, Types::DemarcheDescriptorType, null: false, method: :procedure
+    field :demarche, Types::DemarcheDescriptorType, null: false, method: :revision
 
     field :date_depot, GraphQL::Types::ISO8601DateTime, "Date de dépôt.", null: false, method: :depose_at
     field :date_passage_en_construction, GraphQL::Types::ISO8601DateTime, "Date du dernier passage en construction.", null: false, method: :en_construction_at
@@ -37,7 +37,7 @@ module Types
 
     field :usager, Types::ProfileType, null: false
     field :groupe_instructeur, Types::GroupeInstructeurType, null: false
-    field :revision, Types::RevisionType, null: false
+    field :revision, Types::RevisionType, null: false, deprecation_reason: 'Utilisez le champ `demarche.revision` à la place.'
 
     field :demandeur, Types::DemandeurType, null: false
 
@@ -79,12 +79,8 @@ module Types
       Loaders::Record.for(GroupeInstructeur).load(object.groupe_instructeur_id)
     end
 
-    def revision
-      Loaders::Record.for(ProcedureRevision).load(object.revision_id)
-    end
-
     def demandeur
-      if object.procedure.for_individual
+      if object.revision.procedure.for_individual
         Loaders::Association.for(object.class, :individual).load(object)
       else
         Loaders::Association.for(object.class, :etablissement).load(object)
@@ -166,7 +162,7 @@ module Types
     end
 
     def self.authorized?(object, context)
-      context.authorized_demarche?(object.procedure)
+      context.authorized_demarche?(object.revision.procedure)
     end
   end
 end

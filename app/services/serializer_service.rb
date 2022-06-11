@@ -74,6 +74,7 @@ class SerializerService
       datePassageEnConstruction
       datePassageEnInstruction
       dateTraitement
+      dateDepot
       dateSuppressionParUsager
       dateSuppressionParAdministration
       instructeurs {
@@ -103,8 +104,11 @@ class SerializerService
       motivationAttachment {
         ...FileFragment
       }
-      revision {
-        id
+      demarche {
+        number
+        revision {
+          id
+        }
       }
     }
 
