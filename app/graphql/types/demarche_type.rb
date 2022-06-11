@@ -48,9 +48,10 @@ module Types
       argument :deleted_since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers supprimés depuis la date."
     end
 
-    field :champ_descriptors, [Types::ChampDescriptorType], null: false
-    field :annotation_descriptors, [Types::ChampDescriptorType], null: false
+    field :champ_descriptors, [Types::ChampDescriptorType], null: false, deprecation_reason: 'Utilisez le champ `activeRevision.champDescriptors` à la place.'
+    field :annotation_descriptors, [Types::ChampDescriptorType], null: false, deprecation_reason: 'Utilisez le champ `activeRevision.annotationDescriptors` à la place.'
 
+    field :active_revision, Types::RevisionType, null: false
     field :draft_revision, Types::RevisionType, null: false
     field :published_revision, Types::RevisionType, null: true
     field :revisions, [Types::RevisionType], null: false

@@ -433,8 +433,9 @@ interface Demandeur {
 Une démarche
 """
 type Demarche {
-  annotationDescriptors: [ChampDescriptor!]!
-  champDescriptors: [ChampDescriptor!]!
+  activeRevision: Revision!
+  annotationDescriptors: [ChampDescriptor!]! @deprecated(reason: "Utilisez le champ `active_revision.annotation_descriptors` à la place.")
+  champDescriptors: [ChampDescriptor!]! @deprecated(reason: "Utilisez le champ `active_revision.champ_descriptors` à la place.")
 
   """
   Date de la création.
@@ -639,6 +640,8 @@ type DemarcheDescriptor {
   Numero de la démarche.
   """
   number: Int!
+  revision: Revision!
+  service: Service!
 
   """
   État de la démarche.
@@ -779,7 +782,7 @@ type Dossier {
   L’URL du dossier au format PDF.
   """
   pdf: File
-  revision: Revision!
+  revision: Revision! @deprecated(reason: "Utilisez le champ `demarche.revision` à la place.")
 
   """
   L’état du dossier.
