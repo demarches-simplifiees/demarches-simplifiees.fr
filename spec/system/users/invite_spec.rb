@@ -14,6 +14,7 @@ describe 'Invitations' do
       navigate_to_brouillon(dossier)
 
       fill_in 'Texte obligatoire', with: 'Some edited value'
+
       send_invite_to "user_invite@exemple.fr"
 
       expect(page).to have_current_path(brouillon_dossier_path(dossier))
@@ -26,23 +27,72 @@ describe 'Invitations' do
 
     context 'when inviting someone without an existing account' do
       let(:invite) { create(:invite, dossier: dossier, user: nil) }
-      let(:user_password) { 'my-s3cure-p4ssword' }
 
-      scenario 'an invited user can register using the registration link sent in the invitation email' do
-        # Click the invitation link
-        visit invite_path(invite, params: { email: invite.email })
-        expect(page).to have_current_path(new_user_registration_path, ignore_query: true)
-        expect(page).to have_field('user_email', with: invite.email)
+      scenario 'an invited user can register using the targeted_user_link sent in the invitation email thru the ' do
+        log_in(owner)
+        navigate_to_brouillon(dossier)
 
-        # Create the account
-        sign_up_with invite.email, user_password
-        expect(page).to have_content('lien d’activation')
+        fill_in 'Texte obligatoire', with: 'Some edited value'
 
-        # Confirm the account
-        # (The user should be redirected to the dossier they was invited on)
-        click_confirmation_link_for invite.email
-        expect(page).to have_content('Votre compte a bien été confirmé.')
-        expect(page).to have_current_path(brouillon_dossier_path(dossier))
+        send_invite_to "user_invite@exemple.fr"
+
+        expect {
+          perform_enqueued_jobs
+        }.to change { TargetedUserLink.count }.from(0).to(1)
+
+        invitation_email = open_email("user_invite@exemple.fr")
+        targeted_user_link = TargetedUserLink.last
+        expect(invitation_email).to have_link(targeted_user_link_url(targeted_user_link))
+        invitation_email.click_on targeted_user_link_url(targeted_user_link)
+        expect(page).to have_current_path("/users/sign_up?user%5Bemail%5D=user_invite%40exemple.fr")
+      end
+    end
+
+    context 'when inviting someone with an existing account' do
+      let(:user) { create(:user) }
+
+      scenario 'an invited user can sign in using the targeted_user_link link sent in the invitation email' do
+        log_in(owner)
+        navigate_to_brouillon(dossier)
+
+        fill_in 'Texte obligatoire', with: 'Some edited value'
+        send_invite_to user.email
+
+        expect {
+          perform_enqueued_jobs
+        }.to change { TargetedUserLink.count }.from(0).to(1)
+
+        invitation_email = open_email(user.email)
+        targeted_user_link = TargetedUserLink.last
+        expect(invitation_email).to have_link(targeted_user_link_url(targeted_user_link))
+        invitation_email.click_on targeted_user_link_url(targeted_user_link)
+        expect(page).to have_current_path("/users/sign_in")
+      end
+    end
+
+    context 'when visiting targeted_user_link having an invite without user, but signed with another account' do
+      let(:invite) { create(:invite, user: nil, email: 'target@email.com') }
+      let!(:targeted_user_link) { create(:targeted_user_link, target_context: 'invite', target_model: invite) }
+      let!(:another_user) { create(:user) }
+
+      scenario 'the connected user is alterted he is not using the expected account' do
+        log_in(another_user)
+        visit targeted_user_link_path(targeted_user_link)
+        expect(page).to have_current_path(targeted_user_link_path(targeted_user_link))
+        expect(page).to have_content("L'invitation est à destination de #{targeted_user_link.target_email}")
+      end
+    end
+
+    context 'when visiting targeted_user_link having an invite with user, but signed with another account' do
+      let(:invite) { create(:invite, user: create(:user)) }
+      let!(:targeted_user_link) { create(:targeted_user_link, target_context: 'invite', target_model: invite, user: invite.user) }
+      let!(:another_user) { create(:user) }
+
+      scenario 'the connected user is alterted he is not using the expected account' do
+        log_in(another_user)
+        visit targeted_user_link_path(targeted_user_link)
+        expect(page).to have_current_path(targeted_user_link_path(targeted_user_link))
+        expect(page).to have_content("L'invitation est à destination de #{targeted_user_link.target_email}")
       end
     end
 
