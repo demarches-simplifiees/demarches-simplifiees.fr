@@ -285,7 +285,6 @@ describe Experts::AvisController, type: :controller do
         it { expect(flash.alert).to eq(["toto.fr : Email n'est pas valide"]) }
         it { expect(flash.notice).to eq("Une demande d’avis a été envoyée à titi@titimail.com") }
         it { expect(Avis.count).to eq(old_avis_count + 1) }
-        it { expect(TargetedUserLink.where(target_model: Avis.joins(expert: :user).where(user: { email: 'titi@titimail.com' })).count).to eq(1) }
       end
 
       context 'when the previous avis is public' do
