@@ -266,7 +266,7 @@ module Instructeurs
     def dossier_scope
       if action_name == 'update_annotations'
         Dossier
-          .where(id: current_instrsucteur.dossiers.visible_by_administration)
+          .where(id: current_instructeur.dossiers.visible_by_administration)
           .or(Dossier.where(id: current_user.dossiers.for_procedure_preview))
       else
         current_instructeur.dossiers.visible_by_administration
