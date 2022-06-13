@@ -203,6 +203,10 @@ class TypeDeChamp < ApplicationRecord
     type_champ == TypeDeChamp.type_champs.fetch(:dossier_link)
   end
 
+  def siret?
+    type_champ == TypeDeChamp.type_champs.fetch(:siret)
+  end
+
   def piece_justificative?
     type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative) || type_champ == TypeDeChamp.type_champs.fetch(:titre_identite)
   end

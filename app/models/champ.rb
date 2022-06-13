@@ -49,6 +49,7 @@ class Champ < ApplicationRecord
     :dossier_link?,
     :titre_identite?,
     :header_section?,
+    :siret?,
     :stable_id,
     to: :type_de_champ
 
@@ -74,6 +75,10 @@ class Champ < ApplicationRecord
 
   def public?
     !private?
+  end
+
+  def child?
+    parent_id.present?
   end
 
   def sections
