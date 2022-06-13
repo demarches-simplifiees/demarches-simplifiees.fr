@@ -4,7 +4,7 @@ describe 'Instructing a dossier:', js: true do
   let(:password) { 'my-s3cure-p4ssword' }
   let!(:instructeur) { create(:instructeur, password: password) }
 
-  let!(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
+  let!(:procedure) { create(:procedure, :with_type_de_champ, :published, instructeurs: [instructeur]) }
   let!(:dossier) { create(:dossier, :en_construction, :with_entreprise, procedure: procedure) }
   context 'the instructeur is also a user' do
     scenario 'a instructeur can fill a dossier' do
