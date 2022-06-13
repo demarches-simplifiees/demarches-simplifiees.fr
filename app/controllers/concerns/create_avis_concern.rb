@@ -48,8 +48,7 @@ module CreateAvisConcern
       persisted.each do |avis|
         avis.dossier.demander_un_avis!(avis)
         if avis.dossier == dossier
-          targeted_link = TargetedUserLink.create!(target_context: 'avis', target_model_type: Avis.name, target_model_id: avis.id, user: avis.expert.user)
-          AvisMailer.avis_invitation(avis, targeted_link).deliver_later
+          AvisMailer.avis_invitation(avis).deliver_later
           sent_emails_addresses << avis.expert.email
           # the email format is already verified, we update value to nil
           avis.update_column(:email, nil)
