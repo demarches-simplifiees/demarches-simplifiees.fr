@@ -20,6 +20,9 @@ Cela évite l’accès récursif aux dossiers."
     field :revision, Types::RevisionType, null: false
     field :service, Types::ServiceType, null: true
 
+    field :cadre_juridique, String, null: true
+    field :deliberation, String, null: true
+
     def service
       Loaders::Record.for(Service).load(procedure.service_id)
     end
@@ -28,8 +31,16 @@ Cela évite l’accès récursif aux dossiers."
       object.is_a?(ProcedureRevision) ? object : object.active_revision
     end
 
+    def deliberation
+      Rails.application.routes.url_helpers.url_for(procedure.deliberation) if procedure.deliberation.attached?
+    end
+
     def state
       procedure.aasm.current_state
+    end
+
+    def cadre_juridique
+      procedure.cadre_juridique
     end
 
     def number
