@@ -18,7 +18,7 @@ Cela évite l’accès récursif aux dossiers."
     field :date_fermeture, GraphQL::Types::ISO8601DateTime, "Date de la fermeture.", null: true
 
     field :revision, Types::RevisionType, null: false
-    field :service, Types::ServiceType, null: false
+    field :service, Types::ServiceType, null: true
 
     def service
       Loaders::Record.for(Service).load(procedure.service_id)
