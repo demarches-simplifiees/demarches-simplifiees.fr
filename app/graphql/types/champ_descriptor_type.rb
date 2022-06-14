@@ -18,14 +18,14 @@ module Types
     field :options, [String], "List des options d’un champ avec selection.", null: true
 
     def champ_descriptors
-      if object.repetition?
-        Loaders::Association.for(object.class, :types_de_champ).load(object)
+      if object.type_de_champ.repetition?
+        Loaders::Association.for(object.class, :revision_types_de_champ).load(object)
       end
     end
 
     def options
-      if object.drop_down_list?
-        object.drop_down_list_options.reject(&:empty?)
+      if object.type_de_champ.drop_down_list?
+        object.type_de_champ.drop_down_list_options.reject(&:empty?)
       end
     end
   end

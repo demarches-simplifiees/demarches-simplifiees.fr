@@ -217,7 +217,11 @@ module Instructeurs
       end
       dossier.save
       dossier.log_modifier_annotations!(current_instructeur)
-      redirect_to annotations_privees_instructeur_dossier_path(procedure, dossier)
+
+      respond_to do |format|
+        format.html { redirect_to annotations_privees_instructeur_dossier_path(procedure, dossier) }
+        format.turbo_stream
+      end
     end
 
     def print
@@ -259,17 +263,22 @@ module Instructeurs
       c.type_champ == 'visa' && c.value.present?
     end
 
+    def dossier_scope
+      if action_name == 'update_annotations'
+        Dossier
+          .where(id: current_instructeur.dossiers.visible_by_administration)
+          .or(Dossier.where(id: current_user.dossiers.for_procedure_preview))
+      else
+        current_instructeur.dossiers.visible_by_administration
+      end
+    end
+
     def dossier
-      @dossier ||= current_instructeur
-        .dossiers
-        .visible_by_administration
-        .find(params[:dossier_id])
+      @dossier ||= dossier_scope.find(params[:dossier_id])
     end
 
     def dossier_with_champs
-      @dossier ||= current_instructeur
-        .dossiers
-        .visible_by_administration
+      @dossier ||= dossier_scope
         .with_champs
         .with_annotations
         .find(params[:dossier_id])
@@ -323,7 +332,7 @@ module Instructeurs
     end
 
     def redirect_on_dossier_not_found
-      if !current_instructeur.dossiers.visible_by_administration.exists?(id: params[:dossier_id])
+      if !dossier_scope.exists?(id: params[:dossier_id])
         redirect_to instructeur_procedure_path(procedure)
       end
     end

@@ -141,6 +141,9 @@ en:
           edit_identity: "Edit identity data"
     instructeurs:
       dossiers:
+        autosave:
+          autosave_draft: Your annotations are automatically saved.
+          autosave_confirmation: Annotations saved
         tab_steps:
           to_follow: to follow
           total: total
@@ -524,3 +527,5 @@ en:
         dossiers_count: "Nb files"
         weekly_distribution: "Weekly distribution"
         weekly_distribution_details: "in the last 6 months"
+    procedure_description:
+      estimated_fill_duration: "Estimated fill time: %{estimated_minutes} mn"

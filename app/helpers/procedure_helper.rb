@@ -34,7 +34,7 @@ module ProcedureHelper
     {
       isAnnotation: false,
       typeDeChampsTypes: TypeDeChamp.type_de_champ_types_for(procedure, current_user),
-      typeDeChamps: (procedure.draft_revision ? procedure.draft_revision : procedure).types_de_champ_public.as_json_for_editor,
+      typeDeChamps: procedure.draft_revision.types_de_champ_public_as_json,
       baseUrl: admin_procedure_types_de_champ_path(procedure),
       directUploadUrl: rails_direct_uploads_url,
       continuerUrl: admin_procedure_path(procedure)
@@ -45,7 +45,7 @@ module ProcedureHelper
     {
       isAnnotation: true,
       typeDeChampsTypes: TypeDeChamp.type_de_champ_types_for(procedure, current_user),
-      typeDeChamps: (procedure.draft_revision ? procedure.draft_revision : procedure).types_de_champ_private.as_json_for_editor,
+      typeDeChamps: procedure.draft_revision.types_de_champ_private_as_json,
       baseUrl: admin_procedure_types_de_champ_path(procedure),
       directUploadUrl: rails_direct_uploads_url,
       continuerUrl: admin_procedure_path(procedure)
@@ -81,5 +81,11 @@ module ProcedureHelper
     uri = URI.parse(procedure.lien_dpo)
     return "//#{uri}" if uri.scheme.nil?
     uri.to_s
+  end
+
+  def estimated_fill_duration_minutes(procedure)
+    seconds = procedure.active_revision.estimated_fill_duration
+    minutes = (seconds / 60.0).round
+    [1, minutes].max
   end
 end

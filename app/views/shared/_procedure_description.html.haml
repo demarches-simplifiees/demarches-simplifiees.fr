@@ -8,10 +8,15 @@
 %h1.procedure-title
   = procedure.libelle
 
+- if procedure.feature_enabled?(:procedure_estimated_fill_duration)
+  %p.procedure-configuration.procedure-configuration--fill-duration
+    %span.icon.clock
+    = t('shared.procedure_description.estimated_fill_duration', estimated_minutes: estimated_fill_duration_minutes(procedure))
+
 - if procedure.auto_archive_on
-  %details.procedure-auto-archive
+  %details.procedure-configuration.procedure-configuration--auto-archive
     %summary
-      %span.icon.clock
+      %span.icon.edit
 
       %span.procedure-auto-archive-title Date limite : #{procedure_auto_archive_date(procedure)}
     %p Vous pouvez déposer vos dossiers jusqu’au #{procedure_auto_archive_datetime(procedure)}.

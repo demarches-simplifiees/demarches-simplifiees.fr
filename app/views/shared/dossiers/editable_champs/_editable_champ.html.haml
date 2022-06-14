@@ -1,5 +1,4 @@
-- autosave_controller = autosave_available?(champ.dossier) && !champ.repetition? ? { controller: 'autosave', autosave_url_value: brouillon_dossier_path(champ.dossier) } : {}
-.editable-champ{ class: "editable-champ-#{champ.type_champ}", id: champ.input_group_id, data: autosave_controller }
+.editable-champ{ class: "editable-champ-#{champ.type_champ}", id: champ.input_group_id, data: autosave_available?(champ) ? { controller: 'autosave' } : {} }
   - if champ.repetition?
     %h3.header-subsection= champ.libelle
     - if champ.description.present?

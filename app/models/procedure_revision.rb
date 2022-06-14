@@ -18,7 +18,7 @@ class ProcedureRevision < ApplicationRecord
 
   has_many :dossiers, inverse_of: :revision, foreign_key: :revision_id
 
-  has_many :revision_types_de_champ, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
+  has_many :revision_types_de_champ, -> { order(:position, :id) }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
   has_many :revision_types_de_champ_public, -> { root.public_only.ordered }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
   has_many :revision_types_de_champ_private, -> { root.private_only.ordered }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
   has_many :types_de_champ, through: :revision_types_de_champ, source: :type_de_champ
@@ -125,14 +125,13 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def different_from?(revision)
-    types_de_champ != revision.types_de_champ ||
+    revision_types_de_champ != revision.revision_types_de_champ ||
       attestation_template != revision.attestation_template
   end
 
   def compare(revision)
     changes = []
-    changes += compare_types_de_champ(types_de_champ_public, revision.types_de_champ_public)
-    changes += compare_types_de_champ(types_de_champ_private, revision.types_de_champ_private)
+    changes += compare_revision_types_de_champ(revision_types_de_champ, revision.revision_types_de_champ)
     changes += compare_attestation_template(attestation_template, revision.attestation_template)
     changes
   end
@@ -167,7 +166,45 @@ class ProcedureRevision < ApplicationRecord
       .order("procedure_revision_types_de_champ.position")
   end
 
+  def types_de_champ_public_as_json
+    types_de_champ = types_de_champ_public.includes(piece_justificative_template_attachment: :blob)
+    tdcs_as_json = types_de_champ.map(&:as_json_for_editor)
+    children_types_de_champ_as_json(tdcs_as_json, types_de_champ.filter(&:repetition?))
+    tdcs_as_json
+  end
+
+  def types_de_champ_private_as_json
+    types_de_champ = types_de_champ_private.includes(piece_justificative_template_attachment: :blob)
+    tdcs_as_json = types_de_champ.map(&:as_json_for_editor)
+    children_types_de_champ_as_json(tdcs_as_json, types_de_champ.filter(&:repetition?))
+    tdcs_as_json
+  end
+
+  # Estimated duration to fill the form, in seconds.
+  #
+  # If the revision is locked (i.e. published), the result is cached (because type de champs can no longer be mutated).
+  def estimated_fill_duration
+    Rails.cache.fetch("#{cache_key_with_version}/estimated_fill_duration", expires_in: 12.hours, force: !locked?) do
+      compute_estimated_fill_duration
+    end
+  end
+
   private
+
+  def compute_estimated_fill_duration
+    tdc_durations = types_de_champ_public.fillable.map do |tdc|
+      duration = tdc.estimated_fill_duration(self)
+      tdc.mandatory ? duration : duration / 2
+    end
+    tdc_durations.sum
+  end
+
+  def children_types_de_champ_as_json(tdcs_as_json, parent_tdcs)
+    parent_tdcs.each do |parent_tdc|
+      tdc_as_json = tdcs_as_json.find { |json| json["id"] == parent_tdc.stable_id }
+      tdc_as_json&.merge!(types_de_champ: children_of(parent_tdc).includes(piece_justificative_template_attachment: :blob).map(&:as_json_for_editor))
+    end
+  end
 
   def coordinate_and_tdc(stable_id)
     coordinate = revision_types_de_champ
@@ -245,43 +282,43 @@ class ProcedureRevision < ApplicationRecord
     changes
   end
 
-  def compare_types_de_champ(from_tdc, to_tdc)
-    if from_tdc == to_tdc
+  def compare_revision_types_de_champ(from_coordinates, to_coordinates)
+    if from_coordinates == to_coordinates
       []
     else
-      from_h = from_tdc.index_by(&:stable_id)
-      to_h = to_tdc.index_by(&:stable_id)
+      from_h = from_coordinates.index_by(&:stable_id)
+      to_h = to_coordinates.index_by(&:stable_id)
 
       from_sids = from_h.keys
       to_sids = to_h.keys
 
       removed = (from_sids - to_sids).map do |sid|
-        { model: :type_de_champ, op: :remove, label: from_h[sid].libelle, private: from_h[sid].private?, position: from_sids.index(sid), stable_id: sid }
+        { model: :type_de_champ, op: :remove, label: from_h[sid].libelle, private: from_h[sid].private?, _position: from_sids.index(sid), stable_id: sid }
       end
 
       added = (to_sids - from_sids).map do |sid|
-        { model: :type_de_champ, op: :add, label: to_h[sid].libelle, private: to_h[sid].private?, position: to_sids.index(sid), stable_id: sid }
+        { model: :type_de_champ, op: :add, label: to_h[sid].libelle, private: to_h[sid].private?, _position: to_sids.index(sid), stable_id: sid }
       end
 
       kept = from_sids.intersection(to_sids)
 
       moved = kept
-        .map { |sid| [sid, from_sids.index(sid), to_sids.index(sid)] }
-        .filter { |_, from_index, to_index| from_index != to_index }
-        .map do |sid, from_index, to_index|
-        { model: :type_de_champ, op: :move, label: from_h[sid].libelle, private: from_h[sid].private?, from: from_index, to: to_index, position: to_index, stable_id: sid }
+        .map { |sid| [sid, from_h[sid], to_h[sid]] }
+        .filter { |_, from, to| from.position != to.position }
+        .map do |sid, from, to|
+        { model: :type_de_champ, op: :move, label: from.libelle, private: from.private?, from: from.position, to: to.position, _position: to_sids.index(sid), stable_id: sid }
       end
 
       changed = kept
         .map { |sid| [sid, from_h[sid], to_h[sid]] }
         .flat_map do |sid, from, to|
-        compare_type_de_champ(from, to)
-          .each { |h| h[:position] = to_sids.index(sid) }
-      end
+          compare_type_de_champ(from.type_de_champ, to.type_de_champ)
+            .each { |h| h[:_position] = to_sids.index(sid) }
+        end
 
       (removed + added + moved + changed)
-        .sort_by { |h| h[:position] }
-        .each { |h| h.delete(:position) }
+        .sort_by { |h| h[:_position] }
+        .each { |h| h.delete(:_position) }
     end
   end
 
@@ -409,10 +446,6 @@ class ProcedureRevision < ApplicationRecord
           to: to_type_de_champ.piece_justificative_template_filename,
           stable_id: from_type_de_champ.stable_id
         }
-      end
-    elsif to_type_de_champ.repetition?
-      if from_type_de_champ.types_de_champ != to_type_de_champ.types_de_champ
-        changes += compare_types_de_champ(from_type_de_champ.types_de_champ, to_type_de_champ.types_de_champ)
       end
     end
     changes

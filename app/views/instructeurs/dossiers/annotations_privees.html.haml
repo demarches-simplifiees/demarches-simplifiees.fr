@@ -2,18 +2,5 @@
 
 = render partial: "header", locals: { dossier: @dossier }
 
-#dossier-annotations-privees.container
-  - if @dossier.champs_private.present?
-    %section
-      = form_for @dossier, url: annotations_instructeur_dossier_path(@dossier.procedure, @dossier), html: { class: 'form', multipart: true } do |f|
-        - @dossier.champs_private.each do |champ|
-          = fields_for champ.input_name, champ do |form|
-            = render partial: "shared/dossiers/editable_champs/editable_champ", locals: { form: form, champ: champ, seen_at: @annotations_privees_seen_at }
-
-        .dossier-edit-sticky-footer
-          .send-dossier-actions-bar
-            .send-wrapper
-              = f.submit 'Sauvegarder', class: 'button primary send', data: { disable: true }
-
-  - else
-    %h2.empty-text Aucune annotation privée
+#dossier-annotations-privees
+  = render partial: "shared/dossiers/edit_annotations", locals: { dossier: @dossier, seen_at: @annotations_privees_seen_at }
