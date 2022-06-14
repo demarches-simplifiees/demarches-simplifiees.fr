@@ -12,6 +12,12 @@ module Types
       argument :number, Int, "Numéro du groupe instructeur.", required: true
     end
 
+    field :demarches_publiques, DemarcheDescriptorType.connection_type, null: false
+
+    def demarches_publiques
+      Procedure.publiques
+    end
+
     def demarche(number:)
       Procedure.for_api_v2.find(number)
     rescue => e
