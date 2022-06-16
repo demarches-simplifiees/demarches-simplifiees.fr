@@ -112,7 +112,7 @@ class TypeDeChamp < ApplicationRecord
 
   before_validation :check_mandatory
   before_save :remove_piece_justificative_template, if: -> { type_champ_changed? }
-  before_save :remove_drop_down_list, if: -> { type_champ_changed? }
+  before_validation :remove_drop_down_list, if: -> { type_champ_changed? }
   before_save :remove_repetition, if: -> { type_champ_changed? }
 
   after_save if: -> { @remove_piece_justificative_template } do
@@ -225,18 +225,28 @@ class TypeDeChamp < ApplicationRecord
     type_champ == TypeDeChamp.type_champs.fetch(:carte)
   end
 
+  def cnaf?
+    type_champ == TypeDeChamp.type_champs.fetch(:cnaf)
+  end
+
+  def dgfip?
+    type_champ == TypeDeChamp.type_champs.fetch(:dgfip)
+  end
+
+  def pole_emploi?
+    type_champ == TypeDeChamp.type_champs.fetch(:pole_emploi)
+  end
+
+  def mesri?
+    type_champ == TypeDeChamp.type_champs.fetch(:mesri)
+  end
+
   def public?
     !private?
   end
 
   def self.type_champ_to_class_name(type_champ)
     "TypesDeChamp::#{type_champ.classify}TypeDeChamp"
-  end
-
-  def piece_justificative_template_url
-    if piece_justificative_template.attached?
-      Rails.application.routes.url_helpers.url_for(piece_justificative_template)
-    end
   end
 
   def piece_justificative_template_filename
@@ -298,7 +308,10 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def editable_options
-    options.slice(*TypesDeChamp::CarteTypeDeChamp::LAYERS)
+    layers = TypesDeChamp::CarteTypeDeChamp::LAYERS.map do |layer|
+      [layer, layer_enabled?(layer)]
+    end
+    layers.each_slice((layers.size / 2.0).round).to_a
   end
 
   def read_attribute_for_serialization(name)
@@ -338,6 +351,12 @@ class TypeDeChamp < ApplicationRecord
   def remove_drop_down_list
     if !drop_down_list?
       self.drop_down_options = nil
+    elsif !drop_down_options_changed?
+      self.drop_down_options = if linked_drop_down_list?
+        ['', '--Fromage--', 'bleu de sassenage', 'picodon', '--Dessert--', 'éclair', 'tarte aux pommes']
+      else
+        ['', 'Premier choix', 'Deuxième choix']
+      end
     end
   end
 
