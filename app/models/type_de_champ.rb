@@ -17,6 +17,7 @@
 class TypeDeChamp < ApplicationRecord
   self.ignored_columns = [:migrated_parent, :revision_id, :parent_id, :order_place]
 
+  FILE_MAX_SIZE = 200.megabytes
   FEATURE_FLAGS = {}
 
   enum type_champs: {
@@ -123,6 +124,8 @@ class TypeDeChamp < ApplicationRecord
   end
 
   has_one_attached :piece_justificative_template
+  validates :piece_justificative_template, size: { less_than: FILE_MAX_SIZE }
+  validates :piece_justificative_template, content_type: AUTHORIZED_CONTENT_TYPES
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :type_champ, presence: true, allow_blank: false, allow_nil: false
