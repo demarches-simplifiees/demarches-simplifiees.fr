@@ -8,7 +8,7 @@ module Logic
   end
 
   def self.class_from_name(name)
-    [Constant, Empty, LessThan, LessThanEq, Eq, GreaterThanEq, GreaterThan, EmptyOperator, And, Or]
+    [ChampValue, Constant, Empty, LessThan, LessThanEq, Eq, GreaterThanEq, GreaterThan, EmptyOperator, And, Or]
       .find { |c| c.name == name }
   end
 
@@ -32,6 +32,8 @@ module Logic
   def less_than_eq(left, right) = Logic::LessThanEq.new(left, right)
 
   def constant(value) = Logic::Constant.new(value)
+
+  def champ_value(stable_id) = Logic::ChampValue.new(stable_id)
 
   def empty = Logic::Empty.new
 
