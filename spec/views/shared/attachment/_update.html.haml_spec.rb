@@ -5,7 +5,7 @@ describe 'shared/attachment/_update.html.haml', type: :view do
 
   subject do
     form_for(champ.dossier) do |form|
-      view.render Attachment::EditComponent.image(form, attached_file)
+      view.render Attachment::EditComponent.new(form: form, attached_file: attached_file, user_can_destroy: true, direct_upload: true)
     end
   end
 
@@ -55,8 +55,8 @@ describe 'shared/attachment/_update.html.haml', type: :view do
       form_for(champ.dossier) do |form|
         render Attachment::EditComponent.new(form: form,
           attached_file: attached_file,
-          accept: 'image/png',
-          user_can_destroy: user_can_destroy)
+          user_can_destroy: user_can_destroy,
+          direct_upload: true)
       end
     end
 

@@ -1,9 +1,8 @@
 # Display a widget for uploading, editing and deleting a file attachment
 class Attachment::EditComponent < ApplicationComponent
-  def initialize(form:, attached_file:, accept: nil, template: nil, user_can_destroy: false, direct_upload: true, id: nil)
+  def initialize(form:, attached_file:, template: nil, user_can_destroy: false, direct_upload: true, id: nil)
     @form = form
     @attached_file = attached_file
-    @accept = accept
     @template = template
     @user_can_destroy = user_can_destroy
     @direct_upload = direct_upload
@@ -12,16 +11,15 @@ class Attachment::EditComponent < ApplicationComponent
 
   attr_reader :template, :form
 
-  def self.text(form, file)
-    new(form: form, attached_file: file, user_can_destroy: true)
+  def allowed_extensions
+    content_type_validator.options[:in]
+      .flat_map { |content_type| MIME::Types[content_type].map(&:extensions) }
+      .reject(&:blank?)
+      .flatten
   end
 
-  def self.image(form, file, direct_upload = true)
-    new(form: form,
-      attached_file: file,
-      accept: 'image/png, image/jpg, image/jpeg',
-      user_can_destroy: true,
-      direct_upload: direct_upload)
+  def max_file_size
+    file_size_validator.options[:less_than]
   end
 
   def user_can_destroy?
@@ -55,12 +53,19 @@ class Attachment::EditComponent < ApplicationComponent
   def file_field_options
     {
       class: "attachment-input #{attachment_input_class} #{'hidden' if persisted?}",
-      accept: @accept,
+      accept: content_type_validator.options[:in].join(', '),
       direct_upload: @direct_upload,
-      id: champ&.input_id || @id,
+      id: input_id(@id),
       aria: { describedby: champ&.describedby_id },
-      data: { auto_attach_url: helpers.auto_attach_url(form.object) }
+      data: {
+        auto_attach_url: helpers.auto_attach_url(form.object),
+        max_file_size: max_file_size
+      }
     }
+  end
+
+  def input_id(given_id)
+    [given_id, champ&.input_id, file_field_name].reject(&:blank?).compact.first
   end
 
   def file_field_name
@@ -89,5 +94,17 @@ class Attachment::EditComponent < ApplicationComponent
       class: 'button small',
       data: { toggle_target: ".#{attachment_input_class}" }
     }
+  end
+
+  def file_size_validator
+    @attached_file.record
+      ._validators[file_field_name.to_sym]
+      .find { |validator| validator.class == ActiveStorageValidations::SizeValidator }
+  end
+
+  def content_type_validator
+    @attached_file.record
+      ._validators[file_field_name.to_sym]
+      .find { |validator| validator.class == ActiveStorageValidations::ContentTypeValidator }
   end
 end
