@@ -1,5 +1,6 @@
 module Instructeurs
-  class CommentairesController < ProceduresController
+  class CommentairesController < ApplicationController
+    before_action :authenticate_instructeur_or_expert!
     after_action :mark_messagerie_as_read
 
     def destroy

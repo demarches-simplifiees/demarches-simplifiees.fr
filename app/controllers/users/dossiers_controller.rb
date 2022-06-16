@@ -5,12 +5,10 @@ module Users
     layout 'procedure_context', only: [:identite, :update_identite, :siret, :update_siret]
 
     ACTIONS_ALLOWED_TO_ANY_USER = [:index, :recherche, :new, :qrcode, :transferer_all]
-    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :demande, :messagerie, :brouillon, :update_brouillon, :modifier, :update, :create_commentaire, :papertrail]
-    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE_HIDDEN = [:restore]
+    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :demande, :messagerie, :brouillon, :update_brouillon, :modifier, :update, :create_commentaire, :papertrail, :restore]
 
-    before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE_HIDDEN
+    before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
     before_action :ensure_ownership_or_invitation!, only: ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
-    before_action :ensure_ownership_or_invitation_hidden!, only: ACTIONS_ALLOWED_TO_OWNER_OR_INVITE_HIDDEN
     before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_brouillon, :modifier, :update]
     before_action :forbid_invite_submission!, only: [:update_brouillon]
     before_action :forbid_closed_submission!, only: [:update_brouillon]
@@ -314,7 +312,7 @@ module Users
     end
 
     def restore
-      hidden_dossier.restore(current_user)
+      dossier.restore(current_user)
       flash.notice = t('users.dossiers.restore')
       redirect_to dossiers_path
     end
@@ -379,16 +377,22 @@ module Users
       })
     end
 
-    def dossier
-      @dossier ||= Dossier.visible_by_user.find(params[:id] || params[:dossier_id])
+    def dossier_scope
+      if action_name == 'update_brouillon'
+        Dossier.visible_by_user.or(Dossier.for_procedure_preview)
+      elsif action_name == 'restore'
+        Dossier.hidden_by_user
+      else
+        Dossier.visible_by_user
+      end
     end
 
-    def hidden_dossier
-      @hidden_dossier ||= Dossier.hidden_by_user.find(params[:id] || params[:dossier_id])
+    def dossier
+      @dossier ||= dossier_scope.find(params[:id] || params[:dossier_id])
     end
 
     def dossier_with_champs
-      Dossier.with_champs.visible_by_user.find(params[:id])
+      dossier_scope.with_champs.find(params[:id])
     end
 
     def should_change_groupe_instructeur?
@@ -461,12 +465,6 @@ module Users
 
     def ensure_ownership_or_invitation!
       if !current_user.owns_or_invite?(dossier)
-        forbidden!
-      end
-    end
-
-    def ensure_ownership_or_invitation_hidden!
-      if !current_user.owns_or_invite?(hidden_dossier)
         forbidden!
       end
     end

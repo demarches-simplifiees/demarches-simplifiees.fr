@@ -21,10 +21,15 @@ module ChampHelper
     simple_format(auto_linked_text, {}, sanitize: false)
   end
 
-  def auto_attach_url(form, object)
-    if object.is_a?(Champ) && object.persisted? && object.public?
+  def auto_attach_url(object)
+    if object.is_a?(Champ)
       champs_piece_justificative_url(object.id)
     end
+  end
+
+  def autosave_available?(champ)
+    # FIXME: enable autosave on champs private? once we figured out how to batch audit events
+    champ.dossier.brouillon? && !champ.repetition?
   end
 
   def geo_area_label(geo_area)

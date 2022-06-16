@@ -72,7 +72,7 @@ class TypeDeChamp < ApplicationRecord
   has_one :revision, through: :revision_type_de_champ
   has_one :procedure, through: :revision
 
-  delegate :tags_for_template, :libelle_for_export, to: :dynamic_type
+  delegate :estimated_fill_duration, :tags_for_template, :libelle_for_export, to: :dynamic_type
 
   class WithIndifferentAccess
     def self.load(options)
@@ -342,23 +342,6 @@ class TypeDeChamp < ApplicationRecord
     options.slice(*TypesDeChamp::CarteTypeDeChamp::LAYERS)
   end
 
-  def types_de_champ_for_revision(revision)
-    if revision.draft?
-      # if we are asking for children on a draft revision, just use current child types_de_champ
-      revision.children_of(self).fillable
-    else
-      # otherwise return all types_de_champ in their latest state
-      types_de_champ = TypeDeChamp
-        .fillable
-        .joins(parent: :revision_types_de_champ)
-        .where(parent: { stable_id: stable_id }, revision_types_de_champ: { revision_id: revision })
-
-      TypeDeChamp
-        .where(id: types_de_champ.group(:stable_id).select('MAX(types_de_champ.id)'))
-        .order(:order_place, id: :desc)
-    end
-  end
-
   FEATURE_FLAGS = { 'visa' => 'visa' }
 
   def self.type_de_champ_types_for(procedure, user)
@@ -394,43 +377,37 @@ class TypeDeChamp < ApplicationRecord
       .sort_by(&:first)
   end
 
-  TYPES_DE_CHAMP_BASE = {
-    except: [
-      :created_at,
-      :options,
-      :order_place,
-      :parent_id,
-      :private,
-      :procedure_id,
-      :revision_id,
-      :stable_id,
-      :type,
-      :updated_at
-    ],
-    methods: [
-      # polynesian methods
-      :zones_manuelles,
-      :parcelles,
-      :batiments,
-      :min,
-      :max,
-      :level,
-      :accredited_user_string,
-      # base methods
-      :drop_down_list_value,
-      :drop_down_other,
-      :piece_justificative_template_filename,
-      :piece_justificative_template_url,
-      :editable_options,
-      :drop_down_secondary_libelle,
-      :drop_down_secondary_description
-    ]
-  }
-  TYPES_DE_CHAMP = TYPES_DE_CHAMP_BASE
-    .merge(include: { types_de_champ: TYPES_DE_CHAMP_BASE })
-
-  def self.as_json_for_editor
-    includes(piece_justificative_template_attachment: :blob, types_de_champ: [piece_justificative_template_attachment: :blob]).as_json(TYPES_DE_CHAMP)
+  def as_json_for_editor
+    as_json(
+      except: [
+        :created_at,
+        :options,
+        :order_place,
+        :parent_id,
+        :private,
+        :stable_id,
+        :type,
+        :updated_at
+      ],
+      methods: [
+        # polynesian methods
+        :zones_manuelles,
+        :parcelles,
+        :batiments,
+        :min,
+        :max,
+        :level,
+        :accredited_user_string,
+        # base methods
+        :drop_down_list_value,
+        :drop_down_other,
+        :drop_down_secondary_libelle,
+        :drop_down_secondary_description,
+        :piece_justificative_template_filename,
+        :piece_justificative_template_url,
+        :editable_options
+      ]
+    )
   end
 
   def read_attribute_for_serialization(name)

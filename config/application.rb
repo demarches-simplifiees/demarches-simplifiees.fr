@@ -70,7 +70,7 @@ module TPS
     config.ds_weekly_overview = Rails.env.production? && config.ds_env != 'staging'
 
     config.ds_autosave = {
-      debounce_delay: 3000,
+      debounce_delay: 1000,
       status_visible_duration: 6000
     }
 

@@ -48,8 +48,8 @@ module Types
       argument :deleted_since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers supprimés depuis la date."
     end
 
-    field :champ_descriptors, [Types::ChampDescriptorType], null: false, method: :types_de_champ
-    field :annotation_descriptors, [Types::ChampDescriptorType], null: false, method: :types_de_champ_private
+    field :champ_descriptors, [Types::ChampDescriptorType], null: false
+    field :annotation_descriptors, [Types::ChampDescriptorType], null: false
 
     field :draft_revision, Types::RevisionType, null: false
     field :published_revision, Types::RevisionType, null: true
@@ -118,6 +118,14 @@ module Types
       end
 
       dossiers.order(deleted_at: order)
+    end
+
+    def champ_descriptors
+      object.active_revision.revision_types_de_champ_public
+    end
+
+    def annotation_descriptors
+      object.active_revision.revision_types_de_champ_private
     end
 
     def self.authorized?(object, context)

@@ -58,7 +58,7 @@ class Attachment::EditComponent < ApplicationComponent
       direct_upload: @direct_upload,
       id: champ&.input_id,
       aria: { describedby: champ&.describedby_id },
-      data: { auto_attach_url: helpers.auto_attach_url(form, form.object) }
+      data: { auto_attach_url: helpers.auto_attach_url(form.object) }
     }
   end
 
