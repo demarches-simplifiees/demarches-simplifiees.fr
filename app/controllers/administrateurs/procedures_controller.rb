@@ -181,7 +181,7 @@ module Administrateurs
 
     def restore
       procedure = current_administrateur.procedures.with_discarded.discarded.find(params[:id])
-      procedure.restore_procedure
+      procedure.restore_procedure(current_administrateur)
       flash.notice = t('administrateurs.index.restored', procedure_id: procedure.id)
       redirect_to admin_procedures_path
     end
