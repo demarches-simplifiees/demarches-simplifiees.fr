@@ -44,6 +44,7 @@ class DemarchesPubliquesExportService
             service { nom organisme typeOrganisme }
             cadreJuridique
             deliberation
+            dossiersCount
             revision {
               champDescriptors {
                 type

@@ -1,5 +1,6 @@
 module Types
   class DemarcheDescriptorType < Types::BaseObject
+    field_class BaseField
     description "Une démarche (métadonnées)
 Ceci est une version abrégée du type `Demarche`, qui n’expose que les métadonnées.
 Cela évite l’accès récursif aux dossiers."
@@ -23,12 +24,18 @@ Cela évite l’accès récursif aux dossiers."
     field :cadre_juridique, String, null: true
     field :deliberation, String, null: true
 
+    field :dossiers_count, Int, null: false, require_admin: true
+
     def service
       Loaders::Record.for(Service).load(procedure.service_id)
     end
 
     def revision
       object.is_a?(ProcedureRevision) ? object : object.active_revision
+    end
+
+    def dossiers_count
+      object.dossiers.count
     end
 
     def deliberation
