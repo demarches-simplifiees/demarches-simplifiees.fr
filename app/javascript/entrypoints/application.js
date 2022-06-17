@@ -1,7 +1,6 @@
 import '../shared/polyfills';
 import Rails from '@rails/ujs';
 import * as ActiveStorage from '@rails/activestorage';
-import 'whatwg-fetch'; // window.fetch polyfill
 import * as Turbo from '@hotwired/turbo';
 
 import '../shared/activestorage/ujs';
@@ -75,9 +74,11 @@ const DS = {
 };
 
 // Start Rails helpers
-Rails.start();
 ActiveStorage.start();
 Turbo.session.drive = false;
 
 // Expose globals
 window.DS = window.DS || DS;
+
+import('../shared/track/matomo');
+import('../shared/track/sentry');
