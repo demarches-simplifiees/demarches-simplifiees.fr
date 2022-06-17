@@ -14,7 +14,7 @@ module Types
       argument :number, Int, "Numéro du groupe instructeur.", required: true
     end
 
-    field :demarches_publiques, DemarcheDescriptorType.connection_type, null: false, require_admin: true
+    field :demarches_publiques, DemarcheDescriptorType.connection_type, null: false, require_admin: true, max_page_size: 30
 
     def demarches_publiques
       Procedure.publiques
