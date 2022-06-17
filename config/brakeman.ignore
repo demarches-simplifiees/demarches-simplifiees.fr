@@ -15,7 +15,7 @@
           "type": "controller",
           "class": "Users::DossiersController",
           "method": "merci",
-          "line": 206,
+          "line": 204,
           "file": "app/controllers/users/dossiers_controller.rb",
           "rendered": {
             "name": "users/dossiers/merci",
@@ -95,20 +95,20 @@
     {
       "warning_type": "Redirect",
       "warning_code": 18,
-      "fingerprint": "8396f884c5596d6c1148c7326b63e7e7bfabf9b0c1daf6b3ce0c1ff127b59cb4",
+      "fingerprint": "589e457617e6ad3d35f454b4af8ed326817930d6a724febcf680d7e03c6aeaa2",
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/targeted_user_links_controller.rb",
       "line": 7,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(TargetedUserLink.find_by(:id => params[:id]).redirect_url(Rails.application.routes.url_helpers))",
+      "code": "redirect_to(TargetedUserLink.find(params[:id]).redirect_url(Rails.application.routes.url_helpers))",
       "render_path": null,
       "location": {
         "type": "method",
         "class": "TargetedUserLinksController",
         "method": "show"
       },
-      "user_input": "TargetedUserLink.find_by(:id => params[:id]).redirect_url(Rails.application.routes.url_helpers)",
+      "user_input": "TargetedUserLink.find(params[:id]).redirect_url(Rails.application.routes.url_helpers)",
       "confidence": "High",
       "note": ""
     },
@@ -119,7 +119,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/concerns/dossier_filtering_concern.rb",
-      "line": 18,
+      "line": 25,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "where(\"#{values.count} OR #{\"(#{ProcedurePresentation.sanitized_column(table, column)} ILIKE ?)\"}\", *values.map do\n \"%#{value}%\"\n end)",
       "render_path": null,
@@ -153,6 +153,6 @@
       "note": ""
     }
   ],
-  "updated": "2022-05-23 16:40:50 +0200",
+  "updated": "2022-06-15 16:15:28 +0200",
   "brakeman_version": "5.2.2"
 }
