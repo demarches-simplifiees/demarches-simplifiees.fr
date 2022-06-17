@@ -113,6 +113,8 @@ Rails.application.routes.draw do
 
   get 'password_complexity/:complexity' => 'password_complexity#show', as: 'show_password_complexity', constraints: { complexity: /\d/ }
 
+  resources :targeted_user_links, only: [:show]
+
   #
   # Main routes
   #

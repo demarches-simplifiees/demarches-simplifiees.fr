@@ -13,6 +13,7 @@
 ActiveRecord::Schema.define(version: 2022_05_20_173939) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pgcrypto"
   enable_extension "plpgsql"
   enable_extension "unaccent"
 
@@ -763,6 +764,16 @@ ActiveRecord::Schema.define(version: 2022_05_20_173939) do
     t.index ["unlock_token"], name: "index_super_admins_on_unlock_token", unique: true
   end
 
+  create_table "targeted_user_links", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.string "target_context", null: false
+    t.bigint "target_model_id", null: false
+    t.string "target_model_type", null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_targeted_user_links_on_user_id"
+  end
+
   create_table "task_records", id: false, force: :cascade do |t|
     t.string "version", null: false
   end
@@ -914,6 +925,7 @@ ActiveRecord::Schema.define(version: 2022_05_20_173939) do
   add_foreign_key "received_mails", "procedures"
   add_foreign_key "refused_mails", "procedures"
   add_foreign_key "services", "administrateurs"
+  add_foreign_key "targeted_user_links", "users"
   add_foreign_key "traitements", "dossiers"
   add_foreign_key "trusted_device_tokens", "instructeurs"
   add_foreign_key "types_de_champ", "procedure_revisions", column: "revision_id"

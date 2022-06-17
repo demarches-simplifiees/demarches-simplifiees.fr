@@ -850,11 +850,15 @@ class Procedure < ApplicationRecord
   #----- PF section end
 
   def move_new_children_to_new_parent_coordinate(new_draft)
-    children = new_draft.revision_types_de_champ.where.not(parent_id: nil)
+    children = new_draft.revision_types_de_champ
+      .includes(parent: :type_de_champ)
+      .where.not(parent_id: nil)
+    coordinates_by_stable_id = new_draft.revision_types_de_champ
+      .includes(:type_de_champ)
+      .index_by(&:stable_id)
+
     children.each do |child|
-      old_parent = draft_revision.revision_types_de_champ.find(child.parent_id)
-      new_parent = new_draft.revision_types_de_champ.find_by(type_de_champ_id: old_parent.type_de_champ_id)
-      child.update!(parent_id: new_parent.id)
+      child.update!(parent: coordinates_by_stable_id.fetch(child.parent.stable_id))
     end
     new_draft.revision_types_de_champ.reload
   end

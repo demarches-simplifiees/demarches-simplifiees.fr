@@ -20,6 +20,7 @@ module CreateAvisConcern
     if (instructeur_or_expert.is_a?(Instructeur)) && !instructeur_or_expert.follows.exists?(dossier: dossier)
       instructeur_or_expert.follow(dossier)
     end
+
     create_results = Avis.create(
       expert_emails.flat_map do |email|
         user = User.create_or_promote_to_expert(email, SecureRandom.hex)
@@ -47,7 +48,8 @@ module CreateAvisConcern
       persisted.each do |avis|
         avis.dossier.demander_un_avis!(avis)
         if avis.dossier == dossier
-          AvisMailer.avis_invitation(avis).deliver_later
+          targeted_link = TargetedUserLink.create!(target_context: 'avis', target_model_type: Avis.name, target_model_id: avis.id, user: avis.expert.user)
+          AvisMailer.avis_invitation(avis, targeted_link).deliver_later
           sent_emails_addresses << avis.expert.email
           # the email format is already verified, we update value to nil
           avis.update_column(:email, nil)

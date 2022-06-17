@@ -29,7 +29,7 @@ module ChampHelper
 
   def autosave_available?(champ)
     # FIXME: enable autosave on champs private? once we figured out how to batch audit events
-    champ.dossier.brouillon? && !champ.repetition?
+    champ.dossier&.brouillon? && !champ.repetition?
   end
 
   def geo_area_label(geo_area)
