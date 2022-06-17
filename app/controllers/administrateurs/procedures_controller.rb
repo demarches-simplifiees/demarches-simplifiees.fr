@@ -236,19 +236,21 @@ module Administrateurs
 
       @procedure.assign_attributes(publish_params)
 
-      if @procedure.draft_changed?
+      if @procedure.draft_changed? && !@procedure.close?
         @procedure.publish_revision!
         AdministrationMailer.procedure_published(@procedure).deliver_later
         flash.notice = "Nouvelle version de la démarche publiée"
-        redirect_to admin_procedure_path(@procedure)
+      elsif @procedure.draft_changed? && @procedure.close?
+        @procedure.publish_or_reopen!(current_administrateur)
+        @procedure.publish_revision!
+        flash.notice = "Démarche publiée"
       elsif @procedure.publish_or_reopen!(current_administrateur)
         AdministrationMailer.procedure_published(@procedure).deliver_later
         flash.notice = "Démarche publiée"
-        redirect_to admin_procedure_path(@procedure)
       else
         flash.alert = @procedure.errors.full_messages
-        redirect_to admin_procedure_path(@procedure)
       end
+      redirect_to admin_procedure_path(@procedure)
     end
 
     def transfert

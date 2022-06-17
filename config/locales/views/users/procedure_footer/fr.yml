@@ -1,6 +1,7 @@
 fr:
   users:
     procedure_footer:
+      aria_label: "En savoir plus sur %{procedure_name}"
       managed_by:
         header: 'Cette démarche est gérée par :'
       contact:

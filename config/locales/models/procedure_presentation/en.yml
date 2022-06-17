@@ -10,6 +10,8 @@ en:
             en_construction_at: En construction le
             depose_at: Submitted on
             updated_at: Updated on
+            depose_since: Submitted since
+            updated_since: Updated since
           user:
             email: Requester
           followers_instructeurs:

@@ -62,6 +62,8 @@ describe ProcedurePresentation do
           { "label" => 'En construction le', "table" => 'self', "column" => 'en_construction_at', 'classname' => '' },
           { "label" => 'Déposé le', "table" => 'self', "column" => 'depose_at', 'classname' => '' },
           { "label" => 'Mis à jour le', "table" => 'self', "column" => 'updated_at', 'classname' => '' },
+          { "label" => "Déposé depuis", "table" => "self", "column" => "depose_since", "classname" => "" },
+          { "label" => "Mis à jour depuis", "table" => "self", "column" => "updated_since", "classname" => "" },
           { "label" => 'Demandeur', "table" => 'user', "column" => 'email', 'classname' => '' },
           { "label" => 'Email instructeur', "table" => 'followers_instructeurs', "column" => 'email', 'classname' => '' },
           { "label" => 'Groupe instructeur', "table" => 'groupe_instructeur', "column" => 'label', 'classname' => '' },
@@ -413,6 +415,22 @@ describe ProcedurePresentation do
         end
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
+      end
+
+      context 'for updated_since column' do
+        let(:filter) { [{ 'table' => 'self', 'column' => 'updated_since', 'value' => '18/9/2018' }] }
+
+        let(:kept_dossier) { create(:dossier, procedure: procedure) }
+        let(:later_dossier) { create(:dossier, procedure: procedure) }
+        let(:discarded_dossier) { create(:dossier, procedure: procedure) }
+
+        before do
+          kept_dossier.touch(time: Time.zone.local(2018, 9, 18, 14, 28))
+          later_dossier.touch(time: Time.zone.local(2018, 9, 19, 14, 28))
+          discarded_dossier.touch(time: Time.zone.local(2018, 9, 17, 14, 28))
+        end
+
+        it { is_expected.to match_array([kept_dossier.id, later_dossier.id]) }
       end
 
       context 'ignore time of day' do
