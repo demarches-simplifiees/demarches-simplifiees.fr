@@ -1,5 +1,6 @@
 describe DemarchesPubliquesExportService do
   let(:procedure) { create(:procedure, :published, :with_service, :with_type_de_champ) }
+  let!(:dossier) { create(:dossier, procedure: procedure) }
   let(:io) { StringIO.new }
 
   describe 'call' do
@@ -16,6 +17,7 @@ describe DemarchesPubliquesExportService do
         cadreJuridique: "un cadre juridique important",
         deliberation: nil,
         datePublication: procedure.published_at.iso8601,
+        dossiersCount: 1,
         revision: {
           champDescriptors: [
             {
