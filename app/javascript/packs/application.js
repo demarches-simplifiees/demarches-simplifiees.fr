@@ -56,8 +56,7 @@ registerComponents({
   ComboRegionsSearch: () => import('../components/ComboRegionsSearch'),
   MapEditor: () => import('../components/MapEditor'),
   MapReader: () => import('../components/MapReader'),
-  Trix: () => import('../components/Trix'),
-  TypesDeChampEditor: () => import('../components/TypesDeChampEditor')
+  Trix: () => import('../components/Trix')
 });
 
 // This is the global application namespace where we expose helpers used from rails views

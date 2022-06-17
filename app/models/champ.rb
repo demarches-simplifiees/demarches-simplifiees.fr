@@ -49,6 +49,10 @@ class Champ < ApplicationRecord
     :dossier_link?,
     :titre_identite?,
     :header_section?,
+    :cnaf?,
+    :dgfip?,
+    :pole_emploi?,
+    :mesri?,
     :siret?,
     :stable_id,
     to: :type_de_champ

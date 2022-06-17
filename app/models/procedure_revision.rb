@@ -40,24 +40,26 @@ class ProcedureRevision < ApplicationRecord
 
   def add_type_de_champ(params)
     parent_stable_id = params.delete(:parent_id)
+    after_stable_id = params.delete(:after_id)
 
     coordinate = {}
 
     if parent_stable_id.present?
-      parent_coordinate, parent = coordinate_and_tdc(parent_stable_id)
+      parent_coordinate, _ = coordinate_and_tdc(parent_stable_id)
 
       coordinate[:parent_id] = parent_coordinate.id
-      coordinate[:position] = children_of(parent).count
+      coordinate[:position] = last_position(parent_coordinate.revision_types_de_champ, after_stable_id)
     elsif params[:private]
-      coordinate[:position] = revision_types_de_champ_private.count
+      coordinate[:position] = last_position(revision_types_de_champ_private, after_stable_id)
     else
-      coordinate[:position] = revision_types_de_champ_public.count
+      coordinate[:position] = last_position(revision_types_de_champ_public, after_stable_id)
     end
 
     tdc = TypeDeChamp.new(params)
     if tdc.save
       coordinate[:type_de_champ] = tdc
-      revision_types_de_champ.create!(coordinate)
+      coordinate = revision_types_de_champ.create!(coordinate)
+      reorder(coordinate.siblings)
     end
 
     tdc
@@ -83,6 +85,9 @@ class ProcedureRevision < ApplicationRecord
     siblings.insert(position, siblings.delete_at(siblings.index(coordinate)))
 
     reorder(siblings)
+    coordinate.reload
+
+    coordinate
   end
 
   def remove_type_de_champ(stable_id)
@@ -95,6 +100,24 @@ class ProcedureRevision < ApplicationRecord
     tdc.destroy_if_orphan
 
     reorder(coordinate.siblings)
+
+    coordinate
+  end
+
+  def move_up_type_de_champ(stable_id)
+    coordinate, _ = coordinate_and_tdc(stable_id)
+
+    if coordinate.position > 0
+      move_type_de_champ(stable_id, coordinate.position - 1)
+    else
+      coordinate
+    end
+  end
+
+  def move_down_type_de_champ(stable_id)
+    coordinate, _ = coordinate_and_tdc(stable_id)
+
+    move_type_de_champ(stable_id, coordinate.position + 1)
   end
 
   def draft?
@@ -153,20 +176,6 @@ class ProcedureRevision < ApplicationRecord
     end
   end
 
-  def types_de_champ_public_as_json
-    types_de_champ = types_de_champ_public.includes(piece_justificative_template_attachment: :blob)
-    tdcs_as_json = types_de_champ.map(&:as_json_for_editor)
-    children_types_de_champ_as_json(tdcs_as_json, types_de_champ.filter(&:repetition?))
-    tdcs_as_json
-  end
-
-  def types_de_champ_private_as_json
-    types_de_champ = types_de_champ_private.includes(piece_justificative_template_attachment: :blob)
-    tdcs_as_json = types_de_champ.map(&:as_json_for_editor)
-    children_types_de_champ_as_json(tdcs_as_json, types_de_champ.filter(&:repetition?))
-    tdcs_as_json
-  end
-
   # Estimated duration to fill the form, in seconds.
   #
   # If the revision is locked (i.e. published), the result is cached (because type de champs can no longer be mutated).
@@ -174,6 +183,10 @@ class ProcedureRevision < ApplicationRecord
     Rails.cache.fetch("#{cache_key_with_version}/estimated_fill_duration", expires_in: 12.hours, force: !locked?) do
       compute_estimated_fill_duration
     end
+  end
+
+  def coordinate_for(tdc)
+    revision_types_de_champ.find_by!(type_de_champ: tdc)
   end
 
   private
@@ -203,7 +216,7 @@ class ProcedureRevision < ApplicationRecord
 
   def reorder(siblings)
     siblings.to_a.compact.each.with_index do |sibling, position|
-      sibling.update(position: position)
+      sibling.update_column(:position, position)
     end
   end
 
@@ -439,5 +452,17 @@ class ProcedureRevision < ApplicationRecord
     end
     coordinate.update!(type_de_champ: cloned_type_de_champ)
     cloned_type_de_champ
+  end
+
+  def last_position(siblings, after_stable_id = nil)
+    if after_stable_id.present?
+      siblings
+        .joins(:type_de_champ)
+        .find_by(types_de_champ: { stable_id: after_stable_id })
+        .position + 1
+    else
+      last = siblings.last
+      last.present? ? last.position + 1 : 0
+    end
   end
 end

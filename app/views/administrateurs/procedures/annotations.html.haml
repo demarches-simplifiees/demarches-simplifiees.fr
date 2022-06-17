@@ -7,4 +7,4 @@
   %h1 Configuration des annotations privées
   %br
 
-  = react_component("TypesDeChampEditor", types_de_champ_private_data(@procedure))
+  = render TypesDeChampEditor::EditorComponent.new(revision: @procedure.draft_revision, is_annotation: true)
