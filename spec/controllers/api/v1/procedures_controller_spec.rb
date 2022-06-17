@@ -48,7 +48,6 @@ describe API::V1::ProceduresController, type: :controller do
           it { expect(subject[:id]).to eq(champ.id) }
           it { expect(subject[:libelle]).to eq(champ.libelle) }
           it { expect(subject[:type_champ]).to eq(champ.type_champ) }
-          it { expect(subject[:order_place]).to eq(champ.order_place) }
           it { expect(subject[:description]).to eq(champ.description) }
         end
 

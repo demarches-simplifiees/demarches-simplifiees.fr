@@ -203,24 +203,7 @@ function createAbortController(controller?: AbortController) {
   return;
 }
 
-export function scrollTo(container: HTMLElement, scrollTo: HTMLElement) {
-  container.scrollTop =
-    offset(scrollTo).top - offset(container).top + container.scrollTop;
-}
-
-export function scrollToBottom(container: HTMLElement) {
-  container.scrollTop = container.scrollHeight;
-}
-
 export function isNumeric(s: string) {
   const n = parseFloat(s);
   return !isNaN(n) && isFinite(n);
-}
-
-function offset(element: HTMLElement) {
-  const rect = element.getBoundingClientRect();
-  return {
-    top: rect.top + document.body.scrollTop,
-    left: rect.left + document.body.scrollLeft
-  };
 }

@@ -65,7 +65,7 @@ describe ProcedurePresentation do
         let!(:changed_tdc) { { type_champ: :number, libelle: 'changed libelle 1' } }
 
         before do
-          type_de_champ = procedure.draft_revision.find_or_clone_type_de_champ(previous_tdc.id)
+          type_de_champ = procedure.draft_revision.find_and_ensure_exclusive_use(previous_tdc.id)
           type_de_champ.update(changed_tdc)
 
           procedure.publish_revision!

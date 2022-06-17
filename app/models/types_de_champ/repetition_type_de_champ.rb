@@ -8,8 +8,8 @@ class TypesDeChamp::RepetitionTypeDeChamp < TypesDeChamp::TypeDeChampBase
 
   def estimated_fill_duration(revision)
     estimated_rows_in_repetition = 2.5
-    estimated_row_duration = @type_de_champ
-      .types_de_champ
+    estimated_row_duration = revision
+      .children_of(@type_de_champ)
       .map { |child_tdc| child_tdc.estimated_fill_duration(revision) }
       .sum
     estimated_row_duration * estimated_rows_in_repetition

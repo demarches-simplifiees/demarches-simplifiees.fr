@@ -254,31 +254,19 @@ FactoryBot.define do
         type_de_champ_text = types_de_champ.find { |tdc| tdc.libelle == 'Nom' }
         if !type_de_champ_text
           type_de_champ_text = build(:type_de_champ_text,
+            procedure: champ_repetition.type_de_champ.procedure,
             position: 0,
-            parent: champ_repetition.type_de_champ,
-            libelle: 'Nom')
-          revision.revision_types_de_champ << build(:procedure_revision_type_de_champ,
-            revision: revision,
-            type_de_champ: type_de_champ_text,
             parent: parent,
-            position: 0)
-
-          champ_repetition.type_de_champ.types_de_champ << type_de_champ_text
+            libelle: 'Nom')
         end
 
         type_de_champ_number = types_de_champ.find { |tdc| tdc.libelle == 'Age' }
         if !type_de_champ_number
           type_de_champ_number = build(:type_de_champ_number,
+            procedure: champ_repetition.type_de_champ.procedure,
             position: 1,
-            parent: champ_repetition.type_de_champ,
-            libelle: 'Age')
-          revision.revision_types_de_champ << build(:procedure_revision_type_de_champ,
-            revision: revision,
-            type_de_champ: type_de_champ_number,
             parent: parent,
-            position: 1)
-
-          champ_repetition.type_de_champ.types_de_champ << type_de_champ_number
+            libelle: 'Age')
         end
 
         evaluator.rows.times do |row|

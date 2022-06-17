@@ -374,8 +374,7 @@ describe ProcedureExportService do
         let(:other_parent) { create(:type_de_champ_repetition, stable_id: champ_repetition.stable_id) }
 
         before do
-          create(:procedure_revision_type_de_champ, type_de_champ: other_parent, revision: create(:procedure).active_revision, position: 0)
-          create(:type_de_champ, parent: other_parent)
+          create(:type_de_champ, parent: create(:procedure_revision_type_de_champ, type_de_champ: other_parent, revision: create(:procedure).active_revision, position: 0))
         end
 
         it 'should have headers' do

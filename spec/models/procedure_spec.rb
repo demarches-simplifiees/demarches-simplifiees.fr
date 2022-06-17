@@ -486,22 +486,24 @@ describe Procedure do
       expect(subject.draft_types_de_champ_private.size).to eq(procedure.draft_types_de_champ_private.size)
 
       procedure.draft_types_de_champ.zip(subject.draft_types_de_champ).each do |ptc, stc|
-        expect(stc).to have_same_attributes_as(ptc, except: ["revision_id"])
+        expect(stc).to have_same_attributes_as(ptc)
         expect(stc.revision).to eq(subject.draft_revision)
       end
 
-      TypeDeChamp.where(parent: procedure.draft_types_de_champ.repetition).zip(TypeDeChamp.where(parent: subject.draft_types_de_champ.repetition)).each do |ptc, stc|
-        expect(stc).to have_same_attributes_as(ptc, except: ["revision_id", "parent_id", "migrated_parent"])
+      public_repetition = procedure.draft_types_de_champ.repetition.first
+      procedure.draft_revision.children_of(public_repetition).zip(subject.draft_revision.children_of(public_repetition)).each do |ptc, stc|
+        expect(stc).to have_same_attributes_as(ptc)
         expect(stc.revision).to eq(subject.draft_revision)
       end
 
       procedure.draft_types_de_champ_private.zip(subject.draft_types_de_champ_private).each do |ptc, stc|
-        expect(stc).to have_same_attributes_as(ptc, except: ["revision_id"])
+        expect(stc).to have_same_attributes_as(ptc)
         expect(stc.revision).to eq(subject.draft_revision)
       end
 
-      TypeDeChamp.where(parent: procedure.draft_types_de_champ_private.repetition).zip(TypeDeChamp.where(parent: subject.draft_types_de_champ_private.repetition)).each do |ptc, stc|
-        expect(stc).to have_same_attributes_as(ptc, except: ["revision_id", "parent_id", "migrated_parent"])
+      private_repetition = procedure.draft_types_de_champ_private.repetition.first
+      procedure.draft_revision.children_of(private_repetition).zip(subject.draft_revision.children_of(private_repetition)).each do |ptc, stc|
+        expect(stc).to have_same_attributes_as(ptc)
         expect(stc.revision).to eq(subject.draft_revision)
       end
 

@@ -58,6 +58,8 @@ Rails.application.routes.draw do
 
     resources :zones, only: [:index, :show]
 
+    resources :dubious_procedures, only: [:index]
+
     post 'demandes/create_administrateur'
     post 'demandes/refuse_administrateur'
 
@@ -449,6 +451,7 @@ Rails.application.routes.draw do
       get 'publication' => 'procedures#publication', as: :publication
       put 'publish' => 'procedures#publish', as: :publish
       get 'transfert' => 'procedures#transfert', as: :transfert
+      get 'close' => 'procedures#close', as: :close
       post 'transfer' => 'procedures#transfer', as: :transfer
       resources :mail_templates, only: [:edit, :update]
 
@@ -474,6 +477,9 @@ Rails.application.routes.draw do
       resources :experts, controller: 'experts_procedures', only: [:index, :create, :update, :destroy]
 
       resources :types_de_champ, only: [:create, :update, :destroy] do
+        collection do
+          get :estimate_fill_duration
+        end
         member do
           patch :move
         end
