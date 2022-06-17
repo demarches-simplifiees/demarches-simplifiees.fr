@@ -482,7 +482,7 @@ class Dossier < ApplicationRecord
         end
 
       dossiers.each do |dossier|
-        load_dossier(dossier, champs_by_dossier[dossier.id], champs_by_dossier_by_parent[dossier.id])
+        load_dossier(dossier, champs_by_dossier[dossier.id], champs_by_dossier_by_parent[dossier.id] || {})
       end
     end
 

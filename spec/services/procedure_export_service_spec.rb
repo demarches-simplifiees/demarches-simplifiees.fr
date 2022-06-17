@@ -405,6 +405,18 @@ describe ProcedureExportService do
           expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', another_champ_repetition.libelle_for_export, champ_repetition.libelle_for_export])
         end
       end
+
+      context 'with empty repetition' do
+        before do
+          dossiers.flat_map { |dossier| dossier.champs.filter(&:repetition?) }.each do |champ|
+            champ.champs.destroy_all
+          end
+        end
+
+        it 'should not have data' do
+          expect(repetition_sheet).to be_nil
+        end
+      end
     end
   end
 
