@@ -35,12 +35,12 @@ describe 'Creating a new procedure', js: true do
       visit champs_admin_procedure_path(procedure)
 
       add_champ(remove_flash_message: true)
-      fill_in 'champ-0-libelle', with: 'libelle de champ'
+      fill_in 'Libellé du champ', with: 'libelle de champ'
       blur
       expect(page).to have_content('Formulaire enregistré')
 
       add_champ
-      expect(page).to have_selector('#champ-1-libelle')
+      expect(page).to have_selector('.type-de-champ', count: 1)
 
       click_on Procedure.last.libelle
 
@@ -56,8 +56,8 @@ describe 'Creating a new procedure', js: true do
 
       # Add an empty repetition type de champ
       add_champ(remove_flash_message: true)
-      select('Bloc répétable', from: 'champ-0-type_champ')
-      fill_in 'champ-0-libelle', with: 'libellé de champ'
+      select('Bloc répétable', from: 'Type de champ')
+      fill_in 'Libellé du champ', with: 'libellé de champ'
       blur
       expect(page).to have_content('Formulaire enregistré')
 

@@ -64,8 +64,6 @@ class Dossiers::MessageComponent < ApplicationComponent
     end
   end
 
-  private
-
   def highlight?
     commentaire.created_at.present? && @messagerie_seen_at&.<(commentaire.created_at)
   end

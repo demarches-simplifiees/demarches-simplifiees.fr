@@ -16,6 +16,7 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
 
   belongs_to :parent, class_name: 'ProcedureRevisionTypeDeChamp', optional: true
   has_many :revision_types_de_champ, -> { ordered }, foreign_key: :parent_id, class_name: 'ProcedureRevisionTypeDeChamp', inverse_of: :parent, dependent: :destroy
+  has_one :procedure, through: :revision
   scope :root, -> { where(parent: nil) }
   scope :ordered, -> { order(:position) }
   scope :revision_ordered, -> { order(:revision_id) }
@@ -28,6 +29,14 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
     parent_id.present?
   end
 
+  def first?
+    position == 0
+  end
+
+  def last?
+    siblings.last == self
+  end
+
   def siblings
     if parent_id.present?
       revision.revision_types_de_champ.where(parent_id: parent_id).ordered
@@ -35,6 +44,21 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
       revision.revision_types_de_champ_private
     else
       revision.revision_types_de_champ_public
+    end
+  end
+
+  def previous_sibling
+    index = siblings.index(self)
+    if index > 0
+      siblings[index - 1]
+    end
+  end
+
+  def block
+    if child?
+      parent
+    else
+      revision
     end
   end
 end

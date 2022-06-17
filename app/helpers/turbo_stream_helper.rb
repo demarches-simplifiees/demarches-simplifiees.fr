@@ -4,7 +4,7 @@ module TurboStreamHelper
   end
 
   class TagBuilder < Turbo::Streams::TagBuilder
-    def dispatch(type, detail)
+    def dispatch(type, detail = {})
       append_all('turbo-events', partial: 'layouts/turbo_event', locals: { type: type, detail: detail })
     end
 
@@ -38,6 +38,16 @@ module TurboStreamHelper
 
     def enable(target)
       dispatch('dom:mutation', { action: :enable, target: target })
+    end
+
+    def morph(target, content = nil, **rendering, &block)
+      template = render_template(target, content, allow_inferred_rendering: true, **rendering, &block)
+      dispatch('dom:mutation', { action: :morph, target: target, html: template })
+    end
+
+    def morph_all(targets, content = nil, **rendering, &block)
+      template = render_template(targets, content, allow_inferred_rendering: true, **rendering, &block)
+      dispatch('dom:mutation', { action: :morph, targets: targets, html: template })
     end
   end
 end
