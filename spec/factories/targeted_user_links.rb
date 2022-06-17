@@ -6,7 +6,12 @@ FactoryBot.define do
       user {}
     end
     after(:build) do |targeted_user_link|
-      targeted_user_link.user = targeted_user_link.target_model.expert.user
+      case targeted_user_link.target_context
+      when 'avis'
+        targeted_user_link.user = targeted_user_link.target_model.expert.user
+      when 'invite'
+        targeted_user_link.user = targeted_user_link.target_model&.user
+      end
     end
   end
 end
