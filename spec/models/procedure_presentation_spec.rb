@@ -58,28 +58,28 @@ describe ProcedurePresentation do
       let(:tdc_private_2) { procedure.types_de_champ_private[1] }
       let(:expected) {
         [
-          { "label" => 'Créé le', "table" => 'self', "column" => 'created_at', 'classname' => '' },
-          { "label" => 'En construction le', "table" => 'self', "column" => 'en_construction_at', 'classname' => '' },
-          { "label" => 'Déposé le', "table" => 'self', "column" => 'depose_at', 'classname' => '' },
-          { "label" => 'Mis à jour le', "table" => 'self', "column" => 'updated_at', 'classname' => '' },
-          { "label" => "Déposé depuis", "table" => "self", "column" => "depose_since", "classname" => "" },
-          { "label" => "Mis à jour depuis", "table" => "self", "column" => "updated_since", "classname" => "" },
-          { "label" => 'Demandeur', "table" => 'user', "column" => 'email', 'classname' => '' },
-          { "label" => 'Email instructeur', "table" => 'followers_instructeurs', "column" => 'email', 'classname' => '' },
-          { "label" => 'Groupe instructeur', "table" => 'groupe_instructeur', "column" => 'label', 'classname' => '' },
-          { "label" => 'SIREN', "table" => 'etablissement', "column" => 'entreprise_siren', 'classname' => '' },
-          { "label" => 'Forme juridique', "table" => 'etablissement', "column" => 'entreprise_forme_juridique', 'classname' => '' },
-          { "label" => 'Nom commercial', "table" => 'etablissement', "column" => 'entreprise_nom_commercial', 'classname' => '' },
-          { "label" => 'Raison sociale', "table" => 'etablissement', "column" => 'entreprise_raison_sociale', 'classname' => '' },
-          { "label" => 'Numéro TAHITI siège social', "table" => 'etablissement', "column" => 'entreprise_siret_siege_social', 'classname' => '' },
-          { "label" => 'Date de création', "table" => 'etablissement', "column" => 'entreprise_date_creation', 'classname' => '' },
-          { "label" => 'Numéro TAHITI', "table" => 'etablissement', "column" => 'siret', 'classname' => '' },
-          { "label" => 'Libellé NAF', "table" => 'etablissement', "column" => 'libelle_naf', 'classname' => '' },
-          { "label" => 'Code postal', "table" => 'etablissement', "column" => 'code_postal', 'classname' => '' },
-          { "label" => tdc_1.libelle, "table" => 'type_de_champ', "column" => tdc_1.stable_id.to_s, 'classname' => '' },
-          { "label" => tdc_2.libelle, "table" => 'type_de_champ', "column" => tdc_2.stable_id.to_s, 'classname' => '' },
-          { "label" => tdc_private_1.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_1.stable_id.to_s, 'classname' => '' },
-          { "label" => tdc_private_2.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_2.stable_id.to_s, 'classname' => '' }
+          { "label" => 'Créé le', "table" => 'self', "column" => 'created_at', 'classname' => '', 'virtual' => false },
+          { "label" => 'En construction le', "table" => 'self', "column" => 'en_construction_at', 'classname' => '', 'virtual' => false },
+          { "label" => 'Déposé le', "table" => 'self', "column" => 'depose_at', 'classname' => '', 'virtual' => false },
+          { "label" => 'Mis à jour le', "table" => 'self', "column" => 'updated_at', 'classname' => '', 'virtual' => false },
+          { "label" => "Déposé depuis", "table" => "self", "column" => "depose_since", "classname" => "", 'virtual' => true },
+          { "label" => "Mis à jour depuis", "table" => "self", "column" => "updated_since", "classname" => "", 'virtual' => true },
+          { "label" => 'Demandeur', "table" => 'user', "column" => 'email', 'classname' => '', 'virtual' => false },
+          { "label" => 'Email instructeur', "table" => 'followers_instructeurs', "column" => 'email', 'classname' => '', 'virtual' => false },
+          { "label" => 'Groupe instructeur', "table" => 'groupe_instructeur', "column" => 'label', 'classname' => '', 'virtual' => false },
+          { "label" => 'SIREN', "table" => 'etablissement', "column" => 'entreprise_siren', 'classname' => '', 'virtual' => false },
+          { "label" => 'Forme juridique', "table" => 'etablissement', "column" => 'entreprise_forme_juridique', 'classname' => '', 'virtual' => false },
+          { "label" => 'Nom commercial', "table" => 'etablissement', "column" => 'entreprise_nom_commercial', 'classname' => '', 'virtual' => false },
+          { "label" => 'Raison sociale', "table" => 'etablissement', "column" => 'entreprise_raison_sociale', 'classname' => '', 'virtual' => false },
+          { "label" => 'Numéro TAHITI siège social', "table" => 'etablissement', "column" => 'entreprise_siret_siege_social', 'classname' => '', 'virtual' => false },
+          { "label" => 'Date de création', "table" => 'etablissement', "column" => 'entreprise_date_creation', 'classname' => '', 'virtual' => false },
+          { "label" => 'Numéro TAHITI', "table" => 'etablissement', "column" => 'siret', 'classname' => '', 'virtual' => false },
+          { "label" => 'Libellé NAF', "table" => 'etablissement', "column" => 'libelle_naf', 'classname' => '', 'virtual' => false },
+          { "label" => 'Code postal', "table" => 'etablissement', "column" => 'code_postal', 'classname' => '', 'virtual' => false },
+          { "label" => tdc_1.libelle, "table" => 'type_de_champ', "column" => tdc_1.stable_id.to_s, 'classname' => '', 'virtual' => false },
+          { "label" => tdc_2.libelle, "table" => 'type_de_champ', "column" => tdc_2.stable_id.to_s, 'classname' => '', 'virtual' => false },
+          { "label" => tdc_private_1.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_1.stable_id.to_s, 'classname' => '', 'virtual' => false },
+          { "label" => tdc_private_2.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_2.stable_id.to_s, 'classname' => '', 'virtual' => false }
         ]
       }
 
@@ -96,9 +96,9 @@ describe ProcedurePresentation do
     end
 
     context 'when the procedure is for individuals' do
-      let(:name_field) { { "label" => "Prénom", "table" => "individual", "column" => "prenom", 'classname' => '' } }
-      let(:surname_field) { { "label" => "Nom", "table" => "individual", "column" => "nom", 'classname' => '' } }
-      let(:gender_field) { { "label" => "Civilité", "table" => "individual", "column" => "gender", 'classname' => '' } }
+      let(:name_field) { { "label" => "Prénom", "table" => "individual", "column" => "prenom", 'classname' => '', 'virtual' => false } }
+      let(:surname_field) { { "label" => "Nom", "table" => "individual", "column" => "nom", 'classname' => '', 'virtual' => false } }
+      let(:gender_field) { { "label" => "Civilité", "table" => "individual", "column" => "gender", 'classname' => '', 'virtual' => false } }
       let(:procedure) { create(:procedure, :for_individual) }
       let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to) }
 
@@ -108,25 +108,34 @@ describe ProcedurePresentation do
     end
   end
 
-  describe "#displayed_fields_for_select" do
+  describe "#displayable_fields_for_select" do
     subject { create(:procedure_presentation, assign_to: assign_to) }
+    let(:excluded_displayable_field) { { "label" => "depose_since", "table" => "self", "column" => "depose_since", 'virtual' => true } }
+    let(:included_displayable_field) { { "label" => "label1", "table" => "table1", "column" => "column1", 'virtual' => false } }
 
     before do
       allow(subject).to receive(:fields).and_return([
-        {
-          "label" => "label1",
-          "table" => "table1",
-          "column" => "column1"
-        },
-        {
-          "label" => "label2",
-          "table" => "table2",
-          "column" => "column2"
-        }
+        excluded_displayable_field,
+        included_displayable_field
       ])
     end
 
-    it { expect(subject.displayed_fields_for_select).to eq([[["label1", "table1/column1"], ["label2", "table2/column2"]], ["user/email"]]) }
+    it { expect(subject.displayable_fields_for_select).to eq([[["label1", "table1/column1"]], ["user/email"]]) }
+  end
+  describe "#filterable_fields_options" do
+    subject { create(:procedure_presentation, assign_to: assign_to) }
+    let(:included_displayable_field) do
+      [
+        { "label" => "label1", "table" => "table1", "column" => "column1", 'virtual' => false },
+        { "label" => "depose_since", "table" => "self", "column" => "depose_since", 'virtual' => true }
+      ]
+    end
+
+    before do
+      allow(subject).to receive(:fields).and_return(included_displayable_field)
+    end
+
+    it { expect(subject.filterable_fields_options).to eq([["label1", "table1/column1"], ["depose_since", "self/depose_since"]]) }
   end
 
   describe '#sorted_ids' do
