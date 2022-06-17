@@ -511,9 +511,11 @@ class Procedure < ApplicationRecord
       procedure.service = self.service.clone_and_assign_to_administrateur(admin)
     end
 
-    procedure.save
+    transaction do
+      procedure.save
 
-    move_new_children_to_new_parent_coordinate(procedure.draft_revision)
+      move_new_children_to_new_parent_coordinate(procedure.draft_revision)
+    end
 
     if is_different_admin || from_library
       procedure.draft_types_de_champ.each { |tdc| tdc.options&.delete(:old_pj) }
@@ -730,13 +732,15 @@ class Procedure < ApplicationRecord
   end
 
   def create_new_revision
-    new_draft = draft_revision
-      .deep_clone(include: [:revision_types_de_champ])
-      .tap(&:save!)
+    transaction do
+      new_draft = draft_revision
+        .deep_clone(include: [:revision_types_de_champ])
+        .tap(&:save!)
 
-    move_new_children_to_new_parent_coordinate(new_draft)
+      move_new_children_to_new_parent_coordinate(new_draft)
 
-    new_draft
+      new_draft
+    end
   end
 
   def column_styles(table)

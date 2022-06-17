@@ -177,28 +177,23 @@ describe 'As an administrateur I can edit types de champ', js: true do
   #   expect(page).to have_content('boss@company.com')
   # end
 
-  context "when the estimated fill duration is enabled" do
-    before { Flipper.enable(:procedure_estimated_fill_duration) }
-    after { Flipper.disable(:procedure_estimated_fill_duration) }
+  scenario "displaying the estimated fill duration" do
+    # It doesn't display anything when there are no champs
+    expect(page).not_to have_content('Durée de remplissage estimé')
 
-    scenario "displaying the estimated fill duration" do
-      # It doesn't display anything when there are no champs
-      expect(page).not_to have_content('Durée de remplissage estimé')
+    # It displays the estimate when adding a new champ
+    add_champ
+    select('Pièce justificative', from: 'champ-0-type_champ')
+    expect(page).to have_content('Durée de remplissage estimée : 1 mn')
 
-      # It displays the estimate when adding a new champ
-      add_champ
-      select('Pièce justificative', from: 'champ-0-type_champ')
-      expect(page).to have_content('Durée de remplissage estimée : 1 mn')
+    # It updates the estimate when updating the champ
+    check 'Obligatoire'
+    expect(page).to have_content('Durée de remplissage estimée : 3 mn')
 
-      # It updates the estimate when updating the champ
-      check 'Obligatoire'
-      expect(page).to have_content('Durée de remplissage estimée : 3 mn')
-
-      # It updates the estimate when removing the champ
-      page.accept_alert do
-        click_on 'Supprimer'
-      end
-      expect(page).not_to have_content('Durée de remplissage estimée')
+    # It updates the estimate when removing the champ
+    page.accept_alert do
+      click_on 'Supprimer'
     end
+    expect(page).not_to have_content('Durée de remplissage estimée')
   end
 end

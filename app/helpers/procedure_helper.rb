@@ -38,7 +38,7 @@ module ProcedureHelper
       baseUrl: admin_procedure_types_de_champ_path(procedure),
       directUploadUrl: rails_direct_uploads_url,
       continuerUrl: admin_procedure_path(procedure),
-      estimatedFillDuration: procedure.feature_enabled?(:procedure_estimated_fill_duration) ? procedure.draft_revision.estimated_fill_duration : 0
+      estimatedFillDuration: procedure.draft_revision.estimated_fill_duration
     }
   end
 
