@@ -118,7 +118,7 @@ type Avis {
   dateReponse: ISO8601DateTime
   expert: Profile
   id: ID!
-  instructeur: Profile! @deprecated(reason: "Utilisez le champ claimant à la place.")
+  instructeur: Profile! @deprecated(reason: "Utilisez le champ `claimant` à la place.")
   question: String!
   reponse: String
 }
@@ -328,7 +328,7 @@ type DateChamp implements Champ {
   """
   La valeur du champ formaté en ISO8601 (DateTime).
   """
-  value: ISO8601DateTime @deprecated(reason: "Utilisez le champ 'date' ou le fragment 'DatetimeChamp' à la place.")
+  value: ISO8601DateTime @deprecated(reason: "Utilisez le champ `date` ou le fragment `DatetimeChamp` à la place.")
 }
 
 type DatetimeChamp implements Champ {
@@ -433,8 +433,9 @@ interface Demandeur {
 Une démarche
 """
 type Demarche {
-  annotationDescriptors: [ChampDescriptor!]!
-  champDescriptors: [ChampDescriptor!]!
+  activeRevision: Revision!
+  annotationDescriptors: [ChampDescriptor!]! @deprecated(reason: "Utilisez le champ `activeRevision.annotationDescriptors` à la place.")
+  champDescriptors: [ChampDescriptor!]! @deprecated(reason: "Utilisez le champ `activeRevision.champDescriptors` à la place.")
 
   """
   Date de la création.
@@ -639,6 +640,8 @@ type DemarcheDescriptor {
   Numero de la démarche.
   """
   number: Int!
+  revision: Revision!
+  service: Service!
 
   """
   État de la démarche.
@@ -779,7 +782,7 @@ type Dossier {
   L’URL du dossier au format PDF.
   """
   pdf: File
-  revision: Revision!
+  revision: Revision! @deprecated(reason: "Utilisez le champ `demarche.revision` à la place.")
 
   """
   L’état du dossier.

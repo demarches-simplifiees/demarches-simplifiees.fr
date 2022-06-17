@@ -383,7 +383,7 @@ class Dossier < ApplicationRecord
       .where.not(user: users_who_submitted)
   end
 
-  scope :for_api_v2, -> { includes(procedure: [:administrateurs], revision: [:attestation_template], etablissement: [], individual: [], traitement: []) }
+  scope :for_api_v2, -> { includes(revision: [:attestation_template, procedure: [:administrateurs]], etablissement: [], individual: [], traitement: []) }
 
   scope :with_notifications, -> do
     joins(:follows)
