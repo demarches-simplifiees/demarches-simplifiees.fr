@@ -87,6 +87,7 @@ module Administrateurs
       @current_administrateur = current_administrateur
       @procedure_lien = commencer_url(path: @procedure.path)
       @procedure_lien_test = commencer_test_url(path: @procedure.path)
+      flash.now.notice = "Le bouton pour activer l'expiration des données est à nouveau actif." unless @procedure.procedure_expires_when_termine_enabled?
     end
 
     def edit
