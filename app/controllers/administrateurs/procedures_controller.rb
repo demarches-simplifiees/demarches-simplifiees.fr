@@ -87,6 +87,7 @@ module Administrateurs
       @current_administrateur = current_administrateur
       @procedure_lien = commencer_url(path: @procedure.path)
       @procedure_lien_test = commencer_test_url(path: @procedure.path)
+      flash.now.notice = "Le bouton pour activer l'expiration des données est à nouveau actif." unless @procedure.procedure_expires_when_termine_enabled?
     end
 
     def edit
@@ -328,7 +329,7 @@ module Administrateurs
 
     def check_terms_of_use
       terms_of_use = [:rgs_stamp, :rgpd]
-      if terms_of_use.any? { |k| !params.key?(k) }
+      if terms_of_use.any? { |k| params.key?(k) && params[k].to_i.zero? }
         @procedure.errors.add(:base, :rgpd_rgs_not_checked, message: 'Toutes les cases concernant le RGPD et le RGS doivent être cochées')
       end
       @terms_of_use_read = params.slice(*terms_of_use)
