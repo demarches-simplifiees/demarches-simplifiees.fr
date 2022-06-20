@@ -6,4 +6,11 @@
 
     = f.label :label, 'Nom du groupe'
     = f.text_field :label, placeholder: 'Ville de Bordeaux', required: true
-    = f.submit 'Renommer', class: 'button primary send'
+    .editable-champ.editable-champ-checkbox
+      = f.label :closed, 'Groupe inactif'
+      .notice
+        %p Si cette option est activé les usagers ne pourront plus séléctionné ce groupe d'instructeur
+      = f.check_box :closed
+
+    %br
+    = f.submit 'Valider', class: 'button primary send'

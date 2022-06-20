@@ -25,7 +25,7 @@ describe 'The routing', js: true do
     # rename defaut groupe to littéraire
     click_on 'voir'
     fill_in 'Nom du groupe', with: 'littéraire'
-    click_on 'Renommer'
+    click_on 'Valider'
     expect(page).to have_text('Le nom est à présent « littéraire ».')
     expect(page).to have_field('Nom du groupe', with: 'littéraire')
 
@@ -42,6 +42,13 @@ describe 'The routing', js: true do
     expect(page).to have_text("L’instructeur superwoman@inst.com a été affecté au groupe « littéraire »")
 
     superwoman = User.find_by(email: 'superwoman@inst.com').instructeur
+
+    # add inactive groupe
+    click_on 'Groupes d’instructeurs'
+    fill_in 'Ajouter un groupe', with: 'non visible car inactif'
+    click_on 'Ajouter le groupe'
+    check "Groupe inactif"
+    click_on 'Valider'
 
     # add scientifique groupe
     click_on 'Groupes d’instructeurs'
@@ -203,6 +210,8 @@ describe 'The routing', js: true do
     visit dossiers_path
     click_on user.dossiers.first.id.to_s
     click_on "Modifier mon dossier"
+    expect(page).to have_selector("option", text: "scientifique")
+    expect(page).not_to have_selector("option", text: "Groupe inactif")
 
     select(new_group, from: 'dossier_groupe_instructeur_id')
     click_on "Enregistrer les modifications du dossier"
