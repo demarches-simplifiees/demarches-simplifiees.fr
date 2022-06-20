@@ -1,6 +1,5 @@
-include Logic
-
 describe Logic::BinaryOperator do
+  include Logic
   let(:two_greater_than_one) { greater_than(constant(2), constant(1)) }
 
   describe '#type' do
@@ -22,6 +21,7 @@ describe Logic::BinaryOperator do
 end
 
 describe Logic::GreaterThan do
+  include Logic
   it 'computes' do
     expect(greater_than(constant(1), constant(1)).compute).to be(false)
     expect(greater_than(constant(2), constant(1)).compute).to be(true)
@@ -29,6 +29,7 @@ describe Logic::GreaterThan do
 end
 
 describe Logic::GreaterThanEq do
+  include Logic
   it 'computes' do
     expect(greater_than_eq(constant(0), constant(1)).compute).to be(false)
     expect(greater_than_eq(constant(1), constant(1)).compute).to be(true)
@@ -37,6 +38,7 @@ describe Logic::GreaterThanEq do
 end
 
 describe Logic::LessThan do
+  include Logic
   it 'computes' do
     expect(less_than(constant(1), constant(1)).compute).to be(false)
     expect(less_than(constant(1), constant(2)).compute).to be(true)
@@ -44,6 +46,7 @@ describe Logic::LessThan do
 end
 
 describe Logic::LessThanEq do
+  include Logic
   it 'computes' do
     expect(less_than_eq(constant(0), constant(1)).compute).to be(true)
     expect(less_than_eq(constant(1), constant(1)).compute).to be(true)
