@@ -3,6 +3,7 @@
 # Table name: groupe_instructeurs
 #
 #  id           :bigint           not null, primary key
+#  closed       :boolean          default(FALSE)
 #  label        :text             not null
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
