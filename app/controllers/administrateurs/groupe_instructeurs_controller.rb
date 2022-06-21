@@ -32,16 +32,16 @@ module Administrateurs
     def create
       @groupe_instructeur = procedure
         .groupe_instructeurs
-        .new(label: label, instructeurs: [current_administrateur.instructeur])
+        .new({ instructeurs: [current_administrateur.instructeur] }.merge(groupe_instructeur_params))
 
       if @groupe_instructeur.save
         redirect_to admin_procedure_groupe_instructeur_path(procedure, @groupe_instructeur),
-          notice: "Le groupe d’instructeurs « #{label} » a été créé."
+          notice: "Le groupe d’instructeurs « #{@groupe_instructeur.label} » a été créé."
       else
         @procedure = procedure
         @groupes_instructeurs = paginated_groupe_instructeurs
 
-        flash[:alert] = "le nom « #{label} » est déjà pris par un autre groupe."
+        flash[:alert] = "le nom « #{@groupe_instructeur.label} » est déjà pris par un autre groupe."
         render :index
       end
     end
@@ -49,28 +49,29 @@ module Administrateurs
     def update
       @groupe_instructeur = groupe_instructeur
 
-      if @groupe_instructeur.update(label: label)
+      if @groupe_instructeur.update(groupe_instructeur_params)
         redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur),
-          notice: "Le nom est à présent « #{label} »."
+          notice: "Le nom est à présent « #{@groupe_instructeur.label} »."
       else
         @procedure = procedure
         @instructeurs = paginated_instructeurs
         @available_instructeur_emails = available_instructeur_emails
 
-        flash[:alert] = "le nom « #{label} » est déjà pris par un autre groupe."
+        flash[:alert] = "le nom « #{@groupe_instructeur.label} » est déjà pris par un autre groupe."
         render :show
       end
     end
 
     def destroy
-      if !groupe_instructeur.dossiers.empty?
+      @groupe_instructeur = groupe_instructeur
+
+      if !@groupe_instructeur.dossiers.empty?
         flash[:alert] = "Impossible de supprimer un groupe avec des dossiers. Il faut le réaffecter avant"
       elsif procedure.groupe_instructeurs.one?
         flash[:alert] = "Suppression impossible : il doit y avoir au moins un groupe instructeur sur chaque procédure"
       else
-        label = groupe_instructeur.label
-        groupe_instructeur.destroy!
-        flash[:notice] = "le groupe « #{label} » a été supprimé."
+        @groupe_instructeur.destroy!
+        flash[:notice] = "le groupe « #{@groupe_instructeur.label} » a été supprimé."
       end
       redirect_to admin_procedure_groupe_instructeurs_path(procedure)
     end
@@ -198,7 +199,7 @@ module Administrateurs
 
       redirect_to admin_procedure_groupe_instructeurs_path(procedure),
       notice: "Le routage est #{procedure.routing_enabled? ? "activée" : "désactivée"}."
-    end
+   end
 
     def update_instructeurs_self_management_enabled
       procedure.update!(instructeurs_self_management_enabled_params)
@@ -288,8 +289,8 @@ module Administrateurs
       params[:instructeur][:id]
     end
 
-    def label
-      params[:groupe_instructeur][:label]
+    def groupe_instructeur_params
+      params.require(:groupe_instructeur).permit(:label, :closed)
     end
 
     def paginated_groupe_instructeurs
