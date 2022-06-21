@@ -1,4 +1,13 @@
 class Logic::ChampValue < Logic::Term
+  MANAGED_TYPE_DE_CHAMP = TypeDeChamp.type_champs.slice(
+    :yes_no,
+    :checkbox,
+    :integer_number,
+    :decimal_number,
+    :drop_down_list,
+    :text
+  )
+
   attr_reader :stable_id
 
   def initialize(stable_id)
@@ -7,12 +16,12 @@ class Logic::ChampValue < Logic::Term
 
   def compute(champs)
     case type_de_champ.type_champ
-    when all_types.fetch(:yes_no),
-      all_types.fetch(:checkbox)
+    when MANAGED_TYPE_DE_CHAMP.fetch(:yes_no),
+      MANAGED_TYPE_DE_CHAMP.fetch(:checkbox)
       champ(champs).true?
-    when all_types.fetch(:integer_number), all_types.fetch(:decimal_number)
+    when MANAGED_TYPE_DE_CHAMP.fetch(:integer_number), MANAGED_TYPE_DE_CHAMP.fetch(:decimal_number)
       champ(champs).for_api
-    when all_types.fetch(:drop_down_list), all_types.fetch(:text)
+    when MANAGED_TYPE_DE_CHAMP.fetch(:drop_down_list), MANAGED_TYPE_DE_CHAMP.fetch(:text)
       champ(champs).value
     end
   end
@@ -21,15 +30,17 @@ class Logic::ChampValue < Logic::Term
 
   def type
     case type_de_champ.type_champ
-    when all_types.fetch(:yes_no),
-      all_types.fetch(:checkbox)
+    when MANAGED_TYPE_DE_CHAMP.fetch(:yes_no),
+      MANAGED_TYPE_DE_CHAMP.fetch(:checkbox)
       :boolean
-    when all_types.fetch(:integer_number), all_types.fetch(:decimal_number)
+    when MANAGED_TYPE_DE_CHAMP.fetch(:integer_number), MANAGED_TYPE_DE_CHAMP.fetch(:decimal_number)
       :number
-    when all_types.fetch(:text)
+    when MANAGED_TYPE_DE_CHAMP.fetch(:text)
       :string
-    when all_types.fetch(:drop_down_list)
+    when MANAGED_TYPE_DE_CHAMP.fetch(:drop_down_list)
       :enum
+    else
+      raise "unmanaged type: #{type_de_champ.type_champ}"
     end
   end
 
@@ -68,9 +79,5 @@ class Logic::ChampValue < Logic::Term
 
   def champ(champs)
     champs.find { |c| c.stable_id == stable_id }
-  end
-
-  def all_types
-    TypeDeChamp.type_champs
   end
 end
