@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_17_142759) do
+ActiveRecord::Schema.define(version: 2022_06_20_141238) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -510,10 +510,12 @@ ActiveRecord::Schema.define(version: 2022_06_17_142759) do
   end
 
   create_table "groupe_instructeurs", force: :cascade do |t|
+    t.boolean "closed", default: false
     t.datetime "created_at", null: false
     t.text "label", null: false
     t.bigint "procedure_id", null: false
     t.datetime "updated_at", null: false
+    t.index ["closed", "procedure_id"], name: "index_groupe_instructeurs_on_closed_and_procedure_id"
     t.index ["procedure_id", "label"], name: "index_groupe_instructeurs_on_procedure_id_and_label", unique: true
     t.index ["procedure_id"], name: "index_groupe_instructeurs_on_procedure_id"
   end
