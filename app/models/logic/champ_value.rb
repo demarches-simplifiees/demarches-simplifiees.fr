@@ -8,6 +8,14 @@ class Logic::ChampValue < Logic::Term
     :text
   )
 
+  CHAMP_VALUE_TYPE = {
+    boolean: :boolean,
+    number: :number,
+    string: :string,
+    enum: :enum,
+    empty: :empty
+  }
+
   attr_reader :stable_id
 
   def initialize(stable_id)
@@ -32,13 +40,13 @@ class Logic::ChampValue < Logic::Term
     case type_de_champ.type_champ
     when MANAGED_TYPE_DE_CHAMP.fetch(:yes_no),
       MANAGED_TYPE_DE_CHAMP.fetch(:checkbox)
-      :boolean
+      CHAMP_VALUE_TYPE.fetch(:boolean)
     when MANAGED_TYPE_DE_CHAMP.fetch(:integer_number), MANAGED_TYPE_DE_CHAMP.fetch(:decimal_number)
-      :number
+      CHAMP_VALUE_TYPE.fetch(:number)
     when MANAGED_TYPE_DE_CHAMP.fetch(:text)
-      :string
+      CHAMP_VALUE_TYPE.fetch(:string)
     when MANAGED_TYPE_DE_CHAMP.fetch(:drop_down_list)
-      :enum
+      CHAMP_VALUE_TYPE.fetch(:enum)
     else
       raise "unmanaged type: #{type_de_champ.type_champ}"
     end
