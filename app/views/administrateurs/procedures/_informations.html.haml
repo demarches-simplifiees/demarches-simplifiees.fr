@@ -64,6 +64,17 @@
 
 = f.label :lien_dpo, 'Lien ou email pour contacter le Délégué à la Protection des Données (DPO)'
 = f.text_field :lien_dpo, class: 'form-control'
+
+%h3.header-subsection= t(:opendata_header, scope: [:administrateurs, :informations])
+%p.notice= t(:opendata_notice_html, scope: [:administrateurs, :informations])
+%p.notice= t(:opendata, scope: [:administrateurs, :informations])
+
+%label.toggle-switch
+  = f.check_box :opendata, class: 'toggle-switch-checkbox'
+  %span.toggle-switch-control.round
+  %span.toggle-switch-label.on Oui
+  %span.toggle-switch-label.off Non
+
 %h3.header-subsection Notice explicative de la démarche
 
 %p.notice
