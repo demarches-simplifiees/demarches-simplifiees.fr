@@ -308,6 +308,7 @@ module Administrateurs
         :duree_conservation_dossiers_dans_ds,
         :zone_id,
         :lien_dpo,
+        :opendata,
         :procedure_expires_when_termine_enabled
       ]
       permited_params = if @procedure&.locked?
