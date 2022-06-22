@@ -32,6 +32,7 @@
 #  lien_notice                               :string
 #  lien_site_web                             :string
 #  monavis_embed                             :text
+#  opendata                                  :boolean          default(TRUE)
 #  organisation                              :string
 #  path                                      :string           not null
 #  procedure_expires_when_termine_enabled    :boolean          default(TRUE)
