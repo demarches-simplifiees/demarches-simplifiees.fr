@@ -381,6 +381,14 @@ describe Procedure do
     end
   end
 
+  describe 'opendata' do
+    let(:procedure) { create(:procedure) }
+
+    it 'is true by default' do
+      expect(procedure.opendata).to be_truthy
+    end
+  end
+
   describe 'active' do
     let(:procedure) { create(:procedure) }
     subject { Procedure.active(procedure.id) }
