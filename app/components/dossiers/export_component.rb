@@ -11,7 +11,7 @@ class Dossiers::ExportComponent < ApplicationComponent
   end
 
   def download_export_path(export_format:, force_export: false, no_progress_notification: nil)
-    download_export_instructeur_procedure_path(@procedure,
+    export_instructeur_procedure_path(@procedure,
       export_format: export_format,
       statut: @statut,
       force_export: force_export,

@@ -137,57 +137,7 @@ module Instructeurs
       redirect_back(fallback_location: instructeur_procedure_url(procedure))
     end
 
-    def download_export
-      groupe_instructeurs = current_instructeur
-        .groupe_instructeurs
-        .where(procedure: procedure)
 
-      @can_download_dossiers = current_instructeur
-        .dossiers
-        .visible_by_administration
-        .exists?(groupe_instructeur_id: groupe_instructeur_ids)
-
-      export = Export.find_or_create_export(export_format, groupe_instructeurs, **export_options)
-
-      if export.ready? && export.old? && force_export?
-        export.destroy
-        export = Export.find_or_create_export(export_format, groupe_instructeurs, **export_options)
-      end
-
-      if export.ready?
-        respond_to do |format|
-          format.turbo_stream do
-            @procedure = procedure
-            @statut = export_options[:statut]
-            @dossiers_count = export.count
-            assign_exports
-            flash.notice = "L’export au format \"#{export_format}\" est prêt. Vous pouvez le <a href=\"#{export.file.service_url}\">télécharger</a>"
-          end
-
-          format.html do
-            redirect_to export.file.service_url
-          end
-        end
-      else
-        respond_to do |format|
-          notice_message = "Nous générons cet export. Veuillez revenir dans quelques minutes pour le télécharger."
-
-          format.turbo_stream do
-            @procedure = procedure
-            @statut = export_options[:statut]
-            @dossiers_count = export.count
-            assign_exports
-            if !params[:no_progress_notification]
-              flash.notice = notice_message
-            end
-          end
-
-          format.html do
-            redirect_to instructeur_procedure_url(procedure), notice: notice_message
-          end
-        end
-      end
-    end
 
     def email_notifications
       @procedure = procedure
@@ -281,22 +231,6 @@ module Instructeurs
 
     def statut
       @statut ||= (params[:statut].presence || 'a-suivre')
-    end
-
-    def export_format
-      @export_format ||= params[:export_format]
-    end
-
-    def force_export?
-      @force_export ||= params[:force_export].present?
-    end
-
-    def export_options
-      @export_options ||= {
-        time_span_type: params[:time_span_type],
-        statut: params[:statut],
-        procedure_presentation: params[:statut].present? ? procedure_presentation : nil
-      }.compact
     end
 
     def procedure_id

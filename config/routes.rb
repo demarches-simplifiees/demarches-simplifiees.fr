@@ -354,12 +354,12 @@ Rails.application.routes.draw do
           end
         end
 
+        resources :exports, only: [:index]
+
         patch 'update_displayed_fields'
         get 'update_sort/:table/:column' => 'procedures#update_sort', as: 'update_sort'
         post 'add_filter'
         get 'remove_filter' => 'procedures#remove_filter', as: 'remove_filter'
-        get 'download_export'
-        post 'download_export'
         get 'stats'
         get 'email_notifications'
         patch 'update_email_notifications'
