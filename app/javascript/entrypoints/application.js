@@ -10,7 +10,6 @@ import '../shared/safari-11-file-xhr-workaround';
 import '../shared/toggle-target';
 import '../shared/ujs-error-handling';
 
-import { registerComponents } from '../controllers/react_controller';
 import { registerControllers } from '../shared/stimulus-loader';
 
 import '../new_design/form-validation';
@@ -40,22 +39,6 @@ import {
   showNewAccount,
   showNewAccountPasswordConfirmation
 } from '../new_design/fc-fusion';
-
-registerComponents({
-  ComboAdresseSearch: () => import('../components/ComboAdresseSearch'),
-  ComboAnnuaireEducationSearch: () =>
-    import('../components/ComboAnnuaireEducationSearch'),
-  ComboCommunesSearch: () => import('../components/ComboCommunesSearch'),
-  ComboDepartementsSearch: () =>
-    import('../components/ComboDepartementsSearch'),
-  ComboMultipleDropdownList: () =>
-    import('../components/ComboMultipleDropdownList'),
-  ComboMultiple: () => import('../components/ComboMultiple'),
-  ComboPaysSearch: () => import('../components/ComboPaysSearch'),
-  ComboRegionsSearch: () => import('../components/ComboRegionsSearch'),
-  MapEditor: () => import('../components/MapEditor'),
-  MapReader: () => import('../components/MapReader')
-});
 
 const application = Application.start();
 registerControllers(application);

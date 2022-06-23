@@ -6,11 +6,18 @@ import invariant from 'tiny-invariant';
 type Props = Record<string, unknown>;
 type Loader = () => Promise<{ default: FunctionComponent<Props> }>;
 const componentsRegistry = new Map<string, FunctionComponent<Props>>();
+const components = import.meta.glob('../components/*.tsx');
 
-export function registerComponents(components: Record<string, Loader>): void {
-  for (const [className, loader] of Object.entries(components)) {
-    componentsRegistry.set(className, LoadableComponent(loader));
-  }
+for (const [path, loader] of Object.entries(components)) {
+  const [filename] = path.split('/').reverse();
+  const componentClassName = filename.replace(/\.(ts|tsx)$/, '');
+  console.debug(
+    `Registered lazy default export for "${componentClassName}" component`
+  );
+  componentsRegistry.set(
+    componentClassName,
+    LoadableComponent(loader as Loader)
+  );
 }
 
 // Initialize React components when their markup appears into the DOM.
@@ -18,7 +25,7 @@ export function registerComponents(components: Record<string, Loader>): void {
 // Example:
 //   <div data-controller="react" data-react-component-value="ComboMultiple" data-react-props-value="{}"></div>
 //
-export default class ReactController extends Controller {
+export class ReactController extends Controller {
   static values = {
     component: String,
     props: Object
