@@ -1,8 +1,8 @@
 import '../shared/polyfills';
 import Rails from '@rails/ujs';
 import * as ActiveStorage from '@rails/activestorage';
-import 'whatwg-fetch'; // window.fetch polyfill
 import * as Turbo from '@hotwired/turbo';
+import { Application } from '@hotwired/stimulus';
 
 import '../shared/activestorage/ujs';
 import '../shared/remote-poller';
@@ -10,8 +10,7 @@ import '../shared/safari-11-file-xhr-workaround';
 import '../shared/toggle-target';
 import '../shared/ujs-error-handling';
 
-import { registerComponents } from '../controllers/react_controller';
-import '../controllers';
+import { registerControllers } from '../shared/stimulus-loader';
 
 import '../new_design/form-validation';
 import '../new_design/procedure-context';
@@ -41,23 +40,8 @@ import {
   showNewAccountPasswordConfirmation
 } from '../new_design/fc-fusion';
 
-registerComponents({
-  Chartkick: () => import('../components/Chartkick'),
-  ComboAdresseSearch: () => import('../components/ComboAdresseSearch'),
-  ComboAnnuaireEducationSearch: () =>
-    import('../components/ComboAnnuaireEducationSearch'),
-  ComboCommunesSearch: () => import('../components/ComboCommunesSearch'),
-  ComboDepartementsSearch: () =>
-    import('../components/ComboDepartementsSearch'),
-  ComboMultipleDropdownList: () =>
-    import('../components/ComboMultipleDropdownList'),
-  ComboMultiple: () => import('../components/ComboMultiple'),
-  ComboPaysSearch: () => import('../components/ComboPaysSearch'),
-  ComboRegionsSearch: () => import('../components/ComboRegionsSearch'),
-  MapEditor: () => import('../components/MapEditor'),
-  MapReader: () => import('../components/MapReader'),
-  Trix: () => import('../components/Trix')
-});
+const application = Application.start();
+registerControllers(application);
 
 // This is the global application namespace where we expose helpers used from rails views
 const DS = {
@@ -75,9 +59,11 @@ const DS = {
 };
 
 // Start Rails helpers
-Rails.start();
 ActiveStorage.start();
 Turbo.session.drive = false;
 
 // Expose globals
 window.DS = window.DS || DS;
+
+import('../shared/track/matomo');
+import('../shared/track/sentry');
