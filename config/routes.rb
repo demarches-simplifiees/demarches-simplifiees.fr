@@ -397,7 +397,7 @@ Rails.application.routes.draw do
           end
         end
 
-        resources :archives, only: [:index, :create, :show], controller: 'archives'
+        resources :archives, only: [:index, :create]
       end
     end
   end
@@ -408,7 +408,7 @@ Rails.application.routes.draw do
 
   scope module: 'administrateurs', path: 'admin', as: 'admin' do
     resources :procedures do
-      resources :archives, only: [:index]
+      resources :archives, only: [:index, :create]
       collection do
         get 'new_from_existing'
       end

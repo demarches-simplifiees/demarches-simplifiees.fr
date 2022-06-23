@@ -1,6 +1,7 @@
 module Instructeurs
   class ArchivesController < InstructeurController
     before_action :ensure_procedure_enabled, only: [:create]
+    helper_method :create_archive_url
 
     def index
       @procedure = procedure
@@ -22,6 +23,11 @@ module Instructeurs
       end
       redirect_to instructeur_archives_path(procedure)
     end
+
+    def create_archive_url(procedure, month)
+      instructeur_archives_path(procedure, type: 'monthly', month: month.strftime('%Y-%m'))
+    end
+
 
     private
 
