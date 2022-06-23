@@ -18,7 +18,7 @@ export function registerComponents(components: Record<string, Loader>): void {
 // Example:
 //   <div data-controller="react" data-react-component-value="ComboMultiple" data-react-props-value="{}"></div>
 //
-export class ReactController extends Controller {
+export default class ReactController extends Controller {
   static values = {
     component: String,
     props: Object
