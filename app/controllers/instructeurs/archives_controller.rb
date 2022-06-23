@@ -13,7 +13,7 @@ module Instructeurs
       type = params[:type]
       month = Date.strptime(params[:month], '%Y-%m') if params[:month].present?
 
-      archive = ProcedureArchiveService.new(procedure).create_pending_archive(current_instructeur, type, month)
+      archive = ProcedureArchiveService.new(procedure).create_pending_archive(current_instructeur.groupe_instructeurs.where(procedure: procedure), type, month)
       if archive.pending?
         ArchiveCreationJob.perform_later(procedure, archive, current_instructeur)
         flash[:notice] = "Votre demande a été prise en compte. Selon le nombre de dossiers, cela peut prendre de quelques minutes a plusieurs heures. Vous recevrez un courriel lorsque le fichier sera disponible."
