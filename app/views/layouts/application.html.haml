@@ -43,7 +43,8 @@
       - if content_for?(:footer)
         = content_for(:footer)
 
-      = vite_legacy_javascript_tag 'application'
+      - if vite_legacy?
+        = vite_legacy_javascript_tag 'application'
 
       = yield :charts_js
 
