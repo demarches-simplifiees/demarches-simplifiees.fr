@@ -44,12 +44,4 @@ class InstructeurMailer < ApplicationMailer
 
     mail(to: instructeur.email, subject: subject)
   end
-
-  def send_archive(instructeur, procedure, archive)
-    @archive = archive
-    @procedure = procedure
-    subject = "Votre archive est disponible"
-
-    mail(to: instructeur.email, subject: subject)
-  end
 end

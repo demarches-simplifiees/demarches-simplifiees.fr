@@ -31,14 +31,12 @@ describe Instructeurs::ArchivesController, type: :controller do
   describe '#create' do
     let(:month) { '21-03' }
     let(:date_month) { Date.strptime(month, "%Y-%m") }
-    let(:archive) { create(:archive) }
     let(:subject) do
       post :create, params: { procedure_id: procedure1.id, type: 'monthly', month: month }
     end
 
     it "performs archive creation job" do
-      allow_any_instance_of(ProcedureArchiveService).to receive(:create_pending_archive).and_return(archive)
-      expect { subject }.to have_enqueued_job(ArchiveCreationJob).with(procedure1, archive, instructeur)
+      expect { subject }.to have_enqueued_job(ArchiveCreationJob).with(procedure1, an_instance_of(Archive), instructeur)
       expect(flash.notice).to include("Votre demande a été prise en compte")
     end
   end
