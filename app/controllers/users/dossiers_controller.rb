@@ -172,7 +172,7 @@ module Users
 
       respond_to do |format|
         format.html { render :brouillon }
-        format.turbo_stream
+        format.turbo_stream { render layout: false }
       end
     end
 
