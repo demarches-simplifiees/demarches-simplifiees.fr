@@ -1,8 +1,4 @@
-.statistiques
-  -# Load Chartkick lazily, by using our React lazy-loader.
-  -# (Chartkick itself doesn't use React though)
-  = react_component('Chartkick')
-
+.statistiques{ 'data-controller': 'chartkick' }
   %h1.new-h1= title
   .stat-cards
     - if @usual_traitement_time.present?
