@@ -5,12 +5,8 @@ module Instructeurs
     def index
       @procedure = procedure
       @average_dossier_weight = procedure.average_dossier_weight
-
       @count_dossiers_termines_by_month = Traitement.count_dossiers_termines_by_month(groupe_instructeurs)
-
-      @archives = Archive
-        .for_groupe_instructeur(groupe_instructeurs)
-        .to_a
+      @archives = Archive.for_groupe_instructeur(groupe_instructeurs).to_a
     end
 
     def create
@@ -20,7 +16,7 @@ module Instructeurs
       archive = ProcedureArchiveService.new(procedure).create_pending_archive(current_instructeur, type, month)
       if archive.pending?
         ArchiveCreationJob.perform_later(procedure, archive, current_instructeur)
-        flash[:notice] = "Votre demande a été prise en compte. Selon le nombre de dossiers, cela peut prendre quelques minutes. Vous recevrez un courriel lorsque le fichier sera disponible."
+        flash[:notice] = "Votre demande a été prise en compte. Selon le nombre de dossiers, cela peut prendre de quelques minutes a plusieurs heures. Vous recevrez un courriel lorsque le fichier sera disponible."
       else
         flash[:notice] = "Cette archive a déjà été générée."
       end
