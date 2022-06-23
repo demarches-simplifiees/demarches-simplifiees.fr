@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_21_160241) do
+ActiveRecord::Schema.define(version: 2022_06_22_183305) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -651,6 +651,7 @@ ActiveRecord::Schema.define(version: 2022_06_21_160241) do
     t.string "lien_notice"
     t.string "lien_site_web"
     t.text "monavis_embed"
+    t.boolean "opendata", default: true
     t.string "organisation"
     t.bigint "parent_procedure_id"
     t.string "path", null: false
