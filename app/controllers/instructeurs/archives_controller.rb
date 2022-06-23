@@ -1,6 +1,5 @@
 module Instructeurs
   class ArchivesController < InstructeurController
-    before_action :ensure_procedure_enabled, only: [:create]
     helper_method :create_archive_url
 
     def index
@@ -30,13 +29,6 @@ module Instructeurs
 
 
     private
-
-    def ensure_procedure_enabled
-      if procedure.brouillon?
-        flash[:alert] = "L'accès aux archives n’est pas disponible pour cette démarche, merci d’en faire la demande à l'équipe de démarches simplifiees"
-        return redirect_to instructeur_procedure_path(procedure)
-      end
-    end
 
     def procedure_id
       params[:procedure_id]
