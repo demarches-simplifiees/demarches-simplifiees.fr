@@ -1,10 +1,10 @@
 module Instructeurs
   class ArchivesController < InstructeurController
+    before_action :retrieve_procedure, only: [:index, :create]
     helper_method :create_archive_url
 
     def index
-      @procedure = procedure
-      @average_dossier_weight = procedure.average_dossier_weight
+      @average_dossier_weight = @procedure.average_dossier_weight
       @count_dossiers_termines_by_month = Traitement.count_dossiers_termines_by_month(groupe_instructeurs)
       @archives = Archive.for_groupe_instructeur(groupe_instructeurs).to_a
     end
@@ -13,37 +13,30 @@ module Instructeurs
       type = params[:type]
       month = Date.strptime(params[:month], '%Y-%m') if params[:month].present?
 
-      archive = ProcedureArchiveService.new(procedure).create_pending_archive(current_instructeur.groupe_instructeurs.where(procedure: procedure), type, month)
+      archive = ProcedureArchiveService.new(@procedure).create_pending_archive(groupe_instructeurs, type, month)
       if archive.pending?
-        ArchiveCreationJob.perform_later(procedure, archive, current_instructeur)
+        ArchiveCreationJob.perform_later(@procedure, archive, current_instructeur)
         flash[:notice] = "Votre demande a été prise en compte. Selon le nombre de dossiers, cela peut prendre de quelques minutes a plusieurs heures. Vous recevrez un courriel lorsque le fichier sera disponible."
       else
         flash[:notice] = "Cette archive a déjà été générée."
       end
-      redirect_to instructeur_archives_path(procedure)
+      redirect_to instructeur_archives_path(@procedure)
     end
+
+    private
 
     def create_archive_url(procedure, month)
       instructeur_archives_path(procedure, type: 'monthly', month: month.strftime('%Y-%m'))
     end
 
-
-    private
-
-    def procedure_id
-      params[:procedure_id]
-    end
-
     def groupe_instructeurs
       current_instructeur
         .groupe_instructeurs
-        .where(procedure_id: procedure_id)
+        .where(procedure_id: params[:procedure_id])
     end
 
-    def procedure
-      current_instructeur
-        .procedures
-        .find(procedure_id)
+    def retrieve_procedure
+      @procedure = current_instructeur.procedures.find(params[:procedure_id])
     end
   end
 end

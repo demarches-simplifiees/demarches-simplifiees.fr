@@ -28,7 +28,6 @@ describe 'administrateurs/procedures/show.html.haml', type: :view do
       describe 'archive button' do
         it { expect(rendered).not_to have_css('#archive-procedure') }
       end
-
     end
   end
 

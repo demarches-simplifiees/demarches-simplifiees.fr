@@ -1,19 +1,20 @@
 module Administrateurs
   class ArchivesController < AdministrateurController
     before_action :retrieve_procedure, only: [:index, :create]
+    before_action :retrieve_exports, only: [:index]
     helper_method :create_archive_url
+
     def index
-      @exports = Export.find_for_groupe_instructeurs(@procedure.groupe_instructeur_ids, nil)
       @average_dossier_weight = @procedure.average_dossier_weight
-      @count_dossiers_termines_by_month = Traitement.count_dossiers_termines_by_month(@procedure.groupe_instructeurs)
-      @archives = Archive.for_groupe_instructeur(@procedure.groupe_instructeurs).to_a
+      @count_dossiers_termines_by_month = Traitement.count_dossiers_termines_by_month(groupe_instructeurs)
+      @archives = Archive.for_groupe_instructeur(groupe_instructeurs).to_a
     end
 
     def create
       type = params[:type]
       month = Date.strptime(params[:month], '%Y-%m') if params[:month].present?
 
-      archive = ProcedureArchiveService.new(@procedure).create_pending_archive(@procedure.groupe_instructeurs, type, month)
+      archive = ProcedureArchiveService.new(@procedure).create_pending_archive(groupe_instructeurs, type, month)
       if archive.pending?
         ArchiveCreationJob.perform_later(@procedure, archive, current_administrateur)
         flash[:notice] = "Votre demande a été prise en compte. Selon le nombre de dossiers, cela peut prendre de quelques minutes a plusieurs heures. Vous recevrez un courriel lorsque le fichier sera disponible."
@@ -23,9 +24,18 @@ module Administrateurs
       redirect_to admin_procedure_archives_path(@procedure)
     end
 
+    private
+
+    def retrieve_exports
+      @exports = Export.find_for_groupe_instructeurs(groupe_instructeurs, nil)
+    end
+
+    def groupe_instructeurs
+      @procedure.groupe_instructeurs
+    end
+
     def create_archive_url(procedure, month)
       admin_procedure_archives_path(procedure, type: 'monthly', month: month.strftime('%Y-%m'))
     end
-
   end
 end
