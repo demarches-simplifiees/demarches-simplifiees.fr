@@ -2,6 +2,7 @@ import '../shared/polyfills';
 import Rails from '@rails/ujs';
 import * as ActiveStorage from '@rails/activestorage';
 import * as Turbo from '@hotwired/turbo';
+import { Application } from '@hotwired/stimulus';
 
 import '../shared/activestorage/ujs';
 import '../shared/remote-poller';
@@ -10,7 +11,7 @@ import '../shared/toggle-target';
 import '../shared/ujs-error-handling';
 
 import { registerComponents } from '../controllers/react_controller';
-import '../controllers';
+import { registerControllers } from '../shared/stimulus-loader';
 
 import '../new_design/form-validation';
 import '../new_design/procedure-context';
@@ -41,7 +42,6 @@ import {
 } from '../new_design/fc-fusion';
 
 registerComponents({
-  Chartkick: () => import('../components/Chartkick'),
   ComboAdresseSearch: () => import('../components/ComboAdresseSearch'),
   ComboAnnuaireEducationSearch: () =>
     import('../components/ComboAnnuaireEducationSearch'),
@@ -54,9 +54,11 @@ registerComponents({
   ComboPaysSearch: () => import('../components/ComboPaysSearch'),
   ComboRegionsSearch: () => import('../components/ComboRegionsSearch'),
   MapEditor: () => import('../components/MapEditor'),
-  MapReader: () => import('../components/MapReader'),
-  Trix: () => import('../components/Trix')
+  MapReader: () => import('../components/MapReader')
 });
+
+const application = Application.start();
+registerControllers(application);
 
 // This is the global application namespace where we expose helpers used from rails views
 const DS = {
