@@ -7,7 +7,7 @@ class ArchiveCreationJob < ApplicationJob
       .new(procedure)
       .make_and_upload_archive(archive)
     archive.make_available!
-    InstructeurMailer.send_archive(administrateur_or_instructeur, procedure, archive).deliver_later
+    UserMailer.send_archive(administrateur_or_instructeur, procedure, archive).deliver_later
   rescue => e
     archive.fail! # fail for observability
     raise e       # re-raise for retryable behaviour
