@@ -5,7 +5,7 @@ class ArchiveCreationJob < ApplicationJob
     archive.restart! if archive.failed? # restart for AASM
     ProcedureArchiveService
       .new(procedure)
-      .make_and_upload_archive(archive, instructeur)
+      .make_and_upload_archive(archive)
     archive.make_available!
     InstructeurMailer.send_archive(instructeur, procedure, archive).deliver_later
   rescue => e

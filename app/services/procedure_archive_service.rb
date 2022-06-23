@@ -9,7 +9,7 @@ class ProcedureArchiveService
     Archive.find_or_create_archive(type, month, groupe_instructeurs)
   end
 
-  def make_and_upload_archive(archive, instructeur)
+  def make_and_upload_archive(archive)
     dossiers = Dossier.visible_by_administration
       .where(groupe_instructeur: archive.groupe_instructeurs)
 
