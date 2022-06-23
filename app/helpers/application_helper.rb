@@ -181,4 +181,12 @@ module ApplicationHelper
   def show_outdated_browser_banner?
     !supported_browser? && !has_dismissed_outdated_browser_banner?
   end
+
+  def vite_legacy?
+    if ENV['VITE_LEGACY'] == 'disabled'
+      false
+    else
+      Rails.env.production? || ENV['VITE_LEGACY'] == 'enabled'
+    end
+  end
 end

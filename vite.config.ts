@@ -4,27 +4,17 @@ import ViteLegacy from '@vitejs/plugin-legacy';
 import FullReload from 'vite-plugin-full-reload';
 import RubyPlugin from 'vite-plugin-ruby';
 
-export default defineConfig({
-  resolve: { alias: { '@utils': '/shared/utils.ts' } },
-  build: {
-    sourcemap: true,
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.match('maplibre') || id.match('mapbox')) {
-            return 'maplibre';
-          }
-        }
-      }
-    }
-  },
-  plugins: [
-    RubyPlugin(),
-    ViteReact({
-      parserPlugins: ['classProperties', 'classPrivateProperties'],
-      jsxRuntime: 'classic'
-    }),
-    FullReload(['config/routes.rb', 'app/views/**/*'], { delay: 200 }),
+const plugins = [
+  RubyPlugin(),
+  ViteReact({
+    parserPlugins: ['classProperties', 'classPrivateProperties'],
+    jsxRuntime: 'classic'
+  }),
+  FullReload(['config/routes.rb', 'app/views/**/*'], { delay: 200 })
+];
+
+if (shouldBuildLegacy()) {
+  plugins.push(
     ViteLegacy({
       targets: [
         'defaults',
@@ -48,5 +38,32 @@ export default defineConfig({
         'yet-another-abortcontroller-polyfill'
       ]
     })
-  ]
+  );
+}
+
+export default defineConfig({
+  resolve: { alias: { '@utils': '/shared/utils.ts' } },
+  build: {
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.match('maplibre') || id.match('mapbox')) {
+            return 'maplibre';
+          }
+        }
+      }
+    }
+  },
+  plugins
 });
+
+function shouldBuildLegacy() {
+  if (process.env.VITE_LEGACY == 'disabled') {
+    return false;
+  }
+  return (
+    process.env.RAILS_ENV == 'production' ||
+    process.env.VITE_LEGACY == 'enabled'
+  );
+}
