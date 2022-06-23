@@ -1,0 +1,8 @@
+fr:
+  administrateurs:
+    informations:
+      opendata_header: Open data
+      opendata_notice_html: "Les démarches à destination du public hébergées par Démarches Simplifiées sont dans leur majorité à destination des usagers ou des personnes morales, mais aussi aux agents ou contribuent au fonctionnement des services.<br>
+      Dans leur majorité, les descriptions des formulaires, le titre des champs, sont des informations qui peuvent être communiquées au public en Open data, sous un format numérique facilement exploitables. Les valeurs saisies par les usagers restent évidemment confidentielles.<br>
+      Ces informations seront publiées sur data.gouv.fr et seront mises à jours régulièrement."
+      opendata: "Autorisez-vous la publication du descriptif de la démarche ?"
