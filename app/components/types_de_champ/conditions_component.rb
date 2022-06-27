@@ -68,14 +68,23 @@ class TypesDeChamp::ConditionsComponent < ApplicationComponent
   end
 
   def operator_tag(operator_name, targeted_champ, row_index)
+    ops = compatibles_operators(targeted_champ)
+
+    current_operator_valid = ops.map(&:second).include?(operator_name)
+
+    if !current_operator_valid
+      ops.unshift(['Sélectionner', EmptyOperator.name])
+    end
+
     select_tag(
       input_name_for('operator_name'),
-      options_for_select(available_operators(targeted_champ), operator_name),
-      id: input_id_for('operator_name', row_index)
+      options_for_select(ops, selected: operator_name),
+      id: input_id_for('operator_name', row_index),
+      class: { alert: !current_operator_valid }
     )
   end
 
-  def available_operators(left)
+  def compatibles_operators(left)
     case left.type
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:boolean)
       [
