@@ -8,7 +8,7 @@ describe Logic::Eq do
 
   describe '#errors' do
     it { expect(ds_eq(constant(true), constant(true)).errors).to be_empty }
-    it { expect(ds_eq(constant(true), constant(1)).errors).to eq(["les types sont incompatibles : (true == 1)"]) }
+    it { expect(ds_eq(constant(true), constant(1)).errors).to eq(["les types sont incompatibles : (Oui == 1)"]) }
   end
 
   describe '#==' do
