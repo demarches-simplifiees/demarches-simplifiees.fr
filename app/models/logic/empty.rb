@@ -18,4 +18,8 @@ class Logic::Empty < Logic::Term
   def ==(other)
     self.class == other.class
   end
+
+  def value
+    nil
+  end
 end
