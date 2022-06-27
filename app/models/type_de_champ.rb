@@ -202,6 +202,10 @@ class TypeDeChamp < ApplicationRecord
     ])
   end
 
+  def drop_down_list_with_other?
+    type_champ == TypeDeChamp.type_champs.fetch(:drop_down_list)
+  end
+
   def header_section?
     type_champ == TypeDeChamp.type_champs.fetch(:header_section)
   end

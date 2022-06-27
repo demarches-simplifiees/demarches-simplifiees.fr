@@ -40,6 +40,12 @@
             .cell
               = form.label :drop_down_list_value, "Options de la liste", for: dom_id(type_de_champ, :drop_down_list_value)
               = form.text_area :drop_down_list_value, class: 'small-margin small width-100', rows: 7, id: dom_id(type_de_champ, :drop_down_list_value)
+            - if type_de_champ.drop_down_list_with_other?
+              .cell
+                = form.label :drop_down_other do
+                  Proposer une option &apos;autre&apos; avec un texte libre
+                = form.check_box :drop_down_other, class: "small-margin small"
+
         - if type_de_champ.linked_drop_down_list?
           .flex.column.justify-start.flex-grow
             .cell
