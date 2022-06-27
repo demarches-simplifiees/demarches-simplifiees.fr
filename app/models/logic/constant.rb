@@ -7,7 +7,16 @@ class Logic::Constant < Logic::Term
 
   def compute(_champs = nil) = @value
 
-  def to_s = @value.to_s
+  def to_s
+    case @value
+    when TrueClass
+      "Oui"
+    when FalseClass
+      "Non"
+    else
+      @value.to_s
+    end
+  end
 
   def type
     case @value

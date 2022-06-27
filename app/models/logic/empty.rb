@@ -1,5 +1,5 @@
 class Logic::Empty < Logic::Term
-  def to_s = "empty member"
+  def to_s = "un membre vide"
 
   def type = :empty
 
