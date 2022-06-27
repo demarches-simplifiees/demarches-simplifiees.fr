@@ -215,6 +215,7 @@
     }
 
     &:focus {
+      outline: 0;
       border: 1px solid $blue-france-500;
       box-shadow: 0px 0px 2px 1px $blue-france-500;
     }
