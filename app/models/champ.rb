@@ -89,8 +89,8 @@ class Champ < ApplicationRecord
     @sections ||= dossier&.sections_for(self)
   end
 
-  def mandatory_and_blank?
-    mandatory? && blank?
+  def mandatory_blank_and_visible?
+    mandatory? && blank? && visible?
   end
 
   def blank?
