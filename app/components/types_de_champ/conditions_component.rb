@@ -92,7 +92,7 @@ class TypesDeChamp::ConditionsComponent < ApplicationComponent
       ]
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:empty)
       [
-        ['Est', Eq.name]
+        ['Est', EmptyOperator.name]
       ]
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:enum)
       [
@@ -108,12 +108,21 @@ class TypesDeChamp::ConditionsComponent < ApplicationComponent
   end
 
   def right_operand_tag(left, right, row_index)
+    right_valid = current_right_valid?(left, right)
+
     case left.type
     when :boolean
+      options = [['Oui', constant(true).to_json], ['Non', constant(false).to_json]]
+
+      if !right_valid
+        options.unshift(['Sélectionner', empty])
+      end
+
       select_tag(
         input_name_for('value'),
-        options_for_select([['Oui', constant(true).to_json], ['Non', constant(false).to_json]], right.to_json),
-        id: input_id_for('value', row_index)
+        options_for_select(options, right.to_json),
+        id: input_id_for('value', row_index),
+        class: right_valid ? nil : 'alert'
       )
     when :empty
       select_tag(
@@ -122,15 +131,39 @@ class TypesDeChamp::ConditionsComponent < ApplicationComponent
         id: input_id_for('value', row_index)
       )
     when :enum
+      options = left.options
+
+      if !right_valid
+        options.unshift(['Sélectionner', empty])
+      end
+
       select_tag(
         input_name_for('value'),
-        options_for_select(left.options, right.value),
-        id: input_id_for('value', row_index)
+        options_for_select(options, right.value),
+        id: input_id_for('value', row_index),
+        class: right_valid ? nil : 'alert'
       )
     when :number
-      number_field_tag(input_name_for('value'), right.value, required: true, id: input_id_for('value', row_index))
+      number_field_tag(
+        input_name_for('value'),
+        right.value,
+        required: true,
+        id: input_id_for('value', row_index),
+        class: right_valid ? nil : 'alert'
+      )
     else
       number_field_tag(input_name_for('value'), '', id: input_id_for('value', row_index))
+    end
+  end
+
+  def current_right_valid?(left, right)
+    case [left.type, right.type]
+    in [:boolean, :boolean] | [:number, :number] | [:empty, :empty]
+      true
+    in [:enum, :string]
+      left.options.include?(right.value)
+    else
+      false
     end
   end
 
