@@ -13,4 +13,8 @@ describe Logic::Constant do
     it { expect(empty).to eq(empty) }
     it { expect(empty).not_to eq(constant(true)) }
   end
+
+  describe '#to_s' do
+    it { expect(empty.to_s).to eq('un membre vide') }
+  end
 end

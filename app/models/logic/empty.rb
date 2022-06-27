@@ -1,5 +1,5 @@
 class Logic::Empty < Logic::Term
-  def to_s = "empty member"
+  def to_s = I18n.t('logic.empty')
 
   def type = :empty
 
