@@ -3,7 +3,7 @@
 ## Branches du projet
 
 - `main`, branche qui contient le code du site tel qu'il est [en intégration](https://dev.demarches-simplifiees.fr/)
-- `production`, branche qui contient le code du site tel qu'il est [en production](https://www.demarches-simplifiees.fr)
+- les [releases](https://github.com/betagouv/demarches-simplifiees.fr/releases) pointent sur la branche `main` (historiquement sur la branche `production`)
 
 ## Cycle de développement
 
