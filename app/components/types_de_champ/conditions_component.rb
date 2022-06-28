@@ -174,7 +174,12 @@ class TypesDeChamp::ConditionsComponent < ApplicationComponent
   end
 
   def delete_condition_tag(row_index)
-    submit_tag('X', formaction: delete_row_condition_path(@tdc.id, row_index: row_index))
+    tag.button(
+      tag.span('', class: 'icon delete') + tag.span('Supprimer la ligne', class: 'sr-only'),
+      formaction: delete_row_admin_procedure_condition_path(@procedure_id, @tdc.id, row_index: row_index),
+      formmethod: 'delete',
+      formnovalidate: true
+    )
   end
 
   def render?
