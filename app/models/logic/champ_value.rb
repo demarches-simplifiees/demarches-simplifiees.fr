@@ -13,7 +13,8 @@ class Logic::ChampValue < Logic::Term
     number: :number,
     string: :string,
     enum: :enum,
-    empty: :empty
+    empty: :empty,
+    unmanaged: :unmanaged
   }
 
   attr_reader :stable_id
@@ -48,7 +49,7 @@ class Logic::ChampValue < Logic::Term
     when MANAGED_TYPE_DE_CHAMP.fetch(:drop_down_list)
       CHAMP_VALUE_TYPE.fetch(:enum)
     else
-      raise "unmanaged type: #{type_de_champ.type_champ}"
+      CHAMP_VALUE_TYPE.fetch(:unmanaged)
     end
   end
 
