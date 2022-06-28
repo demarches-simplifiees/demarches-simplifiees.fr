@@ -1,3 +1,5 @@
+= turbo_stream.replace 'errors-summary', render(TypesDeChampEditor::ErrorsSummary.new(revision: @procedure.draft_revision))
+
 - if @coordinate&.type_de_champ&.valid?
   = turbo_stream.morph dom_id(@coordinate, :type_de_champ_editor) do
     = render TypesDeChampEditor::ChampComponent.new(coordinate: @coordinate, upper_coordinates: @upper_coordinates)
