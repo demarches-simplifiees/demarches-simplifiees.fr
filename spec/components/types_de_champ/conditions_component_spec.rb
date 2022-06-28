@@ -77,7 +77,7 @@ describe TypesDeChamp::ConditionsComponent, type: :component do
 
           it do
             expect(page).to have_select('type_de_champ[condition_form][rows][][operator_name]', with_options: ['Est'])
-            expect(page).to have_select('type_de_champ[condition_form][rows][][value]', options: ['val1', 'val2', 'val3'])
+            expect(page).to have_select('type_de_champ[condition_form][rows][][value]', options: ['Sélectionner', 'val1', 'val2', 'val3'])
           end
         end
 

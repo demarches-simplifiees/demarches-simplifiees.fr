@@ -48,26 +48,28 @@ class TypesDeChamp::ConditionsComponent < ApplicationComponent
   end
 
   def left_operand_tag(targeted_champ, row_index)
+    current_target_valid = targets.map(&:second).include?(targeted_champ.to_json)
+
+    selected_target = current_target_valid ? targeted_champ.to_json : empty.to_json
+
     select_tag(
       input_name_for('targeted_champ'),
-      options_for_select(available_targets, targeted_champ.to_json),
+      options_for_select(targets, selected_target),
       onchange: "this.form.action = this.form.action + '/change_champ?row_index=#{row_index}'",
-      id: input_id_for('targeted_champ', row_index)
+      id: input_id_for('targeted_champ', row_index),
+      class: { alert: !current_target_valid }
     )
   end
 
+  def targets
+    available_targets
+      .then { |targets| targets.unshift(['Sélectionner', empty.to_json]) }
+  end
+
   def available_targets
-    targets = @upper_tdcs
+    @upper_tdcs
       .filter { |tdc| ChampValue::MANAGED_TYPE_DE_CHAMP.values.include?(tdc.type_champ) }
-      .map do |tdc|
-      [tdc.libelle, champ_value(tdc.stable_id).to_json]
-    end
-
-    if targets.present?
-      targets.unshift(['Sélectionner', empty.to_json])
-    end
-
-    targets
+      .map { |tdc| [tdc.libelle, champ_value(tdc.stable_id).to_json] }
   end
 
   def operator_tag(operator_name, targeted_champ, row_index)
