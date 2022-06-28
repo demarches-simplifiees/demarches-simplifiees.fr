@@ -65,4 +65,13 @@
       border-color: $dark-red;
     }
   }
+
+  .add-row {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 25px;
+    margin: 0 $default-padding $default-padding;
+  }
 }
