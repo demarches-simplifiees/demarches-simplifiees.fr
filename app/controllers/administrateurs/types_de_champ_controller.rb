@@ -8,6 +8,19 @@ module Administrateurs
 
       if type_de_champ.valid?
         @coordinate = @procedure.draft_revision.coordinate_for(type_de_champ)
+
+        if !@coordinate.child?
+          all_coordinates = @procedure.draft_revision.revision_types_de_champ_public.includes(:type_de_champ)
+          index_of_current_coordinate = all_coordinates.index(@coordinate)
+          @upper_coordinates = all_coordinates.take(index_of_current_coordinate)
+
+          @other_coordinates = all_coordinates.drop(index_of_current_coordinate + 1)
+            .map { |coordinate| [coordinate, all_coordinates.take_while { |c| c != coordinate }] }
+        else
+          @upper_coordinates = []
+          @other_coordinates = []
+        end
+
         reset_procedure
         flash.notice = "Formulaire enregistré"
       else
@@ -18,10 +31,24 @@ module Administrateurs
     def update
       type_de_champ = @procedure.draft_revision.find_and_ensure_exclusive_use(params[:id])
 
+      coordinate = @procedure.draft_revision.coordinate_for(type_de_champ)
+
+      all_coordinates = @procedure.draft_revision.revision_types_de_champ_public.includes(:type_de_champ)
+
+      index_of_current_coordinate = all_coordinates.index(coordinate)
+
+      @upper_coordinates = all_coordinates.take(index_of_current_coordinate)
+
       if type_de_champ.update(type_de_champ_update_params)
         if params[:should_render]
           @coordinate = @procedure.draft_revision.coordinate_for(type_de_champ)
         end
+
+        all_coordinates = @procedure.draft_revision.revision_types_de_champ_public.includes(:type_de_champ)
+
+        @other_coordinates = all_coordinates.drop(index_of_current_coordinate + 1)
+          .map { |coordinate| [coordinate, all_coordinates.take_while { |c| c != coordinate }] }
+
         reset_procedure
         flash.notice = "Formulaire enregistré"
       else
@@ -37,11 +64,25 @@ module Administrateurs
     def move_up
       flash.notice = "Formulaire enregistré"
       @coordinate = @procedure.draft_revision.move_up_type_de_champ(params[:id])
+
+      all_coordinates = @procedure.draft_revision.revision_types_de_champ_public.includes(:type_de_champ)
+      index_of_current_coordinate = all_coordinates.index(@coordinate)
+      @upper_coordinates = all_coordinates.take(index_of_current_coordinate)
+
+      @other_coordinates = all_coordinates.drop(index_of_current_coordinate + 1)
+        .map { |coordinate| [coordinate, all_coordinates.take_while { |c| c != coordinate }] }
     end
 
     def move_down
       flash.notice = "Formulaire enregistré"
       @coordinate = @procedure.draft_revision.move_down_type_de_champ(params[:id])
+
+      all_coordinates = @procedure.draft_revision.revision_types_de_champ_public.includes(:type_de_champ)
+      index_of_current_coordinate = all_coordinates.index(@coordinate)
+      @upper_coordinates = all_coordinates.take(index_of_current_coordinate)
+
+      @other_coordinates = all_coordinates.take(index_of_current_coordinate)
+        .map { |coordinate| [coordinate, all_coordinates.take_while { |c| c != coordinate }] }
     end
 
     def destroy
