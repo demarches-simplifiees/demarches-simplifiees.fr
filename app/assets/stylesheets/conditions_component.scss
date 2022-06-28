@@ -3,6 +3,15 @@
 
 .conditionnel {
 
+  .condition-error {
+    background: $background-red;
+    margin: ($default-spacer) (-$default-spacer);
+
+    ul {
+      padding: $default-spacer;
+    }
+  }
+
   .condition-table {
     table-layout: fixed;
 

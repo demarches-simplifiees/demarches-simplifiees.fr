@@ -155,4 +155,31 @@ class TypesDeChamp::ConditionsComponent < ApplicationComponent
   def input_prefix
     'type_de_champ[condition_form]'
   end
+
+  def errors?
+    condition_per_row
+      .filter { |condition| condition.errors(@upper_tdcs.map(&:stable_id)).present? }
+      .present?
+  end
+
+  def errors
+    condition_per_row
+      .filter { |condition| condition.errors(@upper_tdcs.map(&:stable_id)).present? }
+      .map { |condition| row_error(to_row(condition)) }
+      .uniq
+      .map { |message| tag.li(message) }
+      .then { |lis| tag.ul(lis.reduce(&:+)) }
+  end
+
+  def row_error((left, operator_name, right))
+    targeted_champ = @upper_tdcs.find { |tdc| tdc.stable_id == left.stable_id }
+
+    if targeted_champ.nil?
+      "Un champ cible n'est plus disponible. Il est soit supprimé, soit déplacé en dessous de ce champ."
+    elsif left.type == :unmanaged
+      "Le champ « #{targeted_champ.libelle} » de type #{targeted_champ.type_champ} ne peut pas être utilisé comme champ cible."
+    else
+      "Le champ « #{targeted_champ.libelle} » est #{t(left.type, scope: 'types_de_champ.conditions_component.type')}. Il ne peut pas être #{t(".#{operator_name}").downcase} #{right.to_s.downcase}."
+    end
+  end
 end

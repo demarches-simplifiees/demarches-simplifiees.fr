@@ -5,6 +5,10 @@
         %p.mr-2 Logique conditionnelle
         = logic_conditionnel_button
 
+      - if errors?
+        .condition-error
+          = errors
+
       - if @condition.present?
         %table.condition-table.mt-2.width-100
           %thead
