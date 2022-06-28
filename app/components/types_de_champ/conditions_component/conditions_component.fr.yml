@@ -1,0 +1,10 @@
+---
+fr:
+  'Logic::LessThan': Inférieur à
+  'Logic::LessThanEq': Inférieur ou égal à
+  'Logic::Eq': Équal à
+  'Logic::GreaterThan': Supérieur à
+  'Logic::GreaterThanEq': Supérieur ou égal à
+  type:
+    number: un nombre
+    boolean: soit oui, soit non
