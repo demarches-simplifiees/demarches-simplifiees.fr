@@ -38,6 +38,9 @@
       %span.icon.archive
       Clore
 
+.container
+  = render TypesDeChampEditor::ErrorsSummary.new(revision: @procedure.draft_revision)
+
 - if @procedure.draft_changed?
   .container
     .card.featured
