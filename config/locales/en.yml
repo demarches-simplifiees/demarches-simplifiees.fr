@@ -129,8 +129,6 @@ en:
         messages:
           form:
             send_message: "Send message"
-            attachment_size: "(attachment size max : 20 Mo)"
-            attach_dossier: "Attach a file"
             write_message_placeholder: "Write your message here"
             write_message_to_administration_placeholder: "Write your message to the administration here"
         demande:
