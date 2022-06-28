@@ -124,8 +124,6 @@ fr:
         messages:
           form:
             send_message: "Envoyer le message"
-            attachment_size: "(taille max : 20 Mo)"
-            attach_dossier: "Joindre un document"
             write_message_placeholder: "Écrivez votre message ici"
             write_message_to_administration_placeholder: "Écrivez votre message à l’administration ici"
         demande:
