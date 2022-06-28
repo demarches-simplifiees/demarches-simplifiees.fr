@@ -170,7 +170,12 @@ class TypesDeChamp::ConditionsComponent < ApplicationComponent
   end
 
   def add_condition_tag
-    submit_tag('Ajouter une condition', formaction: add_row_condition_path(@tdc.id))
+    tag.button(
+      tag.span('', class: 'icon add') + tag.span("Ajouter une condition"),
+      formaction: add_row_admin_procedure_condition_path(@procedure_id, @tdc.id),
+      formnovalidate: true,
+      class: 'add-row'
+    )
   end
 
   def delete_condition_tag(row_index)
