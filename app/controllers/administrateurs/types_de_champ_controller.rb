@@ -9,6 +9,8 @@ module Administrateurs
       if type_de_champ.valid?
         @coordinate = @procedure.draft_revision.coordinate_for(type_de_champ)
 
+        # TODO : faire un test dans system qui pete
+
         if !@coordinate.child?
           all_coordinates = @procedure.draft_revision.revision_types_de_champ_public.includes(:type_de_champ)
           index_of_current_coordinate = all_coordinates.index(@coordinate)
@@ -89,6 +91,8 @@ module Administrateurs
       @coordinate = @procedure.draft_revision.remove_type_de_champ(params[:id])
       reset_procedure
       flash.notice = "Formulaire enregistré"
+
+      # TODO : si on supprime un target champ, il faut modifier les enfants
     end
 
     private
