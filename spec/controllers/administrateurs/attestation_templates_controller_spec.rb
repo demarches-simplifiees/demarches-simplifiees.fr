@@ -1,5 +1,3 @@
-include ActionDispatch::TestProcess
-
 describe Administrateurs::AttestationTemplatesController, type: :controller do
   let(:admin) { create(:administrateur) }
   let(:attestation_template) { build(:attestation_template) }
