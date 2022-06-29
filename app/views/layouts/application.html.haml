@@ -15,9 +15,16 @@
 
     = vite_client_tag
     = vite_react_refresh_tag
-    = vite_javascript_tag 'application'
-    - if administrateur_signed_in?
-      = vite_javascript_tag 'track-admin'
+
+    - if vite_legacy?
+      = vite_legacy_javascript_tag 'application'
+      - if administrateur_signed_in?
+        = vite_legacy_javascript_tag 'track-admin'
+    - else
+      = vite_javascript_tag 'application'
+      - if administrateur_signed_in?
+        = vite_javascript_tag 'track-admin'
+
 
     = preload_link_tag(asset_url("Muli-Regular.woff2"))
     = preload_link_tag(asset_url("Muli-Bold.woff2"))
@@ -42,9 +49,6 @@
 
       - if content_for?(:footer)
         = content_for(:footer)
-
-      - if vite_legacy?
-        = vite_legacy_javascript_tag 'application'
 
       = yield :charts_js
 
