@@ -5,7 +5,7 @@ class DubiousProcedure
   attr_accessor :id, :libelle, :dubious_champs, :aasm_state
 
   FORBIDDEN_KEYWORDS = [
-    'NIR', 'NIRPP', 'race', 'religion',
+    'NIR', 'RNIPP', 'race', 'religion', 'RIB', 'IBAN',
     'carte bancaire', 'carte bleue', 'sécurité sociale',
     'agdref', 'syndicat', 'syndical',
     'parti politique', 'opinion politique', 'bord politique', 'courant politique',
