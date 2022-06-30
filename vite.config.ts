@@ -44,16 +44,7 @@ if (shouldBuildLegacy()) {
 export default defineConfig({
   resolve: { alias: { '@utils': '/shared/utils.ts' } },
   build: {
-    sourcemap: true,
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.match('maplibre') || id.match('mapbox')) {
-            return 'maplibre';
-          }
-        }
-      }
-    }
+    sourcemap: true
   },
   plugins
 });

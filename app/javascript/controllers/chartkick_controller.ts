@@ -1,11 +1,10 @@
 import { Controller } from '@hotwired/stimulus';
 import { toggle, delegate } from '@utils';
+import Chartkick from 'chartkick';
+import Highcharts from 'highcharts';
 
 export class ChartkickController extends Controller {
   async connect() {
-    const Highcharts = await import('highcharts');
-    const Chartkick = await import('chartkick');
-
     Chartkick.use(Highcharts);
     const reflow = (nextChartId?: string) =>
       nextChartId && Chartkick.charts[nextChartId]?.getChartObject()?.reflow();
