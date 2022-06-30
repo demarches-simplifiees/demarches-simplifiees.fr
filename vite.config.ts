@@ -45,7 +45,15 @@ export default defineConfig({
   resolve: { alias: { '@utils': '/shared/utils.ts' } },
   build: {
     sourcemap: true,
-    polyfillDynamicImport: true
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.match('maplibre') || id.match('mapbox')) {
+            return 'maplibre';
+          }
+        }
+      }
+    }
   },
   plugins
 });
