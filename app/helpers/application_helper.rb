@@ -189,4 +189,21 @@ module ApplicationHelper
       Rails.env.production? || ENV['VITE_LEGACY'] == 'enabled'
     end
   end
+
+  def ds_vite_legacy_javascript_tag(name, asset_type: :javascript)
+    legacy_name = name.sub(/(\..+)|$/, '-legacy\1')
+    import_tag = tag(:script) do
+      # rubocop:disable Rails/OutputSafety
+      "System.import('#{vite_asset_path(legacy_name, type: asset_type)}')".html_safe
+      # rubocop:enable Rails/OutputSafety
+    end
+
+    safe_join [ds_vite_legacy_polyfill_tag, import_tag]
+  end
+
+  # Internal: Renders the vite-legacy-polyfill to enable code splitting in
+  # browsers that do not support modules.
+  def ds_vite_legacy_polyfill_tag
+    tag(:script, nil, src: vite_asset_path('legacy-polyfills', type: :virtual))
+  end
 end
