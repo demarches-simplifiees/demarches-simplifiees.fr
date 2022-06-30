@@ -48,6 +48,7 @@
 #  draft_revision_id                         :bigint
 #  parent_procedure_id                       :bigint
 #  published_revision_id                     :bigint
+#  replaced_by_procedure_id                  :bigint
 #  service_id                                :bigint
 #  zone_id                                   :bigint
 #
@@ -86,6 +87,8 @@ class Procedure < ApplicationRecord
 
   has_many :experts_procedures, dependent: :destroy
   has_many :experts, through: :experts_procedures
+  has_many :replaced_procedures, -> { with_discarded }, inverse_of: :replaced_by_procedure, class_name: "Procedure",
+  foreign_key: "replaced_by_procedure_id", dependent: :nullify
 
   has_one :module_api_carto, dependent: :destroy
   has_one :legacy_attestation_template, class_name: 'AttestationTemplate', dependent: :destroy
@@ -93,6 +96,7 @@ class Procedure < ApplicationRecord
 
   belongs_to :parent_procedure, class_name: 'Procedure', optional: true
   belongs_to :canonical_procedure, class_name: 'Procedure', optional: true
+  belongs_to :replaced_by_procedure, -> { with_discarded }, inverse_of: :replaced_procedures, class_name: "Procedure", optional: true
   belongs_to :service, optional: true
   belongs_to :zone, optional: true
 
@@ -161,7 +165,7 @@ class Procedure < ApplicationRecord
     if brouillon?
       draft_types_de_champ
     else
-      TypeDeChamp.root
+      TypeDeChamp
         .public_only
         .fillable
         .joins(:revisions)
@@ -177,7 +181,7 @@ class Procedure < ApplicationRecord
     if brouillon?
       draft_types_de_champ_private
     else
-      TypeDeChamp.root
+      TypeDeChamp
         .private_only
         .fillable
         .joins(:revisions)
@@ -403,7 +407,7 @@ class Procedure < ApplicationRecord
   end
 
   def draft_changed?
-    publiee? && published_revision.different_from?(draft_revision) && revision_changes.present?
+    !brouillon? && published_revision.different_from?(draft_revision) && revision_changes.present?
   end
 
   def revision_changes
@@ -458,12 +462,7 @@ class Procedure < ApplicationRecord
     populate_champ_stable_ids
     include_list = {
       draft_revision: {
-        revision_types_de_champ_public: {
-          type_de_champ: :types_de_champ
-        },
-        revision_types_de_champ_private: {
-          type_de_champ: :types_de_champ
-        },
+        revision_types_de_champ: [:type_de_champ],
         attestation_template: [],
         dossier_submitted_message: []
       }
@@ -504,6 +503,7 @@ class Procedure < ApplicationRecord
     procedure.cloned_from_library = from_library
     procedure.parent_procedure = self
     procedure.canonical_procedure = nil
+    procedure.replaced_by_procedure = nil
 
     if from_library
       procedure.service = nil
@@ -511,8 +511,11 @@ class Procedure < ApplicationRecord
       procedure.service = self.service.clone_and_assign_to_administrateur(admin)
     end
 
-    procedure.save
-    TypeDeChamp.where(parent: procedure.draft_revision.types_de_champ.repetition).find_each(&:migrate_parent!)
+    transaction do
+      procedure.save
+
+      move_new_children_to_new_parent_coordinate(procedure.draft_revision)
+    end
 
     if is_different_admin || from_library
       procedure.draft_types_de_champ.each { |tdc| tdc.options&.delete(:old_pj) }
@@ -706,9 +709,12 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def restore_procedure
+  def restore_procedure(author)
     if discarded?
       undiscard
+      self.dossiers.hidden_by_administration.each do |dossier|
+        dossier.restore(author)
+      end
     end
   end
 
@@ -729,27 +735,15 @@ class Procedure < ApplicationRecord
   end
 
   def create_new_revision
-    new_draft = draft_revision
-      .deep_clone(include: [:revision_types_de_champ])
-      .tap(&:save!)
+    transaction do
+      new_draft = draft_revision
+        .deep_clone(include: [:revision_types_de_champ])
+        .tap(&:save!)
 
-    children = new_draft.revision_types_de_champ.where.not(parent_id: nil)
-    children.each do |child|
-      old_parent = draft_revision.revision_types_de_champ.find(child.parent_id)
-      new_parent = new_draft.revision_types_de_champ.find_by(type_de_champ_id: old_parent.type_de_champ_id)
-      child.update!(parent_id: new_parent.id)
+      move_new_children_to_new_parent_coordinate(new_draft)
+
+      new_draft
     end
-
-    new_draft.revision_types_de_champ.reload
-
-    # Some revisions do not have links to children types de champ
-    new_draft
-      .types_de_champ
-      .filter(&:repetition?)
-      .flat_map(&:types_de_champ)
-      .each(&:migrate_parent!)
-
-    new_draft
   end
 
   def column_styles(table)
@@ -860,11 +854,25 @@ class Procedure < ApplicationRecord
     end
   end
 
+  #----- PF section end
+
+  def move_new_children_to_new_parent_coordinate(new_draft)
+    children = new_draft.revision_types_de_champ
+      .includes(parent: :type_de_champ)
+      .where.not(parent_id: nil)
+    coordinates_by_stable_id = new_draft.revision_types_de_champ
+      .includes(:type_de_champ)
+      .index_by(&:stable_id)
+
+    children.each do |child|
+      child.update!(parent: coordinates_by_stable_id.fetch(child.parent.stable_id))
+    end
+    new_draft.revision_types_de_champ.reload
+  end
+
   def validate_for_publication?
     validation_context == :publication || publiee?
   end
-
-  #----- PF section end
 
   def before_publish
     assign_attributes(closed_at: nil, unpublished_at: nil)

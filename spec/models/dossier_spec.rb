@@ -962,7 +962,7 @@ describe Dossier do
 
       expect {
         dossier.passer_en_construction!
-      }.to have_enqueued_job(WebHookJob)
+      }.to have_enqueued_job(WebHookJob).with(dossier.procedure.id, dossier.id, 'en_construction', anything)
 
       expect {
         dossier.update_column(:search_terms, 'bonjour2')
@@ -970,7 +970,7 @@ describe Dossier do
 
       expect {
         dossier.passer_en_instruction!(instructeur: instructeur)
-      }.to have_enqueued_job(WebHookJob)
+      }.to have_enqueued_job(WebHookJob).with(dossier.procedure.id, dossier.id, 'en_instruction', anything)
     end
   end
 
@@ -1453,9 +1453,9 @@ describe Dossier do
         dossier
         procedure.draft_revision.remove_type_de_champ(text_type_de_champ.stable_id)
         procedure.draft_revision.add_type_de_champ(type_champ: TypeDeChamp.type_champs.fetch(:text), libelle: 'New text field')
-        procedure.draft_revision.find_or_clone_type_de_champ(yes_no_type_de_champ.stable_id).update(libelle: 'Updated yes/no')
-        procedure.draft_revision.find_or_clone_type_de_champ(commune_type_de_champ.stable_id).update(libelle: 'Commune de naissance')
-        procedure.draft_revision.find_or_clone_type_de_champ(repetition_type_de_champ.stable_id).update(libelle: 'Repetition')
+        procedure.draft_revision.find_and_ensure_exclusive_use(yes_no_type_de_champ.stable_id).update(libelle: 'Updated yes/no')
+        procedure.draft_revision.find_and_ensure_exclusive_use(commune_type_de_champ.stable_id).update(libelle: 'Commune de naissance')
+        procedure.draft_revision.find_and_ensure_exclusive_use(repetition_type_de_champ.stable_id).update(libelle: 'Repetition')
         procedure.update(published_revision: procedure.draft_revision, draft_revision: procedure.create_new_revision)
         dossier.reload
         procedure.reload

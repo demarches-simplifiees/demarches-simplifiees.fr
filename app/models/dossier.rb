@@ -1261,8 +1261,10 @@ class Dossier < ApplicationRecord
   def send_web_hook
     if saved_change_to_state? && !brouillon? && procedure.web_hook_url.present?
       WebHookJob.perform_later(
-        procedure,
-        self
+        procedure.id,
+        self.id,
+        self.state,
+        self.updated_at
       )
     end
   end

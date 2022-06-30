@@ -354,7 +354,7 @@ describe Administrateurs::ProceduresController, type: :controller do
   describe 'PUT #archive' do
     let(:procedure) { create(:procedure, :published, administrateur: admin, lien_site_web: lien_site_web) }
 
-    context 'when the admin is an owner of the procedure' do
+    context 'when the admin is an owner of the procedure without procedure replacement' do
       before do
         put :archive, params: { procedure_id: procedure.id }
         procedure.reload
@@ -364,6 +364,28 @@ describe Administrateurs::ProceduresController, type: :controller do
         expect(procedure.close?).to be_truthy
         expect(response).to redirect_to :admin_procedures
         expect(flash[:notice]).to have_content 'Démarche close'
+      end
+
+      it 'does not have any replacement procedure' do
+        expect(procedure.replaced_by_procedure).to be_nil
+      end
+    end
+
+    context 'when the admin is an owner of the procedure with procedure replacement' do
+      let(:new_procedure) { create(:procedure, :published, administrateur: admin, lien_site_web: lien_site_web) }
+      before do
+        put :archive, params: { procedure_id: procedure.id, new_procedure: new_procedure }
+        procedure.reload
+      end
+
+      it 'archives the procedure' do
+        expect(procedure.close?).to be_truthy
+        expect(response).to redirect_to :admin_procedures
+        expect(flash[:notice]).to have_content 'Démarche close'
+      end
+
+      it 'does have a replacement procedure' do
+        expect(procedure.replaced_by_procedure).to eq(new_procedure)
       end
     end
 
@@ -774,7 +796,11 @@ describe Administrateurs::ProceduresController, type: :controller do
   end
 
   describe 'PUT #restore' do
-    let(:procedure) { create :procedure, :discarded, administrateur: admin }
+    let(:procedure) { create :procedure_with_dossiers, :with_service, :published, administrateur: admin }
+
+    before do
+      procedure.discard_and_keep_track!(admin)
+    end
 
     context 'when the admin wants to restore a procedure' do
       before do
@@ -783,6 +809,7 @@ describe Administrateurs::ProceduresController, type: :controller do
       end
 
       it { expect(procedure.discarded?).to be_falsy }
+      it { expect(procedure.dossiers.first.hidden_by_administration_at).to be_nil }
     end
   end
 end

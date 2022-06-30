@@ -11,11 +11,8 @@ RSpec.describe AvisMailer, type: :mailer do
     it { expect(subject.subject).to eq("Donnez votre avis sur le dossier nº #{avis.dossier.id} (#{avis.dossier.procedure.libelle})") }
     it { expect(subject.body).to have_text("Vous avez été invité par\r\n#{avis.claimant.email}\r\nà donner votre avis sur le dossier nº #{avis.dossier.id} de la démarche :\r\n#{avis.dossier.procedure.libelle}") }
     it { expect(subject.body).to include(avis.introduction) }
-    it { expect(subject.body).to include(instructeur_avis_url(avis.dossier.procedure.id, avis)) }
-
-    context 'when the recipient is not already registered' do
-      it { expect(subject.body).to include(sign_up_expert_avis_url(avis.dossier.procedure.id, avis.id, email: avis.expert.email)) }
-    end
+    it { expect(subject.body).to include(targeted_user_link_url(TargetedUserLink.where(target_model: avis).first)) }
+    it { expect { subject.body }.to change { TargetedUserLink.where(target_model: avis).count }.from(0).to(1) }
 
     context 'when the dossier has been deleted before the avis was sent' do
       before { dossier.update(hidden_by_user_at: 1.hour.ago) }

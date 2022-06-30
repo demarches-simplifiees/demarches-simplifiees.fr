@@ -54,7 +54,7 @@
 
               - if procedure.publiee?
                 %li
-                  = link_to admin_procedure_archive_path(procedure_id: procedure.id), method: :put, data: { confirm:  "Voulez-vous vraiment clore la démarche ? \nLes dossiers en cours pourront être instruits, mais aucun nouveau dossier ne pourra plus être déposé.", disable_with: "Archivage..."} do
+                  = link_to admin_procedure_close_path(procedure_id: procedure.id) do
                     %span.icon.archive
                     .dropdown-description
                       %h4= t('administrateurs.dropdown_actions.to_close')

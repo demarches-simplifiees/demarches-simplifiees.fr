@@ -432,8 +432,8 @@ describe Procedure do
         received_mail: received_mail,
         service: service,
         attestation_template: build(:attestation_template, logo: logo, signature: signature),
-        types_de_champ: [type_de_champ_0, type_de_champ_1, type_de_champ_2, type_de_champ_pj, type_de_champ_repetition],
-        types_de_champ_private: [type_de_champ_private_0, type_de_champ_private_1, type_de_champ_private_2, type_de_champ_private_repetition],
+        types_de_champ: [type_de_champ_0, type_de_champ_1, type_de_champ_2, type_de_champ_pj],
+        types_de_champ_private: [type_de_champ_private_0, type_de_champ_private_1, type_de_champ_private_2],
         api_particulier_token: '123456789012345',
         api_particulier_scopes: ['cnaf_famille'])
     end
@@ -441,11 +441,11 @@ describe Procedure do
     let(:type_de_champ_1) { build(:type_de_champ, position: 1) }
     let(:type_de_champ_2) { build(:type_de_champ_drop_down_list, position: 2) }
     let(:type_de_champ_pj) { build(:type_de_champ_piece_justificative, position: 3, old_pj: { stable_id: 2713 }) }
-    let(:type_de_champ_repetition) { build(:type_de_champ_repetition, position: 4, types_de_champ: [build(:type_de_champ)]) }
+    let(:type_de_champ_repetition) { build(:type_de_champ_repetition, position: 4, procedure: procedure, types_de_champ: [build(:type_de_champ)]) }
     let(:type_de_champ_private_0) { build(:type_de_champ, :private, position: 0) }
     let(:type_de_champ_private_1) { build(:type_de_champ, :private, position: 1) }
     let(:type_de_champ_private_2) { build(:type_de_champ_drop_down_list, :private, position: 2) }
-    let(:type_de_champ_private_repetition) { build(:type_de_champ_repetition, :private, position: 3, types_de_champ: [build(:type_de_champ, :private)]) }
+    let(:type_de_champ_private_repetition) { build(:type_de_champ_repetition, :private, position: 3, procedure: procedure, types_de_champ: [build(:type_de_champ, :private)]) }
     let(:received_mail) { build(:received_mail) }
     let(:from_library) { false }
     let(:administrateur) { procedure.administrateurs.first }
@@ -459,6 +459,9 @@ describe Procedure do
     let!(:assign_to_2) { create(:assign_to, procedure: procedure, groupe_instructeur: groupe_instructeur_1, instructeur: instructeur_2) }
 
     before do
+      type_de_champ_repetition
+      type_de_champ_private_repetition
+
       @procedure = procedure.clone(administrateur, from_library)
       @procedure.save
     end
@@ -486,22 +489,26 @@ describe Procedure do
       expect(subject.draft_types_de_champ_private.size).to eq(procedure.draft_types_de_champ_private.size)
 
       procedure.draft_types_de_champ.zip(subject.draft_types_de_champ).each do |ptc, stc|
-        expect(stc).to have_same_attributes_as(ptc, except: ["revision_id"])
+        expect(stc).to have_same_attributes_as(ptc)
         expect(stc.revision).to eq(subject.draft_revision)
       end
 
-      TypeDeChamp.where(parent: procedure.draft_types_de_champ.repetition).zip(TypeDeChamp.where(parent: subject.draft_types_de_champ.repetition)).each do |ptc, stc|
-        expect(stc).to have_same_attributes_as(ptc, except: ["revision_id", "parent_id", "migrated_parent"])
+      public_repetition = type_de_champ_repetition
+      cloned_public_repetition = subject.draft_types_de_champ.repetition.first
+      procedure.draft_revision.children_of(public_repetition).zip(subject.draft_revision.children_of(cloned_public_repetition)).each do |ptc, stc|
+        expect(stc).to have_same_attributes_as(ptc)
         expect(stc.revision).to eq(subject.draft_revision)
       end
 
       procedure.draft_types_de_champ_private.zip(subject.draft_types_de_champ_private).each do |ptc, stc|
-        expect(stc).to have_same_attributes_as(ptc, except: ["revision_id"])
+        expect(stc).to have_same_attributes_as(ptc)
         expect(stc.revision).to eq(subject.draft_revision)
       end
 
-      TypeDeChamp.where(parent: procedure.draft_types_de_champ_private.repetition).zip(TypeDeChamp.where(parent: subject.draft_types_de_champ_private.repetition)).each do |ptc, stc|
-        expect(stc).to have_same_attributes_as(ptc, except: ["revision_id", "parent_id", "migrated_parent"])
+      private_repetition = type_de_champ_private_repetition
+      cloned_private_repetition = subject.draft_types_de_champ_private.repetition.first
+      procedure.draft_revision.children_of(private_repetition).zip(subject.draft_revision.children_of(cloned_private_repetition)).each do |ptc, stc|
+        expect(stc).to have_same_attributes_as(ptc)
         expect(stc.revision).to eq(subject.draft_revision)
       end
 

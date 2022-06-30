@@ -474,5 +474,17 @@ describe User, type: :model do
         end
       end
     end
+
+    context 'and the old account had targeted_user_links' do
+      let(:expert) { create(:expert, user: old_user) }
+      let(:expert_procedure) { create(:experts_procedure, expert: expert) }
+      let!(:targeted_user_link) { create(:targeted_user_link, user: old_user, target_model: create(:avis, experts_procedure: expert_procedure)) }
+
+      it 'transfers the targeted_user_link' do
+        subject
+        targeted_user.reload
+        expect(targeted_user.targeted_user_links).to include(targeted_user_link)
+      end
+    end
   end
 end

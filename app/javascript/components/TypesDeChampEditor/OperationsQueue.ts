@@ -4,7 +4,7 @@ import invariant from 'tiny-invariant';
 type Operation = {
   path: string;
   method: string;
-  payload: unknown;
+  payload?: unknown;
   resolve: (value: unknown) => void;
   reject: () => void;
 };
@@ -45,7 +45,8 @@ export class OperationsQueue {
     const url = `${this.baseUrl}${path}`;
 
     try {
-      const data = await httpRequest(url, { method, json: payload }).json();
+      const json = payload;
+      const data = await httpRequest(url, { method, json }).json();
       resolve(data);
     } catch (e) {
       handleError(e as ResponseError, reject);

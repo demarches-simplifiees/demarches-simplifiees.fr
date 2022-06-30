@@ -11,9 +11,10 @@ en:
       title: "Direction Interministérielle au Numérique"
       url: "https://numerique.gouv.fr"
     footer:
+      nav_aria: "More about %{application_name}"
       accessibilite:
         label: "Accessibility: partially compliant"
-        title: "Accessibility: partially compliant"
+        title: "Accessibility declaration"
         url: "https://doc.demarches-simplifiees.fr/declaration-daccessibilite"
       aide:
         label: "Help"
@@ -29,7 +30,7 @@ en:
         url: "https://beta.gouv.fr"
       code:
         label: "Source code"
-        title: "Source code"
+        title: "Our Source code is open source"
         url: "https://github.com/govpf/mes-demarches"
       cgu:
         label: "ToS"
@@ -41,17 +42,17 @@ en:
         url: "https://mes-demarches.gitbook.io/documentation/cgu#rgpd"
       contact:
         label: "Contact"
-        title: "Contact"
+        title: "Contact us"
       contact_technique:
         label: "Technical contact"
-        title: "Technical contact"
+        title: "Technical contact for bug report or security feedback"
       doc:
         label: "Documentation"
-        title: "Documentation"
+        title: "Our Documentation"
         url: "https://doc.demarches-simplifiees.fr"
       doc_nouveautes:
         label: "News"
-        title: "News"
+        title: "Our latest News"
         url: "https://doc.demarches-simplifiees.fr/nouveautes"
       faq:
         label: "FAQ"
@@ -63,34 +64,34 @@ en:
         url: "https:///faq.demarches-simplifiees.fr/collection/1-administrateur-creation-dun-formulaire"
       mentions_legales:
         label: "Legal notices"
-        title: "Legal notices"
+        title: "Legal notices regarding our platform"
         url: "https://doc.demarches-simplifiees.fr/mentions-legales"
-      #      newsletter:
-      #        label: "Newsletter"
-      #        title: "Notre newsletter"
-      #        url: "https://my.sendinblue.com/users/subscribe/js_id/3s2q1/id/1"
+      # newsletter:
+      #   label: "Newsletter"
+      #   title: "Our newsletter"
+      #   url: "https://my.sendinblue.com/users/subscribe/js_id/3s2q1/id/1"
       releases:
         label: "Releases"
-        title: "Releases"
+        title: "Our last updates"
         url: "https://github.com/betagouv/demarches-simplifiees.fr/releases"
       security:
         label: "Security"
-        title: "Security"
+        title: "Security policy"
         url: "https://github.com/betagouv/demarches-simplifiees.fr/blob/main/SECURITY.md"
       stats:
         label: "Statistics"
-        title: "Statistics"
+        title: "Statistics about demarches-simplifiees"
       status_page:
         label: "Disponibility"
-        title: "Disponibility"
+        title: "Disponibility and availability"
         url: "https://status.demarches-simplifiees.fr"
       suivi:
         label: "Audience tracking and privacy"
-        title: "Audience tracking and privacy"
-      #      webinaire:
-      #        label: "Online workshop registration"
-      #        title: "Online workshop registration"
-      #        url: "https://app.livestorm.co/demarches-simplifiees"
+        title: "Tracking and privacy of demarches-simplifiees"
+      # webinaire:
+      #   label: "Online workshop registration"
+      #   title: "Registration for our online workshop"
+      #   url: "https://app.livestorm.co/demarches-simplifiees"
       solidarite_numerique:
         label: "Do you need assistance with your digital file?"
         title: "Do you need assistance with your online process ?"

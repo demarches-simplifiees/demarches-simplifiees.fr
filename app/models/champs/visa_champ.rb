@@ -27,6 +27,6 @@ class Champs::VisaChamp < Champ
   end
 
   def user_accredited?(user)
-    accredited_user_list.include?(user.email)
+    accredited_user_list.include?(user&.email)
   end
 end

@@ -24,6 +24,10 @@ export function TypeDeChamps({
     (tdc) => tdc.id == undefined
   );
 
+  const formattedEstimatedFillDuration = state.estimatedFillDuration
+    ? Math.max(1, Math.round(state.estimatedFillDuration / 60)) + ' mn'
+    : '';
+
   return (
     <div className="champs-editor">
       <SortableContainer
@@ -60,7 +64,12 @@ export function TypeDeChamps({
           onClick={() =>
             dispatch({
               type: 'addNewTypeDeChamp',
-              done: () => dispatch({ type: 'refresh' })
+              done: (estimatedFillDuration: number) => {
+                dispatch({
+                  type: 'refresh',
+                  params: { estimatedFillDuration }
+                });
+              }
             })
           }
         >
@@ -68,6 +77,18 @@ export function TypeDeChamps({
           &nbsp;&nbsp;
           {addChampLabel(state.isAnnotation)}
         </button>
+        {state.estimatedFillDuration > 0 && (
+          <span className="fill-duration">
+            Durée de remplissage estimée&nbsp;:{' '}
+            <a
+              href="https://doc.demarches-simplifiees.fr/tutoriels/tutoriel-administrateur#g.-estimation-de-la-duree-de-remplissage"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {formattedEstimatedFillDuration}
+            </a>
+          </span>
+        )}
         <a className="button accepted" href={state.continuerUrl}>
           Continuer &gt;
         </a>

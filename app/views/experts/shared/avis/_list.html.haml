@@ -9,7 +9,7 @@
         .width-100
           %h2.claimant
             = "#{t('claimant', scope: 'activerecord.attributes.avis')} :"
-            %span.email= (avis.claimant.email == current_expert.email) ? 'Vous' : avis.claimant.email
+            %span.email= (safe_claimant_email(avis.claimant) == current_expert.email) ? 'Vous' : safe_claimant_email(avis.claimant)
             - if avis.confidentiel?
               %span.confidentiel
                 = t('confidentiel', scope: 'activerecord.attributes.avis')

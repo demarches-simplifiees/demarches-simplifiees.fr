@@ -10,6 +10,8 @@ fr:
             en_construction_at: En construction le
             depose_at: Déposé le
             updated_at: Mis à jour le
+            depose_since: Déposé depuis
+            updated_since: Mis à jour depuis
           user:
             email: Demandeur
           followers_instructeurs:

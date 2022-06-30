@@ -35,7 +35,7 @@
           "type": "controller",
           "class": "Users::DossiersController",
           "method": "merci",
-          "line": 201,
+          "line": 206,
           "file": "app/controllers/users/dossiers_controller.rb",
           "rendered": {
             "name": "users/dossiers/merci",
@@ -76,7 +76,7 @@
           "type": "controller",
           "class": "FranceConnect::ParticulierController",
           "method": "merge",
-          "line": 48,
+          "line": 47,
           "file": "app/controllers/france_connect/particulier_controller.rb",
           "rendered": {
             "name": "france_connect/particulier/merge",
@@ -113,6 +113,26 @@
       "note": ""
     },
     {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "8396f884c5596d6c1148c7326b63e7e7bfabf9b0c1daf6b3ce0c1ff127b59cb4",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/targeted_user_links_controller.rb",
+      "line": 7,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(TargetedUserLink.find_by(:id => params[:id]).redirect_url(Rails.application.routes.url_helpers))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "TargetedUserLinksController",
+        "method": "show"
+      },
+      "user_input": "TargetedUserLink.find_by(:id => params[:id]).redirect_url(Rails.application.routes.url_helpers)",
+      "confidence": "High",
+      "note": ""
+    },
+    {
       "warning_type": "SQL Injection",
       "warning_code": 0,
       "fingerprint": "bd1df30f95135357b646e21a03d95498874faffa32e3804fc643e9b6b957ee14",
@@ -139,7 +159,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/instructeurs/procedures_controller.rb",
-      "line": 191,
+      "line": 168,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Export.find_or_create_export(export_format, current_instructeur.groupe_instructeurs.where(:procedure => procedure), **export_options).file.service_url)",
       "render_path": null,
@@ -153,6 +173,6 @@
       "note": ""
     }
   ],
-  "updated": "2022-04-05 14:21:07 +0200",
-  "brakeman_version": "5.1.1"
+  "updated": "2022-05-23 16:40:50 +0200",
+  "brakeman_version": "5.2.2"
 }
