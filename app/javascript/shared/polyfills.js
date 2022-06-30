@@ -1,15 +1,4 @@
 import './polyfills/dataset';
-import 'core-js/stable';
-import 'regenerator-runtime/runtime';
-import 'dom4';
-import 'intersection-observer';
-import 'whatwg-fetch';
-import '@webcomponents/custom-elements';
-import '@webcomponents/template';
-import '@stimulus/polyfills';
-import 'formdata-polyfill';
-import 'event-target-polyfill';
-import 'yet-another-abortcontroller-polyfill';
 
 // IE 11 has no baseURI (required by turbo)
 if (document.baseURI == undefined) {
