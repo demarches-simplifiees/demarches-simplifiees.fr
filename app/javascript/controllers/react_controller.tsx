@@ -1,38 +1,24 @@
 import { Controller } from '@hotwired/stimulus';
-import React from 'react';
+import React, { lazy, Suspense, FunctionComponent } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 import invariant from 'tiny-invariant';
 
 type Props = Record<string, unknown>;
+type Loader = () => Promise<{ default: FunctionComponent<Props> }>;
+const componentsRegistry = new Map<string, FunctionComponent<Props>>();
+const components = import.meta.glob('../components/*.tsx');
 
-const componentsRegistry = new Map();
-
-import ComboAdresseSearch from '../components/ComboAdresseSearch';
-import ComboAnnuaireEducationSearch from '../components/ComboAnnuaireEducationSearch';
-import ComboCommunesSearch from '../components/ComboCommunesSearch';
-import ComboDepartementsSearch from '../components/ComboDepartementsSearch';
-import ComboMultiple from '../components/ComboMultiple';
-import ComboMultipleDropdownList from '../components/ComboMultipleDropdownList';
-import ComboPaysSearch from '../components/ComboPaysSearch';
-import ComboRegionsSearch from '../components/ComboRegionsSearch';
-import ComboSearch from '../components/ComboSearch';
-import MapEditor from '../components/MapEditor';
-import MapReader from '../components/MapReader';
-
-componentsRegistry.set('ComboAdresseSearch', ComboAdresseSearch);
-componentsRegistry.set(
-  'ComboAnnuaireEducationSearch',
-  ComboAnnuaireEducationSearch
-);
-componentsRegistry.set('ComboCommunesSearch', ComboCommunesSearch);
-componentsRegistry.set('ComboDepartementsSearch', ComboDepartementsSearch);
-componentsRegistry.set('ComboMultiple', ComboMultiple);
-componentsRegistry.set('ComboMultipleDropdownList', ComboMultipleDropdownList);
-componentsRegistry.set('ComboPaysSearch', ComboPaysSearch);
-componentsRegistry.set('ComboRegionsSearch', ComboRegionsSearch);
-componentsRegistry.set('ComboSearch', ComboSearch);
-componentsRegistry.set('MapEditor', MapEditor);
-componentsRegistry.set('MapReader', MapReader);
+for (const [path, loader] of Object.entries(components)) {
+  const [filename] = path.split('/').reverse();
+  const componentClassName = filename.replace(/\.(ts|tsx)$/, '');
+  console.debug(
+    `Registered lazy default export for "${componentClassName}" component`
+  );
+  componentsRegistry.set(
+    componentClassName,
+    LoadableComponent(loader as Loader)
+  );
+}
 
 // Initialize React components when their markup appears into the DOM.
 //
@@ -68,7 +54,19 @@ export class ReactController extends Controller {
     render(<Component {...props} />, node);
   }
 
-  private getComponent(componentName: string) {
+  private getComponent(componentName: string): FunctionComponent<Props> | null {
     return componentsRegistry.get(componentName) ?? null;
   }
+}
+
+const Spinner = () => <div className="spinner left" />;
+
+function LoadableComponent(loader: Loader): FunctionComponent<Props> {
+  const LazyComponent = lazy(loader);
+  const Component: FunctionComponent<Props> = (props: Props) => (
+    <Suspense fallback={<Spinner />}>
+      <LazyComponent {...props} />
+    </Suspense>
+  );
+  return Component;
 }
