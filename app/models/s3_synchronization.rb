@@ -44,7 +44,7 @@ class S3Synchronization < ApplicationRecord
       when '4' # switch to s3, cancel not possible
         S3Synchronization.switch_service(:s3_mirror, :s3, until_time)
       when '5' # delete local file stored on s3
-        S3Synchronization.delete_mirrored_files(:s3, :local, until_time)
+        S3Synchronization.move_mirrored_files(:s3, :local, until_time)
       else
       end
     end
@@ -53,21 +53,27 @@ class S3Synchronization < ApplicationRecord
       S3Synchronization.where('updated_at > ?', 1.minute.ago).count > 0
     end
 
-    def delete_mirrored_files(main_service_name, mirror_service_name, until_time)
+    def move_mirrored_files(main_service_name, mirror_service_name, until_time)
       configs = active_storage_configs
       mirror_service = ActiveStorage::Service.configure mirror_service_name, configs
       save_dir = Rails.root.join("storage/backup")
       count = 0
+      not_deleted_count = 0
       blob_keys(main_service_name, until_time) do |key|
         f = Pathname(mirror_service.path_for(key))
-        move(key, f, save_dir) if File.exist?(f)
+        if File.exist?(f)
+          count += 1
+          move(key, f, save_dir)
+        end
+        not_deleted_count += 1 if File.exist?(f)
         dir = f.dirname
         dir.delete if dir.exist? && dir.empty?
         dir = dir.dirname
         dir.delete if dir.exist? && dir.empty?
-        count += 1
       end
-      AdministrationMailer.s3_synchronization_report("Archived #{count} files from '#{mirror_service_name}' storage service.").deliver_now
+      msg = "Archived #{count} files from '#{mirror_service_name}' storage service.\n" +
+        "Files not moved: #{not_deleted_count}"
+      AdministrationMailer.s3_synchronization_report(msg).deliver_now
     end
 
     def move(key, filename, save_dir)
