@@ -79,4 +79,10 @@ describe Logic do
     # false && (true || true) = false
     it { expect(ds_and([constant(false), ds_or([constant(true), constant(true)])]).compute).to be false }
   end
+
+  describe '.add_empty_condition_to' do
+    it { expect(Logic.add_empty_condition_to(nil)).to eq(empty_operator(empty, empty)) }
+    it { expect(Logic.add_empty_condition_to(constant(true))).to eq(ds_and([constant(true), empty_operator(empty, empty)])) }
+    it { expect(Logic.add_empty_condition_to(ds_or([constant(true)]))).to eq(ds_or([constant(true), empty_operator(empty, empty)])) }
+  end
 end

@@ -60,6 +60,18 @@ module Logic
     end
   end
 
+  def self.add_empty_condition_to(condition)
+    empty_condition = EmptyOperator.new(Empty.new, Empty.new)
+
+    if condition.nil?
+      empty_condition
+    elsif [And, Or].include?(condition.class)
+      condition.tap { |c| c.operands << empty_condition }
+    else
+      Logic::And.new([condition, empty_condition])
+    end
+  end
+
   def ds_eq(left, right) = Logic::Eq.new(left, right)
 
   def greater_than(left, right) = Logic::GreaterThan.new(left, right)
