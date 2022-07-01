@@ -37,7 +37,8 @@ module ProcedureHelper
       typeDeChamps: procedure.draft_revision.types_de_champ_public_as_json,
       baseUrl: admin_procedure_types_de_champ_path(procedure),
       directUploadUrl: rails_direct_uploads_url,
-      continuerUrl: admin_procedure_path(procedure)
+      continuerUrl: admin_procedure_path(procedure),
+      estimatedFillDuration: procedure.draft_revision.estimated_fill_duration
     }
   end
 

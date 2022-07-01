@@ -7,16 +7,14 @@
 #  libelle     :string
 #  mandatory   :boolean          default(FALSE)
 #  options     :jsonb
-#  order_place :integer
 #  private     :boolean          default(FALSE), not null
 #  type_champ  :string
 #  created_at  :datetime
 #  updated_at  :datetime
-#  parent_id   :bigint
 #  stable_id   :bigint
 #
 class TypeDeChamp < ApplicationRecord
-  self.ignored_columns = [:migrated_parent, :revision_id]
+  self.ignored_columns = [:migrated_parent, :revision_id, :parent_id, :order_place]
 
   enum type_champs: {
     text: 'text',
@@ -62,10 +60,8 @@ class TypeDeChamp < ApplicationRecord
     mesri: 'mesri'
   }
 
-  belongs_to :parent, class_name: 'TypeDeChamp', optional: true
-  has_many :types_de_champ, -> { ordered }, foreign_key: :parent_id, class_name: 'TypeDeChamp', inverse_of: :parent, dependent: :destroy
-
-  store_accessor :options, :cadastres, :old_pj, :drop_down_options, :skip_pj_validation, :skip_content_type_pj_validation, :drop_down_secondary_libelle, :drop_down_secondary_description, :drop_down_other, :parcelles, :batiments, :zones_manuelles, :min, :max, :level, :accredited_users
+  store_accessor :options, :cadastres, :old_pj, :drop_down_options, :skip_pj_validation, :skip_content_type_pj_validation, :drop_down_secondary_libelle, :drop_down_secondary_description, :drop_down_other,
+                 :parcelles, :batiments, :zones_manuelles, :min, :max, :level, :accredited_users
   has_many :revision_types_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
   has_one :revision_type_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', inverse_of: false
   has_many :revisions, -> { ordered }, through: :revision_types_de_champ
@@ -93,14 +89,12 @@ class TypeDeChamp < ApplicationRecord
 
   scope :public_only, -> { where(private: false) }
   scope :private_only, -> { where(private: true) }
-  scope :ordered, -> { order(order_place: :asc) }
-  scope :root, -> { where(parent_id: nil) }
   scope :repetition, -> { where(type_champ: type_champs.fetch(:repetition)) }
   scope :not_repetition, -> { where.not(type_champ: type_champs.fetch(:repetition)) }
   scope :fillable, -> { where.not(type_champ: [type_champs.fetch(:header_section), type_champs.fetch(:explication)]) }
 
   scope :dubious, -> {
-    where("unaccent(types_de_champ.libelle) ~* unaccent(?)", Cron::FindDubiousProceduresJob.forbidden_regexp)
+    where("unaccent(types_de_champ.libelle) ~* unaccent(?)", DubiousProcedure.forbidden_regexp)
       .where(type_champ: [TypeDeChamp.type_champs.fetch(:text), TypeDeChamp.type_champs.fetch(:textarea)])
   }
 
@@ -117,8 +111,6 @@ class TypeDeChamp < ApplicationRecord
   end
 
   has_one_attached :piece_justificative_template
-
-  accepts_nested_attributes_for :types_de_champ, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :type_champ, presence: true, allow_blank: false, allow_nil: false
@@ -382,8 +374,6 @@ class TypeDeChamp < ApplicationRecord
       except: [
         :created_at,
         :options,
-        :order_place,
-        :parent_id,
         :private,
         :stable_id,
         :type,
@@ -418,16 +408,10 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  def migrate_parent!
-    if parent_id.present? && revision_types_de_champ.empty?
-      parent.revision_types_de_champ.each do |revision_type_de_champ|
-        ProcedureRevisionTypeDeChamp.create(parent: revision_type_de_champ,
-          type_de_champ: self,
-          revision_id: revision_type_de_champ.revision_id,
-          position: order_place)
-      end
+  def destroy_if_orphan
+    if revision_types_de_champ.empty?
+      destroy
     end
-    self
   end
 
   private
@@ -464,8 +448,7 @@ class TypeDeChamp < ApplicationRecord
     if !repetition? && procedure.present?
       procedure
         .draft_revision # action occurs only on draft
-        .children_of(self)
-        .destroy_all
+        .remove_children_of(self)
     end
   end
 end

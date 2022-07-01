@@ -1,0 +1,48 @@
+# This repository adheres to the publiccode.yml standard by including this 
+# metadata file that makes public software easily discoverable.
+# More info at https://github.com/italia/publiccode.yml
+
+publiccodeYmlVersion: '0.2'
+name: Démarches Simplifiéees
+url: 'https://github.com/betagouv/demarches-simplifiees.fr'
+landingURL: 'https://www.demarches-simplifiees.fr/'
+roadmap: 'https://github.com/betagouv/demarches-simplifiees.fr/wiki/Feuille-de-route'
+releaseDate: 'https://github.com/betagouv/demarches-simplifiees.fr/releases/latest'
+developmentStatus: beta
+softwareType: standalone/backend
+categories:
+  - digital-citizenship
+platforms:
+  - web
+logo: |-
+  https://www.demarches-simplifiees.fr/assets/favicons/16x16-02811394c05c7c0c941c5a7404bd2939ee9bf04eae047a68a576c098307d416c.png
+legal:
+  license: GPL-3.0-or-later
+localisation:
+  localisationReady: false
+  availableLanguages:
+    - fr
+    - en
+fr:
+  sample: '0.2'
+description:
+  fr:
+    documentation: 'https://doc.demarches-simplifiees.fr/'
+    apiDocumentation: |-
+      https://doc.demarches-simplifiees.fr/pour-aller-plus-loin/graphql#presentation-de-lapi
+    awards:
+      - Prix spécial du Jury Acteurs du Libre (CNLL)  2021
+    shortDescription: |-
+      outil permettant aux usagers d’effectuer des démarches en ligne, et aux agents administratifs d’instruire ces démarches.
+    longDescription: |
+      Démarches Simplifiées est un outil permettant aux usagers d’effectuer des démarches en ligne, et aux agents administratifs d’instruire ces démarches.
+
+      Il a pour objectif de :
+      - faciliter la dématériarialisation de démarches,
+      - simplifier le remplissage de dossiers,
+      - améliorer les temps de traitement.
+
+      Il doit être générateur d’efficience, tout en garantissant l’autonomie personnelle des utilisateurs. Le choix des priorités de développement est donc guidé par les retours des ses utilisateurs (usagers et agents administratifs).
+    genericName: Générateur de formulaire
+    features:
+      - réaliser une démarche en ligne

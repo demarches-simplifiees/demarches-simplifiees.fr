@@ -6,7 +6,7 @@
       = commentaire_issuer
     - if commentaire_from_guest?
       %span.guest= t('.guest')
-    %span.date{ class: highlight_if_unseen_class }
+    %span.date{ class: highlight_if_unseen_class, data: scroll_to_target }
       = commentaire_date
   .rich-text= commentaire_body
 

@@ -174,14 +174,12 @@ describe ProcedureRevision do
         it 'reorders' do
           children = draft.children_of(type_de_champ_repetition)
           expect(children.pluck(:position)).to eq([0, 1, 2])
-          expect(children.pluck(:order_place)).to eq([0, 1, 2])
 
           draft.remove_type_de_champ(children[1].stable_id)
 
           children.reload
 
           expect(children.pluck(:position)).to eq([0, 1])
-          expect(children.pluck(:order_place)).to eq([0, 1])
         end
       end
     end
@@ -193,7 +191,6 @@ describe ProcedureRevision do
       it 'can remove its children' do
         draft.remove_type_de_champ(child.stable_id)
 
-        expect(type_de_champ_repetition.types_de_champ).to be_empty
         expect { child.reload }.to raise_error ActiveRecord::RecordNotFound
         expect(draft.types_de_champ_public.size).to eq(1)
       end
@@ -284,7 +281,7 @@ describe ProcedureRevision do
       before do
         procedure.publish!
         procedure.reload
-        draft.find_or_clone_type_de_champ(last_type_de_champ.stable_id).update(libelle: 'new libelle')
+        draft.find_and_ensure_exclusive_use(last_type_de_champ.stable_id).update(libelle: 'new libelle')
         procedure.reload
         draft.reload
       end
@@ -330,7 +327,7 @@ describe ProcedureRevision do
       let(:procedure) { create(:procedure, :with_type_de_champ) }
 
       before do
-        updated_tdc = new_draft.find_or_clone_type_de_champ(first_tdc.stable_id)
+        updated_tdc = new_draft.find_and_ensure_exclusive_use(first_tdc.stable_id)
 
         updated_tdc.update(libelle: 'modifier le libelle', description: 'une description', mandatory: !updated_tdc.mandatory)
       end
@@ -431,7 +428,7 @@ describe ProcedureRevision do
 
       before do
         child = new_draft.children_of(new_draft.types_de_champ_public.last).first
-        new_draft.find_or_clone_type_de_champ(child.stable_id).update(type_champ: :drop_down_list, drop_down_options: ['one', 'two'])
+        new_draft.find_and_ensure_exclusive_use(child.stable_id).update(type_champ: :drop_down_list, drop_down_options: ['one', 'two'])
       end
 
       it do
@@ -444,7 +441,7 @@ describe ProcedureRevision do
             private: false,
             from: "text",
             to: "drop_down_list",
-            stable_id: new_draft.types_de_champ_public.last.types_de_champ.first.stable_id
+            stable_id: new_draft.children_of(new_draft.types_de_champ_public.last).first.stable_id
           },
           {
             model: :type_de_champ,
@@ -454,7 +451,7 @@ describe ProcedureRevision do
             private: false,
             from: [],
             to: ["one", "two"],
-            stable_id: new_draft.types_de_champ_public.last.types_de_champ.first.stable_id
+            stable_id: new_draft.children_of(new_draft.types_de_champ_public.last).first.stable_id
           }
         ])
       end
@@ -464,8 +461,8 @@ describe ProcedureRevision do
       let(:procedure) { create(:procedure, :with_repetition) }
 
       before do
-        child = new_draft.types_de_champ_public.last.types_de_champ.first
-        new_draft.find_or_clone_type_de_champ(child.stable_id).update(type_champ: :carte, options: { cadastres: true, znieff: true })
+        child = new_draft.children_of(new_draft.types_de_champ_public.last).first
+        new_draft.find_and_ensure_exclusive_use(child.stable_id).update(type_champ: :carte, options: { cadastres: true, znieff: true })
       end
 
       it do
@@ -478,7 +475,7 @@ describe ProcedureRevision do
             private: false,
             from: "text",
             to: "carte",
-            stable_id: new_draft.types_de_champ_public.last.types_de_champ.first.stable_id
+            stable_id: new_draft.children_of(new_draft.types_de_champ_public.last).first.stable_id
           },
           {
             model: :type_de_champ,
@@ -488,7 +485,7 @@ describe ProcedureRevision do
             private: false,
             from: [],
             to: [:cadastres, :znieff],
-            stable_id: new_draft.types_de_champ_public.last.types_de_champ.first.stable_id
+            stable_id: new_draft.children_of(new_draft.types_de_champ_public.last).first.stable_id
           }
         ])
       end
@@ -578,13 +575,13 @@ describe ProcedureRevision do
     end
 
     context 'when there are repetitions' do
-      let(:types_de_champ) do
-        [
-          build(:type_de_champ_repetition, position: 1, mandatory: true, types_de_champ: [
-            build(:type_de_champ_text, position: 1, mandatory: true),
-            build(:type_de_champ_piece_justificative, position: 2, mandatory: true)
-          ])
-        ]
+      let(:procedure) do
+        procedure = create(:procedure, types_de_champ: [])
+        create(:type_de_champ_repetition, position: 1, mandatory: true, procedure: procedure, types_de_champ: [
+          build(:type_de_champ_text, position: 1, mandatory: true),
+          build(:type_de_champ_piece_justificative, position: 2, mandatory: true)
+        ])
+        procedure
       end
 
       it 'estimates that between 2 and 3 rows will be filled for each repetition' do

@@ -39,22 +39,15 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def add_type_de_champ(params)
-    parent_stable_id = params[:parent_id]
+    parent_stable_id = params.delete(:parent_id)
 
     coordinate = {}
 
     if parent_stable_id.present?
-      # Ensure that if this is a child, it's parent is cloned to the new revision
-      clone_parent_to_draft_revision(parent_stable_id)
-
       parent_coordinate, parent = coordinate_and_tdc(parent_stable_id)
 
       coordinate[:parent_id] = parent_coordinate.id
       coordinate[:position] = children_of(parent).count
-
-      # old system
-      params[:order_place] = coordinate[:position]
-      params[:parent_id] = parent.id
     elsif params[:private]
       coordinate[:position] = revision_types_de_champ_private.count
     else
@@ -72,25 +65,17 @@ class ProcedureRevision < ApplicationRecord
     TypeDeChamp.new.tap { |tdc| tdc.errors.add(:base, e.message) }
   end
 
-  # Only called by by controller update
-  def find_or_clone_type_de_champ(stable_id)
-    # Ensure that if this is a child, it's parent is cloned to the new revision
-    clone_parent_to_draft_revision(stable_id)
-
+  def find_and_ensure_exclusive_use(stable_id)
     coordinate, tdc = coordinate_and_tdc(stable_id)
 
     if tdc.only_present_on_draft?
       tdc
     else
-      replace_tdc_and_children_by_clones(coordinate)
+      replace_type_de_champ_by_clone(coordinate)
     end
   end
 
   def move_type_de_champ(stable_id, position)
-    # Ensure that if this is a child, it's parent is cloned to the new revision
-    # Needed because the order could be based on the ancient system
-    clone_parent_to_draft_revision(stable_id)
-
     coordinate, _ = coordinate_and_tdc(stable_id)
 
     siblings = coordinate.siblings.to_a
@@ -101,17 +86,13 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def remove_type_de_champ(stable_id)
-    # Ensure that if this is a child, it's parent is cloned to the new revision
-    # Needed because the order could be based on the ancient system
-    clone_parent_to_draft_revision(stable_id)
-
     coordinate, tdc = coordinate_and_tdc(stable_id)
 
+    children = children_of(tdc).to_a
     coordinate.destroy
 
-    if tdc.revision_types_de_champ.empty?
-      tdc.destroy
-    end
+    children.each(&:destroy_if_orphan)
+    tdc.destroy_if_orphan
 
     reorder(coordinate.siblings)
   end
@@ -166,6 +147,12 @@ class ProcedureRevision < ApplicationRecord
       .order("procedure_revision_types_de_champ.position")
   end
 
+  def remove_children_of(tdc)
+    children_of(tdc).each do |child|
+      remove_type_de_champ(child.stable_id)
+    end
+  end
+
   def types_de_champ_public_as_json
     types_de_champ = types_de_champ_public.includes(piece_justificative_template_attachment: :blob)
     tdcs_as_json = types_de_champ.map(&:as_json_for_editor)
@@ -216,13 +203,8 @@ class ProcedureRevision < ApplicationRecord
 
   def reorder(siblings)
     siblings.to_a.compact.each.with_index do |sibling, position|
-        sibling.update(position: position)
-
-        # FIXME: to remove when order_place is no longer used
-        if sibling.parent_id.present?
-          sibling.type_de_champ.update!(order_place: position)
-        end
-      end
+      sibling.update(position: position)
+    end
   end
 
   def compare_attestation_template(from_at, to_at)
@@ -451,29 +433,11 @@ class ProcedureRevision < ApplicationRecord
     changes
   end
 
-  def replace_tdc_and_children_by_clones(coordinate)
-    cloned_type_de_champ = coordinate.type_de_champ.deep_clone(include: [:types_de_champ]) do |original, kopy|
+  def replace_type_de_champ_by_clone(coordinate)
+    cloned_type_de_champ = coordinate.type_de_champ.deep_clone do |original, kopy|
       PiecesJustificativesService.clone_attachments(original, kopy)
     end
-    cloned_child_types_de_champ = cloned_type_de_champ.types_de_champ
     coordinate.update!(type_de_champ: cloned_type_de_champ)
-
-    # sync old and new system
-    children_coordinates = revision_types_de_champ.where(parent: coordinate)
-
-    children_coordinates.find_each do |child_coordinate|
-      cloned_child_type_de_champ = cloned_child_types_de_champ.find { |tdc| tdc.stable_id == child_coordinate.type_de_champ.stable_id }
-      child_coordinate.update!(type_de_champ: cloned_child_type_de_champ)
-    end
-
     cloned_type_de_champ
-  end
-
-  def clone_parent_to_draft_revision(stable_id)
-    coordinate, tdc = coordinate_and_tdc(stable_id)
-
-    if coordinate.child? && !tdc.only_present_on_draft?
-      replace_tdc_and_children_by_clones(coordinate.parent)
-    end
   end
 end

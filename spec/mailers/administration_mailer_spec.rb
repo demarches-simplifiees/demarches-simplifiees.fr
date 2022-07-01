@@ -37,12 +37,4 @@ RSpec.describe AdministrationMailer, type: :mailer do
 
     it { expect(subject.subject).not_to be_empty }
   end
-
-  describe '#dubious_procedures' do
-    let(:procedures_and_type_de_champs) { [] }
-
-    subject { described_class.dubious_procedures(procedures_and_type_de_champs) }
-
-    it { expect(subject.subject).not_to be_empty }
-  end
 end

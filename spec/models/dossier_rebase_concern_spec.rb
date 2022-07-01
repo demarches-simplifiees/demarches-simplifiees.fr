@@ -34,7 +34,7 @@ describe Dossier do
 
       context 'with type de champ made optional' do
         before do
-          procedure.draft_revision.find_or_clone_type_de_champ(mandatory_type_de_champ.stable_id).update(mandatory: false)
+          procedure.draft_revision.find_and_ensure_exclusive_use(mandatory_type_de_champ.stable_id).update(mandatory: false)
           procedure.publish_revision!
           dossier.reload
         end
@@ -47,7 +47,7 @@ describe Dossier do
 
       context 'with type de champ made mandatory' do
         before do
-          procedure.draft_revision.find_or_clone_type_de_champ(type_de_champ.stable_id).update(mandatory: true)
+          procedure.draft_revision.find_and_ensure_exclusive_use(type_de_champ.stable_id).update(mandatory: true)
           procedure.publish_revision!
           dossier.reload
         end
@@ -138,7 +138,7 @@ describe Dossier do
 
       context 'with type de champ made optional' do
         before do
-          procedure.draft_revision.find_or_clone_type_de_champ(mandatory_type_de_champ.stable_id).update(mandatory: false)
+          procedure.draft_revision.find_and_ensure_exclusive_use(mandatory_type_de_champ.stable_id).update(mandatory: false)
           procedure.publish_revision!
           dossier.reload
         end
@@ -176,9 +176,9 @@ describe Dossier do
         type_champ: TypeDeChamp.type_champs.fetch(:text),
         libelle: "Un champ text"
       })
-      procedure.draft_revision.find_or_clone_type_de_champ(text_type_de_champ).update(mandatory: false, libelle: "nouveau libelle")
-      procedure.draft_revision.find_or_clone_type_de_champ(datetime_type_de_champ).update(type_champ: TypeDeChamp.type_champs.fetch(:date))
-      procedure.draft_revision.find_or_clone_type_de_champ(repetition_text_type_de_champ).update(libelle: "nouveau libelle dans une repetition")
+      procedure.draft_revision.find_and_ensure_exclusive_use(text_type_de_champ).update(mandatory: false, libelle: "nouveau libelle")
+      procedure.draft_revision.find_and_ensure_exclusive_use(datetime_type_de_champ).update(type_champ: TypeDeChamp.type_champs.fetch(:date))
+      procedure.draft_revision.find_and_ensure_exclusive_use(repetition_text_type_de_champ).update(libelle: "nouveau libelle dans une repetition")
       procedure.draft_revision.add_type_de_champ({
         type_champ: TypeDeChamp.type_champs.fetch(:checkbox),
         libelle: "oui ou non",
@@ -247,7 +247,7 @@ describe Dossier do
           dossier.champs.first.update(value: 'v1')
 
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
-          tdc_to_update = procedure.draft_revision.find_or_clone_type_de_champ(stable_id)
+          tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
           tdc_to_update.update(drop_down_list_value: 'option updated')
         end
 
@@ -269,7 +269,7 @@ describe Dossier do
           dossier.champs.first.update(value: 'v1', geo_areas: [create(:geo_area, :cadastre)])
 
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
-          tdc_to_update = procedure.draft_revision.find_or_clone_type_de_champ(stable_id)
+          tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
           tdc_to_update.update(cadastres: false)
         end
 
@@ -301,7 +301,7 @@ describe Dossier do
       context 'when the first tdc is removed' do
         before do
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
-          tdc_to_remove = procedure.draft_revision.find_or_clone_type_de_champ(stable_id)
+          tdc_to_remove = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
           procedure.draft_revision.remove_type_de_champ(tdc_to_remove.stable_id)
         end
 
@@ -320,7 +320,7 @@ describe Dossier do
       context 'when the first tdc libelle is updated' do
         before do
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
-          tdc_to_update = procedure.draft_revision.find_or_clone_type_de_champ(stable_id)
+          tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
           tdc_to_update.update(libelle: 'l1 updated')
         end
 
@@ -345,7 +345,7 @@ describe Dossier do
           first_champ.update_column('updated_at', Time.zone.parse('01/01/1901'))
 
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
-          tdc_to_update = procedure.draft_revision.find_or_clone_type_de_champ(stable_id)
+          tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
           tdc_to_update.update(type_champ: :integer_number)
         end
 
@@ -396,7 +396,7 @@ describe Dossier do
       context 'when the first child libelle tdc is updated' do
         before do
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'c1')
-          tdc_to_update = procedure.draft_revision.find_or_clone_type_de_champ(stable_id)
+          tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
           tdc_to_update.update(libelle: 'c1 updated')
         end
 
@@ -406,7 +406,7 @@ describe Dossier do
       context 'when the first child tdc type is updated' do
         before do
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'c1')
-          tdc_to_update = procedure.draft_revision.find_or_clone_type_de_champ(stable_id)
+          tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
           tdc_to_update.update(type_champ: :integer_number)
         end
 
@@ -416,7 +416,7 @@ describe Dossier do
       context 'when the parents type is changed' do
         before do
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'p1')
-          parent = procedure.draft_revision.find_or_clone_type_de_champ(stable_id)
+          parent = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
           parent.update(type_champ: :integer_number)
         end
 

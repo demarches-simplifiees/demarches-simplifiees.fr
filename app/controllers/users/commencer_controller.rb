@@ -77,7 +77,7 @@ module Users
 
       if procedure&.close?
         flash.alert = procedure.service.presence ?
-                      t('errors.messages.procedure_archived.with_service_and_phone_email', service_name: procedure.organisation, service_phone_number: procedure.service.telephone, service_email: procedure.service.email) :
+                      t('errors.messages.procedure_archived.with_service_and_phone_email', service_name: procedure.service.nom, service_phone_number: procedure.service.telephone, service_email: procedure.service.email) :
                       t('errors.messages.procedure_archived.with_organisation_only', organisation_name: procedure.organisation)
       else
         flash.alert = t('errors.messages.procedure_not_found')

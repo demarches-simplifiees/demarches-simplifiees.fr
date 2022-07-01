@@ -8,6 +8,8 @@ fr:
           procedure_deleted_dossier_en_cours_content: "Vous pouvez toujours consulter votre dossier, mais il n’est plus possible de le modifier."
           procedure_deleted_dossier_termine_content: "Votre dossier a été traité par l'administration, aucune action n'est possible"
           procedure_close_content: "Vous pouvez toujours consulter votre dossier, mais il ne sera pas traité par l'administration"
+          new_procedure_link: voir la démarche
+          new_procedure_content: "Une nouvelle démarche est disponible, consultez-la ici :"
           contact_service: Pour plus d'informations, veuillez vous rapprocher du service %{service_name}, disponible au %{service_phone_number} ou par email %{service_email}
           title: Votre dossier va expirer
           states:

@@ -41,6 +41,8 @@ class ProcedurePresentation < ApplicationRecord
       field_hash('self', 'en_construction_at'),
       field_hash('self', 'depose_at'),
       field_hash('self', 'updated_at'),
+      field_hash('self', 'depose_since', virtual: true),
+      field_hash('self', 'updated_since', virtual: true),
       field_hash('user', 'email'),
       field_hash('followers_instructeurs', 'email'),
       field_hash('groupe_instructeur', 'label')
@@ -78,11 +80,16 @@ class ProcedurePresentation < ApplicationRecord
     fields
   end
 
-  def displayed_fields_for_select
+  def displayable_fields_for_select
     [
-      fields.map { |field| [field['label'], field_id(field)] },
+      fields.reject { |field| field['virtual'] }
+        .map { |field| [field['label'], field_id(field)] },
       displayed_fields.map { |field| field_id(field) }
     ]
+  end
+
+  def filterable_fields_options
+    fields.map { |field| [field['label'], field_id(field)] }
   end
 
   def displayed_fields_for_headers
@@ -331,12 +338,13 @@ class ProcedurePresentation < ApplicationRecord
     end
   end
 
-  def field_hash(table, column, label: nil, classname: '')
+  def field_hash(table, column, label: nil, classname: '', virtual: false)
     {
       'label' => label || I18n.t(column, scope: [:activerecord, :attributes, :procedure_presentation, :fields, table]),
       TABLE => table,
       COLUMN => column,
-      'classname' => classname
+      'classname' => classname,
+      'virtual' => virtual
     }
   end
 

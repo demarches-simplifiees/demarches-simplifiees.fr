@@ -35,6 +35,10 @@ describe 'users/dossiers/show/header.html.haml', type: :view do
     let(:procedure) { create(:procedure, :with_service, :discarded) }
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
 
+    before do
+      render 'users/dossiers/show/header.html.haml', dossier: dossier
+    end
+
     it 'affiche que la démarche est supprimée' do
       expect(rendered).to have_text("La démarche liée à votre dossier est supprimée")
       expect(rendered).to have_text("Vous pouvez toujours consulter votre dossier, mais il n’est plus possible de le modifier")
@@ -42,6 +46,52 @@ describe 'users/dossiers/show/header.html.haml', type: :view do
 
     it 'can download the dossier' do
       expect(rendered).to have_text("Tout le dossier")
+    end
+
+    it 'does not display a new procedure link' do
+      expect(rendered).not_to have_text("Une nouvelle démarche est disponible, consultez-la ici")
+    end
+  end
+
+  context "when the procedure is discarded with a dossier en construction and a replacement procedure" do
+    let(:new_procedure) { create(:procedure, :with_service, aasm_state: :publiee) }
+    let!(:procedure) { create(:procedure, :with_service, :discarded, replaced_by_procedure_id: new_procedure.id) }
+    let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+
+    before do
+      render 'users/dossiers/show/header.html.haml', dossier: dossier
+    end
+
+    it 'affiche que la démarche est supprimée' do
+      expect(rendered).to have_text("La démarche liée à votre dossier est supprimée")
+      expect(rendered).to have_text("Vous pouvez toujours consulter votre dossier, mais il n’est plus possible de le modifier")
+    end
+
+    it 'can download the dossier' do
+      expect(rendered).to have_text("Tout le dossier")
+    end
+
+    it 'displays a new procedure link' do
+      expect(rendered).to have_text("Une nouvelle démarche est disponible, consultez-la ici")
+    end
+
+    it 'the has_many and belongs_to relations works well' do
+      expect(procedure.replaced_by_procedure).to eq(new_procedure)
+      expect(new_procedure.replaced_procedures).to eq([procedure])
+    end
+  end
+
+  context "when the procedure is discarded with a dossier en construction and a replacement procedure is destroyed" do
+    let(:new_procedure) { create(:procedure, :with_service, aasm_state: :publiee) }
+    let!(:procedure) { create(:procedure, :with_service, :discarded, replaced_by_procedure_id: new_procedure.id) }
+    let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+
+    before do
+      new_procedure.destroy!
+    end
+
+    it 'put the old procedure.replaced_by_procedure blank' do
+      expect(procedure.replaced_by_procedure).to eq(nil)
     end
   end
 

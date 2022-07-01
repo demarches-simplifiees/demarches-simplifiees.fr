@@ -4,7 +4,7 @@
   #filter-menu.dropdown-content.left-aligned.fade-in-down{ data: { menu_button_target: 'menu' } }
     = form_tag add_filter_instructeur_procedure_path(procedure), method: :post, class: 'dropdown-form large' do
       = label_tag :field,  t('views.instructeurs.dossiers.filters.column')
-      = select_tag :field, options_for_select(displayed_fields_options)
+      = select_tag :field, options_for_select(filterable_fields_for_select)
       %br
       = label_tag :value, t('views.instructeurs.dossiers.filters.value')
       = text_field_tag :value, nil, maxlength: ProcedurePresentation::FILTERS_VALUE_MAX_LENGTH

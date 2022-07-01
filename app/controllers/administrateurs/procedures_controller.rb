@@ -1,6 +1,6 @@
 module Administrateurs
   class ProceduresController < AdministrateurController
-    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :allow_expert_review, :experts_require_administrateur_invitation]
+    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :allow_expert_review, :experts_require_administrateur_invitation]
     before_action :procedure_revisable?, only: [:champs, :annotations, :modifications]
 
     ITEMS_PER_PAGE = 25
@@ -150,6 +150,12 @@ module Administrateurs
 
     def archive
       procedure = current_administrateur.procedures.find(params[:procedure_id])
+
+      if params[:new_procedure].present?
+        new_procedure = current_administrateur.procedures.find(params[:new_procedure])
+        procedure.update!(replaced_by_procedure_id: new_procedure.id)
+      end
+
       procedure.close!
 
       flash.notice = "Démarche close"
@@ -175,7 +181,7 @@ module Administrateurs
 
     def restore
       procedure = current_administrateur.procedures.with_discarded.discarded.find(params[:id])
-      procedure.restore_procedure
+      procedure.restore_procedure(current_administrateur)
       flash.notice = t('administrateurs.index.restored', procedure_id: procedure.id)
       redirect_to admin_procedures_path
     end
@@ -220,27 +226,38 @@ module Administrateurs
       @procedure_lien_test = commencer_test_url(path: @procedure.path)
       @procedure.path = @procedure.suggested_path(current_administrateur)
       @current_administrateur = current_administrateur
+      @closed_procedures = current_administrateur.procedures.with_discarded.closes.map { |p| ["#{p.libelle} (#{p.id})", p.id] }.to_h
     end
 
     def publish
+      if params[:old_procedure].present?
+        old_procedure = current_administrateur.procedures.with_discarded.closes.find(params[:old_procedure])
+        old_procedure.update!(replaced_by_procedure_id: @procedure.id)
+      end
+
       @procedure.assign_attributes(publish_params)
 
-      if @procedure.draft_changed?
+      if @procedure.draft_changed? && !@procedure.close?
         @procedure.publish_revision!
         AdministrationMailer.procedure_published(@procedure).deliver_later
         flash.notice = "Nouvelle version de la démarche publiée"
-        redirect_to admin_procedure_path(@procedure)
+      elsif @procedure.draft_changed? && @procedure.close?
+        @procedure.publish_or_reopen!(current_administrateur)
+        @procedure.publish_revision!
+        flash.notice = "Démarche publiée"
       elsif @procedure.publish_or_reopen!(current_administrateur)
         AdministrationMailer.procedure_published(@procedure).deliver_later
         flash.notice = "Démarche publiée"
-        redirect_to admin_procedure_path(@procedure)
       else
         flash.alert = @procedure.errors.full_messages
-        redirect_to admin_procedure_path(@procedure)
       end
+      redirect_to admin_procedure_path(@procedure)
     end
 
     def transfert
+    end
+
+    def close
     end
 
     def allow_expert_review

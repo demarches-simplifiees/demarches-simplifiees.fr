@@ -217,7 +217,7 @@ describe 'The user' do
 
   let(:old_procedure_with_disabled_pj_validation) do
     tdcs = [
-      create(:type_de_champ_piece_justificative, mandatory: true, libelle: 'Pièce justificative 1', order_place: 1, skip_pj_validation: true)
+      create(:type_de_champ_piece_justificative, mandatory: true, libelle: 'Pièce justificative 1', position: 1, skip_pj_validation: true)
     ]
     create(:procedure, :published, :for_individual, types_de_champ: tdcs)
   end

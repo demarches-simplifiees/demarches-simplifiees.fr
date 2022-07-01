@@ -51,14 +51,14 @@ describe Champs::HeaderSectionChamp do
 
     let(:types_de_champ_with_levels) do
       [
-        create(:type_de_champ_header_section, order_place: 1, level: 2), # 1
-        create(:type_de_champ_header_section, order_place: 2, level: 3), # 1.1
-        create(:type_de_champ_header_section, order_place: 3, level: 2), # 2
-        create(:type_de_champ_header_section, order_place: 5, level: 1), # 1
-        create(:type_de_champ_header_section, order_place: 6), # 2 (level 1 by default)
-        create(:type_de_champ_header_section, order_place: 7, level: 2), # 2.1
-        create(:type_de_champ_header_section, order_place: 8, level: 3), # 2.1.1
-        create(:type_de_champ_header_section, order_place: 9, level: 3) # 2.1.2
+        create(:type_de_champ_header_section, position: 1, level: 2), # 1
+        create(:type_de_champ_header_section, position: 2, level: 3), # 1.1
+        create(:type_de_champ_header_section, position: 3, level: 2), # 2
+        create(:type_de_champ_header_section, position: 5, level: 1), # 1
+        create(:type_de_champ_header_section, position: 6), # 2 (level 1 by default)
+        create(:type_de_champ_header_section, position: 7, level: 2), # 2.1
+        create(:type_de_champ_header_section, position: 8, level: 3), # 2.1.1
+        create(:type_de_champ_header_section, position: 9, level: 3) # 2.1.2
       ]
     end
 

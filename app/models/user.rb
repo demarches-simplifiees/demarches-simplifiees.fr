@@ -50,6 +50,7 @@ class User < ApplicationRecord
   self.ignored_columns = [:administrateur_id, :instructeur_id, :expert_id]
 
   has_many :dossiers, dependent: :destroy
+  has_many :targeted_user_links, dependent: :destroy
   has_many :invites, dependent: :destroy
   has_many :dossiers_invites, through: :invites, source: :dossier
   has_many :deleted_dossiers
@@ -235,6 +236,7 @@ class User < ApplicationRecord
       old_user.dossiers.update_all(user_id: id)
       old_user.invites.update_all(user_id: id)
       old_user.merge_logs.update_all(user_id: id)
+      old_user.targeted_user_links.update_all(user_id: id)
 
       # Move or merge old user's roles to the user
       [

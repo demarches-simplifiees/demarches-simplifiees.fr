@@ -28,7 +28,6 @@ features = [
   :visa,
   :procedure_revisions,
   :procedure_routage_api,
-  :procedure_estimated_fill_duration,
   :procedure_process_expired_dossiers_termine
 ]
 

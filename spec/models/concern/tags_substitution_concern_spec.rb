@@ -398,7 +398,7 @@ describe TagsSubstitutionConcern, type: :model do
 
     context 'when procedure has revisions' do
       let(:types_de_champ) { [build(:type_de_champ, libelle: 'mon ancien libellé')] }
-      let(:draft_type_de_champ) { procedure.draft_revision.find_or_clone_type_de_champ(types_de_champ[0].stable_id) }
+      let(:draft_type_de_champ) { procedure.draft_revision.find_and_ensure_exclusive_use(types_de_champ[0].stable_id) }
 
       before do
         draft_type_de_champ.update(libelle: 'mon nouveau libellé')

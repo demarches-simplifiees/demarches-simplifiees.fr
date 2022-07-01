@@ -27,12 +27,6 @@ shared_examples 'type_de_champ_spec' do
       end
     end
 
-    context 'order_place' do
-      # it { is_expected.not_to allow_value(nil).for(:order_place) }
-      # it { is_expected.not_to allow_value('').for(:order_place) }
-      it { is_expected.to allow_value(1).for(:order_place) }
-    end
-
     context 'description' do
       it { is_expected.to allow_value(nil).for(:description) }
       it { is_expected.to allow_value('').for(:description) }

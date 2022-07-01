@@ -7,7 +7,7 @@
     %h1.tab-title Donner votre avis
     %h2.claimant
       Demandeur :
-      %span.email= @avis.claimant.email
+      %span.email= safe_claimant_email(@avis.claimant)
       %span.date Demande d’avis envoyée le #{l(@avis.created_at, format: '%d/%m/%y')}
     %p.introduction= @avis.introduction
 
@@ -15,8 +15,8 @@
       = render Attachment::ShowComponent.new(attachment: @avis.introduction_file.attachment)
     %br/
 
-    = form_for @avis, url: expert_avis_path(@avis.procedure, @avis), html: { class: 'form', data: { persisted_content_id: @avis.id } } do |f|
-      = f.text_area :answer, rows: 3, placeholder: 'Votre avis', required: true, class: 'persisted-input'
+    = form_for @avis, url: expert_avis_path(@avis.procedure, @avis), html: { class: 'form', data: { controller: 'persisted-form', persisted_form_key_value: dom_id(@avis) } } do |f|
+      = f.text_area :answer, rows: 3, placeholder: 'Votre avis', required: true
       = render Attachment::EditComponent.text(f, @avis.piece_justificative_file)
 
       .flex.justify-between.align-baseline

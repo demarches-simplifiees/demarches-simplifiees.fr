@@ -52,8 +52,20 @@ export function updateTypeDeChampOperation(
       handleResponseData(typeDeChamp, data as ResponseData);
     });
 }
+export function estimateFillDuration(queue: OperationsQueue): Promise<number> {
+  return queue
+    .enqueue({
+      path: `/estimate_fill_duration`,
+      method: 'get'
+    })
+    .then((data) => {
+      const responseData = data as EstimatedFillDurationResponseData;
+      return responseData.estimated_fill_duration;
+    });
+}
 
 type ResponseData = { type_de_champ: Record<string, string> };
+type EstimatedFillDurationResponseData = { estimated_fill_duration: number };
 
 function handleResponseData(
   typeDeChamp: Partial<TypeDeChamp>,
