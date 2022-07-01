@@ -68,5 +68,5 @@ Turbo.session.drive = false;
 // Expose globals
 window.DS = window.DS || DS;
 
-import '../shared/track/matomo';
-import '../shared/track/sentry';
+import('../shared/track/matomo');
+import('../shared/track/sentry');
