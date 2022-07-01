@@ -56,7 +56,7 @@ class Champs::DropDownListChamp < Champ
   end
 
   def drop_down_other?
-    drop_down_other
+    drop_down_other == "1" || drop_down_other == true
   end
 
   def value=(value)
