@@ -43,9 +43,7 @@ if (shouldBuildLegacy()) {
 
 export default defineConfig({
   resolve: { alias: { '@utils': '/shared/utils.ts' } },
-  build: {
-    sourcemap: true
-  },
+  build: { sourcemap: true },
   plugins
 });
 
