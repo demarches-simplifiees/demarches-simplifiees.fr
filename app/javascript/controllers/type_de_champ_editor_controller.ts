@@ -139,7 +139,7 @@ export class TypeDeChampEditorController extends ApplicationController {
         ? '.add-to-block'
         : '.add-to-root';
       const input = parent.querySelector<HTMLInputElement>(
-        `${selector} ${AFTER_ID_INPUT_SELECTOR}`
+        `${selector} ${AFTER_STABLE_ID_INPUT_SELECTOR}`
       );
       if (input) {
         input.value = this.typeDeChampIdValue;
@@ -148,7 +148,8 @@ export class TypeDeChampEditorController extends ApplicationController {
   }
 }
 
-const AFTER_ID_INPUT_SELECTOR = 'input[name="type_de_champ[after_id]"]';
+const AFTER_STABLE_ID_INPUT_SELECTOR =
+  'input[name="type_de_champ[after_stable_id]"]';
 
 function createForm(action: string, method: string) {
   const form = document.createElement('form');

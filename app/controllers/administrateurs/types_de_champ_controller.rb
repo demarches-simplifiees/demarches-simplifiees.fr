@@ -55,7 +55,7 @@ module Administrateurs
     def type_de_champ_create_params
       params
         .required(:type_de_champ)
-        .permit(:type_champ, :parent_id, :private, :libelle, :after_id)
+        .permit(:type_champ, :parent_id, :private, :libelle, :after_stable_id)
     end
 
     def type_de_champ_update_params
