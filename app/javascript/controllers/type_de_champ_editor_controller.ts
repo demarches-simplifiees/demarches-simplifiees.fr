@@ -7,7 +7,7 @@ import { ApplicationController } from './application_controller';
 
 export class TypeDeChampEditorController extends ApplicationController {
   static values = {
-    typeDeChampId: String,
+    typeDeChampStableId: String,
     moveUrl: String,
     moveUpUrl: String,
     moveDownUrl: String
@@ -16,7 +16,7 @@ export class TypeDeChampEditorController extends ApplicationController {
   declare readonly moveUrlValue: string;
   declare readonly moveUpUrlValue: string;
   declare readonly moveDownUrlValue: string;
-  declare readonly typeDeChampIdValue: string;
+  declare readonly typeDeChampStableIdValue: string;
   declare readonly isVisible: boolean;
 
   #latestPromise = Promise.resolve();
@@ -142,7 +142,7 @@ export class TypeDeChampEditorController extends ApplicationController {
         `${selector} ${AFTER_STABLE_ID_INPUT_SELECTOR}`
       );
       if (input) {
-        input.value = this.typeDeChampIdValue;
+        input.value = this.typeDeChampStableIdValue;
       }
     }
   }
