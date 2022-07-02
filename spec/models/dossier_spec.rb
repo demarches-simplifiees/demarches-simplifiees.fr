@@ -1477,7 +1477,7 @@ describe Dossier do
           draft = proc_test.draft_revision
 
           tdc_repetition = draft.add_type_de_champ(type_champ: :repetition, libelle: "repetition")
-          draft.add_type_de_champ(type_champ: :communes, libelle: "communes", parent_id: tdc_repetition.stable_id)
+          draft.add_type_de_champ(type_champ: :communes, libelle: "communes", parent_stable_id: tdc_repetition.stable_id)
 
           dossier_test = create(:dossier, procedure: proc_test)
           repetition = proc_test.types_de_champ_for_procedure_presentation.repetition.first
