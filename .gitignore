@@ -27,7 +27,6 @@ yarn-debug.log*
 /.vscode
 /.idea
 /public/assets
-/docs
 
 # Local Netlify folder
 .netlify
@@ -47,3 +46,7 @@ public/packs-test
 public/vite
 public/vite-dev
 public/vite-test
+
+
+app/graphql/schema.json
+public/graphql/schema
