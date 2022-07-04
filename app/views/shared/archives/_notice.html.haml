@@ -1,0 +1,15 @@
+.card.featured
+  .card-title Gestion de vos archives
+  %p
+    L'archivage de votre démarche se fait mensuellement. Ainsi pour chaque mois depuis la publication de votre démarche vous pouvez faire une demande de création d'archive.
+
+  %p
+    Cette archive contient uniquement les dossiers terminés, les demandes déposées par l'usager et la liste des pièces justificatives transmises.
+
+  %p
+    Les archives dont le poid est estimé à plus de #{number_to_human_size(Archive::MAX_SIZE)} ne sont pas supportées.
+    Nous vous invitons à regarder
+    = link_to 'la documentation', ARCHIVAGE_DOC_URL
+    afin de voir les options à votre disposition pour mettre en place un système d’archive.
+
+

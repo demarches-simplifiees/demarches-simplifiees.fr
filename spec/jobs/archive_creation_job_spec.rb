@@ -8,7 +8,7 @@ describe ArchiveCreationJob, type: :job do
     context 'when it fails' do
       let(:status) { :pending }
       let(:mailer) { double('mailer', deliver_later: true) }
-      before { expect(InstructeurMailer).not_to receive(:send_archive) }
+      before { expect(UserMailer).not_to receive(:send_archive) }
 
       it 'does not send email and forward error for retry' do
         allow(DownloadableFileService).to receive(:download_and_zip).and_raise(StandardError, "kaboom")
@@ -21,7 +21,7 @@ describe ArchiveCreationJob, type: :job do
       let(:mailer) { double('mailer', deliver_later: true) }
       before do
         allow(DownloadableFileService).to receive(:download_and_zip).and_return(true)
-        expect(InstructeurMailer).to receive(:send_archive).and_return(mailer)
+        expect(UserMailer).to receive(:send_archive).and_return(mailer)
       end
 
       context 'when archive failed previously' do

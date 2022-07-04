@@ -24,6 +24,10 @@ describe 'administrateurs/procedures/show.html.haml', type: :view do
       describe 'procedure path is not customized' do
         it { expect(rendered).to have_content('Brouillon') }
       end
+
+      describe 'archive button' do
+        it { expect(rendered).not_to have_css('#archive-procedure') }
+      end
     end
   end
 
@@ -37,6 +41,9 @@ describe 'administrateurs/procedures/show.html.haml', type: :view do
     describe 'archive button is visible' do
       it { expect(rendered).not_to have_css('#publish-procedure-link') }
       it { expect(rendered).to have_css('#close-procedure-link') }
+    end
+    describe 'archive button' do
+      it { expect(rendered).to have_css('#archive-procedure') }
     end
   end
 

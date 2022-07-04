@@ -2,8 +2,6 @@
 @import "constants";
 
 .breadcrumbs {
-  margin: $default-spacer 0 3 * $default-spacer;
-
   li {
     display: inline-block;
     font-weight: bold;
