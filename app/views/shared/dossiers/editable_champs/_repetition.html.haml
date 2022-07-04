@@ -4,5 +4,5 @@
 
 .actions{ 'data-turbo': 'true' }
   = link_to champs_repetition_path(champ.id), data: { turbo_method: :post }, class: 'button add-row' do
-    %span.icon.add
+    %span +
     Ajouter un élément pour « #{champ.libelle} »

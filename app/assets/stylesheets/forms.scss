@@ -186,6 +186,18 @@
 
   .add-row {
     margin-bottom: $default-fields-spacer;
+    color: #FFFFFF;
+    border-color: $green;
+    background-color: $green;
+
+    &:hover:not(:disabled) {
+      color: $green;
+      background-color: #FFFFFF;
+    }
+
+    span {
+      font-size: 20px;
+    }
   }
 
   input[type=checkbox] {
