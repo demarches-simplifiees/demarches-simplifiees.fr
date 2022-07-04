@@ -120,9 +120,10 @@ describe 'Instructing a dossier:', js: true do
     within(:css, '.dossiers-export') do
       click_on "Demander un export au format .csv"
     end
-    expect(page).to have_text('Nous générons cet export.')
-    expect(page).to have_text('Un export au format .csv est en train d’être généré')
 
+    expect(page).to have_text('Nous générons cet export.')
+    click_on "Télécharger un dossier"
+    expect(page).to have_text('Un export au format .csv est en train d’être généré')
     perform_enqueued_jobs(only: ExportJob)
     assert_performed_jobs 2
     page.driver.browser.navigate.refresh

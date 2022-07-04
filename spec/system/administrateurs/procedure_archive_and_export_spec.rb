@@ -32,5 +32,14 @@ describe 'Creating a new procedure', js: true do
       page.first(".archive-table .button").click
     }.to have_enqueued_job(ArchiveCreationJob).with(procedure, an_instance_of(Archive), administrateur)
     expect(page).to have_content("Votre demande a été prise en compte. Selon le nombre de dossiers, cela peut prendre de quelques minutes a plusieurs heures. Vous recevrez un courriel lorsque le fichier sera disponible.")
+
+    # check exports
+    page.find("#download-menu", visible: false)
+    click_on "Télécharger tous les dossiers"
+    page.find("#download-menu", visible: true)
+
+    expect {
+      click_on "Demander un export au format .xlsx"
+    }.to have_enqueued_job(ExportJob).with(an_instance_of(Export))
   end
 end
