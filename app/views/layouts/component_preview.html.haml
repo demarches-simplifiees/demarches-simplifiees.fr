@@ -13,7 +13,7 @@
     = favicon_link_tag(image_url("#{FAVICON_32PX_SRC}"), type: "image/png", sizes: "32x32")
     = favicon_link_tag(image_url("#{FAVICON_96PX_SRC}"), type: "image/png", sizes: "96x96")
 
-    = javascript_packs_with_chunks_tag 'application', defer: true
+    = vite_javascript_tag 'application'
 
     = preload_link_tag(asset_url("Muli-Regular.woff2"))
     = preload_link_tag(asset_url("Muli-Bold.woff2"))
