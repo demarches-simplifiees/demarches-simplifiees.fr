@@ -1,0 +1,6 @@
+---
+fr:
+  type:
+    number: un nombre
+    string: un texte
+    boolean: soit oui, soit non
