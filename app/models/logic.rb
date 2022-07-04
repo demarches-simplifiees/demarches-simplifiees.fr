@@ -68,6 +68,10 @@ module Logic
     end
   end
 
+  def self.split_condition(condition)
+    [condition.left, condition.class.name, condition.right]
+  end
+
   def ds_eq(left, right) = Logic::Eq.new(left, right)
 
   def greater_than(left, right) = Logic::GreaterThan.new(left, right)
