@@ -1,5 +1,3 @@
-include ActionDispatch::TestProcess
-
 describe Administrateurs::DossierSubmittedMessagesController, type: :controller do
    let(:administrateur) { create(:administrateur) }
 
