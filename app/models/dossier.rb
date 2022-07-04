@@ -251,6 +251,7 @@ class Dossier < ApplicationRecord
         :followers_instructeurs,
         :traitement,
         :groupe_instructeur,
+        :etablissement,
         procedure: [
           :groupe_instructeurs,
           :draft_types_de_champ,
@@ -258,8 +259,7 @@ class Dossier < ApplicationRecord
           :published_types_de_champ,
           :published_types_de_champ_private
         ],
-        avis: [:claimant, :expert],
-        etablissement: :champ
+        avis: [:claimant, :expert]
       ).order(depose_at: 'asc')
   }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
@@ -436,39 +436,101 @@ class Dossier < ApplicationRecord
   validates :individual, presence: true, if: -> { revision.procedure.for_individual? }
   validates :groupe_instructeur, presence: true, if: -> { !brouillon? }
 
-  EXPORT_BATCH_SIZE = 5000
+  EXPORT_BATCH_SIZE = 2000
 
   def self.downloadable_sorted_batch
-    dossiers = downloadable_sorted.to_a
-    (dossiers.size.to_f / EXPORT_BATCH_SIZE).ceil.times do |i|
-      start_index = i * EXPORT_BATCH_SIZE
-      end_index = start_index + EXPORT_BATCH_SIZE - 1
-      load_champs(dossiers[start_index..end_index])
-    end
-    dossiers
+    ExportPreloader.new(self).in_batches
   end
 
-  def self.load_champs(dossiers)
-    ::ActiveRecord::Associations::Preloader.new.preload(dossiers, {
-      champs: {
-        type_de_champ: [],
-        etablissement: :champ,
-        piece_justificative_file_attachment: :blob,
-        champs: [
-          type_de_champ: [],
-          piece_justificative_file_attachment: :blob
-        ]
-      },
-      champs_private: {
-        type_de_champ: [],
-        etablissement: :champ,
-        piece_justificative_file_attachment: :blob,
-        champs: [
-          type_de_champ: [],
-          piece_justificative_file_attachment: :blob
-        ]
-      }
-    })
+  class ExportPreloader
+    def initialize(dossiers)
+      @dossiers = dossiers
+    end
+
+    def in_batches
+      dossiers = @dossiers.downloadable_sorted.to_a
+      dossiers.each_slice(EXPORT_BATCH_SIZE) { |slice| load_dossiers(slice) }
+      dossiers
+    end
+
+    private
+
+    # returns: { revision_id : { type_de_champ_id : position } }
+    def positions
+      @positions ||= ProcedureRevisionTypeDeChamp
+        .where(revision_id: @dossiers.distinct.pluck(:revision_id))
+        .select(:revision_id, :type_de_champ_id, :position)
+        .group_by(&:revision_id)
+        .transform_values do |coordinates|
+          coordinates.index_by(&:type_de_champ_id).transform_values(&:position)
+        end
+    end
+
+    def load_dossiers(dossiers)
+      all_champs = Champ
+        .includes(:type_de_champ, piece_justificative_file_attachment: :blob)
+        .where(dossier_id: dossiers)
+        .to_a
+
+      load_etablissements(all_champs)
+
+      children_champs, root_champs = all_champs.partition(&:child?)
+      champs_by_dossier = root_champs.group_by(&:dossier_id)
+      champs_by_dossier_by_parent = children_champs
+        .group_by(&:dossier_id)
+        .transform_values do |champs|
+          champs.group_by(&:parent_id)
+        end
+
+      dossiers.each do |dossier|
+        load_dossier(dossier, champs_by_dossier[dossier.id], champs_by_dossier_by_parent[dossier.id])
+      end
+    end
+
+    def load_etablissements(champs)
+      champs_siret = champs.filter(&:siret?)
+      etablissements_by_id = Etablissement.where(id: champs_siret.map(&:etablissement_id).compact).index_by(&:id)
+      champs_siret.each do |champ|
+        etablissement = etablissements_by_id[champ.etablissement_id]
+        champ.association(:etablissement).target = etablissement
+        if etablissement
+          etablissement.association(:champ).target = champ
+        end
+      end
+    end
+
+    def load_dossier(dossier, champs, children_by_parent = {})
+      champs_public, champs_private = champs.partition(&:public?)
+
+      load_champs(dossier, :champs, champs_public, dossier)
+      load_champs(dossier, :champs_private, champs_private, dossier)
+
+      # Load repetition children champs
+      champs.filter(&:repetition?).each do |parent_champ|
+        champs = children_by_parent[parent_champ.id] || []
+        parent_champ.association(:dossier).target = dossier
+
+        load_champs(parent_champ, :champs, champs, dossier)
+        parent_champ.association(:champs).set_inverse_instance(parent_champ)
+      end
+
+      # We need to do this because of the check on `Etablissement#champ` in
+      # `Etablissement#libelle_for_export`. By assigning `nil` to `target` we mark association
+      # as loaded and so the check on `Etablissement#champ` will not trigger n+1 query.
+      if dossier.etablissement
+        dossier.etablissement.association(:champ).target = nil
+      end
+    end
+
+    def load_champs(parent, name, champs, dossier)
+      champs.each do |champ|
+        champ.association(:dossier).target = dossier
+      end
+
+      parent.association(name).target = champs.sort_by do |champ|
+        positions[dossier.revision_id][champ.type_de_champ_id]
+      end
+    end
   end
 
   def user_deleted?
