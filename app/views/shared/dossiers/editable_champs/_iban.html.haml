@@ -1,6 +1,6 @@
 = form.text_field :value,
   id: champ.input_id,
-  placeholder: "27 caractères au format FR7630006000011234567890189",
+  placeholder: t(".placeholder"),
   required: champ.mandatory?,
   aria: { describedby: champ.describedby_id },
   data: { controller: 'iban-input'}
