@@ -26,6 +26,7 @@ fr:
           identifiant_notice: Il est généralement composé de caractères alphanumériques.
         siret:
           placeholder: "50000123456789"
+          title: "Le numéro de SIRET doit comporter exactement 14 chiffres"
       header:
         expires_at:
           brouillon: "Expirera le %{date} (%{duree_conservation_totale} mois après la création du dossier)"

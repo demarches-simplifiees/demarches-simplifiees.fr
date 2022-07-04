@@ -26,6 +26,7 @@ en:
           identifiant_notice: It is usually composed of alphanumeric characters.
         siret:
           placeholder: "50000123456789"
+          title: "The SIRET number must have exactly 14 digits"
       header:
         expires_at:
           brouillon: "Expires on %{date} (%{duree_conservation_totale} months after this file was created)"
