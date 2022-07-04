@@ -434,6 +434,12 @@ Rails.application.routes.draw do
         resource 'sources', only: [:show, :update], controller: 'sources_particulier'
       end
 
+      resources :conditions, only: [:update, :destroy], param: :stable_id do
+        patch :add_row, on: :member
+        patch :change_targeted_champ, on: :member
+        delete :delete_row, on: :member
+      end
+
       put 'clone'
       put 'archive'
       get 'publication' => 'procedures#publication', as: :publication
