@@ -16,7 +16,7 @@ module Administrateurs
     end
 
     def update
-      type_de_champ = @procedure.draft_revision.find_and_ensure_exclusive_use(params[:id])
+      type_de_champ = @procedure.draft_revision.find_and_ensure_exclusive_use(params[:stable_id])
 
       if type_de_champ.update(type_de_champ_update_params)
         if params[:should_render]
@@ -31,21 +31,21 @@ module Administrateurs
 
     def move
       flash.notice = "Formulaire enregistré"
-      @procedure.draft_revision.move_type_de_champ(params[:id], params[:position].to_i)
+      @procedure.draft_revision.move_type_de_champ(params[:stable_id], params[:position].to_i)
     end
 
     def move_up
       flash.notice = "Formulaire enregistré"
-      @coordinate = @procedure.draft_revision.move_up_type_de_champ(params[:id])
+      @coordinate = @procedure.draft_revision.move_up_type_de_champ(params[:stable_id])
     end
 
     def move_down
       flash.notice = "Formulaire enregistré"
-      @coordinate = @procedure.draft_revision.move_down_type_de_champ(params[:id])
+      @coordinate = @procedure.draft_revision.move_down_type_de_champ(params[:stable_id])
     end
 
     def destroy
-      @coordinate = @procedure.draft_revision.remove_type_de_champ(params[:id])
+      @coordinate = @procedure.draft_revision.remove_type_de_champ(params[:stable_id])
       reset_procedure
       flash.notice = "Formulaire enregistré"
     end

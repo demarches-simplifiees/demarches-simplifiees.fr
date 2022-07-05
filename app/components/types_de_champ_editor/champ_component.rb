@@ -35,7 +35,7 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
 
   def form_options
     {
-      url: type_de_champ_path,
+      url: admin_procedure_type_de_champ_path(procedure, type_de_champ.stable_id),
       multipart: true,
       html: { id: nil, class: 'form width-100' }
     }
