@@ -1,12 +1,12 @@
 module Types
   class BaseField < GraphQL::Schema::Field
-    def initialize(*args, require_admin: false, **kwargs, &block)
-      @require_admin = require_admin
+    def initialize(*args, internal: false, **kwargs, &block)
+      @internal = internal
       super(*args, **kwargs, &block)
     end
 
     def visible?(ctx)
-      super && (@require_admin ? ctx[:admin] : true)
+      super && (@internal ? ctx[:internal_use] : true)
     end
   end
 end
