@@ -58,7 +58,7 @@ module Administrateurs
         .permit(:type_champ, :parent_id, :private, :libelle, :after_id)
     end
 
-    INSTANCE_EDITABLE_OPTIONS = TypeDeChamp::TeFenuaTypeDeChamp::LAYERS
+    INSTANCE_EDITABLE_OPTIONS = TypesDeChamp::TeFenuaTypeDeChamp::LAYERS
 
     def type_de_champ_update_params
       params.required(:type_de_champ).permit(:type_champ,
@@ -73,7 +73,7 @@ module Administrateurs
         :piece_justificative_template,
         editable_options: [
           *INSTANCE_EDITABLE_OPTIONS,
-          *TypeDeChamp::CarteTypeDeChamp::LAYERS
+          *TypesDeChamp::CarteTypeDeChamp::LAYERS
         ])
     end
   end

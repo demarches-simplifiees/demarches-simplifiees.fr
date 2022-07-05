@@ -17,7 +17,7 @@ class TypeDeChamp < ApplicationRecord
   self.ignored_columns = [:migrated_parent, :revision_id, :parent_id, :order_place]
 
   FEATURE_FLAGS = { 'visa' => 'visa' }
-  
+
   INSTANCE_TYPE_CHAMPS = {
     nationalites: 'nationalites',
     commune_de_polynesie: 'commune_de_polynesie',
@@ -65,9 +65,9 @@ class TypeDeChamp < ApplicationRecord
     mesri: 'mesri'
   }.merge(INSTANCE_TYPE_CHAMPS)
 
-  INSTANCE_OPTIONS = [:min, :max, :level, :accredited_users]
+  INSTANCE_OPTIONS = [:parcelles, :batiments, :zones_manuelles, :min, :max, :level, :accredited_users]
 
-  store_accessor :options, *INSTANCE_OPTIONS, :old_pj, :drop_down_options, :skip_pj_validation, :skip_content_type_pj_validation, :drop_down_secondary_libelle, :drop_down_secondary_description, :drop_down_other
+  store_accessor :options, *INSTANCE_OPTIONS, :cadastres, :old_pj, :drop_down_options, :skip_pj_validation, :skip_content_type_pj_validation, :drop_down_secondary_libelle, :drop_down_secondary_description, :drop_down_other
 
   has_many :revision_types_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
   has_one :revision_type_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', inverse_of: false
