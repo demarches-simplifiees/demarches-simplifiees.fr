@@ -565,12 +565,13 @@
 }
 
 .fconnect-form {
-  input[type=password] {
+  input[type='password'] {
     margin-bottom: 16px;
   }
 }
 
 input::placeholder,
 textarea::placeholder {
+  opacity: 0.6; // normalize opacity across browsers
   color: $dark-grey;
 }
