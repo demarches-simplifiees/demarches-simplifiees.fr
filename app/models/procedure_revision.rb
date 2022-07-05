@@ -43,8 +43,8 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def add_type_de_champ(params)
-    parent_stable_id = params.delete(:parent_id)
-    after_stable_id = params.delete(:after_id)
+    parent_stable_id = params.delete(:parent_stable_id)
+    after_stable_id = params.delete(:after_stable_id)
 
     coordinate = {}
 

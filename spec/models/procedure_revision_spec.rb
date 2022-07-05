@@ -34,7 +34,7 @@ describe ProcedureRevision do
     end
 
     context 'with a repetition child' do
-      let(:tdc_params) { text_params.merge(parent_id: type_de_champ_repetition.stable_id) }
+      let(:tdc_params) { text_params.merge(parent_stable_id: type_de_champ_repetition.stable_id) }
 
       it do
         expect { subject }.to change { draft.reload.types_de_champ.count }.from(4).to(5)
@@ -93,7 +93,7 @@ describe ProcedureRevision do
         draft.add_type_de_champ({
           type_champ: TypeDeChamp.type_champs.fetch(:text),
           libelle: "second child",
-          parent_id: type_de_champ_repetition.stable_id
+          parent_stable_id: type_de_champ_repetition.stable_id
         })
       end
 
@@ -101,7 +101,7 @@ describe ProcedureRevision do
         draft.add_type_de_champ({
           type_champ: TypeDeChamp.type_champs.fetch(:text),
           libelle: "last child",
-          parent_id: type_de_champ_repetition.stable_id
+          parent_stable_id: type_de_champ_repetition.stable_id
         })
       end
 
@@ -159,7 +159,7 @@ describe ProcedureRevision do
           draft.add_type_de_champ({
             type_champ: TypeDeChamp.type_champs.fetch(:text),
             libelle: "second child",
-            parent_id: type_de_champ_repetition.stable_id
+            parent_stable_id: type_de_champ_repetition.stable_id
           })
         end
 
@@ -167,7 +167,7 @@ describe ProcedureRevision do
           draft.add_type_de_champ({
             type_champ: TypeDeChamp.type_champs.fetch(:text),
             libelle: "last child",
-            parent_id: type_de_champ_repetition.stable_id
+            parent_stable_id: type_de_champ_repetition.stable_id
           })
         end
 
