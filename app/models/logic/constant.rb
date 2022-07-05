@@ -1,8 +1,9 @@
 class Logic::Constant < Logic::Term
   attr_reader :value
 
-  def initialize(value)
+  def initialize(value, id = nil)
     @value = value
+    super(id)
   end
 
   def compute(_champs = nil) = @value
@@ -34,12 +35,13 @@ class Logic::Constant < Logic::Term
   def to_h
     {
       "op" => self.class.name,
-      "value" => @value
+      "value" => @value,
+      "id" => @id
     }
   end
 
   def self.from_h(h)
-    self.new(h['value'])
+    self.new(h['value'], h['id'])
   end
 
   def ==(other)
