@@ -16,7 +16,16 @@
 class TypeDeChamp < ApplicationRecord
   self.ignored_columns = [:migrated_parent, :revision_id, :parent_id, :order_place]
 
-  FEATURE_FLAGS = {}
+  FEATURE_FLAGS = { 'visa' => 'visa' }
+  
+  INSTANCE_TYPE_CHAMPS = {
+    nationalites: 'nationalites',
+    commune_de_polynesie: 'commune_de_polynesie',
+    code_postal_de_polynesie: 'code_postal_de_polynesie',
+    numero_dn: 'numero_dn',
+    te_fenua: 'te_fenua',
+    visa: 'visa'
+  }
 
   enum type_champs: {
     text: 'text',
@@ -36,10 +45,6 @@ class TypeDeChamp < ApplicationRecord
     multiple_drop_down_list: 'multiple_drop_down_list',
     linked_drop_down_list: 'linked_drop_down_list',
     pays: 'pays',
-    nationalites: 'nationalites',
-    commune_de_polynesie: 'commune_de_polynesie',
-    code_postal_de_polynesie: 'code_postal_de_polynesie',
-    numero_dn: 'numero_dn',
     regions: 'regions',
     departements: 'departements',
     communes: 'communes',
@@ -50,20 +55,20 @@ class TypeDeChamp < ApplicationRecord
     piece_justificative: 'piece_justificative',
     siret: 'siret',
     carte: 'carte',
-    te_fenua: 'te_fenua',
     repetition: 'repetition',
     titre_identite: 'titre_identite',
     iban: 'iban',
     annuaire_education: 'annuaire_education',
-    visa: 'visa',
     cnaf: 'cnaf',
     dgfip: 'dgfip',
     pole_emploi: 'pole_emploi',
     mesri: 'mesri'
-  }
+  }.merge(INSTANCE_TYPE_CHAMPS)
 
-  store_accessor :options, :cadastres, :old_pj, :drop_down_options, :skip_pj_validation, :skip_content_type_pj_validation, :drop_down_secondary_libelle, :drop_down_secondary_description, :drop_down_other,
-                 :parcelles, :batiments, :zones_manuelles, :min, :max, :level, :accredited_users
+  INSTANCE_OPTIONS = [:min, :max, :level, :accredited_users]
+
+  store_accessor :options, *INSTANCE_OPTIONS, :old_pj, :drop_down_options, :skip_pj_validation, :skip_content_type_pj_validation, :drop_down_secondary_libelle, :drop_down_secondary_description, :drop_down_other
+
   has_many :revision_types_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
   has_one :revision_type_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', inverse_of: false
   has_many :revisions, -> { ordered }, through: :revision_types_de_champ
@@ -224,6 +229,14 @@ class TypeDeChamp < ApplicationRecord
     type_champ == TypeDeChamp.type_champs.fetch(:number)
   end
 
+  def integer_number?
+    type_champ == TypeDeChamp.type_champs.fetch(:integer_number)
+  end
+
+  def decimal_number?
+    type_champ == TypeDeChamp.type_champs.fetch(:decimal_number)
+  end
+
   def date?
     type_champ == TypeDeChamp.type_champs.fetch(:date)
   end
@@ -242,6 +255,10 @@ class TypeDeChamp < ApplicationRecord
 
   def visa?
     type_champ == TypeDeChamp.type_champs.fetch(:visa)
+  end
+
+  def te_fenua?
+    type_champ == TypeDeChamp.type_champs.fetch(:te_fenua)
   end
 
   def cnaf?
@@ -347,7 +364,14 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def editable_options
-    layers = TypesDeChamp::CarteTypeDeChamp::LAYERS.map do |layer|
+    layers = if carte?
+      TypesDeChamp::CarteTypeDeChamp::LAYERS
+    elsif te_fenua?
+      TypesDeChamp::TeFenuaTypeDeChamp::LAYERS
+    else
+      []
+    end
+    layers = layers.map do |layer|
       [layer, layer_enabled?(layer)]
     end
     layers.each_slice((layers.size / 2.0).round).to_a

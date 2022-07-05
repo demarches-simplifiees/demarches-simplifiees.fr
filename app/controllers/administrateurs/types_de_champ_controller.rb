@@ -58,18 +58,11 @@ module Administrateurs
         .permit(:type_champ, :parent_id, :private, :libelle, :after_id)
     end
 
+    INSTANCE_EDITABLE_OPTIONS = TypeDeChamp::TeFenuaTypeDeChamp::LAYERS
+
     def type_de_champ_update_params
       params.required(:type_de_champ).permit(:type_champ,
-        # polynesian
-        :cadastres,
-        :level,
-        :parcelles,
-        :batiments,
-        :zones_manuelles,
-        :min,
-        :max,
-        :accredited_user_string,
-        # base
+        *TypeDeChamp::INSTANCE_OPTIONS,
         :libelle,
         :description,
         :mandatory,
@@ -79,16 +72,8 @@ module Administrateurs
         :drop_down_secondary_description,
         :piece_justificative_template,
         editable_options: [
-          :cadastres,
-          :unesco,
-          :arretes_protection,
-          :conservatoire_littoral,
-          :reserves_chasse_faune_sauvage,
-          :reserves_biologiques,
-          :reserves_naturelles,
-          :natura_2000,
-          :zones_humides,
-          :znieff
+          *INSTANCE_EDITABLE_OPTIONS,
+          *TypeDeChamp::CarteTypeDeChamp::LAYERS
         ])
     end
   end
