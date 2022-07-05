@@ -27,6 +27,10 @@ en:
         siret:
           placeholder: "50000123456789"
           title: "The SIRET number must have exactly 14 digits"
+        text:
+          placeholder: "Your answer"
+        textarea:
+          placeholder: "Write your answer here"
       header:
         expires_at:
           brouillon: "Expires on %{date} (%{duree_conservation_totale} months after this file was created)"
