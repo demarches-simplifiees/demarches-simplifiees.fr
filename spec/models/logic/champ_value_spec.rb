@@ -20,13 +20,6 @@ describe Logic::ChampValue do
     end
   end
 
-  context 'text tdc' do
-    let(:champ) { create(:champ_text, value: 'text') }
-
-    it { expect(champ_value(champ.stable_id).type).to eq(:string) }
-    it { is_expected.to eq('text') }
-  end
-
   context 'integer tdc' do
     let(:champ) { create(:champ_integer_number, value: '42') }
 
