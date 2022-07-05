@@ -3,5 +3,9 @@ class Logic::EmptyOperator < Logic::BinaryOperator
 
   def type = :empty
 
-  def errors(_stable_ids = nil) = ['empty']
+  def errors(_stable_ids = nil) = []
+
+  def compute(_champs = [])
+    true
+  end
 end

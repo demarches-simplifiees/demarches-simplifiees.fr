@@ -1,5 +1,5 @@
 class Logic::Empty < Logic::Term
-  def to_s = "empty member"
+  def to_s = I18n.t('logic.empty')
 
   def type = :empty
 
@@ -17,5 +17,9 @@ class Logic::Empty < Logic::Term
 
   def ==(other)
     self.class == other.class
+  end
+
+  def value
+    nil
   end
 end

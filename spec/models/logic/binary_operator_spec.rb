@@ -16,7 +16,7 @@ describe Logic::BinaryOperator do
   end
 
   describe '#errors' do
-    it { expect(greater_than(constant(1), constant(true)).errors).to eq(['les types sont incompatibles : (1 > true)']) }
+    it { expect(greater_than(constant(1), constant(true)).errors).to eq(['les types sont incompatibles : (1 > Oui)']) }
   end
 end
 
