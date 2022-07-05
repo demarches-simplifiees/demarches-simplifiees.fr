@@ -1,6 +1,6 @@
 module Logic
   def self.from_h(h)
-    class_from_name(h['op']).from_h(h)
+    class_from_name(h['term']).from_h(h)
   end
 
   def self.from_json(s)
