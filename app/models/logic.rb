@@ -27,8 +27,6 @@ module Logic
     in [:number, EmptyOperator]
       operator_class = Eq
     in [:number, _]
-    in [:string, _]
-      operator_class = Eq
     end
 
     if !compatible_type?(left, right)
@@ -41,8 +39,6 @@ module Logic
         Constant.new(left.options.first)
       when :number
         Constant.new(0)
-      when :string
-        Constant.new('')
       end
     end
 
