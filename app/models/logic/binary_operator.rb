@@ -8,7 +8,7 @@ class Logic::BinaryOperator < Logic::Term
 
   def to_h
     {
-      "op" => self.class.name,
+      "term" => self.class.name,
       "left" => @left.to_h,
       "right" => @right.to_h,
       "id" => @id

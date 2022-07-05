@@ -11,7 +11,7 @@ class Logic::Empty < Logic::Term
 
   def to_h
     {
-      "op" => self.class.name,
+      "term" => self.class.name,
       "id" => @id
     }
   end
