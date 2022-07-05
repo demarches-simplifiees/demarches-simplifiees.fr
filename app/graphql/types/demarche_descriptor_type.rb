@@ -24,7 +24,7 @@ Cela évite l’accès récursif aux dossiers."
     field :cadre_juridique, String, null: true
     field :deliberation, String, null: true
 
-    field :dossiers_count, Int, null: false, require_admin: true
+    field :dossiers_count, Int, null: false, internal: true
 
     def service
       Loaders::Record.for(Service).load(procedure.service_id)

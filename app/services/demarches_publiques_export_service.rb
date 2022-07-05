@@ -23,7 +23,7 @@ class DemarchesPubliquesExportService
   private
 
   def execute_query(cursor: nil)
-    result = API::V2::Schema.execute(query, variables: { cursor: cursor }, context: { internal_use: true, admin: true })
+    result = API::V2::Schema.execute(query, variables: { cursor: cursor }, context: { internal_use: true })
     raise DemarchesPubliquesExportService::Error.new(result["errors"]) if result["errors"]
     @graphql_data = result["data"]
   end
