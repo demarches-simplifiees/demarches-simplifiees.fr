@@ -17,7 +17,7 @@ module Types
     field :demarches_publiques, DemarcheDescriptorType.connection_type, null: false, require_admin: true, max_page_size: 30
 
     def demarches_publiques
-      Procedure.publiques
+      Procedure.opendata
     end
 
     def demarche(number:)
