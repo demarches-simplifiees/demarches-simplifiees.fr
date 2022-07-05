@@ -15,6 +15,18 @@ describe Logic do
       .to eq(ds_and([constant(true), constant(true), constant(false)]))
   end
 
+  it 'saves its id' do
+    [
+      constant(1),
+      empty,
+      champ_value(1),
+      ds_eq(empty, empty),
+      ds_and([constant(true), constant(true)])
+    ].each do |term|
+      expect(Logic.from_h(term.to_h).id).to eq(term.id)
+    end
+  end
+
   describe '.ensure_compatibility_from_left' do
     subject { Logic.ensure_compatibility_from_left(condition) }
 
