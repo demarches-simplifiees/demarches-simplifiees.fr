@@ -1,7 +1,7 @@
 describe Administrateurs::TypesDeChampController, type: :controller do
   let(:admin) { create(:administrateur) }
 
-  describe '#types_de_champs editor api' do
+  describe '#types_de_champs editor' do
     let(:procedure) { create(:procedure) }
 
     before do
@@ -17,12 +17,13 @@ describe Administrateurs::TypesDeChampController, type: :controller do
           procedure_id: procedure.id,
           type_de_champ: {
             type_champ: type_champ,
-            libelle: 'Nouveau champ'
+            libelle: 'Nouveau champ',
+            private: false
           }
-        }
+        }, format: :turbo_stream
       end
 
-      it { expect(response).to have_http_status(:created) }
+      it { expect(response).to have_http_status(:ok) }
     end
 
     context "validate type_de_champ linked_drop_down_list" do
@@ -33,12 +34,13 @@ describe Administrateurs::TypesDeChampController, type: :controller do
           procedure_id: procedure.id,
           type_de_champ: {
             type_champ: type_champ,
-            libelle: 'Nouveau champ'
+            libelle: 'Nouveau champ',
+            private: false
           }
-        }
+        }, format: :turbo_stream
       end
 
-      it { expect(response).to have_http_status(:unprocessable_entity) }
+      it { expect(response).to have_http_status(:ok) }
     end
 
     context "create type_de_champ linked_drop_down_list" do
@@ -50,12 +52,13 @@ describe Administrateurs::TypesDeChampController, type: :controller do
           type_de_champ: {
             type_champ: type_champ,
             libelle: 'Nouveau champ',
-            drop_down_list_value: '--value--'
+            drop_down_list_value: '--value--',
+            private: false
           }
-        }
+        }, format: :turbo_stream
       end
 
-      it { expect(response).to have_http_status(:created) }
+      it { expect(response).to have_http_status(:ok) }
     end
   end
 end

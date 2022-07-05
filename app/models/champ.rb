@@ -50,6 +50,10 @@ class Champ < ApplicationRecord
     :titre_identite?,
     :header_section?,
     :accredited_user_list,
+    :cnaf?,
+    :dgfip?,
+    :pole_emploi?,
+    :mesri?,
     :siret?,
     :stable_id,
     to: :type_de_champ

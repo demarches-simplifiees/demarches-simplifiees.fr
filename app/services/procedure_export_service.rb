@@ -102,11 +102,12 @@ class ProcedureExportService
       .repetition
       .filter_map do |type_de_champ_repetition|
         types_de_champ = procedure.types_de_champ_for_procedure_presentation(type_de_champ_repetition).to_a
+        rows = champs_by_stable_id.fetch(type_de_champ_repetition.stable_id, []).flat_map(&:rows_for_export)
 
-        if types_de_champ.present?
+        if types_de_champ.present? && rows.present?
           {
             sheet_name: type_de_champ_repetition.libelle_for_export,
-            instances: champs_by_stable_id.fetch(type_de_champ_repetition.stable_id, []).flat_map(&:rows_for_export),
+            instances: rows,
             spreadsheet_columns: Proc.new { |instance| instance.spreadsheet_columns(types_de_champ) }
           }
         end

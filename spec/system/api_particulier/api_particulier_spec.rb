@@ -219,8 +219,8 @@ describe 'fetch API Particulier Data', js: true do
       visit champs_admin_procedure_path(procedure)
 
       add_champ
-      select('Données de la Caisse nationale des allocations familiales', from: 'champ-0-type_champ')
-      fill_in 'champ-0-libelle', with: 'libellé de champ'
+      select('Données de la Caisse nationale des allocations familiales', from: 'Type de champ')
+      fill_in 'Libellé du champ', with: 'libellé de champ'
       blur
       expect(page).to have_content('Formulaire enregistré')
 
@@ -279,7 +279,9 @@ describe 'fetch API Particulier Data', js: true do
         expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
 
         dossier = Dossier.last
-        expect(dossier.champs.first.code_postal).to eq('wrong_code')
+        cnaf_champ = dossier.champs.find(&:cnaf?)
+
+        expect(cnaf_champ.code_postal).to eq('wrong_code')
 
         click_on 'Déposer le dossier'
         expect(page).to have_content(/code postal doit posséder 5 caractères/)
@@ -332,7 +334,7 @@ describe 'fetch API Particulier Data', js: true do
         expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
 
         dossier = Dossier.last
-        pole_emploi_champ = dossier.champs.third
+        pole_emploi_champ = dossier.champs.find(&:pole_emploi?)
 
         expect(pole_emploi_champ.identifiant).to eq('wrong code')
 
@@ -400,7 +402,7 @@ describe 'fetch API Particulier Data', js: true do
         expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
 
         dossier = Dossier.last
-        mesri_champ = dossier.champs.fourth
+        mesri_champ = dossier.champs.find(&:mesri?)
 
         expect(mesri_champ.ine).to eq('wrong code')
 
@@ -442,68 +444,72 @@ describe 'fetch API Particulier Data', js: true do
       end
     end
 
-    scenario 'it can fill a DGFiP field' do
-      visit commencer_path(path: procedure.path)
-      click_on 'Commencer la démarche'
+    context 'DGFiP' do
+      scenario 'it can fill a DGFiP field' do
+        visit commencer_path(path: procedure.path)
+        click_on 'Commencer la démarche'
 
-      choose 'Madame'
-      fill_in 'individual_nom',    with: 'FERRI'
-      fill_in 'individual_prenom', with: 'Karine'
+        choose 'Madame'
+        fill_in 'individual_nom',    with: 'FERRI'
+        fill_in 'individual_prenom', with: 'Karine'
 
-      click_button('Continuer')
+        click_button('Continuer')
 
-      fill_in 'Le numéro fiscal', with: numero_fiscal
-      fill_in "La référence d'avis d'imposition", with: 'wrong_code'
+        fill_in 'Le numéro fiscal', with: numero_fiscal
+        fill_in "La référence d'avis d'imposition", with: 'wrong_code'
 
-      blur
-      expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
+        blur
+        expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
 
-      dossier = Dossier.last
-      expect(dossier.champs.second.reference_avis).to eq('wrong_code')
+        dossier = Dossier.last
+        dgfip_champ = dossier.champs.find(&:dgfip?)
 
-      click_on 'Déposer le dossier'
-      expect(page).to have_content(/reference avis doit posséder 13 ou 14 caractères/)
+        expect(dgfip_champ.reference_avis).to eq('wrong_code')
 
-      fill_in "La référence d'avis d'imposition", with: reference_avis
+        click_on 'Déposer le dossier'
+        expect(page).to have_content(/reference avis doit posséder 13 ou 14 caractères/)
 
-      VCR.use_cassette('api_particulier/success/avis_imposition') do
-        perform_enqueued_jobs { click_on 'Déposer le dossier' }
+        fill_in "La référence d'avis d'imposition", with: reference_avis
+
+        VCR.use_cassette('api_particulier/success/avis_imposition') do
+          perform_enqueued_jobs { click_on 'Déposer le dossier' }
+        end
+
+        visit demande_dossier_path(dossier)
+        expect(page).to have_content(/Des données.*ont été reçues depuis la DGFiP/)
+
+        log_out
+
+        login_as instructeur.user, scope: :user
+
+        visit instructeur_dossier_path(procedure, dossier)
+
+        expect(page).to have_content('nom FERRI')
+        expect(page).to have_content('nom de naissance FERRI')
+        expect(page).to have_content('prénoms Karine')
+        expect(page).to have_content('date de naissance 12/08/1978')
+
+        expect(page).to have_content('date de recouvrement 09/10/2020')
+        expect(page).to have_content("date d’établissement 07/07/2020")
+
+        expect(page).to have_content('année 2020')
+        expect(page).to have_content("adresse fiscale de l’année passée 13 rue de la Plage 97615 Pamanzi")
+        expect(page).to have_content('nombre de parts 1')
+        expect(page).to have_content('situation familiale Célibataire')
+        expect(page).to have_content('nombre de personnes à charge 0')
+
+        expect(page).to have_content('revenu brut global 38814')
+        expect(page).to have_content('revenu imposable 38814')
+        expect(page).to have_content('impôt sur le revenu net avant correction 38814')
+        expect(page).to have_content("montant de l’impôt 38814")
+        expect(page).to have_content('revenu fiscal de référence 38814')
+        expect(page).to have_content("année d’imposition 2020")
+        expect(page).to have_content('année des revenus 2020')
+
+        expect(page).to have_content('situation partielle SUP DOM')
+
+        expect(page).not_to have_content('erreur correctif')
       end
-
-      visit demande_dossier_path(dossier)
-      expect(page).to have_content(/Des données.*ont été reçues depuis la DGFiP/)
-
-      log_out
-
-      login_as instructeur.user, scope: :user
-
-      visit instructeur_dossier_path(procedure, dossier)
-
-      expect(page).to have_content('nom FERRI')
-      expect(page).to have_content('nom de naissance FERRI')
-      expect(page).to have_content('prénoms Karine')
-      expect(page).to have_content('date de naissance 12/08/1978')
-
-      expect(page).to have_content('date de recouvrement 09/10/2020')
-      expect(page).to have_content("date d’établissement 07/07/2020")
-
-      expect(page).to have_content('année 2020')
-      expect(page).to have_content("adresse fiscale de l’année passée 13 rue de la Plage 97615 Pamanzi")
-      expect(page).to have_content('nombre de parts 1')
-      expect(page).to have_content('situation familiale Célibataire')
-      expect(page).to have_content('nombre de personnes à charge 0')
-
-      expect(page).to have_content('revenu brut global 38814')
-      expect(page).to have_content('revenu imposable 38814')
-      expect(page).to have_content('impôt sur le revenu net avant correction 38814')
-      expect(page).to have_content("montant de l’impôt 38814")
-      expect(page).to have_content('revenu fiscal de référence 38814')
-      expect(page).to have_content("année d’imposition 2020")
-      expect(page).to have_content('année des revenus 2020')
-
-      expect(page).to have_content('situation partielle SUP DOM')
-
-      expect(page).not_to have_content('erreur correctif')
     end
   end
 end

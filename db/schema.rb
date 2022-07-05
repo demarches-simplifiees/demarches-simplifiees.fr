@@ -771,6 +771,7 @@ ActiveRecord::Schema.define(version: 2022_05_20_173939) do
     t.string "target_model_type", null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "user_id", null: false
+    t.index ["target_model_id"], name: "index_targeted_user_links_on_target_model_id"
     t.index ["user_id"], name: "index_targeted_user_links_on_user_id"
   end
 

@@ -1,12 +1,13 @@
 # Display a widget for uploading, editing and deleting a file attachment
 class Attachment::EditComponent < ApplicationComponent
-  def initialize(form:, attached_file:, accept: nil, template: nil, user_can_destroy: false, direct_upload: true)
+  def initialize(form:, attached_file:, accept: nil, template: nil, user_can_destroy: false, direct_upload: true, id: nil)
     @form = form
     @attached_file = attached_file
     @accept = accept
     @template = template
     @user_can_destroy = user_can_destroy
     @direct_upload = direct_upload
+    @id = id
   end
 
   attr_reader :template, :form
@@ -56,7 +57,7 @@ class Attachment::EditComponent < ApplicationComponent
       class: "attachment-input #{attachment_input_class} #{'hidden' if persisted?}",
       accept: @accept,
       direct_upload: @direct_upload,
-      id: champ&.input_id,
+      id: champ&.input_id || @id,
       aria: { describedby: champ&.describedby_id },
       data: { auto_attach_url: helpers.auto_attach_url(form.object) }
     }

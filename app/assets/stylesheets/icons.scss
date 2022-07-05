@@ -87,6 +87,14 @@
     background-image: image-url("icons/lock.svg");
   }
 
+  &.arrow-up {
+    background-image: image-url("icons/arrow-up.svg");
+  }
+
+  &.arrow-down {
+    background-image: image-url("icons/arrow-down.svg");
+  }
+
   &.add {
     background-image: image-url("icons/add.svg");
     margin-left: -5px;
