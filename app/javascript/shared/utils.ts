@@ -118,7 +118,7 @@ export function httpRequest(
     init.body = JSON.stringify(json);
   }
 
-  let timer: number;
+  let timer: ReturnType<typeof setTimeout>;
   if (!init.signal) {
     controller = createAbortController(controller);
     if (controller) {

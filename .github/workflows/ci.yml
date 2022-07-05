@@ -29,6 +29,28 @@ jobs:
           bundle exec rake lint
           bundle exec rake zeitwerk:check
 
+  js_tests:
+    name: JavaScript tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          cache: 'yarn'
+
+      - name: Install Node modules
+        run: |
+          node --version
+          yarn install --frozen-lockfile
+        shell: bash
+
+      - name: Run tests
+        run: |
+          yarn test
+
   unit_tests:
     name: Unit tests
     runs-on: ubuntu-latest
