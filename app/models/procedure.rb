@@ -219,7 +219,7 @@ class Procedure < ApplicationRecord
   scope :brouillons,            -> { where(aasm_state: :brouillon) }
   scope :publiees,              -> { where(aasm_state: :publiee) }
   scope :closes,                -> { where(aasm_state: [:close, :depubliee]) }
-  scope :publiques,             -> { where(opendata: true) }
+  scope :opendata,              -> { where(opendata: true) }
   scope :publiees_ou_closes,    -> { where(aasm_state: [:publiee, :close, :depubliee]) }
   scope :by_libelle,            -> { order(libelle: :asc) }
   scope :created_during,        -> (range) { where(created_at: range) }
