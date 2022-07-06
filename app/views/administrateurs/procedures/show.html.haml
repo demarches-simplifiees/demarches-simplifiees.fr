@@ -38,15 +38,15 @@
       %span.icon.archive
       Clore
 
-  - if @procedure.draft_changed?
-    = link_to 'Publier les modifications', admin_procedure_publication_path(@procedure), class: 'button primary', id: 'publish-procedure-link', data: { disable_with: "Publication..." }
-
 - if @procedure.draft_changed?
   .container
     .card.featured
       .card-title
         = t(:has_changes, scope: [:administrateurs, :revision_changes])
       = render partial: 'revision_changes', locals: { changes: @procedure.revision_changes }
+      .flex.mt-2.justify-end
+        = button_to "Réinitialiser les modifications", admin_procedure_reset_draft_path(@procedure), class: 'button mr-1', method: :put
+        = link_to 'Publier les modifications', admin_procedure_publication_path(@procedure), class: 'button primary', id: 'publish-procedure-link', data: { disable_with: "Publication..." }
 
 - if !@procedure.procedure_expires_when_termine_enabled?
   = render partial: 'administrateurs/procedures/suggest_expires_when_termine', locals: { procedure: @procedure }
