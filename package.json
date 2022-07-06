@@ -80,7 +80,7 @@
     "lint:js": "eslint --ext .js,.jsx,.ts,.tsx ./app/javascript",
     "webpack:build": "NODE_ENV=production bin/webpack",
     "lint:types": "tsc",
-    "graphql:doc:build": "bin/rake graphql:schema:json && graphdoc --force",
+    "graphql:doc:build": "RAILS_ENV=production bin/rake graphql:schema:json && graphdoc --force",
     "postinstall": "patch-package",
     "test": "vitest",
     "coverage": "vitest run --coverage"
@@ -90,6 +90,6 @@
   },
   "graphdoc": {
     "schemaFile": "./app/graphql/schema.json",
-    "output": "./public/graphql/schema"
+    "output": "./public/doc/graphql"
   }
 }
