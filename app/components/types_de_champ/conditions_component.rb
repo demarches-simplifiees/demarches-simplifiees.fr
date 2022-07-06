@@ -69,8 +69,11 @@ class TypesDeChamp::ConditionsComponent < ApplicationComponent
   end
 
   def targets_for_select
-    available_targets_for_select
-      .then { |targets| targets.unshift([t('.select'), empty.to_json]) }
+    empty_target_for_select + available_targets_for_select
+  end
+
+  def empty_target_for_select
+    [[t('.select'), empty.to_json]]
   end
 
   def available_targets_for_select
