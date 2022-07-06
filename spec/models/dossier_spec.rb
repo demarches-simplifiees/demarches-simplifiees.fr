@@ -1556,8 +1556,9 @@ describe Dossier do
   end
 
   describe "#destroy" do
+    let(:procedure) { create(:procedure, :with_all_champs, :with_all_annotations) }
     let(:transfer) { create(:dossier_transfer) }
-    let(:dossier) { create(:dossier, transfer: transfer) }
+    let(:dossier) { create(:dossier, :with_populated_champs, :with_populated_annotations, transfer: transfer, procedure: procedure) }
 
     before do
       create(:dossier, transfer: transfer)
@@ -1566,6 +1567,12 @@ describe Dossier do
 
     it "can destroy dossier" do
       expect(dossier.destroy).to be_truthy
+      expect { dossier.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "can reset demarche" do
+      expect { dossier.procedure.reset! }.not_to raise_error
+      expect { dossier.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 
