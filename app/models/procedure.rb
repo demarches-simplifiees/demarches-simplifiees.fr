@@ -734,19 +734,20 @@ class Procedure < ApplicationRecord
     APIEntrepriseToken.new(api_entreprise_token).expired?
   end
 
-  def create_new_revision
+  def create_new_revision(revision = nil)
     transaction do
-      new_draft = draft_revision
+      new_revision = (revision || draft_revision)
         .deep_clone(include: [:revision_types_de_champ])
+        .tap { |revision| revision.published_at = nil }
         .tap(&:save!)
 
-      move_new_children_to_new_parent_coordinate(new_draft)
+      move_new_children_to_new_parent_coordinate(new_revision)
 
       # they are not aware of the new tdcs
-      new_draft.types_de_champ_public.reset
-      new_draft.types_de_champ_private.reset
+      new_revision.types_de_champ_public.reset
+      new_revision.types_de_champ_private.reset
 
-      new_draft
+      new_revision
     end
   end
 
@@ -770,6 +771,16 @@ class Procedure < ApplicationRecord
     dossiers
       .state_not_termine
       .find_each { |dossier| DossierRebaseJob.perform_later(dossier) }
+  end
+
+  def reset_draft_revision!
+    if published_revision.present? && draft_changed?
+      transaction do
+        reset!
+        draft_revision.destroy
+        update!(draft_revision: create_new_revision(published_revision))
+      end
+    end
   end
 
   def cnaf_enabled?
