@@ -1,8 +1,4 @@
 class Logic::Empty < Logic::Term
-  def initialize(id = nil)
-    super(id)
-  end
-
   def to_s = I18n.t('logic.empty')
 
   def type = :empty
@@ -11,13 +7,12 @@ class Logic::Empty < Logic::Term
 
   def to_h
     {
-      "term" => self.class.name,
-      "id" => @id
+      "term" => self.class.name
     }
   end
 
-  def self.from_h(h)
-    self.new(h['id'])
+  def self.from_h(_h)
+    self.new
   end
 
   def ==(other)
