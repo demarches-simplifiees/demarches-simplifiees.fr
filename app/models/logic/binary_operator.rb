@@ -1,22 +1,20 @@
 class Logic::BinaryOperator < Logic::Term
   attr_reader :left, :right
 
-  def initialize(left, right, id = nil)
+  def initialize(left, right)
     @left, @right = left, right
-    super(id)
   end
 
   def to_h
     {
       "term" => self.class.name,
       "left" => @left.to_h,
-      "right" => @right.to_h,
-      "id" => @id
+      "right" => @right.to_h
     }
   end
 
   def self.from_h(h)
-    self.new(Logic.from_h(h['left']), Logic.from_h(h['right']), h['id'])
+    self.new(Logic.from_h(h['left']), Logic.from_h(h['right']))
   end
 
   def errors(stable_ids = [])
