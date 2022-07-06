@@ -22,26 +22,32 @@ class TypesDeChamp::ConditionsComponent < ApplicationComponent
 
   def logic_conditionnel_button
     if @condition.nil?
-      submit_tag('cliquer pour activer', formaction: add_row_admin_procedure_condition_path(@procedure_id, @tdc.id))
+      submit_tag(t('.enable_conditionnel'), formaction: add_row_admin_procedure_condition_path(@procedure_id, @tdc.id))
     else
       submit_tag(
-        'cliquer pour désactiver',
+        t('.disable_conditionnel'),
         formmethod: 'delete',
         formnovalidate: true,
-        data: { confirm: "La logique conditionnelle appliquée à ce champ sera désactivé.\nVoulez-vous continuer ?" }
+        data: { confirm: t('.disable_conditionnel_alert') }
       )
     end
   end
 
   def far_left_tag(row_number)
     if row_number == 0
-      'Afficher si'
+      t('.display_if')
     elsif row_number == 1
       select_tag(
         "#{input_prefix}[top_operator_name]",
-        options_for_select([['Et', And.name], ['Ou', Or.name]], @condition.class.name)
+        options_for_select(options_for_far_left_tag, @condition.class.name)
       )
     end
+  end
+
+  def options_for_far_left_tag
+    [And, Or]
+      .map(&:name)
+      .map { |name| [t(name, scope: 'logic.operators'), name] }
   end
 
   def left_operand_tag(targeted_champ, row_index)
@@ -60,7 +66,7 @@ class TypesDeChamp::ConditionsComponent < ApplicationComponent
 
   def targets
     available_targets
-      .then { |targets| targets.unshift(['Sélectionner', empty.to_json]) }
+      .then { |targets| targets.unshift([t('.select'), empty.to_json]) }
   end
 
   def available_targets
@@ -75,7 +81,7 @@ class TypesDeChamp::ConditionsComponent < ApplicationComponent
     current_operator_valid = ops.map(&:second).include?(operator_name)
 
     if !current_operator_valid
-      ops.unshift(['Sélectionner', EmptyOperator.name])
+      ops.unshift([t('.select'), EmptyOperator.name])
     end
 
     select_tag(
@@ -90,15 +96,15 @@ class TypesDeChamp::ConditionsComponent < ApplicationComponent
     case left.type
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:boolean)
       [
-        ['Est', Eq.name]
+        [t('is', scope: 'logic'), Eq.name]
       ]
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:empty)
       [
-        ['Est', EmptyOperator.name]
+        [t('is', scope: 'logic'), EmptyOperator.name]
       ]
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:enum)
       [
-        ['Est', Eq.name]
+        [t('is', scope: 'logic'), Eq.name]
       ]
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:number)
       [Eq, LessThan, GreaterThan, LessThanEq, GreaterThanEq]
@@ -114,10 +120,10 @@ class TypesDeChamp::ConditionsComponent < ApplicationComponent
 
     case left.type
     when :boolean
-      options = [['Oui', constant(true).to_json], ['Non', constant(false).to_json]]
+      options = [[t('utils.yes'), constant(true).to_json], [t('utils.no'), constant(false).to_json]]
 
       if !right_valid
-        options.unshift(['Sélectionner', empty])
+        options.unshift([t('.select'), empty])
       end
 
       select_tag(
@@ -129,14 +135,14 @@ class TypesDeChamp::ConditionsComponent < ApplicationComponent
     when :empty
       select_tag(
         input_name_for('value'),
-        options_for_select([['Sélectionner', empty.to_json]]),
+        options_for_select([[t('.select'), empty.to_json]]),
         id: input_id_for('value', row_index)
       )
     when :enum
       options = left.options
 
       if !right_valid
-        options.unshift(['Sélectionner', empty])
+        options.unshift([t('.select'), empty])
       end
 
       select_tag(
@@ -171,7 +177,7 @@ class TypesDeChamp::ConditionsComponent < ApplicationComponent
 
   def add_condition_tag
     tag.button(
-      tag.span('', class: 'icon add') + tag.span("Ajouter une condition"),
+      tag.span('', class: 'icon add') + tag.span(t('.add_condition')),
       formaction: add_row_admin_procedure_condition_path(@procedure_id, @tdc.id),
       formnovalidate: true,
       class: 'add-row'
@@ -180,7 +186,7 @@ class TypesDeChamp::ConditionsComponent < ApplicationComponent
 
   def delete_condition_tag(row_index)
     tag.button(
-      tag.span('', class: 'icon delete') + tag.span('Supprimer la ligne', class: 'sr-only'),
+      tag.span('', class: 'icon delete') + tag.span(t('.remove_a_row'), class: 'sr-only'),
       formaction: delete_row_admin_procedure_condition_path(@procedure_id, @tdc.id, row_index: row_index),
       formmethod: 'delete',
       formnovalidate: true

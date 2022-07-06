@@ -18,11 +18,17 @@ class TypesDeChamp::ConditionsErrorsComponent < ApplicationComponent
     targeted_champ = @upper_tdcs.find { |tdc| tdc.stable_id == left.stable_id }
 
     if targeted_champ.nil?
-      "Un champ cible n'est plus disponible. Il est soit supprimé, soit déplacé en dessous de ce champ."
+      t('not_available', scope: '.errors')
     elsif left.type == :unmanaged
-      "Le champ « #{targeted_champ.libelle} » de type #{targeted_champ.type_champ} ne peut pas être utilisé comme champ cible."
+      t('unmanaged', scope: '.errors',
+        libelle: targeted_champ.libelle,
+        type_champ: t(targeted_champ.type_champ, scope: '.type'))
     else
-      "Le champ « #{targeted_champ.libelle} » est #{t(left.type, scope: '.type')}. Il ne peut pas être #{t(operator_name, scope: 'logic.operators').downcase} #{right.to_s.downcase}."
+      t('incompatible', scope: '.errors',
+        libelle: targeted_champ.libelle,
+        type_champ: t(targeted_champ.type_champ, scope: '.type'),
+        operator: t(operator_name, scope: 'logic.operators').downcase,
+        right: right.to_s.downcase)
     end
   end
 
