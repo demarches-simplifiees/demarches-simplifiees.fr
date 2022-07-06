@@ -438,6 +438,7 @@ Rails.application.routes.draw do
       put 'archive'
       get 'publication' => 'procedures#publication', as: :publication
       put 'publish' => 'procedures#publish', as: :publish
+      put 'reset_draft' => 'procedures#reset_draft', as: :reset_draft
       get 'transfert' => 'procedures#transfert', as: :transfert
       get 'close' => 'procedures#close', as: :close
       post 'transfer' => 'procedures#transfer', as: :transfer
