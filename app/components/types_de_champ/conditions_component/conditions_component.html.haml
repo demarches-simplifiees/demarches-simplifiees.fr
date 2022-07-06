@@ -1,0 +1,26 @@
+.flex.justify-start.section{ id: dom_id(@tdc, :conditions) }
+  = form_with url: admin_procedure_condition_path(@procedure_id, @tdc), method: :patch, class: 'form width-100' do |f|
+    .conditionnel.mt-2.width-100
+      .flex
+        %p.mr-2 Logique conditionnelle
+        = logic_conditionnel_button
+
+      - if @condition.present?
+        %table.condition-table.mt-2.width-100
+          %thead
+            %tr
+              %th.far-left
+              %th.target Champ Cible
+              %th.operator Opérateur
+              %th.value Valeur
+              %th.delete-column
+          %tbody
+            - rows.each.with_index do |(targeted_champ, operator_name, value), row_index|
+              %tr
+                %td.far-left= far_left_tag(row_index)
+                %td.target= left_operand_tag(targeted_champ, row_index)
+                %td.operator= operator_tag(operator_name, targeted_champ, row_index)
+                %td.value= right_operand_tag(targeted_champ, value, row_index)
+                %td.delete-column= delete_condition_tag(row_index)
+
+        .flex.justify-end.mt-2= add_condition_tag
