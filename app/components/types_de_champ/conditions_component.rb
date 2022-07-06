@@ -51,7 +51,11 @@ class TypesDeChamp::ConditionsComponent < ApplicationComponent
   end
 
   def left_operand_tag(targeted_champ, row_index)
-    current_target_valid = targets.map(&:second).include?(targeted_champ.to_json)
+    # current_target can be invalid if
+    # - its type has changed : number -> carto
+    # - it has been removed
+    # - it has been put lower in the form
+    current_target_valid = targets_for_select.map(&:second).include?(targeted_champ.to_json)
 
     selected_target = current_target_valid ? targeted_champ.to_json : empty.to_json
 
