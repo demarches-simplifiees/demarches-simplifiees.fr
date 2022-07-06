@@ -1,3 +1,9 @@
 fr:
   logic:
     empty: un membre vide
+    operators:
+      'Logic::LessThan': Inférieur à
+      'Logic::LessThanEq': Inférieur ou égal à
+      'Logic::Eq': Égal à
+      'Logic::GreaterThan': Supérieur à
+      'Logic::GreaterThanEq': Supérieur ou égal à
