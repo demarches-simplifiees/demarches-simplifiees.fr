@@ -1,5 +1,7 @@
 module Types
   class QueryType < Types::BaseObject
+    field_class BaseField
+
     field :demarche, DemarcheType, null: false, description: "Informations concernant une démarche." do
       argument :number, Int, "Numéro de la démarche.", required: true
     end
@@ -10,6 +12,12 @@ module Types
 
     field :groupe_instructeur, GroupeInstructeurWithDossiersType, null: false, description: "Informations sur un groupe instructeur." do
       argument :number, Int, "Numéro du groupe instructeur.", required: true
+    end
+
+    field :demarches_publiques, DemarcheDescriptorType.connection_type, null: false, internal: true, max_page_size: 30
+
+    def demarches_publiques
+      Procedure.opendata
     end
 
     def demarche(number:)
