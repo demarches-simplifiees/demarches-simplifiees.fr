@@ -61,42 +61,42 @@ class TypesDeChamp::ConditionsComponent < ApplicationComponent
 
     select_tag(
       input_name_for('targeted_champ'),
-      options_for_select(targets, selected_target),
+      options_for_select(targets_for_select, selected_target),
       onchange: "this.form.action = this.form.action + '/change_targeted_champ?row_index=#{row_index}'",
       id: input_id_for('targeted_champ', row_index),
       class: { alert: !current_target_valid }
     )
   end
 
-  def targets
-    available_targets
+  def targets_for_select
+    available_targets_for_select
       .then { |targets| targets.unshift([t('.select'), empty.to_json]) }
   end
 
-  def available_targets
+  def available_targets_for_select
     @upper_tdcs
       .filter { |tdc| ChampValue::MANAGED_TYPE_DE_CHAMP.values.include?(tdc.type_champ) }
       .map { |tdc| [tdc.libelle, champ_value(tdc.stable_id).to_json] }
   end
 
   def operator_tag(operator_name, targeted_champ, row_index)
-    ops = compatibles_operators(targeted_champ)
+    operators_for_select = compatibles_operators_for_select(targeted_champ)
 
-    current_operator_valid = ops.map(&:second).include?(operator_name)
+    current_operator_valid = operators_for_select.map(&:second).include?(operator_name)
 
     if !current_operator_valid
-      ops.unshift([t('.select'), EmptyOperator.name])
+      operators_for_select.unshift([t('.select'), EmptyOperator.name])
     end
 
     select_tag(
       input_name_for('operator_name'),
-      options_for_select(ops, selected: operator_name),
+      options_for_select(operators_for_select, selected: operator_name),
       id: input_id_for('operator_name', row_index),
       class: { alert: !current_operator_valid }
     )
   end
 
-  def compatibles_operators(left)
+  def compatibles_operators_for_select(left)
     case left.type
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:boolean)
       [
@@ -198,7 +198,7 @@ class TypesDeChamp::ConditionsComponent < ApplicationComponent
   end
 
   def render?
-    @condition.present? || available_targets.any?
+    @condition.present? || available_targets_for_select.any?
   end
 
   def input_name_for(name)
