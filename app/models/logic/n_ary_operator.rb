@@ -1,21 +1,19 @@
 class Logic::NAryOperator < Logic::Term
   attr_reader :operands
 
-  def initialize(operands, id = nil)
+  def initialize(operands)
     @operands = operands
-    super(id)
   end
 
   def to_h
     {
       "term" => self.class.name,
-      "operands" => @operands.map(&:to_h),
-      "id" => @id
+      "operands" => @operands.map(&:to_h)
     }
   end
 
   def self.from_h(h)
-    self.new(h['operands'].map { |operand_h| Logic.from_h(operand_h) }, h['id'])
+    self.new(h['operands'].map { |operand_h| Logic.from_h(operand_h) })
   end
 
   def errors(stable_ids = [])
