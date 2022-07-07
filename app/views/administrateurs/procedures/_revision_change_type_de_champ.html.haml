@@ -44,6 +44,8 @@
       %li.mb-1= t("administrateurs.revision_changes.update_drop_down_other#{postfix}.enabled", label: change[:label])
     - else
       %li.mb-1= t("administrateurs.revision_changes.update_drop_down_other#{postfix}.disabled", label: change[:label])
+  - when :placeholder
+    %li.mb-1= t("update_placeholder#{postfix}", label: change[:label], to: change[:to], scope: [:administrateurs, :revision_changes])
   - when :carte_layers
     - added = change[:to].sort - change[:from].sort
     - removed = change[:from].sort - change[:to].sort
