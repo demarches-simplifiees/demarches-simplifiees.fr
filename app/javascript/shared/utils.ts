@@ -1,9 +1,74 @@
 import Rails from '@rails/ujs';
 import debounce from 'debounce';
 import { session } from '@hotwired/turbo';
+import { z } from 'zod';
 
 export { debounce };
 export const { fire, csrfToken, cspNonce } = Rails;
+
+const Gon = z
+  .object({
+    autosave: z
+      .object({
+        debounce_delay: z.number().default(0),
+        status_visible_duration: z.number().default(0)
+      })
+      .default({}),
+    autocomplete: z
+      .object({
+        api_geo_url: z.string().optional(),
+        api_adresse_url: z.string().optional(),
+        api_education_url: z.string().optional()
+      })
+      .default({}),
+    matomo: z
+      .object({
+        cookieDomain: z.string().optional(),
+        domain: z.string().optional(),
+        enabled: z.boolean().default(false),
+        host: z.string().optional(),
+        key: z.string().nullish()
+      })
+      .default({}),
+    sentry: z
+      .object({
+        key: z.string().nullish(),
+        enabled: z.boolean().default(false),
+        environment: z.string().optional(),
+        user: z.object({ id: z.string() }).default({ id: '' }),
+        browser: z.object({ modern: z.boolean() }).default({ modern: false })
+      })
+      .default({}),
+    crisp: z
+      .object({
+        key: z.string().nullish(),
+        enabled: z.boolean().default(false),
+        administrateur: z
+          .object({
+            email: z.string(),
+            DS_SIGN_IN_COUNT: z.number(),
+            DS_NB_DEMARCHES_BROUILLONS: z.number(),
+            DS_NB_DEMARCHES_ACTIVES: z.number(),
+            DS_NB_DEMARCHES_ARCHIVES: z.number(),
+            DS_ID: z.number()
+          })
+          .default({
+            email: '',
+            DS_SIGN_IN_COUNT: 0,
+            DS_NB_DEMARCHES_BROUILLONS: 0,
+            DS_NB_DEMARCHES_ACTIVES: 0,
+            DS_NB_DEMARCHES_ARCHIVES: 0,
+            DS_ID: 0
+          })
+      })
+      .default({})
+  })
+  .default({});
+declare const window: Window & typeof globalThis & { gon: unknown };
+
+export function getConfig() {
+  return Gon.parse(window.gon);
+}
 
 export function show(el: HTMLElement | null) {
   el?.classList.remove('hidden');
