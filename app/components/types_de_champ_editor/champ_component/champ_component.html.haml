@@ -34,6 +34,13 @@
               = form.label :description, "Description du champ (optionnel)", for: dom_id(type_de_champ, :description)
               = form.text_area :description, class: 'small-margin small width-100', rows: 3, id: dom_id(type_de_champ, :description)
 
+          - if type_de_champ.generic?
+            .cell.mt-1
+              = form.label :placeholder, t(".generic.custom_placeholder_title"), class: 'flex-grow', for: dom_id(type_de_champ, :placeholder)
+              = form.text_field :placeholder, class: 'small-margin small width-100', placeholder: t("#{type_de_champ.type_champ}.placeholder", scope: "shared.dossiers.editable_champs"), id: dom_id(type_de_champ, :placeholder)
+              %p
+                = t(".generic.custom_placeholder_hint")
+
       .flex.justify-start.mt-1
         - if type_de_champ.drop_down_list?
           .flex.column.justify-start.width-33
