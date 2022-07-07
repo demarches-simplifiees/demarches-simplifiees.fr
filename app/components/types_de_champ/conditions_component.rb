@@ -85,17 +85,17 @@ class TypesDeChamp::ConditionsComponent < ApplicationComponent
   def operator_tag(operator_name, targeted_champ, row_index)
     operators_for_select = compatibles_operators_for_select(targeted_champ)
 
-    current_operator_valid = operators_for_select.map(&:second).include?(operator_name)
+    current_operator_invalid = !operators_for_select.map(&:second).include?(operator_name)
 
-    if !current_operator_valid
-      operators_for_select.unshift([t('.select'), EmptyOperator.name])
+    if current_operator_invalid
+      operators_for_select = [[t('.select'), EmptyOperator.name]] + operators_for_select
     end
 
     select_tag(
       input_name_for('operator_name'),
       options_for_select(operators_for_select, selected: operator_name),
       id: input_id_for('operator_name', row_index),
-      class: { alert: !current_operator_valid }
+      class: { alert: current_operator_invalid }
     )
   end
 
@@ -123,13 +123,13 @@ class TypesDeChamp::ConditionsComponent < ApplicationComponent
   end
 
   def right_operand_tag(left, right, row_index)
-    right_valid = current_right_valid?(left, right)
+    right_invalid = !current_right_valid?(left, right)
 
     case left.type
     when :boolean
       options = [[t('utils.yes'), constant(true).to_json], [t('utils.no'), constant(false).to_json]]
 
-      if !right_valid
+      if right_invalid
         options.unshift([t('.select'), empty])
       end
 
@@ -137,7 +137,7 @@ class TypesDeChamp::ConditionsComponent < ApplicationComponent
         input_name_for('value'),
         options_for_select(options, right.to_json),
         id: input_id_for('value', row_index),
-        class: right_valid ? nil : 'alert'
+        class: { alert: right_invalid }
       )
     when :empty
       select_tag(
@@ -148,7 +148,7 @@ class TypesDeChamp::ConditionsComponent < ApplicationComponent
     when :enum
       options = left.options
 
-      if !right_valid
+      if right_invalid
         options.unshift([t('.select'), empty])
       end
 
@@ -156,7 +156,7 @@ class TypesDeChamp::ConditionsComponent < ApplicationComponent
         input_name_for('value'),
         options_for_select(options, right.value),
         id: input_id_for('value', row_index),
-        class: right_valid ? nil : 'alert'
+        class: { alert: right_invalid }
       )
     when :number
       number_field_tag(
@@ -164,7 +164,7 @@ class TypesDeChamp::ConditionsComponent < ApplicationComponent
         right.value,
         required: true,
         id: input_id_for('value', row_index),
-        class: right_valid ? nil : 'alert'
+        class: { alert: right_invalid }
       )
     else
       number_field_tag(input_name_for('value'), '', id: input_id_for('value', row_index))
