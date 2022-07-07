@@ -127,34 +127,34 @@ class TypesDeChamp::ConditionsComponent < ApplicationComponent
 
     case left.type
     when :boolean
-      options = [[t('utils.yes'), constant(true).to_json], [t('utils.no'), constant(false).to_json]]
+      booleans_for_select = [[t('utils.yes'), constant(true).to_json], [t('utils.no'), constant(false).to_json]]
 
       if right_invalid
-        options.unshift([t('.select'), empty])
+        booleans_for_select = empty_target_for_select + booleans_for_select
       end
 
       select_tag(
         input_name_for('value'),
-        options_for_select(options, right.to_json),
+        options_for_select(booleans_for_select, right.to_json),
         id: input_id_for('value', row_index),
         class: { alert: right_invalid }
       )
     when :empty
       select_tag(
         input_name_for('value'),
-        options_for_select([[t('.select'), empty.to_json]]),
+        options_for_select(empty_target_for_select),
         id: input_id_for('value', row_index)
       )
     when :enum
-      options = left.options
+      enums_for_select = left.options
 
       if right_invalid
-        options.unshift([t('.select'), empty])
+        enums_for_select = empty_target_for_select + enums_for_select
       end
 
       select_tag(
         input_name_for('value'),
-        options_for_select(options, right.value),
+        options_for_select(enums_for_select, right.value),
         id: input_id_for('value', row_index),
         class: { alert: right_invalid }
       )
