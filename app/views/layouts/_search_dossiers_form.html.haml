@@ -1,5 +1,5 @@
 .header-search{ role: 'search' }
   = form_tag "#{search_endpoint}", method: :get, class: "form" do
-    = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: t('views.users.dossiers.search.search_file'), title: t('views.users.dossiers.search.search_file')
+    = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: t('views.users.dossiers.search.search_file'), aria: { label: t('views.users.dossiers.search.search_file') }
     %button{ title: t('views.users.dossiers.search.search_file') }
       = image_tag "icons/search-blue.svg", alt: 'Rechercher', 'aria-hidden':'true', width: 24, height: 24, loading: 'lazy'
