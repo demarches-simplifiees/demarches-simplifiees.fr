@@ -10,7 +10,14 @@ describe ProcedureRevision do
 
   describe '#add_type_de_champ' do
     # tdc: public: text, repetition ; private: text ; +1 text child of repetition
-    let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :with_repetition) }
+    let(:procedure) do
+      create(:procedure).tap do |p|
+        p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'l1')
+        parent = p.draft_revision.add_type_de_champ(type_champ: :repetition, libelle: 'l2')
+        p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'l2', parent_stable_id: parent.stable_id)
+        p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'l1 private', private: true)
+      end
+    end
     let(:text_params) { { type_champ: :text, libelle: 'text' } }
     let(:tdc_params) { text_params }
     let(:last_coordinate) { draft.revision_types_de_champ.last }
@@ -57,6 +64,27 @@ describe ProcedureRevision do
       let(:tdc_params) { text_params.merge(parent_id: 123456789) }
 
       it { expect(subject.errors.full_messages).not_to be_empty }
+    end
+
+    context 'after_stable_id' do
+      context 'with a valid after_stable_id' do
+        let(:tdc_params) { text_params.merge(after_stable_id: draft.revision_types_de_champ_public.first.stable_id, libelle: 'in the middle') }
+
+        it do
+          expect(draft.revision_types_de_champ_public.map(&:libelle)).to eq(['l1', 'l2'])
+          subject
+          expect(draft.revision_types_de_champ_public.reload.map(&:libelle)).to eq(['l1', 'in the middle', 'l2'])
+        end
+      end
+
+      context 'with blank valid after_stable_id' do
+        let(:tdc_params) { text_params.merge(after_stable_id: '', libelle: 'in the middle') }
+
+        it do
+          subject
+          expect(draft.revision_types_de_champ_public.reload.map(&:libelle)).to eq(['l1', 'l2', 'in the middle'])
+        end
+      end
     end
   end
 
