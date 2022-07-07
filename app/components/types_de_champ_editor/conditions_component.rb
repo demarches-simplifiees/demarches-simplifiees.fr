@@ -1,4 +1,4 @@
-class TypesDeChamp::ConditionsComponent < ApplicationComponent
+class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
   include Logic
 
   def initialize(tdc:, upper_tdcs:, procedure_id:)

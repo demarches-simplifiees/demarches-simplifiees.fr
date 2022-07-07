@@ -1,4 +1,4 @@
-class TypesDeChamp::ConditionsErrorsComponent < ApplicationComponent
+class TypesDeChampEditor::ConditionsErrorsComponent < ApplicationComponent
   def initialize(conditions:, upper_tdcs:)
     @conditions, @upper_tdcs = conditions, upper_tdcs
   end

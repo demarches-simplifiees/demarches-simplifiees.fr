@@ -1,11 +1,11 @@
-class TypesDeChamp::ConditionsComponentPreview < ViewComponent::Preview
+class TypesDeChampEditor::ConditionsComponentPreview < ViewComponent::Preview
   include Logic
 
   def with_empty_condition
     tdc = TypeDeChamp.create(type_champ: :text, condition: empty_operator(empty, empty), libelle: 't')
     upper_tdcs = []
 
-    render TypesDeChamp::ConditionsComponent.new(
+    render TypesDeChampEditor::ConditionsComponent.new(
       tdc: tdc, upper_tdcs: upper_tdcs, procedure_id: '1'
     )
   end
@@ -23,7 +23,7 @@ class TypesDeChamp::ConditionsComponentPreview < ViewComponent::Preview
     ])
     tdc = TypeDeChamp.create(type_champ: :integer_number, condition: condition, libelle: 'nb de piece')
 
-    render TypesDeChamp::ConditionsComponent.new(
+    render TypesDeChampEditor::ConditionsComponent.new(
       tdc: tdc, upper_tdcs: upper_tdcs, procedure_id: '1'
     )
   end
@@ -43,7 +43,7 @@ class TypesDeChamp::ConditionsComponentPreview < ViewComponent::Preview
 
     tdc = TypeDeChamp.create(type_champ: :integer_number, condition: condition, libelle: 'nb de piece')
 
-    render TypesDeChamp::ConditionsComponent.new(
+    render TypesDeChampEditor::ConditionsComponent.new(
       tdc: tdc, upper_tdcs: upper_tdcs, procedure_id: '1'
     )
   end
