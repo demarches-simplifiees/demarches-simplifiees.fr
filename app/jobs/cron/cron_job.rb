@@ -5,7 +5,7 @@ class Cron::CronJob < ApplicationJob
   class << self
     def schedule
       remove if cron_expression_changed?
-      set(cron: cron_expression).perform_later if !scheduled?
+      Delayed::Job.enqueue(self.new, cron: self.cron_expression) if !scheduled?
       display_schedule
     end
 
