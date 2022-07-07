@@ -4,6 +4,7 @@
 #
 #  id                              :bigint           not null, primary key
 #  format                          :string           not null
+#  job_status                      :string
 #  key                             :text             not null
 #  procedure_presentation_snapshot :jsonb
 #  statut                          :string           default("tous")
@@ -13,7 +14,9 @@
 #  procedure_presentation_id       :bigint
 #
 class Export < ApplicationRecord
-  MAX_DUREE_CONSERVATION_EXPORT = 3.hours
+  include TransientModelsWithPurgeableJobConcern
+
+  MAX_DUREE_CONSERVATION_EXPORT = 16.hours
 
   enum format: {
     csv: 'csv',
@@ -67,10 +70,6 @@ class Export < ApplicationRecord
 
   def since
     time_span_type == Export.time_span_types.fetch(:monthly) ? 30.days.ago : nil
-  end
-
-  def ready?
-    file.attached?
   end
 
   def old?
