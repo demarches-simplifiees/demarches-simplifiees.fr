@@ -435,6 +435,10 @@ class Dossier < ApplicationRecord
   validates :individual, presence: true, if: -> { revision.procedure.for_individual? }
   validates :groupe_instructeur, presence: true, if: -> { !brouillon? }
 
+  def types_de_champ_public
+    types_de_champ
+  end
+
   EXPORT_BATCH_SIZE = 2000
 
   def self.downloadable_sorted_batch
