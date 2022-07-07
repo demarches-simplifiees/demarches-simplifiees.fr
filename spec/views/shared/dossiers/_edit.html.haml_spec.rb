@@ -30,7 +30,7 @@ describe 'shared/dossiers/edit.html.haml', type: :view do
       let(:champs) { [champ_email, champ_phone] }
 
       it "renders basic placeholders" do
-        expect(subject).to have_css('input[type="email"][placeholder$="laposte.net"]')
+        expect(subject).to have_css('input[type="email"][placeholder$="exemple.fr"]')
         expect(subject).to have_css('input[type="tel"][placeholder^="0612"]')
       end
     end

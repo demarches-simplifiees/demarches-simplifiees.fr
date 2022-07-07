@@ -13,7 +13,7 @@ fr:
           reference_avis_label: La référence d'avis d'imposition
           reference_avis_notice: Elle est généralement composée de 13 ou 14 caractères.
         email:
-          placeholder: "camilya.martin@laposte.net"
+          placeholder: "camilya.martin@exemple.fr"
         iban:
           placeholder: "FR76 3000 6000 0012 3456 7890 189"
         mesri:
