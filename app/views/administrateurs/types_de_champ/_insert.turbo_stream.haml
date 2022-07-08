@@ -2,8 +2,13 @@
 
 - if sibling.present?
   = turbo_stream.after dom_id(sibling, :type_de_champ_editor) do
-    = render TypesDeChampEditor::ChampComponent.new(coordinate: coordinate, focused: true)
+    = render TypesDeChampEditor::ChampComponent.new(coordinate: coordinate, upper_coordinates: upper_coordinates, focused: true)
 - else
   = turbo_stream.prepend dom_id(coordinate.block, :types_de_champ_editor_block) do
-    = render TypesDeChampEditor::ChampComponent.new(coordinate: coordinate, focused: true)
+    = render TypesDeChampEditor::ChampComponent.new(coordinate: coordinate, upper_coordinates: upper_coordinates, focused: true)
 = turbo_stream.dispatch 'sortable:sort'
+
+- if @lower_coordinates_and_dep.present?
+  - @lower_coordinates_and_dep.each do |other_coordinate, other_upper_coordinates|
+    = turbo_stream.morph dom_id(other_coordinate, :type_de_champ_editor) do
+      = render TypesDeChampEditor::ChampComponent.new(coordinate: other_coordinate, upper_coordinates: other_upper_coordinates)

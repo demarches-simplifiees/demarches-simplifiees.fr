@@ -1,7 +1,8 @@
 class TypesDeChampEditor::ChampComponent < ApplicationComponent
-  def initialize(coordinate:, focused: false)
+  def initialize(coordinate:, upper_coordinates:, focused: false)
     @coordinate = coordinate
     @focused = focused
+    @upper_coordinates = upper_coordinates
   end
 
   private
