@@ -18,6 +18,7 @@
 #  description                               :string
 #  direction                                 :string
 #  duree_conservation_dossiers_dans_ds       :integer
+#  duree_conservation_etendue_par_ds         :boolean          default(FALSE)
 #  durees_conservation_required              :boolean          default(TRUE)
 #  encrypted_api_particulier_token           :string
 #  euro_flag                                 :boolean          default(FALSE)
@@ -63,8 +64,8 @@ class Procedure < ApplicationRecord
   self.discard_column = :hidden_at
   default_scope -> { kept }
 
-  MAX_DUREE_CONSERVATION = 36
-  MAX_DUREE_CONSERVATION_EXPORT = 3.hours
+  OLD_MAX_DUREE_CONSERVATION = 36
+  NEW_MAX_DUREE_CONSERVATION = 12
 
   MIN_WEIGHT = 350000
 
@@ -270,7 +271,22 @@ class Procedure < ApplicationRecord
     if: :validate_for_publication?
   validate :check_juridique
   validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,200}\z/ }, uniqueness: { scope: [:path, :closed_at, :hidden_at, :unpublished_at], case_sensitive: false }
-  validates :duree_conservation_dossiers_dans_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_DUREE_CONSERVATION }
+  validates :duree_conservation_dossiers_dans_ds, allow_nil: false,
+                                                  numericality: {
+                                                    only_integer: true,
+                                                                  greater_than_or_equal_to: 1,
+                                                                  less_than_or_equal_to: OLD_MAX_DUREE_CONSERVATION
+                                                  },
+                                                  if: :duree_conservation_etendue_par_ds
+
+  validates :duree_conservation_dossiers_dans_ds, allow_nil: false,
+                                                    numericality: {
+                                                      only_integer: true,
+                                                                    greater_than_or_equal_to: 1,
+                                                                    less_than_or_equal_to: NEW_MAX_DUREE_CONSERVATION
+                                                    },
+                                                    unless: :duree_conservation_etendue_par_ds
+
   validates :lien_dpo, email_or_link: true, allow_nil: true
   validates_with MonAvisEmbedValidator
 
