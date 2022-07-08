@@ -64,6 +64,7 @@ describe 'linked dropdown lists' do
       expect(page).to have_select("Valeur secondaire dépendant de la première", options: ['', 'Secondary 1.1', 'Secondary 1.2'])
     end
   end
+
   private
 
   def log_in(email, password, procedure)
