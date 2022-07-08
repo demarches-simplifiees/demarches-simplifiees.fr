@@ -44,26 +44,22 @@ class ProcedureRevision < ApplicationRecord
 
   def add_type_de_champ(params)
     parent_stable_id = params.delete(:parent_stable_id)
+    parent_coordinate, _ = coordinate_and_tdc(parent_stable_id)
+    parent_id = parent_coordinate&.id
+
     after_stable_id = params.delete(:after_stable_id)
+    after_coordinate, _ = coordinate_and_tdc(after_stable_id)
 
-    coordinate = {}
-
-    if parent_stable_id.present?
-      parent_coordinate, _ = coordinate_and_tdc(parent_stable_id)
-
-      coordinate[:parent_id] = parent_coordinate.id
-      coordinate[:position] = last_position(parent_coordinate.revision_types_de_champ, after_stable_id)
-    elsif params[:private]
-      coordinate[:position] = last_position(revision_types_de_champ_private, after_stable_id)
-    else
-      coordinate[:position] = last_position(revision_types_de_champ_public, after_stable_id)
-    end
+    # the collection is orderd by (position, id), so we can use after_coordinate.position
+    # if not present, a big number is used to ensure the element is at the tail
+    position = (after_coordinate&.position) || 100_000
 
     tdc = TypeDeChamp.new(params)
     if tdc.save
-      coordinate[:type_de_champ] = tdc
-      coordinate = revision_types_de_champ.create!(coordinate)
-      reorder(coordinate.siblings)
+      h = { type_de_champ: tdc, parent_id: parent_id, position: position }
+      coordinate = revision_types_de_champ.create!(h)
+
+      reorder(coordinate.reload.siblings)
     end
 
     # they are not aware of the addition
@@ -219,6 +215,8 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def coordinate_and_tdc(stable_id)
+    return [nil, nil] if stable_id.blank?
+
     coordinate = revision_types_de_champ
       .joins(:type_de_champ)
       .find_by(type_de_champ: { stable_id: stable_id })
@@ -476,18 +474,6 @@ class ProcedureRevision < ApplicationRecord
     end
     coordinate.update!(type_de_champ: cloned_type_de_champ)
     cloned_type_de_champ
-  end
-
-  def last_position(siblings, after_stable_id = nil)
-    if after_stable_id.present?
-      siblings
-        .joins(:type_de_champ)
-        .find_by(types_de_champ: { stable_id: after_stable_id })
-        .position + 1
-    else
-      last = siblings.last
-      last.present? ? last.position + 1 : 0
-    end
   end
 
   def conditions_are_valid?
