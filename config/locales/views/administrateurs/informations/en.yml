@@ -1,0 +1,11 @@
+en:
+  administrateurs:
+    informations:
+      opendata_header: Open data
+      opendata_notice_html: "Procedures on Démarches Simplifiées target individuals and companies, as well as public servant and the administration.<br>
+      Mostly forms and fields can be shared publicly as OpenData using a usable digital format. Of courses, user data are not shared<br>
+      Those information will be published and maintained on data.gouv.fr on a regular basis."
+      opendata: "Do you allow the publicaton of this procedure"
+    duree_conservation_dossiers_dans_ds:
+      notice: Duration in month after the beginning of the investigating.
+      new_duration_constraint: For classic procedure, this duration can not be higher than %{new_duration_in_month} months. If you need an higher duration than %{new_duration_in_month} months, please get in touch with our support.
