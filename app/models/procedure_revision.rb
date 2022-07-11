@@ -59,7 +59,7 @@ class ProcedureRevision < ApplicationRecord
       h = { type_de_champ: tdc, parent_id: parent_id, position: position }
       coordinate = revision_types_de_champ.create!(h)
 
-      reorder(coordinate.reload.siblings)
+      renumber(coordinate.reload.siblings)
     end
 
     # they are not aware of the addition
@@ -88,7 +88,7 @@ class ProcedureRevision < ApplicationRecord
 
     siblings.insert(position, siblings.delete_at(siblings.index(coordinate)))
 
-    reorder(siblings)
+    renumber(siblings)
     coordinate.reload
 
     coordinate
@@ -107,7 +107,7 @@ class ProcedureRevision < ApplicationRecord
     types_de_champ_public.reset
     types_de_champ_private.reset
 
-    reorder(coordinate.siblings)
+    renumber(coordinate.siblings)
 
     coordinate
   end
@@ -224,7 +224,7 @@ class ProcedureRevision < ApplicationRecord
     [coordinate, coordinate.type_de_champ]
   end
 
-  def reorder(siblings)
+  def renumber(siblings)
     siblings.to_a.compact.each.with_index do |sibling, position|
       sibling.update_column(:position, position)
     end
