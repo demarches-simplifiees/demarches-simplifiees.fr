@@ -1,9 +1,1 @@
-= turbo_stream.remove dom_id(@coordinate, :type_de_champ_editor)
-= turbo_stream.dispatch 'sortable:sort'
-= turbo_stream.morph dom_id(@coordinate.revision, :estimated_fill_duration) do
-  = render TypesDeChampEditor::EstimatedFillDurationComponent.new(revision: @coordinate.revision, is_annotation: @coordinate.private?)
-
-- if @lower_coordinates_and_dep.present?
-  - @lower_coordinates_and_dep.each do |other_coordinate, other_upper_coordinates|
-    = turbo_stream.morph dom_id(other_coordinate, :type_de_champ_editor) do
-      = render TypesDeChampEditor::ChampComponent.new(coordinate: other_coordinate, upper_coordinates: other_upper_coordinates)
+= render partial: 'insert'

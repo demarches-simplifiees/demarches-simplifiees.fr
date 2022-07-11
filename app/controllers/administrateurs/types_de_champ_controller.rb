@@ -7,6 +7,9 @@ module Administrateurs
 
       if type_de_champ.valid?
         @coordinate = draft.coordinate_for(type_de_champ)
+        @created = champ_component_from(@coordinate, focused: true)
+        @morphed = champ_components_starting_at(@coordinate.position + 1)
+
         reset_procedure
         flash.notice = "Formulaire enregistré"
       else
@@ -18,9 +21,9 @@ module Administrateurs
       type_de_champ = draft.find_and_ensure_exclusive_use(params[:stable_id])
 
       if type_de_champ.update(type_de_champ_update_params)
-        if params[:should_render]
-          @coordinate = draft.coordinate_for(type_de_champ)
-        end
+        @coordinate = draft.coordinate_for(type_de_champ)
+        @morphed = champ_components_starting_at(@coordinate.position)
+
         reset_procedure
         flash.notice = "Formulaire enregistré"
       else
@@ -36,20 +39,46 @@ module Administrateurs
     def move_up
       flash.notice = "Formulaire enregistré"
       @coordinate = draft.move_up_type_de_champ(params[:stable_id])
+      @destroyed = @coordinate
+      @created = champ_component_from(@coordinate)
+      # update the one component below
+      @morphed = champ_components_starting_at(@coordinate.position + 1).take(1)
     end
 
     def move_down
       flash.notice = "Formulaire enregistré"
       @coordinate = draft.move_down_type_de_champ(params[:stable_id])
+      @destroyed = @coordinate
+      @created = champ_component_from(@coordinate)
+      # update the one component above
+      @morphed = champ_components_starting_at(@coordinate.position - 1).take(1)
     end
 
     def destroy
       @coordinate = draft.remove_type_de_champ(params[:stable_id])
       reset_procedure
       flash.notice = "Formulaire enregistré"
+
+      @destroyed = @coordinate
+      @morphed = champ_components_starting_at(@coordinate.position)
     end
 
     private
+
+    def champ_components_starting_at(position)
+      draft
+        .coordinates_starting_at(position)
+        .lazy
+        .map { |c| champ_component_from(c) }
+    end
+
+    def champ_component_from(coordinate, focused: false)
+      TypesDeChampEditor::ChampComponent.new(
+        coordinate: coordinate,
+        upper_coordinates: draft.upper_coordinates(coordinate.position),
+        focused: focused
+      )
+    end
 
     def type_de_champ_create_params
       params
