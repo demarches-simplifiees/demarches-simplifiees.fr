@@ -3,10 +3,10 @@ module Administrateurs
     before_action :retrieve_procedure, :procedure_revisable?
 
     def create
-      type_de_champ = @procedure.draft_revision.add_type_de_champ(type_de_champ_create_params)
+      type_de_champ = draft.add_type_de_champ(type_de_champ_create_params)
 
       if type_de_champ.valid?
-        @coordinate = @procedure.draft_revision.coordinate_for(type_de_champ)
+        @coordinate = draft.coordinate_for(type_de_champ)
         reset_procedure
         flash.notice = "Formulaire enregistré"
       else
@@ -15,11 +15,11 @@ module Administrateurs
     end
 
     def update
-      type_de_champ = @procedure.draft_revision.find_and_ensure_exclusive_use(params[:stable_id])
+      type_de_champ = draft.find_and_ensure_exclusive_use(params[:stable_id])
 
       if type_de_champ.update(type_de_champ_update_params)
         if params[:should_render]
-          @coordinate = @procedure.draft_revision.coordinate_for(type_de_champ)
+          @coordinate = draft.coordinate_for(type_de_champ)
         end
         reset_procedure
         flash.notice = "Formulaire enregistré"
@@ -30,21 +30,21 @@ module Administrateurs
 
     def move
       flash.notice = "Formulaire enregistré"
-      @procedure.draft_revision.move_type_de_champ(params[:stable_id], params[:position].to_i)
+      draft.move_type_de_champ(params[:stable_id], params[:position].to_i)
     end
 
     def move_up
       flash.notice = "Formulaire enregistré"
-      @coordinate = @procedure.draft_revision.move_up_type_de_champ(params[:stable_id])
+      @coordinate = draft.move_up_type_de_champ(params[:stable_id])
     end
 
     def move_down
       flash.notice = "Formulaire enregistré"
-      @coordinate = @procedure.draft_revision.move_down_type_de_champ(params[:stable_id])
+      @coordinate = draft.move_down_type_de_champ(params[:stable_id])
     end
 
     def destroy
-      @coordinate = @procedure.draft_revision.remove_type_de_champ(params[:stable_id])
+      @coordinate = draft.remove_type_de_champ(params[:stable_id])
       reset_procedure
       flash.notice = "Formulaire enregistré"
     end
@@ -80,6 +80,10 @@ module Administrateurs
           :zones_humides,
           :znieff
         ])
+    end
+
+    def draft
+      @procedure.draft_revision
     end
   end
 end
