@@ -65,7 +65,7 @@ class Procedure < ApplicationRecord
   default_scope -> { kept }
 
   OLD_MAX_DUREE_CONSERVATION = 36
-  NEW_MAX_DUREE_CONSERVATION = 12
+  NEW_MAX_DUREE_CONSERVATION = ENV.fetch('NEW_MAX_DUREE_CONSERVATION') { 12 }.to_i
 
   MIN_WEIGHT = 350000
 
