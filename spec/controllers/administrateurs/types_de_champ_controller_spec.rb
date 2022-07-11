@@ -18,7 +18,8 @@ describe Administrateurs::TypesDeChampController, type: :controller do
           type_de_champ: {
             type_champ: type_champ,
             libelle: 'Nouveau champ',
-            private: false
+            private: false,
+            placeholder: "custom placeholder"
           }
         }, format: :turbo_stream
       end

@@ -12,12 +12,25 @@ en:
           numero_fiscal_notice: It is usually composed of 13 to 14 characters.
           reference_avis_label: Tax notice reference
           reference_avis_notice: It is usually composed of 13 to 14 characters.
-        pole_emploi:
-          identifiant_label: Identifier
-          identifiant_notice: It is usually composed of alphanumeric characters.
+        email:
+          placeholder: "camilya.martin@exemple.fr"
+        iban:
+          placeholder: "FR76 3000 6000 0012 3456 7890 189"
         mesri:
           ine_label: INE
           ine_notice: Student National Number. It is usually composed of alphanumeric characters.
+        phone:
+          placeholder: "0612345678"
+        pole_emploi:
+          identifiant_label: Identifier
+          identifiant_notice: It is usually composed of alphanumeric characters.
+        siret:
+          placeholder: "50000123456789"
+          title: "The SIRET number must have exactly 14 digits"
+        text:
+          placeholder: "Your answer"
+        textarea:
+          placeholder: "Write your answer here"
       header:
         expires_at:
           brouillon: "Expires on %{date} (%{duree_conservation_totale} months after this file was created)"

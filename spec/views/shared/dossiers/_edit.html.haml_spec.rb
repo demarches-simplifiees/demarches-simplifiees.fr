@@ -23,6 +23,35 @@ describe 'shared/dossiers/edit.html.haml', type: :view do
       expect(subject).to have_field(champ_dossier_link.libelle, with: champ_dossier_link.value)
       expect(subject).to have_field(champ_textarea.libelle, with: champ_textarea.value)
     end
+
+    context "with standard champs" do
+      let(:champ_email) { create(:champ_email, dossier: dossier) }
+      let(:champ_phone) { create(:champ_phone, dossier: dossier) }
+      let(:champs) { [champ_email, champ_phone] }
+
+      it "renders basic placeholders" do
+        expect(subject).to have_css('input[type="email"][placeholder$="exemple.fr"]')
+        expect(subject).to have_css('input[type="tel"][placeholder^="0612"]')
+      end
+    end
+
+    context "with generic champs" do
+      let(:champ_text) { create(:champ_text, dossier: dossier) }
+      let(:champs) { [champ_text, champ_textarea] }
+
+      it "renders default placeholders" do
+        expect(subject).to have_css('input[placeholder*="réponse"]')
+        expect(subject).to have_css('textarea[placeholder*="réponse"]')
+      end
+
+      it "renders customized placeholders" do
+        champ_text.type_de_champ.placeholder = "custom1 placeholder"
+        champ_textarea.type_de_champ.placeholder = "custom2 placeholder"
+
+        expect(subject).to have_css('input[placeholder*="custom1"]')
+        expect(subject).to have_css('textarea[placeholder*="custom2"]')
+      end
+    end
   end
 
   context 'with a single-value list' do

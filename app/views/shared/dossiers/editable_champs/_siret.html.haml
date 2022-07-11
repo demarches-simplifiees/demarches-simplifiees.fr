@@ -1,11 +1,11 @@
 = form.text_field :value,
   id: champ.input_id,
   aria: { describedby: champ.describedby_id },
-  placeholder: champ.libelle,
+  placeholder: t(".placeholder"),
   data: { controller: 'turbo-input', turbo_input_url_value: champs_siret_path(champ.id) },
   required: champ.mandatory?,
   pattern: "[0-9]{14}",
-  title: "Le numéro de SIRET doit comporter exactement 14 chiffres"
+  title: t(".title")
 .spinner.right.hidden
 .siret-info{ id: dom_id(champ, :siret_info) }
   - if champ.etablissement.present?

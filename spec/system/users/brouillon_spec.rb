@@ -11,7 +11,7 @@ describe 'The user' do
     fill_individual
 
     # fill data
-    fill_in('text', with: 'super texte')
+    fill_in('text *', with: 'super texte')
     fill_in('textarea', with: 'super textarea')
     fill_in('date', with: '12-12-2012')
     select_date_and_time(Time.zone.parse('06/01/2030 7h05'), form_id_for_datetime('datetime'))
