@@ -55,7 +55,7 @@ describe TargetedUserLinksController, type: :controller do
       end
     end
 
-    context 'with invite' do
+    context 'with invite having user' do
       let(:target_context) { 'invite' }
       let(:target_model) { create(:invite, user: user) }
 
@@ -63,6 +63,44 @@ describe TargetedUserLinksController, type: :controller do
         let(:user) { build(:user, last_sign_in_at: 2.days.ago) }
         before do
           sign_in(targeted_user_link.user)
+          get :show, params: { id: targeted_user_link.id }
+        end
+        it 'works' do
+          expect(response).to redirect_to(invite_path(target_model))
+        end
+      end
+
+      context 'connected as different user' do
+        let(:user) { create(:user, last_sign_in_at: 2.days.ago) }
+
+        before do
+          sign_in(create(:expert).user)
+          get :show, params: { id: targeted_user_link.id }
+        end
+
+        it 'renders error page ' do
+          expect(response).to have_http_status(200)
+        end
+      end
+
+      context 'when invite user does not exists' do
+        let(:user) { nil }
+        before { get :show, params: { id: targeted_user_link.id } }
+        it 'works' do
+          expect(response).to redirect_to(invite_path(target_model, email: target_model.email))
+        end
+      end
+    end
+
+    context 'with invite not having user' do
+      let(:target_context) { 'invite' }
+      let(:user_email) { '0f82d7211c23c88a24c1b7cf959b1414@anonymous.org' }
+      let(:target_model) { create(:invite, user: nil, email: user_email) }
+
+      context 'connected with expected user' do
+        let(:user) { create(:user, email: user_email, last_sign_in_at: 2.days.ago) }
+        before do
+          sign_in(user)
           get :show, params: { id: targeted_user_link.id }
         end
         it 'works' do
