@@ -229,7 +229,7 @@ class ProcedureRevision < ApplicationRecord
       .joins(:type_de_champ)
       .find_by(type_de_champ: { stable_id: stable_id })
 
-    [coordinate, coordinate.type_de_champ]
+    [coordinate, coordinate&.type_de_champ]
   end
 
   def renumber(siblings)
