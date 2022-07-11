@@ -22,6 +22,7 @@
 class Champs::DropDownListChamp < Champ
   THRESHOLD_NB_OPTIONS_AS_RADIO = 5
   OTHER = '__other__'
+  delegate :options_without_empty_value_when_mandatory, to: :type_de_champ
 
   def render_as_radios?
     enabled_non_empty_options.size <= THRESHOLD_NB_OPTIONS_AS_RADIO

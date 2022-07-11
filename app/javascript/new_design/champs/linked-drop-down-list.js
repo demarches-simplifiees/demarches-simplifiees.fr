@@ -13,15 +13,19 @@ delegate('change', PRIMARY_SELECTOR, (evt) => {
 
   selectOptions(secondary, options[primary.value]);
 });
-
+function makeOption(option) {
+  let element = document.createElement('option');
+  element.textContent = option;
+  element.value = option;
+  return element;
+}
 function selectOptions(selectElement, options) {
   selectElement.innerHTML = '';
-
+  if (selectElement.required) {
+    selectElement.appendChild(makeOption(''));
+  }
   for (let option of options) {
-    let element = document.createElement('option');
-    element.textContent = option;
-    element.value = option;
-    selectElement.appendChild(element);
+    selectElement.appendChild(makeOption(option));
   }
 
   selectElement.selectedIndex = 0;
