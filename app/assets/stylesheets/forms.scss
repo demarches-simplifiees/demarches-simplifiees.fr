@@ -238,14 +238,50 @@
   input[type=number],
   input[type=tel],
   textarea {
-    width: 100%;
+    @media (max-width: $two-columns-breakpoint) {
+      width: 100%;
+    }
+
+    // don't set 100% width when width-* classes or size attribute are applied
+    @media (min-width: $two-columns-breakpoint) {
+      &:not([class^='width-']):not([size]) {
+        width: 100%;
+      }
+    }
   }
 
-  input[type=email],
-  input[type=password],
-  input[type=number],
-  input[type=tel], {
-    max-width: 500px;
+  @media (min-width: $two-columns-breakpoint) {
+    input[type=email],
+    input[type=password],
+    input[type=number],
+    input[type=tel] {
+      max-width: 500px;
+    }
+  }
+
+  input[type=date] {
+    max-width: 180px;
+  }
+
+  // override default site width/max-width for editable-champ form (Usager form)
+  .editable-champ {
+    @media (min-width: $two-columns-breakpoint) {
+      input {
+        max-width: none;
+
+        &:not([size]) {
+          &[type='date'],
+          &[type='tel'],
+          &[type='number'] {
+            width: 33.33%;
+          }
+
+          &[type='email'] {
+            width: 66.67%;
+          }
+        }
+      }
+    }
   }
 
   input[type=checkbox],
@@ -260,10 +296,6 @@
     margin-left: 5px;
     margin-right: 4px;
     margin-bottom: $default-fields-spacer;
-  }
-
-  input[type=date] {
-    max-width: 180px;
   }
 
   select {

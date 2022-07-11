@@ -5,7 +5,9 @@
   data: { controller: 'turbo-input', turbo_input_url_value: champs_siret_path(champ.id) },
   required: champ.mandatory?,
   pattern: "[0-9]{14}",
-  title: t(".title")
+  title: t(".title"),
+  class: "width-33-desktop",
+  maxlength: 14
 .spinner.right.hidden
 .siret-info{ id: dom_id(champ, :siret_info) }
   - if champ.etablissement.present?
