@@ -94,7 +94,7 @@ describe TargetedUserLinksController, type: :controller do
 
     context 'with invite not having user' do
       let(:target_context) { 'invite' }
-      let(:user_email) { '0f82d7211c23c88a24c1b7cf959b1414@anonymous.org' }
+      let(:user_email) { 'not_yet_registered@a.com' }
       let(:target_model) { create(:invite, user: nil, email: user_email) }
 
       context 'connected with expected user' do
