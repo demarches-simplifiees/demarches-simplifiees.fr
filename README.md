@@ -27,8 +27,20 @@ Vous souhaitez y apporter des changements ou des améliorations ? Lisez notre [
 
 - Chrome
 - chromedriver :
-  * Mac : `brew cask install chromedriver`
+  * Mac : `brew install chromedriver`
   * Linux : voir https://sites.google.com/a/chromium.org/chromedriver/downloads
+
+Si l'emplacement d'installation de Chrome n'est pas standard, ou que vous utilisez Brave ou Chromium à la place,
+il peut être nécessaire d'overrider pour votre machine le path vers le binaire Chrome, par exemple :
+
+```ruby
+# create file spec/support/spec_config.local.rb
+
+Selenium::WebDriver::Chrome.path = "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser"
+
+# Must exactly match the browser version
+Webdrivers::Chromedriver.required_version = "103.0.5060.53"
+```
 
 ### Création des rôles de la base de données
 

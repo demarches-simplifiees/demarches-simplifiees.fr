@@ -68,6 +68,7 @@ module Administrateurs
         :drop_down_secondary_libelle,
         :drop_down_secondary_description,
         :piece_justificative_template,
+        :placeholder,
         editable_options: [
           :cadastres,
           :unesco,

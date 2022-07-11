@@ -329,7 +329,7 @@ describe ProcedureRevision do
       before do
         updated_tdc = new_draft.find_and_ensure_exclusive_use(first_tdc.stable_id)
 
-        updated_tdc.update(libelle: 'modifier le libelle', description: 'une description', mandatory: !updated_tdc.mandatory)
+        updated_tdc.update(libelle: 'modifier le libelle', description: 'une description', mandatory: !updated_tdc.mandatory, placeholder: "new placeholder")
       end
 
       it do
@@ -362,6 +362,16 @@ describe ProcedureRevision do
             private: false,
             from: false,
             to: true,
+            stable_id: first_tdc.stable_id
+          },
+          {
+            model: :type_de_champ,
+            op: :update,
+            attribute: :placeholder,
+            label: first_tdc.libelle,
+            private: false,
+            from: first_tdc.placeholder,
+            to: "new placeholder",
             stable_id: first_tdc.stable_id
           }
         ])

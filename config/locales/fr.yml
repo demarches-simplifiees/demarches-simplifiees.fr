@@ -575,3 +575,9 @@ fr:
         weekly_distribution_details: "au cours des 6 derniers mois"
     procedure_description:
       estimated_fill_duration: "Temps de remplissage estimé : %{estimated_minutes} mn"
+
+  types_de_champ_editor:
+    champ_component:
+      generic:
+        custom_placeholder_title: "Spécimen de saisie (optionnel)"
+        custom_placeholder_hint: Modèle de réponse visible dans le champ avant la saisie par l'usager

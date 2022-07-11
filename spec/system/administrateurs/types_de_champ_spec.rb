@@ -165,4 +165,35 @@ describe 'As an administrateur I can edit types de champ', js: true do
     end
     expect(page).not_to have_content('Durée de remplissage estimée')
   end
+
+  describe "placeholders for generic types" do
+    let(:placeholder) { "my placeholder" }
+    before do
+      add_champ
+    end
+
+    it "text champ" do
+      select('Texte', from: 'Type de champ')
+      expect(page).to have_content('Spécimen de saisie')
+
+      fill_in 'Spécimen de saisie', with: placeholder
+
+      wait_until { procedure.draft_types_de_champ.first.placeholder == placeholder }
+
+      page.refresh
+      expect(page).to have_selector("input[value='#{placeholder}']")
+    end
+
+    it "textarea champ" do
+      select('Zone de texte', from: 'Type de champ')
+      expect(page).to have_content('Spécimen de saisie')
+
+      fill_in 'Spécimen de saisie', with: placeholder
+
+      wait_until { procedure.draft_types_de_champ.first.placeholder == placeholder }
+
+      page.refresh
+      expect(page).to have_selector("input[value='#{placeholder}']")
+    end
+  end
 end
