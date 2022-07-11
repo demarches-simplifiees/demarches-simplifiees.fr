@@ -27,7 +27,10 @@
   Sur #{APPLICATION_NAME}
   %span.mandatory *
 
-%p.notice Durée en mois après le début de l’instruction. Pour les démarches classiques, cette durée ne peut exceder 12 mois. Si vous avez besoin d'une durée supérieur à 12 mois, merci d'en faire la demande à notre support
+%p.notice
+  = t(:notice, scope: [:administrateurs, :duree_conservation_dossiers_dans_ds])
+  - if f.object.duree_conservation_dossiers_dans_ds.to_i < Procedure::NEW_MAX_DUREE_CONSERVATION
+    = t(:new_duration_constraint, scope: [:administrateurs, :duree_conservation_dossiers_dans_ds], new_duration_in_month: Procedure::NEW_MAX_DUREE_CONSERVATION)
 = f.number_field :duree_conservation_dossiers_dans_ds, {class: 'form-control', placeholder: '6', required: true}.merge(f.object.duree_conservation_etendue_par_ds ? {} : {max: 12})
 
 - if @procedure.created_at.present?
