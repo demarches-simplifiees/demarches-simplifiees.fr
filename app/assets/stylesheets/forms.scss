@@ -70,7 +70,6 @@
     .updated-at {
       @include notice-text-style;
       float: right;
-      display: inline-block;
       margin-left: $default-spacer;
       visibility: hidden;
     }
