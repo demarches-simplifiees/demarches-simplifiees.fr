@@ -1,6 +1,11 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { ActionEvent } from '@hotwired/stimulus';
-import { httpRequest } from '@utils';
+import {
+  httpRequest,
+  isSelectElement,
+  isCheckboxOrRadioInputElement,
+  isTextInputElement
+} from '@utils';
 import { useIntersection } from 'stimulus-use';
 
 import { ApplicationController } from './application_controller';
@@ -169,27 +174,4 @@ function createHiddenInput(
   input.name = name;
   input.value = String(value);
   form.appendChild(input);
-}
-
-function isSelectElement(element: HTMLElement): element is HTMLSelectElement {
-  return element.tagName == 'SELECT';
-}
-
-function isCheckboxOrRadioInputElement(
-  element: HTMLElement & { type?: string }
-): element is HTMLInputElement {
-  return (
-    element.tagName == 'INPUT' &&
-    (element.type == 'checkbox' || element.type == 'radio')
-  );
-}
-
-function isTextInputElement(
-  element: HTMLElement & { type?: string }
-): element is HTMLInputElement {
-  return (
-    ['INPUT', 'TEXTAREA'].includes(element.tagName) &&
-    element.type != 'checkbox' &&
-    element.type != 'radio'
-  );
 }
