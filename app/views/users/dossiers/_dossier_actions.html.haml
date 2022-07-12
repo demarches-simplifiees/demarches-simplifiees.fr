@@ -8,7 +8,7 @@
   .dropdown.user-dossier-actions{ data: { controller: 'menu-button' } }
     %button.button.dropdown-button{ data: { menu_button_target: 'button' } }
       = t('views.users.dossiers.dossier_action.actions')
-    #actions-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
+    .dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' }, id: dom_id(dossier, :actions_menu) }
       %ul.dropdown-items
         - if has_edit_action
           - if dossier.brouillon?
