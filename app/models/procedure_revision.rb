@@ -137,14 +137,12 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def different_from?(revision)
-    revision_types_de_champ != revision.revision_types_de_champ ||
-      attestation_template != revision.attestation_template
+    revision_types_de_champ != revision.revision_types_de_champ
   end
 
   def compare(revision)
     changes = []
     changes += compare_revision_types_de_champ(revision_types_de_champ, revision.revision_types_de_champ)
-    changes += compare_attestation_template(attestation_template, revision.attestation_template)
     changes
   end
 
@@ -228,63 +226,6 @@ class ProcedureRevision < ApplicationRecord
     siblings.to_a.compact.each.with_index do |sibling, position|
       sibling.update_column(:position, position)
     end
-  end
-
-  def compare_attestation_template(from_at, to_at)
-    changes = []
-    if from_at.nil? && to_at.present?
-      changes << {
-        model: :attestation_template,
-        op: :add
-      }
-    elsif to_at.present?
-      if from_at.title != to_at.title
-        changes << {
-          model: :attestation_template,
-          op: :update,
-          attribute: :title,
-          from: from_at.title,
-          to: to_at.title
-        }
-      end
-      if from_at.body != to_at.body
-        changes << {
-          model: :attestation_template,
-          op: :update,
-          attribute: :body,
-          from: from_at.body,
-          to: to_at.body
-        }
-      end
-      if from_at.footer != to_at.footer
-        changes << {
-          model: :attestation_template,
-          op: :update,
-          attribute: :footer,
-          from: from_at.footer,
-          to: to_at.footer
-        }
-      end
-      if from_at.logo_checksum != to_at.logo_checksum
-        changes << {
-          model: :attestation_template,
-          op: :update,
-          attribute: :logo,
-          from: from_at.logo_filename,
-          to: to_at.logo_filename
-        }
-      end
-      if from_at.signature_checksum != to_at.signature_checksum
-        changes << {
-          model: :attestation_template,
-          op: :update,
-          attribute: :signature,
-          from: from_at.signature_filename,
-          to: to_at.signature_filename
-        }
-      end
-    end
-    changes
   end
 
   def compare_revision_types_de_champ(from_coordinates, to_coordinates)

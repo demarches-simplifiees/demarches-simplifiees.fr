@@ -8,7 +8,7 @@
 .procedure-form#attestation-template-edit
   .procedure-form__columns.container
     = form_for @attestation_template,
-      url: url_for({ controller: 'administrateurs/attestation_templates', action: :update, id: @procedure.id }),
+      url: admin_procedure_attestation_template_path(@procedure),
       multipart: true,
       html: { class: 'form procedure-form__column--form' } do |f|
 

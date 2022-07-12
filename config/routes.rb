@@ -486,7 +486,7 @@ Rails.application.routes.draw do
         get 'preview', on: :member
       end
 
-      resource :attestation_template, only: [:edit, :update, :create] do
+      resource :attestation_template, only: [:show, :edit, :update, :create] do
         get 'preview', on: :member
       end
       resource :dossier_submitted_message, only: [:edit, :update, :create]
