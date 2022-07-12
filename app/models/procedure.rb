@@ -84,7 +84,6 @@ class Procedure < ApplicationRecord
   has_many :draft_types_de_champ, through: :draft_revision, source: :types_de_champ_public
   has_many :draft_types_de_champ_private, through: :draft_revision, source: :types_de_champ_private
   has_one :draft_attestation_template, through: :draft_revision, source: :attestation_template
-  has_one :published_attestation_template, through: :published_revision, source: :attestation_template
 
   has_one :published_dossier_submitted_message, dependent: :destroy, through: :published_revision, source: :dossier_submitted_message
   has_one :draft_dossier_submitted_message, dependent: :destroy, through: :draft_revision, source: :dossier_submitted_message
@@ -96,7 +95,7 @@ class Procedure < ApplicationRecord
   foreign_key: "replaced_by_procedure_id", dependent: :nullify
 
   has_one :module_api_carto, dependent: :destroy
-  has_one :legacy_attestation_template, class_name: 'AttestationTemplate', dependent: :destroy
+  has_one :attestation_template, dependent: :destroy
   has_many :attestation_templates, through: :revisions, source: :attestation_template
 
   belongs_to :parent_procedure, class_name: 'Procedure', optional: true
@@ -183,6 +182,14 @@ class Procedure < ApplicationRecord
 
   def types_de_champ_private_for_tags
     types_de_champ_for_tags.private_only
+  end
+
+  def revision_ids_with_pending_dossiers
+    dossiers
+      .where.not(revision_id: [draft_revision_id, published_revision_id].compact)
+      .state_en_construction_ou_instruction
+      .distinct(:revision_id)
+      .pluck(:revision_id)
   end
 
   has_many :administrateurs_procedures, dependent: :delete_all
@@ -594,17 +601,24 @@ class Procedure < ApplicationRecord
     touch(:whitelisted_at)
   end
 
-  def attestation_template
-    published_attestation_template || draft_attestation_template
+  def move_attestation_template_to_procedure!
+    if draft_attestation_template.present? && draft_attestation_template != attestation_template
+      draft_attestation_template.update_column(:procedure_id, id)
+      reload
+    end
+  end
+
+  def active_attestation_template
+    draft_attestation_template || attestation_template
   end
 
   def closed_mail_template_attestation_inconsistency_state
     # As an optimization, don’t check the predefined templates (they are presumed correct)
     if closed_mail.present?
       tag_present = closed_mail.body.to_s.include?("--lien attestation--")
-      if attestation_template&.activated? && !tag_present
+      if active_attestation_template&.activated? && !tag_present
         :missing_tag
-      elsif !attestation_template&.activated? && tag_present
+      elsif !active_attestation_template&.activated? && tag_present
         :extraneous_tag
       end
     end
