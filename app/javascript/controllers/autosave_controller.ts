@@ -1,5 +1,4 @@
-import { httpRequest, ResponseError } from '@utils';
-import { z } from 'zod';
+import { httpRequest, ResponseError, getConfig } from '@utils';
 
 import { ApplicationController } from './application_controller';
 import { AutoUpload } from '../shared/activestorage/auto-upload';
@@ -9,10 +8,9 @@ import {
   ERROR_CODE_READ
 } from '../shared/activestorage/file-upload-error';
 
-const Gon = z.object({ autosave: z.object({ debounce_delay: z.number() }) });
-
-declare const window: Window & typeof globalThis & { gon: unknown };
-const { debounce_delay } = Gon.parse(window.gon).autosave;
+const {
+  autosave: { debounce_delay }
+} = getConfig();
 
 const AUTOSAVE_DEBOUNCE_DELAY = debounce_delay;
 const AUTOSAVE_TIMEOUT_DELAY = 60000;
