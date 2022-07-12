@@ -77,4 +77,5 @@
         = render TypesDeChampEditor::BlockComponent.new(block: coordinate, coordinates: coordinate.revision_types_de_champ)
         = render TypesDeChampEditor::AddChampButtonComponent.new(revision: coordinate.revision, parent: coordinate, is_annotation: coordinate.private?)
 
-  = render(TypesDeChampEditor::ConditionsComponent.new(tdc: type_de_champ, upper_tdcs: @upper_coordinates.map(&:type_de_champ), procedure_id: procedure.id))
+  -  if Flipper.enabled?(:conditional, controller.current_user) && !type_de_champ.private? && !coordinate.child?
+    = render(TypesDeChampEditor::ConditionsComponent.new(tdc: type_de_champ, upper_tdcs: @upper_coordinates.map(&:type_de_champ), procedure_id: procedure.id))
