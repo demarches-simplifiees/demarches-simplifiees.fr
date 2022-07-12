@@ -33,10 +33,10 @@ class Logic::ChampValue < Logic::Term
     end
   end
 
-  def to_s = "#{type_de_champ.libelle} Nº#{stable_id}"
+  def to_s = "#{type_de_champ&.libelle} Nº#{stable_id}" # TODO: gerer le cas ou un tdc est supprimé
 
   def type
-    case type_de_champ.type_champ
+    case type_de_champ&.type_champ # TODO: gerer le cas ou un tdc est supprimé
     when MANAGED_TYPE_DE_CHAMP.fetch(:yes_no),
       MANAGED_TYPE_DE_CHAMP.fetch(:checkbox)
       CHAMP_VALUE_TYPE.fetch(:boolean)

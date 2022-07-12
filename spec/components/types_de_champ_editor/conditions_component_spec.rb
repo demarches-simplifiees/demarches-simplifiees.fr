@@ -1,6 +1,12 @@
 describe TypesDeChampEditor::ConditionsComponent, type: :component do
   include Logic
 
+  # TODO: remove along with feature flipping
+  before do
+    allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(nil)
+    allow(Flipper).to receive(:enabled?).with(:conditional, anything).and_return(true)
+  end
+
   describe 'render' do
     let(:tdc) { create(:type_de_champ, condition: condition) }
     let(:condition) { nil }

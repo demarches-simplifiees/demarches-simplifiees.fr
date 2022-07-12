@@ -201,7 +201,11 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
   end
 
   def render?
-    @condition.present? || available_targets_for_select.any?
+    if Flipper.enabled?(:conditional, controller.current_user)
+      @condition.present? || available_targets_for_select.any?
+    else
+      false
+    end
   end
 
   def input_name_for(name)

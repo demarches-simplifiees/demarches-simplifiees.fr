@@ -22,11 +22,11 @@ class TypesDeChampEditor::ConditionsErrorsComponent < ApplicationComponent
     elsif left.type == :unmanaged
       t('unmanaged', scope: '.errors',
         libelle: targeted_champ.libelle,
-        type_champ: t(targeted_champ.type_champ, scope: '.type'))
+        type_champ: t(targeted_champ.type_champ, scope: 'activerecord.attributes.type_de_champ.type_champs')&.downcase)
     else
       t('incompatible', scope: '.errors',
         libelle: targeted_champ.libelle,
-        type_champ: t(targeted_champ.type_champ, scope: '.type'),
+        type_champ: t(targeted_champ.type_champ, scope: 'activerecord.attributes.type_de_champ.type_champs')&.downcase,
         operator: t(operator_name, scope: 'logic.operators').downcase,
         right: right.to_s.downcase)
     end
