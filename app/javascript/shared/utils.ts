@@ -272,3 +272,28 @@ export function isNumeric(s: string) {
   const n = parseFloat(s);
   return !isNaN(n) && isFinite(n);
 }
+
+export function isSelectElement(
+  element: HTMLElement
+): element is HTMLSelectElement {
+  return element.tagName == 'SELECT';
+}
+
+export function isCheckboxOrRadioInputElement(
+  element: HTMLElement & { type?: string }
+): element is HTMLInputElement {
+  return (
+    element.tagName == 'INPUT' &&
+    (element.type == 'checkbox' || element.type == 'radio')
+  );
+}
+
+export function isTextInputElement(
+  element: HTMLElement & { type?: string }
+): element is HTMLInputElement {
+  return (
+    ['INPUT', 'TEXTAREA'].includes(element.tagName) &&
+    element.type != 'checkbox' &&
+    element.type != 'radio'
+  );
+}
