@@ -197,14 +197,6 @@ class ProcedureRevision < ApplicationRecord
     revision_types_de_champ.find_by!(type_de_champ: tdc)
   end
 
-  def upper_coordinates(position)
-    revision_types_de_champ_public.filter { |c| c.position < position }
-  end
-
-  def coordinates_starting_at(position)
-    revision_types_de_champ_public.reload.filter { |c| position <= c.position }
-  end
-
   private
 
   def compute_estimated_fill_duration
