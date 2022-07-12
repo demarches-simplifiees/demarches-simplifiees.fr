@@ -114,7 +114,7 @@ module Users
       sanitized_siret = siret_model.siret
       begin
         etablissement = APIEntrepriseService.create_etablissement(@dossier, sanitized_siret, current_user.id)
-      rescue APIEntreprise::API::Error::RequestFailed, APIEntreprise::API::Error::BadGateway, APIEntreprise::API::Error::TimedOut, APIEntreprise::API::Error::ServiceUnavailable
+      rescue APIEntreprise::API::Error::RequestFailed, APIEntreprise::API::Error::BadGateway, APIEntreprise::API::Error::TimedOut, APIEntreprise::API::Error::ServiceUnavailable, APIEntrepriseToken::TokenError
         return render_siret_error(t('errors.messages.siret_network_error'))
       end
       if etablissement.nil?

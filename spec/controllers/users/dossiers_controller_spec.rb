@@ -271,7 +271,7 @@ describe Users::DossiersController, type: :controller do
         let(:api_etablissement_status) { 200 }
         let(:token_expired) { true }
 
-        it_behaves_like 'the request fails with an error', I18n.t('errors.messages.siret_unknown')
+        it_behaves_like 'the request fails with an error', I18n.t('errors.messages.siret_network_error')
       end
 
       context 'when all API informations available' do
