@@ -30,7 +30,6 @@ describe Administrateurs::TypesDeChampController, type: :controller do
         type_de_champ: {
           type_champ: type_champ,
           libelle: 'l1.5',
-          placeholder: "custom placeholder",
           after_stable_id: first_coordinate.stable_id
         }
       }
