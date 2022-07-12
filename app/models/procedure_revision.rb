@@ -59,7 +59,7 @@ class ProcedureRevision < ApplicationRecord
       h = { type_de_champ: tdc, parent_id: parent_id, position: position }
       coordinate = revision_types_de_champ.create!(h)
 
-      reorder(coordinate.reload.siblings)
+      renumber(coordinate.reload.siblings)
     end
 
     # they are not aware of the addition
@@ -88,7 +88,7 @@ class ProcedureRevision < ApplicationRecord
 
     siblings.insert(position, siblings.delete_at(siblings.index(coordinate)))
 
-    reorder(siblings)
+    renumber(siblings)
     coordinate.reload
 
     coordinate
@@ -107,7 +107,7 @@ class ProcedureRevision < ApplicationRecord
     types_de_champ_public.reset
     types_de_champ_private.reset
 
-    reorder(coordinate.siblings)
+    renumber(coordinate.siblings)
 
     coordinate
   end
@@ -197,6 +197,14 @@ class ProcedureRevision < ApplicationRecord
     revision_types_de_champ.find_by!(type_de_champ: tdc)
   end
 
+  def upper_coordinates(position)
+    revision_types_de_champ_public.filter { |c| c.position < position }
+  end
+
+  def coordinates_starting_at(position)
+    revision_types_de_champ_public.reload.filter { |c| position <= c.position }
+  end
+
   private
 
   def compute_estimated_fill_duration
@@ -221,10 +229,10 @@ class ProcedureRevision < ApplicationRecord
       .joins(:type_de_champ)
       .find_by(type_de_champ: { stable_id: stable_id })
 
-    [coordinate, coordinate.type_de_champ]
+    [coordinate, coordinate&.type_de_champ]
   end
 
-  def reorder(siblings)
+  def renumber(siblings)
     siblings.to_a.compact.each.with_index do |sibling, position|
       sibling.update_column(:position, position)
     end
@@ -482,7 +490,8 @@ class ProcedureRevision < ApplicationRecord
     types_de_champ_public
       .map.with_index
       .filter_map { |tdc, i| tdc.condition.present? ? [tdc, i] : nil }
-      .flat_map { |tdc, i| tdc.condition.errors(stable_ids.take(i)) }
-      .each { |message| errors.add(:condition, message) }
+      .map { |tdc, i| [tdc, tdc.condition.errors(stable_ids.take(i))] }
+      .filter { |_tdc, errors| errors.present? }
+      .each { |tdc, message| errors.add(:condition, message, type_de_champ: tdc) }
   end
 end
