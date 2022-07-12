@@ -23,7 +23,7 @@
     %hr
 
     - if dossier.show_groupe_instructeur_selector?
-      %span{ data: dossier.brouillon? ? { controller: 'autosave' } : {} }
+      %span{ data: { controller: dossier.brouillon? ? 'autosave' : 'check-conditions' } }
         = f.label :groupe_instructeur_id do
           = dossier.procedure.routing_criteria_name
           %span.mandatory *
