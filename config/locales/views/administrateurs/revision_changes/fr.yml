@@ -28,7 +28,6 @@ fr:
         enabled: Le champ « %{label} » comporte maintenant un choix « Autre »
         disabled: Le champ « %{label} » ne comporte plus de choix « Autre »
       update_carte_layers: Les référentiels cartographiques du champ « %{label} » ont été modifiés
-      update_placeholder: Le spécimen de saisie du champ « %{label} » a été modifié. Le nouveau spécimen est « %{to} ».
       add_private: L’annotation privée « %{label} » a été ajoutée
       remove_private: L’annotation privée « %{label} » a été supprimée
       move_private:
