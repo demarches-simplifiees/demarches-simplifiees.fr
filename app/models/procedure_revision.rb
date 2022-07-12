@@ -385,18 +385,6 @@ class ProcedureRevision < ApplicationRecord
         stable_id: from_type_de_champ.stable_id
       }
     end
-    if from_type_de_champ.placeholder != to_type_de_champ.placeholder
-      changes << {
-        model: :type_de_champ,
-        op: :update,
-        attribute: :placeholder,
-        label: from_type_de_champ.libelle,
-        private: from_type_de_champ.private?,
-        from: from_type_de_champ.placeholder,
-        to: to_type_de_champ.placeholder,
-        stable_id: from_type_de_champ.stable_id
-      }
-    end
     if to_type_de_champ.drop_down_list?
       if from_type_de_champ.drop_down_list_options != to_type_de_champ.drop_down_list_options
         changes << {
