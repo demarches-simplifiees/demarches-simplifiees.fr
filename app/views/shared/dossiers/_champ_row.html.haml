@@ -1,4 +1,4 @@
-- champs.reject(&:exclude_from_view?).each do |c|
+- champs.reject(&:exclude_from_view?).filter(&:visible?).each do |c|
   - if c.type_champ == TypeDeChamp.type_champs.fetch(:repetition)
     %tr
       %td.libelle.repetition{ colspan: 3 }

@@ -24,7 +24,7 @@ class Champs::SiretChamp < Champ
     etablissement.present? ? etablissement.search_terms : [value]
   end
 
-  def mandatory_and_blank?
-    mandatory? && Siret.new(siret: value).invalid?
+  def mandatory_blank_and_visible?
+    mandatory? && Siret.new(siret: value).invalid? && visible?
   end
 end
