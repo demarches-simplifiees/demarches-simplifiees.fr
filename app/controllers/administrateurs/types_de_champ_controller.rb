@@ -8,7 +8,7 @@ module Administrateurs
       if type_de_champ.valid?
         @coordinate = draft.coordinate_for(type_de_champ)
         @created = champ_component_from(@coordinate, focused: true)
-        @morphed = champ_components_starting_at(@coordinate.position + 1)
+        @morphed = champ_components_starting_at(@coordinate, 1)
 
         reset_procedure
         flash.notice = "Formulaire enregistré"
@@ -22,7 +22,7 @@ module Administrateurs
 
       if type_de_champ.update(type_de_champ_update_params)
         @coordinate = draft.coordinate_for(type_de_champ)
-        @morphed = champ_components_starting_at(@coordinate.position)
+        @morphed = champ_components_starting_at(@coordinate)
 
         reset_procedure
         flash.notice = "Formulaire enregistré"
@@ -42,7 +42,7 @@ module Administrateurs
       @destroyed = @coordinate
       @created = champ_component_from(@coordinate)
       # update the one component below
-      @morphed = champ_components_starting_at(@coordinate.position + 1).take(1)
+      @morphed = champ_components_starting_at(@coordinate, 1).take(1)
     end
 
     def move_down
@@ -51,7 +51,7 @@ module Administrateurs
       @destroyed = @coordinate
       @created = champ_component_from(@coordinate)
       # update the one component above
-      @morphed = champ_components_starting_at(@coordinate.position - 1).take(1)
+      @morphed = champ_components_starting_at(@coordinate, - 1).take(1)
     end
 
     def destroy
@@ -60,14 +60,14 @@ module Administrateurs
       flash.notice = "Formulaire enregistré"
 
       @destroyed = @coordinate
-      @morphed = champ_components_starting_at(@coordinate.position)
+      @morphed = champ_components_starting_at(@coordinate)
     end
 
     private
 
-    def champ_components_starting_at(position)
-      draft
-        .coordinates_starting_at(position)
+    def champ_components_starting_at(coordinate, offset = 0)
+      coordinate
+        .siblings_starting_at(offset)
         .lazy
         .map { |c| champ_component_from(c) }
     end
@@ -75,7 +75,7 @@ module Administrateurs
     def champ_component_from(coordinate, focused: false)
       TypesDeChampEditor::ChampComponent.new(
         coordinate: coordinate,
-        upper_coordinates: draft.upper_coordinates(coordinate.position),
+        upper_coordinates: coordinate.upper_siblings,
         focused: focused
       )
     end

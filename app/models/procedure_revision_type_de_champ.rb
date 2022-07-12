@@ -47,6 +47,14 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
     end
   end
 
+  def upper_siblings
+    siblings.filter { |s| s.position < position }
+  end
+
+  def siblings_starting_at(offset)
+    siblings.filter { |s| (position + offset) <= s.position }
+  end
+
   def previous_sibling
     index = siblings.index(self)
     if index > 0
