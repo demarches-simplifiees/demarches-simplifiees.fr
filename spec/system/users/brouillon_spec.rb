@@ -271,6 +271,28 @@ describe 'The user' do
     expect(page).to have_text('file.pdf')
   end
 
+  context 'with condition' do
+    include Logic
+
+    let(:procedure) { create(:procedure, :published, :for_individual, :with_yes_no, :with_type_de_champ) }
+    let(:revision) { procedure.published_revision }
+    let(:yes_no_type_de_champ) { revision.types_de_champ.first }
+    let(:type_de_champ) { revision.types_de_champ.last }
+    let(:condition) { ds_eq(champ_value(yes_no_type_de_champ.stable_id), constant(true)) }
+
+    before { type_de_champ.update(condition: condition) }
+
+    scenario 'fill a dossier', js: true do
+      log_in(user, procedure)
+
+      fill_individual
+
+      expect(page).to have_field(type_de_champ.libelle, with: '', visible: false)
+      choose('Oui')
+      expect(page).to have_field(type_de_champ.libelle, with: '', visible: true)
+    end
+  end
+
   context 'draft autosave' do
     scenario 'autosave a draft', js: true do
       log_in(user, simple_procedure)

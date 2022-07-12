@@ -89,8 +89,8 @@ class Champ < ApplicationRecord
     @sections ||= dossier&.sections_for(self)
   end
 
-  def mandatory_and_blank?
-    mandatory? && blank?
+  def mandatory_blank_and_visible?
+    mandatory? && blank? && visible?
   end
 
   def blank?
@@ -180,7 +180,23 @@ class Champ < ApplicationRecord
     raise NotImplemented.new(:fetch_external_data)
   end
 
+  def conditional?
+    type_de_champ.condition.present?
+  end
+
+  def visible?
+    if conditional?
+      type_de_champ.condition.compute(champs_for_condition)
+    else
+      true
+    end
+  end
+
   private
+
+  def champs_for_condition
+    private? ? dossier.champs_private : dossier.champs
+  end
 
   def html_id
     "#{stable_id}-#{id}"
