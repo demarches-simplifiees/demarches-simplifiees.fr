@@ -46,6 +46,9 @@ fr:
       update_carte_layers_private: Les référentiels cartographiques de l’annotation privée « %{label} » ont été modifiés
       add_option: "ajoutés : %{items}"
       remove_option: "supprimés : %{items}"
+      add_condition: Une condition a été ajoutée sur le champ « %{label} ». La nouvelle condition est « %{to} »
+      remove_condition: La condition du champ « %{label} » a été supprimée.
+      update_condition: La condition du champ « %{label} » a été modifiée. La nouvelle condition est « %{to} »
     carte_layers:
       unesco: UNESCO
       arretes_protection: Arrêtés de protection
