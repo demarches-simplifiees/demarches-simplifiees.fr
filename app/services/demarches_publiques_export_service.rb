@@ -1,26 +1,33 @@
 class DemarchesPubliquesExportService
-  attr_reader :io
-  def initialize(io)
-    @io = io
+  attr_reader :gzip_filename
+
+  def initialize(gzip_filename)
+    @gzip_filename = gzip_filename
   end
 
   def call
+    Zlib::GzipWriter.open(gzip_filename) do |gz|
+      generate_json(gz)
+    end
+  end
+
+  private
+
+  def generate_json(io)
     end_cursor = nil
     first = true
-    write_array_opening
+    write_array_opening(io)
     loop do
-      write_demarches_separator if !first
+      write_demarches_separator(io) if !first
       execute_query(cursor: end_cursor)
       end_cursor = last_cursor
       io.write(jsonify(demarches))
       first = false
       break if !has_next_page?
     end
-    write_array_closing
+    write_array_closing(io)
     io.close
   end
-
-  private
 
   def execute_query(cursor: nil)
     result = API::V2::Schema.execute(query, variables: { cursor: cursor }, context: { internal_use: true })
@@ -83,15 +90,15 @@ class DemarchesPubliquesExportService
     demarches.map(&:to_json).join(',')
   end
 
-  def write_array_opening
+  def write_array_opening(io)
     io.write('[')
   end
 
-  def write_array_closing
+  def write_array_closing(io)
     io.write(']')
   end
 
-  def write_demarches_separator
+  def write_demarches_separator(io)
     io.write(',')
   end
 end
