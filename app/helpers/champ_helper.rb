@@ -34,11 +34,11 @@ module ChampHelper
   def geo_area_label(geo_area)
     case geo_area.source
     when GeoArea.sources.fetch(:cadastre)
-        "Parcelle n° #{geo_area.numero} - Feuille #{geo_area.prefixe} #{geo_area.section} - #{geo_area.surface.round} m²"
+      "Parcelle n° #{geo_area.numero} - Feuille #{geo_area.prefixe} #{geo_area.section} - #{geo_area.surface.round} m²"
     when GeoArea.sources.fetch(:selection_utilisateur)
       if geo_area.polygon?
         if geo_area.area.present?
-            "Une aire de surface #{geo_area.area} m²"
+          "Une aire de surface #{geo_area.area} m²"
         else
           "Une aire de surface inconnue"
         end
