@@ -347,15 +347,14 @@ describe ProcedureRevision do
         it do
           is_expected.to eq([
             {
-              :attribute => :condition,
-              :condition_op => :add,
-              :from => "",
-              :label => "l2",
-              :model => :type_de_champ,
-              :op => :update,
-              :private => false,
-              :stable_id => second_tdc.stable_id,
-              :to => "(l1 == 3)"
+              attribute: :condition,
+              from: nil,
+              label: "l2",
+              model: :type_de_champ,
+              op: :update,
+              private: false,
+              stable_id: second_tdc.stable_id,
+              to: "(l1 == 3)"
             }
           ])
         end
@@ -373,15 +372,14 @@ describe ProcedureRevision do
         it do
           is_expected.to eq([
             {
-              :attribute => :condition,
-              :condition_op => :remove,
-              :from => "(l1 == 2)",
-              :label => "l2",
-              :model => :type_de_champ,
-              :op => :update,
-              :private => false,
-              :stable_id => second_tdc.stable_id,
-              :to => ""
+              attribute: :condition,
+              from: "(l1 == 2)",
+              label: "l2",
+              model: :type_de_champ,
+              op: :update,
+              private: false,
+              stable_id: second_tdc.stable_id,
+              to: nil
             }
           ])
         end
@@ -399,15 +397,14 @@ describe ProcedureRevision do
         it do
           is_expected.to eq([
             {
-              :attribute => :condition,
-              :condition_op => :update,
-              :from => "(l1 == 2)",
-              :label => "l2",
-              :model => :type_de_champ,
-              :op => :update,
-              :private => false,
-              :stable_id => second_tdc.stable_id,
-              :to => "(l1 == 3)"
+              attribute: :condition,
+              from: "(l1 == 2)",
+              label: "l2",
+              model: :type_de_champ,
+              op: :update,
+              private: false,
+              stable_id: second_tdc.stable_id,
+              to: "(l1 == 3)"
             }
           ])
         end
