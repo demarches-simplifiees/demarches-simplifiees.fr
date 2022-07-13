@@ -28,11 +28,7 @@ import {
   acceptEmailSuggestion,
   discardEmailSuggestionBox
 } from '../new_design/user-sign_up';
-import {
-  showFusion,
-  showNewAccount,
-  showNewAccountPasswordConfirmation
-} from '../new_design/fc-fusion';
+import { showFusion, showNewAccount } from '../new_design/fc-fusion';
 
 const application = Application.start();
 registerControllers(application);
@@ -46,7 +42,6 @@ const DS = {
   showImportJustificatif,
   showFusion,
   showNewAccount,
-  showNewAccountPasswordConfirmation,
   replaceSemicolonByComma,
   acceptEmailSuggestion,
   discardEmailSuggestionBox
