@@ -1,4 +1,4 @@
-Commune ou section	Commune	Code postal	Population	Bureau de poste	Iles	Ile	Archipel	Commune Associée	Commune - Ile - Code Postal	Code Postal - Commune - Ile
+Commune ou section	Commune	Code postal	Population	Bureau de poste	Iles	Ile	Archipel	Commune AssociÃ©e	Commune - Ile - Code Postal	Code Postal - Commune - Ile
 ARUE	Arue	98701	9537	ARUE	TAHITI	Tahiti	Iles Du Vent		Arue - Tahiti - 98701	98701 - Arue - Tahiti
 TETIAROA	Tetiaroa	98701			TETIAROA	Tetiaroa	Iles Du Vent	Arue	Tetiaroa - 98701	98701 - Tetiaroa
 Faaa (B.P. & P.R.)	Faaa (B.P. & P.R.)	98702	29687	FAA'A CENTRE	TAHITI	Tahiti	Iles Du Vent		Faaa (B.P. & P.R.) - Tahiti - 98702	98702 - Faaa (B.P. & P.R.) - Tahiti
