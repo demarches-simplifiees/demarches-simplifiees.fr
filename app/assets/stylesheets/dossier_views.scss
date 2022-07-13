@@ -32,7 +32,20 @@
 
     .header-actions {
       margin-bottom: $default-spacer;
-      text-align: right;
+      display: flex;
+      justify-content: flex-end;
+      column-gap: $default-spacer * 2;
+    }
+  }
+
+  .edit-identity-action {
+    .dropdown-content {
+      padding: $default-padding;
+      min-width: 250px;
+    }
+
+    .table {
+      margin-bottom: $default-padding * 2;
     }
   }
 
