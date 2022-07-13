@@ -31,6 +31,14 @@ module ChampHelper
     champ.dossier&.brouillon? && !champ.repetition?
   end
 
+  def autosave_controller(champ)
+    if autosave_available?(champ)
+      { controller: 'autosave' }
+    elsif !champ.repetition? && champ.dossier&.en_construction?
+      { controller: 'check-conditions' }
+    end
+  end
+
   def geo_area_label(geo_area)
     case geo_area.source
     when GeoArea.sources.fetch(:cadastre)
