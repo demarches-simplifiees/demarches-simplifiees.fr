@@ -265,10 +265,10 @@
 
   // override default site width/max-width for editable-champ form (Usager form)
   .editable-champ {
-    @media (min-width: $two-columns-breakpoint) {
-      input {
-        max-width: none;
+    input {
+      max-width: none;
 
+      @media (min-width: $two-columns-breakpoint) {
         &:not([size]) {
           &[type='date'],
           &[type='tel'],
