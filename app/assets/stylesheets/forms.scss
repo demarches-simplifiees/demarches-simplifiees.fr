@@ -389,13 +389,8 @@
   .dgfip-inputs,
   .pole-emploi-inputs,
   .mesri-inputs {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    max-width: 700px;
-
-    input {
-      width: inherit;
+    label {
+      font-weight: 400;
     }
   }
 

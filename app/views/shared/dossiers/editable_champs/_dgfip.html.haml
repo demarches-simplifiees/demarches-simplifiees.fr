@@ -4,13 +4,13 @@
     %p.notice= t('.numero_fiscal_notice')
     = form.text_field :numero_fiscal,
       required: champ.mandatory?,
-      size: 14,
-      aria: { describedby: champ.describedby_id }
+      aria: { describedby: champ.describedby_id },
+      class: "width-33-desktop"
 
   %div
     = form.label :reference_avis, t('.reference_avis_label')
     %p.notice= t('.reference_avis_notice')
     = form.text_field :reference_avis,
-      size: 14,
       required: champ.mandatory?,
-      aria: { describedby: champ.describedby_id }
+      aria: { describedby: champ.describedby_id },
+      class: "width-33-desktop"
