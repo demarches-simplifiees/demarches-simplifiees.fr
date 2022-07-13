@@ -39,7 +39,6 @@ module ChampHelper
       if geo_area.polygon?
         if geo_area.area.present?
             "Une aire de surface #{geo_area.area} m²"
-          end
         else
           "Une aire de surface inconnue"
         end
