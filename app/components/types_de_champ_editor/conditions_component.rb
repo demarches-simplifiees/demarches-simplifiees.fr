@@ -22,7 +22,7 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
 
   def logic_conditionnel_button
     if @condition.nil?
-      submit_tag(t('.enable_conditionnel'), formaction: add_row_admin_procedure_condition_path(@procedure_id, @tdc.id))
+      submit_tag(t('.enable_conditionnel'), formaction: add_row_admin_procedure_condition_path(@procedure_id, @tdc.stable_id))
     else
       submit_tag(
         t('.disable_conditionnel'),
@@ -185,7 +185,7 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
   def add_condition_tag
     tag.button(
       tag.span('', class: 'icon add') + tag.span(t('.add_condition')),
-      formaction: add_row_admin_procedure_condition_path(@procedure_id, @tdc.id),
+      formaction: add_row_admin_procedure_condition_path(@procedure_id, @tdc.stable_id),
       formnovalidate: true,
       class: 'add-row'
     )
@@ -194,7 +194,7 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
   def delete_condition_tag(row_index)
     tag.button(
       tag.span('', class: 'icon delete') + tag.span(t('.remove_a_row'), class: 'sr-only'),
-      formaction: delete_row_admin_procedure_condition_path(@procedure_id, @tdc.id, row_index: row_index),
+      formaction: delete_row_admin_procedure_condition_path(@procedure_id, @tdc.stable_id, row_index: row_index),
       formmethod: 'delete',
       formnovalidate: true
     )
@@ -209,7 +209,7 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
   end
 
   def input_id_for(name, row_index)
-    "#{@tdc.id}-#{name}-#{row_index}"
+    "#{@tdc.stable_id}-#{name}-#{row_index}"
   end
 
   def input_prefix
