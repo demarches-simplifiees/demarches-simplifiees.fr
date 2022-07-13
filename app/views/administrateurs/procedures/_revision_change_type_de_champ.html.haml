@@ -54,3 +54,11 @@
           %li= t(:add_option, scope: [:administrateurs, :revision_changes], items: added.map{ |term| "« #{t(term, scope: [:administrateurs, :carte_layers])} »" }.join(", "))
         - if removed.present?
           %li= t(:remove_option, scope: [:administrateurs, :revision_changes], items: removed.map{ |term| "« #{t(term, scope: [:administrateurs, :carte_layers])} »" }.join(", "))
+  - when :condition
+    - case change[:condition_op]
+    - when :add
+      %li= t(:add_condition, scope: [:administrateurs, :revision_changes], label: change[:label], to: change[:to])
+    - when :remove
+      %li= t(:remove_condition, scope: [:administrateurs, :revision_changes], label: change[:label], to: change[:to])
+    - when :update
+      %li= t(:update_condition, scope: [:administrateurs, :revision_changes], label: change[:label], to: change[:to])

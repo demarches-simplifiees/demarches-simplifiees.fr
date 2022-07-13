@@ -322,10 +322,97 @@ describe ProcedureRevision do
   end
 
   describe '#compare' do
+    include Logic
+
     let(:first_tdc) { draft.types_de_champ_public.first }
+    let(:second_tdc) { draft.types_de_champ_public.second }
     let(:new_draft) { procedure.create_new_revision }
 
     subject { procedure.active_revision.compare(new_draft.reload) }
+
+    context 'with a procedure with 2 tdcs' do
+      let(:procedure) do
+        create(:procedure).tap do |p|
+          p.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'l1')
+          p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'l2')
+        end
+      end
+
+      context 'when a condition is added' do
+        before do
+          second = new_draft.find_and_ensure_exclusive_use(second_tdc.stable_id)
+          second.update(condition: ds_eq(champ_value(first_tdc.stable_id), constant(3)))
+        end
+
+        it do
+          is_expected.to eq([
+            {
+              :attribute => :condition,
+              :condition_op => :add,
+              :from => "",
+              :label => "l2",
+              :model => :type_de_champ,
+              :op => :update,
+              :private => false,
+              :stable_id => second_tdc.stable_id,
+              :to => "(l1 == 3)"
+            }
+          ])
+        end
+      end
+
+      context 'when a condition is removed' do
+        before do
+          second_tdc.update(condition: ds_eq(champ_value(first_tdc.stable_id), constant(2)))
+          draft.reload
+
+          second = new_draft.find_and_ensure_exclusive_use(second_tdc.stable_id)
+          second.update(condition: nil)
+        end
+
+        it do
+          is_expected.to eq([
+            {
+              :attribute => :condition,
+              :condition_op => :remove,
+              :from => "(l1 == 2)",
+              :label => "l2",
+              :model => :type_de_champ,
+              :op => :update,
+              :private => false,
+              :stable_id => second_tdc.stable_id,
+              :to => ""
+            }
+          ])
+        end
+      end
+
+      context 'when a condition is changed' do
+        before do
+          second_tdc.update(condition: ds_eq(champ_value(first_tdc.stable_id), constant(2)))
+          draft.reload
+
+          second = new_draft.find_and_ensure_exclusive_use(second_tdc.stable_id)
+          second.update(condition: ds_eq(champ_value(first_tdc.stable_id), constant(3)))
+        end
+
+        it do
+          is_expected.to eq([
+            {
+              :attribute => :condition,
+              :condition_op => :update,
+              :from => "(l1 == 2)",
+              :label => "l2",
+              :model => :type_de_champ,
+              :op => :update,
+              :private => false,
+              :stable_id => second_tdc.stable_id,
+              :to => "(l1 == 3)"
+            }
+          ])
+        end
+      end
+    end
 
     context 'when a type de champ is added' do
       let(:procedure) { create(:procedure) }
