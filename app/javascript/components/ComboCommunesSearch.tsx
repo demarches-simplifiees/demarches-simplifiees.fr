@@ -54,8 +54,12 @@ const [placeholderDepartement, placeholderCommune] =
 
 export default function ComboCommunesSearch({
   id,
+  classNameDepartement,
   ...props
-}: ComboSearchProps<CommuneResult> & { id: string }) {
+}: ComboSearchProps<CommuneResult> & {
+  id: string;
+  classNameDepartement?: string;
+}) {
   const group = groupId(id);
   const [departementValue, setDepartementValue] = useHiddenField(
     group,
@@ -84,6 +88,7 @@ export default function ComboCommunesSearch({
           placeholder={placeholderDepartement}
           addForeignDepartement={false}
           value={departementValue}
+          className={classNameDepartement}
           onChange={(_, result) => {
             setDepartementValue(result?.nom ?? '');
             setCodeDepartement(result?.code ?? '');

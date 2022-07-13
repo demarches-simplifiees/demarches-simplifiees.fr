@@ -328,19 +328,21 @@
     }
   }
 
-
   [data-reach-combobox-input] {
-    width: 100%;
-    min-width: 50%;
-    max-width: 100%;
     min-height: 62px;
     border-radius: 4px;
     border: solid 1px $border-grey;
     padding: $default-padding;
-  }
 
-  [data-reach-combobox-input]:focus {
-    border-color: $blue-france-500;
+    &:not([class^='width-']) {
+      width: 100%;
+      min-width: 50%;
+      max-width: 100%;
+    }
+
+    &:focus {
+      border-color: $blue-france-500;
+    }
   }
 
   [data-reach-combobox-token-list] {
