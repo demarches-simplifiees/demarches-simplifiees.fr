@@ -33,7 +33,7 @@ class Logic::ChampValue < Logic::Term
     end
   end
 
-  def to_s = "#{type_de_champ&.libelle} Nº#{stable_id}" # TODO: gerer le cas ou un tdc est supprimé
+  def to_s = type_de_champ&.libelle # TODO: gerer le cas ou un tdc est supprimé
 
   def type
     case type_de_champ&.type_champ # TODO: gerer le cas ou un tdc est supprimé
