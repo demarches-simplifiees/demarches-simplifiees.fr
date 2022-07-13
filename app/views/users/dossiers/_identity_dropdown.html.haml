@@ -1,0 +1,17 @@
+.dropdown.edit-identity-action{ data: { controller: 'menu-button', popover: 'true' } }
+  %button.button.dropdown-button{ data: { menu_button_target: 'button' } }
+    = t("views.shared.dossiers.demande.my_identity")
+
+  #edit-identity-content.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
+    - if dossier.procedure.for_individual
+      = render partial: "shared/dossiers/identite_individual", locals: { individual: dossier.individual }
+
+      .center
+        = link_to t('views.shared.dossiers.demande.edit_identity'), identite_dossier_path(dossier), class: 'button'
+
+    - elsif dossier.etablissement
+      = render partial: "shared/dossiers/identite_entreprise", locals: { etablissement: dossier.etablissement, short_identity: true, profile: "usager" }
+
+      .center
+        = link_to t('views.shared.dossiers.demande.edit_siret'), siret_dossier_path(dossier), class: 'button'
+
