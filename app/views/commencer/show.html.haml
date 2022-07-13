@@ -11,7 +11,8 @@
     = link_to t('views.shared.account.already_user'), commencer_sign_in_path(path: @procedure.path), class: ['button large expand']
 
   - else
-    - dossiers = current_user.dossiers.where(hidden_by_user_at: nil, revision: @revision.draft? ? @revision : @procedure.revisions.where.not(id: @procedure.draft_revision_id))
+    - revision = @revision.draft? ? @revision : @procedure.revisions.where.not(id: @procedure.draft_revision_id)
+    - dossiers = current_user.dossiers.visible_by_user.where(revision: revision)
     - drafts = dossiers.merge(Dossier.state_brouillon)
     - not_drafts = dossiers.merge(Dossier.state_not_brouillon)
 
