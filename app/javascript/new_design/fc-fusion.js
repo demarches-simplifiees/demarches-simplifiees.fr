@@ -11,9 +11,3 @@ export function showNewAccount() {
   show(document.querySelector('.new-account'));
   hide(document.querySelector('.new-account-password-confirmation'));
 }
-
-export function showNewAccountPasswordConfirmation() {
-  hide(document.querySelector('.fusion'));
-  hide(document.querySelector('.new-account'));
-  show(document.querySelector('.new-account-password-confirmation'));
-}

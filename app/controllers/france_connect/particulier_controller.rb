@@ -53,7 +53,7 @@ class FranceConnect::ParticulierController < ApplicationController
       if !user.can_france_connect?
         flash.alert = t('errors.messages.france_connect.forbidden_html', reset_link: new_user_password_path)
 
-        render js: ajax_redirect(root_path)
+        redirect_to root_path
       else
         @fci.update(user: user)
         @fci.delete_merge_token!
@@ -63,8 +63,6 @@ class FranceConnect::ParticulierController < ApplicationController
       end
     else
       flash.alert = t('france_connect.particulier.flash.invalid_password')
-
-      render js: helpers.render_flash
     end
   end
 
@@ -112,10 +110,7 @@ class FranceConnect::ParticulierController < ApplicationController
     if @fci.nil? || !@fci.valid_for_merge?
       flash.alert = t('france_connect.particulier.flash.merger_token_expired', application_name: APPLICATION_NAME)
 
-      respond_to do |format|
-        format.html { redirect_to root_path }
-        format.js { render js: ajax_redirect(root_path) }
-      end
+      redirect_to root_path
     end
   end
 
@@ -134,12 +129,7 @@ class FranceConnect::ParticulierController < ApplicationController
 
     user.update_attribute('loged_in_with_france_connect', User.loged_in_with_france_connects.fetch(:particulier))
 
-    redirection_location = stored_location_for(current_user) || root_path(current_user)
-
-    respond_to do |format|
-      format.html { redirect_to redirection_location }
-      format.js { render js: ajax_redirect(root_path) }
-    end
+    redirect_to stored_location_for(current_user) || root_path(current_user)
   end
 
   def redirect_france_connect_error_connection
