@@ -1,7 +1,8 @@
-.pole_emploi-inputs
+.pole-emploi-inputs
   %div
     = form.label :identifiant, t('.identifiant_label')
     %p.notice= t('.identifiant_notice')
     = form.text_field :identifiant,
       required: champ.mandatory?,
-      aria: { describedby: champ.describedby_id }
+      aria: { describedby: champ.describedby_id },
+      class: "width-33-desktop"
