@@ -377,6 +377,30 @@ class ProcedureRevision < ApplicationRecord
         stable_id: from_type_de_champ.stable_id
       }
     end
+
+    from_condition = from_type_de_champ.condition
+    to_condition = to_type_de_champ.condition
+    if from_condition != to_condition
+      condition_change = {
+        model: :type_de_champ,
+        op: :update,
+        attribute: :condition,
+        label: from_type_de_champ.libelle,
+        private: from_type_de_champ.private?,
+        from: from_type_de_champ.condition.to_s,
+        to: to_type_de_champ.condition.to_s,
+        stable_id: from_type_de_champ.stable_id
+      }
+      if from_condition.nil?
+        condition_change[:condition_op] = :add
+      elsif to_condition.nil?
+        condition_change[:condition_op] = :remove
+      else
+        condition_change[:condition_op] = :update
+      end
+      changes << condition_change
+    end
+
     if to_type_de_champ.drop_down_list?
       if from_type_de_champ.drop_down_list_options != to_type_de_champ.drop_down_list_options
         changes << {
