@@ -290,6 +290,14 @@ describe 'The user' do
       expect(page).to have_field(type_de_champ.libelle, with: '', visible: false)
       choose('Oui')
       expect(page).to have_field(type_de_champ.libelle, with: '', visible: true)
+
+      click_on 'Déposer le dossier'
+      click_on 'Accéder à votre dossier'
+      click_on 'Modifier mon dossier'
+
+      expect(page).to have_field(type_de_champ.libelle, with: '', visible: true)
+      choose('Non')
+      expect(page).to have_field(type_de_champ.libelle, with: '', visible: false)
     end
   end
 
