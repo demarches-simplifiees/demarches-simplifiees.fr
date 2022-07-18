@@ -25,6 +25,7 @@
 #  entreprise_effectif_annuel_annee         :string
 #  entreprise_effectif_mensuel              :decimal(, )
 #  entreprise_effectif_mois                 :string
+#  entreprise_etat_administratif            :string
 #  entreprise_forme_juridique               :string
 #  entreprise_forme_juridique_code          :string
 #  entreprise_nom                           :string
@@ -59,6 +60,11 @@ class Etablissement < ApplicationRecord
 
   validates :siret, presence: true
   validates :dossier_id, uniqueness: { allow_nil: true }
+
+  enum entreprise_etat_administratif: {
+    actif: "actif",
+    fermé: "fermé"
+  }, _prefix: true
 
   def search_terms
     [
@@ -162,6 +168,7 @@ class Etablissement < ApplicationRecord
       effectif_annuel: entreprise_effectif_annuel,
       effectif_annuel_annee: entreprise_effectif_annuel_annee,
       date_creation: entreprise_date_creation,
+      etat_administratif: entreprise_etat_administratif,
       nom: entreprise_nom,
       prenom: entreprise_prenom,
       inline_adresse: inline_adresse
