@@ -17,7 +17,7 @@ class Champs::SiretController < ApplicationController
 
     begin
       etablissement = find_etablissement_with_siret
-    rescue APIEntreprise::API::Error::RequestFailed, APIEntreprise::API::Error::BadGateway, APIEntreprise::API::Error::TimedOut, APIEntreprise::API::Error::ServiceUnavailable
+    rescue APIEntreprise::API::Error::RequestFailed, APIEntreprise::API::Error::BadGateway, APIEntreprise::API::Error::TimedOut, APIEntreprise::API::Error::ServiceUnavailable, APIEntrepriseToken::TokenError
       # i18n-tasks-use t('errors.messages.siret_network_error')
       return siret_error(:network_error)
     end
