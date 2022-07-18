@@ -9,7 +9,6 @@ fr:
         path: Lien public
         organisation: Organisme
         duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers sur demarches-simplifiees.fr
-        duree_conservation_dossiers_hors_ds: Durée de conservation des dossiers hors demarches-simplifiees.fr
         aasm_state/brouillon: Brouillon
         aasm_state/publiee: Publiée
         aasm_state/close: Close
