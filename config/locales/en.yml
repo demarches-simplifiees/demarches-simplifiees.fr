@@ -133,6 +133,7 @@ en:
             write_message_to_administration_placeholder: "Write your message to the administration here"
         demande:
           requester_identity: "Identity of the requester"
+          my_identity: "My identity"
           form: "Form"
           edit_siret: "Edit SIRET"
           edit_identity: "Edit identity data"

@@ -52,4 +52,27 @@ describe 'dossiers/show/header.html.haml', type: :view do
       end
     end
   end
+
+  describe "identity edit" do
+    context "when the identity is individual" do
+      let(:procedure) { create(:procedure, for_individual: true) }
+      let(:dossier) { create(:dossier, :with_individual, state: "brouillon", procedure: procedure) }
+
+      it "display identity with an edit link" do
+        expect(rendered).to have_text(/Nom\s+#{dossier.individual.nom}/)
+        expect(rendered).to have_link("Modifier l’identité")
+      end
+    end
+
+    context "when the identity is an enterprise" do
+      let(:procedure) { create(:procedure, for_individual: false) }
+      let(:dossier) { create(:dossier, :with_entreprise, state: "brouillon", procedure: procedure) }
+
+      it "display short identity with an edit siret link" do
+        expect(rendered).to have_text(/Dénomination :\s+#{dossier.etablissement.entreprise_raison_sociale}/)
+        expect(rendered).not_to have_text("Numéro de TVA")
+        expect(rendered).to have_link("Modifier le SIRET")
+      end
+    end
+  end
 end

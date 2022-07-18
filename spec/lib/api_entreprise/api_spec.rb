@@ -267,7 +267,7 @@ describe APIEntreprise::API do
     end
 
     it 'makes no call to api-entreprise' do
-      subject
+      expect { subject }.to raise_error(APIEntrepriseToken::TokenError)
       expect(WebMock).not_to have_requested(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}/)
     end
   end
