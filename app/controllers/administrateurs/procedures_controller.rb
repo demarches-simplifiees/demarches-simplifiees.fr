@@ -289,6 +289,10 @@ module Administrateurs
       redirect_to admin_procedure_experts_path(@procedure)
     end
 
+    def champs
+      @procedure = Procedure.includes(draft_revision: { revision_types_de_champ_public: :type_de_champ }).find(@procedure.id)
+    end
+
     private
 
     def apercu_tab
