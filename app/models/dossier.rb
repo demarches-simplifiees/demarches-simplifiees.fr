@@ -1050,6 +1050,7 @@ class Dossier < ApplicationRecord
         ['Entreprise SIRET siège social', etablissement&.entreprise_siret_siege_social],
         ['Entreprise code effectif entreprise', etablissement&.entreprise_code_effectif_entreprise],
         ['Entreprise date de création', etablissement&.entreprise_date_creation],
+        ['Entreprise état administratif', etablissement&.entreprise_etat_administratif],
         ['Entreprise nom', etablissement&.entreprise_nom],
         ['Entreprise prénom', etablissement&.entreprise_prenom],
         ['Association RNA', etablissement&.association_rna],
