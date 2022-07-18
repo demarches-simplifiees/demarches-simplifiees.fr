@@ -1,0 +1,13 @@
+diff --git a/node_modules/@webcomponents/template/template.js b/node_modules/@webcomponents/template/template.js
+index cebfac4..96e03e7 100644
+--- a/node_modules/@webcomponents/template/template.js
++++ b/node_modules/@webcomponents/template/template.js
+@@ -323,7 +323,7 @@
+     var defineOuterHTML = function defineOuterHTML(obj) {
+       Object.defineProperty(obj, 'outerHTML', {
+         get: function () {
+-          return `<${TEMPLATE_TAG}>${this.innerHTML}</${TEMPLATE_TAG}>`;
++          return "<" + TEMPLATE_TAG +">" + this.innerHTML + "</" + TEMPLATE_TAG + ">";
+         },
+         set: function (innerHTML) {
+           if (this.parentNode) {
