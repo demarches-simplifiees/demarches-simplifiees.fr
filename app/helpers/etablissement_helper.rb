@@ -39,4 +39,13 @@ module EtablissementHelper
   def pretty_date_exercice(date)
     date.sub(/(?<year>\d{4})(?<month>\d{2})/, '\k<year>') if date.present?
   end
+
+  def humanized_entreprise_etat_administratif(etablissement)
+    case etablissement.entreprise_etat_administratif&.to_sym
+    when :actif
+      "en activité"
+    when :fermé
+      "fermé"
+    end
+  end
 end
