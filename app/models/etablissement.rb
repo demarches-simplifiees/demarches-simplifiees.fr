@@ -118,6 +118,7 @@ class Etablissement < ApplicationRecord
       ['Entreprise SIRET siège social', :entreprise_siret_siege_social],
       ['Entreprise code effectif entreprise', :entreprise_code_effectif_entreprise],
       ['Entreprise date de création', :entreprise_date_creation],
+      ['Entreprise état administratif', :entreprise_etat_administratif],
       ['Entreprise nom', :entreprise_nom],
       ['Entreprise prénom', :entreprise_prenom],
       ['Association RNA', :association_rna],
