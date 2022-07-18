@@ -22,6 +22,10 @@
       "date_reference": "2014",
       "intitule": "200 à 249 salariés"
     },
+    "etat_administratif": {
+      "value": "A",
+      "date_cessation": null
+    },
     "exercices": [
       {
         "chiffre_affaires": null,
