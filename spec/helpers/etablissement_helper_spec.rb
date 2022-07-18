@@ -4,12 +4,14 @@ RSpec.describe EtablissementHelper, type: :helper do
   let(:enseigne) { "mon enseigne" }
   let(:nom) { 'mon nom' }
   let(:prenom) { 'mon prenom' }
+  let(:etat_administratif) { 'actif' }
   let(:etablissement_params) do
     {
       enseigne: enseigne,
       entreprise_capital_social: 123_000,
       entreprise_code_effectif_entreprise: code_effectif,
       entreprise_raison_sociale: raison_sociale,
+      entreprise_etat_administratif: etat_administratif,
       entreprise_nom: nom,
       entreprise_prenom: prenom
     }
@@ -71,5 +73,24 @@ RSpec.describe EtablissementHelper, type: :helper do
   describe '#pretty_date_exercice' do
     subject { pretty_date_exercice("201908") }
     it { is_expected.to eq("2019") }
+  end
+
+  describe "#humanized_entreprise_etat_administratif" do
+    subject { humanized_entreprise_etat_administratif(etablissement) }
+
+    context "when etat_administratif is A" do
+      let(:etat_administratif) { "actif" }
+      it { is_expected.to eq("en activité") }
+    end
+
+    context "when etat_administratif is F" do
+      let(:etat_administratif) { "fermé" }
+      it { is_expected.to eq("fermé") }
+    end
+
+    context "when etat_administratif is nil" do
+      let(:etat_administratif) { nil }
+      it { is_expected.to be_nil }
+    end
   end
 end
