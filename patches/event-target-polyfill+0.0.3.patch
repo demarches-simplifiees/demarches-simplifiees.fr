@@ -22,3 +22,32 @@ index 82f7f42..c7b65b7 100644
  if (typeof root.EventTarget === "undefined" || !isConstructor(root.Event)) {
    root.EventTarget = (function () {
      function EventTarget() {
+@@ -40,7 +27,8 @@ if (typeof root.EventTarget === "undefined" || !isConstructor(root.Event)) {
+     ) {
+       if (arguments.length < 2) {
+         throw new TypeError(
+-          `TypeError: Failed to execute 'addEventListener' on 'EventTarget': 2 arguments required, but only ${arguments.length} present.`
++          "TypeError: Failed to execute 'addEventListener' on 'EventTarget': 2 arguments required, " \
++          "but only " + arguments.length.toString() + "present."
+         );
+       }
+       const __listeners = this.__listeners;
+@@ -62,7 +50,8 @@ if (typeof root.EventTarget === "undefined" || !isConstructor(root.Event)) {
+     ) {
+       if (arguments.length < 2) {
+         throw new TypeError(
+-          `TypeError: Failed to execute 'addEventListener' on 'EventTarget': 2 arguments required, but only ${arguments.length} present.`
++          "TypeError: Failed to execute 'addEventListener' on 'EventTarget': 2 arguments required, " \
++          "but only " + arguments.length.toString() + "present."
+         );
+       }
+       const __listeners = this.__listeners;
+@@ -78,7 +67,7 @@ if (typeof root.EventTarget === "undefined" || !isConstructor(root.Event)) {
+     EventTarget.prototype.dispatchEvent = function (event) {
+       if (!(event instanceof Event)) {
+         throw new TypeError(
+-          `Failed to execute 'dispatchEvent' on 'EventTarget': parameter 1 is not of type 'Event'.`
++          "Failed to execute 'dispatchEvent' on 'EventTarget': parameter 1 is not of type 'Event'."
+         );
+       }
+       const type = event.type;
