@@ -82,7 +82,14 @@ module Administrateurs
     end
 
     def show
-      @procedure = current_administrateur.procedures.find(params[:id])
+      @procedure = current_administrateur
+        .procedures
+        .includes(
+          published_revision: { revision_types_de_champ: :type_de_champ },
+          draft_revision: { revision_types_de_champ: :type_de_champ }
+        )
+        .find(params[:id])
+
       @current_administrateur = current_administrateur
       @procedure_lien = commencer_url(path: @procedure.path)
       @procedure_lien_test = commencer_test_url(path: @procedure.path)
