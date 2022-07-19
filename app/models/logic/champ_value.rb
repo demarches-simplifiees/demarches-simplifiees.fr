@@ -22,14 +22,18 @@ class Logic::ChampValue < Logic::Term
   end
 
   def compute(champs)
+    targeted_champ = champ(champs)
+
+    return nil if !targeted_champ.visible?
+
     case type_de_champ.type_champ
     when MANAGED_TYPE_DE_CHAMP.fetch(:yes_no),
       MANAGED_TYPE_DE_CHAMP.fetch(:checkbox)
-      champ(champs).true?
+      targeted_champ.true?
     when MANAGED_TYPE_DE_CHAMP.fetch(:integer_number), MANAGED_TYPE_DE_CHAMP.fetch(:decimal_number)
-      champ(champs).for_api
+      targeted_champ.for_api
     when MANAGED_TYPE_DE_CHAMP.fetch(:drop_down_list)
-      champ(champs).value
+      targeted_champ.value
     end
   end
 
