@@ -5,10 +5,8 @@ import { Application } from '@hotwired/stimulus';
 import '@gouvfr/dsfr/dist/dsfr.module.js';
 
 import '../shared/activestorage/ujs';
-import '../shared/remote-poller';
 import '../shared/safari-11-file-xhr-workaround';
 import '../shared/toggle-target';
-import '../shared/ujs-error-handling';
 
 import { registerControllers } from '../shared/stimulus-loader';
 
