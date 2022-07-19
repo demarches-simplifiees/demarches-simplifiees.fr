@@ -1,5 +1,5 @@
 diff --git a/node_modules/formdata-polyfill/FormData.js b/node_modules/formdata-polyfill/FormData.js
-index 8e73660..7b64ba4 100644
+index 8e73660..133dcd0 100644
 --- a/node_modules/formdata-polyfill/FormData.js
 +++ b/node_modules/formdata-polyfill/FormData.js
 @@ -71,7 +71,7 @@ if (typeof Blob !== 'undefined' && (typeof FormData === 'undefined' || !FormData
@@ -7,7 +7,7 @@ index 8e73660..7b64ba4 100644
    function ensureArgs (args, expected) {
      if (args.length < expected) {
 -      throw new TypeError(`${expected} argument required, but only ${args.length} present.`)
-+      throw new TypeError(expected + " argument required, but only " + args.length.toString() + " present.")
++      throw new TypeError("".concat(expected, " argument required, but only ").concat(args.length, " present."))
      }
    }
  
@@ -16,46 +16,46 @@ index 8e73660..7b64ba4 100644
          const boundary = '----formdata-polyfill-' + Math.random(),
            chunks = [],
 -          p = `--${boundary}\r\nContent-Disposition: form-data; name="`
-+          p = "--" + boundary +" \r\nContent-Disposition: form-data; name=\""
-         this.forEach((value, name) => typeof value == 'string'
+-        this.forEach((value, name) => typeof value == 'string'
 -          ? chunks.push(p + escape(normalizeLinefeeds(name)) + `"\r\n\r\n${normalizeLinefeeds(value)}\r\n`)
 -          : chunks.push(p + escape(normalizeLinefeeds(name)) + `"; filename="${escape(value.name)}"\r\nContent-Type: ${value.type||"application/octet-stream"}\r\n\r\n`, value, `\r\n`))
 -        chunks.push(`--${boundary}--`)
-+          ? chunks.push(p + escape(normalizeLinefeeds(name)) + "\"\r\n\r\n" + normalizeLinefeeds(value) + "\r\n")
-+          : chunks.push(p + escape(normalizeLinefeeds(name)) + "\"; filename=\"" + escape(value.name) + "\r\nContent-Type: " + (value.type||"application/octet-stream") + "\r\n\r\n", value, "\r\n"))
-+        chunks.push("--"+boundary+"--")
++          p = "--".concat(boundary, "\r\nContent-Disposition: form-data; name=\"");
++          this.forEach((value, name) => typeof value == 'string'
++          ? chunks.push(p + escape(normalizeLinefeeds(name)) + "\"\r\n\r\n".concat(normalizeLinefeeds(value), "\r\n"))
++          : chunks.push(p + escape(normalizeLinefeeds(name)) + "\"; filename=\"".concat(escape(value.name), "\"\r\nContent-Type: ").concat(value.type || "application/octet-stream", "\r\n\r\n"), value, "\r\n"))
++        chunks.push("--".concat(boundary, "--"));
          return new Blob(chunks, {
            type: "multipart/form-data; boundary=" + boundary
          })
 diff --git a/node_modules/formdata-polyfill/formdata-to-blob.js b/node_modules/formdata-polyfill/formdata-to-blob.js
-index 5a0a517..0b7fbd7 100644
+index 5a0a517..05d1aca 100644
 --- a/node_modules/formdata-polyfill/formdata-to-blob.js
 +++ b/node_modules/formdata-polyfill/formdata-to-blob.js
-@@ -16,22 +16,22 @@ const escape = (str, filename) =>
+@@ -16,22 +16,17 @@ const escape = (str, filename) =>
  export function formDataToBlob (formData, BlobClass = Blob) {
    const boundary = ('----formdata-polyfill-' + Math.random())
    const chunks = []
 -  const prefix = `--${boundary}\r\nContent-Disposition: form-data; name="`
-+  const prefix = "--"+$boundary+"\r\nContent-Disposition: form-data; name=\""
++  var prefix = "--".concat(boundary, "\r\nContent-Disposition: form-data; name=\"");
  
    for (let [name, value] of formData) {
      if (typeof value === 'string') {
 -      chunks.push(prefix + escape(name) + `"\r\n\r\n${value.replace(/\r(?!\n)|(?<!\r)\n/g, '\r\n')}\r\n`)
-+      chunks.push(prefix + escape(name) + "\"\r\n\r\n" + value.replace(/\r(?!\n)|(?<!\r)\n/g, '\r\n') + "\r\n")
++      chunks.push(prefix + escape(name) + "\"\r\n\r\n".concat(value.replace(/\r(?!\n)|(?<!\r)\n/g, '\r\n'), "\r\n"));
      } else {
-       chunks.push(
+-      chunks.push(
 -        prefix + escape(name) + `"; filename="${escape(value.name, 1)}"\r\n` +
 -        `Content-Type: ${value.type || 'application/octet-stream'}\r\n\r\n`,
-+        prefix + escape(name) + "\"; filename=\"" + escape(value.name, 1) + "\r\n" +
-+        "Content-Type: " + (value.type || 'application/octet-stream') + "\r\n\r\n",
-         value,
-         '\r\n'
-       )
+-        value,
+-        '\r\n'
+-      )
++      chunks.push(prefix + escape(name) + "\"; filename=\"".concat(escape(value.name, 1), "\"\r\n") + "Content-Type: ".concat(value.type || 'application/octet-stream', "\r\n\r\n"), value, '\r\n');
      }
    }
  
 -  chunks.push(`--${boundary}--`)
-+  chunks.push("--" + boundary + "--")
++  chunks.push("--".concat(boundary, "--"));
  
    return new BlobClass(chunks, {
      type: 'multipart/form-data; boundary=' + boundary
