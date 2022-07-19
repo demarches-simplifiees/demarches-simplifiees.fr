@@ -9,6 +9,14 @@ fr:
         adresse: 'Adresse postale'
         email: 'Email de contact'
         telephone: 'Téléphone'
+    errors:
+      models:
+        service:
+          attributes:
+            siret:
+              format: "Le numéro SIRET %{message}"
+              length: "doit comporter exactement 14 chiffres"
+              checksum: "est invalide"
   type_organisme:
     administration_centrale: 'Administration centrale'
     association: 'Association'

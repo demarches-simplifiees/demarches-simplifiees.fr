@@ -20,6 +20,10 @@
 
   = f.select :type_organisme, Service.type_organismes.keys.map { |key| [ I18n.t("type_organisme.#{key}"), key] }, class: 'width-33-desktop width-100-mobile'
 
+  = f.label :siret do
+    Numéro SIRET
+    %span.mandatory *
+  = f.text_field :siret, placeholder: "14 chiffres"
 
   = render Dsfr::CalloutComponent.new(title: "Informations de contact") do |c|
     - c.body do
