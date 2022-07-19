@@ -709,6 +709,7 @@ ActiveRecord::Schema.define(version: 2022_09_02_151920) do
     t.text "horaires"
     t.string "nom", null: false
     t.string "organisme"
+    t.string "siret"
     t.string "telephone"
     t.string "type_organisme", null: false
     t.datetime "updated_at", null: false
