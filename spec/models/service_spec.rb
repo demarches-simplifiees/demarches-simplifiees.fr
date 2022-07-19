@@ -10,7 +10,8 @@ describe Service, type: :model do
         telephone: '012345678',
         horaires: 'du lundi au vendredi',
         adresse: '12 rue des schtroumpfs',
-        administrateur_id: administrateur.id
+        administrateur_id: administrateur.id,
+        siret: "35600082800018"
       }
     end
 
@@ -37,6 +38,18 @@ describe Service, type: :model do
 
       valid_phone_numbers.each do |tel|
         subject.telephone = tel
+        expect(subject).to be_valid
+      end
+    end
+
+    describe "siret" do
+      it 'should not be invalid' do
+        subject.siret = "012345678901234"
+        expect(subject).not_to be_valid
+      end
+
+      it 'should be optional' do
+        subject.siret = nil
         expect(subject).to be_valid
       end
     end

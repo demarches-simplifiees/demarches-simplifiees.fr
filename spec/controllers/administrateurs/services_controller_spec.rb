@@ -18,7 +18,8 @@ describe Administrateurs::ServicesController, type: :controller do
             email: 'email@toto.com',
             telephone: '1234',
             horaires: 'horaires',
-            adresse: 'adresse'
+            adresse: 'adresse',
+            siret: "35600082800018"
           },
           procedure_id: procedure.id
         }
@@ -33,6 +34,7 @@ describe Administrateurs::ServicesController, type: :controller do
       it { expect(Service.last.telephone).to eq('1234') }
       it { expect(Service.last.horaires).to eq('horaires') }
       it { expect(Service.last.adresse).to eq('adresse') }
+      it { expect(Service.last.siret).to eq('35600082800018') }
       it { expect(response).to redirect_to(admin_services_path(procedure_id: procedure.id)) }
     end
 

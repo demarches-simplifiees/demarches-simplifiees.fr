@@ -9,3 +9,11 @@ en:
         adresse: 'Mail address'
         email: 'Email'
         telephone: 'Phone'
+    errors:
+      models:
+        service:
+          attributes:
+            siret:
+              format: "SIRET number %{message}"
+              length: "must contain exactly 14 digits"
+              checksum: "is invalid"
