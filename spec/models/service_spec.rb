@@ -14,32 +14,30 @@ describe Service, type: :model do
       }
     end
 
-    it { expect(Service.new(params).valid?).to be_truthy }
+    subject { Service.new(params) }
+
+    it { expect(Service.new(params)).to be_valid }
 
     it 'should forbid invalid phone numbers' do
-      service = Service.create(params)
       invalid_phone_numbers = ["1", "Néant", "01 60 50 40 30 20"]
 
       invalid_phone_numbers.each do |tel|
-        service.telephone = tel
-        expect(service.valid?).to be_falsey
+        subject.telephone = tel
+        expect(subject).not_to be_valid
       end
     end
 
     it 'should accept no phone numbers' do
-      service = Service.create(params)
-      service.telephone = nil
-
-      expect(service.valid?).to be_truthy
+      subject.telephone = nil
+      expect(subject).to be_valid
     end
 
     it 'should accept valid phone numbers' do
-      service = Service.create(params)
       valid_phone_numbers = ["3646", "273115", "0160376983", "01 60 50 40 30 ", "+33160504030"]
 
       valid_phone_numbers.each do |tel|
-        service.telephone = tel
-        expect(service.valid?).to be_truthy
+        subject.telephone = tel
+        expect(subject).to be_valid
       end
     end
 
@@ -47,25 +45,25 @@ describe Service, type: :model do
       before { Service.create(params) }
 
       context 'checks uniqueness of administrateur, name couple' do
-        it { expect(Service.create(params).valid?).to be_falsey }
+        it { expect(Service.create(params)).not_to be_valid }
       end
     end
 
     context 'of type_organisme' do
       it 'should be set' do
-        expect(Service.new(params.except(:type_organisme)).valid?).to be_falsey
+        expect(Service.new(params.except(:type_organisme))).not_to be_valid
       end
     end
 
     context 'of nom' do
       it 'should be set' do
-        expect(Service.new(params.except(:nom)).valid?).to be_falsey
+        expect(Service.new(params.except(:nom))).not_to be_valid
       end
     end
 
     context 'of administrateur' do
       it 'should be set' do
-        expect(Service.new(params.except(:administrateur_id)).valid?).to be_falsey
+        expect(Service.new(params.except(:administrateur_id))).not_to be_valid
       end
     end
 
