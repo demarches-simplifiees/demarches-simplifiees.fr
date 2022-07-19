@@ -5,7 +5,7 @@ import { Application } from '@hotwired/stimulus';
 import '@gouvfr/dsfr/dist/dsfr.module.js';
 
 import '../shared/activestorage/ujs';
-import '../shared/safari-11-file-xhr-workaround';
+import '../shared/safari-11-empty-file-workaround';
 import '../shared/toggle-target';
 
 import { registerControllers } from '../shared/stimulus-loader';
