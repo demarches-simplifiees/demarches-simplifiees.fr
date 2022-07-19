@@ -11,14 +11,15 @@
     = link_to t('views.shared.account.already_user'), commencer_sign_in_path(path: @procedure.path), class: ['button large expand']
 
   - else
-    - dossiers = current_user.dossiers.where(hidden_by_user_at: nil, revision: @revision.draft? ? @revision : @procedure.revisions.where.not(id: @procedure.draft_revision_id))
+    - revision = @revision.draft? ? @revision : @procedure.revisions.where.not(id: @procedure.draft_revision_id)
+    - dossiers = current_user.dossiers.visible_by_user.where(revision: revision)
     - drafts = dossiers.merge(Dossier.state_brouillon)
     - not_drafts = dossiers.merge(Dossier.state_not_brouillon)
 
-    - if dossiers.count == 0
+    - if dossiers.empty?
       = link_to t('views.commencer.show.start_procedure'), url_for_new_dossier(@revision), class: ['button large expand primary']
 
-    - elsif drafts.count == 1 && not_drafts.count == 0
+    - elsif drafts.size == 1 && not_drafts.empty?
       - dossier = drafts.first
       %h2.huge-title= t('views.commencer.show.already_draft')
       %p
@@ -26,7 +27,7 @@
       = link_to t('views.commencer.show.continue_file'), brouillon_dossier_path(dossier), class: ['button large expand primary']
       = link_to t('views.commencer.show.start_new_file'), url_for_new_dossier(@revision), class: ['button large expand']
 
-    - elsif not_drafts.count == 1
+    - elsif not_drafts.size == 1
       - dossier = not_drafts.first
       %h2.huge-title= t('views.commencer.show.already_not_draft')
       %p
