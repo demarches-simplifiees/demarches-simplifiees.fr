@@ -8,6 +8,7 @@
 #  horaires          :text
 #  nom               :string           not null
 #  organisme         :string
+#  siret             :string
 #  telephone         :string
 #  type_organisme    :string           not null
 #  created_at        :datetime         not null
