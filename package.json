@@ -18,6 +18,7 @@
     "@webcomponents/template": "^1.5.0",
     "chartkick": "^4.2.0",
     "core-js": "^3.23.3",
+    "custom-event-polyfill": "^1.0.7",
     "debounce": "^1.2.1",
     "dom4": "^2.1.6",
     "email-butler": "^1.0.13",
