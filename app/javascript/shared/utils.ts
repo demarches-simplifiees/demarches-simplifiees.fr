@@ -70,15 +70,15 @@ export function getConfig() {
   return Gon.parse(window.gon);
 }
 
-export function show(el: HTMLElement | null) {
+export function show(el: Element | null) {
   el?.classList.remove('hidden');
 }
 
-export function hide(el: HTMLElement | null) {
+export function hide(el: Element | null) {
   el?.classList.add('hidden');
 }
 
-export function toggle(el: HTMLElement | null, force?: boolean) {
+export function toggle(el: Element | null, force?: boolean) {
   if (force == undefined) {
     el?.classList.toggle('hidden');
   } else if (force) {
@@ -88,11 +88,15 @@ export function toggle(el: HTMLElement | null, force?: boolean) {
   }
 }
 
-export function enable(el: HTMLInputElement | HTMLButtonElement | null) {
+export function enable(
+  el: HTMLSelectElement | HTMLInputElement | HTMLButtonElement | null
+) {
   el && (el.disabled = false);
 }
 
-export function disable(el: HTMLInputElement | HTMLButtonElement | null) {
+export function disable(
+  el: HTMLSelectElement | HTMLInputElement | HTMLButtonElement | null
+) {
   el && (el.disabled = true);
 }
 

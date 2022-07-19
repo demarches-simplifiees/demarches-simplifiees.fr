@@ -83,13 +83,13 @@ class Champs::LinkedDropDownListChamp < Champ
     [primary_value, secondary_value]
   end
 
+  def has_secondary_options_for_primary?
+    primary_value.present? && secondary_options[primary_value]&.any?(&:present?)
+  end
+
   private
 
   def pack_value(primary, secondary)
     self.value = JSON.generate([primary, secondary])
-  end
-
-  def has_secondary_options_for_primary?
-    primary_value.present? && secondary_options[primary_value]&.any?(&:present?)
   end
 end
