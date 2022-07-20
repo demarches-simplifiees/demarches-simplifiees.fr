@@ -15,6 +15,8 @@ class APIEntreprise::PrivilegesAdapter < APIEntreprise::Adapter
   private
 
   def get_resource
-    APIEntreprise::API.privileges(@token)
+    api.tap do
+      _1.token = @token
+    end.privileges
   end
 end
