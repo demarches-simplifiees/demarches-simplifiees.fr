@@ -1,0 +1,8 @@
+= link_to edit_admin_procedure_path(@procedure), id: 'presentation', class: 'card-admin' do
+  %div
+    %span.icon.accept
+    %p.card-admin-status-accept Validé
+  %div
+    %p.card-admin-title= t('.title')
+    %p.card-admin-subtitle Logo, nom, description
+  %p.button= t('views.shared.actions.edit')

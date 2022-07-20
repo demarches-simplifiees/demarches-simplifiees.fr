@@ -1,0 +1,19 @@
+= link_to admin_procedure_groupe_instructeurs_path(@procedure), id: 'groupe-instructeurs', class: 'card-admin' do
+  - if @procedure.routee? || @procedure.instructeurs.size > 1
+    %div
+      %span.icon.accept
+      %p.card-admin-status-accept Validé
+  - else
+    %div
+      %span.icon.clock
+      %p.card-admin-status-todo À faire
+  %div
+    %p.card-admin-title
+      - if @procedure.routee?
+        %span.badge.baseline= @procedure.groupe_instructeurs.size
+      - else
+        %span.badge.baseline= @procedure.instructeurs.size
+
+      = @procedure.routee? ? t('.routee.title', count: @procedure.groupe_instructeurs.size) : t('.title', count: @procedure.instructeurs.size)
+    %p.card-admin-subtitle Suivi des dossiers
+  %p.button= t('views.shared.actions.edit')

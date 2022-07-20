@@ -1,0 +1,13 @@
+= link_to edit_admin_procedure_dossier_submitted_message_path(@procedure), class: 'card-admin' do
+  - if @procedure.active_dossier_submitted_message.present?
+    %div
+      %span.icon.accept
+      %p.card-admin-status-accept Validé
+  - else
+    %div
+      %span.icon.clock
+      %p.card-admin-status-todo À configurer
+  %div
+    %p.card-admin-title= t('.title')
+    %p.card-admin-subtitle Orienter l'usager suite à l'envoi de son dossier
+  %p.button= t('views.shared.actions.edit')

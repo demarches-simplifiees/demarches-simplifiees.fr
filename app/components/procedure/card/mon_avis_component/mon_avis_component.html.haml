@@ -1,0 +1,13 @@
+= link_to monavis_admin_procedure_path(@procedure), class: 'card-admin' do
+  - if @procedure.monavis_embed.present?
+    %div
+      %span.icon.accept
+      %p.card-admin-status-accept Validé
+  - else
+    %div
+      %span.icon.clock
+      %p.card-admin-status-todo À configurer
+  %div
+    %p.card-admin-title= t('.title')
+    %p.card-admin-subtitle Avis des usagers sur votre démarche
+  %p.button= t('views.shared.actions.edit')
