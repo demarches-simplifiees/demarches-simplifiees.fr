@@ -11,6 +11,12 @@ class DossierPreloader
     dossiers
   end
 
+  def all
+    dossiers = @dossiers.to_a
+    load_dossiers(dossiers)
+    dossiers
+  end
+
   private
 
   # returns: { revision_id : { type_de_champ_id : position } }
