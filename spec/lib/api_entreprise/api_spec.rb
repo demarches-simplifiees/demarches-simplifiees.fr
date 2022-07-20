@@ -258,6 +258,24 @@ describe APIEntreprise::API do
     end
   end
 
+  describe '.privileges' do
+    let(:api) { described_class.new }
+    let(:status) { 200 }
+    let(:body) { File.read('spec/fixtures/files/api_entreprise/privileges.json') }
+    subject { api.privileges }
+
+    before do
+      api.token = token
+
+      stub_request(:get, "https://entreprise.api.gouv.fr/v2/privileges")
+        .to_return(body: body, status: status)
+    end
+
+    context 'when token is authorized' do
+      it { expect(subject).to eq(JSON.parse(body, symbolize_names: true)) }
+    end
+  end
+
   describe 'with expired token' do
     let(:siren) { '111111111' }
     subject { described_class.new(procedure_id).entreprise(siren) }
