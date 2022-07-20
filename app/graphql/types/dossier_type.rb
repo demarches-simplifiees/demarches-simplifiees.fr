@@ -120,6 +120,8 @@ module Types
         Loaders::Champ
           .for(object, private: false)
           .load(ApplicationRecord.id_from_typed_id(id))
+      elsif object.champs.loaded?
+        object.champs
       else
         Loaders::Association.for(object.class, champs: :type_de_champ).load(object)
       end
@@ -130,6 +132,8 @@ module Types
         Loaders::Champ
           .for(object, private: true)
           .load(ApplicationRecord.id_from_typed_id(id))
+      elsif object.champs_private.loaded?
+        object.champs_private
       else
         Loaders::Association.for(object.class, champs_private: :type_de_champ).load(object)
       end
