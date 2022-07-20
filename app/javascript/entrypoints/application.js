@@ -18,8 +18,6 @@ import '../new_design/procedure-form';
 import '../new_design/spinner';
 import '../new_design/support';
 
-import '../new_design/champs/linked-drop-down-list';
-
 import {
   toggleCondidentielExplanation,
   replaceSemicolonByComma
