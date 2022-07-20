@@ -7,7 +7,7 @@ class APIEntreprise::AttestationSocialeAdapter < APIEntreprise::Adapter
   private
 
   def get_resource
-    APIEntreprise::API.attestation_sociale(siren, @procedure_id)
+    api(@procedure_id).attestation_sociale(siren)
   end
 
   def process_params

@@ -7,7 +7,7 @@ class APIEntreprise::BilansBdfAdapter < APIEntreprise::Adapter
   private
 
   def get_resource
-    APIEntreprise::API.bilans_bdf(siren, @procedure_id)
+    api(@procedure_id).bilans_bdf(siren)
   end
 
   def process_params

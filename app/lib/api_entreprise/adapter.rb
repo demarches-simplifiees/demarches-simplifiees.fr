@@ -6,6 +6,10 @@ class APIEntreprise::Adapter
     @procedure_id = procedure_id
   end
 
+  def api(procedure_id = nil)
+    APIEntreprise::API.new(procedure_id)
+  end
+
   def data_source
     begin
       @data_source ||= get_resource
