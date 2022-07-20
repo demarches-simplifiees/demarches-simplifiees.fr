@@ -7,6 +7,7 @@
 .container
   %h1.mb-2
     Archives
+    = render Dossiers::ExportComponent.new(procedure: @procedure, exports: @exports, export_url: method(:download_admin_procedure_exports_path))
 
   = render partial: "shared/archives/notice"
   = render partial: "shared/archives/table", locals: {count_dossiers_termines_by_month: @count_dossiers_termines_by_month, archives: @archives, average_dossier_weight: @average_dossier_weight, procedure: @procedure }

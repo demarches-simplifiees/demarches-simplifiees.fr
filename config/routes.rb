@@ -339,6 +339,8 @@ Rails.application.routes.draw do
   scope module: 'instructeurs', as: 'instructeur' do
     resources :procedures, only: [:index, :show], param: :procedure_id do
       member do
+        resources :archives, only: [:index, :create]
+
         resources :groupes, only: [:index, :show], controller: 'groupe_instructeurs' do
           member do
             post 'add_instructeur'
@@ -396,8 +398,6 @@ Rails.application.routes.draw do
             get 'telecharger_pjs' => 'dossiers#telecharger_pjs'
           end
         end
-
-        resources :archives, only: [:index, :create]
       end
     end
   end
@@ -409,6 +409,13 @@ Rails.application.routes.draw do
   scope module: 'administrateurs', path: 'admin', as: 'admin' do
     resources :procedures do
       resources :archives, only: [:index, :create]
+      resources :exports, only: [] do
+        collection do
+          get 'download'
+          post 'download'
+        end
+      end
+
       collection do
         get 'new_from_existing'
       end
