@@ -11,7 +11,7 @@
 
       .procedure-actions
         - if @can_download_dossiers
-          = render Dossiers::ExportComponent.new(procedure: @procedure, exports: @exports)
+          = render Dossiers::ExportComponent.new(procedure: @procedure, exports: @exports, export_url: method(:download_export_instructeur_procedure_path))
 
     .container.flex= render partial: "tabs", locals: { procedure: @procedure,
         statut: @statut,
@@ -65,7 +65,7 @@
           = render partial: "dossiers_filter", locals: { procedure: @procedure, procedure_presentation: @procedure_presentation, current_filters: @current_filters, statut: @statut, filterable_fields_for_select: @filterable_fields_for_select }
         - if @dossiers_count > 0
           .dossiers-export
-            = render Dossiers::ExportComponent.new(procedure: @procedure, exports: @exports, statut: @statut, count: @dossiers_count)
+            = render Dossiers::ExportComponent.new(procedure: @procedure, exports: @exports, statut: @statut, count: @dossiers_count, export_url: method(:download_export_instructeur_procedure_path))
 
       %table.table.dossiers-table.hoverable
         %thead
