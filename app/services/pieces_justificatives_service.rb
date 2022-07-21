@@ -113,24 +113,16 @@ class PiecesJustificativesService
     pdfs = []
 
     procedure = dossiers.first.procedure
-    tdc_by_id = TypeDeChamp
-      .joins(:revisions)
-      .where(revisions: { id: procedure.revisions })
-      .to_a
-      .index_by(&:id)
+    dossiers = dossiers.includes(:individual, :traitement, :etablissement, user: :france_connect_information, avis: :expert, commentaires: [:instructeur, :expert])
+    dossiers = DossierPreloader.new(dossiers).in_batches
+    dossiers.each do |dossier|
+      dossier.association(:procedure).target = procedure
 
-    dossiers
-      .includes(:champs, :champs_private, :commentaires, :individual,
-                :traitement, :etablissement,
-                user: :france_connect_information, avis: :expert)
-      .find_each do |dossier|
       pdf = ApplicationController
         .render(template: 'dossiers/show', formats: [:pdf],
                 assigns: {
                   include_infos_administration: true,
-                  dossier: dossier,
-                  procedure: procedure,
-                  tdc_by_id: tdc_by_id
+                  dossier: dossier
                 })
 
       a = FakeAttachment.new(

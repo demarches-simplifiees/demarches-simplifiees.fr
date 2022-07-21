@@ -18,4 +18,14 @@ namespace :benchmarks do
       x.report("Démarche 55824") { SerializerService.dossiers(p_55824) }
     end
   end
+
+  desc 'Benchmark pdf'
+  task pdf: :environment do
+    p_45964 = Procedure.find(45964)
+    p_55824 = Procedure.find(55824)
+    Benchmark.bm do |x|
+      x.report("Démarche 45964") { PiecesJustificativesService.generate_dossier_export(p_45964.dossiers) }
+      x.report("Démarche 55824") { PiecesJustificativesService.generate_dossier_export(p_55824.dossiers.limit(10_000)) }
+    end
+  end
 end
