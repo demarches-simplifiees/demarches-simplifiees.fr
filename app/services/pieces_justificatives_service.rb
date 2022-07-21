@@ -107,21 +107,44 @@ class PiecesJustificativesService
     end
   end
 
-  def self.generate_dossier_export(dossier)
-    pdf = ApplicationController
-      .render(template: 'dossiers/show', formats: [:pdf],
-              assigns: {
-                include_infos_administration: true,
-                dossier: dossier
-              })
+  def self.generate_dossier_export(dossiers)
+    return [] if dossiers.empty?
 
-    FakeAttachment.new(
-      file: StringIO.new(pdf),
-      filename: "export-#{dossier.id}.pdf",
-      name: 'pdf_export_for_instructeur',
-      id: dossier.id,
-      created_at: dossier.updated_at
-    )
+    pdfs = []
+
+    procedure = dossiers.first.procedure
+    tdc_by_id = TypeDeChamp
+      .joins(:revisions)
+      .where(revisions: { id: procedure.revisions })
+      .to_a
+      .index_by(&:id)
+
+    dossiers
+      .includes(:champs, :champs_private, :commentaires, :individual,
+                :traitement, :etablissement,
+                user: :france_connect_information, avis: :expert)
+      .find_each do |dossier|
+      pdf = ApplicationController
+        .render(template: 'dossiers/show', formats: [:pdf],
+                assigns: {
+                  include_infos_administration: true,
+                  dossier: dossier,
+                  procedure: procedure,
+                  tdc_by_id: tdc_by_id
+                })
+
+      a = FakeAttachment.new(
+        file: StringIO.new(pdf),
+        filename: "export-#{dossier.id}.pdf",
+        name: 'pdf_export_for_instructeur',
+        id: dossier.id,
+        created_at: dossier.updated_at
+      )
+
+      pdfs << ActiveStorage::DownloadableFile.pj_and_path(dossier.id, a)
+    end
+
+    pdfs
   end
 
   private

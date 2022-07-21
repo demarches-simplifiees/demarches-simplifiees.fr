@@ -62,7 +62,6 @@ gem 'openid_connect'
 gem 'pg'
 gem 'phonelib'
 gem 'prawn-rails' # PDF Generation
-gem 'prawn-svg'
 gem 'premailer-rails'
 gem 'puma' # Use Puma as the app server
 gem 'pundit'
