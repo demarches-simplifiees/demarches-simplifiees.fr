@@ -11,15 +11,15 @@ module Administrateurs
       redirect_to admin_procedures_path, status: 404
     end
 
-    def retrieve_procedure_administration
+    def is_administrateur_through_procedure_administration_as_manager?
       id = params[:procedure_id] || params[:id]
 
-      @procedure_administration = current_administrateur.administrateurs_procedures.find_by(procedure_id: id)
-    end
+      current_administrateur.administrateurs_procedures
+        .exists?(procedure_id: id, manager: true)
+   end
 
     def ensure_not_super_admin!
-      procedure_administration = retrieve_procedure_administration
-      if procedure_administration.manager?
+      if is_administrateur_through_procedure_administration_as_manager?
         redirect_back fallback_location: root_url, alert: "Interdit aux super admins", status: 403
       end
     end

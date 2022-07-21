@@ -1,9 +1,9 @@
 = form_for procedure.administrateurs.new(user: User.new),
   url: { controller: 'procedure_administrateurs' },
-  html: { class: 'form', id: "new_administrateur" },
+  html: { class: 'form', id: "new_administrateur"  },
   data: { turbo: true } do |f|
   = f.label :email do
     Ajouter un administrateur
   %p.notice Renseignez l’email d’un administrateur déjà enregistré sur #{APPLICATION_NAME} pour lui permettre de modifier « #{procedure.libelle} ».
-  = f.email_field :email, placeholder: 'marie.dupont@exemple.fr', required: true
-  = f.submit 'Ajouter comme administrateur', class: 'button primary send'
+  = f.email_field :email, placeholder: 'marie.dupont@exemple.fr', required: true, disabled: disabled_as_super_admin
+  = f.submit 'Ajouter comme administrateur', class: 'button primary send', disabled: disabled_as_super_admin
