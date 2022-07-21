@@ -2,6 +2,7 @@ module Administrateurs
   class ProcedureAdministrateursController < AdministrateurController
     before_action :retrieve_procedure, except: [:new]
     before_action :ensure_not_super_admin!, only: [:create]
+
     def index
       @disabled_as_super_admin = is_administrateur_through_procedure_administration_as_manager?
     end

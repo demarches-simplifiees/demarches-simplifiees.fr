@@ -1,6 +1,6 @@
 .card
-  .card-title
-    = t('.title')
+  %h2.card-title= t('.title')
+
   - if !procedure.routee?
     %p.notice= t('.notice_html')
 
@@ -9,16 +9,16 @@
       = link_to t('.button.routing_disable'), update_routing_enabled_admin_procedure_groupe_instructeurs_path(procedure, routing: :disable), class: 'button primary mt-1', method: 'patch'
   - else
     = link_to t('.button.routing_enable'), update_routing_enabled_admin_procedure_groupe_instructeurs_path(procedure, routing: :enable), class: 'button primary mt-1', method: 'patch'
+.card
+  %h2.card-title L‘autogestion des instructeurs
+  %p.notice= t('.self_managment_notice_html')
 
-    .card-title.mt-4 L‘autogestion des instructeurs
-    %p.notice= t('.self_managment_notice_html')
-
-    = form_for procedure,
-      method: :patch,
-      url: update_instructeurs_self_management_enabled_admin_procedure_groupe_instructeurs_path(procedure),
-      html: { class: 'form procedure-form__column--form no-background' } do |f|
-      %label.toggle-switch
-        = f.check_box :instructeurs_self_management_enabled, class: 'toggle-switch-checkbox', onchange: 'this.form.submit()'
-        %span.toggle-switch-control.round
-        %span.toggle-switch-label.on
-        %span.toggle-switch-label.off
+  = form_for procedure,
+    method: :patch,
+    url: update_instructeurs_self_management_enabled_admin_procedure_groupe_instructeurs_path(procedure),
+    html: { class: 'form procedure-form__column--form no-background' } do |f|
+    %label.toggle-switch
+      = f.check_box :instructeurs_self_management_enabled, class: 'toggle-switch-checkbox', onchange: 'this.form.submit()'
+      %span.toggle-switch-control.round
+      %span.toggle-switch-label.on
+      %span.toggle-switch-label.off
