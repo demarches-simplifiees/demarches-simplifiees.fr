@@ -130,28 +130,30 @@ def add_identite_etablissement(pdf, etablissement)
 end
 
 def add_single_champ(pdf, champ)
+  tdc = @tdc_by_id[champ.type_de_champ_id]
+
   case champ.type
   when 'Champs::PieceJustificativeChamp', 'Champs::TitreIdentiteChamp'
     return
   when 'Champs::HeaderSectionChamp'
-    add_section_title(pdf, champ.libelle)
+    add_section_title(pdf, tdc.libelle)
   when 'Champs::ExplicationChamp'
-    format_in_2_lines(pdf, champ.libelle, champ.description)
+    format_in_2_lines(pdf, tdc.libelle, tdc.description)
   when 'Champs::CarteChamp'
-    format_in_2_lines(pdf, champ.libelle, champ.to_feature_collection.to_json)
+    format_in_2_lines(pdf, tdc.libelle, champ.to_feature_collection.to_json)
   when 'Champs::SiretChamp'
     pdf.font 'marianne', style: :bold do
-      pdf.text champ.libelle
+      pdf.text tdc.libelle
     end
     if champ.etablissement.present?
       add_identite_etablissement(pdf, champ.etablissement)
     end
   when 'Champs::NumberChamp'
     value = champ.to_s.empty? ? 'Non communiqué' : number_with_delimiter(champ.to_s)
-    format_in_2_lines(pdf, champ.libelle, value)
+    format_in_2_lines(pdf, tdc.libelle, value)
   else
     value = champ.to_s.empty? ? 'Non communiqué' : champ.to_s
-    format_in_2_lines(pdf, champ.libelle, value)
+    format_in_2_lines(pdf, tdc.libelle, value)
   end
 end
 
@@ -205,6 +207,9 @@ def add_etats_dossier(pdf, dossier)
 end
 
 prawn_document(page_size: "A4") do |pdf|
+  @procedure ||= @dossier.procedure
+  @tdc_by_id ||= @dossier.revision.types_de_champ.index_by(&:id)
+
   pdf.font_families.update( 'marianne' => {
     normal: Rails.root.join('lib/prawn/fonts/marianne/marianne-regular.ttf' ),
     bold: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf' ),
@@ -212,12 +217,12 @@ prawn_document(page_size: "A4") do |pdf|
   pdf.font 'marianne'
 
   pdf.pad_bottom(40) do
-    pdf.svg IO.read(DOSSIER_PDF_EXPORT_LOGO_SRC), width: 300, position: :center
+    pdf.image DOSSIER_PDF_EXPORT_LOGO_SRC, width: 300, position: :center
   end
 
   format_in_2_columns(pdf, 'Dossier Nº', @dossier.id.to_s)
-  format_in_2_columns(pdf, 'Démarche', @dossier.procedure.libelle)
-  format_in_2_columns(pdf, 'Organisme', @dossier.procedure.organisation_name)
+  format_in_2_columns(pdf, 'Démarche', @procedure.libelle)
+  format_in_2_columns(pdf, 'Organisme', @procedure.organisation_name)
 
   add_etat_dossier(pdf, @dossier)
 
