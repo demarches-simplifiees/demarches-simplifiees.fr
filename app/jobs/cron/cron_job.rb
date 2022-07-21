@@ -3,6 +3,10 @@ class Cron::CronJob < ApplicationJob
   class_attribute :schedule_expression
 
   class << self
+    def schedulable?
+      true
+    end
+
     def schedule
       remove if cron_expression_changed?
       set(cron: cron_expression).perform_later if !scheduled?

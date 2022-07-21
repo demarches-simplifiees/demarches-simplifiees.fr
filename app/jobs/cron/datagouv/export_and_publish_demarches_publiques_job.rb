@@ -15,4 +15,8 @@ class Cron::Datagouv::ExportAndPublishDemarchesPubliquesJob < Cron::CronJob
       FileUtils.rm(gzip_filepath)
     end
   end
+
+  def self.schedulable?
+    ENV.fetch('OPENDATA_ENABLED', nil) == 'enabled'
+  end
 end
