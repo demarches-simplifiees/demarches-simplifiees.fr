@@ -1,4 +1,4 @@
-RSpec.describe Cron::ExportAndPublishDemarchesPubliquesJob, type: :job do
+RSpec.describe Cron::Datagouv::ExportAndPublishDemarchesPubliquesJob, type: :job do
   let!(:procedure) { create(:procedure, :published, :with_service, :with_type_de_champ) }
   let(:status) { 200 }
   let(:body) { "ok" }
@@ -9,7 +9,7 @@ RSpec.describe Cron::ExportAndPublishDemarchesPubliquesJob, type: :job do
       stub
     end
 
-    subject { Cron::ExportAndPublishDemarchesPubliquesJob.perform_now }
+    subject { Cron::Datagouv::ExportAndPublishDemarchesPubliquesJob.perform_now }
 
     it 'send POST request to datagouv' do
       subject

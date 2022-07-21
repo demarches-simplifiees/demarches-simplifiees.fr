@@ -1,4 +1,4 @@
-class Cron::ExportAndPublishDemarchesPubliquesJob < Cron::CronJob
+class Cron::Datagouv::ExportAndPublishDemarchesPubliquesJob < Cron::CronJob
   self.schedule_expression = "every month at 3:00"
 
   def perform(*args)
