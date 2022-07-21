@@ -46,23 +46,39 @@ module Manager
       send_data(emails.join("\n"), :filename => "brouillons-#{procedure.id}-au-#{date}.csv")
     end
 
-    def add_administrateur
-      add_self = params[:email].blank?
-      administrateur_email = add_self ? current_super_admin.email : params[:email]
-      administrateur = Administrateur.by_email(administrateur_email)
-      if administrateur
-        AdministrateursProcedure.create(procedure: procedure, administrateur: administrateur, manager: add_self)
-        if add_self
-          flash[:notice] = "L’administrateur \"#{administrateur_email}\" est ajouté à la démarche pour la journée."
-        else
-          flash[:notice] = "L’administrateur \"#{administrateur_email}\" est ajouté à la démarche."
+    def add_administrateur_and_instructeur
+      administrateur = Administrateur.by_email(current_super_admin.email)
+      instructeur = Instructeur.by_email(current_super_admin.email)
+      if administrateur && instructeur
+        ActiveRecord::Base.transaction do
+          AdministrateursProcedure.create!(procedure: procedure, administrateur: administrateur, manager: true)
+          procedure.groupe_instructeurs.map do |groupe_instructeur|
+            instructeur.assign_to.create(groupe_instructeur: groupe_instructeur, manager: true)
+          end
         end
+
+        flash[:notice] = "L’administrateur \"#{administrateur.email}\" a été ajoutés à la démarche. instructeur \"#{instructeur.email}\" a été ajouté aux #{procedure.groupe_instructeurs.count} groupe(s) d'instructeur"
       else
-        if add_self
-          flash[:alert] = "Vous n’êtes pas connecté en tant qu’administrateur."
-        else
-          flash[:alert] = "L’administrateur \"#{administrateur_email}\" est introuvable."
-        end
+        flash[:alert] = "L’administrateur \"#{administrateur.email}\" est introuvable."
+      end
+      redirect_to manager_procedure_path(procedure)
+    end
+
+    def add_administrateur_with_confirmation
+      confirmation_url = confirm_add_administrateur_manager_procedure_url(id: procedure.id, email: current_super_admin.email)
+
+      flash[:notice] = "Veuillez partager ce lien : #{confirmation_url} avec un autre super admin pour que l'operation soit effectuée"
+      redirect_to manager_procedure_path(procedure)
+    end
+
+    def confirm_add_administrateur
+      administrateur_email = params[:email]
+      if administrateur_email != current_super_admin.email
+        administrateur = Administrateur.by_email(params[:email])
+        AdministrateursProcedure.create!(procedure: procedure, administrateur: administrateur)
+        flash[:notice] = "L’administrateur \"#{administrateur.email}\" a été ajoutés à la démarche."
+      else
+        flash[:alert] = "Veuillez partager ce lien avec un autre super administrateur pour qu'il confirme votre action"
       end
       redirect_to manager_procedure_path(procedure)
     end

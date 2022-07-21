@@ -64,17 +64,19 @@ as well as a link to its edit page.
       <dd class="attribute-data attribute-data--<%=attribute.html_class%>">
         <%= render_field attribute, page: page %>
         <% if attribute.name == 'administrateurs' %>
-          <%= form_tag(add_administrateur_manager_procedure_path(procedure), style: 'margin-top: 1rem;') do %>
+          <%= form_tag(add_administrateur_with_confirmation_manager_procedure_path(procedure), style: 'margin-top: 1rem;') do %>
             <%= email_field_tag(:email, '', placeholder: 'Email', autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false', style: 'margin-bottom: 1rem;width:24rem;') %>
-            <button>Ajouter un administrateur</button>
+            <button>Ajouter un administrateur (pour toujours)</button>
+            <p>J'utilise cette option ETQ support quand un usager a besoin de devenir administrateur sur une démarche</p>
           <% end %>
           <% if procedure.administrateurs.find { |admin| admin.email == current_super_admin.email } %>
             <p style="margin-top: 20px;">Vous êtes déjà administrateur sur cette démarche</p>
             <%= link_to 'Me retirer de cette démarche', delete_administrateur_manager_procedure_path(procedure), method: :put, class: 'button' %>
-            
           <% else %>
-            <%= form_tag(add_administrateur_manager_procedure_path(procedure), style: 'margin-top: 1rem;') do %>
-              <button>Devenir administrateur (pour la journée)</button>
+            <%= form_tag(add_administrateur_and_instructeur_manager_procedure_path(procedure), style: 'margin-top: 1rem;') do %>
+              <button>Devenir administrateur & instructeur (pour la journée)</button>
+              <p>J'utilise cette option ETQ support/dev afin d'aller sur investiguer quelque chose sur démarche</p>
+
             <% end %>
           <% end %>
         <% end %>
