@@ -5,13 +5,7 @@ module Mutations
     argument :attachment, ID, required: true
 
     def resolve(dossier:, annotation_id:, instructeur:, attachment:)
-      resolve_with_type(
-        :piece_justificative,
-        dossier,
-        annotation_id,
-        instructeur,
-        attachment
-      ) do |annotation, attachment|
+      resolve_with_type(dossier: dossier, annotation_id: annotation_id, instructeur: instructeur, value: attachment) do |annotation, attachment|
         annotation.piece_justificative_file.attach(attachment)
       end
     end
@@ -22,6 +16,10 @@ module Mutations
       else
         true
       end
+    end
+
+    def input_type
+      :piece_justificative
     end
   end
 end
