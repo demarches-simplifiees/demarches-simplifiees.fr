@@ -13,7 +13,6 @@ module Administrateurs
 
     def index
       @procedure = procedure
-      @disabled_as_super_admin = is_administrateur_through_procedure_administration_as_manager?
 
       if procedure.routee?
         @groupes_instructeurs = paginated_groupe_instructeurs
@@ -31,7 +30,6 @@ module Administrateurs
       @groupe_instructeur = groupe_instructeur
       @instructeurs = paginated_instructeurs
       @available_instructeur_emails = available_instructeur_emails
-      @disabled_as_super_admin = is_administrateur_through_procedure_administration_as_manager?
     end
 
     def create

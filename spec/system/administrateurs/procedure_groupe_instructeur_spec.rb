@@ -16,7 +16,6 @@ describe 'Manage procedure instructeurs', js: true do
 
     scenario 'it works' do
       visit admin_procedure_path(procedure)
-      byebug
       find('#groupe-instructeurs').click
       expect(page).to have_css("h1", text: "Gérer les instructeurs et les options d'instruction de « #{procedure.libelle} »")
     end

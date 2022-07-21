@@ -12,6 +12,8 @@ module Instructeurs
       end
     end
 
+    private
+
     def is_instructeur_through_assign_tos_as_manager?
       procedure_id = params[:procedure_id]
 
