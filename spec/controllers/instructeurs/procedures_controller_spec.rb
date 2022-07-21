@@ -499,7 +499,7 @@ describe Instructeurs::ProceduresController, type: :controller do
     end
 
     context 'when the export is ready' do
-      let(:export) { create(:export, groupe_instructeurs: [gi_1], job_status: 'generated') }
+      let(:export) { create(:export, groupe_instructeurs: [gi_1, gi_0], job_status: 'generated') }
 
       before do
         export.file.attach(io: StringIO.new('export'), filename: 'file.csv')
@@ -512,7 +512,7 @@ describe Instructeurs::ProceduresController, type: :controller do
     end
 
     context 'when another export is ready' do
-      let(:export) { create(:export, groupe_instructeurs: [gi_0, gi_1]) }
+      let(:export) { create(:export, groupe_instructeurs: [gi_0]) }
 
       before do
         export.file.attach(io: StringIO.new('export'), filename: 'file.csv')

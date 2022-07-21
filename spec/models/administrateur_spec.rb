@@ -3,7 +3,6 @@ describe Administrateur, type: :model do
 
   describe 'associations' do
     it { is_expected.to have_and_belong_to_many(:instructeurs) }
-    it { is_expected.to have_and_belong_to_many(:procedures) }
   end
 
   describe "#renew_api_token" do

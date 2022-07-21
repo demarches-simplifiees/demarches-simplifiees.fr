@@ -15,7 +15,7 @@ class Administrateur < ApplicationRecord
   UNUSED_ADMIN_THRESHOLD = 6.months
 
   has_and_belongs_to_many :instructeurs
-  has_many :administrateurs_procedures, dependent: :destroy
+  has_many :administrateurs_procedures
   has_many :procedures, through: :administrateurs_procedures
   has_many :services
 
@@ -103,7 +103,7 @@ class Administrateur < ApplicationRecord
       # We can't destroy a service if it has procedures, even if those procedures are archived
       service.destroy unless service.procedures.with_discarded.any?
     end
-
+    AdministrateursProcedure.where(administrateur_id: self.id).delete_all
     destroy
   end
 
