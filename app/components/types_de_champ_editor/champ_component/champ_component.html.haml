@@ -40,7 +40,7 @@
             .cell
               = form.label :drop_down_list_value, "Options de la liste", for: dom_id(type_de_champ, :drop_down_list_value)
               = form.text_area :drop_down_list_value, class: 'small-margin small width-100', rows: 7, id: dom_id(type_de_champ, :drop_down_list_value)
-          - if type_de_champ.drop_down_list_with_other?
+          - if type_de_champ.simple_drop_down_list?
             .cell
               = form.label :drop_down_other, for: dom_id(type_de_champ, :drop_down_other) do
                 Proposer une option « autre » avec un texte libre
