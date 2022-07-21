@@ -205,16 +205,16 @@ class TypeDeChamp < ApplicationRecord
     ])
   end
 
-  def drop_down_list_with_other?
+  def simple_drop_down_list?
     type_champ == TypeDeChamp.type_champs.fetch(:drop_down_list)
-  end
-
-  def header_section?
-    type_champ == TypeDeChamp.type_champs.fetch(:header_section)
   end
 
   def linked_drop_down_list?
     type_champ == TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
+  end
+
+  def header_section?
+    type_champ == TypeDeChamp.type_champs.fetch(:header_section)
   end
 
   def exclude_from_view?

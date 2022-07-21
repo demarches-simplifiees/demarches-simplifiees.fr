@@ -1,4 +1,4 @@
-.editable-champ{ class: "editable-champ-#{champ.type_champ} #{champ.visible? ? '' : 'hidden'}", id: champ.input_group_id, data: autosave_controller(champ) }
+.editable-champ{ class: "editable-champ-#{champ.type_champ} #{champ.visible? ? '' : 'hidden'}", id: champ.input_group_id, data: editable_champ_controller(champ) }
   - if champ.repetition?
     %h3.header-subsection= champ.libelle
     - if champ.description.present?
