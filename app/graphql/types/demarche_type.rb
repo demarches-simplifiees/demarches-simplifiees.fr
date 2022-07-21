@@ -32,7 +32,7 @@ module Types
     field :groupe_instructeurs, [Types::GroupeInstructeurType], null: false
     field :service, Types::ServiceType, null: true
 
-    field :dossiers, Types::DossierType.connection_type, "Liste de tous les dossiers d’une démarche.", null: false do
+    field :dossiers, Types::DossierType.connection_type, "Liste de tous les dossiers d’une démarche.", null: false, extras: [:lookahead] do
       argument :order, Types::Order, default_value: :asc, required: false, description: "L’ordre des dossiers."
       argument :created_since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers déposés depuis la date."
       argument :updated_since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers mis à jour depuis la date."
@@ -72,7 +72,7 @@ module Types
       Loaders::Association.for(object.class, :revisions).load(object)
     end
 
-    def dossiers(updated_since: nil, created_since: nil, state: nil, archived: nil, revision: nil, max_revision: nil, min_revision: nil, order:)
+    def dossiers(updated_since: nil, created_since: nil, state: nil, archived: nil, revision: nil, max_revision: nil, min_revision: nil, order:, lookahead:)
       dossiers = object
         .dossiers
         .visible_by_administration
@@ -108,7 +108,11 @@ module Types
         dossiers = dossiers.order_by_created_at(order)
       end
 
-      dossiers
+      # We wrap dossiers in a custom connection alongsite the lookahead for the query.
+      # The custom connection is responsible for preloading paginated dossiers.
+      # https://graphql-ruby.org/pagination/custom_connections.html#using-a-custom-connection
+      # https://graphql-ruby.org/queries/lookahead.html
+      Connections::DossiersConnection.new(dossiers, lookahead: lookahead)
     end
 
     def deleted_dossiers(deleted_since: nil, order:)
