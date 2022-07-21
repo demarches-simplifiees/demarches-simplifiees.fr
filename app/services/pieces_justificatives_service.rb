@@ -117,7 +117,7 @@ class PiecesJustificativesService
       .joins(:revisions)
       .where(revisions: { id: procedure.revisions })
       .to_a
-      .group_by(&:id)
+      .index_by(&:id)
 
     dossiers
       .includes(:champs, :champs_private, :commentaires, :individual,
