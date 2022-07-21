@@ -14,7 +14,7 @@ describe 'Administrateurs can manage administrateurs', js: true do
   scenario 'card is clickable' do
     visit admin_procedure_path(procedure)
     find('#administrateurs').click
-    expect(page).to have_css("h1", text: "Administrateurs de « #{procedure.libelle} »")
+    expect(page).to have_css("h1", text: "Gérer les administrateurs de « #{procedure.libelle} »")
   end
 
   context 'as admin not flagged from manager' do
