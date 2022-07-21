@@ -63,5 +63,23 @@ describe Administrateurs::ExportsController, type: :controller do
         end
       end
     end
+
+    context 'when admin is allowed present as manager' do
+      let!(:procedure) { create(:procedure) }
+      let!(:administrateur_procedure) { create(:administrateurs_procedure, procedure: procedure, administrateur: administrateur, manager: true) }
+
+      context 'get #index.html' do
+        it { is_expected.to have_http_status(:forbidden) }
+      end
+      context 'get #index.turbo_stream' do
+        it 'is forbidden' do
+          post :download,
+            params: { export_format: :csv, procedure_id: procedure.id },
+            format: :turbo_stream
+          expect(response).to have_http_status(:forbidden)
+        end
+      end
+
+    end
   end
 end
