@@ -4,6 +4,11 @@ class SerializerService
     data && data['dossier']
   end
 
+  def self.dossiers(procedure)
+    data = execute_query('serializeDossiers', { number: procedure.id })
+    data && data['demarche']['dossiers']
+  end
+
   def self.avis(avis)
     data = execute_query('serializeAvis', { number: avis.dossier_id, id: avis.to_typed_id })
     data && data['dossier']['avis'].first
@@ -31,6 +36,20 @@ class SerializerService
   end
 
   QUERY = <<-'GRAPHQL'
+    query serializeDossiers($number: Int!, $after: String) {
+      demarche(number: $number) {
+        dossiers(after: $after) {
+          nodes {
+            ...DossierFragment
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+        }
+      }
+    }
+
     query serializeDossier($number: Int!) {
       dossier(number: $number) {
         ...DossierFragment
