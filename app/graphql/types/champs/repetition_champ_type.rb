@@ -5,7 +5,11 @@ module Types::Champs
     field :champs, [Types::ChampType], null: false
 
     def champs
-      Loaders::Association.for(object.class, :champs).load(object)
+      if object.champs.loaded?
+        object.champs
+      else
+        Loaders::Association.for(object.class, :champs).load(object)
+      end
     end
   end
 end
