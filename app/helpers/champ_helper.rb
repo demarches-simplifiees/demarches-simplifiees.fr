@@ -31,11 +31,30 @@ module ChampHelper
     champ.dossier&.brouillon? && !champ.repetition?
   end
 
-  def autosave_controller(champ)
-    if autosave_available?(champ)
-      { controller: 'autosave' }
-    elsif !champ.repetition? && champ.dossier&.en_construction?
-      { controller: 'check-conditions' }
+  def editable_champ_controller(champ)
+    if !champ.repetition? && !champ.non_fillable?
+      # This is an editable champ. Lets find what controllers it might need.
+      controllers = []
+
+      # This is a public champ – it can have an autosave controller.
+      if champ.public?
+        # This is a champ on dossier in draft state. Activate autosave.
+        if champ.dossier&.brouillon?
+          controllers << 'autosave'
+        # This is a champ on a dossier in en_construction state. Enable conditions checker.
+        elsif champ.public? && champ.dossier&.en_construction?
+          controllers << 'check-conditions'
+        end
+      end
+
+      # This is a dropdown champ. Activate special behaviours it might have.
+      if champ.simple_drop_down_list? || champ.linked_drop_down_list?
+        controllers << 'champ-dropdown'
+      end
+
+      if controllers.present?
+        { controller: controllers.join(' ') }
+      end
     end
   end
 
