@@ -16,6 +16,7 @@ namespace :benchmarks do
     Benchmark.bm do |x|
       x.report("Démarche 45964") { SerializerService.dossiers(p_45964) }
       x.report("Démarche 55824") { SerializerService.dossiers(p_55824) }
+      x.report("Démarches publiques") { SerializerService.demarches_publiques }
     end
   end
 
