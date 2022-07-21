@@ -1,4 +1,3 @@
-
 = render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [link_to('Démarches', admin_procedures_path),
                     link_to(@procedure.libelle, admin_procedure_path(@procedure)),
@@ -11,4 +10,5 @@
     locals: { procedure: @procedure,
       groupe_instructeur: @groupe_instructeur,
       instructeurs: @instructeurs,
-      available_instructeur_emails: @available_instructeur_emails }
+      available_instructeur_emails: @available_instructeur_emails,
+      disabled_as_super_admin: @disabled_as_super_admin }

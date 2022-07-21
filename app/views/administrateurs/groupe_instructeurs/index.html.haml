@@ -10,6 +10,8 @@
                       'Instructeurs'] }
 
 .container.groupe-instructeur
+  %h1 Gérer les instructeurs et les options d'instruction de « #{@procedure.libelle} »
+
   = render partial: 'administrateurs/groupe_instructeurs/routing', locals: { procedure: @procedure }
 
   - if @procedure.routee?
@@ -19,4 +21,5 @@
       locals: { procedure: @procedure,
         groupe_instructeur: @procedure.defaut_groupe_instructeur,
         instructeurs: @instructeurs,
-        available_instructeur_emails: @available_instructeur_emails }
+        available_instructeur_emails: @available_instructeur_emails,
+        disabled_as_super_admin: @disabled_as_super_admin }
