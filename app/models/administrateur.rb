@@ -15,7 +15,8 @@ class Administrateur < ApplicationRecord
   UNUSED_ADMIN_THRESHOLD = 6.months
 
   has_and_belongs_to_many :instructeurs
-  has_and_belongs_to_many :procedures
+  has_many :administrateurs_procedures, dependent: :destroy
+  has_many :procedures, through: :administrateurs_procedures
   has_many :services
 
   belongs_to :user
