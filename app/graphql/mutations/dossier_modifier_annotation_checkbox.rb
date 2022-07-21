@@ -6,11 +6,10 @@ module Mutations
 
     def resolve(dossier:, annotation_id:, instructeur:, value:)
       resolve_with_type(
-        :checkbox,
-        dossier,
-        annotation_id,
-        instructeur,
-        value
+        dossier: dossier,
+        annotation_id: annotation_id,
+        instructeur: instructeur,
+        value: value
       ) do |type_champ, value|
         if type_champ == TypeDeChamp.type_champs.fetch(:yes_no)
           value ? 'true' : 'false'
@@ -18,6 +17,12 @@ module Mutations
           value ? 'on' : 'off'
         end
       end
+    end
+
+    private
+
+    def input_type
+      :checkbox
     end
   end
 end
