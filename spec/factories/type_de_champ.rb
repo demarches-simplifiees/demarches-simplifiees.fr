@@ -10,19 +10,22 @@ FactoryBot.define do
       procedure { nil }
       position { nil }
       parent { nil }
+      no_coordinate { false }
     end
 
     after(:build) do |type_de_champ, evaluator|
-      revision = evaluator.procedure&.active_revision || build(:procedure_revision)
-      evaluator.procedure&.save
+      if !evaluator.no_coordinate
+        revision = evaluator.procedure&.active_revision || build(:procedure_revision)
+        evaluator.procedure&.save
 
-      revision.revision_types_de_champ << build(:procedure_revision_type_de_champ,
-        position: evaluator.position || 0,
-        revision: revision,
-        type_de_champ: type_de_champ,
-        parent: evaluator.parent)
+        revision.revision_types_de_champ << build(:procedure_revision_type_de_champ,
+          position: evaluator.position || 0,
+          revision: revision,
+          type_de_champ: type_de_champ,
+          parent: evaluator.parent)
 
-      revision.save
+        revision.save
+      end
     end
 
     trait :private do
