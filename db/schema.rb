@@ -112,7 +112,7 @@ ActiveRecord::Schema.define(version: 2022_07_28_084804) do
     t.boolean "instant_email_dossier_notifications_enabled", default: false, null: false
     t.boolean "instant_email_message_notifications_enabled", default: false, null: false
     t.integer "instructeur_id"
-    t.boolean "manager", default: true
+    t.boolean "manager", default: false
     t.datetime "updated_at"
     t.boolean "weekly_email_notifications_enabled", default: true, null: false
     t.index ["groupe_instructeur_id", "instructeur_id"], name: "unique_couple_groupe_instructeur_instructeur", unique: true

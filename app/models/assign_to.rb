@@ -6,7 +6,7 @@
 #  daily_email_notifications_enabled           :boolean          default(FALSE), not null
 #  instant_email_dossier_notifications_enabled :boolean          default(FALSE), not null
 #  instant_email_message_notifications_enabled :boolean          default(FALSE), not null
-#  manager                                     :boolean          default(TRUE)
+#  manager                                     :boolean          default(FALSE)
 #  weekly_email_notifications_enabled          :boolean          default(TRUE), not null
 #  created_at                                  :datetime
 #  updated_at                                  :datetime
