@@ -34,8 +34,8 @@ class APIDatagouv::API
     def datagouv_upload_url
       [
         datagouv_secret[:api_url],
-        "/datasets/", datagouv_secret[:ds_demarches_publiques_dataset],
-        "/resources/", datagouv_secret[:ds_demarches_publiques_resource],
+        "/datasets/", datagouv_secret[:descriptif_demarches_dataset],
+        "/resources/", datagouv_secret[:descriptif_demarches_resource],
         "/upload/"
       ].join
     end
