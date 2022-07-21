@@ -1,3 +1,4 @@
+- # not renderable as instructeur flagged as manager, so render it anyway
 - if @can_download_dossiers
   - if @statut.nil?
     = turbo_stream.update_all '.procedure-actions' do

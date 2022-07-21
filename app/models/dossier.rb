@@ -26,9 +26,9 @@
 #  last_champ_updated_at                              :datetime
 #  last_commentaire_updated_at                        :datetime
 #  motivation                                         :text
-#  private_search_terms                               :string
+#  private_search_terms                               :text
 #  processed_at                                       :datetime
-#  search_terms                                       :string
+#  search_terms                                       :text
 #  state                                              :string
 #  termine_close_to_expiration_notice_sent_at         :datetime
 #  created_at                                         :datetime

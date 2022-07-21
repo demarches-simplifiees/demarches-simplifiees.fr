@@ -4,7 +4,6 @@ module Administrateurs
     before_action :ensure_not_super_admin!, only: [:create]
 
     def index
-      @disabled_as_super_admin = is_administrateur_through_procedure_administration_as_manager?
     end
 
     def create
@@ -26,7 +25,6 @@ module Administrateurs
       # Actually add the admin
       @procedure.administrateurs << administrateur
       @administrateur = administrateur
-      @disabled_as_super_admin = is_administrateur_through_procedure_administration_as_manager?
       flash.notice = "L’administrateur « #{administrateur.email} » a été ajouté à la démarche « #{@procedure.libelle} »."
     end
 
