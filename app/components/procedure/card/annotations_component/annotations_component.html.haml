@@ -1,0 +1,19 @@
+= link_to annotations_admin_procedure_path(@procedure), class: 'card-admin', title: error_messages do
+  - if error_messages.present?
+    %div
+      %span.icon.refuse
+      %p.card-admin-status-error À modifier
+  - elsif @count == 0
+    %div
+      %span.icon.clock
+      %p.card-admin-status-todo À configurer
+  - else
+    %div
+      %span.icon.accept
+      %p.card-admin-status-accept Validé
+  %div
+    %p.card-admin-title
+      %span.badge.baseline= @count
+      = t('.title')
+    %p.card-admin-subtitle Champs à remplir par l’administration
+  %p.button= t('views.shared.actions.edit')
