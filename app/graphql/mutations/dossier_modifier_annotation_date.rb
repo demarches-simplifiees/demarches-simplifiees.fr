@@ -6,12 +6,17 @@ module Mutations
 
     def resolve(dossier:, annotation_id:, instructeur:, value:)
       resolve_with_type(
-        :date,
-        dossier,
-        annotation_id,
-        instructeur,
-        value
+        dossier: dossier,
+        annotation_id: annotation_id,
+        instructeur: instructeur,
+        value: value
       )
+    end
+
+    private
+
+    def input_type
+      :date
     end
   end
 end

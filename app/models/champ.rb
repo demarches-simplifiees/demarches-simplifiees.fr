@@ -126,7 +126,16 @@ class Champ < ApplicationRecord
   end
 
   def to_typed_id
-    type_de_champ.to_typed_id
+    if row.present?
+      GraphQL::Schema::UniqueWithinType.encode('Champ', "#{stable_id}|#{row}")
+    else
+      type_de_champ.to_typed_id
+    end
+  end
+
+  def self.decode_typed_id(typed_id)
+    _, stable_id_with_maybe_row = GraphQL::Schema::UniqueWithinType.decode(typed_id)
+    stable_id_with_maybe_row.split('|')
   end
 
   def html_label?
