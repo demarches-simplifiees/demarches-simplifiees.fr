@@ -7,10 +7,10 @@ describe Instructeurs::ArchivesController, type: :controller do
   let!(:assign_to) { create(:assign_to, instructeur: instructeur, groupe_instructeur: build(:groupe_instructeur), manager: manager) }
   let(:gi2) { create(:groupe_instructeur) }
 
-   before do
+  before do
     sign_in(instructeur.user)
-   end
-   after { Timecop.return }
+  end
+  after { Timecop.return }
 
   describe '#index' do
     before do
@@ -19,11 +19,10 @@ describe Instructeurs::ArchivesController, type: :controller do
       create_dossier_for_month(procedure1, 2021, 2)
       Timecop.freeze(Time.zone.local(2021, 3, 5))
     end
-      subject{get :index, params: { procedure_id: procedure1.id }}
+    subject { get :index, params: { procedure_id: procedure1.id } }
 
     context 'signed in not as manager' do
-      let(:manager){ false }
-
+      let(:manager) { false }
 
       it { is_expected.to have_http_status(:success) }
       it 'assigns archives' do
@@ -33,7 +32,7 @@ describe Instructeurs::ArchivesController, type: :controller do
     end
 
     context 'signed in as manager' do
-      let(:manager){ true }
+      let(:manager) { true }
 
       before do
         sign_in(instructeur.user)
@@ -52,7 +51,7 @@ describe Instructeurs::ArchivesController, type: :controller do
     let(:date_month) { Date.strptime(month, "%Y-%m") }
 
     context 'signed in not as manager' do
-      let(:manager){ false }
+      let(:manager) { false }
 
       it "performs archive creation job" do
         expect { subject }.to have_enqueued_job(ArchiveCreationJob).with(procedure1, an_instance_of(Archive), instructeur)
@@ -61,11 +60,10 @@ describe Instructeurs::ArchivesController, type: :controller do
     end
 
     context 'signed in as manager' do
-      let(:manager){ true }
+      let(:manager) { true }
 
       it { is_expected.to have_http_status(:forbidden) }
     end
-
   end
 
   private

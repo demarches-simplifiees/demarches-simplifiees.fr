@@ -1,6 +1,7 @@
 module Instructeurs
   class ProceduresController < InstructeurController
     before_action :ensure_ownership!, except: [:index]
+    before_action :ensure_not_super_admin!, only: [:download_export]
 
     ITEMS_PER_PAGE = 25
 
