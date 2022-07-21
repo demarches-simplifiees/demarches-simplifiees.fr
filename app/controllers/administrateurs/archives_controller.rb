@@ -1,7 +1,6 @@
 module Administrateurs
   class ArchivesController < AdministrateurController
     before_action :retrieve_procedure
-    before_action :retrieve_procedure_administration
     before_action :ensure_not_super_admin!
 
     helper_method :create_archive_url

@@ -468,9 +468,10 @@ describe Instructeurs::ProceduresController, type: :controller do
   describe '#download_export' do
     let(:instructeur) { create(:instructeur) }
     let!(:procedure) { create(:procedure) }
-    let!(:gi_0) { procedure.defaut_groupe_instructeur }
+    let!(:assign_to) { create(:assign_to, instructeur: instructeur, groupe_instructeur: build(:groupe_instructeur, procedure: procedure), manager: manager) }
+    let!(:gi_0) { assign_to.groupe_instructeur }
     let!(:gi_1) { create(:groupe_instructeur, label: 'gi_1', procedure: procedure, instructeurs: [instructeur]) }
-
+    let(:manager) { false }
     before { sign_in(instructeur.user) }
 
     subject do
@@ -534,6 +535,11 @@ describe Instructeurs::ProceduresController, type: :controller do
         expect(response.media_type).to eq('text/vnd.turbo-stream.html')
         expect(response).to have_http_status(:ok)
       end
+    end
+
+    context 'when logged in through super admin' do
+      let(:manager) { true }
+      it { is_expected.to have_http_status(:forbidden) }
     end
   end
 

@@ -4,7 +4,8 @@
                     'Administrateurs'], preview: false }
 
 .container
-  %h1 Administrateurs de « #{@procedure.libelle} »
+  %h1 Gérer les administrateurs de « #{@procedure.libelle} »
+
   %table.table
     %thead
       %th= 'Adresse email'
@@ -15,4 +16,4 @@
     %tfoot
       %tr
         %th{ colspan: 4 }
-          = render 'add_admin_form', procedure: @procedure
+          = render 'add_admin_form', procedure: @procedure, disabled_as_super_admin: @disabled_as_super_admin
