@@ -418,6 +418,7 @@ Rails.application.routes.draw do
 
       collection do
         get 'new_from_existing'
+        post 'search'
       end
 
       member do

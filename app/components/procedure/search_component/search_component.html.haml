@@ -1,0 +1,12 @@
+= form_tag(search_admin_procedures_path, data: { turbo: true }, method: :post, class: 'form') do
+  = label_tag :query, 'Rechercher une procédure'
+
+  .notice
+    %p Entrez au minimum 3 lettres
+
+
+  = text_field_tag :query, params[:query], required: true, placeholder: 'politique de la ville', minlength: "3"
+
+  = submit_tag 'Rechercher', class: 'button primary'
+
+  = render Procedure::ResultsComponent.new(grouped_procedures: @grouped_procedures)
