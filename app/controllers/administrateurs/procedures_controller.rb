@@ -67,8 +67,15 @@ module Administrateurs
     SIGNIFICANT_DOSSIERS_THRESHOLD = 30
 
     def new_from_existing
+      @grouped_procedures = nil
+    end
+
+    def search
+      query = ActiveRecord::Base.sanitize_sql_like(params[:query])
+
       significant_procedure_ids = Procedure
         .publiees_ou_closes
+        .where('unaccent(libelle) ILIKE unaccent(?)', "%#{query}%")
         .joins(:dossiers)
         .group("procedures.id")
         .having("count(dossiers.id) >= ?", SIGNIFICANT_DOSSIERS_THRESHOLD)
