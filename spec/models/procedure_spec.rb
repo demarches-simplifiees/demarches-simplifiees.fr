@@ -1275,6 +1275,115 @@ describe Procedure do
     it { expect(build(:procedure, lien_dpo: 'askjdlad l akdj asd ').valid?).to be(false) }
   end
 
+  describe 'factory' do
+    let(:types_de_champ) { [{ type: :yes_no }, { type: :integer_number }] }
+
+    context 'create' do
+      let(:types_de_champ) { [{ type: :yes_no }, { type: :repetition, children: [{ type: :integer_number }] }] }
+      let(:procedure) { create(:procedure, types_de_champ_public: types_de_champ) }
+
+      context 'with brouillon procedure' do
+        it do
+          expect(procedure.draft_revision.types_de_champ_public.count).to eq(2)
+          expect(procedure.draft_revision.types_de_champ.count).to eq(3)
+        end
+      end
+
+      context 'with published procedure' do
+        let(:procedure) { create(:procedure, :published, types_de_champ_public: types_de_champ) }
+
+        it do
+          expect(procedure.draft_revision.types_de_champ_public.count).to eq(2)
+          expect(procedure.draft_revision.types_de_champ.count).to eq(3)
+          expect(procedure.published_revision.types_de_champ_public.count).to eq(2)
+          expect(procedure.published_revision.types_de_champ.count).to eq(3)
+        end
+      end
+    end
+
+    context 'with bouillon procedure' do
+      let(:procedure) { build(:procedure, types_de_champ_public: types_de_champ, types_de_champ_private: types_de_champ) }
+
+      it do
+        expect(procedure.revisions.size).to eq(1)
+        expect(procedure.draft_revision.types_de_champ.size).to eq(4)
+        expect(procedure.draft_revision.types_de_champ_public.size).to eq(2)
+        expect(procedure.published_revision).to be_nil
+      end
+    end
+
+    context 'with published procedure' do
+      let(:procedure) { build(:procedure, :published, types_de_champ_public: types_de_champ, types_de_champ_private: types_de_champ) }
+
+      it do
+        expect(procedure.revisions.size).to eq(2)
+        expect(procedure.draft_revision.types_de_champ.size).to eq(4)
+        expect(procedure.draft_revision.types_de_champ_public.size).to eq(2)
+        expect(procedure.published_revision.types_de_champ.size).to eq(4)
+        expect(procedure.published_revision.types_de_champ_public.size).to eq(2)
+      end
+    end
+
+    context 'repetition' do
+      let(:types_de_champ) do
+        [
+          { type: :yes_no },
+          {
+            type: :repetition,
+            children: [
+              { libelle: 'Nom', mandatory: true },
+              { libelle: 'Prénom', mandatory: true },
+              { libelle: 'Age', type: :integer_number }
+            ]
+          }
+        ]
+      end
+      let(:revision) { procedure.draft_revision }
+      let(:repetition) { revision.revision_types_de_champ_public.last }
+
+      context 'with bouillon procedure' do
+        let(:procedure) { build(:procedure, types_de_champ_public: types_de_champ) }
+
+        it do
+          expect(revision.types_de_champ.size).to eq(5)
+          expect(revision.types_de_champ_public.size).to eq(2)
+          expect(revision.types_de_champ_public.map(&:type_champ)).to eq(['yes_no', 'repetition'])
+          expect(repetition.revision_types_de_champ.size).to eq(3)
+          expect(repetition.revision_types_de_champ.map(&:type_champ)).to eq(['text', 'text', 'integer_number'])
+          expect(repetition.revision_types_de_champ.map(&:mandatory?)).to eq([true, true, false])
+        end
+      end
+
+      context 'with published procedure' do
+        let(:procedure) { build(:procedure, :published, types_de_champ_public: types_de_champ) }
+
+        context 'draft revision' do
+          it do
+            expect(revision.types_de_champ.size).to eq(5)
+            expect(revision.types_de_champ_public.size).to eq(2)
+            expect(revision.types_de_champ_public.map(&:type_champ)).to eq(['yes_no', 'repetition'])
+            expect(repetition.revision_types_de_champ.size).to eq(3)
+            expect(repetition.revision_types_de_champ.map(&:type_champ)).to eq(['text', 'text', 'integer_number'])
+            expect(repetition.revision_types_de_champ.map(&:mandatory?)).to eq([true, true, false])
+          end
+        end
+
+        context 'published revision' do
+          let(:revision) { procedure.published_revision }
+
+          it do
+            expect(revision.types_de_champ.size).to eq(5)
+            expect(revision.types_de_champ_public.size).to eq(2)
+            expect(revision.types_de_champ_public.map(&:type_champ)).to eq(['yes_no', 'repetition'])
+            expect(repetition.revision_types_de_champ.size).to eq(3)
+            expect(repetition.revision_types_de_champ.map(&:type_champ)).to eq(['text', 'text', 'integer_number'])
+            expect(repetition.revision_types_de_champ.map(&:mandatory?)).to eq([true, true, false])
+          end
+        end
+      end
+    end
+  end
+
   private
 
   def create_dossier_with_pj_of_size(size, procedure)
