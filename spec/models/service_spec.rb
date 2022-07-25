@@ -136,4 +136,16 @@ describe Service, type: :model do
       end
     end
   end
+
+  describe 'etablissement_latlng' do
+    it 'without coordinates' do
+      service = build(:service, etablissement_lat: nil, etablissement_lng: nil)
+      expect(service.etablissement_latlng).to eq([nil, nil])
+    end
+
+    it 'with coordinates' do
+      service = build(:service)
+      expect(service.etablissement_latlng).to eq([48.87, 2.34])
+    end
+  end
 end

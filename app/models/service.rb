@@ -63,6 +63,10 @@ class Service < ApplicationRecord
     etablissement_infos.fetch("adresse", nil)
   end
 
+  def etablissement_latlng
+    [etablissement_lat, etablissement_lng]
+  end
+
   private
 
   def enqueue_api_entreprise
