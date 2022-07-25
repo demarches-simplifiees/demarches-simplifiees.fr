@@ -23,6 +23,7 @@ FactoryBot.define do
     entreprise_siret_siege_social { '44011762001530' }
     entreprise_code_effectif_entreprise { '51' }
     entreprise_date_creation { "1990-04-24" }
+    entreprise_etat_administratif { :actif }
 
     trait :with_exercices do
       exercices { [association(:exercice)] }

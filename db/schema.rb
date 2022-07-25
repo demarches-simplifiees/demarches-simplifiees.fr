@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_08_152039) do
+ActiveRecord::Schema.define(version: 2022_07_18_093034) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -376,6 +376,7 @@ ActiveRecord::Schema.define(version: 2022_07_08_152039) do
     t.string "entreprise_effectif_annuel_annee"
     t.decimal "entreprise_effectif_mensuel"
     t.string "entreprise_effectif_mois"
+    t.string "entreprise_etat_administratif"
     t.string "entreprise_forme_juridique"
     t.string "entreprise_forme_juridique_code"
     t.string "entreprise_nom"

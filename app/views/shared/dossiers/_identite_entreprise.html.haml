@@ -27,7 +27,12 @@
           %td= etablissement.naf
         %tr
           %td.libelle Date de création :
-          %td= try_format_date(etablissement.entreprise.date_creation)
+          %td
+            = try_format_date(etablissement.entreprise.date_creation)
+
+            - if etablissement.entreprise_etat_administratif.present?
+              %span.label= humanized_entreprise_etat_administratif(etablissement)
+
         - if profile == 'instructeur'
           %tr
             %td.libelle
