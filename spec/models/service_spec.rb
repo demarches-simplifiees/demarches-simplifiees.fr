@@ -48,9 +48,9 @@ describe Service, type: :model do
         expect(subject).not_to be_valid
       end
 
-      it 'should be optional' do
+      it 'should be required' do
         subject.siret = nil
-        expect(subject).to be_valid
+        expect(subject).not_to be_valid
       end
     end
 

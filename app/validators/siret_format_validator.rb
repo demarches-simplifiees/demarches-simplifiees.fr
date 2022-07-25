@@ -12,7 +12,7 @@ class SiretFormatValidator < ActiveModel::EachValidator
   LA_POSTE_SIREN = '356000000'
 
   def format_is_valid(value)
-    value.match?(/^\d{14}$/)
+    value&.match?(/^\d{14}$/)
   end
 
   def luhn_passed(value)
