@@ -48,6 +48,7 @@ class RootController < ApplicationController
 -- avant l'option C --
             option C"
           champ.value = '["option B", "option C"]'
+          champ.type_de_champ.drop_down_other = "1"
         end
       end
 
