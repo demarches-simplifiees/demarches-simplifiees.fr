@@ -5,12 +5,12 @@ module Administrateurs
     def download
       export = Export.find_or_create_export(export_format, all_groupe_instructeurs, **export_options)
 
-      if export.ready? && export.old? && force_export?
+      if export.available? && export.old? && force_export?
         export.destroy
         export = Export.find_or_create_export(export_format, all_groupe_instructeurs, **export_options)
       end
 
-      if export.ready?
+      if export.available?
         respond_to do |format|
           format.turbo_stream do
             @dossiers_count = export.count

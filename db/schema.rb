@@ -88,9 +88,9 @@ ActiveRecord::Schema.define(version: 2022_07_08_152039) do
 
   create_table "archives", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
+    t.string "job_status", null: false
     t.text "key", null: false
     t.date "month"
-    t.string "status", null: false
     t.string "time_span_type", null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["key", "time_span_type", "month"], name: "index_archives_on_key_and_time_span_type_and_month", unique: true
@@ -430,6 +430,7 @@ ActiveRecord::Schema.define(version: 2022_07_08_152039) do
   create_table "exports", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "format", null: false
+    t.string "job_status"
     t.text "key", null: false
     t.bigint "procedure_presentation_id"
     t.jsonb "procedure_presentation_snapshot"
