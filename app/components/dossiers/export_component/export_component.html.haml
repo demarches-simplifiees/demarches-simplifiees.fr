@@ -11,7 +11,7 @@
         %li
           - if export.nil?
             = link_to t(".everything_#{item[:format]}_html"), download_export_path(export_format: item[:format]), data: { turbo_method: :post }
-          - elsif export.ready?
+          - elsif export.available?
             = link_to ready_link_label(export), export.file.service_url, target: "_blank", rel: "noopener"
             - if export.old?
               = button_to download_export_path(export_format: export.format, force_export: true), **refresh_button_options(export) do

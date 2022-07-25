@@ -5,11 +5,11 @@ FactoryBot.define do
     key { 'unique-key' }
 
     trait :pending do
-      status { 'pending' }
+      job_status { 'pending' }
     end
 
     trait :generated do
-      status { 'generated' }
+      job_status { 'generated' }
     end
   end
 end

@@ -2,6 +2,6 @@ class Cron::PurgeStaleArchivesJob < Cron::CronJob
   self.schedule_expression = "every 5 minutes"
 
   def perform
-    Archive.stale.destroy_all
+    Archive.stale(Archive::RETENTION_DURATION).destroy_all
   end
 end
