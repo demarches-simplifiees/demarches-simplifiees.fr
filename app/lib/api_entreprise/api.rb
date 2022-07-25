@@ -15,6 +15,7 @@ class APIEntreprise::API
 
   attr_reader :procedure
   attr_accessor :token
+  attr_accessor :api_object
 
   def initialize(procedure_id = nil)
     return if procedure_id.blank?
@@ -125,7 +126,12 @@ class APIEntreprise::API
   def build_params(user_id)
     params = base_params
 
-    params[:object] = "procedure_id: #{procedure.id}" if procedure.present?
+    params[:object] = if api_object.present?
+      api_object
+    elsif procedure.present?
+      "procedure_id: #{procedure.id}"
+    end
+
     params[:user_id] = user_id if user_id.present?
 
     params
