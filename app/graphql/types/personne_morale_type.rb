@@ -6,6 +6,11 @@ module Types
         field :nb, Float, null: false
       end
 
+      class EntrepriseEtatAdministratifType < Types::BaseEnum
+        value("Actif", "L'entreprise est en activité", value: Etablissement.entreprise_etat_administratifs.fetch("actif"))
+        value("Ferme", "L'entreprise a cessé son activité", value: Etablissement.entreprise_etat_administratifs.fetch("fermé"))
+      end
+
       field :siren, String, null: false
       field :capital_social, GraphQL::Types::BigInt, null: true, description: "capital social de l’entreprise. -1 si inconnu."
       field :numero_tva_intracommunautaire, String, null: true
@@ -18,6 +23,7 @@ module Types
       field :effectif_mensuel, EffectifType, null: true, description: "effectif pour un mois donné"
       field :effectif_annuel, EffectifType, null: true, description: "effectif moyen d’une année"
       field :date_creation, GraphQL::Types::ISO8601Date, null: false
+      field :etat_administratif, EntrepriseEtatAdministratifType, null: true
       field :nom, String, null: true
       field :prenom, String, null: true
       field :inline_adresse, String, null: false

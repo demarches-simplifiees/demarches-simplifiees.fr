@@ -102,6 +102,10 @@ def add_identite_etablissement(pdf, etablissement)
     format_in_2_columns(pdf, "Code NAF ", etablissement.naf)
     format_in_2_columns(pdf, "Date de création ", try_format_date(etablissement.entreprise.date_creation))
 
+    if etablissement.entreprise_etat_administratif.present?
+      format_in_2_columns(pdf, "État administratif", humanized_entreprise_etat_administratif(etablissement))
+    end
+
     if @include_infos_administration
       if etablissement.entreprise_effectif_mensuel.present?
         format_in_2_columns(pdf, "Effectif mensuel #{try_format_mois_effectif(etablissement)} (URSSAF) ", number_with_delimiter(etablissement.entreprise_effectif_mensuel.to_s))
