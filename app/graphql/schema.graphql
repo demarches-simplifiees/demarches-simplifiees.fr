@@ -2136,11 +2136,6 @@ enum TypeDeChamp {
   email
 
   """
-  Engagement
-  """
-  engagement
-
-  """
   Explication
   """
   explication

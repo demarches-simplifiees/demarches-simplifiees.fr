@@ -1,3 +1,4 @@
+# TODO: remove after 20220725075951_migrate_champs_engagement_to_checkbox passed
 # == Schema Information
 #
 # Table name: champs
