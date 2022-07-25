@@ -150,25 +150,5 @@ describe ChampSerializer do
         it { is_expected.to include(value: nil) }
       end
     end
-
-    context 'when type champ engagement' do
-      context 'on' do
-        let(:champ) { create(:champ_engagement, value: 'on') }
-
-        it { is_expected.to include(value: 'on') }
-      end
-
-      context 'off' do
-        let(:champ) { create(:champ_engagement, value: 'off') }
-
-        it { is_expected.to include(value: 'off') }
-      end
-
-      context 'nil' do
-        let(:champ) { create(:champ_engagement, value: nil) }
-
-        it { is_expected.to include(value: nil) }
-      end
-    end
   end
 end

@@ -59,8 +59,7 @@ module Mutations
       when :checkbox
         [
           TypeDeChamp.type_champs.fetch(:checkbox),
-          TypeDeChamp.type_champs.fetch(:yes_no),
-          TypeDeChamp.type_champs.fetch(:engagement)
+          TypeDeChamp.type_champs.fetch(:yes_no)
         ]
       when :date
         TypeDeChamp.type_champs.fetch(:date)
