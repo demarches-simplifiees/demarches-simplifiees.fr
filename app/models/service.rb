@@ -2,18 +2,21 @@
 #
 # Table name: services
 #
-#  id                :bigint           not null, primary key
-#  adresse           :text
-#  email             :string
-#  horaires          :text
-#  nom               :string           not null
-#  organisme         :string
-#  siret             :string
-#  telephone         :string
-#  type_organisme    :string           not null
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  administrateur_id :bigint
+#  id                  :bigint           not null, primary key
+#  adresse             :text
+#  email               :string
+#  etablissement_infos :jsonb
+#  etablissement_lat   :decimal(10, 6)
+#  etablissement_lng   :decimal(10, 6)
+#  horaires            :text
+#  nom                 :string           not null
+#  organisme           :string
+#  siret               :string
+#  telephone           :string
+#  type_organisme      :string           not null
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  administrateur_id   :bigint
 #
 class Service < ApplicationRecord
   has_many :procedures
