@@ -86,4 +86,54 @@ describe Service, type: :model do
       end
     end
   end
+
+  describe "API Entreprise job" do
+    subject { create(:service) }
+    it "should enqueue a job when created" do
+      expect(APIEntreprise::ServiceJob).to have_been_enqueued.with(subject.id)
+    end
+
+    it "should enqueue a job when siret changed" do
+      subject.update(siret: "35600082800018")
+      expect(APIEntreprise::ServiceJob).to have_been_enqueued.with(subject.id)
+    end
+
+    it "should not enqueue a job when siret is unchanged" do
+      subject
+      clear_enqueued_jobs
+      subject.update(telephone: "09879789")
+      expect(APIEntreprise::ServiceJob).not_to have_been_enqueued
+    end
+  end
+
+  describe "etablissement adresse & geo coordinates" do
+    subject { create(:service, etablissement_lat: latitude, etablissement_lng: longitude, etablissement_infos: etablissement_infos) }
+
+    context "when the service has no geo coordinates" do
+      let(:latitude) { nil }
+      let(:longitude) { nil }
+      let(:etablissement_infos) { {} }
+      it "should return nil" do
+        expect(subject.etablissement_lat).to be_nil
+        expect(subject.etablissement_lng).to be_nil
+        expect(subject.etablissement_adresse).to be_nil
+      end
+    end
+
+    context "when the service has geo coordinates" do
+      let(:latitude) { 43.5 }
+      let(:longitude) { 4.7 }
+      let(:adresse) { "174 Chemin du Beurre\n13200\nARLES\nFRANCE" }
+      let(:etablissement_infos) { { adresse: adresse } }
+
+      it "should return nil" do
+        expect(subject.etablissement_lat).to eq(43.5)
+        expect(subject.etablissement_lng).to eq(4.7)
+      end
+
+      it "should return etablissement adresse" do
+        expect(subject.etablissement_adresse).to eq(adresse)
+      end
+    end
+  end
 end
