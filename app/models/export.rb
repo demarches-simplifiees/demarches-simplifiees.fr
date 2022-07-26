@@ -47,8 +47,6 @@ class Export < ApplicationRecord
 
   validates :format, :groupe_instructeurs, :key, presence: true
 
-  scope :stale, -> { where('exports.updated_at < ?', (Time.zone.now - MAX_DUREE_CONSERVATION_EXPORT)) }
-
   after_create_commit :compute_async
 
   FORMATS_WITH_TIME_SPAN = [:xlsx, :ods, :csv].flat_map do |format|

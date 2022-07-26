@@ -24,9 +24,11 @@ RSpec.describe Export, type: :model do
   describe '.stale' do
     let!(:export) { create(:export) }
     let(:stale_date) { Time.zone.now() - (Export::MAX_DUREE_CONSERVATION_EXPORT + 1.minute) }
-    let!(:stale_export) { create(:export, updated_at: stale_date) }
+    let!(:stale_export_generated) { create(:export, :generated, updated_at: stale_date) }
+    let!(:stale_export_failed) { create(:export, :failed, updated_at: stale_date) }
+    let!(:stale_export_pending) { create(:export, :pending, updated_at: stale_date) }
 
-    it { expect(Export.stale).to match_array([stale_export]) }
+    it { expect(Export.stale(Export::MAX_DUREE_CONSERVATION_EXPORT)).to match_array([stale_export_generated, stale_export_failed]) }
   end
 
   describe '.destroy' do
