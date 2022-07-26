@@ -14,10 +14,10 @@ module Types
       argument :number, Int, "Numéro du groupe instructeur.", required: true
     end
 
-    field :demarches_publiques, DemarcheDescriptorType.connection_type, null: false, internal: true, max_page_size: 30
+    field :demarches_publiques, DemarcheDescriptorType.connection_type, null: false, internal: true
 
     def demarches_publiques
-      Procedure.opendata
+      Procedure.opendata.includes(draft_revision: :procedure, published_revision: :procedure)
     end
 
     def demarche(number:)
