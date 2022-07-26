@@ -13,7 +13,8 @@
   = turbo_stream.morph dom_id(champ_component.coordinate, :type_de_champ_editor) do
     = render champ_component
 
-= turbo_stream.morph dom_id(@coordinate.revision, :estimated_fill_duration) do
-  = render TypesDeChampEditor::EstimatedFillDurationComponent.new(revision: @coordinate.revision, is_annotation: @coordinate.private?)
+- if @coordinate.present?
+  = turbo_stream.morph dom_id(@coordinate.revision, :estimated_fill_duration) do
+    = render TypesDeChampEditor::EstimatedFillDurationComponent.new(revision: @coordinate.revision, is_annotation: @coordinate.private?)
 
 = turbo_stream.dispatch 'sortable:sort'

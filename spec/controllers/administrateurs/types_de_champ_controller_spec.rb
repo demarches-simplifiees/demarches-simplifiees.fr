@@ -51,28 +51,21 @@ describe Administrateurs::TypesDeChampController, type: :controller do
       end
     end
 
-    context "validate type_de_champ linked_drop_down_list" do
-      let(:type_champ) { TypeDeChamp.type_champs.fetch(:linked_drop_down_list) }
+    context "validate" do
+      let(:type_champ) { TypeDeChamp.type_champs.fetch(:text) }
+      let(:params) { default_params.deep_merge(type_de_champ: { libelle: '' }) }
 
       it do
         is_expected.to have_http_status(:ok)
-        expect(flash.alert).to eq(nil)
-      end
-    end
-
-    context "create type_de_champ linked_drop_down_list" do
-      let(:type_champ) { TypeDeChamp.type_champs.fetch(:linked_drop_down_list) }
-      let(:params) { default_params.deep_merge(type_de_champ: { drop_down_list_value: '--value--' }) }
-
-      it do
-        is_expected.to have_http_status(:ok)
-        expect(flash.alert).to eq(nil)
+        expect(assigns(:coordinate)).to be_nil
+        expect(flash.alert).to eq(["Libelle doit être rempli"])
       end
     end
   end
 
   describe '#update' do
-    let(:params) do
+    let(:params) { default_params }
+    let(:default_params) do
       {
         procedure_id: procedure.id,
         stable_id: second_coordinate.stable_id,
@@ -93,6 +86,16 @@ describe Administrateurs::TypesDeChampController, type: :controller do
 
       expect(assigns(:coordinate)).to eq(second_coordinate)
       expect(morpheds).to eq([['updated', ['l1']], ['l3', ['l1', 'updated']]])
+    end
+
+    context "validate" do
+      let(:params) { default_params.deep_merge(type_de_champ: { libelle: '' }) }
+
+      it do
+        is_expected.to have_http_status(:ok)
+        expect(assigns(:coordinate)).to be_nil
+        expect(flash.alert).to eq(["Libelle doit être rempli"])
+      end
     end
   end
 
