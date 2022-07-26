@@ -85,7 +85,6 @@ export class AutosaveStatusController extends ApplicationController {
 
   private logError(error: ResponseError) {
     if (error && error.message) {
-      error.message = `[Autosave] ${error.message}`;
       console.error(error);
       this.globalDispatch('sentry:capture-exception', error);
     }
