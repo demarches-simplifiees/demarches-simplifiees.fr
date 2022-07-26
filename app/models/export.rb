@@ -4,7 +4,7 @@
 #
 #  id                              :bigint           not null, primary key
 #  format                          :string           not null
-#  job_status                      :string
+#  job_status                      :string           default("pending"), not null
 #  key                             :text             not null
 #  procedure_presentation_snapshot :jsonb
 #  statut                          :string           default("tous")

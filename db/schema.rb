@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_18_093034) do
+ActiveRecord::Schema.define(version: 2022_07_26_151017) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -431,7 +431,7 @@ ActiveRecord::Schema.define(version: 2022_07_18_093034) do
   create_table "exports", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "format", null: false
-    t.string "job_status"
+    t.string "job_status", default: "pending", null: false
     t.text "key", null: false
     t.bigint "procedure_presentation_id"
     t.jsonb "procedure_presentation_snapshot"
