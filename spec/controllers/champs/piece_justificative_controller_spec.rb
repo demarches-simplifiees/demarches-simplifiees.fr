@@ -29,7 +29,7 @@ describe Champs::PieceJustificativeController, type: :controller do
       it 'renders the attachment template as Javascript' do
         subject
         expect(response.status).to eq(200)
-        expect(response.body).to include("action=\"replace\" target=\"#{champ.input_group_id}\"")
+        expect(response.body).to include("&quot;action&quot;:&quot;morph&quot;,&quot;target&quot;:&quot;#{champ.input_group_id}&quot;")
       end
 
       it 'updates dossier.last_champ_updated_at' do
