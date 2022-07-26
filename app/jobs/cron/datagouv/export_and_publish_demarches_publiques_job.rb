@@ -1,4 +1,5 @@
 class Cron::Datagouv::ExportAndPublishDemarchesPubliquesJob < Cron::CronJob
+  include DatagouvCronSchedulableConcern
   self.schedule_expression = "every month at 3:00"
 
   def perform(*args)
@@ -10,13 +11,10 @@ class Cron::Datagouv::ExportAndPublishDemarchesPubliquesJob < Cron::CronJob
 
     begin
       DemarchesPubliquesExportService.new(gzip_filepath).call
-      APIDatagouv::API.upload(gzip_filepath)
+      io = File.new(gzip_filepath, 'r')
+      APIDatagouv::API.upload(io, :descriptif_demarches_dataset, :descriptif_demarches_resource)
     ensure
       FileUtils.rm(gzip_filepath)
     end
-  end
-
-  def self.schedulable?
-    ENV.fetch('OPENDATA_ENABLED', nil) == 'enabled'
   end
 end
