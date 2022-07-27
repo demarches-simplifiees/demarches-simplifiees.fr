@@ -35,6 +35,11 @@ module TransientModelsWithPurgeableJobConcern
         .where('updated_at < ?', (Time.zone.now - duration))
     }
 
+    scope :stuck, lambda { |duration|
+      where(job_status: [job_statuses.fetch(:pending)])
+        .where('updated_at < ?', (Time.zone.now - duration))
+    }
+
     def available?
       generated?
     end

@@ -17,6 +17,7 @@ class Export < ApplicationRecord
   include TransientModelsWithPurgeableJobConcern
 
   MAX_DUREE_CONSERVATION_EXPORT = 16.hours
+  MAX_DUREE_GENERATION = 12.hours
 
   enum format: {
     csv: 'csv',
