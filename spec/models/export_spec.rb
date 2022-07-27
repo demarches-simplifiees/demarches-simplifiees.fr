@@ -31,6 +31,16 @@ RSpec.describe Export, type: :model do
     it { expect(Export.stale(Export::MAX_DUREE_CONSERVATION_EXPORT)).to match_array([stale_export_generated, stale_export_failed]) }
   end
 
+  describe '.stuck' do
+    let!(:export) { create(:export) }
+    let(:stuck_date) { Time.zone.now() - (Export::MAX_DUREE_GENERATION + 1.minute) }
+    let!(:stale_export_generated) { create(:export, :generated, updated_at: stuck_date) }
+    let!(:stale_export_failed) { create(:export, :failed, updated_at: stuck_date) }
+    let!(:stale_export_pending) { create(:export, :pending, updated_at: stuck_date) }
+
+    it { expect(Export.stuck(Export::MAX_DUREE_GENERATION)).to match_array([stale_export_pending]) }
+  end
+
   describe '.destroy' do
     let!(:groupe_instructeur) { create(:groupe_instructeur) }
     let!(:export) { create(:export, groupe_instructeurs: [groupe_instructeur]) }

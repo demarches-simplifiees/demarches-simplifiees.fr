@@ -4,25 +4,33 @@ describe Archive do
   before { Timecop.freeze(Time.zone.now) }
   after { Timecop.return }
 
-  let(:archive) { create(:archive, job_status: :pending) }
+  let!(:archive) { create(:archive, job_status: :pending) }
 
   describe 'scopes' do
     describe 'staled' do
-      let(:recent_archive) { create(:archive, job_status: :pending) }
-      let(:staled_archive_still_pending) { create(:archive, job_status: :pending, updated_at: (Archive::RETENTION_DURATION + 2).days.ago) }
-      let(:staled_archive_still_failed) { create(:archive, job_status: :failed, updated_at: (Archive::RETENTION_DURATION + 2).days.ago) }
-      let(:staled_archive_still_generated) { create(:archive, job_status: :generated, updated_at: (Archive::RETENTION_DURATION + 2).days.ago) }
+      let!(:recent_archive) { create(:archive, job_status: :pending) }
+      let!(:staled_archive_still_pending) { create(:archive, job_status: :pending, updated_at: (Archive::RETENTION_DURATION + 2).days.ago) }
+      let!(:staled_archive_still_failed) { create(:archive, job_status: :failed, updated_at: (Archive::RETENTION_DURATION + 2).days.ago) }
+      let!(:staled_archive_still_generated) { create(:archive, job_status: :generated, updated_at: (Archive::RETENTION_DURATION + 2).days.ago) }
 
       subject do
-        archive
-        recent_archive
-        staled_archive_still_pending
-        staled_archive_still_failed
-        staled_archive_still_generated
         Archive.stale(Archive::RETENTION_DURATION)
       end
 
       it { is_expected.to match_array([staled_archive_still_failed, staled_archive_still_generated]) }
+    end
+
+    describe 'stuck' do
+      let!(:recent_archive) { create(:archive, job_status: :pending) }
+      let!(:staled_archive_still_pending) { create(:archive, job_status: :pending, updated_at: (Archive::MAX_DUREE_GENERATION + 2).days.ago) }
+      let!(:staled_archive_still_failed) { create(:archive, job_status: :failed, updated_at: (Archive::MAX_DUREE_GENERATION + 2).days.ago) }
+      let!(:staled_archive_still_generated) { create(:archive, job_status: :generated, updated_at: (Archive::MAX_DUREE_GENERATION + 2).days.ago) }
+
+      subject do
+        Archive.stuck(Archive::MAX_DUREE_GENERATION)
+      end
+
+      it { is_expected.to match_array([staled_archive_still_pending]) }
     end
   end
 

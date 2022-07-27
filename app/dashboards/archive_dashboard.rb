@@ -11,7 +11,7 @@ class ArchiveDashboard < Administrate::BaseDashboard
     id: Field::Number,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
-    status: Field::String,
+    job_status: Field::String,
     file: AttachmentField
   }.freeze
 
@@ -24,7 +24,7 @@ class ArchiveDashboard < Administrate::BaseDashboard
     :id,
     :created_at,
     :updated_at,
-    :status,
+    :job_status,
     :file
   ].freeze
 
@@ -34,6 +34,6 @@ class ArchiveDashboard < Administrate::BaseDashboard
     :id,
     :created_at,
     :updated_at,
-    :status
+    :job_status
   ].freeze
 end
