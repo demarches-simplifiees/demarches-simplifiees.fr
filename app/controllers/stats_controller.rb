@@ -16,10 +16,6 @@ class StatsController < ApplicationController
       stat.dossiers_deposes_entre_60_et_30_jours
     )
 
-    @contact_percentage = Rails.cache.fetch("stats.contact_percentage", expires_in: 1.day) do
-      contact_percentage
-    end
-
     @dossiers_states_for_pie = {
       "Brouillon" => stat.dossiers_brouillon,
       "En construction" => stat.dossiers_en_construction,
@@ -101,31 +97,6 @@ class StatsController < ApplicationController
       last_30_days_count: last_30_days_count.to_s,
       evolution: formatted_evolution
     }
-  end
-
-  def contact_percentage
-    number_of_months = 13
-
-    from = Time.zone.today.prev_month(number_of_months)
-    to = Time.zone.today.prev_month
-
-    adapter = Helpscout::UserConversationsAdapter.new(from, to)
-    if !adapter.can_fetch_reports?
-      return nil
-    end
-
-    adapter
-      .reports
-      .map do |monthly_report|
-        start_date = monthly_report[:start_date].to_time.localtime
-        end_date = monthly_report[:end_date].to_time.localtime
-        replies_count = monthly_report[:replies_sent]
-
-        dossiers_count = Dossier.where(depose_at: start_date..end_date).count
-
-        monthly_contact_percentage = replies_count.fdiv(dossiers_count || 1) * 100
-        [I18n.l(start_date, format: '%b %y'), monthly_contact_percentage.round(1)]
-      end
   end
 
   def max_date
