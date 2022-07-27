@@ -14,6 +14,7 @@ class Archive < ApplicationRecord
   include TransientModelsWithPurgeableJobConcern
 
   RETENTION_DURATION = 4.days
+  MAX_DUREE_GENERATION = 24.hours
   MAX_SIZE = 100.gigabytes
 
   has_and_belongs_to_many :groupe_instructeurs
