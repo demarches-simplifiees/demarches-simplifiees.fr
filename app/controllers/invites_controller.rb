@@ -3,7 +3,7 @@ class InvitesController < ApplicationController
   before_action :store_user_location!, only: [:show]
 
   def create
-    email = params[:invite_email].downcase
+    email = params[:invite_email]&.downcase
     @dossier = current_user.dossiers.visible_by_user.find(params[:dossier_id])
     invite = Invite.create(
       dossier: @dossier,
