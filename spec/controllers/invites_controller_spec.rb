@@ -121,6 +121,15 @@ describe InvitesController, type: :controller do
             it { expect(flash[:alert]).to be_present }
           end
 
+          context "when user does'nt give any email" do
+            subject { post :create, params: { dossier_id: dossier.id } }
+            before do
+              subject
+            end
+            it { expect { subject }.not_to change(Invite, :count) }
+            it { expect(flash[:alert]).to be_present }
+          end
+
           context 'when email is already used' do
             let!(:invite) { create(:invite, dossier: dossier) }
 
