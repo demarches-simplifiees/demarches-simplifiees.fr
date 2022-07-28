@@ -741,7 +741,7 @@ GEM
       activemodel (>= 3.0.0)
       public_suffix
     vcr (6.1.0)
-    view_component (2.53.0)
+    view_component (2.62.0)
       activesupport (>= 5.0.0, < 8.0)
       method_source (~> 1.0)
     virtus (2.0.0)
