@@ -61,7 +61,7 @@ module Instructeurs
       @counts = current_instructeur
         .dossiers_count_summary(groupe_instructeur_ids)
         .symbolize_keys
-      @can_download_dossiers = (@counts[:tous] + @counts[:archives]) > 0 && !is_instructeur_through_assign_tos_as_manager?
+      @can_download_dossiers = (@counts[:tous] + @counts[:archives]) > 0 && !instructeur_as_manager?
 
       dossiers = Dossier.where(groupe_instructeur_id: groupe_instructeur_ids)
       dossiers_count = @counts[statut.underscore.to_sym]
@@ -102,7 +102,7 @@ module Instructeurs
       @a_suivre_count, @suivis_count, @traites_count, @tous_count, @archives_count, @supprimes_recemment_count, @expirant_count = current_instructeur
         .dossiers_count_summary(groupe_instructeur_ids)
         .fetch_values('a_suivre', 'suivis', 'traites', 'tous', 'archives', 'supprimes_recemment', 'expirant')
-      @can_download_dossiers = (@tous_count + @archives_count) > 0 && !is_instructeur_through_assign_tos_as_manager?
+      @can_download_dossiers = (@tous_count + @archives_count) > 0 && !instructeur_as_manager?
 
       notifications = current_instructeur.notifications_for_groupe_instructeurs(groupe_instructeur_ids)
       @has_en_cours_notifications = notifications[:en_cours].present?
@@ -146,7 +146,7 @@ module Instructeurs
       @can_download_dossiers = current_instructeur
         .dossiers
         .visible_by_administration
-        .exists?(groupe_instructeur_id: groupe_instructeur_ids) && !is_instructeur_through_assign_tos_as_manager?
+        .exists?(groupe_instructeur_id: groupe_instructeur_ids) && !instructeur_as_manager?
 
       export = Export.find_or_create_export(export_format, groupe_instructeurs, **export_options)
 

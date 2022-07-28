@@ -16,4 +16,4 @@
     %tfoot
       %tr
         %th{ colspan: 4 }
-          = render 'add_admin_form', procedure: @procedure, disabled_as_super_admin: is_administrateur_through_procedure_administration_as_manager?
+          = render 'add_admin_form', procedure: @procedure, disabled_as_super_admin: administrateur_as_manager?

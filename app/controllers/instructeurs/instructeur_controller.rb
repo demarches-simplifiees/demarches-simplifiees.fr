@@ -7,14 +7,14 @@ module Instructeurs
     end
 
     def ensure_not_super_admin!
-      if is_instructeur_through_assign_tos_as_manager?
+      if instructeur_as_manager?
         redirect_back fallback_location: root_url, alert: "Interdit aux super admins", status: 403
       end
     end
 
     private
 
-    def is_instructeur_through_assign_tos_as_manager?
+    def instructeur_as_manager?
       procedure_id = params[:procedure_id]
 
       current_instructeur.assign_to

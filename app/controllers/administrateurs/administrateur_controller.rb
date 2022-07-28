@@ -1,7 +1,7 @@
 module Administrateurs
   class AdministrateurController < ApplicationController
     before_action :authenticate_administrateur!
-    helper_method :is_administrateur_through_procedure_administration_as_manager?
+    helper_method :administrateur_as_manager?
 
     def retrieve_procedure
       id = params[:procedure_id] || params[:id]
@@ -33,14 +33,14 @@ module Administrateurs
     end
 
     def ensure_not_super_admin!
-      if is_administrateur_through_procedure_administration_as_manager?
+      if administrateur_as_manager?
         redirect_back fallback_location: root_url, alert: "Interdit aux super admins", status: 403
       end
     end
 
     private
 
-    def is_administrateur_through_procedure_administration_as_manager?
+    def administrateur_as_manager?
       id = params[:procedure_id] || params[:id]
 
       current_administrateur.administrateurs_procedures
