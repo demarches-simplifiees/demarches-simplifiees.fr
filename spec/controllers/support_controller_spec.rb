@@ -122,7 +122,7 @@ describe SupportController, type: :controller do
         let(:params) { { subject: 'bonjour', text: 'un message', InvisibleCaptcha.honeypots.sample => 'boom' } }
         it 'does not create a conversation on HelpScout' do
           expect { subject }.not_to change(Commentaire, :count)
-          expect(flash[:alert]).to eq(I18n.t('invisible_captcha.custom_message'))
+          expect(flash[:alert]).to eq(I18n.t('invisible_captcha.sentence_for_humans'))
         end
       end
     end
