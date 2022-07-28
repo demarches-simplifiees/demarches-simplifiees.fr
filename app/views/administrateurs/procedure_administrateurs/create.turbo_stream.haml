@@ -1,3 +1,3 @@
 - if @administrateur.present?
   = turbo_stream.append "administrateurs", partial: 'administrateur', locals: { procedure: @procedure, administrateur: @administrateur }
-  = turbo_stream.replace "new_administrateur", partial: 'add_admin_form', locals: { procedure: @procedure, disabled_as_super_admin: is_administrateur_through_procedure_administration_as_manager? }
+  = turbo_stream.replace "new_administrateur", partial: 'add_admin_form', locals: { procedure: @procedure, disabled_as_super_admin: administrateur_as_manager? }
