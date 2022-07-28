@@ -20,26 +20,6 @@
       %span.big-number-card-detail
         #{number_with_delimiter(@dossiers_numbers[:last_30_days_count])} (#{@dossiers_numbers[:evolution]} %) sur les 30 derniers jours
 
-    .stat-card.stat-card-half.pull-left
-      %span.stat-card-title
-        Pourcentage de contact utilisateur
-
-      .chart-container
-        .chart
-          = line_chart @contact_percentage
-
-      .stat-card-details
-        Nombre de réponses envoyées via HelpScout
-        \/ nombre de dossiers déposés
-
-    .stat-card.stat-card-half.pull-left
-      %span.stat-card-title
-        Répartition des dossiers
-
-      .chart-container
-        .chart
-          = pie_chart @dossiers_states_for_pie,
-            colors: ["#000091", "#7F7FC8", "#9A9AFF", "#00006D"]
 
     .stat-card.stat-card-half.pull-left
       %ul.segmented-control.pull-right
@@ -70,6 +50,15 @@
           = column_chart @dossiers_in_the_last_4_months
         .chart.cumulative-dossiers-chart.hidden
           = area_chart @dossiers_cumulative
+
+    .stat-card.stat-card-half.pull-left
+      %span.stat-card-title
+        Répartition des dossiers
+
+      .chart-container
+        .chart
+          = pie_chart @dossiers_states_for_pie,
+            colors: ["#000091", "#7F7FC8", "#9A9AFF", "#00006D"]
 
     .clearfix
 
