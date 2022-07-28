@@ -75,6 +75,12 @@ class RootController < ApplicationController
     end
 
     @dossier = Dossier.new(champs: all_champs)
+    all_champs.each do |champ|
+      champ.association(:dossier).target = @dossier
+      champ.champs.each do |champ|
+        champ.association(:dossier).target = @dossier
+      end
+    end
   end
 
   def suivi
