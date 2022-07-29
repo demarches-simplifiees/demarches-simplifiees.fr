@@ -51,6 +51,17 @@ describe Users::CommencerController, type: :controller do
         expect(response).to redirect_to(root_path)
       end
     end
+
+    context 'when procedure has a replaced_by_procedure' do
+      let(:path) { published_procedure.path }
+
+      it 'redirects to new procedure' do
+        replaced_by_procedure = create(:procedure, :published)
+        published_procedure.update!(replaced_by_procedure_id: replaced_by_procedure.id)
+        published_procedure.close!
+        expect(subject).to redirect_to(commencer_path(path: replaced_by_procedure.path))
+      end
+    end
   end
 
   describe '#commencer_test' do

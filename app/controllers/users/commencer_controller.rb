@@ -5,8 +5,8 @@ module Users
     def commencer
       @procedure = retrieve_procedure
       return procedure_not_found if @procedure.blank? || @procedure.brouillon?
-      @revision = @procedure.published_revision
 
+      @revision = @procedure.published_revision
       render 'commencer/show'
     end
 
@@ -69,7 +69,10 @@ module Users
     def procedure_not_found
       procedure = Procedure.find_by(path: params[:path])
 
-      if procedure&.close?
+      if procedure&.replaced_by_procedure
+        redirect_to commencer_path(path: procedure.replaced_by_procedure.path)
+        return
+      elsif procedure&.close?
         flash.alert = procedure.service.presence ?
                       t('errors.messages.procedure_archived.with_service_and_phone_email', service_name: procedure.service.nom, service_phone_number: procedure.service.telephone, service_email: procedure.service.email) :
                       t('errors.messages.procedure_archived.with_organisation_only', organisation_name: procedure.organisation)
