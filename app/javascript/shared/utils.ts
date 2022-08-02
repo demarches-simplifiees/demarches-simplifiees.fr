@@ -297,7 +297,7 @@ export function isTextInputElement(
 ): element is HTMLInputElement {
   return (
     ['INPUT', 'TEXTAREA'].includes(element.tagName) &&
-    element.type != 'checkbox' &&
-    element.type != 'radio'
+    typeof element.type == 'string' &&
+    !['checkbox', 'radio', 'file'].includes(element.type)
   );
 }
