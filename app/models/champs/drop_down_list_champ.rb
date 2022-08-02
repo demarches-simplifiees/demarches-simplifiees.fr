@@ -56,10 +56,6 @@ class Champs::DropDownListChamp < Champ
     drop_down_other? && value.present? && drop_down_list_options.exclude?(value)
   end
 
-  def drop_down_other?
-    drop_down_other == "1" || drop_down_other == true
-  end
-
   def value=(value)
     if value != OTHER
       write_attribute(:value, value)
