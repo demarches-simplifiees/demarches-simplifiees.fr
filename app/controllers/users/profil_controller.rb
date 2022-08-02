@@ -30,8 +30,14 @@ module Users
     end
 
     def transfer_all_dossiers
-      DossierTransfer.initiate(next_owner_email, current_user.dossiers)
-      flash.notice = t('.new_transfer', count: current_user.dossiers.count, email: next_owner_email)
+      transfer = DossierTransfer.initiate(next_owner_email, current_user.dossiers)
+
+      if transfer.valid?
+        flash.notice = t('.new_transfer', count: current_user.dossiers.count, email: next_owner_email)
+      else
+        flash.alert = transfer.errors.full_messages
+      end
+
       redirect_to profil_path
     end
 
