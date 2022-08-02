@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_26_151017) do
+ActiveRecord::Schema.define(version: 2022_07_28_084804) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -222,11 +222,9 @@ ActiveRecord::Schema.define(version: 2022_07_26_151017) do
     t.bigint "expert_id"
     t.bigint "instructeur_id"
     t.datetime "updated_at", null: false
-    t.bigint "user_id"
     t.index ["dossier_id"], name: "index_commentaires_on_dossier_id"
     t.index ["expert_id"], name: "index_commentaires_on_expert_id"
     t.index ["instructeur_id"], name: "index_commentaires_on_instructeur_id"
-    t.index ["user_id"], name: "index_commentaires_on_user_id"
   end
 
   create_table "delayed_jobs", id: :serial, force: :cascade do |t|
@@ -311,7 +309,6 @@ ActiveRecord::Schema.define(version: 2022_07_26_151017) do
     t.bigint "dossier_transfer_id"
     t.datetime "en_construction_at"
     t.datetime "en_construction_close_to_expiration_notice_sent_at"
-    t.interval "en_construction_conservation_extension", default: "PT0S"
     t.datetime "en_instruction_at"
     t.boolean "for_procedure_preview", default: false
     t.bigint "groupe_instructeur_id"
@@ -798,18 +795,12 @@ ActiveRecord::Schema.define(version: 2022_07_26_151017) do
     t.text "description"
     t.string "libelle"
     t.boolean "mandatory", default: false
-    t.boolean "migrated_parent"
     t.jsonb "options"
-    t.integer "order_place"
-    t.bigint "parent_id"
     t.boolean "private", default: false, null: false
-    t.bigint "revision_id"
     t.bigint "stable_id"
     t.string "type_champ"
     t.datetime "updated_at"
-    t.index ["parent_id"], name: "index_types_de_champ_on_parent_id"
     t.index ["private"], name: "index_types_de_champ_on_private"
-    t.index ["revision_id"], name: "index_types_de_champ_on_revision_id"
     t.index ["stable_id"], name: "index_types_de_champ_on_stable_id"
   end
 
@@ -922,8 +913,6 @@ ActiveRecord::Schema.define(version: 2022_07_26_151017) do
   add_foreign_key "targeted_user_links", "users"
   add_foreign_key "traitements", "dossiers"
   add_foreign_key "trusted_device_tokens", "instructeurs"
-  add_foreign_key "types_de_champ", "procedure_revisions", column: "revision_id"
-  add_foreign_key "types_de_champ", "types_de_champ", column: "parent_id"
   add_foreign_key "users", "users", column: "requested_merge_into_id"
   add_foreign_key "without_continuation_mails", "procedures"
 end
