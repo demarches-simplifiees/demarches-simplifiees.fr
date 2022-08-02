@@ -135,5 +135,19 @@ describe Administrateurs::ServicesController, type: :controller do
       it { expect(flash.notice).to be_nil }
       it { expect(response).to redirect_to(admin_services_path(procedure_id: 12)) }
     end
+
+    context "when a service has some related discarded procedures" do
+      let!(:procedure) { create(:procedure, :discarded, service: service) }
+
+      before do
+        sign_in(admin.user)
+        delete :destroy, params: { id: service.id, procedure_id: procedure.id }
+      end
+
+      it { expect { service.reload }.to raise_error(ActiveRecord::RecordNotFound) }
+      it { expect(flash.alert).to be_nil }
+      it { expect(flash.notice).to eq("#{service.nom} est supprimé") }
+      it { expect(procedure.reload.service_id).to be_nil }
+    end
   end
 end
