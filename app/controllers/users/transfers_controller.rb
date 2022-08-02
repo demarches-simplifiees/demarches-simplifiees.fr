@@ -2,8 +2,14 @@ module Users
   class TransfersController < UserController
     def create
       transfer = DossierTransfer.new(transfer_params)
-      transfer.save!
-      redirect_to dossiers_path
+
+      if transfer.valid?
+        transfer.save!
+        redirect_to dossiers_path
+      else
+        flash.alert = transfer.errors.full_messages
+        redirect_to transferer_dossier_path(transfer_params[:dossiers].first)
+      end
     end
 
     def update
@@ -23,12 +29,16 @@ module Users
     private
 
     def transfer_params
-      transfer_params = params.require(:dossier_transfer).permit(:email, :dossiers)
-      if transfer_params[:dossiers].present?
-        transfer_params.merge(dossiers: [current_user.dossiers.find(transfer_params[:dossiers])])
+      transfer_params = params.require(:dossier_transfer).permit(:email, :dossier)
+
+      dossier_id = transfer_params.delete(:dossier)
+      dossiers = if dossier_id.present?
+        [current_user.dossiers.find(dossier_id)]
       else
-        transfer_params.merge(dossiers: current_user.dossiers)
+        current_user.dossiers
       end
+
+      transfer_params.merge(dossiers: dossiers)
     end
   end
 end

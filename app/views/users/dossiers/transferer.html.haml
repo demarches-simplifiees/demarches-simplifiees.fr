@@ -5,5 +5,5 @@
   = form_for @transfer, url: transfers_path, html: { class: 'form mt-2' } do |f|
     = f.label :email, 'Email du compte destinataire'
     = f.email_field :email
-    = f.hidden_field :dossiers, value: dossier.id
+    = f.hidden_field :dossier, value: dossier.id
     = f.submit "Envoyer la demande de transfert", class: 'button primary'
