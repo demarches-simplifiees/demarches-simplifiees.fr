@@ -87,6 +87,6 @@
   },
   "graphdoc": {
     "schemaFile": "./app/graphql/schema.json",
-    "output": "./public/doc/graphql"
+    "output": "./public/graphql/schema"
   }
 }
