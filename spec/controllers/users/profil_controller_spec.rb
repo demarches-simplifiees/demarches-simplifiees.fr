@@ -133,14 +133,25 @@ describe Users::ProfilController, type: :controller do
     let(:next_owner) { 'loulou@lou.com' }
     let(:created_transfer) { DossierTransfer.first }
 
-    before do
+    subject {
       post :transfer_all_dossiers, params: { next_owner: next_owner }
-    end
+    }
+
+    before { subject }
 
     it "transfer all dossiers" do
       expect(created_transfer.email).to eq(next_owner)
       expect(created_transfer.dossiers).to match_array(dossiers)
       expect(flash.notice).to eq("Le transfert de 3 dossiers à #{next_owner} est en cours")
+    end
+
+    context "next owner has an empty email" do
+      let(:next_owner) { '' }
+
+      it "should not transfer to an empty email" do
+        expect { subject }.not_to change { DossierTransfer.count }
+        expect(flash.alert).to eq(["L'adresse email est invalide"])
+      end
     end
   end
 
