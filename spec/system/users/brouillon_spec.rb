@@ -179,13 +179,13 @@ describe 'The user' do
 
     expect(page).to have_css('.card-title', text: 'Votre dossier va expirer', visible: true)
     find('#test-user-repousser-expiration').click
-    expect(page).not_to have_selector('#test-user-repousser-expiration')
+    expect(page).to have_no_selector('#test-user-repousser-expiration')
 
     Timecop.freeze(simple_procedure.duree_conservation_dossiers_dans_ds.month.from_now) do
       visit brouillon_dossier_path(user_old_dossier)
       expect(page).to have_css('.card-title', text: 'Votre dossier va expirer', visible: true)
       find('#test-user-repousser-expiration').click
-      expect(page).not_to have_selector('#test-user-repousser-expiration')
+      expect(page).to have_no_selector('#test-user-repousser-expiration')
     end
   end
 
@@ -342,7 +342,7 @@ describe 'The user' do
       log_in(user, simple_procedure)
       fill_individual
 
-      expect(page).not_to have_button('Enregistrer le brouillon')
+      expect(page).to have_no_button('Enregistrer le brouillon')
       expect(page).to have_content('Votre brouillon est automatiquement enregistré')
 
       fill_in('texte obligatoire', with: 'a valid user input')
