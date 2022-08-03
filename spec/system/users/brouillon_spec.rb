@@ -47,31 +47,47 @@ describe 'The user' do
     blur
     expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
 
-    # check data on the dossier
-    expect(user_dossier.brouillon?).to be true
-    expect(champ_value_for('text')).to eq('super texte')
-    expect(champ_value_for('textarea')).to eq('super textarea')
-    expect(champ_value_for('date')).to eq('2012-12-12')
-    expect(champ_value_for('datetime')).to eq('06/01/2030 07:05')
-    expect(champ_value_for('number')).to eq('42')
-    expect(champ_value_for('decimal_number')).to eq('17')
-    expect(champ_value_for('integer_number')).to eq('12')
-    expect(champ_value_for('checkbox')).to eq('on')
-    expect(champ_value_for('civilite')).to eq('Mme')
-    expect(champ_value_for('email')).to eq('loulou@yopmail.com')
-    expect(champ_value_for('phone')).to eq('0123456789')
-    expect(champ_value_for('yes_no')).to eq('false')
-    expect(champ_value_for('simple_drop_down_list')).to eq('val2')
-    expect(champ_value_for('simple_choice_drop_down_list_long')).to eq('bravo')
-    expect(JSON.parse(champ_value_for('multiple_choice_drop_down_list_long'))).to match(['alpha', 'charly'])
-    expect(JSON.parse(champ_value_for('multiple_drop_down_list'))).to match(['val1', 'val3'])
-    expect(champ_value_for('pays')).to eq('Australie')
-    expect(champ_value_for('regions')).to eq('Martinique')
-    expect(champ_value_for('departements')).to eq('02 - Aisne')
-    expect(champ_value_for('communes')).to eq('Ambléon (01300)')
-    expect(champ_value_for('engagement')).to eq('on')
-    expect(champ_value_for('piece_justificative')).to be_nil # antivirus hasn't approved the file yet
-    expect(champ_value_for('dossier_link')).to eq(dossier_to_link.id.to_s)
+    # check data on the dossier from db
+    # Sometimes, `user_dossier.champs` are not yet all updated with the new values
+    # when we first load `user_dossier`, causing random errors.
+    # Strategy is to retry & reload them if necessary for a few seconds,
+    # and raise expectation error instead of timeout error.
+    last_expection_error = nil
+    begin
+      Timeout.timeout(Capybara.default_max_wait_time) do
+        expect(user_dossier).to be_brouillon
+        expect(champ_value_for('text')).to eq('super texte')
+        expect(champ_value_for('textarea')).to eq('super textarea')
+        expect(champ_value_for('date')).to eq('2012-12-12')
+        expect(champ_value_for('datetime')).to eq('06/01/2030 07:05')
+        expect(champ_value_for('number')).to eq('42')
+        expect(champ_value_for('decimal_number')).to eq('17')
+        expect(champ_value_for('integer_number')).to eq('12')
+        expect(champ_value_for('checkbox')).to eq('on')
+        expect(champ_value_for('civilite')).to eq('Mme')
+        expect(champ_value_for('email')).to eq('loulou@yopmail.com')
+        expect(champ_value_for('phone')).to eq('0123456789')
+        expect(champ_value_for('yes_no')).to eq('false')
+        expect(champ_value_for('simple_drop_down_list')).to eq('val2')
+        expect(champ_value_for('simple_choice_drop_down_list_long')).to eq('bravo')
+        expect(JSON.parse(champ_value_for('multiple_choice_drop_down_list_long'))).to match(['alpha', 'charly'])
+        expect(JSON.parse(champ_value_for('multiple_drop_down_list'))).to match(['val1', 'val3'])
+        expect(champ_value_for('pays')).to eq('Australie')
+        expect(champ_value_for('regions')).to eq('Martinique')
+        expect(champ_value_for('departements')).to eq('02 - Aisne')
+        expect(champ_value_for('communes')).to eq('Ambléon (01300)')
+        expect(champ_value_for('engagement')).to eq('on')
+        expect(champ_value_for('dossier_link')).to eq(dossier_to_link.id.to_s)
+        expect(champ_value_for('piece_justificative')).to be_nil # antivirus hasn't approved the file yet
+      rescue RSpec::Expectations::ExpectationNotMetError => e
+        Rails.logger.debug "Error #{e.message.tr("\n", " ")}, will retry"
+        last_expection_error = e
+        sleep(0.1)
+        retry
+      end
+    rescue Timeout::Error => e
+      raise last_expection_error || e
+    end
 
     ## check data on the gui
 
@@ -435,7 +451,7 @@ describe 'The user' do
   end
 
   def champ_value_for(libelle)
-    champs = user_dossier.champs
+    champs = user_dossier.reload.champs
     champs.find { |c| c.libelle == libelle }.value
   end
 
