@@ -26,8 +26,6 @@
           = t('.your_question')
         = hidden_field_tag :type, params[:type]
 
-      = invisible_captcha
-
       %dl
         - @options.each do |(question, question_type, link)|
           %dt
@@ -70,6 +68,8 @@
         = file_field_tag :piece_jointe
 
       = hidden_field_tag :tags, @tags&.join(',')
+
+      = invisible_captcha
 
       .send-wrapper
         = button_tag t('send_mail', scope: [:utils]), type: :submit, class: 'button send primary'
