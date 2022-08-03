@@ -109,4 +109,12 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
   def has_legacy_number?
     revision.types_de_champ.any?(&:legacy_number?)
   end
+
+  def conditional_enabled?
+    if type_de_champ.private? || coordinate.child?
+      false
+    else
+      procedure.feature_enabled?(:procedure_conditional) || Flipper.enabled?(:conditional, controller.current_user)
+    end
+  end
 end
