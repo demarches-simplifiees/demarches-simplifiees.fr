@@ -43,8 +43,8 @@ describe 'The user' do
     fill_in('dossier_link', with: dossier_to_link.id)
     find('.editable-champ-piece_justificative input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
 
+    expect(page).to have_css('span', text: 'Votre brouillon est automatiquement enregistré', visible: true)
     blur
-    sleep(0.7)
     expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
 
     # check data on the dossier
