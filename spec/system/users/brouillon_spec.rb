@@ -4,6 +4,7 @@ describe 'The user' do
 
   let!(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs_mandatory) }
   let(:user_dossier) { user.dossiers.first }
+  let!(:dossier_to_link) { create(:dossier) }
 
   scenario 'fill a dossier', js: true do
     log_in(user, procedure)
@@ -39,7 +40,7 @@ describe 'The user' do
     select_combobox('communes', 'Ambl', 'Ambléon (01300)')
 
     check('engagement')
-    fill_in('dossier_link', with: '123')
+    fill_in('dossier_link', with: dossier_to_link.id)
     find('.editable-champ-piece_justificative input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
 
     blur
@@ -69,8 +70,8 @@ describe 'The user' do
     expect(champ_value_for('departements')).to eq('02 - Aisne')
     expect(champ_value_for('communes')).to eq('Ambléon (01300)')
     expect(champ_value_for('engagement')).to eq('on')
-    expect(champ_value_for('dossier_link')).to eq('123')
     expect(champ_value_for('piece_justificative')).to be_nil # antivirus hasn't approved the file yet
+    expect(champ_value_for('dossier_link')).to eq(dossier_to_link.id.to_s)
 
     ## check data on the gui
 
@@ -94,7 +95,7 @@ describe 'The user' do
     check_selected_value('departements', with: '02 - Aisne')
     check_selected_value('communes', with: 'Ambléon (01300)')
     expect(page).to have_checked_field('engagement')
-    expect(page).to have_field('dossier_link', with: '123')
+    expect(page).to have_field('dossier_link', with: dossier_to_link.id.to_s)
     expect(page).to have_text('file.pdf')
     expect(page).to have_text('analyse antivirus en cours')
   end
