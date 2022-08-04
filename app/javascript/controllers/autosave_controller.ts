@@ -1,6 +1,4 @@
 import {
-  httpRequest,
-  ResponseError,
   isSelectElement,
   isCheckboxOrRadioInputElement,
   isTextInputElement,
@@ -8,7 +6,7 @@ import {
 } from '@utils';
 
 import { ApplicationController } from './application_controller';
-import { AutoUpload } from '../shared/activestorage/auto-upload';
+import Uploader from '../shared/activestorage/uploader';
 import {
   FileUploadError,
   FAILURE_CLIENT,
@@ -20,34 +18,17 @@ const {
 } = getConfig();
 
 const AUTOSAVE_DEBOUNCE_DELAY = debounce_delay;
-const AUTOSAVE_TIMEOUT_DELAY = 60000;
 
 // This is a controller we attach to each "champ" in the main form. It performs
 // the save and dispatches a few events that allow `AutosaveStatusController` to
 // coordinate notifications and retries:
 // * `autosave:enqueue` - dispatched when a new save attempt starts
-// * `autosave:end` - dispatched after sucessful save
 // * `autosave:error` - dispatched when an error occures
 //
-// The controller also listens to the following events:
-// * `autosave:retry` - dispatched by `AutosaveStatusController` when the user
-// clicks the retry button in the form status bar
-//
 export class AutosaveController extends ApplicationController {
-  #abortController?: AbortController;
-  #latestPromise = Promise.resolve();
-  #needsRetry = false;
-
   connect() {
-    this.#latestPromise = Promise.resolve();
-    this.onGlobal('autosave:retry', () => this.didRequestRetry());
     this.on('change', (event) => this.onChange(event));
     this.on('input', (event) => this.onInput(event));
-  }
-
-  disconnect() {
-    this.#abortController?.abort();
-    this.#latestPromise = Promise.resolve();
   }
 
   onClickRetryButton(event: Event) {
@@ -56,13 +37,8 @@ export class AutosaveController extends ApplicationController {
     if (inputTargetSelector) {
       const target =
         this.element.querySelector<HTMLInputElement>(inputTargetSelector);
-      if (
-        target &&
-        target.type == 'file' &&
-        target.dataset.autoAttachUrl &&
-        target.files?.length
-      ) {
-        this.enqueueAutouploadRequest(target, target.files[0]);
+      if (target && target.type == 'file' && target.files?.length) {
+        this.uploadFile(target, target.files[0]);
       }
     }
   }
@@ -70,10 +46,8 @@ export class AutosaveController extends ApplicationController {
   private onChange(event: Event) {
     const target = event.target as HTMLInputElement;
     if (!target.disabled) {
-      if (target.type == 'file') {
-        if (target.dataset.autoAttachUrl && target.files?.length) {
-          this.enqueueAutouploadRequest(target, target.files[0]);
-        }
+      if (target.type == 'file' && target.files?.length) {
+        this.uploadFile(target, target.files[0]);
       } else if (target.type == 'hidden') {
         // In React comboboxes we dispatch a "change" event on hidden inputs to trigger autosave.
         // We want to debounce them.
@@ -99,39 +73,36 @@ export class AutosaveController extends ApplicationController {
     }
   }
 
-  private didRequestRetry() {
-    if (this.#needsRetry) {
-      this.enqueueAutosaveRequest();
-    }
-  }
+  private async uploadFile(target: HTMLInputElement, file: File) {
+    if (target.dataset.directUploadUrl) {
+      const uploader = new Uploader(
+        target,
+        file,
+        target.dataset.directUploadUrl ?? ''
+      );
+      const input = document.createElement('input');
 
-  private didEnqueue() {
-    this.#needsRetry = false;
-    this.globalDispatch('autosave:enqueue');
-  }
-
-  private didSucceed() {
-    this.globalDispatch('autosave:end');
-  }
-
-  private didFail(error: ResponseError) {
-    this.#needsRetry = true;
-    this.globalDispatch('autosave:error', { error });
-  }
-
-  private enqueueAutouploadRequest(target: HTMLInputElement, file: File) {
-    const autoupload = new AutoUpload(target, file);
-    try {
-      autoupload.start();
-    } catch (e) {
-      const error = e as FileUploadError;
-      // Report unexpected client errors to Sentry.
-      // (But ignore usual client errors, or errors we can monitor better on the server side.)
-      if (
-        error.failureReason == FAILURE_CLIENT &&
-        error.code != ERROR_CODE_READ
-      ) {
-        throw error;
+      try {
+        const blobSignedId = await uploader.start();
+        input.type = 'hidden';
+        input.name = target.name;
+        input.value = blobSignedId;
+        target.disabled = true;
+        target.parentElement?.append(input);
+        this.dispatch('change', { target: input, bubbles: true, prefix: '' });
+      } catch (e) {
+        const error = e as FileUploadError;
+        // Report unexpected client errors to Sentry.
+        // (But ignore usual client errors, or errors we can monitor better on the server side.)
+        if (
+          error.failureReason == FAILURE_CLIENT &&
+          error.code != ERROR_CODE_READ
+        ) {
+          this.globalDispatch('autosave:error', { error });
+        }
+      } finally {
+        target.disabled = false;
+        input.remove();
       }
     }
   }
@@ -140,18 +111,6 @@ export class AutosaveController extends ApplicationController {
   // It will be started after the previous one finishes (to prevent older form data
   // to overwrite newer data if the server does not respond in order.)
   private enqueueAutosaveRequest() {
-    this.#latestPromise = this.#latestPromise.finally(() =>
-      this.sendAutosaveRequest()
-        .then(() => this.didSucceed())
-        .catch((error) => this.didFail(error))
-    );
-    this.didEnqueue();
-  }
-
-  // Create a fetch request that saves the form.
-  // Returns a promise fulfilled when the request completes.
-  private sendAutosaveRequest(): Promise<void> {
-    this.#abortController = new AbortController();
     const { form, inputs } = this;
 
     if (!form || inputs.length == 0) {
@@ -171,12 +130,10 @@ export class AutosaveController extends ApplicationController {
       }
     }
 
-    return httpRequest(form.action, {
-      method: 'patch',
-      body: formData,
-      signal: this.#abortController.signal,
-      timeout: AUTOSAVE_TIMEOUT_DELAY
-    }).turbo();
+    this.globalDispatch('autosave:enqueue', {
+      url: form.action,
+      formData
+    });
   }
 
   private get form() {
@@ -190,13 +147,8 @@ export class AutosaveController extends ApplicationController {
         'input:not([type=file]), textarea, select'
       )
     ];
-    const parent = this.element.closest('.editable-champ-repetition');
-    if (parent) {
-      return [
-        ...inputs,
-        ...parent.querySelectorAll<HTMLInputElement>('input[data-id]')
-      ];
-    }
-    return inputs.filter((element) => !element.disabled);
+    return inputs
+      .filter((element) => !element.disabled)
+      .filter((element) => !!element.name);
   }
 }

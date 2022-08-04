@@ -338,7 +338,8 @@ describe Users::DossiersController, type: :controller do
   describe '#update_brouillon' do
     before { sign_in(user) }
 
-    let!(:dossier) { create(:dossier, user: user) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{}]) }
+    let!(:dossier) { create(:dossier, user: user, procedure: procedure) }
     let(:first_champ) { dossier.champs.first }
     let(:value) { 'beautiful value' }
     let(:now) { Time.zone.parse('01/01/2100') }
@@ -347,9 +348,11 @@ describe Users::DossiersController, type: :controller do
         id: dossier.id,
         dossier: {
           groupe_instructeur_id: dossier.groupe_instructeur_id,
-          champs_attributes: {
-            id: first_champ.id,
-            value: value
+          champs_public_attributes: {
+            first_champ.id => {
+              id: first_champ.id,
+              value: value
+            }
           }
         }
       }
@@ -388,7 +391,7 @@ describe Users::DossiersController, type: :controller do
           {
             id: dossier.id,
             dossier: {
-              champs_attributes: {}
+              champs_public_attributes: {}
             }
           }
         end
@@ -447,9 +450,11 @@ describe Users::DossiersController, type: :controller do
             {
               id: dossier.id,
               dossier: {
-                champs_attributes: {
-                  id: first_champ.id,
-                  value: value
+                champs_public_attributes: {
+                  first_champ.id => {
+                    id: first_champ.id,
+                    value: value
+                  }
                 }
               },
               submit_draft: false
@@ -465,7 +470,7 @@ describe Users::DossiersController, type: :controller do
       end
 
       context "when the dossier was created on a routee procedure, but routage was later disabled" do
-        let(:dossier) { create(:dossier, groupe_instructeur: nil, user: user) }
+        let(:dossier) { create(:dossier, groupe_instructeur: nil, user: user, procedure: procedure) }
 
         it "sets a default groupe_instructeur" do
           subject
@@ -586,7 +591,7 @@ describe Users::DossiersController, type: :controller do
   describe '#update' do
     before { sign_in(user) }
 
-    let(:procedure) { create(:procedure, :published, :with_type_de_champ, :with_piece_justificative) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{}, { type: :piece_justificative }]) }
     let!(:dossier) { create(:dossier, :en_construction, user: user, procedure: procedure) }
     let(:first_champ) { dossier.champs.first }
     let(:piece_justificative_champ) { dossier.champs.last }
@@ -599,16 +604,16 @@ describe Users::DossiersController, type: :controller do
         id: dossier.id,
         dossier: {
           groupe_instructeur_id: dossier.groupe_instructeur_id,
-          champs_attributes: [
-            {
+          champs_attributes: {
+            first_champ.id => {
               id: first_champ.id,
               value: value
             },
-            {
+            piece_justificative_champ.id => {
               id: piece_justificative_champ.id,
               piece_justificative_file: file
             }
-          ]
+          }
         }
       }
     end
@@ -731,21 +736,19 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'when the user has an invitation but is not the owner' do
-      let(:dossier) { create(:dossier) }
+      let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
       let!(:invite) { create(:invite, dossier: dossier, user: user) }
 
       before do
-        dossier.passer_en_construction!
         subject
       end
 
       it { expect(first_champ.reload.value).to eq('beautiful value') }
-      it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction)) }
       it { expect(response).to redirect_to(demande_dossier_path(dossier)) }
     end
 
     context 'when the dossier is followed by an instructeur' do
-      let(:dossier) { create(:dossier) }
+      let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
       let(:instructeur) { create(:instructeur) }
       let!(:invite) { create(:invite, dossier: dossier, user: user) }
 

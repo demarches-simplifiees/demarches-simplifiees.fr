@@ -39,7 +39,7 @@ class Champs::PieceJustificativeChamp < Champ
   end
 
   def mandatory_blank_and_visible?
-    mandatory? && !piece_justificative_file.attached? && visible?
+    mandatory? && !attached? && visible?
   end
 
   def for_export
@@ -50,5 +50,9 @@ class Champs::PieceJustificativeChamp < Champ
     if piece_justificative_file.attached? && (piece_justificative_file.virus_scanner.safe? || piece_justificative_file.virus_scanner.pending?)
       piece_justificative_file.service_url
     end
+  end
+
+  def attached?
+    piece_justificative_file.attached?
   end
 end

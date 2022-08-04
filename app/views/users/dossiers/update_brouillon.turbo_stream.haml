@@ -1,5 +1,12 @@
-- @dossier.champs.filter(&:conditional?).each do |champ|
+- @dossier.champs_public.filter(&:conditional?).each do |champ|
   - if champ.visible?
     = turbo_stream.show champ.input_group_id
   - else
     = turbo_stream.hide champ.input_group_id
+
+- @updated_pieces_justificative.each do |champ|
+  = fields_for champ.input_name, champ do |form|
+    = turbo_stream.morph champ.input_group_id, partial: "shared/dossiers/editable_champs/editable_champ", locals: { champ: champ, form: form }
+
+- if @last_piece_justificative.present?
+  = turbo_stream.focus_all "button[data-toggle-target=\".attachment-input-#{@last_piece_justificative.id}\"]"

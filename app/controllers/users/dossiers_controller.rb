@@ -313,6 +313,7 @@ module Users
     end
 
     def assign_dossier_and_check_conditions
+      @updated_pieces_justificative = []
       @dossier.assign_attributes(champs_params[:dossier])
       # We need to set dossier on champs, otherwise dossier will be reloaded
       @dossier.champs.each do |champ|
@@ -368,14 +369,32 @@ module Users
       [params[:page].to_i, 1].max
     end
 
+    CHAMP_ATTRIBUTES = [
+      :id,
+      :value,
+      :value_other,
+      :external_id,
+      :primary_value,
+      :secondary_value,
+      :numero_allocataire,
+      :code_postal,
+      :identifiant,
+      :numero_fiscal,
+      :reference_avis,
+      :ine,
+      :piece_justificative_file,
+      :departement,
+      :code_departement,
+      value: []
+    ]
+
     # FIXME: require(:dossier) when all the champs are united
     def champs_params
-      params.permit(dossier: {
-        champs_attributes: [
-          :id, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: [],
-          champs_attributes: [:id, :_destroy, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: []]
-        ]
-      })
+      if dossier.en_construction?
+        params.permit(dossier: { champs_attributes: CHAMP_ATTRIBUTES + [champs_attributes: CHAMP_ATTRIBUTES] })
+      else
+        params.permit(dossier: { champs_public_attributes: CHAMP_ATTRIBUTES })
+      end
     end
 
     def dossier_scope
@@ -429,23 +448,28 @@ module Users
     end
 
     def update_dossier_and_compute_errors
+      @updated_pieces_justificative = []
       errors = []
+      attributes = champs_params[:dossier]
 
-      if champs_params[:dossier]
-        @dossier.assign_attributes(champs_params[:dossier])
-        # FIXME: in some cases a removed repetition bloc row is submitted.
-        # In this case it will be treated as a new record, and the action will fail.
-        @dossier.champs.filter(&:repetition?).each do |champ|
-          champ.champs = champ.champs.filter(&:persisted?)
-        end
-        if @dossier.champs.any?(&:changed_for_autosave?)
+      if attributes.present?
+        @dossier.assign_attributes(attributes)
+
+        if @dossier.en_construction? || attributes[:champs_public_attributes].present?
           @dossier.last_champ_updated_at = Time.zone.now
         end
 
-        if !@dossier.save(**validation_options)
+        if @dossier.save(**validation_options)
+          if should_change_groupe_instructeur?
+            @dossier.assign_to_groupe_instructeur(groupe_instructeur_from_params)
+          end
+
+          if attributes[:champs_public_attributes].present?
+            @updated_pieces_justificative = @dossier.champs_public.find(attributes[:champs_public_attributes].keys).filter(&:piece_justificative?)
+            @last_piece_justificative = @updated_pieces_justificative.filter(&:attached?).last&.piece_justificative_file&.attachment
+          end
+        else
           errors += @dossier.errors.full_messages
-        elsif should_change_groupe_instructeur?
-          @dossier.assign_to_groupe_instructeur(groupe_instructeur_from_params)
         end
       end
 

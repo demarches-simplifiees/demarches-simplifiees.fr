@@ -5,15 +5,22 @@ import {
   addClass,
   removeClass,
   ResponseError,
-  getConfig
+  getConfig,
+  httpRequest
 } from '@utils';
 
 import { ApplicationController } from './application_controller';
 
+type AutosaveEnqueueEvent = CustomEvent<{ url: string; formData: FormData }>;
+type AutosaveErrorEvent = CustomEvent<{ error: ResponseError }>;
+
 const {
-  autosave: { status_visible_duration }
+  autosave: { status_visible_duration, debounce_delay }
 } = getConfig();
+
 const AUTOSAVE_STATUS_VISIBLE_DURATION = status_visible_duration;
+const AUTOSAVE_DEBOUNCE_DELAY = debounce_delay;
+const AUTOSAVE_TIMEOUT_DELAY = 60000;
 
 // This is a controller we attach to the status area in the main form. It
 // coordinates notifications and will dispatch `autosave:retry` event if user
@@ -24,30 +31,78 @@ export class AutosaveStatusController extends ApplicationController {
 
   declare readonly retryButtonTarget: HTMLButtonElement;
 
+  #abortController?: AbortController;
+  #latestPromise = Promise.resolve();
+  #nextFormData = new FormData();
+  #inFlightFormData = new FormData();
+  #formAction?: string;
+
   connect(): void {
-    this.onGlobal('autosave:enqueue', () => this.didEnqueue());
-    this.onGlobal('autosave:end', () => this.didSucceed());
-    this.onGlobal<CustomEvent>('autosave:error', (event) =>
-      this.didFail(event)
+    this.onGlobal<AutosaveEnqueueEvent>('autosave:enqueue', (event) =>
+      this.didEnqueue(event.detail)
+    );
+    this.onGlobal<AutosaveErrorEvent>('autosave:error', (event) =>
+      this.didFail(event.detail)
     );
   }
 
-  onClickRetryButton() {
-    this.globalDispatch('autosave:retry');
+  disconnect() {
+    this.#abortController?.abort();
+    this.#latestPromise = Promise.resolve();
   }
 
-  private didEnqueue() {
+  onClickRetryButton() {
+    this.debounce(this.enqueueAutosaveRequest, AUTOSAVE_DEBOUNCE_DELAY);
+  }
+
+  private didEnqueue(detail: AutosaveEnqueueEvent['detail']) {
+    this.#formAction = detail.url;
+    detail.formData.forEach((value, key) =>
+      this.#nextFormData.append(key, value)
+    );
+
     disable(this.retryButtonTarget);
+    this.debounce(this.enqueueAutosaveRequest, AUTOSAVE_DEBOUNCE_DELAY);
+  }
+
+  private enqueueAutosaveRequest() {
+    this.#latestPromise = this.#latestPromise.finally(() =>
+      this.sendAutosaveRequest()
+        .then(() => this.didSucceed())
+        .catch((error) => this.didFail({ error }))
+        .finally(() => this.didEnd())
+    );
+  }
+
+  private sendAutosaveRequest(): Promise<void> {
+    if (!this.#formAction) {
+      return Promise.resolve();
+    }
+
+    const formData = (this.#inFlightFormData = this.#nextFormData);
+    this.#abortController = new AbortController();
+    this.#nextFormData = new FormData();
+
+    return httpRequest(this.#formAction, {
+      method: 'patch',
+      body: formData,
+      controller: this.#abortController,
+      timeout: AUTOSAVE_TIMEOUT_DELAY
+    }).turbo();
+  }
+
+  private didEnd() {
+    this.#inFlightFormData = new FormData();
+    enable(this.retryButtonTarget);
   }
 
   private didSucceed() {
-    enable(this.retryButtonTarget);
     this.setState('succeeded');
     this.debounce(this.hideSucceededStatus, AUTOSAVE_STATUS_VISIBLE_DURATION);
   }
 
-  private didFail(event: CustomEvent<{ error: ResponseError }>) {
-    const error = event.detail.error;
+  private didFail(detail: AutosaveErrorEvent['detail']) {
+    const error = detail.error;
 
     if (error.response?.status == 401) {
       // If we are unauthenticated, reload the page using a GET request.
@@ -56,7 +111,11 @@ export class AutosaveStatusController extends ApplicationController {
       return;
     }
 
-    enable(this.retryButtonTarget);
+    const formData = new FormData();
+    this.#inFlightFormData.forEach((value, key) => formData.append(key, value));
+    this.#nextFormData.forEach((value, key) => formData.append(key, value));
+    this.#nextFormData = formData;
+
     this.setState('failed');
 
     const shouldLogError = !error.response || error.response.status != 0; // ignore timeout errors

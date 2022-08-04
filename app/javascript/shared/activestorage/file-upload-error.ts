@@ -4,8 +4,6 @@ export const ERROR_CODE_READ = 'file-upload-read-error';
 export const ERROR_CODE_CREATE = 'file-upload-create-error';
 // Error while uploading the blob content
 export const ERROR_CODE_STORE = 'file-upload-store-error';
-// Error while attaching the blob to the record
-export const ERROR_CODE_ATTACH = 'file-upload-attach-error';
 
 // Failure on the client side (syntax error, error reading file, etc.)
 export const FAILURE_CLIENT = 'file-upload-failure-client';

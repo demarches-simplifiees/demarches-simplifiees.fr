@@ -51,6 +51,7 @@ class Champ < ApplicationRecord
     :header_section?,
     :simple_drop_down_list?,
     :linked_drop_down_list?,
+    :piece_justificative?,
     :non_fillable?,
     :cnaf?,
     :dgfip?,
@@ -163,7 +164,7 @@ class Champ < ApplicationRecord
   # attributes. So instead of the field index, this method uses the champ id; which gives us an independent and
   # predictable input name.
   def input_name
-    if parent_id
+    if parent_id && (dossier.en_construction? || private?)
       "#{parent.input_name}[champs_attributes][#{id}]"
     else
       "dossier[#{champs_attributes_accessor}][#{id}]"
@@ -217,8 +218,10 @@ class Champ < ApplicationRecord
   def champs_attributes_accessor
     if private?
       "champs_private_attributes"
-    else
+    elsif dossier.en_construction?
       "champs_attributes"
+    else
+      "champs_public_attributes"
     end
   end
 

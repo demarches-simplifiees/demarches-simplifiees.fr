@@ -74,7 +74,9 @@ class Dossier < ApplicationRecord
 
   has_one_attached :justificatif_motivation
 
-  has_many :champs, -> { root.public_ordered }, inverse_of: false, dependent: :destroy
+  has_many :champs_public, -> { public_only }, class_name: 'Champ', inverse_of: false, dependent: :destroy
+
+  has_many :champs, -> { root.public_ordered }, inverse_of: false
   has_many :champs_private, -> { root.private_ordered }, class_name: 'Champ', inverse_of: false, dependent: :destroy
   has_many :commentaires, inverse_of: :dossier, dependent: :destroy
   has_many :invites, dependent: :destroy
@@ -142,6 +144,8 @@ class Dossier < ApplicationRecord
 
   accepts_nested_attributes_for :champs
   accepts_nested_attributes_for :champs_private
+
+  accepts_nested_attributes_for :champs_public
 
   include AASM
 

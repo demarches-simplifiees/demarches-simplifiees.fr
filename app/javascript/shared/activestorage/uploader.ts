@@ -1,10 +1,10 @@
 import { DirectUpload } from '@rails/activestorage';
-import { httpRequest, ResponseError } from '@utils';
+
 import ProgressBar from './progress-bar';
 import {
-  FileUploadError,
   errorFromDirectUploadMessage,
-  ERROR_CODE_ATTACH
+  FileUploadError,
+  ERROR_CODE_READ
 } from './file-upload-error';
 
 const BYTES_TO_MB_RATIO = 1_048_576;
@@ -13,57 +13,57 @@ const BYTES_TO_MB_RATIO = 1_048_576;
   used to track lifecycle and progress of an upload.
   */
 export default class Uploader {
-  directUpload: DirectUpload;
-  progressBar: ProgressBar;
-  autoAttachUrl?: string;
-  maxFileSize: number;
-  file: File;
+  #directUpload: DirectUpload;
+  #progressBar: ProgressBar;
+  #maxFileSize: number;
 
   constructor(
     input: HTMLInputElement,
     file: File,
     directUploadUrl: string,
-    autoAttachUrl?: string,
     maxFileSize?: string
   ) {
-    this.file = file;
-    this.directUpload = new DirectUpload(file, directUploadUrl, this);
-    this.progressBar = new ProgressBar(input, this.directUpload.id + '', file);
-    this.autoAttachUrl = autoAttachUrl;
+    this.#directUpload = new DirectUpload(file, directUploadUrl, this);
+    this.#progressBar = new ProgressBar(
+      input,
+      `${this.#directUpload.id}`,
+      file
+    );
     try {
-      this.maxFileSize = parseInt(maxFileSize || '0', 10);
+      this.#maxFileSize = parseInt(maxFileSize || '0', 10);
     } catch (e) {
-      this.maxFileSize = 0;
+      this.#maxFileSize = 0;
     }
   }
 
   /**
-    Upload (and optionally attach) the file.
-    Returns the blob signed id on success.
+    Upload the file. Returns the blob signed id on success.
     Throws a FileUploadError on failure.
     */
   async start() {
-    this.progressBar.start();
-    if (this.maxFileSize > 0 && this.file.size > this.maxFileSize) {
-      throw `La taille du fichier ne peut dépasser
-             ${this.maxFileSize / BYTES_TO_MB_RATIO} Mo
-             (in english: File size can't be bigger than
-             ${this.maxFileSize / BYTES_TO_MB_RATIO} Mo).`;
+    if (
+      this.#maxFileSize > 0 &&
+      this.#directUpload.file.size > this.#maxFileSize
+    ) {
+      const message = `La taille du fichier ne peut dépasser
+      ${this.#maxFileSize / BYTES_TO_MB_RATIO} Mo
+      (in english: File size can't be bigger than
+      ${this.#maxFileSize / BYTES_TO_MB_RATIO} Mo).`;
+
+      throw new FileUploadError(message, 0, ERROR_CODE_READ);
     }
+
+    this.#progressBar.start();
+
     try {
       const blobSignedId = await this.upload();
 
-      if (this.autoAttachUrl) {
-        await this.attach(blobSignedId, this.autoAttachUrl);
-        // On response, the attachment HTML fragment will replace the progress bar.
-      } else {
-        this.progressBar.end();
-        this.progressBar.destroy();
-      }
+      this.#progressBar.end();
+      this.#progressBar.destroy();
 
       return blobSignedId;
     } catch (error) {
-      this.progressBar.error((error as Error).message);
+      this.#progressBar.error((error as Error).message);
       throw error;
     }
   }
@@ -74,7 +74,7 @@ export default class Uploader {
     */
   private async upload(): Promise<string> {
     return new Promise((resolve, reject) => {
-      this.directUpload.create((errorMsg, attributes) => {
+      this.#directUpload.create((errorMsg, attributes) => {
         if (errorMsg) {
           const error = errorFromDirectUploadMessage(errorMsg);
           reject(error);
@@ -85,37 +85,10 @@ export default class Uploader {
     });
   }
 
-  /**
-    Attach the file by sending a POST request to the autoAttachUrl.
-    Throws a FileUploadError on failure (containing the first validation
-    error message, if any).
-    */
-  private async attach(blobSignedId: string, autoAttachUrl: string) {
-    const formData = new FormData();
-    formData.append('blob_signed_id', blobSignedId);
-
-    try {
-      await httpRequest(autoAttachUrl, {
-        method: 'put',
-        body: formData
-      }).turbo();
-    } catch (e) {
-      const error = e as ResponseError;
-      const errors = (error.jsonBody as { errors: string[] })?.errors;
-      const message = errors && errors[0];
-      throw new FileUploadError(
-        message ||
-          `Impossible d'associer le fichier (in english: error attaching file).'`,
-        error.response?.status,
-        ERROR_CODE_ATTACH
-      );
-    }
-  }
-
   uploadRequestDidProgress(event: ProgressEvent) {
     const progress = (event.loaded / event.total) * 100;
     if (progress) {
-      this.progressBar.progress(progress);
+      this.#progressBar.progress(progress);
     }
   }
 
