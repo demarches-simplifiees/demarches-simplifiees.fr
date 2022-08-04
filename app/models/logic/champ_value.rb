@@ -34,7 +34,7 @@ class Logic::ChampValue < Logic::Term
     when MANAGED_TYPE_DE_CHAMP.fetch(:integer_number), MANAGED_TYPE_DE_CHAMP.fetch(:decimal_number)
       targeted_champ.for_api
     when MANAGED_TYPE_DE_CHAMP.fetch(:drop_down_list)
-      targeted_champ.value
+      targeted_champ.selected
     end
   end
 
@@ -78,7 +78,12 @@ class Logic::ChampValue < Logic::Term
   end
 
   def options
-    type_de_champ.drop_down_list_enabled_non_empty_options
+    opts = type_de_champ.drop_down_list_enabled_non_empty_options.map { |option| [option, option] }
+    if type_de_champ.drop_down_other?
+      opts + [["Autre", Champs::DropDownListChamp::OTHER]]
+    else
+      opts
+    end
   end
 
   private
