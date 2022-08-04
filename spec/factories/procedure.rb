@@ -29,18 +29,24 @@ FactoryBot.define do
     end
 
     after(:build) do |procedure, evaluator|
+      if evaluator.types_de_champ.present?
+        raise "use types_de_champ_public instead of types_de_champ"
+      end
+
       initial_revision = build(:procedure_revision, procedure: procedure, attestation_template: evaluator.attestation_template, dossier_submitted_message: evaluator.dossier_submitted_message)
 
       if evaluator.types_de_champ_public.present?
+        if !evaluator.types_de_champ_public.first.is_a?(Hash)
+          raise "types_de_champ_public must be an array of hashes"
+        end
         build_types_de_champ(evaluator.types_de_champ_public, revision: initial_revision, scope: :public)
       end
-      add_types_de_champs(evaluator.types_de_champ, to: initial_revision, scope: :public)
+
       if evaluator.types_de_champ_private.present?
-        if evaluator.types_de_champ_private.first.is_a?(Hash)
-          build_types_de_champ(evaluator.types_de_champ_private, revision: initial_revision, scope: :private)
-        else
-          add_types_de_champs(evaluator.types_de_champ_private, to: initial_revision, scope: :private)
+        if !evaluator.types_de_champ_private.first.is_a?(Hash)
+          raise "types_de_champ_private must be an array of hashes"
         end
+        build_types_de_champ(evaluator.types_de_champ_private, revision: initial_revision, scope: :private)
       end
 
       if procedure.brouillon?
@@ -370,19 +376,19 @@ end
 
 def build_types_de_champ(types_de_champ, revision:, scope: :public, parent: nil)
   types_de_champ.deep_dup.each.with_index do |type_de_champ_attributes, i|
-    type = TypeDeChamp.type_champs.fetch(type_de_champ_attributes.delete(:type) || :text)
+    type = TypeDeChamp.type_champs.fetch(type_de_champ_attributes.delete(:type) || :text).to_sym
     position = type_de_champ_attributes.delete(:position) || i
     children = type_de_champ_attributes.delete(:children)
     options = type_de_champ_attributes.delete(:options)
     layers = type_de_champ_attributes.delete(:layers)
 
-    if options.present?
+    if !options.nil?
       if type == :drop_down_list
         type_de_champ_attributes[:drop_down_other] = options.delete(:other).present?
       end
 
       if type.in?([:drop_down_list, :multiple_drop_down_list, :linked_drop_down_list])
-        type_de_champ_attributes[:drop_down_options] = options
+        type_de_champ_attributes[:drop_down_list_value] = options.join("\r\n")
       end
     end
 
@@ -434,19 +440,5 @@ def build_types_de_champ(types_de_champ, revision:, scope: :public, parent: nil)
     revision.association(:types_de_champ).target = revision.revision_types_de_champ.map(&:type_de_champ)
     revision.association(:types_de_champ_public).target = revision.revision_types_de_champ_public.map(&:type_de_champ)
     revision.association(:types_de_champ_private).target = revision.revision_types_de_champ_private.map(&:type_de_champ)
-  end
-end
-
-def add_types_de_champs(types_de_champ, to: nil, scope: :public)
-  revision = to
-  association_name = scope == :private ? :revision_types_de_champ_private : :revision_types_de_champ_public
-
-  types_de_champ.each.with_index do |type_de_champ, i|
-    type_de_champ.private = (scope == :private)
-
-    revision.public_send(association_name) << build(:procedure_revision_type_de_champ,
-                                                                  revision: revision,
-                                                                  position: i,
-                                                                  type_de_champ: type_de_champ)
   end
 end

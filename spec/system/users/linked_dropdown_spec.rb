@@ -2,22 +2,19 @@ describe 'linked dropdown lists' do
   let(:password) { 'my-s3cure-p4ssword' }
   let!(:user) { create(:user, password: password) }
 
-  let(:list_items) do
-    <<~END_OF_LIST
-      --Primary 1--
-      Secondary 1.1
-      Secondary 1.2
-      --Primary 2--
-      Secondary 2.1
-      Secondary 2.2
-      Secondary 2.3
-    END_OF_LIST
+  let(:options) do
+    [
+      '--Primary 1--',
+      'Secondary 1.1',
+      'Secondary 1.2',
+      '--Primary 2--',
+      'Secondary 2.1',
+      'Secondary 2.2',
+      'Secondary 2.3'
+    ]
   end
 
-  let!(:procedure) do
-    create(:procedure, :published, :for_individual, types_de_champ: [type_de_champ])
-  end
-  let(:type_de_champ) { build(:type_de_champ_linked_drop_down_list, libelle: 'linked dropdown', drop_down_list_value: list_items, mandatory: mandatory) }
+  let(:procedure) { create(:procedure, :published, :for_individual, types_de_champ_public: [{ type: :linked_drop_down_list, libelle: 'linked dropdown', options: options, mandatory: mandatory }]) }
 
   let(:user_dossier) { user.dossiers.first }
   context 'not mandatory' do

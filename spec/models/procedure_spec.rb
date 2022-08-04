@@ -448,20 +448,13 @@ describe Procedure do
         service: service,
         opendata: opendata,
         attestation_template: build(:attestation_template, logo: logo, signature: signature),
-        types_de_champ: [type_de_champ_0, type_de_champ_1, type_de_champ_2, type_de_champ_pj],
-        types_de_champ_private: [type_de_champ_private_0, type_de_champ_private_1, type_de_champ_private_2],
+        types_de_champ_public: [{}, {}, { type: :drop_down_list }, { type: :piece_justificative }, { type: :repetition, children: [{}] }],
+        types_de_champ_private: [{}, {}, { type: :drop_down_list }, { type: :repetition, children: [{}] }],
         api_particulier_token: '123456789012345',
         api_particulier_scopes: ['cnaf_famille'])
     end
-    let(:type_de_champ_0) { build(:type_de_champ, position: 0) }
-    let(:type_de_champ_1) { build(:type_de_champ, position: 1) }
-    let(:type_de_champ_2) { build(:type_de_champ_drop_down_list, position: 2) }
-    let(:type_de_champ_pj) { build(:type_de_champ_piece_justificative, position: 3, old_pj: { stable_id: 2713 }) }
-    let(:type_de_champ_repetition) { build(:type_de_champ_repetition, position: 4, procedure: procedure, types_de_champ: [build(:type_de_champ)]) }
-    let(:type_de_champ_private_0) { build(:type_de_champ, :private, position: 0) }
-    let(:type_de_champ_private_1) { build(:type_de_champ, :private, position: 1) }
-    let(:type_de_champ_private_2) { build(:type_de_champ_drop_down_list, :private, position: 2) }
-    let(:type_de_champ_private_repetition) { build(:type_de_champ_repetition, :private, position: 3, procedure: procedure, types_de_champ: [build(:type_de_champ, :private)]) }
+    let(:type_de_champ_repetition) { procedure.types_de_champ.last }
+    let(:type_de_champ_private_repetition) { procedure.types_de_champ_private.last }
     let(:received_mail) { build(:received_mail) }
     let(:from_library) { false }
     let(:opendata) { true }
@@ -476,9 +469,6 @@ describe Procedure do
     let!(:assign_to_2) { create(:assign_to, procedure: procedure, groupe_instructeur: groupe_instructeur_1, instructeur: instructeur_2) }
 
     before do
-      type_de_champ_repetition
-      type_de_champ_private_repetition
-
       @procedure = procedure.clone(administrateur, from_library)
       @procedure.save
     end
@@ -1156,13 +1146,8 @@ describe Procedure do
   describe '#new_dossier' do
     let(:procedure) do
       create(:procedure,
-        types_de_champ: [
-          build(:type_de_champ_text, position: 0),
-          build(:type_de_champ_number, position: 1)
-        ],
-        types_de_champ_private: [
-          build(:type_de_champ_textarea, :private)
-        ])
+        types_de_champ_public: [{}, { type: :number }],
+        types_de_champ_private: [{ type: :textarea }])
     end
 
     let(:dossier) { procedure.active_revision.new_dossier }
