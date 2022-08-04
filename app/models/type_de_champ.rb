@@ -182,6 +182,10 @@ class TypeDeChamp < ApplicationRecord
     revisions.size == 1
   end
 
+  def drop_down_other?
+    drop_down_other == "1" || drop_down_other == true
+  end
+
   def non_fillable?
     type_champ.in?([
       TypeDeChamp.type_champs.fetch(:header_section),
