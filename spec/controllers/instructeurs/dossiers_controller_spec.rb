@@ -642,15 +642,12 @@ describe Instructeurs::DossiersController, type: :controller do
 
   describe "#update_annotations" do
     let(:procedure) do
-      procedure = create(:procedure, :published, types_de_champ_private: [
-        build(:type_de_champ_multiple_drop_down_list, position: 0),
-        build(:type_de_champ_linked_drop_down_list, position: 1),
-        build(:type_de_champ_datetime, position: 2)
+      create(:procedure, :published, types_de_champ_private: [
+        { type: :multiple_drop_down_list },
+        { type: :linked_drop_down_list },
+        { type: :datetime },
+        { type: :repetition, children: [{}] }
       ], instructeurs: instructeurs)
-
-      create(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure, position: 3, private: true)
-
-      procedure
     end
     let(:dossier) { create(:dossier, :en_construction, :with_populated_annotations, procedure: procedure) }
     let(:another_instructeur) { create(:instructeur) }

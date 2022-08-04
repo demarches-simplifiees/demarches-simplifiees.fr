@@ -704,7 +704,7 @@ describe Dossier do
   end
 
   describe "#unspecified_attestation_champs" do
-    let(:procedure) { create(:procedure, attestation_template: attestation_template, types_de_champ: types_de_champ, types_de_champ_private: types_de_champ_private) }
+    let(:procedure) { create(:procedure, attestation_template: attestation_template, types_de_champ_public: types_de_champ, types_de_champ_private: types_de_champ_private) }
     let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
     let(:types_de_champ) { [] }
     let(:types_de_champ_private) { [] }
@@ -739,14 +739,14 @@ describe Dossier do
         let(:types_de_champ) { [tdc_1, tdc_2, tdc_3, tdc_4] }
         let(:types_de_champ_private) { [tdc_5, tdc_6, tdc_7, tdc_8] }
 
-        let(:tdc_1) { build(:type_de_champ, libelle: "specified champ-in-title") }
-        let(:tdc_2) { build(:type_de_champ, libelle: "unspecified champ-in-title") }
-        let(:tdc_3) { build(:type_de_champ, libelle: "specified champ-in-body") }
-        let(:tdc_4) { build(:type_de_champ, libelle: "unspecified champ-in-body") }
-        let(:tdc_5) { build(:type_de_champ, private: true, libelle: "specified annotation privée-in-title") }
-        let(:tdc_6) { build(:type_de_champ, private: true, libelle: "unspecified annotation privée-in-title") }
-        let(:tdc_7) { build(:type_de_champ, private: true, libelle: "specified annotation privée-in-body") }
-        let(:tdc_8) { build(:type_de_champ, private: true, libelle: "unspecified annotation privée-in-body") }
+        let(:tdc_1) { { libelle: "specified champ-in-title" } }
+        let(:tdc_2) { { libelle: "unspecified champ-in-title" } }
+        let(:tdc_3) { { libelle: "specified champ-in-body" } }
+        let(:tdc_4) { { libelle: "unspecified champ-in-body" } }
+        let(:tdc_5) { { libelle: "specified annotation privée-in-title" } }
+        let(:tdc_6) { { libelle: "unspecified annotation privée-in-title" } }
+        let(:tdc_7) { { libelle: "specified annotation privée-in-body" } }
+        let(:tdc_8) { { libelle: "unspecified annotation privée-in-body" } }
 
         before do
           (dossier.champs + dossier.champs_private)

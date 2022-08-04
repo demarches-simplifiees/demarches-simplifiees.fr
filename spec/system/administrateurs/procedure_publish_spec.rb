@@ -47,17 +47,14 @@ describe 'Publishing a procedure', js: true do
     end
 
     context 'when the procedure has invalid champs' do
-      let(:empty_repetition) { build(:type_de_champ_repetition, types_de_champ: [], libelle: 'Enfants') }
-      let(:empty_drop_down) { build(:type_de_champ_drop_down_list, :without_selectable_values, libelle: 'Civilité') }
-
       let!(:procedure) do
         create(:procedure,
                :with_path,
                :with_service,
                instructeurs: instructeurs,
                administrateur: administrateur,
-               types_de_champ: [empty_repetition],
-               types_de_champ_private: [empty_drop_down])
+               types_de_champ_public: [{ type: :repetition, libelle: 'Enfants', children: [] }, { type: :drop_down_list, libelle: 'Civilité', options: [] }],
+               types_de_champ_private: [{ type: :drop_down_list, libelle: 'Civilité', options: [] }])
       end
 
       scenario 'an error message prevents the publication' do
@@ -133,19 +130,19 @@ describe 'Publishing a procedure', js: true do
   context 'when a procedure has dubious champs' do
     let(:dubious_champs) do
       [
-        build(:type_de_champ_text, libelle: 'NIR'),
-        build(:type_de_champ_text, libelle: 'carte bancaire')
+        { libelle: 'NIR' },
+        { libelle: 'carte bancaire' }
       ]
     end
     let(:not_dubious_champs) do
-      [build(:type_de_champ_text, libelle: 'Prénom')]
+      [{ libelle: 'Prénom' }]
     end
     let!(:procedure) do
       create(:procedure,
                :with_service,
                instructeurs: instructeurs,
                administrateur: administrateur,
-               types_de_champ: not_dubious_champs + dubious_champs)
+               types_de_champ_public: not_dubious_champs + dubious_champs)
     end
 
     scenario 'an admin can publish it, but a warning appears' do
