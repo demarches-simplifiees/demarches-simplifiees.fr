@@ -49,13 +49,14 @@ describe DossierSerializer do
   context 'when a type de champ PJ was cloned from a legacy PJ' do
     let(:original_pj_id) { 3 }
     let(:cloned_type_de_champ) do
-      build(:type_de_champ_piece_justificative,
+      {
+        type: :piece_justificative,
         libelle: "Vidéo de votre demande de subvention",
         description: "Pour optimiser vos chances, soignez la chorégraphie et privilégiez le chant polyphonique.\r\nRécupérer le formulaire vierge pour mon dossier : https://www.dance-academy.gouv.fr",
-        old_pj: { stable_id: original_pj_id },
-        position: 0)
+        old_pj: { stable_id: original_pj_id }
+      }
     end
-    let(:procedure) { create(:procedure, :published, types_de_champ: [cloned_type_de_champ]) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public: [cloned_type_de_champ]) }
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:champ_pj) { dossier.champs.last }
 
@@ -70,7 +71,7 @@ describe DossierSerializer do
         types_de_piece_justificative: [
           {
             "id" => original_pj_id,
-            "libelle" => cloned_type_de_champ.libelle,
+            "libelle" => cloned_type_de_champ[:libelle],
             "description" => 'Pour optimiser vos chances, soignez la chorégraphie et privilégiez le chant polyphonique.',
             "lien_demarche" => 'https://www.dance-academy.gouv.fr',
             "order_place" => 0

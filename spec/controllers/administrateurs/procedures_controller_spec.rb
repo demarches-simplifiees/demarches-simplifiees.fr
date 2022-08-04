@@ -690,12 +690,11 @@ describe Administrateurs::ProceduresController, type: :controller do
 
       context 'procedure revision is invalid' do
         let(:path) { 'new_path' }
-        let(:empty_repetition) { build(:type_de_champ_repetition, types_de_champ: []) }
         let(:procedure) do
           create(:procedure,
                  administrateur: admin,
                  lien_site_web: lien_site_web,
-                 types_de_champ: [empty_repetition])
+                 types_de_champ_public: [{ type: :repetition, children: [] }])
         end
 
         it { expect { put :publish, params: { procedure_id: procedure.id, path: path, lien_site_web: lien_site_web } }.to raise_error(ActiveRecord::RecordInvalid) }

@@ -587,10 +587,8 @@ describe API::V2::GraphqlController do
       end
 
       context "champs" do
-        let(:procedure) { create(:procedure, :published, :for_individual, administrateurs: [admin], types_de_champ: [type_de_champ_date, type_de_champ_datetime]) }
+        let(:procedure) { create(:procedure, :published, :for_individual, administrateurs: [admin], types_de_champ_public: [{ type: :date }, { type: :datetime }]) }
         let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
-        let(:type_de_champ_date) { build(:type_de_champ_date) }
-        let(:type_de_champ_datetime) { build(:type_de_champ_datetime) }
         let(:champ_date) { dossier.champs.first }
         let(:champ_datetime) { dossier.champs.second }
 

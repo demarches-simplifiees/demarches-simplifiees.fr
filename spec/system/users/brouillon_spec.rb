@@ -151,13 +151,7 @@ describe 'The user' do
     expect(page).to have_content('Supprimer', count: 1)
   end
 
-  let(:simple_procedure) do
-    tdcs = [
-      build(:type_de_champ, mandatory: true, libelle: 'texte obligatoire'),
-      build(:type_de_champ, mandatory: false, libelle: 'texte optionnel')
-    ]
-    create(:procedure, :published, :for_individual, types_de_champ: tdcs)
-  end
+  let(:simple_procedure) { create(:procedure, :published, :for_individual, types_de_champ_public: [{ mandatory: true, libelle: 'texte obligatoire' }, { mandatory: false, libelle: 'texte optionnel' }]) }
 
   scenario 'save an incomplete dossier as draft but cannot not submit it', js: true do
     log_in(user, simple_procedure)
@@ -205,25 +199,9 @@ describe 'The user' do
     end
   end
 
-  let(:procedure_with_pj) do
-    tdcs = [build(:type_de_champ_piece_justificative, mandatory: true, libelle: 'Pièce justificative')]
-    create(:procedure, :published, :for_individual, types_de_champ: tdcs)
-  end
-
-  let(:procedure_with_pjs) do
-    tdcs = [
-      build(:type_de_champ_piece_justificative, mandatory: true, libelle: 'Pièce justificative 1', position: 1),
-      build(:type_de_champ_piece_justificative, mandatory: true, libelle: 'Pièce justificative 2', position: 2)
-    ]
-    create(:procedure, :published, :for_individual, types_de_champ: tdcs)
-  end
-
-  let(:old_procedure_with_disabled_pj_validation) do
-    tdcs = [
-      create(:type_de_champ_piece_justificative, mandatory: true, libelle: 'Pièce justificative 1', position: 1, skip_pj_validation: true)
-    ]
-    create(:procedure, :published, :for_individual, types_de_champ: tdcs)
-  end
+  let(:procedure_with_pj) { create(:procedure, :published, :for_individual, types_de_champ_public: [{ type: :piece_justificative, mandatory: true, libelle: 'Pièce justificative' }]) }
+  let(:procedure_with_pjs) { create(:procedure, :published, :for_individual, types_de_champ_public: [{ type: :piece_justificative, mandatory: true, libelle: 'Pièce justificative 1' }, { type: :piece_justificative, mandatory: true, libelle: 'Pièce justificative 2' }]) }
+  let(:old_procedure_with_disabled_pj_validation) { create(:procedure, :published, :for_individual, types_de_champ_public: [{ type: :piece_justificative, mandatory: true, libelle: 'Pièce justificative 1', skip_pj_validation: true }]) }
 
   scenario 'add an attachment', js: true do
     log_in(user, procedure_with_pjs)
