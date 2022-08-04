@@ -370,19 +370,19 @@ end
 
 def build_types_de_champ(types_de_champ, revision:, scope: :public, parent: nil)
   types_de_champ.deep_dup.each.with_index do |type_de_champ_attributes, i|
-    type = TypeDeChamp.type_champs.fetch(type_de_champ_attributes.delete(:type) || :text)
+    type = TypeDeChamp.type_champs.fetch(type_de_champ_attributes.delete(:type) || :text).to_sym
     position = type_de_champ_attributes.delete(:position) || i
     children = type_de_champ_attributes.delete(:children)
     options = type_de_champ_attributes.delete(:options)
     layers = type_de_champ_attributes.delete(:layers)
 
-    if options.present?
+    if !options.nil?
       if type == :drop_down_list
         type_de_champ_attributes[:drop_down_other] = options.delete(:other).present?
       end
 
       if type.in?([:drop_down_list, :multiple_drop_down_list, :linked_drop_down_list])
-        type_de_champ_attributes[:drop_down_options] = options
+        type_de_champ_attributes[:drop_down_list_value] = options.join("\r\n")
       end
     end
 
