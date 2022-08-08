@@ -292,6 +292,18 @@ describe 'The user' do
         click_on 'Déposer le dossier'
         expect(page).to have_current_path(merci_dossier_path(user_dossier))
       end
+
+      scenario 'cannot submit a reveal dossier with a revealed mandatory champ ', js: true do
+        log_in(user, procedure)
+
+        fill_individual
+
+        fill_in('age', with: '18')
+        expect(page).to have_css('label', text: 'nom', visible: :visible)
+
+        click_on 'Déposer le dossier'
+        expect(page).to have_current_path(brouillon_dossier_path(user_dossier))
+      end
     end
 
     context 'with a visibilite in cascade' do
