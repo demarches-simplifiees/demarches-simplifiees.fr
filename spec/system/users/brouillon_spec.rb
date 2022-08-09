@@ -299,7 +299,7 @@ describe 'The user' do
         fill_individual
 
         fill_in('age', with: '18')
-        expect(page).to have_css('label', text: 'nom', visible: :visible)
+        expect(page).to have_css('label', text: 'nom *', visible: :visible)
 
         click_on 'Déposer le dossier'
         expect(page).to have_current_path(brouillon_dossier_path(user_dossier))
