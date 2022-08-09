@@ -20,7 +20,7 @@ class SamlIdpController < ActionController::Base
   private
 
   def saml_attributes
-    admin_attributes = %[<saml:AttributeStatement><saml:Attribute Name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"><saml:AttributeValue>#{current_super_admin.email}</saml:AttributeValue></saml:Attribute><saml:Attribute Name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"><saml:AttributeValue>ds|#{current_super_admin.id}</saml:AttributeValue></saml:Attribute></saml:AttributeStatement>]
+    admin_attributes = %[<saml:AttributeStatement><saml:Attribute NameFormat="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"><saml:AttributeValue>#{current_super_admin.email}</saml:AttributeValue></saml:Attribute></saml:AttributeStatement>]
     {
       issuer_uri: saml_auth_url,
       attributes_provider: admin_attributes
