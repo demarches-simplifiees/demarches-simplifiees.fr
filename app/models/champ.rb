@@ -34,6 +34,7 @@ class Champ < ApplicationRecord
   delegate :libelle,
     :type_champ,
     :procedure,
+    :mandatory?,
     :description,
     :drop_down_list_options,
     :drop_down_other?,
@@ -91,12 +92,8 @@ class Champ < ApplicationRecord
     @sections ||= dossier.sections_for(self)
   end
 
-  def mandatory?
-    type_de_champ.mandatory? && visible?
-  end
-
   def mandatory_blank_and_visible?
-    mandatory? && blank?
+    mandatory? && blank? && visible?
   end
 
   def blank?
