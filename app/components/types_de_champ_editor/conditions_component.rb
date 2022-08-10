@@ -111,7 +111,8 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
       ]
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:enum)
       [
-        [t('is', scope: 'logic'), Eq.name]
+        [t('is', scope: 'logic'), Eq.name],
+        [t('is_not', scope: 'logic'), NotEq.name]
       ]
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:number)
       [Eq, LessThan, GreaterThan, LessThanEq, GreaterThanEq]
