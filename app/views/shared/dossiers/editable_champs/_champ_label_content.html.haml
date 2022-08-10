@@ -1,5 +1,5 @@
 #{champ.libelle}
-- if champ.type_de_champ.mandatory?
+- if champ.mandatory?
   %span.mandatory *
 
 - if champ.updated_at.present? && seen_at.present?
