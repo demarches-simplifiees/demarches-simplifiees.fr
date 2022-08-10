@@ -16,6 +16,7 @@ Rails.application.routes.draw do
       post 'discard', on: :member
       post 'restore', on: :member
       post 'add_administrateur', on: :member
+      put 'delete_administrateur', on: :member
       post 'change_piece_justificative_template', on: :member
       get 'export_mail_brouillons', on: :member
     end
