@@ -3,7 +3,6 @@
   aria: { describedby: champ.describedby_id },
   placeholder: t(".placeholder"),
   data: { controller: 'turbo-input', turbo_input_url_value: champs_siret_path(champ.id) },
-  required: champ.mandatory?,
   pattern: "[0-9]{14}",
   title: t(".title"),
   class: "width-33-desktop",
