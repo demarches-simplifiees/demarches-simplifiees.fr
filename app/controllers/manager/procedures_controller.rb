@@ -67,6 +67,14 @@ module Manager
       redirect_to manager_procedure_path(procedure)
     end
 
+    def delete_administrateur
+      administrateur = procedure.administrateurs.find { |admin| admin.email == current_super_admin.email }
+      if administrateur.present?
+        procedure.administrateurs.delete(administrateur)
+      end
+      redirect_to manager_procedure_path(procedure)
+    end
+
     def change_piece_justificative_template
       if type_de_champ.update(type_de_champ_params)
         flash[:notice] = "Le modèle est mis à jour."
