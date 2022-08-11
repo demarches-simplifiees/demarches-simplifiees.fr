@@ -7,7 +7,7 @@ import {
   isTextInputElement
 } from '@utils';
 import { useIntersection } from 'stimulus-use';
-
+import { AutoUpload } from '../shared/activestorage/auto-upload';
 import { ApplicationController } from './application_controller';
 
 export class TypeDeChampEditorController extends ApplicationController {
@@ -71,7 +71,7 @@ export class TypeDeChampEditorController extends ApplicationController {
   }
 
   private onInput(event: Event) {
-    const target = event.target as HTMLElement & { form?: HTMLFormElement };
+    const target = event.target as HTMLInputElement;
 
     // mark input as touched so we know to not overwrite it's value with next re-render
     target.setAttribute('data-touched', 'true');
@@ -79,6 +79,9 @@ export class TypeDeChampEditorController extends ApplicationController {
     if (target.form && isTextInputElement(target)) {
       this.#dirtyForms.add(target.form);
       this.debounce(this.save, 600);
+    } else if (target.form && target.type == 'file' && target.files?.length) {
+      const autoupload = new AutoUpload(target, target.files[0]);
+      autoupload.start();
     }
   }
 
