@@ -10,5 +10,10 @@
 #
 class Zone < ApplicationRecord
   validates :acronym, presence: true, uniqueness: true
+  has_many :labels, -> { order(designated_on: :desc) }, class_name: 'ZoneLabel', inverse_of: :zone
   has_many :procedures, -> { order(published_at: :desc) }, inverse_of: :zone
+
+  def label
+    labels.first.name
+  end
 end
