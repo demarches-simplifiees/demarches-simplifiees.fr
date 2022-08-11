@@ -484,6 +484,7 @@ Rails.application.routes.draw do
           patch :move
           patch :move_up
           patch :move_down
+          put :piece_justificative_template
         end
       end
 
