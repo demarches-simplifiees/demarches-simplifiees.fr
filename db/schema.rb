@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_02_151920) do
+ActiveRecord::Schema.define(version: 2022_09_11_134914) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -861,6 +861,15 @@ ActiveRecord::Schema.define(version: 2022_09_02_151920) do
     t.index ["procedure_id"], name: "index_without_continuation_mails_on_procedure_id"
   end
 
+  create_table "zone_labels", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.date "designated_on", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "zone_id", null: false
+    t.index ["zone_id"], name: "index_zone_labels_on_zone_id"
+  end
+
   create_table "zones", force: :cascade do |t|
     t.string "acronym", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -922,4 +931,5 @@ ActiveRecord::Schema.define(version: 2022_09_02_151920) do
   add_foreign_key "trusted_device_tokens", "instructeurs"
   add_foreign_key "users", "users", column: "requested_merge_into_id"
   add_foreign_key "without_continuation_mails", "procedures"
+  add_foreign_key "zone_labels", "zones"
 end
