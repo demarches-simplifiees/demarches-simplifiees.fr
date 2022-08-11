@@ -301,14 +301,6 @@ class TypeDeChamp < ApplicationRecord
     self.drop_down_options = parse_drop_down_list_value(value)
   end
 
-  # historicaly we added a blank ("") option by default to avoid wrong selection
-  #   see self.parse_drop_down_list_value
-  #   then rails decided to add this blank ("") option when the select is required
-  #   so we revert this change
-  def options_without_empty_value_when_mandatory(options)
-    mandatory? ? options.reject(&:blank?) : options
-  end
-
   def drop_down_list_options?
     drop_down_list_options.any?
   end

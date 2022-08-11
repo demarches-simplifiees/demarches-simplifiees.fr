@@ -68,9 +68,6 @@ export class ChampDropdownController extends ApplicationController {
     if (options.length) {
       disable(hidden);
 
-      if (secondarySelectElement.required) {
-        secondarySelectElement.appendChild(makeOption(''));
-      }
       for (const option of options) {
         secondarySelectElement.appendChild(makeOption(option));
       }

@@ -30,15 +30,14 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
     tags
   end
 
-  def add_blank_option_when_not_mandatory(options)
-    return options if mandatory
+  def add_blank_option(options)
     options.unshift('')
   end
 
   def primary_options
     primary_options = unpack_options.map(&:first)
     if primary_options.present?
-      primary_options = add_blank_option_when_not_mandatory(primary_options)
+      primary_options = add_blank_option(primary_options)
     end
     primary_options
   end
@@ -58,7 +57,7 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
     chunked = options.slice_before(PRIMARY_PATTERN)
     chunked.map do |chunk|
       primary, *secondary = chunk
-      secondary = add_blank_option_when_not_mandatory(secondary)
+      secondary = add_blank_option(secondary)
       [PRIMARY_PATTERN.match(primary)&.[](1), secondary]
     end
   end
