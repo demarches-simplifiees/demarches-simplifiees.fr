@@ -10,4 +10,4 @@
     %p.notice  Carte nationale d’identité (uniquement le recto), passeport, titre de séjour ou autre justificatif d’identité. Formats acceptés : jpg/png
 
   = form.hidden_field :id, value: champ.id, data: champ.repetition? ? { id: true } : {}
-  = render partial: "shared/dossiers/editable_champs/#{champ.type_champ}", locals: { form: form, champ: champ }
+  = render "EditableChamp::#{champ.type_champ.camelcase}Component".constantize.new(form: form, champ: champ)
