@@ -27,4 +27,8 @@ class Zone < ApplicationRecord
   def available_at?(date)
     label_at(date) != 'NA'
   end
+
+  def self.available_at(date)
+    Zone.all.filter { |zone| zone.available_at?(date) }.sort_by { |zone| zone.label_at(date) }
+  end
 end
