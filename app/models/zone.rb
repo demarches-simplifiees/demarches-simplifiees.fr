@@ -23,4 +23,8 @@ class Zone < ApplicationRecord
       date >= designated_on
     end.at(1)
   end
+
+  def available_at?(date)
+    label_at(date) != 'NA'
+  end
 end
