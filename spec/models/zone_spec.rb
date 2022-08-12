@@ -27,6 +27,12 @@ describe Zone do
     it 'returns label for the current millesime' do
       expect(zone.label).to eq "Ministère de l'Économie, des Finances et de la Souveraineté industrielle et numérique"
     end
+
+    it 'returns label at specific date' do
+      expect(zone.label_at(start_previous_government + 1.week)).to eq "Ministère de l'Économie, des Finances et de la Relance"
+      expect(zone.label_at(start_last_government + 1.week)).to eq "Ministère de l'Économie, des Finances et de la Souveraineté industrielle et numérique"
+      expect(zone.label_at(start_previous_government - 1.week)).to eq "Ministère de l'Économie, des Finances et de la Relance"
+    end
   end
 end
 
