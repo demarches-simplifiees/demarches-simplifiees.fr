@@ -1,0 +1,13 @@
+.editable-@champ{ class: "editable-champ-#{champ.type_champ} #{champ.visible? ? '' : 'hidden'}", id: champ.input_group_id, data: editable_champ_controller(champ) }
+  - if @champ.repetition?
+    %h3.header-subsection= @champ.libelle
+    - if @champ.description.present?
+      %p.notice= string_to_html(@champ.description, false)
+
+  - elsif has_label?(@champ)
+    = render partial: 'shared/dossiers/editable_champs/champ_label', locals: { form: @form, champ: champ, seen_at: defined?(seen_at) ? seen_at : nil }
+  - if @champ.type_champ == "titre_identite"
+    %p.notice  Carte nationale d’identité (uniquement le recto), passeport, titre de séjour ou autre justificatif d’identité. Formats acceptés : jpg/png
+
+  = @form.hidden_field :id, value: @champ.id, data: champ.repetition? ? { id: true } : {}
+  = render partial: "shared/dossiers/editable_champs/#{champ.type_champ}", locals: { form: @form, champ: champ }
