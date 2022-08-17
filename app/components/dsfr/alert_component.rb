@@ -13,11 +13,12 @@ class Dsfr::AlertComponent < ApplicationComponent
   end
 
   private
+
+  attr_reader :state, :title, :block
+
   def initialize(state:, title:)
     @state = state
     @title = title
     @block = block
   end
-
-  attr_reader :state, :title, :block
 end
