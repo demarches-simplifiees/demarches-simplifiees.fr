@@ -67,7 +67,10 @@ window.DS = window.DS || DS;
 import('../shared/track/matomo');
 import('../shared/track/sentry');
 
+import '../../../node_modules/@gouvfr/dsfr/dist/dsfr.module.js';
+
+// import "../../../node_modules/@gouvfr/dsfr/dist/dsfr.min.css";
 import '../../../node_modules/@gouvfr/dsfr/dist/core/core.css';
 import '../../../node_modules/@gouvfr/dsfr/dist/component/button/button.css';
 import '../../../node_modules/@gouvfr/dsfr/dist/component/alert/alert.css';
-import '../../../node_modules/@gouvfr/dsfr/dist/component/callout/callout.css';
+import '../../../node_modules/@gouvfr/dsfr/dist/component/breadcrumb/breadcrumb.css';

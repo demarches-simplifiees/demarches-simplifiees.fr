@@ -1,7 +1,7 @@
 = render partial: 'administrateurs/breadcrumbs',
-  locals: { steps: [link_to('Démarches', admin_procedures_path),
-                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
-                    'Administrateurs'], preview: false }
+  locals: { steps: [['Démarches', admin_procedures_path],
+                    [@procedure.libelle, admin_procedure_path(@procedure)],
+                    ['Administrateurs']], preview: false }
 
 .container
   %h1 Administrateurs de « #{@procedure.libelle} »

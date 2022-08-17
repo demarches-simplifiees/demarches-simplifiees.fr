@@ -2,7 +2,7 @@
 - content_for(:title, title)
 
 = render partial: 'administrateurs/breadcrumbs',
-  locals: { steps: [link_to(@procedure.libelle, instructeur_procedure_path(@procedure)),
-                    t('.title')] }
+  locals: { steps: [[@procedure.libelle, instructeur_procedure_path(@procedure)],
+                    [t('.title')]] }
 
 = render partial: 'shared/procedures/stats', locals: { title: title }

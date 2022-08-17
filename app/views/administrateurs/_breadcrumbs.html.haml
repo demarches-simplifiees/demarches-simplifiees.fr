@@ -1,14 +1,26 @@
 .sub-header
   .container.flex.justify-between.align-baseline.column
-    %ul.breadcrumbs.mt-1.mb-3
-      - steps.each do |step|
-        %li= step
+    %nav{ role: "navigation", class: "fr-breadcrumb", aria: { label: "vous êtes ici :" } }
+      %button{ class: "fr-breadcrumb__button", aria: { expanded: "false", controls: "breadcrumb-1" } }
+        Voir le fil d’Ariane
+
+      .fr-collapse#breadcrumb-1
+        %ol.fr-breadcrumb__list
+          %li= link_to "Accueil", root_path, class: 'fr-breadcrumb__link'
+          - steps.each.with_index do |step, i|
+            - if i == steps.size - 1
+              %li{ aria: {current: "page"}}
+                %span.fr-breadcrumb__link= step[0]
+            - else
+              %li= link_to step[0], step[1], class: 'fr-breadcrumb__link'
+
     - if defined?(preview) && preview
       .mb-2
         = link_to "Prévisualiser le formulaire", apercu_admin_procedure_path(@procedure), target: "_blank", rel: "noopener", class: 'button'
         = link_to "Continuer >", admin_procedure_path(@procedure), title: 'Vous pourrez revenir ici par la suite', class: 'button accepted'
 
     - if defined?(metadatas)
-      %ul.admin-metadata
+      %ol.admin-metadata
         - metadatas.each do |metadata|
           %li= metadata
+

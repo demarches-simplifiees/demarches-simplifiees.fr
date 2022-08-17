@@ -1,6 +1,7 @@
 = render partial: 'administrateurs/breadcrumbs',
-  locals: { steps: [link_to('Démarches', admin_procedures_path),
-                    link_to("#{@procedure.libelle}", admin_procedure_path(@procedure)), "Configuration des emails"] }
+  locals: { steps: [['Démarches', admin_procedures_path],
+                    ["#{@procedure.libelle}", admin_procedure_path(@procedure)],
+                    ["Configuration des emails"]] }
 
 .container
   - @mail_templates.each do |mail_template|

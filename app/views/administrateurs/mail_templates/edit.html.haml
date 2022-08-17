@@ -3,10 +3,10 @@
   = render partial: 'admin/closed_mail_template_attestation_inconsistency_alert'
 
 = render partial: 'administrateurs/breadcrumbs',
-  locals: { steps: [link_to('Démarches', admin_procedures_path),
-                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
-                    link_to("Emails", admin_procedure_mail_templates_path(@procedure)),
-                    @mail_template.class.const_get(:DISPLAYED_NAME)] }
+  locals: { steps: [['Démarches', admin_procedures_path],
+                    [@procedure.libelle, admin_procedure_path(@procedure)],
+                    ["Emails", admin_procedure_mail_templates_path(@procedure)],
+                    [@mail_template.class.const_get(:DISPLAYED_NAME)]] }
 
 .procedure-form
   .procedure-form__columns.container

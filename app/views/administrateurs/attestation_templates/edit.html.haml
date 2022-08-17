@@ -1,9 +1,9 @@
 - content_for(:root_class, 'scroll-margins-for-sticky-footer')
 
 = render partial: 'administrateurs/breadcrumbs',
-  locals: { steps: [link_to('Démarches', admin_procedures_path),
-                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
-                    'Attestation'] }
+  locals: { steps: [['Démarches', admin_procedures_path],
+                    [@procedure.libelle, admin_procedure_path(@procedure)],
+                    ['Attestation']] }
 
 .procedure-form#attestation-template-edit
   .procedure-form__columns.container

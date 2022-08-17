@@ -1,8 +1,8 @@
 
 = render partial: 'administrateurs/breadcrumbs',
-  locals: { steps: [link_to('Démarches', admin_procedures_path),
-                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
-                    'Publication'] }
+  locals: { steps: [['Démarches', admin_procedures_path],
+                    [@procedure.libelle, admin_procedure_path(@procedure)],
+                    ['Publication']] }
 .container
   - if @procedure.draft_types_de_champ.dubious.present?
     .card.warning.mb-3

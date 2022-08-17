@@ -1,13 +1,13 @@
 - if @procedure.routee?
   = render partial: 'administrateurs/breadcrumbs',
-    locals: { steps: [link_to(t('.procedures'), admin_procedures_path),
-                      link_to(@procedure.libelle, admin_procedure_path(@procedure)),
-                      t('.instructors_group')] }
+    locals: { steps: [[(t('.procedures'), admin_procedures_path],
+                      [(@procedure.libelle, admin_procedure_path(@procedure)],
+                      [t('.instructors_group')]] }
 - else
   = render partial: 'administrateurs/breadcrumbs',
-    locals: { steps: [link_to('Démarches', admin_procedures_path),
-                      link_to(@procedure.libelle, admin_procedure_path(@procedure)),
-                      'Instructeurs'] }
+    locals: { steps: [[('Démarches', admin_procedures_path],
+                      [(@procedure.libelle, admin_procedure_path(@procedure)],
+                      ['Instructeurs']] }
 
 .container.groupe-instructeur
   = render partial: 'administrateurs/groupe_instructeurs/routing', locals: { procedure: @procedure }
