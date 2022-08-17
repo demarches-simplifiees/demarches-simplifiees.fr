@@ -13,7 +13,6 @@ class Dsfr::AlertComponent < ApplicationComponent
   end
 
   private
-
   def initialize(state:, title:)
     @state = state
     @title = title
