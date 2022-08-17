@@ -1,7 +1,7 @@
 = render partial: 'administrateurs/breadcrumbs',
-  locals: { steps: [link_to('Démarches', admin_procedures_path),
-                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
-                    'MonAvis'] }
+  locals: { steps: [['Démarches', admin_procedures_path],
+                    [@procedure.libelle.truncate_words(4), admin_procedure_path(@procedure)],
+                    ['MonAvis']] }
 
 .container
   %h1.page-title
