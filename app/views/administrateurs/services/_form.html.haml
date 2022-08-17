@@ -16,17 +16,16 @@
 
   = f.select :type_organisme, Service.type_organismes.keys.map { |key| [ I18n.t("type_organisme.#{key}"), key] }
 
-  %h2.header-section Informations de contact
-
-  %p.explication
-    Votre démarche sera hébergée par #{APPLICATION_NAME} – mais nous ne pouvons pas assurer le support des démarches. Et malgré la dématérialisation, les usagers se poseront parfois des questions légitimes sur le processus administratif.
-    %br
-    %br
-    %strong Il est donc indispensable que les usagers puissent vous contacter
-    par le moyen de leur choix s’ils ont des questions sur votre démarche.
-    %br
-    %br
-    Ces informations de contact seront visibles par les utilisateurs de la démarche, affichées dans le menu « Aide », ainsi qu’en pied de page lors du dépôt d’un dossier. En cas d’informations invalides, #{APPLICATION_NAME} se réserve le droit de suspendre la publication de la démarche.
+  = render Dsfr::CalloutComponent.new(title: "Informations de contact") do |c|
+    - c.body do
+      Votre démarche sera hébergée par #{APPLICATION_NAME} – mais nous ne pouvons pas assurer le support des démarches. Et malgré la dématérialisation, les usagers se poseront parfois des questions légitimes sur le processus administratif.
+      %br
+      %br
+      %strong Il est donc indispensable que les usagers puissent vous contacter
+      par le moyen de leur choix s’ils ont des questions sur votre démarche.
+      %br
+      %br
+      Ces informations de contact seront visibles par les utilisateurs de la démarche, affichées dans le menu « Aide », ainsi qu’en pied de page lors du dépôt d’un dossier. En cas d’informations invalides, #{APPLICATION_NAME} se réserve le droit de suspendre la publication de la démarche.
 
   = f.label :email do
     Adresse email
