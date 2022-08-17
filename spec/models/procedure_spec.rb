@@ -447,6 +447,8 @@ describe Procedure do
         received_mail: received_mail,
         service: service,
         opendata: opendata,
+        duree_conservation_etendue_par_ds: true,
+        duree_conservation_dossiers_dans_ds: Procedure::OLD_MAX_DUREE_CONSERVATION,
         attestation_template: build(:attestation_template, logo: logo, signature: signature),
         types_de_champ_public: [{}, {}, { type: :drop_down_list }, { type: :piece_justificative }, { type: :repetition, children: [{}] }],
         types_de_champ_private: [{}, {}, { type: :drop_down_list }, { type: :repetition, children: [{}] }],
@@ -489,6 +491,11 @@ describe Procedure do
       end
     end
 
+    it 'should reset duree_conservation_etendue_par_ds' do
+      expect(subject.duree_conservation_etendue_par_ds).to eq(false)
+      expect(subject.duree_conservation_dossiers_dans_ds).to eq(Procedure::NEW_MAX_DUREE_CONSERVATION)
+    end
+
     it 'should duplicate specific objects with different id' do
       expect(subject.id).not_to eq(procedure.id)
 
@@ -525,7 +532,7 @@ describe Procedure do
 
       cloned_procedure = subject
       cloned_procedure.parent_procedure_id = nil
-      expect(cloned_procedure).to have_same_attributes_as(procedure, except: ["path", "draft_revision_id", "service_id"])
+      expect(cloned_procedure).to have_same_attributes_as(procedure, except: ["path", "draft_revision_id", "service_id", "duree_conservation_etendue_par_ds", "duree_conservation_dossiers_dans_ds"])
     end
 
     context 'which is opendata' do
