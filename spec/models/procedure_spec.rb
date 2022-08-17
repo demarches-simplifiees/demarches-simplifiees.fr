@@ -525,7 +525,7 @@ describe Procedure do
 
       cloned_procedure = subject
       cloned_procedure.parent_procedure_id = nil
-      expect(cloned_procedure).to have_same_attributes_as(procedure, except: ["path", "draft_revision_id"])
+      expect(cloned_procedure).to have_same_attributes_as(procedure, except: ["path", "draft_revision_id", "service_id"])
     end
 
     context 'which is opendata' do
@@ -569,18 +569,16 @@ describe Procedure do
       end
     end
 
-    it 'should keep service_id' do
-      expect(subject.service).to eq(service)
+    it 'should skips service_id' do
+      expect(subject.service).to eq(nil)
     end
 
     context 'when the procedure is cloned to another administrateur' do
       let(:administrateur) { create(:administrateur) }
       let(:opendata) { false }
 
-      it 'should clone service' do
-        expect(subject.service.id).not_to eq(service.id)
-        expect(subject.service.administrateur_id).not_to eq(service.administrateur_id)
-        expect(subject.service.attributes.except("id", "administrateur_id", "created_at", "updated_at")).to eq(service.attributes.except("id", "administrateur_id", "created_at", "updated_at"))
+      it 'should not clone service' do
+        expect(subject.service).to eq(nil)
       end
 
       it 'should discard old pj information' do
