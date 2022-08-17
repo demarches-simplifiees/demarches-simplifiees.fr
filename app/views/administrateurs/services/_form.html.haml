@@ -1,13 +1,17 @@
 = form_with model: [ :admin, service], local: true, html: { class: 'form' } do |f|
 
   = f.label :nom do
-    Nom
+    Nom du service
     %span.mandatory *
+
+  %p.notice Indiquez le nom et la direction rattachée séparé par une virgule
+
   = f.text_field :nom, placeholder: 'service jeunesse et prévention, direction des affaires maritimes', required: true
 
   = f.label :organisme do
-    Organisme
+    Organisme/s
     %span.mandatory *
+  %p.notice Indiquez les organismes depuis l’échelon territoriale jusqu’au ministère séparés par une virgule
   = f.text_field :organisme, placeholder: "mairie de Mours, préfecture de l'Oise, ministère de la Culture", required: true
 
   = f.label :type_organisme do
@@ -30,21 +34,22 @@
   = f.label :email do
     Adresse email
     %span.mandatory *
-  %p.explication
-    Indiquez une adresse email <strong>valide</strong> qui permettra de recevoir et de réponse aux questions des usagers.
+
+  %p.notice
+    Indiquez une adresse Email valide qui permettra de recevoir et de répondre aux questions des usagers.
 
   = f.email_field :email, placeholder: 'contact@mon-service.fr', required: true
 
   = f.label :telephone do
     Numéro de téléphone
     %span.mandatory *
-  %p.explication Indiquez le numéro de téléphone du service <strong>valide</strong> le plus à même de fournir des réponses pertinentes à vos usagers aux horaires où vous êtes joignables.
+  %p.notice Indiquez le numéro de téléphone du service valide le plus à même de fournir des réponses pertinentes à vos usagers
   = f.telephone_field :telephone, placeholder: '04 12 24 42 37', required: true
 
   = f.label :horaires do
     Horaires
     %span.mandatory *
-  %p.explication Indiquez les horaires où les usagers peuvent vous joindre.
+  %p.notice   Indiquez les jours ouvrables et les horaires où les usagers peuvent vous joindre
   = f.text_area :horaires, placeholder: "Du lundi au vendredi de 9 h 30 à 17 h 30. Le samedi de 9 h 30 à 12 h.", required: true
 
   = f.label :adresse do
@@ -56,4 +61,5 @@
     = hidden_field_tag :procedure_id, procedure_id
 
   .send-wrapper
-    = f.submit "Enregistrer", class: 'button primary send'
+    = render Dsfr::ButtonComponent.new(form: f, label: "Enregistrer", class_names: [''])
+
