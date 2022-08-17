@@ -1,8 +1,8 @@
 = render partial: 'administrateurs/breadcrumbs',
-  locals: { steps: [link_to('Démarches', admin_procedures_path),
-                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
-                    link_to(Procedure.human_attribute_name(:jeton_api_particulier), admin_procedure_api_particulier_path(@procedure)),
-                    t('.data_sources')] }
+  locals: { steps: [['Démarches', admin_procedures_path],
+                    [@procedure.libelle.truncate_words(4), admin_procedure_path(@procedure)],
+                    [Procedure.human_attribute_name(:jeton_api_particulier), admin_procedure_api_particulier_path(@procedure)],
+                    [t('.data_sources')]] }
 
 .container
   %h1.page-title= t('.title')

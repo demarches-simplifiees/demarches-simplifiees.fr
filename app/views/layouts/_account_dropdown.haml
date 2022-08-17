@@ -1,23 +1,39 @@
-.dropdown.header-menu-opener{ data: { controller: 'menu-button' } }
-  %button.button.dropdown-button.icon-only.header-menu-button{ title: "Mon compte", data: { menu_button_target: 'button' } }
-    %span.hidden= t("my_account", scope: [:layouts])
-    = image_tag "icons/account-circle.svg", alt: 'Mon compte', width: 24, height: 24, loading: 'lazy'
-  %ul.header-menu.dropdown-content#mon_compte_menu{ data: { menu_button_target: 'menu' } }
-    %li
-      .menu-item{ title: current_email }
-        = current_email
-    - if super_admin_signed_in?
-      %li
-        = link_to manager_root_path, class: "menu-item menu-link" do
-          = image_tag "icons/super-admin.svg", alt: ''
-          = t('go_superadmin', scope: [:layouts])
-    - if multiple_devise_profile_connect?
-      - if user_signed_in? && nav_bar_profile != :user
-        %li
-          = link_to dossiers_path, class: "menu-item menu-link" do
-            = image_tag "icons/switch-profile.svg", alt: ''
-            = t('go_user', scope: [:layouts])
-      - if instructeur_signed_in? && nav_bar_profile != :instructeur
+
+%nav.fr-nav{ role: "navigation", "aria-label"=> t('menu_aria_label', scope: [:layouts]) }
+  .fr-nav__item
+    %button.fr-translate__btn.fr-btn{ "aria-controls" => "account", "aria-expanded" => "false", :title => t('my_account', scope: [:layouts]) }
+      = image_tag "icons/account-circle.svg", alt: t('my_account', scope: [:layouts]), width: 20, height: 20, loading: 'lazy'
+      &nbsp;
+      = " #{current_email}"
+    #account.fr-collapse.fr-menu
+      %ul.fr-menu__list
+        - if super_admin_signed_in?
+          %li
+            = link_to manager_root_path, class: "fr-nav__link flex align-center" do
+              = image_tag "icons/super-admin.svg", alt: '',width: 20, height: 20, class: 'mr-1'
+              = t('go_superadmin', scope: [:layouts])
+        - if multiple_devise_profile_connect?
+          - if user_signed_in? && nav_bar_profile != :user
+            %li
+              = link_to dossiers_path, class: "fr-nav__link flex align-center" do
+                = image_tag "icons/switch-profile.svg", alt: '', width: 20, height: 20, class: 'mr-1'
+                = t('go_user', scope: [:layouts])
+          - if instructeur_signed_in? && nav_bar_profile != :instructeur
+            %li
+              = link_to instructeur_procedures_path, class: "fr-nav__link flex align-center" do
+                = image_tag "icons/switch-profile.svg", alt: '', width: 20, height: 20, class: 'mr-1'
+                = t('go_instructor', scope: [:layouts])
+          - if expert_signed_in? && nav_bar_profile != :expert
+            %li
+              = link_to expert_all_avis_path, class: "fr-nav__link flex align-center" do
+                = image_tag "icons/switch-profile.svg", alt: ''
+                = t('go_expert', scope: [:layouts])
+          - if administrateur_signed_in? && nav_bar_profile != :administrateur
+            %li
+              = link_to admin_procedures_path, class: "fr-nav__link flex align-center" do
+                = image_tag "icons/switch-profile.svg", alt: '', width: 20, height: 20, class: 'mr-1'
+                = t('go_admin', scope: [:layouts])
+
         %li
           = link_to instructeur_procedures_path, class: "menu-item menu-link" do
             = image_tag "icons/switch-profile.svg", alt: ''

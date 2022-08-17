@@ -1,7 +1,7 @@
 - content_for(:root_class, 'scroll-margins-for-sticky-footer')
 
 = render partial: 'administrateurs/breadcrumbs',
-  locals: { steps: [link_to('Démarches', admin_procedures_path),
+  locals: { steps: [['Démarches', admin_procedures_path],
                     'Nouvelle'] }
 
 .procedure-form
