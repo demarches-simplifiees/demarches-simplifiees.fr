@@ -66,3 +66,9 @@ window.DS = window.DS || DS;
 
 import('../shared/track/matomo');
 import('../shared/track/sentry');
+
+import "../../../node_modules/@gouvfr/dsfr/dist/dsfr.min.css";
+
+
+
+
