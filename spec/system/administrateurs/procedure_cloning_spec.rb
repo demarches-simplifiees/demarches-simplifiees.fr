@@ -27,8 +27,7 @@ describe 'As an administrateur I wanna clone a procedure', js: true do
 
       # select service
       find("#service .button").click
-      within("#procedure_service_id") { select(administrateur.services.first.nom) }
-      click_on("valider")
+      click_on "Assigner"
 
       # then publish
       find('#publish-procedure-link').click
