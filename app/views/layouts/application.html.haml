@@ -18,6 +18,8 @@
     = vite_client_tag
     = vite_react_refresh_tag
     = vite_javascript_tag 'application'
+    = vite_javascript_tag 'dsfr-module', type: "module", nonce: true
+    = vite_javascript_tag 'dsfr-nomodule', type: 'nomodule', type: "text/javascript", nonce: true
     - if administrateur_signed_in?
       = vite_javascript_tag 'track-admin'
 
@@ -28,8 +30,8 @@
         = vite_legacy_javascript_tag 'track-admin'
       = vite_legacy_fallback_tag
 
-    = preload_link_tag(asset_url("Muli-Regular.woff2"))
-    = preload_link_tag(asset_url("Muli-Bold.woff2"))
+    = preload_link_tag(asset_url("Marianne-Regular.woff2"))
+    = preload_link_tag(asset_url("Spectral-Regular.ttf"))
 
     = stylesheet_link_tag 'application', media: 'all'
     = vite_stylesheet_tag 'application', media: 'all'
