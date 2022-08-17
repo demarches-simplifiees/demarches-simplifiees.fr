@@ -506,12 +506,7 @@ class Procedure < ApplicationRecord
     procedure.parent_procedure = self
     procedure.canonical_procedure = nil
     procedure.replaced_by_procedure = nil
-
-    if from_library
-      procedure.service = nil
-    elsif self.service.present? && is_different_admin
-      procedure.service = self.service.clone_and_assign_to_administrateur(admin)
-    end
+    procedure.service = nil
 
     transaction do
       procedure.save
