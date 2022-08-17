@@ -4,25 +4,14 @@
                     'Choix du service'] }
 
 #services-index.container
-  %h1 Choix du service pour la démarche
-
-  = form_for @procedure,  url: { controller: "administrateurs/services", action: :add_to_procedure } , html: { class: 'form' } do |f|
-    = f.label :service_id, "La démarche #{@procedure.libelle} est affectée au service"
-    = f.select :service_id,
-      @services.map { |s| [ s.nom, s.id ] },
-      { prompt: 'choisir un service', selected: @procedure.service&.id },
-      required: true
-
-    = f.hidden_field :id
-    = f.submit 'valider', class: 'button primary'
-
   %h1 Liste des Services
+  %h2 La démarche #{@procedure.libelle} peut être affectée aux services dans la liste ci-dessous
 
   %table.table.table-service.hoverable
     %thead
       %tr
         %th
-          nom
+          Nom
         %th.change
           = link_to('Nouveau service', new_admin_service_path(procedure_id: @procedure.id), class: 'button')
 
@@ -32,8 +21,14 @@
           %td
             = service.nom
           %td.change
-            = link_to('modifier', edit_admin_service_path(service, procedure_id: @procedure.id))
-            = link_to 'supprimer',
-              admin_service_path(service, procedure_id: @procedure.id),
-              method: :delete,
-              data: { confirm: "Confirmez vous la suppression de #{service.nom}" }
+            - if @procedure.service == service
+              %strong.mr-2 (Assigné)
+            - else
+              = button_to "Assigner", add_to_procedure_admin_services_path(procedure: { id: @procedure.id, service_id: service.id, }), method: :patch, class: 'link mr-2', form_class: 'inline'
+            = link_to('Modifier', edit_admin_service_path(service, procedure_id: @procedure.id), class: 'link my-2')
+            - if @procedure.service != service
+              = link_to 'Supprimer',
+                admin_service_path(service, procedure_id: @procedure.id),
+                method: :delete,
+                data: { confirm: "Confirmez vous la suppression de #{service.nom}" },
+                class: 'btn btn-link ml-2'
