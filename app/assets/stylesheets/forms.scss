@@ -494,6 +494,10 @@
     }
   }
 
+  .justify-content--space-between {
+    justify-content: space-between;
+  }
+
   .send-notice {
     @include notice-text-style;
     margin-bottom: $default-padding;

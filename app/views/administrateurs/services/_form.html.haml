@@ -20,6 +20,7 @@
 
   = f.select :type_organisme, Service.type_organismes.keys.map { |key| [ I18n.t("type_organisme.#{key}"), key] }
 
+
   = render Dsfr::CalloutComponent.new(title: "Informations de contact") do |c|
     - c.body do
       Votre démarche sera hébergée par #{APPLICATION_NAME} – mais nous ne pouvons pas assurer le support des démarches. Et malgré la dématérialisation, les usagers se poseront parfois des questions légitimes sur le processus administratif.
@@ -60,6 +61,7 @@
   - if procedure_id.present?
     = hidden_field_tag :procedure_id, procedure_id
 
-  .send-wrapper
+  .send-wrapper.justify-content--space-between
+    = render Dsfr::ButtonComponent.new(label: "Annuler et revenir à la page de suivi", url: admin_procedure_path(id: @procedure.id), class_names: ['fr-btn--secondary'])
     = render Dsfr::ButtonComponent.new(form: f, label: "Enregistrer", class_names: [''])
 

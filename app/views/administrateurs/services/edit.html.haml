@@ -8,7 +8,7 @@
 .container
 
   - if @procedure.service.procedures.count.positive?
-    = render Dsfr::AlertComponent.new(state: :warning, title: "Modifier un service impactera la ou les démarches qui sont rattachée/s") do |c|
+    = render Dsfr::AlertComponent.new(state: :warning, title: "Modifier ce service impactera la ou les démarches qui sont rattachée/s") do |c|
       - c.body do
         %ul
           - @service.procedures.each do |proc|
