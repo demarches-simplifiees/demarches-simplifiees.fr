@@ -18,7 +18,7 @@
     Type d’organisme
     %span.mandatory *
 
-  = f.select :type_organisme, Service.type_organismes.keys.map { |key| [ I18n.t("type_organisme.#{key}"), key] }
+  = f.select :type_organisme, Service.type_organismes.keys.map { |key| [ I18n.t("type_organisme.#{key}"), key] }, class: 'width-33-desktop width-100-mobile'
 
 
   = render Dsfr::CalloutComponent.new(title: "Informations de contact") do |c|
@@ -39,24 +39,24 @@
   %p.notice
     Indiquez une adresse Email valide qui permettra de recevoir et de répondre aux questions des usagers.
 
-  = f.email_field :email, placeholder: 'contact@mon-service.fr', required: true
+  = f.email_field :email, placeholder: 'contact@mon-service.fr', required: true, class: 'width-33-desktop width-100-mobile'
 
   = f.label :telephone do
     Numéro de téléphone
     %span.mandatory *
   %p.notice Indiquez le numéro de téléphone du service valide le plus à même de fournir des réponses pertinentes à vos usagers
-  = f.telephone_field :telephone, placeholder: '04 12 24 42 37', required: true
+  = f.telephone_field :telephone, placeholder: '04 12 24 42 37', required: true, class: 'width-33-desktop width-100-mobile'
 
   = f.label :horaires do
     Horaires
     %span.mandatory *
   %p.notice   Indiquez les jours ouvrables et les horaires où les usagers peuvent vous joindre
-  = f.text_area :horaires, placeholder: "Du lundi au vendredi de 9 h 30 à 17 h 30. Le samedi de 9 h 30 à 12 h.", required: true
+  = f.text_area :horaires, placeholder: "Du lundi au vendredi de 9 h 30 à 17 h 30. Le samedi de 9 h 30 à 12 h.", required: true, class: 'width-66-desktop width-100-mobile'
 
   = f.label :adresse do
     Adresse postale
     %span.mandatory *
-  = f.text_area :adresse, placeholder: "20 avenue de Ségur, 75007 Paris", required: true
+  = f.text_area :adresse, placeholder: "20 avenue de Ségur, 75007 Paris", required: true, class: 'width-66-desktop width-100-mobile'
 
   - if procedure_id.present?
     = hidden_field_tag :procedure_id, procedure_id
