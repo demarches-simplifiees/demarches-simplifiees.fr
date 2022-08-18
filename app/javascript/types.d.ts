@@ -22,3 +22,5 @@ declare module '@tmcw/togeojson/dist/togeojson.es.js' {
 
 declare module 'react-coordinate-input';
 declare module 'chartkick';
+declare module 'trix';
+declare module '@rails/actiontext';

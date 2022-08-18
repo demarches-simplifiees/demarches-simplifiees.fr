@@ -1,28 +1,23 @@
 {
+  "include": ["app/javascript/**/*.ts", "app/javascript/**/*.tsx"],
   "compilerOptions": {
-    "declaration": false,
-    "experimentalDecorators": true,
     "lib": ["DOM", "DOM.Iterable", "ES2019"],
-    "module": "es6",
-    "moduleResolution": "node",
-    "sourceMap": true,
     "target": "ES2019",
+    "moduleResolution": "node",
+    "module": "es2020",
     "jsx": "react",
-    "noEmit": true,
-    "skipLibCheck": true,
     "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
     "strict": true,
-    "types": ["react/next", "react-dom/next"],
+    "types": ["react/next", "react-dom/next", "vite/client"],
     "paths": {
       "~/*": ["./app/javascript/*"],
       "@utils": ["./app/javascript/shared/utils.ts"]
-    }
-  },
-  "exclude": [
-    "**/*.spec.ts",
-    "node_modules",
-    "vendor",
-    "public"
-  ],
-  "compileOnSave": false
+    },
+    "noEmit": true
+  }
 }

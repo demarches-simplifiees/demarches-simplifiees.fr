@@ -235,6 +235,7 @@ GEM
     dotenv-rails (2.7.6)
       dotenv (= 2.7.6)
       railties (>= 3.2)
+    dry-cli (0.7.0)
     dry-inflector (0.2.0)
     dumb_delegator (1.0.0)
     ecma-re-validator (0.3.0)
@@ -448,7 +449,7 @@ GEM
     mini_magick (4.11.0)
     mini_mime (1.1.2)
     mini_portile2 (2.8.0)
-    minitest (5.15.0)
+    minitest (5.16.0)
     momentjs-rails (2.20.1)
       railties (>= 3.1)
     msgpack (1.4.2)
@@ -542,7 +543,7 @@ GEM
       rack (>= 2.1.0)
     rack-protection (2.2.0)
       rack
-    rack-proxy (0.7.0)
+    rack-proxy (0.7.2)
       rack
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
@@ -573,7 +574,7 @@ GEM
       activesupport (>= 4.2)
       choice (~> 0.2.0)
       ruby-graphviz (~> 1.2)
-    rails-html-sanitizer (1.4.2)
+    rails-html-sanitizer (1.4.3)
       loofah (~> 2.3)
     rails-i18n (7.0.3)
       i18n (>= 0.7, < 2)
@@ -689,7 +690,6 @@ GEM
       childprocess (>= 0.5, < 5.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2)
-    semantic_range (3.0.0)
     sentry-delayed_job (4.8.1)
       delayed_job (>= 4.0)
       sentry-ruby-core (~> 4.8.1)
@@ -776,6 +776,15 @@ GEM
       axiom-types (~> 0.1)
       coercible (~> 1.0)
       descendants_tracker (~> 0.0, >= 0.0.3)
+    vite_plugin_legacy (3.0.2)
+      vite_ruby (~> 3.0, >= 3.0.4)
+    vite_rails (3.0.9)
+      railties (>= 5.1, < 8)
+      vite_ruby (~> 3.0)
+    vite_ruby (3.1.6)
+      dry-cli (~> 0.7.0)
+      rack-proxy (~> 0.6, >= 0.6.1)
+      zeitwerk (~> 2.2)
     warden (1.2.9)
       rack (>= 2.0.9)
     watir (6.19.1)
@@ -797,17 +806,12 @@ GEM
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
-    webpacker (5.4.3)
-      activesupport (>= 5.2)
-      rack-proxy (>= 0.6.1)
-      railties (>= 5.2)
-      semantic_range (>= 2.3.0)
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.5.4)
+    zeitwerk (2.6.0)
     zip_tricks (5.6.0)
     zipline (1.4.1)
       actionpack (>= 6.0, < 8.0)
@@ -941,11 +945,12 @@ DEPENDENCIES
   typhoeus
   vcr
   view_component
+  vite_plugin_legacy
+  vite_rails
   warden
   web-console
   webdrivers (~> 4.0)
   webmock
-  webpacker
   zipline
   zxcvbn-ruby
 

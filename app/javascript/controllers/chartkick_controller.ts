@@ -1,12 +1,25 @@
-import Chartkick from 'chartkick';
-import Highcharts from 'highcharts';
+import { Controller } from '@hotwired/stimulus';
 import { toggle, delegate } from '@utils';
 
-export default function () {
-  return null;
+export class ChartkickController extends Controller {
+  async connect() {
+    const Highcharts = await import('highcharts');
+    const Chartkick = await import('chartkick');
+
+    Chartkick.use(Highcharts);
+    const reflow = (nextChartId?: string) =>
+      nextChartId && Chartkick.charts[nextChartId]?.getChartObject()?.reflow();
+
+    delegate('click', '[data-toggle-chart]', (event) =>
+      toggleChart(event as MouseEvent, reflow)
+    );
+  }
 }
 
-function toggleChart(event: MouseEvent) {
+function toggleChart(
+  event: MouseEvent,
+  reflow: (nextChartId?: string) => void
+) {
   const nextSelectorItem = event.target as HTMLButtonElement,
     chartClass = nextSelectorItem.dataset.toggleChart,
     nextChart = chartClass
@@ -30,9 +43,5 @@ function toggleChart(event: MouseEvent) {
   nextChart && toggle(nextChart);
 
   // Reflow needed, see https://github.com/highcharts/highcharts/issues/1979
-  nextChartId && Chartkick.charts[nextChartId]?.getChartObject()?.reflow();
+  reflow(nextChartId);
 }
-
-delegate('click', '[data-toggle-chart]', toggleChart);
-
-Chartkick.use(Highcharts);
