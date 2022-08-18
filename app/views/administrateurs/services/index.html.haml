@@ -5,15 +5,15 @@
 
 #services-index.container
   %h1 Liste des Services
-  %h2 La démarche #{@procedure.libelle} peut être affectée aux services dans la liste ci-dessous
 
-  %table.table.table-service.hoverable
+  %table.fr-table.width-100.mt-3
+    %caption La démarche “#{@procedure.libelle}” peut être affectée aux services dans la liste ci-dessous
     %thead
       %tr
-        %th
+        %th{ scope: "col" }
           Nom
-        %th.change
-          = link_to('Nouveau service', new_admin_service_path(procedure_id: @procedure.id), class: 'button')
+        %th.change{ scope: "col" }
+          = render Dsfr::ButtonComponent.new(label: "Nouveau service", url: new_admin_service_path(procedure_id: @procedure.id), class_names: ['fr-btn--secondary'])
 
     %tbody
       - @services.each do |service|

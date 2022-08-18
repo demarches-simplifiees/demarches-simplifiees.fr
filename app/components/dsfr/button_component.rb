@@ -1,7 +1,7 @@
 class Dsfr::ButtonComponent < ApplicationComponent
   private
 
-  def initialize(label:, form:nil, url: nil, class_names: [])
+  def initialize(label:, form: nil, url: nil, class_names: [])
     @form = form
     @label = label
     @url = url
