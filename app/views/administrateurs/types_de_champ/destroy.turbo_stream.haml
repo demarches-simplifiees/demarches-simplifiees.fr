@@ -1,0 +1,4 @@
+= turbo_stream.remove dom_id(@coordinate, :type_de_champ_editor)
+= turbo_stream.dispatch 'sortable:sort'
+= turbo_stream.morph dom_id(@coordinate.revision, :estimated_fill_duration) do
+  = render TypesDeChampEditor::EstimatedFillDurationComponent.new(revision: @coordinate.revision, is_annotation: @coordinate.private?)

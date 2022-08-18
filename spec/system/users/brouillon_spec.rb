@@ -38,16 +38,16 @@ describe 'The user' do
     select_combobox('communes', 'Ai', '02 - Aisne', check: false)
     select_combobox('communes', 'Ambl', 'Ambléon (01300)')
 
-    select('Australienne', from: 'nationalites')
-    select('Mahina - Tahiti - 98709', from: 'commune_de_polynesie')
-    select('98709 - Mahina - Tahiti', from: 'code_postal_de_polynesie')
+    select('Australienne', from: form_id_for('nationalites'))
+    select('Mahina - Tahiti - 98709', from: form_id_for('commune_de_polynesie'))
+    select('98709 - Mahina - Tahiti', from: form_id_for('code_postal_de_polynesie'))
 
-    check('engagement')
+    check(form_id_for('engagement'))
     fill_in('dossier_link', with: '123')
     find('.editable-champ-piece_justificative input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
 
     blur
-    sleep(0.7)
+    sleep(1.7)
     expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
 
     # check data on the dossier

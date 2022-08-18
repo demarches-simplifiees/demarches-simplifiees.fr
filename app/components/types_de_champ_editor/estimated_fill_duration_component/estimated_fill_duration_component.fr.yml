@@ -1,0 +1,3 @@
+fr:
+  estimated_fill_duration: "Durée de remplissage estimée :"
+  estimated_fill_minutes: "%{estimated_minutes} mn"

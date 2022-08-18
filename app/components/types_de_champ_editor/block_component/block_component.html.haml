@@ -1,0 +1,3 @@
+%ul.types-de-champ-block{ id: block_id, data: sortable_options }
+  - @coordinates.each do |coordinate|
+    = render TypesDeChampEditor::ChampComponent.new(coordinate: coordinate)
