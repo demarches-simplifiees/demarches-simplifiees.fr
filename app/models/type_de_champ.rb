@@ -3,6 +3,7 @@
 # Table name: types_de_champ
 #
 #  id          :integer          not null, primary key
+#  condition   :jsonb
 #  description :text
 #  libelle     :string
 #  mandatory   :boolean          default(FALSE)
@@ -88,6 +89,22 @@ class TypeDeChamp < ApplicationRecord
   end
 
   serialize :options, WithIndifferentAccess
+
+  class ConditionSerializer
+    def self.load(condition)
+      if condition.present?
+        Logic.from_h(condition)
+      end
+    end
+
+    def self.dump(condition)
+      if condition.present?
+        condition.to_h
+      end
+    end
+  end
+
+  serialize :condition, ConditionSerializer
 
   after_initialize :set_dynamic_type
   after_create :populate_stable_id

@@ -1144,7 +1144,7 @@ describe Users::DossiersController, type: :controller do
     subject { patch :restore, params: { id: dossier.id } }
 
     context 'when the user want to restore his dossier' do
-      let!(:dossier) { create(:dossier, :with_individual, state: :accepte, en_construction_at: Time.zone.yesterday.beginning_of_day.utc, hidden_by_user_at: Time.zone.yesterday.beginning_of_day.utc, user: user, autorisation_donnees: true) }
+      let!(:dossier) { create(:dossier, :accepte, :with_individual, en_construction_at: Time.zone.yesterday.beginning_of_day.utc, hidden_by_user_at: Time.zone.yesterday.beginning_of_day.utc, user: user, autorisation_donnees: true) }
 
       before { subject }
 
