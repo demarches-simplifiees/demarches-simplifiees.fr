@@ -30,8 +30,8 @@ VAIRAO	Vairao	98725		TARAVAO	TAHITI	Tahiti	Iles Du Vent		Vairao - Tahiti - 98725
 MATAIEA	Mataiea	98726			TAHITI	Tahiti	Iles Du Vent	Mataiea	Mataiea - Tahiti - 98726	98726 - Mataiea - Tahiti
 PAPEARI	Papeari	98727			TAHITI	Tahiti	Iles Du Vent	Papeari	Papeari - Tahiti - 98727	98727 - Papeari - Tahiti
 MOOREA-MAIAO/AFAREAITU	Afareaitu	98728		MAHAREPA	MOOREA	Moorea	Iles Du Vent		Afareaitu - Moorea - 98728	98728 - Afareaitu - Moorea
-HAUMI	Haumi	98728		MAHAREPA	MOOREA	Moorea			Haumi - Moorea - 98728	98728 - Haumi - Moorea
-MAATEA	Maatea	98728		MAHAREPA	MOOREA	Moorea			Maatea - Moorea - 98728	98728 - Maatea - Moorea
+HAUMI	Haumi	98728		MAHAREPA	MOOREA	Moorea	Iles Du Vent		Haumi - Moorea - 98728	98728 - Haumi - Moorea
+MAATEA	Maatea	98728		MAHAREPA	MOOREA	Moorea	Iles Du Vent		Maatea - Moorea - 98728	98728 - Maatea - Moorea
 MAHAREPA	Maharepa	98728			MOOREA	Moorea	Iles Du Vent		Maharepa - Moorea - 98728	98728 - Maharepa - Moorea
 MOOREA-MAIAO/PAOPAO	Paopao	98728		MAHAREPA	MOOREA	Moorea	Iles Du Vent		Paopao - Moorea - 98728	98728 - Paopao - Moorea
 MOOREA-MAIAO/TEAVARO	Teavaro	98728		MAHAREPA	MOOREA	Moorea	Iles Du Vent		Teavaro - Moorea - 98728	98728 - Teavaro - Moorea
@@ -43,43 +43,43 @@ MOOREA-MAIAO/HAAPITI	Haapiti	98729		PAPETOAI	MOOREA	Moorea	Iles Du Vent		Haapiti
 HAURU	Hauru	98729		PAPETOAI	MOOREA	Moorea	Iles Du Vent		Hauru - Moorea - 98729	98729 - Hauru - Moorea
 MOOREA-MAIAO/PAPETOAI	Papetoai	98729		PAPETOAI	MOOREA	Moorea	Iles Du Vent		Papetoai - Moorea - 98729	98729 - Papetoai - Moorea
 TIAHURA	Tiahura	98729		PAPETOAI	MOOREA	Moorea	Iles Du Vent		Tiahura - Moorea - 98729	98729 - Tiahura - Moorea
-BORA-BORA/ANAU	Anau	98730		VAITAPE	BORA-BORA	Bora-Bora	îles Sous Le Vent		Anau - Bora-Bora - 98730	98730 - Anau - Bora-Bora
-BORA-BORA/FAANUI	Faanui	98730		VAITAPE	BORA-BORA	Bora-Bora	îles Sous Le Vent		Faanui - Bora-Bora - 98730	98730 - Faanui - Bora-Bora
-BORA-BORA/NUNUE	Nunue	98730		VAITAPE	BORA-BORA	Bora-Bora	îles Sous Le Vent		Nunue - Bora-Bora - 98730	98730 - Nunue - Bora-Bora
-TUPAI	Tupai	98730			TUPAI	Tupai	îles Sous Le Vent	Nunue	Tupai - 98730	98730 - Tupai
-BORA-BORA/VAITAPE	Vaitape	98730		VAITAPE	BORA-BORA	Bora-Bora	îles Sous Le Vent		Vaitape - Bora-Bora - 98730	98730 - Vaitape - Bora-Bora
-HUAHINE/FAIE	Faie	98731		FARE	HUAHINE	Huahine	îles Sous Le Vent		Faie - Huahine - 98731	98731 - Faie - Huahine
-HUAHINE/FARE	Fare	98731		FARE	HUAHINE	Huahine	îles Sous Le Vent		Fare - Huahine - 98731	98731 - Fare - Huahine
-HUAHINE/FITII	Fitii	98731		FARE	HUAHINE	Huahine	îles Sous Le Vent		Fitii - Huahine - 98731	98731 - Fitii - Huahine
-HUAHINE/HAAPU	Haapu	98731		FARE	HUAHINE	Huahine	îles Sous Le Vent		Haapu - Huahine - 98731	98731 - Haapu - Huahine
-HUAHINE/MAEVA	Maeva	98731		FARE	HUAHINE	Huahine	îles Sous Le Vent		Maeva - Huahine - 98731	98731 - Maeva - Huahine
-HUAHINE/MAROE	Maroe	98731		FARE	HUAHINE	Huahine	îles Sous Le Vent		Maroe - Huahine - 98731	98731 - Maroe - Huahine
-HUAHINE/PAREA	Parea	98731		FARE	HUAHINE	Huahine	îles Sous Le Vent		Parea - Huahine - 98731	98731 - Parea - Huahine
-HUAHINE/TEFARERII	Tefarerii	98731		FARE	HUAHINE	Huahine	îles Sous Le Vent		Tefarerii - Huahine - 98731	98731 - Tefarerii - Huahine
-MANUAE (SCILLY)	Manuae (Scilly)	98732			MANUAE (SCILLY)	Manuae (Scilly)	îles Sous Le Vent	Maupiti	Manuae (Scilly) - 98732	98732 - Manuae (Scilly)
-MAUPIHAA (MOPELIA)	Maupihaa (Mopelia)	98732			MAUPIHAA (MOPELIA)	Maupihaa (Mopelia)	îles Sous Le Vent	Maupiti	Maupihaa (Mopelia) - 98732	98732 - Maupihaa (Mopelia)
-MAUPITI	Maupiti	98732			MAUPITI	Maupiti	îles Sous Le Vent	Maupiti	Maupiti - 98732	98732 - Maupiti
-MOTU ONE (BELLINGHAUSEN)	Motu One (Bellinghausen)	98732			MOTU ONE (BELLINGHAUSEN)	Motu One (Bellinghausen)	îles Sous Le Vent	Maupiti	Motu One (Bellinghausen) - 98732	98732 - Motu One (Bellinghausen)
-TAHAA/HIPU	Hipu	98733		PATIO	TAHAA	Tahaa	îles Sous Le Vent		Hipu - Tahaa - 98733	98733 - Hipu - Tahaa
-TAHAA/IRIPAU	Iripau	98733		PATIO	TAHAA	Tahaa	îles Sous Le Vent		Iripau - Tahaa - 98733	98733 - Iripau - Tahaa
-TAHAA/PATIO	Patio	98733		PATIO	TAHAA	Tahaa	îles Sous Le Vent		Patio - Tahaa - 98733	98733 - Patio - Tahaa
-TAHAA/RUUTIA	Ruutia	98733		PATIO	TAHAA	Tahaa	îles Sous Le Vent		Ruutia - Tahaa - 98733	98733 - Ruutia - Tahaa
-TAHAA/TAPUAMU	Tapuamu	98733		PATIO	TAHAA	Tahaa	îles Sous Le Vent		Tapuamu - Tahaa - 98733	98733 - Tapuamu - Tahaa
-TAHAA/TIVA	Tiva	98733		PATIO	TAHAA	Tahaa	îles Sous Le Vent		Tiva - Tahaa - 98733	98733 - Tiva - Tahaa
-TAHAA/FAAAHA	Faaaha	98734		HAAMENE	TAHAA	Tahaa	îles Sous Le Vent		Faaaha - Tahaa - 98734	98734 - Faaaha - Tahaa
-TAHAA/HAAMENE	Haamene	98734		HAAMENE	TAHAA	Tahaa	îles Sous Le Vent		Haamene - Tahaa - 98734	98734 - Haamene - Tahaa
-TAHAA/NIUA	Niua	98734		HAAMENE	TAHAA	Tahaa	îles Sous Le Vent		Niua - Tahaa - 98734	98734 - Niua - Tahaa
-TAHAA/VAITOARE	Vaitoare	98734		HAAMENE	TAHAA	Tahaa	îles Sous Le Vent		Vaitoare - Tahaa - 98734	98734 - Vaitoare - Tahaa
-FETUNA	Fetuna	98735		UTUROA	RAIATEA	Raiatea	îles Sous Le Vent	Fetuna	Fetuna - Raiatea - 98735	98735 - Fetuna - Raiatea
-TAPUTAPUATEA/OPOA	Opoa	98735		UTUROA	RAIATEA	Raiatea	îles Sous Le Vent		Opoa - Raiatea - 98735	98735 - Opoa - Raiatea
-TAPUTAPUATEA/PUOHINE	Puohine	98735		UTUROA	RAIATEA	Raiatea	îles Sous Le Vent		Puohine - Raiatea - 98735	98735 - Puohine - Raiatea
-TAPUTAPUATEA	Taputapuatea	98735		UTUROA	RAIATEA	Raiatea	îles Sous Le Vent		Taputapuatea - Raiatea - 98735	98735 - Taputapuatea - Raiatea
-TU MARAAA/TEHURUI	Tehurui	98735		UTUROA	RAIATEA	Raiatea	îles Sous Le Vent		Tehurui - Raiatea - 98735	98735 - Tehurui - Raiatea
-TUMARAAA/TEVAITOA	Tevaitoa	98735		UTUROA	RAIATEA	Raiatea	îles Sous Le Vent		Tevaitoa - Raiatea - 98735	98735 - Tevaitoa - Raiatea
-TUMARAA	Tumaraa	98735		UTUROA	RAIATEA	Raiatea	îles Sous Le Vent		Tumaraa - Raiatea - 98735	98735 - Tumaraa - Raiatea
-UTUROA	Uturoa	98735		UTUROA	RAIATEA	Raiatea	îles Sous Le Vent		Uturoa - Raiatea - 98735	98735 - Uturoa - Raiatea
-TUMARAAA/VAIAAU	Vaiaau	98735		UTUROA	RAIATEA	Raiatea	îles Sous Le Vent		Vaiaau - Raiatea - 98735	98735 - Vaiaau - Raiatea
-TAPUTAPUATEA/AVERA	Avera	98736		AVERA	RAIATEA	Raiatea	îles Sous Le Vent		Avera - Raiatea - 98736	98736 - Avera - Raiatea
+BORA-BORA/ANAU	Anau	98730		VAITAPE	BORA-BORA	Bora-Bora	Iles Sous Le Vent		Anau - Bora-Bora - 98730	98730 - Anau - Bora-Bora
+BORA-BORA/FAANUI	Faanui	98730		VAITAPE	BORA-BORA	Bora-Bora	Iles Sous Le Vent		Faanui - Bora-Bora - 98730	98730 - Faanui - Bora-Bora
+BORA-BORA/NUNUE	Nunue	98730		VAITAPE	BORA-BORA	Bora-Bora	Iles Sous Le Vent		Nunue - Bora-Bora - 98730	98730 - Nunue - Bora-Bora
+TUPAI	Tupai	98730			TUPAI	Tupai	Iles Sous Le Vent	Nunue	Tupai - 98730	98730 - Tupai
+BORA-BORA/VAITAPE	Vaitape	98730		VAITAPE	BORA-BORA	Bora-Bora	Iles Sous Le Vent		Vaitape - Bora-Bora - 98730	98730 - Vaitape - Bora-Bora
+HUAHINE/FAIE	Faie	98731		FARE	HUAHINE	Huahine	Iles Sous Le Vent		Faie - Huahine - 98731	98731 - Faie - Huahine
+HUAHINE/FARE	Fare	98731		FARE	HUAHINE	Huahine	Iles Sous Le Vent		Fare - Huahine - 98731	98731 - Fare - Huahine
+HUAHINE/FITII	Fitii	98731		FARE	HUAHINE	Huahine	Iles Sous Le Vent		Fitii - Huahine - 98731	98731 - Fitii - Huahine
+HUAHINE/HAAPU	Haapu	98731		FARE	HUAHINE	Huahine	Iles Sous Le Vent		Haapu - Huahine - 98731	98731 - Haapu - Huahine
+HUAHINE/MAEVA	Maeva	98731		FARE	HUAHINE	Huahine	Iles Sous Le Vent		Maeva - Huahine - 98731	98731 - Maeva - Huahine
+HUAHINE/MAROE	Maroe	98731		FARE	HUAHINE	Huahine	Iles Sous Le Vent		Maroe - Huahine - 98731	98731 - Maroe - Huahine
+HUAHINE/PAREA	Parea	98731		FARE	HUAHINE	Huahine	Iles Sous Le Vent		Parea - Huahine - 98731	98731 - Parea - Huahine
+HUAHINE/TEFARERII	Tefarerii	98731		FARE	HUAHINE	Huahine	Iles Sous Le Vent		Tefarerii - Huahine - 98731	98731 - Tefarerii - Huahine
+MANUAE (SCILLY)	Manuae (Scilly)	98732			MANUAE (SCILLY)	Manuae (Scilly)	Iles Sous Le Vent	Maupiti	Manuae (Scilly) - 98732	98732 - Manuae (Scilly)
+MAUPIHAA (MOPELIA)	Maupihaa (Mopelia)	98732			MAUPIHAA (MOPELIA)	Maupihaa (Mopelia)	Iles Sous Le Vent	Maupiti	Maupihaa (Mopelia) - 98732	98732 - Maupihaa (Mopelia)
+MAUPITI	Maupiti	98732			MAUPITI	Maupiti	Iles Sous Le Vent	Maupiti	Maupiti - 98732	98732 - Maupiti
+MOTU ONE (BELLINGHAUSEN)	Motu One (Bellinghausen)	98732			MOTU ONE (BELLINGHAUSEN)	Motu One (Bellinghausen)	Iles Sous Le Vent	Maupiti	Motu One (Bellinghausen) - 98732	98732 - Motu One (Bellinghausen)
+TAHAA/HIPU	Hipu	98733		PATIO	TAHAA	Tahaa	Iles Sous Le Vent		Hipu - Tahaa - 98733	98733 - Hipu - Tahaa
+TAHAA/IRIPAU	Iripau	98733		PATIO	TAHAA	Tahaa	Iles Sous Le Vent		Iripau - Tahaa - 98733	98733 - Iripau - Tahaa
+TAHAA/PATIO	Patio	98733		PATIO	TAHAA	Tahaa	Iles Sous Le Vent		Patio - Tahaa - 98733	98733 - Patio - Tahaa
+TAHAA/RUUTIA	Ruutia	98733		PATIO	TAHAA	Tahaa	Iles Sous Le Vent		Ruutia - Tahaa - 98733	98733 - Ruutia - Tahaa
+TAHAA/TAPUAMU	Tapuamu	98733		PATIO	TAHAA	Tahaa	Iles Sous Le Vent		Tapuamu - Tahaa - 98733	98733 - Tapuamu - Tahaa
+TAHAA/TIVA	Tiva	98733		PATIO	TAHAA	Tahaa	Iles Sous Le Vent		Tiva - Tahaa - 98733	98733 - Tiva - Tahaa
+TAHAA/FAAAHA	Faaaha	98734		HAAMENE	TAHAA	Tahaa	Iles Sous Le Vent		Faaaha - Tahaa - 98734	98734 - Faaaha - Tahaa
+TAHAA/HAAMENE	Haamene	98734		HAAMENE	TAHAA	Tahaa	Iles Sous Le Vent		Haamene - Tahaa - 98734	98734 - Haamene - Tahaa
+TAHAA/NIUA	Niua	98734		HAAMENE	TAHAA	Tahaa	Iles Sous Le Vent		Niua - Tahaa - 98734	98734 - Niua - Tahaa
+TAHAA/VAITOARE	Vaitoare	98734		HAAMENE	TAHAA	Tahaa	Iles Sous Le Vent		Vaitoare - Tahaa - 98734	98734 - Vaitoare - Tahaa
+FETUNA	Fetuna	98735		UTUROA	RAIATEA	Raiatea	Iles Sous Le Vent	Fetuna	Fetuna - Raiatea - 98735	98735 - Fetuna - Raiatea
+TAPUTAPUATEA/OPOA	Opoa	98735		UTUROA	RAIATEA	Raiatea	Iles Sous Le Vent		Opoa - Raiatea - 98735	98735 - Opoa - Raiatea
+TAPUTAPUATEA/PUOHINE	Puohine	98735		UTUROA	RAIATEA	Raiatea	Iles Sous Le Vent		Puohine - Raiatea - 98735	98735 - Puohine - Raiatea
+TAPUTAPUATEA	Taputapuatea	98735		UTUROA	RAIATEA	Raiatea	Iles Sous Le Vent		Taputapuatea - Raiatea - 98735	98735 - Taputapuatea - Raiatea
+TU MARAAA/TEHURUI	Tehurui	98735		UTUROA	RAIATEA	Raiatea	Iles Sous Le Vent		Tehurui - Raiatea - 98735	98735 - Tehurui - Raiatea
+TUMARAAA/TEVAITOA	Tevaitoa	98735		UTUROA	RAIATEA	Raiatea	Iles Sous Le Vent		Tevaitoa - Raiatea - 98735	98735 - Tevaitoa - Raiatea
+TUMARAA	Tumaraa	98735		UTUROA	RAIATEA	Raiatea	Iles Sous Le Vent		Tumaraa - Raiatea - 98735	98735 - Tumaraa - Raiatea
+UTUROA	Uturoa	98735		UTUROA	RAIATEA	Raiatea	Iles Sous Le Vent		Uturoa - Raiatea - 98735	98735 - Uturoa - Raiatea
+TUMARAAA/VAIAAU	Vaiaau	98735		UTUROA	RAIATEA	Raiatea	Iles Sous Le Vent		Vaiaau - Raiatea - 98735	98735 - Vaiaau - Raiatea
+TAPUTAPUATEA/AVERA	Avera	98736		AVERA	RAIATEA	Raiatea	Iles Sous Le Vent		Avera - Raiatea - 98736	98736 - Avera - Raiatea
 FATU-HIVA	Fatu-Hiva	98740			Fatu-Hiva	Fatu-Hiva	Marquises	Fatu-Hiva	Fatu-Hiva - 98740	98740 - Fatu-Hiva
 FATU-HIVA/HANAVE	Hanave	98740			Fatu-Hiva	Fatu-Hiva	Marquises	Fatu-Hiva	Hanave - Fatu-Hiva - 98740	98740 - Hanave - Fatu-Hiva
 FATU-HIVA/OMOA	Omoa	98740		OMOA	FATU-HIVA	Fatu-Hiva	Marquises		Omoa - Fatu-Hiva - 98740	98740 - Omoa - Fatu-Hiva
