@@ -61,7 +61,7 @@
   - if procedure_id.present?
     = hidden_field_tag :procedure_id, procedure_id
 
-  .send-wrapper.justify-content--space-between
+  .send-wrapper.justify-content--space-between.send-wrapper--with-border-top.my-0.py-3
     = render Dsfr::ButtonComponent.new(label: "Annuler et revenir à la page de suivi", url: admin_procedure_path(id: @procedure.id), class_names: ['fr-btn--secondary'])
     = render Dsfr::ButtonComponent.new(form: f, label: "Enregistrer", class_names: [''])
 
