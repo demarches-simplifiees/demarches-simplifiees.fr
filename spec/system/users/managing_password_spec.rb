@@ -1,11 +1,13 @@
-describe 'Managing password:' do
+describe 'Managing password:', js: true do
   context 'for simple users' do
     let(:user) { create(:user) }
     let(:new_password) { 'a simple password' }
 
     scenario 'a simple user can reset their password' do
       visit root_path
-      click_on 'Connexion'
+      within('.fr-header .fr-container .fr-header__tools .fr-btns-group') do
+        click_on 'Connexion'
+      end
       click_on 'Mot de passe oublié ?'
       expect(page).to have_current_path(new_user_password_path)
 
@@ -34,7 +36,9 @@ describe 'Managing password:' do
 
     scenario 'an admin can reset their password', js: true do
       visit root_path
-      click_on 'Connexion'
+      within('.fr-header .fr-container .fr-header__tools .fr-btns-group') do
+        click_on 'Connexion'
+      end
       click_on 'Mot de passe oublié ?'
       expect(page).to have_current_path(new_user_password_path)
 

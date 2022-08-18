@@ -2,86 +2,105 @@
 - nav_bar_profile = controller.try(:nav_bar_profile) || :guest
 - dossier = controller.try(:dossier_for_help)
 - procedure = controller.try(:procedure_for_help)
+- is_instructeur_context = nav_bar_profile == :instructeur && instructeur_signed_in?
+- is_expert_context = nav_bar_profile == :expert && expert_signed_in?
+- is_user_context = nav_bar_profile == :user
+%header.fr-header{ class: current_page?(root_path) ? nil : "new-header-with-border", role: "banner"}
+  .fr-header__body
+    .fr-container
+      .fr-header__body-row
+        .fr-header__brand.fr-enlarge-link
+          .fr-header__brand-top
+            .fr-header__logo
+              %p.fr-logo
+                République
+                = succeed "Française" do
+                  %br/
+            .fr-header__navbar
+              - if is_search_enabled
+                %button.fr-btn--search.fr-btn{ "aria-controls" => "search-modal", "data-fr-opened" => "false", :title => t('views.users.dossiers.search.search_file') }= t('views.users.dossiers.search.search_file')
+              %button#button_burger.fr-btn--menu.fr-btn{ "aria-controls" => "burger-menu", "aria-haspopup" => "menu", "data-fr-opened" => "false", :title => "Menu" } Menu
+          .fr-header__service
+            - root_profile_link, root_profile_libelle = root_path_info_for_profile(nav_bar_profile)
 
-%header.new-header{ class: current_page?(root_path) ? nil : "new-header-with-border", role: 'banner' }
-  .header-inner-content
+            = link_to root_profile_link, :title => root_profile_libelle do
+              %p.fr-header__service-title= APPLICATION_NAME
+            %p.fr-header__service-tagline Simplement dématérialiser
 
-    .flex.align-center.justify-center
-      - if params[:controller] == 'users/commencer'
-        = link_to 'Revenir en arrière', url_for(:back), class: "button", title: "Revenir sur le site de mon administration"
-      - else
-        - root_profile_link, root_profile_libelle = root_path_info_for_profile(nav_bar_profile)
-        = link_to root_profile_link, class: 'header-logo justify-center', title: root_profile_libelle do
-          = image_tag HEADER_LOGO_SRC, alt: HEADER_LOGO_ALT, width: HEADER_LOGO_WIDTH, height: HEADER_LOGO_HEIGHT, loading: 'lazy'
-          %span.big.site-title>
-            = APPLICATION_NAME
-          %span.small.site-title>
-            = APPLICATION_SHORTNAME
+        .fr-header__tools
+          .fr-header__tools-links
+            %ul.fr-btns-group
+              - if instructeur_signed_in? || user_signed_in?
+                %li
+                  = render partial: 'layouts/account_dropdown', locals: { nav_bar_profile: nav_bar_profile }
+              - elsif (request.path != new_user_session_path && request.path !=agent_connect_path)
+                - if request.path == new_user_registration_path
+                  %li
+                    .fr-hidden-sm.fr-unhidden-lg.fr-link--sm= t('views.shared.account.already_user_question')
+                %li= link_to t('views.shared.account.signin'), new_user_session_path, class: "fr-btn"
 
-      - if nav_bar_profile == :instructeur && instructeur_signed_in?
-        - current_url = request.path_info
-        %ul.header-tabs
-          - if current_instructeur.procedures.any?
-            %li
-              = active_link_to t('utils.procedure'), instructeur_procedures_path, active: ['dossiers','procedures'].include?(controller_name), class: 'tab-link'
-          - if current_instructeur.user.expert && current_expert.avis_summary[:total] > 0
-            = render partial: 'layouts/header/avis_tab', locals: { current_expert: current_expert }
+                %li
+                  - if dossier.present? && nav_bar_profile == :user
+                    = render partial: 'shared/help/help_dropdown_dossier', locals: { dossier: dossier }
 
-      - if nav_bar_profile == :expert && expert_signed_in?
-        %ul.header-tabs
-          - if current_expert.user.instructeur && current_instructeur.procedures.any?
-            %li
-              = active_link_to t('utils.procedure'), instructeur_procedures_path, active: ['dossiers','procedures'].include?(controller_name), class: 'tab-link'
+                  - elsif procedure.present? && (nav_bar_profile == :user || nav_bar_profile == :guest)
+                    = render partial: 'shared/help/help_dropdown_procedure', locals: { procedure: procedure }
 
-          - if current_expert.avis_summary[:total] > 0
-            = render partial: 'layouts/header/avis_tab', locals: { current_expert: current_expert }
+                  - elsif nav_bar_profile == :instructeur
+                    = render partial: 'shared/help/help_dropdown_instructeur'
 
-      - if nav_bar_profile == :user
-        %ul.header-tabs
-          %li
-            = active_link_to t('.files'), dossiers_path, active: :inclusive, class: 'tab-link'
-          - if current_user.expert && current_expert.avis_summary[:total] > 0
-            = render partial: 'layouts/header/avis_tab', locals: { current_expert: current_expert }
+                  - else
+                    = render partial: 'shared/help/help_button'
 
-    %ul.header-right-content
-      - if params[:controller] == 'recherche'
-        = render partial: 'layouts/search_dossiers_form', locals: { search_endpoint: recherche_index_path }
+              - if localization_enabled?
+                %li
+                  = render partial: 'layouts/locale_dropdown'
 
-      - if nav_bar_profile == :instructeur && instructeur_signed_in?
-        %li
-          = render partial: 'layouts/search_dossiers_form', locals: { search_endpoint: recherche_index_path }
+          - if params[:controller] == 'recherche'
+            = render partial: 'layouts/search_dossiers_form', locals: { search_endpoint: recherche_index_path }
 
-      - if nav_bar_profile == :expert && expert_signed_in?
-        = render partial: 'layouts/search_dossiers_form', locals: { search_endpoint: recherche_index_path }
+          - if is_instructeur_context
+            = render partial: 'layouts/search_dossiers_form', locals: { search_endpoint: recherche_index_path }
 
-      - if nav_bar_profile == :user && user_signed_in? && current_user.dossiers.count > 2
-        %li
-          = render partial: 'layouts/search_dossiers_form', locals: { search_endpoint: recherche_dossiers_path }
+          - if is_expert_context
+            = render partial: 'layouts/search_dossiers_form', locals: { search_endpoint: recherche_index_path }
 
-      - if instructeur_signed_in? || user_signed_in?
-        %li
-          = render partial: 'layouts/account_dropdown', locals: { nav_bar_profile: nav_bar_profile }
+          - if is_user_context && current_user.dossiers.count > 2
+            = render partial: 'layouts/search_dossiers_form', locals: { search_endpoint: recherche_dossiers_path }
 
-      - elsif (request.path != new_user_session_path && request.path != agent_connect_path)
-        - if request.path == new_user_registration_path
-          %li
-            = t('views.shared.account.already_user_question')
-        %li
-          = link_to t('views.shared.account.signin'), new_user_session_path, class: "button secondary"
+  - has_header = [is_instructeur_context, is_expert_context, is_user_context]
+  #burger-menu.fr-header__menu.fr-modal{ "aria-labelledby" => "button_burger" }
+    .fr-container
+      %button.fr-btn--close.fr-btn{ "aria-controls" => "burger-menu", :title => t('close_modal', scope: [:layouts, :header]) }= t('close_modal', scope: [:layouts, :header])
+      .fr-header__menu-links
+      %nav#navigation-478.fr-nav{ "aria-label" => "Menu principal", :role => "navigation" }
+        %ul.fr-nav__list
+          -# Questionner UX pour un back JS
+          - if params[:controller] == 'users/commencer'
+            %li.fr-nav__item
+              = link_to t('layouts.header.back'), url_for(:back), title: t('layouts.header.back'), class: 'fr-nav__link'
 
-      %li
-        - if dossier.present? && nav_bar_profile == :user
-          = render partial: 'shared/help/help_dropdown_dossier', locals: { dossier: dossier }
+          - if is_instructeur_context
+            - if current_instructeur.procedures.any?
+              - current_url = request.path_info
+              %li.fr-nav__item
+                = link_to 'Revenir en arrière', url_for(:back), title: "Revenir sur le site de mon administration", class: 'fr-nav__link'
 
-        - elsif procedure.present? && (nav_bar_profile == :user || nav_bar_profile == :guest)
-          = render partial: 'shared/help/help_dropdown_procedure', locals: { procedure: procedure }
+            - if is_instructeur_context
+              - if current_instructeur.procedures.any?
+                - current_url = request.path_info
+                %li.fr-nav__item
+                  = active_link_to t('utils.procedure'), instructeur_procedures_path, active: ['dossiers','procedures'].include?(controller_name), class: 'fr-nav__link'
+              - if current_instructeur.user.expert && current_expert.avis_summary[:total] > 0
+                = render partial: 'layouts/header/avis_tab', locals: { current_expert: current_expert }
 
-        - elsif nav_bar_profile == :instructeur
-          = render partial: 'shared/help/help_dropdown_instructeur'
+            - if is_expert_context
+              - if current_expert.user.instructeur && current_instructeur.procedures.any?
+                %li.fr-nav__item= active_link_to t('utils.procedure'), instructeur_procedures_path, active: ['dossiers','procedures'].include?(controller_name), class: 'fr-nav__link'
+              - if current_expert.avis_summary[:total] > 0
+                = render partial: 'layouts/header/avis_tab', locals: { current_expert: current_expert }
 
-        - else
-          = render partial: 'shared/help/help_button'
-
-      - if localization_enabled?
-        %li
-          = render partial: 'layouts/locale_dropdown'
+            - if is_user_context
+              %li.fr-nav__item= active_link_to t('.files'), dossiers_path, active: :inclusive, class: 'fr-nav__link'
+              - if current_user.expert && current_expert.avis_summary[:total] > 0
+                = render partial: 'layouts/header/avis_tab', locals: { current_expert: current_expert }

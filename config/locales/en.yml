@@ -66,6 +66,10 @@ en:
         line3: administrative forms.
         are_you_new: First time on %{app_name}?
     my_account: My account
+    header:
+      close_modal: 'Fermer'
+      back: "Back"
+      back_title: "Revenir sur le site de mon administration"
     locale_dropdown:
       languages: "Languages"
     notifications:
