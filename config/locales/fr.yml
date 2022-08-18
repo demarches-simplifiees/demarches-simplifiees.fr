@@ -56,6 +56,10 @@ fr:
         line3: administratifs dématérialisés.
         are_you_new: Vous êtes nouveau sur %{app_name} ?
     my_account: Mon compte
+    header:
+      close_modal: 'Fermer'
+      back: "Revenir en arrière"
+      back_title: "Revenir sur le site de mon administration"
     locale_dropdown:
       languages: "Langues"
     notifications:

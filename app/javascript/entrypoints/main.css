@@ -1,5 +1,16 @@
 @import '@gouvfr/dsfr/dist/core/core.css';
+@import '@gouvfr/dsfr/dist/component/link/link.css';
+@import '@gouvfr/dsfr/dist/component/logo/logo.css';
+@import '@gouvfr/dsfr/dist/component/form/form.css';
+@import '@gouvfr/dsfr/dist/component/badge/badge.css';
+@import '@gouvfr/dsfr/dist/component/navigation/navigation.css';
 @import '@gouvfr/dsfr/dist/component/button/button.css';
 @import '@gouvfr/dsfr/dist/component/alert/alert.css';
 @import '@gouvfr/dsfr/dist/component/callout/callout.css';
+@import '@gouvfr/dsfr/dist/component/breadcrumb/breadcrumb.css';
 @import '@gouvfr/dsfr/dist/component/table/table.css';
+@import '@gouvfr/dsfr/dist/component/modal/modal.css';
+@import '@gouvfr/dsfr/dist/component/input/input.css';
+@import '@gouvfr/dsfr/dist/component/search/search.css';
+@import '@gouvfr/dsfr/dist/component/translate/translate.css';
+@import '@gouvfr/dsfr/dist/component/header/header.css';
