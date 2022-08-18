@@ -4,7 +4,6 @@ class ProcedureExportService
   def initialize(procedure, dossiers)
     @procedure = procedure
     @dossiers = dossiers
-    @tables = [:dossiers, :etablissements, :avis] + champs_repetables_options
   end
 
   def to_csv
@@ -15,8 +14,10 @@ class ProcedureExportService
 
   def to_xlsx
     @dossiers = @dossiers.downloadable_sorted_batch
+    tables = [:dossiers, :etablissements, :avis] + champs_repetables_options
+
     # We recursively build multi page spreadsheet
-    io = @tables.reduce(nil) do |package, table|
+    io = tables.reduce(nil) do |package, table|
       SpreadsheetArchitect.to_axlsx_package(options_for(table, :xlsx), package)
     end.to_stream
     create_blob(io, :xlsx)
@@ -24,8 +25,10 @@ class ProcedureExportService
 
   def to_ods
     @dossiers = @dossiers.downloadable_sorted_batch
+    tables = [:dossiers, :etablissements, :avis] + champs_repetables_options
+
     # We recursively build multi page spreadsheet
-    io = StringIO.new(@tables.reduce(nil) do |spreadsheet, table|
+    io = StringIO.new(tables.reduce(nil) do |spreadsheet, table|
       SpreadsheetArchitect.to_rodf_spreadsheet(options_for(table, :ods), spreadsheet)
     end.bytes)
     create_blob(io, :ods)
@@ -99,11 +102,12 @@ class ProcedureExportService
       .repetition
       .filter_map do |type_de_champ_repetition|
         types_de_champ = procedure.types_de_champ_for_procedure_presentation(type_de_champ_repetition).to_a
+        rows = champs_by_stable_id.fetch(type_de_champ_repetition.stable_id, []).flat_map(&:rows_for_export)
 
-        if types_de_champ.present?
+        if types_de_champ.present? && rows.present?
           {
             sheet_name: type_de_champ_repetition.libelle_for_export,
-            instances: champs_by_stable_id.fetch(type_de_champ_repetition.stable_id, []).flat_map(&:rows_for_export),
+            instances: rows,
             spreadsheet_columns: Proc.new { |instance| instance.spreadsheet_columns(types_de_champ) }
           }
         end

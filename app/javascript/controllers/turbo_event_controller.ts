@@ -1,5 +1,6 @@
 import invariant from 'tiny-invariant';
 import { z } from 'zod';
+import morphdom from 'morphdom';
 
 import { ApplicationController, Detail } from './application_controller';
 
@@ -18,18 +19,27 @@ export class TurboEventController extends ApplicationController {
   }
 }
 
-const MutationAction = z.enum(['show', 'hide', 'focus', 'enable', 'disable']);
+const MutationAction = z.enum([
+  'show',
+  'hide',
+  'focus',
+  'enable',
+  'disable',
+  'morph'
+]);
 type MutationAction = z.infer<typeof MutationAction>;
 const Mutation = z.union([
   z.object({
     action: MutationAction,
     delay: z.number().optional(),
-    target: z.string()
+    target: z.string(),
+    html: z.string().optional()
   }),
   z.object({
     action: MutationAction,
     delay: z.number().optional(),
-    targets: z.string()
+    targets: z.string(),
+    html: z.string().optional()
   })
 ]);
 type Mutation = z.infer<typeof Mutation>;
@@ -65,8 +75,40 @@ const Mutations: Record<MutationAction, (mutation: Mutation) => void> = {
     for (const element of findElements<HTMLInputElement>(mutation)) {
       element.disabled = false;
     }
+  },
+  morph: (mutation) => {
+    invariant(mutation.html, 'morph action requires html');
+    for (const element of findElements<HTMLInputElement>(mutation)) {
+      morphdom(element, mutation.html, {
+        onBeforeElUpdated(fromEl, toEl) {
+          if (isTouchedInput(fromEl)) {
+            fromEl.removeAttribute('data-touched');
+            mergeInputValue(
+              fromEl as HTMLInputElement,
+              toEl as HTMLInputElement
+            );
+          }
+          if (fromEl.isEqualNode(toEl)) {
+            return false;
+          }
+          return true;
+        }
+      });
+    }
   }
 };
+
+function mergeInputValue(fromEl: HTMLInputElement, toEl: HTMLInputElement) {
+  toEl.value = fromEl.value;
+  toEl.checked = fromEl.checked;
+}
+
+function isTouchedInput(element: HTMLElement): boolean {
+  return (
+    ['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName) &&
+    !!element.getAttribute('data-touched')
+  );
+}
 
 function mutate(mutation: Mutation) {
   const fn = Mutations[mutation.action];

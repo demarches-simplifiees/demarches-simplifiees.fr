@@ -3,6 +3,19 @@ require 'csv'
 describe ProcedureExportService do
   let(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs) }
   let(:service) { ProcedureExportService.new(procedure, procedure.dossiers) }
+  let(:tdc_to_ignore) { Set['repetition', 'header_section', 'explication'] }
+  let(:champ_headers) do
+    TypeDeChamp.type_champs.keys.reject { |tdc| tdc_to_ignore.include?(tdc) }.flat_map do |tdc|
+      case tdc
+      when 'drop_down_list'
+        'simple_drop_down_list'
+      when 'communes'
+        ['communes', 'communes (Code insee)']
+      else
+        tdc
+      end
+    end
+  end
 
   describe 'to_xlsx' do
     subject do
@@ -49,46 +62,8 @@ describe ProcedureExportService do
           "Traité le",
           "Motivation de la décision",
           "Instructeurs",
-
-          "textarea",
-          "date",
-          "datetime",
-          "number",
-          "decimal_number",
-          "integer_number",
-          "checkbox",
-          "civilite",
-          "email",
-          "phone",
-          "address",
-          "yes_no",
-          "simple_drop_down_list",
-          "multiple_drop_down_list",
-          "linked_drop_down_list",
-          "pays",
-          "nationalites",
-          "commune_de_polynesie",
-          "code_postal_de_polynesie",
-          "numero_dn",
-          "regions",
-          "departements",
-          "communes",
-          "communes (Code insee)",
-          "engagement",
-          "dossier_link",
-          "piece_justificative",
-          "siret",
-          "carte",
-          "te_fenua",
-          "titre_identite",
-          "iban",
-          "annuaire_education",
-          "visa",
-          "cnaf",
-          "dgfip",
-          "pole_emploi",
-          "mesri",
-          "text"
+          *champ_headers[1..-1],
+          champ_headers[0]
         ]
       end
 
@@ -149,45 +124,8 @@ describe ProcedureExportService do
           "Traité le",
           "Motivation de la décision",
           "Instructeurs",
-          "textarea",
-          "date",
-          "datetime",
-          "number",
-          "decimal_number",
-          "integer_number",
-          "checkbox",
-          "civilite",
-          "email",
-          "phone",
-          "address",
-          "yes_no",
-          "simple_drop_down_list",
-          "multiple_drop_down_list",
-          "linked_drop_down_list",
-          "pays",
-          "nationalites",
-          "commune_de_polynesie",
-          "code_postal_de_polynesie",
-          "numero_dn",
-          "regions",
-          "departements",
-          "communes",
-          "communes (Code insee)",
-          "engagement",
-          "dossier_link",
-          "piece_justificative",
-          "siret",
-          "carte",
-          "te_fenua",
-          "titre_identite",
-          "iban",
-          "annuaire_education",
-          "visa",
-          "cnaf",
-          "dgfip",
-          "pole_emploi",
-          "mesri",
-          "text"
+          *champ_headers[1..-1],
+          champ_headers[0]
         ]
       end
 
@@ -240,45 +178,8 @@ describe ProcedureExportService do
             "Traité le",
             "Motivation de la décision",
             "Instructeurs",
-            "textarea",
-            "date",
-            "datetime",
-            "number",
-            "decimal_number",
-            "integer_number",
-            "checkbox",
-            "civilite",
-            "email",
-            "phone",
-            "address",
-            "yes_no",
-            "simple_drop_down_list",
-            "multiple_drop_down_list",
-            "linked_drop_down_list",
-            "pays",
-            "nationalites",
-            "commune_de_polynesie",
-            "code_postal_de_polynesie",
-            "numero_dn",
-            "regions",
-            "departements",
-            "communes",
-            "communes (Code insee)",
-            "engagement",
-            "dossier_link",
-            "piece_justificative",
-            "siret",
-            "carte",
-            "te_fenua",
-            "titre_identite",
-            "iban",
-            "annuaire_education",
-            "visa",
-            "cnaf",
-            "dgfip",
-            "pole_emploi",
-            "mesri",
-            "text"
+            *champ_headers[1..-1],
+            champ_headers[0]
           ]
         end
 
@@ -424,6 +325,18 @@ describe ProcedureExportService do
 
         it 'should have sheets' do
           expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', another_champ_repetition.libelle_for_export, champ_repetition.libelle_for_export])
+        end
+      end
+
+      context 'with empty repetition' do
+        before do
+          dossiers.flat_map { |dossier| dossier.champs.filter(&:repetition?) }.each do |champ|
+            champ.champs.destroy_all
+          end
+        end
+
+        it 'should not have data' do
+          expect(repetition_sheet).to be_nil
         end
       end
     end

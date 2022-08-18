@@ -16,6 +16,17 @@
 class TypeDeChamp < ApplicationRecord
   self.ignored_columns = [:migrated_parent, :revision_id, :parent_id, :order_place]
 
+  FEATURE_FLAGS = { 'visa' => 'visa' }
+
+  INSTANCE_TYPE_CHAMPS = {
+    nationalites: 'nationalites',
+    commune_de_polynesie: 'commune_de_polynesie',
+    code_postal_de_polynesie: 'code_postal_de_polynesie',
+    numero_dn: 'numero_dn',
+    te_fenua: 'te_fenua',
+    visa: 'visa'
+  }
+
   enum type_champs: {
     text: 'text',
     textarea: 'textarea',
@@ -34,10 +45,6 @@ class TypeDeChamp < ApplicationRecord
     multiple_drop_down_list: 'multiple_drop_down_list',
     linked_drop_down_list: 'linked_drop_down_list',
     pays: 'pays',
-    nationalites: 'nationalites',
-    commune_de_polynesie: 'commune_de_polynesie',
-    code_postal_de_polynesie: 'code_postal_de_polynesie',
-    numero_dn: 'numero_dn',
     regions: 'regions',
     departements: 'departements',
     communes: 'communes',
@@ -48,20 +55,20 @@ class TypeDeChamp < ApplicationRecord
     piece_justificative: 'piece_justificative',
     siret: 'siret',
     carte: 'carte',
-    te_fenua: 'te_fenua',
     repetition: 'repetition',
     titre_identite: 'titre_identite',
     iban: 'iban',
     annuaire_education: 'annuaire_education',
-    visa: 'visa',
     cnaf: 'cnaf',
     dgfip: 'dgfip',
     pole_emploi: 'pole_emploi',
     mesri: 'mesri'
-  }
+  }.merge(INSTANCE_TYPE_CHAMPS)
 
-  store_accessor :options, :cadastres, :old_pj, :drop_down_options, :skip_pj_validation, :skip_content_type_pj_validation, :drop_down_secondary_libelle, :drop_down_secondary_description, :drop_down_other,
-                 :parcelles, :batiments, :zones_manuelles, :min, :max, :level, :accredited_users
+  INSTANCE_OPTIONS = [:parcelles, :batiments, :zones_manuelles, :min, :max, :level, :accredited_users]
+
+  store_accessor :options, *INSTANCE_OPTIONS, :cadastres, :old_pj, :drop_down_options, :skip_pj_validation, :skip_content_type_pj_validation, :drop_down_secondary_libelle, :drop_down_secondary_description, :drop_down_other
+
   has_many :revision_types_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
   has_one :revision_type_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', inverse_of: false
   has_many :revisions, -> { ordered }, through: :revision_types_de_champ
@@ -117,7 +124,7 @@ class TypeDeChamp < ApplicationRecord
 
   before_validation :check_mandatory
   before_save :remove_piece_justificative_template, if: -> { type_champ_changed? }
-  before_save :remove_drop_down_list, if: -> { type_champ_changed? }
+  before_validation :remove_drop_down_list, if: -> { type_champ_changed? }
   before_save :remove_repetition, if: -> { type_champ_changed? }
 
   after_save if: -> { @remove_piece_justificative_template } do
@@ -210,12 +217,24 @@ class TypeDeChamp < ApplicationRecord
     type_champ == TypeDeChamp.type_champs.fetch(:dossier_link)
   end
 
+  def siret?
+    type_champ == TypeDeChamp.type_champs.fetch(:siret)
+  end
+
   def piece_justificative?
     type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative) || type_champ == TypeDeChamp.type_champs.fetch(:titre_identite)
   end
 
   def legacy_number?
     type_champ == TypeDeChamp.type_champs.fetch(:number)
+  end
+
+  def integer_number?
+    type_champ == TypeDeChamp.type_champs.fetch(:integer_number)
+  end
+
+  def decimal_number?
+    type_champ == TypeDeChamp.type_champs.fetch(:decimal_number)
   end
 
   def date?
@@ -238,18 +257,32 @@ class TypeDeChamp < ApplicationRecord
     type_champ == TypeDeChamp.type_champs.fetch(:visa)
   end
 
+  def te_fenua?
+    type_champ == TypeDeChamp.type_champs.fetch(:te_fenua)
+  end
+
+  def cnaf?
+    type_champ == TypeDeChamp.type_champs.fetch(:cnaf)
+  end
+
+  def dgfip?
+    type_champ == TypeDeChamp.type_champs.fetch(:dgfip)
+  end
+
+  def pole_emploi?
+    type_champ == TypeDeChamp.type_champs.fetch(:pole_emploi)
+  end
+
+  def mesri?
+    type_champ == TypeDeChamp.type_champs.fetch(:mesri)
+  end
+
   def public?
     !private?
   end
 
   def self.type_champ_to_class_name(type_champ)
     "TypesDeChamp::#{type_champ.classify}TypeDeChamp"
-  end
-
-  def piece_justificative_template_url
-    if piece_justificative_template.attached?
-      Rails.application.routes.url_helpers.url_for(piece_justificative_template)
-    end
   end
 
   def piece_justificative_template_filename
@@ -331,73 +364,17 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def editable_options
-    options.slice(*TypesDeChamp::CarteTypeDeChamp::LAYERS)
-  end
-
-  FEATURE_FLAGS = { 'visa' => 'visa' }
-
-  def self.type_de_champ_types_for(procedure, user)
-    has_legacy_number = (procedure.types_de_champ + procedure.types_de_champ_private).any?(&:legacy_number?)
-
-    filter_featured_tdc = -> (tdc) do
-      feature_name = FEATURE_FLAGS[tdc]
-      feature_name.blank? || Flipper.enabled?(feature_name, user)
+    layers = if carte?
+      TypesDeChamp::CarteTypeDeChamp::LAYERS
+    elsif te_fenua?
+      TypesDeChamp::TeFenuaTypeDeChamp::LAYERS
+    else
+      []
     end
-
-    filter_tdc = -> (tdc) do
-      case tdc
-      when TypeDeChamp.type_champs.fetch(:number)
-        has_legacy_number
-      when TypeDeChamp.type_champs.fetch(:cnaf)
-        procedure.cnaf_enabled?
-      when TypeDeChamp.type_champs.fetch(:dgfip)
-        procedure.dgfip_enabled?
-      when TypeDeChamp.type_champs.fetch(:pole_emploi)
-        procedure.pole_emploi_enabled?
-      when TypeDeChamp.type_champs.fetch(:mesri)
-        procedure.mesri_enabled?
-      else
-        true
-      end
+    layers = layers.map do |layer|
+      [layer, layer_enabled?(layer)]
     end
-
-    type_champs
-      .keys
-      .filter(&filter_tdc)
-      .filter(&filter_featured_tdc)
-      .map { |tdc| [I18n.t("activerecord.attributes.type_de_champ.type_champs.#{tdc}"), tdc] }
-      .sort_by(&:first)
-  end
-
-  def as_json_for_editor
-    as_json(
-      except: [
-        :created_at,
-        :options,
-        :private,
-        :stable_id,
-        :type,
-        :updated_at
-      ],
-      methods: [
-        # polynesian methods
-        :zones_manuelles,
-        :parcelles,
-        :batiments,
-        :min,
-        :max,
-        :level,
-        :accredited_user_string,
-        # base methods
-        :drop_down_list_value,
-        :drop_down_other,
-        :drop_down_secondary_libelle,
-        :drop_down_secondary_description,
-        :piece_justificative_template_filename,
-        :piece_justificative_template_url,
-        :editable_options
-      ]
-    )
+    layers.each_slice((layers.size / 2.0).round).to_a
   end
 
   def read_attribute_for_serialization(name)
@@ -441,6 +418,12 @@ class TypeDeChamp < ApplicationRecord
   def remove_drop_down_list
     if !drop_down_list?
       self.drop_down_options = nil
+    elsif !drop_down_options_changed?
+      self.drop_down_options = if linked_drop_down_list?
+        ['', '--Fromage--', 'bleu de sassenage', 'picodon', '--Dessert--', 'éclair', 'tarte aux pommes']
+      else
+        ['', 'Premier choix', 'Deuxième choix']
+      end
     end
   end
 

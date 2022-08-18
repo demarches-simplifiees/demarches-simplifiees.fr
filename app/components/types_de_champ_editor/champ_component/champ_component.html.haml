@@ -1,0 +1,116 @@
+%li.type-de-champ.flex.column.justify-start{ html_options }
+  .flex.justify-start.section.head{ class: type_de_champ.header_section? ? '' : 'hr'}
+    .handle.small.icon-only.icon.move-handle{ title: "Déplacer le champ vers le haut ou vers le bas" }
+    .flex.justify-start.delete
+      = button_to type_de_champ_path, class: 'button small icon-only danger', method: :delete, form: { data: { turbo_confirm: 'Êtes vous sûr de vouloir supprimer ce champ ?' } } do
+        .icon.delete
+        %span.sr-only Supprimer
+
+  .flex.justify-start.section.ml-1
+    = form_for(type_de_champ, form_options) do |form|
+      .flex.justify-start
+        .flex.justify-start.width-33
+          .flex.justify-start.column
+            %button.move-up.cell.mb-1{ move_button_options(:up) }
+              .icon.arrow-up.small
+              %span.sr-only Déplacer le champ vers le haut
+            %button.move-down.cell{ move_button_options(:down) }
+              .icon.arrow-down.small
+              %span.sr-only Déplacer le champ vers le bas
+          .cell.flex.justify-start.column.flex-grow
+            = form.label :type_champ, "Type de champ", for: dom_id(type_de_champ, :type_champ)
+            = form.select :type_champ, types_of_type_de_champ, {}, class: 'small-margin small inline width-100', id: dom_id(type_de_champ, :type_champ)
+        .flex.column.justify-start.flex-grow
+          .cell
+            .flex.align-center
+              = form.label :libelle, "Libellé du champ", class: 'flex-grow', for: dom_id(type_de_champ, :libelle)
+              - if can_be_mandatory?
+                .cell.flex.align-center
+                  = form.check_box :mandatory, class: 'small-margin small', id: dom_id(type_de_champ, :mandatory)
+                  = form.label :mandatory, "Champ obligatoire", for: dom_id(type_de_champ, :mandatory)
+            = form.text_field :libelle, class: 'small-margin small width-100', id: dom_id(type_de_champ, :libelle), data: input_autofocus
+          - if !type_de_champ.header_section? && !type_de_champ.titre_identite?
+            .cell.mt-1
+              = form.label :description, "Description du champ (optionnel)", for: dom_id(type_de_champ, :description)
+              = form.text_area :description, class: 'small-margin small width-100', rows: 3, id: dom_id(type_de_champ, :description)
+
+      .flex.justify-start.mt-1
+        -#----- Polynesia options
+        - if type_de_champ.integer_number? || type_de_champ.decimal_number?
+          .flex.width-33
+          .flex.flex-grow.align-center
+            .cell
+              %label bornes
+            .cell
+              = form.label :min, 'Minimum', for: dom_id(type_de_champ, :min)
+            .cell
+              = form.number_field :min, class: 'small-margin small', id: dom_id(type_de_champ, :min)
+            .cell
+              = form.label :max, 'Maximum', for: dom_id(type_de_champ, :max)
+            .cell
+              = form.number_field :max, class: 'small-margin small', id: dom_id(type_de_champ, :max)
+        - if type_de_champ.date?
+          .flex.width-33
+          .flex.flex-grow.align-center
+            .cell
+              %label Période
+            .cell
+              = form.label :min, 'Début', for: dom_id(type_de_champ, :min)
+            .cell
+              = form.date_field :min, class: 'small-margin small', id: dom_id(type_de_champ, :min), value: type_de_champ.min
+            .cell
+              = form.label :max, 'Fin', for: dom_id(type_de_champ, :max)
+            .cell
+              = form.date_field :max, class: 'small-margin small', id: dom_id(type_de_champ, :max), value: type_de_champ.max
+        - if type_de_champ.visa?
+          .flex.width-33
+          .flex.flex-grow.align-center
+            .cell.width-100
+              = form.label :accredited_users, "Mails des personnes accréditées", for: dom_id(type_de_champ, :accredited_users)
+              = form.text_area :accredited_users, class: 'small-margin small', rows: 7, id: dom_id(type_de_champ, :accredited_users), placeholder: 'Ecrire un email par ligne'
+        - if type_de_champ.header_section?
+          .flex.width-33
+          .flex.flex-grow.align-center
+            .cell
+              = form.label :level, 'Niveau', for: dom_id(type_de_champ, :level)
+            .cell
+              = form.number_field :level, class: 'small-margin small', id: dom_id(type_de_champ, :level), min: 1, max: 3
+        -# DS options
+        - if type_de_champ.drop_down_list?
+          - unless type_de_champ.linked_drop_down_list?
+            .flex.width-33
+          .flex.flex-grow
+            .cell.width-100
+              = form.label :drop_down_list_value, "Options de la liste", for: dom_id(type_de_champ, :drop_down_list_value)
+              = form.text_area :drop_down_list_value, class: 'small-margin small width-100', rows: 7, id: dom_id(type_de_champ, :drop_down_list_value)
+        - if type_de_champ.linked_drop_down_list?
+          .flex.column.justify-start.flex-grow
+            .cell
+              = form.label :drop_down_secondary_libelle, "Libellé du champ secondaire", class: 'flex-grow', for: dom_id(type_de_champ, :drop_down_secondary_libelle)
+              = form.text_field :drop_down_secondary_libelle, class: 'small-margin small width-100', id: dom_id(type_de_champ, :drop_down_secondary_libelle)
+            .cell.mt-1
+              = form.label :drop_down_secondary_description, "Description du champ secondaire (optionnel)", for: dom_id(type_de_champ, :drop_down_secondary_description)
+              = form.text_area :drop_down_secondary_description, class: 'small-margin small width-100', rows: 3, id: dom_id(type_de_champ, :drop_down_secondary_description)
+        - if type_de_champ.piece_justificative?
+          .cell
+            = form.label :piece_justificative_template, "Modèle", for: dom_id(type_de_champ, :piece_justificative_template)
+            = render Attachment::EditComponent.new(**piece_justificative_options(form))
+        - if type_de_champ.titre_identite?
+          .cell
+            %p
+              Dans le cadre de la RGPD, le titre d’identité sera supprimé lors de l’acceptation du dossier
+        - if type_de_champ.carte? || type_de_champ.te_fenua?
+          .flex.width-33
+          - type_de_champ.editable_options.each do |slice|
+            .cell
+              .carte-options
+                = form.fields_for :editable_options do |form|
+                  - slice.each do |(name, checked)|
+                    = form.label name, for: dom_id(type_de_champ, "layer_#{name}") do
+                      = form.check_box name, checked: checked, class: 'small-margin small', id: dom_id(type_de_champ, "layer_#{name}")
+                      = t(".layers.#{name}")
+  - if type_de_champ.repetition?
+    .flex.flex-grow.justify-start.section.ml-1
+      .editor-block.flex-grow.cell
+        = render TypesDeChampEditor::BlockComponent.new(block: coordinate, coordinates: coordinate.revision_types_de_champ)
+        = render TypesDeChampEditor::AddChampButtonComponent.new(revision: coordinate.revision, parent: coordinate, is_annotation: coordinate.private?)

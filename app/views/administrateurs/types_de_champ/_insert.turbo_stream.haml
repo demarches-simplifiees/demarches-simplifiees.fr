@@ -1,0 +1,9 @@
+- sibling = coordinate.previous_sibling
+
+- if sibling.present?
+  = turbo_stream.after dom_id(sibling, :type_de_champ_editor) do
+    = render TypesDeChampEditor::ChampComponent.new(coordinate: coordinate, focused: true)
+- else
+  = turbo_stream.prepend dom_id(coordinate.block, :types_de_champ_editor_block) do
+    = render TypesDeChampEditor::ChampComponent.new(coordinate: coordinate, focused: true)
+= turbo_stream.dispatch 'sortable:sort'

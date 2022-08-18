@@ -484,6 +484,8 @@ Rails.application.routes.draw do
         end
         member do
           patch :move
+          patch :move_up
+          patch :move_down
         end
       end
 

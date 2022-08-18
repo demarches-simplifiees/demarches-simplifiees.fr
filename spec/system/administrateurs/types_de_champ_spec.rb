@@ -10,8 +10,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
   scenario "adding a new champ" do
     add_champ
 
-    fill_in 'champ-0-libelle', with: 'libellé de champ'
-    blur
+    fill_in 'Libellé du champ', with: 'libellé de champ'
     expect(page).to have_content('Formulaire enregistré')
   end
 
@@ -25,21 +24,25 @@ describe 'As an administrateur I can edit types de champ', js: true do
     expect(page).to have_selector('.type-de-champ', count: 3)
 
     # Multiple champs can be edited
-    fill_in 'champ-0-libelle', with: 'libellé de champ 0'
-    fill_in 'champ-1-libelle', with: 'libellé de champ 1'
-    blur
+    within '.type-de-champ:nth-child(1)' do
+      fill_in 'Libellé du champ', with: 'libellé de champ 0'
+    end
+    within '.type-de-champ:nth-child(2)' do
+      fill_in 'Libellé du champ', with: 'libellé de champ 1'
+    end
     expect(page).to have_content('Formulaire enregistré')
 
     # Champs can be deleted
-    within '.type-de-champ[data-index="2"]' do
+    within '.type-de-champ:nth-child(3)' do
       page.accept_alert do
         click_on 'Supprimer'
       end
     end
-    expect(page).not_to have_selector('#champ-2-libelle')
+    expect(page).to have_content('Supprimer', count: 2)
 
-    fill_in 'champ-1-libelle', with: 'edited libellé de champ 1'
-    blur
+    within '.type-de-champ:nth-child(2)' do
+      fill_in 'Libellé du champ', with: 'edited libellé de champ 1'
+    end
     expect(page).to have_content('Formulaire enregistré')
     expect(page).to have_content('Supprimer', count: 2)
 
@@ -50,8 +53,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
   scenario "removing champs" do
     add_champ(remove_flash_message: true)
 
-    fill_in 'champ-0-libelle', with: 'libellé de champ'
-    blur
+    fill_in 'Libellé du champ', with: 'libellé de champ'
     expect(page).to have_content('Formulaire enregistré')
 
     page.refresh
@@ -69,32 +71,28 @@ describe 'As an administrateur I can edit types de champ', js: true do
   scenario "adding an invalid champ" do
     add_champ(remove_flash_message: true)
 
-    fill_in 'champ-0-libelle', with: ''
-    fill_in 'champ-0-description', with: 'description du champ'
-    blur
+    fill_in 'Libellé du champ', with: ''
+    fill_in 'Description du champ (optionnel)', with: 'description du champ'
     expect(page).not_to have_content('Formulaire enregistré')
 
-    fill_in 'champ-0-libelle', with: 'libellé de champ'
-    blur
+    fill_in 'Libellé du champ', with: 'libellé de champ'
     expect(page).to have_content('Formulaire enregistré')
   end
 
   scenario "adding a repetition champ" do
     add_champ(remove_flash_message: true)
 
-    select('Bloc répétable', from: 'champ-0-type_champ')
-    fill_in 'champ-0-libelle', with: 'libellé de champ'
-    blur
+    select('Bloc répétable', from: 'Type de champ')
+    fill_in 'Libellé du champ', with: 'libellé de champ'
 
     expect(page).to have_content('Formulaire enregistré')
     page.refresh
 
-    within '.type-de-champ .repetition' do
+    within '.type-de-champ .editor-block' do
       click_on 'Ajouter un champ'
-    end
 
-    fill_in 'repetition-0-champ-0-libelle', with: 'libellé de champ 1'
-    blur
+      fill_in 'Libellé du champ', with: 'libellé de champ 1'
+    end
 
     expect(page).to have_content('Formulaire enregistré')
     expect(page).to have_content('Supprimer', count: 2)
@@ -103,21 +101,23 @@ describe 'As an administrateur I can edit types de champ', js: true do
       click_on 'Ajouter un champ'
     end
 
-    select('Bloc répétable', from: 'champ-0-type_champ')
-    fill_in 'champ-0-libelle', with: 'libellé de champ 2'
-    blur
+    within '.type-de-champ:nth-child(2)' do
+      select('Bloc répétable', from: 'Type de champ')
+      fill_in 'Libellé du champ', with: 'libellé de champ 2'
+    end
 
     expect(page).to have_content('Supprimer', count: 3)
   end
 
   scenario "adding a carte champ" do
-    add_champ
+    add_champ(remove_flash_message: true)
 
-    select('Carte de France', from: 'champ-0-type_champ')
-    fill_in 'champ-0-libelle', with: 'Libellé de champ carte', fill_options: { clear: :backspace }
+    select('Carte de France', from: 'Type de champ')
+    fill_in 'Libellé du champ', with: 'Libellé de champ carte', fill_options: { clear: :backspace }
     check 'Cadastres'
 
-    wait_until { procedure.draft_types_de_champ.first.cadastres == true }
+    wait_until { procedure.draft_types_de_champ.first.layer_enabled?(:cadastres) }
+    wait_until { procedure.draft_types_de_champ.first.libelle == 'Libellé de champ carte' }
     expect(page).to have_content('Formulaire enregistré')
 
     preview_window = window_opened_by { click_on 'Prévisualiser le formulaire' }
@@ -132,13 +132,13 @@ describe 'As an administrateur I can edit types de champ', js: true do
   scenario "Adding te_fenua champ" do
     add_champ
 
-    select('Carte de Polynésie', from: 'champ-0-type_champ')
-    fill_in 'champ-0-libelle', with: 'Libellé de champ Te Fenua', fill_options: { clear: :backspace }
+    select('Carte de Polynésie', from: 'Type de champ')
+    fill_in 'Libellé du champ', with: 'Libellé de champ Te Fenua', fill_options: { clear: :backspace }
     check 'Batiments'
     check 'Parcelles du cadastre'
-    check 'Zones manuelles'
+    check 'Zones Manuelles'
 
-    wait_until { procedure.types_de_champ.first.batiments == true }
+    wait_until { procedure.types_de_champ.first.batiments == '1' }
     expect(page).to have_content('Formulaire enregistré')
 
     preview_window = window_opened_by { click_on 'Prévisualiser le formulaire' }
@@ -148,11 +148,11 @@ describe 'As an administrateur I can edit types de champ', js: true do
   end
 
   scenario "adding a dropdown champ" do
-    add_champ
+    add_champ(remove_flash_message: true)
 
-    select('Choix parmi une liste', from: 'champ-0-type_champ')
-    fill_in 'champ-0-libelle', with: 'Libellé de champ menu déroulant', fill_options: { clear: :backspace }
-    fill_in 'champ-0-drop_down_list_value', with: 'Un menu', fill_options: { clear: :backspace }
+    select('Choix parmi une liste', from: 'Type de champ')
+    fill_in 'Libellé du champ', with: 'Libellé de champ menu déroulant', fill_options: { clear: :backspace }
+    fill_in 'Options de la liste', with: 'Un menu', fill_options: { clear: :backspace }
 
     wait_until { procedure.draft_types_de_champ.first.drop_down_list_options == ['', 'Un menu'] }
     expect(page).to have_content('Formulaire enregistré')
@@ -179,15 +179,15 @@ describe 'As an administrateur I can edit types de champ', js: true do
 
   scenario "displaying the estimated fill duration" do
     # It doesn't display anything when there are no champs
-    expect(page).not_to have_content('Durée de remplissage estimé')
+    expect(page).not_to have_content('Durée de remplissage estimée')
 
     # It displays the estimate when adding a new champ
     add_champ
-    select('Pièce justificative', from: 'champ-0-type_champ')
-    expect(page).to have_content('Durée de remplissage estimée : 1 mn')
+    select('Pièce justificative', from: 'Type de champ')
+    expect(page).to have_content('Durée de remplissage estimée : 2 mn')
 
     # It updates the estimate when updating the champ
-    check 'Obligatoire'
+    check 'Champ obligatoire'
     expect(page).to have_content('Durée de remplissage estimée : 3 mn')
 
     # It updates the estimate when removing the champ
