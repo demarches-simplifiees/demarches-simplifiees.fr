@@ -11,6 +11,6 @@ class TargetedUserLinksController < ApplicationController
   private
 
   def set_targeted_user_link
-    @targeted_user_link = TargetedUserLink.find_by(id: params[:id])
+    @targeted_user_link = TargetedUserLink.find(params[:id])
   end
 end

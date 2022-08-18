@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_31_100040) do
+ActiveRecord::Schema.define(version: 2022_06_22_183305) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -512,10 +512,12 @@ ActiveRecord::Schema.define(version: 2022_05_31_100040) do
   end
 
   create_table "groupe_instructeurs", force: :cascade do |t|
+    t.boolean "closed", default: false
     t.datetime "created_at", null: false
     t.text "label", null: false
     t.bigint "procedure_id", null: false
     t.datetime "updated_at", null: false
+    t.index ["closed", "procedure_id"], name: "index_groupe_instructeurs_on_closed_and_procedure_id"
     t.index ["procedure_id", "label"], name: "index_groupe_instructeurs_on_procedure_id_and_label", unique: true
     t.index ["procedure_id"], name: "index_groupe_instructeurs_on_procedure_id"
   end
@@ -651,6 +653,7 @@ ActiveRecord::Schema.define(version: 2022_05_31_100040) do
     t.string "lien_notice"
     t.string "lien_site_web"
     t.text "monavis_embed"
+    t.boolean "opendata", default: true
     t.string "organisation"
     t.bigint "parent_procedure_id"
     t.string "path", null: false
@@ -770,7 +773,7 @@ ActiveRecord::Schema.define(version: 2022_05_31_100040) do
     t.bigint "target_model_id", null: false
     t.string "target_model_type", null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.index ["target_model_id"], name: "index_targeted_user_links_on_target_model_id"
     t.index ["user_id"], name: "index_targeted_user_links_on_user_id"
   end

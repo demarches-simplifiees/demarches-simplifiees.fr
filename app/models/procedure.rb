@@ -32,6 +32,7 @@
 #  lien_notice                               :string
 #  lien_site_web                             :string
 #  monavis_embed                             :text
+#  opendata                                  :boolean          default(TRUE)
 #  organisation                              :string
 #  path                                      :string           not null
 #  procedure_expires_when_termine_enabled    :boolean          default(TRUE)
@@ -488,6 +489,7 @@ class Procedure < ApplicationRecord
       procedure.administrateurs = [admin]
       procedure.api_entreprise_token = nil
       procedure.encrypted_api_particulier_token = nil
+      procedure.opendata = true
       procedure.api_particulier_scopes = []
     else
       procedure.administrateurs = administrateurs

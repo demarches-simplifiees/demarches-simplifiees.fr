@@ -21,55 +21,65 @@ Cela évite l’accès récursif aux dossiers."
     field :service, Types::ServiceType, null: false
 
     def service
-      Loaders::Record.for(Service).load(object.procedure.service_id)
+      Loaders::Record.for(Service).load(procedure.service_id)
     end
 
     def revision
-      object
+      object.is_a?(ProcedureRevision) ? object : object.active_revision
     end
 
     def state
-      object.procedure.aasm.current_state
+      procedure.aasm.current_state
     end
 
     def number
-      object.procedure.id
+      procedure.id
     end
 
     def title
-      object.procedure.libelle
+      procedure.libelle
     end
 
     def description
-      object.procedure.description
+      procedure.description
     end
 
     def declarative
-      object.procedure.declarative_with_state
+      procedure.declarative_with_state
     end
 
     def date_creation
-      object.procedure.created_at
+      procedure.created_at
     end
 
     def date_publication
-      object.procedure.published_at
+      procedure.published_at
     end
 
     def date_derniere_modification
-      object.procedure.updated_at
+      procedure.updated_at
     end
 
     def date_depublication
-      object.procedure.unpublished_at
+      procedure.unpublished_at
     end
 
     def date_fermeture
-      object.procedure.closed_at
+      procedure.closed_at
     end
 
     def self.authorized?(object, context)
-      context.authorized_demarche?(object.procedure)
+      if object.is_a?(ProcedureRevision)
+        context.authorized_demarche?(object.procedure)
+      else
+        context.authorized_demarche?(object)
+      end
+    end
+
+    private
+
+    def procedure
+      revision.procedure
     end
   end
 end
