@@ -10,7 +10,7 @@ describe ProcedureExportService do
       when 'drop_down_list'
         'simple_drop_down_list'
       when 'communes'
-        ['communes', 'communes (Code insee)']
+        ['communes', 'communes (Code insee)', "communes (Département)"]
       else
         tdc
       end
