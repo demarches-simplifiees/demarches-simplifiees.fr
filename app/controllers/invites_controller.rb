@@ -5,7 +5,6 @@ class InvitesController < ApplicationController
   def create
     email = params[:invite_email].downcase
     @dossier = current_user.dossiers.visible_by_user.find(params[:dossier_id])
-
     invite = Invite.create(
       dossier: @dossier,
       user: User.find_by(email: email),

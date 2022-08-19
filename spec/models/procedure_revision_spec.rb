@@ -623,4 +623,49 @@ describe ProcedureRevision do
       end
     end
   end
+
+  describe 'conditions_are_valid' do
+    include Logic
+
+    def first_champ = procedure.draft_revision.types_de_champ_public.first
+
+    def second_champ = procedure.draft_revision.types_de_champ_public.second
+
+    let(:procedure) { create(:procedure, :with_type_de_champ, types_de_champ_count: 2) }
+    let(:draft_revision) { procedure.draft_revision }
+    let(:condition) { nil }
+
+    subject do
+      draft_revision.save
+      draft_revision.errors
+    end
+
+    before { second_champ.update(condition: condition) }
+
+    context 'when a champ has a valid condition (type)' do
+      let(:condition) { ds_eq(constant(true), constant(true)) }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'when a champ has a valid condition: needed tdc is up in the forms' do
+      let(:condition) { ds_eq(constant('oui'), champ_value(first_champ.stable_id)) }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'when a champ has an invalid condition' do
+      let(:condition) { ds_eq(constant(true), constant(1)) }
+
+      it { expect(subject.first.attribute).to eq(:condition) }
+    end
+
+    context 'when a champ has an invalid condition: needed tdc is down in the forms' do
+      let(:need_second_champ) { ds_eq(constant('oui'), champ_value(second_champ.stable_id)) }
+
+      before { first_champ.update(condition: need_second_champ) }
+
+      it { expect(subject.first.attribute).to eq(:condition) }
+    end
+  end
 end

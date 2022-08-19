@@ -56,16 +56,9 @@ Afin d'initialiser l'environnement de développement, exécutez la commande suiv
 
 On lance le serveur d'application ainsi :
 
-    bin/rails server
+    bin/dev
 
-L'application tourne alors à l'adresse `http://localhost:3000`, et utilise le mécanisme par défaut de rails pour les tâches asynchrones.
-C'est ce qu'on veut dans la plupart des cas. Une exception: ça ne joue pas les tâches cron.
-
-Pour être une peu plus proche du comportement de production, et jouer les tâches cron, on peut lancer la message queue
-dans un service dédié, et indiquer à rails d'utiliser delayed_job:
-
-    bin/rake jobs:work
-    RAILS_QUEUE_ADAPTER=delayed_job bin/rails server
+L'application tourne alors à l'adresse `http://localhost:3000` en parralel avec un worker pour les jobs et le bundler vitejs.
 
 ### Utilisateurs de test
 

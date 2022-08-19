@@ -20,7 +20,6 @@
   Afin de répondre à cette invitation, merci de vous inscrire avec l'adresse email
   = @invite.email
   sur
-  - url_for_link = invite_url(@invite, params: { email: @invite.email })
-  = link_to url_for_link, url_for_link
+  = link_to @url, @url
 
 = render partial: "layouts/mailers/signature"

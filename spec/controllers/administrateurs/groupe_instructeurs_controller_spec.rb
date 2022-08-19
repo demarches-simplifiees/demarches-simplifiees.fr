@@ -188,19 +188,21 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         params: {
           procedure_id: procedure.id,
           id: gi_1_1.id,
-          groupe_instructeur: { label: new_name }
+          groupe_instructeur: { label: new_name, closed: true }
         }
+      gi_1_1.reload
     end
 
-    it { expect(gi_1_1.reload.label).to eq(new_name) }
     it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_1)) }
+    it { expect(gi_1_1.label).to eq(new_name) }
+    it { expect(gi_1_1.closed).to eq(true) }
     it { expect(flash.notice).to be_present }
 
     context 'when the name is already taken' do
       let!(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }
       let(:new_name) { gi_1_2.label }
 
-      it { expect(gi_1_1.reload.label).not_to eq(new_name) }
+      it { expect(gi_1_1.label).not_to eq(new_name) }
       it { expect(flash.alert).to be_present }
     end
   end

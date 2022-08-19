@@ -517,9 +517,6 @@ Lint/UselessAssignment:
 Lint/BinaryOperatorWithIdenticalOperands:
   Enabled: true
 
-Lint/UselessElseWithoutRescue:
-  Enabled: true
-
 Lint/UselessSetterCall:
   Enabled: true
 

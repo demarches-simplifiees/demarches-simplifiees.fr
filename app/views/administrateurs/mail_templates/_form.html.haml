@@ -1,7 +1,3 @@
--# Load Trix lazily, by using our React lazy-loader.
--# (Trix itself doesn't use React though)
-= react_component('Trix')
-
 = f.label :subject do
   Objet de l'email
   %span.mandatory *
@@ -12,7 +8,7 @@
   %span.mandatory *
 = f.rich_text_area :rich_body, required: true, class: "mb-4"
 
-#tags-table
+#tags-table{ 'data-controller': 'trix' }
   %h2.add-tag-title
     Insérer une balise
   %p.notice
