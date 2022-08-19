@@ -468,4 +468,34 @@ describe TagsSubstitutionConcern, type: :model do
       it { is_expected.to include(include({ libelle: 'public' })) }
     end
   end
+
+  describe 'used_tags_for' do
+    let(:text) { 'hello world --public--, --numéro du dossier--, --yolo--' }
+    subject { template_concern.used_tags_for(text) }
+
+    let(:types_de_champ) do
+      [
+        build(:type_de_champ, libelle: 'public'),
+        build(:type_de_champ_header_section, libelle: 'entête de section'),
+        build(:type_de_champ_explication, libelle: 'explication')
+      ]
+    end
+
+    it { is_expected.to eq(["tdc#{types_de_champ.first.stable_id}", 'numéro du dossier', 'yolo']) }
+  end
+
+  describe 'used_type_de_champ_tags' do
+    let(:text) { 'hello world --public--, --numéro du dossier--, --yolo--' }
+    subject { template_concern.used_type_de_champ_tags(text) }
+
+    let(:types_de_champ) do
+      [
+        build(:type_de_champ, libelle: 'public'),
+        build(:type_de_champ_header_section, libelle: 'entête de section'),
+        build(:type_de_champ_explication, libelle: 'explication')
+      ]
+    end
+
+    it { is_expected.to eq([["public", types_de_champ.first.stable_id], ['yolo']]) }
+  end
 end

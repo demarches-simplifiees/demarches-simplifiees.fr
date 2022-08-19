@@ -163,35 +163,21 @@ class Procedure < ApplicationRecord
   end
 
   def types_de_champ_for_tags
-    if brouillon?
-      draft_types_de_champ
-    else
-      TypeDeChamp
-        .public_only
-        .fillable
-        .joins(:revisions)
-        .where(procedure_revisions: { procedure_id: id })
-        .where.not(procedure_revisions: { id: draft_revision_id })
-        .where(revision_types_de_champ: { parent_id: nil })
-        .order(:created_at)
-        .uniq
-    end
+    TypeDeChamp
+      .fillable
+      .joins(:revisions)
+      .where(procedure_revisions: brouillon? ? { id: draft_revision_id } : { procedure_id: id })
+      .where(revision_types_de_champ: { parent_id: nil })
+      .order(:created_at)
+      .distinct(:id)
+  end
+
+  def types_de_champ_public_for_tags
+    types_de_champ_for_tags.public_only
   end
 
   def types_de_champ_private_for_tags
-    if brouillon?
-      draft_types_de_champ_private
-    else
-      TypeDeChamp
-        .private_only
-        .fillable
-        .joins(:revisions)
-        .where(procedure_revisions: { procedure_id: id })
-        .where.not(procedure_revisions: { id: draft_revision_id })
-        .where(revision_types_de_champ: { parent_id: nil })
-        .order(:created_at)
-        .uniq
-    end
+    types_de_champ_for_tags.private_only
   end
 
   has_many :administrateurs_procedures, dependent: :delete_all
@@ -219,6 +205,7 @@ class Procedure < ApplicationRecord
   scope :brouillons,            -> { where(aasm_state: :brouillon) }
   scope :publiees,              -> { where(aasm_state: :publiee) }
   scope :closes,                -> { where(aasm_state: [:close, :depubliee]) }
+  scope :opendata,              -> { where(opendata: true) }
   scope :publiees_ou_closes,    -> { where(aasm_state: [:publiee, :close, :depubliee]) }
   scope :by_libelle,            -> { order(libelle: :asc) }
   scope :created_during,        -> (range) { where(created_at: range) }
