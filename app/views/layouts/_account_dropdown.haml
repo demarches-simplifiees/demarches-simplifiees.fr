@@ -1,7 +1,13 @@
+<<<<<<< HEAD
 
 %nav.fr-nav{ role: "navigation", "aria-label"=> t('menu_aria_label', scope: [:layouts]) }
   .fr-nav__item
     %button.fr-translate__btn.fr-btn{ "aria-controls" => "account", "aria-expanded" => "false", :title => t('my_account', scope: [:layouts]) }
+=======
+%nav.fr-nav{role: "navigation"}
+  .fr-nav__item
+    %button.fr-translate__btn.fr-btn.fr-btn--tertiary{"aria-controls" => "account", "aria-expanded" => "false", :title => t('my_account', scope: [:layouts])}
+>>>>>>> 62ec6eeed (feat(header): switch to DSFR translate component and dropdown component)
       = image_tag "icons/account-circle.svg", alt: t('my_account', scope: [:layouts]), width: 20, height: 20, loading: 'lazy'
       &nbsp;
       = " #{current_email}"
@@ -35,25 +41,10 @@
                 = t('go_admin', scope: [:layouts])
 
         %li
-          = link_to instructeur_procedures_path, class: "menu-item menu-link" do
-            = image_tag "icons/switch-profile.svg", alt: ''
-            = t('go_instructor', scope: [:layouts])
-      - if expert_signed_in? && nav_bar_profile != :expert
+          = link_to profil_path, class: "fr-nav__link flex align-center" do
+            = image_tag "icons/switch-profile.svg", alt: '', width: 20, height: 20, class: 'mr-1'
+            = t('profile', scope: [:layouts])
         %li
-          = link_to expert_all_avis_path, class: "menu-item menu-link" do
-            = image_tag "icons/switch-profile.svg", alt: ''
-            = t('go_expert', scope: [:layouts])
-      - if administrateur_signed_in? && nav_bar_profile != :administrateur
-        %li
-          = link_to admin_procedures_path, class: "menu-item menu-link" do
-            = image_tag "icons/switch-profile.svg", alt: ''
-            = t('go_admin', scope: [:layouts])
-
-    %li
-      = link_to profil_path, class: "menu-item menu-link" do
-        = image_tag "icons/switch-profile.svg", alt: ''
-        = t('profile', scope: [:layouts])
-    %li
-      = link_to destroy_user_session_path, method: :delete, class: "menu-item menu-link" do
-        = image_tag "icons/sign-out.svg", alt: ''
-        = t('logout', scope: [:layouts])
+          = link_to destroy_user_session_path, method: :delete, class: "fr-nav__link flex align-center" do
+            = image_tag "icons/sign-out.svg", alt: '', width: 20, height: 20, class: 'mr-1'
+            = t('logout', scope: [:layouts])

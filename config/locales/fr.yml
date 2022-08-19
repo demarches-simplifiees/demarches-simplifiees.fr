@@ -62,6 +62,12 @@ fr:
       back_title: "Revenir sur le site de mon administration"
     locale_dropdown:
       languages: "Langues"
+      select_locale: "Sélectionner une langue"
+      fr: FR
+      en: EN
+      francais: " - Français"
+      fr_francais:  FR - Français
+      en_english: EN - Anglais
     notifications:
       actions:
         access: Consulter mon dossier
