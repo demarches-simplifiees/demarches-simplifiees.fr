@@ -15,6 +15,18 @@ describe Logic do
       .to eq(ds_and([constant(true), constant(true), constant(false)]))
   end
 
+  it 'saves its id' do
+    [
+      constant(1),
+      empty,
+      champ_value(1),
+      ds_eq(empty, empty),
+      ds_and([constant(true), constant(true)])
+    ].each do |term|
+      expect(Logic.from_h(term.to_h).id).to eq(term.id)
+    end
+  end
+
   describe '.ensure_compatibility_from_left' do
     subject { Logic.ensure_compatibility_from_left(condition) }
 
@@ -40,12 +52,6 @@ describe Logic do
       let(:condition) { empty_operator(constant(1), constant(true)) }
 
       it { is_expected.to eq(ds_eq(constant(1), constant(0))) }
-    end
-
-    context 'when string empty operator true' do
-      let(:condition) { empty_operator(constant('a'), constant(true)) }
-
-      it { is_expected.to eq(ds_eq(constant('a'), constant(''))) }
     end
 
     context 'when dropdown empty operator true' do
@@ -78,5 +84,11 @@ describe Logic do
 
     # false && (true || true) = false
     it { expect(ds_and([constant(false), ds_or([constant(true), constant(true)])]).compute).to be false }
+  end
+
+  describe '.add_empty_condition_to' do
+    it { expect(Logic.add_empty_condition_to(nil)).to eq(empty_operator(empty, empty)) }
+    it { expect(Logic.add_empty_condition_to(constant(true))).to eq(ds_and([constant(true), empty_operator(empty, empty)])) }
+    it { expect(Logic.add_empty_condition_to(ds_or([constant(true)]))).to eq(ds_or([constant(true), empty_operator(empty, empty)])) }
   end
 end

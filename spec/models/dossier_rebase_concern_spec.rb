@@ -182,7 +182,7 @@ describe Dossier do
       procedure.draft_revision.add_type_de_champ({
         type_champ: TypeDeChamp.type_champs.fetch(:checkbox),
         libelle: "oui ou non",
-        parent_id: repetition_type_de_champ.stable_id
+        parent_stable_id: repetition_type_de_champ.stable_id
       })
       procedure.draft_revision.remove_type_de_champ(yes_no_type_de_champ.stable_id)
 
@@ -364,9 +364,9 @@ describe Dossier do
     context 'with a procedure with a repetition' do
       let!(:procedure) do
         create(:procedure).tap do |p|
-          repetition = p.draft_revision.add_type_de_champ(type_champ: :repetition, libelle: 'p1', mandatory: true)
-          p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'c1', parent_id: repetition.stable_id)
-          p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'c2', parent_id: repetition.stable_id)
+          repetition = p.draft_revision.add_type_de_champ(type_champ: :repetition, libelle: 'p1', mandatory: true, mandatory: true)
+          p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'c1', parent_stable_id: repetition.stable_id)
+          p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'c2', parent_stable_id: repetition.stable_id)
           p.publish!
         end
       end
@@ -377,7 +377,7 @@ describe Dossier do
 
       context 'when a child tdc is added in the middle' do
         before do
-          added_tdc = procedure.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'c3', parent_id: repetition_stable_id, mandatory: true)
+          added_tdc = procedure.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'c3', parent_stable_id: repetition_stable_id, mandatory: true)
           procedure.draft_revision.move_type_de_champ(added_tdc.stable_id, 1)
         end
 

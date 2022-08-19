@@ -34,7 +34,7 @@ describe ProcedureRevision do
     end
 
     context 'with a repetition child' do
-      let(:tdc_params) { text_params.merge(parent_id: type_de_champ_repetition.stable_id) }
+      let(:tdc_params) { text_params.merge(parent_stable_id: type_de_champ_repetition.stable_id) }
 
       it do
         expect { subject }.to change { draft.reload.types_de_champ.count }.from(4).to(5)
@@ -93,7 +93,7 @@ describe ProcedureRevision do
         draft.add_type_de_champ({
           type_champ: TypeDeChamp.type_champs.fetch(:text),
           libelle: "second child",
-          parent_id: type_de_champ_repetition.stable_id
+          parent_stable_id: type_de_champ_repetition.stable_id
         })
       end
 
@@ -101,7 +101,7 @@ describe ProcedureRevision do
         draft.add_type_de_champ({
           type_champ: TypeDeChamp.type_champs.fetch(:text),
           libelle: "last child",
-          parent_id: type_de_champ_repetition.stable_id
+          parent_stable_id: type_de_champ_repetition.stable_id
         })
       end
 
@@ -159,7 +159,7 @@ describe ProcedureRevision do
           draft.add_type_de_champ({
             type_champ: TypeDeChamp.type_champs.fetch(:text),
             libelle: "second child",
-            parent_id: type_de_champ_repetition.stable_id
+            parent_stable_id: type_de_champ_repetition.stable_id
           })
         end
 
@@ -167,7 +167,7 @@ describe ProcedureRevision do
           draft.add_type_de_champ({
             type_champ: TypeDeChamp.type_champs.fetch(:text),
             libelle: "last child",
-            parent_id: type_de_champ_repetition.stable_id
+            parent_stable_id: type_de_champ_repetition.stable_id
           })
         end
 
@@ -631,7 +631,13 @@ describe ProcedureRevision do
 
     def second_champ = procedure.draft_revision.types_de_champ_public.second
 
-    let(:procedure) { create(:procedure, :with_type_de_champ, types_de_champ_count: 2) }
+    let(:procedure) do
+      create(:procedure).tap do |p|
+        p.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'l1')
+        p.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'l2')
+      end
+    end
+
     let(:draft_revision) { procedure.draft_revision }
     let(:condition) { nil }
 
@@ -649,7 +655,7 @@ describe ProcedureRevision do
     end
 
     context 'when a champ has a valid condition: needed tdc is up in the forms' do
-      let(:condition) { ds_eq(constant('oui'), champ_value(first_champ.stable_id)) }
+      let(:condition) { ds_eq(champ_value(first_champ.stable_id), constant(1)) }
 
       it { is_expected.to be_empty }
     end

@@ -1,13 +1,23 @@
 class Logic::Constant < Logic::Term
   attr_reader :value
 
-  def initialize(value)
+  def initialize(value, id = nil)
     @value = value
+    super(id)
   end
 
   def compute(_champs = nil) = @value
 
-  def to_s = @value.to_s
+  def to_s
+    case @value
+    when TrueClass
+      I18n.t('utils.yes')
+    when FalseClass
+      I18n.t('utils.no')
+    else
+      @value.to_s
+    end
+  end
 
   def type
     case @value
@@ -24,13 +34,14 @@ class Logic::Constant < Logic::Term
 
   def to_h
     {
-      "op" => self.class.name,
-      "value" => @value
+      "term" => self.class.name,
+      "value" => @value,
+      "id" => @id
     }
   end
 
   def self.from_h(h)
-    self.new(h['value'])
+    self.new(h['value'], h['id'])
   end
 
   def ==(other)

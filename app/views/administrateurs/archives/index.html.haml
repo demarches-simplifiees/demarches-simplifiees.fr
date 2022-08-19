@@ -1,11 +1,12 @@
-- content_for(:title, "Archives pour #{@procedure.libelle}")
-
 = render partial: 'administrateurs/breadcrumbs',
-  locals: { steps: [link_to(@procedure.libelle, instructeur_procedure_path(@procedure)),
-                    'Archives'] }
+  locals: { steps: [link_to('Démarches', admin_procedures_path),
+                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
+                    'Export et Archives'] }
+
 
 .container
-  %h1.mb-2 Archives
+  %h1.mb-2
+    Archives
 
   = render partial: "shared/archives/notice"
   = render partial: "shared/archives/table", locals: {count_dossiers_termines_by_month: @count_dossiers_termines_by_month, archives: @archives, average_dossier_weight: @average_dossier_weight, procedure: @procedure }

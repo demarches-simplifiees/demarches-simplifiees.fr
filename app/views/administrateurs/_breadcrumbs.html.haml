@@ -1,12 +1,13 @@
 .sub-header
   .container.flex.justify-between.align-baseline.column
-    %ul.breadcrumbs
+    %ul.breadcrumbs.mt-1.mb-3
       - steps.each do |step|
         %li= step
     - if defined?(preview) && preview
       .mb-2
         = link_to "Prévisualiser le formulaire", apercu_admin_procedure_path(@procedure), target: "_blank", rel: "noopener", class: 'button'
         = link_to "Continuer >", admin_procedure_path(@procedure), title: 'Vous pourrez revenir ici par la suite', class: 'button accepted'
+
     - if defined?(metadatas)
       %ul.admin-metadata
         - metadatas.each do |metadata|

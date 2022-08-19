@@ -68,28 +68,29 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.30.0",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "netlify-cli": "^8.3.0",
+    "jsdom": "^20.0.0",
     "prettier": "^2.7.1",
     "typescript": "^4.7.3",
     "vite": "^2.9.1",
     "vite-plugin-full-reload": "^1.0.0",
-    "vite-plugin-ruby": "^3.0.9"
+    "vite-plugin-ruby": "^3.0.9",
+    "vitest": "^0.17.0"
   },
   "scripts": {
-    "clean": "del tmp public/packs public/packs-test public/vite public/vite-dev public/vite-test node_modules/.vite",
+    "clean": "del tmp public/packs public/packs-test public/vite public/vite-dev public/vite-test node_modules/.vite public/graphql",
     "lint:js": "eslint --ext .js,.jsx,.ts,.tsx ./app/javascript",
     "webpack:build": "NODE_ENV=production bin/webpack",
     "lint:types": "tsc",
-    "graphql:docs:build": "graphdoc --force",
-    "graphql:docs:deploy": "netlify deploy -d ./docs/graphql --prod",
-    "graphql:docs:publish": "yarn graphql:docs:build && yarn graphql:docs:deploy",
-    "postinstall": "patch-package"
+    "graphql:doc:build": "bin/rake graphql:schema:json && graphdoc --force",
+    "postinstall": "patch-package",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "engines": {
     "node": ">= 16.*"
   },
   "graphdoc": {
-    "endpoint": "https://www.demarches-simplifiees.fr/api/v2/graphql",
-    "output": "./docs/graphql"
+    "schemaFile": "./app/graphql/schema.json",
+    "output": "./public/graphql/schema"
   }
 }

@@ -412,7 +412,7 @@ Rails.application.routes.draw do
           end
         end
 
-        resources :archives, only: [:index, :create, :show], controller: 'archives'
+        resources :archives, only: [:index, :create]
       end
     end
   end
@@ -423,6 +423,7 @@ Rails.application.routes.draw do
 
   scope module: 'administrateurs', path: 'admin', as: 'admin' do
     resources :procedures do
+      resources :archives, only: [:index, :create]
       collection do
         get 'new_from_existing'
       end
@@ -478,7 +479,7 @@ Rails.application.routes.draw do
 
       resources :experts, controller: 'experts_procedures', only: [:index, :create, :update, :destroy]
 
-      resources :types_de_champ, only: [:create, :update, :destroy] do
+      resources :types_de_champ, only: [:create, :update, :destroy], param: :stable_id do
         collection do
           get :estimate_fill_duration
         end
