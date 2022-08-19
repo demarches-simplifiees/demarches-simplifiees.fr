@@ -1,0 +1,47 @@
+import { Controller } from '@hotwired/stimulus';
+import { toggle, delegate } from '@utils';
+
+export class ChartkickController extends Controller {
+  async connect() {
+    const Highcharts = await import('highcharts');
+    const Chartkick = await import('chartkick');
+
+    Chartkick.use(Highcharts);
+    const reflow = (nextChartId?: string) =>
+      nextChartId && Chartkick.charts[nextChartId]?.getChartObject()?.reflow();
+
+    delegate('click', '[data-toggle-chart]', (event) =>
+      toggleChart(event as MouseEvent, reflow)
+    );
+  }
+}
+
+function toggleChart(
+  event: MouseEvent,
+  reflow: (nextChartId?: string) => void
+) {
+  const nextSelectorItem = event.target as HTMLButtonElement,
+    chartClass = nextSelectorItem.dataset.toggleChart,
+    nextChart = chartClass
+      ? document.querySelector<HTMLDivElement>(chartClass)
+      : undefined,
+    nextChartId = nextChart?.children[0]?.id,
+    currentSelectorItem = nextSelectorItem.parentElement?.querySelector(
+      '.segmented-control-item-active'
+    ),
+    currentChart =
+      nextSelectorItem.parentElement?.parentElement?.querySelector<HTMLDivElement>(
+        '.chart:not(.hidden)'
+      );
+
+  // Change the current selector and the next selector states
+  currentSelectorItem?.classList.toggle('segmented-control-item-active');
+  nextSelectorItem.classList.toggle('segmented-control-item-active');
+
+  // Hide the currently shown chart and show the new one
+  currentChart && toggle(currentChart);
+  nextChart && toggle(nextChart);
+
+  // Reflow needed, see https://github.com/highcharts/highcharts/issues/1979
+  reflow(nextChartId);
+}

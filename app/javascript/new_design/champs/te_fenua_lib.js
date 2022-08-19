@@ -1,5 +1,5 @@
 import Feature from 'ol/Feature';
-import Map from 'ol/Map';
+import OLMap from 'ol/Map';
 import Point from 'ol/geom/Point';
 import TileLayer from 'ol/layer/Tile';
 import TileWMS from 'ol/source/TileWMS';
@@ -54,7 +54,7 @@ function getDefaultInteractions() {
 // @return {Map}
 export function createDefaultMap(target, layers) {
   // http://openlayers.org/en/master/apidoc/ol.Map.html
-  return new Map({
+  return new OLMap({
     // N'afficher aucun contrôle.
     controls: defaultControls().extend([new ScaleLine(), new FullScreen()]),
     // interaction by default except mouseWheelZoom

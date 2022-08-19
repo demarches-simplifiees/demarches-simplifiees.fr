@@ -13,8 +13,18 @@
     = favicon_link_tag(image_url("#{FAVICON_32PX_SRC}"), type: "image/png", sizes: "32x32")
     = favicon_link_tag(image_url("#{FAVICON_96PX_SRC}"), type: "image/png", sizes: "96x96")
 
-    - packs = ['application', 'track', administrateur_signed_in? ? 'track-admin' : nil].compact
-    = javascript_packs_with_chunks_tag *packs, defer: true
+    = vite_client_tag
+    = vite_react_refresh_tag
+    = vite_javascript_tag 'application'
+    - if administrateur_signed_in?
+      = vite_javascript_tag 'track-admin'
+
+    - if vite_legacy?
+      = vite_legacy_polyfill_tag
+      = vite_legacy_javascript_tag 'application'
+      - if administrateur_signed_in?
+        = vite_legacy_javascript_tag 'track-admin'
+      = vite_legacy_fallback_tag
 
     = preload_link_tag(asset_url("Muli-Regular.woff2"))
     = preload_link_tag(asset_url("Muli-Bold.woff2"))
@@ -40,6 +50,8 @@
       - if content_for?(:footer)
         = content_for(:footer)
 
+      - if Rails.env.development?
+        = vite_typescript_tag 'axe-core'
       = yield :charts_js
 
     // Container for custom turbo-stream actions

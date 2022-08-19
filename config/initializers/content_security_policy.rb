@@ -44,6 +44,10 @@ Rails.application.config.content_security_policy do |policy|
     # Allow LiveReload requests
     policy.connect_src(*policy.connect_src, "ws://localhost:3035", "http://localhost:3035")
 
+    # Allow Vite.js
+    policy.connect_src(*policy.connect_src, "ws://#{ViteRuby.config.host_with_port}")
+    policy.script_src(*policy.script_src, :unsafe_eval, "http://#{ViteRuby.config.host_with_port}")
+
     # CSP are not enforced in development (see content_security_policy_report_only in development.rb)
     # However we notify a random local URL, to see breakage in the DevTools when adding a new external resource.
     policy.report_uri "http://#{ENV.fetch('APP_HOST')}/csp/"
@@ -52,7 +56,7 @@ Rails.application.config.content_security_policy do |policy|
     # Disallow all connections to external domains during tests
     policy.img_src(:self, :data, :blob)
     policy.script_src(:self, :unsafe_eval, :unsafe_inline, :blob)
-    policy.style_src(:self)
+    policy.style_src(:self, :unsafe_inline)
     policy.connect_src(:self)
     policy.frame_src(:self)
     policy.default_src(:self, :data, :blob)

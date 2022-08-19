@@ -19,10 +19,7 @@ doc/*.svg
 uploads/*
 .byebug_history
 .env
-Procfile.dev
 storage/
-/public/packs
-/public/packs-test
 /node_modules
 /yarn-error.log
 yarn-debug.log*
@@ -47,3 +44,11 @@ vendor/*
 # Custom views
 # /app/custom_views/*
 # !/app/custom_views/.keep
+
+# Webpacker
+public/packs
+public/packs-test
+# Vite Ruby
+public/vite
+public/vite-dev
+public/vite-test

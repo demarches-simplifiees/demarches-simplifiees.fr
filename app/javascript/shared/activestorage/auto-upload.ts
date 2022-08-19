@@ -24,10 +24,16 @@ export class AutoUpload {
   #uploader: Uploader;
 
   constructor(input: HTMLInputElement, file: File) {
-    const { directUploadUrl, autoAttachUrl } = input.dataset;
+    const { directUploadUrl, autoAttachUrl, maxFileSize } = input.dataset;
     invariant(directUploadUrl, 'Could not find the direct upload URL.');
     this.#input = input;
-    this.#uploader = new Uploader(input, file, directUploadUrl, autoAttachUrl);
+    this.#uploader = new Uploader(
+      input,
+      file,
+      directUploadUrl,
+      autoAttachUrl,
+      maxFileSize
+    );
   }
 
   // Create, upload and attach the file.

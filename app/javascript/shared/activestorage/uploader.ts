@@ -7,6 +7,7 @@ import {
   ERROR_CODE_ATTACH
 } from './file-upload-error';
 
+const BYTES_TO_MB_RATIO = 1_048_576;
 /**
   Uploader class is a delegate for DirectUpload instance
   used to track lifecycle and progress of an upload.
@@ -15,16 +16,25 @@ export default class Uploader {
   directUpload: DirectUpload;
   progressBar: ProgressBar;
   autoAttachUrl?: string;
+  maxFileSize: number;
+  file: File;
 
   constructor(
     input: HTMLInputElement,
     file: File,
     directUploadUrl: string,
-    autoAttachUrl?: string
+    autoAttachUrl?: string,
+    maxFileSize?: string
   ) {
+    this.file = file;
     this.directUpload = new DirectUpload(file, directUploadUrl, this);
     this.progressBar = new ProgressBar(input, this.directUpload.id + '', file);
     this.autoAttachUrl = autoAttachUrl;
+    try {
+      this.maxFileSize = parseInt(maxFileSize || '0', 10);
+    } catch (e) {
+      this.maxFileSize = 0;
+    }
   }
 
   /**
@@ -34,7 +44,12 @@ export default class Uploader {
     */
   async start() {
     this.progressBar.start();
-
+    if (this.maxFileSize > 0 && this.file.size > this.maxFileSize) {
+      throw `La taille du fichier ne peut dépasser
+             ${this.maxFileSize / BYTES_TO_MB_RATIO} Mo
+             (in english: File size can't be bigger than
+             ${this.maxFileSize / BYTES_TO_MB_RATIO} Mo).`;
+    }
     try {
       const blobSignedId = await this.upload();
 
@@ -89,7 +104,8 @@ export default class Uploader {
       const errors = (error.jsonBody as { errors: string[] })?.errors;
       const message = errors && errors[0];
       throw new FileUploadError(
-        message || 'Error attaching file.',
+        message ||
+          `Impossible d'associer le fichier (in english: error attaching file).'`,
         error.response?.status,
         ERROR_CODE_ATTACH
       );

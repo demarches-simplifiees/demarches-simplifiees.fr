@@ -45,7 +45,7 @@ async function initialize() {
     let map = getMapFromAddress(event.target);
     if (map) {
       if (event.detail.extent) fitExtent(map, event.detail.extent);
-      else if (event.detail.point) moveTo(map, event.detail.point);
+      else if (event.detail.point) moveMapTo(map, event.detail.point);
       if (event.detail.point) {
         const marker = createMarkerFeature(event.detail.point);
         map.markerLayer.getSource().addFeature(marker);
@@ -151,7 +151,7 @@ function centerMap(map) {
   else fitExtent(map, extent);
 }
 
-function moveTo(map, point) {
+function moveMapTo(map, point) {
   map.getView().animate({ center: point });
 }
 

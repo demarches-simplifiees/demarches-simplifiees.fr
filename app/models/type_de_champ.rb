@@ -3,6 +3,7 @@
 # Table name: types_de_champ
 #
 #  id          :integer          not null, primary key
+#  condition   :jsonb
 #  description :text
 #  libelle     :string
 #  mandatory   :boolean          default(FALSE)
@@ -16,6 +17,7 @@
 class TypeDeChamp < ApplicationRecord
   self.ignored_columns = [:migrated_parent, :revision_id, :parent_id, :order_place]
 
+  FILE_MAX_SIZE = 200.megabytes
   FEATURE_FLAGS = { 'visa' => 'visa' }
 
   INSTANCE_TYPE_CHAMPS = {
@@ -89,6 +91,22 @@ class TypeDeChamp < ApplicationRecord
 
   serialize :options, WithIndifferentAccess
 
+  class ConditionSerializer
+    def self.load(condition)
+      if condition.present?
+        Logic.from_h(condition)
+      end
+    end
+
+    def self.dump(condition)
+      if condition.present?
+        condition.to_h
+      end
+    end
+  end
+
+  serialize :condition, ConditionSerializer
+
   after_initialize :set_dynamic_type
   after_create :populate_stable_id
 
@@ -118,6 +136,8 @@ class TypeDeChamp < ApplicationRecord
   end
 
   has_one_attached :piece_justificative_template
+  validates :piece_justificative_template, size: { less_than: FILE_MAX_SIZE }
+  validates :piece_justificative_template, content_type: AUTHORIZED_CONTENT_TYPES
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :type_champ, presence: true, allow_blank: false, allow_nil: false
@@ -195,6 +215,10 @@ class TypeDeChamp < ApplicationRecord
       TypeDeChamp.type_champs.fetch(:multiple_drop_down_list),
       TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
     ])
+  end
+
+  def drop_down_list_with_other?
+    type_champ == TypeDeChamp.type_champs.fetch(:drop_down_list)
   end
 
   def header_section?
