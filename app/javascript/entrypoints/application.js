@@ -64,6 +64,9 @@ const DS = {
 
 // Start Rails helpers
 ActiveStorage.start();
+if (!window._rails_loaded) {
+  Rails.start();
+}
 Turbo.session.drive = false;
 
 // Expose globals
