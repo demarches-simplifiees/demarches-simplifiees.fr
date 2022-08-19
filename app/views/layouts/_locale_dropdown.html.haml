@@ -1,12 +1,14 @@
-.dropdown.locale-dropdown.header-menu-opener{ data: { controller: 'menu-button' } }
-  %button.button.dropdown-button.icon-only.header-menu-button{ title: t('.languages'), data: { menu_button_target: 'button' } }
-    %span.hidden
-      = t('.languages')
-    = image_tag "icons/translate-icon.svg", alt: t('.languages'), width: 24, height: 24, loading: :lazy, aria: { hidden: true }
-  %ul.header-menu.dropdown-content{ data: { menu_button_target: 'menu' } }
-    %li
-      = active_link_to save_locale_path(locale: :fr), method: :post, class: "menu-item menu-link", active: I18n.locale == :fr do
-        Français
-    %li
-      = active_link_to save_locale_path(locale: :en), method: :post, class: "menu-item menu-link", active: I18n.locale == :en do
-        English
+%nav.fr-translate.fr-nav{:role => "navigation", title: t('.select_locale')}
+  .fr-nav__item
+    %button.fr-translate__btn.fr-btn.fr-btn--tertiary{"aria-controls" => "translate", "aria-expanded" => "false", :title => t('.select_locale')}
+      = t(".#{I18n.locale}")
+      %span.fr-hidden-lg= t('.francais')
+    #translate.fr-collapse.fr-menu
+      %ul.fr-menu__list
+        %li
+          = active_link_to save_locale_path(locale: :fr), method: :post, class: "fr-translate__language fr-nav__link", active: I18n.locale == :fr, "aria-current" => I18n.locale == :fr, hreflang: "fr", lang: "fr" do
+            = t('.fr_francais')
+        %li
+          = active_link_to save_locale_path(locale: :en), method: :post, class: "fr-translate__language   fr-nav__link", active: I18n.locale == :en, "aria-current" => I18n.locale == :en, hreflang: "en", lang: "en" do
+            = t('.en_english')
+
