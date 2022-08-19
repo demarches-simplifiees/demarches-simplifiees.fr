@@ -17,9 +17,8 @@ class Logic::ChampValue < Logic::Term
 
   attr_reader :stable_id
 
-  def initialize(stable_id, id = nil)
+  def initialize(stable_id)
     @stable_id = stable_id
-    super(id)
   end
 
   def compute(champs)
@@ -61,13 +60,12 @@ class Logic::ChampValue < Logic::Term
   def to_h
     {
       "term" => self.class.name,
-      "stable_id" => @stable_id,
-      "id" => @id
+      "stable_id" => @stable_id
     }
   end
 
   def self.from_h(h)
-    self.new(h['stable_id'], h['id'])
+    self.new(h['stable_id'])
   end
 
   def ==(other)

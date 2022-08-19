@@ -449,10 +449,17 @@ Rails.application.routes.draw do
         resource 'sources', only: [:show, :update], controller: 'sources_particulier'
       end
 
+      resources :conditions, only: [:update, :destroy], param: :stable_id do
+        patch :add_row, on: :member
+        patch :change_targeted_champ, on: :member
+        delete :delete_row, on: :member
+      end
+
       put 'clone'
       put 'archive'
       get 'publication' => 'procedures#publication', as: :publication
       put 'publish' => 'procedures#publish', as: :publish
+      put 'reset_draft' => 'procedures#reset_draft', as: :reset_draft
       get 'transfert' => 'procedures#transfert', as: :transfert
       get 'close' => 'procedures#close', as: :close
       post 'transfer' => 'procedures#transfer', as: :transfer

@@ -20,6 +20,30 @@ namespace :support do
   end
 
   desc <<~EOD
+    Destroy all AdministrateursProcedures for a given USER_EMAIL
+    Only works if the AdministrateursProcedures is not the last of the Procedure.
+  EOD
+  task delete_adminstrateurs_procedures: :environment do
+    user_email = ENV['USER_EMAIL']
+    fail "Must specify a USER_EMAIL" if user_email.nil?
+
+    administrateur = Administrateur.joins(:user).where(user: { email: user_email }).first
+    AdministrateursProcedure.where(administrateur: administrateur).each do |administrateur_procedure|
+      procedure = administrateur_procedure.procedure
+      if procedure.administrateurs.count > 1
+        begin
+          procedure.administrateurs.delete(administrateur)
+          puts "Deleted #{user_email} from #{procedure.libelle}"
+        rescue ActiveRecord::RecordInvalid
+          puts "Can't unlink #{user_email} from <#{procedure.libelle}> due to error"
+        end
+      else
+        puts "Can't unlink #{user_email} from <#{procedure.libelle}> because last admin"
+      end
+    end
+  end
+
+  desc <<~EOD
     Change the SIRET for a given dossier (specified by DOSSIER_ID)
   EOD
   task update_dossier_siret: :environment do

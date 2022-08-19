@@ -1,7 +1,7 @@
 module Administrateurs
   class ProceduresController < AdministrateurController
-    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :allow_expert_review, :experts_require_administrateur_invitation]
-    before_action :procedure_revisable?, only: [:champs, :annotations, :modifications]
+    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :allow_expert_review, :experts_require_administrateur_invitation, :reset_draft]
+    before_action :procedure_revisable?, only: [:champs, :annotations, :modifications, :reset_draft]
 
     ITEMS_PER_PAGE = 25
 
@@ -237,20 +237,28 @@ module Administrateurs
 
       @procedure.assign_attributes(publish_params)
 
-      if @procedure.draft_changed? && !@procedure.close?
-        @procedure.publish_revision!
-        AdministrationMailer.procedure_published(@procedure).deliver_later
-        flash.notice = "Nouvelle version de la démarche publiée"
-      elsif @procedure.draft_changed? && @procedure.close?
-        @procedure.publish_or_reopen!(current_administrateur)
-        @procedure.publish_revision!
-        flash.notice = "Démarche publiée"
+      if @procedure.draft_changed?
+        if @procedure.close?
+          if @procedure.publish_or_reopen!(current_administrateur)
+            @procedure.publish_revision!
+            flash.notice = "Démarche publiée"
+          else
+            flash.alert = @procedure.errors.full_messages
+          end
+        else
+          @procedure.publish_revision!
+          flash.notice = "Nouvelle version de la démarche publiée"
+        end
       elsif @procedure.publish_or_reopen!(current_administrateur)
-        AdministrationMailer.procedure_published(@procedure).deliver_later
         flash.notice = "Démarche publiée"
       else
         flash.alert = @procedure.errors.full_messages
       end
+      redirect_to admin_procedure_path(@procedure)
+    end
+
+    def reset_draft
+      @procedure.reset_draft_revision!
       redirect_to admin_procedure_path(@procedure)
     end
 

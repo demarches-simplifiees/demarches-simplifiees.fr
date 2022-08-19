@@ -1,25 +1,22 @@
 import { Controller } from '@hotwired/stimulus';
 import { toggle, delegate } from '@utils';
+import Highcharts from 'highcharts';
+import Chartkick from 'chartkick';
 
 export class ChartkickController extends Controller {
   async connect() {
-    const Highcharts = await import('highcharts');
-    const Chartkick = await import('chartkick');
-
-    Chartkick.use(Highcharts);
-    const reflow = (nextChartId?: string) =>
-      nextChartId && Chartkick.charts[nextChartId]?.getChartObject()?.reflow();
-
     delegate('click', '[data-toggle-chart]', (event) =>
-      toggleChart(event as MouseEvent, reflow)
+      toggleChart(event as MouseEvent)
     );
   }
 }
 
-function toggleChart(
-  event: MouseEvent,
-  reflow: (nextChartId?: string) => void
-) {
+Chartkick.use(Highcharts);
+function reflow(nextChartId?: string) {
+  nextChartId && Chartkick.charts[nextChartId]?.getChartObject()?.reflow();
+}
+
+function toggleChart(event: MouseEvent) {
   const nextSelectorItem = event.target as HTMLButtonElement,
     chartClass = nextSelectorItem.dataset.toggleChart,
     nextChart = chartClass
