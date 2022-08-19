@@ -17,6 +17,7 @@
 class TypeDeChamp < ApplicationRecord
   self.ignored_columns = [:migrated_parent, :revision_id, :parent_id, :order_place]
 
+  FILE_MAX_SIZE = 200.megabytes
   FEATURE_FLAGS = { 'visa' => 'visa' }
 
   INSTANCE_TYPE_CHAMPS = {
@@ -27,9 +28,6 @@ class TypeDeChamp < ApplicationRecord
     te_fenua: 'te_fenua',
     visa: 'visa'
   }
-
-  FILE_MAX_SIZE = 200.megabytes
-  FEATURE_FLAGS = {}
 
   enum type_champs: {
     text: 'text',
