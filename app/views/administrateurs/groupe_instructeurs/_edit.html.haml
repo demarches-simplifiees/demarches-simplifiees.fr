@@ -35,7 +35,7 @@
       = file_field_tag :group_csv_file, required: true, accept: 'text/csv', size: "1"
       = submit_tag t('.csv_import.import_file'), class: 'button primary send', data: { disable_with: "Envoi..." }
   - else
-    %p.mt-4.form.bold.mb-2.text-lg
+    %p.mt-4.form.font-weight-bold.mb-2.text-lg
       = t('.csv_import.title')
     %p.notice
       = t('.csv_import.import_file_procedure_not_published')

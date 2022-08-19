@@ -92,7 +92,6 @@ gem 'strong_migrations' # lint database migrations
 gem 'turbo-rails'
 gem 'typhoeus'
 gem 'view_component'
-gem 'vite_plugin_legacy'
 gem 'vite_rails'
 gem 'warden'
 gem 'zipline'
