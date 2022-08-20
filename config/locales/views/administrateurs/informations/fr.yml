@@ -6,3 +6,6 @@ fr:
       Dans leur majorité, les descriptions des formulaires, le titre des champs, sont des informations qui peuvent être communiquées au public en Open data, sous un format numérique facilement exploitables. Les valeurs saisies par les usagers restent évidemment confidentielles.<br>
       Ces informations seront publiées sur data.gouv.fr et seront mises à jours régulièrement."
       opendata: "Autorisez-vous la publication du descriptif de la démarche ?"
+    duree_conservation_dossiers_dans_ds:
+      notice: Durée en mois après le début de l’instruction.
+      new_duration_constraint: Pour les démarches classiques, cette durée ne peut exceder %{new_duration_in_month} mois. Si vous avez besoin d'une durée supérieure à %{new_duration_in_month} mois, merci d'en faire la demande à notre support.

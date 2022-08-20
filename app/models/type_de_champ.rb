@@ -423,6 +423,11 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
+  def stable_self
+    OpenStruct.new(to_key: [stable_id],
+      model_name: OpenStruct.new(param_key: model_name.param_key))
+  end
+
   private
 
   DEFAULT_EMPTY = ['']

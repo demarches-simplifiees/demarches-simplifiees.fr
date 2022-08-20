@@ -10,7 +10,14 @@ describe ProcedureRevision do
 
   describe '#add_type_de_champ' do
     # tdc: public: text, repetition ; private: text ; +1 text child of repetition
-    let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :with_repetition) }
+    let(:procedure) do
+      create(:procedure).tap do |p|
+        p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'l1')
+        parent = p.draft_revision.add_type_de_champ(type_champ: :repetition, libelle: 'l2')
+        p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'l2', parent_stable_id: parent.stable_id)
+        p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'l1 private', private: true)
+      end
+    end
     let(:text_params) { { type_champ: :text, libelle: 'text' } }
     let(:tdc_params) { text_params }
     let(:last_coordinate) { draft.revision_types_de_champ.last }
@@ -57,6 +64,27 @@ describe ProcedureRevision do
       let(:tdc_params) { text_params.merge(parent_id: 123456789) }
 
       it { expect(subject.errors.full_messages).not_to be_empty }
+    end
+
+    context 'after_stable_id' do
+      context 'with a valid after_stable_id' do
+        let(:tdc_params) { text_params.merge(after_stable_id: draft.revision_types_de_champ_public.first.stable_id, libelle: 'in the middle') }
+
+        it do
+          expect(draft.revision_types_de_champ_public.map(&:libelle)).to eq(['l1', 'l2'])
+          subject
+          expect(draft.revision_types_de_champ_public.reload.map(&:libelle)).to eq(['l1', 'in the middle', 'l2'])
+        end
+      end
+
+      context 'with blank valid after_stable_id' do
+        let(:tdc_params) { text_params.merge(after_stable_id: '', libelle: 'in the middle') }
+
+        it do
+          subject
+          expect(draft.revision_types_de_champ_public.reload.map(&:libelle)).to eq(['l1', 'l2', 'in the middle'])
+        end
+      end
     end
   end
 
@@ -294,10 +322,94 @@ describe ProcedureRevision do
   end
 
   describe '#compare' do
+    include Logic
+
     let(:first_tdc) { draft.types_de_champ_public.first }
+    let(:second_tdc) { draft.types_de_champ_public.second }
     let(:new_draft) { procedure.create_new_revision }
 
     subject { procedure.active_revision.compare(new_draft.reload) }
+
+    context 'with a procedure with 2 tdcs' do
+      let(:procedure) do
+        create(:procedure).tap do |p|
+          p.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'l1')
+          p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'l2')
+        end
+      end
+
+      context 'when a condition is added' do
+        before do
+          second = new_draft.find_and_ensure_exclusive_use(second_tdc.stable_id)
+          second.update(condition: ds_eq(champ_value(first_tdc.stable_id), constant(3)))
+        end
+
+        it do
+          is_expected.to eq([
+            {
+              attribute: :condition,
+              from: nil,
+              label: "l2",
+              model: :type_de_champ,
+              op: :update,
+              private: false,
+              stable_id: second_tdc.stable_id,
+              to: "(l1 == 3)"
+            }
+          ])
+        end
+      end
+
+      context 'when a condition is removed' do
+        before do
+          second_tdc.update(condition: ds_eq(champ_value(first_tdc.stable_id), constant(2)))
+          draft.reload
+
+          second = new_draft.find_and_ensure_exclusive_use(second_tdc.stable_id)
+          second.update(condition: nil)
+        end
+
+        it do
+          is_expected.to eq([
+            {
+              attribute: :condition,
+              from: "(l1 == 2)",
+              label: "l2",
+              model: :type_de_champ,
+              op: :update,
+              private: false,
+              stable_id: second_tdc.stable_id,
+              to: nil
+            }
+          ])
+        end
+      end
+
+      context 'when a condition is changed' do
+        before do
+          second_tdc.update(condition: ds_eq(champ_value(first_tdc.stable_id), constant(2)))
+          draft.reload
+
+          second = new_draft.find_and_ensure_exclusive_use(second_tdc.stable_id)
+          second.update(condition: ds_eq(champ_value(first_tdc.stable_id), constant(3)))
+        end
+
+        it do
+          is_expected.to eq([
+            {
+              attribute: :condition,
+              from: "(l1 == 2)",
+              label: "l2",
+              model: :type_de_champ,
+              op: :update,
+              private: false,
+              stable_id: second_tdc.stable_id,
+              to: "(l1 == 3)"
+            }
+          ])
+        end
+      end
+    end
 
     context 'when a type de champ is added' do
       let(:procedure) { create(:procedure) }

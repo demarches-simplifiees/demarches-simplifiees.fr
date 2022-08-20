@@ -6,54 +6,56 @@ module Administrateurs
 
     def update
       condition = condition_form.to_condition
-      tdc.update!(condition: condition)
+      @tdc.update!(condition: condition)
 
-      render 'administrateurs/types_de_champ/update.turbo_stream.haml'
+      @condition_component = build_condition_component
     end
 
     def add_row
-      condition = Logic.add_empty_condition_to(tdc.condition)
-      tdc.update!(condition: condition)
+      condition = Logic.add_empty_condition_to(@tdc.condition)
+      @tdc.update!(condition: condition)
 
-      render 'administrateurs/types_de_champ/update.turbo_stream.haml'
+      @condition_component = build_condition_component
     end
 
     def delete_row
       condition = condition_form.delete_row(row_index).to_condition
-      tdc.update!(condition: condition)
+      @tdc.update!(condition: condition)
 
-      render 'administrateurs/types_de_champ/update.turbo_stream.haml'
+      @condition_component = build_condition_component
     end
 
     def destroy
-      tdc.update!(condition: nil)
+      @tdc.update!(condition: nil)
 
-      render 'administrateurs/types_de_champ/update.turbo_stream.haml'
+      @condition_component = build_condition_component
     end
 
     def change_targeted_champ
       condition = condition_form.change_champ(row_index).to_condition
-      tdc.update!(condition: condition)
+      @tdc.update!(condition: condition)
 
-      render 'administrateurs/types_de_champ/update.turbo_stream.haml'
+      @condition_component = build_condition_component
     end
 
     private
+
+    def build_condition_component
+      TypesDeChampEditor::ConditionsComponent.new(
+        tdc: @tdc,
+        upper_tdcs: @upper_tdcs,
+        procedure_id: @procedure.id
+      )
+    end
 
     def condition_form
       ConditionForm.new(condition_params)
     end
 
     def retrieve_coordinate_and_uppers
-      @coordinate = draft_revision.coordinate_for(tdc)
-      @upper_coordinates = draft_revision
-        .revision_types_de_champ_public
-        .includes(:type_de_champ)
-        .take_while { |c| c != @coordinate }
-    end
-
-    def tdc
-      @tdc ||= draft_revision.find_and_ensure_exclusive_use(params[:stable_id])
+      @tdc = draft_revision.find_and_ensure_exclusive_use(params[:stable_id])
+      @coordinate = draft_revision.coordinate_for(@tdc)
+      @upper_tdcs = @coordinate.upper_siblings.map(&:type_de_champ)
     end
 
     def draft_revision

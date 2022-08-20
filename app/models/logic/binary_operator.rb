@@ -33,7 +33,7 @@ class Logic::BinaryOperator < Logic::Term
     l = @left.compute(champs)
     r = @right.compute(champs)
 
-    l.send(operation, r)
+    l&.send(operation, r) || false
   end
 
   def to_s = "(#{@left} #{operation} #{@right})"

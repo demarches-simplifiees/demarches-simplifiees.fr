@@ -52,6 +52,7 @@ function lazyLoadNewControllers(application: Application) {
       }
     }
   }).observe(application.element, {
+    attributes: true,
     attributeFilter: [controllerAttribute],
     subtree: true,
     childList: true

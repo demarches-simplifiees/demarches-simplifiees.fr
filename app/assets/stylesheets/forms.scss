@@ -107,7 +107,6 @@
     .updated-at {
       @include notice-text-style;
       float: right;
-      display: inline-block;
       margin-left: $default-spacer;
       visibility: hidden;
     }
@@ -338,14 +337,50 @@
   input[type=number],
   input[type=tel],
   textarea {
-    width: 100%;
+    @media (max-width: $two-columns-breakpoint) {
+      width: 100%;
+    }
+
+    // don't set 100% width when width-* classes or size attribute are applied
+    @media (min-width: $two-columns-breakpoint) {
+      &:not([class^='width-']):not([size]) {
+        width: 100%;
+      }
+    }
   }
 
-  input[type=email],
-  input[type=password],
-  input[type=number],
-  input[type=tel], {
-    max-width: 500px;
+  @media (min-width: $two-columns-breakpoint) {
+    input[type=email],
+    input[type=password],
+    input[type=number],
+    input[type=tel] {
+      max-width: 500px;
+    }
+  }
+
+  input[type=date] {
+    max-width: 180px;
+  }
+
+  // override default site width/max-width for editable-champ form (Usager form)
+  .editable-champ {
+    input {
+      max-width: none;
+
+      @media (min-width: $two-columns-breakpoint) {
+        &:not([size]) {
+          &[type='date'],
+          &[type='tel'],
+          &[type='number'] {
+            width: 33.33%;
+          }
+
+          &[type='email'] {
+            width: 66.67%;
+          }
+        }
+      }
+    }
   }
 
   input[type=checkbox],
@@ -366,8 +401,7 @@
     max-width: 180px;
   }
 
-  select,
-  .select2-selection {
+  select {
     // hack found here: https://stackoverflow.com/questions/1895476/how-to-style-a-select-dropdown-with-css-only-without-javascript
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -397,19 +431,21 @@
     }
   }
 
-
   [data-reach-combobox-input] {
-    width: 100%;
-    min-width: 50%;
-    max-width: 100%;
     min-height: 62px;
     border-radius: 4px;
     border: solid 1px $border-grey;
     padding: $default-padding;
-  }
 
-  [data-reach-combobox-input]:focus {
-    border-color: $blue-france-500;
+    &:not([class^='width-']) {
+      width: 100%;
+      min-width: 50%;
+      max-width: 100%;
+    }
+
+    &:focus {
+      border-color: $blue-france-500;
+    }
   }
 
   .select2 {
@@ -495,13 +531,8 @@
   .dgfip-inputs,
   .pole-emploi-inputs,
   .mesri-inputs {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    max-width: 700px;
-
-    input {
-      width: inherit;
+    label {
+      font-weight: 400;
     }
   }
 
@@ -723,12 +754,13 @@
 }
 
 .fconnect-form {
-  input[type=password] {
+  input[type='password'] {
     margin-bottom: 16px;
   }
 }
 
 input::placeholder,
 textarea::placeholder {
+  opacity: 0.6; // normalize opacity across browsers
   color: $dark-grey;
 }

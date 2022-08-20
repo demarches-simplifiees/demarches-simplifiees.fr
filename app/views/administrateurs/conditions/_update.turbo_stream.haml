@@ -1,0 +1,8 @@
+- rendered = render @condition_component
+
+- if rendered.present?
+  = turbo_stream.morph dom_id(@tdc.stable_self, :conditions) do
+    - rendered
+  end
+- else
+  = turbo_stream.remove dom_id(@tdc.stable_self, :conditions)

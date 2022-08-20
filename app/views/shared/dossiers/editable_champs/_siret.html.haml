@@ -1,11 +1,13 @@
 = form.text_field :value,
   id: champ.input_id,
   aria: { describedby: champ.describedby_id },
-  placeholder: champ.libelle,
+  placeholder: t(".placeholder"),
   data: { controller: 'turbo-input', turbo_input_url_value: champs_siret_path(champ.id) },
   required: champ.mandatory?,
   pattern: "[A-Z0-9][0-9]{5}",
-  title: "Le numéro TAHITI doit comporter exactement 6 caractères"
+  title: t(".title"),
+  class: "width-33-desktop",
+  maxlength: 6
 .spinner.right.hidden
 .siret-info{ id: dom_id(champ, :siret_info) }
   - if champ.etablissement.present?

@@ -11,7 +11,7 @@ describe 'The user' do
     fill_individual
 
     # fill data
-    fill_in('text', with: 'super texte')
+    fill_in('text *', with: 'super texte')
     fill_in('textarea', with: 'super textarea')
     fill_in('date', with: '12-12-2012')
     select_date_and_time(Time.zone.parse('06/01/2030 7h05'), form_id_for_datetime('datetime'))
@@ -283,6 +283,36 @@ describe 'The user' do
 
     # Expect the file to have been saved on the dossier
     expect(page).to have_text('file.pdf')
+  end
+
+  context 'with condition' do
+    include Logic
+
+    let(:procedure) { create(:procedure, :published, :for_individual, :with_yes_no, :with_type_de_champ) }
+    let(:revision) { procedure.published_revision }
+    let(:yes_no_type_de_champ) { revision.types_de_champ.first }
+    let(:type_de_champ) { revision.types_de_champ.last }
+    let(:condition) { ds_eq(champ_value(yes_no_type_de_champ.stable_id), constant(true)) }
+
+    before { type_de_champ.update(condition: condition) }
+
+    scenario 'fill a dossier', js: true do
+      log_in(user, procedure)
+
+      fill_individual
+
+      expect(page).to have_field(type_de_champ.libelle, with: '', visible: false)
+      choose('Oui')
+      expect(page).to have_field(type_de_champ.libelle, with: '', visible: true)
+
+      click_on 'Déposer le dossier'
+      click_on 'Accéder à votre dossier'
+      click_on 'Modifier mon dossier'
+
+      expect(page).to have_field(type_de_champ.libelle, with: '', visible: true)
+      choose('Non')
+      expect(page).to have_field(type_de_champ.libelle, with: '', visible: false)
+    end
   end
 
   context 'draft autosave' do

@@ -32,20 +32,22 @@ module ChampHelper
     champ.dossier&.brouillon? && !champ.repetition?
   end
 
+  def autosave_controller(champ)
+    if autosave_available?(champ)
+      { controller: 'autosave' }
+    elsif !champ.repetition? && champ.dossier&.en_construction?
+      { controller: 'check-conditions' }
+    end
+  end
+
   def geo_area_label(geo_area)
     case geo_area.source
     when GeoArea.sources.fetch(:cadastre)
-      capture do
-        concat "Parcelle n° #{geo_area.numero} - Feuille #{geo_area.prefixe} #{geo_area.section} - #{geo_area.surface.round} m"
-        concat tag.sup("2")
-      end
+      safe_join ["Parcelle n° #{geo_area.numero} - Feuille #{geo_area.prefixe} #{geo_area.section} - #{geo_area.surface.round} m", tag.sup("2")]
     when GeoArea.sources.fetch(:selection_utilisateur)
       if geo_area.polygon?
         if geo_area.area.present?
-          capture do
-            concat "Une aire de surface #{geo_area.area} m"
-            concat tag.sup("2")
-          end
+          safe_join ["Une aire de surface #{geo_area.area} m", tag.sup("2")]
         else
           "Une aire de surface inconnue"
         end

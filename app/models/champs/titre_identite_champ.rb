@@ -32,8 +32,8 @@ class Champs::TitreIdentiteChamp < Champ
     # We don’t know how to search inside documents yet
   end
 
-  def mandatory_and_blank?
-    mandatory? && !piece_justificative_file.attached?
+  def mandatory_blank_and_visible?
+    mandatory? && !piece_justificative_file.attached? && visible?
   end
 
   def for_export

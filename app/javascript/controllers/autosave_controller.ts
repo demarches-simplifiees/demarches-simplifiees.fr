@@ -1,5 +1,13 @@
-import { httpRequest, ResponseError } from '@utils';
-import { z } from 'zod';
+import {
+  httpRequest,
+  ResponseError,
+  isSelectElement,
+  isCheckboxOrRadioInputElement,
+  isTextInputElement,
+  show,
+  hide,
+  getConfig
+} from '@utils';
 
 import { ApplicationController } from './application_controller';
 import { AutoUpload } from '../shared/activestorage/auto-upload';
@@ -9,10 +17,9 @@ import {
   ERROR_CODE_READ
 } from '../shared/activestorage/file-upload-error';
 
-const Gon = z.object({ autosave: z.object({ debounce_delay: z.number() }) });
-
-declare const window: Window & typeof globalThis & { gon: unknown };
-const { debounce_delay } = Gon.parse(window.gon).autosave;
+const {
+  autosave: { debounce_delay }
+} = getConfig();
 
 const AUTOSAVE_DEBOUNCE_DELAY = debounce_delay;
 const AUTOSAVE_TIMEOUT_DELAY = 60000;
@@ -36,8 +43,8 @@ export class AutosaveController extends ApplicationController {
   connect() {
     this.#latestPromise = Promise.resolve();
     this.onGlobal('autosave:retry', () => this.didRequestRetry());
-    this.on('change', (event) => this.onInputChange(event));
-    this.on('input', (event) => this.onInputChange(event));
+    this.on('change', (event) => this.onChange(event));
+    this.on('input', (event) => this.onInput(event));
   }
 
   disconnect() {
@@ -62,18 +69,35 @@ export class AutosaveController extends ApplicationController {
     }
   }
 
-  private onInputChange(event: Event) {
+  private onChange(event: Event) {
     const target = event.target as HTMLInputElement;
-    if (target.disabled) {
-      return;
+    if (!target.disabled) {
+      if (target.type == 'file') {
+        if (target.dataset.autoAttachUrl && target.files?.length) {
+          this.enqueueAutouploadRequest(target, target.files[0]);
+        }
+      } else if (target.type == 'hidden') {
+        // In React comboboxes we dispatch a "change" event on hidden inputs to trigger autosave.
+        // We want to debounce them.
+        this.debounce(this.enqueueAutosaveRequest, AUTOSAVE_DEBOUNCE_DELAY);
+      } else if (
+        isSelectElement(target) ||
+        isCheckboxOrRadioInputElement(target)
+      ) {
+        this.toggleOtherInput(target);
+        this.enqueueAutosaveRequest();
+      }
     }
+  }
+
+  private onInput(event: Event) {
+    const target = event.target as HTMLInputElement;
     if (
-      target.type == 'file' &&
-      target.dataset.autoAttachUrl &&
-      target.files?.length
+      !target.disabled &&
+      // Ignore input from React comboboxes. We trigger "change" events on them when selection is changed.
+      target.getAttribute('role') != 'combobox' &&
+      isTextInputElement(target)
     ) {
-      this.enqueueAutouploadRequest(target, target.files[0]);
-    } else if (target.type != 'file') {
       this.debounce(this.enqueueAutosaveRequest, AUTOSAVE_DEBOUNCE_DELAY);
     }
   }
@@ -177,5 +201,22 @@ export class AutosaveController extends ApplicationController {
       ];
     }
     return inputs.filter((element) => !element.disabled);
+  }
+
+  private toggleOtherInput(target: HTMLSelectElement | HTMLInputElement) {
+    const parent = target.closest('.editable-champ-drop_down_list');
+    const inputGroup = parent?.querySelector<HTMLElement>('.drop_down_other');
+    if (inputGroup) {
+      const input = inputGroup.querySelector('input');
+      if (input) {
+        if (target.value == '__other__') {
+          show(inputGroup);
+          input.disabled = false;
+        } else {
+          hide(inputGroup);
+          input.disabled = true;
+        }
+      }
+    }
   }
 }

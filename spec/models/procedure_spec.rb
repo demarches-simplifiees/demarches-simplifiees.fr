@@ -281,19 +281,26 @@ describe Procedure do
       end
     end
 
-    shared_examples 'duree de conservation' do
-      context 'duree_conservation_required it true, the field gets validated' do
+    describe 'duree de conservation dans ds' do
+      let(:field_name) { :duree_conservation_dossiers_dans_ds }
+
+      context 'for old procedures, duree_conservation_required it true, the field gets validated' do
+        subject { create(:procedure, duree_conservation_etendue_par_ds: true) }
         it { is_expected.not_to allow_value(nil).for(field_name) }
         it { is_expected.not_to allow_value('').for(field_name) }
         it { is_expected.not_to allow_value('trois').for(field_name) }
         it { is_expected.to allow_value(3).for(field_name) }
+        it { is_expected.to allow_value(36).for(field_name) }
+        it { is_expected.to validate_numericality_of(field_name).is_less_than_or_equal_to(Procedure::OLD_MAX_DUREE_CONSERVATION) }
       end
-    end
 
-    describe 'duree de conservation dans ds' do
-      let(:field_name) { :duree_conservation_dossiers_dans_ds }
-
-      it_behaves_like 'duree de conservation'
+      context 'for new procedures, duree_conservation_required it true, the field gets validated' do
+        subject { create(:procedure, duree_conservation_etendue_par_ds: false) }
+        it { is_expected.not_to allow_value(nil).for(field_name) }
+        it { is_expected.not_to allow_value('').for(field_name) }
+        it { is_expected.not_to allow_value('trois').for(field_name) }
+        it { is_expected.to validate_numericality_of(field_name).is_less_than_or_equal_to(Procedure::NEW_MAX_DUREE_CONSERVATION) }
+      end
     end
 
     describe 'draft_types_de_champ validations' do

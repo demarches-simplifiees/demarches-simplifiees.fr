@@ -27,6 +27,8 @@ if (shouldBuildLegacy()) {
         'IE >= 11'
       ],
       additionalLegacyPolyfills: [
+        'dom4',
+        'core-js/stable',
         '@stimulus/polyfills',
         '@webcomponents/custom-elements',
         '@webcomponents/template',

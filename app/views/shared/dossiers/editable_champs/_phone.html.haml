@@ -4,6 +4,6 @@
 = form.phone_field :value,
   id: champ.input_id,
   aria: { describedby: champ.describedby_id },
-  placeholder: champ.libelle,
+  placeholder: t(".placeholder"),
   required: champ.mandatory?,
   pattern: "[^a-zA-Z]+"

@@ -73,10 +73,32 @@
 // sizing
 .width-100 {
   width: 100%;
+
+  @media (max-width: $two-columns-breakpoint) {
+    &-mobile {
+      width: 100%;
+    }
+  }
 }
 
 .width-33 {
   width: 33.33%;
+
+  @media (min-width: $two-columns-breakpoint) {
+    &-desktop {
+      width: 33.33%;
+    }
+  }
+}
+
+.width-66 {
+  width: 66.67%;
+
+  @media (min-width: $two-columns-breakpoint) {
+    &-desktop {
+      width: 66.67%;
+    }
+  }
 }
 
 // who known

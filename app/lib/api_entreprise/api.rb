@@ -82,7 +82,10 @@ class APIEntreprise::API
   end
 
   def self.call_with_siret(resource_name, siret_or_siren, procedure_id, user_id = nil)
-    return if APIEntrepriseToken.new(token_for_procedure(procedure_id)).expired?
+    if APIEntrepriseToken.new(token_for_procedure(procedure_id)).expired?
+      raise APIEntrepriseToken::TokenError, I18n.t("api_entreprise.errors.token_expired")
+    end
+
     url = url(resource_name, siret_or_siren)
     params = params(siret_or_siren, procedure_id, user_id)
 

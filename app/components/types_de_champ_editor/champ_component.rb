@@ -1,12 +1,14 @@
 class TypesDeChampEditor::ChampComponent < ApplicationComponent
-  def initialize(coordinate:, focused: false)
+  attr_reader :coordinate, :upper_coordinates
+
+  def initialize(coordinate:, upper_coordinates:, focused: false)
     @coordinate = coordinate
     @focused = focused
+    @upper_coordinates = upper_coordinates
   end
 
   private
 
-  attr_reader :coordinate
   delegate :type_de_champ, :revision, :procedure, to: :coordinate
 
   def can_be_mandatory?

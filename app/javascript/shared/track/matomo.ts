@@ -1,4 +1,11 @@
-const { cookieDomain, domain, enabled, host, key } = gon.matomo || {};
+import { getConfig } from '@utils';
+
+const {
+  matomo: { cookieDomain, domain, enabled, host, key }
+} = getConfig();
+
+declare const window: Window &
+  typeof globalThis & { _paq: [key: string, value: unknown] };
 
 if (enabled) {
   window._paq = window._paq || [];
@@ -30,5 +37,5 @@ if (enabled) {
   script.id = 'matomo-js';
   script.async = true;
   script.src = jsUrl;
-  firstScript.parentNode.insertBefore(script, firstScript);
+  firstScript.parentNode?.insertBefore(script, firstScript);
 }
