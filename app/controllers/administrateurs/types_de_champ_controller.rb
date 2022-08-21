@@ -102,6 +102,7 @@ module Administrateurs
     def type_de_champ_update_params
       params.required(:type_de_champ).permit(:type_champ,
         :libelle,
+        :nom,
         :description,
         :mandatory,
         :drop_down_list_value,

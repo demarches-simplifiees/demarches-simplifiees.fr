@@ -29,6 +29,10 @@
                   = form.check_box :mandatory, class: 'small-margin small', id: dom_id(type_de_champ, :mandatory)
                   = form.label :mandatory, "Champ obligatoire", for: dom_id(type_de_champ, :mandatory)
             = form.text_field :libelle, class: 'small-margin small width-100', id: dom_id(type_de_champ, :libelle), data: input_autofocus
+          .cell.mt-1
+            .flex.align-center
+              = form.label :nom, "Nom du champ (optionnel)", class: 'flex-grow', for: dom_id(type_de_champ, :nom)
+            = form.text_field :nom, class: 'small-margin small width-100', id: dom_id(type_de_champ, :nom), data: input_autofocus
           - if !type_de_champ.header_section? && !type_de_champ.titre_identite?
             .cell.mt-1
               = form.label :description, "Description du champ (optionnel)", for: dom_id(type_de_champ, :description)

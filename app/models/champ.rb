@@ -32,6 +32,7 @@ class Champ < ApplicationRecord
   has_many :champs, -> { ordered }, foreign_key: :parent_id, inverse_of: :parent, dependent: :destroy
 
   delegate :libelle,
+    :nom,
     :type_champ,
     :procedure,
     :description,

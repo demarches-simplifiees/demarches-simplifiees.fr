@@ -75,6 +75,11 @@ type AddressChamp implements Champ {
   label: String!
 
   """
+  Nom du champ.
+  """
+  name: String!
+
+  """
   La valeur du champ sous forme texte.
   """
   stringValue: String
@@ -139,6 +144,11 @@ type CarteChamp implements Champ {
   label: String!
 
   """
+  Nom du champ.
+  """
+  name: String!
+
+  """
   La valeur du champ sous forme texte.
   """
   stringValue: String
@@ -151,6 +161,11 @@ interface Champ {
   Libellé du champ.
   """
   label: String!
+
+  """
+  Nom du champ.
+  """
+  name: String!
 
   """
   La valeur du champ sous forme texte.
@@ -200,6 +215,11 @@ type CheckboxChamp implements Champ {
   label: String!
 
   """
+  Nom du champ.
+  """
+  name: String!
+
+  """
   La valeur du champ sous forme texte.
   """
   stringValue: String
@@ -227,6 +247,11 @@ type CiviliteChamp implements Champ {
   label: String!
 
   """
+  Nom du champ.
+  """
+  name: String!
+
+  """
   La valeur du champ sous forme texte.
   """
   stringValue: String
@@ -250,6 +275,11 @@ type CommuneChamp implements Champ {
   Libellé du champ.
   """
   label: String!
+
+  """
+  Nom du champ.
+  """
+  name: String!
 
   """
   La valeur du champ sous forme texte.
@@ -321,6 +351,11 @@ type DateChamp implements Champ {
   label: String!
 
   """
+  Nom du champ.
+  """
+  name: String!
+
+  """
   La valeur du champ sous forme texte.
   """
   stringValue: String
@@ -344,6 +379,11 @@ type DatetimeChamp implements Champ {
   label: String!
 
   """
+  Nom du champ.
+  """
+  name: String!
+
+  """
   La valeur du champ sous forme texte.
   """
   stringValue: String
@@ -356,6 +396,11 @@ type DecimalNumberChamp implements Champ {
   Libellé du champ.
   """
   label: String!
+
+  """
+  Nom du champ.
+  """
+  name: String!
 
   """
   La valeur du champ sous forme texte.
@@ -1021,6 +1066,11 @@ type DossierLinkChamp implements Champ {
   label: String!
 
   """
+  Nom du champ.
+  """
+  name: String!
+
+  """
   La valeur du champ sous forme texte.
   """
   stringValue: String
@@ -1610,6 +1660,11 @@ type IntegerNumberChamp implements Champ {
   label: String!
 
   """
+  Nom du champ.
+  """
+  name: String!
+
+  """
   La valeur du champ sous forme texte.
   """
   stringValue: String
@@ -1623,6 +1678,11 @@ type LinkedDropDownListChamp implements Champ {
   Libellé du champ.
   """
   label: String!
+
+  """
+  Nom du champ.
+  """
+  name: String!
   primaryValue: String
   secondaryValue: String
 
@@ -1647,6 +1707,11 @@ type MultipleDropDownListChamp implements Champ {
   Libellé du champ.
   """
   label: String!
+
+  """
+  Nom du champ.
+  """
+  name: String!
 
   """
   La valeur du champ sous forme texte.
@@ -1906,6 +1971,11 @@ type PieceJustificativeChamp implements Champ {
   label: String!
 
   """
+  Nom du champ.
+  """
+  name: String!
+
+  """
   La valeur du champ sous forme texte.
   """
   stringValue: String
@@ -1958,6 +2028,11 @@ type RepetitionChamp implements Champ {
   label: String!
 
   """
+  Nom du champ.
+  """
+  name: String!
+
+  """
   La valeur du champ sous forme texte.
   """
   stringValue: String
@@ -2003,6 +2078,11 @@ type SiretChamp implements Champ {
   label: String!
 
   """
+  Nom du champ.
+  """
+  name: String!
+
+  """
   La valeur du champ sous forme texte.
   """
   stringValue: String
@@ -2015,6 +2095,11 @@ type TextChamp implements Champ {
   Libellé du champ.
   """
   label: String!
+
+  """
+  Nom du champ.
+  """
+  name: String!
 
   """
   La valeur du champ sous forme texte.
@@ -2031,6 +2116,11 @@ type TitreIdentiteChamp implements Champ {
   Libellé du champ.
   """
   label: String!
+
+  """
+  Nom du champ.
+  """
+  name: String!
 
   """
   La valeur du champ sous forme texte.

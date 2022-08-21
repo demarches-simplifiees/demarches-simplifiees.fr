@@ -4,6 +4,7 @@ module Types
 
     global_id_field :id
     field :label, String, "Libellé du champ.", null: false, method: :libelle
+    field :name, String, "Nom du champ.", null: false, method: :nom
     field :string_value, String, "La valeur du champ sous forme texte.", null: true, method: :for_api_v2
 
     definition_methods do

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_28_084804) do
+ActiveRecord::Schema.define(version: 2022_08_21_092209) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -795,6 +795,7 @@ ActiveRecord::Schema.define(version: 2022_07_28_084804) do
     t.text "description"
     t.string "libelle"
     t.boolean "mandatory", default: false
+    t.string "nom", default: "", null: false
     t.jsonb "options"
     t.boolean "private", default: false, null: false
     t.bigint "stable_id"

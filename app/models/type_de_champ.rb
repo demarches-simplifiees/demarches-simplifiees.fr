@@ -7,6 +7,7 @@
 #  description :text
 #  libelle     :string
 #  mandatory   :boolean          default(FALSE)
+#  nom         :string           default(""), not null
 #  options     :jsonb
 #  private     :boolean          default(FALSE), not null
 #  type_champ  :string
