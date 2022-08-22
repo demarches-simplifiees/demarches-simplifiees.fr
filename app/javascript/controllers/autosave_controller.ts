@@ -6,8 +6,11 @@ import {
   isTextInputElement,
   show,
   hide,
+  enable,
+  disable,
   getConfig
 } from '@utils';
+import { z } from 'zod';
 
 import { ApplicationController } from './application_controller';
 import { AutoUpload } from '../shared/activestorage/auto-upload';
@@ -85,6 +88,7 @@ export class AutosaveController extends ApplicationController {
         isCheckboxOrRadioInputElement(target)
       ) {
         this.toggleOtherInput(target);
+        this.toggleLinkedSelect(target);
         this.enqueueAutosaveRequest();
       }
     }
@@ -219,4 +223,60 @@ export class AutosaveController extends ApplicationController {
       }
     }
   }
+
+  private toggleLinkedSelect(target: HTMLSelectElement | HTMLInputElement) {
+    const secondaryOptions = target.dataset.secondaryOptions;
+    if (isSelectElement(target) && secondaryOptions) {
+      const parent = target.closest('.editable-champ-linked_drop_down_list');
+      const secondary = parent?.querySelector<HTMLSelectElement>(
+        'select[data-secondary]'
+      );
+      if (secondary) {
+        const options = parseOptions(secondaryOptions);
+        this.setSecondaryOptions(secondary, options[target.value]);
+      }
+    }
+  }
+
+  private setSecondaryOptions(
+    secondarySelectElement: HTMLSelectElement,
+    options: string[]
+  ) {
+    const wrapper = secondarySelectElement.closest('.secondary');
+    const hidden = wrapper?.nextElementSibling as HTMLInputElement | null;
+
+    secondarySelectElement.innerHTML = '';
+
+    if (options.length) {
+      disable(hidden);
+
+      if (secondarySelectElement.required) {
+        secondarySelectElement.appendChild(makeOption(''));
+      }
+      for (const option of options) {
+        secondarySelectElement.appendChild(makeOption(option));
+      }
+
+      secondarySelectElement.selectedIndex = 0;
+      enable(secondarySelectElement);
+      show(wrapper);
+    } else {
+      hide(wrapper);
+      disable(secondarySelectElement);
+      enable(hidden);
+    }
+  }
+}
+
+const SecondaryOptions = z.record(z.string().array());
+
+function parseOptions(options: string) {
+  return SecondaryOptions.parse(JSON.parse(options));
+}
+
+function makeOption(option: string) {
+  const element = document.createElement('option');
+  element.textContent = option;
+  element.value = option;
+  return element;
 }

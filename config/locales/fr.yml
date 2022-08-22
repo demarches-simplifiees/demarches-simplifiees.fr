@@ -303,7 +303,7 @@ fr:
       super_admin:
         << : *default_attributes
       procedure:
-        zone: Zone qui met en œuvre la démarche
+        zone: La démarche est mise en œuvre par
     errors:
       messages:
         not_a_phone: 'Numéro de téléphone invalide'

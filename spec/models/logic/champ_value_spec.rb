@@ -18,6 +18,14 @@ describe Logic::ChampValue do
 
       it { is_expected.to be(false) }
     end
+
+    context 'with a value not visible' do
+      before do
+        expect(champ).to receive(:visible?).and_return(false)
+      end
+
+      it { is_expected.to be nil }
+    end
   end
 
   context 'integer tdc' do

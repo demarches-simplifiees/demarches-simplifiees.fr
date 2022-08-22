@@ -356,6 +356,7 @@ describe ProcedureExportService do
 
     context 'with files (and http calls)' do
       let!(:dossier) { create(:dossier, :accepte, :with_populated_champs, :with_individual, procedure: procedure) }
+      let(:dossier_exports) { PiecesJustificativesService.generate_dossier_export(Dossier.where(id: dossier)) }
 
       before do
         allow_any_instance_of(ActiveStorage::Attachment).to receive(:url).and_return("https://opengraph.githubassets.com/d0e7862b24d8026a3c03516d865b28151eb3859029c6c6c2e86605891fbdcd7a/socketry/async-io")
@@ -373,7 +374,7 @@ describe ProcedureExportService do
               "#{service.send(:base_filename)}/dossier-#{dossier.id}/",
               "#{service.send(:base_filename)}/dossier-#{dossier.id}/pieces_justificatives/",
               "#{service.send(:base_filename)}/dossier-#{dossier.id}/#{ActiveStorage::DownloadableFile.timestamped_filename(ActiveStorage::Attachment.where(record_type: "Champ").first)}",
-              "#{service.send(:base_filename)}/dossier-#{dossier.id}/#{ActiveStorage::DownloadableFile.timestamped_filename(PiecesJustificativesService.generate_dossier_export(dossier))}"
+              "#{service.send(:base_filename)}/dossier-#{dossier.id}/#{ActiveStorage::DownloadableFile.timestamped_filename(dossier_exports.first.first)}"
             ]
             expect(files.size).to eq(structure.size)
             expect(files.map(&:filename)).to match_array(structure)

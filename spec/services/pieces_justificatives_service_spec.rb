@@ -190,9 +190,14 @@ describe PiecesJustificativesService do
   end
 
   describe '.generate_dossier_export' do
-    let(:dossier) { create(:dossier) }
+    let(:procedure) do
+      create(:procedure, :with_piece_justificative).tap do |procedure|
+        create(:type_de_champ_repetition, procedure: procedure, types_de_champ: [create(:type_de_champ_piece_justificative, procedure: procedure, no_coordinate: true)])
+      end
+    end
+    let(:dossier) { create(:dossier, :with_populated_champs, procedure: procedure) }
 
-    subject { PiecesJustificativesService.generate_dossier_export(dossier) }
+    subject { PiecesJustificativesService.generate_dossier_export(Dossier.where(id: dossier.id)) }
 
     it "doesn't update dossier" do
       expect { subject }.not_to change { dossier.updated_at }
