@@ -6,12 +6,12 @@
 
 
 .container
-
-  - if @procedure.service.procedures.count.positive?
+  - other_services = @service.procedures.reject {|procedure| procedure.id == @procedure.id }
+  - if other_services.count > 1
     = render Dsfr::AlertComponent.new(state: :warning, title: "Modifier ce service impactera la ou les démarches qui sont rattachée/s") do |c|
       - c.body do
         %ul
-          - @service.procedures.each do |proc|
+          - other_services.each do |proc|
             %li= "#{proc.libelle} (N° #{proc.id})"
         %p.mt-3 Si vous souhaitez modifier uniquement les informations pour ce service, créez un nouveau service puis associez-le à la démarche
 
