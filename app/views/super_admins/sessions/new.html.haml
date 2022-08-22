@@ -4,7 +4,7 @@
     .auth-form.sign-in-form
 
       = form_for SuperAdmin.new, url: super_admin_session_path, html: { class: "form" } do |f|
-        %h1 Connectez-vous
+        %h1.fr-h2 Connectez-vous
 
         = f.label :email, "Email (nom@site.com)"
         = f.text_field :email, type: :email, autocomplete: 'username', autofocus: true
