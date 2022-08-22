@@ -202,6 +202,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_private_repetition do
+      after(:build) do |procedure, _evaluator|
+        build(:type_de_champ_repetition, :private, procedure: procedure)
+      end
+    end
+
     trait :with_number do
       after(:build) do |procedure, _evaluator|
         build(:type_de_champ_number, procedure: procedure)

@@ -1,4 +1,8 @@
 module ViteHelper
+  # This module is a port of code in @vitejs/plugin-legacy. We need it because ruby vite_plugin_legacy
+  # has ommited to implement this logic. Original code here:
+  # https://github.com/vitejs/vite/blob/722f5148ea494cdc15379d3a98dca0751131ca22/packages/plugin-legacy/src/index.ts#L408-L532
+
   SAFARI_10_NO_MODULE_FIX = "!function(){var e=document,t=e.createElement('script');if(!('noModule'in t)&&'onbeforeload'in t){var n=!1;e.addEventListener('beforeload',(function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute('nomodule')||!n)return;e.preventDefault()}),!0),t.type='module',t.src='.',e.head.appendChild(t),t.remove()}}();"
 
   LEGACY_POLYFILL_ID = 'vite-legacy-polyfill'

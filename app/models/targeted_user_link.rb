@@ -17,7 +17,7 @@ class TargetedUserLink < ApplicationRecord
   enum target_context: { avis: 'avis', invite: 'invite' }
 
   def invalid_signed_in_user?(signed_in_user)
-    signed_in_user && signed_in_user != self.user
+    signed_in_user && signed_in_user.email != target_email
   end
 
   def target_email
@@ -35,7 +35,8 @@ class TargetedUserLink < ApplicationRecord
     case target_context
     when "invite"
       invite = target_model
-      invite.user&.active? ?
+      user = User.find_by(email: target_email)
+      user&.active? ?
       url_helper.invite_path(invite) :
       url_helper.invite_path(invite, params: { email: invite.email })
     when "avis"

@@ -23,7 +23,7 @@ class Champs::CommuneChamp < Champs::TextChamp
   store_accessor :value_json, :departement, :code_departement
 
   def for_export
-    [value, external_id]
+    [value, external_id, departement? ? departement_code_and_name : '']
   end
 
   def name_departement

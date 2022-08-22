@@ -13,8 +13,16 @@
         %p.notice créée le #{procedure.created_at.strftime('%d/%m/%Y')}
         - if procedure.published_at.present?
           %p.notice publiée le #{procedure.published_at.strftime('%d/%m/%Y')}
+
+        - if procedure.updated_at.today?
+          %p.notice modifiée à #{procedure.updated_at.strftime('%H:%M')}
+        - else
+          %p.notice modifiée le #{procedure.updated_at.strftime('%d/%m/%Y %H:%M')}
+
         - if procedure.closed_at.present?
           %p.notice archivée le #{procedure.closed_at.strftime('%d/%m/%Y')}
+        - elsif procedure.auto_archive_on&.future?
+          %p.notice sera clôturée le #{procedure.auto_archive_on.strftime('%d/%m/%Y')}
 
     .admin-procedures-list-row.actions.flex.justify-between
       %div
@@ -36,7 +44,7 @@
         .dropdown{ data: { controller: 'menu-button' } }
           %button.button.dropdown-button.procedures-actions-btn{ data: { menu_button_target: 'button' } }
             Actions
-          #actions-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
+          .dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' }, id: dom_id(procedure, :actions_menu) }
             %ul.dropdown-items.pl-0
               - if !procedure.close? && !procedure.discarded?
                 %li

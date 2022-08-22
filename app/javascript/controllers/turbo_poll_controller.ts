@@ -22,7 +22,7 @@ export class TurboPollController extends ApplicationController {
   declare readonly intervalValue: number;
   declare readonly maxChecksValue: number;
 
-  #timer?: number;
+  #timer?: ReturnType<typeof setTimeout>;
   #abortController?: AbortController;
 
   connect(): void {

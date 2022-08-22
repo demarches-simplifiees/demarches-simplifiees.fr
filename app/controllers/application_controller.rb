@@ -307,9 +307,9 @@ class ApplicationController < ActionController::Base
         DS_SIGN_IN_COUNT: current_user&.sign_in_count,
         DS_CREATED_AT: current_administrateur&.created_at,
         DS_ID: current_administrateur&.id,
-        DS_NB_DEMARCHES_BROUILLONS: nb_demarches_by_state['brouillon'],
-        DS_NB_DEMARCHES_ACTIVES: nb_demarches_by_state['publiee'],
-        DS_NB_DEMARCHES_ARCHIVES: nb_demarches_by_state['close']
+        DS_NB_DEMARCHES_BROUILLONS: nb_demarches_by_state['brouillon'] || 0,
+        DS_NB_DEMARCHES_ACTIVES: nb_demarches_by_state['publiee'] || 0,
+        DS_NB_DEMARCHES_ARCHIVES: nb_demarches_by_state['close'] || 0
       }
     }
   end

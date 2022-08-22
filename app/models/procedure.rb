@@ -18,6 +18,7 @@
 #  description                               :string
 #  direction                                 :string
 #  duree_conservation_dossiers_dans_ds       :integer
+#  duree_conservation_etendue_par_ds         :boolean          default(FALSE)
 #  durees_conservation_required              :boolean          default(TRUE)
 #  encrypted_api_particulier_token           :string
 #  euro_flag                                 :boolean          default(FALSE)
@@ -63,8 +64,8 @@ class Procedure < ApplicationRecord
   self.discard_column = :hidden_at
   default_scope -> { kept }
 
-  MAX_DUREE_CONSERVATION = 36
-  MAX_DUREE_CONSERVATION_EXPORT = 3.hours
+  OLD_MAX_DUREE_CONSERVATION = 36
+  NEW_MAX_DUREE_CONSERVATION = ENV.fetch('NEW_MAX_DUREE_CONSERVATION') { 12 }.to_i
 
   MIN_WEIGHT = 350000
 
@@ -163,35 +164,21 @@ class Procedure < ApplicationRecord
   end
 
   def types_de_champ_for_tags
-    if brouillon?
-      draft_types_de_champ
-    else
-      TypeDeChamp
-        .public_only
-        .fillable
-        .joins(:revisions)
-        .where(procedure_revisions: { procedure_id: id })
-        .where.not(procedure_revisions: { id: draft_revision_id })
-        .where(revision_types_de_champ: { parent_id: nil })
-        .order(:created_at)
-        .uniq
-    end
+    TypeDeChamp
+      .fillable
+      .joins(:revisions)
+      .where(procedure_revisions: brouillon? ? { id: draft_revision_id } : { procedure_id: id })
+      .where(revision_types_de_champ: { parent_id: nil })
+      .order(:created_at)
+      .distinct(:id)
+  end
+
+  def types_de_champ_public_for_tags
+    types_de_champ_for_tags.public_only
   end
 
   def types_de_champ_private_for_tags
-    if brouillon?
-      draft_types_de_champ_private
-    else
-      TypeDeChamp
-        .private_only
-        .fillable
-        .joins(:revisions)
-        .where(procedure_revisions: { procedure_id: id })
-        .where.not(procedure_revisions: { id: draft_revision_id })
-        .where(revision_types_de_champ: { parent_id: nil })
-        .order(:created_at)
-        .uniq
-    end
+    types_de_champ_for_tags.private_only
   end
 
   has_many :administrateurs_procedures, dependent: :delete_all
@@ -219,6 +206,7 @@ class Procedure < ApplicationRecord
   scope :brouillons,            -> { where(aasm_state: :brouillon) }
   scope :publiees,              -> { where(aasm_state: :publiee) }
   scope :closes,                -> { where(aasm_state: [:close, :depubliee]) }
+  scope :opendata,              -> { where(opendata: true) }
   scope :publiees_ou_closes,    -> { where(aasm_state: [:publiee, :close, :depubliee]) }
   scope :by_libelle,            -> { order(libelle: :asc) }
   scope :created_during,        -> (range) { where(created_at: range) }
@@ -283,7 +271,22 @@ class Procedure < ApplicationRecord
     if: :validate_for_publication?
   validate :check_juridique
   validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,200}\z/ }, uniqueness: { scope: [:path, :closed_at, :hidden_at, :unpublished_at], case_sensitive: false }
-  validates :duree_conservation_dossiers_dans_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_DUREE_CONSERVATION }
+  validates :duree_conservation_dossiers_dans_ds, allow_nil: false,
+                                                  numericality: {
+                                                    only_integer: true,
+                                                                  greater_than_or_equal_to: 1,
+                                                                  less_than_or_equal_to: OLD_MAX_DUREE_CONSERVATION
+                                                  },
+                                                  if: :duree_conservation_etendue_par_ds
+
+  validates :duree_conservation_dossiers_dans_ds, allow_nil: false,
+                                                    numericality: {
+                                                      only_integer: true,
+                                                                    greater_than_or_equal_to: 1,
+                                                                    less_than_or_equal_to: NEW_MAX_DUREE_CONSERVATION
+                                                    },
+                                                    unless: :duree_conservation_etendue_par_ds
+
   validates :lien_dpo, email_or_link: true, allow_nil: true
   validates_with MonAvisEmbedValidator
 
@@ -362,6 +365,7 @@ class Procedure < ApplicationRecord
       else
         publish!
       end
+      AdministrationMailer.procedure_published(self).deliver_later
     end
   end
 
@@ -736,19 +740,20 @@ class Procedure < ApplicationRecord
     APIEntrepriseToken.new(api_entreprise_token).expired?
   end
 
-  def create_new_revision
+  def create_new_revision(revision = nil)
     transaction do
-      new_draft = draft_revision
+      new_revision = (revision || draft_revision)
         .deep_clone(include: [:revision_types_de_champ])
+        .tap { |revision| revision.published_at = nil }
         .tap(&:save!)
 
-      move_new_children_to_new_parent_coordinate(new_draft)
+      move_new_children_to_new_parent_coordinate(new_revision)
 
       # they are not aware of the new tdcs
-      new_draft.types_de_champ_public.reset
-      new_draft.types_de_champ_private.reset
+      new_revision.types_de_champ_public.reset
+      new_revision.types_de_champ_private.reset
 
-      new_draft
+      new_revision
     end
   end
 
@@ -787,6 +792,17 @@ class Procedure < ApplicationRecord
     dossiers
       .state_not_termine
       .find_each { |dossier| DossierRebaseJob.perform_later(dossier) }
+  end
+
+  def reset_draft_revision!
+    if published_revision.present? && draft_changed?
+      transaction do
+        reset!
+        draft_revision.update(attestation_template: nil, dossier_submitted_message: nil)
+        draft_revision.destroy
+        update!(draft_revision: create_new_revision(published_revision))
+      end
+    end
   end
 
   def cnaf_enabled?

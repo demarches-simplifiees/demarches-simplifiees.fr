@@ -1,9 +1,19 @@
-- sibling = coordinate.previous_sibling
+- if @destroyed.present?
+  = turbo_stream.remove dom_id(@destroyed, :type_de_champ_editor)
 
-- if sibling.present?
-  = turbo_stream.after dom_id(sibling, :type_de_champ_editor) do
-    = render TypesDeChampEditor::ChampComponent.new(coordinate: coordinate, focused: true)
-- else
-  = turbo_stream.prepend dom_id(coordinate.block, :types_de_champ_editor_block) do
-    = render TypesDeChampEditor::ChampComponent.new(coordinate: coordinate, focused: true)
+- if @created.present?
+  - if @created.coordinate.previous_sibling.present?
+    = turbo_stream.after dom_id(@created.coordinate.previous_sibling, :type_de_champ_editor) do
+      = render @created
+  - else
+    = turbo_stream.prepend dom_id(@created.coordinate.block, :types_de_champ_editor_block) do
+      = render @created
+
+- @morphed&.each do |champ_component|
+  = turbo_stream.morph dom_id(champ_component.coordinate, :type_de_champ_editor) do
+    = render champ_component
+
+= turbo_stream.morph dom_id(@coordinate.revision, :estimated_fill_duration) do
+  = render TypesDeChampEditor::EstimatedFillDurationComponent.new(revision: @coordinate.revision, is_annotation: @coordinate.private?)
+
 = turbo_stream.dispatch 'sortable:sort'

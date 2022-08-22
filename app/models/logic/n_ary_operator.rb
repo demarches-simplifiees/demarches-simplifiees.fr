@@ -7,7 +7,7 @@ class Logic::NAryOperator < Logic::Term
 
   def to_h
     {
-      "op" => self.class.name,
+      "term" => self.class.name,
       "operands" => @operands.map(&:to_h)
     }
   end

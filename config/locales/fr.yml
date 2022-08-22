@@ -127,6 +127,7 @@ fr:
             write_message_to_administration_placeholder: "Écrivez votre message à l’administration ici"
         demande:
           requester_identity: "Identité du demandeur"
+          my_identity: "Mon identité"
           form: "Formulaire"
           edit_siret: "Modifier le Numéro TAHITI"
           edit_identity: "Modifier l’identité"
@@ -302,7 +303,7 @@ fr:
       super_admin:
         << : *default_attributes
       procedure:
-        zone: Zone qui met en œuvre la démarche
+        zone: La démarche est mise en œuvre par
     errors:
       messages:
         not_a_phone: 'Numéro de téléphone invalide'
@@ -397,71 +398,55 @@ fr:
       default: "%d %B %Y %R"
   pluralize:
     case:
-      zero: dossier
       one: dossier
       other: dossiers
     processed:
-      zero: traité
       one: traité
       other: traités
     new:
-      zero: nouveau
       one: nouveau
       other: nouveaux
     followed:
-      zero: suivi
       one: suivi
       other: suivis
     archived:
-      zero: archivé
       one: archivé
       other: archivés
     en_cours:
-      zero: en cours
       one: en cours
       other: en cours
     traites:
-      zero: traité
       one: traité
       other: traités
     dossiers_invites:
-      zero: dossier invité
       one: dossier invité
       other: dossiers invités
     dossiers_supprimes_recemment:
-      zero: supprimé recemment
       one:  supprimé recemment
       other: supprimés recemment
     dossiers_supprimes_definitivement:
-      zero: supprimé définitivement
       one:  supprimé définitivement
       other: supprimés définitivement
     dossiers_transferes:
-      zero: demande de transfert
       one: demande de transfert
       other: demandes de transfert
     dossiers_close_to_expiration:
-      zero: expirant
       one: expirant
       other: expirant
     dossier_trouve:
-      zero: 0 dossier trouvé
-      one: 1 dossier trouvé
+      '0': 0 dossier trouvé
+      '1': 1 dossier trouvé
       other: "%{count} dossiers trouvés"
     published:
-      zero: Publiée
       one: Publiée
       other: Publiées
     closed:
-      zero: Close
       one: Close
       other: Closes
     draft:
-      zero: Brouillon
       one: Brouillon
       other: Brouillons
     deleted:
-      zero: Supprimée
       one: Supprimée
       other: Supprimées
   users:

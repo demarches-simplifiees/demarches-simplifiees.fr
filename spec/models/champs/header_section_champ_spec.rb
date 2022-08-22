@@ -38,7 +38,7 @@ describe Champs::HeaderSectionChamp do
           revision.add_type_de_champ(
             libelle: tdc.libelle,
             type_champ: tdc.type_champ,
-            parent_id: tdc_repetition.stable_id
+            parent_stable_id: tdc_repetition.stable_id
           )
         end
       end

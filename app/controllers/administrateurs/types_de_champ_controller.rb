@@ -1,13 +1,15 @@
 module Administrateurs
   class TypesDeChampController < AdministrateurController
-    before_action :retrieve_procedure, only: [:create, :update, :move, :move_up, :move_down, :destroy]
-    before_action :procedure_revisable?, only: [:create, :update, :move, :move_up, :move_down, :destroy]
+    before_action :retrieve_procedure, :procedure_revisable?
 
     def create
-      type_de_champ = @procedure.draft_revision.add_type_de_champ(type_de_champ_create_params)
+      type_de_champ = draft.add_type_de_champ(type_de_champ_create_params)
 
       if type_de_champ.valid?
-        @coordinate = @procedure.draft_revision.coordinate_for(type_de_champ)
+        @coordinate = draft.coordinate_for(type_de_champ)
+        @created = champ_component_from(@coordinate, focused: true)
+        @morphed = champ_components_starting_at(@coordinate, 1)
+
         reset_procedure
         flash.notice = "Formulaire enregistré"
       else
@@ -16,12 +18,12 @@ module Administrateurs
     end
 
     def update
-      type_de_champ = @procedure.draft_revision.find_and_ensure_exclusive_use(params[:id])
+      type_de_champ = draft.find_and_ensure_exclusive_use(params[:stable_id])
 
       if type_de_champ.update(type_de_champ_update_params)
-        if params[:should_render]
-          @coordinate = @procedure.draft_revision.coordinate_for(type_de_champ)
-        end
+        @coordinate = draft.coordinate_for(type_de_champ)
+        @morphed = champ_components_starting_at(@coordinate)
+
         reset_procedure
         flash.notice = "Formulaire enregistré"
       else
@@ -31,31 +33,57 @@ module Administrateurs
 
     def move
       flash.notice = "Formulaire enregistré"
-      @procedure.draft_revision.move_type_de_champ(params[:id], params[:position].to_i)
+      draft.move_type_de_champ(params[:stable_id], params[:position].to_i)
     end
 
     def move_up
       flash.notice = "Formulaire enregistré"
-      @coordinate = @procedure.draft_revision.move_up_type_de_champ(params[:id])
+      @coordinate = draft.move_up_type_de_champ(params[:stable_id])
+      @destroyed = @coordinate
+      @created = champ_component_from(@coordinate)
+      # update the one component below
+      @morphed = champ_components_starting_at(@coordinate, 1).take(1)
     end
 
     def move_down
       flash.notice = "Formulaire enregistré"
-      @coordinate = @procedure.draft_revision.move_down_type_de_champ(params[:id])
+      @coordinate = draft.move_down_type_de_champ(params[:stable_id])
+      @destroyed = @coordinate
+      @created = champ_component_from(@coordinate)
+      # update the one component above
+      @morphed = champ_components_starting_at(@coordinate, - 1).take(1)
     end
 
     def destroy
-      @coordinate = @procedure.draft_revision.remove_type_de_champ(params[:id])
+      @coordinate = draft.remove_type_de_champ(params[:stable_id])
       reset_procedure
       flash.notice = "Formulaire enregistré"
+
+      @destroyed = @coordinate
+      @morphed = champ_components_starting_at(@coordinate)
     end
 
     private
 
+    def champ_components_starting_at(coordinate, offset = 0)
+      coordinate
+        .siblings_starting_at(offset)
+        .lazy
+        .map { |c| champ_component_from(c) }
+    end
+
+    def champ_component_from(coordinate, focused: false)
+      TypesDeChampEditor::ChampComponent.new(
+        coordinate: coordinate,
+        upper_coordinates: coordinate.upper_siblings,
+        focused: focused
+      )
+    end
+
     def type_de_champ_create_params
       params
         .required(:type_de_champ)
-        .permit(:type_champ, :parent_id, :private, :libelle, :after_id)
+        .permit(:type_champ, :parent_stable_id, :private, :libelle, :after_stable_id)
     end
 
     INSTANCE_EDITABLE_OPTIONS = TypesDeChamp::TeFenuaTypeDeChamp::LAYERS
@@ -75,6 +103,10 @@ module Administrateurs
           *INSTANCE_EDITABLE_OPTIONS,
           *TypesDeChamp::CarteTypeDeChamp::LAYERS
         ])
+    end
+
+    def draft
+      @procedure.draft_revision
     end
   end
 end

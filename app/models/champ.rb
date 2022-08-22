@@ -92,8 +92,8 @@ class Champ < ApplicationRecord
     @sections ||= dossier&.sections_for(self)
   end
 
-  def mandatory_and_blank?
-    mandatory? && blank?
+  def mandatory_blank_and_visible?
+    mandatory? && blank? && visible?
   end
 
   def blank?
@@ -129,7 +129,16 @@ class Champ < ApplicationRecord
   end
 
   def to_typed_id
-    type_de_champ.to_typed_id
+    if row.present?
+      GraphQL::Schema::UniqueWithinType.encode('Champ', "#{stable_id}|#{row}")
+    else
+      type_de_champ.to_typed_id
+    end
+  end
+
+  def self.decode_typed_id(typed_id)
+    _, stable_id_with_maybe_row = GraphQL::Schema::UniqueWithinType.decode(typed_id)
+    stable_id_with_maybe_row.split('|')
   end
 
   def html_label?
@@ -183,7 +192,23 @@ class Champ < ApplicationRecord
     raise NotImplemented.new(:fetch_external_data)
   end
 
+  def conditional?
+    type_de_champ.condition.present?
+  end
+
+  def visible?
+    if conditional?
+      type_de_champ.condition.compute(champs_for_condition)
+    else
+      true
+    end
+  end
+
   private
+
+  def champs_for_condition
+    private? ? dossier.champs_private : dossier.champs
+  end
 
   def html_id
     "#{stable_id}-#{id}"

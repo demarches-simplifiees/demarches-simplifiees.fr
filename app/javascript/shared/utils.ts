@@ -1,19 +1,84 @@
 import Rails from '@rails/ujs';
 import debounce from 'debounce';
 import { session } from '@hotwired/turbo';
+import { z } from 'zod';
 
 export { debounce };
 export const { fire, csrfToken, cspNonce } = Rails;
 
-export function show(el: HTMLElement | null) {
+const Gon = z
+  .object({
+    autosave: z
+      .object({
+        debounce_delay: z.number().default(0),
+        status_visible_duration: z.number().default(0)
+      })
+      .default({}),
+    autocomplete: z
+      .object({
+        api_geo_url: z.string().optional(),
+        api_adresse_url: z.string().optional(),
+        api_education_url: z.string().optional()
+      })
+      .default({}),
+    matomo: z
+      .object({
+        cookieDomain: z.string().optional(),
+        domain: z.string().optional(),
+        enabled: z.boolean().default(false),
+        host: z.string().optional(),
+        key: z.string().or(z.number()).nullish()
+      })
+      .default({}),
+    sentry: z
+      .object({
+        key: z.string().nullish(),
+        enabled: z.boolean().default(false),
+        environment: z.string().optional(),
+        user: z.object({ id: z.string() }).default({ id: '' }),
+        browser: z.object({ modern: z.boolean() }).default({ modern: false })
+      })
+      .default({}),
+    crisp: z
+      .object({
+        key: z.string().nullish(),
+        enabled: z.boolean().default(false),
+        administrateur: z
+          .object({
+            email: z.string(),
+            DS_SIGN_IN_COUNT: z.number(),
+            DS_NB_DEMARCHES_BROUILLONS: z.number(),
+            DS_NB_DEMARCHES_ACTIVES: z.number(),
+            DS_NB_DEMARCHES_ARCHIVES: z.number(),
+            DS_ID: z.number()
+          })
+          .default({
+            email: '',
+            DS_SIGN_IN_COUNT: 0,
+            DS_NB_DEMARCHES_BROUILLONS: 0,
+            DS_NB_DEMARCHES_ACTIVES: 0,
+            DS_NB_DEMARCHES_ARCHIVES: 0,
+            DS_ID: 0
+          })
+      })
+      .default({})
+  })
+  .default({});
+declare const window: Window & typeof globalThis & { gon: unknown };
+
+export function getConfig() {
+  return Gon.parse(window.gon);
+}
+
+export function show(el: Element | null) {
   el?.classList.remove('hidden');
 }
 
-export function hide(el: HTMLElement | null) {
+export function hide(el: Element | null) {
   el?.classList.add('hidden');
 }
 
-export function toggle(el: HTMLElement | null, force?: boolean) {
+export function toggle(el: Element | null, force?: boolean) {
   if (force == undefined) {
     el?.classList.toggle('hidden');
   } else if (force) {
@@ -23,11 +88,15 @@ export function toggle(el: HTMLElement | null, force?: boolean) {
   }
 }
 
-export function enable(el: HTMLInputElement | HTMLButtonElement | null) {
+export function enable(
+  el: HTMLSelectElement | HTMLInputElement | HTMLButtonElement | null
+) {
   el && (el.disabled = false);
 }
 
-export function disable(el: HTMLInputElement | HTMLButtonElement | null) {
+export function disable(
+  el: HTMLSelectElement | HTMLInputElement | HTMLButtonElement | null
+) {
   el && (el.disabled = true);
 }
 
@@ -118,7 +187,7 @@ export function httpRequest(
     init.body = JSON.stringify(json);
   }
 
-  let timer: number;
+  let timer: ReturnType<typeof setTimeout>;
   if (!init.signal) {
     controller = createAbortController(controller);
     if (controller) {
@@ -206,4 +275,29 @@ function createAbortController(controller?: AbortController) {
 export function isNumeric(s: string) {
   const n = parseFloat(s);
   return !isNaN(n) && isFinite(n);
+}
+
+export function isSelectElement(
+  element: HTMLElement
+): element is HTMLSelectElement {
+  return element.tagName == 'SELECT';
+}
+
+export function isCheckboxOrRadioInputElement(
+  element: HTMLElement & { type?: string }
+): element is HTMLInputElement {
+  return (
+    element.tagName == 'INPUT' &&
+    (element.type == 'checkbox' || element.type == 'radio')
+  );
+}
+
+export function isTextInputElement(
+  element: HTMLElement & { type?: string }
+): element is HTMLInputElement {
+  return (
+    ['INPUT', 'TEXTAREA'].includes(element.tagName) &&
+    element.type != 'checkbox' &&
+    element.type != 'radio'
+  );
 }

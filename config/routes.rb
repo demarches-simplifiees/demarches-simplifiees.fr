@@ -354,6 +354,8 @@ Rails.application.routes.draw do
   scope module: 'instructeurs', as: 'instructeur' do
     resources :procedures, only: [:index, :show], param: :procedure_id do
       member do
+        resources :archives, only: [:index, :create]
+
         resources :groupes, only: [:index, :show], controller: 'groupe_instructeurs' do
           member do
             post 'add_instructeur'
@@ -411,8 +413,6 @@ Rails.application.routes.draw do
             get 'telecharger_pjs' => 'dossiers#telecharger_pjs'
           end
         end
-
-        resources :archives, only: [:index, :create, :show], controller: 'archives'
       end
     end
   end
@@ -423,6 +423,14 @@ Rails.application.routes.draw do
 
   scope module: 'administrateurs', path: 'admin', as: 'admin' do
     resources :procedures do
+      resources :archives, only: [:index, :create]
+      resources :exports, only: [] do
+        collection do
+          get 'download'
+          post 'download'
+        end
+      end
+
       collection do
         get 'new_from_existing'
       end
@@ -448,10 +456,17 @@ Rails.application.routes.draw do
         resource 'sources', only: [:show, :update], controller: 'sources_particulier'
       end
 
+      resources :conditions, only: [:update, :destroy], param: :stable_id do
+        patch :add_row, on: :member
+        patch :change_targeted_champ, on: :member
+        delete :delete_row, on: :member
+      end
+
       put 'clone'
       put 'archive'
       get 'publication' => 'procedures#publication', as: :publication
       put 'publish' => 'procedures#publish', as: :publish
+      put 'reset_draft' => 'procedures#reset_draft', as: :reset_draft
       get 'transfert' => 'procedures#transfert', as: :transfert
       get 'close' => 'procedures#close', as: :close
       post 'transfer' => 'procedures#transfer', as: :transfer
@@ -478,7 +493,7 @@ Rails.application.routes.draw do
 
       resources :experts, controller: 'experts_procedures', only: [:index, :create, :update, :destroy]
 
-      resources :types_de_champ, only: [:create, :update, :destroy] do
+      resources :types_de_champ, only: [:create, :update, :destroy], param: :stable_id do
         collection do
           get :estimate_fill_duration
         end

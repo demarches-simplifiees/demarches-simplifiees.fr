@@ -42,12 +42,6 @@ describe Logic do
       it { is_expected.to eq(ds_eq(constant(1), constant(0))) }
     end
 
-    context 'when string empty operator true' do
-      let(:condition) { empty_operator(constant('a'), constant(true)) }
-
-      it { is_expected.to eq(ds_eq(constant('a'), constant(''))) }
-    end
-
     context 'when dropdown empty operator true' do
       let(:drop_down) { create(:type_de_champ_drop_down_list) }
       let(:first_option) { drop_down.drop_down_list_enabled_non_empty_options.first }
@@ -78,5 +72,11 @@ describe Logic do
 
     # false && (true || true) = false
     it { expect(ds_and([constant(false), ds_or([constant(true), constant(true)])]).compute).to be false }
+  end
+
+  describe '.add_empty_condition_to' do
+    it { expect(Logic.add_empty_condition_to(nil)).to eq(empty_operator(empty, empty)) }
+    it { expect(Logic.add_empty_condition_to(constant(true))).to eq(ds_and([constant(true), empty_operator(empty, empty)])) }
+    it { expect(Logic.add_empty_condition_to(ds_or([constant(true)]))).to eq(ds_or([constant(true), empty_operator(empty, empty)])) }
   end
 end

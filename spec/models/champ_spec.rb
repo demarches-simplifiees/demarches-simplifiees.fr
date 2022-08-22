@@ -78,7 +78,7 @@ describe Champ do
         procedure.active_revision.add_type_de_champ(
           libelle: 'header',
           type_champ: 'header_section',
-          parent_id: procedure.types_de_champ.find(&:repetition?).stable_id
+          parent_stable_id: procedure.types_de_champ.find(&:repetition?).stable_id
         )
       end
     end
@@ -559,7 +559,7 @@ describe Champ do
     let(:champ_text_attrs) { attributes_for(:champ_text, type_de_champ: tdc_text, row: 1) }
 
     before do
-      procedure.active_revision.add_type_de_champ(libelle: 'sub integer', type_champ: 'integer_number', parent_id: tdc_repetition.stable_id)
+      procedure.active_revision.add_type_de_champ(libelle: 'sub integer', type_champ: 'integer_number', parent_stable_id: tdc_repetition.stable_id)
     end
 
     context 'when creating the model directly' do

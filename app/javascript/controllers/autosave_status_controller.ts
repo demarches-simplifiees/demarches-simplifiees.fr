@@ -4,19 +4,15 @@ import {
   hasClass,
   addClass,
   removeClass,
-  ResponseError
+  ResponseError,
+  getConfig
 } from '@utils';
-import { z } from 'zod';
 
 import { ApplicationController } from './application_controller';
 
-const Gon = z.object({
-  autosave: z.object({ status_visible_duration: z.number() })
-});
-
-declare const window: Window & typeof globalThis & { gon: unknown };
-const { status_visible_duration } = Gon.parse(window.gon).autosave;
-
+const {
+  autosave: { status_visible_duration }
+} = getConfig();
 const AUTOSAVE_STATUS_VISIBLE_DURATION = status_visible_duration;
 
 // This is a controller we attach to the status area in the main form. It

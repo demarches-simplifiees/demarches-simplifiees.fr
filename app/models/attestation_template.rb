@@ -144,14 +144,7 @@ class AttestationTemplate < ApplicationRecord
   private
 
   def used_tags
-    delimiters_regex = /--(?<capture>((?!--).)*)--/
-
-    # We can't use flat_map as scan will return 3 levels of array,
-    # using flat_map would give us 2, whereas flatten will
-    # give us 1, which is what we want
-    [normalize_tags(title), normalize_tags(body)]
-      .map { |str| str.scan(delimiters_regex) }
-      .flatten
+    used_tags_for(title) + used_tags_for(body)
   end
 
   def build_pdf(dossier)

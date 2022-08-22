@@ -153,7 +153,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
     select('Choix parmi une liste', from: 'Type de champ')
     fill_in 'Libellé du champ', with: 'Libellé de champ menu déroulant', fill_options: { clear: :backspace }
     fill_in 'Options de la liste', with: 'Un menu', fill_options: { clear: :backspace }
-    check "Proposer une option 'autre' avec un texte libre"
+    check "Proposer une option « autre » avec un texte libre"
 
     wait_until { procedure.draft_types_de_champ.first.drop_down_list_options == ['', 'Un menu'] }
     wait_until { procedure.draft_types_de_champ.first.drop_down_other == "1" }

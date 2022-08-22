@@ -1,12 +1,14 @@
 class TypesDeChampEditor::ChampComponent < ApplicationComponent
-  def initialize(coordinate:, focused: false)
+  attr_reader :coordinate, :upper_coordinates
+
+  def initialize(coordinate:, upper_coordinates:, focused: false)
     @coordinate = coordinate
     @focused = focused
+    @upper_coordinates = upper_coordinates
   end
 
   private
 
-  attr_reader :coordinate
   delegate :type_de_champ, :revision, :procedure, to: :coordinate
 
   def can_be_mandatory?
@@ -28,14 +30,14 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
         type_de_champ_editor_move_url_value: move_admin_procedure_type_de_champ_path(procedure, type_de_champ.stable_id),
         type_de_champ_editor_move_up_url_value: move_up_admin_procedure_type_de_champ_path(procedure, type_de_champ.stable_id),
         type_de_champ_editor_move_down_url_value: move_down_admin_procedure_type_de_champ_path(procedure, type_de_champ.stable_id),
-        type_de_champ_editor_type_de_champ_id_value: coordinate.stable_id
+        type_de_champ_editor_type_de_champ_stable_id_value: type_de_champ.stable_id
       }
     }
   end
 
   def form_options
     {
-      url: type_de_champ_path,
+      url: admin_procedure_type_de_champ_path(procedure, type_de_champ.stable_id),
       multipart: true,
       html: { id: nil, class: 'form width-100' }
     }

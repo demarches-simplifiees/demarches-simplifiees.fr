@@ -281,19 +281,26 @@ describe Procedure do
       end
     end
 
-    shared_examples 'duree de conservation' do
-      context 'duree_conservation_required it true, the field gets validated' do
+    describe 'duree de conservation dans ds' do
+      let(:field_name) { :duree_conservation_dossiers_dans_ds }
+
+      context 'for old procedures, duree_conservation_required it true, the field gets validated' do
+        subject { create(:procedure, duree_conservation_etendue_par_ds: true) }
         it { is_expected.not_to allow_value(nil).for(field_name) }
         it { is_expected.not_to allow_value('').for(field_name) }
         it { is_expected.not_to allow_value('trois').for(field_name) }
         it { is_expected.to allow_value(3).for(field_name) }
+        it { is_expected.to allow_value(36).for(field_name) }
+        it { is_expected.to validate_numericality_of(field_name).is_less_than_or_equal_to(Procedure::OLD_MAX_DUREE_CONSERVATION) }
       end
-    end
 
-    describe 'duree de conservation dans ds' do
-      let(:field_name) { :duree_conservation_dossiers_dans_ds }
-
-      it_behaves_like 'duree de conservation'
+      context 'for new procedures, duree_conservation_required it true, the field gets validated' do
+        subject { create(:procedure, duree_conservation_etendue_par_ds: false) }
+        it { is_expected.not_to allow_value(nil).for(field_name) }
+        it { is_expected.not_to allow_value('').for(field_name) }
+        it { is_expected.not_to allow_value('trois').for(field_name) }
+        it { is_expected.to validate_numericality_of(field_name).is_less_than_or_equal_to(Procedure::NEW_MAX_DUREE_CONSERVATION) }
+      end
     end
 
     describe 'draft_types_de_champ validations' do
@@ -886,6 +893,41 @@ describe Procedure do
         expect(DossierRebaseJob).to have_been_enqueued.with(dossier_draft)
         expect(DossierRebaseJob).to have_been_enqueued.with(dossier_submitted)
         expect(DossierRebaseJob).not_to have_been_enqueued.with(dossier_termine)
+      end
+    end
+  end
+
+  describe "#reset_draft_revision!" do
+    let(:procedure) { create(:procedure) }
+    let(:tdc_attributes) { { type_champ: :number, libelle: 'libelle 1' } }
+    let(:publication_date) { Time.zone.local(2021, 1, 1, 12, 00, 00) }
+
+    context "brouillon procedure" do
+      it "should not reset draft revision" do
+        procedure.draft_revision.add_type_de_champ(tdc_attributes)
+        previous_draft_revision = procedure.draft_revision
+
+        procedure.reset_draft_revision!
+        expect(procedure.draft_revision).to eq(previous_draft_revision)
+      end
+    end
+
+    context "published procedure" do
+      let(:procedure) { create(:procedure, :published, attestation_template: create(:attestation_template), dossier_submitted_message: create(:dossier_submitted_message)) }
+
+      it "should reset draft revision" do
+        procedure.draft_revision.add_type_de_champ(tdc_attributes)
+        previous_draft_revision = procedure.draft_revision
+        previous_attestation_template = previous_draft_revision.attestation_template
+        previous_dossier_submitted_message = previous_draft_revision.dossier_submitted_message
+
+        expect(procedure.draft_changed?).to be_truthy
+        procedure.reset_draft_revision!
+        expect(procedure.draft_changed?).to be_falsey
+        expect(procedure.draft_revision).not_to eq(previous_draft_revision)
+        expect { previous_draft_revision.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect(procedure.draft_revision.attestation_template).to eq(previous_attestation_template)
+        expect(procedure.draft_revision.dossier_submitted_message).to eq(previous_dossier_submitted_message)
       end
     end
   end

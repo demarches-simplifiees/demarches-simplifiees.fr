@@ -66,8 +66,8 @@
           .flex.width-33
           .flex.flex-grow.align-center
             .cell.width-100
-              = form.label :accredited_users, "Mails des personnes accréditées", for: dom_id(type_de_champ, :accredited_users)
-              = form.text_area :accredited_users, class: 'small-margin small', rows: 7, id: dom_id(type_de_champ, :accredited_users), placeholder: 'Ecrire un email par ligne'
+              = form.label :accredited_users, "Mails des personnes accréditées", for: dom_id(type_de_champ, :accredited_user_string)
+              = form.text_area :accredited_user_string, class: 'small-margin small', rows: 7, id: dom_id(type_de_champ, :accredited_user_string), placeholder: 'Ecrire un email par ligne'
         - if type_de_champ.header_section?
           .flex.width-33
           .flex.flex-grow.align-center
@@ -83,11 +83,11 @@
             .cell.width-100
               = form.label :drop_down_list_value, "Options de la liste", for: dom_id(type_de_champ, :drop_down_list_value)
               = form.text_area :drop_down_list_value, class: 'small-margin small width-100', rows: 7, id: dom_id(type_de_champ, :drop_down_list_value)
-            - if type_de_champ.drop_down_list_with_other?
-              .cell
-                = form.label :drop_down_other do
-                  Proposer une option &apos;autre&apos; avec un texte libre
-                = form.check_box :drop_down_other, class: "small-margin small"
+          - if type_de_champ.drop_down_list_with_other?
+            .cell
+              = form.label :drop_down_other, for: dom_id(type_de_champ, :drop_down_other) do
+                Proposer une option « autre » avec un texte libre
+              = form.check_box :drop_down_other, class: "small-margin small", id: dom_id(type_de_champ, :drop_down_other)
 
         - if type_de_champ.linked_drop_down_list?
           .flex.column.justify-start.flex-grow
@@ -120,3 +120,6 @@
       .editor-block.flex-grow.cell
         = render TypesDeChampEditor::BlockComponent.new(block: coordinate, coordinates: coordinate.revision_types_de_champ)
         = render TypesDeChampEditor::AddChampButtonComponent.new(revision: coordinate.revision, parent: coordinate, is_annotation: coordinate.private?)
+
+  -  if Flipper.enabled?(:conditional, controller.current_user) && !type_de_champ.private? && !coordinate.child?
+    = render(TypesDeChampEditor::ConditionsComponent.new(tdc: type_de_champ, upper_tdcs: @upper_coordinates.map(&:type_de_champ), procedure_id: procedure.id))

@@ -134,6 +134,7 @@ en:
             write_message_to_administration_placeholder: "Write your message to the administration here"
         demande:
           requester_identity: "Identity of the requester"
+          my_identity: "My identity"
           form: "Form"
           edit_siret: "Edit Tahiti number"
           edit_identity: "Edit identity data"
@@ -376,71 +377,55 @@ en:
       default: "%B %d %Y %R"
   pluralize:
     case:
-      zero: file
       one: file
       other: files
     processed:
-      zero: processed
       one: processed
       other: processed
     new:
-      zero: new
       one: new
       other: new
     followed:
-      zero: followed
       one: followed
       other: followed
     archived:
-      zero: archived
       one: archived
       other: archived
     en_cours:
-      zero: in progress
       one: in progress
       other: in progress
     traites:
-      zero: finished
       one: finished
       other: finished
     dossiers_invites:
-      zero: guest file
       one: guest file
       other: guest files
     dossiers_supprimes_recemment:
-      zero: recently deleted file
       one: recently deleted file
       other: recently deleted files
     dossiers_supprimes_definitivement:
-      zero: permanently deleted file
       one: permanently deleted file
       other: permanently deleted files
     dossiers_transferes:
-      zero: transfer request
       one: transfer request
       other: transfer requests
     dossiers_close_to_expiration:
-      zero: expiring file
       one: expiring file
       other: expiring files
     dossier_trouve:
-      zero: 0 file found
-      one: 1 file found
+      '0': 0 file found
+      '1': 1 file found
       other: "%{count} files found"
     published:
-      zero: Published
       one: Published
       other: Published
     closed:
-      zero: Closed
       one: Closed
       other: Closed
     draft:
-      zero: Draft
       one: Draft
       other: Drafts
     deleted:
-      zero: Deleted
       one: Deleted
       other: Deleted
   users:

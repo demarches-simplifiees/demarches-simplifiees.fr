@@ -8,7 +8,7 @@ describe Logic::Or do
   end
 
   describe '#to_s' do
-    it { expect(or_from([true, false, true]).to_s).to eq "(true || false || true)" }
+    it { expect(or_from([true, false, true]).to_s).to eq "(Oui || Non || Oui)" }
   end
 
   def or_from(boolean_to_constants)

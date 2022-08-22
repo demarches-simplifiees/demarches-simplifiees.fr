@@ -13,6 +13,8 @@
     = favicon_link_tag(image_url("#{FAVICON_32PX_SRC}"), type: "image/png", sizes: "32x32")
     = favicon_link_tag(image_url("#{FAVICON_96PX_SRC}"), type: "image/png", sizes: "96x96")
 
+    = Gon::Base.render_data(camel_case: true, init: true, nonce:  request.content_security_policy_nonce)
+
     = vite_client_tag
     = vite_react_refresh_tag
     = vite_javascript_tag 'application'
@@ -30,8 +32,6 @@
     = preload_link_tag(asset_url("Muli-Bold.woff2"))
 
     = stylesheet_link_tag 'application', media: 'all'
-
-    = Gon::Base.render_data(camel_case: true, init: true, nonce:  request.content_security_policy_nonce)
 
   %body{ id: content_for(:page_id), class: browser.platform.ios? ? 'ios' : nil }
     .page-wrapper

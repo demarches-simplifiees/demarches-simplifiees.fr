@@ -91,9 +91,9 @@ module DossierHelper
   end
 
   def annuaire_link(siren)
-    return 'https://www.ispf.pf/bases/Repertoires/Entreprises/Recherche.aspx' if siren.blank?
+    return 'https://www.ispf.pf/rte' if siren.blank?
 
-    "https://www.ispf.pf/bases/Repertoires/Entreprises/Detail.aspx?numtah=#{siren}"
+    "https://www.ispf.pf/rte/attestation/#{siren}"
   end
 
   def exports_list(exports, statut = nil)

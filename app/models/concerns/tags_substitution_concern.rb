@@ -85,13 +85,13 @@ module TagsSubstitutionConcern
     },
     {
       libelle: 'nom',
-      description: "nom de l’usager",
+      description: "nom de l'usager",
       target: :nom,
       available_for_states: Dossier::SOUMIS
     },
     {
       libelle: 'prénom',
-      description: "prénom de l’usager",
+      description: "prénom de l'usager",
       target: :prenom,
       available_for_states: Dossier::SOUMIS
     }
@@ -139,6 +139,10 @@ module TagsSubstitutionConcern
     }
   ]
 
+  SHARED_TAG_LIBELLES = (DOSSIER_TAGS + DOSSIER_TAGS_FOR_MAIL + INDIVIDUAL_TAGS + ENTREPRISE_TAGS + ROUTAGE_TAGS).map { |tag| tag[:libelle] }
+
+  TAG_DELIMITERS_REGEX = /--(?<capture>((?!--).)*)--/
+
   def tags
     if procedure.for_individual?
       identity_tags = INDIVIDUAL_TAGS
@@ -154,11 +158,31 @@ module TagsSubstitutionConcern
     filter_tags(identity_tags + dossier_tags + champ_public_tags + champ_private_tags + routage_tags)
   end
 
-  def unspecified_champs_for_dossier(dossier)
-    tags = used_tags
-    (dossier.champs + dossier.champs_private).filter do |champ|
-      tags.include?(champ.libelle) && champ.value.blank? && champ.champs.empty? && !champ.piece_justificative_file.attached?
+  def used_type_de_champ_tags(text)
+    used_tags_for(text, with_libelle: true).filter_map do |(tag, libelle)|
+      if !tag.in?(SHARED_TAG_LIBELLES)
+        if tag.start_with?('tdc')
+          [libelle, tag.gsub('tdc', '').to_i]
+        else
+          [tag]
+        end
+      end
     end
+  end
+
+  def used_tags_for(text, with_libelle: false)
+    text, tags = normalize_tags(text)
+    text
+      .scan(TAG_DELIMITERS_REGEX)
+      .flatten
+      .map do |tag_str|
+        if with_libelle
+          tag = tags.find { |tag| tag[:id] == tag_str }
+          [tag_str, tag ? tag[:libelle] : nil]
+        else
+          tag_str
+        end
+      end
   end
 
   private
@@ -204,7 +228,7 @@ module TagsSubstitutionConcern
   end
 
   def champ_public_tags(dossier: nil)
-    types_de_champ = dossier&.types_de_champ || procedure.active_revision.types_de_champ_public
+    types_de_champ = (dossier || procedure.active_revision).types_de_champ_public
     types_de_champ_tags(types_de_champ, Dossier::SOUMIS)
   end
 
@@ -226,7 +250,7 @@ module TagsSubstitutionConcern
       return ''
     end
 
-    text = normalize_tags(text)
+    text, _ = normalize_tags(text)
 
     tags_and_datas = [
       [champ_public_tags(dossier: dossier), dossier.champs],
@@ -280,8 +304,8 @@ module TagsSubstitutionConcern
   end
 
   def normalize_tags(text)
-    tags = types_de_champ_tags(procedure.types_de_champ_for_tags, Dossier::SOUMIS) + types_de_champ_tags(procedure.types_de_champ_private_for_tags, Dossier::INSTRUCTION_COMMENCEE)
-    filter_tags(tags).reduce(text) { |text, tag| normalize_tag(text, tag) }
+    tags = types_de_champ_tags(procedure.types_de_champ_public_for_tags, Dossier::SOUMIS) + types_de_champ_tags(procedure.types_de_champ_private_for_tags, Dossier::INSTRUCTION_COMMENCEE)
+    [filter_tags(tags).reduce(text) { |text, tag| normalize_tag(text, tag) }, tags]
   end
 
   def normalize_tag(text, tag)

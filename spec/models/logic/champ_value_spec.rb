@@ -18,13 +18,14 @@ describe Logic::ChampValue do
 
       it { is_expected.to be(false) }
     end
-  end
 
-  context 'text tdc' do
-    let(:champ) { create(:champ_text, value: 'text') }
+    context 'with a value not visible' do
+      before do
+        expect(champ).to receive(:visible?).and_return(false)
+      end
 
-    it { expect(champ_value(champ.stable_id).type).to eq(:string) }
-    it { is_expected.to eq('text') }
+      it { is_expected.to be nil }
+    end
   end
 
   context 'integer tdc' do
