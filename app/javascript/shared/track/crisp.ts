@@ -1,4 +1,16 @@
-const { key, enabled, administrateur } = gon.crisp || {};
+import { getConfig } from '@utils';
+const {
+  crisp: { key, enabled, administrateur }
+} = getConfig();
+
+declare const window: Window &
+  typeof globalThis & {
+    CRISP_WEBSITE_ID?: string | null;
+    $crisp: (
+      | [cmd: string, key: string, value: unknown]
+      | [key: string, value: unknown]
+    )[];
+  };
 
 if (enabled) {
   window.$crisp = [];
@@ -10,7 +22,7 @@ if (enabled) {
   script.id = 'crisp-js';
   script.async = true;
   script.src = 'https://client.crisp.chat/l.js';
-  firstScript.parentNode.insertBefore(script, firstScript);
+  firstScript.parentNode?.insertBefore(script, firstScript);
 
   window.$crisp.push(['set', 'user:email', [administrateur.email]]);
   window.$crisp.push(['set', 'session:segments', [['administrateur']]]);

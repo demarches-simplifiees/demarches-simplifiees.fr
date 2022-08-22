@@ -1,6 +1,9 @@
 import * as Sentry from '@sentry/browser';
+import { getConfig } from '@utils';
 
-const { key, enabled, user, environment, browser } = gon.sentry || {};
+const {
+  sentry: { key, enabled, user, environment, browser }
+} = getConfig();
 
 // We need to check for key presence here as we do not have a dsn for browser yet
 if (enabled && key) {
@@ -22,7 +25,7 @@ if (enabled && key) {
 
   // Register a way to explicitely capture messages from a different bundle.
   addEventListener('sentry:capture-exception', (event) => {
-    const error = event.detail;
+    const error = (event as CustomEvent).detail;
     Sentry.captureException(error);
   });
 }

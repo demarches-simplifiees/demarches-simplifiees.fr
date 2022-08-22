@@ -1,4 +1,20 @@
 class Logic::ChampValue < Logic::Term
+  MANAGED_TYPE_DE_CHAMP = TypeDeChamp.type_champs.slice(
+    :yes_no,
+    :checkbox,
+    :integer_number,
+    :decimal_number,
+    :drop_down_list
+  )
+
+  CHAMP_VALUE_TYPE = {
+    boolean: :boolean,
+    number: :number,
+    enum: :enum,
+    empty: :empty,
+    unmanaged: :unmanaged
+  }
+
   attr_reader :stable_id
 
   def initialize(stable_id)
@@ -6,30 +22,34 @@ class Logic::ChampValue < Logic::Term
   end
 
   def compute(champs)
+    targeted_champ = champ(champs)
+
+    return nil if !targeted_champ.visible?
+
     case type_de_champ.type_champ
-    when all_types.fetch(:yes_no),
-      all_types.fetch(:checkbox)
-      champ(champs).true?
-    when all_types.fetch(:integer_number), all_types.fetch(:decimal_number)
-      champ(champs).for_api
-    when all_types.fetch(:drop_down_list), all_types.fetch(:text)
-      champ(champs).value
+    when MANAGED_TYPE_DE_CHAMP.fetch(:yes_no),
+      MANAGED_TYPE_DE_CHAMP.fetch(:checkbox)
+      targeted_champ.true?
+    when MANAGED_TYPE_DE_CHAMP.fetch(:integer_number), MANAGED_TYPE_DE_CHAMP.fetch(:decimal_number)
+      targeted_champ.for_api
+    when MANAGED_TYPE_DE_CHAMP.fetch(:drop_down_list)
+      targeted_champ.value
     end
   end
 
-  def to_s = "#{type_de_champ.libelle} Nº#{stable_id}"
+  def to_s = type_de_champ&.libelle # TODO: gerer le cas ou un tdc est supprimé
 
   def type
-    case type_de_champ.type_champ
-    when all_types.fetch(:yes_no),
-      all_types.fetch(:checkbox)
-      :boolean
-    when all_types.fetch(:integer_number), all_types.fetch(:decimal_number)
-      :number
-    when all_types.fetch(:text)
-      :string
-    when all_types.fetch(:drop_down_list)
-      :enum
+    case type_de_champ&.type_champ # TODO: gerer le cas ou un tdc est supprimé
+    when MANAGED_TYPE_DE_CHAMP.fetch(:yes_no),
+      MANAGED_TYPE_DE_CHAMP.fetch(:checkbox)
+      CHAMP_VALUE_TYPE.fetch(:boolean)
+    when MANAGED_TYPE_DE_CHAMP.fetch(:integer_number), MANAGED_TYPE_DE_CHAMP.fetch(:decimal_number)
+      CHAMP_VALUE_TYPE.fetch(:number)
+    when MANAGED_TYPE_DE_CHAMP.fetch(:drop_down_list)
+      CHAMP_VALUE_TYPE.fetch(:enum)
+    else
+      CHAMP_VALUE_TYPE.fetch(:unmanaged)
     end
   end
 
@@ -43,7 +63,7 @@ class Logic::ChampValue < Logic::Term
 
   def to_h
     {
-      "op" => self.class.name,
+      "term" => self.class.name,
       "stable_id" => @stable_id
     }
   end
@@ -68,9 +88,5 @@ class Logic::ChampValue < Logic::Term
 
   def champ(champs)
     champs.find { |c| c.stable_id == stable_id }
-  end
-
-  def all_types
-    TypeDeChamp.type_champs
   end
 end

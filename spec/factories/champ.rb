@@ -256,8 +256,10 @@ FactoryBot.define do
           type_de_champ_text = build(:type_de_champ_text,
             procedure: champ_repetition.type_de_champ.procedure,
             position: 0,
+            private: champ_repetition.private?,
             parent: parent,
             libelle: 'Nom')
+          types_de_champ.push(type_de_champ_text)
         end
 
         type_de_champ_number = types_de_champ.find { |tdc| tdc.libelle == 'Age' }
@@ -265,15 +267,16 @@ FactoryBot.define do
           type_de_champ_number = build(:type_de_champ_number,
             procedure: champ_repetition.type_de_champ.procedure,
             position: 1,
+            private: champ_repetition.private?,
             parent: parent,
             libelle: 'Age')
+          types_de_champ.push(type_de_champ_number)
         end
 
         evaluator.rows.times do |row|
-          champ_repetition.champs << [
-            build(:champ_text, dossier: champ_repetition.dossier, row: row, type_de_champ: type_de_champ_text, parent: champ_repetition),
-            build(:champ_number, dossier: champ_repetition.dossier, row: row, type_de_champ: type_de_champ_number, parent: champ_repetition)
-          ]
+          champ_repetition.champs << types_de_champ.map do |type_de_champ|
+            build(:"champ_#{type_de_champ.type_champ}", dossier: champ_repetition.dossier, row: row, type_de_champ: type_de_champ, parent: champ_repetition, private: champ_repetition.private?)
+          end
         end
       end
 

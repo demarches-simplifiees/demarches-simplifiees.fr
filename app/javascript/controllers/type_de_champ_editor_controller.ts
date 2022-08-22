@@ -1,13 +1,18 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { ActionEvent } from '@hotwired/stimulus';
-import { httpRequest } from '@utils';
+import {
+  httpRequest,
+  isSelectElement,
+  isCheckboxOrRadioInputElement,
+  isTextInputElement
+} from '@utils';
 import { useIntersection } from 'stimulus-use';
 
 import { ApplicationController } from './application_controller';
 
 export class TypeDeChampEditorController extends ApplicationController {
   static values = {
-    typeDeChampId: String,
+    typeDeChampStableId: String,
     moveUrl: String,
     moveUpUrl: String,
     moveDownUrl: String
@@ -16,7 +21,7 @@ export class TypeDeChampEditorController extends ApplicationController {
   declare readonly moveUrlValue: string;
   declare readonly moveUpUrlValue: string;
   declare readonly moveDownUrlValue: string;
-  declare readonly typeDeChampIdValue: string;
+  declare readonly typeDeChampStableIdValue: string;
   declare readonly isVisible: boolean;
 
   #latestPromise = Promise.resolve();
@@ -139,16 +144,17 @@ export class TypeDeChampEditorController extends ApplicationController {
         ? '.add-to-block'
         : '.add-to-root';
       const input = parent.querySelector<HTMLInputElement>(
-        `${selector} ${AFTER_ID_INPUT_SELECTOR}`
+        `${selector} ${AFTER_STABLE_ID_INPUT_SELECTOR}`
       );
       if (input) {
-        input.value = this.typeDeChampIdValue;
+        input.value = this.typeDeChampStableIdValue;
       }
     }
   }
 }
 
-const AFTER_ID_INPUT_SELECTOR = 'input[name="type_de_champ[after_id]"]';
+const AFTER_STABLE_ID_INPUT_SELECTOR =
+  'input[name="type_de_champ[after_stable_id]"]';
 
 function createForm(action: string, method: string) {
   const form = document.createElement('form');
@@ -168,27 +174,4 @@ function createHiddenInput(
   input.name = name;
   input.value = String(value);
   form.appendChild(input);
-}
-
-function isSelectElement(element: HTMLElement): element is HTMLSelectElement {
-  return element.tagName == 'SELECT';
-}
-
-function isCheckboxOrRadioInputElement(
-  element: HTMLElement & { type?: string }
-): element is HTMLInputElement {
-  return (
-    element.tagName == 'INPUT' &&
-    (element.type == 'checkbox' || element.type == 'radio')
-  );
-}
-
-function isTextInputElement(
-  element: HTMLElement & { type?: string }
-): element is HTMLInputElement {
-  return (
-    ['INPUT', 'TEXTAREA'].includes(element.tagName) &&
-    element.type != 'checkbox' &&
-    element.type != 'radio'
-  );
 }

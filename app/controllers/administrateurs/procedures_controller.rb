@@ -1,7 +1,7 @@
 module Administrateurs
   class ProceduresController < AdministrateurController
-    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :allow_expert_review, :experts_require_administrateur_invitation]
-    before_action :procedure_revisable?, only: [:champs, :annotations, :modifications]
+    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :allow_expert_review, :experts_require_administrateur_invitation, :reset_draft]
+    before_action :procedure_revisable?, only: [:champs, :annotations, :modifications, :reset_draft]
 
     ITEMS_PER_PAGE = 25
 
@@ -83,7 +83,14 @@ module Administrateurs
     end
 
     def show
-      @procedure = current_administrateur.procedures.find(params[:id])
+      @procedure = current_administrateur
+        .procedures
+        .includes(
+          published_revision: { revision_types_de_champ: :type_de_champ },
+          draft_revision: { revision_types_de_champ: :type_de_champ }
+        )
+        .find(params[:id])
+
       @current_administrateur = current_administrateur
       @procedure_lien = commencer_url(path: @procedure.path)
       @procedure_lien_test = commencer_test_url(path: @procedure.path)
@@ -237,20 +244,28 @@ module Administrateurs
 
       @procedure.assign_attributes(publish_params)
 
-      if @procedure.draft_changed? && !@procedure.close?
-        @procedure.publish_revision!
-        AdministrationMailer.procedure_published(@procedure).deliver_later
-        flash.notice = "Nouvelle version de la démarche publiée"
-      elsif @procedure.draft_changed? && @procedure.close?
-        @procedure.publish_or_reopen!(current_administrateur)
-        @procedure.publish_revision!
-        flash.notice = "Démarche publiée"
+      if @procedure.draft_changed?
+        if @procedure.close?
+          if @procedure.publish_or_reopen!(current_administrateur)
+            @procedure.publish_revision!
+            flash.notice = "Démarche publiée"
+          else
+            flash.alert = @procedure.errors.full_messages
+          end
+        else
+          @procedure.publish_revision!
+          flash.notice = "Nouvelle version de la démarche publiée"
+        end
       elsif @procedure.publish_or_reopen!(current_administrateur)
-        AdministrationMailer.procedure_published(@procedure).deliver_later
         flash.notice = "Démarche publiée"
       else
         flash.alert = @procedure.errors.full_messages
       end
+      redirect_to admin_procedure_path(@procedure)
+    end
+
+    def reset_draft
+      @procedure.reset_draft_revision!
       redirect_to admin_procedure_path(@procedure)
     end
 
@@ -283,6 +298,10 @@ module Administrateurs
       @procedure.update!(experts_require_administrateur_invitation: !@procedure.experts_require_administrateur_invitation)
       flash.notice = @procedure.experts_require_administrateur_invitation? ? "Les experts sont gérés par les administrateurs de la démarche" : "Les experts sont gérés par les instructeurs"
       redirect_to admin_procedure_experts_path(@procedure)
+    end
+
+    def champs
+      @procedure = Procedure.includes(draft_revision: { revision_types_de_champ_public: :type_de_champ }).find(@procedure.id)
     end
 
     private

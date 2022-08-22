@@ -1,23 +1,23 @@
 {
   "ignored_warnings": [
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "4254ed68100af9b496883716b1fd658e1943b2385a0d08de5a6ef5c600c1a8f9",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/traitement.rb",
-      "line": 51,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "ActiveRecord::Base.connection.execute(\"select date_trunc('month', r1.processed_at::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.formatted_offset}'::INTERVAL) as month, count(r1.processed_at)\\nfrom (#{Traitement.select(\"max(traitements.processed_at) as processed_at\").termine.where(:dossier => Dossier.state_termine.where(:groupe_instructeur => groupe_instructeurs)).group(:dossier_id).to_sql}) as r1\\ngroup by date_trunc('month', r1.processed_at::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.formatted_offset}'::INTERVAL)\\norder by month desc\\n\")",
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "170b506bd3d25eb50f464703f9d993bf2e124d5cbc8478ce9d9d06a15b4bc55e",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/instructeurs/exports_controller.rb",
+      "line": 26,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Export.find_or_create_export(export_format, groupe_instructeurs, **export_options).file.service_url)",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "Traitement",
-        "method": "Traitement.count_dossiers_termines_by_month"
+        "class": "Instructeurs::ExportsController",
+        "method": "download"
       },
-      "user_input": "Time.zone.formatted_offset",
-      "confidence": "Medium",
+      "user_input": "Export.find_or_create_export(export_format, groupe_instructeurs, **export_options).file.service_url",
+      "confidence": "High",
       "note": ""
     },
     {
@@ -133,6 +133,26 @@
       "note": ""
     },
     {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "8f8133f0679f6301e098c4b9c61c2217224126856963abd02cdc5e54efb4e818",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/administrateurs/exports_controller.rb",
+      "line": 22,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Export.find_or_create_export(export_format, all_groupe_instructeurs, **export_options).file.service_url)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Administrateurs::ExportsController",
+        "method": "download"
+      },
+      "user_input": "Export.find_or_create_export(export_format, all_groupe_instructeurs, **export_options).file.service_url",
+      "confidence": "High",
+      "note": ""
+    },
+    {
       "warning_type": "SQL Injection",
       "warning_code": 0,
       "fingerprint": "bd1df30f95135357b646e21a03d95498874faffa32e3804fc643e9b6b957ee14",
@@ -173,6 +193,6 @@
       "note": ""
     }
   ],
-  "updated": "2022-06-15 16:15:28 +0200",
+  "updated": "2022-07-08 13:14:19 +0200",
   "brakeman_version": "5.2.2"
 }

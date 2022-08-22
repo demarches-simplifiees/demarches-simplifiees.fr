@@ -11,13 +11,6 @@ class Attachment::EditComponent < ApplicationComponent
 
   attr_reader :template, :form
 
-  def allowed_extensions
-    content_type_validator.options[:in]
-      .flat_map { |content_type| MIME::Types[content_type].map(&:extensions) }
-      .reject(&:blank?)
-      .flatten
-  end
-
   def max_file_size
     file_size_validator.options[:less_than]
   end
@@ -51,17 +44,16 @@ class Attachment::EditComponent < ApplicationComponent
   end
 
   def file_field_options
+    track_issue_with_missing_validators if missing_validators?
     {
       class: "attachment-input #{attachment_input_class} #{'hidden' if persisted?}",
-      accept: content_type_validator.options[:in].join(', '),
       direct_upload: @direct_upload,
       id: input_id(@id),
       aria: { describedby: champ&.describedby_id },
       data: {
-        auto_attach_url: helpers.auto_attach_url(form.object),
-        max_file_size: max_file_size
-      }
-    }
+        auto_attach_url: helpers.auto_attach_url(form.object)
+      }.merge(has_file_size_validator? ? { max_file_size: max_file_size } : {})
+    }.merge(has_content_type_validator? ? { accept: content_type_validator.options[:in].join(', ') } : {})
   end
 
   def input_id(given_id)
@@ -106,5 +98,30 @@ class Attachment::EditComponent < ApplicationComponent
     @attached_file.record
       ._validators[file_field_name.to_sym]
       .find { |validator| validator.class == ActiveStorageValidations::ContentTypeValidator }
+  end
+
+  def has_content_type_validator?
+    !content_type_validator.nil?
+  end
+
+  def has_file_size_validator?
+    !file_size_validator.nil?
+  end
+
+  def missing_validators?
+    return true if !has_file_size_validator?
+    return true if !has_content_type_validator?
+    return false
+  end
+
+  def track_issue_with_missing_validators
+    Sentry.capture_message(
+      "Strange case of missing validator",
+      extra: {
+        champ: champ,
+        file_field_name: file_field_name,
+        attachment_id: attachment_id
+      }
+    )
   end
 end

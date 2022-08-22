@@ -1,6 +1,6 @@
 module Logic
   def self.from_h(h)
-    class_from_name(h['op']).from_h(h)
+    class_from_name(h['term']).from_h(h)
   end
 
   def self.from_json(s)
@@ -27,8 +27,6 @@ module Logic
     in [:number, EmptyOperator]
       operator_class = Eq
     in [:number, _]
-    in [:string, _]
-      operator_class = Eq
     end
 
     if !compatible_type?(left, right)
@@ -41,8 +39,6 @@ module Logic
         Constant.new(left.options.first)
       when :number
         Constant.new(0)
-      when :string
-        Constant.new('')
       end
     end
 
@@ -58,6 +54,22 @@ module Logic
     else
       false
     end
+  end
+
+  def self.add_empty_condition_to(condition)
+    empty_condition = EmptyOperator.new(Empty.new, Empty.new)
+
+    if condition.nil?
+      empty_condition
+    elsif [And, Or].include?(condition.class)
+      condition.tap { |c| c.operands << empty_condition }
+    else
+      Logic::And.new([condition, empty_condition])
+    end
+  end
+
+  def self.split_condition(condition)
+    [condition.left, condition.class.name, condition.right]
   end
 
   def ds_eq(left, right) = Logic::Eq.new(left, right)

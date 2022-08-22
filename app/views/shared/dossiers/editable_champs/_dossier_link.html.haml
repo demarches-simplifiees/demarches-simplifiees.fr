@@ -5,7 +5,8 @@
     placeholder: "Numéro de dossier",
     autocomplete: 'off',
     required: champ.mandatory?,
-    data: { controller: 'turbo-input', turbo_input_url_value: champs_dossier_link_path(champ.id) }
+    data: { controller: 'turbo-input', turbo_input_url_value: champs_dossier_link_path(champ.id) },
+    class: "width-33-desktop"
 
   .help-block{ id: dom_id(champ, :help_block) }
     = render partial: 'shared/champs/dossier_link/help_block', locals: { id: champ.value }

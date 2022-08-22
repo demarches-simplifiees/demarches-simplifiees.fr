@@ -1,0 +1,12 @@
+fr:
+  logic:
+    empty: un membre vide
+    is: Est
+    operators:
+      'Logic::LessThan': Inférieur à
+      'Logic::LessThanEq': Inférieur ou égal à
+      'Logic::Eq': Égal à
+      'Logic::GreaterThan': Supérieur à
+      'Logic::GreaterThanEq': Supérieur ou égal à
+      'Logic::And': Et
+      'Logic::Or': Ou

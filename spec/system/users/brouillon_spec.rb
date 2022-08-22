@@ -11,7 +11,7 @@ describe 'The user' do
     fill_individual
 
     # fill data
-    fill_in('text', with: 'super texte')
+    fill_in('text *', with: 'super texte')
     fill_in('textarea', with: 'super textarea')
     fill_in('date', with: '12-12-2012')
     select_date_and_time(Time.zone.parse('06/01/2030 7h05'), form_id_for_datetime('datetime'))
@@ -283,6 +283,64 @@ describe 'The user' do
 
     # Expect the file to have been saved on the dossier
     expect(page).to have_text('file.pdf')
+  end
+
+  context 'with condition' do
+    include Logic
+
+    let(:procedure) do
+      procedure = create(:procedure, :for_individual).tap do |p|
+        p.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'age')
+        p.draft_revision.add_type_de_champ(type_champ: :yes_no, libelle: 'permis de conduire')
+        p.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'tonnage')
+      end
+
+      age, permis, tonnage = procedure.draft_revision.types_de_champ.all
+
+      permis.update(condition: greater_than_eq(champ_value(age.stable_id), constant(18)))
+      tonnage.update(condition: ds_eq(champ_value(permis.stable_id), constant(true)))
+
+      procedure.publish!
+
+      procedure
+    end
+
+    scenario 'fill a dossier', js: true do
+      log_in(user, procedure)
+
+      age, permis, tonnage = user.dossiers.first.champs.to_a
+
+      fill_individual
+
+      expect(page).to have_css('label', text: 'age', visible: true)
+      expect(page).to have_no_css('label', text: 'permis de conduire', visible: true)
+      expect(page).to have_no_css('label', text: 'tonnage', visible: true)
+
+      fill_in('age', with: '18')
+      expect(page).to have_css('label', text: 'permis de conduire', visible: true)
+      expect(page).to have_no_css('label', text: 'tonnage', visible: true)
+
+      choose('Oui')
+      expect(page).to have_css('label', text: 'permis de conduire', visible: true)
+      expect(page).to have_css('label', text: 'tonnage', visible: true)
+
+      fill_in('age', with: '2')
+      expect(page).to have_no_css('label', text: 'permis de conduire', visible: true)
+      expect(page).to have_no_css('label', text: 'tonnage', visible: true)
+
+      click_on 'Déposer le dossier'
+      click_on 'Accéder à votre dossier'
+      click_on 'Modifier mon dossier'
+
+      expect(page).to have_css('label', text: 'age', visible: true)
+      expect(page).to have_no_css('label', text: 'permis de conduire', visible: true)
+      expect(page).to have_no_css('label', text: 'tonnage', visible: true)
+
+      fill_in('age', with: '18')
+      # the champ keeps their previous value so they are all displayed
+      expect(page).to have_css('label', text: 'permis de conduire', visible: true)
+      expect(page).to have_css('label', text: 'tonnage', visible: true)
+    end
   end
 
   context 'draft autosave' do

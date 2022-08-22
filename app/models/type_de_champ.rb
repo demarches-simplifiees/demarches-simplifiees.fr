@@ -18,7 +18,7 @@ class TypeDeChamp < ApplicationRecord
   self.ignored_columns = [:migrated_parent, :revision_id, :parent_id, :order_place]
 
   FILE_MAX_SIZE = 200.megabytes
-  FEATURE_FLAGS = { 'visa' => 'visa' }
+  FEATURE_FLAGS = { :visa => 'visa' }
 
   INSTANCE_TYPE_CHAMPS = {
     nationalites: 'nationalites',
@@ -333,6 +333,14 @@ class TypeDeChamp < ApplicationRecord
     self.drop_down_options = parse_drop_down_list_value(value)
   end
 
+  # historicaly we added a blank ("") option by default to avoid wrong selection
+  #   see self.parse_drop_down_list_value
+  #   then rails decided to add this blank ("") option when the select is required
+  #   so we revert this change
+  def options_without_empty_value_when_mandatory(options)
+    mandatory? ? options.reject(&:blank?) : options
+  end
+
   def drop_down_list_options?
     drop_down_list_options.any?
   end
@@ -415,12 +423,18 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
+  def stable_self
+    OpenStruct.new(to_key: [stable_id],
+      model_name: OpenStruct.new(param_key: model_name.param_key))
+  end
+
   private
 
+  DEFAULT_EMPTY = ['']
   def parse_drop_down_list_value(value)
     value = value ? value.split("\r\n").map(&:strip).join("\r\n") : ''
     result = value.split(/[\r\n]|[\r]|[\n]|[\n\r]/).reject(&:empty?)
-    result.blank? ? [] : [''] + result
+    result.blank? ? [] : DEFAULT_EMPTY + result
   end
 
   def parse_accredited_user_string(value)

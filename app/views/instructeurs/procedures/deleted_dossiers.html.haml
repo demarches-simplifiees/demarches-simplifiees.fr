@@ -11,7 +11,7 @@
 
       .procedure-actions
         - if @can_download_dossiers
-          = render Dossiers::ExportComponent.new(procedure: @procedure, exports: @exports)
+          = render Dossiers::ExportComponent.new(procedure: @procedure, exports: @exports, export_url: method(:download_export_instructeur_procedure_path))
 
     .container.flex= render partial: "tabs", locals: { procedure: @procedure,
         statut: @statut,

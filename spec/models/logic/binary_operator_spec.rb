@@ -16,15 +16,18 @@ describe Logic::BinaryOperator do
   end
 
   describe '#errors' do
-    it { expect(greater_than(constant(1), constant(true)).errors).to eq(['les types sont incompatibles : (1 > true)']) }
+    it { expect(greater_than(constant(1), constant(true)).errors).to eq(['les types sont incompatibles : (1 > Oui)']) }
   end
 end
 
 describe Logic::GreaterThan do
   include Logic
+  let(:champ) { create(:champ_integer_number, value: nil) }
+
   it 'computes' do
     expect(greater_than(constant(1), constant(1)).compute).to be(false)
     expect(greater_than(constant(2), constant(1)).compute).to be(true)
+    expect(greater_than(champ_value(champ.stable_id), constant(2)).compute([champ])).to be(false)
   end
 end
 

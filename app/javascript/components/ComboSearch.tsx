@@ -135,7 +135,7 @@ function ComboSearch<Result>({
         {...props}
         onChange={handleOnChange}
         onBlur={onBlur}
-        value={value}
+        value={value ?? ''}
         autocomplete={false}
         id={id}
         aria-describedby={describedby}

@@ -4,13 +4,13 @@
     %p.notice= t('.numero_allocataire_notice')
     = form.text_field :numero_allocataire,
       required: champ.mandatory?,
-      size: 7,
-      aria: { describedby: champ.describedby_id }
+      aria: { describedby: champ.describedby_id },
+      class: "width-33-desktop"
 
   %div
     = form.label :code_postal, t('.code_postal_label')
     %p.notice= t('.code_postal_notice')
     = form.text_field :code_postal,
-      size: 5,
       required: champ.mandatory?,
-      aria: { describedby: champ.describedby_id }
+      aria: { describedby: champ.describedby_id },
+      class: "width-33-desktop"

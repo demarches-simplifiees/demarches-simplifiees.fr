@@ -7,8 +7,12 @@ module Mutations
     field :annotation, Types::ChampType, null: true
     field :errors, [Types::ValidationErrorType], null: true
 
-    def resolve_with_type(type, dossier, annotation_id, instructeur, value)
-      annotation = find_annotation(dossier, type, annotation_id)
+    def resolve_with_type(dossier:, annotation_id:, instructeur:, value:)
+      annotation = find_annotation(dossier, annotation_id)
+
+      if annotation.nil?
+        return { errors: ["L’annotation \"#{annotation_id}\" n’existe pas"] }
+      end
 
       if block_given?
         yield annotation, value
@@ -31,18 +35,22 @@ module Mutations
 
     private
 
-    def find_annotation(dossier, type, annotation_id)
-      _, stable_id = GraphQL::Schema::UniqueWithinType.decode(annotation_id)
-      dossier.champs_private
-        .joins(:type_de_champ)
-        .find_by!(types_de_champ: {
-          type_champ: annotation_type_champ(type),
-          stable_id: stable_id
-        })
+    def input_type
+      :text
     end
 
-    def annotation_type_champ(type)
-      case type
+    def find_annotation(dossier, annotation_id)
+      stable_id, row = Champ.decode_typed_id(annotation_id)
+
+      Champ.joins(:type_de_champ).find_by(type_de_champ: {
+        type_champ: annotation_type_champ,
+        stable_id: stable_id,
+        private: true
+      }, private: true, row: row, dossier: dossier)
+    end
+
+    def annotation_type_champ
+      case input_type
       when :text
         [
           TypeDeChamp.type_champs.fetch(:text),
