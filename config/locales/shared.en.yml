@@ -20,7 +20,7 @@ en:
           ine_label: INE
           ine_notice: Student National Number. It is usually composed of alphanumeric characters.
         phone:
-          placeholder: "0612345678"
+          placeholder: "87123456"
         pole_emploi:
           identifiant_label: Identifier
           identifiant_notice: It is usually composed of alphanumeric characters.
