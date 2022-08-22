@@ -10,7 +10,7 @@ describe 'As an administrateur I can edit annotation', js: true do
   scenario "adding a new champ" do
     click_on 'Ajouter une annotation'
 
-    select('Carte', from: 'Type de champ')
+    select('Carte de France', from: 'Type de champ')
     # ensure UI update is ok
     check 'Cadastres'
   end
