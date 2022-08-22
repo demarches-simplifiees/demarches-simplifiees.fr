@@ -42,21 +42,22 @@
                     .fr-hidden-sm.fr-unhidden-lg.fr-link--sm= t('views.shared.account.already_user_question')
                 %li= link_to t('views.shared.account.signin'), new_user_session_path, class: "fr-btn"
 
-                %li
-                  - if dossier.present? && nav_bar_profile == :user
-                    = render partial: 'shared/help/help_dropdown_dossier', locals: { dossier: dossier }
+              %li
+                - if dossier.present? && nav_bar_profile == :user
+                  = render partial: 'shared/help/help_dropdown_dossier', locals: { dossier: dossier }
 
-                  - elsif procedure.present? && (nav_bar_profile == :user || nav_bar_profile == :guest)
-                    = render partial: 'shared/help/help_dropdown_procedure', locals: { procedure: procedure }
+                - elsif procedure.present? && (nav_bar_profile == :user || nav_bar_profile == :guest)
+                  = render partial: 'shared/help/help_dropdown_procedure', locals: { procedure: procedure }
 
-                  - elsif nav_bar_profile == :instructeur
-                    = render partial: 'shared/help/help_dropdown_instructeur'
+                - elsif nav_bar_profile == :instructeur
+                  = render partial: 'shared/help/help_dropdown_instructeur'
+                - else
+                  %li= render partial: 'shared/help/help_button'
 
-                  - else
-                    = render partial: 'shared/help/help_button'
 
-            - if localization_enabled?
-              = render partial: 'layouts/locale_dropdown'
+
+              - if localization_enabled?
+                %li= render partial: 'layouts/locale_dropdown'
 
 
           - if params[:controller] == 'recherche'

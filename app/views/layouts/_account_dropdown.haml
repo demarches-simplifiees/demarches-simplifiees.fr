@@ -1,13 +1,6 @@
-<<<<<<< HEAD
-
 %nav.fr-nav{ role: "navigation", "aria-label"=> t('menu_aria_label', scope: [:layouts]) }
   .fr-nav__item
     %button.fr-translate__btn.fr-btn{ "aria-controls" => "account", "aria-expanded" => "false", :title => t('my_account', scope: [:layouts]) }
-=======
-%nav.fr-nav{role: "navigation"}
-  .fr-nav__item
-    %button.fr-translate__btn.fr-btn.fr-btn--tertiary{"aria-controls" => "account", "aria-expanded" => "false", :title => t('my_account', scope: [:layouts])}
->>>>>>> 62ec6eeed (feat(header): switch to DSFR translate component and dropdown component)
       = image_tag "icons/account-circle.svg", alt: t('my_account', scope: [:layouts]), width: 20, height: 20, loading: 'lazy'
       &nbsp;
       = " #{current_email}"
