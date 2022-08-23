@@ -11,3 +11,4 @@ fr:
       'Logic::GreaterThanEq': Supérieur ou égal à
       'Logic::And': Et
       'Logic::Or': Ou
+      'Logic::NotEq': N'est pas
