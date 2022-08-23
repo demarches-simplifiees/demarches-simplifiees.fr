@@ -30,7 +30,7 @@ module Instructeurs
     end
 
     def create_archive_url(procedure, date)
-      instructeur_archives_path(procedure, type: 'monthly', month: date.strftime('%Y-%m'))
+      instructeur_archives_path(procedure, type: 'monthly', year_month: date.strftime('%Y-%m'))
     end
 
     def groupe_instructeurs
