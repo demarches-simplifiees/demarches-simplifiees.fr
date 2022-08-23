@@ -269,6 +269,35 @@ describe 'The user' do
   context 'with condition' do
     include Logic
 
+    context 'with a repetition' do
+      let(:procedure) do
+        procedure = create(:procedure, :published, :for_individual,
+                           types_de_champ_public: [
+                             { type: :integer_number, libelle: 'age' },
+                             {
+                               type: :repetition, libelle: 'repetition', children: [
+                                 { type: :text, libelle: 'nom', mandatory: true }
+                               ]
+                             }
+                           ])
+
+        age = procedure.published_revision.types_de_champ.where(libelle: 'age').first
+        repetition = procedure.published_revision.types_de_champ.repetition.first
+        repetition.update(condition: greater_than_eq(champ_value(age.stable_id), constant(18)))
+
+        procedure
+      end
+
+      scenario 'submit a dossier with an hidden mandatory champ within a repetition', js: true do
+        log_in(user, procedure)
+
+        fill_individual
+        fill_in('age', with: 10)
+        click_on 'Déposer le dossier'
+        expect(page).to have_current_path(merci_dossier_path(user_dossier))
+      end
+    end
+
     context 'with a required conditionnal champ' do
       let(:procedure) do
         procedure = create(:procedure, :published, :for_individual,
@@ -278,7 +307,6 @@ describe 'The user' do
                            ])
 
         age, nom = procedure.draft_revision.types_de_champ.all
-
         nom.update(condition: greater_than_eq(champ_value(age.stable_id), constant(18)))
 
         procedure
@@ -288,7 +316,6 @@ describe 'The user' do
         log_in(user, procedure)
 
         fill_individual
-
         click_on 'Déposer le dossier'
         expect(page).to have_current_path(merci_dossier_path(user_dossier))
       end
