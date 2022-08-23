@@ -1,6 +1,7 @@
 module Administrateurs
   class ExportsController < AdministrateurController
-    before_action :retrieve_procedure, only: [:download]
+    before_action :retrieve_procedure
+    before_action :ensure_not_super_admin!
 
     def download
       export = Export.find_or_create_export(export_format, all_groupe_instructeurs, **export_options)
