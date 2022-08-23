@@ -1,28 +1,38 @@
 class SamlIdpController < ActionController::Base
   include SamlIdp::Controller
 
-  before_action :validate_saml_request
-
   def new
-    if super_admin_signed_in?
-      @saml_response = encode_SAMLResponse(current_super_admin.email, saml_attributes)
-      render :template => "saml_idp/idp/saml_post", :layout => false
+    if validate_saml_request
+      render template: 'saml_idp/new'
     else
-      redirect_to root_path, alert: t("errors.messages.saml_not_authorized")
+      head :forbidden
     end
   end
 
-  def metadata
-    render layout: false, content_type: "application/xml", formats: :xml
+  def show
+    render xml: SamlIdp.metadata.signed
+  end
+
+  def create
+    if validate_saml_request
+      if super_admin_signed_in?
+        @saml_response = idp_make_saml_response(current_super_admin)
+        render template: 'saml_idp/saml_post', layout: false
+      else
+        redirect_to root_path, alert: t("errors.messages.saml_not_authorized")
+      end
+    else
+      head :forbidden
+    end
   end
 
   private
 
-  def saml_attributes
-    admin_attributes = %[<saml:AttributeStatement><saml:Attribute Name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"><saml:AttributeValue>#{current_super_admin.email}</saml:AttributeValue></saml:Attribute><saml:Attribute Name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"><saml:AttributeValue>ds|#{current_super_admin.id}</saml:AttributeValue></saml:Attribute></saml:AttributeStatement>]
-    {
-      issuer_uri: saml_auth_url,
-      attributes_provider: admin_attributes
+  def idp_make_saml_response(super_admin)
+    encode_response super_admin, encryption: {
+      cert: saml_request.service_provider.cert,
+      block_encryption: 'aes256-cbc',
+      key_transport: 'rsa-oaep-mgf1p'
     }
   end
 end
