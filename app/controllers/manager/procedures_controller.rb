@@ -57,7 +57,7 @@ module Manager
           end
         end
 
-        flash[:notice] = "L’administrateur \"#{administrateur.email}\" a été ajoutés à la démarche. instructeur \"#{instructeur.email}\" a été ajouté aux #{procedure.groupe_instructeurs.count} groupe(s) d'instructeur"
+        flash[:notice] = "L’administrateur \"#{administrateur.email}\" a été ajouté à la démarche. L'instructeur \"#{instructeur.email}\" a été ajouté aux #{procedure.groupe_instructeurs.count} groupes d'instructeurs"
       else
         flash[:alert] = "L’administrateur \"#{administrateur.email}\" est introuvable."
       end
@@ -76,7 +76,7 @@ module Manager
       if administrateur_email != current_super_admin.email
         administrateur = Administrateur.by_email(params[:email])
         AdministrateursProcedure.create!(procedure: procedure, administrateur: administrateur)
-        flash[:notice] = "L’administrateur \"#{administrateur.email}\" a été ajoutés à la démarche."
+        flash[:notice] = "L’administrateur \"#{administrateur.email}\" a été ajouté à la démarche."
       else
         flash[:alert] = "Veuillez partager ce lien avec un autre super administrateur pour qu'il confirme votre action"
       end
