@@ -28,5 +28,8 @@ class Zone < ApplicationRecord
 
   def self.available_at(date)
     Zone.all.filter { |zone| zone.available_at?(date) }.sort_by { |zone| zone.label_at(date) }
+      .map do |zone|
+      OpenStruct.new(id: zone.id, label: zone.label_at(date))
+    end
   end
 end

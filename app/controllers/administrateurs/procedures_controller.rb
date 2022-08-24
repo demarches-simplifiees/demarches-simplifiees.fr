@@ -351,7 +351,7 @@ module Administrateurs
         :monavis_embed,
         :api_entreprise_token,
         :duree_conservation_dossiers_dans_ds,
-        :zone_id,
+        { zone_ids: [] },
         :lien_dpo,
         :opendata,
         :procedure_expires_when_termine_enabled
