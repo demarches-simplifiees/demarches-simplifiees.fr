@@ -17,9 +17,10 @@ module Manager
     end
 
     def bulk_update
-      procedure_ids = params[:procedure][:ids].filter { |_id, selected| selected == "1" }
+      # rubocop:disable Style/CollectionMethods
+      procedure_ids = params[:procedure][:ids].select { |_id, selected| selected == "1" }
         .keys
-
+      # rubocop:enable Style/CollectionMethods
       successes = procedure_ids.map do |id|
         procedure = Procedure.find(id)
         success = procedure.update(procedure_expires_when_termine_enabled: true)
