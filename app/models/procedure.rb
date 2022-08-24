@@ -103,6 +103,7 @@ class Procedure < ApplicationRecord
   belongs_to :replaced_by_procedure, -> { with_discarded }, inverse_of: :replaced_procedures, class_name: "Procedure", optional: true
   belongs_to :service, optional: true
   belongs_to :zone, optional: true
+  has_and_belongs_to_many :zones
 
   def active_dossier_submitted_message
     published_dossier_submitted_message || draft_dossier_submitted_message
