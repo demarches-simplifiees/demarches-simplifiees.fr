@@ -14,10 +14,10 @@
 = f.text_area :description, rows: '6', placeholder: 'Description de la démarche, destinataires, etc. ', class: 'form-control'
 
 - if Flipper.enabled? :zonage
-  = f.label :zone do
-    = t('zone', scope: 'activerecord.attributes.procedure')
-    %span.mandatory *
-  = f.select :zone_id, grouped_options_for_zone(@procedure.published_or_created_at)
+  = f.collection_check_boxes :zone_ids, Zone.available_at(@procedure.published_or_created_at), :id, :label do |b|
+    .editable-champ.editable-champ-checkbox
+      = b.check_box
+      = b.label
 
 %h3.header-subsection Logo de la démarche
 = render Attachment::EditComponent.new(form: f, attached_file: @procedure.logo, direct_upload: true, user_can_destroy: true)
