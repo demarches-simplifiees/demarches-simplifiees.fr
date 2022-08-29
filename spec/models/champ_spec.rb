@@ -26,6 +26,13 @@ describe Champ do
     end
   end
 
+  describe "normalization" do
+    it "should remove null bytes before save" do
+      champ = create(:champ, value: "foo\u0000bar")
+      expect(champ.value).to eq "foobar"
+    end
+  end
+
   describe '#public?' do
     let(:type_de_champ) { build(:type_de_champ) }
     let(:champ) { type_de_champ.champ.build }
