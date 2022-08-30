@@ -7,7 +7,7 @@
     %h1.new-h1
       = t('.contact')
 
-    = form_tag contact_path, method: :post, multipart: true, class: 'form' do |f|
+    = form_tag contact_path, method: :post, multipart: true, class: 'form' do
 
       .description
         %p= t('.intro_html')
@@ -21,26 +21,24 @@
             %span.mandatory *
           = text_field_tag :email, params[:email], required: true, autocomplete: 'email'
 
-      .contact-champ
-        = label_tag :type do
+      %fieldset.radios.vertical{ name: "type" }
+        %legend.form-label
           = t('.your_question')
-        = hidden_field_tag :type, params[:type]
+          %span.mandatory *
 
-      %ul
         - @options.each do |(question, question_type, link)|
-          %li.mb-1
-            - if link.present?
-              %button.button{ 'aria-expanded': 'false', 'aria-controls': question_type, data: { 'question-type': question_type } }= question
-            - else
-              %button.button.button-without-hint{ data: { 'question-type': question_type } }= question
+          = label_tag "type_#{question_type}", { 'aria-controls': link ? "card-#{question_type}" : nil } do
+            = radio_button_tag :type, question_type, false, required: true
+            = question
 
-            - if link.present?
-              .support.card.featured.mt-2.mb-2.hidden{ id: question_type }
-                .card-title
-                  = t('.our_answer')
-                .card-content
-                  -# i18n-tasks-use t("support.index.#{question_type}.answer_html")
-                  = t('answer_html', scope: [:support, :index, question_type], base_url: APPLICATION_BASE_URL, "link_#{question_type}": link)
+          - if link.present?
+            .support.card.featured.mb-4.ml-5.hidden{ id: "card-#{question_type}", "aria-hidden": true }
+              .card-title
+                = t('.our_answer')
+              .card-content
+                -# i18n-tasks-use t("support.index.#{question_type}.answer_html")
+                = t('answer_html', scope: [:support, :index, question_type], base_url: APPLICATION_BASE_URL, "link_#{question_type}": link)
+
 
       .contact-champ
         = label_tag :dossier_id, t('file_number', scope: [:utils])

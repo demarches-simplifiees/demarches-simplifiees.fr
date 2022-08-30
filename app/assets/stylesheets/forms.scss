@@ -30,7 +30,8 @@
     color: $dark-red;
   }
 
-  label {
+  label,
+  legend.form-label {
     font-size: 18px;
     margin-bottom: $default-padding;
     display: block;
