@@ -74,6 +74,20 @@
         = form.radio_button :weekly_email_notifications_enabled, false
         = t('.utils.negative')
 
+    = form.label :email_notification, t('.avis_notifications.title')
+    %p.notice
+      = t('.avis_notifications.notice_1')
+    %p.notice
+      = t('.avis_notifications.notice_2')
+
+    .radios
+      %label
+        = form.radio_button :instant_expert_avis_email_notifications_enabled, true
+        = t('.utils.positive')
+      %label
+        = form.radio_button :instant_expert_avis_email_notifications_enabled, false
+        = t('.utils.negative')
+
     .send-wrapper
       = link_to t('.buttons.back_to_procedure'), instructeur_procedure_path(@procedure), class: 'button mr-1'
       = form.submit t('.buttons.save'), class: "button primary"
