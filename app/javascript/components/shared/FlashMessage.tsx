@@ -17,7 +17,12 @@ export function FlashMessage({
   invariant(element, 'Flash messages root element not found');
   return createPortal(
     <div className="flash_message center">
-      <div className={flashClassName(level, sticky, fixed)}>{message}</div>
+      <div
+        className={flashClassName(level, sticky, fixed)}
+        role={roleName(level)}
+      >
+        {message}
+      </div>
     </div>,
     element
   );
@@ -34,4 +39,8 @@ function flashClassName(level: string, sticky = false, fixed = false) {
     className.push('alert-fixed');
   }
   return className.join(' ');
+}
+
+function roleName(level: string) {
+  return level == 'notice' ? 'status' : 'alert';
 }

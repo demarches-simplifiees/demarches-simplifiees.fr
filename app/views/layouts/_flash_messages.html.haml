@@ -5,10 +5,10 @@
         - sticky = defined?(sticky) ? sticky : false
         - fixed = defined?(fixed) ? fixed : false
         - if value.class == Array
-          .alert{ class: flash_class(key, sticky: sticky, fixed: fixed) }
+          .alert{ class: flash_class(key, sticky: sticky, fixed: fixed), role: flash_role(key) }
             - value.each do |message|
               = sanitize(message)
               %br
         - else
-          .alert{ class: flash_class(key, sticky: sticky, fixed: fixed) }
+          .alert{ class: flash_class(key, sticky: sticky, fixed: fixed), role: flash_role(key) }
             = sanitize(value)
