@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_28_084804) do
+ActiveRecord::Schema.define(version: 2022_08_30_125703) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -111,6 +111,7 @@ ActiveRecord::Schema.define(version: 2022_07_28_084804) do
     t.bigint "groupe_instructeur_id"
     t.boolean "instant_email_dossier_notifications_enabled", default: false, null: false
     t.boolean "instant_email_message_notifications_enabled", default: false, null: false
+    t.boolean "instant_expert_avis_email_notifications_enabled", default: false, null: false
     t.integer "instructeur_id"
     t.boolean "manager", default: false
     t.datetime "updated_at"
