@@ -41,6 +41,10 @@ class Instructeur < ApplicationRecord
     includes(:assign_to).where(assign_tos: { instant_email_dossier_notifications_enabled: true })
   }
 
+  scope :with_instant_expert_avis_email_notifications_enabled, -> {
+    includes(:assign_to).where(assign_tos: { instant_expert_avis_email_notifications_enabled: true })
+  }
+
   default_scope { eager_load(:user) }
 
   def self.by_email(email)
@@ -81,7 +85,7 @@ class Instructeur < ApplicationRecord
     end
   end
 
-  NOTIFICATION_SETTINGS = [:daily_email_notifications_enabled, :instant_email_dossier_notifications_enabled, :instant_email_message_notifications_enabled, :weekly_email_notifications_enabled]
+  NOTIFICATION_SETTINGS = [:daily_email_notifications_enabled, :instant_email_dossier_notifications_enabled, :instant_email_message_notifications_enabled, :weekly_email_notifications_enabled, :instant_expert_avis_email_notifications_enabled]
 
   def notification_settings(procedure_id)
     assign_to
