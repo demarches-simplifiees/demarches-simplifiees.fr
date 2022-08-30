@@ -60,9 +60,17 @@ module Experts
     end
 
     def update
+      updated_recently = @avis.updated_recently?
       if @avis.update(avis_params)
         flash.notice = 'Votre réponse est enregistrée.'
         @avis.dossier.update!(last_avis_updated_at: Time.zone.now)
+        if !updated_recently
+          @avis.dossier.followers_instructeurs
+            .with_instant_expert_avis_email_notifications_enabled
+            .each do |instructeur|
+            DossierMailer.notify_new_avis_to_instructeur(@avis, instructeur.email).deliver_later
+          end
+        end
         redirect_to instruction_expert_avis_path(@avis.procedure, @avis)
       else
         flash.now.alert = @avis.errors.full_messages
