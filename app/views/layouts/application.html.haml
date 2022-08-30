@@ -46,7 +46,7 @@
           Env Test
 
       = render partial: "layouts/header"
-      %main
+      %main{ role: :main }
         = render partial: "layouts/flash_messages"
         = content_for?(:content) ? yield(:content) : yield
 
