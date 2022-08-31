@@ -10,7 +10,6 @@ right_margin = 20
 bottom_margin = 20
 left_margin = 20
 
-header_width = page_width - left_margin - right_margin
 body_width = 400
 
 body_left_margin = (page_width - body_width - left_margin - right_margin) / 2
@@ -66,7 +65,7 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
 
     pdf.fill_color grey
     pdf.pad_top(7) do
-      pdf.text "#{Dossier.human_attribute_name(:id)} : #{@dossier.id.to_s}", size: 10, character_spacing: -0.2, align: :justify
+      pdf.text "#{Dossier.human_attribute_name(:id)} : #{@dossier.id}", size: 10, character_spacing: -0.2, align: :justify
       pdf.text t('.file_submitted_at') + ' : ' + l(@dossier.depose_at, format: '%e %B %Y'), size: 10, character_spacing: -0.2, align: :justify
       pdf.text t('.dossier_state') + ' : ' + papertrail_dossier_state(@dossier), size: 10, character_spacing: -0.2, align: :justify
     end
