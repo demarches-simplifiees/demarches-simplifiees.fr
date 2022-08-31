@@ -12,6 +12,7 @@
 #  geo_reference_id :string
 #
 class GeoArea < ApplicationRecord
+  include ActionView::Helpers::NumberHelper
   belongs_to :champ, optional: false
 
   # FIXME: once geo_areas are migrated to not use YAML serialization we can enable store_accessor
@@ -67,6 +68,29 @@ class GeoArea < ApplicationRecord
         dossier_id: champ.dossier_id
       ).compact
     }
+  end
+
+  def label
+    case source
+    when GeoArea.sources.fetch(:cadastre)
+      I18n.t("cadastre", scope: 'geo_area.label', numero: numero, prefixe: prefixe, section: section, surface: surface.round)
+    when GeoArea.sources.fetch(:selection_utilisateur)
+      if polygon?
+        if area > 0
+          I18n.t("area", scope: 'geo_area.label', area: number_with_delimiter(area))
+        else
+          I18n.t("area_unknown", scope: 'geo_area.label')
+        end
+      elsif line?
+        if length > 0
+          I18n.t("line", scope: 'geo_area.label', length: number_with_delimiter(length))
+        else
+          I18n.t("line_unknown", scope: 'geo_area.label')
+        end
+      elsif point?
+        I18n.t("point", scope: 'geo_area.label', location: location)
+      end
+    end
   end
 
   def safe_geometry
