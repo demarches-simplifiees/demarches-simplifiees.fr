@@ -21,8 +21,8 @@ end
 def format_in_2_lines(pdf, champ, nb_lines = 1)
   add_single_line(pdf, champ.libelle, 9, :bold)
   add_optionnal_description(pdf, champ)
-  height = 10 * (nb_lines+1)
-  pdf.bounding_box([0, pdf.cursor],:width => 460,:height => height) do
+  height = 10 * (nb_lines + 1)
+  pdf.bounding_box([0, pdf.cursor], :width => 460, :height => height) do
     pdf.stroke_bounds
   end
   pdf.text "\n"
@@ -30,7 +30,7 @@ end
 
 def format_in_2_columns(pdf, label)
   pdf.text_box label, width: 200, height: 100, overflow: :expand, at: [0, pdf.cursor]
-  pdf.bounding_box([110, pdf.cursor+5],:width => 350,:height => 20) do
+  pdf.bounding_box([110, pdf.cursor + 5], :width => 350, :height => 20) do
     pdf.stroke_bounds
   end
 
@@ -51,7 +51,7 @@ def format_with_checkbox(pdf, option, offset = 0)
     render_expanding_text_box(pdf, label, at: [15, pdf.cursor])
 
     if value == Champs::DropDownListChamp::OTHER
-      pdf.bounding_box([110, pdf.cursor + 3],:width => 350,:height => 20) do
+      pdf.bounding_box([110, pdf.cursor + 3], :width => 350, :height => 20) do
         pdf.stroke_bounds
       end
     end
@@ -64,14 +64,14 @@ def add_page_numbering(pdf)
   # do not have page numbering
   string = '<page> / <total>'
   options = {
-      at: [0, -15],
-      align: :right
+    at: [0, -15],
+    align: :right
   }
   pdf.number_pages string, options
 end
 
 def add_procedure(pdf, dossier)
-  pdf.repeat(lambda {|page| page > 1 })  do
+  pdf.repeat(lambda { |page| page > 1 }) do
     pdf.draw_text dossier.procedure.libelle, :at => pdf.bounds.top_left
   end
 end
@@ -186,7 +186,7 @@ def add_champs(pdf, champs)
   champs.each do |champ|
     if champ.type == 'Champs::RepetitionChamp'
       add_libelle(pdf, champ)
-      (1..3).each do
+      3.times do
         champ.rows.each do |row|
           row.each do |inner_champ|
             render_single_champ(pdf, inner_champ)
@@ -200,10 +200,10 @@ def add_champs(pdf, champs)
 end
 
 prawn_document(page_size: "A4") do |pdf|
-  pdf.font_families.update( 'marianne' => {
-      normal: Rails.root.join('lib/prawn/fonts/marianne/marianne-regular.ttf' ),
-      bold: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf' ),
-      italic: Rails.root.join('lib/prawn/fonts/marianne/marianne-thin.ttf' ),
+  pdf.font_families.update('marianne' => {
+    normal: Rails.root.join('lib/prawn/fonts/marianne/marianne-regular.ttf'),
+    bold: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf'),
+    italic: Rails.root.join('lib/prawn/fonts/marianne/marianne-thin.ttf')
   })
   pdf.font 'marianne'
   pdf.image DOSSIER_PDF_EXPORT_LOGO_SRC, width: 300, position: :center
