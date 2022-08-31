@@ -1,5 +1,5 @@
 //
-// This content is inspired by w3c aria example
+// This content is inspired by w3c aria example, rewritten for better RGAA compatibility.
 // https://www.w3.org/TR/wai-aria-practices-1.1/examples/disclosure/disclosure-faq.html
 //
 
@@ -20,22 +20,21 @@ class ButtonExpand {
       this.controlledNode = document.getElementById(id);
     }
 
-    this.domNode.setAttribute('aria-expanded', 'false');
+    this.radioInput = this.domNode.querySelector('input[type="radio"]');
+
     this.hideContent();
 
     this.domNode.addEventListener('keydown', this.handleKeydown.bind(this));
     this.domNode.addEventListener('click', this.handleClick.bind(this));
-    this.domNode.addEventListener('focus', this.handleFocus.bind(this));
-    this.domNode.addEventListener('blur', this.handleBlur.bind(this));
   }
 
   showContent() {
-    this.domNode.setAttribute('aria-expanded', 'true');
-    this.domNode.classList.add('primary');
+    this.radioInput.checked = true;
+
     if (this.controlledNode) {
+      this.controlledNode.setAttribute('aria-hidden', 'false');
       this.controlledNode.classList.remove('hidden');
     }
-    this.formInput.value = this.domNode.getAttribute('data-question-type');
 
     this.allButtons.forEach((b) => {
       if (b != this) {
@@ -45,18 +44,22 @@ class ButtonExpand {
   }
 
   hideContent() {
-    this.domNode.setAttribute('aria-expanded', 'false');
-    this.domNode.classList.remove('primary');
+    this.radioInput.checked = false;
+
     if (this.controlledNode) {
+      this.controlledNode.setAttribute('aria-hidden', 'true');
       this.controlledNode.classList.add('hidden');
     }
   }
 
   toggleExpand() {
-    if (this.domNode.getAttribute('aria-expanded') === 'true') {
-      this.hideContent();
-    } else {
+    if (
+      this.controlledNode &&
+      this.controlledNode.getAttribute('aria-hidden') === 'true'
+    ) {
       this.showContent();
+    } else {
+      this.hideContent();
     }
   }
 
@@ -64,14 +67,10 @@ class ButtonExpand {
     this.allButtons = buttons;
   }
 
-  setFormInput(formInput) {
-    this.formInput = formInput;
-  }
-
-  handleKeydown() {
+  handleKeydown(event) {
     switch (event.keyCode) {
       case this.keyCode.RETURN:
-        this.toggleExpand();
+        this.showContent();
 
         event.stopPropagation();
         event.preventDefault();
@@ -83,17 +82,11 @@ class ButtonExpand {
   }
 
   handleClick() {
-    event.stopPropagation();
-    event.preventDefault();
-    this.toggleExpand();
-  }
+    // NOTE: click event is also fired on input and label activations
+    // ie., not necessarily by a mouse click but any user inputs, like keyboard navigation with arrows keys.
+    // Cf https://www.w3.org/TR/2012/WD-html5-20121025/content-models.html#interactive-content
 
-  handleFocus = function () {
-    this.domNode.classList.add('focus');
-  };
-
-  handleBlur() {
-    this.domNode.classList.remove('focus');
+    this.showContent();
   }
 }
 
@@ -103,18 +96,14 @@ if (document.querySelector('#contact-form')) {
   window.addEventListener(
     'DOMContentLoaded',
     function () {
-      var buttons = document.querySelectorAll(
-        'button[aria-expanded][aria-controls], button.button-without-hint'
-      );
+      var buttons = document.querySelectorAll('fieldset[name=type] label');
       var expandButtons = [];
-      var formInput = document.querySelector('form input#type');
 
       buttons.forEach((button) => {
         var be = new ButtonExpand(button);
         expandButtons.push(be);
       });
       expandButtons.forEach((button) => button.setAllButtons(expandButtons));
-      expandButtons.forEach((button) => button.setFormInput(formInput));
     },
     false
   );

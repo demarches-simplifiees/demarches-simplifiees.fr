@@ -30,6 +30,12 @@ module ApplicationHelper
     class_names.join(' ')
   end
 
+  def flash_role(level)
+    return "status" if level == "notice"
+
+    'alert'
+  end
+
   def react_component(name, props = {}, html = {})
     tag.div(**html.merge(data: { controller: 'react', react_component_value: name, react_props_value: props.to_json }))
   end
