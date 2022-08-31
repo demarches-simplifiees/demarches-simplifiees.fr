@@ -34,6 +34,8 @@
     = vite_stylesheet_tag 'application', media: 'all'
     = stylesheet_link_tag 'application', media: 'all'
 
+    = yield(:invisible_captcha_styles)
+
   %body{ id: content_for(:page_id), class: browser.platform.ios? ? 'ios' : nil }
     .page-wrapper
       = render partial: "layouts/outdated_browser_banner"
@@ -44,7 +46,7 @@
           Env Test
 
       = render partial: "layouts/header"
-      %main
+      %main{ role: :main }
         = render partial: "layouts/flash_messages"
         = content_for?(:content) ? yield(:content) : yield
 

@@ -1,4 +1,5 @@
 = content_for(:page_id, 'auth')
+= content_for(:title, t('metas.signin.title'))
 
 #session-new.auth-form.sign-in-form
 
@@ -8,7 +9,7 @@
     = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
 
     = f.label :email, t('views.users.sessions.new.email')
-    = f.text_field :email, type: :email, autocomplete: 'username', autofocus: true
+    = f.text_field :email, type: :email, autocomplete: 'email', autofocus: true
 
     = f.label :password, t('views.users.sessions.new.password', min_length: PASSWORD_MIN_LENGTH)
     = f.password_field :password, autocomplete: 'current-password'
