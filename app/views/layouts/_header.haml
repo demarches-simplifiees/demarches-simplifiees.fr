@@ -6,7 +6,7 @@
 - is_expert_context = nav_bar_profile == :expert && expert_signed_in?
 - is_user_context = nav_bar_profile == :user
 - is_search_enabled = [params[:controller] == 'recherche', is_instructeur_context, is_expert_context, is_user_context && current_user.dossiers.count].any?
-%header.fr-header{ class: current_page?(root_path) ? nil : "new-header-with-border", role: "banner"}
+%header{ class: current_page?(root_path) ? "fr-header" : "fr-header new-header-with-border", role: "banner" }
   .fr-header__body
     .fr-container
       .fr-header__body-row
@@ -73,6 +73,7 @@
             = render partial: 'layouts/search_dossiers_form', locals: { search_endpoint: recherche_dossiers_path }
 
   - has_header = [is_instructeur_context, is_expert_context, is_user_context]
+<<<<<<< HEAD
   #burger-menu.fr-header__menu.fr-modal{ "aria-labelledby" => "button_burger" }
     .fr-container
       %button.fr-btn--close.fr-btn{ "aria-controls" => "burger-menu", :title => t('close_modal', scope: [:layouts, :header]) }= t('close_modal', scope: [:layouts, :header])
@@ -84,6 +85,19 @@
       %div.fr-header__menu-links
       %nav#navigation-478.fr-nav{"aria-label" => "Menu principal", :role => "navigation"}
               = link_to t('layouts.header.back'), url_for(:back), title: t('layouts.header.back'), class: 'fr-nav__link'
+=======
+  #burger-menu.fr-header__menu.fr-modal{ "aria-labelledby" => "button-477" }
+    .fr-container
+      %button.fr-btn--close.fr-btn{ "aria-controls" => "burger-menu", :title => "Fermer" } Fermer
+      .fr-header__menu-links
+      %nav#navigation-478.fr-nav{ "aria-label" => "Menu principal", :role => "navigation" }
+        %ul.fr-nav__list
+          -# Questionner UX pour un back JS
+          - if params[:controller] == 'users/commencer'
+            %li.fr-nav__item
+              = link_to 'Revenir en arrière', url_for(:back), title: "Revenir sur le site de mon administration", class: 'fr-nav__link'
+
+>>>>>>> 1d4c3fada (fix(spec): 1. visit new_user_session_path instead of navigating to it. 2. change way to submit search according to dsfr html. 3. avoid nav without aria label. 4. various lint fixes)
           - if is_instructeur_context
             - if current_instructeur.procedures.any?
               - current_url = request.path_info

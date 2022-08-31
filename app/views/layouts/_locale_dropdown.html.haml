@@ -1,6 +1,6 @@
-%nav.fr-translate.fr-nav{:role => "navigation", title: t('.select_locale')}
+%nav.fr-translate.fr-nav{ :role => "navigation", title: t('.select_locale') }
   .fr-nav__item
-    %button.fr-translate__btn.fr-btn{"aria-controls" => "translate", "aria-expanded" => "false", :title => t('.select_locale')}
+    %button.fr-translate__btn.fr-btn{ "aria-controls" => "translate", "aria-expanded" => "false", :title => t('.select_locale') }
       = t(".#{I18n.locale}")
       %span.fr-hidden-lg= t('.francais')
     #translate.fr-collapse.fr-menu

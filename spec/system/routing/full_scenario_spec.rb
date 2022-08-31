@@ -84,11 +84,11 @@ describe 'The routing', js: true do
 
     # the search only show litteraires dossiers
     fill_in 'q', with: scientifique_user.email
-    click_on 'Rechercher'
+    find('.fr-search-bar .fr-btn').click
     expect(page).to have_text('0 dossier trouvé')
 
     fill_in 'q', with: litteraire_user.email
-    click_on 'Rechercher'
+    find('.fr-search-bar .fr-btn').click
     expect(page).to have_text('1 dossier trouvé')
 
     ## and the result is clickable

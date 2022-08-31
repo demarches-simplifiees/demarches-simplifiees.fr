@@ -10,7 +10,7 @@
 
           - steps.each.with_index do |step, i|
             - if i == steps.size - 1
-              %li{ aria: {current: "page"}}
+              %li{ aria: { current: "page" } }
                 %span.fr-breadcrumb__link= step[0]
             - else
               %li= link_to step[0], step[1], class: 'fr-breadcrumb__link'
