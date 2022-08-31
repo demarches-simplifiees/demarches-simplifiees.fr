@@ -6,10 +6,16 @@ require:
   - ./lib/cops/application_name.rb
   - ./lib/cops/unscoped.rb
 
+inherit_mode:
+  merge:
+    - Include
+
 AllCops:
   TargetRubyVersion: 3.0
   DisabledByDefault: true
   SuggestExtensions: false
+  Include:
+    - "app/**/*.prawn"
   Exclude:
     - "db/schema.rb"
     - "db/migrate/20190730153555_recreate_structure.rb"

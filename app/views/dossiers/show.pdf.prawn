@@ -29,7 +29,7 @@ def format_in_2_lines(pdf, label, text)
   maybe_start_new_page(pdf, min_height)
 
   pdf.pad_bottom(2) do
-    pdf.font 'marianne', style: :bold, size: 12  do
+    pdf.font 'marianne', style: :bold, size: 12 do
       pdf.text label
     end
   end
@@ -211,9 +211,9 @@ def add_etats_dossier(pdf, dossier)
 end
 
 prawn_document(page_size: "A4") do |pdf|
-  pdf.font_families.update( 'marianne' => {
-    normal: Rails.root.join('lib/prawn/fonts/marianne/marianne-regular.ttf' ),
-    bold: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf' ),
+  pdf.font_families.update('marianne' => {
+    normal: Rails.root.join('lib/prawn/fonts/marianne/marianne-regular.ttf'),
+    bold: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf')
   })
   pdf.font 'marianne'
 
