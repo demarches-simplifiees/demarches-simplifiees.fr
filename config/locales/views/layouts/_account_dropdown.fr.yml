@@ -2,6 +2,7 @@ fr:
   layouts:
     header:
       files: Dossiers
+    menu_aria_label: 'Menu mon profil'
     go_superadmin: "Passer en super-admin"
     go_user: "Passer en usager"
     go_instructor: "Passer en instructeur"

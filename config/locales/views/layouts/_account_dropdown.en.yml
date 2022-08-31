@@ -2,6 +2,7 @@ en:
   layouts:
     header:
       files: Files
+    menu_aria_label: 'Menu my profile'
     go_superadmin: "Switch to super-admin"
     go_user: "Switch to user"
     go_instructor: "Switch to instructor"
