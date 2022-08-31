@@ -108,7 +108,7 @@ class Champs::CarteChamp < Champ
   end
 
   def for_export
-    nil
+    geo_areas.map(&:label).join("\n")
   end
 
   def blank?

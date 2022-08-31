@@ -6,3 +6,12 @@ fr:
           cadastre: Parcelle cadastrale
           quartier_prioritaire: Quartier prioritaire
           selection_utilisateur: Sélection utilisateur
+  geo_area:
+    label:
+      cadastre: "Parcelle n° %{numero} - Feuille %{prefixe} %{section} - %{surface} m²"
+      area: "Une aire de surface %{area} m²"
+      area_unknown: "Une aire de surface inconnue"
+      line: "Une ligne longue de %{length} m"
+      line_unknown: "Une ligne de longueur inconnue"
+      point: "Un point situé à %{location}"
+
