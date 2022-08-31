@@ -18,8 +18,6 @@
     = vite_client_tag
     = vite_react_refresh_tag
     = vite_javascript_tag 'application'
-    = vite_javascript_tag 'dsfr-module', type: "module", nonce: true
-    = vite_javascript_tag 'dsfr-nomodule', type: 'nomodule', type: "text/javascript", nonce: true
     - if administrateur_signed_in?
       = vite_javascript_tag 'track-admin'
 
@@ -33,8 +31,8 @@
     = preload_link_tag(asset_url("Marianne-Regular.woff2"))
     = preload_link_tag(asset_url("Spectral-Regular.ttf"))
 
-    = stylesheet_link_tag 'application', media: 'all'
     = vite_stylesheet_tag 'application', media: 'all'
+    = stylesheet_link_tag 'application', media: 'all'
 
   %body{ id: content_for(:page_id), class: browser.platform.ios? ? 'ios' : nil }
     .page-wrapper
