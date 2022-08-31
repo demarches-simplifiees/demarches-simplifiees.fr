@@ -25,16 +25,13 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
   grey = '555555'
   black = '333333'
 
-  pdf.float do
-    pdf.image DOSSIER_PDF_EXPORT_LOGO_SRC, height: 64
-  end
+  pdf.pad_bottom(30) do
+    pdf.image DOSSIER_PDF_EXPORT_LOGO_SRC, width: 300, position: :center
 
-  pdf.bounding_box([110, pdf.cursor - 18], width: header_width - 200) do
-    pdf.fill_color black
-    pdf.text APPLICATION_NAME, size: 20, style: :bold
-
-    pdf.fill_color grey
-    pdf.text t('.receipt'), size: 14
+    pdf.pad_top(15) do
+      pdf.fill_color grey
+      pdf.text t('.receipt'), size: 14, align: :center
+    end
   end
 
   pdf.bounding_box([body_left_margin, pdf.cursor - 20], width: body_width) do
