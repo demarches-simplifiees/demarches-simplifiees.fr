@@ -17,7 +17,7 @@ export class ApplicationController extends Controller {
 
   protected globalDispatch<T = Detail>(type: string, detail?: T): void {
     this.dispatch(type, {
-      detail,
+      detail: detail as object,
       prefix: '',
       target: document.documentElement
     });
