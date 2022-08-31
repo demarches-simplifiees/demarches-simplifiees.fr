@@ -1,0 +1,6 @@
+---
+en:
+  numero_allocataire_label: CAF benefit number
+  numero_allocataire_notice: It is usually composed of 7 digits.
+  code_postal_label: postal code
+  code_postal_notice: It is usually composed of 5 digits.
