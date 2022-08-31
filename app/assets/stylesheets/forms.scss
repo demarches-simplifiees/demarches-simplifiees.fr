@@ -494,6 +494,10 @@
     }
   }
 
+  .justify-content--space-between {
+    justify-content: space-between;
+  }
+
   .send-notice {
     @include notice-text-style;
     margin-bottom: $default-padding;
@@ -602,4 +606,8 @@ input::placeholder,
 textarea::placeholder {
   opacity: 0.6; // normalize opacity across browsers
   color: $dark-grey;
+}
+
+.send-wrapper--with-border-top {
+  border-top: 2px solid rgba(0, 0, 145, 1);
 }

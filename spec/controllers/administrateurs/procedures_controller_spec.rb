@@ -332,11 +332,11 @@ describe Administrateurs::ProceduresController, type: :controller do
       before { subject }
 
       it 'creates a new procedure and redirect to it' do
-        expect(response).to redirect_to edit_admin_procedure_path(id: Procedure.last.id)
+        expect(response).to redirect_to admin_procedure_path(id: Procedure.last.id)
         expect(Procedure.last.cloned_from_library).to be_falsey
         expect(Procedure.last.notice.attached?).to be_truthy
         expect(Procedure.last.deliberation.attached?).to be_truthy
-        expect(flash[:notice]).to have_content 'Démarche clonée'
+        expect(flash[:notice]).to have_content 'Démarche clonée, pensez a vérifier la Présentation et choisir le service a laquelle cette procédure est associé.'
       end
 
       context 'when the procedure is cloned from the library' do
@@ -356,8 +356,8 @@ describe Administrateurs::ProceduresController, type: :controller do
       end
 
       it 'creates a new procedure and redirect to it' do
-        expect(response).to redirect_to edit_admin_procedure_path(id: Procedure.last.id)
-        expect(flash[:notice]).to have_content 'Démarche clonée'
+        expect(response).to redirect_to admin_procedure_path(id: Procedure.last.id)
+        expect(flash[:notice]).to have_content 'Démarche clonée, pensez a vérifier la Présentation et choisir le service a laquelle cette procédure est associé.'
       end
     end
   end

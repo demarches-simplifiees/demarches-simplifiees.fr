@@ -486,6 +486,10 @@ class Procedure < ApplicationRecord
     procedure.published_at = nil
     procedure.auto_archive_on = nil
     procedure.lien_notice = nil
+    procedure.duree_conservation_etendue_par_ds = false
+    if procedure.duree_conservation_dossiers_dans_ds > NEW_MAX_DUREE_CONSERVATION
+      procedure.duree_conservation_dossiers_dans_ds = NEW_MAX_DUREE_CONSERVATION
+    end
     procedure.published_revision = nil
     procedure.draft_revision.procedure = procedure
 
@@ -510,12 +514,7 @@ class Procedure < ApplicationRecord
     procedure.parent_procedure = self
     procedure.canonical_procedure = nil
     procedure.replaced_by_procedure = nil
-
-    if from_library
-      procedure.service = nil
-    elsif self.service.present? && is_different_admin
-      procedure.service = self.service.clone_and_assign_to_administrateur(admin)
-    end
+    procedure.service = nil
 
     transaction do
       procedure.save
