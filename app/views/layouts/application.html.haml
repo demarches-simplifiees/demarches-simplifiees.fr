@@ -32,6 +32,7 @@
     = preload_link_tag(asset_url("Muli-Bold.woff2"))
 
     = stylesheet_link_tag 'application', media: 'all'
+    = vite_stylesheet_tag 'application', media: 'all'
 
   %body{ id: content_for(:page_id), class: browser.platform.ios? ? 'ios' : nil }
     .page-wrapper
