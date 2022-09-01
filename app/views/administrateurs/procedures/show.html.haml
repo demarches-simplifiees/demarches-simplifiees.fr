@@ -4,41 +4,45 @@
             metadatas: ["Créée le #{@procedure.created_at.strftime('%d/%m/%Y')} - n° #{@procedure.id}", "#{@procedure.close? ? "Close le #{@procedure.closed_at.strftime('%d/%m/%Y')}" : @procedure.locked? ? "Publiée - #{procedure_lien(@procedure)}" : "Brouillon"}"] }
 
 .container.procedure-admin-container
-  - if !@procedure.brouillon?
-    = link_to admin_procedure_archives_path(@procedure), class: 'button', id: "archive-procedure" do
-      %span.icon.download
-      Télécharger
+  - if @procedure.draft_revision.valid?
+    - if !@procedure.brouillon?
+      = link_to admin_procedure_archives_path(@procedure), class: 'button', id: "archive-procedure" do
+        %span.icon.download
+        Télécharger
 
-  = link_to @procedure.active_revision.draft? ? commencer_dossier_vide_test_path(path: @procedure.path) : commencer_dossier_vide_path(path: @procedure.path), target: "_blank", rel: "noopener", class: 'button', id: "pdf-procedure" do
-    %span.icon.printer
-    PDF
+      = link_to @procedure.active_revision.draft? ? commencer_dossier_vide_test_path(path: @procedure.path) : commencer_dossier_vide_path(path: @procedure.path), target: "_blank", rel: "noopener", class: 'button', id: "pdf-procedure" do
+        %span.icon.printer
+        PDF
 
-  = link_to apercu_admin_procedure_path(@procedure), target: "_blank", rel: "noopener", class: 'button', id: "preview-procedure" do
-    %span.icon.preview
-    Prévisualiser
+    = link_to apercu_admin_procedure_path(@procedure), target: "_blank", rel: "noopener", class: 'button', id: "preview-procedure" do
+      %span.icon.preview
+      Prévisualiser
 
-  - if @procedure.brouillon? || @procedure.draft_changed?
-    = link_to sanitize_url(@procedure_lien_test), target: :blank, rel: :noopener, class: 'button' do
-      %span.icon.in-progress
-      Tester
+    - if @procedure.brouillon? || @procedure.draft_changed?
+      = link_to sanitize_url(@procedure_lien_test), target: :blank, rel: :noopener, class: 'button' do
+        %span.icon.in-progress
+        Tester
 
-  - if @procedure.publiee? || @procedure.brouillon?
-    = link_to admin_procedure_transfert_path(@procedure), class: 'button' do
-      %span.icon.reply
-      Envoyer une copie
+    - if @procedure.publiee? || @procedure.brouillon?
+      = link_to admin_procedure_transfert_path(@procedure), class: 'button' do
+        %span.icon.reply
+        Envoyer une copie
 
-  - if !@procedure.publiee? && !@procedure.close? && !@procedure.depubliee?
-    = link_to 'Publier', admin_procedure_publication_path(@procedure), class: 'button primary', id: 'publish-procedure-link', data: { disable_with: "Publication..." }
+    - if !@procedure.publiee? && !@procedure.close? && !@procedure.depubliee?
+      = link_to 'Publier', admin_procedure_publication_path(@procedure), class: 'button primary', id: 'publish-procedure-link', data: { disable_with: "Publication..." }
 
-  - if (@procedure.close? || @procedure.depubliee?) && !@procedure.draft_changed?
-    = link_to 'Réactiver', admin_procedure_publication_path(@procedure), class: 'button primary', id: 'publish-procedure-link', data: { disable_with: "Publication..." }
+    - if (@procedure.close? || @procedure.depubliee?) && !@procedure.draft_changed?
+      = link_to 'Réactiver', admin_procedure_publication_path(@procedure), class: 'button primary', id: 'publish-procedure-link', data: { disable_with: "Publication..." }
 
-  - if @procedure.locked? && !@procedure.close?
-    = link_to admin_procedure_archive_path(procedure_id: @procedure.id), method: :put, class: 'button', id: "close-procedure-link", data: { confirm:  "Voulez-vous vraiment clore la démarche ? \nLes dossiers en cours pourront être instruits, mais aucun nouveau dossier ne pourra plus être déposé.", disable_with: "Archivage..."} do
-      %span.icon.archive
-      Clore
+    - if @procedure.locked? && !@procedure.close?
+      = link_to admin_procedure_archive_path(procedure_id: @procedure.id), method: :put, class: 'button', id: "close-procedure-link", data: { confirm:  "Voulez-vous vraiment clore la démarche ? \nLes dossiers en cours pourront être instruits, mais aucun nouveau dossier ne pourra plus être déposé.", disable_with: "Archivage..."} do
+        %span.icon.archive
+        Clore
 
-- if @procedure.draft_changed?
+.container
+  = render TypesDeChampEditor::ErrorsSummary.new(revision: @procedure.draft_revision)
+
+- if @procedure.draft_changed? && @procedure.draft_revision.valid?
   .container
     .card.featured
       .card-title

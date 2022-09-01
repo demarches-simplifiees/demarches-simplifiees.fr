@@ -1,4 +1,5 @@
 .types-de-champ-editor.editor-root{ 'data-turbo': 'true', id: dom_id(@revision, :types_de_champ_editor) }
+  = render TypesDeChampEditor::ErrorsSummary.new(revision: @revision)
   = render TypesDeChampEditor::BlockComponent.new(block: @revision, coordinates: coordinates)
   .buttons
     = render TypesDeChampEditor::AddChampButtonComponent.new(revision: @revision, is_annotation: annotations?)
