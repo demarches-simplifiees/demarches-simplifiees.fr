@@ -102,6 +102,10 @@
       &.section {
         padding: $default-spacer $default-spacer 0;
         margin-bottom: 8px;
+
+        input {
+          background-color: $white;
+        }
       }
 
       &.hr {
