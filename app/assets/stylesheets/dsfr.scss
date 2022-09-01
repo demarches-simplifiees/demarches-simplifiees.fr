@@ -1,3 +1,17 @@
+@import "colors";
+// override default text underline of dsfr
 body [href] {
   background-image: none;
+}
+
+// override default transparent background on inputs
+input,
+textarea,
+select {
+  background: $white;
+}
+
+// with Marianne font, weight of font is less bolder, so bold it up
+.button.primary {
+  font-weight: bold;
 }
