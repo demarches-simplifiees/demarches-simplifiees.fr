@@ -46,6 +46,15 @@ class DossierMailer < ApplicationMailer
     end
   end
 
+  def notify_new_avis_to_instructeur(avis, instructeur_email)
+    I18n.with_locale(avis.dossier.user_locale) do
+      @avis = avis
+      @subject = default_i18n_subject(dossier_id: avis.dossier.id, libelle_demarche: avis.procedure.libelle)
+
+      mail(to: instructeur_email, subject: @subject)
+    end
+  end
+
   def notify_new_dossier_depose_to_instructeur(dossier, instructeur_email)
     I18n.with_locale(dossier.user_locale) do
       @dossier = dossier
