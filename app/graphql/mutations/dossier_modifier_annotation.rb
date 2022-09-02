@@ -54,7 +54,10 @@ module Mutations
       when :text
         [
           TypeDeChamp.type_champs.fetch(:text),
-          TypeDeChamp.type_champs.fetch(:textarea)
+          TypeDeChamp.type_champs.fetch(:textarea),
+          TypeDeChamp.type_champs.fetch(:drop_down_list),
+          TypeDeChamp.type_champs.fetch(:email),
+          TypeDeChamp.type_champs.fetch(:phone)
         ]
       when :checkbox
         [
