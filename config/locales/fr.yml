@@ -60,6 +60,7 @@ fr:
       close_modal: 'Fermer'
       back: "Revenir en arrière"
       back_title: "Revenir sur le site de mon administration"
+      main_menu: "Menu principal"
     locale_dropdown:
       languages: "Langues"
       select_locale: "Sélectionner une langue"
