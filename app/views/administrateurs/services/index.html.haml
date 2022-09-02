@@ -4,10 +4,10 @@
                     'Choix du service'] }
 
 #services-index.container
-  %h1 Liste des Services
+  %h1.fr-h1 Liste des Services
+  %h2.fr-h4 La démarche “#{@procedure.libelle}” peut être affectée aux services dans la liste ci-dessous
 
   %table.fr-table.width-100.mt-3
-    %caption La démarche “#{@procedure.libelle}” peut être affectée aux services dans la liste ci-dessous
     %thead
       %tr
         %th{ scope: "col" }
