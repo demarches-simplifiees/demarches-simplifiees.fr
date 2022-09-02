@@ -261,7 +261,7 @@ module Instructeurs
 
     def assign_to_params
       params.require(:assign_to)
-        .permit(:instant_email_dossier_notifications_enabled, :instant_email_message_notifications_enabled, :daily_email_notifications_enabled, :weekly_email_notifications_enabled)
+        .permit(:instant_expert_avis_email_notifications_enabled, :instant_email_dossier_notifications_enabled, :instant_email_message_notifications_enabled, :daily_email_notifications_enabled, :weekly_email_notifications_enabled)
     end
 
     def assign_exports

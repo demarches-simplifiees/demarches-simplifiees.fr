@@ -4,10 +4,11 @@ describe Experts::AvisController, type: :controller do
 
     let(:now) { Time.zone.parse('01/02/2345') }
     let(:instructeur) { create(:instructeur) }
+    let!(:instructeur_with_instant_avis_notification) { create(:instructeur) }
     let(:another_instructeur) { create(:instructeur) }
     let(:claimant) { create(:expert) }
     let(:expert) { create(:expert) }
-    let(:procedure) { create(:procedure, :published, instructeurs: [instructeur, another_instructeur]) }
+    let(:procedure) { create(:procedure, :published, instructeurs: [instructeur, another_instructeur, instructeur_with_instant_avis_notification]) }
     let(:another_procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
     let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
@@ -152,6 +153,38 @@ describe Experts::AvisController, type: :controller do
           expect(avis_without_answer.piece_justificative_file).to_not be_attached
           expect(dossier.reload.last_avis_updated_at).to eq(now)
           expect(flash.notice).to eq('Votre réponse est enregistrée.')
+        end
+      end
+
+      context 'without attachment with an instructeur wants to be notified' do
+        before do
+          allow(DossierMailer).to receive(:notify_new_avis_to_instructeur).and_return(double(deliver_later: nil))
+          AssignTo.find_by(instructeur: instructeur_with_instant_avis_notification).update!(instant_expert_avis_email_notifications_enabled: true)
+          Timecop.freeze(now)
+          instructeur_with_instant_avis_notification.follow(avis_without_answer.dossier)
+          patch :update, params: { id: avis_without_answer.id, procedure_id: procedure.id, avis: { answer: 'answer' } }
+          avis_without_answer.reload
+        end
+        after { Timecop.return }
+
+        it 'The instructeur should be notified of the new avis' do
+          expect(DossierMailer).to have_received(:notify_new_avis_to_instructeur).once.with(avis_without_answer, instructeur_with_instant_avis_notification.email)
+        end
+      end
+
+      context 'without attachment with an instructeur wants to be notified' do
+        before do
+          allow(DossierMailer).to receive(:notify_new_avis_to_instructeur).and_return(double(deliver_later: nil))
+          AssignTo.find_by(instructeur: instructeur_with_instant_avis_notification).update!(instant_expert_avis_email_notifications_enabled: true)
+          Timecop.freeze(now)
+          instructeur_with_instant_avis_notification.follow(avis_without_answer.dossier)
+          patch :update, params: { id: avis_without_answer.id, procedure_id: procedure.id, avis: { answer: 'answer' } }
+          avis_without_answer.reload
+        end
+        after { Timecop.return }
+
+        it 'The instructeur should be notified of the new avis' do
+          expect(DossierMailer).to have_received(:notify_new_avis_to_instructeur).once.with(avis_without_answer, instructeur_with_instant_avis_notification.email)
         end
       end
 
