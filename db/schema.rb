@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_30_125703) do
+ActiveRecord::Schema.define(version: 2022_09_02_151920) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -111,7 +111,7 @@ ActiveRecord::Schema.define(version: 2022_08_30_125703) do
     t.bigint "groupe_instructeur_id"
     t.boolean "instant_email_dossier_notifications_enabled", default: false, null: false
     t.boolean "instant_email_message_notifications_enabled", default: false, null: false
-    t.boolean "instant_expert_avis_email_notifications_enabled", default: false, null: false
+    t.boolean "instant_expert_avis_email_notifications_enabled", default: false
     t.integer "instructeur_id"
     t.boolean "manager", default: false
     t.datetime "updated_at"
@@ -119,6 +119,7 @@ ActiveRecord::Schema.define(version: 2022_08_30_125703) do
     t.index ["groupe_instructeur_id", "instructeur_id"], name: "unique_couple_groupe_instructeur_instructeur", unique: true
     t.index ["groupe_instructeur_id"], name: "index_assign_tos_on_groupe_instructeur_id"
     t.index ["instructeur_id"], name: "index_assign_tos_on_instructeur_id"
+    t.check_constraint "instant_expert_avis_email_notifications_enabled IS NOT NULL", name: "assign_tos_instant_expert_avis_email_notifications_enabled_null"
   end
 
   create_table "attestation_templates", id: :serial, force: :cascade do |t|
