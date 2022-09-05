@@ -164,20 +164,20 @@ describe 'As an administrateur I can edit types de champ', js: true do
     expect(page).to have_content('Un menu')
   end
 
-  # it "Add visa champ" do
-  #   add_champ
-  #
-  #   select('Visa', from: 'champ-0-type_champ')
-  #   fill_in 'champ-0-libelle', with: 'Libellé de champ visa', fill_options: { clear: :backspace }
-  #   fill_in 'champ-0-drop_down_list_value', with: 'boss@company.com', fill_options: { clear: :backspace }
-  #
-  #   wait_until { procedure.draft_types_de_champ.first.accredited_user_list == ['boss@company.com'] }
-  #   expect(page).to have_content('Formulaire enregistré')
-  #
-  #   page.refresh
-  #
-  #   expect(page).to have_content('boss@company.com')
-  # end
+  it "Add visa champ" do
+    add_champ
+
+    select('Visa', from: 'Type de champ')
+    fill_in 'Libellé du champ', with: 'Libellé de champ visa', fill_options: { clear: :backspace }
+    fill_in 'Mails des personnes accréditées', with: 'boss@company.com', fill_options: { clear: :backspace }
+
+    wait_until { procedure.draft_types_de_champ.first.accredited_user_list == ['boss@company.com'] }
+    expect(page).to have_content('Formulaire enregistré')
+
+    page.refresh
+
+    expect(page).to have_content('boss@company.com')
+  end
 
   scenario "displaying the estimated fill duration" do
     # It doesn't display anything when there are no champs

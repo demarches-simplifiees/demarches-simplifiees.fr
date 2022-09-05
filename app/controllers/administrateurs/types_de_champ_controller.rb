@@ -86,11 +86,12 @@ module Administrateurs
         .permit(:type_champ, :parent_stable_id, :private, :libelle, :after_stable_id)
     end
 
+    INSTANCE_PARAMS = TypeDeChamp::INSTANCE_OPTIONS.map { |tdc| tdc != :accredited_users ? tdc : :accredited_user_string }
     INSTANCE_EDITABLE_OPTIONS = TypesDeChamp::TeFenuaTypeDeChamp::LAYERS
 
     def type_de_champ_update_params
       params.required(:type_de_champ).permit(:type_champ,
-        *TypeDeChamp::INSTANCE_OPTIONS,
+        *INSTANCE_PARAMS,
         :libelle,
         :description,
         :mandatory,
