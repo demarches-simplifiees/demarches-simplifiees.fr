@@ -16,16 +16,6 @@ describe Champ do
     end
   end
 
-  describe "validations" do
-    let(:row) { 1 }
-    let(:champ) { create(:champ, type_de_champ: create(:type_de_champ), row: row) }
-    let(:champ2) { build(:champ, type_de_champ: champ.type_de_champ, row: champ.row, dossier: champ.dossier) }
-
-    it "returns false when champ with same type_de_champ and row already exist" do
-      expect(champ2).not_to be_valid
-    end
-  end
-
   describe "normalization" do
     it "should remove null bytes before save" do
       champ = create(:champ, value: "foo\u0000bar")
