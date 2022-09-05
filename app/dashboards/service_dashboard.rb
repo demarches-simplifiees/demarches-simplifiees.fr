@@ -20,7 +20,7 @@ class ServiceDashboard < Administrate::BaseDashboard
     horaires: Field::String,
     adresse: Field::String,
     siret: Field::String,
-    etablissement_adresse: Field::String,
+    etablissement_adresse: Field::String.with_options(searchable: false),
     etablissement_latlng: GeopointField
   }.freeze
 
