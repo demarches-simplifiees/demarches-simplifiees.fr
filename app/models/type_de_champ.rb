@@ -438,7 +438,7 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def parse_accredited_user_string(value)
-    value.blank? ? [] : value.split(/\s*[\r\n]+\s*/)
+    value.blank? ? [] : value.split(/\s*[\r\n]+\s*/).map(&:downcase)
   end
 
   def populate_stable_id
