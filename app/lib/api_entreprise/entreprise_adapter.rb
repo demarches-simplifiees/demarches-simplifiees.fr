@@ -10,7 +10,7 @@ class APIEntreprise::EntrepriseAdapter < APIEntreprise::Adapter
     params[:etat_administratif] = map_etat_administratif(data_source)
 
     if params.present? && valid_params?(params)
-      params[:date_creation] = Time.zone.at(params[:date_creation]).to_datetime
+      params[:date_creation] = Time.zone.at(params[:date_creation]).to_datetime if params[:date_creation].present?
       params.transform_keys { |k| :"entreprise_#{k}" }
     else
       {}
