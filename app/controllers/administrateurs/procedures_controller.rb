@@ -2,6 +2,7 @@ module Administrateurs
   class ProceduresController < AdministrateurController
     before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :allow_expert_review, :experts_require_administrateur_invitation, :reset_draft]
     before_action :procedure_revisable?, only: [:champs, :annotations, :modifications, :reset_draft]
+    before_action :draft_valid?, only: [:apercu]
 
     ITEMS_PER_PAGE = 25
 
@@ -308,6 +309,13 @@ module Administrateurs
     end
 
     private
+
+    def draft_valid?
+      if procedure_without_control.draft_revision.invalid?
+        flash.alert = t('preview_unavailable', scope: 'administrateurs.procedures')
+        redirect_back(fallback_location: champs_admin_procedure_path(procedure_without_control))
+      end
+    end
 
     def apercu_tab
       params[:tab] || 'dossier'
