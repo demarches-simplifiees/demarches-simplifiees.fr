@@ -90,7 +90,7 @@ end
 def add_identite_etablissement(pdf, etablissement)
   pdf.pad_bottom(default_margin) do
     format_in_2_columns(pdf, "SIRET", etablissement.siret)
-    format_in_2_columns(pdf, "SIRET du siège social", etablissement.entreprise.siret_siege_social) if etablissement.entreprise.siret_siege_social.present?
+    format_in_2_columns(pdf, "SIRET du siège social", etablissement.entreprise.siret_siege_social) if etablissement.entreprise.siret_siege_social.present?
     format_in_2_columns(pdf, "Dénomination", raison_sociale_or_name(etablissement))
     format_in_2_columns(pdf, "Forme juridique ", etablissement.entreprise_forme_juridique)
 
@@ -98,9 +98,9 @@ def add_identite_etablissement(pdf, etablissement)
       format_in_2_columns(pdf, "Capital social ", pretty_currency(etablissement.entreprise_capital_social))
     end
 
-    format_in_2_columns(pdf, "Libellé NAF ", etablissement.libelle_naf)
-    format_in_2_columns(pdf, "Code NAF ", etablissement.naf)
-    format_in_2_columns(pdf, "Date de création ", try_format_date(etablissement.entreprise.date_creation))
+    format_in_2_columns(pdf, "Libellé NAF ", etablissement.libelle_naf)
+    format_in_2_columns(pdf, "Code NAF ", etablissement.naf)
+    format_in_2_columns(pdf, "Date de création ", try_format_date(etablissement.entreprise.date_creation))
 
     if etablissement.entreprise_etat_administratif.present?
       format_in_2_columns(pdf, "État administratif", humanized_entreprise_etat_administratif(etablissement))
@@ -116,19 +116,19 @@ def add_identite_etablissement(pdf, etablissement)
     end
 
     format_in_2_columns(pdf, "Effectif (ISPF) ", effectif(etablissement))
-    format_in_2_columns(pdf, "Code effectif ", etablissement.entreprise.code_effectif_entreprise)
+    format_in_2_columns(pdf, "Code effectif ", etablissement.entreprise.code_effectif_entreprise)
     if etablissement.entreprise.numero_tva_intracommunautaire.present?
-      format_in_2_columns(pdf, "Numéro de TVA intracommunautaire ", etablissement.entreprise.numero_tva_intracommunautaire)
+      format_in_2_columns(pdf, "Numéro de TVA intracommunautaire ", etablissement.entreprise.numero_tva_intracommunautaire)
     end
-    format_in_2_columns(pdf, "Adresse ", etablissement.adresse)
+    format_in_2_columns(pdf, "Adresse ", etablissement.adresse)
 
     if etablissement.association?
-      format_in_2_columns(pdf, "Numéro RNA ", etablissement.association_rna)
-      format_in_2_columns(pdf, "Titre ", etablissement.association_titre)
-      format_in_2_columns(pdf, "Objet ", etablissement.association_objet)
-      format_in_2_columns(pdf, "Date de création ", try_format_date(etablissement.association_date_creation))
-      format_in_2_columns(pdf, "Date de publication ", try_format_date(etablissement.association_date_publication))
-      format_in_2_columns(pdf, "Date de déclaration ", try_format_date(etablissement.association_date_declaration))
+      format_in_2_columns(pdf, "Numéro RNA ", etablissement.association_rna)
+      format_in_2_columns(pdf, "Titre ", etablissement.association_titre)
+      format_in_2_columns(pdf, "Objet ", etablissement.association_objet)
+      format_in_2_columns(pdf, "Date de création ", try_format_date(etablissement.association_date_creation))
+      format_in_2_columns(pdf, "Date de publication ", try_format_date(etablissement.association_date_publication))
+      format_in_2_columns(pdf, "Date de déclaration ", try_format_date(etablissement.association_date_declaration))
     end
   end
 end
