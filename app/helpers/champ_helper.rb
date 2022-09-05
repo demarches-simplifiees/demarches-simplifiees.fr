@@ -59,27 +59,4 @@ module ChampHelper
       end
     end
   end
-
-  def geo_area_label(geo_area)
-    case geo_area.source
-    when GeoArea.sources.fetch(:cadastre)
-      safe_join ["Parcelle n° #{geo_area.numero} - Feuille #{geo_area.prefixe} #{geo_area.section} - #{geo_area.surface.round} m", tag.sup("2")]
-    when GeoArea.sources.fetch(:selection_utilisateur)
-      if geo_area.polygon?
-        if geo_area.area.present?
-          safe_join ["Une aire de surface #{geo_area.area} m", tag.sup("2")]
-        else
-          "Une aire de surface inconnue"
-        end
-      elsif geo_area.line?
-        if geo_area.length.present?
-          "Une ligne longue de #{geo_area.length} m"
-        else
-          "Une ligne de longueur inconnue"
-        end
-      elsif geo_area.point?
-        "Un point situé à #{geo_area.location}"
-      end
-    end
-  end
 end
