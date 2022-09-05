@@ -18,15 +18,29 @@ describe Administrateurs::ProceduresController, type: :controller do
 
     let(:procedure) { create(:procedure, :with_all_champs) }
 
+    subject { get :apercu, params: { id: procedure.id } }
+
     before do
       sign_in(admin.user)
-      get :apercu, params: { id: procedure.id }
     end
 
     it do
+      subject
       expect(response).to have_http_status(:ok)
       expect(procedure.dossiers.visible_by_user).to be_empty
       expect(procedure.dossiers.for_procedure_preview).not_to be_empty
+    end
+
+    context 'when the draft is invalid' do
+      before do
+        allow_any_instance_of(ProcedureRevision).to receive(:invalid?).and_return(true)
+      end
+
+      it do
+        subject
+        expect(response).to redirect_to(champs_admin_procedure_path(procedure))
+        expect(flash[:alert]).to be_present
+      end
     end
   end
 
