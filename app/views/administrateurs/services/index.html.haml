@@ -13,7 +13,7 @@
         %th{ scope: "col" }
           Nom
         %th.change{ scope: "col" }
-          = render Dsfr::ButtonComponent.new(label: "Nouveau service", url: new_admin_service_path(procedure_id: @procedure.id), class_names: ['fr-btn--secondary'])
+          = render Dsfr::ButtonComponent.new("Nouveau service", new_admin_service_path(procedure_id: @procedure.id), class: "fr-btn--secondary")
 
     %tbody
       - @services.each do |service|
