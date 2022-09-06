@@ -18,7 +18,10 @@ class ServiceDashboard < Administrate::BaseDashboard
     email: Field::String,
     telephone: Field::String,
     horaires: Field::String,
-    adresse: Field::String
+    adresse: Field::String,
+    siret: Field::String,
+    etablissement_adresse: Field::String.with_options(searchable: false),
+    etablissement_latlng: GeopointField
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -44,7 +47,10 @@ class ServiceDashboard < Administrate::BaseDashboard
     :email,
     :telephone,
     :horaires,
-    :adresse
+    :adresse,
+    :siret,
+    :etablissement_adresse,
+    :etablissement_latlng
   ].freeze
 
   # FORM_ATTRIBUTES

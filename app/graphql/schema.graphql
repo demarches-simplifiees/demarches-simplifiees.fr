@@ -1990,6 +1990,7 @@ type Service {
   id: ID!
   nom: String!
   organisme: String!
+  siret: String
   typeOrganisme: TypeOrganisme!
 }
 

@@ -7,7 +7,7 @@ class APIEntreprise::EffectifsAnnuelsAdapter < APIEntreprise::Adapter
   private
 
   def get_resource
-    APIEntreprise::API.effectifs_annuels(siren, @procedure_id)
+    api(@procedure_id).effectifs_annuels(siren)
   end
 
   def process_params
