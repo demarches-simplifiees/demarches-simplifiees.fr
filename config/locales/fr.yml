@@ -92,7 +92,7 @@ fr:
     registrations:
       new:
         title: "Créez-vous un compte %{name}"
-        email_label: 'Email (nom@site.com)'
+        email_label: 'Email'
         email_placeholder: 'Votre adresse email'
         wanna_say: 'Voulez-vous dire'
         password_label: "Mot de passe (%{min_length} caractères minimum)"
@@ -258,7 +258,7 @@ fr:
       sessions:
         new:
           sign_in: Connectez-vous
-          email: Email (nom@site.com)
+          email: Email
           password: Mot de passe (%{min_length} caractères minimum)
           remember_me: Se souvenir de moi
           reset_password: Mot de passe oublié ?
