@@ -11,8 +11,7 @@
   - @procedure.revisions.each do |revision|
     - if previous_revision.present? && !revision.draft?
       - changes = previous_revision.compare(revision)
-      - if changes.present?
-        .card.mb-4
-          %h2.card-title= "Modifications publiées le #{l(revision.published_at, format: '%d %B %Y à %R')}"
-          = render partial: 'revision_changes', locals: { changes: changes }
+      .card.mb-4
+        %h2.card-title= "Modifications publiées le #{l(revision.published_at, format: '%d %B %Y à %R')}"
+        = render partial: 'revision_changes', locals: { changes: changes }
     - previous_revision = revision
