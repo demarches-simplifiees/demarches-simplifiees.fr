@@ -13,54 +13,77 @@ class APIEntreprise::API
   TIMEOUT = 20
   DEFAULT_API_ENTREPRISE_DELAY = 0.0
 
-  def self.entreprise(siren, procedure_id)
-    call_with_siret(ENTREPRISE_RESOURCE_NAME, siren, procedure_id)
+  attr_reader :procedure
+  attr_accessor :token
+  attr_accessor :api_object
+
+  def initialize(procedure_id = nil)
+    return if procedure_id.blank?
+
+    @procedure = Procedure.find(procedure_id)
+    @token = @procedure.api_entreprise_token
   end
 
-  def self.etablissement(siret, procedure_id)
-    call_with_siret(ETABLISSEMENT_RESOURCE_NAME, siret, procedure_id)
+  def entreprise(siren)
+    call_with_siret(ENTREPRISE_RESOURCE_NAME, siren)
   end
 
-  def self.exercices(siret, procedure_id)
-    call_with_siret(EXERCICES_RESOURCE_NAME, siret, procedure_id)
+  def etablissement(siret)
+    call_with_siret(ETABLISSEMENT_RESOURCE_NAME, siret)
   end
 
-  def self.rna(siret, procedure_id)
-    call_with_siret(RNA_RESOURCE_NAME, siret, procedure_id)
+  def exercices(siret)
+    call_with_siret(EXERCICES_RESOURCE_NAME, siret)
   end
 
-  def self.effectifs(siren, procedure_id, annee, mois)
+  def rna(siret)
+    call_with_siret(RNA_RESOURCE_NAME, siret)
+  end
+
+  def effectifs(siren, annee, mois)
     endpoint = [EFFECTIFS_RESOURCE_NAME, annee, mois, "entreprise"].join('/')
-    call_with_siret(endpoint, siren, procedure_id)
+    call_with_siret(endpoint, siren)
   end
 
-  def self.effectifs_annuels(siren, procedure_id)
-    call_with_siret(EFFECTIFS_ANNUELS_RESOURCE_NAME, siren, procedure_id)
+  def effectifs_annuels(siren)
+    call_with_siret(EFFECTIFS_ANNUELS_RESOURCE_NAME, siren)
   end
 
-  def self.attestation_sociale(siren, procedure_id)
-    procedure = Procedure.find(procedure_id)
-    call_with_siret(ATTESTATION_SOCIALE_RESOURCE_NAME, siren, procedure_id) if procedure.api_entreprise_role?("attestations_sociales")
+  def attestation_sociale(siren)
+    return unless procedure.api_entreprise_role?("attestations_sociales")
+
+    call_with_siret(ATTESTATION_SOCIALE_RESOURCE_NAME, siren)
   end
 
-  def self.attestation_fiscale(siren, procedure_id, user_id)
-    procedure = Procedure.find(procedure_id)
-    call_with_siret(ATTESTATION_FISCALE_RESOURCE_NAME, siren, procedure_id, user_id) if procedure.api_entreprise_role?("attestations_fiscales")
+  def attestation_fiscale(siren, user_id)
+    return unless procedure.api_entreprise_role?("attestations_fiscales")
+
+    call_with_siret(ATTESTATION_FISCALE_RESOURCE_NAME, siren, user_id: user_id)
   end
 
-  def self.bilans_bdf(siren, procedure_id)
-    procedure = Procedure.find(procedure_id)
-    call_with_siret(BILANS_BDF_RESOURCE_NAME, siren, procedure_id) if procedure.api_entreprise_role?("bilans_entreprise_bdf")
+  def bilans_bdf(siren)
+    return unless procedure.api_entreprise_role?("bilans_entreprise_bdf")
+
+    call_with_siret(BILANS_BDF_RESOURCE_NAME, siren)
   end
 
-  def self.privileges(token)
-    call_with_token(PRIVILEGES_RESOURCE_NAME, token)
+  def privileges
+    url = make_url(PRIVILEGES_RESOURCE_NAME)
+    call(url)
   end
 
   private
 
-  def self.call_with_token(resource_name, token)
-    url = "#{API_ENTREPRISE_URL}/#{resource_name}"
+  def call_with_siret(resource_name, siret_or_siren, user_id: nil)
+    url = make_url(resource_name, siret_or_siren)
+
+    params = build_params(user_id)
+
+    call(url, params)
+  end
+
+  def call(url, params = nil)
+    verify_token!
 
     # this is a poor man throttling
     # the idea is to queue api entreprise job on 1 worker
@@ -72,32 +95,13 @@ class APIEntreprise::API
 
     response = Typhoeus.get(url,
       headers: { Authorization: "Bearer #{token}" },
-      timeout: TIMEOUT)
-
-    if response.success?
-      JSON.parse(response.body, symbolize_names: true)
-    else
-      raise RequestFailed.new(response)
-    end
-  end
-
-  def self.call_with_siret(resource_name, siret_or_siren, procedure_id, user_id = nil)
-    if APIEntrepriseToken.new(token_for_procedure(procedure_id)).expired?
-      raise APIEntrepriseToken::TokenError, I18n.t("api_entreprise.errors.token_expired")
-    end
-
-    url = url(resource_name, siret_or_siren)
-    params = params(siret_or_siren, procedure_id, user_id)
-
-    if api_entreprise_delay != 0.0
-      sleep api_entreprise_delay
-    end
-
-    response = Typhoeus.get(url,
-      headers: { Authorization: "Bearer #{token_for_procedure(procedure_id)}" },
       params: params,
       timeout: TIMEOUT)
 
+    handle_response(response)
+  end
+
+  def handle_response(response)
     if response.success?
       JSON.parse(response.body, symbolize_names: true)
     elsif response.code&.between?(401, 499)
@@ -115,29 +119,41 @@ class APIEntreprise::API
     end
   end
 
-  def self.url(resource_name, siret_or_siren)
-    [API_ENTREPRISE_URL, resource_name, siret_or_siren].join("/")
+  def make_url(resource_name, siret_or_siren = nil)
+    [API_ENTREPRISE_URL, resource_name, siret_or_siren].compact.join("/")
   end
 
-  def self.params(siret_or_siren, procedure_id, user_id)
-    # rubocop:disable DS/ApplicationName
-    params = {
-      context: "demarches-simplifiees.fr",
-      recipient: ENV.fetch('API_ENTREPRISE_DEFAULT_SIRET'),
-      object: "procedure_id: #{procedure_id}",
-      non_diffusables: true
-    }
-    # rubocop:enable DS/ApplicationName
+  def build_params(user_id)
+    params = base_params
+
+    params[:object] = if api_object.present?
+      api_object
+    elsif procedure.present?
+      "procedure_id: #{procedure.id}"
+    end
+
     params[:user_id] = user_id if user_id.present?
+
     params
   end
 
-  def self.token_for_procedure(procedure_id)
-    procedure = Procedure.find(procedure_id)
-    procedure.api_entreprise_token
+  def base_params
+    # rubocop:disable DS/ApplicationName
+    {
+      context: "demarches-simplifiees.fr",
+      recipient: ENV.fetch('API_ENTREPRISE_DEFAULT_SIRET'),
+      non_diffusables: true
+    }
+    # rubocop:enable DS/ApplicationName
   end
 
-  def self.api_entreprise_delay
+  def api_entreprise_delay
     ENV.fetch("API_ENTREPRISE_DELAY", DEFAULT_API_ENTREPRISE_DELAY).to_f
+  end
+
+  def verify_token!
+    return unless APIEntrepriseToken.new(token).expired?
+
+    raise APIEntrepriseToken::TokenError, I18n.t("api_entreprise.errors.token_expired")
   end
 end

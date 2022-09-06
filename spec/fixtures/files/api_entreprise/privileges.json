@@ -1,0 +1,29 @@
+{
+  "privileges": [
+    "attestations_agefiph",
+    "attestations_fiscales",
+    "attestations_sociales",
+    "certificat_cnetp",
+    "associations",
+    "certificat_opqibi",
+    "documents_association",
+    "etablissements",
+    "entreprises",
+    "extrait_court_inpi",
+    "extraits_rcs",
+    "exercices",
+    "fntp_carte_pro",
+    "qualibat",
+    "probtp",
+    "msa_cotisations",
+    "bilans_entreprise_bdf",
+    "certificat_rge_ademe",
+    "conventions_collectives",
+    "actes_inpi",
+    "bilans_inpi",
+    "effectifs_acoss",
+    "entreprises_artisanales",
+    "eori_douanes",
+    "certificat_agence_bio"
+  ]
+}
