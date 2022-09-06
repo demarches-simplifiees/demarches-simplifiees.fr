@@ -19,4 +19,4 @@ fr:
           <h1 class="mt-2 mb-2">Connectez-vous</h1>
           <p><b class="bold">Avec AgentConnect</b></p>
         whats_agentconnect: 'Quʼest ce quʼAgentConnect ?'
-        pro_email: Email professionnel (nom@site.com)
+        pro_email: Email professionnel
