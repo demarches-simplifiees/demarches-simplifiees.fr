@@ -24,15 +24,15 @@
             "https://app.livestorm.co/demarches-simplifiees/presentation-general-de-demarches-simplifieesfr",
             rel: "noopener noreferrer",
             target: "_blank",
-            class: "role-panel-button-primary"
+            class: "fr-btn fr-btn--lg fr-mr-1w fr-mb-2w"
 
           = link_to "Documentation",
             DOC_URL,
             rel: "noopener noreferrer",
             target: "_blank",
-            class: "role-panel-button-secondary"
+            class: "fr-btn fr-btn--secondary fr-btn--lg"
 
-        .role-panel-30.role-more-info-image
+        .role-panel-30.role-more-info-image.fr-mt-2w
           %img.role-image{ :src => image_url("landing/roles/usagers.svg"), alt: "" }
 
 .landing-panel.usagers-panel
@@ -49,7 +49,7 @@
 
         = link_to "Créer votre compte administrateur",
             DEMANDE_INSCRIPTION_ADMIN_PAGE_URL,
-            class: "role-panel-button-primary",
+            class: "fr-btn fr-btn--lg",
             rel: "noopener noreferrer"
         %br
         %br
@@ -113,26 +113,43 @@
 
   = render partial: "root/users" if  LANDING_USERS_ENABLED
 
-  .landing-panel.cta-panel-2
-    .container
-      .half.first-half
-        %h1.cta-panel-title Vous êtes prêt pour dématérialiser ?
-        %p.cta-panel-explanation Réduisez vos temps d’instruction de 50 %
-        = link_to "Créer votre compte administrateur",
-          DEMANDE_INSCRIPTION_ADMIN_PAGE_URL,
-          class: "cta-panel-button-blue"
+  .container
+    .fr-grid-row.fr-grid-row--gutters.fr-py-5w
+      .fr-col-md-6.fr-col-12
+        .fr-card
+          .fr-card__body
+            .fr-card__content
+              %h1.fr-card__title
+                Vous êtes prêt pour dématérialiser ?
+              %p.fr-card__desc
+                Réduisez vos temps d’instruction de 50 %
+            .fr-card__footer
+              .fr-btns-group.fr-btns-group--inline-reverse.fr-btns-group--inline-lg
+                .ul
+                  .li
+                    = link_to "Créer votre compte administrateur",
+                      DEMANDE_INSCRIPTION_ADMIN_PAGE_URL,
+                      rel: "noopener noreferrer",
+                      target: "_blank",
+                      class: "fr-btn"
 
-      .half
-        %h1.cta-panel-title Vous voulez en savoir plus ?
-        %p.cta-panel-explanation Participez à notre prochain Webinaire
-        -# haml-lint:disable ApplicationNameLinter
-        = link_to "Inscription à notre webinaire",
-          "https://app.livestorm.co/demarches-simplifiees/presentation-general-de-demarches-simplifieesfr",
-          target: "_blank",
-          class: "cta-panel-button-blue"
-        -# haml-lint:enable ApplicationNameLinter
-
-      .clearfix
+      .fr-col-md-6.fr-col-12
+        .fr-card
+          .fr-card__body
+            .fr-card__content
+              %h1.fr-card__title
+                Vous voulez en savoir plus ?
+              %p.fr-card__desc
+                Participez à notre prochain Webinaire
+            .fr-card__footer
+              .fr-btns-group.fr-btns-group--inline-reverse.fr-btns-group--inline-lg
+                .ul
+                  .li
+                    = link_to "Inscription à notre webinaire",
+                      "https://app.livestorm.co/demarches-simplifiees/presentation-general-de-demarches-simplifieesfr",
+                      rel: "noopener noreferrer",
+                      target: "_blank",
+                      class: "fr-btn"
 
   .landing-panel.cta-panel
     .container
@@ -141,5 +158,5 @@
           %h1.cta-panel-title Une question, un problème ?
           %p.cta-panel-explanation Consultez notre FAQ
         %div
-          %a.cta-panel-button-white{ rel: 'noopener noreferrer', href:"#{ FAQ_URL }" }
+          %a.fr-btn.fr-btn--lg{ rel: 'noopener noreferrer', href:"#{ FAQ_URL }" }
             Voir la FAQ
