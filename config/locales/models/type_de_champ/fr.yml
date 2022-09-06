@@ -18,7 +18,7 @@ fr:
           phone: 'Téléphone'
           address: 'Adresse'
           yes_no: 'Oui/Non'
-          drop_down_list: 'Choix parmi une liste'
+          drop_down_list: 'Choix unique'
           multiple_drop_down_list: 'Choix multiples'
           linked_drop_down_list: 'Deux menus déroulants liés'
           pays: 'Pays'
