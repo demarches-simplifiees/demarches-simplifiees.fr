@@ -30,11 +30,11 @@
             COMMENT_TROUVER_MA_DEMARCHE_URL,
             target: "_blank",
             rel: "noopener noreferrer",
-            class: "role-panel-button-primary"
+            class: "fr-btn fr-btn--lg fr-mr-1w fr-mb-2w"
 
           = link_to "Se connecter",
             new_user_session_path,
-            class: "role-panel-button-secondary"
+            class: "fr-btn fr-btn--secondary fr-btn--lg"
 
   - cache "numbers-panel", :expires_in => 3.hours do
     .landing-panel
@@ -71,7 +71,7 @@
           %p.cta-panel-explanation La réponse est dans l’aide en ligne
         %div
           = link_to "Accéder à l’aide en ligne", FAQ_URL,
-            class: "cta-panel-button-white",
+            class: "fr-btn fr-btn--lg",
             target: "_blank",
             rel: "noopener noreferrer"
         -#   We temporarily disable the link to the contact page on the homepage
@@ -92,4 +92,4 @@
         %div
           = link_to "Découvrez notre outil",
             administration_path,
-            class: "cta-panel-button-blue"
+            class: "fr-btn fr-btn--lg"
