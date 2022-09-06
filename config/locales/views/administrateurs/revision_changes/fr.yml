@@ -1,6 +1,7 @@
 fr:
   administrateurs:
     revision_changes:
+      no_changes: Aucune modification
       attestation_template:
         add: Un model d’attestation à été ajouté
         update_title: Le titre de l’attestation à été modifié. Le nouveau titre est « %{to} »
