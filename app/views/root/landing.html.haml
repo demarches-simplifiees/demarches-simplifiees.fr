@@ -26,15 +26,8 @@
           %h2.role-panel-title Vous souhaitez effectuer une demande auprès d’une administration ?
           %p.role-panel-explanation Réalisez vos demandes en toute simplicité et retrouvez vos dossiers en ligne
 
-          = link_to "Comment trouver ma démarche ?",
-            COMMENT_TROUVER_MA_DEMARCHE_URL,
-            target: "_blank",
-            rel: "noopener noreferrer",
-            class: "fr-btn fr-btn--lg fr-mr-1w fr-mb-2w"
-
-          = link_to "Se connecter",
-            new_user_session_path,
-            class: "fr-btn fr-btn--secondary fr-btn--lg"
+          = render Dsfr::ButtonComponent.new("Comment trouver ma démarche ?", COMMENT_TROUVER_MA_DEMARCHE_URL, class: "fr-btn--lg fr-mr-1w fr-mb-2w", external: true)
+          = render Dsfr::ButtonComponent.new("Se connecter", new_user_session_path, class: "fr-btn--secondary fr-btn--lg", external: true)
 
   - cache "numbers-panel", :expires_in => 3.hours do
     .landing-panel
@@ -70,10 +63,7 @@
           %h2.cta-panel-title Une question, un problème ?
           %p.cta-panel-explanation La réponse est dans l’aide en ligne
         %div
-          = link_to "Accéder à l’aide en ligne", FAQ_URL,
-            class: "fr-btn fr-btn--lg",
-            target: "_blank",
-            rel: "noopener noreferrer"
+          = render Dsfr::ButtonComponent.new "Accéder à l’aide en ligne", FAQ_URL, class: "fr-btn--lg", external: true
         -#   We temporarily disable the link to the contact page on the homepage
         -#   %p.cta-panel-explanation Notre équipe est disponible pour vous renseigner et vous aider
         -# %div
@@ -90,6 +80,4 @@
           %h2.cta-panel-title.grey Administration : vous voulez dématerialiser ?
           %p.cta-panel-explanation.grey Proposez à vos usagers de remplir leurs dossiers en ligne
         %div
-          = link_to "Découvrez notre outil",
-            administration_path,
-            class: "fr-btn fr-btn--lg"
+          = render Dsfr::ButtonComponent.new "Découvrez notre outil", administration_path, class: "fr-btn--lg"
