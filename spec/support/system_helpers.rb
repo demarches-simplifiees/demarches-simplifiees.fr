@@ -126,9 +126,10 @@ module SystemHelpers
   end
 
   def log_out
-    click_button(title: 'Mon compte')
-    click_on 'Se déconnecter'
-
+    within('.fr-header .fr-container .fr-header__tools .fr-btns-group') do
+      click_button(title: 'Mon compte')
+      click_on 'Se déconnecter'
+    end
     expect(page).to have_current_path(root_path)
   end
 
