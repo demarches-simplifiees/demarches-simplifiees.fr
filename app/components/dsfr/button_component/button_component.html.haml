@@ -1,5 +1,5 @@
 - if form
-  = form.submit label, class: "fr-btn #{class_names.join(" ")}"
+  = form.submit label, html_options
 - elsif url
-  = link_to label, url, class: "fr-btn #{class_names.join(" ")}"
+  = link_to label, url, html_options
 
