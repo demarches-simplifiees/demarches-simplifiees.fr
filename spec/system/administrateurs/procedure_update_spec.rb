@@ -38,7 +38,7 @@ describe 'Administrateurs can edit procedures', js: true do
 
       click_on 'Enregistrer'
 
-      expect(page).to have_selector('.breadcrumbs li', text: 'Ma petite démarche')
+      expect(page).to have_selector('.fr-breadcrumb li', text: 'Ma petite démarche')
     end
   end
 
@@ -55,7 +55,7 @@ describe 'Administrateurs can edit procedures', js: true do
 
       click_on 'Enregistrer'
 
-      expect(page).to have_selector('.breadcrumbs li', text: 'Ma petite démarche')
+      expect(page).to have_selector('.fr-breadcrumb li', text: 'Ma petite démarche')
     end
   end
 end

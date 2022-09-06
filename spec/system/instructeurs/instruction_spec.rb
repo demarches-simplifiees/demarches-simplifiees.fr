@@ -259,8 +259,7 @@ describe 'Instructing a dossier:', js: true do
   end
 
   def log_in(email, password, check_email: true)
-    visit '/'
-    click_on 'Connexion'
+    visit new_user_session_path
     expect(page).to have_current_path(new_user_session_path)
 
     sign_in_with(email, password, check_email)
