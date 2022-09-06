@@ -162,7 +162,7 @@ $landing-breakpoint: 1040px;
 .usagers-panel,
 .numbers-panel,
 .cta-panel-2 {
-  background-color: $light-grey;
+  background-color: $alt-blue-france;
 }
 
 .more-info {
@@ -252,6 +252,10 @@ $users-breakpoint: 950px;
 .cta-panel {
   background-color: $blue-france-500;
   color: #FFFFFF;
+
+  .fr-btn {
+    box-shadow: inset 0 0 0 1px var(--text-inverted-blue-france);
+  }
 }
 
 .role-panel-wrapper,
