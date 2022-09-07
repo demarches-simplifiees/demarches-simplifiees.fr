@@ -1,15 +1,12 @@
 class Dsfr::CardComponent < ApplicationComponent
-  def footer_button(*args)
-    @footer_buttons.push args
-  end
+  renders_many :footer_buttons
 
   private
 
-  def initialize(title: nil, desc: nil, footer_buttons: [])
+  def initialize(title: nil, desc: nil)
     @title = title
     @desc = desc
-    @footer_buttons = footer_buttons
   end
 
-  attr_reader :title, :desc, :footer_buttons
+  attr_reader :title, :desc
 end
