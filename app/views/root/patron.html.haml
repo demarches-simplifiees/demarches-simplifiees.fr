@@ -304,3 +304,18 @@
   .container
     %h2.empty-text Aucun dossier
     %p.empty-text-details Vous n’avez commencé aucune démarche pour l’instant.
+
+  .container
+    %h1 Dsfr::CardComponent
+    = link_to "Documentation DSFR Carte", "https://www.systeme-de-design.gouv.fr/elements-d-interface/composants/carte", **external_link_attributes
+
+    .fr-grid-row.fr-grid-row--gutters.fr-py-5w
+      .fr-col-md-6.fr-col-12
+        = render Dsfr::CardComponent.new(title: "Optional title", desc: "Optional description")
+
+      .fr-col-md-6.fr-col-12
+        = render Dsfr::CardComponent.new(title: "With footer buttons") do |c|
+          - c.with_footer_button do
+            = link_to "Button 1", "#", class: "fr-btn", **external_link_attributes
+          - c.with_footer_button do
+            = button_tag "Button 2", class: "fr-btn fr-btn--secondary"
