@@ -281,7 +281,7 @@ en:
           check_france_connect_html: Have you once logged in with France Connect? If yes, <a href=\"%{href}\">try again with France Connect</a>.
       shared:
         email_can_take_a_while_html: <strong>Please note</strong> that this message can take up to 15 minutes to arrive.
-        contact_us_if_any_trouble_html: You can contact us <a href=\"%{href}\">through this form</a> if a problem still exists.
+        contact_us_if_any_trouble_html: 'You can contact us <a href="%{href}">through this form</a> if a problem still exists.'
   modal:
     publish:
       title:
