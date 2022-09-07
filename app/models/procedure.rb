@@ -660,6 +660,11 @@ class Procedure < ApplicationRecord
     feature_enabled?(:procedure_revisions) && revisions.size > 2
   end
 
+  def revisions_count
+    # We start counting from the first revision after publication and we are not counting the draft (there is always one)
+    revisions.size - 2
+  end
+
   def routee?
     routing_enabled? || groupe_instructeurs.size > 1
   end
