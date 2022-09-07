@@ -195,4 +195,8 @@ module ApplicationHelper
       Rails.env.production? || ENV['VITE_LEGACY'] == 'enabled'
     end
   end
+
+  def external_link_attributes
+    { target: "_blank", rel: "noopener noreferrer" }
+  end
 end

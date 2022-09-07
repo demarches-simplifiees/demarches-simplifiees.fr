@@ -20,8 +20,8 @@
           %h1.role-panel-title Est-ce fait pour mon administration ?
           %p.role-panel-explanation Découvrez notre outil et posez nous vos questions lors de notre démonstration en ligne ou lisez notre documentation
 
-          = render Dsfr::ButtonComponent.new("Participer à notre démonstration en ligne", "https://app.livestorm.co/demarches-simplifiees/presentation-general-de-demarches-simplifieesfr", class: "fr-btn--lg frm-mr-1w fr-mb-2w", external: true)
-          = render Dsfr::ButtonComponent.new("Documentation", DOC_URL, class: "fr-btn--secondary fr-btn--lg", external: true)
+          = link_to "Participer à notre démonstration en ligne", INSCRIPTION_WEBINAIRE_URL, class: "fr-btn fr-btn--lg fr-mr-1w fr-mb-2w", **external_link_attributes
+          = link_to "Documentation", DOC_URL, class: "fr-btn fr-btn--secondary fr-btn--lg", **external_link_attributes
 
         .role-panel-30.role-more-info-image.fr-mt-2w
           %img.role-image{ :src => image_url("landing/roles/usagers.svg"), alt: "" }
@@ -37,7 +37,7 @@
         %p.role-panel-explanation Créez un premier formulaire de test en quelques minutes
 
 
-        = render Dsfr::ButtonComponent.new("Créer votre compte administrateur", DEMANDE_INSCRIPTION_ADMIN_PAGE_URL, class: "fr-btn--lg")
+        = link_to "Créer votre compte administrateur", DEMANDE_INSCRIPTION_ADMIN_PAGE_URL, class: "fr-btn fr-btn--lg"
 
         %br
         %br
@@ -104,16 +104,15 @@
   .container
     .fr-grid-row.fr-grid-row--gutters.fr-py-5w
       .fr-col-md-6.fr-col-12
-        = render Dsfr::CardComponent.new(title: "Vous êtes prêt pour dématérialiser ?",
-                                         desc: "Réduisez vos temps d’instruction de 50 %",
-                                         footer_buttons: [{ url: DEMANDE_INSCRIPTION_ADMIN_PAGE_URL, label: "Créer votre compte administrateur", external: true }],
-                                         )
+        = render Dsfr::CardComponent.new(title: "Vous êtes prêt pour dématérialiser ?", desc: "Réduisez vos temps d’instruction de 50 %") do |c|
+          - c.with_footer_button do
+            = link_to("Créer votre compte administrateur", DEMANDE_INSCRIPTION_ADMIN_PAGE_URL, class: "fr-btn", **external_link_attributes)
 
       .fr-col-md-6.fr-col-12
-        = render Dsfr::CardComponent.new(title: "Vous voulez en savoir plus ?",
-                                         desc: "Participez à notre prochain Webinaire",
-                                         footer_buttons: [{ url: "https://app.livestorm.co/demarches-simplifiees/presentation-general-de-demarches-simplifieesfr", label: "Inscription à notre prochain webinaire", external: true }],
-                                         )
+        = render Dsfr::CardComponent.new(title: "Vous voulez en savoir plus ?", desc: "Participez à notre prochain Webinaire") do |c|
+          - c.with_footer_button do
+            = link_to("Inscription à notre prochain webinanire", INSCRIPTION_WEBINAIRE_URL, class: "fr-btn", **external_link_attributes)
+
   .landing-panel.cta-panel
     .container
       .cta-panel-wrapper
@@ -121,4 +120,4 @@
           %h1.cta-panel-title Une question, un problème ?
           %p.cta-panel-explanation Consultez notre FAQ
         %div
-          = render Dsfr::ButtonComponent.new("Voir la FAQ", FAQ_URL, external: true, class: "fr-btn--lg")
+          = link_to "Voir la FAQ", FAQ_URL, class: "fr-btn fr-btn--lg", **external_link_attributes
