@@ -10,8 +10,7 @@
 
     - if footer_buttons?
       .fr-card__footer
-        .fr-btns-group.fr-btns-group--inline-reverse.fr-btns-group--inline-lg
-          %ul
-            - footer_buttons.each do |button|
-              %li
-                = button
+        %ul.fr-btns-group.fr-btns-group--inline-reverse.fr-btns-group--inline-lg
+          - footer_buttons.each do |button|
+            %li
+              = button

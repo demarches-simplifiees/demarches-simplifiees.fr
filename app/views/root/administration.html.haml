@@ -104,12 +104,12 @@
   .container
     .fr-grid-row.fr-grid-row--gutters.fr-py-5w
       .fr-col-md-6.fr-col-12
-        = render Dsfr::CardComponent.new(title: "Vous êtes prêt pour dématérialiser ?", desc: "Réduisez vos temps d’instruction de 50 %") do |c|
+        = render Dsfr::CardVerticalComponent.new(title: "Vous êtes prêt pour dématérialiser ?", desc: "Réduisez vos temps d’instruction de 50 %") do |c|
           - c.with_footer_button do
             = link_to("Créer votre compte administrateur", DEMANDE_INSCRIPTION_ADMIN_PAGE_URL, class: "fr-btn", **external_link_attributes)
 
       .fr-col-md-6.fr-col-12
-        = render Dsfr::CardComponent.new(title: "Vous voulez en savoir plus ?", desc: "Participez à notre prochain Webinaire") do |c|
+        = render Dsfr::CardVerticalComponent.new(title: "Vous voulez en savoir plus ?", desc: "Participez à notre prochain Webinaire") do |c|
           - c.with_footer_button do
             = link_to("Inscription à notre prochain webinanire", INSCRIPTION_WEBINAIRE_URL, class: "fr-btn", **external_link_attributes)
 
