@@ -79,4 +79,22 @@ describe Manager::ProceduresController, type: :controller do
 
     it { expect(procedure.administrateurs).to eq([autre_administrateur]) }
   end
+
+  describe "#add_administrateur_with_confirmation" do
+    let(:procedure) { create(:procedure, administrateurs: [administrateur]) }
+
+    before do
+      post :add_administrateur_with_confirmation, params: { id: procedure.id, email: autre_administrateur.email }
+    end
+
+    it { expect(response).to redirect_to(manager_procedure_path) }
+
+    it { expect(flash[:notice]).to match(/Veuillez partager ce lien :/) }
+
+    it "flashes the confirmation url with the right email address" do
+      expect(flash[:notice]).to include(
+        confirm_add_administrateur_manager_procedure_url(id: procedure.id, email: autre_administrateur.email)
+      )
+    end
+  end
 end
