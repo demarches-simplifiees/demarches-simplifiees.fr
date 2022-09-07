@@ -65,5 +65,12 @@ Turbo.session.drive = false;
 // Expose globals
 window.DS = window.DS || DS;
 
+// enable legacy mode of DSFR when vite is not detectde as modern browser
+window.addEventListener('load', function () {
+  if (!window.__vite_is_modern_browser) {
+    window.dsfr.internals.legacy.setLegacy();
+  }
+});
+
 import('../shared/track/matomo');
 import('../shared/track/sentry');
