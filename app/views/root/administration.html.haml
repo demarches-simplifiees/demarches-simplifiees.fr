@@ -20,19 +20,10 @@
           %h1.role-panel-title Est-ce fait pour mon administration ?
           %p.role-panel-explanation Découvrez notre outil et posez nous vos questions lors de notre démonstration en ligne ou lisez notre documentation
 
-          = link_to "Participer à notre démonstration en ligne",
-            "https://app.livestorm.co/demarches-simplifiees/presentation-general-de-demarches-simplifieesfr",
-            rel: "noopener noreferrer",
-            target: "_blank",
-            class: "role-panel-button-primary"
+          = link_to "Participer à notre démonstration en ligne", INSCRIPTION_WEBINAIRE_URL, class: "fr-btn fr-btn--lg fr-mr-1w fr-mb-2w", **external_link_attributes
+          = link_to "Documentation", DOC_URL, class: "fr-btn fr-btn--secondary fr-btn--lg", **external_link_attributes
 
-          = link_to "Documentation",
-            DOC_URL,
-            rel: "noopener noreferrer",
-            target: "_blank",
-            class: "role-panel-button-secondary"
-
-        .role-panel-30.role-more-info-image
+        .role-panel-30.role-more-info-image.fr-mt-2w
           %img.role-image{ :src => image_url("landing/roles/usagers.svg"), alt: "" }
 
 .landing-panel.usagers-panel
@@ -46,11 +37,8 @@
         %p.role-panel-explanation Créez un premier formulaire de test en quelques minutes
 
 
+        = link_to "Créer votre compte administrateur", DEMANDE_INSCRIPTION_ADMIN_PAGE_URL, class: "fr-btn fr-btn--lg"
 
-        = link_to "Créer votre compte administrateur",
-            DEMANDE_INSCRIPTION_ADMIN_PAGE_URL,
-            class: "role-panel-button-primary",
-            rel: "noopener noreferrer"
         %br
         %br
         %br
@@ -113,26 +101,17 @@
 
   = render partial: "root/users" if  LANDING_USERS_ENABLED
 
-  .landing-panel.cta-panel-2
-    .container
-      .half.first-half
-        %h1.cta-panel-title Vous êtes prêt pour dématérialiser ?
-        %p.cta-panel-explanation Réduisez vos temps d’instruction de 50 %
-        = link_to "Créer votre compte administrateur",
-          DEMANDE_INSCRIPTION_ADMIN_PAGE_URL,
-          class: "cta-panel-button-blue"
+  .container
+    .fr-grid-row.fr-grid-row--gutters.fr-py-5w
+      .fr-col-md-6.fr-col-12
+        = render Dsfr::CardVerticalComponent.new(title: "Vous êtes prêt pour dématérialiser ?", desc: "Réduisez vos temps d’instruction de 50 %") do |c|
+          - c.with_footer_button do
+            = link_to("Créer votre compte administrateur", DEMANDE_INSCRIPTION_ADMIN_PAGE_URL, class: "fr-btn", **external_link_attributes)
 
-      .half
-        %h1.cta-panel-title Vous voulez en savoir plus ?
-        %p.cta-panel-explanation Participez à notre prochain Webinaire
-        -# haml-lint:disable ApplicationNameLinter
-        = link_to "Inscription à notre webinaire",
-          "https://app.livestorm.co/demarches-simplifiees/presentation-general-de-demarches-simplifieesfr",
-          target: "_blank",
-          class: "cta-panel-button-blue"
-        -# haml-lint:enable ApplicationNameLinter
-
-      .clearfix
+      .fr-col-md-6.fr-col-12
+        = render Dsfr::CardVerticalComponent.new(title: "Vous voulez en savoir plus ?", desc: "Participez à notre prochain Webinaire") do |c|
+          - c.with_footer_button do
+            = link_to("Inscription à notre prochain webinanire", INSCRIPTION_WEBINAIRE_URL, class: "fr-btn", **external_link_attributes)
 
   .landing-panel.cta-panel
     .container
@@ -141,5 +120,4 @@
           %h1.cta-panel-title Une question, un problème ?
           %p.cta-panel-explanation Consultez notre FAQ
         %div
-          %a.cta-panel-button-white{ rel: 'noopener noreferrer', href:"#{ FAQ_URL }" }
-            Voir la FAQ
+          = link_to "Voir la FAQ", FAQ_URL, class: "fr-btn fr-btn--lg", **external_link_attributes
