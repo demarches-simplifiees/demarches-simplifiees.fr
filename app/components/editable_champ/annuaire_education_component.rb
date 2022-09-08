@@ -1,7 +1,3 @@
-class EditableChamp::AnnuaireEducationComponent < ApplicationComponent
+class EditableChamp::AnnuaireEducationComponent < EditableChamp::EditableChampBaseComponent
   include ApplicationHelper
-
-  def initialize(form:, champ:)
-    @form, @champ = form, champ
-  end
 end
