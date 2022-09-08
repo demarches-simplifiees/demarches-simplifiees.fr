@@ -15,3 +15,16 @@ select {
 .button.primary {
   font-weight: bold;
 }
+
+// fix firefox < 80 not supporting "appearance: auto" on inputs
+// scss-lint:disable DuplicateProperty
+input[type="checkbox"] {
+  -moz-appearance: checkbox;
+  -moz-appearance: auto;
+}
+
+input[type="radio"] {
+  -moz-appearance: radio;
+  -moz-appearance: auto;
+}
+// scss-lint:enable DuplicateProperty
