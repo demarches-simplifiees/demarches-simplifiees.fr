@@ -17,9 +17,7 @@ en:
         title: "Accessibility declaration"
         url: "https://doc.demarches-simplifiees.fr/declaration-daccessibilite"
       aide:
-        label: "Help"
         title: "Frequently Asked Questions"
-        url: "https://faq.demarches-simplifiees.fr"
       api_doc:
         label: "API Documentation"
         title: "API Documentation"
@@ -39,9 +37,6 @@ en:
       contact:
         label: "Contact"
         title: "Contact us"
-      contact_technique:
-        label: "Technical contact"
-        title: "Technical contact for bug report or security feedback"
       doc:
         label: "Documentation"
         title: "Our Documentation"
@@ -74,9 +69,6 @@ en:
         label: "Security"
         title: "Security policy"
         url: "https://github.com/betagouv/demarches-simplifiees.fr/blob/main/SECURITY.md"
-      stats:
-        label: "Statistics"
-        title: "Statistics about demarches-simplifiees"
       status_page:
         label: "Disponibility"
         title: "Disponibility and availability"
@@ -88,7 +80,3 @@ en:
         label: "Online workshop registration"
         title: "Registration for our online workshop"
         url: "https://app.livestorm.co/demarches-simplifiees"
-      solidarite_numerique:
-        label: "Do you need assistance with your digital file?"
-        title: "Do you need assistance with your online process ?"
-        url: "https://www.solidarite-numerique.fr/cartographie/"
