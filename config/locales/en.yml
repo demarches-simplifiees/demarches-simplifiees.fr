@@ -137,7 +137,6 @@ en:
         edit:
           autosave: Your file is automatically saved after each modification. You can close the window at any time and pick up where you left off later.
           submit_dossier: Submit the file
-          save_changes: Save the changes of the file
         messages:
           form:
             send_message: "Send message"
@@ -151,9 +150,6 @@ en:
           edit_identity: "Edit identity data"
     instructeurs:
       dossiers:
-        autosave:
-          autosave_draft: Your annotations are automatically saved.
-          autosave_confirmation: Annotations saved
         tab_steps:
           to_follow: to follow
           total: total
@@ -192,8 +188,10 @@ en:
       dossiers:
         archived_dossier: "Your file will be kept %{duree_conservation_dossiers_dans_ds} more months"
         autosave:
-          autosave_draft: Your draft is automatically saved.
-          autosave_confirmation: Draft saved
+          explanation: Your file is automatically saved.
+          confirmation: File saved
+          draft_explanation: Your draft is automatically saved.
+          draft_confirmation: Draft saved
           more_information: More informations
         identite:
           identity_data: Identity data

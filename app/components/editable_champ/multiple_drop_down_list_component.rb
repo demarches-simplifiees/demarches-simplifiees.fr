@@ -1,7 +1,3 @@
-class EditableChamp::MultipleDropDownListComponent < ApplicationComponent
+class EditableChamp::MultipleDropDownListComponent < EditableChamp::EditableChampBaseComponent
   include ApplicationHelper
-
-  def initialize(form:, champ:)
-    @form, @champ = form, champ
-  end
 end

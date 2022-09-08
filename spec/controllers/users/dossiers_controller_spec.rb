@@ -649,7 +649,7 @@ describe Users::DossiersController, type: :controller do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction))
       end
 
-      it { is_expected.to redirect_to(demande_dossier_path(dossier)) }
+      it { is_expected.to have_http_status(:ok) }
 
       context 'when only a single file champ are modified' do
         # A bug in ActiveRecord causes records changed through grand-parent <->  parent <-> child
@@ -726,7 +726,7 @@ describe Users::DossiersController, type: :controller do
       it 'does not raise any errors' do
         subject
 
-        expect(response).to redirect_to(demande_dossier_path(dossier))
+        expect(response).to have_http_status(:ok)
       end
     end
 
@@ -741,7 +741,7 @@ describe Users::DossiersController, type: :controller do
 
       it { expect(first_champ.reload.value).to eq('beautiful value') }
       it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction)) }
-      it { expect(response).to redirect_to(demande_dossier_path(dossier)) }
+      it { expect(response).to have_http_status(:ok) }
     end
 
     context 'when the dossier is followed by an instructeur' do
