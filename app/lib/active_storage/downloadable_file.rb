@@ -4,6 +4,27 @@ class ActiveStorage::DownloadableFile
       PiecesJustificativesService.liste_documents(dossiers, for_expert)
   end
 
+  def self.cleanup_list_from_dossier(files)
+    if Rails.application.config.active_storage.service != :openstack
+      return files
+    end
+
+    files.filter do |file, _filename|
+      if file.is_a?(PiecesJustificativesService::FakeAttachment)
+        true
+      else
+        service = file.blob.service
+        client = service.client
+        begin
+          client.head_object(service.container, file.blob.key)
+          true
+        rescue Fog::OpenStack::Storage::NotFound
+          false
+        end
+      end
+    end
+  end
+
   private
 
   def self.bill_and_path(bill)

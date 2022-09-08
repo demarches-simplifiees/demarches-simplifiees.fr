@@ -228,8 +228,9 @@ module Instructeurs
 
     def telecharger_pjs
       files = ActiveStorage::DownloadableFile.create_list_from_dossiers(Dossier.where(id: dossier.id))
+      cleaned_files = ActiveStorage::DownloadableFile.cleanup_list_from_dossier(files)
 
-      zipline(files, "dossier-#{dossier.id}.zip")
+      zipline(cleaned_files, "dossier-#{dossier.id}.zip")
     end
 
     def destroy
