@@ -188,19 +188,15 @@ module Users
 
     def update
       @dossier = dossier_with_champs
+      errors = update_dossier_and_compute_errors
 
-      if check_conditions?
-        assign_dossier_and_check_conditions
-        render :update_brouillon
-      else
-        errors = update_dossier_and_compute_errors
+      if errors.present?
+        flash.now.alert = errors
+      end
 
-        if errors.present?
-          flash.now.alert = errors
-          render :modifier
-        else
-          redirect_to demande_dossier_path(@dossier)
-        end
+      respond_to do |format|
+        format.html { render :modifier }
+        format.turbo_stream { render layout: false }
       end
     end
 
@@ -307,18 +303,6 @@ module Users
     end
 
     private
-
-    def check_conditions?
-      params[:check_conditions] && champs_params[:dossier]
-    end
-
-    def assign_dossier_and_check_conditions
-      @dossier.assign_attributes(champs_params[:dossier])
-      # We need to set dossier on champs, otherwise dossier will be reloaded
-      @dossier.champs.each do |champ|
-        champ.association(:dossier).target = @dossier
-      end
-    end
 
     # if the status tab is filled, then this tab
     # else first filled tab
