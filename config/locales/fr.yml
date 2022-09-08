@@ -132,7 +132,6 @@ fr:
         edit:
           autosave: Votre dossier est enregistré automatiquement après chaque modification. Vous pouvez à tout moment fermer la fenêtre et reprendre plus tard là où vous en étiez.
           submit_dossier: Déposer le dossier
-          save_changes: Enregistrer les modifications du dossier
         messages:
           form:
             send_message: "Envoyer le message"
@@ -146,9 +145,6 @@ fr:
           edit_identity: "Modifier l’identité"
     instructeurs:
       dossiers:
-        autosave:
-          autosave_draft: Vos annotations sont automatiquement enregistrées.
-          autosave_confirmation: Annotations enregistrées
         tab_steps:
           to_follow: à suivre
           total: au total
@@ -188,10 +184,11 @@ fr:
       dossiers:
         archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
         autosave:
-          autosave_draft: Votre brouillon est automatiquement enregistré.
-          autosave_confirmation: Brouillon enregistré
-          more_information: More informations
-          more_infos: En savoir plus
+          explanation: Votre dossier est automatiquement enregistré.
+          confirmation: Dossier enregistré
+          draft_explanation: Votre brouillon est automatiquement enregistré.
+          draft_confirmation: Brouillon enregistré
+          more_information: En savoir plus
         identite:
           identity_data: Données d’identité
           civility: Civilité

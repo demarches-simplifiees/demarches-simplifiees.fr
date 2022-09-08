@@ -1,5 +1,3 @@
-class EditableChamp::LinkedDropDownListComponent < ApplicationComponent
-  def initialize(form:, champ:)
-    @form, @champ = form, champ
-  end
+class EditableChamp::LinkedDropDownListComponent < EditableChamp::EditableChampBaseComponent
+  include StringToHtmlHelper
 end

@@ -2,7 +2,7 @@
   = render partial: "shared/dossiers/submit_is_over", locals: { dossier: dossier }
 
   - if dossier.brouillon?
-    - form_options = { url: brouillon_dossier_url(dossier), method: :patch }
+    - form_options = { url: brouillon_dossier_url(dossier), method: :patch, data: { save_on_input: true } }
   - else
     - form_options = { url: modifier_dossier_url(dossier), method: :patch }
 
@@ -23,7 +23,7 @@
     %hr
 
     - if dossier.show_groupe_instructeur_selector?
-      %span{ data: { controller: dossier.brouillon? ? 'autosave' : 'check-conditions' } }
+      %span{ data: { controller: 'autosave' } }
         = f.label :groupe_instructeur_id do
           = dossier.procedure.routing_criteria_name
           %span.mandatory *
@@ -33,25 +33,19 @@
 
     - dossier.champs.each do |champ|
       = fields_for champ.input_name, champ do |form|
-        = render partial: "shared/dossiers/editable_champs/editable_champ", locals: { form: form, champ: champ }
+        = render EditableChamp::EditableChampComponent.new form: form, champ: champ
 
     - if !dossier.for_procedure_preview?
       .dossier-edit-sticky-footer
         .send-dossier-actions-bar
-          - if dossier.brouillon?
-            = render partial: 'users/dossiers/autosave'
+          = render partial: 'shared/dossiers/autosave', locals: { dossier: dossier }
 
-            - if dossier.can_transition_to_en_construction?
-              = f.button t('views.shared.dossiers.edit.submit_dossier'),
-                name: :submit_draft,
-                value: true,
-                class: 'button send primary',
-                disabled: !current_user.owns?(dossier),
-                data: { 'disable-with': "Envoi en cours…" }
-
-          - else
-            = f.button t('views.shared.dossiers.edit.save_changes'),
+          - if dossier.can_transition_to_en_construction?
+            = f.button t('views.shared.dossiers.edit.submit_dossier'),
+              name: :submit_draft,
+              value: true,
               class: 'button send primary',
+              disabled: !current_user.owns?(dossier),
               data: { 'disable-with': "Envoi en cours…" }
 
         - if dossier.brouillon? && !current_user.owns?(dossier)

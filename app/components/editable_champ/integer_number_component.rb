@@ -1,5 +1,2 @@
-class EditableChamp::IntegerNumberComponent < ApplicationComponent
-  def initialize(form:, champ:)
-    @form, @champ = form, champ
-  end
+class EditableChamp::IntegerNumberComponent < EditableChamp::EditableChampBaseComponent
 end

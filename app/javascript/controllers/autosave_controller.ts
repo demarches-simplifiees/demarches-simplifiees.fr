@@ -42,7 +42,10 @@ export class AutosaveController extends ApplicationController {
     this.#latestPromise = Promise.resolve();
     this.onGlobal('autosave:retry', () => this.didRequestRetry());
     this.on('change', (event) => this.onChange(event));
-    this.on('input', (event) => this.onInput(event));
+
+    if (this.saveOnInput) {
+      this.on('input', (event) => this.onInput(event));
+    }
   }
 
   disconnect() {
@@ -80,7 +83,8 @@ export class AutosaveController extends ApplicationController {
         this.debounce(this.enqueueAutosaveRequest, AUTOSAVE_DEBOUNCE_DELAY);
       } else if (
         isSelectElement(target) ||
-        isCheckboxOrRadioInputElement(target)
+        isCheckboxOrRadioInputElement(target) ||
+        (!this.saveOnInput && isTextInputElement(target))
       ) {
         this.enqueueAutosaveRequest();
       }
@@ -97,6 +101,10 @@ export class AutosaveController extends ApplicationController {
     ) {
       this.debounce(this.enqueueAutosaveRequest, AUTOSAVE_DEBOUNCE_DELAY);
     }
+  }
+
+  private get saveOnInput() {
+    return !!this.form?.dataset.saveOnInput;
   }
 
   private didRequestRetry() {

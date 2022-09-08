@@ -1,5 +1,2 @@
-class EditableChamp::DropDownListComponent < ApplicationComponent
-  def initialize(form:, champ:)
-    @form, @champ = form, champ
-  end
+class EditableChamp::DropDownListComponent < EditableChamp::EditableChampBaseComponent
 end
