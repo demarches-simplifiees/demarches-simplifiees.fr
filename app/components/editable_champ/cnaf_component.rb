@@ -1,5 +1,2 @@
-class EditableChamp::CnafComponent < ApplicationComponent
-  def initialize(form:, champ:)
-    @form, @champ = form, champ
-  end
+class EditableChamp::CnafComponent < EditableChamp::EditableChampBaseComponent
 end
