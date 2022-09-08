@@ -33,7 +33,7 @@
 
     - dossier.champs.each do |champ|
       = fields_for champ.input_name, champ do |form|
-        = render partial: "shared/dossiers/editable_champs/editable_champ", locals: { form: form, champ: champ }
+        = render EditableChamp::EditableChampComponent.new form: form, champ: champ
 
     - if !dossier.for_procedure_preview?
       .dossier-edit-sticky-footer

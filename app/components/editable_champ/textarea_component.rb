@@ -1,7 +1,3 @@
-class EditableChamp::TextareaComponent < ApplicationComponent
+class EditableChamp::TextareaComponent < EditableChamp::EditableChampBaseComponent
   include HtmlToStringHelper
-
-  def initialize(form:, champ:)
-    @form, @champ = form, champ
-  end
 end

@@ -4,16 +4,11 @@
       = form_for dossier, url: annotations_instructeur_dossier_path(dossier.procedure, dossier), html: { class: 'form', multipart: true } do |f|
         - dossier.champs_private.each do |champ|
           = fields_for champ.input_name, champ do |form|
-            = render partial: "shared/dossiers/editable_champs/editable_champ", locals: { form: form, champ: champ, seen_at: seen_at }
+            = render EditableChamp::EditableChampComponent.new form: form, champ: champ, seen_at: seen_at
 
         - if !dossier.for_procedure_preview?
-          - if autosave_available?(dossier.champs_private.first)
-            .dossier-edit-sticky-footer
-              .send-dossier-actions-bar
-                = render partial: 'autosave'
-          - else
-            .send-wrapper
-              = f.submit 'Sauvegarder', class: 'button primary send', data: { disable: true }
+          .send-wrapper
+            = f.submit 'Sauvegarder', class: 'button primary send', data: { disable: true }
 
   - else
     %h2.empty-text Aucune annotation privée
