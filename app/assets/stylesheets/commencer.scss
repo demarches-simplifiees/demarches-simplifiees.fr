@@ -11,6 +11,10 @@
     margin-bottom: 2 * $default-spacer;
   }
 
+  .optional-on-small-screens {
+    color: #FFFFFF;
+  }
+
   @media (max-width: 450px) {
     .optional-on-small-screens {
       display: none;
