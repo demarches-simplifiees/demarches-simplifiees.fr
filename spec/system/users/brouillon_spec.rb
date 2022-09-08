@@ -390,6 +390,9 @@ describe 'The user' do
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
         fill_in('age', with: '18')
+        blur
+        expect(page).to have_css('span', text: 'Dossier enregistré', visible: true)
+
         # the champ keeps their previous value so they are all displayed
         expect(page).to have_css('label', text: 'permis de conduire', visible: true)
         expect(page).to have_css('label', text: 'tonnage', visible: true)

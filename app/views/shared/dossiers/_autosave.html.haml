@@ -1,13 +1,19 @@
 .autosave.autosave-state-idle{ data: { controller: 'autosave-status' } }
   %p.autosave-explanation
     %span.autosave-explanation-text
-      = t('views.users.dossiers.autosave.autosave_draft')
-    = link_to t('views.users.dossiers.autosave.more_infos'), FAQ_AUTOSAVE_URL, target: '_blank', rel: 'noopener', class: 'autosave-more-infos'
+      - if dossier.brouillon?
+        = t('views.users.dossiers.autosave.draft_explanation')
+      - else
+        = t('views.users.dossiers.autosave.explanation')
+    = link_to t('views.users.dossiers.autosave.more_information'), FAQ_AUTOSAVE_URL, target: '_blank', rel: 'noopener', class: 'autosave-more-infos'
 
   %p.autosave-status.succeeded
     %span.autosave-icon.icon.accept
     %span.autosave-label
-      = t('views.users.dossiers.autosave.autosave_confirmation')
+      - if dossier.brouillon?
+        = t('views.users.dossiers.autosave.draft_confirmation')
+      - else
+        = t('views.users.dossiers.autosave.confirmation')
     = link_to t('views.users.dossiers.autosave.more_information'), FAQ_AUTOSAVE_URL, target: '_blank', rel: 'noopener', class: 'autosave-more-infos'
 
   %p.autosave-status.failed

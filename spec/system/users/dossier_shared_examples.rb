@@ -10,9 +10,12 @@ RSpec.shared_examples 'the user can edit the submitted demande' do
 
     expect(page).to have_current_path(modifier_dossier_path(dossier))
     fill_in('Texte obligatoire', with: 'Nouveau texte')
-    click_on 'Enregistrer les modifications du dossier'
+    blur
+    expect(page).to have_css('span', text: 'Dossier enregistré', visible: true)
 
+    click_on 'Demande'
     expect(page).to have_current_path(demande_dossier_path(dossier))
+
     expect(page).to have_content('Nouveau texte')
   end
 end
