@@ -4,13 +4,15 @@ class Logic::ChampValue < Logic::Term
     :checkbox,
     :integer_number,
     :decimal_number,
-    :drop_down_list
+    :drop_down_list,
+    :multiple_drop_down_list
   )
 
   CHAMP_VALUE_TYPE = {
     boolean: :boolean,
     number: :number,
     enum: :enum,
+    enums: :enums,
     empty: :empty,
     unmanaged: :unmanaged
   }
@@ -35,6 +37,8 @@ class Logic::ChampValue < Logic::Term
       targeted_champ.for_api
     when MANAGED_TYPE_DE_CHAMP.fetch(:drop_down_list)
       targeted_champ.selected
+    when MANAGED_TYPE_DE_CHAMP.fetch(:multiple_drop_down_list)
+      targeted_champ.selected_options
     end
   end
 
@@ -49,6 +53,8 @@ class Logic::ChampValue < Logic::Term
       CHAMP_VALUE_TYPE.fetch(:number)
     when MANAGED_TYPE_DE_CHAMP.fetch(:drop_down_list)
       CHAMP_VALUE_TYPE.fetch(:enum)
+    when MANAGED_TYPE_DE_CHAMP.fetch(:multiple_drop_down_list)
+      CHAMP_VALUE_TYPE.fetch(:enums)
     else
       CHAMP_VALUE_TYPE.fetch(:unmanaged)
     end
