@@ -2,7 +2,7 @@
 - content_for(:title, title)
 
 = render partial: 'administrateurs/breadcrumbs',
-  locals: { steps: [[@procedure.libelle.truncate_words(4), instructeur_procedure_path(@procedure)],
+  locals: { steps: [[@procedure.libelle.truncate_words(10), instructeur_procedure_path(@procedure)],
                     [t('.title')]] }
 
 = render partial: 'shared/procedures/stats', locals: { title: title }
