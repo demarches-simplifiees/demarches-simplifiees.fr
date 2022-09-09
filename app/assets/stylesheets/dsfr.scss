@@ -28,3 +28,8 @@ input[type="radio"] {
   -moz-appearance: auto;
 }
 // scss-lint:enable DuplicateProperty
+
+// remove pointer cursor on textarea
+textarea {
+  cursor: auto;
+}
