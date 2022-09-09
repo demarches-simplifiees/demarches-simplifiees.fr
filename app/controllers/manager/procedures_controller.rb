@@ -68,18 +68,6 @@ module Manager
       redirect_to new_manager_procedure_confirmation_url_path(procedure, email: params[:email])
     end
 
-    def confirm_add_administrateur
-      administrateur_email = params[:email]
-      if administrateur_email != current_super_admin.email
-        administrateur = Administrateur.by_email(params[:email])
-        AdministrateursProcedure.create!(procedure: procedure, administrateur: administrateur)
-        flash[:notice] = "L’administrateur \"#{administrateur.email}\" a été ajouté à la démarche."
-      else
-        flash[:alert] = "Veuillez partager ce lien avec un autre super administrateur pour qu'il confirme votre action"
-      end
-      redirect_to manager_procedure_path(procedure)
-    end
-
     def delete_administrateur
       administrateur = procedure.administrateurs.find { |admin| admin.email == current_super_admin.email }
       if administrateur.present?

@@ -27,7 +27,7 @@ describe Manager::ConfirmationUrlsController, type: :controller do
 
     it "shows the confirmation url with encrypted parameters" do
       expect(response.body).to include(
-        confirm_add_administrateur_manager_procedure_url(
+        new_manager_procedure_administrateur_confirmation_url(
           procedure,
           q: encrypt({ email: invited_administrateur.email, inviter_id: inviter_super_admin.id })
         )

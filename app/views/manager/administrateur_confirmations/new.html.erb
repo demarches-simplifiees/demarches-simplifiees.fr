@@ -1,0 +1,35 @@
+<% content_for(:title) { "Confirmation d'ajout d'un administrateur" } %>
+
+<header class="main-content__header" role="banner">
+  <h1 class="main-content__page-title">
+    <%= content_for(:title) %>
+  </h1>
+</header>
+
+<section class="main-content__body">
+  <p>
+    Vous avez été invité·e par
+    <em>
+      <%= @inviter.email %>
+    </em>
+    à confirmer l'ajout de
+    <em>
+      <%= @invited_email %>
+    </em>
+    à la démarche
+    <strong>
+      <%= @procedure.libelle %>
+      (<%= @procedure.id %>).
+    </strong>
+  </p>
+
+  <p>
+    Confirmez-vous cet ajout ?
+  </p>
+
+  <%= form_tag manager_procedure_administrateur_confirmations_path(@procedure) do %>
+    <%= hidden_field_tag :q, params[:q] %>
+    <%= submit_tag "Oui, je confirme l'ajout" %>
+    <%= link_to "Non, je ne confirme pas l'ajout", :back %>
+  <% end %>
+</section>
