@@ -4,7 +4,7 @@ module Manager
     before_action :ensure_not_already_added
 
     def new
-      @url = confirm_add_administrateur_manager_procedure_url(
+      @url = new_manager_procedure_administrateur_confirmation_url(
         procedure.id,
         q: encrypt({ email: params[:email], inviter_id: current_super_admin.id })
       )
