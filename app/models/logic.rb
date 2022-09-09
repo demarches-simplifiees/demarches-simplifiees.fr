@@ -8,7 +8,7 @@ module Logic
   end
 
   def self.class_from_name(name)
-    [ChampValue, Constant, Empty, LessThan, LessThanEq, Eq, NotEq, GreaterThanEq, GreaterThan, EmptyOperator, And, Or]
+    [ChampValue, Constant, Empty, LessThan, LessThanEq, Eq, NotEq, GreaterThanEq, GreaterThan, EmptyOperator, IncludeOperator, And, Or]
       .find { |c| c.name == name }
   end
 
@@ -24,6 +24,8 @@ module Logic
       operator_class = EmptyOperator
     in [:enum, _]
       operator_class = Eq
+    in [:enums, _]
+      operator_class = IncludeOperator
     in [:number, EmptyOperator]
       operator_class = Eq
     in [:number, _]
@@ -35,7 +37,7 @@ module Logic
         Constant.new(true)
       when :empty
         Empty.new
-      when :enum
+      when :enum, :enums
         Constant.new(left.options.first.second)
       when :number
         Constant.new(0)
@@ -49,7 +51,7 @@ module Logic
     case [left.type, right.type]
     in [a, ^a] # syntax for same type
       true
-    in [:enum, :string]
+    in [:enum, :string] | [:enums, :string]
       left.options.map(&:second).include?(right.value)
     else
       false
@@ -83,6 +85,8 @@ module Logic
   def less_than(left, right) = Logic::LessThan.new(left, right)
 
   def less_than_eq(left, right) = Logic::LessThanEq.new(left, right)
+
+  def ds_include(left, right) = Logic::IncludeOperator.new(left, right)
 
   def constant(value) = Logic::Constant.new(value)
 
