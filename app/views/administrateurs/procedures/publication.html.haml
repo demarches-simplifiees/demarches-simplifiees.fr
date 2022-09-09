@@ -1,7 +1,7 @@
 
 = render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [['Démarches', admin_procedures_path],
-                    [@procedure.libelle.truncate_words(4), admin_procedure_path(@procedure)],
+                    [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
                     ['Publication']] }
 .container
   - if @procedure.draft_types_de_champ.dubious.present?
