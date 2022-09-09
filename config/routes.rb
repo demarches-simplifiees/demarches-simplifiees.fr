@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       get 'confirm_add_administrateur', on: :member
       post 'change_piece_justificative_template', on: :member
       get 'export_mail_brouillons', on: :member
+      resources :confirmation_urls, only: :new
     end
 
     resources :archives, only: [:index, :show]
