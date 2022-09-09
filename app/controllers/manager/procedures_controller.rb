@@ -65,10 +65,7 @@ module Manager
     end
 
     def add_administrateur_with_confirmation
-      confirmation_url = confirm_add_administrateur_manager_procedure_url(id: procedure.id, email: current_super_admin.email)
-
-      flash[:notice] = "Veuillez partager ce lien : #{confirmation_url} avec un autre super admin pour que l'operation soit effectuée"
-      redirect_to manager_procedure_path(procedure)
+      redirect_to new_manager_procedure_confirmation_url_path(procedure, email: params[:email])
     end
 
     def confirm_add_administrateur
