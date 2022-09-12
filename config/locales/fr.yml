@@ -169,9 +169,6 @@ fr:
         deleted_by_administration: "Dossier supprimé par l'administration"
         restore: "Restaurer"
         filters:
-          column: Colonne
-          value: Valeur
-          add_filter: Ajouter le filtre
           title: Filtrer
         personalize: Personnaliser
         download: Télécharger un dossier
