@@ -174,9 +174,6 @@ en:
         deleted_by_administration: "File deleted by administration"
         restore: "Restore"
         filters:
-          column: Column
-          value: Value
-          add_filter: Add filter
           title: Filter
         personalize: Personalize
         follow_file: Follow-up the file

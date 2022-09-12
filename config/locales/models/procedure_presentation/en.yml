@@ -7,11 +7,16 @@ en:
             id: File Nº
             state: State
             created_at: Created on
-            en_construction_at: En construction le
-            depose_at: Submitted on
             updated_at: Updated on
-            depose_since: Submitted since
+            depose_at: First submission on
+            en_construction_at: Submitted on
+            en_instruction_at: En instruction on
+            processed_at: Done on
+            depose_since: First Submission since
             updated_since: Updated since
+            en_construction_since: Submitted since
+            en_instruction_since: Instructed since
+            processed_since: Finished since
           user:
             email: Requester
           followers_instructeurs:
