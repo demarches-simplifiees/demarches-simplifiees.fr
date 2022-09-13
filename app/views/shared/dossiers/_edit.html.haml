@@ -8,19 +8,22 @@
 
   = form_for dossier, form_options.merge({ html: { id: 'dossier-edit-form', class: 'form', multipart: true, novalidate: 'novalidate' } }) do |f|
 
-    .prologue
-      %p.mandatory-explanation= t('utils.asterisk_html')
-      - if dossier.brouillon?
-        %p.mandatory-explanation
-          = t('views.shared.dossiers.edit.autosave')
+    %header.mb-6
+      .fr-highlight
+        %p.fr-text--sm
+          %strong
+            = t('utils.asterisk_html')
+          - if dossier.brouillon?
+            = t('views.shared.dossiers.edit.autosave')
+
+          - if notice_url(dossier.procedure).present?
+            %br
+            = link_to t("views.shared.dossiers.edit.notice"), notice_url(dossier.procedure),
+                class: "fr-btn fr-btn--secondary mt-2",
+                title: t("views.shared.dossiers.edit.notice_title"), **external_link_attributes
+
       - if dossier.france_connect_information.present?
         = render partial: "shared/dossiers/france_connect_informations", locals: { user_information: dossier.france_connect_information }
-      - if notice_url(dossier.procedure).present?
-        = link_to notice_url(dossier.procedure), target: '_blank', rel: 'noopener', class: 'button notice', title: "Pour vous aider à remplir votre dossier, vous pouvez consulter le guide de cette démarche." do
-          %span.icon.info>
-          Guide de la démarche
-
-    %hr
 
     - if dossier.show_groupe_instructeur_selector?
       %span{ data: { controller: 'autosave' } }
