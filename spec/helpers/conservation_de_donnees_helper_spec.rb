@@ -8,7 +8,7 @@ RSpec.describe ConservationDeDonneesHelper, type: :helper do
       let(:dans_ds) { 3 }
       let(:hors_ds) { 6 }
 
-      it { is_expected.to eq(["Dans #{APPLICATION_NAME} : 3 mois"]) }
+      it { is_expected.to eq(["#{APPLICATION_NAME} : 3 mois"]) }
     end
 
     context "when the retention time is not set" do
