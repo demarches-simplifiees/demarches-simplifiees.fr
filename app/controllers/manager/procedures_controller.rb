@@ -73,6 +73,14 @@ module Manager
       if administrateur.present?
         procedure.administrateurs.delete(administrateur)
       end
+
+      instructeur = Instructeur.by_email(current_super_admin.email)
+      if instructeur.present?
+        procedure.groupe_instructeurs.map do |groupe_instructeur|
+          groupe_instructeur.assign_tos.where(instructeur: instructeur).destroy_all
+        end
+      end
+
       redirect_to manager_procedure_path(procedure)
     end
 
