@@ -11,9 +11,10 @@
         modifié le
         = try_format_datetime(dossier.identity_updated_at)
 
+  - if dossier.france_connect_information.present?
+    = render partial: "shared/dossiers/france_connect_informations", locals: { user_information: dossier.france_connect_information }
+
   .card
-    - if dossier.france_connect_information.present?
-      = render partial: "shared/dossiers/france_connect_informations", locals: { user_information: dossier.france_connect_information }
     = render partial: "shared/dossiers/user_infos", locals: { user_deleted: dossier.user_deleted?, email: dossier.user_email_for(:display) }
 
     - if dossier.etablissement.present?

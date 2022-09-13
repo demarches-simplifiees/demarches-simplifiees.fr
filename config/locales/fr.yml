@@ -145,6 +145,10 @@ fr:
           form: "Formulaire"
           edit_siret: "Modifier le SIRET"
           edit_identity: "Modifier l’identité"
+        france_connect_informations:
+          details_no_name: "Le dossier a été déposé par un compte FranceConnect."
+          details: "Le dossier a été déposé par le compte de %{name}."
+          details_updated: "Le dossier a été déposé par le compte de %{name}, authentifié par FranceConnect le %{date}."
     instructeurs:
       dossiers:
         tab_steps:
