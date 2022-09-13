@@ -30,7 +30,7 @@ describe 'instructeurs/dossiers/show.html.haml', type: :view do
     end
 
     it 'fills the individual with the informations from France Connect' do
-      expect(rendered).to have_text("Le dossier a été déposé par le compte de #{france_connect_information.given_name} #{france_connect_information.family_name}, authentifié par France Connect le #{france_connect_information.updated_at.strftime('%d/%m/%Y')}")
+      expect(rendered).to have_text("Le dossier a été déposé par le compte de #{france_connect_information.given_name} #{france_connect_information.family_name}, authentifié par FranceConnect le #{france_connect_information.updated_at.strftime('%d/%m/%Y')}")
     end
   end
 end

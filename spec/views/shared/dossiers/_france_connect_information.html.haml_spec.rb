@@ -9,7 +9,7 @@ describe 'shared/dossiers/france_connect_informations.html.haml', type: :view do
   context "with complete france_connect information" do
     let(:user_information) { build(:france_connect_information, updated_at: Time.zone.now) }
     it {
-      expect(subject).to have_text("Le dossier a été déposé par le compte de #{user_information.given_name} #{user_information.family_name}, authentifié par France Connect le #{user_information.updated_at.strftime('%d/%m/%Y')}")
+      expect(subject).to have_text("Le dossier a été déposé par le compte de #{user_information.given_name} #{user_information.family_name}, authentifié par FranceConnect le #{user_information.updated_at.strftime('%d/%m/%Y')}")
     }
   end
 
@@ -18,7 +18,7 @@ describe 'shared/dossiers/france_connect_informations.html.haml', type: :view do
 
     it {
       expect(subject).to have_text("Le dossier a été déposé par le compte de #{user_information.given_name} #{user_information.family_name}")
-      expect(subject).not_to have_text("authentifié par France Connect le ")
+      expect(subject).not_to have_text("authentifié par FranceConnect le ")
     }
   end
 
@@ -26,7 +26,15 @@ describe 'shared/dossiers/france_connect_informations.html.haml', type: :view do
     let(:user_information) { build(:france_connect_information, given_name: nil) }
 
     it {
-      expect(subject).to have_text("Le dossier a été déposé par le compte de  #{user_information.family_name}")
+      expect(subject).to have_text("Le dossier a été déposé par le compte de #{user_information.family_name}")
+    }
+  end
+
+  context "with all names missing" do
+    let(:user_information) { build(:france_connect_information, given_name: nil, family_name: nil) }
+
+    it {
+      expect(subject).to have_text("Le dossier a été déposé par un compte FranceConnect.")
     }
   end
 end

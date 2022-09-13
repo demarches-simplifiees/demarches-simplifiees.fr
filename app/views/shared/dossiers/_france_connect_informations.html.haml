@@ -1,8 +1,13 @@
-.france-connect-informations.card.featured.flex.align-center
-  .france-connect-informations-logo
-    = image_tag "logo-france-connect.png", alt: "France Connect logo"
-  %div
-    - if user_information.updated_at.present?
-      Le dossier a été déposé par le compte de #{user_information&.given_name} #{user_information&.family_name}, authentifié par France Connect le #{user_information.updated_at.strftime('%d/%m/%Y')}.
-    - else
-      Le dossier a été déposé par le compte de #{user_information&.given_name} #{user_information&.family_name}.
+.fr-tile.fr-tile--horizontal.mb-4
+  .fr-tile__body
+    %h4.fr-tile__title
+      FranceConnect
+    %p
+      - if user_information.full_name.empty?
+        = t("views.shared.dossiers.france_connect_informations.details_no_name")
+      - elsif user_information.updated_at.present?
+        = t("views.shared.dossiers.france_connect_informations.details_updated", name: user_information.full_name, date: l(user_information.updated_at.to_date, format: :default))
+      - else
+        = t("views.shared.dossiers.france_connect_informations.details", name: user_information.full_name)
+  .fr-tile__img
+    = image_tag "logo-france-connect.png", alt: "", class: "fr-responsive-img"
