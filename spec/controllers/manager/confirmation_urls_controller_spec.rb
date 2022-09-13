@@ -66,7 +66,7 @@ describe Manager::ConfirmationUrlsController, type: :controller do
   private
 
   def encrypt(parameters)
-    key = Rails.application.key_generator.generate_key(ENV["SECRET_KEY_BASE"])
+    key = Rails.application.key_generator.generate_key("confirm_adding_administrateur")
     verifier = ActiveSupport::MessageVerifier.new(key)
     Base64.urlsafe_encode64(verifier.generate(parameters))
   end
