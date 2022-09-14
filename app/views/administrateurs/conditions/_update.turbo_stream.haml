@@ -1,3 +1,9 @@
+= turbo_stream.replace 'breadcrumbs' , render(partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [['Démarches', admin_procedures_path],
+                    [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
+                    ['Configuration des champs']],
+  preview: @procedure.draft_revision.valid? })
+
 = turbo_stream.replace 'errors-summary', render(TypesDeChampEditor::ErrorsSummary.new(revision: @procedure.draft_revision))
 
 - rendered = render @condition_component
