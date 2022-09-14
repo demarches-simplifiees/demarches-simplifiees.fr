@@ -1,3 +1,7 @@
+- if dossier.france_connect_information.present?
+  - content_for(:notice_info) do
+    = render partial: "shared/dossiers/france_connect_informations_notice", locals: { user_information: dossier.france_connect_information }
+
 .container
   - if dossier.depose_at.present?
     .card
@@ -10,9 +14,6 @@
       %span.highlighted
         modifié le
         = try_format_datetime(dossier.identity_updated_at)
-
-  - if dossier.france_connect_information.present?
-    = render partial: "shared/dossiers/france_connect_informations", locals: { user_information: dossier.france_connect_information }
 
   .card
     = render partial: "shared/dossiers/user_infos", locals: { user_deleted: dossier.user_deleted?, email: dossier.user_email_for(:display) }

@@ -1,6 +1,10 @@
 fr:
   shared:
     dossiers:
+      france_connect_informations:
+        details_no_name: "Le dossier a été déposé par un compte FranceConnect."
+        details: "Le dossier a été déposé par le compte de %{name}."
+        details_updated: "Le dossier a été déposé par le compte de %{name}, authentifié par FranceConnect le %{date}."
       header:
         expires_at:
           brouillon: "Expirera le %{date} (%{duree_conservation_totale} mois après la création du dossier)"

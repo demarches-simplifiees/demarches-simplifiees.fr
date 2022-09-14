@@ -100,3 +100,6 @@
             %li.fr-nav__item= active_link_to t('.files'), dossiers_path, active: :inclusive, class: 'fr-nav__link'
             - if current_user.expert && current_expert.avis_summary[:total] > 0
               = render partial: 'layouts/header/avis_tab', locals: { current_expert: current_expert }
+
+= yield(:notice_info)
+

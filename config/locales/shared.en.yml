@@ -1,6 +1,10 @@
 en:
   shared:
     dossiers:
+      france_connect_informations:
+        details_no_name: "The file was submitted by a FranceConnect account."
+        details: "The file was submitted by the account of %{name}."
+        details_updated: "The file was submitted by the account of %{name}, authenticated by FranceConnect on %{date}."
       header:
         expires_at:
           brouillon: "Expires on %{date} (%{duree_conservation_totale} months after this file was created)"
