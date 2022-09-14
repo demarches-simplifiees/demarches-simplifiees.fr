@@ -62,7 +62,7 @@ class Logic::ChampValue < Logic::Term
 
   def errors(stable_ids)
     if !stable_ids.include?(stable_id)
-      ["le type de champ stable_id=#{stable_id} n'est pas disponible"]
+      [{ type: :not_available }]
     else
       []
     end
