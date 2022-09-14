@@ -37,7 +37,7 @@ describe TypesDeChampEditor::ConditionsErrorsComponent, type: :component do
       let(:upper_tdcs) { [tdc] }
       let(:conditions) { [ds_eq(champ_value(tdc.stable_id), constant('a'))] }
 
-      it { expect(page).to have_content("Le champ « #{tdc.libelle} » est de type « nombre entier ». Il ne peut pas être égal à a.") }
+      it { expect(page).to have_content("Le champ « #{tdc.libelle} » est de type « nombre entier ». Il ne peut pas être égal à « a ».") }
     end
 
     context 'when a number operator is applied on not a number' do
