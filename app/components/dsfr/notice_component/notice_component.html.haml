@@ -1,0 +1,9 @@
+.fr-notice.fr-notice--info
+  .fr-container
+    .fr-notice__body
+      %p.fr-notice__title
+        = title
+
+      - if closable?
+        %button.fr-btn--close.fr-btn{ title: t('.close_notice'), onclick: 'const notice = this.parentNode.parentNode.parentNode; notice.parentNode.removeChild' }
+          = t('.close_notice')
