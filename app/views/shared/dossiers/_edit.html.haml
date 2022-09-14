@@ -1,3 +1,7 @@
+- if dossier.france_connect_information.present?
+  - content_for(:notice_info) do
+    = render partial: "shared/dossiers/france_connect_informations_notice", locals: { user_information: dossier.france_connect_information }
+
 .dossier-edit.container
   = render partial: "shared/dossiers/submit_is_over", locals: { dossier: dossier }
 
@@ -21,9 +25,6 @@
             = link_to t("views.shared.dossiers.edit.notice"), notice_url(dossier.procedure),
                 class: "fr-btn fr-btn--secondary mt-2",
                 title: t("views.shared.dossiers.edit.notice_title"), **external_link_attributes
-
-      - if dossier.france_connect_information.present?
-        = render partial: "shared/dossiers/france_connect_informations", locals: { user_information: dossier.france_connect_information }
 
     - if dossier.show_groupe_instructeur_selector?
       %span{ data: { controller: 'autosave' } }
