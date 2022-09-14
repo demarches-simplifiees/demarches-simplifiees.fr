@@ -169,7 +169,7 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
         class: { alert: right_invalid }
       )
     when :number
-      number_field_tag(
+      text_field_tag(
         input_name_for('value'),
         right.value,
         required: true,
@@ -177,7 +177,7 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
         class: { alert: right_invalid }
       )
     else
-      number_field_tag(input_name_for('value'), '', id: input_id_for('value', row_index))
+      text_field_tag(input_name_for('value'), '', id: input_id_for('value', row_index))
     end
   end
 
