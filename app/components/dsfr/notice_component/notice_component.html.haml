@@ -5,5 +5,5 @@
         = title
 
       - if closable?
-        %button.fr-btn--close.fr-btn{ title: t('.close_notice'), onclick: 'const notice = this.parentNode.parentNode.parentNode; notice.parentNode.removeChild' }
+        %button.fr-btn--close.fr-btn{ title: t('.close_notice'), onclick: 'javascript:DS.closeNoticeInfo(event)' }
           = t('.close_notice')

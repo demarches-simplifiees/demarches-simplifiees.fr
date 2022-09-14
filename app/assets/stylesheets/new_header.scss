@@ -12,8 +12,12 @@ $header-mobile-breakpoint: 550px;
   background-color: #FFFFFF;
 }
 
-.new-header-with-border {
-  border-bottom: 1px solid $border-grey;
+// No drop shadow when a notice is shown.
+.fr-header.fr-header__with-notice-info {
+  &,
+  .fr-header__brand {
+    filter: none;
+  }
 }
 
 .header-inner-content {

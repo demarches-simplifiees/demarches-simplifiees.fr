@@ -37,6 +37,8 @@ import {
   showNewAccountPasswordConfirmation
 } from '../new_design/fc-fusion';
 
+import { closeNoticeInfo } from '../new_design/header';
+
 const application = Application.start();
 registerControllers(application);
 
@@ -52,7 +54,8 @@ const DS = {
   showNewAccountPasswordConfirmation,
   replaceSemicolonByComma,
   acceptEmailSuggestion,
-  discardEmailSuggestionBox
+  discardEmailSuggestionBox,
+  closeNoticeInfo
 };
 
 // Start Rails helpers
