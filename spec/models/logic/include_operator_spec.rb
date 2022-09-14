@@ -9,9 +9,18 @@ describe Logic::IncludeOperator do
   end
 
   describe '#errors' do
-    it { expect(ds_include(champ_value(champ.stable_id), constant('val1')).errors).to be_empty }
-    it { expect(ds_include(champ_value(champ.stable_id), constant('something else')).errors).to eq(["« something else » ne fait pas partie de « #{champ.libelle} »"]) }
-    it { expect(ds_include(constant(1), constant('val1')).errors).to eq(["Lʼopérateur inclusion ne sʼapplique que sur une liste"]) }
+    it { expect(ds_include(champ_value(champ.stable_id), constant('val1')).errors([champ.stable_id])).to be_empty }
+    it do
+      expected = {
+        right: constant('something else'),
+        stable_id: champ.stable_id,
+        type: :not_included
+      }
+
+      expect(ds_include(champ_value(champ.stable_id), constant('something else')).errors([champ.stable_id])).to eq([expected])
+    end
+
+    it { expect(ds_include(constant(1), constant('val1')).errors).to eq([{ type: :required_list }]) }
   end
 
   describe '#==' do

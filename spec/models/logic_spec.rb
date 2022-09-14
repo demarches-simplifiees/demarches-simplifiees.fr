@@ -68,8 +68,7 @@ describe Logic do
       let(:first_option) { drop_down.drop_down_list_enabled_non_empty_options.first }
 
       it do
-        expect(Logic.compatible_type?(champ_value(drop_down.stable_id), constant(first_option))).to be true
-        expect(Logic.compatible_type?(champ_value(drop_down.stable_id), constant('a'))).to be false
+        expect(Logic.compatible_type?(champ_value(drop_down.stable_id), constant('a'))).to be true
       end
     end
   end

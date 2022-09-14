@@ -52,7 +52,7 @@ module Logic
     in [a, ^a] # syntax for same type
       true
     in [:enum, :string] | [:enums, :string]
-      left.options.map(&:second).include?(right.value)
+      true
     else
       false
     end
