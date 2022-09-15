@@ -52,4 +52,44 @@ describe APIEntrepriseService do
       end
     end
   end
+
+  describe "#api_up?" do
+    subject { described_class.api_up? }
+    let(:body) { File.read('spec/fixtures/files/api_entreprise/current_status.json') }
+    let(:status) { 200 }
+
+    before do
+      stub_request(:get, "https://entreprise.api.gouv.fr/watchdoge/dashboard/current_status")
+        .to_return(body: body, status: status)
+    end
+
+    it "returns true when api etablissement is up" do
+      expect(subject).to be_truthy
+    end
+
+    context "when api entreprise is down" do
+      let(:body) do
+        original_body = super()
+
+        json = JSON.parse(original_body)
+        # API etablissements is the first listed
+        json["results"][0]["code"] = 502
+
+        JSON.generate(json)
+      end
+
+      it "returns false" do
+        expect(subject).to be_falsy
+      end
+    end
+
+    context "when api entreprise status is unknown" do
+      let(:body) { "" }
+      let(:status) { 0 }
+
+      it "returns nil" do
+        expect(subject).to be_nil
+      end
+    end
+  end
 end

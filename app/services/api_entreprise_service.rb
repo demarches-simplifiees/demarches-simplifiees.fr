@@ -25,4 +25,17 @@ class APIEntrepriseService
 
     etablissement
   end
+
+  def self.api_up?(uname = "apie_2_etablissements")
+    statuses = APIEntreprise::API.new.current_status.fetch(:results)
+
+    # find results having uname = apie_2_etablissements
+    status = statuses.find { |result| result[:uname] == uname }
+
+    status.fetch(:code) == 200
+  rescue => e
+    Sentry.capture_exception(e, extra: { uname: uname })
+
+    nil
+  end
 end
