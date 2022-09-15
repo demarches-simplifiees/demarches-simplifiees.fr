@@ -90,10 +90,10 @@ module DossierHelper
     l(dossier.expiration_date, format: '%d/%m/%Y')
   end
 
-  def annuaire_link(siren = nil)
+  def annuaire_link(siren_or_siret = nil)
     base_url = "https://annuaire-entreprises.data.gouv.fr"
-    return base_url if siren.blank?
-    "#{base_url}/entreprise/#{siren}"
+    return base_url if siren_or_siret.blank?
+    "#{base_url}/rechercher?terme=#{siren_or_siret}"
   end
 
   def exports_list(exports, statut = nil)
