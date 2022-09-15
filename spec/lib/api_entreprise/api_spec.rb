@@ -289,4 +289,18 @@ describe APIEntreprise::API do
       expect(WebMock).not_to have_requested(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}/)
     end
   end
+
+  describe 'current_status' do
+    subject { described_class.new.current_status }
+    let(:body) { File.read('spec/fixtures/files/api_entreprise/current_status.json') }
+
+    before do
+      stub_request(:get, "https://entreprise.api.gouv.fr/watchdoge/dashboard/current_status")
+        .to_return(body: body)
+    end
+
+    it "returns the current status response" do
+      expect(subject).to eq(JSON.parse(body, symbolize_names: true))
+    end
+  end
 end
