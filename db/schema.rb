@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_03_151920) do
+ActiveRecord::Schema.define(version: 2022_09_04_151920) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -869,6 +869,7 @@ ActiveRecord::Schema.define(version: 2022_09_03_151920) do
     t.index ["acronym"], name: "index_zones_on_acronym", unique: true
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "administrateurs", "users"
   add_foreign_key "administrateurs_instructeurs", "administrateurs"
