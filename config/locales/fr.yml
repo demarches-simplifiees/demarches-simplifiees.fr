@@ -370,6 +370,7 @@ fr:
       procedure_not_found: "La démarche n’existe pas"
       siret_unknown: 'Désolé, nous n’avons pas trouvé d’établissement enregistré correspondant à ce numéro SIRET.'
       siret_network_error: 'Désolé, la récupération des informations SIRET est temporairement indisponible. Veuillez réessayer dans quelques instants.'
+      siret_api_down: "L'INSEE rencontre actuellement un problème majeur qui empêche le traitement des informations SIRET. Il n'y a pas encore de date de résolution annoncée."
       siret_not_found: 'Nous n’avons pas trouvé d’établissement correspondant à ce numéro de SIRET.'
       # etablissement_fail: 'Désolé, nous n’avons pas réussi à enregistrer l’établissement correspondant à ce numéro SIRET'
       france_connect:
