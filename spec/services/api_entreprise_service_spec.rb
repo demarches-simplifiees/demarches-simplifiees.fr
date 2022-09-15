@@ -1,4 +1,16 @@
 describe APIEntrepriseService do
+  shared_examples 'schedule fetch of all etablissement params' do
+    [
+      APIEntreprise::EntrepriseJob, APIEntreprise::AssociationJob, APIEntreprise::ExercicesJob,
+      APIEntreprise::EffectifsJob, APIEntreprise::EffectifsAnnuelsJob, APIEntreprise::AttestationSocialeJob,
+      APIEntreprise::BilansBdfJob
+    ].each do |job|
+      it "should enqueue #{job.class.name}" do
+        expect { subject }.to have_enqueued_job(job)
+      end
+    end
+  end
+
   describe '#create_etablissement' do
     before do
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}/)
@@ -23,15 +35,7 @@ describe APIEntrepriseService do
         expect(subject[:siret]).to eq(siret)
       end
 
-      [
-        APIEntreprise::EntrepriseJob, APIEntreprise::AssociationJob, APIEntreprise::ExercicesJob,
-        APIEntreprise::EffectifsJob, APIEntreprise::EffectifsAnnuelsJob, APIEntreprise::AttestationSocialeJob,
-        APIEntreprise::BilansBdfJob
-      ].each do |job|
-        it "should enqueue #{job.class.name}" do
-          expect { subject }.to have_enqueued_job(job)
-        end
-      end
+      it_behaves_like 'schedule fetch of all etablissement params'
     end
 
     context 'when etablissement api down' do
@@ -51,6 +55,24 @@ describe APIEntrepriseService do
         expect(subject).to be_nil
       end
     end
+  end
+
+  describe '#create_etablissement_as_degraded_mode' do
+    let(:siret) { '41816609600051' }
+    let(:procedure) { create(:procedure) }
+    let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:user_id) { 12 }
+
+    subject(:etablissement) { APIEntrepriseService.create_etablissement_as_degraded_mode(dossier, siret, user_id) }
+
+    it 'should create an etablissement with minimumal attributes' do
+      etablissement = subject
+
+      expect(etablissement.siret).to eq(siret)
+      expect(etablissement).to be_as_degraded_mode
+    end
+
+    it_behaves_like 'schedule fetch of all etablissement params'
   end
 
   describe "#api_up?" do

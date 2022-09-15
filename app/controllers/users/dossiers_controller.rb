@@ -112,18 +112,20 @@ module Users
       end
 
       sanitized_siret = siret_model.siret
-      begin
-        etablissement = APIEntrepriseService.create_etablissement(@dossier, sanitized_siret, current_user.id)
-      rescue APIEntreprise::API::Error::RequestFailed, APIEntreprise::API::Error::BadGateway, APIEntreprise::API::Error::TimedOut, APIEntreprise::API::Error::ServiceUnavailable, APIEntrepriseToken::TokenError => e
-        if e.is_a?(APIEntrepriseToken::TokenError) || APIEntrepriseService.api_up?
-          # probably random error, invite user to retry
-          Sentry.capture_exception(e, extra: { dossier_id: @dossier.id, siret: sanitized_siret })
-          return render_siret_error(t('errors.messages.siret_network_error'))
-        else
-          # global API Entreprise error. TODO: degraded mode + notify ops
-          return render_siret_error(t('errors.messages.siret_api_down'))
-        end
-      end
+      etablissement = begin
+                        APIEntrepriseService.create_etablissement(@dossier, sanitized_siret, current_user.id)
+                      rescue => error
+                        if error.try(:network_error?) && !APIEntrepriseService.api_up?
+                          # TODO: notify ops
+                          APIEntrepriseService.create_etablissement_as_degraded_mode(@dossier, sanitized_siret, current_user.id)
+                        else
+                          Sentry.capture_exception(error, extra: { dossier_id: @dossier.id, siret: })
+
+                          # probably random error, invite user to retry
+                          return render_siret_error(t('errors.messages.siret_network_error'))
+                        end
+                      end
+
       if etablissement.nil?
         return render_siret_error(t('errors.messages.siret_unknown'))
       end

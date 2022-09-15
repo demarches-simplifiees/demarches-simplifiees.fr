@@ -273,7 +273,11 @@ describe Users::DossiersController, type: :controller do
         let(:api_etablissement_status) { 502 }
         let(:api_current_status_response) { File.read('spec/fixtures/files/api_entreprise/current_status.json').tr('200', '502') }
 
-        it_behaves_like 'the request fails with an error', I18n.t('errors.messages.siret_api_down')
+        it "create an etablissement only with SIRET as degraded mode" do
+          dossier.reload
+          expect(dossier.etablissement.siret).to eq(siret)
+          expect(dossier.etablissement).to be_as_degraded_mode
+        end
       end
 
       context 'when API-Entreprise doesn’t know this SIRET' do
