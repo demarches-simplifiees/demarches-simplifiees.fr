@@ -8,7 +8,7 @@ fr:
           selection_utilisateur: Sélection utilisateur
   geo_area:
     label:
-      cadastre: "Parcelle n° %{numero} - Feuille %{prefixe} %{section} - %{surface} m²"
+      cadastre: "Parcelle n° %{numero} - Feuille %{prefixe} %{section} - %{surface} m² – commune %{commune}"
       area: "Une aire de surface %{area} m²"
       area_unknown: "Une aire de surface inconnue"
       line: "Une ligne longue de %{length} m"
