@@ -72,6 +72,13 @@ class APIEntreprise::API
     call(url)
   end
 
+  def current_status
+    status_url = "https://entreprise.api.gouv.fr/watchdoge/dashboard/current_status"
+    response = Typhoeus.get(status_url, timeout: 1)
+
+    handle_response(response)
+  end
+
   private
 
   def call_with_siret(resource_name, siret_or_siren, user_id: nil)
