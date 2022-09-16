@@ -15,4 +15,8 @@ class APIEntreprise::API::Error < ::StandardError
 
     super(msg)
   end
+
+  def network_error?
+    true
+  end
 end
