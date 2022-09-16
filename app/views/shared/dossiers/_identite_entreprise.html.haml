@@ -1,154 +1,163 @@
-%table.table.vertical.dossier-champs
-  %tbody
-    - if etablissement.diffusable_commercialement == false && profile != 'instructeur'
+- if etablissement.as_degraded_mode?
+  %table.table.vertical.dossier-champs
+    %tbody
       %tr
-        %td= t('warning_for_private_info', scope: 'views.shared.dossiers.identite_entreprise', etablissement: raison_sociale_or_name(etablissement))
-    - else
-      %tr
-        %td.libelle Dénomination :
-        %td= raison_sociale_or_name(etablissement)
+        %td.libelle{ colspan: 2 } ⚠ LʼINSEE est indisponible, les informations sur lʼentreprise arriveront dʼici quelques jours.
       %tr
         %td.libelle SIRET :
         %td= etablissement.siret
+- else
+  %table.table.vertical.dossier-champs
+    %tbody
+      - if etablissement.diffusable_commercialement == false && profile != 'instructeur'
+        %tr
+          %td= t('warning_for_private_info', scope: 'views.shared.dossiers.identite_entreprise', etablissement: raison_sociale_or_name(etablissement))
+      - else
+        %tr
+          %td.libelle Dénomination :
+          %td= raison_sociale_or_name(etablissement)
+        %tr
+          %td.libelle SIRET :
+          %td= etablissement.siret
 
-      - unless local_assigns[:short_identity]
-        - if etablissement.siret != etablissement.entreprise.siret_siege_social
-          %tr
-            %td.libelle SIRET du siège social:
-            %td= etablissement.entreprise.siret_siege_social
-        %tr
-          %td.libelle Forme juridique :
-          %td= sanitize(etablissement.entreprise.forme_juridique)
-        %tr
-          %td.libelle Libellé NAF :
-          %td= etablissement.libelle_naf
-        %tr
-          %td.libelle Code NAF :
-          %td= etablissement.naf
-        %tr
-          %td.libelle Date de création :
-          %td
-            = try_format_date(etablissement.entreprise.date_creation)
-
-            - if etablissement.entreprise_etat_administratif.present?
-              %span.label= humanized_entreprise_etat_administratif(etablissement)
-
-        - if profile == 'instructeur'
-          %tr
-            %td.libelle
-              Effectif mensuel
-              = try_format_mois_effectif(etablissement)
-              (URSSAF) :
-            %td= etablissement.entreprise_effectif_mensuel
-          %tr
-            %td.libelle
-              Effectif moyen annuel
-              = etablissement.entreprise_effectif_annuel_annee
-              (URSSAF) :
-            %td= etablissement.entreprise_effectif_annuel
-        %tr
-          %td.libelle Effectif de l'organisation (INSEE) :
-          %td
-            = effectif(etablissement)
-        %tr
-          %td.libelle Numéro de TVA intracommunautaire :
-          %td= etablissement.entreprise.numero_tva_intracommunautaire
-        %tr
-          %td.libelle Adresse :
-          %td
-            - etablissement.adresse.split("\n").each do |line|
-              = line
-              %br
-        %tr
-          %td.libelle Capital social :
-          %td= pretty_currency(etablissement.entreprise.capital_social)
-        %tr
-          %td.libelle Chiffre d’affaires :
-          %td
-            - if profile == 'instructeur'
-              %details
-                - etablissement.exercices.each_with_index do |exercice, index|
-                  = "#{exercice.date_fin_exercice.year} : "
-                  = pretty_currency(exercice.ca)
-                  %br
-            - elsif etablissement.exercices.present?
-              = t('activemodel.models.exercices_summary', count: etablissement.exercices.count)
-
-
-        - if etablissement.entreprise_bilans_bdf.present?
-          - if profile == 'instructeur'
-            = render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
-              locals: { libelle: 'Résultat exercice', key: 'resultat_exercice', etablissement: etablissement }
-
-            = render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
-              locals: { libelle: "Excédent brut d’exploitation", key: 'excedent_brut_exploitation', etablissement: etablissement }
-
-            = render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
-              locals: { libelle: 'Fonds de roulement net global', key: 'fonds_roulement_net_global', etablissement: etablissement }
-
-            = render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
-              locals: { libelle: 'Besoin en fonds de roulement', key: 'besoin_en_fonds_de_roulement', etablissement: etablissement }
+        - unless local_assigns[:short_identity]
+          - if etablissement.siret != etablissement.entreprise.siret_siege_social
             %tr
-              %td.libelle
-                Chiffres financiers clés (Banque de France)
-                = "en #{pretty_currency_unit(etablissement.entreprise_bilans_bdf_monnaie)} :"
-
-              - if controller.is_a?(Instructeurs::AvisController)
-                %td
-                  Les consulter
-                  = link_to "au format csv", bilans_bdf_instructeur_avis_path(@avis, format: 'csv')
-                  ,
-                  = link_to "au format xlsx", bilans_bdf_instructeur_avis_path(@avis, format: 'xlsx')
-                  ou
-                  = link_to "au format ods", bilans_bdf_instructeur_avis_path(@avis, format: 'ods')
-              - else
-                %td
-                  Les consulter
-                  = link_to "au format csv", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'csv')
-                  ,
-                  = link_to "au format xlsx", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'xlsx')
-                  ou
-                  = link_to "au format ods", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'ods')
-          - else
-            %tr
-              %td.libelle
-                Bilans Banque de France :
-              %td Les 3 derniers bilans connus de votre entreprise par la Banque de France ont été joints à votre dossier.
-        - if etablissement.entreprise_attestation_sociale.attached?
+              %td.libelle SIRET du siège social:
+              %td= etablissement.entreprise.siret_siege_social
           %tr
-            %td.libelle Attestation sociale :
-            - if profile == 'instructeur'
-              %td= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_sociale)
-            - else
-              %td Une attestation de vigilance délivrée par l'ACOSS a été jointe à votre dossier.
-
-        - if etablissement.entreprise_attestation_fiscale.attached?
+            %td.libelle Forme juridique :
+            %td= sanitize(etablissement.entreprise.forme_juridique)
           %tr
-            %td.libelle Attestation fiscale :
-            - if profile == 'instructeur'
-              %td= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_fiscale)
-            - else
-              %td Une attestation fiscale délivrée par l'URSSAF a été jointe à votre dossier.
-
-        - if etablissement.association?
+            %td.libelle Libellé NAF :
+            %td= etablissement.libelle_naf
           %tr
-            %td.libelle Numéro RNA :
-            %td= etablissement.association_rna
-          %tr
-            %td.libelle Titre :
-            %td= etablissement.association_titre
-          %tr
-            %td.libelle Objet :
-            %td= etablissement.association_objet
+            %td.libelle Code NAF :
+            %td= etablissement.naf
           %tr
             %td.libelle Date de création :
-            %td= try_format_date(etablissement.association_date_creation)
+            %td
+              = try_format_date(etablissement.entreprise.date_creation)
+
+              - if etablissement.entreprise_etat_administratif.present?
+                %span.label= humanized_entreprise_etat_administratif(etablissement)
+
+          - if profile == 'instructeur'
+            %tr
+              %td.libelle
+                Effectif mensuel
+                = try_format_mois_effectif(etablissement)
+                (URSSAF) :
+              %td= etablissement.entreprise_effectif_mensuel
+            %tr
+              %td.libelle
+                Effectif moyen annuel
+                = etablissement.entreprise_effectif_annuel_annee
+                (URSSAF) :
+              %td= etablissement.entreprise_effectif_annuel
           %tr
-            %td.libelle Date de publication :
-            %td= try_format_date(etablissement.association_date_publication)
+            %td.libelle Effectif de l'organisation (INSEE) :
+            %td
+              = effectif(etablissement)
           %tr
-            %td.libelle Date de déclaration :
-            %td= try_format_date(etablissement.association_date_declaration)
+            %td.libelle Numéro de TVA intracommunautaire :
+            %td= etablissement.entreprise.numero_tva_intracommunautaire
+          %tr
+            %td.libelle Adresse :
+            %td
+              - etablissement.adresse.split("\n").each do |line|
+                = line
+                %br
+          %tr
+            %td.libelle Capital social :
+            %td= pretty_currency(etablissement.entreprise.capital_social)
+          %tr
+            %td.libelle Chiffre d’affaires :
+            %td
+              - if profile == 'instructeur'
+                %details
+                  - etablissement.exercices.each_with_index do |exercice, index|
+                    = "#{exercice.date_fin_exercice.year} : "
+                    = pretty_currency(exercice.ca)
+                    %br
+              - elsif etablissement.exercices.present?
+                = t('activemodel.models.exercices_summary', count: etablissement.exercices.count)
+
+
+          - if etablissement.entreprise_bilans_bdf.present?
+            - if profile == 'instructeur'
+              = render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
+                locals: { libelle: 'Résultat exercice', key: 'resultat_exercice', etablissement: etablissement }
+
+              = render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
+                locals: { libelle: "Excédent brut d’exploitation", key: 'excedent_brut_exploitation', etablissement: etablissement }
+
+              = render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
+                locals: { libelle: 'Fonds de roulement net global', key: 'fonds_roulement_net_global', etablissement: etablissement }
+
+              = render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
+                locals: { libelle: 'Besoin en fonds de roulement', key: 'besoin_en_fonds_de_roulement', etablissement: etablissement }
+              %tr
+                %td.libelle
+                  Chiffres financiers clés (Banque de France)
+                  = "en #{pretty_currency_unit(etablissement.entreprise_bilans_bdf_monnaie)} :"
+
+                - if controller.is_a?(Instructeurs::AvisController)
+                  %td
+                    Les consulter
+                    = link_to "au format csv", bilans_bdf_instructeur_avis_path(@avis, format: 'csv')
+                    ,
+                    = link_to "au format xlsx", bilans_bdf_instructeur_avis_path(@avis, format: 'xlsx')
+                    ou
+                    = link_to "au format ods", bilans_bdf_instructeur_avis_path(@avis, format: 'ods')
+                - else
+                  %td
+                    Les consulter
+                    = link_to "au format csv", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'csv')
+                    ,
+                    = link_to "au format xlsx", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'xlsx')
+                    ou
+                    = link_to "au format ods", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'ods')
+            - else
+              %tr
+                %td.libelle
+                  Bilans Banque de France :
+                %td Les 3 derniers bilans connus de votre entreprise par la Banque de France ont été joints à votre dossier.
+          - if etablissement.entreprise_attestation_sociale.attached?
+            %tr
+              %td.libelle Attestation sociale :
+              - if profile == 'instructeur'
+                %td= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_sociale)
+              - else
+                %td Une attestation de vigilance délivrée par l'ACOSS a été jointe à votre dossier.
+
+          - if etablissement.entreprise_attestation_fiscale.attached?
+            %tr
+              %td.libelle Attestation fiscale :
+              - if profile == 'instructeur'
+                %td= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_fiscale)
+              - else
+                %td Une attestation fiscale délivrée par l'URSSAF a été jointe à votre dossier.
+
+          - if etablissement.association?
+            %tr
+              %td.libelle Numéro RNA :
+              %td= etablissement.association_rna
+            %tr
+              %td.libelle Titre :
+              %td= etablissement.association_titre
+            %tr
+              %td.libelle Objet :
+              %td= etablissement.association_objet
+            %tr
+              %td.libelle Date de création :
+              %td= try_format_date(etablissement.association_date_creation)
+            %tr
+              %td.libelle Date de publication :
+              %td= try_format_date(etablissement.association_date_publication)
+            %tr
+              %td.libelle Date de déclaration :
+              %td= try_format_date(etablissement.association_date_declaration)
 
 - unless local_assigns[:short_identity]
   %p
