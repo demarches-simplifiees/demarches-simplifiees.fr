@@ -6,15 +6,18 @@ FactoryBot.define do
     trait :cadastre do
       source { GeoArea.sources.fetch(:cadastre) }
       properties { { numero: '42', section: 'A11', prefixe: '000', commune: '75127', contenance: 123, id: '75127000A1142' } }
+      geometry { attributes_for(:geo_area, :polygon) }
     end
 
     trait :legacy_cadastre do
       source { GeoArea.sources.fetch(:cadastre) }
       properties { { numero: '42', section: 'A11', code_com: '127', code_dep: '75', code_arr: '000', surface_parcelle: '1234', surface_intersection: 1234 } }
+      geometry { attributes_for(:geo_area, :polygon) }
     end
 
     trait :selection_utilisateur do
       source { GeoArea.sources.fetch(:selection_utilisateur) }
+      geometry { attributes_for(:geo_area, :polygon) }
     end
 
     trait :polygon do

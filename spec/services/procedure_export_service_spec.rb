@@ -74,7 +74,8 @@ describe ProcedureExportService do
           "dossier_link",
           "piece_justificative",
           "siret",
-          "carte",
+          "Carte (Label)",
+          "Carte (GeoJSON)",
           "titre_identite",
           "iban",
           "annuaire_education",
@@ -127,7 +128,14 @@ describe ProcedureExportService do
 
       let(:dossier_etablissement) { etablissements_sheet.data[1] }
       let(:champ_etablissement) { etablissements_sheet.data[0] }
-
+      before do
+        allow_any_instance_of(Dossier)
+          .to receive(:geo_position).and_return({
+            lon: Champs::CarteChamp::DEFAULT_LON.to_s,
+            lat: Champs::CarteChamp::DEFAULT_LAT.to_s,
+            zoom: "13"
+          })
+      end
       let(:nominal_headers) do
         [
           "ID",
@@ -166,7 +174,8 @@ describe ProcedureExportService do
           "dossier_link",
           "piece_justificative",
           "siret",
-          "carte",
+          "Carte (Label)",
+          "Carte (GeoJSON)",
           "titre_identite",
           "iban",
           "annuaire_education",
@@ -253,7 +262,8 @@ describe ProcedureExportService do
             "dossier_link",
             "piece_justificative",
             "siret",
-            "carte",
+            "Carte (Label)",
+            "Carte (GeoJSON)",
             "titre_identite",
             "iban",
             "annuaire_education",

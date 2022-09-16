@@ -108,7 +108,7 @@ class Champs::CarteChamp < Champ
   end
 
   def for_export
-    geo_areas.map(&:label).join("\n")
+    [geo_areas.map(&:label).join("\n"), to_feature_collection.to_json]
   end
 
   def blank?

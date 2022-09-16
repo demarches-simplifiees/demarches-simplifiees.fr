@@ -15,4 +15,8 @@ class TypesDeChamp::CarteTypeDeChamp < TypesDeChamp::TypeDeChampBase
   def estimated_fill_duration(revision)
     FILL_DURATION_LONG
   end
+
+  def libelle_for_export(index)
+    ["Carte (Label)", "Carte (GeoJSON)"][index]
+  end
 end
