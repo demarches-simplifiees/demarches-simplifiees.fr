@@ -92,3 +92,7 @@ fr:
         label: "Besoin d'aide avec vos démarches en ligne ?"
         title: "Avez-vous besoin d'aide concernant vos démarchez informatisées, essayez solidarite-numerique.fr"
         url: "https://www.solidarite-numerique.fr/cartographie/"
+      cookies:
+        label: Gestion des cookies
+        title: Gestion des cookies
+        
