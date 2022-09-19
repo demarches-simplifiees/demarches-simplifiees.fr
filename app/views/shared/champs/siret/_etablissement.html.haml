@@ -9,6 +9,12 @@
 - when :network_error
   = t('errors.messages.siret_network_error')
 
+- when :api_entreprise_down
+  = t('errors.messages.api_entreprise_down')
+
 - else
-  - if siret.present? && siret == etablissement&.siret
-    = render EditableChamp::EtablissementTitreComponent.new(etablissement: etablissement)
+  - if siret.present?
+    - if siret == etablissement&.siret && raison_sociale_or_name(etablissement).present?
+      = render EditableChamp::EtablissementTitreComponent.new(etablissement: etablissement)
+    - else
+      Ce SIRET existe, nous en récupérons les informations.
