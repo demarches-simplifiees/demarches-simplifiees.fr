@@ -8,7 +8,7 @@ en:
           selection_utilisateur: User selection
   geo_area:
     label:
-      cadastre: "Parcel n° %{numero} - Sheet %{prefixe} %{section} - %{surface} m²"
+      cadastre: "Parcel n° %{numero} - Sheet %{prefixe} %{section} - %{surface} m² - town %{commune}"
       area: "An area of %{area} m²"
       area_unknown: "An area of unknown surface"
       line: "A %{length} m long line"
