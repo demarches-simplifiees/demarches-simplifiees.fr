@@ -1,9 +1,9 @@
-.fr-notice.fr-notice--info
+.fr-notice.fr-notice--info{ "data-dsfr-header-target": "notice" }
   .fr-container
     .fr-notice__body
       %p.fr-notice__title
         = title
 
       - if closable?
-        %button.fr-btn--close.fr-btn{ title: t('.close_notice'), onclick: 'javascript:DS.closeNoticeInfo(event)' }
+        %button.fr-btn--close.fr-btn{ title: t('.close_notice'), data: { action: "dsfr-header#closeNotice" } }
           = t('.close_notice')
