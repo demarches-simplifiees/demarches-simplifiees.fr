@@ -26,6 +26,11 @@
                 class: "fr-btn fr-btn--secondary mt-2",
                 title: t("views.shared.dossiers.edit.notice_title"), **external_link_attributes
 
+            - if administrateur_signed_in?
+              %em.ml-1.fr-text-mention--grey.visible-on-previous-hover
+                %span.fr-icon-feedback-line{ "aria-hidden": "true" }
+                  = t('shared.ephemeral_link')
+
     - if dossier.show_groupe_instructeur_selector?
       %span{ data: { controller: 'autosave' } }
         = f.label :groupe_instructeur_id do
