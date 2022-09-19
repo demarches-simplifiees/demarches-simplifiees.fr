@@ -4,7 +4,7 @@
 
 - if !dossier_submission_is_closed?(@dossier)
   = form_for @dossier.individual, url: update_identite_dossier_path(@dossier), html: { class: "form" } do |f|
-    %h1= t('views.users.dossiers.identite.identity_data')
+    %h2.huge-title= t('views.users.dossiers.identite.identity_data')
 
     %p.mb-1= t('views.users.dossiers.identite.complete_data')
 
