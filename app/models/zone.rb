@@ -18,10 +18,8 @@ class Zone < ApplicationRecord
   end
 
   def label_at(date)
-    labels_a = labels.pluck(:designated_on, :name)
-    labels_a.find(-> { labels_a[-1] }) do |designated_on, _|
-      date >= designated_on
-    end.at(1)
+    label = labels.where('designated_on < ?', date)&.first || labels.last
+    label.name
   end
 
   def available_at?(date)
