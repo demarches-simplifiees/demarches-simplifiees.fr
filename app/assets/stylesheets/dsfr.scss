@@ -1,6 +1,10 @@
 @import "colors";
-// override default text underline of dsfr
-body [href]:not([class^="fr-"]):not(.fr-footer__bottom-copy *) {
+
+// Hacky override default text underline of DSFR because we don't want to underline links in our legacy UI.
+// We don't match links having a dsfr class (prefixed by fr-).
+// However DSFR components may contain links without fr- class on them,
+// so these links can be artificially matched by adding any fr-class on them, (like fr-underlined)
+body [href]:not([class^="fr-"]) {
   background-image: none;
 }
 
