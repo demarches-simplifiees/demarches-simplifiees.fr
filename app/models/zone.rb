@@ -25,7 +25,7 @@ class Zone < ApplicationRecord
   end
 
   def available_at?(date)
-    label_at(date) != 'NA'
+    label_at(date) != 'Non attribué'
   end
 
   def self.available_at(date)

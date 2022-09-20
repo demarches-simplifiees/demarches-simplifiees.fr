@@ -47,7 +47,7 @@ describe Zone do
         },
         {
           designated_on: start_last_government,
-          name: "NA"
+          name: "Non attribué"
         },
         {
           designated_on: start_futur_government,
@@ -78,7 +78,7 @@ describe Zone do
         },
         {
           designated_on: start_last_government,
-          name: "NA"
+          name: "Non attribué"
         },
         {
           designated_on: start_futur_government,
@@ -104,7 +104,7 @@ describe Zone do
         },
         {
           designated_on: start_last_government,
-          name: "NA"
+          name: "Non attribué"
         },
         {
           designated_on: start_futur_government,

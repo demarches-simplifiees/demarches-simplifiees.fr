@@ -9,7 +9,7 @@ ministeres:
     - '2020-07-06': "Ministère des Solidarités et de la Santé"
   - MSAPH:
     - '2022-05-20': "Ministère des Solidarités, de l'Autonomie et des personnes handicapées"
-    - '2020-07-06': "NA"
+    - '2020-07-06': "Non attribué"
   - MTEI:
     - '2022-05-20': "Ministère du Travail, du Plein emploi et de l'Insertion"
     - '2020-07-06': "Ministère du Travail"
@@ -19,11 +19,11 @@ ministeres:
     - '2022-05-20': "Ministère de l'Économie, des Finances et de la Souveraineté industrielle et numérique"
     - '2020-07-06': "Ministère de l'Économie, des Finances et de la Relance"
   - MJS:
-    - '2022-05-20': "NA"
+    - '2022-05-20': "Non attribué"
     - '2020-07-06': "Ministère de la Jeunesse et des Sports"
   - MSJO:
     - '2022-05-20': "Ministère des Sports et des Jeux olympiques et paralympiques"
-    - '2020-07-06': "NA"
+    - '2020-07-06': "Non attribué"
   - MEN:
     - '2022-05-20': "Ministère de l'Éducation nationale et de la Jeunesse"
     - '2020-07-06': "Ministère de l'Éducation nationale, de la Jeunesse et des Sports"
@@ -42,17 +42,17 @@ ministeres:
     - '2020-07-06': "Ministère de la Transition écologique"
   - MTE:
     - '2022-05-20': "Ministère de la Transition énergétique"
-    - '2020-07-06': "NA"
+    - '2020-07-06': "Non attribué"
   - MCTRCT:
-    - '2022-05-20': "NA"
+    - '2022-05-20': "Non attribué"
     - '2020-07-06': "Ministère de la Cohésion des territoires et des Relations avec les collectivités territoriales"
   - PM:
     - '2020-07-06': "Premier ministre"
   - MER:
-    - '2022-05-20': "NA"
+    - '2022-05-20': "Non attribué"
     - '2020-07-06': "Ministère de la Mer"
   - MTFP:
     - '2020-07-06': "Ministère de la Transformation et de la Fonction publiques"
   - OM:
-    - '2022-05-20': "NA"
+    - '2022-05-20': "Non attribué"
     - '2020-07-06': "Ministère des Outre-mer"
