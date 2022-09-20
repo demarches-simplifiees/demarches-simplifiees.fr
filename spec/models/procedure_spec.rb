@@ -7,6 +7,9 @@ describe Procedure do
     it { expect(subject.closed_mail_template).to be_a(Mails::ClosedMail) }
     it { expect(subject.refused_mail_template).to be_a(Mails::RefusedMail) }
     it { expect(subject.without_continuation_mail_template).to be_a(Mails::WithoutContinuationMail) }
+    it { expect(subject.new_draft_mail_template).to be_a(Mails::NouvelleBrouillonMail) }
+    it { expect(subject.revert_to_construction_mail_template).to be_a(Mails::RepasserEnConstructionMail) }
+    it { expect(subject.revert_to_instruction_mail_template).to be_a(Mails::RepasserEnInstructionMail) }
   end
 
   describe 'initiated_mail' do

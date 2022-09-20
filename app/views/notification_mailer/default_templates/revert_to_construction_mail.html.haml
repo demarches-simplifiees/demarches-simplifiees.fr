@@ -1,0 +1,10 @@
+%p
+  Bonjour,
+
+%p
+  Votre dossier nº --numéro du dossier--
+  = succeed '.' do
+    %strong a été repassé en construction par les instructeurs
+  Si besoin, vous pouvez y apporter des nouvelles modifications.
+
+= render partial: "notification_mailer/default_templates/signature"

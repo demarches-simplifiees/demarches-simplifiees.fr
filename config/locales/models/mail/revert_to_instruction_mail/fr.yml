@@ -1,0 +1,8 @@
+# == based on activerecord.views.dossier_mail.notify_revert_to_instruction
+fr:
+  activerecord:
+    models:
+      mail:
+        state_reversion_mail:
+          default_subject: Votre dossier nº %{dossier_number} va être réexaminé (%{procedure_libelle})
+          revert_to_instruction: Repassage en instruction

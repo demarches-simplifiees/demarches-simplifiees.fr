@@ -1,0 +1,8 @@
+# == based on activerecord.views.dossier_mail.notify_revert_to_instruction
+fr:
+  activerecord:
+    models:
+      mail:
+        state_reversion_mail:
+          default_subject: Retrouvez votre brouillon pour la démarche « %{libelle_demarche} »
+          new_draft: Nouveau Brouillon

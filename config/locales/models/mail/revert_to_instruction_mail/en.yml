@@ -1,0 +1,8 @@
+# == based on activerecord.views.dossier_mail.notify_revert_to_instruction
+en:
+  activerecord:
+    models:
+      mail:
+        state_reversion_mail:
+          default_subject: Your file nº %{dossier_number} will be reexamined (%{procedure_libelle})
+          revert_to_instruction: Revert to instruction

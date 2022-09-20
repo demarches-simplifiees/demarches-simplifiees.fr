@@ -1,0 +1,7 @@
+en:
+  activerecord:
+    models:
+      mail:
+        state_reversion_mail:
+          default_subject: Your file nº %{dossier_number} can be updated (%{procedure_libelle})
+          revert_to_construction: Revert to construction

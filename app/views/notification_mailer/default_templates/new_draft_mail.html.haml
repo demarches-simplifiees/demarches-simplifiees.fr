@@ -1,0 +1,10 @@
+%p
+  Bonjour,
+
+%p
+  Votre brouillon nº --numéro du dossier--
+  = succeed '.' do
+    %strong a bien été créée
+  Vous pouvez commencé à remplir ce dossier.
+
+= render partial: "notification_mailer/default_templates/signature"

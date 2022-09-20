@@ -1,0 +1,7 @@
+fr:
+  activerecord:
+    models:
+      mail:
+        state_reversion_mail:
+          default_subject: Votre dossier nº %{dossier_number} peut être remodifier (%{procedure_libelle})
+          revert_to_construction: Repassage en construction
