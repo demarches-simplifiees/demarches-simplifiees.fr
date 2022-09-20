@@ -1,0 +1,9 @@
+---
+fr:
+  errors:
+    not_available: "A targeted field is not available."
+    unmanaged: "The field « %{libelle} » is a « %{type_champ} » and cannot be used as conditional source."
+    incompatible: "The field « %{libelle} » is a « %{type_champ} ». It cannot be %{operator} « %{right} »."
+    required_number: "« %{operator} » applies only to number."
+    required_list: "The « include » operator only applies to simple or multiple choice."
+    not_included: "« %{right} » is not included in « %{libelle} »."
