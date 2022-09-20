@@ -9,10 +9,10 @@ class Logic::ChampValue < Logic::Term
   )
 
   CHAMP_VALUE_TYPE = {
-    boolean: :boolean,
-    number: :number,
-    enum: :enum,
-    enums: :enums,
+    boolean: :boolean, # from yes_no or checkbox champ
+    number: :number, # from integer or decimal number champ
+    enum: :enum, # a choice from a dropdownlist
+    enums: :enums, # multiple choice from a dropdownlist (multipledropdownlist)
     empty: :empty,
     unmanaged: :unmanaged
   }
