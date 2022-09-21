@@ -1,17 +1,18 @@
 fr:
   links:
     provider:
-      logo:
-        src: "footer/logo-dinum.png"
-        alt: "Logo DINUM"
-        height: 161
-        width: 138
       name: "DINUM"
       provided_by: "la DINUM"
       title: "Direction Interministérielle au Numérique"
       url: "https://numerique.gouv.fr"
     footer:
-      nav_aria: "En savoir plus sur %{application_name}"
+      top_labels:
+        communication: Communication
+        legals: Informations légales
+        resources: Ressources
+        diagnostic: Diagnostic
+      description_1: Demarches simplifiées est propulsé par la direction interministérielle du numérique. 
+      description_2: Le code source est disponible en licence libre.
       accessibilite:
         label: "Accessibilité : partiellement conforme"
         title: "Consulter notre déclaration d'accessibilité"
@@ -36,9 +37,6 @@ fr:
         label: "Code source"
         title: "Le code ouvert de demarches-simplifiees"
         url: "https://github.com/betagouv/demarches-simplifiees.fr"
-      contact:
-        label: "Contact"
-        title: "Nous contacter"
       contact_technique:
         label: "Contact technique"
         title: "Contacter notre équipe technique"
