@@ -211,6 +211,12 @@ FactoryBot.define do
       value { '44011762001530' }
     end
 
+    factory :champ_rna, class: 'Champs::RNAChamp' do
+      type_de_champ { association :type_de_champ_rna, procedure: dossier.procedure }
+      association :etablissement, factory: [:etablissement]
+      value { 'W173847273' }
+    end
+
     factory :champ_repetition, class: 'Champs::RepetitionChamp' do
       type_de_champ { association :type_de_champ_repetition, procedure: dossier.procedure }
 

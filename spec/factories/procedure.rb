@@ -251,6 +251,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_rna do
+      after(:build) do |procedure, _evaluator|
+        build(:type_de_champ_rna, procedure: procedure)
+      end
+    end
+
     trait :with_dgfip do
       after(:build) do |procedure, _evaluator|
         build(:type_de_champ_dgfip, procedure: procedure)
