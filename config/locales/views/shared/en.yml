@@ -12,7 +12,7 @@ en:
       france_connect_login:
         title: "With FranceConnect"
         description: "FranceConnect is a solution proposed by the government to secure and simplify the connection to web services."
-        login_button: "Sign in with FranceConnect"
+        login_button: "Sign in with"
         help_link: What is FranceConnect?
         separator: or
       account:
