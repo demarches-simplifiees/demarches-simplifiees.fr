@@ -317,6 +317,7 @@
   color: $blue-france-500;
 }
 
-#account-btn:before, #account-btn_copy:before {
+#account-btn::before,
+#account-btn_copy::before {
   content: none;
 }
