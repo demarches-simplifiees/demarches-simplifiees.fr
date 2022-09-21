@@ -24,7 +24,7 @@ describe 'France Connect Particulier Connexion' do
     before { visit new_user_session_path }
 
     scenario 'link to France Connect is present' do
-      expect(page).to have_css('.france-connect-login-button')
+      expect(page).to have_css('.fr-connect')
     end
 
     context 'and click on france connect link' do
@@ -38,7 +38,7 @@ describe 'France Connect Particulier Connexion' do
           let(:france_connect_information) { build(:france_connect_information, user_info) }
 
           context 'and no user has the same email' do
-            before { page.find('.france-connect-login-button').click }
+            before { page.find('.fr-connect').click }
 
             scenario 'he is redirected to user dossiers page' do
               expect(page).to have_content('Dossiers')
@@ -50,7 +50,7 @@ describe 'France Connect Particulier Connexion' do
             let!(:user) { create(:user, email: email, password: 'my-s3cure-p4ssword') }
 
             before do
-              page.find('.france-connect-login-button').click
+              page.find('.fr-connect').click
             end
 
             scenario 'he is redirected to the merge page' do
@@ -99,7 +99,7 @@ describe 'France Connect Particulier Connexion' do
             create(:france_connect_information, :with_user, user_info.merge(created_at: Time.zone.parse('12/12/2012'), updated_at: Time.zone.parse('12/12/2012')))
           end
 
-          before { page.find('.france-connect-login-button').click }
+          before { page.find('.fr-connect').click }
 
           scenario 'he is redirected to user dossiers page' do
             expect(page).to have_content('Dossiers')
@@ -115,11 +115,11 @@ describe 'France Connect Particulier Connexion' do
         before do
           allow_any_instance_of(FranceConnectParticulierClient).to receive(:authorization_uri).and_return(france_connect_particulier_callback_path(code: code))
           allow(FranceConnectService).to receive(:retrieve_user_informations_particulier) { raise Rack::OAuth2::Client::Error.new(500, error: 'Unknown') }
-          page.find('.france-connect-login-button').click
+          page.find('.fr-connect').click
         end
 
         scenario 'he is redirected to login page' do
-          expect(page).to have_css('.france-connect-login-button')
+          expect(page).to have_css('.fr-connect')
         end
 
         scenario 'error message is displayed' do
