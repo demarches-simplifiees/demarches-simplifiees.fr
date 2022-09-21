@@ -15,8 +15,7 @@ fr:
           </ul>
         you_are_a_citizen: Vous êtes un particulier ?
         citizen_page: Accéder à notre page dédiée
-        connect_html: |
-          <h1 class="mt-2 mb-2">Connectez-vous</h1>
-          <p><b class="bold">Avec AgentConnect</b></p>
+        connect: Connectez-vous
+        signin_with: "S'identifier avec"
         whats_agentconnect: 'Quʼest ce quʼAgentConnect ?'
         pro_email: Email professionnel
