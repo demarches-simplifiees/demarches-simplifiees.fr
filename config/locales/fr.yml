@@ -131,6 +131,8 @@ fr:
       dossiers:
         edit:
           autosave: Votre dossier est enregistré automatiquement après chaque modification. Vous pouvez à tout moment fermer la fenêtre et reprendre plus tard là où vous en étiez.
+          notice: Guide de la démarche
+          notice_title: "Pour vous aider à remplir votre dossier, vous pouvez consulter le guide de cette démarche."
           submit_dossier: Déposer le dossier
         messages:
           form:
