@@ -1,0 +1,9 @@
+= @form.text_field :value,
+  id: @champ.input_id,
+  aria: { describedby: @champ.describedby_id },
+  placeholder: t(".placeholder"),
+  required: @champ.mandatory?,
+  pattern: "W[0-9]{9}",
+  title: t(".title"),
+  class: "width-33-desktop",
+  maxlength: 10
