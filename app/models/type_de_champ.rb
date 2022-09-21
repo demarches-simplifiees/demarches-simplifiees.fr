@@ -47,6 +47,7 @@ class TypeDeChamp < ApplicationRecord
     dossier_link: 'dossier_link',
     piece_justificative: 'piece_justificative',
     siret: 'siret',
+    rna: 'rna',
     carte: 'carte',
     repetition: 'repetition',
     titre_identite: 'titre_identite',
@@ -259,6 +260,10 @@ class TypeDeChamp < ApplicationRecord
 
   def cnaf?
     type_champ == TypeDeChamp.type_champs.fetch(:cnaf)
+  end
+
+  def rna?
+    type_champ == TypeDeChamp.type_champs.fetch(:rna)
   end
 
   def dgfip?
