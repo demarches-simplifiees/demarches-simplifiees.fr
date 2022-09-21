@@ -14,9 +14,9 @@ describe '20220705164551_remove_unused_champs' do
 
   describe 'remove_unused_champs' do
     it "with bad champs" do
-      expect(Champ.where(dossier: dossier).count).to eq(39)
+      expect(Champ.where(dossier: dossier).count).to eq(40)
       run_task
-      expect(Champ.where(dossier: dossier).count).to eq(38)
+      expect(Champ.where(dossier: dossier).count).to eq(39)
     end
   end
 end
