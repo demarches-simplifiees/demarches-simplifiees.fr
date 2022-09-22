@@ -1,6 +1,7 @@
-describe 'populate_zones' do
-  let(:rake_task) { Rake::Task['zones:populate_zones'] }
+describe '20220922151100_populate_zones' do
+  let(:rake_task) { Rake::Task['after_party:populate_zones'] }
   subject(:run_task) do
+    Flipper.enable :zonage
     rake_task.invoke
   end
   after(:each) do
