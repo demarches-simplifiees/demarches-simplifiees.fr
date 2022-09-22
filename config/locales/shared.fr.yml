@@ -18,6 +18,11 @@ fr:
           fetching_data: "La récupération automatique des données pour l’allocataire Nº %{numero_allocataire} avec le code postal %{code_postal} est en cours."
           data_fetched: "Des données concernant %{sources} liées au compte Nº %{numero_allocataire} avec le code postal %{code_postal} ont été reçues depuis la CAF."
           data_fetched_title: "Données obtenues de la Caisse nationale d’allocations familiales"
+      rna:
+        show:
+          not_filled: non renseigné
+          fetching_data: "La récupération automatique des données pour l'association avec le numéro RNA %{rna} est en cours."
+          data_fetched_title: Données complémentaires obtenues grâce au RNA "%{rna}"
       dgfip:
         show:
           not_filled: non renseigné

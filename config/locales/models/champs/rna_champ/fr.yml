@@ -1,0 +1,11 @@
+fr:
+  activemodel:
+    attributes:
+      rna_champ:
+        value: Numéro RNA
+        data:
+          association_titre: Nom de l'association
+          association_objet: Objet de l'association
+          association_date_creation: Date de création
+          association_date_declaration: Date de déclaration
+          association_date_publication: Date de publication
