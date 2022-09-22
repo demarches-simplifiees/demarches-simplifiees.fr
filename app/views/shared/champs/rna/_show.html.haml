@@ -1,0 +1,16 @@
+- if champ.blank?
+  %p= t('.not_filled')
+- elsif profile == 'instructeur'
+  - if champ.data.blank?
+    %p= t('.fetching_data', rna: champ.value)
+  - else
+    %p= t('.data_fetched_title', rna: champ.value)
+    %ul
+      - ['association_titre', 'association_objet', ].each do |scope|
+        - if champ.data[scope].present?
+          %li #{t("activemodel.attributes.rna_champ.data.#{scope}")} : #{champ.data[scope].capitalize}
+      - ['association_date_creation', 'association_date_declaration', 'association_date_publication'].each do |scope|
+        - if champ.data[scope].present?
+          %li #{t("activemodel.attributes.rna_champ.data.#{scope}")} : #{l(champ.data[scope].to_date)}
+- else
+  %p= champ.value
