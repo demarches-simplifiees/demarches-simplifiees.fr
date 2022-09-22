@@ -1,7 +1,7 @@
 describe 'administrateurs/procedures/edit.html.haml' do
   let(:logo) { fixture_file_upload('spec/fixtures/files/logo_test_procedure.png', 'image/png') }
   let(:procedure) { create(:procedure, logo: logo, lien_site_web: 'http://some.website') }
-  let(:populate_zones_task) { Rake::Task['zones:populate_zones'] }
+  let(:populate_zones_task) { Rake::Task['after_party:populate_zones'] }
 
   before do
     Flipper.enable(:zonage)
