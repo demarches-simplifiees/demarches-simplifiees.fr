@@ -23,4 +23,27 @@ class Champs::RNAChamp < Champ
   validates :value, allow_blank: true, format: {
     with: /\AW[0-9]{9}\z/, message: I18n.t(:not_a_rna, scope: 'activerecord.errors.messages')
   }
+  after_validation :update_external_id, if: -> { value.present? && external_id.blank? }
+
+  delegate :id, to: :procedure, prefix: true
+
+  def for_export
+    data&.dig("association_titre")&.present? ? "#{value} (#{data.dig("association_titre")})" : value
+  end
+
+  def search_terms
+    etablissement.present? ? etablissement.search_terms : [value]
+  end
+
+  def fetch_external_data?
+    true
+  end
+
+  def fetch_external_data
+    APIEntreprise::RNAAdapter.new(external_id, procedure_id).to_params
+  end
+
+  def update_external_id
+    update(external_id: value)
+  end
 end
