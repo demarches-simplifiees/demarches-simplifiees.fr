@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://demarches-simplifiees.fr/association.schema.json",
+  "title": "Association",
+  "type": "object",
+  "properties": {
+    "association_titre": {
+      "type": "string"
+    },
+    "association_objet": {
+      "type": "string"
+    },
+    "association_rna": {
+      "type": "string"
+    },
+    "association_date_creation": {
+      "type": "string",
+      "format": "date"
+    },
+    "association_date_declaration": {
+      "type": "string",
+      "format": "date"
+    },
+    "association_date_publication": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "required": [
+    "association_titre",
+    "association_rna"
+  ]
+}
