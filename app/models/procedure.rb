@@ -640,7 +640,12 @@ class Procedure < ApplicationRecord
       dossiers
         .state_en_construction
         .where(declarative_triggered_at: nil)
-        .find_each(&:accepter_automatiquement!)
+        .find_each do |dossier|
+          if !dossier.can_terminer?
+            next
+          end
+          dossier.accepter_automatiquement!
+        end
     end
   end
 
