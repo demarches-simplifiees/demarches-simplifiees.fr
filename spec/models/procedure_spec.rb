@@ -1374,6 +1374,16 @@ describe Procedure do
     end
   end
 
+  describe 'process_dossiers!' do
+    let(:procedure) { create(:procedure, declarative_with_state: Procedure.declarative_with_states.fetch(:accepte)) }
+    let(:dossier) { create(:dossier, :en_construction, procedure: procedure, etablissement: create(:etablissement, adresse: nil)) }
+
+    it 'works' do
+      dossier
+      expect(procedure.process_dossiers!).to eq(nil)
+    end
+  end
+
   private
 
   def create_dossier_with_pj_of_size(size, procedure)
