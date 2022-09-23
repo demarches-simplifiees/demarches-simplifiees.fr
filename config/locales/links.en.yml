@@ -1,17 +1,18 @@
 en:
   links:
     provider:
-      logo:
-        src: "footer/logo-dinum.png"
-        alt: "Logo DINUM"
-        height: 161
-        width: 138
       name: "DINUM"
       provided_by: "la DINUM"
       title: "Direction Interministérielle au Numérique"
       url: "https://numerique.gouv.fr"
     footer:
-      nav_aria: "More about %{application_name}"
+      top_labels:
+        communication: Communication
+        legals: Legal information
+        resources: Resources
+        diagnostic: Diagnostic
+      description_1: Demarches simplifiées is powered by the interdepartmental direction of digital. 
+      description_2: The source code is available under a free license.
       accessibilite:
         label: "Accessibility: partially compliant"
         title: "Accessibility declaration"
@@ -34,9 +35,6 @@ en:
         label: "ToS"
         title: "Terms of Service"
         url: "https://doc.demarches-simplifiees.fr/cgu"
-      contact:
-        label: "Contact"
-        title: "Contact us"
       doc:
         label: "Documentation"
         title: "Our Documentation"
