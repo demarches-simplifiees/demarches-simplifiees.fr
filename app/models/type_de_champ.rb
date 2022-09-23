@@ -20,6 +20,54 @@ class TypeDeChamp < ApplicationRecord
   FILE_MAX_SIZE = 200.megabytes
   FEATURE_FLAGS = {}
 
+  CADRE = :cadre
+  STANDARD = :standard
+  CHOICE = :choice
+  ETAT_CIVIL = :etat_civil
+  PAIEMENT_IDENTIFICATION = :paiement_identification
+  REFERENTIEL_EXTERNE = :referentiel_externe
+  LOCALISATION = :localisation
+
+  CATEGORIES = [CADRE, ETAT_CIVIL, LOCALISATION, PAIEMENT_IDENTIFICATION, STANDARD, CHOICE, REFERENTIEL_EXTERNE]
+
+  TYPE_DE_CHAMP_TO_CATEGORIE = {
+    text: STANDARD,
+    textarea: STANDARD,
+    date: STANDARD,
+    datetime: STANDARD,
+    number: STANDARD,
+    decimal_number: STANDARD,
+    integer_number: STANDARD,
+    checkbox: CHOICE,
+    civilite: ETAT_CIVIL,
+    email: ETAT_CIVIL,
+    phone: ETAT_CIVIL,
+    address: LOCALISATION,
+    yes_no: CHOICE,
+    drop_down_list: CHOICE,
+    multiple_drop_down_list: CHOICE,
+    linked_drop_down_list: CHOICE,
+    pays: LOCALISATION,
+    regions: LOCALISATION,
+    departements: LOCALISATION,
+    communes: LOCALISATION,
+    engagement: CADRE,
+    header_section: CADRE,
+    explication: CADRE,
+    dossier_link: CADRE,
+    piece_justificative: STANDARD,
+    siret: PAIEMENT_IDENTIFICATION,
+    carte: REFERENTIEL_EXTERNE,
+    repetition: CADRE,
+    titre_identite: ETAT_CIVIL,
+    iban: PAIEMENT_IDENTIFICATION,
+    annuaire_education: REFERENTIEL_EXTERNE,
+    cnaf: REFERENTIEL_EXTERNE,
+    dgfip: REFERENTIEL_EXTERNE,
+    pole_emploi: REFERENTIEL_EXTERNE,
+    mesri: REFERENTIEL_EXTERNE
+  }
+
   enum type_champs: {
     text: 'text',
     textarea: 'textarea',
