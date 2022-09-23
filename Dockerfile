@@ -4,7 +4,7 @@ FROM ruby:3.1.2-slim AS base
 FROM base AS builder
 
 RUN apt-get update && apt-get install -y \
-  curl build-essential git libpq-dev libicu-dev gnupg &&\
+  curl build-essential git libpq-dev libicu-dev gnupg zip &&\
   curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
   echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
   curl -sL "https://deb.nodesource.com/setup_16.x" | bash - && \
@@ -30,7 +30,7 @@ FROM base
 ENV APP_PATH /app
 #----- minimum set of packages including PostgreSQL client, yarn
 RUN apt-get update && apt-get install -y \
-  curl git postgresql-client libicu67 imagemagick gnupg &&\
+  curl git postgresql-client libicu67 imagemagick gnupg zip &&\
   curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
   echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
   curl -sL "https://deb.nodesource.com/setup_16.x" | bash - && \
