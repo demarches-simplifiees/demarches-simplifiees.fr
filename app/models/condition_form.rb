@@ -2,7 +2,7 @@ class ConditionForm
   include ActiveModel::Model
   include Logic
 
-  attr_accessor :top_operator_name, :rows
+  attr_accessor :top_operator_name, :rows, :upper_tdcs
 
   def to_condition
     case sub_conditions.count
