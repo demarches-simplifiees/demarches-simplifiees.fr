@@ -82,4 +82,29 @@ describe Logic::ChampValue do
     it { expect(champ_value(champ.stable_id).errors([champ.type_de_champ])).to be_empty }
     it { expect(champ_value(champ.stable_id).errors([])).to eq([{ type: :not_available }]) }
   end
+
+  context 'with multiple revision' do
+    let(:options) { ['revision_1'] }
+    let(:procedure) do
+      create(:procedure, :published, :for_individual, types_de_champ_public: [{ type: :drop_down_list, libelle: 'dropdown', options: options }])
+    end
+    let(:drop_down_r1) { procedure.published_revision.types_de_champ_public.first }
+    let(:stable_id) { drop_down_r1.stable_id }
+
+    it { expect(champ_value(stable_id).options([drop_down_r1])).to match_array([["revision_1", "revision_1"]]) }
+
+    context 'with a new revision' do
+      let(:drop_down_r2) { procedure.draft_revision.types_de_champ_public.first }
+
+      before do
+        tdc = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
+        tdc.drop_down_options = ['revision_2']
+        tdc.save!
+      end
+
+      it do
+        expect(champ_value(stable_id).options([drop_down_r2])).to match_array([["revision_2", "revision_2"]])
+      end
+    end
+  end
 end
