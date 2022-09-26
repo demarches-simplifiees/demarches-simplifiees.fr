@@ -812,6 +812,10 @@ class Procedure < ApplicationRecord
     api_particulier_sources['mesri'].present?
   end
 
+  def published_or_created_at
+    published_at || created_at
+  end
+
   private
 
   def move_new_children_to_new_parent_coordinate(new_draft)

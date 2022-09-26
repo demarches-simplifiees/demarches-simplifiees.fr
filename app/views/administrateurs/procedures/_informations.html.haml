@@ -17,7 +17,7 @@
   = f.label :zone do
     = t('zone', scope: 'activerecord.attributes.procedure')
     %span.mandatory *
-  = f.select :zone_id, grouped_options_for_zone
+  = f.select :zone_id, grouped_options_for_zone(@procedure.published_or_created_at)
 
 %h3.header-subsection Logo de la démarche
 = render Attachment::EditComponent.new(form: f, attached_file: @procedure.logo, direct_upload: true, user_can_destroy: true)
