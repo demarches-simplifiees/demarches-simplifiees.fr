@@ -6,7 +6,7 @@ class Logic::IncludeOperator < Logic::BinaryOperator
 
     if left_not_a_list?(type_de_champs)
       result << { type: :required_list }
-    elsif right_value_not_in_list?
+    elsif right_value_not_in_list?(type_de_champs)
       result << {
         type: :not_included,
         stable_id: @left.stable_id,
@@ -23,7 +23,7 @@ class Logic::IncludeOperator < Logic::BinaryOperator
     @left.type(type_de_champs) != :enums
   end
 
-  def right_value_not_in_list?
-    !@left.options.map(&:second).include?(@right.value)
+  def right_value_not_in_list?(type_de_champs)
+    !@left.options(type_de_champs).map(&:second).include?(@right.value)
   end
 end

@@ -53,13 +53,13 @@ describe Logic::ChampValue do
 
     it { expect(champ_value(champ.stable_id).type([champ.type_de_champ])).to eq(:enum) }
     it { is_expected.to eq('val1') }
-    it { expect(champ_value(champ.stable_id).options).to match_array([["val1", "val1"], ["val2", "val2"], ["val3", "val3"]]) }
+    it { expect(champ_value(champ.stable_id).options([champ.type_de_champ])).to match_array([["val1", "val1"], ["val2", "val2"], ["val3", "val3"]]) }
 
     context 'with other enabled' do
       let(:champ) { create(:champ_drop_down_list, value: 'val1', other: true) }
 
       it { is_expected.to eq('val1') }
-      it { expect(champ_value(champ.stable_id).options).to match_array([["val1", "val1"], ["val2", "val2"], ["val3", "val3"], ["Autre", "__other__"]]) }
+      it { expect(champ_value(champ.stable_id).options([champ.type_de_champ])).to match_array([["val1", "val1"], ["val2", "val2"], ["val3", "val3"], ["Autre", "__other__"]]) }
     end
 
     context 'with other filled' do

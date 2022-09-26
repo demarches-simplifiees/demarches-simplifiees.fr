@@ -156,7 +156,7 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
         id: input_id_for('value', row_index)
       )
     when :enum, :enums
-      enums_for_select = left.options
+      enums_for_select = left.options(@upper_tdcs)
 
       if right_invalid
         enums_for_select = empty_target_for_select + enums_for_select
