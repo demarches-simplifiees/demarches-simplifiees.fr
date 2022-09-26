@@ -182,7 +182,7 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
   end
 
   def current_right_valid?(left, right)
-    Logic.compatible_type?(left, right)
+    Logic.compatible_type?(left, right, @upper_tdcs)
   end
 
   def add_condition_tag

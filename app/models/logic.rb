@@ -31,7 +31,7 @@ module Logic
     in [:number, _]
     end
 
-    if !compatible_type?(left, right)
+    if !compatible_type?(left, right, type_de_champs)
       right = case left.type(type_de_champs)
       when :boolean
         Constant.new(true)
@@ -47,7 +47,7 @@ module Logic
     operator_class.new(left, right)
   end
 
-  def self.compatible_type?(left, right)
+  def self.compatible_type?(left, right, type_de_champs)
     case [left.type(type_de_champs), right.type(type_de_champs)]
     in [a, ^a] # syntax for same type
       true

@@ -60,15 +60,15 @@ describe Logic do
   end
 
   describe '.compatible_type?' do
-    it { expect(Logic.compatible_type?(constant(true), constant(true))).to be true }
-    it { expect(Logic.compatible_type?(constant(1), constant(true))).to be false }
+    it { expect(Logic.compatible_type?(constant(true), constant(true), [])).to be true }
+    it { expect(Logic.compatible_type?(constant(1), constant(true), [])).to be false }
 
     context 'with a dropdown' do
       let(:drop_down) { create(:type_de_champ_drop_down_list) }
       let(:first_option) { drop_down.drop_down_list_enabled_non_empty_options.first }
 
       it do
-        expect(Logic.compatible_type?(champ_value(drop_down.stable_id), constant('a'))).to be true
+        expect(Logic.compatible_type?(champ_value(drop_down.stable_id), constant('a'), [drop_down])).to be true
       end
     end
   end
