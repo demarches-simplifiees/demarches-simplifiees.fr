@@ -12,7 +12,7 @@ module Logic
       .find { |c| c.name == name }
   end
 
-  def self.ensure_compatibility_from_left(condition)
+  def self.ensure_compatibility_from_left(condition, type_de_champs)
     left = condition.left
     right = condition.right
     operator_class = condition.class

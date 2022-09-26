@@ -22,7 +22,7 @@ class ConditionForm
   end
 
   def change_champ(i)
-    sub_conditions[i] = Logic.ensure_compatibility_from_left(sub_conditions[i])
+    sub_conditions[i] = Logic.ensure_compatibility_from_left(sub_conditions[i], upper_tdcs)
 
     self
   end
