@@ -29,7 +29,7 @@ class Logic::ChampValue < Logic::Term
     return nil if !targeted_champ.visible?
     return nil if targeted_champ.blank?
 
-    case type_de_champ.type_champ
+    case type_de_champ(champs.map(&:type_de_champ)).type_champ
     when MANAGED_TYPE_DE_CHAMP.fetch(:yes_no),
       MANAGED_TYPE_DE_CHAMP.fetch(:checkbox)
       targeted_champ.true?
@@ -44,8 +44,8 @@ class Logic::ChampValue < Logic::Term
 
   def to_s = type_de_champ&.libelle # TODO: gerer le cas ou un tdc est supprimé
 
-  def type
-    case type_de_champ&.type_champ # TODO: gerer le cas ou un tdc est supprimé
+  def type(type_de_champs)
+    case type_de_champ(type_de_champs)&.type_champ # TODO: gerer le cas ou un tdc est supprimé
     when MANAGED_TYPE_DE_CHAMP.fetch(:yes_no),
       MANAGED_TYPE_DE_CHAMP.fetch(:checkbox)
       CHAMP_VALUE_TYPE.fetch(:boolean)
@@ -83,9 +83,10 @@ class Logic::ChampValue < Logic::Term
     self.class == other.class && @stable_id == other.stable_id
   end
 
-  def options
-    opts = type_de_champ.drop_down_list_enabled_non_empty_options.map { |option| [option, option] }
-    if type_de_champ.drop_down_other?
+  def options(type_de_champs)
+    tdc = type_de_champ(type_de_champs)
+    opts = tdc.drop_down_list_enabled_non_empty_options.map { |option| [option, option] }
+    if tdc.drop_down_other?
       opts + [["Autre", Champs::DropDownListChamp::OTHER]]
     else
       opts
@@ -94,8 +95,8 @@ class Logic::ChampValue < Logic::Term
 
   private
 
-  def type_de_champ
-    TypeDeChamp.find_by(stable_id: stable_id)
+  def type_de_champ(type_de_champs)
+    type_de_champs.find { |c| c.stable_id == stable_id }
   end
 
   def champ(champs)
