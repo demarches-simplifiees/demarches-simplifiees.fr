@@ -7,7 +7,7 @@ class TypesDeChampEditor::ConditionsErrorsComponent < ApplicationComponent
 
   def errors
     @conditions
-      .flat_map { |condition| condition.errors(@upper_tdcs.map(&:stable_id)) }
+      .flat_map { |condition| condition.errors(@upper_tdcs) }
       .map { |error| humanize(error) }
       .uniq
       .map { |message| tag.li(message) }
@@ -48,7 +48,7 @@ class TypesDeChampEditor::ConditionsErrorsComponent < ApplicationComponent
 
   def render?
     @conditions
-      .filter { |condition| condition.errors(@upper_tdcs.map(&:stable_id)).present? }
+      .filter { |condition| condition.errors(@upper_tdcs).present? }
       .present?
   end
 end

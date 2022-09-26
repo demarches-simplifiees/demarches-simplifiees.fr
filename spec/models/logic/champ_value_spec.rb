@@ -79,7 +79,7 @@ describe Logic::ChampValue do
   describe 'errors' do
     let(:champ) { create(:champ) }
 
-    it { expect(champ_value(champ.stable_id).errors([champ.stable_id])).to be_empty }
-    it { expect(champ_value(champ.stable_id).errors(['other stable ids'])).to eq([{ type: :not_available }]) }
+    it { expect(champ_value(champ.stable_id).errors([champ.type_de_champ])).to be_empty }
+    it { expect(champ_value(champ.stable_id).errors([])).to eq([{ type: :not_available }]) }
   end
 end

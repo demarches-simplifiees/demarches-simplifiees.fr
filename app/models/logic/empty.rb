@@ -3,7 +3,7 @@ class Logic::Empty < Logic::Term
 
   def type(_type_de_champs = []) = :empty
 
-  def errors(_stable_ids = nil) = ['empty']
+  def errors(_type_de_champs = []) = ['empty']
 
   def to_h
     {
