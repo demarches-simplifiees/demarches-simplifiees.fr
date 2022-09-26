@@ -95,8 +95,16 @@ class Champ < ApplicationRecord
     type_de_champ.mandatory? && visible?
   end
 
+  def engagement_champ_mandatory_and_blank?
+    mandatory? && type_champ == TypeDeChamp.type_champs.fetch(:engagement) && value == "off"
+  end
+
   def mandatory_blank_and_visible?
-    mandatory? && blank?
+    if engagement_champ_mandatory_and_blank?
+      true
+    else
+      mandatory? && blank?
+    end
   end
 
   def blank?
