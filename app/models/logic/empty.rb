@@ -1,5 +1,5 @@
 class Logic::Empty < Logic::Term
-  def to_s = I18n.t('logic.empty')
+  def to_s(_type_de_champs = []) = I18n.t('logic.empty')
 
   def type(_type_de_champs = []) = :empty
 

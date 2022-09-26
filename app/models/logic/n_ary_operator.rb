@@ -25,7 +25,7 @@ class Logic::NAryOperator < Logic::Term
 
     not_booleans = @operands.filter { |operand| operand.type(type_de_champs) != :boolean }
     if not_booleans.present?
-      errors += ["'#{operator_name}' ne contient pas que des booléens : #{not_booleans.map(&:to_s).join(', ')}"]
+      errors += ["'#{operator_name}' ne contient pas que des booléens : #{not_booleans.map { |o| o.to_s(type_de_champs) }.join(', ')}"]
     end
 
     errors + @operands.flat_map { |operand| operand.errors(type_de_champs) }

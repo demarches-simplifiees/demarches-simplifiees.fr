@@ -1,5 +1,5 @@
 class Logic::EmptyOperator < Logic::BinaryOperator
-  def to_s = "empty operator"
+  def to_s(_type_de_champs = []) = "empty operator"
 
   def type(_type_de_champs = []) = :empty
 

@@ -42,7 +42,7 @@ class Logic::ChampValue < Logic::Term
     end
   end
 
-  def to_s = type_de_champ&.libelle # TODO: gerer le cas ou un tdc est supprimé
+  def to_s(type_de_champs) = type_de_champ(type_de_champs)&.libelle # TODO: gerer le cas ou un tdc est supprimé
 
   def type(type_de_champs)
     case type_de_champ(type_de_champs)&.type_champ # TODO: gerer le cas ou un tdc est supprimé

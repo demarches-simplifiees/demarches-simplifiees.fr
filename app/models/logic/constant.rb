@@ -7,7 +7,7 @@ class Logic::Constant < Logic::Term
 
   def compute(_champs = nil) = @value
 
-  def to_s
+  def to_s(_type_de_champs = [])
     case @value
     when TrueClass
       I18n.t('utils.yes')
