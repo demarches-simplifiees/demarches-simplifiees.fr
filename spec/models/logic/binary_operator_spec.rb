@@ -7,7 +7,7 @@ describe Logic::BinaryOperator do
   end
 
   describe '#to_s' do
-    it { expect(two_greater_than_one.to_s).to eq('(2 > 1)') }
+    it { expect(two_greater_than_one.to_s([])).to eq('(2 > 1)') }
   end
 
   describe '#==' do

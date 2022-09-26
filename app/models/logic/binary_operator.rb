@@ -36,7 +36,7 @@ class Logic::BinaryOperator < Logic::Term
     l&.send(operation, r) || false
   end
 
-  def to_s = "(#{@left} #{operation} #{@right})"
+  def to_s(type_de_champs) = "(#{@left.to_s(type_de_champs)} #{operation} #{@right.to_s(type_de_champs)})"
 
   def ==(other)
     self.class == other.class &&
