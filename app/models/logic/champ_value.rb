@@ -4,13 +4,15 @@ class Logic::ChampValue < Logic::Term
     :checkbox,
     :integer_number,
     :decimal_number,
-    :drop_down_list
+    :drop_down_list,
+    :multiple_drop_down_list
   )
 
   CHAMP_VALUE_TYPE = {
-    boolean: :boolean,
-    number: :number,
-    enum: :enum,
+    boolean: :boolean, # from yes_no or checkbox champ
+    number: :number, # from integer or decimal number champ
+    enum: :enum, # a choice from a dropdownlist
+    enums: :enums, # multiple choice from a dropdownlist (multipledropdownlist)
     empty: :empty,
     unmanaged: :unmanaged
   }
@@ -35,6 +37,8 @@ class Logic::ChampValue < Logic::Term
       targeted_champ.for_api
     when MANAGED_TYPE_DE_CHAMP.fetch(:drop_down_list)
       targeted_champ.selected
+    when MANAGED_TYPE_DE_CHAMP.fetch(:multiple_drop_down_list)
+      targeted_champ.selected_options
     end
   end
 
@@ -49,6 +53,8 @@ class Logic::ChampValue < Logic::Term
       CHAMP_VALUE_TYPE.fetch(:number)
     when MANAGED_TYPE_DE_CHAMP.fetch(:drop_down_list)
       CHAMP_VALUE_TYPE.fetch(:enum)
+    when MANAGED_TYPE_DE_CHAMP.fetch(:multiple_drop_down_list)
+      CHAMP_VALUE_TYPE.fetch(:enums)
     else
       CHAMP_VALUE_TYPE.fetch(:unmanaged)
     end
@@ -56,7 +62,7 @@ class Logic::ChampValue < Logic::Term
 
   def errors(stable_ids)
     if !stable_ids.include?(stable_id)
-      ["le type de champ stable_id=#{stable_id} n'est pas disponible"]
+      [{ type: :not_available }]
     else
       []
     end
