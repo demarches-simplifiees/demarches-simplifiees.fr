@@ -3,7 +3,7 @@ class Logic::Eq < Logic::BinaryOperator
 
   def errors(stable_ids = [])
     errors = [@left, @right]
-      .filter { |term| term.type == :unmanaged }
+      .filter { |term| term.type(type_de_champs) == :unmanaged }
       .map { |term| { type: :unmanaged, stable_id: term.stable_id } }
 
     if !Logic.compatible_type?(@left, @right)
@@ -13,7 +13,7 @@ class Logic::Eq < Logic::BinaryOperator
         right: @right,
         operator_name: self.class.name
       }
-    elsif @left.type == :enum &&
+    elsif @left.type(type_de_champs) == :enum &&
       !left.options.map(&:second).include?(right.value)
       errors << {
         type: :not_included,

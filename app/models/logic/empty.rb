@@ -1,7 +1,7 @@
 class Logic::Empty < Logic::Term
   def to_s = I18n.t('logic.empty')
 
-  def type = :empty
+  def type(_type_de_champs = []) = :empty
 
   def errors(_stable_ids = nil) = ['empty']
 

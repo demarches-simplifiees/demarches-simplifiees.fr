@@ -7,7 +7,7 @@ describe Logic::ChampValue do
     let(:value) { 'true' }
     let(:champ) { create(:champ_yes_no, value: value) }
 
-    it { expect(champ_value(champ.stable_id).type).to eq(:boolean) }
+    it { expect(champ_value(champ.stable_id).type([champ.type_de_champ])).to eq(:boolean) }
 
     context 'with true value' do
       it { is_expected.to be(true) }
@@ -31,7 +31,7 @@ describe Logic::ChampValue do
   context 'integer tdc' do
     let(:champ) { create(:champ_integer_number, value: '42') }
 
-    it { expect(champ_value(champ.stable_id).type).to eq(:number) }
+    it { expect(champ_value(champ.stable_id).type([champ.type_de_champ])).to eq(:number) }
     it { is_expected.to eq(42) }
 
     context 'with a blank value' do
@@ -44,14 +44,14 @@ describe Logic::ChampValue do
   context 'decimal tdc' do
     let(:champ) { create(:champ_decimal_number, value: '42.01') }
 
-    it { expect(champ_value(champ.stable_id).type).to eq(:number) }
+    it { expect(champ_value(champ.stable_id).type([champ.type_de_champ])).to eq(:number) }
     it { is_expected.to eq(42.01) }
   end
 
   context 'dropdown tdc' do
     let(:champ) { create(:champ_drop_down_list, value: 'val1') }
 
-    it { expect(champ_value(champ.stable_id).type).to eq(:enum) }
+    it { expect(champ_value(champ.stable_id).type([champ.type_de_champ])).to eq(:enum) }
     it { is_expected.to eq('val1') }
     it { expect(champ_value(champ.stable_id).options).to match_array([["val1", "val1"], ["val2", "val2"], ["val3", "val3"]]) }
 
@@ -72,7 +72,7 @@ describe Logic::ChampValue do
   context 'checkbox tdc' do
     let(:champ) { create(:champ_checkbox, value: 'on') }
 
-    it { expect(champ_value(champ.stable_id).type).to eq(:boolean) }
+    it { expect(champ_value(champ.stable_id).type([champ.type_de_champ])).to eq(:boolean) }
     it { is_expected.to eq(true) }
   end
 

@@ -23,7 +23,7 @@ class Logic::NAryOperator < Logic::Term
       errors += ["opérateur '#{operator_name}' vide"]
     end
 
-    not_booleans = @operands.filter { |operand| operand.type != :boolean }
+    not_booleans = @operands.filter { |operand| operand.type(type_de_champs) != :boolean }
     if not_booleans.present?
       errors += ["'#{operator_name}' ne contient pas que des booléens : #{not_booleans.map(&:to_s).join(', ')}"]
     end
@@ -31,7 +31,7 @@ class Logic::NAryOperator < Logic::Term
     errors + @operands.flat_map { |operand| operand.errors(stable_ids) }
   end
 
-  def type = :boolean
+  def type(_type_de_champs = []) = :boolean
 
   def ==(other)
     self.class == other.class &&

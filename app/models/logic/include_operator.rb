@@ -4,7 +4,7 @@ class Logic::IncludeOperator < Logic::BinaryOperator
   def errors(stable_ids = [])
     result = []
 
-    if left_not_a_list?
+    if left_not_a_list?(type_de_champs)
       result << { type: :required_list }
     elsif right_value_not_in_list?
       result << {
@@ -19,8 +19,8 @@ class Logic::IncludeOperator < Logic::BinaryOperator
 
   private
 
-  def left_not_a_list?
-    @left.type != :enums
+  def left_not_a_list?(type_de_champs)
+    @left.type(type_de_champs) != :enums
   end
 
   def right_value_not_in_list?

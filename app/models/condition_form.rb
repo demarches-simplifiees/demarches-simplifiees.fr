@@ -39,7 +39,7 @@ class ConditionForm
 
   def row_to_condition(row)
     left = Logic.from_json(row[:targeted_champ])
-    right = parse_value(left.type, row[:value])
+    right = parse_value(left.type(upper_tdcs), row[:value])
 
     Logic.class_from_name(row[:operator_name]).new(left, right)
   end

@@ -105,7 +105,7 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
   end
 
   def compatibles_operators_for_select(left)
-    case left.type
+    case left.type(@upper_tdcs)
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:boolean)
       [
         [t('is', scope: 'logic'), Eq.name]
@@ -135,7 +135,7 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
   def right_operand_tag(left, right, row_index)
     right_invalid = !current_right_valid?(left, right)
 
-    case left.type
+    case left.type(@upper_tdcs)
     when :boolean
       booleans_for_select = [[t('utils.yes'), constant(true).to_json], [t('utils.no'), constant(false).to_json]]
 

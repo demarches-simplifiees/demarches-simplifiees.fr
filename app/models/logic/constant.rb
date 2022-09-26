@@ -18,7 +18,7 @@ class Logic::Constant < Logic::Term
     end
   end
 
-  def type
+  def type(_type_de_champs = [])
     case @value
     when TrueClass, FalseClass
       :boolean

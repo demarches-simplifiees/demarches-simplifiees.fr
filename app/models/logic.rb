@@ -17,7 +17,7 @@ module Logic
     right = condition.right
     operator_class = condition.class
 
-    case [left.type, condition]
+    case [left.type(type_de_champs), condition]
     in [:boolean, _]
       operator_class = Eq
     in [:empty, _]
@@ -32,7 +32,7 @@ module Logic
     end
 
     if !compatible_type?(left, right)
-      right = case left.type
+      right = case left.type(type_de_champs)
       when :boolean
         Constant.new(true)
       when :empty
@@ -48,7 +48,7 @@ module Logic
   end
 
   def self.compatible_type?(left, right)
-    case [left.type, right.type]
+    case [left.type(type_de_champs), right.type(type_de_champs)]
     in [a, ^a] # syntax for same type
       true
     in [:enum, :string] | [:enums, :string]

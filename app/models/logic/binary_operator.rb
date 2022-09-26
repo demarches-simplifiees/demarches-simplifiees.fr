@@ -20,14 +20,14 @@ class Logic::BinaryOperator < Logic::Term
   def errors(stable_ids = [])
     errors = []
 
-    if @left.type != :number || @right.type != :number
+    if @left.type(type_de_champs) != :number || @right.type(type_de_champs) != :number
       errors << { type: :required_number, operator_name: self.class.name }
     end
 
     errors + @left.errors(stable_ids) + @right.errors(stable_ids)
   end
 
-  def type = :boolean
+  def type(type_de_champs = []) = :boolean
 
   def compute(champs = [])
     l = @left.compute(champs)
