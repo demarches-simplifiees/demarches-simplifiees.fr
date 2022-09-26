@@ -16,7 +16,8 @@ describe Logic do
   end
 
   describe '.ensure_compatibility_from_left' do
-    subject { Logic.ensure_compatibility_from_left(condition) }
+    let(:type_de_champs) { [] }
+    subject { Logic.ensure_compatibility_from_left(condition, type_de_champs) }
 
     context 'when it s fine' do
       let(:condition) { greater_than(constant(1), constant(1)) }
@@ -44,18 +45,20 @@ describe Logic do
 
     context 'when dropdown empty operator true' do
       let(:drop_down) { create(:type_de_champ_drop_down_list) }
+      let(:type_de_champs) { [drop_down] }
       let(:first_option) { drop_down.drop_down_list_enabled_non_empty_options.first }
-      let(:condition) { empty_operator(champ_value(drop_down), constant(true)) }
+      let(:condition) { empty_operator(champ_value(drop_down.stable_id), constant(true)) }
 
-      it { is_expected.to eq(ds_eq(champ_value(drop_down), constant(first_option))) }
+      it { is_expected.to eq(ds_eq(champ_value(drop_down.stable_id), constant(first_option))) }
     end
 
     context 'when multiple dropdown empty operator true' do
       let(:multiple_drop_down) { create(:type_de_champ_multiple_drop_down_list) }
+      let(:type_de_champs) { [multiple_drop_down] }
       let(:first_option) { multiple_drop_down.drop_down_list_enabled_non_empty_options.first }
-      let(:condition) { empty_operator(champ_value(multiple_drop_down), constant(true)) }
+      let(:condition) { empty_operator(champ_value(multiple_drop_down.stable_id), constant(true)) }
 
-      it { is_expected.to eq(ds_include(champ_value(multiple_drop_down), constant(first_option))) }
+      it { is_expected.to eq(ds_include(champ_value(multiple_drop_down.stable_id), constant(first_option))) }
     end
   end
 
