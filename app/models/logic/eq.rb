@@ -6,7 +6,7 @@ class Logic::Eq < Logic::BinaryOperator
       .filter { |term| term.type(type_de_champs) == :unmanaged }
       .map { |term| { type: :unmanaged, stable_id: term.stable_id } }
 
-    if !Logic.compatible_type?(@left, @right)
+    if !Logic.compatible_type?(@left, @right, type_de_champs)
       errors << {
         type: :incompatible,
         stable_id: @left.try(:stable_id),
