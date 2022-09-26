@@ -13,7 +13,7 @@ class Zone < ApplicationRecord
   has_many :labels, -> { order(designated_on: :desc) }, class_name: 'ZoneLabel', inverse_of: :zone
   has_many :procedures, -> { order(published_at: :desc) }, inverse_of: :zone
 
-  def label
+  def current_label
     labels.first.name
   end
 
