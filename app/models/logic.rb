@@ -38,7 +38,7 @@ module Logic
       when :empty
         Empty.new
       when :enum, :enums
-        Constant.new(left.options.first.second)
+        Constant.new(left.options(type_de_champs).first.second)
       when :number
         Constant.new(0)
       end

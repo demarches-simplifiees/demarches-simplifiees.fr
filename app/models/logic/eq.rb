@@ -14,7 +14,7 @@ class Logic::Eq < Logic::BinaryOperator
         operator_name: self.class.name
       }
     elsif @left.type(type_de_champs) == :enum &&
-      !left.options.map(&:second).include?(right.value)
+      !left.options(type_de_champs).map(&:second).include?(right.value)
       errors << {
         type: :not_included,
         stable_id: @left.stable_id,
