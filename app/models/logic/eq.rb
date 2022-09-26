@@ -1,7 +1,7 @@
 class Logic::Eq < Logic::BinaryOperator
   def operation = :==
 
-  def errors(stable_ids = [])
+  def errors(type_de_champs = [])
     errors = [@left, @right]
       .filter { |term| term.type(type_de_champs) == :unmanaged }
       .map { |term| { type: :unmanaged, stable_id: term.stable_id } }
@@ -22,7 +22,7 @@ class Logic::Eq < Logic::BinaryOperator
       }
     end
 
-    errors + @left.errors(stable_ids) + @right.errors(stable_ids)
+    errors + @left.errors(type_de_champs) + @right.errors(type_de_champs)
   end
 
   def ==(other)

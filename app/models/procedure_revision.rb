@@ -479,12 +479,12 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def conditions_are_valid?
-    stable_ids = types_de_champ_public.map(&:stable_id)
+    public_tdcs = types_de_champ_public.to_a
 
-    types_de_champ_public
+    public_tdcs
       .map.with_index
       .filter_map { |tdc, i| tdc.condition.present? ? [tdc, i] : nil }
-      .map { |tdc, i| [tdc, tdc.condition.errors(stable_ids.take(i))] }
+      .map { |tdc, i| [tdc, tdc.condition.errors(public_tdcs.take(i))] }
       .filter { |_tdc, errors| errors.present? }
       .each { |tdc, message| errors.add(:condition, message, type_de_champ: tdc) }
   end

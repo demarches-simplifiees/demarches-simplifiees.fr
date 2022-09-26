@@ -60,8 +60,8 @@ class Logic::ChampValue < Logic::Term
     end
   end
 
-  def errors(stable_ids)
-    if !stable_ids.include?(stable_id)
+  def errors(type_de_champs)
+    if !type_de_champs.map(&:stable_id).include?(stable_id)
       [{ type: :not_available }]
     else
       []

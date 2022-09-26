@@ -16,7 +16,7 @@ class Logic::NAryOperator < Logic::Term
     self.new(h['operands'].map { |operand_h| Logic.from_h(operand_h) })
   end
 
-  def errors(stable_ids = [])
+  def errors(type_de_champs = [])
     errors = []
 
     if @operands.empty?
@@ -28,7 +28,7 @@ class Logic::NAryOperator < Logic::Term
       errors += ["'#{operator_name}' ne contient pas que des booléens : #{not_booleans.map(&:to_s).join(', ')}"]
     end
 
-    errors + @operands.flat_map { |operand| operand.errors(stable_ids) }
+    errors + @operands.flat_map { |operand| operand.errors(type_de_champs) }
   end
 
   def type(_type_de_champs = []) = :boolean

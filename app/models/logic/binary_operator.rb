@@ -17,14 +17,14 @@ class Logic::BinaryOperator < Logic::Term
     self.new(Logic.from_h(h['left']), Logic.from_h(h['right']))
   end
 
-  def errors(stable_ids = [])
+  def errors(type_de_champs = [])
     errors = []
 
     if @left.type(type_de_champs) != :number || @right.type(type_de_champs) != :number
       errors << { type: :required_number, operator_name: self.class.name }
     end
 
-    errors + @left.errors(stable_ids) + @right.errors(stable_ids)
+    errors + @left.errors(type_de_champs) + @right.errors(type_de_champs)
   end
 
   def type(type_de_champs = []) = :boolean

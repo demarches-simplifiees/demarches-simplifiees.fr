@@ -29,7 +29,7 @@ class Logic::Constant < Logic::Term
     end
   end
 
-  def errors(_stable_ids = nil) = []
+  def errors(_type_de_champs = nil) = []
 
   def to_h
     {

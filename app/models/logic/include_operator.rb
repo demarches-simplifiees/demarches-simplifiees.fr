@@ -1,7 +1,7 @@
 class Logic::IncludeOperator < Logic::BinaryOperator
   def operation = :include?
 
-  def errors(stable_ids = [])
+  def errors(type_de_champs = [])
     result = []
 
     if left_not_a_list?(type_de_champs)
@@ -14,7 +14,7 @@ class Logic::IncludeOperator < Logic::BinaryOperator
       }
     end
 
-    result + @left.errors(stable_ids) + @right.errors(stable_ids)
+    result + @left.errors(type_de_champs) + @right.errors(type_de_champs)
   end
 
   private
