@@ -119,6 +119,10 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
         [t('is', scope: 'logic'), Eq.name],
         [t('is_not', scope: 'logic'), NotEq.name]
       ]
+    when ChampValue::CHAMP_VALUE_TYPE.fetch(:enums)
+      [
+        [t(IncludeOperator.name, scope: 'logic.operators'), IncludeOperator.name]
+      ]
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:number)
       [Eq, LessThan, GreaterThan, LessThanEq, GreaterThanEq]
         .map(&:name)
@@ -151,7 +155,7 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
         options_for_select(empty_target_for_select),
         id: input_id_for('value', row_index)
       )
-    when :enum
+    when :enum, :enums
       enums_for_select = left.options
 
       if right_invalid
@@ -165,7 +169,7 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
         class: { alert: right_invalid }
       )
     when :number
-      number_field_tag(
+      text_field_tag(
         input_name_for('value'),
         right.value,
         required: true,
@@ -173,7 +177,7 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
         class: { alert: right_invalid }
       )
     else
-      number_field_tag(input_name_for('value'), '', id: input_id_for('value', row_index))
+      text_field_tag(input_name_for('value'), '', id: input_id_for('value', row_index))
     end
   end
 
