@@ -304,6 +304,12 @@
   select {
     width: 200px;
     display: inline-block;
+    background-color: $light-grey;
+    border: 1px solid $border-grey;
+  }
+
+  [disabled] {
+    display: none;
   }
 }
 
