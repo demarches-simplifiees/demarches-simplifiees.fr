@@ -1231,6 +1231,66 @@ describe Procedure do
     end
   end
 
+  describe '.missing_zones?' do
+    before do
+      Flipper.enable :zonage
+    end
+
+    after do
+      Flipper.disable :zonage
+    end
+
+    let(:procedure) { create(:procedure, zones: []) }
+
+    subject { procedure.missing_zones? }
+
+    it { is_expected.to be true }
+
+    context 'when a procedure has zones' do
+      let(:zone) { create(:zone) }
+
+      before { procedure.zones << zone }
+
+      it { is_expected.to be false }
+    end
+  end
+
+  describe '.missing_steps' do
+    before do
+      Flipper.enable :zonage
+    end
+
+    after do
+      Flipper.disable :zonage
+    end
+
+    subject { procedure.missing_steps.include?(step) }
+
+    context 'without zone' do
+      let(:procedure) { create(:procedure, zones: []) }
+      let(:step) { :zones }
+      it { is_expected.to be_truthy }
+    end
+
+    context 'with zone' do
+      let(:procedure) { create(:procedure, zones: [create(:zone)]) }
+      let(:step) { :zones }
+      it { is_expected.to be_falsey }
+    end
+
+    context 'without service' do
+      let(:procedure) { create(:procedure, service: nil) }
+      let(:step) { :service }
+      it { is_expected.to be_truthy }
+    end
+
+    context 'with service' do
+      let(:procedure) { create(:procedure) }
+      let(:step) { :service }
+      it { is_expected.to be_truthy }
+    end
+  end
+
   describe "#destroy" do
     let(:procedure) { create(:procedure, :closed, :with_type_de_champ, :with_bulk_message) }
 
