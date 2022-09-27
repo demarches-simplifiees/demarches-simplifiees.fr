@@ -334,6 +334,19 @@ describe Administrateurs::ProceduresController, type: :controller do
 
           it { expect(subject.for_individual).not_to eq procedure_params[:for_individual] }
         end
+
+        context 'when zones are empty' do
+          before do
+            Flipper.enable(:zonage)
+          end
+
+          after do
+            Flipper.disable(:zonage)
+          end
+
+          let(:zone_ids) { [""] }
+          it { is_expected.to render_template :zones }
+        end
       end
     end
   end

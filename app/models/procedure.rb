@@ -289,6 +289,7 @@ class Procedure < ApplicationRecord
 
   validates :lien_dpo, email_or_link: true, allow_nil: true
   validates_with MonAvisEmbedValidator
+  validates :zones, presence: true, if: -> record { record.publiee? && Flipper.enabled?(:zonage) }
 
   FILE_MAX_SIZE = 20.megabytes
   validates :notice, content_type: [
