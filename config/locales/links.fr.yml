@@ -11,8 +11,11 @@ fr:
         legals: Informations légales
         resources: Ressources
         diagnostic: Diagnostic
-      description_1: Demarches simplifiées est propulsé par la direction interministérielle du numérique. 
-      description_2: Le code source est disponible en licence libre.
+      description_1: Démarches simplifiées est un service propulsé par
+      link_1_label: la direction interministérielle du numérique (DINUM).
+      link_1_url: "https://www.numerique.gouv.fr/dinum/"
+      link_2_label: Le code source
+      description_2: est disponible en licence libre.
       accessibilite:
         label: "Accessibilité : partiellement conforme"
         title: "Consulter notre déclaration d'accessibilité"
@@ -60,10 +63,6 @@ fr:
         label: "Mentions légales"
         title: "Consulter nos Mentions légales"
         url: "https://doc.demarches-simplifiees.fr/mentions-legales"
-      newsletter:
-        label: "Infolettres"
-        title: "S'abonner a notre infolettre"
-        url: "https://my.sendinblue.com/users/subscribe/js_id/3s2q1/id/1"
       releases:
         label: "Nouveautés"
         title: "Les dernière mises à jour de la plateforme"
@@ -93,4 +92,6 @@ fr:
       cookies:
         label: Gestion des cookies
         title: Gestion des cookies
-        
+      contact:
+        label: Contactez-nous
+        title: Contactez-nous
