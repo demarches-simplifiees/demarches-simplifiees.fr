@@ -6,10 +6,24 @@ class TypesDeChampEditor::ConditionsErrorsComponent < ApplicationComponent
   private
 
   def errors
-    @conditions
+    errors = @conditions
       .flat_map { |condition| condition.errors(@upper_tdcs) }
-      .map { |error| humanize(error) }
       .uniq
+
+    # if a tdc is not available (has been removed for example)
+    # it causes a lot of errors (incompatible type for example)
+    # only the root cause is displayed
+    messages = if errors.include?({ type: :not_available })
+      [t('not_available', scope: '.errors')]
+    else
+      errors.map { |error| humanize(error) }
+    end
+
+    to_html_list(messages)
+  end
+
+  def to_html_list(messages)
+    messages
       .map { |message| tag.li(message) }
       .then { |lis| tag.ul(lis.reduce(&:+)) }
   end
