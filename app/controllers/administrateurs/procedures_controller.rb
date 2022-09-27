@@ -131,7 +131,11 @@ module Administrateurs
 
       if !@procedure.update(procedure_params)
         flash.now.alert = @procedure.errors.full_messages
-        render 'edit'
+        if @procedure.errors[:zones].present?
+          render 'zones'
+        else
+          render 'edit'
+        end
       elsif @procedure.brouillon?
         reset_procedure
         flash.notice = 'Démarche modifiée. Tous les dossiers de cette démarche ont été supprimés.'

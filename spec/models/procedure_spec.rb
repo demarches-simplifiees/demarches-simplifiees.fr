@@ -704,7 +704,7 @@ describe Procedure do
   end
 
   describe '#publish!' do
-    let(:procedure) { create(:procedure, path: 'example-path') }
+    let(:procedure) { create(:procedure, path: 'example-path', zones: [create(:zone)]) }
     let(:now) { Time.zone.now.beginning_of_minute }
 
     context 'when publishing a new procedure' do
@@ -757,7 +757,7 @@ describe Procedure do
     let(:canonical_procedure) { create(:procedure, :published) }
     let(:administrateur) { canonical_procedure.administrateurs.first }
 
-    let(:procedure) { create(:procedure, administrateurs: [administrateur]) }
+    let(:procedure) { create(:procedure, administrateurs: [administrateur], zones: [create(:zone)]) }
     let(:now) { Time.zone.now.beginning_of_minute }
 
     context 'when publishing over a previous canonical procedure' do
@@ -1063,7 +1063,7 @@ describe Procedure do
   end
 
   describe 'suggested_path' do
-    let(:procedure) { create(:procedure, aasm_state: :publiee, libelle: 'Inscription au Collège') }
+    let(:procedure) { create(:procedure, aasm_state: :publiee, libelle: 'Inscription au Collège', zones: [create(:zone)]) }
 
     subject { procedure.suggested_path(procedure.administrateurs.first) }
 
@@ -1079,7 +1079,7 @@ describe Procedure do
 
     context 'when the suggestion conflicts with one procedure' do
       before do
-        create(:procedure, aasm_state: :publiee, path: 'inscription-au-college')
+        create(:procedure, aasm_state: :publiee, path: 'inscription-au-college', zones: [create(:zone)])
       end
 
       it { is_expected.to eq 'inscription-au-college-2' }
@@ -1087,8 +1087,8 @@ describe Procedure do
 
     context 'when the suggestion conflicts with several procedures' do
       before do
-        create(:procedure, aasm_state: :publiee, path: 'inscription-au-college')
-        create(:procedure, aasm_state: :publiee, path: 'inscription-au-college-2')
+        create(:procedure, aasm_state: :publiee, path: 'inscription-au-college', zones: [create(:zone)])
+        create(:procedure, aasm_state: :publiee, path: 'inscription-au-college-2', zones: [create(:zone)])
       end
 
       it { is_expected.to eq 'inscription-au-college-3' }
@@ -1096,7 +1096,7 @@ describe Procedure do
 
     context 'when the suggestion conflicts with another procedure of the same admin' do
       before do
-        create(:procedure, aasm_state: :publiee, path: 'inscription-au-college', administrateurs: procedure.administrateurs)
+        create(:procedure, aasm_state: :publiee, path: 'inscription-au-college', administrateurs: procedure.administrateurs, zones: [create(:zone)])
       end
 
       it { is_expected.to eq 'inscription-au-college' }
