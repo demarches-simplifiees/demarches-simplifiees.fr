@@ -8,7 +8,7 @@ describe Logic::And do
 
   describe '#to_s' do
     it do
-      expect(and_from([true, false, true]).to_s).to eq "(Oui && Non && Oui)"
+      expect(and_from([true, false, true]).to_s([])).to eq "(Oui && Non && Oui)"
     end
   end
 
