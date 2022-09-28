@@ -2,10 +2,11 @@ describe 'shared/attachment/_update.html.haml', type: :view do
   let(:champ) { build(:champ_piece_justificative, dossier: create(:dossier)) }
   let(:attached_file) { champ.piece_justificative_file }
   let(:user_can_destroy) { false }
+  let(:template) { nil }
 
   subject do
     form_for(champ.dossier) do |form|
-      view.render Attachment::EditComponent.new(form: form, attached_file: attached_file, user_can_destroy: true, direct_upload: true)
+      view.render Attachment::EditComponent.new(form: form, attached_file: attached_file, user_can_destroy: true, direct_upload: true, template:)
     end
   end
 
@@ -62,6 +63,28 @@ describe 'shared/attachment/_update.html.haml', type: :view do
 
     it 'hides the Delete button' do
       is_expected.not_to have_link('Supprimer')
+    end
+  end
+
+  context 'when champ has a template' do
+    let(:profil) { :user }
+    let(:template) { champ.type_de_champ.piece_justificative_template }
+
+    before do
+      allow_any_instance_of(ActionView::Base).to receive(:administrateur_signed_in?).and_return(profil == :administrateur)
+    end
+
+    it 'renders a link to template' do
+      expect(subject).to have_link('le modèle suivant')
+      expect(subject).not_to have_text("éphémère")
+    end
+
+    context 'as an administrator' do
+      let(:profil) { :administrateur }
+      it 'warn about ephemeral template url' do
+        expect(subject).to have_link('le modèle suivant')
+        expect(subject).to have_text("éphémère")
+      end
     end
   end
 end
