@@ -500,6 +500,7 @@ en:
           connection_done: "The accounts for FranceConnect and %{application_name} are now merged."
           merger_token_expired: "Le delay to merge your FranceConnect and %{application_name} accounts is expired. Please retry."
   shared:
+    ephemeral_link: This link is ephemeral and should not be shared.
     procedures:
       stats:
         usual_processing_time: "Usual processing time"

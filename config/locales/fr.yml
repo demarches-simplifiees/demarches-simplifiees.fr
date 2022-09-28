@@ -551,6 +551,7 @@ fr:
         connection_done: "Les comptes FranceConnect et %{application_name} sont à présent fusionnés"
         merger_token_expired: "Le délai pour fusionner les comptes FranceConnect et %{application_name} est expirée. Veuillez recommencer la procédure pour vous fusionner les comptes."
   shared:
+    ephemeral_link: Ce lien est éphémère et ne devrait pas être partagé.
     procedures:
       stats:
         usual_processing_time: "Temps de traitement usuel"
