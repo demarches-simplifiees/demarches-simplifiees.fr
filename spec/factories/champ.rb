@@ -125,11 +125,6 @@ FactoryBot.define do
       value { 'Paris' }
     end
 
-    factory :champ_engagement, class: 'Champs::EngagementChamp' do
-      type_de_champ { association :type_de_champ_engagement, procedure: dossier.procedure }
-      value { 'true' }
-    end
-
     factory :champ_header_section, class: 'Champs::HeaderSectionChamp' do
       type_de_champ { association :type_de_champ_header_section, procedure: dossier.procedure }
       value { 'une section' }
