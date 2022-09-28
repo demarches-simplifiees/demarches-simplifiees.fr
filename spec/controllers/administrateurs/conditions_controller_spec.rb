@@ -1,16 +1,20 @@
 describe Administrateurs::ConditionsController, type: :controller do
   include Logic
 
-  let(:procedure) { create(:procedure, :with_type_de_champ, types_de_champ_count: 2) }
+  let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :integer_number }] * 3) }
   let(:first_coordinate) { procedure.draft_revision.revision_types_de_champ.first }
+  let(:second_coordinate) { procedure.draft_revision.revision_types_de_champ.first }
+  let(:third_coordinate) { procedure.draft_revision.revision_types_de_champ.first }
+  let(:first_tdc) { procedure.draft_revision.types_de_champ.first }
   let(:second_tdc) { procedure.draft_revision.types_de_champ.second }
+  let(:third_tdc) { procedure.draft_revision.types_de_champ.third }
 
   before { sign_in(procedure.administrateurs.first.user) }
 
   let(:default_params) do
     {
       procedure_id: procedure.id,
-      stable_id: second_tdc.stable_id
+      stable_id: third_tdc.stable_id
     }
   end
 
@@ -23,7 +27,7 @@ describe Administrateurs::ConditionsController, type: :controller do
       {
         rows: [
           {
-            targeted_champ: champ_value(1).to_json,
+            targeted_champ: champ_value(first_tdc.stable_id).to_json,
             operator_name: Logic::Eq.name,
             value: '2'
           }
@@ -32,9 +36,9 @@ describe Administrateurs::ConditionsController, type: :controller do
     end
 
     it do
-      expect(second_tdc.reload.condition).to eq(ds_eq(champ_value(1), constant('2')))
-      expect(assigns(:coordinate)).to eq(procedure.draft_revision.coordinate_for(second_tdc))
-      expect(assigns(:upper_tdcs)).to eq([first_coordinate.type_de_champ])
+      expect(third_tdc.reload.condition).to eq(ds_eq(champ_value(first_tdc.stable_id), constant(2)))
+      expect(assigns(:coordinate)).to eq(procedure.draft_revision.coordinate_for(third_tdc))
+      expect(assigns(:upper_tdcs)).to eq([first_tdc, second_tdc])
     end
   end
 
@@ -42,9 +46,9 @@ describe Administrateurs::ConditionsController, type: :controller do
     before { post :add_row, params: default_params, format: :turbo_stream }
 
     it do
-      expect(second_tdc.reload.condition).to eq(empty_operator(empty, empty))
-      expect(assigns(:coordinate)).to eq(procedure.draft_revision.coordinate_for(second_tdc))
-      expect(assigns(:upper_tdcs)).to eq([first_coordinate.type_de_champ])
+      expect(third_tdc.reload.condition).to eq(empty_operator(empty, empty))
+      expect(assigns(:coordinate)).to eq(procedure.draft_revision.coordinate_for(third_tdc))
+      expect(assigns(:upper_tdcs)).to eq([first_tdc, second_tdc])
     end
   end
 
@@ -66,9 +70,9 @@ describe Administrateurs::ConditionsController, type: :controller do
     end
 
     it do
-      expect(second_tdc.reload.condition).to eq(nil)
-      expect(assigns(:coordinate)).to eq(procedure.draft_revision.coordinate_for(second_tdc))
-      expect(assigns(:upper_tdcs)).to eq([first_coordinate.type_de_champ])
+      expect(third_tdc.reload.condition).to eq(nil)
+      expect(assigns(:coordinate)).to eq(procedure.draft_revision.coordinate_for(third_tdc))
+      expect(assigns(:upper_tdcs)).to eq([first_tdc, second_tdc])
     end
   end
 
@@ -79,15 +83,13 @@ describe Administrateurs::ConditionsController, type: :controller do
     end
 
     it do
-      expect(second_tdc.reload.condition).to eq(nil)
-      expect(assigns(:coordinate)).to eq(procedure.draft_revision.coordinate_for(second_tdc))
-      expect(assigns(:upper_tdcs)).to eq([first_coordinate.type_de_champ])
+      expect(third_tdc.reload.condition).to eq(nil)
+      expect(assigns(:coordinate)).to eq(procedure.draft_revision.coordinate_for(third_tdc))
+      expect(assigns(:upper_tdcs)).to eq([first_tdc, second_tdc])
     end
   end
 
   describe '#change_targeted_champ' do
-    let!(:number_tdc) { create(:type_de_champ_integer_number) }
-
     before do
       second_tdc.update(condition: empty_operator(empty, empty))
       patch :change_targeted_champ, params: params, format: :turbo_stream
@@ -99,7 +101,7 @@ describe Administrateurs::ConditionsController, type: :controller do
       {
         rows: [
           {
-            targeted_champ: champ_value(number_tdc.stable_id).to_json,
+            targeted_champ: champ_value(second_tdc.stable_id).to_json,
             operator_name: Logic::EmptyOperator.name,
             value: empty.to_json
           }
@@ -108,9 +110,9 @@ describe Administrateurs::ConditionsController, type: :controller do
     end
 
     it do
-      expect(second_tdc.reload.condition).to eq(ds_eq(champ_value(number_tdc.stable_id), constant(0)))
-      expect(assigns(:coordinate)).to eq(procedure.draft_revision.coordinate_for(second_tdc))
-      expect(assigns(:upper_tdcs)).to eq([first_coordinate.type_de_champ])
+      expect(third_tdc.reload.condition).to eq(ds_eq(champ_value(second_tdc.stable_id), constant(0)))
+      expect(assigns(:coordinate)).to eq(procedure.draft_revision.coordinate_for(third_tdc))
+      expect(assigns(:upper_tdcs)).to eq([first_tdc, second_tdc])
     end
   end
 end

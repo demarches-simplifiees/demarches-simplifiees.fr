@@ -7,7 +7,7 @@ class Logic::Constant < Logic::Term
 
   def compute(_champs = nil) = @value
 
-  def to_s
+  def to_s(_type_de_champs = [])
     case @value
     when TrueClass
       I18n.t('utils.yes')
@@ -18,7 +18,7 @@ class Logic::Constant < Logic::Term
     end
   end
 
-  def type
+  def type(_type_de_champs = [])
     case @value
     when TrueClass, FalseClass
       :boolean
@@ -29,7 +29,7 @@ class Logic::Constant < Logic::Term
     end
   end
 
-  def errors(_stable_ids = nil) = []
+  def errors(_type_de_champs = nil) = []
 
   def to_h
     {
