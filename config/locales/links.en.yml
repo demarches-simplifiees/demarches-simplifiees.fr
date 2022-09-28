@@ -11,8 +11,11 @@ en:
         legals: Legal information
         resources: Resources
         diagnostic: Diagnostic
-      description_1: Demarches simplifiées is powered by the interdepartmental direction of digital. 
-      description_2: The source code is available under a free license.
+      description_1: Démarches simplifiées is powered by 
+      link_1_label: the interdepartmental direction of digital (DINUM).
+      link_1_url: "https://www.numerique.gouv.fr/dinum/"
+      link_2_label: The source code
+      description_2: is available under a free license.
       accessibilite:
         label: "Accessibility: partially compliant"
         title: "Accessibility declaration"
@@ -55,10 +58,6 @@ en:
         label: "Legal notices"
         title: "Legal notices regarding our platform"
         url: "https://doc.demarches-simplifiees.fr/mentions-legales"
-      newsletter:
-        label: "Newsletter"
-        title: "Our newsletter"
-        url: "https://my.sendinblue.com/users/subscribe/js_id/3s2q1/id/1"
       releases:
         label: "Releases"
         title: "Our last updates"
@@ -78,3 +77,6 @@ en:
         label: "Online workshop registration"
         title: "Registration for our online workshop"
         url: "https://app.livestorm.co/demarches-simplifiees"
+      contact:
+        label: Contactez-nous
+        title: Contactez-nous
