@@ -261,11 +261,11 @@ class Procedure < ApplicationRecord
   validates :administrateurs, presence: true
   validates :lien_site_web, presence: true, if: :publiee?
   validates :draft_types_de_champ,
-    'types_de_champ/no_empty_repetition': true,
+    'types_de_champ/no_empty_block': true,
     'types_de_champ/no_empty_drop_down': true,
     if: :validate_for_publication?
   validates :draft_types_de_champ_private,
-    'types_de_champ/no_empty_repetition': true,
+    'types_de_champ/no_empty_block': true,
     'types_de_champ/no_empty_drop_down': true,
     if: :validate_for_publication?
   validate :check_juridique
