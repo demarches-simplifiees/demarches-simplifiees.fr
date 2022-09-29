@@ -200,7 +200,7 @@ export class AutosaveController extends ApplicationController {
       )
     ].filter((element) => !element.disabled);
 
-    const parent = this.element.closest('.editable-champ-repetition');
+    const parent = this.element.closest('[data-block]');
     if (parent) {
       return [
         ...inputs,
