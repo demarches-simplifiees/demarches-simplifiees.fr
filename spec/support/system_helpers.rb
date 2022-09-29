@@ -130,7 +130,7 @@ module SystemHelpers
       click_button(title: 'Mon compte')
       click_on 'Se déconnecter'
     end
-    expect(page).to have_current_path(root_path)
+    expect(page).to have_current_path(root_path, wait: 5)
   end
 
   # Keep the brower window open after a test success of failure, to
