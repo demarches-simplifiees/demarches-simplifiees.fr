@@ -83,7 +83,7 @@ describe 'France Connect Particulier Connexion' do
 
                 expect(page).to have_css('#password-for-another-account', visible: true)
 
-                within '.new-account-password-confirmation' do
+                within '#new-account-password-confirmation' do
                   fill_in 'password', with: 'my-s3cure-p4ssword'
                   click_on 'Fusionner les comptes'
                 end
