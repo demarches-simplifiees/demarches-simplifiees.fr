@@ -132,7 +132,7 @@ class TypeDeChamp < ApplicationRecord
   before_validation :check_mandatory
   before_save :remove_piece_justificative_template, if: -> { type_champ_changed? }
   before_validation :remove_drop_down_list, if: -> { type_champ_changed? }
-  before_save :remove_repetition, if: -> { type_champ_changed? }
+  before_save :remove_block, if: -> { type_champ_changed? }
 
   after_save if: -> { @remove_piece_justificative_template } do
     piece_justificative_template.purge_later
@@ -218,6 +218,10 @@ class TypeDeChamp < ApplicationRecord
 
   def linked_drop_down_list?
     type_champ == TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
+  end
+
+  def block?
+    type_champ == TypeDeChamp.type_champs.fetch(:repetition)
   end
 
   def header_section?
@@ -405,8 +409,8 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  def remove_repetition
-    if !repetition? && procedure.present?
+  def remove_block
+    if !block? && procedure.present?
       procedure
         .draft_revision # action occurs only on draft
         .remove_children_of(self)
