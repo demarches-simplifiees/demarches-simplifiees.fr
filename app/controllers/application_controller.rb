@@ -263,7 +263,13 @@ class ApplicationController < ActionController::Base
   end
 
   def sentry_user
-    { id: user_signed_in? ? "User##{current_user.id}" : 'Guest' }
+    if user_signed_in?
+      { id: "User##{current_user.id}" }
+    elsif administrateur_signed_in?
+      { id: "Administrateur##{current_administrateur.id}" }
+    else
+      { id: 'Guest' }
+    end
   end
 
   def sentry_config

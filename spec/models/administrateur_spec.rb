@@ -6,10 +6,12 @@ describe Administrateur, type: :model do
   end
 
   describe "#renew_api_token" do
-    let!(:administrateur) { create(:administrateur) }
+    let(:administrateur) { create(:administrateur) }
     let!(:token) { administrateur.renew_api_token }
+    let(:encrypted_token) { BCrypt::Password.new(administrateur.encrypted_token) }
+    let(:base_token) { APIToken.new(token).token }
 
-    it { expect(BCrypt::Password.new(administrateur.encrypted_token)).to eq(token) }
+    it { expect(encrypted_token).to eq(base_token) }
 
     context 'when it s called twice' do
       let!(:new_token) { administrateur.renew_api_token }

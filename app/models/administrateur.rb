@@ -54,7 +54,7 @@ class Administrateur < ApplicationRecord
     api_token = Administrateur.generate_unique_secure_token
     encrypted_token = BCrypt::Password.create(api_token)
     update(encrypted_token: encrypted_token)
-    api_token
+    APIToken.signe(id, api_token)
   end
 
   def valid_api_token?(api_token)
