@@ -49,7 +49,9 @@ class Champ < ApplicationRecord
     :dossier_link?,
     :titre_identite?,
     :header_section?,
-    :accredited_user_list,
+    :simple_drop_down_list?,
+    :linked_drop_down_list?,
+    :non_fillable?,
     :cnaf?,
     :dgfip?,
     :pole_emploi?,
@@ -57,6 +59,11 @@ class Champ < ApplicationRecord
     :siret?,
     :stable_id,
     to: :type_de_champ
+
+  # pf champ
+  delegate :accredited_user_list, to: :type_de_champ
+
+  include DateEncodingConcern
 
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
   scope :public_only, -> { where(private: false) }
@@ -77,8 +84,6 @@ class Champ < ApplicationRecord
   after_update_commit :fetch_external_data_later
 
   validates :type_de_champ_id, uniqueness: { scope: [:dossier_id, :row] }
-
-  include DateEncodingConcern
 
   def public?
     !private?

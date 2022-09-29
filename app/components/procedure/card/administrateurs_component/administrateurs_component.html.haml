@@ -1,0 +1,10 @@
+= link_to admin_procedure_administrateurs_path(@procedure), id: 'administrateurs', class: 'card-admin' do
+  %div
+    %span.icon.accept
+    %p.card-admin-status-accept Validé
+  %div
+    %p.card-admin-title
+      %span.badge.baseline= @procedure.administrateurs.size
+      = t('.title', count: @procedure.administrateurs.size)
+    %p.card-admin-subtitle Gestion de la démarche
+  %p.button= t('views.shared.actions.edit')
