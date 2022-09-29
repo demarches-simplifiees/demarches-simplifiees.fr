@@ -1,4 +1,8 @@
 RSpec.describe StringToHtmlHelper, type: :helper do
+  before do
+    ActionView::Base.sanitized_allowed_attributes.add(['target', 'rel'])
+  end
+
   describe "#string_to_html" do
     subject { string_to_html(description) }
 
