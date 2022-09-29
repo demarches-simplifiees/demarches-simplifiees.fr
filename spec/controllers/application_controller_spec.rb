@@ -22,7 +22,7 @@ describe ApplicationController, type: :controller do
       allow(@controller).to receive(:media_type).and_return('text/plain')
       allow(@controller).to receive(:current_user).and_return(current_user)
       expect(@controller).to receive(:current_instructeur).and_return(current_instructeur)
-      expect(@controller).to receive(:current_administrateur).and_return(current_administrateur)
+      expect(@controller).to receive(:current_administrateur).at_least(:once).and_return(current_administrateur)
       expect(@controller).to receive(:current_super_admin).and_return(current_super_admin)
       allow(Sentry).to receive(:set_user)
 
