@@ -1,4 +1,6 @@
 class Dossiers::MessageComponent < ApplicationComponent
+  include StringToHtmlHelper
+
   def initialize(commentaire:, connected_user:, messagerie_seen_at: nil, show_reply_button: false)
     @commentaire = commentaire
     @connected_user = connected_user
@@ -59,8 +61,7 @@ class Dossiers::MessageComponent < ApplicationComponent
     if commentaire.discarded?
       t('.deleted_body')
     else
-      body_formatted = commentaire.sent_by_system? ? commentaire.body : simple_format(commentaire.body)
-      sanitize(body_formatted)
+      commentaire.sent_by_system? ? sanitize_html(commentaire.body) : string_to_html(commentaire.body)
     end
   end
 
