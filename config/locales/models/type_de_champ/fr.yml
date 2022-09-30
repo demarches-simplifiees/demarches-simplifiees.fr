@@ -25,8 +25,6 @@ fr:
           regions: 'Régions'
           departements: 'Départements'
           communes: 'Communes'
-          # TODO: remove after 20220725075951_migrate_champs_engagement_to_checkbox passed
-          engagement: 'Engagement'
           header_section: 'Titre de section'
           explication: 'Explication'
           dossier_link: 'Lien vers un autre dossier'
