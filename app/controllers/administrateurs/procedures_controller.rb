@@ -235,6 +235,13 @@ module Administrateurs
     end
 
     def publication
+      @procedure = current_administrateur
+        .procedures
+        .includes(
+          published_revision: :types_de_champ,
+          draft_revision: :types_de_champ
+        ).find(params[:procedure_id])
+
       @procedure_lien = commencer_url(path: @procedure.path)
       @procedure_lien_test = commencer_test_url(path: @procedure.path)
       @procedure.path = @procedure.suggested_path(current_administrateur)
