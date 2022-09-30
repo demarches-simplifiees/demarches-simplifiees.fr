@@ -81,9 +81,7 @@
     }
 
     // Move checkbox to the top-left side of the label
-    &.editable-champ-checkbox,
-    // TODO: remove after 20220725075951_migrate_champs_engagement_to_checkbox passed
-    &.editable-champ-engagement {
+    &.editable-champ-checkbox {
       p,
       label {
         padding-left: 28px;
