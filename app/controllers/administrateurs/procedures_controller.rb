@@ -98,6 +98,8 @@ module Administrateurs
         )
         .find(params[:id])
 
+      @procedure.validate(:publication)
+
       @current_administrateur = current_administrateur
       @procedure_lien = commencer_url(path: @procedure.path)
       @procedure_lien_test = commencer_test_url(path: @procedure.path)
