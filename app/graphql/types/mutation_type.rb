@@ -4,7 +4,6 @@ module Types
 
     field :dossier_envoyer_message, mutation: Mutations::DossierEnvoyerMessage
     field :dossier_passer_en_instruction, mutation: Mutations::DossierPasserEnInstruction
-    field :dossier_repasser_en_instruction, mutation: Mutations::DossierRepasserEnInstruction
     field :dossier_classer_sans_suite, mutation: Mutations::DossierClasserSansSuite
     field :dossier_refuser, mutation: Mutations::DossierRefuser
     field :dossier_accepter, mutation: Mutations::DossierAccepter
@@ -18,7 +17,10 @@ module Types
     field :dossier_modifier_annotation_date, mutation: Mutations::DossierModifierAnnotationDate
     field :dossier_modifier_annotation_datetime, mutation: Mutations::DossierModifierAnnotationDatetime
     field :dossier_modifier_annotation_integer_number, mutation: Mutations::DossierModifierAnnotationIntegerNumber
-    field :dossier_modifier_annotation_piece_justificative, mutation: Mutations::DossierModifierAnnotationPieceJustificative
     field :dossier_modifier_annotation_ajouter_ligne, mutation: Mutations::DossierModifierAnnotationAjouterLigne
+
+    # pf mutations
+    field :dossier_repasser_en_instruction, mutation: Mutations::DossierRepasserEnInstruction
+    field :dossier_modifier_annotation_piece_justificative, mutation: Mutations::DossierModifierAnnotationPieceJustificative
   end
 end

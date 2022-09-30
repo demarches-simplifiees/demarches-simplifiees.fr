@@ -1,0 +1,11 @@
+= link_to modifications_admin_procedure_path(@procedure), id: 'modifications', class: 'card-admin' do
+  %div
+    %span.icon.accept
+    %p.card-admin-status-accept Activée
+  %div
+    %p.card-admin-title
+      %span.badge.baseline= @procedure.revisions.size - 1
+      = t('.title')
+
+    %p.card-admin-subtitle Historique des modifications du formulaire
+  %p.button Voir
