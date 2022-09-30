@@ -93,8 +93,8 @@ module Administrateurs
       @procedure = current_administrateur
         .procedures
         .includes(
-          published_revision: { revision_types_de_champ: :type_de_champ },
-          draft_revision: { revision_types_de_champ: :type_de_champ }
+          published_revision: :types_de_champ,
+          draft_revision: :types_de_champ
         )
         .find(params[:id])
 
