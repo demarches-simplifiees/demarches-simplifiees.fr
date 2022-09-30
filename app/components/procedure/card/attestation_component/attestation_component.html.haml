@@ -1,0 +1,13 @@
+= link_to edit_admin_procedure_attestation_template_path(@procedure), class: 'card-admin' do
+  - if @procedure.draft_attestation_template&.activated?
+    %div
+      %span.icon.accept
+      %p.card-admin-status-accept Activée
+  - else
+    %div
+      %span.icon.clock
+      %p.card-admin-status-todo Désactivée
+  %div
+    %p.card-admin-title= t('.title')
+    %p.card-admin-subtitle Délivrance automatique pour les dossiers acceptés
+  %p.button= t('views.shared.actions.edit')

@@ -134,7 +134,7 @@ def add_identite_etablissement(pdf, etablissement)
 end
 
 def add_single_champ(pdf, champ)
-  tdc = @tdc_by_id[champ.type_de_champ_id]
+  tdc = champ.type_de_champ
 
   case champ.type
   when 'Champs::PieceJustificativeChamp', 'Champs::TitreIdentiteChamp'
@@ -196,12 +196,13 @@ def add_message(pdf, message)
     sender = @dossier.user_email_for(:display)
   end
 
-  format_in_2_lines(pdf, "#{sender}, #{try_format_date(message.created_at)}",message.body)
+  format_in_2_lines(pdf, "#{sender}, #{try_format_date(message.created_at)}",
+    ActionView::Base.full_sanitizer.sanitize(message.body))
 end
 
 def add_avis(pdf, avis)
   format_in_2_lines(pdf, "Avis de #{avis.email_to_display}#{avis.confidentiel? ? ' (confidentiel)' : ''}",
-                    avis.answer || 'En attente de réponse')
+    avis.answer || 'En attente de réponse')
 end
 
 def add_etat_dossier(pdf, dossier)
@@ -223,9 +224,6 @@ def add_etats_dossier(pdf, dossier)
 end
 
 prawn_document(page_size: "A4") do |pdf|
-  @procedure ||= @dossier.procedure
-  @tdc_by_id ||= @dossier.revision.types_de_champ.index_by(&:id)
-
   pdf.font_families.update('marianne' => {
     normal: Rails.root.join('lib/prawn/fonts/marianne/marianne-regular.ttf'),
     bold: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf'),
@@ -241,8 +239,8 @@ prawn_document(page_size: "A4") do |pdf|
   pdf.move_down(40)
 
   format_in_2_columns(pdf, 'Dossier Nº', @dossier.id.to_s)
-  format_in_2_columns(pdf, 'Démarche', @procedure.libelle)
-  format_in_2_columns(pdf, 'Organisme', @procedure.organisation_name)
+  format_in_2_columns(pdf, 'Démarche', @dossier.procedure.libelle)
+  format_in_2_columns(pdf, 'Organisme', @dossier.procedure.organisation_name)
 
   add_etat_dossier(pdf, @dossier)
 
