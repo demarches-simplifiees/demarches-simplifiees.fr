@@ -1,7 +1,6 @@
 class Procedure::Card::AnnotationsComponent < ApplicationComponent
   def initialize(procedure:)
     @procedure = procedure
-    @procedure.validate(:publication)
     @count = @procedure.draft_revision.types_de_champ.private_only.size
   end
 
