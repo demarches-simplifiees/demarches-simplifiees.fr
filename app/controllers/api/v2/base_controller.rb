@@ -8,8 +8,13 @@ class API::V2::BaseController < ApplicationController
   private
 
   def context
+    # new token give administrateur_id
     if api_token.administrateur?
       { administrateur_id: api_token.administrateur_id }
+    # web interface (/graphql) give current_administrateur
+    elsif current_administrateur.present?
+      { administrateur_id: current_administrateur.id }
+    # old token
     else
       { token: api_token.token }
     end
