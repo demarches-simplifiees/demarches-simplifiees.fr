@@ -6,6 +6,8 @@ if ENV['SAML_IDP_ENABLED'] == 'enabled'
     config.base_saml_location = "https://#{ENV['APP_HOST']}/saml/metadata"
     config.x509_certificate = ENV.fetch("SAML_IDP_CERTIFICATE")
     config.secret_key = ENV.fetch("SAML_IDP_SECRET_KEY")
+    config.single_service_post_location = "https://#{ENV['APP_HOST']}/saml/auth"
+    config.single_service_redirect_location = "https://#{ENV['APP_HOST']}/saml/auth"
 
     config.name_id.formats = {
       "1.1" => {
