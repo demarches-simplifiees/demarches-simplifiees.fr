@@ -66,8 +66,4 @@
 
     .fr-footer__bottom
       = render partial: 'users/general_footer_row'
-      .fr-footer__bottom-copy
-        %p
-          Sauf mention contraire, tous les contenus de ce site sont sous
-          %a{ href: "https://github.com/etalab/licence-ouverte/blob/master/LO.md", target:"_blank" } licence etalab-2.0
-        %br
+      = render partial: 'shared/footer_copy'
