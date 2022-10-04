@@ -458,8 +458,6 @@ fr:
         undergoingreview: "L’instruction de votre dossier a commencé, il n’est plus possible de supprimer votre dossier. Si vous souhaitez annuler l’instruction contactez votre administration par la messagerie de votre dossier."
         soft_deleted_dossier: "Votre dossier a bien été supprimé de votre interface"
       restore: "Votre dossier a bien été restauré"
-      update_brouillon:
-        draft_saved: "Votre brouillon a bien été sauvegardé."
       etablissement:
         no_establishment: "Aucun établissement n’est associé à ce dossier"
       update_identite:
