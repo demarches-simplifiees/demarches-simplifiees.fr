@@ -80,6 +80,10 @@ class DossierPreloader
   def load_champs(parent, name, champs, dossier, children_by_parent)
     champs.each do |champ|
       champ.association(:dossier).target = dossier
+
+      if parent.is_a?(Champ)
+        champ.association(:parent).target = parent
+      end
     end
 
     parent.association(name).target = champs.sort_by do |champ|
