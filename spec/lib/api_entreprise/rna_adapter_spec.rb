@@ -24,7 +24,7 @@ describe APIEntreprise::RNAAdapter do
     let(:body) { File.read('spec/fixtures/files/api_entreprise/associations.json') }
     let(:status) { 200 }
 
-    it '#to_params return vaid hash' do
+    it '#to_params return valid hash' do
       expect(subject).to be_an_instance_of(Hash)
       expect(subject["association_rna"]).to eq('W595001988')
       expect(subject["association_titre"]).to eq('UN SUR QUATRE')

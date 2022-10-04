@@ -12,7 +12,7 @@ describe APIEducation::AnnuaireEducationAdapter do
     let(:body) { File.read('spec/fixtures/files/api_education/annuaire_education.json') }
     let(:status) { 200 }
 
-    it '#to_params return vaid hash' do
+    it '#to_params return valid hash' do
       expect(subject).to be_an_instance_of(Hash)
       expect(subject['identifiant_de_l_etablissement']).to eq(search_term)
       expect(subject['code_type_contrat_prive']).to eq(99)
@@ -23,7 +23,7 @@ describe APIEducation::AnnuaireEducationAdapter do
     let(:body) { File.read('spec/fixtures/files/api_education/annuaire_education_bug.json') }
     let(:status) { 200 }
 
-    it '#to_params return vaid hash' do
+    it '#to_params return valid hash' do
       expect(subject).to be_an_instance_of(Hash)
       expect(subject['identifiant_de_l_etablissement']).to eq(search_term)
       expect(subject['code_type_contrat_prive']).to eq(99)
