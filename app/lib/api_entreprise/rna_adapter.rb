@@ -14,7 +14,8 @@ class APIEntreprise::RNAAdapter < APIEntreprise::Adapter
   end
 
   def process_params
-    params = data_source[:association]&.slice(*attr_to_fetch)
+    params = data_source[:association]
+    params = params&.slice(*attr_to_fetch) if @depreciated
     params[:rna] = data_source.dig(:association, :id)
     if params[:rna].present? && valid_params?(params)
       params = params.transform_keys { |k| :"association_#{k}" }.deep_stringify_keys
