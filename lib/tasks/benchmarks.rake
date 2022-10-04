@@ -29,4 +29,28 @@ namespace :benchmarks do
       x.report("Démarche 55824") { PiecesJustificativesService.generate_dossier_export(p_55824.dossiers.limit(10_000)) }
     end
   end
+
+  desc 'Attestation Template parser'
+  task attestation_template_parser: :environment do
+    progress = ProgressReport.new(AttestationTemplate.count)
+    AttestationTemplate.find_each do |template|
+      parsed = TagsSubstitutionConcern::TagsParser.parse(template.body)
+      serialized = parsed.map do |token|
+        case token
+        in { tag: tag }
+          "--#{tag}--"
+        in { text: text }
+          text
+        end
+      end.join('')
+      if serialized != template.body
+        throw "Template '#{serialized}' is not eq '#{template.body}' with attestation template #{template.id}"
+      end
+      progress.inc
+    rescue => e
+      pp "Error with attestation template #{template.id}"
+      throw e
+    end
+    progress.finish
+  end
 end
