@@ -19,8 +19,11 @@ en:
       rna:
         show:
           not_filled: not filled
-          fetching_data: "Fetching data for RNA number %{rna}."
-          data_fetched_title: Data received thanks to RNA number "%{rna}"
+          not_found: "RNA number %{rna} (no association found)"
+          data_fetched_title: Data received from RNA number "%{rna}"
+        association:
+          data_fetched: "This RNA number is linked to %{title}"
+          not_found: "No association found"
       dgfip:
         show:
           not_filled: not filled

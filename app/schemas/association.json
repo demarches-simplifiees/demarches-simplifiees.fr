@@ -42,6 +42,10 @@
           "type": "integer"
         },
         {
+          "type": "string",
+          "format": "date"
+        },
+        {
           "type": "null"
         }
       ]

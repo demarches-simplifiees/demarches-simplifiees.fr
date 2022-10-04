@@ -21,8 +21,11 @@ fr:
       rna:
         show:
           not_filled: non renseigné
-          fetching_data: "La récupération automatique des données pour l'association avec le numéro RNA %{rna} est en cours."
-          data_fetched_title: Données complémentaires obtenues grâce au RNA "%{rna}"
+          not_found: "RNA %{rna} (aucun établissement trouvé)"
+          data_fetched_title: Données obtenues grâce au RNA "%{rna}"
+        association:
+          data_fetched: "Ce RNA correspond à %{title}"
+          not_found: "Aucun établissement trouvé"
       dgfip:
         show:
           not_filled: non renseigné
