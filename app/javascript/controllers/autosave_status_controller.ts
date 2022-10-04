@@ -14,7 +14,7 @@ const {
   autosave: { status_visible_duration }
 } = getConfig();
 const AUTOSAVE_STATUS_VISIBLE_DURATION = status_visible_duration;
-
+const TEST_CLASS_FOR_TESTING = 'flushed';
 // This is a controller we attach to the status area in the main form. It
 // coordinates notifications and will dispatch `autosave:retry` event if user
 // decides to retry after an error.
@@ -37,11 +37,15 @@ export class AutosaveStatusController extends ApplicationController {
   }
 
   private didEnqueue() {
+    const autosave = this.element as HTMLDivElement;
+    removeClass(autosave, TEST_CLASS_FOR_TESTING);
     disable(this.retryButtonTarget);
   }
 
   private didSucceed() {
+    const autosave = this.element as HTMLDivElement;
     enable(this.retryButtonTarget);
+    addClass(autosave, TEST_CLASS_FOR_TESTING);
     this.setState('succeeded');
     this.debounce(this.hideSucceededStatus, AUTOSAVE_STATUS_VISIBLE_DURATION);
   }

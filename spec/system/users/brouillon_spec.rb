@@ -38,10 +38,16 @@ describe 'The user' do
     select_combobox('departements', 'Ai', '02 - Aisne')
     select_combobox('communes', 'Ai', '02 - Aisne', check: false)
     select_combobox('communes', 'Ambl', 'Ambléon (01300)')
-
+    # before writing last input. ensure to have 'flushed' the autosave 'pipeline'
+    expect(page).to have_css('.autosave-state-idle.flushed')
+    # then write the last input
     fill_in('dossier_link', with: '123')
+    blur
+    # on blur, autosave should remove the flushed class from the last autosave
+    expect(page).to have_css('.autosave-state-idle:not(.flushed)')
+    # then, wait for the autosave to re-add this class on didSucceed
+    expect(page).to have_css('.autosave-state-idle.flushed')
     find('.editable-champ-piece_justificative input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
-
     expect(page).to have_css('span', text: 'Votre brouillon est automatiquement enregistré', visible: true)
     blur
     expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
