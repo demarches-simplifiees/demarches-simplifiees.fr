@@ -128,6 +128,7 @@ module SystemHelpers
   def log_out
     within('.fr-header .fr-container .fr-header__tools .fr-btns-group') do
       click_button(title: 'Mon compte')
+      expect(page).to have_selector('#account.fr-collapse--expanded', visible: true)
       click_on 'Se déconnecter'
     end
     expect(page).to have_current_path(root_path, wait: 5)
