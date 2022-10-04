@@ -30,7 +30,7 @@ describe DossierPreloader do
         expect(first_child.parent).to eq(repetition)
       end
 
-      expect(count).to eq(1)
+      expect(count).to eq(0)
     end
   end
 end
