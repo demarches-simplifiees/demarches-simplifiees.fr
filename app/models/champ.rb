@@ -25,6 +25,9 @@ class Champ < ApplicationRecord
   belongs_to :parent, class_name: 'Champ', optional: true
   has_one_attached :piece_justificative_file
 
+  attr_accessor :skip_cleanup
+  attr_accessor :skip_fetch
+
   # We declare champ specific relationships (Champs::CarteChamp, Champs::SiretChamp and Champs::RepetitionChamp)
   # here because otherwise we can't easily use includes in our queries.
   has_many :geo_areas, -> { order(:created_at) }, dependent: :destroy, inverse_of: :champ
@@ -76,9 +79,9 @@ class Champ < ApplicationRecord
 
   before_create :set_dossier_id, if: :needs_dossier_id?
   before_validation :set_dossier_id, if: :needs_dossier_id?
-  before_save :cleanup_if_empty
+  before_save :cleanup_if_empty, unless: :skip_cleanup
   before_save :normalize
-  after_update_commit :fetch_external_data_later
+  after_update_commit :fetch_external_data_later, unless: :skip_fetch
 
   def public?
     !private?

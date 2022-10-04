@@ -27,8 +27,16 @@ class Champs::RNAChamp < Champ
 
   delegate :id, to: :procedure, prefix: true
 
+  def title
+    data&.dig("association_titre")
+  end
+
+  def identifier
+    title.present? ? "#{value} (#{title})" : value
+  end
+
   def for_export
-    data&.dig("association_titre")&.present? ? "#{value} (#{data.dig("association_titre")})" : value
+    identifier
   end
 
   def search_terms
