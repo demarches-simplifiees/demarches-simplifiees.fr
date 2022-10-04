@@ -312,6 +312,7 @@ en:
     errors:
       messages:
         not_a_phone: 'Invalid phone number'
+        not_a_rna: 'Invalid RNA number'
       models:
         attestation_template:
           attributes:
