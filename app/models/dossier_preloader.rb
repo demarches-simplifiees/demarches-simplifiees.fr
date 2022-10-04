@@ -92,7 +92,6 @@ class DossierPreloader
       parent_champ.association(:dossier).target = dossier
 
       load_champs(parent_champ, :champs, champs, dossier, children_by_parent)
-      parent_champ.association(:champs).set_inverse_instance(parent_champ)
     end
   end
 end
