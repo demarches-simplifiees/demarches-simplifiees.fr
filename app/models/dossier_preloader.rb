@@ -32,7 +32,7 @@ class DossierPreloader
 
   def load_dossiers(dossiers)
     all_champs = Champ
-      .includes(:type_de_champ, piece_justificative_file_attachment: :blob)
+      .includes(type_de_champ: { piece_justificative_template_attachment: :blob }, piece_justificative_file_attachment: :blob)
       .where(dossier_id: dossiers)
       .to_a
 
