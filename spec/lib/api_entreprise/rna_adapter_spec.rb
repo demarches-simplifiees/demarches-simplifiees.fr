@@ -43,4 +43,14 @@ describe APIEntreprise::RNAAdapter do
       expect { subject }.to raise_exception(APIEntreprise::RNAAdapter::InvalidSchemaError)
     end
   end
+
+  context "when depreciated adapter is used" do
+    let(:adapter) { described_class.new(siret, procedure_id, true) }
+    let(:body) { File.read('spec/fixtures/files/api_entreprise/associations.json') }
+    let(:status) { 200 }
+
+    it '#to_params filter the keys' do
+      expect(subject.keys).to eq(["association_titre", "association_objet", "association_date_creation", "association_date_declaration", "association_date_publication", "association_rna"])
+    end
+  end
 end
