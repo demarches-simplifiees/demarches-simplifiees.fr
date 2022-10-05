@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_11_134914) do
+ActiveRecord::Schema.define(version: 2022_10_04_100358) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -761,6 +761,21 @@ ActiveRecord::Schema.define(version: 2022_09_11_134914) do
     t.index ["unlock_token"], name: "index_super_admins_on_unlock_token", unique: true
   end
 
+  create_table "tags", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.string "name", null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "tags_procedures", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.bigint "procedure_id", null: false
+    t.bigint "tag_id", null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["procedure_id"], name: "index_tags_procedures_on_procedure_id"
+    t.index ["tag_id"], name: "index_tags_procedures_on_tag_id"
+  end
+
   create_table "targeted_user_links", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.string "target_context", null: false
@@ -926,6 +941,8 @@ ActiveRecord::Schema.define(version: 2022_09_11_134914) do
   add_foreign_key "received_mails", "procedures"
   add_foreign_key "refused_mails", "procedures"
   add_foreign_key "services", "administrateurs"
+  add_foreign_key "tags_procedures", "procedures"
+  add_foreign_key "tags_procedures", "tags"
   add_foreign_key "targeted_user_links", "users"
   add_foreign_key "traitements", "dossiers"
   add_foreign_key "trusted_device_tokens", "instructeurs"
