@@ -90,6 +90,8 @@ class Procedure < ApplicationRecord
   has_many :experts, through: :experts_procedures
   has_many :replaced_procedures, -> { with_discarded }, inverse_of: :replaced_by_procedure, class_name: "Procedure",
   foreign_key: "replaced_by_procedure_id", dependent: :nullify
+  has_many :tags_procedures, dependent: :destroy
+  has_many :tags, through: :tags_procedures
 
   has_one :module_api_carto, dependent: :destroy
   has_one :legacy_attestation_template, class_name: 'AttestationTemplate', dependent: :destroy
