@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_11_134914) do
+ActiveRecord::Schema.define(version: 2022_10_05_145646) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -652,6 +652,7 @@ ActiveRecord::Schema.define(version: 2022_09_11_134914) do
     t.string "lien_dpo"
     t.string "lien_notice"
     t.string "lien_site_web"
+    t.integer "max_duree_conservation_dossiers_dans_ds", default: 12
     t.text "monavis_embed"
     t.boolean "opendata", default: true
     t.string "organisation"
