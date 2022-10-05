@@ -36,6 +36,7 @@ fr:
           communes: 'Communes'
           header_section: 'Titre de section'
           explication: 'Explication'
+          engagement: 'Engagement'
           dossier_link: 'Lien vers un autre dossier'
           piece_justificative: 'Pièce justificative'
           siret: 'SIRET'
