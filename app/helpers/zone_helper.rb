@@ -1,5 +1,6 @@
 module ZoneHelper
   def grouped_options_for_zone(date)
+    date ||= Time.zone.now
     collectivite = Zone.find_by(acronym: "COLLECTIVITE")
     {
       "--" => [
