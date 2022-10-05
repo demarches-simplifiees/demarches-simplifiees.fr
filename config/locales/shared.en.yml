@@ -24,6 +24,7 @@ en:
         association:
           data_fetched: "This RNA number is linked to %{title}"
           not_found: "No association found"
+          network_error: "A network error has prevented the association associated with this RNA to be fetched"
       dgfip:
         show:
           not_filled: not filled

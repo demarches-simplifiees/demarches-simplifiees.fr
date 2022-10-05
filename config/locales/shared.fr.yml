@@ -26,6 +26,7 @@ fr:
         association:
           data_fetched: "Ce RNA correspond à %{title}"
           not_found: "Aucun établissement trouvé"
+          network_error: "Une erreur réseau a empêché l'association liée à ce RNA d'être trouvée"
       dgfip:
         show:
           not_filled: non renseigné
