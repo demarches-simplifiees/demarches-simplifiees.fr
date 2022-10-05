@@ -55,6 +55,7 @@ class TypeDeChamp < ApplicationRecord
     explication: CADRE,
     dossier_link: CADRE,
     piece_justificative: STANDARD,
+    rna: REFERENTIEL_EXTERNE,
     siret: PAIEMENT_IDENTIFICATION,
     carte: REFERENTIEL_EXTERNE,
     repetition: CADRE,

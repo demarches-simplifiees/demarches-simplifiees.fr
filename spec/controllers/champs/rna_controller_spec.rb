@@ -110,32 +110,34 @@ describe Champs::RNAController, type: :controller do
         let(:status) { 200 }
         let(:body) { File.read('spec/fixtures/files/api_entreprise/associations.json') }
         let(:expected_data) do
-          { "association_id"=>"W595001988",
-            "association_titre"=>"UN SUR QUATRE",
-            "association_objet"=>"valoriser, transmettre et partager auprès des publics les plus larges possibles, les bienfaits de l'immigration, la richesse de la diversité et la curiosité de l'autre autrement",
-            "association_siret"=>nil,
-            "association_date_creation"=>"2014-01-23",
-            "association_date_declaration"=>"2014-01-24",
-            "association_date_publication"=>"2014-02-08",
-            "association_date_dissolution"=>"0001-01-01",
-            "association_adresse_siege"=> {
-              "complement"=>"",
-              "numero_voie"=>"61",
-              "type_voie"=>"RUE",
-              "libelle_voie"=>"des Noyers",
-              "distribution"=>"_",
-              "code_insee"=>"93063",
-              "code_postal"=>"93230",
-              "commune"=>"Romainville"
+          {
+            "association_id" => "W595001988",
+            "association_titre" => "UN SUR QUATRE",
+            "association_objet" => "valoriser, transmettre et partager auprès des publics les plus larges possibles, les bienfaits de l'immigration, la richesse de la diversité et la curiosité de l'autre autrement",
+            "association_siret" => nil,
+            "association_date_creation" => "2014-01-23",
+            "association_date_declaration" => "2014-01-24",
+            "association_date_publication" => "2014-02-08",
+            "association_date_dissolution" => "0001-01-01",
+            "association_adresse_siege" => {
+              "complement" => "",
+              "numero_voie" => "61",
+              "type_voie" => "RUE",
+              "libelle_voie" => "des Noyers",
+              "distribution" => "_",
+              "code_insee" => "93063",
+              "code_postal" => "93230",
+              "commune" => "Romainville"
             },
-            "association_code_civilite_dirigeant"=>"PM",
-            "association_civilite_dirigeant"=>"Monsieur le Président",
-            "association_code_etat"=>"A",
-            "association_etat"=>"Active",
-            "association_code_groupement"=>"S",
-            "association_groupement"=>"simple",
-            "association_mise_a_jour"=>1392295833,
-            "association_rna"=>"W595001988" }
+            "association_code_civilite_dirigeant" => "PM",
+            "association_civilite_dirigeant" => "Monsieur le Président",
+            "association_code_etat" => "A",
+            "association_etat" => "Active",
+            "association_code_groupement" => "S",
+            "association_groupement" => "simple",
+            "association_mise_a_jour" => 1392295833,
+            "association_rna" => "W595001988"
+          }
         end
 
         subject! { get :show, params: params, format: :turbo_stream }
