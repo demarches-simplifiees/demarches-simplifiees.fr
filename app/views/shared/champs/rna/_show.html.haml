@@ -1,6 +1,6 @@
 - if champ.value.blank?
   %p= t('.not_filled')
-- else
+- elsif profile == 'instructeur'
   - if champ.data.blank?
     %p= t('.not_found', rna: champ.value)
   - else
@@ -12,3 +12,5 @@
       - ['association_date_creation', 'association_date_declaration', 'association_date_publication'].each do |scope|
         - if champ.data[scope].present?
           %li #{t("activemodel.attributes.rna_champ.data.#{scope}")} : #{l(champ.data[scope].to_date)}
+- else
+  %p= champ.identifier
