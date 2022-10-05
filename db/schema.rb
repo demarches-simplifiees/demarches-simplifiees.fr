@@ -562,6 +562,7 @@ ActiveRecord::Schema.define(version: 2022_10_05_145646) do
     t.text "message"
     t.datetime "updated_at"
     t.integer "user_id"
+    t.index ["dossier_id"], name: "index_invites_on_dossier_id"
     t.index ["email", "dossier_id"], name: "index_invites_on_email_and_dossier_id", unique: true
   end
 
