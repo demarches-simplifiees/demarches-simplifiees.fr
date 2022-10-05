@@ -6,7 +6,6 @@ class ProcedureSerializer < ActiveModel::Serializer
   attributes :id,
     :description,
     :organisation,
-    :direction,
     :archived_at,
     :geographic_information,
     :total_dossier,
