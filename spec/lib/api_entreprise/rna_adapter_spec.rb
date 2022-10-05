@@ -1,8 +1,8 @@
 describe APIEntreprise::RNAAdapter do
-  let(:siret) { '50480511000013' }
+  let(:rna) { 'W111111111' }
   let(:procedure) { create(:procedure) }
   let(:procedure_id) { procedure.id }
-  let(:adapter) { described_class.new(siret, procedure_id) }
+  let(:adapter) { described_class.new(rna, procedure_id) }
 
   subject { adapter.to_params }
 
@@ -12,8 +12,8 @@ describe APIEntreprise::RNAAdapter do
     allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
   end
 
-  context 'when siret is not valid' do
-    let(:siret) { '234567' }
+  context 'when rna is not valid' do
+    let(:rna) { '234567' }
     let(:body) { '' }
     let(:status) { 404 }
 
@@ -45,7 +45,7 @@ describe APIEntreprise::RNAAdapter do
   end
 
   context "when depreciated adapter is used" do
-    let(:adapter) { described_class.new(siret, procedure_id, true) }
+    let(:adapter) { described_class.new(rna, procedure_id, true) }
     let(:body) { File.read('spec/fixtures/files/api_entreprise/associations.json') }
     let(:status) { 200 }
 

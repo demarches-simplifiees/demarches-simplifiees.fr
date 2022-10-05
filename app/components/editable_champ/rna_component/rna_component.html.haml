@@ -9,4 +9,4 @@
   class: "width-33-desktop",
   maxlength: 10
 .rna-info{ id: dom_id(@champ, :rna_info) }
-  = render 'shared/champs/rna/association', champ: @champ
+  = render 'shared/champs/rna/association', champ: @champ, network_error: false, rna: @champ.value
