@@ -1,7 +1,7 @@
 @import "colors";
 @import "constants";
 
-.conditionnel {
+form.form > .conditionnel {
 
   .condition-error {
     background: $background-red;
@@ -64,7 +64,7 @@
       margin-bottom: 0;
     }
 
-    input[type=number] {
+    input[type=text] {
       display: inline-block;
       margin-bottom: 0;
     }

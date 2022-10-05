@@ -19,7 +19,10 @@
               %span.sr-only  Déplacer le champ vers le bas
           .cell.flex.justify-start.column.flex-grow
             = form.label :type_champ, "Type de champ", for: dom_id(type_de_champ, :type_champ)
-            = form.select :type_champ, types_of_type_de_champ, {}, class: 'small-margin small inline width-100', id: dom_id(type_de_champ, :type_champ)
+            - if Flipper.enabled?(:categories_type_de_champ, controller.current_user)
+              = form.select :type_champ, grouped_options_for_select(types_of_type_de_champ, type_de_champ.type_champ), {}, class: 'small-margin small inline width-100', id: dom_id(type_de_champ, :type_champ)
+            - else
+              = form.select :type_champ, types_of_type_de_champ, {}, class: 'small-margin small inline width-100', id: dom_id(type_de_champ, :type_champ)
         .flex.column.justify-start.flex-grow
           .cell
             .flex.align-center
@@ -71,7 +74,7 @@
                     = form.label name, for: dom_id(type_de_champ, "layer_#{name}") do
                       = form.check_box name, checked: checked, class: 'small-margin small', id: dom_id(type_de_champ, "layer_#{name}")
                       = t(".layers.#{name}")
-  - if type_de_champ.repetition?
+  - if type_de_champ.block?
     .flex.justify-start.section.ml-1
       .editor-block.flex-grow.cell
         = render TypesDeChampEditor::BlockComponent.new(block: coordinate, coordinates: coordinate.revision_types_de_champ)

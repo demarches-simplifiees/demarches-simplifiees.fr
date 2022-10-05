@@ -20,6 +20,53 @@ class TypeDeChamp < ApplicationRecord
   FILE_MAX_SIZE = 200.megabytes
   FEATURE_FLAGS = {}
 
+  CADRE = :cadre
+  STANDARD = :standard
+  CHOICE = :choice
+  ETAT_CIVIL = :etat_civil
+  PAIEMENT_IDENTIFICATION = :paiement_identification
+  REFERENTIEL_EXTERNE = :referentiel_externe
+  LOCALISATION = :localisation
+
+  CATEGORIES = [CADRE, ETAT_CIVIL, LOCALISATION, PAIEMENT_IDENTIFICATION, STANDARD, CHOICE, REFERENTIEL_EXTERNE]
+
+  TYPE_DE_CHAMP_TO_CATEGORIE = {
+    text: STANDARD,
+    textarea: STANDARD,
+    date: STANDARD,
+    datetime: STANDARD,
+    number: STANDARD,
+    decimal_number: STANDARD,
+    integer_number: STANDARD,
+    checkbox: CHOICE,
+    civilite: ETAT_CIVIL,
+    email: ETAT_CIVIL,
+    phone: ETAT_CIVIL,
+    address: LOCALISATION,
+    yes_no: CHOICE,
+    drop_down_list: CHOICE,
+    multiple_drop_down_list: CHOICE,
+    linked_drop_down_list: CHOICE,
+    pays: LOCALISATION,
+    regions: LOCALISATION,
+    departements: LOCALISATION,
+    communes: LOCALISATION,
+    header_section: CADRE,
+    explication: CADRE,
+    dossier_link: CADRE,
+    piece_justificative: STANDARD,
+    siret: PAIEMENT_IDENTIFICATION,
+    carte: REFERENTIEL_EXTERNE,
+    repetition: CADRE,
+    titre_identite: ETAT_CIVIL,
+    iban: PAIEMENT_IDENTIFICATION,
+    annuaire_education: REFERENTIEL_EXTERNE,
+    cnaf: REFERENTIEL_EXTERNE,
+    dgfip: REFERENTIEL_EXTERNE,
+    pole_emploi: REFERENTIEL_EXTERNE,
+    mesri: REFERENTIEL_EXTERNE
+  }
+
   enum type_champs: {
     text: 'text',
     textarea: 'textarea',
@@ -37,21 +84,20 @@ class TypeDeChamp < ApplicationRecord
     drop_down_list: 'drop_down_list',
     multiple_drop_down_list: 'multiple_drop_down_list',
     linked_drop_down_list: 'linked_drop_down_list',
-    pays: 'pays',
-    regions: 'regions',
-    departements: 'departements',
     communes: 'communes',
-    engagement: 'engagement',
+    departements: 'departements',
+    regions: 'regions',
+    pays: 'pays',
     header_section: 'header_section',
     explication: 'explication',
     dossier_link: 'dossier_link',
     piece_justificative: 'piece_justificative',
-    siret: 'siret',
     rna: 'rna',
     carte: 'carte',
     repetition: 'repetition',
     titre_identite: 'titre_identite',
     iban: 'iban',
+    siret: 'siret',
     annuaire_education: 'annuaire_education',
     cnaf: 'cnaf',
     dgfip: 'dgfip',
@@ -134,7 +180,7 @@ class TypeDeChamp < ApplicationRecord
   before_validation :check_mandatory
   before_save :remove_piece_justificative_template, if: -> { type_champ_changed? }
   before_validation :remove_drop_down_list, if: -> { type_champ_changed? }
-  before_save :remove_repetition, if: -> { type_champ_changed? }
+  before_save :remove_block, if: -> { type_champ_changed? }
 
   after_save if: -> { @remove_piece_justificative_template } do
     piece_justificative_template.purge_later
@@ -220,6 +266,10 @@ class TypeDeChamp < ApplicationRecord
 
   def linked_drop_down_list?
     type_champ == TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
+  end
+
+  def block?
+    type_champ == TypeDeChamp.type_champs.fetch(:repetition)
   end
 
   def header_section?
@@ -411,8 +461,8 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  def remove_repetition
-    if !repetition? && procedure.present?
+  def remove_block
+    if !block? && procedure.present?
       procedure
         .draft_revision # action occurs only on draft
         .remove_children_of(self)

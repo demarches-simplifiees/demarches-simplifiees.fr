@@ -5,17 +5,14 @@ import { Application } from '@hotwired/stimulus';
 import '@gouvfr/dsfr/dist/dsfr.module.js';
 
 import '../shared/activestorage/ujs';
-import '../shared/remote-poller';
-import '../shared/safari-11-file-xhr-workaround';
+import '../shared/safari-11-empty-file-workaround';
 import '../shared/toggle-target';
-import '../shared/ujs-error-handling';
 
 import { registerControllers } from '../shared/stimulus-loader';
 
 import '../new_design/form-validation';
 import '../new_design/procedure-context';
 import '../new_design/procedure-form';
-import '../new_design/spinner';
 import '../new_design/support';
 
 import {
@@ -31,11 +28,7 @@ import {
   acceptEmailSuggestion,
   discardEmailSuggestionBox
 } from '../new_design/user-sign_up';
-import {
-  showFusion,
-  showNewAccount,
-  showNewAccountPasswordConfirmation
-} from '../new_design/fc-fusion';
+import { showFusion, showNewAccount } from '../new_design/fc-fusion';
 
 const application = Application.start();
 registerControllers(application);
@@ -49,7 +42,6 @@ const DS = {
   showImportJustificatif,
   showFusion,
   showNewAccount,
-  showNewAccountPasswordConfirmation,
   replaceSemicolonByComma,
   acceptEmailSuggestion,
   discardEmailSuggestionBox

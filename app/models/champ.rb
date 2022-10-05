@@ -13,11 +13,11 @@
 #  value_json                     :jsonb
 #  created_at                     :datetime
 #  updated_at                     :datetime
-#  dossier_id                     :integer          not null
+#  dossier_id                     :integer
 #  etablissement_id               :integer
 #  external_id                    :string
 #  parent_id                      :bigint
-#  type_de_champ_id               :integer          not null
+#  type_de_champ_id               :integer
 #
 class Champ < ApplicationRecord
   belongs_to :dossier, inverse_of: false, touch: true, optional: false
@@ -48,6 +48,7 @@ class Champ < ApplicationRecord
     :exclude_from_export?,
     :exclude_from_view?,
     :repetition?,
+    :block?,
     :dossier_link?,
     :titre_identite?,
     :header_section?,

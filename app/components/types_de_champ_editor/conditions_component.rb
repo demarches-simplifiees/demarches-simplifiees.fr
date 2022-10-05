@@ -105,7 +105,7 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
   end
 
   def compatibles_operators_for_select(left)
-    case left.type
+    case left.type(@upper_tdcs)
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:boolean)
       [
         [t('is', scope: 'logic'), Eq.name]
@@ -119,6 +119,10 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
         [t('is', scope: 'logic'), Eq.name],
         [t('is_not', scope: 'logic'), NotEq.name]
       ]
+    when ChampValue::CHAMP_VALUE_TYPE.fetch(:enums)
+      [
+        [t(IncludeOperator.name, scope: 'logic.operators'), IncludeOperator.name]
+      ]
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:number)
       [Eq, LessThan, GreaterThan, LessThanEq, GreaterThanEq]
         .map(&:name)
@@ -131,7 +135,7 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
   def right_operand_tag(left, right, row_index)
     right_invalid = !current_right_valid?(left, right)
 
-    case left.type
+    case left.type(@upper_tdcs)
     when :boolean
       booleans_for_select = [[t('utils.yes'), constant(true).to_json], [t('utils.no'), constant(false).to_json]]
 
@@ -151,8 +155,8 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
         options_for_select(empty_target_for_select),
         id: input_id_for('value', row_index)
       )
-    when :enum
-      enums_for_select = left.options
+    when :enum, :enums
+      enums_for_select = left.options(@upper_tdcs)
 
       if right_invalid
         enums_for_select = empty_target_for_select + enums_for_select
@@ -165,7 +169,7 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
         class: { alert: right_invalid }
       )
     when :number
-      number_field_tag(
+      text_field_tag(
         input_name_for('value'),
         right.value,
         required: true,
@@ -173,12 +177,12 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
         class: { alert: right_invalid }
       )
     else
-      number_field_tag(input_name_for('value'), '', id: input_id_for('value', row_index))
+      text_field_tag(input_name_for('value'), '', id: input_id_for('value', row_index))
     end
   end
 
   def current_right_valid?(left, right)
-    Logic.compatible_type?(left, right)
+    Logic.compatible_type?(left, right, @upper_tdcs)
   end
 
   def add_condition_tag

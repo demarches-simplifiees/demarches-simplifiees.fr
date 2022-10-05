@@ -55,6 +55,14 @@ describe Invite do
     end
   end
 
+  describe 'association' do
+    let!(:invite) { create(:invite, email: "email@totor.com") }
+    let!(:target_user_link) { create(:targeted_user_link, target_model: invite, target_context: 'invite') }
+    it 'destroy target_user_link' do
+      expect { invite.destroy! }.to change { TargetedUserLink.count }.from(1).to(0)
+    end
+  end
+
   describe "#default_scope" do
     let!(:dossier) { create(:dossier, hidden_by_user_at: hidden_by_user_at) }
     let!(:invite) { create(:invite, email: "email@totor.com", dossier: dossier) }

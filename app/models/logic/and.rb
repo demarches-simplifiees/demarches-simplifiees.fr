@@ -7,5 +7,5 @@ class Logic::And < Logic::NAryOperator
     @operands.map { |operand| operand.compute(champs) }.all?
   end
 
-  def to_s = "(#{@operands.map(&:to_s).join(' && ')})"
+  def to_s(type_de_champs) = "(#{@operands.map { |o| o.to_s(type_de_champs) }.join(' && ')})"
 end

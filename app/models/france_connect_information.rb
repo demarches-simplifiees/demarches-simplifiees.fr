@@ -56,4 +56,8 @@ class FranceConnectInformation < ApplicationRecord
   def delete_merge_token!
     update(merge_token: nil, merge_token_created_at: nil)
   end
+
+  def full_name
+    [given_name, family_name].compact.join(" ")
+  end
 end

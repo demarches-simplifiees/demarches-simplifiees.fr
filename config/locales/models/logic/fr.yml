@@ -12,3 +12,4 @@ fr:
       'Logic::And': Et
       'Logic::Or': Ou
       'Logic::NotEq': N'est pas
+      'Logic::IncludeOperator': Contient

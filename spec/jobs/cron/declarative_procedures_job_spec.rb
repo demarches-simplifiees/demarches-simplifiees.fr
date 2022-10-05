@@ -12,20 +12,23 @@ RSpec.describe Cron::DeclarativeProceduresJob, type: :job do
     let(:dossier_repasse_en_construction) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
 
     before do
-      Timecop.freeze(date)
-      dossier_repasse_en_construction.touch(:declarative_triggered_at)
-      dossiers = [
-        nouveau_dossier1,
-        nouveau_dossier2,
-        dossier_recu,
-        dossier_brouillon,
-        dossier_repasse_en_construction
-      ]
+        Timecop.freeze(date)
+        dossier_repasse_en_construction&.touch(:declarative_triggered_at)
+      end
 
-      Cron::DeclarativeProceduresJob.new.perform
+    subject(:perform_job) do
+    dossiers = [
+      nouveau_dossier1,
+      nouveau_dossier2,
+      dossier_recu,
+      dossier_brouillon,
+      dossier_repasse_en_construction
+    ].compact
 
-      dossiers.each(&:reload)
-    end
+    Cron::DeclarativeProceduresJob.new.perform
+
+    dossiers.each(&:reload)
+  end
 
     after { Timecop.return }
 
@@ -35,6 +38,7 @@ RSpec.describe Cron::DeclarativeProceduresJob, type: :job do
         let(:last_operation) { nouveau_dossier1.dossier_operation_logs.last }
 
         it {
+          perform_job
           expect(nouveau_dossier1.en_instruction?).to be_truthy
           expect(nouveau_dossier1.en_instruction_at).to eq(date)
           expect(last_operation.operation).to eq('passer_en_instruction')
@@ -58,6 +62,7 @@ RSpec.describe Cron::DeclarativeProceduresJob, type: :job do
         let(:last_operation) { nouveau_dossier1.dossier_operation_logs.last }
 
         it {
+          perform_job
           expect(nouveau_dossier1.accepte?).to be true
           expect(nouveau_dossier1.en_instruction_at).to eq(date)
           expect(nouveau_dossier1.processed_at).to eq(date)
@@ -78,6 +83,25 @@ RSpec.describe Cron::DeclarativeProceduresJob, type: :job do
           expect(dossier_brouillon.en_instruction_at).to eq(nil)
           expect(dossier_brouillon.processed_at).to eq(nil)
         }
+
+        context "having etablissement in degraded_mode" do
+          let(:procedure) { create(:procedure, :published, :with_instructeur, for_individual: false, declarative_with_state: state) }
+          let(:nouveau_dossier1) { create(:dossier, :en_construction, :with_entreprise, :with_attestation, procedure: procedure, as_degraded_mode: false) }
+          let(:nouveau_dossier2) { create(:dossier, :en_construction, :with_entreprise, :with_attestation, procedure: procedure, as_degraded_mode: true) }
+          let(:dossier_recu) { nil }
+          let(:dossier_repasse_en_construction) { nil }
+
+          before do
+            expect(nouveau_dossier2).to_not receive(:accepter_automatiquement)
+            expect(Sentry).to_not receive(:capture_exception)
+          end
+
+          it {
+            perform_job
+            expect(nouveau_dossier1).to be_accepte
+            expect(nouveau_dossier2).to be_en_construction
+          }
+        end
       end
     end
   end

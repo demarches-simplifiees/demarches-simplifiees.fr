@@ -10,7 +10,7 @@
 
     %img.confirmation-icon{ src: image_url("user/confirmation-email.svg"), alt: "Email envoyé" }
 
-    %p.confirmation-preamble
+    %h2.confirmation-preamble
       = succeed '.' do
         Avant d’effectuer votre démarche, nous avons besoin de vérifier votre adresse
         - if resource.email.present?

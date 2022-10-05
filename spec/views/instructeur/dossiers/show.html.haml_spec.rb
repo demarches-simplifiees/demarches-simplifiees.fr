@@ -30,7 +30,25 @@ describe 'instructeurs/dossiers/show.html.haml', type: :view do
     end
 
     it 'fills the individual with the informations from France Connect' do
-      expect(rendered).to have_text("Le dossier a été déposé par le compte de #{france_connect_information.given_name} #{france_connect_information.family_name}, authentifié par France Connect le #{france_connect_information.updated_at.strftime('%d/%m/%Y')}")
+      expect(view.content_for(:notice_info)).to have_text("Le dossier a été déposé par le compte de #{france_connect_information.given_name} #{france_connect_information.family_name}, authentifié par FranceConnect le #{france_connect_information.updated_at.strftime('%d/%m/%Y')}")
+    end
+  end
+
+  describe 'entreprise degraded mode' do
+    context 'etablissement complete' do
+      let(:dossier) { create(:dossier, :en_construction, :with_entreprise, as_degraded_mode: false) }
+
+      it 'contains no warning' do
+        expect(rendered).not_to have_text("Les services de l’INSEE sont indisponibles")
+      end
+    end
+
+    context 'etablissement in degraded mode' do
+      let(:dossier) { create(:dossier, :en_construction, :with_entreprise, as_degraded_mode: true) }
+
+      it 'warns the instructeur' do
+        expect(rendered).to have_text("Les services de l’INSEE sont indisponibles")
+      end
     end
   end
 end

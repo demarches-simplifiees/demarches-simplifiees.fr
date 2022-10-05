@@ -1,17 +1,21 @@
 en:
   links:
     provider:
-      logo:
-        src: "footer/logo-dinum.png"
-        alt: "Logo DINUM"
-        height: 161
-        width: 138
       name: "DINUM"
       provided_by: "la DINUM"
       title: "Direction Interministérielle au Numérique"
       url: "https://numerique.gouv.fr"
     footer:
-      nav_aria: "More about %{application_name}"
+      top_labels:
+        communication: Communication
+        legals: Legal information
+        resources: Resources
+        diagnostic: Diagnostic
+      description_1: Démarches simplifiées is powered by 
+      link_1_label: the interdepartmental direction of digital (DINUM).
+      link_1_url: "https://www.numerique.gouv.fr/dinum/"
+      link_2_label: The source code
+      description_2: is available under a free license.
       accessibilite:
         label: "Accessibility: partially compliant"
         title: "Accessibility declaration"
@@ -34,9 +38,6 @@ en:
         label: "ToS"
         title: "Terms of Service"
         url: "https://doc.demarches-simplifiees.fr/cgu"
-      contact:
-        label: "Contact"
-        title: "Contact us"
       doc:
         label: "Documentation"
         title: "Our Documentation"
@@ -57,10 +58,6 @@ en:
         label: "Legal notices"
         title: "Legal notices regarding our platform"
         url: "https://doc.demarches-simplifiees.fr/mentions-legales"
-      newsletter:
-        label: "Newsletter"
-        title: "Our newsletter"
-        url: "https://my.sendinblue.com/users/subscribe/js_id/3s2q1/id/1"
       releases:
         label: "Releases"
         title: "Our last updates"
@@ -80,3 +77,6 @@ en:
         label: "Online workshop registration"
         title: "Registration for our online workshop"
         url: "https://app.livestorm.co/demarches-simplifiees"
+      contact:
+        label: Contactez-nous
+        title: Contactez-nous

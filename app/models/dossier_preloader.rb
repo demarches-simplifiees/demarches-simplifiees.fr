@@ -87,7 +87,7 @@ class DossierPreloader
     end
 
     # Load children champs
-    champs.filter(&:repetition?).each do |parent_champ|
+    champs.filter(&:block?).each do |parent_champ|
       champs = children_by_parent[parent_champ.id] || []
       parent_champ.association(:dossier).target = dossier
 

@@ -136,6 +136,8 @@ en:
       dossiers:
         edit:
           autosave: Your file is automatically saved after each modification. You can close the window at any time and pick up where you left off later.
+          notice: "Notice to the procedure"
+          notice_title: "To help you complete your file, you can consult the notice to this procedure."
           submit_dossier: Submit the file
         messages:
           form:
@@ -172,9 +174,6 @@ en:
         deleted_by_administration: "File deleted by administration"
         restore: "Restore"
         filters:
-          column: Column
-          value: Value
-          add_filter: Add filter
           title: Filter
         personalize: Personalize
         follow_file: Follow-up the file
@@ -364,6 +363,7 @@ en:
     messages:
       dossier_not_found: "The file does not exist or you do not have access to it."
       # # dossier_map_not_activated: "The file does not have access to the map."
+      targeted_user_link_expired: "This invitation link is not more accessible."
       invalid_siret: "The SIRET is incorrect"
       procedure_not_found: "The procedure does not exist"
       siret_unknown: 'Sorry, we did not find any establishment registered under this SIRET number.'
@@ -502,6 +502,7 @@ en:
           connection_done: "The accounts for FranceConnect and %{application_name} are now merged."
           merger_token_expired: "Le delay to merge your FranceConnect and %{application_name} accounts is expired. Please retry."
   shared:
+    ephemeral_link: This link is ephemeral and should not be shared.
     procedures:
       stats:
         usual_processing_time: "Usual processing time"

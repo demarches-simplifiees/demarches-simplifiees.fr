@@ -48,6 +48,6 @@ class ZoneDashboard < Administrate::BaseDashboard
   # across all pages of the admin dashboard.
   #
   def display_resource(zone)
-    "Zone #{zone.label}"
+    "Zone #{zone.current_label}"
   end
 end

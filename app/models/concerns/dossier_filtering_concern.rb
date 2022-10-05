@@ -2,13 +2,18 @@ module DossierFilteringConcern
   extend ActiveSupport::Concern
 
   included do
+    DATE_SINCE_MAPPING = {
+      'updated_since' => 'updated_at',
+      'depose_since' => 'depose_at',
+      'en_construction_since' => 'en_construction_at',
+      'en_instruction_since' => 'en_instruction_at',
+      'processed_since' => 'processed_at'
+    }
     scope :filter_by_datetimes, lambda { |column, dates|
       if dates.present?
         case column
-        when 'depose_since'
-          where('dossiers.depose_at >= ?', dates.sort.first)
-        when 'updated_since'
-          where('dossiers.updated_at >= ?', dates.sort.first)
+        when *DATE_SINCE_MAPPING.keys
+          where("dossiers.#{DATE_SINCE_MAPPING.fetch(column)} >= ?", dates.sort.first)
         else
           dates
             .map { |date| self.where(column => date..(date + 1.day)) }

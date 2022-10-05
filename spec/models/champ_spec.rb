@@ -273,23 +273,6 @@ describe Champ do
         it { is_expected.to eq([value]) }
       end
 
-      context 'for engagement champ' do
-        let(:libelle) { 'je consens' }
-        let(:type_de_champ) { build(:type_de_champ_engagement, libelle: libelle) }
-
-        context 'when the box is checked' do
-          let(:value) { 'on' }
-
-          it { is_expected.to eq([libelle]) }
-        end
-
-        context 'when the box is unchecked' do
-          let(:value) { 'off' }
-
-          it { is_expected.to be_nil }
-        end
-      end
-
       context 'for explication champ' do
         let(:type_de_champ) { build(:type_de_champ_explication) }
         let(:value) { nil }

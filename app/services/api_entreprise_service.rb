@@ -34,6 +34,14 @@ class APIEntrepriseService
       etablissement
     end
 
+    def update_etablissement_from_degraded_mode(etablissement, procedure_id)
+      siret = etablissement.siret
+      etablissement_params = APIEntreprise::EtablissementAdapter.new(siret, procedure_id).to_params
+      return nil if etablissement_params.empty?
+
+      etablissement.update!(etablissement_params)
+    end
+
     def perform_later_fetch_jobs(etablissement, procedure_id, user_id, wait: nil)
       [
         APIEntreprise::EntrepriseJob, APIEntreprise::AssociationJob, APIEntreprise::ExercicesJob,
