@@ -2,7 +2,6 @@ en:
   activemodel:
     attributes:
       rna_champ:
-        value: RNA number
         data:
           association_titre: Association name
           association_objet: Association purpose
