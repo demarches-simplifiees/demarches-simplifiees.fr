@@ -170,19 +170,19 @@ class Dossier < ApplicationRecord
     end
 
     event :accepter, after: :after_accepter do
-      transitions from: :en_instruction, to: :accepte
+      transitions from: :en_instruction, to: :accepte, guard: :can_terminer?
     end
 
     event :accepter_automatiquement, after: :after_accepter_automatiquement do
-      transitions from: :en_construction, to: :accepte
+      transitions from: :en_construction, to: :accepte, guard: :can_terminer?
     end
 
     event :refuser, after: :after_refuser do
-      transitions from: :en_instruction, to: :refuse
+      transitions from: :en_instruction, to: :refuse, guard: :can_terminer?
     end
 
     event :classer_sans_suite, after: :after_classer_sans_suite do
-      transitions from: :en_instruction, to: :sans_suite
+      transitions from: :en_instruction, to: :sans_suite, guard: :can_terminer?
     end
 
     event :repasser_en_instruction, after: :after_repasser_en_instruction do
@@ -513,6 +513,12 @@ class Dossier < ApplicationRecord
 
   def can_transition_to_en_construction?
     brouillon? && procedure.dossier_can_transition_to_en_construction? && !for_procedure_preview?
+  end
+
+  def can_terminer?
+    return false if etablissement&.as_degraded_mode?
+
+    true
   end
 
   def can_repasser_en_instruction?
@@ -978,7 +984,7 @@ class Dossier < ApplicationRecord
   end
 
   def check_mandatory_champs
-    (champs + champs.filter(&:repetition?).filter(&:visible?).flat_map(&:champs))
+    (champs + champs.filter(&:block?).filter(&:visible?).flat_map(&:champs))
       .filter(&:mandatory_blank_and_visible?)
       .map do |champ|
         "Le champ #{champ.libelle.truncate(200)} doit être rempli."

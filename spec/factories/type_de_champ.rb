@@ -111,9 +111,6 @@ FactoryBot.define do
     factory :type_de_champ_communes do
       type_champ { TypeDeChamp.type_champs.fetch(:communes) }
     end
-    factory :type_de_champ_engagement do
-      type_champ { TypeDeChamp.type_champs.fetch(:engagement) }
-    end
     factory :type_de_champ_header_section do
       type_champ { TypeDeChamp.type_champs.fetch(:header_section) }
     end

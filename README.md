@@ -69,7 +69,7 @@ On lance le serveur d'application ainsi :
 
     bin/dev
 
-L'application tourne alors à l'adresse `http://localhost:3000` en parralel avec un worker pour les jobs et le bundler vitejs.
+L'application tourne alors à l'adresse `http://localhost:3000` avec en parallèle un worker pour les jobs et le bundler vitejs.
 
 ### Utilisateurs de test
 

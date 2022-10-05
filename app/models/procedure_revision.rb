@@ -317,7 +317,7 @@ class ProcedureRevision < ApplicationRecord
       changed = kept
         .map { |sid| [sid, from_h[sid], to_h[sid]] }
         .flat_map do |sid, from, to|
-          compare_type_de_champ(from.type_de_champ, to.type_de_champ)
+          compare_type_de_champ(from.type_de_champ, to.type_de_champ, from_coordinates, to_coordinates)
             .each { |h| h[:_position] = to_sids.index(sid) }
         end
 
@@ -327,7 +327,7 @@ class ProcedureRevision < ApplicationRecord
     end
   end
 
-  def compare_type_de_champ(from_type_de_champ, to_type_de_champ)
+  def compare_type_de_champ(from_type_de_champ, to_type_de_champ, from_coordinates, to_coordinates)
     changes = []
     if from_type_de_champ.type_champ != to_type_de_champ.type_champ
       changes << {
@@ -385,8 +385,8 @@ class ProcedureRevision < ApplicationRecord
         attribute: :condition,
         label: from_type_de_champ.libelle,
         private: from_type_de_champ.private?,
-        from: from_type_de_champ.condition&.to_s,
-        to: to_type_de_champ.condition&.to_s,
+        from: from_type_de_champ.condition&.to_s(from_coordinates.map(&:type_de_champ)),
+        to: to_type_de_champ.condition&.to_s(to_coordinates.map(&:type_de_champ)),
         stable_id: from_type_de_champ.stable_id
       }
     end
@@ -479,12 +479,12 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def conditions_are_valid?
-    stable_ids = types_de_champ_public.map(&:stable_id)
+    public_tdcs = types_de_champ_public.to_a
 
-    types_de_champ_public
+    public_tdcs
       .map.with_index
       .filter_map { |tdc, i| tdc.condition.present? ? [tdc, i] : nil }
-      .map { |tdc, i| [tdc, tdc.condition.errors(stable_ids.take(i))] }
+      .map { |tdc, i| [tdc, tdc.condition.errors(public_tdcs.take(i))] }
       .filter { |_tdc, errors| errors.present? }
       .each { |tdc, message| errors.add(:condition, message, type_de_champ: tdc) }
   end

@@ -236,7 +236,7 @@ prawn_document(page_size: "A4") do |pdf|
   add_title(pdf, "Identité du demandeur")
 
   if @dossier.france_connect_information.present?
-    format_in_2_columns(pdf, 'Informations France Connect', "Le dossier a été déposé par le compte de #{@dossier.france_connect_information.given_name} #{@dossier.france_connect_information.family_name}, authentifié par France Connect le #{@dossier.france_connect_information.updated_at.strftime('%d/%m/%Y')}")
+    format_in_2_columns(pdf, 'Informations FranceConnect', france_connect_informations(@dossier.france_connect_information))
   end
 
   format_in_2_columns(pdf, "Email", @dossier.user_email_for(:display))

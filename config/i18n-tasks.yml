@@ -106,6 +106,7 @@ ignore_unused:
 - 'pluralize.*'
 - 'views.pagination.*'
 - 'time.formats.default'
+- 'instructeurs.dossiers.filterable_state.*'
 # - '{devise,kaminari,will_paginate}.*'
 # - 'simple_form.{yes,no}'
 # - 'simple_form.{placeholders,hints,labels}.*'

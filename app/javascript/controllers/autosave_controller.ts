@@ -193,18 +193,20 @@ export class AutosaveController extends ApplicationController {
 
   private get inputs() {
     const element = this.element as HTMLElement;
+
     const inputs = [
       ...element.querySelectorAll<HTMLInputElement>(
         'input:not([type=file]), textarea, select'
       )
-    ];
-    const parent = this.element.closest('.editable-champ-repetition');
+    ].filter((element) => !element.disabled);
+
+    const parent = this.element.closest('[data-block]');
     if (parent) {
       return [
         ...inputs,
         ...parent.querySelectorAll<HTMLInputElement>('input[data-id]')
       ];
     }
-    return inputs.filter((element) => !element.disabled);
+    return inputs;
   }
 }

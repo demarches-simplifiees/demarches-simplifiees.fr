@@ -261,11 +261,11 @@ class Procedure < ApplicationRecord
   validates :administrateurs, presence: true
   validates :lien_site_web, presence: true, if: :publiee?
   validates :draft_types_de_champ,
-    'types_de_champ/no_empty_repetition': true,
+    'types_de_champ/no_empty_block': true,
     'types_de_champ/no_empty_drop_down': true,
     if: :validate_for_publication?
   validates :draft_types_de_champ_private,
-    'types_de_champ/no_empty_repetition': true,
+    'types_de_champ/no_empty_block': true,
     'types_de_champ/no_empty_drop_down': true,
     if: :validate_for_publication?
   validate :check_juridique
@@ -640,7 +640,9 @@ class Procedure < ApplicationRecord
       dossiers
         .state_en_construction
         .where(declarative_triggered_at: nil)
-        .find_each(&:accepter_automatiquement!)
+        .find_each do |dossier|
+          dossier.accepter_automatiquement! if dossier.may_accepter_automatiquement?
+        end
     end
   end
 
@@ -808,6 +810,10 @@ class Procedure < ApplicationRecord
 
   def mesri_enabled?
     api_particulier_sources['mesri'].present?
+  end
+
+  def published_or_created_at
+    published_at || created_at
   end
 
   private

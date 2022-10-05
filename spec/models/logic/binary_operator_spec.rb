@@ -7,7 +7,7 @@ describe Logic::BinaryOperator do
   end
 
   describe '#to_s' do
-    it { expect(two_greater_than_one.to_s).to eq('(2 > 1)') }
+    it { expect(two_greater_than_one.to_s([])).to eq('(2 > 1)') }
   end
 
   describe '#==' do
@@ -16,7 +16,7 @@ describe Logic::BinaryOperator do
   end
 
   describe '#errors' do
-    it { expect(greater_than(constant(1), constant(true)).errors).to eq(['les types sont incompatibles : (1 > Oui)']) }
+    it { expect(greater_than(constant(1), constant(true)).errors).to eq([{ operator_name: "Logic::GreaterThan", type: :required_number }]) }
   end
 end
 
