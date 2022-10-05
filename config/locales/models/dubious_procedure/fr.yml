@@ -1,9 +1,8 @@
 fr:
   activemodel:
     models:
-      dubious_procedure:
-        other: Démarches douteuses
+      outdated_procedure:
+        other: Démarches sans expiration
     attributes:
-      dubious_procedure:
-        dubious_champs: Champs douteux
-        aasm_state: Etat
+      outdated_procedure:
+        dossiers_close_to_expiration: Dossier pouvant être expirés
