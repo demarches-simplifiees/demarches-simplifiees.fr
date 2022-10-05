@@ -1,6 +1,6 @@
 @import "colors";
-@import "common";
 @import "constants";
+@import "placeholders";
 
 .two-columns {
   background-color: $white;
@@ -10,7 +10,7 @@
   }
 
   .columns-container {
-    @extend .container;
+    @extend %container;
     display: flex;
     flex-direction: column;
     justify-content: center;
