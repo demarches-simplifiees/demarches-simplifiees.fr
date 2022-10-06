@@ -284,7 +284,7 @@ describe Procedure do
     describe 'duree de conservation dans ds' do
       let(:field_name) { :duree_conservation_dossiers_dans_ds }
       context 'by default is caped to 12' do
-        subject { create(:procedure, duree_conservation_dossiers_dans_ds: 12) }
+        subject { create(:procedure, duree_conservation_dossiers_dans_ds: 12, max_duree_conservation_dossiers_dans_ds: 12) }
         it { is_expected.not_to allow_value(nil).for(field_name) }
         it { is_expected.not_to allow_value('').for(field_name) }
         it { is_expected.not_to allow_value('trois').for(field_name) }
@@ -448,6 +448,7 @@ describe Procedure do
         opendata: opendata,
         duree_conservation_etendue_par_ds: true,
         duree_conservation_dossiers_dans_ds: Procedure::OLD_MAX_DUREE_CONSERVATION,
+        max_duree_conservation_dossiers_dans_ds: Procedure::OLD_MAX_DUREE_CONSERVATION,
         attestation_template: build(:attestation_template, logo: logo, signature: signature),
         types_de_champ_public: [{}, {}, { type: :drop_down_list }, { type: :piece_justificative }, { type: :repetition, children: [{}] }],
         types_de_champ_private: [{}, {}, { type: :drop_down_list }, { type: :repetition, children: [{}] }],
@@ -531,7 +532,7 @@ describe Procedure do
 
       cloned_procedure = subject
       cloned_procedure.parent_procedure_id = nil
-      expect(cloned_procedure).to have_same_attributes_as(procedure, except: ["path", "draft_revision_id", "service_id", "duree_conservation_etendue_par_ds", "duree_conservation_dossiers_dans_ds"])
+      expect(cloned_procedure).to have_same_attributes_as(procedure, except: ["path", "draft_revision_id", "service_id", "duree_conservation_etendue_par_ds", "duree_conservation_dossiers_dans_ds", 'max_duree_conservation_dossiers_dans_ds'])
     end
 
     context 'which is opendata' do

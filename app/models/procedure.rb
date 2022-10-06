@@ -489,6 +489,7 @@ class Procedure < ApplicationRecord
     procedure.duree_conservation_etendue_par_ds = false
     if procedure.duree_conservation_dossiers_dans_ds > NEW_MAX_DUREE_CONSERVATION
       procedure.duree_conservation_dossiers_dans_ds = NEW_MAX_DUREE_CONSERVATION
+      procedure.max_duree_conservation_dossiers_dans_ds = NEW_MAX_DUREE_CONSERVATION
     end
     procedure.published_revision = nil
     procedure.draft_revision.procedure = procedure
