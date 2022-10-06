@@ -101,6 +101,13 @@ describe 'wcag rules for usager', js: true do
       expect(page).to be_axe_clean
     end
 
+    scenario 'liste des dossiers et actions sur le dossier' do
+      dossier
+      visit dossiers_path
+      page.find("#actions_menu_dossier_#{dossier.id}_button").click
+      expect(page).to be_axe_clean
+    end
+
     scenario 'dossier' do
       visit dossier_path(dossier)
       expect(page).to be_axe_clean
