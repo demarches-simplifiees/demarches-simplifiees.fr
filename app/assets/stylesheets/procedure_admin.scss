@@ -2,6 +2,10 @@
 .procedure-grid {
   display: flex;
   flex-wrap: wrap;
+
+  & > a {
+    background-image: none; // remove DSFR underline
+  }
 }
 
 .procedure-admin-container {
@@ -11,6 +15,10 @@
 
   .button {
     margin-right: 10px;
+  }
+
+  a {
+    background-image: none; // remove DSFR underline
   }
 }
 
