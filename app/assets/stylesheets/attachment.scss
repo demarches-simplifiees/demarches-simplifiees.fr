@@ -11,6 +11,14 @@
 
   .button {
     text-transform: lowercase;
+    background-image: none; // remove DSFR underline
+  }
+
+}
+
+.attachment-link {
+  a:not(:hover) {
+    background-image: none; // remove DSFR underline
   }
 }
 
