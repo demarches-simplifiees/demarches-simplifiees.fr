@@ -11,8 +11,8 @@
     }
 
     a {
-      background-image: none; // remove DSFR underline
       @include vertical-padding(24px);
+      background-image: none; // remove DSFR underline
       color: $black;
       width: 100%;
 
