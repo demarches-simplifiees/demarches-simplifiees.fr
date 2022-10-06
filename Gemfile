@@ -113,6 +113,7 @@ group :development do
   gem 'brakeman', require: false
   gem 'haml-lint'
   gem 'letter_opener_web'
+  gem 'memory_profiler'
   gem 'rack-mini-profiler'
   gem 'rails-erd', require: false # generates `doc/database_models.pdf`
   gem 'rubocop', require: false
@@ -120,6 +121,7 @@ group :development do
   gem 'rubocop-rails', require: false
   gem 'rubocop-rspec', require: false
   gem 'scss_lint', require: false
+  gem 'stackprof'
   gem 'web-console'
 end
 
