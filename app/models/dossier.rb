@@ -1262,11 +1262,12 @@ class Dossier < ApplicationRecord
       .pluck('avis.id, experts_procedures.id')
 
     # rubocop:disable Lint/UnusedBlockArgument
-    avis_ids = avis_experts_procedures_ids
+    avis = avis_experts_procedures_ids
       .uniq { |(avis_id, experts_procedures_id)| experts_procedures_id }
       .map { |(avis_id, _)| avis_id }
+      .then { |avis_ids| Avis.find(avis_ids) }
     # rubocop:enable Lint/UnusedBlockArgument
 
-    avis_ids.each { |avis_id| ExpertMailer.send_dossier_decision(avis_id).deliver_later }
+    avis.each { |a| ExpertMailer.send_dossier_decision_v2(a).deliver_later }
   end
 end
