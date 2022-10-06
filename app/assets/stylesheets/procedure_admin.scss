@@ -1,9 +1,8 @@
-
 .procedure-grid {
   display: flex;
   flex-wrap: wrap;
 
-  & > a {
+  > a {
     background-image: none; // remove DSFR underline
   }
 }
