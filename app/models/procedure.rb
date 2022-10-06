@@ -32,6 +32,7 @@
 #  lien_dpo                                  :string
 #  lien_notice                               :string
 #  lien_site_web                             :string
+#  max_duree_conservation_dossiers_dans_ds   :integer          default(12)
 #  monavis_embed                             :text
 #  opendata                                  :boolean          default(TRUE)
 #  organisation                              :string
@@ -275,18 +276,15 @@ class Procedure < ApplicationRecord
   validates :duree_conservation_dossiers_dans_ds, allow_nil: false,
                                                   numericality: {
                                                     only_integer: true,
-                                                                  greater_than_or_equal_to: 1,
-                                                                  less_than_or_equal_to: OLD_MAX_DUREE_CONSERVATION
-                                                  },
-                                                  if: :duree_conservation_etendue_par_ds
-
-  validates :duree_conservation_dossiers_dans_ds, allow_nil: false,
-                                                    numericality: {
-                                                      only_integer: true,
-                                                                    greater_than_or_equal_to: 1,
-                                                                    less_than_or_equal_to: NEW_MAX_DUREE_CONSERVATION
-                                                    },
-                                                    unless: :duree_conservation_etendue_par_ds
+                                                    greater_than_or_equal_to: 1,
+                                                    less_than_or_equal_to: :max_duree_conservation_dossiers_dans_ds
+                                                  }
+  validates :max_duree_conservation_dossiers_dans_ds, allow_nil: false,
+                                                  numericality: {
+                                                    only_integer: true,
+                                                    greater_than_or_equal_to: 1,
+                                                    less_than_or_equal_to: 60
+                                                  }
 
   validates :lien_dpo, email_or_link: true, allow_nil: true
   validates_with MonAvisEmbedValidator
