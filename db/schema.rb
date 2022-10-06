@@ -667,6 +667,7 @@ ActiveRecord::Schema.define(version: 2022_10_20_094031) do
     t.text "routing_criteria_name", default: "Votre ville"
     t.boolean "routing_enabled"
     t.bigint "service_id"
+    t.text "tags", default: [], array: true
     t.datetime "test_started_at"
     t.datetime "unpublished_at"
     t.datetime "updated_at", null: false
@@ -683,6 +684,7 @@ ActiveRecord::Schema.define(version: 2022_10_20_094031) do
     t.index ["procedure_expires_when_termine_enabled"], name: "index_procedures_on_procedure_expires_when_termine_enabled"
     t.index ["published_revision_id"], name: "index_procedures_on_published_revision_id"
     t.index ["service_id"], name: "index_procedures_on_service_id"
+    t.index ["tags"], name: "index_procedures_on_tags", using: :gin
     t.index ["zone_id"], name: "index_procedures_on_zone_id"
   end
 
