@@ -37,8 +37,8 @@
 
     - else
       %h2.huge-title= t('views.commencer.show.existing_dossiers')
-      = link_to t('views.commencer.show.show_dossiers'), dossiers_path, class: ['button large expand primary']
-      = link_to t('views.commencer.show.start_new_file'), url_for_new_dossier(@revision), class: ['button large expand']
+      = link_to t('views.commencer.show.show_dossiers'), dossiers_path, class: "fr-btn fr-btn--lg fr-my-2w"
+      = link_to t('views.commencer.show.start_new_file'), url_for_new_dossier(@revision), class: "fr-btn fr-btn--lg fr-btn--secondary fr-my-2w"
 
   - if @procedure.feature_enabled?(:dossier_pdf_vide)
     - pdf_link = @revision.draft? ? commencer_dossier_vide_test_path(path: @procedure.path) : commencer_dossier_vide_path(path: @procedure.path)
@@ -46,4 +46,4 @@
     %p= t('views.commencer.show.want_empty_pdf', service: @procedure&.service&.nom, adresse: @procedure&.service&.adresse)
 
     %br
-    = link_to t('views.commencer.show.download_empty_pdf'), pdf_link, class: ['button large expand']
+    = link_to t('views.commencer.show.download_empty_pdf'), pdf_link, class: "fr-btn fr-btn--lg fr-btn--secondary fr-my-2w"

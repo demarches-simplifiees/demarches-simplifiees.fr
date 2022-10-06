@@ -1,22 +1,10 @@
 @import "colors";
 
-// Hacky override default text underline of DSFR because we don't want to underline links in our legacy UI.
-// We don't match links having a dsfr class (prefixed by fr-).
-// However DSFR components may contain links without fr- class on them,
-// so these links can be artificially matched by adding any fr-class on them, (like fr-underlined)
-body [href]:not([class^="fr-"]) {
-  background-image: none;
-}
-
 // override default transparent background on inputs & font-size to 16px by default
 input,
 textarea,
 select {
   background: $white;
-
-.fr-footer__bottom-link {
-  // re-apply color unsetted by our common "a" rule setting a blue
-  // color: var(--text-mention-grey);
   font-size: 1em;
 }
 

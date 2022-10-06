@@ -17,6 +17,10 @@
     color: #000000;
   }
 
+  a {
+    background-image: none; // remove DSFR underline
+  }
+
   .caret-icon {
     vertical-align: top;
     margin-top: 9px;

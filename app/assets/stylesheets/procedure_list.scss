@@ -11,6 +11,7 @@
     }
 
     a {
+      background-image: none; // remove DSFR underline
       @include vertical-padding(24px);
       color: $black;
       width: 100%;
@@ -45,6 +46,8 @@
   }
 
   .procedure-stats {
+    list-style-type: none;
+
     li {
       min-height: 36px;
       border-left: 1px solid $border-grey;
