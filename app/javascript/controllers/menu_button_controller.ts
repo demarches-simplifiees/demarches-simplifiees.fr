@@ -68,7 +68,7 @@ export class MenuButtonController extends ApplicationController {
   }
 
   private open(focusMenuItem: 'first' | 'last' = 'first') {
-    this.buttonTarget.setAttribute('aria-expanded', '');
+    this.buttonTarget.setAttribute('aria-expanded', 'true');
     this.menuTarget.parentElement?.classList.add('open');
     this.menuTarget.focus();
 
