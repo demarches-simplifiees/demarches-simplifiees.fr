@@ -4,26 +4,11 @@
 
 .procedure-list {
   .procedure-item {
-    border-bottom: 1px solid $border-grey;
+    background-color: rgba(0, 0, 0, 0.02);
+  }
 
-    &:last-child {
-      border-bottom: none;
-    }
-
-    a {
-      @include vertical-padding(24px);
-      background-image: none; // remove DSFR underline
-      color: $black;
-      width: 100%;
-
-      &:hover {
-        background-color: $light-grey;
-
-        .procedure-title {
-          text-decoration: underline;
-        }
-      }
-    }
+  .procedure-logo-link {
+    background-image: none;
   }
 
   .procedure-logo {
@@ -35,32 +20,29 @@
     background-position: 95% 50%;
   }
 
-  .procedure-title {
-    min-height: 40px;
-    font-size: 20px;
-    margin-bottom: 16px;
-  }
-
   .procedure-status {
     margin-left: auto;
   }
 
   .procedure-stats {
     list-style-type: none;
+    padding-inline-start: 0;
 
     li {
       min-height: 36px;
-      border-left: 1px solid $border-grey;
       width: 90px;
       position: relative;
+
+      border-left: 1px solid $border-grey;
+
+      &:first-child {
+        border-left: none;
+      }
 
       &:hover {
         background-color: rgba(0, 0, 0, 0.05);
       }
 
-      &:last-child {
-        border-right: 1px solid $border-grey;
-      }
 
       .stats-number,
       .stats-legend {
