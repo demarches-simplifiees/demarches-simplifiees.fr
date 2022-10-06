@@ -9,37 +9,37 @@
     %button.button.dropdown-button{ data: { menu_button_target: 'button' } }
       = t('views.users.dossiers.dossier_action.actions')
     .dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' }, id: dom_id(dossier, :actions_menu) }
-      %ul.dropdown-items
+      %ul.dropdown-items{ role: :none }
         - if has_edit_action
           - if dossier.brouillon?
-            %li
+            %li{ role: :none }
               = link_to(url_for_dossier(dossier)) do
                 %span.icon.edit
                 .dropdown-description
                   = t('views.users.dossiers.dossier_action.edit_draft')
           - else
-            %li
+            %li{ role: :none }
               = link_to modifier_dossier_path(dossier) do
                 %span.icon.edit
                 .dropdown-description
                   = t('views.users.dossiers.dossier_action.edit_dossier')
 
         - if has_transfer_action
-          %li
+          %li{ role: :none }
             = link_to transferer_dossier_path(dossier) do
               %span.icon.person
               .dropdown-description
                 = t('views.users.dossiers.dossier_action.transfer_dossier')
 
         - if has_new_dossier_action
-          %li
+          %li{ role: :none }
             = link_to procedure_lien(dossier.procedure) do
               %span.icon.new-folder
               .dropdown-description
                 = t('views.users.dossiers.dossier_action.start_other_dossier')
 
         - if has_delete_action
-          %li.danger
+          %li.danger{ role: :none }
             = link_to delete_dossier_dossier_path(dossier), method: :patch, data: { disable: true, confirm: "En continuant, vous allez supprimer ce dossier ainsi que les informations qu’il contient. Toute suppression entraîne l’annulation de la démarche en cours.\n\nConfirmer la suppression ?" } do
               %span.icon.delete
               .dropdown-description
