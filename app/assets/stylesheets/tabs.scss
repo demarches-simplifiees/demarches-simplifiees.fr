@@ -2,6 +2,10 @@
 @import "mixins";
 
 .tabs {
+  ul {
+    margin-bottom: 0;
+  }
+
   li {
     display: inline-block;
     line-height: 36px;
