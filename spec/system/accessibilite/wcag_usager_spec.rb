@@ -95,6 +95,12 @@ describe 'wcag rules for usager', js: true do
       expect(page).to be_axe_clean
     end
 
+    scenario 'liste des dossiers avec des dossiers' do
+      dossier
+      visit dossiers_path
+      expect(page).to be_axe_clean
+    end
+
     scenario 'dossier' do
       visit dossier_path(dossier)
       expect(page).to be_axe_clean
