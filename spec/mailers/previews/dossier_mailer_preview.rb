@@ -45,10 +45,6 @@ class DossierMailerPreview < ActionMailer::Preview
     DossierMailer.notify_brouillon_deletion(dossier_hashes, usager_email)
   end
 
-  def notify_instructeur_deletion_to_user
-    DossierMailer.notify_instructeur_deletion_to_user(deleted_dossier, usager_email)
-  end
-
   def notify_deletion_to_administration
     DossierMailer.notify_deletion_to_administration(deleted_dossier, administration_email)
   end
