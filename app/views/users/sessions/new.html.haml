@@ -22,11 +22,11 @@
       .text-right
         = link_to t('views.users.sessions.new.reset_password'), new_user_password_path, class: "link"
 
-    = f.submit t('views.users.sessions.new.connection'), class: "button large primary expand"
+    = f.submit t('views.users.sessions.new.connection'), class: "fr-btn fr-btn--lg"
 
   - if AgentConnectService.enabled?
     .france-connect-login-separator
       = t('views.shared.france_connect_login.separator')
     .center
       %h2.important-header.mb-1= t('views.users.sessions.new.state_civil_servant')
-      = link_to t('views.users.sessions.new.connect_with_agent_connect'), agent_connect_path, class: "button expend secondary"
+      = link_to t('views.users.sessions.new.connect_with_agent_connect'), agent_connect_path, class: "fr-btn fr-btn--secondary"
