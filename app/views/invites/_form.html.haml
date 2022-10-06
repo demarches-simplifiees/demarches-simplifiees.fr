@@ -1,8 +1,8 @@
 #invites-form
-  - if dossier.invites.present?
+  - if invites.present?
     %h4= t('views.invites.form.invite_to_participate')
     %ul
-      - dossier.invites.each do |invite|
+      - invites.each do |invite|
         %li
           = invite.email
           %small{ 'data-turbo': 'true' }
