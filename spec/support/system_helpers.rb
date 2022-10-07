@@ -131,7 +131,7 @@ module SystemHelpers
       expect(page).to have_selector('#account.fr-collapse--expanded', visible: true)
       click_on 'Se déconnecter'
     end
-    expect(page).to have_current_path(root_path, wait: 5)
+    expect(page).to have_current_path(root_path, wait: 30)
   end
 
   # Keep the brower window open after a test success of failure, to
