@@ -392,7 +392,7 @@ module Users
     end
 
     def dossier_with_champs
-      DossierPreloader.new([dossier]).all.first
+      DossierPreloader.load_one(dossier)
     end
 
     def should_change_groupe_instructeur?

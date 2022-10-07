@@ -17,6 +17,10 @@ class DossierPreloader
     dossiers
   end
 
+  def self.load_one(dossier)
+    DossierPreloader.new([dossier]).all.first
+  end
+
   private
 
   # returns: { revision_id : { type_de_champ_id : position } }
