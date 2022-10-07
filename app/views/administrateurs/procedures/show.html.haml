@@ -58,6 +58,7 @@
   %h2.procedure-admin-explanation Indispensable avant publication
   .procedure-grid
     = render Procedure::Card::PresentationComponent.new(procedure: @procedure)
+    = render Procedure::Card::ZonesComponent.new(procedure: @procedure) if Flipper.enabled? :zonage
     = render Procedure::Card::ChampsComponent.new(procedure: @procedure)
     = render Procedure::Card::ServiceComponent.new(procedure: @procedure, administrateur: current_administrateur)
     = render Procedure::Card::AdministrateursComponent.new(procedure: @procedure)

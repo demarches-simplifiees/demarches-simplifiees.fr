@@ -12,6 +12,8 @@ describe Administrateurs::ProceduresController, type: :controller do
   let(:duree_conservation_dossiers_dans_ds) { 3 }
   let(:monavis_embed) { nil }
   let(:lien_site_web) { 'http://mon-site.gouv.fr' }
+  let(:zone) { create(:zone) }
+  let(:zone_ids) { [zone.id] }
 
   describe '#apercu' do
     render_views
@@ -55,6 +57,7 @@ describe Administrateurs::ProceduresController, type: :controller do
       cadre_juridique: cadre_juridique,
       duree_conservation_dossiers_dans_ds: duree_conservation_dossiers_dans_ds,
       monavis_embed: monavis_embed,
+      zone_ids: zone_ids,
       lien_site_web: lien_site_web
     }
   }
@@ -174,6 +177,14 @@ describe Administrateurs::ProceduresController, type: :controller do
         it { is_expected.to have_http_status(404) }
       end
     end
+  end
+
+  describe 'GET #zones' do
+    let(:procedure) { create(:procedure, administrateur: admin) }
+    let(:procedure_id) { procedure.id }
+
+    subject { get :zones, params: { id: procedure_id } }
+    it { is_expected.to have_http_status(:success) }
   end
 
   describe 'POST #create' do
@@ -322,6 +333,19 @@ describe Administrateurs::ProceduresController, type: :controller do
           it { expect(subject.direction).to eq procedure_params[:direction] }
 
           it { expect(subject.for_individual).not_to eq procedure_params[:for_individual] }
+        end
+
+        context 'when zones are empty' do
+          before do
+            Flipper.enable(:zonage)
+          end
+
+          after do
+            Flipper.disable(:zonage)
+          end
+
+          let(:zone_ids) { [""] }
+          it { is_expected.to render_template :zones }
         end
       end
     end
