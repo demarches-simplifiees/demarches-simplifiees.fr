@@ -803,6 +803,7 @@ class Procedure < ApplicationRecord
     if published_revision.present? && draft_changed?
       transaction do
         reset!
+        draft_revision.types_de_champ.filter(&:only_present_on_draft?).each(&:destroy)
         draft_revision.update(attestation_template: nil, dossier_submitted_message: nil)
         draft_revision.destroy
         update!(draft_revision: create_new_revision(published_revision))
