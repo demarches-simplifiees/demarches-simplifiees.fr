@@ -11,7 +11,7 @@ describe DossierPreloader do
   let(:first_child) { subject.champs.second.champs.first }
 
   describe 'all' do
-    subject { DossierPreloader.new([dossier]).all.first }
+    subject { DossierPreloader.load_one(dossier) }
 
     before { subject }
 
