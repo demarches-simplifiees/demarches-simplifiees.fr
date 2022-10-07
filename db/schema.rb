@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_05_145646) do
+ActiveRecord::Schema.define(version: 2022_10_06_193737) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -683,6 +683,15 @@ ActiveRecord::Schema.define(version: 2022_10_05_145646) do
     t.index ["published_revision_id"], name: "index_procedures_on_published_revision_id"
     t.index ["service_id"], name: "index_procedures_on_service_id"
     t.index ["zone_id"], name: "index_procedures_on_zone_id"
+  end
+
+  create_table "procedures_zones", id: false, force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.bigint "procedure_id"
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "zone_id"
+    t.index ["procedure_id"], name: "index_procedures_zones_on_procedure_id"
+    t.index ["zone_id"], name: "index_procedures_zones_on_zone_id"
   end
 
   create_table "received_mails", id: :serial, force: :cascade do |t|

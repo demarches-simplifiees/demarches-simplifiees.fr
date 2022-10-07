@@ -103,6 +103,7 @@ class Procedure < ApplicationRecord
   belongs_to :replaced_by_procedure, -> { with_discarded }, inverse_of: :replaced_procedures, class_name: "Procedure", optional: true
   belongs_to :service, optional: true
   belongs_to :zone, optional: true
+  has_and_belongs_to_many :zones
 
   def active_dossier_submitted_message
     published_dossier_submitted_message || draft_dossier_submitted_message
@@ -288,6 +289,7 @@ class Procedure < ApplicationRecord
 
   validates :lien_dpo, email_or_link: true, allow_nil: true
   validates_with MonAvisEmbedValidator
+  validates :zones, presence: true, if: -> record { record.publiee? && Flipper.enabled?(:zonage) }
 
   FILE_MAX_SIZE = 20.megabytes
   validates :notice, content_type: [
@@ -627,6 +629,10 @@ class Procedure < ApplicationRecord
       result << :instructeurs
     end
 
+    if missing_zones?
+      result << :zones
+    end
+
     result
   end
 
@@ -657,6 +663,14 @@ class Procedure < ApplicationRecord
 
   def missing_instructeurs?
     !AssignTo.exists?(groupe_instructeur: groupe_instructeurs)
+  end
+
+  def missing_zones?
+    if Flipper.enabled?(:zonage)
+      zones.empty?
+    else
+      false
+    end
   end
 
   def revised?
