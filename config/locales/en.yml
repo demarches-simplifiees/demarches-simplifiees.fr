@@ -421,8 +421,7 @@ en:
       one: expiring file
       other: expiring files
     dossier_trouve:
-      '0': 0 file found
-      '1': 1 file found
+      one: "%{count} file found"
       other: "%{count} files found"
     published:
       one: Published
