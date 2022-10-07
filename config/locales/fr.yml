@@ -429,8 +429,7 @@ fr:
       one: expirant
       other: expirant
     dossier_trouve:
-      '0': 0 dossier trouvé
-      '1': 1 dossier trouvé
+      one: "%{count} dossier trouvé"
       other: "%{count} dossiers trouvés"
     published:
       one: Publiée
