@@ -1,5 +1,5 @@
 RSpec.shared_examples 'the user can edit the submitted demande' do
-  scenario js: true do
+  scenario js: true, retry: 3 do
     visit dossier_path(dossier)
 
     expect(page).to have_current_path(dossier_path(dossier))

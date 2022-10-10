@@ -16,6 +16,7 @@
 # users commonly want.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+require 'rspec/retry'
 
 RSpec.configure do |config|
   config.filter_run_excluding disable: true
@@ -56,6 +57,21 @@ RSpec.configure do |config|
       select_element && values.all? do |value|
         select_element.first(:option, value).selected?
       end
+    end
+  end
+end
+
+RSpec.configure do |config|
+  # show retry status in spec process
+  config.verbose_retry = true
+  # show exception that triggers a retry if verbose_retry is set to true
+  config.display_try_failure_messages = true
+
+  # callback to be run between retries
+  config.retry_callback = proc do |ex|
+    # run some additional clean up task - can be filtered by example metadata
+    if ex.metadata[:js]
+      Capybara.reset!
     end
   end
 end
