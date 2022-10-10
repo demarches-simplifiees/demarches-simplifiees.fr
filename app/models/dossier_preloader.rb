@@ -11,14 +11,14 @@ class DossierPreloader
     dossiers
   end
 
-  def all
+  def all(pj_template: false)
     dossiers = @dossiers.to_a
-    load_dossiers(dossiers)
+    load_dossiers(dossiers, pj_template:)
     dossiers
   end
 
   def self.load_one(dossier)
-    DossierPreloader.new([dossier]).all.first
+    DossierPreloader.new([dossier]).all(pj_template: true).first
   end
 
   private
@@ -34,9 +34,17 @@ class DossierPreloader
       end
   end
 
-  def load_dossiers(dossiers)
+  def load_dossiers(dossiers, pj_template: false)
+    to_include = [piece_justificative_file_attachment: :blob]
+
+    if pj_template
+      to_include << { type_de_champ: { piece_justificative_template_attachment: :blob } }
+    else
+      to_include << :type_de_champ
+    end
+
     all_champs = Champ
-      .includes(type_de_champ: { piece_justificative_template_attachment: :blob }, piece_justificative_file_attachment: :blob)
+      .includes(to_include)
       .where(dossier_id: dossiers)
       .to_a
 
