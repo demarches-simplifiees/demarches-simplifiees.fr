@@ -323,6 +323,7 @@ class Procedure < ApplicationRecord
 
   validates :api_entreprise_token, jwt_token: true, allow_blank: true
   validates :api_particulier_token, format: { with: /\A[A-Za-z0-9\-_=.]{15,}\z/ }, allow_blank: true
+  validates :routing_criteria_name, presence: true, allow_blank: false
 
   before_save :update_juridique_required
   after_initialize :ensure_path_exists
