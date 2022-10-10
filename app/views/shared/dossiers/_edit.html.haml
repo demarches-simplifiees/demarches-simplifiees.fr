@@ -23,7 +23,7 @@
           - if notice_url(dossier.procedure).present?
             .fr-download
               %p
-                = link_to notice_url(dossier.procedure), download: true, class: "fr-download__link mr-2", title: t("views.shared.dossiers.edit.notice_title") do
+                = link_to notice_url(dossier.procedure), download: "", class: "fr-download__link mr-2", title: t("views.shared.dossiers.edit.notice_title") do
                   = t("views.shared.dossiers.edit.notice")
                   - if dossier.procedure.notice.attached?
                     %span.fr-download__detail
