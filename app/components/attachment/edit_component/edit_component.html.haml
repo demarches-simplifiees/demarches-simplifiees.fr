@@ -2,7 +2,7 @@
   - if template&.attached?
     %p.mb-1
       Veuillez télécharger, remplir et joindre
-      = link_to(url_for(template), download: true, class: "fr-link fr-link--icon-right fr-icon-download-line") do
+      = link_to(url_for(template), download: "", class: "fr-link fr-link--icon-right fr-icon-download-line") do
         le modèle suivant
 
       - if helpers.administrateur_signed_in?
