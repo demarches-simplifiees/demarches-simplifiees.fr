@@ -392,7 +392,7 @@ module Users
     end
 
     def dossier_with_champs
-      dossier_scope.with_champs.find(params[:id])
+      DossierPreloader.load_one(dossier)
     end
 
     def should_change_groupe_instructeur?
