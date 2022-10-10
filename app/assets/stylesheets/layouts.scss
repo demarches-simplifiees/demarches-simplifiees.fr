@@ -9,7 +9,7 @@
     background: linear-gradient(to right, #FFFFFF 0%, #FFFFFF 50%, $light-grey 50%, $light-grey 100%);
   }
 
-  .columns-container {
+  .columns-container { // TODO: https://github.com/betagouv/demarches-simplifiees.fr/issues/7882, once implemented, we won't need container anymore
     @extend %container;
     display: flex;
     flex-direction: column;
