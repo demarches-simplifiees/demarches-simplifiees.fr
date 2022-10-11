@@ -11,10 +11,6 @@ class InstructeurMailerPreview < ActionMailer::Preview
     InstructeurMailer.send_login_token(instructeur, "token")
   end
 
-  def invite_instructeur
-    InstructeurMailer.invite_instructeur(instructeur, 'aedfa0d0')
-  end
-
   def user_to_instructeur
     InstructeurMailer.user_to_instructeur(instructeur.email)
   end
@@ -25,12 +21,16 @@ class InstructeurMailerPreview < ActionMailer::Preview
         procedure_libelle: 'une superbe démarche',
         procedure_id: 213,
         nb_en_construction: 2,
+        nb_en_instruction: 2,
+        nb_accepted: 4,
         nb_notification: 2
       },
       {
         procedure_libelle: 'une démarche incroyable',
         procedure_id: 213,
         nb_en_construction: 1,
+        nb_en_instruction: 2,
+        nb_accepted: 5,
         nb_notification: 1
       }
     ]

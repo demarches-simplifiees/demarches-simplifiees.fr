@@ -432,6 +432,7 @@ Rails.application.routes.draw do
       member do
         get 'apercu'
         get 'champs'
+        get 'zones'
         get 'annotations'
         get 'modifications'
         get 'monavis'

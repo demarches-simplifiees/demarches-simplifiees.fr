@@ -11,7 +11,7 @@
           %span.citizen= t('.you_are_a_citizen')
           %br
           %br
-          = link_to t('.citizen_page'), new_user_session_path, class: "button expend secondary"
+          = link_to t('.citizen_page'), new_user_session_path, class: "fr-btn fr-btn--secondary"
 
       .column
         %h1.fr-my-2
@@ -23,7 +23,7 @@
               = t('.signin_with')
             %span.fr-connect__brand AgentConnect
           %p
-            = link_to t('.whats_agentconnect'), 'https://agentconnect.gouv.fr/', target: '_blank', rel: "noopener", class: "fr-underlined"
+            = link_to t('.whats_agentconnect'), 'https://agentconnect.gouv.fr/', target: '_blank', rel: "noopener"
 
 
         .france-connect-login-separator
@@ -45,7 +45,7 @@
               .text-right
                 = link_to t('views.users.sessions.new.reset_password'), new_user_password_path, class: "link"
 
-            = f.submit t('views.users.sessions.new.connection'), class: "button large primary expand"
+            = f.submit t('views.users.sessions.new.connection'), class: "fr-btn fr-btn--lg"
 
 - content_for :footer do
   = render partial: 'users/dossiers/index_footer'

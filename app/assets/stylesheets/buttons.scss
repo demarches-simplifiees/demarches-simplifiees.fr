@@ -183,6 +183,11 @@
   top: 5 * $default-spacer;
   cursor: default;
   z-index: 10;
+  list-style: none;
+
+  a {
+    background-image: none; // remove DSFR underline
+  }
 
   &.left-aligned {
     left: 0;
@@ -256,6 +261,7 @@
 
     a {
       color: $dark-grey;
+      background-image: none; // remove DSFR underline
     }
 
     // Make child links fill the whole clickable area
@@ -310,6 +316,10 @@
 
   [disabled] {
     display: none;
+  }
+
+  ul {
+    list-style: none;
   }
 }
 

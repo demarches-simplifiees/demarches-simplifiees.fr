@@ -1,7 +1,10 @@
-
 .procedure-grid {
   display: flex;
   flex-wrap: wrap;
+
+  > a { // TODO, re-use DSFR https://github.com/betagouv/demarches-simplifiees.fr/issues/7884
+    background-image: none; // remove DSFR underline
+  }
 }
 
 .procedure-admin-container {
@@ -11,6 +14,10 @@
 
   .button {
     margin-right: 10px;
+  }
+
+  a {
+    background-image: none; // remove DSFR underline
   }
 }
 
