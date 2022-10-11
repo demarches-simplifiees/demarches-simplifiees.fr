@@ -26,7 +26,6 @@ class Champ < ApplicationRecord
   has_one_attached :piece_justificative_file
 
   attr_accessor :skip_cleanup
-  attr_accessor :skip_fetch
 
   # We declare champ specific relationships (Champs::CarteChamp, Champs::SiretChamp and Champs::RepetitionChamp)
   # here because otherwise we can't easily use includes in our queries.
@@ -82,7 +81,7 @@ class Champ < ApplicationRecord
   before_validation :set_dossier_id, if: :needs_dossier_id?
   before_save :cleanup_if_empty, unless: :skip_cleanup
   before_save :normalize
-  after_update_commit :fetch_external_data_later, unless: :skip_fetch
+  after_update_commit :fetch_external_data_later
 
   def public?
     !private?
