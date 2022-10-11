@@ -8,7 +8,8 @@ fr:
       procedure:
         path: Lien public
         organisation: Organisme
-        duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers sur demarches-simplifiees.fr
+        duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers sur demarches-simplifiees.fr (choisi par un usager)
+        max_duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers maximum (autorisé par un super admin de DS)
         aasm_state/brouillon: Brouillon
         aasm_state/publiee: Publiée
         aasm_state/close: Close
@@ -17,6 +18,7 @@ fr:
         declarative_with_state/accepte: Accepté
         api_particulier_token: Jeton API Particulier
         lien_dpo: Contact du DPO
+        routing_criteria_name: Nomination du routage
     errors:
       models:
         procedure:

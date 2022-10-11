@@ -225,8 +225,7 @@ GEM
     ecma-re-validator (0.3.0)
       regexp_parser (~> 2.0)
     encryptor (3.0.0)
-    erubi (1.10.0)
-    erubis (2.7.0)
+    erubi (1.11.0)
     et-orbi (1.2.4)
       tzinfo
     ethon (0.15.0)
@@ -306,19 +305,19 @@ GEM
       rails (>= 5.1.0)
     groupdate (5.2.2)
       activesupport (>= 5)
-    haml (5.2.1)
-      temple (>= 0.8.0)
+    haml (6.0.5)
+      temple (>= 0.8.2)
+      thor
       tilt
     haml-lint (0.999.999)
       haml_lint
-    haml-rails (2.0.1)
+    haml-rails (2.1.0)
       actionpack (>= 5.1)
       activesupport (>= 5.1)
-      haml (>= 4.0.6, < 6.0)
-      html2haml (>= 1.0.1)
+      haml (>= 4.0.6)
       railties (>= 5.1)
-    haml_lint (0.37.0)
-      haml (>= 4.0, < 5.3)
+    haml_lint (0.42.0)
+      haml (>= 4.0, < 6.1)
       parallel (~> 1.10)
       rainbow
       rubocop (>= 0.50.0)
@@ -327,11 +326,6 @@ GEM
     hashdiff (1.0.1)
     hashie (4.1.0)
     highline (2.0.3)
-    html2haml (2.2.0)
-      erubis (~> 2.7.0)
-      haml (>= 4.0, < 6)
-      nokogiri (>= 1.6.0)
-      ruby_parser (~> 3.5)
     html_tokenizer (0.0.7)
     htmlentities (4.3.4)
     http-accept (1.7.0)
@@ -339,7 +333,7 @@ GEM
       domain_name (~> 0.5)
     http_accept_language (2.1.1)
     httpclient (2.8.3)
-    i18n (1.11.0)
+    i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     i18n-tasks (1.0.9)
       activesupport (>= 4.0.2)
@@ -407,7 +401,7 @@ GEM
       railties (>= 4)
       request_store (~> 1.0)
     logstash-event (1.2.02)
-    loofah (2.18.0)
+    loofah (2.19.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.7.1)
@@ -418,6 +412,7 @@ GEM
       rest-client (>= 2.0.0)
     marcel (1.0.2)
     matrix (0.4.2)
+    memory_profiler (1.0.0)
     method_source (1.0.0)
     mime-types (3.3.1)
       mime-types-data (~> 3.2015)
@@ -428,7 +423,7 @@ GEM
     mini_magick (4.11.0)
     mini_mime (1.1.2)
     mini_portile2 (2.8.0)
-    minitest (5.16.2)
+    minitest (5.16.3)
     momentjs-rails (2.20.1)
       railties (>= 3.1)
     msgpack (1.4.2)
@@ -468,7 +463,7 @@ GEM
     orm_adapter (0.5.0)
     parallel (1.22.1)
     parsby (1.1.1)
-    parser (3.1.2.0)
+    parser (3.1.2.1)
       ast (~> 2.4.1)
     pdf-core (0.9.0)
     pg (1.2.3)
@@ -508,7 +503,7 @@ GEM
     rack (2.2.4)
     rack-attack (6.5.0)
       rack (>= 1.0, < 3)
-    rack-mini-profiler (2.3.1)
+    rack-mini-profiler (3.0.0)
       rack (>= 1.2.0)
     rack-oauth2 (1.19.0)
       activesupport
@@ -566,7 +561,7 @@ GEM
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    regexp_parser (2.5.0)
+    regexp_parser (2.6.0)
     request_store (1.5.0)
       rack (>= 1.4)
     responders (3.0.1)
@@ -610,16 +605,17 @@ GEM
     rspec-support (3.10.2)
     rspec_junit_formatter (0.4.1)
       rspec-core (>= 2, < 4, != 2.12.0)
-    rubocop (1.30.1)
+    rubocop (1.36.0)
+      json (~> 2.3)
       parallel (~> 1.10)
-      parser (>= 3.1.0.0)
+      parser (>= 3.1.2.1)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 1.8, < 3.0)
       rexml (>= 3.2.5, < 4.0)
-      rubocop-ast (>= 1.18.0, < 2.0)
+      rubocop-ast (>= 1.20.1, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 3.0)
-    rubocop-ast (1.18.0)
+    rubocop-ast (1.21.0)
       parser (>= 3.1.1.0)
     rubocop-performance (1.9.2)
       rubocop (>= 0.90.0, < 2.0)
@@ -637,8 +633,6 @@ GEM
     ruby-vips (2.1.4)
       ffi (~> 1.12)
     ruby2_keywords (0.0.5)
-    ruby_parser (3.15.1)
-      sexp_processor (~> 4.9)
     rubyzip (2.3.0)
     saml_idp (0.14.0)
       activesupport (>= 5.2)
@@ -682,7 +676,6 @@ GEM
     sentry-ruby-core (4.8.1)
       concurrent-ruby
       faraday
-    sexp_processor (4.15.2)
     shoulda-matchers (4.5.1)
       activesupport (>= 4.2.0)
     sib-api-v3-sdk (7.4.0)
@@ -713,6 +706,7 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
+    stackprof (0.2.21)
     strong_migrations (0.8.0)
       activerecord (>= 5.2)
     strscan (3.0.3)
@@ -726,7 +720,7 @@ GEM
       unicode-display_width (>= 1.1.1, < 3)
     thor (1.2.1)
     thread_safe (0.3.6)
-    tilt (2.0.10)
+    tilt (2.0.11)
     timecop (0.9.4)
     timeout (0.1.1)
     ttfunk (1.7.0)
@@ -739,7 +733,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.7)
-    unicode-display_width (2.1.0)
+    unicode-display_width (2.3.0)
     uri_template (0.7.0)
     validate_email (0.1.6)
       activemodel (>= 3.0)
@@ -795,7 +789,7 @@ GEM
       nokogiri (~> 1.11)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.6.0)
+    zeitwerk (2.6.1)
     zip_tricks (5.6.0)
     zipline (1.4.1)
       actionpack (>= 6.0, < 8.0)
@@ -873,6 +867,7 @@ DEPENDENCIES
   logstash-event
   mailjet
   matrix
+  memory_profiler
   mina
   net-imap
   net-pop
@@ -918,6 +913,7 @@ DEPENDENCIES
   spreadsheet_architect
   spring
   spring-commands-rspec
+  stackprof
   strong_migrations
   timecop
   turbo-rails

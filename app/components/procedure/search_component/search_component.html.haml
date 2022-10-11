@@ -7,6 +7,6 @@
 
   = text_field_tag :query, params[:query], required: true, placeholder: 'politique de la ville', minlength: "3"
 
-  = submit_tag 'Rechercher', class: 'button primary'
+  = submit_tag 'Rechercher', class: 'fr-btn'
 
   = render Procedure::ResultsComponent.new(grouped_procedures: @grouped_procedures)

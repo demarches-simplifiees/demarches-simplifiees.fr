@@ -1,11 +1,9 @@
 - if @champ.options?
   - if @champ.render_as_checkboxes?
     = @form.collection_check_boxes(:value, @champ.enabled_non_empty_options, :to_s, :to_s) do |b|
-      .editable-champ.editable-champ-checkbox
-        = b.label do
-          = b.check_box({ multiple: true, checked: @champ&.selected_options&.include?(b.value), aria: { describedby: @champ.describedby_id } })
-          = b.text
-
+      - tag.div(class: 'editable-champ editable-champ-checkbox') do
+        - b.label do
+          - b.check_box({ multiple: true, checked: @champ&.selected_options&.include?(b.value), aria: { describedby: @champ.describedby_id } }) + b.text
   - else
     = @form.hidden_field :value
     = react_component("ComboMultipleDropdownList",

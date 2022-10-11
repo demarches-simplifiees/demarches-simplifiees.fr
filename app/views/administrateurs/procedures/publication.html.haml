@@ -74,13 +74,14 @@
 
         - else
           .alert.alert-info
-            Pour pouvoir tester cette démarche, vous devez d’abord lui affecter
+            Pour pouvoir tester cette démarche, vous devez d’abord lui affecter :
+            %ul
+            - if @procedure.missing_zones?
+              %li= link_to("une ou plusieurs zones", zones_admin_procedure_path(id: @procedure.id))
             - if @procedure.missing_instructeurs?
-              = link_to("des instructeurs", admin_procedure_groupe_instructeur_path(@procedure, @procedure.defaut_groupe_instructeur))
-            - if @procedure.missing_instructeurs? && @procedure.service.nil?
-              et
+              %li= link_to("des instructeurs", admin_procedure_groupe_instructeur_path(@procedure, @procedure.defaut_groupe_instructeur))
             - if @procedure.service.nil?
-              = link_to("un service", admin_services_path(procedure_id: @procedure))
+              %li= link_to("un service", admin_services_path(procedure_id: @procedure))
             \.
       - else
         - if @procedure.missing_steps.include?(:service)
