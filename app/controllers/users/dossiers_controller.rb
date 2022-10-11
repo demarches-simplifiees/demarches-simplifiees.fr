@@ -181,7 +181,7 @@ module Users
 
       respond_to do |format|
         format.html { render :brouillon }
-        format.turbo_stream { render layout: false }
+        format.turbo_stream { render(:update, layout: false) }
       end
     end
 
