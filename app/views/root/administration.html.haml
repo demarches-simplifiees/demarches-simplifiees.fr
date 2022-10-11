@@ -6,7 +6,7 @@
     .container
       .hero-wrapper
         .hero-text
-          %p.hero-tagline
+          %h1.hero-tagline
             %em.hero-tagline-em Dématérialisez et simplifiez
             vos démarches administratives
 
@@ -17,8 +17,8 @@
     .container
       .role-panel-wrapper.role-administrations-panel
         .role-panel-70
-          %h1.role-panel-title Est-ce fait pour mon administration ?
-          %p.role-panel-explanation Découvrez notre outil et posez nous vos questions lors de notre démonstration en ligne ou lisez notre documentation
+          %h2 Est-ce fait pour mon administration ?
+          %p.fr-h5 Découvrez notre outil et posez nous vos questions lors de notre démonstration en ligne ou lisez notre documentation
 
           = link_to "Participer à notre démonstration en ligne", INSCRIPTION_WEBINAIRE_URL, class: "fr-btn fr-btn--lg fr-mr-1w fr-mb-2w", **external_link_attributes
           = link_to "Documentation", DOC_URL, class: "fr-btn fr-btn--secondary fr-btn--lg", **external_link_attributes
@@ -33,8 +33,8 @@
         %img.role-image{ :src => image_url("landing/roles/administrations.svg"), alt: "" }
 
       .role-panel-70
-        %h1.role-panel-title Votre administration est prête pour dématérialiser
-        %p.role-panel-explanation Créez un premier formulaire de test en quelques minutes
+        %h2 Votre administration est prête pour dématérialiser
+        %p.fr-h5 Créez un premier formulaire de test en quelques minutes
 
 
         = link_to "Créer votre compte administrateur", DEMANDE_INSCRIPTION_ADMIN_PAGE_URL, class: "fr-btn fr-btn--lg"
@@ -75,7 +75,7 @@
   - cache "numbers-panel", :expires_in => 3.hours do
     .landing-panel.numbers-panel
       .container
-        %h2.landing-panel-title #{APPLICATION_NAME} en chiffres
+        %h2.center.fr-mb-4w #{APPLICATION_NAME} en chiffres
         %ul.numbers
           %li.number
             .number-value
