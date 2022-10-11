@@ -43,14 +43,6 @@ class Champs::RNAChamp < Champ
     etablissement.present? ? etablissement.search_terms : [value]
   end
 
-  def fetch_external_data?
-    true
-  end
-
-  def fetch_external_data
-    APIEntreprise::RNAAdapter.new(external_id, procedure_id).to_params
-  end
-
   def update_external_id
     self.external_id = self.value
   end

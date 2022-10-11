@@ -7,10 +7,10 @@ class Champs::RNAController < ApplicationController
     @network_error = false
     begin
       data = APIEntreprise::RNAAdapter.new(@rna, @champ.procedure_id).to_params
-      @champ.update!(data: data, value: @rna, skip_cleanup: true, skip_fetch: true)
+      @champ.update!(data: data, value: @rna, skip_cleanup: true)
     rescue APIEntreprise::API::Error, ActiveRecord::RecordInvalid => error
       @network_error = true if error.try(:network_error?) && !APIEntrepriseService.api_up?
-      @champ.update(data: nil, value: nil, skip_cleanup: true, skip_fetch: true)
+      @champ.update(data: nil, value: nil, skip_cleanup: true)
     end
   end
 end
