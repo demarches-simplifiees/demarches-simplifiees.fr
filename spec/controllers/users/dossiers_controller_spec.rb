@@ -98,38 +98,21 @@ describe Users::DossiersController, type: :controller do
     let(:user) { create(:user) }
     let(:asked_dossier) { create(:dossier) }
     let(:ensure_authorized) { :forbid_invite_submission! }
-    let(:submit) { true }
 
     before do
-      @controller.params = @controller.params.merge(dossier_id: asked_dossier.id, submit_draft: submit)
+      @controller.params = @controller.params.merge(dossier_id: asked_dossier.id)
       allow(@controller).to receive(:current_user).and_return(user)
       allow(@controller).to receive(:redirect_to)
     end
 
-    context 'when a user save their own draft' do
-      let(:asked_dossier) { create(:dossier, user: user) }
-      let(:submit) { false }
-
-      it_behaves_like 'does not redirect nor flash'
-    end
-
     context 'when a user submit their own dossier' do
       let(:asked_dossier) { create(:dossier, user: user) }
-      let(:submit) { true }
-
-      it_behaves_like 'does not redirect nor flash'
-    end
-
-    context 'when an invite save the draft for a dossier where they where invited' do
-      before { create(:invite, dossier: asked_dossier, user: user) }
-      let(:submit) { false }
 
       it_behaves_like 'does not redirect nor flash'
     end
 
     context 'when an invite submit a dossier where they where invited' do
       before { create(:invite, dossier: asked_dossier, user: user) }
-      let(:submit) { true }
 
       it_behaves_like 'redirects and flashes'
     end
@@ -355,30 +338,18 @@ describe Users::DossiersController, type: :controller do
     end
   end
 
-  describe '#update_brouillon' do
+  describe '#submit_brouillon' do
     before { sign_in(user) }
 
     let!(:dossier) { create(:dossier, user: user) }
     let(:first_champ) { dossier.champs.first }
     let(:value) { 'beautiful value' }
     let(:now) { Time.zone.parse('01/01/2100') }
-    let(:submit_payload) do
-      {
-        id: dossier.id,
-        dossier: {
-          groupe_instructeur_id: dossier.groupe_instructeur_id,
-          champs_attributes: {
-            id: first_champ.id,
-            value: value
-          }
-        }
-      }
-    end
-    let(:payload) { submit_payload.merge(submit_draft: true) }
+    let(:payload) { { id: dossier.id } }
 
     subject do
       Timecop.freeze(now) do
-        patch :update_brouillon, params: payload
+        post :submit_brouillon, params: payload
       end
     end
 
@@ -390,120 +361,6 @@ describe Users::DossiersController, type: :controller do
 
         expect(response).to redirect_to(dossiers_path)
         expect(flash.alert).to eq('Votre dossier ne peut plus être modifié')
-      end
-    end
-
-    context 'when dossier can be updated by the owner' do
-      it 'updates the champs' do
-        subject
-
-        expect(response).to redirect_to(merci_dossier_path(dossier))
-        expect(first_champ.reload.value).to eq('beautiful value')
-        expect(dossier.reload.updated_at.year).to eq(2100)
-        expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction))
-      end
-
-      context 'without new values for champs' do
-        let(:submit_payload) do
-          {
-            id: dossier.id,
-            dossier: {
-              champs_attributes: {}
-            }
-          }
-        end
-
-        it "doesn't set last_champ_updated_at" do
-          subject
-          expect(dossier.reload.last_champ_updated_at).to eq(nil)
-        end
-      end
-
-      context 'with instructeurs ok to be notified instantly' do
-        let!(:instructeur_with_instant_email_dossier) { create(:instructeur) }
-        let!(:instructeur_without_instant_email_dossier) { create(:instructeur) }
-
-        before do
-          allow(DossierMailer).to receive(:notify_new_dossier_depose_to_instructeur).and_return(double(deliver_later: nil))
-          create(:assign_to, instructeur: instructeur_with_instant_email_dossier, procedure: dossier.procedure, instant_email_dossier_notifications_enabled: true)
-          create(:assign_to, instructeur: instructeur_without_instant_email_dossier, procedure: dossier.procedure, instant_email_dossier_notifications_enabled: false)
-        end
-
-        it "sends notification mail to instructeurs" do
-          subject
-
-          expect(DossierMailer).to have_received(:notify_new_dossier_depose_to_instructeur).once.with(dossier, instructeur_with_instant_email_dossier.email)
-          expect(DossierMailer).not_to have_received(:notify_new_dossier_depose_to_instructeur).with(dossier, instructeur_without_instant_email_dossier.email)
-        end
-      end
-
-      context 'with procedure routee' do
-        let(:procedure) { create(:procedure, :routee, :with_type_de_champ) }
-        let(:dossier_group) { create(:groupe_instructeur, procedure: procedure) }
-        let(:another_group) { create(:groupe_instructeur, procedure: procedure) }
-        let(:instructeur_of_dossier) { create(:instructeur) }
-        let(:instructeur_in_another_group) { create(:instructeur) }
-
-        context "and grope instructeur is set" do
-          let!(:dossier) { create(:dossier, groupe_instructeur: dossier_group, user: user) }
-
-          before do
-            allow(DossierMailer).to receive(:notify_new_dossier_depose_to_instructeur).and_return(double(deliver_later: nil))
-            create(:assign_to, instructeur: instructeur_of_dossier, procedure: dossier.procedure, instant_email_dossier_notifications_enabled: true, groupe_instructeur: dossier_group)
-            create(:assign_to, instructeur: instructeur_in_another_group, procedure: dossier.procedure, instant_email_dossier_notifications_enabled: true, groupe_instructeur: another_group)
-          end
-
-          it "sends notification mail to instructeurs in the correct group instructeur" do
-            subject
-
-            expect(DossierMailer).to have_received(:notify_new_dossier_depose_to_instructeur).once.with(dossier, instructeur_of_dossier.email)
-            expect(DossierMailer).not_to have_received(:notify_new_dossier_depose_to_instructeur).with(dossier, instructeur_in_another_group.email)
-          end
-        end
-
-        context "and groupe instructeur is not set" do
-          let(:dossier) { create(:dossier, procedure: procedure, user: user) }
-          let(:submit_payload) do
-            {
-              id: dossier.id,
-              dossier: {
-                champs_attributes: {
-                  id: first_champ.id,
-                  value: value
-                }
-              },
-              submit_draft: false
-            }
-          end
-
-          it "can not submit" do
-            subject
-
-            expect(flash.alert).to eq(['Le champ « Votre ville » doit être rempli'])
-          end
-        end
-      end
-
-      context "when the dossier was created on a routee procedure, but routage was later disabled" do
-        let(:dossier) { create(:dossier, groupe_instructeur: nil, user: user) }
-
-        it "sets a default groupe_instructeur" do
-          subject
-
-          expect(response).to redirect_to(merci_dossier_path(dossier))
-          expect(dossier.reload.groupe_instructeur).to eq(dossier.procedure.defaut_groupe_instructeur)
-        end
-      end
-
-      context "on an closed procedure" do
-        before { dossier.procedure.close! }
-
-        it "it does not change state" do
-          subject
-
-          expect(response).not_to redirect_to(merci_dossier_path(dossier))
-          expect(dossier.reload.state).to eq(Dossier.states.fetch(:brouillon))
-        end
       end
     end
 
@@ -523,9 +380,9 @@ describe Users::DossiersController, type: :controller do
 
     context 'when the update fails' do
       before do
-        expect_any_instance_of(Dossier).to receive(:save).and_return(false)
+        expect_any_instance_of(Dossier).to receive(:valid?).and_return(false)
         expect_any_instance_of(Dossier).to receive(:errors)
-          .and_return(double(full_messages: ['nop']))
+          .and_return(double('errors', full_messages: ['nop']))
 
         subject
       end
@@ -550,21 +407,6 @@ describe Users::DossiersController, type: :controller do
 
       it { expect(response).to render_template(:brouillon) }
       it { expect(flash.alert).to eq(['Le champ l doit être rempli.']) }
-
-      context 'and the user saves a draft' do
-        let(:payload) { submit_payload.except(:submit_draft) }
-
-        it { expect(response).to render_template(:brouillon) }
-        it { expect(flash.notice).to eq('Votre brouillon a bien été sauvegardé.') }
-        it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:brouillon)) }
-
-        context 'and the dossier is in construction' do
-          let!(:dossier) { create(:dossier, :en_construction, user: user) }
-
-          it { expect(response).to render_template(:brouillon) }
-          it { expect(flash.alert).to eq(['Le champ l doit être rempli.']) }
-        end
-      end
     end
 
     context 'when dossier has no champ' do
@@ -581,25 +423,107 @@ describe Users::DossiersController, type: :controller do
       let(:dossier) { create(:dossier) }
       let!(:invite) { create(:invite, dossier: dossier, user: user) }
 
-      context 'and the invite saves a draft' do
-        let(:payload) { submit_payload.except(:submit_draft) }
-
-        before do
-          first_champ.type_de_champ.update(mandatory: true, libelle: 'l')
-          subject
-        end
-
-        it { expect(response).to render_template(:brouillon) }
-        it { expect(flash.notice).to eq('Votre brouillon a bien été sauvegardé.') }
-        it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:brouillon)) }
-      end
-
       context 'and the invite tries to submit the dossier' do
         before { subject }
 
         it { expect(response).to redirect_to(root_path) }
         it { expect(flash.alert).to eq("Vous n’avez pas accès à ce dossier") }
       end
+    end
+  end
+
+  describe '#update_brouillon' do
+    before { sign_in(user) }
+
+    let(:procedure) { create(:procedure, :published, :with_type_de_champ, :with_piece_justificative) }
+    let!(:dossier) { create(:dossier, user: user, procedure: procedure) }
+    let(:first_champ) { dossier.champs.first }
+    let(:piece_justificative_champ) { dossier.champs.last }
+    let(:value) { 'beautiful value' }
+    let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
+    let(:now) { Time.zone.parse('01/01/2100') }
+
+    let(:submit_payload) do
+      {
+        id: dossier.id,
+        dossier: {
+          groupe_instructeur_id: dossier.groupe_instructeur_id,
+          champs_attributes: [
+            {
+              id: first_champ.id,
+              value: value
+            },
+            {
+              id: piece_justificative_champ.id,
+              piece_justificative_file: file
+            }
+          ]
+        }
+      }
+    end
+    let(:payload) { submit_payload }
+
+    subject do
+      Timecop.freeze(now) do
+        patch :update_brouillon, params: payload
+      end
+    end
+
+    context 'when the dossier cannot be updated by the user' do
+      let!(:dossier) { create(:dossier, :en_instruction, user: user) }
+
+      it 'redirects to the dossiers list' do
+        subject
+
+        expect(response).to redirect_to(dossiers_path)
+        expect(flash.alert).to eq('Votre dossier ne peut plus être modifié')
+      end
+    end
+
+    context 'when dossier can be updated by the owner' do
+      it 'updates the champs' do
+        subject
+
+        expect(response).to have_http_status(:ok)
+        expect(dossier.reload.updated_at.year).to eq(2100)
+        expect(dossier.reload.state).to eq(Dossier.states.fetch(:brouillon))
+      end
+
+      context 'without new values for champs' do
+        let(:submit_payload) do
+          {
+            id: dossier.id,
+            dossier: {
+              champs_attributes: {}
+            }
+          }
+        end
+
+        it "doesn't set last_champ_updated_at" do
+          subject
+          expect(dossier.reload.last_champ_updated_at).to eq(nil)
+        end
+      end
+    end
+
+    context 'when dossier has no champ' do
+      let(:submit_payload) { { id: dossier.id } }
+
+      it 'does not raise any errors' do
+        subject
+
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context 'when the user has an invitation but is not the owner' do
+      let(:dossier) { create(:dossier) }
+      let!(:invite) { create(:invite, dossier: dossier, user: user) }
+
+      before { subject }
+
+      it { expect(first_champ.reload.value).to eq('beautiful value') }
+      it { expect(response).to have_http_status(:ok) }
     end
   end
 
@@ -751,16 +675,12 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'when the user has an invitation but is not the owner' do
-      let(:dossier) { create(:dossier) }
+      let(:dossier) { create(:dossier, :en_construction) }
       let!(:invite) { create(:invite, dossier: dossier, user: user) }
 
-      before do
-        dossier.passer_en_construction!
-        subject
-      end
+      before { subject }
 
       it { expect(first_champ.reload.value).to eq('beautiful value') }
-      it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction)) }
       it { expect(response).to have_http_status(:ok) }
     end
 

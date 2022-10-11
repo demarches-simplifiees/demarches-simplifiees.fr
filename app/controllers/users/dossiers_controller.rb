@@ -5,13 +5,13 @@ module Users
     layout 'procedure_context', only: [:identite, :update_identite, :siret, :update_siret]
 
     ACTIONS_ALLOWED_TO_ANY_USER = [:index, :recherche, :new, :transferer_all]
-    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :demande, :messagerie, :brouillon, :update_brouillon, :modifier, :update, :create_commentaire, :papertrail, :restore]
+    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :demande, :messagerie, :brouillon, :update_brouillon, :submit_brouillon, :modifier, :update, :create_commentaire, :papertrail, :restore]
 
     before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
     before_action :ensure_ownership_or_invitation!, only: ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
-    before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_brouillon, :modifier, :update]
-    before_action :forbid_invite_submission!, only: [:update_brouillon]
-    before_action :forbid_closed_submission!, only: [:update_brouillon]
+    before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_brouillon, :submit_brouillon, :modifier, :update]
+    before_action :forbid_invite_submission!, only: [:submit_brouillon]
+    before_action :forbid_closed_submission!, only: [:submit_brouillon]
     before_action :show_demarche_en_test_banner
     before_action :store_user_location!, only: :new
 
@@ -159,35 +159,24 @@ module Users
       end
     end
 
-    # FIXME:
-    # - delegate draft save logic to champ ?
-    def update_brouillon
+    def submit_brouillon
       @dossier = dossier_with_champs
+      errors = submit_dossier_and_compute_errors
 
-      errors = update_dossier_and_compute_errors
-
-      if passage_en_construction? && errors.blank?
+      if errors.blank?
         @dossier.passer_en_construction!
         NotificationMailer.send_en_construction_notification(@dossier).deliver_later
         @dossier.groupe_instructeur.instructeurs.with_instant_email_dossier_notifications.each do |instructeur|
           DossierMailer.notify_new_dossier_depose_to_instructeur(@dossier, instructeur.email).deliver_later
         end
-        return redirect_to(merci_dossier_path(@dossier))
-      elsif errors.present?
-        flash.now.alert = errors
+
+        redirect_to merci_dossier_path(@dossier)
       else
-        flash.now.notice = t('.draft_saved')
-      end
+        flash.now.alert = errors
 
-      respond_to do |format|
-        format.html { render :brouillon }
-        format.turbo_stream do
-          @to_shows, @to_hides = @dossier.champs
-            .filter(&:conditional?)
-            .partition(&:visible?)
-            .map { |champs| champs_to_one_selector(champs) }
-
-          render(:update, layout: false)
+        respond_to do |format|
+          format.html { render :brouillon }
+          format.turbo_stream
         end
       end
     end
@@ -200,6 +189,23 @@ module Users
 
     def modifier
       @dossier = dossier_with_champs
+    end
+
+    def update_brouillon
+      @dossier = dossier_with_champs
+      update_dossier_and_compute_errors
+
+      respond_to do |format|
+        format.html { render :brouillon }
+        format.turbo_stream do
+          @to_shows, @to_hides = @dossier.champs
+            .filter(&:conditional?)
+            .partition(&:visible?)
+            .map { |champs| champs_to_one_selector(champs) }
+
+          render(:update, layout: false)
+        end
+      end
     end
 
     def update
@@ -217,8 +223,6 @@ module Users
             .filter(&:conditional?)
             .partition(&:visible?)
             .map { |champs| champs_to_one_selector(champs) }
-
-          render layout: false
         end
       end
     end
@@ -450,21 +454,33 @@ module Users
         end
         if !@dossier.save(**validation_options)
           errors += @dossier.errors.full_messages
-        elsif should_change_groupe_instructeur?
+        end
+
+        if should_change_groupe_instructeur?
           @dossier.assign_to_groupe_instructeur(groupe_instructeur_from_params)
         end
       end
+
+      if dossier.en_construction?
+        errors += @dossier.check_mandatory_champs
+      end
+
+      errors
+    end
+
+    def submit_dossier_and_compute_errors
+      errors = []
+
+      @dossier.valid?(**submit_validation_options)
+      errors += @dossier.errors.full_messages
+      errors += @dossier.check_mandatory_champs
 
       if should_fill_groupe_instructeur?
         @dossier.assign_to_groupe_instructeur(defaut_groupe_instructeur)
       end
 
-      if !save_draft?
-        errors += @dossier.check_mandatory_champs
-
-        if @dossier.groupe_instructeur.nil?
-          errors << "Le champ « #{@dossier.procedure.routing_criteria_name} » doit être rempli"
-        end
+      if @dossier.groupe_instructeur.nil?
+        errors << "Le champ « #{@dossier.procedure.routing_criteria_name} » doit être rempli"
       end
 
       errors
@@ -483,13 +499,13 @@ module Users
     end
 
     def forbid_invite_submission!
-      if passage_en_construction? && !current_user.owns?(dossier)
+      if !current_user.owns?(dossier)
         forbidden!
       end
     end
 
     def forbid_closed_submission!
-      if passage_en_construction? && !dossier.can_transition_to_en_construction?
+      if !dossier.can_transition_to_en_construction?
         forbidden!
       end
     end
@@ -516,22 +532,18 @@ module Users
       params.require(:commentaire).permit(:body, :piece_jointe)
     end
 
-    def passage_en_construction?
-      dossier.brouillon? && !save_draft?
-    end
-
-    def save_draft?
-      dossier.brouillon? && !params[:submit_draft]
+    def submit_validation_options
+      # rubocop:disable Lint/BooleanSymbol
+      # Force ActiveRecord to re-validate associated records.
+      { context: :false }
+      # rubocop:enable Lint/BooleanSymbol
     end
 
     def validation_options
-      if save_draft?
+      if dossier.brouillon?
         { context: :brouillon }
       else
-        # rubocop:disable Lint/BooleanSymbol
-        # Force ActiveRecord to re-validate associated records.
-        { context: :false }
-        # rubocop:enable Lint/BooleanSymbol
+        submit_validation_options
       end
     end
 
