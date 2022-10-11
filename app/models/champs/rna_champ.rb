@@ -23,7 +23,6 @@ class Champs::RNAChamp < Champ
   validates :value, allow_blank: true, format: {
     with: /\AW[0-9]{9}\z/, message: I18n.t(:not_a_rna, scope: 'activerecord.errors.messages')
   }
-  after_validation :update_external_id, if: -> { value_changed? }
 
   delegate :id, to: :procedure, prefix: true
 
@@ -41,9 +40,5 @@ class Champs::RNAChamp < Champ
 
   def search_terms
     etablissement.present? ? etablissement.search_terms : [value]
-  end
-
-  def update_external_id
-    self.external_id = self.value
   end
 end
