@@ -97,6 +97,9 @@ class ProcedureRevision < ApplicationRecord
   def remove_type_de_champ(stable_id)
     coordinate, tdc = coordinate_and_tdc(stable_id)
 
+    # in case of replay
+    return nil if coordinate.nil?
+
     children = children_of(tdc).to_a
     coordinate.destroy
 
