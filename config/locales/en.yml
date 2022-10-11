@@ -138,7 +138,6 @@ en:
           autosave: Your file is automatically saved after each modification. You can close the window at any time and pick up where you left off later.
           notice: "Download the notice of the procedure"
           notice_title: "To help you complete your file, you can consult the notice to this procedure."
-          submit_dossier: Submit the file
         messages:
           form:
             send_message: "Send message"
