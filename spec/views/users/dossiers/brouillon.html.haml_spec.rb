@@ -19,8 +19,9 @@ describe 'users/dossiers/brouillon.html.haml', type: :view do
     end
 
     it 'affiche un lien vers la notice' do
-      expect(response).to have_css("a[href*='/rails/active_storage/blobs/']", text: "Guide de la démarche")
+      expect(response).to have_css("a[href*='/rails/active_storage/blobs/']", text: "Télécharger le guide de la démarche")
       expect(rendered).not_to have_text("Ce lien est éphémère")
+      expect(rendered).to have_text("TXT – 11 octets")
     end
 
     it 'affiche les boutons de validation' do
@@ -33,7 +34,7 @@ describe 'users/dossiers/brouillon.html.haml', type: :view do
 
     context 'quand la démarche ne comporte pas de notice' do
       let(:procedure) { create(:procedure) }
-      it { is_expected.not_to have_link("Guide de la démarche") }
+      it { is_expected.not_to have_link("Télécharger le guide de la démarche") }
     end
   end
 

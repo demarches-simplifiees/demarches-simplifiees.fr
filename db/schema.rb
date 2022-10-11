@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_06_193737) do
+ActiveRecord::Schema.define(version: 2022_10_07_113737) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -203,6 +203,7 @@ ActiveRecord::Schema.define(version: 2022_10_06_193737) do
     t.index ["parent_id"], name: "index_champs_on_parent_id"
     t.index ["private"], name: "index_champs_on_private"
     t.index ["row"], name: "index_champs_on_row"
+    t.index ["type"], name: "index_champs_on_type"
     t.index ["type_de_champ_id", "dossier_id", "row"], name: "index_champs_on_type_de_champ_id_and_dossier_id_and_row", unique: true
     t.index ["type_de_champ_id"], name: "index_champs_on_type_de_champ_id"
   end

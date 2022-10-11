@@ -5,7 +5,6 @@ FactoryBot.define do
     sequence(:libelle) { |n| "Procedure #{n}" }
     description { "Demande de subvention à l'intention des associations" }
     organisation { "Orga DINUM" }
-    direction { "direction DINUM" }
     cadre_juridique { "un cadre juridique important" }
     published_at { nil }
     duree_conservation_dossiers_dans_ds { 3 }

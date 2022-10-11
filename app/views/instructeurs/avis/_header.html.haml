@@ -2,7 +2,9 @@
   .container
     %ul.breadcrumbs
       %li= link_to('Avis', instructeur_all_avis_path)
-      %li= link_to(dossier.procedure.libelle, procedure_instructeur_avis_index_path(avis.procedure))
+      %li
+        = link_to(procedure.libelle, procedure_instructeur_avis_index_path(avis.procedure), class: "fr-link")
+        = procedure_badge(dossier.procedure)
       %li= link_to("Dossier nº #{dossier.id}", instructeur_avis_path(avis.procedure, avis))
 
     %nav.tabs

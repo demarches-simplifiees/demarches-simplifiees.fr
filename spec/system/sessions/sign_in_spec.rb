@@ -4,7 +4,7 @@ describe 'Signin in:' do
 
   scenario 'an existing user can sign-in' do
     visit root_path
-    click_on 'Connexion'
+    click_on 'Se connecter', match: :first
 
     sign_in_with user.email, 'invalid-password'
     expect(page).to have_content 'Courriel ou mot de passe incorrect.'
@@ -16,7 +16,7 @@ describe 'Signin in:' do
 
   scenario 'an existing user can lock its account' do
     visit root_path
-    click_on 'Connexion'
+    click_on 'Se connecter', match: :first
 
     5.times { sign_in_with user.email, 'bad password' }
     expect(user.reload.access_locked?).to be false
@@ -60,7 +60,7 @@ describe 'Signin in:' do
     # For now only test the default behavior (an error message is displayed).
     scenario 'they get an error message' do
       visit root_path
-      click_on 'Connexion'
+      click_on 'Se connecter', match: :first
 
       sign_in_with user.email, password
       expect(page).to have_content('Vous devez confirmer votre compte par courriel.')

@@ -134,14 +134,15 @@
                 - else
                   %a.cell-link{ href: path }= status_badge(p.state)
 
-              %td.action-col.follow-col= render partial: 'dossier_actions',
-                locals: { procedure_id: @procedure.id,
-                          dossier_id: p.dossier_id,
-                          state: p.state,
-                          archived: p.archived,
-                          dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
-                          close_to_expiration: @statut == 'expirant',
-                          hidden_by_administration: @statut == 'supprimes_recemment' }
+              %td.action-col.follow-col
+                %ul.inline.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
+                  = render partial: 'dossier_actions', locals: { procedure_id: @procedure.id,
+                              dossier_id: p.dossier_id,
+                              state: p.state,
+                              archived: p.archived,
+                              dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
+                              close_to_expiration: @statut == 'expirant',
+                              hidden_by_administration: @statut == 'supprimes_recemment' }
 
       = pagination
     - else
