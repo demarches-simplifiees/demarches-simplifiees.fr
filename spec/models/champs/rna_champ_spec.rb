@@ -22,10 +22,4 @@ describe Champs::RNAChamp do
       it { expect(champ.for_export).to eq("W182736273") }
     end
   end
-
-  describe 'external_id' do
-    context 'when all data required for an external fetch are given' do
-      it { expect(champ.external_id).to eq("W182736273") }
-    end
-  end
 end
