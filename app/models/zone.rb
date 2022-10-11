@@ -11,7 +11,7 @@
 class Zone < ApplicationRecord
   validates :acronym, presence: true, uniqueness: true
   has_many :labels, -> { order(designated_on: :desc) }, class_name: 'ZoneLabel', inverse_of: :zone
-  has_many :procedures, -> { order(published_at: :desc) }, inverse_of: :zone
+  has_and_belongs_to_many :procedures, -> { order(published_at: :desc) }, inverse_of: :zone
 
   def current_label
     labels.first.name
@@ -28,5 +28,8 @@ class Zone < ApplicationRecord
 
   def self.available_at(date)
     Zone.all.filter { |zone| zone.available_at?(date) }.sort_by { |zone| zone.label_at(date) }
+      .map do |zone|
+      OpenStruct.new(id: zone.id, label: zone.label_at(date))
+    end
   end
 end

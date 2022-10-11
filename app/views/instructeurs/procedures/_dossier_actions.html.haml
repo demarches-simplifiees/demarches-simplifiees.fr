@@ -1,9 +1,9 @@
 - if hidden_by_administration
-  = link_to restore_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: "button" do
+  = link_to restore_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: "fr-btn fr-btn--secondary" do
     = t('views.instructeurs.dossiers.restore')
 - elsif close_to_expiration || Dossier::TERMINE.include?(state)
   .dropdown.user-dossier-actions{ data: { controller: 'menu-button' } }
-    %button.button.dropdown-button{ data: { menu_button_target: 'button' } }
+    %button.fr-btn.dropdown-button{ data: { menu_button_target: 'button' } }
       Actions
     .dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' }, id: "dossier_#{dossier_id}_actions_menu" }
       %ul.dropdown-items
@@ -33,10 +33,8 @@
 
 - elsif Dossier::EN_CONSTRUCTION_OU_INSTRUCTION.include?(state)
   - if dossier_is_followed
-    = link_to unfollow_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: 'button' do
-      %span.icon.unfollow>
+    = link_to unfollow_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: 'fr-btn fr-btn--secondary fr-icon-star-fill' do
       = t('views.instructeurs.dossiers.stop_follow')
   - else
-    = link_to follow_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: 'button' do
-      %span.icon.follow>
+    = link_to follow_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: 'fr-btn fr-btn--secondary fr-icon-star-line' do
       = t('views.instructeurs.dossiers.follow_file')

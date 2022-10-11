@@ -20,6 +20,10 @@ class UserMailerPreview < ActionMailer::Preview
     UserMailer.send_archive(Instructeur.first, Procedure.first, Archive.first)
   end
 
+  def invite_instructeur
+    UserMailer.invite_instructeur(user, 'aedfa0d0')
+  end
+
   private
 
   def user

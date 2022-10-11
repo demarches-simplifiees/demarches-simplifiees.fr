@@ -1,8 +1,8 @@
 #invites-form
-  - if dossier.invites.present?
+  - if invites.present?
     %h4= t('views.invites.form.invite_to_participate')
     %ul
-      - dossier.invites.each do |invite|
+      - invites.each do |invite|
         %li
           = invite.email
           %small{ 'data-turbo': 'true' }
@@ -26,4 +26,4 @@
           = label_tag :invite_message, t('views.invites.form.invite_message')
         = text_area_tag :invite_message, '', class: 'small', placeholder: t('views.invites.form.invite_message')
       .col
-        = submit_tag t('views.invites.form.send_invitation'), class: 'button accepted'
+        = submit_tag t('views.invites.form.send_invitation'), class: 'fr-btn fr-btn--secondary'

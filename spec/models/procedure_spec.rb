@@ -283,23 +283,22 @@ describe Procedure do
 
     describe 'duree de conservation dans ds' do
       let(:field_name) { :duree_conservation_dossiers_dans_ds }
-
-      context 'for old procedures, duree_conservation_required it true, the field gets validated' do
-        subject { create(:procedure, duree_conservation_etendue_par_ds: true) }
+      context 'by default is caped to 12' do
+        subject { create(:procedure, duree_conservation_dossiers_dans_ds: 12, max_duree_conservation_dossiers_dans_ds: 12) }
         it { is_expected.not_to allow_value(nil).for(field_name) }
         it { is_expected.not_to allow_value('').for(field_name) }
         it { is_expected.not_to allow_value('trois').for(field_name) }
         it { is_expected.to allow_value(3).for(field_name) }
-        it { is_expected.to allow_value(36).for(field_name) }
-        it { is_expected.to validate_numericality_of(field_name).is_less_than_or_equal_to(Procedure::OLD_MAX_DUREE_CONSERVATION) }
+        it { is_expected.to validate_numericality_of(field_name).is_less_than_or_equal_to(12) }
       end
-
-      context 'for new procedures, duree_conservation_required it true, the field gets validated' do
-        subject { create(:procedure, duree_conservation_etendue_par_ds: false) }
+      context 'can be over riden' do
+        subject { create(:procedure, duree_conservation_dossiers_dans_ds: 60, max_duree_conservation_dossiers_dans_ds: 60) }
         it { is_expected.not_to allow_value(nil).for(field_name) }
         it { is_expected.not_to allow_value('').for(field_name) }
         it { is_expected.not_to allow_value('trois').for(field_name) }
-        it { is_expected.to validate_numericality_of(field_name).is_less_than_or_equal_to(Procedure::NEW_MAX_DUREE_CONSERVATION) }
+        it { is_expected.to allow_value(3).for(field_name) }
+        it { is_expected.to allow_value(60).for(field_name) }
+        it { is_expected.to validate_numericality_of(field_name).is_less_than_or_equal_to(60) }
       end
     end
 
@@ -449,6 +448,7 @@ describe Procedure do
         opendata: opendata,
         duree_conservation_etendue_par_ds: true,
         duree_conservation_dossiers_dans_ds: Procedure::OLD_MAX_DUREE_CONSERVATION,
+        max_duree_conservation_dossiers_dans_ds: Procedure::OLD_MAX_DUREE_CONSERVATION,
         attestation_template: build(:attestation_template, logo: logo, signature: signature),
         types_de_champ_public: [{}, {}, { type: :drop_down_list }, { type: :piece_justificative }, { type: :repetition, children: [{}] }],
         types_de_champ_private: [{}, {}, { type: :drop_down_list }, { type: :repetition, children: [{}] }],
@@ -532,7 +532,7 @@ describe Procedure do
 
       cloned_procedure = subject
       cloned_procedure.parent_procedure_id = nil
-      expect(cloned_procedure).to have_same_attributes_as(procedure, except: ["path", "draft_revision_id", "service_id", "duree_conservation_etendue_par_ds", "duree_conservation_dossiers_dans_ds"])
+      expect(cloned_procedure).to have_same_attributes_as(procedure, except: ["path", "draft_revision_id", "service_id", "duree_conservation_etendue_par_ds", "duree_conservation_dossiers_dans_ds", 'max_duree_conservation_dossiers_dans_ds'])
     end
 
     context 'which is opendata' do
@@ -704,7 +704,7 @@ describe Procedure do
   end
 
   describe '#publish!' do
-    let(:procedure) { create(:procedure, path: 'example-path') }
+    let(:procedure) { create(:procedure, path: 'example-path', zones: [create(:zone)]) }
     let(:now) { Time.zone.now.beginning_of_minute }
 
     context 'when publishing a new procedure' do
@@ -757,7 +757,7 @@ describe Procedure do
     let(:canonical_procedure) { create(:procedure, :published) }
     let(:administrateur) { canonical_procedure.administrateurs.first }
 
-    let(:procedure) { create(:procedure, administrateurs: [administrateur]) }
+    let(:procedure) { create(:procedure, administrateurs: [administrateur], zones: [create(:zone)]) }
     let(:now) { Time.zone.now.beginning_of_minute }
 
     context 'when publishing over a previous canonical procedure' do
@@ -908,7 +908,15 @@ describe Procedure do
     end
 
     context "published procedure" do
-      let(:procedure) { create(:procedure, :published, attestation_template: create(:attestation_template), dossier_submitted_message: create(:dossier_submitted_message)) }
+      let(:procedure) do
+        create(
+          :procedure,
+          :published,
+          attestation_template: create(:attestation_template),
+          dossier_submitted_message: create(:dossier_submitted_message),
+          types_de_champ_public: [{ type: :text, libelle: 'published tdc' }]
+        )
+      end
 
       it "should reset draft revision" do
         procedure.draft_revision.add_type_de_champ(tdc_attributes)
@@ -923,6 +931,16 @@ describe Procedure do
         expect { previous_draft_revision.reload }.to raise_error(ActiveRecord::RecordNotFound)
         expect(procedure.draft_revision.attestation_template).to eq(previous_attestation_template)
         expect(procedure.draft_revision.dossier_submitted_message).to eq(previous_dossier_submitted_message)
+      end
+
+      it "should erase orphan tdc" do
+        published_tdc = procedure.published_revision.types_de_champ.first
+        draft_tdc = procedure.draft_revision.add_type_de_champ(tdc_attributes)
+
+        procedure.reset_draft_revision!
+
+        expect { published_tdc.reload }.not_to raise_error(ActiveRecord::RecordNotFound)
+        expect { draft_tdc.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
   end
@@ -1063,7 +1081,7 @@ describe Procedure do
   end
 
   describe 'suggested_path' do
-    let(:procedure) { create(:procedure, aasm_state: :publiee, libelle: 'Inscription au Collège') }
+    let(:procedure) { create(:procedure, aasm_state: :publiee, libelle: 'Inscription au Collège', zones: [create(:zone)]) }
 
     subject { procedure.suggested_path(procedure.administrateurs.first) }
 
@@ -1079,7 +1097,7 @@ describe Procedure do
 
     context 'when the suggestion conflicts with one procedure' do
       before do
-        create(:procedure, aasm_state: :publiee, path: 'inscription-au-college')
+        create(:procedure, aasm_state: :publiee, path: 'inscription-au-college', zones: [create(:zone)])
       end
 
       it { is_expected.to eq 'inscription-au-college-2' }
@@ -1087,8 +1105,8 @@ describe Procedure do
 
     context 'when the suggestion conflicts with several procedures' do
       before do
-        create(:procedure, aasm_state: :publiee, path: 'inscription-au-college')
-        create(:procedure, aasm_state: :publiee, path: 'inscription-au-college-2')
+        create(:procedure, aasm_state: :publiee, path: 'inscription-au-college', zones: [create(:zone)])
+        create(:procedure, aasm_state: :publiee, path: 'inscription-au-college-2', zones: [create(:zone)])
       end
 
       it { is_expected.to eq 'inscription-au-college-3' }
@@ -1096,7 +1114,7 @@ describe Procedure do
 
     context 'when the suggestion conflicts with another procedure of the same admin' do
       before do
-        create(:procedure, aasm_state: :publiee, path: 'inscription-au-college', administrateurs: procedure.administrateurs)
+        create(:procedure, aasm_state: :publiee, path: 'inscription-au-college', administrateurs: procedure.administrateurs, zones: [create(:zone)])
       end
 
       it { is_expected.to eq 'inscription-au-college' }
@@ -1228,6 +1246,66 @@ describe Procedure do
       before { instructeur.assign_to_procedure(procedure) }
 
       it { is_expected.to be false }
+    end
+  end
+
+  describe '.missing_zones?' do
+    before do
+      Flipper.enable :zonage
+    end
+
+    after do
+      Flipper.disable :zonage
+    end
+
+    let(:procedure) { create(:procedure, zones: []) }
+
+    subject { procedure.missing_zones? }
+
+    it { is_expected.to be true }
+
+    context 'when a procedure has zones' do
+      let(:zone) { create(:zone) }
+
+      before { procedure.zones << zone }
+
+      it { is_expected.to be false }
+    end
+  end
+
+  describe '.missing_steps' do
+    before do
+      Flipper.enable :zonage
+    end
+
+    after do
+      Flipper.disable :zonage
+    end
+
+    subject { procedure.missing_steps.include?(step) }
+
+    context 'without zone' do
+      let(:procedure) { create(:procedure, zones: []) }
+      let(:step) { :zones }
+      it { is_expected.to be_truthy }
+    end
+
+    context 'with zone' do
+      let(:procedure) { create(:procedure, zones: [create(:zone)]) }
+      let(:step) { :zones }
+      it { is_expected.to be_falsey }
+    end
+
+    context 'without service' do
+      let(:procedure) { create(:procedure, service: nil) }
+      let(:step) { :service }
+      it { is_expected.to be_truthy }
+    end
+
+    context 'with service' do
+      let(:procedure) { create(:procedure) }
+      let(:step) { :service }
+      it { is_expected.to be_truthy }
     end
   end
 

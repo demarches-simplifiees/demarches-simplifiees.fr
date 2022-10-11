@@ -158,9 +158,6 @@
     font-size: 14px;
 
     a {
-      text-decoration: underline;
-      text-decoration-style: dotted;
-
       // Remove the icon indicating an external link (for less visual noise)
       &[target="_blank"]::after {
         display: none;
