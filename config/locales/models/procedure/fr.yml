@@ -18,6 +18,7 @@ fr:
         declarative_with_state/accepte: Accepté
         api_particulier_token: Jeton API Particulier
         lien_dpo: Contact du DPO
+        routing_criteria_name: Nommination du routage
     errors:
       models:
         procedure:
