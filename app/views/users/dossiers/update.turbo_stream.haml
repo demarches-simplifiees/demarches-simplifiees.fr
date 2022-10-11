@@ -1,6 +1,4 @@
-- to_shows, to_hides = @dossier.champs.filter(&:conditional?).partition(&:visible?)
-
-- if to_shows.present?
-  = turbo_stream.show_all(to_shows.map { "##{_1.input_group_id}" }.join(','))
-- if to_hides.present?
-  = turbo_stream.hide_all(to_hides.map { "##{_1.input_group_id}" }.join(','))
+- if @to_shows.present?
+  = turbo_stream.show_all(@to_shows)
+- if @to_hides.present?
+  = turbo_stream.hide_all(@to_hides)

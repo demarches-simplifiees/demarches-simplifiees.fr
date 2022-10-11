@@ -181,7 +181,14 @@ module Users
 
       respond_to do |format|
         format.html { render :brouillon }
-        format.turbo_stream { render(:update, layout: false) }
+        format.turbo_stream do
+          @to_shows, @to_hides = @dossier.champs
+            .filter(&:conditional?)
+            .partition(&:visible?)
+            .map { |champs| champs_to_one_selector(champs) }
+
+          render(:update, layout: false)
+        end
       end
     end
 
@@ -205,7 +212,14 @@ module Users
 
       respond_to do |format|
         format.html { render :modifier }
-        format.turbo_stream { render layout: false }
+        format.turbo_stream do
+          @to_shows, @to_hides = @dossier.champs
+            .filter(&:conditional?)
+            .partition(&:visible?)
+            .map { |champs| champs_to_one_selector(champs) }
+
+          render layout: false
+        end
       end
     end
 
@@ -520,6 +534,13 @@ module Users
         { context: :false }
         # rubocop:enable Lint/BooleanSymbol
       end
+    end
+
+    def champs_to_one_selector(champs)
+      champs
+        .map(&:input_group_id)
+        .map { |id| "##{id}" }
+        .join(',')
     end
   end
 end
