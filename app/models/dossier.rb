@@ -241,19 +241,8 @@ class Dossier < ApplicationRecord
       .joins(:traitements)
       .where(traitements: { processed_at: date.beginning_of_month..date.end_of_month })
   end
-  scope :downloadable_sorted, -> {
-    state_not_brouillon
-      .visible_by_administration
-      .includes(
-        :user,
-        :individual,
-        :followers_instructeurs,
-        :traitement,
-        :groupe_instructeur,
-        :etablissement,
-        procedure: [:groupe_instructeurs],
-        avis: [:claimant, :expert]
-      ).order(depose_at: 'asc')
+  scope :ordered_for_export, -> {
+    order(depose_at: 'asc')
   }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
@@ -434,7 +423,16 @@ class Dossier < ApplicationRecord
   end
 
   def self.downloadable_sorted_batch
-    DossierPreloader.new(downloadable_sorted).in_batches
+    DossierPreloader.new(includes(
+      :user,
+      :individual,
+      :followers_instructeurs,
+      :traitement,
+      :groupe_instructeur,
+      :etablissement,
+      procedure: [:groupe_instructeurs],
+      avis: [:claimant, :expert]
+    ).ordered_for_export).in_batches
   end
 
   def user_deleted?
@@ -1262,11 +1260,12 @@ class Dossier < ApplicationRecord
       .pluck('avis.id, experts_procedures.id')
 
     # rubocop:disable Lint/UnusedBlockArgument
-    avis_ids = avis_experts_procedures_ids
+    avis = avis_experts_procedures_ids
       .uniq { |(avis_id, experts_procedures_id)| experts_procedures_id }
       .map { |(avis_id, _)| avis_id }
+      .then { |avis_ids| Avis.find(avis_ids) }
     # rubocop:enable Lint/UnusedBlockArgument
 
-    avis_ids.each { |avis_id| ExpertMailer.send_dossier_decision(avis_id).deliver_later }
+    avis.each { |a| ExpertMailer.send_dossier_decision_v2(a).deliver_later }
   end
 end

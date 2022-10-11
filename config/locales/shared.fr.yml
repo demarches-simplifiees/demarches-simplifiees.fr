@@ -8,7 +8,7 @@ fr:
       header:
         expires_at:
           brouillon: "Expirera le %{date} (%{duree_conservation_totale} mois après la création du dossier)"
-          en_construction: "Expirera le %{date} (%{duree_conservation_totale} mois après la dernière modification du dossier)"
+          en_construction: "Expirera le %{date} (%{duree_conservation_totale} mois après le dépôt du dossier)"
           en_instruction: "Ce dossier est en instruction, il n'expirera pas"
           accepte: "Expirera le %{date}  (%{duree_conservation_totale} mois après l'acceptation du dossier)"
           refuse: "Expirera le %{date}  (%{duree_conservation_totale} mois après le refus du dossier)"

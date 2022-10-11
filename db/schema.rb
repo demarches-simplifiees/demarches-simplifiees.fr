@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_11_134914) do
+ActiveRecord::Schema.define(version: 2022_10_07_113737) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -203,6 +203,7 @@ ActiveRecord::Schema.define(version: 2022_09_11_134914) do
     t.index ["parent_id"], name: "index_champs_on_parent_id"
     t.index ["private"], name: "index_champs_on_private"
     t.index ["row"], name: "index_champs_on_row"
+    t.index ["type"], name: "index_champs_on_type"
     t.index ["type_de_champ_id", "dossier_id", "row"], name: "index_champs_on_type_de_champ_id_and_dossier_id_and_row", unique: true
     t.index ["type_de_champ_id"], name: "index_champs_on_type_de_champ_id"
   end
@@ -562,6 +563,7 @@ ActiveRecord::Schema.define(version: 2022_09_11_134914) do
     t.text "message"
     t.datetime "updated_at"
     t.integer "user_id"
+    t.index ["dossier_id"], name: "index_invites_on_dossier_id"
     t.index ["email", "dossier_id"], name: "index_invites_on_email_and_dossier_id", unique: true
   end
 
@@ -652,6 +654,7 @@ ActiveRecord::Schema.define(version: 2022_09_11_134914) do
     t.string "lien_dpo"
     t.string "lien_notice"
     t.string "lien_site_web"
+    t.integer "max_duree_conservation_dossiers_dans_ds", default: 12
     t.text "monavis_embed"
     t.boolean "opendata", default: true
     t.string "organisation"
@@ -681,6 +684,15 @@ ActiveRecord::Schema.define(version: 2022_09_11_134914) do
     t.index ["published_revision_id"], name: "index_procedures_on_published_revision_id"
     t.index ["service_id"], name: "index_procedures_on_service_id"
     t.index ["zone_id"], name: "index_procedures_on_zone_id"
+  end
+
+  create_table "procedures_zones", id: false, force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.bigint "procedure_id"
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "zone_id"
+    t.index ["procedure_id"], name: "index_procedures_zones_on_procedure_id"
+    t.index ["zone_id"], name: "index_procedures_zones_on_zone_id"
   end
 
   create_table "received_mails", id: :serial, force: :cascade do |t|

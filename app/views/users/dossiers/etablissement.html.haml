@@ -41,5 +41,5 @@
         = render partial: 'users/dossiers/etablissement/infos_entreprise', locals: { etablissement: etablissement }
 
     .actions
-      = link_to 'Utiliser un autre numéro SIRET', siret_dossier_path(@dossier), class: 'button'
-      = link_to 'Continuer avec ces informations', brouillon_dossier_path(@dossier), class: 'button primary'
+      = link_to 'Utiliser un autre numéro SIRET', siret_dossier_path(@dossier), class: 'fr-btn fr-btn--secondary'
+      = link_to 'Continuer avec ces informations', brouillon_dossier_path(@dossier), class: 'fr-btn'

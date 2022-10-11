@@ -1,0 +1,33 @@
+en:
+  activerecord:
+    models:
+      procedure:
+        one: Procedure
+        other: Procedure
+    attributes:
+      procedure:
+        path: Public link
+        organisation: Service
+        duree_conservation_dossiers_dans_ds: Duration files will be kept
+        max_duree_conservation_dossiers_dans_ds: Max duration allowed to keep files
+        aasm_state/brouillon: Draft
+        aasm_state/publiee: Published
+        aasm_state/close: Close
+        aasm_state/hidden: Destroyed
+        declarative_with_state/en_instruction: Instruction
+        declarative_with_state/accepte: Accepted
+        api_particulier_token: Token API Particulier
+        lien_dpo: DPO contact
+        routing_criteria_name: Routee criteria name
+    errors:
+      models:
+        procedure:
+          attributes:
+            api_particulier_token:
+              invalid: 'invalid format'
+            draft_types_de_champ:
+              format: 'Public field %{message}'
+            draft_types_de_champ_private:
+              format: 'Private field %{message}'
+            lien_dpo:
+              invalid_uri_or_email: "Fill in with an email or a link"
