@@ -38,7 +38,7 @@
                 - if request.path == new_user_registration_path
                   %li
                     .fr-hidden-sm.fr-unhidden-lg.fr-link--sm= t('views.shared.account.already_user_question')
-                %li= link_to t('views.shared.account.signin'), new_user_session_path, class: "fr-btn"
+                %li= link_to t('views.shared.account.signin'), new_user_session_path, class: "fr-btn fr-btn--tertiary fr-icon-account-circle-fill fr-btn--icon-left"
 
               %li
                 - if dossier.present? && nav_bar_profile == :user

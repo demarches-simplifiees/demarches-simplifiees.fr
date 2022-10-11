@@ -38,6 +38,7 @@
     "tiny-invariant": "^1.2.0",
     "trix": "^1.2.3",
     "turbo-polyfills": "^0.3.0",
+    "use-debounce": "^8.0.4",
     "whatwg-fetch": "^3.0.0",
     "yet-another-abortcontroller-polyfill": "^0.0.4",
     "zod": "^3.17.10"

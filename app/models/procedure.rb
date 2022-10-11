@@ -62,7 +62,7 @@ class Procedure < ApplicationRecord
 
   include Discard::Model
   self.discard_column = :hidden_at
-  self.ignored_columns = [:durees_conservation_required, :cerfa_flag, :test_started_at]
+  self.ignored_columns = [:direction, :durees_conservation_required, :cerfa_flag, :test_started_at]
 
   default_scope -> { kept }
 
@@ -323,6 +323,7 @@ class Procedure < ApplicationRecord
 
   validates :api_entreprise_token, jwt_token: true, allow_blank: true
   validates :api_particulier_token, format: { with: /\A[A-Za-z0-9\-_=.]{15,}\z/ }, allow_blank: true
+  validates :routing_criteria_name, presence: true, allow_blank: false
 
   before_save :update_juridique_required
   after_initialize :ensure_path_exists
@@ -803,6 +804,7 @@ class Procedure < ApplicationRecord
     if published_revision.present? && draft_changed?
       transaction do
         reset!
+        draft_revision.types_de_champ.filter(&:only_present_on_draft?).each(&:destroy)
         draft_revision.update(attestation_template: nil, dossier_submitted_message: nil)
         draft_revision.destroy
         update!(draft_revision: create_new_revision(published_revision))

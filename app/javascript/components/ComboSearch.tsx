@@ -1,9 +1,5 @@
-import React, {
-  useState,
-  useRef,
-  useDeferredValue,
-  ChangeEventHandler
-} from 'react';
+import React, { useState, useRef, ChangeEventHandler } from 'react';
+import { useDebounce } from 'use-debounce';
 import { useQuery } from 'react-query';
 import {
   Combobox,
@@ -35,6 +31,7 @@ export type ComboSearchProps<Result> = {
   describedby?: string;
   className?: string;
   placeholder?: string;
+  debounceDelay?: number;
 };
 
 type QueryKey = readonly [
@@ -54,6 +51,7 @@ function ComboSearch<Result>({
   transformResults = (_, results) => results as Result[],
   id,
   describedby,
+  debounceDelay = 0,
   ...props
 }: ComboSearchProps<Result>) {
   invariant(id || onChange, 'ComboSearch: `id` or `onChange` are required');
@@ -63,7 +61,7 @@ function ComboSearch<Result>({
   const [, setExternalId] = useHiddenField(group, 'external_id');
   const initialValue = externalValue ? externalValue : controlledValue;
   const [searchTerm, setSearchTerm] = useState('');
-  const debouncedSearchTerm = useDeferredValue(searchTerm);
+  const [debouncedSearchTerm] = useDebounce(searchTerm, debounceDelay);
   const [value, setValue] = useState(initialValue);
   const resultsMap = useRef<
     Record<string, { key: string; value: string; result: Result }>

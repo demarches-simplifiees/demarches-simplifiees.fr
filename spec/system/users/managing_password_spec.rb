@@ -6,7 +6,7 @@ describe 'Managing password:', js: true do
     scenario 'a simple user can reset their password' do
       visit root_path
       within('.fr-header .fr-container .fr-header__tools .fr-btns-group') do
-        click_on 'Connexion'
+        click_on 'Se connecter'
       end
       click_on 'Mot de passe oublié ?'
       expect(page).to have_current_path(new_user_password_path)
@@ -37,7 +37,7 @@ describe 'Managing password:', js: true do
     scenario 'an admin can reset their password', js: true do
       visit root_path
       within('.fr-header .fr-container .fr-header__tools .fr-btns-group') do
-        click_on 'Connexion'
+        click_on 'Se connecter'
       end
       click_on 'Mot de passe oublié ?'
       expect(page).to have_current_path(new_user_password_path)

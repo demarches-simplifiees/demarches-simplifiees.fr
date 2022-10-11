@@ -1,36 +1,36 @@
 %section.list-avis
   %h1.tab-title
     Avis des invités
-    %span.count= avis.count
+    %span.fr-badge= avis.count
 
   %ul
     - avis.each do |avis|
       %li.one-avis.flex.align-start
         .width-100
-          %h2.claimant
+          %h2.claimant.fr-h6
             = "#{t('claimant', scope: 'activerecord.attributes.avis')} :"
-            %span.email= (safe_claimant_email(avis.claimant) == current_expert.email) ? 'Vous' : safe_claimant_email(avis.claimant)
+            %span.fr-text--xs.fr-text-mention--grey.font-weight-normal= (safe_claimant_email(avis.claimant) == current_expert.email) ? 'Vous' : safe_claimant_email(avis.claimant)
             - if avis.confidentiel?
-              %span.confidentiel
+              %span.confidentiel.font-weight-normal
                 = t('confidentiel', scope: 'activerecord.attributes.avis')
                 %span.icon.lock{ title: t('confidentiel', scope: 'helpers.hint') }
-            %span.date{ class: highlight_if_unseen_class(avis_seen_at, avis.created_at) }
+            %span.date.fr-text--xs.fr-text-mention--grey.font-weight-normal{ class: highlight_if_unseen_class(avis_seen_at, avis.created_at) }
               = t('demande_envoyee_le', scope: 'views.shared.avis', date: l(avis.created_at, format: '%d/%m/%y à %H:%M'))
           %p= avis.introduction
 
           .answer.flex.align-start
             %span.icon.bubble.avis-icon
             .width-100
-              %h2.instructeur
+              %h2.instructeur.fr-h6
                 = (avis.expert.email == current_expert.email) ? 'Vous' : avis.expert.email
                 - if avis.answer.present?
                   - if avis.revoked?
-                    %span.waiting{ class: highlight_if_unseen_class(avis_seen_at, avis.revoked_at) }
+                    %span.waiting.font-weight-normal{ class: highlight_if_unseen_class(avis_seen_at, avis.revoked_at) }
                       = t('demande_revoquee_le', scope: 'views.shared.avis', date: l(avis.revoked_at, format: '%d/%m/%y à %H:%M'))
-                  %span.date{ class: highlight_if_unseen_class(avis_seen_at, avis.updated_at) }
+                  %span.date.fr-text--xs.fr-text-mention--grey.font-weight-normal{ class: highlight_if_unseen_class(avis_seen_at, avis.updated_at) }
                     = t('reponse_donnee_le', scope: 'views.shared.avis', date: l(avis.updated_at, format: '%d/%m/%y à %H:%M'))
                 - else
-                  %span.waiting
+                  %span.waiting.font-weight-normal
                     = t('en_attente', scope: 'views.shared.avis')
               - if avis.piece_justificative_file.attached?
                 = render Attachment::ShowComponent.new(attachment: avis.piece_justificative_file.attachment)
