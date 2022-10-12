@@ -2,8 +2,9 @@
   = form_tag admin_procedure_condition_path(@procedure_id, @tdc.stable_id), method: :patch, class: 'form width-100' do
     .conditionnel.mt-2.width-100
       .flex
-        %p.mr-2 Logique conditionnelle
-        = logic_conditionnel_button
+        %p
+          Logique conditionnelle
+          = logic_conditionnel_button
 
       = render TypesDeChampEditor::ConditionsErrorsComponent.new(conditions: condition_per_row, upper_tdcs: @upper_tdcs)
 
