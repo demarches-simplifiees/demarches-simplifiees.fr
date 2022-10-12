@@ -8,6 +8,7 @@
 
   h2 {
     margin-bottom: $default-padding;
+    font-size: 16px;
 
     .email {
       font-weight: bold;
@@ -74,6 +75,10 @@
 }
 
 .list-avis {
+  ul {
+    padding-inline-start: 0;
+  }
+
   .one-avis {
     border-top: 1px solid $grey;
     padding: $default-padding 0;
@@ -84,6 +89,7 @@
 
     h2 {
       margin-bottom: $default-spacer;
+      font-size: 16px;
 
       .email {
         font-weight: bold;
