@@ -4,18 +4,9 @@ require 'capybara/email/rspec'
 require 'selenium/webdriver'
 
 Capybara.register_driver :chrome do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome)
-end
-
-Capybara.register_driver :headless_chrome do |app|
   options = Selenium::WebDriver::Chrome::Options.new
   options.add_argument('--no-sandbox') unless ENV['SANDBOX']
-  options.add_argument('--headless') unless ENV['NO_HEADLESS']
-  options.add_argument('--window-size=1440,900')
-
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: ['disable-dev-shm-usage', 'disable-software-rasterizer', 'mute-audio', 'window-size=1440,900'] }
-  )
+  options.add_argument('--mute-audio')
 
   download_path = Capybara.save_path
   # Chromedriver 77 requires setting this for headless mode on linux
@@ -23,10 +14,28 @@ Capybara.register_driver :headless_chrome do |app|
   options.add_preference('download.default_directory', download_path)
   options.add_preference(:download, default_directory: download_path)
 
-  Capybara::Selenium::Driver.new(app,
-    browser: :chrome,
-    desired_capabilities: capabilities,
-    options: options).tap do |driver|
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options).tap do |driver|
+    # Set download dir for Chrome < 77
+    driver.browser.download_path = download_path
+  end
+end
+
+Capybara.register_driver :headless_chrome do |app|
+  options = Selenium::WebDriver::Chrome::Options.new
+  options.add_argument('--no-sandbox') unless ENV['SANDBOX']
+  options.add_argument('--headless')
+  options.add_argument('--window-size=1440,900')
+  options.add_argument('--disable-dev-shm-usage')
+  options.add_argument('--disable-software-rasterizer')
+  options.add_argument('--mute-audio')
+
+  download_path = Capybara.save_path
+  # Chromedriver 77 requires setting this for headless mode on linux
+  # Different versions of Chrome/selenium-webdriver require setting differently - just set them all
+  options.add_preference('download.default_directory', download_path)
+  options.add_preference(:download, default_directory: download_path)
+
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options).tap do |driver|
     # Set download dir for Chrome < 77
     driver.browser.download_path = download_path
   end
@@ -53,7 +62,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each, type: :system, js: true) do
-    driven_by :headless_chrome
+    driven_by ENV['NO_HEADLESS'] ? :chrome : :headless_chrome
   end
 
   # Set the user preferred language before Javascript system specs.
