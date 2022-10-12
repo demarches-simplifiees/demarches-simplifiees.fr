@@ -153,6 +153,7 @@ Rails.application.routes.draw do
 
   namespace :champs do
     get ':champ_id/siret', to: 'siret#show', as: :siret
+    get ':champ_id/rna', to: 'rna#show', as: :rna
     get ':champ_id/dossier_link', to: 'dossier_link#show', as: :dossier_link
     post ':champ_id/repetition', to: 'repetition#add', as: :repetition
     delete ':champ_id/repetition', to: 'repetition#remove'

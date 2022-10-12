@@ -57,6 +57,7 @@ class Champ < ApplicationRecord
     :dgfip?,
     :pole_emploi?,
     :mesri?,
+    :rna?,
     :siret?,
     :stable_id,
     to: :type_de_champ

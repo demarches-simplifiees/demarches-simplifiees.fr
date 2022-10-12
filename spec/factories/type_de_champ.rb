@@ -140,6 +140,9 @@ FactoryBot.define do
     factory :type_de_champ_siret do
       type_champ { TypeDeChamp.type_champs.fetch(:siret) }
     end
+    factory :type_de_champ_rna do
+      type_champ { TypeDeChamp.type_champs.fetch(:rna) }
+    end
     factory :type_de_champ_iban do
       type_champ { TypeDeChamp.type_champs.fetch(:iban) }
     end

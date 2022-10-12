@@ -185,7 +185,7 @@ ActiveRecord::Schema.define(version: 2022_10_07_113737) do
   create_table "champs", id: :serial, force: :cascade do |t|
     t.datetime "created_at"
     t.jsonb "data"
-    t.integer "dossier_id"
+    t.integer "dossier_id", null: false
     t.integer "etablissement_id"
     t.string "external_id"
     t.string "fetch_external_data_exceptions", array: true
@@ -194,7 +194,7 @@ ActiveRecord::Schema.define(version: 2022_10_07_113737) do
     t.datetime "rebased_at"
     t.integer "row"
     t.string "type"
-    t.integer "type_de_champ_id"
+    t.integer "type_de_champ_id", null: false
     t.datetime "updated_at"
     t.string "value"
     t.jsonb "value_json"
@@ -874,11 +874,11 @@ ActiveRecord::Schema.define(version: 2022_10_07_113737) do
   end
 
   create_table "zone_labels", force: :cascade do |t|
-    t.datetime "created_at", precision: 6, null: false
+    t.bigint "zone_id", null: false
     t.date "designated_on", null: false
     t.string "name", null: false
+    t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "zone_id", null: false
     t.index ["zone_id"], name: "index_zone_labels_on_zone_id"
   end
 
@@ -890,6 +890,7 @@ ActiveRecord::Schema.define(version: 2022_10_07_113737) do
     t.index ["acronym"], name: "index_zones_on_acronym", unique: true
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "administrateurs", "users"
   add_foreign_key "administrateurs_instructeurs", "administrateurs"
@@ -906,6 +907,9 @@ ActiveRecord::Schema.define(version: 2022_10_07_113737) do
   add_foreign_key "bulk_messages_groupe_instructeurs", "bulk_messages"
   add_foreign_key "bulk_messages_groupe_instructeurs", "groupe_instructeurs"
   add_foreign_key "champs", "champs", column: "parent_id"
+  add_foreign_key "champs", "dossiers"
+  add_foreign_key "champs", "etablissements"
+  add_foreign_key "champs", "types_de_champ"
   add_foreign_key "closed_mails", "procedures"
   add_foreign_key "commentaires", "dossiers"
   add_foreign_key "commentaires", "experts"
@@ -915,6 +919,7 @@ ActiveRecord::Schema.define(version: 2022_10_07_113737) do
   add_foreign_key "dossiers", "groupe_instructeurs"
   add_foreign_key "dossiers", "procedure_revisions", column: "revision_id"
   add_foreign_key "dossiers", "users"
+  add_foreign_key "etablissements", "dossiers"
   add_foreign_key "experts", "users"
   add_foreign_key "experts_procedures", "experts"
   add_foreign_key "experts_procedures", "procedures"

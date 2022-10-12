@@ -1,0 +1,10 @@
+en:
+  activemodel:
+    attributes:
+      rna_champ:
+        data:
+          association_titre: Association name
+          association_objet: Association purpose
+          association_date_creation: Creation date
+          association_date_declaration: Declaration date
+          association_date_publication: Publication date
