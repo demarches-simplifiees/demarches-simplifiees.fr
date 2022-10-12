@@ -27,7 +27,7 @@ describe 'experts/avis/instruction.html.haml', type: :view do
   context 'when an expert is not allowed to invite another expert' do
     let(:confidentiel) { false }
     before do
-      Flipper.enable_actor(:expert_not_allowed_to_invite, avis.procedure)
+      Flipper.enable(:expert_not_allowed_to_invite, avis.procedure)
     end
     it { is_expected.to have_no_text("Inviter des personnes à donner leur avis") }
   end
