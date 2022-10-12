@@ -3,11 +3,13 @@ class ApplicationJob < ActiveJob::Base
 
   DEFAULT_MAX_ATTEMPTS_JOBS = 25
 
-  before_perform do |job|
-    Rails.logger.info("#{job.class.name} started at #{Time.zone.now}")
-  end
+  attr_writer :request_id
 
-  after_perform do |job|
+  around_perform do |job, block|
+    Rails.logger.info("#{job.class.name} started at #{Time.zone.now}")
+    Current.set(request_id: job.request_id) do
+      block.call
+    end
     Rails.logger.info("#{job.class.name} ended at #{Time.zone.now}")
   end
 
@@ -17,5 +19,18 @@ class ApplicationJob < ActiveJob::Base
 
   def max_attempts
     ENV.fetch("MAX_ATTEMPTS_JOBS", DEFAULT_MAX_ATTEMPTS_JOBS).to_i
+  end
+
+  def request_id
+    @request_id ||= Current.request_id
+  end
+
+  def serialize
+    super.merge('request_id' => request_id)
+  end
+
+  def deserialize(job_data)
+    super
+    self.request_id = job_data['request_id']
   end
 end
