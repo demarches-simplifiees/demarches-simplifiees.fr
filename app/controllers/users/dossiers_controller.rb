@@ -448,7 +448,6 @@ module Users
         if @dossier.champs.any?(&:changed_for_autosave?)
           @dossier.last_champ_updated_at = Time.zone.now
         end
-
         if !@dossier.save(**validation_options)
           errors += @dossier.errors.full_messages
         elsif should_change_groupe_instructeur?

@@ -305,9 +305,12 @@ fr:
         << : *default_attributes
       procedure:
         zone: La démarche est mise en œuvre par
+      champs:
+        value: Valeur du champ
     errors:
       messages:
         not_a_phone: 'Numéro de téléphone invalide'
+        not_a_rna: 'Numéro RNA invalide'
       models:
         attestation_template:
           attributes:

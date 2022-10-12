@@ -55,6 +55,7 @@ class TypeDeChamp < ApplicationRecord
     explication: CADRE,
     dossier_link: CADRE,
     piece_justificative: STANDARD,
+    rna: REFERENTIEL_EXTERNE,
     siret: PAIEMENT_IDENTIFICATION,
     carte: REFERENTIEL_EXTERNE,
     repetition: CADRE,
@@ -92,6 +93,7 @@ class TypeDeChamp < ApplicationRecord
     explication: 'explication',
     dossier_link: 'dossier_link',
     piece_justificative: 'piece_justificative',
+    rna: 'rna',
     carte: 'carte',
     repetition: 'repetition',
     titre_identite: 'titre_identite',
@@ -309,6 +311,10 @@ class TypeDeChamp < ApplicationRecord
 
   def cnaf?
     type_champ == TypeDeChamp.type_champs.fetch(:cnaf)
+  end
+
+  def rna?
+    type_champ == TypeDeChamp.type_champs.fetch(:rna)
   end
 
   def dgfip?

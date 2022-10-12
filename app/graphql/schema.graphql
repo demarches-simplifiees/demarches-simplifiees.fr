@@ -2206,6 +2206,11 @@ enum TypeDeChamp {
   repetition
 
   """
+  RNA
+  """
+  rna
+
+  """
   SIRET
   """
   siret
