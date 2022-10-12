@@ -3,6 +3,5 @@
     = render EditableChamp::RepetitionRowComponent.new(form: @form, champ: @champ, row: champs, seen_at: @seen_at)
 
 .actions{ 'data-turbo': 'true' }
-  = link_to champs_repetition_path(@champ.id), data: { turbo_method: :post }, class: 'button add-row' do
-    %span.icon.add
+  = link_to champs_repetition_path(@champ.id), data: { turbo_method: :post }, class: 'fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-circle-line fr-mb-3w' do
     Ajouter un élément pour « #{@champ.libelle} »
