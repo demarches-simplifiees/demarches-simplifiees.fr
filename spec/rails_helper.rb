@@ -120,6 +120,10 @@ RSpec.configure do |config|
     end
   end
 
+  config.before(:each, type: Proc.new { |type| type != :system }) do
+    Flipper.instance = Flipper.new(Flipper::Adapters::Memory.new)
+  end
+
   config.include Shoulda::Matchers::ActiveRecord, type: :model
   config.include Shoulda::Matchers::ActiveModel, type: :model
   config.include Devise::Test::ControllerHelpers, type: :controller
