@@ -6,6 +6,6 @@
   %span.updated-at{ class: highlight_if_unseen_class }
     = "modifié le #{try_format_datetime(@champ.updated_at)}"
 
-- if @champ.rebased_at.present? && @champ.rebased_at > (@seen_at || @champ.updated_at) && controller.current_user.owns_or_invite?(@champ.dossier)
+- if @champ.rebased_at.present? && @champ.rebased_at > (@seen_at || @champ.updated_at) && current_user.owns_or_invite?(@champ.dossier)
   %span.updated-at.highlighted
     Le type de ce @champ où sa description a été modifiée par l'administration. Vérifier son contenu.
