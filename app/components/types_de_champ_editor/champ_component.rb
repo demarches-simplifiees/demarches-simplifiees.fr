@@ -56,7 +56,7 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
   end
 
   def types_of_type_de_champ
-    if Flipper.enabled?(:categories_type_de_champ, controller.current_user)
+    if feature_enabled?(:categories_type_de_champ)
       cat_scope = "activerecord.attributes.type_de_champ.categorie"
       tdc_scope = "activerecord.attributes.type_de_champ.type_champs"
 
@@ -105,7 +105,7 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
 
   def filter_featured_type_champ(type_champ)
     feature_name = TypeDeChamp::FEATURE_FLAGS[type_champ]
-    feature_name.blank? || Flipper.enabled?(feature_name, helpers.current_user)
+    feature_name.blank? || feature_enabled?(feature_name)
   end
 
   def filter_type_champ(type_champ)
@@ -133,7 +133,7 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
     if type_de_champ.private? || coordinate.child?
       false
     else
-      procedure.feature_enabled?(:procedure_conditional) || Flipper.enabled?(:conditional, controller.current_user)
+      procedure.feature_enabled?(:procedure_conditional)
     end
   end
 end

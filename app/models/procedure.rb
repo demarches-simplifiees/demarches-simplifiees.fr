@@ -666,7 +666,7 @@ class Procedure < ApplicationRecord
   end
 
   def missing_zones?
-    if Flipper.enabled?(:zonage)
+    if feature_enabled?(:zonage)
       zones.empty?
     else
       false
