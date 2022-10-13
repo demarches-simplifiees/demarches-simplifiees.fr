@@ -38,6 +38,8 @@ class Logic::BinaryOperator < Logic::Term
 
   def to_s(type_de_champs) = "(#{@left.to_s(type_de_champs)} #{operation} #{@right.to_s(type_de_champs)})"
 
+  def to_expression = "(#{@left.to_expression} #{operation} #{@right.to_expression})"
+
   def ==(other)
     self.class == other.class &&
       @left == other.left &&

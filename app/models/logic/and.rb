@@ -8,4 +8,6 @@ class Logic::And < Logic::NAryOperator
   end
 
   def to_s(type_de_champs) = "(#{@operands.map { |o| o.to_s(type_de_champs) }.join(' && ')})"
+
+  def to_expression = "(#{@operands.map(&:to_expression).join(' && ')})"
 end

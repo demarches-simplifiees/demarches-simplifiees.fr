@@ -396,6 +396,10 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def to_typed_id
+    self.class.to_typed_id(stable_id)
+  end
+
+  def self.to_typed_id(stable_id)
     GraphQL::Schema::UniqueWithinType.encode('Champ', stable_id)
   end
 

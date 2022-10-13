@@ -45,6 +45,8 @@ class Logic::ChampValue < Logic::Term
 
   def to_s(type_de_champs) = type_de_champ(type_de_champs)&.libelle # TODO: gerer le cas ou un tdc est supprimé
 
+  def to_expression = "@#{TypeDeChamp.to_typed_id(stable_id)}"
+
   def type(type_de_champs)
     case type_de_champ(type_de_champs)&.type_champ # TODO: gerer le cas ou un tdc est supprimé
     when MANAGED_TYPE_DE_CHAMP.fetch(:yes_no),

@@ -18,6 +18,10 @@ class Logic::Constant < Logic::Term
     end
   end
 
+  def to_expression
+    @value.to_json
+  end
+
   def type(_type_de_champs = [])
     case @value
     when TrueClass, FalseClass
