@@ -160,7 +160,7 @@ module Users
     end
 
     def submit_brouillon
-      @dossier = dossier_with_champs
+      @dossier = dossier_with_champs(pj_template: false)
       errors = submit_dossier_and_compute_errors
 
       if errors.blank?
@@ -209,7 +209,7 @@ module Users
     end
 
     def update
-      @dossier = dossier_with_champs
+      @dossier = dossier_with_champs(pj_template: false)
       errors = update_dossier_and_compute_errors
 
       if errors.present?
@@ -409,8 +409,8 @@ module Users
                      end
     end
 
-    def dossier_with_champs
-      DossierPreloader.load_one(dossier)
+    def dossier_with_champs(pj_template: true)
+      DossierPreloader.load_one(dossier, pj_template:)
     end
 
     def should_change_groupe_instructeur?
