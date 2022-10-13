@@ -29,15 +29,16 @@ class Logic::ChampValue < Logic::Term
     return nil if !targeted_champ.visible?
     return nil if targeted_champ.blank?
 
-    case type_de_champ(champs.map(&:type_de_champ)).type_champ
-    when MANAGED_TYPE_DE_CHAMP.fetch(:yes_no),
-      MANAGED_TYPE_DE_CHAMP.fetch(:checkbox)
+    # on dépense 22ms ici, à cause du map, mais on doit pouvoir passer par un champ type
+    case targeted_champ.type
+    when "Champs::YesNoChamp",
+      "Champs::CheckboxChamp"
       targeted_champ.true?
-    when MANAGED_TYPE_DE_CHAMP.fetch(:integer_number), MANAGED_TYPE_DE_CHAMP.fetch(:decimal_number)
+    when "Champs::IntegerNumberChamp", "Champs::DecimalNumberChamp"
       targeted_champ.for_api
-    when MANAGED_TYPE_DE_CHAMP.fetch(:drop_down_list)
+    when "Champs::DropDownListChamp"
       targeted_champ.selected
-    when MANAGED_TYPE_DE_CHAMP.fetch(:multiple_drop_down_list)
+    when "Champs::MultipleDropDownListChamp"
       targeted_champ.selected_options
     end
   end

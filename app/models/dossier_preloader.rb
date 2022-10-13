@@ -17,8 +17,8 @@ class DossierPreloader
     dossiers
   end
 
-  def self.load_one(dossier)
-    DossierPreloader.new([dossier]).all(pj_template: true).first
+  def self.load_one(dossier, pj_template: false)
+    DossierPreloader.new([dossier]).all(pj_template: pj_template).first
   end
 
   private
