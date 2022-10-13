@@ -165,6 +165,11 @@ type ChampDescriptor {
   champDescriptors: [ChampDescriptor!]
 
   """
+  Logique conditionelle
+  """
+  condition: String
+
+  """
   Description du champ.
   """
   description: String

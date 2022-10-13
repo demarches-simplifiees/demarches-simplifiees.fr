@@ -13,9 +13,14 @@ module Types
     field :label, String, "Libellé du champ.", null: false, method: :libelle
     field :description, String, "Description du champ.", null: true
     field :required, Boolean, "Est-ce que le champ est obligatoire ?", null: false, method: :mandatory?
+    field :condition, String, "Logique conditionelle", null: true
 
     field :champ_descriptors, [Types::ChampDescriptorType], "Description des champs d’un bloc répétable.", null: true
     field :options, [String], "List des options d’un champ avec selection.", null: true
+
+    def condition
+      object.type_de_champ.condition&.to_expression
+    end
 
     def champ_descriptors
       if object.type_de_champ.block?
