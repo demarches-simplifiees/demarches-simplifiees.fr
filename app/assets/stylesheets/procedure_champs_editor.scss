@@ -91,10 +91,6 @@
 
       .conditionnel {
         color: $white;
-
-        .add-row {
-          background-color: $white;
-        }
       }
     }
 
@@ -151,6 +147,7 @@
     border-bottom: none;
     padding-bottom: 15px;
     padding-top: 15px;
+    z-index: 10; // above DSFR buttons
   }
 
   .fill-duration {
