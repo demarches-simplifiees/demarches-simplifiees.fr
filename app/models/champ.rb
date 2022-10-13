@@ -198,7 +198,7 @@ class Champ < ApplicationRecord
   end
 
   def conditional?
-    type_de_champ.condition.present?
+    type_de_champ.read_attribute_before_type_cast('condition').present?
   end
 
   def visible?
