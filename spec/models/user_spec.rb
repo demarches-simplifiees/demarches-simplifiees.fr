@@ -423,7 +423,11 @@ describe User, type: :model do
     let(:targeted_user) { create(:user) }
 
     subject { targeted_user.merge(old_user) }
-
+    context 'merge myself' do
+      it 'fails' do
+        expect { old_user.merge(old_user) }.to raise_error 'Merging same user, no way'
+      end
+    end
     context 'and the old account has some stuff' do
       let!(:dossier) { create(:dossier, user: old_user) }
       let!(:hidden_dossier) { create(:dossier, user: old_user, hidden_by_user_at: 1.hour.ago) }
