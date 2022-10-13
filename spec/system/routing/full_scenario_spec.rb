@@ -120,8 +120,8 @@ describe 'The routing', js: true do
     click_on 'Modifier mon dossier'
 
     fill_in litteraire_user.dossiers.first.champs.first.libelle, with: 'some value'
-    blur
-    expect(page).to have_css('span', text: 'Dossier enregistré', visible: true)
+    wait_for_autosave(false)
+
     log_out
 
     # the litteraires instructeurs should have a notification
@@ -199,6 +199,7 @@ describe 'The routing', js: true do
     click_button('Continuer')
 
     select(groupe, from: 'dossier_groupe_instructeur_id')
+    wait_for_autosave
 
     click_on 'Déposer le dossier'
     expect(page).to have_text('Merci')
@@ -215,7 +216,8 @@ describe 'The routing', js: true do
     expect(page).not_to have_selector("option", text: "Groupe inactif")
 
     select(new_group, from: 'dossier_groupe_instructeur_id')
-    expect(page).to have_css('span', text: 'Dossier enregistré', visible: true)
+    wait_for_autosave(false)
+
     expect(page).to have_text(new_group)
 
     log_out

@@ -171,6 +171,12 @@ module SystemHelpers
   def form_id_for(libelle)
     find(:xpath, ".//label[contains(text()[normalize-space()], '#{libelle}')]")[:for]
   end
+
+  def wait_for_autosave(brouillon = true)
+    blur
+    expect(page).to have_css('span', text: "#{brouillon ? 'Brouillon' : 'Dossier'} enregistré", visible: true)
+    page.execute_script("document.documentElement.dispatchEvent(new CustomEvent('autosave:reset'));")
+  end
 end
 
 RSpec.configure do |config|

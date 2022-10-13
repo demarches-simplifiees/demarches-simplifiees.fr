@@ -138,7 +138,6 @@ en:
           autosave: Your file is automatically saved after each modification. You can close the window at any time and pick up where you left off later.
           notice: "Download the notice of the procedure"
           notice_title: "To help you complete your file, you can consult the notice to this procedure."
-          submit_dossier: Submit the file
         messages:
           form:
             send_message: "Send message"
@@ -447,8 +446,6 @@ en:
         undergoingreview: "Your file is undergoing review. It is no longer possible to delete your file. To cancel the undergoingreview contact the adminitration via the mailbox."
         soft_deleted_dossier: "Your file has been successfully deleted from your interface"
       restore: "Your file has been successfully restored"
-      update_brouillon:
-        draft_saved: "Your draft has been saved."
       etablissement:
         no_establishment: "There is no establishment tied to this file"
       update_identite:
