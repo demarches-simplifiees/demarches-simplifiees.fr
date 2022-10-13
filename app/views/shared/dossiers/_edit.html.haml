@@ -47,21 +47,4 @@
       = fields_for champ.input_name, champ do |form|
         = render EditableChamp::EditableChampComponent.new form: form, champ: champ
 
-    - if !dossier.for_procedure_preview?
-      .dossier-edit-sticky-footer
-        .send-dossier-actions-bar
-          = render partial: 'shared/dossiers/autosave', locals: { dossier: dossier }
-
-          - if dossier.can_transition_to_en_construction?
-            = f.button t('views.shared.dossiers.edit.submit_dossier'),
-              name: :submit_draft,
-              value: true,
-              class: 'fr-btn fr-btn--sm',
-              disabled: !current_user.owns?(dossier),
-              data: { 'disable-with': "Envoi en cours…" }
-
-        - if dossier.brouillon? && !current_user.owns?(dossier)
-          .send-notice.invite-cannot-submit
-            En tant qu’invité, vous pouvez remplir ce formulaire – mais le titulaire du dossier doit le déposer lui-même.
-
-        = render partial: "shared/dossiers/submit_is_over", locals: { dossier: dossier }
+  = render Dossiers::EditFooterComponent.new(dossier: dossier)
