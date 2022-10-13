@@ -9,10 +9,15 @@ describe Logic do
 
     expect(Logic.from_h(champ_value(1).to_h)).to eq(champ_value(1))
 
-    expect(Logic.from_h(greater_than(constant(1), constant(2)).to_h)).to eq(greater_than(constant(1), constant(2)))
+    logic = greater_than(champ_value(123), constant(2))
+    expect(Logic.from_h(logic.to_h)).to eq(logic)
+    expect(Logic.from_expression(logic.to_expression)).to eq(logic)
+    expect(logic.to_expression).to eq("(@#{TypeDeChamp.to_typed_id(123)} > 2)")
 
-    expect(Logic.from_h(ds_and([constant(true), constant(true), constant(false)]).to_h))
-      .to eq(ds_and([constant(true), constant(true), constant(false)]))
+    logic = ds_and([greater_than(champ_value(123), constant(2)), ds_eq(champ_value(124), constant('foo'))])
+    expect(Logic.from_h(logic.to_h)).to eq(logic)
+    expect(Logic.from_expression(logic.to_expression)).to eq(logic)
+    expect(logic.to_expression).to eq("((@#{TypeDeChamp.to_typed_id(123)} > 2) && (@#{TypeDeChamp.to_typed_id(124)} == \"foo\"))")
   end
 
   describe '.ensure_compatibility_from_left' do
