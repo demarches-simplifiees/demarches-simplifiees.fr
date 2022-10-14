@@ -41,7 +41,10 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
     :recoverable, :rememberable, :trackable, :validatable, :confirmable, :lockable
 
-  has_many :dossiers, dependent: :destroy
+  # We should never cascade delete dossiers. In normal case we call delete_and_keep_track_dossiers
+  # before deleting a user (which dissociate dossiers from the user).
+  # Destroying a user with dossier is always a mistake.
+  has_many :dossiers, dependent: :restrict_with_exception
   has_many :targeted_user_links, dependent: :destroy
   has_many :invites, dependent: :destroy
   has_many :dossiers_invites, through: :invites, source: :dossier
