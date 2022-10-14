@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_07_113737) do
+ActiveRecord::Schema.define(version: 2022_10_13_142432) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -874,11 +874,11 @@ ActiveRecord::Schema.define(version: 2022_10_07_113737) do
   end
 
   create_table "zone_labels", force: :cascade do |t|
-    t.bigint "zone_id", null: false
+    t.datetime "created_at", precision: 6, null: false
     t.date "designated_on", null: false
     t.string "name", null: false
-    t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "zone_id", null: false
     t.index ["zone_id"], name: "index_zone_labels_on_zone_id"
   end
 
