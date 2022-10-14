@@ -9,13 +9,13 @@
       - if @procedure.api_particulier_token.blank?
         %div
           %span.icon.clock
-          %p.card-admin-status-todo= t('.needs_configuration')
+          %p.fr-text-default--info= t('.needs_configuration')
       - else
         %div
           %span.icon.accept
-          %p.card-admin-status-accept= t('.already_configured')
+          %p.fr-text-default--success= t('.already_configured')
       %div
-        %p.card-admin-title
+        %h3.fr-h6
           = Procedure.human_attribute_name(:jeton_api_particulier)
       %p.button= t('views.shared.actions.edit')
 
@@ -24,11 +24,11 @@
         - if @procedure.api_particulier_token.blank?
           %div
             %span.icon.clock
-            %p.card-admin-status-todo= t('.needs_configuration')
+            %p.fr-text-default--info= t('.needs_configuration')
         - else
           %div
             %span.icon.accept
-            %p.card-admin-status-accept= t('.already_configured')
+            %p.fr-text-default--success= t('.already_configured')
         %div
           %p.card-admin-title= t('administrateurs.sources_particulier.show.data_sources')
         %p.button= t('views.shared.actions.edit')
