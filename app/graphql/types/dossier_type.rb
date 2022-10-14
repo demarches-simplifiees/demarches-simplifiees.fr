@@ -121,9 +121,12 @@ module Types
           .for(object, private: false)
           .load(ApplicationRecord.id_from_typed_id(id))
       elsif object.champs.loaded?
-        object.champs
+        object.champs.filter(&:visible?)
       else
-        Loaders::Association.for(object.class, champs: :type_de_champ).load(object)
+        Loaders::Association
+          .for(object.class, champs: :type_de_champ)
+          .load(object)
+          .then { |champs| champs.filter(&:visible?) }
       end
     end
 
