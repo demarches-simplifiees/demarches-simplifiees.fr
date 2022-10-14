@@ -7,6 +7,7 @@ Capybara.register_driver :chrome do |app|
   options = Selenium::WebDriver::Chrome::Options.new
   options.add_argument('--no-sandbox') unless ENV['SANDBOX']
   options.add_argument('--mute-audio')
+  options.add_argument('--window-size=1440,900')
 
   download_path = Capybara.save_path
   # Chromedriver 77 requires setting this for headless mode on linux
