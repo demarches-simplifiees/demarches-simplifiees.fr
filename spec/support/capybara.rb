@@ -48,6 +48,8 @@ Capybara.ignore_hidden_elements = false
 
 Capybara.enable_aria_label = true
 
+Capybara.disable_animation = true
+
 # Save a snapshot of the HTML page when an integration test fails
 Capybara::Screenshot.autosave_on_failure = true
 # Keep only the screenshots generated from the last failing test suite
