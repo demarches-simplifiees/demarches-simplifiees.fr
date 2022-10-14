@@ -97,8 +97,9 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
       context 'of a group that can be deleted' do
         before { delete_group gi_1_2 }
-        it { expect(flash.notice).to be_present }
+        it { expect(flash.notice).to eq "le groupe « groupe instructeur 2 » a été supprimé et le routage a été désactivé." }
         it { expect(procedure.groupe_instructeurs.count).to eq(1) }
+        it { expect(procedure.reload.routing_enabled?).to eq(false) }
         it { expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure)) }
       end
 

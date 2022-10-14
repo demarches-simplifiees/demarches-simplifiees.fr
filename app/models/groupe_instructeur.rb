@@ -22,9 +22,17 @@ class GroupeInstructeur < ApplicationRecord
   validates :label, uniqueness: { scope: :procedure, message: 'existe déjà' }
 
   before_validation -> { label&.strip! }
+  after_create :toggle_routing
 
   scope :without_group, -> (group) { where.not(id: group) }
   scope :for_api_v2, -> { includes(procedure: [:administrateurs]) }
+  scope :actif, -> { where(closed: false) }
+
+  def toggle_routing
+    procedure = self.procedure.reload
+    routing_enabled = procedure.groupe_instructeurs.actif.count > 1
+    procedure.update!(routing_enabled: routing_enabled)
+  end
 
   def add(instructeur)
     return if in?(instructeur.groupe_instructeurs)
