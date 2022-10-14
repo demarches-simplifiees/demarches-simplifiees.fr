@@ -55,24 +55,24 @@
 - if !@procedure.procedure_expires_when_termine_enabled?
   = render partial: 'administrateurs/procedures/suggest_expires_when_termine', locals: { procedure: @procedure }
 .container
-  %h2.procedure-admin-explanation Indispensable avant publication
-  .procedure-grid
-    = render Procedure::Card::PresentationComponent.new(procedure: @procedure)
-    = render Procedure::Card::ZonesComponent.new(procedure: @procedure) if @procedure.feature_enabled?(:zonage)
-    = render Procedure::Card::ChampsComponent.new(procedure: @procedure)
-    = render Procedure::Card::ServiceComponent.new(procedure: @procedure, administrateur: current_administrateur)
-    = render Procedure::Card::AdministrateursComponent.new(procedure: @procedure)
-    = render Procedure::Card::InstructeursComponent.new(procedure: @procedure)
-    = render Procedure::Card::ModificationsComponent.new(procedure: @procedure)
+  %h2.fr-mt-5w.fr-mb-3w.fr-h1 Indispensable avant publication
+  .fr-grid-row.fr-grid-row--gutters
+    .fr-col-6.fr-col-md-4.fr-col-lg-3= render Procedure::Card::PresentationComponent.new(procedure: @procedure)
+    .fr-col-6.fr-col-md-4.fr-col-lg-3= render Procedure::Card::ZonesComponent.new(procedure: @procedure) if @procedure.feature_enabled?(:zonage)
+    .fr-col-6.fr-col-md-4.fr-col-lg-3= render Procedure::Card::ChampsComponent.new(procedure: @procedure)
+    .fr-col-6.fr-col-md-4.fr-col-lg-3= render Procedure::Card::ServiceComponent.new(procedure: @procedure, administrateur: current_administrateur)
+    .fr-col-6.fr-col-md-4.fr-col-lg-3= render Procedure::Card::AdministrateursComponent.new(procedure: @procedure)
+    .fr-col-6.fr-col-md-4.fr-col-lg-3= render Procedure::Card::InstructeursComponent.new(procedure: @procedure)
+    .fr-col-6.fr-col-md-4.fr-col-lg-3= render Procedure::Card::ModificationsComponent.new(procedure: @procedure)
 
-  %h2.procedure-admin-explanation Pour aller plus loin
-  .procedure-grid
-    = render Procedure::Card::AttestationComponent.new(procedure: @procedure)
-    = render Procedure::Card::ExpertsComponent.new(procedure: @procedure)
-    = render Procedure::Card::EmailsComponent.new(procedure: @procedure)
-    = render Procedure::Card::AnnotationsComponent.new(procedure: @procedure)
-    = render Procedure::Card::APIEntrepriseComponent.new(procedure: @procedure)
-    = render Procedure::Card::APIParticulierComponent.new(procedure: @procedure)
-    = render Procedure::Card::MonAvisComponent.new(procedure: @procedure)
-    = render Procedure::Card::DossierSubmittedMessageComponent.new(procedure: @procedure)
+  %h2.fr-mt-5w.fr-mb-3w.fr-h1 Pour aller plus loin
+  .fr-grid-row.fr-grid-row--gutters
+    .fr-col-6.fr-col-md-4.fr-col-lg-3= render Procedure::Card::AttestationComponent.new(procedure: @procedure)
+    .fr-col-6.fr-col-md-4.fr-col-lg-3= render Procedure::Card::ExpertsComponent.new(procedure: @procedure)
+    .fr-col-6.fr-col-md-4.fr-col-lg-3= render Procedure::Card::EmailsComponent.new(procedure: @procedure)
+    .fr-col-6.fr-col-md-4.fr-col-lg-3= render Procedure::Card::AnnotationsComponent.new(procedure: @procedure)
+    .fr-col-6.fr-col-md-4.fr-col-lg-3= render Procedure::Card::APIEntrepriseComponent.new(procedure: @procedure)
+    .fr-col-6.fr-col-md-4.fr-col-lg-3= render Procedure::Card::APIParticulierComponent.new(procedure: @procedure)
+    .fr-col-6.fr-col-md-4.fr-col-lg-3= render Procedure::Card::MonAvisComponent.new(procedure: @procedure)
+    .fr-col-6.fr-col-md-4.fr-col-lg-3= render Procedure::Card::DossierSubmittedMessageComponent.new(procedure: @procedure)
 
