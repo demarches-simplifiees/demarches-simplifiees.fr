@@ -480,7 +480,6 @@ Rails.application.routes.draw do
 
         collection do
           patch 'update_routing_criteria_name'
-          patch 'update_routing_enabled'
           patch 'update_instructeurs_self_management_enabled'
           post 'import'
           get 'export_groupe_instructeurs'

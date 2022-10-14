@@ -32,19 +32,18 @@ describe 'The routing', js: true do
     # add victor to littéraire groupe
     fill_in 'Emails', with: 'victor@inst.com'
     perform_enqueued_jobs { click_on 'Affecter' }
-    expect(page).to have_text("L’instructeur victor@inst.com a été affecté au groupe « littéraire »")
+    expect(page).to have_text("Les instructeurs ont bien été affectés à la démarche")
 
     victor = User.find_by(email: 'victor@inst.com').instructeur
 
     # add superwoman to littéraire groupe
     fill_in 'Emails', with: 'superwoman@inst.com'
     perform_enqueued_jobs { click_on 'Affecter' }
-    expect(page).to have_text("L’instructeur superwoman@inst.com a été affecté au groupe « littéraire »")
+    expect(page).to have_text("Les instructeurs ont bien été affectés à la démarche")
 
     superwoman = User.find_by(email: 'superwoman@inst.com').instructeur
 
     # add inactive groupe
-    click_on 'Groupes d’instructeurs'
     fill_in 'Ajouter un groupe', with: 'non visible car inactif'
     click_on 'Ajouter le groupe'
     check "Groupe inactif"
