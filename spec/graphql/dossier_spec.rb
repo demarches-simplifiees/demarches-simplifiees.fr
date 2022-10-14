@@ -56,6 +56,33 @@ RSpec.describe Types::DossierType, type: :graphql do
     it { expect(data[:dossier][:champs][1][:__typename]).to eq "AddressChamp" }
   end
 
+  describe 'dossier with conditional champs' do
+    include Logic
+    let(:stable_id) { 1234 }
+    let(:condition) { ds_eq(champ_value(stable_id), constant(true)) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :checkbox, stable_id: stable_id }, { type: :text, condition: condition }]) }
+    let(:dossier) { create(:dossier, :accepte, :with_populated_champs, procedure: procedure) }
+    let(:query) { DOSSIER_WITH_CHAMPS_QUERY }
+    let(:variables) { { number: dossier.id } }
+    let(:checkbox_value) { 'on' }
+
+    before do
+      dossier.champs.first.update(value: checkbox_value)
+    end
+
+    context 'when checkbox is true' do
+      it { expect(data[:dossier][:champs].size).to eq 2 }
+      it { expect(data[:dossier][:champs][0][:__typename]).to eq "CheckboxChamp" }
+      it { expect(data[:dossier][:champs][1][:__typename]).to eq "TextChamp" }
+    end
+
+    context 'when checkbox is false' do
+      let(:checkbox_value) { 'off' }
+      it { expect(data[:dossier][:champs].size).to eq 1 }
+      it { expect(data[:dossier][:champs][0][:__typename]).to eq "CheckboxChamp" }
+    end
+  end
+
   describe 'dossier with user' do
     let(:dossier) { create(:dossier, :en_construction) }
     let(:query) { DOSSIER_WITH_USAGER_QUERY }
