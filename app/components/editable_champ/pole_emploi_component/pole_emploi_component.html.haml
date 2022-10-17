@@ -3,6 +3,6 @@
     = @form.label :identifiant, t('.identifiant_label')
     %p.notice= t('.identifiant_notice')
     = @form.text_field :identifiant,
-      required: @champ.mandatory?,
+      required: @champ.required?,
       aria: { describedby: @champ.describedby_id },
       class: "width-33-desktop"
