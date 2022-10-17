@@ -60,6 +60,7 @@ class Champ < ApplicationRecord
     :rna?,
     :siret?,
     :stable_id,
+    :mandatory?,
     to: :type_de_champ
 
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
@@ -91,10 +92,6 @@ class Champ < ApplicationRecord
 
   def sections
     @sections ||= dossier.sections_for(self)
-  end
-
-  def mandatory?
-    type_de_champ.mandatory? && visible?
   end
 
   # used for the `required` html attribute
