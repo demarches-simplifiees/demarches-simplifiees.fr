@@ -69,7 +69,7 @@ to display a collection of resources in an HTML table.
               <%= %(tabindex=0 role=link data-url=#{polymorphic_path([namespace, resource])}) %>
             <% end %>
             >
-            <td><%= f.check_box "procedure[ids][#{resource.id}]", checked: true %></td>
+            <td><%= f.check_box "procedure[ids][#{resource.id}]", checked: false %></td>
           <% collection_presenter.attributes_for(resource).each do |attribute| %>
             <td class="js-table-row cell-data cell-data--<%= attribute.html_class %>">
               <% if show_action? :show, resource -%>
