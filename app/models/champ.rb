@@ -97,6 +97,13 @@ class Champ < ApplicationRecord
     type_de_champ.mandatory? && visible?
   end
 
+  # used for the `required` html attribute
+  # check visibility to avoid hidden required input
+  # which prevent the form from being sent.
+  def required?
+    type_de_champ.mandatory? && visible?
+  end
+
   def mandatory_blank_and_visible?
     mandatory? && blank?
   end

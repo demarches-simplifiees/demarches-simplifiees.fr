@@ -1,6 +1,6 @@
 = @form.hidden_field :value
 = @form.hidden_field :external_id
 = react_component("ComboAnnuaireEducationSearch",
-  required: @champ.mandatory?,
+  required: @champ.required?,
   id: @champ.input_id,
   describedby: @champ.describedby_id)
