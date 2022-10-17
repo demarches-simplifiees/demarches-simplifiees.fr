@@ -462,7 +462,7 @@ module Users
       end
 
       if dossier.en_construction?
-        errors += @dossier.check_mandatory_champs
+        errors += @dossier.check_mandatory_and_visible_champs
       end
 
       errors
@@ -473,7 +473,7 @@ module Users
 
       @dossier.valid?(**submit_validation_options)
       errors += @dossier.errors.full_messages
-      errors += @dossier.check_mandatory_champs
+      errors += @dossier.check_mandatory_and_visible_champs
 
       if should_fill_groupe_instructeur?
         @dossier.assign_to_groupe_instructeur(defaut_groupe_instructeur)

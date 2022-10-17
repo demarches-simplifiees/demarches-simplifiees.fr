@@ -981,8 +981,9 @@ class Dossier < ApplicationRecord
     champs.filter(&:titre_identite?).map(&:piece_justificative_file).each(&:purge_later)
   end
 
-  def check_mandatory_champs
+  def check_mandatory_and_visible_champs
     (champs + champs.filter(&:block?).filter(&:visible?).flat_map(&:champs))
+      .filter(&:visible?)
       .filter(&:mandatory_blank?)
       .map do |champ|
         "Le champ #{champ.libelle.truncate(200)} doit être rempli."
