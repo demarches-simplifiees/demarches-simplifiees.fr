@@ -101,7 +101,7 @@ class Champ < ApplicationRecord
     type_de_champ.mandatory? && visible?
   end
 
-  def mandatory_blank_and_visible?
+  def mandatory_blank?
     mandatory? && blank?
   end
 
