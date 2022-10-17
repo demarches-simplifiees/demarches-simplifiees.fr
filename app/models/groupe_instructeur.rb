@@ -20,6 +20,7 @@ class GroupeInstructeur < ApplicationRecord
 
   validates :label, presence: { message: 'doit être renseigné' }, allow_nil: false
   validates :label, uniqueness: { scope: :procedure, message: 'existe déjà' }
+  validates :closed, acceptance: { accept: [false], message: "Modification impossible : il doit y avoir au moins un groupe instructeur actif sur chaque procédure" }, if: -> { self.procedure.groupe_instructeurs.actif.one? }
 
   before_validation -> { label&.strip! }
   after_create :toggle_routing

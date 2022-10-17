@@ -12,9 +12,6 @@
 .container.groupe-instructeur
   %h1 Gérer les instructeurs et les options d'instruction de « #{@procedure.libelle} »
 
-  = render partial: 'administrateurs/groupe_instructeurs/routing', locals: { procedure: @procedure }
-
-  = render partial: 'administrateurs/groupe_instructeurs/edit', locals: { procedure: @procedure, groupes_instructeurs: @groupes_instructeurs }
   - if @procedure.groupe_instructeurs.one?
     = render partial: 'administrateurs/groupe_instructeurs/instructeurs',
       locals: { procedure: @procedure,
@@ -22,3 +19,9 @@
         instructeurs: @instructeurs,
         available_instructeur_emails: @available_instructeur_emails,
         disabled_as_super_admin: administrateur_as_manager? }
+  - if !@procedure.routee?
+    = render partial: 'administrateurs/groupe_instructeurs/instructeurs_self_management', locals: { procedure: @procedure }
+
+  = render partial: 'administrateurs/groupe_instructeurs/routing', locals: { procedure: @procedure }
+
+  = render partial: 'administrateurs/groupe_instructeurs/edit', locals: { procedure: @procedure, groupes_instructeurs: @groupes_instructeurs }

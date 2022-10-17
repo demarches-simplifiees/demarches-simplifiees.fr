@@ -1,15 +1,14 @@
-- groupe_instructeurs_count = procedure.groupe_instructeurs.count
-.card
-  = form_for procedure,
-    url: { action: :update_routing_criteria_name },
-    html: { class: 'form' } do |f|
+- if groupes_instructeurs.many?
+  .card
+    = form_for procedure,
+      url: { action: :update_routing_criteria_name },
+      html: { class: 'form' } do |f|
 
-    = f.label :routing_criteria_name do
-      = t('.routing.title')
-    %p.notice
-      = t('.routing.notice')
-    = f.text_field :routing_criteria_name, placeholder: t('.add_a_group.placeholder'), required: true
-    = f.submit t('.button.rename'), class: 'button primary send'
+      = f.label :routing_criteria_name do
+        = t('.routing.title')
+      %p.notice
+      = f.text_field :routing_criteria_name, required: true
+      = f.submit t('.button.rename'), class: 'button primary send'
 
 .card
   .card-title
@@ -18,9 +17,10 @@
   = form_for :groupe_instructeur, html: { class: 'form' } do |f|
     = f.label :label do
       = t('.add_a_group.title')
-    %p.notice
-      = t('.add_a_group.notice', routing_criteria_name: procedure.routing_criteria_name)
-    = f.text_field :label, placeholder: t('.add_a_group.placeholder'), required: true
+    - if groupes_instructeurs.many?
+      %p.notice
+        = t('.add_a_group.notice', routing_criteria_name: procedure.routing_criteria_name)
+    = f.text_field :label, required: true
     = f.submit t('.button.add_group'), class: "button primary send"
 
   - csv_max_size = Administrateurs::GroupeInstructeursController::CSV_MAX_SIZE
@@ -51,7 +51,7 @@
       - groupes_instructeurs.each do |group|
         %tr
           %td= group.label
-          %td.actions= link_to t('.view'), admin_procedure_groupe_instructeur_path(procedure, group)
+          %td.actions= link_to t('.set_up'), admin_procedure_groupe_instructeur_path(procedure, group)
           - if groupes_instructeurs.many?
             - if group.dossiers.empty?
               %td.actions

@@ -1,19 +1,4 @@
 .card
   %h2.card-title= t('.title')
 
-  - if !procedure.routee?
-    %p.notice= t('.notice_html')
-
-.card
-  %h2.card-title L‘autogestion des instructeurs
-  %p.notice= t('.self_managment_notice_html')
-
-  = form_for procedure,
-    method: :patch,
-    url: update_instructeurs_self_management_enabled_admin_procedure_groupe_instructeurs_path(procedure),
-    html: { class: 'form procedure-form__column--form no-background' } do |f|
-    %label.toggle-switch
-      = f.check_box :instructeurs_self_management_enabled, class: 'toggle-switch-checkbox', onchange: 'this.form.submit()'
-      %span.toggle-switch-control.round
-      %span.toggle-switch-label.on
-      %span.toggle-switch-label.off
+  %p.notice= t('.notice_html')

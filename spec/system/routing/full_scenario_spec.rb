@@ -12,46 +12,44 @@ describe 'The routing', js: true do
 
   scenario 'works' do
     login_as administrateur.user, scope: :user
-
     visit admin_procedure_path(procedure.id)
     find('#groupe-instructeurs').click
 
-    # rename routing criteria to spécialité
-    fill_in 'Libellé du routage', with: 'spécialité'
-    click_on 'Renommer'
-    expect(page).to have_text('Le libellé est maintenant « spécialité ».')
-    expect(page).to have_field('Libellé du routage', with: 'spécialité')
-
-    # rename defaut groupe to littéraire
-    click_on 'voir'
-    fill_in 'Nom du groupe', with: 'littéraire'
-    click_on 'Valider'
-    expect(page).to have_text('Le nom est à présent « littéraire ».')
-    expect(page).to have_field('Nom du groupe', with: 'littéraire')
+    # add littéraire groupe
+    fill_in 'Ajouter un nom de groupe', with: 'littéraire'
+    click_on 'Ajouter le groupe'
+    expect(page).to have_text('Le groupe d’instructeurs « littéraire » a été créé et le routage a été activé.')
 
     # add victor to littéraire groupe
     fill_in 'Emails', with: 'victor@inst.com'
     perform_enqueued_jobs { click_on 'Affecter' }
-    expect(page).to have_text("Les instructeurs ont bien été affectés à la démarche")
+    expect(page).to have_text("L’instructeur victor@inst.com a été affecté")
 
     victor = User.find_by(email: 'victor@inst.com').instructeur
 
     # add superwoman to littéraire groupe
     fill_in 'Emails', with: 'superwoman@inst.com'
     perform_enqueued_jobs { click_on 'Affecter' }
-    expect(page).to have_text("Les instructeurs ont bien été affectés à la démarche")
+    expect(page).to have_text("L’instructeur superwoman@inst.com a été affecté")
 
     superwoman = User.find_by(email: 'superwoman@inst.com').instructeur
 
+    # rename routing criteria to spécialité
+    click_on 'Groupes d’instructeurs'
+    fill_in 'Libellé de la liste de groupes', with: 'spécialité'
+    click_on 'Renommer'
+    expect(page).to have_text('Le libellé est maintenant « spécialité ».')
+    expect(page).to have_field('Libellé de la liste de groupes', with: 'spécialité')
+
     # add inactive groupe
-    fill_in 'Ajouter un groupe', with: 'non visible car inactif'
+    fill_in 'Ajouter un nom de groupe', with: 'non visible car inactif'
     click_on 'Ajouter le groupe'
     check "Groupe inactif"
-    click_on 'Valider'
+    click_on 'Modifier'
 
     # add scientifique groupe
     click_on 'Groupes d’instructeurs'
-    fill_in 'Ajouter un groupe', with: 'scientifique'
+    fill_in 'Ajouter un nom de groupe', with: 'scientifique'
     click_on 'Ajouter le groupe'
     expect(page).to have_text('Le groupe d’instructeurs « scientifique » a été créé.')
 

@@ -15,13 +15,8 @@ module Administrateurs
       @procedure = procedure
       @groupes_instructeurs = paginated_groupe_instructeurs
 
-      if procedure.routee?
-        @instructeurs = []
-        @available_instructeur_emails = []
-      else
-        @instructeurs = paginated_instructeurs
-        @available_instructeur_emails = available_instructeur_emails
-      end
+      @instructeurs = paginated_instructeurs
+      @available_instructeur_emails = available_instructeur_emails
     end
 
     def show
@@ -37,8 +32,9 @@ module Administrateurs
         .new({ instructeurs: [current_administrateur.instructeur] }.merge(groupe_instructeur_params))
 
       if @groupe_instructeur.save
+        routing_notice = " et le routage a été activé" if procedure.groupe_instructeurs.actif.size == 2
         redirect_to admin_procedure_groupe_instructeur_path(procedure, @groupe_instructeur),
-          notice: "Le groupe d’instructeurs « #{@groupe_instructeur.label} » a été créé."
+          notice: "Le groupe d’instructeurs « #{@groupe_instructeur.label} » a été créé#{routing_notice}."
       else
         @procedure = procedure
         @instructeurs = paginated_instructeurs
@@ -60,7 +56,7 @@ module Administrateurs
         @instructeurs = paginated_instructeurs
         @available_instructeur_emails = available_instructeur_emails
 
-        flash[:alert] = "le nom « #{@groupe_instructeur.label} » est déjà pris par un autre groupe."
+        flash[:alert] = @groupe_instructeur.errors.values.join('<br>')
         render :show
       end
     end
@@ -76,9 +72,9 @@ module Administrateurs
         @groupe_instructeur.destroy!
         if procedure.groupe_instructeurs.actif.count == 1
           procedure.update!(routing_enabled: false)
+          routing_notice = " et le routage a été désactivé"
         end
-        routing_notice = "et le routage a été désactivé" if procedure.groupe_instructeurs.size == 1
-        flash[:notice] = "le groupe « #{@groupe_instructeur.label} » a été supprimé #{routing_notice}."
+        flash[:notice] = "le groupe « #{@groupe_instructeur.label} » a été supprimé#{routing_notice}."
       end
       redirect_to admin_procedure_groupe_instructeurs_path(procedure)
     end
