@@ -11,7 +11,7 @@ namespace :after_party do
         begin
           procedure.update(procedure_expires_when_termine_enabled: true)
         rescue StandardError => e
-          rake_puts "pb with procedure: #{p.id}, #{e.message}"
+          rake_puts "pb with procedure: #{procedure.id}, #{e.message}"
         end
       end
       progress.inc
