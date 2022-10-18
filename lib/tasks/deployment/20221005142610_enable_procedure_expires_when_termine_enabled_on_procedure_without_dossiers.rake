@@ -8,7 +8,11 @@ namespace :after_party do
     progress = ProgressReport.new(procedure_without_expiration.count)
     procedure_without_expiration.find_each do |procedure|
       if procedure.dossiers.count.zero?
-        procedure.update(procedure_expires_when_termine_enabled: true)
+        begin
+          procedure.update(procedure_expires_when_termine_enabled: true)
+        rescue StandardError => e
+          rake_puts "pb with procedure: #{p.id}, #{e.message}"
+        end
       end
       progress.inc
     end
