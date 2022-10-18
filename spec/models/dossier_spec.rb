@@ -1556,8 +1556,9 @@ describe Dossier do
       let(:dossier) { create(:dossier, procedure:) }
       let(:yes_no_tdc) { procedure.types_de_champ.first }
       let(:text_tdc) { procedure.types_de_champ.second }
+      let(:tdcs) { dossier.champs.map(&:type_de_champ) }
 
-      subject { Dossier.champs_for_export(dossier.champs, dossier.champs.map(&:type_de_champ)) }
+      subject { Dossier.champs_for_export(dossier.champs, tdcs) }
 
       before do
         text_tdc.update(condition: ds_eq(champ_value(yes_no_tdc.stable_id), constant(true)))
@@ -1577,6 +1578,24 @@ describe Dossier do
         let(:yes_no_value) { 'false' }
 
         it { is_expected.to eq([[yes_no_tdc.libelle, "Non"], [text_tdc.libelle, nil]]) }
+      end
+
+      context 'with another revision' do
+        let(:tdc_from_another_revision) { create(:type_de_champ_communes, libelle: 'commune', condition: ds_eq(constant(true), constant(true))) }
+        let(:tdcs) { dossier.champs.map(&:type_de_champ) << tdc_from_another_revision }
+        let(:yes_no_value) { 'true' }
+
+        let(:expected) do
+          [
+            [yes_no_tdc.libelle, "Oui"],
+            [text_tdc.libelle, "text"],
+            ["commune", nil],
+            ["commune (Code insee)", nil],
+            ["commune (Département)", ""]
+          ]
+        end
+
+        it { is_expected.to eq(expected) }
       end
     end
   end
