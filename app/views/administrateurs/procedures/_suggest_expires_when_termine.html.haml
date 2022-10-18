@@ -1,10 +1,9 @@
 .container{ :"data-test-suggest_expires_when_termine" => "true" }
-  .card.warning
-    .card-title
-      Veuillez activer la suppression automatique des dossiers expirés.
-    %p
-      Pour des raisons liées au RGPD, veuillez activer la suppression automatique des dossiers expirés (#{procedure.duree_conservation_dossiers_dans_ds} mois après que le dossier a été traité). Vous pouvez à tout moment récupérer une archive de la démarche en vous connectant en tant qu’instructeur.
+  = render Dsfr::CalloutComponent.new(title: "Veuillez activer la suppression automatique des dossiers expirés.", theme: :warning) do |c|
+    - c.with_body do
+      Pour des raisons liées au RGPD, veuillez activer la suppression automatique des dossiers expirés (#{procedure.duree_conservation_dossiers_dans_ds} mois après que le dossier a été traité).
+      Vous pouvez à tout moment récupérer une archive de la démarche en vous connectant en tant qu’instructeur.
       = link_to "En savoir plus", DOC_PROCEDURE_EXPIRES_URL, rel: 'noopener', target: '_blank', class: ''
 
-    %p
-      = button_to "Activer l’expiration des données", admin_procedure_path(id: procedure.id, params: { procedure: { procedure_expires_when_termine_enabled: true }}), method: :patch, class: 'button primary', form: { data: { turbo: true } }
+    - c.with_bottom do
+      = button_to "Activer l’expiration des données", admin_procedure_path(id: procedure.id, params: { procedure: { procedure_expires_when_termine_enabled: true }}), method: :patch, class: 'fr-btn', form: { data: { turbo: true } }
