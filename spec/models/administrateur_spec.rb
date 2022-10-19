@@ -133,6 +133,25 @@ describe Administrateur, type: :model do
       end
     end
 
+    context 'when both admins have a service with the same name' do
+      let(:service_1) { create(:service, nom: 'S', administrateur: old_admin) }
+      let(:service_2) { create(:service, nom: 'S', administrateur: new_admin) }
+      let(:procedure_1) { create(:procedure, service: service_1) }
+
+      before do
+        service_1
+        service_2
+        procedure_1
+        subject
+        [new_admin, old_admin, service_2].map(&:reload)
+      end
+
+      it 'removes the service from the old one' do
+        expect(old_admin.services).to be_empty
+        expect(service_2.procedures).to include(procedure_1)
+      end
+    end
+
     context 'when the old admin has an instructeur' do
       let(:instructeur) { create(:instructeur) }
 
