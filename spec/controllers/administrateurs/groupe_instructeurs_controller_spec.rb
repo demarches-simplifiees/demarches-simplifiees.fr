@@ -183,21 +183,31 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
   describe '#update' do
     let(:new_name) { 'nouveau nom du groupe' }
+    let(:closed_value) { false }
 
     before do
       patch :update,
         params: {
           procedure_id: procedure.id,
           id: gi_1_1.id,
-          groupe_instructeur: { label: new_name, closed: true }
+          groupe_instructeur: { label: new_name, closed: closed_value }
         }
       gi_1_1.reload
     end
 
     it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_1)) }
     it { expect(gi_1_1.label).to eq(new_name) }
-    it { expect(gi_1_1.closed).to eq(true) }
+    it { expect(gi_1_1.closed).to eq(false) }
     it { expect(flash.notice).to be_present }
+
+    context 'when we try do disable the only groupe instructeur' do
+      let(:closed_value) { true }
+
+      it { expect(response).to render_template(:show) }
+      it { expect(gi_1_1.label).not_to eq(new_name) }
+      it { expect(gi_1_1.closed).to eq(false) }
+      it { expect(flash.alert).to be_present }
+    end
 
     context 'when the name is already taken' do
       let!(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }

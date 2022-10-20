@@ -51,4 +51,8 @@ class GroupeInstructeur < ApplicationRecord
       .where(dossiers: { groupe_instructeur: self })
       .update_all(unfollowed_at: Time.zone.now)
   end
+
+  def can_delete?
+    dossiers.empty? && (procedure.groupe_instructeurs.actif.many? || (procedure.groupe_instructeurs.actif.one? && closed))
+  end
 end
