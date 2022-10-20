@@ -3,6 +3,8 @@ class ApplicationMailer < ActionMailer::Base
   default from: "#{APPLICATION_NAME} <#{CONTACT_EMAIL}>"
   layout 'mailer'
 
+  before_action :add_dolist_header
+
   # Don’t retry to send a message if the server rejects the recipient address
   rescue_from Net::SMTPSyntaxError do |_error|
     message.perform_deliveries = false
@@ -27,5 +29,13 @@ class ApplicationMailer < ActionMailer::Base
     # A problem occured when reading logo, maybe the logo is missing and we should clean the procedure to remove logo reference ?
     Sentry.capture_exception(e, extra: { procedure_id: procedure.id })
     nil
+  end
+
+  # mandatory for dolist
+  # used for tracking in Dolist UI
+  # the delivery_method is yet unknown (:balancer)
+  # so we add the dolist header for everyone
+  def add_dolist_header
+    headers['X-Dolist-Message-Name'] = action_name
   end
 end
