@@ -35,7 +35,7 @@ class DossierPreloader
   end
 
   def load_dossiers(dossiers, pj_template: false)
-    to_include = [piece_justificative_file_attachment: :blob]
+    to_include = [piece_justificative_file_attachments: :blob]
 
     if pj_template
       to_include << { type_de_champ: { piece_justificative_template_attachment: :blob } }

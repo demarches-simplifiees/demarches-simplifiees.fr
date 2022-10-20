@@ -248,9 +248,9 @@ class Procedure < ApplicationRecord
       :groupe_instructeurs,
       dossiers: {
         champs_public: [
-          piece_justificative_file_attachment: :blob,
+          piece_justificative_file_attachments: :blob,
           champs: [
-            piece_justificative_file_attachment: :blob
+            piece_justificative_file_attachments: :blob
           ]
         ]
       }
@@ -776,7 +776,7 @@ class Procedure < ApplicationRecord
     if dossiers.termine.any?
       dossiers_sample = dossiers.termine.limit(100)
       total_size = Champ
-        .includes(piece_justificative_file_attachment: :blob)
+        .includes(piece_justificative_file_attachments: :blob)
         .where(type: Champs::PieceJustificativeChamp.to_s, dossier: dossiers_sample)
         .sum('active_storage_blobs.byte_size')
 

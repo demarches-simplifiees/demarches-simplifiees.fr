@@ -113,7 +113,7 @@ class PiecesJustificativesService
 
   def self.pjs_for_champs(dossiers, for_expert = false)
     champs = Champ
-      .joins(:piece_justificative_file_attachment)
+      .joins(:piece_justificative_file_attachments)
       .where(type: "Champs::PieceJustificativeChamp", dossier: dossiers)
 
     if for_expert
