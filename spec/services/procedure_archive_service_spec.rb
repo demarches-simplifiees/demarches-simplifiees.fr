@@ -53,10 +53,10 @@ describe ProcedureArchiveService do
           files = ZipTricks::FileReader.read_zip_structure(io: f)
           structure = [
             "procedure-#{procedure.id}-#{archive.id}/",
+            "procedure-#{procedure.id}-#{archive.id}/-LISTE-DES-FICHIERS-EN-ERREURS.txt",
             "procedure-#{procedure.id}-#{archive.id}/dossier-#{dossier.id}/",
             "procedure-#{procedure.id}-#{archive.id}/dossier-#{dossier.id}/pieces_justificatives/",
-            "procedure-#{procedure.id}-#{archive.id}/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2021-00-00-#{dossier.id}.pdf",
-            "procedure-#{procedure.id}-#{archive.id}/LISEZMOI.txt"
+            "procedure-#{procedure.id}-#{archive.id}/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2021-00-00-#{dossier.id}.pdf"
           ]
           expect(files.map(&:filename)).to match_array(structure)
         end
@@ -100,15 +100,15 @@ describe ProcedureArchiveService do
             zip_entries = ZipTricks::FileReader.read_zip_structure(io: f)
             structure = [
               "procedure-#{procedure.id}-#{archive.id}/",
+              "procedure-#{procedure.id}-#{archive.id}/-LISTE-DES-FICHIERS-EN-ERREURS.txt",
               "procedure-#{procedure.id}-#{archive.id}/dossier-#{dossier.id}/",
               "procedure-#{procedure.id}-#{archive.id}/dossier-#{dossier.id}/export-dossier-05-03-2020-00-00-1.pdf",
               "procedure-#{procedure.id}-#{archive.id}/dossier-#{dossier.id}/pieces_justificatives/",
-              "procedure-#{procedure.id}-#{archive.id}/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2021-00-00-#{dossier.id}.pdf",
-              "procedure-#{procedure.id}-#{archive.id}/LISEZMOI.txt"
+              "procedure-#{procedure.id}-#{archive.id}/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2021-00-00-#{dossier.id}.pdf"
             ]
             expect(zip_entries.map(&:filename)).to match_array(structure)
             zip_entries.map do |entry|
-              next unless entry.filename == "procedure-#{procedure.id}-#{archive.id}/LISEZMOI.txt"
+              next unless entry.filename == "procedure-#{procedure.id}-#{archive.id}/-LISTE-DES-FICHIERS-EN-ERREURS.txt"
               extracted_content = ""
               extractor = entry.extractor_from(f)
               extracted_content << extractor.extract(1024 * 1024) until extractor.eof?
