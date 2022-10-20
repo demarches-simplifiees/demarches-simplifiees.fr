@@ -619,7 +619,7 @@ class Dossier < ApplicationRecord
   end
 
   def show_groupe_instructeur_selector?
-    procedure.routee? && !procedure.feature_enabled?(:procedure_routage_api) && procedure.groupe_instructeurs.size > 1
+    procedure.routee? && !procedure.feature_enabled?(:procedure_routage_api) && procedure.groupe_instructeurs.actif.many?
   end
 
   def assign_to_groupe_instructeur(groupe_instructeur, author = nil)
