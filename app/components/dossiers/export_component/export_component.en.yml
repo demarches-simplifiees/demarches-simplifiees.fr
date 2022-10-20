@@ -3,7 +3,7 @@ en:
   everything_csv_html: Ask an export in format .csv<br>(only folders, without repeatable fields)
   everything_xlsx_html: Ask an export in format .xlsx
   everything_ods_html: Ask an export in format .ods
-  everything_zip_html: Ask an export in format .zip
+  everything_zip_html: Ask an export in format .zip<br>(does not contains timestamp nor operation logs )
   everything_short: Ask an export in format%{export_format}
   everything_pending_html: Ask an export in format %{export_format} is being generated<br>(ask %{export_time} ago)
   everything_ready_html: Download the export in format %{export_format}<br>(generated %{export_time} ago)
