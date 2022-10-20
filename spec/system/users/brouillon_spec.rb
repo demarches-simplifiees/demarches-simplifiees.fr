@@ -115,14 +115,10 @@ describe 'The user' do
     end
 
     expect(page).to have_content('Supprimer', count: 2)
-    wait_for_autosave
-
-    expect(page).to have_content('Supprimer', count: 2)
 
     within '.repetition .row:first-child' do
       click_on 'Supprimer l’élément'
     end
-    wait_for_autosave
 
     expect(page).to have_content('Supprimer', count: 1)
   end
