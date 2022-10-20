@@ -92,6 +92,17 @@ describe TargetedUserLinksController, type: :controller do
           expect(response).to redirect_to(invite_path(target_model, email: target_model.email))
         end
       end
+
+      context 'when there is no dossier visible anymore' do
+        let(:user) { nil }
+        let(:target_model) { create(:invite, user: user, dossier: create(:dossier, hidden_by_user_at: 1.day.ago)) }
+
+        it 'redirect nicely' do
+          get :show, params: { id: targeted_user_link.id }
+          expect(response).to redirect_to(root_path)
+          expect(flash[:error]).to match(/dossier n'est plus accessible/)
+        end
+      end
     end
 
     context 'with invite not having user' do
@@ -139,6 +150,7 @@ describe TargetedUserLinksController, type: :controller do
         get :show, params: { id: "asldjiasld" }
         expect(response).to redirect_to(root_path)
         expect(flash[:error]).to be_present
+        expect(flash[:error]).to match(/invitation n'est plus valable/)
       end
     end
   end
