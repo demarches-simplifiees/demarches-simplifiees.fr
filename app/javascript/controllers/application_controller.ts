@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import { debounce } from '@utils';
+import debounce from 'debounce';
 
 export type Detail = Record<string, unknown>;
 
