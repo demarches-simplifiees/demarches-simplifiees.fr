@@ -139,4 +139,35 @@ class APIEntreprise::API
   def self.api_entreprise_delay
     ENV.fetch("API_ENTREPRISE_DELAY", DEFAULT_API_ENTREPRISE_DELAY).to_f
   end
+
+  class Error < ::StandardError
+    def initialize(response)
+      # use uri to avoid sending token
+      uri = URI.parse(response.effective_url)
+
+      msg = <<~TEXT
+        url: #{uri.host}#{uri.path}
+        HTTP error code: #{response.code}
+        body: #{CGI.escape(response.body)}
+        curl message: #{response.return_message}
+        total time: #{response.total_time}
+        connect time: #{response.connect_time}
+        response headers: #{response.headers}
+      TEXT
+
+      super(msg)
+    end
+
+    class BadFormatRequest < self; end
+
+    class BadGateway < self; end
+
+    class RequestFailed < self; end
+
+    class ResourceNotFound < self; end
+
+    class ServiceUnavailable < self; end
+
+    class TimedOut < self; end
+  end
 end

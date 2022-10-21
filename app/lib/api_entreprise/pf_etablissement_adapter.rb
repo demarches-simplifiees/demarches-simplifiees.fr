@@ -16,6 +16,8 @@ class APIEntreprise::PfEtablissementAdapter < APIEntreprise::Adapter
 
   def process_params
     etablissements = data_source.sort_by { |a| a[:numEtablissement] }.filter { |h| h[:dateRadiation].nil? }
+    return nil if etablissements.blank?
+
     etablissements = etablissements.map { |e| translate(e) }
     fields = Set.new(etablissements.map(&:keys).flatten)
     etablissement = { siege_social: true }

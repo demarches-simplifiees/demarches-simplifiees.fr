@@ -14,7 +14,7 @@ class APIEntrepriseService
       else
         APIEntreprise::EtablissementAdapter.new(siret, dossier_or_champ.procedure.id).to_params
       end
-    return nil if etablissement_params.empty?
+    return nil if etablissement_params.blank?
 
     etablissement = dossier_or_champ.build_etablissement(etablissement_params)
     etablissement.save!
