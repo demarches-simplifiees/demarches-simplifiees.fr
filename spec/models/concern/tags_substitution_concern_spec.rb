@@ -99,7 +99,7 @@ describe TagsSubstitutionConcern, type: :model do
       let(:types_de_champ_public) do
         [
           { libelle: 'libelleA' },
-          { libelle: 'libelleB' }
+          { libelle: "libelle\xc2\xA0B".encode('utf-8') }
         ]
       end
 
@@ -115,7 +115,7 @@ describe TagsSubstitutionConcern, type: :model do
       end
 
       context 'and they are used in the template' do
-        let(:template) { '--libelleA-- --libelleB--' }
+        let(:template) { '--libelleA-- --libelle B--' }
 
         context 'and their value in the dossier are nil' do
           it { is_expected.to eq(' ') }
@@ -128,7 +128,7 @@ describe TagsSubstitutionConcern, type: :model do
               .update(value: 'libelle1')
 
             dossier.champs
-              .find { |champ| champ.libelle == 'libelleB' }
+              .find { |champ| champ.libelle == "libelle\xc2\xA0B".encode('utf-8') }
               .update(value: 'libelle2')
           end
 
