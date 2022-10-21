@@ -833,6 +833,12 @@ class Procedure < ApplicationRecord
     published_at || created_at
   end
 
+  def self.tags
+    unnest = Arel::Nodes::NamedFunction.new('UNNEST', [self.arel_table[:tags]])
+    query = self.select(unnest.as('tags')).distinct.order('tags')
+    self.connection.query(query.to_sql).flatten
+  end
+
   private
 
   def move_new_children_to_new_parent_coordinate(new_draft)

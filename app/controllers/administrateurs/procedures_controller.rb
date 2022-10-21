@@ -63,7 +63,7 @@ module Administrateurs
 
     def new
       @procedure ||= Procedure.new(for_individual: true)
-      @existing_tags = get_existing_tags
+      @existing_tags = Procedure.tags
     end
 
     SIGNIFICANT_DOSSIERS_THRESHOLD = 30
@@ -402,12 +402,6 @@ module Administrateurs
 
     def cloned_from_library?
       params[:from_new_from_existing].present?
-    end
-
-    def get_existing_tags
-      unnest = Arel::Nodes::NamedFunction.new('UNNEST', [Procedure.arel_table[:tags]])
-      query = Procedure.select(unnest.as('tags')).distinct.order('tags')
-      Procedure.connection.query(query.to_sql).flatten
     end
   end
 end
