@@ -125,7 +125,7 @@ class Export < ApplicationRecord
       [
         groupe_instructeurs_ids.sort.join('-'),
         procedure_presentation.id,
-        Digest::MD5.hexdigest(procedure_presentation.snapshot.slice('filters', 'sort').to_s)
+        Digest::MD5.hexdigest(procedure_presentation.snapshot.slice(:filters, :sort).to_s)
       ].join('--')
     else
       groupe_instructeurs_ids.sort.join('-')

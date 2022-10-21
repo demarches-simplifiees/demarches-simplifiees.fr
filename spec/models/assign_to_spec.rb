@@ -8,7 +8,7 @@ describe AssignTo, type: :model do
     let(:errors) { procedure_presentation_and_errors.second }
 
     context "without a procedure_presentation" do
-      it { expect(procedure_presentation_or_default).not_to be_persisted }
+      it { expect(procedure_presentation_or_default).to be_persisted }
       it { expect(procedure_presentation_or_default).to be_valid }
       it { expect(errors).to be_nil }
     end
@@ -28,7 +28,7 @@ describe AssignTo, type: :model do
         pp
       end
 
-      it { expect(procedure_presentation_or_default).not_to be_persisted }
+      it { expect(procedure_presentation_or_default).to be_persisted }
       it { expect(procedure_presentation_or_default).to be_valid }
       it { expect(errors).to be_present }
       it do
