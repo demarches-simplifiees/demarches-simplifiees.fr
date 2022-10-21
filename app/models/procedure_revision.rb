@@ -390,6 +390,46 @@ class ProcedureRevision < ApplicationRecord
         stable_id: from_type_de_champ.stable_id
       }
     end
+    if to_type_de_champ.visa?
+      if from_type_de_champ.accredited_user_list != to_type_de_champ.accredited_user_list
+        changes << {
+          model: :type_de_champ,
+          op: :update,
+          attribute: :accredited_user_list,
+          label: from_type_de_champ.libelle,
+          private: from_type_de_champ.private?,
+          from: from_type_de_champ.accredited_user_list,
+          to: to_type_de_champ.accredited_user_list,
+          stable_id: from_type_de_champ.stable_id
+        }
+      end
+    end
+    if to_type_de_champ.date? || to_type_de_champ.integer_number? || to_type_de_champ.decimal_number?
+      if from_type_de_champ.min != to_type_de_champ.min
+        changes << {
+          model: :type_de_champ,
+          op: :update,
+          attribute: :min,
+          label: from_type_de_champ.libelle,
+          private: from_type_de_champ.private?,
+          from: value_of(to_type_de_champ, from_type_de_champ.min),
+          to: value_of(to_type_de_champ, to_type_de_champ.min),
+          stable_id: from_type_de_champ.stable_id
+        }
+      end
+      if from_type_de_champ.max != to_type_de_champ.max
+        changes << {
+          model: :type_de_champ,
+          op: :update,
+          attribute: :max,
+          label: from_type_de_champ.libelle,
+          private: from_type_de_champ.private?,
+          from: value_of(to_type_de_champ, from_type_de_champ.max),
+          to: value_of(to_type_de_champ, to_type_de_champ.max),
+          stable_id: from_type_de_champ.stable_id
+        }
+      end
+    end
 
     if to_type_de_champ.drop_down_list?
       if from_type_de_champ.drop_down_list_options != to_type_de_champ.drop_down_list_options
@@ -468,6 +508,10 @@ class ProcedureRevision < ApplicationRecord
       end
     end
     changes
+  end
+
+  def value_of(type_de_champ, value)
+    type_de_champ.date? && value.present? ? Date.parse(value) : value
   end
 
   def replace_type_de_champ_by_clone(coordinate)

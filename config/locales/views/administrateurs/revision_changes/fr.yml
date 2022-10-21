@@ -15,6 +15,9 @@ fr:
         one: La position d’un champ a été modifiée
         other: Les positions de %{count} champs ont été modifiées
       update_libelle: Le libellé du champ « %{label} » a été modifié. Le nouveau libellé est « %{to} »
+      update_accredited_users: La liste des personnes autorisées à valider le champ « %{label} » a été modifiée
+      update_min: La nouvelle valeur minimale du champ « %{label} » est « %{to} »
+      update_max: La nouvelle valeur maximale du champ « %{label} » est « %{to} »
       update_description: La description du champ « %{label} » a été modifiée. La nouvelle description est « %{to} »
       update_drop_down_secondary_libelle: Le libellé secondaire du champ « %{label} » a été modifié. Le nouveau libellé est « %{to} »
       update_drop_down_secondary_description: La description secondaire du champ « %{label} » a été modifiée. La nouvelle description est « %{to} »
@@ -34,6 +37,9 @@ fr:
         one: La position d’une annotation privée a été modifiée
         other: Les positions de %{count} annotations privées ont été modifiées
       update_libelle_private: Le libellé de l’annotation privée « %{label} » a été modifié. Le nouveau libellé est « %{to} »
+      update_accredited_users_private: La liste des personnes autorisées à valider l'annotation privée « %{label} » a été modifiée
+      update_min_private: La nouvelle valeur minimale de l'annotation privée « %{label} » est « %{to} »
+      update_max_private: La nouvelle valeur maximale de l'annotation privée « %{label} » est « %{to} »
       update_description_private: La description de l’annotation privée « %{label} » a été modifiée. La nouvelle description est « %{to} »
       update_drop_down_secondary_libelle_private: Le libellé secondaire de l’annotation « %{label} » a été modifié. Le nouveau libellé est « %{to} »
       update_drop_down_secondary_description_private: La description secondaire de l’annotation « %{label} » a été modifiée. La nouvelle description est « %{to} »
