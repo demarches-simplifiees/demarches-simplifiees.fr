@@ -509,5 +509,15 @@ describe TagsSubstitutionConcern, type: :model do
         { text: " encore du text\n" + "---\n" + " encore du text" }
       ])
     end
+
+    it 'allow for - before tag' do
+      tokens = TagsSubstitutionConcern::TagsParser.parse("hello --yolo-- world ---numéro-du - dossier--")
+      expect(tokens).to eq([
+        { text: "hello " },
+        { tag: "yolo" },
+        { text: " world -" },
+        { tag: "numéro-du - dossier" }
+      ])
+    end
   end
 end
