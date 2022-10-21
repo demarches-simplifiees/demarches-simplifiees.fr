@@ -2408,7 +2408,7 @@ type VisaChamp implements Champ {
   Libellé du champ.
   """
   label: String!
-  signedBy: String!
+  signedBy: String
 
   """
   La valeur du champ sous forme texte.

@@ -558,7 +558,7 @@
                 }
               },
               "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ claimant à la place."
+              "deprecationReason": "Utilisez le champ `claimant` à la place."
             },
             {
               "name": "question",
@@ -1585,7 +1585,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ 'date' ou le fragment 'DatetimeChamp' à la place."
+              "deprecationReason": "Utilisez le champ `date` ou le fragment `DatetimeChamp` à la place."
             }
           ],
           "inputFields": null,
@@ -2022,6 +2022,24 @@
           "description": "Une démarche",
           "fields": [
             {
+              "name": "activeRevision",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Revision",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "annotationDescriptors",
               "description": null,
               "args": [
@@ -2044,8 +2062,8 @@
                   }
                 }
               },
-              "isDeprecated": false,
-              "deprecationReason": null
+              "isDeprecated": true,
+              "deprecationReason": "Utilisez le champ `activeRevision.annotationDescriptors` à la place."
             },
             {
               "name": "champDescriptors",
@@ -2070,8 +2088,8 @@
                   }
                 }
               },
-              "isDeprecated": false,
-              "deprecationReason": null
+              "isDeprecated": true,
+              "deprecationReason": "Utilisez le champ `activeRevision.champDescriptors` à la place."
             },
             {
               "name": "dateCreation",
@@ -2560,13 +2578,9 @@
 
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Service",
-                  "ofType": null
-                }
+                "kind": "OBJECT",
+                "name": "Service",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -2620,6 +2634,20 @@
           "name": "DemarcheDescriptor",
           "description": "Une démarche (métadonnées)\nCeci est une version abrégée du type `Demarche`, qui n’expose que les métadonnées.\nCela évite l’accès récursif aux dossiers.",
           "fields": [
+            {
+              "name": "cadreJuridique",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
             {
               "name": "dateCreation",
               "description": "Date de la création.",
@@ -2713,6 +2741,20 @@
               "deprecationReason": null
             },
             {
+              "name": "deliberation",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "description",
               "description": "Description de la démarche.",
               "args": [
@@ -2762,6 +2804,38 @@
                   "name": "Int",
                   "ofType": null
                 }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "revision",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Revision",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "service",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Service",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -3475,8 +3549,8 @@
                   "ofType": null
                 }
               },
-              "isDeprecated": false,
-              "deprecationReason": null
+              "isDeprecated": true,
+              "deprecationReason": "Utilisez le champ `demarche.revision` à la place."
             },
             {
               "name": "state",
@@ -4454,6 +4528,140 @@
               "name": "Champ",
               "ofType": null
             }
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "DossierModifierAnnotationAjouterLigneInput",
+          "description": "Autogenerated input type of DossierModifierAnnotationAjouterLigne",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "dossierId",
+              "description": "Dossier ID",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "instructeurId",
+              "description": "Instructeur qui demande la modification.",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "annotationId",
+              "description": "Annotation ID",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "clientMutationId",
+              "description": "A unique identifier for the client performing the mutation.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "DossierModifierAnnotationAjouterLignePayload",
+          "description": "Autogenerated return type of DossierModifierAnnotationAjouterLigne",
+          "fields": [
+            {
+              "name": "annotation",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "RepetitionChamp",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "clientMutationId",
+              "description": "A unique identifier for the client performing the mutation.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "errors",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "ValidationError",
+                    "ofType": null
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+
           ],
           "enumValues": null,
           "possibleTypes": null
@@ -7451,6 +7659,35 @@
               "deprecationReason": null
             },
             {
+              "name": "dossierModifierAnnotationAjouterLigne",
+              "description": null,
+              "args": [
+                {
+                  "name": "input",
+                  "description": "Parameters for DossierModifierAnnotationAjouterLigne",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "DossierModifierAnnotationAjouterLigneInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "DossierModifierAnnotationAjouterLignePayload",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "dossierModifierAnnotationCheckbox",
               "description": "Modifier l’annotation au format oui/non.",
               "args": [
@@ -9758,30 +9995,6 @@
               "deprecationReason": null
             },
             {
-              "name": "nationalites",
-              "description": "Nationalités",
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "commune_de_polynesie",
-              "description": "Commune de Polynésie",
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "code_postal_de_polynesie",
-              "description": "Code Postal de Polynésie",
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "numero_dn",
-              "description": "Numéro DN",
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "regions",
               "description": "Régions",
               "isDeprecated": false,
@@ -9842,12 +10055,6 @@
               "deprecationReason": null
             },
             {
-              "name": "te_fenua",
-              "description": "Carte de Polynésie",
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "repetition",
               "description": "Bloc répétable",
               "isDeprecated": false,
@@ -9872,12 +10079,6 @@
               "deprecationReason": null
             },
             {
-              "name": "visa",
-              "description": "Visa",
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "cnaf",
               "description": "Données de la Caisse nationale des allocations familiales",
               "isDeprecated": false,
@@ -9898,6 +10099,42 @@
             {
               "name": "mesri",
               "description": "Données du Ministère de l'Enseignement Supérieur, de la Recherche et de l'Innovation",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "nationalites",
+              "description": "Nationalités",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "commune_de_polynesie",
+              "description": "Commune de Polynésie",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "code_postal_de_polynesie",
+              "description": "Code Postal de Polynésie",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "numero_dn",
+              "description": "Numéro DN",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "te_fenua",
+              "description": "Carte de Polynésie",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "visa",
+              "description": "Visa",
               "isDeprecated": false,
               "deprecationReason": null
             }
@@ -10046,13 +10283,9 @@
 
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
