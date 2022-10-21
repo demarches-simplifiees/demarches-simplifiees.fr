@@ -89,13 +89,12 @@ class Export < ApplicationRecord
       .create_or_find_by(format: format,
         time_span_type: time_span_type,
         statut: statut,
-        key: generate_cache_key(groupe_instructeurs.map(&:id), procedure_presentation&.id))
+        key: generate_cache_key(groupe_instructeurs.map(&:id), procedure_presentation))
   end
 
   def self.find_for_groupe_instructeurs(groupe_instructeurs_ids, procedure_presentation)
     exports = if procedure_presentation.present?
-      where(key: generate_cache_key(groupe_instructeurs_ids))
-        .or(where(key: generate_cache_key(groupe_instructeurs_ids, procedure_presentation.id)))
+      where(key: generate_cache_key(groupe_instructeurs_ids, procedure_presentation))
     else
       where(key: generate_cache_key(groupe_instructeurs_ids))
     end
@@ -121,9 +120,13 @@ class Export < ApplicationRecord
     }
   end
 
-  def self.generate_cache_key(groupe_instructeurs_ids, procedure_presentation_id = nil)
-    if procedure_presentation_id.present?
-      "#{groupe_instructeurs_ids.sort.join('-')}--#{procedure_presentation_id}"
+  def self.generate_cache_key(groupe_instructeurs_ids, procedure_presentation = nil)
+    if procedure_presentation.present?
+      [
+        groupe_instructeurs_ids.sort.join('-'),
+        procedure_presentation.id,
+        Digest::MD5.hexdigest(procedure_presentation.snapshot.slice('filters', 'sort').to_s)
+      ].join('--')
     else
       groupe_instructeurs_ids.sort.join('-')
     end
