@@ -519,5 +519,14 @@ describe TagsSubstitutionConcern, type: :model do
         { tag: "numéro-du - dossier" }
       ])
     end
+
+    it 'normalize white spaces' do
+      tokens = TagsSubstitutionConcern::TagsParser.parse("hello --Jour(s) fixe(s)\xc2\xA0souhaité(s)\xc2\xA0:-- world".encode('utf-8'))
+      expect(tokens).to eq([
+        { text: "hello " },
+        { tag: "Jour(s) fixe(s) souhaité(s) :" },
+        { text: " world" }
+      ])
+    end
   end
 end
