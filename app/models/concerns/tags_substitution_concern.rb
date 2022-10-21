@@ -42,7 +42,7 @@ module TagsSubstitutionConcern
 
     define_combinator :tag_text do
       join(single(tag_text_first_char) + many(tag_text_char)).fmap do |str|
-        str.force_encoding('utf-8').encode
+        str.force_encoding('utf-8').encode.gsub(/[[:space:]]/, ' ')
       end
     end
 
