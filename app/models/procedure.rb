@@ -695,7 +695,7 @@ class Procedure < ApplicationRecord
   end
 
   def routee?
-    routing_enabled? || groupe_instructeurs.size > 1
+    routing_enabled?
   end
 
   def instructeurs_self_management?
@@ -703,7 +703,7 @@ class Procedure < ApplicationRecord
   end
 
   def defaut_groupe_instructeur_for_new_dossier
-    if !routee? || feature_enabled?(:procedure_routage_api) || (routee? && self.groupe_instructeurs.actif.size == 1)
+    if !routee? || feature_enabled?(:procedure_routage_api)
       defaut_groupe_instructeur
     end
   end
