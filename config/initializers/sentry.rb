@@ -7,5 +7,5 @@ Sentry.init do |config|
   config.enabled_environments = ['production', secrets[:environment].presence].compact
   config.breadcrumbs_logger = [:active_support_logger]
   config.traces_sample_rate = secrets[:enabled] ? 0.001 : nil
-  config.delayed_job.report_after_job_retries = true
+  config.delayed_job.report_after_job_retries = false # don't wait for all attempts before reporting
 end
