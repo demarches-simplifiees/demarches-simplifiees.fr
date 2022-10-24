@@ -16,12 +16,6 @@
 
 }
 
-.attachment-link {
-  a:not(:hover) {
-    background-image: none; // remove DSFR underline
-  }
-}
-
 .attachment-error {
   display: flex;
   width: max-content;
