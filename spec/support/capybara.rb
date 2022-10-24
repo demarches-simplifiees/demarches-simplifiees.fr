@@ -64,6 +64,12 @@ RSpec.configure do |config|
 
   config.before(:each, type: :system, js: true) do
     driven_by ENV['NO_HEADLESS'] ? :chrome : :headless_chrome
+
+    if ENV['JS_LOG'].present?
+      page.driver.browser.on_log_event(:console) do |event|
+        puts event.args if event.type == ENV['JS_LOG'].downcase.to_sym
+      end
+    end
   end
 
   # Set the user preferred language before Javascript system specs.

@@ -118,6 +118,10 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
 
         NO_HEADLESS=1 bin/rspec spec/system
 
+- Afficher les logs js en error issus de la console du navigateur `console.error('coucou')`
+
+        JS_LOG=error bin/rspec spec/system
+
 ### Ajout de taches à exécuter au déploiement
 
         rails generate after_party:task task_name
