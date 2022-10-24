@@ -87,6 +87,41 @@ describe Administrateurs::ProceduresController, type: :controller do
     it { expect(subject.status).to eq(200) }
   end
 
+  describe 'GET #all' do
+    let!(:draft_procedure)     { create(:procedure) }
+    let!(:published_procedure) { create(:procedure_with_dossiers, :published, dossiers_count: 2) }
+    let!(:closed_procedure)    { create(:procedure, :closed) }
+    subject { get :all }
+
+    it { expect(subject.status).to eq(200) }
+
+    it 'display published or closed procedures' do
+      subject
+      expect(assigns(:procedures)).to include(published_procedure)
+      expect(assigns(:procedures)).to include(closed_procedure)
+    end
+
+    it 'doesn’t display draft procedures' do
+      subject
+      expect(assigns(:procedures)).not_to include(draft_procedure)
+    end
+
+    context "for specific zones" do
+      let(:zone1) { create(:zone) }
+      let(:zone2) { create(:zone) }
+      let!(:procedure1) { create(:procedure, :published, zones: [zone1]) }
+      let!(:procedure2) { create(:procedure, :published, zones: [zone1, zone2]) }
+
+      subject { get :all, params: { zone_ids: [zone2.id] } }
+
+      it 'display only procedures for specified zones' do
+        subject
+        expect(assigns(:procedures)).to include(procedure2)
+        expect(assigns(:procedures)).not_to include(procedure1)
+      end
+    end
+  end
+
   describe 'POST #search' do
     before do
       stub_const("Administrateurs::ProceduresController::SIGNIFICANT_DOSSIERS_THRESHOLD", 2)

@@ -428,6 +428,7 @@ Rails.application.routes.draw do
       collection do
         get 'new_from_existing'
         post 'search'
+        get 'all'
       end
 
       member do
