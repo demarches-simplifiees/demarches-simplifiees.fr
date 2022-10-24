@@ -83,6 +83,7 @@ describe TagsSubstitutionConcern, type: :model do
           gi.dossiers << dossier
           dossier.update(groupe_instructeur: gi)
           dossier.reload
+          procedure.reload
         end
 
         it { expect(procedure.routee?).to eq(true) }

@@ -432,7 +432,7 @@ module Users
     end
 
     def should_fill_groupe_instructeur?
-      (!@dossier.procedure.routee? || @dossier.procedure.groupe_instructeurs.actif.one?) && @dossier.groupe_instructeur_id.nil?
+      !@dossier.procedure.routee? && @dossier.groupe_instructeur_id.nil?
     end
 
     def defaut_groupe_instructeur
