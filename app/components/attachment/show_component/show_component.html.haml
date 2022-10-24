@@ -9,22 +9,23 @@
   - else
     %span{ data: poll_controller_options }
     = attachment.filename.to_s
-    - if attachment.virus_scanner.pending?
-      (analyse antivirus en cours
-      = link_to "rafraichir", attachment_path, data: { action: 'turbo-poll#refresh' }
-      )
-    - elsif attachment.watermark_pending?
-      (traitement de la pièce en cours
-      = link_to "rafraichir", attachment_path, data: { action: 'turbo-poll#refresh' }
-      )
-    - elsif attachment.virus_scanner.infected?
-      - if user_can_upload?
-        (virus détecté, merci d’envoyer un autre fichier)
-      - else
-        (virus détecté, le téléchargement de ce fichier est bloqué)
-    - elsif attachment.virus_scanner.corrupt?
-      - if user_can_upload?
-        (le fichier est corrompu, merci d’envoyer un autre fichier)
-      - else
-        (le fichier est corrompu, le téléchargement est bloqué)
+    %span.fr-text-mention--grey
+      - if attachment.virus_scanner.pending?
+        (analyse antivirus en cours
+        = link_to "rafraichir", attachment_path, data: { action: 'turbo-poll#refresh' }
+        )
+      - elsif attachment.watermark_pending?
+        (traitement de la pièce en cours
+        = link_to "rafraichir", attachment_path, data: { action: 'turbo-poll#refresh' }
+        )
+      - elsif attachment.virus_scanner.infected?
+        - if user_can_upload?
+          (virus détecté, merci d’envoyer un autre fichier)
+        - else
+          (virus détecté, le téléchargement de ce fichier est bloqué)
+      - elsif attachment.virus_scanner.corrupt?
+        - if user_can_upload?
+          (le fichier est corrompu, merci d’envoyer un autre fichier)
+        - else
+          (le fichier est corrompu, le téléchargement est bloqué)
 
