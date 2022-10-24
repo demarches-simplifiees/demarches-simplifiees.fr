@@ -325,6 +325,16 @@ module Administrateurs
       @procedure = Procedure.includes(draft_revision: { revision_types_de_champ_public: :type_de_champ }).find(@procedure.id)
     end
 
+    def all
+      @admin_zones = current_administrateur.zones
+      @other_zones = Zone.all - @admin_zones
+      @zone_ids = params[:zone_ids].filter(&:present?) if params[:zone_ids]
+      @selected_zones = @zone_ids.map { |id| Zone.find(id) } if @zone_ids && @zone_ids.any?
+
+      @procedures = Procedure.joins(:procedures_zones).publiees_ou_closes
+      @procedures = @procedures.where(procedures_zones: { zone_id: @zone_ids }) if @zone_ids && @zone_ids.any?
+    end
+
     private
 
     def draft_valid?

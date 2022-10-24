@@ -1,0 +1,14 @@
+.sidebar-filter {
+  ul {
+    list-style: none;
+    padding-inline-start: 0;
+    border-top: 1px solid var(--border-plain-grey);
+  }
+  li {
+    border-bottom: 1px solid var(--border-plain-grey);
+  }
+  button {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+}

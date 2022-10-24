@@ -4,6 +4,7 @@ import {
   show,
   hide,
   toggle,
+  toggleExpandIcon,
   isSelectElement,
   isTextInputElement,
   isCheckboxOrRadioInputElement
@@ -32,6 +33,20 @@ suite('@utils', () => {
     expect(input.classList.contains('hidden')).toBeTruthy();
     toggle(input);
     expect(input.classList.contains('hidden')).toBeFalsy();
+  });
+
+  test('toggleExpandIcon', () => {
+    const icon = document.createElement('icon');
+    icon.classList.add('fr-icon-add-line');
+
+    toggleExpandIcon(icon);
+    console.log(icon.outerHTML);
+    expect(icon.classList.contains('fr-icon-subtract-line')).toBeTruthy();
+    expect(icon.classList.contains('fr-icon-add-line')).toBeFalsy();
+    toggleExpandIcon(icon);
+    expect(icon.classList.contains('fr-icon-add-line')).toBeTruthy();
+    expect(icon.classList.contains('fr-icon-subtract-line')).toBeFalsy();
+    console.log(icon.outerHTML);
   });
 
   test('isSelectElement', () => {

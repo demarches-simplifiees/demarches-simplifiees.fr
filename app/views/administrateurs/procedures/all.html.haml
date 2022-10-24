@@ -1,0 +1,83 @@
+.fr-container
+  %h1.fr-my-4w Toutes les démarches
+
+  .fr-container--fluid
+    .fr-grid-row.fr-grid-row--gutters
+      .fr-col-8
+        .fr-highlight.fr-mb-4w
+          %p Ce tableau de bord permet de consulter les informations sur les démarches simplifiées pour toutes les zones. Filtrez par zone et statut. Consultez la liste des démarches et cliquez sur une démarche pour voir la zone et quels sont les administrateurs.
+
+
+
+  .fr-container--fluid
+    .fr-grid-row.fr-grid-row--gutters
+      .fr-col-3
+        = form_with url: all_admin_procedures_path, method: :get do |f|
+
+          %fieldset.sidebar-filter
+            %legend.font-weight-bold.fr-pl-2w
+              %span.fr-icon-filter-fill.fr-icon--sm.fr-mr-1w{'aria-hidden': 'true'}
+              Filtrer
+            %ul
+              %li.fr-py-2w.fr-pl-2w{'data-controller': "expand"}
+                .fr-mb-1w{'data-action': 'click->expand#toggle'}
+                  %button
+                    %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{'aria-hidden': 'true', 'data-expand-target': 'icon'}
+                    Mes zones
+                .fr-ml-1w.hidden{'data-expand-target': 'content'}
+                  = f.collection_check_boxes :zone_ids, @admin_zones, :id, :current_label, include_hidden: false do |b|
+                    .fr-checkbox-group.fr-ml-2w
+                      = b.check_box(checked: @zone_ids&.map(&:to_i)&.include?(b.value))
+                      = b.label(class: 'fr-label') { b.text }
+              %li.fr-py-2w.fr-pl-2w{'data-controller': "expand"}
+                .fr-mb-1w{'data-action': 'click->expand#toggle'}
+                  %button
+                    %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{'aria-hidden': 'true', 'data-expand-target': 'icon'}
+                    Autres zones
+                .fr-ml-1w.hidden{'data-expand-target': 'content'}
+                  = f.collection_check_boxes :zone_ids, @other_zones, :id, :current_label, include_hidden: false do |b|
+                    .fr-checkbox-group.fr-ml-2w
+                      = b.check_box(checked: @zone_ids&.map(&:to_i)&.include?(b.value))
+                      = b.label(class: 'fr-label') { b.text }
+          = f.submit 'Filtrer', class: 'fr-btn'
+
+      .fr-col-9
+        .fr-table.fr-table--bordered
+          %table#all-demarches
+            %caption= "#{@procedures.count} démarches"
+            - if @selected_zones
+              .selected-zones.fr-mb-2w
+                - @selected_zones.each do |zone|
+                  %p.fr-tag.fr-mb-1w.fr--background-alt-blue-france= zone.current_label
+            %thead
+              %tr
+                %th{scope: 'col'}
+                %th{scope: 'col'} Démarche
+                %th{scope: 'col'} N°
+                %th{scope: 'col'} Administrateurs
+                %th{scope: 'col'} Statut
+                %th{scope: 'col'} Date
+            - @procedures.each do |procedure|
+              %tbody{'data-controller': 'expand'}
+                %tr.procedure{'data-action': 'click->expand#toggle'}
+                  %td
+                    %button.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-mb-1w.fr-text-action-high--blue-france{'aria-hidden': 'true', 'data-expand-target': 'icon'}
+                  %td= procedure.libelle
+                  %td= procedure.id
+                  %td= procedure.administrateurs.count
+                  %td= procedure.aasm_state
+                  %td= procedure.created_at
+                %tr.hidden{'data-expand-target': 'content'}
+                  %td.fr-highlight--beige-gris-galet{colspan: '6'}
+                    .fr-container
+                      .fr-grid-row
+                        .fr-col-6
+                          - procedure.zones.uniq.each do |zone|
+                            = zone.label_at(procedure.published_or_created_at)
+                        .fr-col-6
+                          - procedure.administrateurs.uniq.each do |admin|
+                            = admin.email
+
+
+
+
