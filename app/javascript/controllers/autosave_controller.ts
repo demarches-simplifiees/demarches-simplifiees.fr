@@ -37,6 +37,7 @@ export class AutosaveController extends ApplicationController {
   #abortController?: AbortController;
   #latestPromise = Promise.resolve();
   #needsRetry = false;
+  #pendingPromiseCount = 0;
 
   connect() {
     this.#latestPromise = Promise.resolve();
@@ -119,11 +120,15 @@ export class AutosaveController extends ApplicationController {
   }
 
   private didSucceed() {
-    this.globalDispatch('autosave:end');
+    this.#pendingPromiseCount -= 1;
+    if (this.#pendingPromiseCount == 0) {
+      this.globalDispatch('autosave:end');
+    }
   }
 
   private didFail(error: ResponseError) {
     this.#needsRetry = true;
+    this.#pendingPromiseCount -= 1;
     this.globalDispatch('autosave:error', { error });
   }
 
@@ -178,6 +183,8 @@ export class AutosaveController extends ApplicationController {
         formData.append(input.name, input.value);
       }
     }
+
+    this.#pendingPromiseCount++;
 
     return httpRequest(form.action, {
       method: 'patch',
