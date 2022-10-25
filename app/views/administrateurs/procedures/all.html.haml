@@ -39,6 +39,16 @@
                     .fr-checkbox-group.fr-ml-2w
                       = b.check_box(checked: @zone_ids&.map(&:to_i)&.include?(b.value))
                       = b.label(class: 'fr-label') { b.text }
+              %li.fr-py-2w.fr-pl-2w{'data-controller': "expand"}
+                .fr-mb-1w{'data-action': 'click->expand#toggle'}
+                  %button
+                    %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{'aria-hidden': 'true', 'data-expand-target': 'icon'}
+                    Statut
+                .fr-ml-1w.hidden{'data-expand-target': 'content'}
+                  = f.collection_check_boxes :statuses, ['publiee', 'close'], :to_s, :to_s, include_hidden: false do |b|
+                    .fr-checkbox-group.fr-ml-2w
+                      = b.check_box(checked: @statuses&.include?(b.value))
+                      = b.label(class: 'fr-label') { b.text }
           = f.submit 'Filtrer', class: 'fr-btn'
 
       .fr-col-9
@@ -49,6 +59,10 @@
               .selected-zones.fr-mb-2w
                 - @selected_zones.each do |zone|
                   %p.fr-tag.fr-mb-1w.fr--background-alt-blue-france= zone.current_label
+            - if @statuses
+              .selected-statuses.fr-mb-2w
+                - @statuses.each do |status|
+                  %p.fr-tag.fr-mb-1w.fr--background-alt-blue-france= status
             %thead
               %tr
                 %th{scope: 'col'}
