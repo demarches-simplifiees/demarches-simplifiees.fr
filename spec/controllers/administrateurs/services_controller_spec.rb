@@ -25,18 +25,21 @@ describe Administrateurs::ServicesController, type: :controller do
         }
       end
 
-      it { expect(flash.alert).to be_nil }
-      it { expect(flash.notice).to eq('super service créé') }
-      it { expect(Service.last.nom).to eq('super service') }
-      it { expect(Service.last.organisme).to eq('organisme') }
-      it { expect(Service.last.type_organisme).to eq(Service.type_organismes.fetch(:association)) }
-      it { expect(Service.last.email).to eq('email@toto.com') }
-      it { expect(Service.last.telephone).to eq('1234') }
-      it { expect(Service.last.horaires).to eq('horaires') }
-      it { expect(Service.last.adresse).to eq('adresse') }
-        it { expect(Service.last.siret).to eq('35600082800018') }
-        it { expect(APIEntreprise::ServiceJob).to have_been_enqueued.with(Service.last.id) }
-      it { expect(response).to redirect_to(admin_services_path(procedure_id: procedure.id)) }
+      it do
+        expect(flash.alert).to be_nil
+        expect(flash.notice).to eq('super service créé')
+        expect(Service.last.nom).to eq('super service')
+        expect(Service.last.organisme).to eq('organisme')
+        expect(Service.last.type_organisme).to eq(Service.type_organismes.fetch(:association))
+        expect(Service.last.email).to eq('email@toto.com')
+        expect(Service.last.telephone).to eq('1234')
+        expect(Service.last.horaires).to eq('horaires')
+        expect(Service.last.adresse).to eq('adresse')
+        expect(Service.last.siret).to eq('35600082800018')
+        expect(APIEntreprise::ServiceJob).to have_been_enqueued.with(Service.last.id)
+
+        expect(response).to redirect_to(admin_services_path(procedure_id: procedure.id))
+      end
     end
 
     context 'when submitting an invalid service' do
