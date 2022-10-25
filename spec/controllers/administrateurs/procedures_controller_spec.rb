@@ -120,6 +120,23 @@ describe Administrateurs::ProceduresController, type: :controller do
         expect(assigns(:procedures)).not_to include(procedure1)
       end
     end
+
+    context 'for specific status' do
+      let!(:procedure1) { create(:procedure, :published) }
+      let!(:procedure2) { create(:procedure, :closed) }
+
+      it 'display only published procedures' do
+        get :all, params: { statuses: ['publiee'] }
+        expect(assigns(:procedures)).to include(procedure1)
+        expect(assigns(:procedures)).not_to include(procedure2)
+      end
+
+      it 'display only closed procedures' do
+        get :all, params: { statuses: ['close'] }
+        expect(assigns(:procedures)).to include(procedure2)
+        expect(assigns(:procedures)).not_to include(procedure1)
+      end
+    end
   end
 
   describe 'POST #search' do
