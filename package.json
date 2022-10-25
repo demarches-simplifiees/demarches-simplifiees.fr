@@ -77,7 +77,7 @@
     "vitest": "^0.20.3"
   },
   "scripts": {
-    "clean": "del tmp public/packs public/packs-test public/vite public/vite-dev public/vite-test node_modules/.vite public/graphql",
+    "clean": "del tmp public/graphql && bin/vite clobber",
     "lint:js": "eslint --ext .js,.jsx,.ts,.tsx ./app/javascript",
     "webpack:build": "NODE_ENV=production bin/webpack",
     "lint:types": "tsc",
