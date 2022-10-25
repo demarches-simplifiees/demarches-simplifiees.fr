@@ -45,8 +45,6 @@ class Service < ApplicationRecord
   validates :adresse, presence: { message: 'doit être renseignée' }, allow_nil: false
   validates :administrateur, presence: { message: 'doit être renseigné' }, allow_nil: false
 
-  after_commit :enqueue_api_entreprise, if: -> { siret_previously_changed? }
-
   def clone_and_assign_to_administrateur(administrateur)
     service_cloned = self.dup
     service_cloned.administrateur = administrateur
@@ -66,8 +64,6 @@ class Service < ApplicationRecord
   def etablissement_latlng
     [etablissement_lat, etablissement_lng]
   end
-
-  private
 
   def enqueue_api_entreprise
     APIEntreprise::ServiceJob.perform_later(self.id)

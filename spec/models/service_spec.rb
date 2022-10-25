@@ -87,25 +87,6 @@ describe Service, type: :model do
     end
   end
 
-  describe "API Entreprise job" do
-    subject { create(:service) }
-    it "should enqueue a job when created" do
-      expect(APIEntreprise::ServiceJob).to have_been_enqueued.with(subject.id)
-    end
-
-    it "should enqueue a job when siret changed" do
-      subject.update(siret: "35600082800018")
-      expect(APIEntreprise::ServiceJob).to have_been_enqueued.with(subject.id)
-    end
-
-    it "should not enqueue a job when siret is unchanged" do
-      subject
-      clear_enqueued_jobs
-      subject.update(telephone: "09879789")
-      expect(APIEntreprise::ServiceJob).not_to have_been_enqueued
-    end
-  end
-
   describe "etablissement adresse & geo coordinates" do
     subject { create(:service, etablissement_lat: latitude, etablissement_lng: longitude, etablissement_infos: etablissement_infos) }
 

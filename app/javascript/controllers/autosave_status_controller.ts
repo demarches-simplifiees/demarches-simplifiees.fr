@@ -27,11 +27,24 @@ export class AutosaveStatusController extends ApplicationController {
   connect(): void {
     this.onGlobal('autosave:enqueue', () => this.didEnqueue());
     this.onGlobal('autosave:end', () => this.didSucceed());
-    // This event is used in tests to reset the state of the controller
-    this.onGlobal('autosave:reset', () => this.didReset());
     this.onGlobal<CustomEvent>('autosave:error', (event) =>
       this.didFail(event)
     );
+
+    this.onGlobal('debounced:added', () => this.debouncedAdded());
+    this.onGlobal('debounced:empty', () => this.debouncedEmpty());
+  }
+
+  private debouncedAdded() {
+    const autosave = this.element as HTMLDivElement;
+    removeClass(autosave, 'debounced-empty');
+    addClass(autosave, 'debounced-added');
+  }
+
+  private debouncedEmpty() {
+    const autosave = this.element as HTMLDivElement;
+    addClass(autosave, 'debounced-empty');
+    removeClass(autosave, 'debounced-added');
   }
 
   onClickRetryButton() {
@@ -46,10 +59,6 @@ export class AutosaveStatusController extends ApplicationController {
     enable(this.retryButtonTarget);
     this.setState('succeeded');
     this.debounce(this.hideSucceededStatus, AUTOSAVE_STATUS_VISIBLE_DURATION);
-  }
-
-  private didReset() {
-    this.setState('idle');
   }
 
   private didFail(event: CustomEvent<{ error: ResponseError }>) {
