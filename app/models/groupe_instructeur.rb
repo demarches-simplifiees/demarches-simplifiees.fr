@@ -23,17 +23,11 @@ class GroupeInstructeur < ApplicationRecord
   validates :closed, acceptance: { accept: [false], message: "Modification impossible : il doit y avoir au moins un groupe instructeur actif sur chaque procédure" }, if: -> { self.procedure.groupe_instructeurs.actif.one? }
 
   before_validation -> { label&.strip! }
-  after_create :toggle_routing
+  after_save :toggle_routing
 
   scope :without_group, -> (group) { where.not(id: group) }
   scope :for_api_v2, -> { includes(procedure: [:administrateurs]) }
   scope :actif, -> { where(closed: false) }
-
-  def toggle_routing
-    procedure = self.procedure.reload
-    routing_enabled = procedure.groupe_instructeurs.actif.count > 1
-    procedure.update!(routing_enabled: routing_enabled)
-  end
 
   def add(instructeur)
     return if in?(instructeur.groupe_instructeurs)
@@ -54,5 +48,11 @@ class GroupeInstructeur < ApplicationRecord
 
   def can_delete?
     dossiers.empty? && (procedure.groupe_instructeurs.actif.many? || (procedure.groupe_instructeurs.actif.one? && closed))
+  end
+
+  private
+
+  def toggle_routing
+    procedure.update!(routing_enabled: procedure.groupe_instructeurs.actif.many?)
   end
 end
