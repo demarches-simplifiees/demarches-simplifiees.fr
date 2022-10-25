@@ -2,6 +2,6 @@
   = turbo_stream.morph @champ.input_group_id do
     = render EditableChamp::EditableChampComponent.new champ: @champ, form: form
 
-- if @champ.piece_justificative_file.attached?
-  - attachment = @champ.piece_justificative_file.attachment
+
+- @champ.piece_justificative_file.attachments.each do |attachment|
   = turbo_stream.focus_all "button[data-toggle-target=\".attachment-input-#{attachment.id}\"]"

@@ -1,2 +1,14 @@
 - user_can_destroy = !@champ.mandatory? || @champ.dossier.brouillon?
-= render Attachment::EditComponent.new(form: @form, attached_file: @champ.piece_justificative_file, template: @champ.type_de_champ.piece_justificative_template, user_can_destroy: user_can_destroy)
+= render Attachment::MultipleComponent.new(form: @form, attached_file: @champ.piece_justificative_file, user_can_destroy: user_can_destroy) do |c|
+  - if @champ.type_de_champ.piece_justificative_template&.attached?
+    - c.with_template do
+      %p
+        Veuillez télécharger, remplir et joindre
+        = link_to(url_for(@champ.type_de_champ.piece_justificative_template), download: "", class: "fr-link fr-link--icon-right fr-icon-download-line") do
+          le modèle suivant
+
+        - if helpers.administrateur_signed_in?
+          %span.fr-ml-2w.fr-text--xs.fr-text-mention--grey.visible-on-previous-hover
+            %span.fr-text-action-high--blue-france.fr-icon-questionnaire-line{ "aria-hidden": "true" }
+            = t('shared.ephemeral_link')
+

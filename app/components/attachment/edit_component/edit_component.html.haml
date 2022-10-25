@@ -1,15 +1,4 @@
-.attachment
-  - if template&.attached?
-    %p.mb-1
-      Veuillez télécharger, remplir et joindre
-      = link_to(url_for(template), download: "", class: "fr-link fr-link--icon-right fr-icon-download-line") do
-        le modèle suivant
-
-      - if helpers.administrateur_signed_in?
-        %span.ml-2.fr-text--xs.fr-text-mention--grey.visible-on-previous-hover
-          %span.fr-text-action-high--blue-france.fr-icon-questionnaire-line{ "aria-hidden": "true" }
-          = t('shared.ephemeral_link')
-
+.fr-mb-2w
   - if persisted?
     .attachment-actions{ id: dom_id(attachment, :actions) }
       .attachment-action
@@ -30,8 +19,9 @@
       %span.icon.retry
       Ré-essayer
 
+  - if !persisted?
+    %label.text-sm.font-weight-normal{ for: file_field_options[:id] }
+      = t('.max_file_size', max_file_size: number_to_human_size(max_file_size))
 
-  %label.text-sm.font-weight-normal{ for: file_field_options[:id] }
-    = t('.max_file_size', max_file_size: number_to_human_size(max_file_size))
+  %p= form.file_field(file_field_name, **file_field_options)
 
-  = form.file_field(file_field_name, **file_field_options)

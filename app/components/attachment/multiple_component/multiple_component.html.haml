@@ -1,0 +1,13 @@
+.fr-mb-4w{ data: { controller: stimulus_controller_name }}
+  = template
+
+  - each_attachment do |attachment, index|
+    %div{id: dom_id(attachment)}
+      = render Attachment::EditComponent.new(form:, attached_file:, attachment:, user_can_destroy:, direct_upload:, id:, index:)
+
+  %div{class: [attachments_empty? ? nil : "hidden"], data: { "#{stimulus_controller_name}-target": "empty" }}
+    = render Attachment::EditComponent.new(form:, attached_file:, user_can_destroy:, direct_upload:, id:, index: attachments_count)
+
+  - if can_attach_next?
+    %button.fr-btn.fr-btn--tertiary.fr-btn--sm{ data: { "#{stimulus_controller_name}-target": "buttonAdd", action: "click->attachment-multiple#add" }} Ajouter un fichier
+

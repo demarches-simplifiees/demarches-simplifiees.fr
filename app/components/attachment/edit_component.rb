@@ -1,15 +1,26 @@
 # Display a widget for uploading, editing and deleting a file attachment
 class Attachment::EditComponent < ApplicationComponent
-  def initialize(form:, attached_file:, template: nil, user_can_destroy: false, direct_upload: true, id: nil)
+  attr_reader :template, :form, :attachment
+
+  delegate :persisted?, to: :attachment, allow_nil: true
+
+  def initialize(form:, attached_file:, attachment: nil, user_can_destroy: false, direct_upload: true, id: nil, index: 0)
     @form = form
     @attached_file = attached_file
-    @template = template
+
+    @attachment = if attachment
+      attachment
+    elsif attached_file.respond_to?(:attachment)
+      attached_file.attachment
+    else
+      # multiple attachments: attachment kwarg is expected, unless adding a new attachment
+    end
+
     @user_can_destroy = user_can_destroy
     @direct_upload = direct_upload
     @id = id
+    @index = index
   end
-
-  attr_reader :template, :form
 
   def max_file_size
     file_size_validator.options[:less_than]
@@ -19,24 +30,16 @@ class Attachment::EditComponent < ApplicationComponent
     @user_can_destroy
   end
 
-  def attachment
-    @attached_file.attachment
-  end
-
   def attachment_path
     helpers.attachment_path attachment.id, { signed_id: attachment.blob.signed_id }
   end
 
   def attachment_id
-    @attachment_id ||= attachment ? attachment.id : SecureRandom.uuid
+    @attachment_id ||= (attachment&.id || SecureRandom.uuid)
   end
 
   def attachment_input_class
     "attachment-input-#{attachment_id}"
-  end
-
-  def persisted?
-    attachment&.persisted?
   end
 
   def champ
@@ -51,13 +54,25 @@ class Attachment::EditComponent < ApplicationComponent
       id: input_id(@id),
       aria: { describedby: champ&.describedby_id },
       data: {
-        auto_attach_url: helpers.auto_attach_url(form.object)
-      }.merge(has_file_size_validator? ? { max_file_size: max_file_size } : {})
+        auto_attach_url:
+      }.merge(has_file_size_validator? ? { max_file_size: } : {})
     }.merge(has_content_type_validator? ? { accept: accept_content_type } : {})
   end
 
+  def auto_attach_url
+    helpers.auto_attach_url(form.object, replace_attachment_id: persisted? ? attachment_id : nil)
+  end
+
   def input_id(given_id)
-    [given_id, champ&.input_id, file_field_name].reject(&:blank?).compact.first
+    return given_id if given_id.present?
+
+    if champ.present?
+      # Single or first attachment input must match label "for" attribute. Others must remain unique.
+      return champ.input_id if @index.zero?
+      return "#{champ.input_id}_#{attachment_id}"
+    end
+
+    file_field_name
   end
 
   def file_field_name
