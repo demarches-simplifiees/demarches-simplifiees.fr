@@ -11,13 +11,13 @@ export class ApplicationController extends Controller {
 
     let debounced = this.#debounced.get(fn);
     if (!debounced) {
-      let wrapper = () => {
+      const wrapper = () => {
         fn.bind(this)();
         this.#debounced.delete(fn);
         if (this.#debounced.size == 0) {
           this.globalDispatch('debounced:empty');
         }
-      }
+      };
 
       debounced = debounce(wrapper.bind(this), interval);
 
