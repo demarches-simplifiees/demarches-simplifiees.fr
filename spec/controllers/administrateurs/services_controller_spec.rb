@@ -34,7 +34,8 @@ describe Administrateurs::ServicesController, type: :controller do
       it { expect(Service.last.telephone).to eq('1234') }
       it { expect(Service.last.horaires).to eq('horaires') }
       it { expect(Service.last.adresse).to eq('adresse') }
-      it { expect(Service.last.siret).to eq('35600082800018') }
+        it { expect(Service.last.siret).to eq('35600082800018') }
+        it { expect(APIEntreprise::ServiceJob).to have_been_enqueued.with(Service.last.id) }
       it { expect(response).to redirect_to(admin_services_path(procedure_id: procedure.id)) }
     end
 
@@ -49,7 +50,7 @@ describe Administrateurs::ServicesController, type: :controller do
 
   describe '#update' do
     let!(:service) { create(:service, administrateur: admin) }
-    let(:service_params) { { nom: 'nom', type_organisme: Service.type_organismes.fetch(:association) } }
+    let(:service_params) { { nom: 'nom', type_organisme: Service.type_organismes.fetch(:association), siret: "13002526500013" } }
 
     before do
       sign_in(admin.user)
@@ -67,6 +68,7 @@ describe Administrateurs::ServicesController, type: :controller do
       it { expect(Service.last.nom).to eq('nom') }
       it { expect(Service.last.type_organisme).to eq(Service.type_organismes.fetch(:association)) }
       it { expect(response).to redirect_to(admin_services_path(procedure_id: procedure.id)) }
+      it { expect(APIEntreprise::ServiceJob).to have_been_enqueued.with(service.id) }
     end
 
     context 'when updating a service with invalid data' do
