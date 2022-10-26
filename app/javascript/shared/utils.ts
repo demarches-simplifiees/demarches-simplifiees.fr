@@ -1,10 +1,5 @@
-import Rails from '@rails/ujs';
-import debounce from 'debounce';
 import { session } from '@hotwired/turbo';
 import { z } from 'zod';
-
-export { debounce };
-export const { fire, csrfToken, cspNonce } = Rails;
 
 const Gon = z
   .object({
@@ -116,17 +111,18 @@ export function delegate<E extends Event = Event>(
   eventNames: string,
   selector: string,
   callback: (event: E) => void
-) {
-  eventNames
+): () => void {
+  const subscriptions = eventNames
     .split(' ')
-    .forEach((eventName) =>
-      Rails.delegate(
+    .map((eventName) =>
+      delegateEvent(
         document,
         selector,
         eventName,
         callback as (event: Event) => void
       )
     );
+  return () => subscriptions.forEach((unsubscribe) => unsubscribe());
 }
 
 export class ResponseError extends Error {
@@ -246,19 +242,6 @@ export function httpRequest(
         const stream = await response.text();
         session.renderStreamMessage(stream);
       }
-    },
-    async js(): Promise<void> {
-      const response = await request(init, 'text/javascript');
-      if (response.status != 204) {
-        const script = document.createElement('script');
-        const nonce = cspNonce();
-        if (nonce) {
-          script.setAttribute('nonce', nonce);
-        }
-        script.text = await response.text();
-        document.head.appendChild(script);
-        document.head.removeChild(script);
-      }
     }
   };
 }
@@ -310,4 +293,42 @@ export function isTextInputElement(
     typeof element.type == 'string' &&
     !['checkbox', 'radio', 'file'].includes(element.type)
   );
+}
+
+export function fire<T>(obj: EventTarget, name: string, data?: T) {
+  const event = new CustomEvent(name, {
+    bubbles: true,
+    cancelable: true,
+    detail: data
+  });
+  obj.dispatchEvent(event);
+  return !event.defaultPrevented;
+}
+
+function csrfToken() {
+  const meta = document.querySelector<HTMLMetaElement>('meta[name=csrf-token]');
+  return meta?.content;
+}
+
+function delegateEvent<E extends Event = Event>(
+  element: EventTarget,
+  selector: string,
+  eventType: string,
+  handler: (event: E) => void | boolean
+): () => void {
+  const listener = function (event: Event) {
+    let { target } = event;
+    while (!!(target instanceof Element) && !target.matches(selector)) {
+      target = target.parentNode;
+    }
+    if (
+      target instanceof Element &&
+      handler.call(target, event as E) === false
+    ) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  };
+  element.addEventListener(eventType, listener);
+  return () => element.removeEventListener(eventType, listener);
 }

@@ -9,7 +9,7 @@
     "@popperjs/core": "^2.11.6",
     "@rails/actiontext": "^6.0.5",
     "@rails/activestorage": "^6.0.5",
-    "@rails/ujs": "^6.0.5",
+    "@rails/ujs": "^7.0.4",
     "@reach/combobox": "^0.17.0",
     "@reach/slider": "^0.17.0",
     "@sentry/browser": "7.8.1",

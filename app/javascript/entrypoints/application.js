@@ -36,7 +36,6 @@ registerControllers(application);
 
 // This is the global application namespace where we expose helpers used from rails views
 const DS = {
-  fire: (eventName, data) => Rails.fire(document, eventName, data),
   toggleCondidentielExplanation,
   showMotivation,
   motivationCancel,
