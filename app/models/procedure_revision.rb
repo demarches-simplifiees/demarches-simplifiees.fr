@@ -204,7 +204,7 @@ class ProcedureRevision < ApplicationRecord
 
   def compute_estimated_fill_duration
     tdc_durations = types_de_champ_public.fillable.map do |tdc|
-      duration = tdc.estimated_fill_duration(self)
+      duration = tdc.estimated_fill_duration(self) + tdc.estimated_read_duration
       tdc.mandatory ? duration : duration / 2
     end
     tdc_durations.sum
