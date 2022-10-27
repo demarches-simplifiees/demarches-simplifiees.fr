@@ -122,6 +122,10 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
 
         JS_LOG=error bin/rspec spec/system
 
+- Augmenter la latence lors de tests end2end pour déceler des bugs récalcitrants
+
+        MAKE_IT_SLOW=1 bin/rspec spec/system
+
 ### Ajout de taches à exécuter au déploiement
 
         rails generate after_party:task task_name

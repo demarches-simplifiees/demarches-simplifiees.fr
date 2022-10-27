@@ -3,6 +3,22 @@ require 'capybara-screenshot/rspec'
 require 'capybara/email/rspec'
 require 'selenium/webdriver'
 
+def setup_driver(app, download_path, options)
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options:).tap do |driver|
+    # Set download dir for Chrome < 77
+    driver.browser.download_path = download_path
+
+    if ENV['MAKE_IT_SLOW'].present?
+      driver.browser.network_conditions = {
+        offline: false,
+        latency: 800,
+        download_throughput: 1024000,
+        upload_throughput: 1024000
+      }
+    end
+  end
+end
+
 Capybara.register_driver :chrome do |app|
   options = Selenium::WebDriver::Chrome::Options.new
   options.add_argument('--no-sandbox') unless ENV['SANDBOX']
@@ -15,10 +31,7 @@ Capybara.register_driver :chrome do |app|
   options.add_preference('download.default_directory', download_path)
   options.add_preference(:download, default_directory: download_path)
 
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options).tap do |driver|
-    # Set download dir for Chrome < 77
-    driver.browser.download_path = download_path
-  end
+  setup_driver(app, download_path, options)
 end
 
 Capybara.register_driver :headless_chrome do |app|
@@ -36,10 +49,7 @@ Capybara.register_driver :headless_chrome do |app|
   options.add_preference('download.default_directory', download_path)
   options.add_preference(:download, default_directory: download_path)
 
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options).tap do |driver|
-    # Set download dir for Chrome < 77
-    driver.browser.download_path = download_path
-  end
+  setup_driver(app, download_path, options)
 end
 
 Capybara.default_max_wait_time = 2
