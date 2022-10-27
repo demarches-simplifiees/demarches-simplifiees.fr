@@ -15,7 +15,7 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
 
   def find_attestation_card(with_nested_selector: nil)
     full_selector = [
-      ".card-admin[href=\"#{edit_admin_procedure_attestation_template_path(procedure)}\"]",
+      "a[href=\"#{edit_admin_procedure_attestation_template_path(procedure)}\"]",
       with_nested_selector
     ].compact.join(" ")
     page.find(full_selector)
