@@ -56,13 +56,32 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
   end
 
   def types_of_type_de_champ
-    TypeDeChamp.type_champs
-      .keys
-      .filter(&method(:filter_type_champ))
-      .filter(&method(:filter_featured_type_champ))
-      .filter(&method(:filter_block_type_champ))
-      .map { |type_champ| [t("activerecord.attributes.type_de_champ.type_champs.#{type_champ}"), type_champ] }
-      .sort_by(&:first)
+    if feature_enabled?(:categories_type_de_champ)
+      cat_scope = "activerecord.attributes.type_de_champ.categorie"
+      tdc_scope = "activerecord.attributes.type_de_champ.type_champs"
+
+      TypeDeChamp.type_champs
+        .keys
+        .filter(&method(:filter_type_champ))
+        .filter(&method(:filter_featured_type_champ))
+        .filter(&method(:filter_block_type_champ))
+        .group_by { TypeDeChamp::TYPE_DE_CHAMP_TO_CATEGORIE.fetch(_1.to_sym) }
+        .sort_by { |k, _v| TypeDeChamp::CATEGORIES.find_index(k) }
+        .to_h do |cat, tdc|
+          [
+            t(cat, scope: cat_scope),
+            tdc.map { [t(_1, scope: tdc_scope), _1] }
+          ]
+        end
+    else
+      TypeDeChamp.type_champs
+        .keys
+        .filter(&method(:filter_type_champ))
+        .filter(&method(:filter_featured_type_champ))
+        .filter(&method(:filter_block_type_champ))
+        .map { |type_champ| [t("activerecord.attributes.type_de_champ.type_champs.#{type_champ}"), type_champ] }
+        .sort_by(&:first)
+    end
   end
 
   def piece_justificative_options(form)
@@ -86,7 +105,7 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
 
   def filter_featured_type_champ(type_champ)
     feature_name = TypeDeChamp::FEATURE_FLAGS[type_champ]
-    feature_name.blank? || Flipper.enabled?(feature_name, helpers.current_user)
+    feature_name.blank? || feature_enabled?(feature_name)
   end
 
   def filter_type_champ(type_champ)
@@ -114,7 +133,7 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
     if type_de_champ.private? || coordinate.child?
       false
     else
-      procedure.feature_enabled?(:procedure_conditional) || Flipper.enabled?(:conditional, controller.current_user)
+      procedure.feature_enabled?(:procedure_conditional)
     end
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_04_151920) do
+ActiveRecord::Schema.define(version: 2022_10_20_094031) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -203,6 +203,7 @@ ActiveRecord::Schema.define(version: 2022_09_04_151920) do
     t.index ["parent_id"], name: "index_champs_on_parent_id"
     t.index ["private"], name: "index_champs_on_private"
     t.index ["row"], name: "index_champs_on_row"
+    t.index ["type"], name: "index_champs_on_type"
     t.index ["type_de_champ_id", "dossier_id", "row"], name: "index_champs_on_type_de_champ_id_and_dossier_id_and_row", unique: true
     t.index ["type_de_champ_id"], name: "index_champs_on_type_de_champ_id"
   end
@@ -562,6 +563,7 @@ ActiveRecord::Schema.define(version: 2022_09_04_151920) do
     t.text "message"
     t.datetime "updated_at"
     t.integer "user_id"
+    t.index ["dossier_id"], name: "index_invites_on_dossier_id"
     t.index ["email", "dossier_id"], name: "index_invites_on_email_and_dossier_id", unique: true
   end
 
@@ -652,6 +654,7 @@ ActiveRecord::Schema.define(version: 2022_09_04_151920) do
     t.string "lien_dpo"
     t.string "lien_notice"
     t.string "lien_site_web"
+    t.integer "max_duree_conservation_dossiers_dans_ds", default: 12
     t.text "monavis_embed"
     t.boolean "opendata", default: true
     t.string "organisation"
@@ -664,6 +667,7 @@ ActiveRecord::Schema.define(version: 2022_09_04_151920) do
     t.text "routing_criteria_name", default: "Votre ville"
     t.boolean "routing_enabled"
     t.bigint "service_id"
+    t.text "tags", default: [], array: true
     t.datetime "test_started_at"
     t.datetime "unpublished_at"
     t.datetime "updated_at", null: false
@@ -680,7 +684,17 @@ ActiveRecord::Schema.define(version: 2022_09_04_151920) do
     t.index ["procedure_expires_when_termine_enabled"], name: "index_procedures_on_procedure_expires_when_termine_enabled"
     t.index ["published_revision_id"], name: "index_procedures_on_published_revision_id"
     t.index ["service_id"], name: "index_procedures_on_service_id"
+    t.index ["tags"], name: "index_procedures_on_tags", using: :gin
     t.index ["zone_id"], name: "index_procedures_on_zone_id"
+  end
+
+  create_table "procedures_zones", id: false, force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.bigint "procedure_id"
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "zone_id"
+    t.index ["procedure_id"], name: "index_procedures_zones_on_procedure_id"
+    t.index ["zone_id"], name: "index_procedures_zones_on_zone_id"
   end
 
   create_table "received_mails", id: :serial, force: :cascade do |t|
@@ -861,6 +875,15 @@ ActiveRecord::Schema.define(version: 2022_09_04_151920) do
     t.index ["procedure_id"], name: "index_without_continuation_mails_on_procedure_id"
   end
 
+  create_table "zone_labels", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.date "designated_on", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "zone_id", null: false
+    t.index ["zone_id"], name: "index_zone_labels_on_zone_id"
+  end
+
   create_table "zones", force: :cascade do |t|
     t.string "acronym", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -892,6 +915,7 @@ ActiveRecord::Schema.define(version: 2022_09_04_151920) do
   add_foreign_key "closed_mails", "procedures"
   add_foreign_key "commentaires", "dossiers"
   add_foreign_key "commentaires", "experts"
+  add_foreign_key "commentaires", "instructeurs"
   add_foreign_key "dossier_operation_logs", "bill_signatures"
   add_foreign_key "dossier_transfer_logs", "dossiers"
   add_foreign_key "dossiers", "dossier_transfers"
@@ -927,4 +951,5 @@ ActiveRecord::Schema.define(version: 2022_09_04_151920) do
   add_foreign_key "trusted_device_tokens", "instructeurs"
   add_foreign_key "users", "users", column: "requested_merge_into_id"
   add_foreign_key "without_continuation_mails", "procedures"
+  add_foreign_key "zone_labels", "zones"
 end

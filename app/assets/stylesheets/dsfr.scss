@@ -1,19 +1,13 @@
 @import "colors";
-// override default text underline of dsfr
-body [href]:not([class^="fr-"]):not(.fr-footer__bottom-copy *) {
-  background-image: none;
-}
 
-// override default transparent background on inputs
+// override default transparent background on inputs & font-size to 16px by default
 input,
 textarea,
 select {
   background: $white;
+  font-size: 1em;
 }
 
-#footer a {
-  color: #333333;
-}
 // with Marianne font, weight of font is less bolder, so bold it up
 .button.primary {
   font-weight: bold;
@@ -35,4 +29,10 @@ input[type="radio"] {
 // remove pointer cursor on textarea
 textarea {
   cursor: auto;
+}
+
+fieldset {
+  border: none;
+  padding-left: 0;
+  padding-bottom: 0;
 }

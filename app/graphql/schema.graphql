@@ -1450,7 +1450,7 @@ type Entreprise {
   """
   capitalSocial: BigInt
   codeEffectifEntreprise: String
-  dateCreation: ISO8601Date!
+  dateCreation: ISO8601Date
 
   """
   effectif moyen d’une année
@@ -2136,11 +2136,6 @@ enum TypeDeChamp {
   email
 
   """
-  Engagement
-  """
-  engagement
-
-  """
   Explication
   """
   explication
@@ -2209,6 +2204,11 @@ enum TypeDeChamp {
   Bloc répétable
   """
   repetition
+
+  """
+  RNA
+  """
+  rna
 
   """
   SIRET

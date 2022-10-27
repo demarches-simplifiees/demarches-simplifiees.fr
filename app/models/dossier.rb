@@ -170,19 +170,19 @@ class Dossier < ApplicationRecord
     end
 
     event :accepter, after: :after_accepter do
-      transitions from: :en_instruction, to: :accepte
+      transitions from: :en_instruction, to: :accepte, guard: :can_terminer?
     end
 
     event :accepter_automatiquement, after: :after_accepter_automatiquement do
-      transitions from: :en_construction, to: :accepte
+      transitions from: :en_construction, to: :accepte, guard: :can_terminer?
     end
 
     event :refuser, after: :after_refuser do
-      transitions from: :en_instruction, to: :refuse
+      transitions from: :en_instruction, to: :refuse, guard: :can_terminer?
     end
 
     event :classer_sans_suite, after: :after_classer_sans_suite do
-      transitions from: :en_instruction, to: :sans_suite
+      transitions from: :en_instruction, to: :sans_suite, guard: :can_terminer?
     end
 
     event :repasser_en_instruction, after: :after_repasser_en_instruction do
@@ -241,19 +241,8 @@ class Dossier < ApplicationRecord
       .joins(:traitements)
       .where(traitements: { processed_at: date.beginning_of_month..date.end_of_month })
   end
-  scope :downloadable_sorted, -> {
-    state_not_brouillon
-      .visible_by_administration
-      .includes(
-        :user,
-        :individual,
-        :followers_instructeurs,
-        :traitement,
-        :groupe_instructeur,
-        :etablissement,
-        procedure: [:groupe_instructeurs],
-        avis: [:claimant, :expert]
-      ).order(depose_at: 'asc')
+  scope :ordered_for_export, -> {
+    order(depose_at: 'asc')
   }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
@@ -434,7 +423,16 @@ class Dossier < ApplicationRecord
   end
 
   def self.downloadable_sorted_batch
-    DossierPreloader.new(downloadable_sorted).in_batches
+    DossierPreloader.new(includes(
+      :user,
+      :individual,
+      :followers_instructeurs,
+      :traitement,
+      :groupe_instructeur,
+      :etablissement,
+      procedure: [:groupe_instructeurs],
+      avis: [:claimant, :expert]
+    ).ordered_for_export).in_batches
   end
 
   def user_deleted?
@@ -513,6 +511,12 @@ class Dossier < ApplicationRecord
 
   def can_transition_to_en_construction?
     brouillon? && procedure.dossier_can_transition_to_en_construction? && !for_procedure_preview?
+  end
+
+  def can_terminer?
+    return false if etablissement&.as_degraded_mode?
+
+    true
   end
 
   def can_repasser_en_instruction?
@@ -610,7 +614,7 @@ class Dossier < ApplicationRecord
   end
 
   def show_groupe_instructeur_selector?
-    procedure.routee? && !procedure.feature_enabled?(:procedure_routage_api)
+    procedure.routee? && !procedure.feature_enabled?(:procedure_routage_api) && procedure.groupe_instructeurs.size > 1
   end
 
   def assign_to_groupe_instructeur(groupe_instructeur, author = nil)
@@ -977,9 +981,10 @@ class Dossier < ApplicationRecord
     champs.filter(&:titre_identite?).map(&:piece_justificative_file).each(&:purge_later)
   end
 
-  def check_mandatory_champs
-    (champs + champs.filter(&:repetition?).filter(&:visible?).flat_map(&:champs))
-      .filter(&:mandatory_blank_and_visible?)
+  def check_mandatory_and_visible_champs
+    (champs + champs.filter(&:block?).filter(&:visible?).flat_map(&:champs))
+      .filter(&:visible?)
+      .filter(&:mandatory_blank?)
       .map do |champ|
         "Le champ #{champ.libelle.truncate(200)} doit être rempli."
       end
@@ -1086,9 +1091,23 @@ class Dossier < ApplicationRecord
   # To do so, we build a virtual champ when there is no value so we can call for_export with all indexes
   def self.champs_for_export(champs, types_de_champ)
     types_de_champ.flat_map do |type_de_champ|
-      champ_or_new = champs.find { |champ| champ.stable_id == type_de_champ.stable_id }
-      champ_or_new ||= type_de_champ.champ.build
-      Array.wrap(champ_or_new.for_export || [nil]).map.with_index do |champ_value, index|
+      champ = champs.find { |champ| champ.stable_id == type_de_champ.stable_id }
+
+      exported_values = if champ.nil? || !champ.visible?
+        # some champs export multiple columns
+        # ex: commune.for_export => [commune, insee, departement]
+        # so we build a fake champ to have the right export
+        type_de_champ.champ.build.for_export
+      else
+        champ.for_export
+      end
+
+      # nil => [nil]
+      # text => [text]
+      # [commune, insee, departement] => [commune, insee, departement]
+      wrapped_exported_values = [exported_values].flatten
+
+      wrapped_exported_values.map.with_index do |champ_value, index|
         [type_de_champ.libelle_for_export(index), champ_value]
       end
     end
@@ -1256,11 +1275,12 @@ class Dossier < ApplicationRecord
       .pluck('avis.id, experts_procedures.id')
 
     # rubocop:disable Lint/UnusedBlockArgument
-    avis_ids = avis_experts_procedures_ids
+    avis = avis_experts_procedures_ids
       .uniq { |(avis_id, experts_procedures_id)| experts_procedures_id }
       .map { |(avis_id, _)| avis_id }
+      .then { |avis_ids| Avis.find(avis_ids) }
     # rubocop:enable Lint/UnusedBlockArgument
 
-    avis_ids.each { |avis_id| ExpertMailer.send_dossier_decision(avis_id).deliver_later }
+    avis.each { |a| ExpertMailer.send_dossier_decision_v2(a).deliver_later }
   end
 end

@@ -4,10 +4,15 @@
       = t('views.shared.france_connect_login.title')
     %p
       = t('views.shared.france_connect_login.description')
-    .france-connect-login-buttons
-      = link_to t('views.shared.france_connect_login.login_button'), url, class: "france-connect-login-button"
-    .france-connect-help-link
-      = link_to t('views.shared.france_connect_login.help_link'), "https://franceconnect.gouv.fr/", target: "_blank", rel: "noopener", class: "link"
+
+    .fr-connect-group.fr-my-2w
+      = link_to(url, class: "fr-btn fr-connect") do
+        %span.fr-connect__login
+          = t('views.shared.france_connect_login.login_button')
+        %span.fr-connect__brand FranceConnect
+      %p
+        = link_to t('views.shared.france_connect_login.help_link'), "https://franceconnect.gouv.fr/", target: "_blank", rel: "noopener"
+
     .france-connect-login-separator
       = t('views.shared.france_connect_login.separator')
 - else

@@ -37,6 +37,7 @@ export class AutosaveController extends ApplicationController {
   #abortController?: AbortController;
   #latestPromise = Promise.resolve();
   #needsRetry = false;
+  #pendingPromiseCount = 0;
 
   connect() {
     this.#latestPromise = Promise.resolve();
@@ -119,11 +120,15 @@ export class AutosaveController extends ApplicationController {
   }
 
   private didSucceed() {
-    this.globalDispatch('autosave:end');
+    this.#pendingPromiseCount -= 1;
+    if (this.#pendingPromiseCount == 0) {
+      this.globalDispatch('autosave:end');
+    }
   }
 
   private didFail(error: ResponseError) {
     this.#needsRetry = true;
+    this.#pendingPromiseCount -= 1;
     this.globalDispatch('autosave:error', { error });
   }
 
@@ -179,6 +184,8 @@ export class AutosaveController extends ApplicationController {
       }
     }
 
+    this.#pendingPromiseCount++;
+
     return httpRequest(form.action, {
       method: 'patch',
       body: formData,
@@ -193,18 +200,20 @@ export class AutosaveController extends ApplicationController {
 
   private get inputs() {
     const element = this.element as HTMLElement;
+
     const inputs = [
       ...element.querySelectorAll<HTMLInputElement>(
         'input:not([type=file]), textarea, select'
       )
-    ];
-    const parent = this.element.closest('.editable-champ-repetition');
+    ].filter((element) => !element.disabled);
+
+    const parent = this.element.closest('[data-block]');
     if (parent) {
       return [
         ...inputs,
         ...parent.querySelectorAll<HTMLInputElement>('input[data-id]')
       ];
     }
-    return inputs.filter((element) => !element.disabled);
+    return inputs;
   }
 }

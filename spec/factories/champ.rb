@@ -125,11 +125,6 @@ FactoryBot.define do
       value { 'Paris' }
     end
 
-    factory :champ_engagement, class: 'Champs::EngagementChamp' do
-      type_de_champ { association :type_de_champ_engagement, procedure: dossier.procedure }
-      value { 'true' }
-    end
-
     factory :champ_header_section, class: 'Champs::HeaderSectionChamp' do
       type_de_champ { association :type_de_champ_header_section, procedure: dossier.procedure }
       value { 'une section' }
@@ -209,6 +204,12 @@ FactoryBot.define do
       type_de_champ { association :type_de_champ_siret, procedure: dossier.procedure }
       association :etablissement, factory: [:etablissement]
       value { '44011762001530' }
+    end
+
+    factory :champ_rna, class: 'Champs::RNAChamp' do
+      type_de_champ { association :type_de_champ_rna, procedure: dossier.procedure }
+      association :etablissement, factory: [:etablissement]
+      value { 'W173847273' }
     end
 
     factory :champ_repetition, class: 'Champs::RepetitionChamp' do

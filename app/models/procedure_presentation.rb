@@ -18,6 +18,8 @@ class ProcedurePresentation < ApplicationRecord
 
   TABLE = 'table'
   COLUMN = 'column'
+  ORDER = 'order'
+
   SLASH = '/'
   TYPE_DE_CHAMP = 'type_de_champ'
   TYPE_DE_CHAMP_PRIVATE = 'type_de_champ_private'
@@ -35,47 +37,60 @@ class ProcedurePresentation < ApplicationRecord
   validate :check_allowed_filter_columns
   validate :check_filters_max_length
 
-  def fields
-    fields = [
-      field_hash('self', 'created_at'),
-      field_hash('self', 'en_construction_at'),
-      field_hash('self', 'depose_at'),
-      field_hash('self', 'updated_at'),
-      field_hash('self', 'depose_since', virtual: true),
-      field_hash('self', 'updated_since', virtual: true),
-      field_hash('user', 'email'),
-      field_hash('followers_instructeurs', 'email'),
-      field_hash('groupe_instructeur', 'label')
+  def self_fields
+    [
+      field_hash('self', 'created_at', type: :date),
+      field_hash('self', 'updated_at', type: :date),
+      field_hash('self', 'depose_at', type: :date),
+      field_hash('self', 'en_construction_at', type: :date),
+      field_hash('self', 'en_instruction_at', type: :date),
+      field_hash('self', 'processed_at', type: :date),
+      field_hash('self', 'updated_since', type: :date, virtual: true),
+      field_hash('self', 'depose_since', type: :date, virtual: true),
+      field_hash('self', 'en_construction_since', type: :date, virtual: true),
+      field_hash('self', 'en_instruction_since', type: :date, virtual: true),
+      field_hash('self', 'processed_since', type: :date, virtual: true),
+      field_hash('self', 'state', type: :enum, scope: 'instructeurs.dossiers.filterable_state', virtual: true)
     ]
+  end
+
+  def fields
+    fields = self_fields
+
+    fields.push(
+      field_hash('user', 'email', type: :text),
+      field_hash('followers_instructeurs', 'email', type: :text),
+      field_hash('groupe_instructeur', 'label', type: :text)
+    )
 
     if procedure.for_individual
       fields.push(
-        field_hash("individual", "prenom"),
-        field_hash("individual", "nom"),
-        field_hash("individual", "gender")
+        field_hash("individual", "prenom", type: :text),
+        field_hash("individual", "nom", type: :text),
+        field_hash("individual", "gender", type: :text)
       )
     end
 
     if !procedure.for_individual
       fields.push(
-        field_hash('etablissement', 'entreprise_siren'),
-        field_hash('etablissement', 'entreprise_forme_juridique'),
-        field_hash('etablissement', 'entreprise_nom_commercial'),
-        field_hash('etablissement', 'entreprise_raison_sociale'),
-        field_hash('etablissement', 'entreprise_siret_siege_social'),
-        field_hash('etablissement', 'entreprise_date_creation')
+        field_hash('etablissement', 'entreprise_siren', type: :text),
+        field_hash('etablissement', 'entreprise_forme_juridique', type: :text),
+        field_hash('etablissement', 'entreprise_nom_commercial', type: :text),
+        field_hash('etablissement', 'entreprise_raison_sociale', type: :text),
+        field_hash('etablissement', 'entreprise_siret_siege_social', type: :text),
+        field_hash('etablissement', 'entreprise_date_creation', type: :date)
       )
 
       fields.push(
-        field_hash('etablissement', 'siret'),
-        field_hash('etablissement', 'libelle_naf'),
-        field_hash('etablissement', 'code_postal')
+        field_hash('etablissement', 'siret', type: :text),
+        field_hash('etablissement', 'libelle_naf', type: :text),
+        field_hash('etablissement', 'code_postal', type: :text)
       )
     end
 
     fields.concat procedure.types_de_champ_for_procedure_presentation
       .pluck(:libelle, :private, :stable_id)
-      .map { |(libelle, is_private, stable_id)| field_hash(is_private ? TYPE_DE_CHAMP_PRIVATE : TYPE_DE_CHAMP, stable_id.to_s, label: libelle) }
+      .map { |(libelle, is_private, stable_id)| field_hash(is_private ? TYPE_DE_CHAMP_PRIVATE : TYPE_DE_CHAMP, stable_id.to_s, label: libelle, type: :text) }
 
     fields
   end
@@ -89,7 +104,9 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def filterable_fields_options
-    fields.map { |field| [field['label'], field_id(field)] }
+    fields.map do |field|
+      [field['label'], field_id(field)]
+    end
   end
 
   def displayed_fields_for_headers
@@ -152,14 +169,21 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def filtered_ids(dossiers, statut)
-    filters[statut].group_by { |filter| filter.values_at(TABLE, COLUMN) } .map do |(table, column), filters|
+    filters.fetch(statut)
+      .group_by { |filter| filter.values_at(TABLE, COLUMN) }
+      .map do |(table, column), filters|
       values = filters.pluck('value')
       case table
       when 'self'
-        dates = values
-          .filter_map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
+        field = self_fields.find { |h| h['column'] == column }
+        if field['type'] == :date
+          dates = values
+            .filter_map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
 
-        dossiers.filter_by_datetimes(column, dates)
+          dossiers.filter_by_datetimes(column, dates)
+        else
+          dossiers.where("dossiers.#{column} IN (?)", values)
+        end
       when TYPE_DE_CHAMP
         dossiers.with_type_de_champ(column)
           .filter_ilike(:champs, :value, values)
@@ -264,22 +288,32 @@ class ProcedurePresentation < ApplicationRecord
     end
   end
 
-  def update_sort(table, column)
-    order = if sort.values_at(TABLE, COLUMN) == [table, column]
+  def update_sort(table, column, order)
+    update!(sort: {
+      TABLE => table,
+      COLUMN => column,
+      ORDER => opposite_order_for(table, column)
+    })
+  end
+
+  def opposite_order_for(table, column)
+    if sort.values_at(TABLE, COLUMN) == [table, column]
       sort['order'] == 'asc' ? 'desc' : 'asc'
     else
       'asc'
     end
-
-    update!(sort: {
-      TABLE => table,
-      COLUMN => column,
-      'order' => order
-    })
   end
 
   def snapshot
     slice(:filters, :sort, :displayed_fields)
+  end
+
+  def field_type(field_id)
+    find_field(*field_id.split(SLASH))['type']
+  end
+
+  def field_enum(field_id)
+    find_field(*field_id.split(SLASH))['scope']
   end
 
   private
@@ -342,13 +376,15 @@ class ProcedurePresentation < ApplicationRecord
     end
   end
 
-  def field_hash(table, column, label: nil, classname: '', virtual: false)
+  def field_hash(table, column, label: nil, classname: '', virtual: false, type: :text, scope: '')
     {
       'label' => label || I18n.t(column, scope: [:activerecord, :attributes, :procedure_presentation, :fields, table]),
       TABLE => table,
       COLUMN => column,
       'classname' => classname,
-      'virtual' => virtual
+      'virtual' => virtual,
+      'type' => type,
+      'scope' => scope
     }
   end
 

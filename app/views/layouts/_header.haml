@@ -6,7 +6,7 @@
 - is_expert_context = nav_bar_profile == :expert && expert_signed_in?
 - is_user_context = nav_bar_profile == :user
 - is_search_enabled = [params[:controller] == 'recherche', is_instructeur_context, is_expert_context, is_user_context && current_user.dossiers.count].any?
-%header{ class: current_page?(root_path) ? "fr-header" : "fr-header new-header-with-border", role: "banner" }
+%header{ class: ["fr-header", content_for?(:notice_info) && "fr-header__with-notice-info"], role: "banner", "data-controller": "dsfr-header" }
   .fr-header__body
     .fr-container
       .fr-header__body-row
@@ -38,7 +38,7 @@
                 - if request.path == new_user_registration_path
                   %li
                     .fr-hidden-sm.fr-unhidden-lg.fr-link--sm= t('views.shared.account.already_user_question')
-                %li= link_to t('views.shared.account.signin'), new_user_session_path, class: "fr-btn"
+                %li= link_to t('views.shared.account.signin'), new_user_session_path, class: "fr-btn fr-btn--tertiary fr-icon-account-circle-fill fr-btn--icon-left"
 
               %li
                 - if dossier.present? && nav_bar_profile == :user
@@ -100,3 +100,6 @@
             %li.fr-nav__item= active_link_to t('.files'), dossiers_path, active: :inclusive, class: 'fr-nav__link'
             - if current_user.expert && current_expert.avis_summary[:total] > 0
               = render partial: 'layouts/header/avis_tab', locals: { current_expert: current_expert }
+
+  = yield(:notice_info)
+

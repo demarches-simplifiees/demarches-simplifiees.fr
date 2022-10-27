@@ -40,77 +40,6 @@ module ApplicationHelper
     tag.div(**html.merge(data: { controller: 'react', react_component_value: name, react_props_value: props.to_json }))
   end
 
-  def render_to_element(selector, partial:, outer: false, locals: {})
-    method = outer ? 'outerHTML' : 'innerHTML'
-    html = escape_javascript(render partial: partial, locals: locals)
-    # rubocop:disable Rails/OutputSafety
-    raw("document.querySelector('#{selector}').#{method} = \"#{html}\";")
-    # rubocop:enable Rails/OutputSafety
-  end
-
-  def append_to_element(selector, partial:, locals: {})
-    html = escape_javascript(render partial: partial, locals: locals)
-    # rubocop:disable Rails/OutputSafety
-    raw("document.querySelector('#{selector}').insertAdjacentHTML('beforeend', \"#{html}\");")
-    # rubocop:enable Rails/OutputSafety
-  end
-
-  def render_flash(timeout: false, sticky: false, fixed: false)
-    if flash.any?
-      html = render_to_element('#flash_messages', partial: 'layouts/flash_messages', locals: { sticky: sticky, fixed: fixed }, outer: true)
-      flash.clear
-      if timeout
-        html += remove_element('#flash_messages', timeout: timeout, inner: true)
-      end
-      html
-    end
-  end
-
-  def remove_element(selector, timeout: 0, inner: false)
-    script = "(function() {";
-    script << "var el = document.querySelector('#{selector}');"
-    method = (inner ? "el.innerHTML = ''" : "el.parentNode.removeChild(el)")
-    if timeout.present? && timeout > 0
-      script << "if (el) { setTimeout(function() { #{method}; }, #{timeout}); }"
-    else
-      script << "if (el) { #{method} };"
-    end
-    script << "})();"
-    # rubocop:disable Rails/OutputSafety
-    raw(script);
-    # rubocop:enable Rails/OutputSafety
-  end
-
-  def show_element(selector)
-    # rubocop:disable Rails/OutputSafety
-    raw("document.querySelector('#{selector}').classList.remove('hidden');")
-    # rubocop:enable Rails/OutputSafety
-  end
-
-  def focus_element(selector)
-    # rubocop:disable Rails/OutputSafety
-    raw("document.querySelector('#{selector}').focus();")
-    # rubocop:enable Rails/OutputSafety
-  end
-
-  def disable_element(selector)
-    # rubocop:disable Rails/OutputSafety
-    raw("document.querySelector('#{selector}').disabled = true;")
-    # rubocop:enable Rails/OutputSafety
-  end
-
-  def enable_element(selector)
-    # rubocop:disable Rails/OutputSafety
-    raw("document.querySelector('#{selector}').disabled = false;")
-    # rubocop:enable Rails/OutputSafety
-  end
-
-  def fire_event(event_name, data)
-    # rubocop:disable Rails/OutputSafety
-    raw("DS.fire('#{event_name}', #{raw(data)});")
-    # rubocop:enable Rails/OutputSafety
-  end
-
   def current_email
     current_user&.email ||
       current_instructeur&.email ||
@@ -198,5 +127,9 @@ module ApplicationHelper
 
   def external_link_attributes
     { target: "_blank", rel: "noopener noreferrer" }
+  end
+
+  def download_details(attachment)
+    "#{attachment.filename.extension.upcase} – #{number_to_human_size(attachment.byte_size)}"
   end
 end

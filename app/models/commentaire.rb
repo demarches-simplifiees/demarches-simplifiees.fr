@@ -18,8 +18,8 @@ class Commentaire < ApplicationRecord
   self.ignored_columns = [:user_id]
   belongs_to :dossier, inverse_of: :commentaires, touch: true, optional: false
 
-  belongs_to :instructeur, optional: true
-  belongs_to :expert, optional: true
+  belongs_to :instructeur, inverse_of: :commentaires, optional: true
+  belongs_to :expert, inverse_of: :commentaires, optional: true
 
   validate :messagerie_available?, on: :create, unless: -> { dossier.brouillon? }
 
@@ -53,7 +53,7 @@ class Commentaire < ApplicationRecord
 
   def redacted_email
     if sent_by_instructeur?
-      if Flipper.enabled?(:hide_instructeur_email, dossier.procedure)
+      if dossier.procedure.feature_enabled?(:hide_instructeur_email)
         "Instructeur n° #{instructeur.id}"
       else
         instructeur.email.split('@').first

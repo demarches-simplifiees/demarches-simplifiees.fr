@@ -11,14 +11,20 @@
           %span.citizen= t('.you_are_a_citizen')
           %br
           %br
-          = link_to t('.citizen_page'), new_user_session_path, class: "button expend secondary"
+          = link_to t('.citizen_page'), new_user_session_path, class: "fr-btn fr-btn--secondary"
 
       .column
-        = t('.connect_html')
+        %h1.fr-my-2
+          = t('.connect')
 
-        = link_to t('.cta'), agent_connect_login_path, class: "france-connect-agent-login-button"
-        .france-connect-help-link
-          = link_to t('.whats_agentconnect'), 'https://agentconnect.gouv.fr/', class: 'link', target: '_blank', target: "_blank", rel: "noopener", class: "link"
+        .fr-connect-group.fr-my-2w
+          = link_to(agent_connect_login_path, class: "fr-btn fr-connect") do
+            %span.fr-connect__login
+              = t('.signin_with')
+            %span.fr-connect__brand AgentConnect
+          %p
+            = link_to t('.whats_agentconnect'), 'https://agentconnect.gouv.fr/', target: '_blank', rel: "noopener"
+
 
         .france-connect-login-separator
           = t('views.shared.france_connect_login.separator')
@@ -39,7 +45,7 @@
               .text-right
                 = link_to t('views.users.sessions.new.reset_password'), new_user_password_path, class: "link"
 
-            = f.submit t('views.users.sessions.new.connection'), class: "button large primary expand"
+            = f.submit t('views.users.sessions.new.connection'), class: "fr-btn fr-btn--lg"
 
 - content_for :footer do
   = render partial: 'users/dossiers/index_footer'

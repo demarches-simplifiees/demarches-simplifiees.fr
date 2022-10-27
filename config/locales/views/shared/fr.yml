@@ -12,11 +12,11 @@ fr:
       france_connect_login:
         title: 'Avec FranceConnect'
         description: "FranceConnect est la solution proposée par l’État pour sécuriser et simplifier la connexion aux services en ligne."
-        login_button: "S’identifier avec FranceConnect"
+        login_button: "S’identifier avec"
         help_link: "Qu’est-ce que FranceConnect ?"
         separator: 'ou'
       account:
         already_user_question: 'Vous avez déjà un compte ?'
         already_user: 'J’ai déjà un compte'
         create: 'Créer un compte'
-        signin: 'Connexion'
+        signin: 'Se connecter'

@@ -3,10 +3,6 @@
 @import "mixins";
 @import "placeholders";
 
-.landing {
-  background-color: #FFFFFF;
-}
-
 .landing-panel {
   @include vertical-padding(60px);
 }
@@ -32,13 +28,11 @@ $landing-breakpoint: 1040px;
 }
 
 .hero-tagline {
-  font-size: 40px;
   margin-bottom: 0px;
 }
 
 .hero-tagline-em {
   color: $blue-france-500;
-  font-size: 40px;
   font-style: normal;
   font-weight: bold;
 }
@@ -55,22 +49,8 @@ $landing-breakpoint: 1040px;
   }
 }
 
-.landing-panel-title {
-  width: 100%;
-  font-size: 30px;
-  font-weight: normal;
-  text-align: center;
-  margin-bottom: 40px;
-  margin-top: 0;
-  color: $g700;
-}
-
 .features-panel {
   background-color: $blue-france-500;
-}
-
-.features-panel-title {
-  color: #FFFFFF;
 }
 
 .features {
@@ -186,15 +166,17 @@ $landing-breakpoint: 1040px;
 }
 
 .number-value {
-  color: $blue-france-500;
-  font-weight: bold;
-  font-size: 36px;
+  color: var(--text-action-high-blue-france);
+  font-size: 2rem;
+  line-height: 2rem;
+  font-weight: 600;
 }
 
 .number-label {
-  font-weight: bold;
-  font-size: 20px;
-  color: $g700;
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 1.5rem;
+  color: var(--text-label-grey);
 }
 
 $users-breakpoint: 950px;
@@ -238,17 +220,6 @@ $users-breakpoint: 950px;
   height: 180px;
 }
 
-.cta-role-title {
-  font-size: 30px;
-  font-weight: bold;
-  margin-top: 13px;
-}
-
-.cta-role-explanation {
-  font-size: 30px;
-  margin-bottom: 10px;
-}
-
 .cta-panel {
   background-color: $blue-france-500;
   color: #FFFFFF;
@@ -258,8 +229,7 @@ $users-breakpoint: 950px;
   }
 }
 
-.role-panel-wrapper,
-.cta-panel-wrapper {
+.role-panel-wrapper {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
@@ -313,24 +283,6 @@ $users-breakpoint: 950px;
   &.grey {
     color: $g700;
   }
-}
-
-.half .cta-panel-title,
-.half .cta-panel-explanation {
-  text-align: center;
-}
-
-.role-panel-title {
-  font-size: 30px;
-  font-weight: bold;
-  line-height: 36px;
-  margin-bottom: 15px;
-  color: $g700;
-}
-
-.role-panel-explanation {
-  font-size: 24px;
-  margin-bottom: 10px;
 }
 
 .role-administrations-image {
@@ -391,85 +343,4 @@ $cta-panel-button-border-size: 2px;
   &:focus {
     outline: 3px solid #FFFFFF;
   }
-}
-
-.cta-panel-button-blue {
-  @include cta-panel-button;
-  border: $cta-panel-button-border-size solid $blue-france-700;
-  color: $blue-france-700;
-
-  &:hover {
-    color: #FFFFFF;
-    background-color: $blue-france-500;
-    text-decoration: none;
-
-    &:focus {
-      color: #FFFFFF;
-    }
-  }
-
-  &:focus {
-    color: $blue-france-500;
-    text-decoration: none;
-  }
-}
-
-@mixin role-button {
-  @include horizontal-padding(30px);
-  display: inline-block;
-  border-radius: 100px;
-  font-size: 20px;
-  text-align: center;
-  cursor: pointer;
-  margin-top: 20px;
-  line-height: 50px;
-}
-
-.role-panel-button-primary {
-  @include role-button;
-  background-color: $blue-france-700;
-  color: #FFFFFF;
-
-  &:hover {
-    color: #FFFFFF;
-    text-decoration: none;
-    background-color: $blue-france-500;
-  }
-
-  &:focus {
-    color: #FFFFFF;
-    text-decoration: none;
-  }
-}
-
-.role-panel-button-secondary {
-  @include role-button;
-  border: $cta-panel-button-border-size solid $blue-france-700;
-  line-height: 50px - 2 * $cta-panel-button-border-size;
-  color: $blue-france-700;
-  margin-left: 10px;
-
-  @media (max-width: $users-breakpoint) {
-    margin-left: 0px;
-  }
-
-  &:hover {
-    color: $blue-france-500;
-    border: $cta-panel-button-border-size solid $blue-france-500;
-    text-decoration: none;
-  }
-
-  &:focus {
-    color: $light-blue;
-    text-decoration: none;
-  }
-}
-
-.half {
-  width: 45%;
-  float: left;
-}
-
-.first-half {
-  margin-right: 10%;
 }

@@ -63,6 +63,8 @@
       .flex
         .flex-grow
           = render partial: "dossiers_filter", locals: { procedure: @procedure, procedure_presentation: @procedure_presentation, current_filters: @current_filters, statut: @statut, filterable_fields_for_select: @filterable_fields_for_select }
+        .flex-grow
+          = render Dossiers::NotifiedToggleComponent.new(procedure: @procedure, procedure_presentation: @procedure_presentation)
         - if @dossiers_count > 0
           .dossiers-export
             = render Dossiers::ExportComponent.new(procedure: @procedure, exports: @exports, statut: @statut, count: @dossiers_count, export_url: method(:download_export_instructeur_procedure_path))
@@ -132,14 +134,15 @@
                 - else
                   %a.cell-link{ href: path }= status_badge(p.state)
 
-              %td.action-col.follow-col= render partial: 'dossier_actions',
-                locals: { procedure_id: @procedure.id,
-                          dossier_id: p.dossier_id,
-                          state: p.state,
-                          archived: p.archived,
-                          dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
-                          close_to_expiration: @statut == 'expirant',
-                          hidden_by_administration: @statut == 'supprimes_recemment' }
+              %td.action-col.follow-col
+                %ul.inline.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
+                  = render partial: 'dossier_actions', locals: { procedure_id: @procedure.id,
+                              dossier_id: p.dossier_id,
+                              state: p.state,
+                              archived: p.archived,
+                              dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
+                              close_to_expiration: @statut == 'expirant',
+                              hidden_by_administration: @statut == 'supprimes_recemment' }
 
       = pagination
     - else

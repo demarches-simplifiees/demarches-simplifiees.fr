@@ -597,14 +597,13 @@ describe Dossier do
     end
   end
 
-  describe '.downloadable_sorted' do
+  describe '.ordered_for_export' do
     let(:procedure) { create(:procedure) }
-    let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:brouillon)) }
     let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_construction), depose_at: Time.zone.parse('03/01/2010')) }
     let!(:dossier3) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_instruction), depose_at: Time.zone.parse('01/01/2010')) }
     let!(:dossier4) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_instruction), archived: true, depose_at: Time.zone.parse('02/01/2010')) }
 
-    subject { procedure.dossiers.downloadable_sorted }
+    subject { procedure.dossiers.ordered_for_export }
 
     it { is_expected.to match([dossier3, dossier4, dossier2]) }
   end
@@ -1138,14 +1137,49 @@ describe Dossier do
     it { expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601) }
   end
 
-  describe "#check_mandatory_champs" do
+  describe "can't transition to terminer when etablissement is in degraded mode" do
+    let(:instructeur) { create(:instructeur) }
+    let(:motivation) { 'motivation' }
+
+    context "when dossier is en_instruction" do
+      let(:dossier_incomplete) { create(:dossier, :en_instruction, :with_entreprise, as_degraded_mode: true) }
+      let(:dossier_ok) { create(:dossier, :en_instruction, :with_entreprise, as_degraded_mode: false) }
+
+      it "can't accepter" do
+        expect(dossier_incomplete.may_accepter?(instructeur:, motivation:)).to be_falsey
+        expect(dossier_ok.accepter(instructeur:, motivation:)).to be_truthy
+      end
+
+      it "can't refuser" do
+        expect(dossier_incomplete.may_refuser?(instructeur:, motivation:)).to be_falsey
+        expect(dossier_ok.may_refuser?(instructeur:, motivation:)).to be_truthy
+      end
+
+      it "can't classer_sans_suite" do
+        expect(dossier_incomplete.may_classer_sans_suite?(instructeur:, motivation:)).to be_falsey
+        expect(dossier_ok.may_classer_sans_suite?(instructeur:, motivation:)).to be_truthy
+      end
+    end
+
+    context "when dossier is en_construction" do
+      let(:dossier_incomplete) { create(:dossier, :en_construction, :with_entreprise, as_degraded_mode: true) }
+      let(:dossier_ok) { create(:dossier, :en_construction, :with_entreprise, as_degraded_mode: false) }
+
+      it "can't accepter_automatiquement" do
+        expect(dossier_incomplete.may_accepter_automatiquement?(instructeur:, motivation:)).to be_falsey
+        expect(dossier_ok.accepter_automatiquement(instructeur:, motivation:)).to be_truthy
+      end
+    end
+  end
+
+  describe "#check_mandatory_and_visible_champs" do
     include Logic
 
     let(:procedure) { create(:procedure, types_de_champ_public: types_de_champ) }
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:types_de_champ) { [type_de_champ] }
     let(:type_de_champ) { {} }
-    let(:errors) { dossier.check_mandatory_champs }
+    let(:errors) { dossier.check_mandatory_and_visible_champs }
 
     it 'no mandatory champs' do
       expect(errors).to be_empty
@@ -1449,67 +1483,119 @@ describe Dossier do
   end
 
   describe "champs_for_export" do
-    let(:procedure) { create(:procedure, :with_type_de_champ, :with_datetime, :with_yes_no, :with_explication, :with_commune, :with_repetition) }
-    let(:text_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
-    let(:yes_no_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:yes_no) } }
-    let(:datetime_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:datetime) } }
-    let(:explication_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:explication) } }
-    let(:commune_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:communes) } }
-    let(:repetition_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
-    let(:repetition_champ) { dossier.champs.find(&:repetition?) }
-    let(:repetition_second_revision_champ) { dossier_second_revision.champs.find(&:repetition?) }
-    let(:dossier) { create(:dossier, procedure: procedure) }
-    let(:dossier_second_revision) { create(:dossier, procedure: procedure) }
-    let(:dossier_champs_for_export) { Dossier.champs_for_export(dossier.champs, procedure.types_de_champ_for_procedure_presentation.not_repetition) }
-    let(:dossier_second_revision_champs_for_export) { Dossier.champs_for_export(dossier_second_revision.champs, procedure.types_de_champ_for_procedure_presentation.not_repetition) }
-    let(:repetition_second_revision_champs_for_export) { Dossier.champs_for_export(repetition_second_revision_champ.champs, procedure.types_de_champ_for_procedure_presentation.repetition) }
+    context 'with a unconditionnal procedure' do
+      let(:procedure) { create(:procedure, :with_type_de_champ, :with_datetime, :with_yes_no, :with_explication, :with_commune, :with_repetition, zones: [create(:zone)]) }
+      let(:text_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
+      let(:yes_no_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:yes_no) } }
+      let(:datetime_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:datetime) } }
+      let(:explication_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:explication) } }
+      let(:commune_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:communes) } }
+      let(:repetition_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
+      let(:repetition_champ) { dossier.champs.find(&:repetition?) }
+      let(:repetition_second_revision_champ) { dossier_second_revision.champs.find(&:repetition?) }
+      let(:dossier) { create(:dossier, procedure: procedure) }
+      let(:dossier_second_revision) { create(:dossier, procedure: procedure) }
+      let(:dossier_champs_for_export) { Dossier.champs_for_export(dossier.champs, procedure.types_de_champ_for_procedure_presentation.not_repetition) }
+      let(:dossier_second_revision_champs_for_export) { Dossier.champs_for_export(dossier_second_revision.champs, procedure.types_de_champ_for_procedure_presentation.not_repetition) }
+      let(:repetition_second_revision_champs_for_export) { Dossier.champs_for_export(repetition_second_revision_champ.champs, procedure.types_de_champ_for_procedure_presentation.repetition) }
 
-    context "when procedure published" do
-      before do
-        procedure.publish!
-        dossier
-        procedure.draft_revision.remove_type_de_champ(text_type_de_champ.stable_id)
-        procedure.draft_revision.add_type_de_champ(type_champ: TypeDeChamp.type_champs.fetch(:text), libelle: 'New text field')
-        procedure.draft_revision.find_and_ensure_exclusive_use(yes_no_type_de_champ.stable_id).update(libelle: 'Updated yes/no')
-        procedure.draft_revision.find_and_ensure_exclusive_use(commune_type_de_champ.stable_id).update(libelle: 'Commune de naissance')
-        procedure.draft_revision.find_and_ensure_exclusive_use(repetition_type_de_champ.stable_id).update(libelle: 'Repetition')
-        procedure.update(published_revision: procedure.draft_revision, draft_revision: procedure.create_new_revision)
-        dossier.reload
-        procedure.reload
+      context "when procedure published" do
+        before do
+          procedure.publish!
+          dossier
+          procedure.draft_revision.remove_type_de_champ(text_type_de_champ.stable_id)
+          procedure.draft_revision.add_type_de_champ(type_champ: TypeDeChamp.type_champs.fetch(:text), libelle: 'New text field')
+          procedure.draft_revision.find_and_ensure_exclusive_use(yes_no_type_de_champ.stable_id).update(libelle: 'Updated yes/no')
+          procedure.draft_revision.find_and_ensure_exclusive_use(commune_type_de_champ.stable_id).update(libelle: 'Commune de naissance')
+          procedure.draft_revision.find_and_ensure_exclusive_use(repetition_type_de_champ.stable_id).update(libelle: 'Repetition')
+          procedure.update(published_revision: procedure.draft_revision, draft_revision: procedure.create_new_revision)
+          dossier.reload
+          procedure.reload
+        end
+
+        it "should have champs from all revisions" do
+          expect(dossier.types_de_champ.map(&:libelle)).to eq([text_type_de_champ.libelle, datetime_type_de_champ.libelle, "Yes/no", explication_type_de_champ.libelle, commune_type_de_champ.libelle, repetition_type_de_champ.libelle])
+          expect(dossier_second_revision.types_de_champ.map(&:libelle)).to eq([datetime_type_de_champ.libelle, "Updated yes/no", explication_type_de_champ.libelle, 'Commune de naissance', "Repetition", "New text field"])
+          expect(dossier_champs_for_export.map { |(libelle)| libelle }).to eq([datetime_type_de_champ.libelle, text_type_de_champ.libelle, "Updated yes/no", "Commune de naissance", "Commune de naissance (Code insee)", "Commune de naissance (Département)", "New text field"])
+          expect(dossier_champs_for_export).to eq(dossier_second_revision_champs_for_export)
+          expect(repetition_second_revision_champs_for_export.map { |(libelle)| libelle }).to eq(procedure.types_de_champ_for_procedure_presentation.repetition.map(&:libelle_for_export))
+          expect(repetition_second_revision_champs_for_export.first.size).to eq(2)
+        end
+
+        context 'within a repetition having a type de champs commune (multiple values for export)' do
+          it 'works' do
+            proc_test = create(:procedure)
+
+            draft = proc_test.draft_revision
+
+            tdc_repetition = draft.add_type_de_champ(type_champ: :repetition, libelle: "repetition")
+            draft.add_type_de_champ(type_champ: :communes, libelle: "communes", parent_stable_id: tdc_repetition.stable_id)
+
+            dossier_test = create(:dossier, procedure: proc_test)
+            repetition = proc_test.types_de_champ_for_procedure_presentation.repetition.first
+            type_champs = proc_test.types_de_champ_for_procedure_presentation(repetition).to_a
+            expect(type_champs.size).to eq(1)
+            expect(Dossier.champs_for_export(dossier.champs, type_champs).size).to eq(3)
+          end
+        end
       end
 
-      it "should have champs from all revisions" do
-        expect(dossier.types_de_champ.map(&:libelle)).to eq([text_type_de_champ.libelle, datetime_type_de_champ.libelle, "Yes/no", explication_type_de_champ.libelle, commune_type_de_champ.libelle, repetition_type_de_champ.libelle])
-        expect(dossier_second_revision.types_de_champ.map(&:libelle)).to eq([datetime_type_de_champ.libelle, "Updated yes/no", explication_type_de_champ.libelle, 'Commune de naissance', "Repetition", "New text field"])
-        expect(dossier_champs_for_export.map { |(libelle)| libelle }).to eq([datetime_type_de_champ.libelle, text_type_de_champ.libelle, "Updated yes/no", "Commune de naissance", "Commune de naissance (Code insee)", "Commune de naissance (Département)", "New text field"])
-        expect(dossier_champs_for_export).to eq(dossier_second_revision_champs_for_export)
-        expect(repetition_second_revision_champs_for_export.map { |(libelle)| libelle }).to eq(procedure.types_de_champ_for_procedure_presentation.repetition.map(&:libelle_for_export))
-        expect(repetition_second_revision_champs_for_export.first.size).to eq(2)
-      end
+      context "when procedure brouillon" do
+        let(:procedure) { create(:procedure, :with_type_de_champ, :with_explication) }
 
-      context 'within a repetition having a type de champs commune (multiple values for export)' do
-        it 'works' do
-          proc_test = create(:procedure)
-
-          draft = proc_test.draft_revision
-
-          tdc_repetition = draft.add_type_de_champ(type_champ: :repetition, libelle: "repetition")
-          draft.add_type_de_champ(type_champ: :communes, libelle: "communes", parent_stable_id: tdc_repetition.stable_id)
-
-          dossier_test = create(:dossier, procedure: proc_test)
-          repetition = proc_test.types_de_champ_for_procedure_presentation.repetition.first
-          type_champs = proc_test.types_de_champ_for_procedure_presentation(repetition).to_a
-          expect(type_champs.size).to eq(1)
-          expect(Dossier.champs_for_export(dossier.champs, type_champs).size).to eq(3)
+        it "should not contain non-exportable types de champ" do
+          expect(dossier_champs_for_export.map { |(libelle)| libelle }).to eq([text_type_de_champ.libelle])
         end
       end
     end
 
-    context "when procedure brouillon" do
-      let(:procedure) { create(:procedure, :with_type_de_champ, :with_explication) }
+    context 'with a procedure with a condition' do
+      include Logic
+      let(:types_de_champ) { [{ type: :yes_no }, { type: :text }] }
+      let(:procedure) { create(:procedure, types_de_champ_public: types_de_champ) }
+      let(:dossier) { create(:dossier, procedure:) }
+      let(:yes_no_tdc) { procedure.types_de_champ.first }
+      let(:text_tdc) { procedure.types_de_champ.second }
+      let(:tdcs) { dossier.champs.map(&:type_de_champ) }
 
-      it "should not contain non-exportable types de champ" do
-        expect(dossier_champs_for_export.map { |(libelle)| libelle }).to eq([text_type_de_champ.libelle])
+      subject { Dossier.champs_for_export(dossier.champs, tdcs) }
+
+      before do
+        text_tdc.update(condition: ds_eq(champ_value(yes_no_tdc.stable_id), constant(true)))
+
+        yes_no, text = dossier.champs
+        yes_no.update(value: yes_no_value)
+        text.update(value: 'text')
+      end
+
+      context 'with a champ visible' do
+        let(:yes_no_value) { 'true' }
+
+        it { is_expected.to eq([[yes_no_tdc.libelle, "Oui"], [text_tdc.libelle, "text"]]) }
+      end
+
+      context 'with a champ invisible' do
+        let(:yes_no_value) { 'false' }
+
+        it { is_expected.to eq([[yes_no_tdc.libelle, "Non"], [text_tdc.libelle, nil]]) }
+      end
+
+      context 'with another revision' do
+        let(:tdc_from_another_revision) { create(:type_de_champ_communes, libelle: 'commune', condition: ds_eq(constant(true), constant(true))) }
+        let(:tdcs) { dossier.champs.map(&:type_de_champ) << tdc_from_another_revision }
+        let(:yes_no_value) { 'true' }
+
+        let(:expected) do
+          [
+            [yes_no_tdc.libelle, "Oui"],
+            [text_tdc.libelle, "text"],
+            ["commune", nil],
+            ["commune (Code insee)", nil],
+            ["commune (Département)", ""]
+          ]
+        end
+
+        it { is_expected.to eq(expected) }
       end
     end
   end

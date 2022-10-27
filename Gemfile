@@ -59,6 +59,7 @@ gem 'net-imap', require: false # See https://github.com/mikel/mail/pull/1439
 gem 'net-pop', require: false # same
 gem 'net-smtp', require: false # same
 gem 'openid_connect'
+gem 'parsby'
 gem 'pg'
 gem 'phonelib'
 gem 'prawn-rails' # PDF Generation
@@ -99,11 +100,12 @@ group :test do
   gem 'launchy'
   gem 'rails-controller-testing'
   gem 'rspec_junit_formatter'
+  gem 'selenium-devtools'
   gem 'selenium-webdriver'
   gem 'shoulda-matchers', require: false
   gem 'timecop'
   gem 'vcr'
-  gem 'webdrivers', '~> 4.0'
+  gem 'webdrivers'
   gem 'webmock'
 end
 
@@ -112,6 +114,7 @@ group :development do
   gem 'brakeman', require: false
   gem 'haml-lint'
   gem 'letter_opener_web'
+  gem 'memory_profiler'
   gem 'rack-mini-profiler'
   gem 'rails-erd', require: false # generates `doc/database_models.pdf`
   gem 'rubocop', require: false
@@ -119,6 +122,7 @@ group :development do
   gem 'rubocop-rails', require: false
   gem 'rubocop-rspec', require: false
   gem 'scss_lint', require: false
+  gem 'stackprof'
   gem 'web-console'
 end
 

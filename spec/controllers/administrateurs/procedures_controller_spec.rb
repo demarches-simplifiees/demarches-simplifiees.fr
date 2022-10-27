@@ -6,12 +6,14 @@ describe Administrateurs::ProceduresController, type: :controller do
   let(:libelle) { 'Démarche de test' }
   let(:description) { 'Description de test' }
   let(:organisation) { 'Organisation de test' }
-  let(:direction) { 'Direction de test' }
   let(:ministere) { create(:zone) }
   let(:cadre_juridique) { 'cadre juridique' }
   let(:duree_conservation_dossiers_dans_ds) { 3 }
   let(:monavis_embed) { nil }
   let(:lien_site_web) { 'http://mon-site.gouv.fr' }
+  let(:zone) { create(:zone) }
+  let(:zone_ids) { [zone.id] }
+  let(:tags) { "[\"planete\",\"environnement\"]" }
 
   describe '#apercu' do
     render_views
@@ -50,12 +52,13 @@ describe Administrateurs::ProceduresController, type: :controller do
       libelle: libelle,
       description: description,
       organisation: organisation,
-      direction: direction,
       ministere: ministere,
       cadre_juridique: cadre_juridique,
       duree_conservation_dossiers_dans_ds: duree_conservation_dossiers_dans_ds,
       monavis_embed: monavis_embed,
-      lien_site_web: lien_site_web
+      zone_ids: zone_ids,
+      lien_site_web: lien_site_web,
+      tags: tags
     }
   }
 
@@ -176,6 +179,14 @@ describe Administrateurs::ProceduresController, type: :controller do
     end
   end
 
+  describe 'GET #zones' do
+    let(:procedure) { create(:procedure, administrateur: admin) }
+    let(:procedure_id) { procedure.id }
+
+    subject { get :zones, params: { id: procedure_id } }
+    it { is_expected.to have_http_status(:success) }
+  end
+
   describe 'POST #create' do
     context 'when all attributs are filled' do
       describe 'new procedure in database' do
@@ -195,9 +206,9 @@ describe Administrateurs::ProceduresController, type: :controller do
           it { expect(subject.libelle).to eq(libelle) }
           it { expect(subject.description).to eq(description) }
           it { expect(subject.organisation).to eq(organisation) }
-          it { expect(subject.direction).to eq(direction) }
           it { expect(subject.administrateurs).to eq([admin]) }
           it { expect(subject.duree_conservation_dossiers_dans_ds).to eq(duree_conservation_dossiers_dans_ds) }
+          it { expect(subject.tags).to eq(["planete", "environnement"]) }
         end
 
         it { is_expected.to redirect_to(champs_admin_procedure_path(Procedure.last)) }
@@ -265,7 +276,6 @@ describe Administrateurs::ProceduresController, type: :controller do
         let(:libelle) { 'Blable' }
         let(:description) { 'blabla' }
         let(:organisation) { 'plop' }
-        let(:direction) { 'plap' }
         let(:duree_conservation_dossiers_dans_ds) { 7 }
         let(:procedure_expires_when_termine_enabled) { true }
 
@@ -277,7 +287,6 @@ describe Administrateurs::ProceduresController, type: :controller do
           it { expect(subject.libelle).to eq(libelle) }
           it { expect(subject.description).to eq(description) }
           it { expect(subject.organisation).to eq(organisation) }
-          it { expect(subject.direction).to eq(direction) }
           it { expect(subject.duree_conservation_dossiers_dans_ds).to eq(duree_conservation_dossiers_dans_ds) }
           it { expect(subject.procedure_expires_when_termine_enabled).to eq(true) }
         end
@@ -319,8 +328,6 @@ describe Administrateurs::ProceduresController, type: :controller do
           it { expect(subject.libelle).to eq procedure_params[:libelle] }
           it { expect(subject.description).to eq procedure_params[:description] }
           it { expect(subject.organisation).to eq procedure_params[:organisation] }
-          it { expect(subject.direction).to eq procedure_params[:direction] }
-
           it { expect(subject.for_individual).not_to eq procedure_params[:for_individual] }
         end
       end

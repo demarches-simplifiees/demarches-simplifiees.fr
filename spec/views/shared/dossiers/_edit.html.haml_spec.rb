@@ -1,6 +1,7 @@
 describe 'shared/dossiers/edit.html.haml', type: :view do
   before do
     allow(controller).to receive(:current_user).and_return(dossier.user)
+    allow(view).to receive(:administrateur_signed_in?).and_return(false)
   end
 
   subject { render 'shared/dossiers/edit.html.haml', dossier: dossier, apercu: false }
@@ -118,7 +119,9 @@ describe 'shared/dossiers/edit.html.haml', type: :view do
     end
 
     context 'when dossier is brouillon' do
-      before { dossier.champs << champ }
+      before do
+        dossier.champs << champ
+      end
 
       it 'can delete a piece justificative' do
         expect(subject).to have_text('Supprimer')

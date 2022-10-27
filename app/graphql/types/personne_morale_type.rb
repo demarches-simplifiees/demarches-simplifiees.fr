@@ -22,7 +22,7 @@ module Types
       field :code_effectif_entreprise, String, null: true
       field :effectif_mensuel, EffectifType, null: true, description: "effectif pour un mois donné"
       field :effectif_annuel, EffectifType, null: true, description: "effectif moyen d’une année"
-      field :date_creation, GraphQL::Types::ISO8601Date, null: false
+      field :date_creation, GraphQL::Types::ISO8601Date, null: true
       field :etat_administratif, EntrepriseEtatAdministratifType, null: true
       field :nom, String, null: true
       field :prenom, String, null: true

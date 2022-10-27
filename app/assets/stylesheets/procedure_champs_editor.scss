@@ -91,10 +91,6 @@
 
       .conditionnel {
         color: $white;
-
-        .add-row {
-          background-color: $white;
-        }
       }
     }
 
@@ -151,6 +147,7 @@
     border-bottom: none;
     padding-bottom: 15px;
     padding-top: 15px;
+    z-index: 10; // above DSFR buttons
   }
 
   .fill-duration {
@@ -158,9 +155,6 @@
     font-size: 14px;
 
     a {
-      text-decoration: underline;
-      text-decoration-style: dotted;
-
       // Remove the icon indicating an external link (for less visual noise)
       &[target="_blank"]::after {
         display: none;

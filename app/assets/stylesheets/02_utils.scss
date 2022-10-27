@@ -1,0 +1,177 @@
+@import "colors";
+@import "constants";
+
+// floats
+.pull-left {
+  float: left;
+}
+
+.pull-right {
+  float: right;
+}
+
+.clearfix {
+  clear: both;
+}
+
+.inline {
+  display: inline;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: none;
+}
+
+// text
+.text-center,
+.center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-sm {
+  font-size: 14px !important;
+}
+
+.text-lg {
+  font-size: 18px;
+}
+
+.font-weight-bold {
+  font-weight: bold !important;
+}
+
+.font-weight-normal {
+  font-weight: normal !important;
+}
+
+.numbers-delimiter {
+  display: inline-block;
+  width: 5px;
+}
+
+.empty-text {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin: 60px 0;
+}
+
+.empty-text-details {
+  margin-bottom: 60px;
+  text-align: center;
+
+  .empty-text + & {
+    margin-top: -50px;
+  }
+}
+
+.relative {
+  position: relative;
+}
+
+// display
+.hidden {
+  display: none;
+}
+
+.visible-on-previous-hover {
+  visibility: hidden;
+}
+
+:hover + .visible-on-previous-hover {
+  visibility: visible;
+}
+
+// sizing
+.width-100 {
+  width: 100%;
+
+  @media (max-width: $two-columns-breakpoint) {
+    &-mobile {
+      width: 100%;
+    }
+  }
+}
+
+.width-33 {
+  width: 33.33%;
+
+  @media (min-width: $two-columns-breakpoint) {
+    &-desktop {
+      width: 33.33%;
+    }
+  }
+}
+
+.width-66 {
+  width: 66.67%;
+
+  @media (min-width: $two-columns-breakpoint) {
+    &-desktop {
+      width: 66.67%;
+    }
+  }
+}
+
+// who known
+.highlighted {
+  background: $orange-bg;
+  color: $black;
+}
+
+// generate spacer utility like bootstrap my-2 -> margin-left/right: 2 * $default-spacer
+// using $direction.key as css modifier, $direction.values to set css properties
+// scale it using $steps
+$directions: (
+  "t": ("margin-top"),
+  "r": ("margin-right"),
+  "b": ("margin-bottom"),
+  "l": ("margin-left"),
+  "x": ("margin-left", "margin-right"),
+  "y": ("margin-top", "margin-bottom"),
+  "":  ("margin")
+);
+$steps: (0, 1, 2, 3, 4, 5, 6, 7, 8);
+
+@each $modifier, $properties in $directions {
+  @each $step in $steps {
+    @each $property in $properties {
+      .m#{$modifier}-#{$step} {
+        #{$property}: $step * $default-spacer;
+      }
+    }
+  }
+}
+
+$directions: (
+  "t": ("padding-top"),
+  "r": ("padding-right"),
+  "b": ("padding-bottom"),
+  "l": ("padding-left"),
+  "x": ("padding-left", "padding-right"),
+  "y": ("padding-top", "padding-bottom"),
+  "":  ("padding")
+);
+$steps: (0, 1, 2, 3, 4, 5, 6, 7, 8);
+
+@each $modifier, $properties in $directions {
+  @each $step in $steps {
+    @each $property in $properties {
+      .p#{$modifier}-#{$step} {
+        #{$property}: $step * $default-spacer;
+      }
+    }
+  }
+}

@@ -15,7 +15,7 @@ class TypesDeChamp::TypeDeChampBase
     stable_id = self.stable_id
     [
       {
-        libelle: libelle,
+        libelle: libelle.gsub(/[[:space:]]/, ' '),
         id: "tdc#{stable_id}",
         description: description,
         lambda: -> (champs) {

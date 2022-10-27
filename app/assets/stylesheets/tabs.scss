@@ -1,0 +1,56 @@
+@import "colors";
+@import "mixins";
+
+.tabs {
+  ul {
+    margin-bottom: 0;
+  }
+
+  li {
+    display: inline-block;
+    line-height: 36px;
+    position: relative;
+    text-align: center;
+    font-size: 14px;
+    border-radius: 3px 3px 0 0;
+    border: 1px solid transparent;
+
+    a {
+      display: block;
+      padding-left: 20px;
+      padding-right: 20px;
+      color: $black;
+      background-image: none;
+    }
+
+    &.active {
+      background-color: #FFFFFF;
+      border-top: 2px solid $blue-france-500;
+      border-left: 1px solid $border-grey;
+      border-right: 1px solid $border-grey;
+
+      a {
+        color: $blue-france-500;
+      }
+
+      .badge {
+        color: $blue-france-500;
+      }
+    }
+
+    &:hover {
+      a {
+        color: $blue-france-500;
+      }
+
+      .badge {
+        color: $blue-france-500;
+      }
+    }
+
+    .notifications {
+      top: 3px;
+      right: 3px;
+    }
+  }
+}

@@ -175,9 +175,13 @@ describe ProcedureRevision do
         it 'reorders' do
           expect(draft.revision_types_de_champ_public.pluck(:position)).to eq([0, 1, 2])
 
-          draft.remove_type_de_champ(draft.types_de_champ_public[1].stable_id)
+          first_stable_id = draft.types_de_champ_public[1].stable_id
+
+          draft.remove_type_de_champ(first_stable_id)
 
           expect(draft.revision_types_de_champ_public.pluck(:position)).to eq([0, 1])
+
+          expect { draft.remove_type_de_champ(first_stable_id) }.not_to raise_error
         end
       end
 

@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import { debounce } from '@utils';
+import debounce from 'debounce';
 
 export type Detail = Record<string, unknown>;
 
@@ -7,9 +7,20 @@ export class ApplicationController extends Controller {
   #debounced = new Map<() => void, () => void>();
 
   protected debounce(fn: () => void, interval: number): void {
+    this.globalDispatch('debounced:added');
+
     let debounced = this.#debounced.get(fn);
     if (!debounced) {
-      debounced = debounce(fn.bind(this), interval);
+      const wrapper = () => {
+        fn.bind(this)();
+        this.#debounced.delete(fn);
+        if (this.#debounced.size == 0) {
+          this.globalDispatch('debounced:empty');
+        }
+      };
+
+      debounced = debounce(wrapper.bind(this), interval);
+
       this.#debounced.set(fn, debounced);
     }
     debounced();

@@ -6,35 +6,63 @@ class TypesDeChampEditor::ConditionsErrorsComponent < ApplicationComponent
   private
 
   def errors
-    @conditions
-      .filter { |condition| condition.errors(@upper_tdcs.map(&:stable_id)).present? }
-      .map { |condition| row_error(Logic.split_condition(condition)) }
+    errors = @conditions
+      .flat_map { |condition| condition.errors(@upper_tdcs) }
       .uniq
+
+    # if a tdc is not available (has been removed for example)
+    # it causes a lot of errors (incompatible type for example)
+    # only the root cause is displayed
+    messages = if errors.include?({ type: :not_available })
+      [t('not_available', scope: '.errors')]
+    else
+      errors.map { |error| humanize(error) }
+    end
+
+    to_html_list(messages)
+  end
+
+  def to_html_list(messages)
+    messages
       .map { |message| tag.li(message) }
       .then { |lis| tag.ul(lis.reduce(&:+)) }
   end
 
-  def row_error((left, operator_name, right))
-    targeted_champ = @upper_tdcs.find { |tdc| tdc.stable_id == left.stable_id }
-
-    if targeted_champ.nil?
+  def humanize(error)
+    case error
+    in { type: :not_available }
       t('not_available', scope: '.errors')
-    elsif left.type == :unmanaged
-      t('unmanaged', scope: '.errors',
+    in { type: :unmanaged, stable_id: stable_id }
+      targeted_champ = @upper_tdcs.find { |tdc| tdc.stable_id == stable_id }
+      t('unmanaged',
+        scope: '.errors',
         libelle: targeted_champ.libelle,
         type_champ: t(targeted_champ.type_champ, scope: 'activerecord.attributes.type_de_champ.type_champs')&.downcase)
-    else
+    in { type: :incompatible, stable_id: stable_id, right: right, operator_name: operator_name }
+      targeted_champ = @upper_tdcs.find { |tdc| tdc.stable_id == stable_id }
       t('incompatible', scope: '.errors',
         libelle: targeted_champ.libelle,
         type_champ: t(targeted_champ.type_champ, scope: 'activerecord.attributes.type_de_champ.type_champs')&.downcase,
         operator: t(operator_name, scope: 'logic.operators').downcase,
         right: right.to_s.downcase)
+    in { type: :required_number, operator_name: operator_name }
+      t('required_number', scope: '.errors',
+        operator: t(operator_name, scope: 'logic.operators'))
+    in { type: :not_included, stable_id: stable_id, right: right }
+      targeted_champ = @upper_tdcs.find { |tdc| tdc.stable_id == stable_id }
+      t('not_included', scope: '.errors',
+        libelle: targeted_champ.libelle,
+        right: right.to_s.downcase)
+    in { type: :required_list }
+      t('required_list', scope: '.errors')
+    else
+      nil
     end
   end
 
   def render?
     @conditions
-      .filter { |condition| condition.errors(@upper_tdcs.map(&:stable_id)).present? }
+      .filter { |condition| condition.errors(@upper_tdcs).present? }
       .present?
   end
 end

@@ -69,7 +69,7 @@ On lance le serveur d'application ainsi :
 
     bin/dev
 
-L'application tourne alors à l'adresse `http://localhost:3000` en parralel avec un worker pour les jobs et le bundler vitejs.
+L'application tourne alors à l'adresse `http://localhost:3000` avec en parallèle un worker pour les jobs et le bundler vitejs.
 
 ### Utilisateurs de test
 
@@ -117,6 +117,10 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
 - Lancer un ou des tests systèmes avec un browser
 
         NO_HEADLESS=1 bin/rspec spec/system
+
+- Afficher les logs js en error issus de la console du navigateur `console.error('coucou')`
+
+        JS_LOG=error bin/rspec spec/system
 
 ### Ajout de taches à exécuter au déploiement
 

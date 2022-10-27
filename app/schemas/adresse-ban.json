@@ -19,7 +19,7 @@
           "enum": ["housenumber", "street", "locality", "municipality"]
         }
       },
-      "required": ["label", "type", "name", "postcode", "citycode", "city"]
+      "required": ["label", "type", "name", "citycode", "city"]
     },
     "geometry": {
       "type": "object",

@@ -6,10 +6,12 @@ describe Administrateur, type: :model do
   end
 
   describe "#renew_api_token" do
-    let!(:administrateur) { create(:administrateur) }
+    let(:administrateur) { create(:administrateur) }
     let!(:token) { administrateur.renew_api_token }
+    let(:encrypted_token) { BCrypt::Password.new(administrateur.encrypted_token) }
+    let(:base_token) { APIToken.new(token).token }
 
-    it { expect(BCrypt::Password.new(administrateur.encrypted_token)).to eq(token) }
+    it { expect(encrypted_token).to eq(base_token) }
 
     context 'when it s called twice' do
       let!(:new_token) { administrateur.renew_api_token }
@@ -128,6 +130,25 @@ describe Administrateur, type: :model do
 
       it 'transfers the service' do
         expect(new_admin.services).to match_array(service)
+      end
+    end
+
+    context 'when both admins have a service with the same name' do
+      let(:service_1) { create(:service, nom: 'S', administrateur: old_admin) }
+      let(:service_2) { create(:service, nom: 'S', administrateur: new_admin) }
+      let(:procedure_1) { create(:procedure, service: service_1) }
+
+      before do
+        service_1
+        service_2
+        procedure_1
+        subject
+        [new_admin, old_admin, service_2].map(&:reload)
+      end
+
+      it 'removes the service from the old one' do
+        expect(old_admin.services).to be_empty
+        expect(service_2.procedures).to include(procedure_1)
       end
     end
 

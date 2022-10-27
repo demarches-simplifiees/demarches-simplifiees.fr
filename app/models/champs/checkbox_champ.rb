@@ -13,11 +13,11 @@
 #  value_json                     :jsonb
 #  created_at                     :datetime
 #  updated_at                     :datetime
-#  dossier_id                     :integer          not null
+#  dossier_id                     :integer
 #  etablissement_id               :integer
 #  external_id                    :string
 #  parent_id                      :bigint
-#  type_de_champ_id               :integer          not null
+#  type_de_champ_id               :integer
 #
 class Champs::CheckboxChamp < Champs::YesNoChamp
   def true?
@@ -26,5 +26,9 @@ class Champs::CheckboxChamp < Champs::YesNoChamp
 
   def for_export
     true? ? 'on' : 'off'
+  end
+
+  def mandatory_blank?
+    mandatory? && (blank? || !true?)
   end
 end

@@ -24,6 +24,10 @@ class ApplicationController < ActionController::Base
   helper_method :multiple_devise_profile_connect?, :instructeur_signed_in?, :current_instructeur, :current_expert, :expert_signed_in?,
     :administrateur_signed_in?, :current_administrateur, :current_account, :localization_enabled?, :set_locale
 
+  before_action do
+    Current.request_id = request.uuid
+  end
+
   def staging_authenticate
     if StagingAuthService.enabled? && !authenticate_with_http_basic { |username, password| StagingAuthService.authenticate(username, password) }
       request_http_basic_authentication
@@ -263,7 +267,13 @@ class ApplicationController < ActionController::Base
   end
 
   def sentry_user
-    { id: user_signed_in? ? "User##{current_user.id}" : 'Guest' }
+    if user_signed_in?
+      { id: "User##{current_user.id}" }
+    elsif administrateur_signed_in?
+      { id: "Administrateur##{current_administrateur.id}" }
+    else
+      { id: 'Guest' }
+    end
   end
 
   def sentry_config

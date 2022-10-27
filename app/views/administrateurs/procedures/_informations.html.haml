@@ -13,12 +13,6 @@
   %span.mandatory *
 = f.text_area :description, rows: '6', placeholder: 'Description de la démarche, destinataires, etc. ', class: 'form-control'
 
-- if Flipper.enabled? :zonage
-  = f.label :zone do
-    = t('zone', scope: 'activerecord.attributes.procedure')
-    %span.mandatory *
-  = f.select :zone_id, grouped_options_for_zone
-
 %h3.header-subsection Logo de la démarche
 = render Attachment::EditComponent.new(form: f, attached_file: @procedure.logo, direct_upload: true, user_can_destroy: true)
 
@@ -68,7 +62,7 @@
 = f.label :lien_dpo, 'Lien ou email pour contacter le Délégué à la Protection des Données (DPO)'
 = f.text_field :lien_dpo, class: 'form-control'
 
-- if Flipper.enabled? :opendata, @procedure
+- if @procedure.feature_enabled?(:opendata)
   %h3.header-subsection= t(:opendata_header, scope: [:administrateurs, :informations])
   %p.notice= t(:opendata_notice_html, scope: [:administrateurs, :informations])
   %p.notice= t(:opendata, scope: [:administrateurs, :informations])
@@ -105,6 +99,18 @@
 
   %p.explication
     Si votre démarche s’adresse indifféremment à une personne morale ou un particulier, choisissez l'option « Particuliers ». Vous pourrez ajouter un champ SIRET directement dans le formulaire.
+
+  %h3.header-subsection Ajouter des tags
+  %p.explication Les tags sont des mots ou des expressions que vous attribuez aux démarches pour décrire leur contenu et pour les retrouver. Les tags sont partagés avec la communauté, ce qui vous permet de voir les tags attribués aux démarches créées par les autres administrateurs.
+  = hidden_field_tag  'procedure[tags]', nil
+  = react_component("ComboMultiple",
+    options: @existing_tags,
+    selected: [], disabled: [],
+    label: 'Tags',
+    group: '.procedure-form__column--form',
+    name: 'tags',
+    describedby: 'procedure-tags',
+    acceptNewValues: true)
 
 %details.procedure-form__options-details
   %summary.procedure-form__options-summary

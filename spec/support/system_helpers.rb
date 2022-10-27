@@ -128,9 +128,10 @@ module SystemHelpers
   def log_out
     within('.fr-header .fr-container .fr-header__tools .fr-btns-group') do
       click_button(title: 'Mon compte')
+      expect(page).to have_selector('#account.fr-collapse--expanded', visible: true)
       click_on 'Se déconnecter'
     end
-    expect(page).to have_current_path(root_path)
+    expect(page).to have_current_path(root_path, wait: 30)
   end
 
   # Keep the brower window open after a test success of failure, to
@@ -169,6 +170,12 @@ module SystemHelpers
 
   def form_id_for(libelle)
     find(:xpath, ".//label[contains(text()[normalize-space()], '#{libelle}')]")[:for]
+  end
+
+  def wait_for_autosave(brouillon = true)
+    blur
+    expect(page).to have_css('.debounced-empty') # no more debounce
+    expect(page).to have_css('.autosave-state-idle') # no more in flight promise
   end
 end
 

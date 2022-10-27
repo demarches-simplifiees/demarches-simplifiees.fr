@@ -32,6 +32,7 @@
 #  lien_dpo                                  :string
 #  lien_notice                               :string
 #  lien_site_web                             :string
+#  max_duree_conservation_dossiers_dans_ds   :integer          default(12)
 #  monavis_embed                             :text
 #  opendata                                  :boolean          default(TRUE)
 #  organisation                              :string
@@ -40,6 +41,7 @@
 #  published_at                              :datetime
 #  routing_criteria_name                     :text             default("Votre ville")
 #  routing_enabled                           :boolean
+#  tags                                      :text             default([]), is an Array
 #  test_started_at                           :datetime
 #  unpublished_at                            :datetime
 #  web_hook_url                              :string
@@ -61,6 +63,8 @@ class Procedure < ApplicationRecord
 
   include Discard::Model
   self.discard_column = :hidden_at
+  self.ignored_columns = [:direction, :durees_conservation_required, :cerfa_flag, :test_started_at]
+
   default_scope -> { kept }
 
   OLD_MAX_DUREE_CONSERVATION = 36
@@ -100,6 +104,7 @@ class Procedure < ApplicationRecord
   belongs_to :replaced_by_procedure, -> { with_discarded }, inverse_of: :replaced_procedures, class_name: "Procedure", optional: true
   belongs_to :service, optional: true
   belongs_to :zone, optional: true
+  has_and_belongs_to_many :zones
 
   def active_dossier_submitted_message
     published_dossier_submitted_message || draft_dossier_submitted_message
@@ -264,11 +269,11 @@ class Procedure < ApplicationRecord
   validates :administrateurs, presence: true
   validates :lien_site_web, presence: true, if: :publiee?
   validates :draft_types_de_champ,
-    'types_de_champ/no_empty_repetition': true,
+    'types_de_champ/no_empty_block': true,
     'types_de_champ/no_empty_drop_down': true,
     if: :validate_for_publication?
   validates :draft_types_de_champ_private,
-    'types_de_champ/no_empty_repetition': true,
+    'types_de_champ/no_empty_block': true,
     'types_de_champ/no_empty_drop_down': true,
     if: :validate_for_publication?
   validate :check_juridique
@@ -276,18 +281,15 @@ class Procedure < ApplicationRecord
   validates :duree_conservation_dossiers_dans_ds, allow_nil: false,
                                                   numericality: {
                                                     only_integer: true,
-                                                                  greater_than_or_equal_to: 1,
-                                                                  less_than_or_equal_to: OLD_MAX_DUREE_CONSERVATION
-                                                  },
-                                                  if: :duree_conservation_etendue_par_ds
-
-  validates :duree_conservation_dossiers_dans_ds, allow_nil: false,
-                                                    numericality: {
-                                                      only_integer: true,
-                                                                    greater_than_or_equal_to: 1,
-                                                                    less_than_or_equal_to: NEW_MAX_DUREE_CONSERVATION
-                                                    },
-                                                    unless: :duree_conservation_etendue_par_ds
+                                                    greater_than_or_equal_to: 1,
+                                                    less_than_or_equal_to: :max_duree_conservation_dossiers_dans_ds
+                                                  }
+  validates :max_duree_conservation_dossiers_dans_ds, allow_nil: false,
+                                                  numericality: {
+                                                    only_integer: true,
+                                                    greater_than_or_equal_to: 1,
+                                                    less_than_or_equal_to: 60
+                                                  }
 
   validates :lien_dpo, email_or_link: true, allow_nil: true
   validates_with MonAvisEmbedValidator
@@ -325,6 +327,7 @@ class Procedure < ApplicationRecord
 
   validates :api_entreprise_token, jwt_token: true, allow_blank: true
   validates :api_particulier_token, format: { with: /\A[A-Za-z0-9\-_=.]{15,}\z/ }, allow_blank: true
+  validates :routing_criteria_name, presence: true, allow_blank: false
 
   before_save :update_juridique_required
   after_initialize :ensure_path_exists
@@ -492,6 +495,7 @@ class Procedure < ApplicationRecord
     procedure.duree_conservation_etendue_par_ds = false
     if procedure.duree_conservation_dossiers_dans_ds > NEW_MAX_DUREE_CONSERVATION
       procedure.duree_conservation_dossiers_dans_ds = NEW_MAX_DUREE_CONSERVATION
+      procedure.max_duree_conservation_dossiers_dans_ds = NEW_MAX_DUREE_CONSERVATION
     end
     procedure.published_revision = nil
     procedure.draft_revision.procedure = procedure
@@ -653,6 +657,10 @@ class Procedure < ApplicationRecord
       result << :instructeurs
     end
 
+    if missing_zones?
+      result << :zones
+    end
+
     result
   end
 
@@ -667,7 +675,9 @@ class Procedure < ApplicationRecord
       dossiers
         .state_en_construction
         .where(declarative_triggered_at: nil)
-        .find_each(&:accepter_automatiquement!)
+        .find_each do |dossier|
+          dossier.accepter_automatiquement! if dossier.may_accepter_automatiquement?
+        end
     end
   end
 
@@ -681,6 +691,14 @@ class Procedure < ApplicationRecord
 
   def missing_instructeurs?
     !AssignTo.exists?(groupe_instructeur: groupe_instructeurs)
+  end
+
+  def missing_zones?
+    if feature_enabled?(:zonage)
+      zones.empty?
+    else
+      false
+    end
   end
 
   def revised?
@@ -701,7 +719,7 @@ class Procedure < ApplicationRecord
   end
 
   def defaut_groupe_instructeur_for_new_dossier
-    if !routee? || feature_enabled?(:procedure_routage_api)
+    if !routee? || feature_enabled?(:procedure_routage_api) || (routee? && self.groupe_instructeurs.size == 1)
       defaut_groupe_instructeur
     end
   end
@@ -814,6 +832,7 @@ class Procedure < ApplicationRecord
     if published_revision.present? && draft_changed?
       transaction do
         reset!
+        draft_revision.types_de_champ.filter(&:only_present_on_draft?).each(&:destroy)
         draft_revision.update(attestation_template: nil, dossier_submitted_message: nil)
         draft_revision.destroy
         update!(draft_revision: create_new_revision(published_revision))
@@ -835,6 +854,10 @@ class Procedure < ApplicationRecord
 
   def mesri_enabled?
     api_particulier_sources['mesri'].present?
+  end
+
+  def published_or_created_at
+    published_at || created_at
   end
 
   private

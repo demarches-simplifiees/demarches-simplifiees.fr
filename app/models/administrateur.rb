@@ -54,7 +54,7 @@ class Administrateur < ApplicationRecord
     api_token = Administrateur.generate_unique_secure_token
     encrypted_token = BCrypt::Password.create(api_token)
     update(encrypted_token: encrypted_token)
-    api_token
+    APIToken.signe(id, api_token)
   end
 
   def valid_api_token?(api_token)
@@ -122,7 +122,18 @@ class Administrateur < ApplicationRecord
       p.administrateurs.delete(old_admin)
     end
 
-    old_admin.services.update_all(administrateur_id: id)
+    old_services = old_admin.services
+    new_service_by_nom = services.index_by(&:nom)
+
+    old_services.each do |old_service|
+      corresponding_service = new_service_by_nom[old_service.nom]
+      if corresponding_service.present?
+        old_service.procedures.update_all(service_id: corresponding_service.id)
+        old_service.destroy
+      else
+        old_service.update!(administrateur_id: id)
+      end
+    end
 
     instructeurs_with_new_admin, instructeurs_without_new_admin = old_admin.instructeurs
       .partition { |i| i.administrateurs.exists?(id) }

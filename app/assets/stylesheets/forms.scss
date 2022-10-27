@@ -81,11 +81,11 @@
     }
 
     // Move checkbox to the top-left side of the label
-    &.editable-champ-checkbox,
-    &.editable-champ-engagement {
+    &.editable-champ-checkbox {
       p,
       label {
         padding-left: 28px;
+        font-weight: normal;
       }
 
       input[type=checkbox] {
@@ -184,9 +184,6 @@
     }
   }
 
-  .add-row {
-    margin-bottom: $default-fields-spacer;
-  }
 
   input[type=checkbox] {
     &.small-margin {
@@ -449,6 +446,13 @@
   }
 
   .siret-info {
+    margin-top: -$default-fields-spacer;
+    margin-bottom: $default-fields-spacer;
+    // Ensure the bottom-margin is not collapsed when the element is empty
+    min-height: 1px;
+  }
+
+  .rna-info {
     margin-top: -$default-fields-spacer;
     margin-bottom: $default-fields-spacer;
     // Ensure the bottom-margin is not collapsed when the element is empty

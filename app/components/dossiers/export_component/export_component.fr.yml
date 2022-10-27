@@ -3,7 +3,7 @@ fr:
   everything_csv_html: Demander un export au format .csv<br>(uniquement les dossiers, sans les champs répétables)
   everything_xlsx_html: Demander un export au format .xlsx
   everything_ods_html: Demander un export au format .ods
-  everything_zip_html: Demander un export au format .zip
+  everything_zip_html: Demander un export au format .zip<br>(ne contient pas l'horodatage ni le journal de log)
   everything_short: Demander un export au format %{export_format}
   everything_pending_html: Un export au format %{export_format} est en train d’être généré<br>(demandé il y a %{export_time})
   everything_ready_html: Télécharger l’export au format %{export_format}<br>(généré il y a %{export_time})

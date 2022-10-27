@@ -13,11 +13,11 @@
 #  value_json                     :jsonb
 #  created_at                     :datetime
 #  updated_at                     :datetime
-#  dossier_id                     :integer          not null
+#  dossier_id                     :integer
 #  etablissement_id               :integer
 #  external_id                    :string
 #  parent_id                      :bigint
-#  type_de_champ_id               :integer          not null
+#  type_de_champ_id               :integer
 #
 class Champs::PieceJustificativeChamp < Champ
   FILE_MAX_SIZE = 200.megabytes
@@ -38,7 +38,7 @@ class Champs::PieceJustificativeChamp < Champ
     # We don’t know how to search inside documents yet
   end
 
-  def mandatory_blank_and_visible?
+  def mandatory_blank?
     mandatory? && !piece_justificative_file.attached?
   end
 

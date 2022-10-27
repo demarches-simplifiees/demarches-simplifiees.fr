@@ -1,5 +1,4 @@
 @import "colors";
-@import "common";
 @import "constants";
 
 .procedure-header {
@@ -103,16 +102,9 @@
       border-color: $blue-france-500;
     }
   }
-}
 
-ul.revision-changes {
-  list-style: none;
-
-  ul {
-    list-style: none;
-
-    li {
-      padding-top: 0.25 * $default-padding;
-    }
+  // fix/dsfr
+  .fr-checkbox-group.fix-dsfr-notified-toggle-component {
+    margin-top: -7px;
   }
 }

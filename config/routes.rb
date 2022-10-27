@@ -153,6 +153,7 @@ Rails.application.routes.draw do
 
   namespace :champs do
     get ':champ_id/siret', to: 'siret#show', as: :siret
+    get ':champ_id/rna', to: 'rna#show', as: :rna
     get ':champ_id/dossier_link', to: 'dossier_link#show', as: :dossier_link
     post ':champ_id/repetition', to: 'repetition#add', as: :repetition
     delete ':champ_id/repetition', to: 'repetition#remove'
@@ -275,6 +276,7 @@ Rails.application.routes.draw do
         get 'etablissement'
         get 'brouillon'
         patch 'brouillon', to: 'dossiers#update_brouillon'
+        post 'brouillon', to: 'dossiers#submit_brouillon'
         get 'modifier', to: 'dossiers#modifier'
         patch 'modifier', to: 'dossiers#update'
         get 'merci'
@@ -431,6 +433,7 @@ Rails.application.routes.draw do
       member do
         get 'apercu'
         get 'champs'
+        get 'zones'
         get 'annotations'
         get 'modifications'
         get 'monavis'

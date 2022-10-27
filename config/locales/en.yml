@@ -136,7 +136,8 @@ en:
       dossiers:
         edit:
           autosave: Your file is automatically saved after each modification. You can close the window at any time and pick up where you left off later.
-          submit_dossier: Submit the file
+          notice: "Download the notice of the procedure"
+          notice_title: "To help you complete your file, you can consult the notice to this procedure."
         messages:
           form:
             send_message: "Send message"
@@ -172,9 +173,6 @@ en:
         deleted_by_administration: "File deleted by administration"
         restore: "Restore"
         filters:
-          column: Column
-          value: Value
-          add_filter: Add filter
           title: Filter
         personalize: Personalize
         follow_file: Follow-up the file
@@ -312,6 +310,7 @@ en:
     errors:
       messages:
         not_a_phone: 'Invalid phone number'
+        not_a_rna: 'Invalid RNA number'
       models:
         attestation_template:
           attributes:
@@ -363,6 +362,7 @@ en:
     messages:
       dossier_not_found: "The file does not exist or you do not have access to it."
       # # dossier_map_not_activated: "The file does not have access to the map."
+      targeted_user_link_expired: "This invitation link or the file is no longer available."
       invalid_siret: "The SIRET is incorrect"
       procedure_not_found: "The procedure does not exist"
       siret_unknown: 'Sorry, we did not find any establishment registered under this SIRET number.'
@@ -421,8 +421,7 @@ en:
       one: expiring file
       other: expiring files
     dossier_trouve:
-      '0': 0 file found
-      '1': 1 file found
+      one: "%{count} file found"
       other: "%{count} files found"
     published:
       one: Published
@@ -447,8 +446,6 @@ en:
         undergoingreview: "Your file is undergoing review. It is no longer possible to delete your file. To cancel the undergoingreview contact the adminitration via the mailbox."
         soft_deleted_dossier: "Your file has been successfully deleted from your interface"
       restore: "Your file has been successfully restored"
-      update_brouillon:
-        draft_saved: "Your draft has been saved."
       etablissement:
         no_establishment: "There is no establishment tied to this file"
       update_identite:
@@ -501,6 +498,7 @@ en:
           connection_done: "The accounts for FranceConnect and %{application_name} are now merged."
           merger_token_expired: "Le delay to merge your FranceConnect and %{application_name} accounts is expired. Please retry."
   shared:
+    ephemeral_link: This link is ephemeral and should not be shared.
     procedures:
       stats:
         usual_processing_time: "Usual processing time"

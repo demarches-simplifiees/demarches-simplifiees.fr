@@ -282,7 +282,7 @@
     %section.list-avis
       %h1.title
         Avis des invités
-        %span.count 1
+        %span.fr-badge 1
 
       %ul
         %li.one-avis
@@ -305,7 +305,7 @@
 
   .container
     %h1 Dsfr::CalloutComponent
-    = link_to "Documentation DSFR Mis en avant (callout)", "https://www.systeme-de-design.gouv.fr/elements-d-interface/composants/mise-en-avant", **external_link_attributes
+    %p= link_to "Documentation DSFR Mis en avant (callout)", "https://www.systeme-de-design.gouv.fr/elements-d-interface/composants/mise-en-avant", **external_link_attributes
 
     = render Dsfr::CalloutComponent.new(title: "Information minimale") do |c|
       - c.with_body do
@@ -313,7 +313,9 @@
 
     = render Dsfr::CalloutComponent.new(title: "Information importante ou avertissement", theme: :warning) do |c|
       - c.with_body do
-        %p Le contenu de cette description est libre.
+        Le contenu de cette description est libre.
+      - c.with_bottom do
+        %button.fr-btn Call to action
 
     = render Dsfr::CalloutComponent.new(title: "Titre d'une information positive", theme: :success, icon: "fr-icon-message-2-fill") do |c|
       - c.with_body do
@@ -323,7 +325,7 @@
           peut être utilisée.
 
     %h1 Dsfr::CardVerticalComponent
-    = link_to "Documentation DSFR Carte", "https://www.systeme-de-design.gouv.fr/elements-d-interface/composants/carte", **external_link_attributes
+    %p= link_to "Documentation DSFR Carte", "https://www.systeme-de-design.gouv.fr/elements-d-interface/composants/carte", **external_link_attributes
 
     .fr-grid-row.fr-grid-row--gutters.fr-py-5w
       .fr-col-md-6.fr-col-12
@@ -335,3 +337,14 @@
             = link_to "Button 1", "#", class: "fr-btn", **external_link_attributes
           - c.with_footer_button do
             = button_tag "Button 2", class: "fr-btn fr-btn--secondary"
+
+    %h1 Dsfr::NoticeComponent
+    %p= link_to "Documentation DSFR Bandeau d'information", "https://www.systeme-de-design.gouv.fr/elements-d-interface/composants/bandeau-d-information-importante", **external_link_attributes
+    .my-3
+      = render Dsfr::NoticeComponent.new(closable: true) do |c|
+        - c.with_title do
+          Titre de cette notice
+          = link_to "avec un lien optionnel.", "#"
+          Des marges verticales ont ici été rajoutées.
+
+

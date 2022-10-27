@@ -1,6 +1,7 @@
 describe API::V2::GraphqlController do
   let(:admin) { create(:administrateur) }
   let(:token) { admin.renew_api_token }
+  let(:legacy_token) { APIToken.new(token).token }
   let(:procedure) { create(:procedure, :published, :for_individual, :with_service, administrateurs: [admin]) }
   let(:dossier)  { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
   let(:dossier1) { create(:dossier, :en_construction, :with_individual, procedure: procedure, en_construction_at: 1.day.ago) }
@@ -98,6 +99,19 @@ describe API::V2::GraphqlController do
   let(:gql_errors) { body[:errors] }
 
   subject { post :execute, params: { query: query } }
+
+  context "when authenticated with legacy token" do
+    let(:authorization_header) { ActionController::HttpAuthentication::Token.encode_credentials(legacy_token) }
+
+    before do
+      request.env['HTTP_AUTHORIZATION'] = authorization_header
+    end
+
+    it "returns the demarche" do
+      expect(gql_errors).to eq(nil)
+      expect(gql_data[:demarche][:id]).to eq(procedure.to_typed_id)
+    end
+  end
 
   context "when authenticated" do
     let(:authorization_header) { ActionController::HttpAuthentication::Token.encode_credentials(token) }

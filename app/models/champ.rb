@@ -13,11 +13,11 @@
 #  value_json                     :jsonb
 #  created_at                     :datetime
 #  updated_at                     :datetime
-#  dossier_id                     :integer          not null
+#  dossier_id                     :integer
 #  etablissement_id               :integer
 #  external_id                    :string
 #  parent_id                      :bigint
-#  type_de_champ_id               :integer          not null
+#  type_de_champ_id               :integer
 #
 class Champ < ApplicationRecord
   belongs_to :dossier, inverse_of: false, touch: true, optional: false
@@ -45,6 +45,7 @@ class Champ < ApplicationRecord
     :exclude_from_export?,
     :exclude_from_view?,
     :repetition?,
+    :block?,
     :dossier_link?,
     :titre_identite?,
     :header_section?,
@@ -56,8 +57,10 @@ class Champ < ApplicationRecord
     :dgfip?,
     :pole_emploi?,
     :mesri?,
+    :rna?,
     :siret?,
     :stable_id,
+    :mandatory?,
     to: :type_de_champ
 
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
@@ -91,11 +94,14 @@ class Champ < ApplicationRecord
     @sections ||= dossier.sections_for(self)
   end
 
-  def mandatory?
+  # used for the `required` html attribute
+  # check visibility to avoid hidden required input
+  # which prevent the form from being sent.
+  def required?
     type_de_champ.mandatory? && visible?
   end
 
-  def mandatory_blank_and_visible?
+  def mandatory_blank?
     mandatory? && blank?
   end
 
@@ -196,7 +202,7 @@ class Champ < ApplicationRecord
   end
 
   def conditional?
-    type_de_champ.condition.present?
+    type_de_champ.read_attribute_before_type_cast('condition').present?
   end
 
   def visible?

@@ -1,8 +1,8 @@
 describe TargetedUserLinksController, type: :controller do
   describe '#show' do
-    let!(:targeted_user_link) { create(:targeted_user_link, target_context: target_context, target_model: target_model, user: user) }
-
     context 'avis' do
+      let!(:targeted_user_link) { create(:targeted_user_link, target_context: target_context, target_model: target_model, user: user) }
+
       let(:target_context) { :avis }
       let!(:expert) { create(:expert, user: user) }
       let!(:target_model) { create(:avis, experts_procedure: expert_procedure) }
@@ -56,6 +56,8 @@ describe TargetedUserLinksController, type: :controller do
     end
 
     context 'with invite having user' do
+      let!(:targeted_user_link) { create(:targeted_user_link, target_context: target_context, target_model: target_model, user: user) }
+
       let(:target_context) { 'invite' }
       let(:target_model) { create(:invite, user: user) }
 
@@ -90,9 +92,21 @@ describe TargetedUserLinksController, type: :controller do
           expect(response).to redirect_to(invite_path(target_model, email: target_model.email))
         end
       end
+
+      context 'when there is no dossier visible anymore' do
+        let(:user) { nil }
+        let(:target_model) { create(:invite, user: user, dossier: create(:dossier, hidden_by_user_at: 1.day.ago)) }
+
+        it 'redirect nicely' do
+          get :show, params: { id: targeted_user_link.id }
+          expect(response).to redirect_to(root_path)
+          expect(flash[:error]).to match(/dossier n'est plus accessible/)
+        end
+      end
     end
 
     context 'with invite not having user' do
+      let!(:targeted_user_link) { create(:targeted_user_link, target_context: target_context, target_model: target_model, user: user) }
       let(:target_context) { 'invite' }
       let(:user_email) { 'not_yet_registered@a.com' }
       let(:target_model) { create(:invite, user: nil, email: user_email) }
@@ -127,6 +141,16 @@ describe TargetedUserLinksController, type: :controller do
         it 'works' do
           expect(response).to redirect_to(invite_path(target_model, email: target_model.email))
         end
+      end
+    end
+
+    context 'not found' do
+      it 'redirect nicely' do
+        sign_in(create(:user))
+        get :show, params: { id: "asldjiasld" }
+        expect(response).to redirect_to(root_path)
+        expect(flash[:error]).to be_present
+        expect(flash[:error]).to match(/invitation n'est plus valable/)
       end
     end
   end

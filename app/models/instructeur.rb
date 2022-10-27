@@ -21,7 +21,7 @@ class Instructeur < ApplicationRecord
   has_many :assign_to_with_email_notifications, -> { with_email_notifications }, class_name: 'AssignTo', inverse_of: :instructeur
   has_many :groupe_instructeur_with_email_notifications, through: :assign_to_with_email_notifications, source: :groupe_instructeur
 
-  has_many :commentaires
+  has_many :commentaires, inverse_of: :instructeur, dependent: :nullify
   has_many :dossiers, -> { state_not_brouillon }, through: :groupe_instructeurs
   has_many :follows, -> { active }, inverse_of: :instructeur
   has_many :previous_follows, -> { inactive }, class_name: 'Follow', inverse_of: :instructeur

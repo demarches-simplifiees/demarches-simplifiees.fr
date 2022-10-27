@@ -13,18 +13,18 @@
 #  value_json                     :jsonb
 #  created_at                     :datetime
 #  updated_at                     :datetime
-#  dossier_id                     :integer          not null
+#  dossier_id                     :integer
 #  etablissement_id               :integer
 #  external_id                    :string
 #  parent_id                      :bigint
-#  type_de_champ_id               :integer          not null
+#  type_de_champ_id               :integer
 #
 class Champs::SiretChamp < Champ
   def search_terms
     etablissement.present? ? etablissement.search_terms : [value]
   end
 
-  def mandatory_blank_and_visible?
+  def mandatory_blank?
     mandatory? && Siret.new(siret: value).invalid?
   end
 end

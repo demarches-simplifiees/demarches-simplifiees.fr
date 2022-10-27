@@ -183,6 +183,11 @@
   top: 5 * $default-spacer;
   cursor: default;
   z-index: 10;
+  list-style: none;
+
+  a {
+    background-image: none; // remove DSFR underline
+  }
 
   &.left-aligned {
     left: 0;
@@ -256,6 +261,7 @@
 
     a {
       color: $dark-grey;
+      background-image: none; // remove DSFR underline
     }
 
     // Make child links fill the whole clickable area
@@ -304,9 +310,23 @@
   select {
     width: 200px;
     display: inline-block;
+    background-color: $light-grey;
+    border: 1px solid $border-grey;
+  }
+
+  [disabled] {
+    display: none;
+  }
+
+  ul {
+    list-style: none;
   }
 }
 
 .link {
   color: $blue-france-500;
+}
+
+.account-btn::before {
+  content: none !important;
 }

@@ -72,8 +72,10 @@ module Administrateurs
       reset_procedure
       flash.notice = "Formulaire enregistré"
 
-      @destroyed = @coordinate
-      @morphed = champ_components_starting_at(@coordinate)
+      if @coordinate.present?
+        @destroyed = @coordinate
+        @morphed = champ_components_starting_at(@coordinate)
+      end
     end
 
     private

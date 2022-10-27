@@ -1,3 +1,7 @@
+- if dossier.france_connect_information.present?
+  - content_for(:notice_info) do
+    = render partial: "shared/dossiers/france_connect_informations_notice", locals: { user_information: dossier.france_connect_information }
+
 .dossier-edit.container
   = render partial: "shared/dossiers/submit_is_over", locals: { dossier: dossier }
 
@@ -8,19 +12,27 @@
 
   = form_for dossier, form_options.merge({ html: { id: 'dossier-edit-form', class: 'form', multipart: true, novalidate: 'novalidate' } }) do |f|
 
-    .prologue
-      %p.mandatory-explanation= t('utils.asterisk_html')
-      - if dossier.brouillon?
-        %p.mandatory-explanation
-          = t('views.shared.dossiers.edit.autosave')
-      - if dossier.france_connect_information.present?
-        = render partial: "shared/dossiers/france_connect_informations", locals: { user_information: dossier.france_connect_information }
-      - if notice_url(dossier.procedure).present?
-        = link_to notice_url(dossier.procedure), target: '_blank', rel: 'noopener', class: 'button notice', title: "Pour vous aider à remplir votre dossier, vous pouvez consulter le guide de cette démarche." do
-          %span.icon.info>
-          Guide de la démarche
+    %header.mb-6
+      .fr-highlight
+        %p.fr-text--sm
+          %strong
+            = t('utils.asterisk_html')
+          - if dossier.brouillon?
+            = t('views.shared.dossiers.edit.autosave')
 
-    %hr
+          - if notice_url(dossier.procedure).present?
+            .fr-download
+              %p
+                = link_to notice_url(dossier.procedure), download: "", class: "fr-download__link mr-2", title: t("views.shared.dossiers.edit.notice_title") do
+                  = t("views.shared.dossiers.edit.notice")
+                  - if dossier.procedure.notice.attached?
+                    %span.fr-download__detail
+                      = download_details(dossier.procedure.notice)
+
+                - if administrateur_signed_in?
+                  %span.fr-text--xs.fr-text-mention--grey.visible-on-previous-hover
+                    %span.fr-text-action-high--blue-france.fr-icon-questionnaire-line{ "aria-hidden": "true" }
+                    = t('shared.ephemeral_link')
 
     - if dossier.show_groupe_instructeur_selector?
       %span{ data: { controller: 'autosave' } }
@@ -35,21 +47,4 @@
       = fields_for champ.input_name, champ do |form|
         = render EditableChamp::EditableChampComponent.new form: form, champ: champ
 
-    - if !dossier.for_procedure_preview?
-      .dossier-edit-sticky-footer
-        .send-dossier-actions-bar
-          = render partial: 'shared/dossiers/autosave', locals: { dossier: dossier }
-
-          - if dossier.can_transition_to_en_construction?
-            = f.button t('views.shared.dossiers.edit.submit_dossier'),
-              name: :submit_draft,
-              value: true,
-              class: 'button send primary',
-              disabled: !current_user.owns?(dossier),
-              data: { 'disable-with': "Envoi en cours…" }
-
-        - if dossier.brouillon? && !current_user.owns?(dossier)
-          .send-notice.invite-cannot-submit
-            En tant qu’invité, vous pouvez remplir ce formulaire – mais le titulaire du dossier doit le déposer lui-même.
-
-        = render partial: "shared/dossiers/submit_is_over", locals: { dossier: dossier }
+  = render Dossiers::EditFooterComponent.new(dossier: dossier)

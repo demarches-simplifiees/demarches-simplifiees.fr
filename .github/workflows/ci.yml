@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:12
+        image: postgres:14
         env:
           POSTGRES_USER: tps_test
           POSTGRES_DB: tps_test
@@ -19,7 +19,7 @@ jobs:
         ports: [ "5432:5432" ]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup the app code and dependancies
         uses: ./.github/actions/ci-setup-rails
@@ -34,10 +34,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           cache: 'yarn'
 
@@ -56,7 +56,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:12
+        image: postgres:14
         env:
           POSTGRES_USER: tps_test
           POSTGRES_DB: tps_test
@@ -68,7 +68,7 @@ jobs:
         instances: [0, 1, 2, 3, 4, 5]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup the app runtime and dependencies
         uses: ./.github/actions/ci-setup-rails
@@ -88,7 +88,7 @@ jobs:
           bin/rspec $SPEC_FILES --format progress --format RspecJunitFormatter --out tmp/rspec_${{ github.job }}_${{ strategy.job-index }}.junit.xml
 
       - name: Upload test results for this instance
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: test-reports
           path: tmp/rspec_${{ github.job }}_${{ strategy.job-index }}.junit.xml
@@ -98,7 +98,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:12
+        image: postgres:14
         env:
           POSTGRES_USER: tps_test
           POSTGRES_DB: tps_test
@@ -110,7 +110,7 @@ jobs:
         instances: [0, 1]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup the app runtime and dependencies
         uses: ./.github/actions/ci-setup-rails
@@ -130,7 +130,7 @@ jobs:
           RAILS_ENV=test bin/rspec $SPEC_FILES --format progress --format RspecJunitFormatter --out tmp/rspec_${{ github.job }}_${{ strategy.job-index }}.junit.xml
 
       - name: Upload test results for this instance
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: test-reports
           path: tmp/rspec_${{ github.job }}_${{ strategy.job-index }}.junit.xml
@@ -141,10 +141,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Collect test results from all instances
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: test-reports
           path: tmp

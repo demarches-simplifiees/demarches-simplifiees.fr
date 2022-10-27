@@ -99,7 +99,7 @@ describe TagsSubstitutionConcern, type: :model do
       let(:types_de_champ_public) do
         [
           { libelle: 'libelleA' },
-          { libelle: 'libelleB' }
+          { libelle: "libelle\xc2\xA0B".encode('utf-8') }
         ]
       end
 
@@ -115,7 +115,7 @@ describe TagsSubstitutionConcern, type: :model do
       end
 
       context 'and they are used in the template' do
-        let(:template) { '--libelleA-- --libelleB--' }
+        let(:template) { '--libelleA-- --libelle B--' }
 
         context 'and their value in the dossier are nil' do
           it { is_expected.to eq(' ') }
@@ -128,7 +128,7 @@ describe TagsSubstitutionConcern, type: :model do
               .update(value: 'libelle1')
 
             dossier.champs
-              .find { |champ| champ.libelle == 'libelleB' }
+              .find { |champ| champ.libelle == "libelle\xc2\xA0B".encode('utf-8') }
               .update(value: 'libelle2')
           end
 
@@ -383,13 +383,13 @@ describe TagsSubstitutionConcern, type: :model do
 
     context 'when generating a document for a dossier that is not termine' do
       let(:dossier) { create(:dossier) }
-      let(:template) { '--motivation-- --date de décision--' }
+      let(:template) { 'text --motivation-- --date de décision--' }
       let(:state) { Dossier.states.fetch(:en_instruction) }
 
       subject { template_concern.send(:replace_tags, template, dossier) }
 
       it "does not treat motivation or date de décision as tags" do
-        is_expected.to eq('--motivation-- --date de décision--')
+        is_expected.to eq('text --motivation-- --date de décision--')
       end
     end
 
@@ -494,5 +494,39 @@ describe TagsSubstitutionConcern, type: :model do
     end
 
     it { is_expected.to eq([["public", procedure.draft_revision.types_de_champ.first.stable_id], ['yolo']]) }
+  end
+
+  describe 'parser' do
+    it do
+      tokens = TagsSubstitutionConcern::TagsParser.parse("hello world --public--, --numéro du dossier--, un test--yolo-- encore du text\n---\n encore du text")
+      expect(tokens).to eq([
+        { text: "hello world " },
+        { tag: "public" },
+        { text: ", " },
+        { tag: "numéro du dossier" },
+        { text: ", un test" },
+        { tag: "yolo" },
+        { text: " encore du text\n" + "---\n" + " encore du text" }
+      ])
+    end
+
+    it 'allow for - before tag' do
+      tokens = TagsSubstitutionConcern::TagsParser.parse("hello --yolo-- world ---numéro-du - dossier--")
+      expect(tokens).to eq([
+        { text: "hello " },
+        { tag: "yolo" },
+        { text: " world -" },
+        { tag: "numéro-du - dossier" }
+      ])
+    end
+
+    it 'normalize white spaces' do
+      tokens = TagsSubstitutionConcern::TagsParser.parse("hello --Jour(s) fixe(s)\xc2\xA0souhaité(s)\xc2\xA0:-- world".encode('utf-8'))
+      expect(tokens).to eq([
+        { text: "hello " },
+        { tag: "Jour(s) fixe(s) souhaité(s) :" },
+        { text: " world" }
+      ])
+    end
   end
 end

@@ -30,6 +30,21 @@ export class AutosaveStatusController extends ApplicationController {
     this.onGlobal<CustomEvent>('autosave:error', (event) =>
       this.didFail(event)
     );
+
+    this.onGlobal('debounced:added', () => this.debouncedAdded());
+    this.onGlobal('debounced:empty', () => this.debouncedEmpty());
+  }
+
+  private debouncedAdded() {
+    const autosave = this.element as HTMLDivElement;
+    removeClass(autosave, 'debounced-empty');
+    addClass(autosave, 'debounced-added');
+  }
+
+  private debouncedEmpty() {
+    const autosave = this.element as HTMLDivElement;
+    addClass(autosave, 'debounced-empty');
+    removeClass(autosave, 'debounced-added');
   }
 
   onClickRetryButton() {

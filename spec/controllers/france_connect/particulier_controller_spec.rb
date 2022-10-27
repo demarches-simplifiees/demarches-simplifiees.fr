@@ -198,7 +198,7 @@ describe FranceConnect::ParticulierController, type: :controller do
     let(:merge_token) { fci.create_merge_token! }
     let(:email) { 'EXISTING_account@a.com ' }
     let(:password) { 'my-s3cure-p4ssword' }
-    let(:format) { :js }
+    let(:format) { :turbo_stream }
 
     subject { post :merge_with_existing_account, params: { merge_token: merge_token, email: email, password: password }, format: format }
 
@@ -309,7 +309,7 @@ describe FranceConnect::ParticulierController, type: :controller do
     let(:fci) { FranceConnectInformation.create!(user_info) }
     let(:merge_token) { fci.create_merge_token! }
     let(:email) { ' Account@a.com ' }
-    let(:format) { :js }
+    let(:format) { :turbo_stream }
 
     subject { post :merge_with_new_account, params: { merge_token: merge_token, email: email }, format: format }
 
@@ -323,7 +323,7 @@ describe FranceConnect::ParticulierController, type: :controller do
         expect(fci.user.email).to eq(email.downcase.strip)
         expect(fci.merge_token).to be_nil
         expect(controller.current_user).to eq(fci.user)
-        expect(response.body).to include("window.location.href='/'")
+        expect(response).to redirect_to(root_path)
       end
     end
 
