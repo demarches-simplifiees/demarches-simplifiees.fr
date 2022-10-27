@@ -77,8 +77,7 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
   EXCLUDE_FROM_BLOCK = [
     TypeDeChamp.type_champs.fetch(:carte),
     TypeDeChamp.type_champs.fetch(:dossier_link),
-    TypeDeChamp.type_champs.fetch(:repetition),
-    TypeDeChamp.type_champs.fetch(:siret)
+    TypeDeChamp.type_champs.fetch(:repetition)
   ]
 
   def filter_block_type_champ(type_champ)

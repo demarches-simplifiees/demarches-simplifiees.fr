@@ -1,4 +1,3 @@
-import '../shared/polyfills';
 import Rails from '@rails/ujs';
 import * as ActiveStorage from '@rails/activestorage';
 import * as Turbo from '@hotwired/turbo';
