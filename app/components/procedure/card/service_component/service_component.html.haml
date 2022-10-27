@@ -1,17 +1,18 @@
-= link_to service_link, class: 'card-admin', id: 'service' do
-  - if @procedure.service_id.present?
+= link_to service_link, class: 'fr-tile fr-enlarge-link', id: 'service' do
+  .fr-tile__body.flex.justify-between
+    - if @procedure.service_id.present?
+      %div
+        %span.icon.accept
+        %p.fr-tile-status-accept Validé
+    - else
+      %div
+        %span.icon.clock
+        %p.fr-tile-status-todo À faire
     %div
-      %span.icon.accept
-      %p.card-admin-status-accept Validé
-  - else
-    %div
-      %span.icon.clock
-      %p.card-admin-status-todo À faire
-  %div
-    %p.card-admin-title= t('.title')
-    %p.card-admin-subtitle
-      - if @procedure.service_id.present?
-        = @procedure.service.nom
-      - else
-        Choix du service administratif
-  %p.button= service_button_text
+      %h3.fr-h6.fr-mt-10v= t('.title')
+      %p.fr-tile-subtitle
+        - if @procedure.service_id.present?
+          = @procedure.service.nom
+        - else
+          Choix du service administratif
+    %p.fr-btn.fr-btn--tertiary= service_button_text

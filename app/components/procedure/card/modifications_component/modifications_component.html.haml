@@ -1,11 +1,12 @@
-= link_to modifications_admin_procedure_path(@procedure), id: 'modifications', class: 'card-admin' do
-  %div
-    %span.icon.accept
-    %p.card-admin-status-accept Activée
-  %div
-    %p.card-admin-title
-      %span.badge.baseline= @procedure.revisions_count
-      = t('.title', count: @procedure.revisions_count)
+= link_to modifications_admin_procedure_path(@procedure), id: 'modifications', class: 'fr-tile fr-enlarge-link' do
+  .fr-tile__body.flex.justify-between
+    %div
+      %span.icon.accept
+      %p.fr-tile-status-accept Activée
+    %div
+      %h3.fr-h6.fr-mt-10v
+        %p.fr-tag= @procedure.revisions_count
+        = t('.title', count: @procedure.revisions_count)
 
-    %p.card-admin-subtitle Historique des modifications du formulaire
-  %p.button Voir
+      %p.fr-tile-subtitle Historique des modifications du formulaire
+    %p.fr-btn.fr-btn--tertiary Voir

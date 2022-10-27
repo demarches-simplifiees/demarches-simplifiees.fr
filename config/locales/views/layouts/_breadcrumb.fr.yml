@@ -7,7 +7,7 @@ fr:
       preview: "Prévisualiser le formulaire"
       continue: "Continuer"
       continue_title: "Vous pourrez revenir ici par la suite"
-      created_at: "Créée le %{date} - n° %{number}"
+      created_at: "Démarche n° %{number}, créée le %{date}"
       closed_at: "Close le %{date}"
       published: "Publiée – "
       draft: "Brouillon"
