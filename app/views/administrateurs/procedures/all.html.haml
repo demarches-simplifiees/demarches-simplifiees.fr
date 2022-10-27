@@ -8,10 +8,10 @@
         .fr-highlight.fr-mb-4w
           %p Ce tableau de bord permet de consulter les informations sur les démarches simplifiées pour toutes les zones. Filtrez par zone et statut. Consultez la liste des démarches et cliquez sur une démarche pour voir la zone et quels sont les administrateurs.
 
-  .fr-container--fluid
+  .fr-container--fluid{'data-turbo': 'true', 'data-controller': 'autosubmit' }
     .fr-grid-row.fr-grid-row--gutters
       .fr-col-3
-        = form_with url: all_admin_procedures_path, method: :get do |f|
+        = form_with(url: all_admin_procedures_path, method: :get, html: {'data-autosubmit-target': 'form'}) do |f|
 
           %fieldset.sidebar-filter
             %legend.font-weight-bold.fr-pl-2w
@@ -23,10 +23,10 @@
                   %button
                     %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{'aria-hidden': 'true', 'data-expand-target': 'icon'}
                     Mes zones
-                .fr-ml-1w.hidden{'data-expand-target': 'content'}
+                .fr-ml-1w{'data-expand-target': 'content'}
                   = f.collection_check_boxes :zone_ids, @admin_zones, :id, :current_label, include_hidden: false do |b|
                     .fr-checkbox-group.fr-ml-2w
-                      = b.check_box(checked: @zone_ids&.map(&:to_i)&.include?(b.value))
+                      = b.check_box(checked: @zone_ids&.map(&:to_i)&.include?(b.value), 'data-action': 'autosubmit#submit')
                       = b.label(class: 'fr-label') { b.text }
               %li.fr-py-2w.fr-pl-2w{'data-controller': "expand"}
                 .fr-mb-1w{'data-action': 'click->expand#toggle'}
@@ -36,7 +36,7 @@
                 .fr-ml-1w.hidden{'data-expand-target': 'content'}
                   = f.collection_check_boxes :zone_ids, @other_zones, :id, :current_label, include_hidden: false do |b|
                     .fr-checkbox-group.fr-ml-2w
-                      = b.check_box(checked: @zone_ids&.map(&:to_i)&.include?(b.value))
+                      = b.check_box(checked: @zone_ids&.map(&:to_i)&.include?(b.value), 'data-action': 'autosubmit#submit')
                       = b.label(class: 'fr-label') { b.text }
               %li.fr-py-2w.fr-pl-2w{'data-controller': "expand"}
                 .fr-mb-1w{'data-action': 'click->expand#toggle'}
@@ -46,14 +46,15 @@
                 .fr-ml-1w.hidden{'data-expand-target': 'content'}
                   = f.collection_check_boxes :statuses, ['publiee', 'close'], :to_s, :to_s, include_hidden: false do |b|
                     .fr-checkbox-group.fr-ml-2w
-                      = b.check_box(checked: @statuses&.include?(b.value))
+                      = b.check_box(checked: @statuses&.include?(b.value), 'data-action': 'autosubmit#submit')
                       = b.label(class: 'fr-label') { b.text }
-          = f.submit 'Filtrer', class: 'fr-btn'
 
       .fr-col-9
         .fr-table.fr-table--bordered
           %table#all-demarches
-            %caption= "#{@procedures.total_count} démarches"
+            %caption
+              = "#{@procedures.total_count} démarches"
+              %span.hidden.fr-icon-ball-pen-fill{'aria-hidden': 'true', 'data-autosubmit-target': 'spinner'}
             - if @selected_zones
               .selected-zones.fr-mb-2w
                 - @selected_zones.each do |zone|
