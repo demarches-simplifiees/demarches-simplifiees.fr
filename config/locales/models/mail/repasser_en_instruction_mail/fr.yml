@@ -3,6 +3,6 @@ fr:
   activerecord:
     models:
       mail:
-        state_reversion_mail:
+        repasser_en_instruction_mail:
           default_subject: Votre dossier nº %{dossier_number} va être réexaminé (%{procedure_libelle})
-          revert_to_instruction: Repassage en instruction
+          repasser_en_instruction: Repassage en instruction

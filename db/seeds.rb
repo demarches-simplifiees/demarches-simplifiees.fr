@@ -15,5 +15,6 @@ user = User.create!(
   password: default_password,
   confirmed_at: Time.zone.now
 )
+user.create_expert!
 user.create_instructeur!
 user.create_administrateur!

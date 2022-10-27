@@ -1,10 +1,10 @@
-	create_table "new_draft_mails", id: :serial do |t|
+	create_table "nouveau_brouillon_mails", id: :serial do |t|
       t.text "body"
       t.string "subject"
       t.integer "procedure_id"
       t.datetime "created_at", null: false
       t.datetime "updated_at", null: false
-      t.index ["procedure_id"], name: "index_new_draft_mails_on_procedure_id"
+      t.index ["procedure_id"], name: "index_nouveau_brouillon_mails_on_procedure_id"
     end
 	
 	create_table "revert_to_construction_mails", id: :serial do |t|
@@ -13,21 +13,21 @@
       t.integer "procedure_id"
       t.datetime "created_at", null: false
       t.datetime "updated_at", null: false
-      t.index ["procedure_id"], name: "index_revert_to_construction_mails_on_procedure_id"
+      t.index ["procedure_id"], name: "index_repasser_en_construction_mails_on_procedure_id"
     end
 	
-	create_table "revert_to_instruction_mails", id: :serial do |t|
+	create_table "repasser_en_instruction_mails", id: :serial do |t|
       t.text "body"
       t.string "subject"
       t.integer "procedure_id"
       t.datetime "created_at", null: false
       t.datetime "updated_at", null: false
-      t.index ["procedure_id"], name: "index_revert_to_instruction_mails_on_procedure_id"
+      t.index ["procedure_id"], name: "index_repasser_en_instruction_mails_on_procedure_id"
     end
 	
 	
-  add_foreign_key "new_draft_mails", "procedures"
-  add_foreign_key "revert_to_construction_mails", "procedures"
-  add_foreign_key "revert_to_instruction_mails", "procedures"
+  add_foreign_key "nouveau_brouillon_mails", "procedures"
+  add_foreign_key "repasser_en_construction_mails", "procedures"
+  add_foreign_key "repasser_en_instruction_mails", "procedures"
 	
 	

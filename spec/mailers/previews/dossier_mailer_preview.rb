@@ -1,15 +1,29 @@
 # Preview all emails at http://localhost:3000/rails/mailers/dossier_mailer
 class DossierMailerPreview < ActionMailer::Preview
-  def notify_new_draft
-    DossierMailer.notify_new_draft(draft)
-  end
+  # def notify_new_draft
+  #   DossierMailer.notify_new_draft(draft)
+  # end
 
   def notify_new_answer
     DossierMailer.with(commentaire: commentaire(on: draft)).notify_new_answer
   end
 
-  def notify_revert_to_instruction
-    DossierMailer.notify_revert_to_instruction(dossier)
+  # def notify_revert_to_instruction
+  #   DossierMailer.notify_revert_to_instruction(dossier)
+  # end
+
+  def notify_repasser_en_instruction
+    DossierMailer.notify_repasser_en_instruction(dossier)
+  end
+
+  def notify_repasser_en_construction
+    DossierMailer.notify_repasser_en_construction(dossier)
+  end
+
+
+  def notify_nouveau_brouillon
+    DossierMailer.notify_nouveau_brouillon(dossier)
+
   end
 
   def notify_brouillon_near_deletion
