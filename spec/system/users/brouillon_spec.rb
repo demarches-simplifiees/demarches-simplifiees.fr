@@ -293,12 +293,14 @@ describe 'The user' do
         p.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'age')
         p.draft_revision.add_type_de_champ(type_champ: :yes_no, libelle: 'permis de conduire')
         p.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'tonnage')
+        p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'parking')
       end
 
-      age, permis, tonnage = procedure.draft_revision.types_de_champ.all
+      age, permis, tonnage, parking = procedure.draft_revision.types_de_champ.all
 
       permis.update(condition: greater_than_eq(champ_value(age.stable_id), constant(18)))
       tonnage.update(condition: ds_eq(champ_value(permis.stable_id), constant(true)))
+      parking.update(condition: less_than_eq(champ_value(tonnage.stable_id), constant(20)))
 
       procedure.publish!
 
@@ -307,8 +309,6 @@ describe 'The user' do
 
     scenario 'fill a dossier', js: true do
       log_in(user, procedure)
-
-      age, permis, tonnage = user.dossiers.first.champs.to_a
 
       fill_individual
 
@@ -323,6 +323,13 @@ describe 'The user' do
       choose('Oui')
       expect(page).to have_css('label', text: 'permis de conduire', visible: true)
       expect(page).to have_css('label', text: 'tonnage', visible: true)
+
+      fill_in('tonnage', with: '1')
+      expect(page).to have_css('label', text: 'parking', visible: true)
+
+      # try to fill with invalid data
+      fill_in('tonnage', with: 'a')
+      expect(page).to have_no_css('label', text: 'parking', visible: true)
 
       fill_in('age', with: '2')
       expect(page).to have_no_css('label', text: 'permis de conduire', visible: true)

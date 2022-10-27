@@ -38,7 +38,7 @@ describe Administrateurs::ExportsController, type: :controller do
       end
 
       context 'when the export is ready' do
-        let(:export) { create(:export, groupe_instructeurs: procedure.groupe_instructeurs) }
+        let(:export) { create(:export, job_status: :generated, groupe_instructeurs: procedure.groupe_instructeurs) }
 
         before do
           export.file.attach(io: StringIO.new('export'), filename: 'file.csv')

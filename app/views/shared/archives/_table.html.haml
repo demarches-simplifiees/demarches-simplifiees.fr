@@ -22,7 +22,7 @@
         = number_to_human_size(weight)
       %td.center
         - if matching_archive.present?
-          - if matching_archive.status == 'generated' && matching_archive.file.attached?
+          - if matching_archive.available?
             = link_to url_for(matching_archive.file), class: 'button primary' do
               %span.icon.download-white
               = t(:archive_ready_html, scope: [:instructeurs, :procedure], generated_period: time_ago_in_words(matching_archive.updated_at))

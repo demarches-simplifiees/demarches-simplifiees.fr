@@ -33,6 +33,12 @@ describe Logic::ChampValue do
 
     it { expect(champ_value(champ.stable_id).type).to eq(:number) }
     it { is_expected.to eq(42) }
+
+    context 'with a blank value' do
+      let(:champ) { create(:champ_integer_number, value: '') }
+
+      it { is_expected.to be nil }
+    end
   end
 
   context 'decimal tdc' do
