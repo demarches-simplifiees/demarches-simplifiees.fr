@@ -335,6 +335,7 @@ module Administrateurs
       @procedures = Procedure.joins(:procedures_zones).publiees_ou_closes
       @procedures = @procedures.where(procedures_zones: { zone_id: @zone_ids }) if @zone_ids && @zone_ids.any?
       @procedures = @procedures.where(aasm_state: @statuses) if @statuses && @statuses.any?
+      @procedures = @procedures.page(params[:page]).per(ITEMS_PER_PAGE).order(published_at: :desc)
     end
 
     private
