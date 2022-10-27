@@ -8,8 +8,6 @@
         .fr-highlight.fr-mb-4w
           %p Ce tableau de bord permet de consulter les informations sur les démarches simplifiées pour toutes les zones. Filtrez par zone et statut. Consultez la liste des démarches et cliquez sur une démarche pour voir la zone et quels sont les administrateurs.
 
-
-
   .fr-container--fluid
     .fr-grid-row.fr-grid-row--gutters
       .fr-col-3
@@ -55,7 +53,7 @@
       .fr-col-9
         .fr-table.fr-table--bordered
           %table#all-demarches
-            %caption= "#{@procedures.count} démarches"
+            %caption= "#{@procedures.total_count} démarches"
             - if @selected_zones
               .selected-zones.fr-mb-2w
                 - @selected_zones.each do |zone|
@@ -64,6 +62,7 @@
               .selected-statuses.fr-mb-2w
                 - @statuses.each do |status|
                   %p.fr-tag.fr-mb-1w.fr--background-alt-blue-france= status
+            = paginate @procedures, views_prefix: 'administrateurs'
             %thead
               %tr
                 %th{scope: 'col'}
@@ -92,7 +91,4 @@
                         .fr-col-6
                           - procedure.administrateurs.uniq.each do |admin|
                             = admin.email
-
-
-
-
+          .fr-mt-2w= paginate @procedures, views_prefix: 'administrateurs'
