@@ -3,5 +3,6 @@ class Cron::PurgeStaleArchivesJob < Cron::CronJob
 
   def perform
     Archive.stale(Archive::RETENTION_DURATION).destroy_all
+    Archive.stuck(Archive::MAX_DUREE_GENERATION).destroy_all
   end
 end

@@ -29,7 +29,7 @@
           - else
             %span.icon.retry
             = t(:archive_pending_html, scope: [:instructeurs, :procedure], created_period: time_ago_in_words(matching_archive.created_at))
-        - elsif weight < Archive::MAX_SIZE
+        - elsif weight.nil? || weight < Archive::MAX_SIZE
           = link_to create_archive_url(procedure, month), method: :post, class: "button" do
             %span.icon.new-folder
             Demander la création
