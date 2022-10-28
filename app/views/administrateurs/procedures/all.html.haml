@@ -81,7 +81,7 @@
                   %td= procedure.id
                   %td= procedure.administrateurs.count
                   %td= procedure.aasm_state
-                  %td= procedure.created_at
+                  %td= l(procedure.published_at, format: :message_date_without_time)
                 %tr.hidden{'data-expand-target': 'content'}
                   %td.fr-highlight--beige-gris-galet{colspan: '6'}
                     .fr-container
