@@ -3,6 +3,28 @@ require 'capybara-screenshot/rspec'
 require 'capybara/email/rspec'
 require 'selenium/webdriver'
 
+def setup_driver(app, download_path, options)
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options:).tap do |driver|
+    # Set download dir for Chrome < 77
+    driver.browser.download_path = download_path
+
+    if ENV['MAKE_IT_SLOW'].present?
+      driver.browser.network_conditions = {
+        offline: false,
+        latency: 800,
+        download_throughput: 1024000,
+        upload_throughput: 1024000
+      }
+    end
+
+    if ENV['JS_LOG'].present?
+      driver.browser.on_log_event(:console) do |event|
+        puts event.args if event.type == ENV['JS_LOG'].downcase.to_sym
+      end
+    end
+  end
+end
+
 Capybara.register_driver :chrome do |app|
   options = Selenium::WebDriver::Chrome::Options.new
   options.add_argument('--no-sandbox') unless ENV['SANDBOX']
@@ -15,10 +37,7 @@ Capybara.register_driver :chrome do |app|
   options.add_preference('download.default_directory', download_path)
   options.add_preference(:download, default_directory: download_path)
 
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options).tap do |driver|
-    # Set download dir for Chrome < 77
-    driver.browser.download_path = download_path
-  end
+  setup_driver(app, download_path, options)
 end
 
 Capybara.register_driver :headless_chrome do |app|
@@ -36,10 +55,7 @@ Capybara.register_driver :headless_chrome do |app|
   options.add_preference('download.default_directory', download_path)
   options.add_preference(:download, default_directory: download_path)
 
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options).tap do |driver|
-    # Set download dir for Chrome < 77
-    driver.browser.download_path = download_path
-  end
+  setup_driver(app, download_path, options)
 end
 
 Capybara.default_max_wait_time = 2
@@ -66,12 +82,6 @@ RSpec.configure do |config|
 
   config.before(:each, type: :system, js: true) do
     driven_by ENV['NO_HEADLESS'] ? :chrome : :headless_chrome
-
-    if ENV['JS_LOG'].present?
-      page.driver.browser.on_log_event(:console) do |event|
-        puts event.args if event.type == ENV['JS_LOG'].downcase.to_sym
-      end
-    end
   end
 
   # Set the user preferred language before Javascript system specs.
