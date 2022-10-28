@@ -22,6 +22,7 @@ module TPS
     Rails.autoloaders.main.ignore(Rails.root.join('lib/linters'))
     Rails.autoloaders.main.ignore(Rails.root.join('lib/tasks/task_helper.rb'))
     config.paths.add Rails.root.join('spec/mailers/previews').to_s, eager_load: true
+    config.autoload_paths << "#{Rails.root}/app/jobs/concerns"
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.

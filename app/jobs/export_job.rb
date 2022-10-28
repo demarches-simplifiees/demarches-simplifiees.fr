@@ -4,6 +4,8 @@ class ExportJob < ApplicationJob
   discard_on ActiveRecord::RecordNotFound
 
   def perform(export)
-    export.compute
+    export.compute_with_safe_stale_for_purge do
+      export.compute
+    end
   end
 end

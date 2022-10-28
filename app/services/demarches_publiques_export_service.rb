@@ -1,97 +1,65 @@
 class DemarchesPubliquesExportService
-  attr_reader :io
-  def initialize(io)
-    @io = io
+  attr_reader :gzip_filename
+
+  def initialize(gzip_filename)
+    @gzip_filename = gzip_filename
   end
 
   def call
+    Zlib::GzipWriter.open(gzip_filename) do |gz|
+      generate_json(gz)
+    end
+  end
+
+  private
+
+  def generate_json(io)
     end_cursor = nil
     first = true
-    write_array_opening
+    write_array_opening(io)
     loop do
-      write_demarches_separator if !first
+      write_demarches_separator(io) if !first
       execute_query(cursor: end_cursor)
       end_cursor = last_cursor
       io.write(jsonify(demarches))
       first = false
       break if !has_next_page?
     end
-    write_array_closing
+    write_array_closing(io)
     io.close
   end
 
-  private
-
   def execute_query(cursor: nil)
-    result = API::V2::Schema.execute(query, variables: { cursor: cursor }, context: { internal_use: true })
-    raise DemarchesPubliquesExportService::Error.new(result["errors"]) if result["errors"]
-    @graphql_data = result["data"]
-  end
-
-  def query
-    "query($cursor: String) {
-      demarchesPubliques(after: $cursor) {
-        pageInfo {
-          endCursor
-          hasNextPage
-        }
-        edges {
-          node {
-            number
-            title
-            description
-            datePublication
-            service { nom organisme typeOrganisme }
-            cadreJuridique
-            deliberation
-            dossiersCount
-            revision {
-              champDescriptors {
-                type
-                label
-                description
-                required
-                options
-                champDescriptors {
-                  type
-                  label
-                  description
-                  required
-                  options
-                }
-              }
-            }
-          }
-        }
-      }
-    }"
+    @graphql_data = SerializerService.demarches_publiques(after: cursor)
+  rescue => e
+    raise DemarchesPubliquesExportService::Error.new(e.message)
   end
 
   def last_cursor
-    @graphql_data["demarchesPubliques"]["pageInfo"]["endCursor"]
+    @graphql_data["pageInfo"]["endCursor"]
   end
 
   def has_next_page?
-    @graphql_data["demarchesPubliques"]["pageInfo"]["hasNextPage"]
+    @graphql_data["pageInfo"]["hasNextPage"]
   end
 
   def demarches
-    @graphql_data["demarchesPubliques"]["edges"].map { |edge| edge["node"] }
+    @graphql_data["nodes"]
   end
 
   def jsonify(demarches)
     demarches.map(&:to_json).join(',')
   end
 
-  def write_array_opening
+  def write_array_opening(io)
     io.write('[')
   end
 
-  def write_array_closing
+  def write_array_closing(io)
     io.write(']')
   end
 
-  def write_demarches_separator
+  def write_demarches_separator(io)
     io.write(',')
   end
 end

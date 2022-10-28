@@ -1,6 +1,6 @@
 describe ArchiveCreationJob, type: :job do
   describe 'perform' do
-    let(:archive) { create(:archive, status: status, groupe_instructeurs: [procedure.groupe_instructeurs.first]) }
+    let(:archive) { create(:archive, job_status: status, groupe_instructeurs: [procedure.groupe_instructeurs.first]) }
     let(:instructeur) { create(:instructeur) }
     let(:procedure) { create(:procedure, instructeurs: [instructeur]) }
     let(:job) { ArchiveCreationJob.new(procedure, archive, instructeur) }

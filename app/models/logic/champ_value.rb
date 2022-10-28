@@ -25,6 +25,7 @@ class Logic::ChampValue < Logic::Term
     targeted_champ = champ(champs)
 
     return nil if !targeted_champ.visible?
+    return nil if targeted_champ.blank?
 
     case type_de_champ.type_champ
     when MANAGED_TYPE_DE_CHAMP.fetch(:yes_no),

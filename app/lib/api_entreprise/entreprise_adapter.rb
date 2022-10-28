@@ -7,6 +7,7 @@ class APIEntreprise::EntrepriseAdapter < APIEntreprise::Adapter
 
   def process_params
     params = data_source[:entreprise]&.slice(*attr_to_fetch)
+    params[:etat_administratif] = map_etat_administratif(data_source)
 
     if params.present? && valid_params?(params)
       params[:date_creation] = Time.zone.at(params[:date_creation]).to_datetime
@@ -31,5 +32,14 @@ class APIEntreprise::EntrepriseAdapter < APIEntreprise::Adapter
       :nom,
       :prenom
     ]
+  end
+
+  def map_etat_administratif(data_source)
+    raw_value = data_source.dig(:entreprise, :etat_administratif, :value) # data structure will change in v3
+
+    case raw_value
+    when 'A' then 'actif'
+    when 'F' then 'fermé'
+    end
   end
 end

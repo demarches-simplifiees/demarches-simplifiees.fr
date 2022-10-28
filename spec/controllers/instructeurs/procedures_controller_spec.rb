@@ -498,7 +498,7 @@ describe Instructeurs::ProceduresController, type: :controller do
     end
 
     context 'when the export is ready' do
-      let(:export) { create(:export, groupe_instructeurs: [gi_1]) }
+      let(:export) { create(:export, groupe_instructeurs: [gi_1], job_status: 'generated') }
 
       before do
         export.file.attach(io: StringIO.new('export'), filename: 'file.csv')
