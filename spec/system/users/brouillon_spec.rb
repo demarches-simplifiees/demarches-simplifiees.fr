@@ -257,6 +257,7 @@ describe 'The user' do
 
       click_on 'Déposer le dossier'
 
+      expect(page).to have_current_path(merci_dossier_path(user_dossier))
       expect(page).to have_text('Merci')
     end
   end
