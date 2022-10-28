@@ -10,10 +10,11 @@ fr:
         organisation: Organisme
         duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers sur demarches-simplifiees.fr (choisi par un usager)
         max_duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers maximum (autorisé par un super admin de DS)
-        aasm_state/brouillon: Brouillon
-        aasm_state/publiee: Publiée
-        aasm_state/close: Close
-        aasm_state/hidden: Suprimée
+        aasm_state:
+          brouillon: Brouillon
+          publiee: Publiée
+          close: Close
+          hidden: Supprimée
         declarative_with_state/en_instruction: En instruction
         declarative_with_state/accepte: Accepté
         api_particulier_token: Jeton API Particulier
