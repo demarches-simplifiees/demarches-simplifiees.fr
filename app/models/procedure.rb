@@ -479,7 +479,7 @@ class Procedure < ApplicationRecord
     procedure = self.deep_clone(include: include_list) do |original, kopy|
       begin
         PiecesJustificativesService.clone_attachments(original, kopy)
-      rescue ActiveStorage::FileNotFoundError
+      rescue ActiveStorage::FileNotFoundError, ActiveStorage::IntegrityError
       end
     end
     procedure.path = SecureRandom.uuid
