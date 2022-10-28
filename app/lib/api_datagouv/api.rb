@@ -11,10 +11,9 @@ class APIDatagouv::API
   end
 
   class << self
-    def upload(path)
-      io = File.new(path, 'r')
+    def upload(io, dataset, resource = nil)
       response = Typhoeus.post(
-        datagouv_upload_url,
+        datagouv_upload_url(dataset, resource),
         body: {
           file: io
         },
@@ -25,19 +24,27 @@ class APIDatagouv::API
       if response.success?
         response.body
       else
-        raise RequestFailed.new(datagouv_upload_url, response)
+        raise RequestFailed.new(datagouv_upload_url(dataset, resource), response)
       end
     end
 
     private
 
-    def datagouv_upload_url
-      [
-        datagouv_secret[:api_url],
-        "/datasets/", datagouv_secret[:descriptif_demarches_dataset],
-        "/resources/", datagouv_secret[:descriptif_demarches_resource],
-        "/upload/"
-      ].join
+    def datagouv_upload_url(dataset, resource = nil)
+      if resource.present?
+        [
+          datagouv_secret[:api_url],
+          "/datasets/", datagouv_secret[dataset],
+          "/resources/", datagouv_secret[resource],
+          "/upload/"
+        ].join
+      else
+        [
+          datagouv_secret[:api_url],
+          "/datasets/", datagouv_secret[dataset],
+          "/upload/"
+        ].join
+      end
     end
 
     def datagouv_secret
