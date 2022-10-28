@@ -14,9 +14,13 @@
         = form_with(url: all_admin_procedures_path, method: :get, html: {'data-autosubmit-target': 'form'}) do |f|
 
           %fieldset.sidebar-filter
-            %legend.font-weight-bold.fr-pl-2w
-              %span.fr-icon-filter-fill.fr-icon--sm.fr-mr-1w{'aria-hidden': 'true'}
-              Filtrer
+            %legend
+              .title.font-weight-bold.fr-pl-2w
+                %span.fr-icon-filter-fill.fr-icon--sm.fr-mr-1w{'aria-hidden': 'true'}
+                Filtrer
+              .reinit
+                = link_to all_admin_procedures_path(zone_ids: current_administrateur.zones) do
+                  %span.fr-icon-arrow-go-back-line Réinitialiser
             %ul
               %li.fr-py-2w.fr-pl-2w{'data-controller': "expand"}
                 .fr-mb-1w{'data-action': 'click->expand#toggle'}
