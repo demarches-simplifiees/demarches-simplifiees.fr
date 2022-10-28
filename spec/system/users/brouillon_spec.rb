@@ -184,7 +184,7 @@ describe 'The user' do
     find_field('Pièce justificative 2').attach_file(Rails.root + 'spec/fixtures/files/RIB.pdf')
 
     # Expect the files to be uploaded immediately
-    expect(page).to have_text('analyse antivirus en cours', count: 2)
+    expect(page).to have_text('analyse antivirus en cours', count: 2, wait: 5)
     expect(page).to have_text('file.pdf')
     expect(page).to have_text('RIB.pdf')
 
@@ -206,7 +206,7 @@ describe 'The user' do
     # Test invalid file type
     attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/invalid_file_format.json')
     expect(page).to have_no_text('La pièce justificative n’est pas d’un type accepté')
-    expect(page).to have_text('analyse antivirus en cours', count: 1)
+    expect(page).to have_text('analyse antivirus en cours', count: 1, wait: 5)
   end
 
   scenario 'retry on transcient upload error', js: true do
@@ -219,15 +219,15 @@ describe 'The user' do
       instance.render json: { errors: ['Error'] }, status: :bad_request
     end
     attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/file.pdf')
-    expect(page).to have_text('Une erreur s’est produite pendant l’envoi du fichier')
+    expect(page).to have_css('p', text: 'Le fichier n’a pas pu être envoyé', visible: :visible, wait: 5)
     expect(page).to have_button('Ré-essayer', visible: true)
     expect(page).to have_button('Déposer le dossier', disabled: false)
 
     allow_any_instance_of(Champs::PieceJustificativeController).to receive(:update).and_call_original
 
     # Test that retrying after a failure works
-    click_on('Ré-essayer', visible: true)
-    expect(page).to have_text('analyse antivirus en cours')
+    click_on('Ré-essayer', visible: true, wait: 5)
+    expect(page).to have_text('analyse antivirus en cours', wait: 5)
     expect(page).to have_text('file.pdf')
     expect(page).to have_button('Déposer le dossier', disabled: false)
 
