@@ -58,7 +58,7 @@
             - if @selected_zones
               .selected-zones.fr-mb-2w
                 - @selected_zones.each do |zone|
-                  %p.fr-tag.fr-mb-1w.fr--background-alt-blue-france= zone.current_label
+                  = link_to zone.current_label, all_admin_procedures_path(zone_ids: @selected_zones.map(&:id) - [zone.id]), class: 'fr-tag fr-tag--dismiss fr-mb-1w'
             - if @statuses
               .selected-statuses.fr-mb-2w
                 - @statuses.each do |status|
