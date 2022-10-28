@@ -82,7 +82,11 @@ class API::V2::GraphqlController < API::V2::BaseController
 
   def handle_error_in_production(exception)
     id = SecureRandom.uuid
-    Sentry.capture_exception(exception, extra: { exception_id: id })
+    Sentry.capture_exception(exception, extra: {
+      exception_id: id,
+      query: params[:query],
+      variables: params[:variables].to_json
+    })
 
     render json: {
       errors: [
