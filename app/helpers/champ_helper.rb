@@ -29,7 +29,7 @@ module ChampHelper
 
   def autosave_available?(champ)
     # FIXME: enable autosave on champs private? once we figured out how to batch audit events
-    champ.dossier&.brouillon? && !champ.repetition?
+    champ.dossier.brouillon? && !champ.repetition?
   end
 
   def editable_champ_controller(champ)
@@ -40,10 +40,10 @@ module ChampHelper
       # This is a public champ – it can have an autosave controller.
       if champ.public?
         # This is a champ on dossier in draft state. Activate autosave.
-        if champ.dossier&.brouillon?
+        if champ.dossier.brouillon?
           controllers << 'autosave'
         # This is a champ on a dossier in en_construction state. Enable conditions checker.
-        elsif champ.public? && champ.dossier&.en_construction?
+        elsif champ.public? && champ.dossier.en_construction?
           controllers << 'check-conditions'
         end
       end

@@ -3,24 +3,24 @@
 # Table name: archives
 #
 #  id             :bigint           not null, primary key
+#  job_status     :string           not null
 #  key            :text             not null
 #  month          :date
-#  status         :string           not null
 #  time_span_type :string           not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #
 class Archive < ApplicationRecord
-  include AASM
+  include TransientModelsWithPurgeableJobConcern
 
   RETENTION_DURATION = 4.days
+  MAX_DUREE_GENERATION = 24.hours
   MAX_SIZE = 100.gigabytes
 
   has_and_belongs_to_many :groupe_instructeurs
 
   has_one_attached :file
 
-  scope :stale, -> { where('updated_at < ?', (Time.zone.now - RETENTION_DURATION)) }
   scope :for_groupe_instructeur, -> (groupe_instructeur) {
     joins(:archives_groupe_instructeurs)
       .where(
@@ -32,32 +32,6 @@ class Archive < ApplicationRecord
     everything: 'everything',
     monthly:    'monthly'
   }
-
-  enum status: {
-    pending: 'pending',
-    generated: 'generated',
-    failed: 'failed'
-  }
-
-  aasm whiny_persistence: true, column: :status, enum: true do
-    state :pending, initial: true
-    state :generated
-    state :failed
-
-    event :make_available do
-      transitions from: :pending, to: :generated
-    end
-    event :restart do
-      transitions from: :failed, to: :pending
-    end
-    event :fail do
-      transitions from: :pending, to: :failed
-    end
-  end
-
-  def available?
-    status == 'generated' && file.attached?
-  end
 
   def filename(procedure)
     if time_span_type == 'everything'

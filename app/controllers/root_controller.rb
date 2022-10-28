@@ -48,6 +48,7 @@ class RootController < ApplicationController
 -- avant l'option C --
             option C"
           champ.value = '["option B", "option C"]'
+          champ.type_de_champ.drop_down_other = "1"
         end
       end
 
@@ -74,6 +75,12 @@ class RootController < ApplicationController
     end
 
     @dossier = Dossier.new(champs: all_champs)
+    all_champs.each do |champ|
+      champ.association(:dossier).target = @dossier
+      champ.champs.each do |champ|
+        champ.association(:dossier).target = @dossier
+      end
+    end
   end
 
   def suivi

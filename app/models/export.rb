@@ -4,6 +4,7 @@
 #
 #  id                              :bigint           not null, primary key
 #  format                          :string           not null
+#  job_status                      :string           default("pending"), not null
 #  key                             :text             not null
 #  procedure_presentation_snapshot :jsonb
 #  statut                          :string           default("tous")
@@ -13,7 +14,10 @@
 #  procedure_presentation_id       :bigint
 #
 class Export < ApplicationRecord
-  MAX_DUREE_CONSERVATION_EXPORT = 3.hours
+  include TransientModelsWithPurgeableJobConcern
+
+  MAX_DUREE_CONSERVATION_EXPORT = 16.hours
+  MAX_DUREE_GENERATION = 12.hours
 
   enum format: {
     csv: 'csv',
@@ -44,8 +48,6 @@ class Export < ApplicationRecord
 
   validates :format, :groupe_instructeurs, :key, presence: true
 
-  scope :stale, -> { where('exports.updated_at < ?', (Time.zone.now - MAX_DUREE_CONSERVATION_EXPORT)) }
-
   after_create_commit :compute_async
 
   FORMATS_WITH_TIME_SPAN = [:xlsx, :ods, :csv].flat_map do |format|
@@ -67,10 +69,6 @@ class Export < ApplicationRecord
 
   def since
     time_span_type == Export.time_span_types.fetch(:monthly) ? 30.days.ago : nil
-  end
-
-  def ready?
-    file.attached?
   end
 
   def old?

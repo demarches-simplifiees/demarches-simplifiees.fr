@@ -18,7 +18,7 @@ describe ProcedureArchiveService do
     after { Timecop.return }
 
     context 'for a specific month' do
-      let(:archive) { create(:archive, time_span_type: 'monthly', status: 'pending', month: date_month, groupe_instructeurs: groupe_instructeurs) }
+      let(:archive) { create(:archive, time_span_type: 'monthly', job_status: 'pending', month: date_month, groupe_instructeurs: groupe_instructeurs) }
       let(:year) { 2021 }
 
       it 'collects files with success' do
@@ -120,7 +120,7 @@ describe ProcedureArchiveService do
     end
 
     context 'for all months' do
-      let(:archive) { create(:archive, time_span_type: 'everything', status: 'pending', groupe_instructeurs: groupe_instructeurs) }
+      let(:archive) { create(:archive, time_span_type: 'everything', job_status: 'pending', groupe_instructeurs: groupe_instructeurs) }
 
       it 'collect files' do
         allow_any_instance_of(ActiveStorage::Attachment).to receive(:url).and_return("https://opengraph.githubassets.com/5e61989aecb78e369c93674f877d7bf4ecde378850114a9563cdf8b6a2472536/typhoeus/typhoeus/issues/110")

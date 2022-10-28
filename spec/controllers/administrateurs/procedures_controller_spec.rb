@@ -73,12 +73,14 @@ describe Administrateurs::ProceduresController, type: :controller do
     it { expect(subject.status).to eq(200) }
   end
 
-  describe 'GET #new_from_existing' do
+  describe 'POST #search' do
     before do
       stub_const("Administrateurs::ProceduresController::SIGNIFICANT_DOSSIERS_THRESHOLD", 2)
     end
 
-    subject { get :new_from_existing }
+    let(:query) { 'Procedure' }
+
+    subject { post :search, params: { query: query }, format: :turbo_stream }
     let(:grouped_procedures) { subject; assigns(:grouped_procedures) }
     let(:response_procedures) { grouped_procedures.map { |_o, procedures| procedures }.flatten }
 
@@ -113,6 +115,18 @@ describe Administrateurs::ProceduresController, type: :controller do
         expect(grouped_procedures.length).to eq 2
         expect(grouped_procedures.find { |o, _p| o == 'DDT des Vosges' }.last).to contain_exactly(procedure_with_service_1)
         expect(grouped_procedures.find { |o, _p| o == 'DDT du Loiret'  }.last).to contain_exactly(procedure_with_service_2, procedure_without_service)
+      end
+    end
+
+    describe 'searching' do
+      let!(:matching_procedure) { create(:procedure_with_dossiers, :published, dossiers_count: 2, libelle: 'éléctriCITE') }
+      let!(:unmatching_procedure) { create(:procedure_with_dossiers, :published, dossiers_count: 2, libelle: 'temoin') }
+
+      let(:query) { 'ELECTRIcité' }
+
+      it 'is case insentivite and unaccented' do
+        expect(response_procedures).to include(matching_procedure)
+        expect(response_procedures).not_to include(unmatching_procedure)
       end
     end
   end

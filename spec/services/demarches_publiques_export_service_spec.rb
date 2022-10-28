@@ -1,7 +1,9 @@
 describe DemarchesPubliquesExportService do
   let(:procedure) { create(:procedure, :published, :with_service, :with_type_de_champ) }
   let!(:dossier) { create(:dossier, procedure: procedure) }
-  let(:io) { StringIO.new }
+  let(:gzip_filename) { "demarches.json.gz" }
+
+  after { FileUtils.rm(gzip_filename) }
 
   describe 'call' do
     it 'generate json for all closed procedures' do
@@ -31,17 +33,24 @@ describe DemarchesPubliquesExportService do
           ]
         }
       }
+      DemarchesPubliquesExportService.new(gzip_filename).call
 
-      DemarchesPubliquesExportService.new(io).call
-      expect(JSON.parse(io.string)[0]
+      expect(JSON.parse(deflat_gzip(gzip_filename))[0]
         .deep_symbolize_keys)
         .to eq(expected_result)
     end
+
     it 'raises exception when procedure with bad data' do
       procedure.libelle = nil
       procedure.save(validate: false)
 
-      expect { DemarchesPubliquesExportService.new(io).call }.to raise_error(DemarchesPubliquesExportService::Error)
+      expect { DemarchesPubliquesExportService.new(gzip_filename).call }.to raise_error(DemarchesPubliquesExportService::Error)
+    end
+  end
+
+  def deflat_gzip(gzip_filename)
+    Zlib::GzipReader.open(gzip_filename) do |gz|
+      return gz.read
     end
   end
 end

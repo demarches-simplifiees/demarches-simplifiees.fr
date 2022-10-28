@@ -1500,6 +1500,7 @@ type Entreprise {
   effectif pour un mois donné
   """
   effectifMensuel: Effectif
+  etatAdministratif: EntrepriseEtatAdministratif
   formeJuridique: String
   formeJuridiqueCode: String
   inlineAdresse: String!
@@ -1510,6 +1511,18 @@ type Entreprise {
   raisonSociale: String!
   siren: String!
   siretSiegeSocial: String!
+}
+
+enum EntrepriseEtatAdministratif {
+  """
+  L'entreprise est en activité
+  """
+  Actif
+
+  """
+  L'entreprise a cessé son activité
+  """
+  Ferme
 }
 
 type File {

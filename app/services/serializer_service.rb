@@ -9,6 +9,11 @@ class SerializerService
     data && data['demarche']['dossiers']
   end
 
+  def self.demarches_publiques(after: nil)
+    data = execute_query('serializeDemarchesPubliques', { after: after })
+    data && data['demarchesPubliques']
+  end
+
   def self.avis(avis)
     data = execute_query('serializeAvis', { number: avis.dossier_id, id: avis.to_typed_id })
     data && data['dossier']['avis'].first
@@ -46,6 +51,18 @@ class SerializerService
             hasNextPage
             endCursor
           }
+        }
+      }
+    }
+
+    query serializeDemarchesPubliques($after: String) {
+      demarchesPubliques(after: $after) {
+        nodes {
+          ...DemarcheDescriptorFragment
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
         }
       }
     }
@@ -259,6 +276,35 @@ class SerializerService
       checksum
       byteSize: byteSizeBigInt
       contentType
+    }
+
+    fragment ChampDescriptorFragment on ChampDescriptor {
+      type
+      label
+      description
+      required
+      options
+      champDescriptors {
+        type
+        label
+        description
+        required
+        options
+      }
+    }
+
+    fragment DemarcheDescriptorFragment on DemarcheDescriptor {
+      number
+      title
+      description
+      datePublication
+      service { nom organisme typeOrganisme }
+      cadreJuridique
+      deliberation
+      dossiersCount
+      revision {
+        champDescriptors { ...ChampDescriptorFragment }
+      }
     }
   GRAPHQL
 end

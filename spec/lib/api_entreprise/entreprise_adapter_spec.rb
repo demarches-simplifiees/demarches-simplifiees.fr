@@ -67,6 +67,10 @@ describe APIEntreprise::EntrepriseAdapter do
       it 'L\'entreprise contient bien un prenom' do
         expect(subject[:entreprise_prenom]).to eq('test_prenom')
       end
+
+      it 'L\'entreprise contient bien un etat administratif' do
+        expect(subject[:entreprise_etat_administratif]).to eq('actif')
+      end
     end
   end
 
