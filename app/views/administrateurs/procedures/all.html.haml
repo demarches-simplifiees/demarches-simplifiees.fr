@@ -47,7 +47,7 @@
                   = f.collection_check_boxes :statuses, ['publiee', 'close'], :to_s, :to_s, include_hidden: false do |b|
                     .fr-checkbox-group.fr-ml-2w
                       = b.check_box(checked: @statuses&.include?(b.value), 'data-action': 'autosubmit#submit')
-                      = b.label(class: 'fr-label') { b.text }
+                      = b.label(class: 'fr-label') { t b.text, scope: 'activerecord.attributes.procedure.aasm_state' }
 
       .fr-col-9
         .fr-table.fr-table--bordered
@@ -80,7 +80,7 @@
                   %td= procedure.libelle
                   %td= procedure.id
                   %td= procedure.administrateurs.count
-                  %td= procedure.aasm_state
+                  %td= t procedure.aasm_state, scope: 'activerecord.attributes.procedure.aasm_state'
                   %td= l(procedure.published_at, format: :message_date_without_time)
                 %tr.hidden{'data-expand-target': 'content'}
                   %td.fr-highlight--beige-gris-galet{colspan: '6'}
