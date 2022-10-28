@@ -104,6 +104,29 @@ describe 'shared/dossiers/edit.html.haml', type: :view do
     end
   end
 
+  context 'with a mandatory piece justificative' do
+    let(:dossier) { create(:dossier) }
+    let(:type_de_champ) { create(:type_de_champ_piece_justificative, procedure: dossier.procedure, mandatory: true) }
+    let(:champ) { create(:champ_piece_justificative, dossier: dossier, type_de_champ: type_de_champ) }
+
+    context 'when dossier is en construction' do
+      let(:dossier) { create(:dossier, :en_construction) }
+      before { dossier.champs << champ }
+
+      it 'cannot delete a piece justificative' do
+        expect(subject).not_to have_text('Supprimer')
+      end
+    end
+
+    context 'when dossier is brouillon' do
+      before { dossier.champs << champ }
+
+      it 'can delete a piece justificative' do
+        expect(subject).to have_text('Supprimer')
+      end
+    end
+  end
+
   context 'with a routed procedure' do
     let(:procedure) do
       create(:procedure,
