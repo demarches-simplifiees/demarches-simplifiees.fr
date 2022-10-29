@@ -4,16 +4,16 @@ class Attachment::EditComponent < ApplicationComponent
 
   delegate :persisted?, to: :attachment, allow_nil: true
 
-  def initialize(form:, attached_file:, attachment: nil, user_can_destroy: false, direct_upload: true, id: nil, index: 0)
+  def initialize(form:, attached_file:, user_can_destroy: false, direct_upload: true, id: nil, index: 0, **kwargs)
     @form = form
     @attached_file = attached_file
 
-    @attachment = if attachment
-      attachment
+    @attachment = if kwargs.key?(:attachment)
+      kwargs[:attachment]
     elsif attached_file.respond_to?(:attachment)
       attached_file.attachment
     else
-      # multiple attachments: attachment kwarg is expected, unless adding a new attachment
+      fail ArgumentError, "You must pass an `attachment` kwarg when not using as single attachment like in #{attached_file.name}. Set it to nil for a new attachment."
     end
 
     @user_can_destroy = user_can_destroy

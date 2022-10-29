@@ -1,6 +1,6 @@
 describe AttachmentsController, type: :controller do
   let(:user) { create(:user) }
-  let(:attachment) { champ.piece_justificative_file.attachment }
+  let(:attachment) { champ.piece_justificative_file.attachments.first }
   let(:dossier) { create(:dossier, user: user) }
   let(:champ) { create(:champ_piece_justificative, dossier_id: dossier.id) }
   let(:signed_id) { attachment.blob.signed_id }
@@ -45,7 +45,7 @@ describe AttachmentsController, type: :controller do
   describe '#destroy' do
     render_views
 
-    let(:attachment) { champ.piece_justificative_file.attachment }
+    let(:attachment) { champ.piece_justificative_file.attachments.first }
     let(:dossier) { create(:dossier, user: user) }
     let(:champ) { create(:champ_piece_justificative, dossier_id: dossier.id) }
     let(:signed_id) { attachment.blob.signed_id }
