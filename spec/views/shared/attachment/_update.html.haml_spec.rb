@@ -30,7 +30,6 @@ describe 'shared/attachment/_update.html.haml', type: :view do
     end
 
     it 'does not render action buttons' do
-      expect(subject).not_to have_link('Remplacer')
       expect(subject).not_to have_link('Supprimer')
     end
 
