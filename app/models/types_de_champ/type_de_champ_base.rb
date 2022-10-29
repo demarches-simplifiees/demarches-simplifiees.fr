@@ -4,8 +4,8 @@ class TypesDeChamp::TypeDeChampBase
   delegate :description, :libelle, :mandatory, :stable_id, :fillable?, to: :@type_de_champ
 
   FILL_DURATION_SHORT  = 10.seconds
-  FILL_DURATION_MEDIUM = 1.minute.in_seconds
-  FILL_DURATION_LONG   = 3.minutes.in_seconds
+  FILL_DURATION_MEDIUM = 1.minute
+  FILL_DURATION_LONG   = 3.minutes
   READ_WORDS_PER_SECOND = 140.0 / 60 # 140 words per minute
 
   def initialize(type_de_champ)
