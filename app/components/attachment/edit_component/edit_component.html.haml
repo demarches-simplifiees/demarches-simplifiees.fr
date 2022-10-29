@@ -6,8 +6,6 @@
       - if user_can_destroy?
         .attachment-action{ "data-turbo": "true" }
           = link_to('Supprimer', attachment_path, **remove_button_options)
-      .attachment-action
-        = button_tag('Remplacer', **replace_button_options)
 
   .attachment-error.hidden
     .attachment-error-message

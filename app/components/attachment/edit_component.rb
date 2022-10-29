@@ -60,7 +60,7 @@ class Attachment::EditComponent < ApplicationComponent
   end
 
   def auto_attach_url
-    helpers.auto_attach_url(form.object, replace_attachment_id: persisted? ? attachment_id : nil)
+    helpers.auto_attach_url(form.object)
   end
 
   def input_id(given_id)
@@ -92,14 +92,6 @@ class Attachment::EditComponent < ApplicationComponent
       type: 'button',
       class: 'button attachment-error-retry',
       data: { input_target: ".#{attachment_input_class}", action: 'autosave#onClickRetryButton' }
-    }
-  end
-
-  def replace_button_options
-    {
-      type: 'button',
-      class: 'button small',
-      data: { toggle_target: ".#{attachment_input_class}" }
     }
   end
 
