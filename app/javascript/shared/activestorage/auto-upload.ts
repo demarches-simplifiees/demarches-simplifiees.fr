@@ -118,9 +118,9 @@ export class AutoUpload {
   }
 
   get errorElement() {
-    return this.#input.parentElement?.querySelector<HTMLElement>(
-      '.attachment-error'
-    );
+    return this.#input
+      .closest('.attachment')
+      ?.querySelector<HTMLElement>('.attachment-error');
   }
 
   get errorTitleElement() {

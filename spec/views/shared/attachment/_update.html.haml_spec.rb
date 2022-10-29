@@ -1,12 +1,12 @@
 describe 'shared/attachment/_update.html.haml', type: :view do
-  let(:champ) { build(:champ_piece_justificative, dossier: create(:dossier)) }
+  let(:champ) { build(:champ_titre_identite, dossier: create(:dossier)) }
   let(:attached_file) { champ.piece_justificative_file }
   let(:user_can_destroy) { false }
   let(:template) { nil }
 
   subject do
     form_for(champ.dossier) do |form|
-      view.render Attachment::EditComponent.new(form: form, attached_file: attached_file, user_can_destroy: true, direct_upload: true)
+      view.render Attachment::EditComponent.new(form: form, attached_file: attached_file, attachment: attached_file[0], user_can_destroy: true, direct_upload: true)
     end
   end
 
@@ -26,7 +26,7 @@ describe 'shared/attachment/_update.html.haml', type: :view do
     end
 
     it 'does not renders a link to the unsaved file' do
-      expect(subject).not_to have_content(attached_file.filename.to_s)
+      expect(subject).not_to have_content(attached_file.attachments[0].filename.to_s)
     end
 
     it 'does not render action buttons' do
@@ -37,7 +37,7 @@ describe 'shared/attachment/_update.html.haml', type: :view do
       before { champ.save! }
 
       it 'renders a link to the file' do
-        expect(subject).to have_content(attached_file.filename.to_s)
+        expect(subject).to have_content(attached_file.attachments[0].filename.to_s)
       end
 
       it 'hides the form field by default' do
@@ -55,6 +55,7 @@ describe 'shared/attachment/_update.html.haml', type: :view do
       form_for(champ.dossier) do |form|
         render Attachment::EditComponent.new(form: form,
           attached_file: attached_file,
+          attachment: attached_file[0],
           user_can_destroy: user_can_destroy,
           direct_upload: true)
       end
