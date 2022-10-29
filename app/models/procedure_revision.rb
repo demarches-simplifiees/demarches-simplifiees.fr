@@ -203,11 +203,14 @@ class ProcedureRevision < ApplicationRecord
   private
 
   def compute_estimated_fill_duration
-    tdc_durations = types_de_champ_public.fillable.map do |tdc|
-      duration = tdc.estimated_fill_duration(self) + tdc.estimated_read_duration
-      tdc.mandatory ? duration : duration / 2
+    types_de_champ_public.sum do |tdc|
+      next tdc.estimated_read_duration unless tdc.fillable?
+
+      duration = tdc.estimated_read_duration + tdc.estimated_fill_duration(self)
+      duration /= 2 unless tdc.mandatory?
+
+      duration
     end
-    tdc_durations.sum
   end
 
   def children_types_de_champ_as_json(tdcs_as_json, parent_tdcs)

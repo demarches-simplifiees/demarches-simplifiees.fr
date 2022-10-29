@@ -731,6 +731,20 @@ describe ProcedureRevision do
         expect(subject).to eq repetable_block_read_duration + row_duration * 2.5 + children_read_duration
       end
     end
+
+    context 'when there are non fillable champs' do
+      let(:types_de_champ_public) do
+        [
+          {
+            type: :explication,
+            description: "5 words description <strong>containing html</strong> " * 20
+          },
+          { mandatory: true, description: nil }
+        ]
+      end
+
+      it 'estimates duration based on content reading' do
+        expect(subject).to eq((100 / TypesDeChamp::TypeDeChampBase::READ_WORDS_PER_SECOND).round + TypesDeChamp::TypeDeChampBase::FILL_DURATION_SHORT)
       end
     end
 
