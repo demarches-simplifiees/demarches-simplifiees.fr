@@ -1,0 +1,18 @@
+module Loaders
+  class Dossier < GraphQL::Batch::Loader
+    def load(key)
+      super(key.to_i)
+    end
+
+    def perform(keys)
+      query(keys).each { |record| fulfill(record.id, record) }
+      keys.each { |key| fulfill(key, nil) unless fulfilled?(key) }
+    end
+
+    private
+
+    def query(keys)
+      ::Dossier.visible_by_administration.where(id: keys)
+    end
+  end
+end
