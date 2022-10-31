@@ -19,6 +19,7 @@ Rails.application.routes.draw do
       post 'add_administrateur_and_instructeur', on: :member
       post 'add_administrateur_with_confirmation', on: :member
       post 'change_piece_justificative_template', on: :member
+      patch 'add_tags', on: :member
       get 'export_mail_brouillons', on: :member
       resources :confirmation_urls, only: :new
       resources :administrateur_confirmations, only: [:new, :create]
