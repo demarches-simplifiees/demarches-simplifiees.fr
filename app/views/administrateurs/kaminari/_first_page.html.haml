@@ -1,0 +1,2 @@
+%li
+  = link_to_unless current_page.first?, t('views.pagination.first').html_safe, url, remote: remote, class: 'fr-pagination__link fr-pagination__link--first', 'aria-disabled': true, title: 'Première page', role: 'link'
