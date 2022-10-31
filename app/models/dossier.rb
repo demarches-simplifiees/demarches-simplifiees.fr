@@ -235,6 +235,12 @@ class Dossier < ApplicationRecord
   scope :en_instruction,              -> { not_archived.state_en_instruction }
   scope :termine,                     -> { not_archived.state_termine }
 
+  scope :processed_by_month, -> (all_groupe_instructeurs) {
+    state_termine
+      .where(groupe_instructeurs: all_groupe_instructeurs)
+      .group_by_period(:month, :processed_at, reverse: true)
+  }
+
   scope :processed_in_month, -> (date) do
     date = date.to_datetime
     state_termine
