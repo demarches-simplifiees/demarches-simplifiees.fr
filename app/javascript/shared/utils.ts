@@ -85,7 +85,7 @@ export function toggle(el: Element | null, force?: boolean) {
 
 export function toggleExpandIcon(icon: Element | null) {
   icon?.classList.toggle('fr-icon-add-line');
-  icon?.classList.toggle('fr-icon-subtract-line');
+  icon?.classList?.toggle('fr-icon-subtract-line');
 }
 
 export function enable(
