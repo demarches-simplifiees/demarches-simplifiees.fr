@@ -329,12 +329,12 @@ module Administrateurs
       @admin_zones = current_administrateur.zones
       @other_zones = Zone.all - @admin_zones
       @zone_ids = params[:zone_ids].filter(&:present?) if params[:zone_ids]
-      @selected_zones = @zone_ids.map { |id| Zone.find(id) } if @zone_ids && @zone_ids.any?
+      @selected_zones = @zone_ids.map { |id| Zone.find(id) } if @zone_ids.present?
       @statuses = params[:statuses].filter(&:present?) if params[:statuses]
 
       @procedures = Procedure.joins(:procedures_zones).publiees_ou_closes
-      @procedures = @procedures.where(procedures_zones: { zone_id: @zone_ids }) if @zone_ids && @zone_ids.any?
-      @procedures = @procedures.where(aasm_state: @statuses) if @statuses && @statuses.any?
+      @procedures = @procedures.where(procedures_zones: { zone_id: @zone_ids }) if @zone_ids.present?
+      @procedures = @procedures.where(aasm_state: @statuses) if @statuses.present?
       @procedures = @procedures.page(params[:page]).per(ITEMS_PER_PAGE).order(published_at: :desc)
     end
 
