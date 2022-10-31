@@ -94,11 +94,12 @@ describe API::V2::GraphqlController do
       }
     }"
   end
+  let(:variables) { {} }
   let(:body) { JSON.parse(subject.body, symbolize_names: true) }
   let(:gql_data) { body[:data] }
   let(:gql_errors) { body[:errors] }
 
-  subject { post :execute, params: { query: query } }
+  subject { post :execute, params: { query: query, variables: variables } }
 
   context "when authenticated with legacy token" do
     let(:authorization_header) { ActionController::HttpAuthentication::Token.encode_credentials(legacy_token) }
@@ -823,21 +824,34 @@ describe API::V2::GraphqlController do
 
     describe "mutations" do
       describe 'dossierEnvoyerMessage' do
-        context 'success' do
-          let(:query) do
-            "mutation {
-              dossierEnvoyerMessage(input: {
-                dossierId: \"#{dossier.to_typed_id}\",
-                instructeurId: \"#{instructeur.to_typed_id}\",
-                body: \"Bonjour\",
-                attachment: \"#{blob.signed_id}\"
-              }) {
-                message {
-                  body
-                }
+        let(:query) do
+          "mutation($input: DossierEnvoyerMessageInput!) {
+            dossierEnvoyerMessage(input: $input) {
+              message {
+                body
               }
-            }"
-          end
+              errors {
+                message
+              }
+            }
+          }"
+        end
+        let(:variables) { { input: input } }
+        let(:input) do
+          {
+            dossierId: dossier_id,
+            instructeurId: instructeur_id,
+            body: input_body,
+            attachment: attachment
+          }
+        end
+        let(:dossier_id) { dossier.to_typed_id }
+        let(:instructeur_id) { instructeur.to_typed_id }
+        let(:input_body) { "Bonjour" }
+        let(:attachment) { nil }
+
+        context 'success' do
+          let(:attachment) { blob.signed_id }
 
           it "should post a message" do
             expect(gql_errors).to eq(nil)
@@ -845,48 +859,41 @@ describe API::V2::GraphqlController do
             expect(gql_data).to eq(dossierEnvoyerMessage: {
               message: {
                 body: "Bonjour"
-              }
+              },
+              errors: nil
             })
           end
         end
 
         context 'schema error' do
-          let(:query) do
-            "mutation {
-              dossierEnvoyerMessage(input: {
-                dossierId: \"#{dossier.to_typed_id}\",
-                instructeurId: \"#{instructeur.to_typed_id}\"
-              }) {
-                message {
-                  body
-                }
-              }
-            }"
+          let(:input) do
+            {
+              dossierId: dossier_id,
+              instructeurId: instructeur_id
+            }
           end
 
           it "should fail" do
             expect(gql_data).to eq(nil)
             expect(gql_errors).not_to eq(nil)
+            expect(body[:errors].first[:message]).to eq("Variable $input of type DossierEnvoyerMessageInput! was provided invalid value for body (Expected value to not be null)")
+            expect(body[:errors].first.key?(:backtrace)).to be_falsey
+          end
+        end
+
+        context 'variables error' do
+          let(:variables) { "{" }
+
+          it "should fail" do
+            expect(gql_data).to eq(nil)
+            expect(gql_errors).not_to eq(nil)
+            expect(body[:errors].first[:message]).to eq("809: unexpected token at '{'")
+            expect(body[:errors].first.key?(:backtrace)).to be_falsey
           end
         end
 
         context 'validation error' do
-          let(:query) do
-            "mutation {
-              dossierEnvoyerMessage(input: {
-                dossierId: \"#{dossier.to_typed_id}\",
-                instructeurId: \"#{instructeur.to_typed_id}\",
-                body: \"\"
-              }) {
-                message {
-                  body
-                }
-                errors {
-                  message
-                }
-              }
-            }"
-          end
+          let(:input_body) { "" }
 
           it "should fail" do
             expect(gql_errors).to eq(nil)
@@ -898,23 +905,7 @@ describe API::V2::GraphqlController do
         end
 
         context 'upload error' do
-          let(:query) do
-            "mutation {
-              dossierEnvoyerMessage(input: {
-                dossierId: \"#{dossier.to_typed_id}\",
-                instructeurId: \"#{instructeur.to_typed_id}\",
-                body: \"Hello world\",
-                attachment: \"fake\"
-              }) {
-                message {
-                  body
-                }
-                errors {
-                  message
-                }
-              }
-            }"
-          end
+          let(:attachment) { 'fake' }
 
           it "should fail" do
             expect(gql_errors).to eq(nil)

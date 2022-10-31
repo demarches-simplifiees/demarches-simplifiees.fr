@@ -10,7 +10,7 @@ class API::V2::GraphqlController < API::V2::BaseController
       operation_name: params[:operationName])
 
     render json: result
-  rescue GraphQL::ParseError => exception
+  rescue GraphQL::ParseError, JSON::ParserError => exception
     handle_parse_error(exception)
   rescue => exception
     if Rails.env.production?
@@ -26,7 +26,7 @@ class API::V2::GraphqlController < API::V2::BaseController
     super
 
     payload.merge!({
-      graphql_operation: operation_log(params[:query], params[:operationName], params[:variables]&.to_unsafe_h)
+      graphql_operation: operation_log(params[:query], params[:operationName], to_unsafe_hash(params[:variables]))
     })
   end
 
@@ -57,6 +57,23 @@ class API::V2::GraphqlController < API::V2::BaseController
     else
       raise ArgumentError, "Unexpected parameter: #{ambiguous_param}"
     end
+  end
+
+  def to_unsafe_hash(ambiguous_param)
+    case ambiguous_param
+    when String
+      if ambiguous_param.present?
+        JSON.parse(ambiguous_param)
+      else
+        {}
+      end
+    when ActionController::Parameters
+      ambiguous_param.to_unsafe_h
+    else
+      ambiguous_param
+    end
+  rescue JSON::ParserError
+    {}
   end
 
   def handle_parse_error(exception)
