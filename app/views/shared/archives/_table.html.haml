@@ -7,17 +7,15 @@
       %th.center Télécharger
 
   %tbody
-  - count_dossiers_termines_by_month.each do |count_by_month|
-    - month = count_by_month["month"].to_date
-    - nb_dossiers_termines = count_by_month["count"]
-    - matching_archive = archives.find { |archive| archive.time_span_type == 'monthly' && archive.month == month }
-    - weight = estimate_weight(matching_archive, nb_dossiers_termines, average_dossier_weight)
+  - count_dossiers_termines_by_month.each do |date, count|
+    - matching_archive = archives.find { |archive| archive.time_span_type == 'monthly' && archive.month == date.month }
+    - weight = estimate_weight(matching_archive, count, average_dossier_weight)
 
     %tr
       %td
-        = I18n.l(month, format: "%B %Y").capitalize
+        = I18n.l(date, format: "%B %Y").capitalize
       %td.text-right
-        = nb_dossiers_termines
+        = count
       %td.text-right
         = number_to_human_size(weight)
       %td.center
@@ -30,7 +28,7 @@
             %span.icon.retry
             = t(:archive_pending_html, scope: [:instructeurs, :procedure], created_period: time_ago_in_words(matching_archive.created_at))
         - elsif weight.nil? || weight < Archive::MAX_SIZE
-          = link_to create_archive_url(procedure, month), method: :post, class: "button" do
+          = link_to create_archive_url(procedure, date), method: :post, class: "button" do
             %span.icon.new-folder
             Demander la création
         - else
