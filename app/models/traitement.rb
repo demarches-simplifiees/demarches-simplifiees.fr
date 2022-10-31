@@ -25,13 +25,4 @@ class Traitement < ApplicationRecord
       .where.not('dossiers.depose_at' => nil, processed_at: nil)
       .order(:processed_at)
   end
-
-  scope :termine_close_to_expiration, -> do
-    joins(dossier: :procedure)
-      .termine
-      .where(process_expired: true)
-      .where('dossiers.state' => Dossier::TERMINE)
-      .where("traitements.processed_at + (procedures.duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: Dossier::INTERVAL_BEFORE_EXPIRATION })
-  end
-
 end
