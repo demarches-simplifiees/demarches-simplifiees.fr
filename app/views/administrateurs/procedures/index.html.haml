@@ -1,7 +1,9 @@
+= render 'main_menu'
+
 .sub-header
   .procedure-admin-listing-container
     = link_to "Nouvelle Démarche", new_from_existing_admin_procedures_path, id: 'new-procedure', class: 'fr-btn'
-  .container
+  .fr-container
 
     %nav.tabs
       %ul
@@ -10,7 +12,7 @@
         = tab_item(t('pluralize.closed', count: @procedures_closed.count), admin_procedures_path(statut: 'archivees'), active: @statut == 'archivees', badge: number_with_html_delimiter(@procedures_closed_count))
         = tab_item(t('pluralize.deleted', count: @procedures_deleted.count), admin_procedures_path(statut: 'supprimees'), active: @statut === 'supprimees', badge: number_with_html_delimiter(@procedures_deleted_count))
 
-.container#procedures{ data: { item_count: @statut === "publiees" ? @procedures_publiees_count : @statut === "brouillons" ? @procedures_draft_count : @procedures_closed_count } }
+.fr-container#procedures{ data: { item_count: @statut === "publiees" ? @procedures_publiees_count : @statut === "brouillons" ? @procedures_draft_count : @procedures_closed_count } }
   - if @statut === "publiees"
     = render partial: "procedures_list", locals: { procedures: @procedures_publiees }
     = paginate @procedures_publiees
