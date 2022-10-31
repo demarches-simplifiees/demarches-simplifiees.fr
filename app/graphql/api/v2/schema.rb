@@ -1,6 +1,9 @@
 class API::V2::Schema < GraphQL::Schema
   default_max_page_size 100
-  max_complexity 300
+  default_page_size 100
+  # Disable max_complexity for now because of what looks like a bug in graphql gem.
+  # After some internal changes complexity for our avarage query went from < 300 to 25 000.
+  max_complexity nil
   max_depth 15
 
   query Types::QueryType
@@ -70,8 +73,6 @@ class API::V2::Schema < GraphQL::Schema
     raise GraphQL::ExecutionError.new("An object of type #{error.type.graphql_name} was hidden due to permissions", extensions: { code: :unauthorized })
   end
 
-  use GraphQL::Execution::Interpreter
-  use GraphQL::Analysis::AST
   use GraphQL::Schema::Timeout, max_seconds: 10
   use GraphQL::Batch
   use GraphQL::Backtrace
@@ -91,8 +92,5 @@ class API::V2::Schema < GraphQL::Schema
 
     query_analyzer(LogQueryComplexity)
     query_analyzer(LogQueryDepth)
-  else
-    query_analyzer(GraphQL::Analysis::AST::MaxQueryComplexity)
-    query_analyzer(GraphQL::Analysis::AST::MaxQueryDepth)
   end
 end
