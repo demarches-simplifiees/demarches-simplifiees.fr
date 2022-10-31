@@ -24,7 +24,11 @@ class AssignTo < ApplicationRecord
 
   def procedure_presentation_or_default_and_errors
     errors = reset_procedure_presentation_if_invalid
-    [procedure_presentation || build_procedure_presentation, errors]
+    if self.procedure_presentation.nil?
+      self.procedure_presentation = build_procedure_presentation
+      self.procedure_presentation.save if procedure_presentation.valid? && !procedure_presentation.persisted?
+    end
+    [self.procedure_presentation, errors]
   end
 
   private
