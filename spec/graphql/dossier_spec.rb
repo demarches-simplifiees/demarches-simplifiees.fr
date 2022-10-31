@@ -108,6 +108,35 @@ RSpec.describe Types::DossierType, type: :graphql do
     }
   end
 
+  describe 'dossier with linked dossier' do
+    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :dossier_link }]) }
+    let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure: procedure) }
+    let(:linked_dossier) { create(:dossier, :en_construction) }
+    let(:query) { DOSSIER_WITH_LINKED_DOSIER_QUERY }
+    let(:variables) { { number: dossier.id } }
+
+    before do
+      dossier.champs.first.update(value: linked_dossier.id)
+    end
+
+    context 'en_construction' do
+      it {
+        expect(data[:dossier][:champs].first).not_to be_nil
+        expect(data[:dossier][:champs].first[:dossier][:id]).to eq(linked_dossier.to_typed_id)
+        expect(data[:dossier][:champs].first[:dossier][:state]).to eq('en_construction')
+      }
+    end
+
+    context 'brouillon' do
+      let(:linked_dossier) { create(:dossier, :brouillon) }
+
+      it {
+        expect(data[:dossier][:champs].first).not_to be_nil
+        expect(data[:dossier][:champs].first[:dossier]).to be_nil
+      }
+    end
+  end
+
   DOSSIER_QUERY = <<-GRAPHQL
   query($number: Int!) {
     dossier(number: $number) {
@@ -177,6 +206,22 @@ RSpec.describe Types::DossierType, type: :graphql do
     cityCode
     streetName
     streetNumber
+  }
+  GRAPHQL
+
+  DOSSIER_WITH_LINKED_DOSIER_QUERY = <<-GRAPHQL
+  query($number: Int!) {
+    dossier(number: $number) {
+      champs {
+        id
+        ... on DossierLinkChamp {
+          dossier {
+            id
+            state
+          }
+        }
+      }
+    }
   }
   GRAPHQL
 end
