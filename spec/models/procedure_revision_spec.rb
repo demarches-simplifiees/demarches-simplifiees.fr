@@ -661,11 +661,14 @@ describe ProcedureRevision do
 
   describe '#estimated_fill_duration' do
     let(:mandatory) { true }
+    let(:description) { nil }
+    let(:description_read_time) { ((description || "").split.size / TypesDeChamp::TypeDeChampBase::READ_WORDS_PER_SECOND).round }
+
     let(:types_de_champ_public) do
       [
-        { mandatory: true },
-        { type: :siret, mandatory: true },
-        { type: :piece_justificative, mandatory: mandatory }
+        { mandatory: true, description: },
+        { type: :siret, mandatory: true, description: },
+        { type: :piece_justificative, mandatory:, description: }
       ]
     end
     let(:procedure) { create(:procedure, types_de_champ_public: types_de_champ_public) }
@@ -676,7 +679,8 @@ describe ProcedureRevision do
       expect(subject).to eq \
           TypesDeChamp::TypeDeChampBase::FILL_DURATION_SHORT \
         + TypesDeChamp::TypeDeChampBase::FILL_DURATION_MEDIUM \
-        + TypesDeChamp::TypeDeChampBase::FILL_DURATION_LONG
+        + TypesDeChamp::TypeDeChampBase::FILL_DURATION_LONG \
+        + 3 * description_read_time
     end
 
     context 'when some champs are optional' do
@@ -684,9 +688,22 @@ describe ProcedureRevision do
 
       it 'estimates that half of optional champs will be filled' do
         expect(subject).to eq \
-             TypesDeChamp::TypeDeChampBase::FILL_DURATION_SHORT \
+            TypesDeChamp::TypeDeChampBase::FILL_DURATION_SHORT \
           + TypesDeChamp::TypeDeChampBase::FILL_DURATION_MEDIUM \
-          + TypesDeChamp::TypeDeChampBase::FILL_DURATION_LONG / 2
+          + 2 * description_read_time \
+          + (description_read_time + TypesDeChamp::TypeDeChampBase::FILL_DURATION_LONG) / 2
+      end
+    end
+
+    context 'when some champs have a description' do
+      let(:description) { "some four words description" }
+
+      it 'estimates that duration includes description reading time' do
+        expect(subject).to eq \
+            TypesDeChamp::TypeDeChampBase::FILL_DURATION_SHORT \
+          + TypesDeChamp::TypeDeChampBase::FILL_DURATION_MEDIUM \
+          + TypesDeChamp::TypeDeChampBase::FILL_DURATION_LONG \
+          + 3 * description_read_time
       end
     end
 
@@ -696,17 +713,38 @@ describe ProcedureRevision do
           {
             type: :repetition,
             mandatory: true,
+            description:,
             children: [
-              { mandatory: true },
-              { type: :piece_justificative, position: 2, mandatory: true }
+              { mandatory: true, description: "word " * 10 },
+              { type: :piece_justificative, position: 2, mandatory: true, description: nil }
             ]
           }
         ]
       end
 
       it 'estimates that between 2 and 3 rows will be filled for each repetition' do
+        repetable_block_read_duration = description_read_time
+
         row_duration = TypesDeChamp::TypeDeChampBase::FILL_DURATION_SHORT + TypesDeChamp::TypeDeChampBase::FILL_DURATION_LONG
-        expect(subject).to eq row_duration * 2.5
+        children_read_duration = (10 / TypesDeChamp::TypeDeChampBase::READ_WORDS_PER_SECOND).round
+
+        expect(subject).to eq repetable_block_read_duration + row_duration * 2.5 + children_read_duration
+      end
+    end
+
+    context 'when there are non fillable champs' do
+      let(:types_de_champ_public) do
+        [
+          {
+            type: :explication,
+            description: "5 words description <strong>containing html</strong> " * 20
+          },
+          { mandatory: true, description: nil }
+        ]
+      end
+
+      it 'estimates duration based on content reading' do
+        expect(subject).to eq((100 / TypesDeChamp::TypeDeChampBase::READ_WORDS_PER_SECOND).round + TypesDeChamp::TypeDeChampBase::FILL_DURATION_SHORT)
       end
     end
 
@@ -722,6 +760,7 @@ describe ProcedureRevision do
         before do
           draft_revision.estimated_fill_duration
           draft_revision.types_de_champ.first.update!(type_champ: TypeDeChamp.type_champs.fetch(:piece_justificative))
+          draft_revision.reload
         end
 
         it 'returns an up-to-date estimate' do
@@ -729,6 +768,7 @@ describe ProcedureRevision do
               TypesDeChamp::TypeDeChampBase::FILL_DURATION_LONG \
             + TypesDeChamp::TypeDeChampBase::FILL_DURATION_MEDIUM \
             + TypesDeChamp::TypeDeChampBase::FILL_DURATION_LONG \
+            + 3 * description_read_time
         end
       end
 
