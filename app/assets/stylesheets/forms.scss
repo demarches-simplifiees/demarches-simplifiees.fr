@@ -346,6 +346,7 @@
   [data-reach-combobox-token-list] {
     padding: $default-spacer;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     list-style: none;
   }
