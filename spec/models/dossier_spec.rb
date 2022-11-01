@@ -1709,4 +1709,50 @@ describe Dossier do
       end
     end
   end
+
+  describe '#processed_by_month' do
+    let(:procedure) { create(:procedure, :published, groupe_instructeurs: [groupe_instructeurs]) }
+    let(:groupe_instructeurs) { create(:groupe_instructeur) }
+
+    before do
+      create_dossier_for_month(procedure, 2021, 3)
+      create_dossier_for_month(procedure, 2021, 3)
+      create_archived_dossier_for_month(procedure, 2021, 3)
+      create_dossier_for_month(procedure, 2021, 2)
+    end
+
+    subject do
+      Timecop.freeze(Time.zone.local(2021, 3, 5)) do
+        Dossier.processed_by_month(groupe_instructeurs).count
+      end
+    end
+
+    it 'count dossiers_termines by month' do
+      expect(count_for_month(subject, 3)).to eq 3
+      expect(count_for_month(subject, 2)).to eq 1
+    end
+
+    it 'returns descending order by month' do
+      expect(subject.keys.first.month).to eq 3
+      expect(subject.keys.last.month).to eq 2
+    end
+  end
+
+  private
+
+  def count_for_month(processed_by_month, month)
+    processed_by_month.find { |date, _count| date.month == month }[1]
+  end
+
+  def create_dossier_for_month(procedure, year, month)
+    Timecop.freeze(Time.zone.local(year, month, 5)) do
+      create(:dossier, :accepte, :with_attestation, procedure: procedure)
+    end
+  end
+
+  def create_archived_dossier_for_month(procedure, year, month)
+    Timecop.freeze(Time.zone.local(year, month, 5)) do
+      create(:dossier, :accepte, :archived, :with_attestation, procedure: procedure)
+    end
+  end
 end
