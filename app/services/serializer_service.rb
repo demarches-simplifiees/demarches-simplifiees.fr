@@ -194,8 +194,10 @@ class SerializerService
     }
 
     fragment RepetitionChampFragment on RepetitionChamp {
-      champs {
-        ...ChampFragment
+      rows {
+        champs {
+          ...ChampFragment
+        }
       }
     }
 
