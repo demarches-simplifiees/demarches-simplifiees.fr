@@ -3,21 +3,21 @@ RSpec.describe 'shared/archives/_table.html.haml', type: :view do
 
   let(:procedure) { create(:procedure) }
   let(:all_archives) { create_list(:archive, 2) }
-  let(:month_date) { "2022-01-01T00:00:00+00:00" }
+  let(:month_date) { DateTime.parse("2022-01-01T00:00:00+00:00") }
   let(:average_dossier_weight) { 1024 }
 
   before do
       allow(view).to receive(:create_archive_url).and_return("/archive/created/stubed")
     end
 
-  subject { render 'shared/archives/table.html.haml', count_dossiers_termines_by_month: [{ "month" => month_date, "count" => 5 }], archives: all_archives + [monthly_archive].compact, average_dossier_weight: average_dossier_weight, procedure: procedure }
+  subject { render 'shared/archives/table.html.haml', count_dossiers_termines_by_month: { month_date => 5 }, archives: all_archives + [monthly_archive].compact, average_dossier_weight: average_dossier_weight, procedure: procedure }
 
   context "when archive is available" do
     let(:monthly_archive) { create(:archive, time_span_type: "monthly", month: month_date, job_status: :generated, file: Rack::Test::UploadedFile.new('spec/fixtures/files/RIB.pdf', 'application/pdf')) }
     it 'renders archive by month with estimate_weight' do
       expect(subject).to have_text("Janvier 2022")
       expect(subject).to have_text("Télécharger")
-      expect(subject).to have_text("338 ko")
+      expect(subject).to have_text("5 ko")
     end
   end
 
