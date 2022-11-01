@@ -4,7 +4,9 @@ class ApplicationRecord < ActiveRecord::Base
   def self.record_from_typed_id(id)
     class_name, record_id = GraphQL::Schema::UniqueWithinType.decode(id)
 
-    if defined?(class_name)
+    if class_name == 'Dossier'
+      Dossier.visible_by_administration.find(record_id)
+    elsif defined?(class_name)
       Object.const_get(class_name).find(record_id)
     else
       raise ActiveRecord::RecordNotFound, "Unexpected object: #{class_name}"
