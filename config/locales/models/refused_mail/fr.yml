@@ -1,0 +1,20 @@
+fr:
+  activerecord:
+    errors:
+      models:
+        mails/refused_mail:
+          attributes:
+            subject:
+              format: Le titre de l’email de notification de refus de dossier %{message}
+              champ_missing: réfère au champ "%{tag}" qui n’existe pas
+              champ_missing_in_draft_revision: réfère au champ "%{tag}" qui à été supprimé mais la supression n’est pas encore publiée
+              champ_missing_in_published_revision: réfère au champ "%{tag}" qui n’est pas encore publiée
+              champ_missing_in_published_and_draft_revision: réfère au champ "%{tag}" qui à été supprimé
+              champ_missing_in_previous_revision: réfère au champ "%{tag}" qui n’existe pas sur un des dossiers en cours de traitement
+            body:
+              format: Le contenu de l’email de notification de refus de dossier %{message}
+              champ_missing: réfère au champ "%{tag}" qui n’existe pas
+              champ_missing_in_draft_revision: réfère au champ "%{tag}" qui à été supprimé mais la supression n’est pas encore publiée
+              champ_missing_in_published_revision: réfère au champ "%{tag}" qui n’est pas encore publiée
+              champ_missing_in_published_and_draft_revision: réfère au champ "%{tag}" qui à été supprimé
+              champ_missing_in_previous_revision: réfère au champ "%{tag}" qui n’existe pas sur un des dossiers en cours de traitement
