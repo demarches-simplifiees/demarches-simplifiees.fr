@@ -11,6 +11,9 @@ class Procedure::Card::ChampsComponent < ApplicationComponent
   end
 
   def error_messages
-    @procedure.errors.messages_for(:draft_types_de_champ).to_sentence
+    [
+      @procedure.errors.messages_for(:draft_types_de_champ),
+      @procedure.errors.messages_for(:draft_revision)
+    ].flatten.to_sentence
   end
 end

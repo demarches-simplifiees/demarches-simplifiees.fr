@@ -468,7 +468,7 @@ Rails.application.routes.draw do
       get 'transfert' => 'procedures#transfert', as: :transfert
       get 'close' => 'procedures#close', as: :close
       post 'transfer' => 'procedures#transfer', as: :transfer
-      resources :mail_templates, only: [:edit, :update]
+      resources :mail_templates, only: [:edit, :update, :show]
 
       resources :groupe_instructeurs, only: [:index, :show, :create, :update, :destroy] do
         member do

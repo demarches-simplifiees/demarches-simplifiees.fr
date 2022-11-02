@@ -272,11 +272,11 @@ class Procedure < ApplicationRecord
   validates :draft_types_de_champ,
     'types_de_champ/no_empty_block': true,
     'types_de_champ/no_empty_drop_down': true,
-    if: :validate_for_publication?
+    on: :publication
   validates :draft_types_de_champ_private,
     'types_de_champ/no_empty_block': true,
     'types_de_champ/no_empty_drop_down': true,
-    if: :validate_for_publication?
+    on: :publication
   validate :check_juridique
   validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,200}\z/ }, uniqueness: { scope: [:path, :closed_at, :hidden_at, :unpublished_at], case_sensitive: false }
   validates :duree_conservation_dossiers_dans_ds, allow_nil: false,
@@ -294,6 +294,13 @@ class Procedure < ApplicationRecord
 
   validates :lien_dpo, email_or_link: true, allow_nil: true
   validates_with MonAvisEmbedValidator
+
+  validates_associated :draft_revision, on: :publication
+  validates_associated :initiated_mail, on: :publication
+  validates_associated :received_mail, on: :publication
+  validates_associated :closed_mail, on: :publication
+  validates_associated :refused_mail, on: :publication
+  validates_associated :without_continuation_mail, on: :publication
 
   FILE_MAX_SIZE = 20.megabytes
   validates :notice, content_type: [
@@ -798,8 +805,12 @@ class Procedure < ApplicationRecord
   end
 
   def publish_revision!
-    update!(draft_revision: create_new_revision, published_revision: draft_revision)
-    published_revision.touch(:published_at)
+    transaction do
+      self.published_revision = draft_revision
+      self.draft_revision = create_new_revision
+      save!(context: :publication)
+      published_revision.touch(:published_at)
+    end
     dossiers
       .state_not_termine
       .find_each { |dossier| DossierRebaseJob.perform_later(dossier) }
@@ -859,16 +870,15 @@ class Procedure < ApplicationRecord
     new_draft.revision_types_de_champ.reload
   end
 
-  def validate_for_publication?
-    validation_context == :publication || publiee?
-  end
-
   def before_publish
     assign_attributes(closed_at: nil, unpublished_at: nil)
   end
 
   def after_publish(canonical_procedure = nil)
-    update!(canonical_procedure: canonical_procedure, draft_revision: create_new_revision, published_revision: draft_revision)
+    self.canonical_procedure = canonical_procedure
+    self.published_revision = draft_revision
+    self.draft_revision = create_new_revision
+    save!(context: :publication)
     touch(:published_at)
     published_revision.touch(:published_at)
   end
