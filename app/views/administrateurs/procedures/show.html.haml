@@ -42,7 +42,7 @@
 .container
   = render TypesDeChampEditor::ErrorsSummary.new(revision: @procedure.draft_revision)
 
-- if @procedure.draft_changed? && @procedure.draft_revision.valid?
+- if @procedure.draft_changed?
   .container
     .card.featured
       .card-title
@@ -50,7 +50,7 @@
       = render partial: 'revision_changes', locals: { changes: @procedure.revision_changes }
       .flex.mt-2.justify-end
         = button_to "Réinitialiser les modifications", admin_procedure_reset_draft_path(@procedure), class: 'fr-btn fr-btn--secondary fr-mr-2w', method: :put
-        = link_to 'Publier les modifications', admin_procedure_publication_path(@procedure), class: 'fr-btn', id: 'publish-procedure-link', data: { disable_with: "Publication..." }
+        = button_to 'Publier les modifications', admin_procedure_publication_path(@procedure), class: 'fr-btn', id: 'publish-procedure-link', data: { disable_with: "Publication..." }, disabled: !@procedure.draft_revision.valid?, method: :get
 
 - if !@procedure.procedure_expires_when_termine_enabled?
   = render partial: 'administrateurs/procedures/suggest_expires_when_termine', locals: { procedure: @procedure }

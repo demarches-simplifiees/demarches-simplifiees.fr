@@ -4,15 +4,7 @@
                     ["Configuration des emails"]] }
 
 .container
-  - @mail_templates.each do |mail_template|
-    .card
-      .flex.justify-between
-        %div
-          .card-title= mail_template.class.const_get(:DISPLAYED_NAME)
-          - if mail_template.updated_at.blank?
-            %p.notice= mail_template.class.const_get(:DISPLAYED_NAME) === 'Accusé de réception' ? 'Personnalisé' : 'Modèle standard'
-          - else
-            %span.badge.baseline modifié le #{mail_template.updated_at.strftime('%d-%m-%Y')}
-
-        %div
-          = link_to 'Modifier', edit_admin_procedure_mail_template_path(@procedure, mail_template.class.const_get(:SLUG)), class: 'fr-btn'
+  .fr-grid-row.fr-grid-row--gutters.fr-py-5w
+    - @mail_templates.each do |mail_template|
+      .fr-col-md-6.fr-col-12
+        = render Procedure::EmailTemplateCardComponent.new(email_template: mail_template)
