@@ -17,7 +17,7 @@ RSpec.describe 'shared/archives/_table.html.haml', type: :view do
     it 'renders archive by month with estimate_weight' do
       expect(subject).to have_text("Janvier 2022")
       expect(subject).to have_text("Télécharger")
-      expect(subject).to have_text("5 ko")
+      expect(subject).to have_text("338 ko")
     end
   end
 

@@ -8,7 +8,7 @@
 
   %tbody
   - count_dossiers_termines_by_month.each do |date, count|
-    - matching_archive = archives.find { |archive| archive.time_span_type == 'monthly' && archive.month == date.month }
+    - matching_archive = archives.find { |archive| archive.time_span_type == 'monthly' && archive.month == date }
     - weight = estimate_weight(matching_archive, count, average_dossier_weight)
 
     %tr
