@@ -258,11 +258,6 @@ module Administrateurs
     end
 
     def publish
-      if params[:old_procedure].present?
-        old_procedure = current_administrateur.procedures.with_discarded.closes.find(params[:old_procedure])
-        old_procedure.update!(replaced_by_procedure_id: @procedure.id)
-      end
-
       @procedure.assign_attributes(publish_params)
 
       if @procedure.draft_changed?
@@ -282,6 +277,16 @@ module Administrateurs
       else
         flash.alert = @procedure.errors.full_messages
       end
+
+      if params[:old_procedure].present? && @procedure.errors.empty?
+        current_administrateur
+          .procedures
+          .with_discarded
+          .closes
+          .find(params[:old_procedure])
+          .update!(replaced_by_procedure: @procedure)
+      end
+
       redirect_to admin_procedure_path(@procedure)
     end
 
