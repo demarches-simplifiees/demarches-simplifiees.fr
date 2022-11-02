@@ -44,6 +44,12 @@ describe 'wcag rules for usager', js: true do
       visit commencer_path(path: procedure.reload.path)
       expect(page).to be_axe_clean
     end
+    scenario 'commencer page, help dropdown' do
+      visit commencer_path(path: procedure.reload.path)
+
+      page.find("#help-menu_button").click
+      expect(page).to be_axe_clean
+    end
   end
 
   context "logged in, depot d'un dossier as individual" do
