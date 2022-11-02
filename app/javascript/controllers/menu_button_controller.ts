@@ -40,6 +40,16 @@ export class MenuButtonController extends ApplicationController {
       for (const menuItem of this.menuTarget.querySelectorAll('a')) {
         menuItem.setAttribute('role', 'menuitem');
       }
+      for (const dropdownItems of this.menuTarget.querySelectorAll(
+        '.dropdown-items'
+      )) {
+        dropdownItems.setAttribute('role', 'none');
+      }
+      for (const dropdownItems of this.menuTarget.querySelectorAll(
+        '.dropdown-items > li'
+      )) {
+        dropdownItems.setAttribute('role', 'none');
+      }
     }
 
     this.on('click', (event) => {
