@@ -48,7 +48,7 @@ describe Mails::InitiatedMail, type: :model do
         procedure.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'age')
       end
 
-      it { expect(subject.errors.full_messages).to eq(["Le contenu de l’email de notification de passage du dossier en instruction réfère au champ \"age\" qui n’est pas encore publiée"]) }
+      it { expect(subject.errors.full_messages).to eq(["Le contenu de l’email de notification de passage du dossier en instruction réfère au champ \"age\" qui n’est pas encore publié"]) }
     end
 
     context 'template with removed but unpublished tag' do
@@ -58,7 +58,7 @@ describe Mails::InitiatedMail, type: :model do
         procedure.draft_revision.remove_type_de_champ(type_de_champ.stable_id)
       end
 
-      it { expect(subject.errors.full_messages).to eq(["Le contenu de l’email de notification de passage du dossier en instruction réfère au champ \"nom\" qui à été supprimé mais la supression n’est pas encore publiée"]) }
+      it { expect(subject.errors.full_messages).to eq(["Le contenu de l’email de notification de passage du dossier en instruction réfère au champ \"nom\" qui a été supprimé mais la suppression n’est pas encore publiée"]) }
     end
 
     context 'template with removed tag' do
@@ -69,7 +69,7 @@ describe Mails::InitiatedMail, type: :model do
         procedure.publish_revision!
       end
 
-      it { expect(subject.errors.full_messages).to eq(["Le contenu de l’email de notification de passage du dossier en instruction réfère au champ \"nom\" qui à été supprimé"]) }
+      it { expect(subject.errors.full_messages).to eq(["Le contenu de l’email de notification de passage du dossier en instruction réfère au champ \"nom\" qui a été supprimé"]) }
     end
 
     context 'template with new tag and old dossier' do

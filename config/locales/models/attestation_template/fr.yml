@@ -5,16 +5,16 @@ fr:
         attestation_template:
           attributes:
             title:
-              format: Le titre du modèl de l’attestation %{message}
+              format: Le titre du modèle de l’attestation %{message}
               champ_missing: réfère au champ "%{tag}" qui n’existe pas
-              champ_missing_in_draft_revision: réfère au champ "%{tag}" qui à été supprimé mais la supression n’est pas encore publiée
-              champ_missing_in_published_revision: réfère au champ "%{tag}" qui n’est pas encore publiée
-              champ_missing_in_published_and_draft_revision: réfère au champ "%{tag}" qui à été supprimé
+              champ_missing_in_draft_revision: réfère au champ "%{tag}" qui à été supprimé mais la suppression n’est pas encore publiée
+              champ_missing_in_published_revision: réfère au champ "%{tag}" qui n’est pas encore publié
+              champ_missing_in_published_and_draft_revision: réfère au champ "%{tag}" qui a été supprimé
               champ_missing_in_previous_revision: réfère au champ "%{tag}" qui n’existe pas sur un des dossiers en cours de traitement
             body:
-              format: Le contenu du modèl de l’attestation %{message}
+              format: Le contenu du modèle de l’attestation %{message}
               champ_missing: réfère au champ "%{tag}" qui n’existe pas
-              champ_missing_in_draft_revision: réfère au champ "%{tag}" qui à été supprimé mais la supression n’est pas encore publiée
-              champ_missing_in_published_revision: réfère au champ "%{tag}" qui n’est pas encore publiée
-              champ_missing_in_published_and_draft_revision: réfère au champ "%{tag}" qui à été supprimé
+              champ_missing_in_draft_revision: réfère au champ "%{tag}" qui a été supprimé mais la suppression n’est pas encore publiée
+              champ_missing_in_published_revision: réfère au champ "%{tag}" qui n’est pas encore publié
+              champ_missing_in_published_and_draft_revision: réfère au champ "%{tag}" qui a été supprimé
               champ_missing_in_previous_revision: réfère au champ "%{tag}" qui n’existe pas sur un des dossiers en cours de traitement
