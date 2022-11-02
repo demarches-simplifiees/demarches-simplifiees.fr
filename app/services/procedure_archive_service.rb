@@ -36,7 +36,12 @@ class ProcedureArchiveService
   private
 
   def zip_root_folder(archive)
-    "procedure-#{@procedure.id}-#{archive.id}"
+    zip_filename = archive.filename(@procedure)
+
+    [
+      File.basename(zip_filename, File.extname(zip_filename)),
+      archive.id
+    ].join("-")
   end
 
   def self.attachments_from_champs_piece_justificative(champs)
