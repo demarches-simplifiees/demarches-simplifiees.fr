@@ -156,9 +156,9 @@ class API::V2::Schema < GraphQL::Schema
   end
 
   use Timeout, max_seconds: 30
-  use GraphQL::Batch
   use GraphQL::Backtrace
   use GraphQL::Schema::Visibility
+  use GraphQL::Dataloader
 
   if Rails.env.development?
     class LogQueryDepth < GraphQL::Analysis::AST::QueryDepth

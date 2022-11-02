@@ -17,7 +17,7 @@ module Types
     field :revision, Types::RevisionType, null: true
 
     def revision
-      Loaders::Association.for(object.class, :revision).load(object)
+      dataloader.with(Sources::Association, :revision).load(object)
     end
   end
 end
