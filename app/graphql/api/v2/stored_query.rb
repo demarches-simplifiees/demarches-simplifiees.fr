@@ -98,6 +98,8 @@ class API::V2::StoredQuery
     $order: Order
     $first: Int
     $after: String
+    $archived: Boolean
+    $revision: ID
     $createdSince: ISO8601DateTime
     $updatedSince: ISO8601DateTime
     $includeDossiers: Boolean = false
@@ -122,8 +124,10 @@ class API::V2::StoredQuery
         order: $order
         first: $first
         after: $after
+        archived: $archived
         createdSince: $createdSince
         updatedSince: $updatedSince
+        revision: $revision
       ) @include(if: $includeDossiers) {
         pageInfo {
           ...PageInfoFragment
