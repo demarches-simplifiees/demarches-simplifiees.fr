@@ -1,12 +1,13 @@
-= link_to modifications_admin_procedure_path(@procedure), id: 'modifications', class: 'fr-tile fr-enlarge-link' do
-  .fr-tile__body.flex.justify-between
-    %div
-      %span.icon.accept
-      %p.fr-tile-status-accept Activée
-    %div
-      %h3.fr-h6.fr-mt-10v
-        %p.fr-tag= @procedure.revisions_count
-        = t('.title', count: @procedure.revisions_count)
+.fr-col-6.fr-col-md-4.fr-col-lg-3
+  = link_to modifications_admin_procedure_path(@procedure), id: 'modifications', class: 'fr-tile fr-enlarge-link' do
+    .fr-tile__body.flex.justify-between
+      %div
+        %span.icon.accept
+        %p.fr-tile-status-accept Activée
+      %div
+        %h3.fr-h6.fr-mt-10v
+          %p.fr-tag= @procedure.revisions_count
+          = t('.title', count: @procedure.revisions_count)
 
-      %p.fr-tile-subtitle Historique des modifications du formulaire
-    %p.fr-btn.fr-btn--tertiary Voir
+        %p.fr-tile-subtitle Historique des modifications du formulaire
+      %p.fr-btn.fr-btn--tertiary Voir
