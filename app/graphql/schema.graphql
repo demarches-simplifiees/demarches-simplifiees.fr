@@ -1949,13 +1949,14 @@ type Query {
 }
 
 type RepetitionChamp implements Champ {
-  champs: [Champ!]!
+  champs: [Champ!]! @deprecated(reason: "Utilisez le champ `rows` à la place.")
   id: ID!
 
   """
   Libellé du champ.
   """
   label: String!
+  rows: [Row!]!
 
   """
   La valeur du champ sous forme texte.
@@ -1977,6 +1978,10 @@ type Revision {
   """
   datePublication: ISO8601DateTime
   id: ID!
+}
+
+type Row {
+  champs: [Champ!]!
 }
 
 type SelectionUtilisateur implements GeoArea {
