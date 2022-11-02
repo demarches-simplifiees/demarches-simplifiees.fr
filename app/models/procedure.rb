@@ -181,6 +181,14 @@ class Procedure < ApplicationRecord
     types_de_champ_for_tags.private_only
   end
 
+  def revision_ids_with_pending_dossiers
+    dossiers
+      .where.not(revision_id: [draft_revision_id, published_revision_id].compact)
+      .state_en_construction_ou_instruction
+      .distinct(:revision_id)
+      .pluck(:revision_id)
+  end
+
   has_many :administrateurs_procedures, dependent: :delete_all
   has_many :administrateurs, through: :administrateurs_procedures, after_remove: -> (procedure, _admin) { procedure.validate! }
   has_many :groupe_instructeurs, dependent: :destroy

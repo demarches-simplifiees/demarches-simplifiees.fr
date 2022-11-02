@@ -15,6 +15,9 @@ module Mails
 
     belongs_to :procedure, optional: false
 
+    validates :subject, tags: true
+    validates :body, tags: true
+
     SLUG = "received_mail"
     DEFAULT_TEMPLATE_NAME = "notification_mailer/default_templates/received_mail"
     DISPLAYED_NAME = I18n.t('activerecord.models.mail.received_mail.under_instruction')

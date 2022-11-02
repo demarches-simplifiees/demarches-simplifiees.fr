@@ -15,6 +15,9 @@ module Mails
 
     belongs_to :procedure, optional: false
 
+    validates :subject, tags: true
+    validates :body, tags: true
+
     SLUG = "refused_mail"
     DEFAULT_TEMPLATE_NAME = "notification_mailer/default_templates/refused_mail"
     DISPLAYED_NAME = 'Accusé de rejet du dossier'
