@@ -1534,17 +1534,22 @@ type GroupeInstructeur {
 }
 
 """
-Un groupe instructeur avec ces dossiers
+Un groupe instructeur avec ses dossiers
 """
 type GroupeInstructeurWithDossiers {
   """
-  Liste de tous les dossiers d’une démarche.
+  Liste de tous les dossiers d’un groupe instructeur.
   """
   dossiers(
     """
     Returns the elements in the list that come after the specified cursor.
     """
     after: String
+
+    """
+    Seulement les dossiers archivés.
+    """
+    archived: Boolean
 
     """
     Returns the elements in the list that come before the specified cursor.
@@ -1567,9 +1572,24 @@ type GroupeInstructeurWithDossiers {
     last: Int
 
     """
+    Seulement les dossiers pour les révisons avant la révision donnée.
+    """
+    maxRevision: ID
+
+    """
+    Seulement les dossiers pour les révisons après la révision donnée.
+    """
+    minRevision: ID
+
+    """
     L’ordre des dossiers.
     """
     order: Order = ASC
+
+    """
+    Seulement les dossiers pour la révision donnée.
+    """
+    revision: ID
 
     """
     Dossiers avec statut.
