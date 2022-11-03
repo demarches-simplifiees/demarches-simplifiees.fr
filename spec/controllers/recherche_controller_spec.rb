@@ -1,4 +1,6 @@
 describe RechercheController, type: :controller do
+  render_views
+
   let(:procedure) {
     create(:procedure,
                            :published,
@@ -74,6 +76,26 @@ describe RechercheController, type: :controller do
         it 'does not return the dossier' do
           subject
           expect(assigns(:projected_dossiers).count).to eq(0)
+          expect(response.body).not_to match(/<div class='fr-alert fr-alert--info/)
+        end
+      end
+
+      context 'when instructeur is attached to the procedure but is not in the instructor group of the dossier' do
+        let!(:gi_p1_1) { GroupeInstructeur.create(label: 'groupe 1', procedure: procedure) }
+        let!(:gi_p1_2) { GroupeInstructeur.create(label: 'groupe 2', procedure: procedure) }
+        let!(:dossier3) { create(:dossier, :accepte, :with_individual, procedure: procedure, groupe_instructeur: gi_p1_2) }
+
+        before { gi_p1_1.instructeurs << instructeur }
+
+        let(:query) { dossier3.id }
+
+        it { is_expected.to have_http_status(200) }
+
+        it 'does not return the dossier but it returns a message' do
+          subject
+          expect(assigns(:projected_dossiers).count).to eq(0)
+          expect(response.body).to match(/Aucun dossier correspondant à votre recherche n’a été trouvé/)
+          expect(CGI.unescapeHTML(response.body)).to match(/Le dossier n° #{dossier3.id} de la procédure « #{dossier3.procedure.libelle} » correspond à votre recherche mais il est rattaché au groupe d'instructeurs « #{dossier3.groupe_instructeur.label} »./)
         end
       end
 
