@@ -182,6 +182,8 @@ en:
         dossier_synthesis: Summary of files
       avis:
         introduction_file_explaination: "File attached to the request for advice"
+      search:
+        not_in_instructor_group_dossier: "File no. %{dossier_id} of the “%{procedure_libelle}” procedure corresponds to your search, but it is attached to the “%{groupe_instructeur_label}” instructor group."
     users:
       dossiers:
         archived_dossier: "Your file will be kept %{duree_conservation_dossiers_dans_ds} more months"
