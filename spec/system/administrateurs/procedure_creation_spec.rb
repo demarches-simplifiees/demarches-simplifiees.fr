@@ -38,6 +38,7 @@ describe 'Creating a new procedure', js: true do
       fill_in 'Libellé du champ', with: 'libelle de champ'
       blur
       expect(page).to have_content('Formulaire enregistré')
+      expect(page).to have_selector('select > optgroup', count: 7)
 
       add_champ
       expect(page).to have_selector('.type-de-champ', count: 1)
@@ -67,21 +68,6 @@ describe 'Creating a new procedure', js: true do
       champs_card = find('.fr-tile', text: 'Champs du formulaire')
       expect(champs_card).to have_selector('.icon.refuse')
       expect(champs_card).to have_content('À modifier')
-    end
-  end
-
-  context 'with feature activated' do
-    let(:procedure) { create(:procedure, :with_service, administrateur: administrateur) }
-    before { Flipper.enable(:categories_type_de_champ, administrateur.user) }
-    after { Flipper.disable(:categories_type_de_champ, administrateur.user) }
-
-    it 'types de champ are grouped by categories ' do
-      visit champs_admin_procedure_path(procedure)
-
-      add_champ(remove_flash_message: true)
-      select('Bloc répétable', from: 'Type de champ')
-
-      expect(page).to have_selector('select > optgroup', count: 7)
     end
   end
 end
