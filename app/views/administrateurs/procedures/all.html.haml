@@ -23,8 +23,8 @@
                   %span.fr-icon-arrow-go-back-line Réinitialiser
             %ul
               %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
-                .fr-mb-1w{ 'data-action': 'click->expand#toggle' }
-                  %button
+                .fr-mb-1w
+                  %button{ 'data-action': 'expand#toggle' }
                     %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
                     Mes zones
                 .fr-ml-1w{ 'data-expand-target': 'content' }
@@ -33,8 +33,8 @@
                       = b.check_box(checked: @zone_ids&.map(&:to_i)&.include?(b.value), 'data-action': 'autosubmit#submit')
                       = b.label(class: 'fr-label') { b.text }
               %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
-                .fr-mb-1w{ 'data-action': 'click->expand#toggle' }
-                  %button
+                .fr-mb-1w
+                  %button{ 'data-action': 'expand#toggle' }
                     %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
                     Autres zones
                 .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
@@ -43,8 +43,7 @@
                       = b.check_box(checked: @zone_ids&.map(&:to_i)&.include?(b.value), 'data-action': 'autosubmit#submit')
                       = b.label(class: 'fr-label') { b.text }
               %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
-                .fr-mb-1w{ 'data-action': 'click->expand#toggle' }
-                  %button
+                  %button{ 'data-action': 'expand#toggle' }
                     %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
                     Statut
                 .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
