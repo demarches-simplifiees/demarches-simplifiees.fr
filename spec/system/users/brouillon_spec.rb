@@ -31,9 +31,9 @@ describe 'The user' do
     check('val3')
     select('bravo', from: form_id_for('simple_choice_drop_down_list_long'))
     select_combobox('multiple_choice_drop_down_list_long', 'alp', 'alpha')
-    # select_combobox('multiple_choice_drop_down_list_long', 'cha', 'charly') # pf Selenium::WebDriver::Error::ElementNotInteractableError
-    select_combobox('pays', 'aust', 'Australie')
+    select_combobox('multiple_choice_drop_down_list_long', 'cha', 'charly')
 
+    select_combobox('pays', 'aust', 'Australie')
     select_combobox('regions', 'Ma', 'Martinique')
     select_combobox('departements', 'Ai', '02 - Aisne')
     select_combobox('communes', 'Ai', '02 - Aisne', check: false)
@@ -114,7 +114,7 @@ describe 'The user' do
     expect(page).to have_checked_field('val1')
     expect(page).to have_checked_field('val3')
     expect(page).to have_selected_value('simple_choice_drop_down_list_long', selected: 'bravo')
-    check_selected_value('multiple_choice_drop_down_list_long', with: ['alpha']) # pf triggers too often errors (, 'charly')
+    check_selected_value('multiple_choice_drop_down_list_long', with: ['alpha', 'charly'])
 
     expect(page).to have_selected_value('nationalites', selected: 'Australienne')
     expect(page).to have_selected_value('commune_de_polynesie', selected: 'Mahina - Tahiti - 98709')

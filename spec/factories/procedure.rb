@@ -424,6 +424,10 @@ def build_types_de_champ(types_de_champ, revision:, scope: :public, parent: nil)
       type_de_champ_attributes[:drop_down_secondary_description] = type_de_champ_attributes.delete(:secondary_description)
     end
 
+    if type == :header_section
+      type_de_champ_attributes[:level] = type_de_champ_attributes.delete(:level)
+    end
+
     if type == :carte && layers.present?
       type_de_champ_attributes[:editable_options] = layers.index_with { '1' }
     end
