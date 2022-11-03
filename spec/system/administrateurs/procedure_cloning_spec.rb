@@ -26,7 +26,7 @@ describe 'As an administrateur I wanna clone a procedure', js: true do
       expect(page).to have_current_path(admin_procedure_path(id: Procedure.last))
 
       # select service
-      find("#service .button").click
+      find("#service .fr-btn").click
       click_on "Assigner"
 
       # then publish

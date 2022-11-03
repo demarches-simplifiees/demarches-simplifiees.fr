@@ -14,8 +14,15 @@
       "type": "string"
     },
     "association_date_creation": {
-      "type": "string",
-      "format": "date"
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "association_date_declaration": {
       "type": "string",
@@ -229,7 +236,6 @@
   "required": [
     "association_titre",
     "association_rna",
-    "association_date_creation",
     "association_date_declaration",
     "association_date_publication"
   ]

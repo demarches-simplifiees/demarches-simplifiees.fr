@@ -8,7 +8,7 @@ module Administrateurs
     def index
       @exports = Export.find_for_groupe_instructeurs(all_groupe_instructeurs.map(&:id), nil)
       @average_dossier_weight = @procedure.average_dossier_weight
-      @count_dossiers_termines_by_month = Traitement.count_dossiers_termines_by_month(all_groupe_instructeurs)
+      @count_dossiers_termines_by_month = @procedure.dossiers.processed_by_month(all_groupe_instructeurs).count
       @archives = Archive.for_groupe_instructeur(all_groupe_instructeurs).to_a
     end
 

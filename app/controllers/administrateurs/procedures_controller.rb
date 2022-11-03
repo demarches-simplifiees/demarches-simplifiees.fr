@@ -63,7 +63,7 @@ module Administrateurs
 
     def new
       @procedure ||= Procedure.new(for_individual: true)
-      @existing_tags = get_existing_tags
+      @existing_tags = Procedure.tags
     end
 
     SIGNIFICANT_DOSSIERS_THRESHOLD = 30
@@ -258,11 +258,6 @@ module Administrateurs
     end
 
     def publish
-      if params[:old_procedure].present?
-        old_procedure = current_administrateur.procedures.with_discarded.closes.find(params[:old_procedure])
-        old_procedure.update!(replaced_by_procedure_id: @procedure.id)
-      end
-
       @procedure.assign_attributes(publish_params)
 
       if @procedure.draft_changed?
@@ -282,6 +277,16 @@ module Administrateurs
       else
         flash.alert = @procedure.errors.full_messages
       end
+
+      if params[:old_procedure].present? && @procedure.errors.empty?
+        current_administrateur
+          .procedures
+          .with_discarded
+          .closes
+          .find(params[:old_procedure])
+          .update!(replaced_by_procedure: @procedure)
+      end
+
       redirect_to admin_procedure_path(@procedure)
     end
 
@@ -323,6 +328,19 @@ module Administrateurs
 
     def champs
       @procedure = Procedure.includes(draft_revision: { revision_types_de_champ_public: :type_de_champ }).find(@procedure.id)
+    end
+
+    def all
+      @admin_zones = current_administrateur.zones
+      @other_zones = Zone.all - @admin_zones
+      @zone_ids = params[:zone_ids].filter(&:present?) if params[:zone_ids]
+      @selected_zones = @zone_ids.map { |id| Zone.find(id) } if @zone_ids.present?
+      @statuses = params[:statuses].filter(&:present?) if params[:statuses]
+
+      @procedures = Procedure.joins(:procedures_zones).publiees_ou_closes
+      @procedures = @procedures.where(procedures_zones: { zone_id: @zone_ids }) if @zone_ids.present?
+      @procedures = @procedures.where(aasm_state: @statuses) if @statuses.present?
+      @procedures = @procedures.page(params[:page]).per(ITEMS_PER_PAGE).order(published_at: :desc)
     end
 
     private
@@ -389,12 +407,6 @@ module Administrateurs
 
     def cloned_from_library?
       params[:from_new_from_existing].present?
-    end
-
-    def get_existing_tags
-      unnest = Arel::Nodes::NamedFunction.new('UNNEST', [Procedure.arel_table[:tags]])
-      query = Procedure.select(unnest.as('tags')).distinct.order('tags')
-      Procedure.connection.query(query.to_sql).flatten
     end
   end
 end

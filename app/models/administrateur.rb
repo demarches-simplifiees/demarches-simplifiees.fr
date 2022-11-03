@@ -131,7 +131,7 @@ class Administrateur < ApplicationRecord
         old_service.procedures.update_all(service_id: corresponding_service.id)
         old_service.destroy
       else
-        old_service.update!(administrateur_id: id)
+        old_service.update_column(:administrateur_id, id)
       end
     end
 
@@ -146,6 +146,10 @@ class Administrateur < ApplicationRecord
       i.administrateurs << self
       i.administrateurs.delete(old_admin)
     end
+  end
+
+  def zones
+    procedures.joins(:zones).flat_map(&:zones).uniq
   end
 
   # required to display feature flags field in manager

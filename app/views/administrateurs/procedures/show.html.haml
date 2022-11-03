@@ -55,8 +55,8 @@
 - if !@procedure.procedure_expires_when_termine_enabled?
   = render partial: 'administrateurs/procedures/suggest_expires_when_termine', locals: { procedure: @procedure }
 .container
-  %h2.procedure-admin-explanation Indispensable avant publication
-  .procedure-grid
+  %h2.fr-mt-5w.fr-mb-3w.fr-h1 Indispensable avant publication
+  .fr-grid-row.fr-grid-row--gutters
     = render Procedure::Card::PresentationComponent.new(procedure: @procedure)
     = render Procedure::Card::ZonesComponent.new(procedure: @procedure) if @procedure.feature_enabled?(:zonage)
     = render Procedure::Card::ChampsComponent.new(procedure: @procedure)
@@ -65,8 +65,8 @@
     = render Procedure::Card::InstructeursComponent.new(procedure: @procedure)
     = render Procedure::Card::ModificationsComponent.new(procedure: @procedure)
 
-  %h2.procedure-admin-explanation Pour aller plus loin
-  .procedure-grid
+  %h2.fr-mt-5w.fr-mb-3w.fr-h1 Pour aller plus loin
+  .fr-grid-row.fr-grid-row--gutters
     = render Procedure::Card::AttestationComponent.new(procedure: @procedure)
     = render Procedure::Card::ExpertsComponent.new(procedure: @procedure)
     = render Procedure::Card::EmailsComponent.new(procedure: @procedure)

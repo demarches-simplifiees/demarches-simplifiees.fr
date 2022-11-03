@@ -232,9 +232,9 @@ module Users
     end
 
     def create_commentaire
-      @commentaire = CommentaireService.build(current_user, dossier, commentaire_params)
+      @commentaire = CommentaireService.create(current_user, dossier, commentaire_params)
 
-      if @commentaire.save
+      if @commentaire.errors.empty?
         @commentaire.dossier.update!(last_commentaire_updated_at: Time.zone.now)
         dossier.followers_instructeurs
           .with_instant_email_message_notifications

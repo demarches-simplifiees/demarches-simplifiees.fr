@@ -213,4 +213,15 @@ describe Administrateur, type: :model do
       it { is_expected.to be_empty }
     end
   end
+
+  describe 'zones' do
+    let(:admin) { create(:administrateur) }
+    let(:zone1) { create(:zone) }
+    let(:zone2) { create(:zone) }
+    let!(:procedure) { create(:procedure, administrateurs: [admin], zones: [zone1, zone2]) }
+
+    it 'return zones of procedures that the admin is associated' do
+      expect(admin.zones).to eq [zone1, zone2]
+    end
+  end
 end

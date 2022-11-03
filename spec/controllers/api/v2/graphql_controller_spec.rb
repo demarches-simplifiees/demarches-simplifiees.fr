@@ -94,11 +94,14 @@ describe API::V2::GraphqlController do
       }
     }"
   end
+  let(:variables) { {} }
+  let(:operation_name) { nil }
+  let(:query_id) { nil }
   let(:body) { JSON.parse(subject.body, symbolize_names: true) }
   let(:gql_data) { body[:data] }
   let(:gql_errors) { body[:errors] }
 
-  subject { post :execute, params: { query: query } }
+  subject { post :execute, params: { query: query, variables: variables, operationName: operation_name, queryId: query_id }.compact, as: :json }
 
   context "when authenticated with legacy token" do
     let(:authorization_header) { ActionController::HttpAuthentication::Token.encode_credentials(legacy_token) }
@@ -821,23 +824,194 @@ describe API::V2::GraphqlController do
       end
     end
 
+    describe 'stored queries' do
+      let(:procedure) { create(:procedure, :published, :for_individual, administrateurs: [admin]) }
+      let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
+      let(:query_id) { 'ds-query-v2' }
+
+      context 'not found operation id' do
+        let(:query_id) { 'ds-query-v0' }
+
+        it {
+          expect(gql_errors.first[:message]).to eq('No query with id "ds-query-v0"')
+        }
+      end
+
+      context 'not found operation name' do
+        let(:operation_name) { 'getStuff' }
+
+        it {
+          expect(gql_errors.first[:message]).to eq('No operation named "getStuff"')
+        }
+      end
+
+      context 'getDossier' do
+        let(:variables) { { dossierNumber: dossier.id } }
+        let(:operation_name) { 'getDossier' }
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data[:dossier][:id]).to eq(dossier.to_typed_id)
+        }
+      end
+
+      context 'getDemarche' do
+        let(:variables) { { demarcheNumber: procedure.id } }
+        let(:operation_name) { 'getDemarche' }
+
+        before { dossier }
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data[:demarche][:id]).to eq(procedure.to_typed_id)
+          expect(gql_data[:demarche][:dossiers]).to be_nil
+        }
+
+        context 'include Dossiers' do
+          let(:variables) { { demarcheNumber: procedure.id, includeDossiers: true } }
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:demarche][:id]).to eq(procedure.to_typed_id)
+            expect(gql_data[:demarche][:dossiers][:nodes].size).to eq(1)
+          }
+        end
+      end
+
+      context 'mutation' do
+        let(:query_id) { 'ds-mutation-v2' }
+
+        context 'not found operation name' do
+          let(:operation_name) { 'dossierStuff' }
+
+          it {
+            expect(gql_errors.first[:message]).to eq('No operation named "dossierStuff"')
+          }
+        end
+
+        context 'dossierArchiver' do
+          let(:dossier) { create(:dossier, :refuse, :with_individual, procedure: procedure) }
+          let(:variables) { { input: { dossierId: dossier.to_typed_id, instructeurId: instructeur.to_typed_id } } }
+          let(:operation_name) { 'dossierArchiver' }
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:dossierArchiver][:errors]).to be_nil
+            expect(gql_data[:dossierArchiver][:dossier][:id]).to eq(dossier.to_typed_id)
+            expect(gql_data[:dossierArchiver][:dossier][:archived]).to be_truthy
+          }
+        end
+
+        context 'dossierPasserEnInstruction' do
+          let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
+          let(:variables) { { input: { dossierId: dossier.to_typed_id, instructeurId: instructeur.to_typed_id } } }
+          let(:operation_name) { 'dossierPasserEnInstruction' }
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:dossierPasserEnInstruction][:errors]).to be_nil
+            expect(gql_data[:dossierPasserEnInstruction][:dossier][:id]).to eq(dossier.to_typed_id)
+            expect(gql_data[:dossierPasserEnInstruction][:dossier][:state]).to eq('en_instruction')
+          }
+        end
+
+        context 'dossierRepasserEnConstruction' do
+          let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
+          let(:variables) { { input: { dossierId: dossier.to_typed_id, instructeurId: instructeur.to_typed_id } } }
+          let(:operation_name) { 'dossierRepasserEnConstruction' }
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:dossierRepasserEnConstruction][:errors]).to be_nil
+            expect(gql_data[:dossierRepasserEnConstruction][:dossier][:id]).to eq(dossier.to_typed_id)
+            expect(gql_data[:dossierRepasserEnConstruction][:dossier][:state]).to eq('en_construction')
+          }
+        end
+
+        context 'dossierRepasserEnInstruction' do
+          let(:dossier) { create(:dossier, :refuse, :with_individual, procedure: procedure) }
+          let(:variables) { { input: { dossierId: dossier.to_typed_id, instructeurId: instructeur.to_typed_id } } }
+          let(:operation_name) { 'dossierRepasserEnInstruction' }
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:dossierRepasserEnInstruction][:errors]).to be_nil
+            expect(gql_data[:dossierRepasserEnInstruction][:dossier][:id]).to eq(dossier.to_typed_id)
+            expect(gql_data[:dossierRepasserEnInstruction][:dossier][:state]).to eq('en_instruction')
+          }
+        end
+
+        context 'dossierAccepter' do
+          let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
+          let(:variables) { { input: { dossierId: dossier.to_typed_id, instructeurId: instructeur.to_typed_id } } }
+          let(:operation_name) { 'dossierAccepter' }
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:dossierAccepter][:errors]).to be_nil
+            expect(gql_data[:dossierAccepter][:dossier][:id]).to eq(dossier.to_typed_id)
+            expect(gql_data[:dossierAccepter][:dossier][:state]).to eq('accepte')
+          }
+        end
+
+        context 'dossierRefuser' do
+          let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
+          let(:variables) { { input: { dossierId: dossier.to_typed_id, instructeurId: instructeur.to_typed_id, motivation: 'yolo' } } }
+          let(:operation_name) { 'dossierRefuser' }
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:dossierRefuser][:errors]).to be_nil
+            expect(gql_data[:dossierRefuser][:dossier][:id]).to eq(dossier.to_typed_id)
+            expect(gql_data[:dossierRefuser][:dossier][:state]).to eq('refuse')
+          }
+        end
+
+        context 'dossierClasserSansSuite' do
+          let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
+          let(:variables) { { input: { dossierId: dossier.to_typed_id, instructeurId: instructeur.to_typed_id, motivation: 'yolo' } } }
+          let(:operation_name) { 'dossierClasserSansSuite' }
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:dossierClasserSansSuite][:errors]).to be_nil
+            expect(gql_data[:dossierClasserSansSuite][:dossier][:id]).to eq(dossier.to_typed_id)
+            expect(gql_data[:dossierClasserSansSuite][:dossier][:state]).to eq('sans_suite')
+          }
+        end
+      end
+    end
+
     describe "mutations" do
       describe 'dossierEnvoyerMessage' do
-        context 'success' do
-          let(:query) do
-            "mutation {
-              dossierEnvoyerMessage(input: {
-                dossierId: \"#{dossier.to_typed_id}\",
-                instructeurId: \"#{instructeur.to_typed_id}\",
-                body: \"Bonjour\",
-                attachment: \"#{blob.signed_id}\"
-              }) {
-                message {
-                  body
-                }
+        let(:query) do
+          "mutation($input: DossierEnvoyerMessageInput!) {
+            dossierEnvoyerMessage(input: $input) {
+              message {
+                body
               }
-            }"
-          end
+              errors {
+                message
+              }
+            }
+          }"
+        end
+        let(:variables) { { input: input } }
+        let(:input) do
+          {
+            dossierId: dossier_id,
+            instructeurId: instructeur_id,
+            body: input_body,
+            attachment: attachment
+          }
+        end
+        let(:dossier_id) { dossier.to_typed_id }
+        let(:instructeur_id) { instructeur.to_typed_id }
+        let(:input_body) { "Bonjour" }
+        let(:attachment) { nil }
+
+        context 'success' do
+          let(:attachment) { blob.signed_id }
 
           it "should post a message" do
             expect(gql_errors).to eq(nil)
@@ -845,48 +1019,41 @@ describe API::V2::GraphqlController do
             expect(gql_data).to eq(dossierEnvoyerMessage: {
               message: {
                 body: "Bonjour"
-              }
+              },
+              errors: nil
             })
           end
         end
 
         context 'schema error' do
-          let(:query) do
-            "mutation {
-              dossierEnvoyerMessage(input: {
-                dossierId: \"#{dossier.to_typed_id}\",
-                instructeurId: \"#{instructeur.to_typed_id}\"
-              }) {
-                message {
-                  body
-                }
-              }
-            }"
+          let(:input) do
+            {
+              dossierId: dossier_id,
+              instructeurId: instructeur_id
+            }
           end
 
           it "should fail" do
             expect(gql_data).to eq(nil)
             expect(gql_errors).not_to eq(nil)
+            expect(body[:errors].first[:message]).to eq("Variable $input of type DossierEnvoyerMessageInput! was provided invalid value for body (Expected value to not be null)")
+            expect(body[:errors].first.key?(:backtrace)).to be_falsey
+          end
+        end
+
+        context 'variables error' do
+          let(:variables) { "{" }
+
+          it "should fail" do
+            expect(gql_data).to eq(nil)
+            expect(gql_errors).not_to eq(nil)
+            expect(body[:errors].first[:message]).to eq("809: unexpected token at '{'")
+            expect(body[:errors].first.key?(:backtrace)).to be_falsey
           end
         end
 
         context 'validation error' do
-          let(:query) do
-            "mutation {
-              dossierEnvoyerMessage(input: {
-                dossierId: \"#{dossier.to_typed_id}\",
-                instructeurId: \"#{instructeur.to_typed_id}\",
-                body: \"\"
-              }) {
-                message {
-                  body
-                }
-                errors {
-                  message
-                }
-              }
-            }"
-          end
+          let(:input_body) { "" }
 
           it "should fail" do
             expect(gql_errors).to eq(nil)
@@ -898,23 +1065,7 @@ describe API::V2::GraphqlController do
         end
 
         context 'upload error' do
-          let(:query) do
-            "mutation {
-              dossierEnvoyerMessage(input: {
-                dossierId: \"#{dossier.to_typed_id}\",
-                instructeurId: \"#{instructeur.to_typed_id}\",
-                body: \"Hello world\",
-                attachment: \"fake\"
-              }) {
-                message {
-                  body
-                }
-                errors {
-                  message
-                }
-              }
-            }"
-          end
+          let(:attachment) { 'fake' }
 
           it "should fail" do
             expect(gql_errors).to eq(nil)

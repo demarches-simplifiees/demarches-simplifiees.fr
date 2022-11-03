@@ -54,10 +54,10 @@ RSpec.describe Expert, type: :model do
 
     context 'when an old expert has a commentaire' do
       let(:dossier) { create(:dossier) }
-      let(:commentaire) { CommentaireService.build(old_expert, dossier, body: "Mon commentaire") }
+      let(:commentaire) { CommentaireService.create(old_expert, dossier, body: "Mon commentaire") }
 
       before do
-        commentaire.save
+        commentaire
         subject
       end
 

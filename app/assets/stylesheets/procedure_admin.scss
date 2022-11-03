@@ -1,12 +1,3 @@
-.procedure-grid {
-  display: flex;
-  flex-wrap: wrap;
-
-  > a { // TODO, re-use DSFR https://github.com/betagouv/demarches-simplifiees.fr/issues/7884
-    background-image: none; // remove DSFR underline
-  }
-}
-
 .procedure-admin-container {
   display: flex;
   justify-content: flex-end;
@@ -36,12 +27,6 @@
   a {
     cursor: pointer;
   }
-}
-
-.procedure-admin-explanation {
-  font-weight: bold;
-  font-size: 20px;
-  margin-bottom: 20px;
 }
 
 .admin-metadata {
