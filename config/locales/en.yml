@@ -31,7 +31,7 @@
 
 en:
   invisible_captcha:
-    custom_message: 'If you are a human, ignore this field'
+    sentence_for_humans: 'If you are a human, ignore this field'
 
   help: 'Help'
   help_dropdown:

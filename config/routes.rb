@@ -495,9 +495,6 @@ Rails.application.routes.draw do
       resources :experts, controller: 'experts_procedures', only: [:index, :create, :update, :destroy]
 
       resources :types_de_champ, only: [:create, :update, :destroy], param: :stable_id do
-        collection do
-          get :estimate_fill_duration
-        end
         member do
           patch :move
           patch :move_up

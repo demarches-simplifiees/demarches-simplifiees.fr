@@ -64,6 +64,7 @@ module Administrateurs
         flash[:alert] = message
         redirect_to admin_services_path(procedure_id: params[:procedure_id])
       else
+        service_to_destroy.procedures.with_discarded.discarded.update(service: nil)
         service_to_destroy.destroy
         redirect_to admin_services_path(procedure_id: params[:procedure_id]),
           notice: "#{service_to_destroy.nom} est supprimé"

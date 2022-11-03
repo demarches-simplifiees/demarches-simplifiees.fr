@@ -14,8 +14,6 @@
 #  dossier_id          :bigint
 #
 class DossierOperationLog < ApplicationRecord
-  self.ignored_columns = [:instructeur_id]
-
   enum operation: {
     changer_groupe_instructeur: 'changer_groupe_instructeur',
     passer_en_instruction: 'passer_en_instruction',
