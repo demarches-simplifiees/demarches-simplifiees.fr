@@ -25,6 +25,6 @@ class Champs::SiretChamp < Champ
   end
 
   def mandatory_blank_and_visible?
-    mandatory? && Siret.new(siret: value).invalid? && visible?
+    mandatory? && Siret.new(siret: value).invalid?
   end
 end

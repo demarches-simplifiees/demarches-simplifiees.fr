@@ -25,14 +25,14 @@ module Users
     end
 
     def dossier_vide_pdf
-      @procedure = retrieve_procedure
+      @procedure = retrieve_procedure_with_closed
       return procedure_not_found if @procedure.blank? || @procedure.brouillon?
 
       generate_empty_pdf(@procedure.published_revision)
     end
 
     def dossier_vide_pdf_test
-      @procedure = retrieve_procedure
+      @procedure = retrieve_procedure_with_closed
       return procedure_not_found if @procedure.blank? || (@procedure.publiee? && !@procedure.draft_changed?)
 
       generate_empty_pdf(@procedure.draft_revision)
@@ -71,6 +71,10 @@ module Users
 
     def retrieve_procedure
       Procedure.publiees.or(Procedure.brouillons).find_by(path: params[:path])
+    end
+
+    def retrieve_procedure_with_closed
+      Procedure.publiees.or(Procedure.brouillons).or(Procedure.closes).find_by(path: params[:path])
     end
 
     def procedure_not_found

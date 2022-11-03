@@ -194,20 +194,26 @@ describe Users::CommencerController, type: :controller do
   # end
 
   describe '#dossier_vide_pdf' do
+    let(:procedure) { create(:procedure, :published, :with_service, :with_path) }
     before { get :dossier_vide_pdf, params: { path: procedure.path } }
 
     context 'published procedure' do
-      let(:procedure) { create(:procedure, :published, :with_service, :with_path) }
-
       it 'works' do
         expect(response).to have_http_status(:success)
       end
     end
-    context 'not published procedure' do
+    context 'not yet published procedure' do
       let(:procedure) { create(:procedure, :with_service, :with_path) }
 
       it 'redirects to procedure not found' do
         expect(response).to have_http_status(302)
+      end
+    end
+    context 'closed procedure' do
+      it 'works' do
+        procedure.service = create(:service)
+        procedure.close!
+        expect(response).to have_http_status(:success)
       end
     end
   end

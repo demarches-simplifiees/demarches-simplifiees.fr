@@ -49,6 +49,7 @@ describe 'The user' do
 
     expect(page).to have_css('span', text: 'Votre brouillon est automatiquement enregistré', visible: true)
     blur
+    sleep(1.7)
     expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
 
     # check data on the dossier from db
@@ -283,65 +284,104 @@ describe 'The user' do
   context 'with condition' do
     include Logic
 
-    let(:procedure) do
-      procedure = create(:procedure, :for_individual).tap do |p|
-        p.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'age')
-        p.draft_revision.add_type_de_champ(type_champ: :yes_no, libelle: 'permis de conduire')
-        p.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'tonnage')
-        p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'parking')
+    context 'with a required conditionnal champ' do
+      let(:procedure) do
+        procedure = create(:procedure, :published, :for_individual,
+                           types_de_champ_public: [
+                             { type: :integer_number, libelle: 'age' },
+                             { type: :text, libelle: 'nom', mandatory: true }
+                           ])
+
+        age, nom = procedure.draft_revision.types_de_champ.all
+
+        nom.update(condition: greater_than_eq(champ_value(age.stable_id), constant(18)))
+
+        procedure
       end
 
-      age, permis, tonnage, parking = procedure.draft_revision.types_de_champ.all
+      scenario 'submit a dossier with an hidden mandatory champ ', js: true do
+        log_in(user, procedure)
 
-      permis.update(condition: greater_than_eq(champ_value(age.stable_id), constant(18)))
-      tonnage.update(condition: ds_eq(champ_value(permis.stable_id), constant(true)))
-      parking.update(condition: less_than_eq(champ_value(tonnage.stable_id), constant(20)))
+        fill_individual
 
-      procedure.publish!
+        click_on 'Déposer le dossier'
+        expect(page).to have_current_path(merci_dossier_path(user_dossier))
+      end
 
-      procedure
+      scenario 'cannot submit a reveal dossier with a revealed mandatory champ ', js: true do
+        log_in(user, procedure)
+
+        fill_individual
+
+        fill_in('age', with: '18')
+        expect(page).to have_css('label', text: 'nom *', visible: :visible)
+
+        click_on 'Déposer le dossier'
+        expect(page).to have_current_path(brouillon_dossier_path(user_dossier))
+      end
     end
 
-    scenario 'fill a dossier', js: true do
-      log_in(user, procedure)
+    context 'with a visibilite in cascade' do
+      let(:procedure) do
+        procedure = create(:procedure, :for_individual).tap do |p|
+          p.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'age')
+          p.draft_revision.add_type_de_champ(type_champ: :yes_no, libelle: 'permis de conduire')
+          p.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'tonnage')
+          p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'parking')
+        end
 
-      fill_individual
+        age, permis, tonnage, parking = procedure.draft_revision.types_de_champ.all
 
-      expect(page).to have_css('label', text: 'age', visible: true)
-      expect(page).to have_no_css('label', text: 'permis de conduire', visible: true)
-      expect(page).to have_no_css('label', text: 'tonnage', visible: true)
+        permis.update(condition: greater_than_eq(champ_value(age.stable_id), constant(18)))
+        tonnage.update(condition: ds_eq(champ_value(permis.stable_id), constant(true)))
+        parking.update(condition: less_than_eq(champ_value(tonnage.stable_id), constant(20)))
 
-      fill_in('age', with: '18')
-      expect(page).to have_css('label', text: 'permis de conduire', visible: true)
-      expect(page).to have_no_css('label', text: 'tonnage', visible: true)
+        procedure.publish!
 
-      choose('Oui')
-      expect(page).to have_css('label', text: 'permis de conduire', visible: true)
-      expect(page).to have_css('label', text: 'tonnage', visible: true)
+        procedure
+      end
 
-      fill_in('tonnage', with: '1')
-      expect(page).to have_css('label', text: 'parking', visible: true)
+      scenario 'fill a dossier', js: true do
+        log_in(user, procedure)
 
-      # try to fill with invalid data
-      fill_in('tonnage', with: 'a')
-      expect(page).to have_no_css('label', text: 'parking', visible: true)
+        fill_individual
 
-      fill_in('age', with: '2')
-      expect(page).to have_no_css('label', text: 'permis de conduire', visible: true)
-      expect(page).to have_no_css('label', text: 'tonnage', visible: true)
+        expect(page).to have_css('label', text: 'age', visible: true)
+        expect(page).to have_no_css('label', text: 'permis de conduire', visible: true)
+        expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
-      click_on 'Déposer le dossier'
-      click_on 'Accéder à votre dossier'
-      click_on 'Modifier mon dossier'
+        fill_in('age', with: '18')
+        expect(page).to have_css('label', text: 'permis de conduire', visible: true)
+        expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
-      expect(page).to have_css('label', text: 'age', visible: true)
-      expect(page).to have_no_css('label', text: 'permis de conduire', visible: true)
-      expect(page).to have_no_css('label', text: 'tonnage', visible: true)
+        choose('Oui')
+        expect(page).to have_css('label', text: 'permis de conduire', visible: true)
+        expect(page).to have_css('label', text: 'tonnage', visible: true)
 
-      fill_in('age', with: '18')
-      # the champ keeps their previous value so they are all displayed
-      expect(page).to have_css('label', text: 'permis de conduire', visible: true)
-      expect(page).to have_css('label', text: 'tonnage', visible: true)
+        fill_in('tonnage', with: '1')
+        expect(page).to have_css('label', text: 'parking', visible: true)
+
+        # try to fill with invalid data
+        fill_in('tonnage', with: 'a')
+        expect(page).to have_no_css('label', text: 'parking', visible: true)
+
+        fill_in('age', with: '2')
+        expect(page).to have_no_css('label', text: 'permis de conduire', visible: true)
+        expect(page).to have_no_css('label', text: 'tonnage', visible: true)
+
+        click_on 'Déposer le dossier'
+        click_on 'Accéder à votre dossier'
+        click_on 'Modifier mon dossier'
+
+        expect(page).to have_css('label', text: 'age', visible: true)
+        expect(page).to have_no_css('label', text: 'permis de conduire', visible: true)
+        expect(page).to have_no_css('label', text: 'tonnage', visible: true)
+
+        fill_in('age', with: '18')
+        # the champ keeps their previous value so they are all displayed
+        expect(page).to have_css('label', text: 'permis de conduire', visible: true)
+        expect(page).to have_css('label', text: 'tonnage', visible: true)
+      end
     end
   end
 
