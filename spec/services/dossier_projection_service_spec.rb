@@ -194,7 +194,7 @@ describe DossierProjectionService do
 
       context 'for type_de_champ table: type_de_champ pays which needs external_id field' do
         let(:table) { 'type_de_champ' }
-        let(:procedure) { create(:procedure, types_de_champ: [build(:type_de_champ_pays)]) }
+        let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :pays }]) }
         let(:dossier) { create(:dossier, procedure: procedure) }
         let(:column) { dossier.procedure.types_de_champ.first.stable_id.to_s }
         let!(:previous_locale) { I18n.locale }

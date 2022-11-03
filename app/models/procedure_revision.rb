@@ -468,15 +468,15 @@ class ProcedureRevision < ApplicationRecord
           }
         end
       end
-      if from_type_de_champ.drop_down_other != to_type_de_champ.drop_down_other
+      if from_type_de_champ.drop_down_other? != to_type_de_champ.drop_down_other?
         changes << {
           model: :type_de_champ,
           op: :update,
           attribute: :drop_down_other,
           label: from_type_de_champ.libelle,
           private: from_type_de_champ.private?,
-          from: from_type_de_champ.drop_down_other,
-          to: to_type_de_champ.drop_down_other,
+          from: from_type_de_champ.drop_down_other?,
+          to: to_type_de_champ.drop_down_other?,
           stable_id: from_type_de_champ.stable_id
         }
       end

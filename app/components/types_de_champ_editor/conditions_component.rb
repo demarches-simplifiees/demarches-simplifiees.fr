@@ -176,7 +176,7 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
     in [:boolean, :boolean] | [:number, :number] | [:empty, :empty]
       true
     in [:enum, :string]
-      left.options.include?(right.value)
+      left.options.map(&:second).include?(right.value)
     else
       false
     end

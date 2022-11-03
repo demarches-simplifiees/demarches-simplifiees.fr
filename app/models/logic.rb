@@ -36,7 +36,7 @@ module Logic
       when :empty
         Empty.new
       when :enum
-        Constant.new(left.options.first)
+        Constant.new(left.options.first.second)
       when :number
         Constant.new(0)
       end
@@ -50,7 +50,7 @@ module Logic
     in [a, ^a] # syntax for same type
       true
     in [:enum, :string]
-      left.options.include?(right.value)
+      left.options.map(&:second).include?(right.value)
     else
       false
     end

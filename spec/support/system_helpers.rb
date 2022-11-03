@@ -104,10 +104,8 @@ module SystemHelpers
   end
 
   def select_combobox(libelle, fill_with, value, check: true)
-    execute_script "arguments[0].scrollIntoView();", find_field(libelle)
     fill_in libelle, with: fill_with
-
-    find('li[role="option"]', text: value).click
+    find('li[role="option"]', text: value, wait: 5).click
     if check
       check_selected_value(libelle, with: value)
     end

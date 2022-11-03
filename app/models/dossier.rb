@@ -987,7 +987,7 @@ class Dossier < ApplicationRecord
   end
 
   def check_mandatory_champs
-    (champs + champs.filter(&:repetition?).flat_map(&:champs))
+    (champs + champs.filter(&:repetition?).filter(&:visible?).flat_map(&:champs))
       .filter(&:mandatory_blank_and_visible?)
       .map do |champ|
         "Le champ #{champ.libelle.truncate(200)} doit être rempli."
