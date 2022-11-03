@@ -183,6 +183,7 @@ Rails.application.routes.draw do
   get "contact-admin", to: "support#admin"
 
   post "webhooks/helpscout", to: "webhook#helpscout"
+  post "webhooks/helpscout_support_dev", to: "webhook#helpscout_support_dev"
   match "webhooks/helpscout", to: lambda { |_| [204, {}, nil] }, via: :head
 
   #
