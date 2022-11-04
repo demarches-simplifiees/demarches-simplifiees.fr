@@ -52,6 +52,17 @@ describe Users::CommencerController, type: :controller do
         expect(response).to redirect_to(root_path)
       end
     end
+
+    context 'when procedure has a replaced_by_procedure' do
+      let(:path) { published_procedure.path }
+
+      it 'redirects to new procedure' do
+        replaced_by_procedure = create(:procedure, :published)
+        published_procedure.update!(replaced_by_procedure_id: replaced_by_procedure.id)
+        published_procedure.close!
+        expect(subject).to redirect_to(commencer_path(path: replaced_by_procedure.path))
+      end
+    end
   end
 
   describe '#commencer_test' do
@@ -183,20 +194,26 @@ describe Users::CommencerController, type: :controller do
   # end
 
   describe '#dossier_vide_pdf' do
+    let(:procedure) { create(:procedure, :published, :with_service, :with_path) }
     before { get :dossier_vide_pdf, params: { path: procedure.path } }
 
     context 'published procedure' do
-      let(:procedure) { create(:procedure, :published, :with_service, :with_path) }
-
       it 'works' do
         expect(response).to have_http_status(:success)
       end
     end
-    context 'not published procedure' do
+    context 'not yet published procedure' do
       let(:procedure) { create(:procedure, :with_service, :with_path) }
 
       it 'redirects to procedure not found' do
         expect(response).to have_http_status(302)
+      end
+    end
+    context 'closed procedure' do
+      it 'works' do
+        procedure.service = create(:service)
+        procedure.close!
+        expect(response).to have_http_status(:success)
       end
     end
   end

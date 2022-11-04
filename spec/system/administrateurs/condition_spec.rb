@@ -18,7 +18,7 @@ describe 'As an administrateur I can edit types de champ condition', js: true do
   before do
     login_as administrateur.user, scope: :user
     # TODO: remove along with feature flipping
-    allow(Flipper).to receive(:enabled?).with(:conditional, anything).and_return(true)
+    Flipper.enable(:procedure_conditional, procedure)
     visit champs_admin_procedure_path(procedure)
   end
 

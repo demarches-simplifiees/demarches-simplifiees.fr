@@ -40,7 +40,7 @@ class Champs::PieceJustificativeChamp < Champ
   end
 
   def mandatory_blank_and_visible?
-    mandatory? && !piece_justificative_file.attached? && visible?
+    mandatory? && !piece_justificative_file.attached?
   end
 
   def for_export

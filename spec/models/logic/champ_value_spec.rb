@@ -49,10 +49,24 @@ describe Logic::ChampValue do
   end
 
   context 'dropdown tdc' do
-    let(:champ) { create(:champ_drop_down_list, value: 'choix 1') }
+    let(:champ) { create(:champ_drop_down_list, value: 'val1') }
 
     it { expect(champ_value(champ.stable_id).type).to eq(:enum) }
-    it { is_expected.to eq('choix 1') }
+    it { is_expected.to eq('val1') }
+    it { expect(champ_value(champ.stable_id).options).to match_array([["val1", "val1"], ["val2", "val2"], ["val3", "val3"]]) }
+
+    context 'with other enabled' do
+      let(:champ) { create(:champ_drop_down_list, value: 'val1', other: true) }
+
+      it { is_expected.to eq('val1') }
+      it { expect(champ_value(champ.stable_id).options).to match_array([["val1", "val1"], ["val2", "val2"], ["val3", "val3"], ["Autre", "__other__"]]) }
+    end
+
+    context 'with other filled' do
+      let(:champ) { create(:champ_drop_down_list, value: 'other value', other: true) }
+
+      it { is_expected.to eq(Champs::DropDownListChamp::OTHER) }
+    end
   end
 
   context 'checkbox tdc' do

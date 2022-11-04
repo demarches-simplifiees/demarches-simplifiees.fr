@@ -1,8 +1,8 @@
 {
   "dependencies": {
-    "@headlessui/react": "^1.6.5",
+    "@headlessui/react": "^1.6.6",
     "@heroicons/react": "^1.0.6",
-    "@hotwired/stimulus": "^3.0.1",
+    "@hotwired/stimulus": "^3.1.0",
     "@hotwired/turbo": "^7.1.0",
     "@mapbox/mapbox-gl-draw": "^1.3.0",
     "@popperjs/core": "^2.11.5",
@@ -40,7 +40,7 @@
     "turbo-polyfills": "^0.3.0",
     "whatwg-fetch": "^3.0.0",
     "yet-another-abortcontroller-polyfill": "^0.0.4",
-    "zod": "^3.17.3"
+    "zod": "^3.17.10"
   },
   "devDependencies": {
     "@2fd/graphdoc": "^2.4.0",
@@ -88,6 +88,6 @@
   },
   "graphdoc": {
     "schemaFile": "./app/graphql/schema.json",
-    "output": "./public/doc/graphql"
+    "output": "./public/graphql/schema"
   }
 }

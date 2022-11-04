@@ -30,7 +30,7 @@ class AgentConnectService
     id_token = ResponseObject::IdToken.decode(access_token.id_token, discover.jwks)
 
     id_token.verify!(
-      client_id: AGENT_CONNECT[:identifier],
+      client_id: Rails.application.secrets.agent_connect[:identifier],
       issuer: discover.issuer,
       nonce: nonce
     )
@@ -43,6 +43,6 @@ class AgentConnectService
   private
 
   def self.find_discover
-    Discovery::Provider::Config.discover!("#{AGENT_CONNECT_BASE_URL}/api/v2")
+    Discovery::Provider::Config.discover!("#{ENV.fetch('AGENT_CONNECT_BASE_URL')}/api/v2")
   end
 end

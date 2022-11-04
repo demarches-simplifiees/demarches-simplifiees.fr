@@ -70,7 +70,14 @@ export class CheckConditionsController extends ApplicationController {
       return Promise.resolve();
     }
 
+    const fileInputs = form.querySelectorAll('input[type="file"]');
+    for (const input of fileInputs) {
+      input.setAttribute('disabled', 'disabled');
+    }
     const formData = new FormData(form);
+    for (const input of fileInputs) {
+      input.removeAttribute('disabled');
+    }
     formData.set('check_conditions', 'true');
 
     return httpRequest(form.action, {

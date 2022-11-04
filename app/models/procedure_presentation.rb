@@ -293,7 +293,11 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def find_type_de_champ(column)
-    TypeDeChamp.order(:revision_id).find_by(stable_id: column)
+    TypeDeChamp
+      .joins(:revision_types_de_champ)
+      .where(revision_types_de_champ: { revision_id: procedure.revisions })
+      .order(:created_at)
+      .find_by(stable_id: column)
   end
 
   def check_allowed_displayed_fields

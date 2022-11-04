@@ -27,7 +27,7 @@ RSpec.describe Types::DossierType, type: :graphql do
   end
 
   describe 'dossier with champs' do
-    let(:procedure) { create(:procedure, :published, :with_commune, :with_address) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :communes }, { type: :address }]) }
     let(:dossier) { create(:dossier, :accepte, :with_populated_champs, procedure: procedure) }
     let(:query) { DOSSIER_WITH_CHAMPS_QUERY }
     let(:variables) { { number: dossier.id } }

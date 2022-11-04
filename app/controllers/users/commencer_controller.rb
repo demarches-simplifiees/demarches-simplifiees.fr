@@ -5,11 +5,12 @@ module Users
     def commencer
       @procedure = retrieve_procedure
       return procedure_not_found if @procedure.blank? || @procedure.brouillon?
+
       @revision = @procedure.published_revision
       if !user_signed_in?
         store_user_location!(@procedure)
       end
-
+      @revision = @procedure.published_revision
       render 'commencer/show'
     end
 
@@ -24,14 +25,14 @@ module Users
     end
 
     def dossier_vide_pdf
-      @procedure = retrieve_procedure
+      @procedure = retrieve_procedure_with_closed
       return procedure_not_found if @procedure.blank? || @procedure.brouillon?
 
       generate_empty_pdf(@procedure.published_revision)
     end
 
     def dossier_vide_pdf_test
-      @procedure = retrieve_procedure
+      @procedure = retrieve_procedure_with_closed
       return procedure_not_found if @procedure.blank? || (@procedure.publiee? && !@procedure.draft_changed?)
 
       generate_empty_pdf(@procedure.draft_revision)
@@ -72,10 +73,17 @@ module Users
       Procedure.publiees.or(Procedure.brouillons).find_by(path: params[:path])
     end
 
+    def retrieve_procedure_with_closed
+      Procedure.publiees.or(Procedure.brouillons).or(Procedure.closes).find_by(path: params[:path])
+    end
+
     def procedure_not_found
       procedure = Procedure.find_by(path: params[:path])
 
-      if procedure&.close?
+      if procedure&.replaced_by_procedure
+        redirect_to commencer_path(path: procedure.replaced_by_procedure.path)
+        return
+      elsif procedure&.close?
         flash.alert = procedure.service.presence ?
                       t('errors.messages.procedure_archived.with_service_and_phone_email', service_name: procedure.service.nom, service_phone_number: procedure.service.telephone, service_email: procedure.service.email) :
                       t('errors.messages.procedure_archived.with_organisation_only', organisation_name: procedure.organisation)
