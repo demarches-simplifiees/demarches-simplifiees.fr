@@ -205,7 +205,7 @@ class Procedure < ApplicationRecord
   has_one :refused_mail, class_name: "Mails::RefusedMail", dependent: :destroy
   has_one :without_continuation_mail, class_name: "Mails::WithoutContinuationMail", dependent: :destroy
 
-  has_one :defaut_groupe_instructeur, -> { order(:label) }, class_name: 'GroupeInstructeur', inverse_of: :procedure
+  has_one :defaut_groupe_instructeur, -> { actif.order(:label) }, class_name: 'GroupeInstructeur', inverse_of: :procedure
 
   has_one_attached :logo
   has_one_attached :notice
@@ -694,16 +694,12 @@ class Procedure < ApplicationRecord
     revisions.size - 2
   end
 
-  def routee?
-    routing_enabled? || groupe_instructeurs.size > 1
-  end
-
   def instructeurs_self_management?
-    routee? || instructeurs_self_management_enabled?
+    routing_enabled? || instructeurs_self_management_enabled?
   end
 
   def defaut_groupe_instructeur_for_new_dossier
-    if !routee? || feature_enabled?(:procedure_routage_api) || (routee? && self.groupe_instructeurs.size == 1)
+    if !routing_enabled? || feature_enabled?(:procedure_routage_api)
       defaut_groupe_instructeur
     end
   end

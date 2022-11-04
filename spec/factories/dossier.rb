@@ -4,7 +4,7 @@ FactoryBot.define do
     state { Dossier.states.fetch(:brouillon) }
 
     user { association :user }
-    groupe_instructeur { procedure.routee? ? nil : procedure.defaut_groupe_instructeur }
+    groupe_instructeur { procedure.routing_enabled? ? nil : procedure.defaut_groupe_instructeur }
     revision { procedure.active_revision }
     individual { association(:individual, :empty, dossier: instance, strategy: :build) if procedure.for_individual? }
 
