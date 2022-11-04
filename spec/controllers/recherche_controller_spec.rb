@@ -1,6 +1,4 @@
 describe RechercheController, type: :controller do
-  render_views
-
   let(:procedure) {
     create(:procedure,
                            :published,
@@ -76,7 +74,7 @@ describe RechercheController, type: :controller do
         it 'does not return the dossier' do
           subject
           expect(assigns(:projected_dossiers).count).to eq(0)
-          expect(response.body).not_to match(/<div class='fr-alert fr-alert--info/)
+          expect(assigns(:not_in_instructor_group_dossiers).count).to eq(0)
         end
       end
 
@@ -94,8 +92,7 @@ describe RechercheController, type: :controller do
         it 'does not return the dossier but it returns a message' do
           subject
           expect(assigns(:projected_dossiers).count).to eq(0)
-          expect(response.body).to match(/Aucun dossier correspondant à votre recherche n’a été trouvé/)
-          expect(CGI.unescapeHTML(response.body)).to match(/Le dossier n° #{dossier3.id} de la procédure « #{dossier3.procedure.libelle} » correspond à votre recherche mais il est rattaché au groupe d'instructeurs « #{dossier3.groupe_instructeur.label} »./)
+          expect(assigns(:not_in_instructor_group_dossiers)).to eq([dossier3])
         end
       end
 

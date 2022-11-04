@@ -32,7 +32,7 @@ class RechercheController < ApplicationController
     # we want to retrieve dossiers that are not accessible to the instructor because he is not in the instructor group
     # to display an alert in the view
     instructeur_procedure_dossiers_ids = DossierSearchService
-      .matching_dossiers(current_instructeur&.procedures&.map(&:dossiers)&.first, @search_terms, with_annotation: true)
+      .matching_dossiers(Dossier.joins(:procedure).where(procedure: {id: current_instructeur&.procedures&.ids}), @search_terms, with_annotation: true)
 
     not_in_instructor_group_dossiers_ids = instructeur_procedure_dossiers_ids - matching_dossiers_ids
 
