@@ -106,7 +106,18 @@ class TypeDeChamp < ApplicationRecord
     mesri: 'mesri'
   }
 
-  store_accessor :options, :cadastres, :old_pj, :drop_down_options, :skip_pj_validation, :skip_content_type_pj_validation, :drop_down_secondary_libelle, :drop_down_secondary_description, :drop_down_other
+  store_accessor :options,
+                 :cadastres,
+                 :old_pj,
+                 :drop_down_options,
+                 :skip_pj_validation,
+                 :skip_content_type_pj_validation,
+                 :drop_down_secondary_libelle,
+                 :drop_down_secondary_description,
+                 :drop_down_other,
+                 :collapsible_explanation_enabled,
+                 :collapsible_explanation_text
+
   has_many :revision_types_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
   has_one :revision_type_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', inverse_of: false
   has_many :revisions, -> { ordered }, through: :revision_types_de_champ
@@ -234,6 +245,10 @@ class TypeDeChamp < ApplicationRecord
     drop_down_other == "1" || drop_down_other == true
   end
 
+  def collapsible_explanation_enabled?
+    collapsible_explanation_enabled == "1"
+  end
+
   def fillable?
     !non_fillable?
   end
@@ -278,6 +293,10 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def exclude_from_view?
+    type_champ == TypeDeChamp.type_champs.fetch(:explication)
+  end
+
+  def explication?
     type_champ == TypeDeChamp.type_champs.fetch(:explication)
   end
 
