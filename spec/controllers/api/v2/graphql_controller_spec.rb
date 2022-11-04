@@ -878,6 +878,30 @@ describe API::V2::GraphqlController do
         end
       end
 
+      context 'getGroupeInstructeur' do
+        let(:groupe_instructeur) { procedure.groupe_instructeurs.first }
+        let(:variables) { { groupeInstructeurNumber: groupe_instructeur.id } }
+        let(:operation_name) { 'getGroupeInstructeur' }
+
+        before { dossier }
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data[:groupeInstructeur][:id]).to eq(groupe_instructeur.to_typed_id)
+          expect(gql_data[:groupeInstructeur][:dossiers]).to be_nil
+        }
+
+        context 'include Dossiers' do
+          let(:variables) { { groupeInstructeurNumber: groupe_instructeur.id, includeDossiers: true } }
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:groupeInstructeur][:id]).to eq(groupe_instructeur.to_typed_id)
+            expect(gql_data[:groupeInstructeur][:dossiers][:nodes].size).to eq(1)
+          }
+        end
+      end
+
       context 'mutation' do
         let(:query_id) { 'ds-mutation-v2' }
 
