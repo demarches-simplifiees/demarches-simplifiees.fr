@@ -78,4 +78,30 @@ RSpec.describe DossierTransfer, type: :model do
       expect(DossierTransfer.count).to eq(0)
     end
   end
+
+  describe "validation" do
+    let(:email) { build(:dossier_transfer).email }
+
+    subject { build(:dossier_transfer, email: email) }
+
+    it "factory is valid" do
+      expect(subject).to be_valid
+    end
+
+    context "when email is blank" do
+      let(:email) { "" }
+
+      it "requires a valid email" do
+        expect(subject).to be_invalid
+      end
+    end
+
+    context "when email is not an email" do
+      let(:email) { "test" }
+
+      it "requires a valid email" do
+        expect(subject).to be_invalid
+      end
+    end
+  end
 end

@@ -21,7 +21,7 @@
 
 fr:
   invisible_captcha:
-    custom_message: 'Si vous êtes un humain, veuillez ignorer ce champs'
+    sentence_for_humans: 'Si vous êtes un humain, laissez ce champ vide'
   help: 'Aide'
   help_dropdown:
     problem_title: Un problème avec le site ?

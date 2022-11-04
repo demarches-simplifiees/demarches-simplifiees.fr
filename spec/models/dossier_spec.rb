@@ -704,7 +704,7 @@ describe Dossier do
   end
 
   describe "#unspecified_attestation_champs" do
-    let(:procedure) { create(:procedure, attestation_template: attestation_template, types_de_champ: types_de_champ, types_de_champ_private: types_de_champ_private) }
+    let(:procedure) { create(:procedure, attestation_template: attestation_template, types_de_champ_public: types_de_champ, types_de_champ_private: types_de_champ_private) }
     let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
     let(:types_de_champ) { [] }
     let(:types_de_champ_private) { [] }
@@ -739,14 +739,14 @@ describe Dossier do
         let(:types_de_champ) { [tdc_1, tdc_2, tdc_3, tdc_4] }
         let(:types_de_champ_private) { [tdc_5, tdc_6, tdc_7, tdc_8] }
 
-        let(:tdc_1) { build(:type_de_champ, libelle: "specified champ-in-title") }
-        let(:tdc_2) { build(:type_de_champ, libelle: "unspecified champ-in-title") }
-        let(:tdc_3) { build(:type_de_champ, libelle: "specified champ-in-body") }
-        let(:tdc_4) { build(:type_de_champ, libelle: "unspecified champ-in-body") }
-        let(:tdc_5) { build(:type_de_champ, private: true, libelle: "specified annotation privée-in-title") }
-        let(:tdc_6) { build(:type_de_champ, private: true, libelle: "unspecified annotation privée-in-title") }
-        let(:tdc_7) { build(:type_de_champ, private: true, libelle: "specified annotation privée-in-body") }
-        let(:tdc_8) { build(:type_de_champ, private: true, libelle: "unspecified annotation privée-in-body") }
+        let(:tdc_1) { { libelle: "specified champ-in-title" } }
+        let(:tdc_2) { { libelle: "unspecified champ-in-title" } }
+        let(:tdc_3) { { libelle: "specified champ-in-body" } }
+        let(:tdc_4) { { libelle: "unspecified champ-in-body" } }
+        let(:tdc_5) { { libelle: "specified annotation privée-in-title" } }
+        let(:tdc_6) { { libelle: "unspecified annotation privée-in-title" } }
+        let(:tdc_7) { { libelle: "specified annotation privée-in-body" } }
+        let(:tdc_8) { { libelle: "unspecified annotation privée-in-body" } }
 
         before do
           (dossier.champs + dossier.champs_private)
@@ -1139,15 +1139,20 @@ describe Dossier do
   end
 
   describe "#check_mandatory_champs" do
-    let(:procedure) { create(:procedure, :with_type_de_champ) }
+    include Logic
+
+    let(:procedure) { create(:procedure, types_de_champ_public: types_de_champ) }
     let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:types_de_champ) { [type_de_champ] }
+    let(:type_de_champ) { {} }
+    let(:errors) { dossier.check_mandatory_champs }
 
     it 'no mandatory champs' do
-      expect(dossier.check_mandatory_champs).to be_empty
+      expect(errors).to be_empty
     end
 
     context "with mandatory champs" do
-      let(:procedure) { create(:procedure, :with_type_de_champ_mandatory) }
+      let(:type_de_champ) { { mandatory: true } }
       let(:champ_with_error) { dossier.champs.first }
 
       before do
@@ -1156,22 +1161,29 @@ describe Dossier do
       end
 
       it 'should have errors' do
-        errors = dossier.check_mandatory_champs
         expect(errors).not_to be_empty
         expect(errors.first).to eq("Le champ #{champ_with_error.libelle} doit être rempli.")
+      end
+
+      context "conditionaly visible" do
+        let(:types_de_champ) { [{ type: :yes_no, stable_id: 99 }, type_de_champ] }
+        let(:type_de_champ) { { mandatory: true, condition: ds_eq(champ_value(99), constant(true)) } }
+
+        it 'should not have errors' do
+          expect(errors).to be_empty
+        end
       end
     end
 
     context "with mandatory SIRET champ" do
-      let(:type_de_champ) { create(:type_de_champ_siret, mandatory: true, procedure: procedure) }
-      let(:champ_siret) { create(:champ_siret, type_de_champ: type_de_champ) }
+      let(:type_de_champ) { { type: :siret, mandatory: true } }
+      let(:champ_siret) { dossier.champs.first }
 
       before do
-        dossier.champs << champ_siret
+        champ_siret.value = '44011762001530'
       end
 
       it 'should not have errors' do
-        errors = dossier.check_mandatory_champs
         expect(errors).to be_empty
       end
 
@@ -1182,7 +1194,6 @@ describe Dossier do
         end
 
         it 'should have errors' do
-          errors = dossier.check_mandatory_champs
           expect(errors).not_to be_empty
           expect(errors.first).to eq("Le champ #{champ_siret.libelle} doit être rempli.")
         end
@@ -1190,24 +1201,16 @@ describe Dossier do
     end
 
     context "with champ repetition" do
-      let(:procedure) { create(:procedure, :with_repetition) }
+      let(:type_de_champ) { { type: :repetition, mandatory: true, children: [{ mandatory: true }] } }
       let(:revision) { procedure.active_revision }
       let(:type_de_champ_repetition) { revision.types_de_champ.first }
 
-      before do
-        type_de_champ_repetition.update(mandatory: true)
-        revision.children_of(type_de_champ_repetition).first.update(mandatory: true)
-      end
-
       context "when no champs" do
-        let(:champ_with_error) do
-          repetition_champ = dossier.champs.first
-          text_champ = repetition_champ.rows.first.first
-          text_champ
-        end
+        let(:champ_with_error) { dossier.champs.first }
 
         it 'should have errors' do
-          errors = dossier.check_mandatory_champs
+          dossier.champs.first.champs.destroy_all
+          expect(dossier.champs.first.rows).to be_empty
           expect(errors).not_to be_empty
           expect(errors.first).to eq("Le champ #{champ_with_error.libelle} doit être rempli.")
         end
@@ -1216,14 +1219,28 @@ describe Dossier do
       context "when mandatory champ inside repetition" do
         let(:champ_with_error) { dossier.champs.first.champs.first }
 
-        before do
-          dossier.champs.first.add_row(dossier.revision)
-        end
-
         it 'should have errors' do
-          errors = dossier.check_mandatory_champs
+          expect(dossier.champs.first.rows).not_to be_empty
           expect(errors).not_to be_empty
           expect(errors.first).to eq("Le champ #{champ_with_error.libelle} doit être rempli.")
+        end
+
+        context "conditionaly visible" do
+          let(:champ_with_error) { dossier.champs.second.champs.first }
+          let(:types_de_champ) { [{ type: :yes_no, stable_id: 99 }, type_de_champ] }
+          let(:type_de_champ) { { type: :repetition, mandatory: true, children: [{ mandatory: true }], condition: ds_eq(champ_value(99), constant(true)) } }
+
+          it 'should not have errors' do
+            expect(dossier.champs.second.rows).not_to be_empty
+            expect(errors).to be_empty
+          end
+
+          it 'should have errors' do
+            dossier.champs.first.update(value: 'true')
+            expect(dossier.champs.second.rows).not_to be_empty
+            expect(errors).not_to be_empty
+            expect(errors.first).to eq("Le champ #{champ_with_error.libelle} doit être rempli.")
+          end
         end
       end
     end

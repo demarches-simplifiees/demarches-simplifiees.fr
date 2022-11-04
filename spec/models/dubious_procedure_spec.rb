@@ -1,14 +1,14 @@
 describe DubiousProcedure, type: :model do
   describe '#all' do
-    let!(:procedure) { create(:procedure, types_de_champ: tdcs) }
-    let(:allowed_tdc) { build(:type_de_champ, libelle: 'fournir') }
+    let!(:procedure) { create(:procedure, types_de_champ_public: tdcs) }
+    let(:allowed_tdc) { { libelle: 'fournir' } }
     subject { DubiousProcedure.all }
 
     context 'with suspicious champs' do
       let(:forbidden_tdcs) do
         [
-          build(:type_de_champ, libelle: 'num de securite sociale, stp'),
-          build(:type_de_champ, libelle: "t'aurais une carte bancaire ?")
+          { libelle: 'num de securite sociale, stp' },
+          { libelle: "t'aurais une carte bancaire ?" }
         ]
       end
 

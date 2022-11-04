@@ -1,0 +1,9 @@
+fr:
+  activerecord:
+    errors:
+      models:
+        dossier_transfer:
+          attributes:
+            email:
+              format: "L'adresse email %{message}"
+              invalid: "est invalide"

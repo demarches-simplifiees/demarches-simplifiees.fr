@@ -56,7 +56,6 @@
 #
 
 class Procedure < ApplicationRecord
-  self.ignored_columns = [:duree_conservation_dossiers_hors_ds]
   include ProcedureStatsConcern
   include EncryptableConcern
 

@@ -12,6 +12,8 @@ class DossierTransfer < ApplicationRecord
 
   EXPIRATION_LIMIT = 2.weeks
 
+  validates :email, format: { with: Devise.email_regexp }
+
   scope :pending, -> { where('created_at > ?', (Time.zone.now - EXPIRATION_LIMIT)) }
   scope :stale, -> { where('created_at < ?', (Time.zone.now - EXPIRATION_LIMIT)) }
   scope :with_dossiers, -> { joins(:dossiers).merge(Dossier.visible_by_user) }

@@ -657,14 +657,14 @@ describe ProcedureRevision do
 
   describe '#estimated_fill_duration' do
     let(:mandatory) { true }
-    let(:types_de_champ) do
+    let(:types_de_champ_public) do
       [
-        build(:type_de_champ_text, position: 1, mandatory: true),
-        build(:type_de_champ_siret, position: 2, mandatory: true),
-        build(:type_de_champ_piece_justificative, position: 3, mandatory: mandatory)
+        { mandatory: true },
+        { type: :siret, mandatory: true },
+        { type: :piece_justificative, mandatory: mandatory }
       ]
     end
-    let(:procedure) { create(:procedure, types_de_champ: types_de_champ) }
+    let(:procedure) { create(:procedure, types_de_champ_public: types_de_champ_public) }
 
     subject { procedure.active_revision.estimated_fill_duration }
 
@@ -687,13 +687,17 @@ describe ProcedureRevision do
     end
 
     context 'when there are repetitions' do
-      let(:procedure) do
-        procedure = create(:procedure, types_de_champ: [])
-        create(:type_de_champ_repetition, position: 1, mandatory: true, procedure: procedure, types_de_champ: [
-          build(:type_de_champ_text, position: 1, mandatory: true),
-          build(:type_de_champ_piece_justificative, position: 2, mandatory: true)
-        ])
-        procedure
+      let(:types_de_champ_public) do
+        [
+          {
+            type: :repetition,
+            mandatory: true,
+            children: [
+              { mandatory: true },
+              { type: :piece_justificative, position: 2, mandatory: true }
+            ]
+          }
+        ]
       end
 
       it 'estimates that between 2 and 3 rows will be filled for each repetition' do
@@ -703,7 +707,7 @@ describe ProcedureRevision do
     end
 
     describe 'caching behavior' do
-      let(:procedure) { create(:procedure, :published, types_de_champ: types_de_champ) }
+      let(:procedure) { create(:procedure, :published, types_de_champ_public: types_de_champ_public) }
 
       before { Rails.cache = ActiveSupport::Cache::MemoryStore.new }
       after { Rails.cache = ActiveSupport::Cache::NullStore.new }

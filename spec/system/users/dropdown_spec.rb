@@ -2,11 +2,7 @@ describe 'dropdown list with other option activated', js: true do
   let(:password) { 'my-s3cure-p4ssword' }
   let!(:user) { create(:user, password: password) }
 
-  let(:type_de_champ) { build(:type_de_champ_drop_down_list, libelle: 'simple dropdown other', drop_down_list_value: list_items, drop_down_other: true) }
-
-  let(:procedure) do
-    create(:procedure, :published, :for_individual, types_de_champ: [type_de_champ])
-  end
+  let(:procedure) { create(:procedure, :published, :for_individual, types_de_champ_public: [{ type: :drop_down_list, libelle: 'simple dropdown other', options: options + [:other] }]) }
 
   let(:user_dossier) { user.dossiers.first }
 
@@ -16,12 +12,12 @@ describe 'dropdown list with other option activated', js: true do
     click_on 'Commencer la démarche'
   end
   context 'with radios' do
-    let(:list_items) do
-      <<~END_OF_LIST
-        --Primary 1--
-        Secondary 1.1
-        Secondary 1.2
-      END_OF_LIST
+    let(:options) do
+      [
+        '--Primary 1--',
+        'Secondary 1.1',
+        'Secondary 1.2'
+      ]
     end
 
     scenario 'Select other option and the other input hidden must appear', js: true do
@@ -33,16 +29,16 @@ describe 'dropdown list with other option activated', js: true do
   end
 
   context 'with select' do
-    let(:list_items) do
-      <<~END_OF_LIST
-        --Primary 1--
-        Secondary 1.1
-        Secondary 1.2
-        Secondary 1.3
-        Secondary 1.4
-        Secondary 1.5
-        Secondary 1.6
-      END_OF_LIST
+    let(:options) do
+      [
+        '--Primary 1--',
+        'Secondary 1.1',
+        'Secondary 1.2',
+        'Secondary 1.3',
+        'Secondary 1.4',
+        'Secondary 1.5',
+        'Secondary 1.6'
+      ]
     end
 
     scenario 'with a select and other, selecting a value save it (avoid hidden other_value to be sent)' do
