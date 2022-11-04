@@ -28,9 +28,9 @@
                     %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
                     Mes zones
                 .fr-ml-1w{ 'data-expand-target': 'content' }
-                  = f.collection_check_boxes :zone_ids, @admin_zones, :id, :current_label, include_hidden: false do |b|
+                  = f.collection_check_boxes :zone_ids, @filter.admin_zones, :id, :current_label, include_hidden: false do |b|
                     .fr-checkbox-group.fr-ml-2w
-                      = b.check_box(checked: @zone_ids&.map(&:to_i)&.include?(b.value), 'data-action': 'autosubmit#submit')
+                      = b.check_box(checked: @filter.zone_filtered?(b.value), 'data-action': 'autosubmit#submit')
                       = b.label(class: 'fr-label') { b.text }
               %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
                 .fr-mb-1w
@@ -38,35 +38,36 @@
                     %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
                     Autres zones
                 .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
-                  = f.collection_check_boxes :zone_ids, @other_zones, :id, :current_label, include_hidden: false do |b|
+                  = f.collection_check_boxes :zone_ids, @filter.other_zones, :id, :current_label, include_hidden: false do |b|
                     .fr-checkbox-group.fr-ml-2w
-                      = b.check_box(checked: @zone_ids&.map(&:to_i)&.include?(b.value), 'data-action': 'autosubmit#submit')
+                      = b.check_box(checked: @filter.zone_filtered?(b.value), 'data-action': 'autosubmit#submit')
                       = b.label(class: 'fr-label') { b.text }
               %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
+                .fr-mb-1w
                   %button{ 'data-action': 'expand#toggle' }
                     %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
                     Statut
                 .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
                   = f.collection_check_boxes :statuses, ['publiee', 'close'], :to_s, :to_s, include_hidden: false do |b|
                     .fr-checkbox-group.fr-ml-2w
-                      = b.check_box(checked: @statuses&.include?(b.value), 'data-action': 'autosubmit#submit')
+                      = b.check_box(checked: @filter.status_filtered?(b.value), 'data-action': 'autosubmit#submit')
                       = b.label(class: 'fr-label') { t b.text, scope: 'activerecord.attributes.procedure.aasm_state' }
 
       .fr-col-9
         .fr-table.fr-table--bordered
           %table#all-demarches
             %caption
-              = "#{@procedures.total_count} démarches"
+              = "#{@filter.procedures_result.total_count} démarches"
               %span.hidden.fr-icon-ball-pen-fill{ 'aria-hidden': 'true', 'data-autosubmit-target': 'spinner' }
-            - if @selected_zones
+            - if @filter.selected_zones.present?
               .selected-zones.fr-mb-2w
-                - @selected_zones.each do |zone|
-                  = link_to zone.current_label, all_admin_procedures_path(zone_ids: @selected_zones.map(&:id) - [zone.id]), class: 'fr-tag fr-tag--dismiss fr-mb-1w'
-            - if @statuses
+                - @filter.selected_zones.each do |zone|
+                  = link_to zone.current_label, all_admin_procedures_path(@filter.without(:zone_ids, zone.id)), class: 'fr-tag fr-tag--dismiss fr-mb-1w'
+            - if @filter.statuses.present?
               .selected-statuses.fr-mb-2w
-                - @statuses.each do |status|
+                - @filter.statuses.each do |status|
                   %p.fr-tag.fr-mb-1w.fr--background-alt-blue-france= status
-            = paginate @procedures, views_prefix: 'administrateurs'
+            = paginate @filter.procedures_result, views_prefix: 'administrateurs'
             %thead
               %tr
                 %th{ scope: 'col' }
@@ -75,7 +76,7 @@
                 %th{ scope: 'col' } Administrateurs
                 %th{ scope: 'col' } Statut
                 %th{ scope: 'col' } Date
-            - @procedures.each do |procedure|
+            - @filter.procedures_result.each do |procedure|
               %tbody{ 'data-controller': 'expand' }
                 %tr.procedure{ 'data-action': 'click->expand#toggle' }
                   %td
@@ -95,4 +96,4 @@
                         .fr-col-6
                           - procedure.administrateurs.uniq.each do |admin|
                             = admin.email
-          .fr-mt-2w= paginate @procedures, views_prefix: 'administrateurs'
+          .fr-mt-2w= paginate @filter.procedures_result, views_prefix: 'administrateurs'
