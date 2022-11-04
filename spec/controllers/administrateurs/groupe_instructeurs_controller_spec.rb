@@ -276,7 +276,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       it { expect(gi_1_2.instructeurs.pluck(:email)).to include(*new_instructeur_emails) }
       it { expect(flash.notice).to be_present }
       it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_2)) }
-      it { expect(procedure.routee?).to be_truthy }
+      it { expect(procedure.routing_enabled?).to be_truthy }
       it "calls GroupeInstructeurMailer with the right groupe and instructeurs" do
         expect(GroupeInstructeurMailer).to have_received(:add_instructeurs).with(
           gi_1_2,

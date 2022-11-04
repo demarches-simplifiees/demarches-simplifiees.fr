@@ -1,4 +1,4 @@
-- if @procedure.routee?
+- if @procedure.routing_enabled?
   = render partial: 'administrateurs/breadcrumbs',
     locals: { steps: [[t('.procedures'), admin_procedures_path],
                       [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
@@ -19,7 +19,7 @@
         instructeurs: @instructeurs,
         available_instructeur_emails: @available_instructeur_emails,
         disabled_as_super_admin: administrateur_as_manager? }
-  - if !@procedure.routee?
+  - if !@procedure.routing_enabled?
     = render partial: 'administrateurs/groupe_instructeurs/instructeurs_self_management', locals: { procedure: @procedure }
 
   = render partial: 'administrateurs/groupe_instructeurs/routing', locals: { procedure: @procedure }
