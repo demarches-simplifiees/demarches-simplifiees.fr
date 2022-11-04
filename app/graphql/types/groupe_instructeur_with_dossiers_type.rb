@@ -13,6 +13,11 @@ module Types
       argument :min_revision, ID, required: false, description: "Seulement les dossiers pour les révisons après la révision donnée."
     end
 
+    field :deleted_dossiers, Types::DeletedDossierType.connection_type, "Liste de tous les dossiers supprimés d’un groupe instructeur.", null: false do
+      argument :order, Types::Order, default_value: :asc, required: false, description: "L’ordre des dossiers supprimés."
+      argument :deleted_since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers supprimés depuis la date."
+    end
+
     def dossiers(updated_since: nil, created_since: nil, state: nil, archived: nil, revision: nil, max_revision: nil, min_revision: nil, order:, lookahead:)
       dossiers = object
         .dossiers
@@ -54,6 +59,16 @@ module Types
       # https://graphql-ruby.org/pagination/custom_connections.html#using-a-custom-connection
       # https://graphql-ruby.org/queries/lookahead.html
       Connections::DossiersConnection.new(dossiers, lookahead: lookahead)
+    end
+
+    def deleted_dossiers(deleted_since: nil, order:)
+      dossiers = object.deleted_dossiers
+
+      if deleted_since.present?
+        dossiers = dossiers.deleted_since(deleted_since)
+      end
+
+      dossiers.order(deleted_at: order)
     end
   end
 end
