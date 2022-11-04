@@ -102,7 +102,12 @@ class API::V2::StoredQuery
     $revision: ID
     $createdSince: ISO8601DateTime
     $updatedSince: ISO8601DateTime
+    $deletedOrder: Order
+    $deletedFirst: Int
+    $deletedAfter: String
+    $deletedSince: ISO8601DateTime
     $includeDossiers: Boolean = false
+    $includeDeletedDossiers: Boolean = false
     $includeChamps: Boolean = true
     $includeAnotations: Boolean = true
     $includeTraitements: Boolean = true
@@ -134,6 +139,19 @@ class API::V2::StoredQuery
         }
         nodes {
           ...DossierFragment
+        }
+      }
+      deletedDossiers(
+        order: $deletedOrder
+        first: $deletedFirst
+        after: $deletedAfter
+        deletedSince: $deletedSince
+      ) @include(if: $includeDeletedDossiers) {
+        pageInfo {
+          ...PageInfoFragment
+        }
+        nodes {
+          ...DeletedDossierFragment
         }
       }
     }
