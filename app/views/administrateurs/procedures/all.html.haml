@@ -50,7 +50,7 @@
                 .fr-input-group.hidden{ 'data-expand-target': 'content' }
                   = f.label 'from_publication_date', 'Depuis', class: 'fr-label'
                   .fr-input-wrap.fr-fi-calendar-line
-                    = f.date_field 'from_publication_date', value: @filter.from_publication_date, class: 'fr-input', 'data-action': 'blur->autosubmit#submit'
+                    = f.date_field 'from_publication_date', value: @filter.from_publication_date, class: 'fr-input', 'data-action': 'blur->autosubmit#submit change->autosubmit#debouncedSubmit'
 
               %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
                 .fr-mb-1w
