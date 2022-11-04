@@ -89,6 +89,14 @@
       label {
         color: $light-grey;
       }
+
+      .conditionnel {
+        color: $white;
+
+        .add-row {
+          background-color: $white;
+        }
+      }
     }
 
     .flex {

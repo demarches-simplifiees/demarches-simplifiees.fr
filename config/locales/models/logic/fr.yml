@@ -2,6 +2,7 @@ fr:
   logic:
     empty: un membre vide
     is: Est
+    is_not: N’est pas
     operators:
       'Logic::LessThan': Inférieur à
       'Logic::LessThanEq': Inférieur ou égal à
@@ -10,3 +11,4 @@ fr:
       'Logic::GreaterThanEq': Supérieur ou égal à
       'Logic::And': Et
       'Logic::Or': Ou
+      'Logic::NotEq': N'est pas

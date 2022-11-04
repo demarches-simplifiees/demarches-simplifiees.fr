@@ -47,9 +47,8 @@ describe 'The user' do
     fill_in('dossier_link', with: dossier_to_link.id)
     find('.editable-champ-piece_justificative input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
 
-    expect(page).to have_css('span', text: 'Votre brouillon est automatiquement enregistré', visible: true)
+    # expect(page).to have_css('span', text: 'Votre brouillon est automatiquement enregistré', visible: true)
     blur
-    sleep(1.7)
     expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
 
     # check data on the dossier from db
@@ -59,7 +58,7 @@ describe 'The user' do
     # and raise expectation error instead of timeout error.
     last_expection_error = nil
     begin
-      Timeout.timeout(Capybara.default_max_wait_time) do
+      Timeout.timeout(Capybara.default_max_wait_time * 2) do
         expect(user_dossier).to be_brouillon
         expect(champ_value_for('text')).to eq('super texte')
         expect(champ_value_for('textarea')).to eq('super textarea')
@@ -196,9 +195,9 @@ describe 'The user' do
     simple_procedure.update(procedure_expires_when_termine_enabled: true)
     allow(simple_procedure).to receive(:feature_enabled?).with(:procedure_process_expired_dossiers_termine).and_return(true)
     user_old_dossier = create(:dossier,
-                              procedure: simple_procedure,
-                              created_at: simple_procedure.duree_conservation_dossiers_dans_ds.month.ago,
-                              user: user)
+      procedure: simple_procedure,
+      created_at: simple_procedure.duree_conservation_dossiers_dans_ds.month.ago,
+      user: user)
     login_as(user, scope: :user)
     visit brouillon_dossier_path(user_old_dossier)
 
@@ -287,10 +286,10 @@ describe 'The user' do
     context 'with a required conditionnal champ' do
       let(:procedure) do
         procedure = create(:procedure, :published, :for_individual,
-                           types_de_champ_public: [
-                             { type: :integer_number, libelle: 'age' },
-                             { type: :text, libelle: 'nom', mandatory: true }
-                           ])
+          types_de_champ_public: [
+            { type: :integer_number, libelle: 'age' },
+            { type: :text, libelle: 'nom', mandatory: true }
+          ])
 
         age, nom = procedure.draft_revision.types_de_champ.all
 
