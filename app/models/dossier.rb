@@ -615,11 +615,11 @@ class Dossier < ApplicationRecord
   end
 
   def show_groupe_instructeur_details?
-    procedure.routee? && groupe_instructeur.present? && (!procedure.feature_enabled?(:procedure_routage_api) || !defaut_groupe_instructeur?)
+    procedure.routing_enabled? && groupe_instructeur.present? && (!procedure.feature_enabled?(:procedure_routage_api) || !defaut_groupe_instructeur?)
   end
 
   def show_groupe_instructeur_selector?
-    procedure.routee? && !procedure.feature_enabled?(:procedure_routage_api)
+    procedure.routing_enabled? && !procedure.feature_enabled?(:procedure_routage_api)
   end
 
   def assign_to_groupe_instructeur(groupe_instructeur, author = nil)
@@ -1085,7 +1085,7 @@ class Dossier < ApplicationRecord
       ['Instructeurs', followers_instructeurs.map(&:email).join(' ')]
     ]
 
-    if procedure.routee?
+    if procedure.routing_enabled?
       columns << ['Groupe instructeur', groupe_instructeur.label]
     end
     columns + self.class.champs_for_export(champs + champs_private, types_de_champ)

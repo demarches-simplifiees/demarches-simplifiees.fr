@@ -196,7 +196,7 @@ module TagsSubstitutionConcern
     end
 
     routage_tags = []
-    if procedure.routee?
+    if procedure.routing_enabled?
       routage_tags = ROUTAGE_TAGS
     end
 

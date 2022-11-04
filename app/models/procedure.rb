@@ -694,16 +694,12 @@ class Procedure < ApplicationRecord
     revisions.size - 2
   end
 
-  def routee?
-    routing_enabled?
-  end
-
   def instructeurs_self_management?
-    routee? || instructeurs_self_management_enabled?
+    routing_enabled? || instructeurs_self_management_enabled?
   end
 
   def defaut_groupe_instructeur_for_new_dossier
-    if !routee? || feature_enabled?(:procedure_routage_api)
+    if !routing_enabled? || feature_enabled?(:procedure_routage_api)
       defaut_groupe_instructeur
     end
   end

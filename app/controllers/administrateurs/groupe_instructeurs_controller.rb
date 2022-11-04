@@ -128,7 +128,7 @@ module Administrateurs
             create_instructeur(instructeur_email)
         end
 
-        if procedure.routee?
+        if procedure.routing_enabled?
           instructeurs.each do |instructeur|
             groupe_instructeur.add(instructeur)
           end
@@ -153,7 +153,7 @@ module Administrateurs
         end
       end
 
-      if procedure.routee?
+      if procedure.routing_enabled?
         redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur)
       else
         redirect_to admin_procedure_groupe_instructeurs_path(procedure)
@@ -165,7 +165,7 @@ module Administrateurs
         flash[:alert] = "Suppression impossible : il doit y avoir au moins un instructeur dans le groupe"
       else
         instructeur = Instructeur.find(instructeur_id)
-        if procedure.routee?
+        if procedure.routing_enabled?
           if groupe_instructeur.remove(instructeur)
             flash[:notice] = "L’instructeur « #{instructeur.email} » a été retiré du groupe."
             GroupeInstructeurMailer
@@ -183,7 +183,7 @@ module Administrateurs
         end
       end
 
-      if procedure.routee?
+      if procedure.routing_enabled?
         redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur)
       else
         redirect_to admin_procedure_groupe_instructeurs_path(procedure)
