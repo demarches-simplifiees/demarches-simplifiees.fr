@@ -42,6 +42,16 @@
                     .fr-checkbox-group.fr-ml-2w
                       = b.check_box(checked: @filter.zone_filtered?(b.value), 'data-action': 'autosubmit#submit')
                       = b.label(class: 'fr-label') { b.text }
+              %li.fr-py-2w{ 'data-controller': "expand" }
+                .fr-mb-1w.fr-pl-2w
+                  %button{ 'data-action': 'click->expand#toggle' }
+                    %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
+                    Date de publication
+                .fr-input-group.hidden{ 'data-expand-target': 'content' }
+                  = f.label 'from_publication_date', 'Depuis', class: 'fr-label'
+                  .fr-input-wrap.fr-fi-calendar-line
+                    = f.date_field 'from_publication_date', value: @filter.from_publication_date, class: 'fr-input', 'data-action': 'blur->autosubmit#submit'
+
               %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
                 .fr-mb-1w
                   %button{ 'data-action': 'expand#toggle' }
@@ -67,6 +77,9 @@
               .selected-statuses.fr-mb-2w
                 - @filter.statuses.each do |status|
                   = link_to status, all_admin_procedures_path(@filter.without(:statuses, status)), class: 'fr-tag fr-tag--dismiss fr-mb-1w'
+            - if @filter.from_publication_date.present?
+              .selected-from-publication-date.fr-mb-2w
+                = link_to "Depuis #{l(@filter.from_publication_date)}", all_admin_procedures_path(@filter.without(:from_publication_date)), class: 'fr-tag fr-tag--dismiss fr-mb-1w'
             = paginate @filter.procedures_result, views_prefix: 'administrateurs'
             %thead
               %tr
