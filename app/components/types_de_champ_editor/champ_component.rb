@@ -120,10 +120,6 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
   end
 
   def conditional_enabled?
-    if type_de_champ.private? || coordinate.child?
-      false
-    else
-      procedure.feature_enabled?(:procedure_conditional)
-    end
+    !type_de_champ.private? && !coordinate.child?
   end
 end
