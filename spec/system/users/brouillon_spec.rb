@@ -238,30 +238,6 @@ describe 'The user' do
     expect(page).to have_text('file.pdf')
   end
 
-  context 'with routing activated and one instructor group' do
-    let!(:simple_procedure) { create(:simple_procedure, :published, :with_type_de_champ, :for_individual) }
-    let!(:administrateur) { create(:administrateur, procedures: [simple_procedure]) }
-
-    before do
-      simple_procedure.update(routing_enabled: true)
-      simple_procedure.defaut_groupe_instructeur.instructeurs << administrateur.instructeur
-    end
-
-    it 'sends the dossier without selecting instructor group', js: true do
-      log_in(user, simple_procedure)
-      fill_individual
-      fill_in('Texte obligatoire', with: 'bla bla')
-      wait_for_autosave
-
-      expect(page).not_to have_text('Votre ville')
-
-      click_on 'Déposer le dossier'
-
-      expect(page).to have_current_path(merci_dossier_path(user_dossier))
-      expect(page).to have_text('Merci')
-    end
-  end
-
   context 'with condition' do
     include Logic
 

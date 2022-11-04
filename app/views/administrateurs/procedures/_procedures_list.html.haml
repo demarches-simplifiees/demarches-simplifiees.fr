@@ -26,7 +26,7 @@
 
     .admin-procedures-list-row.actions.flex.justify-between
       %div
-        - if procedure.routee?
+        - if procedure.routing_enabled?
           %span.icon.person
           %span.badge.baseline= procedure.groupe_instructeurs.count
         - else
@@ -80,4 +80,3 @@
                     %span.icon.unarchive
                     .dropdown-description
                       %h4= t('administrateurs.dropdown_actions.restore')
-

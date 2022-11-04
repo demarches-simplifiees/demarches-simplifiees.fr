@@ -83,14 +83,15 @@ describe TagsSubstitutionConcern, type: :model do
           gi.dossiers << dossier
           dossier.update(groupe_instructeur: gi)
           dossier.reload
+          procedure.reload
         end
 
-        it { expect(procedure.routee?).to eq(true) }
+        it { expect(procedure.routing_enabled?).to eq(true) }
         it { is_expected.to eq(label) }
       end
 
       context 'and the dossier has no groupe instructeur' do
-        it { expect(procedure.routee?).to eq(false) }
+        it { expect(procedure.routing_enabled?).to eq(false) }
         it { is_expected.to eq('défaut') }
       end
     end
