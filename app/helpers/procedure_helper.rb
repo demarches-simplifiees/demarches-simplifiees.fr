@@ -30,12 +30,6 @@ module ProcedureHelper
     t(action, scope: [:modal, :publish, key])
   end
 
-  # Returns a hash of { attribute: full_message } errors.
-  def procedure_publication_errors(procedure)
-    procedure.validate(:publication)
-    procedure.errors.to_hash(full_messages: true).except(:path)
-  end
-
   def procedure_auto_archive_date(procedure)
     I18n.l(procedure.auto_archive_on - 1.day, format: '%-d %B %Y')
   end
