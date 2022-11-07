@@ -7,15 +7,17 @@ class Attachment::MultipleComponent < ApplicationComponent
   attr_reader :direct_upload
   attr_reader :id
   attr_reader :user_can_destroy
+  attr_reader :max
 
   delegate :count, :empty?, to: :attachments, prefix: true
 
-  def initialize(form:, attached_file:, user_can_destroy: false, direct_upload: true, id: nil)
+  def initialize(form:, attached_file:, user_can_destroy: false, direct_upload: true, id: nil, max: nil)
     @form = form
     @attached_file = attached_file
     @user_can_destroy = user_can_destroy
     @direct_upload = direct_upload
     @id = id
+    @max = max || 10
 
     @attachments = attached_file.attachments || []
   end
@@ -28,7 +30,7 @@ class Attachment::MultipleComponent < ApplicationComponent
     return false if @attachments.empty?
     return false if !@attachments.last.persisted?
 
-    true
+    @attachments.count < @max
   end
 
   def stimulus_controller_name
