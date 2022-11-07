@@ -1,3 +1,11 @@
-%h2.explication-libelle= @champ.libelle
-.explication
-  = string_to_html(@champ.description)
+= render Dsfr::CalloutComponent.new(title: @champ.libelle, extra_class_names: ['fr-mb-2w', 'fr-callout--blue-cumulus']) do |c|
+  - c.with_body do
+
+    = string_to_html(@champ.description)
+
+    - if @champ.collapsible_explanation_enabled? && @champ.collapsible_explanation_text.present?
+      %div
+        %p.fr-my-2w
+          %button{type: "button", "aria-controls" => "champs-text-#{@champ.id}", "aria-expanded" => "false", href: "#champs-text-#{@champ.id}"} Lire plus
+        %p.fr-collapse{ id: "champs-text-#{@champ.id}"}
+          = @champ.collapsible_explanation_text
