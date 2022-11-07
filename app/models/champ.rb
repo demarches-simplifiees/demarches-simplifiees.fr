@@ -215,6 +215,27 @@ class Champ < ApplicationRecord
     end
   end
 
+  def clone(dossier:, parent: nil)
+    kopy = deep_clone(only: [:data, :private, :row, :type, :value, :value_json, :external_id, :type_de_champ_id])
+
+    kopy.dossier = dossier
+    kopy.parent = parent if parent
+    kopy
+  end
+
+  def clone_piece_justificative(kopy)
+    if piece_justificative_file.attached?
+      piece_justificative_file.open do |tempfile|
+        kopy.piece_justificative_file.attach({
+          io: File.open(tempfile.path),
+          filename: piece_justificative_file.filename,
+          content_type: piece_justificative_file.content_type,
+          metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+        })
+      end
+    end
+  end
+
   private
 
   def champs_for_condition

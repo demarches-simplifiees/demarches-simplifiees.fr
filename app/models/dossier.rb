@@ -35,6 +35,7 @@
 #  updated_at                                         :datetime
 #  dossier_transfer_id                                :bigint
 #  groupe_instructeur_id                              :bigint
+#  parent_dossier_id                                  :bigint
 #  revision_id                                        :bigint
 #  user_id                                            :integer
 #
@@ -413,7 +414,7 @@ class Dossier < ApplicationRecord
   delegate :siret, :siren, to: :etablissement, allow_nil: true
   delegate :france_connect_information, to: :user, allow_nil: true
 
-  before_save :build_default_champs, if: Proc.new { revision_id_was.nil? }
+  before_save :build_default_champs_for_new_dossier, if: Proc.new { revision_id_was.nil? && parent_dossier_id.nil? }
   before_save :update_search_terms
 
   after_save :send_web_hook
@@ -473,8 +474,8 @@ class Dossier < ApplicationRecord
     self.private_search_terms = champs_private.flat_map(&:search_terms).compact.join(' ')
   end
 
-  def build_default_champs
-    revision.build_champs_public.each do |champ|
+  def build_default_champs_for_new_dossier
+    revision.build_champs.each do |champ|
       champs_public << champ
     end
     revision.build_champs_private.each do |champ|
@@ -1176,6 +1177,23 @@ class Dossier < ApplicationRecord
       end
     end
     @sections[champ.parent || (champ.public? ? :public : :private)]
+  end
+
+  def clone
+    cloned_dossier = deep_clone(only: [:autorisation_donnees, :user_id, :revision_id, :groupe_instructeur_id],
+                                include: [:individual, :etablissement]) do |original, kopy|
+      if original.is_a?(Dossier)
+        kopy.parent_dossier_id = original.id
+        kopy.state = Dossier.states.fetch(:brouillon)
+        kopy.champs = original.champs.map { |champ| champ.clone(dossier: kopy) }
+        kopy.champs_private = kopy.revision.types_de_champ_private.map { |tdc| tdc.build_champ(revision: kopy.revision, dossier: kopy) }
+      end
+    end
+
+    transaction do
+      cloned_dossier.save!
+    end
+    cloned_dossier
   end
 
   private

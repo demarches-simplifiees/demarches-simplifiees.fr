@@ -51,4 +51,11 @@ class Champs::PieceJustificativeChamp < Champ
       piece_justificative_file.service_url
     end
   end
+
+  def clone(dossier:, parent: nil)
+    kopy = super(dossier: dossier, parent: parent)
+
+    clone_piece_justificative(kopy)
+    kopy
+  end
 end
