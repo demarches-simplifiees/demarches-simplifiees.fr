@@ -91,16 +91,17 @@ describe Administrateur, type: :model do
 
     context 'when the old admin has a procedure' do
       let(:procedure) { create(:procedure) }
+      let(:discarded_procedure) { create(:procedure, :discarded) }
 
       before do
-        old_admin.procedures << procedure
+        old_admin.procedures << procedure << discarded_procedure
         subject
         [new_admin, old_admin].map(&:reload)
       end
 
       it 'transfers the procedure' do
-        expect(new_admin.procedures).to match_array(procedure)
-        expect(old_admin.procedures).to be_empty
+        expect(new_admin.procedures.with_discarded).to match_array([procedure, discarded_procedure])
+        expect(old_admin.procedures.with_discarded).to be_empty
       end
     end
 
