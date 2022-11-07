@@ -25,8 +25,7 @@ features = [
   :expert_not_allowed_to_invite,
   :hide_instructeur_email,
   :procedure_revisions,
-  :procedure_routage_api,
-  :procedure_conditional
+  :procedure_routage_api
 ]
 
 def database_exists?
