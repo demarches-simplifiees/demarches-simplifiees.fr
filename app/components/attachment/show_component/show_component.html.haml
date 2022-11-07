@@ -1,31 +1,34 @@
-.attachment-link{ id: dom_id(attachment, :show) }
-  - if should_display_link?
-    = link_to url_for(attachment.blob), target: '_blank', rel: 'noopener',  title: "Télécharger la pièce jointe" do
-      %span.icon.attached
-      = attachment.filename.to_s
-    - if !attachment.virus_scanner.started?
-      (ce fichier n’a pas été analysé par notre antivirus, téléchargez-le avec précaution)
+.attachment-link.fr-download{ id: dom_id(attachment, :show) }
+  %p
+    - if should_display_link?
+      = link_to url_for(attachment.blob), download: "", class: "fr-download__link", title: "Télécharger la pièce jointe" do
+        = attachment.filename.to_s
+        %span.fr-download__detail
+          = helpers.download_details(attachment)
 
-  - else
-    %span{ data: poll_controller_options }
-    = attachment.filename.to_s
-    %span.fr-text-mention--grey
-      - if attachment.virus_scanner.pending?
-        (analyse antivirus en cours
-        = link_to "rafraichir", attachment_path, data: { action: 'turbo-poll#refresh' }
-        )
-      - elsif attachment.watermark_pending?
-        (traitement de la pièce en cours
-        = link_to "rafraichir", attachment_path, data: { action: 'turbo-poll#refresh' }
-        )
-      - elsif attachment.virus_scanner.infected?
-        - if user_can_upload?
-          (virus détecté, merci d’envoyer un autre fichier)
-        - else
-          (virus détecté, le téléchargement de ce fichier est bloqué)
-      - elsif attachment.virus_scanner.corrupt?
-        - if user_can_upload?
-          (le fichier est corrompu, merci d’envoyer un autre fichier)
-        - else
-          (le fichier est corrompu, le téléchargement est bloqué)
+      - if !attachment.virus_scanner.started?
+        (ce fichier n’a pas été analysé par notre antivirus, téléchargez-le avec précaution)
+
+    - else
+      %span{ data: poll_controller_options }
+      = attachment.filename.to_s
+      %span.fr-text-mention--grey
+        - if attachment.virus_scanner.pending?
+          (analyse antivirus en cours
+          = link_to "rafraichir", attachment_path, data: { action: 'turbo-poll#refresh' }
+          )
+        - elsif attachment.watermark_pending?
+          (traitement de la pièce en cours
+          = link_to "rafraichir", attachment_path, data: { action: 'turbo-poll#refresh' }
+          )
+        - elsif attachment.virus_scanner.infected?
+          - if user_can_upload?
+            (virus détecté, merci d’envoyer un autre fichier)
+          - else
+            (virus détecté, le téléchargement de ce fichier est bloqué)
+        - elsif attachment.virus_scanner.corrupt?
+          - if user_can_upload?
+            (le fichier est corrompu, merci d’envoyer un autre fichier)
+          - else
+            (le fichier est corrompu, le téléchargement est bloqué)
 

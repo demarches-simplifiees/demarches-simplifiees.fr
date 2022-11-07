@@ -1,6 +1,8 @@
 - pj = champ.piece_justificative_file
 - if pj.attached?
-  - pj.attachments.each do |attachment|
-    = render Attachment::ShowComponent.new(attachment:)
+  .fr-downloads-group
+    %ul
+      - pj.attachments.each do |attachment|
+        %li= render Attachment::ShowComponent.new(attachment:)
 - else
   Pièce justificative non fournie
