@@ -468,7 +468,7 @@ Rails.application.routes.draw do
       get 'transfert' => 'procedures#transfert', as: :transfert
       get 'close' => 'procedures#close', as: :close
       post 'transfer' => 'procedures#transfer', as: :transfer
-      resources :mail_templates, only: [:edit, :update]
+      resources :mail_templates, only: [:edit, :update, :show]
 
       resources :groupe_instructeurs, only: [:index, :show, :create, :update, :destroy] do
         member do
@@ -480,7 +480,6 @@ Rails.application.routes.draw do
 
         collection do
           patch 'update_routing_criteria_name'
-          patch 'update_routing_enabled'
           patch 'update_instructeurs_self_management_enabled'
           post 'import'
           get 'export_groupe_instructeurs'

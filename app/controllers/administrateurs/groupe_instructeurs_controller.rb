@@ -13,16 +13,10 @@ module Administrateurs
 
     def index
       @procedure = procedure
+      @groupes_instructeurs = paginated_groupe_instructeurs
 
-      if procedure.routee?
-        @groupes_instructeurs = paginated_groupe_instructeurs
-        @instructeurs = []
-        @available_instructeur_emails = []
-      else
-        @groupes_instructeurs = []
-        @instructeurs = paginated_instructeurs
-        @available_instructeur_emails = available_instructeur_emails
-      end
+      @instructeurs = paginated_instructeurs
+      @available_instructeur_emails = available_instructeur_emails
     end
 
     def show
@@ -38,10 +32,12 @@ module Administrateurs
         .new({ instructeurs: [current_administrateur.instructeur] }.merge(groupe_instructeur_params))
 
       if @groupe_instructeur.save
+        routing_notice = " et le routage a été activé" if procedure.groupe_instructeurs.actif.size == 2
         redirect_to admin_procedure_groupe_instructeur_path(procedure, @groupe_instructeur),
-          notice: "Le groupe d’instructeurs « #{@groupe_instructeur.label} » a été créé."
+          notice: "Le groupe d’instructeurs « #{@groupe_instructeur.label} » a été créé#{routing_notice}."
       else
         @procedure = procedure
+        @instructeurs = paginated_instructeurs
         @groupes_instructeurs = paginated_groupe_instructeurs
 
         flash[:alert] = "le nom « #{@groupe_instructeur.label} » est déjà pris par un autre groupe."
@@ -60,7 +56,7 @@ module Administrateurs
         @instructeurs = paginated_instructeurs
         @available_instructeur_emails = available_instructeur_emails
 
-        flash[:alert] = "le nom « #{@groupe_instructeur.label} » est déjà pris par un autre groupe."
+        flash[:alert] = @groupe_instructeur.errors.values.join('<br>')
         render :show
       end
     end
@@ -74,7 +70,11 @@ module Administrateurs
         flash[:alert] = "Suppression impossible : il doit y avoir au moins un groupe instructeur sur chaque procédure"
       else
         @groupe_instructeur.destroy!
-        flash[:notice] = "le groupe « #{@groupe_instructeur.label} » a été supprimé."
+        if procedure.groupe_instructeurs.actif.one?
+          procedure.update!(routing_enabled: false)
+          routing_notice = " et le routage a été désactivé"
+        end
+        flash[:notice] = "le groupe « #{@groupe_instructeur.label} » a été supprimé#{routing_notice}."
       end
       redirect_to admin_procedure_groupe_instructeurs_path(procedure)
     end
@@ -128,7 +128,7 @@ module Administrateurs
             create_instructeur(instructeur_email)
         end
 
-        if procedure.routee?
+        if procedure.routing_enabled?
           instructeurs.each do |instructeur|
             groupe_instructeur.add(instructeur)
           end
@@ -153,7 +153,7 @@ module Administrateurs
         end
       end
 
-      if procedure.routee?
+      if procedure.routing_enabled?
         redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur)
       else
         redirect_to admin_procedure_groupe_instructeurs_path(procedure)
@@ -165,7 +165,7 @@ module Administrateurs
         flash[:alert] = "Suppression impossible : il doit y avoir au moins un instructeur dans le groupe"
       else
         instructeur = Instructeur.find(instructeur_id)
-        if procedure.routee?
+        if procedure.routing_enabled?
           if groupe_instructeur.remove(instructeur)
             flash[:notice] = "L’instructeur « #{instructeur.email} » a été retiré du groupe."
             GroupeInstructeurMailer
@@ -183,7 +183,7 @@ module Administrateurs
         end
       end
 
-      if procedure.routee?
+      if procedure.routing_enabled?
         redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur)
       else
         redirect_to admin_procedure_groupe_instructeurs_path(procedure)
@@ -198,13 +198,6 @@ module Administrateurs
       end
       redirect_to admin_procedure_groupe_instructeurs_path(procedure)
     end
-
-    def update_routing_enabled
-      procedure.update!(routing_enabled_params)
-
-      redirect_to admin_procedure_groupe_instructeurs_path(procedure),
-      notice: "Le routage est #{procedure.routing_enabled? ? "activée" : "désactivée"}."
-   end
 
     def update_instructeurs_self_management_enabled
       procedure.update!(instructeurs_self_management_enabled_params)

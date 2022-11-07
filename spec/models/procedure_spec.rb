@@ -330,11 +330,9 @@ describe Procedure do
         end
       end
 
-      context 'on a published procedure' do
-        before { procedure.publish }
-
+      context 'when validating for publication' do
         it 'validates that no repetition type de champ is empty' do
-          procedure.validate
+          procedure.validate(:publication)
           expect(procedure.errors.full_messages_for(:draft_types_de_champ)).to include(invalid_repetition_error_message)
 
           new_draft = procedure.draft_revision
@@ -342,29 +340,17 @@ describe Procedure do
           parent_coordinate = new_draft.revision_types_de_champ.find_by(type_de_champ: repetition)
           new_draft.revision_types_de_champ.create(type_de_champ: create(:type_de_champ), position: 0, parent: parent_coordinate)
 
-          procedure.validate
+          procedure.validate(:publication)
           expect(procedure.errors.full_messages_for(:draft_types_de_champ)).not_to include(invalid_repetition_error_message)
         end
 
         it 'validates that no drop-down type de champ is empty' do
-          procedure.validate
+          procedure.validate(:publication)
           expect(procedure.errors.full_messages_for(:draft_types_de_champ)).to include(invalid_drop_down_error_message)
 
           drop_down.update!(drop_down_list_value: "--title--\r\nsome value")
-          procedure.reload.validate
+          procedure.reload.validate(:publication)
           expect(procedure.errors.full_messages_for(:draft_types_de_champ)).not_to include(invalid_drop_down_error_message)
-        end
-      end
-
-      context 'when validating for publication' do
-        it 'validates that no repetition type de champ is empty' do
-          procedure.validate(:publication)
-          expect(procedure.errors.full_messages_for(:draft_types_de_champ)).to include(invalid_repetition_error_message)
-        end
-
-        it 'validates that no drop-down type de champ is empty' do
-          procedure.validate(:publication)
-          expect(procedure.errors.full_messages_for(:draft_types_de_champ)).to include(invalid_drop_down_error_message)
         end
       end
 

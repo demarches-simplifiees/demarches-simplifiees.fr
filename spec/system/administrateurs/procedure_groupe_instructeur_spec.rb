@@ -26,11 +26,15 @@ describe 'Manage procedure instructeurs', js: true do
 
     scenario 'can add instructeur' do
       visit admin_procedure_groupe_instructeurs_path(procedure)
-
       expect {
         fill_in "instructeur_emails", with: create(:instructeur).email
         click_on "Affecter"
       }.to change { procedure.instructeurs.count }.by(1)
+      expect {
+        fill_in "groupe_instructeur_label", with: "Bordeaux"
+        click_on "Ajouter le groupe"
+      }.to change { procedure.groupe_instructeurs.count }.by(1)
+      expect(procedure.reload.routing_enabled).to eq true
     end
   end
 

@@ -1,0 +1,3 @@
+= render Dsfr::CardVerticalComponent.new(title: title, desc: desc, error: error, tags: [tag]) do |c|
+  - c.with_footer_button do
+    = link_to 'Modifier', edit_path, class: 'fr-btn'
