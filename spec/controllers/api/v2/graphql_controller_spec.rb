@@ -755,11 +755,11 @@ describe API::V2::GraphqlController do
       end
     end
 
-    describe "champ" do
+    describe "champ piece_justificative" do
       let(:champ) { create(:champ_piece_justificative, dossier: dossier) }
       let(:byte_size) { 2712286911 }
 
-      context "byteSize" do
+      context "with deprecated file field" do
         let(:query) do
           "{
             dossier(number: #{dossier.id}) {
@@ -778,9 +778,28 @@ describe API::V2::GraphqlController do
         }
       end
 
+      context "byteSize" do
+        let(:query) do
+          "{
+            dossier(number: #{dossier.id}) {
+              champs(id: \"#{champ.to_typed_id}\") {
+                ... on PieceJustificativeChamp {
+                  files { byteSize }
+                }
+              }
+            }
+          }"
+        end
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data).to eq(dossier: { champs: [{ files: [{ byteSize: 4 }] }] })
+        }
+      end
+
       context "when the file is really big" do
         before do
-          champ.piece_justificative_file.blob.update(byte_size: byte_size)
+          champ.piece_justificative_file.first.blob.update(byte_size: byte_size)
         end
 
         context "byteSize" do
@@ -789,7 +808,7 @@ describe API::V2::GraphqlController do
               dossier(number: #{dossier.id}) {
                 champs(id: \"#{champ.to_typed_id}\") {
                   ... on PieceJustificativeChamp {
-                    file { byteSize }
+                    files { byteSize }
                   }
                 }
               }
@@ -807,7 +826,7 @@ describe API::V2::GraphqlController do
               dossier(number: #{dossier.id}) {
                 champs(id: \"#{champ.to_typed_id}\") {
                   ... on PieceJustificativeChamp {
-                    file { byteSizeBigInt }
+                    files { byteSizeBigInt }
                   }
                 }
               }
@@ -816,7 +835,7 @@ describe API::V2::GraphqlController do
 
           it {
             expect(gql_errors).to be_nil
-            expect(gql_data).to eq(dossier: { champs: [{ file: { byteSizeBigInt: '2712286911' } }] })
+            expect(gql_data).to eq(dossier: { champs: [{ files: [{ byteSizeBigInt: '2712286911' }] }] })
           }
         end
       end
