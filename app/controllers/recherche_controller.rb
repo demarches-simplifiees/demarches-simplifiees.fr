@@ -29,14 +29,22 @@ class RechercheController < ApplicationController
     @followed_dossiers_id = current_instructeur&.followed_dossiers&.where(id: @paginated_ids)&.ids || []
     @dossier_avis_ids_h = current_expert&.avis&.where(dossier_id: @paginated_ids)&.pluck(:dossier_id, :id).to_h || {}
 
-    # we want to retrieve dossiers that are not accessible to the instructor because he is not in the instructor group
-    # to display an alert in the view
-    instructeur_procedure_dossiers_ids = DossierSearchService
-      .matching_dossiers(Dossier.joins(:procedure).where(procedure: {id: current_instructeur&.procedures&.ids}), @search_terms, with_annotation: true)
+    # if an instructor search for a dossier which is in his procedures but not available to his intructor group
+    # we want to display an alert in view
 
-    not_in_instructor_group_dossiers_ids = instructeur_procedure_dossiers_ids - matching_dossiers_ids
+    # to make it simpler we only do it if the @search_terms is an id
+    return if !DossierSearchService.id_compatible?(@search_terms)
 
-    @not_in_instructor_group_dossiers = Dossier.where(id: not_in_instructor_group_dossiers_ids)
+    dossier_instructeur_searched_for = Dossier.find_by(id: @search_terms)
+
+    return if dossier_instructeur_searched_for.nil?
+    return if current_instructeur&.groupe_instructeur_ids&.include?(dossier_instructeur_searched_for.groupe_instructeur_id)
+
+    if current_instructeur&.procedures&.include?(dossier_instructeur_searched_for.procedure)
+      @dossier_not_in_instructor_group = dossier_instructeur_searched_for
+    else
+      return
+    end
   end
 
   private
