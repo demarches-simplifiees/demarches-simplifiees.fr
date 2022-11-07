@@ -311,6 +311,7 @@ Rails.application.routes.draw do
     post 'transfer_all_dossiers' => 'profil#transfer_all_dossiers'
     post 'accept_merge' => 'profil#accept_merge'
     post 'refuse_merge' => 'profil#refuse_merge'
+    delete 'france_connect_information' => 'profil#destroy_fci'
   end
 
   #
