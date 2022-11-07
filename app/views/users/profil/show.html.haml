@@ -12,8 +12,8 @@
         Acceptez-vous d’absorber le compte de
         %span.email-address= @waiting_merge_emails.join(', ')
 
-      = link_to 'Refuser la fusion', refuse_merge_path, method: :post, class: 'button', data: { confirm: "Confirmez-vous le refus ?" }
-      = link_to 'Accepter la fusion', accept_merge_path, method: :post, class: 'button', data: { confirm: "Confirmez-vous la fusion des comptes ?" }
+      = link_to 'Refuser la fusion', refuse_merge_path, method: :post, class: 'fr-btn fr-btn--secondary', data: { confirm: "Confirmez-vous le refus ?" }
+      = link_to 'Accepter la fusion', accept_merge_path, method: :post, class: 'fr-btn fr-btn--secondary', data: { confirm: "Confirmez-vous la fusion des comptes ?" }
 
   .card
     .card-title Coordonnées
@@ -39,7 +39,7 @@
 
     = form_for current_user, url: update_email_path, method: :patch, html: { class: 'form' } do |f|
       = f.email_field :email, value: nil, placeholder: 'Nouvelle adresse email', required: true
-      = f.submit "Changer mon adresse", class: 'button primary'
+      = f.submit "Changer mon adresse", class: 'fr-btn fr-btn--secondary'
 
   - if !instructeur_signed_in?
     .card
@@ -48,7 +48,7 @@
 
       = form_tag transfer_all_dossiers_path, class: 'form'  do
         = email_field_tag :next_owner, nil, required: true
-        = submit_tag "Transférer tous mes dossiers", class: 'button primary', data: { confirm: t('.transfer_confirmation') }
+        = submit_tag "Transférer tous mes dossiers", class: 'fr-btn fr-btn--secondary', data: { confirm: t('.transfer_confirmation') }
 
       - if @waiting_transfers.present?
         .card.warning
@@ -73,6 +73,6 @@
       = link_to "Regénérer et afficher mon jeton",
         renew_api_token_path,
         method: :post,
-        class: "button primary",
+        class: "fr-btn fr-btn--secondary",
         data: { confirm: "Confirmez-vous la regénération de votre jeton ? Les applications qui l’utilisent actuellement seront bloquées.",
                 disable: true }
