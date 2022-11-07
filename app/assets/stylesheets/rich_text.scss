@@ -1,6 +1,6 @@
 @import "constants";
 
-.rich-text {
+.rich-text:not(.piece_justificative) {
   i {
     font-style: italic;
   }
