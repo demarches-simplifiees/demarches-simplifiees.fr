@@ -1,10 +1,3 @@
 %table.table.vertical.dossier-champs{ role: :presentation }
   %tbody
-    - if dossier.show_groupe_instructeur_details?
-      %td.libelle= dossier.procedure.routing_criteria_name
-      %td{ class: highlight_if_unseen_class(demande_seen_at, dossier.groupe_instructeur_updated_at) }= dossier.groupe_instructeur.label
-      %td.updated-at
-        %span{ class: highlight_if_unseen_class(demande_seen_at, dossier.groupe_instructeur_updated_at) }
-          modifié le
-          = try_format_datetime(dossier.updated_at)
     = render partial: "shared/dossiers/champ_row", locals: { champs: champs, demande_seen_at: demande_seen_at, profile: profile, repetition: false }

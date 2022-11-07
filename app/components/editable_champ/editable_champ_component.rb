@@ -7,6 +7,9 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
 
   private
 
+  def render?
+    @champ.routage? ? (@champ.procedure&.routing_enabled? && !@champ.procedure&.feature_enabled?(:procedure_routage_api)) : true
+  end
   def has_label?(champ)
     types_without_label = [TypeDeChamp.type_champs.fetch(:header_section), TypeDeChamp.type_champs.fetch(:explication)]
     !types_without_label.include?(@champ.type_champ)

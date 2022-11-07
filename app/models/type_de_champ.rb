@@ -67,7 +67,8 @@ class TypeDeChamp < ApplicationRecord
     cnaf: REFERENTIEL_EXTERNE,
     dgfip: REFERENTIEL_EXTERNE,
     pole_emploi: REFERENTIEL_EXTERNE,
-    mesri: REFERENTIEL_EXTERNE
+    mesri: REFERENTIEL_EXTERNE,
+    routage: CADRE
   }
 
   enum type_champs: {
@@ -106,7 +107,8 @@ class TypeDeChamp < ApplicationRecord
     dgfip: 'dgfip',
     pole_emploi: 'pole_emploi',
     mesri: 'mesri',
-    epci: 'epci'
+    epci: 'epci',
+    routage: 'routage'
   }
 
   store_accessor :options,
@@ -370,6 +372,10 @@ class TypeDeChamp < ApplicationRecord
 
   def mesri?
     type_champ == TypeDeChamp.type_champs.fetch(:mesri)
+  end
+
+  def routage?
+    type_champ == TypeDeChamp.type_champs.fetch(:routage)
   end
 
   def public?

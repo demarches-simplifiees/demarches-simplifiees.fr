@@ -1,0 +1,5 @@
+= @form.select :value,
+  options_for_select(@champ.dossier.procedure.groupe_instructeurs.pluck(:label, :id)),
+  required: @champ.mandatory?,
+  include_blank: @champ.dossier.brouillon?,
+  aria: { describedby: @champ.describedby_id }
