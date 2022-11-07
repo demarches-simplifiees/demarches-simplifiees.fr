@@ -76,3 +76,17 @@
         class: "fr-btn fr-btn--secondary",
         data: { confirm: "Confirmez-vous la regénération de votre jeton ? Les applications qui l’utilisent actuellement seront bloquées.",
                 disable: true }
+
+  - if @france_connect_informations.present?
+    .card
+      .card-title= t('.identities', count: @france_connect_informations.count, application_name: APPLICATION_NAME)
+      %p= t('.linked_identities', count: @france_connect_informations.count, application_name: APPLICATION_NAME)
+      %ul
+        - @france_connect_informations.each do |fci|
+          %li
+            #{fci.given_name} #{fci.family_name} (#{fci.email_france_connect})
+            = link_to 'Interdire l’accès',
+              france_connect_information_path(fci_id: fci.id),
+              method: :delete,
+              data: { confirm: t('.unlink_confirmation', full_name: fci.full_name) },
+              class: 'fr-btn fr-btn--secondary fr-ml-2w'
