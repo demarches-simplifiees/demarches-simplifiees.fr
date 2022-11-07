@@ -27,4 +27,11 @@ class Champs::SiretChamp < Champ
   def mandatory_blank?
     mandatory? && Siret.new(siret: value).invalid?
   end
+
+  def clone(dossier:, parent: nil)
+    kopy = super(dossier: dossier, parent: parent)
+
+    kopy.etablissement = etablissement.dup
+    kopy
+  end
 end

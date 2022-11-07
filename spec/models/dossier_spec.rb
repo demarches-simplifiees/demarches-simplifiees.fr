@@ -1685,6 +1685,175 @@ describe Dossier do
     it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["État du dossier", "Brouillon"]) }
   end
 
+  describe '#clone' do
+    let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
+    let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:new_dossier) { dossier.clone }
+
+    context 'reset most attributes' do
+      it { expect(new_dossier.id).not_to eq(dossier.id) }
+      it { expect(new_dossier.api_entreprise_job_exceptions).to be_nil }
+      it { expect(new_dossier.archived).to be_falsey }
+      it { expect(new_dossier.brouillon_close_to_expiration_notice_sent_at).to be_nil }
+      it { expect(new_dossier.conservation_extension).to eq(0.seconds) }
+      it { expect(new_dossier.declarative_triggered_at).to be_nil }
+      it { expect(new_dossier.deleted_user_email_never_send).to be_nil }
+      it { expect(new_dossier.depose_at).to be_nil }
+      it { expect(new_dossier.en_construction_at).to be_nil }
+      it { expect(new_dossier.en_construction_close_to_expiration_notice_sent_at).to be_nil }
+      it { expect(new_dossier.en_instruction_at).to be_nil }
+      it { expect(new_dossier.for_procedure_preview).to be_falsey }
+      it { expect(new_dossier.groupe_instructeur_updated_at).to be_nil }
+      it { expect(new_dossier.hidden_at).to be_nil }
+      it { expect(new_dossier.hidden_by_administration_at).to be_nil }
+      it { expect(new_dossier.hidden_by_reason).to be_nil }
+      it { expect(new_dossier.hidden_by_user_at).to be_nil }
+      it { expect(new_dossier.identity_updated_at).to be_nil }
+      it { expect(new_dossier.last_avis_updated_at).to be_nil }
+      it { expect(new_dossier.last_champ_private_updated_at).to be_nil }
+      it { expect(new_dossier.last_champ_updated_at).to be_nil }
+      it { expect(new_dossier.last_commentaire_updated_at).to be_nil }
+      it { expect(new_dossier.motivation).to be_nil }
+      it { expect(new_dossier.private_search_terms).to eq("") }
+      it { expect(new_dossier.processed_at).to be_nil }
+      it { expect(new_dossier.search_terms).to match(dossier.user.email) }
+      it { expect(new_dossier.termine_close_to_expiration_notice_sent_at).to be_nil }
+      it { expect(new_dossier.dossier_transfer_id).to be_nil }
+    end
+
+    context 'copies some attributes' do
+      it { expect(new_dossier.groupe_instructeur).to eq(dossier.groupe_instructeur) }
+      it { expect(new_dossier.autorisation_donnees).to eq(dossier.autorisation_donnees) }
+      it { expect(new_dossier.revision_id).to eq(dossier.revision_id) }
+      it { expect(new_dossier.user_id).to eq(dossier.user_id) }
+    end
+
+    context 'forces some attributes' do
+      let(:dossier) { create(:dossier, :accepte) }
+
+      it { expect(new_dossier.brouillon?).to eq(true) }
+      it { expect(new_dossier.parent_dossier_id).to eq(dossier.id) }
+    end
+
+    context 'links type_de_champ' do
+      it { expect(new_dossier.types_de_champ.count).to eq(1) }
+      it { expect(new_dossier.types_de_champ).to eq(dossier.types_de_champ) }
+      it { expect(new_dossier.types_de_champ_private.count).to eq(1) }
+      it { expect(new_dossier.types_de_champ_private).to eq(dossier.types_de_champ_private) }
+    end
+
+    context 'procedure with_individual' do
+      let(:procedure) { create(:procedure, :for_individual) }
+      it { expect(new_dossier.individual.slice(:nom, :prenom, :gender)).to eq(dossier.individual.slice(:nom, :prenom, :gender)) }
+      it { expect(new_dossier.individual.id).not_to eq(dossier.individual.id) }
+    end
+
+    context 'procedure with etablissement' do
+      let(:dossier) { create(:dossier, :with_entreprise) }
+      it { expect(new_dossier.etablissement.slice(:siret)).to eq(dossier.etablissement.slice(:siret)) }
+      it { expect(new_dossier.etablissement.id).not_to eq(dossier.etablissement.id) }
+    end
+
+    describe 'skips commentaires' do
+      let(:dossier) { create(:dossier, :with_commentaires) }
+
+      it { expect(new_dossier.commentaires.count).not_to eq(dossier.commentaires.count) }
+      it { expect(new_dossier.commentaires.size).to eq(0) }
+    end
+
+    describe 'skips invites' do
+      let(:dossier) { create(:dossier, :with_invites) }
+
+      it { expect(new_dossier.invites.count).not_to eq(dossier.invites.count) }
+      it { expect(new_dossier.invites.count).to eq(0) }
+    end
+
+    describe 'skips avis' do
+      let(:dossier) { create(:dossier, :with_avis) }
+
+      it { expect(new_dossier.avis.count).not_to eq(dossier.avis.count) }
+      it { expect(new_dossier.avis.count).to eq(0) }
+      it { expect(new_dossier.experts.count).not_to eq(dossier.experts.count) }
+      it { expect(new_dossier.experts.count).to eq(0) }
+    end
+
+    describe 'skips dossier_operation_logs' do
+      let(:dossier) { create(:dossier, :accepte, :with_dossier_operation_logs) }
+
+      it { expect(new_dossier.dossier_operation_logs.count).not_to eq(dossier.dossier_operation_logs.count) }
+      it { expect(new_dossier.dossier_operation_logs.count).to eq(0) }
+    end
+
+    describe 'champs' do
+      it { expect(new_dossier.id).not_to eq(dossier.id) }
+
+      context 'public are duplicated' do
+        it { expect(new_dossier.champs.count).to eq(dossier.champs.count) }
+        it { expect(new_dossier.champs.ids).not_to eq(dossier.champs.ids) }
+
+        it 'keeps champs.values' do
+          original_first_champ = dossier.champs.first
+          original_first_champ.update!(value: 'kthxbye')
+
+          expect(new_dossier.champs.first.value).to eq(original_first_champ.value)
+        end
+
+        context 'for Champs::Repetition with rows, original_champ.repetition and rows are duped' do
+          let(:dossier) { create(:dossier) }
+          let(:type_de_champ_repetition) { create(:type_de_champ_repetition, procedure: dossier.procedure) }
+          let(:champ_repetition) { create(:champ_repetition, type_de_champ: type_de_champ_repetition, dossier: dossier) }
+          before { dossier.champs << champ_repetition }
+
+          it { expect(Champs::RepetitionChamp.where(dossier: new_dossier).first.champs.count).to eq(4) }
+          it { expect(Champs::RepetitionChamp.where(dossier: new_dossier).first.champs.ids).not_to eq(champ_repetition.champs.ids) }
+        end
+
+        context 'for Champs::CarteChamp with geo areas, original_champ.geo_areas are duped' do
+          let(:dossier) { create(:dossier) }
+          let(:type_de_champ_carte) { create(:type_de_champ_carte, procedure: dossier.procedure) }
+          let(:geo_area) { create(:geo_area, :selection_utilisateur, :polygon) }
+          let(:champ_carte) { create(:champ_carte, type_de_champ: type_de_champ_carte, geo_areas: [geo_area]) }
+          before { dossier.champs << champ_carte }
+
+          it { expect(Champs::CarteChamp.where(dossier: new_dossier).first.geo_areas.count).to eq(1) }
+          it { expect(Champs::CarteChamp.where(dossier: new_dossier).first.geo_areas.ids).not_to eq(champ_carte.geo_areas.ids) }
+        end
+
+        context 'for Champs::SiretChamp, original_champ.etablissement is duped' do
+         let(:dossier) { create(:dossier) }
+         let(:type_de_champs_siret) { create(:type_de_champ_siret, procedure: dossier.procedure) }
+         let(:etablissement) { create(:etablissement) }
+         let(:champ_siret) { create(:champ_siret, type_de_champ: type_de_champs_siret, etablissement: create(:etablissement)) }
+         before { dossier.champs << champ_siret }
+
+         it { expect(Champs::SiretChamp.where(dossier: dossier).first.etablissement).not_to be_nil }
+         it { expect(Champs::SiretChamp.where(dossier: new_dossier).first.etablissement.id).not_to eq(champ_siret.etablissement.id) }
+       end
+
+        context 'for Champs::PieceJustificative, original_champ.piece_justificative_file is duped' do
+          let(:dossier) { create(:dossier) }
+          let(:champ_piece_justificative) { create(:champ_piece_justificative, dossier_id: dossier.id) }
+          before { dossier.champs << champ_piece_justificative }
+          it { expect(Champs::PieceJustificativeChamp.where(dossier: dossier).first.piece_justificative_file).not_to be_nil }
+          it { expect(Champs::PieceJustificativeChamp.where(dossier: new_dossier).first.piece_justificative_file.blob.id).not_to eq(champ_piece_justificative.piece_justificative_file.blob.id) }
+        end
+      end
+
+      context 'private are renewd' do
+        it { expect(new_dossier.champs_private.count).to eq(dossier.champs_private.count) }
+        it { expect(new_dossier.champs_private.ids).not_to eq(dossier.champs_private.ids) }
+
+        it 'reset champs private values' do
+          original_first_champs_private = dossier.champs_private.first
+          original_first_champs_private.update!(value: 'kthxbye')
+
+          expect(new_dossier.champs_private.first.value).not_to eq(original_first_champs_private.value)
+          expect(new_dossier.champs_private.first.value).to eq(nil)
+        end
+      end
+    end
+  end
+
   describe '#processed_in_month' do
     include ActiveSupport::Testing::TimeHelpers
 

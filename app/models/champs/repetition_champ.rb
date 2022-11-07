@@ -77,4 +77,13 @@ class Champs::RepetitionChamp < Champ
       ] + Dossier.champs_for_export(champs, types_de_champ)
     end
   end
+
+  def clone(dossier:, parent: nil)
+    kopy = super(dossier: dossier, parent: parent)
+
+    kopy.champs = champs.map do |champ_de_repetition|
+      champ_de_repetition.clone(dossier: dossier, parent: kopy)
+    end
+    kopy
+  end
 end
