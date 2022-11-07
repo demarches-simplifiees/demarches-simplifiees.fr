@@ -2,10 +2,9 @@
 
 .container
 
-  - if @not_in_instructor_group_dossiers.present?
+  - if @dossier_not_in_instructor_group.present?
     .fr-alert.fr-alert--info.fr-alert--sm.fr-mt-3w
-      - @not_in_instructor_group_dossiers.each do |dossier|
-        = p t('views.instructeurs.search.not_in_instructor_group_dossier', dossier_id: dossier.id, procedure_libelle: dossier.procedure.libelle, groupe_instructeur_label: dossier.groupe_instructeur.label)
+      = p t('views.instructeurs.search.dossier_not_in_instructor_group', dossier_id: @dossier_not_in_instructor_group.id, procedure_libelle: @dossier_not_in_instructor_group.procedure.libelle, groupe_instructeur_label: @dossier_not_in_instructor_group.groupe_instructeur.label)
 
   .page-title
     Résultat de la recherche :
