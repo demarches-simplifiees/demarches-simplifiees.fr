@@ -52,6 +52,8 @@
               = render partial: "shared/champs/regions/show", locals: { champ: c }
             - when TypeDeChamp.type_champs.fetch(:rna)
               = render partial: "shared/champs/rna/show", locals: { champ: c, profile: profile }
+            - when TypeDeChamp.type_champs.fetch(:routage)
+              = render partial: "shared/champs/routage/show", locals: { champ: c }
             - when TypeDeChamp.type_champs.fetch(:date)
               = c.to_s
             - when TypeDeChamp.type_champs.fetch(:datetime)

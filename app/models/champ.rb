@@ -69,6 +69,7 @@ class Champ < ApplicationRecord
     :stable_id,
     :mandatory?,
     :prefillable?,
+    :routage?,
     to: :type_de_champ
 
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }

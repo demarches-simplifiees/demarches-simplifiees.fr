@@ -76,7 +76,7 @@ class GroupeInstructeur < ApplicationRecord
 
   private
 
-  def toggle_routing
+  def update_routing
     procedure.update!(routing_enabled: procedure.groupe_instructeurs.active.many?)
   end
 end

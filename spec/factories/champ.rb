@@ -207,6 +207,11 @@ FactoryBot.define do
       type_de_champ { association :type_de_champ_mesri, procedure: dossier.procedure }
     end
 
+    factory :champ_routage, class: 'Champs::RoutageChamp' do
+      type_de_champ { association :type_de_champ_routage, procedure: dossier.procedure }
+      value { dossier.procedure.defaut_groupe_instructeur.id }
+    end
+
     factory :champ_siret, class: 'Champs::SiretChamp' do
       type_de_champ { association :type_de_champ_siret, procedure: dossier.procedure }
       association :etablissement, factory: [:etablissement]
