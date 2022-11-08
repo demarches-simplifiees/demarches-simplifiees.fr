@@ -2,6 +2,11 @@ fr:
   users:
     profil:
       show:
+        profile: Profil
+        contact: Coordonnées
+        new_email_address: Nouvelle adresse email
+        your_email: Votre email est actuellement
+        change_address: Changer mon adresse
         transfer_title: Transferer tous vos dossiers
         transfer_explication_html: "<p>Cette fonctionnalité vous permet de changer le propriétaire de tous vos dossiers. C’est généralement utile lors d’un changement de poste ou si vous souhaitez fusionner plusieurs comptes.</p>
     <p>Adresse email du destinataire de tous vos dossiers</p>"
@@ -10,16 +15,19 @@ fr:
           one: "Le nouveau propriétaire %{email} doit confirmer le transfert d’un dossier en suivant les instructions reçues dans son mail."
           other: "Le nouveau propriétaire %{email} doit confirmer le transfert de vos %{count} dossiers en suivant les instructions reçues dans son mail."
         transfer_confirmation: "Confirmez-vous le transfert ?"
+        transfer_my_files: Transférer tous mes dossiers
+        pending_change: 'Changement en attente :'
+        finalize_email_change: Pour finaliser votre changement d’adresse, vérifiez vos emails et cliquez sur le lien de confirmation.
         email_explications_html: >
           <b class="bold">%{application_name}</b> doit s’assurer que votre compte est utilisé dans un cadre professionnel.
           <br>
           <br>
-          Nous pouvons autoriser automatiquement les changements d’email vers les domaines suivants&nbsp;:
+          Nous pouvons autoriser automatiquement les changements d’email vers les domaines suivants :
           <br>
           %{legit_admin_domains}
           <br>
           <br>
-          Si ce n’est pas votre cas, contactez le support&nbsp;:
+          Si ce n’est pas votre cas, contactez le support :
           <a href="mailto:%{contact_email}">%{contact_email}</a>
         identities:
           one: Identité FranceConnect
@@ -28,6 +36,7 @@ fr:
           one: 'Votre compte sur %{application_name} est actuellement lié à l’identité suivante :'
           other: 'Votre compte sur %{application_name} est actuellement lié aux %{count} identité suivantes :'
         unlink_confirmation: 'le compte FranceConnect « %{full_name} » ne pourra plus accéder à vos dossiers.'
+        forbid_access: Interdire l’accès
       ensure_update_email_is_authorized:
         email_not_allowed: "L’email %{requested_email} ne peut être utilisé, contactez le support : <a href='mailto:%{contact_email}'>%{contact_email}</a>"
       transfer_all_dossiers:
