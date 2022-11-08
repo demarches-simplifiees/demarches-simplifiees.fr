@@ -31,7 +31,6 @@ class TeamAccountDashboard < Administrate::BaseDashboard
     :instructeur,
     :last_sign_in_at,
     :current_sign_in_at
-
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
