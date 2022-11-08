@@ -249,7 +249,8 @@ en:
           actions: "Actions"
         dossier_action:
           edit_dossier: "Edit the file"
-          start_other_dossier: "Start an other file"
+          start_other_dossier: "Start an other empty file"
+          clone: "Clone this file"
           delete_dossier: "Delete the file"
           transfer_dossier: "Transfer the file"
           edit_draft: "Edit the draft"
@@ -442,6 +443,7 @@ en:
       no_longer_editable: "Your file can no longer be edited"
       create_commentaire:
         message_send: "Your message has been sent to the instructor in charge of your file."
+      cloned_success: "Your file has been duplicated. Please review it then you can submit it"
       ask_deletion:
         undergoingreview: "Your file is undergoing review. It is no longer possible to delete your file. To cancel the undergoingreview contact the adminitration via the mailbox."
         soft_deleted_dossier: "Your file has been successfully deleted from your interface"

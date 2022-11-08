@@ -275,6 +275,7 @@ Rails.application.routes.draw do
       member do
         get 'identite'
         patch 'update_identite'
+        post 'clone'
         get 'siret'
         post 'siret', to: 'dossiers#update_siret'
         get 'etablissement'
