@@ -4,6 +4,7 @@ module Users
     before_action :find_transfers, only: [:show, :renew_api_token]
 
     def show
+      @france_connect_informations = FranceConnectInformation.where(user: current_user)
     end
 
     def renew_api_token
@@ -54,6 +55,17 @@ module Users
       users.update_all(requested_merge_into_id: nil)
 
       flash.notice = 'La fusion a été refusé'
+      redirect_to profil_path
+    end
+
+    def destroy_fci
+      fci = FranceConnectInformation
+        .where(user: current_user)
+        .find(params[:fci_id])
+
+      fci.destroy!
+      flash.notice = "Le compte FranceConnect de « #{fci.full_name} » ne peut plus accéder à vos dossiers"
+
       redirect_to profil_path
     end
 
