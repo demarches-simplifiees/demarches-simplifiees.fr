@@ -70,6 +70,17 @@
         - if removed.present?
           - list.with_item do
             = t(:remove_option, scope: [:administrateurs, :revision_changes], items: removed.map{ |term| "« #{t(term, scope: [:administrateurs, :carte_layers])} »" }.join(", "))
+  - when :collapsible_explanation_enabled
+    - if change[:to]
+      - list.with_item do
+        = t("administrateurs.revision_changes.update_collapsible_explanation_enabled#{postfix}.enabled", label: change[:label])
+    - else
+      - list.with_item do
+        = t("administrateurs.revision_changes.update_collapsible_explanation_enabled#{postfix}.disabled", label: change[:label])
+  - when :collapsible_explanation_text
+    - list.with_item do
+      = t("administrateurs.revision_changes.update_collapsible_explanation_text#{postfix}", label: change[:label], text: change[:to])
+
   - when :condition
     - if change[:from].nil?
       - list.with_item do

@@ -42,7 +42,6 @@ class Champ < ApplicationRecord
     :drop_down_list_enabled_non_empty_options,
     :drop_down_secondary_libelle,
     :drop_down_secondary_description,
-    :collapsible_explanation_enabled,
     :collapsible_explanation_enabled?,
     :collapsible_explanation_text,
     :exclude_from_export?,

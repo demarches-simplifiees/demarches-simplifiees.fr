@@ -6,6 +6,6 @@
     - if @champ.collapsible_explanation_enabled? && @champ.collapsible_explanation_text.present?
       %div
         %p.fr-my-2w
-          %button{type: "button", "aria-controls" => "champs-text-#{@champ.id}", "aria-expanded" => "false", href: "#champs-text-#{@champ.id}"} Lire plus
-        %p.fr-collapse{ id: "champs-text-#{@champ.id}"}
+          %button{type: "button", "aria-controls": dom_id(@champ, :explanation), "aria-expanded": "false", href: dom_id(@champ, :explanation)} Lire plus
+        %p.fr-collapse{ id: dom_id(@champ, :explanation)}
           = @champ.collapsible_explanation_text
