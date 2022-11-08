@@ -5,14 +5,25 @@ describe ProceduresFilter do
 
   context 'without filter' do
     let(:filters) { {} }
-    let!(:draft_procedure)     { create(:procedure) }
-    let!(:published_procedure) { create(:procedure_with_dossiers, :published, dossiers_count: 2) }
-    let!(:closed_procedure)    { create(:procedure, :closed) }
+    let!(:draft_procedure)     { create(:procedure, administrateur: admin3) }
+    let!(:published_procedure) { create(:procedure_with_dossiers, :published, dossiers_count: 2, administrateur: admin1) }
+    let!(:closed_procedure)    { create(:procedure, :closed, administrateur: admin2) }
+    let(:admin1) { create(:administrateur) }
+    let(:admin2) { create(:administrateur) }
+    let(:admin3) { create(:administrateur) }
 
     it 'returns only published and closed procedures' do
       expect(subject.procedures_result).to include(published_procedure)
       expect(subject.procedures_result).to include(closed_procedure)
       expect(subject.procedures_result).not_to include(draft_procedure)
+    end
+
+    context 'with view_admins param' do
+      it 'returns admins of the procedures' do
+        expect(subject.admins_result).to include(admin1)
+        expect(subject.admins_result).to include(admin2)
+        expect(subject.admins_result).not_to include(admin3)
+      end
     end
   end
 
