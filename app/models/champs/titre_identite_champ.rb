@@ -47,7 +47,7 @@ class Champs::TitreIdentiteChamp < Champ
   def clone(dossier:, parent: nil)
     kopy = super(dossier: dossier, parent: parent)
 
-    clone_piece_justificative(kopy)
+    mark_for_delayed_clone_piece_justificative(kopy)
     kopy
   end
 end

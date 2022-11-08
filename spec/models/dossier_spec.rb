@@ -1834,8 +1834,8 @@ describe Dossier do
           let(:dossier) { create(:dossier) }
           let(:champ_piece_justificative) { create(:champ_piece_justificative, dossier_id: dossier.id) }
           before { dossier.champs << champ_piece_justificative }
-          it { expect(Champs::PieceJustificativeChamp.where(dossier: dossier).first.piece_justificative_file).not_to be_nil }
-          it { expect(Champs::PieceJustificativeChamp.where(dossier: new_dossier).first.piece_justificative_file.blob.id).not_to eq(champ_piece_justificative.piece_justificative_file.blob.id) }
+          it { expect(Champs::PieceJustificativeChamp.where(dossier: new_dossier).first.piece_justificative_file.blob).to be_nil }
+          it { expect { new_dossier }.to have_enqueued_job(ClonePieceJustificativeJob) }
         end
       end
 

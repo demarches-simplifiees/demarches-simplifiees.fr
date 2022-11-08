@@ -30,6 +30,7 @@ class Champ < ApplicationRecord
   has_many :geo_areas, -> { order(:created_at) }, dependent: :destroy, inverse_of: :champ
   belongs_to :etablissement, optional: true, dependent: :destroy
   has_many :champs, -> { ordered }, foreign_key: :parent_id, inverse_of: :parent, dependent: :destroy
+  after_create_commit :after_clone, if: :cloned?
 
   delegate :libelle,
     :type_champ,
@@ -223,17 +224,31 @@ class Champ < ApplicationRecord
     kopy
   end
 
-  def clone_piece_justificative(kopy)
-    if piece_justificative_file.attached?
-      piece_justificative_file.open do |tempfile|
-        kopy.piece_justificative_file.attach({
-          io: File.open(tempfile.path),
-          filename: piece_justificative_file.filename,
-          content_type: piece_justificative_file.content_type,
-          metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
-        })
-      end
+  def mark_for_delayed_clone_piece_justificative(from)
+    if from.piece_justificative_file.attached?
+      @cloned_from = from
+      @cloned_kopy = self
     end
+  end
+
+  def after_clone
+    ClonePieceJustificativeJob.perform_later(@cloned_from, @cloned_kopy)
+  end
+
+  def cloned?
+    @cloned_from && @cloned_kopy
+  end
+
+  def clone_piece_justificative(kopy)
+    piece_justificative_file.open do |tempfile|
+      kopy.piece_justificative_file.attach({
+        io: File.open(tempfile.path),
+        filename: piece_justificative_file.filename,
+        content_type: piece_justificative_file.content_type,
+        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+      })
+    end
+  rescue ActiveStorage::FileNotFoundError, ActiveStorage::IntegrityError
   end
 
   private
