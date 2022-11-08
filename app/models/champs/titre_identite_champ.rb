@@ -37,10 +37,10 @@ class Champs::TitreIdentiteChamp < Champ
   end
 
   def for_export
-    nil
+    piece_justificative_file.attached? ? "présent" : "absent"
   end
 
   def for_api
-    nil
+    piece_justificative_file.attached? ? "présent" : "absent"
   end
 end
