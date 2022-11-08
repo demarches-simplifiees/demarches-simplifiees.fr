@@ -296,7 +296,6 @@ module Administrateurs
         .groupe_instructeurs
         .page(params[:page])
         .per(ITEMS_PER_PAGE)
-        .order(:label)
     end
 
     def paginated_instructeurs
