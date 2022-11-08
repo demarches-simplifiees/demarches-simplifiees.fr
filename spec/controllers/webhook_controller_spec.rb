@@ -1,10 +1,21 @@
 describe WebhookController, type: :controller do
-  describe '#helpscout' do
-    before do
-      allow(controller).to receive(:verify_signature!).and_return(true)
-      allow(controller).to receive(:verify_authenticity_token)
-    end
+  before do
+    allow(controller).to receive(:verify_signature!).and_return(true)
+    allow(controller).to receive(:verify_authenticity_token)
+  end
 
+  describe '#helpscout_support_dev' do
+    subject(:response) { post :helpscout_support_dev, params: payload }
+    let(:payload) { JSON.parse(File.read(Rails.root.join('spec', 'fixtures', 'files', 'helpscout', 'tagged-dev.json'))) }
+
+    it 'works' do
+      allow(Rails.application.secrets).to receive(:dig).with(:mattermost, :support_webhook_url).and_return("https://notification_url")
+      expect(controller).to receive(:send_mattermost_notification).with("\nNouveau bug taggué #dev : https://secure.helpscout.net/conversation/123456789/123456789?folderId=123456789\n\n> Bonjour,    Je voudrais faire une demande de changement d'adresse et la plateforme m'indique que j'ai plusieurs comptes et que je dois d'abord les fusionner.    Cela fait 3 jours que j'essaie de fusio\n\n**personnes impliquées** : anonymous@anon.fr\n**utilisateur en attente depuis** : 11 min ago")
+      subject
+    end
+  end
+
+  describe '#helpscout' do
     subject(:response) { get :helpscout, params: { customer: { email: customer_email } } }
 
     let(:payload) { JSON.parse(subject.body) }
