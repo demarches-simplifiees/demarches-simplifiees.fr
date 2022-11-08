@@ -1,5 +1,6 @@
 - user_can_destroy = !@champ.mandatory? || @champ.dossier.brouillon?
-= render Attachment::MultipleComponent.new(form: @form, attached_file: @champ.piece_justificative_file, user_can_destroy: user_can_destroy, max: @champ.procedure&.piece_justificative_multiple == false ? 1 : nil) do |c|
+- max = [true, nil].include?(@champ.procedure&.piece_justificative_multiple?) ? 10 : 1
+= render Attachment::MultipleComponent.new(form: @form, attached_file: @champ.piece_justificative_file, user_can_destroy:, max:) do |c|
   - if @champ.type_de_champ.piece_justificative_template&.attached?
     - c.with_template do
       %p
