@@ -259,11 +259,6 @@
       border-bottom: none;
     }
 
-    a {
-      color: $dark-grey;
-      background-image: none; // remove DSFR underline
-    }
-
     // Make child links fill the whole clickable area
     > a {
       display: flex;
