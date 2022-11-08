@@ -41,6 +41,6 @@ class Champs::TitreIdentiteChamp < Champ
   end
 
   def for_api
-    piece_justificative_file.attached? ? "présent" : "absent"
+    nil
   end
 end
