@@ -29,6 +29,10 @@ fr:
         enabled: Le champ « %{label} » comporte maintenant un choix « Autre »
         disabled: Le champ « %{label} » ne comporte plus de choix « Autre »
       update_carte_layers: Les référentiels cartographiques du champ « %{label} » ont été modifiés
+      update_collapsible_explanation_enabled:
+        enabled: "Le texte complementaire affichable au clique du champ  « %{label} » a été ajouté"
+        disabled: "Le texte complementaire affichable au clique du champ  « %{label} » a été supprimée"
+      update_collapsible_explanation_text: "Le texte complementaire affichable au clique du champ « %{label} »  a été modifié. Il est maintenant « %{text} »."
       add_private: L’annotation privée « %{label} » a été ajoutée
       remove_private: L’annotation privée « %{label} » a été supprimée
       move_private:
@@ -45,6 +49,10 @@ fr:
       update_piece_justificative_template_private: Le modèle de pièce justificative de l’annotation privée « %{label} » a été modifié
       update_drop_down_options_private: Les options de sélection de l’annotation privée « %{label} » ont été modifiées
       update_carte_layers_private: Les référentiels cartographiques de l’annotation privée « %{label} » ont été modifiés
+      update_collapsible_explanation_enabled_private:
+        enabled: "Le texte complementaire affichable au clique de l’annotation privée  « %{label} » a été ajouté"
+        disabled: "Le texte complementaire affichable au clique de l’annotation privée  « %{label} » a été supprimée"
+      update_collapsible_explanation_private: "Le texte complementaire affichable au clique de l’annotation privée « %{label} »  a été modifié. Il est maintenant « %{text} »."
       add_option: "ajoutés : %{items}"
       remove_option: "supprimés : %{items}"
       add_condition: Une condition a été ajoutée sur le champ « %{label} ». La nouvelle condition est « %{to} »

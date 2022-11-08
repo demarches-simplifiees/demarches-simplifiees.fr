@@ -71,6 +71,18 @@
                     = form.label name, for: dom_id(type_de_champ, "layer_#{name}") do
                       = form.check_box name, checked: checked, class: 'small-margin small', id: dom_id(type_de_champ, "layer_#{name}")
                       = t(".layers.#{name}")
+        - if type_de_champ.explication?
+          .cell.width-66
+            = form.label :collapsible_explanation_enabled, for: dom_id(type_de_champ, :collapsible_explanation_enabled) do
+              Afficher un texte complementaire affichable au clique
+            = form.check_box :collapsible_explanation_enabled, class: "small-margin small", id: dom_id(type_de_champ, :collapsible_explanation_enabled)
+            - if form.object.collapsible_explanation_enabled?
+              = form.label :collapsible_explanation_text, for: dom_id(type_de_champ, :collapsible_explanation_text) do
+                = "Text à afficher quand l'utiliser a choisi de l'afficher"
+              = form.text_area :collapsible_explanation_text, class: "small-margin small", id: dom_id(type_de_champ, :collapsible_explanation_text)
+
+
+
   - if type_de_champ.block?
     .flex.justify-start.section.ml-1
       .editor-block.flex-grow.cell

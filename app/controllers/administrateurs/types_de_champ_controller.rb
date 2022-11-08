@@ -110,6 +110,8 @@ module Administrateurs
         :drop_down_other,
         :drop_down_secondary_libelle,
         :drop_down_secondary_description,
+        :collapsible_explanation_enabled,
+        :collapsible_explanation_text,
         editable_options: [
           :cadastres,
           :unesco,
