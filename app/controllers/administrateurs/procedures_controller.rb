@@ -397,7 +397,7 @@ module Administrateurs
         :tags
       ]
 
-      editable_params << :piece_justificative_multiple if @procedure&.piece_justificative_multiple == false
+      editable_params << :piece_justificative_multiple if @procedure && !@procedure.piece_justificative_multiple?
 
       permited_params = if @procedure&.locked?
         params.require(:procedure).permit(*editable_params)
