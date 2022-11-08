@@ -389,7 +389,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       before { subject }
 
       it { expect(response.status).to eq(302) }
-      it { expect(procedure.groupe_instructeurs.last.label).to eq("Afrique") }
+      it { expect(procedure.groupe_instructeurs.first.label).to eq("Afrique") }
       it { expect(flash.alert).to be_present }
       it { expect(flash.alert).to eq("Import terminé. Cependant les emails suivants ne sont pas pris en compte: kara") }
     end
@@ -408,7 +408,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
       before { subject }
 
-      it { expect(procedure.groupe_instructeurs.pluck(:label)).to eq(["défaut", "Auvergne-Rhône-Alpes", "Vendée"]) }
+      it { expect(procedure.groupe_instructeurs.pluck(:label)).to match_array(["Auvergne-Rhône-Alpes", "Vendée", "défaut"]) }
       it { expect(flash.notice).to be_present }
       it { expect(flash.notice).to eq("La liste des instructeurs a été importée avec succès") }
     end
