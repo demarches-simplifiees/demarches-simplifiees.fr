@@ -142,3 +142,12 @@
     Dans une démarche déclarative, une fois déposé, un dossier ne peut plus être modifié.
     Soit il passe immédiatement « en instruction » pour être traité soit il est immédiatement « accepté ».
   = f.select :declarative_with_state, Procedure.declarative_attributes_for_select, { include_blank: 'Non' }, class: 'form-control'
+
+  - if !@procedure.piece_justificative_multiple?
+    .fr-checkbox-group
+      = f.check_box :piece_justificative_multiple
+      = f.label :piece_justificative_multiple, class: 'fr-label' do
+        Champ “Pièce justificative” avec multiples fichiers
+    %p.notice
+      Autorise les usagers à envoyer plusieurs fichiers pour les champs de type “Pièce justificative”. L'activation de cette option est irréversible et peut nécessiter des modifications si vous utilisez des systèmes automatisés pour traiter les dossiers.
+
