@@ -58,10 +58,11 @@
           .cell
             = form.label :piece_justificative_template, "Modèle", for: dom_id(type_de_champ, :piece_justificative_template)
             = render Attachment::EditComponent.new(**piece_justificative_options(form))
-        - if type_de_champ.titre_identite?
-          .cell
-            %p
-              Dans le cadre de la RGPD, le titre d’identité sera supprimé lors de l’acceptation du dossier
+
+            - if type_de_champ.titre_identite?
+              %p Dans le cadre de la RGPD, le titre d’identité sera supprimé lors de l’acceptation du dossier
+            - elsif procedure.piece_justificative_multiple?
+              %p Les usagers pourront envoyer plusieurs fichiers si nécessaire.
         - if type_de_champ.carte?
           - type_de_champ.editable_options.each do |slice|
             .cell
