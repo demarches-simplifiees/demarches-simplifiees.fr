@@ -5,7 +5,7 @@ class ProceduresFilter
 
   def initialize(admin, params)
     @admin = admin
-    @params = params.permit(:from_publication_date, zone_ids: [], statuses: [])
+    @params = params.permit(:page, :from_publication_date, zone_ids: [], statuses: [])
   end
 
   def admin_zones
