@@ -64,6 +64,9 @@
                       = b.label(class: 'fr-label') { t b.text, scope: 'activerecord.attributes.procedure.aasm_state' }
 
       .fr-col-9
+        .main-filter-header.fr-my-3w
+          .search
+          = link_to 'Voir la liste des administeurs', '#', class: 'fr-btn fr-btn--secondary btn-admins'
         .fr-table.fr-table--bordered
           %table#all-demarches
             %caption
