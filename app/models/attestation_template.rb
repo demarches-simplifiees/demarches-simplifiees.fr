@@ -21,6 +21,8 @@ class AttestationTemplate < ApplicationRecord
   has_one_attached :logo
   has_one_attached :signature
 
+  validates :title, tags: true, if: -> { procedure.present? }
+  validates :body, tags: true, if: -> { procedure.present? }
   validates :footer, length: { maximum: 190 }
 
   FILE_MAX_SIZE = 1.megabytes

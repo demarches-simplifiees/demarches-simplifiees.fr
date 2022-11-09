@@ -292,6 +292,7 @@ class Procedure < ApplicationRecord
   validates_associated :closed_mail, on: :publication
   validates_associated :refused_mail, on: :publication
   validates_associated :without_continuation_mail, on: :publication
+  validates_associated :attestation_template, on: :publication, if: -> { attestation_template&.activated? }
 
   FILE_MAX_SIZE = 20.megabytes
   validates :notice, content_type: [
