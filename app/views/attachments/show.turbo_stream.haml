@@ -1,2 +1,5 @@
-= turbo_stream.replace dom_id(@attachment, :show) do
-  = render Attachment::ShowComponent.new(attachment: @attachment, user_can_upload: @user_can_upload)
+= turbo_stream.replace dom_id(@attachment, :edit) do
+  - if @user_can_edit
+    = render Attachment::EditComponent.new(attachment: @attachment, attached_file: @attachment.record.public_send(@attachment.name), auto_attach_url: @auto_attach_url)
+  - else
+    = render Attachment::ShowComponent.new(attachment: @attachment)

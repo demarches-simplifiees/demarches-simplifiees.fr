@@ -17,7 +17,7 @@
 
     = form_for @avis, url: instructeur_avis_path(@avis.procedure, @avis), html: { class: 'form' } do |f|
       = f.text_area :answer, rows: 3, placeholder: 'Votre avis', required: true
-      = render Attachment::EditComponent.new(form: f, attached_file: @avis.piece_justificative_file, user_can_destroy: true)
+      = render Attachment::EditComponent.new(object: f.object, attached_file: @avis.piece_justificative_file, user_can_destroy: true)
 
       .flex.justify-between.align-baseline
         %p.confidentiel.flex

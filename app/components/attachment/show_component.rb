@@ -1,27 +1,24 @@
 class Attachment::ShowComponent < ApplicationComponent
-  def initialize(attachment:, user_can_upload: false)
+  def initialize(attachment:)
     @attachment = attachment
-    @user_can_upload = user_can_upload
   end
 
   attr_reader :attachment
-
-  def user_can_upload?
-    @user_can_upload
-  end
 
   def should_display_link?
     (attachment.virus_scanner.safe? || !attachment.virus_scanner.started?) && !attachment.watermark_pending?
   end
 
-  def attachment_path
-    helpers.attachment_path(attachment.id, { signed_id: attachment.blob.signed_id, user_can_upload: user_can_upload? })
+  def error_message
+    case
+    when attachment.virus_scanner.infected?
+      "Virus détecté, le téléchargement est bloqué."
+    when attachment.virus_scanner.corrupt?
+      "Le fichier est corrompu, le téléchargement est bloqué."
+    end
   end
 
-  def poll_controller_options
-    {
-      controller: 'turbo-poll',
-      turbo_poll_url_value: attachment_path
-    }
+  def error?
+    attachment.virus_scanner_error?
   end
 end

@@ -1,5 +1,13 @@
 class Champs::PieceJustificativeController < ApplicationController
   before_action :authenticate_logged_user!
+  before_action :set_champ
+
+  def show
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_back(fallback_location: root_url) }
+    end
+  end
 
   def update
     if attach_piece_justificative_or_retry
@@ -11,9 +19,11 @@ class Champs::PieceJustificativeController < ApplicationController
 
   private
 
-  def attach_piece_justificative
+  def set_champ
     @champ = policy_scope(Champ).find(params[:champ_id])
+  end
 
+  def attach_piece_justificative
     @champ.piece_justificative_file.attach(params[:blob_signed_id])
     save_succeed = @champ.save
     @champ.dossier.update(last_champ_updated_at: Time.zone.now.utc) if save_succeed

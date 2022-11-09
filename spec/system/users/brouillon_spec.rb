@@ -93,7 +93,7 @@ describe 'The user' do
     check_selected_value('communes', with: 'Ambléon (01300)')
     expect(page).to have_field('dossier_link', with: '123')
     expect(page).to have_text('file.pdf')
-    expect(page).to have_text('analyse antivirus en cours')
+    expect(page).to have_text('Analyse antivirus en cours')
   end
 
   let(:procedure_with_repetition) do
@@ -184,7 +184,7 @@ describe 'The user' do
     find_field('Pièce justificative 2').attach_file(Rails.root + 'spec/fixtures/files/RIB.pdf')
 
     # Expect the files to be uploaded immediately
-    expect(page).to have_text('analyse antivirus en cours', count: 2, wait: 5)
+    expect(page).to have_text('Analyse antivirus en cours', count: 2, wait: 5)
     expect(page).to have_text('file.pdf')
     expect(page).to have_text('RIB.pdf')
 
@@ -206,7 +206,7 @@ describe 'The user' do
     # Test invalid file type
     attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/invalid_file_format.json')
     expect(page).to have_no_text('La pièce justificative n’est pas d’un type accepté')
-    expect(page).to have_text('analyse antivirus en cours', count: 1, wait: 5)
+    expect(page).to have_text('Analyse antivirus en cours', count: 1, wait: 5)
   end
 
   scenario 'retry on transcient upload error', js: true do
@@ -216,10 +216,10 @@ describe 'The user' do
     # Test auto-upload failure
     # Make the subsequent auto-upload request fail
     allow_any_instance_of(Champs::PieceJustificativeController).to receive(:update) do |instance|
-      instance.render json: { errors: ['Error'] }, status: :bad_request
+      instance.render json: { errors: ["Une erreur est survenue"] }, status: :bad_request
     end
     attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/file.pdf')
-    expect(page).to have_css('p', text: 'Le fichier n’a pas pu être envoyé', visible: :visible, wait: 5)
+    expect(page).to have_css('p', text: "Une erreur est survenue", visible: :visible, wait: 5)
     expect(page).to have_button('Ré-essayer', visible: true)
     expect(page).to have_button('Déposer le dossier', disabled: false)
 
@@ -227,7 +227,7 @@ describe 'The user' do
 
     # Test that retrying after a failure works
     click_on('Ré-essayer', visible: true, wait: 5)
-    expect(page).to have_text('analyse antivirus en cours', wait: 5)
+    expect(page).to have_text('Analyse antivirus en cours', wait: 5)
     expect(page).to have_text('file.pdf')
     expect(page).to have_button('Déposer le dossier', disabled: false)
 
