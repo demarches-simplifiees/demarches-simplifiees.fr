@@ -809,18 +809,12 @@ ActiveRecord::Schema.define(version: 2022_07_28_084804) do
     t.text "description"
     t.string "libelle"
     t.boolean "mandatory", default: false
-    t.boolean "migrated_parent"
     t.jsonb "options"
-    t.integer "order_place"
-    t.bigint "parent_id"
     t.boolean "private", default: false, null: false
-    t.bigint "revision_id"
     t.bigint "stable_id"
     t.string "type_champ"
     t.datetime "updated_at"
-    t.index ["parent_id"], name: "index_types_de_champ_on_parent_id"
     t.index ["private"], name: "index_types_de_champ_on_private"
-    t.index ["revision_id"], name: "index_types_de_champ_on_revision_id"
     t.index ["stable_id"], name: "index_types_de_champ_on_stable_id"
   end
 
@@ -933,8 +927,6 @@ ActiveRecord::Schema.define(version: 2022_07_28_084804) do
   add_foreign_key "targeted_user_links", "users"
   add_foreign_key "traitements", "dossiers"
   add_foreign_key "trusted_device_tokens", "instructeurs"
-  add_foreign_key "types_de_champ", "procedure_revisions", column: "revision_id"
-  add_foreign_key "types_de_champ", "types_de_champ", column: "parent_id"
   add_foreign_key "users", "users", column: "requested_merge_into_id"
   add_foreign_key "without_continuation_mails", "procedures"
 end
