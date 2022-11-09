@@ -29,7 +29,7 @@ module DossierRebaseConcern
   end
 
   def accepted_en_construction_change?(change)
-    if change[:model] == :attestation_template || change[:op] == :move || change[:op] == :remove
+    if change[:op] == :move || change[:op] == :remove
       true
     elsif change[:op] == :update
       case change[:attribute]
@@ -46,7 +46,7 @@ module DossierRebaseConcern
   end
 
   def accepted_en_instruction_change?(change)
-    change[:model] == :attestation_template
+    false
   end
 
   def rebase
