@@ -29,7 +29,7 @@
                     Mes zones
                 .fr-ml-1w{ 'data-expand-target': 'content' }
                   = f.collection_check_boxes :zone_ids, @filter.admin_zones, :id, :current_label, include_hidden: false do |b|
-                    .fr-checkbox-group.fr-ml-2w
+                    .fr-checkbox-group.fr-ml-2w.fr-py-1w
                       = b.check_box(checked: @filter.zone_filtered?(b.value), 'data-action': 'autosubmit#submit')
                       = b.label(class: 'fr-label') { b.text }
               %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
@@ -39,7 +39,7 @@
                     Autres zones
                 .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
                   = f.collection_check_boxes :zone_ids, @filter.other_zones, :id, :current_label, include_hidden: false do |b|
-                    .fr-checkbox-group.fr-ml-2w
+                    .fr-checkbox-group.fr-ml-2w.fr-py-1w
                       = b.check_box(checked: @filter.zone_filtered?(b.value), 'data-action': 'autosubmit#submit')
                       = b.label(class: 'fr-label') { b.text }
               %li.fr-py-2w{ 'data-controller': "expand" }
@@ -59,7 +59,7 @@
                     Statut
                 .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
                   = f.collection_check_boxes :statuses, ['publiee', 'close'], :to_s, :to_s, include_hidden: false do |b|
-                    .fr-checkbox-group.fr-ml-2w
+                    .fr-checkbox-group.fr-ml-2w.fr-py-1w
                       = b.check_box(checked: @filter.status_filtered?(b.value), 'data-action': 'autosubmit#submit')
                       = b.label(class: 'fr-label') { t b.text, scope: 'activerecord.attributes.procedure.aasm_state' }
 
