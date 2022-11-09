@@ -1,14 +1,24 @@
 describe Administrateurs::ProcedureAdministrateursController, type: :controller do
   let(:signed_in_admin) { create(:administrateur) }
   let(:other_admin) { create(:administrateur) }
-  let(:procedure) { create(:procedure, administrateurs: [signed_in_admin, other_admin]) }
+  let!(:administrateurs_procedure) { create(:administrateurs_procedure, administrateur: signed_in_admin, procedure: procedure, manager: manager) }
+  let!(:procedure) { create(:procedure, administrateurs: [other_admin]) }
   render_views
 
   before do
     sign_in(signed_in_admin.user)
   end
 
+  describe '#create' do
+    context 'as manager' do
+      let(:manager) { true }
+      subject { post :create, params: { procedure_id: procedure.id, administrateur: { email: create(:administrateur).email } }, format: :turbo_stream }
+      it { is_expected.to have_http_status(:forbidden) }
+    end
+  end
+
   describe '#destroy' do
+    let(:manager) { false }
     subject do
       delete :destroy, params: { procedure_id: procedure.id, id: admin_to_remove.id }, format: :turbo_stream
     end

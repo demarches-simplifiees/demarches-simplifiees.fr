@@ -5,15 +5,20 @@
     .instructeur-wrapper
       - if !procedure.routee?
         %p.notice Entrez les adresses email des instructeurs que vous souhaitez affecter à cette démarche
-      = hidden_field_tag :emails, nil
-      = react_component("ComboMultiple",
-        options: available_instructeur_emails, selected: [], disabled: [],
-        group: '.instructeur-wrapper',
-        name: 'emails',
-        label: 'Emails',
-        acceptNewValues: true)
 
-      = f.submit 'Affecter', class: 'button primary send'
+      - if disabled_as_super_admin
+        = f.select :emails, available_instructeur_emails, {}, disabled: disabled_as_super_admin, id: 'instructeur_emails'
+      - else
+        = hidden_field_tag :emails, nil
+        = react_component("ComboMultiple",
+          options: available_instructeur_emails, selected: [], disabled: [],
+          group: '.instructeur-wrapper',
+          id: 'instructeur_emails',
+          name: 'emails',
+          label: 'Emails',
+          acceptNewValues: true)
+
+      = f.submit 'Affecter', class: 'button primary send', disabled: disabled_as_super_admin
 
   %table.table.mt-2
     %thead
