@@ -4,6 +4,8 @@ class Attachment::EditComponent < ApplicationComponent
 
   delegate :persisted?, to: :attachment, allow_nil: true
 
+  EXTENSIONS_ORDER = ['jpeg', 'png', 'pdf', 'zip'].freeze
+
   def initialize(form:, attached_file:, user_can_destroy: false, direct_upload: true, id: nil, index: 0, **kwargs)
     @form = form
     @attached_file = attached_file
@@ -49,7 +51,7 @@ class Attachment::EditComponent < ApplicationComponent
   def file_field_options
     track_issue_with_missing_validators if missing_validators?
     {
-      class: "attachment-input #{attachment_input_class} #{'hidden' if persisted?}",
+      class: "fr-text--sm attachment-input #{attachment_input_class} #{'hidden' if persisted?}",
       direct_upload: @direct_upload,
       id: input_id(@id),
       aria: { describedby: champ&.describedby_id },
@@ -113,6 +115,16 @@ class Attachment::EditComponent < ApplicationComponent
       list.push(".acidcsa")
     end
     list.join(', ')
+  end
+
+  def allowed_formats
+    return nil unless champ&.titre_identite?
+
+    @allowed_formats ||= begin
+                           content_type_validator.options[:in].filter_map do |content_type|
+                             MiniMime.lookup_by_content_type(content_type)&.extension
+                           end.uniq.sort_by { EXTENSIONS_ORDER.index(_1) || 999 }
+                         end
   end
 
   def has_content_type_validator?
