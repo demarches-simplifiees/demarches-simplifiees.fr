@@ -18,8 +18,11 @@
       Ré-essayer
 
   - if !persisted?
-    %label.text-sm.font-weight-normal{ for: file_field_options[:id] }
+    %p.fr-text--sm.fr-text-mention--grey
       = t('.max_file_size', max_file_size: number_to_human_size(max_file_size))
+      - if allowed_formats
+        Formats supportés :
+        = allowed_formats.join(', ')
 
   %p= form.file_field(file_field_name, **file_field_options)
 
