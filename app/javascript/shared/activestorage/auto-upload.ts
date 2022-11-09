@@ -10,7 +10,6 @@ import {
 
 type ErrorMessage = {
   title: string;
-  description: string;
   retry: boolean;
 };
 
@@ -69,6 +68,8 @@ export class AutoUpload {
 
     const message = this.messageFromError(error);
     this.displayErrorMessage(message);
+
+    this.#input.classList.toggle('fr-text-default--error', true);
   }
 
   private done() {
@@ -81,20 +82,19 @@ export class AutoUpload {
 
     if (error.failureReason == FAILURE_CONNECTIVITY) {
       return {
-        title: 'Le fichier n’a pas pu être envoyé.',
-        description: 'Vérifiez votre connexion à Internet, puis ré-essayez.',
+        title:
+          'Le fichier n’a pas pu être envoyé. Vérifiez votre connexion à Internet, puis ré-essayez.',
         retry: true
       };
     } else if (error.code == ERROR_CODE_READ) {
       return {
-        title: 'Nous n’arrivons pas à lire ce fichier sur votre appareil.',
-        description: 'Essayez à nouveau, ou sélectionnez un autre fichier.',
+        title:
+          'Nous n’arrivons pas à lire ce fichier sur votre appareil. Essayez à nouveau, ou sélectionnez un autre fichier.',
         retry: false
       };
     } else {
       return {
-        title: 'Le fichier n’a pas pu être envoyé.',
-        description: message,
+        title: message,
         retry: !!canRetry
       };
     }
@@ -105,7 +105,6 @@ export class AutoUpload {
     if (errorElement) {
       show(errorElement);
       this.errorTitleElement.textContent = message.title || '';
-      this.errorDescriptionElement.textContent = message.description || '';
       toggle(this.errorRetryButton, message.retry);
     }
   }
@@ -124,18 +123,9 @@ export class AutoUpload {
   }
 
   get errorTitleElement() {
-    const element = this.errorElement?.querySelector<HTMLElement>(
-      '.attachment-error-title'
-    );
+    const element =
+      this.errorElement?.querySelector<HTMLElement>('.fr-error-text');
     invariant(element, 'Could not find the error title element.');
-    return element;
-  }
-
-  get errorDescriptionElement() {
-    const element = this.errorElement?.querySelector<HTMLElement>(
-      '.attachment-error-description'
-    );
-    invariant(element, 'Could not find the error description element.');
     return element;
   }
 

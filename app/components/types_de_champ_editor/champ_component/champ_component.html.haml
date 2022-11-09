@@ -57,7 +57,7 @@
         - if type_de_champ.piece_justificative?
           .cell
             = form.label :piece_justificative_template, "Modèle", for: dom_id(type_de_champ, :piece_justificative_template)
-            = render Attachment::EditComponent.new(**piece_justificative_options(form))
+            = render Attachment::EditComponent.new(**piece_justificative_template_options)
 
             - if type_de_champ.titre_identite?
               %p Dans le cadre de la RGPD, le titre d’identité sera supprimé lors de l’acceptation du dossier

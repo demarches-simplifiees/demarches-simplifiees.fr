@@ -1,53 +1,23 @@
 @import "colors";
 @import "constants";
 
-.attachment-actions {
-  display: flex;
-  margin-bottom: $default-spacer;
-}
-
-.attachment-action {
-  margin-right: $default-spacer;
-
-  .button {
-    text-transform: lowercase;
-    background-image: none; // remove DSFR underline, TODO: switch to DSFR download links https://github.com/betagouv/demarches-simplifiees.fr/issues/7883
-  }
-
-}
-
 .attachment-error {
-  display: flex;
-  width: max-content;
-  max-width: 100%;
-  align-items: center;
-  margin-bottom: $default-padding;
-  padding: $default-padding;
-  background: $background-red;
+  position: relative;
 
-  &.hidden {
-    display: none;
+  &::before {
+    box-shadow: inset 2px 0 0 0 var(--border-plain-error);
+    height: 2rem; // height of button
+    content: "";
+    left: -0.75rem;
+    position: absolute;
+    width: 2px;
   }
-}
 
-.attachment-error-message {
-  display: inline-block;
-  margin-right: $default-padding;
-  color: $medium-red;
-}
-
-.attachment-error-title {
-  font-weight: bold;
-}
-
-.attachment-error-retry {
-  white-space: nowrap;
-
-  &.hidden {
-    display: none;
+  .attachment-filename {
+    color: var(--text-default-error);
   }
-}
 
-.attachment-input.hidden {
-  display: none;
+  .fr-error-text {
+    margin-top: 0.5rem;
+  }
 }

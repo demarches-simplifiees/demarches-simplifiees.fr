@@ -386,6 +386,10 @@
     }
   }
 
+  .editable-champ-titre_identite { // scss-lint:disable SelectorFormat
+    margin-bottom: 2 * $default-padding;
+  }
+
   .cnaf-inputs,
   .dgfip-inputs,
   .pole-emploi-inputs,

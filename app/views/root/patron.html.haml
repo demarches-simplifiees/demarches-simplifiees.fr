@@ -348,3 +348,39 @@
           Des marges verticales ont ici été rajoutées.
 
 
+
+  .container
+    %h1.fr-mt-4w Attachment::EditComponent
+    %span.fr-hint-text Note: direct upload, suppression ne marchent pas comme attendu ici.
+
+    - champ = @dossier.champs_public.first
+    - tdc = @dossier.champs_public.find { _1.type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative) }.type_de_champ
+
+    - if attachment = ActiveStorage::Attachment.last
+      - attachment.update(created_at: 1.second.ago)
+      %h3 New attachment
+      = render Attachment::EditComponent.new(champ:, attached_file: champ.piece_justificative_file, attachment: nil)
+
+      %h3.fr-mt-4w Existing attachment
+      = render Attachment::EditComponent.new(champ:, attached_file: champ.piece_justificative_file, attachment:)
+
+      %h3.fr-mt-4w Existing attachment, antivirus in progress
+      - attachment.blob.metadata[:virus_scan_result] = ActiveStorage::VirusScanner::PENDING
+      - attachment.created_at = Time.zone.now
+      = render Attachment::EditComponent.new(champ:, attached_file: Champ.new.piece_justificative_file, attachment:)
+
+      %h3.fr-mt-4w Existing attachment, antivirus in progress since long time
+      - attachment.blob.metadata[:virus_scan_result] = ActiveStorage::VirusScanner::PENDING
+      - attachment.created_at = 2.minutes.ago
+      = render Attachment::EditComponent.new(champ:, attached_file: Champ.new.piece_justificative_file, attachment:)
+
+      %h3.fr-mt-4w Existing attachment, error
+      - attachment.blob.metadata[:virus_scan_result] = ActiveStorage::VirusScanner::INFECTED
+      = render Attachment::EditComponent.new(champ:, attached_file: Champ.new.piece_justificative_file, attachment:)
+
+      %h3.fr-mt-4w New attachment not on Champ
+      = render Attachment::EditComponent.new(auto_attach_url: "/some-auto-attach-path", attached_file: tdc.piece_justificative_template, attachment: nil)
+
+      %h3.fr-mt-4w Existing attachment not on Champ
+      = render Attachment::EditComponent.new(auto_attach_url: "/some-auto-attach-path", attached_file: tdc.piece_justificative_template, attachment: attachment.reload)
+

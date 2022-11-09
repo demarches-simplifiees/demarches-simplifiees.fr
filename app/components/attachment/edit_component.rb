@@ -1,57 +1,68 @@
 # Display a widget for uploading, editing and deleting a file attachment
 class Attachment::EditComponent < ApplicationComponent
-  attr_reader :template, :form, :attachment
-
-  delegate :persisted?, to: :attachment, allow_nil: true
+  attr_reader :champ
+  attr_reader :attachment
+  attr_reader :as_multiple
+  alias as_multiple? as_multiple
 
   EXTENSIONS_ORDER = ['jpeg', 'png', 'pdf', 'zip'].freeze
 
-  def initialize(form:, attached_file:, user_can_destroy: false, direct_upload: true, id: nil, index: 0, **kwargs)
-    @form = form
+  def initialize(champ: nil, auto_attach_url: nil, attached_file:, direct_upload: true, id: nil, index: 0, as_multiple: false, **kwargs)
+    @champ = champ
+    @auto_attach_url = auto_attach_url
     @attached_file = attached_file
 
+    # attachment passed by kwarg because we don't want a default (nil) value.
     @attachment = if kwargs.key?(:attachment)
-      kwargs[:attachment]
+      kwargs.delete(:attachment)
     elsif attached_file.respond_to?(:attachment)
       attached_file.attachment
     else
       fail ArgumentError, "You must pass an `attachment` kwarg when not using as single attachment like in #{attached_file.name}. Set it to nil for a new attachment."
     end
 
-    @user_can_destroy = user_can_destroy
+    fail ArgumentError, "Unknown kwarg #{kwargs.keys.join(', ')}" unless kwargs.empty?
+
     @direct_upload = direct_upload
     @id = id
     @index = index
+    @as_multiple = as_multiple
+  end
+
+  def object_name
+    @object.class.name.underscore
+  end
+
+  def first?
+    @index.zero?
   end
 
   def max_file_size
+    return if file_size_validator.nil?
+
     file_size_validator.options[:less_than]
-  end
-
-  def user_can_destroy?
-    @user_can_destroy
-  end
-
-  def attachment_path
-    helpers.attachment_path attachment.id, { signed_id: attachment.blob.signed_id }
   end
 
   def attachment_id
     @attachment_id ||= (attachment&.id || SecureRandom.uuid)
   end
 
-  def attachment_input_class
-    "attachment-input-#{attachment_id}"
+  def attachment_path(**args)
+    helpers.attachment_path attachment.id, args.merge(signed_id: attachment.blob.signed_id)
   end
 
-  def champ
-    @form.object.is_a?(Champ) ? @form.object : nil
+  def destroy_attachment_path
+    attachment_path(champ_id: champ&.id)
+  end
+
+  def attachment_input_class
+    "attachment-input-#{attachment_id}"
   end
 
   def file_field_options
     track_issue_with_missing_validators if missing_validators?
     {
-      class: "fr-text--sm attachment-input #{attachment_input_class} #{'hidden' if persisted?}",
+      class: "fr-upload attachment-input #{attachment_input_class} #{persisted? ? 'hidden' : ''}",
       direct_upload: @direct_upload,
       id: input_id(@id),
       aria: { describedby: champ&.describedby_id },
@@ -61,9 +72,75 @@ class Attachment::EditComponent < ApplicationComponent
     }.merge(has_content_type_validator? ? { accept: accept_content_type } : {})
   end
 
-  def auto_attach_url
-    helpers.auto_attach_url(form.object)
+  def in_progress?
+    return false if attachment.nil?
+    return true if attachment.virus_scanner.pending?
+    return true if attachment.watermark_pending?
+
+    false
   end
+
+  def progress_bar_label
+    case
+    when attachment.virus_scanner.pending?
+      "Analyse antivirus en cours…"
+    when attachment.watermark_pending?
+      "Traitement en cours…"
+    end
+  end
+
+  def poll_controller_options
+    {
+      controller: 'turbo-poll',
+      turbo_poll_url_value: poll_url
+    }
+  end
+
+  def poll_url
+    if champ.present?
+      auto_attach_url
+    else
+      attachment_path(user_can_edit: true, auto_attach_url: @auto_attach_url)
+    end
+  end
+
+  def file_field_name
+    @attached_file.name
+  end
+
+  def remove_button_options
+    {
+      role: 'button',
+      data: { turbo: "true", turbo_method: :delete }
+    }
+  end
+
+  def retry_button_options
+    {
+      type: 'button',
+      class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-mt-1w fr-icon-refresh-line fr-btn--icon-left attachment-error-retry',
+      data: { input_target: ".#{attachment_input_class}", action: 'autosave#onClickRetryButton' }
+    }
+  end
+
+  def persisted?
+    !!attachment&.persisted?
+  end
+
+  def error?
+    attachment.virus_scanner_error?
+  end
+
+  def error_message
+    case
+    when attachment.virus_scanner.infected?
+      "Virus détecté, merci d’envoyer un autre fichier."
+    when attachment.virus_scanner.corrupt?
+      "Le fichier est corrompu, merci d’envoyer un autre fichier."
+    end
+  end
+
+  private
 
   def input_id(given_id)
     return given_id if given_id.present?
@@ -77,24 +154,12 @@ class Attachment::EditComponent < ApplicationComponent
     file_field_name
   end
 
-  def file_field_name
-    @attached_file.name
-  end
+  def auto_attach_url
+    return @auto_attach_url if @auto_attach_url.present?
 
-  def remove_button_options
-    {
-      role: 'button',
-      class: 'button small danger',
-      data: { turbo_method: :delete }
-    }
-  end
+    return helpers.auto_attach_url(@champ) if @champ.present?
 
-  def retry_button_options
-    {
-      type: 'button',
-      class: 'button attachment-error-retry',
-      data: { input_target: ".#{attachment_input_class}", action: 'autosave#onClickRetryButton' }
-    }
+    fail ArgumentError, "You must pass `auto_attach_url` when not using attachment for a Champ"
   end
 
   def file_size_validator

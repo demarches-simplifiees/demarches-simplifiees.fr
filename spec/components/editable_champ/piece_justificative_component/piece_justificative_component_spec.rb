@@ -1,7 +1,7 @@
 describe EditableChamp::PieceJustificativeComponent, type: :component do
-  let(:champ) { build(:champ_piece_justificative, dossier: create(:dossier)) }
+  let(:champ) { create(:champ_piece_justificative, dossier: create(:dossier)) }
   let(:component) {
-    described_class.new(form: instance_double(ActionView::Helpers::FormBuilder, object: champ.dossier, file_field: "<input type=\"file\" />"), champ:)
+    described_class.new(form: instance_double(ActionView::Helpers::FormBuilder), champ:)
   }
 
   let(:subject) {
@@ -17,14 +17,14 @@ describe EditableChamp::PieceJustificativeComponent, type: :component do
     end
 
     it 'renders a link to template' do
-      expect(subject).to have_link('le modèle suivant')
+      expect(subject).to have_link('Modèle à télécharger')
       expect(subject).not_to have_text("éphémère")
     end
 
     context 'as an administrator' do
       let(:profil) { :administrateur }
       it 'warn about ephemeral template url' do
-        expect(subject).to have_link('le modèle suivant')
+        expect(subject).to have_link('Modèle à télécharger')
         expect(subject).to have_text("éphémère")
       end
     end

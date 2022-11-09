@@ -23,7 +23,7 @@ describe 'shared/attachment/_show.html.haml', type: :view do
     it 'displays the filename, but doesn’t allow to download the file' do
       expect(subject).to have_text(champ.piece_justificative_file[0].filename.to_s)
       expect(subject).not_to have_link(champ.piece_justificative_file[0].filename.to_s)
-      expect(subject).to have_text('analyse antivirus en cours')
+      expect(subject).to have_text('Analyse antivirus en cours')
     end
   end
 
@@ -34,7 +34,7 @@ describe 'shared/attachment/_show.html.haml', type: :view do
       expect(champ.piece_justificative_file.attachments[0].watermark_pending?).to be_truthy
       expect(subject).to have_text(champ.piece_justificative_file[0].filename.to_s)
       expect(subject).not_to have_link(champ.piece_justificative_file[0].filename.to_s)
-      expect(subject).to have_text('traitement de la pièce en cours')
+      expect(subject).to have_text('Traitement en cours')
     end
   end
 
@@ -52,7 +52,7 @@ describe 'shared/attachment/_show.html.haml', type: :view do
     it 'displays the filename, but doesn’t allow to download the file' do
       expect(subject).to have_text(champ.piece_justificative_file[0].filename.to_s)
       expect(subject).not_to have_link(champ.piece_justificative_file[0].filename.to_s)
-      expect(subject).to have_text('virus détecté')
+      expect(subject).to have_text('Virus détecté')
     end
   end
 

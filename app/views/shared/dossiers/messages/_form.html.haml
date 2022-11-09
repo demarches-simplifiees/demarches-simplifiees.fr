@@ -8,7 +8,7 @@
     - disable_piece_jointe = defined?(disable_piece_jointe) ? disable_piece_jointe : false
     %div
       - if !disable_piece_jointe
-        = render Attachment::EditComponent.new(form: f, attached_file: commentaire.piece_jointe)
+        = render Attachment::EditComponent.new(object: f.object, attached_file: commentaire.piece_jointe)
 
     %div
       = f.submit t('views.shared.dossiers.messages.form.send_message'), class: 'button primary send', data: { disable: true }

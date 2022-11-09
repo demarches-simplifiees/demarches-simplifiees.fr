@@ -1,13 +1,15 @@
-.fr-mb-4w{ data: { controller: stimulus_controller_name }}
+.fr-mb-4w.attachment-multiple
   = template
 
   - each_attachment do |attachment, index|
-    %div{id: dom_id(attachment)}
-      = render Attachment::EditComponent.new(form:, attached_file:, attachment:, user_can_destroy:, direct_upload:, id:, index:)
+    %div{ id: dom_id(attachment) }
+      = render Attachment::EditComponent.new(champ:, attached_file:, attachment:, direct_upload:, id:, index:, as_multiple: true)
 
-  %div{class: [attachments_empty? ? nil : "hidden"], data: { "#{stimulus_controller_name}-target": "empty" }}
-    = render Attachment::EditComponent.new(form:, attached_file:, attachment: nil, user_can_destroy:, direct_upload:, id:, index: attachments_count)
+  %div{ id: empty_component_id, class: class_names("hidden": !can_attach_next?) }
+    = render Attachment::EditComponent.new(champ:, attached_file:, attachment: nil, direct_upload:, id:, index: attachments_count)
 
-  - if can_attach_next?
-    %button.fr-btn.fr-btn--tertiary.fr-btn--sm{ data: { "#{stimulus_controller_name}-target": "buttonAdd", action: "click->attachment-multiple#add" }} Ajouter un fichier
-
+  // single poll and refresh message for all attachments
+  - if in_progress?
+    %div{ data: poll_controller_options }
+      - if in_progress_long?
+        = render "attachments/pending_refresh", url: auto_attach_url
