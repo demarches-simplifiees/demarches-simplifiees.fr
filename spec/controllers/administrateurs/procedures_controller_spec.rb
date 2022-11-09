@@ -137,6 +137,20 @@ describe Administrateurs::ProceduresController, type: :controller do
         expect(assigns(:filter).procedures_result).not_to include(procedure1)
       end
     end
+
+    context 'after specific date' do
+      let(:after) { Date.new(2022, 06, 30) }
+      let!(:procedure1) { create(:procedure, :published, published_at: after + 1.day) }
+      let!(:procedure2) { create(:procedure, :published, published_at: after + 2.days) }
+      let!(:procedure3) { create(:procedure, :published, published_at: after - 1.day) }
+
+      it 'display only procedures published after specific date' do
+        get :all, params: { from_publication_date: after }
+        expect(assigns(:filter).procedures_result).to include(procedure1)
+        expect(assigns(:filter).procedures_result).to include(procedure2)
+        expect(assigns(:filter).procedures_result).not_to include(procedure3)
+      end
+    end
   end
 
   describe 'POST #search' do
