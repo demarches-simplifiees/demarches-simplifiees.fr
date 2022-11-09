@@ -110,10 +110,8 @@ class Attachment::EditComponent < ApplicationComponent
   end
 
   def accept_content_type
-    list = content_type_validator.options[:in]
-    if list.include?("application/octet-stream")
-      list.push(".acidcsa")
-    end
+    list = content_type_validator.options[:in].dup
+    list << ".acidcsa" if list.include?("application/octet-stream")
     list.join(', ')
   end
 
