@@ -1,7 +1,7 @@
 .fr-col-6.fr-col-md-4.fr-col-lg-3
   = link_to edit_admin_procedure_attestation_template_path(@procedure), class: 'fr-tile fr-enlarge-link' do
     .fr-tile__body.flex.justify-between
-      - if @procedure.draft_attestation_template&.activated?
+      - if @procedure.attestation_template&.activated?
         %div
           %span.icon.accept
           %p.fr-tile-status-accept Activée

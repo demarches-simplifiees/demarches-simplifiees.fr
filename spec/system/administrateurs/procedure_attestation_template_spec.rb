@@ -33,7 +33,7 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
       fill_in "Corps du document", with: 'BOOM'
       find('.toggle-switch-control').click
       click_on 'Enregistrer'
-      page.find(".alert-success", text: "L'attestation a bien été sauvegardée")
+      page.find(".alert-success", text: "Le model de l’attestation a bien été enregistrée")
 
       # check attestation
       visit admin_procedure_path(procedure)
@@ -49,7 +49,7 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
       find_attestation_card.click
       find('.toggle-switch-control').click
       click_on 'Enregistrer'
-      page.find(".alert-success", text: "L'attestation a bien été modifiée")
+      page.find(".alert-success", text: "Le model de l’attestation a bien été modifiée")
 
       # check attestation is now disabled
       visit admin_procedure_path(procedure)
