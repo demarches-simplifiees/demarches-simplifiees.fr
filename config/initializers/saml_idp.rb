@@ -16,8 +16,6 @@ if ENV['SAML_IDP_ENABLED'] == 'enabled'
         persistent: -> (p) { p.id }
       }
     }
-    return if ENV.fetch('SAML_DOLIST_HOST', nil).blank?
-
     service_providers = {}
     if ENV['SAML_DOLIST_HOST'].present?
       service_providers["https://#{ENV.fetch('SAML_DOLIST_HOST')}"] =
