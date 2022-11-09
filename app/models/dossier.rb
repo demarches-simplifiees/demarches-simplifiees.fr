@@ -135,8 +135,8 @@ class Dossier < ApplicationRecord
 
   has_one :france_connect_information, through: :user
 
-  has_one :attestation_template, through: :revision
   has_one :procedure, through: :revision
+  has_one :attestation_template, through: :procedure
   has_many :types_de_champ, through: :revision, source: :types_de_champ_public
   has_many :types_de_champ_private, through: :revision
 
@@ -375,7 +375,7 @@ class Dossier < ApplicationRecord
       .where.not(user: users_who_submitted)
   end
 
-  scope :for_api_v2, -> { includes(revision: [:attestation_template, procedure: [:administrateurs]], etablissement: [], individual: [], traitement: []) }
+  scope :for_api_v2, -> { includes(:attestation_template, revision: [procedure: [:administrateurs]], etablissement: [], individual: [], traitement: []) }
 
   scope :with_notifications, -> do
     joins(:follows)
@@ -748,17 +748,21 @@ class Dossier < ApplicationRecord
     { lon: lon, lat: lat, zoom: zoom }
   end
 
+  def active_attestation_template
+    attestation_template || revision.attestation_template
+  end
+
   def unspecified_attestation_champs
-    if attestation_template&.activated?
-      attestation_template.unspecified_champs_for_dossier(self)
+    if active_attestation_template&.activated?
+      active_attestation_template.unspecified_champs_for_dossier(self)
     else
       []
     end
   end
 
   def build_attestation
-    if attestation_template&.activated?
-      attestation_template.attestation_for(self)
+    if active_attestation_template&.activated?
+      active_attestation_template.attestation_for(self)
     end
   end
 
@@ -817,10 +821,6 @@ class Dossier < ApplicationRecord
 
       log_dossier_operation(author, :restaurer, self)
     end
-  end
-
-  def attestation_activated?
-    termine? && attestation_template&.activated?
   end
 
   def after_passer_en_construction

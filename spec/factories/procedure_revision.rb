@@ -9,7 +9,6 @@ FactoryBot.define do
         from_revision = evaluator.from_original
 
         revision.procedure = from_revision.procedure
-        revision.attestation_template_id = from_revision.attestation_template_id
         revision.dossier_submitted_message_id = from_revision.dossier_submitted_message_id
 
         coordinate_map = {}
