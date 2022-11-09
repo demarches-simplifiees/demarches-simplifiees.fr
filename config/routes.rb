@@ -62,6 +62,9 @@ Rails.application.routes.draw do
     resources :zones, only: [:index, :show]
 
     resources :dubious_procedures, only: [:index]
+    resources :outdated_procedures, only: [:index] do
+      patch :bulk_update, on: :collection
+    end
 
     post 'demandes/create_administrateur'
     post 'demandes/refuse_administrateur'
