@@ -25,6 +25,8 @@ en:
         closed_mail: File sorted as accepted notification email
         refused_mail: File sorted as refused notification email
         without_continuation_mail: File sorted with no further action notification email
+        attestation_template: Attestation template
+        draft_revision: The form
     errors:
       models:
         procedure:

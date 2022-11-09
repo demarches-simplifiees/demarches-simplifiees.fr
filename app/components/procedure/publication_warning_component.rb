@@ -23,6 +23,8 @@ class Procedure::PublicationWarningComponent < ApplicationComponent
     case attribute
     when :draft_revision
       champs_admin_procedure_path(@procedure)
+    when :attestation_template
+      edit_admin_procedure_attestation_template_path(@procedure)
     when :initiated_mail, :received_mail, :closed_mail, :refused_mail, :without_continuation_mail
       admin_procedure_mail_templates_path(@procedure)
     end

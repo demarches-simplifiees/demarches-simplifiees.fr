@@ -3,8 +3,12 @@
     .fr-tile__body.flex.justify-between
       - if @procedure.attestation_template&.activated?
         %div
-          %span.icon.accept
-          %p.fr-tile-status-accept Activée
+          - if error_messages.present?
+            %span.icon.refuse
+            %p.fr-tile-status-error À modifier
+          - else
+            %span.icon.accept
+            %p.fr-tile-status-accept Activée
       - else
         %div
           %span.icon.clock
