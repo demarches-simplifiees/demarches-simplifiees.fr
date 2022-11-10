@@ -334,6 +334,10 @@ module Administrateurs
       @filter = ProceduresFilter.new(current_administrateur, params)
     end
 
+    def administrateurs
+      @filter = ProceduresFilter.new(current_administrateur, params)
+    end
+
     private
 
     def draft_valid?
