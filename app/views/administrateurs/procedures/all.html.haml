@@ -1,115 +1,50 @@
-= render 'main_menu'
-.fr-container
-  %h1.fr-my-4w Toutes les démarches
-
-  .fr-container--fluid
-    .fr-grid-row.fr-grid-row--gutters
-      .fr-col-8
-        .fr-highlight.fr-mb-4w
-          %p Ce tableau de bord permet de consulter les informations sur les démarches simplifiées pour toutes les zones. Filtrez par zone et statut. Consultez la liste des démarches et cliquez sur une démarche pour voir la zone et quels sont les administrateurs.
-
-  .fr-container--fluid{ 'data-turbo': 'true', 'data-controller': 'autosubmit' }
-    .fr-grid-row.fr-grid-row--gutters
-      .fr-col-3
-        = form_with(url: all_admin_procedures_path, method: :get, html: {'data-autosubmit-target': 'form'}) do |f|
-
-          %fieldset.sidebar-filter
-            %legend
-              .title.font-weight-bold.fr-pl-2w
-                %span.fr-icon-filter-fill.fr-icon--sm.fr-mr-1w{ 'aria-hidden': 'true' }
-                Filtrer
-              .reinit
-                = link_to all_admin_procedures_path(zone_ids: current_administrateur.zones) do
-                  %span.fr-icon-arrow-go-back-line Réinitialiser
-            %ul
-              %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
-                .fr-mb-1w
-                  %button{ 'data-action': 'expand#toggle' }
-                    %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
-                    Mes zones
-                .fr-ml-1w{ 'data-expand-target': 'content' }
-                  = f.collection_check_boxes :zone_ids, @filter.admin_zones, :id, :current_label, include_hidden: false do |b|
-                    .fr-checkbox-group.fr-ml-2w.fr-py-1w
-                      = b.check_box(checked: @filter.zone_filtered?(b.value), 'data-action': 'autosubmit#submit')
-                      = b.label(class: 'fr-label') { b.text }
-              %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
-                .fr-mb-1w
-                  %button{ 'data-action': 'expand#toggle' }
-                    %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
-                    Autres zones
-                .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
-                  = f.collection_check_boxes :zone_ids, @filter.other_zones, :id, :current_label, include_hidden: false do |b|
-                    .fr-checkbox-group.fr-ml-2w.fr-py-1w
-                      = b.check_box(checked: @filter.zone_filtered?(b.value), 'data-action': 'autosubmit#submit')
-                      = b.label(class: 'fr-label') { b.text }
-              %li.fr-py-2w{ 'data-controller': "expand" }
-                .fr-mb-1w.fr-pl-2w
-                  %button{ 'data-action': 'click->expand#toggle' }
-                    %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
-                    Date de publication
-                .fr-input-group.hidden{ 'data-expand-target': 'content' }
-                  = f.label 'from_publication_date', 'Depuis', class: 'fr-label'
-                  .fr-input-wrap.fr-fi-calendar-line
-                    = f.date_field 'from_publication_date', value: @filter.from_publication_date, class: 'fr-input', 'data-action': 'blur->autosubmit#submit change->autosubmit#debouncedSubmit'
-
-              %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
-                .fr-mb-1w
-                  %button{ 'data-action': 'expand#toggle' }
-                    %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
-                    Statut
-                .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
-                  = f.collection_check_boxes :statuses, ['publiee', 'close'], :to_s, :to_s, include_hidden: false do |b|
-                    .fr-checkbox-group.fr-ml-2w.fr-py-1w
-                      = b.check_box(checked: @filter.status_filtered?(b.value), 'data-action': 'autosubmit#submit')
-                      = b.label(class: 'fr-label') { t b.text, scope: 'activerecord.attributes.procedure.aasm_state' }
-
-      .fr-col-9
-        .main-filter-header.fr-my-3w
-          .search
-          = link_to 'Voir la liste des administrateurs', administrateurs_admin_procedures_path(@filter.params), class: 'fr-btn fr-btn--secondary btn-admins'
-        .fr-table.fr-table--bordered
-          %table#all-demarches
-            %caption
-              = "#{@filter.procedures_result.total_count} démarches"
-              %span.hidden.fr-icon-ball-pen-fill{ 'aria-hidden': 'true', 'data-autosubmit-target': 'spinner' }
-            - if @filter.selected_zones.present?
-              .selected-zones.fr-mb-2w
-                - @filter.selected_zones.each do |zone|
-                  = link_to zone.current_label, all_admin_procedures_path(@filter.without(:zone_ids, zone.id)), class: 'fr-tag fr-tag--dismiss fr-mb-1w'
-            - if @filter.statuses.present?
-              .selected-statuses.fr-mb-2w
-                - @filter.statuses.each do |status|
-                  = link_to status, all_admin_procedures_path(@filter.without(:statuses, status)), class: 'fr-tag fr-tag--dismiss fr-mb-1w'
-            - if @filter.from_publication_date.present?
-              .selected-from-publication-date.fr-mb-2w
-                = link_to "Depuis #{l(@filter.from_publication_date)}", all_admin_procedures_path(@filter.without(:from_publication_date)), class: 'fr-tag fr-tag--dismiss fr-mb-1w'
-            = paginate @filter.procedures_result, views_prefix: 'administrateurs'
-            %thead
-              %tr
-                %th{ scope: 'col' }
-                %th{ scope: 'col' } Démarche
-                %th{ scope: 'col' } N°
-                %th{ scope: 'col' } Administrateurs
-                %th{ scope: 'col' } Statut
-                %th{ scope: 'col' } Date
-            - @filter.procedures_result.each do |procedure|
-              %tbody{ 'data-controller': 'expand' }
-                %tr.procedure{ 'data-action': 'click->expand#toggle' }
-                  %td
-                    %button.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-mb-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
-                  %td= procedure.libelle
-                  %td= procedure.id
-                  %td= procedure.administrateurs.count
-                  %td= t procedure.aasm_state, scope: 'activerecord.attributes.procedure.aasm_state'
-                  %td= l(procedure.published_at, format: :message_date_without_time)
-                %tr.hidden{ 'data-expand-target': 'content' }
-                  %td.fr-highlight--beige-gris-galet{ colspan: '6' }
-                    .fr-container
-                      .fr-grid-row
-                        .fr-col-6
-                          - procedure.zones.uniq.each do |zone|
-                            = zone.label_at(procedure.published_or_created_at)
-                        .fr-col-6
-                          - procedure.administrateurs.uniq.each do |admin|
-                            = admin.email
-          .fr-mt-2w= paginate @filter.procedures_result, views_prefix: 'administrateurs'
+- content_for :results do
+  .main-filter-header.fr-my-3w
+    .search
+    = link_to 'Voir la liste des administrateurs', administrateurs_admin_procedures_path(@filter.params), class: 'fr-btn fr-btn--secondary btn-admins'
+  .fr-table.fr-table--bordered
+    %table#all-demarches
+      %caption
+        = "#{@filter.procedures_result.total_count} démarches"
+        %span.hidden.fr-icon-ball-pen-fill{ 'aria-hidden': 'true', 'data-autosubmit-target': 'spinner' }
+      - if @filter.selected_zones.present?
+        .selected-zones.fr-mb-2w
+          - @filter.selected_zones.each do |zone|
+            = link_to zone.current_label, all_admin_procedures_path(@filter.without(:zone_ids, zone.id)), class: 'fr-tag fr-tag--dismiss fr-mb-1w'
+      - if @filter.statuses.present?
+        .selected-statuses.fr-mb-2w
+          - @filter.statuses.each do |status|
+            = link_to status, all_admin_procedures_path(@filter.without(:statuses, status)), class: 'fr-tag fr-tag--dismiss fr-mb-1w'
+      - if @filter.from_publication_date.present?
+        .selected-from-publication-date.fr-mb-2w
+          = link_to "Depuis #{l(@filter.from_publication_date)}", all_admin_procedures_path(@filter.without(:from_publication_date)), class: 'fr-tag fr-tag--dismiss fr-mb-1w'
+      = paginate @filter.procedures_result, views_prefix: 'administrateurs'
+      %thead
+        %tr
+          %th{ scope: 'col' }
+          %th{ scope: 'col' } Démarche
+          %th{ scope: 'col' } N°
+          %th{ scope: 'col' } Administrateurs
+          %th{ scope: 'col' } Statut
+          %th{ scope: 'col' } Date
+      - @filter.procedures_result.each do |procedure|
+        %tbody{ 'data-controller': 'expand' }
+          %tr.procedure{ 'data-action': 'click->expand#toggle' }
+            %td
+              %button.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-mb-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
+            %td= procedure.libelle
+            %td= procedure.id
+            %td= procedure.administrateurs.count
+            %td= t procedure.aasm_state, scope: 'activerecord.attributes.procedure.aasm_state'
+            %td= l(procedure.published_at, format: :message_date_without_time)
+          %tr.hidden{ 'data-expand-target': 'content' }
+            %td.fr-highlight--beige-gris-galet{ colspan: '6' }
+              .fr-container
+                .fr-grid-row
+                  .fr-col-6
+                    - procedure.zones.uniq.each do |zone|
+                      = zone.label_at(procedure.published_or_created_at)
+                  .fr-col-6
+                    - procedure.administrateurs.uniq.each do |admin|
+                      = admin.email
+    .fr-mt-2w= paginate @filter.procedures_result, views_prefix: 'administrateurs'
