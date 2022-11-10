@@ -657,7 +657,23 @@ describe Procedure do
       let(:procedure) { create(:procedure, :with_notice, received_mail: received_mail, service: service) }
 
       it 'should duplicate notice' do
-        expect(subject.notice.attached?).to be true
+        expect(subject.notice.attached?).to be_truthy
+        expect(subject.notice.attachment).not_to eq(procedure.notice.attachment)
+        expect(subject.notice.attachment.blob).to eq(procedure.notice.attachment.blob)
+
+        subject.notice.attach(logo)
+        subject.reload
+        procedure.reload
+
+        expect(subject.notice.attached?).to be_truthy
+        expect(subject.notice.attachment.blob).not_to eq(procedure.notice.attachment.blob)
+
+        subject.notice.purge
+        subject.reload
+        procedure.reload
+
+        expect(subject.notice.attached?).to be_falsey
+        expect(procedure.notice.attached?).to be_truthy
       end
     end
 
@@ -676,16 +692,6 @@ describe Procedure do
       it 'do not clone canonical procedure' do
         expect(subject.canonical_procedure).to be_nil
       end
-    end
-
-    context 'with an pj not found' do
-      let(:procedure) { create(:procedure) }
-
-      before do
-        expect(PiecesJustificativesService).to receive(:clone_attachments).at_least(:once).and_raise(ActiveStorage::FileNotFoundError)
-      end
-
-      it { expect { procedure.clone(administrateur, false) }.not_to raise_error }
     end
   end
 
