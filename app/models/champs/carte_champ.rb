@@ -115,13 +115,6 @@ class Champs::CarteChamp < Champ
     geo_areas.blank?
   end
 
-  def clone(dossier:, parent: nil)
-    kopy = super(dossier: dossier, parent: parent)
-
-    kopy.geo_areas = geo_areas.map(&:dup)
-    kopy
-  end
-
   private
 
   def selection_utilisateur_legacy_geometry

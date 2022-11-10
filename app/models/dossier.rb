@@ -131,6 +131,8 @@ class Dossier < ApplicationRecord
   belongs_to :groupe_instructeur, optional: true
   belongs_to :revision, class_name: 'ProcedureRevision', optional: false
   belongs_to :user, optional: true
+  belongs_to :parent_dossier, class_name: 'Dossier', optional: true
+
   has_one :france_connect_information, through: :user
 
   has_one :attestation_template, through: :revision
@@ -140,6 +142,7 @@ class Dossier < ApplicationRecord
 
   belongs_to :transfer, class_name: 'DossierTransfer', foreign_key: 'dossier_transfer_id', optional: true, inverse_of: :dossiers
   has_many :transfer_logs, class_name: 'DossierTransferLog', dependent: :destroy
+  has_many :parent_dossiers, class_name: 'Dossier', foreign_key: 'parent_dossier_id', dependent: :nullify, inverse_of: :parent_dossier
 
   accepts_nested_attributes_for :champs_public
   accepts_nested_attributes_for :champs_private
@@ -475,7 +478,7 @@ class Dossier < ApplicationRecord
   end
 
   def build_default_champs_for_new_dossier
-    revision.build_champs.each do |champ|
+    revision.build_champs_public.each do |champ|
       champs_public << champ
     end
     revision.build_champs_private.each do |champ|
@@ -1179,14 +1182,20 @@ class Dossier < ApplicationRecord
     @sections[champ.parent || (champ.public? ? :public : :private)]
   end
 
+  # while cloning we do not have champ.id. it comes after transaction
+  # so we collect a list of jobs to process. then enqueue this list
   def clone
     cloned_dossier = deep_clone(only: [:autorisation_donnees, :user_id, :revision_id, :groupe_instructeur_id],
                                 include: [:individual, :etablissement]) do |original, kopy|
       if original.is_a?(Dossier)
         kopy.parent_dossier_id = original.id
         kopy.state = Dossier.states.fetch(:brouillon)
-        kopy.champs = original.champs.map { |champ| champ.clone(dossier: kopy) }
-        kopy.champs_private = kopy.revision.types_de_champ_private.map { |tdc| tdc.build_champ(revision: kopy.revision, dossier: kopy) }
+        kopy.champs_public = original.champs_public.map do |champ|
+          champ.clone(dossier: kopy)
+        end
+        kopy.champs_private = original.champs_private.map do |champ|
+          champ.clone(dossier: kopy)
+        end
       end
     end
 

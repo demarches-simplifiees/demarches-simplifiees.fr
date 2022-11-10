@@ -51,11 +51,4 @@ class Champs::PieceJustificativeChamp < Champ
       piece_justificative_file.service_url
     end
   end
-
-  def clone(dossier:, parent: nil)
-    kopy = super(dossier: dossier, parent: parent)
-
-    kopy.mark_for_delayed_clone_piece_justificative(self)
-    kopy
-  end
 end

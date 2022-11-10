@@ -57,6 +57,8 @@ class PiecesJustificativesService
 
   def self.clone_attachments(original, kopy)
     case original
+    when Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp
+      clone_attachment(original.piece_justificative_file, kopy.piece_justificative_file)
     when TypeDeChamp
       clone_attachment(original.piece_justificative_template, kopy.piece_justificative_template)
     when Procedure

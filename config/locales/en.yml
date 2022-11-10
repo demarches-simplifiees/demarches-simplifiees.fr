@@ -249,8 +249,8 @@ en:
           actions: "Actions"
         dossier_action:
           edit_dossier: "Edit the file"
-          start_other_dossier: "Start an other empty file"
-          clone: "Clone this file"
+          start_other_dossier: "Start another empty file"
+          clone: "Duplicate the file"
           delete_dossier: "Delete the file"
           transfer_dossier: "Transfer the file"
           edit_draft: "Edit the draft"

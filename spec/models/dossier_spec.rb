@@ -1732,14 +1732,15 @@ describe Dossier do
       let(:dossier) { create(:dossier, :accepte) }
 
       it { expect(new_dossier.brouillon?).to eq(true) }
-      it { expect(new_dossier.parent_dossier_id).to eq(dossier.id) }
-    end
+      it { expect(new_dossier.parent_dossier).to eq(dossier) }
 
-    context 'links type_de_champ' do
-      it { expect(new_dossier.types_de_champ.count).to eq(1) }
-      it { expect(new_dossier.types_de_champ).to eq(dossier.types_de_champ) }
-      it { expect(new_dossier.types_de_champ_private.count).to eq(1) }
-      it { expect(new_dossier.types_de_champ_private).to eq(dossier.types_de_champ_private) }
+      context 'destroy parent' do
+        before { new_dossier }
+
+        it 'clean fk' do
+          expect { dossier.destroy }.to change { new_dossier.reload.parent_dossier_id }.from(dossier.id).to(nil)
+        end
+      end
     end
 
     context 'procedure with_individual' do
@@ -1754,55 +1755,25 @@ describe Dossier do
       it { expect(new_dossier.etablissement.id).not_to eq(dossier.etablissement.id) }
     end
 
-    describe 'skips commentaires' do
-      let(:dossier) { create(:dossier, :with_commentaires) }
-
-      it { expect(new_dossier.commentaires.count).not_to eq(dossier.commentaires.count) }
-      it { expect(new_dossier.commentaires.size).to eq(0) }
-    end
-
-    describe 'skips invites' do
-      let(:dossier) { create(:dossier, :with_invites) }
-
-      it { expect(new_dossier.invites.count).not_to eq(dossier.invites.count) }
-      it { expect(new_dossier.invites.count).to eq(0) }
-    end
-
-    describe 'skips avis' do
-      let(:dossier) { create(:dossier, :with_avis) }
-
-      it { expect(new_dossier.avis.count).not_to eq(dossier.avis.count) }
-      it { expect(new_dossier.avis.count).to eq(0) }
-      it { expect(new_dossier.experts.count).not_to eq(dossier.experts.count) }
-      it { expect(new_dossier.experts.count).to eq(0) }
-    end
-
-    describe 'skips dossier_operation_logs' do
-      let(:dossier) { create(:dossier, :accepte, :with_dossier_operation_logs) }
-
-      it { expect(new_dossier.dossier_operation_logs.count).not_to eq(dossier.dossier_operation_logs.count) }
-      it { expect(new_dossier.dossier_operation_logs.count).to eq(0) }
-    end
-
     describe 'champs' do
       it { expect(new_dossier.id).not_to eq(dossier.id) }
 
       context 'public are duplicated' do
-        it { expect(new_dossier.champs.count).to eq(dossier.champs.count) }
-        it { expect(new_dossier.champs.ids).not_to eq(dossier.champs.ids) }
+        it { expect(new_dossier.champs_public.count).to eq(dossier.champs_public.count) }
+        it { expect(new_dossier.champs_public.ids).not_to eq(dossier.champs_public.ids) }
 
         it 'keeps champs.values' do
-          original_first_champ = dossier.champs.first
+          original_first_champ = dossier.champs_public.first
           original_first_champ.update!(value: 'kthxbye')
 
-          expect(new_dossier.champs.first.value).to eq(original_first_champ.value)
+          expect(new_dossier.champs_public.first.value).to eq(original_first_champ.value)
         end
 
         context 'for Champs::Repetition with rows, original_champ.repetition and rows are duped' do
           let(:dossier) { create(:dossier) }
           let(:type_de_champ_repetition) { create(:type_de_champ_repetition, procedure: dossier.procedure) }
           let(:champ_repetition) { create(:champ_repetition, type_de_champ: type_de_champ_repetition, dossier: dossier) }
-          before { dossier.champs << champ_repetition }
+          before { dossier.champs_public << champ_repetition }
 
           it { expect(Champs::RepetitionChamp.where(dossier: new_dossier).first.champs.count).to eq(4) }
           it { expect(Champs::RepetitionChamp.where(dossier: new_dossier).first.champs.ids).not_to eq(champ_repetition.champs.ids) }
@@ -1813,7 +1784,7 @@ describe Dossier do
           let(:type_de_champ_carte) { create(:type_de_champ_carte, procedure: dossier.procedure) }
           let(:geo_area) { create(:geo_area, :selection_utilisateur, :polygon) }
           let(:champ_carte) { create(:champ_carte, type_de_champ: type_de_champ_carte, geo_areas: [geo_area]) }
-          before { dossier.champs << champ_carte }
+          before { dossier.champs_public << champ_carte }
 
           it { expect(Champs::CarteChamp.where(dossier: new_dossier).first.geo_areas.count).to eq(1) }
           it { expect(Champs::CarteChamp.where(dossier: new_dossier).first.geo_areas.ids).not_to eq(champ_carte.geo_areas.ids) }
@@ -1824,7 +1795,7 @@ describe Dossier do
          let(:type_de_champs_siret) { create(:type_de_champ_siret, procedure: dossier.procedure) }
          let(:etablissement) { create(:etablissement) }
          let(:champ_siret) { create(:champ_siret, type_de_champ: type_de_champs_siret, etablissement: create(:etablissement)) }
-         before { dossier.champs << champ_siret }
+         before { dossier.champs_public << champ_siret }
 
          it { expect(Champs::SiretChamp.where(dossier: dossier).first.etablissement).not_to be_nil }
          it { expect(Champs::SiretChamp.where(dossier: new_dossier).first.etablissement.id).not_to eq(champ_siret.etablissement.id) }
@@ -1833,9 +1804,8 @@ describe Dossier do
         context 'for Champs::PieceJustificative, original_champ.piece_justificative_file is duped' do
           let(:dossier) { create(:dossier) }
           let(:champ_piece_justificative) { create(:champ_piece_justificative, dossier_id: dossier.id) }
-          before { dossier.champs << champ_piece_justificative }
-          it { expect(Champs::PieceJustificativeChamp.where(dossier: new_dossier).first.piece_justificative_file.blob).to be_nil }
-          it { expect { new_dossier }.to have_enqueued_job(ClonePieceJustificativeJob) }
+          before { dossier.champs_public << champ_piece_justificative }
+          it { expect(Champs::PieceJustificativeChamp.where(dossier: new_dossier).first.piece_justificative_file.blob).to eq(champ_piece_justificative.piece_justificative_file.blob) }
         end
       end
 
