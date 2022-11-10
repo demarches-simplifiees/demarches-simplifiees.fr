@@ -248,7 +248,7 @@ prawn_document(page_size: "A4") do |pdf|
   end
 
   add_title(pdf, 'Formulaire')
-  add_champs(pdf, @dossier.champs)
+  add_champs(pdf, @dossier.champs_public)
 
   if @include_infos_administration && @dossier.champs_private.present?
     add_title(pdf, "Annotations privées")

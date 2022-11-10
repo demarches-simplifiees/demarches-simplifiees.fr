@@ -13,7 +13,7 @@ describe PiecesJustificativesService do
       let(:dossier) { create(:dossier, procedure: procedure) }
       let(:witness) { create(:dossier, procedure: procedure) }
 
-      let(:pj_champ) { -> (d) { d.champs.find { |c| c.type == 'Champs::PieceJustificativeChamp' } } }
+      let(:pj_champ) { -> (d) { d.champs_public.find { |c| c.type == 'Champs::PieceJustificativeChamp' } } }
 
       before do
         attach_file_to_champ(pj_champ.call(dossier))
@@ -26,7 +26,7 @@ describe PiecesJustificativesService do
     context 'with a pj not safe on a champ' do
       let(:procedure) { create(:procedure, :with_piece_justificative) }
       let(:dossier) { create(:dossier, procedure: procedure) }
-      let(:pj_champ) { -> (d) { d.champs.find { |c| c.type == 'Champs::PieceJustificativeChamp' } } }
+      let(:pj_champ) { -> (d) { d.champs_public.find { |c| c.type == 'Champs::PieceJustificativeChamp' } } }
 
       before { attach_file_to_champ(pj_champ.call(dossier), safe = false) }
 
@@ -60,7 +60,7 @@ describe PiecesJustificativesService do
       let(:dossier) { create(:dossier, procedure: procedure) }
       let(:witness) { create(:dossier, procedure: procedure) }
 
-      let(:champ_identite) { dossier.champs.find { |c| c.type == 'Champs::TitreIdentiteChamp' } }
+      let(:champ_identite) { dossier.champs_public.find { |c| c.type == 'Champs::TitreIdentiteChamp' } }
 
       before { attach_file_to_champ(champ_identite) }
 

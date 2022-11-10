@@ -255,7 +255,7 @@ class Procedure < ApplicationRecord
     includes(
       :groupe_instructeurs,
       dossiers: {
-        champs: [
+        champs_public: [
           piece_justificative_file_attachment: :blob,
           champs: [
             piece_justificative_file_attachment: :blob

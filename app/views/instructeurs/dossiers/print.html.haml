@@ -13,7 +13,7 @@
 
 %h2 Formulaire
 
-- champs = @dossier.champs
+- champs = @dossier.champs_public
 - if champs.any? || @dossier.procedure.routing_enabled?
   = render partial: "shared/dossiers/champs", locals: { champs: champs, dossier: @dossier, demande_seen_at: nil, profile: 'instructeur' }
 

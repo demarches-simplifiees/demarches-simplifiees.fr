@@ -166,7 +166,7 @@ class Champ < ApplicationRecord
 
   # A predictable string to use when generating an input name for this champ.
   #
-  # Rail's FormBuilder can auto-generate input names, using the form "dossier[champs_attributes][5]",
+  # Rail's FormBuilder can auto-generate input names, using the form "dossier[champs_public_attributes][5]",
   # where [5] is the index of the field in the form.
   # However the field index makes it difficult to render a single field, independent from the ordering of the others.
   #
@@ -218,7 +218,7 @@ class Champ < ApplicationRecord
   private
 
   def champs_for_condition
-    private? ? dossier.champs_private : dossier.champs
+    private? ? dossier.champs_private : dossier.champs_public
   end
 
   def html_id
@@ -229,7 +229,7 @@ class Champ < ApplicationRecord
     if private?
       "champs_private_attributes"
     else
-      "champs_attributes"
+      "champs_public_attributes"
     end
   end
 
