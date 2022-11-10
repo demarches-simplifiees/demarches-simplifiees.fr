@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   get '/saml/auth' => 'saml_idp#new'
   post '/saml/auth' => 'saml_idp#create'
-  get '/saml/metadata' => 'saml_idp#metadata'
+  get '/saml/metadata' => 'saml_idp#show'
 
   #
   # Manager
@@ -15,8 +15,10 @@ Rails.application.routes.draw do
       post 'draft', on: :member
       post 'discard', on: :member
       post 'restore', on: :member
-      post 'add_administrateur', on: :member
       put 'delete_administrateur', on: :member
+      post 'add_administrateur_and_instructeur', on: :member
+      post 'add_administrateur_with_confirmation', on: :member
+      get 'confirm_add_administrateur', on: :member
       post 'change_piece_justificative_template', on: :member
       get 'export_mail_brouillons', on: :member
     end
@@ -60,6 +62,9 @@ Rails.application.routes.draw do
     resources :zones, only: [:index, :show]
 
     resources :dubious_procedures, only: [:index]
+    resources :outdated_procedures, only: [:index] do
+      patch :bulk_update, on: :collection
+    end
 
     post 'demandes/create_administrateur'
     post 'demandes/refuse_administrateur'

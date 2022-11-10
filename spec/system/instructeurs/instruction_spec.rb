@@ -180,6 +180,20 @@ describe 'Instructing a dossier:', js: true do
     expect(page).to have_text("Dossier envoyé")
   end
 
+  context 'A instructeur can ask for an Archive' do
+    let(:procedure) { create(:procedure, :published, :with_piece_justificative, instructeurs: [instructeur]) }
+    let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
+    before do
+      log_in(instructeur.email, password)
+      visit instructeur_archives_path(procedure)
+    end
+    scenario 'download' do
+      expect {
+        page.first(".archive-table .button").click
+      }.to have_enqueued_job(ArchiveCreationJob).with(procedure, an_instance_of(Archive), instructeur)
+      expect(Archive.first.month).not_to be_nil
+    end
+  end
   context 'with dossiers having attached files', js: true do
     let(:procedure) { create(:procedure, :published, :with_piece_justificative, instructeurs: [instructeur]) }
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }

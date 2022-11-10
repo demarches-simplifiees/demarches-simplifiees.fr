@@ -208,10 +208,11 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
   end
 
   describe '#add_instructeur_procedure_non_routee' do
-    let(:procedure) { create :procedure, administrateur: admin }
+    let(:procedure) { create :procedure }
+    let!(:groupe_instructeur) { create(:administrateurs_procedure, procedure: procedure, administrateur: admin, manager: manager) }
     let(:emails) { ['instructeur_3@ministere_a.gouv.fr', 'instructeur_4@ministere_b.gouv.fr'].to_json }
     subject { post :add_instructeur, params: { emails: emails, procedure_id: procedure.id, id: gi_1_1.id } }
-
+    let(:manager) { false }
     context 'when all emails are valid' do
       let(:emails) { ['test@b.gouv.fr', 'test2@b.gouv.fr'].to_json }
       it { expect(response.status).to eq(200) }
@@ -233,18 +234,17 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       it { expect(subject.request.flash[:alert]).to be_present }
       it { expect(subject).to redirect_to admin_procedure_groupe_instructeurs_path(procedure) }
     end
+
+    context 'when signed in admin comes from manager' do
+      let(:manager) { true }
+      it { is_expected.to have_http_status(:forbidden) }
+    end
   end
 
   describe '#add_instructeur' do
     let!(:instructeur) { create(:instructeur) }
     let(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }
-
-    before do
-      gi_1_2.instructeurs << instructeur
-
-      allow(GroupeInstructeurMailer).to receive(:add_instructeurs)
-        .and_return(double(deliver_later: true))
-
+    let(:do_request) do
       post :add_instructeur,
         params: {
           procedure_id: procedure.id,
@@ -252,10 +252,16 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
           emails: new_instructeur_emails.to_json
         }
     end
+    before do
+      gi_1_2.instructeurs << instructeur
+
+      allow(GroupeInstructeurMailer).to receive(:add_instructeurs)
+        .and_return(double(deliver_later: true))
+    end
 
     context 'of a news instructeurs' do
       let(:new_instructeur_emails) { ['new_i1@mail.com', 'new_i2@mail.com'] }
-
+      before { do_request }
       it { expect(gi_1_2.instructeurs.pluck(:email)).to include(*new_instructeur_emails) }
       it { expect(flash.notice).to be_present }
       it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_2)) }
@@ -271,21 +277,31 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
     context 'of an instructeur already in the group' do
       let(:new_instructeur_emails) { [instructeur.email] }
-
+      before { do_request }
       it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_2)) }
     end
 
     context 'of badly formed email' do
       let(:new_instructeur_emails) { ['badly_formed_email'] }
-
+      before { do_request }
       it { expect(flash.alert).to be_present }
       it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_2)) }
     end
 
     context 'of an empty string' do
       let(:new_instructeur_emails) { [''] }
-
+      before { do_request }
       it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_2)) }
+    end
+
+    context 'when connected as an administrateur from manager' do
+      let(:new_instructeur_emails) { [instructeur.email] }
+      before do
+        admin.administrateurs_procedures.update_all(manager: true)
+        do_request
+      end
+
+      it { expect(response).to have_http_status(:forbidden) }
     end
   end
 

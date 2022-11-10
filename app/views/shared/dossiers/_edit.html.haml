@@ -6,7 +6,7 @@
   - else
     - form_options = { url: modifier_dossier_url(dossier), method: :patch }
 
-  = form_for dossier, form_options.merge({ html: { id: 'dossier-edit-form', class: 'form', multipart: true } }) do |f|
+  = form_for dossier, form_options.merge({ html: { id: 'dossier-edit-form', class: 'form', multipart: true, novalidate: 'novalidate' } }) do |f|
 
     .prologue
       %p.mandatory-explanation= t('utils.asterisk_html')
