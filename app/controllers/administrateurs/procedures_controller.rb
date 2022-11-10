@@ -1,5 +1,7 @@
 module Administrateurs
   class ProceduresController < AdministrateurController
+    layout 'all', only: [:all, :administrateurs]
+
     before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :zones, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :allow_expert_review, :experts_require_administrateur_invitation, :reset_draft]
     before_action :procedure_revisable?, only: [:champs, :annotations, :modifications, :reset_draft]
     before_action :draft_valid?, only: [:apercu]
