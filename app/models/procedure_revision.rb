@@ -32,7 +32,7 @@ class ProcedureRevision < ApplicationRecord
 
   validate :conditions_are_valid?
 
-  def build_champs
+  def build_champs_public
     # reload: it can be out of sync in test if some tdcs are added wihtout using add_tdc
     types_de_champ_public.reload.map { |tdc| tdc.build_champ(revision: self) }
   end
@@ -154,7 +154,7 @@ class ProcedureRevision < ApplicationRecord
   def new_dossier
     Dossier.new(
       revision: self,
-      champs: build_champs,
+      champs_public: build_champs_public,
       champs_private: build_champs_private,
       groupe_instructeur: procedure.defaut_groupe_instructeur
     )

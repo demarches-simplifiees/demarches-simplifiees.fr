@@ -8,7 +8,7 @@ describe ChampPolicy do
 
   subject { Pundit.policy_scope(account, Champ) }
 
-  let(:champ) { dossier.champs.first }
+  let(:champ) { dossier.champs_public.first }
   let(:champ_private) { dossier.champs_private.first }
 
   shared_examples_for 'they can access a public champ' do

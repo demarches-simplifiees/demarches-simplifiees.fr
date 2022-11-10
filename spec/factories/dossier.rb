@@ -84,7 +84,7 @@ FactoryBot.define do
         end
 
         # find champ with the type de champ
-        champ = dossier.reload.champs.find do |c|
+        champ = dossier.reload.champs_public.find do |c|
           c.type_de_champ == type_de_champ
         end
 
@@ -217,7 +217,7 @@ FactoryBot.define do
 
     trait :with_populated_champs do
       after(:create) do |dossier, _evaluator|
-        dossier.champs = dossier.types_de_champ.map do |type_de_champ|
+        dossier.champs_public = dossier.types_de_champ.map do |type_de_champ|
           build(:"champ_#{type_de_champ.type_champ}", dossier: dossier, type_de_champ: type_de_champ)
         end
         dossier.save!

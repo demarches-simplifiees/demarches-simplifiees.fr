@@ -41,7 +41,7 @@ class AttestationTemplate < ApplicationRecord
   end
 
   def unspecified_champs_for_dossier(dossier)
-    all_champs_with_libelle_index = (dossier.champs + dossier.champs_private).index_by { |champ| "tdc#{champ.stable_id}" }
+    all_champs_with_libelle_index = (dossier.champs_public + dossier.champs_private).index_by { |champ| "tdc#{champ.stable_id}" }
 
     used_tags.filter_map do |used_tag|
       corresponding_champ = all_champs_with_libelle_index[used_tag]

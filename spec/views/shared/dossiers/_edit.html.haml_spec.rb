@@ -15,7 +15,7 @@ describe 'shared/dossiers/edit.html.haml', type: :view do
     let(:champ_textarea) { create(:champ_textarea, dossier: dossier, value: 'Some long text in a textarea.') }
     let(:champs) { [champ_checkbox, champ_header_section, champ_explication, champ_dossier_link, champ_textarea] }
 
-    before { dossier.champs << champs }
+    before { dossier.champs_public << champs }
 
     it 'renders labels and editable values of champs' do
       expect(subject).to have_field(champ_checkbox.libelle, checked: true)
@@ -45,7 +45,7 @@ describe 'shared/dossiers/edit.html.haml', type: :view do
     let(:enabled_options) { type_de_champ.drop_down_list_enabled_non_empty_options }
     let(:mandatory) { true }
 
-    before { dossier.champs << champ }
+    before { dossier.champs_public << champ }
 
     context 'when the list is short' do
       it 'renders the list as radio buttons' do
@@ -78,7 +78,7 @@ describe 'shared/dossiers/edit.html.haml', type: :view do
     let(:options) { type_de_champ.drop_down_list_options }
     let(:enabled_options) { type_de_champ.drop_down_list_enabled_non_empty_options }
 
-    before { dossier.champs << champ }
+    before { dossier.champs_public << champ }
 
     context 'when the list is short' do
       let(:drop_down_list_value) { ['valid', 'invalid', 'not sure yet'].join("\r\n") }
@@ -111,7 +111,7 @@ describe 'shared/dossiers/edit.html.haml', type: :view do
 
     context 'when dossier is en construction' do
       let(:dossier) { create(:dossier, :en_construction) }
-      before { dossier.champs << champ }
+      before { dossier.champs_public << champ }
 
       it 'cannot delete a piece justificative' do
         expect(subject).not_to have_text('Supprimer')
@@ -120,7 +120,7 @@ describe 'shared/dossiers/edit.html.haml', type: :view do
 
     context 'when dossier is brouillon' do
       before do
-        dossier.champs << champ
+        dossier.champs_public << champ
       end
 
       it 'can delete a piece justificative' do

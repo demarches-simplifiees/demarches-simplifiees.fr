@@ -122,7 +122,7 @@ module Types
           .load(ApplicationRecord.id_from_typed_id(id))
       else
         Loaders::Association
-          .for(object.class, champs: :type_de_champ)
+          .for(object.class, champs_public: :type_de_champ)
           .load(object)
           .then { |champs| champs.filter(&:visible?) }
       end

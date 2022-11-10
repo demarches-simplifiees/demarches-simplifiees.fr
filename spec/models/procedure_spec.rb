@@ -1169,11 +1169,11 @@ describe Procedure do
 
     it { expect(dossier.procedure).to eq(procedure) }
 
-    it { expect(dossier.champs.size).to eq(2) }
-    it { expect(dossier.champs[0].type).to eq("Champs::TextChamp") }
+    it { expect(dossier.champs_public.size).to eq(2) }
+    it { expect(dossier.champs_public.first.type).to eq("Champs::TextChamp") }
 
     it { expect(dossier.champs_private.size).to eq(1) }
-    it { expect(dossier.champs_private[0].type).to eq("Champs::TextareaChamp") }
+    it { expect(dossier.champs_private.first.type).to eq("Champs::TextareaChamp") }
 
     it { expect(Champ.count).to eq(0) }
   end
