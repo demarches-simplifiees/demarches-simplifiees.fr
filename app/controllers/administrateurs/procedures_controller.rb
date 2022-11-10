@@ -334,13 +334,28 @@ module Administrateurs
 
     def all
       @filter = ProceduresFilter.new(current_administrateur, params)
+      @procedures = paginate(filter_procedures(@filter), published_at: :desc)
     end
 
     def administrateurs
       @filter = ProceduresFilter.new(current_administrateur, params)
+      @admins = Administrateur.includes(:user, :procedures).where(id: AdministrateursProcedure.where(procedure: filter_procedures(@filter)).select(:administrateur_id))
+      @admins = paginate(@admins, 'users.email')
     end
 
     private
+
+    def filter_procedures(filter)
+      procedures_result = Procedure.joins(:procedures_zones).publiees_ou_closes
+      procedures_result = procedures_result.where(procedures_zones: { zone_id: filter.zone_ids }) if filter.zone_ids.present?
+      procedures_result = procedures_result.where(aasm_state: filter.statuses) if filter.statuses.present?
+      procedures_result = procedures_result.where('published_at >= ?', filter.from_publication_date) if filter.from_publication_date.present?
+      procedures_result
+    end
+
+    def paginate(result, ordered_by)
+      result.page(params[:page]).per(ITEMS_PER_PAGE).order(ordered_by)
+    end
 
     def draft_valid?
       if procedure_without_control.draft_revision.invalid?

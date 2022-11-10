@@ -52,29 +52,4 @@ class ProceduresFilter
       params.to_h.merge(filter => new_filter)
     end
   end
-
-  def procedures_result
-    return @procedures_result if @procedures_result
-    @procedures_result = paginate(filter_procedures, published_at: :desc)
-  end
-
-  def admins_result
-    return @admins_result if @admins_result
-    @admins_result = Administrateur.includes(:user).where(id: AdministrateursProcedure.where(procedure: filter_procedures).select(:administrateur_id))
-    @admins_result = paginate(@admins_result, 'users.email')
-  end
-
-  private
-
-  def filter_procedures
-    procedures_result = Procedure.joins(:procedures_zones).publiees_ou_closes
-    procedures_result = procedures_result.where(procedures_zones: { zone_id: zone_ids }) if zone_ids.present?
-    procedures_result = procedures_result.where(aasm_state: statuses) if statuses.present?
-    procedures_result = procedures_result.where('published_at >= ?', from_publication_date) if from_publication_date.present?
-    procedures_result
-  end
-
-  def paginate(result, ordered_by)
-    result.page(params[:page]).per(ITEMS_PER_PAGE).order(ordered_by)
-  end
 end
