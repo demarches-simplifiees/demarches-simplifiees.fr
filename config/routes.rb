@@ -434,6 +434,7 @@ Rails.application.routes.draw do
         get 'new_from_existing'
         post 'search'
         get 'all'
+        get 'administrateurs'
       end
 
       member do
