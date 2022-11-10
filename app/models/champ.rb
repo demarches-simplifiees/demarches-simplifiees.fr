@@ -30,7 +30,6 @@ class Champ < ApplicationRecord
   has_many :geo_areas, -> { order(:created_at) }, dependent: :destroy, inverse_of: :champ
   belongs_to :etablissement, optional: true, dependent: :destroy
   has_many :champs, -> { ordered }, foreign_key: :parent_id, inverse_of: :parent, dependent: :destroy
-  after_create_commit :after_clone, if: :cloned?
 
   delegate :libelle,
     :type_champ,
@@ -217,26 +216,20 @@ class Champ < ApplicationRecord
   end
 
   def clone(dossier:, parent: nil)
-    kopy = deep_clone(only: [:data, :private, :row, :type, :value, :value_json, :external_id, :type_de_champ_id])
+    kopy = deep_clone(only: (private? ? [] : [:value, :value_json]) + [:data, :private, :row, :type, :external_id, :type_de_champ_id],
+                      include: private? ? [] : [:etablissement, :geo_areas])
 
     kopy.dossier = dossier
     kopy.parent = parent if parent
-    kopy
-  end
-
-  def mark_for_delayed_clone_piece_justificative(from)
-    if from.piece_justificative_file.attached?
-      @cloned_from = from
-      @cloned_kopy = self
+    case self
+    when Champs::RepetitionChamp
+      kopy.champs = (private? ? champs.where(row: 0) : champs).map do |champ_de_repetition|
+        champ_de_repetition.clone(dossier: dossier, parent: kopy)
+      end
+    when Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp
+      PiecesJustificativesService.clone_attachments(self, kopy) if !private? && piece_justificative_file.attached?
     end
-  end
-
-  def after_clone
-    ClonePieceJustificativeJob.perform_later(@cloned_from, @cloned_kopy)
-  end
-
-  def cloned?
-    @cloned_from && @cloned_kopy
+    kopy
   end
 
   def clone_piece_justificative(kopy)
