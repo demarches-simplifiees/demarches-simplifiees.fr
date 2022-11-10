@@ -5,7 +5,7 @@ class ProceduresFilter
 
   def initialize(admin, params)
     @admin = admin
-    @params = params.permit(:page, :from_publication_date, :view_admins, zone_ids: [], statuses: [])
+    @params = params.permit(:page, :from_publication_date, zone_ids: [], statuses: [])
   end
 
   def admin_zones
@@ -36,10 +36,6 @@ class ProceduresFilter
     nil
   end
 
-  def view_admins?
-    params[:view_admins] == 'true'
-  end
-
   def zone_filtered?(zone_id)
     zone_ids&.map(&:to_i)&.include?(zone_id)
   end
@@ -55,10 +51,6 @@ class ProceduresFilter
       new_filter = params.to_h[filter] - [value.to_s]
       params.to_h.merge(filter => new_filter)
     end
-  end
-
-  def with_view_admins(view_admins)
-    params.to_h.merge(view_admins: view_admins)
   end
 
   def procedures_result

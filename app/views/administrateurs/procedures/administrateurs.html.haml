@@ -66,11 +66,11 @@
       .fr-col-9
         .main-filter-header.fr-my-3w
           .search
-          = link_to 'Voir la liste des administrateurs', administrateurs_admin_procedures_path(@filter.params), class: 'fr-btn fr-btn--secondary btn-admins'
+          = link_to 'Voir la liste des démarches', all_admin_procedures_path(@filter.params), class: 'fr-btn fr-btn--secondary btn-admins'
         .fr-table.fr-table--bordered
-          %table#all-demarches
+          %table#all-admins
             %caption
-              = "#{@filter.procedures_result.total_count} démarches"
+              = "#{@filter.admins_result.total_count} administrateurs"
               %span.hidden.fr-icon-ball-pen-fill{ 'aria-hidden': 'true', 'data-autosubmit-target': 'spinner' }
             - if @filter.selected_zones.present?
               .selected-zones.fr-mb-2w
@@ -82,34 +82,27 @@
                   = link_to status, all_admin_procedures_path(@filter.without(:statuses, status)), class: 'fr-tag fr-tag--dismiss fr-mb-1w'
             - if @filter.from_publication_date.present?
               .selected-from-publication-date.fr-mb-2w
-                = link_to "Depuis #{l(@filter.from_publication_date)}", all_admin_procedures_path(@filter.without(:from_publication_date)), class: 'fr-tag fr-tag--dismiss fr-mb-1w'
-            = paginate @filter.procedures_result, views_prefix: 'administrateurs'
+                = link_to "Depuis le #{l(@filter.from_publication_date)}", all_admin_procedures_path(@filter.without(:from_publication_date)), class: 'fr-tag fr-tag--dismiss fr-mb-1w'
+            = paginate @filter.admins_result, views_prefix: 'administrateurs'
             %thead
               %tr
                 %th{ scope: 'col' }
-                %th{ scope: 'col' } Démarche
-                %th{ scope: 'col' } N°
                 %th{ scope: 'col' } Administrateurs
-                %th{ scope: 'col' } Statut
-                %th{ scope: 'col' } Date
-            - @filter.procedures_result.each do |procedure|
+                %th{ scope: 'col' } Nb démarches
+                %th{ scope: 'col' } Inscrit le
+            - @filter.admins_result.each do |admin|
               %tbody{ 'data-controller': 'expand' }
                 %tr.procedure{ 'data-action': 'click->expand#toggle' }
                   %td
                     %button.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-mb-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
-                  %td= procedure.libelle
-                  %td= procedure.id
-                  %td= procedure.administrateurs.count
-                  %td= t procedure.aasm_state, scope: 'activerecord.attributes.procedure.aasm_state'
-                  %td= l(procedure.published_at, format: :message_date_without_time)
+                  %td= admin.email
+                  %td= admin.procedures.count
+                  %td= l(admin.created_at, format: :message_date_without_time)
                 %tr.hidden{ 'data-expand-target': 'content' }
                   %td.fr-highlight--beige-gris-galet{ colspan: '6' }
                     .fr-container
-                      .fr-grid-row
-                        .fr-col-6
-                          - procedure.zones.uniq.each do |zone|
-                            = zone.label_at(procedure.published_or_created_at)
-                        .fr-col-6
-                          - procedure.administrateurs.uniq.each do |admin|
-                            = admin.email
-          .fr-mt-2w= paginate @filter.procedures_result, views_prefix: 'administrateurs'
+                      .fr-col-12.fr-mr-1w
+                        %ul
+                        - admin.procedures.each do |procedure|
+                          %li= procedure.libelle
+          .fr-mt-2w= paginate @filter.admins_result, views_prefix: 'administrateurs'
