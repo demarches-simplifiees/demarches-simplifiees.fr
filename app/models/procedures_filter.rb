@@ -52,13 +52,4 @@ class ProceduresFilter
       params.to_h.merge(filter => new_filter)
     end
   end
-
-  def procedures_result
-    return @procedures_result if @procedures_result
-    @procedures_result = Procedure.joins(:procedures_zones).publiees_ou_closes
-    @procedures_result = @procedures_result.where(procedures_zones: { zone_id: zone_ids }) if zone_ids.present?
-    @procedures_result = @procedures_result.where(aasm_state: statuses) if statuses.present?
-    @procedures_result = @procedures_result.where('published_at >= ?', from_publication_date) if from_publication_date.present?
-    @procedures_result = @procedures_result.page(params[:page]).per(ITEMS_PER_PAGE).order(published_at: :desc)
-  end
 end
