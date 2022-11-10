@@ -88,16 +88,84 @@ describe Administrateurs::ProceduresController, type: :controller do
   end
 
   describe 'GET #all' do
+    let!(:draft_procedure)     { create(:procedure) }
+    let!(:published_procedure) { create(:procedure_with_dossiers, :published, dossiers_count: 2) }
+    let!(:closed_procedure)    { create(:procedure, :closed) }
     subject { get :all }
 
     it { expect(subject.status).to eq(200) }
 
-    it 'assigns ProceduresFilter' do
-      filter = double('filter')
-      expect(ProceduresFilter).to receive(:new).and_return(filter)
+    it 'display published or closed procedures' do
       subject
+      expect(assigns(:procedures)).to include(published_procedure)
+      expect(assigns(:procedures)).to include(closed_procedure)
+    end
 
-      expect(assigns(:filter)).to be_present
+    it 'doesn’t display draft procedures' do
+      subject
+      expect(assigns(:procedures)).not_to include(draft_procedure)
+    end
+
+    context "for specific zones" do
+      let(:zone1) { create(:zone) }
+      let(:zone2) { create(:zone) }
+      let!(:procedure1) { create(:procedure, :published, zones: [zone1]) }
+      let!(:procedure2) { create(:procedure, :published, zones: [zone1, zone2]) }
+
+      subject { get :all, params: { zone_ids: [zone2.id] } }
+
+      it 'display only procedures for specified zones' do
+        subject
+        expect(assigns(:procedures)).to include(procedure2)
+        expect(assigns(:procedures)).not_to include(procedure1)
+      end
+    end
+
+    context 'for specific status' do
+      let!(:procedure1) { create(:procedure, :published) }
+      let!(:procedure2) { create(:procedure, :closed) }
+
+      it 'display only published procedures' do
+        get :all, params: { statuses: ['publiee'] }
+        expect(assigns(:procedures)).to include(procedure1)
+        expect(assigns(:procedures)).not_to include(procedure2)
+      end
+
+      it 'display only closed procedures' do
+        get :all, params: { statuses: ['close'] }
+        expect(assigns(:procedures)).to include(procedure2)
+        expect(assigns(:procedures)).not_to include(procedure1)
+      end
+    end
+
+    context 'after specific date' do
+      let(:after) { Date.new(2022, 06, 30) }
+      let!(:procedure1) { create(:procedure, :published, published_at: after + 1.day) }
+      let!(:procedure2) { create(:procedure, :published, published_at: after + 2.days) }
+      let!(:procedure3) { create(:procedure, :published, published_at: after - 1.day) }
+
+      it 'display only procedures published after specific date' do
+        get :all, params: { from_publication_date: after }
+        expect(assigns(:procedures)).to include(procedure1)
+        expect(assigns(:procedures)).to include(procedure2)
+        expect(assigns(:procedures)).not_to include(procedure3)
+      end
+    end
+  end
+
+  describe 'GET #administrateurs' do
+    let!(:draft_procedure)     { create(:procedure, administrateur: admin3) }
+    let!(:published_procedure) { create(:procedure_with_dossiers, :published, dossiers_count: 2, administrateur: admin1) }
+    let!(:closed_procedure)    { create(:procedure, :closed, administrateur: admin2) }
+    let(:admin1) { create(:administrateur) }
+    let(:admin2) { create(:administrateur) }
+    let(:admin3) { create(:administrateur) }
+
+    it 'displays admins of the procedures' do
+      get :administrateurs
+      expect(assigns(:admins)).to include(admin1)
+      expect(assigns(:admins)).to include(admin2)
+      expect(assigns(:admins)).not_to include(admin3)
     end
   end
 
