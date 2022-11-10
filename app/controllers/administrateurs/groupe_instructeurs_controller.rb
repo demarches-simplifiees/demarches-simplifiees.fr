@@ -1,6 +1,9 @@
 module Administrateurs
   class GroupeInstructeursController < AdministrateurController
     include ActiveSupport::NumberHelper
+
+    before_action :ensure_not_super_admin!, only: [:add_instructeur]
+
     ITEMS_PER_PAGE = 25
     CSV_MAX_SIZE = 1.megabytes
     CSV_ACCEPTED_CONTENT_TYPES = [

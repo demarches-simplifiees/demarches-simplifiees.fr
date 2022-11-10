@@ -351,6 +351,10 @@ class Procedure < ApplicationRecord
     end
   end
 
+  def dossiers_close_to_expiration
+    dossiers.close_to_expiration.count
+  end
+
   def publish_or_reopen!(administrateur)
     Procedure.transaction do
       if brouillon?

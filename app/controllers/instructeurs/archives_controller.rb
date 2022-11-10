@@ -1,6 +1,8 @@
 module Instructeurs
   class ArchivesController < InstructeurController
-    before_action :retrieve_procedure, only: [:index, :create]
+    before_action :retrieve_procedure
+    before_action :ensure_not_super_admin!
+
     helper_method :create_archive_url
 
     def index
@@ -28,7 +30,7 @@ module Instructeurs
     end
 
     def create_archive_url(procedure, date)
-      instructeur_archives_path(procedure, type: 'monthly', month: date.strftime('%Y-%m'))
+      instructeur_archives_path(procedure, type: 'monthly', year_month: date.strftime('%Y-%m'))
     end
 
     def groupe_instructeurs
