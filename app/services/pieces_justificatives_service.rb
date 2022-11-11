@@ -45,7 +45,7 @@ class PiecesJustificativesService
   end
 
   def self.serialize_champs_as_pjs(dossier)
-    dossier.champs.filter { |champ| champ.type_de_champ.old_pj }.map do |champ|
+    dossier.champs_public.filter { |champ| champ.type_de_champ.old_pj }.map do |champ|
       {
         created_at: champ.created_at&.in_time_zone('UTC'),
         type_de_piece_justificative_id: champ.type_de_champ.old_pj[:stable_id],

@@ -5,7 +5,7 @@ describe Champs::CarteController, type: :controller do
   let(:params) do
     {
       dossier: {
-        champs_attributes: {
+        champs_public_attributes: {
           '1' => { value: value }
         }
       },

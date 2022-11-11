@@ -466,7 +466,7 @@ describe 'The user' do
   end
 
   def champ_value_for(libelle)
-    champs = user_dossier.reload.champs
+    champs = user_dossier.reload.champs_public
     champs.find { |c| c.libelle == libelle }.value
   end
 

@@ -4,13 +4,13 @@ describe Champs::DossierLinkController, type: :controller do
 
   describe '#show' do
     let(:dossier) { create(:dossier, user: user, procedure: procedure) }
-    let(:champ) { dossier.champs.first }
+    let(:champ) { dossier.champs_public.first }
 
     context 'when user is connected' do
       render_views
       before { sign_in user }
 
-      let(:champs_attributes) do
+      let(:champs_public_attributes) do
         champ_attributes = []
         champ_attributes[champ.id] = { value: dossier_id }
         champ_attributes
@@ -19,7 +19,7 @@ describe Champs::DossierLinkController, type: :controller do
         {
           champ_id: champ.id,
           dossier: {
-            champs_attributes: champs_attributes
+            champs_public_attributes: champs_public_attributes
           }
         }
       end

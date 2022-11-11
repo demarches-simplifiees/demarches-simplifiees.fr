@@ -158,17 +158,17 @@ describe Dossier do
     let(:yes_no_type_de_champ) { procedure.types_de_champ.find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:yes_no) } }
 
     let(:text_type_de_champ) { procedure.types_de_champ.find(&:mandatory?) }
-    let(:text_champ) { dossier.champs.find(&:mandatory?) }
-    let(:rebased_text_champ) { dossier.champs.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
+    let(:text_champ) { dossier.champs_public.find(&:mandatory?) }
+    let(:rebased_text_champ) { dossier.champs_public.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
 
     let(:datetime_type_de_champ) { procedure.types_de_champ.find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:datetime) } }
-    let(:datetime_champ) { dossier.champs.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:datetime) } }
-    let(:rebased_datetime_champ) { dossier.champs.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:date) } }
+    let(:datetime_champ) { dossier.champs_public.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:datetime) } }
+    let(:rebased_datetime_champ) { dossier.champs_public.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:date) } }
 
     let(:repetition_type_de_champ) { procedure.types_de_champ.find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
     let(:repetition_text_type_de_champ) { procedure.active_revision.children_of(repetition_type_de_champ).find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
-    let(:repetition_champ) { dossier.champs.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
-    let(:rebased_repetition_champ) { dossier.champs.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
+    let(:repetition_champ) { dossier.champs_public.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
+    let(:rebased_repetition_champ) { dossier.champs_public.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
 
     before do
       procedure.publish!
@@ -200,7 +200,7 @@ describe Dossier do
       libelle = text_type_de_champ.libelle
 
       expect(dossier.revision).to eq(procedure.published_revision)
-      expect(dossier.champs.size).to eq(4)
+      expect(dossier.champs_public.size).to eq(4)
       expect(repetition_champ.rows.size).to eq(2)
       expect(repetition_champ.rows[0].size).to eq(1)
       expect(repetition_champ.rows[1].size).to eq(1)
@@ -212,7 +212,7 @@ describe Dossier do
 
       expect(procedure.revisions.size).to eq(3)
       expect(dossier.revision).to eq(procedure.published_revision)
-      expect(dossier.champs.size).to eq(4)
+      expect(dossier.champs_public.size).to eq(4)
       expect(rebased_text_champ.value).to eq(text_champ.value)
       expect(rebased_text_champ.type_de_champ_id).not_to eq(text_champ.type_de_champ_id)
       expect(rebased_datetime_champ.type_champ).to eq(TypeDeChamp.type_champs.fetch(:date))
@@ -244,14 +244,14 @@ describe Dossier do
 
       context 'when a dropdown option is changed' do
         before do
-          dossier.champs.first.update(value: 'v1')
+          dossier.champs_public.first.update(value: 'v1')
 
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
           tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
           tdc_to_update.update(drop_down_list_value: 'option updated')
         end
 
-        it { expect { subject }.to change { dossier.champs.first.value }.from('v1').to(nil) }
+        it { expect { subject }.to change { dossier.champs_public.first.value }.from('v1').to(nil) }
       end
     end
 
@@ -266,14 +266,14 @@ describe Dossier do
 
       context 'and the cadastre are removed' do
         before do
-          dossier.champs.first.update(value: 'v1', geo_areas: [create(:geo_area, :cadastre)])
+          dossier.champs_public.first.update(value: 'v1', geo_areas: [create(:geo_area, :cadastre)])
 
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
           tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
           tdc_to_update.update(cadastres: false)
         end
 
-        it { expect { subject }.to change { dossier.champs.first.cadastres.count }.from(1).to(0) }
+        it { expect { subject }.to change { dossier.champs_public.first.cadastres.count }.from(1).to(0) }
       end
     end
 
@@ -287,7 +287,7 @@ describe Dossier do
       end
       let!(:dossier) { create(:dossier, procedure: procedure) }
 
-      def champ_libelles = dossier.champs.map(&:libelle)
+      def champ_libelles = dossier.champs_public.map(&:libelle)
 
       context 'when a tdc is added in the middle' do
         before do
@@ -328,7 +328,7 @@ describe Dossier do
       end
 
       context 'when the first tdc type is updated' do
-        def first_champ = dossier.champs.first
+        def first_champ = dossier.champs_public.first
 
         before do
           first_champ.update(value: 'v1', external_id: '123', geo_areas: [create(:geo_area)])
@@ -349,7 +349,7 @@ describe Dossier do
           tdc_to_update.update(type_champ: :integer_number)
         end
 
-        it { expect { subject }.to change { dossier.champs.map(&:type_champ) }.from(['text', 'text']).to(['integer_number', 'text']) }
+        it { expect { subject }.to change { dossier.champs_public.map(&:type_champ) }.from(['text', 'text']).to(['integer_number', 'text']) }
         it { expect { subject }.to change { first_champ.class }.from(Champs::TextChamp).to(Champs::IntegerNumberChamp) }
         it { expect { subject }.to change { first_champ.value }.from('v1').to(nil) }
         it { expect { subject }.to change { first_champ.external_id }.from('123').to(nil) }
@@ -373,7 +373,7 @@ describe Dossier do
       let!(:dossier) { create(:dossier, procedure: procedure) }
       let(:repetition_stable_id) { procedure.draft_revision.types_de_champ.find(&:repetition?) }
 
-      def child_libelles = dossier.champs[0].champs.map(&:libelle)
+      def child_libelles = dossier.champs_public.first.champs.map(&:libelle)
 
       context 'when a child tdc is added in the middle' do
         before do
@@ -410,7 +410,7 @@ describe Dossier do
           tdc_to_update.update(type_champ: :integer_number)
         end
 
-        it { expect { subject }.to change { dossier.champs[0].champs.map(&:type_champ) }.from(['text', 'text']).to(['integer_number', 'text']) }
+        it { expect { subject }.to change { dossier.champs_public.first.champs.map(&:type_champ) }.from(['text', 'text']).to(['integer_number', 'text']) }
       end
 
       context 'when the parents type is changed' do
@@ -420,7 +420,7 @@ describe Dossier do
           parent.update(type_champ: :integer_number)
         end
 
-        it { expect { subject }.to change { dossier.champs[0].champs.count }.from(2).to(0) }
+        it { expect { subject }.to change { dossier.champs_public.first.champs.count }.from(2).to(0) }
         it { expect { subject }.to change { Champ.count }.from(3).to(1) }
       end
     end
