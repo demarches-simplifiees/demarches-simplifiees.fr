@@ -385,6 +385,11 @@ module Users
         champs_public_attributes: [
           :id, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: [],
           champs_attributes: [:id, :_destroy, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: []]
+        ],
+        # FIXME: remove after migration
+        champs_attributes: [
+          :id, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: [],
+          champs_attributes: [:id, :_destroy, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: []]
         ]
       })
     end
@@ -443,7 +448,12 @@ module Users
       errors = []
 
       if champs_params[:dossier]
-        @dossier.assign_attributes(champs_params[:dossier])
+        # FIXME: remove after migration
+        dossier_params = champs_params[:dossier]
+        if dossier_params.key?(:champs_attributes)
+          dossier_params[:champs_public_attributes] = dossier_params.delete(:champs_attributes)
+        end
+        @dossier.assign_attributes(dossier_params)
         # FIXME: in some cases a removed repetition bloc row is submitted.
         # In this case it will be treated as a new record, and the action will fail.
         @dossier.champs_public.filter(&:block?).each do |champ|
