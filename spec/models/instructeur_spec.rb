@@ -195,7 +195,7 @@ describe Instructeur, type: :model do
     end
 
     context 'when there is a modification on public champs' do
-      before { dossier.champs.first.update_attribute('value', 'toto') }
+      before { dossier.champs_public.first.update_attribute('value', 'toto') }
 
       it { is_expected.to match({ demande: true, annotations_privees: false, avis: false, messagerie: false }) }
     end
@@ -301,7 +301,7 @@ describe Instructeur, type: :model do
     end
 
     context 'when there is a modification on public champs on a followed dossier from another procedure' do
-      before { dossier_on_procedure_2.champs.first.update_attribute('value', 'toto') }
+      before { dossier_on_procedure_2.champs_public.first.update_attribute('value', 'toto') }
 
       it { is_expected.to match([]) }
     end

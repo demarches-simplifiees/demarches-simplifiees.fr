@@ -467,7 +467,7 @@ describe API::V2::GraphqlController do
               }
             end,
             avis: [],
-            champs: dossier.champs.map do |champ|
+            champs: dossier.champs_public.map do |champ|
               {
                 id: champ.to_typed_id,
                 label: champ.libelle,
@@ -475,7 +475,7 @@ describe API::V2::GraphqlController do
               }
             end
           })
-          expect(gql_data[:dossier][:champs][0][:id]).to eq(dossier.champs[0].type_de_champ.to_typed_id)
+          expect(gql_data[:dossier][:champs][0][:id]).to eq(dossier.champs_public[0].type_de_champ.to_typed_id)
         end
       end
 
@@ -606,8 +606,8 @@ describe API::V2::GraphqlController do
       context "champs" do
         let(:procedure) { create(:procedure, :published, :for_individual, administrateurs: [admin], types_de_champ_public: [{ type: :date }, { type: :datetime }]) }
         let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
-        let(:champ_date) { dossier.champs.first }
-        let(:champ_datetime) { dossier.champs.second }
+        let(:champ_date) { dossier.champs_public.first }
+        let(:champ_datetime) { dossier.champs_public.second }
 
         before do
           champ_date.update(value: '2019-07-10')

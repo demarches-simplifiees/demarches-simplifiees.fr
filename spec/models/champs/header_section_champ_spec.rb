@@ -14,8 +14,8 @@ describe Champs::HeaderSectionChamp do
     let(:dossier) { create(:dossier, procedure: procedure) }
 
     context 'for root-level champs' do
-      let(:first_header)  { dossier.champs.first }
-      let(:second_header) { dossier.champs.fourth }
+      let(:first_header)  { dossier.champs_public.first }
+      let(:second_header) { dossier.champs_public.fourth }
 
       it 'returns the index of the section (starting from 1)' do
         expect(first_header.section_index).to eq 1
@@ -26,8 +26,8 @@ describe Champs::HeaderSectionChamp do
     context 'for repetition champs' do
       let(:types_de_champ_public) { [{ type: :repetition, children: types_de_champ }] }
 
-      let(:first_header)  { dossier.champs.first.champs.first }
-      let(:second_header) { dossier.champs.first.champs.fourth }
+      let(:first_header)  { dossier.champs_public.first.champs.first }
+      let(:second_header) { dossier.champs_public.first.champs.fourth }
 
       it 'returns the index of the section in the repetition (starting from 1)' do
         expect(first_header.section_index).to eq 1

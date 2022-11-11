@@ -116,7 +116,7 @@ describe 'The routing', js: true do
     click_on litteraire_user.dossiers.first.id.to_s
     click_on 'Modifier mon dossier'
 
-    fill_in litteraire_user.dossiers.first.champs.first.libelle, with: 'some value'
+    fill_in litteraire_user.dossiers.first.champs_public.first.libelle, with: 'some value'
     wait_for_autosave(false)
 
     log_out

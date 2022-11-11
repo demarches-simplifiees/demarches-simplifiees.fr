@@ -153,11 +153,11 @@ describe AttestationTemplate, type: :model do
 
         context 'and their value in the dossier are not nil' do
           before do
-            dossier.champs
+            dossier.champs_public
               .find { |champ| champ.libelle == 'libelleA' }
               .update(value: 'libelle1')
 
-            dossier.champs
+            dossier.champs_public
               .find { |champ| champ.libelle == 'libelleB' }
               .update(value: 'libelle2')
           end

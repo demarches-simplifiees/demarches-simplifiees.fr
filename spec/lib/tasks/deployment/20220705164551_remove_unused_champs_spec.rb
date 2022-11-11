@@ -2,7 +2,7 @@ describe '20220705164551_remove_unused_champs' do
   let(:rake_task) { Rake::Task['after_party:remove_unused_champs'] }
   let(:procedure) { create(:procedure, :with_all_champs) }
   let(:dossier) { create(:dossier, :with_populated_champs, procedure: procedure) }
-  let(:champ_repetition) { dossier.champs.find(&:repetition?) }
+  let(:champ_repetition) { dossier.champs_public.find(&:repetition?) }
 
   subject(:run_task) do
     dossier
