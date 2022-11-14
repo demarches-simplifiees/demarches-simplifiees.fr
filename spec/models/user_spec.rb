@@ -298,7 +298,7 @@ describe User, type: :model do
     end
   end
 
-  describe '#delete_and_keep_track_dossiers' do
+  describe '#delete_and_keep_track_dossiers_also_delete_user' do
     let(:super_admin) { create(:super_admin) }
     let(:user) { create(:user) }
 
@@ -308,7 +308,7 @@ describe User, type: :model do
 
       context 'without a discarded dossier' do
         it "keep track of dossiers and delete user" do
-          user.delete_and_keep_track_dossiers(super_admin)
+          user.delete_and_keep_track_dossiers_also_delete_user(super_admin)
 
           expect(DeletedDossier.find_by(dossier_id: dossier_en_construction)).to be_present
           expect(DeletedDossier.find_by(dossier_id: dossier_brouillon)).to be_nil
@@ -322,7 +322,7 @@ describe User, type: :model do
 
         it "keep track of dossiers and delete user" do
           dossier_to_delete.hide_and_keep_track!(user, :user_request)
-          user.delete_and_keep_track_dossiers(super_admin)
+          user.delete_and_keep_track_dossiers_also_delete_user(super_admin)
 
           expect(DeletedDossier.find_by(dossier_id: dossier_en_construction)).to be_present
           expect(DeletedDossier.find_by(dossier_id: dossier_brouillon)).to be_nil
@@ -337,7 +337,7 @@ describe User, type: :model do
       let!(:dossier_termine) { create(:dossier, :accepte, user: user) }
 
       it "keep track of dossiers and delete user" do
-        user.delete_and_keep_track_dossiers(super_admin)
+        user.delete_and_keep_track_dossiers_also_delete_user(super_admin)
 
         expect(dossier_en_instruction.reload).to be_present
         expect(dossier_en_instruction.user).to be_nil
