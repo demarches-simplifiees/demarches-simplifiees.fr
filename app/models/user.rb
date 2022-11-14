@@ -195,6 +195,14 @@ class User < ApplicationRecord
       # delete invites
       Invite.where(dossier: dossiers).destroy_all
 
+      delete_and_keep_track_dossiers(administration)
+
+      destroy!
+    end
+  end
+
+  def delete_and_keep_track_dossiers(administration)
+    transaction do
       # delete dossiers brouillon
       dossiers.state_brouillon.each do |dossier|
         dossier.hide_and_keep_track!(dossier.user, :user_removed)
@@ -212,8 +220,6 @@ class User < ApplicationRecord
         dossier.hide_and_keep_track!(dossier.user, :user_removed)
       end
       dossiers.update_all(deleted_user_email_never_send: email, user_id: nil, dossier_transfer_id: nil)
-
-      destroy!
     end
   end
 
