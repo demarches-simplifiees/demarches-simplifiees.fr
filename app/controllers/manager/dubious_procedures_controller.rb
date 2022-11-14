@@ -8,7 +8,8 @@ module Manager
       render locals: {
         resources: resources,
         page: page,
-        show_search_bar: false
+        show_search_bar: false,
+        search_term: nil
       }
     end
   end
