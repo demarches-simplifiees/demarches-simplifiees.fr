@@ -41,9 +41,13 @@
 }
 
 .pl-8 {
-  padding-left: ($default-spacer * 8) !important
+  padding-left: ($default-spacer * 8) !important;
 }
 
 .cell-group-header {
   font-weight: 600;
+}
+
+.cell-disabled {
+  opacity: 0.6;
 }

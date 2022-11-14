@@ -1,18 +1,21 @@
 %tr
-  %td.cell-data{ class: row.child? ? "pl-8" : nil }
+  %td.cell-data{ class: [row.child? ? "pl-8" : nil, row.visible? ? nil : "cell-disabled"] }
     = row.libelle
     - if row.mandatory?
       %span.mandatory{ style: 'color: #A10005;' } *
-  %td.cell-data
+  %td.cell-data{ class: [row.visible? ? nil : "cell-disabled"] }
     = I18n.t("activerecord.attributes.type_de_champ.type_champs.#{row.type_champ}")
 
-  %td.cell-data
-    - if row.blank? && row.mandatory?
-      ⭕
-    - else
-      ✔️
+  %td.cell-data{ class: [row.visible? ? nil : "cell-disabled"] }
+    - if row.visible?
+      - if row.blank? && row.mandatory?
+        🔴
+      - else
+        🟢
 
-    - if row.blank?
+    - if !row.visible? && row.conditional?
+      masqué, conditionnel
+    - elsif row.blank?
       vide
     - else
       rempli
