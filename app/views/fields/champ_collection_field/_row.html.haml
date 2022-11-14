@@ -1,0 +1,21 @@
+%tr
+  %td.cell-data{ class: row.child? ? "pl-8" : nil }
+    = row.libelle
+    - if row.mandatory?
+      %span.mandatory{ style: 'color: #A10005;' } *
+  %td.cell-data
+    = I18n.t("activerecord.attributes.type_de_champ.type_champs.#{row.type_champ}")
+
+  %td.cell-data
+    - if row.blank?
+      vide
+    - else
+      rempli
+
+- if row.respond_to?(:rows)
+  - row.rows.each_with_index do |group_rows, index|
+    %thead
+      %tr
+        %td.cell-group-header{ colspan: 3}
+          = "Bloc ##{index + 1} “#{row.libelle}”"
+    = render partial: "fields/champ_collection_field/row", collection: group_rows, as: :row
