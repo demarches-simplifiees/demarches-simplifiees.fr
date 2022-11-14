@@ -8,14 +8,14 @@
 
   %td.cell-data{ class: [row.visible? ? nil : "cell-disabled"] }
     - if row.visible?
-      - if row.blank? && row.mandatory?
+      - if row.mandatory_blank?
         🔴
       - else
         🟢
 
     - if !row.visible? && row.conditional?
       masqué, conditionnel
-    - elsif row.blank?
+    - elsif row.blank? && !row.piece_justificative_file.attached?
       vide
     - else
       rempli
