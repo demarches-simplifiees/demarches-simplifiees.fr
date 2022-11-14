@@ -7,6 +7,11 @@
     = I18n.t("activerecord.attributes.type_de_champ.type_champs.#{row.type_champ}")
 
   %td.cell-data
+    - if row.blank? && row.mandatory?
+      ⭕
+    - else
+      ✔️
+
     - if row.blank?
       vide
     - else
