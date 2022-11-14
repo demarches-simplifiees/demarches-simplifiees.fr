@@ -15,7 +15,7 @@ namespace :support do
     user = User.find_by!(email: user_email)
     administration = Administration.find_by!(email: administration_email)
 
-    user.delete_and_keep_track_dossiers(administration)
+    user.delete_and_keep_track_dossiers_also_delete_user(administration)
     user.destroy
   end
 

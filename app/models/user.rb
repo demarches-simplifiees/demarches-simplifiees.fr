@@ -186,7 +186,7 @@ class User < ApplicationRecord
     !administrateur? && !instructeur? && !expert?
   end
 
-  def delete_and_keep_track_dossiers(administration)
+  def delete_and_keep_track_dossiers_also_delete_user(administration)
     if !can_be_deleted?
       raise "Cannot delete this user because they are also instructeur, expert or administrateur"
     end
