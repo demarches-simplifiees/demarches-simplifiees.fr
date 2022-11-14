@@ -1,3 +1,5 @@
+@import "constants";
+
 [data-reach-combobox-token-label] {
   border: 1px solid #CCCCCC;
   border-radius: 4px;
@@ -35,5 +37,13 @@
 }
 
 .mt-1 {
-  margin-top: 1rem;
+  margin-top: $default-spacer !important;
+}
+
+.pl-8 {
+  padding-left: ($default-spacer * 8) !important
+}
+
+.cell-group-header {
+  font-weight: 600;
 }
