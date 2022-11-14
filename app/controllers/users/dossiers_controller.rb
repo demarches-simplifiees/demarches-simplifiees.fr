@@ -329,6 +329,15 @@ module Users
       redirect_to dossiers_path
     end
 
+    def clone
+      cloned_dossier = @dossier.clone
+      flash.notice = t('users.dossiers.cloned_success')
+      redirect_to brouillon_dossier_path(cloned_dossier)
+    rescue ActiveRecord::ActiveRecordError => e
+      flash.alert = e.errors.full_messages
+      redirect_to dossier_path(@dossier)
+    end
+
     private
 
     # if the status tab is filled, then this tab

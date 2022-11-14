@@ -279,6 +279,11 @@ FactoryBot.define do
         build(:type_de_champ_explication, procedure: procedure)
       end
     end
+    trait :with_carte do
+      after(:build) do |procedure, _evaluator|
+        build(:type_de_champ_carte, procedure: procedure)
+      end
+    end
 
     trait :published do
       aasm_state { :publiee }
