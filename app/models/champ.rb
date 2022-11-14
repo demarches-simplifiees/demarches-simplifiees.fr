@@ -215,6 +215,35 @@ class Champ < ApplicationRecord
     end
   end
 
+  def clone(dossier:, parent: nil)
+    kopy = deep_clone(only: (private? ? [] : [:value, :value_json]) + [:data, :private, :row, :type, :external_id, :type_de_champ_id],
+                      include: private? ? [] : [:etablissement, :geo_areas])
+
+    kopy.dossier = dossier
+    kopy.parent = parent if parent
+    case self
+    when Champs::RepetitionChamp
+      kopy.champs = (private? ? champs.where(row: 0) : champs).map do |champ_de_repetition|
+        champ_de_repetition.clone(dossier: dossier, parent: kopy)
+      end
+    when Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp
+      PiecesJustificativesService.clone_attachments(self, kopy) if !private? && piece_justificative_file.attached?
+    end
+    kopy
+  end
+
+  def clone_piece_justificative(kopy)
+    piece_justificative_file.open do |tempfile|
+      kopy.piece_justificative_file.attach({
+        io: File.open(tempfile.path),
+        filename: piece_justificative_file.filename,
+        content_type: piece_justificative_file.content_type,
+        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+      })
+    end
+  rescue ActiveStorage::FileNotFoundError, ActiveStorage::IntegrityError
+  end
+
   private
 
   def champs_for_condition

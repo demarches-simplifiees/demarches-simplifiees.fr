@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_04_071959) do
+ActiveRecord::Schema.define(version: 2022_11_10_100759) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -327,7 +327,8 @@ ActiveRecord::Schema.define(version: 2022_11_04_071959) do
     t.datetime "last_champ_updated_at"
     t.datetime "last_commentaire_updated_at"
     t.text "motivation"
-    t.text "private_search_terms"
+    t.bigint "parent_dossier_id"
+    t.string "private_search_terms"
     t.datetime "processed_at"
     t.bigint "revision_id"
     t.text "search_terms"
@@ -920,6 +921,7 @@ ActiveRecord::Schema.define(version: 2022_11_04_071959) do
   add_foreign_key "dossier_operation_logs", "bill_signatures"
   add_foreign_key "dossier_transfer_logs", "dossiers"
   add_foreign_key "dossiers", "dossier_transfers"
+  add_foreign_key "dossiers", "dossiers", column: "parent_dossier_id"
   add_foreign_key "dossiers", "groupe_instructeurs"
   add_foreign_key "dossiers", "procedure_revisions", column: "revision_id"
   add_foreign_key "dossiers", "users"

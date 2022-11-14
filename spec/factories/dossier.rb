@@ -103,6 +103,18 @@ FactoryBot.define do
       commentaires { [build(:commentaire), build(:commentaire)] }
     end
 
+    trait :with_invites do
+      invites { [build(:invite)] }
+    end
+
+    trait :with_avis do
+      avis { [build(:avis)] }
+    end
+
+    trait :with_dossier_operation_logs do
+      dossier_operation_logs { [build(:dossier_operation_log)] }
+    end
+
     trait :followed do
       after(:create) do |dossier, _evaluator|
         g = create(:instructeur)

@@ -139,7 +139,9 @@ FactoryBot.define do
       type_de_champ { association :type_de_champ_dossier_link, procedure: dossier.procedure }
       value { create(:dossier).id }
     end
-
+    factory :champ_without_piece_justificative, class: 'Champs::PieceJustificativeChamp' do
+      type_de_champ { association :type_de_champ_piece_justificative, procedure: dossier.procedure }
+    end
     factory :champ_piece_justificative, class: 'Champs::PieceJustificativeChamp' do
       type_de_champ { association :type_de_champ_piece_justificative, procedure: dossier.procedure }
 
