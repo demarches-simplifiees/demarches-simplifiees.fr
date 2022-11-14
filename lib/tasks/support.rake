@@ -42,4 +42,48 @@ namespace :support do
       end
     end
   end
+
+  task remove_ex_team_member: :environment do
+    super_admin = SuperAdmin.find_by(email: ENV['SUPER_ADMIN_EMAIL'])
+    fail "Must specify the ADMIN_EMAIL of the operator performing the deletion (yourself)" if super_admin.nil?
+    super_admin_admin = User.find_by(email: super_admin.email).administrateur
+
+    user = User.find_by!(email: ENV['USER_EMAIL'])
+    fail "Must specify a USER_EMAIL" if user.nil?
+
+    ActiveRecord::Base.transaction do
+      # destroy all en_instruction dossier
+      # because the normal workflow forbid to hide them.
+      rake_puts "brutally deleting #{user.dossiers.en_instruction.count} en_instruction dossiers"
+      user.dossiers.en_instruction.destroy_all
+
+      # remove all the other dossier from the user side
+      rake_puts "hide #{user.reload.dossiers.count} dossiers"
+      user.delete_and_keep_track_dossiers(super_admin)
+
+      owned_procedures, shared_procedures = user.administrateur
+        .procedures
+        .partition { _1.administrateurs.one? }
+
+      rake_puts "unlink #{shared_procedures.count} shared procedures"
+      shared_procedures.each { _1.administrateurs.delete(user.administrateur) }
+
+      procedures_without_dossier, procedures_with_dossiers =
+        owned_procedures.partition { _1.dossiers.empty? }
+
+      rake_puts "discard #{procedures_without_dossier.count} procedures without dossier"
+      procedures_without_dossier.each { _1.discard_and_keep_track!(super_admin) }
+
+      procedures_with_only_admin_dossiers,
+        other_procedures = procedures_with_dossiers.partition do |p|
+          p.dossiers.all? { _1.user == user || _1.deleted_user_email_never_send == user.email }
+        end
+
+      rake_puts "discard #{procedures_with_only_admin_dossiers.count} procedures with only admin dossiers"
+      # TODO: clean this ugly hack to delete dossier from admin side
+      procedures_with_only_admin_dossiers.each { _1.discard_and_keep_track!(super_admin_admin) }
+
+      rake_puts "#{other_procedures.count} remaining"
+    end
+  end
 end
