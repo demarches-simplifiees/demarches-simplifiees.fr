@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_10_100759) do
+ActiveRecord::Schema.define(version: 2022_11_14_143935) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -46,8 +46,10 @@ ActiveRecord::Schema.define(version: 2022_11_10_100759) do
     t.string "key", null: false
     t.integer "lock_version"
     t.text "metadata"
+    t.boolean "prefixed_key"
     t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+    t.index ["prefixed_key"], name: "index_active_storage_blobs_on_prefixed_key"
   end
 
   create_table "active_storage_variant_records", force: :cascade do |t|
