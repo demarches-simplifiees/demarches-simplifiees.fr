@@ -72,7 +72,7 @@ class Export < ApplicationRecord
   end
 
   def old?
-    updated_at < 20.minutes.ago || filters_changed?
+    updated_at < 10.minutes.ago || filters_changed?
   end
 
   def filters_changed?
