@@ -2,7 +2,7 @@
   %td{ class: cell_class(cell: :label) }
     = row.libelle
     - if row.mandatory?
-      %span.mandatory{ style: 'color: #A10005;' } *
+      %span.mandatory *
   %td{ class: cell_class }
     = I18n.t("activerecord.attributes.type_de_champ.type_champs.#{row.type_champ}")
 
