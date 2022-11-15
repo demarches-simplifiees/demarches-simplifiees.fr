@@ -66,7 +66,7 @@ describe Manager::ProceduresController, type: :controller do
         get :index, params: { procedure: { direction: :asc, order: :dossiers } }
       end
 
-      it { expect(response.body).to include('1 dossier') }
+      it { expect(response.body).to include('1 Dossier') }
     end
   end
 
