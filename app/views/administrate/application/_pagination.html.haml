@@ -1,0 +1,6 @@
+- if resources.singleton_class.included_modules.include?(Kaminari::PaginatableWithoutCount)
+  %nav.pagination
+    = link_to_prev_page resources, t("views.pagination.previous"), param_name: "_page"
+    = link_to_next_page resources, t("views.pagination.next"), param_name: "_page"
+- else
+  = paginate resources, param_name: "_page"
