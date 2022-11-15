@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "@gouvfr/dsfr": "^1.7.2",
+    "@graphiql/plugin-explorer": "^0.1.11",
+    "@graphiql/toolkit": "^0.8.0",
     "@headlessui/react": "^1.6.6",
     "@heroicons/react": "^1.0.6",
     "@hotwired/stimulus": "^3.1.0",
@@ -21,6 +23,8 @@
     "dom4": "^2.1.6",
     "email-butler": "^1.0.13",
     "geojson": "^0.5.0",
+    "graphiql": "^2.1.0",
+    "graphql": "^16.6.0",
     "highcharts": "^10.2.1",
     "intersection-observer": "^0.12.2",
     "is-hotkey": "^0.2.0",

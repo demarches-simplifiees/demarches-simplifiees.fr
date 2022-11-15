@@ -232,9 +232,7 @@ Rails.application.routes.draw do
   #
 
   get 'graphql/schema' => redirect('/graphql/schema/index.html')
-  authenticated :user, lambda { |user| user.administrateur? } do
-    mount GraphqlPlayground::Rails::Engine, at: "/graphql", graphql_path: "/api/v2/graphql"
-  end
+  get 'graphql', to: "graphql#playground"
 
   namespace :api do
     namespace :v1 do
