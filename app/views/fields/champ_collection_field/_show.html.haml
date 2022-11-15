@@ -6,6 +6,6 @@
         %td.cell-label Type de champ
         %td.cell-label Rempli
     %tbody
-      = render partial: "fields/champ_collection_field/row", collection: field.data, as: :row
+      = render Manager::DossierChampRowComponent.with_collection(field.data)
 - else
   Aucun
