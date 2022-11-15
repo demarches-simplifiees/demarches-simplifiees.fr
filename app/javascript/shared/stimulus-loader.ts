@@ -2,11 +2,16 @@ import { Application } from '@hotwired/stimulus';
 import invariant from 'tiny-invariant';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Loader = () => Promise<{ [key: string]: any }>;
+type Module = { [key: string]: any };
+type Loader = () => Promise<Module>;
 
 const controllerAttribute = 'data-controller';
-const controllers = import.meta.globEager('../controllers/*.{ts,tsx}');
-const lazyControllers = import.meta.glob('../controllers/lazy/*.{ts,tsx}');
+const controllers = import.meta.glob<Module>('../controllers/*.{ts,tsx}', {
+  eager: true
+});
+const lazyControllers = import.meta.glob<Module>(
+  '../controllers/lazy/*.{ts,tsx}'
+);
 const controllerLoaders = new Map<string, Loader>();
 
 export function registerControllers(application: Application) {
