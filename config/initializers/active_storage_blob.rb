@@ -1,7 +1,6 @@
 Rails.application.config.to_prepare do
   require 'active_storage/blob'
   ActiveStorage::Blob.class_eval do
-
     before_create :set_prefixed_key, if: :prefixed_key?
 
     def set_prefixed_key
@@ -22,11 +21,11 @@ Rails.application.config.to_prepare do
     def migrate_to_prefixed_key
       old_key = key.dup
       new_key = ActiveStorage::Blob.make_prefixed_key(old_key)
-      service.client.copy_object(source_container_name = service.container,
-                                 source_object_name = old_key,
-                                 target_container_name = service.container,
+      service.client.copy_object(service.container,
+                                 old_key,
+                                 service.container,
                                  new_key,
-                                 headers = {"Content-Type" => self.content_type})
+                                 { "Content-Type" => self.content_type })
       update_columns(key: new_key, prefixed_key: true)
       service.delete(old_key)
     rescue Fog::OpenStack::Storage::NotFound

@@ -7,10 +7,10 @@ describe ActiveStorage::Blob, type: :model do
   end
 
   context 'OBJECT_STORAGE_BLOB_PREFIXED_KEY=something' do
-    before { allow(ENV).to receive(:[]).with('OBJECT_STORAGE_BLOB_PREFIXED_KEY').and_return('enabled')}
+    before { allow(ENV).to receive(:[]).with('OBJECT_STORAGE_BLOB_PREFIXED_KEY').and_return('enabled') }
 
     it 'creates a direct upload with segments' do
-      expect(subject.key.split('/').size).to eq(3)
+      expect(subject.key.split('/').size).to eq(2)
     end
     it 'creates is marked as prefixed_key' do
       expect(subject.prefixed_key).to eq(true)
@@ -18,7 +18,7 @@ describe ActiveStorage::Blob, type: :model do
   end
 
   context 'OBJECT_STORAGE_BLOB_PREFIXED_KEY inexistant' do
-    before { allow(ENV).to receive('OBJECT_STORAGE_BLOB_PREFIXED_KEY').and_return(nil)}
+    before { allow(ENV).to receive('OBJECT_STORAGE_BLOB_PREFIXED_KEY').and_return(nil) }
 
     it 'creates a direct upload without segments' do
       expect(subject.key.split('/').size).to eq(1)
