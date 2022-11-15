@@ -89,5 +89,9 @@ module Manager
     def targeted_email
       params[:user][:email]
     end
+
+    def paginate_resources(_resources)
+      super.without_count
+    end
   end
 end
