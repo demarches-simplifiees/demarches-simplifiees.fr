@@ -36,7 +36,6 @@ gem 'geo_coord', require: "geo/coord"
 gem 'gon'
 gem 'graphql'
 gem 'graphql-batch'
-gem 'graphql_playground-rails'
 gem 'graphql-rails_logger'
 gem 'groupdate'
 gem 'haml-rails'
