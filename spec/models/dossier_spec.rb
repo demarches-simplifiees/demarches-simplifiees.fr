@@ -1485,12 +1485,12 @@ describe Dossier do
   describe "champs_for_export" do
     context 'with a unconditionnal procedure' do
       let(:procedure) { create(:procedure, :with_type_de_champ, :with_datetime, :with_yes_no, :with_explication, :with_commune, :with_repetition, zones: [create(:zone)]) }
-      let(:text_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
-      let(:yes_no_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:yes_no) } }
-      let(:datetime_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:datetime) } }
-      let(:explication_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:explication) } }
-      let(:commune_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:communes) } }
-      let(:repetition_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
+      let(:text_type_de_champ) { procedure.active_revision.types_de_champ_public.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
+      let(:yes_no_type_de_champ) { procedure.active_revision.types_de_champ_public.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:yes_no) } }
+      let(:datetime_type_de_champ) { procedure.active_revision.types_de_champ_public.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:datetime) } }
+      let(:explication_type_de_champ) { procedure.active_revision.types_de_champ_public.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:explication) } }
+      let(:commune_type_de_champ) { procedure.active_revision.types_de_champ_public.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:communes) } }
+      let(:repetition_type_de_champ) { procedure.active_revision.types_de_champ_public.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
       let(:repetition_champ) { dossier.champs_public.find(&:repetition?) }
       let(:repetition_second_revision_champ) { dossier_second_revision.champs_public.find(&:repetition?) }
       let(:dossier) { create(:dossier, procedure: procedure) }
@@ -1554,8 +1554,8 @@ describe Dossier do
       let(:types_de_champ) { [{ type: :yes_no }, { type: :text }] }
       let(:procedure) { create(:procedure, types_de_champ_public: types_de_champ) }
       let(:dossier) { create(:dossier, procedure:) }
-      let(:yes_no_tdc) { procedure.types_de_champ.first }
-      let(:text_tdc) { procedure.types_de_champ.second }
+      let(:yes_no_tdc) { procedure.active_revision.types_de_champ_public.first }
+      let(:text_tdc) { procedure.active_revision.types_de_champ_public.second }
       let(:tdcs) { dossier.champs_public.map(&:type_de_champ) }
 
       subject { Dossier.champs_for_export(dossier.champs_public, tdcs) }
