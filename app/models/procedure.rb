@@ -828,6 +828,15 @@ class Procedure < ApplicationRecord
     self.connection.query(query.to_sql).flatten
   end
 
+  # double read / to remove
+  def has_a_tdc_routage?
+    active_revision.types_de_champ.any?(&:routage?)
+  end
+
+  def routing_libelle
+    active_revision.types_de_champ.find(&:routage?)&.libelle
+  end
+
   private
 
   def move_new_children_to_new_parent_coordinate(new_draft)

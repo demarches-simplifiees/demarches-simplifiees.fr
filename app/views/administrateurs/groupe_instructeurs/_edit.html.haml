@@ -1,4 +1,4 @@
-- if groupes_instructeurs.many?
+- if groupes_instructeurs.many? && !procedure.has_a_tdc_routage?
   .card
     = form_for procedure,
       url: { action: :update_routing_criteria_name },
@@ -9,7 +9,14 @@
       %p.notice
       = f.text_field :routing_criteria_name, required: true
       = f.submit t('.button.rename'), class: 'button primary send'
-
+- elsif groupes_instructeurs.many? && procedure.has_a_tdc_routage?
+  .card
+    %h2.card-title
+      = t('.routing.title')
+    %span Pour renommer la liste de groupes, changer le libellé du champ routage dans la page
+    %span
+      = link_to('Configuration des champs', champs_admin_procedure_path(@procedure))
+    %span .
 .card
   .card-title
     = t('.group_management.title')
@@ -19,7 +26,7 @@
       = t('.add_a_group.title')
     - if groupes_instructeurs.many?
       %p.notice
-        = t('.add_a_group.notice', routing_criteria_name: procedure.routing_criteria_name)
+        = t('.add_a_group.notice', routing_criteria_name: procedure.routing_libelle || procedure.routing_criteria_name)
     = f.text_field :label, required: true
     = f.submit t('.button.add_group'), class: "button primary send"
 

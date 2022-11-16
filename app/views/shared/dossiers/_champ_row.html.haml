@@ -12,7 +12,8 @@
       - if c.type_champ == TypeDeChamp.type_champs.fetch(:header_section)
         %th.header-section{ colspan: 3 }
           = c.libelle
-      - else
+        -# double read / to keep
+      - elsif !(c.routage? && !c.show_groupe_instructeur_details?)
         %td.libelle{ class: repetition ? 'padded' : '' }
           = "#{c.libelle} :"
         %td.rich-text{ class: c.type_champ }
@@ -63,7 +64,7 @@
             - else
               = format_text_value(c.to_s) unless c.blank?
 
-      - if c.type_champ != TypeDeChamp.type_champs.fetch(:header_section)
+      - if c.type_champ != TypeDeChamp.type_champs.fetch(:header_section) && !(c.routage? && !c.show_groupe_instructeur_details?)
         %td.updated-at
           %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
             modifié le
