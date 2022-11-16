@@ -1,26 +1,6 @@
 {
   "ignored_warnings": [
     {
-      "warning_type": "Redirect",
-      "warning_code": 18,
-      "fingerprint": "170b506bd3d25eb50f464703f9d993bf2e124d5cbc8478ce9d9d06a15b4bc55e",
-      "check_name": "Redirect",
-      "message": "Possible unprotected redirect",
-      "file": "app/controllers/instructeurs/exports_controller.rb",
-      "line": 26,
-      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(Export.find_or_create_export(export_format, groupe_instructeurs, **export_options).file.service_url)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Instructeurs::ExportsController",
-        "method": "download"
-      },
-      "user_input": "Export.find_or_create_export(export_format, groupe_instructeurs, **export_options).file.service_url",
-      "confidence": "High",
-      "note": ""
-    },
-    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "1b805585567775589825c0eda58cb84c074fc760d0a7afb101c023a51427f2b5",
@@ -35,7 +15,7 @@
           "type": "controller",
           "class": "Users::DossiersController",
           "method": "merci",
-          "line": 204,
+          "line": 232,
           "file": "app/controllers/users/dossiers_controller.rb",
           "rendered": {
             "name": "users/dossiers/merci",
@@ -93,62 +73,22 @@
       "note": "explicitely sanitized even if we are using html_safe"
     },
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "4254ed68100af9b496883716b1fd658e1943b2385a0d08de5a6ef5c600c1a8f9",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/traitement.rb",
-      "line": 52,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "ActiveRecord::Base.connection.execute(\"select date_trunc('month', r1.processed_at::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.formatted_offset}'::INTERVAL) as month, count(r1.processed_at)\\nfrom (#{Traitement.select(\"max(traitements.processed_at) as processed_at\").termine.where(:dossier => Dossier.state_termine.where(:groupe_instructeur => groupe_instructeurs)).group(:dossier_id).to_sql}) as r1\\ngroup by date_trunc('month', r1.processed_at::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.formatted_offset}'::INTERVAL)\\norder by month desc\\n\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Traitement",
-        "method": "Traitement.count_dossiers_termines_by_month"
-      },
-      "user_input": "Time.zone.formatted_offset",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
       "warning_type": "Redirect",
       "warning_code": 18,
-      "fingerprint": "589e457617e6ad3d35f454b4af8ed326817930d6a724febcf680d7e03c6aeaa2",
+      "fingerprint": "8a1ccc92988486094b2c89e586902a3b6fcbd43910d6363dce14b9981ca8ddeb",
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
-      "file": "app/controllers/targeted_user_links_controller.rb",
-      "line": 7,
+      "file": "app/controllers/instructeurs/procedures_controller.rb",
+      "line": 175,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(TargetedUserLink.find(params[:id]).redirect_url(Rails.application.routes.url_helpers))",
+      "code": "redirect_to(Export.find_or_create_export(export_format, current_instructeur.groupe_instructeurs.where(:procedure => procedure), :force => force_export?, **export_options).file.service_url)",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "TargetedUserLinksController",
-        "method": "show"
+        "class": "Instructeurs::ProceduresController",
+        "method": "download_export"
       },
-      "user_input": "TargetedUserLink.find(params[:id]).redirect_url(Rails.application.routes.url_helpers)",
-      "confidence": "High",
-      "note": ""
-    },
-    {
-      "warning_type": "Redirect",
-      "warning_code": 18,
-      "fingerprint": "8f8133f0679f6301e098c4b9c61c2217224126856963abd02cdc5e54efb4e818",
-      "check_name": "Redirect",
-      "message": "Possible unprotected redirect",
-      "file": "app/controllers/administrateurs/exports_controller.rb",
-      "line": 22,
-      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(Export.find_or_create_export(export_format, all_groupe_instructeurs, **export_options).file.service_url)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Administrateurs::ExportsController",
-        "method": "download"
-      },
-      "user_input": "Export.find_or_create_export(export_format, all_groupe_instructeurs, **export_options).file.service_url",
+      "user_input": "Export.find_or_create_export(export_format, current_instructeur.groupe_instructeurs.where(:procedure => procedure), :force => force_export?, **export_options).file.service_url",
       "confidence": "High",
       "note": ""
     },
@@ -159,7 +99,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/concerns/dossier_filtering_concern.rb",
-      "line": 25,
+      "line": 30,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "where(\"#{values.count} OR #{\"(#{ProcedurePresentation.sanitized_column(table, column)} ILIKE ?)\"}\", *values.map do\n \"%#{value}%\"\n end)",
       "render_path": null,
@@ -175,24 +115,24 @@
     {
       "warning_type": "Redirect",
       "warning_code": 18,
-      "fingerprint": "eae88be293b3849e07be81a18de99c04b08c7b2c045cc4a43ca3624ea178d965",
+      "fingerprint": "e2220b7cda7df5d02de77e7c3ce137653126e0d8e91ce445676b63ec4c94bbcb",
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
-      "file": "app/controllers/instructeurs/procedures_controller.rb",
-      "line": 168,
+      "file": "app/controllers/administrateurs/exports_controller.rb",
+      "line": 18,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(Export.find_or_create_export(export_format, current_instructeur.groupe_instructeurs.where(:procedure => procedure), **export_options).file.service_url)",
+      "code": "redirect_to(Export.find_or_create_export(export_format, all_groupe_instructeurs, :force => force_export?, **export_options).file.service_url)",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "Instructeurs::ProceduresController",
-        "method": "download_export"
+        "class": "Administrateurs::ExportsController",
+        "method": "download"
       },
-      "user_input": "Export.find_or_create_export(export_format, current_instructeur.groupe_instructeurs.where(:procedure => procedure), **export_options).file.service_url",
+      "user_input": "Export.find_or_create_export(export_format, all_groupe_instructeurs, :force => force_export?, **export_options).file.service_url",
       "confidence": "High",
       "note": ""
     }
   ],
-  "updated": "2022-07-08 13:14:19 +0200",
+  "updated": "2022-11-15 23:04:53 +0100",
   "brakeman_version": "5.2.2"
 }
