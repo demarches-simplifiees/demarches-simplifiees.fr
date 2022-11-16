@@ -387,7 +387,7 @@ describe ProcedureExportService do
 
       context 'with long libelle composed of utf8 characteres' do
         before do
-          procedure.types_de_champ.each do |c|
+          procedure.active_revision.types_de_champ_public.each do |c|
             c.update!(libelle: "#{c.id} - ?/[] ééé ééé ééééééé ééééééé éééééééé. ééé éé éééééééé éé ééé. ééééé éééééééé ééé ééé.")
           end
           champ_repetition.champs.each do |c|

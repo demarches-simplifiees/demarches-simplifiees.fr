@@ -75,10 +75,11 @@ class Procedure < ApplicationRecord
   belongs_to :published_revision, class_name: 'ProcedureRevision', optional: true
   has_many :deleted_dossiers, dependent: :destroy
 
-  has_many :published_types_de_champ, through: :published_revision, source: :types_de_champ_public
-  has_many :published_types_de_champ_private, through: :published_revision, source: :types_de_champ_private
-  has_many :draft_types_de_champ, through: :draft_revision, source: :types_de_champ_public
+  has_many :draft_types_de_champ_public, through: :draft_revision, source: :types_de_champ_public
   has_many :draft_types_de_champ_private, through: :draft_revision, source: :types_de_champ_private
+  has_many :published_types_de_champ_public, through: :published_revision, source: :types_de_champ_public
+  has_many :published_types_de_champ_private, through: :published_revision, source: :types_de_champ_private
+
   has_one :draft_attestation_template, through: :draft_revision, source: :attestation_template
   has_one :published_attestation_template, through: :published_revision, source: :attestation_template
 
@@ -108,14 +109,6 @@ class Procedure < ApplicationRecord
 
   def active_revision
     brouillon? ? draft_revision : published_revision
-  end
-
-  def types_de_champ
-    brouillon? ? draft_types_de_champ : published_types_de_champ
-  end
-
-  def types_de_champ_private
-    brouillon? ? draft_types_de_champ_private : published_types_de_champ_private
   end
 
   def types_de_champ_for_procedure_presentation(parent = nil)
@@ -269,7 +262,7 @@ class Procedure < ApplicationRecord
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validates :administrateurs, presence: true
   validates :lien_site_web, presence: true, if: :publiee?
-  validates :draft_types_de_champ,
+  validates :draft_types_de_champ_public,
     'types_de_champ/no_empty_block': true,
     'types_de_champ/no_empty_drop_down': true,
     on: :publication
@@ -535,7 +528,7 @@ class Procedure < ApplicationRecord
     end
 
     if is_different_admin || from_library
-      procedure.draft_types_de_champ.each { |tdc| tdc.options&.delete(:old_pj) }
+      procedure.draft_revision.types_de_champ_public.each { |tdc| tdc.options&.delete(:old_pj) }
     end
 
     procedure
@@ -860,7 +853,7 @@ class Procedure < ApplicationRecord
     children.each do |child|
       child.update!(parent: coordinates_by_stable_id.fetch(child.parent.stable_id))
     end
-    new_draft.revision_types_de_champ.reload
+    new_draft.reload
   end
 
   def before_publish

@@ -13,7 +13,7 @@ describe DossierProjectionService do
         [
           {
             "table" => "type_de_champ",
-            "column" => procedure.types_de_champ[0].stable_id.to_s
+            "column" => procedure.active_revision.types_de_champ_public[0].stable_id.to_s
           }
         ]
       end
@@ -153,7 +153,7 @@ describe DossierProjectionService do
       context 'for type_de_champ table' do
         let(:table) { 'type_de_champ' }
         let(:dossier) { create(:dossier) }
-        let(:column) { dossier.procedure.types_de_champ.first.stable_id.to_s }
+        let(:column) { dossier.procedure.active_revision.types_de_champ_public.first.stable_id.to_s }
 
         before { dossier.champs_public.first.update(value: 'kale') }
 
@@ -163,7 +163,7 @@ describe DossierProjectionService do
       context 'for type_de_champ_private table' do
         let(:table) { 'type_de_champ_private' }
         let(:dossier) { create(:dossier) }
-        let(:column) { dossier.procedure.types_de_champ_private.first.stable_id.to_s }
+        let(:column) { dossier.procedure.active_revision.types_de_champ_private.first.stable_id.to_s }
 
         before { dossier.champs_private.first.update(value: 'quinoa') }
 
@@ -174,7 +174,7 @@ describe DossierProjectionService do
         let(:table) { 'type_de_champ' }
         let(:procedure) { create(:procedure, :with_yes_no) }
         let(:dossier) { create(:dossier, procedure: procedure) }
-        let(:column) { dossier.procedure.types_de_champ.first.stable_id.to_s }
+        let(:column) { dossier.procedure.active_revision.types_de_champ_public.first.stable_id.to_s }
 
         before { dossier.champs_public.first.update(value: 'true') }
 
@@ -185,7 +185,7 @@ describe DossierProjectionService do
         let(:table) { 'type_de_champ' }
         let(:procedure) { create(:procedure, :with_address) }
         let(:dossier) { create(:dossier, procedure: procedure) }
-        let(:column) { dossier.procedure.types_de_champ.first.stable_id.to_s }
+        let(:column) { dossier.procedure.active_revision.types_de_champ_public.first.stable_id.to_s }
 
         before { dossier.champs_public.first.update(data: { 'label' => '18 a la bonne rue', 'departement' => 'd' }) }
 
@@ -196,7 +196,7 @@ describe DossierProjectionService do
         let(:table) { 'type_de_champ' }
         let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :pays }]) }
         let(:dossier) { create(:dossier, procedure: procedure) }
-        let(:column) { dossier.procedure.types_de_champ.first.stable_id.to_s }
+        let(:column) { dossier.procedure.active_revision.types_de_champ_public.first.stable_id.to_s }
         let!(:previous_locale) { I18n.locale }
 
         before { I18n.locale = :fr }

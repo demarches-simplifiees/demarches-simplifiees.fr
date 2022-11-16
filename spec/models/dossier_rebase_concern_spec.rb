@@ -2,8 +2,8 @@ describe Dossier do
   describe '#can_rebase?' do
     let(:procedure) { create(:procedure, :with_type_de_champ_mandatory, :with_yes_no, attestation_template: build(:attestation_template)) }
     let(:attestation_template) { procedure.draft_revision.attestation_template.find_or_revise! }
-    let(:type_de_champ) { procedure.types_de_champ.find { |tdc| !tdc.mandatory? } }
-    let(:mandatory_type_de_champ) { procedure.types_de_champ.find(&:mandatory?) }
+    let(:type_de_champ) { procedure.active_revision.types_de_champ_public.find { |tdc| !tdc.mandatory? } }
+    let(:mandatory_type_de_champ) { procedure.active_revision.types_de_champ_public.find(&:mandatory?) }
 
     before { Flipper.enable(:procedure_revisions, procedure) }
 
@@ -155,17 +155,17 @@ describe Dossier do
     let(:procedure) { create(:procedure, :with_type_de_champ_mandatory, :with_yes_no, :with_repetition, :with_datetime) }
     let(:dossier) { create(:dossier, procedure: procedure) }
 
-    let(:yes_no_type_de_champ) { procedure.types_de_champ.find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:yes_no) } }
+    let(:yes_no_type_de_champ) { procedure.active_revision.types_de_champ_public.find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:yes_no) } }
 
-    let(:text_type_de_champ) { procedure.types_de_champ.find(&:mandatory?) }
+    let(:text_type_de_champ) { procedure.active_revision.types_de_champ_public.find(&:mandatory?) }
     let(:text_champ) { dossier.champs_public.find(&:mandatory?) }
     let(:rebased_text_champ) { dossier.champs_public.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
 
-    let(:datetime_type_de_champ) { procedure.types_de_champ.find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:datetime) } }
+    let(:datetime_type_de_champ) { procedure.active_revision.types_de_champ_public.find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:datetime) } }
     let(:datetime_champ) { dossier.champs_public.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:datetime) } }
     let(:rebased_datetime_champ) { dossier.champs_public.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:date) } }
 
-    let(:repetition_type_de_champ) { procedure.types_de_champ.find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
+    let(:repetition_type_de_champ) { procedure.active_revision.types_de_champ_public.find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
     let(:repetition_text_type_de_champ) { procedure.active_revision.children_of(repetition_type_de_champ).find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
     let(:repetition_champ) { dossier.champs_public.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
     let(:rebased_repetition_champ) { dossier.champs_public.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
