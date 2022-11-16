@@ -481,7 +481,8 @@ module Users
       end
 
       if @dossier.groupe_instructeur.nil?
-        errors << "Le champ « #{@dossier.procedure.routing_criteria_name} » doit être rempli"
+        # double read
+        errors << "Le champ « #{@dossier.procedure.routing_libelle || @dossier.procedure.routing_criteria_name} » doit être rempli"
       end
 
       errors

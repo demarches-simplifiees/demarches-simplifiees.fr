@@ -179,6 +179,7 @@ module Administrateurs
       end
     end
 
+    # double read / to remove
     def update_routing_criteria_name
       if procedure.update(routing_criteria_name: routing_criteria_name)
         flash[:notice] = "Le libellé est maintenant « #{procedure.routing_criteria_name} »."
