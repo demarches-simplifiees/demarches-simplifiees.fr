@@ -467,4 +467,27 @@ describe ProcedureExportService do
       end
     end
   end
+
+  describe 'to_geo_json' do
+    subject do
+      service
+        .to_geo_json
+        .open { |f| JSON.parse(f.read) }
+    end
+
+    let(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure) }
+    let(:champ_carte) { dossier.champs_public.find(&:carte?) }
+    let(:properties) { subject['features'].first['properties'] }
+
+    before do
+      create(:geo_area, :polygon, champ: champ_carte)
+    end
+
+    it 'should have features' do
+      expect(subject['features'].size).to eq(1)
+      expect(properties['dossier_id']).to eq(dossier.id)
+      expect(properties['champ_id']).to eq(champ_carte.stable_id)
+      expect(properties['champ_label']).to eq(champ_carte.libelle)
+    end
+  end
 end
