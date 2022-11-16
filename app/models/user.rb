@@ -186,7 +186,7 @@ class User < ApplicationRecord
     !administrateur? && !instructeur? && !expert?
   end
 
-  def delete_and_keep_track_dossiers(administration)
+  def delete_and_keep_track_dossiers_also_delete_user(super_admin)
     if !can_be_deleted?
       raise "Cannot delete this user because they are also instructeur, expert or administrateur"
     end
@@ -195,6 +195,14 @@ class User < ApplicationRecord
       # delete invites
       Invite.where(dossier: dossiers).destroy_all
 
+      delete_and_keep_track_dossiers(super_admin)
+
+      destroy!
+    end
+  end
+
+  def delete_and_keep_track_dossiers(super_admin)
+    transaction do
       # delete dossiers brouillon
       dossiers.state_brouillon.each do |dossier|
         dossier.hide_and_keep_track!(dossier.user, :user_removed)
@@ -212,8 +220,6 @@ class User < ApplicationRecord
         dossier.hide_and_keep_track!(dossier.user, :user_removed)
       end
       dossiers.update_all(deleted_user_email_never_send: email, user_id: nil, dossier_transfer_id: nil)
-
-      destroy!
     end
   end
 
