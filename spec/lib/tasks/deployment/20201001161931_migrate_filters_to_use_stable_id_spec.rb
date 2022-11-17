@@ -2,7 +2,7 @@ describe '20201001161931_migrate_filters_to_use_stable_id' do
   let(:rake_task) { Rake::Task['after_party:migrate_filters_to_use_stable_id'] }
 
   let(:procedure) { create(:procedure, :with_instructeur, :with_type_de_champ) }
-  let(:type_de_champ) { procedure.types_de_champ.first }
+  let(:type_de_champ) { procedure.active_revision.types_de_champ_public.first }
   let(:sort) do
     {
       "table" => "type_de_champ",

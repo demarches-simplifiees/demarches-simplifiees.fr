@@ -148,7 +148,7 @@ describe API::V2::GraphqlController do
             draftRevision: { id: procedure.draft_revision.to_typed_id },
             publishedRevision: {
               id: procedure.published_revision.to_typed_id,
-              champDescriptors: procedure.published_types_de_champ.map do |tdc|
+              champDescriptors: procedure.published_revision.types_de_champ_public.map do |tdc|
                 {
                   type: tdc.type_champ
                 }
@@ -159,7 +159,7 @@ describe API::V2::GraphqlController do
               typeOrganisme: procedure.service.type_organisme,
               organisme: procedure.service.organisme
             },
-            champDescriptors: procedure.types_de_champ.map do |tdc|
+            champDescriptors: procedure.active_revision.types_de_champ_public.map do |tdc|
               {
                 id: tdc.to_typed_id,
                 label: tdc.libelle,

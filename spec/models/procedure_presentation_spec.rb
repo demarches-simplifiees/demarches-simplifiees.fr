@@ -2,7 +2,7 @@ describe ProcedurePresentation do
   let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
   let(:instructeur) { create(:instructeur) }
   let(:assign_to) { create(:assign_to, procedure: procedure, instructeur: instructeur) }
-  let(:first_type_de_champ) { assign_to.procedure.types_de_champ.first }
+  let(:first_type_de_champ) { assign_to.procedure.active_revision.types_de_champ_public.first }
   let(:first_type_de_champ_id) { first_type_de_champ.stable_id.to_s }
   let(:procedure_presentation) {
     create(:procedure_presentation,
@@ -52,10 +52,10 @@ describe ProcedurePresentation do
   describe "#fields" do
     context 'when the procedure can have a SIRET number' do
       let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, types_de_champ_count: 4, types_de_champ_private_count: 4) }
-      let(:tdc_1) { procedure.types_de_champ[0] }
-      let(:tdc_2) { procedure.types_de_champ[1] }
-      let(:tdc_private_1) { procedure.types_de_champ_private[0] }
-      let(:tdc_private_2) { procedure.types_de_champ_private[1] }
+      let(:tdc_1) { procedure.active_revision.types_de_champ_public[0] }
+      let(:tdc_2) { procedure.active_revision.types_de_champ_public[1] }
+      let(:tdc_private_1) { procedure.active_revision.types_de_champ_private[0] }
+      let(:tdc_private_2) { procedure.active_revision.types_de_champ_private[1] }
       let(:expected) {
         [
           { "label" => 'Créé le', "table" => 'self', "column" => 'created_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '' },
@@ -90,10 +90,10 @@ describe ProcedurePresentation do
       }
 
       before do
-        procedure.types_de_champ[2].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:header_section))
-        procedure.types_de_champ[3].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:explication))
-        procedure.types_de_champ_private[2].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:header_section))
-        procedure.types_de_champ_private[3].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:explication))
+        procedure.active_revision.types_de_champ_public[2].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:header_section))
+        procedure.active_revision.types_de_champ_public[3].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:explication))
+        procedure.active_revision.types_de_champ_private[2].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:header_section))
+        procedure.active_revision.types_de_champ_private[3].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:explication))
       end
 
       subject { create(:procedure_presentation, assign_to: assign_to) }
@@ -225,7 +225,7 @@ describe ProcedurePresentation do
     context 'for type_de_champ table' do
       context 'with no revisions' do
         let(:table) { 'type_de_champ' }
-        let(:column) { procedure.types_de_champ.first.stable_id.to_s }
+        let(:column) { procedure.active_revision.types_de_champ_public.first.stable_id.to_s }
 
         let(:beurre_dossier) { create(:dossier, procedure: procedure) }
         let(:tartine_dossier) { create(:dossier, procedure: procedure) }
@@ -251,7 +251,7 @@ describe ProcedurePresentation do
       context 'with a revision adding a new type_de_champ' do
         let!(:tdc) { { type_champ: :text, libelle: 'nouveau champ' } }
         let(:table) { 'type_de_champ' }
-        let(:column) { procedure.types_de_champ.last.stable_id.to_s }
+        let(:column) { procedure.active_revision.types_de_champ_public.last.stable_id.to_s }
 
         let(:nothing_dossier) { create(:dossier, procedure: procedure) }
         let(:beurre_dossier) { create(:dossier, procedure: procedure) }
@@ -280,7 +280,7 @@ describe ProcedurePresentation do
     context 'for type_de_champ_private table' do
       context 'with no revisions' do
         let(:table) { 'type_de_champ_private' }
-        let(:column) { procedure.types_de_champ_private.first.stable_id.to_s }
+        let(:column) { procedure.active_revision.types_de_champ_private.first.stable_id.to_s }
 
         let(:biere_dossier) { create(:dossier, procedure: procedure) }
         let(:vin_dossier) { create(:dossier, procedure: procedure) }
@@ -306,7 +306,7 @@ describe ProcedurePresentation do
       context 'with a revision adding a new type_de_champ' do
         let!(:tdc) { { type_champ: :text, private: true, libelle: 'nouveau champ' } }
         let(:table) { 'type_de_champ_private' }
-        let(:column) { procedure.types_de_champ_private.last.stable_id.to_s }
+        let(:column) { procedure.active_revision.types_de_champ_private.last.stable_id.to_s }
 
         let(:nothing_dossier) { create(:dossier, procedure: procedure) }
         let(:biere_dossier) { create(:dossier, procedure: procedure) }
@@ -511,7 +511,7 @@ describe ProcedurePresentation do
 
       let(:kept_dossier) { create(:dossier, procedure: procedure) }
       let(:discarded_dossier) { create(:dossier, procedure: procedure) }
-      let(:type_de_champ) { procedure.types_de_champ.first }
+      let(:type_de_champ) { procedure.active_revision.types_de_champ_public.first }
 
       context 'with single value' do
         before do
@@ -561,7 +561,7 @@ describe ProcedurePresentation do
 
       let(:kept_dossier) { create(:dossier, procedure: procedure) }
       let(:discarded_dossier) { create(:dossier, procedure: procedure) }
-      let(:type_de_champ_private) { procedure.types_de_champ_private.first }
+      let(:type_de_champ_private) { procedure.active_revision.types_de_champ_private.first }
 
       before do
         kept_dossier.champs_private.find_by(type_de_champ: type_de_champ_private).update(value: 'keep me')
