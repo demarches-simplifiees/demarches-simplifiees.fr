@@ -13,6 +13,13 @@
     = favicon_link_tag(image_url("#{FAVICON_32PX_SRC}"), type: "image/png", sizes: "32x32")
     = favicon_link_tag(image_url("#{FAVICON_96PX_SRC}"), type: "image/png", sizes: "96x96")
 
+    %link{ rel: "stylesheet", href: "https://unpkg.com/graphiql/graphiql.min.css" }
+    %link{ rel: "stylesheet", href: "https://unpkg.com/@graphiql/plugin-explorer/dist/style.css" }
+    %script{ crossorigin: true, src: "https://unpkg.com/react@17/umd/react.development.js" }
+    %script{ crossorigin: true, src: "https://unpkg.com/react-dom@17/umd/react-dom.development.js" }
+    %script{ crossorigin: true, src: "https://unpkg.com/graphiql/graphiql.min.js" }
+    %script{ crossorigin: true, src: "https://unpkg.com/@graphiql/plugin-explorer/dist/graphiql-plugin-explorer.umd.js" }
+
     = Gon::Base.render_data(camel_case: true, init: true, nonce:  request.content_security_policy_nonce)
 
     :css
@@ -27,9 +34,42 @@
         height: 100vh;
       }
 
-    = vite_client_tag
-    = vite_typescript_tag 'playground'
-
   %body
     #graphiql
       Loading...
+
+    :javascript
+      function csrfToken() {
+        var meta = document.querySelector('meta[name=csrf-token]');
+        return meta && meta.content;
+      }
+      var defaultQuery = window.gon.defaultQuery;
+      var defaultVariables = window.gon.defaultVariables;
+
+      var fetcher = GraphiQL.createFetcher({
+        url: '/api/v2/graphql',
+        headers: { 'x-csrf-token': csrfToken() }
+      });
+
+      function GraphiQLWithExplorer() {
+        var [query, setQuery] = React.useState(defaultQuery);
+        var explorerPlugin = GraphiQLPluginExplorer.useExplorerPlugin({
+          query: query,
+          onEdit: setQuery,
+        });
+        return React.createElement(GraphiQL, {
+          fetcher: fetcher,
+          defaultEditorToolsVisibility: true,
+          plugins: [explorerPlugin],
+          query: query,
+          variables: defaultVariables,
+          onEditQuery: setQuery,
+          defaultEditorToolsVisibility: true,
+          isHeadersEditorEnabled: false
+        });
+      }
+
+      ReactDOM.render(
+        React.createElement(GraphiQLWithExplorer),
+        document.getElementById('graphiql'),
+      );
