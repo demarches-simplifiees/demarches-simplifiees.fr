@@ -2,15 +2,22 @@
 class Attachment::EditComponent < ApplicationComponent
   attr_reader :champ
   attr_reader :attachment
+  attr_reader :user_can_download
+  alias user_can_download? user_can_download
   attr_reader :as_multiple
   alias as_multiple? as_multiple
 
   EXTENSIONS_ORDER = ['jpeg', 'png', 'pdf', 'zip'].freeze
 
-  def initialize(champ: nil, auto_attach_url: nil, attached_file:, direct_upload: true, id: nil, index: 0, as_multiple: false, **kwargs)
-    @champ = champ
-    @auto_attach_url = auto_attach_url
+  def initialize(champ: nil, auto_attach_url: nil, field_name: nil, attached_file:, direct_upload: true, id: nil, index: 0, as_multiple: false, user_can_download: false, **kwargs)
+    @as_multiple = as_multiple
     @attached_file = attached_file
+    @auto_attach_url = auto_attach_url
+    @champ = champ
+    @direct_upload = direct_upload
+    @id = id
+    @index = index
+    @user_can_download = user_can_download
 
     # attachment passed by kwarg because we don't want a default (nil) value.
     @attachment = if kwargs.key?(:attachment)
@@ -21,16 +28,7 @@ class Attachment::EditComponent < ApplicationComponent
       fail ArgumentError, "You must pass an `attachment` kwarg when not using as single attachment like in #{attached_file.name}. Set it to nil for a new attachment."
     end
 
-    fail ArgumentError, "Unknown kwarg #{kwargs.keys.join(', ')}" unless kwargs.empty?
-
-    @direct_upload = direct_upload
-    @id = id
-    @index = index
-    @as_multiple = as_multiple
-  end
-
-  def object_name
-    @object.class.name.underscore
+    verify_initialization!(kwargs)
   end
 
   def first?
@@ -100,11 +98,15 @@ class Attachment::EditComponent < ApplicationComponent
     if champ.present?
       auto_attach_url
     else
-      attachment_path(user_can_edit: true, auto_attach_url: @auto_attach_url)
+      attachment_path(user_can_edit: true, user_can_download: @user_can_download, auto_attach_url: @auto_attach_url)
     end
   end
 
-  def file_field_name
+  def field_name
+    helpers.field_name(ActiveModel::Naming.param_key(@attached_file.record), attribute_name)
+  end
+
+  def attribute_name
     @attached_file.name
   end
 
@@ -151,7 +153,7 @@ class Attachment::EditComponent < ApplicationComponent
       return "#{champ.input_id}_#{attachment_id}"
     end
 
-    file_field_name
+    helpers.field_id(@attached_file.record, attribute_name)
   end
 
   def auto_attach_url
@@ -159,18 +161,18 @@ class Attachment::EditComponent < ApplicationComponent
 
     return helpers.auto_attach_url(@champ) if @champ.present?
 
-    fail ArgumentError, "You must pass `auto_attach_url` when not using attachment for a Champ"
+    nil
   end
 
   def file_size_validator
     @attached_file.record
-      ._validators[file_field_name.to_sym]
+      ._validators[attribute_name.to_sym]
       .find { |validator| validator.class == ActiveStorageValidations::SizeValidator }
   end
 
   def content_type_validator
     @attached_file.record
-      ._validators[file_field_name.to_sym]
+      ._validators[attribute_name.to_sym]
       .find { |validator| validator.class == ActiveStorageValidations::ContentTypeValidator }
   end
 
@@ -204,12 +206,16 @@ class Attachment::EditComponent < ApplicationComponent
     return false
   end
 
+  def verify_initialization!(kwargs)
+    fail ArgumentError, "Unknown kwarg #{kwargs.keys.join(', ')}" unless kwargs.empty?
+  end
+
   def track_issue_with_missing_validators
     Sentry.capture_message(
       "Strange case of missing validator",
       extra: {
         champ: champ,
-        file_field_name: file_field_name,
+        field_name: field_name,
         attachment_id: attachment_id
       }
     )

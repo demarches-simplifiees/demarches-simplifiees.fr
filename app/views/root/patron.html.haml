@@ -355,6 +355,7 @@
 
     - champ = @dossier.champs_public.first
     - tdc = @dossier.champs_public.find { _1.type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative) }.type_de_champ
+    - avis = Avis.new
 
     - if attachment = ActiveStorage::Attachment.last
       - attachment.update(created_at: 1.second.ago)
@@ -378,9 +379,18 @@
       - attachment.blob.metadata[:virus_scan_result] = ActiveStorage::VirusScanner::INFECTED
       = render Attachment::EditComponent.new(champ:, attached_file: Champ.new.piece_justificative_file, attachment:)
 
-      %h3.fr-mt-4w New attachment not on Champ
+      %h3.fr-mt-4w New attachment on TypeDeChamp
       = render Attachment::EditComponent.new(auto_attach_url: "/some-auto-attach-path", attached_file: tdc.piece_justificative_template, attachment: nil)
 
-      %h3.fr-mt-4w Existing attachment not on Champ
+      %h3.fr-mt-4w Existing attachment on TypeDeChamp
       = render Attachment::EditComponent.new(auto_attach_url: "/some-auto-attach-path", attached_file: tdc.piece_justificative_template, attachment: attachment.reload)
+
+      %h3.fr-mt-4w Existing attachment on TypeDeChamp can download
+      = render Attachment::EditComponent.new(auto_attach_url: "/some-auto-attach-path", attached_file: tdc.piece_justificative_template, attachment: attachment.reload, user_can_download: true)
+
+      %h3.fr-mt-4w New attachment on generic object
+      = render Attachment::EditComponent.new(attached_file: avis.introduction_file)
+
+      %h3.fr-mt-4w Existing attachment on generic object, can download
+      = render Attachment::EditComponent.new(attached_file: avis.introduction_file, attachment: attachment.reload, user_can_download: true)
 

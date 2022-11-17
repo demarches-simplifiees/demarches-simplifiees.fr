@@ -5,7 +5,8 @@
         = link_to('Supprimer', destroy_attachment_path, **remove_button_options, class: "fr-btn fr-btn--tertiary fr-btn--sm fr-icon-delete-line", title: "Supprimer le fichier #{attachment.filename}")
 
         .fr-py-1v
-          %span.attachment-filename= attachment.filename.to_s
+          = link_to_if(user_can_download?, attachment.filename.to_s, attachment.url, class: "attachment-filename", download: "") do
+            %span.attachment-filename= attachment.filename.to_s
           - if in_progress?
             %p.fr-badge.fr-badge--info.fr-badge--sm.fr-badge--no-icon.fr-ml-1w
               = progress_bar_label
@@ -23,7 +24,7 @@
 
 
   - if !as_multiple?
-    = file_field(champ, file_field_name, **file_field_options)
+    = file_field(champ, field_name, **file_field_options)
 
     - if in_progress?
       %div{ data: poll_controller_options }
