@@ -75,7 +75,7 @@ describe Champ do
         procedure.active_revision.add_type_de_champ(
           libelle: 'header',
           type_champ: 'header_section',
-          parent_stable_id: procedure.types_de_champ.find(&:repetition?).stable_id
+          parent_stable_id: procedure.active_revision.types_de_champ_public.find(&:repetition?).stable_id
         )
       end
     end
@@ -494,7 +494,7 @@ describe Champ do
 
   describe 'repetition' do
     let(:procedure) { create(:procedure, :published, :with_type_de_champ, :with_type_de_champ_private, :with_repetition) }
-    let(:tdc_repetition) { procedure.types_de_champ.find(&:repetition?) }
+    let(:tdc_repetition) { procedure.active_revision.types_de_champ_public.find(&:repetition?) }
     let(:tdc_text) { procedure.active_revision.children_of(tdc_repetition).first }
 
     let(:dossier) { create(:dossier, procedure: procedure) }
