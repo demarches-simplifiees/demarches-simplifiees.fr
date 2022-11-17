@@ -4,18 +4,16 @@ class Attachment::MultipleComponent < ApplicationComponent
 
   attr_reader :form
   attr_reader :attached_file
-  attr_reader :direct_upload
   attr_reader :id
   attr_reader :user_can_destroy
   attr_reader :max
 
   delegate :count, :empty?, to: :attachments, prefix: true
 
-  def initialize(form:, attached_file:, user_can_destroy: false, direct_upload: true, id: nil, max: nil)
+  def initialize(form:, attached_file:, user_can_destroy: false, id: nil, max: nil)
     @form = form
     @attached_file = attached_file
     @user_can_destroy = user_can_destroy
-    @direct_upload = direct_upload
     @id = id
     @max = max || 10
 

@@ -14,7 +14,7 @@
 = f.text_area :description, rows: '6', placeholder: 'Description de la démarche, destinataires, etc. ', class: 'form-control'
 
 %h3.header-subsection Logo de la démarche
-= render Attachment::EditComponent.new(form: f, attached_file: @procedure.logo, direct_upload: true, user_can_destroy: true)
+= render Attachment::EditComponent.new(attached_file: @procedure.logo, user_can_download: true)
 
 %h3.header-subsection Conservation des données
 = f.label :duree_conservation_dossiers_dans_ds do
@@ -52,7 +52,7 @@
 = f.text_field :cadre_juridique, class: 'form-control', placeholder: 'https://www.legifrance.gouv.fr/'
 
 = f.label :deliberation, 'Importer le texte'
-= render Attachment::EditComponent.new(form: f, attached_file: @procedure.deliberation, user_can_destroy: true)
+= render Attachment::EditComponent.new(attached_file: @procedure.deliberation, user_can_download: true)
 
 %h3.header-subsection
   RGPD
@@ -81,7 +81,7 @@
 = f.label :notice, 'Notice'
 %p.notice
   Formats acceptés : .doc, .odt, .pdf, .ppt, .pptx
-= render Attachment::EditComponent.new(form: f, attached_file: @procedure.notice, user_can_destroy: true)
+= render Attachment::EditComponent.new(attached_file: @procedure.notice, user_can_download: true)
 
 - if !@procedure.locked?
   %h3.header-subsection À qui s’adresse ma démarche ?

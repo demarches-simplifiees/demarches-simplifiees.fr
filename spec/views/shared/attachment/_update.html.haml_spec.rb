@@ -5,9 +5,7 @@ describe 'shared/attachment/_update.html.haml', type: :view do
   let(:template) { nil }
 
   subject do
-    form_for(champ.dossier) do |form|
-      view.render Attachment::EditComponent.new(form: form, attached_file: attached_file, attachment: attached_file[0], user_can_destroy: true, direct_upload: true)
-    end
+    view.render Attachment::EditComponent.new(champ: champ, attached_file: attached_file, attachment: attached_file[0])
   end
 
   context 'when there is no attached file' do
@@ -52,13 +50,9 @@ describe 'shared/attachment/_update.html.haml', type: :view do
 
   context 'when the user cannot destroy the attachment' do
     subject do
-      form_for(champ.dossier) do |form|
-        render Attachment::EditComponent.new(form: form,
-          attached_file: attached_file,
-          attachment: attached_file[0],
-          user_can_destroy: user_can_destroy,
-          direct_upload: true)
-      end
+      render Attachment::EditComponent.new(champ: champ,
+        attached_file: attached_file,
+        attachment: attached_file[0])
     end
 
     it 'hides the Delete button' do

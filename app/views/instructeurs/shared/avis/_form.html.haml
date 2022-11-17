@@ -8,7 +8,7 @@
     %p#avis-emails-description.avis-notice
       Entrez les adresses email des experts à qui vous souhaitez demander un avis
 
-  = form_for avis, url: url, html: { class: 'form', data: { controller: 'persisted-form', persisted_form_key_value: dom_id(@dossier, :avis_by_instructeur) } } do |f|
+  = form_for avis, url: url, html: { class: 'form', multipart: true, data: { controller: 'persisted-form', persisted_form_key_value: dom_id(@dossier, :avis_by_instructeur) } } do |f|
     = hidden_field_tag  'avis[emails]', nil
     = react_component("ComboMultiple",
         options: @dossier.procedure.experts_require_administrateur_invitation ? @experts_emails : [],
@@ -21,7 +21,7 @@
     = f.text_area :introduction, rows: 3, value: avis.introduction || 'Bonjour, merci de me donner votre avis sur ce dossier.', required: true
     %p.tab-title Ajouter une pièce jointe
     .form-group
-      = render Attachment::EditComponent.new(object: f.object, attached_file: avis.introduction_file, user_can_destroy: true)
+      = render Attachment::EditComponent.new(attached_file: avis.introduction_file)
 
     - if linked_dossiers.present?
       = f.check_box :invite_linked_dossiers, {}, true, false
