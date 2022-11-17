@@ -39,6 +39,7 @@
     "react-query": "^3.39.2",
     "sortablejs": "^1.15.0",
     "stimulus-use": "^0.50.0",
+    "terser": "^5.15.1",
     "tiny-invariant": "^1.2.0",
     "trix": "^1.2.3",
     "turbo-polyfills": "^0.3.0",
