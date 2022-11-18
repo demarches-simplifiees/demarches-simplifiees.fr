@@ -13,6 +13,7 @@
 #  updated_at          :datetime         not null
 #  instructeur_id      :bigint           not null
 #
+
 class BatchOperation < ApplicationRecord
   enum operation: {
     archiver: 'archiver'
@@ -22,10 +23,26 @@ class BatchOperation < ApplicationRecord
   belongs_to :instructeur
   validates :operation, presence: true
 
-  def process
+  def enqueue_all
+    Dossier.joins(:procedure)
+      .where(procedure: { id: instructeur.procedures.ids })
+      .where(id: dossiers.ids)
+      .map { |dossier| BatchOperationProcessOneJob.perform_later(self, dossier) }
+  end
+
+  def process_one(dossier)
     case operation
     when BatchOperation.operations.fetch(:archiver)
-      dossiers.map { |dossier| dossier.archiver!(instructeur) }
+      dossier.archiver!(instructeur)
     end
+    true
+  end
+
+  def called_for_first_time?
+    run_at.nil?
+  end
+
+  def called_for_last_time? # beware, must be reloaded first
+    dossiers.count.zero?
   end
 end
