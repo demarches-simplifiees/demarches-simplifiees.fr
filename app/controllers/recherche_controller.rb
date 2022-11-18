@@ -33,17 +33,15 @@ class RechercheController < ApplicationController
     # we want to display an alert in view
 
     # to make it simpler we only do it if the @search_terms is an id
-    return if !DossierSearchService.id_compatible?(@search_terms)
+    if DossierSearchService.id_compatible?(@search_terms)
+      dossier_instructeur_searched_for = Dossier.find_by(id: @search_terms)
 
-    dossier_instructeur_searched_for = Dossier.find_by(id: @search_terms)
+      if dossier_instructeur_searched_for.present? &&
+          !@instructeur_dossiers_ids.include?(dossier_instructeur_searched_for.id) &&
+          current_instructeur&.procedures&.include?(dossier_instructeur_searched_for.procedure)
 
-    return if dossier_instructeur_searched_for.nil?
-    return if current_instructeur&.groupe_instructeur_ids&.include?(dossier_instructeur_searched_for.groupe_instructeur_id)
-
-    if current_instructeur&.procedures&.include?(dossier_instructeur_searched_for.procedure)
-      @dossier_not_in_instructor_group = dossier_instructeur_searched_for
-    else
-      return
+        @dossier_not_in_instructor_group = dossier_instructeur_searched_for
+      end
     end
   end
 
