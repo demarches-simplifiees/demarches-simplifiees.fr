@@ -77,34 +77,6 @@ class PiecesJustificativesService
     end
   end
 
-  class FakeAttachment < Hashie::Dash
-    property :filename
-    property :name
-    property :file
-    property :id
-    property :created_at
-
-    def download
-      file.read
-    end
-
-    def read(*args)
-      file.read(*args)
-    end
-
-    def close
-      file.close
-    end
-
-    def attached?
-      true
-    end
-
-    def record_type
-      'Fake'
-    end
-  end
-
   def self.generate_dossier_export(dossiers)
     return [] if dossiers.empty?
 
@@ -123,7 +95,7 @@ class PiecesJustificativesService
                   dossier: dossier
                 })
 
-      a = FakeAttachment.new(
+      a = ActiveStorage::FakeAttachment.new(
         file: StringIO.new(pdf),
         filename: "export-#{dossier.id}.pdf",
         name: 'pdf_export_for_instructeur',
