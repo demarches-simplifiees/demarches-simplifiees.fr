@@ -6,7 +6,7 @@
       checked: champ.value.present?,
       aria: { describedby: champ.describedby_id },
       data: { visa: "true" } },
-    current_user&.email || '1',
+    champ.value.presence || current_user&.email || '1',
     ''
   .visa-info
     - if champ.value.present?
