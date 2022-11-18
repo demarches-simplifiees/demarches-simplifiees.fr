@@ -41,16 +41,7 @@ Rails.application.config.to_prepare do
       end
 
       def make_prefixed_key(key)
-        [segment, key].join('/')
+        [key[0..1], key[2..3], key].join('/')
       end
-
-      def segment
-        [rand_a_to_z, rand_a_to_z].join('')
-      end
-
-      def rand_a_to_z
-        ('a'..'z').to_a.sample
-      end
-    end
   end
 end
