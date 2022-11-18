@@ -18,7 +18,7 @@ class Instructeur < ApplicationRecord
   has_many :groupe_instructeurs, -> { order(:label) }, through: :assign_to
   has_many :unordered_groupe_instructeurs, through: :assign_to, source: :groupe_instructeur
   has_many :procedures, -> { distinct }, through: :unordered_groupe_instructeurs
-
+  has_many :batch_operations, dependent: :nullify
   has_many :assign_to_with_email_notifications, -> { with_email_notifications }, class_name: 'AssignTo', inverse_of: :instructeur
   has_many :groupe_instructeur_with_email_notifications, through: :assign_to_with_email_notifications, source: :groupe_instructeur
 

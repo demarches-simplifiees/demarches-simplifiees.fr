@@ -11,7 +11,6 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(version: 2022_11_30_113745) do
-
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -156,6 +155,18 @@ ActiveRecord::Schema.define(version: 2022_11_30_113745) do
     t.index ["claimant_id"], name: "index_avis_on_claimant_id"
     t.index ["dossier_id"], name: "index_avis_on_dossier_id"
     t.index ["experts_procedure_id"], name: "index_avis_on_experts_procedure_id"
+  end
+
+  create_table "batch_operations", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.bigint "failed_dossier_ids", default: [], null: false, array: true
+    t.datetime "finished_at"
+    t.bigint "instructeur_id", null: false
+    t.string "operation", null: false
+    t.jsonb "payload", default: {}, null: false
+    t.datetime "run_at"
+    t.bigint "success_dossier_ids", default: [], null: false, array: true
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "bill_signatures", force: :cascade do |t|
@@ -307,6 +318,7 @@ ActiveRecord::Schema.define(version: 2022_11_30_113745) do
     t.datetime "archived_at"
     t.string "archived_by"
     t.boolean "autorisation_donnees"
+    t.bigint "batch_operation_id"
     t.datetime "brouillon_close_to_expiration_notice_sent_at"
     t.interval "conservation_extension", default: "PT0S"
     t.datetime "created_at"
@@ -340,6 +352,7 @@ ActiveRecord::Schema.define(version: 2022_11_30_113745) do
     t.datetime "updated_at"
     t.integer "user_id"
     t.index ["archived"], name: "index_dossiers_on_archived"
+    t.index ["batch_operation_id"], name: "index_dossiers_on_batch_operation_id"
     t.index ["dossier_transfer_id"], name: "index_dossiers_on_dossier_transfer_id"
     t.index ["groupe_instructeur_id"], name: "index_dossiers_on_groupe_instructeur_id"
     t.index ["hidden_at"], name: "index_dossiers_on_hidden_at"
@@ -913,6 +926,7 @@ ActiveRecord::Schema.define(version: 2022_11_30_113745) do
   add_foreign_key "attestations", "dossiers"
   add_foreign_key "avis", "dossiers"
   add_foreign_key "avis", "experts_procedures"
+  add_foreign_key "batch_operations", "instructeurs"
   add_foreign_key "bulk_messages_groupe_instructeurs", "bulk_messages"
   add_foreign_key "bulk_messages_groupe_instructeurs", "groupe_instructeurs"
   add_foreign_key "champs", "champs", column: "parent_id"
@@ -925,6 +939,7 @@ ActiveRecord::Schema.define(version: 2022_11_30_113745) do
   add_foreign_key "commentaires", "instructeurs"
   add_foreign_key "dossier_operation_logs", "bill_signatures"
   add_foreign_key "dossier_transfer_logs", "dossiers"
+  add_foreign_key "dossiers", "batch_operations"
   add_foreign_key "dossiers", "dossier_transfers"
   add_foreign_key "dossiers", "dossiers", column: "parent_dossier_id"
   add_foreign_key "dossiers", "groupe_instructeurs"
