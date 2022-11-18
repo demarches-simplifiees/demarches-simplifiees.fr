@@ -765,8 +765,8 @@ class Dossier < ApplicationRecord
   def expired_keep_track_and_destroy!
     transaction do
       DeletedDossier.create_from_dossier(self, :expired)
-      dossier_operation_logs.destroy_all
       log_automatic_dossier_operation(:supprimer, self)
+      dossier_operation_logs.purge_discarded
       destroy!
     end
     true
@@ -1164,7 +1164,7 @@ class Dossier < ApplicationRecord
   def purge_discarded
     transaction do
       DeletedDossier.create_from_dossier(self, hidden_by_reason)
-      dossier_operation_logs.not_deletion.destroy_all
+      dossier_operation_logs.purge_discarded
       destroy
     end
   end

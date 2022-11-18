@@ -201,14 +201,21 @@ class PiecesJustificativesService
 
   def self.operation_logs_and_signature_ids(dossiers)
     dol_id_dossier_id_bill_id = DossierOperationLog
+      .where(dossier: dossiers, data: nil)
+      .pluck(:bill_signature_id, :id, :dossier_id)
+    dol_id_data_bill_id = DossierOperationLog
       .where(dossier: dossiers)
-      .pluck(:id, :dossier_id, :bill_signature_id)
+      .with_data
+      .pluck(:bill_signature_id, :id, :dossier_id, :data, :digest, :created_at)
 
     dol_id_dossier_id = dol_id_dossier_id_bill_id
-      .map { |dol_id, dossier_id, _| [dol_id, dossier_id] }
+      .map { |_, dol_id, dossier_id| [dol_id, dossier_id] }
       .to_h
 
-    bill_ids = dol_id_dossier_id_bill_id.map(&:third).uniq.compact
+    bill_ids = (dol_id_dossier_id_bill_id + dol_id_data_bill_id)
+      .map(&:first)
+      .uniq
+      .compact
 
     serialized_dols = ActiveStorage::Attachment
       .includes(:blob)
@@ -217,6 +224,17 @@ class PiecesJustificativesService
         dossier_id = dol_id_dossier_id[a.record_id]
         ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
       end
+    serialized_dols += dol_id_data_bill_id.map do |_, id, dossier_id, data, digest, created_at|
+      a = ActiveStorage::FakeAttachment.new(
+        file: StringIO.new(data.to_json),
+        filename: "operation-#{digest}.json",
+        name: 'serialized',
+        id: id,
+        created_at: created_at,
+        record_type: 'DossierOperationLog'
+      )
+      ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
+    end
 
     [serialized_dols, bill_ids]
   end
