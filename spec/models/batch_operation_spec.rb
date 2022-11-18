@@ -18,28 +18,29 @@ describe BatchOperation, type: :model do
     it { is_expected.to validate_presence_of(:operation) }
   end
 
-  describe 'process' do
-    let(:procedure) { create(:procedure, :with_instructeur) }
+  describe 'enqueue_all' do
+    context 'given dossier_ids not in instructeur procedures' do
+      subject do
+        create(:batch_operation, :archiver, instructeur: create(:instructeur), invalid_instructeur: create(:instructeur))
+      end
 
-    subject do
-      create(:batch_operation, instructeur: procedure.instructeurs.first,
-                               operation: operation,
-                               dossiers: dossiers)
+      it 'does not enqueues any BatchOperationProcessOneJob' do
+        expect { subject.enqueue_all() }
+          .not_to have_enqueued_job(BatchOperationProcessOneJob)
+      end
     end
 
-    context 'archive' do
+    context 'given dossier_ids in instructeur procedures' do
+      subject do
+        create(:batch_operation, :archiver, instructeur: create(:instructeur))
+      end
 
-      let(:operation) { BatchOperation.operations.fetch(:archiver) }
-      let(:dossier_accepte) { create(:dossier, :accepte, procedure: procedure) }
-      let(:dossier_refuse) { create(:dossier, :refuse, procedure: procedure) }
-      let(:dossier_classe_sans_suite) { create(:dossier, :sans_suite, procedure: procedure) }
-      let(:dossiers) { [dossier_accepte, dossier_refuse, dossier_classe_sans_suite] }
-
-      it 'works' do
-        expect { subject.process() }
-          .to change { dossiers.map(&:reload).map(&:archived) }
-          .from(dossiers.map { false })
-          .to(dossiers.map { true })
+      it 'enqueues as many BatchOperationProcessOneJob as dossiers_ids' do
+        expect { subject.enqueue_all() }
+          .to have_enqueued_job(BatchOperationProcessOneJob)
+          .with(subject, subject.dossiers.first)
+          .with(subject, subject.dossiers.second)
+          .with(subject, subject.dossiers.third)
       end
     end
   end
