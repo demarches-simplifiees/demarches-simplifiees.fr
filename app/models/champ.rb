@@ -90,6 +90,7 @@ class Champ < ApplicationRecord
   before_validation :set_dossier_id, if: :needs_dossier_id?
   before_save :cleanup_if_empty
   before_save :normalize
+  after_save :update_dossier_groupe_instructeur_id, if: :routage?
   after_update_commit :fetch_external_data_later
 
   def public?
@@ -276,6 +277,10 @@ class Champ < ApplicationRecord
     return if value.present? && !value.include?("\u0000")
 
     self.value = value.delete("\u0000")
+  end
+
+  def update_dossier_groupe_instructeur_id
+    dossier.update!(groupe_instructeur_id: value)
   end
 
   class NotImplemented < ::StandardError
