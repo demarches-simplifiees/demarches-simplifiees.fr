@@ -1144,6 +1144,13 @@ class Dossier < ApplicationRecord
     }
   end
 
+  def self.to_feature_collection
+    {
+      type: 'FeatureCollection',
+      features: GeoArea.joins(:champ).where(champ: { dossier: ids }).map(&:to_feature)
+    }
+  end
+
   def log_api_entreprise_job_exception(exception)
     exceptions = self.api_entreprise_job_exceptions ||= []
     exceptions << exception.inspect
