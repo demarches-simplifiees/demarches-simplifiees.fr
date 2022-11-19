@@ -1,11 +1,11 @@
-describe BatchOperationJob, type: :job do
+describe BatchOperationProcessOneJob, type: :job do
   describe 'perform' do
     let(:batch_operation) do
       create(:batch_operation, :archiver,
                                options.merge(instructeur: create(:instructeur)))
     end
     let(:dossier_job) { batch_operation.dossiers.first }
-    subject { BatchOperationJob.new(batch_operation, dossier_job) }
+    subject { BatchOperationProcessOneJob.new(batch_operation, dossier_job) }
     let(:options) { {} }
 
     it 'just call the process one' do
