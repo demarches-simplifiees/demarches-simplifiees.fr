@@ -21,6 +21,7 @@ class BatchOperation < ApplicationRecord
 
   has_many :dossiers, dependent: :nullify
   belongs_to :instructeur
+
   validates :operation, presence: true
 
   def enqueue_all
