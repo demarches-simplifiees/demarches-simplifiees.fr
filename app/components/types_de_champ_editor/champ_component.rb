@@ -77,8 +77,7 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
   def piece_justificative_template_options
     {
       attached_file: type_de_champ.piece_justificative_template,
-      auto_attach_url: helpers.auto_attach_url(type_de_champ),
-      id: dom_id(type_de_champ, :piece_justificative_template)
+      auto_attach_url: helpers.auto_attach_url(type_de_champ)
     }
   end
 

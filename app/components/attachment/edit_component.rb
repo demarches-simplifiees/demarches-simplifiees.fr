@@ -9,13 +9,12 @@ class Attachment::EditComponent < ApplicationComponent
 
   EXTENSIONS_ORDER = ['jpeg', 'png', 'pdf', 'zip'].freeze
 
-  def initialize(champ: nil, auto_attach_url: nil, field_name: nil, attached_file:, direct_upload: true, id: nil, index: 0, as_multiple: false, user_can_download: false, **kwargs)
+  def initialize(champ: nil, auto_attach_url: nil, field_name: nil, attached_file:, direct_upload: true, index: 0, as_multiple: false, user_can_download: false, **kwargs)
     @as_multiple = as_multiple
     @attached_file = attached_file
     @auto_attach_url = auto_attach_url
     @champ = champ
     @direct_upload = direct_upload
-    @id = id
     @index = index
     @user_can_download = user_can_download
 
@@ -62,7 +61,7 @@ class Attachment::EditComponent < ApplicationComponent
     {
       class: "fr-upload attachment-input #{attachment_input_class} #{persisted? ? 'hidden' : ''}",
       direct_upload: @direct_upload,
-      id: input_id(@id),
+      id: input_id,
       aria: { describedby: champ&.describedby_id },
       data: {
         auto_attach_url:
@@ -144,9 +143,7 @@ class Attachment::EditComponent < ApplicationComponent
 
   private
 
-  def input_id(given_id)
-    return given_id if given_id.present?
-
+  def input_id
     if champ.present?
       # Single or first attachment input must match label "for" attribute. Others must remain unique.
       return champ.input_id if @index.zero?
