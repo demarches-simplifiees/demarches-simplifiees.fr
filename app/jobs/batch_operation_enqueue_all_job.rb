@@ -3,4 +3,3 @@ class BatchOperationEnqueueAllJob < ApplicationJob
     batch_operation.enqueue_all
   end
 end
-

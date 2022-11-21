@@ -46,4 +46,20 @@ class BatchOperation < ApplicationRecord
   def called_for_last_time? # beware, must be reloaded first
     dossiers.count.zero?
   end
+
+  private
+
+  # safer enqueue, in case instructeur kept the page for some time and their is a Dossier.id which does not fit current transaction
+  def dossiers_safe_scope
+    query = Dossier.joins(:procedure)
+      .where(procedure: { id: instructeur.procedures.ids })
+      .where(id: dossiers.ids)
+      .visible_by_administration
+    # case operation
+    # when BatchOperation.operations.fetch(:archiver) then
+    #   query.not_archived
+    # when BatchOperation.operations.fetch(:accepter) then
+    #   query.state_en_instruction
+    # end
+  end
 end

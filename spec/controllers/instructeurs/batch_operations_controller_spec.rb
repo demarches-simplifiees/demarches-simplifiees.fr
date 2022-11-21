@@ -22,7 +22,7 @@ describe Instructeurs::BatchOperationsController, type: :controller do
           procedure_id: procedure.id,
           batch_operation: {
             operation: BatchOperation.operations.fetch(:archiver),
-            dossier_ids: [ dossier.id ]
+            dossier_ids: [dossier.id]
           }
         }
       end
@@ -37,7 +37,7 @@ describe Instructeurs::BatchOperationsController, type: :controller do
         expect(BatchOperation.first.dossiers).to include(dossier)
       end
       it 'enqueues a BatchOperationJob' do
-        expect {subject}.to have_enqueued_job(BatchOperationEnqueueAllJob).with(BatchOperation.last)
+        expect { subject }.to have_enqueued_job(BatchOperationEnqueueAllJob).with(BatchOperation.last)
       end
     end
   end
