@@ -2,14 +2,15 @@
   - if persisted?
     %div{ id: dom_id(attachment, :persisted_row) }
       .flex.flex-gap-2{ class: class_names("attachment-error": attachment.virus_scanner_error?) }
-        = link_to('Supprimer', destroy_attachment_path, **remove_button_options, class: "fr-btn fr-btn--tertiary fr-btn--sm fr-icon-delete-line", title: "Supprimer le fichier #{attachment.filename}")
+        - if user_can_destroy?
+          = link_to('Supprimer', destroy_attachment_path, **remove_button_options, class: "fr-btn fr-btn--tertiary fr-btn--sm fr-icon-delete-line", title: "Supprimer le fichier #{attachment.filename}")
 
-        .fr-py-1v
-          = link_to_if(user_can_download?, attachment.filename.to_s, attachment.url, class: "attachment-filename", download: "") do
-            %span.attachment-filename= attachment.filename.to_s
-          - if in_progress?
-            %p.fr-badge.fr-badge--info.fr-badge--sm.fr-badge--no-icon.fr-ml-1w
-              = progress_bar_label
+          .fr-py-1v
+            = link_to_if(downloadable?, attachment.filename.to_s, attachment.url, class: "attachment-filename", download: "") do
+              %span.attachment-filename= attachment.filename.to_s
+            - if in_progress?
+              %p.fr-badge.fr-badge--info.fr-badge--sm.fr-badge--no-icon.fr-ml-1w
+                = progress_bar_label
 
       - if error?
         %p.fr-error-text= error_message

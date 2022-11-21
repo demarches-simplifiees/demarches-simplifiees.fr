@@ -365,6 +365,9 @@
       %h3.fr-mt-4w Existing attachment
       = render Attachment::EditComponent.new(champ:, attached_file: champ.piece_justificative_file, attachment:)
 
+      %h3.fr-mt-4w Existing attachment, user can not destroy
+      = render Attachment::EditComponent.new(champ:, attached_file: champ.piece_justificative_file, attachment:, user_can_destroy: false)
+
       %h3.fr-mt-4w Existing attachment, antivirus in progress
       - attachment.blob.metadata[:virus_scan_result] = ActiveStorage::VirusScanner::PENDING
       - attachment.created_at = Time.zone.now
@@ -378,6 +381,7 @@
       %h3.fr-mt-4w Existing attachment, error
       - attachment.blob.metadata[:virus_scan_result] = ActiveStorage::VirusScanner::INFECTED
       = render Attachment::EditComponent.new(champ:, attached_file: Champ.new.piece_justificative_file, attachment:)
+
 
       %h3.fr-mt-4w New attachment on TypeDeChamp
       = render Attachment::EditComponent.new(auto_attach_url: "/some-auto-attach-path", attached_file: tdc.piece_justificative_template, attachment: nil)
