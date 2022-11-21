@@ -169,16 +169,29 @@ describe Administrateurs::ProceduresController, type: :controller do
   describe 'GET #administrateurs' do
     let!(:draft_procedure)     { create(:procedure, administrateur: admin3) }
     let!(:published_procedure) { create(:procedure_with_dossiers, :published, dossiers_count: 2, administrateur: admin1) }
-    let!(:closed_procedure)    { create(:procedure, :closed, administrateur: admin2) }
-    let(:admin1) { create(:administrateur) }
-    let(:admin2) { create(:administrateur) }
-    let(:admin3) { create(:administrateur) }
+    let!(:antoher_published_procedure) { create(:procedure_with_dossiers, :published, dossiers_count: 2, administrateur: admin4) }
+    let!(:closed_procedure) { create(:procedure, :closed, administrateur: admin2) }
+    let(:admin1) { create(:administrateur, email: 'jesuis.surmene@education.gouv.fr') }
+    let(:admin2) { create(:administrateur, email: 'jesuis.alecoute@social.gouv.fr') }
+    let(:admin3) { create(:administrateur, email: 'gerard.lambert@interieur.gouv.fr') }
+    let(:admin4) { create(:administrateur, email: 'jack.lang@culture.gouv.fr') }
 
     it 'displays admins of the procedures' do
       get :administrateurs
       expect(assigns(:admins)).to include(admin1)
       expect(assigns(:admins)).to include(admin2)
+      expect(assigns(:admins)).to include(admin4)
       expect(assigns(:admins)).not_to include(admin3)
+    end
+
+    context 'with email search' do
+      it 'returns procedures with specific terms in libelle' do
+        get :administrateurs, params: { email: 'jesuis' }
+        expect(assigns(:admins)).to include(admin1)
+        expect(assigns(:admins)).to include(admin2)
+        expect(assigns(:admins)).not_to include(admin3)
+        expect(assigns(:admins)).not_to include(admin4)
+      end
     end
   end
 
