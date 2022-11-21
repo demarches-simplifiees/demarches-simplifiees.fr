@@ -1,6 +1,6 @@
 describe Administrateurs::ProcedureAdministrateursController, type: :controller do
-  let(:signed_in_admin) { create(:administrateur, active: true) }
-  let(:other_admin) { create(:administrateur, active: true) }
+  let(:signed_in_admin) { create(:administrateur).tap { _1.user.update(last_sign_in_at: Time.zone.now) } }
+  let(:other_admin) { create(:administrateur).tap { _1.user.update(last_sign_in_at: Time.zone.now) } }
   let!(:administrateurs_procedure) { create(:administrateurs_procedure, administrateur: signed_in_admin, procedure: procedure, manager: manager) }
   let!(:procedure) { create(:procedure, administrateurs: [other_admin]) }
   render_views
