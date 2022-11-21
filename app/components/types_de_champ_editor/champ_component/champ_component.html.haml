@@ -1,5 +1,5 @@
 %li.type-de-champ.flex.column.justify-start{ html_options }
-  .flex.justify-start.section.head{ class: type_de_champ.header_section? ? '' : 'hr'}
+  .flex.justify-start.section.head{ class: type_de_champ.header_section? ? '' : 'hr' }
     .handle.small.icon-only.icon.move-handle{ title: "Déplacer le champ vers le haut ou vers le bas" }
     .flex.justify-start.delete
       = button_to type_de_champ_path, class: 'button small icon-only danger', method: :delete, form: { data: { turbo_confirm: 'Êtes vous sûr de vouloir supprimer ce champ ?' } } do
@@ -16,7 +16,7 @@
               %span.sr-only  Déplacer le champ vers le haut
             %button.move-down.cell{ move_button_options(:down) }
               .icon.arrow-down.small
-              %span.sr-only  Déplacer le champ vers le bas
+              %span.sr-only Déplacer le champ vers le bas
           .cell.flex.justify-start.column.flex-grow
             = form.label :type_champ, "Type de champ", for: dom_id(type_de_champ, :type_champ)
             = form.select :type_champ, grouped_options_for_select(types_of_type_de_champ, type_de_champ.type_champ), {}, class: 'small-margin small inline width-100', id: dom_id(type_de_champ, :type_champ)
