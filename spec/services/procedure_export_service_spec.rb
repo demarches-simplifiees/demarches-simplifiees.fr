@@ -92,10 +92,11 @@ describe ProcedureExportService do
           "dgfip",
           "pole_emploi",
           "mesri",
-          "text",
           "epci",
           "epci (Code)",
           "epci (Département)"
+          "routage",
+          "text"
         ]
       end
 
@@ -202,10 +203,11 @@ describe ProcedureExportService do
           "dgfip",
           "pole_emploi",
           "mesri",
-          "text",
           "epci",
           "epci (Code)",
           "epci (Département)"
+          "routage",
+          "text"
         ]
       end
 
@@ -295,10 +297,11 @@ describe ProcedureExportService do
             "dgfip",
             "pole_emploi",
             "mesri",
-            "text",
             "epci",
             "epci (Code)",
             "epci (Département)"
+            "routage",
+            "text"
           ]
         end
 
