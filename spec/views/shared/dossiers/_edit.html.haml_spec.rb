@@ -114,7 +114,7 @@ describe 'shared/dossiers/edit.html.haml', type: :view do
       before { dossier.champs_public << champ }
 
       it 'cannot delete a piece justificative' do
-        expect(subject).not_to have_text('Supprimer')
+        expect(subject).not_to have_selector("[title='Supprimer le fichier #{champ.piece_justificative_file.attachments[0].filename}']")
       end
     end
 
@@ -124,7 +124,7 @@ describe 'shared/dossiers/edit.html.haml', type: :view do
       end
 
       it 'can delete a piece justificative' do
-        expect(subject).to have_text('Supprimer')
+        expect(subject).to have_selector("[title='Supprimer le fichier #{champ.piece_justificative_file.attachments[0].filename}']")
       end
     end
   end

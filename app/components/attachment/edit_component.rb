@@ -4,12 +4,14 @@ class Attachment::EditComponent < ApplicationComponent
   attr_reader :attachment
   attr_reader :user_can_download
   alias user_can_download? user_can_download
+  attr_reader :user_can_destroy
+  alias user_can_destroy? user_can_destroy
   attr_reader :as_multiple
   alias as_multiple? as_multiple
 
   EXTENSIONS_ORDER = ['jpeg', 'png', 'pdf', 'zip'].freeze
 
-  def initialize(champ: nil, auto_attach_url: nil, field_name: nil, attached_file:, direct_upload: true, index: 0, as_multiple: false, user_can_download: false, **kwargs)
+  def initialize(champ: nil, auto_attach_url: nil, field_name: nil, attached_file:, direct_upload: true, index: 0, as_multiple: false, user_can_download: false, user_can_destroy: true, **kwargs)
     @as_multiple = as_multiple
     @attached_file = attached_file
     @auto_attach_url = auto_attach_url
@@ -17,6 +19,7 @@ class Attachment::EditComponent < ApplicationComponent
     @direct_upload = direct_upload
     @index = index
     @user_can_download = user_can_download
+    @user_can_destroy = user_can_destroy
 
     # attachment passed by kwarg because we don't want a default (nil) value.
     @attachment = if kwargs.key?(:attachment)
@@ -126,6 +129,14 @@ class Attachment::EditComponent < ApplicationComponent
 
   def persisted?
     !!attachment&.persisted?
+  end
+
+  def downloadable?
+    return false unless user_can_download?
+    return false if attachment.virus_scanner_error?
+    return false if attachment.watermark_pending?
+
+    true
   end
 
   def error?

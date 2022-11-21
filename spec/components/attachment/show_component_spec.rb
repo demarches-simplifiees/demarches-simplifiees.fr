@@ -1,12 +1,20 @@
-describe 'shared/attachment/_show.html.haml', type: :view do
+RSpec.describe Attachment::ShowComponent, type: :component do
   let(:champ) { create(:champ_piece_justificative) }
   let(:virus_scan_result) { nil }
+
+  let(:attachment) {
+    champ.piece_justificative_file.attachments.first
+  }
+
+  let(:component) do
+    described_class.new(attachment:)
+  end
+
+  subject { render_inline(component).to_html }
 
   before do
     champ.piece_justificative_file[0].blob.update(metadata: champ.piece_justificative_file[0].blob.metadata.merge(virus_scan_result: virus_scan_result))
   end
-
-  subject { render Attachment::ShowComponent.new(attachment: champ.piece_justificative_file.attachments.first) }
 
   context 'when there is no anti-virus scan' do
     let(:virus_scan_result) { nil }
@@ -24,17 +32,6 @@ describe 'shared/attachment/_show.html.haml', type: :view do
       expect(subject).to have_text(champ.piece_justificative_file[0].filename.to_s)
       expect(subject).not_to have_link(champ.piece_justificative_file[0].filename.to_s)
       expect(subject).to have_text('Analyse antivirus en cours')
-    end
-  end
-
-  context 'when watermark is pending' do
-    let(:champ) { create(:champ_titre_identite) }
-
-    it 'displays the filename, but doesn’t allow to download the file' do
-      expect(champ.piece_justificative_file.attachments[0].watermark_pending?).to be_truthy
-      expect(subject).to have_text(champ.piece_justificative_file[0].filename.to_s)
-      expect(subject).not_to have_link(champ.piece_justificative_file[0].filename.to_s)
-      expect(subject).to have_text('Traitement en cours')
     end
   end
 

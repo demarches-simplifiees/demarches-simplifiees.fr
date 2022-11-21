@@ -1,2 +1,2 @@
 - user_can_destroy = !@champ.mandatory? || @champ.dossier.brouillon?
-= render Attachment::EditComponent.new(champ: @form.object, attached_file: @champ.piece_justificative_file, attachment: @champ.piece_justificative_file[0])
+= render Attachment::EditComponent.new(champ: @form.object, attached_file: @champ.piece_justificative_file, attachment: @champ.piece_justificative_file[0], user_can_destroy:)
