@@ -3,7 +3,7 @@
     = t('views.instructeurs.dossiers.restore')
 - elsif close_to_expiration || Dossier::TERMINE.include?(state)
   .dropdown.user-dossier-actions{ data: { controller: 'menu-button' } }
-    %button.fr-btn.dropdown-button{ data: { menu_button_target: 'button' } }
+    %button.fr-btn.fr-mb-0.dropdown-button{ data: { menu_button_target: 'button' } }
       Actions
     .dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' }, id: "dossier_#{dossier_id}_actions_menu" }
       %ul.dropdown-items

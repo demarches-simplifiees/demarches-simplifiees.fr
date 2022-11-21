@@ -58,8 +58,6 @@
       %p.explication-onglet
         = t('views.instructeurs.dossiers.tab_explainations.expirant')
     - if @filtered_sorted_paginated_ids.present? || @current_filters.count > 0
-      - pagination =  paginate @filtered_sorted_paginated_ids
-      = pagination
       .flex
         .flex-grow
           = render partial: "dossiers_filter", locals: { procedure: @procedure, procedure_presentation: @procedure_presentation, current_filters: @current_filters, statut: @statut, filterable_fields_for_select: @filterable_fields_for_select }
@@ -68,83 +66,106 @@
         - if @dossiers_count > 0
           .dossiers-export
             = render Dossiers::ExportComponent.new(procedure: @procedure, exports: @exports, statut: @statut, count: @dossiers_count, export_url: method(:download_export_instructeur_procedure_path))
+      %hr.fr-mt-5v
 
-      %table.table.dossiers-table.hoverable
-        %thead
-          %tr
-            - if @statut.in? %w(suivis traites tous)
-              = render partial: "header_field", locals: { field: { "label" => "●", "table" => "notifications", "column" => "notifications" }, classname: "notification-col" }
-            - else
-              %th.notification-col
+      %div{ data: { controller: 'batch-operation' } }
+        - batch_operation_component = Dossiers::BatchOperationComponent.new(statut: @statut, procedure: @procedure)
 
-            - @procedure_presentation.displayed_fields_for_headers.each do |field|
-              = render partial: "header_field", locals: { field: field, classname: field['classname'] }
-
-            %th.action-col.follow-col
-              %span.dropdown{ data: { controller: 'menu-button', popover: 'true' } }
-                %button.button.dropdown-button{ data: { menu_button_target: 'button' } }
-                  = t('views.instructeurs.dossiers.personalize')
-                #custom-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
-                  = form_tag update_displayed_fields_instructeur_procedure_path(@procedure), method: :patch, class: 'dropdown-form large columns-form' do
-                    = hidden_field_tag :values, nil
-                    = react_component("ComboMultiple",
-                      options: @displayable_fields_for_select,
-                      selected: @displayable_fields_selected,
-                      disabled: [],
-                      label: 'Colonne à afficher',
-                      group: '.columns-form',
-                      name: 'values')
-
-                    = submit_tag t('views.instructeurs.dossiers.save'), class: 'button'
-
-        %tbody
-          - @projected_dossiers.each do |p|
-            - path = instructeur_dossier_path(@procedure, p.dossier_id)
-            %tr{ class: [p.hidden_by_user_at.present? && "file-hidden-by-user"] }
-              %td.folder-col
-                - if p.hidden_by_administration_at.present?
-                  %span.cell-link
-                    %span.icon.folder
+        .flex
+          .flex-grow= render batch_operation_component
+        .fr-table.fr-table--bordered
+          %table
+            %thead
+              %tr
+                - if batch_operation_component.render?
+                  %th
+                    %input{ type: "checkbox", data: { "batch-operation-target" => "all","action" => "batch-operation#onCheckAll"} }
                 - else
-                  %a.cell-link{ href: path }
-                    %span.icon.folder
-                      - if @not_archived_notifications_dossier_ids.include?(p.dossier_id)
-                        %span.notifications{ 'aria-label': 'notifications' }
-
-              %td.number-col
-                - if p.hidden_by_administration_at.present?
-                  %span.cell-link= p.dossier_id
-                - else
-                  %a.cell-link{ href: path }= p.dossier_id
-
-              - p.columns.each do |column|
-                %td
-                  - if p.hidden_by_administration_at.present?
-                    %span.cell-link
-                      = column
-                      = "- #{t('views.instructeurs.dossiers.deleted_by_user')}" if p.hidden_by_user_at.present?
+                  - if @statut.in? %w(suivis traites tous)
+                    = render partial: "header_field", locals: { field: { "label" => "●", "table" => "notifications", "column" => "notifications" }, classname: "notification-col" }
                   - else
-                    %a.cell-link{ href: path }
-                      = column
-                      = "- #{t('views.instructeurs.dossiers.deleted_by_user')}" if p.hidden_by_user_at.present?
+                    %th.notification-col
 
-              %td.status-col
-                - if p.hidden_by_administration_at.present?
-                  %span.cell-link= status_badge(p.state)
-                - else
-                  %a.cell-link{ href: path }= status_badge(p.state)
+                - @procedure_presentation.displayed_fields_for_headers.each do |field|
+                  = render partial: "header_field", locals: { field: field, classname: field['classname'] }
 
-              %td.action-col.follow-col
-                %ul.inline.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
-                  = render partial: 'dossier_actions', locals: { procedure_id: @procedure.id,
-                              dossier_id: p.dossier_id,
-                              state: p.state,
-                              archived: p.archived,
-                              dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
-                              close_to_expiration: @statut == 'expirant',
-                              hidden_by_administration: @statut == 'supprimes_recemment' }
+                %th.action-col.follow-col
+                  %span.dropdown{ data: { controller: 'menu-button', popover: 'true' } }
+                    %button.button.dropdown-button{ data: { menu_button_target: 'button' } }
+                      = t('views.instructeurs.dossiers.personalize')
+                    #custom-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
+                      = form_tag update_displayed_fields_instructeur_procedure_path(@procedure), method: :patch, class: 'dropdown-form large columns-form' do
+                        = hidden_field_tag :values, nil
+                        = react_component("ComboMultiple",
+                          options: @displayable_fields_for_select,
+                          selected: @displayable_fields_selected,
+                          disabled: [],
+                          label: 'Colonne à afficher',
+                          group: '.columns-form',
+                          name: 'values')
 
-      = pagination
+                        = submit_tag t('views.instructeurs.dossiers.save'), class: 'button'
+
+
+              %tr
+
+            %tbody
+              - @projected_dossiers.each do |p|
+                - path = instructeur_dossier_path(@procedure, p.dossier_id)
+                %tr{ class: [p.hidden_by_user_at.present? && "file-hidden-by-user"] }
+                  %td.folder-col
+                    - if batch_operation_component.render?
+                      - if p.batch_operation_id.present?
+                        %span.cell-link
+                          %span.fr-icon-lock-line{ aria_hidden: "true" }
+                      - else
+                        = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, false, data: { "batch-operation-target" => "input", "action" => "batch-operation#onCheckOne"}, form: dom_id(BatchOperation.new)
+                    - else
+                      - if p.hidden_by_administration_at.present?
+                        %span.cell-link
+                          %span.icon.folder
+                      - else
+                        %a.cell-link{ href: path }
+                          %span.icon.folder
+                            - if @not_archived_notifications_dossier_ids.include?(p.dossier_id)
+                              %span.notifications{ 'aria-label': 'notifications' }
+
+                  %td.number-col
+                    - if p.hidden_by_administration_at.present?
+                      %span.cell-link= p.dossier_id
+                    - else
+                      %a.cell-link{ href: path }= p.dossier_id
+
+                  - p.columns.each do |column|
+                    %td
+                      - if p.hidden_by_administration_at.present?
+                        %span.cell-link
+                          = column
+                          = "- #{t('views.instructeurs.dossiers.deleted_by_user')}" if p.hidden_by_user_at.present?
+                      - else
+                        %a.cell-link{ href: path }
+                          = column
+                          = "- #{t('views.instructeurs.dossiers.deleted_by_user')}" if p.hidden_by_user_at.present?
+
+                  %td.status-col
+                    - if p.hidden_by_administration_at.present?
+                      %span.cell-link= status_badge(p.state)
+                    - else
+                      %a.cell-link{ href: path }= status_badge(p.state)
+
+                  %td.action-col.follow-col
+                    %ul.inline.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
+                      = render partial: 'dossier_actions', locals: { procedure_id: @procedure.id,
+                                  dossier_id: p.dossier_id,
+                                  state: p.state,
+                                  archived: p.archived,
+                                  dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
+                                  close_to_expiration: @statut == 'expirant',
+                                  hidden_by_administration: @statut == 'supprimes_recemment' }
+            %tfoot
+              %tr
+                %td.force-table-100{ colspan: @procedure_presentation.displayed_fields_for_headers.size + 2 }= paginate @filtered_sorted_paginated_ids
+
     - else
       %h2.empty-text
         = t('views.instructeurs.dossiers.no_file')
