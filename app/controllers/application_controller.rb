@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   include TrustedDeviceConcern
-  include Pundit
+  include Pundit::Authorization
   include Devise::StoreLocationExtension
   include ApplicationController::LongLivedAuthenticityToken
   include ApplicationController::ErrorHandling
@@ -362,9 +362,9 @@ class ApplicationController < ActionController::Base
 
   # Extract a value from params based on the "path"
   #
-  # params: { dossiers: { champs_attributes: { 1234 => { value: "hello" } } } }
+  # params: { dossiers: { champs_public_attributes: { 1234 => { value: "hello" } } } }
   #
-  # Usage: read_param_value("dossiers[champs_attributes][1234]", "value")
+  # Usage: read_param_value("dossiers[champs_public_attributes][1234]", "value")
   def read_param_value(path, name)
     parts = path.split(/\[|\]\[|\]/) + [name]
     parts.reduce(params) do |value, part|

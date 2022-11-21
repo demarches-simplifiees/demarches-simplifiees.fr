@@ -32,7 +32,7 @@ class ProcedureRevision < ApplicationRecord
 
   validate :conditions_are_valid?
 
-  def build_champs
+  def build_champs_public
     # reload: it can be out of sync in test if some tdcs are added wihtout using add_tdc
     types_de_champ_public.reload.map { |tdc| tdc.build_champ(revision: self) }
   end
@@ -154,7 +154,7 @@ class ProcedureRevision < ApplicationRecord
   def new_dossier
     Dossier.new(
       revision: self,
-      champs: build_champs,
+      champs_public: build_champs_public,
       champs_private: build_champs_private,
       groupe_instructeur: procedure.defaut_groupe_instructeur
     )
@@ -198,6 +198,10 @@ class ProcedureRevision < ApplicationRecord
 
   def coordinate_for(tdc)
     revision_types_de_champ.find_by!(type_de_champ: tdc)
+  end
+
+  def carte?
+    types_de_champ_public.any?(&:carte?)
   end
 
   private
@@ -356,6 +360,30 @@ class ProcedureRevision < ApplicationRecord
         private: from_type_de_champ.private?,
         from: from_type_de_champ.libelle,
         to: to_type_de_champ.libelle,
+        stable_id: from_type_de_champ.stable_id
+      }
+    end
+    if from_type_de_champ.collapsible_explanation_enabled? != to_type_de_champ.collapsible_explanation_enabled?
+      changes << {
+        model: :type_de_champ,
+        op: :update,
+        attribute: :collapsible_explanation_enabled,
+        label: from_type_de_champ.libelle,
+        private: from_type_de_champ.private?,
+        from: from_type_de_champ.collapsible_explanation_enabled?,
+        to: to_type_de_champ.collapsible_explanation_enabled?,
+        stable_id: from_type_de_champ.stable_id
+      }
+    end
+    if from_type_de_champ.collapsible_explanation_text != to_type_de_champ.collapsible_explanation_text
+      changes << {
+        model: :type_de_champ,
+        op: :update,
+        attribute: :collapsible_explanation_text,
+        label: from_type_de_champ.libelle,
+        private: from_type_de_champ.private?,
+        from: from_type_de_champ.collapsible_explanation_text,
+        to: to_type_de_champ.collapsible_explanation_text,
         stable_id: from_type_de_champ.stable_id
       }
     end

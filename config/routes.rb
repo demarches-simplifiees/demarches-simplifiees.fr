@@ -63,6 +63,8 @@ Rails.application.routes.draw do
 
     resources :zones, only: [:index, :show]
 
+    resources :team_accounts, only: [:index, :show]
+
     resources :dubious_procedures, only: [:index]
     resources :outdated_procedures, only: [:index] do
       patch :bulk_update, on: :collection
@@ -181,6 +183,7 @@ Rails.application.routes.draw do
   get "contact-admin", to: "support#admin"
 
   post "webhooks/helpscout", to: "webhook#helpscout"
+  post "webhooks/helpscout_support_dev", to: "webhook#helpscout_support_dev"
   match "webhooks/helpscout", to: lambda { |_| [204, {}, nil] }, via: :head
 
   #
@@ -229,9 +232,7 @@ Rails.application.routes.draw do
   #
 
   get 'graphql/schema' => redirect('/graphql/schema/index.html')
-  authenticated :user, lambda { |user| user.administrateur? } do
-    mount GraphqlPlayground::Rails::Engine, at: "/graphql", graphql_path: "/api/v2/graphql"
-  end
+  get 'graphql', to: "graphql#playground"
 
   namespace :api do
     namespace :v1 do
@@ -272,6 +273,7 @@ Rails.application.routes.draw do
       member do
         get 'identite'
         patch 'update_identite'
+        post 'clone'
         get 'siret'
         post 'siret', to: 'dossiers#update_siret'
         get 'etablissement'
@@ -309,6 +311,7 @@ Rails.application.routes.draw do
     post 'transfer_all_dossiers' => 'profil#transfer_all_dossiers'
     post 'accept_merge' => 'profil#accept_merge'
     post 'refuse_merge' => 'profil#refuse_merge'
+    delete 'france_connect_information' => 'profil#destroy_fci'
   end
 
   #
@@ -430,6 +433,7 @@ Rails.application.routes.draw do
         get 'new_from_existing'
         post 'search'
         get 'all'
+        get 'administrateurs'
       end
 
       member do

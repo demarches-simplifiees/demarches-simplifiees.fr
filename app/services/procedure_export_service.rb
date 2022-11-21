@@ -42,6 +42,11 @@ class ProcedureExportService
     end
   end
 
+  def to_geo_json
+    io = StringIO.new(dossiers.to_feature_collection.to_json)
+    create_blob(io, :json)
+  end
+
   private
 
   def create_blob(io, format)
@@ -77,12 +82,14 @@ class ProcedureExportService
       'application/vnd.oasis.opendocument.spreadsheet'
     when :zip
       'application/zip'
+    when :json
+      'application/json'
     end
   end
 
   def etablissements
     @etablissements ||= dossiers.flat_map do |dossier|
-      [dossier.champs, dossier.champs_private]
+      [dossier.champs_public, dossier.champs_private]
         .flatten
         .filter { |champ| champ.is_a?(Champs::SiretChamp) }
     end.filter_map(&:etablissement) + dossiers.filter_map(&:etablissement)
@@ -94,7 +101,7 @@ class ProcedureExportService
 
   def champs_repetables_options
     champs_by_stable_id = dossiers
-      .flat_map { |dossier| (dossier.champs + dossier.champs_private).filter(&:repetition?) }
+      .flat_map { |dossier| (dossier.champs_public + dossier.champs_private).filter(&:repetition?) }
       .group_by(&:stable_id)
 
     procedure

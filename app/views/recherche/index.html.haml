@@ -1,6 +1,11 @@
 - content_for(:title, "Recherche : #{@search_terms}")
 
 .container
+
+  - if @dossier_not_in_instructor_group.present?
+    .fr-alert.fr-alert--info.fr-alert--sm.fr-mt-3w
+      = p t('views.instructeurs.search.dossier_not_in_instructor_group', dossier_id: @dossier_not_in_instructor_group.id, procedure_libelle: @dossier_not_in_instructor_group.procedure.libelle, groupe_instructeur_label: @dossier_not_in_instructor_group.groupe_instructeur.label)
+
   .page-title
     Résultat de la recherche :
     = t('pluralize.dossier_trouve', count: @dossiers_count)

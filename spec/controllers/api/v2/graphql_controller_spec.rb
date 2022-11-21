@@ -148,7 +148,7 @@ describe API::V2::GraphqlController do
             draftRevision: { id: procedure.draft_revision.to_typed_id },
             publishedRevision: {
               id: procedure.published_revision.to_typed_id,
-              champDescriptors: procedure.published_types_de_champ.map do |tdc|
+              champDescriptors: procedure.published_revision.types_de_champ_public.map do |tdc|
                 {
                   type: tdc.type_champ
                 }
@@ -159,7 +159,7 @@ describe API::V2::GraphqlController do
               typeOrganisme: procedure.service.type_organisme,
               organisme: procedure.service.organisme
             },
-            champDescriptors: procedure.types_de_champ.map do |tdc|
+            champDescriptors: procedure.active_revision.types_de_champ_public.map do |tdc|
               {
                 id: tdc.to_typed_id,
                 label: tdc.libelle,
@@ -467,7 +467,7 @@ describe API::V2::GraphqlController do
               }
             end,
             avis: [],
-            champs: dossier.champs.map do |champ|
+            champs: dossier.champs_public.map do |champ|
               {
                 id: champ.to_typed_id,
                 label: champ.libelle,
@@ -475,7 +475,7 @@ describe API::V2::GraphqlController do
               }
             end
           })
-          expect(gql_data[:dossier][:champs][0][:id]).to eq(dossier.champs[0].type_de_champ.to_typed_id)
+          expect(gql_data[:dossier][:champs][0][:id]).to eq(dossier.champs_public[0].type_de_champ.to_typed_id)
         end
       end
 
@@ -606,8 +606,8 @@ describe API::V2::GraphqlController do
       context "champs" do
         let(:procedure) { create(:procedure, :published, :for_individual, administrateurs: [admin], types_de_champ_public: [{ type: :date }, { type: :datetime }]) }
         let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
-        let(:champ_date) { dossier.champs.first }
-        let(:champ_datetime) { dossier.champs.second }
+        let(:champ_date) { dossier.champs_public.first }
+        let(:champ_datetime) { dossier.champs_public.second }
 
         before do
           champ_date.update(value: '2019-07-10')

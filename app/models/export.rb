@@ -23,7 +23,8 @@ class Export < ApplicationRecord
     csv: 'csv',
     ods: 'ods',
     xlsx: 'xlsx',
-    zip: 'zip'
+    zip: 'zip',
+    json: 'json'
   }, _prefix: true
 
   enum time_span_type: {
@@ -53,7 +54,7 @@ class Export < ApplicationRecord
   FORMATS_WITH_TIME_SPAN = [:xlsx, :ods, :csv].flat_map do |format|
     [{ format: format, time_span_type: 'everything' }]
   end
-  FORMATS = [:xlsx, :ods, :csv, :zip].map do |format|
+  FORMATS = [:xlsx, :ods, :csv, :zip, :json].map do |format|
     { format: format }
   end
 
@@ -72,7 +73,7 @@ class Export < ApplicationRecord
   end
 
   def old?
-    updated_at < 20.minutes.ago || filters_changed?
+    updated_at < 10.minutes.ago || filters_changed?
   end
 
   def filters_changed?
@@ -83,13 +84,23 @@ class Export < ApplicationRecord
     procedure_presentation_id.present?
   end
 
-  def self.find_or_create_export(format, groupe_instructeurs, time_span_type: time_span_types.fetch(:everything), statut: statuts.fetch(:tous), procedure_presentation: nil)
-    create_with(groupe_instructeurs: groupe_instructeurs, procedure_presentation: procedure_presentation, procedure_presentation_snapshot: procedure_presentation&.snapshot)
-      .includes(:procedure_presentation)
-      .create_or_find_by(format: format,
-        time_span_type: time_span_type,
-        statut: statut,
-        key: generate_cache_key(groupe_instructeurs.map(&:id), procedure_presentation))
+  def flash_message
+    if available?
+      "L’export au format \"#{format}\" est prêt. Vous pouvez le <a href=\"#{file.service_url}\">télécharger</a>"
+    else
+      "Nous générons cet export. Veuillez revenir dans quelques minutes pour le télécharger."
+    end
+  end
+
+  def self.find_or_create_export(format, groupe_instructeurs, time_span_type: time_span_types.fetch(:everything), statut: statuts.fetch(:tous), procedure_presentation: nil, force: false)
+    export = create_or_find_export(format, groupe_instructeurs, time_span_type: time_span_type, statut: statut, procedure_presentation: procedure_presentation)
+
+    if export.available? && export.old? && force
+      export.destroy
+      create_or_find_export(format, groupe_instructeurs, time_span_type: time_span_type, statut: statut, procedure_presentation: procedure_presentation)
+    else
+      export
+    end
   end
 
   def self.find_for_groupe_instructeurs(groupe_instructeurs_ids, procedure_presentation)
@@ -117,8 +128,21 @@ class Export < ApplicationRecord
       zip: {
         time_span_type: {},
         statut: filtered.filter(&:format_zip?).index_by(&:statut)
+      },
+      json: {
+        time_span_type: {},
+        statut: filtered.filter(&:format_json?).index_by(&:statut)
       }
     }
+  end
+
+  def self.create_or_find_export(format, groupe_instructeurs, time_span_type:, statut:, procedure_presentation:)
+    create_with(groupe_instructeurs: groupe_instructeurs, procedure_presentation: procedure_presentation, procedure_presentation_snapshot: procedure_presentation&.snapshot)
+      .includes(:procedure_presentation)
+      .create_or_find_by(format: format,
+        time_span_type: time_span_type,
+        statut: statut,
+        key: generate_cache_key(groupe_instructeurs.map(&:id), procedure_presentation))
   end
 
   def self.generate_cache_key(groupe_instructeurs_ids, procedure_presentation = nil)
@@ -176,6 +200,8 @@ class Export < ApplicationRecord
       service.to_ods
     when :zip
       service.to_zip
+    when :json
+      service.to_geo_json
     end
   end
 

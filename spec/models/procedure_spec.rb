@@ -306,7 +306,7 @@ describe Procedure do
     end
 
     describe 'draft_types_de_champ validations' do
-      let(:repetition) { repetition = procedure.types_de_champ.find(&:repetition?) }
+      let(:repetition) { repetition = procedure.draft_revision.types_de_champ_public.find(&:repetition?) }
       let(:text_field) { build(:type_de_champ_text) }
       let(:invalid_repetition_error_message) { 'Le champ « Enfants » doit comporter au moins un champ répétable' }
 
@@ -326,14 +326,14 @@ describe Procedure do
       context 'on a draft procedure' do
         it 'doesn’t validate the types de champs' do
           procedure.validate
-          expect(procedure.errors[:draft_types_de_champ]).not_to be_present
+          expect(procedure.errors[:draft_types_de_champ_public]).not_to be_present
         end
       end
 
       context 'when validating for publication' do
         it 'validates that no repetition type de champ is empty' do
           procedure.validate(:publication)
-          expect(procedure.errors.full_messages_for(:draft_types_de_champ)).to include(invalid_repetition_error_message)
+          expect(procedure.errors.full_messages_for(:draft_types_de_champ_public)).to include(invalid_repetition_error_message)
 
           new_draft = procedure.draft_revision
 
@@ -341,16 +341,16 @@ describe Procedure do
           new_draft.revision_types_de_champ.create(type_de_champ: create(:type_de_champ), position: 0, parent: parent_coordinate)
 
           procedure.validate(:publication)
-          expect(procedure.errors.full_messages_for(:draft_types_de_champ)).not_to include(invalid_repetition_error_message)
+          expect(procedure.errors.full_messages_for(:draft_types_de_champ_public)).not_to include(invalid_repetition_error_message)
         end
 
         it 'validates that no drop-down type de champ is empty' do
           procedure.validate(:publication)
-          expect(procedure.errors.full_messages_for(:draft_types_de_champ)).to include(invalid_drop_down_error_message)
+          expect(procedure.errors.full_messages_for(:draft_types_de_champ_public)).to include(invalid_drop_down_error_message)
 
           drop_down.update!(drop_down_list_value: "--title--\r\nsome value")
           procedure.reload.validate(:publication)
-          expect(procedure.errors.full_messages_for(:draft_types_de_champ)).not_to include(invalid_drop_down_error_message)
+          expect(procedure.errors.full_messages_for(:draft_types_de_champ_public)).not_to include(invalid_drop_down_error_message)
         end
       end
 
@@ -444,8 +444,8 @@ describe Procedure do
         api_particulier_token: '123456789012345',
         api_particulier_scopes: ['cnaf_famille'])
     end
-    let(:type_de_champ_repetition) { procedure.types_de_champ.last }
-    let(:type_de_champ_private_repetition) { procedure.types_de_champ_private.last }
+    let(:type_de_champ_repetition) { procedure.draft_revision.types_de_champ_public.last }
+    let(:type_de_champ_private_repetition) { procedure.draft_revision.types_de_champ_private.last }
     let(:received_mail) { build(:received_mail) }
     let(:from_library) { false }
     let(:opendata) { true }
@@ -488,28 +488,28 @@ describe Procedure do
     it 'should duplicate specific objects with different id' do
       expect(subject.id).not_to eq(procedure.id)
 
-      expect(subject.draft_types_de_champ.size).to eq(procedure.draft_types_de_champ.size)
-      expect(subject.draft_types_de_champ_private.size).to eq(procedure.draft_types_de_champ_private.size)
+      expect(subject.draft_revision.types_de_champ_public.size).to eq(procedure.draft_revision.types_de_champ_public.size)
+      expect(subject.draft_revision.types_de_champ_private.size).to eq(procedure.draft_revision.types_de_champ_private.size)
 
-      procedure.draft_types_de_champ.zip(subject.draft_types_de_champ).each do |ptc, stc|
+      procedure.draft_revision.types_de_champ_public.zip(subject.draft_revision.types_de_champ_public).each do |ptc, stc|
         expect(stc).to have_same_attributes_as(ptc)
         expect(stc.revision).to eq(subject.draft_revision)
       end
 
       public_repetition = type_de_champ_repetition
-      cloned_public_repetition = subject.draft_types_de_champ.repetition.first
+      cloned_public_repetition = subject.draft_revision.types_de_champ_public.repetition.first
       procedure.draft_revision.children_of(public_repetition).zip(subject.draft_revision.children_of(cloned_public_repetition)).each do |ptc, stc|
         expect(stc).to have_same_attributes_as(ptc)
         expect(stc.revision).to eq(subject.draft_revision)
       end
 
-      procedure.draft_types_de_champ_private.zip(subject.draft_types_de_champ_private).each do |ptc, stc|
+      procedure.draft_revision.types_de_champ_private.zip(subject.draft_revision.types_de_champ_private).each do |ptc, stc|
         expect(stc).to have_same_attributes_as(ptc)
         expect(stc.revision).to eq(subject.draft_revision)
       end
 
       private_repetition = type_de_champ_private_repetition
-      cloned_private_repetition = subject.draft_types_de_champ_private.repetition.first
+      cloned_private_repetition = subject.draft_revision.types_de_champ_private.repetition.first
       procedure.draft_revision.children_of(private_repetition).zip(subject.draft_revision.children_of(cloned_private_repetition)).each do |ptc, stc|
         expect(stc).to have_same_attributes_as(ptc)
         expect(stc.revision).to eq(subject.draft_revision)
@@ -543,7 +543,7 @@ describe Procedure do
       end
 
       it 'should discard old pj information' do
-        subject.draft_types_de_champ.each do |stc|
+        subject.draft_revision.types_de_champ_public.each do |stc|
           expect(stc.old_pj).to be_nil
         end
       end
@@ -578,7 +578,7 @@ describe Procedure do
       end
 
       it 'should discard old pj information' do
-        subject.draft_types_de_champ.each do |stc|
+        subject.draft_revision.types_de_champ_public.each do |stc|
           expect(stc.old_pj).to be_nil
         end
       end
@@ -648,19 +648,35 @@ describe Procedure do
     end
 
     it 'should keep types_de_champ ids stable' do
-      expect(subject.draft_types_de_champ.first.id).not_to eq(procedure.draft_types_de_champ.first.id)
-      expect(subject.draft_types_de_champ.first.stable_id).to eq(procedure.draft_types_de_champ.first.id)
+      expect(subject.draft_revision.types_de_champ_public.first.id).not_to eq(procedure.draft_revision.types_de_champ_public.first.id)
+      expect(subject.draft_revision.types_de_champ_public.first.stable_id).to eq(procedure.draft_revision.types_de_champ_public.first.id)
     end
 
     it 'should duplicate piece_justificative_template on a type_de_champ' do
-      expect(subject.draft_types_de_champ.where(type_champ: "piece_justificative").first.piece_justificative_template.attached?).to be true
+      expect(subject.draft_revision.types_de_champ_public.where(type_champ: "piece_justificative").first.piece_justificative_template.attached?).to be_truthy
     end
 
     context 'with a notice attached' do
       let(:procedure) { create(:procedure, :with_notice, received_mail: received_mail, service: service) }
 
       it 'should duplicate notice' do
-        expect(subject.notice.attached?).to be true
+        expect(subject.notice.attached?).to be_truthy
+        expect(subject.notice.attachment).not_to eq(procedure.notice.attachment)
+        expect(subject.notice.attachment.blob).to eq(procedure.notice.attachment.blob)
+
+        subject.notice.attach(logo)
+        subject.reload
+        procedure.reload
+
+        expect(subject.notice.attached?).to be_truthy
+        expect(subject.notice.attachment.blob).not_to eq(procedure.notice.attachment.blob)
+
+        subject.notice.purge
+        subject.reload
+        procedure.reload
+
+        expect(subject.notice.attached?).to be_falsey
+        expect(procedure.notice.attached?).to be_truthy
       end
     end
 
@@ -679,16 +695,6 @@ describe Procedure do
       it 'do not clone canonical procedure' do
         expect(subject.canonical_procedure).to be_nil
       end
-    end
-
-    context 'with an pj not found' do
-      let(:procedure) { create(:procedure) }
-
-      before do
-        expect(PiecesJustificativesService).to receive(:clone_attachments).at_least(:once).and_raise(ActiveStorage::FileNotFoundError)
-      end
-
-      it { expect { procedure.clone(administrateur, false) }.not_to raise_error }
     end
   end
 
@@ -1166,11 +1172,11 @@ describe Procedure do
 
     it { expect(dossier.procedure).to eq(procedure) }
 
-    it { expect(dossier.champs.size).to eq(2) }
-    it { expect(dossier.champs[0].type).to eq("Champs::TextChamp") }
+    it { expect(dossier.champs_public.size).to eq(2) }
+    it { expect(dossier.champs_public.first.type).to eq("Champs::TextChamp") }
 
     it { expect(dossier.champs_private.size).to eq(1) }
-    it { expect(dossier.champs_private[0].type).to eq("Champs::TextareaChamp") }
+    it { expect(dossier.champs_private.first.type).to eq("Champs::TextareaChamp") }
 
     it { expect(Champ.count).to eq(0) }
   end

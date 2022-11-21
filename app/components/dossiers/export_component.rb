@@ -8,7 +8,27 @@ class Dossiers::ExportComponent < ApplicationComponent
   end
 
   def exports
-    helpers.exports_list(@exports, @statut)
+    if @statut
+      Export::FORMATS.filter(&method(:allowed_format?)).map do |item|
+        export = @exports
+          .fetch(item.fetch(:format))
+          .fetch(:statut)
+          .fetch(@statut, nil)
+        item.merge(export: export)
+      end
+    else
+      Export::FORMATS_WITH_TIME_SPAN.map do |item|
+        export = @exports
+          .fetch(item.fetch(:format))
+          .fetch(:time_span_type)
+          .fetch(item.fetch(:time_span_type), nil)
+        item.merge(export: export)
+      end
+    end
+  end
+
+  def allowed_format?(item)
+    item.fetch(:format) != :json || @procedure.active_revision.carte?
   end
 
   def download_export_path(export_format:, force_export: false, no_progress_notification: nil)

@@ -49,7 +49,7 @@ RSpec.describe Types::DossierType, type: :graphql do
     end
 
     before do
-      dossier.champs.second.update(data: address)
+      dossier.champs_public.second.update(data: address)
     end
 
     it { expect(data[:dossier][:champs][0][:__typename]).to eq "CommuneChamp" }
@@ -67,7 +67,7 @@ RSpec.describe Types::DossierType, type: :graphql do
     let(:checkbox_value) { 'on' }
 
     before do
-      dossier.champs.first.update(value: checkbox_value)
+      dossier.champs_public.first.update(value: checkbox_value)
     end
 
     context 'when checkbox is true' do
@@ -116,7 +116,7 @@ RSpec.describe Types::DossierType, type: :graphql do
     let(:variables) { { number: dossier.id } }
 
     before do
-      dossier.champs.first.update(value: linked_dossier.id)
+      dossier.champs_public.first.update(value: linked_dossier.id)
     end
 
     context 'en_construction' do
@@ -145,7 +145,7 @@ RSpec.describe Types::DossierType, type: :graphql do
     let(:variables) { { number: dossier.id } }
 
     let(:rows) do
-      dossier.champs.first.rows.map do |champs|
+      dossier.champs_public.first.rows.map do |champs|
         { champs: champs.map { { id: _1.to_typed_id } } }
       end
     end
@@ -155,6 +155,30 @@ RSpec.describe Types::DossierType, type: :graphql do
       expect(data[:dossier][:champs].first[:rows]).not_to be_nil
       expect(data[:dossier][:champs].first[:rows].size).to eq(2)
       expect(data[:dossier][:champs].first[:rows]).to eq(rows)
+    }
+  end
+
+  describe 'dossier with titre identite filled' do
+    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :titre_identite }]) }
+    let(:dossier) { create(:dossier, :accepte, :with_populated_champs, procedure: procedure) }
+
+    let(:query) { DOSSIER_WITH_TITRE_IDENTITE_QUERY }
+    let(:variables) { { number: dossier.id } }
+
+    it {
+      expect(data[:dossier][:champs][0][:filled]).to eq(true)
+    }
+  end
+
+  describe 'dossier with titre identite not filled' do
+    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :titre_identite }]) }
+    let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
+
+    let(:query) { DOSSIER_WITH_TITRE_IDENTITE_QUERY }
+    let(:variables) { { number: dossier.id } }
+
+    it {
+      expect(data[:dossier][:champs][0][:filled]).to eq(false)
     }
   end
 
@@ -255,6 +279,23 @@ RSpec.describe Types::DossierType, type: :graphql do
           rows {
             champs { id }
           }
+        }
+      }
+    }
+  }
+  GRAPHQL
+
+  DOSSIER_WITH_TITRE_IDENTITE_QUERY = <<-GRAPHQL
+  query($number: Int!) {
+    dossier(number: $number) {
+      id
+      number
+      champs {
+        id
+        label
+        __typename
+        ... on TitreIdentiteChamp {
+          filled
         }
       }
     }

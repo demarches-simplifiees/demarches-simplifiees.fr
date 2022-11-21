@@ -35,6 +35,7 @@
 #  updated_at                                         :datetime
 #  dossier_transfer_id                                :bigint
 #  groupe_instructeur_id                              :bigint
+#  parent_dossier_id                                  :bigint
 #  revision_id                                        :bigint
 #  user_id                                            :integer
 #
@@ -74,7 +75,7 @@ class Dossier < ApplicationRecord
 
   has_one_attached :justificatif_motivation
 
-  has_many :champs, -> { root.public_ordered }, inverse_of: false, dependent: :destroy
+  has_many :champs_public, -> { root.public_ordered }, class_name: 'Champ', inverse_of: false, dependent: :destroy
   has_many :champs_private, -> { root.private_ordered }, class_name: 'Champ', inverse_of: false, dependent: :destroy
   has_many :commentaires, inverse_of: :dossier, dependent: :destroy
   has_many :invites, dependent: :destroy
@@ -130,6 +131,8 @@ class Dossier < ApplicationRecord
   belongs_to :groupe_instructeur, optional: true
   belongs_to :revision, class_name: 'ProcedureRevision', optional: false
   belongs_to :user, optional: true
+  belongs_to :parent_dossier, class_name: 'Dossier', optional: true
+
   has_one :france_connect_information, through: :user
 
   has_one :attestation_template, through: :revision
@@ -139,8 +142,9 @@ class Dossier < ApplicationRecord
 
   belongs_to :transfer, class_name: 'DossierTransfer', foreign_key: 'dossier_transfer_id', optional: true, inverse_of: :dossiers
   has_many :transfer_logs, class_name: 'DossierTransferLog', dependent: :destroy
+  has_many :parent_dossiers, class_name: 'Dossier', foreign_key: 'parent_dossier_id', dependent: :nullify, inverse_of: :parent_dossier
 
-  accepts_nested_attributes_for :champs
+  accepts_nested_attributes_for :champs_public
   accepts_nested_attributes_for :champs_private
 
   include AASM
@@ -252,7 +256,7 @@ class Dossier < ApplicationRecord
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
   scope :with_champs, -> {
-    includes(champs: [
+    includes(champs_public: [
       :type_de_champ,
       :geo_areas,
       piece_justificative_file_attachment: :blob,
@@ -413,7 +417,7 @@ class Dossier < ApplicationRecord
   delegate :siret, :siren, to: :etablissement, allow_nil: true
   delegate :france_connect_information, to: :user, allow_nil: true
 
-  before_save :build_default_champs, if: Proc.new { revision_id_was.nil? }
+  before_save :build_default_champs_for_new_dossier, if: Proc.new { revision_id_was.nil? && parent_dossier_id.nil? }
   before_save :update_search_terms
 
   after_save :send_web_hook
@@ -465,7 +469,7 @@ class Dossier < ApplicationRecord
   def update_search_terms
     self.search_terms = [
       user&.email,
-      *champs.flat_map(&:search_terms),
+      *champs_public.flat_map(&:search_terms),
       *etablissement&.search_terms,
       individual&.nom,
       individual&.prenom
@@ -473,9 +477,9 @@ class Dossier < ApplicationRecord
     self.private_search_terms = champs_private.flat_map(&:search_terms).compact.join(' ')
   end
 
-  def build_default_champs
-    revision.build_champs.each do |champ|
-      champs << champ
+  def build_default_champs_for_new_dossier
+    revision.build_champs_public.each do |champ|
+      champs_public << champ
     end
     revision.build_champs_private.each do |champ|
       champs_private << champ
@@ -983,11 +987,11 @@ class Dossier < ApplicationRecord
   end
 
   def remove_titres_identite!
-    champs.filter(&:titre_identite?).map(&:piece_justificative_file).each(&:purge_later)
+    champs_public.filter(&:titre_identite?).map(&:piece_justificative_file).each(&:purge_later)
   end
 
   def check_mandatory_and_visible_champs
-    (champs + champs.filter(&:block?).filter(&:visible?).flat_map(&:champs))
+    (champs_public + champs_public.filter(&:block?).filter(&:visible?).flat_map(&:champs))
       .filter(&:visible?)
       .filter(&:mandatory_blank?)
       .map do |champ|
@@ -1088,7 +1092,7 @@ class Dossier < ApplicationRecord
     if procedure.routing_enabled?
       columns << ['Groupe instructeur', groupe_instructeur.label]
     end
-    columns + self.class.champs_for_export(champs + champs_private, types_de_champ)
+    columns + self.class.champs_for_export(champs_public + champs_private, types_de_champ)
   end
 
   # Get all the champs values for the types de champ in the final list.
@@ -1119,7 +1123,7 @@ class Dossier < ApplicationRecord
   end
 
   def linked_dossiers_for(instructeur_or_expert)
-    dossier_ids = champs.filter(&:dossier_link?).filter_map(&:value)
+    dossier_ids = champs_public.filter(&:dossier_link?).filter_map(&:value)
     instructeur_or_expert.dossiers.where(id: dossier_ids)
   end
 
@@ -1137,6 +1141,13 @@ class Dossier < ApplicationRecord
       id: id,
       bbox: bounding_box,
       features: geo_areas.map(&:to_feature)
+    }
+  end
+
+  def self.to_feature_collection
+    {
+      type: 'FeatureCollection',
+      features: GeoArea.joins(:champ).where(champ: { dossier: ids }).map(&:to_feature)
     }
   end
 
@@ -1168,7 +1179,7 @@ class Dossier < ApplicationRecord
     @sections = Hash.new do |hash, parent|
       case parent
       when :public
-        hash[parent] = champs.filter(&:header_section?)
+        hash[parent] = champs_public.filter(&:header_section?)
       when :private
         hash[parent] = champs_private.filter(&:header_section?)
       else
@@ -1176,6 +1187,29 @@ class Dossier < ApplicationRecord
       end
     end
     @sections[champ.parent || (champ.public? ? :public : :private)]
+  end
+
+  # while cloning we do not have champ.id. it comes after transaction
+  # so we collect a list of jobs to process. then enqueue this list
+  def clone
+    cloned_dossier = deep_clone(only: [:autorisation_donnees, :user_id, :revision_id, :groupe_instructeur_id],
+                                include: [:individual, :etablissement]) do |original, kopy|
+      if original.is_a?(Dossier)
+        kopy.parent_dossier_id = original.id
+        kopy.state = Dossier.states.fetch(:brouillon)
+        kopy.champs_public = original.champs_public.map do |champ|
+          champ.clone(dossier: kopy)
+        end
+        kopy.champs_private = original.champs_private.map do |champ|
+          champ.clone(dossier: kopy)
+        end
+      end
+    end
+
+    transaction do
+      cloned_dossier.save!
+    end
+    cloned_dossier
   end
 
   private
@@ -1199,7 +1233,7 @@ class Dossier < ApplicationRecord
   end
 
   def geo_areas
-    champs.flat_map(&:geo_areas) + champs_private.flat_map(&:geo_areas)
+    champs_public.flat_map(&:geo_areas) + champs_private.flat_map(&:geo_areas)
   end
 
   def bounding_box

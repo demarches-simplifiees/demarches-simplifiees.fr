@@ -348,7 +348,7 @@ describe ProcedureExportService do
           create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure)
         ]
       end
-      let(:champ_repetition) { dossiers.first.champs.find { |champ| champ.type_champ == 'repetition' } }
+      let(:champ_repetition) { dossiers.first.champs_public.find { |champ| champ.type_champ == 'repetition' } }
 
       it 'should have sheets' do
         expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', champ_repetition.libelle_for_export])
@@ -387,7 +387,7 @@ describe ProcedureExportService do
 
       context 'with long libelle composed of utf8 characteres' do
         before do
-          procedure.types_de_champ.each do |c|
+          procedure.active_revision.types_de_champ_public.each do |c|
             c.update!(libelle: "#{c.id} - ?/[] ééé ééé ééééééé ééééééé éééééééé. ééé éé éééééééé éé ééé. ééééé éééééééé ééé ééé.")
           end
           champ_repetition.champs.each do |c|
@@ -402,7 +402,7 @@ describe ProcedureExportService do
 
       context 'with non unique labels' do
         let(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure) }
-        let(:champ_repetition) { dossier.champs.find { |champ| champ.type_champ == 'repetition' } }
+        let(:champ_repetition) { dossier.champs_public.find { |champ| champ.type_champ == 'repetition' } }
         let(:type_de_champ_repetition) { create(:type_de_champ_repetition, procedure: procedure, libelle: champ_repetition.libelle) }
         let!(:another_champ_repetition) { create(:champ_repetition, type_de_champ: type_de_champ_repetition, dossier: dossier) }
 
@@ -413,7 +413,7 @@ describe ProcedureExportService do
 
       context 'with empty repetition' do
         before do
-          dossiers.flat_map { |dossier| dossier.champs.filter(&:repetition?) }.each do |champ|
+          dossiers.flat_map { |dossier| dossier.champs_public.filter(&:repetition?) }.each do |champ|
             champ.champs.destroy_all
           end
         end
@@ -465,6 +465,29 @@ describe ProcedureExportService do
           FileUtils.remove_entry_secure('tmp.zip')
         end
       end
+    end
+  end
+
+  describe 'to_geo_json' do
+    subject do
+      service
+        .to_geo_json
+        .open { |f| JSON.parse(f.read) }
+    end
+
+    let(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure) }
+    let(:champ_carte) { dossier.champs_public.find(&:carte?) }
+    let(:properties) { subject['features'].first['properties'] }
+
+    before do
+      create(:geo_area, :polygon, champ: champ_carte)
+    end
+
+    it 'should have features' do
+      expect(subject['features'].size).to eq(1)
+      expect(properties['dossier_id']).to eq(dossier.id)
+      expect(properties['champ_id']).to eq(champ_carte.stable_id)
+      expect(properties['champ_label']).to eq(champ_carte.libelle)
     end
   end
 end

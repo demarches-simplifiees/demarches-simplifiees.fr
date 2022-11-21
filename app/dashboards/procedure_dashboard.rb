@@ -8,7 +8,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
   # which determines how the attribute is displayed
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
-    published_types_de_champ: TypesDeChampCollectionField,
+    published_types_de_champ_public: TypesDeChampCollectionField,
     published_types_de_champ_private: TypesDeChampCollectionField,
     path: ProcedureLinkField,
     dossiers: Field::HasMany,
@@ -79,7 +79,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :whitelisted_at,
     :hidden_at,
     :closed_at,
-    :published_types_de_champ,
+    :published_types_de_champ_public,
     :published_types_de_champ_private,
     :for_individual,
     :auto_archive_on,

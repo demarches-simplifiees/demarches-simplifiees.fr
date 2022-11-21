@@ -15,6 +15,7 @@
   color: $black;
   text-align: center;
   -webkit-appearance: none;
+  background-image: none; // Remove DSFR underline
 
   &:hover:not(:disabled) {
     cursor: pointer;
@@ -257,11 +258,6 @@
 
     &:last-child {
       border-bottom: none;
-    }
-
-    a {
-      color: $dark-grey;
-      background-image: none; // remove DSFR underline
     }
 
     // Make child links fill the whole clickable area

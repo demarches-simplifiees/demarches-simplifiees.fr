@@ -10,7 +10,7 @@ describe Champ do
 
     context 'when the parent dossier is discarded' do
       let(:discarded_dossier) { create(:dossier, :discarded) }
-      subject(:champ) { discarded_dossier.champs.first }
+      subject(:champ) { discarded_dossier.champs_public.first }
 
       it { expect(champ.reload.dossier).to eq discarded_dossier }
     end
@@ -35,7 +35,7 @@ describe Champ do
     let(:dossier) { create(:dossier) }
 
     it 'partition public and private' do
-      expect(dossier.champs.count).to eq(1)
+      expect(dossier.champs_public.count).to eq(1)
       expect(dossier.champs_private.count).to eq(1)
     end
   end
@@ -46,7 +46,7 @@ describe Champ do
 
     context 'when a procedure has 2 revisions' do
       it 'does not duplicate the champs' do
-        expect(dossier.champs.count).to eq(1)
+        expect(dossier.champs_public.count).to eq(1)
         expect(procedure.revisions.count).to eq(2)
       end
     end
@@ -75,16 +75,16 @@ describe Champ do
         procedure.active_revision.add_type_de_champ(
           libelle: 'header',
           type_champ: 'header_section',
-          parent_stable_id: procedure.types_de_champ.find(&:repetition?).stable_id
+          parent_stable_id: procedure.active_revision.types_de_champ_public.find(&:repetition?).stable_id
         )
       end
     end
     let(:dossier) { create(:dossier, procedure: procedure) }
-    let(:public_champ) { dossier.champs.first }
+    let(:public_champ) { dossier.champs_public.first }
     let(:private_champ) { dossier.champs_private.first }
-    let(:champ_in_repetition) { dossier.champs.find(&:repetition?).champs.first }
+    let(:champ_in_repetition) { dossier.champs_public.find(&:repetition?).champs.first }
     let(:standalone_champ) { build(:champ, type_de_champ: build(:type_de_champ), dossier: build(:dossier)) }
-    let(:public_sections) { dossier.champs.filter(&:header_section?) }
+    let(:public_sections) { dossier.champs_public.filter(&:header_section?) }
     let(:private_sections) { dossier.champs_private.filter(&:header_section?) }
     let(:sections_in_repetition) { champ_in_repetition.parent.champs.filter(&:header_section?) }
 
@@ -494,11 +494,11 @@ describe Champ do
 
   describe 'repetition' do
     let(:procedure) { create(:procedure, :published, :with_type_de_champ, :with_type_de_champ_private, :with_repetition) }
-    let(:tdc_repetition) { procedure.types_de_champ.find(&:repetition?) }
+    let(:tdc_repetition) { procedure.active_revision.types_de_champ_public.find(&:repetition?) }
     let(:tdc_text) { procedure.active_revision.children_of(tdc_repetition).first }
 
     let(:dossier) { create(:dossier, procedure: procedure) }
-    let(:champ) { dossier.champs.find(&:repetition?) }
+    let(:champ) { dossier.champs_public.find(&:repetition?) }
     let(:champ_text) { champ.champs.find { |c| c.type_champ == 'text' } }
     let(:champ_integer) { champ.champs.find { |c| c.type_champ == 'integer_number' } }
     let(:champ_text_attrs) { attributes_for(:champ_text, type_de_champ: tdc_text, row: 1) }
@@ -517,7 +517,7 @@ describe Champ do
 
     context 'when updating using nested attributes' do
       subject do
-        dossier.update!(champs_attributes: [
+        dossier.update!(champs_public_attributes: [
           {
             id: champ.id,
             champs_attributes: [champ_text_attrs]
@@ -530,7 +530,7 @@ describe Champ do
       it 'associates nested champs to the parent dossier' do
         subject
 
-        expect(dossier.champs.size).to eq(2)
+        expect(dossier.champs_public.size).to eq(2)
         expect(champ.rows.size).to eq(2)
         second_row = champ.rows.second
         expect(second_row.size).to eq(1)
@@ -590,7 +590,7 @@ describe Champ do
 
     context "#input_name" do
       let(:champ) { create(:champ_text) }
-      it { expect(champ.input_name).to eq "dossier[champs_attributes][#{champ.id}]" }
+      it { expect(champ.input_name).to eq "dossier[champs_public_attributes][#{champ.id}]" }
 
       context "when private" do
         let(:champ) { create(:champ_text, private: true) }
@@ -599,7 +599,7 @@ describe Champ do
 
       context "when has parent" do
         let(:champ) { create(:champ_text, parent: create(:champ_text)) }
-        it { expect(champ.input_name).to eq "dossier[champs_attributes][#{champ.parent_id}][champs_attributes][#{champ.id}]" }
+        it { expect(champ.input_name).to eq "dossier[champs_public_attributes][#{champ.parent_id}][champs_attributes][#{champ.id}]" }
       end
 
       context "when has private parent" do

@@ -41,7 +41,7 @@ class AttestationTemplate < ApplicationRecord
   end
 
   def unspecified_champs_for_dossier(dossier)
-    all_champs_with_libelle_index = (dossier.champs + dossier.champs_private).index_by { |champ| "tdc#{champ.stable_id}" }
+    all_champs_with_libelle_index = (dossier.champs_public + dossier.champs_private).index_by { |champ| "tdc#{champ.stable_id}" }
 
     used_tags.filter_map do |used_tag|
       corresponding_champ = all_champs_with_libelle_index[used_tag]
@@ -54,27 +54,7 @@ class AttestationTemplate < ApplicationRecord
 
   def dup
     attestation_template = AttestationTemplate.new(title: title, body: body, footer: footer, activated: activated)
-
-    if logo.attached?
-      attestation_template.logo.attach(
-        io: StringIO.new(logo.download),
-        filename: logo.filename.to_s,
-        content_type: logo.content_type,
-        # we don't want to run virus scanner on duplicated file
-        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
-      )
-    end
-
-    if signature.attached?
-      attestation_template.signature.attach(
-        io: StringIO.new(signature.download),
-        filename: signature.filename.to_s,
-        content_type: signature.content_type,
-        # we don't want to run virus scanner on duplicated file
-        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
-      )
-    end
-
+    PiecesJustificativesService.clone_attachments(self, attestation_template)
     attestation_template
   end
 

@@ -12,16 +12,17 @@ Rails.application.config.content_security_policy do |policy|
 
   # Javascript: allow us, SendInBlue and Matomo.
   # We need unsafe_inline because miniprofiler and us have some inline buttons :(
-  scripts_whitelist = ["*.crisp.chat", "crisp.chat", "cdn.jsdelivr.net", "maxcdn.bootstrapcdn.com", "code.jquery.com"]
+  scripts_whitelist = ["*.crisp.chat", "crisp.chat", "cdn.jsdelivr.net", "maxcdn.bootstrapcdn.com", "code.jquery.com", "unpkg.com"]
   scripts_whitelist << URI(MATOMO_IFRAME_URL).host if MATOMO_IFRAME_URL.present?
   policy.script_src(:self, :unsafe_eval, :unsafe_inline, :blob, *scripts_whitelist)
 
   # CSS: We have a lot of inline style, and some <style> tags.
   # It's too complicated to be fixed right now (and it wouldn't add value: this is hardcoded in views, so not subject to injections)
-  policy.style_src(:self, :unsafe_inline, "*.crisp.chat", "crisp.chat", 'cdn.jsdelivr.net', 'maxcdn.bootstrapcdn.com')
+  policy.style_src(:self, :unsafe_inline, "*.crisp.chat", "crisp.chat", 'cdn.jsdelivr.net', 'maxcdn.bootstrapcdn.com', "unpkg.com")
 
-  connect_whitelist = ["wss://*.crisp.chat", "*.crisp.chat", "app.franceconnect.gouv.fr", "sentry.io", "openmaptiles.geo.data.gouv.fr", "openmaptiles.github.io", "tiles.geo.api.gouv.fr", "wxs.ign.fr"]
+  connect_whitelist = ["wss://*.crisp.chat", "*.crisp.chat", "app.franceconnect.gouv.fr", "openmaptiles.geo.data.gouv.fr", "openmaptiles.github.io", "tiles.geo.api.gouv.fr", "wxs.ign.fr"]
   connect_whitelist << ENV.fetch('APP_HOST')
+  connect_whitelist += [URI(ENV["SENTRY_DSN_JS"]).host, URI(ENV["SENTRY_DSN_RAILS"]).host].compact.uniq
   connect_whitelist << URI(DS_PROXY_URL).host if DS_PROXY_URL.present?
   connect_whitelist << URI(API_ADRESSE_URL).host if API_ADRESSE_URL.present?
   connect_whitelist << URI(API_EDUCATION_URL).host if API_EDUCATION_URL.present?
@@ -36,7 +37,8 @@ Rails.application.config.content_security_policy do |policy|
 
   # Everything else: allow us
   # Add the error source in the violation notification
-  default_whitelist = ["fonts.gstatic.com", "in-automate.sendinblue.com", "player.vimeo.com", "app.franceconnect.gouv.fr", "sentry.io", "*.crisp.chat", "crisp.chat", "*.crisp.help", "*.sibautomation.com", "sibautomation.com", "data"]
+  default_whitelist = ["fonts.gstatic.com", "in-automate.sendinblue.com", "player.vimeo.com", "app.franceconnect.gouv.fr", "*.crisp.chat", "crisp.chat", "*.crisp.help", "*.sibautomation.com", "sibautomation.com", "data"]
+  default_whitelist += [URI(ENV["SENTRY_DSN_JS"]).host, URI(ENV["SENTRY_DSN_RAILS"]).host].compact.uniq
   default_whitelist << URI(DS_PROXY_URL).host if DS_PROXY_URL.present?
   policy.default_src(:self, :data, :blob, :report_sample, *default_whitelist)
 

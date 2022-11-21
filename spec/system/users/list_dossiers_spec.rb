@@ -80,6 +80,25 @@ describe 'user access to the list of their dossiers', js: true do
         expect(page).not_to have_content(dossier_brouillon.procedure.libelle)
       end
     end
+
+    describe 'clone' do
+      it 'should have links to clone dossiers' do
+        expect(page).to have_link(nil, href: clone_dossier_path(dossier_brouillon))
+        expect(page).to have_link(nil, href: clone_dossier_path(dossier_en_construction))
+        expect(page).to have_link(nil, href: clone_dossier_path(dossier_en_instruction))
+      end
+
+      context 'when user clicks on clone button', js: true do
+        scenario 'the dossier is deleted' do
+          within(:css, "tr[data-dossier-id=\"#{dossier_brouillon.id}\"]") do
+            click_on 'Actions'
+            click_on 'Dupliquer ce dossier'
+          end
+
+          expect(page).to have_content("Votre dossier a bien été dupliqué. Vous pouvez maintenant le vérifier, l’adapter puis le déposer.")
+        end
+      end
+    end
   end
 
   describe "recherche" do
@@ -123,7 +142,7 @@ describe 'user access to the list of their dossiers', js: true do
     context "when user search for something inside the dossier" do
       let(:dossier_en_construction2) { create(:dossier, :with_populated_champs, :en_construction, user: user) }
       before do
-        page.find_by_id('q').set(dossier_en_construction.champs.first.value)
+        page.find_by_id('q').set(dossier_en_construction.champs_public.first.value)
       end
 
       context 'when it only matches one dossier' do
@@ -137,7 +156,7 @@ describe 'user access to the list of their dossiers', js: true do
 
       context 'when it matches multiple dossier' do
         before do
-          dossier_en_construction2.champs.first.update(value: dossier_en_construction.champs.first.value)
+          dossier_en_construction2.champs_public.first.update(value: dossier_en_construction.champs_public.first.value)
           find('.fr-search-bar .fr-btn').click
         end
 

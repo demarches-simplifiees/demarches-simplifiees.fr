@@ -1,5 +1,7 @@
 module Administrateurs
   class ProceduresController < AdministrateurController
+    layout 'all', only: [:all, :administrateurs]
+
     before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :zones, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :allow_expert_review, :experts_require_administrateur_invitation, :reset_draft]
     before_action :procedure_revisable?, only: [:champs, :annotations, :modifications, :reset_draft]
     before_action :draft_valid?, only: [:apercu]
@@ -331,19 +333,29 @@ module Administrateurs
     end
 
     def all
-      @admin_zones = current_administrateur.zones
-      @other_zones = Zone.all - @admin_zones
-      @zone_ids = params[:zone_ids].filter(&:present?) if params[:zone_ids]
-      @selected_zones = @zone_ids.map { |id| Zone.find(id) } if @zone_ids.present?
-      @statuses = params[:statuses].filter(&:present?) if params[:statuses]
+      @filter = ProceduresFilter.new(current_administrateur, params)
+      @procedures = paginate(filter_procedures(@filter), published_at: :desc)
+    end
 
-      @procedures = Procedure.joins(:procedures_zones).publiees_ou_closes
-      @procedures = @procedures.where(procedures_zones: { zone_id: @zone_ids }) if @zone_ids.present?
-      @procedures = @procedures.where(aasm_state: @statuses) if @statuses.present?
-      @procedures = @procedures.page(params[:page]).per(ITEMS_PER_PAGE).order(published_at: :desc)
+    def administrateurs
+      @filter = ProceduresFilter.new(current_administrateur, params)
+      @admins = Administrateur.includes(:user, :procedures).where(id: AdministrateursProcedure.where(procedure: filter_procedures(@filter)).select(:administrateur_id))
+      @admins = paginate(@admins, 'users.email')
     end
 
     private
+
+    def filter_procedures(filter)
+      procedures_result = Procedure.joins(:procedures_zones).publiees_ou_closes
+      procedures_result = procedures_result.where(procedures_zones: { zone_id: filter.zone_ids }) if filter.zone_ids.present?
+      procedures_result = procedures_result.where(aasm_state: filter.statuses) if filter.statuses.present?
+      procedures_result = procedures_result.where('published_at >= ?', filter.from_publication_date) if filter.from_publication_date.present?
+      procedures_result
+    end
+
+    def paginate(result, ordered_by)
+      result.page(params[:page]).per(ITEMS_PER_PAGE).order(ordered_by)
+    end
 
     def draft_valid?
       if procedure_without_control.draft_revision.invalid?

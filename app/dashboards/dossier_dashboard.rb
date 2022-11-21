@@ -21,7 +21,7 @@ class DossierDashboard < Administrate::BaseDashboard
     en_construction_at: Field::DateTime,
     en_instruction_at: Field::DateTime,
     processed_at: Field::DateTime,
-    champs: ChampCollectionField
+    champs_public: ChampCollectionField
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -43,7 +43,7 @@ class DossierDashboard < Administrate::BaseDashboard
     :state,
     :procedure,
     :user,
-    :champs,
+    :champs_public,
     :created_at,
     :updated_at,
     :hidden_by_user_at,

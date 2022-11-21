@@ -1,0 +1,45 @@
+en:
+  users:
+    profil:
+      show:
+        profile: Profile
+        contact: Contact Information
+        your_email: Your current email is
+        new_email_address: New email address
+        change_address: Change my address
+        transfer_title: Transfer all your files
+        transfer_explication_html: "<p>This feature allows you to change the owner of all your files. This is usually useful when changing jobs or if you want to merge several accounts.</p>
+    <p>Email address of the recipient of all your files</p>"
+        waiting_transfers: "Pending Transfers :"
+        one_waiting_transfer:
+          one: "The new owner %{email} must confirm the transfer of a file by following the instructions received in their email."
+          other: "The new owner %{email} must confirm the transfer of your %{count} files by following the instructions received in their email."
+        transfer_confirmation: "Do you accept the transfer?"
+        transfer_my_files: Transfer all my files
+        pending_change: 'Pending change:'
+        finalize_email_change: To finalise your change of email address, check your emails and click on the confirmation link.
+        email_explications_html: >
+          <b class="bold">%{application_name}</b> must ensure that your account is used for professional purposes.
+          <br>
+          <br>
+          We can only automatically allow email changes to the following domains:
+          <br>
+          %{legit_admin_domains}
+          <br>
+          <br>
+          If this is not the case for you, contact support:
+          <a href="mailto:%{contact_email}">%{contact_email}</a>
+        identities:
+          one: FranceConnect Identity
+          other: FranceConnect Identities
+        linked_identities:
+          one: 'Your account on %{application_name} is currently linked to the following identity:'
+          other: 'Your account on %{application_name} is currently linked to the following %{count} identities:'
+        unlink_confirmation: 'the FranceConnect account "%{full_name}" will no longer be able to access your files.'
+        forbid_access: forbid access
+      ensure_update_email_is_authorized:
+        email_not_allowed: "The email %{requested_email} cannot be used, contact support: <a href='mailto:%{contact_email}'>%{contact_email}</a>"
+      transfer_all_dossiers:
+        new_transfer: 
+          one: "The transfer of a file to %{email} is in progress"
+          other: "The transfer of %{count} files to %{email} is in progress"

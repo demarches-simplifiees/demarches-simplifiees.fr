@@ -137,6 +137,36 @@ describe Administrateurs::ProceduresController, type: :controller do
         expect(assigns(:procedures)).not_to include(procedure1)
       end
     end
+
+    context 'after specific date' do
+      let(:after) { Date.new(2022, 06, 30) }
+      let!(:procedure1) { create(:procedure, :published, published_at: after + 1.day) }
+      let!(:procedure2) { create(:procedure, :published, published_at: after + 2.days) }
+      let!(:procedure3) { create(:procedure, :published, published_at: after - 1.day) }
+
+      it 'display only procedures published after specific date' do
+        get :all, params: { from_publication_date: after }
+        expect(assigns(:procedures)).to include(procedure1)
+        expect(assigns(:procedures)).to include(procedure2)
+        expect(assigns(:procedures)).not_to include(procedure3)
+      end
+    end
+  end
+
+  describe 'GET #administrateurs' do
+    let!(:draft_procedure)     { create(:procedure, administrateur: admin3) }
+    let!(:published_procedure) { create(:procedure_with_dossiers, :published, dossiers_count: 2, administrateur: admin1) }
+    let!(:closed_procedure)    { create(:procedure, :closed, administrateur: admin2) }
+    let(:admin1) { create(:administrateur) }
+    let(:admin2) { create(:administrateur) }
+    let(:admin3) { create(:administrateur) }
+
+    it 'displays admins of the procedures' do
+      get :administrateurs
+      expect(assigns(:admins)).to include(admin1)
+      expect(assigns(:admins)).to include(admin2)
+      expect(assigns(:admins)).not_to include(admin3)
+    end
   end
 
   describe 'POST #search' do

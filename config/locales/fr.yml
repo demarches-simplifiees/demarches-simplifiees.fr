@@ -178,6 +178,8 @@ fr:
         dossier_synthesis: Synthèse des dossiers
       avis:
         introduction_file_explaination: "Fichier joint à la demande d’avis"
+      search:
+        dossier_not_in_instructor_group: "Le dossier n° %{dossier_id} de la procédure « %{procedure_libelle} » correspond à votre recherche mais il est rattaché au groupe d'instructeurs « %{groupe_instructeur_label} »."
     users:
       dossiers:
         archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
@@ -245,7 +247,8 @@ fr:
           actions: "Actions"
         dossier_action:
           edit_dossier: "Modifier le dossier"
-          start_other_dossier: "Commencer un autre dossier"
+          start_other_dossier: "Commencer un autre dossier vide"
+          clone: "Dupliquer ce dossier"
           delete_dossier: "Supprimer le dossier"
           transfer_dossier: "Transferer le dossier"
           edit_draft: "Modifier le brouillon"
@@ -450,9 +453,9 @@ fr:
       test_procedure: "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l’administrateur (ajout d'un champ, publication de la démarche...) entraînera sa suppression."
       no_access: "Vous n’avez pas accès à ce dossier"
       no_longer_editable: "Votre dossier ne peut plus être modifié"
-
       create_commentaire:
         message_send: "Votre message a bien été envoyé à l’instructeur en charge de votre dossier."
+      cloned_success: "Votre dossier a bien été dupliqué. Vous pouvez maintenant le vérifier, l’adapter puis le déposer."
       ask_deletion:
         undergoingreview: "L’instruction de votre dossier a commencé, il n’est plus possible de supprimer votre dossier. Si vous souhaitez annuler l’instruction contactez votre administration par la messagerie de votre dossier."
         soft_deleted_dossier: "Votre dossier a bien été supprimé de votre interface"

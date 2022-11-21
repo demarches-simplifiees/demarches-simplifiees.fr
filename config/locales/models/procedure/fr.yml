@@ -20,13 +20,18 @@ fr:
         api_particulier_token: Jeton API Particulier
         lien_dpo: Contact du DPO
         routing_criteria_name: Nomination du routage
+        initiated_mail: L’email de notification de passage de dossier en instruction
+        received_mail: L’email de notification de dépot de dossier
+        closed_mail: L’email de notification d’acceptation de dossier
+        refused_mail: L’email de notification de refus de dossier
+        without_continuation_mail: L’email de notification de classement sans suite de dossier
     errors:
       models:
         procedure:
           attributes:
             api_particulier_token:
               invalid: 'n’a pas le bon format'
-            draft_types_de_champ:
+            draft_types_de_champ_public:
               format: 'Le champ %{message}'
             draft_types_de_champ_private:
               format: 'L’annotation privée %{message}'
