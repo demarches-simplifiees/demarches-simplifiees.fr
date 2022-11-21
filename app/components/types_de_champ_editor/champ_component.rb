@@ -108,6 +108,8 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
       procedure.pole_emploi_enabled?
     when TypeDeChamp.type_champs.fetch(:mesri)
       procedure.mesri_enabled?
+    when TypeDeChamp.type_champs.fetch(:routage)
+      false
     else
       true
     end
