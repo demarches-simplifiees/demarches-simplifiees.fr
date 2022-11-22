@@ -36,6 +36,7 @@
     = yield(:invisible_captcha_styles)
 
   %body{ id: content_for(:page_id), class: browser.platform.ios? ? 'ios' : nil }
+    = render partial: 'layouts/skiplinks'
     .page-wrapper
       = render partial: "layouts/outdated_browser_banner"
       = render partial: 'layouts/pre_maintenance'
@@ -45,7 +46,7 @@
           Env Test
 
       = render partial: "layouts/header"
-      %main{ role: :main }
+      %main#contenu{ role: :main }
         = render partial: "layouts/flash_messages"
 
         = content_for?(:content) ? yield(:content) : yield
