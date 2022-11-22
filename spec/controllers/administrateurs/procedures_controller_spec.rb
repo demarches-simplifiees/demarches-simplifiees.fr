@@ -151,6 +151,19 @@ describe Administrateurs::ProceduresController, type: :controller do
         expect(assigns(:procedures)).not_to include(procedure3)
       end
     end
+
+    context 'with libelle search' do
+      let!(:procedure1) { create(:procedure, :published, libelle: 'Demande de subvention') }
+      let!(:procedure2) { create(:procedure, :published, libelle: "Fonds d'aide public « Prime Entrepreneurs des Quartiers »") }
+      let!(:procedure3) { create(:procedure, :published, libelle: "Hackaton pour entrepreneurs en résidence") }
+
+      it 'returns procedures with specific terms in libelle' do
+        get :all, params: { libelle: 'entrepreneur' }
+        expect(assigns(:procedures)).to include(procedure2)
+        expect(assigns(:procedures)).to include(procedure3)
+        expect(assigns(:procedures)).not_to include(procedure1)
+      end
+    end
   end
 
   describe 'GET #administrateurs' do
