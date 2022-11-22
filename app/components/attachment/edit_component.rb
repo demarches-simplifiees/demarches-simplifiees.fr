@@ -80,15 +80,6 @@ class Attachment::EditComponent < ApplicationComponent
     false
   end
 
-  def progress_bar_label
-    case
-    when attachment.virus_scanner.pending?
-      "Analyse antivirus en cours…"
-    when attachment.watermark_pending?
-      "Traitement en cours…"
-    end
-  end
-
   def poll_controller_options
     {
       controller: 'turbo-poll',

@@ -8,9 +8,8 @@
           .fr-py-1v
             = link_to_if(downloadable?, attachment.filename.to_s, attachment.url, class: "attachment-filename", download: "") do
               %span.attachment-filename= attachment.filename.to_s
-            - if in_progress?
-              %p.fr-badge.fr-badge--info.fr-badge--sm.fr-badge--no-icon.fr-ml-1w
-                = progress_bar_label
+
+            = render Attachment::ProgressComponent.new(attachment: attachment)
 
       - if error?
         %p.fr-error-text= error_message

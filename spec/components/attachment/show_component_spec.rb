@@ -6,6 +6,8 @@ RSpec.describe Attachment::ShowComponent, type: :component do
     champ.piece_justificative_file.attachments.first
   }
 
+  let(:filename) { attachment.filename.to_s }
+
   let(:component) do
     described_class.new(attachment:)
   end
@@ -20,7 +22,7 @@ RSpec.describe Attachment::ShowComponent, type: :component do
     let(:virus_scan_result) { nil }
 
     it 'allows to download the file' do
-      expect(subject).to have_link(champ.piece_justificative_file[0].filename.to_s)
+      expect(subject).to have_link(filename)
       expect(subject).to have_text('ce fichier n’a pas été analysé par notre antivirus')
     end
   end
@@ -29,8 +31,8 @@ RSpec.describe Attachment::ShowComponent, type: :component do
     let(:virus_scan_result) { ActiveStorage::VirusScanner::PENDING }
 
     it 'displays the filename, but doesn’t allow to download the file' do
-      expect(subject).to have_text(champ.piece_justificative_file[0].filename.to_s)
-      expect(subject).not_to have_link(champ.piece_justificative_file[0].filename.to_s)
+      expect(subject).to have_text(filename)
+      expect(subject).not_to have_link(filename)
       expect(subject).to have_text('Analyse antivirus en cours')
     end
   end
@@ -39,7 +41,7 @@ RSpec.describe Attachment::ShowComponent, type: :component do
     let(:virus_scan_result) { ActiveStorage::VirusScanner::SAFE }
 
     it 'allows to download the file' do
-      expect(subject).to have_link(champ.piece_justificative_file[0].filename.to_s)
+      expect(subject).to have_link(filename)
     end
   end
 
@@ -47,8 +49,8 @@ RSpec.describe Attachment::ShowComponent, type: :component do
     let(:virus_scan_result) { ActiveStorage::VirusScanner::INFECTED }
 
     it 'displays the filename, but doesn’t allow to download the file' do
-      expect(subject).to have_text(champ.piece_justificative_file[0].filename.to_s)
-      expect(subject).not_to have_link(champ.piece_justificative_file[0].filename.to_s)
+      expect(subject).to have_text(filename)
+      expect(subject).not_to have_link(filename)
       expect(subject).to have_text('Virus détecté')
     end
   end
@@ -57,8 +59,8 @@ RSpec.describe Attachment::ShowComponent, type: :component do
     let(:virus_scan_result) { ActiveStorage::VirusScanner::INTEGRITY_ERROR }
 
     it 'displays the filename, but doesn’t allow to download the file' do
-      expect(subject).to have_text(champ.piece_justificative_file[0].filename.to_s)
-      expect(subject).not_to have_link(champ.piece_justificative_file[0].filename.to_s)
+      expect(subject).to have_text(filename)
+      expect(subject).not_to have_link(filename)
       expect(subject).to have_text('corrompu')
     end
   end

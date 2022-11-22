@@ -2,6 +2,7 @@ RSpec.describe Attachment::EditComponent, type: :component do
   let(:champ) { create(:champ_titre_identite, dossier: create(:dossier)) }
   let(:attached_file) { champ.piece_justificative_file }
   let(:attachment) { attached_file.attachments.first }
+  let(:filename) { attachment.filename.to_s }
   let(:kwargs) { {} }
 
   let(:component) do
@@ -84,7 +85,6 @@ RSpec.describe Attachment::EditComponent, type: :component do
 
   context 'when user can download' do
     let(:kwargs) { { user_can_download: true } }
-    let(:filename) { champ.piece_justificative_file[0].filename.to_s }
 
     it 'renders a link to download the file' do
       expect(subject).to have_link(filename)
@@ -104,9 +104,47 @@ RSpec.describe Attachment::EditComponent, type: :component do
     end
   end
 
-  context 'TODO: with a pending antivirus scan' do
-  end
+  context 'with non nominal or final antivirus status' do
+    before do
+      champ.piece_justificative_file[0].blob.update(metadata: attachment.blob.metadata.merge(virus_scan_result: virus_scan_result))
+    end
 
-  context 'TODO: with an error' do
+    context 'when the anti-virus scan is pending' do
+      let(:virus_scan_result) { ActiveStorage::VirusScanner::PENDING }
+
+      it 'displays the filename, but doesn’t allow to download the file' do
+        expect(subject).to have_text(filename)
+        expect(subject).to have_no_link(text: filename)
+        expect(subject).to have_text('Analyse antivirus en cours')
+      end
+    end
+
+    context 'when the file is scanned and safe' do
+      let(:virus_scan_result) { ActiveStorage::VirusScanner::SAFE }
+
+      it 'allows to download the file' do
+        expect(subject).to have_link(filename)
+      end
+    end
+
+    context 'when the file is scanned and infected' do
+      let(:virus_scan_result) { ActiveStorage::VirusScanner::INFECTED }
+
+      it 'displays the filename, but doesn’t allow to download the file' do
+        expect(subject).to have_text(champ.piece_justificative_file[0].filename.to_s)
+        expect(subject).to have_no_link(text: filename)
+        expect(subject).to have_text('Virus détecté')
+      end
+    end
+
+    context 'when the file is corrupted' do
+      let(:virus_scan_result) { ActiveStorage::VirusScanner::INTEGRITY_ERROR }
+
+      it 'displays the filename, but doesn’t allow to download the file' do
+        expect(subject).to have_text(filename)
+        expect(subject).to have_no_link(text: filename)
+        expect(subject).to have_text('corrompu')
+      end
+    end
   end
 end
