@@ -8,5 +8,7 @@
   - else
     .attachment-filename.fr-mb-1w= attachment.filename.to_s
 
+    = render Attachment::ProgressComponent.new(attachment: attachment)
+
   - if error?
     %p.fr-error-text= error_message
