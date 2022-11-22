@@ -4,6 +4,7 @@
 #
 #  id                  :bigint           not null, primary key
 #  automatic_operation :boolean          default(FALSE), not null
+#  data                :jsonb
 #  digest              :text
 #  executed_at         :datetime
 #  keep_until          :datetime
