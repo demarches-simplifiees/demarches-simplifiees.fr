@@ -6,7 +6,7 @@
           (ce fichier n’a pas été analysé par notre antivirus, téléchargez-le avec précaution)
 
   - else
-    .attachment-filename.fr-mb-1w= attachment.filename.to_s
+    .attachment-filename.fr-mb-1w.fr-mr-1w= attachment.filename.to_s
 
     = render Attachment::ProgressComponent.new(attachment: attachment)
 

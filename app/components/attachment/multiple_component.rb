@@ -1,25 +1,25 @@
 # Display a widget for uploading, editing and deleting a file attachment
 class Attachment::MultipleComponent < ApplicationComponent
+  DEFAULT_MAX_ATTACHMENTS = 10
+
   renders_one :template
 
-  attr_reader :form
+  attr_reader :champ
   attr_reader :attached_file
+  attr_reader :user_can_download
   attr_reader :user_can_destroy
   attr_reader :max
 
   delegate :count, :empty?, to: :attachments, prefix: true
 
-  def initialize(form:, attached_file:, user_can_destroy: false, max: nil)
-    @form = form
+  def initialize(champ:, attached_file:, user_can_download: false, user_can_destroy: true, max: nil)
+    @champ = champ
     @attached_file = attached_file
+    @user_can_download = user_can_download
     @user_can_destroy = user_can_destroy
-    @max = max || 10
+    @max = max || DEFAULT_MAX_ATTACHMENTS
 
     @attachments = attached_file.attachments || []
-  end
-
-  def champ
-    form.object
   end
 
   def each_attachment(&block)
@@ -31,7 +31,7 @@ class Attachment::MultipleComponent < ApplicationComponent
   end
 
   def empty_component_id
-    "attachment-multiple-empty-#{form.object.id}"
+    "attachment-multiple-empty-#{champ.id}"
   end
 
   def in_progress?
@@ -54,7 +54,7 @@ class Attachment::MultipleComponent < ApplicationComponent
   end
 
   def auto_attach_url
-    helpers.auto_attach_url(form.object)
+    helpers.auto_attach_url(champ)
   end
 
   private

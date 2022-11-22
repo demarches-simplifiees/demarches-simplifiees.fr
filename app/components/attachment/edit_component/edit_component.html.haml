@@ -5,11 +5,13 @@
         - if user_can_destroy?
           = link_to('Supprimer', destroy_attachment_path, **remove_button_options, class: "fr-btn fr-btn--tertiary fr-btn--sm fr-icon-delete-line", title: "Supprimer le fichier #{attachment.filename}")
 
-          .fr-py-1v
-            = link_to_if(downloadable?, attachment.filename.to_s, attachment.url, class: "attachment-filename", download: "") do
-              %span.attachment-filename= attachment.filename.to_s
+        .fr-py-1v
+          - if downloadable?
+            = render Dsfr::DownloadComponent.new(attachment:)
+          - else
+            %span.attachment-filename.fr-mr-1w-= attachment.filename.to_s
 
-            = render Attachment::ProgressComponent.new(attachment: attachment)
+          = render Attachment::ProgressComponent.new(attachment: attachment)
 
       - if error?
         %p.fr-error-text= error_message
