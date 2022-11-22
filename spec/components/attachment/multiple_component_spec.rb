@@ -101,7 +101,7 @@ RSpec.describe Attachment::MultipleComponent, type: :component do
     context "process is taking longer than expected" do
       let(:created_at) { 5.minutes.ago }
       it 'renders a refresh button' do
-        expect(subject).to have_button("Rafraîchir")
+        expect(subject).to have_button("Recharger")
       end
     end
   end

@@ -3,7 +3,7 @@
     = render Dsfr::DownloadComponent.new(attachment: attachment) do |c|
       - if !attachment.virus_scanner.started?
         - c.right do
-          (ce fichier n’a pas été analysé par notre antivirus, téléchargez-le avec précaution)
+          = "(#{t(".virus_not_analyzed")})"
 
   - else
     .attachment-filename.fr-mb-1w.fr-mr-1w= attachment.filename.to_s

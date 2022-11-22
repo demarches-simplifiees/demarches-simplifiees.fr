@@ -28,7 +28,7 @@ RSpec.describe Attachment::EditComponent, type: :component do
     end
 
     it 'renders allowed formats' do
-      expect(subject).to have_content(/Formats supportés :\s+jpeg, png/)
+      expect(subject).to have_content(/Formats supportés : jpeg, png/)
     end
   end
 
@@ -128,7 +128,7 @@ RSpec.describe Attachment::EditComponent, type: :component do
         end
 
         it 'renders a refresh button' do
-          expect(subject).to have_button("Rafraîchir")
+          expect(subject).to have_button("Recharger")
         end
       end
 

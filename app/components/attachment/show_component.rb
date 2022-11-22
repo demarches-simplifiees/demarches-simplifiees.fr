@@ -12,9 +12,9 @@ class Attachment::ShowComponent < ApplicationComponent
   def error_message
     case
     when attachment.virus_scanner.infected?
-      "Virus détecté, le téléchargement est bloqué."
+      t(".errors.virus_infected")
     when attachment.virus_scanner.corrupt?
-      "Le fichier est corrompu, le téléchargement est bloqué."
+      t(".errors.corrupted_file")
     end
   end
 

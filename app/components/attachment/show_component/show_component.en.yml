@@ -1,2 +1,6 @@
 ---
 en:
+  virus_not_analyzed: this file has not been scanned by our antivirus, download it with care
+  errors:
+    virus_infected: Virus detected, download is blocked.
+    corrupted_file: The file is corrupted, the download is blocked.

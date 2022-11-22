@@ -1,3 +1,11 @@
 ---
 fr:
   max_file_size: "Taille maximale : %{max_file_size}."
+  allowed_formats: "Formats supportés : %{formats}"
+  retry: Ré-essayer
+  delete: Supprimer
+  errors:
+    uploading: "Une erreur s’est produite pendant l’envoi du fichier."
+    virus_infected: "Virus détecté, merci d’envoyer un autre fichier."
+    corrupted_file: "Le fichier est corrompu, merci d’envoyer un autre fichier."
+
