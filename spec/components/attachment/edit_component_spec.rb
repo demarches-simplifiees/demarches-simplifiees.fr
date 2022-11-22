@@ -117,6 +117,28 @@ RSpec.describe Attachment::EditComponent, type: :component do
         expect(subject).to have_no_link(text: filename)
         expect(subject).to have_text('Analyse antivirus en cours')
       end
+
+      it 'setup polling' do
+        expect(subject).to have_selector('[data-controller=turbo-poll]')
+      end
+
+      context "process is taking longer than expected" do
+        before do
+          champ.piece_justificative_file.attachments[0].update!(created_at: 5.minutes.ago)
+        end
+
+        it 'renders a refresh button' do
+          expect(subject).to have_button("Rafraîchir")
+        end
+      end
+
+      context "when used as multiple context" do
+        let(:kwargs) { { as_multiple: true } }
+
+        it 'does not setup polling' do
+          expect(subject).to have_no_selector('[data-controller=turbo-poll]')
+        end
+      end
     end
 
     context 'when the file is scanned and safe' do

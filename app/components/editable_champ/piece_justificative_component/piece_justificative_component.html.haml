@@ -1,6 +1,7 @@
 - user_can_destroy = !@champ.mandatory? || @champ.dossier.brouillon?
-- max = [true, nil].include?(@champ.procedure&.piece_justificative_multiple?) ? 10 : 1
-= render Attachment::MultipleComponent.new(form: @form, attached_file: @champ.piece_justificative_file, user_can_destroy:, max:) do |c|
+- user_can_download = !@champ.dossier.brouillon?
+- max = [true, nil].include?(@champ.procedure&.piece_justificative_multiple?) ? Attachment::MultipleComponent::DEFAULT_MAX_ATTACHMENTS : 1
+= render Attachment::MultipleComponent.new(champ: @champ, attached_file: @champ.piece_justificative_file, user_can_destroy:, user_can_download:, max:) do |c|
   - if @champ.type_de_champ.piece_justificative_template&.attached?
     - c.with_template do
       = render Dsfr::DownloadComponent.new(attachment: @champ.type_de_champ.piece_justificative_template, name: "Modèle à télécharger") do |c|
