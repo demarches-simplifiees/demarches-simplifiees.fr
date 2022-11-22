@@ -137,9 +137,9 @@ class Attachment::EditComponent < ApplicationComponent
   def error_message
     case
     when attachment.virus_scanner.infected?
-      "Virus détecté, merci d’envoyer un autre fichier."
+      t(".errors.virus_infected")
     when attachment.virus_scanner.corrupt?
-      "Le fichier est corrompu, merci d’envoyer un autre fichier."
+      t(".errors.corrupted_file")
     end
   end
 

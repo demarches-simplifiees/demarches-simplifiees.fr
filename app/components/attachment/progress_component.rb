@@ -8,9 +8,9 @@ class Attachment::ProgressComponent < ApplicationComponent
   def progress_label
     case
     when attachment.virus_scanner.pending?
-      "Analyse antivirus en cours…"
+      t(".antivirus_pending")
     when attachment.watermark_pending?
-      "Traitement en cours…"
+      t(".watermark_pending")
     end
   end
 

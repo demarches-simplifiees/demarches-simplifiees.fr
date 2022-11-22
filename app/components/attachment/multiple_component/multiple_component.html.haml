@@ -12,4 +12,4 @@
   - if in_progress?
     %div{ data: poll_controller_options }
       - if in_progress_long?
-        = render "attachments/pending_refresh", url: auto_attach_url
+        = render Attachment::LongProcessingRefreshComponent.new

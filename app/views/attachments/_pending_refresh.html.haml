@@ -1,6 +1,0 @@
-= render Dsfr::CalloutComponent.new(title: nil) do |c|
-  - c.with_body do
-    L’analyse antivirus de votre ou de vos pièces jointes prend plus de temps que prévu.
-  - c.with_bottom do
-    = button_tag "Rafraîchir le traitement", type: "button", class: "fr-btn", data: { action: 'click->turbo-poll#refresh' }
-

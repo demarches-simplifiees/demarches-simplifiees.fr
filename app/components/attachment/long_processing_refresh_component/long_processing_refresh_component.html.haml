@@ -1,0 +1,5 @@
+= render Dsfr::CalloutComponent.new(title: nil) do |c|
+  - c.with_body do
+    = t(".explanation")
+  - c.with_bottom do
+    = button_tag t(".reload"), type: "button", class: "fr-btn", data: { action: 'click->turbo-poll#refresh' }

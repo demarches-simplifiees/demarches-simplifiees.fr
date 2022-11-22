@@ -11,6 +11,6 @@ class Dsfr::DownloadComponent < ApplicationComponent
   end
 
   def title
-    "Télécharger le fichier #{attachment.filename}"
+    t(".title", filename: attachment.filename.to_s)
   end
 end

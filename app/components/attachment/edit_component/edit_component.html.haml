@@ -3,7 +3,7 @@
     %div{ id: dom_id(attachment, :persisted_row) }
       .flex.flex-gap-2{ class: class_names("attachment-error": attachment.virus_scanner_error?) }
         - if user_can_destroy?
-          = link_to('Supprimer', destroy_attachment_path, **remove_button_options, class: "fr-btn fr-btn--tertiary fr-btn--sm fr-icon-delete-line", title: "Supprimer le fichier #{attachment.filename}")
+          = link_to(t('.delete'), destroy_attachment_path, **remove_button_options, class: "fr-btn fr-btn--tertiary fr-btn--sm fr-icon-delete-line", title: "Supprimer le fichier #{attachment.filename}")
 
         .fr-py-1v
           - if downloadable?
@@ -21,8 +21,7 @@
       - if max_file_size.present?
         = t('.max_file_size', max_file_size: number_to_human_size(max_file_size))
       - if allowed_formats
-        Formats supportés :
-        = allowed_formats.join(', ')
+        = t('.allowed_formats', formats: allowed_formats.join(', '))
 
 
   - if !as_multiple?
@@ -32,10 +31,10 @@
       %div{ data: poll_controller_options }
         - if attachment.created_at < 30.seconds.ago
           .fr-mt-2w
-            = render partial: "attachments/pending_refresh", url: attachment_path
+            = render Attachment::LongProcessingRefreshComponent.new(attachment: attachment)
 
   .attachment-error.hidden
-    %p.fr-error-text Une erreur s’est produite pendant l’envoi du fichier.
+    %p.fr-error-text= t('.errors.uploading')
     = button_tag(**retry_button_options) do
-      Ré-essayer
+      = t(".retry")
 
