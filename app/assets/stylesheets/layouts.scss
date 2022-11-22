@@ -67,6 +67,8 @@
   position: -webkit-sticky;  // This is needed on Safari (tested on 12.1)
   // scss-lint:enable VendorPrefix
   bottom: 0;
+
+  z-index: 10; // above DSFR btn which are at 1
 }
 
 html.scroll-margins-for-sticky-footer {
