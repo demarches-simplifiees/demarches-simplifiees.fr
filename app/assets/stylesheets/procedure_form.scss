@@ -24,6 +24,10 @@
   padding: 0 $default-padding;
   background-color: $light-grey;
 
+  input[type=file] {
+    background-color: transparent; // Remove white bg set by DSFR
+  }
+
   &.no-background {
     background-color: transparent;
   }
