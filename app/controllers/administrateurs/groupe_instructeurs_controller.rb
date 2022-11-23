@@ -101,6 +101,10 @@ module Administrateurs
       reaffecter_bulk_messages(target_group)
       groupe_instructeur.dossiers.find_each do |dossier|
         dossier.assign_to_groupe_instructeur(target_group, current_administrateur)
+        # double read / condition to remove
+        if (champ_routage = dossier.champs_public.find(&:routage?))
+          champ_routage.update_column(:value, target_group)
+        end
       end
 
       flash[:notice] = "Les dossiers du groupe « #{groupe_instructeur.label} » ont été réaffectés au groupe « #{target_group.label} »."
