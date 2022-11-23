@@ -81,7 +81,6 @@ class Procedure < ApplicationRecord
   has_many :published_types_de_champ_private, through: :published_revision, source: :types_de_champ_private
 
   has_one :draft_attestation_template, through: :draft_revision, source: :attestation_template
-  has_one :published_attestation_template, through: :published_revision, source: :attestation_template
 
   has_one :published_dossier_submitted_message, dependent: :destroy, through: :published_revision, source: :dossier_submitted_message
   has_one :draft_dossier_submitted_message, dependent: :destroy, through: :draft_revision, source: :dossier_submitted_message
@@ -93,8 +92,7 @@ class Procedure < ApplicationRecord
   foreign_key: "replaced_by_procedure_id", dependent: :nullify
 
   has_one :module_api_carto, dependent: :destroy
-  has_one :legacy_attestation_template, class_name: 'AttestationTemplate', dependent: :destroy
-  has_many :attestation_templates, through: :revisions, source: :attestation_template
+  has_one :attestation_template, dependent: :destroy
 
   belongs_to :parent_procedure, class_name: 'Procedure', optional: true
   belongs_to :canonical_procedure, class_name: 'Procedure', optional: true
@@ -294,6 +292,7 @@ class Procedure < ApplicationRecord
   validates_associated :closed_mail, on: :publication
   validates_associated :refused_mail, on: :publication
   validates_associated :without_continuation_mail, on: :publication
+  validates_associated :attestation_template, on: :publication, if: -> { attestation_template&.activated? }
 
   FILE_MAX_SIZE = 20.megabytes
   validates :notice, content_type: [
@@ -473,9 +472,9 @@ class Procedure < ApplicationRecord
 
     populate_champ_stable_ids
     include_list = {
+      attestation_template: [],
       draft_revision: {
         revision_types_de_champ: [:type_de_champ],
-        attestation_template: [],
         dossier_submitted_message: []
       }
     }
@@ -595,8 +594,11 @@ class Procedure < ApplicationRecord
     touch(:whitelisted_at)
   end
 
-  def attestation_template
-    published_attestation_template || draft_attestation_template
+  def move_attestation_template_to_procedure!
+    if draft_attestation_template.present? && draft_attestation_template != attestation_template
+      draft_attestation_template.update_column(:procedure_id, id)
+      reload
+    end
   end
 
   def closed_mail_template_attestation_inconsistency_state

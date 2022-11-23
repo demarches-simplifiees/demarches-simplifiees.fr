@@ -904,7 +904,7 @@ describe Procedure do
         create(
           :procedure,
           :published,
-          attestation_template: create(:attestation_template),
+          attestation_template: build(:attestation_template),
           dossier_submitted_message: create(:dossier_submitted_message),
           types_de_champ_public: [{ type: :text, libelle: 'published tdc' }]
         )
@@ -913,7 +913,7 @@ describe Procedure do
       it "should reset draft revision" do
         procedure.draft_revision.add_type_de_champ(tdc_attributes)
         previous_draft_revision = procedure.draft_revision
-        previous_attestation_template = previous_draft_revision.attestation_template
+        previous_attestation_template = procedure.attestation_template
         previous_dossier_submitted_message = previous_draft_revision.dossier_submitted_message
 
         expect(procedure.draft_changed?).to be_truthy
@@ -921,7 +921,7 @@ describe Procedure do
         expect(procedure.draft_changed?).to be_falsey
         expect(procedure.draft_revision).not_to eq(previous_draft_revision)
         expect { previous_draft_revision.reload }.to raise_error(ActiveRecord::RecordNotFound)
-        expect(procedure.draft_revision.attestation_template).to eq(previous_attestation_template)
+        expect(procedure.attestation_template).to eq(previous_attestation_template)
         expect(procedure.draft_revision.dossier_submitted_message).to eq(previous_dossier_submitted_message)
       end
 
