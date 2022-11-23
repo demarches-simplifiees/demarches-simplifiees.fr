@@ -685,7 +685,7 @@ GEM
       rack (~> 2.2)
       rack-protection (= 2.2.0)
       tilt (~> 2.0)
-    skylight (5.0.1)
+    skylight (5.3.4)
       activesupport (>= 5.2.0)
     smart_properties (1.17.0)
     spreadsheet_architect (4.1.0)
