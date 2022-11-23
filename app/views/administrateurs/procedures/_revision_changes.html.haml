@@ -2,7 +2,6 @@
   - list.with_empty do
     = t(:no_changes, scope: [:administrateurs, :revision_changes])
 
-  = render partial: 'administrateurs/procedures/revision_change_attestation_template', collection: changes.filter { |change| change[:model] == :attestation_template }, as: :change, locals: { list: list }
   = render partial: "administrateurs/procedures/revision_change_type_de_champ", collection: changes.filter { |change| change[:model] == :type_de_champ }, as: :change, locals: { list: list }
   - move_changes, move_private_changes = changes.filter { |change| change[:op] == :move }.partition { |change| !change[:private] }
   - if move_changes.present?
