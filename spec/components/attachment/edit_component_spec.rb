@@ -122,16 +122,6 @@ RSpec.describe Attachment::EditComponent, type: :component do
         expect(subject).to have_selector('[data-controller=turbo-poll]')
       end
 
-      context "process is taking longer than expected" do
-        before do
-          champ.piece_justificative_file.attachments[0].update!(created_at: 5.minutes.ago)
-        end
-
-        it 'renders a refresh button' do
-          expect(subject).to have_button("Recharger")
-        end
-      end
-
       context "when used as multiple context" do
         let(:kwargs) { { as_multiple: true } }
 

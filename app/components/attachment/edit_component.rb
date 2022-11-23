@@ -72,21 +72,6 @@ class Attachment::EditComponent < ApplicationComponent
     }.merge(has_content_type_validator? ? { accept: accept_content_type } : {})
   end
 
-  def in_progress?
-    return false if attachment.nil?
-    return true if attachment.virus_scanner.pending?
-    return true if attachment.watermark_pending?
-
-    false
-  end
-
-  def poll_controller_options
-    {
-      controller: 'turbo-poll',
-      turbo_poll_url_value: poll_url
-    }
-  end
-
   def poll_url
     if champ.present?
       auto_attach_url
