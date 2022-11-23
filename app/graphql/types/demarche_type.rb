@@ -29,7 +29,9 @@ module Types
     field :date_depublication, GraphQL::Types::ISO8601DateTime, "Date de la dépublication.", null: true, method: :unpublished_at
     field :date_fermeture, GraphQL::Types::ISO8601DateTime, "Date de la fermeture.", null: true, method: :closed_at
 
-    field :groupe_instructeurs, [Types::GroupeInstructeurType], null: false
+    field :groupe_instructeurs, [Types::GroupeInstructeurType], null: false do
+      argument :closed, Boolean, required: false
+    end
     field :service, Types::ServiceType, null: true
 
     field :dossiers, Types::DossierType.connection_type, "Liste de tous les dossiers d’une démarche.", null: false, extras: [:lookahead] do
@@ -60,8 +62,14 @@ module Types
       object.aasm.current_state
     end
 
-    def groupe_instructeurs
-      Loaders::Association.for(object.class, groupe_instructeurs: { procedure: [:administrateurs] }).load(object)
+    def groupe_instructeurs(closed: nil)
+      if closed.nil?
+        Loaders::Association.for(object.class, groupe_instructeurs: { procedure: [:administrateurs] }).load(object)
+      elsif closed.true?
+        Loaders::Association.for(object.class, active_groupe_instructeurs: { procedure: [:administrateurs] }).load(object)
+      else
+        Loaders::Association.for(object.class, closed_groupe_instructeurs: { procedure: [:administrateurs] }).load(object)
+      end
     end
 
     def service

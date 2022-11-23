@@ -32,7 +32,7 @@ module Administrateurs
         .new({ instructeurs: [current_administrateur.instructeur] }.merge(groupe_instructeur_params))
 
       if @groupe_instructeur.save
-        routing_notice = " et le routage a été activé" if procedure.groupe_instructeurs.actif.size == 2
+        routing_notice = " et le routage a été activé" if procedure.groupe_instructeurs.active.size == 2
         redirect_to admin_procedure_groupe_instructeur_path(procedure, @groupe_instructeur),
           notice: "Le groupe d’instructeurs « #{@groupe_instructeur.label} » a été créé#{routing_notice}."
       else
@@ -56,7 +56,7 @@ module Administrateurs
         @instructeurs = paginated_instructeurs
         @available_instructeur_emails = available_instructeur_emails
 
-        flash[:alert] = @groupe_instructeur.errors.values.join('<br>')
+        flash[:alert] = @groupe_instructeur.errors.full_messages.to_sentence
         render :show
       end
     end
@@ -70,7 +70,7 @@ module Administrateurs
         flash[:alert] = "Suppression impossible : il doit y avoir au moins un groupe instructeur sur chaque procédure"
       else
         @groupe_instructeur.destroy!
-        if procedure.groupe_instructeurs.actif.one?
+        if procedure.groupe_instructeurs.active.one?
           procedure.update!(routing_enabled: false)
           routing_notice = " et le routage a été désactivé"
         end
