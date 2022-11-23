@@ -32,7 +32,7 @@ module DownloadManager
       attachment_dir = File.dirname(attachment_path)
 
       FileUtils.mkdir_p(attachment_dir) if !Dir.exist?(attachment_dir) # defensive, do not write in undefined dir
-      if attachment.is_a?(PiecesJustificativesService::FakeAttachment)
+      if attachment.is_a?(ActiveStorage::FakeAttachment)
         File.write(attachment_path, attachment.file.read, mode: 'wb')
       else
         request = Typhoeus::Request.new(attachment.url)
