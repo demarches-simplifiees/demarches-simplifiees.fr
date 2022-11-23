@@ -145,7 +145,7 @@ describe 'The user' do
     wait_for_autosave
 
     click_on 'Déposer le dossier'
-    expect(user_dossier.reload.en_construction?).to be(true)
+    wait_until { user_dossier.reload.en_construction? }
     expect(champ_value_for('texte obligatoire')).to eq('super texte')
     expect(page).to have_current_path(merci_dossier_path(user_dossier))
   end
