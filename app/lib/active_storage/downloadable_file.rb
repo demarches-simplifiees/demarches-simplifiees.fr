@@ -10,7 +10,7 @@ class ActiveStorage::DownloadableFile
     end
 
     files.filter do |file, _filename|
-      if file.is_a?(PiecesJustificativesService::FakeAttachment)
+      if file.is_a?(ActiveStorage::FakeAttachment)
         true
       else
         service = file.blob.service
