@@ -1,2 +1,5 @@
 - user_can_destroy = !@champ.mandatory? || @champ.dossier.brouillon?
+
+- if @champ.type_de_champ.piece_justificative_template&.attached?
+  = render partial: "shared/piece_justificative_template", locals: { attachment: @champ.type_de_champ.piece_justificative_template }
 = render Attachment::EditComponent.new(champ: @form.object, attached_file: @champ.piece_justificative_file, attachment: @champ.piece_justificative_file[0], user_can_destroy:)
