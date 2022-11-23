@@ -4,11 +4,12 @@ class Attachment::MultipleComponent < ApplicationComponent
 
   renders_one :template
 
-  attr_reader :champ
   attr_reader :attached_file
-  attr_reader :user_can_download
-  attr_reader :user_can_destroy
+  attr_reader :attachments
+  attr_reader :champ
   attr_reader :max
+  attr_reader :user_can_destroy
+  attr_reader :user_can_download
 
   delegate :count, :empty?, to: :attachments, prefix: true
 
@@ -34,36 +35,8 @@ class Attachment::MultipleComponent < ApplicationComponent
     "attachment-multiple-empty-#{champ.id}"
   end
 
-  def in_progress?
-    @attachments.any? do
-      attachment_in_progress?(_1)
-    end
-  end
-
-  def in_progress_long?
-    @attachments.any? do
-      attachment_in_progress?(_1) && _1.created_at < 30.seconds.ago
-    end
-  end
-
-  def poll_controller_options
-    {
-      controller: 'turbo-poll',
-      turbo_poll_url_value: auto_attach_url
-    }
-  end
-
   def auto_attach_url
     helpers.auto_attach_url(champ)
   end
-
-  private
-
-  def attachments
-    @attachments
-  end
-
-  def attachment_in_progress?(attachment)
-    attachment.virus_scanner.pending? || attachment.watermark_pending?
-  end
+  alias poll_url auto_attach_url
 end

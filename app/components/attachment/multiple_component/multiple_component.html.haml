@@ -9,7 +9,4 @@
     = render Attachment::EditComponent.new(champ:, attached_file:, attachment: nil, index: attachments_count, user_can_destroy:)
 
   // single poll and refresh message for all attachments
-  - if in_progress?
-    %div{ data: poll_controller_options }
-      - if in_progress_long?
-        = render Attachment::LongProcessingRefreshComponent.new
+  = render Attachment::PendingPollComponent.new(attachments: attachments, poll_url:)

@@ -97,12 +97,5 @@ RSpec.describe Attachment::MultipleComponent, type: :component do
     it 'setup polling' do
       expect(subject).to have_selector('[data-controller=turbo-poll]')
     end
-
-    context "process is taking longer than expected" do
-      let(:created_at) { 5.minutes.ago }
-      it 'renders a refresh button' do
-        expect(subject).to have_button("Recharger")
-      end
-    end
   end
 end
