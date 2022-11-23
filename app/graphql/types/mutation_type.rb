@@ -18,5 +18,7 @@ module Types
     field :dossier_modifier_annotation_datetime, mutation: Mutations::DossierModifierAnnotationDatetime
     field :dossier_modifier_annotation_integer_number, mutation: Mutations::DossierModifierAnnotationIntegerNumber
     field :dossier_modifier_annotation_ajouter_ligne, mutation: Mutations::DossierModifierAnnotationAjouterLigne
+
+    field :groupe_instructeur_modifier, mutation: Mutations::GroupeInstructeurModifier
   end
 end

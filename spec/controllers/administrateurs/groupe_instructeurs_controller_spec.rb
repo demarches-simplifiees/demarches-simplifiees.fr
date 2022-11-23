@@ -206,7 +206,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       it { expect(response).to render_template(:show) }
       it { expect(gi_1_1.label).not_to eq(new_name) }
       it { expect(gi_1_1.closed).to eq(false) }
-      it { expect(flash.alert).to be_present }
+      it { expect(flash.alert).to eq('Il doit y avoir au moins un groupe instructeur actif sur chaque démarche') }
     end
 
     context 'when the name is already taken' do
@@ -214,7 +214,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       let(:new_name) { gi_1_2.label }
 
       it { expect(gi_1_1.label).not_to eq(new_name) }
-      it { expect(flash.alert).to be_present }
+      it { expect(flash.alert).to eq('Le libellé est déjà utilisé(e)') }
     end
   end
 

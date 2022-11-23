@@ -1003,6 +1003,43 @@ describe API::V2::GraphqlController do
             expect(gql_data[:dossierClasserSansSuite][:dossier][:state]).to eq('sans_suite')
           }
         end
+
+        context 'groupeInstructeurModifier' do
+          let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
+          let(:variables) { { input: { groupeInstructeurId: dossier.groupe_instructeur.to_typed_id, label: 'nouveau groupe instructeur' } } }
+          let(:operation_name) { 'groupeInstructeurModifier' }
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:groupeInstructeurModifier][:errors]).to be_nil
+            expect(gql_data[:groupeInstructeurModifier][:groupeInstructeur][:id]).to eq(dossier.groupe_instructeur.to_typed_id)
+            expect(dossier.groupe_instructeur.reload.label).to eq('nouveau groupe instructeur')
+          }
+
+          context 'close groupe instructeur' do
+            let(:variables) { { input: { groupeInstructeurId: dossier.groupe_instructeur.to_typed_id, closed: true } } }
+
+            context 'with multiple groupes' do
+              before do
+                create(:groupe_instructeur, procedure: procedure)
+              end
+
+              it {
+                expect(gql_errors).to be_nil
+                expect(gql_data[:groupeInstructeurModifier][:errors]).to be_nil
+                expect(gql_data[:groupeInstructeurModifier][:groupeInstructeur][:id]).to eq(dossier.groupe_instructeur.to_typed_id)
+                expect(dossier.groupe_instructeur.reload.closed).to be_truthy
+              }
+            end
+
+            context 'validation error' do
+              it {
+                expect(gql_errors).to be_nil
+                expect(gql_data[:groupeInstructeurModifier][:errors].first[:message]).to eq('Il doit y avoir au moins un groupe instructeur actif sur chaque démarche')
+              }
+            end
+          end
+        end
       end
     end
 
