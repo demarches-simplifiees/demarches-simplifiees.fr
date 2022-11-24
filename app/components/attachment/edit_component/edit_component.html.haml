@@ -1,4 +1,4 @@
-.attachment.fr-upload-group{ id: attachment ? dom_id(attachment, :edit) : nil, class: class_names("fr-mb-2w": !(as_multiple? && downloadable?)) }
+.attachment.fr-upload-group{ { id: attachment ? dom_id(attachment, :edit) : nil, class: class_names("fr-mb-2w": !(as_multiple? && downloadable?)) }.compact }
   - if persisted?
     %div{ id: dom_id(attachment, :persisted_row) }
       .flex.flex-gap-2{ class: class_names("attachment-error": attachment.virus_scanner_error?) }

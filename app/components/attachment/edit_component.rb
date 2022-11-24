@@ -132,9 +132,8 @@ class Attachment::EditComponent < ApplicationComponent
 
   def input_id
     if champ.present?
-      # Single or first attachment input must match label "for" attribute. Others must remain unique.
-      return champ.input_id if @index.zero?
-      return "#{champ.input_id}_#{attachment_id}"
+      # There is always a single input by champ, its id must match the label "for" attribute.
+      return champ.input_id
     end
 
     helpers.field_id(@attached_file.record, attribute_name)
