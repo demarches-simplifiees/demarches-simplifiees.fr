@@ -1,16 +1,20 @@
 .fr-container.fr-mt-3w
   .fr-grid-row
     .fr-col-lg-8.fr-col-offset-lg-2
-      %h1.fr-h2 Transférer votre dossier
-      %p Vous vous apprêtez à transférer le dossier #{dossier_display_state(@dossier.state, lower: true)} nº #{@dossier.id} déposé par #{demandeur_dossier(@dossier)} le #{try_format_date(@dossier.created_at)} vers le compte d’un autre usager.
+
+      %h1.fr-h2= t(".title")
+      %p= t(".detail", number: @dossier.id,
+        state: dossier_display_state(@dossier.state, lower: true),
+        demandeur: demandeur_dossier(@dossier),
+        created_at: try_format_date(@dossier.created_at))
 
       .fr-highlight
-        %p Une fois la demande de transfert acceptée, le dossier sera associé au compte du destinataire et <strong>vous ne pourrez plus y accéder</strong>.
+        %p= t(".irrevocable_html").html_safe
 
       = form_for @transfer, url: transfers_path, class: "fr-mt-4w" do |f|
         .fr-input-group
-          = f.label :email, 'Email du compte destinataire', class: "fr-label"
+          = f.label :email, t('.email_label'), class: "fr-label"
           = f.email_field :email, required: true, class: "fr-input", autocomplete: "email"
 
         = f.hidden_field :dossier, value: @dossier.id
-        = f.submit "Envoyer la demande de transfert", class: 'fr-btn'
+        = f.submit t('.submit'), class: 'fr-btn'

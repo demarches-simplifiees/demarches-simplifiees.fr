@@ -7,7 +7,7 @@ fr:
         new_email_address: Nouvelle adresse email
         your_email: Votre email est actuellement
         change_address: Changer mon adresse
-        transfer_title: Transferer tous vos dossiers
+        transfer_title: Transférer tous vos dossiers
         transfer_explication_html: "<p>Cette fonctionnalité vous permet de changer le propriétaire de tous vos dossiers. C’est généralement utile lors d’un changement de poste ou si vous souhaitez fusionner plusieurs comptes.</p>
     <p>Adresse email du destinataire de tous vos dossiers</p>"
         waiting_transfers: "Transfert en attente :"
