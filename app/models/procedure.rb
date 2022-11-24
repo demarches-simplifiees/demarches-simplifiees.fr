@@ -681,7 +681,7 @@ class Procedure < ApplicationRecord
   end
 
   def revised?
-    feature_enabled?(:procedure_revisions) && revisions.size > 2
+    revisions.size > 2
   end
 
   def revisions_count
