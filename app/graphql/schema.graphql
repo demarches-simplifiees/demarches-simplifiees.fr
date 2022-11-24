@@ -87,11 +87,6 @@ type AddressChampDescriptor implements ChampDescriptor {
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
 
   """
-  Logique conditionnelle.
-  """
-  condition: String
-
-  """
   Description du champ.
   """
   description: String
@@ -145,11 +140,6 @@ type AnnuaireEducationChampDescriptor implements ChampDescriptor {
   Description des champs d’un bloc répétable.
   """
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
-
-  """
-  Logique conditionnelle.
-  """
-  condition: String
 
   """
   Description du champ.
@@ -228,11 +218,6 @@ type CarteChampDescriptor implements ChampDescriptor {
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
 
   """
-  Logique conditionnelle.
-  """
-  condition: String
-
-  """
   Description du champ.
   """
   description: String
@@ -278,11 +263,6 @@ interface ChampDescriptor {
   Description des champs d’un bloc répétable.
   """
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
-
-  """
-  Logique conditionnelle.
-  """
-  condition: String
 
   """
   Description du champ.
@@ -331,11 +311,6 @@ type CheckboxChampDescriptor implements ChampDescriptor {
   Description des champs d’un bloc répétable.
   """
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
-
-  """
-  Logique conditionnelle.
-  """
-  condition: String
 
   """
   Description du champ.
@@ -398,11 +373,6 @@ type CiviliteChampDescriptor implements ChampDescriptor {
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
 
   """
-  Logique conditionnelle.
-  """
-  condition: String
-
-  """
   Description du champ.
   """
   description: String
@@ -434,11 +404,6 @@ type CnafChampDescriptor implements ChampDescriptor {
   Description des champs d’un bloc répétable.
   """
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
-
-  """
-  Logique conditionnelle.
-  """
-  condition: String
 
   """
   Description du champ.
@@ -496,11 +461,6 @@ type CommuneChampDescriptor implements ChampDescriptor {
   Description des champs d’un bloc répétable.
   """
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
-
-  """
-  Logique conditionnelle.
-  """
-  condition: String
 
   """
   Description du champ.
@@ -610,11 +570,6 @@ type DateChampDescriptor implements ChampDescriptor {
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
 
   """
-  Logique conditionnelle.
-  """
-  condition: String
-
-  """
   Description du champ.
   """
   description: String
@@ -666,11 +621,6 @@ type DatetimeChampDescriptor implements ChampDescriptor {
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
 
   """
-  Logique conditionnelle.
-  """
-  condition: String
-
-  """
   Description du champ.
   """
   description: String
@@ -717,11 +667,6 @@ type DecimalNumberChampDescriptor implements ChampDescriptor {
   Description des champs d’un bloc répétable.
   """
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
-
-  """
-  Logique conditionnelle.
-  """
-  condition: String
 
   """
   Description du champ.
@@ -1018,7 +963,7 @@ Ceci est une version abrégée du type `Demarche`, qui n’expose que les métad
 Cela évite l’accès récursif aux dossiers.
 """
 type DemarcheDescriptor {
-  cadreJuridique: String
+  cadreJuridiqueUrl: String
 
   """
   Date de la création.
@@ -1049,30 +994,44 @@ type DemarcheDescriptor {
   Pour une démarche déclarative, état cible des dossiers à valider automatiquement
   """
   declarative: DossierDeclarativeState
-  deliberation: String
+  deliberation: File
+  demarcheUrl: String
 
   """
   Description de la démarche.
   """
   description: String!
+  dpoUrl: String
+
+  """
+  Durée de conservation des dossiers en mois.
+  """
+  dureeConservationDossiers: Int!
   id: ID!
+  logo: File
+  notice: File
+  noticeUrl: String
 
   """
   Numero de la démarche.
   """
   number: Int!
+  opendata: Boolean!
   revision: Revision!
   service: Service
+  siteWebUrl: String
 
   """
   État de la démarche.
   """
   state: DemarcheState!
+  tags: [String!]!
 
   """
   Titre de la démarche.
   """
   title: String!
+  zones: [String!]!
 }
 
 enum DemarcheState {
@@ -1124,11 +1083,6 @@ type DepartementChampDescriptor implements ChampDescriptor {
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
 
   """
-  Logique conditionnelle.
-  """
-  condition: String
-
-  """
   Description du champ.
   """
   description: String
@@ -1160,11 +1114,6 @@ type DgfipChampDescriptor implements ChampDescriptor {
   Description des champs d’un bloc répétable.
   """
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
-
-  """
-  Logique conditionnelle.
-  """
-  condition: String
 
   """
   Description du champ.
@@ -1540,11 +1489,6 @@ type DossierLinkChampDescriptor implements ChampDescriptor {
   Description des champs d’un bloc répétable.
   """
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
-
-  """
-  Logique conditionnelle.
-  """
-  condition: String
 
   """
   Description du champ.
@@ -1990,11 +1934,6 @@ type DropDownListChampDescriptor implements ChampDescriptor {
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
 
   """
-  Logique conditionnelle.
-  """
-  condition: String
-
-  """
   Description du champ.
   """
   description: String
@@ -2036,11 +1975,6 @@ type EmailChampDescriptor implements ChampDescriptor {
   Description des champs d’un bloc répétable.
   """
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
-
-  """
-  Logique conditionnelle.
-  """
-  condition: String
 
   """
   Description du champ.
@@ -2121,11 +2055,6 @@ type ExplicationChampDescriptor implements ChampDescriptor {
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
   collapsibleExplanationEnabled: Boolean
   collapsibleExplanationText: String
-
-  """
-  Logique conditionnelle.
-  """
-  condition: String
 
   """
   Description du champ.
@@ -2505,11 +2434,6 @@ type HeaderSectionChampDescriptor implements ChampDescriptor {
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
 
   """
-  Logique conditionnelle.
-  """
-  condition: String
-
-  """
   Description du champ.
   """
   description: String
@@ -2551,11 +2475,6 @@ type IbanChampDescriptor implements ChampDescriptor {
   Description des champs d’un bloc répétable.
   """
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
-
-  """
-  Logique conditionnelle.
-  """
-  condition: String
 
   """
   Description du champ.
@@ -2604,11 +2523,6 @@ type IntegerNumberChampDescriptor implements ChampDescriptor {
   Description des champs d’un bloc répétable.
   """
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
-
-  """
-  Logique conditionnelle.
-  """
-  condition: String
 
   """
   Description du champ.
@@ -2660,11 +2574,6 @@ type LinkedDropDownListChampDescriptor implements ChampDescriptor {
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
 
   """
-  Logique conditionnelle.
-  """
-  condition: String
-
-  """
   Description du champ.
   """
   description: String
@@ -2696,11 +2605,6 @@ type MesriChampDescriptor implements ChampDescriptor {
   Description des champs d’un bloc répétable.
   """
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
-
-  """
-  Logique conditionnelle.
-  """
-  condition: String
 
   """
   Description du champ.
@@ -2758,11 +2662,6 @@ type MultipleDropDownListChampDescriptor implements ChampDescriptor {
   Description des champs d’un bloc répétable.
   """
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
-
-  """
-  Logique conditionnelle.
-  """
-  condition: String
 
   """
   Description du champ.
@@ -3006,11 +2905,6 @@ type NumberChampDescriptor implements ChampDescriptor {
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
 
   """
-  Logique conditionnelle.
-  """
-  condition: String
-
-  """
   Description du champ.
   """
   description: String
@@ -3120,11 +3014,6 @@ type PaysChampDescriptor implements ChampDescriptor {
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
 
   """
-  Logique conditionnelle.
-  """
-  condition: String
-
-  """
   Description du champ.
   """
   description: String
@@ -3185,11 +3074,6 @@ type PhoneChampDescriptor implements ChampDescriptor {
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
 
   """
-  Logique conditionnelle.
-  """
-  condition: String
-
-  """
   Description du champ.
   """
   description: String
@@ -3239,11 +3123,6 @@ type PieceJustificativeChampDescriptor implements ChampDescriptor {
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
 
   """
-  Logique conditionnelle.
-  """
-  condition: String
-
-  """
   Description du champ.
   """
   description: String
@@ -3280,11 +3159,6 @@ type PoleEmploiChampDescriptor implements ChampDescriptor {
   Description des champs d’un bloc répétable.
   """
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
-
-  """
-  Logique conditionnelle.
-  """
-  condition: String
 
   """
   Description du champ.
@@ -3375,11 +3249,6 @@ type RNAChampDescriptor implements ChampDescriptor {
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
 
   """
-  Logique conditionnelle.
-  """
-  condition: String
-
-  """
   Description du champ.
   """
   description: String
@@ -3433,11 +3302,6 @@ type RegionChampDescriptor implements ChampDescriptor {
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
 
   """
-  Logique conditionnelle.
-  """
-  condition: String
-
-  """
   Description du champ.
   """
   description: String
@@ -3485,11 +3349,6 @@ type RepetitionChampDescriptor implements ChampDescriptor {
   Description des champs d’un bloc répétable.
   """
   champDescriptors: [ChampDescriptor!]
-
-  """
-  Logique conditionnelle.
-  """
-  condition: String
 
   """
   Description du champ.
@@ -3576,11 +3435,6 @@ type SiretChampDescriptor implements ChampDescriptor {
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
 
   """
-  Logique conditionnelle.
-  """
-  condition: String
-
-  """
   Description du champ.
   """
   description: String
@@ -3629,11 +3483,6 @@ type TextChampDescriptor implements ChampDescriptor {
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
 
   """
-  Logique conditionnelle.
-  """
-  condition: String
-
-  """
   Description du champ.
   """
   description: String
@@ -3665,11 +3514,6 @@ type TextareaChampDescriptor implements ChampDescriptor {
   Description des champs d’un bloc répétable.
   """
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
-
-  """
-  Logique conditionnelle.
-  """
-  condition: String
 
   """
   Description du champ.
@@ -3719,11 +3563,6 @@ type TitreIdentiteChampDescriptor implements ChampDescriptor {
   Description des champs d’un bloc répétable.
   """
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
-
-  """
-  Logique conditionnelle.
-  """
-  condition: String
 
   """
   Description du champ.
@@ -4016,11 +3855,6 @@ type YesNoChampDescriptor implements ChampDescriptor {
   Description des champs d’un bloc répétable.
   """
   champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
-
-  """
-  Logique conditionnelle.
-  """
-  condition: String
 
   """
   Description du champ.
