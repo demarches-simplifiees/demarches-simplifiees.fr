@@ -1495,6 +1495,18 @@ type File {
   url: URL!
 }
 
+input FindDemarcheInput @oneOf {
+  """
+  ID de la démarche.
+  """
+  id: ID
+
+  """
+  Numero de la démarche.
+  """
+  number: Int
+}
+
 interface GeoArea {
   description: String
   geometry: GeoJSON!
@@ -2045,6 +2057,12 @@ type Query {
     """
     number: Int!
   ): Demarche!
+  demarcheDescriptor(
+    """
+    La démarche.
+    """
+    demarche: FindDemarcheInput!
+  ): DemarcheDescriptor
 
   """
   Informations sur un dossier d’une démarche.
