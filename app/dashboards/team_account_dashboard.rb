@@ -15,9 +15,7 @@ class TeamAccountDashboard < Administrate::BaseDashboard
     current_sign_in_at: Field::DateTime,
     last_sign_in_at: Field::DateTime,
     dossiers: Field::HasMany,
-    procedures: Field::HasMany,
-    administrateur: Field::HasOne,
-    instructeur: Field::HasOne
+    procedures: Field::HasMany
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -27,8 +25,6 @@ class TeamAccountDashboard < Administrate::BaseDashboard
   # Feel free to add, remove, or rearrange items.
   COLLECTION_ATTRIBUTES = [
     :email,
-    :administrateur,
-    :instructeur,
     :last_sign_in_at,
     :current_sign_in_at
   ].freeze
