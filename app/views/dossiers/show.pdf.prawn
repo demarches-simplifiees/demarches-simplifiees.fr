@@ -142,7 +142,7 @@ def add_single_champ(pdf, champ)
   when 'Champs::HeaderSectionChamp'
     add_section_title(pdf, tdc.libelle)
   when 'Champs::ExplicationChamp'
-    format_in_2_lines(pdf, tdc.libelle, tdc.description)
+    format_in_2_lines(pdf, tdc.libelle, strip_tags(tdc.description))
   when 'Champs::CarteChamp'
     format_in_2_lines(pdf, tdc.libelle, champ.to_feature_collection.to_json)
   when 'Champs::SiretChamp'
