@@ -28,4 +28,10 @@
 .main-filter-header {
   display: flex;
   justify-content: space-between;
+  align-items: flex-end;
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+  }
 }
