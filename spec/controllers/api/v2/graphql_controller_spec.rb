@@ -902,6 +902,63 @@ describe API::V2::GraphqlController do
         end
       end
 
+      context 'getDemarcheDescriptor' do
+        let(:operation_name) { 'getDemarcheDescriptor' }
+
+        context 'find by number' do
+          let(:variables) { { demarche: { number: procedure.id } } }
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:demarcheDescriptor][:id]).to eq(procedure.to_typed_id)
+          }
+        end
+
+        context 'find by id' do
+          let(:variables) { { demarche: { id: procedure.to_typed_id } } }
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:demarcheDescriptor][:id]).to eq(procedure.to_typed_id)
+          }
+        end
+
+        context 'not opendata' do
+          let(:variables) { { demarche: { id: procedure.to_typed_id } } }
+
+          before { procedure.update(opendata: false) }
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:demarcheDescriptor][:id]).to eq(procedure.to_typed_id)
+          }
+        end
+
+        context 'without authorization token' do
+          let(:authorization_header) { nil }
+
+          context 'opendata' do
+            let(:variables) { { demarche: { id: procedure.to_typed_id } } }
+
+            it {
+              expect(gql_errors).to be_nil
+              expect(gql_data[:demarcheDescriptor][:id]).to eq(procedure.to_typed_id)
+            }
+          end
+
+          context 'not opendata' do
+            let(:variables) { { demarche: { id: procedure.to_typed_id } } }
+
+            before { procedure.update(opendata: false) }
+
+            it {
+              expect(gql_errors).not_to be_nil
+              expect(gql_errors.first[:message]).to eq('An object of type DemarcheDescriptor was hidden due to permissions')
+            }
+          end
+        end
+      end
+
       context 'mutation' do
         let(:query_id) { 'ds-mutation-v2' }
 
