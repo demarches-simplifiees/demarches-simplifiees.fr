@@ -7,6 +7,13 @@ module Manager
         .order(created_at: :asc)
         .page(params[:_page])
         .per(@records_per_page)
+
+      resources.each do |resource|
+        def resource.procedures_count
+          administrateur.procedures.with_discarded.count
+        end
+      end
+
       page = Administrate::Page::Collection.new(dashboard)
 
       render locals: {

@@ -15,7 +15,8 @@ class TeamAccountDashboard < Administrate::BaseDashboard
     current_sign_in_at: Field::DateTime,
     last_sign_in_at: Field::DateTime,
     dossiers: Field::HasMany,
-    procedures: Field::HasMany
+    procedures: Field::HasMany,
+    procedures_count: Field::Number
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -26,7 +27,8 @@ class TeamAccountDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = [
     :email,
     :last_sign_in_at,
-    :current_sign_in_at
+    :current_sign_in_at,
+    :procedures_count
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
