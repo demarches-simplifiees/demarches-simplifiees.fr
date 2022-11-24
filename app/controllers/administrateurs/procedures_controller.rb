@@ -340,6 +340,7 @@ module Administrateurs
     def administrateurs
       @filter = ProceduresFilter.new(current_administrateur, params)
       @admins = Administrateur.includes(:user, :procedures).where(id: AdministrateursProcedure.where(procedure: filter_procedures(@filter)).select(:administrateur_id))
+      @admins = @admins.where('unaccent(users.email) ILIKE unaccent(?)', "%#{@filter.email}%") if @filter.email.present?
       @admins = paginate(@admins, 'users.email')
     end
 
