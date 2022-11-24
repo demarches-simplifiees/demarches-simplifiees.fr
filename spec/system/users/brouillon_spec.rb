@@ -220,13 +220,13 @@ describe 'The user' do
     end
     attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/file.pdf')
     expect(page).to have_css('p', text: "Une erreur est survenue", visible: :visible, wait: 5)
-    expect(page).to have_button('Ré-essayer', visible: true)
+    expect(page).to have_button('Réessayer', visible: true)
     expect(page).to have_button('Déposer le dossier', disabled: false)
 
     allow_any_instance_of(Champs::PieceJustificativeController).to receive(:update).and_call_original
 
     # Test that retrying after a failure works
-    click_on('Ré-essayer', visible: true, wait: 5)
+    click_on('Réessayer', visible: true, wait: 5)
     expect(page).to have_text('Analyse antivirus en cours', wait: 5)
     expect(page).to have_text('file.pdf')
     expect(page).to have_button('Déposer le dossier', disabled: false)

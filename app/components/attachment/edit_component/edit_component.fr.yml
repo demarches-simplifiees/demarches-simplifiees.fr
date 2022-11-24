@@ -2,7 +2,7 @@
 fr:
   max_file_size: "Taille maximale : %{max_file_size}."
   allowed_formats: "Formats supportés : %{formats}"
-  retry: Ré-essayer
+  retry: Réessayer
   delete: Supprimer
   errors:
     uploading: "Une erreur s’est produite pendant l’envoi du fichier."

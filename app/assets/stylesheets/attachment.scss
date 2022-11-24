@@ -1,12 +1,13 @@
 @import "colors";
 @import "constants";
 
-.attachment-error {
+.attachment-error,
+.attachment-upload-error {
   position: relative;
 
   &::before {
     box-shadow: inset 2px 0 0 0 var(--border-plain-error);
-    height: 2rem; // height of button
+    height: 100%;
     content: "";
     left: -0.75rem;
     position: absolute;
@@ -16,7 +17,9 @@
   .attachment-filename {
     color: var(--text-default-error);
   }
+}
 
+.attachment-error {
   .fr-error-text {
     margin-top: 0.5rem;
   }
