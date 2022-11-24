@@ -238,6 +238,53 @@ describe 'The user' do
     expect(page).to have_text('file.pdf')
   end
 
+  scenario "upload multiple pieces justificatives on same champ", js: true do
+    log_in(user, procedure_with_pjs)
+    fill_individual
+
+    attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/file.pdf')
+    expect(page).to have_text('file.pdf')
+    expect(page).to have_text('Analyse antivirus en cours')
+
+    attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/white.png')
+    expect(page).to have_text('white.png')
+
+    click_on("Supprimer le fichier file.pdf")
+    expect(page).to have_no_text('file.pdf')
+    expect(page).to have_text("La pièce jointe a bien été supprimée")
+
+    attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/black.png')
+
+    # Mark all attachments as safe to test turbo poll
+    # They are not immediately attached in db, so we have to wait a bit before continuing
+    # NOTE: we'res using files not used in other tests to avoid conflicts
+    attachments = Timeout.timeout(5) do
+      filenames = ['white.png', 'black.png']
+      attachments = ActiveStorage::Attachment.where(name: "piece_justificative_file").includes(:blob).filter do |attachment|
+        filenames.include?(attachment.filename.to_s)
+      end
+
+      fail ActiveRecord::RecordNotFound, "Not all attachments where found yet" unless attachments.count == filenames.count
+
+      attachments
+    rescue ActiveRecord::RecordNotFound
+      sleep 0.2
+      retry
+    end
+
+    attachments.each {
+      _1.blob.metadata = { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+      _1.save!
+    }
+    expect(page).not_to have_text('Analyse antivirus en cours', wait: 10)
+
+    visit current_path
+
+    expect(page).to have_no_text('file.pdf')
+    expect(page).to have_text('white.png')
+    expect(page).to have_text('black.png')
+  end
+
   context 'with condition' do
     include Logic
 
