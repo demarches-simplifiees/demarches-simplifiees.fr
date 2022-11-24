@@ -10,6 +10,7 @@ class Attachment::MultipleComponent < ApplicationComponent
   attr_reader :max
   attr_reader :user_can_destroy
   attr_reader :user_can_download
+  alias user_can_download? user_can_download
 
   delegate :count, :empty?, to: :attachments, prefix: true
 

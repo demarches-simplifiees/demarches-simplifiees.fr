@@ -21,3 +21,14 @@
     margin-top: 0.5rem;
   }
 }
+
+.attachment-multiple:not(.fr-downloads-group) {
+  ul {
+    list-style-type: none;
+    padding-inline-start: 0;
+  }
+
+  li {
+    padding-bottom: 0;
+  }
+}

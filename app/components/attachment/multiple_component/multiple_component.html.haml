@@ -1,9 +1,10 @@
-.fr-mb-4w.attachment-multiple
+.fr-mb-4w.attachment-multiple{ class: class_names("fr-downloads-group": user_can_download?) }
   = template
 
-  - each_attachment do |attachment, index|
-    %div{ id: dom_id(attachment) }
-      = render Attachment::EditComponent.new(champ:, attached_file:, attachment:, index:, as_multiple: true, user_can_destroy:, user_can_download:)
+  %ul
+    - each_attachment do |attachment, index|
+      %li{ id: dom_id(attachment) }
+        = render Attachment::EditComponent.new(champ:, attached_file:, attachment:, index:, as_multiple: true, user_can_destroy:, user_can_download:)
 
   %div{ id: empty_component_id, class: class_names("hidden": !can_attach_next?) }
     = render Attachment::EditComponent.new(champ:, attached_file:, attachment: nil, index: attachments_count, user_can_destroy:)
