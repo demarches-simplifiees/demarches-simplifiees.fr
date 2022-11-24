@@ -115,7 +115,7 @@ def add_explanation(pdf, explanation)
 end
 
 def add_optionnal_description(pdf, champ)
-  add_explanation(pdf, champ.description.strip + "\n\n") if champ.description.present?
+  add_explanation(pdf, strip_tags(champ.description).strip + "\n\n") if champ.description.present?
 end
 
 def render_single_champ(pdf, champ)
