@@ -11,7 +11,7 @@ class Attachment::EditComponent < ApplicationComponent
 
   EXTENSIONS_ORDER = ['jpeg', 'png', 'pdf', 'zip'].freeze
 
-  def initialize(champ: nil, auto_attach_url: nil, field_name: nil, attached_file:, direct_upload: true, index: 0, as_multiple: false, user_can_download: false, user_can_destroy: true, **kwargs)
+  def initialize(champ: nil, auto_attach_url: nil, attached_file:, direct_upload: true, index: 0, as_multiple: false, user_can_download: false, user_can_destroy: true, **kwargs)
     @as_multiple = as_multiple
     @attached_file = attached_file
     @auto_attach_url = auto_attach_url
