@@ -80,8 +80,6 @@ class Procedure < ApplicationRecord
   has_many :published_types_de_champ_public, through: :published_revision, source: :types_de_champ_public
   has_many :published_types_de_champ_private, through: :published_revision, source: :types_de_champ_private
 
-  has_one :draft_attestation_template, through: :draft_revision, source: :attestation_template
-
   has_one :published_dossier_submitted_message, dependent: :destroy, through: :published_revision, source: :dossier_submitted_message
   has_one :draft_dossier_submitted_message, dependent: :destroy, through: :draft_revision, source: :dossier_submitted_message
   has_many :dossier_submitted_messages, through: :revisions, source: :dossier_submitted_message
@@ -597,13 +595,6 @@ class Procedure < ApplicationRecord
     touch(:whitelisted_at)
   end
 
-  def move_attestation_template_to_procedure!
-    if draft_attestation_template.present? && draft_attestation_template != attestation_template
-      draft_attestation_template.update_column(:procedure_id, id)
-      reload
-    end
-  end
-
   def closed_mail_template_attestation_inconsistency_state
     # As an optimization, don’t check the predefined templates (they are presumed correct)
     if closed_mail.present?
@@ -812,7 +803,7 @@ class Procedure < ApplicationRecord
       transaction do
         reset!
         draft_revision.types_de_champ.filter(&:only_present_on_draft?).each(&:destroy)
-        draft_revision.update(attestation_template: nil, dossier_submitted_message: nil)
+        draft_revision.update(dossier_submitted_message: nil)
         draft_revision.destroy
         update!(draft_revision: create_new_revision(published_revision))
       end

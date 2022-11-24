@@ -133,7 +133,7 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
 
       it do
         expect(flash.alert).to be_present
-        expect(procedure.draft_attestation_template).to be nil
+        expect(procedure.attestation_template).to be nil
       end
     end
 
