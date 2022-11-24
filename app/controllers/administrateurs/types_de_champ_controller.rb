@@ -1,6 +1,6 @@
 module Administrateurs
   class TypesDeChampController < AdministrateurController
-    before_action :retrieve_procedure, :procedure_revisable?
+    before_action :retrieve_procedure
 
     def create
       type_de_champ = draft.add_type_de_champ(type_de_champ_create_params)
