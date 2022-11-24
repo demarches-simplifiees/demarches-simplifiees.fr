@@ -98,7 +98,7 @@ class Attachment::EditComponent < ApplicationComponent
   def retry_button_options
     {
       type: 'button',
-      class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-mt-1w fr-icon-refresh-line fr-btn--icon-left attachment-error-retry',
+      class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-mt-1w attachment-upload-error-retry',
       data: { input_target: ".#{attachment_input_class}", action: 'autosave#onClickRetryButton' }
     }
   end

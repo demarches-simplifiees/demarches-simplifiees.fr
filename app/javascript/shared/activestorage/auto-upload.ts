@@ -119,7 +119,7 @@ export class AutoUpload {
   get errorElement() {
     return this.#input
       .closest('.attachment')
-      ?.querySelector<HTMLElement>('.attachment-error');
+      ?.querySelector<HTMLElement>('.attachment-upload-error');
   }
 
   get errorTitleElement() {
@@ -131,7 +131,7 @@ export class AutoUpload {
 
   get errorRetryButton() {
     const element = this.errorElement?.querySelector<HTMLButtonElement>(
-      '.attachment-error-retry'
+      '.attachment-upload-error-retry'
     );
     invariant(element, 'Could not find the error retry button element.');
     return element;
