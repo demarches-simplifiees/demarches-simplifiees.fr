@@ -60,8 +60,10 @@ class API::V2::GraphqlController < API::V2::BaseController
       else
         {}
       end
-    when Hash, ActionController::Parameters
+    when Hash
       ambiguous_param
+    when ActionController::Parameters
+      ambiguous_param.to_unsafe_h
     when nil
       {}
     else
