@@ -8,3 +8,4 @@ fr:
         irrevocable_html: Une fois la demande de transfert acceptée, le dossier sera associé au compte du destinataire et <strong>vous ne pourrez plus y accéder</strong>.
         email_label: Email du compte destinataire
         submit: Envoyer la demande de transfert
+        notice_sent: L'invitation au transfert a été envoyée avec succès
