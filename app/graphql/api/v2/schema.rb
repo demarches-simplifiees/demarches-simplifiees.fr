@@ -12,23 +12,29 @@ class API::V2::Schema < GraphQL::Schema
   context_class API::V2::Context
 
   def self.id_from_object(object, type_definition, ctx)
-    if object.is_a?(Hash)
+    if type_definition == Types::DemarcheDescriptorType
+      (object.is_a?(Procedure) ? object : object.procedure).to_typed_id
+    elsif object.is_a?(Hash)
       object[:id]
     else
       object.to_typed_id
     end
   end
 
-  def self.object_from_id(id, query_ctx)
+  def self.object_from_id(id, ctx)
     ApplicationRecord.record_from_typed_id(id)
   rescue => e
     raise GraphQL::ExecutionError.new(e.message, extensions: { code: :not_found })
   end
 
-  def self.resolve_type(type, obj, ctx)
-    case obj
+  def self.resolve_type(type_definition, object, ctx)
+    case object
     when Procedure
-      Types::DemarcheType
+      if type_definition == Types::DemarcheDescriptorType
+        type_definition
+      else
+        Types::DemarcheType
+      end
     when Dossier
       Types::DossierType
     when Commentaire
@@ -42,7 +48,7 @@ class API::V2::Schema < GraphQL::Schema
     when GroupeInstructeur
       Types::GroupeInstructeurType
     else
-      raise GraphQL::ExecutionError.new("Unexpected object: #{obj}")
+      raise GraphQL::ExecutionError.new("Unexpected object: #{object}")
     end
   end
 
