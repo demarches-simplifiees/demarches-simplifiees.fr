@@ -15,13 +15,6 @@ class AdminController < ApplicationController
     redirect_to admin_procedures_path, status: 404
   end
 
-  def procedure_locked?
-    if @procedure.locked?
-      flash.alert = 'Démarche verrouillée'
-      redirect_to admin_procedure_path(id: @procedure.id)
-    end
-  end
-
   def reset_procedure
     if @procedure.brouillon?
       @procedure.reset!
