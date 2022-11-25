@@ -288,6 +288,7 @@ FactoryBot.define do
         build(:type_de_champ_explication, procedure: procedure)
       end
     end
+
     trait :with_carte do
       after(:build) do |procedure, _evaluator|
         build(:type_de_champ_carte, procedure: procedure)
@@ -296,6 +297,12 @@ FactoryBot.define do
 
     trait :draft do
       aasm_state { :brouillon }
+    end
+
+    trait :with_routage do
+      after(:build) do |procedure, _evaluator|
+        build(:type_de_champ_routage, procedure: procedure)
+      end
     end
 
     trait :published do
