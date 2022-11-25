@@ -25,7 +25,7 @@ describe BatchOperationProcessOneJob, type: :job do
     context 'when it succeed' do
       it 'pushes dossier_job id to batch_operation.success_dossier_ids' do
         expect { subject.perform_now }
-          .to change { batch_operation.success_dossier_ids }
+          .to change { batch_operation.reload.success_dossier_ids }
           .from([])
           .to([dossier_job.id])
       end
@@ -44,7 +44,7 @@ describe BatchOperationProcessOneJob, type: :job do
         run_at = 2.minutes.ago
         Timecop.freeze(run_at) do
           expect { subject.perform_now }
-            .to change { batch_operation.run_at }
+            .to change { batch_operation.reload.run_at }
             .from(nil)
             .to(run_at)
         end
