@@ -250,7 +250,7 @@ fr:
           start_other_dossier: "Commencer un autre dossier vide"
           clone: "Dupliquer ce dossier"
           delete_dossier: "Supprimer le dossier"
-          transfer_dossier: "Transferer le dossier"
+          transfer_dossier: "Transférer le dossier"
           edit_draft: "Modifier le brouillon"
           actions: "Actions"
       sessions:
