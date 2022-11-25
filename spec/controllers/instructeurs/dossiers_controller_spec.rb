@@ -50,17 +50,28 @@ describe Instructeurs::DossiersController, type: :controller do
   end
 
   describe '#follow' do
+    let(:batch_operation) {}
     before do
+      batch_operation
       patch :follow, params: { procedure_id: procedure.id, dossier_id: dossier.id }
     end
 
     it { expect(instructeur.followed_dossiers).to match([dossier]) }
     it { expect(flash.notice).to eq('Dossier suivi') }
     it { expect(response).to redirect_to(instructeur_procedure_path(dossier.procedure)) }
+
+    context 'with dossier in batch_operation' do
+      let(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
+      it { expect(instructeur.followed_dossiers).to eq([]) }
+      it { expect(response).to redirect_to(instructeur_dossier_path(dossier.procedure, dossier)) }
+      it { expect(flash.alert).to eq("Ce dossier fait parti d'un traitement de masse, veuillez attendre la fin de ce traitement") }
+    end
   end
 
   describe '#unfollow' do
+    let(:batch_operation) {}
     before do
+      batch_operation
       instructeur.followed_dossiers << dossier
       patch :unfollow, params: { procedure_id: procedure.id, dossier_id: dossier.id }
       instructeur.reload
@@ -69,35 +80,58 @@ describe Instructeurs::DossiersController, type: :controller do
     it { expect(instructeur.followed_dossiers).to match([]) }
     it { expect(flash.notice).to eq("Vous ne suivez plus le dossier nº #{dossier.id}") }
     it { expect(response).to redirect_to(instructeur_procedure_path(dossier.procedure)) }
+    context 'with dossier in batch_operation' do
+      let(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
+      it { expect(instructeur.followed_dossiers).to eq([dossier]) }
+      it { expect(response).to redirect_to(instructeur_dossier_path(dossier.procedure, dossier)) }
+      it { expect(flash.alert).to eq("Ce dossier fait parti d'un traitement de masse, veuillez attendre la fin de ce traitement") }
+    end
   end
 
   describe '#archive' do
+    let(:batch_operation) {}
     before do
-      instructeur.follow(dossier)
+      batch_operation
       patch :archive, params: { procedure_id: procedure.id, dossier_id: dossier.id }
       dossier.reload
-      instructeur.reload
+      instructeur.follow(dossier)
     end
 
-    it { expect(dossier.archived).to be true }
+    it { expect(dossier.archived).to eq(true) }
     it { expect(response).to redirect_to(instructeur_procedure_path(dossier.procedure)) }
+
+    context 'with dossier in batch_operation' do
+      let(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
+      it { expect(dossier.archived).to eq(false) }
+      it { expect(response).to redirect_to(instructeur_dossier_path(dossier.procedure, dossier)) }
+      it { expect(flash.alert).to eq("Ce dossier fait parti d'un traitement de masse, veuillez attendre la fin de ce traitement") }
+    end
   end
 
   describe '#unarchive' do
+    let(:batch_operation) {}
     before do
+      batch_operation
       dossier.update(archived: true)
       patch :unarchive, params: { procedure_id: procedure.id, dossier_id: dossier.id }
-      dossier.reload
     end
 
-    it { expect(dossier.archived).to be false }
+    it { expect(dossier.reload.archived).to eq(false) }
     it { expect(response).to redirect_to(instructeur_procedure_path(dossier.procedure)) }
+
+    context 'with dossier in batch_operation' do
+      let!(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
+      it { expect(dossier.reload.archived).to eq(true) }
+      it { expect(response).to redirect_to(instructeur_dossier_path(dossier.procedure, dossier)) }
+      it { expect(flash.alert).to eq("Ce dossier fait parti d'un traitement de masse, veuillez attendre la fin de ce traitement") }
+    end
   end
 
   describe '#passer_en_instruction' do
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
-
+    let(:batch_operation) {}
     before do
+      batch_operation
       sign_in(instructeur.user)
       post :passer_en_instruction, params: { procedure_id: procedure.id, dossier_id: dossier.id }, format: :turbo_stream
     end
@@ -129,12 +163,20 @@ describe Instructeurs::DossiersController, type: :controller do
         expect(response.body).to include('Le dossier est en ce moment accepté : il n’est pas possible de le passer en instruction.')
       end
     end
+
+    context 'with dossier in batch_operation' do
+      let(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
+
+      it { expect(response).to redirect_to(instructeur_dossier_path(dossier.procedure, dossier)) }
+      it { expect(flash.alert).to eq("Ce dossier fait parti d'un traitement de masse, veuillez attendre la fin de ce traitement") }
+    end
   end
 
   describe '#repasser_en_construction' do
     let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
-
+    let(:batch_operation) {}
     before do
+      batch_operation
       sign_in(instructeur.user)
       post :repasser_en_construction,
         params: { procedure_id: procedure.id, dossier_id: dossier.id },
@@ -154,25 +196,29 @@ describe Instructeurs::DossiersController, type: :controller do
         expect(response.body).to include('Le dossier est déjà en construction.')
       end
     end
+
+    context 'with dossier in batch_operation' do
+      let(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
+      it { expect(dossier.reload.state).to eq('en_instruction') }
+      it { expect(response).to redirect_to(instructeur_dossier_path(dossier.procedure, dossier)) }
+      it { expect(flash.alert).to eq("Ce dossier fait parti d'un traitement de masse, veuillez attendre la fin de ce traitement") }
+    end
   end
 
   describe '#repasser_en_instruction' do
     let(:dossier) { create(:dossier, :refuse, procedure: procedure) }
+    let(:batch_operation) {}
     let(:current_user) { instructeur.user }
 
-    subject do
+    before do
+      sign_in current_user
+      batch_operation
       post :repasser_en_instruction,
       params: { procedure_id: procedure.id, dossier_id: dossier.id },
       format: :turbo_stream
     end
 
-    before do
-      sign_in current_user
-    end
-
     context 'when the dossier is refuse' do
-      before { subject }
-
       it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction)) }
       it { expect(response).to have_http_status(:ok) }
       it { expect(response.body).to include('.header-actions') }
@@ -180,8 +226,6 @@ describe Instructeurs::DossiersController, type: :controller do
 
     context 'when the dossier has already been put en_instruction' do
       let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
-
-      before { subject }
 
       it 'warns about the error' do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction))
@@ -193,8 +237,6 @@ describe Instructeurs::DossiersController, type: :controller do
     context 'when the dossier is accepte' do
       let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
 
-      before { subject }
-
       it 'it is possible to go back to en_instruction as instructeur' do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction))
         expect(response).to have_http_status(:ok)
@@ -202,17 +244,19 @@ describe Instructeurs::DossiersController, type: :controller do
     end
 
     context 'when the dossier is done and the user delete it' do
-      let!(:dossier) { create(:dossier, :accepte, procedure: procedure, user: current_user) }
-
-      before do
-        dossier.update!(hidden_by_user_at: Time.zone.now)
-        subject
-      end
+      let!(:dossier) { create(:dossier, :accepte, procedure: procedure, user: current_user, hidden_by_user_at: Time.zone.now) }
 
       it 'reveals the dossier' do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction))
         expect(dossier.reload.hidden_by_user_at).to be_nil
       end
+    end
+
+    context 'with dossier in batch_operation' do
+      let(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
+      it { expect(dossier.reload.state).to eq('refuse') }
+      it { expect(response).to redirect_to(instructeur_dossier_path(dossier.procedure, dossier)) }
+      it { expect(flash.alert).to eq("Ce dossier fait parti d'un traitement de masse, veuillez attendre la fin de ce traitement") }
     end
   end
 
@@ -255,6 +299,18 @@ describe Instructeurs::DossiersController, type: :controller do
         end
 
         it { expect(subject.body).to include('.header-actions') }
+      end
+
+      context 'with dossier in batch_operation' do
+        let!(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
+        subject { post :terminer, params: { process_action: "refuser", procedure_id: procedure.id, dossier_id: dossier.id }, format: :turbo_stream }
+
+        it { expect { subject }.not_to change { dossier.reload.state } }
+        it { is_expected.to redirect_to(instructeur_dossier_path(dossier.procedure, dossier)) }
+        it 'flashes message' do
+          subject
+          expect(flash.alert).to eq("Ce dossier fait parti d'un traitement de masse, veuillez attendre la fin de ce traitement")
+        end
       end
     end
 
@@ -801,7 +857,9 @@ describe Instructeurs::DossiersController, type: :controller do
   end
 
   describe "#destroy" do
+    let(:batch_operation) {}
     subject do
+      batch_operation
       delete :destroy, params: {
         procedure_id: procedure.id,
         dossier_id: dossier.id
@@ -881,6 +939,16 @@ describe Instructeurs::DossiersController, type: :controller do
         expect(DeletedDossier.where(dossier_id: dossier.id).count).to eq(0)
       end
     end
+
+    context 'with dossier in batch_operation' do
+      let(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
+      it { expect { subject }.not_to change { dossier.reload.hidden_at } }
+      it { is_expected.to redirect_to(instructeur_dossier_path(dossier.procedure, dossier)) }
+      it 'flashes message' do
+       subject
+       expect(flash.alert).to eq("Ce dossier fait parti d'un traitement de masse, veuillez attendre la fin de ce traitement")
+     end
+    end
   end
 
   describe '#extend_conservation' do
@@ -900,6 +968,16 @@ describe Instructeurs::DossiersController, type: :controller do
         expect(flash[:notice]).to eq(I18n.t('views.instructeurs.dossiers.archived_dossier'))
       end
     end
+
+    context 'with dossier in batch_operation' do
+       let!(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
+       it { expect { subject }.not_to change { dossier.reload.conservation_extension } }
+       it { is_expected.to redirect_to(instructeur_dossier_path(dossier.procedure, dossier)) }
+       it 'flashes message' do
+         subject
+         expect(flash.alert).to eq("Ce dossier fait parti d'un traitement de masse, veuillez attendre la fin de ce traitement")
+       end
+     end
   end
 
   describe '#restore' do
@@ -907,9 +985,10 @@ describe Instructeurs::DossiersController, type: :controller do
     let!(:gi_p1_1) { GroupeInstructeur.create(label: '1', procedure: procedure) }
     let!(:procedure) { create(:procedure, :published, :for_individual, instructeurs: [instructeur]) }
     let!(:dossier) { create(:dossier, :accepte, :with_individual, procedure: procedure, groupe_instructeur: procedure.groupe_instructeurs.first, hidden_by_administration_at: 1.hour.ago) }
-
+    let(:batch_operation) {}
     before do
       sign_in(instructeur.user)
+      batch_operation
       instructeur.groupe_instructeurs << gi_p1_1
       patch :restore,
       params: {
@@ -920,6 +999,13 @@ describe Instructeurs::DossiersController, type: :controller do
 
     it "puts hidden_by_administration_at to nil" do
       expect(dossier.reload.hidden_by_administration_at).to eq(nil)
+    end
+
+    context 'with dossier in batch_operation' do
+      let(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
+      it { expect(dossier.hidden_by_administration_at).not_to eq(nil) }
+      it { expect(response).to redirect_to(instructeur_dossier_path(dossier.procedure, dossier)) }
+      it { expect(flash.alert).to eq("Ce dossier fait parti d'un traitement de masse, veuillez attendre la fin de ce traitement") }
     end
   end
 end
