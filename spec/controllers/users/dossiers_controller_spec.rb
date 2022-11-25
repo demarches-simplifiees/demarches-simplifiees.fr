@@ -825,9 +825,13 @@ describe Users::DossiersController, type: :controller do
       end
 
       context 'when the dossier has been submitted' do
-        let(:dossier) { create(:dossier, :en_construction, user: user) }
+        let(:procedure) { create(:procedure, :with_routage) }
+        let(:dossier) { create(:dossier, :en_construction, user: user, procedure: procedure) }
         it { expect(assigns(:dossier)).to eq(dossier) }
         it { is_expected.to render_template(:show) }
+        it "has a routage champ" do
+          expect(dossier.groupe_instructeur_id).to eq(dossier.champs_public.find(&:routage?).value.to_i)
+        end
       end
     end
 

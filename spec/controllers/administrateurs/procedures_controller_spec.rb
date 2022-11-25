@@ -339,6 +339,7 @@ describe Administrateurs::ProceduresController, type: :controller do
           it { expect(subject.administrateurs).to eq([admin]) }
           it { expect(subject.duree_conservation_dossiers_dans_ds).to eq(duree_conservation_dossiers_dans_ds) }
           it { expect(subject.tags).to eq(["planete", "environnement"]) }
+          it { expect(subject.draft_revision.types_de_champ.find(&:routage?).libelle).to eq('Votre ville') }
         end
 
         it { is_expected.to redirect_to(champs_admin_procedure_path(Procedure.last)) }

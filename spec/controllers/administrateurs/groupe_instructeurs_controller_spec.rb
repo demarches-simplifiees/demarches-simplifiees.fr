@@ -137,6 +137,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
   end
 
   describe '#reaffecter' do
+    let(:procedure) { create(:procedure, :with_routage, :published, :for_individual, administrateurs: [admin], routing_enabled: true) }
     let!(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }
     let!(:gi_1_3) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 3') }
     let!(:dossier12) { create(:dossier, :en_construction, :with_individual, procedure: procedure, groupe_instructeur: gi_1_1) }
@@ -158,6 +159,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       it { expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure)) }
       it { expect(gi_1_2.dossiers.last.id).to be(dossier12.id) }
       it { expect(dossier12.groupe_instructeur.id).to be(gi_1_2.id) }
+      it { expect(dossier12.champs_public.find(&:routage?).value.to_i).to be(gi_1_2.id) }
       it { expect(bulk_message.groupe_instructeurs).to contain_exactly(gi_1_2, gi_1_3) }
     end
 
