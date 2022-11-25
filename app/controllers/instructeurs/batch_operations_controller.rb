@@ -4,10 +4,7 @@ module Instructeurs
     before_action :ensure_ownership!
 
     def create
-      ActiveRecord::Base.transaction do
-        batch_operation = BatchOperation.create!(batch_operation_params.merge(instructeur: current_instructeur))
-        BatchOperationEnqueueAllJob.perform_later(batch_operation)
-      end
+      BatchOperation.safe_create!(batch_operation_params.merge(instructeur: current_instructeur))
       redirect_back(fallback_location: instructeur_procedure_url(@procedure.id))
     end
 
@@ -15,9 +12,7 @@ module Instructeurs
 
     def batch_operation_params
       params.require(:batch_operation)
-        .permit(:operation, dossier_ids: []).tap do |params|
-              # TODO: filter dossiers_ids out of instructeurs.dossiers.ids
-            end
+        .permit(:operation, dossier_ids: [])
     end
 
     def set_procedure
