@@ -95,6 +95,16 @@ describe Administrateurs::ProceduresController, type: :controller do
 
     it { expect(subject.status).to eq(200) }
 
+    context 'for export' do
+      subject { get :all, format: :xlsx }
+
+      it 'exports result in xlsx' do
+        allow(SpreadsheetArchitect).to receive(:to_xlsx)
+        subject
+        expect(SpreadsheetArchitect).to have_received(:to_xlsx)
+      end
+    end
+
     it 'display published or closed procedures' do
       subject
       expect(values_for_field(assigns(:procedures), "id")).to include(published_procedure.id)
