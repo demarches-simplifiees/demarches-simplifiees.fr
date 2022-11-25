@@ -1,6 +1,7 @@
 module Administrateurs
   class ProceduresController < AdministrateurController
     layout 'all', only: [:all, :administrateurs]
+    respond_to :html, :xlsx
 
     before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :zones, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :allow_expert_review, :experts_require_administrateur_invitation, :reset_draft]
     before_action :draft_valid?, only: [:apercu]
@@ -334,8 +335,14 @@ module Administrateurs
     def all
       @filter = ProceduresFilter.new(current_administrateur, params)
       all_procedures = filter_procedures(@filter)
-      all_procedures = Kaminari.paginate_array(all_procedures.to_a, offset: 0, limit: ITEMS_PER_PAGE, total_count: all_procedures.count)
-      @procedures = all_procedures.page(params[:page]).per(25)
+
+      respond_to do |format|
+        format.html do
+          all_procedures = Kaminari.paginate_array(all_procedures.to_a, offset: 0, limit: ITEMS_PER_PAGE, total_count: all_procedures.count)
+          @procedures = all_procedures.page(params[:page]).per(25)
+        end
+        format.xlsx { render xlsx: SpreadsheetArchitect.to_xlsx(headers: all_procedures.to_a.first.keys, data: all_procedures.to_a.map(&:values)), filename: "demarches-#{@filter}" }
+      end
     end
 
     def administrateurs
