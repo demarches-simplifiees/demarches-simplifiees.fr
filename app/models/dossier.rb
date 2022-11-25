@@ -415,6 +415,7 @@ class Dossier < ApplicationRecord
     end
   end
 
+  scope :not_having_batch_operation, -> { where(batch_operation_id: nil) }
   accepts_nested_attributes_for :individual
 
   delegate :siret, :siren, to: :etablissement, allow_nil: true

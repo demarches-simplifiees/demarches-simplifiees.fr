@@ -8,71 +8,41 @@ describe BatchOperationProcessOneJob, type: :job do
     subject { BatchOperationProcessOneJob.new(batch_operation, dossier_job) }
     let(:options) { {} }
 
-    it 'just call the process one' do
+    it 'when it works' do
+      allow_any_instance_of(BatchOperation).to receive(:process_one).with(dossier_job).and_return(true)
       expect { subject.perform_now }
-        .to change { dossier_job.reload.archived }
-        .from(false)
-        .to(true)
+        .to change { batch_operation.reload.success_dossier_ids }
+        .from([])
+        .to([dossier_job.id])
     end
 
-    it 'unlock the dossier' do
-      expect { subject.perform_now }
-        .to change { dossier_job.reload.batch_operation }
-        .from(batch_operation)
-        .to(nil)
+    it 'when it fails for an "unknown" reason' do
+      allow_any_instance_of(BatchOperation).to receive(:process_one).with(dossier_job).and_raise("boom")
+      expect { subject.perform_now }.to raise_error('boom')
+
+      expect(batch_operation.reload.failed_dossier_ids).to eq([dossier_job.id])
     end
 
-    context 'when it succeed' do
-      it 'pushes dossier_job id to batch_operation.success_dossier_ids' do
-        expect { subject.perform_now }
-          .to change { batch_operation.reload.success_dossier_ids }
-          .from([])
-          .to([dossier_job.id])
+    context 'when the dossier is out of sync (ie: someone applied a transition somewhere we do not know)' do
+      let(:instructeur) { create(:instructeur) }
+      let(:procedure) { create(:simple_procedure, instructeurs: [instructeur]) }
+      let(:dossier) { create(:dossier, :accepte, :with_individual, archived: true, procedure: procedure) }
+      let(:batch_operation) { create(:batch_operation, operation: :archiver, instructeur: instructeur, dossiers: [dossier]) }
+
+      it 'does run process_one' do
+        allow(batch_operation).to receive(:process_one).and_raise("should have been prevented")
+        subject.perform_now
       end
-    end
 
-    context 'when it fails' do
-      it 'pushes dossier_job id to batch_operation.failed_dossier_ids' do
-        expect(batch_operation).to receive(:process_one).with(dossier_job).and_raise("KO")
-        expect { subject.perform_now }.to raise_error("KO")
-        expect(batch_operation.reload.failed_dossier_ids).to eq([dossier_job.id])
-      end
-    end
+      it 'when it fails from dossiers_safe_scope.find' do
+        scope = double
+        expect(scope).to receive(:find).with(dossier_job.id).and_raise(ActiveRecord::RecordNotFound)
+        expect_any_instance_of(BatchOperation).to receive(:dossiers_safe_scope).and_return(scope)
 
-    context 'when it is the first job' do
-      it 'sets run_at at first' do
-        run_at = 2.minutes.ago
-        Timecop.freeze(run_at) do
-          expect { subject.perform_now }
-            .to change { batch_operation.reload.run_at }
-            .from(nil)
-            .to(run_at)
-        end
-      end
-    end
+        subject.perform_now
 
-    context 'when it is the second job (meaning run_at was already set) but not the last' do
-      let(:preview_run_at) { 2.days.ago }
-      let(:options) { { run_at: preview_run_at } }
-      it 'does not change run_at' do
-        expect { subject.perform_now }.not_to change { batch_operation.reload.run_at }
-      end
-    end
-
-    context 'when it is the last job' do
-      before do
-        batch_operation.dossiers
-          .where.not(id: dossier_job.id)
-          .update_all(batch_operation_id: nil)
-      end
-      it 'sets finished_at' do
-        finished_at = Time.zone.now
-        Timecop.freeze(finished_at) do
-          expect { subject.perform_now }
-            .to change { batch_operation.reload.finished_at }
-            .from(nil)
-            .to(finished_at)
-        end
+        expect(batch_operation.reload.failed_dossier_ids).to eq([])
+        expect(batch_operation.dossiers).not_to include(dossier_job)
       end
     end
   end
