@@ -97,13 +97,13 @@ describe Administrateurs::ProceduresController, type: :controller do
 
     it 'display published or closed procedures' do
       subject
-      expect(assigns(:procedures)).to include(published_procedure)
-      expect(assigns(:procedures)).to include(closed_procedure)
+      expect(values_for_field(assigns(:procedures), "id")).to include(published_procedure.id)
+      expect(values_for_field(assigns(:procedures), "id")).to include(closed_procedure.id)
     end
 
     it 'doesn’t display draft procedures' do
       subject
-      expect(assigns(:procedures)).not_to include(draft_procedure)
+      expect(values_for_field(assigns(:procedures), "id")).not_to include(draft_procedure.id)
     end
 
     context "for specific zones" do
@@ -116,8 +116,8 @@ describe Administrateurs::ProceduresController, type: :controller do
 
       it 'display only procedures for specified zones' do
         subject
-        expect(assigns(:procedures)).to include(procedure2)
-        expect(assigns(:procedures)).not_to include(procedure1)
+        expect(values_for_field(assigns(:procedures), "id")).to include(procedure2.id)
+        expect(values_for_field(assigns(:procedures), "id")).not_to include(procedure1.id)
       end
     end
 
@@ -127,14 +127,14 @@ describe Administrateurs::ProceduresController, type: :controller do
 
       it 'display only published procedures' do
         get :all, params: { statuses: ['publiee'] }
-        expect(assigns(:procedures)).to include(procedure1)
-        expect(assigns(:procedures)).not_to include(procedure2)
+        expect(values_for_field(assigns(:procedures), "id")).to include(procedure1.id)
+        expect(values_for_field(assigns(:procedures), "id")).not_to include(procedure2.id)
       end
 
       it 'display only closed procedures' do
         get :all, params: { statuses: ['close'] }
-        expect(assigns(:procedures)).to include(procedure2)
-        expect(assigns(:procedures)).not_to include(procedure1)
+        expect(values_for_field(assigns(:procedures), "id")).to include(procedure2.id)
+        expect(values_for_field(assigns(:procedures), "id")).not_to include(procedure1.id)
       end
     end
 
@@ -146,9 +146,9 @@ describe Administrateurs::ProceduresController, type: :controller do
 
       it 'display only procedures published after specific date' do
         get :all, params: { from_publication_date: after }
-        expect(assigns(:procedures)).to include(procedure1)
-        expect(assigns(:procedures)).to include(procedure2)
-        expect(assigns(:procedures)).not_to include(procedure3)
+        expect(values_for_field(assigns(:procedures), "id")).to include(procedure1.id)
+        expect(values_for_field(assigns(:procedures), "id")).to include(procedure2.id)
+        expect(values_for_field(assigns(:procedures), "id")).not_to include(procedure3.id)
       end
     end
 
@@ -159,9 +159,9 @@ describe Administrateurs::ProceduresController, type: :controller do
 
       it 'returns procedures with specific terms in libelle' do
         get :all, params: { libelle: 'entrepreneur' }
-        expect(assigns(:procedures)).to include(procedure2)
-        expect(assigns(:procedures)).to include(procedure3)
-        expect(assigns(:procedures)).not_to include(procedure1)
+        expect(values_for_field(assigns(:procedures), "id")).to include(procedure2.id)
+        expect(values_for_field(assigns(:procedures), "id")).to include(procedure3.id)
+        expect(values_for_field(assigns(:procedures), "id")).not_to include(procedure1.id)
       end
     end
   end
@@ -942,5 +942,11 @@ describe Administrateurs::ProceduresController, type: :controller do
       it { expect(procedure.discarded?).to be_falsy }
       it { expect(procedure.dossiers.first.hidden_by_administration_at).to be_nil }
     end
+  end
+end
+
+def values_for_field(array, field)
+  array.map do |procedure|
+    procedure[field]
   end
 end
