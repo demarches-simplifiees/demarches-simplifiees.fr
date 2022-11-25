@@ -333,12 +333,15 @@ module Administrateurs
 
     def all
       @filter = ProceduresFilter.new(current_administrateur, params)
-      @procedures = paginate(filter_procedures(@filter), published_at: :desc)
+      all_procedures = filter_procedures(@filter)
+      all_procedures = Kaminari.paginate_array(all_procedures.to_a, offset: 0, limit: ITEMS_PER_PAGE, total_count: all_procedures.count)
+      @procedures = all_procedures.page(params[:page]).per(25)
     end
 
     def administrateurs
       @filter = ProceduresFilter.new(current_administrateur, params)
-      @admins = Administrateur.includes(:user, :procedures).where(id: AdministrateursProcedure.where(procedure: filter_procedures(@filter)).select(:administrateur_id))
+      pids = AdministrateursProcedure.select(:administrateur_id).where(procedure: filter_procedures(@filter).map { |p| p["id"] })
+      @admins = Administrateur.includes(:user, :procedures).where(id: pids)
       @admins = @admins.where('unaccent(users.email) ILIKE unaccent(?)', "%#{@filter.email}%") if @filter.email.present?
       @admins = paginate(@admins, 'users.email')
     end
@@ -346,12 +349,15 @@ module Administrateurs
     private
 
     def filter_procedures(filter)
-      procedures_result = Procedure.joins(:procedures_zones).distinct.publiees_ou_closes
+      procedures_result = Procedure.select(:id).joins(:procedures_zones).distinct.publiees_ou_closes
       procedures_result = procedures_result.where(procedures_zones: { zone_id: filter.zone_ids }) if filter.zone_ids.present?
       procedures_result = procedures_result.where(aasm_state: filter.statuses) if filter.statuses.present?
       procedures_result = procedures_result.where('published_at >= ?', filter.from_publication_date) if filter.from_publication_date.present?
       procedures_result = procedures_result.where('unaccent(libelle) ILIKE unaccent(?)', "%#{filter.libelle}%") if filter.libelle.present?
-      procedures_result
+      procedures_sql = procedures_result.to_sql
+
+      sql = "select id, libelle, published_at, aasm_state, count(administrateurs_procedures.administrateur_id) as admin_count from administrateurs_procedures inner join procedures on procedures.id = administrateurs_procedures.procedure_id where procedures.id in (#{procedures_sql}) group by procedures.id order by published_at desc"
+      ActiveRecord::Base.connection.execute(sql)
     end
 
     def paginate(result, ordered_by)

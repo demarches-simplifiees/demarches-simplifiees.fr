@@ -10,6 +10,7 @@
       = f.label :libelle, 'Rechercher des démarches par libellé', class: 'fr-label'
       = f.search_field 'libelle', size: 40, class: 'fr-input'
     .switch= link_to 'Voir la liste des administrateurs', administrateurs_admin_procedures_path(@filter.params), class: 'fr-btn fr-btn--secondary'
+    .switch= link_to 'Exporter les résultats', all_admin_procedures_path(@filter.params.merge(format: :xlsx)), class: 'fr-btn fr-btn--secondary'
   .fr-table.fr-table--bordered
     %table#all-demarches
       %caption
@@ -43,19 +44,9 @@
           %tr.procedure{ 'data-action': 'click->expand#toggle' }
             %td
               %button.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-mb-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
-            %td= procedure.libelle
-            %td= procedure.id
-            %td= procedure.administrateurs.count
-            %td= t procedure.aasm_state, scope: 'activerecord.attributes.procedure.aasm_state'
-            %td= l(procedure.published_at, format: :message_date_without_time)
-          %tr.hidden{ 'data-expand-target': 'content' }
-            %td.fr-highlight--beige-gris-galet{ colspan: '6' }
-              .fr-container
-                .fr-grid-row
-                  .fr-col-6
-                    - procedure.zones.uniq.each do |zone|
-                      = zone.label_at(procedure.published_or_created_at)
-                  .fr-col-6
-                    - procedure.administrateurs.uniq.each do |admin|
-                      = admin.email
+            %td= procedure["libelle"]
+            %td= procedure["id"]
+            %td= procedure["admin_count"]
+            %td= t procedure["aasm_state"], scope: 'activerecord.attributes.procedure.aasm_state'
+            %td= l(procedure["published_at"], format: :message_date_without_time)
     .fr-mt-2w= paginate @procedures, views_prefix: 'administrateurs'
