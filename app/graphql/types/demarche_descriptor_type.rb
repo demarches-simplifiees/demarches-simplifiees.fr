@@ -138,7 +138,7 @@ Cela évite l’accès récursif aux dossiers."
 
     def self.authorized?(object, context)
       procedure = object.is_a?(ProcedureRevision) ? object.procedure : object
-      procedure.opendata? || context.authorized_demarche?(procedure)
+      context.authorized_demarche?(procedure, opendata: true)
     end
   end
 end

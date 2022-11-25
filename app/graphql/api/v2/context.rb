@@ -22,8 +22,12 @@ class API::V2::Context < GraphQL::Query::Context
     Administrateur.find(self[:administrateur_id])
   end
 
-  def authorized_demarche?(demarche)
+  def authorized_demarche?(demarche, opendata: false)
     if internal_use?
+      return true
+    end
+
+    if opendata && demarche.opendata?
       return true
     end
 
