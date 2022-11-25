@@ -123,6 +123,34 @@ describe API::V2::GraphqlController do
       request.env['HTTP_AUTHORIZATION'] = authorization_header
     end
 
+    describe "token authentication" do
+      it {
+        expect(gql_errors).to eq(nil)
+        expect(gql_data).not_to be_nil
+      }
+
+      context "when the token is invalid" do
+        before do
+          request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Token.encode_credentials('invalid')
+        end
+
+        it {
+          expect(gql_errors.first[:message]).to eq("An object of type Demarche was hidden due to permissions")
+        }
+      end
+
+      context "when the token is revoked" do
+        before do
+          admin.update(encrypted_token: nil)
+        end
+
+        it {
+          expect(token).not_to be_nil
+          expect(gql_errors.first[:message]).to eq("An object of type Demarche was hidden due to permissions")
+        }
+      end
+    end
+
     describe "demarche" do
       describe "query a demarche" do
         let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_all_champs, :with_all_annotations, administrateurs: [admin]) }
