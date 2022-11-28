@@ -837,6 +837,11 @@ class Procedure < ApplicationRecord
     active_revision.types_de_champ.find(&:routage?)&.libelle
   end
 
+  # double read / to remove
+  def show_groupe_instructeur_selector?
+    routing_enabled? && !feature_enabled?(:procedure_routage_api)
+  end
+
   private
 
   def move_new_children_to_new_parent_coordinate(new_draft)

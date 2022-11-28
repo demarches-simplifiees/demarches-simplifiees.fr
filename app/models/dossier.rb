@@ -648,11 +648,6 @@ class Dossier < ApplicationRecord
     procedure.routing_enabled? && groupe_instructeur.present? && (!procedure.feature_enabled?(:procedure_routage_api) || !defaut_groupe_instructeur?)
   end
 
-  # double read / to remove
-  def show_groupe_instructeur_selector?
-    procedure.routing_enabled? && !procedure.feature_enabled?(:procedure_routage_api)
-  end
-
   def assign_to_groupe_instructeur(groupe_instructeur, author = nil)
     if (groupe_instructeur.nil? || groupe_instructeur.procedure == procedure) && self.groupe_instructeur != groupe_instructeur
       if update(groupe_instructeur:, groupe_instructeur_updated_at: Time.zone.now)
