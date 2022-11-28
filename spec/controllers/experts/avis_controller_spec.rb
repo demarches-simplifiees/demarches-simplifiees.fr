@@ -115,22 +115,35 @@ describe Experts::AvisController, type: :controller do
     end
 
     describe '#instruction' do
-      subject { get :instruction, params: { id: avis_without_answer.id, procedure_id: procedure.id } }
+      subject { get :instruction, params: { id: avis_to_instruct.id, procedure_id: procedure.id } }
+
       context 'with valid avis' do
+        let(:avis_to_instruct) { avis_without_answer }
         before { subject }
+
         it do
           expect(response).to have_http_status(:success)
           expect(assigns(:avis)).to eq(avis_without_answer)
           expect(assigns(:dossier)).to eq(dossier)
         end
       end
+
       context 'with an avis that does not belongs to current_expert' do
+        let(:avis_to_instruct) { avis_without_answer }
+
         it "refuse l'accès au dossier" do
           sign_in(create(:expert).user)
           subject
           expect(response).to redirect_to(expert_all_avis_path)
           expect(flash.alert).to eq("Vous n’avez pas accès à cet avis.")
         end
+      end
+
+      context 'with a revoked avis' do
+        let(:avis_to_instruct) { revoked_avis }
+        before { subject }
+
+        it { expect(response).to redirect_to root_path }
       end
     end
 
