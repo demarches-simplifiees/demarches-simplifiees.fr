@@ -23,8 +23,8 @@ describe Experts::AvisController, type: :controller do
       before { get :index }
       it do
         expect(response).to have_http_status(:success)
-        expect(assigns(:avis_by_procedure).flatten).to include(procedure)
-        expect(assigns(:avis_by_procedure).flatten).not_to include(another_procedure)
+        expect(assigns(:avis_by_procedure).keys).to include(procedure)
+        expect(assigns(:avis_by_procedure).keys).not_to include(another_procedure)
       end
     end
 
