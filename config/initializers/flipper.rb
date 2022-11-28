@@ -15,7 +15,6 @@ features = [
   :administrateur_web_hook,
   :api_particulier,
   :dossier_pdf_vide,
-  :expert_not_allowed_to_invite,
   :hide_instructeur_email,
   :procedure_routage_api
 ]
