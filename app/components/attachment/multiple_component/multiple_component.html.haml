@@ -4,10 +4,10 @@
   %ul
     - each_attachment do |attachment, index|
       %li{ id: dom_id(attachment) }
-        = render Attachment::EditComponent.new(champ:, attached_file:, attachment:, index:, as_multiple: true, user_can_destroy:, user_can_download:)
+        = render Attachment::EditComponent.new(champ:, attached_file:, attachment:, index:, as_multiple: true, user_can_destroy:, user_can_download:, form_object_name:)
 
   %div{ id: empty_component_id, class: class_names("hidden": !can_attach_next?) }
-    = render Attachment::EditComponent.new(champ:, attached_file:, attachment: nil, index: attachments_count, user_can_destroy:)
+    = render Attachment::EditComponent.new(champ:, attached_file:, attachment: nil, index: attachments_count, user_can_destroy:, form_object_name:)
 
   // single poll and refresh message for all attachments
   = render Attachment::PendingPollComponent.new(attachments: attachments, poll_url:)

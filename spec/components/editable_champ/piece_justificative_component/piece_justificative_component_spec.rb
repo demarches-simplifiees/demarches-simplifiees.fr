@@ -1,7 +1,7 @@
 describe EditableChamp::PieceJustificativeComponent, type: :component do
   let(:champ) { create(:champ_piece_justificative, dossier: create(:dossier)) }
   let(:component) {
-    described_class.new(form: instance_double(ActionView::Helpers::FormBuilder), champ:)
+    described_class.new(form: instance_double(ActionView::Helpers::FormBuilder, object_name: "dossier[champs_public_attributes]"), champ:)
   }
 
   let(:subject) {
