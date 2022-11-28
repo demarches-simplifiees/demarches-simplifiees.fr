@@ -74,6 +74,8 @@ fr:
         access: Consulter mon dossier
         question: J’ai une question
         reply: Répondre à ce message
+    root_path_link_title:
+      default: "Aller à la page d’accueil"
   views:
     commencer:
       show:
