@@ -86,7 +86,10 @@ en:
         question: I have a question
         reply: Reply to this message
     root_path_link_title:
-      default: "Go to homepage"
+      default: 'Go to homepage'
+      user: 'Go to files list'
+      instructeur: 'Go to procedures list'
+      admin: 'Go to administration panel'
   views:
     commencer:
       show:
