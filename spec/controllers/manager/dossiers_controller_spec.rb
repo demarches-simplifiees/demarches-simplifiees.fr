@@ -32,6 +32,6 @@ describe Manager::DossiersController, type: :controller do
 
     subject { strip_tags(response.body) }
 
-    it { expect(subject).to match(%r{Nom\s+\*\s+Texte\s+🟢\s+rempli}) }
+    it { expect(subject).to match(%r{Nom\s+\*\s+Texte court\s+🟢\s+rempli}) }
   end
 end

@@ -87,7 +87,7 @@ describe ProcedureExportService do
       end
 
       it 'should have headers' do
-        expect(dossiers_sheet.headers).to match(nominal_headers)
+        expect(dossiers_sheet.headers).to match_array(nominal_headers)
       end
 
       it 'should have data' do
@@ -108,7 +108,7 @@ describe ProcedureExportService do
 
         let(:birthdate_headers) { nominal_headers.insert(nominal_headers.index('Archivé'), 'Date de naissance') }
 
-        it { expect(dossiers_sheet.headers).to match(birthdate_headers) }
+        it { expect(dossiers_sheet.headers).to match_array(birthdate_headers) }
         it { expect(dossiers_sheet.data[0][dossiers_sheet.headers.index('Date de naissance')]).to be_a(Date) }
       end
 
@@ -117,7 +117,7 @@ describe ProcedureExportService do
 
         let(:routee_headers) { nominal_headers.insert(nominal_headers.index('textarea'), 'Groupe instructeur') }
 
-        it { expect(dossiers_sheet.headers).to match(routee_headers) }
+        it { expect(dossiers_sheet.headers).to match_array(routee_headers) }
         it { expect(dossiers_sheet.data[0][dossiers_sheet.headers.index('Groupe instructeur')]).to eq('défaut') }
       end
 
@@ -280,12 +280,12 @@ describe ProcedureExportService do
         let(:dossiers_sheet_headers) { subject.first }
 
         it 'should have headers' do
-          expect(dossiers_sheet_headers).to match(nominal_headers)
+          expect(dossiers_sheet_headers).to match_array(nominal_headers)
         end
       end
 
       it 'should have headers' do
-        expect(dossiers_sheet.headers).to match(nominal_headers)
+        expect(dossiers_sheet.headers).to match_array(nominal_headers)
 
         expect(etablissements_sheet.headers).to eq([
           "Dossier ID",
