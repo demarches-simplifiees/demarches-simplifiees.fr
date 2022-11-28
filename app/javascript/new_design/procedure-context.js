@@ -12,6 +12,7 @@ function updateReadMoreVisibility() {
 function expandProcedureDescription() {
   const descBody = document.querySelector('.procedure-description-body');
   descBody.classList.remove('read-more-collapsed');
+  descBody.focus(); // a11y best practice on mobile
 }
 
 addEventListener('DOMContentLoaded', updateReadMoreVisibility);
