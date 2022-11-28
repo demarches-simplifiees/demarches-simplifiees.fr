@@ -312,25 +312,25 @@ describe Experts::AvisController, type: :controller do
     end
 
     describe '#create_avis' do
-      let!(:previous_avis) { create(:avis, dossier: dossier, claimant: claimant, experts_procedure: experts_procedure, confidentiel: previous_avis_confidentiel) }
+      let(:previous_avis_confidentiel) { false }
+      let!(:previous_avis) { create(:avis, dossier:, claimant:, experts_procedure:, confidentiel: previous_avis_confidentiel) }
       let(:emails) { "[\"a@b.com\"]" }
-      let(:intro) { 'introduction' }
+      let(:introduction) { 'introduction' }
       let(:created_avis) { Avis.last }
       let!(:old_avis_count) { Avis.count }
       let(:invite_linked_dossiers) { nil }
+      let(:introduction_file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
+      let(:confidentiel) { false }
 
       before do
         Timecop.freeze(now)
-        @introduction_file = fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf')
-        post :create_avis, params: { id: previous_avis.id, procedure_id: procedure.id, avis: { emails: emails, introduction: intro, experts_procedure: experts_procedure, confidentiel: asked_confidentiel, invite_linked_dossiers: invite_linked_dossiers, introduction_file: @introduction_file } }
+        post :create_avis, params: { id: previous_avis.id, procedure_id: procedure.id, avis: { emails:, introduction:, experts_procedure:, confidentiel:, invite_linked_dossiers:, introduction_file: } }
         created_avis.reload
       end
 
       after { Timecop.return }
 
       context 'when an invalid email' do
-        let(:previous_avis_confidentiel) { false }
-        let(:asked_confidentiel) { false }
         let(:emails) { "[\"toto.fr\"]" }
 
         it do
@@ -342,8 +342,6 @@ describe Experts::AvisController, type: :controller do
       end
 
       context 'ask review with attachment' do
-        let(:previous_avis_confidentiel) { false }
-        let(:asked_confidentiel) { false }
         let(:emails) { "[\"toto@totomail.com\"]" }
 
         it do
@@ -355,8 +353,6 @@ describe Experts::AvisController, type: :controller do
       end
 
       context 'with multiple emails' do
-        let(:asked_confidentiel) { false }
-        let(:previous_avis_confidentiel) { false }
         let(:emails) { "[\"toto.fr\",\"titi@titimail.com\"]" }
 
         it do
@@ -368,14 +364,10 @@ describe Experts::AvisController, type: :controller do
       end
 
       context 'when the previous avis is public' do
-        let(:previous_avis_confidentiel) { false }
-
         context 'when the user asked for a public avis' do
-          let(:asked_confidentiel) { false }
-
           it do
             expect(created_avis.confidentiel).to be(false)
-            expect(created_avis.introduction).to eq(intro)
+            expect(created_avis.introduction).to eq(introduction)
             expect(created_avis.dossier).to eq(previous_avis.dossier)
             expect(created_avis.claimant).to eq(expert)
             expect(response).to redirect_to(instruction_expert_avis_path(previous_avis.procedure, previous_avis))
@@ -383,7 +375,7 @@ describe Experts::AvisController, type: :controller do
         end
 
         context 'when the user asked for a confidentiel avis' do
-          let(:asked_confidentiel) { true }
+          let(:confidentiel) { true }
 
           it { expect(created_avis.confidentiel).to be(true) }
         end
@@ -393,15 +385,13 @@ describe Experts::AvisController, type: :controller do
         let(:previous_avis_confidentiel) { true }
 
         context 'when the user asked for a public avis' do
-          let(:asked_confidentiel) { false }
+          let(:confidentiel) { false }
 
           it { expect(created_avis.confidentiel).to be(true) }
         end
       end
 
       context 'with linked dossiers' do
-        let(:asked_confidentiel) { false }
-        let(:previous_avis_confidentiel) { false }
         let(:dossier) { create(:dossier, :en_construction, :with_dossier_link, procedure: procedure) }
 
         context 'when the expert doesn’t share linked dossiers' do
