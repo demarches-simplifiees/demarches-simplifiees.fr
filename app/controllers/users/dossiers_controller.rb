@@ -148,6 +148,7 @@ module Users
 
     def brouillon
       @dossier = dossier_with_champs
+      # TODO: SEB show validation errors
 
       # TODO: remove when the champs are unifed
       if !@dossier.autorisation_donnees
@@ -303,6 +304,7 @@ module Users
       )
       dossier.build_default_individual
       dossier.save!
+      dossier.prefill!(PrefillParams.new(dossier, params).to_a)
 
       if dossier.procedure.for_individual
         redirect_to identite_dossier_path(dossier)

@@ -1054,8 +1054,9 @@ describe Users::DossiersController, type: :controller do
   describe '#new' do
     let(:procedure) { create(:procedure, :published) }
     let(:procedure_id) { procedure.id }
+    let(:params) { { procedure_id: procedure_id } }
 
-    subject { get :new, params: { procedure_id: procedure_id } }
+    subject { get :new, params: params }
 
     it 'clears the stored procedure context' do
       subject
@@ -1084,6 +1085,34 @@ describe Users::DossiersController, type: :controller do
             let(:procedure) { create(:procedure, :closed) }
 
             it { is_expected.to redirect_to dossiers_path }
+          end
+
+          context 'when prefill values are given' do
+            let!(:type_de_champ_1) { create(:type_de_champ_text, procedure: procedure) }
+            let(:value_1) { "any value" }
+
+            let!(:type_de_champ_2) { create(:type_de_champ_textarea, procedure: procedure) }
+            let(:value_2) { "another value" }
+
+            let(:params) {
+              {
+                procedure_id: procedure_id,
+                type_de_champ_1.to_typed_id => value_1,
+                type_de_champ_2.to_typed_id => value_2
+              }
+            }
+
+            it { expect { subject }.to change { Dossier.count }.by(1) }
+
+            it "prefills the dossier's champs with the given values" do
+              subject
+
+              dossier = Dossier.last
+              expect(dossier.find_champ_by_stable_id(type_de_champ_1.stable_id).value).to eq(value_1)
+              expect(dossier.find_champ_by_stable_id(type_de_champ_2.stable_id).value).to eq(value_2)
+            end
+
+            it { is_expected.to redirect_to siret_dossier_path(id: Dossier.last) }
           end
         end
         context 'when user is not logged' do
