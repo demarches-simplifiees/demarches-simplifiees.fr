@@ -19,8 +19,12 @@ FileUtils.chdir APP_ROOT do
   system! 'bin/yarn install'
   system! 'bin/yarn clean'
 
-  puts "\n== Updating webdrivers =="
-  system! 'RAILS_ENV=test bin/rails webdrivers:chromedriver:update'
+  if ENV["SKIP_UPDATE_WEBDRIVER"]
+    puts "\n== Ignoring webdrivers update because of local configuration. You may need to update it manually.=="
+  else
+    puts "\n== Updating webdrivers =="
+    system! 'RAILS_ENV=test bin/rails webdrivers:chromedriver:update'
+  end
 
   puts "\n== Updating database =="
   system! 'bin/rails db:migrate'
