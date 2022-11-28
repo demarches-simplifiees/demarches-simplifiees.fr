@@ -313,8 +313,9 @@ describe Experts::AvisController, type: :controller do
 
     describe '#create_avis' do
       let(:previous_avis_confidentiel) { false }
-      let!(:previous_avis) { create(:avis, dossier:, claimant:, experts_procedure:, confidentiel: previous_avis_confidentiel) }
-      let(:emails) { "[\"a@b.com\"]" }
+      let(:previous_revoked_at) { nil }
+      let!(:previous_avis) { create(:avis, dossier:, claimant:, experts_procedure:, confidentiel: previous_avis_confidentiel, revoked_at: previous_revoked_at) }
+      let(:emails) { '["a@b.com"]' }
       let(:introduction) { 'introduction' }
       let(:created_avis) { Avis.last }
       let!(:old_avis_count) { Avis.count }
@@ -329,6 +330,15 @@ describe Experts::AvisController, type: :controller do
       end
 
       after { Timecop.return }
+
+      context 'from a revoked avis' do
+        let(:previous_revoked_at) { Time.zone.now }
+
+        it do
+          expect(response).to redirect_to(root_path)
+          expect(Avis.last).to eq(previous_avis)
+        end
+      end
 
       context 'when an invalid email' do
         let(:emails) { "[\"toto.fr\"]" }

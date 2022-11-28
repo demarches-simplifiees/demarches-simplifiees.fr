@@ -4,7 +4,7 @@ module Experts
     include Zipline
 
     before_action :authenticate_expert!, except: [:sign_up, :update_expert]
-    before_action :check_if_avis_revoked, only: [:show, :instruction]
+    before_action :check_if_avis_revoked, only: [:show, :instruction, :create_avis]
     before_action :redirect_if_no_sign_up_needed, only: [:sign_up, :update_expert]
     before_action :set_avis_and_dossier, only: [:show, :instruction, :messagerie, :create_commentaire, :delete_commentaire, :update, :telecharger_pjs]
 
