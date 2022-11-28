@@ -8,7 +8,7 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
   private
 
   def render?
-    @champ.routage? ? (@champ.procedure&.routing_enabled? && !@champ.procedure&.feature_enabled?(:procedure_routage_api)) : true
+    @champ.routage? ? @champ.procedure.show_groupe_instructeur_selector? : true
   end
 
   def has_label?(champ)

@@ -35,7 +35,7 @@
                     = t('shared.ephemeral_link')
 
     -# double read / to remove
-    - if dossier.show_groupe_instructeur_selector? && dossier.champs_public.none?(&:routage?)
+    - if dossier.procedure.show_groupe_instructeur_selector? && dossier.champs_public.none?(&:routage?)
       %span{ data: { controller: 'autosave' } }
         = f.label :groupe_instructeur_id do
           = dossier.procedure.routing_criteria_name
