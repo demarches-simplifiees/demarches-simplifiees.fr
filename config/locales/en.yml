@@ -50,6 +50,7 @@ en:
     message: Message
     send_mail: Send message
     procedure: Procedures
+    new_tab: New tab
   helpers:
     procedure:
       testing_procedure: testing procedure
