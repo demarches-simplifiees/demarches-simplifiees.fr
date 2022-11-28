@@ -76,7 +76,10 @@ fr:
         question: J’ai une question
         reply: Répondre à ce message
     root_path_link_title:
-      default: "Aller à la page d’accueil"
+      default: 'Aller à la page d’accueil'
+      user: 'Aller à la liste des dossiers'
+      instructeur: 'Aller à la liste des démarches'
+      admin: "Aller au panneau d’administration"
   views:
     commencer:
       show:
