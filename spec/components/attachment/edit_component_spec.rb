@@ -159,4 +159,18 @@ RSpec.describe Attachment::EditComponent, type: :component do
       end
     end
   end
+
+  describe 'field name inference' do
+    it "by default generate input name directly form attached file object" do
+      expect(subject).to have_selector("input[name='champs_titre_identite_champ[piece_justificative_file]']")
+    end
+
+    context "when a form object_name is provided" do
+      let(:kwargs) { { form_object_name: "my_form" } }
+
+      it "generate input name from form object name and attached file object" do
+        expect(subject).to have_selector("input[name='my_form[piece_justificative_file]']")
+      end
+    end
+  end
 end

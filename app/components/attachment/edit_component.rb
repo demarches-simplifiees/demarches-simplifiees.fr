@@ -30,6 +30,10 @@ class Attachment::EditComponent < ApplicationComponent
       fail ArgumentError, "You must pass an `attachment` kwarg when not using as single attachment like in #{attached_file.name}. Set it to nil for a new attachment."
     end
 
+    # When parent form has nested attributes, pass the form builder object_name
+    # to correctly infer the input attribute name.
+    @form_object_name = kwargs.delete(:form_object_name)
+
     verify_initialization!(kwargs)
   end
 
@@ -81,7 +85,7 @@ class Attachment::EditComponent < ApplicationComponent
   end
 
   def field_name
-    helpers.field_name(ActiveModel::Naming.param_key(@attached_file.record), attribute_name)
+    helpers.field_name(@form_object_name || ActiveModel::Naming.param_key(@attached_file.record), attribute_name)
   end
 
   def attribute_name
@@ -136,7 +140,7 @@ class Attachment::EditComponent < ApplicationComponent
       return champ.input_id
     end
 
-    helpers.field_id(@attached_file.record, attribute_name)
+    helpers.field_id(@form_object_name || @attached_file.record, attribute_name)
   end
 
   def auto_attach_url
