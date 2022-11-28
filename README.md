@@ -42,6 +42,9 @@ Selenium::WebDriver::Chrome.path = "/Applications/Brave Browser.app/Contents/Mac
 Webdrivers::Chromedriver.required_version = "103.0.5060.53"
 ```
 
+Il peut être également pertinent de désactiver la mise à jour automatique du webdriver
+en définissant une variable d'environnement `SKIP_UPDATE_WEBDRIVER` lors de l'exécution de `bin/update`.
+
 ### Création des rôles de la base de données
 
 Les informations nécessaire à l'initialisation de la base doivent être pré-configurées à la main grâce à la procédure suivante :
