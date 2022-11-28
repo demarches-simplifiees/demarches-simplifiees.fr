@@ -1,10 +1,3 @@
-Flipper.register('Administrateurs') do |user|
-  user.administrateur_id.present?
-end
-Flipper.register('Instructeurs') do |user|
-  user.instructeur_id.present?
-end
-
 # This setup is primarily for first deployment, because consequently
 # we can add new features from the Web UI. However when the new DB is created
 # this will immediately migrate the default features to be controlled.
