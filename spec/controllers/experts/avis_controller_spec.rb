@@ -10,10 +10,10 @@ describe Experts::AvisController, type: :controller do
     let(:expert) { create(:expert) }
     let(:procedure) { create(:procedure, :published, instructeurs: [instructeur, another_instructeur, instructeur_with_instant_avis_notification]) }
     let(:another_procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
-    let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
-    let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
-    let!(:avis_without_answer) { create(:avis, dossier: dossier, claimant: claimant, experts_procedure: experts_procedure) }
-    let!(:avis_with_answer) { create(:avis, dossier: dossier, claimant: claimant, experts_procedure: experts_procedure, answer: 'yop') }
+    let(:dossier) { create(:dossier, :en_construction, procedure:) }
+    let(:experts_procedure) { create(:experts_procedure, expert:, procedure:) }
+    let!(:avis_without_answer) { create(:avis, dossier:, claimant:, experts_procedure:) }
+    let!(:avis_with_answer) { create(:avis, dossier:, claimant:, experts_procedure:, answer: 'yop') }
 
     before do
       sign_in(expert.user)
