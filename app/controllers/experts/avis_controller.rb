@@ -18,8 +18,22 @@ module Experts
 
     def procedure
       @procedure = current_expert.procedures.find_by(id: params[:procedure_id])
-      redirect_to(expert_all_avis_path, flash: { alert: "Vous n’avez pas accès à cette démarche." }) and return unless @procedure
-      expert_avis = current_expert.avis.includes(:dossier).not_hidden_by_administration.where(dossiers: { groupe_instructeur: GroupeInstructeur.where(procedure: @procedure.id) })
+
+      if @procedure.nil?
+        redirect_to(expert_all_avis_path, flash: { alert: "Vous n’avez pas accès à cette démarche." }) and return
+      end
+
+      expert_avis = current_expert
+        .avis
+        .not_revoked
+        .includes(:dossier)
+        .not_hidden_by_administration
+        .where(dossiers: { groupe_instructeur: GroupeInstructeur.where(procedure: @procedure) })
+
+      if expert_avis.empty?
+        redirect_to(expert_all_avis_path, flash: { alert: "Vous n’avez pas accès à cette démarche." }) and return
+      end
+
       @avis_a_donner = expert_avis.without_answer
       @avis_donnes = expert_avis.with_answer
 
