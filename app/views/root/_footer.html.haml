@@ -45,8 +45,8 @@
           premier
           %br
           ministre
-        = link_to t("links.footer.betagouv.url"), title: t("links.footer.betagouv.title"), 'aria-label': t("links.footer.betagouv.label"), class: "fr-footer__brand-link" do
-          %span.footer-logo.footer-logo-beta-gouv-fr{ role: 'img', 'aria-label': "Logo #{t('links.footer.betagouv.label')}" }
+        = link_to t("links.footer.betagouv.url"), title: t("links.footer.betagouv.title"), class: "fr-footer__brand-link" do
+          = image_tag("footer/logo-beta-gouv-fr.svg", class: "fr-footer__logo logo-beta-gouv-fr", alt: "beta.gouv.fr")
       .fr-footer__content
         %p.fr-footer__content-desc
           = t('links.footer.description_1')
