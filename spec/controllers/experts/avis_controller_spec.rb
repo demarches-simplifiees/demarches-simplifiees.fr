@@ -21,9 +21,11 @@ describe Experts::AvisController, type: :controller do
 
     describe '#index' do
       before { get :index }
-      it { expect(response).to have_http_status(:success) }
-      it { expect(assigns(:avis_by_procedure).flatten).to include(procedure) }
-      it { expect(assigns(:avis_by_procedure).flatten).not_to include(another_procedure) }
+      it do
+        expect(response).to have_http_status(:success)
+        expect(assigns(:avis_by_procedure).flatten).to include(procedure)
+        expect(assigns(:avis_by_procedure).flatten).not_to include(another_procedure)
+      end
     end
 
     describe '#procedure' do
@@ -31,10 +33,12 @@ describe Experts::AvisController, type: :controller do
         let!(:oldest_avis_without_answer) { create(:avis, dossier: dossier, claimant: claimant, experts_procedure: experts_procedure, created_at: 2.years.ago) }
         before { get :procedure, params: { procedure_id: procedure.id } }
 
-        it { expect(response).to have_http_status(:success) }
-        it { expect(assigns(:avis_a_donner)).to match([avis_without_answer, oldest_avis_without_answer]) }
-        it { expect(assigns(:avis_donnes)).to match([avis_with_answer]) }
-        it { expect(assigns(:statut)).to eq('a-donner') }
+        it do
+          expect(response).to have_http_status(:success)
+          expect(assigns(:avis_a_donner)).to match([avis_without_answer, oldest_avis_without_answer])
+          expect(assigns(:avis_donnes)).to match([avis_with_answer])
+          expect(assigns(:statut)).to eq('a-donner')
+        end
       end
 
       context 'with a statut equal to donnes' do
@@ -67,9 +71,11 @@ describe Experts::AvisController, type: :controller do
       context 'with a valid avis' do
         before { subject }
 
-        it { expect(response).to have_http_status(:success) }
-        it { expect(assigns(:avis)).to eq(avis_with_answer) }
-        it { expect(assigns(:dossier)).to eq(dossier) }
+        it do
+          expect(response).to have_http_status(:success)
+          expect(assigns(:avis)).to eq(avis_with_answer)
+          expect(assigns(:dossier)).to eq(dossier)
+        end
       end
 
       context 'with a revoked avis' do
@@ -95,9 +101,11 @@ describe Experts::AvisController, type: :controller do
       subject { get :instruction, params: { id: avis_without_answer.id, procedure_id: procedure.id } }
       context 'with valid avis' do
         before { subject }
-        it { expect(response).to have_http_status(:success) }
-        it { expect(assigns(:avis)).to eq(avis_without_answer) }
-        it { expect(assigns(:dossier)).to eq(dossier) }
+        it do
+          expect(response).to have_http_status(:success)
+          expect(assigns(:avis)).to eq(avis_without_answer)
+          expect(assigns(:dossier)).to eq(dossier)
+        end
       end
       context 'with an avis that does not belongs to current_expert' do
         it "refuse l'accès au dossier" do
@@ -125,9 +133,11 @@ describe Experts::AvisController, type: :controller do
       context 'with valid avis' do
         before { subject }
 
-        it { expect(response).to have_http_status(:success) }
-        it { expect(assigns(:avis)).to eq(avis_without_answer) }
-        it { expect(assigns(:dossier)).to eq(dossier) }
+        it do
+          expect(response).to have_http_status(:success)
+          expect(assigns(:avis)).to eq(avis_without_answer)
+          expect(assigns(:dossier)).to eq(dossier)
+        end
       end
       context 'with an avis that does not belongs to current_expert' do
         it "refuse l'accès au dossier" do
@@ -293,10 +303,12 @@ describe Experts::AvisController, type: :controller do
         let(:asked_confidentiel) { false }
         let(:emails) { "[\"toto.fr\"]" }
 
-        it { expect(response).to render_template :instruction }
-        it { expect(flash.alert).to eq(["toto.fr : Email n'est pas valide"]) }
-        it { expect(Avis.last).to eq(previous_avis) }
-        it { expect(dossier.last_avis_updated_at).to eq(nil) }
+        it do
+          expect(response).to render_template :instruction
+          expect(flash.alert).to eq(["toto.fr : Email n'est pas valide"])
+          expect(Avis.last).to eq(previous_avis)
+          expect(dossier.last_avis_updated_at).to eq(nil)
+        end
       end
 
       context 'ask review with attachment' do
@@ -304,10 +316,12 @@ describe Experts::AvisController, type: :controller do
         let(:asked_confidentiel) { false }
         let(:emails) { "[\"toto@totomail.com\"]" }
 
-        it { expect(created_avis.introduction_file).to be_attached }
-        it { expect(created_avis.introduction_file.filename).to eq("piece_justificative_0.pdf") }
-        it { expect(created_avis.dossier.reload.last_avis_updated_at).to eq(now) }
-        it { expect(flash.notice).to eq("Une demande d’avis a été envoyée à toto@totomail.com") }
+        it do
+          expect(created_avis.introduction_file).to be_attached
+          expect(created_avis.introduction_file.filename).to eq("piece_justificative_0.pdf")
+          expect(created_avis.dossier.reload.last_avis_updated_at).to eq(now)
+          expect(flash.notice).to eq("Une demande d’avis a été envoyée à toto@totomail.com")
+        end
       end
 
       context 'with multiple emails' do
@@ -315,10 +329,12 @@ describe Experts::AvisController, type: :controller do
         let(:previous_avis_confidentiel) { false }
         let(:emails) { "[\"toto.fr\",\"titi@titimail.com\"]" }
 
-        it { expect(response).to render_template :instruction }
-        it { expect(flash.alert).to eq(["toto.fr : Email n'est pas valide"]) }
-        it { expect(flash.notice).to eq("Une demande d’avis a été envoyée à titi@titimail.com") }
-        it { expect(Avis.count).to eq(old_avis_count + 1) }
+        it do
+          expect(response).to render_template :instruction
+          expect(flash.alert).to eq(["toto.fr : Email n'est pas valide"])
+          expect(flash.notice).to eq("Une demande d’avis a été envoyée à titi@titimail.com")
+          expect(Avis.count).to eq(old_avis_count + 1)
+        end
       end
 
       context 'when the previous avis is public' do
@@ -327,11 +343,13 @@ describe Experts::AvisController, type: :controller do
         context 'when the user asked for a public avis' do
           let(:asked_confidentiel) { false }
 
-          it { expect(created_avis.confidentiel).to be(false) }
-          it { expect(created_avis.introduction).to eq(intro) }
-          it { expect(created_avis.dossier).to eq(previous_avis.dossier) }
-          it { expect(created_avis.claimant).to eq(expert) }
-          it { expect(response).to redirect_to(instruction_expert_avis_path(previous_avis.procedure, previous_avis)) }
+          it do
+            expect(created_avis.confidentiel).to be(false)
+            expect(created_avis.introduction).to eq(intro)
+            expect(created_avis.dossier).to eq(previous_avis.dossier)
+            expect(created_avis.claimant).to eq(expert)
+            expect(response).to redirect_to(instruction_expert_avis_path(previous_avis.procedure, previous_avis))
+          end
         end
 
         context 'when the user asked for a confidentiel avis' do
