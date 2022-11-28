@@ -129,6 +129,10 @@ module ApplicationHelper
     { target: "_blank", rel: "noopener noreferrer" }
   end
 
+  def new_tab_suffix(title)
+    "#{title} — #{t('utils.new_tab')}"
+  end
+
   def download_details(attachment)
     "#{attachment.filename.extension.upcase} – #{number_to_human_size(attachment.byte_size)}"
   end

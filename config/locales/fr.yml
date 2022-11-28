@@ -40,6 +40,7 @@ fr:
     message: Message
     send_mail: Envoyer le message
     procedure: Démarches
+    new_tab: "Nouvel onglet"
   helpers:
     procedure:
       testing_procedure: démarche en test
