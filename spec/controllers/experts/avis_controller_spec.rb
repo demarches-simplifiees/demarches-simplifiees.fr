@@ -38,13 +38,23 @@ describe Experts::AvisController, type: :controller do
     describe '#procedure' do
       context 'without filter' do
         let!(:oldest_avis_without_answer) { create(:avis, dossier: dossier, claimant: claimant, experts_procedure: experts_procedure, created_at: 2.years.ago) }
-        before { get :procedure, params: { procedure_id: procedure.id } }
+        before { get :procedure, params: { procedure_id: procedure_to_show.id } }
 
-        it do
-          expect(response).to have_http_status(:success)
-          expect(assigns(:avis_a_donner)).to match([avis_without_answer, oldest_avis_without_answer])
-          expect(assigns(:avis_donnes)).to match([avis_with_answer])
-          expect(assigns(:statut)).to eq('a-donner')
+        context 'with legitimates avis' do
+          let(:procedure_to_show) { procedure }
+
+          it do
+            expect(response).to have_http_status(:success)
+            expect(assigns(:avis_a_donner)).to match([avis_without_answer, oldest_avis_without_answer])
+            expect(assigns(:avis_donnes)).to match([avis_with_answer])
+            expect(assigns(:statut)).to eq('a-donner')
+          end
+        end
+
+        context 'with a revoked avis' do
+          let(:procedure_to_show) { revoked_procedure }
+
+          it { expect(response).to redirect_to expert_all_avis_path }
         end
       end
 
