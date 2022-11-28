@@ -508,12 +508,6 @@ class Dossier < ApplicationRecord
     INSTRUCTION_COMMENCEE.include?(state)
   end
 
-  def reset!
-    etablissement.destroy
-
-    update_columns(autorisation_donnees: false)
-  end
-
   def read_only?
     en_instruction? || accepte? || refuse? || sans_suite? || procedure.discarded? || procedure.close? && brouillon?
   end
