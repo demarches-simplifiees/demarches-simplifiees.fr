@@ -15,6 +15,13 @@ describe Experts::AvisController, type: :controller do
     let!(:avis_without_answer) { create(:avis, dossier:, claimant:, experts_procedure:) }
     let!(:avis_with_answer) { create(:avis, dossier:, claimant:, experts_procedure:, answer: 'yop') }
 
+    let!(:revoked_procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
+    let!(:revoked_dossier) { create(:dossier, :en_construction, procedure: revoked_procedure) }
+    let!(:revoked_experts_procedure) { create(:experts_procedure, expert: expert, procedure: revoked_procedure) }
+    let!(:revoked_avis) do
+      create(:avis, dossier: revoked_dossier, claimant:, experts_procedure: revoked_experts_procedure, introduction: 'revoked', revoked_at: Time.zone.now)
+    end
+
     before do
       sign_in(expert.user)
     end
@@ -23,8 +30,8 @@ describe Experts::AvisController, type: :controller do
       before { get :index }
       it do
         expect(response).to have_http_status(:success)
-        expect(assigns(:avis_by_procedure).keys).to include(procedure)
-        expect(assigns(:avis_by_procedure).keys).not_to include(another_procedure)
+        expect(assigns(:avis_by_procedure).keys).to match_array(procedure)
+        expect(assigns(:avis_by_procedure).values.flatten).to match_array([avis_without_answer, avis_with_answer])
       end
     end
 
