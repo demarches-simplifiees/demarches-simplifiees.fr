@@ -24,7 +24,7 @@
           .fr-header__service
             - root_profile_link, root_profile_libelle = root_path_info_for_profile(nav_bar_profile)
 
-            = link_to root_profile_link, :title => root_profile_libelle do
+            = link_to root_profile_link, title: "#{root_profile_libelle} — #{APPLICATION_NAME}" do
               %p.fr-header__service-title= APPLICATION_NAME
 
         .fr-header__tools
