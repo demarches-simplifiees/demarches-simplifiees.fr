@@ -9,8 +9,11 @@ fr:
         archived: archivés
         dossiers_close_to_expiration: expirant
         dossiers_supprimes_recemment: supprimés
+        copy_link_button: Copier le lien de la démarche dans le presse papier
       email_usagers:
         contact_users: Contacter les usagers (brouillon)
         notice: "Vous allez envoyer un message à %{dossiers_count} dont les dossiers sont en brouillon, dans les groupes instructeurs : %{groupe_instructeurs}."
+      administrators_list:
+        title: "%{procedure_libelle} - n°%{procedure_id} - administrateurs"
       stats:
         title: Statistiques
