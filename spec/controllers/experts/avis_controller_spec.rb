@@ -190,6 +190,12 @@ describe Experts::AvisController, type: :controller do
         avis.reload
       end
 
+      context 'on a revoked avis' do
+        let(:avis) { revoked_avis }
+
+        it { expect(subject).to redirect_to(root_path) }
+      end
+
       context 'without attachment' do
         it 'should be ok' do
           expect(subject).to redirect_to(instruction_expert_avis_path(avis.procedure, avis))
