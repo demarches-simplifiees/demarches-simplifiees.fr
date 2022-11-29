@@ -180,18 +180,21 @@ describe Experts::AvisController, type: :controller do
     end
 
     describe '#update' do
-      context 'without attachment' do
-        before do
-          Timecop.freeze(now)
-          patch :update, params: { id: avis_without_answer.id, procedure_id: procedure.id, avis: { answer: 'answer' } }
-          avis_without_answer.reload
-        end
-        after { Timecop.return }
+      before { Timecop.freeze(now) }
+      after { Timecop.return }
 
+      let(:avis) { avis_without_answer }
+
+      subject do
+        post :update, params: { id: avis.id, procedure_id: procedure.id, avis: { answer: 'answer' } }
+        avis.reload
+      end
+
+      context 'without attachment' do
         it 'should be ok' do
-          expect(response).to redirect_to(instruction_expert_avis_path(avis_without_answer.procedure, avis_without_answer))
-          expect(avis_without_answer.answer).to eq('answer')
-          expect(avis_without_answer.piece_justificative_file).to_not be_attached
+          expect(subject).to redirect_to(instruction_expert_avis_path(avis.procedure, avis))
+          expect(avis.answer).to eq('answer')
+          expect(avis.piece_justificative_file).to_not be_attached
           expect(dossier.reload.last_avis_updated_at).to eq(now)
           expect(flash.notice).to eq('Votre réponse est enregistrée.')
         end
@@ -201,28 +204,9 @@ describe Experts::AvisController, type: :controller do
         before do
           allow(DossierMailer).to receive(:notify_new_avis_to_instructeur).and_return(double(deliver_later: nil))
           AssignTo.find_by(instructeur: instructeur_with_instant_avis_notification).update!(instant_expert_avis_email_notifications_enabled: true)
-          Timecop.freeze(now)
           instructeur_with_instant_avis_notification.follow(avis_without_answer.dossier)
-          patch :update, params: { id: avis_without_answer.id, procedure_id: procedure.id, avis: { answer: 'answer' } }
-          avis_without_answer.reload
+          subject
         end
-        after { Timecop.return }
-
-        it 'The instructeur should be notified of the new avis' do
-          expect(DossierMailer).to have_received(:notify_new_avis_to_instructeur).once.with(avis_without_answer, instructeur_with_instant_avis_notification.email)
-        end
-      end
-
-      context 'without attachment with an instructeur wants to be notified' do
-        before do
-          allow(DossierMailer).to receive(:notify_new_avis_to_instructeur).and_return(double(deliver_later: nil))
-          AssignTo.find_by(instructeur: instructeur_with_instant_avis_notification).update!(instant_expert_avis_email_notifications_enabled: true)
-          Timecop.freeze(now)
-          instructeur_with_instant_avis_notification.follow(avis_without_answer.dossier)
-          patch :update, params: { id: avis_without_answer.id, procedure_id: procedure.id, avis: { answer: 'answer' } }
-          avis_without_answer.reload
-        end
-        after { Timecop.return }
 
         it 'The instructeur should be notified of the new avis' do
           expect(DossierMailer).to have_received(:notify_new_avis_to_instructeur).once.with(avis_without_answer, instructeur_with_instant_avis_notification.email)
@@ -230,7 +214,6 @@ describe Experts::AvisController, type: :controller do
       end
 
       context 'with attachment' do
-        include ActiveJob::TestHelper
         let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
 
         before do
@@ -247,11 +230,12 @@ describe Experts::AvisController, type: :controller do
           expect(flash.notice).to eq('Votre réponse est enregistrée.')
         end
       end
+
       context 'with an avis that does not belongs to current_expert' do
+        before { sign_in(create(:expert).user) }
+
         it "refuse l'accès au dossier" do
-          sign_in(create(:expert).user)
-          patch :update, params: { id: avis_without_answer.id, procedure_id: procedure.id, avis: { answer: 'answer' } }
-          expect(response).to redirect_to(expert_all_avis_path)
+          expect(subject).to redirect_to(expert_all_avis_path)
           expect(flash.alert).to eq("Vous n’avez pas accès à cet avis.")
         end
       end
