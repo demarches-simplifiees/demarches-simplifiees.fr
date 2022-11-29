@@ -11,8 +11,6 @@ module Administrateurs
     end
 
     def update
-      @procedure.move_attestation_template_to_procedure!
-
       @attestation_template = @procedure.attestation_template
 
       if @attestation_template.update(activated_attestation_params)
@@ -27,8 +25,6 @@ module Administrateurs
     end
 
     def create
-      @procedure.move_attestation_template_to_procedure!
-
       @attestation_template = build_attestation_template(activated_attestation_params)
 
       if @attestation_template.save

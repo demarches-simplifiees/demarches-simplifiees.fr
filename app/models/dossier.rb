@@ -742,21 +742,17 @@ class Dossier < ApplicationRecord
     { lon: lon, lat: lat, zoom: zoom }
   end
 
-  def active_attestation_template
-    attestation_template || revision.attestation_template
-  end
-
   def unspecified_attestation_champs
-    if active_attestation_template&.activated?
-      active_attestation_template.unspecified_champs_for_dossier(self)
+    if attestation_template&.activated?
+      attestation_template.unspecified_champs_for_dossier(self)
     else
       []
     end
   end
 
   def build_attestation
-    if active_attestation_template&.activated?
-      active_attestation_template.attestation_for(self)
+    if attestation_template&.activated?
+      attestation_template.attestation_for(self)
     end
   end
 
