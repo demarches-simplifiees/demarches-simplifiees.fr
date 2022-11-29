@@ -5,6 +5,18 @@ module ApplicationHelper
     I18n.locale.to_s
   end
 
+  def active_locale_link(locale)
+    link_to save_locale_path(locale:), {
+      method: :post,
+      class: "fr-translate__language fr-nav__link",
+      hreflang: locale,
+      lang: locale,
+      "aria-current": I18n.locale == locale ? "true" : nil
+    }.compact do
+      yield
+    end
+  end
+
   def sanitize_url(url)
     if !url.nil?
       super(url, schemes: ['http', 'https'], replace_evil_with: root_url)
