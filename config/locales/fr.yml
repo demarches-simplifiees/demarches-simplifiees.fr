@@ -241,6 +241,7 @@ fr:
         index:
           dossiers: "Dossiers"
         dossiers_list:
+          caption: Mes dossiers
           procedure: "Démarche"
           n_dossier: "Nº dossier"
           requester: "Demandeur"
