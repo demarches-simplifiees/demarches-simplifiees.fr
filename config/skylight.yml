@@ -1,3 +1,4 @@
 ---
 # The authentication token for the application.
 authentication: <%= ENV['SKYLIGHT_AUTHENTICATION_KEY'] || '' %>
+proxy_url: <%= ENV['https_proxy'] || '' %>
