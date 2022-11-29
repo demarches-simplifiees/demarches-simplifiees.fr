@@ -74,13 +74,8 @@ en:
       back_title: "Revenir sur le site de mon administration"
       main_menu: "Main menu"
     locale_dropdown:
-      languages: "Languages"
       select_locale: "Choose a language"
-      fr: FR
-      en: EN
-      francais: " - French"
-      fr_francais:  FR - French
-      en_english: EN - English
+      locale_name: "English"
     notifications:
       actions:
         access: View your File
