@@ -54,6 +54,7 @@ RSpec.describe Types::DossierType, type: :graphql do
 
     it { expect(data[:dossier][:champs][0][:__typename]).to eq "CommuneChamp" }
     it { expect(data[:dossier][:champs][1][:__typename]).to eq "AddressChamp" }
+    it { expect(data[:dossier][:champs][0][:id]).to eq(data[:dossier][:revision][:champDescriptors][0][:id]) }
   end
 
   describe 'dossier with conditional champs' do
@@ -223,6 +224,12 @@ RSpec.describe Types::DossierType, type: :graphql do
     dossier(number: $number) {
       id
       number
+      revision {
+        champDescriptors {
+          id
+          label
+        }
+      }
       champs {
         id
         label
