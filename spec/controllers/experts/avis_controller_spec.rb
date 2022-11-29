@@ -91,6 +91,28 @@ describe Experts::AvisController, type: :controller do
       end
     end
 
+    describe '#telecharger_pjs' do
+      let(:avis) { avis_with_answer }
+
+      subject { get :telecharger_pjs, params: { id: avis.id, procedure_id: } }
+
+      context 'with a valid avis' do
+        it { is_expected.to have_http_status(:success) }
+      end
+
+      context 'with a revoked avis' do
+        let(:avis) { revoked_avis }
+
+        it { is_expected.to redirect_to(root_path) }
+      end
+
+      context 'with a another avis' do
+        let(:avis) { create(:avis) }
+
+        it { is_expected.to redirect_to(expert_all_avis_path) }
+      end
+    end
+
     describe '#show' do
       subject { get :show, params: { id: avis_with_answer.id, procedure_id: } }
 
