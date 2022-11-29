@@ -498,6 +498,12 @@ describe Experts::AvisController, type: :controller do
         }
       end
 
+      context 'when the avis is revoked' do
+        before { avis.update(revoked_at: Time.zone.now) }
+
+        it { is_expected.to redirect_to(root_path) }
+      end
+
       context 'when the expert hasn’t signed up yet' do
         before { expert.user.update(last_sign_in_at: nil) }
 
