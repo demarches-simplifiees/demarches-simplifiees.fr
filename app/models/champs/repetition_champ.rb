@@ -20,7 +20,7 @@
 #  type_de_champ_id               :integer
 #
 class Champs::RepetitionChamp < Champ
-  accepts_nested_attributes_for :champs, allow_destroy: true
+  accepts_nested_attributes_for :champs
   delegate :libelle_for_export, to: :type_de_champ
 
   def rows
