@@ -599,12 +599,12 @@ describe Champ do
 
       context "when has parent" do
         let(:champ) { create(:champ_text, parent: create(:champ_text)) }
-        it { expect(champ.input_name).to eq "dossier[champs_public_attributes][#{champ.parent_id}][champs_attributes][#{champ.id}]" }
+        it { expect(champ.input_name).to eq "dossier[champs_public_attributes][#{champ.id}]" }
       end
 
       context "when has private parent" do
         let(:champ) { create(:champ_text, private: true, parent: create(:champ_text, private: true)) }
-        it { expect(champ.input_name).to eq "dossier[champs_private_attributes][#{champ.parent_id}][champs_attributes][#{champ.id}]" }
+        it { expect(champ.input_name).to eq "dossier[champs_private_attributes][#{champ.id}]" }
       end
     end
   end

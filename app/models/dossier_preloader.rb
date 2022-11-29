@@ -78,6 +78,9 @@ class DossierPreloader
   def load_dossier(dossier, champs, children_by_parent = {})
     champs_public, champs_private = champs.partition(&:public?)
 
+    dossier.association(:champs).target = []
+    dossier.association(:champs_public_all).target = []
+    dossier.association(:champs_private_all).target = []
     load_champs(dossier, :champs_public, champs_public, dossier, children_by_parent)
     load_champs(dossier, :champs_private, champs_private, dossier, children_by_parent)
 
@@ -90,12 +93,22 @@ class DossierPreloader
   end
 
   def load_champs(parent, name, champs, dossier, children_by_parent)
+    return if champs.empty?
+
     champs.each do |champ|
       champ.association(:dossier).target = dossier
 
       if parent.is_a?(Champ)
         champ.association(:parent).target = parent
       end
+    end
+
+    dossier.association(:champs).target += champs
+
+    if champs.first.public?
+      dossier.association(:champs_public_all).target += champs
+    else
+      dossier.association(:champs_private_all).target += champs
     end
 
     parent.association(name).target = champs.sort_by do |champ|

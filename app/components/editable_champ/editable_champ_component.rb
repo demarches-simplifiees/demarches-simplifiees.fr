@@ -23,7 +23,7 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
         "hidden": !@champ.visible?
       ),
       id: @champ.input_group_id,
-      data: { controller: stimulus_controller, block: @champ.block? }
+      data: { controller: stimulus_controller }
     }
   end
 
