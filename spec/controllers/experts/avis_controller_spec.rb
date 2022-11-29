@@ -159,7 +159,9 @@ describe Experts::AvisController, type: :controller do
     end
 
     describe '#messagerie' do
-      subject { get :messagerie, params: { id: avis_without_answer.id, procedure_id: procedure.id } }
+      let(:avis) { avis_without_answer }
+      subject { get :messagerie, params: { id: avis.id, procedure_id: procedure.id } }
+
       context 'with valid avis' do
         before { subject }
 
@@ -169,6 +171,7 @@ describe Experts::AvisController, type: :controller do
           expect(assigns(:dossier)).to eq(dossier)
         end
       end
+
       context 'with an avis that does not belongs to current_expert' do
         it "refuse l'accès au dossier" do
           sign_in(create(:expert).user)
@@ -176,6 +179,12 @@ describe Experts::AvisController, type: :controller do
           expect(response).to redirect_to(expert_all_avis_path)
           expect(flash.alert).to eq("Vous n’avez pas accès à cet avis.")
         end
+      end
+
+      context 'with a revoked avis' do
+        let(:avis) { revoked_avis }
+
+        it { is_expected.to redirect_to(root_path) }
       end
     end
 
