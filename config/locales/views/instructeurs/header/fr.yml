@@ -11,6 +11,7 @@ fr:
             termine: Le traitement de ce dossier est terminé, mais il va bientôt expirer. Cela signifie qu’il va bientôt être supprimé. Si vous souhaitez conserver une trace, vous pouvez le télécharger au format PDF.
           button_delay_expiration: "Conserver un mois de plus"
           notification_management: gestion des notifications
+          administrators_list: voir les administrateurs
           statistics: statistiques
           instructeurs: instructeurs
           contact_users: contacter les usagers (brouillon)
