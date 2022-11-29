@@ -1,5 +1,5 @@
 - if etablissement.as_degraded_mode?
-  %table.table.vertical.dossier-champs
+  %table.table.vertical.dossier-champs{ role: :presentation }
     %tbody
       %tr
         %td.libelle{ colspan: 2 } ⚠ LʼINSEE est indisponible, les informations sur lʼentreprise arriveront dʼici quelques heures.
@@ -7,7 +7,7 @@
         %td.libelle SIRET :
         %td= etablissement.siret
 - else
-  %table.table.vertical.dossier-champs
+  %table.table.vertical.dossier-champs{ role: :presentation }
     %tbody
       - if etablissement.diffusable_commercialement == false && profile != 'instructeur'
         %tr
