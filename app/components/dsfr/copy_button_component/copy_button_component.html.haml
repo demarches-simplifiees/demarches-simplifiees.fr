@@ -1,5 +1,5 @@
 %span{ data: { controller: 'clipboard', clipboard_text_value: @text } }
   %button{ data: { action: 'clipboard#copy' }, title: @title }
     %span.fr-icon-clipboard-line
-  %p.fr-text--sm.hidden{ data: { clipboard_target: 'success' } }
+  %span.fr-text--sm.hidden{ data: { clipboard_target: 'success' } }
     = @success || t('.copy_confirmation')
