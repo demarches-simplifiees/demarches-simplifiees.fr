@@ -261,8 +261,9 @@ describe Experts::AvisController, type: :controller do
       let(:file) { nil }
       let(:scan_result) { true }
       let(:now) { Time.zone.parse("14/07/1789") }
+      let(:avis) { avis_without_answer }
 
-      subject { post :create_commentaire, params: { id: avis_without_answer.id, procedure_id:, commentaire: { body: 'commentaire body', piece_jointe: file } } }
+      subject { post :create_commentaire, params: { id: avis.id, procedure_id:, commentaire: { body: 'commentaire body', piece_jointe: file } } }
 
       before do
         allow(ClamavService).to receive(:safe_file?).and_return(scan_result)
@@ -283,11 +284,15 @@ describe Experts::AvisController, type: :controller do
         let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
 
         it do
-          subject
+          expect { subject }.to change(Commentaire, :count).by(1)
           expect(Commentaire.last.piece_jointe.filename).to eq("piece_justificative_0.pdf")
         end
+      end
 
-        it { expect { subject }.to change(Commentaire, :count).by(1) }
+      context 'with a revoked avis' do
+        let(:avis) { revoked_avis }
+
+        it { is_expected.to redirect_to(root_path) }
       end
     end
 
