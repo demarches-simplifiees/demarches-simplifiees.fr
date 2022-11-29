@@ -9,5 +9,5 @@
   - if @champ.type_champ == "titre_identite"
     %p.notice  Carte nationale d’identité (uniquement le recto), passeport, titre de séjour ou autre justificatif d’identité.
 
-  = @form.hidden_field :id, value: @champ.id, data: @champ.block? ? { id: true } : {}
+  = @form.hidden_field :id, value: @champ.id
   = render component_class.new(form: @form, champ: @champ, seen_at: @seen_at)
