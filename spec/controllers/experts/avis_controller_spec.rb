@@ -78,9 +78,17 @@ describe Experts::AvisController, type: :controller do
     end
 
     describe '#bilans_bdf' do
-      before { get :bilans_bdf, params: { id: avis_without_answer.id, procedure_id: } }
+      let(:avis) { avis_without_answer }
+
+      before { get :bilans_bdf, params: { id: avis, procedure_id: } }
 
       it { expect(response).to redirect_to(instructeur_avis_path(avis_without_answer)) }
+
+      context 'with a revoked avis' do
+        let(:avis) { revoked_avis }
+
+        it { expect(response).to redirect_to(root_path) }
+      end
     end
 
     describe '#show' do
