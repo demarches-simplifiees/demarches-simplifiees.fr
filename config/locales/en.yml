@@ -35,6 +35,7 @@ en:
 
   help: 'Help'
   help_dropdown:
+    general_title: "Online help"
     problem_title: A problem with the website ?
     problem_description: Find your answer in the online help.
     technical_contact_title: Technical contact
