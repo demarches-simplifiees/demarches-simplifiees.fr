@@ -27,5 +27,13 @@ describe 'instructeurs/procedures/_list.html.haml', type: :view do
     it 'does not contain link to expiring dossiers within procedure' do
       expect(subject).to have_selector(%Q(a[href="#{instructeur_procedure_path(procedure, statut: 'expirant')}"]), count: 0)
     end
+
+    it 'contains copy link' do
+      expect(subject).to have_selector('.fr-icon-clipboard-line')
+    end
+
+    it 'contains procedure number' do
+      expect(subject).to have_text(procedure.id)
+    end
   end
 end
