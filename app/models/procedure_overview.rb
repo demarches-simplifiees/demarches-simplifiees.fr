@@ -10,7 +10,7 @@ class ProcedureOverview
     @start_date = start_date
     @procedure = procedure
 
-    dossiers = procedure.dossiers.where(groupe_instructeur: groups)
+    dossiers = procedure.dossiers.where(groupe_instructeur: groups).visible_by_administration
 
     @dossiers_en_instruction_count = dossiers.state_en_instruction.count
     @old_dossiers_en_instruction = dossiers
@@ -24,7 +24,6 @@ class ProcedureOverview
 
     @created_dossiers_count = dossiers
       .where(created_at: start_date..Time.zone.now)
-      .state_not_brouillon
       .count
   end
 
