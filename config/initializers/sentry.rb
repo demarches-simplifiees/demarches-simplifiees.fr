@@ -6,6 +6,7 @@ Sentry.init do |config|
   config.environment = secrets[:environment] || Rails.env
   config.enabled_environments = ['production', secrets[:environment].presence].compact
   config.breadcrumbs_logger = [:active_support_logger]
+  config.transport.proxy = ENV['https_proxy']
   config.traces_sampler = lambda do |sampling_context|
     # if this is the continuation of a trace, just use that decision (rate controlled by the caller)
     unless sampling_context[:parent_sampled].nil?
