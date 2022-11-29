@@ -1,5 +1,6 @@
 - if dossiers.present?
   %table.table.dossiers-table.hoverable
+    %caption= t('views.users.dossiers.dossiers_list.caption')
     %thead
       %tr
         %th.number-col{ scope: :col }= t('views.users.dossiers.dossiers_list.n_dossier')
