@@ -447,6 +447,12 @@ describe Experts::AvisController, type: :controller do
         get :sign_up, params: { id: avis.id, procedure_id: procedure.id, email: avis.expert.email }
       end
 
+      context 'when the avis is revoked' do
+        before { avis.update(revoked_at: Time.zone.now) }
+
+        it { is_expected.to redirect_to(root_path) }
+      end
+
       context 'when the expert hasn’t signed up yet' do
         before { expert.user.update(last_sign_in_at: nil) }
 
