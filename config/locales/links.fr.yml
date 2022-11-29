@@ -29,7 +29,7 @@ fr:
         title: "Documentation graphql de l'API"
         url: "https://doc.demarches-simplifiees.fr/pour-aller-plus-loin/graphql"
       betagouv:
-        title: "Le site de beta.gouv.fr — République Française"
+        title: "Le site de beta.gouv.fr — Premier Ministre"
         url: "https://beta.gouv.fr"
       cgu:
         label: "CGU"
