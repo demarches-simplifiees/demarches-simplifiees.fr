@@ -9,6 +9,7 @@ describe Experts::AvisController, type: :controller do
     let(:claimant) { create(:expert) }
     let(:expert) { create(:expert) }
     let(:procedure) { create(:procedure, :published, instructeurs: [instructeur, another_instructeur, instructeur_with_instant_avis_notification]) }
+    let(:procedure_id) { procedure.id }
     let(:another_procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
     let(:dossier) { create(:dossier, :en_construction, procedure:) }
     let(:experts_procedure) { create(:experts_procedure, expert:, procedure:) }
@@ -59,13 +60,13 @@ describe Experts::AvisController, type: :controller do
       end
 
       context 'with a statut equal to donnes' do
-        before { get :procedure, params: { statut: 'donnes', procedure_id: procedure.id } }
+        before { get :procedure, params: { statut: 'donnes', procedure_id: } }
 
         it { expect(assigns(:statut)).to eq('donnes') }
       end
 
       context 'with different procedure' do
-        subject { get :procedure, params: { statut: 'donnes', procedure_id: procedure.id } }
+        subject { get :procedure, params: { statut: 'donnes', procedure_id: } }
 
         it 'fails' do
           sign_in(create(:expert).user)
@@ -77,13 +78,13 @@ describe Experts::AvisController, type: :controller do
     end
 
     describe '#bilans_bdf' do
-      before { get :bilans_bdf, params: { id: avis_without_answer.id, procedure_id: procedure.id } }
+      before { get :bilans_bdf, params: { id: avis_without_answer.id, procedure_id: } }
 
       it { expect(response).to redirect_to(instructeur_avis_path(avis_without_answer)) }
     end
 
     describe '#show' do
-      subject { get :show, params: { id: avis_with_answer.id, procedure_id: procedure.id } }
+      subject { get :show, params: { id: avis_with_answer.id, procedure_id: } }
 
       context 'with a valid avis' do
         before { subject }
@@ -115,7 +116,7 @@ describe Experts::AvisController, type: :controller do
     end
 
     describe '#instruction' do
-      subject { get :instruction, params: { id: avis_to_instruct.id, procedure_id: procedure.id } }
+      subject { get :instruction, params: { id: avis_to_instruct.id, procedure_id: } }
 
       context 'with valid avis' do
         let(:avis_to_instruct) { avis_without_answer }
@@ -153,14 +154,14 @@ describe Experts::AvisController, type: :controller do
         avis_with_merged_instructeur = create(:avis, dossier: dossier, claimant: another_instructeur, experts_procedure: experts_procedure)
         another_instructeur.user.destroy
         sign_in(expert.user)
-        get :instruction, params: { id: avis_with_merged_instructeur.id, procedure_id: procedure.id }
+        get :instruction, params: { id: avis_with_merged_instructeur.id, procedure_id: }
         expect(response).to have_http_status(200)
       end
     end
 
     describe '#messagerie' do
       let(:avis) { avis_without_answer }
-      subject { get :messagerie, params: { id: avis.id, procedure_id: procedure.id } }
+      subject { get :messagerie, params: { id: avis.id, procedure_id: } }
 
       context 'with valid avis' do
         before { subject }
@@ -195,7 +196,7 @@ describe Experts::AvisController, type: :controller do
       let(:avis) { avis_without_answer }
 
       subject do
-        post :update, params: { id: avis.id, procedure_id: procedure.id, avis: { answer: 'answer' } }
+        post :update, params: { id: avis.id, procedure_id:, avis: { answer: 'answer' } }
         avis.reload
       end
 
@@ -233,7 +234,7 @@ describe Experts::AvisController, type: :controller do
 
         before do
           expect(ClamavService).to receive(:safe_file?).and_return(true)
-          post :update, params: { id: avis_without_answer.id, procedure_id: procedure.id, avis: { answer: 'answer', piece_justificative_file: file } }
+          post :update, params: { id: avis_without_answer.id, procedure_id:, avis: { answer: 'answer', piece_justificative_file: file } }
           perform_enqueued_jobs
           avis_without_answer.reload
         end
@@ -261,7 +262,7 @@ describe Experts::AvisController, type: :controller do
       let(:scan_result) { true }
       let(:now) { Time.zone.parse("14/07/1789") }
 
-      subject { post :create_commentaire, params: { id: avis_without_answer.id, procedure_id: procedure.id, commentaire: { body: 'commentaire body', piece_jointe: file } } }
+      subject { post :create_commentaire, params: { id: avis_without_answer.id, procedure_id:, commentaire: { body: 'commentaire body', piece_jointe: file } } }
 
       before do
         allow(ClamavService).to receive(:safe_file?).and_return(scan_result)
@@ -324,7 +325,7 @@ describe Experts::AvisController, type: :controller do
 
       before do
         Timecop.freeze(now)
-        post :create_avis, params: { id: previous_avis.id, procedure_id: procedure.id, avis: { emails:, introduction:, experts_procedure:, confidentiel:, invite_linked_dossiers:, introduction_file: } }
+        post :create_avis, params: { id: previous_avis.id, procedure_id:, avis: { emails:, introduction:, experts_procedure:, confidentiel:, invite_linked_dossiers:, introduction_file: } }
         created_avis.reload
       end
 
@@ -450,10 +451,11 @@ describe Experts::AvisController, type: :controller do
     let(:dossier) { create(:dossier) }
     let(:avis) { create(:avis, dossier: dossier, experts_procedure: experts_procedure, claimant: claimant) }
     let(:procedure) { dossier.procedure }
+    let(:procedure_id) { procedure.id }
 
     describe '#sign_up' do
       subject do
-        get :sign_up, params: { id: avis.id, procedure_id: procedure.id, email: avis.expert.email }
+        get :sign_up, params: { id: avis.id, procedure_id:, email: avis.expert.email }
       end
 
       context 'when the avis is revoked' do
@@ -499,7 +501,7 @@ describe Experts::AvisController, type: :controller do
       subject do
         post :update_expert, params: {
           id: avis.id,
-          procedure_id: procedure.id,
+          procedure_id:,
           email: avis.expert.email,
           user: {
             password: 'my-s3cure-p4ssword'
