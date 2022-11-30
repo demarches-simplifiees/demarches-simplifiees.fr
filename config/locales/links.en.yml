@@ -27,8 +27,7 @@ en:
         title: "API Documentation"
         url: "https://doc.demarches-simplifiees.fr/pour-aller-plus-loin/graphql"
       betagouv:
-        label: "Beta.gouv.fr"
-        title: "The Beta.gouv.fr website"
+        title: "The Beta.gouv.fr website — First Minister"
         url: "https://beta.gouv.fr"
       code:
         label: "Source code"

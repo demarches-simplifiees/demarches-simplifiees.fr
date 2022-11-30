@@ -11,7 +11,7 @@
           = t('views.shared.france_connect_login.login_button')
         %span.fr-connect__brand FranceConnect
       %p
-        = link_to t('views.shared.france_connect_login.help_link'), "https://franceconnect.gouv.fr/", target: "_blank", rel: "noopener"
+        = link_to t('views.shared.france_connect_login.help_link'), "https://franceconnect.gouv.fr/", title: new_tab_suffix(t('views.shared.france_connect_login.help_link')), **external_link_attributes
 
     .france-connect-login-separator
       = t('views.shared.france_connect_login.separator')

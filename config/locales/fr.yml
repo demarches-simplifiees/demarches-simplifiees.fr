@@ -24,6 +24,7 @@ fr:
     sentence_for_humans: 'Si vous êtes un humain, laissez ce champ vide'
   help: 'Aide'
   help_dropdown:
+    general_title: "Aide en ligne"
     problem_title: Un problème avec le site ?
     problem_description: Trouvez votre réponse dans l’aide en ligne.
     technical_contact_title: Contact technique
@@ -40,6 +41,7 @@ fr:
     message: Message
     send_mail: Envoyer le message
     procedure: Démarches
+    new_tab: "Nouvel onglet"
   helpers:
     procedure:
       testing_procedure: démarche en test
@@ -74,6 +76,11 @@ fr:
         access: Consulter mon dossier
         question: J’ai une question
         reply: Répondre à ce message
+    root_path_link_title:
+      default: 'Aller à la page d’accueil'
+      user: 'Aller à la liste des dossiers'
+      instructeur: 'Aller à la liste des démarches'
+      admin: "Aller au panneau d’administration"
   views:
     commencer:
       show:
