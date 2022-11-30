@@ -148,7 +148,7 @@ module Users
 
     def brouillon
       @dossier = dossier_with_champs
-      # TODO: SEB show validation errors
+      @dossier.valid?(context: :prefilling)
 
       # TODO: remove when the champs are unifed
       if !@dossier.autorisation_donnees

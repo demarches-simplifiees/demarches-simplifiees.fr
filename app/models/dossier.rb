@@ -435,6 +435,8 @@ class Dossier < ApplicationRecord
   validates :individual, presence: true, if: -> { revision.procedure.for_individual? }
   validates :groupe_instructeur, presence: true, if: -> { !brouillon? }
 
+  validates_associated :champs_public, on: :prefilling
+
   def types_de_champ_public
     types_de_champ
   end
