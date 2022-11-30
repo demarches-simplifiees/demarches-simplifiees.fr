@@ -342,6 +342,7 @@ describe ProcedureExportService do
     end
 
     describe 'Repetitions sheet' do
+      let(:procedure) { create(:procedure, :published, :for_individual, types_de_champ_public: [{ type: :repetition, children: [{ libelle: 'Nom' }, { libelle: 'Age' }] }]) }
       let!(:dossiers) do
         [
           create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure),
@@ -403,7 +404,7 @@ describe ProcedureExportService do
       context 'with non unique labels' do
         let(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure) }
         let(:champ_repetition) { dossier.champs_public.find { |champ| champ.type_champ == 'repetition' } }
-        let(:type_de_champ_repetition) { create(:type_de_champ_repetition, procedure: procedure, libelle: champ_repetition.libelle) }
+        let(:type_de_champ_repetition) { create(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure, libelle: champ_repetition.libelle) }
         let!(:another_champ_repetition) { create(:champ_repetition, type_de_champ: type_de_champ_repetition, dossier: dossier) }
 
         it 'should have sheets' do
