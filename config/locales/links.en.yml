@@ -32,7 +32,7 @@ en:
       code:
         label: "Source code"
         title: "Our Source code is open source"
-        url: "https://github.com/betagouv/demarches-simplifiees.fr"
+        url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr"
       cgu:
         label: "ToS"
         title: "Terms of Service"
@@ -60,7 +60,7 @@ en:
       releases:
         label: "Releases"
         title: "Our last updates"
-        url: "https://github.com/betagouv/demarches-simplifiees.fr/releases"
+        url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr/releases"
       security:
         label: "Security"
         title: "Security policy"
