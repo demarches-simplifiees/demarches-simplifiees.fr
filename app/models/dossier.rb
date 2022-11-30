@@ -5,6 +5,8 @@
 #  id                                                 :integer          not null, primary key
 #  api_entreprise_job_exceptions                      :string           is an Array
 #  archived                                           :boolean          default(FALSE)
+#  archived_at                                        :datetime
+#  archived_by                                        :string
 #  autorisation_donnees                               :boolean
 #  brouillon_close_to_expiration_notice_sent_at       :datetime
 #  conservation_extension                             :interval         default(0 seconds)
@@ -636,14 +638,12 @@ class Dossier < ApplicationRecord
     end
   end
 
-  def archiver!(author)
-    update!(archived: true)
-    log_dossier_operation(author, :archiver)
+  def archiver!(instructeur)
+    update!(archived: true, archived_at: Time.zone.now, archived_by: instructeur.email)
   end
 
-  def desarchiver!(author)
-    update!(archived: false)
-    log_dossier_operation(author, :desarchiver)
+  def desarchiver!
+    update!(archived: false, archived_at: nil, archived_by: nil)
   end
 
   def text_summary

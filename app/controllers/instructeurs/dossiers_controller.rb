@@ -113,7 +113,7 @@ module Instructeurs
     end
 
     def unarchive
-      dossier.desarchiver!(current_instructeur)
+      dossier.desarchiver!
       redirect_back(fallback_location: instructeur_procedure_path(procedure))
     end
 
