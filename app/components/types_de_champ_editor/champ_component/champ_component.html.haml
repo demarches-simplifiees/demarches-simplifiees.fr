@@ -28,7 +28,7 @@
               = form.label :libelle, "Libellé du champ", class: 'flex-grow', for: dom_id(type_de_champ, :libelle)
               - if can_be_mandatory?
                 .cell.flex.align-center
-                  = form.check_box :mandatory, class: 'small-margin small', id: dom_id(type_de_champ, :mandatory)
+                  = form.check_box :mandatory, class: 'small-margin small', id: dom_id(type_de_champ, :mandatory), disabled: type_de_champ.routage?
                   = form.label :mandatory, "Champ obligatoire", for: dom_id(type_de_champ, :mandatory)
             = form.text_field :libelle, class: 'small-margin small width-100', id: dom_id(type_de_champ, :libelle), data: input_autofocus
           - if !type_de_champ.header_section? && !type_de_champ.titre_identite?
