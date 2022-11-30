@@ -263,9 +263,9 @@ describe API::V1::DossiersController do
             it 'should have rows' do
               expect(subject.size).to eq(2)
               expect(subject[0][:id]).to eq(1)
-              expect(subject[0][:champs].size).to eq(3)
-              expect(subject[0][:champs].map { |c| c[:value] }).to eq(['text', 'text', '42'])
-              expect(subject[0][:champs].map { |c| c[:type_de_champ][:type_champ] }).to eq(['text', 'text', 'number'])
+              expect(subject[0][:champs].size).to eq(1)
+              expect(subject[0][:champs].map { |c| c[:value] }).to eq(['text'])
+              expect(subject[0][:champs].map { |c| c[:type_de_champ][:type_champ] }).to eq(['text'])
             end
           end
         end

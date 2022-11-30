@@ -31,7 +31,7 @@ shared_examples 'champ_spec' do
     end
 
     context 'when repetition not blank' do
-      let(:type_de_champ) { build(:type_de_champ_repetition) }
+      let(:type_de_champ) { build(:type_de_champ_repetition, :with_types_de_champ, procedure: build(:procedure)) }
       let(:champ) { build(:champ_repetition, type_de_champ: type_de_champ) }
 
       it { expect(champ.blank?).to be(false) }
