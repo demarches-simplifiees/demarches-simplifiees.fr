@@ -66,9 +66,10 @@
         .fr-footer__content
           %p.fr-footer__content-desc
             = I18n.t('users.procedure_footer.managed_by.header')
-            = "#{service.nom},"
-            = "#{service.organisme},"
-            = string_to_html(service.adresse, wrapper_tag = 'span')
+            %span{ lang: :fr }
+              = "#{service.nom},"
+              = "#{service.organisme},"
+              = string_to_html(service.adresse, 'span')
           = render partial: "shared/footer_content_list"
 
     .fr-footer__bottom

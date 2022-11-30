@@ -16,12 +16,12 @@ en:
       link_1_url: "https://www.numerique.gouv.fr/dinum/"
       link_2_label: The source code
       description_2: is available under a free license.
+      copy_html: "Unless otherwise stated, all content on this site is %{link}"
+      license: "licensed under etalab 2.0"
       accessibilite:
         label: "Accessibility: partially compliant"
         title: "Accessibility declaration"
         url: "https://doc.demarches-simplifiees.fr/declaration-daccessibilite"
-      aide:
-        title: "Frequently Asked Questions"
       api_doc:
         label: "API Documentation"
         title: "API Documentation"
@@ -58,7 +58,7 @@ en:
         title: "Legal notices regarding our platform"
         url: "https://doc.demarches-simplifiees.fr/mentions-legales"
       releases:
-        label: "Releases"
+        label: "Releases notes"
         title: "Our last updates"
         url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr/releases"
       security:
@@ -76,6 +76,9 @@ en:
         label: "Online workshop registration"
         title: "Registration for our online workshop"
         url: "https://app.livestorm.co/demarches-simplifiees"
+      cookies:
+        label: Cookies
+        title: Cookies
       contact:
-        label: Contactez-nous
-        title: Contactez-nous
+        label: Contact
+        title: Contact
