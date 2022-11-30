@@ -8,20 +8,33 @@ class API::V2::BaseController < ApplicationController
   private
 
   def context
-    # new token give administrateur_id
-    if api_token.administrateur?
-      { administrateur_id: api_token.administrateur_id, token: api_token.token }
+    # new token
+    if api_token.present?
+      { token: authorization_bearer_token, administrateur_id: api_token.administrateur.id }
     # web interface (/graphql) give current_administrateur
     elsif current_administrateur.present?
       { administrateur_id: current_administrateur.id }
     # old token
     else
-      { token: api_token.token }
+      { token: authorization_bearer_token }
     end
   end
 
   def token?
     authorization_bearer_token.present?
+  end
+
+  def authenticate_administrateur_from_token
+    if api_token.present?
+      @current_user = api_token.administrateur.user
+    end
+  end
+
+  def api_token
+    if @api_token.nil?
+      @api_token = APIToken.find_and_verify(authorization_bearer_token) || false
+    end
+    @api_token
   end
 
   def authorization_bearer_token
@@ -32,18 +45,5 @@ class API::V2::BaseController < ApplicationController
       end
       received_token
     end
-  end
-
-  def authenticate_administrateur_from_token
-    if api_token.administrateur?
-      administrateur = Administrateur.includes(:user).find_by(id: api_token.administrateur_id)
-      if administrateur.valid_api_token?(api_token.token)
-        @current_user = administrateur.user
-      end
-    end
-  end
-
-  def api_token
-    @api_token ||= APIToken.new(authorization_bearer_token)
   end
 end
