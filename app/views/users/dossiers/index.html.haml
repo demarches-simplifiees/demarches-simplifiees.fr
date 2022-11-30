@@ -1,7 +1,7 @@
 - if @search_terms.present?
-  - content_for(:title, "Recherche : #{@search_terms}")
+  - content_for(:title, t(".title_search", scope: :metas, terms: @search_terms))
 - else
-  - content_for(:title, "Dossiers")
+  - content_for(:title, t(".title", scope: :metas))
 
 - content_for :footer do
   = render partial: "users/dossiers/index_footer"
