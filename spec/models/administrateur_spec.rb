@@ -5,21 +5,6 @@ describe Administrateur, type: :model do
     it { is_expected.to have_and_belong_to_many(:instructeurs) }
   end
 
-  describe "#renew_api_token" do
-    let(:administrateur) { create(:administrateur) }
-    let!(:token) { administrateur.renew_api_token }
-    let(:encrypted_token) { BCrypt::Password.new(administrateur.encrypted_token) }
-    let(:base_token) { APIToken.new(token).token }
-
-    it { expect(encrypted_token).to eq(base_token) }
-
-    context 'when it s called twice' do
-      let!(:new_token) { administrateur.renew_api_token }
-
-      it { expect(new_token).not_to eq(token) }
-    end
-  end
-
   describe "#can_be_deleted?" do
     subject { administrateur.can_be_deleted? }
 
