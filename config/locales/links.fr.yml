@@ -38,7 +38,7 @@ fr:
       code:
         label: "Code source"
         title: "Le code ouvert de demarches-simplifiees"
-        url: "https://github.com/betagouv/demarches-simplifiees.fr"
+        url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr"
       contact_technique:
         label: "Contact technique"
         title: "Contacter notre équipe technique"
@@ -65,7 +65,7 @@ fr:
       releases:
         label: "Nouveautés"
         title: "Les dernière mises à jour de la plateforme"
-        url: "https://github.com/betagouv/demarches-simplifiees.fr/releases"
+        url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr/releases"
       security:
         label: "Sécurité"
         title: "Vous avez identifié une faille, comment nous en informer"
