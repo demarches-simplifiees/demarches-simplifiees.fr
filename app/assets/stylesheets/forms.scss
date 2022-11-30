@@ -228,6 +228,10 @@
     }
   }
 
+  div.field_with_errors > input { // scss-lint:disable SelectorFormat
+    border: 1px solid $dark-red;
+  }
+
   input[type=text],
   input[type=email],
   input[type=password],
