@@ -2,3 +2,18 @@ fr:
   metas:
     signin:
       title: "Se connecter"
+    users:
+      dossiers:
+        index:
+          title: Dossiers
+          title_search: "Recherche : %{terms}"
+        show:
+          title: "Résumé · Dossier nº %{number} (%{procedure_label})"
+        demande:
+          title: "Demande · Dossier nº %{number} (%{procedure_label})"
+        messagerie:
+          title: "Messagerie · Dossier nº %{number} (%{procedure_label})"
+        brouillon:
+          title: "Modification du brouillon nº %{number} (%{procedure_label})"
+        merci:
+          title: "Dossier envoyé (%{procedure_label})"
