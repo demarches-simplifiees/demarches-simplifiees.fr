@@ -1,18 +1,19 @@
 - if dossiers.present?
   %table.table.dossiers-table.hoverable
+    %caption= t('views.users.dossiers.dossiers_list.caption')
     %thead
       %tr
-        %th.number-col= t('views.users.dossiers.dossiers_list.n_dossier')
-        %th= t('views.users.dossiers.dossiers_list.procedure')
+        %th.number-col{ scope: :col }= t('views.users.dossiers.dossiers_list.n_dossier')
+        %th{ scope: :col }= t('views.users.dossiers.dossiers_list.procedure')
         - if dossiers.present?
-          %th= t('views.users.dossiers.dossiers_list.requester')
-        %th.status-col= t('views.users.dossiers.dossiers_list.status')
-        %th.updated-at-col= t('views.users.dossiers.dossiers_list.updated')
-        %th.sr-only= t('views.users.dossiers.dossiers_list.actions')
+          %th{ scope: :col }= t('views.users.dossiers.dossiers_list.requester')
+        %th.status-col{ scope: :col }= t('views.users.dossiers.dossiers_list.status')
+        %th.updated-at-col{ scope: :col }= t('views.users.dossiers.dossiers_list.updated')
+        %th.sr-only{ scope: :col }= t('views.users.dossiers.dossiers_list.actions')
     %tbody
       - dossiers.each do |dossier|
         %tr{ data: { 'dossier-id': dossier.id } }
-          %td.number-col
+          %th.number-col{ scope: :row }
             = link_to(url_for_dossier(dossier), class: 'cell-link', tabindex: -1) do
               %span.icon.folder
               = dossier.id
