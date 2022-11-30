@@ -35,6 +35,7 @@ en:
 
   help: 'Help'
   help_dropdown:
+    general_title: "Online help"
     problem_title: A problem with the website ?
     problem_description: Find your answer in the online help.
     technical_contact_title: Technical contact
@@ -50,6 +51,7 @@ en:
     message: Message
     send_mail: Send message
     procedure: Procedures
+    new_tab: New tab
   helpers:
     procedure:
       testing_procedure: testing procedure
@@ -84,6 +86,11 @@ en:
         access: View your File
         question: I have a question
         reply: Reply to this message
+    root_path_link_title:
+      default: 'Go to homepage'
+      user: 'Go to files list'
+      instructeur: 'Go to procedures list'
+      admin: 'Go to administration panel'
   views:
     commencer:
       show:

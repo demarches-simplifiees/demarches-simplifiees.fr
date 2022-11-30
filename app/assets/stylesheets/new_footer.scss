@@ -13,10 +13,8 @@
   opacity: 0.8;
 }
 
-.footer-logo-beta-gouv-fr {
-  @include ie-compatible-background-image("footer/logo-beta-gouv-fr.svg");
-
-  width: 150px;
-  height: 25px;
-  margin-top: 14px;
+.fr-footer__logo {
+  &.logo-beta-gouv-fr {
+    width: 9rem;
+  }
 }
