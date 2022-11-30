@@ -1,6 +1,6 @@
 describe API::V1::DossiersController do
   let(:admin) { create(:administrateur) }
-  let(:token) { admin.renew_api_token }
+  let(:token) { APIToken.generate(admin)[1] }
   let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, administrateur: admin) }
   let(:wrong_procedure) { create(:procedure) }
 
