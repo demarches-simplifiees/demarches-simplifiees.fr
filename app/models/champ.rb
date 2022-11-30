@@ -31,9 +31,10 @@ class Champ < ApplicationRecord
   belongs_to :etablissement, optional: true, dependent: :destroy
   has_many :champs, -> { ordered }, foreign_key: :parent_id, inverse_of: :parent, dependent: :destroy
 
+  delegate :procedure, to: :dossier
+
   delegate :libelle,
     :type_champ,
-    :procedure,
     :description,
     :drop_down_list_options,
     :drop_down_other?,
