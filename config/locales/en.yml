@@ -245,6 +245,7 @@ en:
         index:
           dossiers: "Files"
         dossiers_list:
+          caption: My files
           procedure: "Procedure"
           n_dossier: "File n."
           requester: "Requester"
