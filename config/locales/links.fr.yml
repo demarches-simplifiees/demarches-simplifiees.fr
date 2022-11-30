@@ -16,14 +16,12 @@ fr:
       link_1_url: "https://www.numerique.gouv.fr/dinum/"
       link_2_label: Le code source
       description_2: est disponible en licence libre.
+      copy_html: "Sauf mention contraire, tous les contenus de ce site sont sous %{link}"
+      license: "licence etalab 2.0"
       accessibilite:
         label: "Accessibilité : partiellement conforme"
         title: "Consulter notre déclaration d’accessibilité"
         url: "https://doc.demarches-simplifiees.fr/declaration-daccessibilite"
-      aide:
-        label: "Aide"
-        title: "Foire aux Questions"
-        url: "https://faq.demarches-simplifiees.fr"
       api_doc:
         label: "Documentation de l’API"
         title: "Documentation graphql de l’API"
