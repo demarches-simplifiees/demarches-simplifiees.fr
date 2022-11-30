@@ -31,22 +31,6 @@ describe Users::ProfilController, type: :controller do
     end
   end
 
-  describe 'POST #renew_api_token' do
-    let(:administrateur) { create(:administrateur) }
-
-    before { sign_in(administrateur.user) }
-
-    before do
-      allow(administrateur).to receive(:renew_api_token)
-      allow(controller).to receive(:current_administrateur) { administrateur }
-      post :renew_api_token
-    end
-
-    it { expect(administrateur).to have_received(:renew_api_token) }
-    it { expect(response.status).to render_template(:show) }
-    it { expect(flash.notice).to eq('Votre jeton a été regénéré.') }
-  end
-
   describe 'PATCH #update_email' do
     context 'when email is same as user' do
       it 'fails' do
