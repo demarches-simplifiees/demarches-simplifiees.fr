@@ -1,3 +1,10 @@
+- if @is_dossier_in_batch_operation
+  = render Dsfr::NoticeComponent.new(closable: false) do |c|
+    - c.with_title do
+      Un traitement de masse est en cours sur ce dossier, vous ne pouvez pas le modifier.
+      = link_to "Recharger la page", instructeur_dossier_path, data: { action: 'turbo-poll#refresh' }
+      pour voir si l'opération est finie.
+
 .sub-header
   .container
     .flex.justify-between

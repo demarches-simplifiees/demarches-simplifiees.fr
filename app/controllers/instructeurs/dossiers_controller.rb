@@ -47,6 +47,7 @@ module Instructeurs
 
     def show
       @demande_seen_at = current_instructeur.follows.find_by(dossier: dossier_with_champs)&.demande_seen_at
+      @is_dossier_in_batch_operation = dossier.batch_operation.present?
 
       respond_to do |format|
         format.pdf do
@@ -330,7 +331,7 @@ module Instructeurs
                            current_instructeur.dossiers.find(params[:dossier_id])
       end
       if dossier_in_batch.batch_operation.present?
-        flash.alert = "Ce dossier fait parti d'un traitement de masse, veuillez attendre la fin de ce traitement"
+        flash.alert = "Votre action n'a pas été effectuée, ce dossier fait parti d'un traitement de masse."
         redirect_back(fallback_location: instructeur_dossier_path(procedure, dossier_in_batch))
       end
     end

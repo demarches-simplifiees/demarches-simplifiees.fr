@@ -64,7 +64,7 @@ describe Instructeurs::DossiersController, type: :controller do
       let(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
       it { expect(instructeur.followed_dossiers).to eq([]) }
       it { expect(response).to redirect_to(instructeur_dossier_path(dossier.procedure, dossier)) }
-      it { expect(flash.alert).to eq("Ce dossier fait parti d'un traitement de masse, veuillez attendre la fin de ce traitement") }
+      it { expect(flash.alert).to eq("Votre action n'a pas été effectuée, ce dossier fait parti d'un traitement de masse.") }
     end
   end
 
@@ -84,7 +84,7 @@ describe Instructeurs::DossiersController, type: :controller do
       let(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
       it { expect(instructeur.followed_dossiers).to eq([dossier]) }
       it { expect(response).to redirect_to(instructeur_dossier_path(dossier.procedure, dossier)) }
-      it { expect(flash.alert).to eq("Ce dossier fait parti d'un traitement de masse, veuillez attendre la fin de ce traitement") }
+      it { expect(flash.alert).to eq("Votre action n'a pas été effectuée, ce dossier fait parti d'un traitement de masse.") }
     end
   end
 
@@ -104,7 +104,7 @@ describe Instructeurs::DossiersController, type: :controller do
       let(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
       it { expect(dossier.archived).to eq(false) }
       it { expect(response).to redirect_to(instructeur_dossier_path(dossier.procedure, dossier)) }
-      it { expect(flash.alert).to eq("Ce dossier fait parti d'un traitement de masse, veuillez attendre la fin de ce traitement") }
+      it { expect(flash.alert).to eq("Votre action n'a pas été effectuée, ce dossier fait parti d'un traitement de masse.") }
     end
   end
 
@@ -123,7 +123,7 @@ describe Instructeurs::DossiersController, type: :controller do
       let!(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
       it { expect(dossier.reload.archived).to eq(true) }
       it { expect(response).to redirect_to(instructeur_dossier_path(dossier.procedure, dossier)) }
-      it { expect(flash.alert).to eq("Ce dossier fait parti d'un traitement de masse, veuillez attendre la fin de ce traitement") }
+      it { expect(flash.alert).to eq("Votre action n'a pas été effectuée, ce dossier fait parti d'un traitement de masse.") }
     end
   end
 
@@ -168,7 +168,7 @@ describe Instructeurs::DossiersController, type: :controller do
       let(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
 
       it { expect(response).to redirect_to(instructeur_dossier_path(dossier.procedure, dossier)) }
-      it { expect(flash.alert).to eq("Ce dossier fait parti d'un traitement de masse, veuillez attendre la fin de ce traitement") }
+      it { expect(flash.alert).to eq("Votre action n'a pas été effectuée, ce dossier fait parti d'un traitement de masse.") }
     end
   end
 
@@ -201,7 +201,7 @@ describe Instructeurs::DossiersController, type: :controller do
       let(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
       it { expect(dossier.reload.state).to eq('en_instruction') }
       it { expect(response).to redirect_to(instructeur_dossier_path(dossier.procedure, dossier)) }
-      it { expect(flash.alert).to eq("Ce dossier fait parti d'un traitement de masse, veuillez attendre la fin de ce traitement") }
+      it { expect(flash.alert).to eq("Votre action n'a pas été effectuée, ce dossier fait parti d'un traitement de masse.") }
     end
   end
 
@@ -256,7 +256,7 @@ describe Instructeurs::DossiersController, type: :controller do
       let(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
       it { expect(dossier.reload.state).to eq('refuse') }
       it { expect(response).to redirect_to(instructeur_dossier_path(dossier.procedure, dossier)) }
-      it { expect(flash.alert).to eq("Ce dossier fait parti d'un traitement de masse, veuillez attendre la fin de ce traitement") }
+      it { expect(flash.alert).to eq("Votre action n'a pas été effectuée, ce dossier fait parti d'un traitement de masse.") }
     end
   end
 
@@ -309,7 +309,7 @@ describe Instructeurs::DossiersController, type: :controller do
         it { is_expected.to redirect_to(instructeur_dossier_path(dossier.procedure, dossier)) }
         it 'flashes message' do
           subject
-          expect(flash.alert).to eq("Ce dossier fait parti d'un traitement de masse, veuillez attendre la fin de ce traitement")
+          expect(flash.alert).to eq("Votre action n'a pas été effectuée, ce dossier fait parti d'un traitement de masse.")
         end
       end
     end
@@ -710,8 +710,18 @@ describe Instructeurs::DossiersController, type: :controller do
       end
 
       it { expect(assigns(:include_infos_administration)).to eq(true) }
+      it { expect(assigns(:is_dossier_in_batch_operation)).to eq(false) }
       it { expect(response).to render_template 'dossiers/show' }
     end
+
+    context 'with dossier in batch_operation' do
+      let!(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
+      it 'assigns variable with true value' do
+        get :show, params: { procedure_id: procedure.id, dossier_id: dossier.id }
+        expect(assigns(:is_dossier_in_batch_operation)).to eq(true)
+      end
+    end
+
   end
 
   describe "#update_annotations" do
@@ -946,7 +956,7 @@ describe Instructeurs::DossiersController, type: :controller do
       it { is_expected.to redirect_to(instructeur_dossier_path(dossier.procedure, dossier)) }
       it 'flashes message' do
        subject
-       expect(flash.alert).to eq("Ce dossier fait parti d'un traitement de masse, veuillez attendre la fin de ce traitement")
+       expect(flash.alert).to eq("Votre action n'a pas été effectuée, ce dossier fait parti d'un traitement de masse.")
      end
     end
   end
@@ -975,7 +985,7 @@ describe Instructeurs::DossiersController, type: :controller do
        it { is_expected.to redirect_to(instructeur_dossier_path(dossier.procedure, dossier)) }
        it 'flashes message' do
          subject
-         expect(flash.alert).to eq("Ce dossier fait parti d'un traitement de masse, veuillez attendre la fin de ce traitement")
+         expect(flash.alert).to eq("Votre action n'a pas été effectuée, ce dossier fait parti d'un traitement de masse.")
        end
      end
   end
@@ -1005,7 +1015,7 @@ describe Instructeurs::DossiersController, type: :controller do
       let(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
       it { expect(dossier.hidden_by_administration_at).not_to eq(nil) }
       it { expect(response).to redirect_to(instructeur_dossier_path(dossier.procedure, dossier)) }
-      it { expect(flash.alert).to eq("Ce dossier fait parti d'un traitement de masse, veuillez attendre la fin de ce traitement") }
+      it { expect(flash.alert).to eq("Votre action n'a pas été effectuée, ce dossier fait parti d'un traitement de masse.") }
     end
   end
 end
