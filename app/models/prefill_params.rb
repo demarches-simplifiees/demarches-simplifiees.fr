@@ -5,43 +5,30 @@ class PrefillParams
   end
 
   def to_a
-    # Builds: [{ stable_id: 1, value: "a value" }, { stable_id: 2, value: "another value"}]
-    stable_ids_and_values = convert_typed_ids_to_stable_ids
-
-    # Builds: [{stable_id: "1", champ: #<Champs::...>}, {stable_id: "2", champ: #<Champs::...>}]
-    stable_ids_and_champs = find_champs(stable_ids_and_values.map { _1[:stable_id] })
-
-    # Merges the arrays together, filters out the values we don't want and returns [{ id: champ_1_id, value: value_1}, ...]
-    merge_by_stable_ids(stable_ids_and_values + stable_ids_and_champs)
-      .map { PrefillValue.new(champ: _1[:champ], value: _1[:value]) }
-      .filter(&:prefillable?)
-      .map(&:to_h)
+    build_prefill_values.filter(&:prefillable?).map(&:to_h)
   end
 
   private
 
-  def convert_typed_ids_to_stable_ids
-    @params
-      .to_unsafe_hash
-      .map { |typed_id, value| { stable_id: stable_id_from_typed_id(typed_id), value: value } }
-      .filter { _1[:stable_id].present? && _1[:value].present? }
-  end
+  def build_prefill_values
+    # Builds: [{ stable_id: 1, value: "a value" }, { stable_id: 2, value: "another value"}]
+    stable_ids_and_values =
+      @params
+        .to_unsafe_hash
+        .map { |typed_id, value| { stable_id: stable_id_from_typed_id(typed_id), value: value } }
+        .filter { _1[:stable_id].present? && _1[:value].present? }
 
-  def find_champs(stable_ids)
     @dossier
-      .find_champs_by_stable_ids(stable_ids)
-      .map { |champ| { stable_id: champ.stable_id.to_s, champ: champ } }
-  end
+      .find_champs_by_stable_ids(stable_ids_and_values.map { _1[:stable_id] })
+      .map do |champ|
+        value = stable_ids_and_values.find { _1[:stable_id] == champ.stable_id }[:value]
 
-  def merge_by_stable_ids(arrays_of_hashes_with_stable_id)
-    arrays_of_hashes_with_stable_id
-      .group_by { _1[:stable_id] }
-      .values
-      .map { _1.reduce(:merge) }
+        PrefillValue.new(champ: champ, value: value)
+      end
   end
 
   def stable_id_from_typed_id(typed_id)
-    Champ.id_from_typed_id(typed_id)
+    Champ.id_from_typed_id(typed_id).to_i
   rescue
     nil
   end
