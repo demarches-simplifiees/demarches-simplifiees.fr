@@ -6,7 +6,7 @@ module DossierPrefillableConcern
   def prefill!(champs_public_attributes)
     return unless champs_public_attributes.any?
 
-    assign_attributes(champs_public_attributes: champs_public_attributes)
+    assign_attributes(champs_public_attributes: champs_public_attributes.map { |h| h.merge(prefilled: true) })
     save(validate: false)
   end
 end

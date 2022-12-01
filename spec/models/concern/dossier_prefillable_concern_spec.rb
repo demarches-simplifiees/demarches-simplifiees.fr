@@ -28,10 +28,13 @@ RSpec.describe DossierPrefillableConcern do
 
         let(:values) { [{ id: champ_id_1, value: value_1 }, { id: champ_id_2, value: value_2 }] }
 
-        it "updates the champs with the new values" do
+        it "updates the champs with the new values and mark them as prefilled" do
           fill
+
           expect(dossier.champs_public.first.value).to eq(value_1)
+          expect(dossier.champs_public.first.prefilled).to eq(true)
           expect(dossier.champs_public.last.value).to eq(value_2)
+          expect(dossier.champs_public.last.prefilled).to eq(true)
         end
       end
 
@@ -44,6 +47,10 @@ RSpec.describe DossierPrefillableConcern do
 
         it "still updates the champ" do
           expect { fill }.to change { dossier.champs_public.first.value }.from(nil).to(value)
+        end
+
+        it "still marks it as prefilled" do
+          expect { fill }.to change { dossier.champs_public.first.prefilled }.from(false).to(true)
         end
       end
     end
