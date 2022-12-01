@@ -10,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_30_113745) do
+ActiveRecord::Schema.define(version: 2022_12_01_091658) do
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -165,7 +166,15 @@ ActiveRecord::Schema.define(version: 2022_11_30_113745) do
     t.string "operation", null: false
     t.jsonb "payload", default: {}, null: false
     t.datetime "run_at"
+    t.datetime "seen_at"
     t.bigint "success_dossier_ids", default: [], null: false, array: true
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "batch_operations_groupe_instructeurs", force: :cascade do |t|
+    t.bigint "batch_operation_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.bigint "groupe_instructeur_id", null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
