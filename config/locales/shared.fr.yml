@@ -9,8 +9,8 @@ fr:
         expires_at:
           brouillon: "Expirera le %{date} (%{duree_conservation_totale} mois après la création du dossier)"
           en_construction: "Expirera le %{date} (%{duree_conservation_totale} mois après le dépôt du dossier)"
-          en_instruction: "Ce dossier est en instruction, il n'expirera pas"
-          accepte: "Expirera le %{date}  (%{duree_conservation_totale} mois après l'acceptation du dossier)"
+          en_instruction: "Ce dossier est en instruction, il n’expirera pas"
+          accepte: "Expirera le %{date}  (%{duree_conservation_totale} mois après l’acceptation du dossier)"
           refuse: "Expirera le %{date}  (%{duree_conservation_totale} mois après le refus du dossier)"
           sans_suite: "Expirera le %{date} (%{duree_conservation_totale} mois après le classement sans suite du dossier)"
 
@@ -30,22 +30,22 @@ fr:
         association:
           data_fetched: "Ce RNA correspond à %{title}"
           not_found: "Aucun établissement trouvé"
-          network_error: "Une erreur réseau a empêché l'association liée à ce RNA d'être trouvée"
+          network_error: "Une erreur réseau a empêché l’association liée à ce RNA d’être trouvée"
       dgfip:
         show:
           not_filled: non renseigné
-          fetching_data: "La récupération automatique des données pour le déclarant Nº %{numero_fiscal} avec la référence d'avis %{reference_avis} est en cours."
-          data_fetched: "Des données concernant %{sources} liées au déclarant Nº %{numero_fiscal} avec la référence d'avis %{reference_avis} ont été reçues depuis la DGFiP."
+          fetching_data: "La récupération automatique des données pour le déclarant Nº %{numero_fiscal} avec la référence d’avis %{reference_avis} est en cours."
+          data_fetched: "Des données concernant %{sources} liées au déclarant Nº %{numero_fiscal} avec la référence d’avis %{reference_avis} ont été reçues depuis la DGFiP."
           data_fetched_title: "Données obtenues de la Direction générale des Finances publiques"
       pole_emploi:
         show:
           not_filled: non renseigné
-          fetching_data: "La récupération automatique des données pour l'identifiant %{identifiant} est en cours."
-          data_fetched: "Des données concernant %{sources} liées à l'identifiant %{identifiant} ont été reçues depuis Pôle emploi."
+          fetching_data: "La récupération automatique des données pour l’identifiant %{identifiant} est en cours."
+          data_fetched: "Des données concernant %{sources} liées à l’identifiant %{identifiant} ont été reçues depuis Pôle emploi."
           data_fetched_title: "Données obtenues de Pôle emploi"
       mesri:
         show:
           not_filled: non renseigné
-          fetching_data: "La récupération automatique des données pour l'INE %{ine} est en cours."
-          data_fetched: "Des données concernant %{sources} liées à l'INE %{ine} ont été reçues depuis le MESRI."
+          fetching_data: "La récupération automatique des données pour l’INE %{ine} est en cours."
+          data_fetched: "Des données concernant %{sources} liées à l’INE %{ine} ont été reçues depuis le MESRI."
           data_fetched_title: "Données obtenues du MESRI"

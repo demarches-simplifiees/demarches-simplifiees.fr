@@ -12,14 +12,14 @@ fr:
         phone:
           link: 'Par téléphone au %{service_telephone}'
         schedule:
-          prefix: "Horaires d'ouverture : "
+          prefix: "Horaires d’ouverture : "
         stats:
           link: "Voir les statistiques de la démarche"
       legals:
         header: "Cadre juridique"
         data_retention: "%{application_name} : %{duree_conservation_dossiers_dans_ds} mois"
         data_retention_url: "https://doc.demarches-simplifiees.fr/pour-aller-plus-loin/archivage-longue-duree-des-demarches"
-        terms: "Texte cadrant la demande d'information"
+        terms: "Texte cadrant la demande d’information"
         dpo: "Contacter le Délégué à la Protection des Données"
       official_links:
         legifrance:
