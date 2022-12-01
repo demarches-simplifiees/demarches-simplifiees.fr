@@ -40,18 +40,10 @@ en:
         label: "Documentation"
         title: "Our Documentation"
         url: "https://doc.demarches-simplifiees.fr"
-      doc_nouveautes:
-        label: "News"
-        title: "Our latest News"
-        url: "https://doc.demarches-simplifiees.fr/nouveautes"
       faq:
         label: "FAQ"
         title: "Frequently Asked Questions"
         url: "https://faq.demarches-simplifiees.fr"
-      faq_admin:
-        label: "FAQ"
-        title: "Frequently Asked Questions"
-        url: "https:///faq.demarches-simplifiees.fr/collection/1-administrateur-creation-dun-formulaire"
       mentions_legales:
         label: "Legal notices"
         title: "Legal notices regarding our platform"
@@ -71,10 +63,6 @@ en:
       suivi:
         label: "Audience tracking and privacy"
         title: "Tracking and privacy of demarches-simplifiees"
-      webinaire:
-        label: "Online workshop registration"
-        title: "Registration for our online workshop"
-        url: "https://app.livestorm.co/demarches-simplifiees"
       cookies:
         label: Cookies
         title: Cookies

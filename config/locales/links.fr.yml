@@ -43,18 +43,10 @@ fr:
         label: "Documentation"
         title: "Documentation utilisateur"
         url: "https://doc.demarches-simplifiees.fr"
-      doc_nouveautes:
-        label: "Nouveautés"
-        title: "Les dernière nouveautés"
-        url: "https://doc.demarches-simplifiees.fr/nouveautes"
       faq:
         label: "FAQ"
         title: "Foire aux Questions"
         url: "https://faq.demarches-simplifiees.fr"
-      faq_admin:
-        label: "FAQ"
-        title: "Foire aux Questions"
-        url: "https:///faq.demarches-simplifiees.fr/collection/1-administrateur-creation-dun-formulaire"
       mentions_legales:
         label: "Mentions légales"
         title: "Consulter nos Mentions légales"
@@ -77,10 +69,6 @@ fr:
       suivi:
         label: "Suivi d’audience et vie privée"
         title: "Consulter notre politique de respect de la vie privée"
-      webinaire:
-        label: "Inscription ateliers en ligne"
-        title: "Inscription ateliers en ligne"
-        url: "https://app.livestorm.co/demarches-simplifiees"
       solidarite_numerique:
         label: "Besoin d’aide avec vos démarches en ligne ?"
         title: "Avez-vous besoin d’aide concernant vos démarchez informatisées, essayez solidarite-numerique.fr"
