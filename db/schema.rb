@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_22_145030) do
+ActiveRecord::Schema.define(version: 2022_11_30_113745) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -304,6 +304,8 @@ ActiveRecord::Schema.define(version: 2022_11_22_145030) do
   create_table "dossiers", id: :serial, force: :cascade do |t|
     t.string "api_entreprise_job_exceptions", array: true
     t.boolean "archived", default: false
+    t.datetime "archived_at"
+    t.string "archived_by"
     t.boolean "autorisation_donnees"
     t.datetime "brouillon_close_to_expiration_notice_sent_at"
     t.interval "conservation_extension", default: "PT0S"
