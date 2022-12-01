@@ -78,6 +78,7 @@ class Dossier < ApplicationRecord
 
   has_one_attached :justificatif_motivation
 
+  has_many :champs
   has_many :champs_public, -> { root.public_ordered }, class_name: 'Champ', inverse_of: false, dependent: :destroy
   has_many :champs_private, -> { root.private_ordered }, class_name: 'Champ', inverse_of: false, dependent: :destroy
   has_many :commentaires, inverse_of: :dossier, dependent: :destroy
