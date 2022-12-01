@@ -1,7 +1,6 @@
 en:
   links:
     provider:
-      name: "DINUM"
       provided_by: "la DINUM"
       title: "Direction Interministérielle au Numérique"
       url: "https://numerique.gouv.fr"
