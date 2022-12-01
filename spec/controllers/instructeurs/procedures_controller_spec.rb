@@ -341,6 +341,24 @@ describe Instructeurs::ProceduresController, type: :controller do
 
           it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([termine_dossier, termine_dossier_on_gi_2].map(&:id)) }
         end
+
+        context 'with batch operations' do
+          let!(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [termine_dossier], instructeur: instructeur) }
+          let!(:termine_dossier_2) { create(:dossier, :accepte, procedure: procedure) }
+          let!(:batch_operation_2) { create(:batch_operation, operation: :archiver, dossiers: [termine_dossier_2], instructeur: instructeur) }
+
+          before { subject }
+
+          it { expect(assigns(:procedure_batchs)).to match_array([batch_operation, batch_operation_2]) }
+        end
+
+        context 'with a batch operation not attached to the instructeur' do
+          let(:instructeur_2) { create(:instructeur) }
+          let!(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [termine_dossier], instructeur: instructeur_2) }
+          before { subject }
+
+          it { expect(assigns(:procedure_batchs)).to eq(nil) }
+        end
       end
 
       context 'with an archived dossier' do

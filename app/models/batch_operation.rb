@@ -78,7 +78,7 @@ class BatchOperation < ApplicationRecord
     transaction do
       instance = new(params)
       instance.dossiers = instance.dossiers_safe_scope(params[:dossier_ids])
-                                  .not_having_batch_operation
+        .not_having_batch_operation
       instance.save!
       BatchOperationEnqueueAllJob.perform_later(instance)
       instance
@@ -92,6 +92,22 @@ class BatchOperation < ApplicationRecord
   # beware, must be reloaded first
   def called_for_last_time?
     dossiers.count.zero?
+  end
+
+  def finished_and_success?
+    called_for_last_time? && failed_dossier_ids.empty?
+  end
+
+  def finished_and_fails?
+    called_for_last_time? && failed_dossier_ids.present?
+  end
+
+  def in_progress?
+    !called_for_last_time? && (failed_dossier_ids + success_dossier_ids).present?
+  end
+
+  def beginning?
+    !called_for_last_time? && (failed_dossier_ids + success_dossier_ids).empty?
   end
 
   private

@@ -71,6 +71,10 @@
       %div{ data: { controller: 'batch-operation' } }
         - batch_operation_component = Dossiers::BatchOperationComponent.new(statut: @statut, procedure: @procedure)
 
+        - if @procedure_batchs.present?
+          - @procedure_batchs.each do |batch|
+            = render Dossiers::BatchAlertComponent.new(batch: batch, procedure: @procedure)
+
         .flex
           .flex-grow= render batch_operation_component
         .fr-table.fr-table--bordered
@@ -116,8 +120,7 @@
                   %td.folder-col
                     - if batch_operation_component.render?
                       - if p.batch_operation_id.present?
-                        %span.cell-link
-                          %span.fr-icon-lock-line{ aria_hidden: "true" }
+                        = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, true, disabled: true
                       - else
                         = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, false, data: { "batch-operation-target" => "input", "action" => "batch-operation#onCheckOne"}, form: dom_id(BatchOperation.new)
                     - else
