@@ -49,7 +49,7 @@
           %h3.fr-footer__top-cat= I18n.t('users.procedure_footer.dematerialisation.header')
           %ul.fr-footer__top-list
             %li
-              = link_to t('users.procedure_footer.dematerialisation.title_1'), commencer_dossier_vide_path(path: procedure.path), rel: 'noopener', class: 'fr-footer__top-link'
+              = link_to t('users.procedure_footer.dematerialisation.title_1'), commencer_dossier_vide_for_revision_path(procedure.active_revision), rel: 'noopener', class: 'fr-footer__top-link'
             %li
               = link_to t('users.procedure_footer.dematerialisation.title_2'),t('users.procedure_footer.dematerialisation.link'), rel: 'noopener', class: 'fr-footer__top-link'
 

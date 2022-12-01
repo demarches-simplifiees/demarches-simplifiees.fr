@@ -27,7 +27,7 @@ module Users
 
     def dossier_vide_pdf_test
       @procedure = retrieve_procedure_with_closed
-      return procedure_not_found if @procedure.blank? || (@procedure.publiee? && !@procedure.draft_changed?)
+      return procedure_not_found if @procedure.blank?
 
       generate_empty_pdf(@procedure.draft_revision)
     end

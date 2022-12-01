@@ -234,11 +234,5 @@ describe Users::CommencerController, type: :controller do
         expect(response).to have_http_status(:success)
       end
     end
-    context 'published procedure' do
-      let(:procedure) { create(:procedure, :published, :with_service, :with_path) }
-      it 'redirect to procedure not found' do
-        expect(response).to have_http_status(302)
-      end
-    end
   end
 end
