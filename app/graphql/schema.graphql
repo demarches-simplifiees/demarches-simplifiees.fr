@@ -2304,7 +2304,7 @@ enum TypeDeChamp {
   linked_drop_down_list
 
   """
-  Données du Ministère de l'Enseignement Supérieur, de la Recherche et de l'Innovation
+  Données du Ministère de l’Enseignement Supérieur, de la Recherche et de l’Innovation
   """
   mesri
 

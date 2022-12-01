@@ -178,16 +178,16 @@ describe 'fetch API Particulier Data', js: true do
       within('#mesri-inscriptions') do
         check('statut')
         check('régime')
-        check("date de début d'inscription")
-        check("date de fin d'inscription")
+        check("date de début d’inscription")
+        check("date de fin d’inscription")
         check("code de la commune")
       end
 
       within('#mesri-admissions') do
         check('statut')
         check('régime')
-        check("date de début d'admission")
-        check("date de fin d'admission")
+        check("date de début d’admission")
+        check("date de fin d’admission")
         check("code de la commune")
       end
 
@@ -434,14 +434,14 @@ describe 'fetch API Particulier Data', js: true do
 
         expect(page).to have_content('statut inscrit')
         expect(page).to have_content('régime formation continue')
-        expect(page).to have_content("date de début d'inscription 1 septembre 2022")
-        expect(page).to have_content("date de fin d'inscription 31 août 2023")
+        expect(page).to have_content("date de début d’inscription 1 septembre 2022")
+        expect(page).to have_content("date de fin d’inscription 31 août 2023")
         expect(page).to have_content('code de la commune 75106')
 
         expect(page).to have_content('statut admis')
         expect(page).to have_content('régime formation continue')
-        expect(page).to have_content("date de début d'admission 1 septembre 2021")
-        expect(page).to have_content("date de fin d'admission 31 août 2022")
+        expect(page).to have_content("date de début d’admission 1 septembre 2021")
+        expect(page).to have_content("date de fin d’admission 31 août 2022")
         expect(page).to have_content('code de la commune 75106')
 
         expect(page).to have_content('UAI 0751722P')
@@ -461,7 +461,7 @@ describe 'fetch API Particulier Data', js: true do
         click_button('Continuer')
 
         fill_in 'Le numéro fiscal', with: numero_fiscal
-        fill_in "La référence d'avis d'imposition", with: 'wrong_code'
+        fill_in "La référence d’avis d’imposition", with: 'wrong_code'
         wait_for_autosave
 
         dossier = Dossier.last
@@ -473,7 +473,7 @@ describe 'fetch API Particulier Data', js: true do
         expect(page).to have_content(/reference avis doit posséder 13 ou 14 caractères/)
 
         VCR.use_cassette('api_particulier/success/avis_imposition') do
-          fill_in "La référence d'avis d'imposition", with: reference_avis
+          fill_in "La référence d’avis d’imposition", with: reference_avis
           wait_for_autosave
           click_on 'Déposer le dossier'
           perform_enqueued_jobs
