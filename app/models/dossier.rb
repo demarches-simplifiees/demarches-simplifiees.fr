@@ -1229,10 +1229,10 @@ class Dossier < ApplicationRecord
     cloned_dossier
   end
 
-  def find_champ_by_stable_id(stable_id)
-    return nil if stable_id.blank?
+  def find_champs_by_stable_ids(stable_ids)
+    return [] if stable_ids.compact.empty?
 
-    champs_public.joins(:type_de_champ).find_by(types_de_champ: { stable_id: stable_id })
+    champs_public.joins(:type_de_champ).where(types_de_champ: { stable_id: stable_ids })
   end
 
   private
