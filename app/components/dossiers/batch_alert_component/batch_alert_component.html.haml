@@ -1,0 +1,38 @@
+.fr-mb-5v
+  - if @batch.finished_and_success?
+    = render Dsfr::AlertComponent.new(title: t('.finish.title'), state: :success) do |c|
+      - c.body do
+        %p
+          = t('.finish.text_success', count: @batch.success_dossier_ids.count)
+
+  - if @batch.finished_and_fails?
+    = render Dsfr::AlertComponent.new(title: t('.finish.title'), state: :warning) do |c|
+      - c.body do
+        %p
+          = t('.finish.text_fail', count: @batch.failed_dossier_ids.count)
+
+  - if @batch.beginning?
+    = render Dsfr::AlertComponent.new(title: t('.in_progress.title'), state: :info) do |c|
+      - c.body do
+        %p
+          = t('.in_progress.text_beginning', count: @batch.dossiers.count)
+
+        %p
+          = link_to t('.link_text'), instructeur_procedure_path(@procedure, statut: params["statut"]), data: { action: 'turbo-poll#refresh' }
+          = t('.after_link_text')
+
+  - if @batch.in_progress?
+    = render Dsfr::AlertComponent.new(title: t('.in_progress.title'), state: :info) do |c|
+      - c.body do
+
+        - if @batch.failed_dossier_ids.present?
+          %p
+            = t('.in_progress.text_fail', count: @batch.failed_dossier_ids.count)
+
+        - if @batch.success_dossier_ids.present?
+          %p
+            = t('.in_progress.text_success', count: @batch.success_dossier_ids.count)
+
+        %p
+          = link_to t('.link_text'), instructeur_procedure_path(@procedure, statut: params["statut"]), data: { action: 'turbo-poll#refresh' }
+          = t('.after_link_text')
