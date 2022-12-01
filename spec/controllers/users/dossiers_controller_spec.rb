@@ -1108,8 +1108,8 @@ describe Users::DossiersController, type: :controller do
               subject
 
               dossier = Dossier.last
-              expect(dossier.find_champ_by_stable_id(type_de_champ_1.stable_id).value).to eq(value_1)
-              expect(dossier.find_champ_by_stable_id(type_de_champ_2.stable_id).value).to eq(value_2)
+              expect(find_champ_by_stable_id(dossier, type_de_champ_1.stable_id).value).to eq(value_1)
+              expect(find_champ_by_stable_id(dossier, type_de_champ_2.stable_id).value).to eq(value_2)
             end
 
             it { is_expected.to redirect_to siret_dossier_path(id: Dossier.last) }
@@ -1209,9 +1209,9 @@ describe Users::DossiersController, type: :controller do
 
     context 'when not logged in' do
       it 'fails' do
-       subject
-       expect { expect(response).to redirect_to(new_user_session_path) }
-     end
+        subject
+        expect { expect(response).to redirect_to(new_user_session_path) }
+      end
     end
   end
 
@@ -1230,5 +1230,11 @@ describe Users::DossiersController, type: :controller do
       it { expect(subject).to redirect_to(brouillon_dossier_path(Dossier.last)) }
       it { expect { subject }.to change { dossier.user.dossiers.count }.by(1) }
     end
+  end
+
+  private
+
+  def find_champ_by_stable_id(dossier, stable_id)
+    dossier.champs_public.joins(:type_de_champ).find_by(types_de_champ: { stable_id: stable_id })
   end
 end

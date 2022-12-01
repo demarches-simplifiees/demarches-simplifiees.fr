@@ -1855,36 +1855,37 @@ describe Dossier do
     end
   end
 
-  describe "#find_champ_by_stable_id" do
+  describe '#find_champs_by_stable_ids' do
     let(:procedure) { create(:procedure, :published) }
     let(:dossier) { create(:dossier, :brouillon, procedure: procedure) }
 
-    subject { dossier.find_champ_by_stable_id(stable_id) }
+    subject { dossier.find_champs_by_stable_ids(stable_ids) }
 
-    context 'when the stable id is missing' do
-      let(:stable_id) { nil }
+    context 'when stable_ids is empty' do
+      let(:stable_ids) { [] }
 
-      it { expect(subject).to be_nil }
+      it { expect(subject).to match([]) }
     end
 
-    context 'when the stable id is blank' do
-      let(:stable_id) { "" }
+    context 'when stable_ids contains nil or blank values' do
+      let(:stable_ids) { [nil, ""] }
 
-      it { expect(subject).to be_nil }
+      it { expect(subject).to match([]) }
     end
 
-    context 'when the stable id is present' do
-      context 'when the dossier has no champ with the given stable id' do
-        let(:stable_id) { 'My Neighbor Totoro is the best film ever' }
+    context 'when stable_ids contains present values' do
+      context 'when the dossier has no champ with the given stable ids' do
+        let(:stable_ids) { ['My Neighbor Totoro', 'Miyazaki'] }
 
-        it { expect(subject).to be_nil }
+        it { expect(subject).to match([]) }
       end
 
-      context 'when the dossier has a champ with the given stable id' do
-        let!(:type_de_champ) { create(:type_de_champ_text, procedure: procedure) }
-        let(:stable_id) { type_de_champ.stable_id }
+      context 'when the dossier has champs with the given stable ids' do
+        let!(:type_de_champ_1) { create(:type_de_champ_text, procedure: procedure) }
+        let!(:type_de_champ_2) { create(:type_de_champ_textarea, procedure: procedure) }
+        let(:stable_ids) { [type_de_champ_1.stable_id, type_de_champ_2.stable_id] }
 
-        it { expect(subject).to eq(dossier.champs_public.joins(:type_de_champ).find_by(types_de_champ: { stable_id: stable_id })) }
+        it { expect(subject).to match(dossier.champs_public.joins(:type_de_champ).where(types_de_champ: { stable_id: stable_ids })) }
       end
     end
   end
