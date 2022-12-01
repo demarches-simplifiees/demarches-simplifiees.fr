@@ -12,7 +12,6 @@
         %p
           = t('.finish.text_fail', count: @batch.failed_dossier_ids.count)
     - set_seen_at!
-
   - if @batch.beginning?
     = render Dsfr::AlertComponent.new(title: t('.in_progress.title'), state: :info) do |c|
       - c.body do
