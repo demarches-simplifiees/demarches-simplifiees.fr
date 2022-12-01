@@ -44,7 +44,7 @@ fr:
           notice: Ce groupe sera un choix de la liste "%{routing_criteria_name}"
         csv_import:
           title: Importer par CSV
-          notice_1: Le fichier csv doit comporter 2 colonnes (Groupe, Email) et être séparé par des virgules. L’import n’écrase pas les groupes et les instructeurs existants. La modification du fichier csv ne s’opère que pour l’ajout de nouveaux instructeurs. La suppression d’un instructeur s’opère manuellement en cliquant sur le bouton « retirer ».
+          notice_1: Le fichier csv doit comporter 2 colonnes (Groupe, Email) et être séparé par des virgules. Si vous n'avez pas créé de groupe, entrez « défaut » dans la colonne Groupe pour chaque instructeur. L’import n’écrase pas les groupes et les instructeurs existants. La modification du fichier csv ne s’opère que pour l’ajout de nouveaux instructeurs. La suppression d’un instructeur s’opère manuellement en cliquant sur le bouton « retirer ».
           notice_2: Le poids du fichier doit être inférieur à %{csv_max_size}
           download_exemple: Télécharger l’exemple de fichier CSV
           import_file: Importer le fichier
