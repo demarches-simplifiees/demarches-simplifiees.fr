@@ -18,22 +18,22 @@ fr:
       description_2: est disponible en licence libre.
       accessibilite:
         label: "Accessibilité : partiellement conforme"
-        title: "Consulter notre déclaration d'accessibilité"
+        title: "Consulter notre déclaration d’accessibilité"
         url: "https://doc.demarches-simplifiees.fr/declaration-daccessibilite"
       aide:
         label: "Aide"
         title: "Foire aux Questions"
         url: "https://faq.demarches-simplifiees.fr"
       api_doc:
-        label: "Documentation de l'API"
-        title: "Documentation graphql de l'API"
+        label: "Documentation de l’API"
+        title: "Documentation graphql de l’API"
         url: "https://doc.demarches-simplifiees.fr/pour-aller-plus-loin/graphql"
       betagouv:
         title: "Le site de beta.gouv.fr — Premier Ministre"
         url: "https://beta.gouv.fr"
       cgu:
         label: "CGU"
-        title: "Conditions Générales d'Utilisation"
+        title: "Conditions Générales d’Utilisation"
         url: "https://doc.demarches-simplifiees.fr/cgu"
       code:
         label: "Code source"
@@ -72,21 +72,21 @@ fr:
         url: "https://github.com/betagouv/demarches-simplifiees.fr/blob/main/SECURITY.md"
       stats:
         label: "Statistiques"
-        title: "Statistiques d'usage"
+        title: "Statistiques d’usage"
       status_page:
         label: "Disponibilité"
         title: "Disponibilité du site demarches-simplifiees"
         url: "https://status.demarches-simplifiees.fr"
       suivi:
-        label: "Suivi d'audience et vie privée"
+        label: "Suivi d’audience et vie privée"
         title: "Consulter notre politique de respect de la vie privée"
       webinaire:
         label: "Inscription ateliers en ligne"
         title: "Inscription ateliers en ligne"
         url: "https://app.livestorm.co/demarches-simplifiees"
       solidarite_numerique:
-        label: "Besoin d'aide avec vos démarches en ligne ?"
-        title: "Avez-vous besoin d'aide concernant vos démarchez informatisées, essayez solidarite-numerique.fr"
+        label: "Besoin d’aide avec vos démarches en ligne ?"
+        title: "Avez-vous besoin d’aide concernant vos démarchez informatisées, essayez solidarite-numerique.fr"
         url: "https://www.solidarite-numerique.fr/cartographie/"
       cookies:
         label: Gestion des cookies

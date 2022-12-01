@@ -1,5 +1,5 @@
 .container.mt-4
-  Transferer les #{@transfer.dossiers.size} dossiers de votre compte vers le compte d‘un autre usager :
+  Transferer les #{@transfer.dossiers.size} dossiers de votre compte vers le compte d’un autre usager :
 
   = form_for @transfer, url: transfers_path, html: { class: 'form mt-2' } do |f|
     = f.label :email, 'Email du compte destinataire'

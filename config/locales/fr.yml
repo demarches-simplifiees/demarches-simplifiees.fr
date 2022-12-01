@@ -89,7 +89,7 @@ fr:
         continue_file: 'Continuer à remplir mon dossier'
         start_new_file: 'Commencer un nouveau dossier'
         show_my_submitted_file: 'Voir mon dossier déposé'
-        want_empty_pdf: "Vous souhaitez effectuer une demande par papier ? Vous pouvez télécharger un dossier vide au format PDF, et l'envoyer à l’administration concernée : %{service} - %{adresse}"
+        want_empty_pdf: "Vous souhaitez effectuer une demande par papier ? Vous pouvez télécharger un dossier vide au format PDF, et l’envoyer à l’administration concernée : %{service} - %{adresse}"
         download_empty_pdf: 'Télécharger un dossier vide au format PDF'
     registrations:
       new:
@@ -158,16 +158,16 @@ fr:
           involved_persons: Personnes impliquées
         tab_explainations:
           a_suivre: Aucun instructeur n’est affecté au suivi de ces dossiers. Soyez le premier !
-          suivis: Les dossiers qui sont dans cet onglet sont uniquement ceux que vous suivez. Vous pouvez échanger avec le demandeur jusqu'à pouvoir les accepter, les refuser ou les classer sans suite.
+          suivis: Les dossiers qui sont dans cet onglet sont uniquement ceux que vous suivez. Vous pouvez échanger avec le demandeur jusqu’à pouvoir les accepter, les refuser ou les classer sans suite.
           traites_html: "Les dossiers dans cet onglet sont terminés : ils ont été acceptés, refusés ou classés sans suite. Vous pouvez <a href=%{archives_path}>télécharger</a> les archives au format zip des dossiers terminés et leurs pièces jointes."
           tous: Tous les dossiers qui ont été déposés sur cette démarche, quel que soit le statut.
           supprimes_recemment: Tous les dossiers terminés et supprimés par les instructeurs sur cette démarche
           archives:  "Les dossiers de cet onglet sont archivés : vous ne pouvez plus y répondre, et les demandeurs ne peuvent plus les modifier."
-          expirant: Les dossiers n'expireront pas avant la période de conservation des données.
+          expirant: Les dossiers n’expireront pas avant la période de conservation des données.
         archived_dossier: "Le dossier sera conservé 1 mois supplémentaire"
         delete_dossier: "Supprimer le dossier"
-        deleted_by_user: "Dossier supprimé par l'usager"
-        deleted_by_administration: "Dossier supprimé par l'administration"
+        deleted_by_user: "Dossier supprimé par l’usager"
+        deleted_by_administration: "Dossier supprimé par l’administration"
         restore: "Restaurer"
         filters:
           title: Filtrer
@@ -181,7 +181,7 @@ fr:
       avis:
         introduction_file_explaination: "Fichier joint à la demande d’avis"
       search:
-        dossier_not_in_instructor_group: "Le dossier n° %{dossier_id} de la procédure « %{procedure_libelle} » correspond à votre recherche mais il est rattaché au groupe d'instructeurs « %{groupe_instructeur_label} »."
+        dossier_not_in_instructor_group: "Le dossier n° %{dossier_id} de la procédure « %{procedure_libelle} » correspond à votre recherche mais il est rattaché au groupe d’instructeurs « %{groupe_instructeur_label} »."
     users:
       dossiers:
         archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
@@ -373,7 +373,7 @@ fr:
       saml_not_authorized: "Vous n’êtes pas autorisé à accéder à ce service."
       dossier_not_found: "Le dossier n’existe pas ou vous n’y avez pas accès."
       # dossier_map_not_activated: "Le dossier n’a pas accès à la cartographie."
-      targeted_user_link_expired: "Ce lien d'invitation n'est plus valable ou le dossier n'est plus accessible."
+      targeted_user_link_expired: "Ce lien d’invitation n’est plus valable ou le dossier n’est plus accessible."
       invalid_siret: "Le siret est incorrect"
       procedure_not_found: "La démarche n’existe pas"
       siret_unknown: 'Désolé, nous n’avons pas trouvé d’établissement enregistré correspondant à ce numéro SIRET.'
@@ -385,8 +385,8 @@ fr:
         connexion: "Erreur lors de la connexion à France Connect."
         forbidden_html: "Seul-e-s les usagers peuvent se connecter via France Connect. En tant qu’instructeur ou administrateur, nous vous invitons à <a href='%{reset_link}'>réininitialiser votre mot de passe</a>."
       procedure_archived:
-        with_service_and_phone_email: Cette démarche en ligne a été close, il n’est plus possible de déposer de dossier. Pour plus d'informations veuillez contacter le service %{service_name} au %{service_phone_number} ou par email à %{service_email}
-        with_organisation_only: Cette démarche en ligne a été close, il n’est plus possible de déposer de dossier. Pour plus d'informations veuillez contacter le service %{organisation_name}
+        with_service_and_phone_email: Cette démarche en ligne a été close, il n’est plus possible de déposer de dossier. Pour plus d’informations veuillez contacter le service %{service_name} au %{service_phone_number} ou par email à %{service_email}
+        with_organisation_only: Cette démarche en ligne a été close, il n’est plus possible de déposer de dossier. Pour plus d’informations veuillez contacter le service %{organisation_name}
 
       empty_repetition: '« %{value} » doit comporter au moins un champ répétable'
       empty_drop_down: '« %{value} » doit comporter au moins un choix sélectionnable'
@@ -453,7 +453,7 @@ fr:
       other: Supprimées
   users:
     dossiers:
-      test_procedure: "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l’administrateur (ajout d'un champ, publication de la démarche...) entraînera sa suppression."
+      test_procedure: "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l’administrateur (ajout d’un champ, publication de la démarche...) entraînera sa suppression."
       no_access: "Vous n’avez pas accès à ce dossier"
       no_longer_editable: "Votre dossier ne peut plus être modifié"
       create_commentaire:
@@ -468,7 +468,7 @@ fr:
       update_identite:
         identity_saved: "Identité enregistrée"
       attestation:
-        no_longer_available: "L’attestation n'est plus disponible sur ce dossier."
+        no_longer_available: "L’attestation n’est plus disponible sur ce dossier."
       papertrail:
         receipt: "Attestation de dépôt"
         description: "Ce document atteste que %{user_name} a déposé le %{date} un dossier sur la démarche « %{procedure} »."
@@ -490,7 +490,7 @@ fr:
   instructeurs:
     dossiers:
        deleted_by_instructeur: "Le dossier a bien été supprimé de votre interface"
-       impossible_deletion: "Supression impossible : le dossier n'est pas traité"
+       impossible_deletion: "Supression impossible : le dossier n’est pas traité"
        restore: "Le dossier a bien été restauré"
        labels:
         to_follow: à suivre
@@ -512,12 +512,12 @@ fr:
     jeton_particulier:
       show:
         configure_token: "Configurer le jeton API Particulier"
-        api_particulier_description_html: "%{app_name} utilise <a href=\"https://api.gouv.fr/les-api/api-particulier\">API Particulier</a> qui permet d'accéder aux données familiales (CAF), aux données fiscales (DGFiP), au statut pôle-emploi et au statut étudiant d'un citoyen.<br />Renseignez ici le <a href=\"https://api.gouv.fr/les-api/api-particulier/demande-acces\">jeton API Particulier</a> propre à votre démarche."
+        api_particulier_description_html: "%{app_name} utilise <a href=\"https://api.gouv.fr/les-api/api-particulier\">API Particulier</a> qui permet d’accéder aux données familiales (CAF), aux données fiscales (DGFiP), au statut pôle-emploi et au statut étudiant d’un citoyen.<br />Renseignez ici le <a href=\"https://api.gouv.fr/les-api/api-particulier/demande-acces\">jeton API Particulier</a> propre à votre démarche."
         token_description: "Il doit contenir au minimum 15 caractères."
       update:
         token_ok: "Le jeton a bien été mis à jour"
-        no_scopes_token: "Mise à jour impossible : le jeton n'a pas acces aux données.<br /><br />Vérifiez-le auprès de <a href='https://datapass.api.gouv.fr/'>https://datapass.api.gouv.fr/</a>"
-        not_found_token: "Mise à jour impossible : le jeton n'a pas été trouvé ou n'est pas actif<br /><br />Vérifiez-le auprès de <a href='https://datapass.api.gouv.fr/'>https://datapass.api.gouv.fr/</a>"
+        no_scopes_token: "Mise à jour impossible : le jeton n’a pas acces aux données.<br /><br />Vérifiez-le auprès de <a href='https://datapass.api.gouv.fr/'>https://datapass.api.gouv.fr/</a>"
+        not_found_token: "Mise à jour impossible : le jeton n’a pas été trouvé ou n’est pas actif<br /><br />Vérifiez-le auprès de <a href='https://datapass.api.gouv.fr/'>https://datapass.api.gouv.fr/</a>"
         network_error:  "Mise à jour impossible : une erreur réseau est survenue"
       api_particulier:
         already_configured: "Déjà rempli"
@@ -526,7 +526,7 @@ fr:
       show:
         title: "Définir les sources de données"
         data_sources: "Sources de données"
-        explication_html: "<p>API Particulier facilite l’accès des administrations aux données familiales (CAF), aux données fiscales (DGFiP), au statut pôle-emploi et au statut étudiant d'un citoyen pour simplifier les démarches administratives mises en œuvre par les collectivités et les administrations.<br> Cela permet aux administrations d’accéder à des informations certifiées à la source et ainsi : </p> <ul> <li>de s’affranchir des pièces justificatives lors des démarches en ligne,</li> <li>de réduire le nombre d’erreurs de saisie,</li> <li>d’écarter le risque de fraude documentaire.</li> </ul> <p> <strong>Important&nbsp;:</strong> les disposition de l'article <a href='https://www.legifrance.gouv.fr/affichCodeArticle.do?cidTexte=LEGITEXT000031366350&amp;idArticle=LEGIARTI000031367412&amp;dateTexte=&amp;categorieLien=cid'>L144-8</a> n’autorisent que l’échange des informations strictement nécessaires pour traiter une démarche.<br /><br />En conséquence, ne sélectionnez ici que les données auxquelles vous aurez accès d’un point de vue légal.</p>"
+        explication_html: "<p>API Particulier facilite l’accès des administrations aux données familiales (CAF), aux données fiscales (DGFiP), au statut pôle-emploi et au statut étudiant d’un citoyen pour simplifier les démarches administratives mises en œuvre par les collectivités et les administrations.<br> Cela permet aux administrations d’accéder à des informations certifiées à la source et ainsi : </p> <ul> <li>de s’affranchir des pièces justificatives lors des démarches en ligne,</li> <li>de réduire le nombre d’erreurs de saisie,</li> <li>d’écarter le risque de fraude documentaire.</li> </ul> <p> <strong>Important&nbsp;:</strong> les disposition de l’article <a href='https://www.legifrance.gouv.fr/affichCodeArticle.do?cidTexte=LEGITEXT000031366350&amp;idArticle=LEGIARTI000031367412&amp;dateTexte=&amp;categorieLien=cid'>L144-8</a> n’autorisent que l’échange des informations strictement nécessaires pour traiter une démarche.<br /><br />En conséquence, ne sélectionnez ici que les données auxquelles vous aurez accès d’un point de vue légal.</p>"
       update:
         sources_ok: 'Mise à jour effectuée'
     procedures:
