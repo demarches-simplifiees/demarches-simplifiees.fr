@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Dossier::Prefillable
+module DossierPrefillableConcern
   extend ActiveSupport::Concern
 
   def prefill!(champs_public_attributes)
