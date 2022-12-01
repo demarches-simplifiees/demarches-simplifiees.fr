@@ -8,6 +8,7 @@
 #  operation           :string           not null
 #  payload             :jsonb            not null
 #  run_at              :datetime
+#  seen_at             :datetime
 #  success_dossier_ids :bigint           default([]), not null, is an Array
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
@@ -20,6 +21,7 @@ class BatchOperation < ApplicationRecord
   }
 
   has_many :dossiers, dependent: :nullify
+  has_and_belongs_to_many :groupe_instructeurs
   belongs_to :instructeur
 
   validates :operation, presence: true

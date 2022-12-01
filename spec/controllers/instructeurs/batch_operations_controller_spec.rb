@@ -32,9 +32,12 @@ describe Instructeurs::BatchOperationsController, type: :controller do
       it 'creates a batch operation for our signed in instructeur' do
         expect { subject }.to change { instructeur.batch_operations.count }.by(1)
       end
-      it 'created a batch operation contains dossiers' do
+      it 'created a batch operation contains dossiers, instructeur, groupe_instructeur' do
         subject
-        expect(BatchOperation.first.dossiers).to include(dossier)
+        batch_operation = BatchOperation.first
+        expect(batch_operation.dossiers).to include(dossier)
+        expect(batch_operation.instructeur).to eq(instructeur)
+        expect(batch_operation.groupe_instructeurs.to_a).to eq(instructeur.groupe_instructeurs.to_a)
       end
       it 'enqueues a BatchOperationJob' do
         expect { subject }.to have_enqueued_job(BatchOperationEnqueueAllJob).with(BatchOperation.last)

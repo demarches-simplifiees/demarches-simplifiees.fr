@@ -4,7 +4,7 @@ module Instructeurs
     before_action :ensure_ownership!
 
     def create
-      BatchOperation.safe_create!(batch_operation_params.merge(instructeur: current_instructeur))
+      BatchOperation.safe_create!(batch_operation_params)
       redirect_back(fallback_location: instructeur_procedure_url(@procedure.id))
     end
 
@@ -13,6 +13,8 @@ module Instructeurs
     def batch_operation_params
       params.require(:batch_operation)
         .permit(:operation, dossier_ids: [])
+        .merge(instructeur: current_instructeur)
+        .merge(groupe_instructeurs: current_instructeur.groupe_instructeurs.where(procedure_id: @procedure.id))
     end
 
     def set_procedure

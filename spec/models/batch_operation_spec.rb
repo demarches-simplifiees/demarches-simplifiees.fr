@@ -2,6 +2,7 @@ describe BatchOperation, type: :model do
   describe 'association' do
     it { is_expected.to have_many(:dossiers) }
     it { is_expected.to belong_to(:instructeur) }
+    it { is_expected.to have_and_belong_to_many(:groupe_instructeurs) }
   end
 
   describe 'attributes' do
