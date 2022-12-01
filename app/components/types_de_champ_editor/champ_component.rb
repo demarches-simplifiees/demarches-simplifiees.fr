@@ -7,6 +7,10 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
     @upper_coordinates = upper_coordinates
   end
 
+  def render?
+    @coordinate.type_de_champ.routage? ? @coordinate.procedure.routing_enabled? : true
+  end
+
   private
 
   delegate :type_de_champ, :revision, :procedure, to: :coordinate
