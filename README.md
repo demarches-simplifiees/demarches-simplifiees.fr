@@ -103,7 +103,7 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
         rake spec
         rspec
 
-- Lancer un test en particulier
+- Lancer un test au hasard
 
         rake spec SPEC=file_path/file_name_spec.rb:line_number
         rspec file_path/file_name_spec.rb:line_number
