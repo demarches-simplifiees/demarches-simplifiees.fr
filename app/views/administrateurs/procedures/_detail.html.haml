@@ -1,0 +1,21 @@
+%tr.procedure{ id: "procedure_#{procedure.id}" }
+  %td
+    = button_to detail_admin_procedure_path(procedure["id"]), params: show_detail ? {} : { show_detail: true }, method: :get, title: 'Cacher les détails', class: [ show_detail ? 'fr-icon-subtract-line':'fr-icon-add-line', "fr-icon--sm fr-mr-1w fr-mb-1w fr-text-action-high--blue-france fr-btn fr-btn--tertiary-no-outline"] do
+      Cacher les détails
+  %td= procedure.libelle
+  %td= procedure.id
+  %td= procedure.administrateurs.count
+  %td= t procedure.aasm_state, scope: 'activerecord.attributes.procedure.aasm_state'
+  %td= l(procedure.published_at, format: :message_date_without_time)
+
+- if show_detail
+  %tr.procedure{ id: "procedure_detail_#{procedure.id}" }
+    %td.fr-highlight--beige-gris-galet{ colspan: '6' }
+      .fr-container
+        .fr-grid-row
+          .fr-col-6
+            - procedure.zones.uniq.each do |zone|
+              = zone.label_at(procedure.published_or_created_at)
+          .fr-col-6
+            - procedure.administrateurs.uniq.each do |admin|
+              = admin.email

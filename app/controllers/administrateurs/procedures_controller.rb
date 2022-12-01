@@ -332,6 +332,14 @@ module Administrateurs
       @procedure = Procedure.includes(draft_revision: { revision_types_de_champ_public: :type_de_champ }).find(@procedure.id)
     end
 
+    def detail
+      @procedure = Procedure.find(params[:id])
+      render turbo_stream: [
+        turbo_stream.remove("procedure_detail_#{@procedure.id}"),
+        turbo_stream.replace("procedure_#{@procedure.id}", partial: "detail", locals: { procedure: @procedure, show_detail: params[:show_detail] })
+      ]
+    end
+
     def all
       @filter = ProceduresFilter.new(current_administrateur, params)
       all_procedures = filter_procedures(@filter)
