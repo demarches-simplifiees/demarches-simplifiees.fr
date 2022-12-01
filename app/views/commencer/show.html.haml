@@ -41,9 +41,8 @@
       = link_to t('views.commencer.show.start_new_file'), url_for_new_dossier(@revision), class: "fr-btn fr-btn--lg fr-btn--secondary fr-my-2w"
 
   - if @procedure.feature_enabled?(:dossier_pdf_vide)
-    - pdf_link = @revision.draft? ? commencer_dossier_vide_test_path(path: @procedure.path) : commencer_dossier_vide_path(path: @procedure.path)
     %hr
     %p= t('views.commencer.show.want_empty_pdf', service: @procedure&.service&.nom, adresse: @procedure&.service&.adresse)
 
     %br
-    = link_to t('views.commencer.show.download_empty_pdf'), pdf_link, class: "fr-btn fr-btn--lg fr-btn--secondary fr-my-2w"
+    = link_to t('views.commencer.show.download_empty_pdf'), commencer_dossier_vide_for_revision_path(@revision), class: "fr-btn fr-btn--lg fr-btn--secondary fr-my-2w"
