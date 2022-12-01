@@ -218,6 +218,7 @@ en:
         show:
           header:
             edit_dossier: Edit my file
+            edit_dossier_title: "Edit my file - You can modify your file as long as it has not been sent for processing"
             summary: "Summary"
             request: "Request"
             mailbox: "Mailbox"
