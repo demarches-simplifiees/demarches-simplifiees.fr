@@ -40,7 +40,7 @@ module Administrateurs
         @instructeurs = paginated_instructeurs
         @groupes_instructeurs = paginated_groupe_instructeurs
 
-        flash[:alert] = "le nom « #{@groupe_instructeur.label} » est déjà pris par un autre groupe."
+        flash[:alert] = @groupe_instructeur.errors.full_messages
         render :index
       end
     end
@@ -56,7 +56,7 @@ module Administrateurs
         @instructeurs = paginated_instructeurs
         @available_instructeur_emails = available_instructeur_emails
 
-        flash[:alert] = @groupe_instructeur.errors.full_messages.to_sentence
+        flash[:alert] = @groupe_instructeur.errors.full_messages
         render :show
       end
     end
@@ -64,7 +64,7 @@ module Administrateurs
     def destroy
       @groupe_instructeur = groupe_instructeur
 
-      if !@groupe_instructeur.dossiers.empty?
+      if @groupe_instructeur.dossiers.present?
         flash[:alert] = "Impossible de supprimer un groupe avec des dossiers. Il faut le réaffecter avant"
       elsif procedure.groupe_instructeurs.one?
         flash[:alert] = "Suppression impossible : il doit y avoir au moins un groupe instructeur sur chaque procédure"
@@ -109,47 +109,30 @@ module Administrateurs
 
     def add_instructeur
       emails = params['emails'].presence || [].to_json
-      emails = JSON.parse(emails).map(&:strip).map(&:downcase)
+      emails = JSON.parse(emails)
 
-      correct_emails, bad_emails = emails
-        .partition { |email| URI::MailTo::EMAIL_REGEXP.match?(email) }
+      instructeurs, invalid_emails = Instructeur.find_or_invite(emails:, groupe_instructeur:)
 
-      if bad_emails.present?
+      if invalid_emails.present?
         flash[:alert] = t('.wrong_address',
-          count: bad_emails.count,
-          value: bad_emails.join(', '))
+          count: invalid_emails.size,
+          emails: invalid_emails.join(', '))
       end
 
-      email_to_adds = correct_emails - groupe_instructeur.instructeurs.map(&:email)
+      if instructeurs.present?
+        instructeurs.each { groupe_instructeur.add(_1) }
 
-      if email_to_adds.present?
-        instructeurs = email_to_adds.map do |instructeur_email|
-          Instructeur.by_email(instructeur_email) ||
-            create_instructeur(instructeur_email)
-        end
-
-        if procedure.routing_enabled?
-          instructeurs.each do |instructeur|
-            groupe_instructeur.add(instructeur)
-          end
-
+        flash[:notice] = if procedure.routing_enabled?
           GroupeInstructeurMailer
-            .add_instructeurs(groupe_instructeur, instructeurs, current_user.email)
+            .add_instructeurs(groupe_instructeur, instructeurs, current_administrateur.email)
             .deliver_later
 
-          flash[:notice] = t('.assignment',
-            count: email_to_adds.count,
-            value: email_to_adds.join(', '),
+          t('.assignment',
+            count: instructeurs.size,
+            emails: instructeurs.map(&:email).join(', '),
             groupe: groupe_instructeur.label)
-
         else
-
-          if instructeurs.present?
-            instructeurs.each do |instructeur|
-              procedure.defaut_groupe_instructeur.add(instructeur)
-            end
-            flash[:notice] = "Les instructeurs ont bien été affectés à la démarche"
-          end
+          "Les instructeurs ont bien été affectés à la démarche"
         end
       end
 
@@ -164,21 +147,27 @@ module Administrateurs
       if groupe_instructeur.instructeurs.one?
         flash[:alert] = "Suppression impossible : il doit y avoir au moins un instructeur dans le groupe"
       else
-        instructeur = Instructeur.find(instructeur_id)
-        if procedure.routing_enabled?
-          if groupe_instructeur.remove(instructeur)
-            flash[:notice] = "L’instructeur « #{instructeur.email} » a été retiré du groupe."
+        instructeur = groupe_instructeur.instructeurs.find_by(id: instructeur_id)
+
+        if groupe_instructeur.remove(instructeur)
+          flash[:notice] = if procedure.routing_enabled?
             GroupeInstructeurMailer
-              .remove_instructeur(groupe_instructeur, instructeur, current_user.email)
+              .remove_instructeurs(groupe_instructeur, [instructeur], current_administrateur.email)
               .deliver_later
+
+            "L’instructeur « #{instructeur.email} » a été retiré du groupe."
           else
-            flash[:alert] = "L’instructeur « #{instructeur.email} » n’est pas dans le groupe."
+            "L’instructeur a bien été désaffecté de la démarche"
           end
         else
-          if procedure.defaut_groupe_instructeur.remove(instructeur)
-            flash[:notice] = "L’instructeur a bien été désaffecté de la démarche"
+          flash[:alert] = if procedure.routing_enabled?
+            if instructeur.present?
+              "L’instructeur « #{instructeur.email} » n’est pas dans le groupe."
+            else
+              "L’instructeur n’est pas dans le groupe."
+            end
           else
-            flash[:alert] = "L’instructeur n’est pas affecté à la démarche"
+            "L’instructeur n’est pas affecté à la démarche"
           end
         end
       end
@@ -257,16 +246,6 @@ module Administrateurs
     end
 
     private
-
-    def create_instructeur(email)
-      user = User.create_or_promote_to_instructeur(
-        email,
-        SecureRandom.hex,
-        administrateurs: [current_administrateur]
-      )
-      user.invite!
-      user.instructeur
-    end
 
     def procedure
       current_administrateur
