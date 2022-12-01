@@ -46,7 +46,6 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
       expect(batch_operation.seen_at).not_to eq(nil)
       expect(subject).not_to have_text("2 dossiers ont été archivés")
     end
-
   end
 
   context 'finished and fail' do
