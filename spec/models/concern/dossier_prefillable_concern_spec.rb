@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Dossier::Prefillable do
+RSpec.describe DossierPrefillableConcern do
   describe '.prefill!' do
     let(:procedure) { create(:procedure, :published) }
     let(:dossier) { create(:dossier, :brouillon, procedure: procedure) }
