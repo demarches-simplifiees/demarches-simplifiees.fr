@@ -101,7 +101,7 @@ describe 'users/dossiers/show/header.html.haml', type: :view do
 
     it 'affiche que la démarche est supprimée' do
       expect(rendered).to have_text("La démarche liée à votre dossier est supprimée")
-      expect(rendered).to have_text("Votre dossier a été traité par l'administration, aucune action n'est possible")
+      expect(rendered).to have_text("Votre dossier a été traité par l’administration, aucune action n’est possible")
     end
 
     it 'can download the dossier' do
