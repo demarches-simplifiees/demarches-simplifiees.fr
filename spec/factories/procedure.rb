@@ -19,7 +19,6 @@ FactoryBot.define do
     transient do
       administrateur {}
       instructeurs { [] }
-      types_de_champ { [] }
       types_de_champ_public { [] }
       types_de_champ_private { [] }
       updated_at { nil }
@@ -27,10 +26,6 @@ FactoryBot.define do
     end
 
     after(:build) do |procedure, evaluator|
-      if evaluator.types_de_champ.present?
-        raise "use types_de_champ_public instead of types_de_champ"
-      end
-
       initial_revision = build(:procedure_revision, procedure: procedure, dossier_submitted_message: evaluator.dossier_submitted_message)
 
       if evaluator.types_de_champ_public.present?
@@ -347,7 +342,11 @@ FactoryBot.define do
           if libelle == 'drop_down_list'
             libelle = 'simple_drop_down_list'
           end
-          build(:"type_de_champ_#{type_champ}", procedure: procedure, mandatory: true, libelle: libelle, position: index)
+          if type_champ == 'repetition'
+            build(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure, mandatory: true, libelle: libelle, position: index)
+          else
+            build(:"type_de_champ_#{type_champ}", procedure: procedure, mandatory: true, libelle: libelle, position: index)
+          end
         end
         build(:type_de_champ_drop_down_list, :long, procedure: procedure, mandatory: true, libelle: 'simple_choice_drop_down_list_long', position: TypeDeChamp.type_champs.size)
         build(:type_de_champ_multiple_drop_down_list, :long, procedure: procedure, mandatory: true, libelle: 'multiple_choice_drop_down_list_long', position: TypeDeChamp.type_champs.size + 1)
@@ -360,7 +359,11 @@ FactoryBot.define do
           if libelle == 'drop_down_list'
             libelle = 'simple_drop_down_list'
           end
-          build(:"type_de_champ_#{type_champ}", procedure: procedure, libelle: libelle, position: index)
+          if type_champ == 'repetition'
+            build(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure, libelle: libelle, position: index)
+          else
+            build(:"type_de_champ_#{type_champ}", procedure: procedure, libelle: libelle, position: index)
+          end
         end
       end
     end
