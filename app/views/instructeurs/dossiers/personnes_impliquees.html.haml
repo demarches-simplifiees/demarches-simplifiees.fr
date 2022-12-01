@@ -15,3 +15,7 @@
   = render partial: 'instructeurs/dossiers/personnes_impliquees_block', locals: { emails_collection: @invites_emails, title: "Personnes invitées à consulter ce dossier", blank: "Aucune personne n’a été invitée à consulter ce dossier" }
 
   = render partial: 'instructeurs/dossiers/decisions_rendues_block', locals: { traitements: @dossier.traitements }
+
+  - if @dossier.archived? && @dossier.archived_at.present?
+    = render partial: 'instructeurs/dossiers/archived_block', locals: @dossier.slice(:archived_by, :archived_at)
+
