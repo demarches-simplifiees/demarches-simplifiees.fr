@@ -66,4 +66,39 @@ describe Champs::PieceJustificativeController, type: :controller do
       end
     end
   end
+
+  describe '#template' do
+    before { Timecop.freeze }
+    after { Timecop.return }
+
+    subject do
+      get :template, params: {
+        champ_id: champ.id
+      }
+    end
+
+    context "user signed in" do
+      before { sign_in user }
+
+      it 'redirects to the template' do
+        subject
+        expect(response).to redirect_to(champ.type_de_champ.piece_justificative_template.blob)
+      end
+    end
+
+    context "another user signed in" do
+      before { sign_in create(:user) }
+
+      it "should not share template url" do
+        expect { subject }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    context "user anonymous" do
+      it 'does not redirect to the template' do
+        subject
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+  end
 end
