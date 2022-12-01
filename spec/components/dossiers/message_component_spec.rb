@@ -16,6 +16,11 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
 
   it { is_expected.to have_button("Répondre") }
 
+  context 'escape <img> tag' do
+    before { commentaire.update(body: '<img src="demarches-simplifiees.fr" />Hello') }
+    it { is_expected.not_to have_selector('img[src="demarches-simplifiees.fr"]') }
+  end
+
   context 'with a seen_at after commentaire created_at' do
     let(:seen_at) { commentaire.created_at + 1.hour  }
 
