@@ -177,6 +177,9 @@ en:
         filters:
           title: Filter
         select_all: Select all
+        batch_operation:
+          enabled: "Add this file to the selection for the bulk operation"
+          disabled: "Impossible to add this file to the selection because it is already in a bulk operation"
         personalize: Personalize
         follow_file: Follow-up the file
         save: Save

@@ -343,9 +343,9 @@ describe Instructeurs::ProceduresController, type: :controller do
         end
 
         context 'with batch operations' do
-          let!(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [termine_dossier], instructeur: instructeur) }
+          let!(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [termine_dossier], instructeur: instructeur, groupe_instructeurs: instructeur.groupe_instructeurs) }
           let!(:termine_dossier_2) { create(:dossier, :accepte, procedure: procedure) }
-          let!(:batch_operation_2) { create(:batch_operation, operation: :archiver, dossiers: [termine_dossier_2], instructeur: instructeur) }
+          let!(:batch_operation_2) { create(:batch_operation, operation: :archiver, dossiers: [termine_dossier_2], instructeur: instructeur, groupe_instructeurs: instructeur.groupe_instructeurs) }
 
           before { subject }
 
@@ -357,7 +357,7 @@ describe Instructeurs::ProceduresController, type: :controller do
           let!(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [termine_dossier], instructeur: instructeur_2) }
           before { subject }
 
-          it { expect(assigns(:batch_operations)).to eq(nil) }
+          it { expect(assigns(:batch_operations)).to eq([]) }
         end
       end
 

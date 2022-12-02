@@ -2,7 +2,7 @@
   = link_to restore_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: "fr-btn fr-btn--secondary" do
     = t('views.instructeurs.dossiers.restore')
 - elsif close_to_expiration || Dossier::TERMINE.include?(state)
-  .dropdown.user-dossier-actions{ data: { controller: 'menu-button' } }
+  %li.dropdown.user-dossier-actions{ data: { controller: 'menu-button' } }
     %button.fr-btn.fr-mb-0.dropdown-button{ data: { menu_button_target: 'button' } }
       Actions
     .dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' }, id: "dossier_#{dossier_id}_actions_menu" }
@@ -11,23 +11,23 @@
           %li
             = link_to repousser_expiration_instructeur_dossier_path(procedure_id, dossier_id), method: :post do
               %span.icon.standby
-              .dropdown-description= t('instructeurs.dossiers.header.banner.button_delay_expiration')
+              %span.dropdown-description= t('instructeurs.dossiers.header.banner.button_delay_expiration')
         - if archived
           %li
             = link_to unarchive_instructeur_dossier_path(procedure_id, dossier_id), method: :patch do
               %span.icon.unarchive
-              .dropdown-description
+              %span.dropdown-description
                 Désarchiver le dossier
         - else
           %li
             = link_to archive_instructeur_dossier_path(procedure_id, dossier_id), method: :patch do
               %span.icon.archive
-              .dropdown-description
+              %span.dropdown-description
                 Archiver le dossier
           %li.danger
             = link_to instructeur_dossier_path(procedure_id, dossier_id), method: :delete do
               %span.icon.delete
-              .dropdown-description
+              %span.dropdown-description
                 = t('views.instructeurs.dossiers.delete_dossier')
 
 - elsif Dossier::EN_CONSTRUCTION_OU_INSTRUCTION.include?(state)

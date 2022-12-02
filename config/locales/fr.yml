@@ -172,6 +172,9 @@ fr:
         filters:
           title: Filtrer
         select_all: Tout selectionner
+        batch_operation:
+          enabled: "Ajouter ce dossier à la selection pour un traitement de masse"
+          disabled: "Impossible d'ajouter ce dossier à la selection car il est déjà dans un traitement de masse"
         personalize: Personnaliser
         download: Télécharger un dossier
         follow_file: Suivre le dossier
