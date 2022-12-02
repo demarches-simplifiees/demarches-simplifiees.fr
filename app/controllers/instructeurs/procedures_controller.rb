@@ -91,17 +91,9 @@ module Instructeurs
 
       assign_exports
 
-      # Set procedure_batchs to display alerts in view
-      # TO DO // récupérer les batchs du groupe d'instructeurs au lieu de l'instructeur
-      return if current_instructeur.batch_operations.blank?
-      # extraire un dossier de chaque batch pour voir quel procedure est rattaché -> et les ajouter à un tableau
-      @procedure_batchs = []
-      current_instructeur.batch_operations.each do |batch|
-        random_batch_dossier_id = (batch.failed_dossier_ids + batch.success_dossier_ids + batch.dossiers.ids).sample
-        if Dossier.find(random_batch_dossier_id).procedure.id == @procedure.id
-          @procedure_batchs << batch
-        end
-      end
+      @batch_operations = BatchOperation.joins(:groupe_instructeurs)
+                                        .where(groupe_instructeurs: current_instructeur.groupe_instructeurs.where(procedure_id: @procedure.id))
+                                        .distinct
     end
 
     def deleted_dossiers

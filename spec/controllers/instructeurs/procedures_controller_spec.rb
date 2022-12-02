@@ -342,22 +342,31 @@ describe Instructeurs::ProceduresController, type: :controller do
           it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([termine_dossier, termine_dossier_on_gi_2].map(&:id)) }
         end
 
-        context 'with batch operations' do
-          let!(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [termine_dossier], instructeur: instructeur) }
+        context 'with batch operations attached to the instructeur and his group' do
+          let!(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [termine_dossier], instructeur: instructeur, groupe_instructeurs: [gi_2]) }
+
           let!(:termine_dossier_2) { create(:dossier, :accepte, procedure: procedure) }
-          let!(:batch_operation_2) { create(:batch_operation, operation: :archiver, dossiers: [termine_dossier_2], instructeur: instructeur) }
+          let!(:batch_operation_2) { create(:batch_operation, operation: :archiver, dossiers: [termine_dossier_2], instructeur: instructeur, groupe_instructeurs: [gi_2]) }
 
           before { subject }
 
-          it { expect(assigns(:procedure_batchs)).to match_array([batch_operation, batch_operation_2]) }
+          it { expect(assigns(:batch_operations)).to match_array([batch_operation, batch_operation_2]) }
         end
 
-        context 'with a batch operation not attached to the instructeur' do
+        context 'with a batch operation not attached to the instructeur and his group' do
           let(:instructeur_2) { create(:instructeur) }
-          let!(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [termine_dossier], instructeur: instructeur_2) }
+          let!(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [termine_dossier], instructeur: instructeur_2, groupe_instructeurs: [gi_3]) }
           before { subject }
 
-          it { expect(assigns(:procedure_batchs)).to eq(nil) }
+          it { expect(assigns(:batch_operations)).to eq([]) }
+        end
+
+        context 'with a batch operation not attached to the instructeur but to his group' do
+          let(:instructeur_2) { create(:instructeur) }
+          let!(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [termine_dossier], instructeur: instructeur_2, groupe_instructeurs: [gi_2]) }
+          before { subject }
+
+          it { expect(assigns(:batch_operations)).to match_array([batch_operation]) }
         end
       end
 

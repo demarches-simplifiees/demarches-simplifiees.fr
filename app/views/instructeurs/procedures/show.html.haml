@@ -71,9 +71,9 @@
       %div{ data: { controller: 'batch-operation' } }
         - batch_operation_component = Dossiers::BatchOperationComponent.new(statut: @statut, procedure: @procedure)
 
-        - if @procedure_batchs.present?
-          - @procedure_batchs.each do |batch|
-            = render Dossiers::BatchAlertComponent.new(batch: batch, procedure: @procedure)
+        - if @batch_operations.present?
+          - @batch_operations.each do |batch_operation|
+            = render Dossiers::BatchAlertComponent.new(batch: batch_operation, procedure: @procedure)
 
         .flex
           .flex-grow= render batch_operation_component
