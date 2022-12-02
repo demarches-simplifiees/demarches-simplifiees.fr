@@ -1,11 +1,10 @@
 import { ApplicationController } from './application_controller';
 
 export class BatchOperationController extends ApplicationController {
-  static targets = ['input', 'all', 'submit', 'form'];
+  static targets = ['form', 'input', 'submit'];
 
-  declare readonly submit: HTMLFormElement;
-  declare readonly submit: HTMLInputElement;
-  declare readonly allTarget: HTMLInputElement;
+  declare readonly formTarget: HTMLFormElement;
+  declare readonly submitTarget: HTMLInputElement;
   declare readonly inputTargets: HTMLInputElement[];
 
   connect() {
@@ -18,10 +17,10 @@ export class BatchOperationController extends ApplicationController {
   // DSFR recommends a <input type="submit" /> or <button type="submit" /> a form (not a <select>)
   // but we have many actions on the same form (archive all, accept all, ...)
   // so we intercept the form submit, and set the BatchOperation.operation by hand using the Event.submitter
-  interceptFormSubmit(event: Event) {
-    const { submitter } = event;
+  interceptFormSubmit(event: SubmitEvent) {
+    const submitter = event.submitter as HTMLInputElement;
 
-    submitter.setAttribute('value', submitter.dataset.submitterOperation);
+    submitter.setAttribute('value', submitter.dataset.submitterOperation || '');
 
     return event;
   }
@@ -32,7 +31,9 @@ export class BatchOperationController extends ApplicationController {
   }
 
   onCheckAll(event: Event) {
-    this.inputTargets.forEach((e) => (e.checked = event.target.checked));
+    const target = event.target as HTMLInputElement;
+
+    this.inputTargets.forEach((e) => (e.checked = target.checked));
     this.toggleSubmitButtonWhenNeeded();
     return event;
   }

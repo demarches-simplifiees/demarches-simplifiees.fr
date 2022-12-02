@@ -1,3 +1,4 @@
 %div{ class: "fr-alert fr-alert--#{state}" }
-  %h3.fr-alert__title= "#{prefix_for_state}#{title}"
+  = content_tag(heading_level, class: 'fr-alert__title') do
+    = "#{prefix_for_state}#{title}"
   = body

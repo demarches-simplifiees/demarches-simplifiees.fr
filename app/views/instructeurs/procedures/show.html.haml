@@ -68,8 +68,8 @@
             = render Dossiers::ExportComponent.new(procedure: @procedure, exports: @exports, statut: @statut, count: @dossiers_count, export_url: method(:download_export_instructeur_procedure_path))
       %hr.fr-mt-5v
 
-      %div{ data: { controller: 'batch-operation' } }
-        - batch_operation_component = Dossiers::BatchOperationComponent.new(statut: @statut, procedure: @procedure)
+      - batch_operation_component = Dossiers::BatchOperationComponent.new(statut: @statut, procedure: @procedure)
+      %div{ data: batch_operation_component.render? ? { controller: 'batch-operation' } : {} }
 
         - if @batch_operations.present?
           - @batch_operations.each do |batch_operation|
@@ -78,7 +78,7 @@
         .flex
           .flex-grow= render batch_operation_component
         .fr-table.fr-table--bordered
-          %table
+          %table.dossiers-table
             %thead
               %tr
                 - if batch_operation_component.render?
