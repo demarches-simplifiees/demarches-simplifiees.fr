@@ -39,6 +39,14 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
     it { is_expected.to have_selector('.fr-alert--success') }
     it { is_expected.to have_text("L'action de masse est terminée") }
     it { is_expected.to have_text("2 dossiers ont été archivés") }
+    it { expect(batch_operation.seen_at).to eq(nil) }
+
+    it 'does not display alert on the next render' do
+      render_inline(component).to_html
+      expect(batch_operation.seen_at).not_to eq(nil)
+      expect(subject).not_to have_text("2 dossiers ont été archivés")
+    end
+
   end
 
   context 'finished and fail' do
@@ -51,5 +59,12 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
     it { is_expected.to have_selector('.fr-alert--warning') }
     it { is_expected.to have_text("L'action de masse est terminée") }
     it { is_expected.to have_text("1 dossier n'a pas été archivé") }
+    it { expect(batch_operation.seen_at).to eq(nil) }
+
+    it 'does not display alert on the next render' do
+      render_inline(component).to_html
+      expect(batch_operation.seen_at).not_to eq(nil)
+      expect(subject).not_to have_text("2 dossiers ont été archivés")
+    end
   end
 end
