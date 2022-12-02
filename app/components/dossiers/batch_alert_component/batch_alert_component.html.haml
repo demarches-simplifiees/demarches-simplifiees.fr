@@ -1,15 +1,17 @@
 .fr-mb-5v
-  - if @batch.finished_and_success?
+  - if @batch.finished_and_success? && @batch.seen_at.nil?
     = render Dsfr::AlertComponent.new(title: t('.finish.title'), state: :success) do |c|
       - c.body do
         %p
           = t('.finish.text_success', count: @batch.success_dossier_ids.count)
+    - set_seen_at!
 
-  - if @batch.finished_and_fails?
+  - if @batch.finished_and_fails? && @batch.seen_at.nil?
     = render Dsfr::AlertComponent.new(title: t('.finish.title'), state: :warning) do |c|
       - c.body do
         %p
           = t('.finish.text_fail', count: @batch.failed_dossier_ids.count)
+    - set_seen_at!
 
   - if @batch.beginning?
     = render Dsfr::AlertComponent.new(title: t('.in_progress.title'), state: :info) do |c|

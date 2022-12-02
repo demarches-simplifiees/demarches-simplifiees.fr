@@ -5,4 +5,9 @@ class Dossiers::BatchAlertComponent < ApplicationComponent
     @batch = batch
     @procedure = procedure
   end
+
+  def set_seen_at!
+    @batch.seen_at = Time.zone.now
+    @batch.save
+  end
 end
