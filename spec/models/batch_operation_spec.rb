@@ -83,13 +83,10 @@ describe BatchOperation, type: :model do
 
     context 'when it is the first job' do
       it 'sets run_at at first' do
-        run_at = 2.minutes.ago
-        Timecop.freeze(run_at) do
-          expect { batch_operation.track_processed_dossier(false, dossier) }
-            .to change { batch_operation.reload.run_at }
-            .from(nil)
-            .to(run_at)
-        end
+        expect { batch_operation.track_processed_dossier(false, dossier) }
+          .to change { batch_operation.reload.run_at }
+          .from(nil)
+          .to(anything)
       end
     end
 
@@ -103,13 +100,10 @@ describe BatchOperation, type: :model do
 
     context 'when it is the last job' do
       it 'sets finished_at' do
-        finished_at = Time.zone.now
-        Timecop.freeze(finished_at) do
-          expect { batch_operation.track_processed_dossier(true, dossier) }
-            .to change { batch_operation.reload.finished_at }
-            .from(nil)
-            .to(finished_at)
-        end
+        expect { batch_operation.track_processed_dossier(true, dossier) }
+          .to change { batch_operation.reload.finished_at }
+          .from(nil)
+          .to(anything)
       end
     end
   end

@@ -92,8 +92,8 @@ module Instructeurs
       assign_exports
 
       @batch_operations = BatchOperation.joins(:groupe_instructeurs)
-                                        .where(groupe_instructeurs: current_instructeur.groupe_instructeurs.where(procedure_id: @procedure.id))
-                                        .distinct
+        .where(groupe_instructeurs: current_instructeur.groupe_instructeurs.where(procedure_id: @procedure.id))
+        .distinct
     end
 
     def deleted_dossiers

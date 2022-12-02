@@ -721,7 +721,6 @@ describe Instructeurs::DossiersController, type: :controller do
         expect(assigns(:is_dossier_in_batch_operation)).to eq(true)
       end
     end
-
   end
 
   describe "#update_annotations" do
