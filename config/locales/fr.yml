@@ -193,6 +193,7 @@ fr:
           more_information: En savoir plus
         identite:
           identity_data: Données d’identité
+          all_required: Tous les champs sont obligatoires.
           civility: Civilité
           first_name: Prénom
           last_name: Nom
