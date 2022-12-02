@@ -244,6 +244,11 @@ module Instructeurs
       redirect_to instructeur_procedure_path(@procedure)
     end
 
+    def administrateurs
+      @procedure = procedure
+      @administrateurs = procedure.administrateurs
+    end
+
     private
 
     def create_bulk_message_mail(dossier_count, dossier_state)

@@ -4,9 +4,12 @@
       .procedure-logo{ style: "background-image: url(#{p.logo_url})" }
 
     .procedure-details
-      %p.fr-mb-2w
-        = procedure_badge(p)
-        = link_to(p.libelle, instructeur_procedure_path(p), class: "fr-link fr-ml-1w")
+      .flex.clipboard-container
+        %p.fr-mb-2w
+          = procedure_badge(p)
+          = link_to("#{p.libelle} - n°#{p.id}", instructeur_procedure_path(p), class: "fr-link fr-ml-1w")
+          = render Dsfr::CopyButtonComponent.new(title: t('instructeurs.procedures.index.copy_link_button'), text: procedure_lien(p))
+
       %ul.procedure-stats.flex
         %li
           %object
