@@ -1,19 +1,19 @@
 .fr-mb-5v
   - if @batch.finished_and_success? && @batch.seen_at.nil?
-    = render Dsfr::AlertComponent.new(title: t('.finish.title'), state: :success) do |c|
+    = render Dsfr::AlertComponent.new(title: t('.finish.title'), state: :success, heading_level: 'h2') do |c|
       - c.body do
         %p
           = t('.finish.text_success', count: @batch.success_dossier_ids.count)
     - set_seen_at!
 
   - if @batch.finished_and_fails? && @batch.seen_at.nil?
-    = render Dsfr::AlertComponent.new(title: t('.finish.title'), state: :warning) do |c|
+    = render Dsfr::AlertComponent.new(title: t('.finish.title'), state: :warning, heading_level: 'h2') do |c|
       - c.body do
         %p
           = t('.finish.text_fail', count: @batch.failed_dossier_ids.count)
     - set_seen_at!
   - if @batch.beginning?
-    = render Dsfr::AlertComponent.new(title: t('.in_progress.title'), state: :info) do |c|
+    = render Dsfr::AlertComponent.new(title: t('.in_progress.title'), state: :info, heading_level: 'h2') do |c|
       - c.body do
         %p
           = t('.in_progress.text_beginning', count: @batch.dossiers.count)
@@ -23,7 +23,7 @@
           = t('.after_link_text')
 
   - if @batch.in_progress?
-    = render Dsfr::AlertComponent.new(title: t('.in_progress.title'), state: :info) do |c|
+    = render Dsfr::AlertComponent.new(title: t('.in_progress.title'), state: :info, heading_level: 'h2') do |c|
       - c.body do
 
         - if @batch.failed_dossier_ids.present?

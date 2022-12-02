@@ -13,6 +13,9 @@ describe 'BatchOperation a dossier:', js: true do
       dossier_3 = create(:dossier, :accepte, procedure: procedure)
       log_in(instructeur.email, password)
       visit instructeur_procedure_path(procedure, statut: 'traites')
+
+      # check a11y with enabled checkbox
+      expect(page).to be_axe_clean
       # ensure button is disabled by default
       expect(page).to have_selector('input[disabled][value="Archiver la sélection"]')
 
@@ -28,6 +31,8 @@ describe 'BatchOperation a dossier:', js: true do
 
       # ensure batched dossier is disabled
       expect(page).to have_selector("##{checkbox_id}[disabled]")
+      # check a11y with disabled checkbox
+      expect(page).to be_axe_clean
 
       # ensure alert is present
       expect(page).to have_content("Information : Une action de masse est en cours")
