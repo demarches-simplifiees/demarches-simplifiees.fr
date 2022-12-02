@@ -279,6 +279,10 @@ FactoryBot.define do
       end
     end
 
+    trait :draft do
+      aasm_state { :brouillon }
+    end
+
     trait :published do
       aasm_state { :publiee }
       path { generate(:published_path) }

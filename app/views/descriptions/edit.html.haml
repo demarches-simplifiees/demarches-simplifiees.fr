@@ -1,0 +1,35 @@
+- content_for(:title, @description.libelle)
+
+- content_for :footer do
+  = render partial: "root/footer"
+
+.container
+  .two-columns.procedure-context
+    .columns-container
+      .column.procedure-preview
+        = render partial: 'shared/procedure_description', locals: { procedure: @description }
+      .column.procedure-context-content
+        %p
+          Vous souhaitez permettre à vos usager·ères la
+          %strong création d'un dossier prérempli
+          , à partir de données dont vous disposez déjà, pour la démarche «
+          = @description.libelle
+          ».
+        %p
+          Pour cela, ajoutez les champs que vous souhaitez préremplir, grâce au tableau ci-dessous.
+        %p
+          Lorsque vous avez terminé, il ne vous reste plus qu'à copier l'URL et à la partager.
+
+  .card
+    .card-title
+      %span.icon.edit
+      Champs de la démarche
+    = render "types_de_champs", description: @description
+
+  .card.featured
+    .card-title
+      %span.icon.new-folder
+      URL de préremplissage
+      -# TODO: SEB in a nice verbatim or input
+    = render "prefill_url"
+    -# TODO: SEB copy button
