@@ -76,7 +76,7 @@ Rails.application.configure do
   config.assets.raise_runtime_errors = true
 
   # Action Mailer settings
-  config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.delivery_method = ENV['HELO_ENABLED'] == 'enabled' ? :helo : :letter_opener
 
   config.action_mailer.default_url_options = { host: ENV.fetch("APP_HOST") }
   config.action_mailer.asset_host = "http://" + ENV.fetch("APP_HOST")
