@@ -377,6 +377,7 @@ Rails.application.routes.draw do
         post 'download_export'
         get 'stats'
         get 'email_notifications'
+        get 'administrateurs'
         patch 'update_email_notifications'
         get 'deleted_dossiers'
         get 'email_usagers'

@@ -11,6 +11,7 @@ en:
             termine: This file had been processed and will soon expire. So it will be deleted soon. If you want to keep it, you can dowload a PDF file of it.
           button_delay_expiration: "Keep for one more month"
           notification_management: notification management
+          administrators_list: administrators list
           statistics: statistics
           instructeurs: instructors
           contact_users: contact users (draft)
