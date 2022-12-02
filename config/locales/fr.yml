@@ -171,6 +171,7 @@ fr:
         restore: "Restaurer"
         filters:
           title: Filtrer
+        select_all: Tout selectionner
         personalize: Personnaliser
         download: Télécharger un dossier
         follow_file: Suivre le dossier
