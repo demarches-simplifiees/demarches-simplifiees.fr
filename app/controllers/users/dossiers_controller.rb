@@ -301,7 +301,8 @@ module Users
         revision: params[:brouillon] ? procedure.draft_revision : procedure.active_revision,
         groupe_instructeur: procedure.defaut_groupe_instructeur_for_new_dossier,
         user: current_user,
-        state: Dossier.states.fetch(:brouillon)
+        state: Dossier.states.fetch(:brouillon),
+        migrated_champ_routage: procedure.draft_revision.types_de_champ.any?(&:routage?)
       )
       dossier.build_default_individual
       dossier.save!
