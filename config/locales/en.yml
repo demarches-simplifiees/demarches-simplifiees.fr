@@ -176,6 +176,7 @@ en:
         restore: "Restore"
         filters:
           title: Filter
+        select_all: Select all
         personalize: Personalize
         follow_file: Follow-up the file
         save: Save

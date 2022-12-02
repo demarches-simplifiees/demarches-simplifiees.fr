@@ -83,7 +83,7 @@
               %tr
                 - if batch_operation_component.render?
                   %th
-                    %input{ type: "checkbox", data: { "batch-operation-target" => "all","action" => "batch-operation#onCheckAll"} }
+                    %input{ type: "checkbox", data: { "batch-operation-target" => "all","action" => "batch-operation#onCheckAll"}, id: dom_id(BatchOperation.new, :checkbox_all), aria: { title: t('views.instructeurs.dossiers.select_all') } }
                 - else
                   - if @statut.in? %w(suivis traites tous)
                     = render partial: "header_field", locals: { field: { "label" => "●", "table" => "notifications", "column" => "notifications" }, classname: "notification-col" }
@@ -120,9 +120,9 @@
                   %td.folder-col
                     - if batch_operation_component.render?
                       - if p.batch_operation_id.present?
-                        = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, true, disabled: true
+                        = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, true, disabled: true, id: dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}")
                       - else
-                        = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, false, data: { "batch-operation-target" => "input", "action" => "batch-operation#onCheckOne"}, form: dom_id(BatchOperation.new)
+                        = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, false, data: { "batch-operation-target" => "input", "action" => "batch-operation#onCheckOne"}, form: dom_id(BatchOperation.new), id: dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}")
                     - else
                       - if p.hidden_by_administration_at.present?
                         %span.cell-link
