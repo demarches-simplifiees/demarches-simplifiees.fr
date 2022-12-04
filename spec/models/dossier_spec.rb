@@ -1023,6 +1023,7 @@ describe Dossier do
     let!(:instructeur) { create(:instructeur) }
     let!(:now) { Time.zone.parse('01/01/2100') }
     let(:attestation) { Attestation.new }
+    let(:event) { dossier.event_store.read.stream("$by_dossier_id_#{dossier.uuid}").last }
 
     before do
       allow(NotificationMailer).to receive(:send_accepte_notification).and_return(double(deliver_later: true))
@@ -1049,6 +1050,10 @@ describe Dossier do
     it { expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601) }
     it { expect(NotificationMailer).to have_received(:send_accepte_notification).with(dossier) }
     it { expect(dossier.attestation).to eq(attestation) }
+    it {
+      expect(event.event_type).to eq('DossierAccepte')
+      expect(event.data[:motivation]).to eq('motivation')
+    }
   end
 
   describe '#accepter_automatiquement!' do
