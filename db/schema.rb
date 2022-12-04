@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_12_06_144624) do
+ActiveRecord::Schema.define(version: 2022_12_07_144624) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -357,6 +357,7 @@ ActiveRecord::Schema.define(version: 2022_12_06_144624) do
     t.datetime "en_construction_at"
     t.datetime "en_construction_close_to_expiration_notice_sent_at"
     t.datetime "en_instruction_at"
+    t.text "event_encryption_key"
     t.boolean "for_procedure_preview", default: false
     t.bigint "groupe_instructeur_id"
     t.datetime "groupe_instructeur_updated_at"

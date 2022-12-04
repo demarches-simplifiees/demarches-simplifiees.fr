@@ -16,6 +16,7 @@
 #  en_construction_at                                 :datetime
 #  en_construction_close_to_expiration_notice_sent_at :datetime
 #  en_instruction_at                                  :datetime
+#  event_encryption_key                               :text
 #  for_procedure_preview                              :boolean          default(FALSE)
 #  groupe_instructeur_updated_at                      :datetime
 #  hidden_at                                          :datetime
