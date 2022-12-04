@@ -851,11 +851,12 @@ class Dossier < ApplicationRecord
       .passer_en_construction
       .processed_at
     save!
+    log_event(DossierDepose, valid_at: depose_at)
   end
 
   def after_passer_en_instruction(h)
     instructeur = h[:instructeur]
-    disable_notification = h.fetch(:disable_notification, false)
+    disable_notification = h.fetch(:disable_notification, procedure.declarative_accepte?)
 
     instructeur.follow(self)
 
@@ -866,10 +867,8 @@ class Dossier < ApplicationRecord
       .processed_at
     save!
 
-    if !disable_notification
-      NotificationMailer.send_en_instruction_notification(self).deliver_later
-    end
     log_dossier_operation(instructeur, :passer_en_instruction)
+    log_event(DossierPasseEnInstruction, valid_at: en_instruction_at, disable_notification:)
   end
 
   def after_passer_automatiquement_en_instruction
@@ -882,6 +881,7 @@ class Dossier < ApplicationRecord
 
     NotificationMailer.send_en_instruction_notification(self).deliver_later
     log_automatic_dossier_operation(:passer_en_instruction)
+    log_event(DossierPasseEnInstruction, valid_at: en_instruction_at, disable_notification: true)
   end
 
   def after_repasser_en_construction(h)
@@ -896,6 +896,7 @@ class Dossier < ApplicationRecord
       .processed_at
     save!
     log_dossier_operation(instructeur, :repasser_en_construction)
+    log_event(DossierRepasseEnConstruction, valid_at: en_construction_at, disable_notification:)
   end
 
   def after_repasser_en_instruction(h)
@@ -911,13 +912,12 @@ class Dossier < ApplicationRecord
     self.en_instruction_at = self.traitements
       .passer_en_instruction(instructeur: instructeur)
       .processed_at
+    save!
+
     attestation&.destroy
 
-    save!
-    if !disable_notification
-      DossierMailer.notify_revert_to_instruction(self).deliver_later
-    end
     log_dossier_operation(instructeur, :repasser_en_instruction)
+    log_event(DossierRepasseEnInstruction, valid_at: en_instruction_at, disable_notification:)
   end
 
   def after_accepter(h)
@@ -937,15 +937,11 @@ class Dossier < ApplicationRecord
 
     if attestation.nil?
       self.attestation = build_attestation
+      save!
     end
 
-    save!
-    remove_titres_identite!
-    if !disable_notification
-      NotificationMailer.send_accepte_notification(self).deliver_later
-    end
-    send_dossier_decision_to_experts(self)
     log_dossier_operation(instructeur, :accepter, self)
+    log_event(DossierAccepte, valid_at: processed_at, data: { motivation: }, disable_notification:)
   end
 
   def after_accepter_automatiquement
@@ -956,12 +952,11 @@ class Dossier < ApplicationRecord
 
     if attestation.nil?
       self.attestation = build_attestation
+      save!
     end
 
-    save!
-    remove_titres_identite!
-    NotificationMailer.send_accepte_notification(self).deliver_later
     log_automatic_dossier_operation(:accepter, self)
+    log_event(DossierAccepte, valid_at: processed_at, data: { motivation: nil }, disable_notification: false)
   end
 
   def after_refuser(h)
@@ -977,15 +972,11 @@ class Dossier < ApplicationRecord
 
     if justificatif
       self.justificatif_motivation.attach(justificatif)
+      save!
     end
 
-    save!
-    remove_titres_identite!
-    if !disable_notification
-      NotificationMailer.send_refuse_notification(self).deliver_later
-    end
-    send_dossier_decision_to_experts(self)
     log_dossier_operation(instructeur, :refuser, self)
+    log_event(DossierRefuse, valid_at: processed_at, data: { motivation: }, disable_notification:)
   end
 
   def after_classer_sans_suite(h)
@@ -1001,15 +992,11 @@ class Dossier < ApplicationRecord
 
     if justificatif
       self.justificatif_motivation.attach(justificatif)
+      save!
     end
 
-    save!
-    remove_titres_identite!
-    if !disable_notification
-      NotificationMailer.send_sans_suite_notification(self).deliver_later
-    end
-    send_dossier_decision_to_experts(self)
     log_dossier_operation(instructeur, :classer_sans_suite, self)
+    log_event(DossierClasseSansSuite, valid_at: processed_at, data: { motivation: }, disable_notification:)
   end
 
   def process_declarative!
@@ -1018,10 +1005,6 @@ class Dossier < ApplicationRecord
     elsif procedure.declarative_en_instruction? && may_passer_automatiquement_en_instruction?
       passer_automatiquement_en_instruction!
     end
-  end
-
-  def remove_titres_identite!
-    champs_public.filter(&:titre_identite?).map(&:piece_justificative_file).each(&:purge_later)
   end
 
   def check_mandatory_and_visible_champs
@@ -1312,6 +1295,16 @@ class Dossier < ApplicationRecord
     end
   end
 
+  def log_event(event, valid_at:, data: {}, disable_notification: false)
+    data[:dossier_id] = uuid
+    data[:demarche_id] = procedure.uuid
+    metadata = { valid_at:, disable_notification: }
+    if log_operations?
+      metadata[:snapshot_id] = snapshots.create!.id
+    end
+    event_store.publish(event.new(data:, metadata:), stream_name: "$by_dossier_id_#{uuid}")
+  end
+
   def send_draft_notification_email
     if brouillon? && !procedure.declarative? && !for_procedure_preview?
       DossierMailer.notify_new_draft(self).deliver_later
@@ -1346,23 +1339,5 @@ class Dossier < ApplicationRecord
       .find_each do |dossier|
         DossierMailer.notify_brouillon_not_submitted(dossier).deliver_later
       end
-  end
-
-  def send_dossier_decision_to_experts(dossier)
-    avis_experts_procedures_ids = Avis
-      .joins(:experts_procedure)
-      .where(dossier: dossier, experts_procedures: { allow_decision_access: true })
-      .with_answer
-      .distinct
-      .pluck('avis.id, experts_procedures.id')
-
-    # rubocop:disable Lint/UnusedBlockArgument
-    avis = avis_experts_procedures_ids
-      .uniq { |(avis_id, experts_procedures_id)| experts_procedures_id }
-      .map { |(avis_id, _)| avis_id }
-      .then { |avis_ids| Avis.find(avis_ids) }
-    # rubocop:enable Lint/UnusedBlockArgument
-
-    avis.each { |a| ExpertMailer.send_dossier_decision_v2(a).deliver_later }
   end
 end

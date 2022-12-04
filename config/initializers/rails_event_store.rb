@@ -19,6 +19,25 @@ Rails.configuration.to_prepare do
     store.subscribe_to_all_events(LinkByData.new(event_store: store, key: :demarche_id))
     store.subscribe_to_all_events(LinkByData.new(event_store: store, key: :dossier_id))
 
+    store.subscribe(Dossier::NotificationService, to: [
+      DossierDepose,
+      DossierPasseEnInstruction,
+      DossierAccepte,
+      DossierRefuse,
+      DossierClasseSansSuite,
+      DossierRepasseEnInstruction
+    ])
+
+    store.subscribe(Dossier::RemoveTitreIdentiteJob, to: [
+      DossierAccepte,
+      DossierRefuse,
+      DossierClasseSansSuite
+    ])
+    store.subscribe(Dossier::SendDecisionToExpertsJob, to: [
+      DossierAccepte,
+      DossierRefuse,
+      DossierClasseSansSuite
+    ])
   end
 end
 
