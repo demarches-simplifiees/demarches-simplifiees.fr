@@ -22,4 +22,8 @@ class ApplicationRecord < ActiveRecord::Base
   def to_typed_id
     GraphQL::Schema::UniqueWithinType.encode(self.class.name, id)
   end
+
+  def event_store
+    Rails.configuration.event_store
+  end
 end

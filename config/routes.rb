@@ -81,6 +81,14 @@ Rails.application.routes.draw do
     get 'import_procedure_tags' => 'procedures#import_data'
     post 'import_tags' => 'procedures#import_tags'
     root to: "administrateurs#index"
+
+    if Rails.env.development?
+      mount RailsEventStore::Browser => "/events"
+    else
+      authenticate :super_admin do
+        mount RailsEventStore::Browser => "/events"
+      end
+    end
   end
 
   #

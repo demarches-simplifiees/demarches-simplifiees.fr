@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   include Devise::StoreLocationExtension
   include ApplicationController::LongLivedAuthenticityToken
   include ApplicationController::ErrorHandling
+  include RequestMetadataConcern
 
   MAINTENANCE_MESSAGE = 'Le site est actuellement en maintenance. Il sera à nouveau disponible dans un court instant.'
 
@@ -96,6 +97,10 @@ class ApplicationController < ActionController::Base
 
   def ajax_redirect(path)
     "window.location.href='#{path}'"
+  end
+
+  def event_store
+    Rails.configuration.event_store
   end
 
   protected
