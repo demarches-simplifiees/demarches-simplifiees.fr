@@ -860,7 +860,9 @@ class Dossier < ApplicationRecord
     log_automatic_dossier_operation(:passer_en_instruction)
   end
 
-  def after_repasser_en_construction(instructeur)
+  def after_repasser_en_construction(h)
+    instructeur = h[:instructeur]
+
     create_missing_traitemets
 
     self.en_construction_close_to_expiration_notice_sent_at = nil
