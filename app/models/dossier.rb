@@ -137,6 +137,7 @@ class Dossier < ApplicationRecord
   has_one :traitement, -> { order(processed_at: :desc) }, inverse_of: false
 
   has_many :dossier_operation_logs, -> { order(:created_at) }, inverse_of: :dossier
+  has_many :snapshots, class_name: 'DossierSnapshot', inverse_of: :dossier, dependent: :destroy
 
   belongs_to :groupe_instructeur, optional: true
   belongs_to :revision, class_name: 'ProcedureRevision', optional: false

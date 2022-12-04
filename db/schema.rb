@@ -310,6 +310,14 @@ ActiveRecord::Schema.define(version: 2022_12_05_144624) do
     t.index ["keep_until"], name: "index_dossier_operation_logs_on_keep_until"
   end
 
+  create_table "dossier_snapshots", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.jsonb "data"
+    t.bigint "dossier_id", null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["dossier_id"], name: "index_dossier_snapshots_on_dossier_id"
+  end
+
   create_table "dossier_submitted_messages", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.string "message_on_submit_by_usager"
@@ -985,6 +993,7 @@ ActiveRecord::Schema.define(version: 2022_12_05_144624) do
   add_foreign_key "commentaires", "experts"
   add_foreign_key "commentaires", "instructeurs"
   add_foreign_key "dossier_operation_logs", "bill_signatures"
+  add_foreign_key "dossier_snapshots", "dossiers"
   add_foreign_key "dossier_transfer_logs", "dossiers"
   add_foreign_key "dossiers", "batch_operations"
   add_foreign_key "dossiers", "dossier_transfers"
