@@ -548,7 +548,7 @@ describe Dossier do
       let(:dossier) { create(:dossier, :en_instruction, :with_individual) }
 
       before do
-        dossier.refuser!(instructeur: instructeur)
+        dossier.refuser!(instructeur: instructeur, motivation: "")
         dossier.reload
       end
 
@@ -562,7 +562,7 @@ describe Dossier do
       let(:dossier) { create(:dossier, :en_instruction, :with_individual) }
 
       before do
-        dossier.classer_sans_suite!(instructeur: instructeur)
+        dossier.classer_sans_suite!(instructeur: instructeur, motivation: "")
         dossier.reload
       end
 
@@ -903,7 +903,7 @@ describe Dossier do
   end
 
   describe 'webhook' do
-    let(:dossier) { create(:dossier) }
+    let(:dossier) { create(:dossier, :with_individual) }
     let(:instructeur) { create(:instructeur) }
 
     it 'should not call webhook' do
@@ -1079,7 +1079,7 @@ describe Dossier do
   end
 
   describe '#passer_en_instruction!' do
-    let(:dossier) { create(:dossier, :en_construction, en_construction_close_to_expiration_notice_sent_at: Time.zone.now) }
+    let(:dossier) { create(:dossier, :en_construction, :with_individual, en_construction_close_to_expiration_notice_sent_at: Time.zone.now) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let(:operation_serialized) { last_operation.data }
     let(:instructeur) { create(:instructeur) }
@@ -1097,7 +1097,7 @@ describe Dossier do
   end
 
   describe '#passer_automatiquement_en_instruction!' do
-    let(:dossier) { create(:dossier, :en_construction, :with_declarative_en_instruction, en_construction_close_to_expiration_notice_sent_at: Time.zone.now) }
+    let(:dossier) { create(:dossier, :en_construction, :with_declarative_en_instruction, :with_individual, en_construction_close_to_expiration_notice_sent_at: Time.zone.now) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let(:operation_serialized) { last_operation.data }
     let(:instructeur) { create(:instructeur) }
@@ -1317,7 +1317,7 @@ describe Dossier do
   end
 
   describe '#repasser_en_instruction!' do
-    let(:dossier) { create(:dossier, :refuse, :with_attestation, archived: true, termine_close_to_expiration_notice_sent_at: Time.zone.now) }
+    let(:dossier) { create(:dossier, :refuse, :with_attestation, :with_individual, archived: true, termine_close_to_expiration_notice_sent_at: Time.zone.now) }
     let!(:instructeur) { create(:instructeur) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
 
@@ -1646,30 +1646,34 @@ describe Dossier do
     let(:champ_titre_identite_vide) { create(:champ_titre_identite, type_de_champ: type_de_champ_titre_identite_vide) }
 
     before do
-      champ_titre_identite_vide.piece_justificative_file.purge
       dossier.champs_public << champ_titre_identite
       dossier.champs_public << champ_titre_identite_vide
+      perform_enqueued_jobs
+      champ_titre_identite_vide.reload.piece_justificative_file.purge
     end
 
     it "clean up titres identite on accepter" do
       expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy
       expect(champ_titre_identite_vide.piece_justificative_file.attached?).to be_falsey
       dossier.accepter!(instructeur: dossier.followers_instructeurs.first, motivation: "yolo!")
-      expect(champ_titre_identite.piece_justificative_file.attached?).to be_falsey
+      perform_enqueued_jobs
+      expect(champ_titre_identite.reload.piece_justificative_file.attached?).to be_falsey
     end
 
     it "clean up titres identite on refuser" do
       expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy
       expect(champ_titre_identite_vide.piece_justificative_file.attached?).to be_falsey
       dossier.refuser!(instructeur: dossier.followers_instructeurs.first, motivation: "yolo!")
-      expect(champ_titre_identite.piece_justificative_file.attached?).to be_falsey
+      perform_enqueued_jobs
+      expect(champ_titre_identite.reload.piece_justificative_file.attached?).to be_falsey
     end
 
     it "clean up titres identite on classer_sans_suite" do
       expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy
       expect(champ_titre_identite_vide.piece_justificative_file.attached?).to be_falsey
       dossier.classer_sans_suite!(instructeur: dossier.followers_instructeurs.first, motivation: "yolo!")
-      expect(champ_titre_identite.piece_justificative_file.attached?).to be_falsey
+      perform_enqueued_jobs
+      expect(champ_titre_identite.reload.piece_justificative_file.attached?).to be_falsey
     end
 
     context 'en_construction' do
@@ -1679,7 +1683,8 @@ describe Dossier do
         expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy
         expect(champ_titre_identite_vide.piece_justificative_file.attached?).to be_falsey
         dossier.accepter_automatiquement!
-        expect(champ_titre_identite.piece_justificative_file.attached?).to be_falsey
+        perform_enqueued_jobs
+        expect(champ_titre_identite.reload.piece_justificative_file.attached?).to be_falsey
       end
     end
   end
