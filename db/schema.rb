@@ -371,6 +371,7 @@ ActiveRecord::Schema.define(version: 2022_12_05_144624) do
     t.datetime "termine_close_to_expiration_notice_sent_at"
     t.datetime "updated_at"
     t.integer "user_id"
+    t.uuid "uuid"
     t.index ["archived"], name: "index_dossiers_on_archived"
     t.index ["batch_operation_id"], name: "index_dossiers_on_batch_operation_id"
     t.index ["dossier_transfer_id"], name: "index_dossiers_on_dossier_transfer_id"
@@ -732,6 +733,7 @@ ActiveRecord::Schema.define(version: 2022_12_05_144624) do
     t.datetime "test_started_at"
     t.datetime "unpublished_at"
     t.datetime "updated_at", null: false
+    t.uuid "uuid"
     t.string "web_hook_url"
     t.datetime "whitelisted_at"
     t.bigint "zone_id"
@@ -912,6 +914,7 @@ ActiveRecord::Schema.define(version: 2022_12_05_144624) do
     t.text "unconfirmed_email"
     t.string "unlock_token"
     t.datetime "updated_at"
+    t.uuid "uuid"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["requested_merge_into_id"], name: "index_users_on_requested_merge_into_id"

@@ -41,6 +41,7 @@
 #  routing_enabled                           :boolean
 #  tags                                      :text             default([]), is an Array
 #  unpublished_at                            :datetime
+#  uuid                                      :uuid
 #  web_hook_url                              :string
 #  whitelisted_at                            :datetime
 #  created_at                                :datetime         not null
@@ -99,6 +100,16 @@ class Procedure < ApplicationRecord
   belongs_to :service, optional: true
   belongs_to :zone, optional: true
   has_and_belongs_to_many :zones
+
+  before_create do |procedure|
+    procedure.uuid ||= SecureRandom.uuid
+  end
+
+  after_find do |procedure|
+    if procedure.uuid.nil?
+      procedure.update_column(:uuid, SecureRandom.uuid)
+    end
+  end
 
   def active_dossier_submitted_message
     published_dossier_submitted_message || draft_dossier_submitted_message

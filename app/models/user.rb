@@ -24,6 +24,7 @@
 #  team_account                 :boolean          default(FALSE)
 #  unconfirmed_email            :text
 #  unlock_token                 :string
+#  uuid                         :uuid
 #  created_at                   :datetime
 #  updated_at                   :datetime
 #  requested_merge_into_id      :bigint
@@ -65,6 +66,16 @@ class User < ApplicationRecord
   before_validation -> { sanitize_email(:email) }
 
   validate :does_not_merge_on_self, if: :requested_merge_into_id_changed?
+
+  before_create do |user|
+    user.uuid ||= SecureRandom.uuid
+  end
+
+  after_find do |user|
+    if user.uuid.nil?
+      user.update_column(:uuid, SecureRandom.uuid)
+    end
+  end
 
   def validate_password_complexity?
     administrateur?

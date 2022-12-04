@@ -33,6 +33,7 @@
 #  search_terms                                       :text
 #  state                                              :string
 #  termine_close_to_expiration_notice_sent_at         :datetime
+#  uuid                                               :uuid
 #  created_at                                         :datetime
 #  updated_at                                         :datetime
 #  batch_operation_id                                 :bigint
@@ -440,6 +441,16 @@ class Dossier < ApplicationRecord
   validates :groupe_instructeur, presence: true, if: -> { !brouillon? }
 
   validates_associated :prefilled_champs_public, on: :prefilling
+
+  before_create do |dossier|
+    dossier.uuid ||= SecureRandom.uuid
+  end
+
+  after_find do |dossier|
+    if dossier.uuid.nil?
+      dossier.update_column(:uuid, SecureRandom.uuid)
+    end
+  end
 
   def types_de_champ_public
     types_de_champ
