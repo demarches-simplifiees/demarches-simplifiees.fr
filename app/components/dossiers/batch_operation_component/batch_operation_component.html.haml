@@ -1,5 +1,4 @@
 = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, id: dom_id(BatchOperation.new), html: { class: 'flex justify-end' }, data: { "batch-operation-target" => "form"}) do |form|
   .flex.align-center
     - available_operations.each do |opt|
-      = form.submit opt[0], class: "fr-btn", disabled: :disabled, name: "#{form.object_name}[operation]", data: { "batch-operation-target" => "submit", "submitter-operation" => opt[1]}
-
+      = form.button opt[0], class: "fr-btn fr-btn--icon-left fr-icon-folder-2-line", disabled: :disabled, name: "#{form.object_name}[operation]", data: { "batch-operation-target" => "submit", "submitter-operation" => opt[1]}
