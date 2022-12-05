@@ -88,14 +88,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is authorized", :type_de_champ_integer_number, "42"
     it_behaves_like "a champ public value that is authorized", :type_de_champ_email, "value"
     it_behaves_like "a champ public value that is authorized", :type_de_champ_phone, "value"
-    it_behaves_like "a champ public value that is authorized", :type_de_champ_address, "value"
-    it_behaves_like "a champ public value that is authorized", :type_de_champ_pays, "value"
-    it_behaves_like "a champ public value that is authorized", :type_de_champ_regions, "value"
-    it_behaves_like "a champ public value that is authorized", :type_de_champ_departements, "value"
-    it_behaves_like "a champ public value that is authorized", :type_de_champ_siret, "value"
-    it_behaves_like "a champ public value that is authorized", :type_de_champ_rna, "value"
     it_behaves_like "a champ public value that is authorized", :type_de_champ_iban, "value"
-    it_behaves_like "a champ public value that is authorized", :type_de_champ_annuaire_education, "value"
 
     it_behaves_like "a champ public value that is unauthorized", :type_de_champ_decimal_number, "non decimal string"
     it_behaves_like "a champ public value that is unauthorized", :type_de_champ_integer_number, "non integer string"
@@ -120,6 +113,13 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is unauthorized", :type_de_champ_pole_emploi, "value"
     it_behaves_like "a champ public value that is unauthorized", :type_de_champ_mesri, "value"
     it_behaves_like "a champ public value that is unauthorized", :type_de_champ_carte, "value"
+    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_address, "value"
+    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_pays, "value"
+    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_regions, "value"
+    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_departements, "value"
+    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_siret, "value"
+    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_rna, "value"
+    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_annuaire_education, "value"
   end
 
   private
