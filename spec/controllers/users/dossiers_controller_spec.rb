@@ -1113,6 +1113,28 @@ describe Users::DossiersController, type: :controller do
             end
 
             it { is_expected.to redirect_to siret_dossier_path(id: Dossier.last) }
+
+            context 'when prefill values contain a hash' do
+              let(:value_2) { { evil: "payload" } }
+
+              it "prefills the dossier's champ with the hash stored as a string" do
+                subject
+
+                dossier = Dossier.last
+                expect(find_champ_by_stable_id(dossier, type_de_champ_2.stable_id).value).to eq("{\"evil\"=>\"payload\"}")
+              end
+            end
+
+            context 'when prefill values contain an array' do
+              let(:value_2) { ["a", "b", "c"] }
+
+              it "prefills the dossier's champ with the array stored as a string" do
+                subject
+
+                dossier = Dossier.last
+                expect(find_champ_by_stable_id(dossier, type_de_champ_2.stable_id).value).to eq("[\"a\", \"b\", \"c\"]")
+              end
+            end
           end
         end
         context 'when user is not logged' do
