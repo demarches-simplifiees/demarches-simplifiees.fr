@@ -34,6 +34,7 @@
 #  opendata                                  :boolean          default(TRUE)
 #  organisation                              :string
 #  path                                      :string           not null
+#  piece_justificative_multiple              :boolean          default(TRUE), not null
 #  procedure_expires_when_termine_enabled    :boolean          default(TRUE)
 #  published_at                              :datetime
 #  routing_criteria_name                     :text             default("Votre ville")
@@ -248,9 +249,9 @@ class Procedure < ApplicationRecord
       :groupe_instructeurs,
       dossiers: {
         champs_public: [
-          piece_justificative_file_attachment: :blob,
+          piece_justificative_file_attachments: :blob,
           champs: [
-            piece_justificative_file_attachment: :blob
+            piece_justificative_file_attachments: :blob
           ]
         ]
       }
@@ -776,7 +777,7 @@ class Procedure < ApplicationRecord
     if dossiers.termine.any?
       dossiers_sample = dossiers.termine.limit(100)
       total_size = Champ
-        .includes(piece_justificative_file_attachment: :blob)
+        .includes(piece_justificative_file_attachments: :blob)
         .where(type: Champs::PieceJustificativeChamp.to_s, dossier: dossiers_sample)
         .sum('active_storage_blobs.byte_size')
 

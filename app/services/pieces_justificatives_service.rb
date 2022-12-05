@@ -46,19 +46,23 @@ class PiecesJustificativesService
 
   def self.serialize_champs_as_pjs(dossier)
     dossier.champs_public.filter { |champ| champ.type_de_champ.old_pj }.map do |champ|
-      {
-        created_at: champ.created_at&.in_time_zone('UTC'),
-        type_de_piece_justificative_id: champ.type_de_champ.old_pj[:stable_id],
-        content_url: champ.for_api,
-        user: champ.dossier.user
-      }
-    end
+      champ.for_api&.map do |content_url|
+        {
+          created_at: champ.created_at&.in_time_zone('UTC'),
+          type_de_piece_justificative_id: champ.type_de_champ.old_pj[:stable_id],
+          content_url:,
+          user: champ.dossier.user
+        }
+      end
+    end.flatten
   end
 
   def self.clone_attachments(original, kopy)
     case original
     when Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp
-      clone_attachment(original.piece_justificative_file, kopy.piece_justificative_file)
+      original.piece_justificative_file.attachments.each do |attachment|
+        kopy.piece_justificative_file.attach(attachment.blob)
+      end
     when TypeDeChamp
       clone_attachment(original.piece_justificative_template, kopy.piece_justificative_template)
     when Procedure
@@ -113,7 +117,7 @@ class PiecesJustificativesService
 
   def self.pjs_for_champs(dossiers, for_expert = false)
     champs = Champ
-      .joins(:piece_justificative_file_attachment)
+      .joins(:piece_justificative_file_attachments)
       .where(type: "Champs::PieceJustificativeChamp", dossier: dossiers)
 
     if for_expert

@@ -3,7 +3,7 @@
     %span.icon{ class: popup_class }
     #{popup_title}
 
-  = form_tag(terminer_instructeur_dossier_path(dossier.procedure, dossier), data: { turbo: true, turbo_confirm: confirm }, method: :post, multipart: true, class: 'form') do
+  = form_tag(terminer_instructeur_dossier_path(dossier.procedure, dossier), data: { turbo: true, turbo_confirm: confirm }, method: :post, html: { multipart: true, class: 'form' }) do
     - if title == 'Accepter'
       = text_area :dossier, :motivation, class: 'motivation-text-area', placeholder: placeholder, required: false
       - if dossier.attestation_template&.activated?

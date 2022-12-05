@@ -6,7 +6,9 @@ describe ChampSerializer do
     context 'when type champ is piece justificative' do
       let(:champ) { create(:champ_piece_justificative) }
 
-      it { expect(subject[:value]).to match('/rails/active_storage/disk/') }
+      it {
+        expect(subject[:value]).to match_array([a_string_matching('/rails/active_storage/disk/')])
+      }
     end
 
     context 'when type champ is not piece justificative' do

@@ -43,12 +43,16 @@ class Champs::PieceJustificativeChamp < Champ
   end
 
   def for_export
-    piece_justificative_file.filename.to_s if piece_justificative_file.attached?
+    piece_justificative_file.map { _1.filename.to_s }
   end
 
   def for_api
-    if piece_justificative_file.attached? && (piece_justificative_file.virus_scanner.safe? || piece_justificative_file.virus_scanner.pending?)
-      piece_justificative_file.service_url
+    return nil unless piece_justificative_file.attached?
+
+    piece_justificative_file.filter_map do |attachment|
+      if attachment.virus_scanner.safe? || attachment.virus_scanner.pending?
+        attachment.service_url
+      end
     end
   end
 end

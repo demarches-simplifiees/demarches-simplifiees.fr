@@ -15,9 +15,9 @@
       = render Attachment::ShowComponent.new(attachment: @avis.introduction_file.attachment)
     %br/
 
-    = form_for @avis, url: expert_avis_path(@avis.procedure, @avis), html: { class: 'form', data: { controller: 'persisted-form', persisted_form_key_value: dom_id(@avis) } } do |f|
+    = form_for @avis, url: expert_avis_path(@avis.procedure, @avis), html: { class: 'form', data: { controller: 'persisted-form', persisted_form_key_value: dom_id(@avis) }, multipart: true } do |f|
       = f.text_area :answer, rows: 3, placeholder: 'Votre avis', required: true
-      = render Attachment::EditComponent.new(form: f, attached_file: @avis.piece_justificative_file, user_can_destroy: true)
+      = render Attachment::EditComponent.new(attached_file: @avis.piece_justificative_file, user_can_download: true)
 
       .flex.justify-between.align-baseline
         %p.confidentiel.flex
