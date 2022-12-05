@@ -60,7 +60,7 @@ class PrefillParams
     end
 
     def prefillable?
-      exists? && authorized? && valid?
+      authorized? && valid?
     end
 
     def to_h
@@ -71,10 +71,6 @@ class PrefillParams
     end
 
     private
-
-    def exists?
-      champ.present?
-    end
 
     def authorized?
       AUTHORIZED_TYPES_DE_CHAMPS.include?(champ.type_champ)
