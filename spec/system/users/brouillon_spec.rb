@@ -93,7 +93,7 @@ describe 'The user' do
     check_selected_value('communes', with: 'Ambléon (01300)')
     expect(page).to have_field('dossier_link', with: '123')
     expect(page).to have_text('file.pdf')
-    expect(page).to have_text('analyse antivirus en cours')
+    expect(page).to have_text('Analyse antivirus en cours')
   end
 
   let(:procedure_with_repetition) do
@@ -184,7 +184,7 @@ describe 'The user' do
     find_field('Pièce justificative 2').attach_file(Rails.root + 'spec/fixtures/files/RIB.pdf')
 
     # Expect the files to be uploaded immediately
-    expect(page).to have_text('analyse antivirus en cours', count: 2, wait: 5)
+    expect(page).to have_text('Analyse antivirus en cours', count: 2, wait: 5)
     expect(page).to have_text('file.pdf')
     expect(page).to have_text('RIB.pdf')
 
@@ -206,7 +206,7 @@ describe 'The user' do
     # Test invalid file type
     attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/invalid_file_format.json')
     expect(page).to have_no_text('La pièce justificative n’est pas d’un type accepté')
-    expect(page).to have_text('analyse antivirus en cours', count: 1, wait: 5)
+    expect(page).to have_text('Analyse antivirus en cours', count: 1, wait: 5)
   end
 
   scenario 'retry on transcient upload error', js: true do
@@ -216,18 +216,18 @@ describe 'The user' do
     # Test auto-upload failure
     # Make the subsequent auto-upload request fail
     allow_any_instance_of(Champs::PieceJustificativeController).to receive(:update) do |instance|
-      instance.render json: { errors: ['Error'] }, status: :bad_request
+      instance.render json: { errors: ["Une erreur est survenue"] }, status: :bad_request
     end
     attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/file.pdf')
-    expect(page).to have_css('p', text: 'Le fichier n’a pas pu être envoyé', visible: :visible, wait: 5)
-    expect(page).to have_button('Ré-essayer', visible: true)
+    expect(page).to have_css('p', text: "Une erreur est survenue", visible: :visible, wait: 5)
+    expect(page).to have_button('Réessayer', visible: true)
     expect(page).to have_button('Déposer le dossier', disabled: false)
 
     allow_any_instance_of(Champs::PieceJustificativeController).to receive(:update).and_call_original
 
     # Test that retrying after a failure works
-    click_on('Ré-essayer', visible: true, wait: 5)
-    expect(page).to have_text('analyse antivirus en cours', wait: 5)
+    click_on('Réessayer', visible: true, wait: 5)
+    expect(page).to have_text('Analyse antivirus en cours', wait: 5)
     expect(page).to have_text('file.pdf')
     expect(page).to have_button('Déposer le dossier', disabled: false)
 
@@ -236,6 +236,53 @@ describe 'The user' do
 
     # Expect the file to have been saved on the dossier
     expect(page).to have_text('file.pdf')
+  end
+
+  scenario "upload multiple pieces justificatives on same champ", js: true do
+    log_in(user, procedure_with_pjs)
+    fill_individual
+
+    attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/file.pdf')
+    expect(page).to have_text('file.pdf')
+    expect(page).to have_text('Analyse antivirus en cours')
+
+    attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/white.png')
+    expect(page).to have_text('white.png')
+
+    click_on("Supprimer le fichier file.pdf")
+    expect(page).to have_no_text('file.pdf')
+    expect(page).to have_text("La pièce jointe a bien été supprimée")
+
+    attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/black.png')
+
+    # Mark all attachments as safe to test turbo poll
+    # They are not immediately attached in db, so we have to wait a bit before continuing
+    # NOTE: we'res using files not used in other tests to avoid conflicts
+    attachments = Timeout.timeout(5) do
+      filenames = ['white.png', 'black.png']
+      attachments = ActiveStorage::Attachment.where(name: "piece_justificative_file").includes(:blob).filter do |attachment|
+        filenames.include?(attachment.filename.to_s)
+      end
+
+      fail ActiveRecord::RecordNotFound, "Not all attachments where found yet" unless attachments.count == filenames.count
+
+      attachments
+    rescue ActiveRecord::RecordNotFound
+      sleep 0.2
+      retry
+    end
+
+    attachments.each {
+      _1.blob.metadata = { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+      _1.save!
+    }
+    expect(page).not_to have_text('Analyse antivirus en cours', wait: 10)
+
+    visit current_path
+
+    expect(page).to have_no_text('file.pdf')
+    expect(page).to have_text('white.png')
+    expect(page).to have_text('black.png')
   end
 
   context 'with condition' do

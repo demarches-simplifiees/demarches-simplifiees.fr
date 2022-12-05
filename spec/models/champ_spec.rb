@@ -452,13 +452,13 @@ describe Champ do
         end
 
         it 'marks the file as pending virus scan' do
-          expect(subject.piece_justificative_file.virus_scanner.started?).to be_truthy
+          expect(subject.piece_justificative_file.first.virus_scanner.started?).to be_truthy
         end
 
         it 'marks the file as safe once the scan completes' do
           subject
           perform_enqueued_jobs
-          expect(champ.reload.piece_justificative_file.virus_scanner.safe?).to be_truthy
+          expect(champ.reload.piece_justificative_file.first.virus_scanner.safe?).to be_truthy
         end
       end
     end
@@ -467,7 +467,7 @@ describe Champ do
   describe '#enqueue_watermark_job' do
     context 'when type_champ is type_de_champ_titre_identite' do
       let(:type_de_champ) { create(:type_de_champ_titre_identite) }
-      let(:champ) { build(:champ_titre_identite, type_de_champ: type_de_champ) }
+      let(:champ) { build(:champ_titre_identite, type_de_champ: type_de_champ, skip_default_attachment: true) }
 
       before do
         allow(ClamavService).to receive(:safe_file?).and_return(true)
@@ -480,14 +480,14 @@ describe Champ do
       end
 
       it 'marks the file as needing watermarking' do
-        expect(subject.piece_justificative_file.watermark_pending?).to be_truthy
+        expect(subject.piece_justificative_file.first.watermark_pending?).to be_truthy
       end
 
       it 'watermarks the file' do
         subject
         perform_enqueued_jobs
-        expect(champ.reload.piece_justificative_file.watermark_pending?).to be_falsy
-        expect(champ.reload.piece_justificative_file.blob.watermark_done?).to be_truthy
+        expect(champ.reload.piece_justificative_file.first.watermark_pending?).to be_falsy
+        expect(champ.reload.piece_justificative_file.first.blob.watermark_done?).to be_truthy
       end
     end
   end

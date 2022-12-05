@@ -162,8 +162,13 @@ FactoryBot.define do
 
     factory :champ_titre_identite, class: 'Champs::TitreIdentiteChamp' do
       type_de_champ { association :type_de_champ_titre_identite, procedure: dossier.procedure }
+      transient do
+        skip_default_attachment { false }
+      end
 
-      after(:build) do |champ, _evaluator|
+      after(:build) do |champ, evaluator|
+        next if evaluator.skip_default_attachment
+
         champ.piece_justificative_file.attach(
           io: StringIO.new("toto"),
           filename: "toto.png",

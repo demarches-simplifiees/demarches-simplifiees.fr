@@ -1,3 +1,5 @@
+@import "constants";
+
 .flex {
   display: flex;
 
@@ -48,4 +50,8 @@
 
 .flex-no-shrink {
   flex-shrink: 0;
+}
+
+.flex-gap-2 {
+  gap: 2 * $default-spacer; // scss-lint:disable PropertySpelling
 }

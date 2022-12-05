@@ -396,6 +396,9 @@ module Administrateurs
         :procedure_expires_when_termine_enabled,
         :tags
       ]
+
+      editable_params << :piece_justificative_multiple if @procedure && !@procedure.piece_justificative_multiple?
+
       permited_params = if @procedure&.locked?
         params.require(:procedure).permit(*editable_params)
       else

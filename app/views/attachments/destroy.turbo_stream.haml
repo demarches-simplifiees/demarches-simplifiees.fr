@@ -1,2 +1,6 @@
-= turbo_stream.remove dom_id(@attachment, :actions)
+= turbo_stream.remove dom_id(@attachment, :persisted_row)
+
+- if @champ_id
+  = turbo_stream.show "attachment-multiple-empty-#{@champ_id}"
+
 = turbo_stream.show_all ".attachment-input-#{@attachment.id}"

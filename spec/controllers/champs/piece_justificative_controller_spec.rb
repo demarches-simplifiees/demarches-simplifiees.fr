@@ -23,7 +23,7 @@ describe Champs::PieceJustificativeController, type: :controller do
         subject
         champ.reload
         expect(champ.piece_justificative_file.attached?).to be true
-        expect(champ.piece_justificative_file.filename).to eq('piece_justificative_0.pdf')
+        expect(champ.piece_justificative_file[0].filename).to eq('piece_justificative_0.pdf')
       end
 
       it 'renders the attachment template as Javascript' do

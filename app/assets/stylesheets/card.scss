@@ -59,7 +59,7 @@
     }
   }
 
-  ul {
+  :not(.fr-downloads-group) > ul {
     list-style-type: disc;
     list-style-position: inside;
     padding-left: $default-padding;
