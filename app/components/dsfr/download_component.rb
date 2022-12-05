@@ -4,11 +4,13 @@ class Dsfr::DownloadComponent < ApplicationComponent
   attr_reader :attachment
   attr_reader :html_class
   attr_reader :name
+  attr_reader :new_tab
 
-  def initialize(attachment:, name: nil, url: nil)
+  def initialize(attachment:, name: nil, url: nil, new_tab: false)
     @attachment = attachment
     @name = name || attachment.filename.to_s
     @url = url
+    @new_tab = new_tab
   end
 
   def title
