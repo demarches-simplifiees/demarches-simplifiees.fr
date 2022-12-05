@@ -170,4 +170,19 @@ describe BatchOperation, type: :model do
       end
     end
   end
+
+  describe 'stale' do
+    let(:finished_at) { 6.hours.ago }
+    let(:staled_batch_operation) { create(:batch_operation, operation: :archiver, finished_at: 2.days.ago, updated_at: 2.days.ago) }
+    it 'finds stale jobs' do
+      expect(BatchOperation.stale).to match_array(staled_batch_operation)
+    end
+  end
+
+  describe 'stuck' do
+    let(:stuck_batch_operation) { create(:batch_operation, operation: :archiver, finished_at: nil, updated_at: 2.days.ago) }
+    it 'finds stale jobs' do
+      expect(BatchOperation.stuck).to match_array(stuck_batch_operation)
+    end
+  end
 end

@@ -26,6 +26,19 @@ class BatchOperation < ApplicationRecord
 
   validates :operation, presence: true
 
+  RETENTION_DURATION = 4.hours
+  MAX_DUREE_GENERATION = 24.hours
+
+  scope :stale, lambda {
+    where.not(finished_at: nil)
+      .where('updated_at < ?', (Time.zone.now - RETENTION_DURATION))
+  }
+
+  scope :stuck, lambda {
+    where(finished_at: nil)
+      .where('updated_at < ?', (Time.zone.now - MAX_DUREE_GENERATION))
+  }
+
   def dossiers_safe_scope(dossier_ids = self.dossier_ids)
     query = Dossier.joins(:procedure)
       .where(procedure: { id: instructeur.procedures.ids })
@@ -60,6 +73,7 @@ class BatchOperation < ApplicationRecord
       values = []
       values.push([arel_table[:run_at], Time.zone.now]) if called_for_first_time?
       values.push([arel_table[:finished_at], Time.zone.now]) if called_for_last_time?
+      values.push([arel_table[:updated_at], Time.zone.now])
       if success
         values.push([arel_table[:success_dossier_ids], Arel::Nodes::NamedFunction.new('array_append', [arel_table[:success_dossier_ids], dossier.id])])
         values.push([arel_table[:failed_dossier_ids], Arel::Nodes::NamedFunction.new('array_remove', [arel_table[:failed_dossier_ids], dossier.id])])
