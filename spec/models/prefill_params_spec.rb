@@ -16,8 +16,8 @@ RSpec.describe PrefillParams do
 
       let(:params) {
         {
-          type_de_champ_1.to_typed_id => value_1,
-          type_de_champ_2.to_typed_id => value_2
+          "champ_#{type_de_champ_1.to_typed_id}" => value_1,
+          "champ_#{type_de_champ_2.to_typed_id}" => value_2
         }
       }
 
@@ -29,8 +29,18 @@ RSpec.describe PrefillParams do
       end
     end
 
+    context "when the typed id is not prefixed by 'champ_'" do
+      let!(:type_de_champ) { create(:type_de_champ_text, procedure: procedure) }
+
+      let(:params) { { type_de_champ.to_typed_id => "value" } }
+
+      it "filters out the champ" do
+        expect(prefill_params_array).to match([])
+      end
+    end
+
     context "when the typed id is unknown" do
-      let(:params) { { "-1" => "value" } }
+      let(:params) { { "champ_jane_doe" => "value" } }
 
       it "filters out the unknown params" do
         expect(prefill_params_array).to match([])
@@ -40,7 +50,7 @@ RSpec.describe PrefillParams do
     context 'when there is no Champ that matches the TypeDeChamp with the given stable id' do
       let!(:type_de_champ) { create(:type_de_champ_text) } # goes to another procedure
 
-      let(:params) { { type_de_champ.to_typed_id => "value" } }
+      let(:params) { { "champ_#{type_de_champ.to_typed_id}" => "value" } }
 
       it "filters out the param" do
         expect(prefill_params_array).to match([])
@@ -52,7 +62,7 @@ RSpec.describe PrefillParams do
         let!(:type_de_champ) { create(type_de_champ_name, procedure: procedure) }
         let(:champ_id) { find_champ_by_stable_id(dossier, type_de_champ.stable_id).id }
 
-        let(:params) { { type_de_champ.to_typed_id => value } }
+        let(:params) { { "champ_#{type_de_champ.to_typed_id}" => value } }
 
         it "builds an array of hash(id, value) matching the given params" do
           expect(prefill_params_array).to match([{ id: champ_id, value: value }])
@@ -63,7 +73,7 @@ RSpec.describe PrefillParams do
     shared_examples "a champ public value that is unauthorized" do |type_de_champ_name, value|
       let!(:type_de_champ) { create(type_de_champ_name, procedure: procedure) }
 
-      let(:params) { { type_de_champ.to_typed_id => value } }
+      let(:params) { { "champ_#{type_de_champ.to_typed_id}" => value } }
 
       context 'when the type de champ is unauthorized (type_de_champ_name)' do
         it "filters out the param" do
