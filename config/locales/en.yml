@@ -197,6 +197,7 @@ en:
           more_information: More informations
         identite:
           identity_data: Identity data
+          all_required: All fields are required.
           civility: Civility
           first_name: First Name
           last_name: Last Name
