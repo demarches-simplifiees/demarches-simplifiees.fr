@@ -32,7 +32,7 @@
 
           %tr{ class: [p.hidden_by_administration_at.present? && "file-hidden-by-user"] }
             - if instructeur_and_expert_dossier
-              %td.folder-col.cell-link
+              %td.text-center.cell-link
                 %span.icon.folder
               %td.number-col
                 .cell-link= p.dossier_id
@@ -48,7 +48,7 @@
 
             - else
 
-              %td.folder-col
+              %td.text-center
                 %a.cell-link{ href: path }
                   %span.icon.folder
 
