@@ -3,15 +3,11 @@ fr:
     title: L'action de masse est terminée
     text_success:
       one: 1 dossier a été archivé
-      other: "%{count} dossiers ont été archivés"
-    text_fail:
-      one: 1 dossier n'a pas été archivé
-      other: "%{count} dossiers n'ont pas été archivés"
+      other: "%{success_count}/%{count} dossiers ont été archivés"
   in_progress:
     title: Une action de masse est en cours
-    text_beginning: "0/ %{count} dossier archivé"
     text_success:
-      one: 1 dossier a été archivé
-      other: "%{count} dossiers ont été archivés"
+      one: 1 dossier sera archivé
+      other: "%{progress_count}/%{count} dossiers ont été archivés"
   link_text: Recharger la page
   after_link_text: pour voir si l'opération est finie.

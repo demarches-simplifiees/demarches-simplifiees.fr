@@ -36,7 +36,7 @@ describe 'BatchOperation a dossier:', js: true do
 
       # ensure alert is present
       expect(page).to have_content("Information : Une action de masse est en cours")
-      expect(page).to have_content("0/ 1 dossier archivé")
+      expect(page).to have_content("1 dossier sera archivé")
 
       # ensure jobs are queued
       perform_enqueued_jobs(only: [BatchOperationEnqueueAllJob])
