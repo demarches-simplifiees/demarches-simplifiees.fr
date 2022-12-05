@@ -49,6 +49,6 @@
             %td= procedure["libelle"]
             %td= procedure["id"]
             %td= procedure["admin_count"]
-            %td= t procedure["aasm_state"], scope: 'activerecord.attributes.procedure.aasm_state'
+            %td= t procedure["aasm_state"], scope: 'activerecord.values.procedure.aasm_state'
             %td= l(procedure["published_at"], format: :message_date_without_time)
     .fr-mt-2w= paginate @procedures, views_prefix: 'administrateurs'

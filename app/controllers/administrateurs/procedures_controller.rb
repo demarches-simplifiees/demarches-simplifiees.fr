@@ -349,7 +349,13 @@ module Administrateurs
           all_procedures = Kaminari.paginate_array(all_procedures.to_a, offset: 0, limit: ITEMS_PER_PAGE, total_count: all_procedures.count)
           @procedures = all_procedures.page(params[:page]).per(25)
         end
-        format.xlsx { render xlsx: SpreadsheetArchitect.to_xlsx(headers: all_procedures.to_a.first.keys, data: all_procedures.to_a.map(&:values)), filename: "demarches-#{@filter}" }
+        format.xlsx do
+          render xlsx: SpreadsheetArchitect.to_xlsx(
+            headers: export_procedures_headers(all_procedures),
+            data: export_procedures_values(all_procedures)
+          ),
+          filename: "demarches-#{@filter}"
+        end
       end
     end
 
@@ -362,6 +368,21 @@ module Administrateurs
     end
 
     private
+
+    def export_procedures_headers(all_procedures)
+      all_procedures.to_a.first.keys.map do |key|
+        I18n.t(key, scope: 'activerecord.attributes.procedure_export')
+      end
+    end
+
+    def export_procedures_values(all_procedures)
+      aasm_state_index = all_procedures.to_a.first.keys.index("aasm_state")
+      all_procedures.to_a.map(&:values).each do |procedure|
+        procedure.tap do |p|
+          p[aasm_state_index] = I18n.t(p[aasm_state_index], scope: 'activerecord.attributes.procedure.aasm_state')
+        end
+      end
+    end
 
     def filter_procedures(filter)
       procedures_result = Procedure.select(:id).joins(:procedures_zones).distinct.publiees_ou_closes
