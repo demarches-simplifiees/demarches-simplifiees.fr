@@ -108,20 +108,17 @@ class BatchOperation < ApplicationRecord
     dossiers.count.zero?
   end
 
-  def finished_and_success?
-    called_for_last_time? && failed_dossier_ids.empty?
+  def total_count
+    total = failed_dossier_ids.size + success_dossier_ids.size
+
+    if finished_at.blank?
+      total += dossiers.count
+    end
+    total
   end
 
-  def finished_and_fails?
-    called_for_last_time? && failed_dossier_ids.present?
-  end
-
-  def in_progress?
-    !called_for_last_time? && (failed_dossier_ids + success_dossier_ids).present?
-  end
-
-  def beginning?
-    !called_for_last_time? && (failed_dossier_ids + success_dossier_ids).empty?
+  def progress_count
+    failed_dossier_ids.size + success_dossier_ids.size
   end
 
   private

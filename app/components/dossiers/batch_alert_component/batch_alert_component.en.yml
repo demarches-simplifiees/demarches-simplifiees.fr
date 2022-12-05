@@ -1,17 +1,13 @@
 en:
   finish:
     title: The bulk action is finished
-    text_success:
-      one: 1 file has been archived
-      other: "%{count} files have been archived"
-    text_fail:
-      one: 1 file has not been archived
-      other: "%{count} have not been archived"
+    text:
+      one: 1/1 file has been archived
+      other: "%{success_count}/%{count} files have been archived"
   in_progress:
     title: A bulk action is processing
-    text_beginning: "0/ %{count} file archived"
     text_success:
-      one: 1 file has been archived
-      other: "%{count} files have been archived"
+      one: 1/1 is being archived
+      other: "%{progress_count}/%{count} files have been archived"
   link_text: Refresh this webpage
   after_link_text: to check if the process is over.

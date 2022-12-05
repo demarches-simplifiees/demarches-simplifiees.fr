@@ -4,6 +4,7 @@ class Dossiers::BatchAlertComponent < ApplicationComponent
   def initialize(batch:, procedure:)
     @batch = batch
     @procedure = procedure
+    set_seen_at! if batch.finished_at.present?
   end
 
   def set_seen_at!
