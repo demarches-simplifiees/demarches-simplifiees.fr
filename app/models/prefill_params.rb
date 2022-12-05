@@ -13,7 +13,7 @@ class PrefillParams
   def build_prefill_values
     value_by_stable_id = @params
       .to_unsafe_hash
-      .map { |typed_id, value| [stable_id_from_typed_id(typed_id), value] }
+      .map { |prefixed_typed_id, value| [stable_id_from_typed_id(prefixed_typed_id), value] }
       .filter { |stable_id, value| stable_id.present? && value.present? }
       .to_h
 
@@ -23,8 +23,10 @@ class PrefillParams
       .map { |champ, value| PrefillValue.new(champ:, value:) }
   end
 
-  def stable_id_from_typed_id(typed_id)
-    Champ.id_from_typed_id(typed_id).to_i
+  def stable_id_from_typed_id(prefixed_typed_id)
+    return nil unless prefixed_typed_id.starts_with?("champ_")
+
+    Champ.id_from_typed_id(prefixed_typed_id.gsub("champ_", "")).to_i
   rescue
     nil
   end
