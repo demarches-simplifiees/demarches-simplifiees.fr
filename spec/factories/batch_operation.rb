@@ -4,6 +4,8 @@ FactoryBot.define do
       invalid_instructeur { nil }
     end
 
+    association :instructeur
+
     trait :archiver do
       operation { BatchOperation.operations.fetch(:archiver) }
       after(:build) do |batch_operation, evaluator|
