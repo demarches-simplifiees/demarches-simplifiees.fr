@@ -1,0 +1,28 @@
+---
+fr:
+  root:
+    landing:
+      promise: |
+        Effectuer
+        une démarche administrative
+        en ligne
+      have_a_procedure: Vous souhaitez effectuer une demande auprès d’une administration ?
+      fill_procedure: Réalisez vos demandes en toute simplicité et retrouvez vos dossiers en ligne
+      how_to_find_procedure: Comment trouver ma démarche ?
+      our_numbers: "%{name} en chiffres"
+      numbers:
+        administrations: |
+          administrations
+          partenaires
+        files: |
+          dossiers
+          déposés
+        processing_time: |
+          de réduction
+          des délais de traitement
+      question: Une question, un problème ?
+      answer_in_faq: La réponse est dans l’aide en ligne
+      online_help: Accéder à l’aide en ligne
+      administration_dematerialize: "Administration : vous voulez dématerialiser ?"
+      administration_fill_online: Proposez à vos usagers de remplir leurs dossiers en ligne
+      administration_discover: Découvrez notre outil

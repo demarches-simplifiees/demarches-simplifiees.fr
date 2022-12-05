@@ -1,7 +1,6 @@
 fr:
   links:
     provider:
-      name: "DINUM"
       provided_by: "la DINUM"
       title: "Direction Interministérielle au Numérique"
       url: "https://numerique.gouv.fr"
@@ -16,14 +15,12 @@ fr:
       link_1_url: "https://www.numerique.gouv.fr/dinum/"
       link_2_label: Le code source
       description_2: est disponible en licence libre.
+      copy_html: "Sauf mention contraire, tous les contenus de ce site sont sous %{link}"
+      license: "licence etalab 2.0"
       accessibilite:
         label: "Accessibilité : partiellement conforme"
         title: "Consulter notre déclaration d’accessibilité"
         url: "https://doc.demarches-simplifiees.fr/declaration-daccessibilite"
-      aide:
-        label: "Aide"
-        title: "Foire aux Questions"
-        url: "https://faq.demarches-simplifiees.fr"
       api_doc:
         label: "Documentation de l’API"
         title: "Documentation graphql de l’API"
@@ -38,7 +35,7 @@ fr:
       code:
         label: "Code source"
         title: "Le code ouvert de demarches-simplifiees"
-        url: "https://github.com/betagouv/demarches-simplifiees.fr"
+        url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr"
       contact_technique:
         label: "Contact technique"
         title: "Contacter notre équipe technique"
@@ -46,18 +43,10 @@ fr:
         label: "Documentation"
         title: "Documentation utilisateur"
         url: "https://doc.demarches-simplifiees.fr"
-      doc_nouveautes:
-        label: "Nouveautés"
-        title: "Les dernière nouveautés"
-        url: "https://doc.demarches-simplifiees.fr/nouveautes"
       faq:
         label: "FAQ"
         title: "Foire aux Questions"
         url: "https://faq.demarches-simplifiees.fr"
-      faq_admin:
-        label: "FAQ"
-        title: "Foire aux Questions"
-        url: "https:///faq.demarches-simplifiees.fr/collection/1-administrateur-creation-dun-formulaire"
       mentions_legales:
         label: "Mentions légales"
         title: "Consulter nos Mentions légales"
@@ -65,7 +54,7 @@ fr:
       releases:
         label: "Nouveautés"
         title: "Les dernière mises à jour de la plateforme"
-        url: "https://github.com/betagouv/demarches-simplifiees.fr/releases"
+        url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr/releases"
       security:
         label: "Sécurité"
         title: "Vous avez identifié une faille, comment nous en informer"
@@ -80,10 +69,6 @@ fr:
       suivi:
         label: "Suivi d’audience et vie privée"
         title: "Consulter notre politique de respect de la vie privée"
-      webinaire:
-        label: "Inscription ateliers en ligne"
-        title: "Inscription ateliers en ligne"
-        url: "https://app.livestorm.co/demarches-simplifiees"
       solidarite_numerique:
         label: "Besoin d’aide avec vos démarches en ligne ?"
         title: "Avez-vous besoin d’aide concernant vos démarchez informatisées, essayez solidarite-numerique.fr"

@@ -1,7 +1,6 @@
 en:
   links:
     provider:
-      name: "DINUM"
       provided_by: "la DINUM"
       title: "Direction Interministérielle au Numérique"
       url: "https://numerique.gouv.fr"
@@ -16,12 +15,12 @@ en:
       link_1_url: "https://www.numerique.gouv.fr/dinum/"
       link_2_label: The source code
       description_2: is available under a free license.
+      copy_html: "Unless otherwise stated, all content on this site is %{link}"
+      license: "licensed under etalab 2.0"
       accessibilite:
         label: "Accessibility: partially compliant"
         title: "Accessibility declaration"
         url: "https://doc.demarches-simplifiees.fr/declaration-daccessibilite"
-      aide:
-        title: "Frequently Asked Questions"
       api_doc:
         label: "API Documentation"
         title: "API Documentation"
@@ -32,7 +31,7 @@ en:
       code:
         label: "Source code"
         title: "Our Source code is open source"
-        url: "https://github.com/betagouv/demarches-simplifiees.fr"
+        url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr"
       cgu:
         label: "ToS"
         title: "Terms of Service"
@@ -41,26 +40,18 @@ en:
         label: "Documentation"
         title: "Our Documentation"
         url: "https://doc.demarches-simplifiees.fr"
-      doc_nouveautes:
-        label: "News"
-        title: "Our latest News"
-        url: "https://doc.demarches-simplifiees.fr/nouveautes"
       faq:
         label: "FAQ"
         title: "Frequently Asked Questions"
         url: "https://faq.demarches-simplifiees.fr"
-      faq_admin:
-        label: "FAQ"
-        title: "Frequently Asked Questions"
-        url: "https:///faq.demarches-simplifiees.fr/collection/1-administrateur-creation-dun-formulaire"
       mentions_legales:
         label: "Legal notices"
         title: "Legal notices regarding our platform"
         url: "https://doc.demarches-simplifiees.fr/mentions-legales"
       releases:
-        label: "Releases"
+        label: "Releases notes"
         title: "Our last updates"
-        url: "https://github.com/betagouv/demarches-simplifiees.fr/releases"
+        url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr/releases"
       security:
         label: "Security"
         title: "Security policy"
@@ -72,10 +63,9 @@ en:
       suivi:
         label: "Audience tracking and privacy"
         title: "Tracking and privacy of demarches-simplifiees"
-      webinaire:
-        label: "Online workshop registration"
-        title: "Registration for our online workshop"
-        url: "https://app.livestorm.co/demarches-simplifiees"
+      cookies:
+        label: Cookies
+        title: Cookies
       contact:
-        label: Contactez-nous
-        title: Contactez-nous
+        label: Contact
+        title: Contact

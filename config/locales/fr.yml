@@ -214,6 +214,7 @@ fr:
         show:
           header:
             edit_dossier: Modifier mon dossier
+            edit_dossier_title: "Modifier mon dossier - Vous pouvez modifier votre dossier tant qu’il n’est passé en instruction"
             summary: "Résumé"
             request: "Demande"
             mailbox: "Messagerie"
