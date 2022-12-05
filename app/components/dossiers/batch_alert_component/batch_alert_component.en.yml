@@ -13,8 +13,5 @@ en:
     text_success:
       one: 1 file has been archived
       other: "%{count} files have been archived"
-    text_fail:
-      one: 1 file has not been archived
-      other: "%{count} have not been archived"
   link_text: Refresh this webpage
   after_link_text: to check if the process is over.

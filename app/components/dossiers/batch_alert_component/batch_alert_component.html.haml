@@ -26,10 +26,6 @@
     = render Dsfr::AlertComponent.new(title: t('.in_progress.title'), state: :info, heading_level: 'h2') do |c|
       - c.body do
 
-        - if @batch.failed_dossier_ids.present?
-          %p
-            = t('.in_progress.text_fail', count: @batch.failed_dossier_ids.count)
-
         - if @batch.success_dossier_ids.present?
           %p
             = t('.in_progress.text_success', count: @batch.success_dossier_ids.count)

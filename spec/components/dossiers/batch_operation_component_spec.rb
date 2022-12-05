@@ -14,11 +14,11 @@ RSpec.describe Dossiers::BatchOperationComponent, type: :component do
   subject { render_inline(component).to_html }
   context 'statut traite' do
     let(:statut) { 'traites' }
-    it { is_expected.to have_selector('input') }
+    it { is_expected.to have_selector('button') }
   end
 
   context 'statut tous' do
     let(:statut) { 'tous' }
-    it { is_expected.not_to have_selector('input') }
+    it { is_expected.not_to have_selector('button') }
   end
 end

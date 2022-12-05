@@ -24,6 +24,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
        batch_operation.track_processed_dossier(true, dossier)
        batch_operation.reload
      }
+
     it { is_expected.to have_selector('.fr-alert--info') }
     it { is_expected.to have_text("Une action de masse est en cours") }
     it { is_expected.to have_text("1 dossier a été archivé") }
@@ -63,7 +64,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
     it 'does not display alert on the next render' do
       render_inline(component).to_html
       expect(batch_operation.seen_at).not_to eq(nil)
-      expect(subject).not_to have_text("2 dossiers ont été archivés")
+      expect(subject).not_to have_text("1 dossier n'a pas été archivé")
     end
   end
 end
