@@ -39,14 +39,7 @@ class PrefillParams
       TypeDeChamp.type_champs.fetch(:integer_number),
       TypeDeChamp.type_champs.fetch(:email),
       TypeDeChamp.type_champs.fetch(:phone),
-      TypeDeChamp.type_champs.fetch(:address),
-      TypeDeChamp.type_champs.fetch(:pays),
-      TypeDeChamp.type_champs.fetch(:regions),
-      TypeDeChamp.type_champs.fetch(:departements),
-      TypeDeChamp.type_champs.fetch(:siret),
-      TypeDeChamp.type_champs.fetch(:rna),
-      TypeDeChamp.type_champs.fetch(:iban),
-      TypeDeChamp.type_champs.fetch(:annuaire_education)
+      TypeDeChamp.type_champs.fetch(:iban)
     ]
 
     NEED_VALIDATION_TYPES_DE_CHAMPS = [
