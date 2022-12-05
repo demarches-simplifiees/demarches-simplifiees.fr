@@ -4,4 +4,4 @@
 = render Attachment::MultipleComponent.new(champ: @champ, attached_file: @champ.piece_justificative_file, form_object_name: @form.object_name, user_can_destroy:, user_can_download:, max:) do |c|
   - if @champ.type_de_champ.piece_justificative_template&.attached?
     - c.with_template do
-      = render partial: "shared/piece_justificative_template", locals: { attachment: @champ.type_de_champ.piece_justificative_template }
+      = render partial: "shared/piece_justificative_template", locals: { champ: @champ }
