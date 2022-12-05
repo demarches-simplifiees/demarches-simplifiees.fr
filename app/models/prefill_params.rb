@@ -11,20 +11,16 @@ class PrefillParams
   private
 
   def build_prefill_values
-    # Builds: [{ stable_id: 1, value: "a value" }, { stable_id: 2, value: "another value"}]
-    stable_ids_and_values =
-      @params
-        .to_unsafe_hash
-        .map { |typed_id, value| { stable_id: stable_id_from_typed_id(typed_id), value: value } }
-        .filter { _1[:stable_id].present? && _1[:value].present? }
+    value_by_stable_id = @params
+      .to_unsafe_hash
+      .map { |typed_id, value| [stable_id_from_typed_id(typed_id), value] }
+      .filter { |stable_id, value| stable_id.present? && value.present? }
+      .to_h
 
     @dossier
-      .find_champs_by_stable_ids(stable_ids_and_values.map { _1[:stable_id] })
-      .map do |champ|
-        value = stable_ids_and_values.find { _1[:stable_id] == champ.stable_id }[:value]
-
-        PrefillValue.new(champ: champ, value: value)
-      end
+      .find_champs_by_stable_ids(value_by_stable_id.keys)
+      .map { |champ| [champ, value_by_stable_id[champ.stable_id]] }
+      .map { |champ, value| PrefillValue.new(champ:, value:) }
   end
 
   def stable_id_from_typed_id(typed_id)
