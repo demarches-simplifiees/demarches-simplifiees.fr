@@ -17,6 +17,10 @@ class Champs::PieceJustificativeController < ApplicationController
     end
   end
 
+  def template
+    redirect_to @champ.type_de_champ.piece_justificative_template.blob
+  end
+
   private
 
   def set_champ
