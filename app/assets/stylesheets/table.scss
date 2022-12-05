@@ -55,3 +55,13 @@
 .force-table-100 {
   width: calc(100vw);
 }
+
+.fr-table--bordered {
+  .table {
+    &.hoverable {
+      tbody tr:hover {
+        background: $white;
+      }
+    }
+  }
+}
