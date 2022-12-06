@@ -2,4 +2,4 @@
   = render "types_de_champs", description: @description
 
 = turbo_stream.replace "#{dom_id(@description)}_url" do
-  = render "prefill_url", description: @description
+  = render "prefill_link", description: @description

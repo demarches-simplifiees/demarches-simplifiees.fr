@@ -114,8 +114,9 @@ en:
         champ_add: Add
         champ_remove: Remove
         champ_unavailable: Unavailable
-        prefill_url_title: Prefill link
-        prefill_url_copy: Copy prefill link
+        prefill_link_title: Prefill link
+        prefill_link_info: Use the button to copy the link, then remplace the values with your data.
+        prefill_link_copy: Copy prefill link
     registrations:
       new:
         title: "Create an account %{name}"

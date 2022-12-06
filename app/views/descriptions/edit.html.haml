@@ -19,10 +19,4 @@
       = t("views.descriptions.edit.champs_title")
     = render "types_de_champs", description: @description
 
-  .card.featured
-    .card-title
-      %span.icon.new-folder
-      = t("views.descriptions.edit.prefill_url_title")
-      -# TODO: SEB in a nice verbatim or input
-    = render "prefill_url"
-    -# TODO: SEB copy button
+  = render "prefill_link", description: @description

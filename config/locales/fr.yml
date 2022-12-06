@@ -104,8 +104,9 @@ fr:
         champ_add: Ajouter
         champ_remove: Retirer
         champ_unavailable: Indisponible
-        prefill_url_title: Lien de préremplissage
-        prefill_url_copy: Copier le lien de préremplissage
+        prefill_link_title: Lien de préremplissage
+        prefill_link_info: Copiez le lien grâce au bouton ci-dessous et remplacez les valeurs par les données dont vous disposez.
+        prefill_link_copy: Copier le lien de préremplissage
     registrations:
       new:
         title: "Créez-vous un compte %{name}"
