@@ -7,7 +7,7 @@ describe ChampSerializer do
       let(:champ) { create(:champ_piece_justificative) }
 
       it {
-        expect(subject[:value]).to match_array([a_string_matching('/rails/active_storage/disk/')])
+        expect(subject[:value]).to a_string_matching('/rails/active_storage/disk/')
       }
     end
 
