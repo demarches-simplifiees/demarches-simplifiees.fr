@@ -14,11 +14,12 @@ class Dsfr::AlertComponent < ApplicationComponent
 
   private
 
-  def initialize(state:, title:)
+  def initialize(state:, title:, heading_level: 'h3')
     @state = state
     @title = title
     @block = block
+    @heading_level = heading_level
   end
 
-  attr_reader :state, :title, :block
+  attr_reader :state, :title, :block, :heading_level
 end
