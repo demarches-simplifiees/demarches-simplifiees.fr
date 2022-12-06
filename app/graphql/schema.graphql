@@ -112,7 +112,8 @@ type Association {
 }
 
 type Avis {
-  attachment: File
+  attachment: File @deprecated(reason: "Utilisez le champ `attachments` à la place.")
+  attachments: [File!]!
   claimant: Profile
   dateQuestion: ISO8601DateTime!
   dateReponse: ISO8601DateTime
@@ -1754,7 +1755,8 @@ type LinkedDropDownListChamp implements Champ {
 }
 
 type Message {
-  attachment: File
+  attachment: File @deprecated(reason: "Utilisez le champ `attachments` à la place.")
+  attachments: [File!]!
   body: String!
   createdAt: ISO8601DateTime!
   email: String!
@@ -2029,7 +2031,7 @@ type PersonnePhysique implements Demandeur {
 
 type PieceJustificativeChamp implements Champ {
   file: File @deprecated(reason: "Utilisez le champ `files` à la place.")
-  files: [File!]
+  files: [File!]!
   id: ID!
 
   """
