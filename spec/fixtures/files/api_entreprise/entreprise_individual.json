@@ -1,0 +1,86 @@
+{
+  "entreprise": {
+    "siren": "909700890",
+    "capital_social": null,
+    "numero_tva_intracommunautaire": "FR19909700890",
+    "forme_juridique": "Entrepreneur individuel",
+    "forme_juridique_code": "1000",
+    "nom_commercial": "",
+    "procedure_collective": false,
+    "enseigne": null,
+    "libelle_naf_entreprise": "Ingénierie, études techniques",
+    "naf_entreprise": "7112B",
+    "raison_sociale": "LE LOUARN*LE LOUARN SMAIL/MARINE  /",
+    "siret_siege_social": "90970089000025",
+    "code_effectif_entreprise": null,
+    "date_creation": 1643151600,
+    "nom": "LE LOUARN",
+    "prenom": "MARINE",
+    "date_radiation": null,
+    "categorie_entreprise": null,
+    "tranche_effectif_salarie_entreprise": {
+      "de": null,
+      "a": null,
+      "code": null,
+      "date_reference": null,
+      "intitule": null
+    },
+    "mandataires_sociaux": [],
+    "etat_administratif": {
+      "value": "A",
+      "date_cessation": null
+    },
+    "diffusable_commercialement": true
+  },
+  "etablissement_siege": {
+    "siege_social": true,
+    "siret": "90970089000025",
+    "naf": "7112B",
+    "libelle_naf": "Ingénierie, études techniques",
+    "date_mise_a_jour": 1657592059,
+    "tranche_effectif_salarie_etablissement": {
+      "de": null,
+      "a": null,
+      "code": null,
+      "date_reference": null,
+      "intitule": null
+    },
+    "date_creation_etablissement": 1646694000,
+    "region_implantation": {
+      "code": "84",
+      "value": "Auvergne-Rhône-Alpes"
+    },
+    "commune_implantation": {
+      "code": "42218",
+      "value": "Saint-Étienne"
+    },
+    "pays_implantation": {
+      "code": "FR",
+      "value": "FRANCE"
+    },
+    "diffusable_commercialement": true,
+    "enseigne": null,
+    "adresse": {
+      "l1": "MADAME MARINE LE LOUARN SMAIL",
+      "l2": null,
+      "l3": null,
+      "l4": "4 RUE ETIENNE MIMARD",
+      "l5": null,
+      "l6": "42000 SAINT-ETIENNE",
+      "l7": "FRANCE",
+      "numero_voie": "4",
+      "type_voie": "RUE",
+      "nom_voie": "ETIENNE MIMARD",
+      "complement_adresse": null,
+      "code_postal": "42000",
+      "localite": "SAINT-ETIENNE",
+      "code_insee_localite": "42218",
+      "cedex": null
+    },
+    "etat_administratif": {
+      "value": "A",
+      "date_fermeture": null
+    }
+  },
+  "gateway_error": false
+}
