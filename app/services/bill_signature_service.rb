@@ -9,7 +9,7 @@ class BillSignatureService
 
   def self.sign_operations(operations, day)
     bill = BillSignature.build_with_operations(operations, day)
-    signature = Universign::API.timestamp(bill.digest)
+    signature = Certigna::API.timestamp(bill.digest)
     bill.set_signature(signature, day)
     bill.save!
   end
