@@ -104,7 +104,7 @@ class BatchOperation < ApplicationRecord
 
   # beware, must be reloaded first
   def called_for_last_time?(dossier_to_ignore)
-    dossiers.where.not(id: dossier_to_ignore.id).count.zero?
+    dossiers.where.not(id: dossier_to_ignore.id).empty?
   end
 
   def total_count
