@@ -250,14 +250,14 @@ describe 'The user' do
     expect(page).to have_text('white.png')
 
     click_on("Supprimer le fichier file.pdf")
-    expect(page).to have_no_text('file.pdf')
+    expect(page).not_to have_text('file.pdf')
     expect(page).to have_text("La pièce jointe a bien été supprimée")
 
     attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/black.png')
 
     # Mark all attachments as safe to test turbo poll
     # They are not immediately attached in db, so we have to wait a bit before continuing
-    # NOTE: we'res using files not used in other tests to avoid conflicts
+    # NOTE: we're using files not used in other tests to avoid conflicts with concurrent tests
     attachments = Timeout.timeout(5) do
       filenames = ['white.png', 'black.png']
       attachments = ActiveStorage::Attachment.where(name: "piece_justificative_file").includes(:blob).filter do |attachment|
@@ -280,7 +280,7 @@ describe 'The user' do
 
     visit current_path
 
-    expect(page).to have_no_text('file.pdf')
+    expect(page).not_to have_text('file.pdf')
     expect(page).to have_text('white.png')
     expect(page).to have_text('black.png')
   end
