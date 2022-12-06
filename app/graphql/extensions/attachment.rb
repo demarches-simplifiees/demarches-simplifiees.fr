@@ -35,13 +35,18 @@ module Extensions
       if value.respond_to?(:map)
         attachments = value.map { after_resolve_attachment(_1) }
 
-        if options[:flat_first]
+        if options[:as] == :single
           attachments.first
         else
           attachments
         end
       else
-        after_resolve_attachment(value)
+        attachment = after_resolve_attachment(value)
+        if options[:as] == :multiple
+          [attachment]
+        else
+          attachment
+        end
       end
     end
 
