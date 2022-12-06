@@ -49,10 +49,12 @@ class Champs::PieceJustificativeChamp < Champ
   def for_api
     return nil unless piece_justificative_file.attached?
 
-    piece_justificative_file.filter_map do |attachment|
-      if attachment.virus_scanner.safe? || attachment.virus_scanner.pending?
-        attachment.service_url
-      end
+    # API v1 don't support multiple PJ
+    attachment = piece_justificative_file.first
+    return nil if attachment.nil?
+
+    if attachment.virus_scanner.safe? || attachment.virus_scanner.pending?
+      attachment.service_url
     end
   end
 end
