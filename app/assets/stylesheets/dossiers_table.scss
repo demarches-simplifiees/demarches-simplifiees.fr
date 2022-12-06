@@ -5,7 +5,6 @@
   font-size: 14px;
 
   th {
-    vertical-align: top;
     padding: (2 * $default-spacer) $default-spacer;
   }
 
@@ -54,7 +53,7 @@
     white-space: nowrap;
   }
 
-  .folder-col {
+  .text-center {
     text-align: center;
   }
 

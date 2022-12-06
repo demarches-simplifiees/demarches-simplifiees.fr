@@ -9,7 +9,9 @@ module Instructeurs
     include Zipline
 
     before_action :redirect_on_dossier_not_found, only: :show
+    before_action :redirect_on_dossier_in_batch_operation, only: [:archive, :unarchive, :follow, :unfollow, :passer_en_instruction, :repasser_en_construction, :repasser_en_instruction, :terminer, :restore, :destroy, :extend_conservation]
     after_action :mark_demande_as_read, only: :show
+
     after_action :mark_messagerie_as_read, only: [:messagerie, :create_commentaire]
     after_action :mark_avis_as_read, only: [:avis, :create_avis]
     after_action :mark_annotations_privees_as_read, only: [:annotations_privees, :update_annotations]
@@ -45,6 +47,7 @@ module Instructeurs
 
     def show
       @demande_seen_at = current_instructeur.follows.find_by(dossier: dossier_with_champs)&.demande_seen_at
+      @is_dossier_in_batch_operation = dossier.batch_operation.present?
 
       respond_to do |format|
         format.pdf do
@@ -318,6 +321,18 @@ module Instructeurs
     def redirect_on_dossier_not_found
       if !dossier_scope.exists?(id: params[:dossier_id])
         redirect_to instructeur_procedure_path(procedure)
+      end
+    end
+
+    def redirect_on_dossier_in_batch_operation
+      dossier_in_batch = begin
+        dossier
+                         rescue ActiveRecord::RecordNotFound
+                           current_instructeur.dossiers.find(params[:dossier_id])
+      end
+      if dossier_in_batch.batch_operation.present?
+        flash.alert = "Votre action n'a pas été effectuée, ce dossier fait parti d'un traitement de masse."
+        redirect_back(fallback_location: instructeur_dossier_path(procedure, dossier_in_batch))
       end
     end
   end
