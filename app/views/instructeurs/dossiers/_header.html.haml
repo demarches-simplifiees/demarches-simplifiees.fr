@@ -2,7 +2,7 @@
   = render Dsfr::NoticeComponent.new(closable: false) do |c|
     - c.with_title do
       Un traitement de masse est en cours sur ce dossier, vous ne pouvez pas le modifier.
-      = link_to "Recharger la page", instructeur_dossier_path, data: { action: 'turbo-poll#refresh' }
+      = link_to "Recharger la page", instructeur_dossier_path
       pour voir si l'opération est finie.
 
 .sub-header
