@@ -43,3 +43,10 @@
     top: -1rem;
   }
 }
+
+.attachment-multiple.fr-downloads-group.destroyable {
+  ul {
+    list-style-type: none;
+    padding-inline-start: 0;
+  }
+}

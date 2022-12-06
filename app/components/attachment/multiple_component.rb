@@ -10,6 +10,7 @@ class Attachment::MultipleComponent < ApplicationComponent
   attr_reader :form_object_name
   attr_reader :max
   attr_reader :user_can_destroy
+  alias user_can_destroy? user_can_destroy
   attr_reader :user_can_download
   alias user_can_download? user_can_download
 
