@@ -68,11 +68,10 @@ class BatchOperation < ApplicationRecord
   def track_processed_dossier(success, dossier)
     transaction do
       dossier.update(batch_operation: nil)
-      reload
       manager = Arel::UpdateManager.new.table(arel_table).where(arel_table[:id].eq(id))
       values = []
       values.push([arel_table[:run_at], Time.zone.now]) if called_for_first_time?
-      values.push([arel_table[:finished_at], Time.zone.now]) if called_for_last_time?
+      values.push([arel_table[:finished_at], Time.zone.now]) if called_for_last_time?(dossier)
       values.push([arel_table[:updated_at], Time.zone.now])
       if success
         values.push([arel_table[:success_dossier_ids], Arel::Nodes::NamedFunction.new('array_append', [arel_table[:success_dossier_ids], dossier.id])])
@@ -104,8 +103,8 @@ class BatchOperation < ApplicationRecord
   end
 
   # beware, must be reloaded first
-  def called_for_last_time?
-    dossiers.count.zero?
+  def called_for_last_time?(dossier_to_ignore)
+    dossiers.where.not(id: dossier_to_ignore.id).count.zero?
   end
 
   def total_count
