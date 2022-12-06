@@ -35,3 +35,11 @@
     padding-bottom: 0;
   }
 }
+
+.attachment {
+  // Anti-virus badge for just uploaded attachment when seen as downloadable
+  .fr-download + .fr-badge {
+    position: relative;
+    top: -1rem;
+  }
+}
