@@ -280,7 +280,7 @@ class Dossier < ApplicationRecord
       .includes(commentaires: { piece_jointe_attachment: :blob },
         justificatif_motivation_attachment: :blob,
         attestation: [],
-        avis: { piece_justificative_file_attachments: :blob },
+        avis: { piece_justificative_file_attachment: :blob },
         traitement: [],
         etablissement: [],
         individual: [],
