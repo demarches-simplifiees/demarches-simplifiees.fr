@@ -33,6 +33,7 @@ class GroupeInstructeur < ApplicationRecord
   scope :closed, -> { where(closed: true) }
 
   def add(instructeur)
+    return if instructeur.nil?
     return if in?(instructeur.groupe_instructeurs)
 
     default_notification_settings = instructeur.notification_settings(procedure_id)
@@ -40,6 +41,7 @@ class GroupeInstructeur < ApplicationRecord
   end
 
   def remove(instructeur)
+    return if instructeur.nil?
     return if !in?(instructeur.groupe_instructeurs)
 
     instructeur.groupe_instructeurs.destroy(self)
