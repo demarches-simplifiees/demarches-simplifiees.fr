@@ -98,6 +98,7 @@ describe ProcedureExportService do
         offset = dossier.depose_at.utc_offset
         depose_at = Time.zone.at(dossiers_sheet.data[0][8] - offset.seconds)
         en_instruction_at = Time.zone.at(dossiers_sheet.data[0][9] - offset.seconds)
+        expect(dossiers_sheet.data.first.size).to eq(nominal_headers.size)
         expect(depose_at).to eq(dossier.depose_at.round)
         expect(en_instruction_at).to eq(dossier.en_instruction_at.round)
       end
@@ -118,6 +119,17 @@ describe ProcedureExportService do
 
         it { expect(dossiers_sheet.headers).to match(routee_headers) }
         it { expect(dossiers_sheet.data[0][dossiers_sheet.headers.index('Groupe instructeur')]).to eq('défaut') }
+      end
+
+      context 'with a dossier having multiple pjs' do
+        let!(:dossier_2) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure) }
+        before do
+          dossier_2.champs_public
+            .find { _1.is_a? Champs::PieceJustificativeChamp }
+            .piece_justificative_file
+            .attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
+        end
+        it { expect(dossiers_sheet.data.first.size).to eq(nominal_headers.size) }
       end
     end
 

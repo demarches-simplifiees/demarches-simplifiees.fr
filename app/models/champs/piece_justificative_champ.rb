@@ -43,7 +43,7 @@ class Champs::PieceJustificativeChamp < Champ
   end
 
   def for_export
-    piece_justificative_file.map { _1.filename.to_s }
+    piece_justificative_file.map { _1.filename.to_s }.join(', ')
   end
 
   def for_api
