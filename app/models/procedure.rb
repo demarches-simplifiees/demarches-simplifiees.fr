@@ -447,6 +447,10 @@ class Procedure < ApplicationRecord
     declarative_with_state == Procedure.declarative_with_states.fetch(:accepte)
   end
 
+  def declarative_en_instruction?
+    declarative_with_state == Procedure.declarative_with_states.fetch(:en_instruction)
+  end
+
   def self.declarative_attributes_for_select
     declarative_with_states.map do |state, _|
       [I18n.t("activerecord.attributes.#{model_name.i18n_key}.declarative_with_state/#{state}"), state]
@@ -633,23 +637,6 @@ class Procedure < ApplicationRecord
     end
 
     result
-  end
-
-  def process_dossiers!
-    case declarative_with_state
-    when Procedure.declarative_with_states.fetch(:en_instruction)
-      dossiers
-        .state_en_construction
-        .where(declarative_triggered_at: nil)
-        .find_each(&:passer_automatiquement_en_instruction!)
-    when Procedure.declarative_with_states.fetch(:accepte)
-      dossiers
-        .state_en_construction
-        .where(declarative_triggered_at: nil)
-        .find_each do |dossier|
-          dossier.accepter_automatiquement! if dossier.may_accepter_automatiquement?
-        end
-    end
   end
 
   def logo_url

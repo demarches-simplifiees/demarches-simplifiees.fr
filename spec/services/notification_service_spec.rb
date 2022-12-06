@@ -48,11 +48,10 @@ describe NotificationService do
       end
 
       context 'when a declarative dossier in instruction exists on this procedure' do
-        let!(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+        let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
         before do
           procedure.update(declarative_with_state: "en_instruction")
-          Cron::DeclarativeProceduresJob.new.perform
-          dossier.reload
+          dossier.process_declarative!
         end
 
         it do
@@ -62,12 +61,11 @@ describe NotificationService do
       end
 
       context 'when a declarative dossier in accepte on yesterday exists on this procedure' do
-        let!(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+        let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
         before do
           procedure.update(declarative_with_state: "accepte")
-          Cron::DeclarativeProceduresJob.new.perform
+          dossier.process_declarative!
           dossier.traitements.last.update!(processed_at: Time.zone.yesterday.beginning_of_day)
-          dossier.reload
         end
 
         it do
@@ -77,11 +75,10 @@ describe NotificationService do
       end
 
       context 'when a declarative dossier in accepte on today exists on this procedure' do
-        let!(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+        let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
         before do
           procedure.update(declarative_with_state: "accepte")
-          Cron::DeclarativeProceduresJob.new.perform
-          dossier.reload
+          dossier.process_declarative!
         end
 
         it do

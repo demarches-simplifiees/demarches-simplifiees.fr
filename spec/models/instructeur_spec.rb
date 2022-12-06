@@ -186,7 +186,7 @@ describe Instructeur, type: :model do
   end
 
   describe '#notifications_for_dossier' do
-    let!(:dossier) { create(:dossier, :followed, state: Dossier.states.fetch(:en_construction)) }
+    let!(:dossier) { create(:dossier, :en_construction, :followed) }
     let(:instructeur) { dossier.follows.first.instructeur }
 
     subject { instructeur.notifications_for_dossier(dossier) }
@@ -245,12 +245,12 @@ describe Instructeur, type: :model do
     # a procedure, one group, 2 instructeurs
     let(:procedure) { create(:simple_procedure, :routee, :with_type_de_champ_private, :for_individual) }
     let(:gi_p1) { procedure.groupe_instructeurs.last }
-    let!(:dossier) { create(:dossier, :with_individual, :followed, procedure: procedure, groupe_instructeur: gi_p1, state: Dossier.states.fetch(:en_construction)) }
+    let!(:dossier) { create(:dossier, :en_construction, :with_individual, :followed, procedure: procedure, groupe_instructeur: gi_p1) }
     let(:instructeur) { dossier.follows.first.instructeur }
     let!(:instructeur_2) { create(:instructeur, groupe_instructeurs: [gi_p1]) }
 
     # another procedure, dossier followed by a third instructeur
-    let!(:dossier_on_procedure_2) { create(:dossier, :followed, state: Dossier.states.fetch(:en_construction)) }
+    let!(:dossier_on_procedure_2) { create(:dossier, :en_construction, :followed) }
     let!(:instructeur_on_procedure_2) { dossier_on_procedure_2.follows.first.instructeur }
     let(:gi_p2) { dossier.groupe_instructeur }
 
@@ -355,7 +355,7 @@ describe Instructeur, type: :model do
   end
 
   describe '#procedure_ids_with_notifications' do
-    let!(:dossier) { create(:dossier, :followed, state: Dossier.states.fetch(:en_construction)) }
+    let!(:dossier) { create(:dossier, :en_construction, :followed) }
     let(:instructeur) { dossier.follows.first.instructeur }
     let(:procedure) { dossier.procedure }
 
@@ -369,7 +369,7 @@ describe Instructeur, type: :model do
   end
 
   describe '#mark_tab_as_seen' do
-    let!(:dossier) { create(:dossier, :followed, state: Dossier.states.fetch(:en_construction)) }
+    let!(:dossier) { create(:dossier, :en_construction, :followed) }
     let(:instructeur) { dossier.follows.first.instructeur }
     let(:freeze_date) { Time.zone.parse('12/12/2012') }
 
@@ -416,7 +416,7 @@ describe Instructeur, type: :model do
     end
 
     context 'when a dossier in construction exists' do
-      let!(:dossier) { create(:dossier, procedure: procedure_to_assign, state: Dossier.states.fetch(:en_construction)) }
+      let!(:dossier) { create(:dossier, :en_construction, procedure: procedure_to_assign) }
 
       it do
         expect(instructeur.email_notification_data).to eq([
@@ -454,12 +454,11 @@ describe Instructeur, type: :model do
     end
 
     context 'when a declarated dossier in instruction exists' do
-      let!(:dossier) { create(:dossier, procedure: procedure_to_assign, state: Dossier.states.fetch(:en_construction)) }
+      let(:dossier) { create(:dossier, :en_construction, procedure: procedure_to_assign) }
 
       before do
-        procedure_to_assign.update(declarative_with_state: "en_instruction")
-        Cron::DeclarativeProceduresJob.new.perform
-        dossier.reload
+        procedure_to_assign.update!(declarative_with_state: "en_instruction")
+        dossier.process_declarative!
       end
 
       it { expect(procedure_to_assign.declarative_with_state).to eq("en_instruction") }
@@ -479,12 +478,11 @@ describe Instructeur, type: :model do
     end
 
     context 'when a declarated dossier in accepte processed at today exists' do
-      let!(:dossier) { create(:dossier, procedure: procedure_to_assign, state: Dossier.states.fetch(:en_construction)) }
+      let(:dossier) { create(:dossier, :en_construction, procedure: procedure_to_assign) }
 
       before do
         procedure_to_assign.update(declarative_with_state: "accepte")
-        Cron::DeclarativeProceduresJob.new.perform
-        dossier.reload
+        dossier.process_declarative!
       end
 
       it { expect(procedure_to_assign.declarative_with_state).to eq("accepte") }
@@ -496,13 +494,12 @@ describe Instructeur, type: :model do
     end
 
     context 'when a declarated dossier in accepte processed at yesterday exists' do
-      let!(:dossier) { create(:dossier, procedure: procedure_to_assign, state: Dossier.states.fetch(:en_construction)) }
+      let(:dossier) { create(:dossier, :en_construction, procedure: procedure_to_assign) }
 
       before do
         procedure_to_assign.update(declarative_with_state: "accepte")
-        Cron::DeclarativeProceduresJob.new.perform
+        dossier.process_declarative!
         dossier.traitements.last.update(processed_at: Time.zone.yesterday.beginning_of_day)
-        dossier.reload
       end
 
       it { expect(procedure_to_assign.declarative_with_state).to eq("accepte") }
