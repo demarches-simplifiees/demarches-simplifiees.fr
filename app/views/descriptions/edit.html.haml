@@ -13,10 +13,7 @@
           = t("views.descriptions.edit.intro_html", libelle: @description.libelle)
         %p
           = t("views.descriptions.edit.info")
-  .card
-    .card-title
-      %span.icon.edit
-      = t("views.descriptions.edit.champs_title")
-    = render "types_de_champs", description: @description
+
+  = render "types_de_champs", description: @description
 
   = render "prefill_link", description: @description

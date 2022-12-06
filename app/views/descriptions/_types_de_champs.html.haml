@@ -1,39 +1,44 @@
 = turbo_frame_tag "#{dom_id(@description)}_types_de_champs" do
-  %table.table.hoverable
-    %thead
-      %tr
-        %th
-          = t("views.descriptions.edit.champ_id")
-        %th
-          = t("views.descriptions.edit.champ_type")
-        %th
-          = t("views.descriptions.edit.champ_libelle")
-        %th
-          = t("views.descriptions.edit.champ_description")
-        %th
-          = t("views.descriptions.edit.champ_prefill")
+  .card
+    .card-title
+      %span.icon.edit
+      = t("views.descriptions.edit.champs_title")
 
-    %tbody
-      - description.types_de_champ.each do |type_de_champ|
+    %table.table.hoverable
+      %thead
         %tr
-          %td
-            = type_de_champ.to_typed_id
-          %td
-            = t("activerecord.attributes.type_de_champ.type_champs.#{type_de_champ.type_champ}")
-          %td
-            = type_de_champ.libelle
-          %td
-            = type_de_champ.description
-          %td.text-center
-            = form_for description, url: description_path(description.path), data: { turbo: true } do |f|
-              - description.type_de_champ_ids.each do |id|
-                = f.hidden_field :type_de_champ_ids, value: id, multiple: true
-              - if description.include?(type_de_champ.id)
-                = f.hidden_field :type_de_champ_id_to_remove, value: type_de_champ.id
-                = f.submit t("views.descriptions.edit.champ_remove"), class: 'button secondary'
-              - elsif type_de_champ.prefillable?
-                = f.hidden_field :type_de_champ_id_to_add, value: type_de_champ.id
-                = f.submit t("views.descriptions.edit.champ_add"), class: 'button primary'
-              - else
-                %button.button{ disabled: true }
-                  = t("views.descriptions.edit.champ_unavailable")
+          %th
+            = t("views.descriptions.edit.champ_id")
+          %th
+            = t("views.descriptions.edit.champ_type")
+          %th
+            = t("views.descriptions.edit.champ_libelle")
+          %th
+            = t("views.descriptions.edit.champ_description")
+          %th
+            = t("views.descriptions.edit.champ_prefill")
+
+      %tbody
+        - description.types_de_champ.each do |type_de_champ|
+          %tr
+            %td
+              = type_de_champ.to_typed_id
+            %td
+              = t("activerecord.attributes.type_de_champ.type_champs.#{type_de_champ.type_champ}")
+            %td
+              = type_de_champ.libelle
+            %td
+              = type_de_champ.description
+            %td.text-center
+              = form_for description, url: description_path(description.path), data: { turbo: true } do |f|
+                - description.type_de_champ_ids.each do |id|
+                  = f.hidden_field :type_de_champ_ids, value: id, multiple: true
+                - if description.include?(type_de_champ.id)
+                  = f.hidden_field :type_de_champ_id_to_remove, value: type_de_champ.id
+                  = f.submit t("views.descriptions.edit.champ_remove"), class: 'button secondary'
+                - elsif type_de_champ.prefillable?
+                  = f.hidden_field :type_de_champ_id_to_add, value: type_de_champ.id
+                  = f.submit t("views.descriptions.edit.champ_add"), class: 'button primary'
+                - else
+                  %button.button{ disabled: true }
+                    = t("views.descriptions.edit.champ_unavailable")
