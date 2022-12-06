@@ -1,4 +1,3 @@
-# TODO: SEB translations
 class DescriptionsController < ApplicationController
   before_action :set_description
 

@@ -10,26 +10,19 @@
         = render partial: 'shared/procedure_description', locals: { procedure: @description }
       .column.procedure-context-content
         %p
-          Vous souhaitez permettre à vos usager·ères la
-          %strong création d'un dossier prérempli
-          , à partir de données dont vous disposez déjà, pour la démarche «
-          = @description.libelle
-          ».
+          = t("views.descriptions.edit.intro_html", libelle: @description.libelle)
         %p
-          Pour cela, ajoutez les champs que vous souhaitez préremplir, grâce au tableau ci-dessous.
-        %p
-          Lorsque vous avez terminé, il ne vous reste plus qu'à copier l'URL et à la partager.
-
+          = t("views.descriptions.edit.info")
   .card
     .card-title
       %span.icon.edit
-      Champs de la démarche
+      = t("views.descriptions.edit.champs_title")
     = render "types_de_champs", description: @description
 
   .card.featured
     .card-title
       %span.icon.new-folder
-      URL de préremplissage
+      = t("views.descriptions.edit.prefill_url_title")
       -# TODO: SEB in a nice verbatim or input
     = render "prefill_url"
     -# TODO: SEB copy button

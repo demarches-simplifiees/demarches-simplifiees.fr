@@ -2,11 +2,16 @@
   %table.table.hoverable
     %thead
       %tr
-        %th ID
-        %th Type
-        %th Libellé
-        %th Description
-        %th Préremplissable
+        %th
+          = t("views.descriptions.edit.champ_id")
+        %th
+          = t("views.descriptions.edit.champ_type")
+        %th
+          = t("views.descriptions.edit.champ_libelle")
+        %th
+          = t("views.descriptions.edit.champ_description")
+        %th
+          = t("views.descriptions.edit.champ_prefill")
 
     %tbody
       - description.types_de_champ.each do |type_de_champ|
@@ -25,9 +30,10 @@
                 = f.hidden_field :type_de_champ_ids, value: id, multiple: true
               - if description.include?(type_de_champ.id)
                 = f.hidden_field :type_de_champ_id_to_remove, value: type_de_champ.id
-                = f.submit 'Retirer', class: 'button secondary'
+                = f.submit t("views.descriptions.edit.champ_remove"), class: 'button secondary'
               - elsif type_de_champ.prefillable?
                 = f.hidden_field :type_de_champ_id_to_add, value: type_de_champ.id
-                = f.submit 'Ajouter', class: 'button primary'
+                = f.submit t("views.descriptions.edit.champ_add"), class: 'button primary'
               - else
-                %button.button{ disabled: true } Indisponible
+                %button.button{ disabled: true }
+                  = t("views.descriptions.edit.champ_unavailable")
