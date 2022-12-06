@@ -43,11 +43,11 @@ describe Champs::PieceJustificativeChamp do
     let(:champ_pj) { create(:champ_piece_justificative) }
     subject { champ_pj.for_export }
 
-    it { is_expected.to match_array(['toto.txt']) }
+    it { is_expected.to eq('toto.txt') }
 
     context 'without attached file' do
       before { champ_pj.piece_justificative_file.purge }
-      it { is_expected.to eq([]) }
+      it { is_expected.to eq('') }
     end
   end
 
