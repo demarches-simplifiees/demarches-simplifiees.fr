@@ -844,7 +844,7 @@ class Dossier < ApplicationRecord
       .processed_at
     save!
 
-    if !procedure.declarative_accepte? && !disable_notification
+    if !disable_notification
       NotificationMailer.send_en_instruction_notification(self).deliver_later
     end
     log_dossier_operation(instructeur, :passer_en_instruction)
@@ -857,6 +857,8 @@ class Dossier < ApplicationRecord
       .passer_en_instruction
       .processed_at
     save!
+
+    NotificationMailer.send_en_instruction_notification(self).deliver_later
     log_automatic_dossier_operation(:passer_en_instruction)
   end
 
