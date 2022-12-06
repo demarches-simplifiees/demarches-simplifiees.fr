@@ -2,7 +2,7 @@
   Bonjour,
 
 %p
-  #{t('administrateurs.groupe_instructeurs.add_instructeur.assignment', count: @new_instructeur_emails.count, value: @new_instructeur_emails.join(', '), groupe: @group.label).chomp('.')} par « #{@current_instructeur_email} », en charge de la démarche « #{@group.procedure.libelle} ».
+  = t('administrateurs.groupe_instructeurs.add_instructeur.email_body', count: @new_instructeur_emails.size, emails: @new_instructeur_emails.join(', '), groupe: @group.label, email: @current_instructeur_email, procedure: @group.procedure.libelle)
 
 %p
   Cliquez sur le lien ci-dessous pour voir la liste des instructeurs de ce groupe :
