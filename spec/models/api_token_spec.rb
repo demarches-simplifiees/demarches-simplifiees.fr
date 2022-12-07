@@ -121,23 +121,6 @@ describe APIToken, type: :model do
           it { expect(result).to be_truthy }
         end
       end
-
-      context 'with plain token (before migration)' do
-        before do
-          administrateur.update(encrypted_token: api_token.encrypted_token)
-          other_administrateur.update(encrypted_token: other_api_token.encrypted_token)
-          api_token.destroy
-          other_api_token.destroy
-        end
-
-        let(:token) { plain_token }
-        it { expect(result).to be_truthy }
-
-        context 'with other plain token' do
-          let(:token) { other_plain_token }
-          it { expect(result).to be_truthy }
-        end
-      end
     end
 
     context 'with packed token' do
@@ -153,16 +136,6 @@ describe APIToken, type: :model do
 
     context 'with plain token' do
       before { api_token.update(version: 1) }
-
-      let(:token) { plain_token }
-      it { expect(result).to be_truthy }
-    end
-
-    context 'with plain token (before migration)' do
-      before do
-        administrateur.update(encrypted_token: api_token.encrypted_token)
-        api_token.destroy
-      end
 
       let(:token) { plain_token }
       it { expect(result).to be_truthy }
