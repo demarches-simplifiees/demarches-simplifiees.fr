@@ -167,14 +167,12 @@
   "required": [
     "identifiant_de_l_etablissement",
     "nom_etablissement",
-    "type_contrat_prive",
     "nom_commune",
     "code_commune",
     "libelle_academie",
     "code_academie",
     "libelle_nature",
     "code_nature",
-    "adresse_1",
     "code_postal",
     "libelle_region",
     "code_region"
