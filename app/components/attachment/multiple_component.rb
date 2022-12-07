@@ -43,4 +43,10 @@ class Attachment::MultipleComponent < ApplicationComponent
     helpers.auto_attach_url(champ)
   end
   alias poll_url auto_attach_url
+
+  def poll_context
+    return :dossier if champ.present?
+
+    nil
+  end
 end

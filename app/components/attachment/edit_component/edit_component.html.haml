@@ -28,7 +28,7 @@
     = file_field(champ, field_name, **file_field_options)
 
     - if persisted?
-      - Attachment::PendingPollComponent.new(attachment: attachment, poll_url:).then do |component|
+      - Attachment::PendingPollComponent.new(attachment: attachment, poll_url:, context: poll_context).then do |component|
         .fr-mt-2w
           = render component
 
