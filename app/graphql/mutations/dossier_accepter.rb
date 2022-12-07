@@ -14,9 +14,9 @@ module Mutations
     field :errors, [Types::ValidationErrorType], null: true
 
     def resolve(dossier:, instructeur:, motivation: nil, justificatif: nil, disable_notification:)
-      dossier.accepter!(instructeur: instructeur, motivation: motivation, justificatif: justificatif, disable_notification: disable_notification)
+      dossier.accepter!(instructeur:, motivation:, justificatif:, disable_notification:)
 
-      { dossier: dossier }
+      { dossier: }
     end
 
     def ready?(justificatif: nil, **args)

@@ -11,9 +11,9 @@ module Mutations
     field :errors, [Types::ValidationErrorType], null: true
 
     def resolve(dossier:, groupe_instructeur:)
-      dossier.update!(groupe_instructeur: groupe_instructeur)
+      dossier.update!(groupe_instructeur:)
 
-      { dossier: dossier }
+      { dossier: }
     end
 
     def authorized?(dossier:, groupe_instructeur:)

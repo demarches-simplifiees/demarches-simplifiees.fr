@@ -12,9 +12,9 @@ module Mutations
     field :errors, [Types::ValidationErrorType], null: true
 
     def resolve(dossier:, instructeur:, disable_notification:)
-      dossier.repasser_en_construction!(instructeur: instructeur, disable_notification: disable_notification)
+      dossier.repasser_en_construction!(instructeur:, disable_notification:)
 
-      { dossier: dossier }
+      { dossier: }
     end
 
     def authorized?(dossier:, instructeur:, **args)
