@@ -192,7 +192,7 @@ Rails.application.routes.draw do
   get '/description/:path', to: 'descriptions#edit'
   resources :procedures, only: [], param: :path do
     member do
-      resource :description, only: [:edit, :update]
+      resource :description, only: :update
     end
   end
 
