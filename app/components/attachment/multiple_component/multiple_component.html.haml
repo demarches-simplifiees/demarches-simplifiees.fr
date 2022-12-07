@@ -1,10 +1,10 @@
-.fr-mb-4w.attachment-multiple{ class: class_names("fr-downloads-group": user_can_download?, "destroyable": user_can_destroy?) }
+.fr-mb-4w.attachment-multiple{ class: class_names("fr-downloads-group": view_as == :download, "destroyable": user_can_destroy?) }
   = template
 
   %ul
     - each_attachment do |attachment, index|
       %li{ id: dom_id(attachment) }
-        = render Attachment::EditComponent.new(champ:, attached_file:, attachment:, index:, as_multiple: true, user_can_destroy:, user_can_download:, form_object_name:)
+        = render Attachment::EditComponent.new(champ:, attached_file:, attachment:, index:, as_multiple: true, view_as:, user_can_destroy:, form_object_name:)
 
   %div{ id: empty_component_id, class: class_names("hidden": !can_attach_next?) }
     = render Attachment::EditComponent.new(champ:, attached_file:, attachment: nil, index: attachments_count, user_can_destroy:, form_object_name:)
