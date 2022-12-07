@@ -106,6 +106,7 @@ fr:
         champ_unavailable: Indisponible
         prefill_link_title: Lien de préremplissage
         prefill_link_info: Copiez le lien grâce au bouton ci-dessous et remplacez les valeurs par les données dont vous disposez.
+        prefill_link_too_long: Attention, ce lien de préremplissage est trop long et risque de ne pas fonctionner sur certains navigateurs.
         prefill_link_copy: Copier le lien de préremplissage
     registrations:
       new:

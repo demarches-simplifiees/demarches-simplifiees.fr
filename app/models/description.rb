@@ -1,6 +1,8 @@
 class Description < SimpleDelegator
   include Rails.application.routes.url_helpers
 
+  MAX_PREFILL_LINK_LENGTH = 2000
+
   attr_reader :type_de_champ_ids
 
   def initialize(procedure)
@@ -22,7 +24,11 @@ class Description < SimpleDelegator
     @type_de_champ_ids.include?(type_de_champ_id.to_s)
   end
 
-  def to_s # TODO: SEB limit length to 2000
+  def too_long?
+    to_s.length > MAX_PREFILL_LINK_LENGTH
+  end
+
+  def to_s
     new_dossier_url({ procedure_id: id }.merge(prefilled_champs))
   end
 
