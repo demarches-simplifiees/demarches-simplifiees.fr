@@ -23,7 +23,7 @@ module Mutations
       if annotation.save
         dossier.log_modifier_annotation!(annotation, instructeur)
 
-        { annotation: annotation }
+        { annotation: }
       else
         { errors: annotation.errors.full_messages }
       end
@@ -44,9 +44,9 @@ module Mutations
 
       Champ.joins(:type_de_champ).find_by(type_de_champ: {
         type_champ: annotation_type_champ,
-        stable_id: stable_id,
+        stable_id:,
         private: true
-      }, private: true, row: row, dossier: dossier)
+      }, private: true, row:, dossier:)
     end
 
     def annotation_type_champ

@@ -5,12 +5,7 @@ module Mutations
     argument :value, String, required: true
 
     def resolve(dossier:, annotation_id:, instructeur:, value:)
-      resolve_with_type(
-        dossier: dossier,
-        annotation_id: annotation_id,
-        instructeur: instructeur,
-        value: value
-      )
+      resolve_with_type(dossier:, annotation_id:, instructeur:, value:)
     end
 
     private
