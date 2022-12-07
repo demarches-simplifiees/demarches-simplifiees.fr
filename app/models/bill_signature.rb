@@ -109,7 +109,9 @@ class BillSignature < ApplicationRecord
       io = io_for_changes(attachment_changes[attachment])
       if io.present?
         io.rewind
-        io.read
+        result = io.read
+        io.rewind
+        result
       end
     elsif serialized.attached?
       serialized.download
