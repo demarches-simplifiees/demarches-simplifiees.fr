@@ -1,4 +1,5 @@
 class DescriptionsController < ApplicationController
+  before_action :retreive_procedure
   before_action :set_description
 
   def edit
@@ -15,8 +16,12 @@ class DescriptionsController < ApplicationController
 
   private
 
+  def retreive_procedure
+    @procedure = Procedure.publiees_ou_brouillons.opendata.find_by!(path: params[:path])
+  end
+
   def set_description
-    @description = Description.new(Procedure.publiees.or(Procedure.brouillons).opendata.find_by!(path: params[:path]))
+    @description = Description.new(@procedure)
   end
 
   def description_params

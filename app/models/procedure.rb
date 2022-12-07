@@ -204,15 +204,16 @@ class Procedure < ApplicationRecord
   has_one_attached :notice
   has_one_attached :deliberation
 
-  scope :brouillons,            -> { where(aasm_state: :brouillon) }
-  scope :publiees,              -> { where(aasm_state: :publiee) }
-  scope :closes,                -> { where(aasm_state: [:close, :depubliee]) }
-  scope :opendata,              -> { where(opendata: true) }
-  scope :publiees_ou_closes,    -> { where(aasm_state: [:publiee, :close, :depubliee]) }
-  scope :by_libelle,            -> { order(libelle: :asc) }
-  scope :created_during,        -> (range) { where(created_at: range) }
-  scope :cloned_from_library,   -> { where(cloned_from_library: true) }
-  scope :declarative,           -> { where.not(declarative_with_state: nil) }
+  scope :brouillons,             -> { where(aasm_state: :brouillon) }
+  scope :publiees,               -> { where(aasm_state: :publiee) }
+  scope :publiees_ou_brouillons, -> { publiees.or(brouillons) }
+  scope :closes,                 -> { where(aasm_state: [:close, :depubliee]) }
+  scope :opendata,               -> { where(opendata: true) }
+  scope :publiees_ou_closes,     -> { where(aasm_state: [:publiee, :close, :depubliee]) }
+  scope :by_libelle,             -> { order(libelle: :asc) }
+  scope :created_during,         -> (range) { where(created_at: range) }
+  scope :cloned_from_library,    -> { where(cloned_from_library: true) }
+  scope :declarative,            -> { where.not(declarative_with_state: nil) }
 
   scope :discarded_expired, -> do
     with_discarded
