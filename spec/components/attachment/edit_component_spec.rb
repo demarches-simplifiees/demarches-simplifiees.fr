@@ -83,8 +83,8 @@ RSpec.describe Attachment::EditComponent, type: :component do
     end
   end
 
-  context 'when user can download' do
-    let(:kwargs) { { user_can_download: true } }
+  context 'when view as download' do
+    let(:kwargs) { { view_as: :download } }
 
     context 'when watermarking is done' do
       before do
@@ -110,8 +110,8 @@ RSpec.describe Attachment::EditComponent, type: :component do
     end
   end
 
-  context 'when user cannot download' do
-    let(:kwargs) { { user_can_download: false } }
+  context 'when view as link' do
+    let(:kwargs) { { view_as: :link } }
 
     context 'when watermarking is done' do
       before do

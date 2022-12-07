@@ -2,8 +2,6 @@
 class Attachment::EditComponent < ApplicationComponent
   attr_reader :champ
   attr_reader :attachment
-  attr_reader :user_can_download
-  alias user_can_download? user_can_download
   attr_reader :user_can_destroy
   alias user_can_destroy? user_can_destroy
   attr_reader :as_multiple
@@ -11,14 +9,14 @@ class Attachment::EditComponent < ApplicationComponent
 
   EXTENSIONS_ORDER = ['jpeg', 'png', 'pdf', 'zip'].freeze
 
-  def initialize(champ: nil, auto_attach_url: nil, attached_file:, direct_upload: true, index: 0, as_multiple: false, user_can_download: false, user_can_destroy: true, **kwargs)
+  def initialize(champ: nil, auto_attach_url: nil, attached_file:, direct_upload: true, index: 0, as_multiple: false, view_as: :link, user_can_destroy: true, **kwargs)
     @as_multiple = as_multiple
     @attached_file = attached_file
     @auto_attach_url = auto_attach_url
     @champ = champ
     @direct_upload = direct_upload
     @index = index
-    @user_can_download = user_can_download
+    @view_as = view_as
     @user_can_destroy = user_can_destroy
 
     # attachment passed by kwarg because we don't want a default (nil) value.
@@ -80,7 +78,7 @@ class Attachment::EditComponent < ApplicationComponent
     if champ.present?
       auto_attach_url
     else
-      attachment_path(user_can_edit: true, user_can_download: @user_can_download, auto_attach_url: @auto_attach_url)
+      attachment_path(user_can_edit: true, view_as: @view_as, auto_attach_url: @auto_attach_url)
     end
   end
 
@@ -118,7 +116,7 @@ class Attachment::EditComponent < ApplicationComponent
   end
 
   def downloadable?
-    return false unless user_can_download?
+    return false unless @view_as == :download
 
     viewable?
   end
@@ -206,6 +204,8 @@ class Attachment::EditComponent < ApplicationComponent
 
   def verify_initialization!(kwargs)
     fail ArgumentError, "Unknown kwarg #{kwargs.keys.join(', ')}" unless kwargs.empty?
+
+    fail ArgumentError, "Invalid view_as:#{@view_as}, must be :download or :link" if [:download, :link].exclude?(@view_as)
   end
 
   def track_issue_with_missing_validators
