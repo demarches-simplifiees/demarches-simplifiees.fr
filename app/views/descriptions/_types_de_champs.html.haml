@@ -32,12 +32,12 @@
             %td.text-center
               = form_for description, url: description_path(description.path), data: { turbo: true } do |f|
                 - if description.include?(type_de_champ.id)
-                  - (description.type_de_champ_ids - [type_de_champ.id.to_s]).each do |id|
-                    = f.hidden_field :type_de_champ_ids, value: id, multiple: true
+                  - (description.selected_type_de_champ_ids - [type_de_champ.id.to_s]).each do |id|
+                    = f.hidden_field :selected_type_de_champ_ids, value: id, multiple: true
                   = f.submit t("views.descriptions.edit.champ_remove"), class: 'button secondary'
                 - elsif type_de_champ.prefillable?
-                  - (description.type_de_champ_ids + [type_de_champ.id.to_s]).each do |id|
-                    = f.hidden_field :type_de_champ_ids, value: id, multiple: true
+                  - (description.selected_type_de_champ_ids + [type_de_champ.id.to_s]).each do |id|
+                    = f.hidden_field :selected_type_de_champ_ids, value: id, multiple: true
                   = f.submit t("views.descriptions.edit.champ_add"), class: 'button primary'
                 - else
                   %button.button{ disabled: true }

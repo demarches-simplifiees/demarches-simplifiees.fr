@@ -3,15 +3,15 @@ class Description < SimpleDelegator
 
   MAX_PREFILL_LINK_LENGTH = 2000
 
-  attr_reader :type_de_champ_ids
+  attr_reader :selected_type_de_champ_ids
 
   def initialize(procedure)
     super(procedure)
-    @type_de_champ_ids = []
+    @selected_type_de_champ_ids = []
   end
 
   def update(attributes)
-    @type_de_champ_ids = attributes[:type_de_champ_ids].presence || []
+    @selected_type_de_champ_ids = attributes[:selected_type_de_champ_ids].presence || []
   end
 
   def types_de_champ
@@ -19,7 +19,7 @@ class Description < SimpleDelegator
   end
 
   def include?(type_de_champ_id)
-    @type_de_champ_ids.include?(type_de_champ_id.to_s)
+    selected_type_de_champ_ids.include?(type_de_champ_id.to_s)
   end
 
   def too_long?
@@ -33,6 +33,6 @@ class Description < SimpleDelegator
   private
 
   def prefilled_champs
-    types_de_champ.where(id: @type_de_champ_ids).map { |type_de_champ| ["champ_#{type_de_champ.to_typed_id}", type_de_champ.libelle] }.to_h
+    types_de_champ.where(id: selected_type_de_champ_ids).map { |type_de_champ| ["champ_#{type_de_champ.to_typed_id}", type_de_champ.libelle] }.to_h
   end
 end

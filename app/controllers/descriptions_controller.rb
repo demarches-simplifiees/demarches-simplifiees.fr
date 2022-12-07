@@ -25,8 +25,8 @@ class DescriptionsController < ApplicationController
   end
 
   def description_params
-    params.require(:procedure).permit(type_de_champ_ids: [])
+    params.require(:procedure).permit(selected_type_de_champ_ids: [])
   rescue ActionController::ParameterMissing
-    { type_de_champ_ids: [] }
+    { selected_type_de_champ_ids: [] }
   end
 end

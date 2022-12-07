@@ -61,7 +61,7 @@ describe DescriptionsController, type: :controller do
 
     context 'when adding a type_de_champ_id' do
       let(:type_de_champ_to_add) { create(:type_de_champ_text, procedure: procedure) }
-      let(:params) { { type_de_champ_ids: [type_de_champ.id, type_de_champ_to_add.id] } }
+      let(:params) { { selected_type_de_champ_ids: [type_de_champ.id, type_de_champ_to_add.id] } }
 
       it { expect(response).to render_template(:update) }
 
@@ -74,7 +74,7 @@ describe DescriptionsController, type: :controller do
 
     context 'when removing a type_de_champ_id' do
       let(:type_de_champ_to_remove) { type_de_champ }
-      let(:params) { { type_de_champ_ids: [] } }
+      let(:params) { { selected_type_de_champ_ids: [] } }
 
       it { expect(response).to render_template(:update) }
 
