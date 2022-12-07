@@ -13,22 +13,6 @@ RSpec.describe Description, type: :model do
         expect { update }.to change { description.type_de_champ_ids }.from([]).to(type_de_champ_ids)
       end
     end
-
-    context 'when a type_de_champ_id to add is given' do
-      let(:attributes) { { type_de_champ_ids: type_de_champ_ids, type_de_champ_id_to_add: "3" } }
-
-      it 'adds it to type_de_champ_ids' do
-        expect { update }.to change { description.type_de_champ_ids }.from([]).to(type_de_champ_ids + ["3"])
-      end
-    end
-
-    context 'when a type_de_champ_id to remove is given' do
-      let(:attributes) { { type_de_champ_ids: type_de_champ_ids, type_de_champ_id_to_remove: "2" } }
-
-      it 'removes it from type_de_champ_ids' do
-        expect { update }.to change { description.type_de_champ_ids }.from([]).to(type_de_champ_ids - ["2"])
-      end
-    end
   end
 
   describe '#types_de_champ' do
@@ -45,7 +29,7 @@ RSpec.describe Description, type: :model do
     subject(:included) { description.include?(type_de_champ_id) }
 
     context 'when the id has been added to the description' do
-      before { description.update(type_de_champ_id_to_add: "1") }
+      before { description.update(type_de_champ_ids: ["1"]) }
 
       it { expect(included).to eq(true) }
     end

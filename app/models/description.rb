@@ -12,8 +12,6 @@ class Description < SimpleDelegator
 
   def update(attributes)
     @type_de_champ_ids = attributes[:type_de_champ_ids].presence || []
-    @type_de_champ_ids << attributes[:type_de_champ_id_to_add] if attributes[:type_de_champ_id_to_add]
-    @type_de_champ_ids = @type_de_champ_ids - [attributes[:type_de_champ_id_to_remove]] if attributes[:type_de_champ_id_to_remove]
   end
 
   def types_de_champ

@@ -31,13 +31,13 @@
               = type_de_champ.description
             %td.text-center
               = form_for description, url: description_path(description.path), data: { turbo: true } do |f|
-                - description.type_de_champ_ids.each do |id|
-                  = f.hidden_field :type_de_champ_ids, value: id, multiple: true
                 - if description.include?(type_de_champ.id)
-                  = f.hidden_field :type_de_champ_id_to_remove, value: type_de_champ.id
+                  - (description.type_de_champ_ids - [type_de_champ.id.to_s]).each do |id|
+                    = f.hidden_field :type_de_champ_ids, value: id, multiple: true
                   = f.submit t("views.descriptions.edit.champ_remove"), class: 'button secondary'
                 - elsif type_de_champ.prefillable?
-                  = f.hidden_field :type_de_champ_id_to_add, value: type_de_champ.id
+                  - (description.type_de_champ_ids + [type_de_champ.id.to_s]).each do |id|
+                    = f.hidden_field :type_de_champ_ids, value: id, multiple: true
                   = f.submit t("views.descriptions.edit.champ_add"), class: 'button primary'
                 - else
                   %button.button{ disabled: true }

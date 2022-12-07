@@ -25,10 +25,8 @@ class DescriptionsController < ApplicationController
   end
 
   def description_params
-    params.require(:procedure).permit(
-      :type_de_champ_id_to_add,
-      :type_de_champ_id_to_remove,
-      type_de_champ_ids: []
-    )
+    params.require(:procedure).permit(type_de_champ_ids: [])
+  rescue ActionController::ParameterMissing
+    { type_de_champ_ids: [] }
   end
 end
