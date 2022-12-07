@@ -1,7 +1,7 @@
 describe API::V2::GraphqlController do
   let(:admin) { create(:administrateur) }
-  let(:token) { admin.renew_api_token }
-  let(:legacy_token) { APIToken.new(token).token }
+  let(:token) { APIToken.generate(admin)[1] }
+  let(:legacy_token) { APIToken.send(:unpack, token)[:plain_token] }
   let(:procedure) { create(:procedure, :published, :for_individual, :with_service, administrateurs: [admin]) }
   let(:dossier)  { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
   let(:dossier1) { create(:dossier, :en_construction, :with_individual, procedure: procedure, en_construction_at: 1.day.ago) }

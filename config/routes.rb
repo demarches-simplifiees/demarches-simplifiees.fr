@@ -173,6 +173,7 @@ Rails.application.routes.draw do
 
   resources :attachments, only: [:show, :destroy]
   resources :recherche, only: [:index]
+  resources :api_tokens, only: [:create, :update, :destroy]
 
   get "patron" => "root#patron"
   get "suivi" => "root#suivi"
@@ -306,9 +307,6 @@ Rails.application.routes.draw do
     get 'demarches' => 'demarches#index'
 
     get 'profil' => 'profil#show'
-    post 'renew-api-token' => 'profil#renew_api_token'
-    # allow refresh 'renew api token' page
-    get 'renew-api-token' => redirect('/profil')
     patch 'update_email' => 'profil#update_email'
     post 'transfer_all_dossiers' => 'profil#transfer_all_dossiers'
     post 'accept_merge' => 'profil#accept_merge'

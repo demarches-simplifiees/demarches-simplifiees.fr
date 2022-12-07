@@ -1,16 +1,10 @@
 module Users
   class ProfilController < UserController
     before_action :ensure_update_email_is_authorized, only: :update_email
-    before_action :find_transfers, only: [:show, :renew_api_token]
+    before_action :find_transfers, only: [:show]
 
     def show
       @france_connect_informations = FranceConnectInformation.where(user: current_user)
-    end
-
-    def renew_api_token
-      @token = current_administrateur.renew_api_token
-      flash.now.notice = 'Votre jeton a été regénéré.'
-      render :show
     end
 
     def update_email
