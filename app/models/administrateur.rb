@@ -9,7 +9,7 @@
 #  user_id         :bigint           not null
 #
 class Administrateur < ApplicationRecord
-  self.ignored_columns = [:active]
+  self.ignored_columns = [:active, :encrypted_token]
 
   UNUSED_ADMIN_THRESHOLD = 6.months
 
