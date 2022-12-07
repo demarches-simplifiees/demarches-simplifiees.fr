@@ -119,6 +119,11 @@ class Attachment::EditComponent < ApplicationComponent
 
   def downloadable?
     return false unless user_can_download?
+
+    viewable?
+  end
+
+  def viewable?
     return false if attachment.virus_scanner_error?
     return false if attachment.watermark_pending?
 
