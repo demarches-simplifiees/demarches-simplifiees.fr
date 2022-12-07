@@ -190,7 +190,7 @@ Rails.application.routes.draw do
   match "webhooks/helpscout", to: lambda { |_| [204, {}, nil] }, via: :head
 
   get '/description/:path', to: 'descriptions#edit'
-  resources :dossiers, only: [], param: :path do
+  resources :procedures, only: [], param: :path do
     member do
       resource :description, only: [:edit, :update]
     end
