@@ -16,7 +16,7 @@ module Mutations
 
       annotation.add_row(dossier.revision)
 
-      { annotation: annotation, errors: nil }
+      { annotation:, errors: nil }
     end
 
     def authorized?(dossier:, instructeur:, **args)
