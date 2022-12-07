@@ -127,14 +127,11 @@
                       - if @not_archived_notifications_dossier_ids.include?(p.dossier_id)
                         %span.notifications{ 'aria-label': 'notifications' }
                     - else
-                      - if p.hidden_by_administration_at.present?
-                        %span.cell-link
-                          %span.icon.folder
-                      - else
-                        %a.cell-link{ href: path }
-                          %span.icon.folder
-                            - if @not_archived_notifications_dossier_ids.include?(p.dossier_id)
-                              %span.notifications{ 'aria-label': 'notifications' }
+                      %span.icon.folder
+
+                    - if @not_archived_notifications_dossier_ids.include?(p.dossier_id)
+                      %span.notifications{ 'aria-label': 'notifications' }
+
 
                   %td.number-col
                     - if p.hidden_by_administration_at.present?
