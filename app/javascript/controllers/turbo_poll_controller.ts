@@ -3,7 +3,8 @@ import { httpRequest } from '@utils';
 import { ApplicationController } from './application_controller';
 
 const DEFAULT_POLL_INTERVAL = 3000;
-const DEFAULT_MAX_CHECKS = 5;
+const DEFAULT_MAX_CHECKS = 10;
+const DEFAULT_EXPONENTIAL_FACTOR = 1.2;
 
 // Periodically check the state of a URL.
 //
@@ -65,7 +66,7 @@ export class TurboPollController extends ApplicationController {
     if (!state) {
       return this.resetState();
     }
-    state.interval *= 1.5;
+    state.interval *= DEFAULT_EXPONENTIAL_FACTOR;
     state.checks += 1;
     if (state.checks <= this.maxChecksValue) {
       return state;

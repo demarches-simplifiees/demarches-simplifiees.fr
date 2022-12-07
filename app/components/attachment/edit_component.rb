@@ -84,6 +84,12 @@ class Attachment::EditComponent < ApplicationComponent
     end
   end
 
+  def poll_context
+    return :dossier if champ.present?
+
+    nil
+  end
+
   def field_name
     helpers.field_name(@form_object_name || ActiveModel::Naming.param_key(@attached_file.record), attribute_name)
   end

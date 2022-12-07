@@ -1,4 +1,7 @@
 ---
 en:
   reload: Reload
-  explanation: Scanning for viruses and processing your attachment(s) takes longer than expected.
+  explanation:
+    one: Scanning for viruses and processing your attachment takes longer than expected.
+    other: Scanning for viruses and processing your attachments takes longer than expected.
+  dossier_submittable: This does not prevent you from submitting your file if you wish.

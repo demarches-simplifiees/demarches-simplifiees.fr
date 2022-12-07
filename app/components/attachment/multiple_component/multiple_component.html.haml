@@ -10,4 +10,4 @@
     = render Attachment::EditComponent.new(champ:, attached_file:, attachment: nil, index: attachments_count, user_can_destroy:, form_object_name:)
 
   // single poll and refresh message for all attachments
-  = render Attachment::PendingPollComponent.new(attachments: attachments, poll_url:)
+  = render Attachment::PendingPollComponent.new(attachments: attachments, poll_url:, context: poll_context)
