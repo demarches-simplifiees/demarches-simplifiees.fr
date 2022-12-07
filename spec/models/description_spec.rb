@@ -60,7 +60,7 @@ RSpec.describe Description, type: :model do
     end
   end
 
-  describe '#to_s' do
+  describe '#prefill_link' do
     let(:procedure) { create(:procedure) }
     let(:type_de_champ) { create(:type_de_champ_text, procedure: procedure) }
     let(:description) { described_class.new(procedure) }
@@ -68,7 +68,7 @@ RSpec.describe Description, type: :model do
     before { description.update(type_de_champ_ids: [type_de_champ.id]) }
 
     it "builds the URL to create a new prefilled dossier" do
-      expect(description.to_s).to eq(
+      expect(description.prefill_link).to eq(
         new_dossier_url(
           procedure_id: procedure.id,
           "champ_#{type_de_champ.to_typed_id}" => type_de_champ.libelle

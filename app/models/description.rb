@@ -23,10 +23,10 @@ class Description < SimpleDelegator
   end
 
   def too_long?
-    to_s.length > MAX_PREFILL_LINK_LENGTH
+    prefill_link.length > MAX_PREFILL_LINK_LENGTH
   end
 
-  def to_s
+  def prefill_link
     new_dossier_url({ procedure_id: id }.merge(prefilled_champs))
   end
 

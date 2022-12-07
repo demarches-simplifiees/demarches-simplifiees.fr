@@ -9,7 +9,7 @@
       = body
       %div
         %strong
-          = description
+          = description.prefill_link
     - unless description.too_long?
       - c.with_bottom do
         = render Dsfr::CopyButtonComponent.new(title: t("views.descriptions.edit.prefill_link_copy"), text: description)
