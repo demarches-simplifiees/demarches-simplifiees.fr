@@ -23,15 +23,11 @@ class API::V2::Context < GraphQL::Query::Context
     # We are caching authorization logic because it is called for each node
     # of the requested graph and can be expensive. Context is reset per request so it is safe.
     self[:authorized] ||= Hash.new do |hash, demarche_id|
-      # Compute the hash value dynamically when first requested
-      authorized_administrateur = demarche.administrateurs.find do |administrateur|
-        if self[:token]
-          administrateur.valid_api_token?(self[:token])
-        else
-          administrateur.id == self[:administrateur_id]
-        end
+      hash[demarche_id] = if self[:token]
+        APIToken.find_and_verify(self[:token], demarche.administrateurs).present?
+      elsif self[:administrateur_id]
+        demarche.administrateurs.map(&:id).include?(self[:administrateur_id])
       end
-      hash[demarche_id] = authorized_administrateur.present?
     end
 
     self[:authorized][demarche.id]
