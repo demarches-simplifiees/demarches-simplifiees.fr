@@ -14,7 +14,7 @@ module Mutations
       message = CommentaireService.create(instructeur, dossier, body: body, piece_jointe: attachment)
 
       if message.errors.empty?
-        { message: message }
+        { message: }
       else
         { errors: message.errors.full_messages }
       end
