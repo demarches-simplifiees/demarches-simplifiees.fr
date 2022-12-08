@@ -118,6 +118,6 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
   end
 
   def conditional_enabled?
-    !type_de_champ.private? && !coordinate.child?
+    !type_de_champ.private?
   end
 end
