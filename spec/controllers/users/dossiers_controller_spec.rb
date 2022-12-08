@@ -1054,8 +1054,9 @@ describe Users::DossiersController, type: :controller do
   describe '#new' do
     let(:procedure) { create(:procedure, :published) }
     let(:procedure_id) { procedure.id }
+    let(:params) { { procedure_id: procedure_id } }
 
-    subject { get :new, params: { procedure_id: procedure_id } }
+    subject { get :new, params: params }
 
     it 'clears the stored procedure context' do
       subject
@@ -1084,6 +1085,56 @@ describe Users::DossiersController, type: :controller do
             let(:procedure) { create(:procedure, :closed) }
 
             it { is_expected.to redirect_to dossiers_path }
+          end
+
+          context 'when prefill values are given' do
+            let!(:type_de_champ_1) { create(:type_de_champ_text, procedure: procedure) }
+            let(:value_1) { "any value" }
+
+            let!(:type_de_champ_2) { create(:type_de_champ_textarea, procedure: procedure) }
+            let(:value_2) { "another value" }
+
+            let(:params) {
+              {
+                procedure_id: procedure_id,
+                "champ_#{type_de_champ_1.to_typed_id}" => value_1,
+                "champ_#{type_de_champ_2.to_typed_id}" => value_2
+              }
+            }
+
+            it { expect { subject }.to change { Dossier.count }.by(1) }
+
+            it "prefills the dossier's champs with the given values" do
+              subject
+
+              dossier = Dossier.last
+              expect(find_champ_by_stable_id(dossier, type_de_champ_1.stable_id).value).to eq(value_1)
+              expect(find_champ_by_stable_id(dossier, type_de_champ_2.stable_id).value).to eq(value_2)
+            end
+
+            it { is_expected.to redirect_to siret_dossier_path(id: Dossier.last) }
+
+            context 'when prefill values contain a hash' do
+              let(:value_2) { { evil: "payload" } }
+
+              it "prefills the dossier's champ with the hash stored as a string" do
+                subject
+
+                dossier = Dossier.last
+                expect(find_champ_by_stable_id(dossier, type_de_champ_2.stable_id).value).to eq("{\"evil\"=>\"payload\"}")
+              end
+            end
+
+            context 'when prefill values contain an array' do
+              let(:value_2) { ["a", "b", "c"] }
+
+              it "prefills the dossier's champ with the array stored as a string" do
+                subject
+
+                dossier = Dossier.last
+                expect(find_champ_by_stable_id(dossier, type_de_champ_2.stable_id).value).to eq("[\"a\", \"b\", \"c\"]")
+              end
+            end
           end
         end
         context 'when user is not logged' do
@@ -1180,9 +1231,9 @@ describe Users::DossiersController, type: :controller do
 
     context 'when not logged in' do
       it 'fails' do
-       subject
-       expect { expect(response).to redirect_to(new_user_session_path) }
-     end
+        subject
+        expect { expect(response).to redirect_to(new_user_session_path) }
+      end
     end
   end
 
@@ -1201,5 +1252,11 @@ describe Users::DossiersController, type: :controller do
       it { expect(subject).to redirect_to(brouillon_dossier_path(Dossier.last)) }
       it { expect { subject }.to change { dossier.user.dossiers.count }.by(1) }
     end
+  end
+
+  private
+
+  def find_champ_by_stable_id(dossier, stable_id)
+    dossier.champs_public.joins(:type_de_champ).find_by(types_de_champ: { stable_id: stable_id })
   end
 end

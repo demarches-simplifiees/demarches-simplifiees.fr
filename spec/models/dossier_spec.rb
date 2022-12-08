@@ -1855,6 +1855,41 @@ describe Dossier do
     end
   end
 
+  describe '#find_champs_by_stable_ids' do
+    let(:procedure) { create(:procedure, :published) }
+    let(:dossier) { create(:dossier, :brouillon, procedure: procedure) }
+
+    subject { dossier.find_champs_by_stable_ids(stable_ids) }
+
+    context 'when stable_ids is empty' do
+      let(:stable_ids) { [] }
+
+      it { expect(subject).to match([]) }
+    end
+
+    context 'when stable_ids contains nil or blank values' do
+      let(:stable_ids) { [nil, ""] }
+
+      it { expect(subject).to match([]) }
+    end
+
+    context 'when stable_ids contains present values' do
+      context 'when the dossier has no champ with the given stable ids' do
+        let(:stable_ids) { ['My Neighbor Totoro', 'Miyazaki'] }
+
+        it { expect(subject).to match([]) }
+      end
+
+      context 'when the dossier has champs with the given stable ids' do
+        let!(:type_de_champ_1) { create(:type_de_champ_text, procedure: procedure) }
+        let!(:type_de_champ_2) { create(:type_de_champ_textarea, procedure: procedure) }
+        let(:stable_ids) { [type_de_champ_1.stable_id, type_de_champ_2.stable_id] }
+
+        it { expect(subject).to match(dossier.champs_public.joins(:type_de_champ).where(types_de_champ: { stable_id: stable_ids })) }
+      end
+    end
+  end
+
   describe 'BatchOperation' do
     subject { build(:dossier) }
     it { is_expected.to belong_to(:batch_operation).optional }

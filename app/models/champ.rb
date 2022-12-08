@@ -5,6 +5,7 @@
 #  id                             :integer          not null, primary key
 #  data                           :jsonb
 #  fetch_external_data_exceptions :string           is an Array
+#  prefilled                      :boolean          default(FALSE)
 #  private                        :boolean          default(FALSE), not null
 #  rebased_at                     :datetime
 #  row                            :integer
@@ -79,6 +80,7 @@ class Champ < ApplicationRecord
   scope :public_ordered, -> { public_only.ordered }
   scope :private_ordered, -> { private_only.ordered }
   scope :root, -> { where(parent_id: nil) }
+  scope :prefilled, -> { where(prefilled: true) }
 
   before_create :set_dossier_id, if: :needs_dossier_id?
   before_validation :set_dossier_id, if: :needs_dossier_id?
