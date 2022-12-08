@@ -3,7 +3,7 @@ import { httpRequest } from '@utils';
 import { ApplicationController } from './application_controller';
 
 const DEFAULT_POLL_INTERVAL = 3000;
-const DEFAULT_MAX_CHECKS = 5;
+const DEFAULT_MAX_CHECKS = 20;
 
 // Periodically check the state of a URL.
 //
@@ -26,10 +26,7 @@ export class TurboPollController extends ApplicationController {
   #abortController?: AbortController;
 
   connect(): void {
-    const state = this.nextState();
-    if (state) {
-      this.schedule(state);
-    }
+    this.schedule();
   }
 
   disconnect(): void {
@@ -37,7 +34,6 @@ export class TurboPollController extends ApplicationController {
   }
 
   refresh() {
-    this.cancel();
     this.#abortController = new AbortController();
 
     httpRequest(this.urlValue, { signal: this.#abortController.signal })
@@ -45,15 +41,21 @@ export class TurboPollController extends ApplicationController {
       .catch(() => null);
   }
 
-  private schedule(state: PollState): void {
+  private schedule(): void {
     this.cancel();
-    this.#timer = setTimeout(() => {
-      this.refresh();
-    }, state.interval);
+    this.#timer = setInterval(() => {
+      const nextState = this.nextState();
+
+      if (!nextState) {
+        this.cancel();
+      } else {
+        this.refresh();
+      }
+    }, this.intervalValue);
   }
 
   private cancel(): void {
-    clearTimeout(this.#timer);
+    clearInterval(this.#timer);
     this.#abortController?.abort();
     this.#abortController = window.AbortController
       ? new AbortController()
@@ -62,10 +64,11 @@ export class TurboPollController extends ApplicationController {
 
   private nextState(): PollState | false {
     const state = pollers.get(this.urlValue);
+
     if (!state) {
       return this.resetState();
     }
-    state.interval *= 1.5;
+
     state.checks += 1;
     if (state.checks <= this.maxChecksValue) {
       return state;
@@ -86,7 +89,6 @@ export class TurboPollController extends ApplicationController {
 }
 
 type PollState = {
-  interval: number;
   checks: number;
 };
 

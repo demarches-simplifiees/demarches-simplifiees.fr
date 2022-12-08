@@ -83,16 +83,22 @@ RSpec.describe Attachment::EditComponent, type: :component do
     end
   end
 
-  context 'when user can download' do
-    let(:kwargs) { { user_can_download: true } }
+  context 'when view as download' do
+    let(:kwargs) { { view_as: :download } }
 
-    it 'renders a link to download the file' do
-      expect(subject).to have_link(filename)
+    context 'when watermarking is done' do
+      before do
+        attachment.metadata['watermark'] = true
+      end
+
+      it 'renders a complete downlaod interface with details to download the file' do
+        expect(subject).to have_link(text: filename)
+        expect(subject).to have_text(/PNG.+\d+ octets/)
+      end
     end
 
     context 'when watermark is pending' do
       let(:champ) { create(:champ_titre_identite) }
-      let(:kwargs) { { user_can_download: true } }
 
       it 'displays the filename, but doesn’t allow to download the file' do
         expect(attachment.watermark_pending?).to be_truthy
@@ -100,6 +106,21 @@ RSpec.describe Attachment::EditComponent, type: :component do
         expect(subject).to have_link('Supprimer')
         expect(subject).to have_no_link(text: filename) # don't match "Delete" link which also include filename in title attribute
         expect(subject).to have_text('Traitement en cours')
+      end
+    end
+  end
+
+  context 'when view as link' do
+    let(:kwargs) { { view_as: :link } }
+
+    context 'when watermarking is done' do
+      before do
+        attachment.metadata['watermark'] = true
+      end
+
+      it 'renders a simple link to view file' do
+        expect(subject).to have_link(text: filename)
+        expect(subject).not_to have_text(/PNG.+\d+ octets/)
       end
     end
   end
