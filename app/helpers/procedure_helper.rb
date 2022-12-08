@@ -66,4 +66,20 @@ module ProcedureHelper
     minutes = (seconds / 60.0).round
     [1, minutes].max
   end
+
+  def admin_procedures_back_path(procedure)
+    statut = if procedure.discarded?
+      'supprimees'
+    else
+      case procedure.aasm_state
+      when 'brouillon'
+        'brouillons'
+      when 'close', 'depubliee'
+        'archivees'
+      else
+        'publiees'
+      end
+    end
+    admin_procedures_path(statut:)
+  end
 end
