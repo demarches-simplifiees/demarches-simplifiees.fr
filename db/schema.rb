@@ -808,7 +808,6 @@ ActiveRecord::Schema.define(version: 2022_12_05_144624) do
     t.integer "sign_in_count", default: 0, null: false
     t.string "unlock_token"
     t.datetime "updated_at"
-    t.boolean "team_account", default: false
     t.index ["email"], name: "index_super_admins_on_email", unique: true
     t.index ["reset_password_token"], name: "index_super_admins_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_super_admins_on_unlock_token", unique: true
@@ -885,6 +884,7 @@ ActiveRecord::Schema.define(version: 2022_12_05_144624) do
     t.string "reset_password_token"
     t.integer "sign_in_count", default: 0, null: false
     t.string "siret"
+    t.boolean "team_account", default: false
     t.text "unconfirmed_email"
     t.string "unlock_token"
     t.datetime "updated_at"
