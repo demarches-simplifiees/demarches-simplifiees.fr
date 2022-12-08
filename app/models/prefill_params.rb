@@ -31,16 +31,6 @@ class PrefillParams
   end
 
   class PrefillValue
-    AUTHORIZED_TYPES_DE_CHAMPS = [
-      TypeDeChamp.type_champs.fetch(:text),
-      TypeDeChamp.type_champs.fetch(:textarea),
-      TypeDeChamp.type_champs.fetch(:decimal_number),
-      TypeDeChamp.type_champs.fetch(:integer_number),
-      TypeDeChamp.type_champs.fetch(:email),
-      TypeDeChamp.type_champs.fetch(:phone),
-      TypeDeChamp.type_champs.fetch(:iban)
-    ]
-
     NEED_VALIDATION_TYPES_DE_CHAMPS = [
       TypeDeChamp.type_champs.fetch(:decimal_number),
       TypeDeChamp.type_champs.fetch(:integer_number)
@@ -54,7 +44,7 @@ class PrefillParams
     end
 
     def prefillable?
-      authorized? && valid?
+      champ.prefillable? && valid?
     end
 
     def to_h
@@ -65,10 +55,6 @@ class PrefillParams
     end
 
     private
-
-    def authorized?
-      AUTHORIZED_TYPES_DE_CHAMPS.include?(champ.type_champ)
-    end
 
     def valid?
       return true unless NEED_VALIDATION_TYPES_DE_CHAMPS.include?(champ.type_champ)

@@ -251,7 +251,6 @@ class TypeDeChamp < ApplicationRecord
     collapsible_explanation_enabled == "1"
   end
 
-  # TODO: SEB when new-prefilled-dossier is merged, use this to know whenever a champ is prefillable (may need a delegate champ -> type_de_champ)
   def prefillable?
     type_champ.in?([
       TypeDeChamp.type_champs.fetch(:text),
