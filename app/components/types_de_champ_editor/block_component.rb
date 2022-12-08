@@ -1,7 +1,8 @@
 class TypesDeChampEditor::BlockComponent < ApplicationComponent
-  def initialize(block:, coordinates:)
+  def initialize(block:, coordinates:, upper_coordinates: [])
     @block = block
     @coordinates = coordinates
+    @upper_coordinates = upper_coordinates
   end
 
   private
