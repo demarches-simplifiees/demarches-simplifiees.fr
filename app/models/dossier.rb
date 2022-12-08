@@ -46,6 +46,7 @@ class Dossier < ApplicationRecord
   self.ignored_columns = [:en_construction_conservation_extension]
   include DossierFilteringConcern
   include DossierRebaseConcern
+  include DossierPrefillableConcern
 
   enum state: {
     brouillon:       'brouillon',
@@ -82,6 +83,7 @@ class Dossier < ApplicationRecord
   has_many :champs_public, -> { root.public_ordered }, class_name: 'Champ', inverse_of: false, dependent: :destroy
   has_many :champs_private, -> { root.private_ordered }, class_name: 'Champ', inverse_of: false, dependent: :destroy
   has_many :champs_public_all, -> { public_only }, class_name: 'Champ', inverse_of: false
+  has_many :prefilled_champs_public, -> { root.public_only.prefilled }, class_name: 'Champ', inverse_of: false, dependent: :destroy
   has_many :commentaires, inverse_of: :dossier, dependent: :destroy
   has_many :invites, dependent: :destroy
   has_many :follows, -> { active }, inverse_of: :dossier
@@ -432,6 +434,8 @@ class Dossier < ApplicationRecord
   validates :user, presence: true, if: -> { deleted_user_email_never_send.nil? }
   validates :individual, presence: true, if: -> { revision.procedure.for_individual? }
   validates :groupe_instructeur, presence: true, if: -> { !brouillon? }
+
+  validates_associated :prefilled_champs_public, on: :prefilling
 
   def types_de_champ_public
     types_de_champ
@@ -1224,6 +1228,12 @@ class Dossier < ApplicationRecord
       cloned_dossier.save!
     end
     cloned_dossier
+  end
+
+  def find_champs_by_stable_ids(stable_ids)
+    return [] if stable_ids.compact.empty?
+
+    champs_public.joins(:type_de_champ).where(types_de_champ: { stable_id: stable_ids })
   end
 
   private
