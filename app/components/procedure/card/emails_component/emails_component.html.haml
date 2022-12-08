@@ -5,10 +5,16 @@
         - if error_messages.present?
           %span.icon.refuse
           %p.fr-tile-status-error À modifier
+        - elsif fully_customized?
+          %span.icon.accept
+          %p.fr-tile-status-todo Validé
         - else
           %span.icon.clock
           %p.fr-tile-status-todo À configurer
       %div
-        %h3.fr-h6.fr-mt-10v= t('.title')
+        .line-count.fr-my-1w
+          %p.fr-tag= customized_progress
+
+        %h3.fr-h6= t('.title')
         %p.fr-tile-subtitle Notifications automatiques
       %p.fr-btn.fr-btn--tertiary= t('views.shared.actions.edit')
