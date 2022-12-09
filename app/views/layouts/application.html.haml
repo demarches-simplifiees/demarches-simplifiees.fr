@@ -35,7 +35,7 @@
 
     = yield(:invisible_captcha_styles)
 
-  %body{ { id: content_for(:page_id), class: browser.platform.ios? ? 'ios' : nil }.compact }
+  %body{ { id: content_for(:page_id), class: browser.platform.ios? ? 'ios' : nil }.compact, data: {controller: 'beforeunload', beforeunload_text_value: t('.beforeunload')} }
     = render partial: 'layouts/skiplinks'
     .page-wrapper
       = render partial: "layouts/outdated_browser_banner"
