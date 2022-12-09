@@ -1,0 +1,7 @@
+en:
+  activerecord:
+    models:
+      mail:
+        repasser_en_construction_mail:
+          default_subject: Your file nº %{dossier_number} can be updated (%{procedure_libelle})
+          repasser_en_construction: Revert to construction

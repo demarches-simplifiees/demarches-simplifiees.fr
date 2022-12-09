@@ -197,6 +197,9 @@ class Procedure < ApplicationRecord
   has_one :closed_mail, class_name: "Mails::ClosedMail", dependent: :destroy
   has_one :refused_mail, class_name: "Mails::RefusedMail", dependent: :destroy
   has_one :without_continuation_mail, class_name: "Mails::WithoutContinuationMail", dependent: :destroy
+  has_one :nouveau_brouillon_mail, class_name: "Mails::NouveauBrouillonMail", dependent: :destroy
+  has_one :repasser_en_construction_mail, class_name: "Mails::RepasserEnConstructionMail", dependent: :destroy
+  has_one :repasser_en_instruction_mail, class_name: "Mails::RepasserEnInstructionMail", dependent: :destroy
 
   has_one :defaut_groupe_instructeur, -> { active.order(:label) }, class_name: 'GroupeInstructeur', inverse_of: false
 
@@ -518,6 +521,9 @@ class Procedure < ApplicationRecord
     procedure.closed_mail = closed_mail&.dup
     procedure.refused_mail = refused_mail&.dup
     procedure.without_continuation_mail = without_continuation_mail&.dup
+    procedure.nouveau_brouillon_mail = nouveau_brouillon_mail&.dup
+    procedure.repasser_en_construction_mail = repasser_en_construction_mail&.dup
+    procedure.repasser_en_instruction_mail = repasser_en_instruction_mail&.dup
     procedure.ask_birthday = false # see issue #4242
 
     procedure.cloned_from_library = from_library
@@ -571,12 +577,34 @@ class Procedure < ApplicationRecord
     without_continuation_mail || Mails::WithoutContinuationMail.default_for_procedure(self)
   end
 
+  def nouveau_brouillon_mail_template
+    received_mail|| Mails::NouveauBrouillonMail.default_for_procedure(self)
+  end
+
+  def repasser_en_construction_mail_template
+    repasser_en_construction_mail|| Mails::RepasserEnConstructionMail.default_for_procedure(self)
+  end
+
+  def repasser_en_instruction_mail_template
+    repasser_en_instruction_mail|| Mails::RepasserEnInstructionMail.default_for_procedure(self)
+  end
+
   def mail_template_for(state)
     case state
+    when Dossier.states.fetch(:brouillon)
+      nouveau_brouillon_mail_template
     when Dossier.states.fetch(:en_construction)
-      initiated_mail_template
+      if DossierOperationLog.operation == 'repasser_en_construction'
+        repasser_en_construction_mail_template
+      else
+        initiated_mail_template
+      end
     when Dossier.states.fetch(:en_instruction)
-      received_mail_template
+      if DossierOperationLog.operation == 'repasser_en_instruction'
+        repasser_en_instruction_mail_template
+      else
+        received_mail_template
+      end
     when Dossier.states.fetch(:accepte)
       closed_mail_template
     when Dossier.states.fetch(:refuse)

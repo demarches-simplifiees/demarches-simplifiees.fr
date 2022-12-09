@@ -58,7 +58,10 @@ module Administrateurs
         procedure.received_mail_template,
         procedure.closed_mail_template,
         procedure.refused_mail_template,
-        procedure.without_continuation_mail_template
+        procedure.without_continuation_mail_template,
+        procedure.repasser_en_construction_mail_template,
+        procedure.repasser_en_instruction_mail_template,
+        procedure.nouveau_brouillon_mail_template
       ]
     end
 

@@ -8,18 +8,18 @@ class DossierMailer < ApplicationMailer
   default from: NO_REPLY_EMAIL
   after_action :prevent_perform_deliveries, only: [:notify_new_answer]
 
-  def notify_new_draft(dossier)
-    I18n.with_locale(dossier.user_locale) do
-      @dossier = dossier
-      @service = dossier.procedure.service
-      @logo_url = attach_logo(dossier.procedure)
-      @subject = default_i18n_subject(libelle_demarche: dossier.procedure.libelle)
+  # def notify_new_draft(dossier)
+  #   I18n.with_locale(dossier.user_locale) do
+  #     @dossier = dossier
+  #     @service = dossier.procedure.service
+  #     @logo_url = attach_logo(dossier.procedure)
+  #     @subject = default_i18n_subject(libelle_demarche: dossier.procedure.libelle)
 
-      mail(to: dossier.user_email_for(:notification), subject: @subject) do |format|
-        format.html { render layout: 'mailers/notifications_layout' }
-      end
-    end
-  end
+  #     mail(to: dossier.user_email_for(:notification), subject: @subject) do |format|
+  #       format.html { render layout: 'mailers/notifications_layout' }
+  #     end
+  #   end
+  # end
 
   def notify_new_answer
     commentaire = params[:commentaire]
@@ -64,18 +64,18 @@ class DossierMailer < ApplicationMailer
     end
   end
 
-  def notify_revert_to_instruction(dossier)
-    I18n.with_locale(dossier.user_locale) do
-      @dossier = dossier
-      @service = dossier.procedure.service
-      @logo_url = attach_logo(dossier.procedure)
-      @subject = default_i18n_subject(dossier_id: dossier.id, libelle_demarche: dossier.procedure.libelle)
+  # def notify_revert_to_instruction(dossier)
+  #   I18n.with_locale(dossier.user_locale) do
+  #     @dossier = dossier
+  #     @service = dossier.procedure.service
+  #     @logo_url = attach_logo(dossier.procedure)
+  #     @subject = default_i18n_subject(dossier_id: dossier.id, libelle_demarche: dossier.procedure.libelle)
 
-      mail(to: dossier.user_email_for(:notification), subject: @subject) do |format|
-        format.html { render layout: 'mailers/notifications_layout' }
-      end
-    end
-  end
+  #     mail(to: dossier.user_email_for(:notification), subject: @subject) do |format|
+  #       format.html { render layout: 'mailers/notifications_layout' }
+  #     end
+  #   end
+  # end
 
   def notify_brouillon_near_deletion(dossiers, to_email)
     I18n.with_locale(dossiers.first.user_locale) do
@@ -186,4 +186,46 @@ class DossierMailer < ApplicationMailer
       super
     end
   end
+
+
+  # function renamed in frensh
+  def notify_nouveau_brouillon(dossier)
+    I18n.with_locale(dossier.user_locale) do
+      @dossier = dossier
+      @service = dossier.procedure.service
+      @logo_url = attach_logo(dossier.procedure)
+      @subject = default_i18n_subject(libelle_demarche: dossier.procedure.libelle)
+
+      mail(to: dossier.user_email_for(:notification), subject: @subject) do |format|
+        format.html { render layout: 'mailers/notifications_layout' }
+      end
+    end
+  end
+
+  def notify_repasser_en_instruction(dossier)
+    I18n.with_locale(dossier.user_locale) do
+      @dossier = dossier
+      @service = dossier.procedure.service
+      @logo_url = attach_logo(dossier.procedure)
+      @subject = default_i18n_subject(dossier_id: dossier.id, libelle_demarche: dossier.procedure.libelle)
+
+      mail(to: dossier.user_email_for(:notification), subject: @subject) do |format|
+        format.html { render layout: 'mailers/notifications_layout' }
+      end
+    end
+  end
+
+  def notify_repasser_en_construction(dossier)
+    I18n.with_locale(dossier.user_locale) do
+      @dossier = dossier
+      @service = dossier.procedure.service
+      @logo_url = attach_logo(dossier.procedure)
+      @subject = default_i18n_subject(dossier_id: dossier.id, libelle_demarche: dossier.procedure.libelle)
+
+      mail(to: dossier.user_email_for(:notification), subject: @subject) do |format|
+        format.html { render layout: 'mailers/notifications_layout' }
+      end
+    end
+  end
+
 end

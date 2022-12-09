@@ -1,0 +1,16 @@
+- content_for :procedure_logo do
+  = render 'layouts/mailers/logo', url: @logo_url
+
+%p= t(:hello, scope: [:views, :shared, :greetings])
+
+%p= t('.body_html', libelle_demarche: @dossier.procedure.libelle)
+%p= t('.link_html')
+= round_button(t('.access_file'), dossier_url(@dossier), :primary)
+
+- if @dossier.procedure.auto_archive_on
+  %p= t('.submit_before', before: procedure_auto_archive_datetime(@dossier.procedure))
+
+= render 'layouts/mailers/signature'
+
+- content_for :footer do
+  = render 'layouts/mailers/service_footer', service: @service, dossier: @dossier

@@ -1,0 +1,8 @@
+# == based on activerecord.views.dossier_mail.notify_new_draft
+en:
+  activerecord:
+    models:
+      mail:
+        nouveau_brouillon_mail:
+          default_subject: Draft file created on procedure « %{procedure_libelle} »
+          nouveau_brouillon: New Draft

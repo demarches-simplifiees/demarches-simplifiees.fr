@@ -1,0 +1,8 @@
+# == based on activerecord.views.dossier_mail.notify_new_draft
+en:
+  activerecord:
+    models:
+      mail:
+        state_reversion_mail:
+          default_subject: Draft file created on procedure « %{libelle_demarche} »
+          new_draft: New Draft
