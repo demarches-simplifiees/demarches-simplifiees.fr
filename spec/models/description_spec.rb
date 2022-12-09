@@ -69,8 +69,8 @@ RSpec.describe Description, type: :model do
 
     it "builds the URL to create a new prefilled dossier" do
       expect(description.prefill_link).to eq(
-        new_dossier_url(
-          procedure_id: procedure.id,
+        commencer_path(
+          path: procedure.path,
           "champ_#{type_de_champ.to_typed_id}" => type_de_champ.libelle
         )
       )

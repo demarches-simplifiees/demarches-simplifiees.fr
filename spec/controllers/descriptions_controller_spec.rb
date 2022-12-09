@@ -66,7 +66,7 @@ describe DescriptionsController, type: :controller do
       it { expect(response).to render_template(:update) }
 
       it "includes the prefill URL" do
-        expect(response.body).to include({ procedure_id: procedure.id }.to_query)
+        expect(response.body).to include(commencer_path(path: procedure.path))
         expect(response.body).to include({ "champ_#{type_de_champ.to_typed_id}" => type_de_champ.libelle }.to_query)
         expect(response.body).to include({ "champ_#{type_de_champ_to_add.to_typed_id}" => type_de_champ_to_add.libelle }.to_query)
       end
@@ -79,7 +79,7 @@ describe DescriptionsController, type: :controller do
       it { expect(response).to render_template(:update) }
 
       it "includes the prefill URL" do
-        expect(response.body).to include({ procedure_id: procedure.id }.to_query)
+        expect(response.body).to include(commencer_path(path: procedure.path))
         expect(response.body).not_to include({ "champ_#{type_de_champ_to_remove.to_typed_id}" => type_de_champ_to_remove.libelle }.to_query)
       end
     end

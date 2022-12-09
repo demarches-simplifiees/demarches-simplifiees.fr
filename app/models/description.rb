@@ -27,7 +27,7 @@ class Description < SimpleDelegator
   end
 
   def prefill_link
-    new_dossier_url({ procedure_id: id }.merge(prefilled_champs))
+    commencer_path({ path: path }.merge(prefilled_champs))
   end
 
   private
