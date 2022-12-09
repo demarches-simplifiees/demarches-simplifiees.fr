@@ -1067,7 +1067,7 @@ describe Users::DossiersController, type: :controller do
             it { is_expected.to redirect_to dossiers_path }
           end
 
-          context 'when prefill values are given' do
+          context 'when prefill values have been stored in session before' do
             let!(:type_de_champ_1) { create(:type_de_champ_text, procedure: procedure) }
             let(:value_1) { "any value" }
 
@@ -1081,6 +1081,10 @@ describe Users::DossiersController, type: :controller do
                 "champ_#{type_de_champ_2.to_typed_id}" => value_2
               }
             }
+
+            before { session[:stored_params] = params.to_yaml }
+
+            it { expect { subject }.to change { session[:stored_params] }.to(nil) }
 
             it { expect { subject }.to change { Dossier.count }.by(1) }
 

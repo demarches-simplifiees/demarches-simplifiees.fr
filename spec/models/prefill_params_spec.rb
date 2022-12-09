@@ -3,7 +3,7 @@ RSpec.describe PrefillParams do
     let(:procedure) { create(:procedure, :published) }
     let(:dossier) { create(:dossier, :brouillon, procedure: procedure) }
 
-    subject(:prefill_params_array) { described_class.new(dossier, ActionController::Parameters.new(params)).to_a }
+    subject(:prefill_params_array) { described_class.new(dossier, params).to_a }
 
     context "when the stable ids match the TypeDeChamp of the corresponding procedure" do
       let!(:type_de_champ_1) { create(:type_de_champ_text, procedure: procedure) }

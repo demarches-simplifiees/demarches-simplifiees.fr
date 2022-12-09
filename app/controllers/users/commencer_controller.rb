@@ -1,10 +1,14 @@
 module Users
   class CommencerController < ApplicationController
+    include ParamsStoreConcern
+
     layout 'procedure_context'
 
     def commencer
       @procedure = retrieve_procedure
       return procedure_not_found if @procedure.blank? || @procedure.brouillon?
+
+      store_params
 
       @revision = @procedure.published_revision
       render 'commencer/show'
