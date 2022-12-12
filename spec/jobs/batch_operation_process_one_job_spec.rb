@@ -26,9 +26,9 @@ describe BatchOperationProcessOneJob, type: :job do
     context 'when operation is "archiver"' do
       it 'archives the dossier in the batch' do
         expect { subject.perform_now }
-        .to change { dossier_job.reload.archived? }
-        .from(false)
-        .to(true)
+          .to change { dossier_job.reload.archived? }
+          .from(false)
+          .to(true)
       end
     end
 
@@ -40,9 +40,9 @@ describe BatchOperationProcessOneJob, type: :job do
 
       it 'changes the dossier to en_instruction in the batch' do
         expect { subject.perform_now }
-        .to change { dossier_job.reload.en_instruction? }
-        .from(false)
-        .to(true)
+          .to change { dossier_job.reload.en_instruction? }
+          .from(false)
+          .to(true)
       end
     end
 

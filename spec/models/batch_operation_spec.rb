@@ -186,7 +186,7 @@ describe BatchOperation, type: :model do
     let(:instructeur) { create(:instructeur) }
     let(:procedure) { create(:simple_procedure, instructeurs: [instructeur]) }
     let(:dossier_2) { create(:dossier, :accepte, procedure: procedure) }
-    subject { BatchOperation.safe_create!(instructeur: instructeur, operation: :archiver, dossier_ids: [dossier.id, dossier_2.id,]) }
+    subject { BatchOperation.safe_create!(instructeur: instructeur, operation: :archiver, dossier_ids: [dossier.id, dossier_2.id]) }
 
     context 'success with divergent list of dossier_ids' do
       let(:dossier) { create(:dossier, :accepte, :with_individual, archived: true, procedure: procedure) }
