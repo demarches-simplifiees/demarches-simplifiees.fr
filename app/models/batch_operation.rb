@@ -17,7 +17,8 @@
 
 class BatchOperation < ApplicationRecord
   enum operation: {
-    archiver: 'archiver'
+    archiver: 'archiver',
+    passer_en_instruction: 'passer_en_instruction'
   }
 
   has_many :dossiers, dependent: :nullify
@@ -47,6 +48,8 @@ class BatchOperation < ApplicationRecord
     case operation
     when BatchOperation.operations.fetch(:archiver) then
       query.not_archived.state_termine
+    when BatchOperation.operations.fetch(:passer_en_instruction) then
+      query.state_en_construction
     end
   end
 
@@ -59,6 +62,8 @@ class BatchOperation < ApplicationRecord
     case operation
     when BatchOperation.operations.fetch(:archiver)
       dossier.archiver!(instructeur)
+    when BatchOperation.operations.fetch(:passer_en_instruction)
+      dossier.passer_en_instruction(instructeur: instructeur)
     end
   end
 
@@ -92,9 +97,11 @@ class BatchOperation < ApplicationRecord
       instance = new(params)
       instance.dossiers = instance.dossiers_safe_scope(params[:dossier_ids])
         .not_having_batch_operation
-      instance.save!
-      BatchOperationEnqueueAllJob.perform_later(instance)
-      instance
+      if instance.dossiers.present?
+        instance.save!
+        BatchOperationEnqueueAllJob.perform_later(instance)
+        instance
+      end
     end
   end
 

@@ -60,6 +60,13 @@ describe BatchOperation, type: :model do
           .from([])
           .to([dossier.id])
       end
+
+      it 'changes the state' do
+        expect { batch_operation.track_processed_dossier(true, dossier) }
+          .to change { dossier.state }
+          .from('accepte')
+          .to('archive')
+      end
     end
 
     context 'when it succeed after a failure' do
@@ -120,10 +127,10 @@ describe BatchOperation, type: :model do
         expect(batch_operation.dossiers_safe_scope).to include(dossier)
       end
     end
-    context 'when dossier is already arcvhied' do
+    context 'when dossier is already archived' do
       let(:dossier) { create(:dossier, :accepte, :with_individual, archived: true, procedure: procedure) }
 
-      it 'skips dosssier is already archived' do
+      it 'skips dossier is already archived' do
         expect(batch_operation.dossiers_safe_scope).not_to include(dossier)
       end
     end
@@ -145,10 +152,41 @@ describe BatchOperation, type: :model do
     end
   end
 
+  describe '#dossiers_safe_scope (with passer_en_instruction)' do
+    let(:instructeur) { create(:instructeur) }
+    let(:procedure) { create(:simple_procedure, instructeurs: [instructeur]) }
+    let(:batch_operation) { create(:batch_operation, operation: :passer_en_instruction, instructeur: instructeur, dossiers: [dossier]) }
+
+    context 'when dossier is valid' do
+      let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
+
+      it 'find dosssier' do
+        expect(batch_operation.dossiers_safe_scope).to include(dossier)
+      end
+    end
+
+    context 'when dossier is already en instruction' do
+      let(:dossier) { create(:dossier, :en_instruction, :with_individual, archived: true, procedure: procedure) }
+
+      it 'skips dossier is already en instruction' do
+        expect(batch_operation.dossiers_safe_scope).not_to include(dossier)
+      end
+    end
+
+    context 'when dossier is not in state en construction' do
+      let(:dossier) { create(:dossier, :accepte, :with_individual, procedure: procedure) }
+
+      it 'does not enqueue any job' do
+        expect(batch_operation.dossiers_safe_scope).not_to include(dossier)
+      end
+    end
+  end
+
   describe '#safe_create!' do
     let(:instructeur) { create(:instructeur) }
     let(:procedure) { create(:simple_procedure, instructeurs: [instructeur]) }
-    subject { BatchOperation.safe_create!(instructeur: instructeur, operation: :archiver, dossier_ids: [dossier.id]) }
+    let(:dossier_2) { create(:dossier, :accepte, procedure: procedure) }
+    subject { BatchOperation.safe_create!(instructeur: instructeur, operation: :archiver, dossier_ids: [dossier.id, dossier_2.id,]) }
 
     context 'success with divergent list of dossier_ids' do
       let(:dossier) { create(:dossier, :accepte, :with_individual, archived: true, procedure: procedure) }
