@@ -60,13 +60,6 @@ describe BatchOperation, type: :model do
           .from([])
           .to([dossier.id])
       end
-
-      it 'changes the state' do
-        expect { batch_operation.track_processed_dossier(true, dossier) }
-          .to change { dossier.state }
-          .from('accepte')
-          .to('archive')
-      end
     end
 
     context 'when it succeed after a failure' do
