@@ -17,6 +17,12 @@ RSpec.describe Dossiers::BatchOperationComponent, type: :component do
     it { is_expected.to have_selector('button') }
   end
 
+  subject { render_inline(component).to_html }
+  context 'statut suivis' do
+    let(:statut) { 'suivis' }
+    it { is_expected.to have_selector('button') }
+  end
+
   context 'statut tous' do
     let(:statut) { 'tous' }
     it { is_expected.not_to have_selector('button') }

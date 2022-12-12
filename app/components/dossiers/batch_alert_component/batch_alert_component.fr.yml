@@ -1,13 +1,25 @@
 fr:
-  finish:
-    title: L'action de masse est terminée
-    text_success:
-      one: 1 dossier a été archivé
-      other: "%{success_count}/%{count} dossiers ont été archivés"
-  in_progress:
-    title: Une action de masse est en cours
-    text_success:
-      one: 1 dossier sera archivé
-      other: "%{progress_count}/%{count} dossiers ont été archivés"
+  archiver:
+    finish:
+      title: L'action de masse est terminée
+      text_success:
+        one: 1 dossier a été archivé
+        other: "%{success_count}/%{count} dossiers ont été archivés"
+    in_progress:
+      title: Une action de masse est en cours
+      text_success:
+        one: 1 dossier sera archivé
+        other: "%{progress_count}/%{count} dossiers ont été archivés"
+  passer_en_instruction:
+    finish:
+      title: L'action de masse est terminée
+      text_success:
+        one: 1 dossier a été passé en instruction
+        other: "%{success_count}/%{count} dossiers ont été passés en instruction"
+    in_progress:
+      title: Une action de masse est en cours
+      text_success:
+        one: 1 dossier sera passé en instruction
+        other: "%{progress_count}/%{count} dossiers ont été passés en instruction"
   link_text: Recharger la page
   after_link_text: pour voir si l'opération est finie.
