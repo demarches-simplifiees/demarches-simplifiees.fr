@@ -1,6 +1,8 @@
 class API::Public::V1::BaseController < APIController
   skip_forgery_protection
 
+  before_action :check_content_type_is_json
+
   protected
 
   def render_missing_param(param_name)
@@ -16,6 +18,10 @@ class API::Public::V1::BaseController < APIController
   end
 
   private
+
+  def check_content_type_is_json
+    render_error("Content-Type should be json", :bad_request) unless request.headers['Content-Type'] == 'application/json'
+  end
 
   def render_error(message, status)
     render json: { error: message }, status: status
