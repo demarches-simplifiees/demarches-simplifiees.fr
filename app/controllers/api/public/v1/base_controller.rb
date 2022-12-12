@@ -1,8 +1,14 @@
-class API::Public::V1::BaseController < ApplicationController
+class API::Public::V1::BaseController < APIController
+  skip_forgery_protection
+
   protected
 
   def render_missing_param(param_name)
     render_error("#{param_name} is missing", :bad_request)
+  end
+
+  def render_bad_request(error_message)
+    render_error(error_message, :bad_request)
   end
 
   def render_not_found(resource_name, resource_id)
