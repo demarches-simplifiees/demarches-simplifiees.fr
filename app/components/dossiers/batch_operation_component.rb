@@ -21,4 +21,11 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
     end
     options
   end
+
+  def icons
+    {
+      archiver: 'fr-icon-folder-2-line',
+      passer_en_instruction: 'fr-icon-edit-line'
+    }
+  end
 end
