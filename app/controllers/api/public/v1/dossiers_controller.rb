@@ -11,7 +11,7 @@ class API::Public::V1::DossiersController < API::Public::V1::BaseController
     )
     dossier.build_default_individual
     if dossier.save
-      # TODO: SEB dossier.prefill!(PrefillParams.new(dossier, params).to_a)
+      dossier.prefill!(PrefillParams.new(dossier, params).to_a)
       render json: { dossier_url: brouillon_dossier_url(dossier) }, status: :created
     else
       render_bad_request(dossier.errors.full_messages.to_sentence)
