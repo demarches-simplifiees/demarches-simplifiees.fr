@@ -1082,7 +1082,7 @@ describe Users::DossiersController, type: :controller do
               }
             }
 
-            before { session[:stored_params] = params.to_yaml }
+            before { session[:stored_params] = params.to_json }
 
             it { expect { subject }.to change { session[:stored_params] }.to(nil) }
 

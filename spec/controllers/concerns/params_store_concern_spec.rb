@@ -25,7 +25,7 @@ RSpec.describe ParamsStoreConcern, type: :controller do
     end
 
     it "stores current params except controller and action" do
-      stored_params = { "param1" => "param1", "param2" => "param2" }.to_yaml
+      stored_params = { "param1" => "param1", "param2" => "param2" }.to_json
       expect { store_params }.to change { session[:stored_params] }.from(nil).to(stored_params)
     end
   end
