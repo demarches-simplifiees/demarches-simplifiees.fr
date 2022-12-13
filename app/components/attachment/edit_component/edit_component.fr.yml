@@ -4,6 +4,7 @@ fr:
   allowed_formats: "Formats supportés : %{formats}"
   retry: Réessayer
   delete: Supprimer
+  replace: Remplacer
   errors:
     uploading: "Une erreur s’est produite pendant l’envoi du fichier."
     virus_infected: "Virus détecté, merci d’envoyer un autre fichier."
