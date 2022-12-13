@@ -1,4 +1,4 @@
-class Description < SimpleDelegator
+class Prefilling < SimpleDelegator
   include Rails.application.routes.url_helpers
 
   MAX_PREFILL_LINK_LENGTH = 2000

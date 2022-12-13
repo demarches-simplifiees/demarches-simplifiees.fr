@@ -1,4 +1,4 @@
-describe DescriptionsController, type: :controller do
+describe PrefillingsController, type: :controller do
   describe '#edit' do
     subject(:edit_request) {
       get :edit, params: { path: procedure.path }

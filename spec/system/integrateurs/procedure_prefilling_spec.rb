@@ -4,7 +4,7 @@ describe 'As an integrator:', js: true do
 
   before { visit "/commencer/#{procedure.path}/preremplissage" }
 
-  scenario 'I can read the procedure description (aka public champs)' do
+  scenario 'I can read the procedure prefilling (aka public champs)' do
     expect(page).to have_content(type_de_champ.to_typed_id)
     expect(page).to have_content(I18n.t("activerecord.attributes.type_de_champ.type_champs.#{type_de_champ.type_champ}"))
     expect(page).to have_content(type_de_champ.libelle)
@@ -14,8 +14,8 @@ describe 'As an integrator:', js: true do
   scenario 'I can select champs to prefill' do
     click_on 'Ajouter'
 
-    description = Description.new(procedure)
-    description.update(selected_type_de_champ_ids: [type_de_champ.id.to_s])
-    expect(page).to have_content(description.prefill_link)
+    prefilling = Prefilling.new(procedure)
+    prefilling.update(selected_type_de_champ_ids: [type_de_champ.id.to_s])
+    expect(page).to have_content(prefilling.prefill_link)
   end
 end

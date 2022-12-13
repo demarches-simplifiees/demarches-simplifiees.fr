@@ -1,0 +1,5 @@
+= turbo_stream.replace "#{dom_id(@prefilling)}_types_de_champs" do
+  = render "types_de_champs", prefilling: @prefilling
+
+= turbo_stream.replace "#{dom_id(@prefilling)}_url" do
+  = render "prefill_link", prefilling: @prefilling
