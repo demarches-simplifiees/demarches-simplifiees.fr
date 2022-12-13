@@ -87,6 +87,10 @@ en:
       instructeur: 'Go to procedures list'
       admin: 'Go to administration panel'
   views:
+    prefills:
+      show:
+        title: Fill the file
+        introduction: Please authenticate before filling the file.
     commencer:
       show:
         start_procedure: Start the procedure

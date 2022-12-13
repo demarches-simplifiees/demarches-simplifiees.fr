@@ -222,11 +222,12 @@ class Dossier < ApplicationRecord
   scope :state_termine,                        -> { where(state: TERMINE) }
   scope :state_not_termine,                    -> { where.not(state: TERMINE) }
 
-  scope :archived,      -> { where(archived: true) }
-  scope :not_archived,  -> { where(archived: false) }
-  scope :hidden_by_user, -> { where.not(hidden_by_user_at: nil) }
-  scope :hidden_by_administration, -> { where.not(hidden_by_administration_at: nil) }
-  scope :visible_by_user, -> { where(for_procedure_preview: false).or(where(for_procedure_preview: nil)).where(hidden_by_user_at: nil) }
+  scope :archived,                  -> { where(archived: true) }
+  scope :not_archived,              -> { where(archived: false) }
+  scope :prefilled,                 -> { where(prefilled: true) }
+  scope :hidden_by_user,            -> { where.not(hidden_by_user_at: nil) }
+  scope :hidden_by_administration,  -> { where.not(hidden_by_administration_at: nil) }
+  scope :visible_by_user,           -> { where(for_procedure_preview: false).or(where(for_procedure_preview: nil)).where(hidden_by_user_at: nil) }
   scope :visible_by_administration, -> {
     state_not_brouillon
       .where(hidden_by_administration_at: nil)
@@ -720,6 +721,17 @@ class Dossier < ApplicationRecord
     elsif individual.present?
       "#{individual.nom} #{individual.prenom}"
     end
+  end
+
+  def orphan?
+    user.nil?
+  end
+
+  def owned_by?(a_user)
+    return false if a_user.nil?
+    return false if orphan?
+
+    user == a_user
   end
 
   def log_operations?

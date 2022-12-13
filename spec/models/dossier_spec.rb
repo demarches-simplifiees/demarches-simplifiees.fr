@@ -1942,6 +1942,54 @@ describe Dossier do
     it { is_expected.to belong_to(:batch_operation).optional }
   end
 
+  describe '#orphan?' do
+    subject(:orphan) { dossier.orphan? }
+
+    context 'when the dossier has a user' do
+      let(:dossier) { build(:dossier) }
+
+      it { expect(orphan).to be_falsey }
+    end
+
+    context 'when the dossier does not have a user' do
+      let(:dossier) { build(:dossier, user: nil) }
+
+      it { expect(orphan).to be_truthy }
+    end
+  end
+
+  describe '#owned_by?' do
+    subject(:owned_by) { dossier.owned_by?(user) }
+
+    context 'when the dossier is orphan' do
+      let(:dossier) { build(:dossier, user: nil) }
+      let(:user) { build(:user) }
+
+      it { expect(owned_by).to be_falsey }
+    end
+
+    context 'when the given user is nil' do
+      let(:dossier) { build(:dossier) }
+      let(:user) { nil }
+
+      it { expect(owned_by).to be_falsey }
+    end
+
+    context 'when the dossier has a user and it is not the given user' do
+      let(:dossier) { build(:dossier) }
+      let(:user) { build(:user) }
+
+      it { expect(owned_by).to be_falsey }
+    end
+
+    context 'when the dossier has a user and it is the given user' do
+      let(:dossier) { build(:dossier, user: user) }
+      let(:user) { build(:user) }
+
+      it { expect(owned_by).to be_truthy }
+    end
+  end
+
   private
 
   def count_for_month(processed_by_month, month)
