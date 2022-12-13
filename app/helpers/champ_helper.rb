@@ -7,11 +7,11 @@ module ChampHelper
     simple_format(auto_linked_text, {}, sanitize: false)
   end
 
-  def auto_attach_url(object)
+  def auto_attach_url(object, params = {})
     if object.is_a?(Champ)
-      champs_attach_piece_justificative_url(object.id)
+      champs_attach_piece_justificative_url(object.id, params)
     elsif object.is_a?(TypeDeChamp)
-      piece_justificative_template_admin_procedure_type_de_champ_url(stable_id: object.stable_id, procedure_id: object.procedure.id)
+      piece_justificative_template_admin_procedure_type_de_champ_url(stable_id: object.stable_id, procedure_id: object.procedure.id, **params)
     end
   end
 end
