@@ -3,8 +3,10 @@ en:
   max_file_size: "File size limit : %{max_file_size}."
   allowed_formats: "Supported formats : %{formats}"
   retry: Retry
-  replace: Replace
   delete: Delete
+  delete_file: Delete file %{filename}
+  replace: Replace
+  replace_file: Replace file %{filename}
   errors:
     uploading: "An error occurred while sending the file."
     virus_infected: "Virus detected, please send another file."
