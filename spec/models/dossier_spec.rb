@@ -25,6 +25,20 @@ describe Dossier do
     subject(:dossier) { create(:dossier, procedure: procedure) }
 
     it { is_expected.to validate_presence_of(:individual) }
+
+    it { is_expected.to validate_presence_of(:user) }
+
+    context 'when dossier has deleted_user_email_never_send' do
+      subject(:dossier) { create(:dossier, procedure: procedure, deleted_user_email_never_send: "seb@totoro.org") }
+
+      it { is_expected.not_to validate_presence_of(:user) }
+    end
+
+    context 'when dossier is prefilled' do
+      subject(:dossier) { create(:dossier, procedure: procedure, prefilled: true) }
+
+      it { is_expected.not_to validate_presence_of(:user) }
+    end
   end
 
   describe 'with_champs' do

@@ -28,6 +28,8 @@
 #  last_champ_updated_at                              :datetime
 #  last_commentaire_updated_at                        :datetime
 #  motivation                                         :text
+#  prefill_token                                      :string
+#  prefilled                                          :boolean
 #  private_search_terms                               :text
 #  processed_at                                       :datetime
 #  search_terms                                       :text
@@ -69,6 +71,8 @@ class Dossier < ApplicationRecord
   MONTHS_AFTER_EXPIRATION = 1
   DAYS_AFTER_EXPIRATION = 5
   INTERVAL_EXPIRATION = "#{MONTHS_AFTER_EXPIRATION} month #{DAYS_AFTER_EXPIRATION} days"
+
+  has_secure_token :prefill_token
 
   has_one :etablissement, dependent: :destroy
   has_one :individual, validate: false, dependent: :destroy
@@ -435,7 +439,7 @@ class Dossier < ApplicationRecord
 
   after_save :send_web_hook
 
-  validates :user, presence: true, if: -> { deleted_user_email_never_send.nil? }
+  validates :user, presence: true, if: -> { deleted_user_email_never_send.nil? }, unless: -> { prefilled }
   validates :individual, presence: true, if: -> { revision.procedure.for_individual? }
   validates :groupe_instructeur, presence: true, if: -> { !brouillon? }
 

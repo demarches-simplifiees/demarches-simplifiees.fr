@@ -7,7 +7,7 @@ class API::Public::V1::DossiersController < API::Public::V1::BaseController
       revision: @procedure.active_revision,
       groupe_instructeur: @procedure.defaut_groupe_instructeur_for_new_dossier,
       state: Dossier.states.fetch(:brouillon),
-      deleted_user_email_never_send: true
+      prefilled: true
     )
     dossier.build_default_individual
     if dossier.save

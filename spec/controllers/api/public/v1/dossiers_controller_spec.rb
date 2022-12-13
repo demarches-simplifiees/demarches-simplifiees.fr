@@ -20,6 +20,16 @@ RSpec.describe API::Public::V1::DossiersController, type: :controller do
 
           it { expect { create_request }.to change { Dossier.count }.by(1) }
 
+          it "marks the created dossier as prefilled" do
+            create_request
+            expect(Dossier.last.prefilled).to eq(true)
+          end
+
+          it "creates the dossier without a user" do
+            create_request
+            expect(Dossier.last.user).to eq(nil)
+          end
+
           it "responds with the brouillon dossier path" do
             create_request
             expect(JSON.parse(response.body)["dossier_url"]).to eq("http://test.host#{brouillon_dossier_path(Dossier.last)}")
