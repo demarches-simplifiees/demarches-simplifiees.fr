@@ -111,13 +111,14 @@ class Attachment::EditComponent < ApplicationComponent
     {
       type: 'button',
       data: {
-        action: "click->replace-attachment#open"
-      }
+        action: "click->replace-attachment#open",
+        auto_attach_url: auto_attach_url
+      }.compact
     }
   end
 
   def replace_controller_attributes
-    return {} unless user_can_replace? || as_multiple?
+    return {} if !persisted? || !user_can_replace? || as_multiple?
 
     {
       "data-controller": 'replace-attachment'

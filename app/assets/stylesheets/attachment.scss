@@ -25,7 +25,8 @@
   }
 }
 
-.attachment-multiple:not(.fr-downloads-group) {
+.attachment-multiple:not(.fr-downloads-group),
+.attachment-multiple.fr-downloads-group[data-controller=replace-attachment] {
   ul {
     list-style-type: none;
     padding-inline-start: 0;
@@ -41,6 +42,10 @@
   .fr-download + .fr-badge {
     position: relative;
     top: -1rem;
+  }
+
+  .fr-btn {
+    align-self: flex-start;
   }
 }
 
