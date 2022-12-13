@@ -305,7 +305,7 @@ module Users
       )
       dossier.build_default_individual
       dossier.save!
-      dossier.prefill!(PrefillParams.new(dossier, stored_params).to_a)
+      dossier.prefill!(PrefillParams.new(dossier, retrieve_and_delete_stored_params).to_a)
 
       if dossier.procedure.for_individual
         redirect_to identite_dossier_path(dossier)

@@ -7,7 +7,7 @@ module ParamsStoreConcern
     session[:stored_params] = params.to_unsafe_h.except(:controller, :action).to_h.to_json
   end
 
-  def stored_params
+  def retrieve_and_delete_stored_params
     return {} if session[:stored_params].blank?
 
     JSON.parse(session.delete(:stored_params))

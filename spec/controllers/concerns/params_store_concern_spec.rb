@@ -30,12 +30,12 @@ RSpec.describe ParamsStoreConcern, type: :controller do
     end
   end
 
-  describe '#stored_params' do
-    subject(:stored_params) { controller.stored_params }
+  describe '#retrieve_and_delete_stored_params' do
+    subject(:retrieve_and_delete_stored_params) { controller.retrieve_and_delete_stored_params }
 
     context 'when there are no stored params' do
       it 'returns an empty hash' do
-        expect(stored_params).to be_empty
+        expect(retrieve_and_delete_stored_params).to be_empty
       end
     end
 
@@ -43,11 +43,11 @@ RSpec.describe ParamsStoreConcern, type: :controller do
       before { controller.store_params }
 
       it 'deletes the stored params' do
-        expect { stored_params }.to change { session[:stored_params] }.to(nil)
+        expect { retrieve_and_delete_stored_params }.to change { session[:stored_params] }.to(nil)
       end
 
       it 'returns the stored params' do
-        expect(stored_params).to eq({ "param1" => "param1", "param2" => "param2" })
+        expect(retrieve_and_delete_stored_params).to eq({ "param1" => "param1", "param2" => "param2" })
       end
     end
   end
