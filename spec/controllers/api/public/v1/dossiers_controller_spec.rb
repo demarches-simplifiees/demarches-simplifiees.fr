@@ -76,30 +76,14 @@ RSpec.describe API::Public::V1::DossiersController, type: :controller do
 
       context 'when the procedure is found' do
         context 'when the procedure is publiee' do
-          context 'when the procedure is opendata' do
-            it_behaves_like 'the procedure is found' do
-              let(:procedure) { create(:procedure, :published, opendata: true) }
-            end
-          end
-
-          context 'when the procedure is not opendata' do
-            it_behaves_like 'the procedure is not found' do
-              let(:procedure) { create(:procedure, :published, opendata: false) }
-            end
+          it_behaves_like 'the procedure is found' do
+            let(:procedure) { create(:procedure, :published) }
           end
         end
 
         context 'when the procedure is brouillon' do
-          context 'when the procedure is opendata' do
-            it_behaves_like 'the procedure is found' do
-              let(:procedure) { create(:procedure, :draft, opendata: true) }
-            end
-          end
-
-          context 'when the procedure is not opendata' do
-            it_behaves_like 'the procedure is not found' do
-              let(:procedure) { create(:procedure, :draft, opendata: false) }
-            end
+          it_behaves_like 'the procedure is found' do
+            let(:procedure) { create(:procedure, :draft) }
           end
         end
 

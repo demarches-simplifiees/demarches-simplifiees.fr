@@ -25,7 +25,7 @@ class API::Public::V1::DossiersController < API::Public::V1::BaseController
   end
 
   def retrieve_procedure
-    @procedure = Procedure.publiees_ou_brouillons.opendata.find_by(id: params[:procedure_id])
+    @procedure = Procedure.publiees_ou_brouillons.find_by(id: params[:procedure_id])
     render_not_found("procedure", params[:procedure_id]) if @procedure.blank?
   end
 end
