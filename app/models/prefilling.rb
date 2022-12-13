@@ -27,7 +27,7 @@ class Prefilling < SimpleDelegator
   end
 
   def prefill_link
-    commencer_path({ path: path }.merge(prefilled_champs))
+    commencer_url({ path: path }.merge(prefilled_champs))
   end
 
   private
