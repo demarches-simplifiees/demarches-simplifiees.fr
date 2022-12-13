@@ -1,0 +1,14 @@
+= turbo_frame_tag "#{dom_id(prefilling)}_query" do
+
+  - if prefilling.prefilled_champs.any?
+
+    = render Dsfr::CalloutComponent.new(title: t("views.prefillings.edit.prefill_query_title"), theme: :success, icon: "fr-icon-code-box-fill") do |c|
+      - c.with_body do
+        = t("views.prefillings.edit.prefill_query_info")
+        %pre
+          %code
+            %strong
+              = prefilling.prefill_query
+      - unless prefilling.too_long?
+        - c.with_bottom do
+          = render Dsfr::CopyButtonComponent.new(title: t("views.prefillings.edit.prefill_query_copy"), text: prefilling.prefill_query)

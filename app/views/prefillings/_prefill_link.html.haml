@@ -3,12 +3,13 @@
   - icon = prefilling.too_long? ? "fr-icon-warning-fill" : "fr-icon-paint-fill"
   - body = prefilling.too_long? ? t("views.prefillings.edit.prefill_link_too_long") : t("views.prefillings.edit.prefill_link_info")
 
-  = render Dsfr::CalloutComponent.new(title: t("views.prefillings.edit.prefill_link_title"), theme: theme, icon: "fr-icon-paint-fill") do |c|
-    - c.with_body do
-      = body
-      %div
-        %strong
-          = prefilling.prefill_link
-    - unless prefilling.too_long?
-      - c.with_bottom do
-        = render Dsfr::CopyButtonComponent.new(title: t("views.prefillings.edit.prefill_link_copy"), text: prefilling)
+  - if prefilling.prefilled_champs.any?
+    = render Dsfr::CalloutComponent.new(title: t("views.prefillings.edit.prefill_link_title"), theme: theme, icon: icon) do |c|
+      - c.with_body do
+        = body
+        %div
+          %strong
+            = prefilling.prefill_link
+      - unless prefilling.too_long?
+        - c.with_bottom do
+          = render Dsfr::CopyButtonComponent.new(title: t("views.prefillings.edit.prefill_link_copy"), text: prefilling.prefill_link)

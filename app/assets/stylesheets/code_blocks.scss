@@ -1,0 +1,10 @@
+@import "colors";
+
+pre code {
+  background-color: $black;
+  color: $white;
+  border-radius: 3px;
+  padding: 1rem;
+  display: block;
+  overflow: auto;
+}

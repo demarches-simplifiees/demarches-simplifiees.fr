@@ -1,8 +1,8 @@
 describe PrefillingsController, type: :controller do
   describe '#edit' do
-    subject(:edit_request) {
+    subject(:edit_request) do
       get :edit, params: { path: procedure.path }
-    }
+    end
 
     context 'when the procedure is found' do
       context 'when the procedure is publiee' do
@@ -52,10 +52,11 @@ describe PrefillingsController, type: :controller do
 
     let(:procedure) { create(:procedure, :published, opendata: true) }
     let(:type_de_champ) { create(:type_de_champ_text, procedure: procedure) }
+    let(:type_de_champ2) { create(:type_de_champ_text, procedure: procedure) }
 
-    subject(:update_request) {
+    subject(:update_request) do
       patch :update, params: { path: procedure.path, procedure: params }, format: :turbo_stream
-    }
+    end
 
     before { update_request }
 
@@ -70,17 +71,44 @@ describe PrefillingsController, type: :controller do
         expect(response.body).to include({ "champ_#{type_de_champ.to_typed_id}" => type_de_champ.libelle }.to_query)
         expect(response.body).to include({ "champ_#{type_de_champ_to_add.to_typed_id}" => type_de_champ_to_add.libelle }.to_query)
       end
+
+      it "includes the prefill query" do
+        expect(response.body).to include(api_public_v1_dossiers_path)
+        expect(response.body).to include("&quot;procedure_id&quot;: #{procedure.id}, &quot;champ_#{type_de_champ.to_typed_id}&quot;: &quot;#{type_de_champ.libelle}&quot;, &quot;champ_#{type_de_champ_to_add.to_typed_id}&quot;: &quot;#{type_de_champ_to_add.libelle}&quot")
+      end
     end
 
     context 'when removing a type_de_champ_id' do
-      let(:type_de_champ_to_remove) { type_de_champ }
-      let(:params) { { selected_type_de_champ_ids: [] } }
+      let(:type_de_champ_to_remove) { type_de_champ2 }
+      let(:params) { { selected_type_de_champ_ids: [type_de_champ] } }
 
       it { expect(response).to render_template(:update) }
 
       it "includes the prefill URL" do
         expect(response.body).to include(commencer_path(path: procedure.path))
+        expect(response.body).to include({ "champ_#{type_de_champ.to_typed_id}" => type_de_champ.libelle }.to_query)
         expect(response.body).not_to include({ "champ_#{type_de_champ_to_remove.to_typed_id}" => type_de_champ_to_remove.libelle }.to_query)
+      end
+
+      it "includes the prefill query" do
+        expect(response.body).to include(api_public_v1_dossiers_path)
+        expect(response.body).to include("&quot;procedure_id&quot;: #{procedure.id}, &quot;champ_#{type_de_champ.to_typed_id}&quot;: &quot;#{type_de_champ.libelle}&quot;")
+        expect(response.body).not_to include("&quot;champ_#{type_de_champ_to_remove.to_typed_id}&quot;: &quot;#{type_de_champ_to_remove.libelle}&quot;")
+      end
+    end
+
+    context 'when removing the last type de champ' do
+      let(:type_de_champ_to_remove) { type_de_champ }
+      let(:params) { { selected_type_de_champ_ids: [] } }
+
+      it { expect(response).to render_template(:update) }
+
+      it "does not include the prefill URL" do
+        expect(response.body).not_to include(commencer_path(path: procedure.path))
+      end
+
+      it "does not include the prefill query" do
+        expect(response.body).not_to include(api_public_v1_dossiers_path)
       end
     end
   end

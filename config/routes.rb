@@ -258,6 +258,12 @@ Rails.application.routes.draw do
     end
 
     resources :pays, only: :index
+
+    namespace :public do
+      namespace :v1 do
+        resources :dossiers, only: :create
+      end
+    end
   end
 
   #
