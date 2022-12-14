@@ -114,11 +114,11 @@ en:
         champ_add: Add
         champ_remove: Remove
         champ_unavailable: Unavailable
-        prefill_link_title: Prefill link
+        prefill_link_title: Prefill link (GET)
         prefill_link_info: Use the button to copy the link, then remplace the values with your data.
         prefill_link_too_long: Warning, the prefill link is too long and may not work on all browsers.
         prefill_link_copy: Copy prefill link
-        prefill_query_title: Prefill query
+        prefill_query_title: Prefill query (POST)
         prefill_query_info: Use the button to copy the query, then remplace the values with your data.
         prefill_query_copy: Copy prefill query
     registrations:

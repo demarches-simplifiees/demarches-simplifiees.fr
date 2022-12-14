@@ -7,8 +7,8 @@
     = render Dsfr::CalloutComponent.new(title: t("views.prefillings.edit.prefill_link_title"), theme: theme, icon: icon) do |c|
       - c.with_body do
         = body
-        %div
-          %strong
+        %pre
+          %code
             = prefilling.prefill_link
       - unless prefilling.too_long?
         - c.with_bottom do

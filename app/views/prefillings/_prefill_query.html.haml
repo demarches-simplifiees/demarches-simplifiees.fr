@@ -7,8 +7,7 @@
         = t("views.prefillings.edit.prefill_query_info")
         %pre
           %code
-            %strong
-              = prefilling.prefill_query
+            = prefilling.prefill_query
       - unless prefilling.too_long?
         - c.with_bottom do
           = render Dsfr::CopyButtonComponent.new(title: t("views.prefillings.edit.prefill_query_copy"), text: prefilling.prefill_query)
