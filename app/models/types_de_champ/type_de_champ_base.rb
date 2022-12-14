@@ -16,7 +16,7 @@ class TypesDeChamp::TypeDeChampBase
     stable_id = self.stable_id
     [
       {
-        libelle: libelle.gsub(/[[:space:]]/, ' '),
+        libelle: TagsSubstitutionConcern::TagsParser.normalize(libelle),
         id: "tdc#{stable_id}",
         description: description,
         lambda: -> (champs) {

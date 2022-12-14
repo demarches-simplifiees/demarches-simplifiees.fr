@@ -9,7 +9,7 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
     stable_id = @type_de_champ.stable_id
     tags.push(
       {
-        libelle: "#{libelle}/primaire",
+        libelle: "#{TagsSubstitutionConcern::TagsParser.normalize(libelle)}/primaire",
         id: "tdc#{stable_id}/primaire",
         description: "#{description} (menu primaire)",
         lambda: -> (champs) {
@@ -19,7 +19,7 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
     )
     tags.push(
       {
-        libelle: "#{libelle}/secondaire",
+        libelle: "#{TagsSubstitutionConcern::TagsParser.normalize(libelle)}/secondaire",
         id: "tdc#{stable_id}/secondaire",
         description: "#{description} (menu secondaire)",
         lambda: -> (champs) {
