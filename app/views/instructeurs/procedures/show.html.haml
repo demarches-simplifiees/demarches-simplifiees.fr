@@ -25,7 +25,7 @@
         has_en_cours_notifications: @has_en_cours_notifications,
         has_termine_notifications: @has_termine_notifications }
 
-  .container
+  .fr-container--fluid.fr-mx-4w.overflow-y-visible
     - if @statut == 'a-suivre'
       %p.explication-onglet
         = t('views.instructeurs.dossiers.tab_explainations.a_suivre')
@@ -66,7 +66,6 @@
         - if @dossiers_count > 0
           .dossiers-export
             = render Dossiers::ExportComponent.new(procedure: @procedure, exports: @exports, statut: @statut, count: @dossiers_count, export_url: method(:download_export_instructeur_procedure_path))
-      %hr.fr-mt-5v
 
       - batch_operation_component = Dossiers::BatchOperationComponent.new(statut: @statut, procedure: @procedure)
       %div{ data: batch_operation_component.render? ? { controller: 'batch-operation' } : {} }
@@ -108,7 +107,7 @@
                           group: '.columns-form',
                           name: 'values')
 
-                        = submit_tag t('views.instructeurs.dossiers.save'), class: 'button'
+                        = submit_tag t('views.instructeurs.dossiers.save'), class: 'fr-btn fr-btn--secondary'
 
 
               %tr

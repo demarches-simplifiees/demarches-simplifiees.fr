@@ -302,7 +302,7 @@
     margin-bottom: 2 * $default-spacer;
   }
 
-  input,
+  input:not(.fr-btn),
   select {
     width: 200px;
     display: inline-block;
