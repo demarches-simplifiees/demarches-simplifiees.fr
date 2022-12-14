@@ -783,7 +783,7 @@ class Procedure < ApplicationRecord
     end
     dossiers
       .state_not_termine
-      .find_each { |dossier| DossierRebaseJob.perform_later(dossier) }
+      .find_each(&:rebase_later)
   end
 
   def reset_draft_revision!
