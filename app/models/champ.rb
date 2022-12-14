@@ -239,7 +239,7 @@ class Champ < ApplicationRecord
   private
 
   def champs_for_condition
-    dossier.champs.filter { _1.row.nil? || _1.row == row }
+    private? ? dossier.champs_private : dossier.champs_public
   end
 
   def html_id
