@@ -134,9 +134,7 @@ export class AutosaveController extends ApplicationController {
 
   private enqueueAutouploadRequest(target: HTMLInputElement, file: File) {
     const autoupload = new AutoUpload(target, file);
-    try {
-      autoupload.start();
-    } catch (e) {
+    autoupload.start().catch((e) => {
       const error = e as FileUploadError;
       // Report unexpected client errors to Sentry.
       // (But ignore usual client errors, or errors we can monitor better on the server side.)
@@ -146,7 +144,7 @@ export class AutosaveController extends ApplicationController {
       ) {
         throw error;
       }
-    }
+    });
   }
 
   // Add a new autosave request to the queue.
@@ -187,8 +185,9 @@ export class AutosaveController extends ApplicationController {
     this.#pendingPromiseCount++;
 
     return httpRequest(form.action, {
-      method: 'patch',
+      method: 'post',
       body: formData,
+      headers: { 'x-http-method-override': 'PATCH' },
       signal: this.#abortController.signal,
       timeout: AUTOSAVE_TIMEOUT_DELAY
     }).turbo();
