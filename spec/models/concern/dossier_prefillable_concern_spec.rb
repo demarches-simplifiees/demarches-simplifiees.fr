@@ -50,7 +50,7 @@ RSpec.describe DossierPrefillableConcern do
         end
 
         it "still marks it as prefilled" do
-          expect { fill }.to change { dossier.champs_public.first.prefilled }.from(false).to(true)
+          expect { fill }.to change { dossier.champs_public.first.prefilled }.from(nil).to(true)
         end
       end
     end
