@@ -1,5 +1,5 @@
 %span.dropdown{ data: { controller: 'menu-button', popover: 'true' } }
-  %button.button.dropdown-button{ data: { menu_button_target: 'button' } }
+  %button.fr-btn.fr-btn--secondary.fr-btn--sm.fr-mr-1w.dropdown-button{ data: { menu_button_target: 'button' } }
     = t('views.instructeurs.dossiers.filters.title')
   #filter-menu.dropdown-content.left-aligned.fade-in-down{ data: { menu_button_target: 'menu' } }
     = render Dossiers::FilterComponent.new(procedure: procedure, procedure_presentation: @procedure_presentation, statut: statut)
