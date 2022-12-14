@@ -200,7 +200,7 @@ module Users
       respond_to do |format|
         format.html { render :brouillon }
         format.turbo_stream do
-          @to_shows, @to_hides = @dossier.champs_public
+          @to_shows, @to_hides = @dossier.champs_public_all
             .filter(&:conditional?)
             .partition(&:visible?)
             .map { |champs| champs_to_one_selector(champs) }
@@ -221,7 +221,7 @@ module Users
       respond_to do |format|
         format.html { render :modifier }
         format.turbo_stream do
-          @to_shows, @to_hides = @dossier.champs_public
+          @to_shows, @to_hides = @dossier.champs_public_all
             .filter(&:conditional?)
             .partition(&:visible?)
             .map { |champs| champs_to_one_selector(champs) }
@@ -391,14 +391,13 @@ module Users
       [params[:page].to_i, 1].max
     end
 
-    # FIXME: require(:dossier) when all the champs are united
-    def champs_params
-      params.permit(dossier: {
-        champs_public_attributes: [
-          :id, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: [],
-          champs_attributes: [:id, :_destroy, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: []]
-        ]
-      })
+    def champs_public_params
+      champs_params = params.require(:dossier).permit(champs_public_attributes: [
+        :id, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: [],
+        champs_attributes: [:id, :_destroy, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: []]
+      ])
+      champs_params[:champs_public_all_attributes] = champs_params.delete(:champs_public_attributes) || {}
+      champs_params
     end
 
     def dossier_scope
@@ -454,23 +453,16 @@ module Users
     def update_dossier_and_compute_errors
       errors = []
 
-      if champs_params[:dossier]
-        @dossier.assign_attributes(champs_params[:dossier])
-        # FIXME: in some cases a removed repetition bloc row is submitted.
-        # In this case it will be treated as a new record, and the action will fail.
-        @dossier.champs_public.filter(&:block?).each do |champ|
-          champ.champs = champ.champs.filter(&:persisted?)
-        end
-        if @dossier.champs_public.any?(&:changed_for_autosave?)
-          @dossier.last_champ_updated_at = Time.zone.now
-        end
-        if !@dossier.save(**validation_options)
-          errors += @dossier.errors.full_messages
-        end
+      @dossier.assign_attributes(champs_public_params)
+      if @dossier.champs_public_all.any?(&:changed_for_autosave?)
+        @dossier.last_champ_updated_at = Time.zone.now
+      end
+      if !@dossier.save(**validation_options)
+        errors += @dossier.errors.full_messages
+      end
 
-        if should_change_groupe_instructeur?
-          @dossier.assign_to_groupe_instructeur(groupe_instructeur_from_params)
-        end
+      if should_change_groupe_instructeur?
+        @dossier.assign_to_groupe_instructeur(groupe_instructeur_from_params)
       end
 
       if dossier.en_construction?

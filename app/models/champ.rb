@@ -178,10 +178,10 @@ class Champ < ApplicationRecord
   # attributes. So instead of the field index, this method uses the champ id; which gives us an independent and
   # predictable input name.
   def input_name
-    if parent_id
-      "#{parent.input_name}[champs_attributes][#{id}]"
+    if private?
+      "dossier[champs_private_attributes][#{id}]"
     else
-      "dossier[#{champs_attributes_accessor}][#{id}]"
+      "dossier[champs_public_attributes][#{id}]"
     end
   end
 
@@ -244,14 +244,6 @@ class Champ < ApplicationRecord
 
   def html_id
     "#{stable_id}-#{id}"
-  end
-
-  def champs_attributes_accessor
-    if private?
-      "champs_private_attributes"
-    else
-      "champs_public_attributes"
-    end
   end
 
   def needs_dossier_id?
