@@ -1,6 +1,7 @@
 module Administrateurs
   class TypesDeChampController < AdministrateurController
     before_action :retrieve_procedure
+    after_action :reset_procedure, only: [:create, :update, :destroy]
 
     def create
       type_de_champ = draft.add_type_de_champ(type_de_champ_create_params)
@@ -10,7 +11,6 @@ module Administrateurs
         @created = champ_component_from(@coordinate, focused: true)
         @morphed = champ_components_starting_at(@coordinate, 1)
 
-        reset_procedure
         flash.notice = "Formulaire enregistré"
       else
         flash.alert = type_de_champ.errors.full_messages
@@ -24,7 +24,6 @@ module Administrateurs
         @coordinate = draft.coordinate_for(type_de_champ)
         @morphed = champ_components_starting_at(@coordinate)
 
-        reset_procedure
         flash.notice = "Formulaire enregistré"
       else
         flash.alert = type_de_champ.errors.full_messages
@@ -69,7 +68,6 @@ module Administrateurs
 
     def destroy
       @coordinate = draft.remove_type_de_champ(params[:stable_id])
-      reset_procedure
       flash.notice = "Formulaire enregistré"
 
       if @coordinate.present?
