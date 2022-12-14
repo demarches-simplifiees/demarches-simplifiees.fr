@@ -8,7 +8,7 @@
       - c.with_body do
         = body
         %pre
-          %code
+          %code.code-block
             = prefill_description.prefill_link
       - unless prefill_description.link_too_long?
         - c.with_bottom do

@@ -34,11 +34,11 @@
                 - if prefill_description.include?(type_de_champ.id)
                   - (prefill_description.selected_type_de_champ_ids - [type_de_champ.id.to_s]).each do |id|
                     = f.hidden_field :selected_type_de_champ_ids, value: id, multiple: true
-                  = f.submit t("views.prefill_descriptions.edit.champ_remove"), class: 'button secondary'
+                  = f.submit t("views.prefill_descriptions.edit.champ_remove"), class: 'fr-btn fr-btn--secondary fr-btn--md'
                 - elsif type_de_champ.prefillable?
                   - (prefill_description.selected_type_de_champ_ids + [type_de_champ.id.to_s]).each do |id|
                     = f.hidden_field :selected_type_de_champ_ids, value: id, multiple: true
-                  = f.submit t("views.prefill_descriptions.edit.champ_add"), class: 'button primary'
+                  = f.submit t("views.prefill_descriptions.edit.champ_add"), class: 'fr-btn fr-btn--md'
                 - else
-                  %button.button{ disabled: true }
+                  %button.fr-btn.fr-btn--secondary{ disabled: true }
                     = t("views.prefill_descriptions.edit.champ_unavailable")

@@ -6,7 +6,7 @@
       - c.with_body do
         = t("views.prefill_descriptions.edit.prefill_query_info")
         %pre
-          %code
+          %code.code-block
             = prefill_description.prefill_query
       - c.with_bottom do
         = render Dsfr::CopyButtonComponent.new(title: t("views.prefill_descriptions.edit.prefill_query_copy"), text: prefill_description.prefill_query)
