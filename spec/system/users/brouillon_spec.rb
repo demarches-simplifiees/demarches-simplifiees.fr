@@ -289,87 +289,52 @@ describe 'The user' do
     include Logic
 
     context 'with a repetition' do
-      let(:stable_id) { 999 }
-      let(:condition) { greater_than_eq(champ_value(stable_id), constant(18)) }
       let(:procedure) do
-        create(:procedure, :published, :for_individual,
-          types_de_champ_public: [
-            { type: :integer_number, libelle: 'age', stable_id: },
-            {
-              type: :repetition, libelle: 'repetition', condition:, children: [
-                { type: :text, libelle: 'nom', mandatory: true }
-              ]
-            }
-          ])
+        procedure = create(:procedure, :published, :for_individual,
+                           types_de_champ_public: [
+                             { type: :integer_number, libelle: 'age' },
+                             {
+                               type: :repetition, libelle: 'repetition', children: [
+                                 { type: :text, libelle: 'nom', mandatory: true }
+                               ]
+                             }
+                           ])
+
+        age = procedure.published_revision.types_de_champ.where(libelle: 'age').first
+        repetition = procedure.published_revision.types_de_champ.repetition.first
+        repetition.update(condition: greater_than_eq(champ_value(age.stable_id), constant(18)))
+
+        procedure
       end
 
       scenario 'submit a dossier with an hidden mandatory champ within a repetition', js: true do
         log_in(user, procedure)
 
         fill_individual
-
         fill_in('age', with: 10)
         click_on 'Déposer le dossier'
         expect(page).to have_current_path(merci_dossier_path(user_dossier))
       end
     end
 
-    context 'with a condition inside repetition' do
-      let(:a_stable_id) { 999 }
-      let(:b_stable_id) { 9999 }
-      let(:a_condition) { ds_eq(champ_value(a_stable_id), constant(true)) }
-      let(:b_condition) { ds_eq(champ_value(b_stable_id), constant(true)) }
-      let(:condition) { ds_or([a_condition, b_condition]) }
-      let(:procedure) do
-        create(:procedure, :published, :for_individual,
-          types_de_champ_public: [
-            { type: :checkbox, libelle: 'champ_a', stable_id: a_stable_id },
-            {
-              type: :repetition, libelle: 'repetition', children: [
-                { type: :checkbox, libelle: 'champ_b', stable_id: b_stable_id },
-                { type: :text, libelle: 'champ_c', condition: }
-              ]
-            }
-          ])
-      end
-
-      scenario 'fill a dossier', js: true do
-        log_in(user, procedure)
-
-        fill_individual
-
-        expect(page).to have_no_css('label', text: 'champ_c', visible: true)
-        check('champ_a')
-        wait_for_autosave
-
-        expect(page).to have_css('label', text: 'champ_c', visible: true)
-        uncheck('champ_a')
-        wait_for_autosave
-
-        expect(page).to have_no_css('label', text: 'champ_c', visible: true)
-        check('champ_b')
-        wait_for_autosave
-
-        expect(page).to have_css('label', text: 'champ_c', visible: true)
-      end
-    end
-
     context 'with a required conditionnal champ' do
-      let(:stable_id) { 999 }
-      let(:condition) { greater_than_eq(champ_value(stable_id), constant(18)) }
       let(:procedure) do
-        create(:procedure, :published, :for_individual,
-          types_de_champ_public: [
-            { type: :integer_number, libelle: 'age', stable_id: },
-            { type: :text, libelle: 'nom', mandatory: true, condition: }
-          ])
+        procedure = create(:procedure, :published, :for_individual,
+                           types_de_champ_public: [
+                             { type: :integer_number, libelle: 'age' },
+                             { type: :text, libelle: 'nom', mandatory: true }
+                           ])
+
+        age, nom = procedure.draft_revision.types_de_champ.all
+        nom.update(condition: greater_than_eq(champ_value(age.stable_id), constant(18)))
+
+        procedure
       end
 
       scenario 'submit a dossier with an hidden mandatory champ ', js: true do
         log_in(user, procedure)
 
         fill_individual
-
         click_on 'Déposer le dossier'
         expect(page).to have_current_path(merci_dossier_path(user_dossier))
       end
@@ -388,21 +353,23 @@ describe 'The user' do
     end
 
     context 'with a visibilite in cascade' do
-      let(:age_stable_id) { 999 }
-      let(:permis_stable_id) { 9999 }
-      let(:tonnage_stable_id) { 99999 }
-      let(:permis_condition) { greater_than_eq(champ_value(age_stable_id), constant(18)) }
-      let(:tonnage_condition) { ds_eq(champ_value(permis_stable_id), constant(true)) }
-      let(:parking_condition) { less_than_eq(champ_value(tonnage_stable_id), constant(20)) }
-
       let(:procedure) do
-        create(:procedure, :published, :for_individual,
-          types_de_champ_public: [
-            { type: :integer_number, libelle: 'age', stable_id: age_stable_id },
-            { type: :yes_no, libelle: 'permis de conduire', stable_id: permis_stable_id, condition: permis_condition },
-            { type: :integer_number, libelle: 'tonnage', stable_id: tonnage_stable_id, condition: tonnage_condition },
-            { type: :text, libelle: 'parking', condition: parking_condition }
-          ])
+        procedure = create(:procedure, :for_individual).tap do |p|
+          p.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'age')
+          p.draft_revision.add_type_de_champ(type_champ: :yes_no, libelle: 'permis de conduire')
+          p.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'tonnage')
+          p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'parking')
+        end
+
+        age, permis, tonnage, parking = procedure.draft_revision.types_de_champ.all
+
+        permis.update(condition: greater_than_eq(champ_value(age.stable_id), constant(18)))
+        tonnage.update(condition: ds_eq(champ_value(permis.stable_id), constant(true)))
+        parking.update(condition: less_than_eq(champ_value(tonnage.stable_id), constant(20)))
+
+        procedure.publish!
+
+        procedure
       end
 
       scenario 'fill a dossier', js: true do
