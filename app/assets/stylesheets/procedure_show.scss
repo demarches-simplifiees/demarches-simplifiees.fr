@@ -22,6 +22,7 @@
   .dossiers-table {
     margin-top: $default-spacer;
     margin-bottom: 3 * $default-spacer;
+    overflow: visible; // remove DSFR hidden overflow because of dropdown
   }
 
   .procedure-actions {
