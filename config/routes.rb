@@ -189,10 +189,10 @@ Rails.application.routes.draw do
   post "webhooks/helpscout_support_dev", to: "webhook#helpscout_support_dev"
   match "webhooks/helpscout", to: lambda { |_| [204, {}, nil] }, via: :head
 
-  get '/preremplir/:path', to: 'prefillings#edit'
+  get '/preremplir/:path', to: 'prefill_descriptions#edit'
   resources :procedures, only: [], param: :path do
     member do
-      resource :prefilling, only: :update
+      resource :prefill_description, only: :update
     end
   end
 

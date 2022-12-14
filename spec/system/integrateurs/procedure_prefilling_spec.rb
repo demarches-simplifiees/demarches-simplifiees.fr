@@ -14,8 +14,8 @@ describe 'As an integrator:', js: true do
   scenario 'I can select champs to prefill' do
     click_on 'Ajouter'
 
-    prefilling = Prefilling.new(procedure)
-    prefilling.update(selected_type_de_champ_ids: [type_de_champ.id.to_s])
-    expect(page).to have_content(prefilling.prefill_link)
+    prefill_description = PrefillDescription.new(procedure)
+    prefill_description.update(selected_type_de_champ_ids: [type_de_champ.id.to_s])
+    expect(page).to have_content(prefill_description.prefill_link)
   end
 end

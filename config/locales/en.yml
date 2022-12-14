@@ -101,7 +101,7 @@ en:
         show_my_submitted_file: 'Show my submitted file'
         want_empty_pdf: "You prefer to submit a paper form? You can download an empty PDF file, and send it to the right administration : %{service} - %{adresse}"
         download_empty_pdf: 'Download an empty PDF file'
-    prefillings:
+    prefill_descriptions:
       edit:
         intro_html: "You'd like to allow your users to <strong>create a prefilled file</strong>, with data you already have, for the procedure « %{libelle} »."
         info: Add the fields you want to prefill, thanks to the table below. Once it's over, copy the prefill link, replace the values and share the link.

@@ -1,12 +1,12 @@
-class PrefillingsController < ApplicationController
-  before_action :retreive_procedure
-  before_action :set_prefilling
+class PrefillDescriptionsController < ApplicationController
+  before_action :retrieve_procedure
+  before_action :set_prefill_description
 
   def edit
   end
 
   def update
-    @prefilling.update(prefilling_params)
+    @prefill_description.update(prefill_description_params)
 
     respond_to do |format|
       format.turbo_stream
@@ -16,15 +16,15 @@ class PrefillingsController < ApplicationController
 
   private
 
-  def retreive_procedure
+  def retrieve_procedure
     @procedure = Procedure.publiees_ou_brouillons.opendata.find_by!(path: params[:path])
   end
 
-  def set_prefilling
-    @prefilling = Prefilling.new(@procedure)
+  def set_prefill_description
+    @prefill_description = PrefillDescription.new(@procedure)
   end
 
-  def prefilling_params
+  def prefill_description_params
     params.require(:procedure).permit(selected_type_de_champ_ids: [])
   rescue ActionController::ParameterMissing
     { selected_type_de_champ_ids: [] }

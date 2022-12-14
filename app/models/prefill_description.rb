@@ -1,4 +1,4 @@
-class Prefilling < SimpleDelegator
+class PrefillDescription < SimpleDelegator
   include Rails.application.routes.url_helpers
 
   MAX_PREFILL_LINK_LENGTH = 2000
@@ -22,7 +22,7 @@ class Prefilling < SimpleDelegator
     selected_type_de_champ_ids.include?(type_de_champ_id.to_s)
   end
 
-  def too_long?
+  def link_too_long?
     prefill_link.length > MAX_PREFILL_LINK_LENGTH
   end
 
@@ -32,7 +32,7 @@ class Prefilling < SimpleDelegator
 
   def prefill_query
     @prefill_query ||=
-      <<-TEXT
+      <<~TEXT
         curl --request POST '#{api_public_v1_dossiers_url}'
              --header 'Content-Type: application/json'
              --data '{"procedure_id": #{id}, #{prefilled_champs_for_query}}'
