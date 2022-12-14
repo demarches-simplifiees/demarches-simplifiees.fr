@@ -38,7 +38,7 @@ describe Mails::InitiatedMail, type: :model do
     context 'template with invalid tag' do
       let(:email_body) { 'foo --numéro du -- bar' }
 
-      it { expect(subject.errors.full_messages).to eq(["Le contenu de l’email de notification de passage du dossier en instruction réfère au champ \"numéro du \" qui n’existe pas"]) }
+      it { expect(subject.errors.full_messages).to eq(["Le contenu de l’email de notification de passage du dossier en instruction réfère au champ \"numéro du\" qui n’existe pas"]) }
     end
 
     context 'template with unpublished tag' do

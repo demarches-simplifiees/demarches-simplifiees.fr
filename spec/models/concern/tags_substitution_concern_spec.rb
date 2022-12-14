@@ -512,10 +512,16 @@ describe TagsSubstitutionConcern, type: :model do
     end
 
     it 'allow for - before tag' do
-      tokens = TagsSubstitutionConcern::TagsParser.parse("hello --yolo-- world ---numéro-du - dossier--")
+      tokens = TagsSubstitutionConcern::TagsParser.parse("hello --yolo-- --  before-- --after -- -- around -- world ---numéro-du - dossier--")
       expect(tokens).to eq([
         { text: "hello " },
         { tag: "yolo" },
+        { text: " " },
+        { tag: "before" },
+        { text: " " },
+        { tag: "after" },
+        { text: " " },
+        { tag: "around" },
         { text: " world -" },
         { tag: "numéro-du - dossier" }
       ])
