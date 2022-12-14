@@ -212,7 +212,7 @@ module Instructeurs
 
     def update_annotations
       dossier_with_champs.assign_attributes(champs_private_params)
-      if dossier.champs_private.any?(&:changed?)
+      if dossier.champs_private_all.any?(&:changed?)
         dossier.last_champ_private_updated_at = Time.zone.now
       end
       dossier.save
@@ -286,10 +286,12 @@ module Instructeurs
     end
 
     def champs_private_params
-      params.require(:dossier).permit(champs_private_attributes: [
+      champs_params = params.require(:dossier).permit(champs_private_attributes: [
         :id, :primary_value, :secondary_value, :piece_justificative_file, :value_other, :external_id, :numero_allocataire, :code_postal, :departement, :code_departement, :value, value: [],
         champs_attributes: [:id, :_destroy, :value, :primary_value, :secondary_value, :piece_justificative_file, :value_other, :external_id, :numero_allocataire, :code_postal, :departement, :code_departement, value: []]
       ])
+      champs_params[:champs_private_all_attributes] = champs_params.delete(:champs_private_attributes) || {}
+      champs_params
     end
 
     def mark_demande_as_read

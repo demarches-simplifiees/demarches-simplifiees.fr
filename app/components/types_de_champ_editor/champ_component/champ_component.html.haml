@@ -87,7 +87,7 @@
   - if type_de_champ.block?
     .flex.justify-start.section.ml-1
       .editor-block.flex-grow.cell
-        = render TypesDeChampEditor::BlockComponent.new(block: coordinate, coordinates: coordinate.revision_types_de_champ, upper_coordinates: @upper_coordinates)
+        = render TypesDeChampEditor::BlockComponent.new(block: coordinate, coordinates: coordinate.revision_types_de_champ)
         = render TypesDeChampEditor::AddChampButtonComponent.new(revision: coordinate.revision, parent: coordinate, is_annotation: coordinate.private?)
 
   -  if conditional_enabled?

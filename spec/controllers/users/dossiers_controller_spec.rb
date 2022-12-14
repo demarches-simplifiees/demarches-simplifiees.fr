@@ -494,7 +494,7 @@ describe Users::DossiersController, type: :controller do
           {
             id: dossier.id,
             dossier: {
-              champs_public_attributes: {}
+              champs_public_attributes: [{ value: '' }]
             }
           }
         end
@@ -503,16 +503,6 @@ describe Users::DossiersController, type: :controller do
           subject
           expect(dossier.reload.last_champ_updated_at).to eq(nil)
         end
-      end
-    end
-
-    context 'when dossier has no champ' do
-      let(:submit_payload) { { id: dossier.id } }
-
-      it 'does not raise any errors' do
-        subject
-
-        expect(response).to have_http_status(:ok)
       end
     end
 
@@ -662,16 +652,6 @@ describe Users::DossiersController, type: :controller do
 
       it { expect(response).to render_template(:modifier) }
       it { expect(flash.alert).to eq(['Le champ l doit être rempli.']) }
-    end
-
-    context 'when dossier has no champ' do
-      let(:submit_payload) { { id: dossier.id } }
-
-      it 'does not raise any errors' do
-        subject
-
-        expect(response).to have_http_status(:ok)
-      end
     end
 
     context 'when the user has an invitation but is not the owner' do
