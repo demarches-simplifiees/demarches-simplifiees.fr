@@ -6,11 +6,10 @@
 
 - current_filters.group_by { |filter| filter['table'] }.each_with_index do |(table, filters), i|
   - if i > 0
-    et
+    = " et "
   - filters.each_with_index do |filter, i|
     - if i > 0
-      ou
-    %span.filter
-      = link_to remove_filter_instructeur_procedure_path(procedure, { statut: statut, field: "#{filter['table']}/#{filter['column']}", value: filter['value'] }) do
-        %img.close-icon{ src: image_url("close.svg") }
+      = " ou "
+    = link_to remove_filter_instructeur_procedure_path(procedure, { statut: statut, field: "#{filter['table']}/#{filter['column']}", value: filter['value'] }),
+      class: "fr-tag fr-tag--dismiss fr-mb-1w", aria: { label: "Retirer le filtre #{filter['column']}" } do
       = "#{filter['label'].truncate(50)} : #{procedure_presentation.human_value_for_filter(filter)}"
