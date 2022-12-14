@@ -149,7 +149,7 @@ class Dossier < ApplicationRecord
 
   belongs_to :transfer, class_name: 'DossierTransfer', foreign_key: 'dossier_transfer_id', optional: true, inverse_of: :dossiers
   has_many :transfer_logs, class_name: 'DossierTransferLog', dependent: :destroy
-  has_many :parent_dossiers, class_name: 'Dossier', foreign_key: 'parent_dossier_id', dependent: :nullify, inverse_of: :parent_dossier
+  has_many :cloned_dossiers, class_name: 'Dossier', foreign_key: 'parent_dossier_id', dependent: :nullify, inverse_of: :parent_dossier
 
   accepts_nested_attributes_for :champs_public
   accepts_nested_attributes_for :champs_private
