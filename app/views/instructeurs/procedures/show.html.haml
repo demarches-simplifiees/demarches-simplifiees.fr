@@ -25,7 +25,7 @@
         has_en_cours_notifications: @has_en_cours_notifications,
         has_termine_notifications: @has_termine_notifications }
 
-  .container
+  .fr-container--fluid.fr-mx-4w
     - if @statut == 'a-suivre'
       %p.explication-onglet
         = t('views.instructeurs.dossiers.tab_explainations.a_suivre')
