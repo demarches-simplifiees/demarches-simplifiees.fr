@@ -540,7 +540,7 @@ describe API::V2::GraphqlController do
               }
             end,
             avis: [],
-            champs: dossier.champs_public.map do |champ|
+            champs: dossier.champs_public.filter(&:visible?).map do |champ|
               {
                 id: champ.to_typed_id,
                 label: champ.libelle,

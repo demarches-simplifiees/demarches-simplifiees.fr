@@ -286,6 +286,10 @@ class TypeDeChamp < ApplicationRecord
     ])
   end
 
+  def visible?
+    routage? ? procedure.routing_enabled? : true
+  end
+
   def exclude_from_export?
     type_champ.in?([
       TypeDeChamp.type_champs.fetch(:header_section),
