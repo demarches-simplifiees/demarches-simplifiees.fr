@@ -201,19 +201,10 @@ export class AutosaveController extends ApplicationController {
   private get inputs() {
     const element = this.element as HTMLElement;
 
-    const inputs = [
+    return [
       ...element.querySelectorAll<HTMLInputElement>(
         'input:not([type=file]), textarea, select'
       )
     ].filter((element) => !element.disabled);
-
-    const parent = this.element.closest('[data-block]');
-    if (parent) {
-      return [
-        ...inputs,
-        ...parent.querySelectorAll<HTMLInputElement>('input[data-id]')
-      ];
-    }
-    return inputs;
   }
 }
