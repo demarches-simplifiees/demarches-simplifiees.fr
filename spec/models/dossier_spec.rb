@@ -1052,7 +1052,7 @@ describe Dossier do
   end
 
   describe '#accepter_automatiquement!' do
-    let(:dossier) { create(:dossier, :en_construction, :with_individual) }
+    let(:dossier) { create(:dossier, :en_construction, :with_individual, :with_declarative_accepte) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let!(:now) { Time.zone.parse('01/01/2100') }
     let(:attestation) { Attestation.new }
@@ -1097,7 +1097,7 @@ describe Dossier do
   end
 
   describe '#passer_automatiquement_en_instruction!' do
-    let(:dossier) { create(:dossier, :en_construction, en_construction_close_to_expiration_notice_sent_at: Time.zone.now) }
+    let(:dossier) { create(:dossier, :en_construction, :with_declarative_en_instruction, en_construction_close_to_expiration_notice_sent_at: Time.zone.now) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let(:operation_serialized) { last_operation.data }
     let(:instructeur) { create(:instructeur) }
@@ -1111,6 +1111,66 @@ describe Dossier do
     it { expect(operation_serialized['operation']).to eq('passer_en_instruction') }
     it { expect(operation_serialized['dossier_id']).to eq(dossier.id) }
     it { expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601) }
+  end
+
+  describe '#can_passer_automatiquement_en_instruction?' do
+    let(:dossier) { create(:dossier, :en_construction, declarative_triggered_at: declarative_triggered_at) }
+    let(:declarative_triggered_at) { nil }
+
+    it { expect(dossier.can_passer_automatiquement_en_instruction?).to be_falsey }
+
+    context 'when dossier is declarative' do
+      before { dossier.procedure.update(declarative_with_state: :en_instruction) }
+
+      context 'when dossier never transitioned' do
+        it { expect(dossier.can_passer_automatiquement_en_instruction?).to be_truthy }
+      end
+
+      context 'when dossier transitioned before' do
+        let(:declarative_triggered_at) { 1.day.ago }
+
+        it { expect(dossier.can_passer_automatiquement_en_instruction?).to be_falsey }
+      end
+    end
+
+    context 'when procedure has auto archive set' do
+      before { dossier.procedure.update(auto_archive_on: 1.day.ago) }
+
+      it { expect(dossier.can_passer_automatiquement_en_instruction?).to be_truthy }
+
+      context 'when auto_archive_on is in the future' do
+        before { dossier.procedure.update(auto_archive_on: 1.day.from_now) }
+
+        it { expect(dossier.can_passer_automatiquement_en_instruction?).to be_falsey }
+      end
+
+      context 'when dossier transitioned before' do
+        let(:declarative_triggered_at) { 1.day.ago }
+
+        it { expect(dossier.can_passer_automatiquement_en_instruction?).to be_truthy }
+      end
+    end
+  end
+
+  describe '#can_accepter_automatiquement?' do
+    let(:dossier) { create(:dossier, :en_instruction, declarative_triggered_at: declarative_triggered_at) }
+    let(:declarative_triggered_at) { nil }
+
+    it { expect(dossier.can_accepter_automatiquement?).to be_falsey }
+
+    context 'when dossier is declarative' do
+      before { dossier.procedure.update(declarative_with_state: :accepte) }
+
+      context 'when dossier never transitioned' do
+        it { expect(dossier.can_accepter_automatiquement?).to be_truthy }
+      end
+
+      context 'when dossier transitioned before' do
+        let(:declarative_triggered_at) { 1.day.ago }
+
+        it { expect(dossier.can_accepter_automatiquement?).to be_falsey }
+      end
+    end
   end
 
   describe "can't transition to terminer when etablissement is in degraded mode" do
@@ -1138,8 +1198,8 @@ describe Dossier do
     end
 
     context "when dossier is en_construction" do
-      let(:dossier_incomplete) { create(:dossier, :en_construction, :with_entreprise, as_degraded_mode: true) }
-      let(:dossier_ok) { create(:dossier, :en_construction, :with_entreprise, as_degraded_mode: false) }
+      let(:dossier_incomplete) { create(:dossier, :en_construction, :with_entreprise, :with_declarative_accepte, as_degraded_mode: true) }
+      let(:dossier_ok) { create(:dossier, :en_construction, :with_entreprise, :with_declarative_accepte, as_degraded_mode: false) }
 
       it "can't accepter_automatiquement" do
         expect(dossier_incomplete.may_accepter_automatiquement?(instructeur:, motivation:)).to be_falsey
@@ -1613,7 +1673,7 @@ describe Dossier do
     end
 
     context 'en_construction' do
-      let(:dossier) { create(:dossier, :en_construction, :followed, :with_individual) }
+      let(:dossier) { create(:dossier, :en_construction, :followed, :with_individual, :with_declarative_accepte) }
 
       it "clean up titres identite on accepter_automatiquement" do
         expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy

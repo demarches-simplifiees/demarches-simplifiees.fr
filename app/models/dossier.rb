@@ -537,11 +537,11 @@ class Dossier < ApplicationRecord
   end
 
   def can_accepter_automatiquement?
-    declarative_triggered_at.nil? && can_terminer?
+    declarative_triggered_at.nil? && procedure.declarative_accepte? && can_terminer?
   end
 
   def can_passer_automatiquement_en_instruction?
-    declarative_triggered_at.nil?
+    (declarative_triggered_at.nil? && procedure.declarative_en_instruction?) || procedure.auto_archive_on&.then { _1 <= Time.zone.today }
   end
 
   def can_repasser_en_instruction?
