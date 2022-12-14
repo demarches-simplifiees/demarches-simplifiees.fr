@@ -793,11 +793,8 @@ describe Instructeurs::DossiersController, type: :controller do
                 secondary_value: 'secondary'
               },
               '3': {
-                id: champ_repetition.id,
-                champs_attributes: {
-                  id: champ_repetition.champs.first.id,
-                  value: 'text'
-                }
+                id: champ_repetition.champs.first.id,
+                value: 'text'
               }
             }
           }
