@@ -3,25 +3,28 @@ import { ApplicationController } from './application_controller';
 export class BatchOperationController extends ApplicationController {
   static targets = ['form', 'input', 'submit'];
 
-  declare readonly formTarget: HTMLFormElement;
-  declare readonly submitTarget: HTMLInputElement;
+  declare readonly formTargets: HTMLFormElement[];
+  declare readonly submitTargets: HTMLInputElement[];
   declare readonly inputTargets: HTMLInputElement[];
 
   connect() {
-    this.formTarget.addEventListener(
-      'submit',
-      this.interceptFormSubmit.bind(this)
+    this.formTargets.forEach((e) =>
+      e.addEventListener('submit', this.interceptFormSubmit.bind(this))
     );
   }
 
   // DSFR recommends a <input type="submit" /> or <button type="submit" /> a form (not a <select>)
   // but we have many actions on the same form (archive all, accept all, ...)
   // so we intercept the form submit, and set the BatchOperation.operation by hand using the Event.submitter
-  interceptFormSubmit(event: SubmitEvent) {
+  interceptFormSubmit(event: SubmitEvent): SubmitEvent {
     const submitter = event.submitter as HTMLInputElement;
 
     submitter.setAttribute('value', submitter.dataset.submitterOperation || '');
-
+    this.inputTargets.forEach((e) =>
+      e.setAttribute(
+        'form',
+        `new_batch_operation_${submitter.dataset.submitterOperation}`
+    ));
     return event;
   }
 
@@ -40,10 +43,17 @@ export class BatchOperationController extends ApplicationController {
 
   toggleSubmitButtonWhenNeeded() {
     const available = this.inputTargets.some((e) => e.checked);
+    const dropdown = document.querySelector("#batch_operation_dropdown");
     if (available) {
-      this.submitTarget.removeAttribute('disabled');
+      this.submitTargets.forEach((e) => e.removeAttribute('disabled'));
+      if (dropdown) {
+        dropdown.removeAttribute('disabled');
+      }
     } else {
-      this.submitTarget.setAttribute('disabled', 'disabled');
+      this.submitTargets.forEach((e) => e.setAttribute('disabled', 'disabled'));
+      if (dropdown) {
+        dropdown.setAttribute('disabled', 'disabled');
+      }
     }
   }
 }
