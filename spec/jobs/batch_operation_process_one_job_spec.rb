@@ -46,6 +46,20 @@ describe BatchOperationProcessOneJob, type: :job do
       end
     end
 
+    context 'when operation is "accepter"' do
+      let(:batch_operation) do
+        create(:batch_operation, :accepter,
+                                 options.merge(instructeur: create(:instructeur)))
+      end
+
+      it 'accepts the dossier in the batch' do
+        expect { subject.perform_now }
+          .to change { dossier_job.reload.accepte? }
+          .from(false)
+          .to(true)
+      end
+    end
+
     context 'when the dossier is out of sync (ie: someone applied a transition somewhere we do not know)' do
       let(:instructeur) { create(:instructeur) }
       let(:procedure) { create(:simple_procedure, instructeurs: [instructeur]) }

@@ -78,8 +78,7 @@
           - @batch_operations.each do |batch_operation|
             = render Dossiers::BatchAlertComponent.new(batch: batch_operation, procedure: @procedure)
 
-        .flex
-          .flex-grow= render batch_operation_component
+        = render batch_operation_component
         .fr-table.fr-table--bordered
           %table.table.dossiers-table.hoverable
             %thead
@@ -125,7 +124,7 @@
                       - if p.batch_operation_id.present?
                         = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, true, disabled: true, id: dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"), aria: {label: t('views.instructeurs.dossiers.batch_operation.disabled')}
                       - else
-                        = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, false, data: { "batch-operation-target" => "input", "action" => "batch-operation#onCheckOne"}, form: dom_id(BatchOperation.new), id: dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"), aria: {label: t('views.instructeurs.dossiers.batch_operation.enabled')}
+                        = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, false, data: { "batch-operation-target" => "input", "action" => "batch-operation#onCheckOne"}, id: dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"), aria: {label: t('views.instructeurs.dossiers.batch_operation.enabled')}
 
                       - if @not_archived_notifications_dossier_ids.include?(p.dossier_id)
                         %span.notifications{ 'aria-label': 'notifications' }

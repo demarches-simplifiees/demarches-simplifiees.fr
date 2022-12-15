@@ -18,7 +18,8 @@
 class BatchOperation < ApplicationRecord
   enum operation: {
     archiver: 'archiver',
-    passer_en_instruction: 'passer_en_instruction'
+    passer_en_instruction: 'passer_en_instruction',
+    accepter: 'accepter'
   }
 
   has_many :dossiers, dependent: :nullify
@@ -53,6 +54,8 @@ class BatchOperation < ApplicationRecord
       query.not_archived.state_termine
     when BatchOperation.operations.fetch(:passer_en_instruction) then
       query.state_en_construction
+    when BatchOperation.operations.fetch(:accepter) then
+      query.state_en_instruction
     end
   end
 
@@ -67,6 +70,8 @@ class BatchOperation < ApplicationRecord
       dossier.archiver!(instructeur)
     when BatchOperation.operations.fetch(:passer_en_instruction)
       dossier.passer_en_instruction(instructeur: instructeur)
+    when BatchOperation.operations.fetch(:accepter)
+      dossier.accepter(instructeur: instructeur)
     end
   end
 

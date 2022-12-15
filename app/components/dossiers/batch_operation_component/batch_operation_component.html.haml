@@ -1,4 +1,20 @@
-= form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, id: dom_id(BatchOperation.new), html: { class: 'flex justify-end' }, data: { "batch-operation-target" => "form"}) do |form|
-  .flex.align-center
-    - available_operations.each do |opt|
-      = form.button opt[0], class: ['fr-btn fr-btn--icon-left', icons[opt[1].to_sym]], disabled: :disabled, name: "#{form.object_name}[operation]", data: { "batch-operation-target" => "submit", "submitter-operation" => opt[1]}
+- if available_operations[:options].present?
+  - if available_operations[:options].count == 1
+    - opt = available_operations[:options].dig(0)
+    = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'flex justify-end', id: "#{dom_id(BatchOperation.new)}_#{opt[:operation]}" }, data: { "batch-operation-target" => "form"}) do |form|
+      = form.button opt[:label], class: ['fr-btn fr-btn--icon-left', icons[opt[:operation].to_sym]], disabled: :disabled, name: "#{form.object_name}[operation]", data: { "batch-operation-target" => "submit", "submitter-operation" => opt[:operation] }
+
+  -else
+    .flex.justify-end
+      .dropdown{ data: { controller: 'menu-button', popover: 'true' } }
+        -# Dropdown button title
+        %button.fr-btn.dropdown-button{ id: 'batch_operation_dropdown', disabled: :disabled, data: { menu_button_target: 'button'} }
+          Actions multiples
+
+        #state-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
+
+          %ul.dropdown-items
+            - available_operations[:options].each do |opt|
+              %li{ 'data-turbo': 'true' }
+                = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'flex justify-end', id: "#{dom_id(BatchOperation.new)}_#{opt[:operation]}" }, data: { "batch-operation-target" => "form"}) do |form|
+                  = form.button opt[:label], class: ['fr-btn--icon-left', icons[opt[:operation].to_sym]], disabled: :disabled, name: "#{form.object_name}[operation]", data: { "batch-operation-target" => "submit", "submitter-operation" => opt[:operation]}
