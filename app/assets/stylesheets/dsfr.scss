@@ -3,7 +3,8 @@
 // override default transparent background on inputs & font-size to 16px by default
 input,
 textarea,
-select {
+select,
+.procedure-form__column--form .fr-input { //FIXME when DSFR is DONE
   background: $white;
   font-size: 1em;
 }

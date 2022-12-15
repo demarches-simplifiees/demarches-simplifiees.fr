@@ -1,12 +1,6 @@
-= f.label :subject do
-  Objet de l'email
-  %span.mandatory *
-= f.text_field :subject, required: true
+= render Dsfr::InputComponent.new(form: f, attribute: :subject, input_type: :text_field, opts: {})
 
-= f.label :body do
-  Corps de l'email
-  %span.mandatory *
-= f.rich_text_area :rich_body, required: true, class: "mb-4"
+= render Dsfr::InputComponent.new(form: f, attribute: :rich_body, input_type: :rich_text_area, opts: { class: 'fr-mb-4vh'})
 
 #tags-table{ 'data-controller': 'trix' }
   %h2.add-tag-title

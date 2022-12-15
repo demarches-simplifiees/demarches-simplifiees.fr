@@ -38,7 +38,7 @@ describe Mails::InitiatedMail, type: :model do
     context 'template with invalid tag' do
       let(:email_body) { 'foo --numéro du -- bar' }
 
-      it { expect(subject.errors.full_messages).to eq(["Le contenu de l’email de notification de passage du dossier en instruction réfère au champ \"numéro du\" qui n’existe pas"]) }
+      it { expect(subject.errors.full_messages).to eq(["Le corps de l’email contient la balise \"numéro du\" qui n’existe pas, veuillez la supprimer."]) }
     end
 
     context 'template with unpublished tag' do
@@ -48,7 +48,7 @@ describe Mails::InitiatedMail, type: :model do
         procedure.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'age')
       end
 
-      it { expect(subject.errors.full_messages).to eq(["Le contenu de l’email de notification de passage du dossier en instruction réfère au champ \"age\" qui n’est pas encore publié"]) }
+      it { expect(subject.errors.full_messages).to eq(["Le corps de l’email contient la balise \"age\" qui n’est pas encore publié."]) }
     end
 
     context 'template with removed but unpublished tag' do
@@ -58,7 +58,7 @@ describe Mails::InitiatedMail, type: :model do
         procedure.draft_revision.remove_type_de_champ(type_de_champ.stable_id)
       end
 
-      it { expect(subject.errors.full_messages).to eq(["Le contenu de l’email de notification de passage du dossier en instruction réfère au champ \"nom\" qui a été supprimé mais la suppression n’est pas encore publiée"]) }
+      it { expect(subject.errors.full_messages).to eq(["Le corps de l’email contient la balise \"nom\" qui a été supprimé mais la suppression n’est pas encore publiée."]) }
     end
 
     context 'template with removed tag' do
@@ -69,7 +69,7 @@ describe Mails::InitiatedMail, type: :model do
         procedure.publish_revision!
       end
 
-      it { expect(subject.errors.full_messages).to eq(["Le contenu de l’email de notification de passage du dossier en instruction réfère au champ \"nom\" qui a été supprimé"]) }
+      it { expect(subject.errors.full_messages).to eq(["Le corps de l’email contient la balise \"nom\" qui a été supprimé."]) }
     end
 
     context 'template with new tag and old dossier' do
@@ -81,7 +81,7 @@ describe Mails::InitiatedMail, type: :model do
         procedure.publish_revision!
       end
 
-      it { expect(subject.errors.full_messages).to eq(["Le contenu de l’email de notification de passage du dossier en instruction réfère au champ \"age\" qui n’existe pas sur un des dossiers en cours de traitement"]) }
+      it { expect(subject.errors.full_messages).to eq(["Le corps de l’email contient la balise \"age\" qui n’existe pas sur un des dossiers en cours de traitement."]) }
     end
   end
 end
