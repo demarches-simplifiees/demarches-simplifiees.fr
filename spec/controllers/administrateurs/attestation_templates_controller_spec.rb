@@ -115,7 +115,7 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
         expect(procedure.attestation_template.logo.download).to eq(logo2.read)
         expect(procedure.attestation_template.signature.download).to eq(signature2.read)
         expect(response).to redirect_to edit_admin_procedure_attestation_template_path(procedure)
-        expect(flash.notice).to eq("Le model de l’attestation a bien été enregistrée")
+        expect(flash.notice).to eq("Le modèle de l’attestation a bien été enregistré")
       end
     end
 
