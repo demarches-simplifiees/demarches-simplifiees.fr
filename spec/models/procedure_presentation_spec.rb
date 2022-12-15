@@ -784,6 +784,14 @@ describe ProcedurePresentation do
         expect(subject).to eq("oui")
       end
     end
+
+    context 'when filter is state' do
+      let(:filters) { { "suivis" => [{ "table" => "self", "column" => "state", "value" => "en_construction" }] } }
+
+      it 'should get i18n value' do
+        expect(subject).to eq("En construction")
+      end
+    end
   end
 
   describe "#add_filter" do
