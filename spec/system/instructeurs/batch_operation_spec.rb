@@ -12,6 +12,12 @@ describe 'BatchOperation a dossier:', js: true do
       dossier_2 = create(:dossier, :accepte, procedure: procedure)
       dossier_3 = create(:dossier, :accepte, procedure: procedure)
       log_in(instructeur.email, password)
+
+      # visit a page without batch operation and make sure there is no checkboxes in table
+      visit instructeur_procedure_path(procedure, statut: 'tous')
+      expect(page).not_to have_selector("#checkbox_all_batch_operation")
+      expect(page).not_to have_selector("#checkbox_#{dossier_1.id}_batch_operation")
+
       visit instructeur_procedure_path(procedure, statut: 'traites')
 
       # check a11y with enabled checkbox
