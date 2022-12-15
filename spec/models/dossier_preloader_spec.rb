@@ -30,6 +30,7 @@ describe DossierPreloader do
         expect(subject.champs_public_all.first.dossier).to eq(subject)
         expect(subject.champs_public.first.dossier).to eq(subject)
 
+        expect(subject.champs_public.first.type_de_champ.procedure).to eq(subject.procedure)
         expect(subject.champs_public.first.type_de_champ.piece_justificative_template.attached?).to eq(false)
 
         expect(subject.champs.first.conditional?).to eq(false)
