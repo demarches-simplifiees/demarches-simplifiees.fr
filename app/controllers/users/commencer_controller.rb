@@ -1,6 +1,6 @@
 module Users
   class CommencerController < ApplicationController
-    include ParamsStoreConcern
+    include QueryParamsStoreConcern
 
     layout 'procedure_context'
 
@@ -8,7 +8,7 @@ module Users
       @procedure = retrieve_procedure
       return procedure_not_found if @procedure.blank? || @procedure.brouillon?
 
-      store_params
+      store_query_params
 
       @revision = @procedure.published_revision
       render 'commencer/show'

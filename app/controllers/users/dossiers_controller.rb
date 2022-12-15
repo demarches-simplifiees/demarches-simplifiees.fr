@@ -1,7 +1,7 @@
 module Users
   class DossiersController < UserController
     include DossierHelper
-    include ParamsStoreConcern
+    include QueryParamsStoreConcern
 
     layout 'procedure_context', only: [:identite, :update_identite, :siret, :update_siret]
 
@@ -305,7 +305,7 @@ module Users
       )
       dossier.build_default_individual
       dossier.save!
-      dossier.prefill!(PrefillParams.new(dossier, retrieve_and_delete_stored_params).to_a)
+      dossier.prefill!(PrefillParams.new(dossier, retrieve_and_delete_stored_query_params).to_a)
 
       if dossier.procedure.for_individual
         redirect_to identite_dossier_path(dossier)
