@@ -1,0 +1,14 @@
+%div{ class: input_group_class_names }
+  = @form.label @attribute, label.html_safe, class: "fr-label"
+
+  = @form.send(@input_type, @attribute, input_opts)
+
+  - if errors_on_attribute?
+    - if error_messages.size == 1
+      %p.fr-error-text{ id: error_message_id }= error_messages.first
+    - else
+      %div.fr-error-text{ id: error_message_id }
+        %ul
+          - error_messages.map do |error_message|
+            %li= error_message
+

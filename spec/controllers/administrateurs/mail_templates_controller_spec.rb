@@ -73,7 +73,7 @@ describe Administrateurs::MailTemplatesController, type: :controller do
 
       it do
         expect(subject.body).not_to eq(mail_body)
-        expect(response.body).to match("Le contenu de l’email de notification de passage du dossier en instruction réfère au champ \"numéro\" qui n’existe pas")
+        expect(response.body).to match("Le corps de l’email contient la balise &quot;numéro&quot; qui n’existe pas, veuillez la supprimer.")
       end
     end
   end

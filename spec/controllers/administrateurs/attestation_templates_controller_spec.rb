@@ -180,7 +180,7 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
         expect(procedure.attestation_template.logo.download).to eq(logo2.read)
         expect(procedure.attestation_template.signature.download).to eq(signature2.read)
         expect(response).to redirect_to edit_admin_procedure_attestation_template_path(procedure)
-        expect(flash.notice).to eq("Le model de l’attestation a bien été modifiée")
+        expect(flash.notice).to eq("Le modèle de l’attestation a bien été modifiée")
       end
     end
 
@@ -233,33 +233,32 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
 
       context 'with invalid tag' do
         let(:body) { 'body --yolo--' }
-
-        it { expect(flash.alert).to eq(['Le contenu du modèle de l’attestation réfère au champ "yolo" qui n’existe pas']) }
+        it { expect(flash.alert).to eq("Le modèle de l’attestation contient des erreurs et n'a pas pu être enregistré, veuillez les corriger.") }
       end
 
       context 'with removed champ' do
+        render_views
         let(:body) { "body --#{removed_type_de_champ.libelle}--" }
-
-        it { expect(flash.alert).to eq(["Le contenu du modèle de l’attestation réfère au champ \"#{removed_type_de_champ.libelle}\" qui a été supprimé mais la suppression n’est pas encore publiée"]) }
+        it { expect(response.body).to have_content("Le contenu de l’attestation contient la balise \"#{removed_type_de_champ.libelle}\" qui a été supprimée mais la suppression n’est pas encore publiée.") }
       end
 
       context 'with removed and published' do
+        render_views
         let(:body) { "body --#{removed_and_published_type_de_champ.libelle}--" }
-
-        it { expect(flash.alert).to eq(["Le contenu du modèle de l’attestation réfère au champ \"#{removed_and_published_type_de_champ.libelle}\" qui a été supprimé"]) }
+        it { expect(response.body).to have_content("Le contenu de l’attestation contient la balise \"#{removed_and_published_type_de_champ.libelle}\" qui a été supprimée.") }
       end
 
       context 'with new champ missing on dossier submitted on previous revision' do
+        render_views
         let(:dossier) { create(:dossier, :en_construction, procedure: procedure, revision: procedure.revisions.first) }
         let(:body) { "body --#{new_type_de_champ.libelle}--" }
-
-        it { expect(flash.alert).to eq(["Le contenu du modèle de l’attestation réfère au champ \"#{new_type_de_champ.libelle}\" qui n’existe pas sur un des dossiers en cours de traitement"]) }
+        it { expect(response.body).to have_content("Le contenu de l’attestation contient la balise \"#{new_type_de_champ.libelle}\" qui n’existe pas sur un des dossiers en cours de traitement") }
       end
 
       context 'with champ on draft' do
+        render_views
         let(:body) { "body --#{draft_type_de_champ.libelle}--" }
-
-        it { expect(flash.alert).to eq(["Le contenu du modèle de l’attestation réfère au champ \"#{draft_type_de_champ.libelle}\" qui n’est pas encore publié"]) }
+        it { expect(response.body).to have_content("Le contenu de l’attestation contient la balise \"#{draft_type_de_champ.libelle}\" qui n’est pas encore publiée") }
       end
     end
   end

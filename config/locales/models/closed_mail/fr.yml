@@ -1,20 +1,24 @@
 fr:
   activerecord:
+    attributes:
+      mails/closed_mail:
+        subject: Objet de l’email
+        rich_body: Corps de l’email
     errors:
       models:
         mails/closed_mail:
           attributes:
             subject:
-              format: Le titre de l’email de notification d’acceptation de dossier %{message}
-              champ_missing: réfère au champ "%{tag}" qui n’existe pas
-              champ_missing_in_draft_revision: réfère au champ "%{tag}" qui a été supprimé mais la suppression n’est pas encore publiée
-              champ_missing_in_published_revision: réfère au champ "%{tag}" qui n’est pas encore publié
-              champ_missing_in_published_and_draft_revision: réfère au champ "%{tag}" qui a été supprimé
-              champ_missing_in_previous_revision: réfère au champ "%{tag}" qui n’existe pas sur un des dossiers en cours de traitement
+              format: L’objet de l’email %{message}
+              champ_missing: contient la balise "%{tag}" qui n’existe pas, veuillez la supprimer.
+              champ_missing_in_draft_revision: contient la balise "%{tag}" qui a été supprimée mais la suppression n’est pas encore publiée.
+              champ_missing_in_published_revision: contient la balise "%{tag}" qui n’est pas encore publiée.
+              champ_missing_in_published_and_draft_revision: contient la balise "%{tag}" qui a été supprimée.
+              champ_missing_in_previous_revision: contient la balise "%{tag}" qui n’existe pas sur un des dossiers en cours de traitement.
             body:
-              format: Le contenu de l’email de notification d’acceptation de dossier %{message}
-              champ_missing: réfère au champ "%{tag}" qui n’existe pas
-              champ_missing_in_draft_revision: réfère au champ "%{tag}" qui a été supprimé mais la suppression n’est pas encore publiée
-              champ_missing_in_published_revision: réfère au champ "%{tag}" qui n’est pas encore publié
-              champ_missing_in_published_and_draft_revision: réfère au champ "%{tag}" qui a été supprimé
-              champ_missing_in_previous_revision: réfère au champ "%{tag}" qui n’existe pas sur un des dossiers en cours de traitement
+              format: Le corps de l’email %{message}
+              champ_missing: contient la balise "%{tag}" qui n’existe pas, veuillez la supprimer.
+              champ_missing_in_draft_revision: contient la balise "%{tag}" qui a été supprimée mais la suppression n’est pas encore publiée.
+              champ_missing_in_published_revision: contient la balise "%{tag}" qui n’est pas encore publiée.
+              champ_missing_in_published_and_draft_revision: contient la balise "%{tag}" qui a été supprimée.
+              champ_missing_in_previous_revision: contient la balise "%{tag}" qui n’existe pas sur un des dossiers en cours de traitement.

@@ -1,12 +1,6 @@
-= f.label :title do
-  Titre de l'attestation
-  %span.mandatory *
-= f.text_field :title, class: 'form-control', placeholder: 'Titre de l’attestation'
+= render Dsfr::InputComponent.new(form: f, attribute: :title, input_type: :text_field, opts: {})
 
-= f.label :body do
-  Corps du document
-  %span.mandatory *
-= f.text_area :body, rows: '6', placeholder: 'Description de la démarche, destinataires, etc. ', class: 'form-control'
+= render Dsfr::InputComponent.new(form: f, attribute: :body, input_type: :text_area, opts: { rows: '6', placeholder: 'Description de la démarche, destinataires, etc. '})
 
 #tags-table
   %h2.add-tag-title
@@ -40,6 +34,4 @@
   %br
   Dimensions conseillées : au minimum 500 px de largeur ou de hauteur, poids maximum : 0,5 Mo.
 
-= f.label :footer do
-  Pied de page
-= f.text_field :footer, class: 'form-control', maxlength: 190, size: nil
+= render Dsfr::InputComponent.new(form: f, attribute: :footer, input_type: :text_field, opts: { maxlength: 190, size: nil }, required: false)

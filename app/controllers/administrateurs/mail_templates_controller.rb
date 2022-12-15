@@ -25,7 +25,7 @@ module Administrateurs
         flash.notice = "Email mis à jour"
         redirect_to edit_admin_procedure_mail_template_path(mail_template.procedure_id, params[:id])
       else
-        flash.now.alert = mail_template.errors.full_messages
+        flash.now.alert = "L’email contient des erreurs et n’a pas pu être enregistré, veuillez les corriger."
         mail_template.rich_body = mail_template.body
 
         @mail_template = mail_template

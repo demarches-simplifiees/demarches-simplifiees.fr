@@ -14,11 +14,11 @@ module Administrateurs
       @attestation_template = @procedure.attestation_template
 
       if @attestation_template.update(activated_attestation_params)
-        flash.notice = "Le model de l’attestation a bien été modifiée"
+        flash.notice = "Le modèle de l’attestation a bien été modifié"
 
         redirect_to edit_admin_procedure_attestation_template_path(@procedure)
       else
-        flash.now.alert = @attestation_template.errors.full_messages
+        flash.now.alert = "Le modèle de l’attestation contient des erreurs et n'a pas pu être enregistré, veuillez les corriger."
 
         render :edit
       end
@@ -28,7 +28,7 @@ module Administrateurs
       @attestation_template = build_attestation_template(activated_attestation_params)
 
       if @attestation_template.save
-        flash.notice = "Le model de l’attestation a bien été enregistrée"
+        flash.notice = "Le modèle de l’attestation a bien été enregistré"
 
         redirect_to edit_admin_procedure_attestation_template_path(@procedure)
       else
