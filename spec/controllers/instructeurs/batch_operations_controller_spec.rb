@@ -43,5 +43,14 @@ describe Instructeurs::BatchOperationsController, type: :controller do
         expect { subject }.to have_enqueued_job(BatchOperationEnqueueAllJob).with(BatchOperation.last)
       end
     end
+
+    context 'fails with no dossiers' do
+      let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+
+      it 'does not create a batch operation if no dossiers' do
+        expect { subject }.not_to change { instructeur.batch_operations.count }
+        expect(flash.alert).to eq("Le traitement de masse n'a pas été lancé. Vérifiez que l'action demandée est possible pour les dossiers sélectionnés")
+      end
+    end
   end
 end

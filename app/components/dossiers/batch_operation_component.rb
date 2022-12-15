@@ -7,7 +7,7 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
   end
 
   def render?
-    @statut == 'traites'
+    @statut == 'traites' || 'suivis'
   end
 
   def available_operations
@@ -15,9 +15,17 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
     case @statut
     when 'traites' then
       options.push [t(".operations.archiver"), BatchOperation.operations.fetch(:archiver)]
+    when 'suivis' then
+      options.push [t(".operations.passer_en_instruction"), BatchOperation.operations.fetch(:passer_en_instruction)]
     else
     end
-
     options
+  end
+
+  def icons
+    {
+      archiver: 'fr-icon-folder-2-line',
+      passer_en_instruction: 'fr-icon-edit-line'
+    }
   end
 end
