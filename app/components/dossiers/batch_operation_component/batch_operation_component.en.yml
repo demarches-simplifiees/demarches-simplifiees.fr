@@ -1,3 +1,4 @@
 fr:
   operations:
     archiver: 'Archive selected files'
+    passer_en_instruction: 'Change selected files to instructing'

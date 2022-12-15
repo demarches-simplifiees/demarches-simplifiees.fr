@@ -23,6 +23,29 @@ describe BatchOperationProcessOneJob, type: :job do
       expect(batch_operation.reload.failed_dossier_ids).to eq([dossier_job.id])
     end
 
+    context 'when operation is "archiver"' do
+      it 'archives the dossier in the batch' do
+        expect { subject.perform_now }
+          .to change { dossier_job.reload.archived? }
+          .from(false)
+          .to(true)
+      end
+    end
+
+    context 'when operation is "passer_en_instruction"' do
+      let(:batch_operation) do
+        create(:batch_operation, :passer_en_instruction,
+                                 options.merge(instructeur: create(:instructeur)))
+      end
+
+      it 'changes the dossier to en_instruction in the batch' do
+        expect { subject.perform_now }
+          .to change { dossier_job.reload.en_instruction? }
+          .from(false)
+          .to(true)
+      end
+    end
+
     context 'when the dossier is out of sync (ie: someone applied a transition somewhere we do not know)' do
       let(:instructeur) { create(:instructeur) }
       let(:procedure) { create(:simple_procedure, instructeurs: [instructeur]) }
