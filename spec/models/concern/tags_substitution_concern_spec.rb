@@ -465,6 +465,23 @@ describe TagsSubstitutionConcern, type: :model do
 
       it { is_expected.to include(include({ libelle: 'public' })) }
     end
+
+    context 'when generating document for dossier having conditional' do
+      include Logic
+      let(:state) { Dossier.states.fetch(:en_construction) }
+      let(:stable_id) { 1234 }
+      let(:condition) { ds_eq(champ_value(stable_id), constant(true)) }
+
+      let(:types_de_champ_public) do
+        [
+          { type: :text, libelle: 'public' },
+          { type: :text, libelle: 'conditional', condition: condition }
+        ]
+      end
+
+      it { is_expected.to include(include({ libelle: 'public' })) }
+      it { is_expected.not_to include(include({ libelle: 'conditional' })) }
+    end
   end
 
   describe 'used_tags_for' do

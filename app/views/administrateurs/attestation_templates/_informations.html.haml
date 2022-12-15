@@ -2,10 +2,15 @@
 
 = render Dsfr::InputComponent.new(form: f, attribute: :body, input_type: :text_area, opts: { rows: '6', placeholder: 'Description de la démarche, destinataires, etc. '})
 
-#tags-table
-  %h2.add-tag-title
+#tags-table.clearfix.fr-mt-3w
+  %h2.fr-h3
     Insérer une balise
-  %p.notice
+
+  = render Dsfr::AlertComponent.new(state: :info, title: "Balises sur le conditionnel", heading_level: 'h3') do |c|
+    - c.body do
+      Les balises pour les champs conditionnés ne sont pour le moment pas supportées.
+
+  %p.notice.fr-mt-3w
     Copiez-collez les balises ci-dessous pour afficher automatiquement l’information souhaitée.
   .head
     .tag Balise
