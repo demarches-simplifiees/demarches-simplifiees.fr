@@ -12,7 +12,6 @@ class PrefillParams
 
   def build_prefill_values
     value_by_stable_id = @params
-      .to_unsafe_hash
       .map { |prefixed_typed_id, value| [stable_id_from_typed_id(prefixed_typed_id), value] }
       .filter { |stable_id, value| stable_id.present? && value.present? }
       .to_h

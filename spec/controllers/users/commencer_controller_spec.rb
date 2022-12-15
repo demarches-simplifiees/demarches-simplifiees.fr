@@ -15,6 +15,16 @@ describe Users::CommencerController, type: :controller do
         expect(assigns(:procedure)).to eq published_procedure
         expect(assigns(:revision)).to eq published_procedure.published_revision
       end
+
+      context 'when there are query params' do
+        subject { get :commencer, params: { path: path, any_param: "any param" } }
+
+        it "stores the parameters in session" do
+          subject
+
+          expect(session[:stored_params]).to be_present
+        end
+      end
     end
 
     context 'when the path is for a draft procedure' do
