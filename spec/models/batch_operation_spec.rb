@@ -176,6 +176,36 @@ describe BatchOperation, type: :model do
     end
   end
 
+  describe '#dossiers_safe_scope (with accepter)' do
+    let(:instructeur) { create(:instructeur) }
+    let(:procedure) { create(:simple_procedure, instructeurs: [instructeur]) }
+    let(:batch_operation) { create(:batch_operation, operation: :accepter, instructeur: instructeur, dossiers: [dossier]) }
+
+    context 'when dossier is valid' do
+      let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
+
+      it 'find dosssier' do
+        expect(batch_operation.dossiers_safe_scope).to include(dossier)
+      end
+    end
+
+    context 'when dossier is already accepte' do
+      let(:dossier) { create(:dossier, :accepte, :with_individual, archived: true, procedure: procedure) }
+
+      it 'skips dossier is already en instruction' do
+        expect(batch_operation.dossiers_safe_scope).not_to include(dossier)
+      end
+    end
+
+    context 'when dossier is not in state en instruction' do
+      let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
+
+      it 'does not enqueue any job' do
+        expect(batch_operation.dossiers_safe_scope).not_to include(dossier)
+      end
+    end
+  end
+
   describe '#safe_create!' do
     let(:instructeur) { create(:instructeur) }
     let(:procedure) { create(:simple_procedure, instructeurs: [instructeur]) }
