@@ -62,20 +62,24 @@ class PiecesJustificativesService
         kopy.piece_justificative_file.attach(attachment.blob)
       end
     when TypeDeChamp
-      clone_attachment(original.piece_justificative_template, kopy.piece_justificative_template)
+      clone_attachment(original, kopy, :piece_justificative_template)
     when Procedure
-      clone_attachment(original.logo, kopy.logo)
-      clone_attachment(original.notice, kopy.notice)
-      clone_attachment(original.deliberation, kopy.deliberation)
+      clone_attachment(original, kopy, :logo)
+      clone_attachment(original, kopy, :notice)
+      clone_attachment(original, kopy, :deliberation)
     when AttestationTemplate
-      clone_attachment(original.logo, kopy.logo)
-      clone_attachment(original.signature, kopy.signature)
+      clone_attachment(original, kopy, :logo)
+      clone_attachment(original, kopy, :signature)
+    when Etablissement
+      clone_attachment(original, kopy, :entreprise_attestation_sociale)
+      clone_attachment(original, kopy, :entreprise_attestation_fiscale)
     end
   end
 
-  def self.clone_attachment(original_attachment, copy_attachment)
-    if original_attachment.attached?
-      copy_attachment.attach(original_attachment.blob)
+  def self.clone_attachment(original, kopy, attachment_name)
+    attachment = original.public_send(attachment_name)
+    if attachment.attached?
+      kopy.public_send(attachment_name).attach(attachment.blob)
     end
   end
 
