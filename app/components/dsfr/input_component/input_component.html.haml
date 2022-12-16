@@ -7,8 +7,8 @@
     - if error_messages.size == 1
       %p.fr-error-text{ id: error_message_id }= error_messages.first
     - else
-      %div.fr-error-text{ id: error_message_id }
-        %ul
+      .fr-error-text{ id: error_message_id }
+        %ul.list-style-type-none.fr-pl-0
           - error_messages.map do |error_message|
             %li= error_message
 

@@ -4,7 +4,8 @@
 input,
 textarea,
 select,
-.procedure-form__column--form .fr-input { //FIXME when DSFR is DONE
+// FIXME when DSFR is DONE
+.form-ds-fr-white .fr-input {
   background: $white;
   font-size: 1em;
 }

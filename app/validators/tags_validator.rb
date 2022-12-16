@@ -43,8 +43,8 @@ class TagsValidator < ActiveModel::EachValidator
   private
 
   def add_errors(record, attribute, message, tags)
-    tags.each do |tag|
-      record.errors.add(attribute, message, tag: tag)
+    if tags.present?
+      record.errors.add(attribute, message, count: tags.size, tags: tags.join(', '))
     end
   end
 
