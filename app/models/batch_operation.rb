@@ -27,6 +27,8 @@ class BatchOperation < ApplicationRecord
   has_many :groupe_instructeurs, through: :dossier_operations
   belongs_to :instructeur
 
+  store_accessor :payload, :motivation
+
   validates :operation, presence: true
 
   before_create :build_operations
@@ -71,7 +73,7 @@ class BatchOperation < ApplicationRecord
     when BatchOperation.operations.fetch(:passer_en_instruction)
       dossier.passer_en_instruction(instructeur: instructeur)
     when BatchOperation.operations.fetch(:accepter)
-      dossier.accepter(instructeur: instructeur)
+      dossier.accepter(instructeur: instructeur, motivation: motivation)
     end
   end
 
