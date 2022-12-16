@@ -2,3 +2,5 @@
   = turbo_stream.show_all(@to_shows)
 - if @to_hides.present?
   = turbo_stream.hide_all(@to_hides)
+
+= turbo_stream.remove_all(".editable-champ .spinner")
