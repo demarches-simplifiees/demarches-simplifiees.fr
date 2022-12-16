@@ -1,4 +1,5 @@
 = @form.text_field :value,
   id: @champ.input_id,
   required: @champ.required?,
-  aria: { describedby: @champ.describedby_id }
+  aria: { describedby: @champ.describedby_id },
+  data: data_dependent_conditions

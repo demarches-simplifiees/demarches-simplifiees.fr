@@ -101,6 +101,12 @@ export class AutosaveController extends ApplicationController {
       isTextInputElement(target)
     ) {
       this.debounce(this.enqueueAutosaveRequest, AUTOSAVE_DEBOUNCE_DELAY);
+
+      if (target.dataset.dependentConditions) {
+        const spinner = document.createElement('div');
+        spinner.classList.add('spinner', 'right');
+        target.after(spinner);
+      }
     }
   }
 

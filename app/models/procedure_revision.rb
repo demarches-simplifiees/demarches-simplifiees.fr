@@ -185,6 +185,16 @@ class ProcedureRevision < ApplicationRecord
     end
   end
 
+  def dependent_conditions(tdc)
+    stable_id = tdc.stable_id
+
+    (tdc.public? ? types_de_champ_public : types_de_champ_private).filter do |other_tdc|
+      next if !other_tdc.condition?
+
+      other_tdc.condition.sources.include?(stable_id)
+    end
+  end
+
   # Estimated duration to fill the form, in seconds.
   #
   # If the revision is locked (i.e. published), the result is cached (because type de champs can no longer be mutated).
