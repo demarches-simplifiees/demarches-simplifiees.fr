@@ -21,6 +21,8 @@ RSpec.describe Dossiers::BatchOperationComponent, type: :component do
   context 'statut suivis' do
     let(:statut) { 'suivis' }
     it { is_expected.to have_button('Actions multiples', disabled: true) }
+    it { is_expected.to have_button('Passer en instruction les dossiers sélectionnés', disabled: true) }
+    it { is_expected.to have_link('Accepter les dossiers sélectionnés') }
   end
 
   context 'statut tous' do

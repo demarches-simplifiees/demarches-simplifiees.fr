@@ -16,5 +16,18 @@
           %ul.dropdown-items
             - available_operations[:options].each do |opt|
               %li{ 'data-turbo': 'true' }
-                = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'flex justify-end', id: "#{dom_id(BatchOperation.new)}_#{opt[:operation]}" }, data: { "batch-operation-target" => "form"}) do |form|
-                  = form.button opt[:label], class: ['fr-btn--icon-left', icons[opt[:operation].to_sym]], disabled: :disabled, name: "#{form.object_name}[operation]", data: { "batch-operation-target" => "submit", "submitter-operation" => opt[:operation]}
+                = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'flex justify-end form', id: "#{dom_id(BatchOperation.new)}_#{opt[:operation]}" }, data: { "batch-operation-target" => "form"}) do |form|
+                  - if opt[:operation] == 'accepter'
+                    .wrapper
+                      %a{ href: '#', onclick: "DS.showMotivation(event, 'accept');", class: ['fr-btn--icon-left', icons[opt[:operation].to_sym]] }
+                        = opt[:label]
+
+                      .motivation.hidden{ class: 'accept' }
+                        = form.text_area :motivation, class: 'motivation-text-area'
+
+                        .text-right
+                          %span{ onclick: 'DS.motivationCancel();', class: 'fr-btn fr-btn--secondary' } Annuler
+
+                          = form.button "Valider la décision", class: ['fr-btn'], disabled: :disabled, name: "#{form.object_name}[operation]", data: { "batch-operation-target" => "submit", "submitter-operation" => opt[:operation]}
+                  - else
+                    = form.button opt[:label], class: ['fr-btn--icon-left', icons[opt[:operation].to_sym]], disabled: :disabled, name: "#{form.object_name}[operation]", data: { "batch-operation-target" => "submit", "submitter-operation" => opt[:operation]}
