@@ -2222,7 +2222,7 @@ enum TypeDeChamp {
   carte
 
   """
-  Case à cocher
+  Case à cocher seule
   """
   checkbox
 
@@ -2272,12 +2272,12 @@ enum TypeDeChamp {
   dossier_link
 
   """
-  Choix unique
+  Choix simple
   """
   drop_down_list
 
   """
-  Email
+  Adresse électronique
   """
   email
 
@@ -2292,7 +2292,7 @@ enum TypeDeChamp {
   header_section
 
   """
-  Iban
+  Numéro Iban
   """
   iban
 
@@ -2312,7 +2312,7 @@ enum TypeDeChamp {
   mesri
 
   """
-  Choix multiples
+  Choix multiple
   """
   multiple_drop_down_list
 
@@ -2357,17 +2357,17 @@ enum TypeDeChamp {
   rna
 
   """
-  SIRET
+  Numéro Siret
   """
   siret
 
   """
-  Texte
+  Texte court
   """
   text
 
   """
-  Zone de texte
+  Texte long
   """
   textarea
 

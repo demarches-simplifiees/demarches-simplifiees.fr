@@ -1482,7 +1482,7 @@ describe API::V2::GraphqlController do
             "mutation {
               dossierModifierAnnotationText(input: {
                 dossierId: \"#{dossier.to_typed_id}\",
-                annotationId: \"#{dossier.champs_private.first.to_typed_id}\",
+                annotationId: \"#{dossier.champs_private.find { |c| c.type == 'Champs::TextChamp' }.to_typed_id}\",
                 instructeurId: \"#{instructeur.to_typed_id}\",
                 value: \"hello\"
               }) {
