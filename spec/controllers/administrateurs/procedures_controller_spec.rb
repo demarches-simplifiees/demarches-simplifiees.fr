@@ -99,21 +99,21 @@ describe Administrateurs::ProceduresController, type: :controller do
       subject { get :all, format: :xlsx }
 
       it 'exports result in xlsx' do
-        allow(SpreadsheetArchitect).to receive(:to_xlsx)
+        allow(ProcedureDetail).to receive(:to_xlsx)
         subject
-        expect(SpreadsheetArchitect).to have_received(:to_xlsx)
+        expect(ProcedureDetail).to have_received(:to_xlsx)
       end
     end
 
     it 'display published or closed procedures' do
       subject
-      expect(values_for_field(assigns(:procedures), "id")).to include(published_procedure.id)
-      expect(values_for_field(assigns(:procedures), "id")).to include(closed_procedure.id)
+      expect(assigns(:procedures).any? { |p| p.id == published_procedure.id }).to be_truthy
+      expect(assigns(:procedures).any? { |p| p.id == closed_procedure.id }).to be_truthy
     end
 
     it 'doesn’t display draft procedures' do
       subject
-      expect(values_for_field(assigns(:procedures), "id")).not_to include(draft_procedure.id)
+      expect(assigns(:procedures).any? { |p| p.id == draft_procedure.id }).to be_falsey
     end
 
     context "for specific zones" do
@@ -126,8 +126,8 @@ describe Administrateurs::ProceduresController, type: :controller do
 
       it 'display only procedures for specified zones' do
         subject
-        expect(values_for_field(assigns(:procedures), "id")).to include(procedure2.id)
-        expect(values_for_field(assigns(:procedures), "id")).not_to include(procedure1.id)
+        expect(assigns(:procedures).any? { |p| p.id == procedure2.id }).to be_truthy
+        expect(assigns(:procedures).any? { |p| p.id == procedure1.id }).to be_falsey
       end
     end
 
@@ -137,14 +137,14 @@ describe Administrateurs::ProceduresController, type: :controller do
 
       it 'display only published procedures' do
         get :all, params: { statuses: ['publiee'] }
-        expect(values_for_field(assigns(:procedures), "id")).to include(procedure1.id)
-        expect(values_for_field(assigns(:procedures), "id")).not_to include(procedure2.id)
+        expect(assigns(:procedures).any? { |p| p.id == procedure1.id }).to be_truthy
+        expect(assigns(:procedures).any? { |p| p.id == procedure2.id }).to be_falsey
       end
 
       it 'display only closed procedures' do
         get :all, params: { statuses: ['close'] }
-        expect(values_for_field(assigns(:procedures), "id")).to include(procedure2.id)
-        expect(values_for_field(assigns(:procedures), "id")).not_to include(procedure1.id)
+        expect(assigns(:procedures).any? { |p| p.id == procedure2.id }).to be_truthy
+        expect(assigns(:procedures).any? { |p| p.id == procedure1.id }).to be_falsey
       end
     end
 
@@ -156,9 +156,9 @@ describe Administrateurs::ProceduresController, type: :controller do
 
       it 'display only procedures published after specific date' do
         get :all, params: { from_publication_date: after }
-        expect(values_for_field(assigns(:procedures), "id")).to include(procedure1.id)
-        expect(values_for_field(assigns(:procedures), "id")).to include(procedure2.id)
-        expect(values_for_field(assigns(:procedures), "id")).not_to include(procedure3.id)
+        expect(assigns(:procedures).any? { |p| p.id == procedure1.id }).to be_truthy
+        expect(assigns(:procedures).any? { |p| p.id == procedure2.id }).to be_truthy
+        expect(assigns(:procedures).any? { |p| p.id == procedure3.id }).to be_falsey
       end
     end
 
@@ -169,9 +169,9 @@ describe Administrateurs::ProceduresController, type: :controller do
 
       it 'returns procedures with specific terms in libelle' do
         get :all, params: { libelle: 'entrepreneur' }
-        expect(values_for_field(assigns(:procedures), "id")).to include(procedure2.id)
-        expect(values_for_field(assigns(:procedures), "id")).to include(procedure3.id)
-        expect(values_for_field(assigns(:procedures), "id")).not_to include(procedure1.id)
+        expect(assigns(:procedures).any? { |p| p.id == procedure2.id }).to be_truthy
+        expect(assigns(:procedures).any? { |p| p.id == procedure3.id }).to be_truthy
+        expect(assigns(:procedures).any? { |p| p.id == procedure1.id }).to be_falsey
       end
     end
   end
@@ -952,11 +952,5 @@ describe Administrateurs::ProceduresController, type: :controller do
       it { expect(procedure.discarded?).to be_falsy }
       it { expect(procedure.dossiers.first.hidden_by_administration_at).to be_nil }
     end
-  end
-end
-
-def values_for_field(array, field)
-  array.map do |procedure|
-    procedure[field]
   end
 end

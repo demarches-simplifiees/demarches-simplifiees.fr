@@ -342,7 +342,7 @@ module Administrateurs
 
     def all
       @filter = ProceduresFilter.new(current_administrateur, params)
-      all_procedures = filter_procedures(@filter)
+      all_procedures = filter_procedures(@filter).map { |p| ProcedureDetail.new(p) }
 
       respond_to do |format|
         format.html do
@@ -350,11 +350,8 @@ module Administrateurs
           @procedures = all_procedures.page(params[:page]).per(25)
         end
         format.xlsx do
-          render xlsx: SpreadsheetArchitect.to_xlsx(
-            headers: export_procedures_headers(all_procedures),
-            data: export_procedures_values(all_procedures)
-          ),
-          filename: "demarches-#{@filter}"
+          render xlsx: ProcedureDetail.to_xlsx(instances: all_procedures),
+            filename: "demarches-#{@filter}"
         end
       end
     end
@@ -368,21 +365,6 @@ module Administrateurs
     end
 
     private
-
-    def export_procedures_headers(all_procedures)
-      all_procedures.to_a.first.keys.map do |key|
-        I18n.t(key, scope: 'activerecord.attributes.procedure_export')
-      end
-    end
-
-    def export_procedures_values(all_procedures)
-      aasm_state_index = all_procedures.to_a.first.keys.index("aasm_state")
-      all_procedures.to_a.map(&:values).each do |procedure|
-        procedure.tap do |p|
-          p[aasm_state_index] = I18n.t(p[aasm_state_index], scope: 'activerecord.attributes.procedure.aasm_state')
-        end
-      end
-    end
 
     def filter_procedures(filter)
       procedures_result = Procedure.select(:id).joins(:procedures_zones).distinct.publiees_ou_closes
