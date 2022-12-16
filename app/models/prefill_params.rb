@@ -33,7 +33,8 @@ class PrefillParams
   class PrefillValue
     NEED_VALIDATION_TYPES_DE_CHAMPS = [
       TypeDeChamp.type_champs.fetch(:decimal_number),
-      TypeDeChamp.type_champs.fetch(:integer_number)
+      TypeDeChamp.type_champs.fetch(:integer_number),
+      TypeDeChamp.type_champs.fetch(:yes_no)
     ]
 
     attr_reader :champ, :value
