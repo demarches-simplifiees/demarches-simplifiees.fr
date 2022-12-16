@@ -46,9 +46,9 @@
             %td
               = button_to detail_admin_procedure_path(procedure["id"]), params: { show_detail: true}, method: :get, title: 'Afficher details', class: "fr-icon-add-line fr-icon--sm fr-mr-1w fr-mb-1w fr-text-action-high--blue-france fr-btn fr-btn--tertiary-no-outline" do
                 Afficher details procedure
-            %td= procedure["libelle"]
-            %td= procedure["id"]
-            %td= procedure["admin_count"]
-            %td= t procedure["aasm_state"], scope: 'activerecord.values.procedure.aasm_state'
-            %td= l(procedure["published_at"], format: :message_date_without_time)
+            %td= procedure.libelle
+            %td= procedure.id
+            %td= procedure.admin_count
+            %td= t procedure.aasm_state, scope: 'activerecord.values.procedure.aasm_state'
+            %td= l(procedure.published_at, format: :message_date_without_time)
     .fr-mt-2w= paginate @procedures, views_prefix: 'administrateurs'
