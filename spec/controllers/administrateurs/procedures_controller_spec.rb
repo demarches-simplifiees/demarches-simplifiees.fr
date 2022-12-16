@@ -95,15 +95,25 @@ describe Administrateurs::ProceduresController, type: :controller do
 
     it { expect(subject.status).to eq(200) }
 
+    context 'for export' do
+      subject { get :all, format: :xlsx }
+
+      it 'exports result in xlsx' do
+        allow(ProcedureDetail).to receive(:to_xlsx)
+        subject
+        expect(ProcedureDetail).to have_received(:to_xlsx)
+      end
+    end
+
     it 'display published or closed procedures' do
       subject
-      expect(assigns(:procedures)).to include(published_procedure)
-      expect(assigns(:procedures)).to include(closed_procedure)
+      expect(assigns(:procedures).any? { |p| p.id == published_procedure.id }).to be_truthy
+      expect(assigns(:procedures).any? { |p| p.id == closed_procedure.id }).to be_truthy
     end
 
     it 'doesn’t display draft procedures' do
       subject
-      expect(assigns(:procedures)).not_to include(draft_procedure)
+      expect(assigns(:procedures).any? { |p| p.id == draft_procedure.id }).to be_falsey
     end
 
     context "for specific zones" do
@@ -116,8 +126,8 @@ describe Administrateurs::ProceduresController, type: :controller do
 
       it 'display only procedures for specified zones' do
         subject
-        expect(assigns(:procedures)).to include(procedure2)
-        expect(assigns(:procedures)).not_to include(procedure1)
+        expect(assigns(:procedures).any? { |p| p.id == procedure2.id }).to be_truthy
+        expect(assigns(:procedures).any? { |p| p.id == procedure1.id }).to be_falsey
       end
     end
 
@@ -127,14 +137,14 @@ describe Administrateurs::ProceduresController, type: :controller do
 
       it 'display only published procedures' do
         get :all, params: { statuses: ['publiee'] }
-        expect(assigns(:procedures)).to include(procedure1)
-        expect(assigns(:procedures)).not_to include(procedure2)
+        expect(assigns(:procedures).any? { |p| p.id == procedure1.id }).to be_truthy
+        expect(assigns(:procedures).any? { |p| p.id == procedure2.id }).to be_falsey
       end
 
       it 'display only closed procedures' do
         get :all, params: { statuses: ['close'] }
-        expect(assigns(:procedures)).to include(procedure2)
-        expect(assigns(:procedures)).not_to include(procedure1)
+        expect(assigns(:procedures).any? { |p| p.id == procedure2.id }).to be_truthy
+        expect(assigns(:procedures).any? { |p| p.id == procedure1.id }).to be_falsey
       end
     end
 
@@ -146,9 +156,9 @@ describe Administrateurs::ProceduresController, type: :controller do
 
       it 'display only procedures published after specific date' do
         get :all, params: { from_publication_date: after }
-        expect(assigns(:procedures)).to include(procedure1)
-        expect(assigns(:procedures)).to include(procedure2)
-        expect(assigns(:procedures)).not_to include(procedure3)
+        expect(assigns(:procedures).any? { |p| p.id == procedure1.id }).to be_truthy
+        expect(assigns(:procedures).any? { |p| p.id == procedure2.id }).to be_truthy
+        expect(assigns(:procedures).any? { |p| p.id == procedure3.id }).to be_falsey
       end
     end
 
@@ -159,9 +169,9 @@ describe Administrateurs::ProceduresController, type: :controller do
 
       it 'returns procedures with specific terms in libelle' do
         get :all, params: { libelle: 'entrepreneur' }
-        expect(assigns(:procedures)).to include(procedure2)
-        expect(assigns(:procedures)).to include(procedure3)
-        expect(assigns(:procedures)).not_to include(procedure1)
+        expect(assigns(:procedures).any? { |p| p.id == procedure2.id }).to be_truthy
+        expect(assigns(:procedures).any? { |p| p.id == procedure3.id }).to be_truthy
+        expect(assigns(:procedures).any? { |p| p.id == procedure1.id }).to be_falsey
       end
     end
   end

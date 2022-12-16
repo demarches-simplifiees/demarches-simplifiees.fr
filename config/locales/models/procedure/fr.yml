@@ -10,6 +10,11 @@ fr:
         organisation: Organisme
         duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers sur demarches-simplifiees.fr (choisi par un usager)
         max_duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers maximum (autorisé par un super admin de DS)
+        id: Id
+        libelle: Libelle
+        published_at: 'Date de publication'
+        aasm_state: 'Statut'
+        admin_count: 'Nb administrateurs'
         aasm_state:
           brouillon: Brouillon
           publiee: Publiée
@@ -27,6 +32,12 @@ fr:
         without_continuation_mail: L’email de notification de classement sans suite de dossier
         attestation_template: Le modèle d’attestation
         draft_revision: Le formulaire
+      procedure_export:
+        id: Id
+        libelle: Libelle
+        published_at: 'Date de publication'
+        aasm_state: 'Statut'
+        admin_count: 'Nb administrateurs'
     errors:
       models:
         procedure:
