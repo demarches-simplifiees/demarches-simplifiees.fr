@@ -155,6 +155,10 @@ def add_single_champ(pdf, champ)
   when 'Champs::NumberChamp'
     value = champ.to_s.empty? ? 'Non communiqué' : number_with_delimiter(champ.to_s)
     format_in_2_lines(pdf, tdc.libelle, value)
+  when 'Champs::CommuneChamp'
+    value = champ.to_s.empty? ? 'Non communiqué' : champ.to_s
+    format_in_2_lines(pdf, tdc.libelle, value)
+    pdf.text "Département : #{champ.departement}" if champ.departement.present?
   else
     value = champ.to_s.empty? ? 'Non communiqué' : champ.to_s
     format_in_2_lines(pdf, tdc.libelle, value)
