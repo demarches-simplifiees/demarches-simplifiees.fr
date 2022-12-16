@@ -60,4 +60,14 @@ class ProceduresFilter
       params.to_h.merge(filter => new_filter)
     end
   end
+
+  def to_s
+    filters = []
+    filters << selected_zones&.map { |zone| zone.current_label.parameterize }
+    filters << libelle&.parameterize
+    filters << email
+    filters << "from-#{from_publication_date}" if from_publication_date
+    filters << statuses
+    filters.compact.join('-')
+  end
 end

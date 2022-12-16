@@ -440,6 +440,7 @@ Rails.application.routes.draw do
       end
 
       member do
+        get 'detail'
         get 'apercu'
         get 'champs'
         get 'zones'
