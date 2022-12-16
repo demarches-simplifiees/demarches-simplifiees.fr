@@ -1,5 +1,5 @@
 class Cron::Datagouv::ExportAndPublishDemarchesPubliquesJob < Cron::CronJob
-  self.schedule_expression = "every month at 3:00"
+  self.schedule_expression = "every month at 4:00"
 
   def self.schedulable?
     false
