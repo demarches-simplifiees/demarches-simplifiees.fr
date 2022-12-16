@@ -142,7 +142,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
   scenario "adding a dropdown champ" do
     add_champ(remove_flash_message: true)
 
-    select('Choix unique', from: 'Type de champ')
+    select('Choix simple', from: 'Type de champ')
     fill_in 'Libellé du champ', with: 'Libellé de champ menu déroulant', fill_options: { clear: :backspace }
     fill_in 'Options de la liste', with: 'Un menu', fill_options: { clear: :backspace }
     check "Proposer une option « autre » avec un texte libre"
