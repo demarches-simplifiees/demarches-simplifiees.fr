@@ -20,36 +20,10 @@
 #  parent_id                      :bigint
 #  type_de_champ_id               :integer
 #
-class Champs::YesNoChamp < Champ
-  def search_terms
-    if true?
-      [libelle]
-    end
-  end
-
-  def to_s
-    processed_value
-  end
-
-  def for_tag
-    processed_value
-  end
-
-  def for_export
-    processed_value
-  end
+class Champs::YesNoChamp < Champs::BooleanChamp
+  validates :value, inclusion: ["true", "false"], allow_nil: true, allow_blank: false
 
   def true?
     value == 'true'
-  end
-
-  def for_api_v2
-    true? ? 'true' : 'false'
-  end
-
-  private
-
-  def processed_value
-    true? ? 'Oui' : 'Non'
   end
 end

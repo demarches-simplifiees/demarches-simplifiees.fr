@@ -20,16 +20,36 @@
 #  parent_id                      :bigint
 #  type_de_champ_id               :integer
 #
-class Champs::CheckboxChamp < Champs::BooleanChamp
-  def true?
-    value == 'on'
+class Champs::BooleanChamp < Champ
+  def search_terms
+    if true?
+      [libelle]
+    end
+  end
+
+  def to_s
+    processed_value
+  end
+
+  def for_tag
+    processed_value
   end
 
   def for_export
-    true? ? 'on' : 'off'
+    processed_value
   end
 
-  def mandatory_blank?
-    mandatory? && (blank? || !true?)
+  def true?
+    raise NotImplemented
+  end
+
+  def for_api_v2
+    true? ? 'true' : 'false'
+  end
+
+  private
+
+  def processed_value
+    true? ? 'Oui' : 'Non'
   end
 end
