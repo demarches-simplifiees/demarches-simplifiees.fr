@@ -18,6 +18,7 @@
 #  etablissement_id               :integer
 #  external_id                    :string
 #  parent_id                      :bigint
+#  row_id                         :string
 #  type_de_champ_id               :integer
 #
 class Champ < ApplicationRecord
@@ -221,7 +222,7 @@ class Champ < ApplicationRecord
   end
 
   def clone
-    champ_attributes = [:parent_id, :private, :row, :type, :type_de_champ_id]
+    champ_attributes = [:parent_id, :private, :row, :row_id, :type, :type_de_champ_id]
     value_attributes = private? ? [] : [:value, :value_json, :data, :external_id]
     relationships = private? ? [] : [:etablissement, :geo_areas]
 
