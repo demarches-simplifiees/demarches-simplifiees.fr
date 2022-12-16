@@ -7,18 +7,26 @@ fr:
     errors:
       models:
         mails/initiated_mail:
+          tags_errors: &tags_errors
+            champ_missing:
+              one: contient la balise "%{tags}" qui n’existe pas. Supprimer la balise
+              other: contient  %{count} balises (%{tags}) qui n’existent pas. Supprimer les balises
+            champ_missing_in_draft_revision:
+              one: contient la balise "%{tags}" qui a été supprimée mais la suppression n’est pas encore publiée. Publier la nouvelle version de la démarche et recommencer
+              other: contient  %{count} balises (%{tags}) qui ont été supprimées mais la suppression n’est pas encore publiée. Publier la nouvelle version de la démarche et recommencer
+            champ_missing_in_published_revision:
+              one: contient la balise "%{tags}" qui n’est pas encore publiée. Publier la nouvelle version de la démarche et recommencer
+              other: contient  %{count} balises (%{tags}) qui ne sont pas encore publiées. Publier la nouvelle version de la démarche et recommencer
+            champ_missing_in_published_and_draft_revision:
+              one: contient la balise "%{tags}" qui a été supprimée. Supprimer la balise
+              other: contient  %{count} balises (%{tags}) qui ont été supprimées. Supprimer les balises
+            champ_missing_in_previous_revision:
+              one: contient la balise "%{tags}" qui n’existe pas sur un des dossiers en cours de traitement. Supprimer la balise
+              other: contient %{count} balises (%{tags}) qui n’existent pas sur un des dossiers en cours de traitement. Supprimer les balises
           attributes:
             subject:
-              format: L’objet de l’email %{message}
-              champ_missing: contient la balise "%{tag}" qui n’existe pas, veuillez la supprimer.
-              champ_missing_in_draft_revision: contient la balise "%{tag}" qui a été supprimée mais la suppression n’est pas encore publiée.
-              champ_missing_in_published_revision: contient la balise "%{tag}" qui n’est pas encore publiée.
-              champ_missing_in_published_and_draft_revision: contient la balise "%{tag}" qui a été supprimée.
-              champ_missing_in_previous_revision: contient la balise "%{tag}" qui n’existe pas sur un des dossiers en cours de traitement.
+              format: Le champ « Objet de l’email » %{message}
+              <<: *tags_errors
             body:
-              format: Le corps de l’email %{message}
-              champ_missing: contient la balise "%{tag}" qui n’existe pas, veuillez la supprimer.
-              champ_missing_in_draft_revision: contient la balise "%{tag}" qui a été supprimé mais la suppression n’est pas encore publiée.
-              champ_missing_in_published_revision: contient la balise "%{tag}" qui n’est pas encore publié.
-              champ_missing_in_published_and_draft_revision: contient la balise "%{tag}" qui a été supprimé.
-              champ_missing_in_previous_revision: contient la balise "%{tag}" qui n’existe pas sur un des dossiers en cours de traitement.
+              format: Le champ « Corps de l’email » %{message}
+              <<: *tags_errors

@@ -30,7 +30,7 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
       # now process to enable attestation
       find_attestation_card.click
       fill_in "Titre de l’attestation", with: 'BOOM'
-      fill_in "Contenu de l'attestation", with: 'BOOM'
+      fill_in "Contenu de l’attestation", with: 'BOOM'
       find('.toggle-switch-control').click
       click_on 'Enregistrer'
 
