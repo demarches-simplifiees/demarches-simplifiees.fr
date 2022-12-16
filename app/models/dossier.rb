@@ -1211,27 +1211,30 @@ class Dossier < ApplicationRecord
     @sections[champ.parent || (champ.public? ? :public : :private)]
   end
 
-  # while cloning we do not have champ.id. it comes after transaction
-  # so we collect a list of jobs to process. then enqueue this list
   def clone
-    cloned_dossier = deep_clone(only: [:autorisation_donnees, :user_id, :revision_id, :groupe_instructeur_id],
-                                include: [:individual, :etablissement]) do |original, kopy|
+    dossier_attributes = [:autorisation_donnees, :user_id, :revision_id, :groupe_instructeur_id]
+    relationships = [:individual, :etablissement]
+
+    cloned_dossier = deep_clone(only: dossier_attributes, include: relationships) do |original, kopy|
+      PiecesJustificativesService.clone_attachments(original, kopy)
+
       if original.is_a?(Dossier)
         kopy.parent_dossier_id = original.id
         kopy.state = Dossier.states.fetch(:brouillon)
-        kopy.champs_public = original.champs_public.map do |champ|
-          champ.clone(dossier: kopy)
-        end
-        kopy.champs_private = original.champs_private.map do |champ|
-          champ.clone(dossier: kopy)
+        cloned_champs = original.champs
+          .index_by(&:id)
+          .transform_values(&:clone)
+
+        kopy.champs = cloned_champs.values.map do |champ|
+          champ.dossier = kopy
+          champ.parent = cloned_champs[champ.parent_id] if champ.child?
+          champ
         end
       end
     end
 
-    transaction do
-      cloned_dossier.save!
-    end
-    cloned_dossier
+    transaction { cloned_dossier.save! }
+    cloned_dossier.reload
   end
 
   def find_champs_by_stable_ids(stable_ids)

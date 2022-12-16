@@ -220,21 +220,14 @@ class Champ < ApplicationRecord
     end
   end
 
-  def clone(dossier:, parent: nil)
-    kopy = deep_clone(only: (private? ? [] : [:value, :value_json, :data, :external_id]) + [:private, :row, :type, :type_de_champ_id],
-                      include: private? ? [] : [:etablissement, :geo_areas])
+  def clone
+    champ_attributes = [:parent_id, :private, :row, :type, :type_de_champ_id]
+    value_attributes = private? ? [] : [:value, :value_json, :data, :external_id]
+    relationships = private? ? [] : [:etablissement, :geo_areas]
 
-    kopy.dossier = dossier
-    kopy.parent = parent if parent
-    case self
-    when Champs::RepetitionChamp
-      kopy.champs = (private? ? champs.where(row: 0) : champs).map do |champ_de_repetition|
-        champ_de_repetition.clone(dossier: dossier, parent: kopy)
-      end
-    when Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp
-      PiecesJustificativesService.clone_attachments(self, kopy) if !private? && piece_justificative_file.attached?
+    deep_clone(only: champ_attributes + value_attributes, include: relationships) do |original, kopy|
+      PiecesJustificativesService.clone_attachments(original, kopy)
     end
-    kopy
   end
 
   private
