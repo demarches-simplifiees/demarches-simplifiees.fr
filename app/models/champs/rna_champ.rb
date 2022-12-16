@@ -19,6 +19,7 @@
 #  external_id                    :string
 #  parent_id                      :bigint
 #  type_de_champ_id               :integer          not null
+#  row_id                         :string
 #
 class Champs::RNAChamp < Champ
   validates :value, allow_blank: true, format: {
