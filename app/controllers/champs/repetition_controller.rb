@@ -8,7 +8,7 @@ class Champs::RepetitionController < ApplicationController
 
   def remove
     champ = policy_scope(Champ).includes(:champs).find(params[:champ_id])
-    champ.champs.where(id: params[:champ_ids]).destroy_all
+    champ.champs.where(row_id: params[:row_id]).destroy_all
     @row_id = params[:row_id]
   end
 end

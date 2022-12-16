@@ -26,16 +26,15 @@ class Champs::RepetitionChamp < Champ
   delegate :libelle_for_export, to: :type_de_champ
 
   def rows
-    champs.group_by(&:row).values
+    champs.group_by(&:row_id).values
   end
 
   def add_row(revision)
     added_champs = []
     transaction do
-      row = (blank? ? -1 : champs.last.row) + 1
       row_id = ULID.generate
       revision.children_of(type_de_champ).each do |type_de_champ|
-        added_champs << type_de_champ.champ.build(row:, row_id:)
+        added_champs << type_de_champ.champ.build(row_id:)
       end
       self.champs << added_champs
     end
