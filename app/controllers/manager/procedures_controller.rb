@@ -1,5 +1,10 @@
 module Manager
   class ProceduresController < Manager::ApplicationController
+    CSV_MAX_SIZE = 1.megabytes
+    CSV_ACCEPTED_CONTENT_TYPES = [
+      "text/csv",
+      "application/vnd.ms-excel"
+    ]
     #
     # Administrate overrides
     #
@@ -103,6 +108,44 @@ module Manager
       redirect_to manager_procedure_path(procedure)
     end
 
+    def import_data
+    end
+
+    def import_tags
+      if !CSV_ACCEPTED_CONTENT_TYPES.include?(tags_csv_file.content_type) && !CSV_ACCEPTED_CONTENT_TYPES.include?(marcel_content_type)
+        flash[:alert] = "Importation impossible : veuillez importer un fichier CSV"
+
+      elsif tags_csv_file.size > CSV_MAX_SIZE
+        flash[:alert] = "Importation impossible : le poids du fichier est supérieur à #{number_to_human_size(CSV_MAX_SIZE)}"
+
+      else
+        file = tags_csv_file.read
+        base_encoding = CharlockHolmes::EncodingDetector.detect(file)
+        procedure_tags = ACSV::CSV.new_for_ruby3(file.encode("UTF-8", base_encoding[:encoding], invalid: :replace, replace: ""), headers: true, header_converters: :downcase)
+          .map { |r| r.to_h.slice('demarche', 'tag') }
+
+        invalid_ids = []
+        procedure_tags.each do |procedure_tag|
+          procedure = Procedure.find_by(id: procedure_tag['demarche'])
+          tags = procedure_tag["tag"].split(',').map(&:strip).map(&:capitalize)
+
+          if procedure.nil?
+            invalid_ids << procedure_tag['demarche']
+            next
+          end
+
+          tags.each do |tag|
+            procedure.tags.push(tag)
+          end
+          procedure.save
+        end
+      end
+      message =  "Import des tags terminé."
+      message += " Ces démarches n'existent pas : #{invalid_ids.to_sentence}" if invalid_ids.any?
+      flash.notice = message
+      redirect_to manager_administrateurs_path
+    end
+
     private
 
     def procedure
@@ -119,6 +162,14 @@ module Manager
 
     def tags_params
       params.require(:procedure).permit(:tags)
+    end
+
+    def tags_csv_file
+      params[:tags_csv_file]
+    end
+
+    def marcel_content_type
+      Marcel::MimeType.for(tags_csv_file.read, name: tags_csv_file.original_filename, declared_type: tags_csv_file.content_type)
     end
 
     def unfiltered_list?
