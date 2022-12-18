@@ -78,6 +78,8 @@ Rails.application.routes.draw do
       match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post]
     end
 
+    get 'import_procedure_tags' => 'procedures#import_data'
+    post 'import_tags' => 'procedures#import_tags'
     root to: "administrateurs#index"
   end
 
