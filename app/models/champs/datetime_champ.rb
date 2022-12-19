@@ -49,11 +49,17 @@ class Champs::DatetimeChamp < Champ
           year, month, day, hour, minute = hash_date.values_at(1, 2, 3, 4, 5)
           Time.zone.local(year, month, day, hour, minute).strftime("%d/%m/%Y %H:%M")
         rescue
+          # i18n-tasks-use t('errors.messages.not_a_datetime')
+          errors.add :date, errors.generate_message(:value, :not_a_datetime)
           nil
         end
     elsif /^\d{2}\/\d{2}\/\d{4}\s\d{2}:\d{2}$/.match?(value) # old browsers can send with dd/mm/yyyy hh:mm format
       self.value = Time.zone.strptime(value, "%d/%m/%Y %H:%M").strftime("%Y-%m-%d %H:%M")
+    elsif /^\d{2}\/\d{2}\/\d{4}-\d{2}:\d{2}$/.match?(value) # advised format for prefilling
+      self.value = Time.zone.strptime(value, "%d/%m/%Y-%H:%M").strftime("%Y-%m-%d %H:%M")
     elsif !(/^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}$/.match?(value)) # a datetime not correctly formatted should not be stored
+      # i18n-tasks-use t('errors.messages.not_a_datetime')
+      errors.add :date, errors.generate_message(:value, :not_a_datetime)
       self.value = nil
     end
   end

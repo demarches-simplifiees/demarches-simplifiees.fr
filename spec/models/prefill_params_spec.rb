@@ -89,6 +89,8 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is authorized", :type_de_champ_email, "value"
     it_behaves_like "a champ public value that is authorized", :type_de_champ_phone, "value"
     it_behaves_like "a champ public value that is authorized", :type_de_champ_iban, "value"
+    it_behaves_like "a champ public value that is authorized", :type_de_champ_date, "22/12/2022"
+    it_behaves_like "a champ public value that is authorized", :type_de_champ_datetime, "22/12/2022 10:00"
 
     it_behaves_like "a champ public value that is unauthorized", :type_de_champ_decimal_number, "non decimal string"
     it_behaves_like "a champ public value that is unauthorized", :type_de_champ_integer_number, "non integer string"
@@ -99,8 +101,6 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is unauthorized", :type_de_champ_checkbox, "value"
     it_behaves_like "a champ public value that is unauthorized", :type_de_champ_civilite, "value"
     it_behaves_like "a champ public value that is unauthorized", :type_de_champ_yes_no, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_date, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_datetime, "value"
     it_behaves_like "a champ public value that is unauthorized", :type_de_champ_drop_down_list, "value"
     it_behaves_like "a champ public value that is unauthorized", :type_de_champ_multiple_drop_down_list, "value"
     it_behaves_like "a champ public value that is unauthorized", :type_de_champ_linked_drop_down_list, "value"

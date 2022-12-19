@@ -42,6 +42,8 @@ class Champs::DateChamp < Champ
       begin
         Time.zone.parse(value).to_date.iso8601
       rescue
+        # i18n-tasks-use t('errors.messages.not_a_date')
+        errors.add :date, errors.generate_message(:value, :not_a_date)
         nil
       end
   end

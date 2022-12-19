@@ -259,7 +259,10 @@ class TypeDeChamp < ApplicationRecord
       TypeDeChamp.type_champs.fetch(:integer_number),
       TypeDeChamp.type_champs.fetch(:email),
       TypeDeChamp.type_champs.fetch(:phone),
-      TypeDeChamp.type_champs.fetch(:iban)
+      TypeDeChamp.type_champs.fetch(:iban),
+      TypeDeChamp.type_champs.fetch(:date),
+      TypeDeChamp.type_champs.fetch(:datetime)
+
     ])
   end
 
