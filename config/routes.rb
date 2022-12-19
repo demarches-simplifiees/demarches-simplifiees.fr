@@ -189,6 +189,13 @@ Rails.application.routes.draw do
   post "webhooks/helpscout_support_dev", to: "webhook#helpscout_support_dev"
   match "webhooks/helpscout", to: lambda { |_| [204, {}, nil] }, via: :head
 
+  get '/preremplir/:path', to: 'prefill_descriptions#edit'
+  resources :procedures, only: [], param: :path do
+    member do
+      resource :prefill_description, only: :update
+    end
+  end
+
   #
   # Deprecated UI
   #
@@ -251,6 +258,12 @@ Rails.application.routes.draw do
     end
 
     resources :pays, only: :index
+
+    namespace :public do
+      namespace :v1 do
+        resources :dossiers, only: :create
+      end
+    end
   end
 
   #

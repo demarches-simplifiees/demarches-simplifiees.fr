@@ -1,0 +1,19 @@
+- content_for(:title, @prefill_description.libelle)
+
+- content_for :footer do
+  = render partial: "root/footer"
+
+.container
+  .two-columns.procedure-context
+    .columns-container
+      .column.procedure-preview
+        = render partial: 'shared/procedure_description', locals: { procedure: @prefill_description }
+      .column.procedure-context-content
+        %p
+          = t("views.prefill_descriptions.edit.intro_html", libelle: @prefill_description.libelle)
+        %p
+          = t("views.prefill_descriptions.edit.info")
+
+  = render "types_de_champs", prefill_description: @prefill_description
+
+  = render "prefill_link", prefill_description: @prefill_description
