@@ -14,7 +14,7 @@
     = form_for @mail_template,
       url: admin_procedure_mail_template_path(@procedure, @mail_template.class.const_get(:SLUG)),
       method: :put,
-      html: { class: 'form procedure-form__column--form' } do |f|
+      html: { class: 'form form-ds-fr-white procedure-form__column--form' } do |f|
 
       %h1.page-title= @mail_template.class.const_get(:DISPLAYED_NAME)
       = render partial: 'form', locals: { f: f, tags: @mail_template.tags }

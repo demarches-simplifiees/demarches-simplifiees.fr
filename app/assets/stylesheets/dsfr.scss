@@ -3,7 +3,9 @@
 // override default transparent background on inputs & font-size to 16px by default
 input,
 textarea,
-select {
+select,
+// FIXME when DSFR is DONE
+.form-ds-fr-white .fr-input {
   background: $white;
   font-size: 1em;
 }
