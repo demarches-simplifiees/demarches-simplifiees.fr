@@ -100,4 +100,23 @@ RSpec.describe PrefillDescription, type: :model do
       )
     end
   end
+
+  describe '#prefill_query' do
+    let(:procedure) { create(:procedure) }
+    let(:type_de_champ) { create(:type_de_champ_text, procedure: procedure) }
+    let(:prefill_description) { described_class.new(procedure) }
+    let(:expected_query) do
+      <<~TEXT
+        curl --request POST '#{api_public_v1_dossiers_url}'
+             --header 'Content-Type: application/json'
+             --data '{"procedure_id": #{procedure.id}, "champ_#{type_de_champ.to_typed_id}": "#{type_de_champ.libelle}"}'
+      TEXT
+    end
+
+    before { prefill_description.update(selected_type_de_champ_ids: [type_de_champ.id]) }
+
+    it "builds the query to create a new prefilled dossier" do
+      expect(prefill_description.prefill_query).to eq(expected_query)
+    end
+  end
 end
