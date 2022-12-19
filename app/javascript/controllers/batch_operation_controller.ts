@@ -20,11 +20,6 @@ export class BatchOperationController extends ApplicationController {
     const submitter = event.submitter as HTMLInputElement;
 
     submitter.setAttribute('value', submitter.dataset.submitterOperation || '');
-    this.inputTargets.forEach((e) =>
-      e.setAttribute(
-        'form',
-        `new_batch_operation_${submitter.dataset.submitterOperation}`
-    ));
     return event;
   }
 

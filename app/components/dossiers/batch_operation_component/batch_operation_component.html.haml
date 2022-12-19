@@ -1,7 +1,7 @@
 - if available_operations[:options].present?
   - if available_operations[:options].count == 1
     - opt = available_operations[:options].dig(0)
-    = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'flex justify-end', id: "#{dom_id(BatchOperation.new)}_#{opt[:operation]}" }, data: { "batch-operation-target" => "form"}) do |form|
+    = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'flex justify-end', id: "#{dom_id(BatchOperation.new)}" }, data: { "batch-operation-target" => "form"}) do |form|
       = form.button opt[:label], class: ['fr-btn fr-btn--icon-left', icons[opt[:operation].to_sym]], disabled: :disabled, name: "#{form.object_name}[operation]", data: { "batch-operation-target" => "submit", "submitter-operation" => opt[:operation] }
 
   -else
@@ -12,11 +12,10 @@
           Actions multiples
 
         #state-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
-
-          %ul.dropdown-items
-            - available_operations[:options].each do |opt|
-              %li{ 'data-turbo': 'true' }
-                = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'flex justify-end form', id: "#{dom_id(BatchOperation.new)}_#{opt[:operation]}" }, data: { "batch-operation-target" => "form"}) do |form|
+          = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'flex justify-end form', id: "#{dom_id(BatchOperation.new)}" }, data: { "batch-operation-target" => "form"}) do |form|
+            %ul.dropdown-items
+              - available_operations[:options].each do |opt|
+                %li{ 'data-turbo': 'true' }
                   - if opt[:operation] == 'accepter'
                     .wrapper
                       %a{ href: '#', onclick: "DS.showMotivation(event, 'accept');", class: ['fr-btn--icon-left', icons[opt[:operation].to_sym]] }
