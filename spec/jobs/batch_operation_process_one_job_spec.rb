@@ -67,6 +67,22 @@ describe BatchOperationProcessOneJob, type: :job do
       end
     end
 
+    context 'when operation is "accepter" with justificatif' do
+      let(:fake_justificatif) { ActiveStorage::Blob.create_and_upload!(io: StringIO.new("ma justification"), filename: 'piece_justificative_0.pdf', content_type: 'application/pdf') }
+
+      let(:batch_operation) do
+        create(:batch_operation, :accepter,
+               options.merge(instructeur: create(:instructeur), motivation: 'motivation', justificatif_motivation: fake_justificatif.signed_id))
+      end
+
+      it 'accepts the dossier in the batch with a justificatif' do
+        expect { subject.perform_now }
+          .to change { dossier_job.reload.justificatif_motivation.filename }
+          .from(nil)
+          .to(fake_justificatif.filename)
+      end
+    end
+
     context 'when the dossier is out of sync (ie: someone applied a transition somewhere we do not know)' do
       let(:instructeur) { create(:instructeur) }
       let(:procedure) { create(:simple_procedure, instructeurs: [instructeur]) }
