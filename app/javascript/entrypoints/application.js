@@ -14,7 +14,6 @@ import { registerControllers } from '../shared/stimulus-loader';
 import '../new_design/form-validation';
 import '../new_design/procedure-context';
 import '../new_design/procedure-form';
-import '../new_design/support';
 
 import {
   toggleCondidentielExplanation,
