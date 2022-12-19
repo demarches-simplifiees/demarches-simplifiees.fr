@@ -21,6 +21,17 @@ RSpec.describe PrefillDescription, type: :model do
     let(:prefill_description) { described_class.new(procedure) }
 
     it { expect(prefill_description.types_de_champ).to match([type_de_champ]) }
+
+    shared_examples "filters out non fillable types de champ" do |type_de_champ_name|
+      context "when the procedure has a #{type_de_champ_name} champ" do
+        let(:non_fillable_type_de_champ) { create(type_de_champ_name, procedure: procedure) }
+
+        it { expect(prefill_description.types_de_champ).not_to include(non_fillable_type_de_champ) }
+      end
+    end
+
+    it_behaves_like "filters out non fillable types de champ", :type_de_champ_header_section
+    it_behaves_like "filters out non fillable types de champ", :type_de_champ_explication
   end
 
   describe '#include?' do

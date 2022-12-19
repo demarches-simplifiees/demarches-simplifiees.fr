@@ -15,7 +15,7 @@ class PrefillDescription < SimpleDelegator
   end
 
   def types_de_champ
-    active_revision.types_de_champ_public
+    active_revision.types_de_champ_public.fillable
   end
 
   def include?(type_de_champ_id)
