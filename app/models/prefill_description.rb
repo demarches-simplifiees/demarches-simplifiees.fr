@@ -37,10 +37,14 @@ class PrefillDescription < SimpleDelegator
   private
 
   def prefilled_champs_for_link
-    prefilled_champs.map { |type_de_champ| ["champ_#{type_de_champ.to_typed_id}", type_de_champ.libelle] }.to_h
+    prefilled_champs.map { |type_de_champ| ["champ_#{type_de_champ.to_typed_id}", example_value(type_de_champ)] }.to_h
   end
 
   def prefilled_champs_for_query
-    prefilled_champs.map { |type_de_champ| "\"champ_#{type_de_champ.to_typed_id}\": \"#{type_de_champ.libelle}\"" } .join(', ')
+    prefilled_champs.map { |type_de_champ| "\"champ_#{type_de_champ.to_typed_id}\": \"#{example_value(type_de_champ)}\"" } .join(', ')
+  end
+
+  def example_value(type_de_champ)
+    I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")
   end
 end

@@ -71,7 +71,7 @@ RSpec.describe PrefillDescription, type: :model do
       expect(prefill_description.prefill_link).to eq(
         commencer_url(
           path: procedure.path,
-          "champ_#{type_de_champ.to_typed_id}" => type_de_champ.libelle
+          "champ_#{type_de_champ.to_typed_id}" => I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")
         )
       )
     end
