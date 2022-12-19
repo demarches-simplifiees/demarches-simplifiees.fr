@@ -251,6 +251,18 @@ class TypeDeChamp < ApplicationRecord
     collapsible_explanation_enabled == "1"
   end
 
+  def prefillable?
+    type_champ.in?([
+      TypeDeChamp.type_champs.fetch(:text),
+      TypeDeChamp.type_champs.fetch(:textarea),
+      TypeDeChamp.type_champs.fetch(:decimal_number),
+      TypeDeChamp.type_champs.fetch(:integer_number),
+      TypeDeChamp.type_champs.fetch(:email),
+      TypeDeChamp.type_champs.fetch(:phone),
+      TypeDeChamp.type_champs.fetch(:iban)
+    ])
+  end
+
   def fillable?
     !non_fillable?
   end
