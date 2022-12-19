@@ -3,6 +3,3 @@
 
 = turbo_stream.replace "#{dom_id(@prefill_description)}_url" do
   = render "prefill_link", prefill_description: @prefill_description
-
-= turbo_stream.replace "#{dom_id(@prefill_description)}_query" do
-  = render "prefill_query", prefill_description: @prefill_description
