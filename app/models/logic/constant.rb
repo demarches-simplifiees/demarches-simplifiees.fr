@@ -1,4 +1,6 @@
 class Logic::Constant < Logic::Term
+  include Comparable
+
   attr_reader :value
 
   def initialize(value)
@@ -44,5 +46,10 @@ class Logic::Constant < Logic::Term
 
   def ==(other)
     self.class == other.class && @value == other.value
+  end
+
+  def <=>(other)
+    raise "incompatible, #{self.class.name} <=> #{other.class.name}" if self.class != other.class
+    @value <=> other.value
   end
 end
