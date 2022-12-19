@@ -91,6 +91,8 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is authorized", :type_de_champ_iban, "value"
     it_behaves_like "a champ public value that is authorized", :type_de_champ_yes_no, "true"
     it_behaves_like "a champ public value that is authorized", :type_de_champ_yes_no, "false"
+    it_behaves_like "a champ public value that is authorized", :type_de_champ_checkbox, "on"
+    it_behaves_like "a champ public value that is authorized", :type_de_champ_checkbox, "off"
 
     it_behaves_like "a champ public value that is unauthorized", :type_de_champ_decimal_number, "non decimal string"
     it_behaves_like "a champ public value that is unauthorized", :type_de_champ_integer_number, "non integer string"
