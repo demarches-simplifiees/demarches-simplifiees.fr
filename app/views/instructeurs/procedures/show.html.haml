@@ -69,6 +69,7 @@
         - if @dossiers_count > 0
           %span.dossiers-export
             = render Dossiers::ExportComponent.new(procedure: @procedure, exports: @exports, statut: @statut, count: @dossiers_count, export_url: method(:download_export_instructeur_procedure_path))
+      %hr.fr-mt-5v
 
     - if @filtered_sorted_paginated_ids.present? || @current_filters.count > 0
       - batch_operation_component = Dossiers::BatchOperationComponent.new(statut: @statut, procedure: @procedure)
@@ -124,7 +125,7 @@
                       - if p.batch_operation_id.present?
                         = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, true, disabled: true, id: dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"), aria: {label: t('views.instructeurs.dossiers.batch_operation.disabled')}
                       - else
-                        = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, false, data: { "batch-operation-target" => "input", "action" => "batch-operation#onCheckOne"}, id: dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"), aria: {label: t('views.instructeurs.dossiers.batch_operation.enabled')}
+                        = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, false, data: { "batch-operation-target" => "input", "action" => "batch-operation#onCheckOne"}, form: dom_id(BatchOperation.new), id: dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"), aria: {label: t('views.instructeurs.dossiers.batch_operation.enabled')}
 
                       - if @not_archived_notifications_dossier_ids.include?(p.dossier_id)
                         %span.notifications{ 'aria-label': 'notifications' }
