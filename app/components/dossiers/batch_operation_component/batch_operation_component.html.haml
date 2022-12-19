@@ -24,6 +24,10 @@
 
                       .motivation.hidden{ class: 'accept' }
                         = form.text_area :motivation, class: 'motivation-text-area'
+                        .optional-justificatif{ id: "justificatif_motivation_suggest_accept", onclick: "DS.showImportJustificatif('accept');" }
+                          .button Ajouter un justificatif (optionnel)
+                        .hidden{ id: "justificatif_motivation_import_accept" }
+                          = form.file_field :justificatif_motivation, direct_upload: true
 
                         .text-right
                           %span{ onclick: 'DS.motivationCancel();', class: 'fr-btn fr-btn--secondary' } Annuler
