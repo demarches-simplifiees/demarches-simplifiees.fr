@@ -21,6 +21,8 @@
 #  type_de_champ_id               :integer
 #
 class Champs::CheckboxChamp < Champs::BooleanChamp
+  validates :value, inclusion: ["on", "off"], allow_nil: true, allow_blank: false
+
   def true?
     value == 'on'
   end
