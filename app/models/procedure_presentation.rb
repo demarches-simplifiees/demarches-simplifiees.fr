@@ -293,13 +293,15 @@ class ProcedurePresentation < ApplicationRecord
     update!(sort: {
       TABLE => table,
       COLUMN => column,
-      ORDER => opposite_order_for(table, column)
+      ORDER => order.presence || opposite_order_for(table, column)
     })
   end
 
   def opposite_order_for(table, column)
     if sort.values_at(TABLE, COLUMN) == [table, column]
       sort['order'] == 'asc' ? 'desc' : 'asc'
+    elsif [table, column] == ["notifications", "notifications"]
+      'desc' # default order for notifications
     else
       'asc'
     end
