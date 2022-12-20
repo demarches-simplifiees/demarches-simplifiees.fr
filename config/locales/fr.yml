@@ -107,6 +107,7 @@ fr:
           decimal_number: Un nombre décimal
           integer_number: Un nombre entier
           email: Une adresse email
+          civilite: '"M." pour Monsieur, "Mme" pour Madame'
           phone: Un numéro de téléphone
           iban: Un numéro Iban
           yes_no: '"true" pour Oui, "false" pour Non'
@@ -121,6 +122,7 @@ fr:
           phone: 0612345678
           iban: FR7611315000011234567890138
           yes_no: "true"
+          civilite: "M."
           checkbox: "on"
         prefill_link_title: Lien de préremplissage (GET)
         prefill_link_info: Copiez le lien grâce au bouton ci-dessous et remplacez les valeurs par les données dont vous disposez.
