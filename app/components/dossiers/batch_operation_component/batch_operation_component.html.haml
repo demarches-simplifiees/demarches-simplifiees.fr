@@ -18,8 +18,11 @@
                 %li{ 'data-turbo': 'true' }
                   - if opt[:operation] == 'accepter'
                     .wrapper
-                      %a{ href: '#', onclick: "DS.showMotivation(event, 'accept');", class: ['fr-btn--icon-left', icons[opt[:operation].to_sym]] }
-                        = opt[:label]
+
+                      %a{ href: '#', class: 'dropdown-items-link', onclick: "DS.showMotivation(event, 'accept');" }
+                        %span{ class: icons[opt[:operation].to_sym] }
+                        .dropdown-description
+                          %h4= opt[:label]
 
                       .motivation.hidden{ class: 'accept' }
                         = form.text_area :motivation, class: 'motivation-text-area'
@@ -33,4 +36,7 @@
 
                           = form.button "Valider la décision", class: ['fr-btn'], disabled: :disabled, name: "#{form.object_name}[operation]", data: { "batch-operation-target" => "submit", "submitter-operation" => opt[:operation]}
                   - else
-                    = form.button opt[:label], class: ['fr-btn--icon-left', icons[opt[:operation].to_sym]], disabled: :disabled, name: "#{form.object_name}[operation]", data: { "batch-operation-target" => "submit", "submitter-operation" => opt[:operation]}
+                    = form.button opt[:label], class: 'dropdown-items-link', disabled: :disabled, name: "#{form.object_name}[operation]", data: { "batch-operation-target" => "submit", "submitter-operation" => opt[:operation]} do
+                      %span{ class: icons[opt[:operation].to_sym] }
+                      .dropdown-description
+                        %h4= opt[:label]
