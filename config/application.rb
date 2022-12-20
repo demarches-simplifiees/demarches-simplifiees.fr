@@ -75,6 +75,8 @@ module TPS
       status_visible_duration: 6000
     }
 
+    config.ds_opendata_enabled = ENV.fetch('OPENDATA_ENABLED', nil) == 'enabled'
+
     config.skylight.probes += [:graphql]
 
     # Custom Configuration
