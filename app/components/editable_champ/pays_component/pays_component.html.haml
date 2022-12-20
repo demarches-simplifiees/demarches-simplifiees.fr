@@ -1,7 +1,1 @@
-= @form.hidden_field :value
-= @form.hidden_field :external_id
-= react_component("ComboPaysSearch",
-  required: @champ.required?,
-  id: @champ.input_id,
-  className: "width-33-desktop width-100-mobile",
-  describedby: @champ.describedby_id)
+= @form.select :value, options, select_options, required: @champ.mandatory?, id: @champ.input_id, aria: { describedby: @champ.describedby_id }, class: "width-33-desktop width-100-mobile"
