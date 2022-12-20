@@ -15,7 +15,7 @@ class PrefillDescription < SimpleDelegator
   end
 
   def types_de_champ
-    active_revision.types_de_champ_public
+    active_revision.types_de_champ_public.fillable
   end
 
   def include?(type_de_champ_id)
@@ -37,10 +37,14 @@ class PrefillDescription < SimpleDelegator
   private
 
   def prefilled_champs_for_link
-    prefilled_champs.map { |type_de_champ| ["champ_#{type_de_champ.to_typed_id}", type_de_champ.libelle.tr(" ", "+")] }.to_h
+    prefilled_champs.map { |type_de_champ| ["champ_#{type_de_champ.to_typed_id}", example_value(type_de_champ).tr(" ", "+")] }.to_h
   end
 
   def prefilled_champs_for_query
-    prefilled_champs.map { |type_de_champ| "\"champ_#{type_de_champ.to_typed_id}\": \"#{type_de_champ.libelle}\"" } .join(', ')
+    prefilled_champs.map { |type_de_champ| "\"champ_#{type_de_champ.to_typed_id}\": \"#{example_value(type_de_champ)}\"" } .join(', ')
+  end
+
+  def example_value(type_de_champ)
+    I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")
   end
 end
