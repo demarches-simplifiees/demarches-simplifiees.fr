@@ -15,7 +15,7 @@ class PrefillDescription < SimpleDelegator
   end
 
   def types_de_champ
-    active_revision.types_de_champ_public.fillable
+    active_revision.types_de_champ_public.fillable.partition(&:prefillable?).flatten
   end
 
   def include?(type_de_champ_id)
@@ -31,7 +31,7 @@ class PrefillDescription < SimpleDelegator
   end
 
   def prefilled_champs
-    @prefilled_champs ||= types_de_champ.where(id: selected_type_de_champ_ids)
+    @prefilled_champs ||= active_fillable_public_types_de_champ.where(id: selected_type_de_champ_ids)
   end
 
   private
@@ -46,5 +46,9 @@ class PrefillDescription < SimpleDelegator
 
   def example_value(type_de_champ)
     I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")
+  end
+
+  def active_fillable_public_types_de_champ
+    active_revision.types_de_champ_public.fillable
   end
 end
