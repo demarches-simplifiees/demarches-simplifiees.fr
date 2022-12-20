@@ -1,0 +1,41 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://geo.api.gouv.fr/regions
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Server:
+      - nginx/1.10.3 (Ubuntu)
+      Date:
+      - Tue, 20 Dec 2022 11:55:45 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '653'
+      Vary:
+      - Accept-Encoding
+      - Origin
+      X-Powered-By:
+      - Express
+      Etag:
+      - W/"28d-NqjRJu+ph9X/ycpx3D2pjeoeVto"
+      Strict-Transport-Security:
+      - max-age=15552000
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        W3sibm9tIjoiw45sZS1kZS1GcmFuY2UiLCJjb2RlIjoiMTEifSx7Im5vbSI6IkNlbnRyZS1WYWwgZGUgTG9pcmUiLCJjb2RlIjoiMjQifSx7Im5vbSI6IkJvdXJnb2duZS1GcmFuY2hlLUNvbXTDqSIsImNvZGUiOiIyNyJ9LHsibm9tIjoiTm9ybWFuZGllIiwiY29kZSI6IjI4In0seyJub20iOiJIYXV0cy1kZS1GcmFuY2UiLCJjb2RlIjoiMzIifSx7Im5vbSI6IkdyYW5kIEVzdCIsImNvZGUiOiI0NCJ9LHsibm9tIjoiUGF5cyBkZSBsYSBMb2lyZSIsImNvZGUiOiI1MiJ9LHsibm9tIjoiQnJldGFnbmUiLCJjb2RlIjoiNTMifSx7Im5vbSI6Ik5vdXZlbGxlLUFxdWl0YWluZSIsImNvZGUiOiI3NSJ9LHsibm9tIjoiT2NjaXRhbmllIiwiY29kZSI6Ijc2In0seyJub20iOiJBdXZlcmduZS1SaMO0bmUtQWxwZXMiLCJjb2RlIjoiODQifSx7Im5vbSI6IlByb3ZlbmNlLUFscGVzLUPDtHRlIGQnQXp1ciIsImNvZGUiOiI5MyJ9LHsibm9tIjoiQ29yc2UiLCJjb2RlIjoiOTQifSx7Im5vbSI6Ikd1YWRlbG91cGUiLCJjb2RlIjoiMDEifSx7Im5vbSI6Ik1hcnRpbmlxdWUiLCJjb2RlIjoiMDIifSx7Im5vbSI6Ikd1eWFuZSIsImNvZGUiOiIwMyJ9LHsibm9tIjoiTGEgUsOpdW5pb24iLCJjb2RlIjoiMDQifSx7Im5vbSI6Ik1heW90dGUiLCJjb2RlIjoiMDYifV0=
+  recorded_at: Tue, 20 Dec 2022 11:55:45 GMT
+recorded_with: VCR 6.1.0
