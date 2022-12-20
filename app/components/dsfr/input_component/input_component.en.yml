@@ -1,0 +1,7 @@
+---
+en:
+  show_password:
+    aria_label: "Show password"
+    label: "Show"
+  email_suggest:
+    wanna_say: 'Do you mean to say ?'
