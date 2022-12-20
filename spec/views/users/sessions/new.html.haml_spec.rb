@@ -3,7 +3,7 @@ describe 'users/sessions/new.html.haml', type: :view do
 
   before(:each) do
     allow(view).to receive(:devise_mapping).and_return(Devise.mappings[:user])
-    allow(view).to receive(:resource).and_return(:user)
+    allow(view).to receive(:resource).and_return(User.new)
   end
 
   before do
@@ -12,7 +12,7 @@ describe 'users/sessions/new.html.haml', type: :view do
   end
 
   it 'renders' do
-    expect(rendered).to have_field('Email')
+    expect(rendered).to have_field('Adresse éléctronique')
     expect(rendered).to have_field('Mot de passe')
     expect(rendered).to have_button('Se connecter')
   end

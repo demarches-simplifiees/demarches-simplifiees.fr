@@ -62,7 +62,7 @@ describe Users::SessionsController, type: :controller do
           subject
 
           expect(response).to render_template(:new)
-          expect(flash.alert).to eq('Courriel ou mot de passe incorrect.')
+          expect(flash.alert).to eq("Adresse éléctronique ou mot de passe incorrect.")
         end
       end
     end

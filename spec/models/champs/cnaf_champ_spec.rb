@@ -63,7 +63,7 @@ describe Champs::CnafChamp, type: :model do
 
       it do
         is_expected.to be false
-        expect(champ.errors.full_messages).to eq(["Code postal doit posséder 5 caractères"])
+        expect(champ.errors.full_messages).to eq(["Le champ « Code postal » doit posséder 5 caractères"])
       end
     end
 
@@ -72,7 +72,7 @@ describe Champs::CnafChamp, type: :model do
 
       it do
         is_expected.to be false
-        expect(champ.errors.full_messages).to eq(["Numero allocataire doit être composé au maximum de 7 chiffres"])
+        expect(champ.errors.full_messages).to eq(["Le champ « Numero allocataire » doit être composé au maximum de 7 chiffres"])
       end
     end
 
@@ -81,7 +81,7 @@ describe Champs::CnafChamp, type: :model do
 
       it do
         is_expected.to be false
-        expect(champ.errors.full_messages).to eq(["Numero allocataire doit être composé au maximum de 7 chiffres"])
+        expect(champ.errors.full_messages).to eq(["Le champ « Numero allocataire » doit être composé au maximum de 7 chiffres"])
       end
 
       context 'and the validation_context is :brouillon' do
@@ -96,7 +96,7 @@ describe Champs::CnafChamp, type: :model do
 
       it do
         is_expected.to be false
-        expect(champ.errors.full_messages).to eq(["Code postal doit posséder 5 caractères"])
+        expect(champ.errors.full_messages).to eq(["Le champ « Code postal » doit posséder 5 caractères"])
       end
     end
   end
