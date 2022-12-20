@@ -24,10 +24,6 @@ import {
   motivationCancel,
   showImportJustificatif
 } from '../new_design/state-button';
-import {
-  acceptEmailSuggestion,
-  discardEmailSuggestionBox
-} from '../new_design/user-sign_up';
 import { showFusion, showNewAccount } from '../new_design/fc-fusion';
 
 const application = Application.start();
@@ -41,9 +37,7 @@ const DS = {
   showImportJustificatif,
   showFusion,
   showNewAccount,
-  replaceSemicolonByComma,
-  acceptEmailSuggestion,
-  discardEmailSuggestionBox
+  replaceSemicolonByComma
 };
 
 // Start Rails helpers

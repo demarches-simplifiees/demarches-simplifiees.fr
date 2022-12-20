@@ -36,7 +36,7 @@ describe TypesDeChamp::LinkedDropDownListTypeDeChamp do
           it { is_expected.to be_invalid }
           it do
             subject.validate
-            expect(subject.errors.full_messages).to eq ["#{subject.libelle} doit commencer par une entrée de menu primaire de la forme <code style='white-space: pre-wrap;'>--texte--</code>"]
+            expect(subject.errors.full_messages).to eq ["Le champ « #{subject.libelle} » doit commencer par une entrée de menu primaire de la forme <code style='white-space: pre-wrap;'>--texte--</code>"]
           end
         end
 

@@ -949,7 +949,7 @@ describe API::V2::GraphqlController do
           it "should fail" do
             expect(gql_errors).to eq(nil)
             expect(gql_data).to eq(dossierEnvoyerMessage: {
-              errors: [{ message: "Votre message ne peut être vide" }],
+              errors: [{ message: "Le champ « Votre message » ne peut être vide" }],
               message: nil
             })
           end

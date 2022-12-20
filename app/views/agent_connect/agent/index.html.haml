@@ -26,8 +26,7 @@
             = link_to t('.whats_agentconnect'), 'https://agentconnect.gouv.fr/', target: '_blank', rel: "noopener"
 
 
-        .france-connect-login-separator
-          = t('views.shared.france_connect_login.separator')
+        %p.fr-hr-or= t('views.shared.france_connect_login.separator')
 
         #session-new.auth-form.sign-in-form
           = form_for User.new, url: user_session_path, html: { class: "form" } do |f|
