@@ -6,7 +6,7 @@ module QueryParamsStoreConcern
     # lost previously stored params
     return if session[:stored_params].present? || request.query_parameters.empty?
 
-    session[:stored_params] = request.query_parameters.to_json
+    session[:stored_params] = request.query_parameters.transform_values { |v| v[/[^=].*/] }.to_json
   end
 
   def retrieve_and_delete_stored_query_params

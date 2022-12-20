@@ -27,7 +27,7 @@ class PrefillDescription < SimpleDelegator
   end
 
   def prefill_link
-    @prefill_link ||= commencer_url({ path: path }.merge(prefilled_champs_for_link))
+    @prefill_link ||= URI.decode_www_form_component(commencer_url({ path: path }.merge(prefilled_champs_for_link)))
   end
 
   def prefilled_champs
@@ -37,7 +37,7 @@ class PrefillDescription < SimpleDelegator
   private
 
   def prefilled_champs_for_link
-    prefilled_champs.map { |type_de_champ| ["champ_#{type_de_champ.to_typed_id}", type_de_champ.libelle] }.to_h
+    prefilled_champs.map { |type_de_champ| ["champ_#{type_de_champ.to_typed_id}", type_de_champ.libelle.tr(" ", "+")] }.to_h
   end
 
   def prefilled_champs_for_query
