@@ -80,8 +80,7 @@ export class AutosaveController extends ApplicationController {
         }
       } else if (target.type == 'hidden') {
         // In React comboboxes we dispatch a "change" event on hidden inputs to trigger autosave.
-        // We want to debounce them.
-        this.debounce(this.enqueueAutosaveRequest, AUTOSAVE_DEBOUNCE_DELAY);
+        this.enqueueAutosaveRequest();
       } else if (
         isSelectElement(target) ||
         isCheckboxOrRadioInputElement(target) ||
