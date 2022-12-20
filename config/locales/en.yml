@@ -105,15 +105,33 @@ en:
       edit:
         intro_html: "You'd like to allow your users to <strong>create a prefilled file</strong>, with data you already have, for the procedure « %{libelle} »."
         info: Add the fields you want to prefill, thanks to the table below. Once it's over, copy the prefill link, replace the values and share the link.
-        champs_title: Fields
         champ_id: ID
         champ_type: Type
-        champ_libelle: Label
-        champ_description: Description
-        champ_prefill: Prefillable
         champ_add: Add
         champ_remove: Remove
         champ_unavailable: Unavailable
+        possible_values:
+          title: Values
+          text: A short text
+          textarea: A long text
+          decimal_number: A decimal number
+          integer_number: An integer number
+          email: An email address
+          phone: A phone number
+          iban: An Iban number
+          yes_no: '"true" for Yes, "false" pour No'
+          checkbox: '"on" to check, "off" to uncheck'
+        examples:
+          title: Example
+          text: Short text
+          textarea: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          decimal_number: 3.14
+          integer_number: 42
+          email: personne@fournisseur.fr
+          phone: 0612345678
+          iban: FR7611315000011234567890138
+          yes_no: "true"
+          checkbox: "on"
         prefill_link_title: Prefill link (GET)
         prefill_link_info: Use the button to copy the link, then remplace the values with your data.
         prefill_link_too_long: Warning, the prefill link is too long and may not work on all browsers.

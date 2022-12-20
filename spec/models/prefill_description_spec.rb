@@ -21,6 +21,17 @@ RSpec.describe PrefillDescription, type: :model do
     let(:prefill_description) { described_class.new(procedure) }
 
     it { expect(prefill_description.types_de_champ).to match([type_de_champ]) }
+
+    shared_examples "filters out non fillable types de champ" do |type_de_champ_name|
+      context "when the procedure has a #{type_de_champ_name} champ" do
+        let(:non_fillable_type_de_champ) { create(type_de_champ_name, procedure: procedure) }
+
+        it { expect(prefill_description.types_de_champ).not_to include(non_fillable_type_de_champ) }
+      end
+    end
+
+    it_behaves_like "filters out non fillable types de champ", :type_de_champ_header_section
+    it_behaves_like "filters out non fillable types de champ", :type_de_champ_explication
   end
 
   describe '#include?' do
@@ -48,7 +59,7 @@ RSpec.describe PrefillDescription, type: :model do
     before { prefill_description.update(selected_type_de_champ_ids: create_list(:type_de_champ_text, type_de_champs_count, procedure: procedure).map(&:id)) }
 
     context 'when the prefill link is too long' do
-      let(:type_de_champs_count) { 60 }
+      let(:type_de_champs_count) { 65 }
 
       it { expect(too_long).to eq(true) }
     end
@@ -71,7 +82,7 @@ RSpec.describe PrefillDescription, type: :model do
       expect(prefill_description.prefill_link).to eq(
         commencer_url(
           path: procedure.path,
-          "champ_#{type_de_champ.to_typed_id}" => type_de_champ.libelle
+          "champ_#{type_de_champ.to_typed_id}" => I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")
         )
       )
     end
