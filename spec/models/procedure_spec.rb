@@ -1243,7 +1243,7 @@ describe Procedure do
 
   describe '.missing_zones?' do
     before do
-      Flipper.enable :zonage
+      Rails.application.config.ds_zonage_enabled = true
     end
 
     let(:procedure) { create(:procedure, zones: []) }
