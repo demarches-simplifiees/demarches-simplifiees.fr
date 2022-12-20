@@ -1,6 +1,8 @@
 = turbo_frame_tag "#{dom_id(@prefill_description)}_types_de_champs" do
   .fr-grid-row.fr-grid-row--gutters.fr-py-5w
     - prefill_description.types_de_champ.each do |type_de_champ|
+      - prefillable = type_de_champ.prefillable?
+
       .fr-col-md-6.fr-col-12
         .card
           .card-title.flex.justify-between.align-center
@@ -10,7 +12,7 @@
                 - (prefill_description.selected_type_de_champ_ids - [type_de_champ.id.to_s]).each do |id|
                   = f.hidden_field :selected_type_de_champ_ids, value: id, multiple: true
                 = f.submit t("views.prefill_descriptions.edit.champ_remove"), class: 'fr-btn fr-btn--secondary fr-btn--md'
-              - elsif type_de_champ.prefillable?
+              - elsif prefillable
                 - (prefill_description.selected_type_de_champ_ids + [type_de_champ.id.to_s]).each do |id|
                   = f.hidden_field :selected_type_de_champ_ids, value: id, multiple: true
                 = f.submit t("views.prefill_descriptions.edit.champ_add"), class: 'fr-btn fr-btn--md'
@@ -32,13 +34,13 @@
                   = t("views.prefill_descriptions.edit.champ_type")
                 %td
                   = t("activerecord.attributes.type_de_champ.type_champs.#{type_de_champ.type_champ}")
-              %tr
+              %tr{ class: prefillable ? "" : "fr-text-mention--grey" }
                 %th
                   = t("views.prefill_descriptions.edit.possible_values.title")
                 %td
-                  = t("views.prefill_descriptions.edit.possible_values.#{type_de_champ.type_champ}")
-              %tr
+                  = t("views.prefill_descriptions.edit.possible_values.#{type_de_champ.type_champ}") if prefillable
+              %tr{ class: prefillable ? "" : "fr-text-mention--grey" }
                 %th
                   = t("views.prefill_descriptions.edit.examples.title")
                 %td
-                  = t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")
+                  = t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}") if prefillable
