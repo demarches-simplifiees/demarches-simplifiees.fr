@@ -6,7 +6,7 @@ describe 'As an administrateur I wanna clone a procedure', js: true do
   let(:administrateur) { create(:administrateur) }
 
   before do
-    create(:procedure, :with_service, :with_instructeur,
+    create(:procedure, :with_service, :with_instructeur, :with_zone,
       aasm_state: :publiee,
       administrateurs: [administrateur],
       libelle: 'libellé de la procédure',
@@ -28,6 +28,11 @@ describe 'As an administrateur I wanna clone a procedure', js: true do
       # select service
       find("#service .fr-btn").click
       click_on "Assigner"
+
+      # select zone
+      find("#zones .fr-btn").click
+      check Zone.last.current_label
+      click_on 'Enregistrer'
 
       # then publish
       find('#publish-procedure-link').click
