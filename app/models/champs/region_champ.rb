@@ -21,6 +21,10 @@
 #  type_de_champ_id               :integer
 #
 class Champs::RegionChamp < Champs::TextChamp
+  def for_export
+    [name, code]
+  end
+
   def selected
     code
   end

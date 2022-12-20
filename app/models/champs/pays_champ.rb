@@ -21,6 +21,10 @@
 #  type_de_champ_id               :integer
 #
 class Champs::PaysChamp < Champs::TextChamp
+  def for_export
+    [formatted_value, code]
+  end
+
   def to_s
     formatted_value
   end
