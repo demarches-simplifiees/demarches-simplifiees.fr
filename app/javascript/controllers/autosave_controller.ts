@@ -100,6 +100,8 @@ export class AutosaveController extends ApplicationController {
       target.getAttribute('role') != 'combobox' &&
       isTextInputElement(target)
     ) {
+      // File submit have to know a request will be enqueued and it should wait for it.
+      this.willEnqueue();
       this.debounce(this.enqueueAutosaveRequest, AUTOSAVE_DEBOUNCE_DELAY);
     }
   }
@@ -112,6 +114,10 @@ export class AutosaveController extends ApplicationController {
     if (this.#needsRetry) {
       this.enqueueAutosaveRequest();
     }
+  }
+
+  private willEnqueue() {
+    this.globalDispatch('autosave:enqueue');
   }
 
   private didEnqueue() {
