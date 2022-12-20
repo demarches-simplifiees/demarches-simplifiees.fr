@@ -246,8 +246,8 @@ describe TypeDeChamp do
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_number
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_communes
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_dossier_link
-    it_behaves_like "a non-prefillable type de champ", :type_de_champ_titre_identite
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_checkbox
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_titre_identite
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_civilite
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_yes_no
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_date
