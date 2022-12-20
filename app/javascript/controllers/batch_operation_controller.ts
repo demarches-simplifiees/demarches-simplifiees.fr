@@ -38,7 +38,7 @@ export class BatchOperationController extends ApplicationController {
 
   toggleSubmitButtonWhenNeeded() {
     const available = this.inputTargets.some((e) => e.checked);
-    const dropdown = document.querySelector("#batch_operation_dropdown");
+    const dropdown = document.querySelector('#batch_operation_dropdown');
     if (available) {
       this.submitTargets.forEach((e) => e.removeAttribute('disabled'));
       if (dropdown) {
