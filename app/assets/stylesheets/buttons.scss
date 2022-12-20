@@ -266,7 +266,8 @@ ul.dropdown-items {
     }
 
     // Make child links fill the whole clickable area
-    > a, .dropdown-items-link {
+    > a,
+      .dropdown-items-link {
       display: flex;
       flex-grow: 1;
       margin: -$default-padding;

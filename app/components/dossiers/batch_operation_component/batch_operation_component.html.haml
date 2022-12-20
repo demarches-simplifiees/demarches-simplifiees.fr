@@ -4,7 +4,7 @@
     = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'flex justify-end', id: "#{dom_id(BatchOperation.new)}" }, data: { "batch-operation-target" => "form"}) do |form|
       = form.button opt[:label], class: ['fr-btn fr-btn--icon-left', icons[opt[:operation].to_sym]], disabled: :disabled, name: "#{form.object_name}[operation]", data: { "batch-operation-target" => "submit", "submitter-operation" => opt[:operation] }
 
-  -else
+  - else
     .flex.justify-end
       .dropdown{ data: { controller: 'menu-button', popover: 'true' } }
         -# Dropdown button title
@@ -19,12 +19,12 @@
                   - if opt[:operation] == 'accepter'
                     .wrapper
 
-                      %a{ href: '#', class: 'dropdown-items-link', onclick: "DS.showMotivation(event, 'accept');" }
+                      %a.dropdown-items-link{ href: '#', onclick: "DS.showMotivation(event, 'accept');" }
                         %span{ class: icons[opt[:operation].to_sym] }
                         .dropdown-description
                           %h4= opt[:label]
 
-                      .motivation.hidden{ class: 'accept' }
+                      .motivation.hidden.accept
                         = form.text_area :motivation, class: 'motivation-text-area'
                         .optional-justificatif{ id: "justificatif_motivation_suggest_accept", onclick: "DS.showImportJustificatif('accept');" }
                           .button Ajouter un justificatif (optionnel)
