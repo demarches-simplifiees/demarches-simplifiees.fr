@@ -77,6 +77,8 @@ module TPS
 
     config.ds_opendata_enabled = ENV.fetch('OPENDATA_ENABLED', nil) == 'enabled'
 
+    config.ds_zonage_enabled = ENV.fetch("ZONAGE_ENABLED", nil) == "enabled"
+
     config.skylight.probes += [:graphql]
 
     # Custom Configuration
