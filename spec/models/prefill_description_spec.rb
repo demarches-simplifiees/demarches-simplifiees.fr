@@ -59,7 +59,7 @@ RSpec.describe PrefillDescription, type: :model do
     before { prefill_description.update(selected_type_de_champ_ids: create_list(:type_de_champ_text, type_de_champs_count, procedure: procedure).map(&:id)) }
 
     context 'when the prefill link is too long' do
-      let(:type_de_champs_count) { 60 }
+      let(:type_de_champs_count) { 65 }
 
       it { expect(too_long).to eq(true) }
     end
