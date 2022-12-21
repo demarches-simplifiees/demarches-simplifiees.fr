@@ -31,6 +31,18 @@ module Types
           else
             Types::Champs::TextChampType
           end
+        when ::Champs::DepartementChamp
+          if context.has_fragment?(:DepartementChamp)
+            Types::Champs::DepartementChampType
+          else
+            Types::Champs::TextChampType
+          end
+        when ::Champs::RegionChamp
+          if context.has_fragment?(:RegionChamp)
+            Types::Champs::RegionChampType
+          else
+            Types::Champs::TextChampType
+          end
         when ::Champs::DossierLinkChamp
           Types::Champs::DossierLinkChampType
         when ::Champs::PieceJustificativeChamp
