@@ -306,6 +306,7 @@ module Users
       dossier.build_default_individual
       dossier.save!
       dossier.prefill!(PrefillParams.new(dossier, retrieve_and_delete_stored_query_params).to_a)
+      DossierMailer.with(dossier:).notify_new_draft.deliver_later
 
       if dossier.procedure.for_individual
         redirect_to identite_dossier_path(dossier)
@@ -335,6 +336,7 @@ module Users
 
     def clone
       cloned_dossier = @dossier.clone
+      DossierMailer.with(dossier: cloned_dossier).notify_new_draft.deliver_later
       flash.notice = t('users.dossiers.cloned_success')
       redirect_to brouillon_dossier_path(cloned_dossier)
     rescue ActiveRecord::RecordInvalid => e
