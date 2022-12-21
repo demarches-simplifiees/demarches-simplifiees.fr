@@ -33,9 +33,9 @@ class PrefillDescription < SimpleDelegator
   def prefill_query
     @prefill_query ||=
       <<~TEXT
-        curl --request POST '#{api_public_v1_dossiers_url}'
+        curl --request POST '#{api_public_v1_dossiers_url(self)}'
              --header 'Content-Type: application/json'
-             --data '{"procedure_id": #{id}, #{prefilled_champs_for_query}}'
+             --data '{#{prefilled_champs_for_query}}'
       TEXT
   end
 

@@ -107,9 +107,9 @@ RSpec.describe PrefillDescription, type: :model do
     let(:prefill_description) { described_class.new(procedure) }
     let(:expected_query) do
       <<~TEXT
-        curl --request POST '#{api_public_v1_dossiers_url}'
+        curl --request POST '#{api_public_v1_dossiers_url(procedure)}'
              --header 'Content-Type: application/json'
-             --data '{"procedure_id": #{procedure.id}, "champ_#{type_de_champ.to_typed_id}": "#{type_de_champ.libelle}"}'
+             --data '{"champ_#{type_de_champ.to_typed_id}": "#{type_de_champ.libelle}"}'
       TEXT
     end
 
