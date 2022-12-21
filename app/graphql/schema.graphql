@@ -2017,6 +2017,26 @@ type ParcelleCadastrale implements GeoArea {
   surfaceParcelle: Float! @deprecated(reason: "Utilisez le champ `surface` à la place.")
 }
 
+type Pays {
+  code: String!
+  name: String!
+}
+
+type PaysChamp implements Champ {
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+  pays: Pays
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
+}
+
 type PersonneMorale implements Demandeur {
   address: Address!
   adresse: String! @deprecated(reason: "Utilisez le champ `address.label` à la place.")
