@@ -346,6 +346,24 @@ class API::V2::StoredQuery
       collapsibleExplanationEnabled
       collapsibleExplanationText
     }
+    ... on PaysChampDescriptor {
+      options {
+        name
+        code
+      }
+    }
+    ... on RegionChampDescriptor {
+      options {
+        name
+        code
+      }
+    }
+    ... on DepartementChampDescriptor {
+      options {
+        name
+        code
+      }
+    }
   }
 
   fragment AvisFragment on Avis {

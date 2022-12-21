@@ -1094,9 +1094,9 @@ type DepartementChampDescriptor implements ChampDescriptor {
   label: String!
 
   """
-  List des options d’un champ avec selection.
+  List des departements.
   """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
+  options: [Departement!]
 
   """
   Est-ce que le champ est obligatoire ?
@@ -3025,9 +3025,9 @@ type PaysChampDescriptor implements ChampDescriptor {
   label: String!
 
   """
-  List des options d’un champ avec selection.
+  List des pays.
   """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
+  options: [Pays!]
 
   """
   Est-ce que le champ est obligatoire ?
@@ -3313,9 +3313,9 @@ type RegionChampDescriptor implements ChampDescriptor {
   label: String!
 
   """
-  List des options d’un champ avec selection.
+  List des regions.
   """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
+  options: [Region!]
 
   """
   Est-ce que le champ est obligatoire ?
