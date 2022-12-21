@@ -21,6 +21,10 @@
 #  type_de_champ_id               :integer
 #
 class Champs::BooleanChamp < Champ
+  def true?
+    value == 'true'
+  end
+
   def search_terms
     if true?
       [libelle]
@@ -37,10 +41,6 @@ class Champs::BooleanChamp < Champ
 
   def for_export
     processed_value
-  end
-
-  def true?
-    raise NotImplemented
   end
 
   def for_api_v2

@@ -121,7 +121,7 @@ en:
           phone: A phone number
           iban: An Iban number
           yes_no: '"true" for Yes, "false" pour No'
-          checkbox: '"on" to check, "off" to uncheck'
+          checkbox: '"true" to check, "false" to uncheck'
         examples:
           title: Example
           text: Short text
@@ -132,7 +132,7 @@ en:
           phone: 0612345678
           iban: FR7611315000011234567890138
           yes_no: "true"
-          checkbox: "on"
+          checkbox: "true"
         prefill_link_title: Prefill link (GET)
         prefill_link_info: Use the button to copy the link, then remplace the values with your data.
         prefill_link_too_long: Warning, the prefill link is too long and may not work on all browsers.

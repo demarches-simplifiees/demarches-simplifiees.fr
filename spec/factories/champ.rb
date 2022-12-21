@@ -58,7 +58,7 @@ FactoryBot.define do
 
     factory :champ_checkbox, class: 'Champs::CheckboxChamp' do
       type_de_champ { association :type_de_champ_checkbox, procedure: dossier.procedure }
-      value { 'on' }
+      value { 'true' }
     end
 
     factory :champ_civilite, class: 'Champs::CiviliteChamp' do

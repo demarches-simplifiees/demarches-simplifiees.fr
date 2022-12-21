@@ -21,7 +21,4 @@
 #  type_de_champ_id               :integer
 #
 class Champs::YesNoChamp < Champs::BooleanChamp
-  def true?
-    value == 'true'
-  end
 end

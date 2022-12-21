@@ -21,10 +21,6 @@
 #  type_de_champ_id               :integer
 #
 class Champs::CheckboxChamp < Champs::BooleanChamp
-  def true?
-    value == 'on'
-  end
-
   def for_export
     true? ? 'on' : 'off'
   end
