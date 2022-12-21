@@ -685,6 +685,21 @@ type Departement {
   name: String!
 }
 
+type DepartementChamp implements Champ {
+  departement: Departement
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
+}
+
 """
 Represents direct upload credentials
 """
@@ -2086,6 +2101,26 @@ type Query {
     """
     number: Int!
   ): GroupeInstructeurWithDossiers!
+}
+
+type Region {
+  code: String!
+  name: String!
+}
+
+type RegionChamp implements Champ {
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+  region: Region
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
 }
 
 type RepetitionChamp implements Champ {

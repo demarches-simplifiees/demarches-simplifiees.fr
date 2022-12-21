@@ -196,7 +196,7 @@ describe Champ do
       end
     end
 
-    describe '#search_terms' do
+    describe '#search_terms', vcr: { cassette_name: 'api_geo_all' } do
       let(:champ) { type_de_champ.champ.build(value: value) }
       subject { champ.search_terms }
 
@@ -247,9 +247,9 @@ describe Champ do
 
       context 'for département champ' do
         let(:type_de_champ) { build(:type_de_champ_departements) }
-        let(:value) { "69 - Rhône" }
+        let(:value) { "69" }
 
-        it { is_expected.to eq([value]) }
+        it { is_expected.to eq(['69 – Rhône']) }
       end
 
       context 'for dossier link champ' do
@@ -319,9 +319,9 @@ describe Champ do
 
       context 'for pays champ' do
         let(:type_de_champ) { build(:type_de_champ_pays) }
-        let(:value) { "FRANCE" }
+        let(:value) { "FR" }
 
-        it { is_expected.to eq([value]) }
+        it { is_expected.to eq(['France']) }
       end
 
       context 'for phone champ' do
@@ -340,9 +340,9 @@ describe Champ do
 
       context 'for region champ' do
         let(:type_de_champ) { build(:type_de_champ_regions) }
-        let(:value) { "Île-de-France" }
+        let(:value) { "11" }
 
-        it { is_expected.to eq([value]) }
+        it { is_expected.to eq(['Île-de-France']) }
       end
 
       context 'for siret champ' do
