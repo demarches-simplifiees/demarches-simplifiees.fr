@@ -116,6 +116,15 @@ FactoryBot.define do
       end
     end
 
+    trait :with_zone do
+      zones {
+        [
+          create(:zone, labels:
+                 [{ designated_on: Time.zone.now, name: "Ministère 1" }])
+        ]
+      }
+    end
+
     trait :routee do
       after(:create) do |procedure, _evaluator|
         procedure.groupe_instructeurs.create(label: 'deuxième groupe')

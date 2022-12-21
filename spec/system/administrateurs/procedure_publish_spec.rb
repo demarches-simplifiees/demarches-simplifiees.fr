@@ -10,6 +10,7 @@ describe 'Publishing a procedure', js: true do
       :with_path,
       :with_type_de_champ,
       :with_service,
+      :with_zone,
       instructeurs: instructeurs,
       administrateur: administrateur)
   end
@@ -51,6 +52,7 @@ describe 'Publishing a procedure', js: true do
         create(:procedure,
                :with_path,
                :with_service,
+               :with_zone,
                instructeurs: instructeurs,
                administrateur: administrateur,
                types_de_champ_public: [{ type: :repetition, libelle: 'Enfants', children: [] }, { type: :drop_down_list, libelle: 'Civilité', options: [] }],

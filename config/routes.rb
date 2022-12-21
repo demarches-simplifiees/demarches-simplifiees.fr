@@ -450,8 +450,8 @@ Rails.application.routes.draw do
       collection do
         get 'new_from_existing'
         post 'search'
-        get 'all'
-        get 'administrateurs'
+        get 'all' if Rails.application.config.ds_zonage_enabled
+        get 'administrateurs' if Rails.application.config.ds_zonage_enabled
       end
 
       member do

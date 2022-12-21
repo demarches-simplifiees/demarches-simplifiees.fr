@@ -653,7 +653,7 @@ class Procedure < ApplicationRecord
   end
 
   def missing_zones?
-    if feature_enabled?(:zonage)
+    if Rails.application.config.ds_zonage_enabled
       zones.empty?
     else
       false
