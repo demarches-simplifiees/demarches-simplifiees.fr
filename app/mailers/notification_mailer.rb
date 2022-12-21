@@ -53,7 +53,7 @@ class NotificationMailer < ApplicationMailer
   def set_dossier
     @dossier = params[:dossier]
 
-    if @dossier.user_deleted?
+    if @dossier.skip_user_notification_email?
       mail.perform_deliveries = false
     else
       I18n.with_locale(@dossier.user_locale) do
