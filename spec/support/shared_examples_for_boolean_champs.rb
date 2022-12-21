@@ -1,4 +1,16 @@
 RSpec.shared_examples "a boolean champ" do
+  describe 'before validation' do
+    subject { boolean_champ.valid? }
+
+    context "when the value is blank" do
+      let(:value) { "" }
+
+      it "normalizes the value to nil" do
+        expect { subject }.to change { boolean_champ.value }.from(value).to(nil)
+      end
+    end
+  end
+
   describe '#to_s' do
     subject { boolean_champ.to_s }
 

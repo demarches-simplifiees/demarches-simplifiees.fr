@@ -21,8 +21,13 @@
 #  type_de_champ_id               :integer
 #
 class Champs::BooleanChamp < Champ
+  TRUE_VALUE = 'true'
+  FALSE_VALUE = 'false'
+
+  before_validation :set_value_to_nil, if: -> { value.blank? }
+
   def true?
-    value == 'true'
+    value == TRUE_VALUE
   end
 
   def search_terms
@@ -51,5 +56,9 @@ class Champs::BooleanChamp < Champ
 
   def processed_value
     true? ? 'Oui' : 'Non'
+  end
+
+  def set_value_to_nil
+    self.value = nil
   end
 end
