@@ -9,8 +9,15 @@ RSpec.shared_examples "a boolean champ" do
         expect { subject }.to change { boolean_champ.value }.from(value).to(nil)
       end
     end
-  end
 
+    context "when the value is something else" do
+      let(:value) { "something else" }
+
+      it "normalizes the value to 'false'" do
+        expect { subject }.to change { boolean_champ.value }.from(value).to(Champs::BooleanChamp::FALSE_VALUE)
+      end
+    end
+  end
   describe '#to_s' do
     subject { boolean_champ.to_s }
 
