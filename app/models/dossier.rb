@@ -153,6 +153,7 @@ class Dossier < ApplicationRecord
   has_many :transfer_logs, class_name: 'DossierTransferLog', dependent: :destroy
   has_many :cloned_dossiers, class_name: 'Dossier', foreign_key: 'parent_dossier_id', dependent: :nullify, inverse_of: :parent_dossier
 
+  accepts_nested_attributes_for :champs
   accepts_nested_attributes_for :champs_public
   accepts_nested_attributes_for :champs_private
   accepts_nested_attributes_for :champs_public_all
@@ -1240,7 +1241,7 @@ class Dossier < ApplicationRecord
   def find_champs_by_stable_ids(stable_ids)
     return [] if stable_ids.compact.empty?
 
-    champs_public.joins(:type_de_champ).where(types_de_champ: { stable_id: stable_ids })
+    champs.joins(:type_de_champ).where(types_de_champ: { stable_id: stable_ids })
   end
 
   def skip_user_notification_email?
