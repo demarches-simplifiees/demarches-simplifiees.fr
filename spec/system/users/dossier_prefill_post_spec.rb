@@ -79,10 +79,9 @@ describe 'Prefilling a dossier (with a POST request):' do
 
   def create_and_prefill_dossier_with_post_request
     session = ActionDispatch::Integration::Session.new(Rails.application)
-    session.post api_public_v1_dossiers_path,
+    session.post api_public_v1_dossiers_path(procedure),
       headers: { "Content-Type" => "application/json" },
       params: {
-        procedure_id: procedure.id,
         "champ_#{type_de_champ_text.to_typed_id}" => text_value,
         "champ_#{type_de_champ_phone.to_typed_id}" => phone_value
       }.to_json

@@ -1,5 +1,4 @@
 class API::Public::V1::DossiersController < API::Public::V1::BaseController
-  before_action :check_procedure_id_presence
   before_action :retrieve_procedure
 
   def create
@@ -20,12 +19,8 @@ class API::Public::V1::DossiersController < API::Public::V1::BaseController
 
   private
 
-  def check_procedure_id_presence
-    render_missing_param(:procedure_id) if params[:procedure_id].blank?
-  end
-
   def retrieve_procedure
-    @procedure = Procedure.publiees_ou_brouillons.find_by(id: params[:procedure_id])
-    render_not_found("procedure", params[:procedure_id]) if @procedure.blank?
+    @procedure = Procedure.publiees_ou_brouillons.find_by(id: params[:id])
+    render_not_found("procedure", params[:id]) if @procedure.blank?
   end
 end

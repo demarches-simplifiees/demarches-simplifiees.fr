@@ -3,12 +3,12 @@ RSpec.describe API::Public::V1::DossiersController, type: :controller do
 
   describe '#create' do
     # Request prototype:
-    # curl --request POST 'localhost:3000/api/public/v1/dossiers' \
+    # curl --request POST 'http://localhost:3000/api/public/v1/demarches/2/dossiers' \
     # --header 'Content-Type: application/json' \
-    # --data '{"procedure_id": 2, "champ_Q2hhbXAtMg": "texte"}' | json_pp
+    # --data '{"champ_Q2hhbXAtMjI=": "personne@fournisseur.fr"}'
 
-    context 'when the procedure id is present' do
-      let(:params) { { procedure_id: procedure.id } }
+    context 'when the request content type is json' do
+      let(:params) { { id: procedure.id } }
       subject(:create_request) do
         request.headers["Content-Type"] = "application/json"
         post :create, params: params
@@ -46,7 +46,7 @@ RSpec.describe API::Public::V1::DossiersController, type: :controller do
 
             let(:params) {
               {
-                procedure_id: procedure.id,
+                id: procedure.id,
                 "champ_#{type_de_champ_1.to_typed_id}" => value_1,
                 "champ_#{type_de_champ_2.to_typed_id}" => value_2
               }
@@ -113,23 +113,10 @@ RSpec.describe API::Public::V1::DossiersController, type: :controller do
       end
     end
 
-    context 'when the procedure id is blank' do
-      subject(:create_request) do
-        request.headers["Content-Type"] = "application/json"
-        post :create
-      end
-
-      before { create_request }
-
-      it { expect(response).to have_http_status(:bad_request) }
-
-      it { expect(response).to have_failed_with("procedure_id is missing") }
-    end
-
     context 'when the request content type is not json' do
       subject(:create_request) do
         request.headers["Content-Type"] = "application/xhtml+xml"
-        post :create, params: { procedure_id: 0 }
+        post :create, params: { id: 0 }
       end
 
       before { create_request }
