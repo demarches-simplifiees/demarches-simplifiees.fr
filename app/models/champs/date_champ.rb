@@ -21,7 +21,8 @@
 #  type_de_champ_id               :integer
 #
 class Champs::DateChamp < Champ
-  before_save :format_before_save
+  before_validation :format_before_save
+  validate :iso_8601
 
   def search_terms
     # Text search is pretty useless for dates so we’re not including these champs
@@ -38,13 +39,19 @@ class Champs::DateChamp < Champ
   private
 
   def format_before_save
-    self.value =
-      begin
-        Time.zone.parse(value).to_date.iso8601
-      rescue
-        # i18n-tasks-use t('errors.messages.not_a_date')
-        errors.add :date, errors.generate_message(:value, :not_a_date)
-        nil
-      end
+    self.value = nil if !valid_iso8601?(value)
+  end
+
+  def iso_8601
+    return if valid_iso8601?(value)
+    # i18n-tasks-use t('errors.messages.not_a_datetime')
+    errors.add :date, errors.generate_message(:value, :not_a_date)
+  end
+
+  def valid_iso8601?(value)
+    Date.iso8601(value)
+    true
+  rescue ArgumentError, Date::Error # rubocop:disable Lint/ShadowedException
+    false
   end
 end

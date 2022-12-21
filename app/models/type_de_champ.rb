@@ -262,7 +262,6 @@ class TypeDeChamp < ApplicationRecord
       TypeDeChamp.type_champs.fetch(:iban),
       TypeDeChamp.type_champs.fetch(:date),
       TypeDeChamp.type_champs.fetch(:datetime)
-
     ])
   end
 
