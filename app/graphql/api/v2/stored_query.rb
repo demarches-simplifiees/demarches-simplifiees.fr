@@ -454,6 +454,12 @@ class API::V2::StoredQuery
         code
       }
     }
+    ... on PaysChamp {
+      pays {
+        name
+        code
+      }
+    }
     ... on SiretChamp {
       etablissement {
         ...PersonneMoraleFragment
