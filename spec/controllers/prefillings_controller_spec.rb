@@ -79,8 +79,13 @@ describe PrefillDescriptionsController, type: :controller do
       end
 
       it "includes the prefill query" do
-        expect(response.body).to include(api_public_v1_dossiers_path)
-        expect(response.body).to include("&quot;procedure_id&quot;: #{procedure.id}, &quot;champ_#{type_de_champ.to_typed_id}&quot;: &quot;#{type_de_champ.libelle}&quot;, &quot;champ_#{type_de_champ_to_add.to_typed_id}&quot;: &quot;#{type_de_champ_to_add.libelle}&quot")
+        type_de_champ_value = I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")
+        type_de_champ_to_add_value = I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ_to_add.type_champ}")
+
+        expect(response.body).to include(api_public_v1_dossiers_path(procedure))
+        expect(response.body).to include(
+          "&quot;champ_#{type_de_champ.to_typed_id}&quot;: &quot;#{type_de_champ_value}&quot;, &quot;champ_#{type_de_champ_to_add.to_typed_id}&quot;: &quot;#{type_de_champ_to_add_value}&quot"
+        )
       end
     end
 
@@ -101,9 +106,16 @@ describe PrefillDescriptionsController, type: :controller do
       end
 
       it "includes the prefill query" do
-        expect(response.body).to include(api_public_v1_dossiers_path)
-        expect(response.body).to include("&quot;procedure_id&quot;: #{procedure.id}, &quot;champ_#{type_de_champ.to_typed_id}&quot;: &quot;#{type_de_champ.libelle}&quot;")
-        expect(response.body).not_to include("&quot;champ_#{type_de_champ_to_remove.to_typed_id}&quot;: &quot;#{type_de_champ_to_remove.libelle}&quot;")
+        type_de_champ_value = I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")
+        type_de_champ_to_remove_value = I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ_to_remove.type_champ}")
+
+        expect(response.body).to include(api_public_v1_dossiers_path(procedure))
+        expect(response.body).to include(
+          "&quot;champ_#{type_de_champ.to_typed_id}&quot;: &quot;#{type_de_champ_value}&quot;"
+        )
+        expect(response.body).not_to include(
+          "&quot;champ_#{type_de_champ_to_remove.to_typed_id}&quot;: &quot;#{type_de_champ_to_remove_value}&quot;"
+        )
       end
     end
 
@@ -118,7 +130,7 @@ describe PrefillDescriptionsController, type: :controller do
       end
 
       it "does not include the prefill query" do
-        expect(response.body).not_to include(api_public_v1_dossiers_path)
+        expect(response.body).not_to include(api_public_v1_dossiers_path(procedure))
       end
     end
   end

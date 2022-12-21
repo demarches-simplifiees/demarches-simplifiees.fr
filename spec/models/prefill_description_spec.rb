@@ -109,7 +109,7 @@ RSpec.describe PrefillDescription, type: :model do
       <<~TEXT
         curl --request POST '#{api_public_v1_dossiers_url(procedure)}'
              --header 'Content-Type: application/json'
-             --data '{"champ_#{type_de_champ.to_typed_id}": "#{type_de_champ.libelle}"}'
+             --data '{"champ_#{type_de_champ.to_typed_id}": "#{I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")}"}'
       TEXT
     end
 
