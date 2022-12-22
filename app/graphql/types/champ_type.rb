@@ -43,6 +43,12 @@ module Types
           else
             Types::Champs::TextChampType
           end
+        when ::Champs::PaysChamp
+          if context.has_fragment?(:PaysChamp)
+            Types::Champs::PaysChampType
+          else
+            Types::Champs::TextChampType
+          end
         when ::Champs::DossierLinkChamp
           Types::Champs::DossierLinkChampType
         when ::Champs::PieceJustificativeChamp
