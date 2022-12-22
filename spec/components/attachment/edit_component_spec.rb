@@ -127,7 +127,7 @@ RSpec.describe Attachment::EditComponent, type: :component do
 
   context 'with non nominal or final antivirus status' do
     before do
-      champ.piece_justificative_file[0].blob.update(metadata: attachment.blob.metadata.merge(virus_scan_result: virus_scan_result))
+      champ.piece_justificative_file[0].blob.update(virus_scan_result:)
     end
 
     context 'when the anti-virus scan is pending' do

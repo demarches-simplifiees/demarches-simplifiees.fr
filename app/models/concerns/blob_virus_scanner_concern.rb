@@ -23,6 +23,6 @@ module BlobVirusScannerConcern
   private
 
   def set_pending
-    metadata[:virus_scan_result] ||= ActiveStorage::VirusScanner::PENDING
+    self.virus_scan_result = metadata[:virus_scan_result] || ActiveStorage::VirusScanner::PENDING
   end
 end

@@ -15,7 +15,7 @@ RSpec.describe Attachment::ShowComponent, type: :component do
   subject { render_inline(component).to_html }
 
   before do
-    champ.piece_justificative_file[0].blob.update(metadata: champ.piece_justificative_file[0].blob.metadata.merge(virus_scan_result: virus_scan_result))
+    attachment.blob.update(virus_scan_result:, metadata: attachment.blob.metadata.merge(virus_scan_result:))
   end
 
   context 'when there is no anti-virus scan' do
