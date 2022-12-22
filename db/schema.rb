@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_12_05_144624) do
+ActiveRecord::Schema.define(version: 2022_12_22_204553) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -292,6 +292,16 @@ ActiveRecord::Schema.define(version: 2022_12_05_144624) do
     t.index ["deleted_at"], name: "index_deleted_dossiers_on_deleted_at"
     t.index ["dossier_id"], name: "index_deleted_dossiers_on_dossier_id", unique: true
     t.index ["procedure_id"], name: "index_deleted_dossiers_on_procedure_id"
+  end
+
+  create_table "dossier_batch_operations", force: :cascade do |t|
+    t.bigint "batch_operation_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.bigint "dossier_id", null: false
+    t.string "state", default: "pending", null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["batch_operation_id"], name: "index_dossier_batch_operations_on_batch_operation_id"
+    t.index ["dossier_id"], name: "index_dossier_batch_operations_on_dossier_id"
   end
 
   create_table "dossier_operation_logs", force: :cascade do |t|
