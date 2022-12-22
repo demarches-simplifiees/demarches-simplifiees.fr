@@ -11,7 +11,7 @@ describe BatchOperationProcessOneJob, type: :job do
     it 'when it works' do
       allow_any_instance_of(BatchOperation).to receive(:process_one).with(dossier_job).and_return(true)
       expect { subject.perform_now }
-        .to change { batch_operation.reload.success_dossier_ids }
+        .to change { batch_operation.dossier_operations.success.pluck(:dossier_id) }
         .from([])
         .to([dossier_job.id])
     end
@@ -20,7 +20,7 @@ describe BatchOperationProcessOneJob, type: :job do
       allow_any_instance_of(BatchOperation).to receive(:process_one).with(dossier_job).and_raise("boom")
       expect { subject.perform_now }.to raise_error('boom')
 
-      expect(batch_operation.reload.failed_dossier_ids).to eq([dossier_job.id])
+      expect(batch_operation.dossier_operations.error.pluck(:dossier_id)).to eq([dossier_job.id])
     end
 
     context 'when operation is "archiver"' do
