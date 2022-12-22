@@ -21,8 +21,8 @@ describe VirusScannerJob, type: :job do
   context "should raise ActiveRecord::StaleObjectError" do
     let(:blob_2) { ActiveStorage::Blob.find(blob.id) }
     before do
-      blob_2.metadata[:virus_scan_result] = "infected"
-      blob.metadata[:virus_scan_result] = "safe"
+      blob_2.virus_scan_result = ActiveStorage::VirusScanner::INFECTED
+      blob.virus_scan_result = ActiveStorage::VirusScanner::SAFE
       blob.save
     end
 
