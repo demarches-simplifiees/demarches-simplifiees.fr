@@ -88,7 +88,7 @@ RSpec.describe Attachment::EditComponent, type: :component do
 
     context 'when watermarking is done' do
       before do
-        attachment.metadata['watermark'] = true
+        attachment.blob.touch(:watermarked_at)
       end
 
       it 'renders a complete downlaod interface with details to download the file' do
@@ -115,7 +115,7 @@ RSpec.describe Attachment::EditComponent, type: :component do
 
     context 'when watermarking is done' do
       before do
-        attachment.metadata['watermark'] = true
+        attachment.blob.touch(:watermarked_at)
       end
 
       it 'renders a simple link to view file' do

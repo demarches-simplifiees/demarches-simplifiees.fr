@@ -4,11 +4,11 @@ module BlobTitreIdentiteWatermarkConcern
   end
 
   def watermark_done?
-    metadata[:watermark]
+    watermarked_at.present?
   end
 
   def watermark_later
-    if watermark_required?
+    if watermark_pending?
       TitreIdentiteWatermarkJob.perform_later(self)
     end
   end
@@ -16,6 +16,6 @@ module BlobTitreIdentiteWatermarkConcern
   private
 
   def watermark_required?
-    attachments.any? { |attachment| attachment.record.class.name == 'Champs::TitreIdentiteChamp' }
+    attachments.any? { _1.record.class == Champs::TitreIdentiteChamp }
   end
 end

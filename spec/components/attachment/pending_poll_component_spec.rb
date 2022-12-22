@@ -39,7 +39,7 @@ RSpec.describe Attachment::PendingPollComponent, type: :component do
 
   context "when waterkmark is done" do
     before do
-      attachment.blob[:metadata] = { watermark: true }
+      attachment.blob.touch(:watermarked_at)
     end
 
     it "does not render" do
