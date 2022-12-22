@@ -72,6 +72,17 @@ describe Dossier do
           expect(dossier.pending_changes).not_to be_empty
           expect(dossier.can_rebase?).to be_falsey
         end
+
+        context 'with a value' do
+          before do
+            dossier.champs.find_by(type_de_champ: type_de_champ).update(value: 'a value')
+          end
+
+          it 'should be true' do
+            expect(dossier.pending_changes).not_to be_empty
+            expect(dossier.can_rebase?).to be_truthy
+          end
+        end
       end
 
       context 'with type de champ change type' do
