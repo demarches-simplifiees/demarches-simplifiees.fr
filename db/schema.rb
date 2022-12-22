@@ -47,6 +47,7 @@ ActiveRecord::Schema.define(version: 2022_12_13_084442) do
     t.integer "lock_version"
     t.text "metadata"
     t.string "service_name", null: false
+    t.datetime "watermarked_at"
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
