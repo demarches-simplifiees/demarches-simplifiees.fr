@@ -143,11 +143,7 @@ module DossierRebaseConcern
     champ = target_coordinate
       .type_de_champ
       .build_champ(params)
-    if parent.is_a?(Dossier)
-      parent.champs_public << champ
-    else
-      parent.champs << champ
-    end
+    parent.champs << champ
   end
 
   def delete_champs_for_revision(stable_id)
