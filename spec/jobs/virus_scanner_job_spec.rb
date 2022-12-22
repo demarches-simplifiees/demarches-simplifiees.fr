@@ -15,18 +15,6 @@ describe VirusScannerJob, type: :job do
     end
     it { expect(blob.virus_scanner.safe?).to be_truthy }
     it { expect(blob.analyzed?).to be_truthy }
-    it { expect(blob.lock_version).to eq(2) }
-  end
-
-  context "should raise ActiveRecord::StaleObjectError" do
-    let(:blob_2) { ActiveStorage::Blob.find(blob.id) }
-    before do
-      blob_2.virus_scan_result = ActiveStorage::VirusScanner::INFECTED
-      blob.virus_scan_result = ActiveStorage::VirusScanner::SAFE
-      blob.save
-    end
-
-    it { expect { blob_2.save }.to raise_error(ActiveRecord::StaleObjectError) }
   end
 
   context "when there is an integrity error" do
