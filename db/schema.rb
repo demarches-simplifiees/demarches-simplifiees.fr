@@ -297,6 +297,16 @@ ActiveRecord::Schema.define(version: 2022_12_27_084442) do
     t.index ["procedure_id"], name: "index_deleted_dossiers_on_procedure_id"
   end
 
+  create_table "dossier_batch_operations", force: :cascade do |t|
+    t.bigint "batch_operation_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.bigint "dossier_id", null: false
+    t.string "state", default: "pending", null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["batch_operation_id"], name: "index_dossier_batch_operations_on_batch_operation_id"
+    t.index ["dossier_id"], name: "index_dossier_batch_operations_on_dossier_id"
+  end
+
   create_table "dossier_operation_logs", force: :cascade do |t|
     t.boolean "automatic_operation", default: false, null: false
     t.bigint "bill_signature_id"
