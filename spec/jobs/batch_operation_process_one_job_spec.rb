@@ -65,6 +65,35 @@ describe BatchOperationProcessOneJob, type: :job do
           .from(nil)
           .to('motivation')
       end
+
+      context 'when it raises a  ActiveRecord::StaleObjectError' do
+        before { allow_any_instance_of(Dossier).to receive(:after_accepter).and_raise(ActiveRecord::StaleObjectError) }
+
+        it 'with invalid dossier (ex: ActiveRecord::StaleObjectError), unlink dossier/batch_operation with update_column' do
+          scope = double
+          expect(scope).to receive(:find).with(dossier_job.id).and_return(dossier_job)
+          expect_any_instance_of(BatchOperation).to receive(:dossiers_safe_scope).and_return(scope)
+          dossier_job.errors.add('KC')
+
+          expect do
+            begin
+              subject.perform_now
+            rescue ActiveRecord::StaleObjectError
+              # noop, juste want to catch existing error but not others
+            end
+          end.to change { dossier_job.reload.batch_operation }.from(batch_operation).to(nil)
+        end
+
+        it 'does not change dossier state' do
+          expect do
+            begin
+              subject.perform_now
+            rescue ActiveRecord::StaleObjectError
+              # noop, juste want to catch existing error but not others
+            end
+          end.not_to change { dossier_job.reload.accepte? }
+        end
+      end
     end
 
     context 'when operation is "accepter" with justificatif' do
