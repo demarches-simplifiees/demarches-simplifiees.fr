@@ -247,198 +247,110 @@ class ProcedureRevision < ApplicationRecord
       from_sids = from_h.keys
       to_sids = to_h.keys
 
-      removed = (from_sids - to_sids).map do |sid|
-        { model: :type_de_champ, op: :remove, label: from_h[sid].libelle, private: from_h[sid].private?, _position: from_sids.index(sid), stable_id: sid }
-      end
-
-      added = (to_sids - from_sids).map do |sid|
-        { model: :type_de_champ, op: :add, label: to_h[sid].libelle, private: to_h[sid].private?, mandatory: to_h[sid].mandatory?, _position: to_sids.index(sid), stable_id: sid }
-      end
+      removed = (from_sids - to_sids).map { ProcedureRevisionChange::RemoveChamp.new(from_h[_1]) }
+      added = (to_sids - from_sids).map { ProcedureRevisionChange::AddChamp.new(to_h[_1]) }
 
       kept = from_sids.intersection(to_sids)
 
       moved = kept
-        .map { |sid| [sid, from_h[sid], to_h[sid]] }
-        .filter { |_, from, to| from.position != to.position }
-        .map do |sid, from, to|
-        { model: :type_de_champ, op: :move, label: from.libelle, private: from.private?, from: from.position, to: to.position, _position: to_sids.index(sid), stable_id: sid }
-      end
+        .map { [from_h[_1], to_h[_1]] }
+        .filter { |from, to| from.position != to.position }
+        .map { |from, to| ProcedureRevisionChange::MoveChamp.new(from, from.position, to.position) }
 
       changed = kept
-        .map { |sid| [sid, from_h[sid], to_h[sid]] }
-        .flat_map do |sid, from, to|
-          compare_type_de_champ(from.type_de_champ, to.type_de_champ, from_coordinates, to_coordinates)
-            .each { |h| h[:_position] = to_sids.index(sid) }
-        end
+        .map { [from_h[_1], to_h[_1]] }
+        .flat_map { |from, to| compare_type_de_champ(from.type_de_champ, to.type_de_champ, from_coordinates, to_coordinates) }
 
-      (removed + added + moved + changed)
-        .sort_by { |h| h[:_position] }
-        .each { |h| h.delete(:_position) }
+      (removed + added + moved + changed).sort_by { _1.op == :remove ? from_sids[_1.stable_id] : to_sids[_1.stable_id] }
     end
   end
 
   def compare_type_de_champ(from_type_de_champ, to_type_de_champ, from_coordinates, to_coordinates)
     changes = []
     if from_type_de_champ.type_champ != to_type_de_champ.type_champ
-      changes << {
-        model: :type_de_champ,
-        op: :update,
-        attribute: :type_champ,
-        label: from_type_de_champ.libelle,
-        private: from_type_de_champ.private?,
-        from: from_type_de_champ.type_champ,
-        to: to_type_de_champ.type_champ,
-        stable_id: from_type_de_champ.stable_id
-      }
+      changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+        :type_champ,
+        from_type_de_champ.type_champ,
+        to_type_de_champ.type_champ)
     end
     if from_type_de_champ.libelle != to_type_de_champ.libelle
-      changes << {
-        model: :type_de_champ,
-        op: :update,
-        attribute: :libelle,
-        label: from_type_de_champ.libelle,
-        private: from_type_de_champ.private?,
-        from: from_type_de_champ.libelle,
-        to: to_type_de_champ.libelle,
-        stable_id: from_type_de_champ.stable_id
-      }
+      changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+        :libelle,
+        from_type_de_champ.libelle,
+        to_type_de_champ.libelle)
     end
     if from_type_de_champ.collapsible_explanation_enabled? != to_type_de_champ.collapsible_explanation_enabled?
-      changes << {
-        model: :type_de_champ,
-        op: :update,
-        attribute: :collapsible_explanation_enabled,
-        label: from_type_de_champ.libelle,
-        private: from_type_de_champ.private?,
-        from: from_type_de_champ.collapsible_explanation_enabled?,
-        to: to_type_de_champ.collapsible_explanation_enabled?,
-        stable_id: from_type_de_champ.stable_id
-      }
+      changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+        :collapsible_explanation_enabled,
+        from_type_de_champ.collapsible_explanation_enabled?,
+        to_type_de_champ.collapsible_explanation_enabled?)
     end
     if from_type_de_champ.collapsible_explanation_text != to_type_de_champ.collapsible_explanation_text
-      changes << {
-        model: :type_de_champ,
-        op: :update,
-        attribute: :collapsible_explanation_text,
-        label: from_type_de_champ.libelle,
-        private: from_type_de_champ.private?,
-        from: from_type_de_champ.collapsible_explanation_text,
-        to: to_type_de_champ.collapsible_explanation_text,
-        stable_id: from_type_de_champ.stable_id
-      }
+      changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+        :collapsible_explanation_text,
+        from_type_de_champ.collapsible_explanation_text,
+        to_type_de_champ.collapsible_explanation_text)
     end
     if from_type_de_champ.description != to_type_de_champ.description
-      changes << {
-        model: :type_de_champ,
-        op: :update,
-        attribute: :description,
-        label: from_type_de_champ.libelle,
-        private: from_type_de_champ.private?,
-        from: from_type_de_champ.description,
-        to: to_type_de_champ.description,
-        stable_id: from_type_de_champ.stable_id
-      }
+      changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+        :description,
+        from_type_de_champ.description,
+        to_type_de_champ.description)
     end
     if from_type_de_champ.mandatory? != to_type_de_champ.mandatory?
-      changes << {
-        model: :type_de_champ,
-        op: :update,
-        attribute: :mandatory,
-        label: from_type_de_champ.libelle,
-        private: from_type_de_champ.private?,
-        from: from_type_de_champ.mandatory?,
-        to: to_type_de_champ.mandatory?,
-        stable_id: from_type_de_champ.stable_id
-      }
+      changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+        :mandatory,
+        from_type_de_champ.mandatory?,
+        to_type_de_champ.mandatory?)
     end
 
     if from_type_de_champ.condition != to_type_de_champ.condition
-      changes << {
-        model: :type_de_champ,
-        op: :update,
-        attribute: :condition,
-        label: from_type_de_champ.libelle,
-        private: from_type_de_champ.private?,
-        from: from_type_de_champ.condition&.to_s(from_coordinates.map(&:type_de_champ)),
-        to: to_type_de_champ.condition&.to_s(to_coordinates.map(&:type_de_champ)),
-        stable_id: from_type_de_champ.stable_id
-      }
+      changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+        :condition,
+        from_type_de_champ.condition&.to_s(from_coordinates.map(&:type_de_champ)),
+        to_type_de_champ.condition&.to_s(to_coordinates.map(&:type_de_champ)))
     end
 
     if to_type_de_champ.drop_down_list?
       if from_type_de_champ.drop_down_list_options != to_type_de_champ.drop_down_list_options
-        changes << {
-          model: :type_de_champ,
-          op: :update,
-          attribute: :drop_down_options,
-          label: from_type_de_champ.libelle,
-          private: from_type_de_champ.private?,
-          from: from_type_de_champ.drop_down_list_options,
-          to: to_type_de_champ.drop_down_list_options,
-          stable_id: from_type_de_champ.stable_id
-        }
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          :drop_down_options,
+          from_type_de_champ.drop_down_list_options,
+          to_type_de_champ.drop_down_list_options)
       end
       if to_type_de_champ.linked_drop_down_list?
         if from_type_de_champ.drop_down_secondary_libelle != to_type_de_champ.drop_down_secondary_libelle
-          changes << {
-            model: :type_de_champ,
-            op: :update,
-            attribute: :drop_down_secondary_libelle,
-            label: from_type_de_champ.libelle,
-            private: from_type_de_champ.private?,
-            from: from_type_de_champ.drop_down_secondary_libelle,
-            to: to_type_de_champ.drop_down_secondary_libelle
-          }
+          changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+            :drop_down_secondary_libelle,
+            from_type_de_champ.drop_down_secondary_libelle,
+            to_type_de_champ.drop_down_secondary_libelle)
         end
         if from_type_de_champ.drop_down_secondary_description != to_type_de_champ.drop_down_secondary_description
-          changes << {
-            model: :type_de_champ,
-            op: :update,
-            attribute: :drop_down_secondary_description,
-            label: from_type_de_champ.libelle,
-            private: from_type_de_champ.private?,
-            from: from_type_de_champ.drop_down_secondary_description,
-            to: to_type_de_champ.drop_down_secondary_description
-          }
+          changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+            :drop_down_secondary_description,
+            from_type_de_champ.drop_down_secondary_description,
+            to_type_de_champ.drop_down_secondary_description)
         end
       end
       if from_type_de_champ.drop_down_other? != to_type_de_champ.drop_down_other?
-        changes << {
-          model: :type_de_champ,
-          op: :update,
-          attribute: :drop_down_other,
-          label: from_type_de_champ.libelle,
-          private: from_type_de_champ.private?,
-          from: from_type_de_champ.drop_down_other?,
-          to: to_type_de_champ.drop_down_other?,
-          stable_id: from_type_de_champ.stable_id
-        }
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          :drop_down_other,
+          from_type_de_champ.drop_down_other?,
+          to_type_de_champ.drop_down_other?)
       end
     elsif to_type_de_champ.carte?
       if from_type_de_champ.carte_optional_layers != to_type_de_champ.carte_optional_layers
-        changes << {
-          model: :type_de_champ,
-          op: :update,
-          attribute: :carte_layers,
-          label: from_type_de_champ.libelle,
-          private: from_type_de_champ.private?,
-          from: from_type_de_champ.carte_optional_layers,
-          to: to_type_de_champ.carte_optional_layers,
-          stable_id: from_type_de_champ.stable_id
-        }
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          :carte_layers,
+          from_type_de_champ.carte_optional_layers,
+          to_type_de_champ.carte_optional_layers)
       end
     elsif to_type_de_champ.piece_justificative?
       if from_type_de_champ.piece_justificative_template_checksum != to_type_de_champ.piece_justificative_template_checksum
-        changes << {
-          model: :type_de_champ,
-          op: :update,
-          attribute: :piece_justificative_template,
-          label: from_type_de_champ.libelle,
-          private: from_type_de_champ.private?,
-          from: from_type_de_champ.piece_justificative_template_filename,
-          to: to_type_de_champ.piece_justificative_template_filename,
-          stable_id: from_type_de_champ.stable_id
-        }
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          :piece_justificative_template,
+          from_type_de_champ.piece_justificative_template_filename,
+          to_type_de_champ.piece_justificative_template_filename)
       end
     end
     changes

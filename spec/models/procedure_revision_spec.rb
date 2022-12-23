@@ -332,7 +332,7 @@ describe ProcedureRevision do
     let(:second_tdc) { draft.types_de_champ_public.second }
     let(:new_draft) { procedure.create_new_revision }
 
-    subject { procedure.active_revision.compare(new_draft.reload) }
+    subject { procedure.active_revision.compare(new_draft.reload).map(&:to_h) }
 
     context 'with a procedure with 2 tdcs' do
       let(:procedure) do
@@ -354,7 +354,6 @@ describe ProcedureRevision do
               attribute: :condition,
               from: nil,
               label: "l2",
-              model: :type_de_champ,
               op: :update,
               private: false,
               stable_id: second_tdc.stable_id,
@@ -379,7 +378,6 @@ describe ProcedureRevision do
               attribute: :condition,
               from: "(l1 == 2)",
               label: "l2",
-              model: :type_de_champ,
               op: :update,
               private: false,
               stable_id: second_tdc.stable_id,
@@ -404,7 +402,6 @@ describe ProcedureRevision do
               attribute: :condition,
               from: "(l1 == 2)",
               label: "l2",
-              model: :type_de_champ,
               op: :update,
               private: false,
               stable_id: second_tdc.stable_id,
@@ -429,7 +426,6 @@ describe ProcedureRevision do
       it do
         is_expected.to eq([
           {
-            model: :type_de_champ,
             op: :add,
             label: "Un champ text",
             private: false,
@@ -453,7 +449,6 @@ describe ProcedureRevision do
         it do
           is_expected.to eq([
             {
-              model: :type_de_champ,
               op: :update,
               attribute: :libelle,
               label: first_tdc.libelle,
@@ -463,7 +458,6 @@ describe ProcedureRevision do
               stable_id: first_tdc.stable_id
             },
             {
-              model: :type_de_champ,
               op: :update,
               attribute: :description,
               label: first_tdc.libelle,
@@ -473,7 +467,6 @@ describe ProcedureRevision do
               stable_id: first_tdc.stable_id
             },
             {
-              model: :type_de_champ,
               op: :update,
               attribute: :mandatory,
               label: first_tdc.libelle,
@@ -497,7 +490,6 @@ describe ProcedureRevision do
         it do
           is_expected.to eq([
             {
-              model: :type_de_champ,
               op: :update,
               attribute: :collapsible_explanation_enabled,
               label: first_tdc.libelle,
@@ -507,7 +499,6 @@ describe ProcedureRevision do
               stable_id: first_tdc.stable_id
             },
             {
-              model: :type_de_champ,
               op: :update,
               attribute: :collapsible_explanation_text,
               label: first_tdc.libelle,
@@ -535,22 +526,20 @@ describe ProcedureRevision do
       it do
         is_expected.to eq([
           {
-            model: :type_de_champ,
-            op: :move,
-            label: new_draft_third_tdc.libelle,
-            private: false,
-            from: 2,
-            to: 1,
-            stable_id: new_draft_third_tdc.stable_id
-          },
-          {
-            model: :type_de_champ,
             op: :move,
             label: new_draft_second_tdc.libelle,
             private: false,
             from: 1,
             to: 2,
             stable_id: new_draft_second_tdc.stable_id
+          },
+          {
+            op: :move,
+            label: new_draft_third_tdc.libelle,
+            private: false,
+            from: 2,
+            to: 1,
+            stable_id: new_draft_third_tdc.stable_id
           }
         ])
       end
@@ -566,7 +555,6 @@ describe ProcedureRevision do
       it do
         is_expected.to eq([
           {
-            model: :type_de_champ,
             op: :remove,
             label: first_tdc.libelle,
             private: false,
@@ -587,7 +575,6 @@ describe ProcedureRevision do
       it do
         is_expected.to eq([
           {
-            model: :type_de_champ,
             op: :update,
             attribute: :type_champ,
             label: "sub type de champ",
@@ -597,7 +584,6 @@ describe ProcedureRevision do
             stable_id: new_draft.children_of(new_draft.types_de_champ_public.last).first.stable_id
           },
           {
-            model: :type_de_champ,
             op: :update,
             attribute: :drop_down_options,
             label: "sub type de champ",
@@ -621,7 +607,6 @@ describe ProcedureRevision do
       it do
         is_expected.to eq([
           {
-            model: :type_de_champ,
             op: :update,
             attribute: :type_champ,
             label: "sub type de champ",
@@ -631,7 +616,6 @@ describe ProcedureRevision do
             stable_id: new_draft.children_of(new_draft.types_de_champ_public.last).first.stable_id
           },
           {
-            model: :type_de_champ,
             op: :update,
             attribute: :carte_layers,
             label: "sub type de champ",
