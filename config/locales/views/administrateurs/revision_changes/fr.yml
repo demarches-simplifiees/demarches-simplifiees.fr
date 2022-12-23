@@ -27,6 +27,7 @@ fr:
         disabled: "Le texte complementaire affichable au clique du champ  « %{label} » a été supprimée"
       update_collapsible_explanation_text: "Le texte complementaire affichable au clique du champ « %{label} »  a été modifié. Il est maintenant « %{text} »."
       add_private: L’annotation privée « %{label} » a été ajoutée
+      add_mandatory: Le champ obligatoire « %{label} » a été ajouté
       remove_private: L’annotation privée « %{label} » a été supprimée
       move_private:
         one: La position d’une annotation privée a été modifiée
