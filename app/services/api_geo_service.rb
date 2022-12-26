@@ -4,7 +4,7 @@ class APIGeoService
       I18nData.countries(locale)
         .merge(get_localized_additional_countries(locale))
         .map { |(code, name)| { name:, code: } }
-        .sort_by { I18n.transliterate(_1[:name]) }
+        .sort_by { I18n.transliterate(_1[:name].tr('î', 'Î')) }
     end
 
     def country_name(code, locale: I18n.locale)
