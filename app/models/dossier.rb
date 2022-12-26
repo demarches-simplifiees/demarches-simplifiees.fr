@@ -433,7 +433,6 @@ class Dossier < ApplicationRecord
   before_save :update_search_terms
 
   after_save :send_web_hook
-  after_create_commit :send_draft_notification_email
 
   validates :user, presence: true, if: -> { deleted_user_email_never_send.nil? }
   validates :individual, presence: true, if: -> { revision.procedure.for_individual? }
@@ -1244,6 +1243,14 @@ class Dossier < ApplicationRecord
     champs_public.joins(:type_de_champ).where(types_de_champ: { stable_id: stable_ids })
   end
 
+  def skip_user_notification_email?
+    return true if brouillon? && procedure.declarative?
+    return true if for_procedure_preview?
+    return true if user_deleted?
+
+    false
+  end
+
   private
 
   def create_missing_traitemets
@@ -1298,12 +1305,6 @@ class Dossier < ApplicationRecord
         automatic_operation: true,
         subject: subject
       )
-    end
-  end
-
-  def send_draft_notification_email
-    if brouillon? && !procedure.declarative? && !for_procedure_preview?
-      DossierMailer.notify_new_draft(self).deliver_later
     end
   end
 
