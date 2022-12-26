@@ -15,7 +15,7 @@ describe Administrateurs::ProceduresController, type: :controller do
   let(:zone_ids) { [zone.id] }
   let(:tags) { "[\"planete\",\"environnement\"]" }
 
-  describe '#apercu' do
+  describe '#apercu', vcr: { cassette_name: 'api_geo_all' } do
     render_views
 
     let(:procedure) { create(:procedure, :with_all_champs) }

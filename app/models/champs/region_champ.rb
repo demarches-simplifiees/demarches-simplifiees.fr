@@ -21,4 +21,29 @@
 #  type_de_champ_id               :integer
 #
 class Champs::RegionChamp < Champs::TextChamp
+  def for_export
+    [name, code]
+  end
+
+  def selected
+    code
+  end
+
+  def name
+    value
+  end
+
+  def code
+    external_id || APIGeoService.region_code(value)
+  end
+
+  def value=(code)
+    if code&.size == 2
+      self.external_id = code
+      super(APIGeoService.region_name(code))
+    elsif code.blank?
+      self.external_id = nil
+      super(nil)
+    end
+  end
 end
