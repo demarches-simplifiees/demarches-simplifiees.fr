@@ -442,6 +442,24 @@ class API::V2::StoredQuery
         code
       }
     }
+    ... on DepartementChamp {
+      departement {
+        name
+        code
+      }
+    }
+    ... on RegionChamp {
+      region {
+        name
+        code
+      }
+    }
+    ... on PaysChamp {
+      pays {
+        name
+        code
+      }
+    }
     ... on SiretChamp {
       etablissement {
         ...PersonneMoraleFragment
