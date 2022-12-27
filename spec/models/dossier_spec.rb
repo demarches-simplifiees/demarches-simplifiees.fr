@@ -1669,6 +1669,7 @@ describe Dossier do
   end
 
   describe "#destroy" do
+    before { allow(APIGeoService).to receive(:departement_name).with('01').and_return('Ain') }
     let(:procedure) { create(:procedure, :with_all_champs, :with_all_annotations) }
     let(:transfer) { create(:dossier_transfer) }
     let(:dossier) { create(:dossier, :with_populated_champs, :with_populated_annotations, transfer: transfer, procedure: procedure) }
