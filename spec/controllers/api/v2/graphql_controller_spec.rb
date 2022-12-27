@@ -37,6 +37,7 @@ describe API::V2::GraphqlController do
   end
 
   before do
+    allow(APIGeoService).to receive(:departement_name).with('01').and_return('Ain')
     instructeur.assign_to_procedure(procedure)
   end
 

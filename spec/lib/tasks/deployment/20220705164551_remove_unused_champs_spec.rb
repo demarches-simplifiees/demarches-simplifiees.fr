@@ -9,7 +9,10 @@ describe '20220705164551_remove_unused_champs' do
     rake_task.invoke
   end
 
-  before { champ_repetition.champs.first.update(type_de_champ: create(:type_de_champ)) }
+  before do
+    allow(APIGeoService).to receive(:departement_name).with('01').and_return('Ain')
+    champ_repetition.champs.first.update(type_de_champ: create(:type_de_champ))
+  end
   after { rake_task.reenable }
 
   describe 'remove_unused_champs' do

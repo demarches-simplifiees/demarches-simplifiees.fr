@@ -262,6 +262,7 @@ class Champ < ApplicationRecord
 
   def normalize
     return if value.nil?
+    return if value.present? && !value.include?("\u0000")
 
     self.value = value.delete("\u0000")
   end
