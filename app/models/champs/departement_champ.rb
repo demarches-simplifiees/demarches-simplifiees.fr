@@ -33,6 +33,10 @@ class Champs::DepartementChamp < Champs::TextChamp
     formatted_value
   end
 
+  def for_api
+    formatted_value
+  end
+
   def selected
     code
   end
