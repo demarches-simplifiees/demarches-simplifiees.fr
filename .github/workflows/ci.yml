@@ -19,9 +19,13 @@ jobs:
         ports: [ "5432:5432" ]
 
     steps:
+      - name: 🛑 Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.11.0
+
+      - name: ⬇️ Checkout repo
       - uses: actions/checkout@v3
 
-      - name: Setup the app code and dependancies
+      - name: 🛠 Setup the app code and dependancies
         uses: ./.github/actions/ci-setup-rails
 
       - name: Run linters
@@ -34,6 +38,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: 🛑 Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.11.0
+
+      - name: ⬇️ Checkout repo
       - uses: actions/checkout@v3
 
       - name: Setup Node
@@ -68,9 +76,13 @@ jobs:
         instances: [0, 1, 2, 3, 4, 5]
 
     steps:
+      - name: 🛑 Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.11.0
+
+      - name: ⬇️ Checkout repo
       - uses: actions/checkout@v3
 
-      - name: Setup the app runtime and dependencies
+      - name: 🛠 Setup the app runtime and dependencies
         uses: ./.github/actions/ci-setup-rails
 
       - name: Pre-compile assets
@@ -110,9 +122,13 @@ jobs:
         instances: [0, 1]
 
     steps:
+      - name: 🛑 Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.11.0
+
+      - name: ⬇️ Checkout repo
       - uses: actions/checkout@v3
 
-      - name: Setup the app runtime and dependencies
+      - name: 🛠 Setup the app runtime and dependencies
         uses: ./.github/actions/ci-setup-rails
 
       - name: Pre-compile assets
@@ -141,6 +157,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: 🛑 Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.11.0
+
+      - name: ⬇️ Checkout repo
       - uses: actions/checkout@v3
 
       - name: Collect test results from all instances
