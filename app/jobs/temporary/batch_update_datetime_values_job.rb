@@ -1,4 +1,4 @@
-class Temporary::BatchUpdateDatetimeValueJob < ApplicationJob
+class Temporary::BatchUpdateDatetimeValuesJob < ApplicationJob
   def perform(ids)
     ids.each do |id|
       datetime_champ = Champs::DatetimeChamp.find(id)
