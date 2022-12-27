@@ -33,6 +33,10 @@ class Champs::DepartementChamp < Champs::TextChamp
     formatted_value
   end
 
+  def for_api
+    formatted_value
+  end
+
   def selected
     code
   end
@@ -51,7 +55,7 @@ class Champs::DepartementChamp < Champs::TextChamp
   end
 
   def value=(code)
-    if code&.size == 2
+    if [2, 3].include?(code&.size)
       self.external_id = code
       super(APIGeoService.departement_name(code))
     elsif code.blank?

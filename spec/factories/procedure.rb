@@ -199,6 +199,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_departement do
+      after(:build) do |procedure, _evaluator|
+        build(:type_de_champ_departements, procedure: procedure)
+      end
+    end
+
     trait :with_piece_justificative do
       after(:build) do |procedure, _evaluator|
         build(:type_de_champ_piece_justificative, procedure: procedure)
