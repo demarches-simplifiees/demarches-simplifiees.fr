@@ -1,16 +1,19 @@
 RSpec.describe PrefillParams do
   describe "#to_a" do
-    let(:procedure) { create(:procedure, :published) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public:, types_de_champ_private:) }
     let(:dossier) { create(:dossier, :brouillon, procedure: procedure) }
+    let(:types_de_champ_public) { [] }
+    let(:types_de_champ_private) { [] }
 
     subject(:prefill_params_array) { described_class.new(dossier, params).to_a }
 
     context "when the stable ids match the TypeDeChamp of the corresponding procedure" do
-      let!(:type_de_champ_1) { create(:type_de_champ_text, procedure: procedure) }
+      let(:types_de_champ_public) { [{ type: :text }, { type: :textarea }] }
+      let(:type_de_champ_1) { procedure.published_revision.types_de_champ_public.first }
       let(:value_1) { "any value" }
       let(:champ_id_1) { find_champ_by_stable_id(dossier, type_de_champ_1.stable_id).id }
 
-      let!(:type_de_champ_2) { create(:type_de_champ_textarea, procedure: procedure) }
+      let(:type_de_champ_2) { procedure.published_revision.types_de_champ_public.second }
       let(:value_2) { "another value" }
       let(:champ_id_2) { find_champ_by_stable_id(dossier, type_de_champ_2.stable_id).id }
 
@@ -30,7 +33,8 @@ RSpec.describe PrefillParams do
     end
 
     context "when the typed id is not prefixed by 'champ_'" do
-      let!(:type_de_champ) { create(:type_de_champ_text, procedure: procedure) }
+      let(:type_de_champ) { procedure.published_revision.types_de_champ_public.first }
+      let(:types_de_champ_public) { [{ type: :text }] }
 
       let(:params) { { type_de_champ.to_typed_id => "value" } }
 
@@ -57,9 +61,10 @@ RSpec.describe PrefillParams do
       end
     end
 
-    shared_examples "a champ public value that is authorized" do |type_de_champ_name, value|
-      context "when the type de champ is authorized (#{type_de_champ_name})" do
-        let!(:type_de_champ) { create(type_de_champ_name, procedure: procedure) }
+    shared_examples "a champ public value that is authorized" do |type_de_champ_type, value|
+      context "when the type de champ is authorized (#{type_de_champ_type})" do
+        let(:types_de_champ_public) { [{ type: type_de_champ_type }] }
+        let(:type_de_champ) { procedure.published_revision.types_de_champ_public.first }
         let(:champ_id) { find_champ_by_stable_id(dossier, type_de_champ.stable_id).id }
 
         let(:params) { { "champ_#{type_de_champ.to_typed_id}" => value } }
@@ -70,64 +75,91 @@ RSpec.describe PrefillParams do
       end
     end
 
-    shared_examples "a champ public value that is unauthorized" do |type_de_champ_name, value|
-      let!(:type_de_champ) { create(type_de_champ_name, procedure: procedure) }
+    shared_examples "a champ private value that is authorized" do |type_de_champ_type, value|
+      context "when the type de champ is authorized (#{type_de_champ_type})" do
+        let(:types_de_champ_private) { [{ type: type_de_champ_type }] }
+        let(:type_de_champ) { procedure.published_revision.types_de_champ_private.first }
+        let(:champ_id) { find_champ_by_stable_id(dossier, type_de_champ.stable_id).id }
+
+        let(:params) { { "champ_#{type_de_champ.to_typed_id}" => value } }
+
+        it "builds an array of hash(id, value) matching the given params" do
+          expect(prefill_params_array).to match([{ id: champ_id, value: value }])
+        end
+      end
+    end
+
+    shared_examples "a champ public value that is unauthorized" do |type_de_champ_type, value|
+      let(:types_de_champ_public) { [{ type: type_de_champ_type }] }
+      let(:type_de_champ) { procedure.published_revision.types_de_champ_public.first }
 
       let(:params) { { "champ_#{type_de_champ.to_typed_id}" => value } }
 
-      context 'when the type de champ is unauthorized (type_de_champ_name)' do
+      context "when the type de champ is unauthorized (#{type_de_champ_type})" do
         it "filters out the param" do
           expect(prefill_params_array).to match([])
         end
       end
     end
 
-    it_behaves_like "a champ public value that is authorized", :type_de_champ_text, "value"
-    it_behaves_like "a champ public value that is authorized", :type_de_champ_textarea, "value"
-    it_behaves_like "a champ public value that is authorized", :type_de_champ_decimal_number, "3.14"
-    it_behaves_like "a champ public value that is authorized", :type_de_champ_integer_number, "42"
-    it_behaves_like "a champ public value that is authorized", :type_de_champ_email, "value"
-    it_behaves_like "a champ public value that is authorized", :type_de_champ_phone, "value"
-    it_behaves_like "a champ public value that is authorized", :type_de_champ_iban, "value"
-    it_behaves_like "a champ public value that is authorized", :type_de_champ_date, "2022-12-22"
-    it_behaves_like "a champ public value that is authorized", :type_de_champ_datetime, "2022-12-22T10:30"
+    it_behaves_like "a champ public value that is authorized", :text, "value"
+    it_behaves_like "a champ public value that is authorized", :textarea, "value"
+    it_behaves_like "a champ public value that is authorized", :decimal_number, "3.14"
+    it_behaves_like "a champ public value that is authorized", :integer_number, "42"
+    it_behaves_like "a champ public value that is authorized", :email, "value"
+    it_behaves_like "a champ public value that is authorized", :phone, "value"
+    it_behaves_like "a champ public value that is authorized", :iban, "value"
+    it_behaves_like "a champ public value that is authorized", :civilite, "M."
+    it_behaves_like "a champ public value that is authorized", :date, "2022-12-22"
+    it_behaves_like "a champ public value that is authorized", :datetime, "2022-12-22T10:30"
 
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_decimal_number, "non decimal string"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_integer_number, "non integer string"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_number, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_communes, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_dossier_link, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_titre_identite, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_checkbox, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_civilite, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_yes_no, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_date, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_datetime, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_datetime, "12-22-2022T10:30"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_drop_down_list, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_multiple_drop_down_list, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_linked_drop_down_list, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_header_section, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_explication, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_piece_justificative, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_repetition, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_cnaf, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_dgfip, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_pole_emploi, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_mesri, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_carte, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_address, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_pays, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_regions, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_departements, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_siret, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_rna, "value"
-    it_behaves_like "a champ public value that is unauthorized", :type_de_champ_annuaire_education, "value"
+    it_behaves_like "a champ private value that is authorized", :text, "value"
+    it_behaves_like "a champ private value that is authorized", :textarea, "value"
+    it_behaves_like "a champ private value that is authorized", :decimal_number, "3.14"
+    it_behaves_like "a champ private value that is authorized", :integer_number, "42"
+    it_behaves_like "a champ private value that is authorized", :email, "value"
+    it_behaves_like "a champ private value that is authorized", :phone, "value"
+    it_behaves_like "a champ private value that is authorized", :iban, "value"
+    it_behaves_like "a champ private value that is authorized", :civilite, "M."
+    it_behaves_like "a champ private value that is authorized", :date, "2022-12-22"
+    it_behaves_like "a champ private value that is authorized", :datetime, "2022-12-22T10:30"
+
+    it_behaves_like "a champ public value that is unauthorized", :decimal_number, "non decimal string"
+    it_behaves_like "a champ public value that is unauthorized", :integer_number, "non integer string"
+    it_behaves_like "a champ public value that is unauthorized", :number, "value"
+    it_behaves_like "a champ public value that is unauthorized", :communes, "value"
+    it_behaves_like "a champ public value that is unauthorized", :dossier_link, "value"
+    it_behaves_like "a champ public value that is unauthorized", :titre_identite, "value"
+    it_behaves_like "a champ public value that is unauthorized", :checkbox, "value"
+    it_behaves_like "a champ public value that is unauthorized", :civilite, "value"
+    it_behaves_like "a champ public value that is unauthorized", :yes_no, "value"
+    it_behaves_like "a champ public value that is unauthorized", :date, "value"
+    it_behaves_like "a champ public value that is unauthorized", :datetime, "value"
+    it_behaves_like "a champ public value that is unauthorized", :datetime, "12-22-2022T10:30"
+    it_behaves_like "a champ public value that is unauthorized", :drop_down_list, "value"
+    it_behaves_like "a champ public value that is unauthorized", :multiple_drop_down_list, "value"
+    it_behaves_like "a champ public value that is unauthorized", :linked_drop_down_list, "value"
+    it_behaves_like "a champ public value that is unauthorized", :header_section, "value"
+    it_behaves_like "a champ public value that is unauthorized", :explication, "value"
+    it_behaves_like "a champ public value that is unauthorized", :piece_justificative, "value"
+    it_behaves_like "a champ public value that is unauthorized", :repetition, "value"
+    it_behaves_like "a champ public value that is unauthorized", :cnaf, "value"
+    it_behaves_like "a champ public value that is unauthorized", :dgfip, "value"
+    it_behaves_like "a champ public value that is unauthorized", :pole_emploi, "value"
+    it_behaves_like "a champ public value that is unauthorized", :mesri, "value"
+    it_behaves_like "a champ public value that is unauthorized", :carte, "value"
+    it_behaves_like "a champ public value that is unauthorized", :address, "value"
+    it_behaves_like "a champ public value that is unauthorized", :pays, "value"
+    it_behaves_like "a champ public value that is unauthorized", :regions, "value"
+    it_behaves_like "a champ public value that is unauthorized", :departements, "value"
+    it_behaves_like "a champ public value that is unauthorized", :siret, "value"
+    it_behaves_like "a champ public value that is unauthorized", :rna, "value"
+    it_behaves_like "a champ public value that is unauthorized", :annuaire_education, "value"
   end
 
   private
 
   def find_champ_by_stable_id(dossier, stable_id)
-    dossier.champs_public.joins(:type_de_champ).find_by(types_de_champ: { stable_id: stable_id })
+    dossier.champs.joins(:type_de_champ).find_by(types_de_champ: { stable_id: stable_id })
   end
 end

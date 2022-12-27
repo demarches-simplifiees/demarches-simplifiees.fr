@@ -1,56 +1,7 @@
 fr:
   administrateurs:
     revision_changes:
-      no_changes: Aucune modification
       has_changes: Modifications en cours (appliqué à la prochaine publication)
-      add: Le champ « %{label} » a été ajouté
-      remove: Le champ « %{label} » a été supprimé
-      move:
-        one: La position d’un champ a été modifiée
-        other: Les positions de %{count} champs ont été modifiées
-      update_libelle: Le libellé du champ « %{label} » a été modifié. Le nouveau libellé est « %{to} »
-      update_description: La description du champ « %{label} » a été modifiée. La nouvelle description est « %{to} »
-      update_drop_down_secondary_libelle: Le libellé secondaire du champ « %{label} » a été modifié. Le nouveau libellé est « %{to} »
-      update_drop_down_secondary_description: La description secondaire du champ « %{label} » a été modifiée. La nouvelle description est « %{to} »
-      update_type_champ: Le type du champ « %{label} » a été modifié. Il est maintenant de type « %{to} »
-      update_mandatory:
-        enabled: Le champ « %{label} » est maintenant obligatoire
-        disabled: Le champ « %{label} » n’est plus obligatoire
-      update_piece_justificative_template: Le modèle de pièce justificative du champ « %{label} » a été modifié
-      update_drop_down_options: Les options de sélection du champ « %{label} » ont été modifiées
-      update_drop_down_other:
-        enabled: Le champ « %{label} » comporte maintenant un choix « Autre »
-        disabled: Le champ « %{label} » ne comporte plus de choix « Autre »
-      update_carte_layers: Les référentiels cartographiques du champ « %{label} » ont été modifiés
-      update_collapsible_explanation_enabled:
-        enabled: "Le texte complementaire affichable au clique du champ  « %{label} » a été ajouté"
-        disabled: "Le texte complementaire affichable au clique du champ  « %{label} » a été supprimée"
-      update_collapsible_explanation_text: "Le texte complementaire affichable au clique du champ « %{label} »  a été modifié. Il est maintenant « %{text} »."
-      add_private: L’annotation privée « %{label} » a été ajoutée
-      remove_private: L’annotation privée « %{label} » a été supprimée
-      move_private:
-        one: La position d’une annotation privée a été modifiée
-        other: Les positions de %{count} annotations privées ont été modifiées
-      update_libelle_private: Le libellé de l’annotation privée « %{label} » a été modifié. Le nouveau libellé est « %{to} »
-      update_description_private: La description de l’annotation privée « %{label} » a été modifiée. La nouvelle description est « %{to} »
-      update_drop_down_secondary_libelle_private: Le libellé secondaire de l’annotation « %{label} » a été modifié. Le nouveau libellé est « %{to} »
-      update_drop_down_secondary_description_private: La description secondaire de l’annotation « %{label} » a été modifiée. La nouvelle description est « %{to} »
-      update_type_champ_private: Le type de l’annotation privée « %{label} » a été modifié. Elle est maintenant de type « %{to} »
-      update_mandatory_private:
-        enabled: L’annotation privée « %{label} » est maintenant obligatoire
-        disabled: L’annotation privée « %{label} » n’est plus obligatoire
-      update_piece_justificative_template_private: Le modèle de pièce justificative de l’annotation privée « %{label} » a été modifié
-      update_drop_down_options_private: Les options de sélection de l’annotation privée « %{label} » ont été modifiées
-      update_carte_layers_private: Les référentiels cartographiques de l’annotation privée « %{label} » ont été modifiés
-      update_collapsible_explanation_enabled_private:
-        enabled: "Le texte complementaire affichable au clique de l’annotation privée  « %{label} » a été ajouté"
-        disabled: "Le texte complementaire affichable au clique de l’annotation privée  « %{label} » a été supprimée"
-      update_collapsible_explanation_private: "Le texte complementaire affichable au clique de l’annotation privée « %{label} »  a été modifié. Il est maintenant « %{text} »."
-      add_option: "ajoutés : %{items}"
-      remove_option: "supprimés : %{items}"
-      add_condition: Une condition a été ajoutée sur le champ « %{label} ». La nouvelle condition est « %{to} »
-      remove_condition: La condition du champ « %{label} » a été supprimée.
-      update_condition: La condition du champ « %{label} » a été modifiée. La nouvelle condition est « %{to} »
     carte_layers:
       unesco: UNESCO
       arretes_protection: Arrêtés de protection

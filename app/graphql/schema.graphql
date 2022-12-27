@@ -685,6 +685,21 @@ type Departement {
   name: String!
 }
 
+type DepartementChamp implements Champ {
+  departement: Departement
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
+}
+
 """
 Represents direct upload credentials
 """
@@ -2002,6 +2017,26 @@ type ParcelleCadastrale implements GeoArea {
   surfaceParcelle: Float! @deprecated(reason: "Utilisez le champ `surface` à la place.")
 }
 
+type Pays {
+  code: String!
+  name: String!
+}
+
+type PaysChamp implements Champ {
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+  pays: Pays
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
+}
+
 type PersonneMorale implements Demandeur {
   address: Address!
   adresse: String! @deprecated(reason: "Utilisez le champ `address.label` à la place.")
@@ -2086,6 +2121,26 @@ type Query {
     """
     number: Int!
   ): GroupeInstructeurWithDossiers!
+}
+
+type Region {
+  code: String!
+  name: String!
+}
+
+type RegionChamp implements Champ {
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+  region: Region
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
 }
 
 type RepetitionChamp implements Champ {

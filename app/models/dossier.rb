@@ -153,6 +153,7 @@ class Dossier < ApplicationRecord
   has_many :transfer_logs, class_name: 'DossierTransferLog', dependent: :destroy
   has_many :cloned_dossiers, class_name: 'Dossier', foreign_key: 'parent_dossier_id', dependent: :nullify, inverse_of: :parent_dossier
 
+  accepts_nested_attributes_for :champs
   accepts_nested_attributes_for :champs_public
   accepts_nested_attributes_for :champs_private
   accepts_nested_attributes_for :champs_public_all
@@ -433,7 +434,6 @@ class Dossier < ApplicationRecord
   before_save :update_search_terms
 
   after_save :send_web_hook
-  after_create_commit :send_draft_notification_email
 
   validates :user, presence: true, if: -> { deleted_user_email_never_send.nil? }
   validates :individual, presence: true, if: -> { revision.procedure.for_individual? }
@@ -902,6 +902,7 @@ class Dossier < ApplicationRecord
     attestation&.destroy
 
     save!
+    rebase_later
     if !disable_notification
       DossierMailer.notify_revert_to_instruction(self).deliver_later
     end
@@ -1211,33 +1212,44 @@ class Dossier < ApplicationRecord
     @sections[champ.parent || (champ.public? ? :public : :private)]
   end
 
-  # while cloning we do not have champ.id. it comes after transaction
-  # so we collect a list of jobs to process. then enqueue this list
   def clone
-    cloned_dossier = deep_clone(only: [:autorisation_donnees, :user_id, :revision_id, :groupe_instructeur_id],
-                                include: [:individual, :etablissement]) do |original, kopy|
+    dossier_attributes = [:autorisation_donnees, :user_id, :revision_id, :groupe_instructeur_id]
+    relationships = [:individual, :etablissement]
+
+    cloned_dossier = deep_clone(only: dossier_attributes, include: relationships) do |original, kopy|
+      PiecesJustificativesService.clone_attachments(original, kopy)
+
       if original.is_a?(Dossier)
         kopy.parent_dossier_id = original.id
         kopy.state = Dossier.states.fetch(:brouillon)
-        kopy.champs_public = original.champs_public.map do |champ|
-          champ.clone(dossier: kopy)
-        end
-        kopy.champs_private = original.champs_private.map do |champ|
-          champ.clone(dossier: kopy)
+        cloned_champs = original.champs
+          .index_by(&:id)
+          .transform_values(&:clone)
+
+        kopy.champs = cloned_champs.values.map do |champ|
+          champ.dossier = kopy
+          champ.parent = cloned_champs[champ.parent_id] if champ.child?
+          champ
         end
       end
     end
 
-    transaction do
-      cloned_dossier.save!
-    end
-    cloned_dossier
+    transaction { cloned_dossier.save! }
+    cloned_dossier.reload
   end
 
   def find_champs_by_stable_ids(stable_ids)
     return [] if stable_ids.compact.empty?
 
-    champs_public.joins(:type_de_champ).where(types_de_champ: { stable_id: stable_ids })
+    champs.joins(:type_de_champ).where(types_de_champ: { stable_id: stable_ids })
+  end
+
+  def skip_user_notification_email?
+    return true if brouillon? && procedure.declarative?
+    return true if for_procedure_preview?
+    return true if user_deleted?
+
+    false
   end
 
   private
@@ -1294,12 +1306,6 @@ class Dossier < ApplicationRecord
         automatic_operation: true,
         subject: subject
       )
-    end
-  end
-
-  def send_draft_notification_email
-    if brouillon? && !procedure.declarative? && !for_procedure_preview?
-      DossierMailer.notify_new_draft(self).deliver_later
     end
   end
 

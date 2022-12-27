@@ -3,6 +3,9 @@ require 'csv'
 describe ProcedureExportService do
   let(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs) }
   let(:service) { ProcedureExportService.new(procedure, procedure.dossiers) }
+  before do
+    allow(APIGeoService).to receive(:departement_name).with('01').and_return('Ain')
+  end
 
   describe 'to_xlsx' do
     subject do
@@ -68,8 +71,11 @@ describe ProcedureExportService do
           "communes (Code insee)",
           "communes (Département)",
           "departements",
+          "departements (Code)",
           "regions",
+          "regions (Code)",
           "pays",
+          "pays (Code)",
           "dossier_link",
           "piece_justificative",
           "rna",
@@ -172,8 +178,11 @@ describe ProcedureExportService do
           "communes (Code insee)",
           "communes (Département)",
           "departements",
+          "departements (Code)",
           "regions",
+          "regions (Code)",
           "pays",
+          "pays (Code)",
           "dossier_link",
           "piece_justificative",
           "rna",
@@ -259,8 +268,11 @@ describe ProcedureExportService do
             "communes (Code insee)",
             "communes (Département)",
             "departements",
+            "departements (Code)",
             "regions",
+            "regions (Code)",
             "pays",
+            "pays (Code)",
             "dossier_link",
             "piece_justificative",
             "rna",

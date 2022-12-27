@@ -2,10 +2,11 @@
 
 RSpec.describe DossierPrefillableConcern do
   describe '.prefill!' do
-    let(:procedure) { create(:procedure, :published) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
     let(:dossier) { create(:dossier, :brouillon, procedure: procedure) }
+    let(:types_de_champ_public) { [] }
 
-    subject(:fill) { dossier.prefill!(values) }
+    subject(:fill) { dossier.prefill!(values); dossier.reload }
 
     context 'when champs_public_attributes is empty' do
       let(:values) { [] }
@@ -18,11 +19,12 @@ RSpec.describe DossierPrefillableConcern do
 
     context 'when champs_public_attributes has values' do
       context 'when the champs are valid' do
-        let!(:type_de_champ_1) { create(:type_de_champ_text, procedure: procedure) }
+        let(:types_de_champ_public) { [{ type: :text }, { type: :phone }] }
+        let(:type_de_champ_1) { procedure.published_revision.types_de_champ_public.first }
         let(:value_1) { "any value" }
         let(:champ_id_1) { find_champ_by_stable_id(dossier, type_de_champ_1.stable_id).id }
 
-        let!(:type_de_champ_2) { create(:type_de_champ_phone, procedure: procedure) }
+        let(:type_de_champ_2) { procedure.published_revision.types_de_champ_public.second }
         let(:value_2) { "33612345678" }
         let(:champ_id_2) { find_champ_by_stable_id(dossier, type_de_champ_2.stable_id).id }
 
@@ -39,9 +41,10 @@ RSpec.describe DossierPrefillableConcern do
       end
 
       context 'when a champ is invalid' do
-        let!(:type_de_champ) { create(:type_de_champ_phone, procedure: procedure) }
+        let(:types_de_champ_public) { [{ type: :phone }] }
+        let(:type_de_champ_1) { procedure.published_revision.types_de_champ_public.first }
         let(:value) { "a non phone value" }
-        let(:champ_id) { find_champ_by_stable_id(dossier, type_de_champ.stable_id).id }
+        let(:champ_id) { find_champ_by_stable_id(dossier, type_de_champ_1.stable_id).id }
 
         let(:values) { [{ id: champ_id, value: value }] }
 
@@ -59,6 +62,6 @@ RSpec.describe DossierPrefillableConcern do
   private
 
   def find_champ_by_stable_id(dossier, stable_id)
-    dossier.champs_public.joins(:type_de_champ).find_by(types_de_champ: { stable_id: stable_id })
+    dossier.champs.joins(:type_de_champ).find_by(types_de_champ: { stable_id: stable_id })
   end
 end

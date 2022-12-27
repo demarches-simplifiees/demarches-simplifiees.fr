@@ -47,7 +47,7 @@
     .card.featured
       .card-title
         = t(:has_changes, scope: [:administrateurs, :revision_changes])
-      = render partial: 'revision_changes', locals: { changes: @procedure.revision_changes }
+      = render Procedure::RevisionChangesComponent.new changes: @procedure.revision_changes, previous_revision: @procedure.published_revision
       .flex.mt-2.justify-end
         = button_to "Réinitialiser les modifications", admin_procedure_reset_draft_path(@procedure), class: 'fr-btn fr-btn--secondary fr-mr-2w', method: :put
         = button_to 'Publier les modifications', admin_procedure_publication_path(@procedure), class: 'fr-btn', id: 'publish-procedure-link', data: { disable_with: "Publication..." }, disabled: !@procedure.draft_revision.valid?, method: :get
@@ -58,7 +58,7 @@
   %h2.fr-mt-5w.fr-mb-3w.fr-h1 Indispensable avant publication
   .fr-grid-row.fr-grid-row--gutters
     = render Procedure::Card::PresentationComponent.new(procedure: @procedure)
-    = render Procedure::Card::ZonesComponent.new(procedure: @procedure) if @procedure.feature_enabled?(:zonage)
+    = render Procedure::Card::ZonesComponent.new(procedure: @procedure) if Rails.application.config.ds_zonage_enabled
     = render Procedure::Card::ChampsComponent.new(procedure: @procedure)
     = render Procedure::Card::ServiceComponent.new(procedure: @procedure, administrateur: current_administrateur)
     = render Procedure::Card::AdministrateursComponent.new(procedure: @procedure)

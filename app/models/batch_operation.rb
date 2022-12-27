@@ -78,12 +78,15 @@ class BatchOperation < ApplicationRecord
       values.push([arel_table[:run_at], Time.zone.now]) if called_for_first_time?
       values.push([arel_table[:finished_at], Time.zone.now]) if called_for_last_time?(dossier)
       values.push([arel_table[:updated_at], Time.zone.now])
+
+      # NOTE: ensure to append BigInteger to SQL array by casting IDs
       if success
-        values.push([arel_table[:success_dossier_ids], Arel::Nodes::NamedFunction.new('array_append', [arel_table[:success_dossier_ids], dossier.id])])
-        values.push([arel_table[:failed_dossier_ids], Arel::Nodes::NamedFunction.new('array_remove', [arel_table[:failed_dossier_ids], dossier.id])])
+        values.push([arel_table[:success_dossier_ids], Arel::Nodes::NamedFunction.new('array_append', [arel_table[:success_dossier_ids], Arel::Nodes::SqlLiteral.new("#{dossier.id}::BIGINT")])])
+        values.push([arel_table[:failed_dossier_ids], Arel::Nodes::NamedFunction.new('array_remove', [arel_table[:failed_dossier_ids], Arel::Nodes::SqlLiteral.new("#{dossier.id}::BIGINT")])])
       else
-        values.push([arel_table[:failed_dossier_ids], Arel::Nodes::NamedFunction.new('array_append', [arel_table[:failed_dossier_ids], dossier.id])])
+        values.push([arel_table[:failed_dossier_ids], Arel::Nodes::NamedFunction.new('array_append', [arel_table[:failed_dossier_ids], Arel::Nodes::SqlLiteral.new("#{dossier.id}::BIGINT")])])
       end
+
       manager.set(values)
       ActiveRecord::Base.connection.update(manager.to_sql)
     end

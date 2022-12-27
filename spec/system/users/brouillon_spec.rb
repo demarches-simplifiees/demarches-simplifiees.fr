@@ -6,7 +6,14 @@ describe 'The user' do
   let(:user_dossier) { user.dossiers.first }
   let!(:dossier_to_link) { create(:dossier) }
 
-  scenario 'fill a dossier', js: true do
+  let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
+
+  before do
+    allow(Rails).to receive(:cache).and_return(memory_store)
+    Rails.cache.clear
+  end
+
+  scenario 'fill a dossier', js: true, vcr: { cassette_name: 'api_geo_all' } do
     log_in(user, procedure)
 
     fill_individual
@@ -33,9 +40,9 @@ describe 'The user' do
     select_combobox('multiple_choice_drop_down_list_long', 'alp', 'alpha')
     select_combobox('multiple_choice_drop_down_list_long', 'cha', 'charly')
 
-    select_combobox('pays', 'aust', 'Australie')
-    select_combobox('regions', 'Ma', 'Martinique')
-    select_combobox('departements', 'Ai', '02 - Aisne')
+    select('Australie', from: form_id_for('pays'))
+    select('Martinique', from: form_id_for('regions'))
+    select('02 – Aisne', from: form_id_for('departements'))
     select_combobox('communes', 'Ai', '02 - Aisne', check: false)
     select_combobox('communes', 'Ambl', 'Ambléon (01300)')
 
@@ -65,7 +72,7 @@ describe 'The user' do
     expect(JSON.parse(champ_value_for('multiple_drop_down_list'))).to match(['val1', 'val3'])
     expect(champ_value_for('pays')).to eq('Australie')
     expect(champ_value_for('regions')).to eq('Martinique')
-    expect(champ_value_for('departements')).to eq('02 - Aisne')
+    expect(champ_value_for('departements')).to eq('Aisne')
     expect(champ_value_for('communes')).to eq('Ambléon (01300)')
     expect(champ_value_for('dossier_link')).to eq('123')
     expect(champ_value_for('piece_justificative')).to be_nil # antivirus hasn't approved the file yet
@@ -86,10 +93,10 @@ describe 'The user' do
     expect(page).to have_checked_field('val1')
     expect(page).to have_checked_field('val3')
     expect(page).to have_selected_value('simple_choice_drop_down_list_long', selected: 'bravo')
+    expect(page).to have_selected_value('pays', selected: 'Australie')
+    expect(page).to have_selected_value('regions', selected: 'Martinique')
+    expect(page).to have_selected_value('departements', selected: '02 – Aisne')
     check_selected_value('multiple_choice_drop_down_list_long', with: ['alpha', 'charly'])
-    check_selected_value('pays', with: 'Australie')
-    check_selected_value('regions', with: 'Martinique')
-    check_selected_value('departements', with: '02 - Aisne')
     check_selected_value('communes', with: 'Ambléon (01300)')
     expect(page).to have_field('dossier_link', with: '123')
     expect(page).to have_text('file.pdf')

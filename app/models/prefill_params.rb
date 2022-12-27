@@ -35,7 +35,8 @@ class PrefillParams
       TypeDeChamp.type_champs.fetch(:decimal_number),
       TypeDeChamp.type_champs.fetch(:integer_number),
       TypeDeChamp.type_champs.fetch(:date),
-      TypeDeChamp.type_champs.fetch(:datetime)
+      TypeDeChamp.type_champs.fetch(:datetime),
+      TypeDeChamp.type_champs.fetch(:civilite)
     ]
 
     attr_reader :champ, :value

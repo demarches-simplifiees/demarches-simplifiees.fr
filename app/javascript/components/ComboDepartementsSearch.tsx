@@ -1,9 +1,7 @@
 import React from 'react';
-import { QueryClientProvider } from 'react-query';
 import { matchSorter } from 'match-sorter';
 
 import ComboSearch, { ComboSearchProps } from './ComboSearch';
-import { queryClient } from './shared/queryClient';
 
 type DepartementResult = { code: string; nom: string };
 
@@ -40,15 +38,5 @@ export function ComboDepartementsSearch({
         addForeignDepartement ? expandResultsWithForeignDepartement : undefined
       }
     />
-  );
-}
-
-export default function ComboDepartementsSearchDefault(
-  params: ComboDepartementsSearchProps
-) {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <ComboDepartementsSearch {...params} />
-    </QueryClientProvider>
   );
 }

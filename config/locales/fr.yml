@@ -107,6 +107,7 @@ fr:
           decimal_number: Un nombre décimal
           integer_number: Un nombre entier
           email: Une adresse email
+          civilite: '"M." pour Monsieur, "Mme" pour Madame'
           phone: Un numéro de téléphone
           iban: Un numéro Iban
           yes_no: '"true" pour Oui, "false" pour Non'
@@ -123,6 +124,7 @@ fr:
           phone: 0612345678
           iban: FR7611315000011234567890138
           yes_no: "true"
+          civilite: "M."
           checkbox: "on"
           date: "2023-02-01"
           datetime: "2023-02-01T10:30"
@@ -212,6 +214,7 @@ fr:
         batch_operation:
           enabled: "Ajouter ce dossier à la selection pour un traitement de masse"
           disabled: "Impossible d'ajouter ce dossier à la selection car il est déjà dans un traitement de masse"
+        show_deleted_dossiers: Afficher les dossiers supprimés
         personalize: Personnaliser
         download: Télécharger un dossier
         follow_file: Suivre le dossier
@@ -273,6 +276,14 @@ fr:
             admin_review: Votre dossier est en cours d’instruction par l’administration. Vous ne pouvez plus le modifier.
             status_completed: terminé
             use_mailbox_for_questions_html: "<strong>Vous avez une question ?</strong> Utilisez la messagerie pour <a href=\"%{mailbox_url}\">contacter l’administration directement</a>."
+            acceptee_html: "Votre dossier a été <strong>accepté</strong>."
+            accepte_motivation: "Motif de l’acceptation"
+            accepte_attestation: "Télécharger l’attestation"
+            refuse_html: "Nous sommes désolés, votre dossier a malheureusement été <strong>refusé</strong>."
+            refuse_motivation: "Motif du refus"
+            refuse_reply: "Envoyer un message à l’administration"
+            sans_suite_html: "Votre dossier a été classé <strong>sans suite</strong>."
+            sans_suite_motivation: "Motif du classement sans suite"
           latest_message:
             latest_message: "Dernier message"
         messagerie:

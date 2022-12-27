@@ -6,16 +6,16 @@ class DossierMailer < ApplicationMailer
 
   layout 'mailers/layout'
   default from: NO_REPLY_EMAIL
-  after_action :prevent_perform_deliveries, only: [:notify_new_answer]
+  after_action :prevent_perform_deliveries, only: [:notify_new_draft, :notify_new_answer]
 
-  def notify_new_draft(dossier)
-    I18n.with_locale(dossier.user_locale) do
-      @dossier = dossier
-      @service = dossier.procedure.service
-      @logo_url = attach_logo(dossier.procedure)
-      @subject = default_i18n_subject(libelle_demarche: dossier.procedure.libelle)
+  def notify_new_draft
+    @dossier = params[:dossier]
+    I18n.with_locale(@dossier.user_locale) do
+      @service = @dossier.procedure.service
+      @logo_url = attach_logo(@dossier.procedure)
+      @subject = default_i18n_subject(libelle_demarche: @dossier.procedure.libelle)
 
-      mail(to: dossier.user_email_for(:notification), subject: @subject) do |format|
+      mail(to: @dossier.user_email_for(:notification), subject: @subject) do |format|
         format.html { render layout: 'mailers/notifications_layout' }
       end
     end
@@ -170,7 +170,9 @@ class DossierMailer < ApplicationMailer
   protected
 
   def prevent_perform_deliveries
-    mail.perform_deliveries = false if params[:commentaire].discarded?
+    if params[:commentaire]&.discarded? || params[:dossier]&.skip_user_notification_email?
+      mail.perform_deliveries = false
+    end
   end
 
   # This is an override of `default_i18n_subject` method

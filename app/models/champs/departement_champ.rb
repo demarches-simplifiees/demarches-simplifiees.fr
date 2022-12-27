@@ -21,4 +21,52 @@
 #  type_de_champ_id               :integer
 #
 class Champs::DepartementChamp < Champs::TextChamp
+  def for_export
+    [name, code]
+  end
+
+  def to_s
+    formatted_value
+  end
+
+  def for_tag
+    formatted_value
+  end
+
+  def for_api
+    formatted_value
+  end
+
+  def selected
+    code
+  end
+
+  def code
+    external_id || APIGeoService.departement_code(name)
+  end
+
+  def name
+    maybe_code_and_name = value&.match(/(\d+) - (.+)/)
+    if maybe_code_and_name
+      maybe_code_and_name[2]
+    else
+      value
+    end
+  end
+
+  def value=(code)
+    if [2, 3].include?(code&.size)
+      self.external_id = code
+      super(APIGeoService.departement_name(code))
+    elsif code.blank?
+      self.external_id = nil
+      super(nil)
+    end
+  end
+
+  private
+
+  def formatted_value
+    blank? ? "" : "#{code} – #{name}"
+  end
 end
