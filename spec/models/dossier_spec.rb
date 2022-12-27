@@ -1492,6 +1492,19 @@ describe Dossier do
     end
   end
 
+  describe "prefilled" do
+    let(:procedure) { create(:procedure) }
+    let!(:prefilled_dossier) { create(:dossier, procedure: procedure) }
+    let!(:champ_text) { create(:champ_text, dossier: prefilled_dossier, value: 'super_text', prefilled: false) }
+    let!(:champ_text2) { create(:champ_text, dossier: prefilled_dossier, value: 'super_text2', prefilled: true) }
+    let!(:dossier) { create(:dossier, procedure: procedure) }
+    let!(:champ_text3) { create(:champ_text, dossier: dossier, value: 'super_text3', prefilled: false) }
+
+    it 'should find dossiers with notifiable procedure' do
+      expect(Dossier.prefilled).to match_array([prefilled_dossier])
+    end
+  end
+
   describe "champs_for_export" do
     context 'with a unconditionnal procedure' do
       let(:procedure) { create(:procedure, :with_type_de_champ, :with_datetime, :with_yes_no, :with_explication, :with_commune, :with_repetition, zones: [create(:zone)]) }

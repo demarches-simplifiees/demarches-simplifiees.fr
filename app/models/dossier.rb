@@ -218,6 +218,7 @@ class Dossier < ApplicationRecord
   scope :state_termine,                        -> { where(state: TERMINE) }
   scope :state_not_termine,                    -> { where.not(state: TERMINE) }
 
+  scope :prefilled, -> { joins(:champs).where(champs: { prefilled: true }) }
   scope :archived,      -> { where(archived: true) }
   scope :not_archived,  -> { where(archived: false) }
   scope :hidden_by_user, -> { where.not(hidden_by_user_at: nil) }
