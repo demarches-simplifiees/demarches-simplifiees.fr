@@ -39,16 +39,18 @@ class Champs::DateChamp < Champ
   private
 
   def format_before_save
-    self.value = nil if !valid_iso8601?(value)
+    return if valid_iso8601?
+
+    self.value = nil
   end
 
   def iso_8601
-    return if valid_iso8601?(value)
-    # i18n-tasks-use t('errors.messages.not_a_datetime')
+    return if valid_iso8601?
+    # i18n-tasks-use t('errors.messages.not_a_date')
     errors.add :date, errors.generate_message(:value, :not_a_date)
   end
 
-  def valid_iso8601?(value)
+  def valid_iso8601?
     Date.iso8601(value)
     true
   rescue ArgumentError, Date::Error # rubocop:disable Lint/ShadowedException
