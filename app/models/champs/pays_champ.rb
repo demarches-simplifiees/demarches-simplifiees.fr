@@ -55,7 +55,7 @@ class Champs::PaysChamp < Champs::TextChamp
   end
 
   def name
-    if external_id
+    if external_id.present?
       APIGeoService.country_name(external_id)
     else
       value.present? ? value.to_s : ''
