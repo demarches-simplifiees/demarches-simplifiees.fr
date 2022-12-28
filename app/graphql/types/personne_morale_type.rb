@@ -90,7 +90,7 @@ module Types
 
     field :siret, String, null: false
     field :siege_social, Boolean, null: false
-    field :naf, String, null: false
+    field :naf, String, null: true # see: https://sentry.io/organizations/demarches-simplifiees/issues/2839832517/activity/?environment=production&project=1429550&query=is%3Aunresolved&referrer=issue-stream#
     field :libelle_naf, String, null: false
 
     field :address, Types::AddressType, null: false
