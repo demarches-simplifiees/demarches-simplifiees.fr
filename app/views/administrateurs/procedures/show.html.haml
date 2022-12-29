@@ -28,6 +28,11 @@
         %span.icon.reply
         Envoyer une copie
 
+    - if @procedure.publiee? || @procedure.brouillon?
+      = link_to preremplir_path(@procedure.path), target: "_blank", rel: :noopener, class: 'button' do
+        %span.icon.edit
+        Préremplir via lien ou API
+
     - if !@procedure.publiee? && !@procedure.close? && !@procedure.depubliee?
       = link_to 'Publier', admin_procedure_publication_path(@procedure), class: 'button primary', id: 'publish-procedure-link', data: { disable_with: "Publication..." }
 
@@ -75,4 +80,3 @@
     = render Procedure::Card::APIParticulierComponent.new(procedure: @procedure)
     = render Procedure::Card::MonAvisComponent.new(procedure: @procedure)
     = render Procedure::Card::DossierSubmittedMessageComponent.new(procedure: @procedure)
-
