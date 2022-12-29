@@ -102,16 +102,17 @@ fr:
         champ_unavailable: Indisponible
         possible_values:
           title: Valeurs
-          text: Un texte court
-          textarea: Un texte long
-          decimal_number: Un nombre décimal
-          integer_number: Un nombre entier
-          email: Une adresse email
-          civilite: '"M." pour Monsieur, "Mme" pour Madame'
-          phone: Un numéro de téléphone
-          iban: Un numéro Iban
-          yes_no: '"true" pour Oui, "false" pour Non'
-          checkbox: '"on" pour coché, "off" pour décoché'
+          text_html: Un texte court
+          textarea_html: Un texte long
+          decimal_number_html: Un nombre décimal
+          integer_number_html: Un nombre entier
+          email_html: Une adresse email
+          civilite_html: '"M." pour Monsieur, "Mme" pour Madame'
+          phone_html: Un numéro de téléphone
+          iban_html: Un numéro Iban
+          yes_no_html: '"true" pour Oui, "false" pour Non'
+          checkbox_html: '"on" pour coché, "off" pour décoché'
+          pays_html: Un <a href="https://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">code pays ISO 3166-2</a>
         examples:
           title: Exemple
           text: Texte court
@@ -124,6 +125,7 @@ fr:
           yes_no: "true"
           civilite: "M."
           checkbox: "on"
+          pays: "FR"
         prefill_link_title: Lien de préremplissage (GET)
         prefill_link_info: Copiez le lien grâce au bouton ci-dessous et remplacez les valeurs par les données dont vous disposez.
         prefill_link_too_long: Attention, ce lien de préremplissage est trop long et risque de ne pas fonctionner sur certains navigateurs.

@@ -20,7 +20,8 @@
                 %button.fr-btn.fr-btn--secondary{ disabled: true }
                   = t("views.prefill_descriptions.edit.champ_unavailable")
 
-          = type_de_champ.description
+          %p
+            = type_de_champ.description
 
           %table.table.vertical
             %tbody
@@ -38,7 +39,7 @@
                 %th
                   = t("views.prefill_descriptions.edit.possible_values.title")
                 %td
-                  = t("views.prefill_descriptions.edit.possible_values.#{type_de_champ.type_champ}") if prefillable
+                  = t("views.prefill_descriptions.edit.possible_values.#{type_de_champ.type_champ}_html") if prefillable
               %tr{ class: prefillable ? "" : "fr-text-mention--grey" }
                 %th
                   = t("views.prefill_descriptions.edit.examples.title")

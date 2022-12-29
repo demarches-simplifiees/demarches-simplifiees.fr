@@ -1,4 +1,4 @@
-fr:
+en:
   activerecord:
     models:
       type_de_champ: 'Field type'

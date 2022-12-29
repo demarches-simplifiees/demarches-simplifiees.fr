@@ -110,6 +110,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is authorized", :phone, "value"
     it_behaves_like "a champ public value that is authorized", :iban, "value"
     it_behaves_like "a champ public value that is authorized", :civilite, "M."
+    it_behaves_like "a champ public value that is authorized", :pays, "FR"
 
     it_behaves_like "a champ private value that is authorized", :text, "value"
     it_behaves_like "a champ private value that is authorized", :textarea, "value"
@@ -119,6 +120,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ private value that is authorized", :phone, "value"
     it_behaves_like "a champ private value that is authorized", :iban, "value"
     it_behaves_like "a champ private value that is authorized", :civilite, "M."
+    it_behaves_like "a champ private value that is authorized", :pays, "FR"
 
     it_behaves_like "a champ public value that is unauthorized", :decimal_number, "non decimal string"
     it_behaves_like "a champ public value that is unauthorized", :integer_number, "non integer string"

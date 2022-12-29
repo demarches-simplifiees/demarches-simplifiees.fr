@@ -260,7 +260,8 @@ class TypeDeChamp < ApplicationRecord
       TypeDeChamp.type_champs.fetch(:email),
       TypeDeChamp.type_champs.fetch(:phone),
       TypeDeChamp.type_champs.fetch(:iban),
-      TypeDeChamp.type_champs.fetch(:civilite)
+      TypeDeChamp.type_champs.fetch(:civilite),
+      TypeDeChamp.type_champs.fetch(:pays)
     ])
   end
 
