@@ -33,9 +33,17 @@ en:
           other: "%{count} instructors are assigned"
       edit:
         routing:
-          title: Label of the groups list
+          list_title: Label of the groups list
+          title: Routing
+          routing_notice: |
+            With routing, folders are sent to several intructors groups. To enable routing, add at least one group below. To disable it, delete or disable some groups, in order to keep only one group. More explanation in the
+          title_notice: |
+            The title of groups list is « Votre ville ». In order to rename it, update routing field title in page
+          title_notice_link: Fields configuration
+          doc:
+            label: documentation
+            url: 'https://doc.demarches-simplifiees.fr/pour-aller-plus-loin/routage'
         group_management:
-          title: Group management
           delete: delete the group
           delete_confirmation: Are you sure you want to delete the group "%{group_name}"
           move_files:
@@ -60,16 +68,6 @@ en:
         existing_groupe:
           one: "%{count} group exist"
           other: "%{count} groups exist"
-      routing:
-        title: Routing
-        notice_html: |
-          Routing is a feature for procedures requiring the sharing of instructions between different groups according to a specific criterion (territory, theme or other).
-          <br><br>
-          This feature makes it possible to route the files to each group, and to no longer need to filter its files among a large quantity of requests. It is therefore particularly suitable for national approaches instructed locally.
-          <br><br>
-          Instructors only see the files that concern them, and therefore do not have access to data outside their scope.
-          <br><br>
-          Routing is activated once there are at least two active instructors   groups
       instructeurs_self_management:
         self_managment_notice_html: |
           Instructor Self-Management allows instructors to self-manage the list of Gait Instructors.

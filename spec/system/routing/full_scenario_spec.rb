@@ -16,7 +16,7 @@ describe 'The routing', js: true do
     find('#groupe-instructeurs').click
 
     # add littéraire groupe
-    fill_in 'Ajouter un nom de groupe', with: 'littéraire'
+    fill_in 'groupe_instructeur_label', with: 'littéraire'
     click_on 'Ajouter le groupe'
     expect(page).to have_text('Le groupe d’instructeurs « littéraire » a été créé et le routage a été activé.')
 
@@ -42,14 +42,14 @@ describe 'The routing', js: true do
     expect(page).to have_field('Libellé de la liste de groupes', with: 'spécialité')
 
     # add inactive groupe
-    fill_in 'Ajouter un nom de groupe', with: 'non visible car inactif'
+    fill_in 'groupe_instructeur_label', with: 'non visible car inactif'
     click_on 'Ajouter le groupe'
     check "Groupe inactif"
     click_on 'Modifier'
 
     # add scientifique groupe
     click_on 'Groupes d’instructeurs'
-    fill_in 'Ajouter un nom de groupe', with: 'scientifique'
+    fill_in 'groupe_instructeur_label', with: 'scientifique'
     click_on 'Ajouter le groupe'
     expect(page).to have_text('Le groupe d’instructeurs « scientifique » a été créé.')
 
