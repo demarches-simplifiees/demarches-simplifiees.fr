@@ -77,7 +77,7 @@ describe Users::CommencerController, type: :controller do
       let(:dossier) { create(:dossier, :brouillon, :prefilled, user: user) }
       let(:path) { dossier.procedure.path }
 
-      subject { get :commencer, params: { path: path, token: dossier.prefill_token } }
+      subject { get :commencer, params: { path: path, prefill_token: dossier.prefill_token } }
 
       shared_examples 'a prefilled brouillon dossier retriever' do
         context 'when the dossier is a prefilled brouillon and the prefill token is present' do
@@ -175,6 +175,13 @@ describe Users::CommencerController, type: :controller do
     end
   end
 
+  shared_examples 'a prefill token storage' do
+    it 'stores the prefill token' do
+      subject
+      expect(controller.stored_location_for(:user)).to include('prefill_token')
+    end
+  end
+
   describe '#sign_in' do
     context 'for a published procedure' do
       subject { get :sign_in, params: { path: published_procedure.path } }
@@ -185,6 +192,12 @@ describe Users::CommencerController, type: :controller do
       end
 
       it { expect(subject).to redirect_to(new_user_session_path) }
+
+      context 'when a prefill token is given' do
+        subject { get :sign_in, params: { path: published_procedure.path, prefill_token: 'prefill_token' } }
+
+        it_behaves_like 'a prefill token storage'
+      end
     end
 
     context 'for a draft procedure' do
@@ -196,6 +209,12 @@ describe Users::CommencerController, type: :controller do
       end
 
       it { expect(subject).to redirect_to(new_user_session_path) }
+
+      context 'when a prefill token is given' do
+        subject { get :sign_in, params: { path: draft_procedure.path, prefill_token: 'prefill_token' } }
+
+        it_behaves_like 'a prefill token storage'
+      end
     end
 
     context 'when the path doesn’t exist' do
@@ -217,6 +236,12 @@ describe Users::CommencerController, type: :controller do
       end
 
       it { expect(subject).to redirect_to(new_user_registration_path) }
+
+      context 'when a prefill token is given' do
+        subject { get :sign_up, params: { path: published_procedure.path, prefill_token: 'prefill_token' } }
+
+        it_behaves_like 'a prefill token storage'
+      end
     end
 
     context 'for a draft procedure' do
@@ -228,6 +253,12 @@ describe Users::CommencerController, type: :controller do
       end
 
       it { expect(subject).to redirect_to(new_user_registration_path) }
+
+      context 'when a prefill token is given' do
+        subject { get :sign_up, params: { path: draft_procedure.path, prefill_token: 'prefill_token' } }
+
+        it_behaves_like 'a prefill token storage'
+      end
     end
 
     context 'when the path doesn’t exist' do
@@ -249,6 +280,12 @@ describe Users::CommencerController, type: :controller do
       end
 
       it { expect(subject).to redirect_to(france_connect_particulier_path) }
+
+      context 'when a prefill token is given' do
+        subject { get :france_connect, params: { path: published_procedure.path, prefill_token: 'prefill_token' } }
+
+        it_behaves_like 'a prefill token storage'
+      end
     end
 
     context 'for a draft procedure' do
@@ -260,6 +297,12 @@ describe Users::CommencerController, type: :controller do
       end
 
       it { expect(subject).to redirect_to(france_connect_particulier_path) }
+
+      context 'when a prefill token is given' do
+        subject { get :france_connect, params: { path: draft_procedure.path, prefill_token: 'prefill_token' } }
+
+        it_behaves_like 'a prefill token storage'
+      end
     end
 
     context 'when the path doesn’t exist' do

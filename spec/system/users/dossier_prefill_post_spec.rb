@@ -12,7 +12,7 @@ describe 'Prefilling a dossier (with a POST request):' do
   scenario "the user get the URL of a prefilled orphan brouillon dossier" do
     dossier_url = create_and_prefill_dossier_with_post_request
 
-    expect(dossier_url).to eq(commencer_path(procedure.path, token: dossier.prefill_token))
+    expect(dossier_url).to eq(commencer_path(procedure.path, prefill_token: dossier.prefill_token))
   end
 
   describe 'visit the dossier URL' do

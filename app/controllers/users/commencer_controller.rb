@@ -4,7 +4,7 @@ module Users
 
     layout 'procedure_context'
 
-    before_action :retrieve_prefilled_dossier,        if: -> { params[:token].present? },                        only: :commencer
+    before_action :retrieve_prefilled_dossier,        if: -> { params[:prefill_token].present? },                only: :commencer
     before_action :set_prefilled_dossier_ownership,   if: -> { user_signed_in? && @prefilled_dossier&.orphan? }, only: :commencer
     before_action :check_prefilled_dossier_ownership, if: -> { user_signed_in? && @prefilled_dossier },          only: :commencer
 
@@ -79,7 +79,7 @@ module Users
     end
 
     def retrieve_prefilled_dossier
-      @prefilled_dossier = Dossier.state_brouillon.prefilled.find_by!(prefill_token: params[:token])
+      @prefilled_dossier = Dossier.state_brouillon.prefilled.find_by!(prefill_token: params[:prefill_token])
     end
 
     # The prefilled dossier is not owned yet, and the user is signed in: they become the new owner
@@ -110,7 +110,7 @@ module Users
     end
 
     def store_user_location!(procedure)
-      store_location_for(:user, helpers.procedure_lien(procedure, token: params[:token]))
+      store_location_for(:user, helpers.procedure_lien(procedure, prefill_token: params[:prefill_token]))
     end
 
     def generate_empty_pdf(revision)
