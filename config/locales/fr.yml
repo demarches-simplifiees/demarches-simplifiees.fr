@@ -86,6 +86,8 @@ fr:
         start_procedure: Commencer la démarche
         existing_dossiers: Vous avez déjà des dossiers pour cette démarche
         show_dossiers: Voir mes dossiers en cours
+        prefilled_draft: "Vous avez un dossier prérempli"
+        prefilled_draft_detail_html: "Il y a <strong>%{time_ago}</strong>, vous avez prérempli un dossier sur la démarche « %{procedure} »."
         already_draft: "Vous avez déjà commencé à remplir un dossier"
         already_draft_detail_html: "Il y a <strong>%{time_ago}</strong>, vous avez commencé à remplir un dossier sur la démarche « %{procedure} »."
         already_not_draft: "Vous avez déjà déposé un dossier"

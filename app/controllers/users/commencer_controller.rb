@@ -4,6 +4,10 @@ module Users
 
     layout 'procedure_context'
 
+    before_action :retrieve_prefilled_dossier,        if: -> { params[:token].present? },                        only: :commencer
+    before_action :set_prefilled_dossier_ownership,   if: -> { user_signed_in? && @prefilled_dossier&.orphan? }, only: :commencer
+    before_action :check_prefilled_dossier_ownership, if: -> { user_signed_in? && @prefilled_dossier },          only: :commencer
+
     def commencer
       @procedure = retrieve_procedure
       return procedure_not_found if @procedure.blank? || @procedure.brouillon?
@@ -74,6 +78,20 @@ module Users
       Procedure.publiees.or(Procedure.brouillons).or(Procedure.closes).find_by(path: params[:path])
     end
 
+    def retrieve_prefilled_dossier
+      @prefilled_dossier = Dossier.state_brouillon.prefilled.find_by!(prefill_token: params[:token])
+    end
+
+    # The prefilled dossier is not owned yet, and the user is signed in: they become the new owner
+    def set_prefilled_dossier_ownership
+      @prefilled_dossier.update!(user: current_user)
+    end
+
+    # The prefilled dossier is owned by another user: raise an exception
+    def check_prefilled_dossier_ownership
+      raise ActiveRecord::RecordNotFound unless @prefilled_dossier.owned_by?(current_user)
+    end
+
     def procedure_not_found
       procedure = Procedure.find_by(path: params[:path])
 
@@ -92,7 +110,7 @@ module Users
     end
 
     def store_user_location!(procedure)
-      store_location_for(:user, helpers.procedure_lien(procedure))
+      store_location_for(:user, helpers.procedure_lien(procedure, token: params[:token]))
     end
 
     def generate_empty_pdf(revision)

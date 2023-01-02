@@ -33,7 +33,7 @@ RSpec.describe API::Public::V1::DossiersController, type: :controller do
           it "responds with the brouillon dossier path" do
             create_request
             expect(JSON.parse(response.body)["dossier_url"]).to eq(
-              "http://test.host#{prefill_path(Dossier.last, token: Dossier.last.prefill_token)}"
+              "http://test.host#{commencer_path(procedure.path, token: Dossier.last.prefill_token)}"
             )
           end
 

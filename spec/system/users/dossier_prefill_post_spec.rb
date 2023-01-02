@@ -12,7 +12,7 @@ describe 'Prefilling a dossier (with a POST request):' do
   scenario "the user get the URL of a prefilled orphan brouillon dossier" do
     dossier_url = create_and_prefill_dossier_with_post_request
 
-    expect(dossier_url).to eq(prefill_path(dossier, token: dossier.prefill_token))
+    expect(dossier_url).to eq(commencer_path(procedure.path, token: dossier.prefill_token))
   end
 
   describe 'visit the dossier URL' do
@@ -25,6 +25,9 @@ describe 'Prefilling a dossier (with a POST request):' do
           sign_in_with user.email, password
 
           visit create_and_prefill_dossier_with_post_request
+
+          expect(page).to have_content('Vous avez un dossier prérempli')
+          click_on 'Continuer à remplir mon dossier'
         end
       end
     end
@@ -39,6 +42,9 @@ describe 'Prefilling a dossier (with a POST request):' do
           before do
             click_on "J’ai déjà un compte"
             sign_in_with user.email, password
+
+            expect(page).to have_content('Vous avez un dossier prérempli')
+            click_on 'Continuer à remplir mon dossier'
           end
         end
       end
@@ -56,6 +62,9 @@ describe 'Prefilling a dossier (with a POST request):' do
 
             click_confirmation_link_for user_email
             expect(page).to have_content('Votre compte a bien été confirmé.')
+
+            expect(page).to have_content('Vous avez un dossier prérempli')
+            click_on 'Continuer à remplir mon dossier'
           end
         end
       end
@@ -69,6 +78,9 @@ describe 'Prefilling a dossier (with a POST request):' do
             allow(FranceConnectService).to receive(:retrieve_user_informations_particulier).and_return(build(:france_connect_information))
 
             page.find('.fr-connect').click
+
+            expect(page).to have_content('Vous avez un dossier prérempli')
+            click_on 'Continuer à remplir mon dossier'
           end
         end
       end

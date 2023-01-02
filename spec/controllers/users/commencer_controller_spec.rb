@@ -72,6 +72,76 @@ describe Users::CommencerController, type: :controller do
         expect(subject).to redirect_to(commencer_path(path: replaced_by_procedure.path))
       end
     end
+
+    context 'when a dossier has been prefilled' do
+      let(:dossier) { create(:dossier, :brouillon, :prefilled, user: user) }
+      let(:path) { dossier.procedure.path }
+
+      subject { get :commencer, params: { path: path, token: dossier.prefill_token } }
+
+      shared_examples 'a prefilled brouillon dossier retriever' do
+        context 'when the dossier is a prefilled brouillon and the prefill token is present' do
+          it 'retrieves the dossier' do
+            subject
+            expect(assigns(:prefilled_dossier)).to eq(dossier)
+          end
+        end
+
+        context 'when the dossier is not prefilled' do
+          before do
+            dossier.prefilled = false
+            dossier.save(validate: false)
+          end
+
+          it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
+        end
+
+        context 'when the dossier is not a brouillon' do
+          before { dossier.en_construction! }
+
+          it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
+        end
+
+        context 'when the prefill token does not match any dossier' do
+          before { dossier.prefill_token = "totoro" }
+
+          it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
+        end
+      end
+
+      context 'when the user is unauthenticated' do
+        let(:user) { nil }
+
+        it_behaves_like 'a prefilled brouillon dossier retriever'
+      end
+
+      context 'when the user is authenticated' do
+        context 'when the dossier already has an owner' do
+          let(:user) { create(:user) }
+
+          context 'when the user is the dossier owner' do
+            before { sign_in user }
+
+            it_behaves_like 'a prefilled brouillon dossier retriever'
+          end
+
+          context 'when the user is not the dossier owner' do
+            before { sign_in create(:user) }
+
+            it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
+          end
+        end
+
+        context 'when the dossier does not have an owner yet' do
+          let(:user) { nil }
+          let(:newly_authenticated_user) { create(:user) }
+
+          before { sign_in newly_authenticated_user }
+
+          it { expect { subject }.to change { dossier.reload.user }.from(nil).to(newly_authenticated_user) }
+        end
+      end
+    end
   end
 
   describe '#commencer_test' do
