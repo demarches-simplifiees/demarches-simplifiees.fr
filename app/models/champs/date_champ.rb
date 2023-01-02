@@ -21,7 +21,7 @@
 #  type_de_champ_id               :integer
 #
 class Champs::DateChamp < Champ
-  before_validation :convert_to_iso8601
+  before_validation :convert_to_iso8601, unless: -> { validation_context == :prefill }
   validate :iso_8601
 
   def search_terms

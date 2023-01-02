@@ -63,7 +63,7 @@ class PrefillParams
       return true unless NEED_VALIDATION_TYPES_DE_CHAMPS.include?(champ.type_champ)
 
       champ.value = value
-      champ.valid?
+      champ.valid?(:prefill)
     end
   end
 end
