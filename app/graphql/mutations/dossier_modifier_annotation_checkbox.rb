@@ -5,12 +5,8 @@ module Mutations
     argument :value, Boolean, required: true
 
     def resolve(dossier:, annotation_id:, instructeur:, value:)
-      resolve_with_type(dossier:, annotation_id:, instructeur:, value:) do |type_champ, value|
-        if type_champ == TypeDeChamp.type_champs.fetch(:yes_no) || type_champ == TypeDeChamp.type_champs.fetch(:checkbox)
-          value ? 'true' : 'false'
-        else
-          value ? 'on' : 'off'
-        end
+      resolve_with_type(dossier:, annotation_id:, instructeur:, value:) do |_, value|
+        value ? 'true' : 'false'
       end
     end
 
