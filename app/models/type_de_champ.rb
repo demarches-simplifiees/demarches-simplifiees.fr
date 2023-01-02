@@ -68,7 +68,7 @@ class TypeDeChamp < ApplicationRecord
     dgfip: REFERENTIEL_EXTERNE,
     pole_emploi: REFERENTIEL_EXTERNE,
     mesri: REFERENTIEL_EXTERNE,
-    routage: CADRE
+    routage: STRUCTURE
   }
 
   enum type_champs: {
