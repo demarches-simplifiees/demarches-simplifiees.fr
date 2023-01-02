@@ -49,7 +49,7 @@ class Champs::PaysChamp < Champs::TextChamp
       super(nil)
     elsif code != value
       self.external_id = APIGeoService.country_code(code)
-      super(code) if self.external_id.present?
+      super(code)
     end
   end
 

@@ -61,11 +61,7 @@ class PrefillParams
     def valid?
       return true unless NEED_VALIDATION_TYPES_DE_CHAMPS.include?(champ.type_champ)
 
-      if champ.type_champ == "pays"
-        champ.external_id = value
-      else
-        champ.value = value
-      end
+      champ.value = value
       champ.valid?
     end
   end
