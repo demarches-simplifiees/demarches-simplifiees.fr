@@ -18,6 +18,23 @@ RSpec.shared_examples "a boolean champ" do
       end
     end
   end
+
+  describe '#true?' do
+    subject { boolean_champ.true? }
+
+    context "when the checkbox value is 'true'" do
+      let(:value) { 'true' }
+
+      it { is_expected.to eq(true) }
+    end
+
+    context "when the checkbox value is 'false'" do
+      let(:value) { 'false' }
+
+      it { is_expected.to eq(false) }
+    end
+  end
+
   describe '#to_s' do
     subject { boolean_champ.to_s }
 
