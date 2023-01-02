@@ -104,7 +104,7 @@ export class MenuButtonController extends ApplicationController {
   }
 
   private close() {
-    this.buttonTarget.removeAttribute('aria-expanded');
+    this.buttonTarget.setAttribute('aria-expanded', 'false');
     this.menuTarget.parentElement?.classList.remove('open');
     this.#teardown?.();
     this.setFocusToMenuitem(null);
