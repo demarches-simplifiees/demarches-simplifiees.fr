@@ -94,7 +94,7 @@ fr:
     prefill_descriptions:
       edit:
         intro_html: "Vous souhaitez permettre à vos usager·ères la <strong>création d'un dossier prérempli</strong>, à partir de données dont vous disposez déjà, pour la démarche « %{libelle} »."
-        info: Pour cela, ajoutez les champs que vous souhaitez préremplir, grâce au tableau ci-dessous. Lorsque vous avez terminé, il ne vous reste plus qu'à copier le lien de préremplissage, à remplacer les valeurs et à le partager.
+        info_html: Pour cela, sélectionnez ci-dessous les champs que vous souhaitez préremplir.<br> Vous trouverez ensuite en bas de cette page un lien de préremplissage qu'il ne vous restera plus qu'à copier, à adapter en remplaçant les valeurs par défaut et à partager.<br> De la même façon, vous trouverez en bas de page un exemple de requête cURL à adapter si vous souhaitez préremplir les dossiers par API.
         champ_id: ID
         champ_type: Type
         champ_add: Ajouter
