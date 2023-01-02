@@ -61,7 +61,7 @@
               %td.actions
                 = link_to reaffecter_dossiers_admin_procedure_groupe_instructeur_path(procedure, group), class: 'button', title: t('.group_management.move_folders_confirmation') do
                   %span.icon.follow
-                  = t('.group_management.move_folders')
+                  = t('.group_management.move_folders', count: group.dossiers.count)
 
 
   = paginate groupes_instructeurs
