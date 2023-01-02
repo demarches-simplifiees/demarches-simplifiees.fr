@@ -8,6 +8,12 @@ describe Champs::DateChamp do
       expect(champ.reload.value).to be_nil
     end
 
+    it 'converts to nil if empty string' do
+      champ = champ_with_value("")
+      champ.save
+      expect(champ.reload.value).to be_nil
+    end
+
     it 'converts to nil if not ISO8601' do
       champ = champ_with_value("12-21-2023")
       champ.save
@@ -18,6 +24,12 @@ describe Champs::DateChamp do
       champ = champ_with_value("value")
       champ.save
       expect(champ.reload.value).to be_nil
+    end
+
+    it "converts %d/%m/%Y format to ISO" do
+      champ = champ_with_value("31/12/2017")
+      champ.save
+      expect(champ.reload.value).to eq("2017-12-31")
     end
 
     it 'preserves if ISO8601' do

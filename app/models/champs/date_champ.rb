@@ -21,7 +21,7 @@
 #  type_de_champ_id               :integer
 #
 class Champs::DateChamp < Champ
-  before_validation :format_before_save
+  before_validation :convert_to_iso8601
   validate :iso_8601
 
   def search_terms
@@ -38,14 +38,18 @@ class Champs::DateChamp < Champ
 
   private
 
-  def format_before_save
+  def convert_to_iso8601
     return if valid_iso8601?
 
-    self.value = nil
+    self.value = if /^\d{2}\/\d{2}\/\d{4}$/.match?(value)
+      Date.parse(value).iso8601
+    else
+      nil
+    end
   end
 
   def iso_8601
-    return if valid_iso8601?
+    return if valid_iso8601? || value.blank?
     # i18n-tasks-use t('errors.messages.not_a_date')
     errors.add :date, errors.generate_message(:value, :not_a_date)
   end

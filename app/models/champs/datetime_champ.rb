@@ -21,7 +21,7 @@
 #  type_de_champ_id               :integer
 #
 class Champs::DatetimeChamp < Champ
-  before_validation :format_before_save
+  before_validation :convert_to_iso8601
   validate :iso_8601
 
   def search_terms
@@ -42,7 +42,7 @@ class Champs::DatetimeChamp < Champ
 
   private
 
-  def format_before_save
+  def convert_to_iso8601
     if (value =~ /=>/).present?
       self.value =
         begin
@@ -67,7 +67,7 @@ class Champs::DatetimeChamp < Champ
   end
 
   def iso_8601
-    return if valid_iso8601?
+    return if valid_iso8601? || value.blank?
     # i18n-tasks-use t('errors.messages.not_a_datetime')
     errors.add :datetime, errors.generate_message(:value, :not_a_datetime)
   end

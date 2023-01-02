@@ -8,6 +8,12 @@ describe Champs::DatetimeChamp do
       expect(champ.reload.value).to be_nil
     end
 
+    it 'converts to nil if empty string' do
+      champ = champ_with_value("")
+      champ.save
+      expect(champ.reload.value).to be_nil
+    end
+
     it 'converts to nil if not ISO8601' do
       champ = champ_with_value("12-21-2023 03:20")
       champ.save

@@ -104,7 +104,7 @@ en:
     prefill_descriptions:
       edit:
         intro_html: "You'd like to allow your users to <strong>create a prefilled file</strong>, with data you already have, for the procedure « %{libelle} »."
-        info: Add the fields you want to prefill, thanks to the table below. Once it's over, copy the prefill link, replace the values and share the link.
+        info_html: To do this, select the fields below that you want to prefill.<br> You will then find a prefill link at the bottom of this page, which you will just need to copy, adapt by replacing the default values, and share.<br> In the same way, you will find an example of a cURL request at the bottom of the page to adapt if you want to prefill the folders via API.
         champ_id: ID
         champ_type: Type
         champ_add: Add
