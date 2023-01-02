@@ -39,7 +39,16 @@ fr:
           other: "%{count} instructeurs sont affectés"
       edit:
         routing:
-          title: Libellé de la liste de groupes
+          list_title: Libellé de la liste de groupes
+          title: Routage
+          routing_notice: |
+            Le routage permet d’acheminer les dossiers vers différents groupes d’instructeurs. Pour l’activer, ajoutez au moins un nouveau groupe ci-dessous. Pour désactiver le routage, supprimez ou désactivez des groupes afin de n’en conserver qu'un seul. Plus d'explications dans la
+          title_notice: |
+            Par défaut, le titre de la liste de groupes est « Votre ville ». Pour le renommer (par exemple : Votre région, Votre département...) changez le libellé du champ routage dans la page
+          title_notice_link: Configuration des champs
+          doc:
+            label: documentation
+            url: 'https://doc.demarches-simplifiees.fr/pour-aller-plus-loin/routage'
         group_management:
           title: Gestion des Groupes
           delete: supprimer le groupe
@@ -50,7 +59,7 @@ fr:
             other: déplacer les %{count} dossiers
           move_files_confirmation: Réaffecter les dossiers à un autre groupe afin de pouvoir le supprimer
         add_a_group:
-          title: Ajouter un nom de groupe
+          title: Ajouter un nouveau groupe
           notice: Ce groupe sera un choix de la liste "%{routing_criteria_name}"
         csv_import:
           title: Importer par CSV
@@ -68,9 +77,6 @@ fr:
           one: "%{count} groupe existe"
           other: "%{count} groupes existent"
       routing:
-        title: Routage
-        notice_html: |
-          Le routage permet d’acheminer les dossiers vers différents groupes d’instructeurs. Il s’active automatiquement dès qu’une démarche compte au moins deux groupes actifs.
         button:
           self_managment_toggle: Activer l’autogestion des instructeurs
           add_group: Ajouter le groupe

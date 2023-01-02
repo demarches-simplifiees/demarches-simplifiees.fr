@@ -22,6 +22,4 @@
   - if !@procedure.routing_enabled?
     = render partial: 'administrateurs/groupe_instructeurs/instructeurs_self_management', locals: { procedure: @procedure }
 
-  = render partial: 'administrateurs/groupe_instructeurs/routing', locals: { procedure: @procedure }
-
   = render partial: 'administrateurs/groupe_instructeurs/edit', locals: { procedure: @procedure, groupes_instructeurs: @groupes_instructeurs }
