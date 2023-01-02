@@ -55,7 +55,12 @@ class Champs::DatetimeChamp < Champ
     elsif /^\d{2}\/\d{2}\/\d{4}\s\d{2}:\d{2}$/.match?(value) # old browsers can send with dd/mm/yyyy hh:mm format
       self.value = Time.zone.strptime(value, "%d/%m/%Y %H:%M").iso8601
     elsif valid_iso8601? # a correct iso8601 datetime
-      self.value = Time.zone.strptime(value, "%Y-%m-%dT%H:%M").iso8601
+      self.value =
+        begin
+          Time.zone.strptime(value, "%Y-%m-%dT%H:%M").iso8601
+        rescue ArgumentError
+          Time.zone.strptime(value, "%Y-%m-%d %H:%M").iso8601
+        end
     else
       self.value = nil
     end
@@ -68,6 +73,8 @@ class Champs::DatetimeChamp < Champ
   end
 
   def valid_iso8601?
+    return true if /^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}$/.match?(value)
+
     DateTime.iso8601(value)
     true
   rescue ArgumentError, Date::Error # rubocop:disable Lint/ShadowedException
