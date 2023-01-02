@@ -55,9 +55,6 @@ class Champs::DateChamp < Champ
   end
 
   def valid_iso8601?
-    Date.iso8601(value)
-    true
-  rescue ArgumentError, Date::Error # rubocop:disable Lint/ShadowedException
-    false
+    return true if /^\d{4}-\d{2}-\d{2}$/.match?(value)
   end
 end
