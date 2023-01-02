@@ -42,7 +42,7 @@
             = link_to admin_procedure_path(procedure), class: 'fr-btn fr-icon-draft-line fr-btn--tertiary' do
               Modifier
         %li.dropdown{ data: { controller: 'menu-button' } }
-          %button.fr-btn.fr-btn--tertiary.dropdown-button.procedures-actions-btn{ data: { menu_button_target: 'button' } }
+          %button.fr-btn.fr-btn--tertiary.dropdown-button.procedures-actions-btn{ data: { menu_button_target: 'button' }, "aria-expanded": "false" }
             Actions
           .dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' }, id: dom_id(procedure, :actions_menu) }
             %ul.dropdown-items.pl-0

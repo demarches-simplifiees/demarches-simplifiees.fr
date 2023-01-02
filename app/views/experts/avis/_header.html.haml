@@ -10,7 +10,7 @@
 
       .header-actions
         %span.dropdown.print-menu-opener{ data: { controller: 'menu-button' } }
-          %button.button.dropdown-button.icon-only{ data: { menu_button_target: 'button' } }
+          %button.button.dropdown-button.icon-only{ data: { menu_button_target: 'button' }, "aria-expanded": "false" }
             %span.icon.attached
           %ul.print-menu.dropdown-content#print-pj-menu{ data: { menu_button_target: 'menu' } }
             %li= link_to "Télécharger le dossier et toutes ses pièces jointes", telecharger_pjs_expert_avis_path(avis.procedure, avis), target: "_blank", rel: "noopener", class: "menu-item menu-link"

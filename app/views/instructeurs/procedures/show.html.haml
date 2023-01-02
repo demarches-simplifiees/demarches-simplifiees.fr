@@ -98,7 +98,7 @@
 
                 %th.action-col.follow-col
                   %span.dropdown{ data: { controller: 'menu-button', popover: 'true' } }
-                    %button.fr-btn.fr-btn--sm.fr-btn--secondary.dropdown-button{ data: { menu_button_target: 'button' } }
+                    %button.fr-btn.fr-btn--sm.fr-btn--secondary.dropdown-button{ data: { menu_button_target: 'button' }, "aria-expanded": "false" }
                       = t('views.instructeurs.dossiers.personalize')
                     #custom-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
                       = form_tag update_displayed_fields_instructeur_procedure_path(@procedure), method: :patch, class: 'dropdown-form large columns-form' do

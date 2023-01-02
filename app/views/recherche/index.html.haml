@@ -68,7 +68,7 @@
             - if instructeur_dossier && expert_dossier
               %td.action-col.follow-col
                 .dropdown{ data: { controller: 'menu-button' } }
-                  %button.button.dropdown-button{ data: { menu_button_target: 'button' } }
+                  %button.button.dropdown-button{ data: { menu_button_target: 'button' }, "aria-expanded": "false" }
                     Actions
                   .dropdown-content{ data: { menu_button_target: 'menu' } }
                     %ul.dropdown-items

@@ -1,5 +1,5 @@
 %span.dropdown{ data: { controller: 'menu-button' } }
-  %button.fr-btn.fr-btn--secondary.fr-btn--sm.dropdown-button{ data: { menu_button_target: 'button' } }
+  %button.fr-btn.fr-btn--secondary.fr-btn--sm.dropdown-button{ data: { menu_button_target: 'button' }, "aria-expanded": "false" }
     - if @count.nil?
       = t(".download_all")
     - else
