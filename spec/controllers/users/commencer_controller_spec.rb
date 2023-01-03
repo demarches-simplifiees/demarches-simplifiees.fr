@@ -139,6 +139,15 @@ describe Users::CommencerController, type: :controller do
           before { sign_in newly_authenticated_user }
 
           it { expect { subject }.to change { dossier.reload.user }.from(nil).to(newly_authenticated_user) }
+
+          it 'sends the notify_new_draft email' do
+            expect { perform_enqueued_jobs { subject } }.to change { ActionMailer::Base.deliveries.count }.by(1)
+
+            dossier = Dossier.last
+            mail = ActionMailer::Base.deliveries.last
+            expect(mail.subject).to eq("Retrouvez votre brouillon pour la démarche « #{dossier.procedure.libelle} »")
+            expect(mail.html_part.body).to include(dossier_path(dossier))
+          end
         end
       end
     end
