@@ -270,7 +270,7 @@ module TagsSubstitutionConcern
   end
 
   def champ_public_tags(dossier: nil)
-    types_de_champ = (dossier || procedure.active_revision).types_de_champ_public.not_condition.filter(&:visible?)
+    types_de_champ = (dossier || procedure.active_revision).types_de_champ_public.not_condition
     types_de_champ_tags(types_de_champ, Dossier::SOUMIS)
   end
 

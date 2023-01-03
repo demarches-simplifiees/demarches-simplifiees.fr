@@ -78,5 +78,15 @@ class GroupeInstructeur < ApplicationRecord
 
   def update_routing
     procedure.update!(routing_enabled: procedure.groupe_instructeurs.active.many?)
+
+    if procedure.groupe_instructeurs.active.size == 2 && !procedure.has_a_tdc_routage?
+      procedure.draft_revision.add_type_de_champ(
+        type_champ: 'routage',
+        libelle: procedure.routing_criteria_name,
+        mandatory: true
+      )
+    elsif procedure.groupe_instructeurs.active.one? && procedure.has_a_tdc_routage?
+      procedure.draft_revision.remove_type_de_champ(procedure.routing_type_de_champ.stable_id)
+    end
   end
 end
