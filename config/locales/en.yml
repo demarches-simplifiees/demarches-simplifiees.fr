@@ -32,7 +32,6 @@
 en:
   invisible_captcha:
     sentence_for_humans: 'If you are a human, ignore this field'
-
   help: 'Help'
   help_dropdown:
     general_title: "Online help"
@@ -141,10 +140,10 @@ en:
     registrations:
       new:
         title: "Create an account %{name}"
+        subtitle: "Create an account using an email"
         email_label: 'Email (name@site.com)'
-        email_placeholder: 'Your email address'
-        wanna_say: 'Do you mean to say'
         password_label: "Password (%{min_length} characters minimum)"
+        password_message: "Your password must have :"
         password_placeholder: "%{min_length} characters minimum"
     invites:
       dropdown:
@@ -314,8 +313,7 @@ en:
           actions: "Actions"
       sessions:
         new:
-          sign_in: Sign in
-          email: Email address (name@site.com)
+          sign_in: Sign in on %{application_name}
           password: Password (minimum length %{min_length} characters)
           remember_me: Remember me
           reset_password: Forgot password?
@@ -323,6 +321,7 @@ en:
           find_procedure: Find your procedure
           state_civil_servant: Are you a state civil servant?
           connect_with_agent_connect: Visit our dedicated page
+          subtitle: "Sign in with my account"
       passwords:
         reset_link_sent:
           got_it: Got it!
@@ -352,10 +351,14 @@ en:
       user:
         one: User
         other: Users
+
     attributes:
       default_attributes: &default_attributes
-        password: 'password'
+        email: Email
+        password: 'Password'
         requested_merge_into: 'new email address'
+        hints:
+          email: "Expected format : john.doe@example.com"
       user:
         siret: 'SIRET number'
         << : *default_attributes
@@ -363,8 +366,11 @@ en:
         << : *default_attributes
       super_admin:
         << : *default_attributes
-      instructeur:
-        password: 'password'
+      procedure:
+        zone: This procedure is run by
+      champs:
+        value: Value
+
     errors:
       messages:
         not_a_phone: 'Invalid phone number'
@@ -374,35 +380,40 @@ en:
           attributes:
             footer:
               too_long: ": the footer is too long."
-        user:
-          attributes:
-            reset_password_token:
-              # invalid: ": Votre lien de nouveau mot de passe a expiré. Merci d’en demander un nouveau."
-            email:
-              invalid: invalid
-              taken: already in use
-            password:
-              too_short: 'is too short'
-            password_confirmation:
-              confirmation: ': The two passwords do not match'
-            requested_merge_into:
-              same: "can't be the same as the old one"
+
         invite:
           attributes:
             email:
               taken: ': Invitation already sent'
+
+        user:
+          attributes: &error_attributes
+            reset_password_token:
+              invalid: ": is expired. Ask a new one"
+            email:
+              blank: "is empty. Fill in the email"
+              invalid: "is invalid. Fill in a valid email address, example: john.doe@example.fr"
+              taken: "already in use. Fill in another email"
+            password:
+              too_short: "is too short. Fill in a password with at least 8 characters"
+              not_strong: "not strong enough. Fill in a stronger password"
+            password_confirmation:
+              confirmation: ": The two passwords do not match"
+            requested_merge_into:
+              same: "can't be the same as the old one"
+
         instructeur:
           attributes:
-            email:
-              invalid: invalid
-              taken: already in use
-            password:
-              too_short: 'is too short'
+            << : *error_attributes
+        super_admin:
+          attributes:
+            << : *error_attributes
+
         procedure:
           attributes:
             path:
               taken: is already used for procedure. You cannot use it because it belongs to another administrator.
-              # taken_can_be_claimed: est identique à celui d’une autre de vos procedures publiées. Si vous publiez cette procedure, l’ancienne sera dépubliée et ne sera plus accessible au public. Les utilisateurs qui ont commencé un brouillon vont pouvoir le déposer.
+              taken_can_be_claimed: Is the same as another of your procedure. If you publish this procedure, the other one will be unpublished
               invalid: is not valid. It must countain between 3 and 50 characters among a-z, 0-9, '_' and '-'.
         "champs/cnaf_champ":
           attributes:
@@ -417,6 +428,7 @@ en:
             reference_avis:
               invalid: "must be 13 or 14 characters long"
   errors:
+    format: "Field « %{attribute} » %{message}"
     messages:
       dossier_not_found: "The file does not exist or you do not have access to it."
       # # dossier_map_not_activated: "The file does not have access to the map."

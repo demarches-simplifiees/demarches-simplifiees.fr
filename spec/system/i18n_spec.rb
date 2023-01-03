@@ -5,7 +5,7 @@ describe 'Accessing the website in different languages:' do
 
     scenario 'I can change the language of the page' do
       visit new_user_session_path
-      expect(page).to have_text('Connectez-vous')
+      expect(page).to have_text("Connexion à #{APPLICATION_NAME}")
 
       find('.fr-translate__btn').click
       find('.fr-nav__link[hreflang="en"]').click

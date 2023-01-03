@@ -17,6 +17,6 @@ shared_examples "the user has got a prefilled dossier, owned by themselves" do
     expect(page).to have_current_path(brouillon_dossier_path(dossier))
     expect(page).to have_field(type_de_champ_text.libelle, with: text_value)
     expect(page).to have_field(type_de_champ_phone.libelle, with: phone_value)
-    expect(page).to have_css('.field_with_errors', text: type_de_champ_phone.libelle)
+    expect(page).to have_css('label', text: type_de_champ_phone.libelle)
   end
 end
