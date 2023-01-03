@@ -16,4 +16,6 @@ en:
             brouillon: Your file is still in draft and will soon expire. So it will be deleted soon without being instructed. If you want to pursue your procedure you can submit it now. Otherwise you are able to delay its expiration by clicking on the underneath button.
             en_construction: Your file is pending for instruction. The maximum delay is 6 months, but you can extend the duration by a month by clicking on the underneath button.
             termine: Your file had been processed and will soon expire. So it will be deleted soon. If you want to keep it, you can dowload a PDF file of it.
-          button_delay_expiration: "Keep for %{duree_conservation_dossiers_dans_ds} more months"
+          button_delay_expiration:
+            one: "Keep for %{count} more month"
+            other: "Keep for %{count} more months"
