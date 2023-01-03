@@ -3,10 +3,11 @@
 module DossierPrefillableConcern
   extend ActiveSupport::Concern
 
-  def prefill!(champs_attributes)
-    return if champs_attributes.empty?
+  def prefill!(champs_public_attributes)
+    attr = { prefilled: true }
+    attr[:champs_public_attributes] = champs_public_attributes.map { |h| h.merge(prefilled: true) } if champs_public_attributes.any?
 
-    assign_attributes(champs_attributes: champs_attributes.map { |h| h.merge(prefilled: true) })
+    assign_attributes(attr)
     save(validate: false)
   end
 end

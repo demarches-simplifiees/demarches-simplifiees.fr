@@ -206,7 +206,7 @@ class Procedure < ApplicationRecord
 
   scope :brouillons,             -> { where(aasm_state: :brouillon) }
   scope :publiees,               -> { where(aasm_state: :publiee) }
-  scope :publiees_ou_brouillons, -> { publiees.or(brouillons) }
+  scope :publiees_ou_brouillons, -> { where(aasm_state: [:publiee, :brouillon]) }
   scope :closes,                 -> { where(aasm_state: [:close, :depubliee]) }
   scope :opendata,               -> { where(opendata: true) }
   scope :publiees_ou_closes,     -> { where(aasm_state: [:publiee, :close, :depubliee]) }
