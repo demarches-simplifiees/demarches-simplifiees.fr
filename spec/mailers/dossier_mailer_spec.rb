@@ -125,8 +125,8 @@ RSpec.describe DossierMailer, type: :mailer do
       subject { described_class.notify_automatic_deletion_to_user([deleted_dossier], dossier.user.email) }
 
       it { expect(subject.to).to eq([dossier.user.email]) }
-      it { expect(subject.subject).to eq("Un dossier a été supprimé automatiquement") }
-      it { expect(subject.body).to include("n° #{dossier.id} ") }
+      it { expect(subject.subject).to eq("Un dossier a été supprimé automatiquement de votre compte") }
+      it { expect(subject.body).to include("N° #{dossier.id} ") }
       it { expect(subject.body).to include(dossier.procedure.libelle) }
       it { expect(subject.body).to include("nous nous excusons de la gène occasionnée") }
     end
@@ -137,8 +137,8 @@ RSpec.describe DossierMailer, type: :mailer do
       subject { described_class.notify_automatic_deletion_to_user([deleted_dossier], dossier.user.email) }
 
       it { expect(subject.to).to eq([dossier.user.email]) }
-      it { expect(subject.subject).to eq("Un dossier a été supprimé automatiquement") }
-      it { expect(subject.body).to include("n° #{dossier.id} ") }
+      it { expect(subject.subject).to eq("Un dossier a été supprimé automatiquement de votre compte") }
+      it { expect(subject.body).to include("N° #{dossier.id} ") }
       it { expect(subject.body).to include(dossier.procedure.libelle) }
       it { expect(subject.body).not_to include("nous nous excusons de la gène occasionnée") }
     end
