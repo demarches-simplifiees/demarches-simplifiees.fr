@@ -18,7 +18,7 @@
         %br
         = button_to users_dossier_repousser_expiration_path(dossier), class: 'button mt-2', id: 'test-user-repousser-expiration' do
           %span.icon.standby
-          = t('users.dossiers.header.banner.button_delay_expiration', duree_conservation_dossiers_dans_ds: dossier.procedure.duree_conservation_dossiers_dans_ds)
+          = t('users.dossiers.header.banner.button_delay_expiration', count: dossier.procedure.duree_conservation_dossiers_dans_ds)
 - elsif dossier.en_instruction? && dossier.procedure.procedure_expires_when_termine_enabled
   %p.expires_at_en_instruction
     %small= t("shared.dossiers.header.expires_at.en_instruction")
