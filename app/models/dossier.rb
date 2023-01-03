@@ -28,6 +28,8 @@
 #  last_champ_updated_at                              :datetime
 #  last_commentaire_updated_at                        :datetime
 #  motivation                                         :text
+#  prefill_token                                      :string
+#  prefilled                                          :boolean
 #  private_search_terms                               :text
 #  processed_at                                       :datetime
 #  search_terms                                       :text
@@ -69,6 +71,8 @@ class Dossier < ApplicationRecord
   MONTHS_AFTER_EXPIRATION = 1
   DAYS_AFTER_EXPIRATION = 5
   INTERVAL_EXPIRATION = "#{MONTHS_AFTER_EXPIRATION} month #{DAYS_AFTER_EXPIRATION} days"
+
+  has_secure_token :prefill_token
 
   has_one :etablissement, dependent: :destroy
   has_one :individual, validate: false, dependent: :destroy
@@ -218,11 +222,12 @@ class Dossier < ApplicationRecord
   scope :state_termine,                        -> { where(state: TERMINE) }
   scope :state_not_termine,                    -> { where.not(state: TERMINE) }
 
-  scope :archived,      -> { where(archived: true) }
-  scope :not_archived,  -> { where(archived: false) }
-  scope :hidden_by_user, -> { where.not(hidden_by_user_at: nil) }
-  scope :hidden_by_administration, -> { where.not(hidden_by_administration_at: nil) }
-  scope :visible_by_user, -> { where(for_procedure_preview: false).or(where(for_procedure_preview: nil)).where(hidden_by_user_at: nil) }
+  scope :archived,                  -> { where(archived: true) }
+  scope :not_archived,              -> { where(archived: false) }
+  scope :prefilled,                 -> { where(prefilled: true) }
+  scope :hidden_by_user,            -> { where.not(hidden_by_user_at: nil) }
+  scope :hidden_by_administration,  -> { where.not(hidden_by_administration_at: nil) }
+  scope :visible_by_user,           -> { where(for_procedure_preview: false).or(where(for_procedure_preview: nil)).where(hidden_by_user_at: nil) }
   scope :visible_by_administration, -> {
     state_not_brouillon
       .where(hidden_by_administration_at: nil)
@@ -435,7 +440,7 @@ class Dossier < ApplicationRecord
 
   after_save :send_web_hook
 
-  validates :user, presence: true, if: -> { deleted_user_email_never_send.nil? }
+  validates :user, presence: true, if: -> { deleted_user_email_never_send.nil? }, unless: -> { prefilled }
   validates :individual, presence: true, if: -> { revision.procedure.for_individual? }
   validates :groupe_instructeur, presence: true, if: -> { !brouillon? }
 
@@ -716,6 +721,17 @@ class Dossier < ApplicationRecord
     elsif individual.present?
       "#{individual.nom} #{individual.prenom}"
     end
+  end
+
+  def orphan?
+    prefilled? && user.nil?
+  end
+
+  def owned_by?(a_user)
+    return false if a_user.nil?
+    return false if orphan?
+
+    user == a_user
   end
 
   def log_operations?

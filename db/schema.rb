@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_12_05_144624) do
+ActiveRecord::Schema.define(version: 2022_12_13_084442) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -298,13 +298,13 @@ ActiveRecord::Schema.define(version: 2022_12_05_144624) do
     t.boolean "automatic_operation", default: false, null: false
     t.bigint "bill_signature_id"
     t.datetime "created_at", null: false
+    t.jsonb "data"
     t.text "digest"
     t.bigint "dossier_id"
     t.datetime "executed_at"
     t.datetime "keep_until"
     t.string "operation", null: false
     t.datetime "updated_at", null: false
-    t.jsonb "data"
     t.index ["bill_signature_id"], name: "index_dossier_operation_logs_on_bill_signature_id"
     t.index ["dossier_id"], name: "index_dossier_operation_logs_on_dossier_id"
     t.index ["keep_until"], name: "index_dossier_operation_logs_on_keep_until"
@@ -363,6 +363,8 @@ ActiveRecord::Schema.define(version: 2022_12_05_144624) do
     t.datetime "last_commentaire_updated_at"
     t.text "motivation"
     t.bigint "parent_dossier_id"
+    t.string "prefill_token"
+    t.boolean "prefilled"
     t.string "private_search_terms"
     t.datetime "processed_at"
     t.bigint "revision_id"
@@ -376,6 +378,7 @@ ActiveRecord::Schema.define(version: 2022_12_05_144624) do
     t.index ["dossier_transfer_id"], name: "index_dossiers_on_dossier_transfer_id"
     t.index ["groupe_instructeur_id"], name: "index_dossiers_on_groupe_instructeur_id"
     t.index ["hidden_at"], name: "index_dossiers_on_hidden_at"
+    t.index ["prefill_token"], name: "index_dossiers_on_prefill_token", unique: true
     t.index ["revision_id"], name: "index_dossiers_on_revision_id"
     t.index ["state"], name: "index_dossiers_on_state"
     t.index ["user_id"], name: "index_dossiers_on_user_id"
@@ -807,6 +810,7 @@ ActiveRecord::Schema.define(version: 2022_12_05_144624) do
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"
     t.integer "sign_in_count", default: 0, null: false
+    t.boolean "team_account", default: false
     t.string "unlock_token"
     t.datetime "updated_at"
     t.index ["email"], name: "index_super_admins_on_email", unique: true
@@ -885,7 +889,6 @@ ActiveRecord::Schema.define(version: 2022_12_05_144624) do
     t.string "reset_password_token"
     t.integer "sign_in_count", default: 0, null: false
     t.string "siret"
-    t.boolean "team_account", default: false
     t.text "unconfirmed_email"
     t.string "unlock_token"
     t.datetime "updated_at"
