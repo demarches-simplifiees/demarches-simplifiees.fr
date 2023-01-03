@@ -10,6 +10,6 @@ fr:
         siret:
           attributes:
             siret:
-              length: 'Le numéro SIRET doit comporter 14 chiffres'
-              checksum: 'Le numéro SIRET comporte une erreur, vérifiez les chiffres composant le numéro'
-              invalid: 'Le numéro SIRET ne correspond pas à un établissement existant'
+              length: 'est invalide. Saisir un numéro SIRET avec 14 chiffres'
+              checksum: 'comporte une erreur. Vérifier les chiffres composant le numéro'
+              invalid: 'ne correspond pas à un établissement existant'

@@ -31,7 +31,7 @@ describe Invite do
 
         it do
           expect(invite.save).to be false
-          expect(invite.errors.full_messages).to eq(["Email n'est pas valide"])
+          expect(invite.errors.full_messages).to eq(["Le champ « Email » n'est pas valide"])
         end
 
         context 'when an email is empty' do
@@ -39,7 +39,7 @@ describe Invite do
 
           it do
             expect(invite.save).to be false
-            expect(invite.errors.full_messages).to eq(["Email doit être rempli"])
+            expect(invite.errors.full_messages).to eq(["Le champ « Email » doit être rempli"])
           end
         end
       end
