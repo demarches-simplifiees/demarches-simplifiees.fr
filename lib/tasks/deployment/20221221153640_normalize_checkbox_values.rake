@@ -25,8 +25,8 @@ namespace :after_party do
 
   def update_all(scope, value, progress)
     scope.in_batches(of: 10_000) do |checkboxes|
-      checkboxes.update_all(value: value)
       progress.inc(checkboxes.count)
+      checkboxes.update_all(value: value)
     end
   end
 end

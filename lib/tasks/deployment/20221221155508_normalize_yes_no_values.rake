@@ -21,8 +21,8 @@ namespace :after_party do
 
   def update_all(scope, value, progress)
     scope.in_batches(of: 10_000) do |yes_no|
-      yes_no.update_all(value: value)
       progress.inc(yes_no.count)
+      yes_no.update_all(value: value)
     end
   end
 end
