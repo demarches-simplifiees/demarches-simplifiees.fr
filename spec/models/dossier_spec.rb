@@ -1945,16 +1945,32 @@ describe Dossier do
   describe '#orphan?' do
     subject(:orphan) { dossier.orphan? }
 
-    context 'when the dossier has a user' do
-      let(:dossier) { build(:dossier) }
+    context 'when the dossier is prefilled' do
+      context 'when the dossier has a user' do
+        let(:dossier) { build(:dossier, :prefilled) }
 
-      it { expect(orphan).to be_falsey }
+        it { expect(orphan).to be_falsey }
+      end
+
+      context 'when the dossier does not have a user' do
+        let(:dossier) { build(:dossier, :prefilled, user: nil) }
+
+        it { expect(orphan).to be_truthy }
+      end
     end
 
-    context 'when the dossier does not have a user' do
-      let(:dossier) { build(:dossier, user: nil) }
+    context 'when the dossier is not prefilled' do
+      context 'when the dossier has a user' do
+        let(:dossier) { build(:dossier) }
 
-      it { expect(orphan).to be_truthy }
+        it { expect(orphan).to be_falsey }
+      end
+
+      context 'when the dossier does not have a user' do
+        let(:dossier) { build(:dossier, user: nil) }
+
+        it { expect(orphan).to be_falsey }
+      end
     end
   end
 

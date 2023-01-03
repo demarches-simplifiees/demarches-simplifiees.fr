@@ -724,7 +724,7 @@ class Dossier < ApplicationRecord
   end
 
   def orphan?
-    user.nil?
+    prefilled? && user.nil?
   end
 
   def owned_by?(a_user)
