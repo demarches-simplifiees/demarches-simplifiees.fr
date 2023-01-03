@@ -121,6 +121,8 @@ en:
           iban: An Iban number
           yes_no: '"true" for Yes, "false" pour No'
           checkbox: '"on" to check, "off" to uncheck'
+          date: ISO8601 date
+          datetime: ISO8601 datetime
         examples:
           title: Example
           text: Short text
@@ -132,6 +134,8 @@ en:
           iban: FR7611315000011234567890138
           yes_no: "true"
           checkbox: "on"
+          date: "2023-02-01"
+          datetime: "2023-02-01T10:30"
         prefill_link_title: Prefill link (GET)
         prefill_link_info: Use the button to copy the link, then remplace the values with your data.
         prefill_link_too_long: Warning, the prefill link is too long and may not work on all browsers.

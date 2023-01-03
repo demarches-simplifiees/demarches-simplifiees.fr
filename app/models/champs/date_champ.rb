@@ -55,6 +55,6 @@ class Champs::DateChamp < Champ
   end
 
   def valid_iso8601?
-    return true if /^\d{4}-\d{2}-\d{2}$/.match?(value)
+    /^\d{4}-\d{2}-\d{2}$/.match?(value)
   end
 end

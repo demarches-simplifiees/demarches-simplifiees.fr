@@ -1,7 +1,7 @@
 describe Champs::DatetimeChamp do
   let(:datetime_champ) { build(:champ_datetime) }
 
-  describe '#format_before_save' do
+  describe '#convert_to_iso8601' do
     it 'preserves nil' do
       champ = champ_with_value(nil)
       champ.save
