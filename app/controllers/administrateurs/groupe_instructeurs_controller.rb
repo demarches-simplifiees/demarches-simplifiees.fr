@@ -72,6 +72,7 @@ module Administrateurs
         @groupe_instructeur.destroy!
         if procedure.groupe_instructeurs.active.one?
           procedure.update!(routing_enabled: false)
+          procedure.draft_revision.remove_type_de_champ(procedure.routing_type_de_champ&.stable_id)
           routing_notice = " et le routage a été désactivé"
         end
         flash[:notice] = "le groupe « #{@groupe_instructeur.label} » a été supprimé#{routing_notice}."

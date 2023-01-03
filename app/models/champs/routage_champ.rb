@@ -2,10 +2,6 @@ class Champs::RoutageChamp < Champs::TextChamp
   before_create :set_groupe_instructeur_id
   after_update :update_dossier_groupe_instructeur_id
 
-  def visible?
-    procedure.routing_enabled? && super
-  end
-
   private
 
   # double read / method to remove

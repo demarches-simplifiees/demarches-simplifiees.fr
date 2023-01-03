@@ -828,16 +828,18 @@ class Procedure < ApplicationRecord
     self.connection.query(query.to_sql).flatten
   end
 
-  # double read / to remove
   def has_a_tdc_routage?
     active_revision.types_de_champ.any?(&:routage?)
   end
 
   def routing_libelle
-    active_revision.types_de_champ.find(&:routage?)&.libelle
+    routing_type_de_champ&.libelle
   end
 
-  # double read / to remove
+  def routing_type_de_champ
+    active_revision.types_de_champ.find(&:routage?)
+  end
+
   def show_groupe_instructeur_selector?
     routing_enabled? && !feature_enabled?(:procedure_routage_api)
   end
