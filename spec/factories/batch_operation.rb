@@ -39,5 +39,16 @@ FactoryBot.define do
         ]
       end
     end
+
+    trait :follow do
+      operation { BatchOperation.operations.fetch(:follow) }
+      after(:build) do |batch_operation, evaluator|
+        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur], administrateurs: [create(:administrateur)])
+        batch_operation.dossiers = [
+          create(:dossier, :with_individual, :en_instruction, procedure: procedure),
+          create(:dossier, :with_individual, :en_construction, procedure: procedure)
+        ]
+      end
+    end
   end
 end

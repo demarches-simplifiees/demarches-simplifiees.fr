@@ -7,11 +7,21 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
   end
 
   def render?
-    ['traites', 'suivis'].include?(@statut)
+    ['a-suivre', 'traites', 'suivis'].include?(@statut)
   end
 
   def available_operations
     case @statut
+    when 'a-suivre' then
+      {
+        options:
+          [
+            {
+              label: t(".operations.follow"),
+              operation: BatchOperation.operations.fetch(:follow)
+            }
+          ]
+      }
     when 'traites' then
       {
         options:
@@ -47,9 +57,10 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
 
   def icons
     {
+      accepter: 'fr-icon-success-line',
       archiver: 'fr-icon-folder-2-line',
-      passer_en_instruction: 'fr-icon-edit-line',
-      accepter: 'fr-icon-success-line'
+      follow: 'fr-icon-star-line',
+      passer_en_instruction: 'fr-icon-edit-line'
     }
   end
 end

@@ -3,3 +3,4 @@ fr:
     archiver: 'Archive selected files'
     passer_en_instruction: 'Change selected files to instructing'
     accepter: 'Accept seleted files'
+    follow: 'Follow seleted files'

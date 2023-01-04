@@ -26,6 +26,15 @@ fr:
       text_success:
         one: 1 dossier sera accepté
         other: "%{progress_count}/%{count} dossiers ont été acceptés"
+  follow:
+    finish:
+      text_success:
+        one: 1 dossier a été suivi
+        other: "%{success_count}/%{count} dossiers ont été suivis"
+    in_progress:
+      text_success:
+        one: 1 dossier sera suivi
+        other: "%{progress_count}/%{count} dossiers ont été suivis"
   title:
     finish: L'action de masse est terminée
     in_progress: Une action de masse est en cours
