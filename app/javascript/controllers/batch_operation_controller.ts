@@ -1,31 +1,13 @@
 import { ApplicationController } from './application_controller';
+import { disable, enable } from '@utils';
 
 export class BatchOperationController extends ApplicationController {
-  static targets = ['form', 'input', 'submit'];
+  static targets = ['input'];
 
-  declare readonly formTargets: HTMLFormElement[];
-  declare readonly submitTargets: HTMLInputElement[];
   declare readonly inputTargets: HTMLInputElement[];
 
-  connect() {
-    this.formTargets.forEach((e) =>
-      e.addEventListener('submit', this.interceptFormSubmit.bind(this))
-    );
-  }
-
-  // DSFR recommends a <input type="submit" /> or <button type="submit" /> a form (not a <select>)
-  // but we have many actions on the same form (archive all, accept all, ...)
-  // so we intercept the form submit, and set the BatchOperation.operation by hand using the Event.submitter
-  interceptFormSubmit(event: SubmitEvent): SubmitEvent {
-    const submitter = event.submitter as HTMLInputElement;
-
-    submitter.setAttribute('value', submitter.dataset.submitterOperation || '');
-    return event;
-  }
-
-  onCheckOne(event: Event) {
+  onCheckOne() {
     this.toggleSubmitButtonWhenNeeded();
-    return event;
   }
 
   onCheckAll(event: Event) {
@@ -33,21 +15,18 @@ export class BatchOperationController extends ApplicationController {
 
     this.inputTargets.forEach((e) => (e.checked = target.checked));
     this.toggleSubmitButtonWhenNeeded();
-    return event;
   }
 
   toggleSubmitButtonWhenNeeded() {
     const available = this.inputTargets.some((e) => e.checked);
-    const dropdown = document.querySelector('#batch_operation_dropdown');
-    if (available) {
-      this.submitTargets.forEach((e) => e.removeAttribute('disabled'));
-      if (dropdown) {
-        dropdown.removeAttribute('disabled');
-      }
-    } else {
-      this.submitTargets.forEach((e) => e.setAttribute('disabled', 'disabled'));
-      if (dropdown) {
-        dropdown.setAttribute('disabled', 'disabled');
+    const buttons = this.element.querySelectorAll<HTMLButtonElement>(
+      '.batch-operation button'
+    );
+    for (const button of buttons) {
+      if (available) {
+        enable(button);
+      } else {
+        disable(button);
       }
     }
   }
