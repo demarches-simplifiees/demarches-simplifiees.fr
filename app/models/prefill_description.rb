@@ -54,7 +54,12 @@ class PrefillDescription < SimpleDelegator
   end
 
   def example_value(type_de_champ)
-    I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")
+    # TODO: SEB build a presenter or something to avoid if / else
+    if type_de_champ.simple_drop_down_list?
+      type_de_champ.drop_down_list_enabled_non_empty_options.first
+    else
+      I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")
+    end
   end
 
   def active_fillable_public_types_de_champ

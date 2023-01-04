@@ -38,7 +38,9 @@ class PrefillParams
       TypeDeChamp.type_champs.fetch(:datetime),
       TypeDeChamp.type_champs.fetch(:civilite),
       TypeDeChamp.type_champs.fetch(:yes_no),
-      TypeDeChamp.type_champs.fetch(:checkbox)
+      TypeDeChamp.type_champs.fetch(:checkbox),
+      TypeDeChamp.type_champs.fetch(:civilite)
+      # TODO: SEB validate that the value is in the drop_down_list_options
     ]
 
     attr_reader :champ, :value

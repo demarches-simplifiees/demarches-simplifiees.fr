@@ -38,9 +38,18 @@
                 %th
                   = t("views.prefill_descriptions.edit.possible_values.title")
                 %td
-                  = t("views.prefill_descriptions.edit.possible_values.#{type_de_champ.type_champ}") if prefillable
+                  -# TODO: SEB build a presenter or something to avoid if / else
+                  - if type_de_champ.simple_drop_down_list?
+                    -# TODO: SEB find a better way to show possible values
+                    = type_de_champ.drop_down_list_value
+                  - elsif prefillable
+                    = t("views.prefill_descriptions.edit.possible_values.#{type_de_champ.type_champ}")
               %tr{ class: prefillable ? "" : "fr-text-mention--grey" }
                 %th
                   = t("views.prefill_descriptions.edit.examples.title")
                 %td
-                  = t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}") if prefillable
+                  -# TODO: SEB build a presenter or something to avoid if / else
+                  - if type_de_champ.simple_drop_down_list?
+                    = type_de_champ.drop_down_list_enabled_non_empty_options.first
+                  - elsif prefillable
+                    = t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")
