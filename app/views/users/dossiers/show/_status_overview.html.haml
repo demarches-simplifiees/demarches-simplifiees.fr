@@ -26,7 +26,7 @@
 
     - elsif dossier.en_instruction?
       .en-instruction
-        %p{ role: 'alert' }
+        %p{ role: 'status' }
           = t('views.users.dossiers.show.status_overview.admin_review')
 
         = render partial: 'users/dossiers/show/estimated_delay', locals: { procedure: dossier.procedure }
@@ -36,7 +36,7 @@
 
     - elsif dossier.accepte?
       .accepte
-        %p.decision{ role: 'alert' }
+        %p.decision{ role: 'status' }
           %span.icon.accept
           = t('views.users.dossiers.show.status_overview.acceptee_html')
 
@@ -55,7 +55,7 @@
 
     - elsif dossier.refuse?
       .refuse
-        %p.decision{ role: 'alert' }
+        %p.decision{ role: 'status' }
           %span.icon.refuse
           = t('views.users.dossiers.show.status_overview.refuse_html')
 
@@ -69,7 +69,7 @@
 
     - elsif dossier.sans_suite?
       .sans-suite
-        %p.decision{ role: 'alert' }
+        %p.decision{ role: 'status' }
           %span.icon.without-continuation
           = t('views.users.dossiers.show.status_overview.sans_suite_html')
 
