@@ -3,8 +3,16 @@ namespace :after_party do
   task backfill_dossiers_with_routing_data: :environment do
     puts "Running deploy task 'backfill_dossiers_with_routing_data'"
 
-    progress = ProgressReport.new(Dossier.where(migrated_champ_routage: nil).count)
-    ProcedureRevision.where(migrated_champ_routage: nil).find_each do |revision|
+    dossiers = Dossier.joins(:procedure)
+      .where(procedures: { migrated_champ_routage: true })
+      .where(migrated_champ_routage: nil)
+
+    progress = ProgressReport.new(dossiers.count)
+
+    ProcedureRevision.joins(:procedure)
+      .where(procedures: { migrated_champ_routage: true })
+      .where(migrated_champ_routage: nil)
+      .find_each do |revision|
       revision_type_de_champ_id = ProcedureRevisionTypeDeChamp
         .joins(:type_de_champ)
         .where(revision:, types_de_champ: { type_champ: 'routage' })

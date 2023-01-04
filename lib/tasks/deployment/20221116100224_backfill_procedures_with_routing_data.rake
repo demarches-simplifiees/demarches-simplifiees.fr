@@ -7,6 +7,7 @@ namespace :after_party do
       .with_discarded
       .includes(revisions: [:revision_types_de_champ_public])
       .where(migrated_champ_routage: nil)
+      .where(routing_enabled: true)
 
     progress = ProgressReport.new(procedures.count)
     procedures.find_each do |procedure|
