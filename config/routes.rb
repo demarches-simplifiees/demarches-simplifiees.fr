@@ -322,6 +322,8 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :prefills, only: :show
+
     resource :feedback, only: [:create]
     get 'demarches' => 'demarches#index'
 
