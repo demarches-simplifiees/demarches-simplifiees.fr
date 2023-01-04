@@ -39,7 +39,7 @@ RSpec.describe Attachment::PendingPollComponent, type: :component do
 
   context "when waterkmark is done" do
     before do
-      attachment.blob[:metadata] = { watermark: true }
+      attachment.blob.touch(:watermarked_at)
     end
 
     it "does not render" do
@@ -48,7 +48,7 @@ RSpec.describe Attachment::PendingPollComponent, type: :component do
 
     context "when antivirus is in progress" do
       before do
-        attachment.blob[:metadata] = { virus_scan_result: ActiveStorage::VirusScanner::PENDING }
+        attachment.blob.virus_scan_result = ActiveStorage::VirusScanner::PENDING
       end
 
       it "renders" do

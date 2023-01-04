@@ -280,7 +280,7 @@ describe 'The user' do
     end
 
     attachments.each {
-      _1.blob.metadata = { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+      _1.blob.virus_scan_result = ActiveStorage::VirusScanner::SAFE
       _1.save!
     }
     expect(page).not_to have_text('Analyse antivirus en cours', wait: 10)
