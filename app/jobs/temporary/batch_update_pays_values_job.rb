@@ -84,7 +84,9 @@ class Temporary::BatchUpdatePaysValuesJob < ApplicationJob
         UNUSUAL_COUNTRY_NAME_MATCHER[pays_champ.value]
       end
 
-      pays_champ.update_columns(value: value, external_id: associated_country_code)
+      if value.present? || !pays_champ.required?
+        pays_champ.update_columns(value: value, external_id: associated_country_code)
+      end
     end
   end
 end
