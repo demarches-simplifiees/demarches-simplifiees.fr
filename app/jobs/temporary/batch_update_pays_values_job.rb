@@ -1,21 +1,4 @@
 class Temporary::BatchUpdatePaysValuesJob < ApplicationJob
-  private_constant :UNUSUAL_COUNTRY_NAME_MATCHER
-
-  def perform(ids)
-    ids.each do |id|
-      pays_champ = Champs::PaysChamp.find(id)
-      next if pays_champ.valid?
-
-      value = if APIGeoService.countries.pluck(:name).include?(pays_champ.value)
-        pays_champ.value
-      else
-        UNUSUAL_COUNTRY_NAME_MATCHER[pays_champ.value]
-      end
-
-      pays_champ.update(value: value, external_id: APIGeoService.country_code(value))
-    end
-  end
-
   UNUSUAL_COUNTRY_NAME_MATCHER = {
     "ACORES, MADERE" => "Portugal",
     "ALASKA" => "États-Unis",
@@ -85,4 +68,23 @@ class Temporary::BatchUpdatePaysValuesJob < ApplicationJob
     "YEMEN DEMOCRATIQUE" => "Yémen",
     "ZANZIBAR" => "Tanzanie"
   }
+
+  private_constant :UNUSUAL_COUNTRY_NAME_MATCHER
+
+  def perform(ids)
+    ids.each do |id|
+      pays_champ = Champs::PaysChamp.find(id)
+      next if pays_champ.valid?
+
+      associated_country_code = APIGeoService.country_code(pays_champ.value)
+
+      value = if associated_country_code.present?
+        pays_champ.value
+      else
+        UNUSUAL_COUNTRY_NAME_MATCHER[pays_champ.value]
+      end
+
+      pays_champ.update_columns(value: value, external_id: associated_country_code)
+    end
+  end
 end
