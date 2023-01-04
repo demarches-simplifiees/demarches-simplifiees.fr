@@ -15,8 +15,8 @@ class TitreIdentiteWatermarkJob < ApplicationJob
   WATERMARK = URI.parse(WATERMARK_FILE).is_a?(URI::HTTP) ? WATERMARK_FILE : Rails.root.join("app/assets/images/#{WATERMARK_FILE}")
 
   def perform(blob)
-    if blob.virus_scanner.pending? then raise FileNotScannedYetError end
-    if blob.watermark_done? then return end
+    return if blob.watermark_done?
+    raise FileNotScannedYetError if blob.virus_scanner.pending?
 
     blob.open do |file|
       watermark = resize_watermark(file)
@@ -24,12 +24,8 @@ class TitreIdentiteWatermarkJob < ApplicationJob
       if watermark.present?
         processed = watermark_image(file, watermark)
 
-        blob.metadata[:watermark] = true
         blob.upload(processed)
-        blob.save
-      else
-        blob.metadata[:watermark_invalid] = true
-        blob.save
+        blob.touch(:watermarked_at)
       end
     end
   end

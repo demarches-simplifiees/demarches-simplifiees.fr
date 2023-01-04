@@ -1,32 +1,40 @@
 = content_for(:page_id, 'auth')
 = content_for(:title, t('metas.signin.title'))
 
-#session-new.auth-form.sign-in-form
 
-  = form_for resource, url: user_session_path, html: { class: "form" } do |f|
-    %h1.huge-title= t('views.users.sessions.new.sign_in')
+#session-new.auth-form.sign-in-form
+  = form_for resource, url: user_session_path, html: { class: "fr-py-5w" } do |f|
+
+    %h1.fr-h2= t('views.users.sessions.new.sign_in', application_name: APPLICATION_NAME)
 
     = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
 
-    = f.label :email, t('views.users.sessions.new.email')
-    = f.text_field :email, type: :email, autocomplete: 'email', autofocus: true
+    %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'new-account-legend' } }
+      %legend.fr-fieldset__legend#new-account-legend
+        %h2.fr-h6= I18n.t('views.users.sessions.new.subtitle')
 
-    = f.label :password, t('views.users.sessions.new.password', min_length: PASSWORD_MIN_LENGTH)
-    = f.password_field :password, autocomplete: 'current-password'
+      .fr-fieldset__element
+        %p.fr-text--sm= t('utils.asterisk_html')
 
-    .auth-options
-      .flex-no-shrink
-        = f.check_box :remember_me
-        = f.label :remember_me, t('views.users.sessions.new.remember_me'), class: 'remember-me'
+      .fr-fieldset__element= render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { autocomplete: 'email', autofocus: true })
 
-      .text-right
-        = link_to t('views.users.sessions.new.reset_password'), new_user_password_path, class: "link"
+      .fr-fieldset__element
+        = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field, opts: { autocomplete: 'current-password' })
+
+        %p= link_to t('views.users.sessions.new.reset_password'), new_user_password_path, class: "link"
+
+
+      .fr-fieldset__element
+        .auth-options
+          .flex-no-shrink
+            = f.check_box :remember_me
+            = f.label :remember_me, t('views.users.sessions.new.remember_me'), class: 'remember-me'
+
 
     = f.submit t('views.users.sessions.new.connection'), class: "fr-btn fr-btn--lg"
 
   - if AgentConnectService.enabled?
-    .france-connect-login-separator
-      = t('views.shared.france_connect_login.separator')
+    %p.fr-hr-or= t('views.shared.france_connect_login.separator')
     .center
       %h2.important-header.mb-1= t('views.users.sessions.new.state_civil_servant')
       = link_to t('views.users.sessions.new.connect_with_agent_connect'), agent_connect_path, class: "fr-btn fr-btn--secondary"

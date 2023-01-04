@@ -32,7 +32,6 @@
 en:
   invisible_captcha:
     sentence_for_humans: 'If you are a human, ignore this field'
-
   help: 'Help'
   help_dropdown:
     general_title: "Online help"
@@ -92,6 +91,8 @@ en:
         start_procedure: Start the procedure
         existing_dossiers: You already have files for this procedure
         show_dossiers: View my current files
+        prefilled_draft: "You have a prefilled file"
+        prefilled_draft_detail_html: "You prefilled a file for the \"%{procedure}\" procedure <strong>%{time_ago} ago</strong>"
         already_draft: "You already started to fill a file"
         already_draft_detail_html: "You started to fill a file for the \"%{procedure}\" procedure <strong>%{time_ago} ago</strong>"
         already_not_draft: "You already submitted a file"
@@ -104,7 +105,7 @@ en:
     prefill_descriptions:
       edit:
         intro_html: "You'd like to allow your users to <strong>create a prefilled file</strong>, with data you already have, for the procedure « %{libelle} »."
-        info: Add the fields you want to prefill, thanks to the table below. Once it's over, copy the prefill link, replace the values and share the link.
+        info_html: To do this, select the fields below that you want to prefill.<br> You will then find a prefill link at the bottom of this page, which you will just need to copy, adapt by replacing the default values, and share.<br> In the same way, you will find an example of a cURL request at the bottom of the page to adapt if you want to prefill the folders via API.
         champ_id: ID
         champ_type: Type
         champ_add: Add
@@ -136,13 +137,17 @@ en:
         prefill_link_info: Use the button to copy the link, then remplace the values with your data.
         prefill_link_too_long: Warning, the prefill link is too long and may not work on all browsers.
         prefill_link_copy: Copy prefill link
+        prefill_query_title: Prefill query (POST)
+        prefill_query_info: Use the button to copy the query, then remplace the values with your data.
+        prefill_query_response_html: '# Response:<br># {"dossier_url":"%{url}"}'
+        prefill_query_copy: Copy prefill query
     registrations:
       new:
         title: "Create an account %{name}"
+        subtitle: "Create an account using an email"
         email_label: 'Email (name@site.com)'
-        email_placeholder: 'Your email address'
-        wanna_say: 'Do you mean to say'
         password_label: "Password (%{min_length} characters minimum)"
+        password_message: "Your password must have :"
         password_placeholder: "%{min_length} characters minimum"
     invites:
       dropdown:
@@ -312,8 +317,7 @@ en:
           actions: "Actions"
       sessions:
         new:
-          sign_in: Sign in
-          email: Email address (name@site.com)
+          sign_in: Sign in on %{application_name}
           password: Password (minimum length %{min_length} characters)
           remember_me: Remember me
           reset_password: Forgot password?
@@ -321,6 +325,7 @@ en:
           find_procedure: Find your procedure
           state_civil_servant: Are you a state civil servant?
           connect_with_agent_connect: Visit our dedicated page
+          subtitle: "Sign in with my account"
       passwords:
         reset_link_sent:
           got_it: Got it!
@@ -350,10 +355,14 @@ en:
       user:
         one: User
         other: Users
+
     attributes:
       default_attributes: &default_attributes
-        password: 'password'
+        email: Email
+        password: 'Password'
         requested_merge_into: 'new email address'
+        hints:
+          email: "Expected format : john.doe@example.com"
       user:
         siret: 'SIRET number'
         << : *default_attributes
@@ -361,8 +370,11 @@ en:
         << : *default_attributes
       super_admin:
         << : *default_attributes
-      instructeur:
-        password: 'password'
+      procedure:
+        zone: This procedure is run by
+      champs:
+        value: Value
+
     errors:
       messages:
         not_a_phone: 'Invalid phone number'
@@ -372,35 +384,40 @@ en:
           attributes:
             footer:
               too_long: ": the footer is too long."
-        user:
-          attributes:
-            reset_password_token:
-              # invalid: ": Votre lien de nouveau mot de passe a expiré. Merci d’en demander un nouveau."
-            email:
-              invalid: invalid
-              taken: already in use
-            password:
-              too_short: 'is too short'
-            password_confirmation:
-              confirmation: ': The two passwords do not match'
-            requested_merge_into:
-              same: "can't be the same as the old one"
+
         invite:
           attributes:
             email:
               taken: ': Invitation already sent'
+
+        user:
+          attributes: &error_attributes
+            reset_password_token:
+              invalid: ": is expired. Ask a new one"
+            email:
+              blank: "is empty. Fill in the email"
+              invalid: "is invalid. Fill in a valid email address, example: john.doe@example.fr"
+              taken: "already in use. Fill in another email"
+            password:
+              too_short: "is too short. Fill in a password with at least 8 characters"
+              not_strong: "not strong enough. Fill in a stronger password"
+            password_confirmation:
+              confirmation: ": The two passwords do not match"
+            requested_merge_into:
+              same: "can't be the same as the old one"
+
         instructeur:
           attributes:
-            email:
-              invalid: invalid
-              taken: already in use
-            password:
-              too_short: 'is too short'
+            << : *error_attributes
+        super_admin:
+          attributes:
+            << : *error_attributes
+
         procedure:
           attributes:
             path:
               taken: is already used for procedure. You cannot use it because it belongs to another administrator.
-              # taken_can_be_claimed: est identique à celui d’une autre de vos procedures publiées. Si vous publiez cette procedure, l’ancienne sera dépubliée et ne sera plus accessible au public. Les utilisateurs qui ont commencé un brouillon vont pouvoir le déposer.
+              taken_can_be_claimed: Is the same as another of your procedure. If you publish this procedure, the other one will be unpublished
               invalid: is not valid. It must countain between 3 and 50 characters among a-z, 0-9, '_' and '-'.
         "champs/cnaf_champ":
           attributes:
@@ -415,6 +432,7 @@ en:
             reference_avis:
               invalid: "must be 13 or 14 characters long"
   errors:
+    format: "Field « %{attribute} » %{message}"
     messages:
       dossier_not_found: "The file does not exist or you do not have access to it."
       # # dossier_map_not_activated: "The file does not have access to the map."

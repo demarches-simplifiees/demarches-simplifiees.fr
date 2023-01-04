@@ -72,6 +72,85 @@ describe Users::CommencerController, type: :controller do
         expect(subject).to redirect_to(commencer_path(path: replaced_by_procedure.path))
       end
     end
+
+    context 'when a dossier has been prefilled' do
+      let(:dossier) { create(:dossier, :brouillon, :prefilled, user: user) }
+      let(:path) { dossier.procedure.path }
+
+      subject { get :commencer, params: { path: path, prefill_token: dossier.prefill_token } }
+
+      shared_examples 'a prefilled brouillon dossier retriever' do
+        context 'when the dossier is a prefilled brouillon and the prefill token is present' do
+          it 'retrieves the dossier' do
+            subject
+            expect(assigns(:prefilled_dossier)).to eq(dossier)
+          end
+        end
+
+        context 'when the dossier is not prefilled' do
+          before do
+            dossier.prefilled = false
+            dossier.save(validate: false)
+          end
+
+          it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
+        end
+
+        context 'when the dossier is not a brouillon' do
+          before { dossier.en_construction! }
+
+          it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
+        end
+
+        context 'when the prefill token does not match any dossier' do
+          before { dossier.prefill_token = "totoro" }
+
+          it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
+        end
+      end
+
+      context 'when the user is unauthenticated' do
+        let(:user) { nil }
+
+        it_behaves_like 'a prefilled brouillon dossier retriever'
+      end
+
+      context 'when the user is authenticated' do
+        context 'when the dossier already has an owner' do
+          let(:user) { create(:user) }
+
+          context 'when the user is the dossier owner' do
+            before { sign_in user }
+
+            it_behaves_like 'a prefilled brouillon dossier retriever'
+          end
+
+          context 'when the user is not the dossier owner' do
+            before { sign_in create(:user) }
+
+            it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
+          end
+        end
+
+        context 'when the dossier does not have an owner yet' do
+          let(:user) { nil }
+          let(:newly_authenticated_user) { create(:user) }
+
+          before { sign_in newly_authenticated_user }
+
+          it { expect { subject }.to change { dossier.reload.user }.from(nil).to(newly_authenticated_user) }
+
+          it 'sends the notify_new_draft email' do
+            expect { perform_enqueued_jobs { subject } }.to change { ActionMailer::Base.deliveries.count }.by(1)
+
+            dossier = Dossier.last
+            mail = ActionMailer::Base.deliveries.last
+            expect(mail.subject).to eq("Retrouvez votre brouillon pour la démarche « #{dossier.procedure.libelle} »")
+            expect(mail.html_part.body).to include(dossier_path(dossier))
+          end
+        end
+      end
+    end
   end
 
   describe '#commencer_test' do
@@ -105,6 +184,13 @@ describe Users::CommencerController, type: :controller do
     end
   end
 
+  shared_examples 'a prefill token storage' do
+    it 'stores the prefill token' do
+      subject
+      expect(controller.stored_location_for(:user)).to include('prefill_token')
+    end
+  end
+
   describe '#sign_in' do
     context 'for a published procedure' do
       subject { get :sign_in, params: { path: published_procedure.path } }
@@ -115,6 +201,12 @@ describe Users::CommencerController, type: :controller do
       end
 
       it { expect(subject).to redirect_to(new_user_session_path) }
+
+      context 'when a prefill token is given' do
+        subject { get :sign_in, params: { path: published_procedure.path, prefill_token: 'prefill_token' } }
+
+        it_behaves_like 'a prefill token storage'
+      end
     end
 
     context 'for a draft procedure' do
@@ -126,6 +218,12 @@ describe Users::CommencerController, type: :controller do
       end
 
       it { expect(subject).to redirect_to(new_user_session_path) }
+
+      context 'when a prefill token is given' do
+        subject { get :sign_in, params: { path: draft_procedure.path, prefill_token: 'prefill_token' } }
+
+        it_behaves_like 'a prefill token storage'
+      end
     end
 
     context 'when the path doesn’t exist' do
@@ -147,6 +245,12 @@ describe Users::CommencerController, type: :controller do
       end
 
       it { expect(subject).to redirect_to(new_user_registration_path) }
+
+      context 'when a prefill token is given' do
+        subject { get :sign_up, params: { path: published_procedure.path, prefill_token: 'prefill_token' } }
+
+        it_behaves_like 'a prefill token storage'
+      end
     end
 
     context 'for a draft procedure' do
@@ -158,6 +262,12 @@ describe Users::CommencerController, type: :controller do
       end
 
       it { expect(subject).to redirect_to(new_user_registration_path) }
+
+      context 'when a prefill token is given' do
+        subject { get :sign_up, params: { path: draft_procedure.path, prefill_token: 'prefill_token' } }
+
+        it_behaves_like 'a prefill token storage'
+      end
     end
 
     context 'when the path doesn’t exist' do
@@ -179,6 +289,12 @@ describe Users::CommencerController, type: :controller do
       end
 
       it { expect(subject).to redirect_to(france_connect_particulier_path) }
+
+      context 'when a prefill token is given' do
+        subject { get :france_connect, params: { path: published_procedure.path, prefill_token: 'prefill_token' } }
+
+        it_behaves_like 'a prefill token storage'
+      end
     end
 
     context 'for a draft procedure' do
@@ -190,6 +306,12 @@ describe Users::CommencerController, type: :controller do
       end
 
       it { expect(subject).to redirect_to(france_connect_particulier_path) }
+
+      context 'when a prefill token is given' do
+        subject { get :france_connect, params: { path: draft_procedure.path, prefill_token: 'prefill_token' } }
+
+        it_behaves_like 'a prefill token storage'
+      end
     end
 
     context 'when the path doesn’t exist' do

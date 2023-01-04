@@ -25,6 +25,20 @@ describe Dossier do
     subject(:dossier) { create(:dossier, procedure: procedure) }
 
     it { is_expected.to validate_presence_of(:individual) }
+
+    it { is_expected.to validate_presence_of(:user) }
+
+    context 'when dossier has deleted_user_email_never_send' do
+      subject(:dossier) { create(:dossier, procedure: procedure, deleted_user_email_never_send: "seb@totoro.org") }
+
+      it { is_expected.not_to validate_presence_of(:user) }
+    end
+
+    context 'when dossier is prefilled' do
+      subject(:dossier) { create(:dossier, procedure: procedure, prefilled: true) }
+
+      it { is_expected.not_to validate_presence_of(:user) }
+    end
   end
 
   describe 'with_champs' do
@@ -1492,19 +1506,6 @@ describe Dossier do
     end
   end
 
-  describe "prefilled" do
-    let(:procedure) { create(:procedure) }
-    let!(:prefilled_dossier) { create(:dossier, procedure: procedure) }
-    let!(:champ_text) { create(:champ_text, dossier: prefilled_dossier, value: 'super_text', prefilled: false) }
-    let!(:champ_text2) { create(:champ_text, dossier: prefilled_dossier, value: 'super_text2', prefilled: true) }
-    let!(:dossier) { create(:dossier, procedure: procedure) }
-    let!(:champ_text3) { create(:champ_text, dossier: dossier, value: 'super_text3', prefilled: false) }
-
-    it 'should find dossiers with notifiable procedure' do
-      expect(Dossier.prefilled).to match_array([prefilled_dossier])
-    end
-  end
-
   describe "champs_for_export" do
     context 'with a unconditionnal procedure' do
       let(:procedure) { create(:procedure, :with_type_de_champ, :with_datetime, :with_yes_no, :with_explication, :with_commune, :with_repetition, zones: [create(:zone)]) }
@@ -1939,6 +1940,70 @@ describe Dossier do
   describe 'BatchOperation' do
     subject { build(:dossier) }
     it { is_expected.to belong_to(:batch_operation).optional }
+  end
+
+  describe '#orphan?' do
+    subject(:orphan) { dossier.orphan? }
+
+    context 'when the dossier is prefilled' do
+      context 'when the dossier has a user' do
+        let(:dossier) { build(:dossier, :prefilled) }
+
+        it { expect(orphan).to be_falsey }
+      end
+
+      context 'when the dossier does not have a user' do
+        let(:dossier) { build(:dossier, :prefilled, user: nil) }
+
+        it { expect(orphan).to be_truthy }
+      end
+    end
+
+    context 'when the dossier is not prefilled' do
+      context 'when the dossier has a user' do
+        let(:dossier) { build(:dossier) }
+
+        it { expect(orphan).to be_falsey }
+      end
+
+      context 'when the dossier does not have a user' do
+        let(:dossier) { build(:dossier, user: nil) }
+
+        it { expect(orphan).to be_falsey }
+      end
+    end
+  end
+
+  describe '#owned_by?' do
+    subject(:owned_by) { dossier.owned_by?(user) }
+
+    context 'when the dossier is orphan' do
+      let(:dossier) { build(:dossier, user: nil) }
+      let(:user) { build(:user) }
+
+      it { expect(owned_by).to be_falsey }
+    end
+
+    context 'when the given user is nil' do
+      let(:dossier) { build(:dossier) }
+      let(:user) { nil }
+
+      it { expect(owned_by).to be_falsey }
+    end
+
+    context 'when the dossier has a user and it is not the given user' do
+      let(:dossier) { build(:dossier) }
+      let(:user) { build(:user) }
+
+      it { expect(owned_by).to be_falsey }
+    end
+
+    context 'when the dossier has a user and it is the given user' do
+      let(:dossier) { build(:dossier, user: user) }
+      let(:user) { build(:user) }
+
+      it { expect(owned_by).to be_truthy }
+    end
   end
 
   private

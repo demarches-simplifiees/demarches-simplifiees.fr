@@ -44,7 +44,7 @@ describe 'layouts/_header.html.haml', type: :view do
     let(:profile) { :user }
 
     it { is_expected.to have_css(".fr-header__logo") }
-    it { is_expected.to have_link("Dossiers", href: dossiers_path) }
+    it { is_expected.to have_link("Mes dossiers", href: dossiers_path) }
     it { is_expected.to have_selector(:button, user.email, class: "account-btn") }
 
     it 'displays the Help button' do

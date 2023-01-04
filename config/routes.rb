@@ -191,7 +191,7 @@ Rails.application.routes.draw do
   post "webhooks/helpscout_support_dev", to: "webhook#helpscout_support_dev"
   match "webhooks/helpscout", to: lambda { |_| [204, {}, nil] }, via: :head
 
-  get '/preremplir/:path', to: 'prefill_descriptions#edit'
+  get '/preremplir/:path', to: 'prefill_descriptions#edit', as: :preremplir
   resources :procedures, only: [], param: :path do
     member do
       resource :prefill_description, only: :update
@@ -263,7 +263,11 @@ Rails.application.routes.draw do
 
     namespace :public do
       namespace :v1 do
-        resources :dossiers, only: :create
+        resources :demarches, only: [] do
+          member do
+            resources :dossiers, only: :create
+          end
+        end
       end
     end
   end
@@ -317,6 +321,8 @@ Rails.application.routes.draw do
         resources :transfers, only: [:create, :update, :destroy]
       end
     end
+
+    resources :prefills, only: :show
 
     resource :feedback, only: [:create]
     get 'demarches' => 'demarches#index'

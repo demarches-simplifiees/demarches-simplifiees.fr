@@ -58,7 +58,7 @@ describe Administrateurs::TypesDeChampController, type: :controller do
       it do
         is_expected.to have_http_status(:ok)
         expect(assigns(:coordinate)).to be_nil
-        expect(flash.alert).to eq(["Libelle doit être rempli"])
+        expect(flash.alert).to eq(["Le champ « Libelle » doit être rempli"])
       end
     end
   end
@@ -94,7 +94,7 @@ describe Administrateurs::TypesDeChampController, type: :controller do
       it do
         is_expected.to have_http_status(:ok)
         expect(assigns(:coordinate)).to be_nil
-        expect(flash.alert).to eq(["Libelle doit être rempli"])
+        expect(flash.alert).to eq(["Le champ « Libelle » doit être rempli"])
       end
     end
   end

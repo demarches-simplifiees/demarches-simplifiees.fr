@@ -45,7 +45,7 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
     end
 
     if procedure_from_params
-      commencer_path(path: procedure_from_params.path)
+      commencer_path(path: procedure_from_params.path, prefill_token: params[:prefill_token])
     elsif signed_in?
       # Will try to use `stored_location_for` to find a path
       after_sign_in_path_for(resource_name)
