@@ -32,6 +32,10 @@ class DossierMailerPreview < ActionMailer::Preview
     DossierMailer.notify_near_deletion_to_user([dossier_accepte], usager_email)
   end
 
+  def notify_termine_near_deletion_to_user_multiple
+    DossierMailer.notify_near_deletion_to_user([dossier_accepte, dossier_accepte], usager_email)
+  end
+
   def notify_termine_near_deletion_to_administration
     DossierMailer.notify_near_deletion_to_administration([dossier_accepte, dossier_accepte], administration_email)
   end
