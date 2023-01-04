@@ -38,7 +38,9 @@ en:
           title: Group management
           delete: delete the group
           delete_confirmation: Are you sure you want to delete the group "%{group_name}"
-          move_folders: move folders
+          move_folders:
+            one: move 1 file
+            other: move the %{count} files
           move_folders_confirmation: Reassign folders to another group so you can delete it
         add_a_group:
           title: Add a group

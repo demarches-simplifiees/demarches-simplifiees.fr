@@ -69,6 +69,19 @@ RSpec.describe ProcedureContextConcern, type: :controller do
           expect(subject.status).to eq 200
           expect(assigns(:procedure)).to eq test_procedure
         end
+
+        context 'when a prefill token has been stored' do
+          let(:dossier) { create :dossier, :prefilled, procedure: test_procedure }
+
+          before do
+            controller.store_location_for(:user, commencer_test_path(path: test_procedure.path, prefill_token: dossier.prefill_token))
+          end
+
+          it 'succeeds, and assigns the prefill token on the controller' do
+            expect(subject.status).to eq 200
+            expect(assigns(:prefill_token)).to eq dossier.prefill_token
+          end
+        end
       end
 
       context 'when the stored procedure is published' do
@@ -81,6 +94,19 @@ RSpec.describe ProcedureContextConcern, type: :controller do
         it 'succeeds, and assigns the procedure on the controller' do
           expect(subject.status).to eq 200
           expect(assigns(:procedure)).to eq published_procedure
+        end
+
+        context 'when a prefill token has been stored' do
+          let(:dossier) { create :dossier, :prefilled, procedure: published_procedure }
+
+          before do
+            controller.store_location_for(:user, commencer_path(path: published_procedure.path, prefill_token: dossier.prefill_token))
+          end
+
+          it 'succeeds, and assigns the prefill token on the controller' do
+            expect(subject.status).to eq 200
+            expect(assigns(:prefill_token)).to eq dossier.prefill_token
+          end
         end
       end
     end

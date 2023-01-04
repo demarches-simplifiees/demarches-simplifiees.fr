@@ -166,13 +166,13 @@ describe 'The user' do
     login_as(user, scope: :user)
     visit brouillon_dossier_path(user_old_dossier)
 
-    expect(page).to have_css('.card-title', text: 'Votre dossier va expirer', visible: true)
+    expect(page).to have_css('.fr-callout__title', text: 'Votre dossier va expirer', visible: true)
     find('#test-user-repousser-expiration').click
     expect(page).to have_no_selector('#test-user-repousser-expiration')
 
     Timecop.freeze(simple_procedure.duree_conservation_dossiers_dans_ds.month.from_now) do
       visit brouillon_dossier_path(user_old_dossier)
-      expect(page).to have_css('.card-title', text: 'Votre dossier va expirer', visible: true)
+      expect(page).to have_css('.fr-callout__title', text: 'Votre dossier va expirer', visible: true)
       find('#test-user-repousser-expiration').click
       expect(page).to have_no_selector('#test-user-repousser-expiration')
     end
@@ -280,7 +280,7 @@ describe 'The user' do
     end
 
     attachments.each {
-      _1.blob.metadata = { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+      _1.blob.virus_scan_result = ActiveStorage::VirusScanner::SAFE
       _1.save!
     }
     expect(page).not_to have_text('Analyse antivirus en cours', wait: 10)

@@ -114,7 +114,7 @@ describe 'Creating a new dossier:' do
         click_on 'Valider'
 
         expect(page).to have_current_path(siret_dossier_path(dossier))
-        expect(page).to have_content('Le numéro SIRET doit comporter 14 chiffres')
+        expect(page).to have_content('Le champ « Siret » est invalide. Saisir un numéro SIRET avec 14 chiffres')
         expect(page).to have_field('Numéro SIRET', with: '0000')
       end
     end

@@ -125,8 +125,8 @@ RSpec.describe DossierMailer, type: :mailer do
       subject { described_class.notify_automatic_deletion_to_user([deleted_dossier], dossier.user.email) }
 
       it { expect(subject.to).to eq([dossier.user.email]) }
-      it { expect(subject.subject).to eq("Un dossier a été supprimé automatiquement") }
-      it { expect(subject.body).to include("n° #{dossier.id} ") }
+      it { expect(subject.subject).to eq("Un dossier a été supprimé automatiquement de votre compte") }
+      it { expect(subject.body).to include("N° #{dossier.id} ") }
       it { expect(subject.body).to include(dossier.procedure.libelle) }
       it { expect(subject.body).to include("nous nous excusons de la gène occasionnée") }
     end
@@ -137,8 +137,8 @@ RSpec.describe DossierMailer, type: :mailer do
       subject { described_class.notify_automatic_deletion_to_user([deleted_dossier], dossier.user.email) }
 
       it { expect(subject.to).to eq([dossier.user.email]) }
-      it { expect(subject.subject).to eq("Un dossier a été supprimé automatiquement") }
-      it { expect(subject.body).to include("n° #{dossier.id} ") }
+      it { expect(subject.subject).to eq("Un dossier a été supprimé automatiquement de votre compte") }
+      it { expect(subject.body).to include("N° #{dossier.id} ") }
       it { expect(subject.body).to include(dossier.procedure.libelle) }
       it { expect(subject.body).not_to include("nous nous excusons de la gène occasionnée") }
     end
@@ -161,7 +161,7 @@ RSpec.describe DossierMailer, type: :mailer do
       subject { described_class.notify_near_deletion_to_administration([dossier], dossier.user.email) }
 
       it { expect(subject.subject).to eq("Un dossier en construction va bientôt être supprimé") }
-      it { expect(subject.body).to include("n° #{dossier.id} ") }
+      it { expect(subject.body).to include("N° #{dossier.id} ") }
       it { expect(subject.body).to include(dossier.procedure.libelle) }
       it { expect(subject.body).to include("PDF") }
       it { expect(subject.body).to include("Vous avez <b>deux semaines</b> pour commencer l’instruction du dossier.") }
@@ -173,10 +173,8 @@ RSpec.describe DossierMailer, type: :mailer do
       subject { described_class.notify_near_deletion_to_administration([dossier], dossier.user.email) }
 
       it { expect(subject.subject).to eq("Un dossier dont le traitement est terminé va bientôt être supprimé") }
-      it { expect(subject.body).to include("n° #{dossier.id} ") }
+      it { expect(subject.body).to include("N° #{dossier.id} ") }
       it { expect(subject.body).to include(dossier.procedure.libelle) }
-      it { expect(subject.body).to include("PDF") }
-      it { expect(subject.body).to include("Vous avez <b>deux semaines</b> pour archiver le dossier.") }
     end
   end
 
@@ -188,10 +186,9 @@ RSpec.describe DossierMailer, type: :mailer do
 
       it { expect(subject.to).to eq([dossier.user.email]) }
       it { expect(subject.subject).to eq("Un dossier en construction va bientôt être supprimé") }
-      it { expect(subject.body).to include("n° #{dossier.id} ") }
+      it { expect(subject.body).to include("N° #{dossier.id} ") }
       it { expect(subject.body).to include(dossier.procedure.libelle) }
-      it { expect(subject.body).to include("PDF") }
-      it { expect(subject.body).to include("Vous pouvez retrouver votre dossier pendant encore <b>deux semaines</b>. Vous n’avez rien à faire.") }
+      it { expect(subject.body).to include("Votre compte reste activé") }
       it { expect(subject.body).to include("Si vous souhaitez conserver votre dossier plus longtemps, vous pouvez <b>prolonger sa durée de conservation</b> dans l’interface.") }
     end
 
@@ -202,10 +199,21 @@ RSpec.describe DossierMailer, type: :mailer do
 
       it { expect(subject.to).to eq([dossier.user.email]) }
       it { expect(subject.subject).to eq("Un dossier dont le traitement est terminé va bientôt être supprimé") }
-      it { expect(subject.body).to include("n° #{dossier.id} ") }
+      it { expect(subject.body).to include("N° #{dossier.id} ") }
       it { expect(subject.body).to include(dossier.procedure.libelle) }
+      it { expect(subject.body).to include("Votre compte reste activé") }
       it { expect(subject.body).to include("PDF") }
-      it { expect(subject.body).to include("Vous pouvez retrouver votre dossier pendant encore <b>deux semaines</b>. Vous n’avez rien à faire.") }
+    end
+
+    describe 'multiple termines' do
+      let(:dossiers) { create_list(:dossier, 3, :accepte) }
+
+      subject { described_class.notify_near_deletion_to_user(dossiers, dossiers[0].user.email) }
+
+      it { expect(subject.subject).to eq("Des dossiers dont le traitement est terminé vont bientôt être supprimés") }
+      it { expect(subject.body).to include("N° #{dossiers[0].id} ") }
+      it { expect(subject.body).to include("N° #{dossiers[1].id} ") }
+      it { expect(subject.body).to include("N° #{dossiers[2].id} ") }
     end
   end
 

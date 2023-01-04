@@ -22,7 +22,7 @@ class APIEntrepriseToken
   private
 
   def roles
-    Array(decoded_token["roles"])
+    Array(decoded_token["roles"] || decoded_token["scopes"])
   end
 
   def decoded_token
