@@ -11,11 +11,12 @@ describe 'As an integrator:', js: true do
     expect(page).to have_content(type_de_champ.description)
   end
 
-  scenario 'I can select champs to prefill' do
+  scenario 'I can select champs to prefill and get prefill link and prefill query' do
     click_on 'Ajouter'
 
     prefill_description = PrefillDescription.new(procedure)
     prefill_description.update(selected_type_de_champ_ids: [type_de_champ.id.to_s])
     expect(page).to have_content(prefill_description.prefill_link)
+    expect(page).to have_content(prefill_description.prefill_query.gsub("\n    ", "").delete("\n"))
   end
 end
