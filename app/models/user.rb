@@ -80,6 +80,7 @@ class User < ApplicationRecord
 
     # Make our procedure_after_confirmation available to the Mailer
     opts[:procedure_after_confirmation] = CurrentConfirmation.procedure_after_confirmation
+    opts[:prefill_token] = CurrentConfirmation.prefill_token
 
     send_devise_notification(:confirmation_instructions, @raw_confirmation_token, opts)
   end

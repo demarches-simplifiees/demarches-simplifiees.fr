@@ -282,7 +282,7 @@ describe 'fetch API Particulier Data', js: true do
         wait_until { cnaf_champ.reload.code_postal == 'wrong_code' }
 
         click_on 'Déposer le dossier'
-        expect(page).to have_content(/code postal doit posséder 5 caractères/)
+        expect(page).to have_content(/Le champ « Champs public code postal » doit posséder 5 caractères/)
 
         VCR.use_cassette('api_particulier/success/composition_familiale') do
           fill_in 'Le code postal', with: code_postal
@@ -470,7 +470,7 @@ describe 'fetch API Particulier Data', js: true do
         wait_until { dgfip_champ.reload.reference_avis == 'wrong_code' }
 
         click_on 'Déposer le dossier'
-        expect(page).to have_content(/reference avis doit posséder 13 ou 14 caractères/)
+        expect(page).to have_content(/Le champ « Champs public reference avis » doit posséder 13 ou 14 caractères/)
 
         VCR.use_cassette('api_particulier/success/avis_imposition') do
           fill_in "La référence d’avis d’imposition", with: reference_avis

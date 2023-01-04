@@ -97,6 +97,7 @@ search:
 
 ## Consider these keys used:
 ignore_unused:
+- 'errors.format'
 - 'activerecord.models.*'
 - 'activerecord.attributes.*'
 - 'activerecord.errors.*'

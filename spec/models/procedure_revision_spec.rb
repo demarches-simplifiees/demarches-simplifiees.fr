@@ -57,7 +57,7 @@ describe ProcedureRevision do
     context 'when a libelle is missing' do
       let(:tdc_params) { text_params.except(:libelle) }
 
-      it { expect(subject.errors.full_messages).to eq(["Libelle doit être rempli"]) }
+      it { expect(subject.errors.full_messages).to eq(["Le champ « Libelle » doit être rempli"]) }
     end
 
     context 'when a parent is incorrect' do

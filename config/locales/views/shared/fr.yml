@@ -10,7 +10,7 @@ fr:
         reponse_donnee_le: "Réponse donnée le %{date}"
         en_attente: "En attente de réponse"
       france_connect_login:
-        title: 'Avec FranceConnect'
+        title: 'Se créer un compte avec FranceConnect'
         description: "FranceConnect est la solution proposée par l’État pour sécuriser et simplifier la connexion aux services en ligne."
         login_button: "S’identifier avec"
         help_link: "Qu’est-ce que FranceConnect ?"

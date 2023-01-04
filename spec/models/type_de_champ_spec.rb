@@ -143,7 +143,7 @@ describe TypeDeChamp do
       it { is_expected.to be_invalid }
       it do
         subject.validate
-        expect(subject.errors.full_messages.to_sentence).to eq('Troll always invalid')
+        expect(subject.errors.full_messages.to_sentence).to eq("Le champ « Troll » always invalid")
       end
     end
   end
@@ -156,13 +156,13 @@ describe TypeDeChamp do
       expect(type_de_champ.validate).to be_falsey
       messages = type_de_champ.errors.full_messages
       expect(messages.size).to eq(1)
-      expect(messages.first.starts_with?("#{type_de_champ.libelle} doit commencer par")).to be_truthy
+      expect(messages.first).to eq("Le champ « #{type_de_champ.libelle} » doit commencer par une entrée de menu primaire de la forme <code style='white-space: pre-wrap;'>--texte--</code>")
 
       type_de_champ.libelle = ''
       expect(type_de_champ.validate).to be_falsey
       messages = type_de_champ.errors.full_messages
       expect(messages.size).to eq(2)
-      expect(messages.last.starts_with?("La liste doit commencer par")).to be_truthy
+      expect(messages.last).to eq("Le champ « La liste » doit commencer par une entrée de menu primaire de la forme <code style='white-space: pre-wrap;'>--texte--</code>")
     end
   end
 

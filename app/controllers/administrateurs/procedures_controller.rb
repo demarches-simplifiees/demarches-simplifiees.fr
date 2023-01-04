@@ -66,7 +66,6 @@ module Administrateurs
 
     def new
       @procedure ||= Procedure.new(for_individual: true)
-      @existing_tags = Procedure.tags
     end
 
     SIGNIFICANT_DOSSIERS_THRESHOLD = 30
