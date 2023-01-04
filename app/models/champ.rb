@@ -21,6 +21,8 @@
 #  type_de_champ_id               :integer
 #
 class Champ < ApplicationRecord
+  include ChampConditionalConcern
+
   belongs_to :dossier, inverse_of: false, touch: true, optional: false
   belongs_to :type_de_champ, inverse_of: :champ, optional: false
   belongs_to :parent, class_name: 'Champ', optional: true
@@ -208,22 +210,6 @@ class Champ < ApplicationRecord
     raise NotImplemented.new(:fetch_external_data)
   end
 
-  def conditional?
-    type_de_champ.read_attribute_before_type_cast('condition').present?
-  end
-
-  def dependent_conditions?
-    dossier.revision.dependent_conditions(type_de_champ).any?
-  end
-
-  def visible?
-    if conditional?
-      type_de_champ.condition.compute(champs_for_condition)
-    else
-      true
-    end
-  end
-
   def clone
     champ_attributes = [:parent_id, :private, :row, :type, :type_de_champ_id]
     value_attributes = private? ? [] : [:value, :value_json, :data, :external_id]
@@ -235,10 +221,6 @@ class Champ < ApplicationRecord
   end
 
   private
-
-  def champs_for_condition
-    dossier.champs.filter { _1.row.nil? || _1.row == row }
-  end
 
   def html_id
     "#{stable_id}-#{id}"
