@@ -83,6 +83,12 @@ describe Logic::ChampValue do
     it { expect(champ_value(champ.stable_id).errors([])).to eq([{ type: :not_available }]) }
   end
 
+  describe '#sources' do
+    let(:champ) { create(:champ) }
+
+    it { expect(champ_value(champ.stable_id).sources).to eq([champ.stable_id]) }
+  end
+
   context 'with multiple revision' do
     let(:options) { ['revision_1'] }
     let(:procedure) do
