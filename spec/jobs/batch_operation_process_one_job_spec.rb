@@ -46,6 +46,20 @@ describe BatchOperationProcessOneJob, type: :job do
       end
     end
 
+    context 'when operation is "follow"' do
+      let(:batch_operation) do
+        create(:batch_operation, :follow,
+                                 options.merge(instructeur: create(:instructeur)))
+      end
+
+      it 'adds a follower to the dossier' do
+        expect { subject.perform_now }
+          .to change { dossier_job.reload.follows }
+          .from([])
+          .to(anything)
+      end
+    end
+
     context 'when operation is "accepter"' do
       let(:batch_operation) do
         create(:batch_operation, :accepter,
