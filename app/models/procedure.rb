@@ -69,6 +69,8 @@ class Procedure < ApplicationRecord
 
   MIN_WEIGHT = 350000
 
+  DOSSIERS_COUNT_EXPIRING = 1.hour
+
   attr_encrypted :api_particulier_token
 
   has_many :revisions, -> { order(:id) }, class_name: 'ProcedureRevision', inverse_of: :procedure
@@ -819,6 +821,11 @@ class Procedure < ApplicationRecord
     published_at || created_at
   end
 
+  def estimated_dossiers_count
+    Rails.cache.fetch("procedure_#{self.id}_dossiers_count", expires_in: DOSSIERS_COUNT_EXPIRING) do
+      dossiers.count
+    end
+  end
   def self.tags
     unnest = Arel::Nodes::NamedFunction.new('UNNEST', [self.arel_table[:tags]])
     query = self.select(unnest.as('tags')).distinct.order('tags')

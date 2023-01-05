@@ -4,6 +4,7 @@
       Cacher les détails
   %td= procedure.libelle
   %td= procedure.id
+  %td= procedure.estimated_dossiers_count
   %td= procedure.administrateurs.count
   %td= t procedure.aasm_state, scope: 'activerecord.attributes.procedure.aasm_state'
   %td= l(procedure.published_at, format: :message_date_without_time)

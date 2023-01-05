@@ -37,6 +37,7 @@
           %th{ scope: 'col' }
           %th{ scope: 'col' } Démarche
           %th{ scope: 'col' } N°
+          %th{ scope: 'col' } Dossiers
           %th{ scope: 'col' } Administrateurs
           %th{ scope: 'col' } Statut
           %th{ scope: 'col' } Date
@@ -48,6 +49,7 @@
                 Afficher details procedure
             %td= procedure.libelle
             %td= procedure.id
+            %td= procedure.estimated_dossiers_count
             %td= procedure.admin_count
             %td= t procedure.aasm_state, scope: 'activerecord.values.procedure.aasm_state'
             %td= l(procedure.published_at, format: :message_date_without_time)
