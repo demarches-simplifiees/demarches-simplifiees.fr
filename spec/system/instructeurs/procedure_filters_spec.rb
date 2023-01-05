@@ -79,14 +79,14 @@ describe "procedure filters" do
 
   scenario "should be able to user custom fiters", js: true do
     # use date filter
-    click_on 'Filtrer'
+    click_on 'Sélectionner un filtre'
     select "En construction le", from: "Colonne"
     find("input#value[type=date]", visible: true)
     fill_in "Valeur", with: "10/10/2010"
     click_button "Ajouter le filtre"
 
     # use enum filter
-    click_on 'Filtrer'
+    click_on 'Sélectionner un filtre'
     select "Statut", from: "Colonne"
     find("select#value", visible: false)
     select 'En construction', from: "Valeur"
@@ -130,7 +130,7 @@ describe "procedure filters" do
   end
 
   def add_filter(column_name, filter_value)
-    click_on 'Filtrer'
+    click_on 'Sélectionner un filtre'
     select column_name, from: "Colonne"
     fill_in "Valeur", with: filter_value
     click_button "Ajouter le filtre"
