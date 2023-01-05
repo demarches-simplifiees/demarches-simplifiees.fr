@@ -25,36 +25,36 @@
         has_en_cours_notifications: @has_en_cours_notifications,
         has_termine_notifications: @has_termine_notifications }
 
-  .fr-container--fluid.fr-mx-4w.overflow-y-visible
-    .container.fr-highlight
-      - if @statut == 'a-suivre'
-        %p
-          = t('views.instructeurs.dossiers.tab_explainations.a_suivre')
-      - if @statut == 'suivis'
-        %p
-          = t('views.instructeurs.dossiers.tab_explainations.suivis')
-      - if @statut == 'traites'
-        %p
-          = t('views.instructeurs.dossiers.tab_explainations.traites_html', archives_path: instructeur_archives_path(@procedure))
-      - if @statut == 'tous'
-        %p
-          = t('views.instructeurs.dossiers.tab_explainations.tous')
-      - if @statut == 'supprimes_recemment'
-        %p
-          = t('views.instructeurs.dossiers.tab_explainations.supprimes_recemment')
-      - if @statut == 'archives'
-        %p
-          = t('views.instructeurs.dossiers.tab_explainations.archives')
-          %br
-          Ces dossiers seront supprimés lorsque leur délai de conservation dans Démarches-simplifiées
-          - if @procedure.duree_conservation_dossiers_dans_ds
-            = "(#{@procedure.duree_conservation_dossiers_dans_ds} mois)"
-          sera expiré.
-          = link_to 'En savoir plus', ARCHIVAGE_DOC_URL
-      - if @statut == 'expirant'
-        %p
-          = t('views.instructeurs.dossiers.tab_explainations.expirant')
+  .container.fr-highlight
+    - if @statut == 'a-suivre'
+      %p
+        = t('views.instructeurs.dossiers.tab_explainations.a_suivre')
+    - if @statut == 'suivis'
+      %p
+        = t('views.instructeurs.dossiers.tab_explainations.suivis')
+    - if @statut == 'traites'
+      %p
+        = t('views.instructeurs.dossiers.tab_explainations.traites_html', archives_path: instructeur_archives_path(@procedure))
+    - if @statut == 'tous'
+      %p
+        = t('views.instructeurs.dossiers.tab_explainations.tous')
+    - if @statut == 'supprimes_recemment'
+      %p
+        = t('views.instructeurs.dossiers.tab_explainations.supprimes_recemment')
+    - if @statut == 'archives'
+      %p
+        = t('views.instructeurs.dossiers.tab_explainations.archives')
+        %br
+        Ces dossiers seront supprimés lorsque leur délai de conservation dans Démarches-simplifiées
+        - if @procedure.duree_conservation_dossiers_dans_ds
+          = "(#{@procedure.duree_conservation_dossiers_dans_ds} mois)"
+        sera expiré.
+        = link_to 'En savoir plus', ARCHIVAGE_DOC_URL
+    - if @statut == 'expirant'
+      %p
+        = t('views.instructeurs.dossiers.tab_explainations.expirant')
 
+  .fr-container--fluid.fr-mx-4w.overflow-y-visible
     %hr
     .flex.fr-mb-2w
       - if @filtered_sorted_paginated_ids.present? || @current_filters.count > 0
