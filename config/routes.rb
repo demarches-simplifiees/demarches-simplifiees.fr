@@ -198,6 +198,7 @@ Rails.application.routes.draw do
   resources :procedures, only: [], param: :path do
     member do
       resource :prefill_description, only: :update
+      resources :prefill_type_de_champs, only: :show
     end
   end
 

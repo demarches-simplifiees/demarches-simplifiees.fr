@@ -1,4 +1,4 @@
-= turbo_frame_tag "#{dom_id(@prefill_description)}_types_de_champs" do
+= turbo_frame_tag "#{dom_id(prefill_description)}_types_de_champs" do
   .fr-grid-row.fr-grid-row--gutters.fr-py-5w
     - prefill_description.types_de_champ.each do |type_de_champ|
       - prefillable = type_de_champ.prefillable?
@@ -38,8 +38,12 @@
                 %th
                   = t("views.prefill_descriptions.edit.possible_values.title")
                 %td
-                  -# TODO: SEB show a preview and link to open in a new tab when it's too long
-                  = type_de_champ.possible_values.to_sentence
+                  - if type_de_champ.too_many_possible_values?
+                    = "#{type_de_champ.possible_values_sample.join(", ")}..."
+                    %br
+                    = link_to "Voir toutes les valeurs possibles", prefill_type_de_champ_path(prefill_description.path, type_de_champ)
+                  - else
+                    = type_de_champ.possible_values.to_sentence
               %tr{ class: prefillable ? "" : "fr-text-mention--grey" }
                 %th
                   = t("views.prefill_descriptions.edit.examples.title")

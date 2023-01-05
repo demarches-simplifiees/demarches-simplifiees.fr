@@ -57,4 +57,29 @@ RSpec.describe TypesDeChamp::PrefillTypeDeChamp, type: :model do
       it { expect(example_value).to eq(I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")) }
     end
   end
+
+  describe '#too_many_possible_values?' do
+    let(:type_de_champ) { build(:type_de_champ_drop_down_list) }
+    subject(:too_many_possible_values) { described_class.build(type_de_champ).too_many_possible_values? }
+
+    context 'when there are too many possible values' do
+      before { type_de_champ.drop_down_options = (1..described_class::POSSIBLE_VALUES_THRESHOLD + 1).map(&:to_s) }
+
+      it { expect(too_many_possible_values).to eq(true) }
+    end
+
+    context 'when there are not too many possible values' do
+      before { type_de_champ.drop_down_options = (1..described_class::POSSIBLE_VALUES_THRESHOLD).map(&:to_s) }
+
+      it { expect(too_many_possible_values).to eq(false) }
+    end
+  end
+
+  describe '#possible_values_sample' do
+    let(:drop_down_options) { (1..described_class::POSSIBLE_VALUES_THRESHOLD + 1).map(&:to_s) }
+    let(:type_de_champ) { build(:type_de_champ_drop_down_list, drop_down_options: drop_down_options) }
+    subject(:possible_values_sample) { described_class.build(type_de_champ).possible_values_sample }
+
+    it { expect(possible_values_sample).to match(drop_down_options.first(described_class::POSSIBLE_VALUES_THRESHOLD)) }
+  end
 end
