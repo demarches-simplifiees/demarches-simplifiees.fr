@@ -78,16 +78,14 @@ class BatchOperation < ApplicationRecord
   end
 
   def track_processed_dossier(success, dossier)
-    transaction do
-      dossiers.delete(dossier)
-      touch(:run_at) if called_for_first_time?
-      touch(:finished_at) if called_for_last_time?(dossier)
+    dossiers.delete(dossier)
+    touch(:run_at) if called_for_first_time?
+    touch(:finished_at) if called_for_last_time?(dossier)
 
-      if success
-        dossier_operation(dossier).done!
-      else
-        dossier_operation(dossier).fail!
-      end
+    if success
+      dossier_operation(dossier).done!
+    else
+      dossier_operation(dossier).fail!
     end
   end
 
