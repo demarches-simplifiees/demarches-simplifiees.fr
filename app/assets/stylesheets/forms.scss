@@ -181,6 +181,11 @@
     &.no-margin {
       margin-bottom: 0;
     }
+
+    + .spinner {
+      position: relative;
+      top: -($default-fields-spacer / 2);
+    }
   }
 
 

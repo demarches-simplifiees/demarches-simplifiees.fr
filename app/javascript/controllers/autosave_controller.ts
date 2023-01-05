@@ -103,9 +103,14 @@ export class AutosaveController extends ApplicationController {
       this.debounce(this.enqueueAutosaveRequest, AUTOSAVE_DEBOUNCE_DELAY);
 
       if (target.dataset.dependentConditions) {
-        const spinner = document.createElement('div');
-        spinner.classList.add('spinner', 'right');
-        target.after(spinner);
+        // do not do anything is next DOM element has class "new-laoder"
+        if (!target.nextElementSibling?.classList.contains('spinner')) {
+          const spinner = document.createElement('div');
+          spinner.classList.add('spinner');
+          spinner.setAttribute('aria-live', 'live');
+          spinner.setAttribute('aria-label', 'Chargement en cours…');
+          target.after(spinner);
+        }
       }
     }
   }

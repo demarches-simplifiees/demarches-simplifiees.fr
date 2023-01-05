@@ -1,6 +1,6 @@
 @import "colors";
 
-.spinner {
+.spinner-old {
   color: $black;
   width: 1em;
   height: 1em;
@@ -56,5 +56,27 @@
 
   87.5% {
     box-shadow: 0em -3em 0 0, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
+  }
+}
+
+
+.spinner {
+  /* Add a loading spinner using the `::before` pseudo-element */
+  &::before {
+    content: "";
+    display: inline-block;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 3px solid var(--text-default-grey);
+    border-radius: 50%;
+    border-top-color: var(--background-default-grey);
+    animation: spinner 0.7s cubic-bezier(0,0,.36,.78) infinite;
+  }
+}
+
+/* Add the keyframes for the spinner animation */
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
   }
 }
