@@ -17,6 +17,7 @@ describe Champs::DepartementChamp, type: :model do
       expect(champ.value).to eq('Ain')
       expect(champ.selected).to eq('01')
       expect(champ.to_s).to eq('01 – Ain')
+      expect(champ.for_api_v2).to eq('01 - Ain')
     end
 
     it 'with code having 3 chars' do
@@ -27,6 +28,16 @@ describe Champs::DepartementChamp, type: :model do
       expect(champ.value).to eq('Guadeloupe')
       expect(champ.selected).to eq('971')
       expect(champ.to_s).to eq('971 – Guadeloupe')
+    end
+
+    it 'with alphanumeric code' do
+      champ.value = '2B'
+      expect(champ.external_id).to eq('2B')
+      expect(champ.code).to eq('2B')
+      expect(champ.name).to eq('Haute-Corse')
+      expect(champ.value).to eq('Haute-Corse')
+      expect(champ.selected).to eq('2B')
+      expect(champ.to_s).to eq('2B – Haute-Corse')
     end
 
     it 'with nil' do
@@ -61,7 +72,7 @@ describe Champs::DepartementChamp, type: :model do
       expect(champ.to_s).to eq('')
     end
 
-    it 'with initial name' do
+    it 'with initial code and name' do
       champ.write_attribute(:value, '01 - Ain')
       expect(champ.external_id).to be_nil
       expect(champ.code).to eq('01')
@@ -69,6 +80,16 @@ describe Champs::DepartementChamp, type: :model do
       expect(champ.value).to eq('01 - Ain')
       expect(champ.selected).to eq('01')
       expect(champ.to_s).to eq('01 – Ain')
+    end
+
+    it 'with initial code and alphanumeric name' do
+      champ.write_attribute(:value, '2B - Haute-Corse')
+      expect(champ.external_id).to be_nil
+      expect(champ.code).to eq('2B')
+      expect(champ.name).to eq('Haute-Corse')
+      expect(champ.value).to eq('2B - Haute-Corse')
+      expect(champ.selected).to eq('2B')
+      expect(champ.to_s).to eq('2B – Haute-Corse')
     end
   end
 end
