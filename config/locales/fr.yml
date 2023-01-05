@@ -113,7 +113,7 @@ fr:
           phone: Un numéro de téléphone
           iban: Un numéro Iban
           yes_no: '"true" pour Oui, "false" pour Non'
-          checkbox: '"on" pour coché, "off" pour décoché'
+          checkbox: '"true" pour coché, "false" pour décoché'
         examples:
           title: Exemple
           text: Texte court
@@ -125,7 +125,7 @@ fr:
           iban: FR7611315000011234567890138
           yes_no: "true"
           civilite: "M."
-          checkbox: "on"
+          checkbox: "true"
         prefill_link_title: Lien de préremplissage (GET)
         prefill_link_info: Copiez le lien grâce au bouton ci-dessous et remplacez les valeurs par les données dont vous disposez.
         prefill_link_too_long: Attention, ce lien de préremplissage est trop long et risque de ne pas fonctionner sur certains navigateurs.
