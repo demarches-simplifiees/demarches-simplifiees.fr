@@ -181,7 +181,7 @@
       margin-bottom: 0;
     }
 
-    + .spinner {
+    + .spinner:not(.right):not(.left) {
       position: relative;
       top: -($default-fields-spacer / 2);
     }
