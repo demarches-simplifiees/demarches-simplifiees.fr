@@ -20,7 +20,7 @@ $landing-breakpoint: 1040px;
 }
 
 .hero-text {
-  max-width: 500px;
+  max-width: 25rem;
 
   @media (max-width: $landing-breakpoint) {
     margin: auto;
