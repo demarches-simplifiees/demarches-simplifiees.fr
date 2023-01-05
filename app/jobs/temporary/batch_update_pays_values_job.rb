@@ -76,15 +76,14 @@ class Temporary::BatchUpdatePaysValuesJob < ApplicationJob
       pays_champ = Champs::PaysChamp.find(id)
       next if pays_champ.valid?
 
-      associated_country_code = APIGeoService.country_code(pays_champ.value)
-
-      value = if associated_country_code.present?
+      value = if APIGeoService.country_code(pays_champ.value).present?
         pays_champ.value
       else
         UNUSUAL_COUNTRY_NAME_MATCHER[pays_champ.value]
       end
 
       if value.present? || !pays_champ.required?
+        associated_country_code = APIGeoService.country_code(value)
         pays_champ.update_columns(value: value, external_id: associated_country_code)
       end
     end
