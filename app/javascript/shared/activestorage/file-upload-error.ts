@@ -30,10 +30,8 @@ export class FileUploadError extends Error {
 
     // Prevent the constructor stacktrace from being included.
     // (it messes up with Sentry issues grouping)
-    if ('captureStackTrace' in Error) {
-      // V8-only
-      //Error.captureStackTrace(this, this.constructor);
-    } else {
+    const hasCaptureStackTrace = 'captureStackTrace' in Error;
+    if (!hasCaptureStackTrace) {
       this.stack = new Error().stack;
     }
   }
