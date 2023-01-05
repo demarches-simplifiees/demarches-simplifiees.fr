@@ -792,12 +792,19 @@ class Procedure < ApplicationRecord
 
   def reset_draft_revision!
     if published_revision.present? && draft_changed?
-      transaction do
-        reset!
-        draft_revision.types_de_champ.filter(&:only_present_on_draft?).each(&:destroy)
-        draft_revision.update(dossier_submitted_message: nil)
-        draft_revision.destroy
-        update!(draft_revision: create_new_revision(published_revision))
+      if revision_changes.filter { |rev| rev.type_de_champ.type_de_champ.routage? }.any?
+        draft_revision.types_de_champ
+          .filter(&:only_present_on_draft?)
+          .filter { |tdc| !tdc.routage? }
+          .each(&:destroy)
+      else
+        transaction do
+          reset!
+          draft_revision.types_de_champ.filter(&:only_present_on_draft?).each(&:destroy)
+          draft_revision.update(dossier_submitted_message: nil)
+          draft_revision.destroy
+          update!(draft_revision: create_new_revision(published_revision))
+        end
       end
     end
   end
@@ -829,7 +836,7 @@ class Procedure < ApplicationRecord
   end
 
   def has_a_tdc_routage?
-    active_revision.types_de_champ.any?(&:routage?)
+    draft_revision.types_de_champ.any?(&:routage?)
   end
 
   def routing_libelle
@@ -837,7 +844,7 @@ class Procedure < ApplicationRecord
   end
 
   def routing_type_de_champ
-    active_revision.types_de_champ.find(&:routage?)
+    draft_revision.types_de_champ.find(&:routage?)
   end
 
   def show_groupe_instructeur_selector?

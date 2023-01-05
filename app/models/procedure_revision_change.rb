@@ -10,6 +10,8 @@ class ProcedureRevisionChange
   def to_h = { op:, stable_id:, label:, private: private? }
 
   class AddChamp < ProcedureRevisionChange
+    attr_reader :type_de_champ
+
     def initialize(type_de_champ)
       super(type_de_champ)
     end
@@ -22,6 +24,7 @@ class ProcedureRevisionChange
   end
 
   class RemoveChamp < ProcedureRevisionChange
+    attr_reader :type_de_champ
     def initialize(type_de_champ)
       super(type_de_champ)
     end
@@ -31,7 +34,7 @@ class ProcedureRevisionChange
   end
 
   class MoveChamp < ProcedureRevisionChange
-    attr_reader :from, :to
+    attr_reader :from, :to, :type_de_champ
 
     def initialize(type_de_champ, from, to)
       super(type_de_champ)
