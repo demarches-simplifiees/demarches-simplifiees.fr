@@ -173,10 +173,16 @@ $landing-breakpoint: 1040px;
 }
 
 .number-label {
+  max-width: 10rem;
+  margin: auto;
   font-weight: 600;
   font-size: 1.25rem;
   line-height: 1.5rem;
   color: var(--text-label-grey);
+}
+
+.number-label-third {
+  max-width: 13rem;
 }
 
 $users-breakpoint: 950px;
