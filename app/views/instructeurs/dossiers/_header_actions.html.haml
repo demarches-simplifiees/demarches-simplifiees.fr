@@ -1,21 +1,31 @@
 %ul.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline-md.fr-btns-group--icon-right
-  %li.dropdown.print-menu-opener{ data: { controller: 'menu-button' } }
-    %button.fr-btn.fr-btn--tertiary.fr-icon-printer-line.dropdown-button{ title: 'imprimer', 'aria-label': 'Imprimer', data: { menu_button_target: 'button' } } Imprimer
-    %ul#print-menu.print-menu.dropdown-content{ data: { menu_button_target: 'menu' } }
-      %li
-        = link_to "Tout le dossier", print_instructeur_dossier_path(dossier.procedure, dossier), target: "_blank", rel: "noopener", class: "menu-item menu-link"
-      %li
-        = link_to "Uniquement cet onglet", "#", onclick: "window.print()", class: "menu-item menu-link"
-      %li
-        = link_to "Export PDF", instructeur_dossier_path(dossier.procedure, dossier, format: :pdf), target: "_blank", rel: "noopener", class: "menu-item menu-link"
-      - if dossier.geo_data?
-        %li
-          = link_to "Export GeoJSON", geo_data_instructeur_dossier_path(dossier.procedure, dossier), target: "_blank", rel: "noopener", class: "menu-item menu-link"
+  = render Dropdown::MenuComponent.new(wrapper: :li, menu_options: { id: 'print-menu'}, button_options: { class: ['fr-btn--tertiary', 'fr-icon-printer-line']}) do |menu|
+    - menu.with_button_inner_html do
+      Imprimer
 
-  %li.dropdown.print-menu-opener{ data: { controller: 'menu-button' } }
-    %button.fr-btn.fr-btn--tertiary.fr-icon-download-line.dropdown-button{ data: { menu_button_target: 'button', 'aria-label': 'Télécharger' } } Télécharger
-    %ul#print-pj-menu.print-menu.dropdown-content{ data: { menu_button_target: 'menu' } }
-      %li= link_to "Télécharger le dossier et toutes ses pièces jointes", telecharger_pjs_instructeur_dossier_path(dossier.procedure, dossier), target: "_blank", rel: "noopener", class: "menu-item menu-link"
+    - menu.with_item do
+      = link_to print_instructeur_dossier_path(dossier.procedure, dossier), role: 'menuitem', target: "_blank", rel: "noopener", class: "menu-item menu-link" do
+        Tout le dossier
+
+    - menu.with_item do
+      = link_to '#', role: 'menuitem', onclick: "window.print()", class: "menu-item menu-link" do
+        Uniquement cet onglet
+
+    - menu.with_item do
+      = link_to instructeur_dossier_path(dossier.procedure, dossier, format: :pdf), target: "_blank", rel: "noopener", class: "menu-item menu-link", role: 'menuitem' do
+        Export PDF
+
+    - if dossier.geo_data?
+      - menu.with_item do
+        = link_to  geo_data_instructeur_dossier_path(dossier.procedure, dossier), target: "_blank", rel: "noopener", class: "menu-item menu-link", role: 'menuitem' do
+          Export GeoJSON
+
+  = render Dropdown::MenuComponent.new(wrapper: :li, menu_options: { id: 'print-pj-menu'}, button_options: { class: ['fr-btn--tertiary', 'fr-icon-download-line']}) do |menu|
+    - menu.with_button_inner_html do
+      Télécharger
+    - menu.with_item do
+      = link_to telecharger_pjs_instructeur_dossier_path(dossier.procedure, dossier), target: "_blank", rel: "noopener", class: "menu-item menu-link", role: 'menuitem'  do
+        Télécharger le dossier et toutes ses pièces jointes
 
   %li
     = render partial: "instructeurs/procedures/dossier_actions",
