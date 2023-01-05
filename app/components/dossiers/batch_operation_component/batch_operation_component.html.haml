@@ -1,42 +1,41 @@
-- if available_operations[:options].present?
-  - if available_operations[:options].count == 1
-    - opt = available_operations[:options].dig(0)
-    = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'flex justify-end', id: "#{dom_id(BatchOperation.new)}" }, data: { "batch-operation-target" => "form"}) do |form|
-      = form.button opt[:label], class: ['fr-btn fr-btn--icon-left', icons[opt[:operation].to_sym]], disabled: :disabled, name: "#{form.object_name}[operation]", data: { "batch-operation-target" => "submit", "submitter-operation" => opt[:operation] }
+- if available_operations[:options].count == 1
+  - opt = available_operations[:options].dig(0)
+  = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'flex justify-end', id: "#{dom_id(BatchOperation.new)}" }, data: { "batch-operation-target" => "form"}) do |form|
+    = form.button opt[:label], class: ['fr-btn fr-btn--icon-left', icons[opt[:operation].to_sym]], disabled: :disabled, name: "#{form.object_name}[operation]", data: { "batch-operation-target" => "submit", "submitter-operation" => opt[:operation] }
 
-  - else
-    .flex.justify-end
-      .dropdown{ data: { controller: 'menu-button', popover: 'true' } }
-        -# Dropdown button title
-        %button.fr-btn.dropdown-button{ id: 'batch_operation_dropdown', disabled: :disabled, data: { menu_button_target: 'button'} }
-          Actions multiples
+- else
+  .flex.justify-end
+    .dropdown{ data: { controller: 'menu-button', popover: 'true' } }
+      -# Dropdown button title
+      %button.fr-btn.dropdown-button{ id: 'batch_operation_dropdown', disabled: :disabled, data: { menu_button_target: 'button'} }
+        Actions multiples
 
-        #state-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
-          = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'flex justify-end form', id: "#{dom_id(BatchOperation.new)}" }, data: { "batch-operation-target" => "form"}) do |form|
-            %ul.dropdown-items
-              - available_operations[:options].each do |opt|
-                %li{ 'data-turbo': 'true' }
-                  - if opt[:operation] == 'accepter'
-                    .wrapper
+      #state-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
+        = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'flex justify-end form', id: "#{dom_id(BatchOperation.new)}" }, data: { "batch-operation-target" => "form"}) do |form|
+          %ul.dropdown-items
+            - available_operations[:options].each do |opt|
+              %li{ 'data-turbo': 'true' }
+                - if opt[:operation] == 'accepter'
+                  .wrapper
 
-                      %a.dropdown-items-link{ href: '#', onclick: "DS.showMotivation(event, 'accept');" }
-                        %span{ class: icons[opt[:operation].to_sym] }
-                        .dropdown-description
-                          %h4= opt[:label]
-
-                      .motivation.hidden.accept
-                        = form.text_area :motivation, class: 'motivation-text-area'
-                        .optional-justificatif{ id: "justificatif_motivation_suggest_accept", onclick: "DS.showImportJustificatif('accept');" }
-                          .button Ajouter un justificatif (optionnel)
-                        .hidden{ id: "justificatif_motivation_import_accept" }
-                          = form.file_field :justificatif_motivation, direct_upload: true
-
-                        .text-right
-                          %span{ onclick: 'DS.motivationCancel();', class: 'fr-btn fr-btn--secondary' } Annuler
-
-                          = form.button "Valider la décision", class: ['fr-btn'], disabled: :disabled, name: "#{form.object_name}[operation]", data: { "batch-operation-target" => "submit", "submitter-operation" => opt[:operation]}
-                  - else
-                    = form.button opt[:label], class: 'dropdown-items-link', disabled: :disabled, name: "#{form.object_name}[operation]", data: { "batch-operation-target" => "submit", "submitter-operation" => opt[:operation]} do
+                    %a.dropdown-items-link{ href: '#', onclick: "DS.showMotivation(event, 'accept');" }
                       %span{ class: icons[opt[:operation].to_sym] }
                       .dropdown-description
                         %h4= opt[:label]
+
+                    .motivation.hidden.accept
+                      = form.text_area :motivation, class: 'motivation-text-area'
+                      .optional-justificatif{ id: "justificatif_motivation_suggest_accept", onclick: "DS.showImportJustificatif('accept');" }
+                        .button Ajouter un justificatif (optionnel)
+                      .hidden{ id: "justificatif_motivation_import_accept" }
+                        = form.file_field :justificatif_motivation, direct_upload: true
+
+                      .text-right
+                        %span{ onclick: 'DS.motivationCancel();', class: 'fr-btn fr-btn--secondary' } Annuler
+
+                        = form.button "Valider la décision", class: ['fr-btn'], disabled: :disabled, name: "#{form.object_name}[operation]", data: { "batch-operation-target" => "submit", "submitter-operation" => opt[:operation]}
+                - else
+                  = form.button opt[:label], class: 'dropdown-items-link', disabled: :disabled, name: "#{form.object_name}[operation]", data: { "batch-operation-target" => "submit", "submitter-operation" => opt[:operation]} do
+                    %span{ class: icons[opt[:operation].to_sym] }
+                    .dropdown-description
+                      %h4= opt[:label]
