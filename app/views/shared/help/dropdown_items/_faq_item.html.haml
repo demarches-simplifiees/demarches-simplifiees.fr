@@ -1,9 +1,7 @@
-%li
-  = link_to t("links.common.faq.url"), title: new_tab_suffix(t('help_dropdown.general_title')), **external_link_attributes do
-    %span.icon.help
-    .dropdown-description
-      %span.help-dropdown-title
-        = t('help_dropdown.problem_title')
-      %p
-        = t('help_dropdown.problem_description')
-
+= link_to t("links.common.faq.url"), title: new_tab_suffix(t('help_dropdown.general_title')), **external_link_attributes, role: 'menuitem' do
+  %span.icon.help
+  .dropdown-description
+    %span.help-dropdown-title
+      = t('help_dropdown.problem_title')
+    %p
+      = t('help_dropdown.problem_description')
