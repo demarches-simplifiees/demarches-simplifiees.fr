@@ -27,6 +27,8 @@ class Champs::BooleanChamp < Champ
   before_validation :set_value_to_nil, if: -> { value.blank? }
   before_validation :set_value_to_false, unless: -> { ([nil, TRUE_VALUE, FALSE_VALUE]).include?(value) }
 
+  validates :value, inclusion: [TRUE_VALUE, FALSE_VALUE], allow_nil: true, allow_blank: false
+
   def true?
     value == TRUE_VALUE
   end
