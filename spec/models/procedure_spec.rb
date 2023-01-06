@@ -9,6 +9,20 @@ describe Procedure do
     it { expect(subject.without_continuation_mail_template).to be_a(Mails::WithoutContinuationMail) }
   end
 
+  describe 'compute_dossiers_count' do
+    let(:procedure) { create(:procedure_with_dossiers, dossiers_count: 2, dossiers_count_computed_at: Time.zone.now - Procedure::DOSSIERS_COUNT_EXPIRING) }
+
+    it 'caches estimated_dossiers_count' do
+      procedure.dossiers.each(&:passer_en_construction!)
+      expect { procedure.compute_dossiers_count }.to change(procedure, :estimated_dossiers_count).from(nil).to(2)
+      expect { create(:dossier, procedure: procedure).passer_en_construction! }.not_to change(procedure, :estimated_dossiers_count)
+
+      Timecop.freeze(Time.zone.now + Procedure::DOSSIERS_COUNT_EXPIRING)
+      expect { procedure.compute_dossiers_count }.to change(procedure, :estimated_dossiers_count).from(2).to(3)
+      Timecop.return
+    end
+  end
+
   describe 'initiated_mail' do
     let(:procedure) { create(:procedure) }
 
