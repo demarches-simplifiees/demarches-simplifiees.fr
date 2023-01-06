@@ -1,5 +1,4 @@
-= content_tag(@wrapper, class: wrapper_class_names, data: { controller: 'menu-button' }) do
-
+= content_tag(@wrapper, wrapper_options) do
   %button{ class: button_class_names, id: button_id, data: { menu_button_target: 'button' }, "aria-expanded": "false", 'aria-haspopup': 'true', 'aria-controls': menu_id }
     = button_inner_html
 
