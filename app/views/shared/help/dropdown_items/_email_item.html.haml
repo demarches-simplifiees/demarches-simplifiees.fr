@@ -1,5 +1,5 @@
-%li
-  = mail_to CONTACT_EMAIL do
+%li{ role: 'none' }
+  = mail_to CONTACT_EMAIL, role: 'menuitem' do
     %span.icon.mail
     .dropdown-description
       %span.help-dropdown-title
