@@ -6,7 +6,6 @@ describe 'The routing', js: true do
   let(:litteraire_user) { create(:user, password: password) }
 
   before do
-    procedure.update(routing_enabled: true)
     procedure.defaut_groupe_instructeur.instructeurs << administrateur.instructeur
   end
 
@@ -34,12 +33,13 @@ describe 'The routing', js: true do
 
     superwoman = User.find_by(email: 'superwoman@inst.com').instructeur
 
-    # rename routing criteria to spécialité
+    # rename routing libelle to spécialité
     click_on 'Groupes d’instructeurs'
-    fill_in 'Libellé de la liste de groupes', with: 'spécialité'
-    click_on 'Renommer'
-    expect(page).to have_text('Le libellé est maintenant « spécialité ».')
-    expect(page).to have_field('Libellé de la liste de groupes', with: 'spécialité')
+    click_on 'Configuration des champs'
+    page.first("input[name='type_de_champ[libelle]']").fill_in with: 'spécialité'
+    click_on 'Continuer'
+    click_on 'Groupe Instructeurs'
+    expect(page).to have_text('Ce groupe sera un choix de la liste « spécialité »')
 
     # add inactive groupe
     fill_in 'groupe_instructeur_label', with: 'non visible car inactif'
@@ -115,10 +115,9 @@ describe 'The routing', js: true do
 
     click_on litteraire_user.dossiers.first.id.to_s
     click_on 'Modifier mon dossier'
-
-    fill_in litteraire_user.dossiers.first.champs_public.first.libelle, with: 'some value'
+    expect(page).to have_text('Libelle du champ 1')
+    page.find_by_id(form_id_for('Libelle du champ 1')).fill_in with: 'some value'
     wait_for_autosave(false)
-
     log_out
 
     # the litteraires instructeurs should have a notification
@@ -195,7 +194,7 @@ describe 'The routing', js: true do
     fill_in 'individual_prenom', with: 'Prenom'
     click_button('Continuer')
 
-    select(groupe, from: 'dossier_groupe_instructeur_id')
+    select(groupe, from: select_id_for('routing-selector'))
     wait_for_autosave
 
     click_on 'Déposer le dossier'
@@ -212,7 +211,7 @@ describe 'The routing', js: true do
     expect(page).to have_selector("option", text: "scientifique")
     expect(page).not_to have_selector("option", text: "Groupe inactif")
 
-    select(new_group, from: 'dossier_groupe_instructeur_id')
+    select(new_group, from: select_id_for('routing-selector'))
     wait_for_autosave(false)
 
     expect(page).to have_text(new_group)
