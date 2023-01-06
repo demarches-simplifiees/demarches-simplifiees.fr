@@ -60,7 +60,7 @@ fr:
           move_files_confirmation: Réaffecter les dossiers à un autre groupe afin de pouvoir le supprimer
         add_a_group:
           title: Ajouter un nouveau groupe
-          notice: Ce groupe sera un choix de la liste "%{routing_criteria_name}"
+          notice: Ce groupe sera un choix de la liste « %{routing_criteria_name} »
         csv_import:
           title: Importer par CSV
           notice_1: Le fichier csv doit comporter 2 colonnes (Groupe, Email) et être séparé par des virgules. Si vous n'avez pas créé de groupe, entrez « défaut » dans la colonne Groupe pour chaque instructeur. L’import n’écrase pas les groupes et les instructeurs existants. La modification du fichier csv ne s’opère que pour l’ajout de nouveaux instructeurs. La suppression d’un instructeur s’opère manuellement en cliquant sur le bouton « retirer ».

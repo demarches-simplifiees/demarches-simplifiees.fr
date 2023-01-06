@@ -172,6 +172,10 @@ module SystemHelpers
     find(:xpath, ".//label[contains(text()[normalize-space()], '#{libelle}')]")[:for]
   end
 
+  def select_id_for(css_class)
+    find(:xpath, ".//select[contains(concat(' ', normalize-space(@class), ' '), ' #{css_class} ')]")[:id]
+  end
+
   def wait_for_autosave(brouillon = true)
     blur
     expect(page).to have_css('.debounced-empty') # no more debounce

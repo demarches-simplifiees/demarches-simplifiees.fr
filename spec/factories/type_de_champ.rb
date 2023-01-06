@@ -166,6 +166,7 @@ FactoryBot.define do
     end
     factory :type_de_champ_routage do
       type_champ { TypeDeChamp.type_champs.fetch(:routage) }
+      libelle { 'Votre ville' }
     end
     factory :type_de_champ_repetition do
       type_champ { TypeDeChamp.type_champs.fetch(:repetition) }

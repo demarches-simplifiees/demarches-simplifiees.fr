@@ -301,7 +301,7 @@ FactoryBot.define do
 
     trait :with_routage do
       after(:build) do |procedure, _evaluator|
-        build(:type_de_champ_routage, procedure: procedure)
+        build(:type_de_champ_routage, mandatory: true, procedure: procedure)
       end
     end
 
