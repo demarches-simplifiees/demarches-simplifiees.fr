@@ -10,6 +10,21 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
     ['a-suivre', 'traites', 'suivis'].include?(@statut)
   end
 
+  def operations_for_dossier(dossier)
+    case dossier.state
+    when Dossier.states.fetch(:en_construction)
+      [BatchOperation.operations.fetch(:passer_en_instruction)]
+    when Dossier.states.fetch(:en_instruction)
+      [BatchOperation.operations.fetch(:accepter)]
+    when Dossier.states.fetch(:accepte), Dossier.states.fetch(:refuse), Dossier.states.fetch(:sans_suite)
+      [BatchOperation.operations.fetch(:archiver)]
+    else
+      []
+    end
+  end
+
+  private
+
   def available_operations
     case @statut
     when 'a-suivre' then
