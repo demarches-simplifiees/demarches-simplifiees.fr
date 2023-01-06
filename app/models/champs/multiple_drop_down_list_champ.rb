@@ -70,6 +70,14 @@ class Champs::MultipleDropDownListChamp < Champ
     selected_options.blank?
   end
 
+  def in?(options)
+    (selected_options - options).size != selected_options.size
+  end
+
+  def remove_option(options)
+    update_column(:value, (selected_options - options).to_json)
+  end
+
   private
 
   def format_before_save

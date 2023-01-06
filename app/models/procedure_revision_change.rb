@@ -62,7 +62,7 @@ class ProcedureRevisionChange
 
       case attribute
       when :drop_down_options
-        (from - to).empty?
+        (from - to).empty? || dossier&.can_rebase_drop_down_options_change?(stable_id, from - to)
       when :drop_down_other
         !from && to
       when :mandatory
