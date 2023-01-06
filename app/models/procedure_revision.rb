@@ -52,7 +52,7 @@ class ProcedureRevision < ApplicationRecord
 
     # the collection is orderd by (position, id), so we can use after_coordinate.position
     # if not present, a big number is used to ensure the element is at the tail
-    position = (after_coordinate&.position) || 100_000
+    position = params[:type_champ] == 'routage' ? -1 : (after_coordinate&.position || 100_000)
 
     tdc = TypeDeChamp.new(params)
     if tdc.save
