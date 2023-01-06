@@ -1,17 +1,16 @@
-- if available_operations[:options].count == 1
-  - opt = available_operations[:options].dig(0)
-  = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'fr-ml-auto', id: "#{dom_id(BatchOperation.new)}" }, data: { "batch-operation-target" => "form"}) do |form|
-    = form.button opt[:label], class: ['fr-btn fr-btn--icon-left', icons[opt[:operation].to_sym]], disabled: :disabled, name: "#{form.object_name}[operation]", data: { "batch-operation-target" => "submit", "submitter-operation" => opt[:operation] }
-
-- else
-  .fr-ml-auto
+.batch-operation.fr-ml-auto
+  - if available_operations[:options].count == 1
+    - opt = available_operations[:options].dig(0)
+    = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'fr-ml-auto', id: "#{dom_id(BatchOperation.new)}" }) do |form|
+      = form.button opt[:label], class: ['fr-btn fr-btn--icon-left', icons[opt[:operation].to_sym]], disabled: true, name: "#{form.object_name}[operation]", value: opt[:operation]
+  - else
     .dropdown{ data: { controller: 'menu-button', popover: 'true' } }
       -# Dropdown button title
-      %button.fr-btn.dropdown-button{ id: 'batch_operation_dropdown', disabled: :disabled, data: { menu_button_target: 'button'} }
+      %button.fr-btn.dropdown-button{ disabled: true, data: { menu_button_target: 'button'} }
         Actions multiples
 
       #state-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
-        = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'form', id: "#{dom_id(BatchOperation.new)}" }, data: { "batch-operation-target" => "form"}) do |form|
+        = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'form', id: "#{dom_id(BatchOperation.new)}" }) do |form|
           %ul.dropdown-items
             - available_operations[:options].each do |opt|
               %li{ 'data-turbo': 'true' }
@@ -33,9 +32,10 @@
                       .text-right
                         %span{ onclick: 'DS.motivationCancel();', class: 'fr-btn fr-btn--secondary' } Annuler
 
-                        = form.button "Valider la décision", class: ['fr-btn'], disabled: :disabled, name: "#{form.object_name}[operation]", data: { "batch-operation-target" => "submit", "submitter-operation" => opt[:operation]}
+                        = form.button "Valider la décision", class: ['fr-btn'], disabled: true, name: "#{form.object_name}[operation]", value: opt[:operation]
                 - else
-                  = form.button opt[:label], class: 'dropdown-items-link', disabled: :disabled, name: "#{form.object_name}[operation]", data: { "batch-operation-target" => "submit", "submitter-operation" => opt[:operation]} do
+                  = form.button opt[:label], class: 'dropdown-items-link', disabled: true, name: "#{form.object_name}[operation]", value: opt[:operation] do
                     %span{ class: icons[opt[:operation].to_sym] }
                     .dropdown-description
                       %h4= opt[:label]
+
