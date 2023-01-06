@@ -15,12 +15,10 @@ module Administrateurs
       @service.administrateur = current_administrateur
 
       begin
-        if @service.save!
-          @service.enqueue_api_entreprise
-
-          redirect_to admin_services_path(procedure_id: params[:procedure_id]),
-            notice: "#{@service.nom} créé"
-        end
+        @service.save!
+        @service.enqueue_api_entreprise
+        redirect_to admin_services_path(procedure_id: params[:procedure_id]),
+          notice: "#{@service.nom} créé"
       rescue StandardError => e
         Rails.logger.error e.message
         @procedure = procedure
@@ -38,14 +36,12 @@ module Administrateurs
       @service = service
 
       begin
-        if @service.update!(service_params)
-          if @service.siret_previously_changed?
-            @service.enqueue_api_entreprise
-          end
-
-          redirect_to admin_services_path(procedure_id: params[:procedure_id]),
-            notice: "#{@service.nom} modifié"
+        @service.update!(service_params)
+        if @service.siret_previously_changed?
+          @service.enqueue_api_entreprise
         end
+        redirect_to admin_services_path(procedure_id: params[:procedure_id]),
+          notice: "#{@service.nom} modifié"
       rescue StandardError => e
         Rails.logger.error e.message
         @procedure = procedure
