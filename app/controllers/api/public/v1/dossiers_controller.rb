@@ -11,7 +11,10 @@ class API::Public::V1::DossiersController < API::Public::V1::BaseController
     dossier.build_default_individual
     if dossier.save
       dossier.prefill!(PrefillParams.new(dossier, params.to_unsafe_h).to_a)
-      render json: { dossier_url: commencer_url(@procedure.path, prefill_token: dossier.prefill_token) }, status: :created
+      render json: {
+        dossier_url: commencer_url(@procedure.path, prefill_token: dossier.prefill_token),
+        dossier_id: dossier.id
+      }, status: :created
     else
       render_bad_request(dossier.errors.full_messages.to_sentence)
     end
