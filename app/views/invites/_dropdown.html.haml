@@ -1,6 +1,6 @@
 - invites = dossier.invites.load
-.dropdown.invite-user-action{ data: { controller: 'menu-button', popover: 'true' } }
-  %button.button.dropdown-button{ data: { menu_button_target: 'button' } }
+= render Dropdown::MenuComponent.new(wrapper: :span, wrapper_options: {class: 'invite-user-action'}, button_options: { class: ['fr-btn--secondary'] }, menu_options: { id: 'invite-content' }) do |menu|
+  - menu.with_button_inner_html do
     %span.icon.person
     - if invites.present?
       = t('views.invites.dropdown.view_invited_people')
@@ -10,6 +10,5 @@
         = t('views.invites.dropdown.invite_to_view')
       - else
         = t('views.invites.dropdown.invite_to_edit')
-
-  #invite-content.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
+  - menu.with_form do
     = render partial: "invites/form", locals: { dossier: dossier, invites: invites }
