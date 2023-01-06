@@ -26,6 +26,10 @@ module DossierRebaseConcern
     !champs.filter { _1.stable_id == stable_id }.any?(&:blank?)
   end
 
+  def can_rebase_drop_down_options_change?(stable_id, options)
+    !champs.filter { _1.stable_id == stable_id }.any? { _1.in?(options) }
+  end
+
   private
 
   def accepted_en_construction_changes?
@@ -60,9 +64,11 @@ module DossierRebaseConcern
     changes_by_op[:remove]
       .each { delete_champs_for_revision(_1.stable_id) }
 
-    changes_by_op[:update]
-      .map { |change| [change, champs.joins(:type_de_champ).where(type_de_champ: { stable_id: change.stable_id })] }
-      .each { |change, champs| apply(change, champs) }
+    if brouillon?
+      changes_by_op[:update]
+        .map { |change| [change, champs.joins(:type_de_champ).where(type_de_champ: { stable_id: change.stable_id })] }
+        .each { |change, champs| apply(change, champs) }
+    end
 
     # due to repetition tdc clone on update or erase
     # we must reassign tdc to the latest version
@@ -82,25 +88,23 @@ module DossierRebaseConcern
       champs.each { purge_piece_justificative_file(_1) }
       GeoArea.where(champ: champs).destroy_all
       Etablissement.where(champ: champs).destroy_all
-
-      {
-        type: "Champs::#{change.to.classify}Champ",
+      champs.update_all(type: "Champs::#{change.to.classify}Champ",
         value: nil,
         value_json: nil,
         external_id: nil,
-        data:  nil
-      }
+        data: nil)
     when :drop_down_options
-      { value: nil }
+      # we are removing options, we need to remove the value if it contains one of the removed options
+      removed_options = change.from - change.to
+      if removed_options.present? && champs.any? { _1.in?(removed_options) }
+        champs.filter { _1.in?(removed_options) }.each { _1.remove_option(removed_options) }
+      end
     when :carte_layers
       # if we are removing cadastres layer, we need to remove cadastre geo areas
       if change.from.include?(:cadastres) && !change.to.include?(:cadastres)
         champs.each { _1.cadastres.each(&:destroy) }
       end
-
-      nil
     end
-      &.then { champs.update_all(_1) }
   end
 
   def add_new_champs_for_revision(target_coordinate)
