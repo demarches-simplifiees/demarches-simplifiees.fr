@@ -333,10 +333,10 @@ module Administrateurs
 
     def detail
       @procedure = Procedure.find(params[:id])
-      render turbo_stream: [
-        turbo_stream.remove("procedure_detail_#{@procedure.id}"),
-        turbo_stream.replace("procedure_#{@procedure.id}", partial: "detail", locals: { procedure: @procedure, show_detail: params[:show_detail] })
-      ]
+      @show_detail = params[:show_detail]
+      respond_to do |format|
+        format.turbo_stream
+      end
     end
 
     def all
