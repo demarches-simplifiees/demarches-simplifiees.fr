@@ -40,5 +40,33 @@ RSpec.describe ApplicationMailer, type: :mailer do
       expect(event.processed_at).to be_within(1.second).of(Time.zone.now)
       expect(event.status).to eq('dispatched')
     end
+
+    context "when email is not sent" do
+      subject(:send_email) { UserMailer.ask_for_merge(user1, user2.email).deliver_now }
+
+      before do
+        allow_any_instance_of(Mail::Message)
+          .to receive(:deliver)
+          .and_raise(smtp_error)
+      end
+
+      context "smtp server busy" do
+        let(:smtp_error) { Net::SMTPServerBusy.new }
+
+        it "creates an event" do
+          expect { send_email }.to change { EmailEvent.count }.by(1)
+          expect(EmailEvent.last.status).to eq('dispatch_error')
+        end
+      end
+
+      context "smtp unknown error" do
+        let(:smtp_error) { Net::SMTPUnknownError.new }
+
+        it "creates an event" do
+          expect { send_email }.to change { EmailEvent.count }.by(1)
+          expect(EmailEvent.last.status).to eq('dispatch_error')
+        end
+      end
+    end
   end
 end

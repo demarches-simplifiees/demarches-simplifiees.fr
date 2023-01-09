@@ -13,8 +13,10 @@
 #
 class EmailEvent < ApplicationRecord
   enum status: {
-    dispatched: 'dispatched'
+    dispatched: 'dispatched',
+    dispatch_error: 'dispatch_error'
   }
+
   class << self
     def create_from_message!(message, status:)
       message.to.each do |recipient|
