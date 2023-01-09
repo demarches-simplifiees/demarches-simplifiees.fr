@@ -4,13 +4,18 @@ en:
       provided_by: "la DINUM"
       title: "Direction Interministérielle au Numérique"
       url: "https://numerique.gouv.fr"
+    common:
+      faq:
+        label: "FAQ"
+        title: "Frequently Asked Questions"
+        url: "https://faq.demarches-simplifiees.fr"
     footer:
       top_labels:
         communication: Communication
         legals: Legal information
         resources: Resources
         diagnostic: Diagnostic
-      description_1: Démarches simplifiées is powered by 
+      description_1: Démarches simplifiées is powered by
       link_1_label: the interdepartmental direction of digital (DINUM).
       link_1_url: "https://www.numerique.gouv.fr/dinum/"
       link_2_label: The source code
@@ -40,10 +45,6 @@ en:
         label: "Documentation"
         title: "Our Documentation"
         url: "https://doc.demarches-simplifiees.fr"
-      faq:
-        label: "FAQ"
-        title: "Frequently Asked Questions"
-        url: "https://faq.demarches-simplifiees.fr"
       mentions_legales:
         label: "Legal notices"
         title: "Legal notices regarding our platform"
