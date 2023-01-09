@@ -116,6 +116,7 @@ fr:
           date: Date au format ISO8601
           datetime: Datetime au format ISO8601
           checkbox: '"true" pour coché, "false" pour décoché'
+          drop_down_list_other: Toute valeur
         examples:
           title: Exemple
           text: Texte court

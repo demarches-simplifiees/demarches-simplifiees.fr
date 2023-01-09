@@ -124,6 +124,7 @@ en:
           date: ISO8601 date
           datetime: ISO8601 datetime
           checkbox: '"true" to check, "false" to uncheck'
+          drop_down_list_other: Any value
         examples:
           title: Example
           text: Short text

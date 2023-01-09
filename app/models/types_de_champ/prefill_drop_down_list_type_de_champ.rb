@@ -1,7 +1,13 @@
 class TypesDeChamp::PrefillDropDownListTypeDeChamp < TypesDeChamp::PrefillTypeDeChamp
-  # TODO: SEB manage drop down list with "other"
   def possible_values
-    drop_down_list_enabled_non_empty_options
+    possible_values = drop_down_list_enabled_non_empty_options
+    if drop_down_other?
+      possible_values.insert(
+        0,
+        I18n.t("views.prefill_descriptions.edit.possible_values.drop_down_list_other")
+      )
+    end
+    possible_values
   end
 
   def example_value
