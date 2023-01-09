@@ -25,4 +25,20 @@ RSpec.describe ApplicationMailer, type: :mailer do
       it { expect(subject.message).not_to be_an_instance_of(ActionMailer::Base::NullMail) }
     end
   end
+
+  describe 'EmailDeliveryObserver is invoked' do
+    let(:user1) { create(:user) }
+    let(:user2) { create(:user, email: "thisisyour@email.com") }
+
+    it 'creates a new EmailEvent record with the correct information' do
+      expect { UserMailer.ask_for_merge(user1, user2.email).deliver_now }.to change { EmailEvent.count }.by(1)
+      event = EmailEvent.last
+
+      expect(event.to).to eq("th*******r@email.com")
+      expect(event.method).to eq("test")
+      expect(event.subject).to eq('Fusion de compte')
+      expect(event.processed_at).to be_within(1.second).of(Time.zone.now)
+      expect(event.status).to eq('dispatched')
+    end
+  end
 end
