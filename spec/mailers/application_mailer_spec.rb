@@ -59,8 +59,8 @@ RSpec.describe ApplicationMailer, type: :mailer do
         end
       end
 
-      context "smtp unknown error" do
-        let(:smtp_error) { Net::SMTPUnknownError.new }
+      context "generic unknown error" do
+        let(:smtp_error) { Net::OpenTimeout.new }
 
         it "creates an event" do
           expect { send_email }.to change { EmailEvent.count }.by(1)
