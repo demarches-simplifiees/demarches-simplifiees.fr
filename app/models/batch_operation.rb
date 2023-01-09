@@ -60,7 +60,7 @@ class BatchOperation < ApplicationRecord
     when BatchOperation.operations.fetch(:accepter) then
       query.state_en_instruction
     when BatchOperation.operations.fetch(:follow) then
-      query.without_followers
+      query.without_followers.en_cours
     end
   end
 
