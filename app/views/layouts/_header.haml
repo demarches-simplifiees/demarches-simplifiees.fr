@@ -51,7 +51,7 @@
                   = render partial: 'shared/help/help_dropdown_instructeur'
                 - else
                   // NB: on mobile in order to have links correctly aligned, we need a left icon
-                  = link_to t('help'), FAQ_URL, class: 'fr-btn fr-icon-questionnaire-line fr-btn--icon-left', title: new_tab_suffix(t('help')), **external_link_attributes
+                  = link_to t('help'), t("links.footer.faq.url"), class: 'fr-btn fr-icon-questionnaire-line fr-btn--icon-left', title: new_tab_suffix(t('help')), **external_link_attributes
 
 
 
