@@ -271,14 +271,14 @@ module Instructeurs
     end
 
     def dossier
-      @dossier ||= dossier_scope.find(params[:dossier_id])
+      @dossier ||= DossierPreloader.load_one(dossier_scope.find(params[:dossier_id]))
     end
 
     def dossier_with_champs
-      @dossier ||= dossier_scope
+      @dossier ||= DossierPreloader.load_one(dossier_scope
         .with_champs
         .with_annotations
-        .find(params[:dossier_id])
+        .find(params[:dossier_id]))
     end
 
     def commentaire_params
