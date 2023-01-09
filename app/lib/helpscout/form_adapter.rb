@@ -3,9 +3,9 @@ class Helpscout::FormAdapter
 
   def self.options
     [
-      [I18n.t(:question, scope: [:support, :index, TYPE_INFO]), TYPE_INFO, FAQ_CONTACTER_SERVICE_EN_CHARGE_URL],
+      [I18n.t(:question, scope: [:support, :index, TYPE_INFO]), TYPE_INFO, I18n.t("links.common.faq.contacter_service_en_charge_url")],
       [I18n.t(:question, scope: [:support, :index, TYPE_PERDU]), TYPE_PERDU, LISTE_DES_DEMARCHES_URL],
-      [I18n.t(:question, scope: [:support, :index, TYPE_INSTRUCTION]), TYPE_INSTRUCTION, FAQ_OU_EN_EST_MON_DOSSIER_URL],
+      [I18n.t(:question, scope: [:support, :index, TYPE_INSTRUCTION]), TYPE_INSTRUCTION, I18n.t("links.common.faq.ou_en_est_mon_dossier_url")],
       [I18n.t(:question, scope: [:support, :index, TYPE_AMELIORATION]), TYPE_AMELIORATION, FEATURE_UPVOTE_URL],
       [I18n.t(:question, scope: [:support, :index, TYPE_AUTRE]), TYPE_AUTRE]
     ]
