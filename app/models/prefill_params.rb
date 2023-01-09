@@ -38,8 +38,7 @@ class PrefillParams
       TypeDeChamp.type_champs.fetch(:datetime),
       TypeDeChamp.type_champs.fetch(:civilite),
       TypeDeChamp.type_champs.fetch(:yes_no),
-      TypeDeChamp.type_champs.fetch(:checkbox),
-      TypeDeChamp.type_champs.fetch(:civilite)
+      TypeDeChamp.type_champs.fetch(:checkbox)
     ]
 
     attr_reader :champ, :value
