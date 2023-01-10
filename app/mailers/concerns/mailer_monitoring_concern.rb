@@ -1,4 +1,4 @@
-module MailerErrorConcern
+module MailerMonitoringConcern
   extend ActiveSupport::Concern
 
   included do
@@ -16,6 +16,14 @@ module MailerErrorConcern
     end
 
     rescue_from StandardError, with: :log_delivery_error
+
+    # mandatory for dolist
+    # used for tracking in Dolist UI
+    # the delivery_method is yet unknown (:balancer)
+    # so we add the dolist header for everyone
+    def add_dolist_header
+      headers['X-Dolist-Message-Name'] = action_name
+    end
 
     protected
 

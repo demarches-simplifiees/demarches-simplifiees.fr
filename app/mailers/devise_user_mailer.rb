@@ -3,7 +3,7 @@ class DeviseUserMailer < Devise::Mailer
   helper :application # gives access to all helpers defined within `application_helper`.
   helper MailerHelper
   include Devise::Controllers::UrlHelpers # Optional. eg. `confirmation_url`
-  include MailerErrorConcern
+  include MailerMonitoringConcern
   layout 'mailers/layout'
 
   def template_paths
