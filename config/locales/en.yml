@@ -221,6 +221,7 @@ en:
           enabled: "Add this file to the selection for the bulk operation"
           disabled: "Impossible to add this file to the selection because it is already in a bulk operation"
         dossiers_count:
+          zero: 0 file
           one: 1 file
           other: "%{count} files"
         personalize: Personalize the table
