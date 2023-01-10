@@ -83,6 +83,24 @@ RSpec.describe BalancerDeliveryMethod do
     end
   end
 
+  context 'when observers are configured' do
+    let(:observer) { double("Observer") }
+
+    before do
+      allow(observer).to receive(:delivered_email)
+      ActionMailer::Base.register_observer(observer)
+    end
+
+    after do
+      ActionMailer::Base.unregister_observer(observer)
+    end
+
+    it 'invoke the observer exactly once' do
+      mail = ExampleMailer.greet('Joshua').deliver_now
+      expect(observer).to have_received(:delivered_email).with(mail).once
+    end
+  end
+
   # Helpers
 
   def have_been_delivered_using(delivery_class)
