@@ -19,7 +19,9 @@ class EmailEvent < ApplicationRecord
 
   class << self
     def create_from_message!(message, status:)
-      message.to.each do |recipient|
+      to = message.to || ["unset"] # no recipients when error occurs *before* setting to: in the mailer
+
+      to.each do |recipient|
         EmailEvent.create!(
           to: pseudonymize_email(recipient),
           subject: message.subject,

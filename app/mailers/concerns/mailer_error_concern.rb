@@ -20,12 +20,8 @@ module MailerErrorConcern
     protected
 
     def log_delivery_error(exception)
-      if defined?(message) && message.to.present?
-        EmailEvent.create_from_message!(message, status: "dispatch_error")
-        Sentry.capture_exception(exception, extra: { to: message&.to, subject: message&.subject })
-      else
-        Sentry.capture_exception(exception)
-      end
+      EmailEvent.create_from_message!(message, status: "dispatch_error")
+      Sentry.capture_exception(exception, extra: { to: message.to, subject: message.subject })
 
       # TODO find a way to re attempt the job
     end
