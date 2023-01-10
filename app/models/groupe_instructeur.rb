@@ -51,6 +51,25 @@ class GroupeInstructeur < ApplicationRecord
       .update_all(unfollowed_at: Time.zone.now)
   end
 
+  def add_instructeurs(ids: [], emails: [])
+    instructeurs_to_add, valid_emails, invalid_emails = Instructeur.find_all_by_identifier_with_emails(ids:, emails:)
+    not_found_emails = valid_emails - instructeurs_to_add.map(&:email)
+
+    # Send invitations to users without account
+    if not_found_emails.present?
+      instructeurs_to_add += not_found_emails.map do |email|
+        user = User.create_or_promote_to_instructeur(email, SecureRandom.hex, administrateurs: procedure.administrateurs)
+        user.invite!
+        user.instructeur
+      end
+    end
+
+    # We dont't want to assign a user to a groupe_instructeur if they are already assigned to it
+    instructeurs_to_add -= instructeurs
+
+    [instructeurs_to_add, invalid_emails]
+  end
+
   def can_delete?
     dossiers.empty? && (procedure.groupe_instructeurs.active.many? || (procedure.groupe_instructeurs.active.one? && closed))
   end

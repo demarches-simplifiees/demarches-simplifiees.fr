@@ -2,7 +2,7 @@ module Mutations
   class GroupeInstructeurModifier < Mutations::BaseMutation
     description "Modifier un groupe instructeur."
 
-    argument :groupe_instructeur_id, ID, "Groupe instructeur ID", required: true, loads: Types::GroupeInstructeurType
+    argument :groupe_instructeur_id, ID, "Groupe instructeur ID.", required: true, loads: Types::GroupeInstructeurType
     argument :label, String, "Libellé du groupe instructeur.", required: false
     argument :closed, Boolean, "L’état du groupe instructeur.", required: false
 
