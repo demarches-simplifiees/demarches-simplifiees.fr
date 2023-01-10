@@ -214,7 +214,10 @@ class Champ < ApplicationRecord
   end
 
   def visible?
-    if conditional?
+    # Huge gain perf for cascade conditions
+    return @visible if instance_variable_defined? :@visible
+
+    @visible = if conditional?
       type_de_champ.condition.compute(champs_for_condition)
     else
       true
