@@ -11,8 +11,14 @@ class EmailEventDashboard < Administrate::BaseDashboard
   }
   COLLECTION_ATTRIBUTES = [:id, :to, :subject, :method, :status, :processed_at].freeze
   SHOW_PAGE_ATTRIBUTES = [:id, :to, :subject, :method, :status, :processed_at].freeze
+
+  METHODS_FILTERS =
+    ActionMailer::Base.delivery_methods.keys.index_with do |method|
+      -> (resources) { resources.where(method: method) }
+    end
+
   COLLECTION_FILTERS = {
     dispatched: -> (resources) { resources.dispatched },
     dispatch_error: -> (resources) { resources.dispatch_error }
-  }.freeze
+  }.merge(METHODS_FILTERS).freeze
 end
