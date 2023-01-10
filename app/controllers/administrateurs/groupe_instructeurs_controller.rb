@@ -109,9 +109,9 @@ module Administrateurs
 
     def add_instructeur
       emails = params['emails'].presence || [].to_json
-      emails = JSON.parse(emails)
+      emails = JSON.parse(emails).map { EmailSanitizableConcern::EmailSanitizer.sanitize(_1) }
 
-      instructeurs, invalid_emails = Instructeur.find_or_invite(emails:, groupe_instructeur:)
+      instructeurs, invalid_emails = groupe_instructeur.add_instructeurs(emails:)
 
       if invalid_emails.present?
         flash[:alert] = t('.wrong_address',
