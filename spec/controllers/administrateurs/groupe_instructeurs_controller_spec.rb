@@ -476,6 +476,65 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     end
   end
 
+  describe '#add_instructeurs_via_csv_file' do
+    let(:procedure_non_routee) { create(:procedure, :published, :for_individual, administrateurs: [admin]) }
+
+    subject do
+      post :import, params: { procedure_id: procedure_non_routee.id, instructeurs_csv_file: csv_file }
+    end
+
+    context 'when the csv file is less than 1 mo and content type text/csv' do
+      let(:csv_file) { fixture_file_upload('spec/fixtures/files/instructeurs-file.csv', 'text/csv') }
+
+      before { subject }
+
+      it { expect(response.status).to eq(302) }
+      it { expect(procedure_non_routee.instructeurs.pluck(:email)).to match_array(["kara@beta-gouv.fr", "philippe@mail.com", "lisa@gouv.fr"]) }
+      it { expect(flash.alert).to be_present }
+      it { expect(flash.alert).to eq("Import terminé. Cependant les emails suivants ne sont pas pris en compte: eric") }
+    end
+
+    context 'when the csv file has more than one column' do
+      let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe-instructeur.csv', 'text/csv') }
+
+      before { subject }
+
+      it { expect(response.status).to eq(302) }
+      it { expect(flash.alert).to be_present }
+      it { expect(flash.alert).to eq("Importation impossible, veuillez importer un csv <a href=\"/csv/import-instructeurs-test.csv\">suivant ce modèle</a>") }
+    end
+
+    context 'when the file content type is application/vnd.ms-excel' do
+      let(:csv_file) { fixture_file_upload('spec/fixtures/files/valid-instructeurs-file.csv', "application/vnd.ms-excel") }
+
+      before { subject }
+      it { expect(procedure_non_routee.instructeurs.pluck(:email)).to match_array(["kara@beta-gouv.fr", "philippe@mail.com", "lisa@gouv.fr"]) }
+      it { expect(flash.notice).to be_present }
+      it { expect(flash.notice).to eq("La liste des instructeurs a été importée avec succès") }
+    end
+
+    context 'when the csv file length is more than 1 mo' do
+      let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe-instructeur.csv', 'text/csv') }
+
+      before do
+        allow_any_instance_of(ActionDispatch::Http::UploadedFile).to receive(:size).and_return(3.megabytes)
+        subject
+      end
+
+      it { expect(flash.alert).to be_present }
+      it { expect(flash.alert).to eq("Importation impossible : le poids du fichier est supérieur à 1 Mo") }
+    end
+
+    context 'when the file content type is not accepted' do
+      let(:csv_file) { fixture_file_upload('spec/fixtures/files/french-flag.gif', 'image/gif') }
+
+      before { subject }
+
+      it { expect(flash.alert).to be_present }
+      it { expect(flash.alert).to eq("Importation impossible : veuillez importer un fichier CSV") }
+    end
+  end
+
   describe '#export_groupe_instructeurs' do
     let(:procedure) { create(:procedure, :published) }
     let(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 1 2') }
