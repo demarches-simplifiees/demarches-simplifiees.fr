@@ -77,6 +77,8 @@
   </p>
 <% end %>
 
+<%= link_to "Voir aussi les événements d'email", manager_email_events_path("search" => @user.email) %>
+
   <h2 style="font-size: 1.3em; margin: 24px 0 8px 0">Problèmes potentiel</h2>
 
   <% if @user.confirmed? %>

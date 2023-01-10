@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_12_27_084442) do
+ActiveRecord::Schema.define(version: 2023_01_09_140138) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -405,6 +405,16 @@ ActiveRecord::Schema.define(version: 2022_12_27_084442) do
     t.datetime "updated_at"
     t.string "value"
     t.index ["type_de_champ_id"], name: "index_drop_down_lists_on_type_de_champ_id"
+  end
+
+  create_table "email_events", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.string "method", null: false
+    t.datetime "processed_at"
+    t.string "status", null: false
+    t.string "subject", null: false
+    t.string "to", null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "etablissements", id: :serial, force: :cascade do |t|
