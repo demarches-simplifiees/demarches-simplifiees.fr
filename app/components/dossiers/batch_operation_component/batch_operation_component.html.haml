@@ -1,41 +1,24 @@
-.batch-operation.fr-ml-auto
-  - if available_operations[:options].count == 1
-    - opt = available_operations[:options].dig(0)
-    = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'fr-ml-auto', id: "#{dom_id(BatchOperation.new)}" }) do |form|
-      = form.button opt[:label], class: ['fr-btn fr-btn--icon-left', icons[opt[:operation].to_sym]], disabled: true, name: "#{form.object_name}[operation]", value: opt[:operation]
+.batch-operation.fr-ml-auto.flex
+  - if available_operations[:options].count.between?(1,3)
+    = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'form', id: "#{dom_id(BatchOperation.new)}" }) do |form|
+      - available_operations[:options].each do |opt|
+        = render partial: "instructeurs/dossiers/batch_operation_inline_buttons", locals: { opt: opt, icons: icons, form: form }
+
   - else
-    .dropdown{ data: { controller: 'menu-button', popover: 'true' } }
-      -# Dropdown button title
-      %button.fr-btn.dropdown-button{ disabled: true, data: { menu_button_target: 'button'} }
-        Actions multiples
+    = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'form flex', id: "#{dom_id(BatchOperation.new)}" }) do |form|
+      - available_operations[:options][0,2].each do |opt|
+        = render partial: "instructeurs/dossiers/batch_operation_inline_buttons", locals: { opt: opt, icons: icons, form: form }
 
-      #state-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
-        = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'form', id: "#{dom_id(BatchOperation.new)}" }) do |form|
+      .dropdown{ data: { controller: 'menu-button', popover: 'true' } }
+        -# Dropdown button title
+        %button.fr-btn.fr-btn--sm.fr-ml-1w.dropdown-button{ disabled: true, data: { menu_button_target: 'button'} }
+          Autres actions multiples
+
+        #state-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
           %ul.dropdown-items
-            - available_operations[:options].each do |opt|
+            - available_operations[:options][2, available_operations[:options].count].each do |opt|
               %li{ 'data-turbo': 'true' }
-                - if opt[:operation] == 'accepter'
-                  .wrapper
-
-                    %a.dropdown-items-link{ href: '#', onclick: "DS.showMotivation(event, 'accept');" }
-                      %span{ class: icons[opt[:operation].to_sym] }
-                      .dropdown-description
-                        %h4= opt[:label]
-
-                    .motivation.hidden.accept
-                      = form.text_area :motivation, class: 'motivation-text-area'
-                      .optional-justificatif{ id: "justificatif_motivation_suggest_accept", onclick: "DS.showImportJustificatif('accept');" }
-                        .button Ajouter un justificatif (optionnel)
-                      .hidden{ id: "justificatif_motivation_import_accept" }
-                        = form.file_field :justificatif_motivation, direct_upload: true
-
-                      .text-right
-                        %span{ onclick: 'DS.motivationCancel();', class: 'fr-btn fr-btn--secondary' } Annuler
-
-                        = form.button "Valider la décision", class: ['fr-btn'], disabled: true, name: "#{form.object_name}[operation]", value: opt[:operation]
-                - else
-                  = form.button opt[:label], class: 'dropdown-items-link', disabled: true, name: "#{form.object_name}[operation]", value: opt[:operation] do
-                    %span{ class: icons[opt[:operation].to_sym] }
-                    .dropdown-description
-                      %h4= opt[:label]
-
+                = form.button opt[:label], class: 'dropdown-items-link ', disabled: true, name: "#{form.object_name}[operation]", value: opt[:operation] do
+                  %span{ class: icons[opt[:operation].to_sym] }
+                  .dropdown-description
+                    %h4= opt[:label]
