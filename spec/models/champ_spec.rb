@@ -501,14 +501,14 @@ describe Champ do
     let(:champ) { dossier.champs_public.find(&:repetition?) }
     let(:champ_text) { champ.champs.find { |c| c.type_champ == 'text' } }
     let(:champ_integer) { champ.champs.find { |c| c.type_champ == 'integer_number' } }
-    let(:champ_text_attrs) { attributes_for(:champ_text, type_de_champ: tdc_text, row: 1) }
+    let(:champ_text_attrs) { attributes_for(:champ_text, type_de_champ: tdc_text, row_id: ULID.generate) }
 
     before do
       procedure.active_revision.add_type_de_champ(libelle: 'sub integer', type_champ: 'integer_number', parent_stable_id: tdc_repetition.stable_id)
     end
 
     context 'when creating the model directly' do
-      let(:champ_text_row_1) { create(:champ_text, type_de_champ: tdc_text, row: 2, parent: champ, dossier: nil) }
+      let(:champ_text_row_1) { create(:champ_text, type_de_champ: tdc_text, row_id: ULID.generate, parent: champ, dossier: nil) }
 
       it 'associates nested champs to the parent dossier' do
         expect(champ_text_row_1.dossier_id).to eq(champ.dossier_id)
