@@ -112,7 +112,7 @@ class DossierPreloader
     end
 
     parent.association(name).target = champs.sort_by do |champ|
-      [champ.row, positions[dossier.revision_id][champ.type_de_champ_id]]
+      [champ.row_id, positions[dossier.revision_id][champ.type_de_champ_id]]
     end
 
     # Load children champs

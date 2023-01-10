@@ -22,6 +22,7 @@
 #  type_de_champ_id               :integer
 #
 class Champ < ApplicationRecord
+  self.ignored_columns = [:row]
   belongs_to :dossier, inverse_of: false, touch: true, optional: false
   belongs_to :type_de_champ, inverse_of: :champ, optional: false
   belongs_to :parent, class_name: 'Champ', optional: true
@@ -77,7 +78,7 @@ class Champ < ApplicationRecord
     includes(:type_de_champ)
       .joins(dossier: { revision: :revision_types_de_champ })
       .where('procedure_revision_types_de_champ.type_de_champ_id = champs.type_de_champ_id')
-      .order(:row, :position)
+      .order(:row_id, :position)
   end
   scope :public_ordered, -> { public_only.ordered }
   scope :private_ordered, -> { private_only.ordered }
@@ -146,8 +147,8 @@ class Champ < ApplicationRecord
   end
 
   def to_typed_id
-    if row.present?
-      GraphQL::Schema::UniqueWithinType.encode('Champ', "#{stable_id}|#{row}")
+    if row_id.present?
+      GraphQL::Schema::UniqueWithinType.encode('Champ', "#{stable_id}|#{row_id}")
     else
       type_de_champ.to_typed_id
     end
@@ -225,7 +226,7 @@ class Champ < ApplicationRecord
   end
 
   def clone
-    champ_attributes = [:parent_id, :private, :row, :row_id, :type, :type_de_champ_id]
+    champ_attributes = [:parent_id, :private, :row_id, :type, :type_de_champ_id]
     value_attributes = private? ? [] : [:value, :value_json, :data, :external_id]
     relationships = private? ? [] : [:etablissement, :geo_areas]
 
@@ -237,7 +238,7 @@ class Champ < ApplicationRecord
   private
 
   def champs_for_condition
-    dossier.champs.filter { _1.row.nil? || _1.row == row }
+    dossier.champs.filter { _1.row_id.nil? || _1.row_id == row_id }
   end
 
   def html_id
