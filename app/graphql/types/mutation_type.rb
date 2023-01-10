@@ -20,5 +20,8 @@ module Types
     field :dossier_modifier_annotation_ajouter_ligne, mutation: Mutations::DossierModifierAnnotationAjouterLigne
 
     field :groupe_instructeur_modifier, mutation: Mutations::GroupeInstructeurModifier
+    field :groupe_instructeur_creer, mutation: Mutations::GroupeInstructeurCreer
+    field :groupe_instructeur_ajouter_instructeurs, mutation: Mutations::GroupeInstructeurAjouterInstructeurs
+    field :groupe_instructeur_supprimer_instructeurs, mutation: Mutations::GroupeInstructeurSupprimerInstructeurs
   end
 end

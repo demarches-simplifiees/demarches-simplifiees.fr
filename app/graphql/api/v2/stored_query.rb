@@ -750,5 +750,56 @@ class API::V2::StoredQuery
       }
     }
   }
+
+  mutation groupeInstructeurCreer($input: GroupeInstructeurCreerInput!, $includeInstructeurs: Boolean = false) {
+    groupeInstructeurCreer(input: $input) {
+      groupeInstructeur {
+        id
+        instructeurs @include(if: $includeInstructeurs) {
+          id
+          email
+        }
+      }
+      errors {
+        message
+      }
+      warnings {
+        message
+      }
+    }
+  }
+
+  mutation groupeInstructeurAjouterInstructeurs($input: GroupeInstructeurAjouterInstructeursInput!, $includeInstructeurs: Boolean = false) {
+    groupeInstructeurAjouterInstructeurs(input: $input) {
+      groupeInstructeur {
+        id
+        instructeurs @include(if: $includeInstructeurs) {
+          id
+          email
+        }
+      }
+      errors {
+        message
+      }
+      warnings {
+        message
+      }
+    }
+  }
+
+  mutation groupeInstructeurSupprimerInstructeurs($input: GroupeInstructeurSupprimerInstructeursInput!, $includeInstructeurs: Boolean = false) {
+    groupeInstructeurSupprimerInstructeurs(input: $input) {
+      groupeInstructeur {
+        id
+        instructeurs @include(if: $includeInstructeurs) {
+          id
+          email
+        }
+      }
+      errors {
+        message
+      }
+    }
+  }
   GRAPHQL
 end
