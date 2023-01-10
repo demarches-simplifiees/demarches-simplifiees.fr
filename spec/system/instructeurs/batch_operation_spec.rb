@@ -23,15 +23,15 @@ describe 'BatchOperation a dossier:', js: true do
       # check a11y with enabled checkbox
       expect(page).to be_axe_clean
       # ensure button is disabled by default
-      expect(page).to have_button("Archiver les dossiers sélectionnés", disabled: true)
+      expect(page).to have_button("Archiver les dossiers", disabled: true)
 
       checkbox_id = dom_id(BatchOperation.new, "checkbox_#{dossier_1.id}")
       # batch one dossier
       check(checkbox_id)
-      expect(page).to have_button("Archiver les dossiers sélectionnés")
+      expect(page).to have_button("Archiver les dossiers")
 
       # ensure batch is created
-      expect { click_on "Archiver les dossiers sélectionnés" }
+      expect { click_on "Archiver les dossiers" }
         .to change { BatchOperation.count }
         .from(0).to(1)
 
@@ -67,7 +67,7 @@ describe 'BatchOperation a dossier:', js: true do
       end
 
       # submnit checkall
-      expect { click_on "Archiver les dossiers sélectionnés" }
+      expect { click_on "Archiver les dossiers" }
         .to change { BatchOperation.count }
         .from(1).to(2)
 

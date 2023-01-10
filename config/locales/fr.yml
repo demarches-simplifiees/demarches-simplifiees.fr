@@ -217,6 +217,7 @@ fr:
           enabled: "Ajouter ce dossier à la selection pour un traitement de masse"
           disabled: "Impossible d'ajouter ce dossier à la selection car il est déjà dans un traitement de masse"
         dossiers_count:
+          zero: 0 dossier
           one: 1 dossier
           other: "%{count} dossiers"
         show_deleted_dossiers: Afficher les dossiers supprimés
