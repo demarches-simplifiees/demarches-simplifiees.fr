@@ -50,10 +50,13 @@ class ProcedureRevision < ApplicationRecord
     after_stable_id = params.delete(:after_stable_id)
     after_coordinate, _ = coordinate_and_tdc(after_stable_id)
 
-    # the collection is orderd by (position, id), so we can use after_coordinate.position
-    # if not present, a big number is used to ensure the element is at the tail
-    position = params[:type_champ] == 'routage' ? -1 : (after_coordinate&.position || 100_000)
-
+    position = if params[:type_champ] == 'routage'
+      -1
+    else
+      # the collection is orderd by (position, id), so we can use after_coordinate.position
+      # if not present, a big number is used to ensure the element is at the tail
+      (after_coordinate&.position || 100_000)
+    end
     tdc = TypeDeChamp.new(params)
     if tdc.save
       h = { type_de_champ: tdc, parent_id: parent_id, position: position }
