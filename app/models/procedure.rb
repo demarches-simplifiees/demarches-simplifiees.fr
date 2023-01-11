@@ -30,6 +30,7 @@
 #  lien_notice                               :string
 #  lien_site_web                             :string
 #  max_duree_conservation_dossiers_dans_ds   :integer          default(12)
+#  migrated_champ_routage                    :boolean
 #  monavis_embed                             :text
 #  opendata                                  :boolean          default(TRUE)
 #  organisation                              :string
