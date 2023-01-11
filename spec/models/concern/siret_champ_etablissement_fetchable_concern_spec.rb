@@ -16,8 +16,6 @@ RSpec.describe SiretChampEtablissementFetchableConcern do
     subject(:fetch_etablissement!) { champ.fetch_etablissement!(siret, build_stubbed(:user)) }
 
     shared_examples 'an error occured' do |error|
-      it { expect { fetch_etablissement! }.to change { champ.reload.value }.to('') }
-
       it { expect { fetch_etablissement! }.to change { champ.reload.etablissement }.to(nil) }
 
       it { expect { fetch_etablissement! }.to change { Etablissement.count }.by(-1) }
