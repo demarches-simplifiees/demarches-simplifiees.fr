@@ -652,11 +652,13 @@ class Dossier < ApplicationRecord
 
   def assign_to_groupe_instructeur(groupe_instructeur, author = nil)
     if (groupe_instructeur.nil? || groupe_instructeur.procedure == procedure) && self.groupe_instructeur != groupe_instructeur
-      if update(groupe_instructeur: groupe_instructeur, groupe_instructeur_updated_at: Time.zone.now)
-        unfollow_stale_instructeurs
+      if update(groupe_instructeur:, groupe_instructeur_updated_at: Time.zone.now)
+        if !brouillon?
+          unfollow_stale_instructeurs
 
-        if author.present?
-          log_dossier_operation(author, :changer_groupe_instructeur, self)
+          if author.present?
+            log_dossier_operation(author, :changer_groupe_instructeur, self)
+          end
         end
 
         true
