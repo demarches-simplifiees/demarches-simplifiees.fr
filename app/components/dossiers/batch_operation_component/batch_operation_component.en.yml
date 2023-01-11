@@ -4,3 +4,4 @@ fr:
     passer_en_instruction: 'Change selected files to instructing'
     accepter: 'Accept seleted files'
     follow: 'Follow seleted files'
+    repasser_en_construction: 'Change selected files to in progress'

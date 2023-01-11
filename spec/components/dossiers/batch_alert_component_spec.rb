@@ -218,4 +218,58 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
       end
     end
   end
+
+  describe 'repasser en construction' do
+    let(:component) do
+      described_class.new(
+        batch: batch_operation,
+        procedure: procedure
+      )
+    end
+    let!(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+    let!(:dossier_2) { create(:dossier, :en_instruction, procedure: procedure) }
+    let!(:batch_operation) { create(:batch_operation, operation: :repasser_en_construction, dossiers: [dossier, dossier_2], instructeur: instructeur) }
+
+    context 'in_progress' do
+      before {
+         batch_operation.track_processed_dossier(true, dossier)
+         batch_operation.reload
+       }
+
+      it { is_expected.to have_selector('.fr-alert--info') }
+      it { is_expected.to have_text("Une action de masse est en cours") }
+      it { is_expected.to have_text("1/2 dossiers ont été repassés en construction") }
+    end
+
+    context 'finished and success' do
+      before {
+         batch_operation.track_processed_dossier(true, dossier)
+         batch_operation.track_processed_dossier(true, dossier_2)
+         batch_operation.reload
+       }
+
+      it { is_expected.to have_selector('.fr-alert--success') }
+      it { is_expected.to have_text("L'action de masse est terminée") }
+      it { is_expected.to have_text("2 dossiers ont été repassés en construction") }
+      it { expect(batch_operation.seen_at).to eq(nil) }
+    end
+
+    context 'finished and fail' do
+      before {
+        batch_operation.track_processed_dossier(false, dossier)
+        batch_operation.track_processed_dossier(true, dossier_2)
+        batch_operation.reload
+      }
+
+      it { is_expected.to have_selector('.fr-alert--warning') }
+      it { is_expected.to have_text("L'action de masse est terminée") }
+      it { is_expected.to have_text("1/2 dossiers ont été repassés en construction") }
+      it { expect(batch_operation.seen_at).to eq(nil) }
+
+      it 'on next render "seen_at" is set to avoid rendering alert' do
+        render_inline(component).to_html
+        expect(batch_operation.seen_at).not_to eq(nil)
+      end
+    end
+  end
 end
