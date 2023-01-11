@@ -12,4 +12,4 @@
       %span.small-simple= t('.are_you_new', app_name: APPLICATION_NAME.gsub("-","&#8209;")).html_safe
       %br
       %br
-      = link_to t('views.users.sessions.new.find_procedure'), COMMENT_TROUVER_MA_DEMARCHE_URL, title: new_tab_suffix(t('views.users.sessions.new.find_procedure')), class: "fr-btn fr-btn--secondary", **external_link_attributes
+      = link_to t('views.users.sessions.new.find_procedure'), t("links.common.faq.comment_trouver_ma_demarche_url"), title: new_tab_suffix(t('views.users.sessions.new.find_procedure')), class: "fr-btn fr-btn--secondary", **external_link_attributes

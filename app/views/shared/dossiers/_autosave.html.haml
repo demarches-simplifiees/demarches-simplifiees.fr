@@ -5,7 +5,7 @@
         = t('views.users.dossiers.autosave.draft_explanation')
       - else
         = t('views.users.dossiers.autosave.explanation')
-    = link_to t('views.users.dossiers.autosave.more_information'), FAQ_AUTOSAVE_URL, target: '_blank', rel: 'noopener', class: 'autosave-more-infos fr-link fr-link--sm'
+    = link_to t('views.users.dossiers.autosave.more_information'), t("links.common.faq.autosave_url"), class: 'autosave-more-infos fr-link fr-link--sm', **external_link_attributes
 
   %p.autosave-status.succeeded
     %span.autosave-icon.icon.accept
@@ -14,7 +14,7 @@
         = t('views.users.dossiers.autosave.draft_confirmation')
       - else
         = t('views.users.dossiers.autosave.confirmation')
-    = link_to t('views.users.dossiers.autosave.more_information'), FAQ_AUTOSAVE_URL, target: '_blank', rel: 'noopener', class: 'autosave-more-infos fr-link fr-link--sm'
+    = link_to t('views.users.dossiers.autosave.more_information'), t("links.common.faq.autosave_url"), class: 'autosave-more-infos fr-link fr-link--sm', **external_link_attributes
 
   %p.autosave-status.failed
     %span.autosave-icon ⚠️
