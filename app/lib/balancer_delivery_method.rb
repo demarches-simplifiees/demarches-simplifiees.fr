@@ -14,6 +14,7 @@
 #
 # Be sure to restart your server when you modify this file.
 class BalancerDeliveryMethod
+  FORCE_DELIVERY_METHOD_HEADER = 'X-deliver-with'
   # Allows configuring the random number generator used for selecting a delivery method,
   # mostly for testing purposes.
   mattr_accessor :random, default: Random.new
@@ -39,7 +40,13 @@ class BalancerDeliveryMethod
 
   private
 
+  def force_delivery_method?(mail)
+    @delivery_methods.keys.map(&:to_s).include?(mail[FORCE_DELIVERY_METHOD_HEADER]&.value)
+  end
+
   def delivery_method(mail)
+    return mail[FORCE_DELIVERY_METHOD_HEADER].value.to_sym if force_delivery_method?(mail)
+
     @delivery_methods
       .flat_map { |delivery_method, weight| [delivery_method] * weight }
       .sample(random: self.class.random)
