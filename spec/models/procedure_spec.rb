@@ -178,20 +178,20 @@ describe Procedure do
     end
 
     context 'juridique' do
-      it { is_expected.not_to allow_value(nil).for(:cadre_juridique) }
-      it { is_expected.to allow_value('text').for(:cadre_juridique) }
+      it { is_expected.not_to allow_value(nil).on(:publication).for(:cadre_juridique) }
+      it { is_expected.to allow_value('text').on(:publication).for(:cadre_juridique) }
 
       context 'with deliberation' do
         let(:procedure) { build(:procedure, cadre_juridique: nil) }
 
-        it { expect(procedure.valid?).to eq(false) }
+        it { expect(procedure.valid?(:publication)).to eq(false) }
 
         context 'when the deliberation is uploaded ' do
           before do
             procedure.deliberation = fixture_file_upload('spec/fixtures/files/file.pdf', 'application/pdf')
           end
 
-          it { expect(procedure.valid?).to eq(true) }
+          it { expect(procedure.valid?(:publication)).to eq(true) }
         end
 
         context 'when the deliberation is uploaded with an unauthorized format' do
@@ -199,14 +199,14 @@ describe Procedure do
             procedure.deliberation = fixture_file_upload('spec/fixtures/files/french-flag.gif', 'image/gif')
           end
 
-          it { expect(procedure.valid?).to eq(false) }
+          it { expect(procedure.valid?(:publication)).to eq(false) }
         end
       end
 
       context 'when juridique_required is false' do
         let(:procedure) { build(:procedure, juridique_required: false, cadre_juridique: nil) }
 
-        it { expect(procedure.valid?).to eq(true) }
+        it { expect(procedure.valid?(:publication)).to eq(true) }
       end
     end
 
