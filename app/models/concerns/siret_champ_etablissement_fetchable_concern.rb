@@ -27,7 +27,7 @@ module SiretChampEtablissementFetchableConcern
 
   def clear(error: nil)
     etablissement_to_destroy = etablissement
-    update!(value: '', etablissement: nil)
+    update!(etablissement: nil)
     etablissement_to_destroy&.destroy
     error.presence
   end

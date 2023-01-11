@@ -39,10 +39,8 @@ describe Champs::SiretController, type: :controller do
       context 'when the SIRET is empty' do
         subject! { get :show, params: params, format: :turbo_stream }
 
-        it 'clears the etablissement and SIRET on the model' do
-          champ.reload
-          expect(champ.etablissement).to be_nil
-          expect(champ.value).to be_empty
+        it 'clears the etablissement on the model' do
+          expect(champ.reload.etablissement).to be_nil
         end
 
         it 'clears any information or error message' do
@@ -55,10 +53,8 @@ describe Champs::SiretController, type: :controller do
 
         subject! { get :show, params: params, format: :turbo_stream }
 
-        it 'clears the etablissement and SIRET on the model' do
-          champ.reload
-          expect(champ.etablissement).to be_nil
-          expect(champ.value).to be_empty
+        it 'clears the etablissement on the model' do
+          expect(champ.reload.etablissement).to be_nil
         end
 
         it 'displays a “SIRET is invalid” error message' do
@@ -76,10 +72,8 @@ describe Champs::SiretController, type: :controller do
 
         subject! { get :show, params: params, format: :turbo_stream }
 
-        it 'clears the etablissement and SIRET on the model' do
-          champ.reload
-          expect(champ.etablissement).to be_nil
-          expect(champ.value).to be_empty
+        it 'clears the etablissement on the model' do
+          expect(champ.reload.etablissement).to be_nil
         end
 
         it 'displays a “API is unavailable” error message' do
@@ -115,10 +109,8 @@ describe Champs::SiretController, type: :controller do
 
         subject! { get :show, params: params, format: :turbo_stream }
 
-        it 'clears the etablissement and SIRET on the model' do
-          champ.reload
-          expect(champ.etablissement).to be_nil
-          expect(champ.value).to be_empty
+        it 'clears the etablissement on the model' do
+          expect(champ.reload.etablissement).to be_nil
         end
 
         it 'displays a “SIRET not found” error message' do
