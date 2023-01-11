@@ -376,6 +376,7 @@ ActiveRecord::Schema.define(version: 2023_01_11_094621) do
     t.datetime "last_champ_private_updated_at"
     t.datetime "last_champ_updated_at"
     t.datetime "last_commentaire_updated_at"
+    t.boolean "migrated_champ_routage"
     t.text "motivation"
     t.bigint "parent_dossier_id"
     t.string "prefill_token"
