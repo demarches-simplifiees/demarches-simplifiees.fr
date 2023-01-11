@@ -25,7 +25,7 @@ class GroupeInstructeur < ApplicationRecord
   validates :closed, acceptance: { accept: [false] }, if: -> { self.procedure.groupe_instructeurs.active.one? }
 
   before_validation -> { label&.strip! }
-  after_save :toggle_routing
+  after_save :update_routing
 
   scope :without_group, -> (group) { where.not(id: group) }
   scope :for_api_v2, -> { includes(procedure: [:administrateurs]) }
