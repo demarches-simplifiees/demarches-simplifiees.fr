@@ -6,7 +6,10 @@ RSpec.describe DossierPrefillableConcern do
     let(:dossier) { create(:dossier, :brouillon, procedure: procedure) }
     let(:types_de_champ_public) { [] }
 
-    subject(:fill) { dossier.prefill!(values); dossier.reload }
+    subject(:fill) do
+      dossier.prefill!(values)
+      dossier.reload
+    end
 
     shared_examples 'a dossier marked as prefilled' do
       it 'marks the dossier as prefilled' do
