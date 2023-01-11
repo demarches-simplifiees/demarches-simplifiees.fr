@@ -836,7 +836,7 @@ class Procedure < ApplicationRecord
   end
 
   def has_a_tdc_routage?
-    draft_revision.types_de_champ.any?(&:routage?)
+    routing_type_de_champ.present?
   end
 
   def routing_libelle
