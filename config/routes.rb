@@ -192,6 +192,7 @@ Rails.application.routes.draw do
   match "webhooks/helpscout", to: lambda { |_| [204, {}, nil] }, via: :head
 
   get '/preremplir/:path', to: 'prefill_descriptions#edit', as: :preremplir
+  get '/preremplir/:path/schema', to: 'api/public/v1/json_schema_procedures#show', as: :json_schema, defaults: { format: :json }
   resources :procedures, only: [], param: :path do
     member do
       resource :prefill_description, only: :update
