@@ -5,6 +5,7 @@ class DeviseUserMailer < Devise::Mailer
   include Devise::Controllers::UrlHelpers # Optional. eg. `confirmation_url`
   include MailerMonitoringConcern
   layout 'mailers/layout'
+  before_action :add_delivery_method, if: :forced_delivery?
 
   def template_paths
     ['devise_mailer']
@@ -15,5 +16,13 @@ class DeviseUserMailer < Devise::Mailer
     @procedure = opts[:procedure_after_confirmation] || nil
     @prefill_token = opts[:prefill_token]
     super
+  end
+
+  def add_delivery_method
+    headers[BalancerDeliveryMethod::FORCE_DELIVERY_METHOD_HEADER] = SafeMailer.forced_delivery_method
+  end
+
+  def forced_delivery?
+    SafeMailer&.forced_delivery_method.present?
   end
 end
