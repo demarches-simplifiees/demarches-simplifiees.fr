@@ -2,6 +2,8 @@ module MailerMonitoringConcern
   extend ActiveSupport::Concern
 
   included do
+    before_action :add_dolist_header
+
     # Don’t retry to send a message if the server rejects the recipient address
     rescue_from Net::SMTPSyntaxError do |_exception|
       message.perform_deliveries = false
