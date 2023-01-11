@@ -6,12 +6,12 @@
 = f.label :libelle do
   Titre de la démarche
   %span.mandatory *
-= f.text_field :libelle, class: 'form-control', placeholder: 'Titre'
+= f.text_field :libelle, class: 'form-control', placeholder: 'Titre', required: true
 
 = f.label :description do
   Description
   %span.mandatory *
-= f.text_area :description, rows: '6', placeholder: 'Description de la démarche, destinataires, etc. ', class: 'form-control'
+= f.text_area :description, rows: '6', placeholder: 'Description de la démarche, destinataires, etc. ', class: 'form-control', required: true
 
 %h3.header-subsection Logo de la démarche
 = render Attachment::EditComponent.new(attached_file: @procedure.logo, view_as: :link)
