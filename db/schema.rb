@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_01_10_181426) do
+ActiveRecord::Schema.define(version: 2023_01_11_094621) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -783,6 +783,12 @@ ActiveRecord::Schema.define(version: 2023_01_10_181426) do
     t.string "subject"
     t.datetime "updated_at", null: false
     t.index ["procedure_id"], name: "index_refused_mails_on_procedure_id"
+  end
+
+  create_table "safe_mailers", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.string "forced_delivery_method"
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "services", force: :cascade do |t|

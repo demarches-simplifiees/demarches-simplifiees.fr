@@ -23,6 +23,6 @@ class DeviseUserMailer < Devise::Mailer
   end
 
   def forced_delivery?
-    SafeMailer&.forced_delivery_method.present?
+    SafeMailer.forced_delivery_method.present?
   end
 end
