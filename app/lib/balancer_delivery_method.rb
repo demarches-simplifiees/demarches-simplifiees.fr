@@ -25,7 +25,16 @@ class BalancerDeliveryMethod
   def deliver!(mail)
     balanced_delivery_method = delivery_method(mail)
     ApplicationMailer.wrap_delivery_behavior(mail, balanced_delivery_method)
-    mail.deliver
+
+    # Because we don't want to invoke observers or interceptors twice,
+    # we can't call again `mail.deliver` here to send the email with balanced method
+    # (it was first called before by deliver_now in ActiveJob or application code, which leads us here).
+    #
+    # Instead, we directly deliver the email from the handler (set by the wrapper above)
+    # like Mail::Message.deliver does.
+    #
+    # See https://github.com/mikel/mail/blob/199a76bed3fc518508b46135691914a1cfd8bff8/lib/mail/message.rb#L250
+    mail.delivery_handler.deliver_mail(mail) { mail.send :do_delivery }
   end
 
   private
