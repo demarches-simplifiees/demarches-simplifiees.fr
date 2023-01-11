@@ -785,6 +785,12 @@ ActiveRecord::Schema.define(version: 2023_01_11_094621) do
     t.index ["procedure_id"], name: "index_refused_mails_on_procedure_id"
   end
 
+  create_table "safe_mailers", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.string "forced_delivery_method"
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "services", force: :cascade do |t|
     t.bigint "administrateur_id"
     t.text "adresse"
