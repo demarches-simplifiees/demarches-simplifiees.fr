@@ -60,6 +60,20 @@ describe BatchOperationProcessOneJob, type: :job do
       end
     end
 
+    context 'when operation is "repasser en construction"' do
+      let(:batch_operation) do
+        create(:batch_operation, :repasser_en_construction,
+                                 options.merge(instructeur: create(:instructeur)))
+      end
+
+      it 'changed the dossier to en construction' do
+        expect { subject.perform_now }
+          .to change { dossier_job.reload.en_construction? }
+          .from(false)
+          .to(true)
+      end
+    end
+
     context 'when operation is "accepter"' do
       let(:batch_operation) do
         create(:batch_operation, :accepter,
