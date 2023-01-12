@@ -69,13 +69,12 @@ module Administrateurs
       elsif procedure.groupe_instructeurs.one?
         flash.now[:alert] = "Suppression impossible : il doit y avoir au moins un groupe instructeur sur chaque procédure"
       else
-          @groupe_instructeur.destroy!
-          if procedure.groupe_instructeurs.active.one?
-            procedure.update!(routing_enabled: false)
-            routing_notice = " et le routage a été désactivé"
-          end
-          flash.now[:notice] = "le groupe « #{@groupe_instructeur.label} » a été supprimé#{routing_notice}."
+        @groupe_instructeur.destroy!
+        if procedure.groupe_instructeurs.active.one?
+          procedure.update!(routing_enabled: false)
+          routing_notice = " et le routage a été désactivé"
         end
+        flash.now[:notice] = "le groupe « #{@groupe_instructeur.label} » a été supprimé#{routing_notice}."
       end
       redirect_to admin_procedure_groupe_instructeurs_path(procedure)
     end
