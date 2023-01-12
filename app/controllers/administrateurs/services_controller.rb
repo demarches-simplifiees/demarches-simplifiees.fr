@@ -34,15 +34,14 @@ module Administrateurs
     def update
       @service = service
 
-      begin
-        @service.update!(service_params)
+      if @service.update(service_params)
         if @service.siret_previously_changed?
           @service.enqueue_api_entreprise
         end
+
         redirect_to admin_services_path(procedure_id: params[:procedure_id]),
           notice: "#{@service.nom} modifié"
-      rescue StandardError => e
-        Rails.logger.error e.message
+      else
         @procedure = procedure
         flash[:alert] = @service.errors.full_messages
         render :edit
