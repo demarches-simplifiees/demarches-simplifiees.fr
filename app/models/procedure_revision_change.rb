@@ -48,7 +48,7 @@ class ProcedureRevisionChange
   end
 
   class UpdateChamp < ProcedureRevisionChange
-    attr_reader :attribute, :from, :to
+    attr_reader :attribute, :from, :to, :type_de_champ
 
     def initialize(type_de_champ, attribute, from, to)
       super(type_de_champ)

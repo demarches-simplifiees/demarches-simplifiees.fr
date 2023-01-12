@@ -792,19 +792,37 @@ class Procedure < ApplicationRecord
 
   def reset_draft_revision!
     if published_revision.present? && draft_changed?
-      if revision_changes.filter { |rev| rev.type_de_champ.type_de_champ.routage? }.any?
-        draft_revision.types_de_champ
-          .filter(&:only_present_on_draft?)
-          .filter { |tdc| !tdc.routage? }
-          .each(&:destroy)
-      else
-        transaction do
-          reset!
-          draft_revision.types_de_champ.filter(&:only_present_on_draft?).each(&:destroy)
-          draft_revision.update(dossier_submitted_message: nil)
-          draft_revision.destroy
-          update!(draft_revision: create_new_revision(published_revision))
+      transaction do
+        reset!
+        new_draft_revision = create_new_revision(published_revision)
+
+        # In the case of ProcedureRevisionChange::AddChamp for champ routage
+        # Find and detach champ routage
+        if revision_changes.find { _1.is_a?(ProcedureRevisionChange::AddChamp) && _1.type_de_champ.routage? }
+          routage_coordinate = draft_revision.revision_types_de_champ_public.find { _1.only_present_on_draft? && _1.routage? }
+          routage_coordinate.update_columns(revision_id: new_draft_revision.id, position: 0)
+          draft_revision.reload
         end
+
+        # In the case of ProcedureRevisionChange::RemoveChamp  for champ routage
+        remove_champ_routage_revisions = revision_changes.find { _1.is_a?(ProcedureRevisionChange::RemoveChamp) && _1.type_de_champ.routage? }
+
+        draft_revision.types_de_champ.filter(&:only_present_on_draft?).each(&:destroy)
+        draft_revision.update(dossier_submitted_message: nil)
+        draft_revision.destroy!
+
+        new_draft_revision.types_de_champ.filter(&:routage?).each(&:destroy) if remove_champ_routage_revisions
+
+        # In the case of ProcedureRevisionChange::AddChamp  for champ routage
+        # Reattach champ routage in first position
+        if routage_coordinate.present?
+          new_draft_revision.revision_types_de_champ_public
+            .each.with_index(1) do |coordinate, position|
+            coordinate.update_column(:position, position)
+          end
+        end
+        new_draft_revision.reload
+        update!(draft_revision: new_draft_revision)
       end
     end
   end
