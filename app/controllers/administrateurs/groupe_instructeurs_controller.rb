@@ -31,13 +31,11 @@ module Administrateurs
         .groupe_instructeurs
         .new({ instructeurs: [current_administrateur.instructeur] }.merge(groupe_instructeur_params))
 
-      begin
-        @groupe_instructeur.save!
+      if @groupe_instructeur.save
         routing_notice = " et le routage a été activé" if procedure.groupe_instructeurs.active.size == 2
         redirect_to admin_procedure_groupe_instructeur_path(procedure, @groupe_instructeur),
         notice: "Le groupe d’instructeurs « #{@groupe_instructeur.label} » a été créé#{routing_notice}."
-      rescue StandardError => e
-        Rails.logger.error e.message
+      else
         @procedure = procedure
         @instructeurs = paginated_instructeurs
         @groupes_instructeurs = paginated_groupe_instructeurs
@@ -50,12 +48,10 @@ module Administrateurs
     def update
       @groupe_instructeur = groupe_instructeur
 
-      begin
-        @groupe_instructeur.update!(groupe_instructeur_params)
+      if @groupe_instructeur.update(groupe_instructeur_params)
         redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur),
         notice: "Le nom est à présent « #{@groupe_instructeur.label} »."
-      rescue StandardError => e
-        Rails.logger.error e.message
+      else
         @procedure = procedure
         @instructeurs = paginated_instructeurs
         @available_instructeur_emails = available_instructeur_emails
@@ -69,9 +65,9 @@ module Administrateurs
       @groupe_instructeur = groupe_instructeur
 
       if @groupe_instructeur.dossiers.present?
-        flash[:alert] = "Impossible de supprimer un groupe avec des dossiers. Il faut le réaffecter avant"
+        flash.now[:alert] = "Impossible de supprimer un groupe avec des dossiers. Il faut le réaffecter avant"
       elsif procedure.groupe_instructeurs.one?
-        flash[:alert] = "Suppression impossible : il doit y avoir au moins un groupe instructeur sur chaque procédure"
+        flash.now[:alert] = "Suppression impossible : il doit y avoir au moins un groupe instructeur sur chaque procédure"
       else
         begin
           @groupe_instructeur.destroy!
@@ -79,7 +75,7 @@ module Administrateurs
             procedure.update!(routing_enabled: false)
             routing_notice = " et le routage a été désactivé"
           end
-          flash[:notice] = "le groupe « #{@groupe_instructeur.label} » a été supprimé#{routing_notice}."
+          flash.now[:notice] = "le groupe « #{@groupe_instructeur.label} » a été supprimé#{routing_notice}."
         rescue StandardError => e
           Rails.logger.error e.message
         end
