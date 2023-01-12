@@ -113,6 +113,8 @@ fr:
           phone: Un numéro de téléphone
           iban: Un numéro Iban
           yes_no: '"true" pour Oui, "false" pour Non'
+          date: Date au format ISO8601
+          datetime: Datetime au format ISO8601
           checkbox: '"true" pour coché, "false" pour décoché'
         examples:
           title: Exemple
@@ -125,6 +127,8 @@ fr:
           iban: FR7611315000011234567890138
           yes_no: "true"
           civilite: "M."
+          date: "2023-02-01"
+          datetime: "2023-02-01T10:30"
           checkbox: "true"
         prefill_link_title: Lien de préremplissage (GET)
         prefill_link_info: Copiez le lien grâce au bouton ci-dessous et remplacez les valeurs par les données dont vous disposez.
@@ -460,6 +464,8 @@ fr:
         one: "Aucune parcelle cadastrale sur la zone sélectionnée"
         other: "Aucune parcelle cadastrale sur les zones sélectionnées"
       not_an_integer: "doit être un nombre entier (sans chiffres après la virgule)"
+      not_a_date: "doit être une date correctement formatée"
+      not_a_datetime: "doit être une date et heure correctement formatée"
       blank: "doit être rempli"
   time:
     formats:

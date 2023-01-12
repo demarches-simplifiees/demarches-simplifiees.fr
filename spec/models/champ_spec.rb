@@ -108,13 +108,13 @@ describe Champ do
     context 'when the value is sent by a modern browser' do
       let(:value) { '2017-12-31 10:23' }
 
-      it { expect(champ.value).to eq(value) }
+      it { expect(champ.value).to eq("2017-12-31T10:23:00+01:00") }
     end
 
     context 'when the value is sent by a old browser' do
       let(:value) { '31/12/2018 09:26' }
 
-      it { expect(champ.value).to eq('2018-12-31 09:26') }
+      it { expect(champ.value).to eq("2018-12-31T09:26:00+01:00") }
     end
   end
 
