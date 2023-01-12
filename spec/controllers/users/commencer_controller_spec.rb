@@ -350,7 +350,7 @@ describe Users::CommencerController, type: :controller do
 
   describe '#dossier_vide_test_pdf' do
     render_views
-    before { get :dossier_vide_pdf_test, params: { path: procedure.path }, format: :pdf }
+    before { get :dossier_vide_pdf_test, params: { procedure_id: procedure.id }, format: :pdf }
 
     context 'not published procedure with service' do
       let(:procedure) { create(:procedure, :with_service, :with_path) }

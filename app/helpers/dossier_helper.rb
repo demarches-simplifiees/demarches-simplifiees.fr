@@ -30,7 +30,7 @@ module DossierHelper
   end
 
   def commencer_dossier_vide_for_revision_path(revision)
-    revision.draft? ? commencer_dossier_vide_test_path(path: revision.procedure.path) : commencer_dossier_vide_path(path: revision.procedure.path)
+    revision.draft? ? commencer_dossier_vide_test_path(procedure_id: revision.procedure.id) : commencer_dossier_vide_path(procedure_id: revision.procedure.id)
   end
 
   def dossier_submission_is_closed?(dossier)

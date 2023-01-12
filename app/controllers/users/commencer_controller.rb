@@ -75,7 +75,7 @@ module Users
     end
 
     def retrieve_procedure_with_closed
-      Procedure.publiees.or(Procedure.brouillons).or(Procedure.closes).find_by(path: params[:path])
+      Procedure.find(params[:procedure_id])
     end
 
     def retrieve_prefilled_dossier
