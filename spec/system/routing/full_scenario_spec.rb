@@ -115,8 +115,7 @@ describe 'The routing', js: true do
 
     click_on litteraire_user.dossiers.first.id.to_s
     click_on 'Modifier mon dossier'
-    expect(page).to have_text('Libelle du champ 1')
-    page.find_by_id(form_id_for('Libelle du champ 1')).fill_in with: 'some value'
+    fill_in litteraire_user.dossiers.first.champs_public.last.libelle, with: 'some value'
     wait_for_autosave(false)
     log_out
 
