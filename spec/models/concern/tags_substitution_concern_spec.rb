@@ -545,11 +545,12 @@ describe TagsSubstitutionConcern, type: :model do
     end
 
     it 'normalize white spaces' do
-      tokens = TagsSubstitutionConcern::TagsParser.parse("hello --Jour(s) fixe(s)\xc2\xA0souhaité(s)\xc2\xA0:-- world".encode('utf-8'))
+      tokens = TagsSubstitutionConcern::TagsParser.parse("hello --Jour(s) fixe(s)\xc2\xA0souhaité(s)\xc2\xA0:-- world --B.8 COMMUNE&nbsp; o\xC3\xB9 est&nbsp;situ\xC3\xA9e le site d'exploitation--".encode('utf-8'))
       expect(tokens).to eq([
         { text: "hello " },
         { tag: "Jour(s) fixe(s) souhaité(s) :" },
-        { text: " world" }
+        { text: " world " },
+        { tag: "B.8 COMMUNE  où est située le site d'exploitation" }
       ])
     end
   end

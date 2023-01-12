@@ -61,7 +61,7 @@ describe 'The user' do
     expect(champ_value_for('number')).to eq('42')
     expect(champ_value_for('decimal_number')).to eq('17')
     expect(champ_value_for('integer_number')).to eq('12')
-    expect(champ_value_for('checkbox')).to eq('on')
+    expect(champ_value_for('checkbox')).to eq('true')
     expect(champ_value_for('civilite')).to eq('Mme')
     expect(champ_value_for('email')).to eq('loulou@yopmail.com')
     expect(champ_value_for('phone')).to eq('0123456789')

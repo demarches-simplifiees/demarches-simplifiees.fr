@@ -278,7 +278,7 @@ describe Dossier do
       # Add two rows then remove previous to last row in order to create a "hole" in the sequence
       repetition_champ.add_row(repetition_champ.dossier.revision)
       repetition_champ.add_row(repetition_champ.dossier.revision)
-      repetition_champ.champs.where(row: repetition_champ.champs.last.row - 1).destroy_all
+      repetition_champ.champs.where(row_id: repetition_champ.rows[-2].first.row_id).destroy_all
       repetition_champ.reload
     end
 
@@ -323,22 +323,138 @@ describe Dossier do
     context 'with a procedure with a dropdown tdc' do
       let!(:procedure) do
         create(:procedure).tap do |p|
-          p.draft_revision.add_type_de_champ(type_champ: :drop_down_list, libelle: 'l1', drop_down_list_value: 'option')
+          p.draft_revision.add_type_de_champ(type_champ: :drop_down_list, libelle: 'l1', drop_down_list_value: "option\nv1\n")
           p.publish!
         end
       end
       let!(:dossier) { create(:dossier, procedure: procedure) }
 
-      context 'when a dropdown option is changed' do
+      context 'when a dropdown option is added' do
         before do
           dossier.champs_public.first.update(value: 'v1')
 
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
           tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
-          tdc_to_update.update(drop_down_list_value: 'option updated')
+          tdc_to_update.update(drop_down_list_value: "option\nupdated\nv1")
+        end
+
+        it { expect { subject }.not_to change { dossier.champs_public.first.value } }
+      end
+
+      context 'when a dropdown option is removed' do
+        before do
+          dossier.champs_public.first.update(value: 'v1')
+
+          stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
+          tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
+          tdc_to_update.update(drop_down_list_value: "option\nupdated")
         end
 
         it { expect { subject }.to change { dossier.champs_public.first.value }.from('v1').to(nil) }
+      end
+
+      context 'when a dropdown unused option is removed' do
+        before do
+          dossier.champs_public.first.update(value: 'v1')
+
+          stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
+          tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
+          tdc_to_update.update(drop_down_list_value: "v1\nupdated")
+        end
+
+        it { expect { subject }.not_to change { dossier.champs_public.first.value } }
+      end
+    end
+
+    context 'with a procedure with a multiple dropdown tdc' do
+      let!(:procedure) do
+        create(:procedure).tap do |p|
+          p.draft_revision.add_type_de_champ(type_champ: :multiple_drop_down_list, libelle: 'l1', drop_down_list_value: "option\nv1\n")
+          p.publish!
+        end
+      end
+      let!(:dossier) { create(:dossier, procedure: procedure) }
+
+      context 'when a dropdown option is added' do
+        before do
+          dossier.champs_public.first.update(value: '["v1"]')
+
+          stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
+          tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
+          tdc_to_update.update(drop_down_list_value: "option\nupdated\nv1")
+        end
+
+        it { expect { subject }.not_to change { dossier.champs_public.first.value } }
+      end
+
+      context 'when a dropdown option is removed' do
+        before do
+          dossier.champs_public.first.update(value: '["v1", "option"]')
+
+          stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
+          tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
+          tdc_to_update.update(drop_down_list_value: "option\nupdated")
+        end
+
+        it { expect { subject }.to change { dossier.champs_public.first.value }.from('["v1", "option"]').to('["option"]') }
+      end
+
+      context 'when a dropdown unused option is removed' do
+        before do
+          dossier.champs_public.first.update(value: '["v1"]')
+
+          stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
+          tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
+          tdc_to_update.update(drop_down_list_value: "v1\nupdated")
+        end
+
+        it { expect { subject }.not_to change { dossier.champs_public.first.value } }
+      end
+    end
+
+    context 'with a procedure with a linked dropdown tdc' do
+      let!(:procedure) do
+        create(:procedure).tap do |p|
+          p.draft_revision.add_type_de_champ(type_champ: :linked_drop_down_list, libelle: 'l1', drop_down_list_value: "--titre1--\noption\nv1\n--titre2--\noption2\nv2\n")
+          p.publish!
+        end
+      end
+      let!(:dossier) { create(:dossier, procedure: procedure) }
+
+      context 'when a dropdown option is added' do
+        before do
+          dossier.champs_public.first.update(value: '["v1",""]')
+
+          stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
+          tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
+          tdc_to_update.update(drop_down_list_value: "--titre1--\noption\nv1\nupdated\n--titre2--\noption2\nv2\n")
+        end
+
+        it { expect { subject }.not_to change { dossier.champs_public.first.value } }
+      end
+
+      context 'when a dropdown option is removed' do
+        before do
+          dossier.champs_public.first.update(value: '["v1","option2"]')
+
+          stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
+          tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
+          tdc_to_update.update(drop_down_list_value: "--titre1--\noption\nupdated\n--titre2--\noption2\nv2\n")
+        end
+
+        it { expect { subject }.to change { dossier.champs_public.first.value }.from('["v1","option2"]').to(nil) }
+      end
+
+      context 'when a dropdown unused option is removed' do
+        before do
+          dossier.champs_public.first.update(value: '["v1",""]')
+
+          stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
+          tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
+          tdc_to_update.update(drop_down_list_value: "--titre1--\nv1\nupdated\n--titre2--\noption2\nv2\n")
+        end
+
+        it { expect { subject }.not_to change { dossier.champs_public.first.value } }
       end
     end
 

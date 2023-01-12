@@ -58,7 +58,7 @@ FactoryBot.define do
 
     factory :champ_checkbox, class: 'Champs::CheckboxChamp' do
       type_de_champ { association :type_de_champ_checkbox, procedure: dossier.procedure }
-      value { 'on' }
+      value { 'true' }
     end
 
     factory :champ_civilite, class: 'Champs::CiviliteChamp' do
@@ -231,9 +231,10 @@ FactoryBot.define do
         parent = revision.revision_types_de_champ.find { |rtdc| rtdc.type_de_champ == champ_repetition.type_de_champ }
         types_de_champ = revision.revision_types_de_champ.filter { |rtdc| rtdc.parent == parent }.map(&:type_de_champ)
 
-        evaluator.rows.times do |row|
+        evaluator.rows.times do
+          row_id = ULID.generate
           champ_repetition.champs << types_de_champ.map do |type_de_champ|
-            build(:"champ_#{type_de_champ.type_champ}", dossier: champ_repetition.dossier, row: row, type_de_champ: type_de_champ, parent: champ_repetition, private: champ_repetition.private?)
+            build(:"champ_#{type_de_champ.type_champ}", dossier: champ_repetition.dossier, row_id:, type_de_champ: type_de_champ, parent: champ_repetition, private: champ_repetition.private?)
           end
         end
       end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_12_27_084442) do
+ActiveRecord::Schema.define(version: 2023_01_11_094621) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -227,6 +227,7 @@ ActiveRecord::Schema.define(version: 2022_12_27_084442) do
     t.boolean "private", default: false, null: false
     t.datetime "rebased_at"
     t.integer "row"
+    t.string "row_id"
     t.string "type"
     t.integer "type_de_champ_id", null: false
     t.datetime "updated_at"
@@ -237,8 +238,9 @@ ActiveRecord::Schema.define(version: 2022_12_27_084442) do
     t.index ["parent_id"], name: "index_champs_on_parent_id"
     t.index ["private"], name: "index_champs_on_private"
     t.index ["row"], name: "index_champs_on_row"
+    t.index ["row_id"], name: "index_champs_on_row_id"
     t.index ["type"], name: "index_champs_on_type"
-    t.index ["type_de_champ_id", "dossier_id", "row"], name: "index_champs_on_type_de_champ_id_and_dossier_id_and_row", unique: true
+    t.index ["type_de_champ_id", "dossier_id", "row_id"], name: "index_champs_on_type_de_champ_id_and_dossier_id_and_row_id", unique: true
     t.index ["type_de_champ_id"], name: "index_champs_on_type_de_champ_id"
   end
 
@@ -295,6 +297,16 @@ ActiveRecord::Schema.define(version: 2022_12_27_084442) do
     t.index ["deleted_at"], name: "index_deleted_dossiers_on_deleted_at"
     t.index ["dossier_id"], name: "index_deleted_dossiers_on_dossier_id", unique: true
     t.index ["procedure_id"], name: "index_deleted_dossiers_on_procedure_id"
+  end
+
+  create_table "dossier_batch_operations", force: :cascade do |t|
+    t.bigint "batch_operation_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.bigint "dossier_id", null: false
+    t.string "state", default: "pending", null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["batch_operation_id"], name: "index_dossier_batch_operations_on_batch_operation_id"
+    t.index ["dossier_id"], name: "index_dossier_batch_operations_on_dossier_id"
   end
 
   create_table "dossier_operation_logs", force: :cascade do |t|
@@ -364,6 +376,7 @@ ActiveRecord::Schema.define(version: 2022_12_27_084442) do
     t.datetime "last_champ_private_updated_at"
     t.datetime "last_champ_updated_at"
     t.datetime "last_commentaire_updated_at"
+    t.boolean "migrated_champ_routage"
     t.text "motivation"
     t.bigint "parent_dossier_id"
     t.string "prefill_token"
@@ -393,6 +406,16 @@ ActiveRecord::Schema.define(version: 2022_12_27_084442) do
     t.datetime "updated_at"
     t.string "value"
     t.index ["type_de_champ_id"], name: "index_drop_down_lists_on_type_de_champ_id"
+  end
+
+  create_table "email_events", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.string "method", null: false
+    t.datetime "processed_at"
+    t.string "status", null: false
+    t.string "subject", null: false
+    t.string "to", null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "etablissements", id: :serial, force: :cascade do |t|
@@ -656,6 +679,7 @@ ActiveRecord::Schema.define(version: 2022_12_27_084442) do
     t.bigint "attestation_template_id"
     t.datetime "created_at", null: false
     t.bigint "dossier_submitted_message_id"
+    t.boolean "migrated_champ_routage"
     t.bigint "procedure_id", null: false
     t.datetime "published_at"
     t.datetime "updated_at", null: false
@@ -698,6 +722,7 @@ ActiveRecord::Schema.define(version: 2022_12_27_084442) do
     t.string "lien_notice"
     t.string "lien_site_web"
     t.integer "max_duree_conservation_dossiers_dans_ds", default: 12
+    t.boolean "migrated_champ_routage"
     t.text "monavis_embed"
     t.boolean "opendata", default: true
     t.string "organisation"
@@ -758,6 +783,12 @@ ActiveRecord::Schema.define(version: 2022_12_27_084442) do
     t.string "subject"
     t.datetime "updated_at", null: false
     t.index ["procedure_id"], name: "index_refused_mails_on_procedure_id"
+  end
+
+  create_table "safe_mailers", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.string "forced_delivery_method"
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "services", force: :cascade do |t|

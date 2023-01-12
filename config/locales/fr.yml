@@ -113,9 +113,9 @@ fr:
           phone: Un numéro de téléphone
           iban: Un numéro Iban
           yes_no: '"true" pour Oui, "false" pour Non'
-          checkbox: '"on" pour coché, "off" pour décoché'
           date: Date au format ISO8601
           datetime: Datetime au format ISO8601
+          checkbox: '"true" pour coché, "false" pour décoché'
         examples:
           title: Exemple
           text: Texte court
@@ -127,16 +127,16 @@ fr:
           iban: FR7611315000011234567890138
           yes_no: "true"
           civilite: "M."
-          checkbox: "on"
           date: "2023-02-01"
           datetime: "2023-02-01T10:30"
+          checkbox: "true"
         prefill_link_title: Lien de préremplissage (GET)
         prefill_link_info: Copiez le lien grâce au bouton ci-dessous et remplacez les valeurs par les données dont vous disposez.
         prefill_link_too_long: Attention, ce lien de préremplissage est trop long et risque de ne pas fonctionner sur certains navigateurs.
         prefill_link_copy: Copier le lien de préremplissage
         prefill_query_title: Requête de préremplissage (POST)
         prefill_query_info: Copiez la requête grâce au bouton ci-dessous et remplacez les valeurs par les données dont vous disposez.
-        prefill_query_response_html: '# Response:<br># {"dossier_url":"%{url}"}'
+        prefill_query_response_html: '# Response:<br># {<br>#    "dossier_url": "%{url}",<br>#    "dossier_id": "aBase64Id==",<br>#    "dossier_number": 42<br># }'
         prefill_query_copy: Copier la requête de préremplissage
     registrations:
       new:
@@ -215,13 +215,17 @@ fr:
         deleted_by_administration: "Dossier supprimé par l’administration"
         restore: "Restaurer"
         filters:
-          title: Filtrer
+          title: Sélectionner un filtre
         select_all: Tout selectionner
         batch_operation:
           enabled: "Ajouter ce dossier à la selection pour un traitement de masse"
           disabled: "Impossible d'ajouter ce dossier à la selection car il est déjà dans un traitement de masse"
+        dossiers_count:
+          zero: 0 dossier
+          one: 1 dossier
+          other: "%{count} dossiers"
         show_deleted_dossiers: Afficher les dossiers supprimés
-        personalize: Personnaliser
+        personalize: Personnaliser le tableau
         download: Télécharger un dossier
         follow_file: Suivre le dossier
         stop_follow: Ne plus suivre

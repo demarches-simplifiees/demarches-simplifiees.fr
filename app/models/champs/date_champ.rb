@@ -18,6 +18,7 @@
 #  etablissement_id               :integer
 #  external_id                    :string
 #  parent_id                      :bigint
+#  row_id                         :string
 #  type_de_champ_id               :integer
 #
 class Champs::DateChamp < Champ

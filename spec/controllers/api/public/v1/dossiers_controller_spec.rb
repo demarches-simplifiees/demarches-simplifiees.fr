@@ -30,11 +30,14 @@ RSpec.describe API::Public::V1::DossiersController, type: :controller do
             expect(Dossier.last.user).to eq(nil)
           end
 
-          it "responds with the brouillon dossier path" do
+          it "responds with the brouillon dossier url and id" do
             create_request
-            expect(JSON.parse(response.body)["dossier_url"]).to eq(
-              "http://test.host#{commencer_path(procedure.path, prefill_token: Dossier.last.prefill_token)}"
-            )
+
+            dossier = Dossier.last
+            dossier_url = "http://test.host#{commencer_path(procedure.path, prefill_token: dossier.prefill_token)}"
+            expect(JSON.parse(response.body)["dossier_url"]).to eq(dossier_url)
+            expect(JSON.parse(response.body)["dossier_id"]).to eq(dossier.to_typed_id)
+            expect(JSON.parse(response.body)["dossier_number"]).to eq(dossier.id)
           end
 
           context 'when prefill values are given' do
