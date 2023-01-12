@@ -1,4 +1,4 @@
-describe Temporary::BatchUpdateDatetimeValuesJob, type: :job do
+describe Migrations::BatchUpdateDatetimeValuesJob, type: :job do
   before do
     datetime_champ.save(validate: false)
   end

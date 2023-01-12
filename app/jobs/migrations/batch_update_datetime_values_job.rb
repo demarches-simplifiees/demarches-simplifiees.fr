@@ -1,4 +1,4 @@
-class Temporary::BatchUpdateDatetimeValuesJob < ApplicationJob
+class Migrations::BatchUpdateDatetimeValuesJob < ApplicationJob
   def perform(ids)
     Champs::DatetimeChamp.where(id: ids).each do |datetime_champ|
       current_value_in_time = Time.zone.parse(datetime_champ.value)
