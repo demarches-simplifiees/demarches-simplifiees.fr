@@ -1,4 +1,9 @@
+require "open-uri"
 require 'prawn/measurement_extensions'
+
+def maybe_open(src)
+  URI(src).scheme.nil? ? src : URI.parse(src).open
+end
 
 #----- A4 page size
 page_size = 'A4'
@@ -25,7 +30,7 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
   black = '333333'
 
   pdf.pad_bottom(30) do
-    pdf.image DOSSIER_PDF_EXPORT_LOGO_SRC, width: 300, position: :center
+    pdf.image maybe_open(DOSSIER_PDF_EXPORT_LOGO_SRC), width: 300, position: :center
 
     pdf.pad_top(15) do
       pdf.fill_color grey
