@@ -34,7 +34,9 @@ class PrefillParams
     NEED_VALIDATION_TYPES_DE_CHAMPS = [
       TypeDeChamp.type_champs.fetch(:decimal_number),
       TypeDeChamp.type_champs.fetch(:integer_number),
-      TypeDeChamp.type_champs.fetch(:civilite)
+      TypeDeChamp.type_champs.fetch(:civilite),
+      TypeDeChamp.type_champs.fetch(:yes_no),
+      TypeDeChamp.type_champs.fetch(:checkbox)
     ]
 
     attr_reader :champ, :value

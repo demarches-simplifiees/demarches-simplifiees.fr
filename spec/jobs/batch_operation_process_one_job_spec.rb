@@ -11,7 +11,7 @@ describe BatchOperationProcessOneJob, type: :job do
     it 'when it works' do
       allow_any_instance_of(BatchOperation).to receive(:process_one).with(dossier_job).and_return(true)
       expect { subject.perform_now }
-        .to change { batch_operation.reload.success_dossier_ids }
+        .to change { batch_operation.dossier_operations.success.pluck(:dossier_id) }
         .from([])
         .to([dossier_job.id])
     end
@@ -20,7 +20,7 @@ describe BatchOperationProcessOneJob, type: :job do
       allow_any_instance_of(BatchOperation).to receive(:process_one).with(dossier_job).and_raise("boom")
       expect { subject.perform_now }.to raise_error('boom')
 
-      expect(batch_operation.reload.failed_dossier_ids).to eq([dossier_job.id])
+      expect(batch_operation.dossier_operations.error.pluck(:dossier_id)).to eq([dossier_job.id])
     end
 
     context 'when operation is "archiver"' do
@@ -43,6 +43,86 @@ describe BatchOperationProcessOneJob, type: :job do
           .to change { dossier_job.reload.en_instruction? }
           .from(false)
           .to(true)
+      end
+    end
+
+    context 'when operation is "follow"' do
+      let(:batch_operation) do
+        create(:batch_operation, :follow,
+                                 options.merge(instructeur: create(:instructeur)))
+      end
+
+      it 'adds a follower to the dossier' do
+        expect { subject.perform_now }
+          .to change { dossier_job.reload.follows }
+          .from([])
+          .to(anything)
+      end
+    end
+
+    context 'when operation is "accepter"' do
+      let(:batch_operation) do
+        create(:batch_operation, :accepter,
+                                 options.merge(instructeur: create(:instructeur), motivation: 'motivation'))
+      end
+
+      it 'accepts the dossier in the batch' do
+        expect { subject.perform_now }
+          .to change { dossier_job.reload.accepte? }
+          .from(false)
+          .to(true)
+      end
+
+      it 'accepts the dossier in the batch with a motivation' do
+        expect { subject.perform_now }
+          .to change { dossier_job.reload.motivation }
+          .from(nil)
+          .to('motivation')
+      end
+
+      context 'when it raises a  ActiveRecord::StaleObjectError' do
+        before { allow_any_instance_of(Dossier).to receive(:after_accepter).and_raise(ActiveRecord::StaleObjectError) }
+
+        it 'with invalid dossier (ex: ActiveRecord::StaleObjectError), unlink dossier/batch_operation with update_column' do
+          scope = double
+          expect(scope).to receive(:find).with(dossier_job.id).and_return(dossier_job)
+          expect_any_instance_of(BatchOperation).to receive(:dossiers_safe_scope).and_return(scope)
+          dossier_job.errors.add('KC')
+
+          expect do
+            begin
+              subject.perform_now
+            rescue ActiveRecord::StaleObjectError
+              # noop, juste want to catch existing error but not others
+            end
+          end.to change { dossier_job.reload.batch_operation }.from(batch_operation).to(nil)
+        end
+
+        it 'does not change dossier state' do
+          expect do
+            begin
+              subject.perform_now
+            rescue ActiveRecord::StaleObjectError
+              # noop, juste want to catch existing error but not others
+            end
+          end.not_to change { dossier_job.reload.accepte? }
+        end
+      end
+    end
+
+    context 'when operation is "accepter" with justificatif' do
+      let(:fake_justificatif) { ActiveStorage::Blob.create_and_upload!(io: StringIO.new("ma justification"), filename: 'piece_justificative_0.pdf', content_type: 'application/pdf') }
+
+      let(:batch_operation) do
+        create(:batch_operation, :accepter,
+               options.merge(instructeur: create(:instructeur), motivation: 'motivation', justificatif_motivation: fake_justificatif.signed_id))
+      end
+
+      it 'accepts the dossier in the batch with a justificatif' do
+        expect { subject.perform_now }
+          .to change { dossier_job.reload.justificatif_motivation.filename }
+          .from(nil)
+          .to(fake_justificatif.filename)
       end
     end
 

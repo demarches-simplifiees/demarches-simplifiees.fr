@@ -343,18 +343,20 @@ describe Instructeurs::ProceduresController, type: :controller do
         end
 
         context 'with batch operations' do
-          let!(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [termine_dossier], instructeur: instructeur, groupe_instructeurs: instructeur.groupe_instructeurs) }
+          let!(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [termine_dossier], instructeur: instructeur) }
           let!(:termine_dossier_2) { create(:dossier, :accepte, procedure: procedure) }
-          let!(:batch_operation_2) { create(:batch_operation, operation: :archiver, dossiers: [termine_dossier_2], instructeur: instructeur, groupe_instructeurs: instructeur.groupe_instructeurs) }
+          let!(:batch_operation_2) { create(:batch_operation, operation: :archiver, dossiers: [termine_dossier_2], instructeur: instructeur) }
 
           before { subject }
 
           it { expect(assigns(:batch_operations)).to match_array([batch_operation, batch_operation_2]) }
         end
 
-        context 'with a batch operation not attached to the instructeur' do
+        context 'with a dossier in a groupe instructeur where current instructeur is not ' do
           let(:instructeur_2) { create(:instructeur) }
+          let!(:termine_dossier) { create(:dossier, :accepte, procedure: procedure, groupe_instructeur: gi_3) }
           let!(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [termine_dossier], instructeur: instructeur_2) }
+
           before { subject }
 
           it { expect(assigns(:batch_operations)).to eq([]) }

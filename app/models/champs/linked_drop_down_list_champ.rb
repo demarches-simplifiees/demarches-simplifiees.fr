@@ -18,6 +18,7 @@
 #  etablissement_id               :integer
 #  external_id                    :string
 #  parent_id                      :bigint
+#  row_id                         :string
 #  type_de_champ_id               :integer
 #
 class Champs::LinkedDropDownListChamp < Champ
@@ -86,6 +87,14 @@ class Champs::LinkedDropDownListChamp < Champ
 
   def has_secondary_options_for_primary?
     primary_value.present? && secondary_options[primary_value]&.any?(&:present?)
+  end
+
+  def in?(options)
+    options.include?(primary_value) || options.include?(secondary_value)
+  end
+
+  def remove_option(options)
+    update_column(:value, nil)
   end
 
   private

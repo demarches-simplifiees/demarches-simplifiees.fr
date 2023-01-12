@@ -40,13 +40,11 @@ module Mutations
     end
 
     def find_annotation(dossier, annotation_id)
-      stable_id, row = Champ.decode_typed_id(annotation_id)
+      stable_id, row_id = Champ.decode_typed_id(annotation_id)
 
       Champ.joins(:type_de_champ).find_by(type_de_champ: {
-        type_champ: annotation_type_champ,
-        stable_id:,
-        private: true
-      }, private: true, row:, dossier:)
+        type_champ: annotation_type_champ, stable_id:, private: true
+      }, private: true, row_id:, dossier:)
     end
 
     def annotation_type_champ

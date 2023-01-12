@@ -18,6 +18,7 @@
 #  etablissement_id               :integer
 #  external_id                    :string
 #  parent_id                      :bigint
+#  row_id                         :string
 #  type_de_champ_id               :integer
 #
 class Champs::DropDownListChamp < Champ
@@ -69,5 +70,13 @@ class Champs::DropDownListChamp < Champ
 
   def value_other
     other_value_present? ? value : ""
+  end
+
+  def in?(options)
+    options.include?(value)
+  end
+
+  def remove_option(options)
+    update_column(:value, nil)
   end
 end

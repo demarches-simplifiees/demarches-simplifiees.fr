@@ -121,7 +121,7 @@ en:
           phone: A phone number
           iban: An Iban number
           yes_no: '"true" for Yes, "false" pour No'
-          checkbox: '"on" to check, "off" to uncheck'
+          checkbox: '"true" to check, "false" to uncheck'
         examples:
           title: Example
           text: Short text
@@ -132,14 +132,14 @@ en:
           phone: 0612345678
           iban: FR7611315000011234567890138
           yes_no: "true"
-          checkbox: "on"
+          checkbox: "true"
         prefill_link_title: Prefill link (GET)
         prefill_link_info: Use the button to copy the link, then remplace the values with your data.
         prefill_link_too_long: Warning, the prefill link is too long and may not work on all browsers.
         prefill_link_copy: Copy prefill link
         prefill_query_title: Prefill query (POST)
         prefill_query_info: Use the button to copy the query, then remplace the values with your data.
-        prefill_query_response_html: '# Response:<br># {"dossier_url":"%{url}"}'
+        prefill_query_response_html: '# Response:<br># {<br>#    "dossier_url": "%{url}",<br>#    "dossier_id": "aBase64Id==",<br>#    "dossier_number": 42<br># }'
         prefill_query_copy: Copy prefill query
     registrations:
       new:
@@ -215,12 +215,16 @@ en:
         deleted_by_administration: "File deleted by administration"
         restore: "Restore"
         filters:
-          title: Filter
+          title: Select a filter
         select_all: Select all
         batch_operation:
           enabled: "Add this file to the selection for the bulk operation"
           disabled: "Impossible to add this file to the selection because it is already in a bulk operation"
-        personalize: Personalize
+        dossiers_count:
+          zero: 0 file
+          one: 1 file
+          other: "%{count} files"
+        personalize: Personalize the table
         show_deleted_dossiers: Show deleted files
         follow_file: Follow-up the file
         save: Save

@@ -84,6 +84,7 @@ gem 'spreadsheet_architect'
 gem 'strong_migrations' # lint database migrations
 gem 'turbo-rails'
 gem 'typhoeus'
+gem 'ulid-ruby', require: 'ulid'
 gem 'view_component'
 gem 'vite_rails'
 gem 'warden'

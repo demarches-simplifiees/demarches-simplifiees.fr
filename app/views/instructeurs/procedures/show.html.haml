@@ -25,24 +25,24 @@
         has_en_cours_notifications: @has_en_cours_notifications,
         has_termine_notifications: @has_termine_notifications }
 
-  .fr-container--fluid.fr-mx-4w.overflow-y-visible
+  .container.fr-highlight
     - if @statut == 'a-suivre'
-      %p.explication-onglet
+      %p
         = t('views.instructeurs.dossiers.tab_explainations.a_suivre')
     - if @statut == 'suivis'
-      %p.explication-onglet
+      %p
         = t('views.instructeurs.dossiers.tab_explainations.suivis')
     - if @statut == 'traites'
-      %p.explication-onglet
+      %p
         = t('views.instructeurs.dossiers.tab_explainations.traites_html', archives_path: instructeur_archives_path(@procedure))
     - if @statut == 'tous'
-      %p.explication-onglet
+      %p
         = t('views.instructeurs.dossiers.tab_explainations.tous')
     - if @statut == 'supprimes_recemment'
-      %p.explication-onglet
+      %p
         = t('views.instructeurs.dossiers.tab_explainations.supprimes_recemment')
     - if @statut == 'archives'
-      %p.explication-onglet
+      %p
         = t('views.instructeurs.dossiers.tab_explainations.archives')
         %br
         Ces dossiers seront supprimés lorsque leur délai de conservation dans Démarches-simplifiées
@@ -51,42 +51,64 @@
         sera expiré.
         = link_to 'En savoir plus', ARCHIVAGE_DOC_URL
     - if @statut == 'expirant'
-      %p.explication-onglet
+      %p
         = t('views.instructeurs.dossiers.tab_explainations.expirant')
 
-    .flex
+  .fr-container--fluid.fr-mx-4w.overflow-y-visible
+    %hr
+    .flex.align-center
       - if @filtered_sorted_paginated_ids.present? || @current_filters.count > 0
-        %div
-          = render partial: "dossiers_filter", locals: { procedure: @procedure, procedure_presentation: @procedure_presentation, current_filters: @current_filters, statut: @statut, filterable_fields_for_select: @filterable_fields_for_select }
+        = render partial: "dossiers_filter_dropdown", locals: { procedure: @procedure, statut: @statut}
+        = render Dossiers::NotifiedToggleComponent.new(procedure: @procedure, procedure_presentation: @procedure_presentation)
+
+        .fr-ml-auto
+          %span.dropdown{ data: { controller: 'menu-button', popover: 'true' } }
+            %button.fr-btn.fr-btn--sm.fr-btn--secondary.dropdown-button.fr-ml-1w{ data: { menu_button_target: 'button' } }
+              = t('views.instructeurs.dossiers.personalize')
+            #custom-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
+              = form_tag update_displayed_fields_instructeur_procedure_path(@procedure), method: :patch, class: 'dropdown-form large columns-form' do
+                = hidden_field_tag :values, nil
+                = react_component("ComboMultiple",
+                  options: @displayable_fields_for_select,
+                  selected: @displayable_fields_selected,
+                  disabled: [],
+                  label: 'Colonne à afficher',
+                  group: '.columns-form',
+                  name: 'values')
+
+                = submit_tag t('views.instructeurs.dossiers.save'), class: 'fr-btn fr-btn--secondary'
+
         .fr-ml-2w
-          = render Dossiers::NotifiedToggleComponent.new(procedure: @procedure, procedure_presentation: @procedure_presentation)
+          - if @statut == 'archives'
+            = link_to deleted_dossiers_instructeur_procedure_path(@procedure), class: "fr-link fr-icon-delete-line fr-link--icon-left fr-mr-2w" do
+              = t('views.instructeurs.dossiers.show_deleted_dossiers')
 
-      .flex-grow.text-right
-        - if @statut == 'archives'
-          = link_to deleted_dossiers_instructeur_procedure_path(@procedure), class: "fr-link fr-icon-delete-line fr-link--icon-left fr-mr-2w" do
-            = t('views.instructeurs.dossiers.show_deleted_dossiers')
-
-        - if @dossiers_count > 0
-          %span.dossiers-export
-            = render Dossiers::ExportComponent.new(procedure: @procedure, exports: @exports, statut: @statut, count: @dossiers_count, export_url: method(:download_export_instructeur_procedure_path))
+          - if @dossiers_count > 0
+            %span.dossiers-export
+              = render Dossiers::ExportComponent.new(procedure: @procedure, exports: @exports, statut: @statut, count: @dossiers_count, export_url: method(:download_export_instructeur_procedure_path))
 
     - if @filtered_sorted_paginated_ids.present? || @current_filters.count > 0
+      = render partial: "dossiers_filter_tags", locals: { procedure: @procedure, procedure_presentation: @procedure_presentation, current_filters: @current_filters, statut: @statut }
+
       - batch_operation_component = Dossiers::BatchOperationComponent.new(statut: @statut, procedure: @procedure)
+
+      - if @batch_operations.present?
+        - @batch_operations.each do |batch_operation|
+          = render Dossiers::BatchAlertComponent.new(batch: batch_operation, procedure: @procedure)
+
       %div{ data: batch_operation_component.render? ? { controller: 'batch-operation' } : {} }
+        .flex.align-center
+          %span.fr-h6.fr-mb-0.fr-mr-2w
+            = t('views.instructeurs.dossiers.dossiers_count', count: @dossiers_count)
 
-        - if @batch_operations.present?
-          - @batch_operations.each do |batch_operation|
-            = render Dossiers::BatchAlertComponent.new(batch: batch_operation, procedure: @procedure)
-
-        .flex
-          .flex-grow= render batch_operation_component
+          = render batch_operation_component
         .fr-table.fr-table--bordered
           %table.table.dossiers-table.hoverable
             %thead
               %tr
                 - if batch_operation_component.render?
                   %th.text-center
-                    %input{ type: "checkbox", data: { "batch-operation-target" => "all","action" => "batch-operation#onCheckAll"}, id: dom_id(BatchOperation.new, :checkbox_all), aria: { label: t('views.instructeurs.dossiers.select_all') } }
+                    %input{ type: "checkbox", data: { action: "batch-operation#onCheckAll" }, id: dom_id(BatchOperation.new, :checkbox_all), aria: { label: t('views.instructeurs.dossiers.select_all') } }
                 - else
                   - if @statut.in? %w(suivis traites tous)
                     = render partial: "header_field", locals: { field: { "label" => "●", "table" => "notifications", "column" => "notifications" }, classname: "notification-col text-center" }
@@ -97,23 +119,7 @@
                   = render partial: "header_field", locals: { field: field, classname: field['classname'] }
 
                 %th.action-col.follow-col
-                  %span.dropdown{ data: { controller: 'menu-button', popover: 'true' } }
-                    %button.fr-btn.fr-btn--sm.fr-btn--secondary.dropdown-button{ data: { menu_button_target: 'button' } }
-                      = t('views.instructeurs.dossiers.personalize')
-                    #custom-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
-                      = form_tag update_displayed_fields_instructeur_procedure_path(@procedure), method: :patch, class: 'dropdown-form large columns-form' do
-                        = hidden_field_tag :values, nil
-                        = react_component("ComboMultiple",
-                          options: @displayable_fields_for_select,
-                          selected: @displayable_fields_selected,
-                          disabled: [],
-                          label: 'Colonne à afficher',
-                          group: '.columns-form',
-                          name: 'values')
-
-                        = submit_tag t('views.instructeurs.dossiers.save'), class: 'fr-btn fr-btn--secondary'
-
-
+                  Actions
               %tr
 
             %tbody
@@ -123,9 +129,9 @@
                   %td.text-center
                     - if batch_operation_component.render?
                       - if p.batch_operation_id.present?
-                        = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, true, disabled: true, id: dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"), aria: {label: t('views.instructeurs.dossiers.batch_operation.disabled')}
+                        = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, true, disabled: true, id: dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"), aria: { label: t('views.instructeurs.dossiers.batch_operation.disabled') }
                       - else
-                        = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, false, data: { "batch-operation-target" => "input", "action" => "batch-operation#onCheckOne"}, form: dom_id(BatchOperation.new), id: dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"), aria: {label: t('views.instructeurs.dossiers.batch_operation.enabled')}
+                        = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, false, data: { batch_operation_target: "input", action: "batch-operation#onCheckOne", operations: batch_operation_component.operations_for_dossier(p).join(',') }, form: dom_id(BatchOperation.new), id: dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"), aria: { label: t('views.instructeurs.dossiers.batch_operation.enabled') }
 
                       - if @not_archived_notifications_dossier_ids.include?(p.dossier_id)
                         %span.notifications{ 'aria-label': 'notifications' }
