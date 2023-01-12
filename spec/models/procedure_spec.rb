@@ -935,6 +935,91 @@ describe Procedure do
         expect { draft_tdc.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
+
+    context "with revision changes on routage type de champ" do
+      let(:procedure) do
+        create(
+          :procedure,
+          :published,
+          attestation_template: build(:attestation_template),
+          dossier_submitted_message: create(:dossier_submitted_message),
+          types_de_champ_public: [{ type: :routage, libelle: 'Votre ville' }, { type: :text, libelle: 'published tdc' }]
+        )
+      end
+
+      context "with remove" do
+        it "should reset draft revision and reset routage type de champ" do
+          routage_type_de_champ = procedure.draft_revision.types_de_champ.first
+          procedure.draft_revision.remove_type_de_champ(routage_type_de_champ.stable_id)
+          expect(procedure.draft_changed?).to be_truthy
+          procedure.reset_draft_revision!
+          expect(procedure.draft_revision.types_de_champ.count).to eq 1
+          expect(procedure.draft_revision.types_de_champ.first.type_champ).not_to eq 'routage'
+        end
+      end
+
+      context "with update" do
+        it "should reset draft revision and reset routage type de champ" do
+          routage_type_de_champ = procedure.draft_revision.types_de_champ.first
+          procedure.draft_revision.find_and_ensure_exclusive_use(routage_type_de_champ.stable_id).update(libelle: 'Votre département')
+
+          expect(procedure.draft_changed?).to be_truthy
+          procedure.reset_draft_revision!
+          expect(procedure.draft_revision.types_de_champ.count).to eq 2
+          expect(procedure.draft_revision.types_de_champ.first.type_champ).to eq 'routage'
+          expect(procedure.draft_revision.types_de_champ.first.libelle).to eq 'Votre ville'
+        end
+      end
+
+      context "with move" do
+        it "should reset draft revision and reset routage type de champ" do
+          procedure_revision_routage_type_de_champ = procedure.draft_revision.revision_types_de_champ.first
+          expect(procedure_revision_routage_type_de_champ.position).to eq 0
+          expect(procedure_revision_routage_type_de_champ.libelle).to eq 'Votre ville'
+          procedure.draft_revision.move_down_type_de_champ(procedure_revision_routage_type_de_champ.type_de_champ.stable_id)
+          expect(procedure.draft_revision.revision_types_de_champ.last.position).to eq 1
+          expect(procedure.draft_revision.revision_types_de_champ.last.libelle).to eq 'Votre ville'
+
+          expect(procedure.draft_changed?).to be_truthy
+          procedure.reset_draft_revision!
+          expect(procedure.draft_revision.types_de_champ.count).to eq 2
+          expect(procedure.draft_revision.revision_types_de_champ.first.position).to eq 0
+          expect(procedure.draft_revision.revision_types_de_champ.first.libelle).to eq 'Votre ville'
+        end
+      end
+
+      context "with add" do
+        let!(:procedure) do
+          create(
+            :procedure,
+            :published,
+            attestation_template: build(:attestation_template),
+            dossier_submitted_message: create(:dossier_submitted_message),
+            types_de_champ_public: [{ type: :text, libelle: 'published tdc' }]
+          )
+        end
+        let(:routage_tdc_attributes) { { type_champ: :routage, libelle: 'routage tdc' } }
+
+        it "should reset draft revision but keep routage type de champ" do
+          procedure.draft_revision.add_type_de_champ(tdc_attributes)
+          procedure.draft_revision.add_type_de_champ(routage_tdc_attributes)
+          previous_draft_revision = procedure.draft_revision
+          previous_attestation_template = procedure.attestation_template
+          previous_dossier_submitted_message = previous_draft_revision.dossier_submitted_message
+
+          expect(procedure.draft_changed?).to be_truthy
+          procedure.reset_draft_revision!
+          procedure.draft_revision.reload
+          expect(procedure.draft_changed?).to be_truthy
+          expect(procedure.draft_revision).not_to eq(previous_draft_revision)
+          expect { previous_draft_revision.reload }.to raise_error(ActiveRecord::RecordNotFound)
+          expect(procedure.attestation_template).to eq(previous_attestation_template)
+          expect(procedure.draft_revision.dossier_submitted_message).to eq(previous_dossier_submitted_message)
+          expect(procedure.draft_revision.types_de_champ.count).to eq 2
+          expect(procedure.draft_revision.types_de_champ.first.type_champ).to eq 'routage'
+        end
+      end
+    end
   end
 
   describe "#unpublish!" do
