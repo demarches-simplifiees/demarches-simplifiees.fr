@@ -74,6 +74,12 @@ export class AutosubmitController extends ApplicationController {
     const submitter = this.hasSubmitterTarget ? this.submitterTarget : null;
     const form =
       submitter?.form ?? this.element.closest<HTMLFormElement>('form');
-    form?.requestSubmit(submitter);
+
+    // Safari does not support "formaction" attribute on submitter passed to requestSubmit :(
+    if (submitter && navigator.userAgent.indexOf('Safari') > -1) {
+      submitter.click();
+    } else {
+      form?.requestSubmit(submitter);
+    }
   }
 }
