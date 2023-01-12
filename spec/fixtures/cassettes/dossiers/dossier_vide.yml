@@ -1,0 +1,47 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://example.org/images/logo.png
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - openresty/1.15.8.1
+      Date:
+      - Thu, 12 Jan 2023 08:50:07 GMT
+      Content-Type:
+      - image/png
+      Content-Length:
+      - '114'
+      Connection:
+      - keep-alive
+      Last-Modified:
+      - Tue, 10 Jan 2023 21:37:12 GMT
+      Etag:
+      - '"63bdda88-c52"'
+      Cache-Control:
+      - max-age=31536000
+      - public
+      Accept-Ranges:
+      - bytes
+      Strict-Transport-Security:
+      - max-age=15724800; includeSubDomains
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII=
+  recorded_at: Thu, 12 Jan 2023 08:50:07 GMT
+recorded_with: VCR 6.1.0
