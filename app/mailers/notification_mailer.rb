@@ -15,7 +15,7 @@ class NotificationMailer < ApplicationMailer
   helper MailerHelper
 
   layout 'mailers/notifications_layout'
-  default from: NO_REPLY_EMAIL
+  default from: CONTACT_EMAIL
 
   def send_notification
     @service = @dossier.procedure.service

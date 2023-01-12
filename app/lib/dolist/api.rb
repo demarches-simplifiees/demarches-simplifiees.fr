@@ -67,7 +67,7 @@ class Dolist::API
 
   def to_sent_mail(email_address, contact_id, dolist_message)
     SentMail.new(
-      from: ENV['DOLIST_NO_REPLY_EMAIL'],
+      from: CONTACT_EMAIL,
       to: email_address,
       subject: dolist_message['SendingName'],
       delivered_at: Time.zone.parse(dolist_message['SendDate']),

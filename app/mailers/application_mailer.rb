@@ -2,7 +2,6 @@ class ApplicationMailer < ActionMailer::Base
   include MailerMonitoringConcern
 
   helper :application # gives access to all helpers defined within `application_helper`.
-  default from: "#{APPLICATION_NAME} <#{CONTACT_EMAIL}>"
   layout 'mailer'
 
   # Attach the procedure logo to the email (if any).

@@ -4,6 +4,10 @@ module MailerMonitoringConcern
   included do
     before_action :add_dolist_header
 
+    # a same sender for all mailers
+    # just in case their is issues with no-reply/ne-pas-repondre subject
+    default from: "#{APPLICATION_NAME} <#{CONTACT_EMAIL}>"
+
     # Don’t retry to send a message if the server rejects the recipient address
     rescue_from Net::SMTPSyntaxError do |_exception|
       message.perform_deliveries = false

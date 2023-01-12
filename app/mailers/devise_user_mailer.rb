@@ -12,7 +12,6 @@ class DeviseUserMailer < Devise::Mailer
   end
 
   def confirmation_instructions(record, token, opts = {})
-    opts[:from] = NO_REPLY_EMAIL
     @procedure = opts[:procedure_after_confirmation] || nil
     @prefill_token = opts[:prefill_token]
     super

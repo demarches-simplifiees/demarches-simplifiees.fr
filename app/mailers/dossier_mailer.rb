@@ -5,7 +5,7 @@ class DossierMailer < ApplicationMailer
   helper ProcedureHelper
 
   layout 'mailers/layout'
-  default from: NO_REPLY_EMAIL
+  default from: CONTACT_EMAIL
   after_action :prevent_perform_deliveries, only: [:notify_new_draft, :notify_new_answer]
 
   def notify_new_draft
