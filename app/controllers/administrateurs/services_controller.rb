@@ -14,13 +14,12 @@ module Administrateurs
       @service = Service.new(service_params)
       @service.administrateur = current_administrateur
 
-      begin
-        @service.save!
+      if @service.save
         @service.enqueue_api_entreprise
+
         redirect_to admin_services_path(procedure_id: params[:procedure_id]),
           notice: "#{@service.nom} créé"
-      rescue StandardError => e
-        Rails.logger.error e.message
+      else
         @procedure = procedure
         flash[:alert] = @service.errors.full_messages
         render :new
