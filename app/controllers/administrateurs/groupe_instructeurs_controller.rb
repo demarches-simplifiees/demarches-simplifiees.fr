@@ -34,7 +34,7 @@ module Administrateurs
       if @groupe_instructeur.save
         routing_notice = " et le routage a été activé" if procedure.groupe_instructeurs.active.size == 2
         redirect_to admin_procedure_groupe_instructeur_path(procedure, @groupe_instructeur),
-        notice: "Le groupe d’instructeurs « #{@groupe_instructeur.label} » a été créé#{routing_notice}."
+          notice: "Le groupe d’instructeurs « #{@groupe_instructeur.label} » a été créé#{routing_notice}."
       else
         @procedure = procedure
         @instructeurs = paginated_instructeurs
@@ -50,7 +50,7 @@ module Administrateurs
 
       if @groupe_instructeur.update(groupe_instructeur_params)
         redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur),
-        notice: "Le nom est à présent « #{@groupe_instructeur.label} »."
+          notice: "Le nom est à présent « #{@groupe_instructeur.label} »."
       else
         @procedure = procedure
         @instructeurs = paginated_instructeurs
