@@ -18,7 +18,7 @@ class ProcedureRevisionChange
 
     def op = :add
     def mandatory? = @type_de_champ.mandatory?
-    def can_rebase?(dossier = nil) = !mandatory?
+    def can_rebase?(dossier = nil) = !mandatory? || @type_de_champ.routage?
 
     def to_h = super.merge(mandatory: mandatory?)
   end

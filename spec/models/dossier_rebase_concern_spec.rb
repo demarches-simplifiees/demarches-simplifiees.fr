@@ -48,6 +48,23 @@ describe Dossier do
         end
       end
 
+      context 'with added routage type de champ' do
+        before do
+          procedure.draft_revision.add_type_de_champ({
+            type_champ: TypeDeChamp.type_champs.fetch(:routage),
+            libelle: "Un champ routage",
+            mandatory: true
+          })
+          procedure.publish_revision!
+          dossier.reload
+        end
+
+        it 'should be true' do
+          expect(dossier.pending_changes).not_to be_empty
+          expect(dossier.can_rebase?).to be_truthy
+        end
+      end
+
       context 'with type de champ made optional' do
         before do
           procedure.draft_revision.find_and_ensure_exclusive_use(mandatory_type_de_champ.stable_id).update(mandatory: false)
