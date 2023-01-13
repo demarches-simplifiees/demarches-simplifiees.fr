@@ -84,7 +84,7 @@ class Champs::DropDownListChamp < Champ
   private
 
   def value_is_in_options
-    return if drop_down_list_options.include?(value)
+    return if enabled_non_empty_options.include?(value)
 
     errors.add(:value, :not_in_options)
   end
