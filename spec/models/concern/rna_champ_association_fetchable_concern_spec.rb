@@ -10,10 +10,10 @@ RSpec.describe RNAChampAssociationFetchableConcern do
 
     subject(:fetch_association!) { champ.fetch_association!(rna) }
 
-    shared_examples "an association fetcher" do |expected_result, expected_value, expected_data|
+    shared_examples "an association fetcher" do |expected_result, _expected_value, expected_data|
       it { expect(fetch_association!).to eq(expected_result) }
 
-      it { expect { fetch_association! }.to change { champ.reload.value }.to(expected_value) }
+      it { expect { fetch_association! }.to change { champ.reload.value }.to(rna) }
 
       it { expect { fetch_association! }.to change { champ.reload.data }.to(expected_data) }
     end
@@ -31,7 +31,7 @@ RSpec.describe RNAChampAssociationFetchableConcern do
       let(:status) { 422 }
       let(:body) { '' }
 
-      it_behaves_like "an association fetcher", nil, nil, nil
+      it_behaves_like "an association fetcher", nil, '1234', nil
     end
 
     context 'when the RNA is unknow' do
@@ -49,7 +49,7 @@ RSpec.describe RNAChampAssociationFetchableConcern do
 
       before { expect(APIEntrepriseService).to receive(:api_up?).and_return(false) }
 
-      it_behaves_like "an association fetcher", :network_error, nil, nil
+      it_behaves_like "an association fetcher", :network_error, 'W595001988', nil
     end
 
     context 'when the RNA informations are retrieved successfully' do
