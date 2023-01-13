@@ -13,9 +13,9 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
   def operations_for_dossier(dossier)
     case dossier.state
     when Dossier.states.fetch(:en_construction)
-      [BatchOperation.operations.fetch(:passer_en_instruction), BatchOperation.operations.fetch(:follow)]
+      [BatchOperation.operations.fetch(:passer_en_instruction), BatchOperation.operations.fetch(:follow), BatchOperation.operations.fetch(:unfollow)]
     when Dossier.states.fetch(:en_instruction)
-      [BatchOperation.operations.fetch(:accepter), BatchOperation.operations.fetch(:repasser_en_construction)]
+      [BatchOperation.operations.fetch(:accepter), BatchOperation.operations.fetch(:repasser_en_construction), BatchOperation.operations.fetch(:follow), BatchOperation.operations.fetch(:unfollow)]
     when Dossier.states.fetch(:accepte), Dossier.states.fetch(:refuse), Dossier.states.fetch(:sans_suite)
       [BatchOperation.operations.fetch(:archiver)]
     else
@@ -63,6 +63,11 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
             },
 
             {
+              label: t(".operations.unfollow"),
+              operation: BatchOperation.operations.fetch(:unfollow)
+            },
+
+            {
               label: t(".operations.repasser_en_construction"),
               operation: BatchOperation.operations.fetch(:repasser_en_construction)
             }
@@ -81,7 +86,8 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
       archiver: 'fr-icon-folder-2-line',
       follow: 'fr-icon-star-line',
       passer_en_instruction: 'fr-icon-edit-line',
-      repasser_en_construction: 'fr-icon-draft-line'
+      repasser_en_construction: 'fr-icon-draft-line',
+      unfollow: 'fr-icon-star-fill'
     }
   end
 end
