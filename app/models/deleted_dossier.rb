@@ -27,10 +27,11 @@ class DeletedDossier < ApplicationRecord
     user_removed:      'user_removed',
     procedure_removed: 'procedure_removed',
     expired:           'expired',
-    instructeur_request: 'instructeur_request'
+    instructeur_request: 'instructeur_request',
+    unknown: 'unknown'
   }
 
-  def self.create_from_dossier(dossier, reason)
+  def self.create_from_dossier(dossier, reason = :unknown)
     return if !dossier.log_operations?
 
     # We have some bad data because of partially deleted dossiers in the past.
