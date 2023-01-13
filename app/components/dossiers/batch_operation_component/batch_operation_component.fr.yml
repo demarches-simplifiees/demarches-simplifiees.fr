@@ -4,4 +4,5 @@ fr:
     passer_en_instruction: 'Passer les dossiers en instruction'
     accepter: 'Accepter les dossiers'
     follow: 'Suivre les dossiers'
+    unfollow: 'Ne plus suivre les dossiers'
     repasser_en_construction: 'Repasser les dossiers en construction'

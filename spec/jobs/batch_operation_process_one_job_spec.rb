@@ -60,6 +60,21 @@ describe BatchOperationProcessOneJob, type: :job do
       end
     end
 
+    context 'when operation is "unfollow"' do
+      let(:batch_operation) do
+        create(:batch_operation, :unfollow,
+                                 options.merge(instructeur: create(:instructeur)))
+      end
+
+      it 'removes a follower to the dossier' do
+        expect { subject.perform_now }
+          .to change { dossier_job.reload.follows.first.unfollowed_at }
+          .from(nil)
+          .to(anything)
+      end
+    end
+
+
     context 'when operation is "repasser en construction"' do
       let(:batch_operation) do
         create(:batch_operation, :repasser_en_construction,

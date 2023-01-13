@@ -35,6 +35,15 @@ en:
       text_success:
         one: 1/1 is being followed
         other: "%{progress_count}/%{count} files have been followed"
+  unfollow:
+    finish:
+      text_success:
+        one: 1/1 file has been unfollowed
+        other: "%{success_count}/%{count} files have been unfollowed"
+    in_progress:
+      text_success:
+        one: 1/1 is being unfollowed
+        other: "%{progress_count}/%{count} files have been unfollowed"
   repasser_en_construction:
     finish:
       text_success:
