@@ -54,8 +54,9 @@ module TurboStreamHelper
       action_all :morph, targets, content, **rendering, &block
     end
 
-    def dispatch(type, detail = {})
-      turbo_stream_simple_action_tag(:dispatch, 'event-type': type, 'event-detail': detail.to_json)
+    def dispatch(type, detail = nil)
+      content = detail.present? ? tag.script(cdata_section(detail.to_json), type: 'application/json') : nil
+      action_all :append, 'head', tag.dispatch_event(content, type:)
     end
 
     private
