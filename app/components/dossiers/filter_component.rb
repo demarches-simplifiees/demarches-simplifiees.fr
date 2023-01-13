@@ -18,6 +18,6 @@ class Dossiers::FilterComponent < ApplicationComponent
   end
 
   def options_for_select_of_field
-    I18n.t(procedure_presentation.field_enum(field_id)).map(&:to_a).map(&:reverse)
+    procedure_presentation.field_enum(field_id)
   end
 end
