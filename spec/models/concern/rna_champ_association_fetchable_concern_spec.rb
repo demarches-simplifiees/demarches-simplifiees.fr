@@ -1,6 +1,6 @@
 RSpec.describe RNAChampAssociationFetchableConcern do
   describe '.fetch_association!' do
-    let!(:champ) { create(:champ_rna, data: "not nil data") }
+    let!(:champ) { create(:champ_rna, data: "not nil data", value: 'W173847273') }
 
     before do
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/associations\//)
@@ -10,12 +10,17 @@ RSpec.describe RNAChampAssociationFetchableConcern do
 
     subject(:fetch_association!) { champ.fetch_association!(rna) }
 
-    shared_examples "an association fetcher" do |expected_result, _expected_value, expected_data|
-      it { expect(fetch_association!).to eq(expected_result) }
-
-      it { expect { fetch_association! }.to change { champ.reload.value }.to(rna) }
+    shared_examples "an association fetcher" do |expected_result, expected_error, expected_value, expected_data|
+      it { expect { fetch_association! }.to change { champ.reload.value }.to(expected_value) }
 
       it { expect { fetch_association! }.to change { champ.reload.data }.to(expected_data) }
+
+      it { expect(fetch_association!).to eq(expected_result) }
+
+      it 'populates the association_fetch_error_key when an error occurs' do
+        fetch_association!
+        expect(champ.association_fetch_error_key).to eq(expected_error)
+      end
     end
 
     context 'when the RNA is empty' do
@@ -23,7 +28,7 @@ RSpec.describe RNAChampAssociationFetchableConcern do
       let(:status) { 422 }
       let(:body) { '' }
 
-      it_behaves_like "an association fetcher", nil, '', {}
+      it_behaves_like "an association fetcher", false, :empty, '', nil
     end
 
     context 'when the RNA is invalid' do
@@ -31,7 +36,7 @@ RSpec.describe RNAChampAssociationFetchableConcern do
       let(:status) { 422 }
       let(:body) { '' }
 
-      it_behaves_like "an association fetcher", nil, '1234', nil
+      it_behaves_like "an association fetcher", false, :invalid, '1234', nil
     end
 
     context 'when the RNA is unknow' do
@@ -39,7 +44,7 @@ RSpec.describe RNAChampAssociationFetchableConcern do
       let(:status) { 404 }
       let(:body) { '' }
 
-      it_behaves_like "an association fetcher", nil, 'W111111111', {}
+      it_behaves_like "an association fetcher", false, :not_found, 'W111111111', nil
     end
 
     context 'when the API is unavailable due to network error' do
@@ -49,7 +54,7 @@ RSpec.describe RNAChampAssociationFetchableConcern do
 
       before { expect(APIEntrepriseService).to receive(:api_up?).and_return(false) }
 
-      it_behaves_like "an association fetcher", :network_error, 'W595001988', nil
+      it_behaves_like "an association fetcher", false, :network_error, 'W595001988', nil
     end
 
     context 'when the RNA informations are retrieved successfully' do
@@ -57,7 +62,7 @@ RSpec.describe RNAChampAssociationFetchableConcern do
       let(:status) { 200 }
       let(:body) { File.read('spec/fixtures/files/api_entreprise/associations.json') }
 
-      it_behaves_like "an association fetcher", nil, 'W595001988', {
+      it_behaves_like "an association fetcher", true, nil, 'W595001988', {
         "association_id" => "W595001988",
         "association_titre" => "UN SUR QUATRE",
         "association_objet" => "valoriser, transmettre et partager auprès des publics les plus larges possibles, les bienfaits de l'immigration, la richesse de la diversité et la curiosité de l'autre autrement",

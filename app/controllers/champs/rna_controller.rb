@@ -3,7 +3,6 @@ class Champs::RNAController < ApplicationController
 
   def show
     @champ = policy_scope(Champ).find(params[:champ_id])
-    @rna = read_param_value(@champ.input_name, 'value')
-    @network_error = @champ.fetch_association!(@rna).present?
+    @error = @champ.association_fetch_error_key unless @champ.fetch_association!(read_param_value(@champ.input_name, 'value'))
   end
 end
