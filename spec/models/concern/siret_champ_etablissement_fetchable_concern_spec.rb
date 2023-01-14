@@ -20,13 +20,18 @@ RSpec.describe SiretChampEtablissementFetchableConcern do
 
       it { expect { fetch_etablissement! }.to change { Etablissement.count }.by(-1) }
 
-      it { expect(fetch_etablissement!).to eq(error) }
+      it { expect(fetch_etablissement!).to eq(false) }
+
+      it 'populates the etablissement_fetch_error_key' do
+        fetch_etablissement!
+        expect(champ.etablissement_fetch_error_key).to eq(error)
+      end
     end
 
     context 'when the SIRET is empty' do
       let(:siret) { '' }
 
-      it_behaves_like 'an error occured', nil
+      it_behaves_like 'an error occured', :empty
     end
 
     context 'when the SIRET is invalid' do
@@ -63,7 +68,12 @@ RSpec.describe SiretChampEtablissementFetchableConcern do
 
       it { expect { fetch_etablissement! }.to change { Etablissement.count }.by(1) }
 
-      it { expect(fetch_etablissement!).to eq(:api_entreprise_down) }
+      it { expect(fetch_etablissement!).to eq(false) }
+
+      it 'populates the etablissement_fetch_error_key' do
+        fetch_etablissement!
+        expect(champ.etablissement_fetch_error_key).to eq(:api_entreprise_down)
+      end
     end
 
     context 'when the SIRET is valid but unknown' do
@@ -86,7 +96,7 @@ RSpec.describe SiretChampEtablissementFetchableConcern do
 
       it { expect { fetch_etablissement! }.to change { Etablissement.count }.by(1) }
 
-      it { expect(fetch_etablissement!).to eq(siret) }
+      it { expect(fetch_etablissement!).to eq(true) }
     end
   end
 end
