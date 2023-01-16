@@ -13,14 +13,14 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
   def operations_for_dossier(dossier)
     case dossier.state
     when Dossier.states.fetch(:en_construction)
-      [BatchOperation.operations.fetch(:passer_en_instruction), BatchOperation.operations.fetch(:follow), BatchOperation.operations.fetch(:unfollow)]
+      [BatchOperation.operations.fetch(:passer_en_instruction)]
     when Dossier.states.fetch(:en_instruction)
-      [BatchOperation.operations.fetch(:accepter), BatchOperation.operations.fetch(:repasser_en_construction), BatchOperation.operations.fetch(:follow), BatchOperation.operations.fetch(:unfollow)]
+      [BatchOperation.operations.fetch(:accepter), BatchOperation.operations.fetch(:repasser_en_construction)]
     when Dossier.states.fetch(:accepte), Dossier.states.fetch(:refuse), Dossier.states.fetch(:sans_suite)
       [BatchOperation.operations.fetch(:archiver)]
     else
       []
-    end
+    end.append(BatchOperation.operations.fetch(:follow), BatchOperation.operations.fetch(:unfollow))
   end
 
   private
