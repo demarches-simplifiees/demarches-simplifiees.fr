@@ -1,4 +1,4 @@
-class Temporary::BatchUpdatePaysValuesJob < ApplicationJob
+class Migrations::BatchUpdatePaysValuesJob < ApplicationJob
   UNUSUAL_COUNTRY_NAME_MATCHER = {
     "ACORES, MADERE" => "Portugal",
     "ALASKA" => "États-Unis",
@@ -76,11 +76,8 @@ class Temporary::BatchUpdatePaysValuesJob < ApplicationJob
       pays_champ = Champs::PaysChamp.find(id)
       next if pays_champ.valid?
 
-      value = if APIGeoService.country_code(pays_champ.value).present?
-        pays_champ.value
-      else
-        UNUSUAL_COUNTRY_NAME_MATCHER[pays_champ.value]
-      end
+      code = APIGeoService.country_code(pays_champ.value)
+      value = code.present? ? pays_champ.value : UNUSUAL_COUNTRY_NAME_MATCHER[pays_champ.value]
 
       if value.present? || !pays_champ.required?
         associated_country_code = APIGeoService.country_code(value)

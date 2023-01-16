@@ -116,7 +116,7 @@ fr:
           checkbox_html: '"true" pour coché, "false" pour décoché'
           pays_html: Un <a href="https://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">code pays ISO 3166-2</a>
           datetime_html: Datetime au format ISO8601
-          date: Date au format ISO8601
+          date_html: Date au format ISO8601
         examples:
           title: Exemple
           text: Texte court

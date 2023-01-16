@@ -1,4 +1,4 @@
-describe Temporary::BatchUpdatePaysValuesJob, type: :job do
+describe Migrations::BatchUpdatePaysValuesJob, type: :job do
   before do
     pays_champ.save(validate: false)
   end
