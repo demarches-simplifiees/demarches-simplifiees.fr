@@ -138,6 +138,9 @@ fr:
         prefill_query_info: Copiez la requête grâce au bouton ci-dessous et remplacez les valeurs par les données dont vous disposez.
         prefill_query_response_html: '# Response:<br># {<br>#    "dossier_url": "%{url}",<br>#    "dossier_id": "aBase64Id==",<br>#    "dossier_number": 42<br># }'
         prefill_query_copy: Copier la requête de préremplissage
+        json_schema_title: JSON Schema de la démarche
+        json_schema_info: Copiez la requête grâce au bouton ci-dessous pour découvrir les détails de la démarche et de ses champs au format JSON Schema
+        json_schema_copy: Copier la requête d'obtention du JSON Schema
     registrations:
       new:
         title: "Creation de compte sur %{name}"

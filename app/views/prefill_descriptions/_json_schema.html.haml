@@ -1,0 +1,8 @@
+= render Dsfr::CalloutComponent.new(title: t("views.prefill_descriptions.edit.json_schema_title"), theme: :success, icon: "fr-icon-layout-grid-fill") do |c|
+  - c.with_body do
+    = t("views.prefill_descriptions.edit.json_schema_info")
+    %pre
+      %code.code-block
+        = json_schema_url(prefill_description.path)
+  - c.with_bottom do
+    = render Dsfr::CopyButtonComponent.new(title: t("views.prefill_descriptions.edit.json_schema_copy"), text: json_schema_url(prefill_description.path))
