@@ -21,7 +21,7 @@ export class ReplaceAttachmentController extends ApplicationController {
 
       // reset autoAttachUrl which would add an attachment
       // when replace is not finalized
-      this.inputTarget.addEventListener('cancel', () => {
+      this.on(this.inputTarget, 'cancel', () => {
         this.inputTarget.dataset.autoAttachUrl =
           this.inputTarget.dataset.originalAutoAttachUrl;
       });
