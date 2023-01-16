@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import debounce from 'debounce';
+import invariant from 'tiny-invariant';
 
 export type Detail = Record<string, unknown>;
 
@@ -39,10 +40,27 @@ export class ApplicationController extends Controller {
   }
 
   protected on<HandlerEvent extends Event = Event>(
+    target: EventTarget,
     eventName: string,
     handler: (event: HandlerEvent) => void
+  ): void;
+  protected on<HandlerEvent extends Event = Event>(
+    eventName: string,
+    handler: (event: HandlerEvent) => void
+  ): void;
+  protected on<HandlerEvent extends Event = Event>(
+    targetOrEventName: EventTarget | string,
+    eventNameOrHandler: string | ((event: HandlerEvent) => void),
+    handler?: (event: HandlerEvent) => void
   ): void {
-    this.onTarget(this.element, eventName, handler);
+    if (typeof targetOrEventName == 'string') {
+      invariant(typeof eventNameOrHandler != 'string', 'handler is required');
+      this.onTarget(this.element, targetOrEventName, eventNameOrHandler);
+    } else {
+      invariant(eventNameOrHandler == 'string', 'event name is required');
+      invariant(handler, 'handler is required');
+      this.onTarget(targetOrEventName, eventNameOrHandler, handler);
+    }
   }
 
   protected onGlobal<HandlerEvent extends Event = Event>(
