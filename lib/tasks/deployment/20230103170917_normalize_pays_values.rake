@@ -5,7 +5,7 @@ namespace :after_party do
 
     # Put your task implementation HERE.
     Champs::PaysChamp.in_batches do |pays_champs|
-      Temporary::BatchUpdatePaysValuesJob.perform_later(pays_champs.pluck(:id))
+      Migrations::BatchUpdatePaysValuesJob.perform_later(pays_champs.pluck(:id))
     end
 
     # Update task as completed.  If you remove the line below, the task will
