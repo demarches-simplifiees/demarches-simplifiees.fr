@@ -511,28 +511,28 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@coldwired/actions@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@coldwired/actions/-/actions-0.8.0.tgz#a5e92c0badbc37ffa7c9e70d2aa7982739fbba5f"
-  integrity sha512-IbqyC2ToDv1JWBVkk33ywDrftD34r3WBLokub7Tlon8xS6FQQVejwmgqIqiQ3iLE0jiXOqKz2an3Y1e69mJ55A==
+"@coldwired/actions@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@coldwired/actions/-/actions-0.8.1.tgz#c309a2a38f5a0af11c03c4cf8e16c6496c7f9894"
+  integrity sha512-d+rgz+FHeKRcqPS8c8mPRuwYsbfDwIExJIOdpexAmhhW67c1V3xo4+oAwNSE395/qU5/JXmOnHPeqA6t6Fx9ew==
   dependencies:
-    "@coldwired/utils" "^0.4.1"
+    "@coldwired/utils" "^0.8.1"
     morphdom "^2.6.1"
     tiny-invariant "^1.3.1"
 
-"@coldwired/turbo-stream@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@coldwired/turbo-stream/-/turbo-stream-0.8.0.tgz#596202ecbca88f9b264d5055bedcb94298db626b"
-  integrity sha512-/ZKdAcgDkcH+YkW2RyxXGMM6OdpKp4nVpFGTYnor+4mR/jjEdnTRw+3wnZJQfgPzLMG39SXEmY4mp9xQM/qA3Q==
+"@coldwired/turbo-stream@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@coldwired/turbo-stream/-/turbo-stream-0.8.1.tgz#3f2f52b8cd59906c2387b78949c66fad79cb0eae"
+  integrity sha512-rxDzEObIZ4MQQzM2joXV2yjOLcveHBDkghDu6EiiCAMl95wV/O6dMTM1KW3+l6tjd0a5hTTKrhoNJKuWLTV5GA==
   dependencies:
-    "@coldwired/actions" "^0.8.0"
-    "@coldwired/utils" "^0.4.1"
+    "@coldwired/actions" "^0.8.1"
+    "@coldwired/utils" "^0.8.1"
     tiny-invariant "^1.3.1"
 
-"@coldwired/utils@^0.4.1":
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/@coldwired/utils/-/utils-0.4.1.tgz#50a615c81948754f4c7f118df05a44e078f28568"
-  integrity sha512-a673URA77AUBm8u5bWGtEmMi9oMv8HBidPT1GtRsaYma1W23Hd2Emn+oD6vUyGLfL+hJGT91w+Y2Y3x9BgLqwQ==
+"@coldwired/utils@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@coldwired/utils/-/utils-0.8.1.tgz#bd20e69d12d938b43ac03d4020416188e8c8107b"
+  integrity sha512-pT3vLSNFKXAZUi3IgomLXNiDB/l4Qer3/uHP6I6XzLY/q7xIBarhSmcuYUsgxs4jlH8sIsgAjU+PP0qGXc3QAg==
 
 "@esbuild/android-arm64@0.16.14":
   version "0.16.14"

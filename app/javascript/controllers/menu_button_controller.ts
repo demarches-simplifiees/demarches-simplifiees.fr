@@ -6,7 +6,6 @@ export class MenuButtonController extends ApplicationController {
   declare readonly buttonTarget: HTMLButtonElement;
   declare readonly menuTarget: HTMLElement;
 
-  #isOpen = false;
   #teardown?: () => void;
 
   connect() {
@@ -15,6 +14,10 @@ export class MenuButtonController extends ApplicationController {
 
   disconnect(): void {
     this.#teardown?.();
+  }
+
+  private get isOpen() {
+    return (this.element as HTMLElement).classList.contains('open');
   }
 
   private get isMenu() {
@@ -57,7 +60,7 @@ export class MenuButtonController extends ApplicationController {
       if (this.buttonTarget == target || this.buttonTarget.contains(target)) {
         event.preventDefault();
 
-        if (this.#isOpen) {
+        if (this.isOpen) {
           this.close();
         } else {
           this.open();
@@ -98,7 +101,6 @@ export class MenuButtonController extends ApplicationController {
       document.body.addEventListener('click', onClickBody);
     });
 
-    this.#isOpen = true;
     this.#teardown = () =>
       document.body.removeEventListener('click', onClickBody);
   }
@@ -108,7 +110,6 @@ export class MenuButtonController extends ApplicationController {
     this.menuTarget.parentElement?.classList.remove('open');
     this.#teardown?.();
     this.setFocusToMenuitem(null);
-    this.#isOpen = false;
   }
 
   private isClickOutside(target: HTMLElement) {
@@ -116,7 +117,7 @@ export class MenuButtonController extends ApplicationController {
       target.isConnected &&
       !this.element.contains(target) &&
       !target.closest('reach-portal') &&
-      this.#isOpen
+      this.isOpen
     );
   }
 
