@@ -6,7 +6,7 @@ describe ProcedureStatsConcern do
 
     before do
       create_list(:dossier, 2, :brouillon, procedure: procedure)
-      create_list(:dossier, 1, :en_instruction, procedure: procedure)
+      create(:dossier, :en_instruction, procedure: procedure)
     end
 
     it "returns the funnel stats" do
