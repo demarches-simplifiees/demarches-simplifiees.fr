@@ -122,7 +122,7 @@ en:
           phone_html: A phone number
           iban_html: An Iban number
           yes_no_html: '"true" for Yes, "false" pour No'
-          checkbox_html: '"on" to check, "off" to uncheck'
+          checkbox_html: '"true" to check, "false" to uncheck'
           pays_html: An <a href="https://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">ISO 3166-2 country code</a>
           date_html: ISO8601 date
           datetime_html: ISO8601 datetime
