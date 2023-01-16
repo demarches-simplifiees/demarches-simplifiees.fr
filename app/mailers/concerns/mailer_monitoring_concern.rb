@@ -2,8 +2,6 @@ module MailerMonitoringConcern
   extend ActiveSupport::Concern
 
   included do
-    before_action :add_dolist_header
-
     # Intercept & log any error, then re-raise so job will retry.
     # NOTE: rescue_from order matters, later matchers are tried first.
     rescue_from StandardError, with: :log_and_raise_delivery_error
@@ -19,14 +17,6 @@ module MailerMonitoringConcern
       else
         log_and_raise_delivery_error(exception)
       end
-    end
-
-    # mandatory for dolist
-    # used for tracking in Dolist UI
-    # the delivery_method is yet unknown (:balancer)
-    # so we add the dolist header for everyone
-    def add_dolist_header
-      headers['X-Dolist-Message-Name'] = action_name
     end
 
     def log_and_raise_delivery_error(exception)
