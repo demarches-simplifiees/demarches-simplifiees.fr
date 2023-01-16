@@ -68,9 +68,9 @@ describe BatchOperationProcessOneJob, type: :job do
 
       it 'removes a follower to the dossier' do
         expect { subject.perform_now }
-          .to change { dossier_job.reload.follows.first.unfollowed_at }
-          .from(nil)
-          .to(anything)
+          .to change { dossier_job.reload.follows.count }
+          .from(1)
+          .to(0)
       end
     end
 

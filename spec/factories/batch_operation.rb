@@ -56,8 +56,8 @@ FactoryBot.define do
       after(:build) do |batch_operation, evaluator|
         procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur], administrateurs: [create(:administrateur)])
         batch_operation.dossiers = [
-          create(:dossier, :with_individual, :followed, :en_instruction, procedure: procedure),
-          create(:dossier, :with_individual, :followed, :en_construction, procedure: procedure)
+          create(:dossier, :with_individual, :en_instruction, procedure: procedure, followers_instructeurs: procedure.instructeurs),
+          create(:dossier, :with_individual, :en_construction, procedure: procedure, followers_instructeurs: procedure.instructeurs)
         ]
       end
     end
