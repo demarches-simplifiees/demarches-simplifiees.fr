@@ -25,4 +25,48 @@ RSpec.describe ApplicationMailer, type: :mailer do
       it { expect(subject.message).not_to be_an_instance_of(ActionMailer::Base::NullMail) }
     end
   end
+
+  describe 'EmailDeliveryObserver is invoked' do
+    let(:user1) { create(:user) }
+    let(:user2) { create(:user, email: "your@email.com") }
+
+    it 'creates a new EmailEvent record with the correct information' do
+      expect { UserMailer.ask_for_merge(user1, user2.email).deliver_now }.to change { EmailEvent.count }.by(1)
+      event = EmailEvent.last
+
+      expect(event.to).to eq("your@email.com")
+      expect(event.method).to eq("test")
+      expect(event.subject).to eq('Fusion de compte')
+      expect(event.processed_at).to be_within(1.second).of(Time.zone.now)
+      expect(event.status).to eq('dispatched')
+    end
+
+    context "when email is not sent" do
+      subject(:send_email) { UserMailer.ask_for_merge(user1, user2.email).deliver_now }
+
+      before do
+        allow_any_instance_of(Mail::Message)
+          .to receive(:deliver)
+          .and_raise(smtp_error)
+      end
+
+      context "smtp server busy" do
+        let(:smtp_error) { Net::SMTPServerBusy.new }
+
+        it "creates an event" do
+          expect { send_email }.to change { EmailEvent.count }.by(1)
+          expect(EmailEvent.last.status).to eq('dispatch_error')
+        end
+      end
+
+      context "generic unknown error" do
+        let(:smtp_error) { Net::OpenTimeout.new }
+
+        it "creates an event" do
+          expect { send_email }.to change { EmailEvent.count }.by(1)
+          expect(EmailEvent.last.status).to eq('dispatch_error')
+        end
+      end
+    end
+  end
 end

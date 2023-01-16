@@ -1,4 +1,6 @@
 fr:
   operations:
-    archiver: 'Archiver les dossiers sélectionnés'
-    passer_en_instruction: 'Passer en instruction les dossiers sélectionnés'
+    archiver: 'Archiver les dossiers'
+    passer_en_instruction: 'Passer en instruction les dossiers'
+    accepter: 'Accepter les dossiers'
+    follow: 'Suivre les dossiers'

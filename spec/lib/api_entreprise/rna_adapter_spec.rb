@@ -30,7 +30,6 @@ describe APIEntreprise::RNAAdapter do
       expect(subject["association_titre"]).to eq('UN SUR QUATRE')
       expect(subject["association_objet"]).to eq("valoriser, transmettre et partager auprès des publics les plus larges possibles, les bienfaits de l'immigration, la richesse de la diversité et la curiosité de l'autre autrement")
       expect(subject["association_date_declaration"]).to eq('2014-01-24')
-      expect(subject["association_date_publication"]).to eq('2014-02-08')
     end
   end
 

@@ -34,7 +34,11 @@ class PrefillParams
     NEED_VALIDATION_TYPES_DE_CHAMPS = [
       TypeDeChamp.type_champs.fetch(:decimal_number),
       TypeDeChamp.type_champs.fetch(:integer_number),
+      TypeDeChamp.type_champs.fetch(:date),
+      TypeDeChamp.type_champs.fetch(:datetime),
       TypeDeChamp.type_champs.fetch(:civilite),
+      TypeDeChamp.type_champs.fetch(:yes_no),
+      TypeDeChamp.type_champs.fetch(:checkbox),
       TypeDeChamp.type_champs.fetch(:pays)
     ]
 
@@ -62,7 +66,7 @@ class PrefillParams
       return true unless NEED_VALIDATION_TYPES_DE_CHAMPS.include?(champ.type_champ)
 
       champ.value = value
-      champ.valid?
+      champ.valid?(:prefill)
     end
   end
 end

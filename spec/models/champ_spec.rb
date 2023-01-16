@@ -108,13 +108,13 @@ describe Champ do
     context 'when the value is sent by a modern browser' do
       let(:value) { '2017-12-31 10:23' }
 
-      it { expect(champ.value).to eq(value) }
+      it { expect(champ.value).to eq("2017-12-31T10:23:00+01:00") }
     end
 
     context 'when the value is sent by a old browser' do
       let(:value) { '31/12/2018 09:26' }
 
-      it { expect(champ.value).to eq('2018-12-31 09:26') }
+      it { expect(champ.value).to eq("2018-12-31T09:26:00+01:00") }
     end
   end
 
@@ -212,13 +212,13 @@ describe Champ do
         let(:type_de_champ) { build(:type_de_champ_checkbox, libelle: libelle) }
 
         context 'when the box is checked' do
-          let(:value) { 'on' }
+          let(:value) { 'true' }
 
           it { is_expected.to eq([libelle]) }
         end
 
         context 'when the box is unchecked' do
-          let(:value) { 'off' }
+          let(:value) { 'false' }
 
           it { is_expected.to be_nil }
         end
@@ -501,14 +501,14 @@ describe Champ do
     let(:champ) { dossier.champs_public.find(&:repetition?) }
     let(:champ_text) { champ.champs.find { |c| c.type_champ == 'text' } }
     let(:champ_integer) { champ.champs.find { |c| c.type_champ == 'integer_number' } }
-    let(:champ_text_attrs) { attributes_for(:champ_text, type_de_champ: tdc_text, row: 1) }
+    let(:champ_text_attrs) { attributes_for(:champ_text, type_de_champ: tdc_text, row_id: ULID.generate) }
 
     before do
       procedure.active_revision.add_type_de_champ(libelle: 'sub integer', type_champ: 'integer_number', parent_stable_id: tdc_repetition.stable_id)
     end
 
     context 'when creating the model directly' do
-      let(:champ_text_row_1) { create(:champ_text, type_de_champ: tdc_text, row: 2, parent: champ, dossier: nil) }
+      let(:champ_text_row_1) { create(:champ_text, type_de_champ: tdc_text, row_id: ULID.generate, parent: champ, dossier: nil) }
 
       it 'associates nested champs to the parent dossier' do
         expect(champ_text_row_1.dossier_id).to eq(champ.dossier_id)

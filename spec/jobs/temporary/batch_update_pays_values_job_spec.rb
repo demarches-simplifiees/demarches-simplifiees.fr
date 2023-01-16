@@ -41,7 +41,7 @@ describe Temporary::BatchUpdatePaysValuesJob, type: :job do
     it 'cleans the value' do
       subject
       expect(pays_champ.reload.value).to eq('Christmas, Île')
-      expect(pays_champ.reload.external_id).to be_nil
+      expect(pays_champ.reload.external_id).to eq('CX')
     end
   end
 end

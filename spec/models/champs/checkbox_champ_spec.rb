@@ -1,19 +1,23 @@
 describe Champs::CheckboxChamp do
-  let(:checkbox) { Champs::CheckboxChamp.new(value: value) }
+  it_behaves_like "a boolean champ" do
+    let(:boolean_champ) { Champs::CheckboxChamp.new(value: value) }
+  end
 
-  describe '#to_s' do
-    subject { checkbox.to_s }
+  # TODO remove when normalize_checkbox_values is over
+  describe '#true?' do
+    let(:checkbox_champ) { Champs::CheckboxChamp.new(value: value) }
+    subject { checkbox_champ.true? }
 
-    context 'when the value is on' do
+    context "when the checkbox value is 'on'" do
       let(:value) { 'on' }
 
-      it { is_expected.to eq('Oui') }
+      it { is_expected.to eq(true) }
     end
 
-    context 'when the value is off' do
+    context "when the checkbox value is 'off'" do
       let(:value) { 'off' }
 
-      it { is_expected.to eq('Non') }
+      it { is_expected.to eq(false) }
     end
   end
 end

@@ -38,10 +38,11 @@ en:
           title: Group management
           delete: delete the group
           delete_confirmation: Are you sure you want to delete the group "%{group_name}"
-          move_folders:
-            one: move 1 file
+          move_files:
+            zero: move draft files
+            one: move one file
             other: move the %{count} files
-          move_folders_confirmation: Reassign folders to another group so you can delete it
+          move_files_confirmation: Reassign folders to another group so you can delete it
         add_a_group:
           title: Add a group
           notice: This group will be a choice from the list "%{routing_criteria_name}"
