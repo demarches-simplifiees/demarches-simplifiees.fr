@@ -1,4 +1,5 @@
 class ApplicationMailer < ActionMailer::Base
+  include MailerDolistConcern
   include MailerMonitoringConcern
 
   helper :application # gives access to all helpers defined within `application_helper`.
