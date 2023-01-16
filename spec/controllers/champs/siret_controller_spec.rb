@@ -48,7 +48,7 @@ describe Champs::SiretController, type: :controller do
         end
       end
 
-      context 'when the SIRET is invalid' do
+      context "when the SIRET is invalid because of it's length" do
         let(:siret) { '1234' }
 
         subject! { get :show, params: params, format: :turbo_stream }
@@ -59,6 +59,20 @@ describe Champs::SiretController, type: :controller do
 
         it 'displays a “SIRET is invalid” error message' do
           expect(response.body).to include('Le numéro de SIRET doit comporter exactement 14 chiffres.')
+        end
+      end
+
+      context "when the SIRET is invalid because of it's checksum" do
+        let(:siret) { '82812345600023' }
+
+        subject! { get :show, params: params, format: :turbo_stream }
+
+        it 'clears the etablissement on the model' do
+          expect(champ.reload.etablissement).to be_nil
+        end
+
+        it 'displays a “SIRET is invalid” error message' do
+          expect(response.body).to include('Le format du numéro de SIRET est invalide.')
         end
       end
 

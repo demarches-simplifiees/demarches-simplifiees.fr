@@ -34,10 +34,16 @@ RSpec.describe SiretChampEtablissementFetchableConcern do
       it_behaves_like 'an error occured', :empty
     end
 
-    context 'when the SIRET is invalid' do
+    context "when the SIRET is invalid because of it's length" do
       let(:siret) { '1234' }
 
-      it_behaves_like 'an error occured', :invalid
+      it_behaves_like 'an error occured', :invalid_length
+    end
+
+    context "when the SIRET is invalid because of it's checksum" do
+      let(:siret) { '82812345600023' }
+
+      it_behaves_like 'an error occured', :invalid_checksum
     end
 
     context 'when the API is unavailable due to network error' do
