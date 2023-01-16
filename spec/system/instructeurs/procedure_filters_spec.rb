@@ -97,6 +97,7 @@ describe "procedure filters" do
   scenario "should be able to add and remove two filters for the same field", js: true do
     add_filter(type_de_champ.libelle, champ.value)
     add_filter(type_de_champ.libelle, champ_2.value)
+    add_enum_filter('Groupe instructeur', procedure.groupe_instructeurs.first.label)
 
     within ".dossiers-table" do
       expect(page).to have_link(new_unfollow_dossier.id.to_s, exact: true)
@@ -134,6 +135,14 @@ describe "procedure filters" do
     click_on 'Sélectionner un filtre'
     select column_name, from: "Colonne"
     fill_in "Valeur", with: filter_value
+    click_button "Ajouter le filtre"
+    expect(page).to have_no_css("select#field", visible: true)
+  end
+
+  def add_enum_filter(column_name, filter_value)
+    click_on 'Sélectionner un filtre'
+    select column_name, from: "Colonne"
+    select filter_value, from: "Valeur"
     click_button "Ajouter le filtre"
     expect(page).to have_no_css("select#field", visible: true)
   end
