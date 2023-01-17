@@ -80,7 +80,7 @@ Rails.application.configure do
   ActionMailer::Base.add_delivery_method :balancer, BalancerDeliveryMethod
   config.action_mailer.balancer_settings = {
     helo: ENV['HELO_ENABLED'] == 'enabled' ? 100 : 0,
-      letter_opener: ENV['HELO_ENABLED'] == 'enabled' ? 0 : 100
+    letter_opener: ENV['HELO_ENABLED'] == 'enabled' ? 0 : 100
   }
   config.action_mailer.delivery_method = :balancer
 

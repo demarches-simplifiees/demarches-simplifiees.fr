@@ -41,8 +41,8 @@ RSpec.describe ApplicationMailer, type: :mailer do
       expect(event.status).to eq('dispatched')
     end
 
-    context "when email is not sent" do
-      subject(:send_email) { UserMailer.ask_for_merge(user1, user2.email).deliver_now }
+    context "when there is an error and email are not sent" do
+      subject { UserMailer.ask_for_merge(user1, user2.email) }
 
       before do
         allow_any_instance_of(Mail::Message)
@@ -53,8 +53,8 @@ RSpec.describe ApplicationMailer, type: :mailer do
       context "smtp server busy" do
         let(:smtp_error) { Net::SMTPServerBusy.new }
 
-        it "creates an event" do
-          expect { send_email }.to change { EmailEvent.count }.by(1)
+        it "re-raise an error and creates an event" do
+          expect { subject.deliver_now }.to change { EmailEvent.count }.by(1).and raise_error(MailDeliveryError)
           expect(EmailEvent.last.status).to eq('dispatch_error')
         end
       end
@@ -62,8 +62,8 @@ RSpec.describe ApplicationMailer, type: :mailer do
       context "generic unknown error" do
         let(:smtp_error) { Net::OpenTimeout.new }
 
-        it "creates an event" do
-          expect { send_email }.to change { EmailEvent.count }.by(1)
+        it "re-raise an error and creates an event" do
+          expect { subject.deliver_now }.to change { EmailEvent.count }.by(1).and raise_error(MailDeliveryError)
           expect(EmailEvent.last.status).to eq('dispatch_error')
         end
       end
