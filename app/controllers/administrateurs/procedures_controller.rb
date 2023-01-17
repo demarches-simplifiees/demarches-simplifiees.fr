@@ -273,10 +273,16 @@ module Administrateurs
           @procedure.publish_revision!
           flash.notice = "Nouvelle version de la démarche publiée"
         end
-      elsif @procedure.publish_or_reopen!(current_administrateur)
-        flash.notice = "Démarche publiée"
       else
-        flash.alert = @procedure.errors.full_messages
+        begin
+          if @procedure.publish_or_reopen!(current_administrateur)
+            flash.notice = "Démarche publiée"
+          else
+            flash.alert = @procedure.errors.full_messages
+          end
+        rescue StandardError => e
+          flash.alert = @procedure.errors.full_messages
+        end
       end
 
       if params[:old_procedure].present? && @procedure.errors.empty?
