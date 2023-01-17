@@ -86,14 +86,19 @@ module Instructeurs
 
     def send_to_instructeurs
       recipients = params['recipients'].presence || [].to_json
-      recipients = Instructeur.find(JSON.parse(recipients))
+      # instructeurs are scoped by groupe_instructeur to avoid enumeration
+      recipients = dossier.groupe_instructeur.instructeurs.where(id: JSON.parse(recipients))
 
-      recipients.each do |recipient|
-        recipient.follow(dossier)
-        InstructeurMailer.send_dossier(current_instructeur, dossier, recipient).deliver_later
+      if recipients.present?
+        recipients.each do |recipient|
+          recipient.follow(dossier)
+          InstructeurMailer.send_dossier(current_instructeur, dossier, recipient).deliver_later
+        end
+        flash.notice = "Dossier envoyé"
+      else
+        flash.alert = "Instructeur inconnu ou non présent sur la procédure"
       end
 
-      flash.notice = "Dossier envoyé"
       redirect_to(personnes_impliquees_instructeur_dossier_path(procedure, dossier))
     end
 
