@@ -1,4 +1,26 @@
 describe ProcedureStatsConcern do
+  describe '#stats_dossiers_funnel' do
+    let(:procedure) { create(:procedure) }
+
+    subject(:stats_dossiers_funnel) { procedure.stats_dossiers_funnel }
+
+    before do
+      create_list(:dossier, 2, :brouillon, procedure: procedure)
+      create_list(:dossier, 1, :en_instruction, procedure: procedure)
+    end
+
+    it "returns the funnel stats" do
+      expect(stats_dossiers_funnel).to match(
+        [
+          ['Démarrés', procedure.dossiers.count],
+          ['Déposés', procedure.dossiers.state_not_brouillon.count],
+          ['Instruction débutée', procedure.dossiers.state_instruction_commencee.count],
+          ['Traités', procedure.dossiers.state_termine.count]
+        ]
+      )
+    end
+  end
+
   describe '#usual_traitement_time_for_recent_dossiers' do
     let(:procedure) { create(:procedure) }
 
