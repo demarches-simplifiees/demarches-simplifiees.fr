@@ -34,11 +34,11 @@
           %li.number
             .number-value
               = number_with_delimiter(@stat&.administrations_partenaires)
-            %div.number-label= t(".numbers.administrations")
+            .number-label= t(".numbers.administrations")
           %li.number
             .number-value
               = number_with_delimiter(@stat&.dossiers_not_brouillon)
-            %div.number-label= t(".numbers.files")
+            .number-label= t(".numbers.files")
           %li.number
             .number-value
               = "#{number_with_delimiter(50)} %"
