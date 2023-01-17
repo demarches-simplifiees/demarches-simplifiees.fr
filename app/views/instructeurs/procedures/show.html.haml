@@ -99,7 +99,7 @@
       %div{ data: batch_operation_component.render? ? { controller: 'batch-operation' } : {} }
         .flex.align-center.fr-mt-2w
           %span.fr-h6.fr-mb-0.fr-mr-2w
-            = t('views.instructeurs.dossiers.dossiers_count', count: @dossiers_count)
+            = page_entries_info @filtered_sorted_paginated_ids, entry_name: 'dossier'
 
           = render batch_operation_component
         .fr-table.fr-table--bordered
