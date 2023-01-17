@@ -2,15 +2,12 @@
 #
 # Table name: administrateurs
 #
-#  id              :integer          not null, primary key
-#  encrypted_token :string
-#  created_at      :datetime
-#  updated_at      :datetime
-#  user_id         :bigint           not null
+#  id         :integer          not null, primary key
+#  created_at :datetime
+#  updated_at :datetime
+#  user_id    :bigint           not null
 #
 class Administrateur < ApplicationRecord
-  self.ignored_columns = [:active, :encrypted_token]
-
   UNUSED_ADMIN_THRESHOLD = 6.months
 
   has_and_belongs_to_many :instructeurs
