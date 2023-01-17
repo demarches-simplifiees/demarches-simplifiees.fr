@@ -5,7 +5,7 @@ namespace :after_party do
 
     # Put your task implementation HERE.
     Champs::DatetimeChamp.in_batches do |datetime_champs|
-      Migrations::BatchUpdateDatetimeValueJob.perform_later(datetime_champs.pluck(:id))
+      Migrations::BatchUpdateDatetimeValuesJob.perform_later(datetime_champs.pluck(:id))
     end
 
     # Update task as completed.  If you remove the line below, the task will
