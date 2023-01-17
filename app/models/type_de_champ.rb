@@ -469,6 +469,14 @@ class TypeDeChamp < ApplicationRecord
       model_name: OpenStruct.new(param_key: model_name.param_key))
   end
 
+  def refresh_after_update?
+    self.class.refresh_after_update?(type_champ)
+  end
+
+  def self.refresh_after_update?(_type_champ)
+    false
+  end
+
   private
 
   DEFAULT_EMPTY = ['']
