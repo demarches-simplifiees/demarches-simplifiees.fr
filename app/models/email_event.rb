@@ -24,7 +24,7 @@ class EmailEvent < ApplicationRecord
       to.each do |recipient|
         EmailEvent.create!(
           to: recipient,
-          subject: message.subject,
+          subject: message.subject || "",
           processed_at: message.date,
           method: ActionMailer::Base.delivery_methods.key(message.delivery_method.class),
           status:
