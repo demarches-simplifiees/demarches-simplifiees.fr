@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_01_11_094621) do
+ActiveRecord::Schema.define(version: 2023_01_17_094317) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -60,9 +60,7 @@ ActiveRecord::Schema.define(version: 2023_01_11_094621) do
   end
 
   create_table "administrateurs", id: :serial, force: :cascade do |t|
-    t.boolean "active", default: false
     t.datetime "created_at"
-    t.string "encrypted_token"
     t.datetime "updated_at"
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_administrateurs_on_user_id"
@@ -226,7 +224,6 @@ ActiveRecord::Schema.define(version: 2023_01_11_094621) do
     t.boolean "prefilled"
     t.boolean "private", default: false, null: false
     t.datetime "rebased_at"
-    t.integer "row"
     t.string "row_id"
     t.string "type"
     t.integer "type_de_champ_id", null: false
@@ -237,7 +234,6 @@ ActiveRecord::Schema.define(version: 2023_01_11_094621) do
     t.index ["etablissement_id"], name: "index_champs_on_etablissement_id"
     t.index ["parent_id"], name: "index_champs_on_parent_id"
     t.index ["private"], name: "index_champs_on_private"
-    t.index ["row"], name: "index_champs_on_row"
     t.index ["row_id"], name: "index_champs_on_row_id"
     t.index ["type"], name: "index_champs_on_type"
     t.index ["type_de_champ_id", "dossier_id", "row_id"], name: "index_champs_on_type_de_champ_id_and_dossier_id_and_row_id", unique: true
