@@ -77,7 +77,11 @@ class Migrations::BatchUpdatePaysValuesJob < ApplicationJob
       next if pays_champ.valid?
 
       code = APIGeoService.country_code(pays_champ.value)
-      value = code.present? ? pays_champ.value : UNUSUAL_COUNTRY_NAME_MATCHER[pays_champ.value]
+      value = if code.present?
+        APIGeoService.country_name(code)
+      else
+        UNUSUAL_COUNTRY_NAME_MATCHER[pays_champ.value]
+      end
 
       if value.present? || !pays_champ.required?
         associated_country_code = APIGeoService.country_code(value)

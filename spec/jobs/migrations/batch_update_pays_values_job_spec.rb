@@ -30,7 +30,7 @@ describe Migrations::BatchUpdatePaysValuesJob, type: :job do
 
     it 'cleans the value' do
       subject
-      expect(pays_champ.reload.value).to eq('Vietnam')
+      expect(pays_champ.reload.value).to eq('Viêt Nam')
       expect(pays_champ.reload.external_id).to eq('VN')
     end
   end
