@@ -65,8 +65,8 @@ Rails.application.config.content_security_policy do |policy|
     policy.report_uri CSP_REPORT_URI if CSP_REPORT_URI.present?
   end
   # polynesian configurations
-  policy.connect_src(*policy.connect_src, "www.tefenua.gov.pf", "oos.eu-west-2.outscale.com", "osu.cloudgouv-eu-west-1.outscale.com")
-  policy.default_src(*policy.default_src, "oos.eu-west-2.outscale.com", "osu.cloudgouv-eu-west-1.outscale.com")
+  policy.connect_src(*policy.connect_src, "www.tefenua.gov.pf", "oos.eu-west-2.outscale.com", "oos.cloudgouv-eu-west-1.outscale.com")
+  policy.default_src(*policy.default_src, "oos.eu-west-2.outscale.com", "oos.cloudgouv-eu-west-1.outscale.com")
 end
 
 # If you are using UJS then enable automatic nonce generation
