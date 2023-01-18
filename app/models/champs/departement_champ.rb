@@ -8,7 +8,6 @@
 #  prefilled                      :boolean          default(FALSE)
 #  private                        :boolean          default(FALSE), not null
 #  rebased_at                     :datetime
-#  row                            :integer
 #  type                           :string
 #  value                          :string
 #  value_json                     :jsonb
@@ -18,6 +17,7 @@
 #  etablissement_id               :integer
 #  external_id                    :string
 #  parent_id                      :bigint
+#  row_id                         :string
 #  type_de_champ_id               :integer
 #
 class Champs::DepartementChamp < Champs::TextChamp
@@ -37,6 +37,10 @@ class Champs::DepartementChamp < Champs::TextChamp
     formatted_value
   end
 
+  def for_api_v2
+    formatted_value.tr('–', '-')
+  end
+
   def selected
     code
   end
@@ -46,7 +50,7 @@ class Champs::DepartementChamp < Champs::TextChamp
   end
 
   def name
-    maybe_code_and_name = value&.match(/(\d+) - (.+)/)
+    maybe_code_and_name = value&.match(/^(\w{2,3}) - (.+)/)
     if maybe_code_and_name
       maybe_code_and_name[2]
     else

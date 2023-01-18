@@ -15,7 +15,7 @@ class PrefillDescription < SimpleDelegator
   end
 
   def types_de_champ
-    active_revision.types_de_champ_public.fillable.partition(&:prefillable?).flatten
+    TypesDeChamp::PrefillTypeDeChamp.wrap(active_revision.types_de_champ_public.fillable.partition(&:prefillable?).flatten)
   end
 
   def include?(type_de_champ_id)
@@ -40,21 +40,17 @@ class PrefillDescription < SimpleDelegator
   end
 
   def prefilled_champs
-    @prefilled_champs ||= active_fillable_public_types_de_champ.where(id: selected_type_de_champ_ids)
+    @prefilled_champs ||= TypesDeChamp::PrefillTypeDeChamp.wrap(active_fillable_public_types_de_champ.where(id: selected_type_de_champ_ids))
   end
 
   private
 
   def prefilled_champs_for_link
-    prefilled_champs.map { |type_de_champ| ["champ_#{type_de_champ.to_typed_id}", example_value(type_de_champ)] }.to_h
+    prefilled_champs.map { |type_de_champ| ["champ_#{type_de_champ.to_typed_id}", type_de_champ.example_value] }.to_h
   end
 
   def prefilled_champs_for_query
-    prefilled_champs.map { |type_de_champ| "\"champ_#{type_de_champ.to_typed_id}\": \"#{example_value(type_de_champ)}\"" } .join(', ')
-  end
-
-  def example_value(type_de_champ)
-    I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")
+    prefilled_champs.map { |type_de_champ| "\"champ_#{type_de_champ.to_typed_id}\": \"#{type_de_champ.example_value}\"" } .join(', ')
   end
 
   def active_fillable_public_types_de_champ

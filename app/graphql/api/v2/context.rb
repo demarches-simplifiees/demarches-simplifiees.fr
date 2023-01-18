@@ -15,8 +15,19 @@ class API::V2::Context < GraphQL::Query::Context
     self[:internal_use]
   end
 
-  def authorized_demarche?(demarche)
+  def current_administrateur
+    unless self[:administrateur_id]
+      raise GraphQL::ExecutionError.new("Pour effectuer cette opération, vous avez besoin d’un jeton au nouveau format. Vous pouvez l’obtenir dans votre interface administrateur.", extensions: { code: :deprecated_token })
+    end
+    Administrateur.find(self[:administrateur_id])
+  end
+
+  def authorized_demarche?(demarche, opendata: false)
     if internal_use?
+      return true
+    end
+
+    if opendata && demarche.opendata?
       return true
     end
 

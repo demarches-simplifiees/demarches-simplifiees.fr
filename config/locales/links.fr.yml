@@ -4,6 +4,18 @@ fr:
       provided_by: "la DINUM"
       title: "Direction Interministérielle au Numérique"
       url: "https://numerique.gouv.fr"
+    common:
+      faq:
+        label: "FAQ"
+        title: "Foire aux Questions"
+        url: "https://faq.demarches-simplifiees.fr"
+        autosave_url: "https://faq.demarches-simplifiees.fr/article/77-enregistrer-mon-formulaire-pour-le-reprendre-plus-tard?preview=5ec28ca1042863474d1aee00"
+        comment_trouver_ma_demarche_url: "https://faq.demarches-simplifiees.fr/article/59-comment-trouver-ma-demarche"
+        confirmer_compte_chaque_connexion_url: "https://faq.demarches-simplifiees.fr/article/34-je-dois-confirmer-mon-compte-a-chaque-connexion"
+        contacter_service_en_charge_url: "https://faq.demarches-simplifiees.fr/article/12-contacter-le-service-en-charge-de-ma-demarche"
+        email_non_recu_url: "https://faq.demarches-simplifiees.fr/article/79-je-ne-recois-pas-demail"
+        erreur_siret_url: "https://faq.demarches-simplifiees.fr/article/4-erreur-siret"
+        ou_en_est_mon_dossier_url: "https://faq.demarches-simplifiees.fr/article/11-je-veux-savoir-ou-en-est-linstruction-de-ma-demarche"
     footer:
       top_labels:
         communication: Communication
@@ -43,10 +55,6 @@ fr:
         label: "Documentation"
         title: "Documentation utilisateur"
         url: "https://doc.demarches-simplifiees.fr"
-      faq:
-        label: "FAQ"
-        title: "Foire aux Questions"
-        url: "https://faq.demarches-simplifiees.fr"
       mentions_legales:
         label: "Mentions légales"
         title: "Consulter nos Mentions légales"

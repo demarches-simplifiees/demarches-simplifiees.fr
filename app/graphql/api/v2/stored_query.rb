@@ -50,7 +50,7 @@ class API::V2::StoredQuery
       declarative
       dateCreation
       dateFermeture
-      publishedRevision @include(if: $includeRevision) {
+      activeRevision @include(if: $includeRevision) {
         ...RevisionFragment
       }
       groupeInstructeurs @include(if: $includeGroupeInstructeurs) {
@@ -305,25 +305,65 @@ class API::V2::StoredQuery
     datePublication
     champDescriptors {
       ...ChampDescriptorFragment
-      champDescriptors {
-        ...ChampDescriptorFragment
+      ... on RepetitionChampDescriptor {
+        champDescriptors {
+          ...ChampDescriptorFragment
+        }
       }
     }
     annotationDescriptors {
       ...ChampDescriptorFragment
-      champDescriptors {
-        ...ChampDescriptorFragment
+      ... on RepetitionChampDescriptor {
+        champDescriptors {
+          ...ChampDescriptorFragment
+        }
       }
     }
   }
 
   fragment ChampDescriptorFragment on ChampDescriptor {
+    __typename
     id
-    type
     label
     description
     required
-    options
+    ... on DropDownListChampDescriptor {
+      options
+      otherOption
+    }
+    ... on MultipleDropDownListChampDescriptor {
+      options
+    }
+    ... on LinkedDropDownListChampDescriptor {
+      options
+    }
+    ... on PieceJustificativeChampDescriptor {
+      fileTemplate {
+        ...FileFragment
+      }
+    }
+    ... on ExplicationChampDescriptor {
+      collapsibleExplanationEnabled
+      collapsibleExplanationText
+    }
+    ... on PaysChampDescriptor {
+      options {
+        name
+        code
+      }
+    }
+    ... on RegionChampDescriptor {
+      options {
+        name
+        code
+      }
+    }
+    ... on DepartementChampDescriptor {
+      options {
+        name
+        code
+      }
+    }
   }
 
   fragment AvisFragment on Avis {
@@ -744,6 +784,69 @@ class API::V2::StoredQuery
     groupeInstructeurModifier(input: $input) {
       groupeInstructeur {
         id
+      }
+      errors {
+        message
+      }
+    }
+  }
+
+  mutation groupeInstructeurCreer($input: GroupeInstructeurCreerInput!, $includeInstructeurs: Boolean = false) {
+    groupeInstructeurCreer(input: $input) {
+      groupeInstructeur {
+        id
+        instructeurs @include(if: $includeInstructeurs) {
+          id
+          email
+        }
+      }
+      errors {
+        message
+      }
+      warnings {
+        message
+      }
+    }
+  }
+
+  mutation groupeInstructeurAjouterInstructeurs($input: GroupeInstructeurAjouterInstructeursInput!, $includeInstructeurs: Boolean = false) {
+    groupeInstructeurAjouterInstructeurs(input: $input) {
+      groupeInstructeur {
+        id
+        instructeurs @include(if: $includeInstructeurs) {
+          id
+          email
+        }
+      }
+      errors {
+        message
+      }
+      warnings {
+        message
+      }
+    }
+  }
+
+  mutation groupeInstructeurSupprimerInstructeurs($input: GroupeInstructeurSupprimerInstructeursInput!, $includeInstructeurs: Boolean = false) {
+    groupeInstructeurSupprimerInstructeurs(input: $input) {
+      groupeInstructeur {
+        id
+        instructeurs @include(if: $includeInstructeurs) {
+          id
+          email
+        }
+      }
+      errors {
+        message
+      }
+    }
+  }
+
+  mutation demarcheCloner($input: DemarcheClonerInput!) {
+    demarcheCloner(input: $input) {
+      demarche {
+        id
+        number
       }
       errors {
         message

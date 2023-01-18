@@ -134,16 +134,16 @@ describe ChampSerializer do
     end
 
     context 'when type champ checkbox' do
-      context 'on' do
-        let(:champ) { create(:champ_checkbox, value: 'on') }
+      context 'true' do
+        let(:champ) { create(:champ_checkbox, value: 'true') }
 
-        it { is_expected.to include(value: 'on') }
+        it { is_expected.to include(value: 'true') }
       end
 
-      context 'off' do
-        let(:champ) { create(:champ_checkbox, value: 'off') }
+      context 'false' do
+        let(:champ) { create(:champ_checkbox, value: 'false') }
 
-        it { is_expected.to include(value: 'off') }
+        it { is_expected.to include(value: 'false') }
       end
 
       context 'nil' do

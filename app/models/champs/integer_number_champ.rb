@@ -8,7 +8,6 @@
 #  prefilled                      :boolean          default(FALSE)
 #  private                        :boolean          default(FALSE), not null
 #  rebased_at                     :datetime
-#  row                            :integer
 #  type                           :string
 #  value                          :string
 #  value_json                     :jsonb
@@ -18,6 +17,7 @@
 #  etablissement_id               :integer
 #  external_id                    :string
 #  parent_id                      :bigint
+#  row_id                         :string
 #  type_de_champ_id               :integer
 #
 class Champs::IntegerNumberChamp < Champ

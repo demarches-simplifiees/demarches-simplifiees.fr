@@ -12,23 +12,29 @@ class API::V2::Schema < GraphQL::Schema
   context_class API::V2::Context
 
   def self.id_from_object(object, type_definition, ctx)
-    if object.is_a?(Hash)
+    if type_definition == Types::DemarcheDescriptorType
+      (object.is_a?(Procedure) ? object : object.procedure).to_typed_id
+    elsif object.is_a?(Hash)
       object[:id]
     else
       object.to_typed_id
     end
   end
 
-  def self.object_from_id(id, query_ctx)
+  def self.object_from_id(id, ctx)
     ApplicationRecord.record_from_typed_id(id)
   rescue => e
     raise GraphQL::ExecutionError.new(e.message, extensions: { code: :not_found })
   end
 
-  def self.resolve_type(type, obj, ctx)
-    case obj
+  def self.resolve_type(type_definition, object, ctx)
+    case object
     when Procedure
-      Types::DemarcheType
+      if type_definition == Types::DemarcheDescriptorType
+        type_definition
+      else
+        Types::DemarcheType
+      end
     when Dossier
       Types::DossierType
     when Commentaire
@@ -42,7 +48,7 @@ class API::V2::Schema < GraphQL::Schema
     when GroupeInstructeur
       Types::GroupeInstructeurType
     else
-      raise GraphQL::ExecutionError.new("Unexpected object: #{obj}")
+      raise GraphQL::ExecutionError.new("Unexpected object: #{object}")
     end
   end
 
@@ -69,7 +75,42 @@ class API::V2::Schema < GraphQL::Schema
     Types::GeoAreas::ParcelleCadastraleType,
     Types::GeoAreas::SelectionUtilisateurType,
     Types::PersonneMoraleType,
-    Types::PersonnePhysiqueType
+    Types::PersonnePhysiqueType,
+    Types::Champs::Descriptor::AddressChampDescriptorType,
+    Types::Champs::Descriptor::AnnuaireEducationChampDescriptorType,
+    Types::Champs::Descriptor::CarteChampDescriptorType,
+    Types::Champs::Descriptor::CheckboxChampDescriptorType,
+    Types::Champs::Descriptor::CiviliteChampDescriptorType,
+    Types::Champs::Descriptor::CnafChampDescriptorType,
+    Types::Champs::Descriptor::CommuneChampDescriptorType,
+    Types::Champs::Descriptor::DateChampDescriptorType,
+    Types::Champs::Descriptor::DatetimeChampDescriptorType,
+    Types::Champs::Descriptor::DecimalNumberChampDescriptorType,
+    Types::Champs::Descriptor::DepartementChampDescriptorType,
+    Types::Champs::Descriptor::DgfipChampDescriptorType,
+    Types::Champs::Descriptor::DossierLinkChampDescriptorType,
+    Types::Champs::Descriptor::DropDownListChampDescriptorType,
+    Types::Champs::Descriptor::EmailChampDescriptorType,
+    Types::Champs::Descriptor::ExplicationChampDescriptorType,
+    Types::Champs::Descriptor::HeaderSectionChampDescriptorType,
+    Types::Champs::Descriptor::IbanChampDescriptorType,
+    Types::Champs::Descriptor::IntegerNumberChampDescriptorType,
+    Types::Champs::Descriptor::LinkedDropDownListChampDescriptorType,
+    Types::Champs::Descriptor::MesriChampDescriptorType,
+    Types::Champs::Descriptor::MultipleDropDownListChampDescriptorType,
+    Types::Champs::Descriptor::NumberChampDescriptorType,
+    Types::Champs::Descriptor::PaysChampDescriptorType,
+    Types::Champs::Descriptor::PhoneChampDescriptorType,
+    Types::Champs::Descriptor::PieceJustificativeChampDescriptorType,
+    Types::Champs::Descriptor::PoleEmploiChampDescriptorType,
+    Types::Champs::Descriptor::RegionChampDescriptorType,
+    Types::Champs::Descriptor::RepetitionChampDescriptorType,
+    Types::Champs::Descriptor::RNAChampDescriptorType,
+    Types::Champs::Descriptor::SiretChampDescriptorType,
+    Types::Champs::Descriptor::TextChampDescriptorType,
+    Types::Champs::Descriptor::TextareaChampDescriptorType,
+    Types::Champs::Descriptor::TitreIdentiteChampDescriptorType,
+    Types::Champs::Descriptor::YesNoChampDescriptorType
 
   def self.unauthorized_object(error)
     # Add a top-level error to the response instead of returning nil:

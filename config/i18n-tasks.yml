@@ -108,6 +108,7 @@ ignore_unused:
 - 'views.pagination.*'
 - 'time.formats.default'
 - 'instructeurs.dossiers.filterable_state.*'
+- 'views.prefill_descriptions.edit.possible_values.*'
 # - '{devise,kaminari,will_paginate}.*'
 # - 'simple_form.{yes,no}'
 # - 'simple_form.{placeholders,hints,labels}.*'

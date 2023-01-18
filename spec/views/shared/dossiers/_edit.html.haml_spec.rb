@@ -8,7 +8,7 @@ describe 'shared/dossiers/edit.html.haml', type: :view do
 
   context 'when there are some champs' do
     let(:dossier) { create(:dossier) }
-    let(:champ_checkbox) { create(:champ_checkbox, dossier: dossier, value: 'on') }
+    let(:champ_checkbox) { create(:champ_checkbox, dossier: dossier, value: 'true') }
     let(:champ_header_section) { create(:champ_header_section, dossier: dossier, value: 'Section') }
     let(:champ_explication) { create(:champ_explication, dossier: dossier, value: 'mazette') }
     let(:champ_dossier_link) { create(:champ_dossier_link, dossier: dossier, value: dossier.id) }
@@ -40,7 +40,7 @@ describe 'shared/dossiers/edit.html.haml', type: :view do
   context 'with a single-value list' do
     let(:dossier) { create(:dossier) }
     let(:type_de_champ) { create(:type_de_champ_drop_down_list, mandatory: mandatory, procedure: dossier.procedure) }
-    let(:champ) { create(:champ_drop_down_list, dossier: dossier, type_de_champ: type_de_champ) }
+    let(:champ) { create(:champ_drop_down_list, dossier: dossier, type_de_champ: type_de_champ, value: value) }
     let(:options) { type_de_champ.drop_down_list_options }
     let(:enabled_options) { type_de_champ.drop_down_list_enabled_non_empty_options }
     let(:mandatory) { true }
@@ -48,6 +48,7 @@ describe 'shared/dossiers/edit.html.haml', type: :view do
     before { dossier.champs_public << champ }
 
     context 'when the list is short' do
+      let(:value) { 'val1' }
       it 'renders the list as radio buttons' do
         expect(subject).to have_selector('input[type=radio]', count: enabled_options.count)
       end
@@ -63,6 +64,7 @@ describe 'shared/dossiers/edit.html.haml', type: :view do
     end
 
     context 'when the list is long' do
+      let(:value) { 'alpha' }
       let(:type_de_champ) { create(:type_de_champ_drop_down_list, :long, procedure: dossier.procedure) }
 
       it 'renders the list as a dropdown' do

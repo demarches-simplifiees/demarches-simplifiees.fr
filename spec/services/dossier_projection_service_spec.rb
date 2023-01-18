@@ -215,7 +215,7 @@ describe DossierProjectionService do
             dossier.champs_public.first.update(value: "qu'il est beau mon pays")
           end
 
-          it { is_expected.to eq("qu'il est beau mon pays") }
+          it { is_expected.to eq("") }
         end
       end
     end

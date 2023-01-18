@@ -104,16 +104,20 @@ fr:
         champ_unavailable: Indisponible
         possible_values:
           title: Valeurs
-          text: Un texte court
-          textarea: Un texte long
-          decimal_number: Un nombre décimal
-          integer_number: Un nombre entier
-          email: Une adresse email
-          civilite: '"M." pour Monsieur, "Mme" pour Madame'
-          phone: Un numéro de téléphone
-          iban: Un numéro Iban
-          yes_no: '"true" pour Oui, "false" pour Non'
-          checkbox: '"on" pour coché, "off" pour décoché'
+          text_html: Un texte court
+          textarea_html: Un texte long
+          decimal_number_html: Un nombre décimal
+          integer_number_html: Un nombre entier
+          email_html: Une adresse email
+          civilite_html: '"M." pour Monsieur, "Mme" pour Madame'
+          phone_html: Un numéro de téléphone
+          iban_html: Un numéro Iban
+          yes_no_html: '"true" pour Oui, "false" pour Non'
+          checkbox_html: '"true" pour coché, "false" pour décoché'
+          pays_html: Un <a href="https://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">code pays ISO 3166-2</a>
+          datetime_html: Datetime au format ISO8601
+          date_html: Date au format ISO8601
+          drop_down_list_other_html: Toute valeur
         examples:
           title: Exemple
           text: Texte court
@@ -125,14 +129,17 @@ fr:
           iban: FR7611315000011234567890138
           yes_no: "true"
           civilite: "M."
-          checkbox: "on"
+          pays: "FR"
+          date: "2023-02-01"
+          datetime: "2023-02-01T10:30"
+          checkbox: "true"
         prefill_link_title: Lien de préremplissage (GET)
         prefill_link_info: Copiez le lien grâce au bouton ci-dessous et remplacez les valeurs par les données dont vous disposez.
         prefill_link_too_long: Attention, ce lien de préremplissage est trop long et risque de ne pas fonctionner sur certains navigateurs.
         prefill_link_copy: Copier le lien de préremplissage
         prefill_query_title: Requête de préremplissage (POST)
         prefill_query_info: Copiez la requête grâce au bouton ci-dessous et remplacez les valeurs par les données dont vous disposez.
-        prefill_query_response_html: '# Response:<br># {"dossier_url":"%{url}"}'
+        prefill_query_response_html: '# Response:<br># {<br>#    "dossier_url": "%{url}",<br>#    "dossier_id": "aBase64Id==",<br>#    "dossier_number": 42<br># }'
         prefill_query_copy: Copier la requête de préremplissage
         json_schema_title: JSON Schema de la démarche
         json_schema_info: Copiez la requête grâce au bouton ci-dessous pour découvrir les détails de la démarche et de ses champs au format JSON Schema
@@ -214,13 +221,17 @@ fr:
         deleted_by_administration: "Dossier supprimé par l’administration"
         restore: "Restaurer"
         filters:
-          title: Filtrer
+          title: Sélectionner un filtre
         select_all: Tout selectionner
         batch_operation:
           enabled: "Ajouter ce dossier à la selection pour un traitement de masse"
           disabled: "Impossible d'ajouter ce dossier à la selection car il est déjà dans un traitement de masse"
+        dossiers_count:
+          zero: 0 dossier
+          one: 1 dossier
+          other: "%{count} dossiers"
         show_deleted_dossiers: Afficher les dossiers supprimés
-        personalize: Personnaliser
+        personalize: Personnaliser le tableau
         download: Télécharger un dossier
         follow_file: Suivre le dossier
         stop_follow: Ne plus suivre
@@ -264,7 +275,7 @@ fr:
         show:
           header:
             edit_dossier: Modifier mon dossier
-            edit_dossier_title: "Modifier mon dossier - Vous pouvez modifier votre dossier tant qu’il n’est passé en instruction"
+            edit_dossier_title: "Modifier mon dossier - Vous pouvez modifier votre dossier tant qu’il n’est pas passé en instruction"
             summary: "Résumé"
             request: "Demande"
             mailbox: "Messagerie"
@@ -430,7 +441,10 @@ fr:
               invalid: "doit posséder 13 ou 14 caractères"
             reference_avis:
               invalid: "doit posséder 13 ou 14 caractères"
-
+        "champs/drop_down_list_champ":
+          attributes:
+            value:
+              not_in_options: "doit être dans les options proposées"
   errors:
     format: "Le champ « %{attribute} » %{message}"
     messages:
@@ -459,6 +473,8 @@ fr:
         one: "Aucune parcelle cadastrale sur la zone sélectionnée"
         other: "Aucune parcelle cadastrale sur les zones sélectionnées"
       not_an_integer: "doit être un nombre entier (sans chiffres après la virgule)"
+      not_a_date: "doit être une date correctement formatée"
+      not_a_datetime: "doit être une date et heure correctement formatée"
       blank: "doit être rempli"
   time:
     formats:

@@ -4,7 +4,7 @@ module Manager
     before_action :default_params
 
     def default_params
-      params[resource_name] ||= {
+      request.query_parameters[resource_name] ||= {
         order: "created_at",
         direction: "desc"
       }

@@ -65,10 +65,15 @@ Rails.application.routes.draw do
 
     resources :team_accounts, only: [:index, :show]
 
+    resources :email_events, only: [:index, :show] do
+      post :generate_dolist_report, on: :collection
+    end
+
     resources :dubious_procedures, only: [:index]
     resources :outdated_procedures, only: [:index] do
       patch :bulk_update, on: :collection
     end
+    resources :safe_mailers, only: [:index, :edit, :update, :destroy, :new, :create, :show]
 
     post 'demandes/create_administrateur'
     post 'demandes/refuse_administrateur'
@@ -196,6 +201,7 @@ Rails.application.routes.draw do
   resources :procedures, only: [], param: :path do
     member do
       resource :prefill_description, only: :update
+      resources :prefill_type_de_champs, only: :show
     end
   end
 
@@ -323,8 +329,6 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :prefills, only: :show
-
     resource :feedback, only: [:create]
     get 'demarches' => 'demarches#index'
 
@@ -394,7 +398,8 @@ Rails.application.routes.draw do
         patch 'update_displayed_fields'
         get 'update_sort/:table/:column' => 'procedures#update_sort', as: 'update_sort'
         post 'add_filter'
-        get 'remove_filter' => 'procedures#remove_filter', as: 'remove_filter'
+        post 'update_filter'
+        get 'remove_filter'
         get 'download_export'
         post 'download_export'
         get 'stats'
@@ -462,7 +467,7 @@ Rails.application.routes.draw do
       end
 
       member do
-        get 'detail'
+        post 'detail'
         get 'apercu'
         get 'champs'
         get 'zones'

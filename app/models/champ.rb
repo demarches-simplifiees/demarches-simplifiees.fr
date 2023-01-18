@@ -8,7 +8,6 @@
 #  prefilled                      :boolean          default(FALSE)
 #  private                        :boolean          default(FALSE), not null
 #  rebased_at                     :datetime
-#  row                            :integer
 #  type                           :string
 #  value                          :string
 #  value_json                     :jsonb
@@ -18,6 +17,7 @@
 #  etablissement_id               :integer
 #  external_id                    :string
 #  parent_id                      :bigint
+#  row_id                         :string
 #  type_de_champ_id               :integer
 #
 class Champ < ApplicationRecord
@@ -76,7 +76,7 @@ class Champ < ApplicationRecord
     includes(:type_de_champ)
       .joins(dossier: { revision: :revision_types_de_champ })
       .where('procedure_revision_types_de_champ.type_de_champ_id = champs.type_de_champ_id')
-      .order(:row, :position)
+      .order(:row_id, :position)
   end
   scope :public_ordered, -> { public_only.ordered }
   scope :private_ordered, -> { private_only.ordered }
@@ -145,8 +145,8 @@ class Champ < ApplicationRecord
   end
 
   def to_typed_id
-    if row.present?
-      GraphQL::Schema::UniqueWithinType.encode('Champ', "#{stable_id}|#{row}")
+    if row_id.present?
+      GraphQL::Schema::UniqueWithinType.encode('Champ', "#{stable_id}|#{row_id}")
     else
       type_de_champ.to_typed_id
     end
@@ -213,7 +213,10 @@ class Champ < ApplicationRecord
   end
 
   def visible?
-    if conditional?
+    # Huge gain perf for cascade conditions
+    return @visible if instance_variable_defined? :@visible
+
+    @visible = if conditional?
       type_de_champ.condition.compute(champs_for_condition)
     else
       true
@@ -221,7 +224,7 @@ class Champ < ApplicationRecord
   end
 
   def clone
-    champ_attributes = [:parent_id, :private, :row, :type, :type_de_champ_id]
+    champ_attributes = [:parent_id, :private, :row_id, :type, :type_de_champ_id]
     value_attributes = private? ? [] : [:value, :value_json, :data, :external_id]
     relationships = private? ? [] : [:etablissement, :geo_areas]
 
@@ -233,7 +236,7 @@ class Champ < ApplicationRecord
   private
 
   def champs_for_condition
-    dossier.champs.filter { _1.row.nil? || _1.row == row }
+    dossier.champs.filter { _1.row_id.nil? || _1.row_id == row_id }
   end
 
   def html_id

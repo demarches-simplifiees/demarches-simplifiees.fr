@@ -40,7 +40,7 @@ module Administrateurs
         @instructeurs = paginated_instructeurs
         @groupes_instructeurs = paginated_groupe_instructeurs
 
-        flash[:alert] = @groupe_instructeur.errors.full_messages
+        flash.now[:alert] = @groupe_instructeur.errors.full_messages
         render :index
       end
     end
@@ -56,7 +56,7 @@ module Administrateurs
         @instructeurs = paginated_instructeurs
         @available_instructeur_emails = available_instructeur_emails
 
-        flash[:alert] = @groupe_instructeur.errors.full_messages
+        flash.now[:alert] = @groupe_instructeur.errors.full_messages
         render :show
       end
     end
@@ -109,9 +109,9 @@ module Administrateurs
 
     def add_instructeur
       emails = params['emails'].presence || [].to_json
-      emails = JSON.parse(emails)
+      emails = JSON.parse(emails).map { EmailSanitizableConcern::EmailSanitizer.sanitize(_1) }
 
-      instructeurs, invalid_emails = Instructeur.find_or_invite(emails:, groupe_instructeur:)
+      instructeurs, invalid_emails = groupe_instructeur.add_instructeurs(emails:)
 
       if invalid_emails.present?
         flash[:alert] = t('.wrong_address',
