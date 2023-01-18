@@ -79,6 +79,16 @@ describe API::V2::GraphqlController do
           expect(gql_data[:demarche][:dossiers][:nodes].size).to eq(1)
         }
       end
+
+      context 'include Revision' do
+        let(:variables) { { demarcheNumber: procedure.id, includeRevision: true } }
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data[:demarche][:id]).to eq(procedure.to_typed_id)
+          expect(gql_data[:demarche][:activeRevision]).not_to be_nil
+        }
+      end
     end
 
     context 'getGroupeInstructeur' do

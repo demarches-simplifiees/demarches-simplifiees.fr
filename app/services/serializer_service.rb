@@ -303,16 +303,18 @@ class SerializerService
     }
 
     fragment ChampDescriptorFragment on ChampDescriptor {
-      type
+      __typename
       label
       description
       required
-      options
-      champDescriptors {
-        type
-        label
-        description
-        required
+      ... on DropDownListChampDescriptor {
+        options
+        otherOption
+      }
+      ... on MultipleDropDownListChampDescriptor {
+        options
+      }
+      ... on LinkedDropDownListChampDescriptor {
         options
       }
     }
@@ -321,13 +323,28 @@ class SerializerService
       number
       title
       description
+      tags
+      zones
       datePublication
       service { nom organisme typeOrganisme }
-      cadreJuridique
-      deliberation
+      demarcheUrl
+      dpoUrl
+      noticeUrl
+      siteWebUrl
+      cadreJuridiqueUrl
+      logo { ...FileFragment }
+      notice { ...FileFragment }
+      deliberation { ...FileFragment }
       dossiersCount
       revision {
-        champDescriptors { ...ChampDescriptorFragment }
+        champDescriptors {
+          ...ChampDescriptorFragment
+          ... on RepetitionChampDescriptor {
+            champDescriptors {
+              ...ChampDescriptorFragment
+            }
+          }
+        }
       }
     }
   GRAPHQL
