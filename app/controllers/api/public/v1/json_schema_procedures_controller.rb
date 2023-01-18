@@ -9,7 +9,8 @@ class API::Public::V1::JSONSchemaProceduresController < API::Public::V1::BaseCon
   private
 
   def retrieve_procedure
-    @procedure = Procedure.publiees_ou_brouillons.opendata.find_by!(path: params[:path])
+    @procedure = Procedure.publiees_ou_brouillons.opendata.find_by(path: params[:path])
+    render_not_found("procedure", params[:path]) if @procedure.blank?
   end
 
   def procedure_graph_ql_schema
