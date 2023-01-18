@@ -20,8 +20,11 @@ RSpec.describe Dossiers::BatchOperationComponent, type: :component do
   subject { render_inline(component).to_html }
   context 'statut suivis' do
     let(:statut) { 'suivis' }
-    it { is_expected.to have_button('Passer en instruction les dossiers', disabled: true) }
+    it { is_expected.to have_button('Passer les dossiers en instruction', disabled: true) }
     it { is_expected.to have_button('Accepter les dossiers', disabled: true) }
+    it { is_expected.to have_button('Autres actions multiples', disabled: true) }
+    it { is_expected.to have_button('Repasser les dossiers en construction', disabled: true) }
+    it { is_expected.to have_button('Ne plus suivre les dossiers', disabled: true) }
   end
 
   context 'statut a-suivre' do

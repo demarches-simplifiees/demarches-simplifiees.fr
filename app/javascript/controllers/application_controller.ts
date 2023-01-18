@@ -1,7 +1,11 @@
 import { Controller } from '@hotwired/stimulus';
 import debounce from 'debounce';
+import invariant from 'tiny-invariant';
 
 export type Detail = Record<string, unknown>;
+
+// see: https://www.quirksmode.org/blog/archives/2008/04/delegating_the.html
+const FOCUS_EVENTS = ['focus', 'blur'];
 
 export class ApplicationController extends Controller {
   #debounced = new Map<() => void, ReturnType<typeof debounce>>();
@@ -39,10 +43,32 @@ export class ApplicationController extends Controller {
   }
 
   protected on<HandlerEvent extends Event = Event>(
+    target: EventTarget,
     eventName: string,
     handler: (event: HandlerEvent) => void
+  ): void;
+  protected on<HandlerEvent extends Event = Event>(
+    eventName: string,
+    handler: (event: HandlerEvent) => void
+  ): void;
+  protected on<HandlerEvent extends Event = Event>(
+    targetOrEventName: EventTarget | string,
+    eventNameOrHandler: string | ((event: HandlerEvent) => void),
+    handler?: (event: HandlerEvent) => void
   ): void {
-    this.onTarget(this.element, eventName, handler);
+    if (typeof targetOrEventName == 'string') {
+      invariant(typeof eventNameOrHandler != 'string', 'handler is required');
+      this.onTarget(
+        this.element,
+        targetOrEventName,
+        eventNameOrHandler,
+        FOCUS_EVENTS.includes(targetOrEventName)
+      );
+    } else {
+      invariant(eventNameOrHandler == 'string', 'event name is required');
+      invariant(handler, 'handler is required');
+      this.onTarget(targetOrEventName, eventNameOrHandler, handler);
+    }
   }
 
   protected onGlobal<HandlerEvent extends Event = Event>(
@@ -55,15 +81,16 @@ export class ApplicationController extends Controller {
   private onTarget<HandlerEvent extends Event = Event>(
     target: EventTarget,
     eventName: string,
-    handler: (event: HandlerEvent) => void
+    handler: (event: HandlerEvent) => void,
+    capture?: boolean
   ): void {
     const disconnect = this.disconnect;
     const callback = (event: Event): void => {
       handler(event as HandlerEvent);
     };
-    target.addEventListener(eventName, callback);
+    target.addEventListener(eventName, callback, capture);
     this.disconnect = () => {
-      target.removeEventListener(eventName, callback);
+      target.removeEventListener(eventName, callback, capture);
       disconnect.call(this);
     };
   }

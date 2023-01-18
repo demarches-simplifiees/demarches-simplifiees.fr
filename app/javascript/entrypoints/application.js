@@ -4,7 +4,6 @@ import * as Turbo from '@hotwired/turbo';
 import { Application } from '@hotwired/stimulus';
 import '@gouvfr/dsfr/dist/dsfr.module.js';
 
-import '../shared/turbo-actions';
 import '../shared/activestorage/ujs';
 import '../shared/safari-11-empty-file-workaround';
 import '../shared/toggle-target';
@@ -15,10 +14,7 @@ import '../new_design/form-validation';
 import '../new_design/procedure-context';
 import '../new_design/procedure-form';
 
-import {
-  toggleCondidentielExplanation,
-  replaceSemicolonByComma
-} from '../new_design/avis';
+import { toggleCondidentielExplanation } from '../new_design/avis';
 import {
   showMotivation,
   motivationCancel,
@@ -36,8 +32,7 @@ const DS = {
   motivationCancel,
   showImportJustificatif,
   showFusion,
-  showNewAccount,
-  replaceSemicolonByComma
+  showNewAccount
 };
 
 // Start Rails helpers

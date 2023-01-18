@@ -117,6 +117,7 @@ fr:
           pays_html: Un <a href="https://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">code pays ISO 3166-2</a>
           datetime_html: Datetime au format ISO8601
           date_html: Date au format ISO8601
+          drop_down_list_other_html: Toute valeur
         examples:
           title: Exemple
           text: Texte court
@@ -271,7 +272,7 @@ fr:
         show:
           header:
             edit_dossier: Modifier mon dossier
-            edit_dossier_title: "Modifier mon dossier - Vous pouvez modifier votre dossier tant qu’il n’est passé en instruction"
+            edit_dossier_title: "Modifier mon dossier - Vous pouvez modifier votre dossier tant qu’il n’est pas passé en instruction"
             summary: "Résumé"
             request: "Demande"
             mailbox: "Messagerie"
@@ -437,7 +438,10 @@ fr:
               invalid: "doit posséder 13 ou 14 caractères"
             reference_avis:
               invalid: "doit posséder 13 ou 14 caractères"
-
+        "champs/drop_down_list_champ":
+          attributes:
+            value:
+              not_in_options: "doit être dans les options proposées"
   errors:
     format: "Le champ « %{attribute} » %{message}"
     messages:

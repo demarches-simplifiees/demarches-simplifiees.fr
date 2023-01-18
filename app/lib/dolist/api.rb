@@ -4,6 +4,27 @@ class Dolist::API
   EMAIL_KEY = 7
   DOLIST_WEB_DASHBOARD = "https://campaign.dolist.net/#/%{account_id}/contacts/%{contact_id}/sendings"
 
+  class_attribute :limit_remaining, :limit_reset_at
+
+  class << self
+    def save_rate_limit_headers(headers)
+      self.limit_remaining = headers["X-Rate-Limit-Remaining"].to_i
+      self.limit_reset_at = Time.zone.at(headers["X-Rate-Limit-Reset"].to_i / 1_000)
+    end
+
+    def near_rate_limit?
+      return if limit_remaining.nil?
+
+      limit_remaining < 20 # keep 20 requests for non background API calls
+    end
+
+    def sleep_until_limit_reset
+      return if limit_reset_at.nil? || limit_reset_at.past?
+
+      sleep (limit_reset_at - Time.zone.now).ceil
+    end
+  end
+
   def properly_configured?
     client_key.present?
   end
@@ -49,9 +70,7 @@ class Dolist::API
       Query: { FieldValueList: [{ ID: EMAIL_KEY, Value: email_address }] }
     }.to_json
 
-    response = Typhoeus.post(url, body: body, headers: headers)
-
-    JSON.parse(response.response_body)["ID"]
+    post(url, body)["ID"]
   end
 
   # https://api.dolist.com/documentation/index.html#/b3A6Mzg0MTQ4MDk-recuperer-les-statistiques-des-envois-pour-un-contact
@@ -60,9 +79,15 @@ class Dolist::API
 
     body = { SearchQuery: { ContactID: contact_id } }.to_json
 
-    response = Typhoeus.post(url, body: body, headers: headers)
+    post(url, body)["ItemList"]
+  end
 
-    JSON.parse(response.response_body)['ItemList']
+  def post(url, body)
+    response = Typhoeus.post(url, body:, headers:).tap do
+      self.class.save_rate_limit_headers(_1.headers)
+    end
+
+    JSON.parse(response.response_body)
   end
 
   def to_sent_mail(email_address, contact_id, dolist_message)

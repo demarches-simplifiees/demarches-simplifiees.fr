@@ -35,6 +35,24 @@ fr:
       text_success:
         one: 1 dossier sera suivi
         other: "%{progress_count}/%{count} dossiers ont été suivis"
+  unfollow:
+    finish:
+      text_success:
+        one: 1 dossier n'est plus suivi
+        other: "%{success_count}/%{count} dossiers ne sont plus suivis"
+    in_progress:
+      text_success:
+        one: 1 dossier ne sera plus suivi
+        other: "%{progress_count}/%{count} dossiers ne sont plus suivis"
+  repasser_en_construction:
+    finish:
+      text_success:
+        one: 1 dossier a été repassé en construction
+        other: "%{success_count}/%{count} dossiers ont été repassés en construction"
+    in_progress:
+      text_success:
+        one: 1 dossier sera repassé en construction
+        other: "%{progress_count}/%{count} dossiers ont été repassés en construction"
   title:
     finish: L'action de masse est terminée
     in_progress: Une action de masse est en cours

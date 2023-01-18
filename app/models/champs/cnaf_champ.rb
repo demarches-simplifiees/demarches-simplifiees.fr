@@ -8,7 +8,6 @@
 #  prefilled                      :boolean          default(FALSE)
 #  private                        :boolean          default(FALSE), not null
 #  rebased_at                     :datetime
-#  row                            :integer
 #  type                           :string
 #  value                          :string
 #  value_json                     :jsonb

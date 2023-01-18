@@ -126,6 +126,7 @@ en:
           pays_html: An <a href="https://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">ISO 3166-2 country code</a>
           date_html: ISO8601 date
           datetime_html: ISO8601 datetime
+          drop_down_list_other_html: Any value
         examples:
           title: Example
           text: Short text
@@ -442,6 +443,10 @@ en:
               invalid: "must be 13 or 14 characters long"
             reference_avis:
               invalid: "must be 13 or 14 characters long"
+        "champs/drop_down_list_champ":
+          attributes:
+            value:
+              not_in_options: "must be in the given options"
   errors:
     format: "Field « %{attribute} » %{message}"
     messages:

@@ -72,7 +72,7 @@ describe ProcedurePresentation do
           { "label" => "Statut", "table" => "self", "column" => "state", "classname" => "", 'virtual' => true, 'scope' => 'instructeurs.dossiers.filterable_state', 'type' => :enum },
           { "label" => 'Demandeur', "table" => 'user', "column" => 'email', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
           { "label" => 'Email instructeur', "table" => 'followers_instructeurs', "column" => 'email', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
-          { "label" => 'Groupe instructeur', "table" => 'groupe_instructeur', "column" => 'label', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
+          { "label" => 'Groupe instructeur', "table" => 'groupe_instructeur', "column" => 'id', 'classname' => '', 'virtual' => false, 'type' => :enum, "scope" => '' },
           { "label" => 'SIREN', "table" => 'etablissement', "column" => 'entreprise_siren', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
           { "label" => 'Forme juridique', "table" => 'etablissement', "column" => 'entreprise_forme_juridique', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
           { "label" => 'Nom commercial', "table" => 'etablissement', "column" => 'entreprise_nom_commercial', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
@@ -739,7 +739,7 @@ describe ProcedurePresentation do
     end
 
     context 'for groupe_instructeur table' do
-      let(:filter) { [{ 'table' => 'groupe_instructeur', 'column' => 'label', 'value' => 'défaut' }] }
+      let(:filter) { [{ 'table' => 'groupe_instructeur', 'column' => 'id', 'value' => procedure.defaut_groupe_instructeur.id.to_s }] }
 
       let!(:gi_2) { procedure.groupe_instructeurs.create(label: 'gi2') }
       let!(:gi_3) { procedure.groupe_instructeurs.create(label: 'gi3') }
@@ -752,8 +752,8 @@ describe ProcedurePresentation do
       context 'with multiple search values' do
         let(:filter) do
           [
-            { 'table' => 'groupe_instructeur', 'column' => 'label', 'value' => 'défaut' },
-            { 'table' => 'groupe_instructeur', 'column' => 'label', 'value' => 'gi3' }
+            { 'table' => 'groupe_instructeur', 'column' => 'id', 'value' => procedure.defaut_groupe_instructeur.id.to_s },
+            { 'table' => 'groupe_instructeur', 'column' => 'id', 'value' => gi_3.id.to_s }
           ]
         end
 

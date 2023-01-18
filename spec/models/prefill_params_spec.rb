@@ -117,6 +117,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is authorized", :yes_no, "false"
     it_behaves_like "a champ public value that is authorized", :checkbox, "true"
     it_behaves_like "a champ public value that is authorized", :checkbox, "false"
+    it_behaves_like "a champ public value that is authorized", :drop_down_list, "value"
 
     it_behaves_like "a champ private value that is authorized", :text, "value"
     it_behaves_like "a champ private value that is authorized", :textarea, "value"
@@ -133,6 +134,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ private value that is authorized", :yes_no, "false"
     it_behaves_like "a champ private value that is authorized", :checkbox, "true"
     it_behaves_like "a champ private value that is authorized", :checkbox, "false"
+    it_behaves_like "a champ private value that is authorized", :drop_down_list, "value"
 
     it_behaves_like "a champ public value that is unauthorized", :decimal_number, "non decimal string"
     it_behaves_like "a champ public value that is unauthorized", :integer_number, "non integer string"
@@ -144,7 +146,6 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is unauthorized", :date, "value"
     it_behaves_like "a champ public value that is unauthorized", :datetime, "value"
     it_behaves_like "a champ public value that is unauthorized", :datetime, "12-22-2022T10:30"
-    it_behaves_like "a champ public value that is unauthorized", :drop_down_list, "value"
     it_behaves_like "a champ public value that is unauthorized", :multiple_drop_down_list, "value"
     it_behaves_like "a champ public value that is unauthorized", :linked_drop_down_list, "value"
     it_behaves_like "a champ public value that is unauthorized", :header_section, "value"
