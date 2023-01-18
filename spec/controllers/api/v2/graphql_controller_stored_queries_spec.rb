@@ -2,7 +2,8 @@ describe API::V2::GraphqlController do
   let(:admin) { create(:administrateur) }
   let(:token) { APIToken.generate(admin)[1] }
   let(:legacy_token) { APIToken.send(:unpack, token)[:plain_token] }
-  let(:procedure) { create(:procedure, :published, :for_individual, :with_service, administrateurs: [admin]) }
+  let(:procedure) { create(:procedure, :published, :for_individual, :with_service, administrateurs: [admin], types_de_champ_public:) }
+  let(:types_de_champ_public) { [] }
   let(:dossier)  { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
   let(:dossier1) { create(:dossier, :en_construction, :with_individual, procedure: procedure, en_construction_at: 1.day.ago) }
   let(:dossier2) { create(:dossier, :en_construction, :with_individual, :archived, procedure: procedure, en_construction_at: 3.days.ago) }
@@ -28,7 +29,6 @@ describe API::V2::GraphqlController do
   end
 
   describe 'ds-query-v2' do
-    let(:procedure) { create(:procedure, :published, :for_individual, administrateurs: [admin]) }
     let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
     let(:query_id) { 'ds-query-v2' }
 
@@ -115,11 +115,12 @@ describe API::V2::GraphqlController do
       end
     end
 
-    context 'getDemarcheDescriptor' do
+    context 'getDemarcheDescriptor', vcr: { cassette_name: 'api_geo_regions' } do
       let(:operation_name) { 'getDemarcheDescriptor' }
+      let(:types_de_champ_public) { [{ type: :text }, { type: :piece_justificative }, { type: :regions }] }
 
       context 'find by number' do
-        let(:variables) { { demarche: { number: procedure.id } } }
+        let(:variables) { { demarche: { number: procedure.id }, includeRevision: true } }
 
         it {
           expect(gql_errors).to be_nil
