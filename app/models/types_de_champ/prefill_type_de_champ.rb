@@ -7,6 +7,8 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
       TypesDeChamp::PrefillDropDownListTypeDeChamp.new(type_de_champ)
     when TypeDeChamp.type_champs.fetch(:pays)
       TypesDeChamp::PrefillPaysTypeDeChamp.new(type_de_champ)
+    when TypeDeChamp.type_champs.fetch(:regions)
+      TypesDeChamp::PrefillRegionTypeDeChamp.new(type_de_champ)
     else
       new(type_de_champ)
     end

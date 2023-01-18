@@ -21,8 +21,6 @@
 #  type_de_champ_id               :integer
 #
 class Champs::RegionChamp < Champs::TextChamp
-  # TODO: SEB possible values (https://geo.api.gouv.fr/regions)
-  # TODO: SEB example value
   # TODO: SEB add validation
 
   def for_export
