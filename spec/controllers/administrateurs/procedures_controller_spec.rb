@@ -162,6 +162,15 @@ describe Administrateurs::ProceduresController, type: :controller do
       end
     end
 
+    context 'with specific tag' do
+      let!(:tag_procedure) { create(:procedure, :published, tags: ['environnement']) }
+
+      it 'returns procedures with specific tag' do
+        get :all, params: { tag: 'environnement' }
+        expect(assigns(:procedures).any? { |p| p.id == tag_procedure.id }).to be_truthy
+      end
+    end
+
     context 'with libelle search' do
       let!(:procedure1) { create(:procedure, :published, libelle: 'Demande de subvention') }
       let!(:procedure2) { create(:procedure, :published, libelle: "Fonds d'aide public « Prime Entrepreneurs des Quartiers »") }
