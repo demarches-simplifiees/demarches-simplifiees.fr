@@ -113,18 +113,20 @@ en:
         champ_unavailable: Unavailable
         possible_values:
           title: Values
-          text: A short text
-          textarea: A long text
-          decimal_number: A decimal number
-          integer_number: An integer number
-          email: An email address
-          phone: A phone number
-          iban: An Iban number
-          yes_no: '"true" for Yes, "false" pour No'
-          date: ISO8601 date
-          datetime: ISO8601 datetime
-          checkbox: '"true" to check, "false" to uncheck'
-          drop_down_list_other: Any value
+          text_html: A short text
+          textarea_html: A long text
+          decimal_number_html: A decimal number
+          integer_number_html: An integer number
+          email_html: An email address
+          civilite_html: '"M." for Mister, "Mme" for Madam'
+          phone_html: A phone number
+          iban_html: An Iban number
+          yes_no_html: '"true" for Yes, "false" pour No'
+          checkbox_html: '"true" to check, "false" to uncheck'
+          pays_html: An <a href="https://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">ISO 3166-2 country code</a>
+          date_html: ISO8601 date
+          datetime_html: ISO8601 datetime
+          drop_down_list_other_html: Any value
         examples:
           title: Example
           text: Short text
@@ -135,6 +137,7 @@ en:
           phone: 0612345678
           iban: FR7611315000011234567890138
           yes_no: "true"
+          pays: "FR"
           date: "2023-02-01"
           datetime: "2023-02-01T10:30"
           checkbox: "true"

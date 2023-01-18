@@ -245,6 +245,7 @@ describe TypeDeChamp do
     it_behaves_like "a prefillable type de champ", :type_de_champ_date
     it_behaves_like "a prefillable type de champ", :type_de_champ_datetime
     it_behaves_like "a prefillable type de champ", :type_de_champ_civilite
+    it_behaves_like "a prefillable type de champ", :type_de_champ_pays
     it_behaves_like "a prefillable type de champ", :type_de_champ_yes_no
     it_behaves_like "a prefillable type de champ", :type_de_champ_checkbox
     it_behaves_like "a prefillable type de champ", :type_de_champ_drop_down_list
@@ -265,7 +266,6 @@ describe TypeDeChamp do
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_mesri
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_carte
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_address
-    it_behaves_like "a non-prefillable type de champ", :type_de_champ_pays
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_regions
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_departements
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_siret
