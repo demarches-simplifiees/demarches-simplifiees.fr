@@ -219,13 +219,8 @@ module Administrateurs
             if groupes_emails_has_keys.blank?
               flash[:alert] = "Importation impossible, veuillez importer un csv #{view_context.link_to('suivant ce modèle', "/csv/#{I18n.locale}/import-groupe-test.csv")}"
             else
-              add_instructeurs_and_get_errors = InstructeursImportService.import_groupes(procedure, groupes_emails)
-
-              if add_instructeurs_and_get_errors.blank?
-                flash[:notice] = "La liste des instructeurs a été importée avec succès"
-              else
-                flash[:alert] = "Import terminé. Cependant les emails suivants ne sont pas pris en compte: #{add_instructeurs_and_get_errors.join(', ')}"
-              end
+              result = InstructeursImportService.import_groupes(procedure, groupes_emails)
+              flash_message_for_import(result)
             end
 
           elsif params[:instructeurs_csv_file]
@@ -237,13 +232,8 @@ module Administrateurs
             if instructors_emails_has_key.blank?
               flash[:alert] = "Importation impossible, veuillez importer un csv #{view_context.link_to('suivant ce modèle', "/csv/import-instructeurs-test.csv")}"
             else
-              add_instructeurs_and_get_errors = InstructeursImportService.import_instructeurs(procedure, instructors_emails)
-
-              if add_instructeurs_and_get_errors.blank?
-                flash[:notice] = "La liste des instructeurs a été importée avec succès"
-              else
-                flash[:alert] = "Import terminé. Cependant les emails suivants ne sont pas pris en compte: #{add_instructeurs_and_get_errors.join(', ')}"
-              end
+              result = InstructeursImportService.import_instructeurs(procedure, instructors_emails)
+              flash_message_for_import(result)
             end
           end
           redirect_to admin_procedure_groupe_instructeurs_path(procedure)
@@ -333,6 +323,14 @@ module Administrateurs
 
     def routing_enabled_params
       { routing_enabled: params.require(:routing) == 'enable' }
+    end
+
+    def flash_message_for_import(result)
+      if result.blank?
+        flash[:notice] = "La liste des instructeurs a été importée avec succès"
+      else
+        flash[:alert] = "Import terminé. Cependant les emails suivants ne sont pas pris en compte: #{result.join(', ')}"
+      end
     end
   end
 end
