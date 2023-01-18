@@ -108,8 +108,6 @@ module Types
       end
     end
 
-    private
-
     def type_de_champ
       object.type_de_champ
     end

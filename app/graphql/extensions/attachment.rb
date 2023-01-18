@@ -24,10 +24,11 @@ module Extensions
     # This method resolves (as it states) the field itself
     # (it's the same as defining a method within a type)
     def resolve(object:, **_rest)
+      root_instance = object.public_send(root)
       Loaders::Association.for(
-        object.public_send(root).class,
+        root_instance.class,
         attachment_assoc => :blob
-      ).load(object.object)
+      ).load(root_instance)
     end
 
     # This method is called if the result of the `resolve`
