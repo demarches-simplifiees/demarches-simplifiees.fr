@@ -38,7 +38,7 @@ RSpec.describe TypesDeChamp::PrefillTypeDeChamp, type: :model do
     context 'when the type de champ is prefillable' do
       let(:type_de_champ) { build(:type_de_champ_email) }
 
-      it { expect(possible_values).to match([I18n.t("views.prefill_descriptions.edit.possible_values.#{type_de_champ.type_champ}")]) }
+      it { expect(possible_values).to match([I18n.t("views.prefill_descriptions.edit.possible_values.#{type_de_champ.type_champ}_html")]) }
     end
   end
 
