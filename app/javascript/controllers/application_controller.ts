@@ -4,6 +4,9 @@ import invariant from 'tiny-invariant';
 
 export type Detail = Record<string, unknown>;
 
+// see: https://www.quirksmode.org/blog/archives/2008/04/delegating_the.html
+const FOCUS_EVENTS = ['focus', 'blur'];
+
 export class ApplicationController extends Controller {
   #debounced = new Map<() => void, ReturnType<typeof debounce>>();
 
@@ -55,7 +58,12 @@ export class ApplicationController extends Controller {
   ): void {
     if (typeof targetOrEventName == 'string') {
       invariant(typeof eventNameOrHandler != 'string', 'handler is required');
-      this.onTarget(this.element, targetOrEventName, eventNameOrHandler);
+      this.onTarget(
+        this.element,
+        targetOrEventName,
+        eventNameOrHandler,
+        FOCUS_EVENTS.includes(targetOrEventName)
+      );
     } else {
       invariant(eventNameOrHandler == 'string', 'event name is required');
       invariant(handler, 'handler is required');
@@ -73,15 +81,16 @@ export class ApplicationController extends Controller {
   private onTarget<HandlerEvent extends Event = Event>(
     target: EventTarget,
     eventName: string,
-    handler: (event: HandlerEvent) => void
+    handler: (event: HandlerEvent) => void,
+    capture?: boolean
   ): void {
     const disconnect = this.disconnect;
     const callback = (event: Event): void => {
       handler(event as HandlerEvent);
     };
-    target.addEventListener(eventName, callback);
+    target.addEventListener(eventName, callback, capture);
     this.disconnect = () => {
-      target.removeEventListener(eventName, callback);
+      target.removeEventListener(eventName, callback, capture);
       disconnect.call(this);
     };
   }
