@@ -540,7 +540,7 @@ class Dossier < ApplicationRecord
   end
 
   def can_terminer?
-    return false if etablissement&.as_degraded_mode?
+    return false if any_etablissement_as_degraded_mode?
 
     true
   end
@@ -567,6 +567,13 @@ class Dossier < ApplicationRecord
 
   def can_be_deleted_by_administration?(reason)
     termine? || reason == :procedure_removed
+  end
+
+  def any_etablissement_as_degraded_mode?
+    return true if etablissement&.as_degraded_mode?
+    return true if champs_public_all.any? { _1.etablissement&.as_degraded_mode? }
+
+    false
   end
 
   def messagerie_available?
