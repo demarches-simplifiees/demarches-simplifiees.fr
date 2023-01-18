@@ -92,7 +92,7 @@ FactoryBot.define do
       end
 
       type_de_champ { association :type_de_champ_drop_down_list, procedure: dossier.procedure, drop_down_other: other }
-      value { 'choix 1' }
+      value { 'val1' }
     end
 
     factory :champ_multiple_drop_down_list, class: 'Champs::MultipleDropDownListChamp' do
