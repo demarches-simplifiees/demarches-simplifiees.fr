@@ -405,6 +405,17 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       it { expect(flash.alert).to eq("Import terminé. Cependant les emails suivants ne sont pas pris en compte: kara") }
     end
 
+    context 'when the csv file has only one column' do
+      let(:csv_file) { fixture_file_upload('spec/fixtures/files/valid-instructeurs-file.csv', 'text/csv') }
+
+      before { subject }
+
+      it { expect { subject }.not_to raise_error }
+      it { expect(response.status).to eq(302) }
+      it { expect(flash.alert).to be_present }
+      it { expect(flash.alert).to eq("Importation impossible, veuillez importer un csv <a href=\"/csv/#{I18n.locale}/import-groupe-test.csv\">suivant ce modèle</a>") }
+    end
+
     context 'when the file content type is application/vnd.ms-excel' do
       let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe_avec_caracteres_speciaux.csv', "application/vnd.ms-excel") }
 
