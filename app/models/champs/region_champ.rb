@@ -21,7 +21,8 @@
 #  type_de_champ_id               :integer
 #
 class Champs::RegionChamp < Champs::TextChamp
-  # TODO: SEB add validation
+  validates :value, inclusion: APIGeoService.regions.pluck(:name), allow_nil: true, allow_blank: false
+  validates :external_id, inclusion: APIGeoService.regions.pluck(:code), allow_nil: true, allow_blank: false
 
   def for_export
     [name, code]
@@ -46,6 +47,9 @@ class Champs::RegionChamp < Champs::TextChamp
     elsif code.blank?
       self.external_id = nil
       super(nil)
+    else
+      self.external_id = APIGeoService.region_code(code)
+      super(code)
     end
   end
 end

@@ -6,9 +6,69 @@ describe Champs::RegionChamp, type: :model do
     Rails.cache.clear
   end
 
-  let(:champ) { described_class.new }
+  describe 'validations' do
+    describe 'external link' do
+      subject { build(:champ_regions, external_id: external_id) }
+
+      context 'when nil' do
+        let(:external_id) { nil }
+
+        it { is_expected.to be_valid }
+      end
+
+      context 'when blank' do
+        let(:external_id) { '' }
+
+        it { is_expected.not_to be_valid }
+      end
+
+      context 'when included in the region codes' do
+        let(:external_id) { "01" }
+
+        it { is_expected.to be_valid }
+      end
+
+      context 'when not included in the region codes' do
+        let(:external_id) { "totoro" }
+
+        it { is_expected.not_to be_valid }
+      end
+    end
+
+    describe 'value' do
+      subject { create(:champ_regions) }
+
+      before { subject.update_columns(value: value) }
+
+      context 'when nil' do
+        let(:value) { nil }
+
+        it { is_expected.to be_valid }
+      end
+
+      context 'when blank' do
+        let(:value) { '' }
+
+        it { is_expected.not_to be_valid }
+      end
+
+      context 'when included in the region names' do
+        let(:value) { "Guyane" }
+
+        it { is_expected.to be_valid }
+      end
+
+      context 'when not included in the region names' do
+        let(:value) { "totoro" }
+
+        it { is_expected.not_to be_valid }
+      end
+    end
+  end
 
   describe 'value', vcr: { cassette_name: 'api_geo_regions' } do
+    let(:champ) { described_class.new }
+
     it 'with code' do
       champ.value = '01'
       expect(champ.external_id).to eq('01')

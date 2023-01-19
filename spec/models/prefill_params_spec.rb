@@ -1,11 +1,18 @@
 RSpec.describe PrefillParams do
-  describe "#to_a" do
+  describe "#to_a", vcr: { cassette_name: 'api_geo_regions' } do
+    let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
+
     let(:procedure) { create(:procedure, :published, types_de_champ_public:, types_de_champ_private:) }
     let(:dossier) { create(:dossier, :brouillon, procedure: procedure) }
     let(:types_de_champ_public) { [] }
     let(:types_de_champ_private) { [] }
 
     subject(:prefill_params_array) { described_class.new(dossier, params).to_a }
+
+    before do
+      allow(Rails).to receive(:cache).and_return(memory_store)
+      Rails.cache.clear
+    end
 
     context "when the stable ids match the TypeDeChamp of the corresponding procedure" do
       let(:types_de_champ_public) { [{ type: :text }, { type: :textarea }] }
@@ -161,7 +168,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is unauthorized", :carte, "value"
     it_behaves_like "a champ public value that is unauthorized", :address, "value"
     it_behaves_like "a champ public value that is unauthorized", :pays, "value"
-    # TODO: SEB it_behaves_like "a champ public value that is unauthorized", :regions, "value"
+    it_behaves_like "a champ public value that is unauthorized", :regions, "value"
     it_behaves_like "a champ public value that is unauthorized", :departements, "value"
     it_behaves_like "a champ public value that is unauthorized", :siret, "value"
     it_behaves_like "a champ public value that is unauthorized", :rna, "value"
