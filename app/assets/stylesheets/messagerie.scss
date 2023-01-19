@@ -28,3 +28,13 @@
     margin-bottom: 0;
   }
 }
+
+label[for="commentaire_body"] {
+  font-weight: normal;
+}
+
+#commentaire_body {
+  padding: 0.5rem 1rem;
+  box-shadow: inset 0 -2px 0 0 var(--border-plain-grey);
+  border-radius: 0.25rem 0.25rem 0 0;  
+}
