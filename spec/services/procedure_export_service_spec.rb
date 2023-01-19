@@ -1,10 +1,14 @@
 require 'csv'
 
-describe ProcedureExportService do
+describe ProcedureExportService, vcr: { cassette_name: 'api_geo_all' } do
   let(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs) }
   let(:service) { ProcedureExportService.new(procedure, procedure.dossiers) }
+
+  let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
+
   before do
-    allow(APIGeoService).to receive(:departement_name).with('01').and_return('Ain')
+    allow(Rails).to receive(:cache).and_return(memory_store)
+    Rails.cache.clear
   end
 
   describe 'to_xlsx' do
@@ -88,7 +92,10 @@ describe ProcedureExportService do
           "dgfip",
           "pole_emploi",
           "mesri",
-          "text"
+          "text",
+          "epci",
+          "epci (Code)",
+          "epci (Département)"
         ]
       end
 
@@ -195,7 +202,10 @@ describe ProcedureExportService do
           "dgfip",
           "pole_emploi",
           "mesri",
-          "text"
+          "text",
+          "epci",
+          "epci (Code)",
+          "epci (Département)"
         ]
       end
 
@@ -285,7 +295,10 @@ describe ProcedureExportService do
             "dgfip",
             "pole_emploi",
             "mesri",
-            "text"
+            "text",
+            "epci",
+            "epci (Code)",
+            "epci (Département)"
           ]
         end
 
