@@ -1,9 +1,9 @@
-- row_id = "row-#{@row.first.row_id}"
+- row_id = "safe-row-selector-#{@row.first.row_id}"
 .row{ id: row_id }
   - @row.each do |champ|
     = fields_for champ.input_name, champ do |form|
       = render EditableChamp::EditableChampComponent.new form: form, champ: champ, seen_at: @seen_at
 
   .flex.row-reverse{ 'data-turbo': 'true' }
-    = link_to champs_repetition_path(@champ.id, row_id:), data: { turbo_method: :delete }, class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-text-action-high--red-marianne' do
+    = link_to champs_repetition_path(@champ.id, row_id: @row.first.row_id), data: { turbo_method: :delete }, class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-text-action-high--red-marianne' do
       Supprimer l’élément
