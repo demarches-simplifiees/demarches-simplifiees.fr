@@ -123,11 +123,12 @@ describe 'The user' do
 
     expect(page).to have_content('Supprimer', count: 2)
 
-    within '.repetition .row:first-child' do
-      click_on 'Supprimer l’élément'
-    end
-
-    expect(page).to have_content('Supprimer', count: 1)
+    expect do
+      within '.repetition .row:first-child' do
+        click_on 'Supprimer l’élément'
+      end
+      expect(page).to have_content('Supprimer', count: 1)
+    end.to change { Champ.count }
   end
 
   let(:simple_procedure) { create(:procedure, :published, :for_individual, types_de_champ_public: [{ mandatory: true, libelle: 'texte obligatoire' }, { mandatory: false, libelle: 'texte optionnel' }]) }
