@@ -3,6 +3,7 @@
   - placeholder = t('views.shared.dossiers.messages.form.write_message_to_administration_placeholder')
   - if instructeur_signed_in? || administrateur_signed_in? || expert_signed_in?
     - placeholder = t('views.shared.dossiers.messages.form.write_message_placeholder')
+  %p.fr-text--sm= t('utils.asterisk_html')
   .fr-input-group
     = label_tag :commentaire_body, class: 'fr-label' do
       = t('message', scope: [:utils])
@@ -16,4 +17,3 @@
 
     .send-wrapper.fr-my-3w
       = f.submit t('views.shared.dossiers.messages.form.send_message'), class: 'fr-btn send', data: { disable: true }
-      
