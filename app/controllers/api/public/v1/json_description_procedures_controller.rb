@@ -1,4 +1,4 @@
-class API::Public::V1::JSONSchemaProceduresController < API::Public::V1::BaseController
+class API::Public::V1::JSONDescriptionProceduresController < API::Public::V1::BaseController
   skip_before_action :check_content_type_is_json
   before_action :retrieve_procedure
 

@@ -1,4 +1,4 @@
-RSpec.describe API::Public::V1::JSONSchemaProceduresController, type: :controller do
+RSpec.describe API::Public::V1::JSONDescriptionProceduresController, type: :controller do
   include Rails.application.routes.url_helpers
 
   describe '#show' do
@@ -37,11 +37,5 @@ RSpec.describe API::Public::V1::JSONSchemaProceduresController, type: :controlle
 
       it { expect(response).to have_failed_with("procedure error is not found") }
     end
-  end
-
-  private
-
-  def find_champ_by_stable_id(dossier, stable_id)
-    dossier.champs_public.joins(:type_de_champ).find_by(types_de_champ: { stable_id: stable_id })
   end
 end

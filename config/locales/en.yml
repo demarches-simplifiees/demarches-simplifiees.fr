@@ -149,6 +149,9 @@ en:
         prefill_query_info: Use the button to copy the query, then remplace the values with your data.
         prefill_query_response_html: '# Response:<br># {<br>#    "dossier_url": "%{url}",<br>#    "dossier_id": "aBase64Id==",<br>#    "dossier_number": 42<br># }'
         prefill_query_copy: Copy prefill query
+        json_description_title: JSON description of the procedure
+        json_description_info: Use the button to copy the query and learn more about the procedure and its fields thanks to a JSON description.
+        json_description_copy: Copy the JSON description query
     registrations:
       new:
         title: "Create an account %{name}"
