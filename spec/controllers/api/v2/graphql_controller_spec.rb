@@ -151,6 +151,17 @@ describe API::V2::GraphqlController do
         }
       end
 
+      context "when the does not belong to an admin of the procedure" do
+        let(:another_administrateur) { create(:administrateur) }
+        before do
+          request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Token.encode_credentials(APIToken.generate(another_administrateur)[1])
+        end
+
+        it {
+          expect(gql_errors.first[:message]).to eq("An object of type Demarche was hidden due to permissions")
+        }
+      end
+
       context "when the token is revoked" do
         before do
           admin.api_tokens.destroy_all
