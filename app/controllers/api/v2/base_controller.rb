@@ -10,7 +10,7 @@ class API::V2::BaseController < ApplicationController
   def context
     # new token
     if api_token.present?
-      { token: authorization_bearer_token, administrateur_id: api_token.administrateur.id }
+      { administrateur_id: api_token.administrateur.id }
     # web interface (/graphql) give current_administrateur
     elsif current_administrateur.present?
       { administrateur_id: current_administrateur.id }
