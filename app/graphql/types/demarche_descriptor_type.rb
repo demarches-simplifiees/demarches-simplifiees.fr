@@ -1,7 +1,5 @@
 module Types
   class DemarcheDescriptorType < Types::BaseObject
-    field_class BaseField
-
     class FindDemarcheInput < Types::BaseInputObject
       one_of
       argument :number, Int, "Numero de la démarche.", required: false
