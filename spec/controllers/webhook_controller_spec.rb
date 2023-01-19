@@ -1,16 +1,16 @@
 describe WebhookController, type: :controller do
   before do
-    allow(controller).to receive(:verify_signature!).and_return(true)
+    allow(controller).to receive(:verify_helpscout_signature!).and_return(true)
     allow(controller).to receive(:verify_authenticity_token)
   end
 
   describe '#helpscout_support_dev' do
     subject(:response) { post :helpscout_support_dev, params: payload }
     let(:payload) { JSON.parse(File.read(Rails.root.join('spec', 'fixtures', 'files', 'helpscout', 'tagged-dev.json'))) }
-
+    let(:webhook_url) { "https://notification_url" }
     it 'works' do
-      allow(Rails.application.secrets).to receive(:dig).with(:mattermost, :support_webhook_url).and_return("https://notification_url")
-      expect(controller).to receive(:send_mattermost_notification).with("\nNouveau bug taggué #dev : https://secure.helpscout.net/conversation/123456789/123456789?folderId=123456789\n\n> Bonjour,    Je voudrais faire une demande de changement d'adresse et la plateforme m'indique que j'ai plusieurs comptes et que je dois d'abord les fusionner.    Cela fait 3 jours que j'essaie de fusio\n\n**personnes impliquées** : anonymous@anon.fr\n**utilisateur en attente depuis** : 11 min ago")
+      allow(Rails.application.secrets).to receive(:dig).with(:mattermost, :support_webhook_url).and_return(webhook_url)
+      expect(controller).to receive(:send_mattermost_notification).with(webhook_url, "\nNouveau bug taggué #dev : https://secure.helpscout.net/conversation/123456789/123456789?folderId=123456789\n\n> Bonjour,    Je voudrais faire une demande de changement d'adresse et la plateforme m'indique que j'ai plusieurs comptes et que je dois d'abord les fusionner.    Cela fait 3 jours que j'essaie de fusio\n\n**personnes impliquées** : anonymous@anon.fr\n**utilisateur en attente depuis** : 11 min ago")
       subject
     end
   end
@@ -63,6 +63,18 @@ describe WebhookController, type: :controller do
           expect(payload['html']).to have_selector("a[href='#{manager_administrateur_url(admin)}']")
         end
       end
+    end
+  end
+
+  describe '#sendinblue' do
+    subject(:response) { post :sendinblue, params: payload }
+    let(:payload) { JSON.parse(File.read(Rails.root.join('spec', 'fixtures', 'files', 'sendinblue', 'incident.json'))) }
+
+    it 'sends notification to mattermost' do
+      notification_url = "https://notification_url"
+      allow(Rails.application.secrets).to receive(:dig).with(:mattermost, :send_in_blue_outage_webhook_url).and_return(notification_url)
+      expect(controller).to receive(:send_mattermost_notification).with(notification_url, "Incident sur SIB : Database Issues.\nEtat de SIB: Degraded Performance\nL'Incident a commencé à 2015-04-03T18:27:15+00:00 et est p-e terminé a \nles composant suivants sont affectés : Chat Service, Voice Services, Admin Dashboard")
+      subject
     end
   end
 end
