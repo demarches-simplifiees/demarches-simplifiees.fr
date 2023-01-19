@@ -17,7 +17,9 @@ RSpec.describe DossierPrefillableConcern do
     context 'when champs_public_attributes is empty' do
       let(:values) { [] }
 
-      it_behaves_like 'a dossier marked as prefilled'
+      it "doesn't mark the dossier as prefilled" do
+        expect { fill }.not_to change { dossier.reload.prefilled }.from(nil)
+      end
 
       it "doesn't change champs_public" do
         expect { fill }.not_to change { dossier.champs_public.to_a }
