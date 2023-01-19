@@ -44,6 +44,7 @@ class TypeDeChamp < ApplicationRecord
     departements: LOCALISATION,
     regions: LOCALISATION,
     pays: LOCALISATION,
+    epci: LOCALISATION,
     iban: PAIEMENT_IDENTIFICATION,
     siret: PAIEMENT_IDENTIFICATION,
     text: STANDARD,
@@ -104,7 +105,8 @@ class TypeDeChamp < ApplicationRecord
     cnaf: 'cnaf',
     dgfip: 'dgfip',
     pole_emploi: 'pole_emploi',
-    mesri: 'mesri'
+    mesri: 'mesri',
+    epci: 'epci'
   }
 
   store_accessor :options,
@@ -473,8 +475,13 @@ class TypeDeChamp < ApplicationRecord
     self.class.refresh_after_update?(type_champ)
   end
 
-  def self.refresh_after_update?(_type_champ)
-    false
+  def self.refresh_after_update?(type_champ)
+    case type_champ
+    when type_champs.fetch(:epci)
+      true
+    else
+      false
+    end
   end
 
   private
