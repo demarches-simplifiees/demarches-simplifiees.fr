@@ -151,15 +151,32 @@ describe API::V2::GraphqlController do
         }
       end
 
-      context "when the does not belong to an admin of the procedure" do
+      context "when the token does not belong to an admin of the procedure" do
         let(:another_administrateur) { create(:administrateur) }
+        let(:token_v3) { APIToken.generate(another_administrateur)[1] }
+        let(:plain_token) { APIToken.send(:unpack, token_v3)[:plain_token] }
         before do
-          request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Token.encode_credentials(APIToken.generate(another_administrateur)[1])
+          request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Token.encode_credentials(token)
         end
 
-        it {
-          expect(gql_errors.first[:message]).to eq("An object of type Demarche was hidden due to permissions")
-        }
+        context 'v3' do
+          let(:token) { token_v3 }
+          it {
+            expect(gql_errors.first[:message]).to eq("An object of type Demarche was hidden due to permissions")
+          }
+        end
+        context 'v2' do
+          let(:token) { APIToken.send(:message_verifier).generate([another_administrateur.id, plain_token]) }
+          it {
+            expect(gql_errors.first[:message]).to eq("An object of type Demarche was hidden due to permissions")
+          }
+        end
+        context 'v1' do
+          let(:token) { plain_token }
+          it {
+            expect(gql_errors.first[:message]).to eq("An object of type Demarche was hidden due to permissions")
+          }
+        end
       end
 
       context "when the token is revoked" do
