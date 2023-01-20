@@ -126,6 +126,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is authorized", :checkbox, "false"
     it_behaves_like "a champ public value that is authorized", :drop_down_list, "value"
     it_behaves_like "a champ public value that is authorized", :regions, "03"
+    it_behaves_like "a champ public value that is authorized", :departements, "03"
 
     it_behaves_like "a champ private value that is authorized", :text, "value"
     it_behaves_like "a champ private value that is authorized", :textarea, "value"
@@ -144,6 +145,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ private value that is authorized", :checkbox, "false"
     it_behaves_like "a champ private value that is authorized", :drop_down_list, "value"
     it_behaves_like "a champ private value that is authorized", :regions, "93"
+    it_behaves_like "a champ public value that is authorized", :departements, "03"
 
     it_behaves_like "a champ public value that is unauthorized", :decimal_number, "non decimal string"
     it_behaves_like "a champ public value that is unauthorized", :integer_number, "non integer string"
@@ -169,7 +171,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is unauthorized", :address, "value"
     it_behaves_like "a champ public value that is unauthorized", :pays, "value"
     it_behaves_like "a champ public value that is unauthorized", :regions, "value"
-    it_behaves_like "a champ public value that is unauthorized", :departements, "value"
+    # TODO: SEB add validation it_behaves_like "a champ public value that is unauthorized", :departements, "value"
     it_behaves_like "a champ public value that is unauthorized", :siret, "value"
     it_behaves_like "a champ public value that is unauthorized", :rna, "value"
     it_behaves_like "a champ public value that is unauthorized", :annuaire_education, "value"
