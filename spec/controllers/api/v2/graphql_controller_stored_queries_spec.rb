@@ -11,12 +11,7 @@ describe API::V2::GraphqlController do
   let(:instructeur) { create(:instructeur, followed_dossiers: dossiers) }
   let(:authorization_header) { ActionController::HttpAuthentication::Token.encode_credentials(token) }
 
-  let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
-
   before do
-    allow(Rails).to receive(:cache).and_return(memory_store)
-    Rails.cache.clear
-
     instructeur.assign_to_procedure(procedure)
   end
 

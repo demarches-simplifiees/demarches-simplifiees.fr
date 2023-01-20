@@ -6,7 +6,7 @@ describe Champs::RegionChamp, type: :model do
     Rails.cache.clear
   end
 
-  describe 'validations' do
+  describe 'validations', vcr: { cassette_name: 'api_geo_regions' } do
     describe 'external link' do
       subject { build(:champ_regions, external_id: external_id) }
 

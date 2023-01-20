@@ -445,6 +445,12 @@ fr:
           attributes:
             value:
               not_in_options: "doit être dans les options proposées"
+        "champs/region_champ":
+          attributes:
+            value:
+              not_in_region_names: "doit être un nom de région valide"
+            external_id:
+              not_in_region_codes: "doit être un code de région valide"
   errors:
     format: "Le champ « %{attribute} » %{message}"
     messages:

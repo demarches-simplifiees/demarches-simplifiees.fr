@@ -450,6 +450,12 @@ en:
           attributes:
             value:
               not_in_options: "must be in the given options"
+        "champs/region_champ":
+          attributes:
+            value:
+              not_in_region_names: "must be a valid region name"
+            external_id:
+              not_in_region_codes: "must be a valid region code"
   errors:
     format: "Field « %{attribute} » %{message}"
     messages:
