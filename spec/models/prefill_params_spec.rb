@@ -1,5 +1,5 @@
 RSpec.describe PrefillParams do
-  describe "#to_a", vcr: { cassette_name: 'api_geo_regions' } do
+  describe "#to_a", vcr: { cassette_name: 'api_geo_all' } do
     let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
 
     let(:procedure) { create(:procedure, :published, types_de_champ_public:, types_de_champ_private:) }
@@ -171,7 +171,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is unauthorized", :address, "value"
     it_behaves_like "a champ public value that is unauthorized", :pays, "value"
     it_behaves_like "a champ public value that is unauthorized", :regions, "value"
-    # TODO: SEB add validation it_behaves_like "a champ public value that is unauthorized", :departements, "value"
+    it_behaves_like "a champ public value that is unauthorized", :departements, "value"
     it_behaves_like "a champ public value that is unauthorized", :siret, "value"
     it_behaves_like "a champ public value that is unauthorized", :rna, "value"
     it_behaves_like "a champ public value that is unauthorized", :annuaire_education, "value"

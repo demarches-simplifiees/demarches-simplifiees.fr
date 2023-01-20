@@ -470,6 +470,12 @@ fr:
               not_in_region_names: "doit être un nom de région valide"
             external_id:
               not_in_region_codes: "doit être un code de région valide"
+        "champs/departement_champ":
+          attributes:
+            value:
+              not_in_departement_names: "doit être un nom de département valide"
+            external_id:
+              not_in_departement_codes: "doit être un code de département valide"
   errors:
     format: "Le champ « %{attribute} » %{message}"
     messages:

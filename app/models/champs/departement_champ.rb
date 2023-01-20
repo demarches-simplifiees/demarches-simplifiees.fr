@@ -21,6 +21,9 @@
 #  type_de_champ_id               :integer
 #
 class Champs::DepartementChamp < Champs::TextChamp
+  validate :value_in_departement_names, unless: -> { value.nil? }
+  validate :external_id_in_departement_codes, unless: -> { external_id.nil? }
+
   def for_export
     [name, code]
   end
@@ -65,6 +68,9 @@ class Champs::DepartementChamp < Champs::TextChamp
     elsif code.blank?
       self.external_id = nil
       super(nil)
+    else
+      self.external_id = APIGeoService.departement_code(code)
+      super(code)
     end
   end
 
@@ -72,5 +78,17 @@ class Champs::DepartementChamp < Champs::TextChamp
 
   def formatted_value
     blank? ? "" : "#{code} – #{name}"
+  end
+
+  def value_in_departement_names
+    return if value.in?(APIGeoService.departements.pluck(:name))
+
+    errors.add(:value, :not_in_departement_names)
+  end
+
+  def external_id_in_departement_codes
+    return if external_id.in?(APIGeoService.departements.pluck(:code))
+
+    errors.add(:external_id, :not_in_departement_codes)
   end
 end
