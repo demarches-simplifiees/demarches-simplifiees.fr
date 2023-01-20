@@ -9,6 +9,8 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
       TypesDeChamp::PrefillPaysTypeDeChamp.new(type_de_champ)
     when TypeDeChamp.type_champs.fetch(:regions)
       TypesDeChamp::PrefillRegionTypeDeChamp.new(type_de_champ)
+    when TypeDeChamp.type_champs.fetch(:departements)
+      TypesDeChamp::PrefillDepartementTypeDeChamp.new(type_de_champ)
     else
       new(type_de_champ)
     end
