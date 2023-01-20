@@ -16,8 +16,8 @@ RSpec.describe API::Public::V1::StatsController, type: :controller do
       it {
         expect(JSON.parse(response.body)).to match({
           funnel: procedure.stats_dossiers_funnel.as_json,
-          done: procedure.stats_termines_states.as_json,
-          done_by_week: procedure.stats_termines_by_week.as_json,
+          processed: procedure.stats_termines_states.as_json,
+          processed_by_week: procedure.stats_termines_by_week.as_json,
           processing_time: procedure.stats_usual_traitement_time.as_json,
           processing_time_by_month: procedure.stats_usual_traitement_time_by_month_in_days.as_json
         }.with_indifferent_access)
