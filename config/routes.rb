@@ -273,6 +273,7 @@ Rails.application.routes.draw do
         resources :demarches, only: [] do
           member do
             resources :dossiers, only: :create
+            resources :stats, only: :index
           end
         end
       end
