@@ -475,6 +475,12 @@ en:
               not_in_region_names: "must be a valid region name"
             external_id:
               not_in_region_codes: "must be a valid region code"
+        "champs/departement_champ":
+          attributes:
+            value:
+              not_in_departement_names: "must be a valid departement name"
+            external_id:
+              not_in_departement_codes: "must be a valid departement code"
   errors:
     format: "Field « %{attribute} » %{message}"
     messages:

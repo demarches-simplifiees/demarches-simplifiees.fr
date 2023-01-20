@@ -42,7 +42,6 @@ describe API::V2::GraphqlController do
     allow(Rails).to receive(:cache).and_return(memory_store)
     Rails.cache.clear
 
-    allow(APIGeoService).to receive(:departement_name).with('01').and_return('Ain')
     instructeur.assign_to_procedure(procedure)
   end
 
@@ -397,7 +396,7 @@ describe API::V2::GraphqlController do
         dossier
       end
 
-      context "for individual", vcr: { cassette_name: 'api_geo_regions' } do
+      context "for individual", vcr: { cassette_name: 'api_geo_all' } do
         let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_all_champs, :with_all_annotations, administrateurs: [admin]) }
         let(:query) do
           "{
