@@ -98,11 +98,6 @@ type AddressChampDescriptor implements ChampDescriptor {
   label: String!
 
   """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
-
-  """
   Est-ce que le champ est obligatoire ?
   """
   required: Boolean!
@@ -151,11 +146,6 @@ type AnnuaireEducationChampDescriptor implements ChampDescriptor {
   Libellé du champ.
   """
   label: String!
-
-  """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
 
   """
   Est-ce que le champ est obligatoire ?
@@ -229,11 +219,6 @@ type CarteChampDescriptor implements ChampDescriptor {
   label: String!
 
   """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
-
-  """
   Est-ce que le champ est obligatoire ?
   """
   required: Boolean!
@@ -274,11 +259,6 @@ interface ChampDescriptor {
   Libellé du champ.
   """
   label: String!
-
-  """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
 
   """
   Est-ce que le champ est obligatoire ?
@@ -322,11 +302,6 @@ type CheckboxChampDescriptor implements ChampDescriptor {
   Libellé du champ.
   """
   label: String!
-
-  """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
 
   """
   Est-ce que le champ est obligatoire ?
@@ -384,11 +359,6 @@ type CiviliteChampDescriptor implements ChampDescriptor {
   label: String!
 
   """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
-
-  """
   Est-ce que le champ est obligatoire ?
   """
   required: Boolean!
@@ -415,11 +385,6 @@ type CnafChampDescriptor implements ChampDescriptor {
   Libellé du champ.
   """
   label: String!
-
-  """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
 
   """
   Est-ce que le champ est obligatoire ?
@@ -472,11 +437,6 @@ type CommuneChampDescriptor implements ChampDescriptor {
   Libellé du champ.
   """
   label: String!
-
-  """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
 
   """
   Est-ce que le champ est obligatoire ?
@@ -581,11 +541,6 @@ type DateChampDescriptor implements ChampDescriptor {
   label: String!
 
   """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
-
-  """
   Est-ce que le champ est obligatoire ?
   """
   required: Boolean!
@@ -632,11 +587,6 @@ type DatetimeChampDescriptor implements ChampDescriptor {
   label: String!
 
   """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
-
-  """
   Est-ce que le champ est obligatoire ?
   """
   required: Boolean!
@@ -678,11 +628,6 @@ type DecimalNumberChampDescriptor implements ChampDescriptor {
   Libellé du champ.
   """
   label: String!
-
-  """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
 
   """
   Est-ce que le champ est obligatoire ?
@@ -1127,11 +1072,6 @@ type DgfipChampDescriptor implements ChampDescriptor {
   label: String!
 
   """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
-
-  """
   Est-ce que le champ est obligatoire ?
   """
   required: Boolean!
@@ -1500,11 +1440,6 @@ type DossierLinkChampDescriptor implements ChampDescriptor {
   Libellé du champ.
   """
   label: String!
-
-  """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
 
   """
   Est-ce que le champ est obligatoire ?
@@ -1988,11 +1923,6 @@ type EmailChampDescriptor implements ChampDescriptor {
   label: String!
 
   """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
-
-  """
   Est-ce que le champ est obligatoire ?
   """
   required: Boolean!
@@ -2066,11 +1996,6 @@ type ExplicationChampDescriptor implements ChampDescriptor {
   Libellé du champ.
   """
   label: String!
-
-  """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
 
   """
   Est-ce que le champ est obligatoire ?
@@ -2445,11 +2370,6 @@ type HeaderSectionChampDescriptor implements ChampDescriptor {
   label: String!
 
   """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
-
-  """
   Est-ce que le champ est obligatoire ?
   """
   required: Boolean!
@@ -2486,11 +2406,6 @@ type IbanChampDescriptor implements ChampDescriptor {
   Libellé du champ.
   """
   label: String!
-
-  """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
 
   """
   Est-ce que le champ est obligatoire ?
@@ -2534,11 +2449,6 @@ type IntegerNumberChampDescriptor implements ChampDescriptor {
   Libellé du champ.
   """
   label: String!
-
-  """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
 
   """
   Est-ce que le champ est obligatoire ?
@@ -2616,11 +2526,6 @@ type MesriChampDescriptor implements ChampDescriptor {
   Libellé du champ.
   """
   label: String!
-
-  """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
 
   """
   Est-ce que le champ est obligatoire ?
@@ -2916,11 +2821,6 @@ type NumberChampDescriptor implements ChampDescriptor {
   label: String!
 
   """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
-
-  """
   Est-ce que le champ est obligatoire ?
   """
   required: Boolean!
@@ -3085,11 +2985,6 @@ type PhoneChampDescriptor implements ChampDescriptor {
   label: String!
 
   """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
-
-  """
   Est-ce que le champ est obligatoire ?
   """
   required: Boolean!
@@ -3139,11 +3034,6 @@ type PieceJustificativeChampDescriptor implements ChampDescriptor {
   label: String!
 
   """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
-
-  """
   Est-ce que le champ est obligatoire ?
   """
   required: Boolean!
@@ -3170,11 +3060,6 @@ type PoleEmploiChampDescriptor implements ChampDescriptor {
   Libellé du champ.
   """
   label: String!
-
-  """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
 
   """
   Est-ce que le champ est obligatoire ?
@@ -3258,11 +3143,6 @@ type RNAChampDescriptor implements ChampDescriptor {
   Libellé du champ.
   """
   label: String!
-
-  """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
 
   """
   Est-ce que le champ est obligatoire ?
@@ -3362,11 +3242,6 @@ type RepetitionChampDescriptor implements ChampDescriptor {
   label: String!
 
   """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
-
-  """
   Est-ce que le champ est obligatoire ?
   """
   required: Boolean!
@@ -3446,11 +3321,6 @@ type SiretChampDescriptor implements ChampDescriptor {
   label: String!
 
   """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
-
-  """
   Est-ce que le champ est obligatoire ?
   """
   required: Boolean!
@@ -3494,11 +3364,6 @@ type TextChampDescriptor implements ChampDescriptor {
   label: String!
 
   """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
-
-  """
   Est-ce que le champ est obligatoire ?
   """
   required: Boolean!
@@ -3525,11 +3390,6 @@ type TextareaChampDescriptor implements ChampDescriptor {
   Libellé du champ.
   """
   label: String!
-
-  """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
 
   """
   Est-ce que le champ est obligatoire ?
@@ -3574,11 +3434,6 @@ type TitreIdentiteChampDescriptor implements ChampDescriptor {
   Libellé du champ.
   """
   label: String!
-
-  """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
 
   """
   Est-ce que le champ est obligatoire ?
@@ -3866,11 +3721,6 @@ type YesNoChampDescriptor implements ChampDescriptor {
   Libellé du champ.
   """
   label: String!
-
-  """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
 
   """
   Est-ce que le champ est obligatoire ?
