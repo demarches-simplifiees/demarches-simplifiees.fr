@@ -1,0 +1,17 @@
+.fr-notice.fr-notice--info.fr-mt-2w.hidden
+  .fr-container
+    .fr-notice__body
+      #not_selected
+        %p.fr-notice__title
+          Les
+          %span#dynamic_number n
+          dossiers de cette pages sont sélectionnés.
+          %a{ :href => "#", data: { action: "batch-operation#onSelectMore", dossiers: @filtered_sorted_ids.join(',') } }
+            = "Sélectionner les #{@dossiers_count} dossiers."
+      #selected.hidden
+        %p.fr-notice__title
+          = "#{@dossiers_count} dossiers sont sélectionnés"
+          %a{ :href => "#", data: { action: "batch-operation#onDeleteSelection" } }
+            = "Effacer la sélection"
+
+        = check_box_tag :"batch_operation[dossier_ids][]", [], false, class: 'hidden', data: { batch_operation_target: "input", action: "batch-operation#onCheckOne", operations: "accepter,repasser_en_construction,follow,unfollow" }, form: dom_id(BatchOperation.new), id: dom_id(BatchOperation.new, "checkbox_multiple"), aria: { label: t('views.instructeurs.dossiers.batch_operation.enabled') }
