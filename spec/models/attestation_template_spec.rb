@@ -1,45 +1,4 @@
 describe AttestationTemplate, type: :model do
-  # describe 'validate' do
-  #   let(:logo_size) { AttestationTemplate::FILE_MAX_SIZE_IN_MB.megabyte }
-  #   let(:signature_size) { AttestationTemplate::FILE_MAX_SIZE_IN_MB.megabyte }
-  #   let(:fake_logo) { double(AttestationTemplateLogoUploader, file: double(size: logo_size)) }
-  #   let(:fake_signature) { double(AttestationTemplateSignatureUploader, file: double(size: signature_size)) }
-  #   let(:attestation_template) { AttestationTemplate.new }
-
-  #   before do
-  #     allow(attestation_template).to receive(:logo).and_return(fake_logo)
-  #     allow(attestation_template).to receive(:signature).and_return(fake_signature)
-  #     attestation_template.validate
-  #   end
-
-  #   subject { attestation_template.errors.details }
-
-  #   context 'when no files are present' do
-  #     let(:fake_logo) { nil }
-  #     let(:fake_signature) { nil }
-
-  #     it { is_expected.to match({}) }
-  #   end
-
-  #   context 'when the logo and the signature have the right size' do
-  #     it { is_expected.to match({}) }
-  #   end
-
-  #   context 'when the logo and the signature are too heavy' do
-  #     let(:logo_size) { AttestationTemplate::FILE_MAX_SIZE_IN_MB.megabyte + 1 }
-  #     let(:signature_size) { AttestationTemplate::FILE_MAX_SIZE_IN_MB.megabyte + 1 }
-
-  #     it do
-  #       expected = {
-  #         signature: [{ error: ' : vous ne pouvez pas charger une image de plus de 0,5 Mo' }],
-  #         logo: [{ error: ' : vous ne pouvez pas charger une image de plus de 0,5 Mo' }]
-  #       }
-
-  #       is_expected.to match(expected)
-  #     end
-  #   end
-  # end
-
   describe 'validates footer length' do
     let(:attestation_template) { build(:attestation_template, footer: footer) }
 
@@ -108,13 +67,7 @@ describe AttestationTemplate, type: :model do
     let!(:dossier) { create(:dossier, procedure: procedure, individual: individual, etablissement: etablissement) }
     let(:template_title) { 'title' }
     let(:template_body) { 'body' }
-    let(:attestation_template) do
-      build(:attestation_template,
-        title: template_title,
-        body: template_body,
-        logo: @logo,
-        signature: @signature)
-    end
+    let(:attestation_template) { build(:attestation_template, :with_files, title: template_title, body: template_body) }
 
     before do
       Timecop.freeze(Time.zone.now)
@@ -139,6 +92,23 @@ describe AttestationTemplate, type: :model do
 
     let(:attestation) { attestation_template.attestation_for(dossier) }
 
+    context "when the attestation has a logo but our storage is down" do
+      before { require 'fog/openstack' }
+
+      it 'retries once' do
+        call_count = 0
+        allow(attestation_template.logo).to receive(:download) do
+          if call_count == 0
+            call_count += 1
+            raise Fog::OpenStack::Storage::NotFound.new('Object storage 99.99% availability leave space to 0.01% failure')
+          else
+            attestation_template.logo.blob.download
+          end
+        end
+        expect(attestation.pdf).to be_attached
+      end
+    end
+
     context 'when the procedure has a type de champ named libelleA et libelleB' do
       let(:types_de_champ) do
         [
@@ -147,7 +117,7 @@ describe AttestationTemplate, type: :model do
         ]
       end
 
-      context 'and the are used in the template title and body' do
+      context 'and they are used in the template title and body' do
         let(:template_title) { 'title --libelleA--' }
         let(:template_body) { 'body --libelleB--' }
 
