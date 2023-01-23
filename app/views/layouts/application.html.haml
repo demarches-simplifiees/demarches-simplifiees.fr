@@ -38,6 +38,8 @@
   %body{ { id: content_for(:page_id), class: browser.platform.ios? ? 'ios' : nil, data: { controller: 'turbo' } }.compact }
     = render partial: 'layouts/skiplinks'
     .page-wrapper
+      - if feature_enabled?(:team_on_strike)
+        = render partial: 'layouts/strike_banner'
       = render partial: "layouts/outdated_browser_banner"
       = render partial: 'layouts/pre_maintenance'
 

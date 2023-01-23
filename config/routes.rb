@@ -192,6 +192,7 @@ Rails.application.routes.draw do
 
   get "contact-admin", to: "support#admin"
 
+  post "webhooks/sendinblue", to: "webhook#sendinblue"
   post "webhooks/helpscout", to: "webhook#helpscout"
   post "webhooks/helpscout_support_dev", to: "webhook#helpscout_support_dev"
   match "webhooks/helpscout", to: lambda { |_| [204, {}, nil] }, via: :head
@@ -273,6 +274,7 @@ Rails.application.routes.draw do
         resources :demarches, only: [] do
           member do
             resources :dossiers, only: :create
+            resources :stats, only: :index
           end
         end
       end

@@ -5,6 +5,8 @@ class API::V2::StoredQuery
       QUERY_V2
     when 'ds-mutation-v2'
       MUTATION_V2
+    when 'introspection'
+      GraphQL::Introspection::INTROSPECTION_QUERY
     else
       if fallback.nil?
         raise GraphQL::ExecutionError.new("No query with id \"#{query_id}\"")
@@ -284,6 +286,9 @@ class API::V2::StoredQuery
     dateDerniereModification
     dateDepublication
     dateFermeture
+    notice { url }
+    deliberation { url }
+    cadreJuridiqueUrl
     service @include(if: $includeService) {
       ...ServiceFragment
     }

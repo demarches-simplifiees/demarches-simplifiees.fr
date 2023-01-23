@@ -2,7 +2,16 @@
   %table.table.vertical.dossier-champs{ role: :presentation }
     %tbody
       %tr
-        %td.libelle{ colspan: 2 } ⚠ LʼINSEE est indisponible, les informations sur lʼentreprise arriveront dʼici quelques heures.
+        %td{ colspan: 2 }
+          .fr-alert.fr-alert--warning.fr-alert--sm
+            %p
+              LʼINSEE est indisponible, les informations sur lʼentreprise arriveront dʼici quelques heures.
+              - if profile == "instructeur"
+                %br
+                Il nʼest pas possible dʼaccepter ou de refuser un dossier sans cette étape.
+
+
+
       %tr
         %td.libelle SIRET :
         %td= etablissement.siret
