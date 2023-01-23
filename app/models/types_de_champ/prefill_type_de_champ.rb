@@ -29,8 +29,4 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
   def too_many_possible_values?
     possible_values.count > POSSIBLE_VALUES_THRESHOLD
   end
-
-  def possible_values_sample
-    possible_values.first(POSSIBLE_VALUES_THRESHOLD)
-  end
 end
