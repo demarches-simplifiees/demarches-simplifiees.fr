@@ -20,7 +20,10 @@ export class BatchOperationController extends ApplicationController {
     this.inputTargets.forEach((e) => (e.checked = target.checked));
     this.toggleSubmitButtonWhenNeeded();
 
-    displayNotice(this.inputTargets);
+    const pagination = document.querySelector('.pagination')
+    if (pagination) {
+      displayNotice(this.inputTargets);
+    }
   }
 
   onSelectMore(event) {
@@ -38,6 +41,7 @@ export class BatchOperationController extends ApplicationController {
     event.preventDefault();
     emptyCheckboxes();
     deleteSelection();
+    this.toggleSubmitButtonWhenNeeded();
   }
 
   toggleSubmitButtonWhenNeeded() {
