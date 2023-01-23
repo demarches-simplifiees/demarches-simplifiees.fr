@@ -4,6 +4,7 @@ module Instructeurs
     before_action :ensure_not_super_admin!, only: [:download_export]
 
     ITEMS_PER_PAGE = 25
+    BATCH_SELECTION_LIMIT = 500
 
     def index
       @procedures = current_instructeur

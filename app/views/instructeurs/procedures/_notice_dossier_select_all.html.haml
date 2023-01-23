@@ -5,13 +5,19 @@
         %p.fr-notice__title
           Les
           %span#dynamic_number n
-          dossiers de cette pages sont sélectionnés.
-          %a{ :href => "#", data: { action: "batch-operation#onSelectMore", dossiers: @filtered_sorted_ids.join(',') } }
-            = "Sélectionner les #{@dossiers_count} dossiers."
+          dossiers de cette page sont sélectionnés.
+          %a{ :href => "#", data: { action: "batch-operation#onSelectMore", dossiers: @filtered_sorted_ids.first(Instructeurs::ProceduresController::BATCH_SELECTION_LIMIT).join(',') } }
+            - if @dossiers_count <= Instructeurs::ProceduresController::BATCH_SELECTION_LIMIT
+              = "Sélectionner les #{@dossiers_count} dossiers."
+            - else
+              = "Sélectionner les #{Instructeurs::ProceduresController::BATCH_SELECTION_LIMIT} premiers dossiers sur les #{@dossiers_count}"
       #selected.hidden
         %p.fr-notice__title
-          = "#{@dossiers_count} dossiers sont sélectionnés"
+          - if @dossiers_count <= Instructeurs::ProceduresController::BATCH_SELECTION_LIMIT
+            = "#{@dossiers_count} dossiers sont sélectionnés."
+          - else
+            = "#{Instructeurs::ProceduresController::BATCH_SELECTION_LIMIT} dossiers sont sélectionnés."
           %a{ :href => "#", data: { action: "batch-operation#onDeleteSelection" } }
             = "Effacer la sélection"
 
-        = check_box_tag :"batch_operation[dossier_ids][]", [], false, class: 'hidden', data: { batch_operation_target: "input", action: "batch-operation#onCheckOne", operations: "accepter,repasser_en_construction,follow,unfollow" }, form: dom_id(BatchOperation.new), id: dom_id(BatchOperation.new, "checkbox_multiple"), aria: { label: t('views.instructeurs.dossiers.batch_operation.enabled') }
+        = check_box_tag :"batch_operation[dossier_ids][]", [], false, class: 'hidden', data: { batch_operation_target: "input", action: "batch-operation#onCheckOne", operations: BatchOperation.operations.values.join(',') }, form: dom_id(BatchOperation.new), id: dom_id(BatchOperation.new, "checkbox_multiple"), aria: { label: t('views.instructeurs.dossiers.batch_operation.enabled') }
