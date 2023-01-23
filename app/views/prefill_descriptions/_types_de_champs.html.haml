@@ -43,8 +43,6 @@
                     = t("views.prefill_descriptions.edit.possible_values.#{type_de_champ.type_champ}_html")
                     %br
                   - if type_de_champ.too_many_possible_values?
-                    = "#{type_de_champ.possible_values_sample.join(", ")}..."
-                    %br
                     = link_to "Voir toutes les valeurs possibles", prefill_type_de_champ_path(prefill_description.path, type_de_champ)
                   - else
                     = type_de_champ.possible_values.to_sentence

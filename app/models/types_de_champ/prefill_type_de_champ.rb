@@ -1,5 +1,5 @@
 class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
-  POSSIBLE_VALUES_THRESHOLD = 10
+  POSSIBLE_VALUES_THRESHOLD = 5
 
   def self.build(type_de_champ)
     case type_de_champ.type_champ
