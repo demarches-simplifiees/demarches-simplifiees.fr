@@ -40,6 +40,9 @@
                     - if avis.revokable_by?(current_instructeur)
                       |
                       = link_to(t('revoke', scope: 'helpers.label'), revoquer_instructeur_avis_path(avis.procedure, avis), data: { confirm: t('revoke', scope: 'helpers.confirmation', email: avis.expert.email) }, method: :patch)
+                  - if avis.reminded_at
+                    %span.date.fr-text--xs.fr-text-mention--grey{ class: highlight_if_unseen_class(avis_seen_at, avis.reminded_at) }
+                      = t('relance_effectuee_le', scope: 'views.shared.avis', date: l(avis.reminded_at, format: '%d/%m/%y à %H:%M'))
               - if avis.introduction_file.attached?
                 = render Attachment::ShowComponent.new(attachment: avis.introduction_file.attachment)
                 .answer-body.mb-3
