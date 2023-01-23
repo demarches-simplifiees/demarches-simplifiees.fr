@@ -38,6 +38,7 @@ export class AutosaveController extends ApplicationController {
   #latestPromise = Promise.resolve();
   #needsRetry = false;
   #pendingPromiseCount = 0;
+  #spinnerTimeoutId?: ReturnType<typeof setTimeout>;
 
   connect() {
     this.#latestPromise = Promise.resolve();
@@ -88,6 +89,8 @@ export class AutosaveController extends ApplicationController {
         (!this.saveOnInput && isTextInputElement(target))
       ) {
         this.enqueueAutosaveRequest();
+
+        this.showConditionnalSpinner(target);
       }
     }
   }
@@ -102,17 +105,28 @@ export class AutosaveController extends ApplicationController {
     ) {
       this.debounce(this.enqueueAutosaveRequest, AUTOSAVE_DEBOUNCE_DELAY);
 
-      if (target.dataset.dependentConditions) {
-        // do not do anything is next DOM element has class "new-laoder"
-        if (!target.nextElementSibling?.classList.contains('spinner')) {
-          const spinner = document.createElement('div');
-          spinner.classList.add('spinner');
-          spinner.setAttribute('aria-live', 'live');
-          spinner.setAttribute('aria-label', 'Chargement en cours…');
-          target.after(spinner);
-        }
-      }
+      this.showConditionnalSpinner(target);
     }
+  }
+
+  private showConditionnalSpinner(target: HTMLInputElement) {
+    if (target.dataset.dependentConditions) {
+      this.showSpinner(target);
+      return;
+    }
+  }
+
+  private showSpinner(champElement: HTMLElement) {
+    this.#spinnerTimeoutId = setTimeout(() => {
+      // do not do anything if there is already a spinner
+      if (!champElement.nextElementSibling?.classList.contains('spinner')) {
+        const spinner = document.createElement('div');
+        spinner.classList.add('spinner');
+        spinner.setAttribute('aria-live', 'live');
+        spinner.setAttribute('aria-label', 'Chargement en cours…');
+        champElement.after(spinner);
+      }
+    }, 200);
   }
 
   private get saveOnInput() {
@@ -134,6 +148,7 @@ export class AutosaveController extends ApplicationController {
     this.#pendingPromiseCount -= 1;
     if (this.#pendingPromiseCount == 0) {
       this.globalDispatch('autosave:end');
+      clearTimeout(this.#spinnerTimeoutId);
     }
   }
 
