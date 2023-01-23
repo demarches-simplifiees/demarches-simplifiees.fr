@@ -33,6 +33,7 @@ describe Instructeurs::AvisController, type: :controller do
         get :revive, params: { procedure_id: procedure.id, id: avis.id }
         expect(AvisMailer).to have_received(:avis_invitation).once.with(avis)
         expect(flash.notice).to eq("Un mail de relance a été envoyé à #{avis.expert.email}")
+        expect(avis.reload.reminded_at).to be_present
       end
     end
   end
