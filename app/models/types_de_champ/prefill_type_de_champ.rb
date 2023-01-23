@@ -15,9 +15,7 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
   end
 
   def possible_values
-    return [] unless prefillable?
-
-    [I18n.t("views.prefill_descriptions.edit.possible_values.#{type_champ}_html")]
+    []
   end
 
   def example_value

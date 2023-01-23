@@ -39,6 +39,9 @@
                 %th
                   = t("views.prefill_descriptions.edit.possible_values.title")
                 %td
+                  - if I18n.exists?("views.prefill_descriptions.edit.possible_values.#{type_de_champ.type_champ}_html")
+                    = t("views.prefill_descriptions.edit.possible_values.#{type_de_champ.type_champ}_html")
+                    %br
                   - if type_de_champ.too_many_possible_values?
                     = "#{type_de_champ.possible_values_sample.join(", ")}..."
                     %br
