@@ -7,4 +7,5 @@
     = turbo_stream.morph champ.input_group_id do
       = render EditableChamp::EditableChampComponent.new champ:, form:
 
-= turbo_stream.remove_all(".editable-champ .spinner");
+= turbo_stream.remove_all(".editable-champ .spinner-removable");
+= turbo_stream.hide_all(".editable-champ .spinner");

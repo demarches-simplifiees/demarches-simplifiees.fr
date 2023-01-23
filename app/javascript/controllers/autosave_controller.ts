@@ -21,6 +21,7 @@ const {
 
 const AUTOSAVE_DEBOUNCE_DELAY = debounce_delay;
 const AUTOSAVE_TIMEOUT_DELAY = 60000;
+const AUTOSAVE_CONDITIONAL_SPINNER_DEBOUNCE_DELAY = 200;
 
 // This is a controller we attach to each "champ" in the main form. It performs
 // the save and dispatches a few events that allow `AutosaveStatusController` to
@@ -114,19 +115,26 @@ export class AutosaveController extends ApplicationController {
       this.showSpinner(target);
       return;
     }
+
+    // for some champs, like checkbox, spinner is attached on fieldset
+    const parentFieldset = target.closest('fieldset');
+
+    if (parentFieldset?.dataset?.dependentConditions) {
+      this.showSpinner(parentFieldset);
+    }
   }
 
   private showSpinner(champElement: HTMLElement) {
     this.#spinnerTimeoutId = setTimeout(() => {
-      // do not do anything if there is already a spinner
+      // do not do anything if there is already a spinner for this champ, like SIRET champ
       if (!champElement.nextElementSibling?.classList.contains('spinner')) {
         const spinner = document.createElement('div');
-        spinner.classList.add('spinner');
+        spinner.classList.add('spinner', 'spinner-removable');
         spinner.setAttribute('aria-live', 'live');
         spinner.setAttribute('aria-label', 'Chargement en cours…');
         champElement.after(spinner);
       }
-    }, 200);
+    }, AUTOSAVE_CONDITIONAL_SPINNER_DEBOUNCE_DELAY);
   }
 
   private get saveOnInput() {
