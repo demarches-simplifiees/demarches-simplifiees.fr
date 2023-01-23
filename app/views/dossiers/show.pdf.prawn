@@ -135,6 +135,7 @@ end
 
 def add_single_champ(pdf, champ)
   tdc = champ.type_de_champ
+  return if champ.conditional? && !champ.visible?
 
   case champ.type
   when 'Champs::PieceJustificativeChamp', 'Champs::TitreIdentiteChamp'
