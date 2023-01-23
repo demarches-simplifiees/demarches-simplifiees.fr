@@ -92,6 +92,8 @@ module Types
           Types::Champs::Descriptor::PoleEmploiChampDescriptorType
         when TypeDeChamp.type_champs.fetch(:mesri)
           Types::Champs::Descriptor::MesriChampDescriptorType
+        when TypeDeChamp.type_champs.fetch(:epci)
+          Types::Champs::Descriptor::EpciChampDescriptorType
         end
       end
     end

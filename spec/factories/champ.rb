@@ -125,6 +125,12 @@ FactoryBot.define do
       value { 'Paris' }
     end
 
+    factory :champ_epci, class: 'Champs::EpciChamp' do
+      type_de_champ { association :type_de_champ_epci, procedure: dossier.procedure }
+      value { 'CC Retz en Valois' }
+      external_id { '200071991' }
+    end
+
     factory :champ_header_section, class: 'Champs::HeaderSectionChamp' do
       type_de_champ { association :type_de_champ_header_section, procedure: dossier.procedure }
       value { 'une section' }

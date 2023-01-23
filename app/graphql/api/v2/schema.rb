@@ -62,6 +62,7 @@ class API::V2::Schema < GraphQL::Schema
     Types::Champs::DecimalNumberChampType,
     Types::Champs::DepartementChampType,
     Types::Champs::DossierLinkChampType,
+    Types::Champs::EpciChampType,
     Types::Champs::IntegerNumberChampType,
     Types::Champs::LinkedDropDownListChampType,
     Types::Champs::MultipleDropDownListChampType,
@@ -91,6 +92,7 @@ class API::V2::Schema < GraphQL::Schema
     Types::Champs::Descriptor::DossierLinkChampDescriptorType,
     Types::Champs::Descriptor::DropDownListChampDescriptorType,
     Types::Champs::Descriptor::EmailChampDescriptorType,
+    Types::Champs::Descriptor::EpciChampDescriptorType,
     Types::Champs::Descriptor::ExplicationChampDescriptorType,
     Types::Champs::Descriptor::HeaderSectionChampDescriptorType,
     Types::Champs::Descriptor::IbanChampDescriptorType,
@@ -107,8 +109,8 @@ class API::V2::Schema < GraphQL::Schema
     Types::Champs::Descriptor::RepetitionChampDescriptorType,
     Types::Champs::Descriptor::RNAChampDescriptorType,
     Types::Champs::Descriptor::SiretChampDescriptorType,
-    Types::Champs::Descriptor::TextChampDescriptorType,
     Types::Champs::Descriptor::TextareaChampDescriptorType,
+    Types::Champs::Descriptor::TextChampDescriptorType,
     Types::Champs::Descriptor::TitreIdentiteChampDescriptorType,
     Types::Champs::Descriptor::YesNoChampDescriptorType
 
