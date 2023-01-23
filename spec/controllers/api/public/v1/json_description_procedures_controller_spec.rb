@@ -2,12 +2,12 @@ RSpec.describe API::Public::V1::JSONDescriptionProceduresController, type: :cont
   include Rails.application.routes.url_helpers
 
   describe '#show' do
-    # curl --request POST 'http://localhost:3000/preremplir/:path/schema'
-
     let(:procedure) { create(:procedure, :published, :with_type_de_champ) }
     subject(:show_request) do
       get :show, params: params
     end
+
+    before { show_request }
 
     context 'the procedure is found' do
       let(:params) { { path: procedure.path } }
@@ -21,8 +21,6 @@ RSpec.describe API::Public::V1::JSONDescriptionProceduresController, type: :cont
           .to_h.dig("data", "demarcheDescriptor").to_json
       end
 
-      before { show_request }
-
       it { expect(response).to have_http_status(:success) }
 
       it { expect(response.body).to eq(expected_response) }
@@ -30,8 +28,6 @@ RSpec.describe API::Public::V1::JSONDescriptionProceduresController, type: :cont
 
     context "the procedure is not found" do
       let(:params) { { path: "error" } }
-
-      before { show_request }
 
       it { expect(response).to have_http_status(:not_found) }
 
