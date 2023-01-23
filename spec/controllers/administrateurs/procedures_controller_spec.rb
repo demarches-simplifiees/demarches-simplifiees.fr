@@ -342,6 +342,25 @@ describe Administrateurs::ProceduresController, type: :controller do
         it { expect(flash[:notice]).to be_present }
       end
 
+      describe "procedure is saved with custom retention period" do
+        let(:duree_conservation_dossiers_dans_ds) { 17 }
+
+        before do
+          stub_const("Procedure::NEW_MAX_DUREE_CONSERVATION", 18)
+        end
+
+        subject { post :create, params: { procedure: procedure_params } }
+
+        it { expect { subject }.to change { Procedure.count }.by(1) }
+
+        it "must save retention period and max retention period" do
+          subject
+          last_procedure = Procedure.last
+          expect(last_procedure.duree_conservation_dossiers_dans_ds).to eq(duree_conservation_dossiers_dans_ds)
+          expect(last_procedure.max_duree_conservation_dossiers_dans_ds).to eq(Procedure::NEW_MAX_DUREE_CONSERVATION)
+        end
+      end
+
       context 'when procedure is correctly saved' do
         let(:instructeur) { admin.instructeur }
 
