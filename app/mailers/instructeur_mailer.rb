@@ -44,4 +44,10 @@ class InstructeurMailer < ApplicationMailer
 
     mail(to: instructeur.email, subject: subject)
   end
+
+  private
+
+  def forced_delivery_for_action?
+    action_name == "send_login_token"
+  end
 end
