@@ -42,4 +42,11 @@ describe APIGeoService do
       expect(APIGeoService.departements.last).to eq(code: '976', name: 'Mayotte')
     end
   end
+
+  describe 'epcis', vcr: { cassette_name: 'api_geo_epcis' } do
+    it 'return sorted results' do
+      expect(APIGeoService.epcis('01').size).to eq(17)
+      expect(APIGeoService.epcis('01').first).to eq(code: '200042935', name: 'CA Haut - Bugey Agglomération')
+    end
+  end
 end
