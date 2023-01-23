@@ -101,4 +101,9 @@ class Avis < ApplicationRecord
       destroy!
     end
   end
+
+  def remind_by!(revocator)
+    return false if !revivable_by?(revocator) || answer.present?
+    update!(revived_at: Time.zone.now)
+  end
 end
