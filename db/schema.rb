@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_12_27_084442) do
+ActiveRecord::Schema.define(version: 2022_12_26_221025) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -47,10 +47,11 @@ ActiveRecord::Schema.define(version: 2022_12_27_084442) do
     t.integer "lock_version"
     t.text "metadata"
     t.string "service_name", null: false
+    t.datetime "watermarked_at"
     t.string "virus_scan_result"
     t.datetime "virus_scanned_at"
-    t.datetime "watermarked_at"
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+    t.index ["virus_scan_result"], name: "index_active_storage_blobs_on_virus_scan_result"
   end
 
   create_table "active_storage_variant_records", force: :cascade do |t|
@@ -91,11 +92,11 @@ ActiveRecord::Schema.define(version: 2022_12_27_084442) do
 
   create_table "api_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.bigint "administrateur_id", null: false
-    t.datetime "created_at", precision: 6, null: false
     t.string "encrypted_token", null: false
     t.string "name", null: false
-    t.datetime "updated_at", precision: 6, null: false
     t.integer "version", default: 3, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["administrateur_id"], name: "index_api_tokens_on_administrateur_id"
   end
 
@@ -172,22 +173,22 @@ ActiveRecord::Schema.define(version: 2022_12_27_084442) do
   end
 
   create_table "batch_operations", force: :cascade do |t|
-    t.datetime "created_at", precision: 6, null: false
-    t.bigint "failed_dossier_ids", default: [], null: false, array: true
-    t.datetime "finished_at"
     t.bigint "instructeur_id", null: false
     t.string "operation", null: false
     t.jsonb "payload", default: {}, null: false
-    t.datetime "run_at"
-    t.datetime "seen_at"
+    t.bigint "failed_dossier_ids", default: [], null: false, array: true
     t.bigint "success_dossier_ids", default: [], null: false, array: true
+    t.datetime "run_at"
+    t.datetime "finished_at"
+    t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "seen_at"
   end
 
   create_table "batch_operations_groupe_instructeurs", force: :cascade do |t|
     t.bigint "batch_operation_id", null: false
-    t.datetime "created_at", precision: 6, null: false
     t.bigint "groupe_instructeur_id", null: false
+    t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
@@ -223,7 +224,6 @@ ActiveRecord::Schema.define(version: 2022_12_27_084442) do
     t.string "external_id"
     t.string "fetch_external_data_exceptions", array: true
     t.bigint "parent_id"
-    t.boolean "prefilled"
     t.boolean "private", default: false, null: false
     t.datetime "rebased_at"
     t.integer "row"
@@ -232,6 +232,7 @@ ActiveRecord::Schema.define(version: 2022_12_27_084442) do
     t.datetime "updated_at"
     t.string "value"
     t.jsonb "value_json"
+    t.boolean "prefilled"
     t.index ["dossier_id"], name: "index_champs_on_dossier_id"
     t.index ["etablissement_id"], name: "index_champs_on_etablissement_id"
     t.index ["parent_id"], name: "index_champs_on_parent_id"
@@ -301,13 +302,13 @@ ActiveRecord::Schema.define(version: 2022_12_27_084442) do
     t.boolean "automatic_operation", default: false, null: false
     t.bigint "bill_signature_id"
     t.datetime "created_at", null: false
-    t.jsonb "data"
     t.text "digest"
     t.bigint "dossier_id"
     t.datetime "executed_at"
     t.datetime "keep_until"
     t.string "operation", null: false
     t.datetime "updated_at", null: false
+    t.jsonb "data"
     t.index ["bill_signature_id"], name: "index_dossier_operation_logs_on_bill_signature_id"
     t.index ["dossier_id"], name: "index_dossier_operation_logs_on_dossier_id"
     t.index ["keep_until"], name: "index_dossier_operation_logs_on_keep_until"
@@ -338,12 +339,9 @@ ActiveRecord::Schema.define(version: 2022_12_27_084442) do
   create_table "dossiers", id: :serial, force: :cascade do |t|
     t.string "api_entreprise_job_exceptions", array: true
     t.boolean "archived", default: false
-    t.datetime "archived_at"
-    t.string "archived_by"
     t.boolean "autorisation_donnees"
-    t.bigint "batch_operation_id"
     t.datetime "brouillon_close_to_expiration_notice_sent_at"
-    t.interval "conservation_extension", default: "PT0S"
+    t.interval "conservation_extension"
     t.datetime "created_at"
     t.datetime "declarative_triggered_at"
     t.string "deleted_user_email_never_send"
@@ -365,10 +363,7 @@ ActiveRecord::Schema.define(version: 2022_12_27_084442) do
     t.datetime "last_champ_updated_at"
     t.datetime "last_commentaire_updated_at"
     t.text "motivation"
-    t.bigint "parent_dossier_id"
-    t.string "prefill_token"
-    t.boolean "prefilled"
-    t.string "private_search_terms"
+    t.text "private_search_terms"
     t.datetime "processed_at"
     t.bigint "revision_id"
     t.text "search_terms"
@@ -376,6 +371,12 @@ ActiveRecord::Schema.define(version: 2022_12_27_084442) do
     t.datetime "termine_close_to_expiration_notice_sent_at"
     t.datetime "updated_at"
     t.integer "user_id"
+    t.bigint "parent_dossier_id"
+    t.bigint "batch_operation_id"
+    t.datetime "archived_at"
+    t.string "archived_by"
+    t.string "prefill_token"
+    t.boolean "prefilled"
     t.index ["archived"], name: "index_dossiers_on_archived"
     t.index ["batch_operation_id"], name: "index_dossiers_on_batch_operation_id"
     t.index ["dossier_transfer_id"], name: "index_dossiers_on_dossier_transfer_id"
@@ -683,7 +684,7 @@ ActiveRecord::Schema.define(version: 2022_12_27_084442) do
     t.string "direction"
     t.bigint "draft_revision_id"
     t.integer "duree_conservation_dossiers_dans_ds"
-    t.boolean "duree_conservation_etendue_par_ds", default: false
+    t.boolean "duree_conservation_etendue_par_ds", default: false, null: false
     t.boolean "durees_conservation_required", default: true
     t.string "encrypted_api_particulier_token"
     t.boolean "euro_flag", default: false
@@ -697,13 +698,12 @@ ActiveRecord::Schema.define(version: 2022_12_27_084442) do
     t.string "lien_dpo"
     t.string "lien_notice"
     t.string "lien_site_web"
-    t.integer "max_duree_conservation_dossiers_dans_ds", default: 12
+    t.integer "max_duree_conservation_dossiers_dans_ds", default: 12, null: false
     t.text "monavis_embed"
     t.boolean "opendata", default: true
     t.string "organisation"
     t.bigint "parent_procedure_id"
     t.string "path", null: false
-    t.boolean "piece_justificative_multiple", default: true, null: false
     t.boolean "procedure_expires_when_termine_enabled", default: true
     t.datetime "published_at"
     t.bigint "published_revision_id"
@@ -711,13 +711,14 @@ ActiveRecord::Schema.define(version: 2022_12_27_084442) do
     t.text "routing_criteria_name", default: "Votre ville"
     t.boolean "routing_enabled"
     t.bigint "service_id"
-    t.text "tags", default: [], array: true
     t.datetime "test_started_at"
     t.datetime "unpublished_at"
     t.datetime "updated_at", null: false
     t.string "web_hook_url"
     t.datetime "whitelisted_at"
     t.bigint "zone_id"
+    t.text "tags", default: [], array: true
+    t.boolean "piece_justificative_multiple", default: true, null: false
     t.index ["api_particulier_sources"], name: "index_procedures_on_api_particulier_sources", using: :gin
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
     t.index ["draft_revision_id"], name: "index_procedures_on_draft_revision_id"
@@ -813,7 +814,6 @@ ActiveRecord::Schema.define(version: 2022_12_27_084442) do
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"
     t.integer "sign_in_count", default: 0, null: false
-    t.boolean "team_account", default: false
     t.string "unlock_token"
     t.datetime "updated_at"
     t.index ["email"], name: "index_super_admins_on_email", unique: true
@@ -895,6 +895,7 @@ ActiveRecord::Schema.define(version: 2022_12_27_084442) do
     t.text "unconfirmed_email"
     t.string "unlock_token"
     t.datetime "updated_at"
+    t.boolean "team_account", default: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["requested_merge_into_id"], name: "index_users_on_requested_merge_into_id"
