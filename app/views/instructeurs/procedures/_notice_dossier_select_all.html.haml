@@ -20,4 +20,4 @@
           %a{ :href => "#", data: { action: "batch-operation#onDeleteSelection" } }
             = "Effacer la sélection"
 
-        = check_box_tag :"batch_operation[dossier_ids][]", [], false, class: 'hidden', data: { batch_operation_target: "input", action: "batch-operation#onCheckOne", operations: BatchOperation.operations.values.join(',') }, form: dom_id(BatchOperation.new), id: dom_id(BatchOperation.new, "checkbox_multiple"), aria: { label: t('views.instructeurs.dossiers.batch_operation.enabled') }
+        = hidden_field_tag :"batch_operation[dossier_ids][]", "", form: dom_id(BatchOperation.new), id: dom_id(BatchOperation.new, "checkbox_multiple")
