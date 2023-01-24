@@ -98,7 +98,7 @@ function displayNotice(inputs) {
     deleteSelection();
   };
 
-  document.querySelector('#dynamic_number').textContent = (inputs.length - 1);
+  document.querySelector('#dynamic_number').textContent = (inputs.length);
 }
 
 function deleteSelection() {
