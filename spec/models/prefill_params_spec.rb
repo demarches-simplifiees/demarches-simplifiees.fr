@@ -189,6 +189,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is unauthorized", :siret, "value"
     it_behaves_like "a champ public value that is unauthorized", :rna, "value"
     it_behaves_like "a champ public value that is unauthorized", :annuaire_education, "value"
+    it_behaves_like "a champ public value that is unauthorized", :multiple_drop_down_list, ["value"]
   end
 
   private
