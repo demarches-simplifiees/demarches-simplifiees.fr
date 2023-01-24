@@ -3,12 +3,11 @@
   - placeholder = t('views.shared.dossiers.messages.form.write_message_to_administration_placeholder')
   - if instructeur_signed_in? || administrateur_signed_in? || expert_signed_in?
     - placeholder = t('views.shared.dossiers.messages.form.write_message_placeholder')
-  %p.fr-text--sm= t('utils.asterisk_html')
   .fr-input-group
     = label_tag :commentaire_body, class: 'fr-label' do
       = t('message', scope: [:utils])
       %span.mandatory *
-    = text_area_tag :commentaire_body, params[:commentaire_body], placeholder: placeholder, title: placeholder, rows: 5, required: true, class: 'fr-input message-textarea'
+    = f.text_area :body, rows: 5, placeholder: placeholder, title: placeholder, required: true, class: 'fr-input message-textarea'
   .flex.justify-between.wrap
     - disable_piece_jointe = defined?(disable_piece_jointe) ? disable_piece_jointe : false
     %div
