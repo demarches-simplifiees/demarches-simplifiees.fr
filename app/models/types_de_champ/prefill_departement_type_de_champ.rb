@@ -3,10 +3,6 @@ class TypesDeChamp::PrefillDepartementTypeDeChamp < TypesDeChamp::PrefillTypeDeC
     departements.map { |departement| "#{departement[:code]} (#{departement[:name]})" }
   end
 
-  def example_value
-    departements.pick(:code)
-  end
-
   private
 
   def departements
