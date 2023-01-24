@@ -92,19 +92,20 @@ describe 'BatchOperation a dossier:', js: true do
       # click on check_all make the notice appear
       find("##{dom_id(BatchOperation.new, :checkbox_all)}").check
       expect(page).to have_selector('.fr-notice')
-      expect(page).to have_content('Les 2 dossiers de cette pages sont sélectionnés. Sélectionner les 3 dossiers.')
+      expect(page).to have_content('Les 2 dossiers de cette page sont sélectionnés. Sélectionner les 3 dossiers.')
 
       # click on selection link fill checkbox value with dossier_ids
       click_on("Sélectionner les 3 dossiers")
       expect(page).to have_content('3 dossiers sont sélectionnés. Effacer la sélection ')
-      expect(page).to have_selector('#checkbox_multiple_batch_operation', visible: false)
-      expect(find_field("batch_operation[dossier_ids][]", match: :first).value).to eq "#{dossier_3.id},#{dossier_2.id},#{dossier_1.id}"
+      expect(find_field("batch_operation[dossier_ids][]", type: :hidden).value).to eq "#{dossier_3.id},#{dossier_2.id},#{dossier_1.id}"
+
+
 
       # click on delete link empty checkbox value and hide notice
       click_on("Effacer la sélection")
       expect(page).to have_selector('.fr-notice', visible: false)
       expect(page).to have_button("Suivre les dossiers", disabled: true)
-      expect(find_field("batch_operation[dossier_ids][]", match: :first).value).to eq ""
+      expect(find_field("batch_operation[dossier_ids][]", type: :hidden).value).to eq ""
 
       # click on check_all + notice link and submit
       find("##{dom_id(BatchOperation.new, :checkbox_all)}").check
@@ -136,7 +137,7 @@ describe 'BatchOperation a dossier:', js: true do
       # click on selection link fill checkbox value with dossier_ids
       click_on("Sélectionner les 3 premiers dossiers sur les 4")
       expect(page).to have_content('3 dossiers sont sélectionnés. Effacer la sélection')
-      expect(find_field("batch_operation[dossier_ids][]", match: :first).value).to eq "#{dossier_4.id},#{dossier_3.id},#{dossier_2.id}"
+      expect(find_field("batch_operation[dossier_ids][]", type: :hidden).value).to eq "#{dossier_4.id},#{dossier_3.id},#{dossier_2.id}"
 
       # create batch
       expect { click_on "Suivre les dossiers" }
