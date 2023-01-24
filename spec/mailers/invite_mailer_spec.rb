@@ -29,6 +29,16 @@ RSpec.describe InviteMailer, type: :mailer do
          expect(TargetedUserLink.where(target_model: invite, user: invite.user).count).to eq(1)
        end
     end
+
+    context 'without SafeMailer configured' do
+      it { expect(mailer[BalancerDeliveryMethod::FORCE_DELIVERY_METHOD_HEADER]&.value).to eq(nil) }
+    end
+
+    context 'with SafeMailer configured' do
+      let(:forced_delivery_method) { :kikoo }
+      before { allow(SafeMailer).to receive(:forced_delivery_method).and_return(forced_delivery_method) }
+      it { expect(mailer[BalancerDeliveryMethod::FORCE_DELIVERY_METHOD_HEADER]&.value).to eq(forced_delivery_method.to_s) }
+    end
   end
 
   describe '.invite_guest' do
