@@ -30,7 +30,6 @@
     color: $dark-red;
   }
 
-  label,
   legend.form-label {
     font-size: 18px;
     margin-bottom: $default-padding;
@@ -198,9 +197,6 @@
   input[type=tel],
   textarea,
   select {
-    border-radius: 4px;
-    border: solid 1px $border-grey;
-    padding: $default-padding;
 
     &.small {
       padding: $default-spacer;
@@ -218,7 +214,7 @@
     }
 
     // Hide the browser default invalidity indicator until the field is touched
-    &:invalid:not(:focus) {
+    &:invalid:not(:focus):not(.fr-input) {
       box-shadow: none;
     }
 
@@ -624,3 +620,4 @@ textarea::placeholder {
 .send-wrapper--with-border-top {
   border-top: 2px solid rgba(0, 0, 145, 1);
 }
+
