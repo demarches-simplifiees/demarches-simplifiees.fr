@@ -21,4 +21,10 @@ class AdministrateurMailer < ApplicationMailer
       subject: @subject,
       reply_to: CONTACT_EMAIL)
   end
+
+  private
+
+  def forced_delivery_for_action?
+    action_name == "activate_before_expiration"
+  end
 end

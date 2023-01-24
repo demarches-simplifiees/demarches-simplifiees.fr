@@ -55,4 +55,8 @@ class UserMailer < ApplicationMailer
 
     mail(to: administrateur_or_instructeur.email, subject: subject)
   end
+
+  def forced_delivery_for_action?
+    ['france_connect_merge_confirmation', "new_account_warning", "ask_for_merge", "invite_instructeur"].include?(action_name)
+  end
 end

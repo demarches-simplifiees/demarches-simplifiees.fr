@@ -9,6 +9,23 @@ RSpec.describe InstructeurMailer, type: :mailer do
     it { expect(subject.body).to include('Bonjour') }
   end
 
+  describe '#send_login_token' do
+    let(:user) { create(:instructeur) }
+    let(:token) { SecureRandom.hex }
+
+    context 'without SafeMailer configured' do
+      subject { described_class.send_login_token(user, token) }
+      it { expect(subject[BalancerDeliveryMethod::FORCE_DELIVERY_METHOD_HEADER]&.value).to eq(nil) }
+    end
+
+    context 'with SafeMailer configured' do
+      let(:forced_delivery_method) { :kikoo }
+      before { allow(SafeMailer).to receive(:forced_delivery_method).and_return(forced_delivery_method) }
+      subject { described_class.send_login_token(user, token) }
+      it { expect(subject[BalancerDeliveryMethod::FORCE_DELIVERY_METHOD_HEADER]&.value).to eq(forced_delivery_method.to_s) }
+    end
+  end
+
   describe '#last_week_overview' do
     let(:instructeur) { create(:instructeur) }
     let(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
