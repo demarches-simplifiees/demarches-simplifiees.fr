@@ -9,10 +9,17 @@ describe 'Prefilling a dossier (with a POST request):' do
   let(:type_de_champ_text) { create(:type_de_champ_text, procedure: procedure) }
   let(:type_de_champ_phone) { create(:type_de_champ_phone, procedure: procedure) }
   let(:type_de_champ_datetime) { create(:type_de_champ_datetime, procedure: procedure) }
+  let(:type_de_champ_multiple_drop_down_list) { create(:type_de_champ_multiple_drop_down_list, procedure: procedure) }
   let(:type_de_champ_epci) { create(:type_de_champ_epci, procedure: procedure) }
   let(:text_value) { "My Neighbor Totoro is the best movie ever" }
   let(:phone_value) { "invalid phone value" }
   let(:datetime_value) { "2023-02-01T10:32" }
+  let(:multiple_drop_down_list_values) {
+    [
+      type_de_champ_multiple_drop_down_list.drop_down_list_enabled_non_empty_options.first,
+      type_de_champ_multiple_drop_down_list.drop_down_list_enabled_non_empty_options.last
+    ]
+  }
   let(:epci_value) { ['01', '200029999'] }
 
   before do
@@ -116,6 +123,7 @@ describe 'Prefilling a dossier (with a POST request):' do
         "champ_#{type_de_champ_text.to_typed_id}" => text_value,
         "champ_#{type_de_champ_phone.to_typed_id}" => phone_value,
         "champ_#{type_de_champ_datetime.to_typed_id}" => datetime_value,
+        "champ_#{type_de_champ_multiple_drop_down_list.to_typed_id}" => multiple_drop_down_list_values,
         "champ_#{type_de_champ_epci.to_typed_id}" => epci_value
       }.to_json
     JSON.parse(session.response.body)["dossier_url"].gsub("http://www.example.com", "")
