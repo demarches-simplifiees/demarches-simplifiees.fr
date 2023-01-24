@@ -101,6 +101,19 @@ RSpec.describe PrefillDescription, type: :model do
         )
       )
     end
+
+    context 'when the type de champ can have multiple values' do
+      let(:type_de_champ) { create(:type_de_champ_multiple_drop_down_list, procedure: procedure) }
+
+      it 'builds the URL with array parameter' do
+        expect(prefill_description.prefill_link).to eq(
+          commencer_url(
+            path: procedure.path,
+            "champ_#{type_de_champ.to_typed_id}": TypesDeChamp::PrefillMultipleDropDownListTypeDeChamp.new(type_de_champ).example_value
+          )
+        )
+      end
+    end
   end
 
   describe '#prefill_query' do
@@ -119,6 +132,21 @@ RSpec.describe PrefillDescription, type: :model do
 
     it "builds the query to create a new prefilled dossier" do
       expect(prefill_description.prefill_query).to eq(expected_query)
+    end
+
+    context 'when the type de champ can have multiple values' do
+      let(:type_de_champ) { create(:type_de_champ_multiple_drop_down_list, procedure: procedure) }
+      let(:expected_query) do
+        <<~TEXT
+          curl --request POST '#{api_public_v1_dossiers_url(procedure)}' \\
+               --header 'Content-Type: application/json' \\
+               --data '{"champ_#{type_de_champ.to_typed_id}": #{TypesDeChamp::PrefillMultipleDropDownListTypeDeChamp.new(type_de_champ).example_value}}'
+        TEXT
+      end
+
+      it 'builds the query with array parameter' do
+        expect(prefill_description.prefill_query).to eq(expected_query)
+      end
     end
   end
 end
