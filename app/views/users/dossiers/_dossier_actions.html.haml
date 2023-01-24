@@ -6,7 +6,7 @@
 
 - if has_actions
   .dropdown.user-dossier-actions{ data: { controller: 'menu-button' } }
-    %button.button.dropdown-button{ data: { menu_button_target: 'button' } }
+    %button.fr-btn.fr-btn--secondary.dropdown-button{ data: { menu_button_target: 'button' } }
       = t('views.users.dossiers.dossier_action.actions')
     .dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' }, id: dom_id(dossier, :actions_menu) }
       %ul.dropdown-items
