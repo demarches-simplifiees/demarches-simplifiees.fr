@@ -34,6 +34,7 @@ export class ChampDropdownController extends ApplicationController {
         if (target.value == '__other__') {
           show(inputGroup);
           input.disabled = false;
+          input.focus();
         } else {
           hide(inputGroup);
           input.disabled = true;
