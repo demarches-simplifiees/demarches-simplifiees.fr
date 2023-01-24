@@ -124,6 +124,7 @@ en:
           yes_no_html: '"true" for Yes, "false" pour No'
           checkbox_html: '"true" to check, "false" to uncheck'
           pays_html: An <a href="https://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">ISO 3166-2 country code</a>
+          regions_html: An <a href="https://fr.wikipedia.org/wiki/R%C3%A9gion_fran%C3%A7aise" target="_blank">INSEE region code</a>
           date_html: ISO8601 date
           datetime_html: ISO8601 datetime
           drop_down_list_other_html: Any value
@@ -138,6 +139,7 @@ en:
           iban: FR7611315000011234567890138
           yes_no: "true"
           pays: "FR"
+          regions: "53"
           date: "2023-02-01"
           datetime: "2023-02-01T10:30"
           checkbox: "true"
@@ -450,6 +452,12 @@ en:
           attributes:
             value:
               not_in_options: "must be in the given options"
+        "champs/region_champ":
+          attributes:
+            value:
+              not_in_region_names: "must be a valid region name"
+            external_id:
+              not_in_region_codes: "must be a valid region code"
   errors:
     format: "Field « %{attribute} » %{message}"
     messages:
