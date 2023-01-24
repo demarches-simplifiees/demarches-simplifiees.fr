@@ -1,6 +1,6 @@
 - if @champ.options?
   - if @champ.render_as_radios?
-    %fieldset.radios{ data: data_dependent_conditions }
+    %fieldset.radios
       - @champ.enabled_non_empty_options.each do |option|
         %label
           = @form.radio_button :value, option
@@ -16,7 +16,7 @@
           = @form.radio_button :value, Champs::DropDownListChamp::OTHER, checked: @champ.other_value_present?
           Autre
   - else
-    = @form.select :value, @champ.options_without_empty_value_when_mandatory(@champ.options), { selected: @champ.selected }, required: @champ.mandatory?, id: @champ.input_id, aria: { describedby: @champ.describedby_id }, data: data_dependent_conditions
+    = @form.select :value, @champ.options_without_empty_value_when_mandatory(@champ.options), { selected: @champ.selected }, required: @champ.mandatory?, id: @champ.input_id, aria: { describedby: @champ.describedby_id }
 
   - if @champ.drop_down_other?
     = render EditableChamp::DropDownOtherInputComponent.new(form: @form, champ: @champ)

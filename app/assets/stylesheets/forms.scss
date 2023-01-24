@@ -534,6 +534,11 @@
       margin-right: 0;
     }
   }
+
+  fieldset ~ .spinner {
+    position: relative;
+    top: -($default-fields-spacer / 2);
+  }
 }
 
 [data-react-component-value]:not([data-react-component-value^="ComboMultiple"]) {
