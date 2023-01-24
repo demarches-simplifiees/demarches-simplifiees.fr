@@ -1,12 +1,20 @@
 class SerializerService
   def self.dossier(dossier)
-    data = execute_query('serializeDossier', { number: dossier.id })
-    data && data['dossier']
+    Sentry.with_scope do |scope|
+      scope.set_tags(dossier_id: dossier.id)
+
+      data = execute_query('serializeDossier', { number: dossier.id })
+      data && data['dossier']
+    end
   end
 
   def self.dossiers(procedure)
-    data = execute_query('serializeDossiers', { number: procedure.id })
-    data && data['demarche']['dossiers']
+    Sentry.with_scope do |scope|
+      scope.set_tags(procedure_id: procedure.id)
+
+      data = execute_query('serializeDossiers', { number: procedure.id })
+      data && data['demarche']['dossiers']
+    end
   end
 
   def self.demarches_publiques(after: nil)
@@ -20,12 +28,16 @@ class SerializerService
   end
 
   def self.champ(champ)
-    if champ.private?
-      data = execute_query('serializeAnnotation', { number: champ.dossier_id, id: champ.to_typed_id })
-      data && data['dossier']['annotations'].first
-    else
-      data = execute_query('serializeChamp', { number: champ.dossier_id, id: champ.to_typed_id })
-      data && data['dossier']['champs'].first
+    Sentry.with_scope do |scope|
+      scope.set_tags(champ_id: champ.id)
+
+      if champ.private?
+        data = execute_query('serializeAnnotation', { number: champ.dossier_id, id: champ.to_typed_id })
+        data && data['dossier']['annotations'].first
+      else
+        data = execute_query('serializeChamp', { number: champ.dossier_id, id: champ.to_typed_id })
+        data && data['dossier']['champs'].first
+      end
     end
   end
 
@@ -303,16 +315,18 @@ class SerializerService
     }
 
     fragment ChampDescriptorFragment on ChampDescriptor {
-      type
+      __typename
       label
       description
       required
-      options
-      champDescriptors {
-        type
-        label
-        description
-        required
+      ... on DropDownListChampDescriptor {
+        options
+        otherOption
+      }
+      ... on MultipleDropDownListChampDescriptor {
+        options
+      }
+      ... on LinkedDropDownListChampDescriptor {
         options
       }
     }
@@ -321,13 +335,28 @@ class SerializerService
       number
       title
       description
+      tags
+      zones
       datePublication
       service { nom organisme typeOrganisme }
-      cadreJuridique
-      deliberation
+      demarcheUrl
+      dpoUrl
+      noticeUrl
+      siteWebUrl
+      cadreJuridiqueUrl
+      logo { ...FileFragment }
+      notice { ...FileFragment }
+      deliberation { ...FileFragment }
       dossiersCount
       revision {
-        champDescriptors { ...ChampDescriptorFragment }
+        champDescriptors {
+          ...ChampDescriptorFragment
+          ... on RepetitionChampDescriptor {
+            champDescriptors {
+              ...ChampDescriptorFragment
+            }
+          }
+        }
       }
     }
   GRAPHQL

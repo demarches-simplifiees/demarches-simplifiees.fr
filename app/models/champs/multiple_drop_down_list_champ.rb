@@ -8,7 +8,6 @@
 #  prefilled                      :boolean          default(FALSE)
 #  private                        :boolean          default(FALSE), not null
 #  rebased_at                     :datetime
-#  row                            :integer
 #  type                           :string
 #  value                          :string
 #  value_json                     :jsonb
@@ -18,6 +17,7 @@
 #  etablissement_id               :integer
 #  external_id                    :string
 #  parent_id                      :bigint
+#  row_id                         :string
 #  type_de_champ_id               :integer
 #
 class Champs::MultipleDropDownListChamp < Champ
@@ -67,6 +67,14 @@ class Champs::MultipleDropDownListChamp < Champ
 
   def blank?
     selected_options.blank?
+  end
+
+  def in?(options)
+    (selected_options - options).size != selected_options.size
+  end
+
+  def remove_option(options)
+    update_column(:value, (selected_options - options).to_json)
   end
 
   private

@@ -201,10 +201,7 @@ module Users
       respond_to do |format|
         format.html { render :brouillon }
         format.turbo_stream do
-          @to_shows, @to_hides = @dossier.champs_public_all
-            .filter(&:conditional?)
-            .partition(&:visible?)
-            .map { |champs| champs_to_one_selector(champs) }
+          @to_show, @to_hide, @to_update = champs_to_turbo_update
 
           render(:update, layout: false)
         end
@@ -222,10 +219,7 @@ module Users
       respond_to do |format|
         format.html { render :modifier }
         format.turbo_stream do
-          @to_shows, @to_hides = @dossier.champs_public_all
-            .filter(&:conditional?)
-            .partition(&:visible?)
-            .map { |champs| champs_to_one_selector(champs) }
+          @to_show, @to_hide, @to_update = champs_to_turbo_update
         end
       end
     end
@@ -491,6 +485,24 @@ module Users
       end
 
       errors
+    end
+
+    def champs_to_turbo_update
+      champ_ids = champs_public_params
+        .fetch(:champs_public_all_attributes)
+        .keys
+        .map(&:to_i)
+
+      to_update = dossier
+        .champs_public_all
+        .filter { _1.id.in?(champ_ids) && _1.refresh_after_update? }
+      to_show, to_hide = dossier
+        .champs_public_all
+        .filter(&:conditional?)
+        .partition(&:visible?)
+        .map { champs_to_one_selector(_1 - to_update) }
+
+      return to_show, to_hide, to_update
     end
 
     def ensure_ownership!

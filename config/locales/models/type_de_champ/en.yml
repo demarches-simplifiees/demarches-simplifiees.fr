@@ -1,4 +1,4 @@
-fr:
+en:
   activerecord:
     models:
       type_de_champ: 'Field type'
@@ -45,8 +45,8 @@ fr:
           annuaire_education: 'Schooling directory'
           rna: 'RNA'
           carte: 'Card'
-          engagement: 'Commitment'
           cnaf: 'Data from Caisse nationale des allocations familiales'
           dgfip: 'Data from Direction générale des Finances publiques'
           pole_emploi: 'Pôle emploi status'
           mesri: "Data from Ministère de l’Enseignement Supérieur, de la Recherche et de l’Innovation"
+          epci: "EPCI"

@@ -1,25 +1,60 @@
 en:
   archiver:
     finish:
-      title: The bulk action is finished
-      text:
+      text_success:
         one: 1/1 file has been archived
         other: "%{success_count}/%{count} files have been archived"
     in_progress:
-      title: A bulk action is processing
       text_success:
         one: 1/1 is being archived
         other: "%{progress_count}/%{count} files have been archived"
   passer_en_instruction:
     finish:
-      title: The bulk action is finished
-      text:
+      text_success:
         one: 1/1 file has been changed to instructing
         other: "%{success_count}/%{count} files have been changed to instructing"
     in_progress:
-      title: A bulk action is processing
       text_success:
         one: 1/1 is being changed to instructing
         other: "%{progress_count}/%{count} files have been changed to instructing"
+  accepter:
+    finish:
+      text_success:
+        one: 1/1 file has been accepted
+        other: "%{success_count}/%{count} files have been accepted"
+    in_progress:
+      text_success:
+        one: 1/1 is being accepted
+        other: "%{progress_count}/%{count} files have been accepted"
+  follow:
+    finish:
+      text_success:
+        one: 1/1 file has been followed
+        other: "%{success_count}/%{count} files have been followed"
+    in_progress:
+      text_success:
+        one: 1/1 is being followed
+        other: "%{progress_count}/%{count} files have been followed"
+  unfollow:
+    finish:
+      text_success:
+        one: 1/1 file has been unfollowed
+        other: "%{success_count}/%{count} files have been unfollowed"
+    in_progress:
+      text_success:
+        one: 1/1 is being unfollowed
+        other: "%{progress_count}/%{count} files have been unfollowed"
+  repasser_en_construction:
+    finish:
+      text_success:
+        one: 1/1 file has been changed to in progress
+        other: "%{success_count}/%{count} files have been changed to in progress"
+    in_progress:
+      text_success:
+        one: 1/1 is being changed to in progress
+        other: "%{progress_count}/%{count} files have been changed to in progress"
+  title:
+    finish: The bulk action is finished
+    in_progress:  A bulk action is processing
   link_text: Refresh this webpage
   after_link_text: to check if the process is over.

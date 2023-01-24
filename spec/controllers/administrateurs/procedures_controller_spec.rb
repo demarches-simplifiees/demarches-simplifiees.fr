@@ -19,11 +19,14 @@ describe Administrateurs::ProceduresController, type: :controller do
     render_views
 
     let(:procedure) { create(:procedure, :with_all_champs) }
+    let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
 
     subject { get :apercu, params: { id: procedure.id } }
 
     before do
       sign_in(admin.user)
+      allow(Rails).to receive(:cache).and_return(memory_store)
+      Rails.cache.clear
     end
 
     it do
@@ -159,6 +162,15 @@ describe Administrateurs::ProceduresController, type: :controller do
         expect(assigns(:procedures).any? { |p| p.id == procedure1.id }).to be_truthy
         expect(assigns(:procedures).any? { |p| p.id == procedure2.id }).to be_truthy
         expect(assigns(:procedures).any? { |p| p.id == procedure3.id }).to be_falsey
+      end
+    end
+
+    context 'with specific tag' do
+      let!(:tag_procedure) { create(:procedure, :published, tags: ['environnement']) }
+
+      it 'returns procedures with specific tag' do
+        get :all, params: { tag: 'environnement' }
+        expect(assigns(:procedures).any? { |p| p.id == tag_procedure.id }).to be_truthy
       end
     end
 
@@ -331,6 +343,25 @@ describe Administrateurs::ProceduresController, type: :controller do
 
         it { is_expected.to redirect_to(champs_admin_procedure_path(Procedure.last)) }
         it { expect(flash[:notice]).to be_present }
+      end
+
+      describe "procedure is saved with custom retention period" do
+        let(:duree_conservation_dossiers_dans_ds) { 17 }
+
+        before do
+          stub_const("Procedure::NEW_MAX_DUREE_CONSERVATION", 18)
+        end
+
+        subject { post :create, params: { procedure: procedure_params } }
+
+        it { expect { subject }.to change { Procedure.count }.by(1) }
+
+        it "must save retention period and max retention period" do
+          subject
+          last_procedure = Procedure.last
+          expect(last_procedure.duree_conservation_dossiers_dans_ds).to eq(duree_conservation_dossiers_dans_ds)
+          expect(last_procedure.max_duree_conservation_dossiers_dans_ds).to eq(Procedure::NEW_MAX_DUREE_CONSERVATION)
+        end
       end
 
       context 'when procedure is correctly saved' do

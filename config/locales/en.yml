@@ -113,15 +113,20 @@ en:
         champ_unavailable: Unavailable
         possible_values:
           title: Values
-          text: A short text
-          textarea: A long text
-          decimal_number: A decimal number
-          integer_number: An integer number
-          email: An email address
-          phone: A phone number
-          iban: An Iban number
-          yes_no: '"true" for Yes, "false" pour No'
-          checkbox: '"on" to check, "off" to uncheck'
+          text_html: A short text
+          textarea_html: A long text
+          decimal_number_html: A decimal number
+          integer_number_html: An integer number
+          email_html: An email address
+          civilite_html: '"M." for Mister, "Mme" for Madam'
+          phone_html: A phone number
+          iban_html: An Iban number
+          yes_no_html: '"true" for Yes, "false" pour No'
+          checkbox_html: '"true" to check, "false" to uncheck'
+          pays_html: An <a href="https://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">ISO 3166-2 country code</a>
+          date_html: ISO8601 date
+          datetime_html: ISO8601 datetime
+          drop_down_list_other_html: Any value
         examples:
           title: Example
           text: Short text
@@ -132,15 +137,21 @@ en:
           phone: 0612345678
           iban: FR7611315000011234567890138
           yes_no: "true"
-          checkbox: "on"
+          pays: "FR"
+          date: "2023-02-01"
+          datetime: "2023-02-01T10:30"
+          checkbox: "true"
         prefill_link_title: Prefill link (GET)
         prefill_link_info: Use the button to copy the link, then remplace the values with your data.
         prefill_link_too_long: Warning, the prefill link is too long and may not work on all browsers.
         prefill_link_copy: Copy prefill link
         prefill_query_title: Prefill query (POST)
         prefill_query_info: Use the button to copy the query, then remplace the values with your data.
-        prefill_query_response_html: '# Response:<br># {"dossier_url":"%{url}"}'
+        prefill_query_response_html: '# Response:<br># {<br>#    "dossier_url": "%{url}",<br>#    "dossier_id": "aBase64Id==",<br>#    "dossier_number": 42<br># }'
         prefill_query_copy: Copy prefill query
+        json_description_title: JSON description of the procedure
+        json_description_info: Use the button to copy the query and learn more about the procedure and its fields thanks to a JSON description.
+        json_description_copy: Copy the JSON description query
     registrations:
       new:
         title: "Create an account %{name}"
@@ -215,12 +226,16 @@ en:
         deleted_by_administration: "File deleted by administration"
         restore: "Restore"
         filters:
-          title: Filter
+          title: Select a filter
         select_all: Select all
         batch_operation:
           enabled: "Add this file to the selection for the bulk operation"
           disabled: "Impossible to add this file to the selection because it is already in a bulk operation"
-        personalize: Personalize
+        dossiers_count:
+          zero: 0 file
+          one: 1 file
+          other: "%{count} files"
+        personalize: Personalize the table
         show_deleted_dossiers: Show deleted files
         follow_file: Follow-up the file
         save: Save
@@ -431,6 +446,10 @@ en:
               invalid: "must be 13 or 14 characters long"
             reference_avis:
               invalid: "must be 13 or 14 characters long"
+        "champs/drop_down_list_champ":
+          attributes:
+            value:
+              not_in_options: "must be in the given options"
   errors:
     format: "Field « %{attribute} » %{message}"
     messages:
@@ -453,6 +472,8 @@ en:
       #   one: "Aucune parcelle cadastrale sur la zone sélectionnée"
       #   other: "Aucune parcelle cadastrale sur les zones sélectionnées"
       not_an_integer: "must be an integer (without decimal)"
+      not_a_date: "must be a correct date"
+      not_a_datetime: "must be a correct datetime"
       blank: "can't be blank"
   time:
     formats:

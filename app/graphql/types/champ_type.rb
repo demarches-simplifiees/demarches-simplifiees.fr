@@ -71,6 +71,8 @@ module Types
           Types::Champs::CiviliteChampType
         when ::Champs::TitreIdentiteChamp
           Types::Champs::TitreIdentiteChampType
+        when ::Champs::EpciChamp
+          Types::Champs::EpciChampType
         else
           Types::Champs::TextChampType
         end

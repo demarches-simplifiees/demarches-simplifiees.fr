@@ -23,14 +23,12 @@ describe Instructeurs::DossiersController, type: :controller do
   end
 
   describe '#send_to_instructeurs' do
-    let(:recipient) { create(:instructeur) }
-    let(:instructeurs) { [instructeur, recipient] }
     let(:mail) { double("mail") }
 
     before do
-      expect(mail).to receive(:deliver_later)
+      allow(mail).to receive(:deliver_later)
 
-      expect(InstructeurMailer)
+      allow(InstructeurMailer)
         .to receive(:send_dossier)
         .with(instructeur, dossier, recipient)
         .and_return(mail)
@@ -45,8 +43,25 @@ describe Instructeurs::DossiersController, type: :controller do
       )
     end
 
-    it { expect(response).to redirect_to(personnes_impliquees_instructeur_dossier_url) }
-    it { expect(recipient.followed_dossiers).to include(dossier) }
+    context 'when the recipient belongs to the dossier groupe instructeur' do
+      let(:recipient) { instructeur }
+
+      it do
+        expect(InstructeurMailer).to have_received(:send_dossier)
+        expect(response).to redirect_to(personnes_impliquees_instructeur_dossier_url)
+        expect(recipient.followed_dossiers).to include(dossier)
+      end
+    end
+
+    context 'when the recipient is random' do
+      let(:recipient) { create(:instructeur) }
+
+      it do
+        expect(InstructeurMailer).not_to have_received(:send_dossier)
+        expect(response).to redirect_to(personnes_impliquees_instructeur_dossier_url)
+        expect(recipient.followed_dossiers).not_to include(dossier)
+      end
+    end
   end
 
   describe '#follow' do
@@ -805,7 +820,7 @@ describe Instructeurs::DossiersController, type: :controller do
         expect(champ_multiple_drop_down_list.value).to eq('["un", "deux"]')
         expect(champ_linked_drop_down_list.primary_value).to eq('primary')
         expect(champ_linked_drop_down_list.secondary_value).to eq('secondary')
-        expect(champ_datetime.value).to eq('21/12/2019 13:17')
+        expect(champ_datetime.value).to eq('2019-12-21T13:17:00+01:00')
         expect(champ_repetition.champs.first.value).to eq('text')
         expect(dossier.reload.last_champ_private_updated_at).to eq(now)
         expect(response).to redirect_to(annotations_privees_instructeur_dossier_path(dossier.procedure, dossier))

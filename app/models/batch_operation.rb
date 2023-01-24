@@ -17,15 +17,24 @@
 
 class BatchOperation < ApplicationRecord
   enum operation: {
+    accepter: 'accepter',
     archiver: 'archiver',
-    passer_en_instruction: 'passer_en_instruction'
+    follow: 'follow',
+    passer_en_instruction: 'passer_en_instruction',
+    repasser_en_construction: 'repasser_en_construction',
+    unfollow: 'unfollow'
   }
 
   has_many :dossiers, dependent: :nullify
-  has_and_belongs_to_many :groupe_instructeurs
+  has_many :dossier_operations, class_name: 'DossierBatchOperation', dependent: :destroy
+  has_many :groupe_instructeurs, through: :dossier_operations
   belongs_to :instructeur
 
+  store_accessor :payload, :motivation, :justificatif_motivation
+
   validates :operation, presence: true
+
+  before_create :build_operations
 
   RETENTION_DURATION = 4.hours
   MAX_DUREE_GENERATION = 24.hours
@@ -50,6 +59,14 @@ class BatchOperation < ApplicationRecord
       query.not_archived.state_termine
     when BatchOperation.operations.fetch(:passer_en_instruction) then
       query.state_en_construction
+    when BatchOperation.operations.fetch(:accepter) then
+      query.state_en_instruction
+    when BatchOperation.operations.fetch(:follow) then
+      query.without_followers.en_cours
+    when BatchOperation.operations.fetch(:repasser_en_construction) then
+      query.state_en_instruction
+    when BatchOperation.operations.fetch(:unfollow) then
+      query.with_followers.en_cours
     end
   end
 
@@ -64,31 +81,26 @@ class BatchOperation < ApplicationRecord
       dossier.archiver!(instructeur)
     when BatchOperation.operations.fetch(:passer_en_instruction)
       dossier.passer_en_instruction(instructeur: instructeur)
+    when BatchOperation.operations.fetch(:accepter)
+      dossier.accepter(instructeur: instructeur, motivation: motivation, justificatif: justificatif_motivation)
+    when BatchOperation.operations.fetch(:follow)
+      instructeur.follow(dossier)
+    when BatchOperation.operations.fetch(:repasser_en_construction)
+      dossier.repasser_en_construction!(instructeur: instructeur)
+    when BatchOperation.operations.fetch(:unfollow)
+      instructeur.unfollow(dossier)
     end
   end
 
-  # use Arel::UpdateManager for array_append/array_remove (inspired by atomic_append)
-  #   see: https://www.rubydoc.info/gems/arel/Arel/UpdateManager
-  #   we use this approach to ensure atomicity
   def track_processed_dossier(success, dossier)
-    transaction do
-      dossier.update(batch_operation: nil)
-      manager = Arel::UpdateManager.new.table(arel_table).where(arel_table[:id].eq(id))
-      values = []
-      values.push([arel_table[:run_at], Time.zone.now]) if called_for_first_time?
-      values.push([arel_table[:finished_at], Time.zone.now]) if called_for_last_time?(dossier)
-      values.push([arel_table[:updated_at], Time.zone.now])
+    dossiers.delete(dossier)
+    touch(:run_at) if called_for_first_time?
+    touch(:finished_at) if called_for_last_time?(dossier)
 
-      # NOTE: ensure to append BigInteger to SQL array by casting IDs
-      if success
-        values.push([arel_table[:success_dossier_ids], Arel::Nodes::NamedFunction.new('array_append', [arel_table[:success_dossier_ids], Arel::Nodes::SqlLiteral.new("#{dossier.id}::BIGINT")])])
-        values.push([arel_table[:failed_dossier_ids], Arel::Nodes::NamedFunction.new('array_remove', [arel_table[:failed_dossier_ids], Arel::Nodes::SqlLiteral.new("#{dossier.id}::BIGINT")])])
-      else
-        values.push([arel_table[:failed_dossier_ids], Arel::Nodes::NamedFunction.new('array_append', [arel_table[:failed_dossier_ids], Arel::Nodes::SqlLiteral.new("#{dossier.id}::BIGINT")])])
-      end
-
-      manager.set(values)
-      ActiveRecord::Base.connection.update(manager.to_sql)
+    if success
+      dossier_operation(dossier).done!
+    else
+      dossier_operation(dossier).fail!
     end
   end
 
@@ -112,27 +124,33 @@ class BatchOperation < ApplicationRecord
     run_at.nil?
   end
 
-  # beware, must be reloaded first
   def called_for_last_time?(dossier_to_ignore)
-    dossiers.where.not(id: dossier_to_ignore.id).empty?
+    dossiers.count.zero?
   end
 
   def total_count
-    total = failed_dossier_ids.size + success_dossier_ids.size
-
-    if finished_at.blank?
-      total += dossiers.count
-    end
-    total
+    dossier_operations.size
   end
 
   def progress_count
-    failed_dossier_ids.size + success_dossier_ids.size
+    dossier_operations.pending.size
+  end
+
+  def success_count
+    dossier_operations.success.size
+  end
+
+  def errors?
+    dossier_operations.error.present?
   end
 
   private
 
-  def arel_table
-    BatchOperation.arel_table
+  def dossier_operation(dossier)
+    dossier_operations.find_by!(dossier:)
+  end
+
+  def build_operations
+    dossier_operations.build(dossiers.map { { dossier: _1 } })
   end
 end

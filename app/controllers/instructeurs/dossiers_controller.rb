@@ -86,14 +86,19 @@ module Instructeurs
 
     def send_to_instructeurs
       recipients = params['recipients'].presence || [].to_json
-      recipients = Instructeur.find(JSON.parse(recipients))
+      # instructeurs are scoped by groupe_instructeur to avoid enumeration
+      recipients = dossier.groupe_instructeur.instructeurs.where(id: JSON.parse(recipients))
 
-      recipients.each do |recipient|
-        recipient.follow(dossier)
-        InstructeurMailer.send_dossier(current_instructeur, dossier, recipient).deliver_later
+      if recipients.present?
+        recipients.each do |recipient|
+          recipient.follow(dossier)
+          InstructeurMailer.send_dossier(current_instructeur, dossier, recipient).deliver_later
+        end
+        flash.notice = "Dossier envoyé"
+      else
+        flash.alert = "Instructeur inconnu ou non présent sur la procédure"
       end
 
-      flash.notice = "Dossier envoyé"
       redirect_to(personnes_impliquees_instructeur_dossier_path(procedure, dossier))
     end
 
@@ -271,14 +276,11 @@ module Instructeurs
     end
 
     def dossier
-      @dossier ||= dossier_scope.find(params[:dossier_id])
+      @dossier ||= DossierPreloader.load_one(dossier_scope.find(params[:dossier_id]))
     end
 
     def dossier_with_champs
-      @dossier ||= dossier_scope
-        .with_champs
-        .with_annotations
-        .find(params[:dossier_id])
+      @dossier ||= DossierPreloader.load_one(dossier_scope.find(params[:dossier_id]))
     end
 
     def commentaire_params
@@ -313,7 +315,7 @@ module Instructeurs
     def aasm_error_message(exception, target_state:)
       if exception.originating_state == target_state
         "Le dossier est déjà #{dossier_display_state(target_state, lower: true)}."
-      elsif exception.failures.include?(:can_terminer?)
+      elsif exception.failures.include?(:can_terminer?) && dossier.any_etablissement_as_degraded_mode?
         "Les données relatives au SIRET de ce dossier n’ont pas pu encore être vérifiées : il n’est pas possible de le passer #{dossier_display_state(target_state, lower: true)}."
       else
         "Le dossier est en ce moment #{dossier_display_state(exception.originating_state, lower: true)} : il n’est pas possible de le passer #{dossier_display_state(target_state, lower: true)}."

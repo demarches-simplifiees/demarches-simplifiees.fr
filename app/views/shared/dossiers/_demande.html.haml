@@ -33,7 +33,7 @@
           = link_to t('views.shared.dossiers.demande.edit_identity'), identite_dossier_path(dossier), class: 'fr-btn fr-btn--tertiary'
 
   %h2.fr-h6= t('views.shared.dossiers.demande.form')
-  - champs = dossier.champs_public.includes(:type_de_champ)
+  - champs = dossier.champs_public
   - if champs.any? || dossier.procedure.routing_enabled?
     .card
       = render partial: "shared/dossiers/champs", locals: { champs: champs, dossier: dossier, demande_seen_at: demande_seen_at, profile: profile }

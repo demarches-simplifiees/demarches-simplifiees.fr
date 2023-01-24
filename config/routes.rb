@@ -65,10 +65,15 @@ Rails.application.routes.draw do
 
     resources :team_accounts, only: [:index, :show]
 
+    resources :email_events, only: [:index, :show] do
+      post :generate_dolist_report, on: :collection
+    end
+
     resources :dubious_procedures, only: [:index]
     resources :outdated_procedures, only: [:index] do
       patch :bulk_update, on: :collection
     end
+    resources :safe_mailers, only: [:index, :edit, :update, :destroy, :new, :create, :show]
 
     post 'demandes/create_administrateur'
     post 'demandes/refuse_administrateur'
@@ -177,7 +182,7 @@ Rails.application.routes.draw do
   resources :recherche, only: [:index]
   resources :api_tokens, only: [:create, :update, :destroy]
 
-  get "patron" => "root#patron"
+  get "patron" => "root#patron" if Rails.env.development? || Rails.env.test?
   get "suivi" => "root#suivi"
   post "dismiss_outdated_browser" => "root#dismiss_outdated_browser"
   post "save_locale" => "root#save_locale"
@@ -187,14 +192,17 @@ Rails.application.routes.draw do
 
   get "contact-admin", to: "support#admin"
 
+  post "webhooks/sendinblue", to: "webhook#sendinblue"
   post "webhooks/helpscout", to: "webhook#helpscout"
   post "webhooks/helpscout_support_dev", to: "webhook#helpscout_support_dev"
   match "webhooks/helpscout", to: lambda { |_| [204, {}, nil] }, via: :head
 
   get '/preremplir/:path', to: 'prefill_descriptions#edit', as: :preremplir
+  get '/preremplir/:path/schema', to: 'api/public/v1/json_description_procedures#show', as: :prefill_json_description, defaults: { format: :json }
   resources :procedures, only: [], param: :path do
     member do
       resource :prefill_description, only: :update
+      resources :prefill_type_de_champs, only: :show
     end
   end
 
@@ -266,6 +274,7 @@ Rails.application.routes.draw do
         resources :demarches, only: [] do
           member do
             resources :dossiers, only: :create
+            resources :stats, only: :index
           end
         end
       end
@@ -321,8 +330,6 @@ Rails.application.routes.draw do
         resources :transfers, only: [:create, :update, :destroy]
       end
     end
-
-    resources :prefills, only: :show
 
     resource :feedback, only: [:create]
     get 'demarches' => 'demarches#index'
@@ -393,7 +400,8 @@ Rails.application.routes.draw do
         patch 'update_displayed_fields'
         get 'update_sort/:table/:column' => 'procedures#update_sort', as: 'update_sort'
         post 'add_filter'
-        get 'remove_filter' => 'procedures#remove_filter', as: 'remove_filter'
+        post 'update_filter'
+        get 'remove_filter'
         get 'download_export'
         post 'download_export'
         get 'stats'
@@ -461,7 +469,7 @@ Rails.application.routes.draw do
       end
 
       member do
-        get 'detail'
+        post 'detail'
         get 'apercu'
         get 'champs'
         get 'zones'

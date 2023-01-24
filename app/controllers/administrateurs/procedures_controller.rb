@@ -115,7 +115,11 @@ module Administrateurs
     end
 
     def create
-      @procedure = Procedure.new(procedure_params.merge(administrateurs: [current_administrateur]))
+      new_procedure_params = { max_duree_conservation_dossiers_dans_ds: Procedure::NEW_MAX_DUREE_CONSERVATION }
+        .merge(procedure_params)
+        .merge(administrateurs: [current_administrateur])
+
+      @procedure = Procedure.new(new_procedure_params)
       @procedure.draft_revision = @procedure.revisions.build
 
       if !@procedure.save
@@ -333,10 +337,10 @@ module Administrateurs
 
     def detail
       @procedure = Procedure.find(params[:id])
-      render turbo_stream: [
-        turbo_stream.remove("procedure_detail_#{@procedure.id}"),
-        turbo_stream.replace("procedure_#{@procedure.id}", partial: "detail", locals: { procedure: @procedure, show_detail: params[:show_detail] })
-      ]
+      @show_detail = params[:show_detail]
+      respond_to do |format|
+        format.turbo_stream
+      end
     end
 
     def all
@@ -369,6 +373,7 @@ module Administrateurs
       procedures_result = Procedure.select(:id).joins(:procedures_zones).distinct.publiees_ou_closes
       procedures_result = procedures_result.where(procedures_zones: { zone_id: filter.zone_ids }) if filter.zone_ids.present?
       procedures_result = procedures_result.where(aasm_state: filter.statuses) if filter.statuses.present?
+      procedures_result = procedures_result.where("? = ANY(tags)", filter.tag) if filter.tag.present?
       procedures_result = procedures_result.where('published_at >= ?', filter.from_publication_date) if filter.from_publication_date.present?
       procedures_result = procedures_result.where('unaccent(libelle) ILIKE unaccent(?)', "%#{filter.libelle}%") if filter.libelle.present?
       procedures_sql = procedures_result.to_sql

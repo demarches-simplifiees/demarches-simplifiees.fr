@@ -83,7 +83,7 @@ class PiecesJustificativesService
     end
   end
 
-  def self.generate_dossier_export(dossiers)
+  def self.generate_dossier_export(dossiers, include_infos_administration: false)
     return [] if dossiers.empty?
 
     pdfs = []
@@ -97,7 +97,7 @@ class PiecesJustificativesService
       pdf = ApplicationController
         .render(template: 'dossiers/show', formats: [:pdf],
                 assigns: {
-                  include_infos_administration: true,
+                  include_infos_administration:,
                   dossier: dossier
                 })
 
@@ -255,6 +255,6 @@ class PiecesJustificativesService
   def self.safe_attachment(attachment)
     attachment
       .blob
-      .metadata[:virus_scan_result] == ActiveStorage::VirusScanner::SAFE
+      .virus_scan_result == ActiveStorage::VirusScanner::SAFE
   end
 end

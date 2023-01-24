@@ -57,11 +57,11 @@ describe 'The user' do
     expect(champ_value_for('text')).to eq('super texte')
     expect(champ_value_for('textarea')).to eq('super textarea')
     expect(champ_value_for('date')).to eq('2012-12-12')
-    expect(champ_value_for('datetime')).to eq('06/01/2030 07:05')
+    expect(champ_value_for('datetime')).to eq('2030-01-06T07:05:00+01:00')
     expect(champ_value_for('number')).to eq('42')
     expect(champ_value_for('decimal_number')).to eq('17')
     expect(champ_value_for('integer_number')).to eq('12')
-    expect(champ_value_for('checkbox')).to eq('on')
+    expect(champ_value_for('checkbox')).to eq('true')
     expect(champ_value_for('civilite')).to eq('Mme')
     expect(champ_value_for('email')).to eq('loulou@yopmail.com')
     expect(champ_value_for('phone')).to eq('0123456789')
@@ -123,11 +123,12 @@ describe 'The user' do
 
     expect(page).to have_content('Supprimer', count: 2)
 
-    within '.repetition .row:first-child' do
-      click_on 'Supprimer l’élément'
-    end
-
-    expect(page).to have_content('Supprimer', count: 1)
+    expect do
+      within '.repetition .row:first-child' do
+        click_on 'Supprimer l’élément'
+      end
+      expect(page).to have_content('Supprimer', count: 1)
+    end.to change { Champ.count }
   end
 
   let(:simple_procedure) { create(:procedure, :published, :for_individual, types_de_champ_public: [{ mandatory: true, libelle: 'texte obligatoire' }, { mandatory: false, libelle: 'texte optionnel' }]) }

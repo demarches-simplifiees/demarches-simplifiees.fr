@@ -1,8 +1,11 @@
 class API::V2::Context < GraphQL::Query::Context
-  # This method is used to check if a given fragment is used in the given query.
-  # We need that in order to maintain backward compatibility for Types de Champ
-  # that we extended in later iterations of our schema.
+  # This method is used to check if a given fragment is used in the given query. We need that in
+  # order to maintain backward compatibility for Types de Champ that we extended in later iterations
+  # of our schema. If it is an introspection query, we assume all fragments are present.
   def has_fragment?(fragment_name)
+    return true if query.nil?
+    return true if introspection?
+
     self[:has_fragment] ||= Hash.new do |hash, fragment_name|
       visitor = HasFragment.new(query.document, fragment_name)
       visitor.visit
@@ -11,22 +14,41 @@ class API::V2::Context < GraphQL::Query::Context
     self[:has_fragment][fragment_name]
   end
 
+  def has_fragments?(fragment_names)
+    fragment_names.any? { has_fragment?(_1) }
+  end
+
+  def introspection?
+    query.selected_operation.name == "IntrospectionQuery"
+  end
+
   def internal_use?
     self[:internal_use]
   end
 
-  def authorized_demarche?(demarche)
+  def current_administrateur
+    unless self[:administrateur_id]
+      raise GraphQL::ExecutionError.new("Pour effectuer cette opération, vous avez besoin d’un jeton au nouveau format. Vous pouvez l’obtenir dans votre interface administrateur.", extensions: { code: :deprecated_token })
+    end
+    Administrateur.find(self[:administrateur_id])
+  end
+
+  def authorized_demarche?(demarche, opendata: false)
     if internal_use?
+      return true
+    end
+
+    if opendata && demarche.opendata?
       return true
     end
 
     # We are caching authorization logic because it is called for each node
     # of the requested graph and can be expensive. Context is reset per request so it is safe.
     self[:authorized] ||= Hash.new do |hash, demarche_id|
-      hash[demarche_id] = if self[:token]
-        APIToken.find_and_verify(self[:token], demarche.administrateurs).present?
-      elsif self[:administrateur_id]
+      hash[demarche_id] = if self[:administrateur_id]
         demarche.administrateurs.map(&:id).include?(self[:administrateur_id])
+      elsif self[:token]
+        APIToken.find_and_verify(self[:token], demarche.administrateurs).present?
       end
     end
 

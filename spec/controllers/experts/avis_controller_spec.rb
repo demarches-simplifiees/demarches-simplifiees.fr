@@ -96,8 +96,15 @@ describe Experts::AvisController, type: :controller do
 
       subject { get :telecharger_pjs, params: { id: avis.id, procedure_id: } }
 
+      before do
+        allow(PiecesJustificativesService).to receive(:generate_dossier_export).and_return([]).with([dossier], include_infos_administration: false)
+      end
+
       context 'with a valid avis' do
-        it { is_expected.to have_http_status(:success) }
+        it do
+          is_expected.to have_http_status(:success)
+          expect(PiecesJustificativesService).to have_received(:generate_dossier_export)
+        end
       end
 
       context 'with a revoked avis' do

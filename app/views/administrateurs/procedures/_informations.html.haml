@@ -6,12 +6,12 @@
 = f.label :libelle do
   Titre de la démarche
   %span.mandatory *
-= f.text_field :libelle, class: 'form-control', placeholder: 'Titre'
+= f.text_field :libelle, class: 'form-control', placeholder: 'Titre', required: true
 
 = f.label :description do
   Description
   %span.mandatory *
-= f.text_area :description, rows: '6', placeholder: 'Description de la démarche, destinataires, etc. ', class: 'form-control'
+= f.text_area :description, rows: '6', placeholder: 'Description de la démarche, destinataires, etc. ', class: 'form-control', required: true
 
 %h3.header-subsection Logo de la démarche
 = render Attachment::EditComponent.new(attached_file: @procedure.logo, view_as: :link)
@@ -25,7 +25,7 @@
   = t(:notice, scope: [:administrateurs, :duree_conservation_dossiers_dans_ds])
   - if f.object.duree_conservation_dossiers_dans_ds.to_i < Procedure::NEW_MAX_DUREE_CONSERVATION
     = t(:new_duration_constraint, scope: [:administrateurs, :duree_conservation_dossiers_dans_ds], new_duration_in_month: Procedure::NEW_MAX_DUREE_CONSERVATION)
-= f.number_field :duree_conservation_dossiers_dans_ds, { class: 'form-control', placeholder: '6', required: true }.merge(f.object.duree_conservation_etendue_par_ds ? {} : { max: 12 })
+= f.number_field :duree_conservation_dossiers_dans_ds, { class: 'form-control', placeholder: '6', required: true }.merge(f.object.duree_conservation_etendue_par_ds ? {} : { max: Procedure::NEW_MAX_DUREE_CONSERVATION })
 
 - if @procedure.created_at.present?
   = f.label :lien_site_web do

@@ -1,4 +1,5 @@
 require "active_support/core_ext/integer/time"
+require Rails.root.join("app/lib/balancer_delivery_method")
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -76,7 +77,12 @@ Rails.application.configure do
   config.assets.raise_runtime_errors = true
 
   # Action Mailer settings
-  config.action_mailer.delivery_method = ENV['HELO_ENABLED'] == 'enabled' ? :helo : :letter_opener
+  ActionMailer::Base.add_delivery_method :balancer, BalancerDeliveryMethod
+  config.action_mailer.balancer_settings = {
+    helo: ENV['HELO_ENABLED'] == 'enabled' ? 100 : 0,
+    letter_opener: ENV['HELO_ENABLED'] == 'enabled' ? 0 : 100
+  }
+  config.action_mailer.delivery_method = :balancer
 
   config.action_mailer.default_url_options = { host: ENV.fetch("APP_HOST") }
   config.action_mailer.asset_host = "http://" + ENV.fetch("APP_HOST")

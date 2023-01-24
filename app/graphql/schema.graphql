@@ -80,6 +80,34 @@ type AddressChamp implements Champ {
   stringValue: String
 }
 
+type AddressChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
 enum AddressType {
   """
   numéro « à la plaque »
@@ -100,6 +128,34 @@ enum AddressType {
   position « à la voie », placé approximativement au centre de celle-ci
   """
   street
+}
+
+type AnnuaireEducationChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
 }
 
 type Association {
@@ -145,6 +201,34 @@ type CarteChamp implements Champ {
   stringValue: String
 }
 
+type CarteChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
 interface Champ {
   id: ID!
 
@@ -159,11 +243,11 @@ interface Champ {
   stringValue: String
 }
 
-type ChampDescriptor {
+interface ChampDescriptor {
   """
   Description des champs d’un bloc répétable.
   """
-  champDescriptors: [ChampDescriptor!]
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
 
   """
   Description du champ.
@@ -177,11 +261,6 @@ type ChampDescriptor {
   label: String!
 
   """
-  List des options d’un champ avec selection.
-  """
-  options: [String!]
-
-  """
   Est-ce que le champ est obligatoire ?
   """
   required: Boolean!
@@ -189,7 +268,7 @@ type ChampDescriptor {
   """
   Type de la valeur du champ.
   """
-  type: TypeDeChamp!
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
 }
 
 type CheckboxChamp implements Champ {
@@ -205,6 +284,34 @@ type CheckboxChamp implements Champ {
   """
   stringValue: String
   value: Boolean!
+}
+
+type CheckboxChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
 }
 
 enum Civilite {
@@ -234,6 +341,62 @@ type CiviliteChamp implements Champ {
   value: Civilite
 }
 
+type CiviliteChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
+type CnafChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
 type Commune {
   """
   Le code INSEE
@@ -256,6 +419,34 @@ type CommuneChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+}
+
+type CommuneChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
 }
 
 """
@@ -332,6 +523,34 @@ type DateChamp implements Champ {
   value: ISO8601DateTime @deprecated(reason: "Utilisez le champ `date` ou le fragment `DatetimeChamp` à la place.")
 }
 
+type DateChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
 type DatetimeChamp implements Champ {
   """
   La valeur du champ formaté en ISO8601 (DateTime).
@@ -350,6 +569,34 @@ type DatetimeChamp implements Champ {
   stringValue: String
 }
 
+type DatetimeChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
 type DecimalNumberChamp implements Champ {
   id: ID!
 
@@ -363,6 +610,34 @@ type DecimalNumberChamp implements Champ {
   """
   stringValue: String
   value: Float
+}
+
+type DecimalNumberChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
 }
 
 """
@@ -596,12 +871,44 @@ type Demarche {
 }
 
 """
+Autogenerated input type of DemarcheCloner
+"""
+input DemarcheClonerInput {
+  """
+  A unique identifier for the client performing the mutation.
+  """
+  clientMutationId: String
+
+  """
+  La démarche
+  """
+  demarche: FindDemarcheInput!
+
+  """
+  Le titre de la nouvelle démarche.
+  """
+  title: String
+}
+
+"""
+Autogenerated return type of DemarcheCloner.
+"""
+type DemarcheClonerPayload {
+  """
+  A unique identifier for the client performing the mutation.
+  """
+  clientMutationId: String
+  demarche: DemarcheDescriptor
+  errors: [ValidationError!]
+}
+
+"""
 Une démarche (métadonnées)
 Ceci est une version abrégée du type `Demarche`, qui n’expose que les métadonnées.
 Cela évite l’accès récursif aux dossiers.
 """
 type DemarcheDescriptor {
-  cadreJuridique: String
+  cadreJuridiqueUrl: String
 
   """
   Date de la création.
@@ -632,30 +939,44 @@ type DemarcheDescriptor {
   Pour une démarche déclarative, état cible des dossiers à valider automatiquement
   """
   declarative: DossierDeclarativeState
-  deliberation: String
+  deliberation: File
+  demarcheUrl: String
 
   """
   Description de la démarche.
   """
   description: String!
+  dpoUrl: String
+
+  """
+  Durée de conservation des dossiers en mois.
+  """
+  dureeConservationDossiers: Int!
   id: ID!
+  logo: File
+  notice: File
+  noticeUrl: String
 
   """
   Numero de la démarche.
   """
   number: Int!
+  opendata: Boolean!
   revision: Revision!
   service: Service
+  siteWebUrl: String
 
   """
   État de la démarche.
   """
   state: DemarcheState!
+  tags: [String!]!
 
   """
   Titre de la démarche.
   """
   title: String!
+  zones: [String!]!
 }
 
 enum DemarcheState {
@@ -698,6 +1019,67 @@ type DepartementChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+}
+
+type DepartementChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  List des departements.
+  """
+  options: [Departement!]
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
+type DgfipChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
 }
 
 """
@@ -1040,6 +1422,34 @@ type DossierLinkChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+}
+
+type DossierLinkChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
 }
 
 """
@@ -1452,9 +1862,75 @@ enum DossierState {
   sans_suite
 }
 
+type DropDownListChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  List des options d’un champ avec selection.
+  """
+  options: [String!]
+
+  """
+  La selection contien l’option "Autre".
+  """
+  otherOption: Boolean
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
 type Effectif {
   nb: Float!
   periode: String!
+}
+
+type EmailChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
 }
 
 type Entreprise {
@@ -1500,6 +1976,85 @@ enum EntrepriseEtatAdministratif {
   L'entreprise a cessé son activité
   """
   Ferme
+}
+
+type Epci {
+  code: String!
+  name: String!
+}
+
+type EpciChamp implements Champ {
+  departement: Departement
+  epci: Epci
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
+}
+
+type EpciChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
+type ExplicationChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+  collapsibleExplanationEnabled: Boolean
+  collapsibleExplanationText: String
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
 }
 
 type File {
@@ -1570,6 +2125,92 @@ type GroupeInstructeur {
 }
 
 """
+Autogenerated input type of GroupeInstructeurAjouterInstructeurs
+"""
+input GroupeInstructeurAjouterInstructeursInput {
+  """
+  A unique identifier for the client performing the mutation.
+  """
+  clientMutationId: String
+
+  """
+  Groupe instructeur ID.
+  """
+  groupeInstructeurId: ID!
+
+  """
+  Instructeurs à ajouter.
+  """
+  instructeurs: [ProfileInput!]!
+}
+
+"""
+Autogenerated return type of GroupeInstructeurAjouterInstructeurs.
+"""
+type GroupeInstructeurAjouterInstructeursPayload {
+  """
+  A unique identifier for the client performing the mutation.
+  """
+  clientMutationId: String
+  errors: [ValidationError!]
+  groupeInstructeur: GroupeInstructeur
+  warnings: [WarningMessage!]
+}
+
+"""
+Attributs pour l’ajout d'un groupe instructeur.
+"""
+input GroupeInstructeurAttributes {
+  """
+  L’état du groupe instructeur.
+  """
+  closed: Boolean = false
+
+  """
+  Instructeurs à ajouter.
+  """
+  instructeurs: [ProfileInput!] = []
+
+  """
+  Libelle du groupe instructeur.
+  """
+  label: String!
+}
+
+"""
+Autogenerated input type of GroupeInstructeurCreer
+"""
+input GroupeInstructeurCreerInput {
+  """
+  A unique identifier for the client performing the mutation.
+  """
+  clientMutationId: String
+
+  """
+  Demarche ID ou numéro.
+  """
+  demarche: FindDemarcheInput!
+
+  """
+  Groupes instructeur à ajouter.
+  """
+  groupeInstructeur: GroupeInstructeurAttributes!
+}
+
+"""
+Autogenerated return type of GroupeInstructeurCreer.
+"""
+type GroupeInstructeurCreerPayload {
+  """
+  A unique identifier for the client performing the mutation.
+  """
+  clientMutationId: String
+  errors: [ValidationError!]
+  groupeInstructeur: GroupeInstructeur
+  warnings: [WarningMessage!]
+}
+
+"""
 Autogenerated input type of GroupeInstructeurModifier
 """
 input GroupeInstructeurModifierInput {
@@ -1584,7 +2225,7 @@ input GroupeInstructeurModifierInput {
   closed: Boolean
 
   """
-  Groupe instructeur ID
+  Groupe instructeur ID.
   """
   groupeInstructeurId: ID!
 
@@ -1598,6 +2239,38 @@ input GroupeInstructeurModifierInput {
 Autogenerated return type of GroupeInstructeurModifier.
 """
 type GroupeInstructeurModifierPayload {
+  """
+  A unique identifier for the client performing the mutation.
+  """
+  clientMutationId: String
+  errors: [ValidationError!]
+  groupeInstructeur: GroupeInstructeur
+}
+
+"""
+Autogenerated input type of GroupeInstructeurSupprimerInstructeurs
+"""
+input GroupeInstructeurSupprimerInstructeursInput {
+  """
+  A unique identifier for the client performing the mutation.
+  """
+  clientMutationId: String
+
+  """
+  Groupe instructeur ID.
+  """
+  groupeInstructeurId: ID!
+
+  """
+  Instructeurs à supprimer.
+  """
+  instructeurs: [ProfileInput!]!
+}
+
+"""
+Autogenerated return type of GroupeInstructeurSupprimerInstructeurs.
+"""
+type GroupeInstructeurSupprimerInstructeursPayload {
   """
   A unique identifier for the client performing the mutation.
   """
@@ -1728,6 +2401,34 @@ type GroupeInstructeurWithDossiers {
   number: Int!
 }
 
+type HeaderSectionChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
 """
 An ISO 8601-encoded date
 """
@@ -1737,6 +2438,34 @@ scalar ISO8601Date
 An ISO 8601-encoded datetime
 """
 scalar ISO8601DateTime
+
+type IbanChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
 
 type IntegerNumberChamp implements Champ {
   id: ID!
@@ -1753,6 +2482,34 @@ type IntegerNumberChamp implements Champ {
   value: BigInt
 }
 
+type IntegerNumberChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
 type LinkedDropDownListChamp implements Champ {
   id: ID!
 
@@ -1767,6 +2524,67 @@ type LinkedDropDownListChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+}
+
+type LinkedDropDownListChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  List des options d’un champ avec selection.
+  """
+  options: [String!]
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
+type MesriChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
 }
 
 type Message {
@@ -1793,6 +2611,39 @@ type MultipleDropDownListChamp implements Champ {
   values: [String!]!
 }
 
+type MultipleDropDownListChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  List des options d’un champ avec selection.
+  """
+  options: [String!]
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
 type Mutation {
   """
   File information required to prepare a direct upload
@@ -1803,6 +2654,16 @@ type Mutation {
     """
     input: CreateDirectUploadInput!
   ): CreateDirectUploadPayload
+
+  """
+  Cloner une démarche.
+  """
+  demarcheCloner(
+    """
+    Parameters for DemarcheCloner
+    """
+    input: DemarcheClonerInput!
+  ): DemarcheClonerPayload
 
   """
   Accepter le dossier.
@@ -1951,6 +2812,26 @@ type Mutation {
   ): DossierRepasserEnInstructionPayload
 
   """
+  Ajouter des instructeurs à un groupe instructeur.
+  """
+  groupeInstructeurAjouterInstructeurs(
+    """
+    Parameters for GroupeInstructeurAjouterInstructeurs
+    """
+    input: GroupeInstructeurAjouterInstructeursInput!
+  ): GroupeInstructeurAjouterInstructeursPayload
+
+  """
+  Crée un groupe instructeur.
+  """
+  groupeInstructeurCreer(
+    """
+    Parameters for GroupeInstructeurCreer
+    """
+    input: GroupeInstructeurCreerInput!
+  ): GroupeInstructeurCreerPayload
+
+  """
   Modifier un groupe instructeur.
   """
   groupeInstructeurModifier(
@@ -1959,6 +2840,44 @@ type Mutation {
     """
     input: GroupeInstructeurModifierInput!
   ): GroupeInstructeurModifierPayload
+
+  """
+  Supprimer des instructeurs d’un groupe instructeur.
+  """
+  groupeInstructeurSupprimerInstructeurs(
+    """
+    Parameters for GroupeInstructeurSupprimerInstructeurs
+    """
+    input: GroupeInstructeurSupprimerInstructeursInput!
+  ): GroupeInstructeurSupprimerInstructeursPayload
+}
+
+type NumberChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
 }
 
 enum Order {
@@ -2037,6 +2956,39 @@ type PaysChamp implements Champ {
   stringValue: String
 }
 
+type PaysChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  List des pays.
+  """
+  options: [Pays!]
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
 type PersonneMorale implements Demandeur {
   address: Address!
   adresse: String! @deprecated(reason: "Utilisez le champ `address.label` à la place.")
@@ -2064,6 +3016,34 @@ type PersonnePhysique implements Demandeur {
   prenom: String!
 }
 
+type PhoneChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
 type PieceJustificativeChamp implements Champ {
   file: File @deprecated(reason: "Utilisez le champ `files` à la place.")
   files: [File!]!
@@ -2080,9 +3060,82 @@ type PieceJustificativeChamp implements Champ {
   stringValue: String
 }
 
+type PieceJustificativeChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+
+  """
+  Modèle de la pièce justificative.
+  """
+  fileTemplate: File
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
+type PoleEmploiChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
 type Profile {
   email: String!
   id: ID!
+}
+
+input ProfileInput @oneOf {
+  """
+  Email
+  """
+  email: String
+
+  """
+  ID
+  """
+  id: ID
 }
 
 type Query {
@@ -2123,6 +3176,34 @@ type Query {
   ): GroupeInstructeurWithDossiers!
 }
 
+type RNAChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
 type Region {
   code: String!
   name: String!
@@ -2143,6 +3224,39 @@ type RegionChamp implements Champ {
   stringValue: String
 }
 
+type RegionChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  List des regions.
+  """
+  options: [Region!]
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
 type RepetitionChamp implements Champ {
   champs: [Champ!]! @deprecated(reason: "Utilisez le champ `rows` à la place.")
   id: ID!
@@ -2157,6 +3271,34 @@ type RepetitionChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+}
+
+type RepetitionChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!]
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
 }
 
 type Revision {
@@ -2177,6 +3319,7 @@ type Revision {
 
 type Row {
   champs: [Champ!]!
+  id: ID!
 }
 
 type SelectionUtilisateur implements GeoArea {
@@ -2209,6 +3352,34 @@ type SiretChamp implements Champ {
   stringValue: String
 }
 
+type SiretChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
 type TextChamp implements Champ {
   id: ID!
 
@@ -2222,6 +3393,62 @@ type TextChamp implements Champ {
   """
   stringValue: String
   value: String
+}
+
+type TextChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
+type TextareaChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
 }
 
 type TitreIdentiteChamp implements Champ {
@@ -2238,6 +3465,34 @@ type TitreIdentiteChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+}
+
+type TitreIdentiteChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
 }
 
 enum TitreIdentiteGrantType {
@@ -2335,6 +3590,11 @@ enum TypeDeChamp {
   Adresse électronique
   """
   email
+
+  """
+  EPCI
+  """
+  epci
 
   """
   Explication
@@ -2487,4 +3747,42 @@ type ValidationError {
   A description of the error
   """
   message: String!
+}
+
+"""
+Message d’alerte
+"""
+type WarningMessage {
+  """
+  La description de l’alerte
+  """
+  message: String!
+}
+
+type YesNoChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
 }

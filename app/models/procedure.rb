@@ -30,6 +30,7 @@
 #  lien_notice                               :string
 #  lien_site_web                             :string
 #  max_duree_conservation_dossiers_dans_ds   :integer          default(12)
+#  migrated_champ_routage                    :boolean
 #  monavis_embed                             :text
 #  opendata                                  :boolean          default(TRUE)
 #  organisation                              :string
@@ -271,7 +272,9 @@ class Procedure < ApplicationRecord
     'types_de_champ/no_empty_block': true,
     'types_de_champ/no_empty_drop_down': true,
     on: :publication
-  validate :check_juridique
+
+  validate :check_juridique, on: [:create, :publication]
+
   validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,200}\z/ }, uniqueness: { scope: [:path, :closed_at, :hidden_at, :unpublished_at], case_sensitive: false }
   validates :duree_conservation_dossiers_dans_ds, allow_nil: false,
                                                   numericality: {

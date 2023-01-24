@@ -1,7 +1,5 @@
 module Types
   class QueryType < Types::BaseObject
-    field_class BaseField
-
     field :demarche, DemarcheType, null: false, description: "Informations concernant une démarche." do
       argument :number, Int, "Numéro de la démarche.", required: true
     end
@@ -38,11 +36,12 @@ module Types
     end
 
     def dossier(number:)
-      if context.internal_use?
+      dossier = if context.internal_use?
         Dossier.state_not_brouillon.for_api_v2.find(number)
       else
         Dossier.visible_by_administration.for_api_v2.find(number)
       end
+      DossierPreloader.load_one(dossier)
     rescue => e
       raise GraphQL::ExecutionError.new(e.message, extensions: { code: :not_found })
     end

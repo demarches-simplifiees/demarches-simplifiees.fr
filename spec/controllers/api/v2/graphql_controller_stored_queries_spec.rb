@@ -2,7 +2,8 @@ describe API::V2::GraphqlController do
   let(:admin) { create(:administrateur) }
   let(:token) { APIToken.generate(admin)[1] }
   let(:legacy_token) { APIToken.send(:unpack, token)[:plain_token] }
-  let(:procedure) { create(:procedure, :published, :for_individual, :with_service, administrateurs: [admin]) }
+  let(:procedure) { create(:procedure, :published, :for_individual, :with_service, administrateurs: [admin], types_de_champ_public:) }
+  let(:types_de_champ_public) { [] }
   let(:dossier)  { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
   let(:dossier1) { create(:dossier, :en_construction, :with_individual, procedure: procedure, en_construction_at: 1.day.ago) }
   let(:dossier2) { create(:dossier, :en_construction, :with_individual, :archived, procedure: procedure, en_construction_at: 3.days.ago) }
@@ -27,8 +28,20 @@ describe API::V2::GraphqlController do
     request.env['HTTP_AUTHORIZATION'] = authorization_header
   end
 
+  describe 'introspection' do
+    let(:query_id) { 'introspection' }
+    let(:operation_name) { 'IntrospectionQuery' }
+    let(:champ_descriptor) { gql_data[:__schema][:types].find { _1[:name] == 'ChampDescriptor' } }
+
+    it {
+      expect(gql_errors).to be_nil
+      expect(gql_data[:__schema]).not_to be_nil
+      expect(champ_descriptor).not_to be_nil
+      expect(champ_descriptor[:fields].find { _1[:name] == 'options' }).to be_nil
+    }
+  end
+
   describe 'ds-query-v2' do
-    let(:procedure) { create(:procedure, :published, :for_individual, administrateurs: [admin]) }
     let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
     let(:query_id) { 'ds-query-v2' }
 
@@ -79,6 +92,16 @@ describe API::V2::GraphqlController do
           expect(gql_data[:demarche][:dossiers][:nodes].size).to eq(1)
         }
       end
+
+      context 'include Revision' do
+        let(:variables) { { demarcheNumber: procedure.id, includeRevision: true } }
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data[:demarche][:id]).to eq(procedure.to_typed_id)
+          expect(gql_data[:demarche][:activeRevision]).not_to be_nil
+        }
+      end
     end
 
     context 'getGroupeInstructeur' do
@@ -105,11 +128,12 @@ describe API::V2::GraphqlController do
       end
     end
 
-    context 'getDemarcheDescriptor' do
+    context 'getDemarcheDescriptor', vcr: { cassette_name: 'api_geo_regions' } do
       let(:operation_name) { 'getDemarcheDescriptor' }
+      let(:types_de_champ_public) { [{ type: :text }, { type: :piece_justificative }, { type: :regions }] }
 
       context 'find by number' do
-        let(:variables) { { demarche: { number: procedure.id } } }
+        let(:variables) { { demarche: { number: procedure.id }, includeRevision: true } }
 
         it {
           expect(gql_errors).to be_nil
@@ -299,6 +323,112 @@ describe API::V2::GraphqlController do
             expect(gql_data[:groupeInstructeurModifier][:errors].first[:message]).to eq('Il doit y avoir au moins un groupe instructeur actif sur chaque démarche')
           }
         end
+      end
+    end
+
+    context 'groupeInstructeurCreer' do
+      let(:variables) { { input: { demarche: { id: procedure.to_typed_id }, groupeInstructeur: { label: 'nouveau groupe instructeur' } }, includeInstructeurs: true } }
+      let(:operation_name) { 'groupeInstructeurCreer' }
+
+      it {
+        expect(gql_errors).to be_nil
+        expect(gql_data[:groupeInstructeurCreer][:errors]).to be_nil
+        expect(gql_data[:groupeInstructeurCreer][:groupeInstructeur][:id]).not_to be_nil
+        expect(gql_data[:groupeInstructeurCreer][:groupeInstructeur][:instructeurs]).to eq([{ id: admin.instructeur.to_typed_id, email: admin.email }])
+        expect(GroupeInstructeur.last.label).to eq('nouveau groupe instructeur')
+      }
+
+      context 'with instructeurs' do
+        let(:email) { 'test@test.com' }
+        let(:variables) { { input: { demarche: { id: procedure.to_typed_id }, groupeInstructeur: { label: 'nouveau groupe instructeur avec instructeurs', instructeurs: [email:] } }, includeInstructeurs: true } }
+        let(:operation_name) { 'groupeInstructeurCreer' }
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data[:groupeInstructeurCreer][:errors]).to be_nil
+          expect(gql_data[:groupeInstructeurCreer][:groupeInstructeur][:id]).not_to be_nil
+          expect(gql_data[:groupeInstructeurCreer][:groupeInstructeur][:instructeurs]).to eq([{ id: admin.instructeur.to_typed_id, email: admin.instructeur.email }, { id: Instructeur.last.to_typed_id, email: }])
+        }
+      end
+    end
+
+    context 'groupeInstructeurAjouterInstructeurs' do
+      let(:email) { 'test@test.com' }
+      let(:groupe_instructeur) { procedure.groupe_instructeurs.first }
+      let(:existing_instructeur) { groupe_instructeur.instructeurs.first }
+      let(:variables) { { input: { groupeInstructeurId: groupe_instructeur.to_typed_id, instructeurs: [{ email: }, { email: 'yolo' }, { id: existing_instructeur.to_typed_id }] }, includeInstructeurs: true } }
+      let(:operation_name) { 'groupeInstructeurAjouterInstructeurs' }
+
+      it {
+        expect(gql_errors).to be_nil
+        expect(gql_data[:groupeInstructeurAjouterInstructeurs][:errors]).to be_nil
+        expect(gql_data[:groupeInstructeurAjouterInstructeurs][:warnings]).to eq([message: "yolo n’est pas une adresse email valide"])
+        expect(gql_data[:groupeInstructeurAjouterInstructeurs][:groupeInstructeur][:id]).to eq(groupe_instructeur.to_typed_id)
+        expect(groupe_instructeur.instructeurs.count).to eq(2)
+        expect(gql_data[:groupeInstructeurAjouterInstructeurs][:groupeInstructeur][:instructeurs]).to eq([{ id: existing_instructeur.to_typed_id, email: existing_instructeur.email }, { id: Instructeur.last.to_typed_id, email: }])
+      }
+    end
+
+    context 'groupeInstructeurSupprimerInstructeurs' do
+      let(:email) { 'test@test.com' }
+      let(:groupe_instructeur) { procedure.groupe_instructeurs.first }
+      let(:existing_instructeur) { groupe_instructeur.instructeurs.first }
+      let(:new_instructeur) { create(:instructeur) }
+      let(:variables) { { input: { groupeInstructeurId: groupe_instructeur.to_typed_id, instructeurs: [{ email: }, { id: new_instructeur.to_typed_id }] }, includeInstructeurs: true } }
+      let(:operation_name) { 'groupeInstructeurSupprimerInstructeurs' }
+
+      before do
+        existing_instructeur
+        groupe_instructeur.add(new_instructeur)
+      end
+
+      it {
+        expect(groupe_instructeur.reload.instructeurs.count).to eq(2)
+        expect(gql_errors).to be_nil
+        expect(gql_data[:groupeInstructeurSupprimerInstructeurs][:errors]).to be_nil
+        expect(gql_data[:groupeInstructeurSupprimerInstructeurs][:groupeInstructeur][:id]).to eq(groupe_instructeur.to_typed_id)
+        expect(groupe_instructeur.instructeurs.count).to eq(1)
+        expect(gql_data[:groupeInstructeurSupprimerInstructeurs][:groupeInstructeur][:instructeurs]).to eq([{ id: existing_instructeur.to_typed_id, email: existing_instructeur.email }])
+      }
+    end
+
+    context 'demarcheCloner' do
+      let(:operation_name) { 'demarcheCloner' }
+
+      context 'find by number' do
+        let(:variables) { { input: { demarche: { number: procedure.id } } } }
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data[:demarcheCloner][:errors]).to be_nil
+          expect(gql_data[:demarcheCloner][:demarche][:id]).not_to be_nil
+          expect(gql_data[:demarcheCloner][:demarche][:id]).not_to eq(procedure.to_typed_id)
+          expect(gql_data[:demarcheCloner][:demarche][:id]).to eq(Procedure.last.to_typed_id)
+        }
+      end
+
+      context 'find by id' do
+        let(:variables) { { input: { demarche: { id: procedure.to_typed_id } } } }
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data[:demarcheCloner][:errors]).to be_nil
+          expect(gql_data[:demarcheCloner][:demarche][:id]).not_to be_nil
+          expect(gql_data[:demarcheCloner][:demarche][:id]).not_to eq(procedure.to_typed_id)
+          expect(gql_data[:demarcheCloner][:demarche][:id]).to eq(Procedure.last.to_typed_id)
+        }
+      end
+
+      context 'with title' do
+        let(:variables) { { input: { demarche: { id: procedure.to_typed_id }, title: new_title } } }
+        let(:new_title) { "#{procedure.libelle} TEST 1" }
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data[:demarcheCloner][:errors]).to be_nil
+          expect(gql_data[:demarcheCloner][:demarche][:id]).to eq(Procedure.last.to_typed_id)
+          expect(Procedure.last.libelle).to eq(new_title)
+        }
       end
     end
   end

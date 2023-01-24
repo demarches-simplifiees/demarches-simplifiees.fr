@@ -1,7 +1,5 @@
-= form_tag update_sort_instructeur_procedure_path(procedure_id: @procedure.id, table: 'notifications', column: 'notifications', order: opposite_order), method: 'GET', data: {controller: 'checkbox'} do
-  .fr-form-group
-    .fr-fieldset__content
-      .fr-checkbox-group.fix-dsfr-notified-toggle-component
-        = check_box_tag :order, opposite_order, active?, data: {action: 'change->checkbox#onChange'}
-        = label_tag :order, t('.show_notified_first'), class: 'fr-label'
-        = submit_tag t('.show_notified_first'), data: {"checkbox-target": 'submit' }, class: 'visually-hidden'
+= form_tag update_sort_instructeur_procedure_path(procedure_id: @procedure.id, table: 'notifications', column: 'notifications', order: opposite_order), method: :get, data: { controller: 'autosubmit' } do
+  .fr-toggle
+    = check_box_tag :order, opposite_order, active?, class: 'fr-toggle__input'
+    = label_tag :order, t('.show_notified_first'), class: 'fr-toggle__label fr-pl-1w'
+    = submit_tag t('.show_notified_first'), data: {"checkbox-target": 'submit' }, class: 'visually-hidden'

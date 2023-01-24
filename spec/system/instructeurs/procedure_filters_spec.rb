@@ -79,14 +79,15 @@ describe "procedure filters" do
 
   scenario "should be able to user custom fiters", js: true do
     # use date filter
-    click_on 'Filtrer'
+    click_on 'Sélectionner un filtre'
     select "En construction le", from: "Colonne"
     find("input#value[type=date]", visible: true)
     fill_in "Valeur", with: "10/10/2010"
     click_button "Ajouter le filtre"
+    expect(page).to have_no_css("select#field", visible: true)
 
     # use enum filter
-    click_on 'Filtrer'
+    click_on 'Sélectionner un filtre'
     select "Statut", from: "Colonne"
     find("select#value", visible: false)
     select 'En construction', from: "Valeur"
@@ -96,6 +97,7 @@ describe "procedure filters" do
   scenario "should be able to add and remove two filters for the same field", js: true do
     add_filter(type_de_champ.libelle, champ.value)
     add_filter(type_de_champ.libelle, champ_2.value)
+    add_enum_filter('Groupe instructeur', procedure.groupe_instructeurs.first.label)
 
     within ".dossiers-table" do
       expect(page).to have_link(new_unfollow_dossier.id.to_s, exact: true)
@@ -130,10 +132,19 @@ describe "procedure filters" do
   end
 
   def add_filter(column_name, filter_value)
-    click_on 'Filtrer'
+    click_on 'Sélectionner un filtre'
     select column_name, from: "Colonne"
     fill_in "Valeur", with: filter_value
     click_button "Ajouter le filtre"
+    expect(page).to have_no_css("select#field", visible: true)
+  end
+
+  def add_enum_filter(column_name, filter_value)
+    click_on 'Sélectionner un filtre'
+    select column_name, from: "Colonne"
+    select filter_value, from: "Valeur"
+    click_button "Ajouter le filtre"
+    expect(page).to have_no_css("select#field", visible: true)
   end
 
   def add_column(column_name)

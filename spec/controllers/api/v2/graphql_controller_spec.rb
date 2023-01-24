@@ -67,7 +67,7 @@ describe API::V2::GraphqlController do
         publishedRevision {
           id
           champDescriptors {
-            type
+            __typename
           }
         }
         service {
@@ -76,16 +76,26 @@ describe API::V2::GraphqlController do
           organisme
         }
         champDescriptors {
+          __typename
           id
-          type
           label
           description
           required
-          champDescriptors {
-            id
-            type
+          ... on RepetitionChampDescriptor {
+            champDescriptors {
+              __typename
+              id
+            }
           }
-          options
+          ... on DropDownListChampDescriptor {
+            options
+          }
+          ... on MultipleDropDownListChampDescriptor {
+            options
+          }
+          ... on LinkedDropDownListChampDescriptor {
+            options
+          }
         }
         dossiers {
           nodes {
@@ -141,6 +151,34 @@ describe API::V2::GraphqlController do
         }
       end
 
+      context "when the token does not belong to an admin of the procedure" do
+        let(:another_administrateur) { create(:administrateur) }
+        let(:token_v3) { APIToken.generate(another_administrateur)[1] }
+        let(:plain_token) { APIToken.send(:unpack, token_v3)[:plain_token] }
+        before do
+          request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Token.encode_credentials(token)
+        end
+
+        context 'v3' do
+          let(:token) { token_v3 }
+          it {
+            expect(gql_errors.first[:message]).to eq("An object of type Demarche was hidden due to permissions")
+          }
+        end
+        context 'v2' do
+          let(:token) { APIToken.send(:message_verifier).generate([another_administrateur.id, plain_token]) }
+          it {
+            expect(gql_errors.first[:message]).to eq("An object of type Demarche was hidden due to permissions")
+          }
+        end
+        context 'v1' do
+          let(:token) { plain_token }
+          it {
+            expect(gql_errors.first[:message]).to eq("An object of type Demarche was hidden due to permissions")
+          }
+        end
+      end
+
       context "when the token is revoked" do
         before do
           admin.api_tokens.destroy_all
@@ -157,9 +195,13 @@ describe API::V2::GraphqlController do
       describe "query a demarche" do
         let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_all_champs, :with_all_annotations, administrateurs: [admin]) }
 
+        def format_type_champ(type_champ)
+          "#{type_champ.gsub('regions', 'region').gsub('departements', 'departement').gsub('communes', 'commune').camelcase}ChampDescriptor"
+        end
+
         it "returns the demarche" do
           expect(gql_errors).to eq(nil)
-          expect(gql_data).to eq(demarche: {
+          expect(gql_data).to include(demarche: {
             id: procedure.to_typed_id,
             number: procedure.id,
             title: procedure.libelle,
@@ -174,15 +216,11 @@ describe API::V2::GraphqlController do
                 label: "défaut"
               }
             ],
-            revisions: procedure.revisions.map { |revision| { id: revision.to_typed_id } },
+            revisions: procedure.revisions.map { { id: _1.to_typed_id } },
             draftRevision: { id: procedure.draft_revision.to_typed_id },
             publishedRevision: {
               id: procedure.published_revision.to_typed_id,
-              champDescriptors: procedure.published_revision.types_de_champ_public.map do |tdc|
-                {
-                  type: tdc.type_champ
-                }
-              end
+              champDescriptors: procedure.published_revision.types_de_champ_public.map { { __typename: format_type_champ(_1.type_champ) } }
             },
             service: {
               nom: procedure.service.nom,
@@ -193,15 +231,15 @@ describe API::V2::GraphqlController do
               {
                 id: tdc.to_typed_id,
                 label: tdc.libelle,
-                type: tdc.type_champ,
+                __typename: format_type_champ(tdc.type_champ),
                 description: tdc.description,
                 required: tdc.mandatory?,
-                champDescriptors: tdc.repetition? ? procedure.active_revision.children_of(tdc.reload).map { |tdc| { id: tdc.to_typed_id, type: tdc.type_champ } } : nil,
+                champDescriptors: tdc.repetition? ? procedure.active_revision.children_of(tdc.reload).map { { id: _1.to_typed_id, __typename: format_type_champ(_1.type_champ) } } : nil,
                 options: tdc.drop_down_list? ? tdc.drop_down_list_options.reject(&:empty?) : nil
-              }
+              }.compact
             end,
             dossiers: {
-              nodes: dossiers.map { |dossier| { id: dossier.to_typed_id } }
+              nodes: dossiers.map { { id: _1.to_typed_id } }
             }
           })
         end

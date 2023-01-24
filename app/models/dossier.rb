@@ -27,6 +27,7 @@
 #  last_champ_private_updated_at                      :datetime
 #  last_champ_updated_at                              :datetime
 #  last_commentaire_updated_at                        :datetime
+#  migrated_champ_routage                             :boolean
 #  motivation                                         :text
 #  prefill_token                                      :string
 #  prefilled                                          :boolean
@@ -146,6 +147,8 @@ class Dossier < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :parent_dossier, class_name: 'Dossier', optional: true
   belongs_to :batch_operation, optional: true
+  has_many :dossier_batch_operations
+  has_many :batch_operations, through: :dossier_batch_operations
   has_one :france_connect_information, through: :user
 
   has_one :procedure, through: :revision
@@ -272,6 +275,7 @@ class Dossier < ApplicationRecord
   }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
+  scope :with_followers,              -> { left_outer_joins(:follows).where.not(follows: { id: nil }) }
   scope :with_champs, -> {
     includes(champs_public: [
       :type_de_champ,
@@ -536,7 +540,7 @@ class Dossier < ApplicationRecord
   end
 
   def can_terminer?
-    return false if etablissement&.as_degraded_mode?
+    return false if any_etablissement_as_degraded_mode?
 
     true
   end
@@ -563,6 +567,13 @@ class Dossier < ApplicationRecord
 
   def can_be_deleted_by_administration?(reason)
     termine? || reason == :procedure_removed
+  end
+
+  def any_etablissement_as_degraded_mode?
+    return true if etablissement&.as_degraded_mode?
+    return true if champs_public_all.any? { _1.etablissement&.as_degraded_mode? }
+
+    false
   end
 
   def messagerie_available?
@@ -649,11 +660,13 @@ class Dossier < ApplicationRecord
 
   def assign_to_groupe_instructeur(groupe_instructeur, author = nil)
     if (groupe_instructeur.nil? || groupe_instructeur.procedure == procedure) && self.groupe_instructeur != groupe_instructeur
-      if update(groupe_instructeur: groupe_instructeur, groupe_instructeur_updated_at: Time.zone.now)
-        unfollow_stale_instructeurs
+      if update(groupe_instructeur:, groupe_instructeur_updated_at: Time.zone.now)
+        if !brouillon?
+          unfollow_stale_instructeurs
 
-        if author.present?
-          log_dossier_operation(author, :changer_groupe_instructeur, self)
+          if author.present?
+            log_dossier_operation(author, :changer_groupe_instructeur, self)
+          end
         end
 
         true

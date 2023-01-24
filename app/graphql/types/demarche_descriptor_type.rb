@@ -1,7 +1,5 @@
 module Types
   class DemarcheDescriptorType < Types::BaseObject
-    field_class BaseField
-
     class FindDemarcheInput < Types::BaseInputObject
       one_of
       argument :number, Int, "Numero de la démarche.", required: false
@@ -25,11 +23,24 @@ Cela évite l’accès récursif aux dossiers."
     field :date_depublication, GraphQL::Types::ISO8601DateTime, "Date de la dépublication.", null: true
     field :date_fermeture, GraphQL::Types::ISO8601DateTime, "Date de la fermeture.", null: true
 
+    field :duree_conservation_dossiers, Int, "Durée de conservation des dossiers en mois.", null: false
+
+    field :demarche_url, String, null: true
+    field :site_web_url, String, null: true
+    field :dpo_url, String, null: true
+    field :notice_url, String, null: true
+    field :cadre_juridique_url, String, null: true
+
+    field :opendata, Boolean, null: false
+    field :tags, [String], null: false
+    field :zones, [String], null: false
+
     field :revision, Types::RevisionType, null: false
     field :service, Types::ServiceType, null: true
 
-    field :cadre_juridique, String, null: true
-    field :deliberation, String, null: true
+    field :logo, Types::File, null: true, extensions: [{ Extensions::Attachment => { root: :procedure } }]
+    field :notice, Types::File, null: true, extensions: [{ Extensions::Attachment => { root: :procedure } }]
+    field :deliberation, Types::File, null: true, extensions: [{ Extensions::Attachment => { root: :procedure } }]
 
     field :dossiers_count, Int, null: false, internal: true
 
@@ -38,23 +49,49 @@ Cela évite l’accès récursif aux dossiers."
     end
 
     def revision
-      object.is_a?(ProcedureRevision) ? object : object.active_revision
+      if object.is_a?(ProcedureRevision)
+        object
+      else
+        object.active_revision
+      end
+    end
+
+    def procedure
+      if object.is_a?(ProcedureRevision)
+        object.procedure
+      else
+        object
+      end
     end
 
     def dossiers_count
-      object.dossiers.count
-    end
-
-    def deliberation
-      Rails.application.routes.url_helpers.url_for(procedure.deliberation) if procedure.deliberation.attached?
+      procedure.dossiers.visible_by_administration.count
     end
 
     def state
       procedure.aasm.current_state
     end
 
-    def cadre_juridique
+    delegate :description, :opendata, :tags, to: :procedure
+
+    def demarche_url
+      procedure.lien_demarche
+    end
+
+    def dpo_url
+      procedure.lien_dpo
+    end
+
+    def notice_url
+      procedure.lien_notice
+    end
+
+    def cadre_juridique_url
       procedure.cadre_juridique
+    end
+
+    def site_web_url
+      procedure.lien_site_web
     end
 
     def number
@@ -63,10 +100,6 @@ Cela évite l’accès récursif aux dossiers."
 
     def title
       procedure.libelle
-    end
-
-    def description
-      procedure.description
     end
 
     def declarative
@@ -93,15 +126,17 @@ Cela évite l’accès récursif aux dossiers."
       procedure.closed_at
     end
 
-    def self.authorized?(object, context)
-      procedure = object.is_a?(ProcedureRevision) ? object.procedure : object
-      procedure.opendata? || context.authorized_demarche?(procedure)
+    def duree_conservation_dossiers
+      procedure.duree_conservation_dossiers_dans_ds
     end
 
-    private
+    def zones
+      procedure.zones.map(&:current_label)
+    end
 
-    def procedure
-      revision.procedure
+    def self.authorized?(object, context)
+      procedure = object.is_a?(ProcedureRevision) ? object.procedure : object
+      context.authorized_demarche?(procedure, opendata: true)
     end
   end
 end

@@ -44,6 +44,7 @@ class TypeDeChamp < ApplicationRecord
     departements: LOCALISATION,
     regions: LOCALISATION,
     pays: LOCALISATION,
+    epci: LOCALISATION,
     iban: PAIEMENT_IDENTIFICATION,
     siret: PAIEMENT_IDENTIFICATION,
     text: STANDARD,
@@ -104,7 +105,8 @@ class TypeDeChamp < ApplicationRecord
     cnaf: 'cnaf',
     dgfip: 'dgfip',
     pole_emploi: 'pole_emploi',
-    mesri: 'mesri'
+    mesri: 'mesri',
+    epci: 'epci'
   }
 
   store_accessor :options,
@@ -260,7 +262,13 @@ class TypeDeChamp < ApplicationRecord
       TypeDeChamp.type_champs.fetch(:email),
       TypeDeChamp.type_champs.fetch(:phone),
       TypeDeChamp.type_champs.fetch(:iban),
-      TypeDeChamp.type_champs.fetch(:civilite)
+      TypeDeChamp.type_champs.fetch(:civilite),
+      TypeDeChamp.type_champs.fetch(:pays),
+      TypeDeChamp.type_champs.fetch(:date),
+      TypeDeChamp.type_champs.fetch(:datetime),
+      TypeDeChamp.type_champs.fetch(:yes_no),
+      TypeDeChamp.type_champs.fetch(:checkbox),
+      TypeDeChamp.type_champs.fetch(:drop_down_list)
     ])
   end
 
@@ -461,6 +469,19 @@ class TypeDeChamp < ApplicationRecord
   def stable_self
     OpenStruct.new(to_key: [stable_id],
       model_name: OpenStruct.new(param_key: model_name.param_key))
+  end
+
+  def refresh_after_update?
+    self.class.refresh_after_update?(type_champ)
+  end
+
+  def self.refresh_after_update?(type_champ)
+    case type_champ
+    when type_champs.fetch(:epci)
+      true
+    else
+      false
+    end
   end
 
   private

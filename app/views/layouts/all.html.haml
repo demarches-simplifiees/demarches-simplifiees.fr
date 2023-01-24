@@ -9,10 +9,10 @@
           .fr-highlight.fr-mb-4w
             %p Ce tableau de bord permet de consulter les informations sur les démarches simplifiées pour toutes les zones. Filtrez par zone et statut. Consultez la liste des démarches et cliquez sur une démarche pour voir la zone et quels sont les administrateurs.
 
-    .fr-container--fluid{ 'data-turbo': 'true', 'data-controller': 'autosubmit' }
+    .fr-container--fluid{ data: { turbo: 'true' } }
       .fr-grid-row.fr-grid-row--gutters
         .fr-col-3
-          = form_with(url: all_admin_procedures_path, method: :get, html: {'data-autosubmit-target': 'form'}) do |f|
+          = form_with(url: all_admin_procedures_path, method: :get, data: { controller: 'autosubmit', turbo_frame: 'procedures' }) do |f|
 
             %fieldset.sidebar-filter
               %legend
@@ -31,7 +31,7 @@
                   .fr-ml-1w{ 'data-expand-target': 'content' }
                     = f.collection_check_boxes :zone_ids, @filter.admin_zones, :id, :current_label, include_hidden: false do |b|
                       .fr-checkbox-group.fr-ml-2w.fr-py-1w
-                        = b.check_box(checked: @filter.zone_filtered?(b.value), 'data-action': 'autosubmit#submit')
+                        = b.check_box(checked: @filter.zone_filtered?(b.value))
                         = b.label(class: 'fr-label') { b.text }
                 %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
                   .fr-mb-1w
@@ -41,7 +41,7 @@
                   .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
                     = f.collection_check_boxes :zone_ids, @filter.other_zones, :id, :current_label, include_hidden: false do |b|
                       .fr-checkbox-group.fr-ml-2w.fr-py-1w
-                        = b.check_box(checked: @filter.zone_filtered?(b.value), 'data-action': 'autosubmit#submit')
+                        = b.check_box(checked: @filter.zone_filtered?(b.value))
                         = b.label(class: 'fr-label') { b.text }
                 %li.fr-py-2w{ 'data-controller': "expand" }
                   .fr-mb-1w.fr-pl-2w
@@ -51,7 +51,7 @@
                   .fr-input-group.hidden{ 'data-expand-target': 'content' }
                     = f.label 'from_publication_date', 'Depuis', class: 'fr-label'
                     .fr-input-wrap.fr-fi-calendar-line
-                      = f.date_field 'from_publication_date', value: @filter.from_publication_date, class: 'fr-input', 'data-action': 'blur->autosubmit#submit change->autosubmit#debouncedSubmit'
+                      = f.date_field 'from_publication_date', value: @filter.from_publication_date, class: 'fr-input'
 
                 %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
                   .fr-mb-1w
@@ -61,9 +61,21 @@
                   .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
                     = f.collection_check_boxes :statuses, ['publiee', 'close'], :to_s, :to_s, include_hidden: false do |b|
                       .fr-checkbox-group.fr-ml-2w.fr-py-1w
-                        = b.check_box(checked: @filter.status_filtered?(b.value), 'data-action': 'autosubmit#submit')
+                        = b.check_box(checked: @filter.status_filtered?(b.value))
                         = b.label(class: 'fr-label') { t b.text, scope: 'activerecord.attributes.procedure.aasm_state' }
 
-        .fr-col-9
+                %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
+                  .fr-mb-1w
+                    %button{ 'data-action': 'expand#toggle' }
+                      %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
+                      Tags
+                  .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
+                    %div
+                      = f.search_field :tag, placeholder: 'Choisissez un tag', list: 'tags_list', class: 'fr-input', data: { no_autosubmit: 'input' }
+                      %datalist#tags_list
+                        - Procedure.tags.each do |tag|
+                          %option{ value: tag }
+
+        %turbo-frame#procedures.fr-col-9{ 'data-turbo-action': 'advance' }
           = yield(:results)
 = render template: 'layouts/application'
