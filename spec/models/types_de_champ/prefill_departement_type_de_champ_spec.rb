@@ -9,6 +9,12 @@ RSpec.describe TypesDeChamp::PrefillDepartementTypeDeChamp, type: :model do
     Rails.cache.clear
   end
 
+  describe 'ancestors' do
+    subject { described_class.build(type_de_champ) }
+
+    it { is_expected.to be_kind_of(TypesDeChamp::PrefillTypeDeChamp) }
+  end
+
   describe '#possible_values', vcr: { cassette_name: 'api_geo_departements' } do
     let(:expected_values) {
       APIGeoService.departements.sort_by { |departement| departement[:code] }.map { |departement| "#{departement[:code]} (#{departement[:name]})" }
@@ -16,11 +22,5 @@ RSpec.describe TypesDeChamp::PrefillDepartementTypeDeChamp, type: :model do
     subject(:possible_values) { described_class.new(type_de_champ).possible_values }
 
     it { expect(possible_values).to match(expected_values) }
-  end
-
-  describe '#example_value', vcr: { cassette_name: 'api_geo_departements' } do
-    subject(:example_value) { described_class.new(type_de_champ).example_value }
-
-    it { expect(example_value).to eq(APIGeoService.departements.sort_by { |departement| departement[:code] }.first[:code]) }
   end
 end

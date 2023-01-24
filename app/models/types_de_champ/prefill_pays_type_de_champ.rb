@@ -3,10 +3,6 @@ class TypesDeChamp::PrefillPaysTypeDeChamp < TypesDeChamp::PrefillTypeDeChamp
     countries.map { |country| "#{country[:code]} (#{country[:name]})" }
   end
 
-  def example_value
-    countries.pick(:code)
-  end
-
   private
 
   def countries
