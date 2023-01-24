@@ -824,7 +824,7 @@ class Procedure < ApplicationRecord
 
   def self.tags
     unnest = Arel::Nodes::NamedFunction.new('UNNEST', [self.arel_table[:tags]])
-    query = self.select(unnest.as('tags')).distinct.order('tags')
+    query = self.select(unnest.as('tags')).publiees_ou_closes.distinct.order('tags')
     self.connection.query(query.to_sql).flatten
   end
 
