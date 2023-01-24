@@ -1,6 +1,6 @@
 - if @champ.options?
   - if @champ.render_as_checkboxes?
-    = @form.collection_check_boxes(:value, @champ.enabled_non_empty_options, :to_s, :to_s, data: data_dependent_conditions) do |b|
+    = @form.collection_check_boxes(:value, @champ.enabled_non_empty_options, :to_s, :to_s) do |b|
       - tag.div(class: 'editable-champ editable-champ-checkbox') do
         - b.label do
           - b.check_box({ multiple: true, checked: @champ&.selected_options&.include?(b.value), aria: { describedby: @champ.describedby_id } }) + b.text

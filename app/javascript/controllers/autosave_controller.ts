@@ -111,28 +111,26 @@ export class AutosaveController extends ApplicationController {
   }
 
   private showConditionnalSpinner(target: HTMLInputElement) {
-    if (target.dataset.dependentConditions) {
-      this.showSpinner(target);
+    const champWrapperElement = target.closest(
+      '.editable-champ[data-dependent-conditions]'
+    );
+
+    if (!champWrapperElement) {
       return;
     }
 
-    // for some champs, like checkbox, spinner is attached on fieldset
-    const parentFieldset = target.closest('fieldset');
-
-    if (parentFieldset?.dataset?.dependentConditions) {
-      this.showSpinner(parentFieldset);
-    }
+    this.showSpinner(champWrapperElement);
   }
 
-  private showSpinner(champElement: HTMLElement) {
+  private showSpinner(champElement: Element) {
     this.#spinnerTimeoutId = setTimeout(() => {
       // do not do anything if there is already a spinner for this champ, like SIRET champ
-      if (!champElement.nextElementSibling?.classList.contains('spinner')) {
+      if (!champElement.querySelector('.spinner')) {
         const spinner = document.createElement('div');
         spinner.classList.add('spinner', 'spinner-removable');
         spinner.setAttribute('aria-live', 'live');
         spinner.setAttribute('aria-label', 'Chargement en cours…');
-        champElement.after(spinner);
+        champElement.appendChild(spinner);
       }
     }, AUTOSAVE_CONDITIONAL_SPINNER_DEBOUNCE_DELAY);
   }
