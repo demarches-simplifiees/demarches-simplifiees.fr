@@ -103,7 +103,7 @@
 
           = render batch_operation_component
 
-        = render partial: "notice_dossier_select_all", local: {dossiers_count: @dossiers_count, filtered_sorted_ids: @filtered_sorted_ids}
+        = render Dossiers::BatchNoticeSelectAllComponent.new(dossiers_count: @dossiers_count, filtered_sorted_ids: @filtered_sorted_ids)
 
         .fr-table.fr-table--bordered
           %table.table.dossiers-table.hoverable
