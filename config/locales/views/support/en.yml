@@ -2,7 +2,8 @@ en:
   support:
     index:
       contact: Contact
-      intro_html: Contact us via this form and we will answer you as quickly as possible.<br>Make sure you provide all the required information so we can help you in the best way.
+      intro_html: "<p>Contact us via this form and we will answer you as quickly as possible.</p>
+      <p>Make sure you provide all the required information so we can help you in the best way.</p>"
       your_question: Your question
       our_answer: 👉 Our answer
       notice_pj_product: A screenshot can help us identify the element to improve.
@@ -10,27 +11,23 @@ en:
       procedure_info:
         question: I've encountered a problem while completing my application
         answer_html: "<p>Are you sure that all the mandatory fields (<span class= mandatory> * </span>) are properly filled?
-              <p>If you have questions about the information requested, contact the service in charge of the procedure.</p>
-              <p><a href=%{link_procedure_info}>Find more information</a></p>"
+              <p>If you have questions about the information requested, <a href=%{link_procedure_info}>contact the service in charge of the procedure (FAQ)</a>.</p>"
       instruction_info:
         question: I have a question about the instruction of my application
-        answer_html: "<p>If you have questions about the instruction of your application (response delay for example), contact directly the instructor via our mail system.</p>
-              <p><a href=%{link_instruction_info}>Find more information</a></p>
-              <br>
+        answer_html: "<p>Si vous avez des questions sur l’instruction de votre dossier (par exemple sur les délais), nous vous invitons à <a href=%{link_instruction_info}>contacter directement les services qui instruisent votre dossier par votre messagerie (FAQ)</a>.</p>
+        <p>Si vous souhaitez poser une question pour un problème technique sur le site, utilisez le formulaire ci-dessous. Nous ne pourrons pas vous renseigner sur l’instruction de votre dossier.</p>"
+        answer_html: "<p>If you have questions about the instruction of your application (response delay for example), <a href=%{link_instruction_info}>contact directly the instructor via our mail system (FAQ)</a>.</p>
               <p>If you are facing technical issues on the website, use the form below. We will not be able to inform you about the instruction of your application.</p>"
       product:
         question: I have an idea to improve the website
-        answer_html: "<p>Got an idea? Please check our <strong>enhancement dashboard</strong></p>
+        answer_html: "<p>Got an idea? <a href=%{link_product}>Please check our enhancement dashboard</a> :</p>
               <ul><li>Vote for your priority improvements</li>
-              <li>Share your own ideas</li></ul>
-              <p><strong><a href=%{link_product}>➡ Access the enhancement dashboard</a></strong></p>"
+              <li>Share your own ideas</li></ul>"
       lost_user:
         question: I am having trouble finding the procedure I am looking for
         answer_html: "<p>We invite you to contact the administration in charge of the procedure so they can provide you the link.
               It should look like this: %{base_url}/commencer/NOM_DE_LA_DEMARCHE.</p>
-              <br>
-              <p>You can find here the most popular procedures (licence, detr, etc.) :</p>
-              <p><a href=%{link_lost_user}>%{link_lost_user}</a></p>"
+              <p>You can <a href=%{link_lost_user}>find here the most popular procedures (licence, detr, etc.)</a>.</p>"
       other:
         question: Other topic
     admin:
