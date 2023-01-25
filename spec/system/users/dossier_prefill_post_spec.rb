@@ -1,4 +1,4 @@
-describe 'Prefilling a dossier (with a POST request):' do
+describe 'Prefilling a dossier (with a POST request):', js: true do
   let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
 
   let(:password) { 'my-s3cure-p4ssword' }
@@ -8,13 +8,16 @@ describe 'Prefilling a dossier (with a POST request):' do
 
   let(:type_de_champ_text) { create(:type_de_champ_text, procedure: procedure) }
   let(:type_de_champ_phone) { create(:type_de_champ_phone, procedure: procedure) }
+  let(:type_de_champ_siret) { create(:type_de_champ_siret, procedure: procedure) }
   let(:type_de_champ_datetime) { create(:type_de_champ_datetime, procedure: procedure) }
   let(:type_de_champ_multiple_drop_down_list) { create(:type_de_champ_multiple_drop_down_list, procedure: procedure) }
   let(:type_de_champ_epci) { create(:type_de_champ_epci, procedure: procedure) }
   let(:type_de_champ_repetition) { create(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure) }
   let(:type_de_champ_commune) { create(:type_de_champ_communes, procedure: procedure) }
+
   let(:text_value) { "My Neighbor Totoro is the best movie ever" }
   let(:phone_value) { "invalid phone value" }
+  let(:siret_value) { '41816609600051' }
   let(:datetime_value) { "2023-02-01T10:32" }
   let(:multiple_drop_down_list_values) {
     [
@@ -33,6 +36,9 @@ describe 'Prefilling a dossier (with a POST request):' do
   before do
     allow(Rails).to receive(:cache).and_return(memory_store)
     Rails.cache.clear
+
+    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret_value}/)
+      .to_return(status: 200, body: File.read('spec/fixtures/files/api_entreprise/etablissements.json'))
 
     VCR.insert_cassette('api_geo_departements')
     VCR.insert_cassette('api_geo_communes')
@@ -132,6 +138,7 @@ describe 'Prefilling a dossier (with a POST request):' do
       params: {
         "champ_#{type_de_champ_text.to_typed_id_for_query}" => text_value,
         "champ_#{type_de_champ_phone.to_typed_id_for_query}" => phone_value,
+        "champ_#{type_de_champ_siret.to_typed_id_for_query}" => siret_value,
         "champ_#{type_de_champ_repetition.to_typed_id_for_query}" => [
           {
             "champ_#{sub_type_de_champs_repetition.first.to_typed_id_for_query}": text_repetition_value,
