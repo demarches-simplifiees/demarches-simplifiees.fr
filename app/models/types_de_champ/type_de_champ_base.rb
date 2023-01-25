@@ -62,4 +62,8 @@ class TypesDeChamp::TypeDeChampBase
   def human_to_filter(human_value)
     human_value
   end
+
+  def pattern
+    "/^.{0,255}$/"
+  end
 end

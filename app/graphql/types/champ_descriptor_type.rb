@@ -13,6 +13,7 @@ module Types
     global_id_field :id
     field :label, String, "Libellé du champ.", null: false, method: :libelle
     field :description, String, "Description du champ.", null: true
+    field :pattern, String, "Regex décrivant le format attendu pour le champ", null: false, method: :pattern
     field :required, Boolean, "Est-ce que le champ est obligatoire ?", null: false, method: :mandatory?
 
     field :options, [String], "List des options d’un champ avec selection.", null: true, deprecation_reason: 'Utilisez le champ `DropDownListChampDescriptor.options` à la place.'

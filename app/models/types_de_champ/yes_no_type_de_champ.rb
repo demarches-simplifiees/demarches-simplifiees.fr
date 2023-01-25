@@ -19,4 +19,8 @@ class TypesDeChamp::YesNoTypeDeChamp < TypesDeChamp::CheckboxTypeDeChamp
       human_value
     end
   end
+
+  def pattern
+    "^(true|false)$"
+  end
 end

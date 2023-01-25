@@ -331,6 +331,7 @@ class API::V2::StoredQuery
     id
     label
     description
+    pattern
     required
     ... on DropDownListChampDescriptor {
       options

@@ -2,4 +2,8 @@ class TypesDeChamp::MesriTypeDeChamp < TypesDeChamp::TextTypeDeChamp
   def estimated_fill_duration(revision)
     FILL_DURATION_MEDIUM
   end
+
+  def pattern
+    ""
+  end
 end

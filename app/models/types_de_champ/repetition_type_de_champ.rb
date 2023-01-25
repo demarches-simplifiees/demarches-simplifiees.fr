@@ -24,4 +24,8 @@ class TypesDeChamp::RepetitionTypeDeChamp < TypesDeChamp::TypeDeChampBase
     # /\*?[] are invalid Excel worksheet characters
     ActiveStorage::Filename.new(str.delete('[]*?')).sanitized
   end
+
+  def pattern
+    ""
+  end
 end

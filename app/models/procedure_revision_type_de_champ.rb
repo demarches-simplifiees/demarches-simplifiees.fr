@@ -23,7 +23,7 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
   scope :public_only, -> { joins(:type_de_champ).where(types_de_champ: { private: false }) }
   scope :private_only, -> { joins(:type_de_champ).where(types_de_champ: { private: true }) }
 
-  delegate :stable_id, :libelle, :description, :type_champ, :mandatory?, :private?, :to_typed_id, to: :type_de_champ
+  delegate :stable_id, :libelle, :description, :type_champ, :pattern, :mandatory?, :private?, :to_typed_id, to: :type_de_champ
 
   def child?
     parent_id.present?

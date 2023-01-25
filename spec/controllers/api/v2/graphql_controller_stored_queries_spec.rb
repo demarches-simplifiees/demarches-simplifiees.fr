@@ -138,6 +138,7 @@ describe API::V2::GraphqlController do
         it {
           expect(gql_errors).to be_nil
           expect(gql_data[:demarcheDescriptor][:id]).to eq(procedure.to_typed_id)
+          expect(gql_data.dig(:demarcheDescriptor, :revision, :champDescriptors, 0, :pattern)).to eq('/^.{0,255}$/')
         }
       end
 
