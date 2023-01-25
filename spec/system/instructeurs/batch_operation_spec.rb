@@ -99,8 +99,6 @@ describe 'BatchOperation a dossier:', js: true do
       expect(page).to have_content('3 dossiers sont sélectionnés. Effacer la sélection ')
       expect(find_field("batch_operation[dossier_ids][]", type: :hidden).value).to eq "#{dossier_3.id},#{dossier_2.id},#{dossier_1.id}"
 
-
-
       # click on delete link empty checkbox value and hide notice
       click_on("Effacer la sélection")
       expect(page).to have_selector('.fr-notice', visible: false)
