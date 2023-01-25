@@ -1,4 +1,5 @@
 = content_for(:page_id, 'auth')
+= content_for(:title, t('metas.signin.title'))
 
 = render partial: 'shared/social_login', locals: { title: t('views.users.sessions.new.social_sign_in'), prefix: "" }
 
@@ -8,7 +9,7 @@
     = form_for resource, url: user_session_path, html: { class: "form" } do |f|
 
       = f.label :email, t('views.users.sessions.new.email')
-      = f.text_field :email, type: :email, autocomplete: 'username', autofocus: false
+      = f.text_field :email, type: :email, autocomplete: 'email', autofocus: false
 
       = f.label :password, t('views.users.sessions.new.password', min_length: PASSWORD_MIN_LENGTH)
       = f.password_field :password, autocomplete: 'current-password'

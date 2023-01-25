@@ -80,6 +80,7 @@ class Champ < ApplicationRecord
   before_create :set_dossier_id, if: :needs_dossier_id?
   before_validation :set_dossier_id, if: :needs_dossier_id?
   before_save :cleanup_if_empty
+  before_save :normalize
   after_update_commit :fetch_external_data_later
 
   validates :type_de_champ_id, uniqueness: { scope: [:dossier_id, :row] }
@@ -248,6 +249,12 @@ class Champ < ApplicationRecord
     if fetch_external_data? && external_id.present? && data.nil?
       ChampFetchExternalDataJob.perform_later(self, external_id)
     end
+  end
+
+  def normalize
+    return if value.nil?
+
+    self.value = value.delete("\u0000")
   end
 
   class NotImplemented < ::StandardError
