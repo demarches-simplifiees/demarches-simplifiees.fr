@@ -173,3 +173,72 @@ La compatibilité est testée par Browserstack.<br>[<img src="app/assets/images/
 [![View performance data on Skylight](https://badges.skylight.io/status/zAvWTaqO0mu1.svg)](https://oss.skylight.io/app/applications/zAvWTaqO0mu1)
 
 Nous utilisons Skylight pour suivre les performances de notre application.
+
+## Anonymisation des données
+
+Si vous voulez configurer un rôle postgresql accédant à la base de données
+anonymisée, installez [l’extension pg_anonymizer](https://postgresql-anonymizer.readthedocs.io/)
+sur le serveur.
+
+Le fonctionnement de pg\_anonymizer et de rails empêchent l’anonymisation à la volée
+(dynamic masking) car le rôle (et le dump) voient des VIEW à la place des TABLE,
+qui masquent des caractéristiques des nécessaires à Rails comme les séquences.
+
+Le workflow général est le suivant :
+
+- les règles d’anonymisation sont injectées (mises à jour) dans la base à chaque déploiement
+- on exporte un dump classique de la base; il est réinjecté dans une base temporaire dans un environnement sécurisé
+- on lance l’anonymisation statique sur cette base temporaire avec `anon.anonymize_database()`. Cela peut prendre plusieurs heures.
+- on dump cette base anonymisée, qui peut être chiffré pour être transmise ailleurs.
+
+
+### Détail
+
+Créez le rôle qui supportera l’anonymisation.
+(Adaptez avec le nom de rôle de votre choix, un mot de passe,
+et le nom de la base en production).
+
+```sql
+CREATE ROLE pganonrole LOGIN PASSWORD 'password' IN ROLE tps_development;
+
+\c tps_development
+GRANT SELECT ON ALL TABLES IN SCHEMA public to pganonrole
+```
+
+Définissez la variable d'environment `PG_ANONYMIZER_ROLE` avec le nom de ce rôle.
+Jouez les migrations avec `rails db:migrate`: une migration va créer l’extension et l'activera pour ce rôle.
+
+
+Puis terminez la configuration :
+
+```sql
+CREATE EXTENSION IF NOT EXISTS anon CASCADE;
+
+SELECT anon.init();
+
+SECURITY LABEL FOR anon ON ROLE pganonrole IS 'MASKED';
+
+>>>>>>> 817bbf8f6 (fixup! chore(db): setup pg_anonymizer)
+ALTER DATABASE tps_development SET session_preload_libraries = 'anon';
+# Il peut être nécessaire d'ouvrir une nouvelle session sql pour terminer la configuration.
+
+NOTE: le salt doit être protégé avec le même niveau que les identifiants à la base de données.
+ALTER DATABASE tps_development SET anon.salt = 'a-very-random-salty-string';
+```
+
+Enfin injectez les règles d’anonymisation :
+
+```
+rake anonymizer:setup_rules
+```
+
+Si les règles doivent évoluer, éditez-les dans le fichier. Cette tâche sera rejouée automatiquement
+à chaque déploiement via un after party.
+
+
+Pour lancer l’anonymisation et **réécrire toute la base** sur la base temporaire,
+on se connecte avec le rôle anonymisé, puis :
+
+```sql
+anon.anonymize_database();
+```
