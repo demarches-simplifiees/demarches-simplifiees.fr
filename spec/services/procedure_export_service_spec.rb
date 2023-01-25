@@ -94,7 +94,7 @@ describe ProcedureExportService do
           "mesri",
           "epci",
           "epci (Code)",
-          "epci (Département)"
+          "epci (Département)",
           "routage",
           "text"
         ]
@@ -205,7 +205,7 @@ describe ProcedureExportService do
           "mesri",
           "epci",
           "epci (Code)",
-          "epci (Département)"
+          "epci (Département)",
           "routage",
           "text"
         ]
@@ -299,7 +299,7 @@ describe ProcedureExportService do
             "mesri",
             "epci",
             "epci (Code)",
-            "epci (Département)"
+            "epci (Département)",
             "routage",
             "text"
           ]
