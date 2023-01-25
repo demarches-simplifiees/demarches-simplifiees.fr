@@ -1,6 +1,6 @@
 .dropdown.header-menu-opener{ data: { controller: 'menu-button' } }
   %button.button.dropdown-button.icon-only.header-menu-button{ title: "Mon compte", data: { menu_button_target: 'button' } }
-    .hidden Mon compte
+    %span.hidden= t("my_account", scope: [:layouts])
     = image_tag "icons/account-circle.svg", alt: 'Mon compte', width: 24, height: 24, loading: 'lazy'
   %ul.header-menu.dropdown-content#mon_compte_menu{ data: { menu_button_target: 'menu' } }
     %li

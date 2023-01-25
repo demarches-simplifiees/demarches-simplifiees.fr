@@ -1,5 +1,26 @@
 require 'prawn/measurement_extensions'
 
+def default_margin
+  10
+end
+
+def maybe_start_new_page(pdf, size)
+  if pdf.cursor < size + default_margin
+    pdf.start_new_page
+  end
+end
+
+def text_box(pdf, text, x, width)
+  box = ::Prawn::Text::Box.new(text.to_s,
+    document: pdf,
+    width: width,
+    overflow: :expand,
+    at: [x, pdf.cursor])
+
+  box.render
+  box.height
+end
+
 def prawn_text(message)
   tags = ['a', 'b', 'br', 'color', 'font', 'i', 'strong', 'sub', 'sup', 'u']
   atts = ['alt', 'character_spacing', 'href', 'name', 'rel', 'rgb', 'size', 'src', 'target']
@@ -43,16 +64,6 @@ def format_in_2_columns(pdf, label, text)
     (text, h3) = render_box(pdf, text, 110, pdf.bounds.width - 110)
     pdf.move_down 5 + [h1, h2, h3].max
     pdf.start_new_page if text.present?
-  end
-end
-
-def default_margin
-  10
-end
-
-def maybe_start_new_page(pdf, size)
-  if pdf.cursor < size + default_margin
-    pdf.start_new_page
   end
 end
 
@@ -143,17 +154,6 @@ def add_single_champ(pdf, champ)
   case champ.type
   when 'Champs::PieceJustificativeChamp', 'Champs::TitreIdentiteChamp'
     return
-  when 'Champs::RepetitionChamp'
-    raise 'There should not be a RepetitionChamp here !'
-  when 'Champs::PieceJustificativeChamp'
-    url = Rails.application.routes.url_helpers.champs_piece_justificative_download_url({ champ_id: champ.id, h: champ.encoded_date(:created_at) })
-    link = if champ.piece_justificative_file.present?
-      display = champ.piece_justificative_file.filename
-      content_tag :a, display, { href: url, target: '_blank', rel: 'noopener' }
-    else
-      "Non renseigné"
-    end
-    format_in_2_columns(pdf, tdc.libelle, link)
   when 'Champs::HeaderSectionChamp'
     add_section_title(pdf, tdc.libelle)
   when 'Champs::ExplicationChamp'
@@ -232,7 +232,7 @@ prawn_document(page_size: "A4") do |pdf|
     normal: Rails.root.join('lib/prawn/fonts/marianne/marianne-regular.ttf'),
     bold: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf'),
     bold_italic: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf'),
-    italic: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf'),
+    italic: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf')
   })
   pdf.font 'marianne'
 

@@ -28,10 +28,13 @@
         = vite_legacy_javascript_tag 'track-admin'
       = vite_legacy_fallback_tag
 
-    = preload_link_tag(asset_url("Muli-Regular.woff2"))
-    = preload_link_tag(asset_url("Muli-Bold.woff2"))
+    = preload_link_tag(asset_url("Marianne-Regular.woff2"))
+    = preload_link_tag(asset_url("Spectral-Regular.ttf"))
 
+    = vite_stylesheet_tag 'application', media: 'all'
     = stylesheet_link_tag 'application', media: 'all'
+
+    = yield(:invisible_captcha_styles)
 
   %body{ id: content_for(:page_id), class: browser.platform.ios? ? 'ios' : nil }
     .page-wrapper
@@ -43,7 +46,7 @@
           Env Test
 
       = render partial: "layouts/header"
-      %main
+      %main{ role: :main }
         = render partial: "layouts/flash_messages"
         = content_for?(:content) ? yield(:content) : yield
 

@@ -1,10 +1,9 @@
 require 'prawn/measurement_extensions'
 require 'prawn/qrcode'
 
-
 #----- A4 page size
 page_size = 'A4'
-#page_height = 842
+# page_height = 842
 page_width = 595
 
 #----- margins
@@ -38,7 +37,7 @@ footer_height = qrcode.present? ? qrcode_size + 40 : 30
 info = {
   :Title => title,
   :Subject => "Attestation pour un dossier",
-  :Creator => "#{APPLICATION_NAME}",
+  :Creator => (APPLICATION_NAME).to_s,
   :Producer => "Prawn",
   :CreationDate => created_at
 }
@@ -48,7 +47,7 @@ def print_text(pdf, text, size)
 end
 
 def print_image(pdf, c)
-  attachment = ActiveStorage::Attachment.find_by_id(c.attributes['id'].to_s)
+  attachment = ActiveStorage::Attachment.find_by(id: c.attributes['id'].to_s)
   attachment.blob.open { |file| pdf.image file, fit: [30.mm, 40.mm], position: :center }
   # url = c.attributes['src']
   # display = c.attributes['display']
@@ -59,11 +58,11 @@ end
 def prawn_text(message)
   tags = ['a', 'b', 'br', 'color', 'font', 'i', 'strong', 'sub', 'sup', 'u']
   atts = ['alt', 'character_spacing', 'href', 'name', 'rel', 'rgb', 'size', 'src', 'target']
-  text = ActionView::Base.safe_list_sanitizer.sanitize(message.to_s, tags: tags, attributes: atts)
+  ActionView::Base.safe_list_sanitizer.sanitize(message.to_s, tags: tags, attributes: atts)
 end
 
 def make_link(display, url)
-  content_tag(:a, display, { href: url, target: '_blank', rel: 'noopener' })
+  tag.a(display, href: url, target: '_blank', rel: 'noopener')
 end
 
 def cell_link(pdf, display, url)
@@ -75,7 +74,7 @@ def cell_image(pdf, c)
   display = c.attributes['display']&.to_s || c.children.to_s
   id = c.attributes['id']&.to_s
   if id && display
-    attachment = ActiveStorage::Attachment.find_by_id(id)
+    attachment = ActiveStorage::Attachment.find_by(id: id)
     content = [
       [attachment.blob.open { |file| ::Prawn::Table::Cell::Image.new(pdf, [], { image: file, fit: [20.mm, 20.mm], position: :center }) }],
       [cell_link(pdf, display, url)]
@@ -123,14 +122,13 @@ def print(pdf, text, size:)
 end
 
 prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], page_size: page_size, info: info) do |pdf|
-  base = 'lib/prawn/fonts/liberation_serif'
-  pdf.font_families.update('liberation serif' => {
-    normal: Rails.root.join(base, 'LiberationSerif-Regular.ttf'),
-    bold: Rails.root.join(base, 'LiberationSerif-Bold.ttf'),
-    bold_italic: Rails.root.join(base, 'LiberationSerif-BoldItalic.ttf'),
-    italic: Rails.root.join(base, 'LiberationSerif-Italic.ttf')
+  pdf.font_families.update('marianne' => {
+    normal: Rails.root.join('lib/prawn/fonts/marianne/marianne-regular.ttf'),
+    bold: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf'),
+    bold_italic: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf'),
+    italic: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf')
   })
-  pdf.font 'liberation serif'
+  pdf.font 'marianne'
 
   grey = '555555'
   black = '000000'
@@ -140,10 +138,10 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
   pdf.bounding_box([0, pdf.cursor], width: body_width, height: body_height) do
     if logo.present?
       logo_content = if logo.is_a?(ActiveStorage::Attached::One)
-                       logo.download
-                     else
-                       logo.rewind && logo.read
-                     end
+        logo.download
+      else
+        logo.rewind && logo.read
+      end
       pdf.image StringIO.new(logo_content), fit: [max_logo_width, max_logo_height], position: :center
     end
 
@@ -158,14 +156,13 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
       print pdf, body, size: 11
     end
 
-    cpos = pdf.cursor - 40
     if signature.present?
       pdf.pad_top(20) do
         signature_content = if signature.is_a?(ActiveStorage::Attached::One)
-                              signature.download
-                            else
-                              signature.rewind && signature.read
-                            end
+          signature.download
+        else
+          signature.rewind && signature.read
+        end
         pdf.image StringIO.new(signature_content), fit: [max_signature_size, max_signature_size], position: :right
       end
     end

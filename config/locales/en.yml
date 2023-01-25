@@ -65,6 +65,7 @@ en:
         line2: to manage dematerialized
         line3: administrative forms.
         are_you_new: First time on %{app_name}?
+    my_account: My account
     locale_dropdown:
       languages: "Languages"
     notifications:

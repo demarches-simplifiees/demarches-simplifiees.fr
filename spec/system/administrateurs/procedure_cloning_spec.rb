@@ -24,8 +24,13 @@ describe 'As an administrateur I wanna clone a procedure', js: true do
       visit admin_procedures_path(statut: "brouillons")
       expect(page.find_by_id('procedures')['data-item-count']).to eq('1')
       click_on Procedure.last.libelle
-      expect(page).to have_current_path(admin_procedure_path(Procedure.last))
+      expect(page).to have_current_path(admin_procedure_path(id: Procedure.last))
 
+      # select service
+      find("#service .button").click
+      click_on "Assigner"
+
+      # then publish
       find('#publish-procedure-link').click
       expect(find_field('procedure_path').value).to eq Procedure.last.service.suggested_path + '-libelle-de-la-procedure'
       fill_in 'procedure_path', with: procedure_path
