@@ -99,7 +99,7 @@
       %div{ data: batch_operation_component.render? ? { controller: 'batch-operation' } : {} }
         .flex.align-center.fr-mt-2w
           %span.fr-h6.fr-mb-0.fr-mr-2w
-            = page_entries_info @filtered_sorted_paginated_ids, entry_name: 'dossier'
+            = page_entries_info @filtered_sorted_paginated_ids
 
           = render batch_operation_component
 
