@@ -36,7 +36,7 @@
                   %span.fr-text--xs.fr-text-mention--grey
                     = t('en_attente', scope: 'views.shared.avis')
                     |
-                    %span= link_to(t('revive', scope: 'helpers.label'), revive_instructeur_avis_path(avis.procedure, avis), data: { confirm: t('revive', scope: 'helpers.confirmation', email: avis.expert.email) })
+                    %span= link_to(t('remind', scope: 'helpers.label'), remind_instructeur_avis_path(avis.procedure, avis), data: { confirm: t('remind', scope: 'helpers.confirmation', email: avis.expert.email) })
                     - if avis.revokable_by?(current_instructeur)
                       |
                       = link_to(t('revoke', scope: 'helpers.label'), revoquer_instructeur_avis_path(avis.procedure, avis), data: { confirm: t('revoke', scope: 'helpers.confirmation', email: avis.expert.email) }, method: :patch)
