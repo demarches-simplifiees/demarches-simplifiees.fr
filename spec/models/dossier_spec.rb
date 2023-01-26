@@ -1405,6 +1405,46 @@ describe Dossier do
     end
   end
 
+  describe '#geo_data' do
+    let(:dossier) { create(:dossier) }
+    let(:type_de_champ_carte) { create(:type_de_champ_carte, procedure: dossier.procedure) }
+    let(:geo_area) { create(:geo_area) }
+    let(:champ_carte) { create(:champ_carte, type_de_champ: type_de_champ_carte, geo_areas: [geo_area]) }
+
+    context "without data" do
+      it { expect(dossier.geo_data?).to be_falsey }
+    end
+
+    context "with geo data in public champ" do
+      before do
+        dossier.champs_public << champ_carte
+      end
+
+      it { expect(dossier.geo_data?).to be_truthy }
+    end
+
+    context "with geo data in private champ" do
+      before do
+        dossier.champs_private << champ_carte
+      end
+
+      it { expect(dossier.geo_data?).to be_truthy }
+    end
+
+    it "should solve N+1 problem" do
+      dossier.champs_public << create_list(:champ_carte, 3, type_de_champ: type_de_champ_carte, geo_areas: [create(:geo_area)])
+
+      count = 0
+
+      callback = lambda { |*_args| count += 1 }
+      ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+        dossier.geo_data?
+      end
+
+      expect(count).to eq(1)
+    end
+  end
+
   describe 'dossier_operation_log after dossier deletion' do
     let(:dossier) { create(:dossier) }
     let(:dossier_operation_log) { create(:dossier_operation_log, dossier: dossier) }
