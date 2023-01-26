@@ -30,6 +30,7 @@
     color: $dark-red;
   }
 
+  label,
   legend.form-label {
     font-size: 18px;
     margin-bottom: $default-padding;
@@ -202,6 +203,9 @@
   input[type=tel],
   textarea,
   select {
+    border-radius: 4px;
+    border: solid 1px $border-grey;
+    padding: $default-padding;
 
     &.small {
       padding: $default-spacer;
