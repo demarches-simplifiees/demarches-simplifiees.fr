@@ -224,7 +224,7 @@ class Champ < ApplicationRecord
   private
 
   def html_id
-    "#{stable_id}-#{id}"
+    "champ-#{stable_id}-#{id}"
   end
 
   def needs_dossier_id?
