@@ -17,4 +17,8 @@ describe Logic::Constant do
   describe '#to_s' do
     it { expect(empty.to_s).to eq('un membre vide') }
   end
+
+  describe '#sources' do
+    it { expect(empty.sources).to eq([]) }
+  end
 end

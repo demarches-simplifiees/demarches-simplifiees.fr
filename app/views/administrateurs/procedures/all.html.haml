@@ -16,7 +16,7 @@
     %table#all-demarches
       %caption
         = "#{@procedures.total_count} démarches"
-        %span.hidden.fr-icon-ball-pen-fill{ 'aria-hidden': 'true', 'data-turbo-target': 'spinner' }
+        %span.hidden.spinner{ 'aria-hidden': 'true', 'data-turbo-target': 'spinner' }
       - if @filter.libelle
         .selected-query.fr-mb-2w
           = link_to @filter.libelle, all_admin_procedures_path(@filter.without(:libelle)), class: 'fr-tag fr-tag--dismiss fr-mb-1w'
