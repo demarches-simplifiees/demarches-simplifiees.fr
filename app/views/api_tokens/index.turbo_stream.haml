@@ -1,2 +1,2 @@
-= turbo_stream.morph dom_id(current_administrateur, :profil_api_token) do
+= turbo_stream.replace dom_id(current_administrateur, :profil_api_token) do
   = render Profile::APITokenCardComponent.new created_api_token: @api_token, created_packed_token: @packed_token
