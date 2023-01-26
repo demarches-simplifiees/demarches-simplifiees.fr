@@ -1,6 +1,10 @@
 fr:
   helpers:
     page_entries_info:
+      entry:
+        zero: "dossier"
+        one: "dossier"
+        other: "dossiers"
       more_pages:
         display_entries: "%{first} - %{last} <span class='fr-text--sm'>sur %{total} %{entry_name}</span>"
       one_page:
