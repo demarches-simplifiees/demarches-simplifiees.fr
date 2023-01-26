@@ -30,7 +30,8 @@ export class TurboController extends ApplicationController {
   connect() {
     this.#actions = new Actions({
       element: document.documentElement,
-      schema: { forceAttribute: 'data-turbo-force', hiddenClassName: 'hidden' }
+      schema: { forceAttribute: 'data-turbo-force', hiddenClassName: 'hidden' },
+      debug: false
     });
 
     // actions#observe() is an interface over specialized mutation observers.
@@ -50,29 +51,9 @@ export class TurboController extends ApplicationController {
 
     // see: https://turbo.hotwired.dev/handbook/streams#custom-actions
     this.onGlobal('turbo:before-stream-render', (event: StreamRenderEvent) => {
-      const fallbackToDefaultActions = event.detail.render;
       event.detail.render = (streamElement: StreamElement) =>
-        this.renderStreamElement(streamElement, fallbackToDefaultActions);
+        this.actions.applyActions([parseTurboStream(streamElement)]);
     });
-  }
-
-  private renderStreamElement(
-    streamElement: StreamElement,
-    fallbackRender: (streamElement: StreamElement) => void
-  ) {
-    switch (streamElement.action) {
-      // keep turbo default behavior to avoid risks going all in on coldwire
-      case 'replace':
-      case 'update':
-        fallbackRender(streamElement);
-        break;
-      case 'morph':
-        streamElement.setAttribute('action', 'replace');
-        this.actions.applyActions([parseTurboStream(streamElement)]);
-        break;
-      default:
-        this.actions.applyActions([parseTurboStream(streamElement)]);
-    }
   }
 
   private startSpinner() {
