@@ -1,11 +1,9 @@
 #search-modal.fr-header__search.fr-modal
   .fr-container.fr-container-lg--fluid
     %button.fr-btn--close.fr-btn{ "aria-controls" => "search-modal", :title => t('close_modal', scope: [:layouts, :header]) }= t('close_modal', scope: [:layouts, :header])
-    #search-473.fr-search-bar{ :role => "search" }
-      = form_tag "#{search_endpoint}", method: :get, class: "flex width-100" do
+    #search-473.fr-search-bar
+      = form_tag "#{search_endpoint}", method: :get, :role => "search", class: "flex width-100" do
         = label_tag "q", t('views.users.dossiers.search.search_file'), class: 'fr-label'
-        = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: t('views.users.dossiers.search.search_file'), aria: { label: t('views.users.dossiers.search.search_file') }, class: "fr-input"
+        = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: t('views.users.dossiers.search.placeholder'), class: "fr-input"
         %button.fr-btn{ title: t('views.users.dossiers.search.search_file') }
-          = image_tag "icons/search-blue.svg", alt: t('views.users.dossiers.search.search_file'), 'aria-hidden':'true', width: 24, height: 24, loading: 'lazy'
-
-
+          = t('views.users.dossiers.search.search_file')

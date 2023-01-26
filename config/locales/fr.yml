@@ -309,7 +309,8 @@ fr:
         demande:
           edit_dossier: "Modifier le dossier"
         search:
-          search_file: Rechercher un dossier
+          placeholder: Rechercher un dossier
+          search_file: Rechercher
         index:
           dossiers: "Dossiers"
         dossiers_list:
