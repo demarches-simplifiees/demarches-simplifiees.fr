@@ -73,6 +73,8 @@ module Types
           Types::Champs::TitreIdentiteChampType
         when ::Champs::EpciChamp
           Types::Champs::EpciChampType
+        when ::Champs::RoutageChamp
+          Types::Champs::RoutageChampType
         else
           Types::Champs::TextChampType
         end

@@ -94,6 +94,8 @@ module Types
           Types::Champs::Descriptor::MesriChampDescriptorType
         when TypeDeChamp.type_champs.fetch(:epci)
           Types::Champs::Descriptor::EpciChampDescriptorType
+        when TypeDeChamp.type_champs.fetch(:routage)
+          Types::Champs::Descriptor::RoutageChampDescriptorType
         end
       end
     end
