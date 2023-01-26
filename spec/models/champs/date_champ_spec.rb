@@ -1,5 +1,5 @@
 describe Champs::DateChamp do
-  let(:date_champ) { build(:champ_date) }
+  let(:date_champ) { create(:champ_date) }
 
   describe '#convert_to_iso8601' do
     it 'preserves nil' do
@@ -37,16 +37,14 @@ describe Champs::DateChamp do
       champ.save
       expect(champ.reload.value).to eq("2023-12-21")
     end
-  end
 
-  describe 'validate :iso_8601' do
-    it 'works' do
-      date_champ.value = '2023-27-02'
-      date_champ.send(:iso_8601)
-      expect(date_champ.valid?).to eq(false)
-      expect(date_champ.to_s).not_to raise_error
+    it 'converts to nil if false iso' do
+      champ = champ_with_value("2023-27-02")
+      champ.save
+      expect(champ.reload.value).to eq(nil)
     end
   end
+
   def champ_with_value(number)
     date_champ.tap { |c| c.value = number }
   end
