@@ -1184,7 +1184,7 @@ class Dossier < ApplicationRecord
   end
 
   def geo_data?
-    geo_areas.present?
+    GeoArea.exists?(champ_id: champs_public.ids + champs_private.ids)
   end
 
   def to_feature_collection
