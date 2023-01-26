@@ -20,7 +20,7 @@ module DossierCloneConcern
   end
 
   def reset_editing_fork!
-    if editing_fork? && forked_with_changes?
+    if editing_fork? && (forked_with_changes? || editing_fork_origin.updated_at > updated_at)
       destroy_editing_fork!
     end
   end

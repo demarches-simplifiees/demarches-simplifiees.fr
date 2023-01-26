@@ -251,12 +251,6 @@ fr:
     users:
       dossiers:
         archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
-        autosave:
-          explanation: Votre dossier est automatiquement enregistré.
-          confirmation: Dossier enregistré
-          draft_explanation: Votre brouillon est automatiquement enregistré.
-          draft_confirmation: Brouillon enregistré
-          more_information: En savoir plus
         identite:
           identity_data: Données d’identité
           all_required: Tous les champs sont obligatoires.

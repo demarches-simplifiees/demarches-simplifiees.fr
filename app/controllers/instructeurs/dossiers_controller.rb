@@ -14,7 +14,7 @@ module Instructeurs
 
     after_action :mark_messagerie_as_read, only: [:messagerie, :create_commentaire]
     after_action :mark_avis_as_read, only: [:avis, :create_avis]
-    after_action :mark_annotations_privees_as_read, only: [:annotations_privees, :update_annotations]
+    after_action :mark_annotations_privees_as_read, only: [:annotations_privees, :submit_annotations]
 
     def attestation
       if dossier.attestation.pdf.attached?
@@ -65,6 +65,9 @@ module Instructeurs
 
     def annotations_privees
       @annotations_privees_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.annotations_privees_seen_at
+      dossier.find_editing_fork(current_user, :private)&.reset_editing_fork!
+      @dossier_for_editing = dossier.find_or_create_editing_fork(current_user, :private)
+      DossierPreloader.load_one(@dossier_for_editing)
     end
 
     def avis
@@ -216,17 +219,33 @@ module Instructeurs
     end
 
     def update_annotations
-      dossier_with_champs.assign_attributes(champs_private_params)
-      if dossier.champs_private_all.any?(&:changed?)
-        dossier.last_champ_private_updated_at = Time.zone.now
+      dossier.assign_attributes(champs_private_params)
+      if !dossier.save(context: :annotations)
+        flash.now.alert = dossier.errors.full_messages
       end
-      dossier.save
-      dossier.log_modifier_annotations!(current_instructeur)
 
       respond_to do |format|
-        format.html { redirect_to annotations_privees_instructeur_dossier_path(procedure, dossier) }
-        format.turbo_stream
+        format.turbo_stream do
+          @to_show, @to_hide, @to_update = champs_to_turbo_update
+        end
       end
+    end
+
+    def submit_annotations
+      editing_fork = dossier.find_editing_fork(current_user, :private)
+      DossierPreloader.new([dossier, editing_fork]).all(pj_template: false)
+
+      dossier.merge_fork(editing_fork)
+      dossier.touch(:last_champ_private_updated_at)
+      dossier.log_modifier_annotations!(current_instructeur)
+
+      redirect_to annotations_privees_instructeur_dossier_path(procedure, dossier)
+    end
+
+    def reset_annotations
+      dossier.find_editing_fork(current_user, :private)&.reset_editing_fork!
+
+      redirect_to annotations_privees_instructeur_dossier_path(procedure, dossier)
     end
 
     def print
@@ -270,6 +289,7 @@ module Instructeurs
         Dossier
           .where(id: current_instructeur.dossiers.visible_by_administration)
           .or(Dossier.where(id: current_user.dossiers.for_procedure_preview))
+          .or(Dossier.for_editing_fork)
       else
         current_instructeur.dossiers.visible_by_administration
       end
@@ -309,7 +329,7 @@ module Instructeurs
     end
 
     def mark_annotations_privees_as_read
-      current_instructeur.mark_tab_as_seen(dossier, :annotations_privees)
+      current_instructeur.mark_tab_as_seen(dossier.editing_fork? ? dossier.editing_fork_origin : dossier, :annotations_privees)
     end
 
     def aasm_error_message(exception, target_state:)
@@ -338,6 +358,31 @@ module Instructeurs
         flash.alert = "Votre action n'a pas été effectuée, ce dossier fait parti d'un traitement de masse."
         redirect_back(fallback_location: instructeur_dossier_path(procedure, dossier_in_batch))
       end
+    end
+
+    def champs_to_turbo_update
+      champ_ids = champs_private_params
+        .fetch(:champs_private_all_attributes)
+        .keys
+        .map(&:to_i)
+
+      to_update = dossier
+        .champs_private_all
+        .filter { _1.id.in?(champ_ids) && (_1.refresh_after_update? || _1.forked_with_changes?) }
+      to_show, to_hide = dossier
+        .champs_private_all
+        .filter(&:conditional?)
+        .partition(&:visible?)
+        .map { champs_to_one_selector(_1 - to_update) }
+
+      return to_show, to_hide, to_update
+    end
+
+    def champs_to_one_selector(champs)
+      champs
+        .map(&:input_group_id)
+        .map { |id| "##{id}" }
+        .join(',')
     end
   end
 end

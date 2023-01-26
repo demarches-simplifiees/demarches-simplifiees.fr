@@ -11,7 +11,5 @@
       = turbo_stream.update champ.labelledby_id do
         = render EditableChamp::ChampLabelContentComponent.new champ:
 
-= turbo_stream.remove_all(".editable-champ .spinner-removable");
-= turbo_stream.hide_all(".editable-champ .spinner");
 = turbo_stream.replace_all '.dossier-edit-sticky-footer' do
-  = render Dossiers::EditFooterComponent.new(dossier: @dossier, annotation: false)
+  = render Dossiers::EditFooterComponent.new(dossier: @dossier, annotation: true)

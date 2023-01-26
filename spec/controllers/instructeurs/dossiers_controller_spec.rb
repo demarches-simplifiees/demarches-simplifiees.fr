@@ -748,30 +748,30 @@ describe Instructeurs::DossiersController, type: :controller do
       ], instructeurs: instructeurs)
     end
     let(:dossier) { create(:dossier, :en_construction, :with_populated_annotations, procedure: procedure) }
+    let(:dossier_for_editing) { dossier.find_or_create_editing_fork(instructeur.user, :private) }
     let(:another_instructeur) { create(:instructeur) }
     let(:now) { Time.zone.parse('01/01/2100') }
 
     let(:champ_multiple_drop_down_list) do
-      dossier.champs_private.first
+      dossier_for_editing.champs_private.first
     end
 
     let(:champ_linked_drop_down_list) do
-      dossier.champs_private.second
+      dossier_for_editing.champs_private.second
     end
 
     let(:champ_datetime) do
-      dossier.champs_private.third
+      dossier_for_editing.champs_private.third
     end
 
     let(:champ_repetition) do
-      dossier.champs_private.fourth
+      dossier_for_editing.champs_private.fourth
     end
 
     before do
-      expect(controller.current_instructeur).to receive(:mark_tab_as_seen).with(dossier, :annotations_privees)
       another_instructeur.follow(dossier)
       Timecop.freeze(now)
-      patch :update_annotations, params: params
+      patch :update_annotations, params: params, format: :turbo_stream
 
       champ_multiple_drop_down_list.reload
       champ_linked_drop_down_list.reload
@@ -787,7 +787,7 @@ describe Instructeurs::DossiersController, type: :controller do
       let(:params) do
         {
           procedure_id: procedure.id,
-          dossier_id: dossier.id,
+          dossier_id: dossier_for_editing.id,
           dossier: {
             champs_private_attributes: {
               '0': {
@@ -818,22 +818,16 @@ describe Instructeurs::DossiersController, type: :controller do
         expect(champ_linked_drop_down_list.secondary_value).to eq('secondary')
         expect(champ_datetime.value).to eq('2019-12-21T13:17:00+01:00')
         expect(champ_repetition.champs.first.value).to eq('text')
-        expect(dossier.reload.last_champ_private_updated_at).to eq(now)
-        expect(response).to redirect_to(annotations_privees_instructeur_dossier_path(dossier.procedure, dossier))
+        expect(dossier.reload.last_champ_private_updated_at).to eq(nil)
+        expect(response).to have_http_status(200)
       }
-
-      it 'updates the annotations' do
-        Timecop.travel(now + 1.hour)
-        expect(instructeur.followed_dossiers.with_notifications).to eq([])
-        expect(another_instructeur.followed_dossiers.with_notifications).to eq([dossier.reload])
-      end
     end
 
     context "without new values for champs_private" do
       let(:params) do
         {
           procedure_id: procedure.id,
-          dossier_id: dossier.id,
+          dossier_id: dossier_for_editing.id,
           dossier: {
             champs_private_attributes: {},
             champs_public_attributes: {
@@ -848,8 +842,42 @@ describe Instructeurs::DossiersController, type: :controller do
 
       it {
         expect(dossier.reload.last_champ_private_updated_at).to eq(nil)
-        expect(response).to redirect_to(annotations_privees_instructeur_dossier_path(dossier.procedure, dossier))
+        expect(response).to have_http_status(200)
       }
+    end
+  end
+
+  describe '#submit_annotations' do
+    let(:procedure) { create(:procedure, :published, types_de_champ_private: [{}], instructeurs:) }
+    let(:dossier) { create(:dossier, :en_construction, :with_populated_annotations, procedure: procedure) }
+    let(:dossier_for_editing) { dossier.find_or_create_editing_fork(instructeur.user, :private) }
+    let(:another_instructeur) { create(:instructeur) }
+    let(:now) { Time.zone.parse('01/01/2100') }
+    let(:params) do
+      {
+        procedure_id: procedure.id,
+        dossier_id: dossier.id
+      }
+    end
+    let(:dossier_for_editing) { dossier.find_or_create_editing_fork(instructeur.user, :private) }
+
+    before do
+      dossier_for_editing
+      expect(controller.current_instructeur).to receive(:mark_tab_as_seen).with(dossier, :annotations_privees)
+      another_instructeur.follow(dossier)
+      Timecop.freeze(now)
+      post :submit_annotations, params:
+    end
+
+    after do
+      Timecop.return
+    end
+
+    it 'submit the annotations' do
+      Timecop.travel(now + 1.hour)
+      expect(dossier.reload.last_champ_private_updated_at).to eq(now)
+      expect(instructeur.followed_dossiers.with_notifications).to eq([])
+      expect(another_instructeur.followed_dossiers.with_notifications).to eq([dossier.reload])
     end
   end
 

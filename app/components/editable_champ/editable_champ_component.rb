@@ -30,12 +30,7 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
   def stimulus_controller
     if !@champ.block? && @champ.fillable?
       # This is an editable champ. Lets find what controllers it might need.
-      controllers = []
-
-      # This is a public champ – it can have an autosave controller.
-      if @champ.public?
-        controllers << 'autosave'
-      end
+      controllers = ['autosave']
 
       # This is a dropdown champ. Activate special behaviours it might have.
       if @champ.simple_drop_down_list? || @champ.linked_drop_down_list?

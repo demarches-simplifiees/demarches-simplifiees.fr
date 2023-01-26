@@ -431,6 +431,8 @@ Rails.application.routes.draw do
             patch 'unarchive'
             patch 'restore'
             patch 'annotations' => 'dossiers#update_annotations'
+            post 'annotations' => 'dossiers#submit_annotations'
+            delete 'annotations' => 'dossiers#reset_annotations'
             post 'commentaire' => 'dossiers#create_commentaire'
             post 'passer-en-instruction' => 'dossiers#passer_en_instruction'
             post 'repasser-en-construction' => 'dossiers#repasser_en_construction'
