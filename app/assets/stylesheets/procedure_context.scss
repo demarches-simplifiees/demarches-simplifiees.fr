@@ -17,7 +17,8 @@ $procedure-description-line-height: 22px;
   }
 
   .simple {
-    font-size: 24px;
+    margin-bottom: 0.2rem;
+    font-size: 1.5rem;
     color: $blue-france-500;
     font-weight: bold;
   }
@@ -140,6 +141,14 @@ $procedure-description-line-height: 22px;
         max-height: 130px;
       }
     }
+  }
+}
+
+.no-procedure-presentation {
+  margin-bottom:1.6rem;
+
+  p {
+    margin: 0;
   }
 }
 
