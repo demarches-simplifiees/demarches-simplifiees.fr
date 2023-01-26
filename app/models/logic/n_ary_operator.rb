@@ -5,6 +5,10 @@ class Logic::NAryOperator < Logic::Term
     @operands = operands
   end
 
+  def sources
+    @operands.flat_map(&:sources)
+  end
+
   def to_h
     {
       "term" => self.class.name,

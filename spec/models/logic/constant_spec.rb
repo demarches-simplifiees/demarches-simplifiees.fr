@@ -21,4 +21,8 @@ describe Logic::Constant do
     it { expect(constant(1)).to eq(constant(1)) }
     it { expect(constant(1)).not_to eq(constant('a')) }
   end
+
+  describe '#sources' do
+    it { expect(constant(1).sources).to eq([]) }
+  end
 end

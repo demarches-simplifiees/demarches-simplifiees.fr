@@ -23,6 +23,10 @@ describe Logic::NAryOperator do
     end
   end
 
+  describe '#sources' do
+    it { expect(and_from([false, true]).sources).to eq([]) }
+  end
+
   def and_from(boolean_to_constants)
     ds_and(boolean_to_constants.map { |b| constant(b) })
   end

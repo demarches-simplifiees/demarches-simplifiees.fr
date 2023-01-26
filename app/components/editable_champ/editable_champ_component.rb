@@ -23,7 +23,7 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
         "hidden": !@champ.visible?
       ),
       id: @champ.input_group_id,
-      data: { controller: stimulus_controller }
+      data: { controller: stimulus_controller, **data_dependent_conditions }
     }
   end
 
@@ -43,6 +43,14 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
       end
 
       controllers.join(' ')
+    end
+  end
+
+  def data_dependent_conditions
+    if @champ.dependent_conditions?
+      { "dependent-conditions": "true" }
+    else
+      {}
     end
   end
 end
