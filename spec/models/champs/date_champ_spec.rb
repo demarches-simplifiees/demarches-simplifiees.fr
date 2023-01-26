@@ -39,6 +39,14 @@ describe Champs::DateChamp do
     end
   end
 
+  describe 'validate :iso_8601' do
+    it 'works' do
+      date_champ.value = '2023-27-02'
+      date_champ.send(:iso_8601)
+      expect(date_champ.valid?).to eq(false)
+      expect(date_champ.to_s).not_to raise_error
+    end
+  end
   def champ_with_value(number)
     date_champ.tap { |c| c.value = number }
   end
