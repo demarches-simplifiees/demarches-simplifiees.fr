@@ -8,6 +8,7 @@ describe 'Prefilling a dossier (with a POST request):', js: true do
 
   let(:type_de_champ_text) { create(:type_de_champ_text, procedure: procedure) }
   let(:type_de_champ_phone) { create(:type_de_champ_phone, procedure: procedure) }
+  let(:type_de_champ_rna) { create(:type_de_champ_rna, procedure: procedure) }
   let(:type_de_champ_siret) { create(:type_de_champ_siret, procedure: procedure) }
   let(:type_de_champ_datetime) { create(:type_de_champ_datetime, procedure: procedure) }
   let(:type_de_champ_multiple_drop_down_list) { create(:type_de_champ_multiple_drop_down_list, procedure: procedure) }
@@ -17,6 +18,7 @@ describe 'Prefilling a dossier (with a POST request):', js: true do
 
   let(:text_value) { "My Neighbor Totoro is the best movie ever" }
   let(:phone_value) { "invalid phone value" }
+  let(:rna_value) { 'W595001988' }
   let(:siret_value) { '41816609600051' }
   let(:datetime_value) { "2023-02-01T10:32" }
   let(:multiple_drop_down_list_values) {
@@ -42,6 +44,9 @@ describe 'Prefilling a dossier (with a POST request):', js: true do
 
     stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siret_value[0..8]}/)
       .to_return(status: 200, body: File.read('spec/fixtures/files/api_entreprise/entreprises.json'))
+
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/associations\//)
+      .to_return(status: 200, body: File.read('spec/fixtures/files/api_entreprise/associations.json'))
 
     VCR.insert_cassette('api_geo_departements')
     VCR.insert_cassette('api_geo_communes')
@@ -141,6 +146,7 @@ describe 'Prefilling a dossier (with a POST request):', js: true do
       params: {
         "champ_#{type_de_champ_text.to_typed_id_for_query}" => text_value,
         "champ_#{type_de_champ_phone.to_typed_id_for_query}" => phone_value,
+        "champ_#{type_de_champ_rna.to_typed_id_for_query}" => rna_value,
         "champ_#{type_de_champ_siret.to_typed_id_for_query}" => siret_value,
         "champ_#{type_de_champ_repetition.to_typed_id_for_query}" => [
           {
