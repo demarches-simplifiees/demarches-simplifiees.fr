@@ -18,4 +18,4 @@
           %a{ :href => "#", data: { action: "batch-operation#onDeleteSelection" } }
             = t(".delete_selection")
 
-        = hidden_field_tag :"batch_operation[dossier_ids][]", "", form: dom_id(BatchOperation.new), id: dom_id(BatchOperation.new, "checkbox_multiple")
+        = hidden_field_tag :"batch_operation[dossier_ids][]", "", form: dom_id(BatchOperation.new), id: dom_id(BatchOperation.new, "input_multiple_ids")

@@ -20,24 +20,33 @@ export class BatchOperationController extends ApplicationController {
     this.inputTargets.forEach((e) => (e.checked = target.checked));
     this.toggleSubmitButtonWhenNeeded();
 
-    const pagination = document.querySelector('.pagination')
+    const pagination = document.querySelector('.pagination');
     if (pagination) {
       displayNotice(this.inputTargets);
     }
   }
 
-  onSelectMore(event) {
+  onSelectMore(event: {
+    preventDefault: () => void;
+    target: HTMLInputElement;
+  }) {
     event.preventDefault();
 
     const target = event.target as HTMLInputElement;
     const dossierIds = target.getAttribute('data-dossiers');
-    const hidden_checkbox_multiple_ids = document.querySelector('#checkbox_multiple_batch_operation');
-    hidden_checkbox_multiple_ids.value = dossierIds;
+
+    const hidden_input_multiple_ids = document.querySelector<HTMLInputElement>(
+      '#input_multiple_ids_batch_operation'
+    );
+    if (hidden_input_multiple_ids) {
+      hidden_input_multiple_ids.value = dossierIds || '';
+    }
+
     hide(document.querySelector('#not_selected'));
     show(document.querySelector('#selected'));
   }
 
-  onDeleteSelection(event) {
+  onDeleteSelection(event: { preventDefault: () => void }) {
     event.preventDefault();
     emptyCheckboxes();
     deleteSelection();
@@ -88,27 +97,43 @@ function switchButton(button: HTMLButtonElement, flag: boolean) {
   }
 }
 
-function displayNotice(inputs) {
-  if (document.querySelector('#checkbox_all_batch_operation').checked) {
-    show(document.querySelector('.fr-notice'));
-    hide(document.querySelector('#selected'));
-    show(document.querySelector('#not_selected'));
-  } else {
-    hide(document.querySelector('.fr-notice'));
-    deleteSelection();
-  };
+function displayNotice(inputs: HTMLInputElement[]) {
+  const checkbox_all = document.querySelector<HTMLInputElement>(
+    '#checkbox_all_batch_operation'
+  );
+  if (checkbox_all) {
+    if (checkbox_all.checked) {
+      show(document.querySelector('.fr-notice'));
+      hide(document.querySelector('#selected'));
+      show(document.querySelector('#not_selected'));
+    } else {
+      hide(document.querySelector('.fr-notice'));
+      deleteSelection();
+    }
+  }
 
-  document.querySelector('#dynamic_number').textContent = (inputs.length);
+  const dynamic_number = document.querySelector('#dynamic_number');
+
+  if (dynamic_number) {
+    dynamic_number.textContent = inputs.length.toString();
+  }
 }
 
 function deleteSelection() {
-  const hidden_checkbox_multiple_ids = document.querySelector('#checkbox_multiple_batch_operation');
-  hidden_checkbox_multiple_ids.value = "";
+  const hidden_input_multiple_ids = document.querySelector<HTMLInputElement>(
+    '#input_multiple_ids_batch_operation'
+  );
+
+  if (hidden_input_multiple_ids) {
+    hidden_input_multiple_ids.value = '';
+  }
 
   hide(document.querySelector('.fr-notice'));
 }
 
 function emptyCheckboxes() {
-  const inputs = document.querySelectorAll('div[data-controller="batch-operation"] input[type=checkbox]')
+  const inputs = document.querySelectorAll<HTMLInputElement>(
+    'div[data-controller="batch-operation"] input[type=checkbox]'
+  );
   inputs.forEach((e) => (e.checked = false));
 }
