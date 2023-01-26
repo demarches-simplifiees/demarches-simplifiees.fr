@@ -14,7 +14,7 @@ module Instructeurs
       end
     end
 
-    def revive
+    def remind
       avis = Avis.find(params[:id])
       if avis.remind_by!(current_instructeur)
         AvisMailer.avis_invitation(avis).deliver_later
