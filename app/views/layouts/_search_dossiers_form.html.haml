@@ -1,9 +1,10 @@
 #search-modal.fr-header__search.fr-modal{ "aria-label": t('views.users.dossiers.search.search_file') }
   .fr-container.fr-container-lg--fluid
     %button.fr-btn--close.fr-btn{ "aria-controls" => "search-modal", :title => t('close_modal', scope: [:layouts, :header]) }= t('close_modal', scope: [:layouts, :header])
-    #search-473.fr-search-bar.fr-search-bar--lg
+    #search-473.fr-search-bar
       = form_tag "#{search_endpoint}", method: :get, :role => "search", class: "flex width-100" do
         = label_tag "q", t('views.users.dossiers.search.search_file'), class: 'fr-label'
-        = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: t('views.users.dossiers.search.search_file'), class: "fr-input"
-        %button.fr-btn
-          = t('views.users.dossiers.search.simple')
+        = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: t('views.users.dossiers.search.placeholder'), class: "fr-input"
+        %button.fr-btn{ title: t('views.users.dossiers.search.search_file') }
+          = t('views.users.dossiers.search.search_file')
+

@@ -318,9 +318,8 @@ en:
         demande:
           edit_dossier: "Edit file"
         search:
-          search_file: Search a file
-          simple: Search
-        secondary_menu: Secondary menu
+          placeholder: Search a file
+          search_file: Search
         index:
           dossiers: "Files"
         dossiers_list:
