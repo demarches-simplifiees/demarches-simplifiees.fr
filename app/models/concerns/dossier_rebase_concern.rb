@@ -56,8 +56,7 @@ module DossierRebaseConcern
 
     # add champ
     changes_by_op[:add]
-      .map(&:stable_id)
-      .map { target_coordinates_by_stable_id[_1] }
+      .map { target_coordinates_by_stable_id[_1.stable_id] }
       .each { add_new_champs_for_revision(_1) }
 
     # remove champ
@@ -72,11 +71,9 @@ module DossierRebaseConcern
 
     # due to repetition tdc clone on update or erase
     # we must reassign tdc to the latest version
-    Champ
-      .includes(:type_de_champ)
-      .where(dossier: self)
-      .map { [_1, target_coordinates_by_stable_id[_1.stable_id].type_de_champ] }
-      .each { |champ, target_tdc| champ.update_columns(type_de_champ_id: target_tdc.id, rebased_at: Time.zone.now) }
+    champs
+      .map { [_1, target_coordinates_by_stable_id[_1.stable_id].type_de_champ_id] }
+      .each { |champ, type_de_champ_id| champ.update_columns(type_de_champ_id:) }
 
     # update dossier revision
     self.update_column(:revision_id, target_revision.id)
@@ -92,18 +89,27 @@ module DossierRebaseConcern
         value: nil,
         value_json: nil,
         external_id: nil,
-        data: nil)
+        data: nil,
+        rebased_at: Time.zone.now)
     when :drop_down_options
       # we are removing options, we need to remove the value if it contains one of the removed options
       removed_options = change.from - change.to
       if removed_options.present? && champs.any? { _1.in?(removed_options) }
-        champs.filter { _1.in?(removed_options) }.each { _1.remove_option(removed_options) }
+        champs.filter { _1.in?(removed_options) }.each do
+          _1.remove_option(removed_options)
+          _1.update_column(:rebased_at, Time.zone.now)
+        end
       end
     when :carte_layers
       # if we are removing cadastres layer, we need to remove cadastre geo areas
       if change.from.include?(:cadastres) && !change.to.include?(:cadastres)
-        champs.each { _1.cadastres.each(&:destroy) }
+        champs.filter { _1.cadastres.present? }.each do
+          _1.cadastres.each(&:destroy)
+          _1.update_column(:rebased_at, Time.zone.now)
+        end
       end
+    else
+      champs.update_all(rebased_at: Time.zone.now)
     end
   end
 
@@ -126,7 +132,7 @@ module DossierRebaseConcern
   end
 
   def create_champ(target_coordinate, parent, row_id: nil)
-    params = { revision: target_coordinate.revision, row_id: }.compact
+    params = { revision: target_coordinate.revision, rebased_at: Time.zone.now, row_id: }.compact
     champ = target_coordinate
       .type_de_champ
       .build_champ(params)
