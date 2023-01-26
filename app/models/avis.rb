@@ -8,6 +8,7 @@
 #  confidentiel         :boolean          default(FALSE), not null
 #  email                :string
 #  introduction         :text
+#  reminded_at          :datetime
 #  revoked_at           :datetime
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
