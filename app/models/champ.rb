@@ -225,6 +225,10 @@ class Champ < ApplicationRecord
     end
   end
 
+  def forked_with_changes?
+    dossier.champ_forked_with_changes?(self)
+  end
+
   private
 
   def html_id
