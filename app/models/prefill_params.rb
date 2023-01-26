@@ -5,7 +5,7 @@ class PrefillParams
   end
 
   def to_a
-    build_prefill_values.filter(&:prefillable?).map(&:to_h)
+    build_prefill_values.filter(&:prefillable?).map(&:to_h).flatten
   end
 
   private
@@ -55,10 +55,14 @@ class PrefillParams
     end
 
     def to_h
-      {
-        id: champ.id,
-        value: value
-      }
+      if champ.type_champ == TypeDeChamp.type_champs.fetch(:repetition)
+        repeatable_hashes
+      else
+        {
+          id: champ.id,
+          value: value
+        }
+      end
     end
 
     private
@@ -68,6 +72,17 @@ class PrefillParams
 
       champ.value = value
       champ.valid?(:prefill)
+    end
+
+    def repeatable_hashes
+      value.map.with_index do |repetition, index|
+        row = champ.rows[index] || champ.add_row(champ.dossier_revision)
+        JSON.parse(repetition).map do |key, value|
+          id = row.find { |champ| champ.libelle == key }.id
+          { id: id, value: value }
+        end
+      rescue JSON::ParserError
+      end.flatten
     end
   end
 end
