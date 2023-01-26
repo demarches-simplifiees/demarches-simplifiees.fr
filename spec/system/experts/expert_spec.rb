@@ -116,7 +116,6 @@ describe 'Inviting an expert:' do
         click_on '1 avis à donner'
         click_on avis.dossier.user.email
 
-        find(:css, '[aria-controls=print-pj-menu]').click
         click_on 'Télécharger le dossier et toutes ses pièces jointes'
         # For some reason, clicking the download link does not trigger the download in the headless browser ;
         # So we need to go to the download link directly
