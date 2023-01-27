@@ -6,7 +6,7 @@
 
   .secondary{ class: @champ.has_secondary_options_for_primary? ? '' : 'hidden' }
     = @form.label :secondary_value, for: "#{@champ.input_id}-secondary" do
-      = @champ.drop_down_secondary_libelle.presence || "Valeur secondaire dépendant de la première"
+      = @champ.drop_down_secondary_libelle.presence || (champ.libelle + ' : précisez')
       - if @champ.type_de_champ.mandatory?
         %span.mandatory *
     - if @champ.drop_down_secondary_description.present?

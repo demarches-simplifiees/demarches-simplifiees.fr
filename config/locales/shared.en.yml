@@ -6,7 +6,7 @@ en:
           brouillon: "Expires on %{date} (%{duree_conservation_totale} months after this file was created)"
           en_construction: "Expires on %{date} (%{duree_conservation_totale} months after this file was last modified)"
           en_instruction: "This file is being instructed, the administration will answer as soon as possible"
-          accepte: "Expires on %{date} (%{duree_conservation_totale} months after this file was accepted)"
+          accepte: "Expires on %{date} (%{duree_conservation_totale} months after this file was accepted)"date
           refuse: "Expires on %{date} (%{duree_conservation_totale} months after this file was rejected)"
           sans_suite: "Expires on %{date} (%{duree_conservation_totale} months after this file was closed)"
     champs:
@@ -14,7 +14,7 @@ en:
         show:
           not_filled: not filled
           fetching_data: "Fetching data for recipient No. %{numero_allocataire} with postal code %{code_postal}."
-          data_fetched: "Data concerning %{sources} linked to the account Nº %{numero_allocataire} with the postal code %{code_postal} has been received from the CAF."
+          data_fetched: "Data concerningdate %{sources} linked to the account Nº %{numero_allocataire} with the postal code %{code_postal} has been received from the CAF."
           data_fetched_title: "Data received from la Caisse nationale d’allocations familiales"
       dgfip:
         show:

@@ -1,4 +1,4 @@
 ---
 fr:
-  placeholder: "50000123456789"
-  title: "Le numéro de SIRET doit comporter exactement 14 chiffres"
+  placeholder: "003970"
+  title: "Le numéro Tahiti doit commencer par une lettre ou un chiffre et être suivi de 5 chiffres"
