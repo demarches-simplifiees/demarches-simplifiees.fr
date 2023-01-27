@@ -9,8 +9,6 @@ fr:
           accepte: "Expirera le %{date}  (%{duree_conservation_totale} mois après l'acceptation du dossier)"
           refuse: "Expirera le %{date}  (%{duree_conservation_totale} mois après le refus du dossier)"
           sans_suite: "Expirera le %{date} (%{duree_conservation_totale} mois après le classement sans suite du dossier)"
-
-
     champs:
       cnaf:
         show:

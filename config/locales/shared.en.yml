@@ -6,7 +6,7 @@ en:
           brouillon: "Expires on %{date} (%{duree_conservation_totale} months after this file was created)"
           en_construction: "Expires on %{date} (%{duree_conservation_totale} months after this file was last modified)"
           en_instruction: "This file is being instructed, the administration will answer as soon as possible"
-          accepte: "Expires on %{date} (%{duree_conservation_totale} months after this file was accepted)"date
+          accepte: "Expires on %{date} (%{duree_conservation_totale} months after this file was accepted)"
           refuse: "Expires on %{date} (%{duree_conservation_totale} months after this file was rejected)"
           sans_suite: "Expires on %{date} (%{duree_conservation_totale} months after this file was closed)"
     champs:

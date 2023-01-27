@@ -1,0 +1,24 @@
+.numero-dn
+  %span
+    = @form.label :numero_dn, "DN", for: "#{@champ.input_id}_numero_dn"
+  = @form.text_field :numero_dn,
+    value: @champ.numero_dn,
+    required: @champ.mandatory?,
+    placeholder: '0123456',
+    style: 'width: 7em',
+    pattern: "[0-9]{3,7}",
+    title: t(".title"),
+    aria: { describedby: @champ.describedby_id },
+    data: { dn: true, remote: true, debounce: true, url: champs_dn_path(@champ.id), spinner: true }
+
+  %span
+    = @form.label :date_de_naissance, t('.date'), for: "#{@champ.input_id}_date_de_naissance"
+  = @form.date_field :date_de_naissance,
+    value: @champ.date_de_naissance,
+    required: @champ.mandatory?,
+    title: t('.date_title'),
+    max: Date.today,
+    aria: { describedby: @champ.describedby_id },
+    data: { ddn: true, remote: true, debounce: true, url: champs_dn_path(@champ.id), spinner: true }
+  .numero-dn-info
+  .spinner.right.hidden

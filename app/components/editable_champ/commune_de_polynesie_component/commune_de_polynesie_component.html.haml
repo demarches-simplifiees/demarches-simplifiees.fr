@@ -1,4 +1,4 @@
-= form.select :value,
+= @form.select :value,
   Champs::CommuneDePolynesieChamp.options,
   { disabled: Champs::CommuneDePolynesieChamp.disabled_options, include_blank: true },
-  { required: champ.mandatory?, id: champ.input_id, aria: { describedby: champ.describedby_id } }
+  { required: @champ.mandatory?, id: @champ.input_id, aria: { describedby: @champ.describedby_id } }
