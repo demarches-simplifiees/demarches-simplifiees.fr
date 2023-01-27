@@ -11,4 +11,4 @@
 .spinner.right.hidden
 .siret-info{ id: dom_id(@champ, :siret_info) }
   - if @champ.etablissement.present?
-    = render partial: 'shared/dossiers/editable_champs/etablissement_titre', locals: { etablissement: @champ.etablissement }
+    = render EditableChamp::EtablissementTitreComponent.new(etablissement: @champ.etablissement)
