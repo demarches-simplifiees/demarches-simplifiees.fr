@@ -1,32 +1,6 @@
 fr:
   shared:
     dossiers:
-      editable_champs:
-        cnaf:
-          numero_allocataire_label: Le numéro d’allocataire CAF
-          numero_allocataire_notice: Il est généralement composé de 7 chiffres.
-          code_postal_label: Le code postal
-          code_postal_notice: Il est généralement composé de 5 chiffres.
-        dgfip:
-          numero_fiscal_label: Le numéro fiscal
-          numero_fiscal_notice: Il est généralement composé de 13 ou 14 caractères.
-          reference_avis_label: La référence d'avis d'imposition
-          reference_avis_notice: Elle est généralement composée de 13 ou 14 caractères.
-        email:
-          placeholder: "camilya.martin@exemple.fr"
-        iban:
-          placeholder: "FR76 3000 6000 0012 3456 7890 189"
-        mesri:
-          ine_label: INE
-          ine_notice: Identifiant National Étudiant. Il est généralement composé de caractères alphanumériques.
-        phone:
-          placeholder: "87123456"
-        pole_emploi:
-          identifiant_label: Identifiant
-          identifiant_notice: Il est généralement composé de caractères alphanumériques.
-        siret:
-          placeholder: "003970"
-          title: "Le numéro TAHITI doit comporter exactement 6 caractères"
       header:
         expires_at:
           brouillon: "Expirera le %{date} (%{duree_conservation_totale} mois après la création du dossier)"

@@ -1,0 +1,6 @@
+---
+fr:
+  numero_allocataire_label: Le numéro d’allocataire CAF
+  numero_allocataire_notice: Il est généralement composé de 7 chiffres.
+  code_postal_label: Le code postal
+  code_postal_notice: Il est généralement composé de 5 chiffres.
