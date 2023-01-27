@@ -27,8 +27,8 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
 
     context 'finished and success' do
       before {
-         batch_operation.track_processed_dossier(true, dossier)
-         batch_operation.track_processed_dossier(true, dossier_2)
+         BatchOperationProcessOneJob.perform_now(batch_operation, dossier)
+         BatchOperationProcessOneJob.perform_now(batch_operation, dossier_2)
          batch_operation.reload
        }
 
@@ -42,6 +42,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
       before {
         batch_operation.track_processed_dossier(false, dossier)
         batch_operation.track_processed_dossier(true, dossier_2)
+        batch_operation.touch(:finished_at)
         batch_operation.reload
       }
 
@@ -81,8 +82,8 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
 
     context 'finished and success' do
       before {
-         batch_operation.track_processed_dossier(true, dossier)
-         batch_operation.track_processed_dossier(true, dossier_2)
+         BatchOperationProcessOneJob.perform_now(batch_operation, dossier)
+         BatchOperationProcessOneJob.perform_now(batch_operation, dossier_2)
          batch_operation.reload
        }
 
@@ -96,6 +97,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
       before {
         batch_operation.track_processed_dossier(false, dossier)
         batch_operation.track_processed_dossier(true, dossier_2)
+        batch_operation.touch(:finished_at)
         batch_operation.reload
       }
 
@@ -135,8 +137,8 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
 
     context 'finished and success' do
       before {
-         batch_operation.track_processed_dossier(true, dossier)
-         batch_operation.track_processed_dossier(true, dossier_2)
+         BatchOperationProcessOneJob.perform_now(batch_operation, dossier)
+         BatchOperationProcessOneJob.perform_now(batch_operation, dossier_2)
          batch_operation.reload
        }
 
@@ -150,6 +152,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
       before {
         batch_operation.track_processed_dossier(false, dossier)
         batch_operation.track_processed_dossier(true, dossier_2)
+        batch_operation.touch(:finished_at)
         batch_operation.reload
       }
 
@@ -189,8 +192,8 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
 
     context 'finished and success' do
       before {
-         batch_operation.track_processed_dossier(true, dossier)
-         batch_operation.track_processed_dossier(true, dossier_2)
+         BatchOperationProcessOneJob.perform_now(batch_operation, dossier)
+         BatchOperationProcessOneJob.perform_now(batch_operation, dossier_2)
          batch_operation.reload
        }
 
@@ -204,6 +207,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
       before {
         batch_operation.track_processed_dossier(false, dossier)
         batch_operation.track_processed_dossier(true, dossier_2)
+        batch_operation.touch(:finished_at)
         batch_operation.reload
       }
 
@@ -243,8 +247,8 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
 
     context 'finished and success' do
       before {
-         batch_operation.track_processed_dossier(true, dossier)
-         batch_operation.track_processed_dossier(true, dossier_2)
+         BatchOperationProcessOneJob.perform_now(batch_operation, dossier)
+         BatchOperationProcessOneJob.perform_now(batch_operation, dossier_2)
          batch_operation.reload
        }
 
@@ -258,6 +262,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
       before {
         batch_operation.track_processed_dossier(false, dossier)
         batch_operation.track_processed_dossier(true, dossier_2)
+        batch_operation.touch(:finished_at)
         batch_operation.reload
       }
 
@@ -297,8 +302,8 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
 
     context 'finished and success' do
       before {
-         batch_operation.track_processed_dossier(true, dossier)
-         batch_operation.track_processed_dossier(true, dossier_2)
+         BatchOperationProcessOneJob.perform_now(batch_operation, dossier)
+         BatchOperationProcessOneJob.perform_now(batch_operation, dossier_2)
          batch_operation.reload
        }
 
@@ -312,6 +317,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
       before {
         batch_operation.track_processed_dossier(false, dossier)
         batch_operation.track_processed_dossier(true, dossier_2)
+        batch_operation.touch(:finished_at)
         batch_operation.reload
       }
 
