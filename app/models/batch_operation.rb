@@ -95,7 +95,6 @@ class BatchOperation < ApplicationRecord
   def track_processed_dossier(success, dossier)
     dossiers.delete(dossier)
     touch(:run_at) if called_for_first_time?
-    touch(:finished_at) if called_for_last_time?(dossier)
 
     if success
       dossier_operation(dossier).done!
@@ -122,10 +121,6 @@ class BatchOperation < ApplicationRecord
 
   def called_for_first_time?
     run_at.nil?
-  end
-
-  def called_for_last_time?(dossier_to_ignore)
-    dossiers.count.zero?
   end
 
   def total_count
