@@ -1,5 +1,5 @@
 describe Champs::DateChamp do
-  let(:date_champ) { build(:champ_date) }
+  let(:date_champ) { create(:champ_date) }
 
   describe '#convert_to_iso8601' do
     it 'preserves nil' do
@@ -36,6 +36,12 @@ describe Champs::DateChamp do
       champ = champ_with_value("2023-12-21")
       champ.save
       expect(champ.reload.value).to eq("2023-12-21")
+    end
+
+    it 'converts to nil if false iso' do
+      champ = champ_with_value("2023-27-02")
+      champ.save
+      expect(champ.reload.value).to eq(nil)
     end
   end
 
