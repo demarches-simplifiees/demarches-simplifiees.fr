@@ -23,6 +23,10 @@ fr:
           title: Recevoir un récapitulatif hebdomadaire
           notice_1: Cet email récapitule l’activité de la semaine sur l’ensemble de vos démarches.
           notice_2: Il est envoyé chaque semaine le lundi matin.
+        avis_notifications:
+          title: Recevoir une notification pour chaque avis rendu par un expert
+          notice_1: Cet email vous signale un nouvel avis posté par un expert que vous avez sollicité sur un dossier.
+          notice_2: Il est envoyé à chaque fois qu'un expert rend un avis.
         buttons:
           back_to_procedure: Revenir à la procédure
           save: Enregistrer
