@@ -54,29 +54,32 @@ module DossierRebaseConcern
       .group_by(&:op)
       .tap { _1.default = [] }
 
+    champs_by_stable_id = champs
+      .joins(:type_de_champ)
+      .group_by(&:stable_id)
+      .transform_values { Champ.where(id: _1) }
+
     # add champ
     changes_by_op[:add]
-      .map { target_coordinates_by_stable_id[_1.stable_id] }
-      .each { add_new_champs_for_revision(_1) }
+      .each { add_new_champs_for_revision(target_coordinates_by_stable_id[_1.stable_id]) }
 
     # remove champ
     changes_by_op[:remove]
-      .each { delete_champs_for_revision(_1.stable_id) }
+      .each { champs_by_stable_id[_1.stable_id].destroy_all }
 
     if brouillon?
       changes_by_op[:update]
-        .map { |change| [change, champs.joins(:type_de_champ).where(type_de_champ: { stable_id: change.stable_id })] }
-        .each { |change, champs| apply(change, champs) }
+        .each { apply(_1, champs_by_stable_id[_1.stable_id]) }
     end
 
     # due to repetition tdc clone on update or erase
     # we must reassign tdc to the latest version
-    champs
-      .map { [_1, target_coordinates_by_stable_id[_1.stable_id].type_de_champ_id] }
-      .each { |champ, type_de_champ_id| champ.update_columns(type_de_champ_id:) }
+    champs_by_stable_id
+      .filter_map { |stable_id, champs| [target_coordinates_by_stable_id[stable_id].type_de_champ_id, champs] if champs.present? }
+      .each { |type_de_champ_id, champs| champs.update_all(type_de_champ_id:) }
 
     # update dossier revision
-    self.update_column(:revision_id, target_revision.id)
+    update_column(:revision_id, target_revision.id)
   end
 
   def apply(change, champs)
@@ -137,13 +140,6 @@ module DossierRebaseConcern
       .type_de_champ
       .build_champ(params)
     parent.champs << champ
-  end
-
-  def delete_champs_for_revision(stable_id)
-    champs
-      .joins(:type_de_champ)
-      .where(types_de_champ: { stable_id: })
-      .destroy_all
   end
 
   def purge_piece_justificative_file(champ)
