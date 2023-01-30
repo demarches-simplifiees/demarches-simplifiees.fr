@@ -103,11 +103,11 @@ function displayNotice(inputs: HTMLInputElement[]) {
   );
   if (checkbox_all) {
     if (checkbox_all.checked) {
-      show(document.querySelector('.fr-notice'));
+      show(document.querySelector('#js_batch_select_more'));
       hide(document.querySelector('#selected'));
       show(document.querySelector('#not_selected'));
     } else {
-      hide(document.querySelector('.fr-notice'));
+      hide(document.querySelector('#js_batch_select_more'));
       deleteSelection();
     }
   }
@@ -128,7 +128,7 @@ function deleteSelection() {
     hidden_input_multiple_ids.value = '';
   }
 
-  hide(document.querySelector('.fr-notice'));
+  hide(document.querySelector('#js_batch_select_more'));
 }
 
 function emptyCheckboxes() {
