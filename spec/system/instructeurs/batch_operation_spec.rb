@@ -63,7 +63,7 @@ describe 'BatchOperation a dossier:', js: true do
       find("##{dom_id(BatchOperation.new, :checkbox_all)}").check
 
       # multiple select notice don't appear if all the dossiers are on the same page
-      expect(page).to have_selector('.fr-notice', visible: false)
+      expect(page).to have_selector('#js_batch_select_more', visible: false)
 
       [dossier_2, dossier_3].map do |dossier|
         dossier_checkbox_id = dom_id(BatchOperation.new, "checkbox_#{dossier.id}")
@@ -91,7 +91,7 @@ describe 'BatchOperation a dossier:', js: true do
 
       # click on check_all make the notice appear
       find("##{dom_id(BatchOperation.new, :checkbox_all)}").check
-      expect(page).to have_selector('.fr-notice')
+      expect(page).to have_selector('#js_batch_select_more')
       expect(page).to have_content('Les 2 dossiers de cette page sont sélectionnés. Sélectionner les 3 dossiers.')
 
       # click on selection link fill checkbox value with dossier_ids
@@ -101,7 +101,7 @@ describe 'BatchOperation a dossier:', js: true do
 
       # click on delete link empty checkbox value and hide notice
       click_on("Effacer la sélection")
-      expect(page).to have_selector('.fr-notice', visible: false)
+      expect(page).to have_selector('#js_batch_select_more', visible: false)
       expect(page).to have_button("Suivre les dossiers", disabled: true)
       expect(find_field("batch_operation[dossier_ids][]", type: :hidden).value).to eq ""
 
@@ -129,7 +129,7 @@ describe 'BatchOperation a dossier:', js: true do
 
       # click on check_all make the notice appear
       find("##{dom_id(BatchOperation.new, :checkbox_all)}").check
-      expect(page).to have_selector('.fr-notice')
+      expect(page).to have_selector('#js_batch_select_more')
       expect(page).to have_content('Les 2 dossiers de cette page sont sélectionnés. Sélectionner les 3 premiers dossiers sur les 4')
 
       # click on selection link fill checkbox value with dossier_ids
