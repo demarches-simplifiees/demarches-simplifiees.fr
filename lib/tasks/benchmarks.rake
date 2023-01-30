@@ -32,25 +32,10 @@ namespace :benchmarks do
 
   desc 'Attestation Template parser'
   task attestation_template_parser: :environment do
-    progress = ProgressReport.new(AttestationTemplate.count)
-    AttestationTemplate.find_each do |template|
-      parsed = TagsSubstitutionConcern::TagsParser.parse(template.body)
-      serialized = parsed.map do |token|
-        case token
-        in { tag: tag }
-          "--#{tag}--"
-        in { text: text }
-          text
-        end
-      end.join('')
-      if serialized != template.body
-        throw "Template '#{serialized}' is not eq '#{template.body}' with attestation template #{template.id}"
-      end
-      progress.inc
-    rescue => e
-      pp "Error with attestation template #{template.id}"
-      throw e
+    procedure = Procedure.find(68139)
+    Benchmark.bm do |x|
+      x.report("Empty") { TagsSubstitutionConcern::TagsParser.parse('') }
+      x.report("Démarche 68139") { TagsSubstitutionConcern::TagsParser.parse(procedure.attestation_template.body) }
     end
-    progress.finish
   end
 end
