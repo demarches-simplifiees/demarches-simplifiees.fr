@@ -34,7 +34,7 @@
 
               - if link.present?
                 .support.card.featured.mb-4.ml-4.hidden{ id: "card-#{question_type}", "aria-hidden": true , data: { "support-target": "content" } }
-                  .card-title
+                  %p.card-title
                     = t('.our_answer')
                   .card-content
                     -# i18n-tasks-use t("support.index.#{question_type}.answer_html")
