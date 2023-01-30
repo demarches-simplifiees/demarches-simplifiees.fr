@@ -31,7 +31,7 @@ describe 'shared/dossiers/edit.html.haml', type: :view do
 
       it "renders basic placeholders" do
         expect(subject).to have_css('input[type="email"][placeholder$="exemple.fr"]')
-        expect(subject).to have_css('input[type="tel"][placeholder^="8712"]')
+        expect(subject).to have_css('input[type="tel"][placeholder^="87088089"]')
       end
     end
   end

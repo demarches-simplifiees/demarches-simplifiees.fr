@@ -1,4 +1,0 @@
-= react_component("MapEditor", featureCollection: champ.to_feature_collection, url: champs_carte_features_path(champ), options: champ.render_options)
-
-.geo-areas{ id: dom_id(champ, :geo_areas) }
-  = render partial: 'shared/champs/carte/geo_areas', locals: { champ: champ, editing: true }

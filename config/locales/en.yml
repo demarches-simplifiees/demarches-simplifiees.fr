@@ -294,14 +294,14 @@ en:
         password: 'password'
         requested_merge_into: 'new email address'
       user:
-        siret: 'SIRET number'
+        siret: 'TAHITI number'
         << : *default_attributes
       instructeur:
         << : *default_attributes
       super_admin:
         << : *default_attributes
-      instructeur:
-        password: 'password'
+      procedure:
+        zone: Procedure is handled by
     errors:
       messages:
         not_a_phone: 'Invalid phone number'
