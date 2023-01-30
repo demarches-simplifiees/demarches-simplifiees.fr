@@ -21,13 +21,13 @@ namespace :after_party do
       scope_value_old_format.count
     )
 
-    update_all(scope_85, progress, value: "Vendée")
+    update_all_departements(scope_85, progress, value: "Vendée")
 
-    update_all(scope_external_id_nil, progress, external_id: nil)
+    update_all_departements(scope_external_id_nil, progress, external_id: nil)
 
-    update_all(scope_external_id_nil_value_empty, progress, value: nil)
+    update_all_departements(scope_external_id_nil_value_empty, progress, value: nil)
 
-    update_all(scope_external_id_empty_value_empty, progress, external_id: nil, value: nil)
+    update_all_departements(scope_external_id_empty_value_empty, progress, external_id: nil, value: nil)
 
     scope_value_blank.find_each do |champ|
       champ.update_columns(value: APIGeoService.departement_name(champ.external_id))
@@ -64,7 +64,7 @@ namespace :after_party do
 
   private
 
-  def update_all(scope, progress, attributes)
+  def update_all_departements(scope, progress, attributes)
     scope.in_batches(of: 10_000) do |departements|
       progress.inc(departements.count)
       departements.update_all(attributes)
