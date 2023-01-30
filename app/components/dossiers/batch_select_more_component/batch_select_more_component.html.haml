@@ -1,0 +1,21 @@
+%tr#js_batch_select_more.fr-background-alt--blue-france.hidden
+  %td.fr-py-2w.text-center{ colspan: 100 }
+    #not_selected
+      %p
+        = t('.selected_html')
+        %button.fr-btn.fr-btn--sm.fr-btn--tertiary-no-outline{ data: { action: "batch-operation#onSelectMore", dossiers: @filtered_sorted_ids.first(Instructeurs::ProceduresController::BATCH_SELECTION_LIMIT).join(',') } }
+          - if @dossiers_count <= Instructeurs::ProceduresController::BATCH_SELECTION_LIMIT
+            = t(".select_all", dossiers_count: @dossiers_count)
+          - else
+            = t(".select_all_limit", dossiers_count: @dossiers_count, limit: Instructeurs::ProceduresController::BATCH_SELECTION_LIMIT)
+
+    #selected.hidden
+      %p
+        - if @dossiers_count <= Instructeurs::ProceduresController::BATCH_SELECTION_LIMIT
+          = t(".selected_all", dossiers_count: @dossiers_count)
+        - else
+          = t(".selected_all_limit", limit: Instructeurs::ProceduresController::BATCH_SELECTION_LIMIT)
+        %button.fr-btn.fr-btn--sm.fr-btn--tertiary-no-outline{ data: { action: "batch-operation#onDeleteSelection" } }
+          = t(".delete_selection")
+
+      = hidden_field_tag :"batch_operation[dossier_ids][]", "", form: dom_id(BatchOperation.new), id: dom_id(BatchOperation.new, "input_multiple_ids")

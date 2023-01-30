@@ -103,8 +103,6 @@
 
           = render batch_operation_component
 
-        = render Dossiers::BatchNoticeSelectAllComponent.new(dossiers_count: @dossiers_count, filtered_sorted_ids: @filtered_sorted_ids)
-
         .fr-table.fr-table--bordered
           %table.table.dossiers-table.hoverable
             %thead
@@ -127,6 +125,8 @@
               %tr
 
             %tbody
+              = render Dossiers::BatchSelectMoreComponent.new(dossiers_count: @dossiers_count, filtered_sorted_ids: @filtered_sorted_ids)
+
               - @projected_dossiers.each do |p|
                 - path = instructeur_dossier_path(@procedure, p.dossier_id)
                 %tr{ class: [p.hidden_by_user_at.present? && "file-hidden-by-user"] }

@@ -28,7 +28,7 @@
 
   &.hoverable {
     tbody tr:hover {
-      background: $light-grey;
+      background-color: $light-grey;
     }
   }
 
@@ -60,7 +60,7 @@
   .table {
     &.hoverable {
       tbody tr:hover {
-        background: $white;
+        background-color: $white;
       }
     }
   }
