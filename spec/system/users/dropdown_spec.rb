@@ -26,6 +26,21 @@ describe 'dropdown list with other option activated', js: true do
       find('.radios').find('label:last-child').find('input').select_option
       expect(page).to have_selector('.drop_down_other', visible: true)
     end
+
+    scenario "Getting back from other save the new option", js: true do
+      fill_individual
+
+      choose "Autre"
+      fill_in("Veuillez saisir votre autre choix", with: "My choice")
+
+      wait_until { user_dossier.champs_public.first.value == "My choice" }
+      expect(user_dossier.champs_public.first.value).to eq("My choice")
+
+      choose "Secondary 1.1"
+
+      wait_until { user_dossier.champs_public.first.value == "Secondary 1.1" }
+      expect(user_dossier.champs_public.first.value).to eq("Secondary 1.1")
+    end
   end
 
   context 'with select' do
