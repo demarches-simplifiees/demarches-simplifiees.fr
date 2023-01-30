@@ -22,13 +22,18 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
 
   def logic_conditionnel_button
     if @condition.nil?
-      submit_tag(t('.enable_conditionnel'), formaction: add_row_admin_procedure_condition_path(@procedure_id, @tdc.stable_id))
+      submit_tag(
+        t('.enable_conditionnel'),
+        formaction: add_row_admin_procedure_condition_path(@procedure_id, @tdc.stable_id),
+        class: 'button small'
+      )
     else
       submit_tag(
         t('.disable_conditionnel'),
         formmethod: 'delete',
         formnovalidate: true,
-        data: { confirm: t('.disable_conditionnel_alert') }
+        data: { confirm: t('.disable_conditionnel_alert') },
+        class: 'button small'
       )
     end
   end
@@ -188,7 +193,7 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
       tag.span('', class: 'icon add') + tag.span(t('.add_condition')),
       formaction: add_row_admin_procedure_condition_path(@procedure_id, @tdc.stable_id),
       formnovalidate: true,
-      class: 'add-row'
+      class: 'add-row button small'
     )
   end
 
