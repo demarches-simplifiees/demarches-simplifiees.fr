@@ -1,0 +1,7 @@
+#errors-summary
+  - if @revision.invalid?
+    .card.warning
+      .card-title La logique conditionnelle est devenue invalide 
+
+      %p.mb-2= t('.fix', count: @revision.errors.count)
+      = error_message

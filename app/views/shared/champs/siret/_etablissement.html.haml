@@ -11,4 +11,4 @@
 
 - else
   - if siret.present? && siret == etablissement&.siret
-    = render partial: 'shared/dossiers/editable_champs/etablissement_titre', locals: { etablissement: etablissement }
+    = render EditableChamp::EtablissementTitreComponent.new(etablissement: etablissement)

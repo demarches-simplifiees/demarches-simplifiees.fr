@@ -83,16 +83,4 @@ module ChampHelper
       end
     end
   end
-
-  def form_id(form)
-    form.object_name.gsub(/[\[\]]+/, '_').chop
-  end
-
-  def datetime_start_year(date)
-    if date == nil || date.year == 0 || date.year >= Date.today.year - 1
-      Date.today.year - 1
-    else
-      date.year
-    end
-  end
 end
