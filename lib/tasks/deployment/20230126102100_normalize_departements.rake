@@ -4,18 +4,14 @@ namespace :after_party do
     puts "Running deploy task 'normalize_departements'"
 
     scope_85 = Champs::DepartementChamp.where(external_id: [nil, ''], value: "85")
-    scope_external_id_nil = Champs::DepartementChamp.where(external_id: '', value: nil)
-    scope_external_id_nil_value_empty = Champs::DepartementChamp.where(external_id: nil, value: '')
-    scope_external_id_empty_value_empty = Champs::DepartementChamp.where(external_id: '', value: '')
+    scope_external_id_blank_value_blank = Champs::DepartementChamp.where(external_id: [nil, ''], value: [nil, ''])
     scope_value_blank = Champs::DepartementChamp.where(value: [nil, '']).where.not(external_id: [nil, ''])
     scope_external_id_blank = Champs::DepartementChamp.where(external_id: [nil, '']).where.not(value: [nil, ''])
     scope_value_old_format = Champs::DepartementChamp.where.not(external_id: [nil, '']).where("value ~ ?", '^(\w{2,3}) - (.+)')
 
     progress = ProgressReport.new(
       scope_85.count +
-      scope_external_id_nil.count +
-      scope_external_id_nil_value_empty.count +
-      scope_external_id_empty_value_empty.count +
+      scope_external_id_blank_value_blank.count +
       scope_value_blank.count +
       scope_external_id_blank.count +
       scope_value_old_format.count
@@ -23,11 +19,7 @@ namespace :after_party do
 
     update_all_departements(scope_85, progress, value: "Vendée")
 
-    update_all_departements(scope_external_id_nil, progress, external_id: nil)
-
-    update_all_departements(scope_external_id_nil_value_empty, progress, value: nil)
-
-    update_all_departements(scope_external_id_empty_value_empty, progress, external_id: nil, value: nil)
+    update_all_departements(scope_external_id_blank_value_blank, progress, external_id: nil, value: nil)
 
     scope_value_blank.find_each do |champ|
       champ.update_columns(value: APIGeoService.departement_name(champ.external_id))
