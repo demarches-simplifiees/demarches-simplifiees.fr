@@ -26,6 +26,11 @@ describe Users::TransfersController, type: :controller do
       it { expect(DossierTransfer.last.dossiers).to eq([dossier]) }
     end
 
+    context 'with upper case email' do
+      let(:email) { "Test@rspec.net" }
+      it { expect(DossierTransfer.last.email).to eq(email.strip.downcase) }
+    end
+
     shared_examples 'email error' do
       it { expect { subject }.not_to change { DossierTransfer.count } }
       it { expect(flash.alert).to match([/invalide/]) }
