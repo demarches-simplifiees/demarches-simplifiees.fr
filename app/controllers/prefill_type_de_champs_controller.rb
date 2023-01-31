@@ -12,6 +12,6 @@ class PrefillTypeDeChampsController < ApplicationController
   end
 
   def set_prefill_type_de_champ
-    @type_de_champ = TypesDeChamp::PrefillTypeDeChamp.build(@procedure.active_revision.types_de_champ_public.fillable.find(params[:id]))
+    @type_de_champ = TypesDeChamp::PrefillTypeDeChamp.build(@procedure.active_revision.types_de_champ.fillable.find(params[:id]))
   end
 end
