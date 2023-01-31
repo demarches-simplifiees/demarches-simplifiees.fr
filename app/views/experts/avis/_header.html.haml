@@ -9,11 +9,11 @@
         %li= link_to("Dossier nº #{dossier.id}", expert_avis_path(avis.procedure, avis))
 
       .header-actions
-        %span.dropdown.print-menu-opener{ data: { controller: 'menu-button' } }
-          %button.button.dropdown-button.icon-only{ data: { menu_button_target: 'button' } }
-            %span.icon.attached
-          %ul.print-menu.dropdown-content#print-pj-menu{ data: { menu_button_target: 'menu' } }
-            %li= link_to "Télécharger le dossier et toutes ses pièces jointes", telecharger_pjs_expert_avis_path(avis.procedure, avis), target: "_blank", rel: "noopener", class: "menu-item menu-link"
+        .fr-download
+          = link_to telecharger_pjs_expert_avis_path(avis.procedure, avis), download: :download, class: "menu-item menu-link fr-download__link" do
+            Télécharger le dossier et toutes ses pièces jointes
+            %span.fr-download__detail
+              ZIP
 
     %nav.tabs
       %ul

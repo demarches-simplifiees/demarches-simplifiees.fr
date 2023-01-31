@@ -1,15 +1,14 @@
-%li.help-dropdown-service
-  %span.icon.person
-  .dropdown-description
-    %span.help-dropdown-title= title
-    .help-dropdown-service-action
-      %p Contactez directement l’administration :
-      %p.help-dropdown-service-item
-        %span.icon.small.mail
-        = link_to service.email, "mailto:#{service.email}"
-      %p.help-dropdown-service-item
-        %span.icon.small.phone
-        = link_to service.telephone, service.telephone_url
-      %p.help-dropdown-service-item
-        %span.icon.small.clock
-        = service.horaires
+%span.icon.person
+.dropdown-description
+  %span.help-dropdown-title= title
+  .help-dropdown-service-action
+    %p Contactez directement l’administration :
+    %p.help-dropdown-service-item
+      %span.icon.small.mail
+      = link_to service.email, "mailto:#{service.email}", role: 'menuitem'
+    %p.help-dropdown-service-item
+      %span.icon.small.phone
+      = link_to service.telephone, service.telephone_url, role: 'menuitem'
+    %p.help-dropdown-service-item
+      %span.icon.small.clock
+      = service.horaires

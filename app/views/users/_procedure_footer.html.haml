@@ -15,9 +15,10 @@
               %li
                 - horaires = "#{I18n.t('users.procedure_footer.contact.schedule.prefix')}#{formatted_horaires(service.horaires)}"
                 = link_to service.telephone_url, class: 'fr-footer__top-link' do
-                  = I18n.t('users.procedure_footer.contact.phone.link', service_telephone: service.telephone)
-                  %br
-                  = horaires
+                  %p
+                    = I18n.t('users.procedure_footer.contact.phone.link', service_telephone: service.telephone)
+                  %p
+                    = horaires
               %li
                 = link_to I18n.t('users.procedure_footer.contact.stats.link'), statistiques_path(procedure.path), class: 'fr-footer__top-link', rel: 'noopener'
 

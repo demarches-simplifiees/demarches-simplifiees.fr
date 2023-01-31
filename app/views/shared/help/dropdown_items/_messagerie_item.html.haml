@@ -1,6 +1,5 @@
-%li
-  = link_to messagerie_dossier_path(dossier) do
-    %span.icon.mail
-    .dropdown-description
-      %span.help-dropdown-title= title
-      %p Envoyez directement un message à l’instructeur.
+= link_to messagerie_dossier_path(dossier), role: 'menuitem' do
+  %span.icon.mail
+  .dropdown-description
+    %span.help-dropdown-title= title
+    %p Envoyez directement un message à l’instructeur.

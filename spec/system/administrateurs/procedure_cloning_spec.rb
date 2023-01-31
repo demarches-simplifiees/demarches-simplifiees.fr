@@ -18,7 +18,7 @@ describe 'As an administrateur I wanna clone a procedure', js: true do
     scenario do
       visit admin_procedures_path
       expect(page.find_by_id('procedures')['data-item-count']).to eq('1')
-      page.all('.procedures-actions-btn').first.click
+      page.all('.admin-procedures-list-row .dropdown .fr-btn').first.click
       page.all('.clone-btn').first.click
       visit admin_procedures_path(statut: "brouillons")
       expect(page.find_by_id('procedures')['data-item-count']).to eq('1')

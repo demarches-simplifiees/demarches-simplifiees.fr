@@ -1,5 +1,7 @@
-%span.dropdown{ data: { controller: 'menu-button', popover: 'true' } }
-  %button.fr-btn.fr-btn--tertiary.fr-btn--sm.fr-mr-2w.dropdown-button{ data: { menu_button_target: 'button' } }
+= render Dropdown::MenuComponent.new(wrapper: :div, button_options: { class: ['fr-btn--secondary', 'fr-btn--sm', 'fr-mr-1w'] }, menu_options: { id: 'filter-menu', class:['left-aligned'] }) do |menu|
+  - menu.with_button_inner_html do
     = t('views.instructeurs.dossiers.filters.title')
-  #filter-menu.dropdown-content.left-aligned.fade-in-down{ data: { menu_button_target: 'menu' } }
+
+  - menu.with_form do
     = render Dossiers::FilterComponent.new(procedure: procedure, procedure_presentation: @procedure_presentation, statut: statut)
+

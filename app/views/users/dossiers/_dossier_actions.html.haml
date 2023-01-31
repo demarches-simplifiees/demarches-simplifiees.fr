@@ -4,49 +4,51 @@
 - has_transfer_action = dossier.user == current_user
 - has_actions = has_edit_action || has_delete_action || has_new_dossier_action || has_transfer_action
 
+
+
 - if has_actions
-  .dropdown.user-dossier-actions{ data: { controller: 'menu-button' } }
-    %button.fr-btn.fr-btn--secondary.dropdown-button{ data: { menu_button_target: 'button' } }
+  = render Dropdown::MenuComponent.new(wrapper: :div, wrapper_options: {class: 'invite-user-actions'}, menu_options: {id: dom_id(dossier, :actions_menu)}, button_options: {class: 'fr-btn--sm fr-btn--secondary'}) do |menu|
+    - menu.with_button_inner_html do
       = t('views.users.dossiers.dossier_action.actions')
-    .dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' }, id: dom_id(dossier, :actions_menu) }
-      %ul.dropdown-items
-        - if has_edit_action
-          - if dossier.brouillon?
-            %li
-              = link_to(url_for_dossier(dossier)) do
-                %span.icon.edit
-                .dropdown-description
-                  = t('views.users.dossiers.dossier_action.edit_draft')
-          - else
-            %li
-              = link_to modifier_dossier_path(dossier) do
-                %span.icon.edit
-                .dropdown-description
-                  = t('views.users.dossiers.dossier_action.edit_dossier')
 
-        - if has_transfer_action
-          %li
-            = link_to transferer_dossier_path(dossier) do
-              %span.icon.person
-              .dropdown-description
-                = t('views.users.dossiers.dossier_action.transfer_dossier')
+    - if has_edit_action
+      - if dossier.brouillon?
+        - menu.with_item do
+          = link_to(url_for_dossier(dossier), role: 'menuitem') do
+            %span.icon.edit
+            .dropdown-description
+              = t('views.users.dossiers.dossier_action.edit_draft')
+      - else
+        - menu.with_item do
+          = link_to(modifier_dossier_path(dossier), role: 'menuitem') do
+            %span.icon.edit
+            .dropdown-description
+              = t('views.users.dossiers.dossier_action.edit_dossier')
 
-        - if has_new_dossier_action
-          %li
-            = link_to procedure_lien(dossier.procedure) do
-              %span.icon.new-folder
-              .dropdown-description
-                = t('views.users.dossiers.dossier_action.start_other_dossier')
-          %li
-            = link_to clone_dossier_path(dossier), method: :post do
-              %span.icon.new-folder
-              .dropdown-description
-                = t('views.users.dossiers.dossier_action.clone')
+    - if has_transfer_action
+      - menu.with_item do
+        = link_to(transferer_dossier_path(dossier), role: 'menuitem') do
+          %span.icon.person
+          .dropdown-description
+            = t('views.users.dossiers.dossier_action.transfer_dossier')
 
-        - if has_delete_action
-          %li.danger
-            = link_to delete_dossier_dossier_path(dossier), method: :patch, data: { disable: true, confirm: "En continuant, vous allez supprimer ce dossier ainsi que les informations qu’il contient. Toute suppression entraîne l’annulation de la démarche en cours.\n\nConfirmer la suppression ?" } do
-              %span.icon.delete
-              .dropdown-description
-                = t('views.users.dossiers.dossier_action.delete_dossier')
+    - if has_new_dossier_action
+      - menu.with_item do
+        = link_to(procedure_lien(dossier.procedure), role: 'menuitem') do
+          %span.icon.new-folder
+          .dropdown-description
+            = t('views.users.dossiers.dossier_action.start_other_dossier')
 
+      - menu.with_item do
+        = link_to(clone_dossier_path(dossier), method: :post, role: 'menuitem') do
+          %span.icon.new-folder
+          .dropdown-description
+            = t('views.users.dossiers.dossier_action.clone')
+
+    - if has_delete_action
+      - menu.with_item(class: 'danger') do
+        = link_to(delete_dossier_dossier_path(dossier), role: 'menuitem', method: :patch, data: { disable: true, confirm: "En continuant, vous allez supprimer ce dossier ainsi que les informations qu’il contient. Toute suppression entraîne l’annulation de la démarche en cours.\n\nConfirmer la suppression ?" }) do
+
+          %span.icon.delete
+          .dropdown-description
+            = t('views.users.dossiers.dossier_action.delete_dossier')

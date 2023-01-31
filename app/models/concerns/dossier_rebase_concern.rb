@@ -54,32 +54,32 @@ module DossierRebaseConcern
       .group_by(&:op)
       .tap { _1.default = [] }
 
+    champs_by_stable_id = champs
+      .joins(:type_de_champ)
+      .group_by(&:stable_id)
+      .transform_values { Champ.where(id: _1) }
+
     # add champ
     changes_by_op[:add]
-      .map(&:stable_id)
-      .map { target_coordinates_by_stable_id[_1] }
-      .each { add_new_champs_for_revision(_1) }
+      .each { add_new_champs_for_revision(target_coordinates_by_stable_id[_1.stable_id]) }
 
     # remove champ
     changes_by_op[:remove]
-      .each { delete_champs_for_revision(_1.stable_id) }
+      .each { champs_by_stable_id[_1.stable_id].destroy_all }
 
     if brouillon?
       changes_by_op[:update]
-        .map { |change| [change, champs.joins(:type_de_champ).where(type_de_champ: { stable_id: change.stable_id })] }
-        .each { |change, champs| apply(change, champs) }
+        .each { apply(_1, champs_by_stable_id[_1.stable_id]) }
     end
 
     # due to repetition tdc clone on update or erase
     # we must reassign tdc to the latest version
-    Champ
-      .includes(:type_de_champ)
-      .where(dossier: self)
-      .map { [_1, target_coordinates_by_stable_id[_1.stable_id].type_de_champ] }
-      .each { |champ, target_tdc| champ.update_columns(type_de_champ_id: target_tdc.id, rebased_at: Time.zone.now) }
+    champs_by_stable_id
+      .filter_map { |stable_id, champs| [target_coordinates_by_stable_id[stable_id].type_de_champ_id, champs] if champs.present? }
+      .each { |type_de_champ_id, champs| champs.update_all(type_de_champ_id:) }
 
     # update dossier revision
-    self.update_column(:revision_id, target_revision.id)
+    update_column(:revision_id, target_revision.id)
   end
 
   def apply(change, champs)
@@ -92,18 +92,27 @@ module DossierRebaseConcern
         value: nil,
         value_json: nil,
         external_id: nil,
-        data: nil)
+        data: nil,
+        rebased_at: Time.zone.now)
     when :drop_down_options
       # we are removing options, we need to remove the value if it contains one of the removed options
       removed_options = change.from - change.to
       if removed_options.present? && champs.any? { _1.in?(removed_options) }
-        champs.filter { _1.in?(removed_options) }.each { _1.remove_option(removed_options) }
+        champs.filter { _1.in?(removed_options) }.each do
+          _1.remove_option(removed_options)
+          _1.update_column(:rebased_at, Time.zone.now)
+        end
       end
     when :carte_layers
       # if we are removing cadastres layer, we need to remove cadastre geo areas
       if change.from.include?(:cadastres) && !change.to.include?(:cadastres)
-        champs.each { _1.cadastres.each(&:destroy) }
+        champs.filter { _1.cadastres.present? }.each do
+          _1.cadastres.each(&:destroy)
+          _1.update_column(:rebased_at, Time.zone.now)
+        end
       end
+    else
+      champs.update_all(rebased_at: Time.zone.now)
     end
   end
 
@@ -126,18 +135,11 @@ module DossierRebaseConcern
   end
 
   def create_champ(target_coordinate, parent, row_id: nil)
-    params = { revision: target_coordinate.revision, row_id: }.compact
+    params = { revision: target_coordinate.revision, rebased_at: Time.zone.now, row_id: }.compact
     champ = target_coordinate
       .type_de_champ
       .build_champ(params)
     parent.champs << champ
-  end
-
-  def delete_champs_for_revision(stable_id)
-    champs
-      .joins(:type_de_champ)
-      .where(types_de_champ: { stable_id: })
-      .destroy_all
   end
 
   def purge_piece_justificative_file(champ)

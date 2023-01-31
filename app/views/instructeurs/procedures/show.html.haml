@@ -62,10 +62,10 @@
         = render Dossiers::NotifiedToggleComponent.new(procedure: @procedure, procedure_presentation: @procedure_presentation)
 
         .fr-ml-auto
-          %span.dropdown{ data: { controller: 'menu-button', popover: 'true' } }
-            %button.fr-btn.fr-btn--sm.fr-btn--tertiary.dropdown-button.fr-ml-1w{ data: { menu_button_target: 'button' } }
+          = render Dropdown::MenuComponent.new(wrapper: :span, button_options: { class: ['fr-btn--sm', 'fr-btn--secondary'] }, menu_options: { id: 'custom-menu' }) do |menu|
+            - menu.with_button_inner_html do
               = t('views.instructeurs.dossiers.personalize')
-            #custom-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
+            - menu.with_form do
               = form_tag update_displayed_fields_instructeur_procedure_path(@procedure), method: :patch, class: 'dropdown-form large columns-form' do
                 = hidden_field_tag :values, nil
                 = react_component("ComboMultiple",
@@ -120,6 +120,7 @@
 
                 %th.action-col.follow-col
                   Actions
+
               %tr
 
             %tbody
