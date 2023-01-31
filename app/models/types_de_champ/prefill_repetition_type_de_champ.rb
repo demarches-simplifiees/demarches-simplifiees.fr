@@ -14,7 +14,7 @@ class TypesDeChamp::PrefillRepetitionTypeDeChamp < TypesDeChamp::PrefillTypeDeCh
   end
 
   def possible_values_sentence
-    "#{I18n.t("views.prefill_descriptions.edit.possible_values.#{type_champ}_html")}<br>#{possible_values.join("<br>")}".html_safe
+    "#{I18n.t("views.prefill_descriptions.edit.possible_values.#{type_champ}_html")}<br>#{possible_values.join("<br>")}".html_safe # rubocop:disable Rails/OutputSafety
   end
 
   def example_value
