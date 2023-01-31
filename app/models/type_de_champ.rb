@@ -242,7 +242,7 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def only_present_on_draft?
-    revisions.size == 1
+    revisions.one? && revisions.first.draft?
   end
 
   def drop_down_other?
