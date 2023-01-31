@@ -61,7 +61,10 @@ module DossierRebaseConcern
 
     # add champ
     changes_by_op[:add]
-      .each { add_new_champs_for_revision(target_coordinates_by_stable_id[_1.stable_id]) }
+      .map { target_coordinates_by_stable_id[_1.stable_id] }
+      # add parent champs first so we can then add children
+      .sort_by { _1.child? ? 1 : 0 }
+      .each { add_new_champs_for_revision(_1) }
 
     # remove champ
     changes_by_op[:remove]
@@ -120,13 +123,14 @@ module DossierRebaseConcern
     if target_coordinate.child?
       # If this type de champ is a child, we create a new champ for each row of the parent
       parent_stable_id = target_coordinate.parent.stable_id
-      champs_repetition = champs
-        .includes(:champs, :type_de_champ)
-        .where(type_de_champ: { stable_id: parent_stable_id })
 
-      champs_repetition.each do |champ_repetition|
-        champ_repetition.champs.map(&:row_id).uniq.each do |row_id|
-          create_champ(target_coordinate, champ_repetition, row_id:)
+      champs.filter { _1.stable_id == parent_stable_id }.each do |champ_repetition|
+        if champ_repetition.champs.empty?
+          create_champ(target_coordinate, champ_repetition, row_id: ULID.generate)
+        else
+          champ_repetition.champs.map(&:row_id).uniq.each do |row_id|
+            create_champ(target_coordinate, champ_repetition, row_id:)
+          end
         end
       end
     else
@@ -135,10 +139,10 @@ module DossierRebaseConcern
   end
 
   def create_champ(target_coordinate, parent, row_id: nil)
-    params = { revision: target_coordinate.revision, rebased_at: Time.zone.now, row_id: }.compact
     champ = target_coordinate
       .type_de_champ
-      .build_champ(params)
+      .champ
+      .build(rebased_at: Time.zone.now, row_id:)
     parent.champs << champ
   end
 
