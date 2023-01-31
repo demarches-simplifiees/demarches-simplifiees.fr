@@ -41,17 +41,21 @@ module TagsSubstitutionConcern
     end
 
     define_combinator :tag_text_first_char do
-      any_char.that_fail(lit('-') | tag_delimiter)
+      any_char.that_fail(lit('-') | tag_delimiter | eol)
     end
 
     define_combinator :tag_text_char do
-      any_char.that_fail(tag_delimiter)
+      any_char.that_fail(tag_delimiter | eol)
     end
 
     define_combinator :tag_text do
       join(single(tag_text_first_char) + many(tag_text_char)).fmap do |str|
         str.force_encoding('utf-8').encode.gsub(/[[:space:]]/, ' ')
       end
+    end
+
+    define_combinator :eol do
+      lit("\r\n") | lit("\n")
     end
   end
 
