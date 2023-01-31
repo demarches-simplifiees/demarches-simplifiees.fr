@@ -1,10 +1,11 @@
 class TypesDeChamp::PrefillRepetitionTypeDeChamp < TypesDeChamp::PrefillTypeDeChamp
   include ActionView::Helpers::UrlHelper
+  include ApplicationHelper
 
   def possible_values
     prefillable_subchamps.map do |prefill_type_de_champ|
       if prefill_type_de_champ.too_many_possible_values?
-        link = link_to "Voir toutes les valeurs possibles", Rails.application.routes.url_helpers.prefill_type_de_champ_path("piece-jointe", prefill_type_de_champ)
+        link = link_to I18n.t("views.prefill_descriptions.edit.possible_values.link.text"), Rails.application.routes.url_helpers.prefill_type_de_champ_path(prefill_type_de_champ.path, prefill_type_de_champ), title: ActionController::Base.helpers.sanitize(new_tab_suffix(I18n.t("views.prefill_descriptions.edit.possible_values.link.title"))), **external_link_attributes
         "#{prefill_type_de_champ.libelle}: #{link}"
       else
         "#{prefill_type_de_champ.libelle}: #{prefill_type_de_champ.possible_values_sentence}"
