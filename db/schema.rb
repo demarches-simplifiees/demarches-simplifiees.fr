@@ -165,7 +165,6 @@ ActiveRecord::Schema.define(version: 2023_01_26_145329) do
     t.datetime "reminded_at"
     t.datetime "revoked_at"
     t.datetime "updated_at", null: false
-    t.datetime "reminded_at"
     t.index ["claimant_id"], name: "index_avis_on_claimant_id"
     t.index ["dossier_id"], name: "index_avis_on_dossier_id"
     t.index ["experts_procedure_id"], name: "index_avis_on_experts_procedure_id"
