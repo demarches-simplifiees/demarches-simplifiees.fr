@@ -38,7 +38,7 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
 
   def possible_values_sentence
     if too_many_possible_values?
-      I18n.t("views.prefill_descriptions.edit.possible_values.#{type_champ}_html").html_safe
+      I18n.t("views.prefill_descriptions.edit.possible_values.#{type_champ}_html").html_safe # rubocop:disable Rails/OutputSafety
     else
       possible_values.to_sentence
     end
