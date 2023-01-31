@@ -72,6 +72,18 @@ describe APIEntreprise::EntrepriseAdapter do
         expect(subject[:entreprise_etat_administratif]).to eq('actif')
       end
     end
+
+    context "when date_creation is empty" do
+      let(:body) do
+        hash = JSON.parse(super())
+        hash["entreprise"]["date_creation"] = nil
+        JSON.generate(hash)
+      end
+
+      it 'L\'entreprise ne contient pas de date_creation' do
+        expect(subject[:entreprise_date_creation]).to be_nil
+      end
+    end
   end
 
   context "when the SIRET is unknown" do

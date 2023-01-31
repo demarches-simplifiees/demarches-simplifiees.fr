@@ -6,4 +6,5 @@ class ServiceSerializer < ActiveModel::Serializer
   attribute :telephone, key: :phone
   attribute :horaires, key: :schedule
   attribute :adresse, key: :address
+  attribute :siret, key: :siret
 end

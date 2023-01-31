@@ -2,9 +2,7 @@ class SiretFormatValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     if !format_is_valid(value)
       record.errors.add(attribute, :length)
-    end
-
-    if !luhn_passed(value)
+    elsif !luhn_passed(value)
       record.errors.add(attribute, :checksum)
     end
   end
@@ -14,7 +12,7 @@ class SiretFormatValidator < ActiveModel::EachValidator
   LA_POSTE_SIREN = '356000000'
 
   def format_is_valid(value)
-    case value.length
+    case value&.length
     when 6
       value.match?(/^[0-9A-Z]\d{5}$/)
     when 14

@@ -20,6 +20,16 @@
 
   = f.select :type_organisme, Service.type_organismes.keys.map { |key| [ I18n.t("type_organisme.#{key}"), key] }, class: 'width-33-desktop width-100-mobile'
 
+  = f.label :siret do
+    Numéro SIRET
+    %span.mandatory *
+
+  %p.notice
+    Veuillez saisir le numéro de SIRET de l'organisme dont ce service dépend.
+    %br
+    = link_to "➡ Rechercher le numéro SIRET sur « annuaire-entreprises.data.gouv.fr »", annuaire_link, target: "_blank"
+
+  = f.text_field :siret, placeholder: "14 chiffres", required: true
 
   = render Dsfr::CalloutComponent.new(title: "Informations de contact") do |c|
     - c.body do

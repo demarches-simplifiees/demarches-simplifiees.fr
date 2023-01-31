@@ -5,7 +5,7 @@ FactoryBot.define do
 
     trait :cadastre do
       source { GeoArea.sources.fetch(:cadastre) }
-      properties { { numero: '42', section: 'A11', prefixe: '000', commune: '75127', contenance: '1234', id: '75127000A1142' } }
+      properties { { numero: '42', section: 'A11', prefixe: '000', commune: '75127', contenance: 123, id: '75127000A1142' } }
     end
 
     trait :legacy_cadastre do
