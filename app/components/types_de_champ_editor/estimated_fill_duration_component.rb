@@ -10,6 +10,10 @@ class TypesDeChampEditor::EstimatedFillDurationComponent < ApplicationComponent
     @is_annotation
   end
 
+  def render?
+    @revision.procedure.estimated_duration_visible?
+  end
+
   def show?
     !annotations? && @revision.types_de_champ_public.present?
   end

@@ -1,5 +1,6 @@
 describe 'shared/_procedure_description.html.haml', type: :view do
-  let(:procedure) { create(:procedure, :published, :with_service) }
+  let(:estimated_duration_visible) { true }
+  let(:procedure) { create(:procedure, :published, :with_service, estimated_duration_visible:) }
 
   subject { render partial: 'shared/procedure_description', locals: { procedure: procedure } }
 
@@ -9,6 +10,14 @@ describe 'shared/_procedure_description.html.haml', type: :view do
     expect(rendered).to have_text(procedure.libelle)
     expect(rendered).to have_text(procedure.description)
     expect(rendered).to have_text('Temps de remplissage estimé')
+  end
+
+  context 'procedure with estimated duration not visible' do
+    let(:estimated_duration_visible) { false }
+    it 'hides the estimated duration' do
+      subject
+      expect(rendered).not_to have_text('Temps de remplissage estimé')
+    end
   end
 
   it 'does not show empty date limite' do
