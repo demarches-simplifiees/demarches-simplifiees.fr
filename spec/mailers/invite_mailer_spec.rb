@@ -51,6 +51,15 @@ RSpec.describe InviteMailer, type: :mailer do
         .from(0).to(1)
     end
 
+    context 'when an avis exists with same id' do
+      it 'associate the TargetedUserLink to the good model [does not search by id only]' do
+        avis = create(:avis, id: invite.id)
+        link_on_avis_with_same_id = create(:targeted_user_link, target_model: avis, target_context: TargetedUserLink.target_contexts[:avis])
+        deliver
+        expect(invite.targeted_user_link).not_to eq(link_on_avis_with_same_id)
+      end
+    end
+
     context 'when it fails' do
       it 'creates only one target_user_link' do
          send_mail_values = [:raise, true]
