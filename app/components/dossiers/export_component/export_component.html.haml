@@ -1,21 +1,21 @@
-%span.dropdown{ data: { controller: 'menu-button' } }
-  %button.fr-btn.fr-btn--sm.dropdown-button{ data: { menu_button_target: 'button' }, class: @class_btn.present? ? @class_btn : 'fr-btn--secondary' }
-    - if @count.nil?
-      = t(".download_all")
+= render Dropdown::MenuComponent.new(wrapper: :span, button_options: { class: ['fr-btn--sm', @class_btn.present? ? @class_btn : 'fr-btn--secondary']}, menu_options: { id: @count.nil? ? "download_menu" : "download_all_menu", class: ['dropdown-export'] }) do |menu|
+  - menu.with_button_inner_html do
+    = @count.nil? ? t(".download_all") : t(".download", count: @count)
+  - exports.each do |item|
+    - export = item[:export]
+
+    - if export.nil?
+      - menu.with_item do
+        = link_to download_export_path(export_format: item[:format]), role: 'menuitem', data: { turbo_method: :post, turbo: true } do
+          = t(".everything_#{item[:format]}_html")
+    - elsif export.available?
+      - menu.with_item do
+        %div
+          = link_to ready_link_label(export), export.file.service_url, target: "_blank", rel: "noopener", role: 'menuitem'
+          - if export.old?
+            = button_to download_export_path(export_format: export.format, force_export: true), refresh_button_options(export).merge(role: 'menuitem') do
+              .icon.retry
     - else
-      = t(".download", count: @count)
-  .dropdown-content.fade-in-down{ style: 'width: 450px', data: { menu_button_target: 'menu' }, id: @count.nil? ? "download_menu" : "download_all_menu" }
-    %ul.dropdown-items{ 'data-turbo': 'true' }
-      - exports.each do |item|
-        - export = item[:export]
-        %li
-          - if export.nil?
-            = link_to t(".everything_#{item[:format]}_html"), download_export_path(export_format: item[:format]), data: { turbo_method: :post }
-          - elsif export.available?
-            = link_to ready_link_label(export), export.file.service_url, target: "_blank", rel: "noopener"
-            - if export.old?
-              = button_to download_export_path(export_format: export.format, force_export: true), **refresh_button_options(export) do
-                .icon.retry
-          - else
-            %span{ data: poll_controller_options(export) }
-              = pending_label(export)
+      - menu.with_item(aria: {disabled:"true"}, class: 'selected') do
+        %span{ data: poll_controller_options(export) }
+          = pending_label(export)

@@ -1,10 +1,11 @@
 describe PiecesJustificativesService do
   describe '.liste_documents' do
-    let(:for_expert) { false }
+    let(:with_champs_private) { true }
+    let(:with_bills) { true }
 
     subject do
       PiecesJustificativesService
-        .liste_documents(Dossier.where(id: dossier.id), for_expert)
+        .liste_documents(Dossier.where(id: dossier.id), with_bills:, with_champs_private:)
         .map(&:first)
     end
 
@@ -59,8 +60,8 @@ describe PiecesJustificativesService do
 
       it { expect(subject).to match_array(private_pj_champ.call(dossier).piece_justificative_file.attachments) }
 
-      context 'for expert' do
-        let(:for_expert) { true }
+      context 'without private champ' do
+        let(:with_champs_private) { false }
 
         it { expect(subject).to be_empty }
       end
@@ -171,8 +172,8 @@ describe PiecesJustificativesService do
         expect(subject).to match_array([dossier_bs.serialized.attachment, dossier_bs.signature.attachment])
       end
 
-      context 'for expert' do
-        let(:for_expert) { true }
+      context 'without bills' do
+        let(:with_bills) { false }
 
         it { expect(subject).to be_empty }
       end
@@ -192,8 +193,8 @@ describe PiecesJustificativesService do
 
       it { expect(subject).to match_array(dol.serialized.attachment) }
 
-      context 'for expert' do
-        let(:for_expert) { true }
+      context 'without bills' do
+        let(:with_bills) { false }
 
         it { expect(subject).to be_empty }
       end

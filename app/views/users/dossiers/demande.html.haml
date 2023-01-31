@@ -10,5 +10,5 @@
 
   .container
     - if !@dossier.read_only?
-      = link_to t('views.users.dossiers.demande.edit_dossier'), modifier_dossier_path(@dossier), class: 'button accepted edit-form', title: "Modifier mon dossier tant qu'il n'est pas passé en instruction"
+      = link_to t('views.users.dossiers.demande.edit_dossier'), modifier_dossier_path(@dossier), class: 'fr-btn fr-btn-sm', 'title'=> "Modifier mon dossier tant qu'il n'est pas passé en instruction"
       .clearfix

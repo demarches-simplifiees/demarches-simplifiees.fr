@@ -226,7 +226,7 @@ class Champ < ApplicationRecord
   private
 
   def html_id
-    "#{stable_id}-#{id}"
+    "champ-#{stable_id}-#{id}"
   end
 
   def needs_dossier_id?
@@ -238,7 +238,7 @@ class Champ < ApplicationRecord
   end
 
   def cleanup_if_empty
-    if external_id_changed?
+    if persisted? && external_id_changed?
       self.data = nil
     end
   end

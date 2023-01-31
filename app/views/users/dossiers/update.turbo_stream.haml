@@ -4,7 +4,7 @@
   = turbo_stream.hide_all(@to_hide)
 - @to_update.each do |champ|
   = fields_for champ.input_name, champ do |form|
-    = turbo_stream.morph champ.input_group_id do
+    = turbo_stream.replace champ.input_group_id do
       = render EditableChamp::EditableChampComponent.new champ:, form:
 
 = turbo_stream.remove_all(".editable-champ .spinner-removable");

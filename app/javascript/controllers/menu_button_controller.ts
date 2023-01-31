@@ -6,14 +6,8 @@ export class MenuButtonController extends ApplicationController {
   declare readonly buttonTarget: HTMLButtonElement;
   declare readonly menuTarget: HTMLElement;
 
-  #teardown?: () => void;
-
   connect() {
     this.setup();
-  }
-
-  disconnect(): void {
-    this.#teardown?.();
   }
 
   private get isOpen() {
@@ -21,38 +15,17 @@ export class MenuButtonController extends ApplicationController {
   }
 
   private get isMenu() {
-    return !(this.element as HTMLElement).dataset.popover;
+    return this.menuTarget.getAttribute('role') == 'menu';
   }
 
   private setup() {
-    this.buttonTarget.setAttribute(
-      'aria-haspopup',
-      this.isMenu ? 'menu' : 'true'
-    );
-    this.buttonTarget.setAttribute('aria-controls', this.menuTarget.id);
-    if (!this.buttonTarget.id) {
-      this.buttonTarget.id = `${this.menuTarget.id}_button`;
-    }
-
-    this.menuTarget.setAttribute('aria-labelledby', this.buttonTarget.id);
-    this.menuTarget.setAttribute('role', this.isMenu ? 'menu' : 'region');
+    // see:
+    // To progressively enhance this navigation widget that is by default accessible,
+    // the class to hide the menu and the inclusion of tabindex="-1" on the interactive menuitem
+    // content should be added with JavaScript on load.
     this.menuTarget.classList.add('fade-in-down');
-    this.menuTarget.setAttribute('tab-index', '-1');
-
     if (this.isMenu) {
-      for (const menuItem of this.menuTarget.querySelectorAll('a')) {
-        menuItem.setAttribute('role', 'menuitem');
-      }
-      for (const dropdownItems of this.menuTarget.querySelectorAll(
-        '.dropdown-items'
-      )) {
-        dropdownItems.setAttribute('role', 'none');
-      }
-      for (const dropdownItems of this.menuTarget.querySelectorAll(
-        '.dropdown-items > li'
-      )) {
-        dropdownItems.setAttribute('role', 'none');
-      }
+      this.menuItems.map((menuItem) => menuItem.setAttribute('tabindex', '-1'));
     }
 
     this.on('click', (event) => {
@@ -78,6 +51,14 @@ export class MenuButtonController extends ApplicationController {
         this.onMenuKeydown(event);
       }
     });
+
+    this.on(document.body, 'click', (event) => {
+      const target = event.target as HTMLElement;
+      if (this.isOpen && this.isClickOutside(target)) {
+        this.menuTarget.classList.remove('fade-in-down');
+        this.close();
+      }
+    });
   }
 
   private open(focusMenuItem: 'first' | 'last' = 'first') {
@@ -85,30 +66,18 @@ export class MenuButtonController extends ApplicationController {
     this.menuTarget.parentElement?.classList.add('open');
     this.menuTarget.focus();
 
-    const onClickBody = (event: Event) => {
-      const target = event.target as HTMLElement;
-      if (this.isClickOutside(target)) {
-        this.menuTarget.classList.remove('fade-in-down');
-        this.close();
-      }
-    };
     requestAnimationFrame(() => {
       if (focusMenuItem == 'first') {
         this.setFocusToFirstMenuitem();
       } else {
         this.setFocusToLastMenuitem();
       }
-      document.body.addEventListener('click', onClickBody);
     });
-
-    this.#teardown = () =>
-      document.body.removeEventListener('click', onClickBody);
   }
 
   private close() {
-    this.buttonTarget.removeAttribute('aria-expanded');
+    this.buttonTarget.setAttribute('aria-expanded', 'false');
     this.menuTarget.parentElement?.classList.remove('open');
-    this.#teardown?.();
     this.setFocusToMenuitem(null);
   }
 

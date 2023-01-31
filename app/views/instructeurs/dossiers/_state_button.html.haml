@@ -1,120 +1,107 @@
-.dropdown{ data: { controller: 'menu-button', popover: 'true', turbo_force: true } }
-  -# Dropdown button title
-  %button.fr-btn.dropdown-button{ class: button_or_label_class(dossier), data: { menu_button_target: 'button' } }
-    = dossier_display_state dossier
+= render Dropdown::MenuComponent.new(wrapper: :div, wrapper_options: { data: {'turbo-force': true} }, button_options: { class: [button_or_label_class(dossier)] }) do |menu|
+  - menu.with_button_inner_html do
+    = dossier_display_state(dossier)
 
-  -# Dropdown content
-  #state-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
+  - if dossier.en_construction?
+    - menu.with_item(aria: {disabled:"true"}, class: 'selected') do
+      %span.icon.edit
+      .dropdown-description
+        %h4 En construction
+        Vous permettez à l'usager de modifier ses réponses au formulaire
 
-    - if dossier.en_construction?
-      -# ------------------------------------------------------
-      -# EN CONSTRUCTION
-      -# ------------------------------------------------------
-      %ul.dropdown-items
+    - menu.with_item('data-turbo': 'true') do
+      = link_to(passer_en_instruction_instructeur_dossier_path(dossier.procedure, dossier), data: { turbo_method: :post, turbo_confirm: "Confirmez-vous le passage en instruction de ce dossier ?", turbo: true }, role: 'menuitem') do
+        %span.icon.in-progress
+        .dropdown-description
+          %h4 Passer en instruction
+          L’usager ne pourra plus modifier le formulaire
 
-        %li.selected
-          %span.icon.edit
+  - elsif dossier.en_instruction?
+    - menu.with_item('data-turbo': 'true') do
+      = link_to(repasser_en_construction_instructeur_dossier_path(dossier.procedure, dossier), data: { turbo_method: :post, turbo_confirm: "Confirmez-vous le passage en construction de ce dossier ?"}, role: 'menuitem') do
+        %span.icon.edit
+        .dropdown-description
+          %h4 Repasser en construction
+          Vous permettrez à l'usager de modifier ses réponses au formulaire
+
+    - menu.with_item(aria: {disabled:"true"}, class: 'selected') do
+      %span.icon.in-progress
+      .dropdown-description
+        %h4 En instruction
+        L’usager ne peut modifier son dossier pendant l'instruction
+
+    - menu.with_item do
+      = link_to('#', onclick: "DS.showMotivation(event, 'accept');", role: 'menuitem') do
+        %span.icon.accept
+        .dropdown-description
+          %h4 Accepter
+          L’usager sera notifié que son dossier a été accepté
+
+
+    - menu.with_item do
+      = link_to('#', onclick: "DS.showMotivation(event, 'without-continuation');", role: 'menuitem') do
+        %span.icon.without-continuation
+        .dropdown-description
+          %h4 Classer sans suite
+          L’usager sera notifié que son dossier a été classé sans suite
+
+
+    - menu.with_item do
+      = link_to('#', onclick: "DS.showMotivation(event, 'refuse');", role: 'menuitem') do
+        %span.icon.refuse
+        .dropdown-description
+          %h4 Refuser
+          L’usager sera notifié que son dossier a été refusé
+
+    - menu.with_form do
+      = render partial: 'instructeurs/dossiers/state_button_motivation', locals: { dossier: dossier, popup_title: 'Accepter le dossier', placeholder: 'Expliquez au demandeur pourquoi ce dossier est accepté (facultatif)', popup_class: 'accept', process_action: 'accepter', title: 'Accepter', confirm: "Confirmez-vous l'acceptation ce dossier ?" }
+
+    - menu.with_form do
+      = render partial: 'instructeurs/dossiers/state_button_motivation', locals: { dossier: dossier, popup_title: 'Classer le dossier sans suite', placeholder: 'Expliquez au demandeur pourquoi ce dossier est classé sans suite (obligatoire)', popup_class: 'without-continuation', process_action: 'classer_sans_suite', title: 'Classer sans suite', confirm: 'Confirmez-vous le classement sans suite de ce dossier ?' }
+
+    - menu.with_form do
+      = render partial: 'instructeurs/dossiers/state_button_motivation', locals: { dossier: dossier, popup_title: 'Refuser le dossier', placeholder: 'Expliquez au demandeur pourquoi ce dossier est refusé (obligatoire)', popup_class: 'refuse', process_action: 'refuser', title: 'Refuser', confirm: 'Confirmez-vous le refus de ce dossier ?' }
+
+  - elsif dossier.termine?
+    - if dossier.motivation.present?
+      - menu.with_item(class: 'inactive') do
+        %span.icon.info
+        .dropdown-description
+          %h4 Motivation
+          %p « #{dossier.motivation} »
+
+    - if dossier.justificatif_motivation.attached?
+      - menu.with_item(class: 'inactive') do
+        %span.icon.justificatif
+        .dropdown-description
+          %h4 Justificatif
+          %p Ce justificatif joint par l’instructeur a été envoyé au demandeur.
+          = render partial: 'users/dossiers/show/download_justificatif', locals: { dossier: dossier }
+
+    - if dossier.attestation.present?
+      - menu.with_item do
+        = link_to(attestation_instructeur_dossier_path(dossier.procedure, dossier), target: '_blank', rel: 'noopener', role: 'menuitem') do
+          %span.icon.preview
           .dropdown-description
-            %h4 En construction
-            Vous permettez à l'usager de modifier ses réponses au formulaire
+            %h4 Voir l’attestation
+            %p Cette attestation a été envoyée automatiquement au demandeur.
 
-        %li{ 'data-turbo': 'true' }
-          = link_to passer_en_instruction_instructeur_dossier_path(dossier.procedure, dossier), data: { turbo_method: :post, turbo_confirm: "Confirmez-vous le passage en instruction de ce dossier ?" } do
-            %span.icon.in-progress
-            .dropdown-description
-              %h4 Passer en instruction
-              L’usager ne pourra plus modifier le formulaire
-
-    - elsif dossier.en_instruction?
-      -# ------------------------------------------------------
-      -# EN INSTRUCTION
-      -# ------------------------------------------------------
-      %ul.dropdown-items
-
-        %li{ 'data-turbo': 'true' }
-          = link_to repasser_en_construction_instructeur_dossier_path(dossier.procedure, dossier), data: { turbo_method: :post, turbo_confirm: "Confirmez-vous le passage en construction de ce dossier ?" } do
-            %span.icon.edit
-            .dropdown-description
-              %h4 Repasser en construction
-              Vous permettrez à l'usager de modifier ses réponses au formulaire
-
-        %li.selected
+    - if dossier.can_repasser_en_instruction?
+      - menu.with_item do
+        = link_to(repasser_en_instruction_instructeur_dossier_path(dossier.procedure, dossier), data: { turbo_method: :post, turbo_confirm: "Voulez vous remettre le dossier #{dossier.id} en instruction ?", turbo: true }, role: 'menuitem') do
           %span.icon.in-progress
           .dropdown-description
-            %h4 En instruction
-            L’usager ne peut modifier son dossier pendant l'instruction
+            %h4 Repasser en instruction
+            L’usager sera notifié que son dossier est réexaminé.
+    - elsif dossier.user_deleted?
+      - menu.with_item do
+        %span.icon.info
+        .dropdown-description
+          %h4 En attente d’archivage
+          L’usager a supprimé son compte. Vous pouvez archiver puis supprimer le dossier.
 
-        %li
-          %a{ href: '#', onclick: "DS.showMotivation(event, 'accept');" }
-            %span.icon.accept
-            .dropdown-description
-              %h4 Accepter
-              L’usager sera notifié que son dossier a été accepté
-
-        %li
-          %a{ href: '#', onclick: "DS.showMotivation(event, 'without-continuation');" }
-            %span.icon.without-continuation
-            .dropdown-description
-              %h4 Classer sans suite
-              L’usager sera notifié que son dossier a été classé sans suite
-
-        %li
-          %a{ href: '#', onclick: "DS.showMotivation(event, 'refuse');" }
-            %span.icon.refuse
-            .dropdown-description
-              %h4 Refuser
-              L’usager sera notifié que son dossier a été refusé
-
-        = render partial: 'instructeurs/dossiers/state_button_motivation', locals: { dossier: dossier, popup_title: 'Accepter le dossier', placeholder: 'Expliquez au demandeur pourquoi ce dossier est accepté (facultatif)', popup_class: 'accept', process_action: 'accepter', title: 'Accepter', confirm: "Confirmez-vous l'acceptation ce dossier ?" }
-
-        = render partial: 'instructeurs/dossiers/state_button_motivation', locals: { dossier: dossier, popup_title: 'Classer le dossier sans suite', placeholder: 'Expliquez au demandeur pourquoi ce dossier est classé sans suite (obligatoire)', popup_class: 'without-continuation', process_action: 'classer_sans_suite', title: 'Classer sans suite', confirm: 'Confirmez-vous le classement sans suite de ce dossier ?' }
-
-        = render partial: 'instructeurs/dossiers/state_button_motivation', locals: { dossier: dossier, popup_title: 'Refuser le dossier', placeholder: 'Expliquez au demandeur pourquoi ce dossier est refusé (obligatoire)', popup_class: 'refuse', process_action: 'refuser', title: 'Refuser', confirm: 'Confirmez-vous le refus de ce dossier ?' }
-
-    - elsif dossier.termine?
-      -# ---------------------------------------------------
-      -# TERMINÉ
-      -# ---------------------------------------------------
-      %ul.dropdown-items
-        - if dossier.motivation.present?
-          %li.inactive
-            %span.icon.info
-            .dropdown-description
-              %h4 Motivation
-              %p « #{dossier.motivation} »
-
-        - if dossier.justificatif_motivation.attached?
-          %li.inactive
-            %span.icon.justificatif
-            .dropdown-description
-              %h4 Justificatif
-              %p Ce justificatif joint par l’instructeur a été envoyé au demandeur.
-              = render partial: 'users/dossiers/show/download_justificatif', locals: { dossier: dossier }
-
-        - if dossier.attestation.present?
-          %li
-            = link_to attestation_instructeur_dossier_path(dossier.procedure, dossier), target: '_blank', rel: 'noopener' do
-              %span.icon.preview
-              .dropdown-description
-                %h4 Voir l’attestation
-                %p Cette attestation a été envoyée automatiquement au demandeur.
-
-        - if dossier.can_repasser_en_instruction?
-          %li{ 'data-turbo': 'true' }
-            = link_to repasser_en_instruction_instructeur_dossier_path(dossier.procedure, dossier), data: { turbo_method: :post, turbo_confirm: "Voulez vous remettre le dossier #{dossier.id} en instruction ?" } do
-              %span.icon.in-progress
-              .dropdown-description
-                %h4 Repasser en instruction
-                L’usager sera notifié que son dossier est réexaminé.
-        - elsif dossier.user_deleted?
-          %li
-            %span.icon.info
-            .dropdown-description
-              %h4 En attente d’archivage
-              L’usager a supprimé son compte. Vous pouvez archiver puis supprimer le dossier.
-
-        %li
-          = link_to instructeur_dossier_path(dossier.procedure, dossier), method: :delete do
-            %span.icon.delete
-            .dropdown-description
-              %h4 Supprimer le dossier
+    - menu.with_item do
+      = link_to(instructeur_dossier_path(dossier.procedure, dossier), method: :delete, role: 'menuitem') do
+        %span.icon.delete
+        .dropdown-description
+          %h4 Supprimer le dossier

@@ -89,9 +89,12 @@ export class AutosaveController extends ApplicationController {
         isCheckboxOrRadioInputElement(target) ||
         (!this.saveOnInput && isTextInputElement(target))
       ) {
-        this.enqueueAutosaveRequest();
-
-        this.showConditionnalSpinner(target);
+        // Wait next tick so champs having JS can interact
+        // with form elements before extracting form data.
+        setTimeout(() => {
+          this.enqueueAutosaveRequest();
+          this.showConditionnalSpinner(target);
+        }, 0);
       }
     }
   }

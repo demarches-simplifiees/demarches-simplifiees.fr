@@ -1405,6 +1405,46 @@ describe Dossier do
     end
   end
 
+  describe '#geo_data' do
+    let(:dossier) { create(:dossier) }
+    let(:type_de_champ_carte) { create(:type_de_champ_carte, procedure: dossier.procedure) }
+    let(:geo_area) { create(:geo_area) }
+    let(:champ_carte) { create(:champ_carte, type_de_champ: type_de_champ_carte, geo_areas: [geo_area]) }
+
+    context "without data" do
+      it { expect(dossier.geo_data?).to be_falsey }
+    end
+
+    context "with geo data in public champ" do
+      before do
+        dossier.champs_public << champ_carte
+      end
+
+      it { expect(dossier.geo_data?).to be_truthy }
+    end
+
+    context "with geo data in private champ" do
+      before do
+        dossier.champs_private << champ_carte
+      end
+
+      it { expect(dossier.geo_data?).to be_truthy }
+    end
+
+    it "should solve N+1 problem" do
+      dossier.champs_public << create_list(:champ_carte, 3, type_de_champ: type_de_champ_carte, geo_areas: [create(:geo_area)])
+
+      count = 0
+
+      callback = lambda { |*_args| count += 1 }
+      ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+        dossier.geo_data?
+      end
+
+      expect(count).to eq(1)
+    end
+  end
+
   describe 'dossier_operation_log after dossier deletion' do
     let(:dossier) { create(:dossier) }
     let(:dossier_operation_log) { create(:dossier_operation_log, dossier: dossier) }
@@ -1852,6 +1892,19 @@ describe Dossier do
           let(:champ_piece_justificative) { create(:champ_piece_justificative, dossier_id: dossier.id) }
           before { dossier.champs_public << champ_piece_justificative }
           it { expect(Champs::PieceJustificativeChamp.where(dossier: new_dossier).first.piece_justificative_file.first.blob).to eq(champ_piece_justificative.piece_justificative_file.first.blob) }
+        end
+
+        context 'for Champs::AddressChamp, original_champ.data is duped' do
+          let(:dossier) { create(:dossier) }
+          let(:type_de_champs_adress) { create(:type_de_champ_address, procedure: dossier.procedure) }
+          let(:etablissement) { create(:etablissement) }
+          let(:champ_address) { create(:champ_address, type_de_champ: type_de_champs_adress, external_id: 'Address', data: { city_code: '75019' }) }
+          before { dossier.champs_public << champ_address }
+
+          it { expect(Champs::AddressChamp.where(dossier: dossier).first.data).not_to be_nil }
+          it { expect(Champs::AddressChamp.where(dossier: dossier).first.external_id).not_to be_nil }
+          it { expect(Champs::AddressChamp.where(dossier: new_dossier).first.external_id).to eq(champ_address.external_id) }
+          it { expect(Champs::AddressChamp.where(dossier: new_dossier).first.data).to eq(champ_address.data) }
         end
       end
 
