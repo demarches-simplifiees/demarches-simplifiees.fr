@@ -4,7 +4,7 @@ class TypesDeChamp::PrefillRepetitionTypeDeChamp < TypesDeChamp::PrefillTypeDeCh
   def possible_values
     prefillable_subchamps.map do |prefill_type_de_champ|
       if prefill_type_de_champ.too_many_possible_values?
-        link = link_to "Voir toutes les valeurs possibles", Rails.application.routes.url_helpers.prefill_type_de_champ_path("piece-jointe", self)
+        link = link_to "Voir toutes les valeurs possibles", Rails.application.routes.url_helpers.prefill_type_de_champ_path("piece-jointe", prefill_type_de_champ)
         "#{prefill_type_de_champ.libelle}: #{link}"
       else
         "#{prefill_type_de_champ.libelle}: #{prefill_type_de_champ.possible_values_sentence}"

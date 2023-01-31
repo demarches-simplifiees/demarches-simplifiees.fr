@@ -11,9 +11,6 @@ class PrefillParams
   private
 
   def build_prefill_values
-    byebug
-    # nop : "[{\"txt\":\"Texte court\", \"nb\":\"3.14\", \"Test dropdown\":\"Premier choix\", \"régio\":\"53\"}, {\"txt\":\"Texte court\", \"nb\":\"3.14\", \"Test dropdown\":\"Premier choix\", \"régio\":\"53\"}]"
-    # {"champ_Q2hhbXAtNDI="=>["{\"txt\":\"abc\", \"nb\":\"1,12\"}", "{\"txt\":\"def\", \"nb\":\"2,12\"}"]}
     value_by_stable_id = @params
       .map { |prefixed_typed_id, value| [stable_id_from_typed_id(prefixed_typed_id), value] }
       .filter { |stable_id, value| stable_id.present? && value.present? }

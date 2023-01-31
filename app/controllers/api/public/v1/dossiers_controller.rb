@@ -2,7 +2,6 @@ class API::Public::V1::DossiersController < API::Public::V1::BaseController
   before_action :retrieve_procedure
 
   def create
-    byebug
     dossier = Dossier.new(
       revision: @procedure.active_revision,
       groupe_instructeur: @procedure.defaut_groupe_instructeur_for_new_dossier,
