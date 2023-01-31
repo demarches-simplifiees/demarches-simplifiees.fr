@@ -6,14 +6,8 @@ export class MenuButtonController extends ApplicationController {
   declare readonly buttonTarget: HTMLButtonElement;
   declare readonly menuTarget: HTMLElement;
 
-  #teardown?: () => void;
-
   connect() {
     this.setup();
-  }
-
-  disconnect(): void {
-    this.#teardown?.();
   }
 
   private get isOpen() {
@@ -57,6 +51,14 @@ export class MenuButtonController extends ApplicationController {
         this.onMenuKeydown(event);
       }
     });
+
+    this.on(document.body, 'click', (event) => {
+      const target = event.target as HTMLElement;
+      if (this.isOpen && this.isClickOutside(target)) {
+        this.menuTarget.classList.remove('fade-in-down');
+        this.close();
+      }
+    });
   }
 
   private open(focusMenuItem: 'first' | 'last' = 'first') {
@@ -64,30 +66,18 @@ export class MenuButtonController extends ApplicationController {
     this.menuTarget.parentElement?.classList.add('open');
     this.menuTarget.focus();
 
-    const onClickBody = (event: Event) => {
-      const target = event.target as HTMLElement;
-      if (this.isClickOutside(target)) {
-        this.menuTarget.classList.remove('fade-in-down');
-        this.close();
-      }
-    };
     requestAnimationFrame(() => {
       if (focusMenuItem == 'first') {
         this.setFocusToFirstMenuitem();
       } else {
         this.setFocusToLastMenuitem();
       }
-      document.body.addEventListener('click', onClickBody);
     });
-
-    this.#teardown = () =>
-      document.body.removeEventListener('click', onClickBody);
   }
 
   private close() {
     this.buttonTarget.setAttribute('aria-expanded', 'false');
     this.menuTarget.parentElement?.classList.remove('open');
-    this.#teardown?.();
     this.setFocusToMenuitem(null);
   }
 
