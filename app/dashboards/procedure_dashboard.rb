@@ -38,6 +38,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     procedure_expires_when_termine_enabled: Field::Boolean,
     duree_conservation_dossiers_dans_ds: Field::Number,
     max_duree_conservation_dossiers_dans_ds: Field::Number,
+    estimated_duration_visible: Field::Boolean,
     tags: Field::Text
   }.freeze
 
@@ -88,7 +89,8 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :attestation_template,
     :procedure_expires_when_termine_enabled,
     :duree_conservation_dossiers_dans_ds,
-    :max_duree_conservation_dossiers_dans_ds
+    :max_duree_conservation_dossiers_dans_ds,
+    :estimated_duration_visible
   ].freeze
 
   # FORM_ATTRIBUTES
@@ -97,7 +99,8 @@ class ProcedureDashboard < Administrate::BaseDashboard
   FORM_ATTRIBUTES = [
     :procedure_expires_when_termine_enabled,
     :duree_conservation_dossiers_dans_ds,
-    :max_duree_conservation_dossiers_dans_ds
+    :max_duree_conservation_dossiers_dans_ds,
+    :estimated_duration_visible
   ].freeze
 
   # Overwrite this method to customize how procedures are displayed
