@@ -15,7 +15,7 @@ class ProcedureArchiveService
       dossiers.processed_in_month(archive.month)
     end
 
-    attachments = ActiveStorage::DownloadableFile.create_list_from_dossiers(dossiers)
+    attachments = ActiveStorage::DownloadableFile.create_list_from_dossiers(dossiers, with_bills: true, with_champs_private: true)
 
     DownloadableFileService.download_and_zip(@procedure, attachments, zip_root_folder(archive)) do |zip_filepath|
       ArchiveUploader.new(procedure: @procedure, filename: archive.filename(@procedure), filepath: zip_filepath)
