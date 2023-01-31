@@ -330,8 +330,11 @@ class ProcedurePresentation < ApplicationRecord
     if field['scope'].present?
       I18n.t(field['scope']).map(&:to_a).map(&:reverse)
     elsif field['table'] == 'groupe_instructeur'
-      instructeur.groupe_instructeurs
-        .map { [_1.label, _1.id] }
+      instructeur.groupe_instructeurs.filter_map do
+        if _1.procedure_id == procedure.id
+          [_1.label, _1.id]
+        end
+      end
     end
   end
 
