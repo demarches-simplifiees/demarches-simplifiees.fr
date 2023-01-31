@@ -61,6 +61,7 @@ describe 'Invitations' do
 
         invitation_email = open_email(user.email)
         targeted_user_link = TargetedUserLink.last
+        expect(targeted_user_link.user.email).to eq(user.email)
         expect(invitation_email).to have_link(targeted_user_link_url(targeted_user_link))
         invitation_email.click_on targeted_user_link_url(targeted_user_link)
         expect(page).to have_current_path("/users/sign_in")
