@@ -128,6 +128,7 @@ class TypeDeChamp < ApplicationRecord
   has_one :procedure, through: :revision
 
   delegate :estimated_fill_duration, :estimated_read_duration, :tags_for_template, :libelle_for_export, to: :dynamic_type
+  delegate :active_revision, to: :procedure, prefix: true
 
   class WithIndifferentAccess
     def self.load(options)
@@ -483,6 +484,12 @@ class TypeDeChamp < ApplicationRecord
       true
     else
       false
+    end
+  end
+
+  def active_revision_type_de_champ
+    procedure_active_revision.revision_types_de_champ_public.find do |rtc|
+      rtc.type_de_champ_id == id
     end
   end
 

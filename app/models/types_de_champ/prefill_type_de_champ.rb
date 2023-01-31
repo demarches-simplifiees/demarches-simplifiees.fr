@@ -9,6 +9,8 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
       TypesDeChamp::PrefillPaysTypeDeChamp.new(type_de_champ)
     when TypeDeChamp.type_champs.fetch(:regions)
       TypesDeChamp::PrefillRegionTypeDeChamp.new(type_de_champ)
+    when TypeDeChamp.type_champs.fetch(:repetition)
+      TypesDeChamp::PrefillRepetitionTypeDeChamp.new(type_de_champ)
     else
       new(type_de_champ)
     end
@@ -19,7 +21,9 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
   end
 
   def possible_values
-    []
+    return [] unless prefillable?
+
+    [I18n.t("views.prefill_descriptions.edit.possible_values.#{type_champ}_html")]
   end
 
   def example_value
@@ -30,5 +34,13 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
 
   def too_many_possible_values?
     possible_values.count > POSSIBLE_VALUES_THRESHOLD
+  end
+
+  def possible_values_sentence
+    if too_many_possible_values?
+      I18n.t("views.prefill_descriptions.edit.possible_values.#{type_champ}_html").html_safe
+    else
+      possible_values.to_sentence
+    end
   end
 end
