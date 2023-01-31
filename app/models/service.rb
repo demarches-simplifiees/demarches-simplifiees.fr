@@ -83,5 +83,4 @@ class Service < ApplicationRecord
   def enqueue_api_entreprise
     APIEntreprise::ServiceJob.perform_later(self.id)
   end
-
 end
