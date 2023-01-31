@@ -129,6 +129,7 @@ class TypeDeChamp < ApplicationRecord
 
   delegate :estimated_fill_duration, :estimated_read_duration, :tags_for_template, :libelle_for_export, to: :dynamic_type
   delegate :active_revision, to: :procedure, prefix: true
+  delegate :path, to: :procedure
 
   class WithIndifferentAccess
     def self.load(options)

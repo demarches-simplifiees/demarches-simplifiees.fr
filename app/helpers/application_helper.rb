@@ -142,7 +142,7 @@ module ApplicationHelper
   end
 
   def new_tab_suffix(title)
-    "#{title} — #{t('utils.new_tab')}"
+    "#{title} — #{I18n.t('utils.new_tab')}"
   end
 
   def download_details(attachment)
