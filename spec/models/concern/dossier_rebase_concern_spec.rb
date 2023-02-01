@@ -6,6 +6,17 @@ describe DossierRebaseConcern do
     let(:private_type_de_champ) { procedure.active_revision.types_de_champ_private.first }
     let(:mandatory_type_de_champ) { procedure.active_revision.types_de_champ_public.find(&:mandatory?) }
 
+    context 'on unpublished procedure' do
+      context 'en_construction' do
+        let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+
+        it 'should be false' do
+          expect(dossier.pending_changes).to be_empty
+          expect(dossier.can_rebase?).to be_falsey
+        end
+      end
+    end
+
     context 'en_construction' do
       let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
 
