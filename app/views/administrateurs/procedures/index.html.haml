@@ -5,7 +5,7 @@
     = link_to "Nouvelle Démarche", new_from_existing_admin_procedures_path, id: 'new-procedure', class: 'fr-btn'
   .fr-container
 
-    %nav.tabs
+    %nav.tabs{ role: 'navigation', "aria-label" => t('views.users.dossiers.label_navigation')}
       %ul
         = tab_item(t('pluralize.published', count: @procedures_publiees.count), admin_procedures_path(statut: 'publiees'), active: @statut == 'publiees', badge: number_with_html_delimiter(@procedures_publiees_count))
         = tab_item('En test', admin_procedures_path(statut: 'brouillons'), active: @statut == 'brouillons', badge: number_with_html_delimiter(@procedures_draft_count))
