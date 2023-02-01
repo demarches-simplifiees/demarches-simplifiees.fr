@@ -198,7 +198,9 @@ class ApplicationController < ActionController::Base
     payload.merge!({
       user_agent: request.user_agent,
       user_id: current_user&.id,
-      user_roles: current_user_roles
+      user_roles: current_user_roles,
+      client_ip: request.headers['X-Forwarded-For'],
+      request_id: request.headers['X-Request-ID']
     }.compact)
 
     if browser.known?
