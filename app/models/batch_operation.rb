@@ -141,7 +141,7 @@ class BatchOperation < ApplicationRecord
   end
 
   def finished_at
-    dossiers.empty? ? run_at : nil
+    dossiers.empty? ? super : nil
   end
 
   private
