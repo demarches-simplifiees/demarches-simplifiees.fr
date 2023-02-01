@@ -14,7 +14,7 @@
 
     - else
       %h1.page-title= t('views.users.dossiers.index.dossiers')
-      %nav.tabs
+      %nav.tabs{ role: 'navigation', "aria-label" => t('views.users.dossiers.label_navigation')}
         %ul
           - if @user_dossiers.present?
             = tab_item(t('pluralize.en_cours', count: @user_dossiers.count),
