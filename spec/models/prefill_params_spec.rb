@@ -126,6 +126,8 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is authorized", :checkbox, "false"
     it_behaves_like "a champ public value that is authorized", :drop_down_list, "value"
     it_behaves_like "a champ public value that is authorized", :regions, "03"
+    it_behaves_like "a champ public value that is authorized", :linked_drop_down_list, ["primary", "secondary"]
+    it_behaves_like "a champ public value that is authorized", :linked_drop_down_list, "primary"
 
     it_behaves_like "a champ private value that is authorized", :text, "value"
     it_behaves_like "a champ private value that is authorized", :textarea, "value"
@@ -144,6 +146,8 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ private value that is authorized", :checkbox, "false"
     it_behaves_like "a champ private value that is authorized", :drop_down_list, "value"
     it_behaves_like "a champ private value that is authorized", :regions, "93"
+    it_behaves_like "a champ private value that is authorized", :linked_drop_down_list, ["primary", "secondary"]
+    it_behaves_like "a champ private value that is authorized", :linked_drop_down_list, "primary"
 
     it_behaves_like "a champ public value that is unauthorized", :decimal_number, "non decimal string"
     it_behaves_like "a champ public value that is unauthorized", :integer_number, "non integer string"

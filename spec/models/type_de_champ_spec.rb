@@ -249,6 +249,7 @@ describe TypeDeChamp do
     it_behaves_like "a prefillable type de champ", :type_de_champ_yes_no
     it_behaves_like "a prefillable type de champ", :type_de_champ_checkbox
     it_behaves_like "a prefillable type de champ", :type_de_champ_drop_down_list
+    it_behaves_like "a prefillable type de champ", :type_de_champ_linked_drop_down_list
     it_behaves_like "a prefillable type de champ", :type_de_champ_regions
 
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_number
@@ -256,7 +257,6 @@ describe TypeDeChamp do
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_dossier_link
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_titre_identite
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_multiple_drop_down_list
-    it_behaves_like "a non-prefillable type de champ", :type_de_champ_linked_drop_down_list
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_header_section
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_explication
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_piece_justificative

@@ -269,6 +269,7 @@ class TypeDeChamp < ApplicationRecord
       TypeDeChamp.type_champs.fetch(:yes_no),
       TypeDeChamp.type_champs.fetch(:checkbox),
       TypeDeChamp.type_champs.fetch(:drop_down_list),
+      TypeDeChamp.type_champs.fetch(:linked_drop_down_list),
       TypeDeChamp.type_champs.fetch(:regions)
     ])
   end
