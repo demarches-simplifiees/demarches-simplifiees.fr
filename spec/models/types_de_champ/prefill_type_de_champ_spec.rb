@@ -50,7 +50,7 @@ RSpec.describe TypesDeChamp::PrefillTypeDeChamp, type: :model do
     context 'when the type de champ is prefillable' do
       let(:type_de_champ) { build(:type_de_champ_email) }
 
-      it { expect(possible_values).to match([]) }
+      it { expect(possible_values).to match(["Une adresse email"]) }
     end
   end
 

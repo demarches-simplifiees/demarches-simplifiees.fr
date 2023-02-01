@@ -75,6 +75,8 @@ class PrefillParams
     end
 
     def repeatable_hashes
+      return [] unless value.is_a?(Array)
+
       value.map.with_index do |repetition, index|
         row = champ.rows[index] || champ.add_row(champ.dossier_revision)
         JSON.parse(repetition).map do |key, value|
