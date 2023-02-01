@@ -14,7 +14,11 @@
 
     - else
       %h1.page-title= t('views.users.dossiers.index.dossiers')
+<<<<<<< HEAD
       %nav.tabs{ role: 'navigation', 'aria-label': t('views.users.dossiers.secondary_menu') }
+=======
+      %nav.tabs{ role: 'navigation', "aria-label" => t('views.users.dossiers.label_navigation')}
+>>>>>>> 2d6cc128f (add attributes secondary menu users)
         %ul
           - if @user_dossiers.present?
             = tab_item(t('pluralize.en_cours', count: @user_dossiers.count),

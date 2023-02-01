@@ -250,6 +250,7 @@ fr:
         dossier_not_in_instructor_group: "Le dossier n° %{dossier_id} de la procédure « %{procedure_libelle} » correspond à votre recherche mais il est rattaché au groupe d’instructeurs « %{groupe_instructeur_label} »."
     users:
       dossiers:
+        label_navigation: "Menu secondaire"
         archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
         autosave:
           explanation: Votre dossier est automatiquement enregistré.
