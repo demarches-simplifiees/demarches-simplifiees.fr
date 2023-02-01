@@ -313,8 +313,8 @@ en:
         demande:
           edit_dossier: "Edit file"
         search:
-          placeholder: Search a file
-          search_file: Search
+          search_file: Search a file
+          simple: Search
         index:
           dossiers: "Files"
         dossiers_list:
