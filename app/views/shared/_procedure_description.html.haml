@@ -8,7 +8,7 @@
 %h1.procedure-title
   = procedure.libelle
 
-- if procedure.persisted?
+- if procedure.persisted? && procedure.estimated_duration_visible?
   %p.procedure-configuration.procedure-configuration--fill-duration
     %span.icon.clock
     = t('shared.procedure_description.estimated_fill_duration', estimated_minutes: estimated_fill_duration_minutes(procedure))
