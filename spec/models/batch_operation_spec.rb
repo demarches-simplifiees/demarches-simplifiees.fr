@@ -98,6 +98,15 @@ describe BatchOperation, type: :model do
           .not_to change { batch_operation.reload.run_at }
       end
     end
+
+    context 'when it is the last job' do
+      it 'sets finished_at' do
+        expect { batch_operation.track_processed_dossier(true, dossier) }
+          .to change { batch_operation.reload.finished_at }
+          .from(nil)
+          .to(anything)
+      end
+    end
   end
 
   describe '#dossiers_safe_scope (with archiver)' do

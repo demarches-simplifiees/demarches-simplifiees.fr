@@ -23,15 +23,6 @@ describe BatchOperationProcessOneJob, type: :job do
       expect(batch_operation.dossier_operations.error.pluck(:dossier_id)).to eq([dossier_job.id])
     end
 
-    it 'sets finished_at when it is the last job' do
-      BatchOperationProcessOneJob.new(batch_operation, batch_operation.dossiers.second).perform_now
-      BatchOperationProcessOneJob.new(batch_operation, batch_operation.dossiers.last).perform_now
-      expect { subject.perform_now }
-        .to change { batch_operation.finished_at }
-        .from(nil)
-        .to(anything)
-    end
-
     context 'when operation is "archiver"' do
       it 'archives the dossier in the batch' do
         expect { subject.perform_now }
