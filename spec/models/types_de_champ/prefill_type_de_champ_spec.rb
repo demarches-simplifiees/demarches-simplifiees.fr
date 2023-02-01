@@ -10,6 +10,12 @@ RSpec.describe TypesDeChamp::PrefillTypeDeChamp, type: :model do
       it { expect(built).to be_kind_of(TypesDeChamp::PrefillDropDownListTypeDeChamp) }
     end
 
+    context 'when the type de champ is a linked_drop_down_list' do
+      let(:type_de_champ) { build(:type_de_champ_linked_drop_down_list) }
+
+      it { expect(built).to be_kind_of(TypesDeChamp::PrefillLinkedDropDownListTypeDeChamp) }
+    end
+
     context 'when the type de champ is a pays' do
       let(:type_de_champ) { build(:type_de_champ_pays) }
 
