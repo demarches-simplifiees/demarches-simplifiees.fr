@@ -74,6 +74,10 @@ class Avis < ApplicationRecord
     ]
   end
 
+  def updated_recently?
+    updated_at > 30.minutes.ago
+  end
+
   def revoked?
     revoked_at.present?
   end
