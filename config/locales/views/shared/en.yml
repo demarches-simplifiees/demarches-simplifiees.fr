@@ -7,6 +7,7 @@ en:
       avis:
         demande_envoyee_le: "Feedback send at %{date}"
         demande_revoquee_le: "Feedback revoked at %{date}"
+        relance_effectuee_le: "Reminder sent at %{date}"
         reponse_donnee_le: "Response sent at %{date}"
         en_attente: "Waiting for response"
       france_connect_login:
