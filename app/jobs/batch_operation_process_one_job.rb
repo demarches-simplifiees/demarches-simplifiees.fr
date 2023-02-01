@@ -1,12 +1,6 @@
 class BatchOperationProcessOneJob < ApplicationJob
   retry_on StandardError, attempts: 1 # default 5, for now no retryable behavior
 
-  after_perform do |job|
-    if called_for_last_time?(job)
-      job.arguments.first.touch(:finished_at)
-    end
-  end
-
   def perform(batch_operation, dossier)
     dossier = batch_operation.dossiers_safe_scope.find(dossier.id)
     begin
@@ -22,11 +16,5 @@ class BatchOperationProcessOneJob < ApplicationJob
     end
   rescue ActiveRecord::RecordNotFound
     dossier.update_column(:batch_operation_id, nil)
-  end
-
-  private
-
-  def called_for_last_time?(job)
-    job.arguments.first.dossiers.count.zero?
   end
 end
