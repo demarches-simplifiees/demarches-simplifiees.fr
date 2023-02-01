@@ -12,9 +12,6 @@ describe 'administrateurs/services/edit.html.haml', type: :view do
       assign(:procedure, procedure)
       render
     end
-    it "siret or numero tahiti is useless and should be present" do
-      expect(rendered).not_to match(/siret|numéro TAHITI/im)
-    end
     it 'contains placeholder at papeete' do
       expect(rendered).to match(/Papeete/)
     end

@@ -15,6 +15,6 @@ en:
         service:
           attributes:
             siret:
-              format: 'must start with lettee or digit, followed by 5 digits'
-              invalid: "doesn't point to a valid firm"
-              checksum: 'has error, verify the number'
+              format: "TAHITI number %{message}"
+              length: "must start with lettee or digit, followed by 5 digits"
+              checksum: "is invalid"

@@ -111,4 +111,37 @@ RSpec.describe GeoArea, type: :model do
       it { expect(geo_area.description).to be_nil }
     end
   end
+
+  describe "#label" do
+    context "when geo is a line" do
+      let(:geo_area) { build(:geo_area, :selection_utilisateur, :line_string, champ: nil) }
+      it "should return the label" do
+        expect(geo_area.label).to eq("Une ligne longue de 21,2 m")
+      end
+
+      it "should return unknown length" do
+        geo_area.geometry["coordinates"] = []
+        expect(geo_area.label).to eq("Une ligne de longueur inconnue")
+      end
+    end
+
+    context "when geo is a polygon" do
+      let(:geo_area) { build(:geo_area, :selection_utilisateur, :polygon, champ: nil) }
+      it "should return the label" do
+        expect(geo_area.label).to eq("Une aire de surface 103,6 m²")
+      end
+
+      it "should return unknown surface" do
+        geo_area.geometry["coordinates"] = []
+        expect(geo_area.label).to eq("Une aire de surface inconnue")
+      end
+    end
+
+    context "when geo is a cadastre parcelle" do
+      let(:geo_area) { build(:geo_area, :selection_utilisateur, :cadastre, champ: nil) }
+      it "should return the label" do
+        expect(geo_area.label).to eq("Parcelle n° 42 - Feuille 000 A11 - 123 m²")
+      end
+    end
+  end
 end

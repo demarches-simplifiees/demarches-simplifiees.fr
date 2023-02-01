@@ -90,10 +90,11 @@ module DossierHelper
     l(dossier.expiration_date, format: '%d/%m/%Y')
   end
 
-  def annuaire_link(siren)
-    return 'https://www.ispf.pf/rte' if siren.blank?
+  def annuaire_link(siren = nil)
+    base_url = 'https://www.ispf.pf/rte'
+    return base_url if siren.blank?
 
-    "https://www.ispf.pf/rte/attestation/#{siren}"
+    "#{base_url}/attestation/#{siren}"
   end
 
   def exports_list(exports, statut = nil)

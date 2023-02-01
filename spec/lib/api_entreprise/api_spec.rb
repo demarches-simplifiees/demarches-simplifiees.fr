@@ -4,7 +4,7 @@ describe APIEntreprise::API do
   let(:token) { Rails.application.secrets.api_entreprise[:key] }
 
   describe '.entreprise' do
-    subject { described_class.entreprise(siren, procedure_id) }
+    subject { described_class.new(procedure_id).entreprise(siren) }
 
     before do
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}/)
@@ -85,7 +85,7 @@ describe APIEntreprise::API do
   end
 
   describe '.etablissement' do
-    subject { described_class.etablissement(siret, procedure_id) }
+    subject { described_class.new(procedure_id).etablissement(siret) }
     before do
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*non_diffusables=true/)
         .to_return(status: status, body: body)
@@ -121,7 +121,7 @@ describe APIEntreprise::API do
     end
 
     context 'when siret does not exist' do
-      subject { described_class.exercices(siret, procedure_id) }
+      subject { described_class.new(procedure_id).exercices(siret) }
 
       let(:siret) { '11111111111111' }
       let(:status) { 404 }
@@ -133,7 +133,7 @@ describe APIEntreprise::API do
     end
 
     context 'when siret exists' do
-      subject { described_class.exercices(siret, procedure_id) }
+      subject { described_class.new(procedure_id).exercices(siret) }
 
       let(:siret) { '41816609600051' }
       let(:status) { 200 }
@@ -152,7 +152,7 @@ describe APIEntreprise::API do
       allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
     end
 
-    subject { described_class.rna(siren, procedure_id) }
+    subject { described_class.new(procedure_id).rna(siren) }
 
     context 'when siren does not exist' do
       let(:siren) { '111111111' }
@@ -186,7 +186,7 @@ describe APIEntreprise::API do
         .to_return(body: body, status: status)
     end
 
-    subject { described_class.attestation_sociale(siren, procedure.id) }
+    subject { described_class.new(procedure.id).attestation_sociale(siren) }
 
     context 'when token not authorized' do
       let(:roles) { ["entreprises"] }
@@ -215,7 +215,7 @@ describe APIEntreprise::API do
         .to_return(body: body, status: status)
     end
 
-    subject { described_class.attestation_fiscale(siren, procedure.id, user_id) }
+    subject { described_class.new(procedure.id).attestation_fiscale(siren, user_id) }
 
     context 'when token not authorized' do
       let(:roles) { ["entreprises"] }
@@ -243,7 +243,7 @@ describe APIEntreprise::API do
         .to_return(body: body, status: status)
     end
 
-    subject { described_class.bilans_bdf(siren, procedure.id) }
+    subject { described_class.new(procedure.id).bilans_bdf(siren) }
 
     context 'when token not authorized' do
       let(:roles) { ["entreprises"] }
@@ -258,9 +258,27 @@ describe APIEntreprise::API do
     end
   end
 
+  describe '.privileges' do
+    let(:api) { described_class.new }
+    let(:status) { 200 }
+    let(:body) { File.read('spec/fixtures/files/api_entreprise/privileges.json') }
+    subject { api.privileges }
+
+    before do
+      api.token = token
+
+      stub_request(:get, "https://entreprise.api.gouv.fr/v2/privileges")
+        .to_return(body: body, status: status)
+    end
+
+    context 'when token is authorized' do
+      it { expect(subject).to eq(JSON.parse(body, symbolize_names: true)) }
+    end
+  end
+
   describe 'with expired token' do
     let(:siren) { '111111111' }
-    subject { described_class.entreprise(siren, procedure_id) }
+    subject { described_class.new(procedure_id).entreprise(siren) }
 
     before do
       allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(true)

@@ -8,7 +8,7 @@ class APIEntreprise::AttestationFiscaleAdapter < APIEntreprise::Adapter
   private
 
   def get_resource
-    APIEntreprise::API.attestation_fiscale(siren, @procedure_id, @user_id)
+    api(@procedure_id).attestation_fiscale(siren, @user_id)
   end
 
   def process_params
