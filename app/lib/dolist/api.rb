@@ -123,7 +123,9 @@ class Dolist::API
   end
 
   def sender_id
-    @sender_id ||= senders.dig("ItemList", 0, "Sender", "ID")
+    Rails.cache.fetch("dolist_api_sender_id", expires_in: 1.hour) do
+      senders.dig("ItemList", 0, "Sender", "ID")
+    end
   end
 
   def get(url)
