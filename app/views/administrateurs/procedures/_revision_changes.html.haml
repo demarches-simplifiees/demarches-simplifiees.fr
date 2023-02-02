@@ -1,10 +1,13 @@
 %ul.revision-changes
-  - changes.filter { |change| change[:model] == :attestation_template }.each do |change|
-    = render partial: 'administrateurs/procedures/revision_change_attestation_template', locals: { change: change }
-  - changes.filter { |change| change[:model] == :type_de_champ }.each do |change|
-    = render partial: 'administrateurs/procedures/revision_change_type_de_champ', locals: { change: change }
-  - move_changes, move_private_changes = changes.filter { |change| change[:op] == :move }.partition { |change| !change[:private] }
-  - if move_changes.size != 0
-    %li.mb-1= t(:move, scope: [:administrateurs, :revision_changes], count: move_changes.size)
-  - if move_private_changes.size != 0
-    %li.mb-1= t(:move_private, scope: [:administrateurs, :revision_changes], count: move_private_changes.size)
+  - if changes.empty?
+    %li.mb-1= t(:no_changes, scope: [:administrateurs, :revision_changes])
+  - else
+    - changes.filter { |change| change[:model] == :attestation_template }.each do |change|
+      = render partial: 'administrateurs/procedures/revision_change_attestation_template', locals: { change: change }
+    - changes.filter { |change| change[:model] == :type_de_champ }.each do |change|
+      = render partial: 'administrateurs/procedures/revision_change_type_de_champ', locals: { change: change }
+    - move_changes, move_private_changes = changes.filter { |change| change[:op] == :move }.partition { |change| !change[:private] }
+    - if move_changes.present?
+      %li.mb-1= t(:move, scope: [:administrateurs, :revision_changes], count: move_changes.size)
+    - if move_private_changes.present?
+      %li.mb-1= t(:move_private, scope: [:administrateurs, :revision_changes], count: move_private_changes.size)

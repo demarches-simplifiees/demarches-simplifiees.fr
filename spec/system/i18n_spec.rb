@@ -7,8 +7,8 @@ describe 'Accessing the website in different languages:' do
       visit new_user_session_path
       expect(page).to have_text('Si vous avez')
 
-      click_on 'Langues'
-      click_on 'English'
+      find('.fr-translate__btn').click
+      find('.fr-nav__link[hreflang="en"]').click
 
       # The page is now in English
       expect(page).to have_text('If you already have')
