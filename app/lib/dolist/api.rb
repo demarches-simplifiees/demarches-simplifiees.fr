@@ -30,6 +30,11 @@ class Dolist::API
 
       sleep (limit_reset_at - Time.zone.now).ceil
     end
+
+    def sendable?(mail)
+      # Mail having attachments are not yet supported in our account
+      mail.attachments.none? { !_1.inline? }
+    end
   end
 
   def properly_configured?
