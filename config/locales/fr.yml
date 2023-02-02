@@ -16,115 +16,121 @@
 #
 # This would use the information in config/locales/es.yml.
 #
+# The following keys must be escaped otherwise they will not be retrieved by
+# the default I18n backend:
+#
+# true, false, on, off, yes, no
+#
+# Instead, surround them with single quotes.
+#
+# en:
+#   'true': 'foo'
+#
 # To learn more, please read the Rails Internationalization guide
 # available at http://guides.rubyonrails.org/i18n.html.
 
-fr:
+en:
   invisible_captcha:
-    sentence_for_humans: 'Si vous êtes un humain, laissez ce champ vide'
-  help: 'Aide'
+    sentence_for_humans: 'If you are a human, ignore this field'
+  help: 'Help'
   help_dropdown:
-    general_title: "Aide en ligne"
-    problem_title: Un problème avec le site ?
-    problem_description: Trouvez votre réponse dans l’aide en ligne.
-    technical_contact_title: Contact technique
-    technical_contact_description: Envoyez nous un message à %{contact_email}.
+    general_title: "Online help"
+    problem_title: A problem with the website ?
+    problem_description: Find your answer in the online help.
+    technical_contact_title: Technical contact
+    technical_contact_description: Send us a message to %{contact_email}.
   utils:
-    'yes': Oui
-    'no': Non
-    i_dont_know: Je ne sais pas
-    deconnexion: "Déconnexion"
-    pj: "Pièces jointes"
-    asterisk_html: Les champs suivis d’un astérisque ( <span class = mandatory> * </span> ) sont obligatoires.
-    file_number: Numéro de dossier
-    subject: Sujet
+    'yes': Yes
+    'no': No
+    deconnexion: "Log out"
+    pj: "Attachments"
+    asterisk_html: Fields marked by an asterisk ( <span class = mandatory>*</span> ) are mandatory.
+    file_number: File number
+    subject: Subject
     message: Message
-    send_mail: Envoyer le message
-    procedure: Démarches
-    new_tab: "Nouvel onglet"
+    send_mail: Send message
+    procedure: Procedures
+    new_tab: New tab
   helpers:
     procedure:
-      testing_procedure: démarche en test
-      close: Close
-      unpublished: Dépubliée
+      testing_procedure: testing procedure
+      close: Closed
+      unpublished: Unpublished
     commentaire:
-      send_message_to_instructeur: "Envoyer un message à l’instructeur"
-      reply_in_mailbox: "Répondre dans la messagerie"
+      send_message_to_instructeur: "Send a message to the instructor"
+      reply_in_mailbox: "Reply in mailbox"
   layouts:
     commencer:
       no_procedure:
-        line1: Un outil simple
-        line2: pour gérer les formulaires
-        line3: administratifs dématérialisés.
-        are_you_new: Vous êtes nouveau sur %{app_name} ?
-    my_account: Mon compte
+        line1: A simple tool
+        line2: to manage dematerialized
+        line3: administrative forms.
+        are_you_new: First time on %{app_name}?
+    my_account: My account
     header:
-      close_modal: 'Fermer'
-      back: "Revenir en arrière"
+      close_modal: 'Close'
+      back: "Back"
       back_title: "Revenir sur le site de mon administration"
-      main_menu: "Menu principal"
+      main_menu: "Main menu"
     locale_dropdown:
-      select_locale: "Sélectionner une langue"
-      locale_name: "Français"
+      select_locale: "Choose a language"
+      locale_name: "English"
     notifications:
       actions:
-        access: Consulter mon dossier
-        question: J’ai une question
-        reply: Répondre à ce message
+        access: View your File
+        question: I have a question
+        reply: Reply to this message
     root_path_link_title:
-      default: 'Aller à la page d’accueil'
-      user: 'Aller à la liste des dossiers'
-      instructeur: 'Aller à la liste des démarches'
-      admin: "Aller au panneau d’administration"
+      default: 'Go to homepage'
+      user: 'Go to files list'
+      instructeur: 'Go to procedures list'
+      admin: 'Go to administration panel'
   views:
     commencer:
       show:
-        start_procedure: Commencer la démarche
-        existing_dossiers: Vous avez déjà des dossiers pour cette démarche
-        show_dossiers: Voir mes dossiers en cours
-        prefilled_draft: "Vous avez un dossier prérempli"
-        prefilled_draft_detail_html: "Il y a <strong>%{time_ago}</strong>, vous avez prérempli un dossier sur la démarche « %{procedure} »."
-        already_draft: "Vous avez déjà commencé à remplir un dossier"
-        already_draft_detail_html: "Il y a <strong>%{time_ago}</strong>, vous avez commencé à remplir un dossier sur la démarche « %{procedure} »."
-        already_not_draft: "Vous avez déjà déposé un dossier"
-        already_not_draft_detail_html: "Il y a <strong>%{time_ago}</strong>, vous avez déposé un dossier sur la démarche « %{procedure} »."
-        continue_file: 'Continuer à remplir mon dossier'
-        start_new_file: 'Commencer un nouveau dossier'
-        show_my_submitted_file: 'Voir mon dossier déposé'
-        want_empty_pdf: "Vous souhaitez effectuer une demande par papier ? Vous pouvez télécharger un dossier vide au format PDF, et l’envoyer à l’administration concernée : %{service} - %{adresse}"
-        download_empty_pdf: 'Télécharger un dossier vide au format PDF'
+        start_procedure: Start the procedure
+        existing_dossiers: You already have files for this procedure
+        show_dossiers: View my current files
+        prefilled_draft: "You have a prefilled file"
+        prefilled_draft_detail_html: "You prefilled a file for the \"%{procedure}\" procedure <strong>%{time_ago} ago</strong>"
+        already_draft: "You already started to fill a file"
+        already_draft_detail_html: "You started to fill a file for the \"%{procedure}\" procedure <strong>%{time_ago} ago</strong>"
+        already_not_draft: "You already submitted a file"
+        already_not_draft_detail_html: "You submitted a file for the \"%{procedure}\" procedure <strong>%{time_ago} ago</strong>."
+        continue_file: "Continue to fill my file"
+        start_new_file: "Start a new file"
+        show_my_submitted_file: 'Show my submitted file'
+        want_empty_pdf: "You prefer to submit a paper form? You can download an empty PDF file, and send it to the right administration : %{service} - %{adresse}"
+        download_empty_pdf: 'Download an empty PDF file'
     prefill_descriptions:
       edit:
-        intro_html: "Vous souhaitez permettre à vos usager·ères la <strong>création d'un dossier prérempli</strong>, à partir de données dont vous disposez déjà, pour la démarche « %{libelle} »."
-        info_html: Pour cela, sélectionnez ci-dessous les champs que vous souhaitez préremplir.<br> Vous trouverez ensuite en bas de cette page un lien de préremplissage qu'il ne vous restera plus qu'à copier, à adapter en remplaçant les valeurs par défaut et à partager.<br> De la même façon, vous trouverez en bas de page un exemple de requête cURL à adapter si vous souhaitez préremplir les dossiers par API.
+        intro_html: "You'd like to allow your users to <strong>create a prefilled file</strong>, with data you already have, for the procedure « %{libelle} »."
+        info_html: To do this, select the fields below that you want to prefill.<br> You will then find a prefill link at the bottom of this page, which you will just need to copy, adapt by replacing the default values, and share.<br> In the same way, you will find an example of a cURL request at the bottom of the page to adapt if you want to prefill the folders via API.
         champ_id: ID
         champ_type: Type
-        champ_add: Ajouter
-        champ_remove: Retirer
-        champ_unavailable: Indisponible
+        champ_add: Add
+        champ_remove: Remove
+        champ_unavailable: Unavailable
         possible_values:
-          link:
-            title: Toutes les valeurs possibles
-            text: Voir toutes les valeurs possibles
-          title: Valeurs
-          text_html: Un texte court
-          textarea_html: Un texte long
-          decimal_number_html: Un nombre décimal
-          integer_number_html: Un nombre entier
-          email_html: Une adresse email
-          civilite_html: '"M." pour Monsieur, "Mme" pour Madame'
-          phone_html: Un numéro de téléphone
-          iban_html: Un numéro Iban
-          yes_no_html: '"true" pour Oui, "false" pour Non'
-          checkbox_html: '"true" pour coché, "false" pour décoché'
-          pays_html: Un <a href="https://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">code pays ISO 3166-2</a>
-          regions_html: Un <a href="https://fr.wikipedia.org/wiki/R%C3%A9gion_fran%C3%A7aise" target="_blank">code INSEE de région</a>
-          datetime_html: Datetime au format ISO8601
-          date_html: Date au format ISO8601
-          drop_down_list_other_html: Toute valeur
+          title: Values
+          text_html: A short text
+          textarea_html: A long text
+          decimal_number_html: A decimal number
+          integer_number_html: An integer number
+          email_html: An email address
+          civilite_html: '"M." for Mister, "Mme" for Madam'
+          phone_html: A phone number
+          iban_html: An Iban number
+          yes_no_html: '"true" for Yes, "false" pour No'
+          checkbox_html: '"true" to check, "false" to uncheck'
+          pays_html: An <a href="https://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">ISO 3166-2 country code</a>
+          regions_html: An <a href="https://fr.wikipedia.org/wiki/R%C3%A9gion_fran%C3%A7aise" target="_blank">INSEE region code</a>
+          date_html: ISO8601 date
+          datetime_html: ISO8601 datetime
+          drop_down_list_other_html: Any value
         examples:
-          title: Exemple
-          text: Texte court
+          title: Example
+          text: Short text
           textarea: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
           decimal_number: 3.14
           integer_number: 42
@@ -132,295 +138,292 @@ fr:
           phone: 0612345678
           iban: FR7611315000011234567890138
           yes_no: "true"
-          civilite: "M."
           pays: "FR"
           regions: "53"
           date: "2023-02-01"
           datetime: "2023-02-01T10:30"
           checkbox: "true"
-        prefill_link_title: Lien de préremplissage (GET)
-        prefill_link_info: Copiez le lien grâce au bouton ci-dessous et remplacez les valeurs par les données dont vous disposez.
-        prefill_link_too_long: Attention, ce lien de préremplissage est trop long et risque de ne pas fonctionner sur certains navigateurs.
-        prefill_link_copy: Copier le lien de préremplissage
-        prefill_query_title: Requête de préremplissage (POST)
-        prefill_query_info: Copiez la requête grâce au bouton ci-dessous et remplacez les valeurs par les données dont vous disposez.
+        prefill_link_title: Prefill link (GET)
+        prefill_link_info: Use the button to copy the link, then remplace the values with your data.
+        prefill_link_too_long: Warning, the prefill link is too long and may not work on all browsers.
+        prefill_link_copy: Copy prefill link
+        prefill_query_title: Prefill query (POST)
+        prefill_query_info: Use the button to copy the query, then remplace the values with your data.
         prefill_query_response_html: '# Response:<br># {<br>#    "dossier_url": "%{url}",<br>#    "dossier_id": "aBase64Id==",<br>#    "dossier_number": 42<br># }'
-        prefill_query_copy: Copier la requête de préremplissage
-        json_description_title: Description JSON de la démarche
-        json_description_info: Copiez la requête grâce au bouton ci-dessous pour découvrir les détails de la démarche et de ses champs au format JSON
-        json_description_copy: Copier la requête d'obtention de la description JSON
+        prefill_query_copy: Copy prefill query
+        json_description_title: JSON description of the procedure
+        json_description_info: Use the button to copy the query and learn more about the procedure and its fields thanks to a JSON description.
+        json_description_copy: Copy the JSON description query
     registrations:
       new:
-        title: "Creation de compte sur %{name}"
-        subtitle: "Se créer un compte en choisissant un identifiant"
-        email_label: 'Email'
-        password_label: "Mot de passe (%{min_length} caractères minimum)"
-        password_message: "Votre mot de passe doit contenir :"
-        password_placeholder: "%{min_length} caractères minimum"
+        title: "Create an account %{name}"
+        subtitle: "Create an account using an email"
+        email_label: 'Email (name@site.com)'
+        password_label: "Password (%{min_length} characters minimum)"
+        password_message: "Your password must have :"
+        password_placeholder: "%{min_length} characters minimum"
     invites:
       dropdown:
-        invite_to_edit: Inviter une personne à modifier ce dossier
-        view_invited_people: "Voir les personnes invitées"
-        invite_to_view: "Inviter une personne à consulter ce dossier"
+        invite_to_edit: Invite someone to edit this file
+        view_invited_people: "View invited people"
+        invite_to_view: "Invite someone to view this file"
       form:
-        invite_to_edit_line1: Vous pouvez inviter quelqu’un à remplir ce dossier avec vous.
-        invite_to_edit_line2: Cette personne aura le droit de modifier votre dossier.
-        email: Adresse mail
-        invite_message: Ajouter un message à la personne invitée (optionnel)
-        send_invitation: Envoyer une invitation
-        invite_to_participate: "Personnes invitées à participer à ce dossier"
-        withdraw_permission: "Révoquer l’autorisation"
-        want_to_withdraw_permission: "Souhaitez-vous supprimer l’autorisation ?"
-        edit_dossier: "Ces personnes peuvent modifier ce dossier."
-        submit_dossier_yourself: "Une fois le dossier complet, vous devez le déposer vous-même."
+        invite_to_edit_line1: You can invite someone to complete this file with you.
+        invite_to_edit_line2: This person will have the right to edit your file.
+        email: Email address
+        invite_message: Add a message to the person you invite (optional)
+        send_invitation: Send an invitation
+        invite_to_participate: "Invited people to participate in this file"
+        withdraw_permission: "Withdraw the permission"
+        want_to_withdraw_permission: "Would you like to withdraw the permission?"
+        edit_dossier: "These people can edit this file."
+        submit_dossier_yourself: "You must submit the file yourself when it is complete."
     pagination:
-      next: Suivant
-      last: Dernier
-      previous: Précédent
-      first: Premier
+      next: Next
+      last: Last
+      previous: Previous
+      first: First
       truncate: '&hellip;'
     shared:
-      actions:
-        save: Enregistrer
-        edit: Modifier
       greetings:
-        hello: Bonjour,
-        best_regards: Bonne journée,
+        hello: Dear Sir or Madam,
+        best_regards: Best Regards,
       dossiers:
         edit:
-          autosave: Votre dossier est enregistré automatiquement après chaque modification. Vous pouvez à tout moment fermer la fenêtre et reprendre plus tard là où vous en étiez.
-          notice: Télécharger le guide de la démarche
-          notice_title: "Pour vous aider à remplir votre dossier, vous pouvez consulter le guide de cette démarche."
+          autosave: Your file is automatically saved after each modification. You can close the window at any time and pick up where you left off later.
+          notice: "Download the notice of the procedure"
+          notice_title: "To help you complete your file, you can consult the notice to this procedure."
         messages:
           form:
-            send_message: "Envoyer le message"
-            write_message_placeholder: "Écrivez votre message ici"
-            write_message_to_administration_placeholder: "Écrivez votre message à l’administration ici"
+            send_message: "Send message"
+            write_message_placeholder: "Write your message here"
+            write_message_to_administration_placeholder: "Write your message to the administration here"
         demande:
-          requester_identity: "Identité du demandeur"
-          my_identity: "Mon identité"
-          form: "Formulaire"
-          edit_siret: "Modifier le SIRET"
-          edit_identity: "Modifier l’identité"
+          requester_identity: "Identity of the requester"
+          my_identity: "My identity"
+          form: "Form"
+          edit_siret: "Edit SIRET"
+          edit_identity: "Edit identity data"
     instructeurs:
       dossiers:
         tab_steps:
-          to_follow: à suivre
-          total: au total
-          request: Demande
-          private_annotations: Annotations privées
-          external_opinion: Avis externes
-          messaging: Messagerie
-          involved_persons: Personnes impliquées
+          to_follow: to follow
+          total: total
+          request: Request
+          private_annotations: Private annotations
+          external_opinion: External opinion
+          messaging: Messaging
+          involved_persons: Involved persons
         tab_explainations:
-          a_suivre: Aucun instructeur n’est affecté au suivi de ces dossiers. Soyez le premier !
-          suivis: Les dossiers qui sont dans cet onglet sont uniquement ceux que vous suivez. Vous pouvez échanger avec le demandeur jusqu’à pouvoir les accepter, les refuser ou les classer sans suite.
-          traites_html: "Les dossiers dans cet onglet sont terminés : ils ont été acceptés, refusés ou classés sans suite. Vous pouvez <a href=%{archives_path}>télécharger</a> les archives au format zip des dossiers terminés et leurs pièces jointes."
-          tous: Tous les dossiers qui ont été déposés sur cette démarche, quel que soit le statut.
-          supprimes_recemment: Tous les dossiers terminés et supprimés par les instructeurs sur cette démarche
-          archives:  "Les dossiers de cet onglet sont archivés : vous ne pouvez plus y répondre, et les demandeurs ne peuvent plus les modifier."
-          expirant: Les dossiers n’expireront pas avant la période de conservation des données.
-        archived_dossier: "Le dossier sera conservé 1 mois supplémentaire"
-        delete_dossier: "Supprimer le dossier"
-        deleted_by_user: "Dossier supprimé par l’usager"
-        deleted_by_administration: "Dossier supprimé par l’administration"
-        restore: "Restaurer"
+          a_suivre: No instructor is assigned to follow up on these files. Be the first !
+          suivis: The folders that are in this tab are only those that you follow. You can exchange with the requester until you can accept them, refuse them or classify them without follow-up.
+          traites_html: "The files in this tab are finished: they have been accepted, refused or closed without follow-up. You can <a href=%{archives_path}>download</a> the zip archives of finished files and their attachments."
+          tous: All the files that have been submitted on this approach, regardless of the status.
+          supprimes_recemment: All files completed and deleted by the instructors on this approach.
+          archives: "The files in this tab are archived: you can no longer reply to them, and requesters can no longer modify them."
+          expirant: Records will not expire prior to the data retention period.
+        archived_dossier: "This file will be kept for an additional month"
+        delete_dossier: "Delete file"
+        deleted_by_user: "File deleted by user"
+        deleted_by_administration: "File deleted by administration"
+        restore: "Restore"
         filters:
-          title: Sélectionner un filtre
-        select_all: Tout selectionner
+          title: Select a filter
+        select_all: Select all
         batch_operation:
-          enabled: "Ajouter ce dossier à la selection pour un traitement de masse"
-          disabled: "Impossible d'ajouter ce dossier à la selection car il est déjà dans un traitement de masse"
+          enabled: "Add this file to the selection for the bulk operation"
+          disabled: "Impossible to add this file to the selection because it is already in a bulk operation"
         dossiers_count:
-          zero: 0 dossier
-          one: 1 dossier
-          other: "%{count} dossiers"
-        show_deleted_dossiers: Afficher les dossiers supprimés
-        personalize: Personnaliser le tableau
-        download: Télécharger un dossier
-        follow_file: Suivre le dossier
-        stop_follow: Ne plus suivre
-        save: Enregistrer
-        no_file: Aucun dossier
-        dossier_synthesis: Synthèse des dossiers
+          zero: 0 file
+          one: 1 file
+          other: "%{count} files"
+        personalize: Personalize the table
+        show_deleted_dossiers: Show deleted files
+        follow_file: Follow-up the file
+        save: Save
+        stop_follow: No longer follow
+        no_file: No file
+        dossier_synthesis: Summary of files
       avis:
-        introduction_file_explaination: "Fichier joint à la demande d’avis"
+        introduction_file_explaination: "File attached to the request for advice"
       search:
-        dossier_not_in_instructor_group: "Le dossier n° %{dossier_id} de la procédure « %{procedure_libelle} » correspond à votre recherche mais il est rattaché au groupe d’instructeurs « %{groupe_instructeur_label} »."
+        dossier_not_in_instructor_group: "File no. %{dossier_id} of the “%{procedure_libelle}” procedure corresponds to your search, but it is attached to the “%{groupe_instructeur_label}” instructor group."
     users:
       dossiers:
-        archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
+        label_navigation: "Secondary menu"
+        archived_dossier: "Your file will be kept %{duree_conservation_dossiers_dans_ds} more months"
         autosave:
-          explanation: Votre dossier est automatiquement enregistré.
-          confirmation: Dossier enregistré
-          draft_explanation: Votre brouillon est automatiquement enregistré.
-          draft_confirmation: Brouillon enregistré
-          more_information: En savoir plus
+          explanation: Your file is automatically saved.
+          confirmation: File saved
+          draft_explanation: Your draft is automatically saved.
+          draft_confirmation: Draft saved
+          more_information: More informations
         identite:
-          identity_data: Données d’identité
-          all_required: Tous les champs sont obligatoires.
-          civility: Civilité
-          first_name: Prénom
-          last_name: Nom
+          identity_data: Identity data
+          all_required: All fields are required.
+          civility: Civility
+          first_name: First Name
+          last_name: Last Name
           birthdate: Date de naissance
-          complete_data: Merci de remplir vos informations personnelles pour accéder à la démarche.
-          continue: Continuer
+          complete_data: Please complete your personal information to access the procedure.
+          continue: Continue
         merci:
-          thanks: Merci !
-          dossier_send_l1: Votre dossier sur la démarche
-          dossier_send_l2: a bien été envoyé.
-          dossier_acces_l1: Vous avez désormais accès à votre
-          dossier_acces_l2: dossier en ligne.
-          dossier_edit_l1: Vous pouvez
-          dossier_edit_l2: le modifier
-          dossier_edit_l3: et
-          dossier_edit_l4: échanger avec un instructeur.
-          acces_dossier: Accéder à votre dossier
-          submit_dossier: Déposer un autre dossier
+          thanks: Thank you!
+          dossier_send_l1: Your file on the procedure
+          dossier_send_l2: has been sent.
+          dossier_acces_l1: You have now access to your
+          dossier_acces_l2: online file.
+          dossier_edit_l1: You can
+          dossier_edit_l2: edit it
+          dossier_edit_l3: and
+          dossier_edit_l4: talk with an instructor.
+          acces_dossier: Access your file
+          submit_dossier: Submit an other file
         show:
           header:
-            edit_dossier: Modifier mon dossier
-            edit_dossier_title: "Modifier mon dossier - Vous pouvez modifier votre dossier tant qu’il n’est pas passé en instruction"
-            summary: "Résumé"
-            request: "Demande"
-            mailbox: "Messagerie"
-            dossier_number: "Dossier nº %{dossier_id}"
-            created_date: "- En brouillon depuis le %{date_du_dossier}"
-            submit_date: "- Déposé le %{date_du_dossier}"
-            print: "imprimer"
-            print_dossier: "Tout le dossier"
+            edit_dossier: Edit my file
+            edit_dossier_title: "Edit my file - You can modify your file as long as it has not been sent for processing"
+            summary: "Summary"
+            request: "Request"
+            mailbox: "Mailbox"
+            dossier_number: "File n. %{dossier_id}"
+            created_date: "- Draft on %{date_du_dossier}"
+            submit_date: "- Submit on %{date_du_dossier}"
+            print: "print"
+            print_dossier: "All the file"
           status_overview:
-            status_draft: brouillon
-            status_in_progress: en construction
-            en_construction_html: "Votre dossier est en construction. Cela signifie que <strong>vous pouvez encore le modifier</strong>. Vous ne pourrez plus modifier votre dossier lorsque l’administration le passera « en instruction »."
-            status_review: en instruction
-            admin_review: Votre dossier est en cours d’instruction par l’administration. Vous ne pouvez plus le modifier.
-            status_completed: terminé
-            use_mailbox_for_questions_html: "<strong>Vous avez une question ?</strong> Utilisez la messagerie pour <a href=\"%{mailbox_url}\">contacter l’administration directement</a>."
-            acceptee_html: "Votre dossier a été <strong>accepté</strong>."
-            accepte_motivation: "Motif de l’acceptation"
-            accepte_attestation: "Télécharger l’attestation"
-            refuse_html: "Nous sommes désolés, votre dossier a malheureusement été <strong>refusé</strong>."
-            refuse_motivation: "Motif du refus"
-            refuse_reply: "Envoyer un message à l’administration"
-            sans_suite_html: "Votre dossier a été classé <strong>sans suite</strong>."
-            sans_suite_motivation: "Motif du classement sans suite"
+            status_draft: draft
+            status_in_progress: in progress
+            en_construction_html: Your file is in progress. It means that <strong>you can still edit it</strong>. You will no longer be able to edit the file when the administration will switch it to "review".
+            status_review: undergoing review
+            admin_review: The administration is reviewing your file. You are no longer able to edit it.
+            status_completed: completed
+            use_mailbox_for_questions_html: "<strong>You have a question?</strong> Use the mailbox to <a href=\"%{mailbox_url}\">contact the administration directly</a>."
+            acceptee_html: "Your file had been <strong>accepted</strong>."
+            accepte_motivation: "Reason"
+            accepte_attestation: "Download the attestation"
+            refuse_html: "Sorry, your file had been <strong>rejected</strong>."
+            refuse_motivation: "Reason"
+            refuse_reply: "Send a message to the administration"
+            sans_suite_html: "Your file had been <strong>closed, no further action</strong>."
+            sans_suite_motivation: "Reason"
           latest_message:
-            latest_message: "Dernier message"
+            latest_message: "Latest message"
         messagerie:
-          mailbox: "La messagerie vous permet de contacter l’instructeur en charge de votre dossier."
+          mailbox: "The mailbox allows you to contact the instructor in charge of your file."
         demande:
-          edit_dossier: "Modifier le dossier"
+          edit_dossier: "Edit file"
         search:
-          placeholder: Rechercher un dossier
-          search_file: Rechercher
+          search_file: Search a file
+          simple: Search
         index:
-          dossiers: "Dossiers"
+          dossiers: "Files"
         dossiers_list:
-          caption: Mes dossiers
-          procedure: "Démarche"
-          n_dossier: "Nº dossier"
-          requester: "Demandeur"
-          status: "Statut"
-          updated: "Mis à jour"
+          caption: My files
+          procedure: "Procedure"
+          n_dossier: "File n."
+          requester: "Requester"
+          status: "Status"
+          updated: "Updated"
           actions: "Actions"
         dossier_action:
-          edit_dossier: "Modifier le dossier"
-          start_other_dossier: "Commencer un autre dossier vide"
-          clone: "Dupliquer ce dossier"
-          delete_dossier: "Supprimer le dossier"
-          transfer_dossier: "Transférer le dossier"
-          edit_draft: "Modifier le brouillon"
+          edit_dossier: "Edit the file"
+          start_other_dossier: "Start another empty file"
+          clone: "Duplicate the file"
+          delete_dossier: "Delete the file"
+          transfer_dossier: "Transfer the file"
+          edit_draft: "Edit the draft"
           actions: "Actions"
       sessions:
         new:
-          sign_in: Connexion à %{application_name}
-          password: Mot de passe (%{min_length} caractères minimum)
-          remember_me: Se souvenir de moi
-          reset_password: Mot de passe oublié ?
-          connection: Se connecter
-          find_procedure: Trouvez votre démarche
-          state_civil_servant: Vous êtes agent de la fonction publique d’État ?
-          connect_with_agent_connect: Accédez à notre page dédiée
-          subtitle: "Se connecter avec son compte"
+          sign_in: Sign in on %{application_name}
+          password: Password (minimum length %{min_length} characters)
+          remember_me: Remember me
+          reset_password: Forgot password?
+          connection: Sign in
+          find_procedure: Find your procedure
+          state_civil_servant: Are you a state civil servant?
+          connect_with_agent_connect: Visit our dedicated page
+          subtitle: "Sign in with my account"
       passwords:
         reset_link_sent:
-          email_sent_html: "Nous vous avons envoyé un email à l’adresse <strong>%{email}</strong>."
-          click_link_to_reset_password: "Cliquez sur le lien contenu dans l’email pour changer votre mot de passe."
-          no_mail: "Vous n’avez pas reçu l’email ?"
-          check_spams: "Vérifiez la boite Indésirables ou Spam de votre boite email."
-          check_account: "Avez-vous bien créé un compte %{application_name} avec l’adresse %{email} ? Si aucun compte n’existe avec cette adresse, vous ne recevrez pas de message."
-          check_france_connect_html: "Vous êtes-vous connecté avec France Connect par le passé ? Dans ce cas <a href=\"%{href}\">essayez à nouveau avec France Connect</a>."
-          got_it: "Bien reçu !"
-          open_your_mailbox: "Maintenant ouvrez votre boite email."
-          title: "Lien de réinitialisation du mot de passe envoyé"
+          got_it: Got it!
+          open_your_mailbox: Now open your mailbox.
+          email_sent_html: We have sent you an email to the address <strong>%{email}</strong>.
+          click_link_to_reset_password: Click on the link in the email to change your password.
+          no_mail: Didn't receive the email?
+          check_spams: Check your junk or spam email.
+          check_account: Have you created a %{application_name} account with the adress %{email}? You will not receive any message if no account is linked to your email adress.
+          check_france_connect_html: Have you once logged in with France Connect? If yes, <a href=\"%{href}\">try again with France Connect</a>.
       shared:
-        email_can_take_a_while_html: "<strong>Attention</strong>, ce message peut mettre jusqu’à <strong>15 minutes</strong> pour arriver."
-        contact_us_if_any_trouble_html: 'En cas de difficultés, nous restons joignables <a href="%{href}">via ce formulaire</a>.'
+        email_can_take_a_while_html: <strong>Please note</strong> that this message can take up to 15 minutes to arrive.
+        contact_us_if_any_trouble_html: 'You can contact us <a href="%{href}">through this form</a> if a problem still exists.'
   modal:
     publish:
       title:
-        publish: Publier la démarche
-        reopen: Réactiver la démarche
+        publish: Publish the procedure
+        reopen: Reopen the procedure
       body:
-        publish: Vous vous apprêtez à publier votre démarche au public.
-        reopen: Vous vous apprêtez à réactiver votre démarche.
+        publish: You are about to publish the procedure to the public.
+        reopen: You are about to reopen the procedure.
       submit:
-        publish: Publier
-        reopen: Réactiver
+        publish: Publish
+        reopen: Reopen
   activerecord:
     models:
       user:
-        one: Utilisateur
-        other: Utilisateurs
+        one: User
+        other: Users
 
     attributes:
       default_attributes: &default_attributes
-        email: Adresse éléctronique
-        password: 'Mot de passe'
-        requested_merge_into: 'La nouvelle adresse email'
+        email: Email
+        password: 'Password'
+        requested_merge_into: 'new email address'
         hints:
-          email: "Format attendu : john.doe@exemple.fr"
+          email: "Expected format : john.doe@example.com"
       user:
-        siret: 'Numéro SIRET'
+        siret: 'SIRET number'
         << : *default_attributes
       instructeur:
         << : *default_attributes
       super_admin:
         << : *default_attributes
       procedure:
-        zone: La démarche est mise en œuvre par
+        zone: This procedure is run by
       champs:
-        value: Valeur du champ
+        value: Value
 
     errors:
       messages:
-        not_a_phone: 'Numéro de téléphone invalide'
-        not_a_rna: 'Numéro RNA invalide'
+        not_a_phone: 'Invalid phone number'
+        not_a_rna: 'Invalid RNA number'
       models:
         attestation_template:
           attributes:
             footer:
-              too_long: ": le pied de page est trop long."
+              too_long: ": the footer is too long."
+
         invite:
           attributes:
             email:
-              taken: ': Invitation déjà envoyée'
+              taken: ': Invitation already sent'
+
         user:
           attributes: &error_attributes
             reset_password_token:
-              invalid: ": Votre lien de nouveau mot de passe a expiré. Merci d’en demander un nouveau."
+              invalid: ": is expired. Ask a new one"
             email:
-              blank: "est vide. Saisir une adresse éléctronique"
-              invalid: "est invalide. Saisir une adresse éléctronique valide, exemple : john.doe@exemple.fr"
-              taken: "déjà utilisé. Saisir une autre adresse éléctronique."
+              blank: "is empty. Fill in the email"
+              invalid: "is invalid. Fill in a valid email address, example: john.doe@example.fr"
+              taken: "already in use. Fill in another email"
             password:
-              too_short: "est trop court. Saisir un mot de passe avec au moins 8 caractères"
-              not_strong: "n’est pas assez complexe. Saisir un mot de passe plus complexe"
+              too_short: "is too short. Fill in a password with at least 8 characters"
+              not_strong: "not strong enough. Fill in a stronger password"
             password_confirmation:
-              confirmation: ': Les deux mots de passe ne correspondent pas'
+              confirmation: ": The two passwords do not match"
             requested_merge_into:
-              same: "ne peut être identique à l’ancienne. Saisir une autre adresse email"
+              same: "can't be the same as the old one"
 
         instructeur:
           attributes:
@@ -432,239 +435,191 @@ fr:
         procedure:
           attributes:
             path:
-              taken: est déjà utilisé par une démarche. Vous ne pouvez pas l’utiliser car il appartient à un autre administrateur.
-              taken_can_be_claimed: est identique à celui d’une autre de vos démarches publiées. Si vous publiez cette démarche, l’ancienne sera dépubliée et ne sera plus accessible au public. Les utilisateurs qui ont commencé un brouillon vont pouvoir le déposer.
-              invalid: n’est pas valide. Il doit comporter au moins 3 caractères, au plus 50 caractères et seuls les caractères a-z, 0-9, '_' et '-' sont autorisés.
+              taken: is already used for procedure. You cannot use it because it belongs to another administrator.
+              taken_can_be_claimed: Is the same as another of your procedure. If you publish this procedure, the other one will be unpublished
+              invalid: is not valid. It must countain between 3 and 50 characters among a-z, 0-9, '_' and '-'.
         "champs/cnaf_champ":
           attributes:
             numero_allocataire:
-              invalid: "doit être composé au maximum de 7 chiffres"
+              invalid: "must be a maximum of 7 digits"
             code_postal:
-              invalid: "doit posséder 5 caractères"
+              invalid: "must be 5 characters long"
         "champs/dgfip_champ":
           attributes:
             numero_fiscal:
-              invalid: "doit posséder 13 ou 14 caractères"
+              invalid: "must be 13 or 14 characters long"
             reference_avis:
-              invalid: "doit posséder 13 ou 14 caractères"
+              invalid: "must be 13 or 14 characters long"
         "champs/drop_down_list_champ":
           attributes:
             value:
-              not_in_options: "doit être dans les options proposées"
+              not_in_options: "must be in the given options"
         "champs/region_champ":
           attributes:
             value:
-              not_in_region_names: "doit être un nom de région valide"
+              not_in_region_names: "must be a valid region name"
             external_id:
-              not_in_region_codes: "doit être un code de région valide"
+              not_in_region_codes: "must be a valid region code"
   errors:
-    format: "Le champ « %{attribute} » %{message}"
+    format: "Field « %{attribute} » %{message}"
     messages:
-      saml_not_authorized: "Vous n’êtes pas autorisé à accéder à ce service."
-      dossier_not_found: "Le dossier n’existe pas ou vous n’y avez pas accès."
-      # dossier_map_not_activated: "Le dossier n’a pas accès à la cartographie."
-      targeted_user_link_expired: "Ce lien d’invitation n’est plus valable ou le dossier n’est plus accessible."
-      invalid_siret: "Le siret est incorrect"
-      procedure_not_found: "La démarche n’existe pas"
-      siret_unknown: 'Désolé, nous n’avons pas trouvé d’établissement enregistré correspondant à ce numéro SIRET.'
+      dossier_not_found: "The file does not exist or you do not have access to it."
+      # # dossier_map_not_activated: "The file does not have access to the map."
+      targeted_user_link_expired: "This invitation link or the file is no longer available."
+      invalid_siret: "The SIRET is incorrect"
+      procedure_not_found: "The procedure does not exist"
+      siret_unknown: 'Sorry, we did not find any establishment registered under this SIRET number.'
       siret_network_error: 'Désolé, la récupération des informations SIRET est temporairement indisponible. Veuillez réessayer dans quelques instants.'
       siret_not_found: 'Nous n’avons pas trouvé d’établissement correspondant à ce numéro de SIRET.'
-      api_entreprise_down: 'Notre fournisseur de données semble en panne, nous récupérerons les données plus tard.'
-      # etablissement_fail: 'Désolé, nous n’avons pas réussi à enregistrer l’établissement correspondant à ce numéro SIRET'
+      # # etablissement_fail: 'Désolé, nous n’avons pas réussi à enregistrer l’établissement correspondant à ce numéro SIRET'
       france_connect:
-        connexion: "Erreur lors de la connexion à France Connect."
-        forbidden_html: "Seul-e-s les usagers peuvent se connecter via France Connect. En tant qu’instructeur ou administrateur, nous vous invitons à <a href='%{reset_link}'>réininitialiser votre mot de passe</a>."
+        connexion: "Error trying to connect to France Connect."
       procedure_archived:
-        with_service_and_phone_email: Cette démarche en ligne a été close, il n’est plus possible de déposer de dossier. Pour plus d’informations veuillez contacter le service %{service_name} au %{service_phone_number} ou par email à %{service_email}
-        with_organisation_only: Cette démarche en ligne a été close, il n’est plus possible de déposer de dossier. Pour plus d’informations veuillez contacter le service %{organisation_name}
-
-      empty_repetition: '« %{value} » doit comporter au moins un champ répétable'
-      empty_drop_down: '« %{value} » doit comporter au moins un choix sélectionnable'
-      # procedure_not_draft: "Cette démarche n’est maintenant plus en brouillon."
-      cadastres_empty:
-        one: "Aucune parcelle cadastrale sur la zone sélectionnée"
-        other: "Aucune parcelle cadastrale sur les zones sélectionnées"
-      not_an_integer: "doit être un nombre entier (sans chiffres après la virgule)"
-      not_a_date: "doit être une date correctement formatée"
-      not_a_datetime: "doit être une date et heure correctement formatée"
-      blank: "doit être rempli"
+        with_service_and_phone_email: This procedure has been closed, it is no longer possible to submit a file. For more information, please contact the service %{service_name}, available at %{service_phone_number} or by email %{service_email}
+        with_organisation_only: This procedure has been closed, it is no longer possible to submit a file. For more information, please contact the organisation %{organisation_name}
+      # # procedure_not_draft: "This procedure is not a draft anymore."
+      # cadastres_empty:
+      #   one: "Aucune parcelle cadastrale sur la zone sélectionnée"
+      #   other: "Aucune parcelle cadastrale sur les zones sélectionnées"
+      not_an_integer: "must be an integer (without decimal)"
+      not_a_date: "must be a correct date"
+      not_a_datetime: "must be a correct datetime"
+      blank: "can't be blank"
   time:
     formats:
-      default: "%d %B %Y %R"
+      default: "%B %d %Y %R"
   pluralize:
     case:
-      one: dossier
-      other: dossiers
+      one: file
+      other: files
     processed:
-      one: traité
-      other: traités
+      one: processed
+      other: processed
     new:
-      one: nouveau
-      other: nouveaux
+      one: new
+      other: new
     followed:
-      one: suivi
-      other: suivis
+      one: followed
+      other: followed
     archived:
-      one: archivé
-      other: archivés
+      one: archived
+      other: archived
     en_cours:
-      one: en cours
-      other: en cours
+      one: in progress
+      other: in progress
     traites:
-      one: traité
-      other: traités
+      one: finished
+      other: finished
     dossiers_invites:
-      one: dossier invité
-      other: dossiers invités
+      one: guest file
+      other: guest files
     dossiers_supprimes_recemment:
-      one:  supprimé récemment
-      other: supprimés récemment
+      one: recently deleted file
+      other: recently deleted files
     dossiers_supprimes_definitivement:
-      one:  supprimé définitivement
-      other: supprimés définitivement
+      one: permanently deleted file
+      other: permanently deleted files
     dossiers_transferes:
-      one: demande de transfert
-      other: demandes de transfert
+      one: transfer request
+      other: transfer requests
     dossiers_close_to_expiration:
-      one: expirant
-      other: expirant
+      one: expiring file
+      other: expiring files
     dossier_trouve:
-      one: "%{count} dossier trouvé"
-      other: "%{count} dossiers trouvés"
+      one: "%{count} file found"
+      other: "%{count} files found"
     published:
-      one: Publiée
-      other: Publiées
+      one: Published
+      other: Published
     closed:
-      one: Close
-      other: Closes
+      one: Closed
+      other: Closed
     draft:
-      one: Brouillon
-      other: Brouillons
+      one: Draft
+      other: Drafts
     deleted:
-      one: Supprimée
-      other: Supprimées
+      one: Deleted
+      other: Deleted
   users:
     dossiers:
-      test_procedure: "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l’administrateur (ajout d’un champ, publication de la démarche...) entraînera sa suppression."
-      no_access: "Vous n’avez pas accès à ce dossier"
-      no_longer_editable: "Votre dossier ne peut plus être modifié"
+      test_procedure: "This file is submitted on a test procedure. Any modification of the procedure by the administrator (addition of a field, publication of the procedure, etc.) will result in the removal of the file."
+      no_access: "You do not have access to this file"
+      no_longer_editable: "Your file can no longer be edited"
       create_commentaire:
-        message_send: "Votre message a bien été envoyé à l’instructeur en charge de votre dossier."
-      cloned_success: "Votre dossier a bien été dupliqué. Vous pouvez maintenant le vérifier, l’adapter puis le déposer."
+        message_send: "Your message has been sent to the instructor in charge of your file."
+      cloned_success: "Your file has been duplicated. Please review it then you can submit it"
       ask_deletion:
-        undergoingreview: "L’instruction de votre dossier a commencé, il n’est plus possible de supprimer votre dossier. Si vous souhaitez annuler l’instruction contactez votre administration par la messagerie de votre dossier."
-        soft_deleted_dossier: "Votre dossier a bien été supprimé de votre interface"
-      restore: "Votre dossier a bien été restauré"
+        undergoingreview: "Your file is undergoing review. It is no longer possible to delete your file. To cancel the undergoingreview contact the adminitration via the mailbox."
+        soft_deleted_dossier: "Your file has been successfully deleted from your interface"
+      restore: "Your file has been successfully restored"
       etablissement:
-        no_establishment: "Aucun établissement n’est associé à ce dossier"
+        no_establishment: "There is no establishment tied to this file"
       update_identite:
-        identity_saved: "Identité enregistrée"
+        identity_saved: "Identity data is registred"
       attestation:
-        no_longer_available: "L’attestation n’est plus disponible sur ce dossier."
-      papertrail:
-        receipt: "Attestation de dépôt"
-        description: "Ce document atteste que %{user_name} a déposé le %{date} un dossier sur la démarche « %{procedure} »."
-        file_submitted_at: "Dossier déposé le"
-        dossier_state: "État du dossier"
-        states:
-          en_construction: "déposé, en attente d’examen par l’administration"
-          en_instruction: "en cours d’instruction par l’administration"
-          accepte: "accepté"
-          refuse: "refusé"
-          sans suite: "classé sans suite"
-        administrative_service: "Service administratif"
-        generated_at: "Fait le %{date},"
-        signature: "La direction de %{app_name}"
+        no_longer_available: "The certificate is no longer available on this file."
       show:
         papertrail:
-          get_papertrail: "Obtenir une attestation de dépôt de dossier"
-          filename: "attestation-de-depot.pdf"
+          get_papertrail: "Get a deposit receipt"
+          filename: "deposit-receipt.pdf"
+      papertrail:
+        receipt: "Deposit receipt"
+        description: "This document attests that on the %{date}, %{user_name} submitted a file on the procedure “%{procedure}”."
+        file_submitted_at: "File submission date"
+        dossier_state: "File status"
+        states:
+          en_construction: "submitted, pending processing"
+          en_instruction: "processing"
+          accepte: "accepted"
+          refuse: "declined"
+          sans suite: "closed, no further action"
+        administrative_service: "Administrative department"
+        generated_at: "Made on %{date},"
+        signature: "%{app_name}"
   instructeurs:
     dossiers:
-       deleted_by_instructeur: "Le dossier a bien été supprimé de votre interface"
-       impossible_deletion: "Supression impossible : le dossier n’est pas traité"
-       restore: "Le dossier a bien été restauré"
+       deleted_by_instructeur: "The folder has been deleted"
+       impossible_deletion: "Unable to delete : the folder is not processed"
+       restore: "The folder has been restored"
        labels:
-        to_follow: à suivre
-        total: dossiers
-  administrateurs:
-    index:
-      restored: La démarche %{procedure_id} a été restaurée
-    dropdown_actions:
-      delete: Supprimer
-      restore: Restaurer
-      to_test: Tester
-      to_clone: Cloner
-      to_close: Clore
-    procedures:
-      show:
-        ready: "Validé"
-        needs_configuration: "À configurer"
-        configure_api_particulier_token: "Configurer le jeton API particulier"
-    jeton_particulier:
-      show:
-        configure_token: "Configurer le jeton API Particulier"
-        api_particulier_description_html: "%{app_name} utilise <a href=\"https://api.gouv.fr/les-api/api-particulier\">API Particulier</a> qui permet d’accéder aux données familiales (CAF), aux données fiscales (DGFiP), au statut pôle-emploi et au statut étudiant d’un citoyen.<br />Renseignez ici le <a href=\"https://api.gouv.fr/les-api/api-particulier/demande-acces\">jeton API Particulier</a> propre à votre démarche."
-        token_description: "Il doit contenir au minimum 15 caractères."
-      update:
-        token_ok: "Le jeton a bien été mis à jour"
-        no_scopes_token: "Mise à jour impossible : le jeton n’a pas acces aux données.<br /><br />Vérifiez-le auprès de <a href='https://datapass.api.gouv.fr/'>https://datapass.api.gouv.fr/</a>"
-        not_found_token: "Mise à jour impossible : le jeton n’a pas été trouvé ou n’est pas actif<br /><br />Vérifiez-le auprès de <a href='https://datapass.api.gouv.fr/'>https://datapass.api.gouv.fr/</a>"
-        network_error:  "Mise à jour impossible : une erreur réseau est survenue"
-      api_particulier:
-        already_configured: "Déjà rempli"
-        needs_configuration: "À remplir"
-    sources_particulier:
-      show:
-        title: "Définir les sources de données"
-        data_sources: "Sources de données"
-        explication_html: "<p>API Particulier facilite l’accès des administrations aux données familiales (CAF), aux données fiscales (DGFiP), au statut pôle-emploi et au statut étudiant d’un citoyen pour simplifier les démarches administratives mises en œuvre par les collectivités et les administrations.<br> Cela permet aux administrations d’accéder à des informations certifiées à la source et ainsi : </p> <ul> <li>de s’affranchir des pièces justificatives lors des démarches en ligne,</li> <li>de réduire le nombre d’erreurs de saisie,</li> <li>d’écarter le risque de fraude documentaire.</li> </ul> <p> <strong>Important&nbsp;:</strong> les disposition de l’article <a href='https://www.legifrance.gouv.fr/affichCodeArticle.do?cidTexte=LEGITEXT000031366350&amp;idArticle=LEGIARTI000031367412&amp;dateTexte=&amp;categorieLien=cid'>L144-8</a> n’autorisent que l’échange des informations strictement nécessaires pour traiter une démarche.<br /><br />En conséquence, ne sélectionnez ici que les données auxquelles vous aurez accès d’un point de vue légal.</p>"
-      update:
-        sources_ok: 'Mise à jour effectuée'
-    procedures:
-      show:
-        ready: "Validé"
-        needs_configuration: "À configurer"
-        configure_api_particulier_token: "Configurer le jeton API particulier"
-  zones:
-    ministeres: Ministères
+          to_follow: to follow
   france_connect:
     particulier:
       password_confirmation:
-        back: 'revenir en arrière'
-        already_exists: Le compte %{email} existe déjà sur %{application_name}
-        fill_in_password: entrez votre mot de passe pour fusionner les comptes
+        back: 'back to previous step'
+        already_exists: An account with %{email} already existis on %{application_name}
+        fill_in_password: fill in your password to merge your accounts
       merge:
-        title: "Fusion des comptes FranceConnect et %{application_name}"
-        subtitle: "Bonjour,<br /><br />Votre compte FranceConnect utilise <b class='bold'>%{email}</b> comme email de contact.<br />Or il existe un compte sur %{application_name} avec cet email."
-        label_select_merge_flow: Ce compte %{email} vous appartient-il ?
-        title_fill_in_password:  Pour les fusionner, entrez votre mot de passe
-        button_merge: Fusionner les comptes
-        title_fill_in_email: Donnez-nous alors le mail que %{application_name} utilisera pour vous contacter
-        button_use_this_email: Utiliser ce mail
-        link_confirm_by_email: Confirmer mon compte par email
+        title: "Merge your account FranceConnect and %{application_name}"
+        subtitle: "Hello,<br /><br />Your account FranceConnect uses <b class='bold'>%{email}</b> as contact email.<br />But there is an existing %{application_name} account using this email."
+        label_select_merge_flow: Is %{email} one of your email account ?
+        title_fill_in_password:  To merge your accounts fill in your password
+        button_merge: Merge accounts
+        title_fill_in_email: Fill in the email that %{application_name} will use to contact you
+        button_use_this_email: Use this email
+        link_confirm_by_email: Confirm by receiving an email
       flash:
-        confirmation_mail_sent: "Nous venons de vous envoyer le mail de confirmation, veuillez cliquer sur le lien contenu dans ce mail pour fusionner vos comptes"
-        invalid_password: "Mauvais mot de passe"
-        connection_done: "Les comptes FranceConnect et %{application_name} sont à présent fusionnés"
-        merger_token_expired: "Le délai pour fusionner les comptes FranceConnect et %{application_name} est expirée. Veuillez recommencer la procédure pour vous fusionner les comptes."
+          confirmation_mail_sent: "An email with the confirmation link has been sent, please click on the link."
+          invalid_password: "The password is not correct."
+          connection_done: "The accounts for FranceConnect and %{application_name} are now merged."
+          merger_token_expired: "Le delay to merge your FranceConnect and %{application_name} accounts is expired. Please retry."
   shared:
-    ephemeral_link: Ce lien est éphémère et ne devrait pas être partagé.
+    ephemeral_link: This link is ephemeral and should not be shared.
     procedures:
       stats:
-        usual_processing_time: "Temps de traitement usuel"
-        processing_time_description: "%{percentile}% des demandes des %{span} derniers jours ont été traitées en moins de %{days}."
-        processing_time: "Temps de traitement"
-        since_procedure_creation: "depuis le lancement de la démarche"
-        nb_days: "Nb Jours"
-        processing_time_graph_description: "Temps de traitement entre le passage en instruction et la réponse (accepté, refusé, ou classé sans suite) pour 90% des dossiers"
-        status_evolution_details: "depuis le lancement de la démarche"
-        status_evolution: "Avancée des dossiers"
-        acceptance_rate: "Taux d’acceptation"
-        acceptance_rate_details: "depuis le lancement de la démarche"
-        rate: "Taux"
-        dossiers_count: "Nb dossiers"
-        weekly_distribution: "Répartition par semaine"
-        weekly_distribution_details: "au cours des 6 derniers mois"
+        usual_processing_time: "Usual processing time"
+        processing_time_description: "%{percentile}% of submitted files in the last %{span} days were processed in less than %{days}."
+        processing_time: "Processing time"
+        since_procedure_creation: "since the procedure was created"
+        nb_days: "Nb Days"
+        processing_time_graph_description: "Processing time between instruction and final answer (accepted, rejected or closed) for 90% of files."
+        status_evolution_details: "since the procedure launch"
+        status_evolution: "Evolution of file statuses"
+        acceptance_rate: "Acceptance rate"
+        acceptance_rate_details: "since the procedure launch"
+        rate: "Rate"
+        dossiers_count: "Nb files"
+        weekly_distribution: "Weekly distribution"
+        weekly_distribution_details: "in the last 6 months"
     procedure_description:
-      estimated_fill_duration: "Temps de remplissage estimé : %{estimated_minutes} mn"
+      estimated_fill_duration: "Estimated fill time: %{estimated_minutes} mn"
