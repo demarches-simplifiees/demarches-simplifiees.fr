@@ -68,16 +68,7 @@ describe Champ do
 
   describe '#sections' do
     let(:procedure) do
-      create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :with_repetition, types_de_champ_count: 1, types_de_champ_private_count: 1).tap do |procedure|
-        create(:type_de_champ_header_section, procedure: procedure)
-        create(:type_de_champ_header_section, procedure: procedure, private: true)
-
-        procedure.active_revision.add_type_de_champ(
-          libelle: 'header',
-          type_champ: 'header_section',
-          parent_stable_id: procedure.active_revision.types_de_champ_public.find(&:repetition?).stable_id
-        )
-      end
+      create(:procedure, types_de_champ_public: [{}, { type: :header_section }, { type: :repetition, mandatory: true, children: [{ type: :header_section }] }], types_de_champ_private: [{}, { type: :header_section }])
     end
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:public_champ) { dossier.champs_public.first }
@@ -500,7 +491,7 @@ describe Champ do
   end
 
   describe 'repetition' do
-    let(:procedure) { create(:procedure, :published, :with_type_de_champ, :with_type_de_champ_private, :with_repetition) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_private: [{}], types_de_champ_public: [{}, { type: :repetition, mandatory: true, children: [{}, { type: :integer_number }] }]) }
     let(:tdc_repetition) { procedure.active_revision.types_de_champ_public.find(&:repetition?) }
     let(:tdc_text) { procedure.active_revision.children_of(tdc_repetition).first }
 
@@ -509,10 +500,6 @@ describe Champ do
     let(:champ_text) { champ.champs.find { |c| c.type_champ == 'text' } }
     let(:champ_integer) { champ.champs.find { |c| c.type_champ == 'integer_number' } }
     let(:champ_text_attrs) { attributes_for(:champ_text, type_de_champ: tdc_text, row_id: ULID.generate) }
-
-    before do
-      procedure.active_revision.add_type_de_champ(libelle: 'sub integer', type_champ: 'integer_number', parent_stable_id: tdc_repetition.stable_id)
-    end
 
     context 'when creating the model directly' do
       let(:champ_text_row_1) { create(:champ_text, type_de_champ: tdc_text, row_id: ULID.generate, parent: champ, dossier: nil) }

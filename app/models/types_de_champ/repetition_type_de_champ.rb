@@ -1,11 +1,4 @@
 class TypesDeChamp::RepetitionTypeDeChamp < TypesDeChamp::TypeDeChampBase
-  def build_champ(params)
-    revision = params[:revision]
-    champ = super
-    champ.add_row(revision)
-    champ
-  end
-
   def estimated_fill_duration(revision)
     estimated_rows_in_repetition = 2.5
 
