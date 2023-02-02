@@ -103,9 +103,6 @@ fr:
         champ_remove: Retirer
         champ_unavailable: Indisponible
         possible_values:
-          link:
-            title: Toutes les valeurs possibles
-            text: Voir toutes les valeurs possibles
           title: Valeurs
           text_html: Un texte court
           textarea_html: Un texte long
@@ -249,6 +246,7 @@ fr:
         dossier_not_in_instructor_group: "Le dossier n° %{dossier_id} de la procédure « %{procedure_libelle} » correspond à votre recherche mais il est rattaché au groupe d’instructeurs « %{groupe_instructeur_label} »."
     users:
       dossiers:
+        label_navigation: "Menu secondaire"
         archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
         autosave:
           explanation: Votre dossier est automatiquement enregistré.
@@ -312,8 +310,8 @@ fr:
         demande:
           edit_dossier: "Modifier le dossier"
         search:
-          placeholder: Rechercher un dossier
-          search_file: Rechercher
+          search_file: Rechercher un dossier
+          simple: Rechercher
         index:
           dossiers: "Dossiers"
         dossiers_list:
