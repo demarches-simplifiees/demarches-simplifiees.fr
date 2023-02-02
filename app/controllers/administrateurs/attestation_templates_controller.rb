@@ -8,6 +8,7 @@ module Administrateurs
 
     def edit
       @attestation_template = build_attestation_template
+      @attestation_template.validate
     end
 
     def update

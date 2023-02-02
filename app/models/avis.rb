@@ -8,6 +8,7 @@
 #  confidentiel         :boolean          default(FALSE), not null
 #  email                :string
 #  introduction         :text
+#  reminded_at          :datetime
 #  revoked_at           :datetime
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
@@ -27,7 +28,7 @@ class Avis < ApplicationRecord
   has_one :expert, through: :experts_procedure
   has_one :procedure, through: :experts_procedure
 
-  has_many :targeted_user_links, dependent: :destroy, inverse_of: :target_model, foreign_key: 'target_model_id'
+  has_many :targeted_user_links, as: :target_model, dependent: :destroy, inverse_of: :target_model
 
   FILE_MAX_SIZE = 20.megabytes
   validates :piece_justificative_file,
@@ -83,8 +84,8 @@ class Avis < ApplicationRecord
     revoked_at.present?
   end
 
-  def revivable_by?(reviver)
-    revokable_by?(reviver)
+  def remindable_by?(reminder)
+    revokable_by?(reminder)
   end
 
   def revokable_by?(revocator)
@@ -99,5 +100,10 @@ class Avis < ApplicationRecord
     else
       destroy!
     end
+  end
+
+  def remind_by!(revocator)
+    return false if !remindable_by?(revocator) || answer.present?
+    update!(reminded_at: Time.zone.now)
   end
 end

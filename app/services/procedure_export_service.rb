@@ -35,7 +35,7 @@ class ProcedureExportService
   end
 
   def to_zip
-    attachments = ActiveStorage::DownloadableFile.create_list_from_dossiers(dossiers, true)
+    attachments = ActiveStorage::DownloadableFile.create_list_from_dossiers(dossiers, with_champs_private: true)
 
     DownloadableFileService.download_and_zip(procedure, attachments, base_filename) do |zip_filepath|
       ArchiveUploader.new(procedure: procedure, filename: filename(:zip), filepath: zip_filepath).blob

@@ -1,13 +1,13 @@
 class PiecesJustificativesService
-  def self.liste_documents(dossiers, for_expert)
+  def self.liste_documents(dossiers, with_bills:, with_champs_private:)
     bill_ids = []
 
     docs = dossiers.in_batches.flat_map do |batch|
-      pjs = pjs_for_champs(batch, for_expert) +
+      pjs = pjs_for_champs(batch, with_champs_private:) +
         pjs_for_commentaires(batch) +
         pjs_for_dossier(batch)
 
-      if !for_expert
+      if with_bills
         # some bills are shared among operations
         # so first, all the bill_ids are fetched
         operation_logs, some_bill_ids = operation_logs_and_signature_ids(batch)
@@ -19,7 +19,7 @@ class PiecesJustificativesService
       pjs
     end
 
-    if !for_expert
+    if with_bills
       # then the bills are retrieved without duplication
       docs += signatures(bill_ids.uniq)
     end
@@ -117,12 +117,12 @@ class PiecesJustificativesService
 
   private
 
-  def self.pjs_for_champs(dossiers, for_expert = false)
+  def self.pjs_for_champs(dossiers, with_champs_private:)
     champs = Champ
       .joins(:piece_justificative_file_attachments)
       .where(type: "Champs::PieceJustificativeChamp", dossier: dossiers)
 
-    if for_expert
+    if !with_champs_private
       champs = champs.where(private: false)
     end
 

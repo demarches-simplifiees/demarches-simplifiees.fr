@@ -83,7 +83,8 @@ export class AutoUpload {
     if (error.failureReason == FAILURE_CONNECTIVITY) {
       return {
         title:
-          'Le fichier n’a pas pu être envoyé. Vérifiez votre connexion à Internet, puis ré-essayez.',
+          'Le fichier n’a pas pu être envoyé. Vérifiez votre connexion à Internet, puis ré-essayez. Vérifiez aussi que le pare-feu de votre appareil ou votre réseau autorise l’envoi de fichier vers ' +
+          window.location.host,
         retry: true
       };
     } else if (error.code == ERROR_CODE_READ) {

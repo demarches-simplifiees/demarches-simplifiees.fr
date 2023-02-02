@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_01_17_094317) do
+ActiveRecord::Schema.define(version: 2023_01_31_172119) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -162,6 +162,7 @@ ActiveRecord::Schema.define(version: 2023_01_17_094317) do
     t.string "email"
     t.bigint "experts_procedure_id"
     t.text "introduction"
+    t.datetime "reminded_at"
     t.datetime "revoked_at"
     t.datetime "updated_at", null: false
     t.index ["claimant_id"], name: "index_avis_on_claimant_id"
@@ -706,6 +707,7 @@ ActiveRecord::Schema.define(version: 2023_01_17_094317) do
     t.boolean "duree_conservation_etendue_par_ds", default: false
     t.boolean "durees_conservation_required", default: true
     t.string "encrypted_api_particulier_token"
+    t.boolean "estimated_duration_visible", default: true, null: false
     t.boolean "euro_flag", default: false
     t.boolean "experts_require_administrateur_invitation", default: false
     t.boolean "for_individual", default: false

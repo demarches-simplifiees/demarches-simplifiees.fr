@@ -854,4 +854,15 @@ describe ProcedurePresentation do
       it { is_expected.to eq(sorted_ids) }
     end
   end
+
+  describe '#field_enum' do
+    context "field is groupe_instructeur" do
+      let!(:gi_2) { instructeur.groupe_instructeurs.create(label: 'gi2', procedure:) }
+      let!(:gi_3) { instructeur.groupe_instructeurs.create(label: 'gi3', procedure: create(:procedure)) }
+
+      subject { procedure_presentation.field_enum('groupe_instructeur/id') }
+
+      it { is_expected.to eq([['défaut', procedure.defaut_groupe_instructeur.id], ['gi2', gi_2.id]]) }
+    end
+  end
 end

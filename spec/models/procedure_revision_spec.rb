@@ -872,4 +872,21 @@ describe ProcedureRevision do
     it { expect(draft.dependent_conditions(first_champ)).to eq([second_champ]) }
     it { expect(draft.dependent_conditions(second_champ)).to eq([]) }
   end
+
+  describe 'only_present_on_draft?' do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ libelle: 'Un champ texte' }]) }
+    let(:type_de_champ) { procedure.draft_revision.types_de_champ_public.first }
+
+    it {
+      expect(type_de_champ.only_present_on_draft?).to be_truthy
+      procedure.publish!
+      expect(type_de_champ.only_present_on_draft?).to be_falsey
+      procedure.draft_revision.remove_type_de_champ(type_de_champ.stable_id)
+      expect(type_de_champ.only_present_on_draft?).to be_falsey
+      expect(type_de_champ.revisions.count).to eq(1)
+      procedure.publish_revision!
+      expect(type_de_champ.only_present_on_draft?).to be_falsey
+      expect(type_de_champ.revisions.count).to eq(1)
+    }
+  end
 end
