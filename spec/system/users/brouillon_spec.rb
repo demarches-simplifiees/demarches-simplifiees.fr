@@ -104,7 +104,7 @@ describe 'The user' do
   end
 
   let(:procedure_with_repetition) do
-    create(:procedure, :published, :for_individual, :with_repetition)
+    create(:procedure, :published, :for_individual, types_de_champ_public: [{ type: :repetition, mandatory: true, children: [{ libelle: 'sub type de champ' }] }])
   end
 
   scenario 'fill a dossier with repetition', js: true do
@@ -333,7 +333,7 @@ describe 'The user' do
           types_de_champ_public: [
             { type: :checkbox, libelle: 'champ_a', stable_id: a_stable_id },
             {
-              type: :repetition, libelle: 'repetition', children: [
+              type: :repetition, libelle: 'repetition', mandatory: true, children: [
                 { type: :checkbox, libelle: 'champ_b', stable_id: b_stable_id },
                 { type: :text, libelle: 'champ_c', condition: }
               ]

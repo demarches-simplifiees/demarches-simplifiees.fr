@@ -58,6 +58,7 @@ module DossierRebaseConcern
       .joins(:type_de_champ)
       .group_by(&:stable_id)
       .transform_values { Champ.where(id: _1) }
+      .tap { _1.default = Champ.none }
 
     # add champ
     changes_by_op[:add]
@@ -67,12 +68,11 @@ module DossierRebaseConcern
       .each { add_new_champs_for_revision(_1) }
 
     # remove champ
-    changes_by_op[:remove]
-      .each { champs_by_stable_id[_1.stable_id].destroy_all }
+    changes_by_op[:remove].each { champs_by_stable_id[_1.stable_id].destroy_all }
 
+    # update champ
     if brouillon?
-      changes_by_op[:update]
-        .each { apply(_1, champs_by_stable_id[_1.stable_id]) }
+      changes_by_op[:update].each { apply(_1, champs_by_stable_id[_1.stable_id]) }
     end
 
     # due to repetition tdc clone on update or erase
@@ -125,12 +125,12 @@ module DossierRebaseConcern
       parent_stable_id = target_coordinate.parent.stable_id
 
       champs.filter { _1.stable_id == parent_stable_id }.each do |champ_repetition|
-        if champ_repetition.champs.empty?
-          create_champ(target_coordinate, champ_repetition, row_id: ULID.generate)
-        else
+        if champ_repetition.champs.present?
           champ_repetition.champs.map(&:row_id).uniq.each do |row_id|
             create_champ(target_coordinate, champ_repetition, row_id:)
           end
+        elsif champ_repetition.mandatory?
+          create_champ(target_coordinate, champ_repetition, row_id: ULID.generate)
         end
       end
     else
@@ -141,8 +141,7 @@ module DossierRebaseConcern
   def create_champ(target_coordinate, parent, row_id: nil)
     champ = target_coordinate
       .type_de_champ
-      .champ
-      .build(rebased_at: Time.zone.now, row_id:)
+      .build_champ(rebased_at: Time.zone.now, row_id:)
     parent.champs << champ
   end
 
