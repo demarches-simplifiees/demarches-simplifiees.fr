@@ -1,4 +1,4 @@
-describe Dossier do
+describe DossierRebaseConcern do
   describe '#can_rebase?' do
     let(:procedure) { create(:procedure, :with_type_de_champ_mandatory, :with_type_de_champ_private, :with_yes_no) }
     let(:attestation_template) { procedure.draft_revision.attestation_template.find_or_revise! }
