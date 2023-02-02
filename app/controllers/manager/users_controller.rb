@@ -30,6 +30,13 @@ module Manager
       redirect_to manager_user_path(user)
     end
 
+    def resend_reset_password_instructions
+      user = User.find(params[:id])
+      user.send_reset_password_instructions
+      flash[:notice] = "L'email de réinitialisation du mot de passe a été renvoyé."
+      redirect_to manager_user_path(user)
+    end
+
     def enable_feature
       user = User.find(params[:id])
 
