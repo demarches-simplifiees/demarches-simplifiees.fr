@@ -15,6 +15,9 @@ class APIEntrepriseService
       etablissement_params = APIEntreprise::EtablissementAdapter.new(siret, procedure_id).to_params
       return nil if etablissement_params.empty?
 
+      entreprise_params = APIEntreprise::EntrepriseAdapter.new(siret, procedure_id).to_params
+      etablissement_params.merge!(entreprise_params) if entreprise_params.any?
+
       etablissement = dossier_or_champ.build_etablissement(etablissement_params)
       etablissement.save!
 

@@ -59,6 +59,9 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
     stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\//)
       .to_return(status: 200, body: File.read('spec/fixtures/files/api_entreprise/etablissements.json'))
 
+    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siret_value[0..8]}/)
+      .to_return(status: 200, body: File.read('spec/fixtures/files/api_entreprise/entreprises.json'))
+
     VCR.insert_cassette('api_geo_departements')
     VCR.insert_cassette('api_geo_communes')
     VCR.insert_cassette('api_geo_epcis')
