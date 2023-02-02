@@ -14,7 +14,14 @@
     vertical-align: middle;
   }
 
-  th,
+  th {
+    font-weight: bold;
+    text-align: center;
+    padding: (2 * $default-spacer) 2px;
+    vertical-align: middle;
+    border-bottom: 1px solid $border-grey;
+  }
+
   td.libelle {
     text-align: left;
     font-weight: bold;

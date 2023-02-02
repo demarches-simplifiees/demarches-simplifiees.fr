@@ -40,6 +40,8 @@
           %span.mandatory *
         = text_area_tag :text, params[:text], rows: 6, required: true
 
+      = invisible_captcha
+
       = hidden_field_tag :tags, @tags&.join(',')
       = hidden_field_tag :admin, true
 

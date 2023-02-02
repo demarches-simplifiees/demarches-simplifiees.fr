@@ -951,7 +951,7 @@ describe API::V2::GraphqlController do
               errors: nil
             })
 
-            perform_enqueued_jobs
+            perform_enqueued_jobs except: [APIEntreprise::ServiceJob]
             expect(ActionMailer::Base.deliveries.size).to eq(4)
           end
         end
@@ -994,7 +994,7 @@ describe API::V2::GraphqlController do
               errors: nil
             })
 
-            perform_enqueued_jobs
+            perform_enqueued_jobs except: [APIEntreprise::ServiceJob]
             expect(ActionMailer::Base.deliveries.size).to eq(3)
           end
         end
@@ -1037,7 +1037,7 @@ describe API::V2::GraphqlController do
               errors: nil
             })
 
-            perform_enqueued_jobs
+            perform_enqueued_jobs except: [APIEntreprise::ServiceJob]
             expect(ActionMailer::Base.deliveries.size).to eq(4)
           end
         end
@@ -1080,7 +1080,7 @@ describe API::V2::GraphqlController do
               errors: nil
             })
 
-            perform_enqueued_jobs
+            perform_enqueued_jobs except: [APIEntreprise::ServiceJob]
             expect(ActionMailer::Base.deliveries.size).to eq(3)
           end
         end

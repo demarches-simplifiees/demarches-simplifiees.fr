@@ -718,9 +718,13 @@ ActiveRecord::Schema.define(version: 2022_09_02_151920) do
     t.text "adresse"
     t.datetime "created_at", null: false
     t.string "email"
+    t.jsonb "etablissement_infos", default: {}
+    t.decimal "etablissement_lat", precision: 10, scale: 6
+    t.decimal "etablissement_lng", precision: 10, scale: 6
     t.text "horaires"
     t.string "nom", null: false
     t.string "organisme"
+    t.string "siret"
     t.string "telephone"
     t.string "type_organisme", null: false
     t.datetime "updated_at", null: false
@@ -769,7 +773,7 @@ ActiveRecord::Schema.define(version: 2022_09_02_151920) do
     t.index ["unlock_token"], name: "index_super_admins_on_unlock_token", unique: true
   end
 
-  create_table "targeted_user_links", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "targeted_user_links", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.string "target_context", null: false
     t.bigint "target_model_id", null: false

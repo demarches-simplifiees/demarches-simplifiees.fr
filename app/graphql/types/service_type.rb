@@ -11,5 +11,6 @@ module Types
     field :nom, String, null: false
     field :type_organisme, TypeOrganisme, null: false
     field :organisme, String, null: false
+    field :siret, String, null: true
   end
 end
