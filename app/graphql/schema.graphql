@@ -2233,7 +2233,7 @@ enum TypeDeChamp {
   dossier_link
 
   """
-  Choix parmi une liste
+  Choix unique
   """
   drop_down_list
 

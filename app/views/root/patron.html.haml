@@ -45,9 +45,7 @@
     %form.form
       = form_for @dossier, url: '', html: { class: 'form' } do |f|
         = f.fields_for :champs do |champ_form|
-          - champ = champ_form.object
-          = render partial: "shared/dossiers/editable_champs/editable_champ",
-            locals: { champ: champ, form: champ_form, seen_at: nil }
+          = render EditableChamp::EditableChampComponent.new champ: champ_form.object, form: champ_form
 
         .editable-champ.editable-champ-text
           %label Mot de passe
@@ -304,3 +302,18 @@
   .container
     %h2.empty-text Aucun dossier
     %p.empty-text-details Vous n’avez commencé aucune démarche pour l’instant.
+
+  .container
+    %h1 Dsfr::CardVerticalComponent
+    = link_to "Documentation DSFR Carte", "https://www.systeme-de-design.gouv.fr/elements-d-interface/composants/carte", **external_link_attributes
+
+    .fr-grid-row.fr-grid-row--gutters.fr-py-5w
+      .fr-col-md-6.fr-col-12
+        = render Dsfr::CardVerticalComponent.new(title: "Optional title", desc: "Optional description")
+
+      .fr-col-md-6.fr-col-12
+        = render Dsfr::CardVerticalComponent.new(title: "With footer buttons") do |c|
+          - c.with_footer_button do
+            = link_to "Button 1", "#", class: "fr-btn", **external_link_attributes
+          - c.with_footer_button do
+            = button_tag "Button 2", class: "fr-btn fr-btn--secondary"

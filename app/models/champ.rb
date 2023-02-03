@@ -51,6 +51,7 @@ class Champ < ApplicationRecord
     :simple_drop_down_list?,
     :linked_drop_down_list?,
     :non_fillable?,
+    :fillable?,
     :cnaf?,
     :dgfip?,
     :pole_emploi?,
@@ -82,8 +83,6 @@ class Champ < ApplicationRecord
   before_save :cleanup_if_empty
   before_save :normalize
   after_update_commit :fetch_external_data_later
-
-  validates :type_de_champ_id, uniqueness: { scope: [:dossier_id, :row] }
 
   def public?
     !private?

@@ -1,7 +1,7 @@
 = render partial: 'administrateurs/breadcrumbs',
-  locals: { steps: [link_to('Démarches', admin_procedures_path),
-                    "#{@procedure.libelle}", 'archiver'],
-            metadatas: ["Créée le #{@procedure.created_at.strftime('%d/%m/%Y')} - n° #{@procedure.id}", "#{@procedure.close? ? "Close le #{@procedure.closed_at.strftime('%d/%m/%Y')}" : @procedure.locked? ? "Publiée - #{procedure_lien(@procedure)}" : "Brouillon"}"] }
+  locals: { steps: [['Démarches', admin_procedures_path],
+                    ["#{@procedure.libelle.truncate_words(4)} - archiver"]],
+            metadatas: true }
 
 .container
   .card

@@ -1,5 +1,2 @@
-class EditableChamp::VisaComponent < ApplicationComponent
-  def initialize(form:, champ:)
-    @form, @champ = form, champ
-  end
+class EditableChamp::VisaComponent < EditableChamp::EditableChampBaseComponent
 end

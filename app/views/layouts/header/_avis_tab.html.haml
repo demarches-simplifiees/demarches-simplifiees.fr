@@ -1,5 +1,5 @@
-%li
-  = active_link_to expert_all_avis_path, active: controller_name == 'avis', class: 'tab-link' do
+%li.fr-nav__item
+  = active_link_to expert_all_avis_path, active: controller_name == 'avis', class: 'fr-nav__link' do
     Avis
     - if current_expert.avis_summary[:unanswered] > 0
       %span.badge.warning= current_expert.avis_summary[:unanswered]

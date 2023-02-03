@@ -56,8 +56,19 @@ fr:
         line3: administratifs dématérialisés.
         are_you_new: Vous êtes nouveau sur %{app_name} ?
     my_account: Mon compte
+    header:
+      close_modal: 'Fermer'
+      back: "Revenir en arrière"
+      back_title: "Revenir sur le site de mon administration"
+      main_menu: "Menu principal"
     locale_dropdown:
       languages: "Langues"
+      select_locale: "Sélectionner une langue"
+      fr: FR
+      en: EN
+      francais: " - Français"
+      fr_francais:  FR - Français
+      en_english: EN - Anglais
     notifications:
       actions:
         access: Consulter mon dossier
@@ -82,7 +93,7 @@ fr:
     registrations:
       new:
         title: "Créez-vous un compte %{name}"
-        email_label: 'Email (nom@site.com)'
+        email_label: 'Email'
         email_placeholder: 'Votre adresse email'
         wanna_say: 'Voulez-vous dire'
         password_label: "Mot de passe"
@@ -120,7 +131,6 @@ fr:
         edit:
           autosave: Votre dossier est enregistré automatiquement après chaque modification. Vous pouvez à tout moment fermer la fenêtre et reprendre plus tard là où vous en étiez.
           submit_dossier: Déposer le dossier
-          save_changes: Enregistrer les modifications du dossier
         messages:
           form:
             send_message: "Envoyer le message"
@@ -134,9 +144,6 @@ fr:
           edit_identity: "Modifier l’identité"
     instructeurs:
       dossiers:
-        autosave:
-          autosave_draft: Vos annotations sont automatiquement enregistrées.
-          autosave_confirmation: Annotations enregistrées
         tab_steps:
           to_follow: à suivre
           total: au total
@@ -176,10 +183,11 @@ fr:
       dossiers:
         archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
         autosave:
-          autosave_draft: Votre brouillon est automatiquement enregistré.
-          autosave_confirmation: Brouillon enregistré
-          more_information: More informations
-          more_infos: En savoir plus
+          explanation: Votre dossier est automatiquement enregistré.
+          confirmation: Dossier enregistré
+          draft_explanation: Votre brouillon est automatiquement enregistré.
+          draft_confirmation: Brouillon enregistré
+          more_information: En savoir plus
         identite:
           identity_data: Données d’identité
           civility: Civilité
@@ -246,8 +254,8 @@ fr:
       sessions:
         new:
           sign_in: Si vous avez un compte %{app_name}
-          social_sign_in: "Pour se connecter rapidement"
-          email: Email (nom@site.com)
+          social_sign_in: Pour se connecter rapidement
+          email: Email
           password: Mot de passe (%{min_length} caractères minimum)
           remember_me: Se souvenir de moi
           reset_password: Mot de passe oublié ?
@@ -268,7 +276,7 @@ fr:
           title: "Lien de réinitialisation du mot de passe envoyé"
       shared:
         email_can_take_a_while_html: "<strong>Attention</strong>, ce message peut mettre jusqu’à <strong>15 minutes</strong> pour arriver."
-        contact_us_if_any_trouble_html: "En cas de difficultés, nous restons joignables <a href=\"%{href}\">via ce formulaire</a>."
+        contact_us_if_any_trouble_html: 'En cas de difficultés, nous restons joignables <a href="%{href}">via ce formulaire</a>.'
   modal:
     publish:
       title:

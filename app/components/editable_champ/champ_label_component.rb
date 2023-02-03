@@ -1,5 +1,7 @@
 class EditableChamp::ChampLabelComponent < ApplicationComponent
-  def initialize(form:, champ:)
-    @form, @champ = form, champ
+  include StringToHtmlHelper
+
+  def initialize(form:, champ:, seen_at: nil)
+    @form, @champ, @seen_at = form, champ, seen_at
   end
 end

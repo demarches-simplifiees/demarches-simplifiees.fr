@@ -32,7 +32,7 @@ describe Administrateurs::ConditionsController, type: :controller do
     end
 
     it do
-      expect(second_tdc.reload.condition).to eq(ds_eq(champ_value(1), constant(2)))
+      expect(second_tdc.reload.condition).to eq(ds_eq(champ_value(1), constant('2')))
       expect(assigns(:coordinate)).to eq(procedure.draft_revision.coordinate_for(second_tdc))
       expect(assigns(:upper_tdcs)).to eq([first_coordinate.type_de_champ])
     end

@@ -18,7 +18,7 @@ class TypeDeChamp < ApplicationRecord
   self.ignored_columns = [:migrated_parent, :revision_id, :parent_id, :order_place]
 
   FILE_MAX_SIZE = 200.megabytes
-  FEATURE_FLAGS = { :visa => 'visa' }
+  FEATURE_FLAGS = { 'visa' => 'visa' }
 
   INSTANCE_TYPE_CHAMPS = {
     nationalites: 'nationalites',
@@ -196,6 +196,10 @@ class TypeDeChamp < ApplicationRecord
 
   def drop_down_other?
     drop_down_other == "1" || drop_down_other == true
+  end
+
+  def fillable?
+    !non_fillable?
   end
 
   def non_fillable?

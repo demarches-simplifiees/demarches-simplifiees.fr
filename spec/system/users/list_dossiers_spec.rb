@@ -1,4 +1,4 @@
-describe 'user access to the list of their dossiers' do
+describe 'user access to the list of their dossiers', js: true do
   let(:user) { create(:user) }
   let!(:dossier_brouillon)       { create(:dossier, user: user) }
   let!(:dossier_en_construction) { create(:dossier, :with_populated_champs, :en_construction, user: user) }
@@ -86,7 +86,7 @@ describe 'user access to the list of their dossiers' do
     context "when the dossier does not exist" do
       before do
         page.find_by_id('q').set(10000000)
-        click_button("Rechercher")
+        find('.fr-search-bar .fr-btn').click
       end
 
       it "shows an error message on the dossiers page" do
@@ -100,7 +100,7 @@ describe 'user access to the list of their dossiers' do
 
       before do
         page.find_by_id('q').set(dossier_other_user.id)
-        click_button("Rechercher")
+        find('.fr-search-bar .fr-btn').click
       end
 
       it "shows an error message on the dossiers page" do
@@ -112,7 +112,7 @@ describe 'user access to the list of their dossiers' do
     context "when the dossier belongs to the user" do
       before do
         page.find_by_id('q').set(dossier_en_construction.id)
-        click_button("Rechercher")
+        find('.fr-search-bar .fr-btn').click
       end
 
       it "redirects to the dossier page" do
@@ -128,7 +128,7 @@ describe 'user access to the list of their dossiers' do
 
       context 'when it only matches one dossier' do
         before do
-          click_button("Rechercher")
+          find('.fr-search-bar .fr-btn').click
         end
         it "redirects to the dossier page" do
           expect(current_path).to eq(dossier_path(dossier_en_construction))
@@ -138,7 +138,7 @@ describe 'user access to the list of their dossiers' do
       context 'when it matches multiple dossier' do
         before do
           dossier_en_construction2.champs.first.update(value: dossier_en_construction.champs.first.value)
-          click_button("Rechercher")
+          find('.fr-search-bar .fr-btn').click
         end
 
         it "redirects to the search results" do

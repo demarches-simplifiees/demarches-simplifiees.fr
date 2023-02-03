@@ -1,3 +1,5 @@
 ---
 fr:
-  title: Modifications
+  title:
+    one: Modification
+    other: Modifications

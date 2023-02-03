@@ -4,8 +4,8 @@
     %p.card-admin-status-accept Activée
   %div
     %p.card-admin-title
-      %span.badge.baseline= @procedure.revisions.size - 1
-      = t('.title')
+      %span.badge.baseline= @procedure.revisions_count
+      = t('.title', count: @procedure.revisions_count)
 
     %p.card-admin-subtitle Historique des modifications du formulaire
   %p.button Voir
