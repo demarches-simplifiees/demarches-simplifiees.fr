@@ -6,8 +6,14 @@ describe 'Prefilling a dossier (with a GET request):' do
 
   let(:type_de_champ_text) { create(:type_de_champ_text, procedure: procedure) }
   let(:type_de_champ_phone) { create(:type_de_champ_phone, procedure: procedure) }
+  let(:type_de_champ_repetition) { create(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure) }
   let(:text_value) { "My Neighbor Totoro is the best movie ever" }
   let(:phone_value) { "invalid phone value" }
+  let(:sub_type_de_champs_repetition) { type_de_champ_repetition.active_revision_type_de_champ.revision_types_de_champ.map(&:type_de_champ) }
+  let(:text_repetition_libelle) { sub_type_de_champs_repetition.first.libelle }
+  let(:integer_repetition_libelle) { sub_type_de_champs_repetition.second.libelle }
+  let(:text_repetition_value) { "First repetition text" }
+  let(:integer_repetition_value) { "42" }
 
   context 'when authenticated' do
     it_behaves_like "the user has got a prefilled dossier, owned by themselves" do
@@ -20,7 +26,13 @@ describe 'Prefilling a dossier (with a GET request):' do
         visit commencer_path(
           path: procedure.path,
           "champ_#{type_de_champ_text.to_typed_id}" => text_value,
-          "champ_#{type_de_champ_phone.to_typed_id}" => phone_value
+          "champ_#{type_de_champ_phone.to_typed_id}" => phone_value,
+          "champ_#{type_de_champ_repetition.to_typed_id}" => [
+            "{
+              \"#{sub_type_de_champs_repetition.first.libelle}\": \"#{text_repetition_value}\",
+              \"#{sub_type_de_champs_repetition.second.libelle}\": \"#{integer_repetition_value}\"
+            }"
+          ]
         )
 
         click_on "Commencer la démarche"
@@ -33,7 +45,13 @@ describe 'Prefilling a dossier (with a GET request):' do
       visit commencer_path(
         path: procedure.path,
         "champ_#{type_de_champ_text.to_typed_id}" => text_value,
-        "champ_#{type_de_champ_phone.to_typed_id}" => phone_value
+        "champ_#{type_de_champ_phone.to_typed_id}" => phone_value,
+        "champ_#{type_de_champ_repetition.to_typed_id}" => [
+          "{
+            \"#{sub_type_de_champs_repetition.first.libelle}\": \"#{text_repetition_value}\",
+            \"#{sub_type_de_champs_repetition.second.libelle}\": \"#{integer_repetition_value}\"
+          }"
+        ]
       )
     end
 
