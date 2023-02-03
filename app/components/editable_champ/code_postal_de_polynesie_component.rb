@@ -1,5 +1,2 @@
-class EditableChamp::CodePostalDePolynesieComponent < ApplicationComponent
-  def initialize(form:, champ:)
-    @form, @champ = form, champ
-  end
+class EditableChamp::CodePostalDePolynesieComponent < EditableChamp::EditableChampBaseComponent
 end
