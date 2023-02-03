@@ -178,14 +178,7 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
   end
 
   def current_right_valid?(left, right)
-    case [left.type, right.type]
-    in [:boolean, :boolean] | [:number, :number] | [:empty, :empty]
-      true
-    in [:enum, :string]
-      left.options.map(&:second).include?(right.value)
-    else
-      false
-    end
+    Logic.compatible_type?(left, right)
   end
 
   def add_condition_tag

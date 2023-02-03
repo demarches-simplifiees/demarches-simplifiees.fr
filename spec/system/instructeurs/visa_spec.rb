@@ -22,15 +22,8 @@ describe 'Using Visa field', js: true do
   end
 
   scenario 'instructor1 cannot validate visa', :js do
-    log_in(instructeur1.email, password)
-
-    expect(page).to have_current_path(instructeur_procedures_path)
-
-    click_on procedure.libelle
-    expect(page).to have_current_path(instructeur_procedure_path(procedure))
-
-    click_on dossier.user.email
-    expect(page).to have_current_path(instructeur_dossier_path(procedure, dossier))
+    login_as instructeur1.user, scope: :user
+    visit instructeur_dossier_path(procedure, dossier)
 
     click_on 'Annotations privées'
     expect(page).to have_current_path(annotations_privees_instructeur_dossier_path(dossier.procedure, dossier))
@@ -38,16 +31,9 @@ describe 'Using Visa field', js: true do
     expect(page).to have_field('visa_to_test', disabled: true)
   end
 
-  scenario 'instructor1 cannot validate visa', :js do
-    log_in(instructeur2.email, password)
-
-    expect(page).to have_current_path(instructeur_procedures_path)
-
-    click_on procedure.libelle
-    expect(page).to have_current_path(instructeur_procedure_path(procedure))
-
-    click_on dossier.user.email
-    expect(page).to have_current_path(instructeur_dossier_path(procedure, dossier))
+  scenario 'instructor2 can validate visa', :js do
+    login_as instructeur2.user, scope: :user
+    visit instructeur_dossier_path(procedure, dossier)
 
     click_on 'Annotations privées'
     expect(page).to have_current_path(annotations_privees_instructeur_dossier_path(dossier.procedure, dossier))
@@ -60,20 +46,6 @@ describe 'Using Visa field', js: true do
 
     check_fields_before_visa_are_disabled
     check_fields_after_visa_are_enabled
-  end
-
-  def log_in(email, password, check_email: true)
-    visit '/'
-    click_on 'Connexion'
-    expect(page).to have_current_path(new_user_session_path)
-
-    sign_in_with(email, password, check_email)
-
-    expect(page).to have_current_path(instructeur_procedures_path)
-  end
-
-  def log_out
-    click_on 'Se déconnecter'
   end
 
   def check_fields_before_visa_are_disabled

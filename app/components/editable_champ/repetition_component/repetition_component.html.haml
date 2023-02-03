@@ -1,6 +1,6 @@
 .repetition{ id: dom_id(@champ, :rows) }
   - @champ.rows.each do |champs|
-    = render EditableChamp::RepetitionRowComponent.new(form: @form, champ: @champ, row: champs)
+    = render EditableChamp::RepetitionRowComponent.new(form: @form, champ: @champ, row: champs, seen_at: @seen_at)
 
 .actions{ 'data-turbo': 'true' }
   = link_to champs_repetition_path(@champ.id), data: { turbo_method: :post }, class: 'button add-row' do

@@ -1,7 +1,3 @@
-class EditableChamp::ExplicationComponent < ApplicationComponent
+class EditableChamp::ExplicationComponent < EditableChamp::EditableChampBaseComponent
   include StringToHtmlHelper
-
-  def initialize(form:, champ:)
-    @form, @champ = form, champ
-  end
 end

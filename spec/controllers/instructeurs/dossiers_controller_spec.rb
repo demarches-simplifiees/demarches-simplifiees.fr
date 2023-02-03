@@ -769,6 +769,17 @@ describe Instructeurs::DossiersController, type: :controller do
         dossier_id: dossier.id
       }
     end
+
+    it 'includes an attachment' do
+      expect(subject.headers['Content-Disposition']).to start_with('attachment; ')
+    end
+
+    it 'the attachment.zip is extractable' do
+      content = ZipTricks::FileReader.read_zip_structure(io: StringIO.new(subject.body))
+      file_names = content.map(&:filename)
+      expect(file_names.size).to eq(1)
+      expect(file_names.first).to start_with("dossier-#{dossier.id}/export-")
+    end
   end
 
   describe "#destroy" do

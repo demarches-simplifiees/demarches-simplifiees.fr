@@ -1,7 +1,3 @@
-class EditableChamp::DepartementsComponent < ApplicationComponent
+class EditableChamp::DepartementsComponent < EditableChamp::EditableChampBaseComponent
   include ApplicationHelper
-
-  def initialize(form:, champ:)
-    @form, @champ = form, champ
-  end
 end

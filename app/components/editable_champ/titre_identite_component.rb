@@ -1,5 +1,2 @@
-class EditableChamp::TitreIdentiteComponent < ApplicationComponent
-  def initialize(form:, champ:)
-    @form, @champ = form, champ
-  end
+class EditableChamp::TitreIdentiteComponent < EditableChamp::EditableChampBaseComponent
 end

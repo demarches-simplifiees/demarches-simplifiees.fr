@@ -1,5 +1,2 @@
-class EditableChamp::DateComponent < ApplicationComponent
-  def initialize(form:, champ:)
-    @form, @champ = form, champ
-  end
+class EditableChamp::DateComponent < EditableChamp::EditableChampBaseComponent
 end

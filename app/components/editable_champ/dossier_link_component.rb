@@ -1,5 +1,2 @@
-class EditableChamp::DossierLinkComponent < ApplicationComponent
-  def initialize(form:, champ:)
-    @form, @champ = form, champ
-  end
+class EditableChamp::DossierLinkComponent < EditableChamp::EditableChampBaseComponent
 end

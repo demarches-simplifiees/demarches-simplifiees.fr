@@ -1,5 +1,2 @@
-class EditableChamp::HeaderSectionComponent < ApplicationComponent
-  def initialize(form:, champ:)
-    @form, @champ = form, champ
-  end
+class EditableChamp::HeaderSectionComponent < EditableChamp::EditableChampBaseComponent
 end
