@@ -17,8 +17,9 @@ class EmailEvent < ApplicationRecord
     dispatched: 'dispatched',
     dispatch_error: 'dispatch_error'
   }
-
-  scope :dolist, -> { where(method: 'dolist') }
+  scope :dolist, -> { dolist_smtp.or(dolist_api) }
+  scope :dolist_smtp, -> { where(method: 'dolist_smtp') }
+  scope :dolist_api, -> { where(method: 'dolist_api') }
   scope :sendinblue, -> { where(method: 'sendinblue') }
 
   class << self

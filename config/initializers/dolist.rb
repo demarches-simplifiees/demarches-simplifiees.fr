@@ -20,7 +20,7 @@ ActiveSupport.on_load(:action_mailer) do
         if response&.dig("Result")
           mail.message_id = response.dig("Result")
         else
-          Rails.logger.info "Email sent. #{mail}"
+          fail "DoList delivery error. Body: #{response}"
         end
       end
     end
