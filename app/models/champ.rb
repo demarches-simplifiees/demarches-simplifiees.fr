@@ -51,6 +51,7 @@ class Champ < ApplicationRecord
     :simple_drop_down_list?,
     :linked_drop_down_list?,
     :non_fillable?,
+    :fillable?,
     :cnaf?,
     :dgfip?,
     :pole_emploi?,

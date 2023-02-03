@@ -127,7 +127,7 @@ describe 'Invitations' do
       expect(page).to have_text("user_invite@exemple.fr")
     end
 
-    context 'as an invited user' do
+    context 'as an invited user', js: true do
       before do
         navigate_to_invited_dossier(invite)
         expect(page).to have_current_path(dossier_path(invite.dossier))

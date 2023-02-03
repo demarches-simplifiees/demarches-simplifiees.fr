@@ -198,6 +198,10 @@ class TypeDeChamp < ApplicationRecord
     drop_down_other == "1" || drop_down_other == true
   end
 
+  def fillable?
+    !non_fillable?
+  end
+
   def non_fillable?
     type_champ.in?([
       TypeDeChamp.type_champs.fetch(:header_section),

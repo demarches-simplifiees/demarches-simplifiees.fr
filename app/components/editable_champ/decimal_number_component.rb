@@ -1,5 +1,2 @@
-class EditableChamp::DecimalNumberComponent < ApplicationComponent
-  def initialize(form:, champ:)
-    @form, @champ = form, champ
-  end
+class EditableChamp::DecimalNumberComponent < EditableChamp::EditableChampBaseComponent
 end

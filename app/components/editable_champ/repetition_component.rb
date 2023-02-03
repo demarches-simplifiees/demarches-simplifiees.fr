@@ -1,5 +1,2 @@
-class EditableChamp::RepetitionComponent < ApplicationComponent
-  def initialize(form:, champ:)
-    @form, @champ = form, champ
-  end
+class EditableChamp::RepetitionComponent < EditableChamp::EditableChampBaseComponent
 end
