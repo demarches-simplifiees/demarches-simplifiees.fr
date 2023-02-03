@@ -10,6 +10,7 @@
 #  to           :string           not null
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
+#  message_id   :string
 #
 class EmailEvent < ApplicationRecord
   enum status: {
@@ -30,6 +31,7 @@ class EmailEvent < ApplicationRecord
           subject: message.subject || "",
           processed_at: message.date,
           method: ActionMailer::Base.delivery_methods.key(message.delivery_method.class),
+          external_id: message.message_id,
           status:
         )
       rescue StandardError => error
