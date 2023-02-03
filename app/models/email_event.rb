@@ -13,14 +13,18 @@
 #  message_id   :string
 #
 class EmailEvent < ApplicationRecord
+  RETENTION_DURATION = 1.month
+
   enum status: {
     dispatched: 'dispatched',
     dispatch_error: 'dispatch_error'
   }
+
   scope :dolist, -> { dolist_smtp.or(dolist_api) }
   scope :dolist_smtp, -> { where(method: 'dolist_smtp') }
   scope :dolist_api, -> { where(method: 'dolist_api') }
   scope :sendinblue, -> { where(method: 'sendinblue') }
+  scope :outdated, -> { where("created_at < ?", RETENTION_DURATION.ago) }
 
   class << self
     def create_from_message!(message, status:)
