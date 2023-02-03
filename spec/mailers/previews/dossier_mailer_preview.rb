@@ -1,7 +1,7 @@
 # Preview all emails at http://localhost:3000/rails/mailers/dossier_mailer
 class DossierMailerPreview < ActionMailer::Preview
   def notify_new_draft
-    DossierMailer.notify_new_draft(draft)
+    DossierMailer.with(dossier: draft).notify_new_draft
   end
 
   def notify_new_answer
