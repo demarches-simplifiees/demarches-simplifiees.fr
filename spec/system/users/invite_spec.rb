@@ -12,11 +12,8 @@ describe 'Invitations' do
     scenario 'on the form, the owner of a dossier can invite another user to collaborate on the dossier', js: true do
       log_in(owner)
       navigate_to_brouillon(dossier)
-
       fill_in 'Texte obligatoire', with: 'Some edited value'
-
       send_invite_to "user_invite@exemple.fr"
-
       expect(page).to have_current_path(brouillon_dossier_path(dossier))
       expect(page).to have_text("Une invitation a été envoyée à user_invite@exemple.fr.")
       expect(page).to have_text("user_invite@exemple.fr")
@@ -144,8 +141,7 @@ describe 'Invitations' do
   private
 
   def log_in(user)
-    visit '/'
-    click_on 'Connexion'
+    visit new_user_session_path
     sign_in_with(user.email, user.password)
     expect(page).to have_current_path(dossiers_path)
   end

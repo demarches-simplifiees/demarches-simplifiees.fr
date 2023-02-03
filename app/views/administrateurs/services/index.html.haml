@@ -1,7 +1,7 @@
 = render partial: 'administrateurs/breadcrumbs',
-  locals: { steps: [link_to('Démarches', admin_procedures_path),
-                    link_to(@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)),
-                    'Choix du service'] }
+  locals: { steps: [['Démarches', admin_procedures_path],
+                    [@procedure.libelle.truncate_words(4), admin_procedure_path(@procedure)],
+                    ['Choix du service']] }
 
 #services-index.container
   %h1.fr-h1 Liste des Services
@@ -13,7 +13,7 @@
         %th{ scope: "col" }
           Nom
         %th.change{ scope: "col" }
-          = render Dsfr::ButtonComponent.new(label: "Nouveau service", url: new_admin_service_path(procedure_id: @procedure.id), class_names: ['fr-btn--secondary'])
+          = link_to "Nouveau service", new_admin_service_path(procedure_id: @procedure.id), class: "fr-btn fr-btn--secondary"
 
     %tbody
       - @services.each do |service|

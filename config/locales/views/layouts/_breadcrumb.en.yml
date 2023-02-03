@@ -1,0 +1,13 @@
+en:
+  layouts:
+    breadcrumb:
+      root: "Home"
+      you_are_here: "You are here"
+      show: Show breadcrumb
+      preview: "Preview the form"
+      continue: "Continue >"
+      continue_title: "You can comeback using this link"
+      created_at: "Created at %{date} - n° %{number}"
+      closed_at: "Closed at %{date}"
+      published: "Published"
+      draft: "Draft"

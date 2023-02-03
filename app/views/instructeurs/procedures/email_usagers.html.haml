@@ -1,8 +1,8 @@
 - content_for(:title, "Contacter les usagers pour #{@procedure.libelle}")
 
 = render partial: 'administrateurs/breadcrumbs',
-  locals: { steps: [link_to(@procedure.libelle, instructeur_procedure_path(@procedure)),
-                    t('.contact_users')] }
+  locals: { steps: [[@procedure.libelle.truncate_words(4), instructeur_procedure_path(@procedure)],
+                    [t('.contact_users')]] }
 .messagerie.container
   - if @email_usagers_dossiers.present?
     %p.notice.mb-2.mt-4

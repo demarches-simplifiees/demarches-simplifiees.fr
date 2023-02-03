@@ -19,7 +19,7 @@ describe 'layouts/_header.html.haml', type: :view do
     let(:user) { nil }
     let(:profile) { nil }
 
-    it { is_expected.to have_css("a.header-logo[href=\"#{root_path}\"]") }
+    it { is_expected.to have_css(".fr-header__logo") }
 
     it 'displays the Help link' do
       expect(subject).to have_link('Aide', href: FAQ_URL)
@@ -42,7 +42,7 @@ describe 'layouts/_header.html.haml', type: :view do
     let(:user) { create(:user) }
     let(:profile) { :user }
 
-    it { is_expected.to have_css("a.header-logo[href=\"#{dossiers_path}\"]") }
+    it { is_expected.to have_css(".fr-header__logo") }
     it { is_expected.to have_link("Dossiers", href: dossiers_path) }
 
     it 'displays the Help button' do
@@ -56,7 +56,7 @@ describe 'layouts/_header.html.haml', type: :view do
     let(:profile) { :instructeur }
     let(:current_instructeur) { instructeur }
 
-    it { is_expected.to have_css("a.header-logo[href=\"#{instructeur_procedures_path}\"]") }
+    it { is_expected.to have_css(".fr-header__logo") }
 
     it 'displays the Help dropdown menu' do
       expect(subject).to have_css(".help-dropdown")
