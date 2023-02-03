@@ -3,7 +3,7 @@
   %span.mandatory *
 
 - if @champ.updated_at.present? && @seen_at.present?
-  %span.updated-at{ class: highlight_if_unseen_class(@seen_at, @champ.updated_at) }
+  %span.updated-at{ class: highlight_if_unseen_class }
     = "modifié le #{try_format_datetime(@champ.updated_at)}"
 
 - if @champ.rebased_at.present? && @champ.rebased_at > (@seen_at || @champ.updated_at) && controller.current_user.owns_or_invite?(@champ.dossier)
