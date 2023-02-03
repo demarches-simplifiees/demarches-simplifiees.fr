@@ -22,6 +22,12 @@ RSpec.describe TypesDeChamp::PrefillTypeDeChamp, type: :model do
       it { expect(built).to be_kind_of(TypesDeChamp::PrefillRegionTypeDeChamp) }
     end
 
+    context 'when the type de champ is a repetition' do
+      let(:type_de_champ) { build(:type_de_champ_repetition) }
+
+      it { expect(built).to be_kind_of(TypesDeChamp::PrefillRepetitionTypeDeChamp) }
+    end
+
     context 'when any other type de champ' do
       let(:type_de_champ) { build(:type_de_champ_date) }
 

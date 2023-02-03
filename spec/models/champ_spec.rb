@@ -545,12 +545,12 @@ describe Champ do
 
         champ.champs << champ_integer
         first_row = champ.reload.rows.first
-        expect(first_row.size).to eq(2)
+        expect(first_row.size).to eq(3)
         expect(first_row.second).to eq(champ_integer)
 
         champ.champs << champ_text
         first_row = champ.reload.rows.first
-        expect(first_row.size).to eq(2)
+        expect(first_row.size).to eq(3)
         expect(first_row.first).to eq(champ_text)
 
         expect(champ.rows.size).to eq(2)

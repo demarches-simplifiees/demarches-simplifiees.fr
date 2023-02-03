@@ -18,5 +18,8 @@ shared_examples "the user has got a prefilled dossier, owned by themselves" do
     expect(page).to have_field(type_de_champ_text.libelle, with: text_value)
     expect(page).to have_field(type_de_champ_phone.libelle, with: phone_value)
     expect(page).to have_css('label', text: type_de_champ_phone.libelle)
+    expect(page).to have_css('h3', text: type_de_champ_repetition.libelle)
+    expect(page).to have_field(text_repetition_libelle, with: text_repetition_value)
+    expect(page).to have_field(integer_repetition_libelle, with: integer_repetition_value)
   end
 end
