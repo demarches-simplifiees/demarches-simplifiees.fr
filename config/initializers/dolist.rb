@@ -16,8 +16,9 @@ ActiveSupport.on_load(:action_mailer) do
 
       def deliver!(mail)
         response = Dolist::API.new.send_email(mail)
-        if !respons&.dig("Result")
-          Rails.logger.info "Email not sent. Error message: #{mail}"
+
+        if response&.dig("Result")
+          mail.message_id = response.dig("Result")
         else
           Rails.logger.info "Email sent. #{mail}"
         end
