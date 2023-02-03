@@ -47,8 +47,12 @@ class BalancerDeliveryMethod
   def delivery_method(mail)
     return mail[FORCE_DELIVERY_METHOD_HEADER].value.to_sym if force_delivery_method?(mail)
 
-    @delivery_methods
+    compatible_delivery_methods_for(mail)
       .flat_map { |delivery_method, weight| [delivery_method] * weight }
       .sample(random: self.class.random)
+  end
+
+  def compatible_delivery_methods_for(mail)
+    @delivery_methods.reject { |delivery_method, _weight| delivery_method.to_s == 'dolist_api' && !Dolist::API.sendable?(mail) }
   end
 end
