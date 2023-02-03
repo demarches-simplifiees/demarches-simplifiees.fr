@@ -4,8 +4,7 @@ module Instructeurs
     before_action :ensure_ownership!
 
     def create
-      dossier_ids = batch_operation_params[:dossier_ids].join(',').split(',').uniq
-      batch = BatchOperation.safe_create!(batch_operation_params.merge(dossier_ids: dossier_ids))
+      batch = BatchOperation.safe_create!(batch_operation_params)
       flash[:alert] = "Le traitement de masse n'a pas été lancé. Vérifiez que l'action demandée est possible pour les dossiers sélectionnés" if batch.blank?
       redirect_back(fallback_location: instructeur_procedure_url(@procedure.id))
     end
@@ -15,6 +14,7 @@ module Instructeurs
     def batch_operation_params
       params.require(:batch_operation)
         .permit(:operation, :motivation, :justificatif_motivation, dossier_ids: [])
+        .merge(dossier_ids: params['batch_operation']['dossier_ids'].join(',').split(',').uniq)
         .merge(instructeur: current_instructeur)
     end
 
