@@ -317,8 +317,9 @@ en:
         demande:
           edit_dossier: "Edit file"
         search:
-          search_file: "Search a file"
-          simple: "Search"
+          search_file: Search a file
+          simple: Search
+        secondary_menu: Secondary menu
         index:
           dossiers: "Files"
         dossiers_list:
