@@ -53,7 +53,7 @@ class Attachment::EditComponent < ApplicationComponent
       data: {
         auto_attach_url: helpers.auto_attach_url(form.object)
       }.merge(has_file_size_validator? ? { max_file_size: max_file_size } : {})
-    }.merge(has_content_type_validator? ? { accept: content_type_validator.options[:in].join(', ') } : {})
+    }.merge(has_content_type_validator? ? { accept: accept_content_type } : {})
   end
 
   def input_id(given_id)
@@ -98,6 +98,14 @@ class Attachment::EditComponent < ApplicationComponent
     @attached_file.record
       ._validators[file_field_name.to_sym]
       .find { |validator| validator.class == ActiveStorageValidations::ContentTypeValidator }
+  end
+
+  def accept_content_type
+    list = content_type_validator.options[:in]
+    if list.include?("application/octet-stream")
+      list.push(".acidcsa")
+    end
+    list.join(', ')
   end
 
   def has_content_type_validator?

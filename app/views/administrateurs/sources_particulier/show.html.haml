@@ -1,6 +1,6 @@
 = render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [['Démarches', admin_procedures_path],
-                    [@procedure.libelle.truncate_words(4), admin_procedure_path(@procedure)],
+                    [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
                     [Procedure.human_attribute_name(:jeton_api_particulier), admin_procedure_api_particulier_path(@procedure)],
                     [t('.data_sources')]] }
 

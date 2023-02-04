@@ -1,6 +1,6 @@
 = render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [['Démarches', admin_procedures_path],
-                    ["#{@procedure.libelle.truncate_words(4)} - archiver"]],
+                    ["#{@procedure.libelle.truncate_words(10)} - archiver"]],
             metadatas: true }
 
 .container
