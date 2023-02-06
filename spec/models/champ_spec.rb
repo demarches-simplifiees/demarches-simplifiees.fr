@@ -510,10 +510,6 @@ describe Champ do
     let(:champ_integer) { champ.champs.find { |c| c.type_champ == 'integer_number' } }
     let(:champ_text_attrs) { attributes_for(:champ_text, type_de_champ: tdc_text, row_id: ULID.generate) }
 
-    before do
-      procedure.active_revision.add_type_de_champ(libelle: 'sub integer', type_champ: 'integer_number', parent_stable_id: tdc_repetition.stable_id)
-    end
-
     context 'when creating the model directly' do
       let(:champ_text_row_1) { create(:champ_text, type_de_champ: tdc_text, row_id: ULID.generate, parent: champ, dossier: nil) }
 
@@ -539,18 +535,18 @@ describe Champ do
 
         expect(dossier.champs_public.size).to eq(2)
         expect(champ.rows.size).to eq(2)
-        second_row = champ.rows.second
+        second_row = champ.reload.rows.second
         expect(second_row.size).to eq(1)
         expect(second_row.first.dossier).to eq(dossier)
 
         champ.champs << champ_integer
         first_row = champ.reload.rows.first
-        expect(first_row.size).to eq(3)
+        expect(first_row.size).to eq(2)
         expect(first_row.second).to eq(champ_integer)
 
         champ.champs << champ_text
         first_row = champ.reload.rows.first
-        expect(first_row.size).to eq(3)
+        expect(first_row.size).to eq(2)
         expect(first_row.first).to eq(champ_text)
 
         expect(champ.rows.size).to eq(2)
