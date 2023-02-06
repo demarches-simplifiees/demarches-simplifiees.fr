@@ -251,6 +251,7 @@ describe TypeDeChamp do
     it_behaves_like "a prefillable type de champ", :type_de_champ_drop_down_list
     it_behaves_like "a prefillable type de champ", :type_de_champ_regions
     it_behaves_like "a prefillable type de champ", :type_de_champ_departements
+    it_behaves_like "a prefillable type de champ", :type_de_champ_epci
 
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_number
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_communes
