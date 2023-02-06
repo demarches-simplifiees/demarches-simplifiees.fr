@@ -103,13 +103,28 @@ RSpec.describe PrefillDescription, type: :model do
     end
 
     context 'when the type de champ can have multiple values' do
-      let(:type_de_champ) { create(:type_de_champ_multiple_drop_down_list, procedure: procedure) }
+      let(:type_de_champ) { TypesDeChamp::PrefillTypeDeChamp.build(create(:type_de_champ_epci, procedure: procedure)) }
+
+      let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
+
+      before do
+        allow(Rails).to receive(:cache).and_return(memory_store)
+        Rails.cache.clear
+
+        VCR.insert_cassette('api_geo_departements')
+        VCR.insert_cassette('api_geo_epcis')
+      end
+
+      after do
+        VCR.eject_cassette('api_geo_departements')
+        VCR.eject_cassette('api_geo_epcis')
+      end
 
       it 'builds the URL with array parameter' do
         expect(prefill_description.prefill_link).to eq(
           commencer_url(
             path: procedure.path,
-            "champ_#{type_de_champ.to_typed_id}": TypesDeChamp::PrefillMultipleDropDownListTypeDeChamp.new(type_de_champ).example_value
+            "champ_#{type_de_champ.to_typed_id}": type_de_champ.example_value
           )
         )
       end
@@ -128,19 +143,34 @@ RSpec.describe PrefillDescription, type: :model do
       TEXT
     end
 
-    before { prefill_description.update(selected_type_de_champ_ids: [type_de_champ.id]) }
+    let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
+
+    before do
+      allow(Rails).to receive(:cache).and_return(memory_store)
+      Rails.cache.clear
+
+      VCR.insert_cassette('api_geo_departements')
+      VCR.insert_cassette('api_geo_epcis')
+
+      prefill_description.update(selected_type_de_champ_ids: [type_de_champ.id])
+    end
+
+    after do
+      VCR.eject_cassette('api_geo_departements')
+      VCR.eject_cassette('api_geo_epcis')
+    end
 
     it "builds the query to create a new prefilled dossier" do
       expect(prefill_description.prefill_query).to eq(expected_query)
     end
 
     context 'when the type de champ can have multiple values' do
-      let(:type_de_champ) { create(:type_de_champ_multiple_drop_down_list, procedure: procedure) }
+      let(:type_de_champ) { TypesDeChamp::PrefillTypeDeChamp.build(create(:type_de_champ_epci, procedure: procedure)) }
       let(:expected_query) do
         <<~TEXT
           curl --request POST '#{api_public_v1_dossiers_url(procedure)}' \\
                --header 'Content-Type: application/json' \\
-               --data '{"champ_#{type_de_champ.to_typed_id}": #{TypesDeChamp::PrefillMultipleDropDownListTypeDeChamp.new(type_de_champ).example_value}}'
+               --data '{"champ_#{type_de_champ.to_typed_id}": #{type_de_champ.example_value}}'
         TEXT
       end
 
