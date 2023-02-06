@@ -9,10 +9,10 @@ namespace :after_party do
     scope_invalid = Champs::CheckboxChamp.where.not(value: [nil, 'true', 'false'])
 
     progress = ProgressReport.new(scope_blank.count + scope_on.count + scope_off.count + scope_invalid.count)
-    update_all_checkbox(scope_blank, nil, progress)
-    update_all_checkbox(scope_on, 'true', progress)
-    update_all_checkbox(scope_off, 'false', progress)
-    update_all_checkbox(scope_invalid, 'false', progress)
+    update_all(scope_blank, nil, progress)
+    update_all(scope_on, 'true', progress)
+    update_all(scope_off, 'false', progress)
+    update_all(scope_invalid, 'false', progress)
     progress.finish
 
     # Update task as completed.  If you remove the line below, the task will
@@ -23,7 +23,7 @@ namespace :after_party do
 
   private
 
-  def update_all_checkbox(scope, value, progress)
+  def update_all(scope, value, progress)
     scope.in_batches(of: 10_000) do |checkboxes|
       progress.inc(checkboxes.count)
       checkboxes.update_all(value: value)
