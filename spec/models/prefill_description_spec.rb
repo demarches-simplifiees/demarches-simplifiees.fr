@@ -88,36 +88,42 @@ RSpec.describe PrefillDescription, type: :model do
     end
   end
 
-  describe '#prefill_link' do
+  describe '#prefill_link', vcr: { cassette_name: 'api_geo_regions' } do
     let(:procedure) { create(:procedure) }
     let(:type_de_champ) { create(:type_de_champ_text, procedure: procedure) }
+    let(:type_de_champ_repetition) { build(:type_de_champ_repetition, :with_types_de_champ, :with_region_types_de_champ, procedure: procedure) }
+    let(:prefillable_subchamps) { TypesDeChamp::PrefillRepetitionTypeDeChamp.new(type_de_champ_repetition).send(:prefillable_subchamps) }
+    let(:region_repetition) { prefillable_subchamps.third }
     let(:prefill_description) { described_class.new(procedure) }
 
-    before { prefill_description.update(selected_type_de_champ_ids: [type_de_champ.id]) }
+    before { prefill_description.update(selected_type_de_champ_ids: [type_de_champ.id, type_de_champ_repetition.id]) }
 
     it "builds the URL to create a new prefilled dossier" do
       expect(prefill_description.prefill_link).to eq(
         commencer_url(
           path: procedure.path,
-          "champ_#{type_de_champ.to_typed_id}" => I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")
+          "champ_#{type_de_champ.to_typed_id}" => I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}"),
+          "champ_#{type_de_champ_repetition.to_typed_id}" => TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_repetition).example_value
         )
       )
     end
   end
 
-  describe '#prefill_query' do
+  describe '#prefill_query', vcr: { cassette_name: 'api_geo_regions' } do
     let(:procedure) { create(:procedure) }
     let(:type_de_champ) { create(:type_de_champ_text, procedure: procedure) }
+    let(:type_de_champ_repetition) { build(:type_de_champ_repetition, :with_types_de_champ, :with_region_types_de_champ, procedure: procedure) }
+    let(:prefillable_subchamps) { TypesDeChamp::PrefillRepetitionTypeDeChamp.new(type_de_champ_repetition).send(:prefillable_subchamps) }
+    let(:region_repetition) { prefillable_subchamps.third }
     let(:prefill_description) { described_class.new(procedure) }
     let(:expected_query) do
       <<~TEXT
         curl --request POST '#{api_public_v1_dossiers_url(procedure)}' \\
              --header 'Content-Type: application/json' \\
-             --data '{"champ_#{type_de_champ.to_typed_id}": "#{I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")}"}'
+             --data '{"champ_#{type_de_champ.to_typed_id}": "#{I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")}", "champ_#{type_de_champ_repetition.to_typed_id}": #{TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_repetition).example_value}}'
       TEXT
     end
-
-    before { prefill_description.update(selected_type_de_champ_ids: [type_de_champ.id]) }
+    before { prefill_description.update(selected_type_de_champ_ids: [type_de_champ.id, type_de_champ_repetition.id]) }
 
     it "builds the query to create a new prefilled dossier" do
       expect(prefill_description.prefill_query).to eq(expected_query)
