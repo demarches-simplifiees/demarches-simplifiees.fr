@@ -144,6 +144,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ private value that is authorized", :checkbox, "false"
     it_behaves_like "a champ private value that is authorized", :drop_down_list, "value"
     it_behaves_like "a champ private value that is authorized", :regions, "93"
+    it_behaves_like "a champ public value that is unauthorized", :repetition, "[{\"name\":\"value\"}, {\"name\":\"value2\"}]"
 
     it_behaves_like "a champ public value that is unauthorized", :decimal_number, "non decimal string"
     it_behaves_like "a champ public value that is unauthorized", :integer_number, "non integer string"
@@ -160,7 +161,6 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is unauthorized", :header_section, "value"
     it_behaves_like "a champ public value that is unauthorized", :explication, "value"
     it_behaves_like "a champ public value that is unauthorized", :piece_justificative, "value"
-    it_behaves_like "a champ public value that is unauthorized", :repetition, "value"
     it_behaves_like "a champ public value that is unauthorized", :cnaf, "value"
     it_behaves_like "a champ public value that is unauthorized", :dgfip, "value"
     it_behaves_like "a champ public value that is unauthorized", :pole_emploi, "value"
