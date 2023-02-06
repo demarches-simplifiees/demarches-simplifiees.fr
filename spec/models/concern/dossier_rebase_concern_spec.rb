@@ -254,7 +254,7 @@ describe DossierRebaseConcern do
       create(:procedure, types_de_champ_public: [
         { type: :text, mandatory: true, stable_id: 100 },
         {
-          type: :repetition, stable_id: 101, children: [
+          type: :repetition, stable_id: 101, mandatory: true, children: [
             { type: :text, stable_id: 102 }
           ]
         },
@@ -300,7 +300,8 @@ describe DossierRebaseConcern do
       procedure.draft_revision.remove_type_de_champ(yes_no_type_de_champ.stable_id)
       new_repetition_type_de_champ = procedure.draft_revision.add_type_de_champ({
         type_champ: TypeDeChamp.type_champs.fetch(:repetition),
-        libelle: "une autre repetition"
+        libelle: "une autre repetition",
+        mandatory: true
       })
       procedure.draft_revision.add_type_de_champ({
         type_champ: TypeDeChamp.type_champs.fetch(:text),
@@ -610,7 +611,7 @@ describe DossierRebaseConcern do
     context 'with a procedure with a repetition' do
       let!(:procedure) do
         create(:procedure).tap do |p|
-          repetition = p.draft_revision.add_type_de_champ(type_champ: :repetition, libelle: 'p1')
+          repetition = p.draft_revision.add_type_de_champ(type_champ: :repetition, libelle: 'p1', mandatory: true)
           p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'c1', parent_stable_id: repetition.stable_id)
           p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'c2', parent_stable_id: repetition.stable_id)
           p.publish!

@@ -24,7 +24,7 @@ describe Champs::HeaderSectionChamp do
     end
 
     context 'for repetition champs' do
-      let(:types_de_champ_public) { [{ type: :repetition, children: types_de_champ }] }
+      let(:types_de_champ_public) { [{ type: :repetition, mandatory: true, children: types_de_champ }] }
 
       let(:first_header)  { dossier.champs_public.first.champs.first }
       let(:second_header) { dossier.champs_public.first.champs.fourth }
