@@ -20,7 +20,7 @@ class NotificationMailer < ApplicationMailer
   def send_notification
     @service = @dossier.procedure.service
     @logo_url = attach_logo(@dossier.procedure)
-    @rendered_template = sanitize(@body)
+    @rendered_template = sanitize(@body, scrubber: Sanitizers::MailScrubber.new)
     attachments[@attachment[:filename]] = @attachment[:content] if @attachment.present?
 
     I18n.with_locale(@dossier.user_locale) do
