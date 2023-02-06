@@ -268,7 +268,8 @@ class TypeDeChamp < ApplicationRecord
       TypeDeChamp.type_champs.fetch(:checkbox),
       TypeDeChamp.type_champs.fetch(:drop_down_list),
       TypeDeChamp.type_champs.fetch(:regions),
-      TypeDeChamp.type_champs.fetch(:departements)
+      TypeDeChamp.type_champs.fetch(:departements),
+      TypeDeChamp.type_champs.fetch(:epci)
     ])
   end
 
