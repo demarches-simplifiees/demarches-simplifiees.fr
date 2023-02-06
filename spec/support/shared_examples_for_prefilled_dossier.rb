@@ -18,6 +18,6 @@ shared_examples "the user has got a prefilled dossier, owned by themselves" do
     expect(page).to have_field(type_de_champ_text.libelle, with: text_value)
     expect(page).to have_field(type_de_champ_phone.libelle, with: phone_value)
     expect(page).to have_css('label', text: type_de_champ_phone.libelle)
-    expect(page).to have_field(type_de_champ_datetime.libelle, with: "#{datetime_value}:00")
+    expect(page).to have_field(type_de_champ_datetime.libelle, with: datetime_value)
   end
 end
