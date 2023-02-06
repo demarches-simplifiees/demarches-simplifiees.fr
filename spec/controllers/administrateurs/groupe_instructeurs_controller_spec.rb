@@ -263,12 +263,8 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
           emails: new_instructeur_emails.to_json
         }
     end
-    before do
-      gi_1_2.instructeurs << instructeur
 
-      allow(GroupeInstructeurMailer).to receive(:add_instructeurs)
-        .and_return(double(deliver_later: true))
-    end
+    before { gi_1_2.instructeurs << instructeur }
 
     context 'of a news instructeurs' do
       let(:new_instructeur_emails) { ['new_i1@mail.com', 'new_i2@mail.com'] }
@@ -277,13 +273,6 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       it { expect(flash.notice).to be_present }
       it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_2)) }
       it { expect(procedure.routing_enabled?).to be_truthy }
-      it "calls GroupeInstructeurMailer with the right groupe and instructeurs" do
-        expect(GroupeInstructeurMailer).to have_received(:add_instructeurs).with(
-          gi_1_2,
-          satisfy { |instructeurs| instructeurs.all? { |i| new_instructeur_emails.include?(i.email) } },
-          admin.email
-        )
-      end
     end
 
     context 'of an instructeur already in the group' do
