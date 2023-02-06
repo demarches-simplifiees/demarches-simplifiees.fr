@@ -1,3 +1,10 @@
-%p{ style: 'background-color: #F5F5FE; padding: 25px; ' }
-  J'aide les services publics à s'améliorer :
-  = link_to 'je donne mon avis avec services publics +', 'https://www.plus.transformation.gouv.fr/experience/step_1?pk_campaign=demarches-simplifiees', target: '_blank', rel: 'noopener'
+%div{ style: 'background-color: #F5F5FE; padding: 15px;' }
+  %table{ width: "100%", border: "0", cellspacing: "0", cellpadding: "0" }
+    %tr
+      %td{ width: "25%" }
+        = image_tag('mailer/logo-services-plus.svg', "aria-hidden": true, style: 'vertical-align: middle')
+      %td{ width: "75%", valign: "top" }
+        %p{ style: 'margin: 0' }
+          J'aide les services publics à s'améliorer :
+          %br
+          = link_to 'je donne mon avis avec services publics +', 'https://www.plus.transformation.gouv.fr/experience/step_1?pk_campaign=demarches-simplifiees', target: '_blank', rel: 'noopener'
