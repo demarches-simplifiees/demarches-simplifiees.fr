@@ -1,6 +1,8 @@
 class TypesDeChamp::PrefillEpciTypeDeChamp < TypesDeChamp::PrefillTypeDeChamp
   def possible_values
-    departements.map { |departement| "#{departement[:code]} (#{departement[:name]})" }
+    departements.map do |departement|
+      "#{departement[:code]} (#{departement[:name]}) : https://geo.api.gouv.fr/epcis?codeDepartement=#{departement[:code]}"
+    end
   end
 
   def example_value
