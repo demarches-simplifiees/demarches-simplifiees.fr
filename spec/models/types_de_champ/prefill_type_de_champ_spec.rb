@@ -28,6 +28,12 @@ RSpec.describe TypesDeChamp::PrefillTypeDeChamp, type: :model do
       it { expect(built).to be_kind_of(TypesDeChamp::PrefillDepartementTypeDeChamp) }
     end
 
+    context 'when the type de champ is a epci' do
+      let(:type_de_champ) { build(:type_de_champ_epci) }
+
+      it { expect(built).to be_kind_of(TypesDeChamp::PrefillEpciTypeDeChamp) }
+    end
+
     context 'when any other type de champ' do
       let(:type_de_champ) { build(:type_de_champ_date) }
 
@@ -91,5 +97,13 @@ RSpec.describe TypesDeChamp::PrefillTypeDeChamp, type: :model do
 
       it { expect(too_many_possible_values).to eq(false) }
     end
+  end
+
+  describe '#transform_value_to_assignable_attributes' do
+    let(:type_de_champ) { build(:type_de_champ_email) }
+    let(:value) { "any@email.org" }
+    subject(:transform_value_to_assignable_attributes) { described_class.build(type_de_champ).transform_value_to_assignable_attributes(value) }
+
+    it { is_expected.to match({ value: value }) }
   end
 end

@@ -56,10 +56,7 @@ class PrefillParams
     end
 
     def to_h
-      {
-        id: champ.id,
-        value: value
-      }
+      { id: champ.id }.merge(champ_attributes)
     end
 
     private
@@ -67,8 +64,14 @@ class PrefillParams
     def valid?
       return true unless NEED_VALIDATION_TYPES_DE_CHAMPS.include?(champ.type_champ)
 
-      champ.value = value
+      champ.assign_attributes(champ_attributes)
       champ.valid?(:prefill)
+    end
+
+    def champ_attributes
+      TypesDeChamp::PrefillTypeDeChamp
+        .build(champ.type_de_champ)
+        .transform_value_to_assignable_attributes(value)
     end
   end
 end
