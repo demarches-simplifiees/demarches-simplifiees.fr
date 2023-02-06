@@ -26,6 +26,36 @@ RSpec.describe ApplicationMailer, type: :mailer do
     end
   end
 
+  describe 'dealing with Dolist API error' do
+    let(:dossier) { create(:dossier, procedure: create(:simple_procedure)) }
+    before do
+      ActionMailer::Base.delivery_method = :dolist_api
+      api_error_response = { "ResponseStatus": { "ErrorCode": "Forbidden", "Message": "Blocked non authorized request", "Errors": [] } }
+      allow_any_instance_of(Dolist::API).to receive(:send_email).and_return(api_error_response)
+    end
+    subject { DossierMailer.with(dossier:).notify_new_draft.deliver_now }
+
+    it 'raise classic error to retry' do
+      expect { subject }.to raise_error(MailDeliveryError)
+      expect(EmailEvent.dolist_api.dispatch_error.count).to eq(1)
+    end
+  end
+
+  describe 'dealing with Dolist API success' do
+    let(:dossier) { create(:dossier, procedure: create(:simple_procedure)) }
+    let(:message_id) { "29d9b692-0374-4084-8434-d9cddbced205" }
+    before do
+      ActionMailer::Base.delivery_method = :dolist_api
+      api_success_response = { "Result" => message_id }
+      allow_any_instance_of(Dolist::API).to receive(:send_email).and_return(api_success_response)
+    end
+    subject { DossierMailer.with(dossier:).notify_new_draft.deliver_now }
+
+    it 'forward message ID to observer and EmailEvent.create_from_message!' do
+      expect { subject }.to change { EmailEvent.dolist_api.dispatched.where(message_id:).count }.to eq(1)
+    end
+  end
+
   describe 'EmailDeliveryObserver is invoked' do
     let(:user1) { create(:user) }
     let(:user2) { create(:user, email: "your@email.com") }
