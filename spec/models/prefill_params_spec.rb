@@ -12,6 +12,16 @@ RSpec.describe PrefillParams do
     before do
       allow(Rails).to receive(:cache).and_return(memory_store)
       Rails.cache.clear
+
+      VCR.insert_cassette('api_geo_regions')
+      VCR.insert_cassette('api_geo_departements')
+      VCR.insert_cassette('api_geo_epcis')
+    end
+
+    after do
+      VCR.eject_cassette('api_geo_regions')
+      VCR.eject_cassette('api_geo_departements')
+      VCR.eject_cassette('api_geo_epcis')
     end
 
     context "when the stable ids match the TypeDeChamp of the corresponding procedure" do

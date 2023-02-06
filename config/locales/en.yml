@@ -483,6 +483,14 @@ en:
               not_in_departement_names: "must be a valid department name"
             external_id:
               not_in_departement_codes: "must be a valid department code"
+        "champs/epci_champ":
+          attributes:
+            code_departement:
+              not_in_departement_codes: "must be a valid department code"
+            external_id:
+              not_in_departement_epci_codes: "must be a valid EPCI code of the matching department"
+            value:
+              not_in_departement_epci_names: "must be a valid EPCI name of the matching department"
   errors:
     format: "Field « %{attribute} » %{message}"
     messages:
