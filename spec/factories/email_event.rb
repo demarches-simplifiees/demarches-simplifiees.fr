@@ -6,7 +6,7 @@ FactoryBot.define do
     status { "dispatched" }
 
     trait :dolist do
-      add_attribute(:method) { "dolist" }
+      add_attribute(:method) { "dolist_smtp" }
     end
   end
 end
