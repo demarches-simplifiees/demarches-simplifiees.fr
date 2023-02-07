@@ -1,6 +1,6 @@
 - if @dossier.present?
-  = turbo_stream.replace_all '.invite-user-action', partial: 'invites/dropdown', locals: { dossier: @dossier }
+  = turbo_stream.replace_all '.invite-user-action', partial: 'invites/dropdown', locals: { dossier: @dossier, morphing: true }
   - if @dossier.invites.empty?
-    = turbo_stream.focus 'invite_email'
+    = turbo_stream.focus 'invite-list'
   - else
-    = turbo_stream.focus_all '#invites-form ul a:first-child'
+    = turbo_stream.focus 'invite_email'
