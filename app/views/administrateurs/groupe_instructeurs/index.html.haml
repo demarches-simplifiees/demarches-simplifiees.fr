@@ -1,12 +1,12 @@
 - if @procedure.routee?
   = render partial: 'administrateurs/breadcrumbs',
     locals: { steps: [[t('.procedures'), admin_procedures_path],
-                      [@procedure.libelle.truncate_words(4), admin_procedure_path(@procedure)],
+                      [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
                       [t('.instructors_group')]] }
 - else
   = render partial: 'administrateurs/breadcrumbs',
     locals: { steps: [[t('.procedures'), admin_procedures_path],
-                      [@procedure.libelle.truncate_words(4), admin_procedure_path(@procedure)],
+                      [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
                       ['Instructeurs']] }
 
 .container.groupe-instructeur

@@ -4,7 +4,7 @@
 
 = render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [['Démarches', admin_procedures_path],
-                    [@procedure.libelle.truncate_words(4), admin_procedure_path(@procedure)],
+                    [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
                     ["Emails", admin_procedure_mail_templates_path(@procedure)],
                     [@mail_template.class.const_get(:DISPLAYED_NAME)]] }
 
