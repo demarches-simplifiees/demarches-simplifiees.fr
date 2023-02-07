@@ -32,6 +32,9 @@ class Dolist::API
     end
 
     def sendable?(mail)
+      return false if mail.to.blank? # recipient are mandatory
+      return false if mail.bcc.present? # no bcc support
+
       # Mail having attachments are not yet supported in our account
       mail.attachments.none? { !_1.inline? }
     end
