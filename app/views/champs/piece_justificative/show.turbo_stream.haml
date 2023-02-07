@@ -2,5 +2,6 @@
   = turbo_stream.replace @champ.input_group_id do
     = render EditableChamp::EditableChampComponent.new champ: @champ, form: form
 
-- @champ.piece_justificative_file.attachments.each do |attachment|
-  = turbo_stream.focus_all "button[data-toggle-target=\".attachment-input-#{attachment.id}\"]"
+  - last_attached_file = @champ.piece_justificative_file.attachments.last
+  - if last_attached_file
+    = turbo_stream.focus_all "#persisted_row_attachment_#{last_attached_file.id} .attachment-filename a"
