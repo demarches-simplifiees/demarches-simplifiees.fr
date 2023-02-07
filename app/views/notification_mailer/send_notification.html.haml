@@ -6,7 +6,8 @@
 - if @actions.present?
   = render 'notification_mailer/actions', actions: @actions, dossier: @dossier
 
-= render 'layouts/mailers/service_plus'
+- if @with_services_publics_plus
+  = render 'layouts/mailers/services_publics_plus'
 
 - content_for :footer do
   = render 'layouts/mailers/service_footer', service: @service, dossier: @dossier

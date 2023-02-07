@@ -9,6 +9,7 @@ class NotificationMailer < ApplicationMailer
   include ActionView::Helpers::SanitizeHelper
 
   before_action :set_dossier
+  before_action :set_services_publics_plus, only: :send_notification
   after_action :create_commentaire_for_notification
 
   helper ServiceHelper
@@ -49,6 +50,12 @@ class NotificationMailer < ApplicationMailer
   end
 
   private
+
+  def set_services_publics_plus
+    return unless Dossier::TERMINE.include?(params[:state])
+
+    @with_services_publics_plus = true
+  end
 
   def set_dossier
     @dossier = params[:dossier]
