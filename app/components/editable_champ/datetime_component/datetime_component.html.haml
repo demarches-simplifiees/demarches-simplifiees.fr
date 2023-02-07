@@ -1,2 +1,2 @@
 .datetime
-  = @form.datetime_field(:value, value: @champ.value.try(:[], 0..15), id: @champ.input_id, aria: { describedby: @champ.describedby_id })
+  = @form.datetime_field(:value, value: @champ.valid? && @champ.value.present? ? DateTime.iso8601(@champ.value).strftime('%Y-%m-%dT%H:%M') : @champ.value, id: @champ.input_id, aria: { describedby: @champ.describedby_id })
