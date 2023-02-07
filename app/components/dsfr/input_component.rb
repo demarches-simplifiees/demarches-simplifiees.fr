@@ -89,6 +89,10 @@ class Dsfr::InputComponent < ApplicationComponent
     @input_type == :email_field
   end
 
+  def show_password_id
+    dom_id(object, "#{@attribute}_show_password")
+  end
+
   private
 
   def hint?

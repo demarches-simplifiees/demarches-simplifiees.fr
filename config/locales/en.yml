@@ -351,6 +351,10 @@ en:
           connect_with_agent_connect: Visit our dedicated page
           subtitle: "Sign in with my account"
       passwords:
+        edit:
+          subtitle: Change password
+          submit: Change password
+          submit_loading: Sending…
         reset_link_sent:
           got_it: Got it!
           open_your_mailbox: Now open your mailbox.
