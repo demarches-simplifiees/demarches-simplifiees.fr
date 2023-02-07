@@ -54,7 +54,7 @@ class NotificationMailer < ApplicationMailer
   def set_services_publics_plus
     return unless Dossier::TERMINE.include?(params[:state])
 
-    @with_services_publics_plus = true
+    @services_publics_plus_url = ENV['SERVICES_PUBLICS_PLUS_URL'].presence
   end
 
   def set_dossier
