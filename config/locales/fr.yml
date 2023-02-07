@@ -347,6 +347,10 @@ fr:
           connect_with_agent_connect: Accédez à notre page dédiée
           subtitle: "Se connecter avec son compte"
       passwords:
+        edit:
+          subtitle: Changement de mot de passe
+          submit: Changer le mot de passe
+          submit_loading: Envoi…
         reset_link_sent:
           email_sent_html: "Nous vous avons envoyé un email à l’adresse <strong>%{email}</strong>."
           click_link_to_reset_password: "Cliquez sur le lien contenu dans l’email pour changer votre mot de passe."

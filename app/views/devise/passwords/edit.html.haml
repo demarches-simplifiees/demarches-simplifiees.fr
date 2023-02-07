@@ -7,16 +7,21 @@
   .one-column-centered
     = devise_error_messages!
 
-    = form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :patch, class: 'form' }) do |f|
-
-      %h1 Changement de mot de passe
-
+    = form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :patch, class: '' }) do |f|
       = f.hidden_field :reset_password_token
 
-      = f.label 'Nouveau mot de passe'
-      = render 'password_complexity/field', { form: f, test_complexity: populated_resource.validate_password_complexity? }
 
-      = f.label 'Confirmez le nouveau mot de passe'
-      = f.password_field :password_confirmation, autocomplete: 'off'
+      %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'edit-password-legend' } }
+        %legend.fr-fieldset__legend#edit-password-legend
+          %h1.fr-h2= I18n.t('views.users.passwords.edit.subtitle')
 
-      = f.submit 'Changer le mot de passe', class: 'button large primary expand', id: "submit-password", data: { disable_with: "Envoi…" }
+        .fr-fieldset__element
+          = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field,
+            opts: { autofocus: 'true', autocomplete: 'new-password', data: { controller: populated_resource.validate_password_complexity? ? 'turbo-input' : false, turbo_input_url_value: show_password_complexity_path }})
+
+          = render 'password_complexity/field', { form: f, test_complexity: populated_resource.validate_password_complexity? }
+
+        .fr-fieldset__element
+          = render Dsfr::InputComponent.new(form: f, attribute: :password_confirmation, input_type: :password_field, opts: { autocomplete: 'new-password' })
+
+      = f.submit t('views.users.passwords.edit.submit'), id: 'submit-password', class: "fr-btn fr-btn--lg fr-mt-2w", data: { disable_with: t('views.users.passwords.edit.submit_loading') }
