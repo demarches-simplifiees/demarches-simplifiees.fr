@@ -74,5 +74,19 @@ RSpec.describe 'commencer/show.html.haml', type: :view do
         expect(rendered).to have_link('Voir mes dossiers en cours', href: dossiers_path)
       end
     end
+
+    context 'and they have a prefilled dossier' do
+      let!(:prefilled_dossier) { create(:dossier, :prefilled, user: user, procedure: procedure) }
+
+      before { assign(:prefilled_dossier, prefilled_dossier) }
+
+      it_behaves_like 'it renders a link to create a new dossier', 'Commencer un nouveau dossier'
+
+      it 'renders a link to resume the pending draft' do
+        subject
+        expect(rendered).to have_text(time_ago_in_words(prefilled_dossier.created_at))
+        expect(rendered).to have_link('Continuer à remplir mon dossier', href: brouillon_dossier_path(prefilled_dossier))
+      end
+    end
   end
 end
