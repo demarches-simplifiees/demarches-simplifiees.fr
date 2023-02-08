@@ -1,6 +1,6 @@
 describe DossierRebaseConcern do
   describe '#can_rebase?' do
-    let(:procedure) { create(:procedure, :with_type_de_champ_mandatory, :with_type_de_champ_private, :with_yes_no) }
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ mandatory: true }, { type: :yes_no }], types_de_champ_private: [{}]) }
     let(:attestation_template) { procedure.draft_revision.attestation_template.find_or_revise! }
     let(:type_de_champ) { procedure.active_revision.types_de_champ_public.find { |tdc| !tdc.mandatory? } }
     let(:private_type_de_champ) { procedure.active_revision.types_de_champ_private.first }
@@ -252,7 +252,7 @@ describe DossierRebaseConcern do
   describe "#rebase" do
     let(:procedure) do
       create(:procedure, types_de_champ_public: [
-        { type: :text, mandatory: true, stable_id: 100 },
+        { type: :text, mandatory: true, stable_id: 1 },
         {
           type: :repetition, stable_id: 101, mandatory: true, children: [
             { type: :text, stable_id: 102 }
@@ -266,17 +266,17 @@ describe DossierRebaseConcern do
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:types_de_champ) { procedure.active_revision.types_de_champ }
 
-    let(:text_type_de_champ) { types_de_champ.find { _1.stable_id == 100 } }
+    let(:text_type_de_champ) { types_de_champ.find { _1.stable_id == 1 } }
     let(:repetition_type_de_champ) { types_de_champ.find { _1.stable_id == 101 } }
     let(:repetition_text_type_de_champ) { types_de_champ.find { _1.stable_id == 102 } }
     let(:datetime_type_de_champ) { types_de_champ.find { _1.stable_id == 103 } }
     let(:yes_no_type_de_champ) { types_de_champ.find { _1.stable_id == 104 } }
 
-    let(:text_champ) { dossier.champs_public.find { _1.stable_id == 100 } }
+    let(:text_champ) { dossier.champs_public.find { _1.stable_id == 1 } }
     let(:repetition_champ) { dossier.champs_public.find { _1.stable_id == 101 } }
     let(:datetime_champ) { dossier.champs_public.find { _1.stable_id == 103 } }
 
-    let(:rebased_text_champ) { dossier.champs_public.find { _1.stable_id == 100 } }
+    let(:rebased_text_champ) { dossier.champs_public.find { _1.stable_id == 1 } }
     let(:rebased_repetition_champ) { dossier.champs_public.find { _1.stable_id == 101 } }
     let(:rebased_datetime_champ) { dossier.champs_public.find { _1.stable_id == 103 } }
     let(:rebased_number_champ) { dossier.champs_public.find { _1.stable_id == 105 } }
