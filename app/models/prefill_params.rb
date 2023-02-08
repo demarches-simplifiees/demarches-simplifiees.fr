@@ -83,7 +83,7 @@ class PrefillParams
           id = row.find { |champ| champ.libelle == key }&.id
           next unless id
           { id: id, value: value }
-        end
+        end.compact
       rescue JSON::ParserError
       end.compact
     end
