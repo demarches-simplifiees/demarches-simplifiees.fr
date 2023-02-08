@@ -1,6 +1,7 @@
 RSpec.describe 'commencer/show.html.haml', type: :view do
   include Rails.application.routes.url_helpers
 
+  let(:stored_query_params) { false }
   let(:procedure) { create(:procedure, :published, :for_individual, :with_service) }
 
   before do
@@ -9,6 +10,8 @@ RSpec.describe 'commencer/show.html.haml', type: :view do
     if user
       sign_in user
     end
+
+    allow(view).to receive(:stored_query_params?).and_return(stored_query_params)
   end
 
   subject { render }
@@ -80,13 +83,17 @@ RSpec.describe 'commencer/show.html.haml', type: :view do
 
       before { assign(:prefilled_dossier, prefilled_dossier) }
 
-      it_behaves_like 'it renders a link to create a new dossier', 'Commencer un nouveau dossier'
-
-      it 'renders a link to resume the pending draft' do
+      it 'renders a link to resume the prefilled dossier' do
         subject
         expect(rendered).to have_text(time_ago_in_words(prefilled_dossier.created_at))
-        expect(rendered).to have_link('Continuer à remplir mon dossier', href: brouillon_dossier_path(prefilled_dossier))
+        expect(rendered).to have_link('Poursuivre mon dossier prérempli', href: brouillon_dossier_path(prefilled_dossier))
       end
+    end
+
+    context 'and they have stored query params in order to prefill a dossier' do
+      let(:stored_query_params) { true }
+
+      it_behaves_like 'it renders a link to create a new dossier', 'Poursuivre mon dossier prérempli'
     end
   end
 end
