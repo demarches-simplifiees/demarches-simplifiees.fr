@@ -12,7 +12,7 @@ module Loaders
     private
 
     def query(keys)
-      ::Dossier.visible_by_administration.where(id: keys)
+      ::Dossier.visible_by_administration.for_api_v2.where(id: keys)
     end
   end
 end
