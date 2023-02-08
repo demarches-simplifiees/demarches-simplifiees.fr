@@ -147,7 +147,7 @@ class Dossier < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :parent_dossier, class_name: 'Dossier', optional: true
   belongs_to :batch_operation, optional: true
-  has_many :dossier_batch_operations
+  has_many :dossier_batch_operations, dependent: :destroy
   has_many :batch_operations, through: :dossier_batch_operations
   has_one :france_connect_information, through: :user
 
