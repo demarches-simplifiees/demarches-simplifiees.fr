@@ -3,6 +3,10 @@ class ExportJob < ApplicationJob
 
   discard_on ActiveRecord::RecordNotFound
 
+  before_perform do |job|
+    Sentry.set_tags(procedure_id: job.arguments.first.procedure.id)
+  end
+
   def perform(export)
     return if export.generated?
 
