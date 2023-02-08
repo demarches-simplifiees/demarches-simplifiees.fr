@@ -36,6 +36,14 @@ RSpec.describe QueryParamsStoreConcern, type: :controller do
         expect { store_query_params }.to change { session[:stored_params] }.from(nil).to(params.to_json)
       end
     end
+
+    context 'when params contain a locale' do
+      let(:params) { { locale: "fr", param2: "param2" } }
+
+      it "does not store the locale" do
+        expect { store_query_params }.to change { session[:stored_params] }.from(nil).to({ param2: "param2" }.to_json)
+      end
+    end
   end
 
   describe '#retrieve_and_delete_stored_query_params' do
