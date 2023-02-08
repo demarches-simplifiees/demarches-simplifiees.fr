@@ -77,9 +77,11 @@ module DossierRebaseConcern
 
     # due to repetition tdc clone on update or erase
     # we must reassign tdc to the latest version
-    champs_by_stable_id
-      .filter_map { |stable_id, champs| [target_coordinates_by_stable_id[stable_id].type_de_champ_id, champs] if champs.present? }
-      .each { |type_de_champ_id, champs| champs.update_all(type_de_champ_id:) }
+    champs_by_stable_id.each do |stable_id, champs|
+      if target_coordinates_by_stable_id[stable_id].present? && champs.present?
+        champs.update_all(type_de_champ_id: target_coordinates_by_stable_id[stable_id].type_de_champ_id)
+      end
+    end
 
     # update dossier revision
     update_column(:revision_id, target_revision.id)
