@@ -18,7 +18,9 @@ Rails.application.configure do
         graphql_variables: event.payload[:graphql_variables],
         browser: event.payload[:browser],
         browser_version: event.payload[:browser_version],
-        platform: event.payload[:platform]
+        platform: event.payload[:platform],
+        client_ip: event.payload[:client_ip],
+        request_id: event.payload[:request_id]
       }.compact
     end
 
