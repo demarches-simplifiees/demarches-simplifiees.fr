@@ -76,7 +76,7 @@ module Types
     end
 
     def groupe_instructeur
-      Loaders::Record.for(GroupeInstructeur).load(object.groupe_instructeur_id)
+      Loaders::Record.for(GroupeInstructeur, includes: [:procedure]).load(object.groupe_instructeur_id)
     end
 
     def demandeur
