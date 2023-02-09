@@ -7,6 +7,7 @@
 #
 class NotificationMailer < ApplicationMailer
   include ActionView::Helpers::SanitizeHelper
+  include ActionView::Helpers::TextHelper
 
   before_action :set_dossier
   before_action :set_services_publics_plus, only: :send_notification
@@ -67,7 +68,7 @@ class NotificationMailer < ApplicationMailer
         mail_template = @dossier.procedure.mail_template_for(params[:state])
 
         @email = @dossier.user_email_for(:notification)
-        @subject = mail_template.subject_for_dossier(@dossier)
+        @subject = truncate(mail_template.subject_for_dossier(@dossier), length: 100)
         @body = mail_template.body_for_dossier(@dossier)
         @actions = mail_template.actions_for_dossier(@dossier)
         @attachment = mail_template.attachment_for_dossier(@dossier)
