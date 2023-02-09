@@ -1,5 +1,6 @@
-= turbo_stream.replace 'complexity-label', partial: 'label'
-= turbo_stream.replace 'complexity-bar', partial: 'bar'
+= turbo_stream.update 'password_complexity' do
+  = render PasswordComplexityComponent.new(length: @length, min_length: @min_length, score: @score, min_complexity: @min_complexity)
+
 - if @score < @min_complexity || @length < @min_length
   = turbo_stream.disable 'submit-password'
 - else
