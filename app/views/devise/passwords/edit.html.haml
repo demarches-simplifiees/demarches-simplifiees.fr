@@ -3,25 +3,28 @@
 - content_for :footer do
   = render partial: 'root/footer'
 
-.container.devise-container
-  .one-column-centered
-    = devise_error_messages!
+.fr-container.fr-my-5w
+  .fr-grid-row.fr-grid-row--center
+    .fr-col-lg-6
+      = devise_error_messages!
 
-    = form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :patch, class: '' }) do |f|
-      = f.hidden_field :reset_password_token
+      = form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :patch, class: '' }) do |f|
+        = f.hidden_field :reset_password_token
 
 
-      %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'edit-password-legend' } }
-        %legend.fr-fieldset__legend#edit-password-legend
-          %h1.fr-h2= I18n.t('views.users.passwords.edit.subtitle')
+        %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'edit-password-legend' } }
+          %legend.fr-fieldset__legend#edit-password-legend
+            %h1.fr-h2= I18n.t('views.users.passwords.edit.subtitle')
 
-        .fr-fieldset__element
-          = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field,
-            opts: { autofocus: 'true', autocomplete: 'new-password', data: { controller: populated_resource.validate_password_complexity? ? 'turbo-input' : false, turbo_input_url_value: show_password_complexity_path }})
+          .fr-fieldset__element
+            = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field,
+              opts: { autofocus: 'true', autocomplete: 'new-password', data: { controller: populated_resource.validate_password_complexity? ? 'turbo-input' : false, turbo_input_url_value: show_password_complexity_path }})
 
-          = render 'password_complexity/field', { form: f, test_complexity: populated_resource.validate_password_complexity? }
+            - if populated_resource.validate_password_complexity?
+              #password_complexity
+                = render PasswordComplexityComponent.new
 
-        .fr-fieldset__element
-          = render Dsfr::InputComponent.new(form: f, attribute: :password_confirmation, input_type: :password_field, opts: { autocomplete: 'new-password' })
+          .fr-fieldset__element
+            = render Dsfr::InputComponent.new(form: f, attribute: :password_confirmation, input_type: :password_field, opts: { autocomplete: 'new-password' })
 
-      = f.submit t('views.users.passwords.edit.submit'), id: 'submit-password', class: "fr-btn fr-btn--lg fr-mt-2w", data: { disable_with: t('views.users.passwords.edit.submit_loading') }
+        = f.submit t('views.users.passwords.edit.submit'), id: 'submit-password', class: "fr-btn fr-btn--lg fr-mt-2w", data: { disable_with: t('views.users.passwords.edit.submit_loading') }
