@@ -222,6 +222,10 @@ class Etablissement < ApplicationRecord
     SpreadsheetArchitect.send("to_#{format}".to_sym, bilans_bdf_data)
   end
 
+  def as_degraded_mode?
+    adresse.nil? # TOOD: maybe dedicated column or more robust way
+  end
+
   private
 
   def bilans_new_keys
