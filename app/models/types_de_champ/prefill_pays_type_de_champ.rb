@@ -1,5 +1,5 @@
 class TypesDeChamp::PrefillPaysTypeDeChamp < TypesDeChamp::PrefillTypeDeChamp
-  def possible_values
+  def possible_values_list
     countries.map { |country| "#{country[:code]} (#{country[:name]})" }
   end
 

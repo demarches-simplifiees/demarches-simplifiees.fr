@@ -53,33 +53,17 @@ RSpec.describe TypesDeChamp::PrefillTypeDeChamp, type: :model do
       it { expect(possible_values).to be_empty }
     end
 
-    context 'when the type de champ is prefillable' do
-      let(:type_de_champ) { build(:type_de_champ_email) }
-
-      it { expect(possible_values).to match(["Une adresse email"]) }
-    end
-  end
-
-  describe '#possible_values_sentence' do
-    subject(:possible_values_sentence) { described_class.build(type_de_champ).possible_values_sentence }
-
-    context 'when the type de champ is not prefillable' do
-      let(:type_de_champ) { build(:type_de_champ_mesri) }
-
-      it { expect(possible_values_sentence).to be_empty }
-    end
-
     context 'when there is too many possible values' do
-      let(:type_de_champ) { build(:type_de_champ_drop_down_list) }
+      let(:type_de_champ) { create(:type_de_champ_drop_down_list) }
       before { type_de_champ.drop_down_options = (1..described_class::POSSIBLE_VALUES_THRESHOLD + 1).map(&:to_s) }
 
-      it { expect(possible_values_sentence).to match("Un choix parmi ceux sélectionnés à la création de la procédure") }
+      it { expect(possible_values).to match("Un choix parmi ceux sélectionnés à la création de la procédure") }
     end
 
     context 'when the type de champ is prefillable' do
       let(:type_de_champ) { build(:type_de_champ_email) }
 
-      it { expect(possible_values_sentence).to match("Une adresse email") }
+      it { expect(possible_values).to match("Une adresse email") }
     end
   end
 
@@ -96,23 +80,6 @@ RSpec.describe TypesDeChamp::PrefillTypeDeChamp, type: :model do
       let(:type_de_champ) { build(:type_de_champ_email) }
 
       it { expect(example_value).to eq(I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")) }
-    end
-  end
-
-  describe '#too_many_possible_values?' do
-    let(:type_de_champ) { build(:type_de_champ_drop_down_list) }
-    subject(:too_many_possible_values) { described_class.build(type_de_champ).too_many_possible_values? }
-
-    context 'when there are too many possible values' do
-      before { type_de_champ.drop_down_options = (1..described_class::POSSIBLE_VALUES_THRESHOLD + 1).map(&:to_s) }
-
-      it { expect(too_many_possible_values).to eq(true) }
-    end
-
-    context 'when there are not too many possible values' do
-      before { type_de_champ.drop_down_options = (1..described_class::POSSIBLE_VALUES_THRESHOLD).map(&:to_s) }
-
-      it { expect(too_many_possible_values).to eq(false) }
     end
   end
 end

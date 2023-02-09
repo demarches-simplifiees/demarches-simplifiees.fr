@@ -39,10 +39,7 @@
                 %th
                   = t("views.prefill_descriptions.edit.possible_values.title")
                 %td
-                  = type_de_champ.possible_values_sentence
-                  %br
-                  - if type_de_champ.too_many_possible_values?
-                    = link_to t("views.prefill_descriptions.edit.possible_values.link.text"), prefill_type_de_champ_path(prefill_description.path, type_de_champ), title: new_tab_suffix(t("views.prefill_descriptions.edit.possible_values.link.title")), **external_link_attributes
+                  = type_de_champ.possible_values
               %tr{ class: prefillable ? "" : "fr-text-mention--grey" }
                 %th
                   = t("views.prefill_descriptions.edit.examples.title")
