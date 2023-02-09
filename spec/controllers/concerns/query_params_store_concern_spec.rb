@@ -15,7 +15,7 @@ RSpec.describe QueryParamsStoreConcern, type: :controller do
       let(:params) { { param1: "param1" } }
 
       it "does nothing" do
-        session[:stored_params] = "there is alread something in there"
+        session[:stored_params] = "there is already something in there"
 
         expect { store_query_params }.not_to change { session[:stored_params] }
       end
@@ -34,6 +34,14 @@ RSpec.describe QueryParamsStoreConcern, type: :controller do
 
       it "stores the query params" do
         expect { store_query_params }.to change { session[:stored_params] }.from(nil).to(params.to_json)
+      end
+    end
+
+    context 'when params contain a locale' do
+      let(:params) { { locale: "fr", param2: "param2" } }
+
+      it "does not store the locale" do
+        expect { store_query_params }.to change { session[:stored_params] }.from(nil).to({ param2: "param2" }.to_json)
       end
     end
   end
@@ -61,6 +69,23 @@ RSpec.describe QueryParamsStoreConcern, type: :controller do
       it 'returns the stored params' do
         expect(retrieve_and_delete_stored_query_params).to match(params.with_indifferent_access)
       end
+    end
+  end
+
+  describe '#stored_query_params?' do
+    subject(:stored_query_params?) { controller.stored_query_params? }
+
+    before { controller.store_query_params }
+    context 'when query params have been stored' do
+      let(:params) { { param1: "param1", param2: "param2" } }
+
+      it { is_expected.to eq(true) }
+    end
+
+    context 'when query params have not been stored' do
+      let(:params) { {} }
+
+      it { is_expected.to eq(false) }
     end
   end
 end
