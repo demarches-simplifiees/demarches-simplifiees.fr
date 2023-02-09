@@ -12,7 +12,7 @@
     = render(partial: 'users/dossiers/procedure_removed_banner', locals: { dossier: dossier })
   - elsif current_user.owns?(dossier)
     .header-actions
-      = render partial: 'invites/dropdown', locals: { dossier: dossier }
+      = render partial: 'invites/dropdown', locals: { dossier: dossier, morphing: false }
 
       - unless dossier.read_only?
         = render partial: 'users/dossiers/identity_dropdown', locals: { dossier: dossier }

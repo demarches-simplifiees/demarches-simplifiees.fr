@@ -9,6 +9,7 @@ class NotificationMailer < ApplicationMailer
   include ActionView::Helpers::SanitizeHelper
 
   before_action :set_dossier
+  before_action :set_services_publics_plus, only: :send_notification
   after_action :create_commentaire_for_notification
 
   helper ServiceHelper
@@ -20,7 +21,7 @@ class NotificationMailer < ApplicationMailer
   def send_notification
     @service = @dossier.procedure.service
     @logo_url = attach_logo(@dossier.procedure)
-    @rendered_template = sanitize(@body)
+    @rendered_template = sanitize(@body, scrubber: Sanitizers::MailScrubber.new)
     attachments[@attachment[:filename]] = @attachment[:content] if @attachment.present?
 
     I18n.with_locale(@dossier.user_locale) do
@@ -49,6 +50,12 @@ class NotificationMailer < ApplicationMailer
   end
 
   private
+
+  def set_services_publics_plus
+    return unless Dossier::TERMINE.include?(params[:state])
+
+    @services_publics_plus_url = ENV['SERVICES_PUBLICS_PLUS_URL'].presence
+  end
 
   def set_dossier
     @dossier = params[:dossier]

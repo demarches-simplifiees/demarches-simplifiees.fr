@@ -26,12 +26,6 @@ module Mutations
         result[:warnings] = [warning]
       end
 
-      if groupe_instructeur.procedure.routing_enabled? && instructeurs.present?
-        GroupeInstructeurMailer
-          .add_instructeurs(groupe_instructeur, instructeurs, current_administrateur.email)
-          .deliver_later
-      end
-
       result
     end
   end

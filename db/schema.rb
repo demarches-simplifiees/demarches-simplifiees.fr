@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_01_31_172119) do
+ActiveRecord::Schema.define(version: 2023_02_07_105539) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -233,6 +233,7 @@ ActiveRecord::Schema.define(version: 2023_01_31_172119) do
     t.jsonb "value_json"
     t.index ["dossier_id"], name: "index_champs_on_dossier_id"
     t.index ["etablissement_id"], name: "index_champs_on_etablissement_id"
+    t.index ["external_id"], name: "index_champs_on_external_id"
     t.index ["parent_id"], name: "index_champs_on_parent_id"
     t.index ["private"], name: "index_champs_on_private"
     t.index ["row_id"], name: "index_champs_on_row_id"
@@ -407,6 +408,7 @@ ActiveRecord::Schema.define(version: 2023_01_31_172119) do
 
   create_table "email_events", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
+    t.string "message_id"
     t.string "method", null: false
     t.datetime "processed_at"
     t.string "status", null: false

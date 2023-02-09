@@ -34,12 +34,12 @@ class ProcedureRevision < ApplicationRecord
 
   def build_champs_public
     # reload: it can be out of sync in test if some tdcs are added wihtout using add_tdc
-    types_de_champ_public.reload.map { |tdc| tdc.build_champ(revision: self) }
+    types_de_champ_public.reload.map(&:build_champ)
   end
 
   def build_champs_private
     # reload: it can be out of sync in test if some tdcs are added wihtout using add_tdc
-    types_de_champ_private.reload.map { |tdc| tdc.build_champ(revision: self) }
+    types_de_champ_private.reload.map(&:build_champ)
   end
 
   def add_type_de_champ(params)
@@ -272,7 +272,7 @@ class ProcedureRevision < ApplicationRecord
         .map { [from_h[_1], to_h[_1]] }
         .flat_map { |from, to| compare_type_de_champ(from.type_de_champ, to.type_de_champ, from_coordinates, to_coordinates) }
 
-      (removed + added + moved + changed).sort_by { _1.op == :remove ? from_sids[_1.stable_id] : to_sids[_1.stable_id] }
+      (removed + added + moved + changed).sort_by { _1.op == :remove ? from_sids.index(_1.stable_id) : to_sids.index(_1.stable_id) }
     end
   end
 

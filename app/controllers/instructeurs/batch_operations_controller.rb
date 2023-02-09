@@ -14,6 +14,7 @@ module Instructeurs
     def batch_operation_params
       params.require(:batch_operation)
         .permit(:operation, :motivation, :justificatif_motivation, dossier_ids: [])
+        .merge(dossier_ids: params['batch_operation']['dossier_ids'].join(',').split(',').uniq)
         .merge(instructeur: current_instructeur)
     end
 

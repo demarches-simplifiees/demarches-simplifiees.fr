@@ -263,12 +263,8 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
           emails: new_instructeur_emails.to_json
         }
     end
-    before do
-      gi_1_2.instructeurs << instructeur
 
-      allow(GroupeInstructeurMailer).to receive(:add_instructeurs)
-        .and_return(double(deliver_later: true))
-    end
+    before { gi_1_2.instructeurs << instructeur }
 
     context 'of a news instructeurs' do
       let(:new_instructeur_emails) { ['new_i1@mail.com', 'new_i2@mail.com'] }
@@ -277,13 +273,6 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       it { expect(flash.notice).to be_present }
       it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_2)) }
       it { expect(procedure.routing_enabled?).to be_truthy }
-      it "calls GroupeInstructeurMailer with the right groupe and instructeurs" do
-        expect(GroupeInstructeurMailer).to have_received(:add_instructeurs).with(
-          gi_1_2,
-          satisfy { |instructeurs| instructeurs.all? { |i| new_instructeur_emails.include?(i.email) } },
-          admin.email
-        )
-      end
     end
 
     context 'of an instructeur already in the group' do
@@ -441,6 +430,16 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
       it { expect(flash.alert).to be_present }
       it { expect(flash.alert).to eq("Importation impossible, veuillez importer un csv <a href=\"/csv/#{I18n.locale}/import-groupe-test.csv\">suivant ce modèle</a>") }
+    end
+
+    context 'when procedure is closed' do
+      let(:procedure) { create(:procedure, :closed, administrateurs: [admin]) }
+      let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe-instructeur.csv', 'text/csv') }
+
+      before { subject }
+
+      it { expect(procedure.groupe_instructeurs.first.label).to eq("Afrique") }
+      it { expect(flash.alert).to eq("Import terminé. Cependant les emails suivants ne sont pas pris en compte: kara") }
     end
   end
 

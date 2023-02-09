@@ -40,7 +40,7 @@ module Administrateurs
       @dossier = dossier
       @logo_url = procedure.logo_url
       @service = procedure.service
-      @rendered_template = sanitize(mail_template.body_for_dossier(dossier))
+      @rendered_template = sanitize(mail_template.body_for_dossier(dossier), scrubber: Sanitizers::MailScrubber.new)
       @actions = mail_template.actions_for_dossier(dossier)
 
       render(template: 'notification_mailer/send_notification', layout: 'mailers/notifications_layout')

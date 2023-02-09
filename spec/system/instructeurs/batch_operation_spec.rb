@@ -61,17 +61,88 @@ describe 'BatchOperation a dossier:', js: true do
 
       # try checkall
       find("##{dom_id(BatchOperation.new, :checkbox_all)}").check
+
+      # multiple select notice don't appear if all the dossiers are on the same page
+      expect(page).to have_selector('#js_batch_select_more', visible: false)
+
       [dossier_2, dossier_3].map do |dossier|
         dossier_checkbox_id = dom_id(BatchOperation.new, "checkbox_#{dossier.id}")
         expect(page).to have_selector("##{dossier_checkbox_id}:checked")
       end
 
-      # submnit checkall
+      # submit checkall
       expect { click_on "Archiver les dossiers" }
         .to change { BatchOperation.count }
         .from(1).to(2)
 
       expect(BatchOperation.last.dossiers).to match_array([dossier_2, dossier_3])
+    end
+
+    scenario 'create a BatchOperation with more dossiers than pagination' do
+      stub_const "Instructeurs::ProceduresController::ITEMS_PER_PAGE", 2
+      dossier_1 = create(:dossier, :en_instruction, procedure: procedure)
+      dossier_2 = create(:dossier, :en_instruction, procedure: procedure)
+      dossier_3 = create(:dossier, :en_instruction, procedure: procedure)
+      log_in(instructeur.email, password)
+
+      visit instructeur_procedure_path(procedure, statut: 'a-suivre')
+
+      expect(page).to have_content("1 - 2 sur 3 dossiers")
+
+      # click on check_all make the notice appear
+      find("##{dom_id(BatchOperation.new, :checkbox_all)}").check
+      expect(page).to have_selector('#js_batch_select_more')
+      expect(page).to have_content('Les 2 dossiers de cette page sont sélectionnés. Sélectionner tous les 3 dossiers.')
+
+      # click on selection link fill checkbox value with dossier_ids
+      click_on("Sélectionner tous les 3 dossiers")
+      expect(page).to have_content('3 dossiers sont sélectionnés. Effacer la sélection ')
+      expect(find_field("batch_operation[dossier_ids][]", type: :hidden).value).to eq "#{dossier_3.id},#{dossier_2.id},#{dossier_1.id}"
+
+      # click on delete link empty checkbox value and hide notice
+      click_on("Effacer la sélection")
+      expect(page).to have_selector('#js_batch_select_more', visible: false)
+      expect(page).to have_button("Suivre les dossiers", disabled: true)
+      expect(find_field("batch_operation[dossier_ids][]", type: :hidden).value).to eq ""
+
+      # click on check_all + notice link and submit
+      find("##{dom_id(BatchOperation.new, :checkbox_all)}").check
+      click_on("Sélectionner tous les 3 dossiers")
+
+      expect { click_on "Suivre les dossiers" }
+        .to change { BatchOperation.count }
+        .from(0).to(1)
+
+      expect(BatchOperation.last.dossiers).to match_array([dossier_1, dossier_2, dossier_3])
+    end
+
+    scenario 'create a BatchOperation within the limit of selection' do
+      stub_const "Instructeurs::ProceduresController::ITEMS_PER_PAGE", 2
+      stub_const "Instructeurs::ProceduresController::BATCH_SELECTION_LIMIT", 3
+      dossier_1 = create(:dossier, :en_instruction, procedure: procedure)
+      dossier_2 = create(:dossier, :en_instruction, procedure: procedure)
+      dossier_3 = create(:dossier, :en_instruction, procedure: procedure)
+      dossier_4 = create(:dossier, :en_instruction, procedure: procedure)
+      log_in(instructeur.email, password)
+
+      visit instructeur_procedure_path(procedure, statut: 'a-suivre')
+
+      # click on check_all make the notice appear
+      find("##{dom_id(BatchOperation.new, :checkbox_all)}").check
+      expect(page).to have_selector('#js_batch_select_more')
+      expect(page).to have_content('Les 2 dossiers de cette page sont sélectionnés. Sélectionner les 3 premiers dossiers sur les 4')
+
+      # click on selection link fill checkbox value with dossier_ids
+      click_on("Sélectionner les 3 premiers dossiers sur les 4")
+      expect(page).to have_content('3 dossiers sont sélectionnés. Effacer la sélection')
+      expect(find_field("batch_operation[dossier_ids][]", type: :hidden).value).to eq "#{dossier_4.id},#{dossier_3.id},#{dossier_2.id}"
+
+      # create batch
+      expect { click_on "Suivre les dossiers" }
+        .to change { BatchOperation.count }
+        .from(0).to(1)
+
+      expect(BatchOperation.last.dossiers).to match_array([dossier_2, dossier_3, dossier_4])
     end
   end
 

@@ -147,7 +147,7 @@ class Dossier < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :parent_dossier, class_name: 'Dossier', optional: true
   belongs_to :batch_operation, optional: true
-  has_many :dossier_batch_operations
+  has_many :dossier_batch_operations, dependent: :destroy
   has_many :batch_operations, through: :dossier_batch_operations
   has_one :france_connect_information, through: :user
 
@@ -506,6 +506,12 @@ class Dossier < ApplicationRecord
     end
     revision.build_champs_private.each do |champ|
       champs_private << champ
+    end
+    champs_public.filter { _1.repetition? && _1.mandatory? }.each do |champ|
+      champ.add_row(revision)
+    end
+    champs_private.filter(&:repetition?).each do |champ|
+      champ.add_row(revision)
     end
   end
 

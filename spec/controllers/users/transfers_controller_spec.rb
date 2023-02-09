@@ -1,23 +1,32 @@
 describe Users::TransfersController, type: :controller do
-  let(:user) { create(:user) }
-  let(:dossier) { create(:dossier, user: user) }
-
-  before { sign_in(user) }
+  let(:sender_user) { create(:user) }
+  let(:recipient_user) { create(:user) }
+  let(:dossier) { create(:dossier, user: sender_user) }
 
   describe 'DELETE destroy' do
-    let(:dossier_transfert) { DossierTransfer.initiate(user.email, [dossier]) }
+    let(:dossier_transfert) { DossierTransfer.initiate(recipient_user.email, [dossier]) }
+
+    subject { delete :destroy, params: { id: dossier_transfert.id } }
 
     before do
-      delete :destroy, params: { id: dossier_transfert.id }
+      sign_in(recipient_user)
     end
 
-    it { expect { dossier_transfert.reload }.to raise_error(ActiveRecord::RecordNotFound) }
+    it { expect { subject }.not_to raise_error }
+
+    it "deletes dossier transfert" do
+      subject
+      expect { dossier_transfert.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
   end
 
   describe "POST create" do
     subject { post :create, params: { dossier_transfer: { email: email, dossier: dossier.id } } }
 
-    before { subject }
+    before do
+      sign_in(sender_user)
+      subject
+    end
 
     context "with valid email" do
       let(:email) { "test@rspec.net" }

@@ -1,0 +1,7 @@
+en:
+  pagination_files_selected_html: All <span id='dynamic_number'>n</span> files from this page are selected.
+  select_all: "Select all %{dossiers_count} files."
+  select_all_limit: "Select first %{limit} files on %{dossiers_count}"
+  selected_all: "All %{dossiers_count} files are selected."
+  selected_all_limit: "%{limit} files are selected."
+  delete_selection: "Delete selection"
