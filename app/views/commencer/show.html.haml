@@ -16,15 +16,18 @@
     - drafts = dossiers.merge(Dossier.state_brouillon)
     - not_drafts = dossiers.merge(Dossier.state_not_brouillon)
 
-    - if dossiers.empty?
-      = link_to t('views.commencer.show.start_procedure'), url_for_new_dossier(@revision), class: 'fr-btn fr-btn--lg fr-my-2w'
-
-    - elsif @prefilled_dossier
+    - if @prefilled_dossier
       %h2.huge-title= t('views.commencer.show.prefilled_draft')
-      %p
-        = t('views.commencer.show.prefilled_draft_detail_html', time_ago: time_ago_in_words(@prefilled_dossier.created_at), procedure: @prefilled_dossier.procedure.libelle)
-      = link_to t('views.commencer.show.continue_file'), brouillon_dossier_path(@prefilled_dossier), class: 'fr-btn fr-btn--lg fr-my-2w'
-      = link_to t('views.commencer.show.start_new_file'), url_for_new_dossier(@revision), class: 'fr-btn fr-btn--lg fr-btn--secondary fr-my-2w'
+      %p= t('views.commencer.show.prefilled_draft_detail_html', time_ago: time_ago_in_words(@prefilled_dossier.created_at), procedure: @procedure.libelle)
+      = link_to t('views.commencer.show.go_to_prefilled_file'), brouillon_dossier_path(@prefilled_dossier), class: 'fr-btn fr-btn--lg fr-my-2w'
+
+    - elsif stored_query_params?
+      %h2.huge-title= t('views.commencer.show.prefilled_draft')
+      %p= t('views.commencer.show.prefill_dossier_detail_html', procedure: @procedure.libelle)
+      = link_to t('views.commencer.show.go_to_prefilled_file'), url_for_new_dossier(@revision), class: 'fr-btn fr-btn--lg fr-my-2w'
+
+    - elsif dossiers.empty?
+      = link_to t('views.commencer.show.start_procedure'), url_for_new_dossier(@revision), class: 'fr-btn fr-btn--lg fr-my-2w'
 
     - elsif drafts.size == 1 && not_drafts.empty?
       - dossier = drafts.first

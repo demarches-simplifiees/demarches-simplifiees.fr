@@ -26,7 +26,7 @@ describe 'Prefilling a dossier (with a GET request):' do
           "champ_#{type_de_champ_datetime.to_typed_id}" => datetime_value
         )
 
-        click_on "Commencer la démarche"
+        click_on "Poursuivre mon dossier prérempli"
       end
     end
   end
@@ -49,7 +49,7 @@ describe 'Prefilling a dossier (with a GET request):' do
           click_on "J’ai déjà un compte"
           sign_in_with user.email, password
 
-          click_on "Commencer la démarche"
+          click_on "Poursuivre mon dossier prérempli"
         end
       end
     end
@@ -68,7 +68,7 @@ describe 'Prefilling a dossier (with a GET request):' do
           click_confirmation_link_for user_email
           expect(page).to have_content('Votre compte a bien été confirmé.')
 
-          click_on "Commencer la démarche"
+          click_on "Poursuivre mon dossier prérempli"
         end
       end
     end
@@ -83,7 +83,7 @@ describe 'Prefilling a dossier (with a GET request):' do
 
           page.find('.fr-connect').click
 
-          click_on "Commencer la démarche"
+          click_on "Poursuivre mon dossier prérempli"
         end
       end
     end
