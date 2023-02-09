@@ -34,7 +34,7 @@ RSpec.describe TypesDeChamp::PrefillRepetitionTypeDeChamp, type: :model, vcr: { 
 
   describe '#possible_values_sentence' do
     subject(:possible_values_sentence) { described_class.new(type_de_champ).possible_values_sentence }
-    let(:expected_value) { "Un array de hash avec les valeurs possibles pour chaque champ de la répétition.<br>sub type de champ: Un texte court<br>sub type de champ2: Un nombre entier<br>region sub_champ: <a title=\"Toutes les valeurs possibles — Nouvel onglet\" target=\"_blank\" rel=\"noopener noreferrer\" href=\"/procedures/#{procedure.path}/prefill_type_de_champs/#{region_repetition.id}\">Voir toutes les valeurs possibles</a>" }
+    let(:expected_value) { "Un tableau de dictionnaires avec les valeurs possibles pour chaque champ de la répétition.<br>sub type de champ: Un texte court<br>sub type de champ2: Un nombre entier<br>region sub_champ: <a title=\"Toutes les valeurs possibles — Nouvel onglet\" target=\"_blank\" rel=\"noopener noreferrer\" href=\"/procedures/#{procedure.path}/prefill_type_de_champs/#{region_repetition.id}\">Voir toutes les valeurs possibles</a>" }
 
     it { expect(possible_values_sentence).to eq(expected_value) }
   end

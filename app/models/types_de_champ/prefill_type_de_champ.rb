@@ -1,5 +1,8 @@
 class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
-  POSSIBLE_VALUES_THRESHOLD = 5
+  include ActionView::Helpers::UrlHelper
+  include ApplicationHelper
+
+  POSSIBLE_VALUES_THRESHOLD = 1
 
   def self.build(type_de_champ)
     case type_de_champ.type_champ
@@ -21,9 +24,19 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
   end
 
   def possible_values
+    [possible_values_list_display, link_to_all_possible_values].compact.join('<br>').html_safe
+  end
+
+  def possible_values_list
     return [] unless prefillable?
 
     [I18n.t("views.prefill_descriptions.edit.possible_values.#{type_champ}_html")]
+  end
+
+  def link_to_all_possible_values
+    return unless too_many_possible_values?
+
+    link_to I18n.t("views.prefill_descriptions.edit.possible_values.link.text"), Rails.application.routes.url_helpers.prefill_type_de_champ_path(path, self), title: new_tab_suffix(I18n.t("views.prefill_descriptions.edit.possible_values.link.title")), **external_link_attributes
   end
 
   def example_value
@@ -33,14 +46,16 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
   end
 
   def too_many_possible_values?
-    possible_values.count > POSSIBLE_VALUES_THRESHOLD
+    possible_values_list.count > POSSIBLE_VALUES_THRESHOLD
   end
 
-  def possible_values_sentence
+  private
+
+  def possible_values_list_display
     if too_many_possible_values?
       I18n.t("views.prefill_descriptions.edit.possible_values.#{type_champ}_html").html_safe # rubocop:disable Rails/OutputSafety
     else
-      possible_values.to_sentence
+      possible_values_list.to_sentence
     end
   end
 end

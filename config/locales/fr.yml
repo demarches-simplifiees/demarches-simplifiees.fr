@@ -123,7 +123,7 @@ fr:
           datetime_html: Datetime au format ISO8601
           date_html: Date au format ISO8601
           drop_down_list_other_html: Toute valeur
-          repetition_html: Un array de hash avec les valeurs possibles pour chaque champ de la répétition.
+          repetition_html: Un tableau de dictionnaires avec les valeurs possibles pour chaque champ de la répétition.
         examples:
           title: Exemple
           text: Texte court
