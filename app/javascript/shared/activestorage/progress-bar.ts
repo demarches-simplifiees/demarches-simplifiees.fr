@@ -54,7 +54,7 @@ export default class ProgressBar {
 
   static render(id: string, filename: string) {
     return `<div id="direct-upload-${id}" class="direct-upload ${PENDING_CLASS}" data-direct-upload-id="${id}">
-      <div role="progressbar" aria-valuemin="0" aria-valuemax="100" class="direct-upload__progress" style="width: 0%"></div>
+      <div role="progressbar" aria-label="Chargement de fichier" tabindex="0" max="100" aria-valuemin="0" aria-valuemax="100" class="direct-upload__progress" style="width: 0%"></div>
       <span class="direct-upload__filename">${filename}</span>
     </div>`;
   }
