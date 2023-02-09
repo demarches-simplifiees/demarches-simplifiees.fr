@@ -11,6 +11,8 @@
   %td= procedure.administrateurs.count
   %td= t procedure.aasm_state, scope: 'activerecord.attributes.procedure.aasm_state'
   %td= l(procedure.published_at, format: :message_date_without_time)
+  %td= link_to('Cloner', admin_procedure_clone_path(procedure.id, from_new_from_existing: true), 'data-method' => :put, class: 'fr-btn fr-btn--tertiary fr-btn--sm')
+
 
 - if show_detail
   %tr.procedure{ id: "procedure_detail_#{procedure.id}" }

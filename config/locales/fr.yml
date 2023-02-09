@@ -541,6 +541,9 @@ fr:
     deleted:
       one: Supprimée
       other: Supprimées
+    procedures:
+      one: Démarche
+      other: Démarches
   users:
     dossiers:
       test_procedure: "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l’administrateur (ajout d’un champ, publication de la démarche...) entraînera sa suppression."
