@@ -260,6 +260,7 @@ fr:
           identity_data: Données d’identité
           all_required: Tous les champs sont obligatoires.
           civility: Civilité
+          description: Description de la procédure
           first_name: Prénom
           last_name: Nom
           birthdate: Date de naissance
