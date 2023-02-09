@@ -117,5 +117,11 @@ RSpec.describe NotificationMailer, type: :mailer do
       let(:subject) { 'Un long libellé --libellé démarche--' }
       it { expect(mail.subject.length).to be <= 100 }
     end
+
+    context "subject should fallback to default" do
+      let(:subject) { "" }
+      it { expect(mail.subject).to match(/^Votre dossier .+ a été accepté \(My super long title/) }
+      it { expect(mail.subject.length).to be <= 100 }
+    end
   end
 end
