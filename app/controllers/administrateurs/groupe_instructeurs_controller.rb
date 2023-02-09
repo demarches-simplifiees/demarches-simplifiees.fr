@@ -192,7 +192,7 @@ module Administrateurs
     end
 
     def import
-      if procedure.publiee?
+      if procedure.publiee_or_close?
         if !CSV_ACCEPTED_CONTENT_TYPES.include?(group_csv_file.content_type) && !CSV_ACCEPTED_CONTENT_TYPES.include?(marcel_content_type)
           flash[:alert] = "Importation impossible : veuillez importer un fichier CSV"
 

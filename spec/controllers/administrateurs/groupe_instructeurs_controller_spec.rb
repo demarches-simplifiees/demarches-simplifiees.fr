@@ -431,6 +431,16 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       it { expect(flash.alert).to be_present }
       it { expect(flash.alert).to eq("Importation impossible, veuillez importer un csv <a href=\"/csv/#{I18n.locale}/import-groupe-test.csv\">suivant ce modèle</a>") }
     end
+
+    context 'when procedure is closed' do
+      let(:procedure) { create(:procedure, :closed, administrateurs: [admin]) }
+      let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe-instructeur.csv', 'text/csv') }
+
+      before { subject }
+
+      it { expect(procedure.groupe_instructeurs.first.label).to eq("Afrique") }
+      it { expect(flash.alert).to eq("Import terminé. Cependant les emails suivants ne sont pas pris en compte: kara") }
+    end
   end
 
   describe '#export_groupe_instructeurs' do
