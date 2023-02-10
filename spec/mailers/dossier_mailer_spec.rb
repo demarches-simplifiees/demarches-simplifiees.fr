@@ -191,7 +191,7 @@ RSpec.describe DossierMailer, type: :mailer do
       it { expect(subject.body).to include("n° #{dossier.id} ") }
       it { expect(subject.body).to include(dossier.procedure.libelle) }
       it { expect(subject.body).to include("PDF") }
-      it { expect(subject.body).to include("Vous pouvez retrouver votre dossier pendant encore <b>deux semaines</b>. Vous n’avez rien à faire.") }
+      it { expect(subject.body).to include("Vous n'avez aucune action particulière à faire. Si vous avez besoin d'y accéder, ce dossier reste disponible pendant encore <b>deux semaines</b>.") }
       it { expect(subject.body).to include("Si vous souhaitez conserver votre dossier plus longtemps, vous pouvez <b>prolonger sa durée de conservation</b> dans l’interface.") }
     end
 
@@ -205,7 +205,7 @@ RSpec.describe DossierMailer, type: :mailer do
       it { expect(subject.body).to include("n° #{dossier.id} ") }
       it { expect(subject.body).to include(dossier.procedure.libelle) }
       it { expect(subject.body).to include("PDF") }
-      it { expect(subject.body).to include("Vous pouvez retrouver votre dossier pendant encore <b>deux semaines</b>. Vous n’avez rien à faire.") }
+      it { expect(subject.body).to include("Vous n'avez aucune action particulière à faire. Si vous avez besoin d'y accéder, ce dossier reste disponible pendant encore <b>deux semaines</b>.") }
     end
   end
 

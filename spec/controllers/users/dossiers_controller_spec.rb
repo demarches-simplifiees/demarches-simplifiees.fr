@@ -250,6 +250,7 @@ describe Users::DossiersController, type: :controller do
     let(:api_etablissement_status) { 200 }
     let(:api_etablissement_body) { File.read('spec/fixtures/files/api_entreprise/etablissements.json') }
     let(:token_expired) { false }
+    let(:api_current_status_response) { nil }
 
     before do
       sign_in(user)
@@ -258,6 +259,19 @@ describe Users::DossiersController, type: :controller do
       allow_any_instance_of(APIEntrepriseToken).to receive(:roles)
         .and_return(["attestations_fiscales", "attestations_sociales", "bilans_entreprise_bdf"])
       allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(token_expired)
+
+      if api_current_status_response
+        stub_request(:get, "https://entreprise.api.gouv.fr/watchdoge/dashboard/current_status")
+          .to_return(body: api_current_status_response)
+      end
+
+      #----- Pf
+      stub_request(:get, Regexp.quote("#{API_ENTREPRISE_PF_URL}/etablissements/Entreprise/#{siret}"))
+        .to_return(status: api_etablissement_status, body: api_etablissement_body)
+
+      if api_current_status_response
+        stub_request(:get, API_ENTREPRISE_PF_URL).to_return(status: api_current_status_response.include?("502") ? 502 : 200)
+      end
     end
 
     subject! { post :update_siret, params: { id: dossier.id, user: { siret: params_siret } } }
@@ -298,10 +312,23 @@ describe Users::DossiersController, type: :controller do
 
     context 'with a valid SIRET' do
       let(:params_siret) { '418 166 096 00051' }
-      context 'When API-Entreprise is down' do
+
+      context 'When API-Entreprise is ponctually down' do
         let(:api_etablissement_status) { 502 }
+        let(:api_current_status_response) { File.read('spec/fixtures/files/api_entreprise/current_status.json') }
 
         it_behaves_like 'the request fails with an error', I18n.t('errors.messages.siret_network_error')
+      end
+
+      context 'When API-Entreprise is globally down' do
+        let(:api_etablissement_status) { 502 }
+        let(:api_current_status_response) { File.read('spec/fixtures/files/api_entreprise/current_status.json').sub('200', '502') }
+
+        it "create an etablissement only with SIRET as degraded mode" do
+          dossier.reload
+          expect(dossier.etablissement.siret).to eq(siret)
+          expect(dossier.etablissement).to be_as_degraded_mode
+        end
       end
 
       context 'when API-Entreprise doesn’t know this SIRET' do
@@ -312,6 +339,7 @@ describe Users::DossiersController, type: :controller do
 
       context 'when default token has expired' do
         let(:api_etablissement_status) { 200 }
+        let(:api_current_status_response) { File.read('spec/fixtures/files/api_entreprise/current_status.json') }
         let(:token_expired) { true }
 
         it_behaves_like 'the request fails with an error', I18n.t('errors.messages.siret_network_error')

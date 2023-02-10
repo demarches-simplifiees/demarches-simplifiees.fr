@@ -304,6 +304,24 @@
     %p.empty-text-details Vous n’avez commencé aucune démarche pour l’instant.
 
   .container
+    %h1 Dsfr::CalloutComponent
+    = link_to "Documentation DSFR Mis en avant (callout)", "https://www.systeme-de-design.gouv.fr/elements-d-interface/composants/mise-en-avant", **external_link_attributes
+
+    = render Dsfr::CalloutComponent.new(title: "Information minimale") do |c|
+      - c.with_body do
+        %p Ceci est le minimum pour afficher un callout.
+
+    = render Dsfr::CalloutComponent.new(title: "Information importante ou avertissement", theme: :warning) do |c|
+      - c.with_body do
+        %p Le contenu de cette description est libre.
+
+    = render Dsfr::CalloutComponent.new(title: "Titre d'une information positive", theme: :success, icon: "fr-icon-message-2-fill") do |c|
+      - c.with_body do
+        %p
+          N'importe quelle icône
+          = link_to("du jeu d'icônes", "https://www.systeme-de-design.gouv.fr/elements-d-interface/fondamentaux-techniques/icones", **external_link_attributes)
+          peut être utilisée.
+
     %h1 Dsfr::CardVerticalComponent
     = link_to "Documentation DSFR Carte", "https://www.systeme-de-design.gouv.fr/elements-d-interface/composants/carte", **external_link_attributes
 

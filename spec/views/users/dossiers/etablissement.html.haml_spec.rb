@@ -27,4 +27,13 @@ describe 'users/dossiers/etablissement.html.haml', type: :view do
   it 'prépare le footer' do
     expect(footer).to have_selector('footer')
   end
+
+  context 'etablissement as degraded mode' do
+    let(:etablissement) { Etablissement.create!(siret: '003970') }
+
+    it "affiche une notice avec un lien de vérification vers l'annuaire" do
+      expect(rendered).to have_text(etablissement.siret)
+      expect(rendered).to have_link("Vérifier dans l'annuaire des entreprises", href: "https://www.ispf.pf/rte/attestation/#{etablissement.siret}")
+    end
+  end
 end

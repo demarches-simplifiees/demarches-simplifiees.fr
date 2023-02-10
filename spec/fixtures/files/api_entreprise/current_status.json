@@ -1,0 +1,265 @@
+{
+  "results": [
+    {
+      "uname": "apie_2_etablissements",
+      "name": "Etablissements",
+      "provider": "insee",
+      "api_version": 2,
+      "code": 200,
+      "timestamp": "2022-09-15T14:31:40.442Z",
+      "endpoint": "api_entreprise/v2/etablissements_restored"
+    },
+    {
+      "uname": "apie_2_certificats_qualibat",
+      "name": "Certificats Qualibat",
+      "provider": "qualibat",
+      "api_version": 2,
+      "code": 200,
+      "timestamp": "2022-09-15T14:30:28.848Z",
+      "endpoint": "api_entreprise/v2/certificats_qualibat"
+    },
+    {
+      "uname": "apie_2_effectifs_annuels_acoss",
+      "name": "Effectifs annuels",
+      "provider": "acoss",
+      "api_version": 2,
+      "code": 200,
+      "timestamp": "2022-09-15T14:30:41.415Z",
+      "endpoint": "api_entreprise/v2/effectifs_annuels_entreprise_acoss_covid"
+    },
+    {
+      "uname": "apie_2_effectifs_mensuels_entreprise_acoss",
+      "name": "Effectifs mensuels (entreprise)",
+      "provider": "acoss",
+      "api_version": 2,
+      "code": 200,
+      "timestamp": "2022-09-15T14:31:17.437Z",
+      "endpoint": "api_entreprise/v2/effectifs_mensuels_entreprise_acoss_covid"
+    },
+    {
+      "uname": "apie_2_effectifs_mensuels_etablissement_acoss",
+      "name": "Effectifs mensuels (établissement)",
+      "provider": "acoss",
+      "api_version": 2,
+      "code": 200,
+      "timestamp": "2022-09-15T14:31:52.412Z",
+      "endpoint": "api_entreprise/v2/effectifs_mensuels_etablissement_acoss_covid"
+    },
+    {
+      "uname": "apie_2_conventions_collectives",
+      "name": "Conventions Collectives",
+      "provider": "fabsocial",
+      "api_version": 2,
+      "code": 200,
+      "timestamp": "2022-09-15T14:30:03.003Z",
+      "endpoint": "api_entreprise/v2/conventions_collectives"
+    },
+    {
+      "uname": "apie_2_agence_bio",
+      "name": "Certifications BIO",
+      "provider": "agencebio",
+      "api_version": 2,
+      "code": 200,
+      "timestamp": "2022-09-15T14:30:03.042Z",
+      "endpoint": "api_entreprise/v2/certificats_agence_bio"
+    },
+    {
+      "uname": "apie_2_entreprises",
+      "name": "Entreprise",
+      "provider": "insee",
+      "api_version": 2,
+      "code": 206,
+      "timestamp": "2022-09-15T14:33:27.934Z",
+      "endpoint": "api_entreprise/v2/entreprises_restored"
+    },
+    {
+      "uname": "apie_2_eori",
+      "name": "Immatriculation EORI Douanes",
+      "provider": "douanes",
+      "api_version": 2,
+      "code": 200,
+      "timestamp": "2022-09-15T14:33:46.047Z",
+      "endpoint": "api_entreprise/v2/eori_douanes"
+    },
+    {
+      "uname": "apie_2_attestations_fiscales_dgfip",
+      "name": "Attestations fiscales",
+      "provider": "dgfip",
+      "api_version": 2,
+      "code": 200,
+      "timestamp": "2022-09-15T14:31:32.503Z",
+      "endpoint": "api_entreprise/v2/attestations_fiscales_dgfip"
+    },
+    {
+      "uname": "apie_2_cma_france",
+      "name": "Entreprises Artisanales CMA France",
+      "provider": "cmafrance",
+      "api_version": 2,
+      "code": 200,
+      "timestamp": "2022-09-15T14:30:55.431Z",
+      "endpoint": "api_entreprise/v2/entreprises_artisanales"
+    },
+    {
+      "uname": "apie_2_liasses_fiscales_dgfip_complete",
+      "name": "Liasses fiscales (complete)",
+      "provider": "dgfip",
+      "api_version": 2,
+      "code": 200,
+      "timestamp": "2022-09-15T14:32:55.595Z",
+      "endpoint": "api_entreprise/v2/liasses_fiscales_dgfip"
+    },
+    {
+      "uname": "apie_2_exercices_dgfip",
+      "name": "Exercices",
+      "provider": "dgfip",
+      "api_version": 2,
+      "code": 200,
+      "timestamp": "2022-09-15T14:19:15.501Z",
+      "endpoint": "api_entreprise/v2/exercices"
+    },
+    {
+      "uname": "apie_2_cotisations_msa",
+      "name": "Cotisations MSA",
+      "provider": "msa",
+      "api_version": 2,
+      "code": 200,
+      "timestamp": "2022-09-15T14:31:57.747Z",
+      "endpoint": "api_entreprise/v2/cotisations_msa"
+    },
+    {
+      "uname": "apie_2_eligibilites_cotisation_retraite_probtp",
+      "name": "Eligibilité cotisation retraite ProBTP",
+      "provider": "probtp",
+      "api_version": 2,
+      "code": 200,
+      "timestamp": "2022-09-15T14:30:36.979Z",
+      "endpoint": "api_entreprise/v2/eligibilites_cotisation_retraite_probtp"
+    },
+    {
+      "uname": "apie_2_documents_associations_rna",
+      "name": "Documents associations",
+      "provider": "rna",
+      "api_version": 2,
+      "code": 200,
+      "timestamp": "2022-09-15T14:31:57.924Z",
+      "endpoint": "api_entreprise/v2/documents_associations"
+    },
+    {
+      "uname": "apie_2_cartes_professionnelles_fntp",
+      "name": "Cartes professionnelles FNTP",
+      "provider": "fntp",
+      "api_version": 2,
+      "code": 200,
+      "timestamp": "2022-09-15T14:00:06.107Z",
+      "endpoint": "api_entreprise/v2/cartes_professionnelles_fntp"
+    },
+    {
+      "uname": "apie_2_associations_rna",
+      "name": "Associations",
+      "provider": "rna",
+      "api_version": 2,
+      "code": 200,
+      "timestamp": "2022-09-15T14:33:12.993Z",
+      "endpoint": "api_entreprise/v2/associations"
+    },
+    {
+      "uname": "apie_2_attestations_agefiph",
+      "name": "Attestations agefiph",
+      "provider": "agefiph",
+      "api_version": 2,
+      "code": 200,
+      "timestamp": "2022-09-15T14:32:15.345Z",
+      "endpoint": "api_entreprise/v2/attestations_agefiph"
+    },
+    {
+      "uname": "apie_2_extraits_rcs_infogreffe",
+      "name": "Extraits RCS (Infogreffe)",
+      "provider": "infogreffe",
+      "api_version": 2,
+      "code": 200,
+      "timestamp": "2022-09-15T14:33:48.762Z",
+      "endpoint": "api_entreprise/v2/extraits_rcs_infogreffe"
+    },
+    {
+      "uname": "apie_2_liasses_fiscales_dgfip_dictionnaire",
+      "name": "Liasses fiscales (dictionnaire)",
+      "provider": "dgfip",
+      "api_version": 2,
+      "code": 200,
+      "timestamp": "2022-09-15T14:31:36.557Z",
+      "endpoint": "api_entreprise/v2/liasses_fiscales_dgfip"
+    },
+    {
+      "uname": "apie_2_certificats_cnetp",
+      "name": "Certificats CNETP",
+      "provider": "cnetp",
+      "api_version": 2,
+      "code": 200,
+      "timestamp": "2022-09-15T14:32:23.801Z",
+      "endpoint": "api_entreprise/v2/certificats_cnetp"
+    },
+    {
+      "uname": "apie_2_certificats_opqibi",
+      "name": "Certificats OPQIBI",
+      "provider": "opqibi",
+      "api_version": 2,
+      "code": 200,
+      "timestamp": "2022-09-15T14:00:03.725Z",
+      "endpoint": "api_entreprise/v2/certificats_opqibi"
+    },
+    {
+      "uname": "apie_2_certificats_rge_ademe",
+      "name": "Certificats RGE ADEME",
+      "provider": "ademe",
+      "api_version": 2,
+      "code": 200,
+      "timestamp": "2022-09-15T14:00:04.174Z",
+      "endpoint": "api_entreprise/v2/certificats_rge_ademe"
+    },
+    {
+      "uname": "apie_2_liasses_fiscales_dgfip_declaration",
+      "name": "Liasses fiscales (déclaration)",
+      "provider": "dgfip",
+      "api_version": 2,
+      "code": 200,
+      "timestamp": "2022-09-15T14:00:03.654Z",
+      "endpoint": "api_entreprise/v2/liasses_fiscales_dgfip"
+    },
+    {
+      "uname": "apie_2_extraits_courts_inpi",
+      "name": "Extraits courts INPI",
+      "provider": "inpi",
+      "api_version": 2,
+      "code": 200,
+      "timestamp": "2022-09-15T14:00:04.660Z",
+      "endpoint": "api_entreprise/v2/extraits_courts_inpi"
+    },
+    {
+      "uname": "apie_2_actes_inpi",
+      "name": "Actes INPI",
+      "provider": "inpi",
+      "api_version": 2,
+      "code": 200,
+      "timestamp": "2022-09-15T14:00:04.263Z",
+      "endpoint": "api_entreprise/v2/documents_inpi"
+    },
+    {
+      "uname": "apie_2_bilans_inpi",
+      "name": "Bilans INPI",
+      "provider": "inpi",
+      "api_version": 2,
+      "code": 200,
+      "timestamp": "2022-09-15T14:00:04.446Z",
+      "endpoint": "api_entreprise/v2/documents_inpi"
+    },
+    {
+      "uname": "apie_2_bilans_entreprises_bdf",
+      "name": "Bilans Entreprises Banque de France",
+      "provider": "bdf",
+      "api_version": 2,
+      "code": 404,
+      "timestamp": "2022-09-15T14:00:07.312Z",
+      "endpoint": "api_entreprise/v2/bilans_entreprises_bdf"
+    }
+  ]
+}
