@@ -9,21 +9,22 @@ class TypesDeChamp::PrefillRepetitionTypeDeChamp < TypesDeChamp::PrefillTypeDeCh
     ].join("</br>").html_safe # rubocop:disable Rails/OutputSafety
   end
 
-  def subchamps_possible_values_list
-    "<ul>" + prefillable_subchamps.map do |prefill_type_de_champ|
-      "<li>#{prefill_type_de_champ.libelle}: #{prefill_type_de_champ.possible_values}</li>"
-    end.join + "</ul>"
-  end
 
   def example_value
     [row_values_format, row_values_format].map { |row| row.to_s.gsub("=>", ":") }
   end
 
+  private
+
   def too_many_possible_values?
     false
   end
 
-  private
+  def subchamps_possible_values_list
+    "<ul>" + prefillable_subchamps.map do |prefill_type_de_champ|
+      "<li>#{prefill_type_de_champ.libelle}: #{prefill_type_de_champ.possible_values}</li>"
+    end.join + "</ul>"
+  end
 
   def row_values_format
     @row_example_value ||=

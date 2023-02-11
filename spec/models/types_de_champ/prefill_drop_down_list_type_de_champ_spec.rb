@@ -2,22 +2,25 @@
 
 RSpec.describe TypesDeChamp::PrefillDropDownListTypeDeChamp do
   describe '#possible_values' do
+    let(:procedure) { create(:procedure) }
     subject(:possible_values) { described_class.new(type_de_champ).possible_values }
 
+    before { type_de_champ.reload }
+
     context "when the drop down list accepts 'other'" do
-      let(:type_de_champ) { build(:type_de_champ_drop_down_list, :with_other) }
+      let(:type_de_champ) { build(:type_de_champ_drop_down_list, :with_other, procedure: procedure) }
 
       it {
         expect(possible_values).to match(
-          [I18n.t("views.prefill_descriptions.edit.possible_values.drop_down_list_other_html")] + type_de_champ.drop_down_list_enabled_non_empty_options
+          ([I18n.t("views.prefill_descriptions.edit.possible_values.drop_down_list_other_html")] + type_de_champ.drop_down_list_enabled_non_empty_options).to_sentence
         )
       }
     end
 
     context "when the drop down list does not accept 'other'" do
-      let(:type_de_champ) { build(:type_de_champ_drop_down_list) }
+      let(:type_de_champ) { build(:type_de_champ_drop_down_list, procedure:) }
 
-      it { expect(possible_values).to match(type_de_champ.drop_down_list_enabled_non_empty_options) }
+      it { expect(possible_values).to match(type_de_champ.drop_down_list_enabled_non_empty_options.to_sentence) }
     end
   end
 
