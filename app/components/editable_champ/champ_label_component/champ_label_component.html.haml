@@ -7,4 +7,4 @@
     = render EditableChamp::ChampLabelContentComponent.new champ: @champ, seen_at: @seen_at
 
 - if @champ.description.present?
-  .notice{ id: @champ.describedby_id }= string_to_html(@champ.description)
+  .notice{ id: @champ.describedby_id }= string_to_html(@champ.description, allow_a: true)

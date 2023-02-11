@@ -15,7 +15,7 @@
   .fr-table.fr-table--bordered
     %table#all-demarches
       %caption
-        = "#{@procedures.total_count} démarches"
+        = "#{@procedures.total_count} #{t('pluralize.procedures', count: @procedures.total_count)}"
         %span.hidden.spinner{ 'aria-hidden': 'true', 'data-turbo-target': 'spinner' }
       - if @filter.libelle
         .selected-query.fr-mb-2w
@@ -40,10 +40,11 @@
         %tr
           %th{ scope: 'col' }
           %th{ scope: 'col' } Démarche
-          %th{ scope: 'col' } N°
+          %th{ scope: 'col' } №
           %th{ scope: 'col' } Administrateurs
           %th{ scope: 'col' } Statut
           %th{ scope: 'col' } Date
+          %th{ scope: 'col' } Action
       %tbody{ 'data-turbo': 'true' }
         - @procedures.each do |procedure|
           = render partial: 'detail', locals: { procedure: procedure, show_detail: false }

@@ -108,6 +108,11 @@ https://www.demarches-simplifiees.fr/users/password/new
 
 Cordialement</pre>
   <% end %>
+
+
+  <p><strong>Mot de passe perdu ?</strong> Vous pouvez <%= link_to('renvoyer l’email de réinitialisation', [:resend_reset_password_instructions, namespace, :user], method: :post, class: 'button') %>
+    <small>Attention au téléscopage: cet email invalide les liens des emails similaires précédents.</small></p>
+
   <p>
     <strong>Compte <a href="https://app-smtp.sendinblue.com/block">bloqué</a> chez Sendinblue ?</strong>
     Vous pouvez le <%= link_to('débloquer', manager_user_unblock_email_path(@user), method: :put, class: 'button') %>

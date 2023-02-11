@@ -52,7 +52,7 @@ Rails.application.configure do
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
-  config.log_level = :debug
+  config.log_level = ENV["DS_ENV"] == "staging" ? :debug : :info
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :subdomain, :uuid ]
@@ -80,12 +80,13 @@ Rails.application.configure do
   else
     sendinblue_weigth = ENV.fetch('SENDINBLUE_BALANCING_VALUE') { 0 }.to_i
     dolist_weigth = ENV.fetch('DOLIST_BALANCING_VALUE') { 0 }.to_i
-
+    dolist_api_weight = ENV.fetch('DOLIST_API_BALANCING_VALUE') { 0 }.to_i
     ActionMailer::Base.add_delivery_method :balancer, BalancerDeliveryMethod
     config.action_mailer.balancer_settings = {
       sendinblue: sendinblue_weigth,
-      dolist: dolist_weigth,
-      mailjet: 100 - (sendinblue_weigth + dolist_weigth)
+      dolist_smtp: dolist_weigth,
+      dolist_api: dolist_api_weight,
+      mailjet: 100 - (sendinblue_weigth + dolist_weigth + dolist_api_weight)
     }
     config.action_mailer.delivery_method = :balancer
   end

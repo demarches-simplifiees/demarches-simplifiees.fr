@@ -18,6 +18,7 @@
 #  duree_conservation_dossiers_dans_ds       :integer
 #  duree_conservation_etendue_par_ds         :boolean          default(FALSE)
 #  encrypted_api_particulier_token           :string
+#  estimated_duration_visible                :boolean          default(TRUE), not null
 #  euro_flag                                 :boolean          default(FALSE)
 #  experts_require_administrateur_invitation :boolean          default(FALSE)
 #  for_individual                            :boolean          default(FALSE)
@@ -822,9 +823,13 @@ class Procedure < ApplicationRecord
     published_at || created_at
   end
 
+  def publiee_or_close?
+    publiee? || close?
+  end
+
   def self.tags
     unnest = Arel::Nodes::NamedFunction.new('UNNEST', [self.arel_table[:tags]])
-    query = self.select(unnest.as('tags')).publiees_ou_closes.distinct.order('tags')
+    query = self.select(unnest.as('tags')).publiees.distinct.order('tags')
     self.connection.query(query.to_sql).flatten
   end
 

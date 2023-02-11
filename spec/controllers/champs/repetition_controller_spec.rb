@@ -1,6 +1,6 @@
 describe Champs::RepetitionController, type: :controller do
   describe '#remove' do
-    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, children: [{ libelle: 'Nom' }, { type: :integer_number, libelle: 'Age' }] }]) }
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, mandatory: true, children: [{ libelle: 'Nom' }, { type: :integer_number, libelle: 'Age' }] }]) }
     let(:dossier) { create(:dossier, procedure: procedure) }
 
     before { sign_in dossier.user }

@@ -6,9 +6,11 @@ describe 'Prefilling a dossier (with a GET request):' do
 
   let(:type_de_champ_text) { create(:type_de_champ_text, procedure: procedure) }
   let(:type_de_champ_phone) { create(:type_de_champ_phone, procedure: procedure) }
+  let(:type_de_champ_datetime) { create(:type_de_champ_datetime, procedure: procedure) }
   let(:type_de_champ_repetition) { create(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure) }
   let(:text_value) { "My Neighbor Totoro is the best movie ever" }
   let(:phone_value) { "invalid phone value" }
+  let(:datetime_value) { "2023-02-01T10:32" }
   let(:sub_type_de_champs_repetition) { type_de_champ_repetition.active_revision_type_de_champ.revision_types_de_champ.map(&:type_de_champ) }
   let(:text_repetition_libelle) { sub_type_de_champs_repetition.first.libelle }
   let(:integer_repetition_libelle) { sub_type_de_champs_repetition.second.libelle }
@@ -32,10 +34,11 @@ describe 'Prefilling a dossier (with a GET request):' do
               \"#{sub_type_de_champs_repetition.first.libelle}\": \"#{text_repetition_value}\",
               \"#{sub_type_de_champs_repetition.second.libelle}\": \"#{integer_repetition_value}\"
             }"
-          ]
+          ],
+          "champ_#{type_de_champ_datetime.to_typed_id}" => datetime_value
         )
 
-        click_on "Commencer la démarche"
+        click_on "Poursuivre mon dossier prérempli"
       end
     end
   end
@@ -51,7 +54,8 @@ describe 'Prefilling a dossier (with a GET request):' do
             \"#{sub_type_de_champs_repetition.first.libelle}\": \"#{text_repetition_value}\",
             \"#{sub_type_de_champs_repetition.second.libelle}\": \"#{integer_repetition_value}\"
           }"
-        ]
+        ],
+        "champ_#{type_de_champ_datetime.to_typed_id}" => datetime_value
       )
     end
 
@@ -63,7 +67,7 @@ describe 'Prefilling a dossier (with a GET request):' do
           click_on "J’ai déjà un compte"
           sign_in_with user.email, password
 
-          click_on "Commencer la démarche"
+          click_on "Poursuivre mon dossier prérempli"
         end
       end
     end
@@ -82,7 +86,7 @@ describe 'Prefilling a dossier (with a GET request):' do
           click_confirmation_link_for user_email
           expect(page).to have_content('Votre compte a bien été confirmé.')
 
-          click_on "Commencer la démarche"
+          click_on "Poursuivre mon dossier prérempli"
         end
       end
     end
@@ -97,7 +101,7 @@ describe 'Prefilling a dossier (with a GET request):' do
 
           page.find('.fr-connect').click
 
-          click_on "Commencer la démarche"
+          click_on "Poursuivre mon dossier prérempli"
         end
       end
     end

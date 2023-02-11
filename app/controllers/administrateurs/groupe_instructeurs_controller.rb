@@ -123,10 +123,6 @@ module Administrateurs
         instructeurs.each { groupe_instructeur.add(_1) }
 
         flash[:notice] = if procedure.routing_enabled?
-          GroupeInstructeurMailer
-            .add_instructeurs(groupe_instructeur, instructeurs, current_administrateur.email)
-            .deliver_later
-
           t('.assignment',
             count: instructeurs.size,
             emails: instructeurs.map(&:email).join(', '),
@@ -196,7 +192,7 @@ module Administrateurs
     end
 
     def import
-      if procedure.publiee?
+      if procedure.publiee_or_close?
         if !CSV_ACCEPTED_CONTENT_TYPES.include?(group_csv_file.content_type) && !CSV_ACCEPTED_CONTENT_TYPES.include?(marcel_content_type)
           flash[:alert] = "Importation impossible : veuillez importer un fichier CSV"
 

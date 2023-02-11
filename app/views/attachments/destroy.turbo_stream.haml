@@ -2,5 +2,6 @@
 
 - if @champ_id
   = turbo_stream.show "attachment-multiple-empty-#{@champ_id}"
+  = turbo_stream.focus_all "#attachment-multiple-empty-#{@champ_id} input"
 
 = turbo_stream.show_all ".attachment-input-#{@attachment.id}"

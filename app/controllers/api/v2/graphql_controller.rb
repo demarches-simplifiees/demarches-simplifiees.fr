@@ -1,6 +1,4 @@
 class API::V2::GraphqlController < API::V2::BaseController
-  include GraphqlOperationLogConcern
-
   def execute
     result = API::V2::Schema.execute(query,
       variables: variables,
@@ -24,7 +22,8 @@ class API::V2::GraphqlController < API::V2::BaseController
     super
 
     payload.merge!({
-      graphql_operation: operation_log(query(fallback: ''), params[:operationName], to_unsafe_hash(params[:variables]))
+      graphql_query: query(fallback: params[:queryId]),
+      graphql_variables: to_unsafe_hash(params[:variables]).to_json
     })
   end
 

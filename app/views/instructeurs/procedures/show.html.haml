@@ -99,9 +99,10 @@
       %div{ data: batch_operation_component.render? ? { controller: 'batch-operation' } : {} }
         .flex.align-center.fr-mt-2w
           %span.fr-h6.fr-mb-0.fr-mr-2w
-            = t('views.instructeurs.dossiers.dossiers_count', count: @dossiers_count)
+            = page_entries_info @filtered_sorted_paginated_ids
 
           = render batch_operation_component
+
         .fr-table.fr-table--bordered
           %table.table.dossiers-table.hoverable
             %thead
@@ -124,6 +125,8 @@
               %tr
 
             %tbody
+              = render Dossiers::BatchSelectMoreComponent.new(dossiers_count: @dossiers_count, filtered_sorted_ids: @filtered_sorted_ids)
+
               - @projected_dossiers.each do |p|
                 - path = instructeur_dossier_path(@procedure, p.dossier_id)
                 %tr{ class: [p.hidden_by_user_at.present? && "file-hidden-by-user"] }

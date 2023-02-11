@@ -1,0 +1,20 @@
+en:
+  helpers:
+    page_entries_info:
+      entry:
+        zero: "file"
+        one: "file"
+        other: "files"
+      more_pages:
+        display_entries: "%{first} - %{last} <span class='fr-text--sm'>in %{total} %{entry_name}</span>"
+      one_page:
+        display_entries:
+          one: "<b>%{count}</b> %{entry_name}"
+          other: "%{count} <span class='fr-text--sm'>in %{count} %{entry_name}</span>"
+  views:
+    pagination:
+      first: "&laquo; First"
+      last: Last &raquo;
+      next: Next &rsaquo;
+      previous: "&lsaquo; Prev"
+      truncate: "&hellip;"

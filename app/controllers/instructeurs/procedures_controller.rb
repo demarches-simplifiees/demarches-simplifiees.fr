@@ -4,6 +4,7 @@ module Instructeurs
     before_action :ensure_not_super_admin!, only: [:download_export]
 
     ITEMS_PER_PAGE = 25
+    BATCH_SELECTION_LIMIT = 500
 
     def index
       @procedures = current_instructeur
@@ -77,13 +78,13 @@ module Instructeurs
       @has_termine_notifications = notifications[:termines].present?
       @not_archived_notifications_dossier_ids = notifications[:en_cours] + notifications[:termines]
 
-      filtered_sorted_ids = procedure_presentation.filtered_sorted_ids(dossiers, statut, count: dossiers_count)
+      @filtered_sorted_ids = procedure_presentation.filtered_sorted_ids(dossiers, statut, count: dossiers_count)
 
       page = params[:page].presence || 1
 
-      @dossiers_count = filtered_sorted_ids.size
+      @dossiers_count = @filtered_sorted_ids.size
       @filtered_sorted_paginated_ids = Kaminari
-        .paginate_array(filtered_sorted_ids)
+        .paginate_array(@filtered_sorted_ids)
         .page(page)
         .per(ITEMS_PER_PAGE)
 

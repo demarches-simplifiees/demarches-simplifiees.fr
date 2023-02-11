@@ -1,10 +1,21 @@
-describe Dossier do
+describe DossierRebaseConcern do
   describe '#can_rebase?' do
-    let(:procedure) { create(:procedure, :with_type_de_champ_mandatory, :with_type_de_champ_private, :with_yes_no) }
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ mandatory: true }, { type: :yes_no }], types_de_champ_private: [{}]) }
     let(:attestation_template) { procedure.draft_revision.attestation_template.find_or_revise! }
     let(:type_de_champ) { procedure.active_revision.types_de_champ_public.find { |tdc| !tdc.mandatory? } }
     let(:private_type_de_champ) { procedure.active_revision.types_de_champ_private.first }
     let(:mandatory_type_de_champ) { procedure.active_revision.types_de_champ_public.find(&:mandatory?) }
+
+    context 'on unpublished procedure' do
+      context 'en_construction' do
+        let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+
+        it 'should be false' do
+          expect(dossier.pending_changes).to be_empty
+          expect(dossier.can_rebase?).to be_falsey
+        end
+      end
+    end
 
     context 'en_construction' do
       let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
@@ -239,25 +250,38 @@ describe Dossier do
   end
 
   describe "#rebase" do
-    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :text, mandatory: true }, { type: :repetition, children: [{ type: :text }] }, { type: :datetime }, { type: :yes_no }, { type: :integer_number }]) }
+    let(:procedure) do
+      create(:procedure, types_de_champ_public: [
+        { type: :text, mandatory: true, stable_id: 1 },
+        {
+          type: :repetition, stable_id: 101, mandatory: true, children: [
+            { type: :text, stable_id: 102 }
+          ]
+        },
+        { type: :datetime, stable_id: 103 },
+        { type: :yes_no, stable_id: 104 },
+        { type: :integer_number, stable_id: 105 }
+      ])
+    end
     let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:types_de_champ) { procedure.active_revision.types_de_champ }
 
-    let(:yes_no_type_de_champ) { procedure.active_revision.types_de_champ_public.find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:yes_no) } }
+    let(:text_type_de_champ) { types_de_champ.find { _1.stable_id == 1 } }
+    let(:repetition_type_de_champ) { types_de_champ.find { _1.stable_id == 101 } }
+    let(:repetition_text_type_de_champ) { types_de_champ.find { _1.stable_id == 102 } }
+    let(:datetime_type_de_champ) { types_de_champ.find { _1.stable_id == 103 } }
+    let(:yes_no_type_de_champ) { types_de_champ.find { _1.stable_id == 104 } }
 
-    let(:text_type_de_champ) { procedure.active_revision.types_de_champ_public.find(&:mandatory?) }
-    let(:text_champ) { dossier.champs_public.find(&:mandatory?) }
-    let(:rebased_text_champ) { dossier.champs_public.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
+    let(:text_champ) { dossier.champs_public.find { _1.stable_id == 1 } }
+    let(:repetition_champ) { dossier.champs_public.find { _1.stable_id == 101 } }
+    let(:datetime_champ) { dossier.champs_public.find { _1.stable_id == 103 } }
 
-    let(:rebased_number_champ) { dossier.champs_public.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:integer_number) } }
+    let(:rebased_text_champ) { dossier.champs_public.find { _1.stable_id == 1 } }
+    let(:rebased_repetition_champ) { dossier.champs_public.find { _1.stable_id == 101 } }
+    let(:rebased_datetime_champ) { dossier.champs_public.find { _1.stable_id == 103 } }
+    let(:rebased_number_champ) { dossier.champs_public.find { _1.stable_id == 105 } }
 
-    let(:datetime_type_de_champ) { procedure.active_revision.types_de_champ_public.find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:datetime) } }
-    let(:datetime_champ) { dossier.champs_public.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:datetime) } }
-    let(:rebased_datetime_champ) { dossier.champs_public.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:date) } }
-
-    let(:repetition_type_de_champ) { procedure.active_revision.types_de_champ_public.find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
-    let(:repetition_text_type_de_champ) { procedure.active_revision.children_of(repetition_type_de_champ).find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
-    let(:repetition_champ) { dossier.champs_public.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
-    let(:rebased_repetition_champ) { dossier.champs_public.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
+    let(:rebased_new_repetition_champ) { dossier.champs_public.find { _1.libelle == "une autre repetition" } }
 
     before do
       procedure.publish!
@@ -265,15 +289,30 @@ describe Dossier do
         type_champ: TypeDeChamp.type_champs.fetch(:text),
         libelle: "Un champ text"
       })
-      procedure.draft_revision.find_and_ensure_exclusive_use(text_type_de_champ).update(mandatory: false, libelle: "nouveau libelle")
-      procedure.draft_revision.find_and_ensure_exclusive_use(datetime_type_de_champ).update(type_champ: TypeDeChamp.type_champs.fetch(:date))
-      procedure.draft_revision.find_and_ensure_exclusive_use(repetition_text_type_de_champ).update(libelle: "nouveau libelle dans une repetition")
+      procedure.draft_revision.find_and_ensure_exclusive_use(text_type_de_champ.stable_id).update(mandatory: false, libelle: "nouveau libelle")
+      procedure.draft_revision.find_and_ensure_exclusive_use(datetime_type_de_champ.stable_id).update(type_champ: TypeDeChamp.type_champs.fetch(:date))
+      procedure.draft_revision.find_and_ensure_exclusive_use(repetition_text_type_de_champ.stable_id).update(libelle: "nouveau libelle dans une repetition")
       procedure.draft_revision.add_type_de_champ({
         type_champ: TypeDeChamp.type_champs.fetch(:checkbox),
         libelle: "oui ou non",
         parent_stable_id: repetition_type_de_champ.stable_id
       })
       procedure.draft_revision.remove_type_de_champ(yes_no_type_de_champ.stable_id)
+      new_repetition_type_de_champ = procedure.draft_revision.add_type_de_champ({
+        type_champ: TypeDeChamp.type_champs.fetch(:repetition),
+        libelle: "une autre repetition",
+        mandatory: true
+      })
+      procedure.draft_revision.add_type_de_champ({
+        type_champ: TypeDeChamp.type_champs.fetch(:text),
+        libelle: "un champ text dans une autre repetition",
+        parent_stable_id: new_repetition_type_de_champ.stable_id
+      })
+      procedure.draft_revision.add_type_de_champ({
+        type_champ: TypeDeChamp.type_champs.fetch(:date),
+        libelle: "un champ date dans une autre repetition",
+        parent_stable_id: new_repetition_type_de_champ.stable_id
+      })
 
       datetime_champ.update(value: Time.zone.now.to_s)
       text_champ.update(value: 'bonjour')
@@ -285,11 +324,9 @@ describe Dossier do
     end
 
     it "updates the brouillon champs with the latest revision changes" do
-      revision_id = dossier.revision_id
-      libelle = text_type_de_champ.libelle
-
       expect(dossier.revision).to eq(procedure.published_revision)
       expect(dossier.champs_public.size).to eq(5)
+      expect(dossier.champs_public_all.size).to eq(7)
       expect(repetition_champ.rows.size).to eq(2)
       expect(repetition_champ.rows[0].size).to eq(1)
       expect(repetition_champ.rows[1].size).to eq(1)
@@ -301,7 +338,8 @@ describe Dossier do
 
       expect(procedure.revisions.size).to eq(3)
       expect(dossier.revision).to eq(procedure.published_revision)
-      expect(dossier.champs_public.size).to eq(5)
+      expect(dossier.champs_public.size).to eq(6)
+      expect(dossier.champs_public_all.size).to eq(12)
       expect(rebased_text_champ.value).to eq(text_champ.value)
       expect(rebased_text_champ.type_de_champ_id).not_to eq(text_champ.type_de_champ_id)
       expect(rebased_datetime_champ.type_champ).to eq(TypeDeChamp.type_champs.fetch(:date))
@@ -312,6 +350,10 @@ describe Dossier do
       expect(rebased_text_champ.rebased_at).not_to be_nil
       expect(rebased_datetime_champ.rebased_at).not_to be_nil
       expect(rebased_number_champ.rebased_at).to be_nil
+      expect(rebased_new_repetition_champ).not_to be_nil
+      expect(rebased_new_repetition_champ.rebased_at).not_to be_nil
+      expect(rebased_new_repetition_champ.rows.size).to eq(1)
+      expect(rebased_new_repetition_champ.rows[0].size).to eq(2)
     end
   end
 
@@ -569,7 +611,7 @@ describe Dossier do
     context 'with a procedure with a repetition' do
       let!(:procedure) do
         create(:procedure).tap do |p|
-          repetition = p.draft_revision.add_type_de_champ(type_champ: :repetition, libelle: 'p1')
+          repetition = p.draft_revision.add_type_de_champ(type_champ: :repetition, libelle: 'p1', mandatory: true)
           p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'c1', parent_stable_id: repetition.stable_id)
           p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'c2', parent_stable_id: repetition.stable_id)
           p.publish!

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_01_26_145329) do
+ActiveRecord::Schema.define(version: 2023_02_07_105539) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -233,6 +233,7 @@ ActiveRecord::Schema.define(version: 2023_01_26_145329) do
     t.jsonb "value_json"
     t.index ["dossier_id"], name: "index_champs_on_dossier_id"
     t.index ["etablissement_id"], name: "index_champs_on_etablissement_id"
+    t.index ["external_id"], name: "index_champs_on_external_id"
     t.index ["parent_id"], name: "index_champs_on_parent_id"
     t.index ["private"], name: "index_champs_on_private"
     t.index ["row_id"], name: "index_champs_on_row_id"
@@ -407,6 +408,7 @@ ActiveRecord::Schema.define(version: 2023_01_26_145329) do
 
   create_table "email_events", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
+    t.string "message_id"
     t.string "method", null: false
     t.datetime "processed_at"
     t.string "status", null: false
@@ -707,6 +709,7 @@ ActiveRecord::Schema.define(version: 2023_01_26_145329) do
     t.boolean "duree_conservation_etendue_par_ds", default: false
     t.boolean "durees_conservation_required", default: true
     t.string "encrypted_api_particulier_token"
+    t.boolean "estimated_duration_visible", default: true, null: false
     t.boolean "euro_flag", default: false
     t.boolean "experts_require_administrateur_invitation", default: false
     t.boolean "for_individual", default: false

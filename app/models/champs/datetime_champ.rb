@@ -36,10 +36,6 @@ class Champs::DatetimeChamp < Champ
     value.present? ? I18n.l(Time.zone.parse(value)) : ""
   end
 
-  def html_label?
-    false
-  end
-
   private
 
   def convert_to_iso8601

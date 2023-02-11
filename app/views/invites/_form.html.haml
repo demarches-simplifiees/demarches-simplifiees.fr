@@ -1,12 +1,14 @@
 #invites-form
   - if invites.present?
-    %h4= t('views.invites.form.invite_to_participate')
-    %ul
-      - invites.each do |invite|
-        %li
-          = invite.email
-          %small{ 'data-turbo': 'true' }
-            = link_to t('views.invites.form.withdraw_permission'), invite_path(invite), data: { turbo_method: :delete, turbo_confirm: t('views.invites.form.want_to_withdraw_permission') }
+    #invite-list{ morphing ? { tabindex: "-1" } : {} }
+      %h4= t('views.invites.form.invite_to_participate')
+      %ul
+        - invites.each do |invite|
+          %li
+            = invite.email
+            %small{ 'data-turbo': 'true' }
+              = link_to t('views.invites.form.withdraw_permission'), invite_path(invite), data: { turbo_method: :delete, turbo_confirm: t('views.invites.form.want_to_withdraw_permission') }
+
     %p= t('views.invites.form.edit_dossier')
     - if dossier.brouillon?
       %p= t('views.invites.form.submit_dossier_yourself')
