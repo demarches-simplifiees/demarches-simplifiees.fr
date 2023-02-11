@@ -9,7 +9,6 @@ class TypesDeChamp::PrefillRepetitionTypeDeChamp < TypesDeChamp::PrefillTypeDeCh
     ].join("</br>").html_safe # rubocop:disable Rails/OutputSafety
   end
 
-
   def example_value
     [row_values_format, row_values_format].map { |row| row.to_s.gsub("=>", ":") }
   end
@@ -39,5 +38,4 @@ class TypesDeChamp::PrefillRepetitionTypeDeChamp < TypesDeChamp::PrefillTypeDeCh
     @prefillable_subchamps ||=
       TypesDeChamp::PrefillTypeDeChamp.wrap(active_revision_type_de_champ.revision_types_de_champ.map(&:type_de_champ).filter(&:prefillable?))
   end
-
 end
