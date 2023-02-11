@@ -45,7 +45,7 @@ RSpec.describe TypesDeChamp::PrefillTypeDeChamp, type: :model do
   end
 
   describe '#possible_values' do
-    subject(:possible_values) { described_class.build(type_de_champ).possible_values }
+    subject(:possible_values) { described_class.new(type_de_champ).possible_values }
 
     context 'when the type de champ is not prefillable' do
       let(:type_de_champ) { build(:type_de_champ_mesri) }
@@ -54,16 +54,16 @@ RSpec.describe TypesDeChamp::PrefillTypeDeChamp, type: :model do
     end
 
     context 'when there is too many possible values' do
-      let(:type_de_champ) { create(:type_de_champ_drop_down_list) }
+      let(:type_de_champ) { create(:type_de_champ_drop_down_list, procedure: create(:procedure)) }
       before { type_de_champ.drop_down_options = (1..described_class::POSSIBLE_VALUES_THRESHOLD + 1).map(&:to_s) }
 
-      it { expect(possible_values).to match("Un choix parmi ceux sélectionnés à la création de la procédure") }
+      it { expect(possible_values).to eq("Un choix parmi ceux sélectionnés à la création de la procédure") }
     end
 
     context 'when the type de champ is prefillable' do
       let(:type_de_champ) { build(:type_de_champ_email) }
 
-      it { expect(possible_values).to match("Une adresse email") }
+      it { expect(possible_values).to eq("Une adresse email") }
     end
   end
 

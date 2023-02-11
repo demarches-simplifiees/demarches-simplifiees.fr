@@ -2,7 +2,7 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
 
-  POSSIBLE_VALUES_THRESHOLD = 1
+  POSSIBLE_VALUES_THRESHOLD = 5
 
   def self.build(type_de_champ)
     case type_de_champ.type_champ
@@ -24,19 +24,7 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
   end
 
   def possible_values
-    [possible_values_list_display, link_to_all_possible_values].compact.join('<br>').html_safe
-  end
-
-  def possible_values_list
-    return [] unless prefillable?
-
-    [I18n.t("views.prefill_descriptions.edit.possible_values.#{type_champ}_html")]
-  end
-
-  def link_to_all_possible_values
-    return unless too_many_possible_values?
-
-    link_to I18n.t("views.prefill_descriptions.edit.possible_values.link.text"), Rails.application.routes.url_helpers.prefill_type_de_champ_path(path, self), title: new_tab_suffix(I18n.t("views.prefill_descriptions.edit.possible_values.link.title")), **external_link_attributes
+    [possible_values_list_display, link_to_all_possible_values].compact.join('<br>').html_safe # rubocop:disable Rails/OutputSafety
   end
 
   def example_value
@@ -45,11 +33,23 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
     I18n.t("views.prefill_descriptions.edit.examples.#{type_champ}")
   end
 
+  private
+
+  def possible_values_list
+    return [] unless prefillable?
+
+    [I18n.t("views.prefill_descriptions.edit.possible_values.#{type_champ}_html")]
+  end
+
+  def link_to_all_possible_values
+    return unless too_many_possible_values? && prefillable?
+
+    link_to I18n.t("views.prefill_descriptions.edit.possible_values.link.text"), Rails.application.routes.url_helpers.prefill_type_de_champ_path(path, self), title: new_tab_suffix(I18n.t("views.prefill_descriptions.edit.possible_values.link.title")), **external_link_attributes
+  end
+
   def too_many_possible_values?
     possible_values_list.count > POSSIBLE_VALUES_THRESHOLD
   end
-
-  private
 
   def possible_values_list_display
     if too_many_possible_values?

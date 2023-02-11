@@ -20,9 +20,13 @@ RSpec.describe TypesDeChamp::PrefillRepetitionTypeDeChamp, type: :model, vcr: { 
 
   describe '#possible_values' do
     subject(:possible_values) { described_class.new(type_de_champ).possible_values }
-    let(:expected_value) { ["sub type de champ: Un texte court", "sub type de champ2: Un nombre entier", "region sub_champ: <a title=\"Toutes les valeurs possibles — Nouvel onglet\" target=\"_blank\" rel=\"noopener noreferrer\" href=\"/procedures/#{procedure.path}/prefill_type_de_champs/#{region_repetition.id}\">Voir toutes les valeurs possibles</a>"] }
+    let(:expected_value) {
+      "Un tableau de dictionnaires avec les valeurs possibles pour chaque champ de la répétition.</br><ul><li>sub type de champ: Un texte court</li><li>sub type de champ2: Un nombre entier</li><li>region sub_champ: Un <a href=\"https://fr.wikipedia.org/wiki/R%C3%A9gion_fran%C3%A7aise\" target=\"_blank\">code INSEE de région</a><br><a title=\"Toutes les valeurs possibles — Nouvel onglet\" target=\"_blank\" rel=\"noopener noreferrer\" href=\"/procedures/#{procedure.path}/prefill_type_de_champs/#{region_repetition.id}\">Voir toutes les valeurs possibles</a></li></ul>"
+    }
 
-    it { expect(possible_values).to eq(expected_value) }
+    it {
+      expect(possible_values).to eq(expected_value)
+    }
   end
 
   describe '#example_value' do
@@ -30,12 +34,5 @@ RSpec.describe TypesDeChamp::PrefillRepetitionTypeDeChamp, type: :model, vcr: { 
     let(:expected_value) { ["{\"sub type de champ\":\"Texte court\", \"sub type de champ2\":\"42\", \"region sub_champ\":\"53\"}", "{\"sub type de champ\":\"Texte court\", \"sub type de champ2\":\"42\", \"region sub_champ\":\"53\"}"] }
 
     it { expect(example_value).to eq(expected_value) }
-  end
-
-  describe '#possible_values_sentence' do
-    subject(:possible_values_sentence) { described_class.new(type_de_champ).possible_values_sentence }
-    let(:expected_value) { "Un tableau de dictionnaires avec les valeurs possibles pour chaque champ de la répétition.<br>sub type de champ: Un texte court<br>sub type de champ2: Un nombre entier<br>region sub_champ: <a title=\"Toutes les valeurs possibles — Nouvel onglet\" target=\"_blank\" rel=\"noopener noreferrer\" href=\"/procedures/#{procedure.path}/prefill_type_de_champs/#{region_repetition.id}\">Voir toutes les valeurs possibles</a>" }
-
-    it { expect(possible_values_sentence).to eq(expected_value) }
   end
 end
