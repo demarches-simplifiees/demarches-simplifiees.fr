@@ -21,8 +21,9 @@ describe 'The user' do
     # fill data
     fill_in('text *', with: 'super texte')
     fill_in('textarea', with: 'super textarea')
-    fill_in('date', with: '12-12-2012')
-    select_date_and_time(Time.zone.parse('06/01/2030 7h05'), form_id_for_datetime('datetime'))
+    fill_in('date *', with: '12-12-2012')
+    fill_in('datetime', with: Time.zone.parse('2023-01-06T07:05'))
+    find("input[type=datetime-local]").send_keys(:arrow_up).send_keys(:arrow_down) # triggers onChange
     fill_in('number', with: '42')
     fill_in('decimal_number', with: '17')
     fill_in('integer_number', with: '12')
@@ -57,7 +58,7 @@ describe 'The user' do
     expect(champ_value_for('text')).to eq('super texte')
     expect(champ_value_for('textarea')).to eq('super textarea')
     expect(champ_value_for('date')).to eq('2012-12-12')
-    expect(champ_value_for('datetime')).to eq('2030-01-06T07:05:00+01:00')
+    expect(champ_value_for('datetime')).to eq('2023-01-06T07:05:00+01:00')
     expect(champ_value_for('number')).to eq('42')
     expect(champ_value_for('decimal_number')).to eq('17')
     expect(champ_value_for('integer_number')).to eq('12')
@@ -82,7 +83,7 @@ describe 'The user' do
     expect(page).to have_field('text', with: 'super texte')
     expect(page).to have_field('textarea', with: 'super textarea')
     expect(page).to have_field('date', with: '2012-12-12')
-    check_date_and_time(Time.zone.parse('06/01/2030 7:05'), form_id_for_datetime('datetime'))
+    expect(page).to have_field('datetime', with: '2023-01-06T07:05')
     expect(page).to have_field('number', with: '42')
     expect(page).to have_checked_field('checkbox')
     expect(page).to have_checked_field('Madame')
@@ -104,7 +105,7 @@ describe 'The user' do
   end
 
   let(:procedure_with_repetition) do
-    create(:procedure, :published, :for_individual, :with_repetition)
+    create(:procedure, :published, :for_individual, types_de_champ_public: [{ type: :repetition, mandatory: true, children: [{ libelle: 'sub type de champ' }] }])
   end
 
   scenario 'fill a dossier with repetition', js: true do
@@ -333,7 +334,7 @@ describe 'The user' do
           types_de_champ_public: [
             { type: :checkbox, libelle: 'champ_a', stable_id: a_stable_id },
             {
-              type: :repetition, libelle: 'repetition', children: [
+              type: :repetition, libelle: 'repetition', mandatory: true, children: [
                 { type: :checkbox, libelle: 'champ_b', stable_id: b_stable_id },
                 { type: :text, libelle: 'champ_c', condition: }
               ]
@@ -527,32 +528,6 @@ describe 'The user' do
     expect(page).to have_current_path(identite_dossier_path(user_dossier))
   end
 
-  def form_id_for_datetime(libelle)
-    # The HTML for datetime is a bit specific since it has 5 selects, below here is a sample HTML
-    # So, we want to find the partial id of a datetime (partial because there are 5 ids:
-    # dossier_champs_attributes_3_value_1i, 2i, ... 5i) ; we are interested in the 'dossier_champs_attributes_3_value' part
-    # which is then completed in select_date_and_time and check_date_and_time
-    #
-    # We find the H2, find the first select in the next .datetime div, then strip the last 3 characters
-    #
-    # <h4 class="form-label">
-    #   libelle
-    # </h4>
-    # <div class="datetime">
-    #     <span class="hidden">
-    #         <label for="dossier_champs_attributes_3_value_3i">Jour</label></span>
-    #     <select id="dossier_champs_attributes_3_value_3i" name="dossier[champs_attributes][3][value(3i)]">
-    #     <option value=""></option>
-    #     <option value="1">1</option>
-    #     <option value="2">2</option>
-    #     <!-- … -->
-    #     </select>
-    #     <!-- … 4 other selects for month, year, minute and seconds -->
-    # </div>
-    e = find(:xpath, ".//div[contains(text()[normalize-space()], '#{libelle}')]")
-    e.sibling('.datetime').first('select')[:id][0..-4]
-  end
-
   def champ_value_for(libelle)
     champs = user_dossier.reload.champs_public
     champs.find { |c| c.libelle == libelle }.value
@@ -564,21 +539,5 @@ describe 'The user' do
     fill_in('individual_nom', with: 'nom')
     click_on 'Continuer'
     expect(page).to have_current_path(brouillon_dossier_path(user_dossier))
-  end
-
-  def select_date_and_time(date, field)
-    select date.strftime('%Y'), from: "#{field}_1i" # year
-    select I18n.l(date, format: '%B'), from: "#{field}_2i" # month
-    select date.strftime('%-d'), from: "#{field}_3i" # day
-    select date.strftime('%H'), from: "#{field}_4i" # hour
-    select date.strftime('%M'), from: "#{field}_5i" # minute
-  end
-
-  def check_date_and_time(date, field)
-    expect(page).to have_selected_value("#{field}_1i", selected: date.strftime('%Y'))
-    expect(page).to have_selected_value("#{field}_2i", selected: I18n.l(date, format: '%B'))
-    expect(page).to have_selected_value("#{field}_3i", selected: date.strftime('%-d'))
-    expect(page).to have_selected_value("#{field}_4i", selected: date.strftime('%H'))
-    expect(page).to have_selected_value("#{field}_5i", selected: date.strftime('%M'))
   end
 end

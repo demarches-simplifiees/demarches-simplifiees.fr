@@ -51,10 +51,6 @@ class TypesDeChamp::TypeDeChampBase
     (words / READ_WORDS_PER_SECOND).round.seconds
   end
 
-  def build_champ(params)
-    @type_de_champ.champ.build(params)
-  end
-
   def filter_to_human(filter_value)
     filter_value
   end

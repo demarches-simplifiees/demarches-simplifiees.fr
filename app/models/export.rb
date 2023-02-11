@@ -163,6 +163,10 @@ class Export < ApplicationRecord
     end
   end
 
+  def procedure
+    groupe_instructeurs.first.procedure
+  end
+
   private
 
   def load_snapshot!
@@ -203,9 +207,5 @@ class Export < ApplicationRecord
     when :json
       service.to_geo_json
     end
-  end
-
-  def procedure
-    groupe_instructeurs.first.procedure
   end
 end

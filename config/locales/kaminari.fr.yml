@@ -1,0 +1,20 @@
+fr:
+  helpers:
+    page_entries_info:
+      entry:
+        zero: "dossier"
+        one: "dossier"
+        other: "dossiers"
+      more_pages:
+        display_entries: "%{first} - %{last} <span class='fr-text--sm'>sur %{total} %{entry_name}</span>"
+      one_page:
+        display_entries:
+          one: "<b>%{count}</b> %{entry_name}"
+          other: "%{count} <span class='fr-text--sm'>sur %{count} %{entry_name}</span>"
+  views:
+    pagination:
+      first: "&laquo; Premier"
+      last: Dernier &raquo;
+      next: Suivant &rsaquo;
+      previous: "&lsaquo; Précédent"
+      truncate: "&hellip;"

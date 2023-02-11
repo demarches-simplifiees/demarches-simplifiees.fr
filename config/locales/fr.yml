@@ -59,6 +59,7 @@ fr:
         are_you_new: Vous êtes nouveau sur %{app_name} ?
     my_account: Mon compte
     header:
+      label_modal: "Menu en-tête de page"
       close_modal: 'Fermer'
       back: "Revenir en arrière"
       back_title: "Revenir sur le site de mon administration"
@@ -83,11 +84,13 @@ fr:
         existing_dossiers: Vous avez déjà des dossiers pour cette démarche
         show_dossiers: Voir mes dossiers en cours
         prefilled_draft: "Vous avez un dossier prérempli"
-        prefilled_draft_detail_html: "Il y a <strong>%{time_ago}</strong>, vous avez prérempli un dossier sur la démarche « %{procedure} »."
+        prefilled_draft_detail_html: "Vous êtes prêt·e à poursuivre un dossier prérempli sur la démarche « %{procedure} », commencé il y a <strong>%{time_ago}</strong>."
+        prefill_dossier_detail_html: "Vous êtes prêt·e à poursuivre un dossier prérempli sur la démarche « %{procedure} »."
         already_draft: "Vous avez déjà commencé à remplir un dossier"
         already_draft_detail_html: "Il y a <strong>%{time_ago}</strong>, vous avez commencé à remplir un dossier sur la démarche « %{procedure} »."
         already_not_draft: "Vous avez déjà déposé un dossier"
         already_not_draft_detail_html: "Il y a <strong>%{time_ago}</strong>, vous avez déposé un dossier sur la démarche « %{procedure} »."
+        go_to_prefilled_file: 'Poursuivre mon dossier prérempli'
         continue_file: 'Continuer à remplir mon dossier'
         start_new_file: 'Commencer un nouveau dossier'
         show_my_submitted_file: 'Voir mon dossier déposé'
@@ -233,10 +236,6 @@ fr:
         batch_operation:
           enabled: "Ajouter ce dossier à la selection pour un traitement de masse"
           disabled: "Impossible d'ajouter ce dossier à la selection car il est déjà dans un traitement de masse"
-        dossiers_count:
-          zero: 0 dossier
-          one: 1 dossier
-          other: "%{count} dossiers"
         show_deleted_dossiers: Afficher les dossiers supprimés
         personalize: Personnaliser le tableau
         download: Télécharger un dossier
@@ -314,8 +313,9 @@ fr:
         demande:
           edit_dossier: "Modifier le dossier"
         search:
-          placeholder: Rechercher un dossier
-          search_file: Rechercher
+          search_file: Rechercher un dossier
+          simple: Rechercher
+        secondary_menu: Menu secondaire
         index:
           dossiers: "Dossiers"
         dossiers_list:
@@ -545,6 +545,9 @@ fr:
     deleted:
       one: Supprimée
       other: Supprimées
+    procedures:
+      one: Démarche
+      other: Démarches
   users:
     dossiers:
       test_procedure: "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l’administrateur (ajout d’un champ, publication de la démarche...) entraînera sa suppression."

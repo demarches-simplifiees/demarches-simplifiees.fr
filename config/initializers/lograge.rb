@@ -14,10 +14,13 @@ Rails.application.configure do
         user_email: event.payload[:user_email],
         user_roles: event.payload[:user_roles],
         user_agent: event.payload[:user_agent],
-        graphql_operation: event.payload[:graphql_operation],
+        graphql_query: event.payload[:graphql_query],
+        graphql_variables: event.payload[:graphql_variables],
         browser: event.payload[:browser],
         browser_version: event.payload[:browser_version],
-        platform: event.payload[:platform]
+        platform: event.payload[:platform],
+        client_ip: event.payload[:client_ip],
+        request_id: event.payload[:request_id]
       }.compact
     end
 

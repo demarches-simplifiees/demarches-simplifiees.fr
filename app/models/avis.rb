@@ -84,8 +84,8 @@ class Avis < ApplicationRecord
     revoked_at.present?
   end
 
-  def revivable_by?(reviver)
-    revokable_by?(reviver)
+  def remindable_by?(reminder)
+    revokable_by?(reminder)
   end
 
   def revokable_by?(revocator)
@@ -100,5 +100,10 @@ class Avis < ApplicationRecord
     else
       destroy!
     end
+  end
+
+  def remind_by!(revocator)
+    return false if !remindable_by?(revocator) || answer.present?
+    update!(reminded_at: Time.zone.now)
   end
 end

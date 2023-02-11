@@ -1,6 +1,7 @@
 RSpec.describe StringToHtmlHelper, type: :helper do
   describe "#string_to_html" do
-    subject { string_to_html(description) }
+    let(:allow_a) { false }
+    subject { string_to_html(description, allow_a:) }
 
     context "with some simple texte" do
       let(:description) { "1er ligne \n 2ieme ligne" }
@@ -11,7 +12,15 @@ RSpec.describe StringToHtmlHelper, type: :helper do
     context "with a link" do
       context "using an authorized scheme" do
         let(:description) { "Cliquez sur https://d-s.fr pour continuer." }
-        it { is_expected.to eq("<p>Cliquez sur <a href=\"https://d-s.fr\" target=\"_blank\" rel=\"noopener\">https://d-s.fr</a> pour continuer.</p>") }
+
+        context 'with a tag authorized' do
+          let(:allow_a) { true }
+          it { is_expected.to eq("<p>Cliquez sur <a href=\"https://d-s.fr\" target=\"_blank\" rel=\"noopener\">https://d-s.fr</a> pour continuer.</p>") }
+        end
+
+        context 'without a tag' do
+          it { is_expected.to eq("<p>Cliquez sur https://d-s.fr pour continuer.</p>") }
+        end
       end
 
       context "using a non-authorized scheme" do

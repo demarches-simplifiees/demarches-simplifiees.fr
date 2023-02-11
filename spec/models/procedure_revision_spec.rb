@@ -527,19 +527,19 @@ describe ProcedureRevision do
         is_expected.to eq([
           {
             op: :move,
-            label: new_draft_second_tdc.libelle,
-            private: false,
-            from: 1,
-            to: 2,
-            stable_id: new_draft_second_tdc.stable_id
-          },
-          {
-            op: :move,
             label: new_draft_third_tdc.libelle,
             private: false,
             from: 2,
             to: 1,
             stable_id: new_draft_third_tdc.stable_id
+          },
+          {
+            op: :move,
+            label: new_draft_second_tdc.libelle,
+            private: false,
+            from: 1,
+            to: 2,
+            stable_id: new_draft_second_tdc.stable_id
           }
         ])
       end

@@ -14,12 +14,12 @@ module DossierRebaseConcern
   end
 
   def can_rebase?
-    revision != procedure.published_revision &&
+    procedure.published_revision.present? && revision != procedure.published_revision &&
       (brouillon? || accepted_en_construction_changes? || accepted_en_instruction_changes?)
   end
 
   def pending_changes
-    revision.compare(procedure.published_revision)
+    procedure.published_revision.present? ? revision.compare(procedure.published_revision) : []
   end
 
   def can_rebase_mandatory_change?(stable_id)
@@ -58,25 +58,30 @@ module DossierRebaseConcern
       .joins(:type_de_champ)
       .group_by(&:stable_id)
       .transform_values { Champ.where(id: _1) }
+      .tap { _1.default = Champ.none }
 
     # add champ
     changes_by_op[:add]
-      .each { add_new_champs_for_revision(target_coordinates_by_stable_id[_1.stable_id]) }
+      .map { target_coordinates_by_stable_id[_1.stable_id] }
+      # add parent champs first so we can then add children
+      .sort_by { _1.child? ? 1 : 0 }
+      .each { add_new_champs_for_revision(_1) }
 
     # remove champ
-    changes_by_op[:remove]
-      .each { champs_by_stable_id[_1.stable_id].destroy_all }
+    changes_by_op[:remove].each { champs_by_stable_id[_1.stable_id].destroy_all }
 
+    # update champ
     if brouillon?
-      changes_by_op[:update]
-        .each { apply(_1, champs_by_stable_id[_1.stable_id]) }
+      changes_by_op[:update].each { apply(_1, champs_by_stable_id[_1.stable_id]) }
     end
 
     # due to repetition tdc clone on update or erase
     # we must reassign tdc to the latest version
-    champs_by_stable_id
-      .filter_map { |stable_id, champs| [target_coordinates_by_stable_id[stable_id].type_de_champ_id, champs] if champs.present? }
-      .each { |type_de_champ_id, champs| champs.update_all(type_de_champ_id:) }
+    champs_by_stable_id.each do |stable_id, champs|
+      if target_coordinates_by_stable_id[stable_id].present? && champs.present?
+        champs.update_all(type_de_champ_id: target_coordinates_by_stable_id[stable_id].type_de_champ_id)
+      end
+    end
 
     # update dossier revision
     update_column(:revision_id, target_revision.id)
@@ -120,13 +125,14 @@ module DossierRebaseConcern
     if target_coordinate.child?
       # If this type de champ is a child, we create a new champ for each row of the parent
       parent_stable_id = target_coordinate.parent.stable_id
-      champs_repetition = champs
-        .includes(:champs, :type_de_champ)
-        .where(type_de_champ: { stable_id: parent_stable_id })
 
-      champs_repetition.each do |champ_repetition|
-        champ_repetition.champs.map(&:row_id).uniq.each do |row_id|
-          create_champ(target_coordinate, champ_repetition, row_id:)
+      champs.filter { _1.stable_id == parent_stable_id }.each do |champ_repetition|
+        if champ_repetition.champs.present?
+          champ_repetition.champs.map(&:row_id).uniq.each do |row_id|
+            create_champ(target_coordinate, champ_repetition, row_id:)
+          end
+        elsif champ_repetition.mandatory?
+          create_champ(target_coordinate, champ_repetition, row_id: ULID.generate)
         end
       end
     else
@@ -135,10 +141,9 @@ module DossierRebaseConcern
   end
 
   def create_champ(target_coordinate, parent, row_id: nil)
-    params = { revision: target_coordinate.revision, rebased_at: Time.zone.now, row_id: }.compact
     champ = target_coordinate
       .type_de_champ
-      .build_champ(params)
+      .build_champ(rebased_at: Time.zone.now, row_id:)
     parent.champs << champ
   end
 

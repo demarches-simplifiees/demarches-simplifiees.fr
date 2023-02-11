@@ -178,12 +178,10 @@ class TypeDeChamp < ApplicationRecord
 
   has_many :champ, inverse_of: :type_de_champ, dependent: :destroy do
     def build(params = {})
-      params.delete(:revision)
       super(params.merge(proxy_association.owner.params_for_champ))
     end
 
     def create(params = {})
-      params.delete(:revision)
       super(params.merge(proxy_association.owner.params_for_champ))
     end
   end
@@ -231,8 +229,8 @@ class TypeDeChamp < ApplicationRecord
     }
   end
 
-  def build_champ(params)
-    dynamic_type.build_champ(params)
+  def build_champ(params = {})
+    champ.build(params)
   end
 
   def check_mandatory

@@ -41,6 +41,7 @@ Rails.application.routes.draw do
     resources :users, only: [:index, :show, :edit, :update] do
       delete 'delete', on: :member
       post 'resend_confirmation_instructions', on: :member
+      post 'resend_reset_password_instructions', on: :member
       put 'enable_feature', on: :member
       get 'emails', on: :member
       put 'unblock_email'
@@ -393,7 +394,7 @@ Rails.application.routes.draw do
           get '', action: 'procedure', on: :collection, as: :procedure
           member do
             patch 'revoquer'
-            get 'revive'
+            get 'remind'
           end
         end
 
