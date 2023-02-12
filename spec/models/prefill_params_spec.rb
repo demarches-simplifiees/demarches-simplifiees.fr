@@ -72,12 +72,12 @@ RSpec.describe PrefillParams do
       context "when the type de champ is authorized (#{type_de_champ_type})" do
         let(:types_de_champ_public) { [{ type: type_de_champ_type }] }
         let(:type_de_champ) { procedure.published_revision.types_de_champ_public.first }
-        let(:champ_id) { find_champ_by_stable_id(dossier, type_de_champ.stable_id).id }
+        let(:champ) { find_champ_by_stable_id(dossier, type_de_champ.stable_id) }
 
         let(:params) { { "champ_#{type_de_champ.to_typed_id}" => value } }
 
         it "builds an array of hash(id, value) matching the given params" do
-          expect(prefill_params_array).to match([{ id: champ_id, value: value }])
+          expect(prefill_params_array).to match([{ id: champ.id }.merge(attributes(champ, value))])
         end
       end
     end
@@ -86,12 +86,12 @@ RSpec.describe PrefillParams do
       context "when the type de champ is authorized (#{type_de_champ_type})" do
         let(:types_de_champ_private) { [{ type: type_de_champ_type }] }
         let(:type_de_champ) { procedure.published_revision.types_de_champ_private.first }
-        let(:champ_id) { find_champ_by_stable_id(dossier, type_de_champ.stable_id).id }
+        let(:champ) { find_champ_by_stable_id(dossier, type_de_champ.stable_id) }
 
         let(:params) { { "champ_#{type_de_champ.to_typed_id}" => value } }
 
         it "builds an array of hash(id, value) matching the given params" do
-          expect(prefill_params_array).to match([{ id: champ_id, value: value }])
+          expect(prefill_params_array).to match([{ id: champ.id }.merge(attributes(champ, value))])
         end
       end
     end
@@ -230,5 +230,11 @@ RSpec.describe PrefillParams do
 
   def find_champ_by_stable_id(dossier, stable_id)
     dossier.champs.joins(:type_de_champ).find_by(types_de_champ: { stable_id: stable_id })
+  end
+
+  def attributes(champ, value)
+    TypesDeChamp::PrefillTypeDeChamp
+      .build(champ.type_de_champ)
+      .to_assignable_attributes(champ, value)
   end
 end

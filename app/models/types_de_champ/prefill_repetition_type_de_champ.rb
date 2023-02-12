@@ -13,6 +13,22 @@ class TypesDeChamp::PrefillRepetitionTypeDeChamp < TypesDeChamp::PrefillTypeDeCh
     [row_values_format, row_values_format].map { |row| row.to_s.gsub("=>", ":") }
   end
 
+  alias_method :formatted_example_value, :example_value
+
+  def to_assignable_attributes(champ, value)
+    return [] unless value.is_a?(Array)
+
+    value.map.with_index do |repetition, index|
+      row = champ.rows[index] || champ.add_row(champ.dossier_revision)
+      JSON.parse(repetition).map do |key, value|
+        id = row.find { |champ| champ.libelle == key }&.id
+        next unless id
+        { id: id, value: value }
+      end.compact
+    rescue JSON::ParserError
+    end.compact
+  end
+
   private
 
   def too_many_possible_values?
