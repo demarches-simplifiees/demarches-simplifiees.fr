@@ -19,12 +19,7 @@ class TypesDeChamp::PrefillRepetitionTypeDeChamp < TypesDeChamp::PrefillTypeDeCh
     return [] unless value.is_a?(Array)
 
     value.map.with_index do |repetition, index|
-      row = champ.rows[index] || champ.add_row(champ.dossier_revision)
-      JSON.parse(repetition).map do |key, value|
-        id = row.find { |champ| champ.libelle == key }&.id
-        next unless id
-        { id: id, value: value }
-      end.compact
+      PrefillRepetitionRow.new(champ, repetition, index).to_assignable_attributes
     rescue JSON::ParserError
     end.compact
   end
@@ -53,5 +48,24 @@ class TypesDeChamp::PrefillRepetitionTypeDeChamp < TypesDeChamp::PrefillTypeDeCh
 
     @prefillable_subchamps ||=
       TypesDeChamp::PrefillTypeDeChamp.wrap(active_revision_type_de_champ.revision_types_de_champ.map(&:type_de_champ).filter(&:prefillable?))
+  end
+
+  class PrefillRepetitionRow
+    def initialize(champ, repetition, index)
+      @champ = champ
+      @repetition = repetition
+      @index = index
+    end
+
+    def to_assignable_attributes
+      row = @champ.rows[@index] || @champ.add_row(@champ.dossier_revision)
+
+      JSON.parse(@repetition).map do |key, value|
+        subchamp = row.find { |champ| champ.libelle == key }
+        return unless subchamp
+
+        TypesDeChamp::PrefillTypeDeChamp.build(subchamp.type_de_champ).to_assignable_attributes(subchamp, value)
+      end.compact
+    end
   end
 end
