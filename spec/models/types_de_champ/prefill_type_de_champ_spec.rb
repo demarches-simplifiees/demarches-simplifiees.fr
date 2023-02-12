@@ -82,4 +82,13 @@ RSpec.describe TypesDeChamp::PrefillTypeDeChamp, type: :model do
       it { expect(example_value).to eq(I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")) }
     end
   end
+
+  describe '#to_assignable_attributes' do
+    let(:type_de_champ) { build(:type_de_champ_email) }
+    let(:champ) { build(:champ, type_de_champ: type_de_champ) }
+    let(:value) { "any@email.org" }
+    subject(:to_assignable_attributes) { described_class.build(type_de_champ).to_assignable_attributes(champ, value) }
+
+    it { is_expected.to match({ id: champ.id, value: value }) }
+  end
 end

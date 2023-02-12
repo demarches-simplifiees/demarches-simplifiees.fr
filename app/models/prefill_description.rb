@@ -51,11 +51,7 @@ class PrefillDescription < SimpleDelegator
 
   def prefilled_champs_for_query
     prefilled_champs.map do |type_de_champ|
-      if type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:repetition)
-        "\"champ_#{type_de_champ.to_typed_id}\": #{type_de_champ.example_value}"
-      else
-        "\"champ_#{type_de_champ.to_typed_id}\": \"#{type_de_champ.example_value}\""
-      end
+      "\"champ_#{type_de_champ.to_typed_id}\": #{type_de_champ.formatted_example_value}"
     end.join(', ')
   end
 

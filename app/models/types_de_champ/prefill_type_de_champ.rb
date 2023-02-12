@@ -33,6 +33,14 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
     I18n.t("views.prefill_descriptions.edit.examples.#{type_champ}")
   end
 
+  def formatted_example_value
+    "\"#{example_value}\"" if example_value.present?
+  end
+
+  def to_assignable_attributes(champ, value)
+    { id: champ.id, value: value }
+  end
+
   private
 
   def possible_values_list
