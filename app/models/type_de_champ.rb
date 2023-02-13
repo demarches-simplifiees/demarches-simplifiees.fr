@@ -274,6 +274,7 @@ class TypeDeChamp < ApplicationRecord
       TypeDeChamp.type_champs.fetch(:repetition),
       TypeDeChamp.type_champs.fetch(:multiple_drop_down_list),
       TypeDeChamp.type_champs.fetch(:epci),
+      TypeDeChamp.type_champs.fetch(:annuaire_education),
       TypeDeChamp.type_champs.fetch(:dossier_link),
       TypeDeChamp.type_champs.fetch(:siret),
       TypeDeChamp.type_champs.fetch(:rna)
