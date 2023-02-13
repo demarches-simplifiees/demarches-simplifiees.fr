@@ -20,7 +20,6 @@ class TypesDeChamp::PrefillRepetitionTypeDeChamp < TypesDeChamp::PrefillTypeDeCh
 
     value.map.with_index do |repetition, index|
       PrefillRepetitionRow.new(champ, repetition, index).to_assignable_attributes
-    rescue JSON::ParserError
     end.compact
   end
 
@@ -65,6 +64,7 @@ class TypesDeChamp::PrefillRepetitionTypeDeChamp < TypesDeChamp::PrefillTypeDeCh
         return unless subchamp
 
         TypesDeChamp::PrefillTypeDeChamp.build(subchamp.type_de_champ).to_assignable_attributes(subchamp, value)
+      rescue JSON::ParserError # On ignore les valeurs qu'on n'arrive pas à parser
       end.compact
     end
   end
