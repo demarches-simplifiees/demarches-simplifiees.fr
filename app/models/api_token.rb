@@ -16,6 +16,17 @@ class APIToken < ApplicationRecord
   include ActiveRecord::SecureToken
 
   belongs_to :administrateur, inverse_of: :api_tokens
+  has_many :procedures, through: :administrateur
+
+  def context
+    context = { administrateur_id: administrateur_id, write_access: write_access? }
+
+    if full_access?
+      context.merge procedure_ids:
+    else
+      context.merge procedure_ids: procedure_ids & allowed_procedure_ids
+    end
+  end
 
   # Prefix is made of the first 6 characters of the uuid base64 encoded
   # it does not leak plain token

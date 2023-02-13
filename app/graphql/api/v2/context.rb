@@ -49,10 +49,12 @@ class API::V2::Context < GraphQL::Query::Context
     self[:authorized] ||= {}
 
     if self[:authorized][demarche.id].nil?
-      self[:authorized][demarche.id] = if self[:administrateur_id]
-        demarche.administrateurs.map(&:id).include?(self[:administrateur_id])
-      elsif self[:token]
+      self[:authorized][demarche.id] = if self[:procedure_ids].present?
+        self[:procedure_ids].include?(demarche.id)
+      elsif self[:token].present?
         APIToken.find_and_verify(self[:token], demarche.administrateurs).present?
+      else
+        false
       end
     end
 
