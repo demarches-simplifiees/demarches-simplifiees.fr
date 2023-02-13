@@ -1,7 +1,5 @@
 module Users
   class CommencerController < ApplicationController
-    include QueryParamsStoreConcern
-
     layout 'procedure_context'
 
     before_action :retrieve_prefilled_dossier,        if: -> { params[:prefill_token].present? },                only: :commencer
@@ -11,8 +9,6 @@ module Users
     def commencer
       @procedure = retrieve_procedure
       return procedure_not_found if @procedure.blank? || @procedure.brouillon?
-
-      store_query_params
 
       @revision = @procedure.published_revision
       render 'commencer/show'
@@ -24,6 +20,22 @@ module Users
       @revision = @procedure.draft_revision
 
       render 'commencer/show'
+    end
+
+    def preremplir
+      @procedure = retrieve_procedure
+      dossier = Dossier.new(
+        revision: @procedure.active_revision,
+        groupe_instructeur: @procedure.defaut_groupe_instructeur_for_new_dossier,
+        state: Dossier.states.fetch(:brouillon),
+        prefilled: true
+      )
+      dossier.build_default_individual
+      if dossier.save
+        dossier.prefill!(PrefillParams.new(dossier, params.to_unsafe_h).to_a)
+      end
+
+      redirect_to commencer_url(@procedure.path, prefill_token: dossier.prefill_token)
     end
 
     def dossier_vide_pdf
