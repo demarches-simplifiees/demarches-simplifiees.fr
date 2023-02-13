@@ -72,11 +72,31 @@ describe Manager::ProceduresController, type: :controller do
 
   describe '#delete_administrateur' do
     let(:procedure) { create(:procedure, :with_service, administrateurs: [administrateur, autre_administrateur]) }
+    let(:administrateur) { create(:administrateur, email: super_admin.email) }
 
-    before do
-      put :delete_administrateur, params: { id: procedure.id }
+    subject(:delete_request) { put :delete_administrateur, params: { id: procedure.id } }
+
+    it "removes the current administrateur from the procedure" do
+      delete_request
+      expect(procedure.administrateurs).to eq([autre_administrateur])
     end
 
-    it { expect(procedure.administrateurs).to eq([autre_administrateur]) }
+    context 'when the current administrateur has been added as instructeur too' do
+      let(:instructeur) { create(:instructeur) }
+      let(:administrateur) { create(:administrateur, email: super_admin.email, instructeur: instructeur) }
+
+      before do
+        procedure.groupe_instructeurs.map do |groupe_instructeur|
+          instructeur.assign_to.create!(groupe_instructeur: groupe_instructeur, manager: true)
+        end
+      end
+
+      it "removes the instructeur from the procedure" do
+        delete_request
+        instructeur.groupe_instructeurs.each do |groupe_instructeur|
+          expect(groupe_instructeur.instructeurs).not_to include(instructeur)
+        end
+      end
+    end
   end
 end

@@ -1,4 +1,5 @@
 @import '@gouvfr/dsfr/dist/core/core.css';
+@import '@gouvfr/dsfr/dist/utility/utility.css';
 @import '@gouvfr/dsfr/dist/component/link/link.css';
 @import '@gouvfr/dsfr/dist/component/logo/logo.css';
 @import '@gouvfr/dsfr/dist/component/form/form.css';

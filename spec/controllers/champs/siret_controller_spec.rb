@@ -135,8 +135,6 @@ describe Champs::SiretController, type: :controller do
 
       context 'when the Numero Tahiti informations are retrieved successfully', vcr: { cassette_name: 'pf_api_entreprise' } do
         let(:siret) { '075390' }
-        let(:api_etablissement_status) { 200 }
-        let(:api_etablissement_body) { File.read('spec/fixtures/files/api_entreprise/etablissements.json') }
 
         subject! { get :show, params: params, format: :turbo_stream }
 

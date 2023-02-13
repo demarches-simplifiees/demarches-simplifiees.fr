@@ -1,34 +1,69 @@
 class APIEntrepriseService
-  # create etablissement with EtablissementAdapter
-  # enqueue api_entreprise jobs to retrieve
-  # all informations we can get about a SIRET.
-  #
-  # Returns nil if the SIRET is unknown
-  #
-  # Raises a APIEntreprise::API::Error::RequestFailed exception on transient errors
-  # (timeout, 5XX HTTP error code, etc.)
-  def self.create_etablissement(dossier_or_champ, siret, user_id = nil)
-    etablissement_params =
-      if siret.length == 6
-        APIEntreprise::PfEtablissementAdapter.new(siret, dossier_or_champ.procedure.id).to_params
-      else
-        APIEntreprise::EtablissementAdapter.new(siret, dossier_or_champ.procedure.id).to_params
+  class << self
+    # create etablissement with EtablissementAdapter
+    # enqueue api_entreprise jobs to retrieve
+    # all informations we can get about a SIRET.
+    #
+    # Returns nil if the SIRET is unknown
+    #
+    # Raises a APIEntreprise::API::Error::RequestFailed exception on transient errors
+    # (timeout, 5XX HTTP error code, etc.)
+    def create_etablissement(dossier_or_champ, siret, user_id = nil)
+      procedure_id = dossier_or_champ.procedure.id
+      etablissement_params =
+        if siret.length == 6
+          APIEntreprise::PfEtablissementAdapter.new(siret, procedure_id).to_params
+        else
+          APIEntreprise::EtablissementAdapter.new(siret, procedure_id).to_params
+        end
+      return nil if etablissement_params.empty?
+
+      etablissement = dossier_or_champ.build_etablissement(etablissement_params)
+      etablissement.save!
+      if siret.length > 6
+        perform_later_fetch_jobs(etablissement, procedure_id, user_id)
       end
-    return nil if etablissement_params.blank?
+      etablissement
+    end
 
-    etablissement = dossier_or_champ.build_etablissement(etablissement_params)
-    etablissement.save!
+    def create_etablissement_as_degraded_mode(dossier_or_champ, siret, user_id = nil)
+      etablissement = dossier_or_champ.build_etablissement(siret: siret)
+      etablissement.save!
 
-    if siret.length > 6
+      procedure_id = dossier_or_champ.procedure.id
+
+      perform_later_fetch_jobs(etablissement, procedure_id, user_id, wait: 30.minutes)
+
+      etablissement
+    end
+
+    def perform_later_fetch_jobs(etablissement, procedure_id, user_id, wait: nil)
       [
         APIEntreprise::EntrepriseJob, APIEntreprise::AssociationJob, APIEntreprise::ExercicesJob,
         APIEntreprise::EffectifsJob, APIEntreprise::EffectifsAnnuelsJob, APIEntreprise::AttestationSocialeJob,
         APIEntreprise::BilansBdfJob
       ].each do |job|
-        job.perform_later(etablissement.id, dossier_or_champ.procedure.id)
+        job.set(wait:).perform_later(etablissement.id, procedure_id)
       end
-      APIEntreprise::AttestationFiscaleJob.perform_later(etablissement.id, dossier_or_champ.procedure.id, user_id)
+
+      APIEntreprise::AttestationFiscaleJob.set(wait:).perform_later(etablissement.id, procedure_id, user_id)
     end
-    etablissement
+
+    def fr_api_up?(uname = "apie_2_etablissements")
+      statuses = APIEntreprise::API.new.current_status.fetch(:results)
+
+      # find results having uname = apie_2_etablissements
+      status = statuses.find { |result| result[:uname] == uname }
+
+      status.fetch(:code) == 200
+    rescue => e
+      Sentry.capture_exception(e, extra: { uname: uname })
+
+      nil
+    end
+
+    def api_up?(uname = "apie_2_etablissements")
+      APIEntreprise::PfAPI.api_up?
+    end
   end
 end

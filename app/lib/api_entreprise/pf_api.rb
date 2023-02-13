@@ -7,6 +7,10 @@ class APIEntreprise::PfAPI
     call(ENTREPRISE_RESOURCE_NAME, no_tahiti)
   end
 
+  def self.api_up?
+    Typhoeus.get(API_ENTREPRISE_PF_URL, timeout: 0.5, ssl_verifypeer: false, verbose: false).code == 200
+  end
+
   private
 
   def call(resource_name, no_tahiti)
@@ -22,7 +26,7 @@ class APIEntreprise::PfAPI
     elsif response.code == 400
       raise APIEntreprise::API::Error::BadFormatRequest.new(response)
     elsif response.code == 502
-      raise	APIEntreprise::API::Error::BadGateway.new(response)
+      raise APIEntreprise::API::Error::BadGateway.new(response)
     elsif response.code == 503
       raise APIEntreprise::API::Error::ServiceUnavailable.new(response)
     elsif response.timed_out?
