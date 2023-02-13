@@ -19,7 +19,7 @@ module Mutations
       { dossier: }
     end
 
-    def ready?(justificatif: nil, **args)
+    def authorized_before_load?(justificatif: nil, **args)
       if justificatif.present?
         validate_blob(justificatif)
       else
