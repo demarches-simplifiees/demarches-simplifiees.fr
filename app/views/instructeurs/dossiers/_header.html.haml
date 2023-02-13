@@ -7,16 +7,19 @@
 
 .sub-header
   .container
-    .flex.justify-between
-      %ul.breadcrumbs
-        %li
-          = link_to dossier.procedure.libelle.truncate_words(10), instructeur_procedure_path(dossier.procedure), title: dossier.procedure.libelle, class: "fr-link"
-          = procedure_badge(dossier.procedure)
-        %li
+    .flex.fr-mb-3w
+      %div
+        %h1.fr-h2.fr-mb-1w
           = "Dossier nº #{dossier.id}"
 
-      .header-actions
+          = status_badge(dossier.state, 'super')
+        = link_to dossier.procedure.libelle.truncate_words(10), instructeur_procedure_path(dossier.procedure), title: dossier.procedure.libelle, class: "fr-link"
+        = procedure_badge(dossier.procedure)
+
+      .header-actions.fr-ml-auto
         = render partial: 'instructeurs/dossiers/header_actions', locals: { dossier: dossier }
+        = render(partial: 'instructeurs/dossiers/print_and_export_actions', locals: {dossier: dossier})
+
 
     = render(partial: 'instructeurs/dossiers/expiration_banner', locals: {dossier: dossier})
 
