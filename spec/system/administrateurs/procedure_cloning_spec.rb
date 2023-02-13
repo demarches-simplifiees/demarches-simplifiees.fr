@@ -14,7 +14,22 @@ describe 'As an administrateur I wanna clone a procedure', js: true do
       published_at: Time.zone.now)
     login_as administrateur.user, scope: :user
   end
+  context 'Visit all admin procedures' do
+    let(:download_dir) { Rails.root.join('tmp/capybara') }
+    let(:download_file_pattern) { download_dir.join('*.xlsx') }
 
+    scenario do
+      Dir[download_file_pattern].map { File.delete(_1) }
+      visit all_admin_procedures_path
+
+      click_on "Exporter les résultats"
+      Timeout.timeout(Capybara.default_max_wait_time,
+                      Timeout::Error,
+                     "File download timeout! can't download procedure/all.xlsx") do
+        sleep 0.1 until !Dir[download_file_pattern].empty?
+      end
+    end
+  end
   context 'Cloning a procedure owned by the current admin' do
     scenario do
       visit admin_procedures_path
