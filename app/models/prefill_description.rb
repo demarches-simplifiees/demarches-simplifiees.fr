@@ -27,7 +27,7 @@ class PrefillDescription < SimpleDelegator
   end
 
   def prefill_link
-    @prefill_link ||= commencer_url({ path: path }.merge(prefilled_champs_for_link))
+    @prefill_link ||= commencer_preremplissage_url({ path: path }.merge(prefilled_champs_for_link))
   end
 
   def prefill_query
