@@ -20,7 +20,14 @@ ActiveSupport.on_load(:action_mailer) do
         if response&.dig("Result")
           mail.message_id = response.dig("Result")
         else
-          fail "DoList delivery error. Body: #{response}"
+          case response&.dig("ResponseStatus", "ErrorCode")
+          when '458', '402' then
+            # do nothing, user simply unsubscribed but we are not yet tracking this
+            # {"ResponseStatus"=>{"ErrorCode"=>"458", "Message"=>"The contact is disabled.", "Errors"=>[]}}
+            # {"ResponseStatus"=>{"ErrorCode"=>"402", "Message"=>"The specified email is not authorized.", "Errors"=>[]}}
+          else
+            fail "DoList delivery error. Body: #{response}"
+          end
         end
       end
     end
