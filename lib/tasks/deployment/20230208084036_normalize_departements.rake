@@ -24,9 +24,9 @@ namespace :after_party do
   private
 
   def normalize_asynchronously(scope, progress, job)
-    scope.in_batches(of: 10_000) do |batch|
-      progress.inc(batch.count)
-      job.perform_later(batch.pluck(:id))
+    scope.pluck(:id).in_groups_of(10_000, false) do |champ_ids|
+      job.perform_later(champ_ids)
+      progress.inc(champ_ids.count)
     end
   end
 end
