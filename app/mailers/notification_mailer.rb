@@ -8,6 +8,8 @@
 class NotificationMailer < ApplicationMailer
   include ActionView::Helpers::SanitizeHelper
 
+  MAX_SUBJECT_LENGTH = 140
+
   before_action :set_dossier
   before_action :set_services_publics_plus, only: :send_notification
   after_action :create_commentaire_for_notification
@@ -67,7 +69,7 @@ class NotificationMailer < ApplicationMailer
         mail_template = @dossier.procedure.mail_template_for(params[:state])
 
         @email = @dossier.user_email_for(:notification)
-        @subject = mail_template.subject_for_dossier(@dossier)
+        @subject = mail_template.subject_for_dossier(@dossier).truncate(MAX_SUBJECT_LENGTH)
         @body = mail_template.body_for_dossier(@dossier)
         @actions = mail_template.actions_for_dossier(@dossier)
         @attachment = mail_template.attachment_for_dossier(@dossier)
