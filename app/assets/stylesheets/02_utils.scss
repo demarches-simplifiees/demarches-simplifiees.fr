@@ -139,6 +139,10 @@
   overflow: visible;
 }
 
+.super {
+  vertical-align: super;
+}
+
 // generate spacer utility like bootstrap my-2 -> margin-left/right: 2 * $default-spacer
 // using $direction.key as css modifier, $direction.values to set css properties
 // scale it using $steps
