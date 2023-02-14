@@ -1,5 +1,5 @@
 class TypesDeChamp::PrefillRegionTypeDeChamp < TypesDeChamp::PrefillTypeDeChamp
-  def possible_values_list
+  def all_possible_values
     regions.map { |region| "#{region[:code]} (#{region[:name]})" }
   end
 

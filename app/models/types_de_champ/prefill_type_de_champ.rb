@@ -27,7 +27,7 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
     [possible_values_list_display, link_to_all_possible_values].compact.join('<br>').html_safe # rubocop:disable Rails/OutputSafety
   end
 
-  def possible_values_list
+  def all_possible_values
     return [] unless prefillable?
 
     [I18n.t("views.prefill_descriptions.edit.possible_values.#{type_champ}_html")]
@@ -56,14 +56,14 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
   end
 
   def too_many_possible_values?
-    possible_values_list.count > POSSIBLE_VALUES_THRESHOLD
+    all_possible_values.count > POSSIBLE_VALUES_THRESHOLD
   end
 
   def possible_values_list_display
     if too_many_possible_values?
       I18n.t("views.prefill_descriptions.edit.possible_values.#{type_champ}_html").html_safe # rubocop:disable Rails/OutputSafety
     else
-      possible_values_list.to_sentence
+      all_possible_values.to_sentence
     end
   end
 end
