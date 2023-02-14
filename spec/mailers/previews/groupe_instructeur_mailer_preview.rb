@@ -4,7 +4,7 @@ class GroupeInstructeurMailerPreview < ActionMailer::Preview
     groupe = GroupeInstructeur.new(id: 1, label: 'Val-De-Marne', procedure:)
     current_instructeur_email = 'admin@dgfip.com'
     instructeurs = Instructeur.limit(2)
-    GroupeInstructeurMailer.remove_instructeurs(groupe, instructeurs, current_instructeur_email)
+    GroupeInstructeurMailer.notify_group_when_instructeurs_removed(groupe, instructeurs, current_instructeur_email)
   end
 
   def remove_instructeur

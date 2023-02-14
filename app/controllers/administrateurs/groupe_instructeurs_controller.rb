@@ -148,11 +148,11 @@ module Administrateurs
         if groupe_instructeur.remove(instructeur)
           flash[:notice] = if procedure.routing_enabled?
             GroupeInstructeurMailer
-              .remove_instructeur(groupe_instructeur, [instructeur], current_administrateur.email)
+              .notify_removed_instructeurs(groupe_instructeur, [instructeur], current_administrateur.email)
               .deliver_later
 
             GroupeInstructeurMailer
-              .remove_instructeurs(groupe_instructeur, [instructeur], current_administrateur.email)
+              .notify_group_when_instructeurs_removed(groupe_instructeur, [instructeur], current_administrateur.email)
               .deliver_later
 
             "L’instructeur « #{instructeur.email} » a été retiré du groupe."
