@@ -56,3 +56,7 @@ fieldset {
   }
 }
 
+.fr-btns-group--sm.fr-btns-group--icon-right .fr-btn[class*=" fr-icon-"].icon-only::after {
+  margin-left: 0;
+  margin-right: 0;
+}
