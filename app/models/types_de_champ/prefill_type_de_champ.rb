@@ -57,7 +57,12 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
   def link_to_all_possible_values
     return unless prefillable?
 
-    link_to I18n.t("views.prefill_descriptions.edit.possible_values.link.text"), Rails.application.routes.url_helpers.prefill_type_de_champ_path(path, self), title: new_tab_suffix(I18n.t("views.prefill_descriptions.edit.possible_values.link.title")), **external_link_attributes
+    link_to(
+      I18n.t("views.prefill_descriptions.edit.possible_values.link.text"),
+      Rails.application.routes.url_helpers.prefill_type_de_champ_path(path, self),
+      title: new_tab_suffix(I18n.t("views.prefill_descriptions.edit.possible_values.link.title")),
+      **external_link_attributes
+    )
   end
 
   def too_many_possible_values?
