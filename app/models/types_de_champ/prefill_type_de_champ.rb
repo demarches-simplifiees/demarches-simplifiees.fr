@@ -27,6 +27,12 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
     [possible_values_list_display, link_to_all_possible_values].compact.join('<br>').html_safe # rubocop:disable Rails/OutputSafety
   end
 
+  def possible_values_list
+    return [] unless prefillable?
+
+    [I18n.t("views.prefill_descriptions.edit.possible_values.#{type_champ}_html")]
+  end
+
   def example_value
     return nil unless prefillable?
 
@@ -42,12 +48,6 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
   end
 
   private
-
-  def possible_values_list
-    return [] unless prefillable?
-
-    [I18n.t("views.prefill_descriptions.edit.possible_values.#{type_champ}_html")]
-  end
 
   def link_to_all_possible_values
     return unless too_many_possible_values? && prefillable?
