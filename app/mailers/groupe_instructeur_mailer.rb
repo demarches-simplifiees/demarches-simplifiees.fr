@@ -11,4 +11,14 @@ class GroupeInstructeurMailer < ApplicationMailer
     emails = @group.instructeurs.map(&:email)
     mail(bcc: emails, subject: subject)
   end
+
+  def remove_instructeur(group, removed_instructeurs, current_instructeur_email)
+    removed_instructeur_emails = removed_instructeurs.map(&:email)
+    @group = group
+    @current_instructeur_email = current_instructeur_email
+
+    subject = "Retrait du groupe \"#{group.label}\""
+
+    mail(bcc: removed_instructeur_emails, subject: subject)
+  end
 end

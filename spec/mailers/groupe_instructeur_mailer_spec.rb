@@ -7,15 +7,36 @@ RSpec.describe GroupeInstructeurMailer, type: :mailer do
       gi.instructeurs << instructeurs_to_remove
       gi
     end
-    let(:instructeur_1) { create(:instructeur, email: 'int3@g') }
-    let(:instructeur_2) { create(:instructeur, email: 'int4@g') }
+    let(:instructeur_3) { create(:instructeur, email: 'int3@g') }
+    let(:instructeur_4) { create(:instructeur, email: 'int4@g') }
 
-    let(:instructeurs_to_remove) { [instructeur_1, instructeur_2] }
+    let(:instructeurs_to_remove) { [instructeur_3, instructeur_4] }
     let(:current_instructeur_email) { 'toto@email.com' }
 
     subject { described_class.remove_instructeurs(groupe_instructeur, instructeurs_to_remove, current_instructeur_email) }
 
     it { expect(subject.body).to include('Les instructeurs int3@g, int4@g ont été retirés du groupe') }
-    it { expect(subject.bcc).to match_array(['int1@g', 'int2@g', 'int3@g', 'int4@g']) }
+    it { expect(subject.bcc).to include('int1@g', 'int2@g') }
+  end
+
+  describe '#remove_instructeur' do
+    let(:groupe_instructeur) do
+      gi = GroupeInstructeur.create(label: 'gi1', procedure: create(:procedure))
+      gi.instructeurs << create(:instructeur, email: 'int1@g')
+      gi.instructeurs << create(:instructeur, email: 'int2@g')
+      gi.instructeurs << instructeurs_to_remove
+      gi
+    end
+    let(:instructeur_3) { create(:instructeur, email: 'int3@g') }
+    let(:instructeur_4) { create(:instructeur, email: 'int4@g') }
+
+    let(:instructeurs_to_remove) { [instructeur_3, instructeur_4] }
+    let(:current_instructeur_email) { 'toto@email.com' }
+
+    subject { described_class.remove_instructeur(groupe_instructeur, instructeurs_to_remove, current_instructeur_email) }
+
+    it { expect(subject.body).to include('ous avez été retiré du groupe « gi1 » par « toto@email.com »') }
+    it { expect(subject.bcc).to match_array(['int3@g', 'int4@g']) }
+    it { expect(subject.bcc).not_to match_array(['int1@g', 'int2@g']) }
   end
 end

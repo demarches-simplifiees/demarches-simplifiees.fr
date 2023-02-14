@@ -19,10 +19,12 @@ en:
         email_body:
           one: "The instructor %{emails} was assigned to the group « %{groupe} » by « %{email} », in charge of procedure « %{procedure} »."
           other: "The instructors %{emails} were assigned to the group « %{groupe} » by « %{email} », in charge of procedure « %{procedure} »."
-      remove_instructeur:
+      remove_instructeurs:
         email_body:
           one: "The instructor %{emails} was removed from the group « %{groupe} » by « %{email} », in charge of procedure « %{procedure} »."
           other: "The instructors %{emails} were removed from the group « %{groupe} » by « %{email} », in charge of procedure « %{procedure} »."
+      remove_instructeur:
+        email_body: "You were removed from the group « %{groupe} » by « %{email} », in charge of procedure « %{procedure} »."
       reaffecter_dossiers:
         existing_groupe:
           one: "%{count} group exist"

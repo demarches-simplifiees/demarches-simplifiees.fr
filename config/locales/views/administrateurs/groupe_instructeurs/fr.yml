@@ -25,10 +25,12 @@ fr:
         email_body:
           one: "L’instructeur %{emails} a été affecté au groupe « %{groupe} » par « %{email} », en charge de la démarche « %{procedure} »."
           other: "Les instructeurs %{emails} ont été affectés au groupe « %{groupe} » par « %{email} », en charge de la démarche « %{procedure} »."
-      remove_instructeur:
+      remove_instructeurs:
         email_body:
           one: "L’instructeur %{emails} a été retiré du groupe « %{groupe} » par « %{email} », en charge de la démarche « %{procedure} »."
           other: "Les instructeurs %{emails} ont été retirés du groupe « %{groupe} » par « %{email} », en charge de la démarche « %{procedure} »."
+      remove_instructeur:
+        email_body: "Vous avez été retiré du groupe « %{groupe} » par « %{email} », en charge de la démarche « %{procedure} »."
       reaffecter_dossiers:
         existing_groupe:
           one: "%{count} groupe existe"
