@@ -64,21 +64,14 @@ class Champs::CarteChamp < Champ
   end
 
   def bounding_box
-    factory = RGeo::Geographic.simple_mercator_factory
-    bounding_box = RGeo::Cartesian::BoundingBox.new(factory)
-
     if geo_areas.present?
-      geo_areas.filter_map(&:rgeo_geometry).each do |geometry|
-        bounding_box.add(geometry)
-      end
+      GeojsonService.bbox(type: 'FeatureCollection', features: geo_areas.map(&:to_feature))
     elsif dossier.present?
       point = dossier.geo_position
-      bounding_box.add(factory.point(point[:lon], point[:lat]))
+      GeojsonService.bbox(type: 'Feature', geometry: { type: 'Point', coordinates: [point[:lon], point[:lat]] })
     else
-      bounding_box.add(factory.point(DEFAULT_LON, DEFAULT_LAT))
+      GeojsonService.bbox(type: 'Feature', geometry: { type: 'Point', coordinates: [DEFAULT_LON, DEFAULT_LAT] })
     end
-
-    [bounding_box.max_point, bounding_box.min_point].compact.flat_map(&:coordinates)
   end
 
   def to_feature_collection
