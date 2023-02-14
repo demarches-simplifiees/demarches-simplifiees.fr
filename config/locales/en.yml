@@ -68,7 +68,6 @@ en:
         are_you_new: First time on %{app_name}?
     my_account: My account
     header:
-      label_modal: "Burger menu"
       close_modal: 'Close'
       back: "Back"
       back_title: "Revenir sur le site de mon administration"
@@ -93,11 +92,13 @@ en:
         existing_dossiers: You already have files for this procedure
         show_dossiers: View my current files
         prefilled_draft: "You have a prefilled file"
-        prefilled_draft_detail_html: "You prefilled a file for the \"%{procedure}\" procedure <strong>%{time_ago} ago</strong>"
+        prefilled_draft_detail_html: "You are ready to continue a prefilled file for the \"%{procedure}\" procedure, started <strong>%{time_ago} ago</strong>."
+        prefill_dossier_detail_html: "You are ready to continue a prefilled file for the \"%{procedure}\" procedure."
         already_draft: "You already started to fill a file"
         already_draft_detail_html: "You started to fill a file for the \"%{procedure}\" procedure <strong>%{time_ago} ago</strong>"
         already_not_draft: "You already submitted a file"
         already_not_draft_detail_html: "You submitted a file for the \"%{procedure}\" procedure <strong>%{time_ago} ago</strong>."
+        go_to_prefilled_file: 'Continue to fill my prefilled file'
         continue_file: "Continue to fill my file"
         start_new_file: "Start a new file"
         show_my_submitted_file: 'Show my submitted file'
@@ -145,6 +146,7 @@ en:
           iban: FR7611315000011234567890138
           yes_no: "true"
           pays: "FR"
+          departements: "56"
           regions: "53"
           date: "2023-02-01"
           datetime: "2023-02-01T10:30"
@@ -396,6 +398,19 @@ en:
         zone: This procedure is run by
       champs:
         value: Value
+      default_mail_attributes: &default_mail_attributes
+        hints:
+          subject: The generated subject will be truncated if it exceeds 100 characters.
+      mails/closed_mail:
+        << : *default_mail_attributes
+      mails/initiated_mail:
+        << : *default_mail_attributes
+      mails/received_mail:
+        << : *default_mail_attributes
+      mails/refused_mail:
+        << : *default_mail_attributes
+      mails/without_continuation_mail:
+        << : *default_mail_attributes
 
     errors:
       messages:
