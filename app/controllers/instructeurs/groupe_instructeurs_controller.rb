@@ -35,11 +35,11 @@ module Instructeurs
         if groupe_instructeur.remove(instructeur)
           flash[:notice] = "L’instructeur « #{instructeur.email} » a été retiré du groupe."
           GroupeInstructeurMailer
-            .remove_instructeur(groupe_instructeur, [instructeur], current_administrateur.email)
+            .notify_removed_instructeurs(groupe_instructeur, [instructeur], current_user.email)
             .deliver_later
 
           GroupeInstructeurMailer
-            .remove_instructeurs(groupe_instructeur, [instructeur], current_user.email)
+            .notify_group_when_instructeurs_removed(groupe_instructeur, [instructeur], current_user.email)
             .deliver_later
         else
           flash[:alert] = "L’instructeur « #{instructeur.email} » n’est pas dans le groupe."

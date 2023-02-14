@@ -1,0 +1,7 @@
+%p
+  Bonjour,
+
+%p
+  = t('administrateurs.groupe_instructeurs.notify_removed_instructeurs.email_body', groupe: @group.label, email: @current_instructeur_email, procedure: @group.procedure.libelle)
+
+= render partial: "layouts/mailers/signature"
