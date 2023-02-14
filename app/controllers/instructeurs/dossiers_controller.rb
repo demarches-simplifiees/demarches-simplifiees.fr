@@ -134,7 +134,7 @@ module Instructeurs
       end
 
       @dossier = dossier
-      render :change_state
+      redirect_back(fallback_location: instructeur_procedure_path(procedure))
     end
 
     def repasser_en_construction
@@ -146,7 +146,7 @@ module Instructeurs
       end
 
       @dossier = dossier
-      render :change_state
+      redirect_back(fallback_location: instructeur_procedure_path(procedure))
     end
 
     def repasser_en_instruction
@@ -158,7 +158,7 @@ module Instructeurs
       end
 
       @dossier = dossier
-      render :change_state
+      redirect_back(fallback_location: instructeur_procedure_path(procedure))
     end
 
     def terminer
