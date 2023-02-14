@@ -24,13 +24,18 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
   end
 
   def possible_values
-    [possible_values_list_display, link_to_all_possible_values].compact.join('<br>').html_safe # rubocop:disable Rails/OutputSafety
+    values = []
+    values << description if description.present?
+    if too_many_possible_values?
+      values << link_to_all_possible_values
+    else
+      values << all_possible_values.to_sentence
+    end
+    values.compact.join('<br>').html_safe # rubocop:disable Rails/OutputSafety
   end
 
   def all_possible_values
-    return [] unless prefillable?
-
-    [I18n.t("views.prefill_descriptions.edit.possible_values.#{type_champ}_html")]
+    []
   end
 
   def example_value
@@ -50,7 +55,7 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
   private
 
   def link_to_all_possible_values
-    return unless too_many_possible_values? && prefillable?
+    return unless prefillable?
 
     link_to I18n.t("views.prefill_descriptions.edit.possible_values.link.text"), Rails.application.routes.url_helpers.prefill_type_de_champ_path(path, self), title: new_tab_suffix(I18n.t("views.prefill_descriptions.edit.possible_values.link.title")), **external_link_attributes
   end
@@ -59,11 +64,7 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
     all_possible_values.count > POSSIBLE_VALUES_THRESHOLD
   end
 
-  def possible_values_list_display
-    if too_many_possible_values?
-      I18n.t("views.prefill_descriptions.edit.possible_values.#{type_champ}_html").html_safe # rubocop:disable Rails/OutputSafety
-    else
-      all_possible_values.to_sentence
-    end
+  def description
+    @description ||= I18n.t("views.prefill_descriptions.edit.possible_values.#{type_champ}_html", default: nil)&.html_safe # rubocop:disable Rails/OutputSafety
   end
 end

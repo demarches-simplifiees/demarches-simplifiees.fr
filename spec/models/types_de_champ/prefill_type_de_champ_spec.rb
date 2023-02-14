@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe TypesDeChamp::PrefillTypeDeChamp, type: :model do
+  include ActionView::Helpers::UrlHelper
+  include ApplicationHelper
+
   describe '.build' do
     subject(:built) { described_class.build(type_de_champ) }
 
@@ -45,25 +48,56 @@ RSpec.describe TypesDeChamp::PrefillTypeDeChamp, type: :model do
   end
 
   describe '#possible_values' do
-    subject(:possible_values) { described_class.new(type_de_champ).possible_values }
+    let(:built) { described_class.build(type_de_champ) }
+    subject(:possible_values) { built.possible_values }
+
+    context 'when the type de champ is prefillable' do
+      context 'when the type de champ has a description' do
+        let(:type_de_champ) { build(:type_de_champ_text) }
+
+        it { expect(possible_values).to include(I18n.t("views.prefill_descriptions.edit.possible_values.#{type_de_champ.type_champ}_html")) }
+      end
+
+      context 'when the type de champ does not have a description' do
+        let(:type_de_champ) { build(:type_de_champ_mesri) }
+
+        it { expect(possible_values).not_to include(I18n.t("views.prefill_descriptions.edit.possible_values.#{type_de_champ.type_champ}_html")) }
+      end
+
+      describe 'too many possible values or not' do
+        let!(:procedure) { create(:procedure, :with_drop_down_list) }
+        let(:type_de_champ) { procedure.draft_types_de_champ_public.first }
+        let(:link_to_all_possible_values) {
+          link_to(
+            I18n.t("views.prefill_descriptions.edit.possible_values.link.text"),
+            Rails.application.routes.url_helpers.prefill_type_de_champ_path(type_de_champ.path, type_de_champ),
+            title: new_tab_suffix(I18n.t("views.prefill_descriptions.edit.possible_values.link.title")),
+            **external_link_attributes
+          )
+        }
+
+        context 'when there is too many possible values' do
+          before { type_de_champ.drop_down_options = (1..described_class::POSSIBLE_VALUES_THRESHOLD + 1).map(&:to_s) }
+
+          it { expect(possible_values).to include(link_to_all_possible_values) }
+
+          it { expect(possible_values).not_to include(built.all_possible_values.to_sentence) }
+        end
+
+        context 'when there is not too many possible values' do
+          before { type_de_champ.drop_down_options = (1..described_class::POSSIBLE_VALUES_THRESHOLD - 1).map(&:to_s) }
+
+          it { expect(possible_values).not_to include(link_to_all_possible_values) }
+
+          it { expect(possible_values).to include(built.all_possible_values.to_sentence) }
+        end
+      end
+    end
 
     context 'when the type de champ is not prefillable' do
       let(:type_de_champ) { build(:type_de_champ_mesri) }
 
       it { expect(possible_values).to be_empty }
-    end
-
-    context 'when there is too many possible values' do
-      let(:type_de_champ) { create(:type_de_champ_drop_down_list, procedure: create(:procedure)) }
-      before { type_de_champ.drop_down_options = (1..described_class::POSSIBLE_VALUES_THRESHOLD + 1).map(&:to_s) }
-
-      it { expect(possible_values).to eq("Un choix parmi ceux sélectionnés à la création de la procédure") }
-    end
-
-    context 'when the type de champ is prefillable' do
-      let(:type_de_champ) { build(:type_de_champ_email) }
-
-      it { expect(possible_values).to eq("Une adresse email") }
     end
   end
 
