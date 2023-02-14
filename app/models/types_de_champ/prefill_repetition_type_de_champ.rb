@@ -5,7 +5,7 @@ class TypesDeChamp::PrefillRepetitionTypeDeChamp < TypesDeChamp::PrefillTypeDeCh
   def possible_values
     [
       I18n.t("views.prefill_descriptions.edit.possible_values.#{type_champ}_html"),
-      subchamps_possible_values_list
+      subchamps_all_possible_values
     ].join("</br>").html_safe # rubocop:disable Rails/OutputSafety
   end
 
@@ -25,7 +25,7 @@ class TypesDeChamp::PrefillRepetitionTypeDeChamp < TypesDeChamp::PrefillTypeDeCh
 
   private
 
-  def subchamps_possible_values_list
+  def subchamps_all_possible_values
     "<ul>" + prefillable_subchamps.map do |prefill_type_de_champ|
       "<li>#{prefill_type_de_champ.libelle}: #{prefill_type_de_champ.possible_values}</li>"
     end.join + "</ul>"

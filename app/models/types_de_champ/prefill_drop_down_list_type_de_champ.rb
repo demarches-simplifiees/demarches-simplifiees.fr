@@ -1,5 +1,5 @@
 class TypesDeChamp::PrefillDropDownListTypeDeChamp < TypesDeChamp::PrefillTypeDeChamp
-  def possible_values_list
+  def all_possible_values
     if drop_down_other?
       drop_down_list_enabled_non_empty_options.insert(
         0,
@@ -11,6 +11,6 @@ class TypesDeChamp::PrefillDropDownListTypeDeChamp < TypesDeChamp::PrefillTypeDe
   end
 
   def example_value
-    possible_values_list.first
+    all_possible_values.first
   end
 end
