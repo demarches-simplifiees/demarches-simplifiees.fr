@@ -25,10 +25,6 @@ class TypesDeChamp::PrefillRepetitionTypeDeChamp < TypesDeChamp::PrefillTypeDeCh
 
   private
 
-  def too_many_possible_values?
-    false
-  end
-
   def subchamps_possible_values_list
     "<ul>" + prefillable_subchamps.map do |prefill_type_de_champ|
       "<li>#{prefill_type_de_champ.libelle}: #{prefill_type_de_champ.possible_values}</li>"
