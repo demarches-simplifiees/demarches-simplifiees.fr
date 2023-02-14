@@ -52,11 +52,12 @@ class GeoArea < ApplicationRecord
   scope :cadastres, -> { where(source: sources.fetch(:cadastre)) }
 
   validates :geometry, geo_json: true, allow_blank: false
+  before_validation :normalize_geometry
 
   def to_feature
     {
       type: 'Feature',
-      geometry: safe_geometry,
+      geometry: geometry.deep_symbolize_keys,
       properties: cadastre_properties.merge(
         source: source,
         area: area,
@@ -96,16 +97,6 @@ class GeoArea < ApplicationRecord
     end
   end
 
-  def safe_geometry
-    RGeo::GeoJSON.encode(rgeo_geometry)
-  end
-
-  def rgeo_geometry
-    RGeo::GeoJSON.decode(geometry.to_json, geo_factory: RGeo::Geographic.simple_mercator_factory)
-  rescue RGeo::Error::InvalidGeometry
-    nil
-  end
-
   def area
     if polygon?
       GeojsonService.area(geometry.deep_symbolize_keys).round(1)
@@ -120,7 +111,7 @@ class GeoArea < ApplicationRecord
 
   def location
     if point?
-      Geo::Coord.new(*rgeo_geometry.coordinates.reverse).to_s
+      Geo::Coord.new(*geometry['coordinates'].reverse).to_s
     end
   end
 
@@ -237,5 +228,22 @@ class GeoArea < ApplicationRecord
     else
       properties['id']
     end
+  end
+
+  private
+
+  def normalize_geometry
+    if geometry.present?
+      normalized_geometry = rgeo_geometry
+      if normalized_geometry.present?
+        self.geometry = RGeo::GeoJSON.encode(normalized_geometry)
+      end
+    end
+  end
+
+  def rgeo_geometry
+    RGeo::GeoJSON.decode(geometry.to_json, geo_factory: RGeo::Geographic.simple_mercator_factory)
+  rescue RGeo::Error::InvalidGeometry
+    nil
   end
 end
