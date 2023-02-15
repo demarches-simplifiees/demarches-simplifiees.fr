@@ -137,4 +137,12 @@ RSpec.describe TypesDeChamp::PrefillTypeDeChamp, type: :model do
 
     it { is_expected.to match({ id: champ.id, value: value }) }
   end
+
+  describe '#transform_value_to_assignable_attributes' do
+    let(:type_de_champ) { build(:type_de_champ_email) }
+    let(:value) { "any@email.org" }
+    subject(:transform_value_to_assignable_attributes) { described_class.build(type_de_champ).transform_value_to_assignable_attributes(value) }
+
+    it { is_expected.to match({ value: value }) }
+  end
 end

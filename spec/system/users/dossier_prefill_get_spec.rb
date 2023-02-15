@@ -9,17 +9,17 @@ describe 'Prefilling a dossier (with a GET request):' do
   let(:type_de_champ_text) { create(:type_de_champ_text, procedure: procedure) }
   let(:type_de_champ_phone) { create(:type_de_champ_phone, procedure: procedure) }
   let(:type_de_champ_datetime) { create(:type_de_champ_datetime, procedure: procedure) }
+  let(:type_de_champ_epci) { create(:type_de_champ_epci, procedure: procedure) }
   let(:type_de_champ_repetition) { create(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure) }
   let(:text_value) { "My Neighbor Totoro is the best movie ever" }
   let(:phone_value) { "invalid phone value" }
   let(:datetime_value) { "2023-02-01T10:32" }
+  let(:epci_value) { ['01', '200029999'] }
   let(:sub_type_de_champs_repetition) { type_de_champ_repetition.active_revision_type_de_champ.revision_types_de_champ.map(&:type_de_champ) }
   let(:text_repetition_libelle) { sub_type_de_champs_repetition.first.libelle }
   let(:integer_repetition_libelle) { sub_type_de_champs_repetition.second.libelle }
   let(:text_repetition_value) { "First repetition text" }
   let(:integer_repetition_value) { "42" }
-  let(:type_de_champ_epci) { create(:type_de_champ_epci, procedure: procedure) }
-  let(:epci_value) { ['01', '200029999'] }
 
   before do
     allow(Rails).to receive(:cache).and_return(memory_store)
