@@ -1,25 +1,22 @@
 en:
   users:
     procedure_footer:
-      aria_label: "Know more about %{procedure_name}"
       managed_by:
         header: 'This procedure is managed by :'
       contact:
         header: 'Ask a question about your file :'
         in_app_mail:
-          prefix: 'Directly :'
-          link: "via the chat"
+          link: "Direclty via the chat"
         email:
-          prefix: 'By mail :'
+          link: "Direcly by email %{service_email}"
         phone:
-          prefix: 'By phone :'
+          link: 'By phone %{service_telephone}'
         schedule:
           prefix: 'Hours : '
         stats:
-          prefix: 'Stats :'
-          cta: "see the procedure's stats"
+          link: "See the procedure's stats"
       legals:
         header: "Legals :"
-        data_retention: "Within %{application_name} : %{duree_conservation_dossiers_dans_ds} months"
+        data_retention: "%{application_name} : %{duree_conservation_dossiers_dans_ds} months"
         terms: "Laws regarding this data collection"
         dpo: "Contact the Data Protection Officer"

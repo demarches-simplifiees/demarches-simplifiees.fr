@@ -1,6 +1,6 @@
 @import "colors";
 // override default text underline of dsfr
-body [href] {
+body [href]:not([class^="fr-"]):not(.fr-footer__bottom-copy *) {
   background-image: none;
 }
 
@@ -11,6 +11,9 @@ select {
   background: $white;
 }
 
+#footer a {
+  color: #333333;
+}
 // with Marianne font, weight of font is less bolder, so bold it up
 .button.primary {
   font-weight: bold;

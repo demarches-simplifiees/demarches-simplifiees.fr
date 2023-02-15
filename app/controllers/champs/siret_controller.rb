@@ -17,9 +17,22 @@ class Champs::SiretController < ApplicationController
 
     begin
       etablissement = find_etablissement_with_siret
-    rescue APIEntreprise::API::Error::RequestFailed, APIEntreprise::API::Error::BadGateway, APIEntreprise::API::Error::TimedOut, APIEntreprise::API::Error::ServiceUnavailable, APIEntrepriseToken::TokenError
-      # i18n-tasks-use t('errors.messages.siret_network_error')
-      return siret_error(:network_error)
+    rescue => error
+      if error.try(:network_error?) && !APIEntrepriseService.api_up?
+        # TODO: notify ops
+        etablissement = APIEntrepriseService.create_etablissement_as_degraded_mode(@champ, @siret, current_user.id)
+
+        if !@champ.nil?
+          @champ.update!(value: etablissement.siret, etablissement: etablissement)
+        end
+
+        @siret = :api_entreprise_down
+        return
+      else
+        Sentry.capture_exception(error, extra: { dossier_id: @champ.dossier_id, siret: @siret })
+        # i18n-tasks-use t('errors.messages.siret_network_error')
+        return siret_error(:network_error)
+      end
     end
     if etablissement.nil?
       # i18n-tasks-use t('errors.messages.siret_not_found')

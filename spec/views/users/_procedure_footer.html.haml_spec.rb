@@ -16,7 +16,6 @@ describe 'users/procedure_footer.html.haml', type: :view do
 
   it "affiche les liens usuels requis" do
     expect(subject).to have_link("Accessibilité")
-    expect(subject).to have_link("CGU")
     expect(subject).to have_link("Mentions légales")
   end
 
