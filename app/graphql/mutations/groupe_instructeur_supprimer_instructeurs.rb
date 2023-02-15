@@ -17,10 +17,6 @@ module Mutations
 
       if groupe_instructeur.procedure.routing_enabled? && instructeurs.present?
         GroupeInstructeurMailer
-          .notify_removed_instructeurs(groupe_instructeur, instructeurs, current_administrateur.email)
-          .deliver_later
-
-        GroupeInstructeurMailer
           .notify_group_when_instructeurs_removed(groupe_instructeur, instructeurs, current_administrateur.email)
           .deliver_later
       end
