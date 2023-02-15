@@ -106,8 +106,8 @@ describe 'Prefilling a dossier (with a POST request):' do
         "champ_#{type_de_champ_phone.to_typed_id}" => phone_value,
         "champ_#{type_de_champ_repetition.to_typed_id}" => [
           "{
-            \"#{sub_type_de_champs_repetition.first.libelle}\": \"#{text_repetition_value}\",
-            \"#{sub_type_de_champs_repetition.second.libelle}\": \"#{integer_repetition_value}\"
+            \"#{sub_type_de_champs_repetition.first.to_typed_id}\": \"#{text_repetition_value}\",
+            \"#{sub_type_de_champs_repetition.second.to_typed_id}\": \"#{integer_repetition_value}\"
           }"
         ],
         "champ_#{type_de_champ_datetime.to_typed_id}" => datetime_value

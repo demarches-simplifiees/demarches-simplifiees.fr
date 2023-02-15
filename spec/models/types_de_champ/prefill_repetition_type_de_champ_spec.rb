@@ -69,7 +69,6 @@ RSpec.describe TypesDeChamp::PrefillRepetitionTypeDeChamp, type: :model, vcr: { 
       it { is_expected.to match([[{ id: text_repetition.champ.first.id, value: "value" }], [{ id: integer_repetition.champ.second.id, value: "value3" }]]) }
     end
 
-
     context 'when the value is an array with right keys' do
       let(:value) { ["{\"#{text_repetition.to_typed_id}\":\"value\"}", "{\"#{text_repetition.to_typed_id}\":\"value2\"}"] }
 
