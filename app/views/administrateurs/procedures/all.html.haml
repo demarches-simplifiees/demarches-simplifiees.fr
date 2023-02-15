@@ -11,7 +11,7 @@
       = f.search_field 'libelle', size: 30, class: 'fr-input'
     .actions
       .link.fr-mx-1w= link_to 'Voir les administrateurs', administrateurs_admin_procedures_path(@filter.params), class: 'fr-btn fr-btn--secondary'
-      .link.fr-mx-1w= link_to 'Exporter les résultats', all_admin_procedures_path(@filter.params.merge(format: :xlsx)), class: 'fr-btn fr-btn--secondary'
+      .link.fr-mx-1w{ "data-turbo": "false" }= link_to 'Exporter les résultats', all_admin_procedures_path(@filter.params.merge(format: :xlsx)), class: 'fr-btn fr-btn--secondary'
   .fr-table.fr-table--bordered
     %table#all-demarches
       %caption
