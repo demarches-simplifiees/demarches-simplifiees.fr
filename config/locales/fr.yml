@@ -119,12 +119,13 @@ fr:
           iban_html: Un numéro Iban
           yes_no_html: '"true" pour Oui, "false" pour Non'
           checkbox_html: '"true" pour coché, "false" pour décoché'
-          pays_html: Un <a href="https://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">code pays ISO 3166-2</a>
+          pays_html: Un <a href="https://en.wikipedia.org/wiki/ISO_3166-2" target="_blank" rel="noopener noreferrer">code pays ISO 3166-2</a>
           departements_html: Un <a href="https://fr.wikipedia.org/wiki/Num%C3%A9rotation_des_d%C3%A9partements_fran%C3%A7ais" target="_blank">numéro de département</a>
-          regions_html: Un <a href="https://fr.wikipedia.org/wiki/R%C3%A9gion_fran%C3%A7aise" target="_blank">code INSEE de région</a>
+          regions_html: Un <a href="https://fr.wikipedia.org/wiki/R%C3%A9gion_fran%C3%A7aise" target="_blank" rel="noopener noreferrer">code INSEE de région</a>
           datetime_html: Datetime au format ISO8601
           date_html: Date au format ISO8601
           drop_down_list_other_html: Toute valeur
+          epci_html: Un tableau contenant le code de département et <a href="https://geo.api.gouv.fr/epcis" target="_blank" rel="noopener noreferrer">celui de l'EPCI</a>.
         examples:
           title: Exemple
           text: Texte court
@@ -477,6 +478,14 @@ fr:
               not_in_departement_names: "doit être un nom de département valide"
             external_id:
               not_in_departement_codes: "doit être un code de département valide"
+        "champs/epci_champ":
+          attributes:
+            code_departement:
+              not_in_departement_codes: "doit être un code de département valide"
+            external_id:
+              not_in_departement_epci_codes: "doit être un code d'EPCI du département correspondant"
+            value:
+              not_in_departement_epci_names: "doit être un nom d'EPCI du département correspondant"
   errors:
     format: "Le champ « %{attribute} » %{message}"
     messages:

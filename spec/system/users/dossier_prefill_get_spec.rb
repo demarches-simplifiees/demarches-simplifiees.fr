@@ -1,4 +1,6 @@
 describe 'Prefilling a dossier (with a GET request):' do
+  let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
+
   let(:password) { 'my-s3cure-p4ssword' }
 
   let(:procedure) { create(:procedure, :published, opendata: true) }
@@ -7,9 +9,24 @@ describe 'Prefilling a dossier (with a GET request):' do
   let(:type_de_champ_text) { create(:type_de_champ_text, procedure: procedure) }
   let(:type_de_champ_phone) { create(:type_de_champ_phone, procedure: procedure) }
   let(:type_de_champ_datetime) { create(:type_de_champ_datetime, procedure: procedure) }
+  let(:type_de_champ_epci) { create(:type_de_champ_epci, procedure: procedure) }
   let(:text_value) { "My Neighbor Totoro is the best movie ever" }
   let(:phone_value) { "invalid phone value" }
   let(:datetime_value) { "2023-02-01T10:32" }
+  let(:epci_value) { ['01', '200029999'] }
+
+  before do
+    allow(Rails).to receive(:cache).and_return(memory_store)
+    Rails.cache.clear
+
+    VCR.insert_cassette('api_geo_departements')
+    VCR.insert_cassette('api_geo_epcis')
+  end
+
+  after do
+    VCR.eject_cassette('api_geo_departements')
+    VCR.eject_cassette('api_geo_epcis')
+  end
 
   context 'when authenticated' do
     it_behaves_like "the user has got a prefilled dossier, owned by themselves" do
@@ -23,7 +40,8 @@ describe 'Prefilling a dossier (with a GET request):' do
           path: procedure.path,
           "champ_#{type_de_champ_text.to_typed_id}" => text_value,
           "champ_#{type_de_champ_phone.to_typed_id}" => phone_value,
-          "champ_#{type_de_champ_datetime.to_typed_id}" => datetime_value
+          "champ_#{type_de_champ_datetime.to_typed_id}" => datetime_value,
+          "champ_#{type_de_champ_epci.to_typed_id}" => epci_value
         )
 
         click_on "Poursuivre mon dossier prérempli"
@@ -37,7 +55,8 @@ describe 'Prefilling a dossier (with a GET request):' do
         path: procedure.path,
         "champ_#{type_de_champ_text.to_typed_id}" => text_value,
         "champ_#{type_de_champ_phone.to_typed_id}" => phone_value,
-        "champ_#{type_de_champ_datetime.to_typed_id}" => datetime_value
+        "champ_#{type_de_champ_datetime.to_typed_id}" => datetime_value,
+        "champ_#{type_de_champ_epci.to_typed_id}" => epci_value
       )
     end
 
