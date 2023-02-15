@@ -56,6 +56,12 @@ class PrefillParams
       champ.prefillable? && valid?
     end
 
+    def champ_attributes
+      TypesDeChamp::PrefillTypeDeChamp
+        .build(champ.type_de_champ)
+        .to_assignable_attributes(champ, value)
+    end
+
     private
 
     def valid?
@@ -65,10 +71,5 @@ class PrefillParams
       champ.valid?(:prefill)
     end
 
-    def champ_attributes
-      TypesDeChamp::PrefillTypeDeChamp
-        .build(champ.type_de_champ)
-        .to_assignable_attributes(champ, value)
-    end
   end
 end
