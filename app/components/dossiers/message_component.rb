@@ -60,7 +60,7 @@ class Dossiers::MessageComponent < ApplicationComponent
       t('.deleted_body')
     else
       body_formatted = commentaire.sent_by_system? ? commentaire.body : simple_format(commentaire.body)
-      sanitize(body_formatted)
+      sanitize(body_formatted, commentaire.sent_by_system? ? { scrubber: Sanitizers::MailScrubber.new } : {})
     end
   end
 

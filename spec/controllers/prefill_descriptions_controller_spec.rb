@@ -55,14 +55,14 @@ describe PrefillDescriptionsController, type: :controller do
     let(:type_de_champ2) { create(:type_de_champ_text, procedure: procedure) }
 
     subject(:update_request) do
-      patch :update, params: { path: procedure.path, procedure: params }, format: :turbo_stream
+      patch :update, params: { path: procedure.path, type_de_champ: params }, format: :turbo_stream
     end
 
     before { update_request }
 
     context 'when adding a type_de_champ_id' do
       let(:type_de_champ_to_add) { create(:type_de_champ_text, procedure: procedure) }
-      let(:params) { { selected_type_de_champ_ids: [type_de_champ.id, type_de_champ_to_add.id] } }
+      let(:params) { { selected_type_de_champ_ids: [type_de_champ.id, type_de_champ_to_add.id].join(' ') } }
 
       it { expect(response).to render_template(:update) }
 
@@ -91,7 +91,7 @@ describe PrefillDescriptionsController, type: :controller do
 
     context 'when removing a type_de_champ_id' do
       let(:type_de_champ_to_remove) { type_de_champ2 }
-      let(:params) { { selected_type_de_champ_ids: [type_de_champ] } }
+      let(:params) { { selected_type_de_champ_ids: type_de_champ } }
 
       it { expect(response).to render_template(:update) }
 
@@ -121,7 +121,7 @@ describe PrefillDescriptionsController, type: :controller do
 
     context 'when removing the last type de champ' do
       let(:type_de_champ_to_remove) { type_de_champ }
-      let(:params) { { selected_type_de_champ_ids: [] } }
+      let(:params) { { selected_type_de_champ_ids: '' } }
 
       it { expect(response).to render_template(:update) }
 

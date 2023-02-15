@@ -68,7 +68,6 @@ en:
         are_you_new: First time on %{app_name}?
     my_account: My account
     header:
-      label_modal: "Burger menu"
       close_modal: 'Close'
       back: "Back"
       back_title: "Revenir sur le site de mon administration"
@@ -130,6 +129,7 @@ en:
           yes_no_html: '"true" for Yes, "false" pour No'
           checkbox_html: '"true" to check, "false" to uncheck'
           pays_html: An <a href="https://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">ISO 3166-2 country code</a>
+          departements_html: A <a href="https://fr.wikipedia.org/wiki/Num%C3%A9rotation_des_d%C3%A9partements_fran%C3%A7ais" target="_blank">department number</a>
           regions_html: An <a href="https://fr.wikipedia.org/wiki/R%C3%A9gion_fran%C3%A7aise" target="_blank">INSEE region code</a>
           drop_down_list_html: A choice among those selected when the procedure was created
           date_html: ISO8601 date
@@ -147,6 +147,7 @@ en:
           iban: FR7611315000011234567890138
           yes_no: "true"
           pays: "FR"
+          departements: "56"
           regions: "53"
           date: "2023-02-01"
           datetime: "2023-02-01T10:30"
@@ -397,6 +398,19 @@ en:
         zone: This procedure is run by
       champs:
         value: Value
+      default_mail_attributes: &default_mail_attributes
+        hints:
+          subject: The generated subject will be truncated if it exceeds 100 characters.
+      mails/closed_mail:
+        << : *default_mail_attributes
+      mails/initiated_mail:
+        << : *default_mail_attributes
+      mails/received_mail:
+        << : *default_mail_attributes
+      mails/refused_mail:
+        << : *default_mail_attributes
+      mails/without_continuation_mail:
+        << : *default_mail_attributes
 
     errors:
       messages:
@@ -464,6 +478,12 @@ en:
               not_in_region_names: "must be a valid region name"
             external_id:
               not_in_region_codes: "must be a valid region code"
+        "champs/departement_champ":
+          attributes:
+            value:
+              not_in_departement_names: "must be a valid department name"
+            external_id:
+              not_in_departement_codes: "must be a valid department code"
   errors:
     format: "Field « %{attribute} » %{message}"
     messages:

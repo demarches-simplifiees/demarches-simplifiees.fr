@@ -79,7 +79,7 @@
             = form.check_box :collapsible_explanation_enabled, class: "small-margin small", id: dom_id(type_de_champ, :collapsible_explanation_enabled)
             - if form.object.collapsible_explanation_enabled?
               = form.label :collapsible_explanation_text, for: dom_id(type_de_champ, :collapsible_explanation_text) do
-                = "Text à afficher quand l'utiliser a choisi de l'afficher"
+                = "Texte à afficher quand l'utiliser a choisi de l'afficher"
               = form.text_area :collapsible_explanation_text, class: "small-margin small", id: dom_id(type_de_champ, :collapsible_explanation_text)
 
 
