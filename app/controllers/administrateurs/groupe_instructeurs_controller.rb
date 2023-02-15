@@ -146,19 +146,18 @@ module Administrateurs
         instructeur = groupe_instructeur.instructeurs.find_by(id: instructeur_id)
 
         if groupe_instructeur.remove(instructeur)
-          flash[:notice] = if procedure.routing_enabled?
-            GroupeInstructeurMailer
-              .notify_removed_instructeurs(groupe_instructeur, [instructeur], current_administrateur.email)
-              .deliver_later
-
-            GroupeInstructeurMailer
-              .notify_group_when_instructeurs_removed(groupe_instructeur, [instructeur], current_administrateur.email)
-              .deliver_later
-
+          flash[:notice] = if instructeur.in?(procedure.instructeurs)
             "L’instructeur « #{instructeur.email} » a été retiré du groupe."
           else
             "L’instructeur a bien été désaffecté de la démarche"
           end
+          GroupeInstructeurMailer
+            .notify_removed_instructeur(groupe_instructeur, instructeur, current_administrateur.email)
+            .deliver_later
+
+          GroupeInstructeurMailer
+            .notify_group_when_instructeurs_removed(groupe_instructeur, [instructeur], current_administrateur.email)
+            .deliver_later
         else
           flash[:alert] = if procedure.routing_enabled?
             if instructeur.present?

@@ -29,8 +29,11 @@ fr:
         email_body:
           one: "L’instructeur %{emails} a été retiré du groupe « %{groupe} » par « %{email} », en charge de la démarche « %{procedure} »."
           other: "Les instructeurs %{emails} ont été retirés du groupe « %{groupe} » par « %{email} », en charge de la démarche « %{procedure} »."
-      notify_removed_instructeurs:
-        email_body: "Vous avez été retiré du groupe « %{groupe} » par « %{email} », en charge de la démarche « %{procedure} »."
+      notify_removed_instructeur:
+        assigned:
+          email_body: "Vous avez été retiré du groupe « %{groupe} » par « %{email} », en charge de la démarche « %{procedure} »."
+        unassigned:
+          email_body: "Vous avez été désaffecté de la démarche « %{procedure} » par « %{email} »."
       reaffecter_dossiers:
         existing_groupe:
           one: "%{count} groupe existe"
