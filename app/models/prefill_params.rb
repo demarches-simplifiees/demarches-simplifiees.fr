@@ -40,7 +40,8 @@ class PrefillParams
       TypeDeChamp.type_champs.fetch(:yes_no),
       TypeDeChamp.type_champs.fetch(:checkbox),
       TypeDeChamp.type_champs.fetch(:pays),
-      TypeDeChamp.type_champs.fetch(:regions)
+      TypeDeChamp.type_champs.fetch(:regions),
+      TypeDeChamp.type_champs.fetch(:departements)
     ]
 
     attr_reader :champ, :value

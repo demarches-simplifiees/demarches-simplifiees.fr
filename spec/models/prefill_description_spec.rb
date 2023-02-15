@@ -3,12 +3,10 @@ RSpec.describe PrefillDescription, type: :model do
 
   describe '#update' do
     let(:prefill_description) { described_class.new(build(:procedure)) }
-    let(:selected_type_de_champ_ids) { ["1", "2"] }
-    subject(:update) { prefill_description.update(attributes) }
+    let(:selected_type_de_champ_ids) { ['1', '2'] }
+    subject(:update) { prefill_description.update({ selected_type_de_champ_ids: selected_type_de_champ_ids.join(' ') }) }
 
     context 'when selected_type_de_champ_ids are given' do
-      let(:attributes) { { selected_type_de_champ_ids: selected_type_de_champ_ids } }
-
       it 'populate selected_type_de_champ_ids' do
         expect { update }.to change { prefill_description.selected_type_de_champ_ids }.from([]).to(selected_type_de_champ_ids)
       end
@@ -57,7 +55,7 @@ RSpec.describe PrefillDescription, type: :model do
     subject(:included) { prefill_description.include?(type_de_champ_id) }
 
     context 'when the id has been added to the prefill_description' do
-      before { prefill_description.update(selected_type_de_champ_ids: ["1"]) }
+      before { prefill_description.update(selected_type_de_champ_ids: '1') }
 
       it { expect(included).to eq(true) }
     end
@@ -73,7 +71,7 @@ RSpec.describe PrefillDescription, type: :model do
 
     subject(:too_long) { prefill_description.link_too_long? }
 
-    before { prefill_description.update(selected_type_de_champ_ids: create_list(:type_de_champ_text, type_de_champs_count, procedure: procedure).map(&:id)) }
+    before { prefill_description.update(selected_type_de_champ_ids: create_list(:type_de_champ_text, type_de_champs_count, procedure: procedure).map(&:id)).join(' ') }
 
     context 'when the prefill link is too long' do
       let(:type_de_champs_count) { 65 }

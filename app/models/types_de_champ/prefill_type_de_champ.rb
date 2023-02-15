@@ -14,6 +14,8 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
       TypesDeChamp::PrefillRegionTypeDeChamp.new(type_de_champ)
     when TypeDeChamp.type_champs.fetch(:repetition)
       TypesDeChamp::PrefillRepetitionTypeDeChamp.new(type_de_champ)
+    when TypeDeChamp.type_champs.fetch(:departements)
+      TypesDeChamp::PrefillDepartementTypeDeChamp.new(type_de_champ)
     else
       new(type_de_champ)
     end

@@ -1,5 +1,5 @@
 RSpec.describe PrefillParams do
-  describe "#to_a", vcr: { cassette_name: 'api_geo_regions' } do
+  describe "#to_a", vcr: { cassette_name: 'api_geo_all' } do
     let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
 
     let(:procedure) { create(:procedure, :published, types_de_champ_public:, types_de_champ_private:) }
@@ -126,6 +126,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is authorized", :checkbox, "false"
     it_behaves_like "a champ public value that is authorized", :drop_down_list, "value"
     it_behaves_like "a champ public value that is authorized", :regions, "03"
+    it_behaves_like "a champ public value that is authorized", :departements, "03"
 
     context "when the public type de champ is authorized (repetition)" do
       let(:types_de_champ_public) { [{ type: :repetition, children: [{ type: :text }] }] }
@@ -158,6 +159,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ private value that is authorized", :checkbox, "false"
     it_behaves_like "a champ private value that is authorized", :drop_down_list, "value"
     it_behaves_like "a champ private value that is authorized", :regions, "93"
+    it_behaves_like "a champ public value that is authorized", :departements, "03"
 
     context "when the private type de champ is authorized (repetition)" do
       let(:types_de_champ_private) { [{ type: :repetition, children: [{ type: :text }] }] }
