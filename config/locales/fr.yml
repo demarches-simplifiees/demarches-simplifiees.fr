@@ -629,6 +629,10 @@ fr:
         to_follow: à suivre
         total: dossiers
   administrateurs:
+    activate:
+      new:
+        title: Choix du mot de passe
+        continue: Continuer
     index:
       restored: La démarche %{procedure_id} a été restaurée
     dropdown_actions:
