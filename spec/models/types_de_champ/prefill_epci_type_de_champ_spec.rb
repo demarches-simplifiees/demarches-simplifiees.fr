@@ -12,7 +12,7 @@ RSpec.describe TypesDeChamp::PrefillEpciTypeDeChamp do
   describe 'ancestors' do
     subject { described_class.new(type_de_champ) }
 
-    it { is_expected.to be_kind_of(TypesDeChamp::PrefillEpciTypeDeChamp) }
+    it { is_expected.to be_kind_of(TypesDeChamp::PrefillTypeDeChamp) }
   end
 
   describe '#possible_values' do
