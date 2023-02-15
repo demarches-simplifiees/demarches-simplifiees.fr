@@ -16,6 +16,8 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
       TypesDeChamp::PrefillRepetitionTypeDeChamp.new(type_de_champ)
     when TypeDeChamp.type_champs.fetch(:departements)
       TypesDeChamp::PrefillDepartementTypeDeChamp.new(type_de_champ)
+    when TypeDeChamp.type_champs.fetch(:epci)
+      TypesDeChamp::PrefillEpciTypeDeChamp.new(type_de_champ)
     else
       new(type_de_champ)
     end
@@ -44,10 +46,6 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
     return nil unless prefillable?
 
     I18n.t("views.prefill_descriptions.edit.examples.#{type_champ}")
-  end
-
-  def formatted_example_value
-    "\"#{example_value}\"" if example_value.present?
   end
 
   def to_assignable_attributes(champ, value)

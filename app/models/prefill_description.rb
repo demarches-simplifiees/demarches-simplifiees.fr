@@ -45,17 +45,33 @@ class PrefillDescription < SimpleDelegator
 
   private
 
+  def active_fillable_public_types_de_champ
+    active_revision.types_de_champ_public.fillable
+  end
+
   def prefilled_champs_for_link
-    prefilled_champs.map { |type_de_champ| ["champ_#{type_de_champ.to_typed_id}", type_de_champ.example_value] }.to_h
+    prefilled_champs_as_params.map(&:to_a).to_h
   end
 
   def prefilled_champs_for_query
-    prefilled_champs.map do |type_de_champ|
-      "\"champ_#{type_de_champ.to_typed_id}\": #{type_de_champ.formatted_example_value}"
-    end.join(', ')
+    prefilled_champs_as_params.map(&:to_s).join(', ')
   end
 
-  def active_fillable_public_types_de_champ
-    active_revision.types_de_champ_public.fillable
+  def prefilled_champs_as_params
+    prefilled_champs.map { |type_de_champ| Param.new(type_de_champ.to_typed_id, type_de_champ.example_value) }
+  end
+
+  Param = Struct.new(:key, :value) do
+    def to_a
+      ["champ_#{key}", value]
+    end
+
+    def to_s
+      if value.is_a?(Array)
+        "\"champ_#{key}\": #{value}"
+      else
+        "\"champ_#{key}\": \"#{value}\""
+      end
+    end
   end
 end

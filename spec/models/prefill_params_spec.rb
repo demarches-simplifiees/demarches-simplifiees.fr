@@ -12,6 +12,16 @@ RSpec.describe PrefillParams do
     before do
       allow(Rails).to receive(:cache).and_return(memory_store)
       Rails.cache.clear
+
+      VCR.insert_cassette('api_geo_regions')
+      VCR.insert_cassette('api_geo_departements')
+      VCR.insert_cassette('api_geo_epcis')
+    end
+
+    after do
+      VCR.eject_cassette('api_geo_regions')
+      VCR.eject_cassette('api_geo_departements')
+      VCR.eject_cassette('api_geo_epcis')
     end
 
     context "when the stable ids match the TypeDeChamp of the corresponding procedure" do
@@ -76,7 +86,7 @@ RSpec.describe PrefillParams do
 
         let(:params) { { "champ_#{type_de_champ.to_typed_id}" => value } }
 
-        it "builds an array of hash(id, value) matching the given params" do
+        it "builds an array of hash matching the given params" do
           expect(prefill_params_array).to match([{ id: champ.id }.merge(attributes(champ, value))])
         end
       end
@@ -90,7 +100,7 @@ RSpec.describe PrefillParams do
 
         let(:params) { { "champ_#{type_de_champ.to_typed_id}" => value } }
 
-        it "builds an array of hash(id, value) matching the given params" do
+        it "builds an array of hash matching the given params" do
           expect(prefill_params_array).to match([{ id: champ.id }.merge(attributes(champ, value))])
         end
       end
@@ -127,6 +137,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is authorized", :drop_down_list, "value"
     it_behaves_like "a champ public value that is authorized", :regions, "03"
     it_behaves_like "a champ public value that is authorized", :departements, "03"
+    it_behaves_like "a champ public value that is authorized", :epci, ['01', '200042935']
 
     context "when the public type de champ is authorized (repetition)" do
       let(:types_de_champ_public) { [{ type: :repetition, children: [{ type: :text }] }] }
@@ -159,7 +170,8 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ private value that is authorized", :checkbox, "false"
     it_behaves_like "a champ private value that is authorized", :drop_down_list, "value"
     it_behaves_like "a champ private value that is authorized", :regions, "93"
-    it_behaves_like "a champ public value that is authorized", :departements, "03"
+    it_behaves_like "a champ private value that is authorized", :departements, "03"
+    it_behaves_like "a champ private value that is authorized", :epci, ['01', '200042935']
 
     context "when the private type de champ is authorized (repetition)" do
       let(:types_de_champ_private) { [{ type: :repetition, children: [{ type: :text }] }] }

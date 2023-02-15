@@ -41,7 +41,8 @@ class PrefillParams
       TypeDeChamp.type_champs.fetch(:checkbox),
       TypeDeChamp.type_champs.fetch(:pays),
       TypeDeChamp.type_champs.fetch(:regions),
-      TypeDeChamp.type_champs.fetch(:departements)
+      TypeDeChamp.type_champs.fetch(:departements),
+      TypeDeChamp.type_champs.fetch(:epci)
     ]
 
     attr_reader :champ, :value
@@ -55,12 +56,6 @@ class PrefillParams
       champ.prefillable? && valid?
     end
 
-    def champ_attributes
-      TypesDeChamp::PrefillTypeDeChamp
-        .build(champ.type_de_champ)
-        .to_assignable_attributes(champ, value)
-    end
-
     private
 
     def valid?
@@ -68,6 +63,12 @@ class PrefillParams
 
       champ.assign_attributes(champ_attributes)
       champ.valid?(:prefill)
+    end
+
+    def champ_attributes
+      TypesDeChamp::PrefillTypeDeChamp
+        .build(champ.type_de_champ)
+        .to_assignable_attributes(value)
     end
   end
 end
