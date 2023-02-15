@@ -6,7 +6,7 @@ class Dsfr::InputComponent < ApplicationComponent
   # it uses aria-describedby on input and link it to yielded content
   renders_one :describedby
 
-  def initialize(form:, attribute:, input_type:, opts: {}, required: true)
+  def initialize(form:, attribute:, input_type: :text_field, opts: {}, required: true)
     @form = form
     @attribute = attribute
     @input_type = input_type
