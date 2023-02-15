@@ -1,6 +1,6 @@
 @import "colors";
 // override default text underline of dsfr
-body [href]:not([class^="fr-"]):not(.fr-footer__bottom-copy *) {
+body [href]:not([class^="fr-"]):not(.fr-footer__bottom-copy *):not(.france-connect-login-button) {
   background-image: none;
 }
 
