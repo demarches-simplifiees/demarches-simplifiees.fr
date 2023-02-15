@@ -13,8 +13,6 @@ class TypesDeChamp::PrefillRepetitionTypeDeChamp < TypesDeChamp::PrefillTypeDeCh
     [row_values_format, row_values_format].map { |row| row.to_s.gsub("=>", ":") }
   end
 
-  alias_method :formatted_example_value, :example_value
-
   def to_assignable_attributes(champ, value)
     return [] unless value.is_a?(Array)
 

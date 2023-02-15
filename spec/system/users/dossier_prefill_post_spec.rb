@@ -1,4 +1,6 @@
 describe 'Prefilling a dossier (with a POST request):' do
+  let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
+
   let(:password) { 'my-s3cure-p4ssword' }
 
   let(:procedure) { create(:procedure, :published) }
@@ -16,6 +18,21 @@ describe 'Prefilling a dossier (with a POST request):' do
   let(:integer_repetition_libelle) { sub_type_de_champs_repetition.second.libelle }
   let(:text_repetition_value) { "First repetition text" }
   let(:integer_repetition_value) { "42" }
+  let(:type_de_champ_epci) { create(:type_de_champ_epci, procedure: procedure) }
+  let(:epci_value) { ['01', '200029999'] }
+
+  before do
+    allow(Rails).to receive(:cache).and_return(memory_store)
+    Rails.cache.clear
+
+    VCR.insert_cassette('api_geo_departements')
+    VCR.insert_cassette('api_geo_epcis')
+  end
+
+  after do
+    VCR.eject_cassette('api_geo_departements')
+    VCR.eject_cassette('api_geo_epcis')
+  end
 
   scenario "the user get the URL of a prefilled orphan brouillon dossier" do
     dossier_url = create_and_prefill_dossier_with_post_request
@@ -110,7 +127,8 @@ describe 'Prefilling a dossier (with a POST request):' do
             \"#{sub_type_de_champs_repetition.second.to_typed_id}\": \"#{integer_repetition_value}\"
           }"
         ],
-        "champ_#{type_de_champ_datetime.to_typed_id}" => datetime_value
+        "champ_#{type_de_champ_datetime.to_typed_id}" => datetime_value,
+        "champ_#{type_de_champ_epci.to_typed_id}" => epci_value
       }.to_json
     JSON.parse(session.response.body)["dossier_url"].gsub("http://www.example.com", "")
   end
