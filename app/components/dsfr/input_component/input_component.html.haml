@@ -7,13 +7,13 @@
         - if hint?
           %span.fr-hint-text= hint
 
-  = @form.send(@input_type, @attribute, input_opts)
+  = @form.public_send(@input_type, @attribute, input_opts)
 
   - if errors_on_attribute?
     - if error_messages.size == 1
-      %p.fr-error-text{ id: error_message_id }= error_messages.first
+      %p.fr-error-text{ id: describedby_id }= error_messages.first
     - else
-      .fr-error-text{ id: error_message_id }
+      .fr-error-text{ id: describedby_id }
         %ul.list-style-type-none.fr-pl-0
           - error_messages.map do |error_message|
             %li= error_message

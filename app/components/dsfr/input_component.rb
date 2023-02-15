@@ -40,19 +40,21 @@ class Dsfr::InputComponent < ApplicationComponent
                                          'fr-mb-0': true,
                                          'fr-input--error': errors_on_attribute?))
 
-    if errors_on_attribute? || describedby
-      @opts = @opts.deep_merge(aria: {
-        describedby: error_message_id,
-                                       invalid: errors_on_attribute?
+    if errors_on_attribute? || describedby?
+      @opts.deep_merge!(aria: {
+        describedby: describedby_id,
+        invalid: errors_on_attribute?
       })
     end
+
     if @required
       @opts[:required] = true
     end
+
     if email?
-      @opts = @opts.deep_merge(data: {
+      @opts.deep_merge!(data: {
         action: "blur->email-input#checkEmail",
-                                       'email-input-target': 'input'
+        'email-input-target': 'input'
       })
     end
     @opts
@@ -63,12 +65,12 @@ class Dsfr::InputComponent < ApplicationComponent
     errors.has_key?(attribute_or_rich_body)
   end
 
-  def error_message_id
-    dom_id(object, @attribute)
-  end
-
   def error_messages
     errors.full_messages_for(attribute_or_rich_body)
+  end
+
+  def describedby_id
+    dom_id(object, "#{@attribute}-messages")
   end
 
   # i18n lookups
