@@ -1,5 +1,5 @@
 class GroupeInstructeurMailerPreview < ActionMailer::Preview
-  def remove_instructeurs
+  def notify_group_when_instructeurs_removed
     procedure = Procedure.new(id: 1, libelle: 'une superbe procedure')
     groupe = GroupeInstructeur.new(id: 1, label: 'Val-De-Marne', procedure:)
     current_instructeur_email = 'admin@dgfip.com'
@@ -7,11 +7,11 @@ class GroupeInstructeurMailerPreview < ActionMailer::Preview
     GroupeInstructeurMailer.notify_group_when_instructeurs_removed(groupe, instructeurs, current_instructeur_email)
   end
 
-  def remove_instructeur
+  def notify_removed_instructeur
     procedure = Procedure.new(id: 1, libelle: 'une superbe procedure')
     groupe = GroupeInstructeur.new(id: 1, label: 'Val-De-Marne', procedure:)
     current_instructeur_email = 'admin@dgfip.com'
-    instructeurs = Instructeur.limit(2)
-    GroupeInstructeurMailer.remove_instructeur(groupe, instructeurs, current_instructeur_email)
+    instructeur = Instructeur.last
+    GroupeInstructeurMailer.notify_removed_instructeur(groupe, instructeur, current_instructeur_email)
   end
 end
