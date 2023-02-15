@@ -55,34 +55,38 @@ RSpec.describe TypesDeChamp::PrefillEpciTypeDeChamp do
   describe '#transform_value_to_assignable_attributes' do
     subject(:transform_value_to_assignable_attributes) { described_class.build(type_de_champ).transform_value_to_assignable_attributes(value) }
 
+    shared_examples "a transformation to" do |code_departement, value|
+      it { is_expected.to match({ code_departement: code_departement, value: value }) }
+    end
+
     context 'when the value is nil' do
       let(:value) { nil }
-      it { is_expected.to match({ code_departement: nil, value: nil }) }
+      it_behaves_like "a transformation to", nil, nil
     end
 
     context 'when the value is empty' do
       let(:value) { '' }
-      it { is_expected.to match({ code_departement: nil, value: nil }) }
+      it_behaves_like "a transformation to", nil, nil
     end
 
     context 'when the value is a string' do
       let(:value) { 'hello' }
-      it { is_expected.to match({ code_departement: nil, value: nil }) }
+      it_behaves_like "a transformation to", nil, nil
     end
 
     context 'when the value is an array of one element' do
       let(:value) { ['01'] }
-      it { is_expected.to match({ code_departement: '01', value: nil }) }
+      it_behaves_like "a transformation to", '01', nil
     end
 
     context 'when the value is an array of two elements' do
       let(:value) { ['01', '200042935'] }
-      it { is_expected.to match({ code_departement: '01', value: '200042935' }) }
+      it_behaves_like "a transformation to", '01', '200042935'
     end
 
     context 'when the value is an array of three or more elements' do
       let(:value) { ['01', '200042935', 'hello'] }
-      it { is_expected.to match({ code_departement: '01', value: '200042935' }) }
+      it_behaves_like "a transformation to", '01', '200042935'
     end
   end
 
