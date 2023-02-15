@@ -1312,14 +1312,7 @@ class Dossier < ApplicationRecord
   end
 
   def bounding_box
-    factory = RGeo::Geographic.simple_mercator_factory
-    bounding_box = RGeo::Cartesian::BoundingBox.new(factory)
-
-    geo_areas.filter_map(&:rgeo_geometry).each do |geometry|
-      bounding_box.add(geometry)
-    end
-
-    [bounding_box.max_point, bounding_box.min_point].compact.flat_map(&:coordinates)
+    GeojsonService.bbox(type: 'FeatureCollection', features: geo_areas.map(&:to_feature))
   end
 
   def log_dossier_operation(author, operation, subject = nil)

@@ -23,7 +23,7 @@ RSpec.describe GeoArea, type: :model do
     it { expect(geo_area.location).to eq("46°32'19\"N 2°25'42\"E") }
   end
 
-  describe '#rgeo_geometry' do
+  describe '#geometry' do
     let(:geo_area) { build(:geo_area, :polygon, champ: nil) }
     let(:polygon) do
       {
@@ -47,9 +47,9 @@ RSpec.describe GeoArea, type: :model do
 
     context 'polygon_with_extra_coordinate' do
       let(:geo_area) { build(:geo_area, :polygon_with_extra_coordinate, champ: nil) }
+      before { geo_area.valid? }
 
-      it { expect(geo_area.geometry).not_to eq(polygon) }
-      it { expect(geo_area.safe_geometry).to eq(polygon) }
+      it { expect(geo_area.geometry).to eq(polygon) }
     end
   end
 
