@@ -136,6 +136,7 @@ en:
           drop_down_list_other_html: Any value
           repetition_html: A array of hashes with possible values for each field of the repetition.
           regions_html: An <a href="https://fr.wikipedia.org/wiki/R%C3%A9gion_fran%C3%A7aise" target="_blank" rel="noopener noreferrer">INSEE region code</a>
+          regions_html: An <a href="https://fr.wikipedia.org/wiki/R%C3%A9gion_fran%C3%A7aise" target="_blank" rel="noopener noreferrer">INSEE region code</a>
           epci_html: An array of the department code and the <a href="https://geo.api.gouv.fr/epcis" target="_blank" rel="noopener noreferrer">EPCI one</a>.
         examples:
           title: Example

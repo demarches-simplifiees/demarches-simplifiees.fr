@@ -68,7 +68,7 @@ class PrefillParams
     def champ_attributes
       TypesDeChamp::PrefillTypeDeChamp
         .build(champ.type_de_champ)
-        .to_assignable_attributes(value)
+        .to_assignable_attributes(champ, value)
     end
   end
 end

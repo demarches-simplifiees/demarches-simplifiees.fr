@@ -72,4 +72,8 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
   def description
     @description ||= I18n.t("views.prefill_descriptions.edit.possible_values.#{type_champ}_html", default: nil)&.html_safe # rubocop:disable Rails/OutputSafety
   end
+
+  def transform_value_to_assignable_attributes(value)
+    { value: value }
+  end
 end
