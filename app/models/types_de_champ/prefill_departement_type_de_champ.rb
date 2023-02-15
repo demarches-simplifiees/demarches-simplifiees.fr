@@ -1,5 +1,5 @@
 class TypesDeChamp::PrefillDepartementTypeDeChamp < TypesDeChamp::PrefillTypeDeChamp
-  def possible_values
+  def all_possible_values
     departements.map { |departement| "#{departement[:code]} (#{departement[:name]})" }
   end
 

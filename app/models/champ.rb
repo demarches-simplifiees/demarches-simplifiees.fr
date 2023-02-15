@@ -72,6 +72,8 @@ class Champ < ApplicationRecord
     :refresh_after_update?,
     to: :type_de_champ
 
+  delegate :to_typed_id, to: :type_de_champ, prefix: true
+
   delegate :revision, to: :dossier, prefix: true
 
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
