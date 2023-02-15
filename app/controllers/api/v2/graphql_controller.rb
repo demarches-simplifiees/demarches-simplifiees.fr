@@ -1,10 +1,6 @@
 class API::V2::GraphqlController < API::V2::BaseController
   def execute
-    result = API::V2::Schema.execute(query,
-      variables: variables,
-      context: context,
-      operation_name: params[:operationName])
-
+    result = tracing? ? instrumented { perform_query } : perform_query
     render json: result
   rescue GraphQL::ParseError, JSON::ParserError => exception
     handle_parse_error(exception)
@@ -17,6 +13,13 @@ class API::V2::GraphqlController < API::V2::BaseController
   end
 
   private
+
+  def perform_query
+    API::V2::Schema.execute(query,
+      variables: variables,
+      context: context,
+      operation_name: params[:operationName])
+  end
 
   def append_info_to_payload(payload)
     super
@@ -123,5 +126,28 @@ class API::V2::GraphqlController < API::V2::BaseController
       ],
       data: nil
     }, status: 500
+  end
+
+  def tracing?
+    params[:tracing].present? && (Rails.env.development? || manager?)
+  end
+
+  def manager?
+    administrateur_signed_in? && AdministrateursProcedure.exists?(administrateur: current_administrateur, manager: true)
+  end
+
+  def instrumented
+    events = []
+    ActiveSupport::Notifications.subscribed(-> (_name, start, finish, _id, payload) { events << { start: Time.zone.at(start), duration: (finish - start) * 1000, sql: payload[:sql] } }, "sql.active_record", monotonic: true) do
+      result = yield
+      result.merge(extensions: {
+        tracing: {
+          startTime: events.first[:start],
+          endTime: events.last[:start],
+          duration: events.sum { _1[:duration] },
+          events: events.sort_by { _1[:duration] }.reverse
+        }
+      })
+    end
   end
 end
