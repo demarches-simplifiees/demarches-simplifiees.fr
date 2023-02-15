@@ -24,7 +24,7 @@ RSpec.describe TypesDeChamp::PrefillRepetitionTypeDeChamp, type: :model, vcr: { 
   describe '#possible_values' do
     subject(:possible_values) { described_class.new(type_de_champ).possible_values }
     let(:expected_value) {
-      "Un tableau de dictionnaires avec les valeurs possibles pour chaque champ de la répétition.</br><ul><li>#{text_repetition.to_typed_id}: Un texte court<br></li><li>#{integer_repetition.to_typed_id}: Un nombre entier<br></li><li>#{region_repetition.to_typed_id}: Un <a href=\"https://fr.wikipedia.org/wiki/R%C3%A9gion_fran%C3%A7aise\" target=\"_blank\">code INSEE de région</a><br><a title=\"Toutes les valeurs possibles — Nouvel onglet\" target=\"_blank\" rel=\"noopener noreferrer\" href=\"/procedures/#{procedure.path}/prefill_type_de_champs/#{region_repetition.id}\">Voir toutes les valeurs possibles</a></li></ul>"
+      "Un tableau de dictionnaires avec les valeurs possibles pour chaque champ de la répétition.</br><ul><li>#{text_repetition.to_typed_id}: Un texte court<br></li><li>#{integer_repetition.to_typed_id}: Un nombre entier<br></li><li>#{region_repetition.to_typed_id}: Un <a href=\"https://fr.wikipedia.org/wiki/R%C3%A9gion_fran%C3%A7aise\" target=\"_blank\" rel=\"noopener noreferrer\">code INSEE de région</a><br><a title=\"Toutes les valeurs possibles — Nouvel onglet\" target=\"_blank\" rel=\"noopener noreferrer\" href=\"/procedures/#{procedure.path}/prefill_type_de_champs/#{region_repetition.id}\">Voir toutes les valeurs possibles</a></li></ul>"
     }
 
     it {
