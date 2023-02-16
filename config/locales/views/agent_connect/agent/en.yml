@@ -15,8 +15,6 @@ en:
           </ul>
         you_are_a_citizen: You are an individual ?
         citizen_page: Go to our dedicated page
-        connect_html: |
-          <h1 class="mt-2 mb-2">Connect</h1>
-          <p><b class="bold">With AgentConnect</b></p>
+        connect: Connect
         whats_agentconnect: 'What is AgentConnect?'
         pro_email: Professional email

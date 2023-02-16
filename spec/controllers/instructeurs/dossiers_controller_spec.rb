@@ -388,6 +388,24 @@ describe Instructeurs::DossiersController, type: :controller do
       end
     end
 
+    context 'when related etablissement is still in degraded_mode' do
+      let(:procedure) { create(:procedure, :published, for_individual: false, instructeurs: instructeurs) }
+      let(:dossier) { create(:dossier, :en_instruction, :with_entreprise, procedure: procedure, as_degraded_mode: true) }
+
+      subject { post :terminer, params: { process_action: "accepter", procedure_id: procedure.id, dossier_id: dossier.id }, format: :turbo_stream }
+
+      context "with accepter" do
+        it 'warns about the error' do
+          subject
+          dossier.reload
+          expect(dossier.state).to eq(Dossier.states.fetch(:en_instruction))
+
+          expect(response).to have_http_status(:ok)
+          expect(response.body).to match(/Les données relatives au SIRET .+ de le passer accepté/)
+        end
+      end
+    end
+
     context 'when a dossier is already closed' do
       let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
 
