@@ -351,6 +351,10 @@ en:
           connect_with_agent_connect: Visit our dedicated page
           subtitle: "Sign in with my account"
       passwords:
+        edit:
+          subtitle: Change password
+          submit: Change password
+          submit_loading: Sending…
         reset_link_sent:
           got_it: Got it!
           open_your_mailbox: Now open your mailbox.
@@ -576,6 +580,11 @@ en:
     deleted:
       one: Deleted
       other: Deleted
+  administrateurs:
+    activate:
+      new:
+        title: Pick a password
+        continue: Continue
   users:
     dossiers:
       test_procedure: "This file is submitted on a test procedure. Any modification of the procedure by the administrator (addition of a field, publication of the procedure, etc.) will result in the removal of the file."
