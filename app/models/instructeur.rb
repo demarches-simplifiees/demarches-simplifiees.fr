@@ -52,6 +52,22 @@ class Instructeur < ApplicationRecord
     find_by(users: { email: email })
   end
 
+  def self.find_or_create_instructeurs(ids: [], emails: [], administrateurs:)
+    instructeurs_to_add, valid_emails, invalid_emails = Instructeur.find_all_by_identifier_with_emails(ids:, emails:)
+    not_found_emails = valid_emails - instructeurs_to_add.map(&:email)
+
+    # Send invitations to users without account
+    if not_found_emails.present?
+      instructeurs_to_add += not_found_emails.map do |email|
+        user = User.create_or_promote_to_instructeur(email, SecureRandom.hex, administrateurs: administrateurs)
+        user.invite!
+        user.instructeur
+      end
+    end
+
+    [instructeurs_to_add, invalid_emails]
+  end
+
   def self.find_all_by_identifier(ids: [], emails: [])
     find_all_by_identifier_with_emails(ids:, emails:).first
   end
