@@ -117,7 +117,7 @@ describe Champ do
     # when using the old form, and the ChampsService Class
     # TODO: to remove
     context 'when the value is already deserialized' do
-      let(:value) { '["1", "2"]' }
+      let(:value) { '["val1", "val2"]' }
 
       it { expect(champ.value).to eq(value) }
 
@@ -133,9 +133,9 @@ describe Champ do
     # GOTCHA
     context 'when the value is not already deserialized' do
       context 'when a choice is selected' do
-        let(:value) { '["", "1", "2"]' }
+        let(:value) { '["", "val1", "val2"]' }
 
-        it { expect(champ.value).to eq('["1", "2"]') }
+        it { expect(champ.value).to eq('["val1", "val2"]') }
       end
 
       context 'when all choices are removed' do

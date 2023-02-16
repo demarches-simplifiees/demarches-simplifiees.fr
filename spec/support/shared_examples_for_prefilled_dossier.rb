@@ -22,6 +22,9 @@ shared_examples "the user has got a prefilled dossier, owned by themselves" do
     expect(page).to have_field(text_repetition_libelle, with: text_repetition_value)
     expect(page).to have_field(integer_repetition_libelle, with: integer_repetition_value)
     expect(page).to have_field(type_de_champ_datetime.libelle, with: datetime_value)
+    expect(page).to have_css('label', text: type_de_champ_multiple_drop_down_list.libelle)
+    expect(page).to have_content(multiple_drop_down_list_values.first)
+    expect(page).to have_content(multiple_drop_down_list_values.last)
     expect(page).to have_field(type_de_champ_epci.libelle, with: epci_value.last)
   end
 end

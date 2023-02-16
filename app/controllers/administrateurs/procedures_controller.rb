@@ -96,8 +96,20 @@ module Administrateurs
       @procedure = current_administrateur
         .procedures
         .includes(
-          published_revision: :types_de_champ,
-          draft_revision: :types_de_champ
+          published_revision: {
+            types_de_champ: [],
+            revision_types_de_champ: { type_de_champ: { piece_justificative_template_attachment: :blob } }
+          },
+          draft_revision: {
+            types_de_champ: [],
+            revision_types_de_champ: { type_de_champ: { piece_justificative_template_attachment: :blob } }
+          },
+          attestation_template: [],
+          initiated_mail: [],
+          received_mail: [],
+          closed_mail: [],
+          refused_mail: [],
+          without_continuation_mail: []
         )
         .find(params[:id])
 
@@ -332,7 +344,35 @@ module Administrateurs
     end
 
     def champs
-      @procedure = Procedure.includes(draft_revision: { revision_types_de_champ_public: :type_de_champ }).find(@procedure.id)
+      @procedure = Procedure.includes(draft_revision: {
+        revision_types_de_champ: {
+          type_de_champ: { piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
+          revision: [],
+          procedure: []
+        },
+        revision_types_de_champ_public: {
+          type_de_champ: { piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
+          revision: [],
+          procedure: []
+        },
+        procedure: []
+      }).find(@procedure.id)
+    end
+
+    def annotations
+      @procedure = Procedure.includes(draft_revision: {
+        revision_types_de_champ: {
+          type_de_champ: { piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
+          revision: [],
+          procedure: []
+        },
+        revision_types_de_champ_private: {
+          type_de_champ: { piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
+          revision: [],
+          procedure: []
+        },
+        procedure: []
+      }).find(@procedure.id)
     end
 
     def detail

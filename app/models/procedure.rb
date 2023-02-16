@@ -173,12 +173,15 @@ class Procedure < ApplicationRecord
     types_de_champ_for_tags.private_only
   end
 
-  def revision_ids_with_pending_dossiers
-    dossiers
-      .where.not(revision_id: [draft_revision_id, published_revision_id].compact)
-      .state_en_construction_ou_instruction
-      .distinct(:revision_id)
-      .pluck(:revision_id)
+  def revisions_with_pending_dossiers
+    @revisions_with_pending_dossiers ||= begin
+      ids = dossiers
+        .where.not(revision_id: [draft_revision_id, published_revision_id].compact)
+        .state_en_construction_ou_instruction
+        .distinct(:revision_id)
+        .pluck(:revision_id)
+      ProcedureRevision.includes(revision_types_de_champ: [:type_de_champ]).where(id: ids)
+    end
   end
 
   has_many :administrateurs_procedures, dependent: :delete_all

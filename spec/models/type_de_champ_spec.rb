@@ -95,7 +95,7 @@ describe TypeDeChamp do
         let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:text) }
 
         it 'removes the children types de champ' do
-          expect(procedure.draft_revision.children_of(tdc)).to be_empty
+          expect(procedure.draft_revision.reload.children_of(tdc)).to be_empty
         end
       end
     end
@@ -249,16 +249,15 @@ describe TypeDeChamp do
     it_behaves_like "a prefillable type de champ", :type_de_champ_yes_no
     it_behaves_like "a prefillable type de champ", :type_de_champ_checkbox
     it_behaves_like "a prefillable type de champ", :type_de_champ_drop_down_list
-    it_behaves_like "a prefillable type de champ", :type_de_champ_regions
     it_behaves_like "a prefillable type de champ", :type_de_champ_repetition
     it_behaves_like "a prefillable type de champ", :type_de_champ_departements
+    it_behaves_like "a prefillable type de champ", :type_de_champ_multiple_drop_down_list
     it_behaves_like "a prefillable type de champ", :type_de_champ_epci
 
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_number
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_communes
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_dossier_link
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_titre_identite
-    it_behaves_like "a non-prefillable type de champ", :type_de_champ_multiple_drop_down_list
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_linked_drop_down_list
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_header_section
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_explication
