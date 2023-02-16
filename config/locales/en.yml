@@ -265,6 +265,7 @@ en:
           identity_data: Identity data
           all_required: All fields are required.
           civility: Civility
+          description: Description of the procedure
           first_name: First Name
           last_name: Last Name
           birthdate: Date de naissance
