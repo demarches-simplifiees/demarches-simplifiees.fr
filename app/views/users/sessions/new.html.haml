@@ -5,7 +5,7 @@
 
 .form-column.procedure-context-content
   .auth-form.sign-in-form
-    %h1.center= t('views.users.sessions.new.sign_in', app_name: APPLICATION_NAME.gsub("-","&#8209;")).html_safe
+    %h1.fr-h6.center= t('views.users.sessions.new.sign_in', app_name: APPLICATION_NAME.gsub("-","&#8209;")).html_safe
     = form_for resource, url: user_session_path, html: { class: "form" } do |f|
 
       = f.label :email, t('views.users.sessions.new.email')

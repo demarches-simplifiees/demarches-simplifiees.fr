@@ -140,7 +140,7 @@ RSpec.describe GeoArea, type: :model do
     context "when geo is a cadastre parcelle" do
       let(:geo_area) { build(:geo_area, :selection_utilisateur, :cadastre, champ: nil) }
       it "should return the label" do
-        expect(geo_area.label).to eq("Parcelle n° 42 - Feuille 000 A11 - 123 m²")
+        expect(geo_area.label).to eq("Parcelle n° 42 - Feuille 000 A11 - 123 m² – commune 75127")
       end
     end
   end

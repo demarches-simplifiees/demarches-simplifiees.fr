@@ -1,25 +1,41 @@
 fr:
   users:
     procedure_footer:
-      aria_label: "En savoir plus sur %{procedure_name}"
       managed_by:
-        header: 'Cette démarche est gérée par :'
+        header: 'Cette démarche est gérée par'
       contact:
-        header: 'Poser une question sur votre dossier :'
+        header: 'Poser une question sur votre dossier'
         in_app_mail:
-          prefix: 'Directement :'
-          link: "par la messagerie"
+          link: "Directement par la messagerie"
         email:
-          prefix: 'Par email :'
+          link: "Directement par courriel : %{service_email}"
         phone:
-          prefix: 'Par téléphone :'
+          link: 'Par téléphone au %{service_telephone}'
         schedule:
-          prefix: 'Horaires : '
+          prefix: "Horaires d'ouverture : "
         stats:
-          prefix: 'Statistiques :'
-          cta: "voir les statistiques de la démarche"
+          link: "Voir les statistiques de la démarche"
       legals:
-        header: "Cadre juridique :"
-        data_retention: "Dans %{application_name} : %{duree_conservation_dossiers_dans_ds} mois"
+        header: "Cadre juridique"
+        data_retention: "%{application_name} : %{duree_conservation_dossiers_dans_ds} mois"
+        data_retention_url: "https://doc.demarches-simplifiees.fr/pour-aller-plus-loin/archivage-longue-duree-des-demarches"
         terms: "Texte cadrant la demande d'information"
         dpo: "Contacter le Délégué à la Protection des Données"
+      official_links:
+        legifrance:
+          title: legifrance.gouv.fr
+          url: "https://legifrance.gouv.fr"
+        gouvernement:
+          title: gouvernement.fr
+          url: "https://gouvernement.fr"
+        service_public:
+          title: service-public.fr
+          url: "https://service-public.fr"
+        data_gouv:
+          title: data.gouv.fr
+          url: "https://data.gouv.fr"
+      dematerialisation: 
+        header: Dematérialisation
+        title_1: Accès au formulaire PDF à imprimer
+        title_2: Les démarches administratives en ligne
+        link: "https://www.solidarite-numerique.fr/cartographie/"
