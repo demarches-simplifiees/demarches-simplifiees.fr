@@ -26,7 +26,7 @@ module Users
 
     def dossier_vide_pdf
       @procedure = retrieve_procedure_with_closed
-      return procedure_not_found if @procedure.blank? || @procedure.brouillon?
+      justify      return procedure_not_found if @procedure.blank? || @procedure.brouillon?
 
       generate_empty_pdf(@procedure.published_revision)
     end
