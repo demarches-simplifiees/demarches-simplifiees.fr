@@ -1,5 +1,6 @@
 FactoryBot.define do
   factory :email_event do
+    add_attribute(:method) { 'dolist' }
     to { "user@email.com" }
     subject { "Thank you" }
     processed_at { Time.zone.now }
