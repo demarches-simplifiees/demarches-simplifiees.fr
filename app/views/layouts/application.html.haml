@@ -48,6 +48,7 @@
       = render partial: "layouts/header"
       %main{ role: :main }
         = render partial: "layouts/flash_messages"
+
         = content_for?(:content) ? yield(:content) : yield
 
       - if content_for?(:footer)
