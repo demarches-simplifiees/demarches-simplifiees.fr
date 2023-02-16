@@ -3,11 +3,9 @@ class InstructeursImportService
     created_at = Time.zone.now
     updated_at = Time.zone.now
 
-    admins = procedure.administrateurs
-
     groupes_emails, error_groupe_emails = groupes_emails
       .map { |groupe_email| { "groupe" => groupe_email["groupe"].present? ? groupe_email["groupe"].strip : nil, "email" => groupe_email["email"].present? ? groupe_email["email"].gsub(/[[:space:]]/, '').downcase : nil } }
-      .partition { |groupe_email| Devise.email_regexp.match?(groupe_email['email']) && groupe_email['groupe'].present? }
+      .partition { |groupe_email| groupe_email['groupe'].present? }
 
     errors = error_groupe_emails.map { |group_email| group_email['email'] }
 
@@ -20,62 +18,33 @@ class InstructeursImportService
 
     target_groupes = procedure.reload.groupe_instructeurs
 
-    target_instructeurs = find_or_create_instructeurs(admins, groupes_emails)
+    defaut_groupe_instructeur = procedure.defaut_groupe_instructeur
 
-    groupes_emails.each do |groupe_email|
-      gi = target_groupes.find { |g| g.label == groupe_email['groupe'] }
-      add_instructeur_to_groupe(target_instructeurs, groupe_email, gi)
+    instructeurs_emails = groupes_emails.map { |instructeur_email| instructeur_email["email"] }.uniq
+
+    instructeurs, invalid_emails = defaut_groupe_instructeur.add_instructeurs(emails: instructeurs_emails)
+
+    if instructeurs.present?
+      groupes_emails.each do |groupe_email|
+        gi = target_groupes.find { |g| g.label == groupe_email['groupe'] }
+        instructeur = Instructeur.where(users: { email: groupe_email['email'] }).first
+
+        gi.add(instructeur)
+      end
     end
-
-    errors
+    errors << invalid_emails
+    errors.flatten
   end
 
   def self.import_instructeurs(procedure, emails)
-    admins = procedure.administrateurs
+    instructeurs_emails = emails.map { |instructeur_email| instructeur_email["email"].present? ? instructeur_email["email"].gsub(/[[:space:]]/, '').downcase : nil }
 
-    instructeurs_emails, error_instructeurs_emails = emails
-      .map { |instructeur_email| { "email" => instructeur_email["email"].present? ? instructeur_email["email"].gsub(/[[:space:]]/, '').downcase : nil } }
-      .partition { |instructeur_email| Devise.email_regexp.match?(instructeur_email['email']) }
+    groupe_instructeur = procedure.defaut_groupe_instructeur
 
-    errors = error_instructeurs_emails.map { |instructeur_email| instructeur_email['email'] }
+    instructeurs, invalid_emails = groupe_instructeur.add_instructeurs(emails: instructeurs_emails)
 
-    target_instructeurs = find_or_create_instructeurs(admins, instructeurs_emails)
+    instructeurs.each { groupe_instructeur.add(_1) } if instructeurs.present?
 
-    instructeurs_emails.each do |instructeur_email|
-      gi = procedure.defaut_groupe_instructeur
-      add_instructeur_to_groupe(target_instructeurs, instructeur_email, gi)
-    end
-
-    errors
-  end
-
-  private
-
-  def self.find_or_create_instructeurs(administrateurs, instructeurs_emails)
-    target_emails = instructeurs_emails.map { |instructeur_email| instructeur_email["email"] }.uniq
-
-    existing_emails = Instructeur.where(user: { email: target_emails }).pluck(:email)
-    missing_emails = target_emails - existing_emails
-    missing_emails.each { |email| create_instructeur(administrateurs, email) }
-
-    User.where(email: target_emails).map(&:instructeur)
-  end
-
-  def self.create_instructeur(administrateurs, email)
-    user = User.create_or_promote_to_instructeur(
-      email,
-      SecureRandom.hex,
-      administrateurs: administrateurs
-    )
-    user.invite!
-    user.instructeur
-  end
-
-  def self.add_instructeur_to_groupe(target_instructeurs, instructeur_email, gi)
-    instructeur = target_instructeurs.find { |i| i.email == instructeur_email['email'] }
-
-    if !gi.instructeurs.include?(instructeur)
-      gi.instructeurs << instructeur
-    end
+    invalid_emails
   end
 end
