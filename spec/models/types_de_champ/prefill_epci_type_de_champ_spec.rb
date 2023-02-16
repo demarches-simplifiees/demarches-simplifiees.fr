@@ -2,6 +2,7 @@
 
 RSpec.describe TypesDeChamp::PrefillEpciTypeDeChamp do
   let(:type_de_champ) { build(:type_de_champ_epci) }
+  let(:champ) { create(:champ_epci, type_de_champ: type_de_champ) }
   let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
 
   before do
@@ -57,32 +58,32 @@ RSpec.describe TypesDeChamp::PrefillEpciTypeDeChamp do
 
     context 'when the value is nil' do
       let(:value) { nil }
-      it { is_expected.to match({ code_departement: nil, value: nil }) }
+      it { is_expected.to match({ code_departement: nil, value: nil, id: champ.id }) }
     end
 
     context 'when the value is empty' do
       let(:value) { '' }
-      it { is_expected.to match({ code_departement: nil, value: nil }) }
+      it { is_expected.to match({ code_departement: nil, value: nil, id: champ.id }) }
     end
 
     context 'when the value is a string' do
       let(:value) { 'hello' }
-      it { is_expected.to match({ code_departement: nil, value: nil }) }
+      it { is_expected.to match({ code_departement: nil, value: nil, id: champ.id }) }
     end
 
     context 'when the value is an array of one element' do
       let(:value) { ['01'] }
-      it { is_expected.to match({ code_departement: '01', value: nil }) }
+      it { is_expected.to match({ code_departement: '01', value: nil, id: champ.id }) }
     end
 
     context 'when the value is an array of two elements' do
       let(:value) { ['01', '200042935'] }
-      it { is_expected.to match({ code_departement: '01', value: '200042935' }) }
+      it { is_expected.to match({ code_departement: '01', value: '200042935', id: champ.id }) }
     end
 
     context 'when the value is an array of three or more elements' do
       let(:value) { ['01', '200042935', 'hello'] }
-      it { is_expected.to match({ code_departement: '01', value: '200042935' }) }
+      it { is_expected.to match({ code_departement: '01', value: '200042935', id: champ.id }) }
     end
   end
 

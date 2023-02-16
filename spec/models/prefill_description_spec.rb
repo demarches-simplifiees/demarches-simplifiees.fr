@@ -88,69 +88,12 @@ RSpec.describe PrefillDescription, type: :model do
 
   describe '#prefill_link', vcr: { cassette_name: 'api_geo_regions' } do
     let(:procedure) { create(:procedure) }
-    let(:type_de_champ) { create(:type_de_champ_text, procedure: procedure) }
-    let(:type_de_champ_repetition) { build(:type_de_champ_repetition, :with_types_de_champ, :with_region_types_de_champ, procedure: procedure) }
+    let(:type_de_champ_text) { build(:type_de_champ_text, procedure: procedure) }
+    let(:type_de_champ_epci) { build(:type_de_champ_epci, procedure: procedure) }
+    let(:type_de_champ_repetition) { create(:type_de_champ_repetition, :with_types_de_champ, :with_region_types_de_champ, procedure: procedure) }
     let(:prefillable_subchamps) { TypesDeChamp::PrefillRepetitionTypeDeChamp.new(type_de_champ_repetition).send(:prefillable_subchamps) }
     let(:region_repetition) { prefillable_subchamps.third }
     let(:prefill_description) { described_class.new(procedure) }
-
-    before { prefill_description.update(selected_type_de_champ_ids: [type_de_champ.id, type_de_champ_repetition.id]) }
-
-    it "builds the URL to create a new prefilled dossier" do
-      expect(prefill_description.prefill_link).to eq(
-        commencer_url(
-          path: procedure.path,
-          "champ_#{type_de_champ.to_typed_id}" => I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}"),
-          "champ_#{type_de_champ_repetition.to_typed_id}" => TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_repetition).example_value
-        )
-      )
-    end
-
-    context 'when the type de champ can have multiple values' do
-      let(:type_de_champ) { TypesDeChamp::PrefillTypeDeChamp.build(create(:type_de_champ_epci, procedure: procedure)) }
-
-      let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
-
-      before do
-        allow(Rails).to receive(:cache).and_return(memory_store)
-        Rails.cache.clear
-
-        VCR.insert_cassette('api_geo_departements')
-        VCR.insert_cassette('api_geo_epcis')
-      end
-
-      after do
-        VCR.eject_cassette('api_geo_departements')
-        VCR.eject_cassette('api_geo_epcis')
-      end
-
-      it 'builds the URL with array parameter' do
-        expect(prefill_description.prefill_link).to eq(
-          commencer_url(
-            path: procedure.path,
-            "champ_#{type_de_champ.to_typed_id}": type_de_champ.example_value
-          )
-        )
-      end
-    end
-  end
-
-  describe '#prefill_query', vcr: { cassette_name: 'api_geo_regions' } do
-    let(:procedure) { create(:procedure) }
-    let(:type_de_champ) { create(:type_de_champ_text, procedure: procedure) }
-    let(:type_de_champ_repetition) { build(:type_de_champ_repetition, :with_types_de_champ, :with_region_types_de_champ, procedure: procedure) }
-    let(:prefillable_subchamps) { TypesDeChamp::PrefillRepetitionTypeDeChamp.new(type_de_champ_repetition).send(:prefillable_subchamps) }
-    let(:region_repetition) { prefillable_subchamps.third }
-    let(:prefill_description) { described_class.new(procedure) }
-    let(:expected_query) do
-      <<~TEXT
-        curl --request POST '#{api_public_v1_dossiers_url(procedure)}' \\
-             --header 'Content-Type: application/json' \\
-             --data '{"champ_#{type_de_champ.to_typed_id}": "#{I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")}", "champ_#{type_de_champ_repetition.to_typed_id}": #{TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_repetition).example_value}}'
-      TEXT
-    end
-
-    before { prefill_description.update(selected_type_de_champ_ids: [type_de_champ.id, type_de_champ_repetition.id]) }
 
     let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
 
@@ -161,7 +104,52 @@ RSpec.describe PrefillDescription, type: :model do
       VCR.insert_cassette('api_geo_departements')
       VCR.insert_cassette('api_geo_epcis')
 
-      prefill_description.update(selected_type_de_champ_ids: [type_de_champ.id])
+      prefill_description.update(selected_type_de_champ_ids: [type_de_champ_text.id, type_de_champ_epci.id, type_de_champ_repetition.id])
+    end
+
+    after do
+      VCR.eject_cassette('api_geo_departements')
+      VCR.eject_cassette('api_geo_epcis')
+    end
+
+    it "builds the URL to create a new prefilled dossier" do
+      expect(prefill_description.prefill_link).to eq(
+        commencer_url(
+          path: procedure.path,
+          "champ_#{type_de_champ_text.to_typed_id}" => TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_text).example_value,
+          "champ_#{type_de_champ_epci.to_typed_id}" => TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_epci).example_value,
+          "champ_#{type_de_champ_repetition.to_typed_id}" => TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_repetition).example_value
+        )
+      )
+    end
+  end
+
+  describe '#prefill_query', vcr: { cassette_name: 'api_geo_regions' } do
+    let(:procedure) { create(:procedure) }
+    let(:type_de_champ_text) { create(:type_de_champ_text, procedure: procedure) }
+    let(:type_de_champ_epci) { TypesDeChamp::PrefillTypeDeChamp.build(create(:type_de_champ_epci, procedure: procedure)) }
+    let(:type_de_champ_repetition) { build(:type_de_champ_repetition, :with_types_de_champ, :with_region_types_de_champ, procedure: procedure) }
+    let(:prefillable_subchamps) { TypesDeChamp::PrefillRepetitionTypeDeChamp.new(type_de_champ_repetition).send(:prefillable_subchamps) }
+    let(:region_repetition) { prefillable_subchamps.third }
+    let(:prefill_description) { described_class.new(procedure) }
+    let(:expected_query) do
+      <<~TEXT
+        curl --request POST '#{api_public_v1_dossiers_url(procedure)}' \\
+             --header 'Content-Type: application/json' \\
+             --data '{"champ_#{type_de_champ_text.to_typed_id}": "#{TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_text).example_value}", "champ_#{type_de_champ_epci.to_typed_id}": #{TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_epci).example_value}, "champ_#{type_de_champ_repetition.to_typed_id}": #{TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_repetition).example_value}}'
+      TEXT
+    end
+
+    let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
+
+    before do
+      allow(Rails).to receive(:cache).and_return(memory_store)
+      Rails.cache.clear
+
+      VCR.insert_cassette('api_geo_departements')
+      VCR.insert_cassette('api_geo_epcis')
+
+      prefill_description.update(selected_type_de_champ_ids: [type_de_champ_text.id, type_de_champ_epci.id, type_de_champ_repetition.id])
     end
 
     after do
@@ -171,21 +159,6 @@ RSpec.describe PrefillDescription, type: :model do
 
     it "builds the query to create a new prefilled dossier" do
       expect(prefill_description.prefill_query).to eq(expected_query)
-    end
-
-    context 'when the type de champ can have multiple values' do
-      let(:type_de_champ) { TypesDeChamp::PrefillTypeDeChamp.build(create(:type_de_champ_epci, procedure: procedure)) }
-      let(:expected_query) do
-        <<~TEXT
-          curl --request POST '#{api_public_v1_dossiers_url(procedure)}' \\
-               --header 'Content-Type: application/json' \\
-               --data '{"champ_#{type_de_champ.to_typed_id}": #{type_de_champ.example_value}}'
-        TEXT
-      end
-
-      it 'builds the query with array parameter' do
-        expect(prefill_description.prefill_query).to eq(expected_query)
-      end
     end
   end
 end
