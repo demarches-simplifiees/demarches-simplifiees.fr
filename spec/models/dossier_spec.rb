@@ -1138,6 +1138,41 @@ describe Dossier do
     it { expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601) }
   end
 
+  describe "can't transition to terminer when etablissement is in degraded mode" do
+    let(:instructeur) { create(:instructeur) }
+    let(:motivation) { 'motivation' }
+
+    context "when dossier is en_instruction" do
+      let(:dossier_incomplete) { create(:dossier, :en_instruction, :with_entreprise, as_degraded_mode: true) }
+      let(:dossier_ok) { create(:dossier, :en_instruction, :with_entreprise, as_degraded_mode: false) }
+
+      it "can't accepter" do
+        expect(dossier_incomplete.may_accepter?(instructeur:, motivation:)).to be_falsey
+        expect(dossier_ok.accepter(instructeur:, motivation:)).to be_truthy
+      end
+
+      it "can't refuser" do
+        expect(dossier_incomplete.may_refuser?(instructeur:, motivation:)).to be_falsey
+        expect(dossier_ok.may_refuser?(instructeur:, motivation:)).to be_truthy
+      end
+
+      it "can't classer_sans_suite" do
+        expect(dossier_incomplete.may_classer_sans_suite?(instructeur:, motivation:)).to be_falsey
+        expect(dossier_ok.may_classer_sans_suite?(instructeur:, motivation:)).to be_truthy
+      end
+    end
+
+    context "when dossier is en_construction" do
+      let(:dossier_incomplete) { create(:dossier, :en_construction, :with_entreprise, as_degraded_mode: true) }
+      let(:dossier_ok) { create(:dossier, :en_construction, :with_entreprise, as_degraded_mode: false) }
+
+      it "can't accepter_automatiquement" do
+        expect(dossier_incomplete.may_accepter_automatiquement?(instructeur:, motivation:)).to be_falsey
+        expect(dossier_ok.accepter_automatiquement(instructeur:, motivation:)).to be_truthy
+      end
+    end
+  end
+
   describe "#check_mandatory_champs" do
     include Logic
 
