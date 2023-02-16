@@ -18,11 +18,9 @@ class InstructeursImportService
 
     target_groupes = procedure.reload.groupe_instructeurs
 
-    defaut_groupe_instructeur = procedure.defaut_groupe_instructeur
-
     instructeurs_emails = groupes_emails.map { |instructeur_email| instructeur_email["email"] }.uniq
 
-    instructeurs, invalid_emails = defaut_groupe_instructeur.add_instructeurs(emails: instructeurs_emails)
+    instructeurs, invalid_emails = Instructeur.find_or_create_instructeurs(emails: instructeurs_emails, administrateurs: procedure.administrateurs)
 
     if instructeurs.present?
       groupes_emails.each do |groupe_email|
@@ -41,7 +39,7 @@ class InstructeursImportService
 
     groupe_instructeur = procedure.defaut_groupe_instructeur
 
-    instructeurs, invalid_emails = groupe_instructeur.add_instructeurs(emails: instructeurs_emails)
+    instructeurs, invalid_emails = Instructeur.find_or_create_instructeurs(emails: instructeurs_emails, administrateurs: procedure.administrateurs)
 
     instructeurs.each { groupe_instructeur.add(_1) } if instructeurs.present?
 
