@@ -63,4 +63,38 @@ namespace :anonymizer do
       end
     end
   end
+
+  desc "Seed simple data to test anonymization"
+  task seed_test_data: :environment do
+    fail "Bad enviroment" unless Rails.env.development?
+
+    # Ask confirmation about truncating all data in the database. Then continue only if user types 'yes'
+    puts "This task will truncate all tables, including #{User.count} users. Are you sure? (yes/no)"
+    if ['yes', 'y'].exclude?(STDIN.gets.chomp)
+      puts "Bye"
+      exit
+    end
+
+    Rake::Task["db:truncate_all"].invoke
+
+    require "factory_bot"
+    Dir[Rails.root.join("spec/factories/*.rb")].each { require _1 }
+
+    sa_email = FactoryBot.create(:super_admin, email: "me@superadmin.ds").email
+    FactoryBot.create(:user, email: sa_email)
+
+    FactoryBot.create(:dossier, :with_populated_champs, procedure: FactoryBot.create(:procedure, :with_all_champs))
+    FactoryBot.create(:avis)
+    FactoryBot.create(:commentaire)
+    FactoryBot.create(:dossier_transfer)
+    FactoryBot.create(:email_event)
+    FactoryBot.create(:france_connect_information)
+    FactoryBot.create(:individual)
+    FactoryBot.create(:traitement, dossier: FactoryBot.create(:dossier))
+    FactoryBot.create(:invite)
+    FactoryBot.create(:trusted_device_token)
+
+    puts "Now, connect to db with anonymized role and execute a query verifying anonymization:"
+    puts "psql -U #{ENV["PG_ANONYMIZER_ROLE"]} -h localhost -d tps_development -c 'SELECT email FROM users;'"
+  end
 end
