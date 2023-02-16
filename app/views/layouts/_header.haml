@@ -87,18 +87,18 @@
             - if current_instructeur.procedures.any?
               - current_url = request.path_info
               %li.fr-nav__item
-                = active_link_to t('utils.procedure'), instructeur_procedures_path, active: ['dossiers','procedures'].include?(controller_name), class: 'fr-nav__link'
+                = active_link_to t('utils.procedure'), instructeur_procedures_path, active: ['dossiers','procedures'].include?(controller_name), class: 'fr-nav__link', aria: { current: current_url == instructeur_procedures_path ? 'page' : true }
             - if current_instructeur.user.expert && current_expert.avis_summary[:total] > 0
               = render partial: 'layouts/header/avis_tab', locals: { current_expert: current_expert }
 
           - if is_expert_context
             - if current_expert.user.instructeur && current_instructeur.procedures.any?
-              %li.fr-nav__item= active_link_to t('utils.procedure'), instructeur_procedures_path, active: ['dossiers','procedures'].include?(controller_name), class: 'fr-nav__link'
+              %li.fr-nav__item= active_link_to t('utils.procedure'), instructeur_procedures_path, active: ['dossiers','procedures'].include?(controller_name), class: 'fr-nav__link', aria: { current: true }
             - if current_expert.avis_summary[:total] > 0
               = render partial: 'layouts/header/avis_tab', locals: { current_expert: current_expert }
 
           - if is_user_context
-            %li.fr-nav__item= active_link_to t('.files'), dossiers_path, active: :inclusive, class: 'fr-nav__link'
+            %li.fr-nav__item= active_link_to t('.files'), dossiers_path, active: :inclusive, class: 'fr-nav__link', aria: { current: true }
             - if current_user.expert && current_expert.avis_summary[:total] > 0
               = render partial: 'layouts/header/avis_tab', locals: { current_expert: current_expert }
 

@@ -320,11 +320,22 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     end
 
     context 'when there are many instructeurs' do
-      before { remove_instructeur(admin.instructeur) }
+      before do
+        allow(GroupeInstructeurMailer).to receive(:notify_removed_instructeur)
+          .and_return(double(deliver_later: true))
+        remove_instructeur(admin.instructeur)
+      end
 
       it { expect(gi_1_1.instructeurs).to include(instructeur) }
       it { expect(gi_1_1.reload.instructeurs.count).to eq(1) }
       it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_1)) }
+      it "calls GroupeInstructeurMailer with the right groupe and instructeur" do
+        expect(GroupeInstructeurMailer).to have_received(:notify_removed_instructeur).with(
+          gi_1_1,
+          admin.instructeur,
+          admin.email
+        )
+      end
     end
 
     context 'when there is only one instructeur' do

@@ -268,6 +268,7 @@ en:
           identity_data: Identity data
           all_required: All fields are required.
           civility: Civility
+          description: Description of the procedure
           first_name: First Name
           last_name: Last Name
           birthdate: Date de naissance
@@ -353,6 +354,10 @@ en:
           connect_with_agent_connect: Visit our dedicated page
           subtitle: "Sign in with my account"
       passwords:
+        edit:
+          subtitle: Change password
+          submit: Change password
+          submit_loading: Sending…
         reset_link_sent:
           got_it: Got it!
           open_your_mailbox: Now open your mailbox.
@@ -474,6 +479,10 @@ en:
           attributes:
             value:
               not_in_options: "must be in the given options"
+        "champs/multiple_drop_down_list_champ":
+          attributes:
+            value:
+              not_in_options: "must be in the given options"
         "champs/region_champ":
           attributes:
             value:
@@ -574,6 +583,11 @@ en:
     deleted:
       one: Deleted
       other: Deleted
+  administrateurs:
+    activate:
+      new:
+        title: Pick a password
+        continue: Continue
   users:
     dossiers:
       test_procedure: "This file is submitted on a test procedure. Any modification of the procedure by the administrator (addition of a field, publication of the procedure, etc.) will result in the removal of the file."

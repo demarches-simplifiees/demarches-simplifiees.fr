@@ -18,10 +18,8 @@
       .fr-fieldset__element= render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { autocomplete: 'email', autofocus: true })
 
       .fr-fieldset__element
-        = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field, opts: { autocomplete: 'new-password', min_length: PASSWORD_MIN_LENGTH }) do |c|
+        = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field, opts: { autocomplete: 'new-password', minlength: PASSWORD_MIN_LENGTH }) do |c|
           - c.describedby do
-            #password-input-messages.fr-messages-group{ "aria-live" => "off" }
-              %p#password-input-message.fr-message= t('views.registrations.new.password_message')
-              %p#password-input-message-info.fr-message.fr-message--info= t('views.registrations.new.password_placeholder', min_length: PASSWORD_MIN_LENGTH)
+            = render partial: "devise/password_rules", locals: { id: c.describedby_id }
 
     = f.submit t('views.shared.account.create'), class: "fr-btn fr-btn--lg"
