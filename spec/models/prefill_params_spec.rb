@@ -128,6 +128,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is authorized", :iban, "value"
     it_behaves_like "a champ public value that is authorized", :civilite, "M."
     it_behaves_like "a champ public value that is authorized", :pays, "FR"
+    it_behaves_like "a champ public value that is authorized", :regions, "03"
     it_behaves_like "a champ public value that is authorized", :date, "2022-12-22"
     it_behaves_like "a champ public value that is authorized", :datetime, "2022-12-22T10:30"
     it_behaves_like "a champ public value that is authorized", :yes_no, "true"
@@ -135,8 +136,8 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is authorized", :checkbox, "true"
     it_behaves_like "a champ public value that is authorized", :checkbox, "false"
     it_behaves_like "a champ public value that is authorized", :drop_down_list, "value"
-    it_behaves_like "a champ public value that is authorized", :regions, "03"
     it_behaves_like "a champ public value that is authorized", :departements, "03"
+    it_behaves_like "a champ public value that is authorized", :multiple_drop_down_list, ["val1", "val2"]
     it_behaves_like "a champ public value that is authorized", :epci, ['01', '200042935']
 
     it_behaves_like "a champ private value that is authorized", :text, "value"
@@ -148,6 +149,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ private value that is authorized", :iban, "value"
     it_behaves_like "a champ private value that is authorized", :civilite, "M."
     it_behaves_like "a champ private value that is authorized", :pays, "FR"
+    it_behaves_like "a champ private value that is authorized", :regions, "93"
     it_behaves_like "a champ private value that is authorized", :date, "2022-12-22"
     it_behaves_like "a champ private value that is authorized", :datetime, "2022-12-22T10:30"
     it_behaves_like "a champ private value that is authorized", :yes_no, "true"
@@ -157,6 +159,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ private value that is authorized", :drop_down_list, "value"
     it_behaves_like "a champ private value that is authorized", :regions, "93"
     it_behaves_like "a champ private value that is authorized", :departements, "03"
+    it_behaves_like "a champ private value that is authorized", :multiple_drop_down_list, ["val1", "val2"]
     it_behaves_like "a champ private value that is authorized", :epci, ['01', '200042935']
 
     it_behaves_like "a champ public value that is unauthorized", :decimal_number, "non decimal string"
@@ -169,7 +172,6 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is unauthorized", :date, "value"
     it_behaves_like "a champ public value that is unauthorized", :datetime, "value"
     it_behaves_like "a champ public value that is unauthorized", :datetime, "12-22-2022T10:30"
-    it_behaves_like "a champ public value that is unauthorized", :multiple_drop_down_list, "value"
     it_behaves_like "a champ public value that is unauthorized", :linked_drop_down_list, "value"
     it_behaves_like "a champ public value that is unauthorized", :header_section, "value"
     it_behaves_like "a champ public value that is unauthorized", :explication, "value"
@@ -187,6 +189,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is unauthorized", :siret, "value"
     it_behaves_like "a champ public value that is unauthorized", :rna, "value"
     it_behaves_like "a champ public value that is unauthorized", :annuaire_education, "value"
+    it_behaves_like "a champ public value that is unauthorized", :multiple_drop_down_list, ["value"]
   end
 
   private
