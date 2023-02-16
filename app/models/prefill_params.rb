@@ -42,6 +42,7 @@ class PrefillParams
       TypeDeChamp.type_champs.fetch(:pays),
       TypeDeChamp.type_champs.fetch(:regions),
       TypeDeChamp.type_champs.fetch(:departements),
+      TypeDeChamp.type_champs.fetch(:multiple_drop_down_list),
       TypeDeChamp.type_champs.fetch(:epci)
     ]
 

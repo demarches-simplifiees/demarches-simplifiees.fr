@@ -261,6 +261,7 @@ fr:
           identity_data: Données d’identité
           all_required: Tous les champs sont obligatoires.
           civility: Civilité
+          description: Description de la démarche
           first_name: Prénom
           last_name: Nom
           birthdate: Date de naissance
@@ -346,6 +347,10 @@ fr:
           connect_with_agent_connect: Accédez à notre page dédiée
           subtitle: "Se connecter avec son compte"
       passwords:
+        edit:
+          subtitle: Changement de mot de passe
+          submit: Changer le mot de passe
+          submit_loading: Envoi…
         reset_link_sent:
           email_sent_html: "Nous vous avons envoyé un email à l’adresse <strong>%{email}</strong>."
           click_link_to_reset_password: "Cliquez sur le lien contenu dans l’email pour changer votre mot de passe."
@@ -463,6 +468,10 @@ fr:
             reference_avis:
               invalid: "doit posséder 13 ou 14 caractères"
         "champs/drop_down_list_champ":
+          attributes:
+            value:
+              not_in_options: "doit être dans les options proposées"
+        "champs/multiple_drop_down_list_champ":
           attributes:
             value:
               not_in_options: "doit être dans les options proposées"
@@ -620,6 +629,10 @@ fr:
         to_follow: à suivre
         total: dossiers
   administrateurs:
+    activate:
+      new:
+        title: Choix du mot de passe
+        continue: Continuer
     index:
       restored: La démarche %{procedure_id} a été restaurée
     dropdown_actions:
