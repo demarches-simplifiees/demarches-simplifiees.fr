@@ -146,7 +146,7 @@ RSpec.describe PrefillParams do
       let(:type_de_champ_child_value) { "value" }
       let(:type_de_champ_child_value2) { "value2" }
 
-      let(:params) { { "champ_#{type_de_champ.to_typed_id}" => ["{\"#{type_de_champ_child.libelle}\":\"#{type_de_champ_child_value}\"}", "{\"#{type_de_champ_child.libelle}\":\"#{type_de_champ_child_value2}\"}"] } }
+      let(:params) { { "champ_#{type_de_champ.to_typed_id}" => ["{\"#{type_de_champ_child.to_typed_id}\":\"#{type_de_champ_child_value}\"}", "{\"#{type_de_champ_child.to_typed_id}\":\"#{type_de_champ_child_value2}\"}"] } }
 
       it "builds an array of hash(id, value) matching the given params" do
         expect(prefill_params_array).to match([{ id: type_de_champ_child.champ.first.id, value: type_de_champ_child_value }, { id: type_de_champ_child.champ.second.id, value: type_de_champ_child_value2 }])
@@ -180,7 +180,7 @@ RSpec.describe PrefillParams do
       let(:type_de_champ_child_value) { "value" }
       let(:type_de_champ_child_value2) { "value2" }
 
-      let(:params) { { "champ_#{type_de_champ.to_typed_id}" => ["{\"#{type_de_champ_child.libelle}\":\"#{type_de_champ_child_value}\"}", "{\"#{type_de_champ_child.libelle}\":\"#{type_de_champ_child_value2}\"}"] } }
+      let(:params) { { "champ_#{type_de_champ.to_typed_id}" => ["{\"#{type_de_champ_child.to_typed_id}\":\"#{type_de_champ_child_value}\"}", "{\"#{type_de_champ_child.to_typed_id}\":\"#{type_de_champ_child_value2}\"}"] } }
 
       it "builds an array of hash(id, value) matching the given params" do
         expect(prefill_params_array).to match([{ id: type_de_champ_child.champ.first.id, value: type_de_champ_child_value }, { id: type_de_champ_child.champ.second.id, value: type_de_champ_child_value2 }])
@@ -227,7 +227,7 @@ RSpec.describe PrefillParams do
       end
     end
 
-    context "when the public type de champ is unauthorized because of wrong value libelle (repetition)" do
+    context "when the public type de champ is unauthorized because of wrong value typed_id (repetition)" do
       let(:types_de_champ_public) { [{ type: :repetition, children: [{ type: :text }] }] }
       let(:type_de_champ) { procedure.published_revision.types_de_champ_public.first }
       let(:type_de_champ_child) { procedure.published_revision.children_of(type_de_champ).first }

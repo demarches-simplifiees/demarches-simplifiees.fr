@@ -70,6 +70,5 @@ class PrefillParams
       champ.assign_attributes(champ_attributes)
       champ.valid?(:prefill)
     end
-
   end
 end
