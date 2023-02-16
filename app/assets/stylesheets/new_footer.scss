@@ -3,13 +3,6 @@
 @import "mixins";
 @import "placeholders";
 
-footer {
-  background-color: $light-grey;
-  border-top: 1px solid $border-grey;
-  bottom: 0;
-  width: 100%;
-}
-
 .landing-footer {
   @include vertical-padding(72px);
 }
