@@ -1,21 +1,26 @@
-- content_for(:title, "Choix du mot de passe")
+- content_for(:title, t('.title'))
 
 - content_for :footer do
   = render partial: "root/footer"
 
-.container.devise-container
-  .one-column-centered
-    = form_for @administrateur, url: { controller: 'administrateurs/activate', action: :create }, html: { class: "form" } do |f|
-      %br
-      %h1
-        Choix du mot de passe
+.fr-container.fr-my-5w
+  .fr-grid-row.fr-grid-row--center
+    .fr-col-lg-6
+      = form_for @administrateur, url: { controller: 'administrateurs/activate', action: :create } do |f|
+        = f.hidden_field :reset_password_token, value: @token
 
-      = f.hidden_field :reset_password_token, value: @token
-      = f.label :email, "Email"
-      = f.text_field :email, disabled: true
+        %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'edit-password-legend' } }
+          %legend.fr-fieldset__legend#edit-password-legend
+            %h1.fr-h2= t('.title')
 
-      = f.label :password do
-        Mot de passe
-      = render 'password_complexity/field', { form: f, test_complexity: true }
+          .fr-fieldset__element
+            = render Dsfr::InputComponent.new(form: f, attribute: :email, opts: { disabled: true })
 
-      = f.submit 'Continuer', class: 'button large primary expand', id: "submit-password", data: { disable_with: "Envoi..." }
+          .fr-fieldset__element
+            = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field,
+              opts: { autofocus: 'true', autocomplete: 'new-password', data: { controller: 'turbo-input', turbo_input_url_value: show_password_complexity_path }})
+
+            #password_complexity
+              = render PasswordComplexityComponent.new
+
+        = f.submit t('.continue'), id: 'submit-password', class: "fr-btn fr-btn--lg fr-mt-2w", data: { disable_with: t('views.users.passwords.edit.submit_loading') }
