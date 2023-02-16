@@ -23,6 +23,8 @@
 class Champs::MultipleDropDownListChamp < Champ
   before_save :format_before_save
 
+  validate :values_are_in_options, if: -> { value.present? }
+
   def options?
     drop_down_list_options?
   end
@@ -89,5 +91,13 @@ class Champs::MultipleDropDownListChamp < Champ
         self.value = json.to_s
       end
     end
+  end
+
+  def values_are_in_options
+    json = selected_options.reject(&:blank?)
+    return if json.empty?
+    return if (json - enabled_non_empty_options).empty?
+
+    errors.add(:value, :not_in_options)
   end
 end

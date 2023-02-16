@@ -1,0 +1,8 @@
+%p
+  Bonjour,
+
+%p
+  - assignment_state = @still_assigned_to_procedure ? 'assigned' : 'unassigned'
+  = t("administrateurs.groupe_instructeurs.notify_removed_instructeur.#{assignment_state}.email_body", groupe: @group.label, email: @current_instructeur_email, procedure: @group.procedure.libelle)
+
+= render partial: "layouts/mailers/signature"
