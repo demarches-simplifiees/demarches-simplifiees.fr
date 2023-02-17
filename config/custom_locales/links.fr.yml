@@ -2,10 +2,10 @@ fr:
   links:
     provider:
       logo:
-        src: "footer/logo-dmra-carre-120x164.png"
+        src: "footer/logo-dmra-horisontal.png"
         alt: "Logo DMRA"
-        height: 164
-        width: 120
+        height: 90
+        width: 240
       name: "DMRA"
       provided_by: "la DMRA"
       title: "Direction de la Modernisation et des Réformes de l'Administration"
