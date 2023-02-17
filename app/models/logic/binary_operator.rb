@@ -21,7 +21,7 @@ class Logic::BinaryOperator < Logic::Term
     errors = []
 
     if @left.type != :number || @right.type != :number
-      errors += ["les types sont incompatibles : #{self}"]
+      errors << { type: :required_number, operator_name: self.class.name }
     end
 
     errors + @left.errors(stable_ids) + @right.errors(stable_ids)

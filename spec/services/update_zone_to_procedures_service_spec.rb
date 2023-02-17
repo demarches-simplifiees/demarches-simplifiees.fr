@@ -1,10 +1,11 @@
 describe UpdateZoneToProceduresService do
   before(:each) do
-    Rake::Task['zones:populate_zones'].invoke
+    Flipper.enable :zonage
+    Rake::Task['after_party:populate_zones'].invoke
   end
 
   after(:each) do
-    Rake::Task['zones:populate_zones'].reenable
+    Rake::Task['after_party:populate_zones'].reenable
   end
 
   describe '#call' do
