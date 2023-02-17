@@ -28,7 +28,7 @@ describe TypesDeChampEditor::ConditionsErrorsComponent, type: :component do
 
       it do
         expect(page).to have_css('.condition-error')
-        expect(page).to have_content("Le champ « #{tdc.libelle} » est de type « adresse » et ne peut pas être utilisé comme champ cible.")
+        expect(page).to have_content("Le champ « #{tdc.libelle} » est de type « adresse en france » et ne peut pas être utilisé comme champ cible.")
       end
     end
 
