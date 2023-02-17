@@ -5,7 +5,8 @@ namespace :after_party do
 
     Etablissement.joins(:dossier).where(adresse: nil).find_each do |etablissement|
       begin
-        APIEntrepriseService.update_etablissement_from_degraded_mode(etablissement)
+        procedure_id = etablissement.dossier.procedure.id
+        APIEntrepriseService.update_etablissement_from_degraded_mode(etablissement, procedure_id)
       rescue => e
         Sentry.capture_exception(e)
       end
