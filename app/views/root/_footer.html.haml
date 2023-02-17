@@ -12,6 +12,7 @@
               = link_to t("links.provider.url"), title: t("links.provider.title"), 'aria-label': t("links.provider.name") do
                 %span.footer-logo{ role: 'img', 'aria-label': t("links.provider.logo.alt") }
                   = image_tag t("links.provider.logo.src"), alt: t("links.provider.logo.alt"), width: t("links.provider.logo.width"), height: t("links.provider.logo.height"), loading: 'lazy'
+            %li
               = link_to t("links.footer.betagouv.url"), title: t("links.footer.betagouv.title"), 'aria-label': t("links.footer.betagouv.label") do
                 %span.footer-logo.footer-logo-beta-gouv-fr{ role: 'img', 'aria-label': "Logo #{t('links.footer.betagouv.label')}" }
 
