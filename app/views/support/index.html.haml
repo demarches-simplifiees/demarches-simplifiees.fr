@@ -10,7 +10,7 @@
     = form_tag contact_path, method: :post, multipart: true, class: 'form' do
 
       .description
-        %p= t('.intro_html')
+        %h2= t('.intro_html')
         %br
         %p.mandatory-explanation= t('asterisk_html', scope: [:utils])
 

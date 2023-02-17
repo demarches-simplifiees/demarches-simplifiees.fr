@@ -2,16 +2,22 @@ fr:
   links:
     provider:
       logo:
-        src: "footer/logo-dinum.png"
-        alt: "Logo DINUM"
-        height: 161
-        width: 138
+        src: "footer/logo-dmra-carre-120x164.png"
+        alt: "Logo DMRA"
+        height: 164
+        width: 120
       name: "DINUM"
       provided_by: "la DINUM"
       title: "Direction Interministérielle au Numérique"
       url: "https://numerique.gouv.fr"
     footer:
-      nav_aria: "En savoir plus sur %{application_name}"
+      top_labels:
+        communication: Communication
+        legals: Informations légales
+        resources: Ressources
+        diagnostic: Diagnostic
+      description_1: Demarches simplifiées est propulsé par la direction interministérielle du numérique.
+      description_2: Le code source est disponible en licence libre.
       accessibilite:
         label: "Accessibilité : partiellement conforme"
         title: "Consulter notre déclaration d'accessibilité"
@@ -38,11 +44,8 @@ fr:
         url: "https://mes-demarches.gitbook.io/documentation/cgu#rgpd"
       code:
         label: "Code source"
-        title: "Notre code est ouvert"
+        title: "Le code ouvert de Mes-Démarches basé sur démarches-simplifiées"
         url: "https://github.com/govpf/mes-demarches"
-      contact:
-        label: "Contact"
-        title: "Nous contacter"
       contact_technique:
         label: "Contact technique"
         title: "Contacter notre équipe technique"
@@ -99,4 +102,4 @@ fr:
       cookies:
         label: Gestion des cookies
         title: Gestion des cookies
-        
+
