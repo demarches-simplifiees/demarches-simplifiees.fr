@@ -7,11 +7,16 @@ fr:
             id: Nº dossier
             state: Statut
             created_at: Créé le
-            en_construction_at: En construction le
-            depose_at: Déposé le
             updated_at: Mis à jour le
-            depose_since: Déposé depuis
+            depose_at: Déposé le
+            en_construction_at: En construction le
+            en_instruction_at: En instruction le
+            processed_at: Terminé le
             updated_since: Mis à jour depuis
+            depose_since: Déposé depuis
+            en_construction_since: En construction depuis
+            en_instruction_since: En instruction depuis
+            processed_since: Terminé depuis
           user:
             email: Demandeur
           followers_instructeurs:

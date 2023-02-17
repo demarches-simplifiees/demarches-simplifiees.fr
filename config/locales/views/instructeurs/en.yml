@@ -3,3 +3,23 @@ en:
     procedure:
       archive_pending_html: Archive creation pending<br>(requested %{created_period} ago)
       archive_ready_html: Download archive<br>(requested %{generated_period} ago)
+    dossiers:
+      decisions_rendues_block:
+        without_email:
+          en_construction: The file had been sent at %{processed_at}
+          en_instruction: The file had been on instruction at %{processed_at}
+          accepte: The file had been accepted at %{processed_at}
+          refuse: The file file hadd been refused at %{processed_at}
+          classe_sans_suite: The file had been filed away at %{processed_at}
+        with_email:
+          en_construction: '%{email} sent this file at %{processed_at}'
+          en_instruction: '%{email} started this file the instruction at %{processed_at}'
+          accepte: '%{email} accepted this file at %{processed_at}'
+          refuse: '%{email} refused this file at %{processed_at}'
+          classe_sans_suite: '%{email} filed away this file at %{processed_at}'
+      filterable_state:
+        en_construction: "In progress"
+        en_instruction: "Processing"
+        accepte: "Accepted"
+        refuse: "Refused"
+        sans_suite: "No further action"

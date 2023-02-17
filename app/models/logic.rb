@@ -12,12 +12,12 @@ module Logic
       .find { |c| c.name == name }
   end
 
-  def self.ensure_compatibility_from_left(condition)
+  def self.ensure_compatibility_from_left(condition, type_de_champs)
     left = condition.left
     right = condition.right
     operator_class = condition.class
 
-    case [left.type, condition]
+    case [left.type(type_de_champs), condition]
     in [:boolean, _]
       operator_class = Eq
     in [:empty, _]
@@ -31,14 +31,14 @@ module Logic
     in [:number, _]
     end
 
-    if !compatible_type?(left, right)
-      right = case left.type
+    if !compatible_type?(left, right, type_de_champs)
+      right = case left.type(type_de_champs)
       when :boolean
         Constant.new(true)
       when :empty
         Empty.new
       when :enum, :enums
-        Constant.new(left.options.first.second)
+        Constant.new(left.options(type_de_champs).first.second)
       when :number
         Constant.new(0)
       end
@@ -47,8 +47,8 @@ module Logic
     operator_class.new(left, right)
   end
 
-  def self.compatible_type?(left, right)
-    case [left.type, right.type]
+  def self.compatible_type?(left, right, type_de_champs)
+    case [left.type(type_de_champs), right.type(type_de_champs)]
     in [a, ^a] # syntax for same type
       true
     in [:enum, :string] | [:enums, :string]

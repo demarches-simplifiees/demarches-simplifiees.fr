@@ -12,8 +12,8 @@ en:
       url: "https://www.service-public.pf/voir/annuaire/dmra-direction-modernisation-et-reformes-administration/"
     footer:
       description_1: |
-        Mes-Démarches is created by the french interdepartmental direction of digital et customized for French Polynesia
-        by Direction of Modernization and Reform of the Administration.
+        Mes-Démarches is supported by Direction of Modernization and Reform of the Administration and forked from
+        demarches-simplifiees.fr, led by
       aide:
         url: "https://faq.demarches-simplifiees.fr"
       cgu:

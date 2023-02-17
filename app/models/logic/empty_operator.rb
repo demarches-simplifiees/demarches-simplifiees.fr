@@ -1,9 +1,9 @@
 class Logic::EmptyOperator < Logic::BinaryOperator
-  def to_s = "empty operator"
+  def to_s(_type_de_champs = []) = "empty operator"
 
-  def type = :empty
+  def type(_type_de_champs = []) = :empty
 
-  def errors(_stable_ids = nil) = []
+  def errors(_type_de_champs = []) = []
 
   def compute(_champs = [])
     true

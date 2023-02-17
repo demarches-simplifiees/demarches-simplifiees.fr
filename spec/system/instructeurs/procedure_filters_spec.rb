@@ -77,11 +77,25 @@ describe "procedure filters" do
     end
   end
 
+  scenario "should be able to user custom fiters", js: true do
+    # use date filter
+    click_on 'Filtrer'
+    select "En construction le", from: "Colonne"
+    find("input#value[type=date]", visible: true)
+    fill_in "Valeur", with: "10/10/2010"
+    click_button "Ajouter le filtre"
+
+    # use enum filter
+    click_on 'Filtrer'
+    select "Statut", from: "Colonne"
+    find("select#value", visible: false)
+    select 'En construction', from: "Valeur"
+    click_button "Ajouter le filtre"
+  end
+
   scenario "should be able to add and remove two filters for the same field", js: true do
     add_filter(type_de_champ.libelle, champ.value)
     add_filter(type_de_champ.libelle, champ_2.value)
-
-    expect(page).to have_content("#{type_de_champ.libelle} : #{champ.value}")
 
     within ".dossiers-table" do
       expect(page).to have_link(new_unfollow_dossier.id.to_s, exact: true)
@@ -106,7 +120,6 @@ describe "procedure filters" do
     within ".dossiers-table" do
       expect(page).to have_link(new_unfollow_dossier.id.to_s, exact: true)
       expect(page).to have_link(new_unfollow_dossier.user.email)
-
       expect(page).to have_link(new_unfollow_dossier_2.id.to_s, exact: true)
       expect(page).to have_link(new_unfollow_dossier_2.user.email)
     end

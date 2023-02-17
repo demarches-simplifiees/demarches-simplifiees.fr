@@ -1,0 +1,13 @@
+= form_tag add_filter_instructeur_procedure_url(procedure), method: :post, class: 'dropdown-form large', id: 'filter-component', data: { controller: 'dossier-filter' } do
+  = label_tag :field,  t('.column')
+  = select_tag :field, options_for_select(filterable_fields_for_select, field_id), include_blank: field_id.nil?, data: {action: "dossier-filter#onChange"}
+  %br
+  = label_tag :value, t('.value'), for: 'value'
+  - if field_type == :enum
+    = select_tag :value, options_for_select(options_for_select_of_field), id: 'value', name: 'value'
+  - else
+    %input#value{ type: field_type, name: :value, maxlength: ProcedurePresentation::FILTERS_VALUE_MAX_LENGTH, disabled: field_id.nil? ? true : false }
+
+  = hidden_field_tag :statut, statut
+  %br
+  = submit_tag t('.add_filter'), class: 'button'
