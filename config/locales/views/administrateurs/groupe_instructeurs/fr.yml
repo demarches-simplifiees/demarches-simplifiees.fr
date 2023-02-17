@@ -22,9 +22,6 @@ fr:
         assignment:
           one: "L’instructeur %{emails} a été affecté au groupe « %{groupe} »."
           other: "Les instructeurs %{emails} ont été affectés au groupe « %{groupe} »."
-        email_body:
-          one: "L’instructeur %{emails} a été affecté au groupe « %{groupe} » par « %{email} », en charge de la démarche « %{procedure} »."
-          other: "Les instructeurs %{emails} ont été affectés au groupe « %{groupe} » par « %{email} », en charge de la démarche « %{procedure} »."
       notify_group_when_instructeurs_removed:
         email_body:
           one: "L’instructeur %{emails} a été retiré du groupe « %{groupe} » par « %{email} », en charge de la démarche « %{procedure} »."
@@ -34,6 +31,11 @@ fr:
           email_body: "Vous avez été retiré du groupe « %{groupe} » par « %{email} », en charge de la démarche « %{procedure} »."
         unassigned:
           email_body: "Vous avez été désaffecté de la démarche « %{procedure} » par « %{email} »."
+      notify_added_instructeurs:
+        one_group:
+          email_body: "Vous avez été affecté à la démarche « %{procedure} » par « %{email} »."
+        many_groups:
+          email_body: "Vous avez été ajouté au groupe « %{groupe} » par « %{email} », en charge de la démarche « %{procedure} »."
       reaffecter_dossiers:
         existing_groupe:
           one: "%{count} groupe existe"

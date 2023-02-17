@@ -16,9 +16,6 @@ en:
         assignment:
           one: "The instructor %{emails} was assigned to the group « %{groupe} »."
           other: "The instructors %{emails} were assigned to the group « %{groupe} »."
-        email_body:
-          one: "The instructor %{emails} was assigned to the group « %{groupe} » by « %{email} », in charge of procedure « %{procedure} »."
-          other: "The instructors %{emails} were assigned to the group « %{groupe} » by « %{email} », in charge of procedure « %{procedure} »."
       notify_group_when_instructeurs_removed:
         email_body:
           one: "The instructor %{emails} was removed from the group « %{groupe} » by « %{email} », in charge of procedure « %{procedure} »."
@@ -28,6 +25,11 @@ en:
           email_body: "You were unassigned from the procedure « %{procedure} » by « %{email} »."
         assigned:
           email_body: "You were removed from the group « %{groupe} » by « %{email} », in charge of procedure « %{procedure} »."
+      notify_added_instructeurs:
+        one_group:
+          email_body: "You were assigned to the procedure « %{procedure} » by « %{email} »."
+        many_groups:
+          email_body: "You were assigned to the group « %{groupe} » by « %{email} », in charge of procedure « %{procedure} »."
       reaffecter_dossiers:
         existing_groupe:
           one: "%{count} group exist"
