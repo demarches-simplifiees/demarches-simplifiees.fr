@@ -19,9 +19,9 @@
         instructeurs: @instructeurs,
         available_instructeur_emails: @available_instructeur_emails,
         disabled_as_super_admin: administrateur_as_manager? }
-  - if !@procedure.routing_enabled?
-    = render partial: 'administrateurs/groupe_instructeurs/instructeurs_self_management', locals: { procedure: @procedure }
 
   = render partial: 'administrateurs/groupe_instructeurs/routing', locals: { procedure: @procedure }
 
   = render partial: 'administrateurs/groupe_instructeurs/edit', locals: { procedure: @procedure, groupes_instructeurs: @groupes_instructeurs }
+
+  = render partial: 'administrateurs/groupe_instructeurs/instructeurs_self_management', locals: { procedure: @procedure }
