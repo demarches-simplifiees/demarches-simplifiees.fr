@@ -119,4 +119,21 @@ module DossierHelper
       end
     end
   end
+
+  def france_connect_informations(user_information, provider)
+    if provider
+      provider = 'FranceConnect' if provider == 'particulier' || provider == 'entreprise'
+      provider = provider.camelize
+    end
+    if user_information.full_name.empty?
+      t("shared.dossiers.france_connect_informations.details_no_name", provider: provider)
+    elsif user_information.updated_at.present?
+      t("shared.dossiers.france_connect_informations.details_updated",
+        name: user_information.full_name,
+        provider: provider,
+        date: l(user_information.updated_at.to_date, format: :default))
+    else
+      t("shared.dossiers.france_connect_informations.details", name: user_information.full_name)
+    end
+  end
 end
