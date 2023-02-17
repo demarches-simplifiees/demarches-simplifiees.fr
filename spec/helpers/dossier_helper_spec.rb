@@ -217,7 +217,8 @@ RSpec.describe DossierHelper, type: :helper do
   end
 
   describe ".france_connect_information" do
-    subject { france_connect_informations(user_information) }
+    subject { france_connect_informations(user_information, provider) }
+    let(:provider) { "particulier" }
 
     context "with complete france_connect information" do
       let(:user_information) { build(:france_connect_information, updated_at: Time.zone.now) }
@@ -248,6 +249,14 @@ RSpec.describe DossierHelper, type: :helper do
 
       it {
         expect(subject).to have_text("Le dossier a été déposé par un compte FranceConnect.")
+      }
+    end
+
+    context "from provider other than FranceConnect" do
+      let(:user_information) { build(:france_connect_information, updated_at: Time.zone.now) }
+      let(:provider) { "google" }
+      it {
+        expect(subject).to have_text("Le dossier a été déposé par le compte de #{user_information.given_name} #{user_information.family_name}, authentifié par #{provider.camelize} le #{user_information.updated_at.strftime('%d/%m/%Y')}")
       }
     end
   end
