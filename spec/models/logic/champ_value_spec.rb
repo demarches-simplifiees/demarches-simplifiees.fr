@@ -80,6 +80,6 @@ describe Logic::ChampValue do
     let(:champ) { create(:champ) }
 
     it { expect(champ_value(champ.stable_id).errors([champ.stable_id])).to be_empty }
-    it { expect(champ_value(champ.stable_id).errors(['other stable ids'])).to eq(["le type de champ stable_id=#{champ.stable_id} n'est pas disponible"]) }
+    it { expect(champ_value(champ.stable_id).errors(['other stable ids'])).to eq([{ type: :not_available }]) }
   end
 end

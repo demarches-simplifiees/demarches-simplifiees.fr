@@ -19,7 +19,7 @@ class Entreprise < Hashie::Dash
   property :effectif_mensuel
   property :effectif_annuel
   property :effectif_annuel_annee
-  property :date_creation
+  property :date_creation, default: nil
   property :nom, default: nil
   property :prenom, default: nil
 

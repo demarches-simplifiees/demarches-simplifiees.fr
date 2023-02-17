@@ -830,6 +830,10 @@ class Procedure < ApplicationRecord
     api_particulier_sources['mesri'].present?
   end
 
+  def published_or_created_at
+    published_at || created_at
+  end
+
   private
 
   #----- PF section start
