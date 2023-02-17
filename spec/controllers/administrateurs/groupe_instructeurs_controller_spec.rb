@@ -268,11 +268,22 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
     context 'of a news instructeurs' do
       let(:new_instructeur_emails) { ['new_i1@mail.com', 'new_i2@mail.com'] }
-      before { do_request }
+      before do
+        allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs)
+          .and_return(double(deliver_later: true))
+        do_request
+      end
       it { expect(gi_1_2.instructeurs.pluck(:email)).to include(*new_instructeur_emails) }
       it { expect(flash.notice).to be_present }
       it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_2)) }
       it { expect(procedure.routing_enabled?).to be_truthy }
+      it "calls GroupeInstructeurMailer with the right params" do
+        expect(GroupeInstructeurMailer).to have_received(:notify_added_instructeurs).with(
+          gi_1_2,
+          gi_1_2.instructeurs.last(2),
+          admin.email
+        )
+      end
     end
 
     context 'of an instructeur already in the group' do

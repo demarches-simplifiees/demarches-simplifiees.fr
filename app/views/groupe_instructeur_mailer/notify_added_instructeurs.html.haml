@@ -1,0 +1,8 @@
+%p
+  Bonjour,
+
+%p
+  - number_of_groups = @group.procedure.groupe_instructeurs.many? ? 'many_groups' : 'one_group'
+  = t("administrateurs.groupe_instructeurs.notify_added_instructeurs.#{number_of_groups}.email_body", groupe: @group.label, email: @current_instructeur_email, procedure: @group.procedure.libelle)
+
+= render partial: "layouts/mailers/signature"
