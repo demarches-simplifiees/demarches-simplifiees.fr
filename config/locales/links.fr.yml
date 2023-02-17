@@ -1,6 +1,11 @@
 fr:
   links:
     provider:
+      logo:
+        src: "footer/logo-dmra-carre-120x164.png"
+        alt: "Logo DMRA"
+        height: 164
+        width: 120
       name: "DINUM"
       provided_by: "la DINUM"
       title: "Direction Interministérielle au Numérique"
@@ -11,7 +16,7 @@ fr:
         legals: Informations légales
         resources: Ressources
         diagnostic: Diagnostic
-      description_1: Demarches simplifiées est propulsé par la direction interministérielle du numérique. 
+      description_1: Demarches simplifiées est propulsé par la direction interministérielle du numérique.
       description_2: Le code source est disponible en licence libre.
       accessibilite:
         label: "Accessibilité : partiellement conforme"
@@ -97,4 +102,4 @@ fr:
       cookies:
         label: Gestion des cookies
         title: Gestion des cookies
-        
+

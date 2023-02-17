@@ -1,6 +1,11 @@
 en:
   links:
     provider:
+      logo:
+        src: "footer/logo-dmra-carre-120x164.png"
+        alt: "Logo DMRA"
+        height: 164
+        width: 120
       name: "DINUM"
       provided_by: "la DINUM"
       title: "Direction Interministérielle au Numérique"
@@ -11,7 +16,7 @@ en:
         legals: Legal information
         resources: Resources
         diagnostic: Diagnostic
-      description_1: Demarches simplifiées is powered by the interdepartmental direction of digital. 
+      description_1: Demarches simplifiées is powered by the interdepartmental direction of digital.
       description_2: The source code is available under a free license.
       accessibilite:
         label: "Accessibility: partially compliant"
