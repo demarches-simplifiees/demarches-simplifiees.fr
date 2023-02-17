@@ -166,7 +166,8 @@ linters:
 
   SelectorFormat:
     enabled: true
-    convention: hyphenated_lowercase
+    # hyphenated_lowercase + any dsfr selector which are not hyphenated
+    convention: ^(?:fr-[^A-Z]+|[^_A-Z]+)$
 
   Shorthand:
     enabled: false
