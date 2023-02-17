@@ -2,7 +2,7 @@ en:
   links:
     provider:
       logo:
-        src: "footer/logo-dmra-carre.png"
+        src: "footer/logo-dmra-horisontal.png"
         alt: "Logo DMRA"
         height: 90
         width: 240
