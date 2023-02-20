@@ -2089,6 +2089,33 @@ describe Dossier do
     end
   end
 
+  describe '#auto_numbering_section_headers_for?' do
+    let(:public_libelle) { "Infos" }
+    let(:private_libelle) { "Infos Private" }
+    let(:types_de_champ_public) { [{ type: :header_section, libelle: public_libelle }, { type: :header_section, libelle: "Details" }] }
+    let(:types_de_champ_private) { [{ type: :header_section, libelle: private_libelle }, { type: :header_section, libelle: "Details Private" }] }
+
+    let(:procedure) { create(:procedure, :for_individual, types_de_champ_public:, types_de_champ_private:) }
+    let(:dossier) { create(:dossier, procedure: procedure) }
+
+    context "with no section having number" do
+      it { expect(dossier.auto_numbering_section_headers_for?(dossier.champs_public[1])).to eq(true) }
+      it { expect(dossier.auto_numbering_section_headers_for?(dossier.champs_private[1])).to eq(true) }
+    end
+
+    context "with public section having number" do
+      let(:public_libelle) { "1 - infos" }
+      it { expect(dossier.auto_numbering_section_headers_for?(dossier.champs_public[1])).to eq(false) }
+      it { expect(dossier.auto_numbering_section_headers_for?(dossier.champs_private[1])).to eq(true) }
+    end
+
+    context "with private section having number" do
+      let(:private_libelle) { "1 - infos private" }
+      it { expect(dossier.auto_numbering_section_headers_for?(dossier.champs_public[1])).to eq(true) }
+      it { expect(dossier.auto_numbering_section_headers_for?(dossier.champs_private[1])).to eq(false) }
+    end
+  end
+
   private
 
   def count_for_month(processed_by_month, month)

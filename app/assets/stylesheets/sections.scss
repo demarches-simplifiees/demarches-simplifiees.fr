@@ -1,0 +1,11 @@
+.counter-start-header-section {
+  counter-reset: headerSectionCounter;
+}
+
+.header-section {
+  counter-increment: headerSectionCounter;
+
+  &.header-section-counter::before {
+    content: counter(headerSectionCounter) ". ";
+  }
+}
