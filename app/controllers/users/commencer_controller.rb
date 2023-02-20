@@ -2,15 +2,22 @@ module Users
   class CommencerController < ApplicationController
     layout 'procedure_context'
 
-    before_action :retrieve_prefilled_dossier,        if: -> { params[:prefill_token].present? },                only: :commencer
-    before_action :set_prefilled_dossier_ownership,   if: -> { user_signed_in? && @prefilled_dossier&.orphan? }, only: :commencer
-    before_action :check_prefilled_dossier_ownership, if: -> { user_signed_in? && @prefilled_dossier },          only: :commencer
-
     def commencer
       @procedure = retrieve_procedure
       return procedure_not_found if @procedure.blank? || @procedure.brouillon?
-
       @revision = @procedure.published_revision
+
+      if prefill_params_present?
+        build_prefilled_dossier
+      elsif params[:prefill_token].present?
+        retrieve_prefilled_dossier
+      end
+
+      if user_signed_in?
+        set_prefilled_dossier_ownership if @prefilled_dossier&.orphan?
+        check_prefilled_dossier_ownership if @prefilled_dossier
+      end
+
       render 'commencer/show'
     end
 
@@ -20,22 +27,6 @@ module Users
       @revision = @procedure.draft_revision
 
       render 'commencer/show'
-    end
-
-    def preremplir
-      @procedure = retrieve_procedure
-      dossier = Dossier.new(
-        revision: @procedure.active_revision,
-        groupe_instructeur: @procedure.defaut_groupe_instructeur_for_new_dossier,
-        state: Dossier.states.fetch(:brouillon),
-        prefilled: true
-      )
-      dossier.build_default_individual
-      if dossier.save
-        dossier.prefill!(PrefillParams.new(dossier, params.to_unsafe_h).to_a)
-      end
-
-      redirect_to commencer_url(@procedure.path, prefill_token: dossier.prefill_token)
     end
 
     def dossier_vide_pdf
@@ -82,12 +73,29 @@ module Users
 
     private
 
+    def prefill_params_present?
+      params.keys.find { |param| param.split('_').first == "champ" }
+    end
+
     def retrieve_procedure
       Procedure.publiees.or(Procedure.brouillons).find_by(path: params[:path])
     end
 
     def retrieve_procedure_with_closed
       Procedure.publiees.or(Procedure.brouillons).or(Procedure.closes).order(published_at: :desc).find_by(path: params[:path])
+    end
+
+    def build_prefilled_dossier
+      @prefilled_dossier = Dossier.new(
+        revision: @revision,
+        groupe_instructeur: @procedure.defaut_groupe_instructeur_for_new_dossier,
+        state: Dossier.states.fetch(:brouillon),
+        prefilled: true
+      )
+      @prefilled_dossier.build_default_individual
+      if @prefilled_dossier.save
+        @prefilled_dossier.prefill!(PrefillParams.new(@prefilled_dossier, params.to_unsafe_h).to_a)
+      end
     end
 
     def retrieve_prefilled_dossier
