@@ -2,13 +2,17 @@
   - content_for(:notice_info) do
     = render partial: "shared/dossiers/france_connect_informations_notice", locals: { user_information: dossier.france_connect_information }
 
-.dossier-edit.container
+.dossier-edit.container{ 'data-controller': 'delete-attachment' }
   = render partial: "shared/dossiers/submit_is_over", locals: { dossier: dossier }
 
   - if dossier.brouillon?
     - form_options = { url: brouillon_dossier_url(dossier), method: :patch, data: { save_on_input: true } }
   - else
     - form_options = { url: modifier_dossier_url(dossier), method: :patch }
+
+  = form_for(:attachment, url: { controller: "/attachments", action: "destroy", id: ""}, method: :delete, data: { action: "delete-attachment#onSubmit", 'delete-attachment-target': 'form' }, html: { class: 'form', id: dom_id(ActiveStorage::Attachment.new, :delete) }) {}
+
+  }
 
   = form_for dossier, form_options.merge({ html: { id: 'dossier-edit-form', class: 'form', multipart: true, novalidate: 'novalidate' } }) do |f|
 
