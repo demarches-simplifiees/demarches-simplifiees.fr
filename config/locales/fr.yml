@@ -85,7 +85,6 @@ fr:
         show_dossiers: Voir mes dossiers en cours
         prefilled_draft: "Vous avez un dossier prérempli"
         prefilled_draft_detail_html: "Vous êtes prêt·e à poursuivre un dossier prérempli sur la démarche « %{procedure} », commencé il y a <strong>%{time_ago}</strong>."
-        prefill_dossier_detail_html: "Vous êtes prêt·e à poursuivre un dossier prérempli sur la démarche « %{procedure} »."
         already_draft: "Vous avez déjà commencé à remplir un dossier"
         already_draft_detail_html: "Il y a <strong>%{time_ago}</strong>, vous avez commencé à remplir un dossier sur la démarche « %{procedure} »."
         already_not_draft: "Vous avez déjà déposé un dossier"
