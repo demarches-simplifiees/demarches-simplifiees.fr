@@ -19,6 +19,12 @@ module Mutations
         GroupeInstructeurMailer
           .notify_group_when_instructeurs_removed(groupe_instructeur, instructeurs, current_administrateur.email)
           .deliver_later
+
+        instructeurs.each do |instructeur|
+          GroupeInstructeurMailer
+            .notify_removed_instructeur(groupe_instructeur, instructeur, current_administrateur.email)
+            .deliver_later
+        end
       end
 
       { groupe_instructeur: }
