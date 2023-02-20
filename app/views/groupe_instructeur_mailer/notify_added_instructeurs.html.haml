@@ -1,5 +1,4 @@
-%p
-  Bonjour,
+%p= t(:hello, scope: [:views, :shared, :greetings])
 
 %p
   - number_of_groups = @group.procedure.groupe_instructeurs.many? ? 'many_groups' : 'one_group'
