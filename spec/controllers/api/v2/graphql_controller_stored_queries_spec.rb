@@ -360,6 +360,11 @@ describe API::V2::GraphqlController do
       let(:variables) { { input: { groupeInstructeurId: groupe_instructeur.to_typed_id, instructeurs: [{ email: }, { email: 'yolo' }, { id: existing_instructeur.to_typed_id }] }, includeInstructeurs: true } }
       let(:operation_name) { 'groupeInstructeurAjouterInstructeurs' }
 
+      before do
+        allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs)
+          .and_return(double(deliver_later: true))
+      end
+
       it {
         expect(gql_errors).to be_nil
         expect(gql_data[:groupeInstructeurAjouterInstructeurs][:errors]).to be_nil
@@ -367,6 +372,11 @@ describe API::V2::GraphqlController do
         expect(gql_data[:groupeInstructeurAjouterInstructeurs][:groupeInstructeur][:id]).to eq(groupe_instructeur.to_typed_id)
         expect(groupe_instructeur.instructeurs.count).to eq(2)
         expect(gql_data[:groupeInstructeurAjouterInstructeurs][:groupeInstructeur][:instructeurs]).to eq([{ id: existing_instructeur.to_typed_id, email: existing_instructeur.email }, { id: Instructeur.last.to_typed_id, email: }])
+        expect(GroupeInstructeurMailer).to have_received(:notify_added_instructeurs).with(
+          groupe_instructeur,
+          [Instructeur.last],
+          admin.email
+        )
       }
     end
 
