@@ -22,6 +22,10 @@ module Instructeurs
       else
         groupe_instructeur.add(instructeur)
         flash[:notice] = "L’instructeur « #{instructeur_email} » a été affecté au groupe."
+
+        GroupeInstructeurMailer
+          .notify_added_instructeurs(groupe_instructeur, [instructeur], current_user.email)
+          .deliver_later
       end
 
       redirect_to instructeur_groupe_path(procedure, groupe_instructeur)

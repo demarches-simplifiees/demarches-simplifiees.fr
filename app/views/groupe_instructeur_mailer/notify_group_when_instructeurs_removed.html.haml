@@ -1,8 +1,7 @@
-%p
-  Bonjour,
+%p= t(:hello, scope: [:views, :shared, :greetings])
 
 %p
-  = t('administrateurs.groupe_instructeurs.notify_group_when_instructeurs_removed.email_body', count: @removed_instructeur_emails.size, emails: @removed_instructeur_emails.join(', '), groupe: @group.label, email: @current_instructeur_email, procedure: @group.procedure.libelle)
+  = t('.email_body', count: @removed_instructeur_emails.size, emails: @removed_instructeur_emails.join(', '), groupe: @group.label, email: @current_instructeur_email, procedure: @group.procedure.libelle)
 
 %p
   Cliquez sur le lien ci-dessous pour voir la liste des instructeurs de ce groupe :
