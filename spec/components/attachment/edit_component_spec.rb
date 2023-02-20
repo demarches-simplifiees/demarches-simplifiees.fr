@@ -103,7 +103,7 @@ RSpec.describe Attachment::EditComponent, type: :component do
       it 'displays the filename, but doesn’t allow to download the file' do
         expect(attachment.watermark_pending?).to be_truthy
         expect(subject).to have_text(filename)
-        expect(subject).to have_link('Supprimer')
+        expect(subject).to have_button('Supprimer')
         expect(subject).to have_no_link(text: filename) # don't match "Delete" link which also include filename in title attribute
         expect(subject).to have_text('Traitement en cours')
       end

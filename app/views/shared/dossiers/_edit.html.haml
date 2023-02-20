@@ -12,8 +12,6 @@
 
   = form_for(:attachment, url: { controller: "/attachments", action: "destroy", id: ""}, method: :delete, data: { action: "delete-attachment#onSubmit", 'delete-attachment-target': 'form' }, html: { class: 'form', id: dom_id(ActiveStorage::Attachment.new, :delete) }) {}
 
-  }
-
   = form_for dossier, form_options.merge({ html: { id: 'dossier-edit-form', class: 'form', multipart: true, novalidate: 'novalidate' } }) do |f|
 
     %header.mb-6
