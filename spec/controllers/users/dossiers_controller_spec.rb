@@ -1082,10 +1082,6 @@ describe Users::DossiersController, type: :controller do
               }
             }
 
-            before { session[:stored_params] = params.to_json }
-
-            it { expect { subject }.to change { session[:stored_params] }.to(nil) }
-
             it { expect { subject }.to change { Dossier.count }.by(1) }
 
             it "prefills the dossier's champs with the given values" do
