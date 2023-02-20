@@ -90,7 +90,7 @@ class ProcedurePresentation < ApplicationRecord
 
     fields.concat procedure.types_de_champ_for_procedure_presentation
       .pluck(:type_champ, :libelle, :private, :stable_id)
-      .map { |(type_champ, libelle, is_private, stable_id)| field_hash(is_private ? TYPE_DE_CHAMP_PRIVATE : TYPE_DE_CHAMP, stable_id.to_s, label: libelle, type: (type_champ == TypeDeChamp.type_champs.fetch(:departements) ? :enum : :text)) }
+      .map { |(type_champ, libelle, is_private, stable_id)| field_hash(is_private ? TYPE_DE_CHAMP_PRIVATE : TYPE_DE_CHAMP, stable_id.to_s, label: libelle, type: (TypeDeChamp.options_for_select?(type_champ) ? :enum : :text)) }
 
     fields
   end
