@@ -53,6 +53,8 @@ class Champ < ApplicationRecord
     :repetition?,
     :block?,
     :dossier_link?,
+    :departement?,
+    :region?,
     :titre_identite?,
     :header_section?,
     :simple_drop_down_list?,
