@@ -379,6 +379,8 @@ describe API::V2::GraphqlController do
       let(:operation_name) { 'groupeInstructeurSupprimerInstructeurs' }
 
       before do
+        allow(GroupeInstructeurMailer).to receive(:notify_group_when_instructeurs_removed)
+          .and_return(double(deliver_later: true))
         existing_instructeur
         groupe_instructeur.add(new_instructeur)
       end
@@ -390,6 +392,11 @@ describe API::V2::GraphqlController do
         expect(gql_data[:groupeInstructeurSupprimerInstructeurs][:groupeInstructeur][:id]).to eq(groupe_instructeur.to_typed_id)
         expect(groupe_instructeur.instructeurs.count).to eq(1)
         expect(gql_data[:groupeInstructeurSupprimerInstructeurs][:groupeInstructeur][:instructeurs]).to eq([{ id: existing_instructeur.to_typed_id, email: existing_instructeur.email }])
+        expect(GroupeInstructeurMailer).to have_received(:notify_group_when_instructeurs_removed).with(
+          groupe_instructeur,
+          [new_instructeur],
+          admin.email
+        )
       }
     end
 

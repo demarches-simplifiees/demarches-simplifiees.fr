@@ -14,6 +14,13 @@ module Mutations
 
       instructeurs.each { groupe_instructeur.remove(_1) }
       groupe_instructeur.reload
+
+      if instructeurs.present?
+        GroupeInstructeurMailer
+          .notify_group_when_instructeurs_removed(groupe_instructeur, instructeurs, current_administrateur.email)
+          .deliver_later
+      end
+
       { groupe_instructeur: }
     end
   end
