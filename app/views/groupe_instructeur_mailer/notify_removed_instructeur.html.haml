@@ -1,5 +1,4 @@
-%p
-  Bonjour,
+%p= t(:hello, scope: [:views, :shared, :greetings])
 
 %p
   - assignment_state = @still_assigned_to_procedure ? 'assigned' : 'unassigned'

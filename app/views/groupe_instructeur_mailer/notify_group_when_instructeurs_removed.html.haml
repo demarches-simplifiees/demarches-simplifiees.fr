@@ -1,5 +1,4 @@
-%p
-  Bonjour,
+%p= t(:hello, scope: [:views, :shared, :greetings])
 
 %p
   = t('.email_body', count: @removed_instructeur_emails.size, emails: @removed_instructeur_emails.join(', '), groupe: @group.label, email: @current_instructeur_email, procedure: @group.procedure.libelle)
