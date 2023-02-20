@@ -49,7 +49,7 @@ module Administrateurs
     end
 
     def condition_form
-      ConditionForm.new(condition_params)
+      ConditionForm.new(condition_params.merge({ upper_tdcs: @upper_tdcs }))
     end
 
     def retrieve_coordinate_and_uppers

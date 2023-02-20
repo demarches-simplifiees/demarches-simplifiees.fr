@@ -50,7 +50,6 @@ class TypeDeChamp < ApplicationRecord
     regions: 'regions',
     departements: 'departements',
     communes: 'communes',
-    engagement: 'engagement',
     header_section: 'header_section',
     explication: 'explication',
     dossier_link: 'dossier_link',

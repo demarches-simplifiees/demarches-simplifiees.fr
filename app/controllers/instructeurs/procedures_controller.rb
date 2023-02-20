@@ -127,9 +127,19 @@ module Instructeurs
     end
 
     def add_filter
-      procedure_presentation.add_filter(statut, params[:field], params[:value])
+      respond_to do |format|
+        format.html do
+          procedure_presentation.add_filter(statut, params[:field], params[:value])
 
-      redirect_back(fallback_location: instructeur_procedure_url(procedure))
+          redirect_back(fallback_location: instructeur_procedure_url(procedure))
+        end
+        format.turbo_stream do
+          @statut = statut
+          @procedure = procedure
+          @procedure_presentation = procedure_presentation
+          @field = params[:field]
+        end
+      end
     end
 
     def remove_filter
