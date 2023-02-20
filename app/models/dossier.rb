@@ -1291,6 +1291,10 @@ class Dossier < ApplicationRecord
     false
   end
 
+  def auto_numbering_section_headers_for?(champ)
+    sections_for(champ)&.none?(&:libelle_with_section_index?)
+  end
+
   private
 
   def create_missing_traitemets
