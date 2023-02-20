@@ -2116,6 +2116,47 @@ describe Dossier do
     end
   end
 
+  describe '#index_for_section_header' do
+    include Logic
+    let(:number_stable_id) { 99 }
+    let(:types_de_champ) {
+  [
+    { type: :header_section, libelle: "Infos" }, { type: :integer_number, stable_id: number_stable_id },
+    { type: :header_section, libelle: "Details", condition: ds_eq(champ_value(99), constant(5)) }, { type: :header_section, libelle: "Conclusion" }
+  ]
+}
+
+    let(:procedure) { create(:procedure, :for_individual, types_de_champ_public: types_de_champ) }
+    let(:dossier) { create(:dossier, procedure: procedure) }
+
+    let(:headers) { dossier.champs_public.select { _1.header_section? } }
+
+    let(:number_value) { nil }
+
+    before do
+      dossier.champs_public.find { _1.stable_id == number_stable_id }.update(value: number_value)
+      dossier.reload
+    end
+
+    context "when there are invisible sections" do
+      it "index accordingly header sections" do
+         expect(dossier.index_for_section_header(headers[0])).to eq(1)
+         expect(headers[1]).not_to be_visible
+         expect(dossier.index_for_section_header(headers[2])).to eq(2)
+       end
+    end
+
+    context "when all headers are visible" do
+      let(:number_value) { 5 }
+      it "index accordingly header sections" do
+        expect(dossier.index_for_section_header(headers[0])).to eq(1)
+        expect(headers[1]).to be_visible
+        expect(dossier.index_for_section_header(headers[1])).to eq(2)
+        expect(dossier.index_for_section_header(headers[2])).to eq(3)
+      end
+    end
+  end
+
   private
 
   def count_for_month(processed_by_month, month)
