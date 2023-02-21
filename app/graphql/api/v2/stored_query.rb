@@ -288,6 +288,7 @@ class API::V2::StoredQuery
     dateFermeture
     notice { url }
     deliberation { url }
+    demarcheUrl
     cadreJuridiqueUrl
     service @include(if: $includeService) {
       ...ServiceFragment

@@ -75,7 +75,11 @@ Cela évite l’accès récursif aux dossiers."
     delegate :description, :opendata, :tags, to: :procedure
 
     def demarche_url
-      procedure.lien_demarche
+      if procedure.brouillon?
+        Rails.application.routes.url_helpers.commencer_test_url(path: procedure.path)
+      else
+        Rails.application.routes.url_helpers.commencer_url(path: procedure.path)
+      end
     end
 
     def dpo_url
