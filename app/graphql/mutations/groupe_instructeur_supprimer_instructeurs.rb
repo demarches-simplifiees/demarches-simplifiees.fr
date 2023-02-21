@@ -12,10 +12,10 @@ module Mutations
       ids, emails = partition_instructeurs_by(instructeurs)
       instructeurs = groupe_instructeur.instructeurs.find_all_by_identifier(ids:, emails:)
 
-      instructeurs.each { groupe_instructeur.remove(_1) }
-      groupe_instructeur.reload
-
       if instructeurs.present?
+        instructeurs.each { groupe_instructeur.remove(_1) }
+        groupe_instructeur.reload
+
         GroupeInstructeurMailer
           .notify_group_when_instructeurs_removed(groupe_instructeur, instructeurs, current_administrateur.email)
           .deliver_later
