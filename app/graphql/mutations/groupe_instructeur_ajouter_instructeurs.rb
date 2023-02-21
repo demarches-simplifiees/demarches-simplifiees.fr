@@ -11,7 +11,7 @@ module Mutations
 
     def resolve(groupe_instructeur:, instructeurs:)
       ids, emails = partition_instructeurs_by(instructeurs)
-      instructeurs, invalid_emails = Instructeur.find_or_create_instructeurs(ids:, emails:, administrateurs: groupe_instructeur.procedure.administrateurs)
+      instructeurs, invalid_emails = groupe_instructeur.add_instructeurs(ids:, emails:)
 
       instructeurs.each { groupe_instructeur.add(_1) }
       groupe_instructeur.reload
