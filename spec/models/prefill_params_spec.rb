@@ -251,7 +251,7 @@ RSpec.describe PrefillParams do
 
   def attributes(champ, value)
     TypesDeChamp::PrefillTypeDeChamp
-      .build(champ.type_de_champ)
+      .build(champ.type_de_champ, procedure.active_revision)
       .to_assignable_attributes(champ, value)
   end
 end
