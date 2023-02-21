@@ -22,7 +22,7 @@ describe 'Prefilling a dossier (with a GET request):' do
     ]
   }
   let(:epci_value) { ['01', '200029999'] }
-  let(:sub_type_de_champs_repetition) { type_de_champ_repetition.active_revision_type_de_champ.revision_types_de_champ.map(&:type_de_champ) }
+  let(:sub_type_de_champs_repetition) { procedure.active_revision.children_of(type_de_champ_repetition) }
   let(:text_repetition_libelle) { sub_type_de_champs_repetition.first.libelle }
   let(:integer_repetition_libelle) { sub_type_de_champs_repetition.second.libelle }
   let(:text_repetition_value) { "First repetition text" }

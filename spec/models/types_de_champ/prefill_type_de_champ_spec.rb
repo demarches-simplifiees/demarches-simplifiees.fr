@@ -4,60 +4,62 @@ RSpec.describe TypesDeChamp::PrefillTypeDeChamp, type: :model do
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
 
+  let(:procedure) { create(:procedure) }
+
   describe '.build' do
-    subject(:built) { described_class.build(type_de_champ) }
+    subject(:built) { described_class.build(type_de_champ, procedure.active_revision) }
 
     context 'when the type de champ is a drop_down_list' do
-      let(:type_de_champ) { build(:type_de_champ_drop_down_list) }
+      let(:type_de_champ) { build(:type_de_champ_drop_down_list, procedure: procedure) }
 
       it { expect(built).to be_kind_of(TypesDeChamp::PrefillDropDownListTypeDeChamp) }
     end
 
     context 'when the type de champ is a multiple_drop_down_list' do
-      let(:type_de_champ) { build(:type_de_champ_multiple_drop_down_list) }
+      let(:type_de_champ) { build(:type_de_champ_multiple_drop_down_list, procedure: procedure) }
 
       it { expect(built).to be_kind_of(TypesDeChamp::PrefillMultipleDropDownListTypeDeChamp) }
     end
 
     context 'when the type de champ is a pays' do
-      let(:type_de_champ) { build(:type_de_champ_pays) }
+      let(:type_de_champ) { build(:type_de_champ_pays, procedure: procedure) }
 
       it { expect(built).to be_kind_of(TypesDeChamp::PrefillPaysTypeDeChamp) }
     end
 
     context 'when the type de champ is a regions' do
-      let(:type_de_champ) { build(:type_de_champ_regions) }
+      let(:type_de_champ) { build(:type_de_champ_regions, procedure: procedure) }
 
       it { expect(built).to be_kind_of(TypesDeChamp::PrefillRegionTypeDeChamp) }
     end
 
     context 'when the type de champ is a repetition' do
-      let(:type_de_champ) { build(:type_de_champ_repetition) }
+      let(:type_de_champ) { build(:type_de_champ_repetition, procedure: procedure) }
 
       it { expect(built).to be_kind_of(TypesDeChamp::PrefillRepetitionTypeDeChamp) }
     end
 
     context 'when the type de champ is a departements' do
-      let(:type_de_champ) { build(:type_de_champ_departements) }
+      let(:type_de_champ) { build(:type_de_champ_departements, procedure: procedure) }
 
       it { expect(built).to be_kind_of(TypesDeChamp::PrefillDepartementTypeDeChamp) }
     end
 
     context 'when the type de champ is a epci' do
-      let(:type_de_champ) { build(:type_de_champ_epci) }
+      let(:type_de_champ) { build(:type_de_champ_epci, procedure: procedure) }
 
       it { expect(built).to be_kind_of(TypesDeChamp::PrefillEpciTypeDeChamp) }
     end
 
     context 'when any other type de champ' do
-      let(:type_de_champ) { build(:type_de_champ_date) }
+      let(:type_de_champ) { build(:type_de_champ_date, procedure: procedure) }
 
       it { expect(built).to be_kind_of(TypesDeChamp::PrefillTypeDeChamp) }
     end
   end
 
   describe '.wrap' do
-    subject(:wrapped) { described_class.wrap([build(:type_de_champ_drop_down_list), build(:type_de_champ_email)]) }
+    subject(:wrapped) { described_class.wrap([build(:type_de_champ_drop_down_list, procedure: procedure), build(:type_de_champ_email, procedure: procedure)], procedure.active_revision) }
 
     it 'wraps the collection' do
       expect(wrapped.first).to be_kind_of(TypesDeChamp::PrefillDropDownListTypeDeChamp)
@@ -66,7 +68,7 @@ RSpec.describe TypesDeChamp::PrefillTypeDeChamp, type: :model do
   end
 
   describe '#possible_values' do
-    let(:built) { described_class.build(type_de_champ) }
+    let(:built) { described_class.build(type_de_champ, procedure.active_revision) }
     subject(:possible_values) { built.possible_values }
 
     context 'when the type de champ is prefillable' do
@@ -88,7 +90,7 @@ RSpec.describe TypesDeChamp::PrefillTypeDeChamp, type: :model do
         let(:link_to_all_possible_values) {
           link_to(
             I18n.t("views.prefill_descriptions.edit.possible_values.link.text"),
-            Rails.application.routes.url_helpers.prefill_type_de_champ_path(type_de_champ.path, type_de_champ),
+            Rails.application.routes.url_helpers.prefill_type_de_champ_path(procedure.path, type_de_champ),
             title: new_tab_suffix(I18n.t("views.prefill_descriptions.edit.possible_values.link.title")),
             **external_link_attributes
           )
@@ -113,33 +115,33 @@ RSpec.describe TypesDeChamp::PrefillTypeDeChamp, type: :model do
     end
 
     context 'when the type de champ is not prefillable' do
-      let(:type_de_champ) { build(:type_de_champ_mesri) }
+      let(:type_de_champ) { build(:type_de_champ_mesri, procedure: procedure) }
 
       it { expect(possible_values).to be_empty }
     end
   end
 
   describe '#example_value' do
-    subject(:example_value) { described_class.build(type_de_champ).example_value }
+    subject(:example_value) { described_class.build(type_de_champ, procedure.active_revision).example_value }
 
     context 'when the type de champ is not prefillable' do
-      let(:type_de_champ) { build(:type_de_champ_mesri) }
+      let(:type_de_champ) { build(:type_de_champ_mesri, procedure: procedure) }
 
       it { expect(example_value).to be_nil }
     end
 
     context 'when the type de champ is prefillable' do
-      let(:type_de_champ) { build(:type_de_champ_email) }
+      let(:type_de_champ) { build(:type_de_champ_email, procedure: procedure) }
 
       it { expect(example_value).to eq(I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")) }
     end
   end
 
   describe '#to_assignable_attributes' do
-    let(:type_de_champ) { build(:type_de_champ_email) }
+    let(:type_de_champ) { build(:type_de_champ_email, procedure: procedure) }
     let(:champ) { build(:champ, type_de_champ: type_de_champ) }
     let(:value) { "any@email.org" }
-    subject(:to_assignable_attributes) { described_class.build(type_de_champ).to_assignable_attributes(champ, value) }
+    subject(:to_assignable_attributes) { described_class.build(type_de_champ, procedure.active_revision).to_assignable_attributes(champ, value) }
 
     it { is_expected.to match({ id: champ.id, value: value }) }
   end

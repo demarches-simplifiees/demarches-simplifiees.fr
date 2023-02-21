@@ -1,4 +1,6 @@
 class PrefillParams
+  attr_reader :dossier, :params
+
   def initialize(dossier, params)
     @dossier = dossier
     @params = params
@@ -11,15 +13,15 @@ class PrefillParams
   private
 
   def build_prefill_values
-    value_by_stable_id = @params
+    value_by_stable_id = params
       .map { |prefixed_typed_id, value| [stable_id_from_typed_id(prefixed_typed_id), value] }
       .filter { |stable_id, value| stable_id.present? && value.present? }
       .to_h
 
-    @dossier
+    dossier
       .find_champs_by_stable_ids(value_by_stable_id.keys)
       .map { |champ| [champ, value_by_stable_id[champ.stable_id]] }
-      .map { |champ, value| PrefillValue.new(champ:, value:) }
+      .map { |champ, value| PrefillValue.new(champ:, value:, dossier:) }
   end
 
   def stable_id_from_typed_id(prefixed_typed_id)
@@ -46,11 +48,12 @@ class PrefillParams
       TypeDeChamp.type_champs.fetch(:epci)
     ]
 
-    attr_reader :champ, :value
+    attr_reader :champ, :value, :dossier
 
-    def initialize(champ:, value:)
+    def initialize(champ:, value:, dossier:)
       @champ = champ
       @value = value
+      @dossier = dossier
     end
 
     def prefillable?
@@ -59,7 +62,7 @@ class PrefillParams
 
     def champ_attributes
       TypesDeChamp::PrefillTypeDeChamp
-        .build(champ.type_de_champ)
+        .build(champ.type_de_champ, dossier.revision)
         .to_assignable_attributes(champ, value)
     end
 

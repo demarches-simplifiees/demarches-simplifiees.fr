@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe TypesDeChamp::PrefillRepetitionTypeDeChamp, type: :model, vcr: { cassette_name: 'api_geo_regions' } do
-  let(:procedure) { build(:procedure) }
+  let(:procedure) { create(:procedure) }
   let(:type_de_champ) { build(:type_de_champ_repetition, :with_types_de_champ, :with_region_types_de_champ, procedure: procedure) }
   let(:champ) { create(:champ_repetition, type_de_champ: type_de_champ) }
-  let(:prefillable_subchamps) { TypesDeChamp::PrefillRepetitionTypeDeChamp.new(type_de_champ).send(:prefillable_subchamps) }
+  let(:prefillable_subchamps) { TypesDeChamp::PrefillRepetitionTypeDeChamp.new(type_de_champ, procedure.active_revision).send(:prefillable_subchamps) }
   let(:text_repetition) { prefillable_subchamps.first }
   let(:integer_repetition) { prefillable_subchamps.second }
   let(:region_repetition) { prefillable_subchamps.third }
@@ -16,13 +16,13 @@ RSpec.describe TypesDeChamp::PrefillRepetitionTypeDeChamp, type: :model, vcr: { 
   end
 
   describe 'ancestors' do
-    subject { described_class.build(type_de_champ) }
+    subject { described_class.build(type_de_champ, procedure.active_revision) }
 
     it { is_expected.to be_kind_of(TypesDeChamp::PrefillTypeDeChamp) }
   end
 
   describe '#possible_values' do
-    subject(:possible_values) { described_class.new(type_de_champ).possible_values }
+    subject(:possible_values) { described_class.new(type_de_champ, procedure.active_revision).possible_values }
     let(:expected_value) {
       "Un tableau de dictionnaires avec les valeurs possibles pour chaque champ de la répétition.</br><ul><li>#{text_repetition.to_typed_id}: Un texte court<br></li><li>#{integer_repetition.to_typed_id}: Un nombre entier<br></li><li>#{region_repetition.to_typed_id}: Un <a href=\"https://fr.wikipedia.org/wiki/R%C3%A9gion_fran%C3%A7aise\" target=\"_blank\" rel=\"noopener noreferrer\">code INSEE de région</a><br><a title=\"Toutes les valeurs possibles — Nouvel onglet\" target=\"_blank\" rel=\"noopener noreferrer\" href=\"/procedures/#{procedure.path}/prefill_type_de_champs/#{region_repetition.id}\">Voir toutes les valeurs possibles</a></li></ul>"
     }
@@ -33,14 +33,14 @@ RSpec.describe TypesDeChamp::PrefillRepetitionTypeDeChamp, type: :model, vcr: { 
   end
 
   describe '#example_value' do
-    subject(:example_value) { described_class.new(type_de_champ).example_value }
+    subject(:example_value) { described_class.new(type_de_champ, procedure.active_revision).example_value }
     let(:expected_value) { ["{\"#{text_repetition.to_typed_id}\":\"Texte court\", \"#{integer_repetition.to_typed_id}\":\"42\", \"#{region_repetition.to_typed_id}\":\"53\"}", "{\"#{text_repetition.to_typed_id}\":\"Texte court\", \"#{integer_repetition.to_typed_id}\":\"42\", \"#{region_repetition.to_typed_id}\":\"53\"}"] }
 
     it { expect(example_value).to eq(expected_value) }
   end
 
   describe '#to_assignable_attributes' do
-    subject(:to_assignable_attributes) { described_class.build(type_de_champ).to_assignable_attributes(champ, value) }
+    subject(:to_assignable_attributes) { described_class.build(type_de_champ, procedure.active_revision).to_assignable_attributes(champ, value) }
 
     context 'when the value is nil' do
       let(:value) { nil }

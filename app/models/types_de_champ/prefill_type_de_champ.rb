@@ -4,29 +4,34 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
 
   POSSIBLE_VALUES_THRESHOLD = 5
 
-  def self.build(type_de_champ)
+  def initialize(type_de_champ, revision)
+    super(type_de_champ)
+    @revision = revision
+  end
+
+  def self.build(type_de_champ, revision)
     case type_de_champ.type_champ
     when TypeDeChamp.type_champs.fetch(:drop_down_list)
-      TypesDeChamp::PrefillDropDownListTypeDeChamp.new(type_de_champ)
+      TypesDeChamp::PrefillDropDownListTypeDeChamp.new(type_de_champ, revision)
     when TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)
-      TypesDeChamp::PrefillMultipleDropDownListTypeDeChamp.new(type_de_champ)
+      TypesDeChamp::PrefillMultipleDropDownListTypeDeChamp.new(type_de_champ, revision)
     when TypeDeChamp.type_champs.fetch(:pays)
-      TypesDeChamp::PrefillPaysTypeDeChamp.new(type_de_champ)
+      TypesDeChamp::PrefillPaysTypeDeChamp.new(type_de_champ, revision)
     when TypeDeChamp.type_champs.fetch(:regions)
-      TypesDeChamp::PrefillRegionTypeDeChamp.new(type_de_champ)
+      TypesDeChamp::PrefillRegionTypeDeChamp.new(type_de_champ, revision)
     when TypeDeChamp.type_champs.fetch(:repetition)
-      TypesDeChamp::PrefillRepetitionTypeDeChamp.new(type_de_champ)
+      TypesDeChamp::PrefillRepetitionTypeDeChamp.new(type_de_champ, revision)
     when TypeDeChamp.type_champs.fetch(:departements)
-      TypesDeChamp::PrefillDepartementTypeDeChamp.new(type_de_champ)
+      TypesDeChamp::PrefillDepartementTypeDeChamp.new(type_de_champ, revision)
     when TypeDeChamp.type_champs.fetch(:epci)
-      TypesDeChamp::PrefillEpciTypeDeChamp.new(type_de_champ)
+      TypesDeChamp::PrefillEpciTypeDeChamp.new(type_de_champ, revision)
     else
-      new(type_de_champ)
+      new(type_de_champ, revision)
     end
   end
 
-  def self.wrap(collection)
-    collection.map { |type_de_champ| build(type_de_champ) }
+  def self.wrap(collection, revision)
+    collection.map { |type_de_champ| build(type_de_champ, revision) }
   end
 
   def possible_values
@@ -61,7 +66,7 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
 
     link_to(
       I18n.t("views.prefill_descriptions.edit.possible_values.link.text"),
-      Rails.application.routes.url_helpers.prefill_type_de_champ_path(path, self),
+      Rails.application.routes.url_helpers.prefill_type_de_champ_path(revision.procedure_path, self),
       title: new_tab_suffix(I18n.t("views.prefill_descriptions.edit.possible_values.link.title")),
       **external_link_attributes
     )
