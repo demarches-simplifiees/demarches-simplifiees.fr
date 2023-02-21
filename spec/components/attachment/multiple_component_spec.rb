@@ -47,8 +47,8 @@ RSpec.describe Attachment::MultipleComponent, type: :component do
     end
 
     it 'shows the Delete button by default' do
-      expect(subject).to have_link(title: "Supprimer le fichier #{attached_file.attachments[0].filename}")
-      expect(subject).to have_link(title: "Supprimer le fichier #{attached_file.attachments[1].filename}")
+      expect(subject).to have_button(title: "Supprimer le fichier #{attached_file.attachments[0].filename}")
+      expect(subject).to have_button(title: "Supprimer le fichier #{attached_file.attachments[1].filename}")
     end
 
     it 'renders a form field for uploading a new file' do

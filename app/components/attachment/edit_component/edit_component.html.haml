@@ -3,7 +3,8 @@
     %div{ id: dom_id(attachment, :persisted_row) }
       .flex.flex-gap-2{ class: class_names("attachment-error": attachment.virus_scanner_error?) }
         - if user_can_destroy?
-          = link_to(t('.delete'), destroy_attachment_path, **remove_button_options, class: "fr-btn fr-btn--tertiary fr-btn--sm fr-icon-delete-line", title: t(".delete_file", filename: attachment.filename))
+          = button_tag(name: "action", formaction: destroy_attachment_path, class: "fr-btn fr-btn--tertiary fr-btn--sm fr-icon-delete-line", title: t(".delete_file", filename: attachment.filename), form: dom_id(ActiveStorage::Attachment.new, :delete), data: {turbo: true, 'turbo-method': 'delete'}) do
+            = t('.delete')
         - elsif user_can_replace?
           = button_tag t('.replace'), **replace_button_options, class: "fr-btn fr-btn--tertiary fr-btn--sm", title: t(".replace_file", filename: attachment.filename)
 
