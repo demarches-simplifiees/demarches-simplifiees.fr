@@ -14,14 +14,14 @@ describe 'instructeurs/dossiers/envoyer_dossier_block.html.haml', type: :view do
     let(:potential_recipients) { [instructeur] }
 
     it { is_expected.to match(/data-react-props.*#{instructeur.email}/) }
-    it { is_expected.to have_css(".button.send") }
+    it { is_expected.to have_css(".fr-btn") }
   end
 
   context "there is no other instructeur for the procedure" do
     let(:potential_recipients) { [] }
 
     it { is_expected.not_to have_css("select") }
-    it { is_expected.not_to have_css(".button.send") }
+    it { is_expected.not_to have_css(".fr-btn") }
     it { is_expected.to have_content("Vous êtes le seul instructeur assigné sur cette démarche") }
   end
 end
