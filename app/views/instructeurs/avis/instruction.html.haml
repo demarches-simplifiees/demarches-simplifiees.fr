@@ -15,6 +15,7 @@
       = render Attachment::ShowComponent.new(attachment: @avis.introduction_file.attachment)
     %br/
 
+    = render Attachment::DeleteFormComponent.new
     = form_for @avis, url: instructeur_avis_path(@avis.procedure, @avis), html: { class: 'form' } do |f|
       = f.text_area :answer, rows: 3, placeholder: 'Votre avis', required: true
       = render Attachment::EditComponent.new(attached_file: @avis.piece_justificative_file)
