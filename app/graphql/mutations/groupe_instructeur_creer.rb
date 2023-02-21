@@ -29,9 +29,8 @@ module Mutations
         result = { groupe_instructeur: }
 
         if emails.present? || ids.present?
-          instructeurs, invalid_emails = groupe_instructeur.add_instructeurs(ids:, emails:)
+          _, invalid_emails = groupe_instructeur.add_instructeurs(ids:, emails:)
 
-          instructeurs.each { groupe_instructeur.add(_1) }
           groupe_instructeur.reload
 
           if invalid_emails.present?
