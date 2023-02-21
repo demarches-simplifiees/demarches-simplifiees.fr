@@ -32,6 +32,8 @@ class ProcedureRevision < ApplicationRecord
 
   validate :conditions_are_valid?
 
+  delegate :path, to: :procedure, prefix: true
+
   def build_champs_public
     # reload: it can be out of sync in test if some tdcs are added wihtout using add_tdc
     types_de_champ_public.reload.map(&:build_champ)

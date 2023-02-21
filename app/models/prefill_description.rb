@@ -15,7 +15,7 @@ class PrefillDescription < SimpleDelegator
   end
 
   def types_de_champ
-    TypesDeChamp::PrefillTypeDeChamp.wrap(active_revision.types_de_champ_public.fillable.partition(&:prefillable?).flatten)
+    TypesDeChamp::PrefillTypeDeChamp.wrap(active_revision.types_de_champ_public.fillable.partition(&:prefillable?).flatten, active_revision)
   end
 
   def include?(type_de_champ_id)
@@ -40,7 +40,7 @@ class PrefillDescription < SimpleDelegator
   end
 
   def prefilled_champs
-    @prefilled_champs ||= TypesDeChamp::PrefillTypeDeChamp.wrap(active_fillable_public_types_de_champ.where(id: selected_type_de_champ_ids))
+    @prefilled_champs ||= TypesDeChamp::PrefillTypeDeChamp.wrap(active_fillable_public_types_de_champ.where(id: selected_type_de_champ_ids), active_revision)
   end
 
   private

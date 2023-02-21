@@ -22,7 +22,7 @@ RSpec.describe PrefillDescription, type: :model do
 
     it { expect(types_de_champ.count).to eq(1) }
 
-    it { expect(types_de_champ.first).to eql(TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ)) }
+    it { expect(types_de_champ.first).to eql(TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ, procedure.active_revision)) }
 
     shared_examples "filters out non fillable types de champ" do |type_de_champ_name|
       context "when the procedure has a #{type_de_champ_name} champ" do
@@ -91,7 +91,7 @@ RSpec.describe PrefillDescription, type: :model do
     let(:type_de_champ_text) { build(:type_de_champ_text, procedure: procedure) }
     let(:type_de_champ_epci) { build(:type_de_champ_epci, procedure: procedure) }
     let(:type_de_champ_repetition) { create(:type_de_champ_repetition, :with_types_de_champ, :with_region_types_de_champ, procedure: procedure) }
-    let(:prefillable_subchamps) { TypesDeChamp::PrefillRepetitionTypeDeChamp.new(type_de_champ_repetition).send(:prefillable_subchamps) }
+    let(:prefillable_subchamps) { TypesDeChamp::PrefillRepetitionTypeDeChamp.new(type_de_champ_repetition, procedure.active_revision).send(:prefillable_subchamps) }
     let(:region_repetition) { prefillable_subchamps.third }
     let(:prefill_description) { described_class.new(procedure) }
 
@@ -116,9 +116,9 @@ RSpec.describe PrefillDescription, type: :model do
       expect(prefill_description.prefill_link).to eq(
         commencer_url(
           path: procedure.path,
-          "champ_#{type_de_champ_text.to_typed_id}" => TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_text).example_value,
-          "champ_#{type_de_champ_epci.to_typed_id}" => TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_epci).example_value,
-          "champ_#{type_de_champ_repetition.to_typed_id}" => TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_repetition).example_value
+          "champ_#{type_de_champ_text.to_typed_id}" => TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_text, procedure.active_revision).example_value,
+          "champ_#{type_de_champ_epci.to_typed_id}" => TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_epci, procedure.active_revision).example_value,
+          "champ_#{type_de_champ_repetition.to_typed_id}" => TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_repetition, procedure.active_revision).example_value
         )
       )
     end
@@ -129,14 +129,14 @@ RSpec.describe PrefillDescription, type: :model do
     let(:type_de_champ_text) { create(:type_de_champ_text, procedure: procedure) }
     let(:type_de_champ_epci) { TypesDeChamp::PrefillTypeDeChamp.build(create(:type_de_champ_epci, procedure: procedure)) }
     let(:type_de_champ_repetition) { build(:type_de_champ_repetition, :with_types_de_champ, :with_region_types_de_champ, procedure: procedure) }
-    let(:prefillable_subchamps) { TypesDeChamp::PrefillRepetitionTypeDeChamp.new(type_de_champ_repetition).send(:prefillable_subchamps) }
+    let(:prefillable_subchamps) { TypesDeChamp::PrefillRepetitionTypeDeChamp.new(type_de_champ_repetition, procedure.active_revision).send(:prefillable_subchamps) }
     let(:region_repetition) { prefillable_subchamps.third }
     let(:prefill_description) { described_class.new(procedure) }
     let(:expected_query) do
       <<~TEXT
         curl --request POST '#{api_public_v1_dossiers_url(procedure)}' \\
              --header 'Content-Type: application/json' \\
-             --data '{"champ_#{type_de_champ_text.to_typed_id}": "#{TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_text).example_value}", "champ_#{type_de_champ_epci.to_typed_id}": #{TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_epci).example_value}, "champ_#{type_de_champ_repetition.to_typed_id}": #{TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_repetition).example_value}}'
+             --data '{"champ_#{type_de_champ_text.to_typed_id}": "#{TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_text, procedure.active_revision).example_value}", "champ_#{type_de_champ_epci.to_typed_id}": #{TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_epci, procedure.active_revision).example_value}, "champ_#{type_de_champ_repetition.to_typed_id}": #{TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_repetition, procedure.active_revision).example_value}}'
       TEXT
     end
 
