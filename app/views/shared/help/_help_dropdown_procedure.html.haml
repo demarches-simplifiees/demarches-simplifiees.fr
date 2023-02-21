@@ -4,6 +4,6 @@
 
   - if procedure.service.present?
     - menu.with_item do
-      = render partial: 'shared/help/dropdown_items/service_item', locals: { service: procedure.service, title: "Une question sur cette démarche ?" }
+      = render partial: 'shared/help/dropdown_items/service_item', locals: { service: procedure.service, title: t('help_dropdown.procedure_title') }
   - menu.with_item do
     = render partial: 'shared/help/dropdown_items/faq_item'

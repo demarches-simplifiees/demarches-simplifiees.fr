@@ -1,5 +1,6 @@
 = link_to messagerie_dossier_path(dossier), role: 'menuitem' do
   %span.icon.mail
   .dropdown-description
+  .dropdown-description.fr-text--sm
     %span.help-dropdown-title= title
-    %p Envoyez directement un message à l’instructeur.
+    %p.fr-text--sm= t('help_dropdown.contact_instructeur')

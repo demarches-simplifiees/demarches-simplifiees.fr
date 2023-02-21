@@ -2,7 +2,7 @@
 .dropdown-description
   %span.help-dropdown-title= title
   .help-dropdown-service-action
-    %p Contactez directement l’administration :
+    %p= t('help_dropdown.contact_administration')
     %p.help-dropdown-service-item
       %span.icon.small.mail
       = link_to service.email, "mailto:#{service.email}", role: 'menuitem'
