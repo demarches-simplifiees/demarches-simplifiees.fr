@@ -127,7 +127,7 @@ RSpec.describe PrefillDescription, type: :model do
   describe '#prefill_query', vcr: { cassette_name: 'api_geo_regions' } do
     let(:procedure) { create(:procedure) }
     let(:type_de_champ_text) { create(:type_de_champ_text, procedure: procedure) }
-    let(:type_de_champ_epci) { TypesDeChamp::PrefillTypeDeChamp.build(create(:type_de_champ_epci, procedure: procedure)) }
+    let(:type_de_champ_epci) { TypesDeChamp::PrefillTypeDeChamp.build(create(:type_de_champ_epci, procedure: procedure), procedure.active_revision) }
     let(:type_de_champ_repetition) { build(:type_de_champ_repetition, :with_types_de_champ, :with_region_types_de_champ, procedure: procedure) }
     let(:prefillable_subchamps) { TypesDeChamp::PrefillRepetitionTypeDeChamp.new(type_de_champ_repetition, procedure.active_revision).send(:prefillable_subchamps) }
     let(:region_repetition) { prefillable_subchamps.third }

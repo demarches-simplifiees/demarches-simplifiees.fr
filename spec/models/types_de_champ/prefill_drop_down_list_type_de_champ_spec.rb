@@ -3,7 +3,7 @@
 RSpec.describe TypesDeChamp::PrefillDropDownListTypeDeChamp do
   describe '#possible_values' do
     let(:procedure) { create(:procedure) }
-    subject(:possible_values) { described_class.new(type_de_champ).possible_values }
+    subject(:possible_values) { described_class.new(type_de_champ, procedure.active_revision).possible_values }
 
     before { type_de_champ.reload }
 
@@ -25,8 +25,9 @@ RSpec.describe TypesDeChamp::PrefillDropDownListTypeDeChamp do
   end
 
   describe '#example_value' do
-    let(:type_de_champ) { build(:type_de_champ_drop_down_list) }
-    subject(:example_value) { described_class.new(type_de_champ).example_value }
+    let(:procedure) { create(:procedure) }
+    let(:type_de_champ) { build(:type_de_champ_drop_down_list, procedure: procedure) }
+    subject(:example_value) { described_class.new(type_de_champ, procedure.active_revision).example_value }
 
     it { expect(example_value).to eq(type_de_champ.drop_down_list_enabled_non_empty_options.first) }
   end
