@@ -30,8 +30,7 @@ class InstructeursImportService
       .to_h
 
     target_groupes.each do |groupe_instructeur, emails|
-      instructeurs, invalid_emails = groupe_instructeur.add_instructeurs(emails:)
-      instructeurs.each { groupe_instructeur.add(_1) }
+      _, invalid_emails = groupe_instructeur.add_instructeurs(emails:)
       errors << invalid_emails
     end
 
@@ -46,9 +45,7 @@ class InstructeursImportService
 
     groupe_instructeur = procedure.defaut_groupe_instructeur
 
-    instructeurs, invalid_emails = groupe_instructeur.add_instructeurs(emails: instructeurs_emails)
-
-    instructeurs.each { groupe_instructeur.add(_1) }
+    _, invalid_emails = groupe_instructeur.add_instructeurs(emails: instructeurs_emails)
 
     invalid_emails
   end

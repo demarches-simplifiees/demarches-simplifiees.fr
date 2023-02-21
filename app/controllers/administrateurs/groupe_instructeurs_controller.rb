@@ -120,8 +120,6 @@ module Administrateurs
       end
 
       if instructeurs.present?
-        instructeurs.each { groupe_instructeur.add(_1) }
-
         flash[:notice] = if procedure.routing_enabled?
           t('.assignment',
             count: instructeurs.size,
