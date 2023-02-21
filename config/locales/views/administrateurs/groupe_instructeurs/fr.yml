@@ -55,6 +55,7 @@ fr:
           download_exemple: Télécharger l’exemple de fichier CSV
           import_file: Importer le fichier
           import_file_procedure_not_published: L’import d’instructeurs par fichier CSV est disponible une fois la démarche publiée
+          import_file_alert: Tous les instructeurs ajoutés à la procédure vont être notifiés par email. Voulez-vous continuer ?
         view: voir
         set_up: paramétrer
         button:

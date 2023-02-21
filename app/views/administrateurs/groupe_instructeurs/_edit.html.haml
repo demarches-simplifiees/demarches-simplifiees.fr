@@ -35,7 +35,7 @@
       %p.mt-2.mb-2= link_to t('.csv_import.download_exemple'), sample_file_path
       - csv_params = procedure.routing_enabled? ? :group_csv_file : :instructeurs_csv_file
       = file_field_tag csv_params, required: true, accept: 'text/csv', size: "1"
-      = submit_tag t('.csv_import.import_file'), class: 'button primary send', data: { disable_with: "Envoi..." }
+      = submit_tag t('.csv_import.import_file'), class: 'button primary send', data: { disable_with: "Envoi...", confirm: t('.csv_import.import_file_alert') }
   - else
     %p.mt-4.form.font-weight-bold.mb-2.text-lg
       = t('.csv_import.title')
