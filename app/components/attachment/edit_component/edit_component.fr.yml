@@ -7,6 +7,7 @@ fr:
   delete_file: Supprimer le fichier %{filename}
   replace: Remplacer
   replace_file: Remplacer le fichier %{filename}
+  open_file: Ouvrir le fichier %{filename}
   errors:
     uploading: "Une erreur s’est produite pendant l’envoi du fichier."
     virus_infected: "Virus détecté, merci d’envoyer un autre fichier."
