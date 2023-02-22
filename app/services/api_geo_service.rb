@@ -35,7 +35,7 @@ class APIGeoService
     end
 
     def departements
-      [{ code: '99', name: 'Etranger' }] + get_from_api_geo(:departements).sort_by { _1[:code] }
+      [{ code: '99', name: 'Etranger' }] + get_from_api_geo('departements?zone=metro,drom,com').sort_by { _1[:code] }
     end
 
     def departement_name(code)
