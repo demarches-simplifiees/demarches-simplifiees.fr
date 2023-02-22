@@ -19,7 +19,7 @@
       = link_to(  archive_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: 'fr-btn fr-icon-folder-2-line') do
         Archiver le dossier
 
-      = link_to('', instructeur_dossier_path(procedure_id, dossier_id), method: :delete, class: 'fr-btn fr-btn--secondary fr-icon-delete-line icon-only')
+      = link_to('', instructeur_dossier_path(procedure_id, dossier_id), method: :delete, class: 'fr-btn fr-btn--secondary fr-icon-delete-line icon-only', title: t('views.instructeurs.dossiers.delete_dossier'))
 
 
 - elsif Dossier::EN_CONSTRUCTION_OU_INSTRUCTION.include?(state)

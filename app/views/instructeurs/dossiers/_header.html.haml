@@ -23,6 +23,29 @@
 
     = render(partial: 'instructeurs/dossiers/expiration_banner', locals: {dossier: dossier})
 
+    - if dossier.motivation.present?
+      %p.fr-mb-1w
+        %small
+          %strong
+            Motivation :
+          « #{dossier.motivation} »
+
+    - if dossier.justificatif_motivation.attached?
+      %p.fr-mb-0
+        %small
+          %strong
+            Justificatif :
+          Ce justificatif joint par l’instructeur a été envoyé au demandeur.
+        = render partial: 'users/dossiers/show/download_justificatif', locals: { dossier: dossier }
+
+    - if dossier.attestation.present?
+      %p.fr-mb-0
+        %small
+          %strong
+            Cette attestation a été envoyée automatiquement au demandeur.
+        = link_to('Voir l’attestation', attestation_instructeur_dossier_path(dossier.procedure, dossier), target: '_blank', rel: 'noopener')
+
+
     %nav.tabs
       %ul
         - notifications_summary = current_instructeur.notifications_for_dossier(dossier)

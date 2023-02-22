@@ -153,16 +153,16 @@ describe Instructeurs::DossiersController, type: :controller do
 
     it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction)) }
     it { expect(instructeur.follow?(dossier)).to be true }
-    it { expect(response).to have_http_status(:ok) }
-    it { expect(response.body).to include('.header-actions') }
+    it { expect(response).to redirect_to(instructeur_procedure_path(dossier.procedure)) }
+    it { expect(flash.notice).to eq("Dossier passé en instruction.") }
 
     context 'when the dossier has already been put en_instruction' do
       let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
 
       it 'warns about the error' do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction))
-        expect(response).to have_http_status(:ok)
-        expect(response.body).to include('Le dossier est déjà en instruction.')
+        expect(response).to redirect_to(instructeur_procedure_path(dossier.procedure))
+        expect(flash.alert).to eq("Le dossier est déjà en instruction.")
       end
     end
 
@@ -174,8 +174,8 @@ describe Instructeurs::DossiersController, type: :controller do
       end
 
       it 'warns about the error' do
-        expect(response).to have_http_status(:ok)
-        expect(response.body).to include('Le dossier est en ce moment accepté : il n’est pas possible de le passer en instruction.')
+        expect(response).to redirect_to(instructeur_procedure_path(dossier.procedure))
+        expect(flash.alert).to eq("Le dossier est en ce moment accepté : il n’est pas possible de le passer en instruction.")
       end
     end
 
@@ -199,16 +199,16 @@ describe Instructeurs::DossiersController, type: :controller do
     end
 
     it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction)) }
-    it { expect(response).to have_http_status(:ok) }
-    it { expect(response.body).to include('.header-actions') }
+    it { expect(response).to redirect_to(instructeur_procedure_path(dossier.procedure)) }
+    it { expect(flash.notice).to eq("Dossier repassé en construction.") }
 
     context 'when the dossier has already been put en_construction' do
       let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
 
       it 'warns about the error' do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction))
-        expect(response).to have_http_status(:ok)
-        expect(response.body).to include('Le dossier est déjà en construction.')
+        expect(response).to redirect_to(instructeur_procedure_path(dossier.procedure))
+        expect(flash.alert).to eq("Le dossier est déjà en construction.")
       end
     end
 
@@ -235,8 +235,8 @@ describe Instructeurs::DossiersController, type: :controller do
 
     context 'when the dossier is refuse' do
       it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction)) }
-      it { expect(response).to have_http_status(:ok) }
-      it { expect(response.body).to include('.header-actions') }
+      it { expect(response).to redirect_to(instructeur_procedure_path(dossier.procedure)) }
+      it { expect(flash.notice).to eq("Le dossier #{dossier.id} a été repassé en instruction.") }
     end
 
     context 'when the dossier has already been put en_instruction' do
@@ -244,8 +244,8 @@ describe Instructeurs::DossiersController, type: :controller do
 
       it 'warns about the error' do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction))
-        expect(response).to have_http_status(:ok)
-        expect(response.body).to include('Le dossier est déjà en instruction.')
+        expect(response).to redirect_to(instructeur_procedure_path(dossier.procedure))
+        expect(flash.alert).to eq("Le dossier est déjà en instruction.")
       end
     end
 
@@ -254,7 +254,8 @@ describe Instructeurs::DossiersController, type: :controller do
 
       it 'it is possible to go back to en_instruction as instructeur' do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction))
-        expect(response).to have_http_status(:ok)
+        expect(response).to redirect_to(instructeur_procedure_path(dossier.procedure))
+        expect(flash.notice).to eq("Le dossier #{dossier.id} a été repassé en instruction.")
       end
     end
 
