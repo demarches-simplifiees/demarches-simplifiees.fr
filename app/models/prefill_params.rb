@@ -57,11 +57,11 @@ class PrefillParams
     end
 
     def prefillable?
-      champ.prefillable? && valid?
+      champ.prefillable? && valid? && champ_attributes.present?
     end
 
     def champ_attributes
-      TypesDeChamp::PrefillTypeDeChamp
+      @champ_attributes ||= TypesDeChamp::PrefillTypeDeChamp
         .build(champ.type_de_champ, dossier.revision)
         .to_assignable_attributes(champ, value)
     end
