@@ -509,6 +509,10 @@ en:
               not_in_departement_epci_codes: "must be a valid EPCI code of the matching department"
             value:
               not_in_departement_epci_names: "must be a valid EPCI name of the matching department"
+        "champs/dossier_link_champ":
+          attributes:
+            value:
+              not_integerable: "must be an integer"
   errors:
     format: "Field « %{attribute} » %{message}"
     messages:
