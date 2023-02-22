@@ -114,11 +114,13 @@ RSpec.describe PrefillDescription, type: :model do
 
     it "builds the URL to create a new prefilled dossier" do
       expect(prefill_description.prefill_link).to eq(
-        commencer_url(
-          path: procedure.path,
-          "champ_#{type_de_champ_text.to_typed_id}" => TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_text, procedure.active_revision).example_value,
-          "champ_#{type_de_champ_epci.to_typed_id}" => TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_epci, procedure.active_revision).example_value,
-          "champ_#{type_de_champ_repetition.to_typed_id}" => TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_repetition, procedure.active_revision).example_value
+        CGI.unescape(
+          commencer_url(
+            path: procedure.path,
+            "champ_#{type_de_champ_text.to_typed_id_for_query}" => TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_text, procedure.active_revision).example_value,
+            "champ_#{type_de_champ_epci.to_typed_id_for_query}" => TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_epci, procedure.active_revision).example_value,
+            "champ_#{type_de_champ_repetition.to_typed_id_for_query}" => TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_repetition, procedure.active_revision).example_value
+          )
         )
       )
     end
@@ -130,13 +132,15 @@ RSpec.describe PrefillDescription, type: :model do
     let(:type_de_champ_epci) { TypesDeChamp::PrefillTypeDeChamp.build(create(:type_de_champ_epci, procedure: procedure), procedure.active_revision) }
     let(:type_de_champ_repetition) { build(:type_de_champ_repetition, :with_types_de_champ, :with_region_types_de_champ, procedure: procedure) }
     let(:prefillable_subchamps) { TypesDeChamp::PrefillRepetitionTypeDeChamp.new(type_de_champ_repetition, procedure.active_revision).send(:prefillable_subchamps) }
+    let(:text_repetition) { prefillable_subchamps.first }
+    let(:integer_repetition) { prefillable_subchamps.second }
     let(:region_repetition) { prefillable_subchamps.third }
     let(:prefill_description) { described_class.new(procedure) }
     let(:expected_query) do
       <<~TEXT
         curl --request POST '#{api_public_v1_dossiers_url(procedure)}' \\
              --header 'Content-Type: application/json' \\
-             --data '{"champ_#{type_de_champ_text.to_typed_id}": "#{TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_text, procedure.active_revision).example_value}", "champ_#{type_de_champ_epci.to_typed_id}": #{TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_epci, procedure.active_revision).example_value}, "champ_#{type_de_champ_repetition.to_typed_id}": #{TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_repetition, procedure.active_revision).example_value}}'
+             --data '{"champ_#{type_de_champ_text.to_typed_id_for_query}":"Texte court","champ_#{type_de_champ_epci.to_typed_id_for_query}":["01","200042935"],"champ_#{type_de_champ_repetition.to_typed_id_for_query}":[{"champ_#{text_repetition.to_typed_id_for_query}":"Texte court","champ_#{integer_repetition.to_typed_id_for_query}":"42","champ_#{region_repetition.to_typed_id_for_query}":"53"},{"champ_#{text_repetition.to_typed_id_for_query}":"Texte court","champ_#{integer_repetition.to_typed_id_for_query}":"42","champ_#{region_repetition.to_typed_id_for_query}":"53"}]}'
       TEXT
     end
 

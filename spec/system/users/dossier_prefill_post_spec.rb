@@ -126,17 +126,17 @@ describe 'Prefilling a dossier (with a POST request):' do
     session.post api_public_v1_dossiers_path(procedure),
       headers: { "Content-Type" => "application/json" },
       params: {
-        "champ_#{type_de_champ_text.to_typed_id}" => text_value,
-        "champ_#{type_de_champ_phone.to_typed_id}" => phone_value,
-        "champ_#{type_de_champ_repetition.to_typed_id}" => [
-          "{
-            \"#{sub_type_de_champs_repetition.first.to_typed_id}\": \"#{text_repetition_value}\",
-            \"#{sub_type_de_champs_repetition.second.to_typed_id}\": \"#{integer_repetition_value}\"
-          }"
+        "champ_#{type_de_champ_text.to_typed_id_for_query}" => text_value,
+        "champ_#{type_de_champ_phone.to_typed_id_for_query}" => phone_value,
+        "champ_#{type_de_champ_repetition.to_typed_id_for_query}" => [
+          {
+            "champ_#{sub_type_de_champs_repetition.first.to_typed_id_for_query}": text_repetition_value,
+            "champ_#{sub_type_de_champs_repetition.second.to_typed_id_for_query}": integer_repetition_value
+          }
         ],
-        "champ_#{type_de_champ_datetime.to_typed_id}" => datetime_value,
-        "champ_#{type_de_champ_multiple_drop_down_list.to_typed_id}" => multiple_drop_down_list_values,
-        "champ_#{type_de_champ_epci.to_typed_id}" => epci_value
+        "champ_#{type_de_champ_datetime.to_typed_id_for_query}" => datetime_value,
+        "champ_#{type_de_champ_multiple_drop_down_list.to_typed_id_for_query}" => multiple_drop_down_list_values,
+        "champ_#{type_de_champ_epci.to_typed_id_for_query}" => epci_value
       }.to_json
     JSON.parse(session.response.body)["dossier_url"].gsub("http://www.example.com", "")
   end

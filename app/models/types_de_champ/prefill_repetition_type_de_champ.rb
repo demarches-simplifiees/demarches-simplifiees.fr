@@ -10,7 +10,7 @@ class TypesDeChamp::PrefillRepetitionTypeDeChamp < TypesDeChamp::PrefillTypeDeCh
   end
 
   def example_value
-    [row_values_format, row_values_format].map { |row| row.to_s.gsub("=>", ":") }
+    [row_values_format, row_values_format]
   end
 
   def to_assignable_attributes(champ, value)
@@ -25,14 +25,14 @@ class TypesDeChamp::PrefillRepetitionTypeDeChamp < TypesDeChamp::PrefillTypeDeCh
 
   def subchamps_all_possible_values
     "<ul>" + prefillable_subchamps.map do |prefill_type_de_champ|
-      "<li>#{prefill_type_de_champ.to_typed_id}: #{prefill_type_de_champ.possible_values}</li>"
+      "<li>champ_#{prefill_type_de_champ.to_typed_id_for_query}: #{prefill_type_de_champ.possible_values}</li>"
     end.join + "</ul>"
   end
 
   def row_values_format
     @row_example_value ||=
       prefillable_subchamps.map do |prefill_type_de_champ|
-      [prefill_type_de_champ.to_typed_id, prefill_type_de_champ.example_value.to_s]
+      ["champ_#{prefill_type_de_champ.to_typed_id_for_query}", prefill_type_de_champ.example_value.to_s]
     end.to_h
   end
 
@@ -52,14 +52,17 @@ class TypesDeChamp::PrefillRepetitionTypeDeChamp < TypesDeChamp::PrefillTypeDeCh
     end
 
     def to_assignable_attributes
+      return unless repetition.is_a?(Hash)
+
       row = champ.rows[index] || champ.add_row(champ.dossier_revision)
 
-      JSON.parse(repetition).map do |key, value|
-        subchamp = row.find { |champ| champ.type_de_champ_to_typed_id == key }
+      repetition.map do |key, value|
+        next unless key.is_a?(String) && key.starts_with?("champ_")
+
+        subchamp = row.find { |champ| champ.type_de_champ_to_typed_id_for_query == key.split("_").last }
         next unless subchamp
 
         TypesDeChamp::PrefillTypeDeChamp.build(subchamp.type_de_champ, revision).to_assignable_attributes(subchamp, value)
-      rescue JSON::ParserError # On ignore les valeurs qu'on n'arrive pas à parser
       end.compact
     end
   end

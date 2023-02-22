@@ -36,8 +36,8 @@ RSpec.describe PrefillParams do
 
       let(:params) {
         {
-          "champ_#{type_de_champ_1.to_typed_id}" => value_1,
-          "champ_#{type_de_champ_2.to_typed_id}" => value_2
+          "champ_#{type_de_champ_1.to_typed_id_for_query}" => value_1,
+          "champ_#{type_de_champ_2.to_typed_id_for_query}" => value_2
         }
       }
 
@@ -53,7 +53,7 @@ RSpec.describe PrefillParams do
       let(:type_de_champ) { procedure.published_revision.types_de_champ_public.first }
       let(:types_de_champ_public) { [{ type: :text }] }
 
-      let(:params) { { type_de_champ.to_typed_id => "value" } }
+      let(:params) { { type_de_champ.to_typed_id_for_query => "value" } }
 
       it "filters out the champ" do
         expect(prefill_params_array).to match([])
@@ -71,7 +71,7 @@ RSpec.describe PrefillParams do
     context 'when there is no Champ that matches the TypeDeChamp with the given stable id' do
       let!(:type_de_champ) { create(:type_de_champ_text) } # goes to another procedure
 
-      let(:params) { { "champ_#{type_de_champ.to_typed_id}" => "value" } }
+      let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => "value" } }
 
       it "filters out the param" do
         expect(prefill_params_array).to match([])
@@ -84,7 +84,7 @@ RSpec.describe PrefillParams do
         let(:type_de_champ) { procedure.published_revision.types_de_champ_public.first }
         let(:champ) { find_champ_by_stable_id(dossier, type_de_champ.stable_id) }
 
-        let(:params) { { "champ_#{type_de_champ.to_typed_id}" => value } }
+        let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => value } }
 
         it "builds an array of hash matching the given params" do
           expect(prefill_params_array).to match([{ id: champ.id }.merge(attributes(champ, value))])
@@ -98,7 +98,7 @@ RSpec.describe PrefillParams do
         let(:type_de_champ) { procedure.published_revision.types_de_champ_private.first }
         let(:champ) { find_champ_by_stable_id(dossier, type_de_champ.stable_id) }
 
-        let(:params) { { "champ_#{type_de_champ.to_typed_id}" => value } }
+        let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => value } }
 
         it "builds an array of hash matching the given params" do
           expect(prefill_params_array).to match([{ id: champ.id }.merge(attributes(champ, value))])
@@ -110,7 +110,7 @@ RSpec.describe PrefillParams do
       let(:types_de_champ_public) { [{ type: type_de_champ_type }] }
       let(:type_de_champ) { procedure.published_revision.types_de_champ_public.first }
 
-      let(:params) { { "champ_#{type_de_champ.to_typed_id}" => value } }
+      let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => value } }
 
       context "when the type de champ is unauthorized (#{type_de_champ_type})" do
         it "filters out the param" do
@@ -147,7 +147,7 @@ RSpec.describe PrefillParams do
       let(:type_de_champ_child_value) { "value" }
       let(:type_de_champ_child_value2) { "value2" }
 
-      let(:params) { { "champ_#{type_de_champ.to_typed_id}" => ["{\"#{type_de_champ_child.to_typed_id}\":\"#{type_de_champ_child_value}\"}", "{\"#{type_de_champ_child.to_typed_id}\":\"#{type_de_champ_child_value2}\"}"] } }
+      let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => [{"champ_#{type_de_champ_child.to_typed_id_for_query}"=> type_de_champ_child_value}, {"champ_#{type_de_champ_child.to_typed_id_for_query}"=> type_de_champ_child_value2 }] } }
 
       it "builds an array of hash(id, value) matching the given params" do
         expect(prefill_params_array).to match([{ id: type_de_champ_child.champ.first.id, value: type_de_champ_child_value }, { id: type_de_champ_child.champ.second.id, value: type_de_champ_child_value2 }])
@@ -183,7 +183,7 @@ RSpec.describe PrefillParams do
       let(:type_de_champ_child_value) { "value" }
       let(:type_de_champ_child_value2) { "value2" }
 
-      let(:params) { { "champ_#{type_de_champ.to_typed_id}" => ["{\"#{type_de_champ_child.to_typed_id}\":\"#{type_de_champ_child_value}\"}", "{\"#{type_de_champ_child.to_typed_id}\":\"#{type_de_champ_child_value2}\"}"] } }
+      let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => [{"champ_#{type_de_champ_child.to_typed_id_for_query}" => type_de_champ_child_value}, {"champ_#{type_de_champ_child.to_typed_id_for_query}" => type_de_champ_child_value2}] } }
 
       it "builds an array of hash(id, value) matching the given params" do
         expect(prefill_params_array).to match([{ id: type_de_champ_child.champ.first.id, value: type_de_champ_child_value }, { id: type_de_champ_child.champ.second.id, value: type_de_champ_child_value2 }])
@@ -223,7 +223,7 @@ RSpec.describe PrefillParams do
       let(:type_de_champ) { procedure.published_revision.types_de_champ_public.first }
       let(:type_de_champ_child) { procedure.published_revision.children_of(type_de_champ).first }
 
-      let(:params) { { "champ_#{type_de_champ.to_typed_id}" => "value" } }
+      let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => "value" } }
 
       it "builds an array of hash(id, value) matching the given params" do
         expect(prefill_params_array).to match([])
@@ -235,7 +235,7 @@ RSpec.describe PrefillParams do
       let(:type_de_champ) { procedure.published_revision.types_de_champ_public.first }
       let(:type_de_champ_child) { procedure.published_revision.children_of(type_de_champ).first }
 
-      let(:params) { { "champ_#{type_de_champ.to_typed_id}" => ["{\"wrong\":\"value\"}", "{\"wrong\":\"value2\"}"] } }
+      let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => ["{\"wrong\":\"value\"}", "{\"wrong\":\"value2\"}"] } }
 
       it "builds an array of hash(id, value) matching the given params" do
         expect(prefill_params_array).to match([])
