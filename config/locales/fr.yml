@@ -131,6 +131,7 @@ fr:
           siret_html: Un numéro de SIRET
           repetition_html: Un tableau de dictionnaires avec les valeurs possibles pour chaque champ de la répétition.
           epci_html: Un tableau contenant le code de département et <a href="https://geo.api.gouv.fr/epcis" target="_blank" rel="noopener noreferrer">celui de l'EPCI</a>.
+          dossier_link_html: L'identifiant du dossier, sous forme de nombre entier.
         examples:
           title: Exemple
           text: Texte court
@@ -148,6 +149,7 @@ fr:
           date: "2023-02-01"
           datetime: "2023-02-01T10:30"
           checkbox: "true"
+          dossier_link: 42
           rna: "W503726238"
           siret: "13002526500013"
         prefill_link_title: Lien de préremplissage (GET)
