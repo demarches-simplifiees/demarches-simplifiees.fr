@@ -1,5 +1,5 @@
 = render Dsfr::CalloutComponent.new(title: @champ.libelle, extra_class_names: ['fr-mb-2w', 'fr-callout--blue-cumulus']) do |c|
-  - c.with_body do
+  - c.with_html_body do
 
     = render SimpleFormatComponent.new(@champ.description, allow_a: true)
 
