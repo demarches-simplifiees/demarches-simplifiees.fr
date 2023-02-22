@@ -1,54 +1,52 @@
 class InstructeursImportService
-  def self.import(procedure, groupes_emails)
-    created_at = Time.zone.now
-    updated_at = Time.zone.now
+  def self.import_groupes(procedure, groupes_emails)
+    groupes_emails, error_groupe_emails = groupes_emails.partition { _1['groupe'].present? }
 
-    admins = procedure.administrateurs
+    groupes_emails = groupes_emails.map do
+      {
+        groupe: _1['groupe'].strip,
+        email: _1['email'].present? ? EmailSanitizableConcern::EmailSanitizer.sanitize(_1['email']) : nil
+      }
+    end
+    errors = error_groupe_emails.map { _1['email'] }.uniq
+    target_labels = groupes_emails.map { _1[:groupe] }.uniq
 
-    groupes_emails, error_groupe_emails = groupes_emails
-      .map { |groupe_email| { "groupe" => groupe_email["groupe"].present? ? groupe_email["groupe"].strip : nil, "email" => groupe_email["email"].present? ? groupe_email["email"].gsub(/[[:space:]]/, '').downcase : nil } }
-      .partition { |groupe_email| Devise.email_regexp.match?(groupe_email['email']) && groupe_email['groupe'].present? }
-
-    errors = error_groupe_emails.map { |group_email| group_email['email'] }
-
-    target_labels = groupes_emails.map { |groupe_email| groupe_email['groupe'] }.uniq
     missing_labels = target_labels - procedure.groupe_instructeurs.pluck(:label)
 
     if missing_labels.present?
-      GroupeInstructeur.insert_all(missing_labels.map { |label| { label: label, procedure_id: procedure.id, created_at: created_at, updated_at: updated_at } })
+      created_at = Time.zone.now
+      GroupeInstructeur.insert_all(missing_labels.map { |label| { procedure_id: procedure.id, label:, created_at:, updated_at: created_at } })
     end
 
-    target_groupes = procedure.reload.groupe_instructeurs
+    emails_in_groupe = groupes_emails
+      .group_by { _1[:groupe] }
+      .transform_values { |groupes_emails| groupes_emails.map { _1[:email] }.uniq }
+    emails_in_groupe.default = []
 
-    target_emails = groupes_emails.map { |groupe_email| groupe_email["email"] }.uniq
+    target_groupes = procedure
+      .groupe_instructeurs
+      .where(label: target_labels)
+      .map { [_1, emails_in_groupe[_1.label]] }
+      .to_h
 
-    existing_emails = Instructeur.where(user: { email: target_emails }).pluck(:email)
-    missing_emails = target_emails - existing_emails
-    missing_emails.each { |email| create_instructeur(admins, email) }
-
-    target_instructeurs = User.where(email: target_emails).map(&:instructeur)
-
-    groupes_emails.each do |groupe_email|
-      gi = target_groupes.find { |g| g.label == groupe_email['groupe'] }
-      instructeur = target_instructeurs.find { |i| i.email == groupe_email['email'] }
-
-      if !gi.instructeurs.include?(instructeur)
-        gi.instructeurs << instructeur
-      end
+    target_groupes.each do |groupe_instructeur, emails|
+      _, invalid_emails = groupe_instructeur.add_instructeurs(emails:)
+      errors << invalid_emails
     end
 
-    errors
+    errors.flatten
   end
 
-  private
+  def self.import_instructeurs(procedure, emails)
+    instructeurs_emails = emails
+      .map { _1["email"] }
+      .compact
+      .map { EmailSanitizableConcern::EmailSanitizer.sanitize(_1) }
 
-  def self.create_instructeur(administrateurs, email)
-    user = User.create_or_promote_to_instructeur(
-      email,
-      SecureRandom.hex,
-      administrateurs: administrateurs
-    )
-    user.invite!
-    user.instructeur
+    groupe_instructeur = procedure.defaut_groupe_instructeur
+
+    _, invalid_emails = groupe_instructeur.add_instructeurs(emails: instructeurs_emails)
+
+    invalid_emails
   end
 end

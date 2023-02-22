@@ -41,7 +41,10 @@ en:
           notice: This group will be a choice from the list "%{routing_criteria_name}"
         csv_import:
           title: CSV Import
-          notice_1: The csv file must have 2 columns (Group, Email) and be separated by commas. The import does not overwrite existing groups and instructors.
+          routing_enabled:
+            notice_1: The csv file must have 2 columns (Group, Email) and be separated by commas. The import does not overwrite existing groups and instructors.
+          routing_disabled:
+            notice_1: The csv file must have 1 column with instructors emails.
           notice_2: The size of the file must be less than %{csv_max_size}.
           download_exemple: Download sample CSV file
           import_file: Import file

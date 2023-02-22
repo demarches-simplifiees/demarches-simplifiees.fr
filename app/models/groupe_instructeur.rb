@@ -66,6 +66,7 @@ class GroupeInstructeur < ApplicationRecord
 
     # We dont't want to assign a user to a groupe_instructeur if they are already assigned to it
     instructeurs_to_add -= instructeurs
+    instructeurs_to_add.each { add(_1) }
 
     [instructeurs_to_add, invalid_emails]
   end
