@@ -1,4 +1,9 @@
-import React, { useState, useRef, ChangeEventHandler } from 'react';
+import React, {
+  useState,
+  useRef,
+  useId,
+  ChangeEventHandler
+} from 'react';
 import { useDebounce } from 'use-debounce';
 import { useQuery } from 'react-query';
 import {
@@ -127,6 +132,12 @@ function ComboSearch<Result>({
     }
   };
 
+  const a11yInstructions =
+    'utilisez les flèches haut et bas pour naviguer et la touche Entrée pour choisir.\
+    Sur un appareil tactile, explorez par toucher ou avec des gestes.';
+
+  const initInstrId = useId();
+
   return (
     <Combobox onSelect={handleOnSelect}>
       <ComboboxInput
@@ -136,7 +147,7 @@ function ComboSearch<Result>({
         value={value ?? ''}
         autocomplete={false}
         id={id}
-        aria-describedby={describedby}
+        aria-describedby={describedby ?? initInstrId}
       />
       {isSuccess && (
         <ComboboxPopover className="shadow-popup">
@@ -155,6 +166,12 @@ function ComboSearch<Result>({
             </span>
           )}
         </ComboboxPopover>
+      )}
+      {!describedby && (
+        <span id={initInstrId} className="hidden">
+          Quand les résultats de l’autocomplete sont disponibles,{' '}
+          {a11yInstructions}
+        </span>
       )}
     </Combobox>
   );
