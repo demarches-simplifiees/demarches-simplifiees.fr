@@ -158,6 +158,7 @@ function ComboSearch<Result>({
   }, [results.length, isSuccess]);
 
   const initInstrId = useId();
+  const resultsId = useId();
 
   return (
     <Combobox onSelect={handleOnSelect}>
@@ -169,9 +170,10 @@ function ComboSearch<Result>({
         autocomplete={false}
         id={id}
         aria-describedby={describedby ?? initInstrId}
+        aria-owns={resultsId}
       />
       {isSuccess && (
-        <ComboboxPopover className="shadow-popup">
+        <ComboboxPopover id={resultsId} className="shadow-popup">
           {results.length > 0 ? (
             <ComboboxList>
               {results.map((result, index) => {
