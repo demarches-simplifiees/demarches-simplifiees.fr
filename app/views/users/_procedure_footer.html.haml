@@ -65,12 +65,13 @@
 
       - if service.present?
         .fr-footer__content
+
           %p.fr-footer__content-desc
             = I18n.t('users.procedure_footer.managed_by.header')
-            %div{ lang: :fr }
-              %p= "#{service.nom}, #{service.organisme},"
-              = render SimpleFormatComponent.new(service.adresse)
-          = render partial: "shared/footer_content_list"
+            %span{ lang: :fr }= "#{service.nom}, #{service.organisme},"
+          %div{ lang: :fr }
+            = render SimpleFormatComponent.new(service.adresse, class_names_map: {paragraph: 'fr-footer__content-desc'})
+            = render partial: "shared/footer_content_list"
 
     .fr-footer__bottom
       = render partial: 'users/general_footer_row', locals: { dossier: dossier }
