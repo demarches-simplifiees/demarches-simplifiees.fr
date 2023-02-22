@@ -7,6 +7,7 @@
 
 .procedure-form#attestation-template-edit
   .procedure-form__columns.container
+    = render Attachment::DeleteFormComponent.new
     = form_for @attestation_template,
       url: admin_procedure_attestation_template_path(@procedure),
       html: { multipart: true, class: 'form form-ds-fr-white procedure-form__column--form' } do |f|

@@ -1,9 +1,11 @@
 name: Continuous Integration
 on:
   push:
-    branches: 'main'
+    branches: [main]
   pull_request:
-    branches: 'main'
+    branches: [main]
+  merge_group:
+    branches: [main]
 
 jobs:
   linters:
