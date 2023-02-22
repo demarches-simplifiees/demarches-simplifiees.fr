@@ -1,6 +1,6 @@
 describe "procedure filters" do
   let(:instructeur) { create(:instructeur) }
-  let(:procedure) { create(:procedure, :published, :with_type_de_champ, instructeurs: [instructeur]) }
+  let(:procedure) { create(:procedure, :published, :with_type_de_champ, :with_departement, :with_region, instructeurs: [instructeur]) }
   let!(:type_de_champ) { procedure.active_revision.types_de_champ_public.first }
   let!(:new_unfollow_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
   let!(:champ) { Champ.find_by(type_de_champ_id: type_de_champ.id, dossier_id: new_unfollow_dossier.id) }
@@ -92,6 +92,44 @@ describe "procedure filters" do
     find("select#value", visible: false)
     select 'En construction', from: "Valeur"
     click_button "Ajouter le filtre"
+  end
+
+  describe 'with a vcr cached cassette' do
+    let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
+
+    before do
+      allow(Rails).to receive(:cache).and_return(memory_store)
+      Rails.cache.clear
+    end
+
+    scenario "should be able to find by departements with custom enum lookup", js: true, vcr: { cassette_name: 'api_geo_departements' } do
+      departement_champ = new_unfollow_dossier.champs.find(&:departement?)
+      departement_champ.update!(value: 'Oise', external_id: '60')
+      departement_champ.reload
+      champ_select_value = "#{departement_champ.external_id} – #{departement_champ.value}"
+
+      click_on 'Sélectionner un filtre'
+      select departement_champ.libelle, from: "Colonne"
+      find("select#value", visible: true)
+      select champ_select_value, from: "Valeur"
+      click_button "Ajouter le filtre"
+      find("select#value", visible: false) # w8 for filter to be applied
+      expect(page).to have_link(new_unfollow_dossier.id.to_s)
+    end
+
+    scenario "should be able to find by region with custom enum lookup", js: true, vcr: { cassette_name: 'api_geo_regions' } do
+      region_champ = new_unfollow_dossier.champs.find(&:region?)
+      region_champ.update!(value: 'Bretagne', external_id: '53')
+      region_champ.reload
+
+      click_on 'Sélectionner un filtre'
+      select region_champ.libelle, from: "Colonne"
+      find("select#value", visible: true)
+      select region_champ.value, from: "Valeur"
+      click_button "Ajouter le filtre"
+      find("select#value", visible: false) # w8 for filter to be applied
+      expect(page).to have_link(new_unfollow_dossier.id.to_s)
+    end
   end
 
   scenario "should be able to add and remove two filters for the same field", js: true do

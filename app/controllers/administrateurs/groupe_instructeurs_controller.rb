@@ -120,8 +120,6 @@ module Administrateurs
       end
 
       if instructeurs.present?
-        instructeurs.each { groupe_instructeur.add(_1) }
-
         flash[:notice] = if procedure.routing_enabled?
           t('.assignment',
             count: instructeurs.size,
@@ -130,6 +128,10 @@ module Administrateurs
         else
           "Les instructeurs ont bien été affectés à la démarche"
         end
+
+        GroupeInstructeurMailer
+          .notify_added_instructeurs(groupe_instructeur, instructeurs, current_administrateur.email)
+          .deliver_later
       end
 
       if procedure.routing_enabled?
@@ -196,33 +198,44 @@ module Administrateurs
 
     def import
       if procedure.publiee_or_close?
-        if !CSV_ACCEPTED_CONTENT_TYPES.include?(group_csv_file.content_type) && !CSV_ACCEPTED_CONTENT_TYPES.include?(marcel_content_type)
+        if !CSV_ACCEPTED_CONTENT_TYPES.include?(csv_file.content_type) && !CSV_ACCEPTED_CONTENT_TYPES.include?(marcel_content_type)
           flash[:alert] = "Importation impossible : veuillez importer un fichier CSV"
 
-        elsif group_csv_file.size > CSV_MAX_SIZE
+        elsif csv_file.size > CSV_MAX_SIZE
           flash[:alert] = "Importation impossible : le poids du fichier est supérieur à #{number_to_human_size(CSV_MAX_SIZE)}"
 
         else
-          file = group_csv_file.read
+          file = csv_file.read
           base_encoding = CharlockHolmes::EncodingDetector.detect(file)
-          groupes_emails = ACSV::CSV.new_for_ruby3(file.encode("UTF-8", base_encoding[:encoding], invalid: :replace, replace: ""), headers: true, header_converters: :downcase)
-            .map { |r| r.to_h.slice('groupe', 'email') }
 
-          groupes_emails_has_keys = groupes_emails.first.has_key?("groupe") && groupes_emails.first.has_key?("email")
+          if params[:group_csv_file]
+            groupes_emails = ACSV::CSV.new_for_ruby3(file.encode("UTF-8", base_encoding[:encoding], invalid: :replace, replace: ""), headers: true, header_converters: :downcase)
+              .map { |r| r.to_h.slice('groupe', 'email') }
 
-          if groupes_emails_has_keys.blank?
-            flash[:alert] = "Importation impossible, veuillez importer un csv #{view_context.link_to('suivant ce modèle', "/csv/#{I18n.locale}/import-groupe-test.csv")}"
-          else
-            add_instructeurs_and_get_errors = InstructeursImportService.import(procedure, groupes_emails)
+            groupes_emails_has_keys = groupes_emails.first.has_key?("groupe") && groupes_emails.first.has_key?("email")
 
-            if add_instructeurs_and_get_errors.empty?
-              flash[:notice] = "La liste des instructeurs a été importée avec succès"
+            if groupes_emails_has_keys.blank?
+              flash[:alert] = "Importation impossible, veuillez importer un csv #{view_context.link_to('suivant ce modèle', "/csv/#{I18n.locale}/import-groupe-test.csv")}"
             else
-              flash[:alert] = "Import terminé. Cependant les emails suivants ne sont pas pris en compte: #{add_instructeurs_and_get_errors.join(', ')}"
+              result = InstructeursImportService.import_groupes(procedure, groupes_emails)
+              flash_message_for_import(result)
+            end
+
+          elsif params[:instructeurs_csv_file]
+            instructors_emails = ACSV::CSV.new_for_ruby3(file.encode("UTF-8", base_encoding[:encoding], invalid: :replace, replace: ""), headers: true, header_converters: :downcase)
+              .map(&:to_h)
+
+            instructors_emails_has_key = instructors_emails.first.has_key?("email") && !instructors_emails.first.keys.many?
+
+            if instructors_emails_has_key.blank?
+              flash[:alert] = "Importation impossible, veuillez importer un csv #{view_context.link_to('suivant ce modèle', "/csv/import-instructeurs-test.csv")}"
+            else
+              result = InstructeursImportService.import_instructeurs(procedure, instructors_emails)
+              flash_message_for_import(result)
             end
           end
+          redirect_to admin_procedure_groupe_instructeurs_path(procedure)
         end
-        redirect_to admin_procedure_groupe_instructeurs_path(procedure)
       end
     end
 
@@ -294,12 +307,12 @@ module Administrateurs
       (all - assigned).sort
     end
 
-    def group_csv_file
-      params[:group_csv_file]
+    def csv_file
+      params[:group_csv_file] || params[:instructeurs_csv_file]
     end
 
     def marcel_content_type
-      Marcel::MimeType.for(group_csv_file.read, name: group_csv_file.original_filename, declared_type: group_csv_file.content_type)
+      Marcel::MimeType.for(csv_file.read, name: csv_file.original_filename, declared_type: csv_file.content_type)
     end
 
     def instructeurs_self_management_enabled_params
@@ -308,6 +321,14 @@ module Administrateurs
 
     def routing_enabled_params
       { routing_enabled: params.require(:routing) == 'enable' }
+    end
+
+    def flash_message_for_import(result)
+      if result.blank?
+        flash[:notice] = "La liste des instructeurs a été importée avec succès"
+      else
+        flash[:alert] = "Import terminé. Cependant les emails suivants ne sont pas pris en compte: #{result.join(', ')}"
+      end
     end
   end
 end

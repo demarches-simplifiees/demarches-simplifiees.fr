@@ -22,18 +22,6 @@ fr:
         assignment:
           one: "L’instructeur %{emails} a été affecté au groupe « %{groupe} »."
           other: "Les instructeurs %{emails} ont été affectés au groupe « %{groupe} »."
-        email_body:
-          one: "L’instructeur %{emails} a été affecté au groupe « %{groupe} » par « %{email} », en charge de la démarche « %{procedure} »."
-          other: "Les instructeurs %{emails} ont été affectés au groupe « %{groupe} » par « %{email} », en charge de la démarche « %{procedure} »."
-      notify_group_when_instructeurs_removed:
-        email_body:
-          one: "L’instructeur %{emails} a été retiré du groupe « %{groupe} » par « %{email} », en charge de la démarche « %{procedure} »."
-          other: "Les instructeurs %{emails} ont été retirés du groupe « %{groupe} » par « %{email} », en charge de la démarche « %{procedure} »."
-      notify_removed_instructeur:
-        assigned:
-          email_body: "Vous avez été retiré du groupe « %{groupe} » par « %{email} », en charge de la démarche « %{procedure} »."
-        unassigned:
-          email_body: "Vous avez été désaffecté de la démarche « %{procedure} » par « %{email} »."
       reaffecter_dossiers:
         existing_groupe:
           one: "%{count} groupe existe"
@@ -59,8 +47,11 @@ fr:
           notice: Ce groupe sera un choix de la liste "%{routing_criteria_name}"
         csv_import:
           title: Importer par CSV
-          notice_1: Le fichier csv doit comporter 2 colonnes (Groupe, Email) et être séparé par des virgules. Si vous n'avez pas créé de groupe, entrez « défaut » dans la colonne Groupe pour chaque instructeur. L’import n’écrase pas les groupes et les instructeurs existants. La modification du fichier csv ne s’opère que pour l’ajout de nouveaux instructeurs. La suppression d’un instructeur s’opère manuellement en cliquant sur le bouton « retirer ».
-          notice_2: Le poids du fichier doit être inférieur à %{csv_max_size}
+          routing_enabled:
+            notice_1: Le fichier csv doit comporter 2 colonnes (Groupe, Email) et être séparé par des virgules.
+          routing_disabled:
+            notice_1: Le fichier csv doit comporter 1 seule colonne (Email) avec une adresse email d'instructeur par ligne.
+          notice_2: L’import n’écrase pas les groupes et les instructeurs existants. La modification du fichier csv ne s’opère que pour l’ajout de nouveaux instructeurs. La suppression d’un instructeur s’opère manuellement en cliquant sur le bouton « retirer ». Le poids du fichier doit être inférieur à %{csv_max_size}.
           download_exemple: Télécharger l’exemple de fichier CSV
           import_file: Importer le fichier
           import_file_procedure_not_published: L’import d’instructeurs par fichier CSV est disponible une fois la démarche publiée

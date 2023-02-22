@@ -2080,6 +2080,15 @@ describe Dossier do
     end
   end
 
+  describe 'update procedure dossiers count' do
+    let(:dossier) { create(:dossier, :brouillon, :with_individual) }
+
+    it 'update procedure dossiers count when passing to construction' do
+      expect(dossier.procedure).to receive(:compute_dossiers_count)
+      dossier.passer_en_construction!
+    end
+  end
+
   private
 
   def count_for_month(processed_by_month, month)

@@ -39,7 +39,7 @@ RSpec.describe GroupeInstructeurMailer, type: :mailer do
     before { groupe_instructeur.remove(instructeur_to_remove) }
 
     context 'when instructeur is fully removed form procedure' do
-      it { expect(subject.body).to include('Vous avez été désaffecté de la démarche') }
+      it { expect(subject.body).to include('Vous avez été désaffecté(e) de la démarche') }
       it { expect(subject.to).to include('int3@g') }
       it { expect(subject.to).not_to include('int1@g', 'int2@g') }
     end
@@ -51,9 +51,34 @@ RSpec.describe GroupeInstructeurMailer, type: :mailer do
         gi2
       end
 
-      it { expect(subject.body).to include('Vous avez été retiré du groupe « gi1 » par « toto@email.com »') }
+      it { expect(subject.body).to include('Vous avez été retiré(e) du groupe « gi1 » par « toto@email.com »') }
       it { expect(subject.to).to include('int3@g') }
       it { expect(subject.to).not_to include('int1@g', 'int2@g') }
+    end
+  end
+
+  describe '#notify_added_instructeurs' do
+    let(:procedure) { create(:procedure) }
+
+    let(:instructeurs_to_add) { [create(:instructeur, email: 'int3@g'), create(:instructeur, email: 'int4@g')] }
+
+    let(:current_instructeur_email) { 'toto@email.com' }
+
+    subject { described_class.notify_added_instructeurs(procedure.defaut_groupe_instructeur, instructeurs_to_add, current_instructeur_email) }
+
+    before { instructeurs_to_add.each { procedure.defaut_groupe_instructeur.add(_1) } }
+
+    context 'when there is only one group on procedure' do
+      it { expect(subject.body).to include('Vous avez été affecté(e) à la démarche') }
+      it { expect(subject.bcc).to match_array(['int3@g', 'int4@g']) }
+    end
+
+    context 'when there are many groups on procedure' do
+      let!(:groupe_instructeur_2) do
+        GroupeInstructeur.create(label: 'gi2', procedure: procedure)
+      end
+      it { expect(subject.body).to include('Vous avez été ajouté(e) au groupe') }
+      it { expect(subject.bcc).to match_array(['int3@g', 'int4@g']) }
     end
   end
 end

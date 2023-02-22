@@ -1,0 +1,6 @@
+en:
+  groupe_instructeur_mailer:
+    notify_removed_instructeur:
+      email_body:
+        assigned: "You were removed from the group « %{groupe} » by « %{email} », in charge of procedure « %{procedure} »."
+        unassigned: "You were unassigned from the procedure « %{procedure} » by « %{email} »."

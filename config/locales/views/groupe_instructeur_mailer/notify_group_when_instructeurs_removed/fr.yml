@@ -1,0 +1,6 @@
+fr:
+  groupe_instructeur_mailer:
+    notify_group_when_instructeurs_removed:
+      email_body:
+        one: "L’instructeur %{emails} a été retiré du groupe « %{groupe} » par « %{email} », en charge de la démarche « %{procedure} »."
+        other: "Les instructeurs %{emails} ont été retirés du groupe « %{groupe} » par « %{email} », en charge de la démarche « %{procedure} »."

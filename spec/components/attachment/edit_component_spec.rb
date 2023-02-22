@@ -103,7 +103,7 @@ RSpec.describe Attachment::EditComponent, type: :component do
       it 'displays the filename, but doesn’t allow to download the file' do
         expect(attachment.watermark_pending?).to be_truthy
         expect(subject).to have_text(filename)
-        expect(subject).to have_link('Supprimer')
+        expect(subject).to have_button('Supprimer')
         expect(subject).to have_no_link(text: filename) # don't match "Delete" link which also include filename in title attribute
         expect(subject).to have_text('Traitement en cours')
       end
@@ -152,8 +152,12 @@ RSpec.describe Attachment::EditComponent, type: :component do
       end
     end
 
-    context 'when the file is scanned and safe' do
+    context 'when the file is scanned, watermarked_at, and viewed as download and safe' do
+      let(:kwargs) { { view_as: :download } }
       let(:virus_scan_result) { ActiveStorage::VirusScanner::SAFE }
+      before do
+        attachment.blob.touch(:watermarked_at)
+      end
 
       it 'allows to download the file' do
         expect(subject).to have_link(filename)

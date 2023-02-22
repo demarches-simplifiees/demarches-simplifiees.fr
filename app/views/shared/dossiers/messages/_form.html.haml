@@ -1,3 +1,4 @@
+= render Attachment::DeleteFormComponent.new
 = form_for(commentaire, url: form_url, html: { class: 'form', multipart: true, data: { controller: 'persisted-form', persisted_form_key_value: @dossier.present? ? dom_id(@dossier) : dom_id(@procedure, :bulk_message) } }) do |f|
   - dossier = commentaire.dossier
   - placeholder = t('views.shared.dossiers.messages.form.write_message_to_administration_placeholder')

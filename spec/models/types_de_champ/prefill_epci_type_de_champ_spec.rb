@@ -14,7 +14,7 @@ RSpec.describe TypesDeChamp::PrefillEpciTypeDeChamp do
   describe 'ancestors' do
     subject { described_class.new(type_de_champ, procedure.active_revision) }
 
-    it { is_expected.to be_kind_of(TypesDeChamp::PrefillEpciTypeDeChamp) }
+    it { is_expected.to be_kind_of(TypesDeChamp::PrefillTypeDeChamp) }
   end
 
   describe '#possible_values' do
@@ -57,34 +57,44 @@ RSpec.describe TypesDeChamp::PrefillEpciTypeDeChamp do
   describe '#to_assignable_attributes' do
     subject(:to_assignable_attributes) { described_class.build(type_de_champ, procedure.active_revision).to_assignable_attributes(champ, value) }
 
+    shared_examples "a transformation to" do |code_departement, value|
+      it { is_expected.to match({ code_departement: code_departement, value: value, id: champ.id }) }
+    end
+
     context 'when the value is nil' do
       let(:value) { nil }
-      it { is_expected.to match({ code_departement: nil, value: nil, id: champ.id }) }
+
+      it_behaves_like "a transformation to", nil, nil
     end
 
     context 'when the value is empty' do
       let(:value) { '' }
-      it { is_expected.to match({ code_departement: nil, value: nil, id: champ.id }) }
+
+      it_behaves_like "a transformation to", nil, nil
     end
 
     context 'when the value is a string' do
       let(:value) { 'hello' }
-      it { is_expected.to match({ code_departement: nil, value: nil, id: champ.id }) }
+
+      it_behaves_like "a transformation to", nil, nil
     end
 
     context 'when the value is an array of one element' do
       let(:value) { ['01'] }
-      it { is_expected.to match({ code_departement: '01', value: nil, id: champ.id }) }
+
+      it_behaves_like "a transformation to", '01', nil
     end
 
     context 'when the value is an array of two elements' do
       let(:value) { ['01', '200042935'] }
-      it { is_expected.to match({ code_departement: '01', value: '200042935', id: champ.id }) }
+
+      it_behaves_like "a transformation to", '01', '200042935'
     end
 
     context 'when the value is an array of three or more elements' do
       let(:value) { ['01', '200042935', 'hello'] }
-      it { is_expected.to match({ code_departement: '01', value: '200042935', id: champ.id }) }
+
+      it_behaves_like "a transformation to", '01', '200042935'
     end
   end
 
