@@ -217,8 +217,15 @@ module Administrateurs
             if groupes_emails_has_keys.blank?
               flash[:alert] = "Importation impossible, veuillez importer un csv #{view_context.link_to('suivant ce modèle', "/csv/#{I18n.locale}/import-groupe-test.csv")}"
             else
-              result = InstructeursImportService.import_groupes(procedure, groupes_emails)
-              flash_message_for_import(result)
+              added_instructeurs_by_group, invalid_emails = InstructeursImportService.import_groupes(procedure, groupes_emails)
+
+              added_instructeurs_by_group.each do |groupe, added_instructeurs|
+                GroupeInstructeurMailer
+                  .notify_added_instructeurs(groupe, added_instructeurs, current_administrateur.email)
+                  .deliver_later
+              end
+
+              flash_message_for_import(invalid_emails)
             end
 
           elsif params[:instructeurs_csv_file]
