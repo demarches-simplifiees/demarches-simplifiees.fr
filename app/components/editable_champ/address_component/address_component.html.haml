@@ -1,6 +1,11 @@
+- render_parent
+
 = @form.hidden_field :value
 = @form.hidden_field :external_id
+
 = react_component("ComboAdresseSearch",
   required: @champ.required?,
   id: @champ.input_id,
-  describedby: @champ.describedby_id)
+  describedby: @champ.describedby_id,
+  **react_combo_props,
+)
