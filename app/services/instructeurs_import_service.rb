@@ -45,8 +45,8 @@ class InstructeursImportService
 
     groupe_instructeur = procedure.defaut_groupe_instructeur
 
-    _, invalid_emails = groupe_instructeur.add_instructeurs(emails: instructeurs_emails)
+    instructeurs, invalid_emails = groupe_instructeur.add_instructeurs(emails: instructeurs_emails)
 
-    invalid_emails
+    [instructeurs, invalid_emails]
   end
 end

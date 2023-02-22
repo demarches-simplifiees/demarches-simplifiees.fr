@@ -486,12 +486,23 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     context 'when the csv file is less than 1 mo and content type text/csv' do
       let(:csv_file) { fixture_file_upload('spec/fixtures/files/instructeurs-file.csv', 'text/csv') }
 
-      before { subject }
+      before do
+        allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs)
+          .and_return(double(deliver_later: true))
+        subject
+      end
 
       it { expect(response.status).to eq(302) }
       it { expect(procedure_non_routee.instructeurs.pluck(:email)).to match_array(["kara@beta-gouv.fr", "philippe@mail.com", "lisa@gouv.fr"]) }
       it { expect(flash.alert).to be_present }
       it { expect(flash.alert).to eq("Import terminé. Cependant les emails suivants ne sont pas pris en compte: eric") }
+      it "calls GroupeInstructeurMailer" do
+        expect(GroupeInstructeurMailer).to have_received(:notify_added_instructeurs).with(
+          procedure_non_routee.defaut_groupe_instructeur,
+          any_args,
+          admin.email
+        )
+      end
     end
 
     context 'when the csv file has more than one column' do

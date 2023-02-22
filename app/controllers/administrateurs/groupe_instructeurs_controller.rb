@@ -230,8 +230,13 @@ module Administrateurs
             if instructors_emails_has_key.blank?
               flash[:alert] = "Importation impossible, veuillez importer un csv #{view_context.link_to('suivant ce modèle', "/csv/import-instructeurs-test.csv")}"
             else
-              result = InstructeursImportService.import_instructeurs(procedure, instructors_emails)
-              flash_message_for_import(result)
+              added_instructeurs, invalid_emails = InstructeursImportService.import_instructeurs(procedure, instructors_emails)
+
+              GroupeInstructeurMailer
+                .notify_added_instructeurs(groupe_instructeur, added_instructeurs, current_administrateur.email)
+                .deliver_later
+
+              flash_message_for_import(invalid_emails)
             end
           end
           redirect_to admin_procedure_groupe_instructeurs_path(procedure)
