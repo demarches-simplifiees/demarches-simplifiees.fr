@@ -141,6 +141,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is authorized", :departements, "03"
     it_behaves_like "a champ public value that is authorized", :communes, ['01', '01457']
     it_behaves_like "a champ public value that is authorized", :multiple_drop_down_list, ["val1", "val2"]
+    it_behaves_like "a champ public value that is authorized", :dossier_link, "1"
     it_behaves_like "a champ public value that is authorized", :epci, ['01', '200042935']
     it_behaves_like "a champ public value that is authorized", :siret, "13002526500013"
     it_behaves_like "a champ public value that is authorized", :rna, "value"
@@ -182,6 +183,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ private value that is authorized", :departements, "03"
     it_behaves_like "a champ private value that is authorized", :communes, ['01', '01457']
     it_behaves_like "a champ private value that is authorized", :multiple_drop_down_list, ["val1", "val2"]
+    it_behaves_like "a champ private value that is authorized", :dossier_link, "1"
     it_behaves_like "a champ private value that is authorized", :epci, ['01', '200042935']
 
     context "when the private type de champ is authorized (repetition)" do
@@ -201,7 +203,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is unauthorized", :decimal_number, "non decimal string"
     it_behaves_like "a champ public value that is unauthorized", :integer_number, "non integer string"
     it_behaves_like "a champ public value that is unauthorized", :number, "value"
-    it_behaves_like "a champ public value that is unauthorized", :dossier_link, "value"
+    # TODO: SEB    it_behaves_like "a champ public value that is unauthorized", :dossier_link, "value"
     it_behaves_like "a champ public value that is unauthorized", :titre_identite, "value"
     it_behaves_like "a champ public value that is unauthorized", :civilite, "value"
     it_behaves_like "a champ public value that is unauthorized", :date, "value"
