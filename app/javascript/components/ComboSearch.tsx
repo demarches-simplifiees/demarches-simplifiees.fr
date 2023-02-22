@@ -38,6 +38,8 @@ export type ComboSearchProps<Result> = {
   className?: string;
   placeholder?: string;
   debounceDelay?: number;
+  screenReaderInstructions: string;
+  announceTemplateId: string;
 };
 
 type QueryKey = readonly [
@@ -57,6 +59,8 @@ function ComboSearch<Result>({
   transformResults = (_, results) => results as Result[],
   id,
   describedby,
+  screenReaderInstructions,
+  announceTemplateId,
   debounceDelay = 0,
   ...props
 }: ComboSearchProps<Result>) {
@@ -134,28 +138,41 @@ function ComboSearch<Result>({
   };
 
   const [announceLive, setAnnounceLive] = useState('');
-
-  const a11yInstructions =
-    'utilisez les flèches haut et bas pour naviguer et la touche Entrée pour choisir.\
-    Sur un appareil tactile, explorez par toucher ou avec des gestes.';
-
   const announceTimeout = useRef<ReturnType<typeof setTimeout>>();
+  const announceTemplate = document.querySelector<HTMLTemplateElement>(
+    `#${announceTemplateId}`
+  );
+  invariant(announceTemplate, `Missing #${announceTemplateId}`);
+
+  const announceFragment = useRef(
+    announceTemplate.content.cloneNode(true) as DocumentFragment
+  ).current;
 
   useEffect(() => {
-    if (isSuccess && results.length > 0) {
-      setAnnounceLive(
-        `${results.length} résultats disponibles, ${a11yInstructions}`
+    if (isSuccess) {
+      const slot = announceFragment.querySelector<HTMLSlotElement>(
+        'slot[name="' + (results.length <= 1 ? results.length : 'many') + '"]'
       );
 
-      announceTimeout.current = setTimeout(() => {
-        setAnnounceLive('');
-      }, 4000);
-    } else {
-      setAnnounceLive('Aucun résultat trouvé.');
+      if (!slot) {
+        return;
+      }
+
+      const countSlot =
+        slot.querySelector<HTMLSlotElement>('slot[name="count"]');
+      if (countSlot) {
+        countSlot.replaceWith(String(results.length));
+      }
+
+      setAnnounceLive(slot.textContent ?? '');
     }
 
+    announceTimeout.current = setTimeout(() => {
+      setAnnounceLive('');
+    }, 3000);
+
     return () => clearTimeout(announceTimeout.current);
-  }, [results.length, isSuccess]);
+  }, [announceFragment, results.length, isSuccess]);
 
   const initInstrId = useId();
   const resultsId = useId();
@@ -192,8 +209,7 @@ function ComboSearch<Result>({
       )}
       {!describedby && (
         <span id={initInstrId} className="hidden">
-          Quand les résultats de l’autocomplete sont disponibles,{' '}
-          {a11yInstructions}
+          {screenReaderInstructions}
         </span>
       )}
       <div aria-live="assertive" className="sr-only">
