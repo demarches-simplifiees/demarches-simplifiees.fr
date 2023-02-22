@@ -1,5 +1,6 @@
 import React, {
   useState,
+  useEffect,
   useRef,
   useId,
   ChangeEventHandler
@@ -132,9 +133,29 @@ function ComboSearch<Result>({
     }
   };
 
+  const [announceLive, setAnnounceLive] = useState('');
+
   const a11yInstructions =
     'utilisez les flèches haut et bas pour naviguer et la touche Entrée pour choisir.\
     Sur un appareil tactile, explorez par toucher ou avec des gestes.';
+
+  const announceTimeout = useRef<ReturnType<typeof setTimeout>>();
+
+  useEffect(() => {
+    if (isSuccess && results.length > 0) {
+      setAnnounceLive(
+        `${results.length} résultats disponibles, ${a11yInstructions}`
+      );
+
+      announceTimeout.current = setTimeout(() => {
+        setAnnounceLive('');
+      }, 4000);
+    } else {
+      setAnnounceLive('Aucun résultat trouvé.');
+    }
+
+    return () => clearTimeout(announceTimeout.current);
+  }, [results.length, isSuccess]);
 
   const initInstrId = useId();
 
@@ -173,6 +194,9 @@ function ComboSearch<Result>({
           {a11yInstructions}
         </span>
       )}
+      <div aria-live="assertive" className="sr-only">
+        {announceLive}
+      </div>
     </Combobox>
   );
 }
