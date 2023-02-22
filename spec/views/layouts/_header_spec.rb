@@ -20,6 +20,7 @@ describe 'layouts/_header.html.haml', type: :view do
     let(:profile) { nil }
 
     it { is_expected.to have_css(".fr-header__logo") }
+    it { is_expected.to_not have_css(".account-btn") }
 
     it 'displays the Help link' do
       expect(subject).to have_link('Aide', href: FAQ_URL)
@@ -44,6 +45,7 @@ describe 'layouts/_header.html.haml', type: :view do
 
     it { is_expected.to have_css(".fr-header__logo") }
     it { is_expected.to have_link("Dossiers", href: dossiers_path) }
+    it { is_expected.to have_selector(:button, user.email, class: "account-btn") }
 
     it 'displays the Help button' do
       expect(subject).to have_link("Aide", href: FAQ_URL)
@@ -57,6 +59,7 @@ describe 'layouts/_header.html.haml', type: :view do
     let(:current_instructeur) { instructeur }
 
     it { is_expected.to have_css(".fr-header__logo") }
+    it { is_expected.to have_selector(:button, user.email, class: "account-btn") }
 
     it 'displays the Help dropdown menu' do
       expect(subject).to have_css(".help-dropdown")
