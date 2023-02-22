@@ -64,6 +64,9 @@ en:
     commentaire:
       send_message_to_instructeur: "Send a message to the instructor"
       reply_in_mailbox: "Reply in mailbox"
+  skiplinks:
+    quick: Quick access
+    content: Content
   layouts:
     commencer:
       no_procedure:
