@@ -504,6 +504,10 @@ fr:
               not_in_departement_epci_codes: "doit être un code d'EPCI du département correspondant"
             value:
               not_in_departement_epci_names: "doit être un nom d'EPCI du département correspondant"
+        "champs/dossier_link_champ":
+          attributes:
+            value:
+              not_integerable: "doit être un entier"
   errors:
     format: "Le champ « %{attribute} » %{message}"
     messages:

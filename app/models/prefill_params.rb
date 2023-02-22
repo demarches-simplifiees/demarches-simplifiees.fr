@@ -37,7 +37,8 @@ class PrefillParams
       TypeDeChamp.type_champs.fetch(:regions),
       TypeDeChamp.type_champs.fetch(:departements),
       TypeDeChamp.type_champs.fetch(:multiple_drop_down_list),
-      TypeDeChamp.type_champs.fetch(:epci)
+      TypeDeChamp.type_champs.fetch(:epci),
+      TypeDeChamp.type_champs.fetch(:dossier_link)
     ]
 
     attr_reader :champ, :value, :dossier
