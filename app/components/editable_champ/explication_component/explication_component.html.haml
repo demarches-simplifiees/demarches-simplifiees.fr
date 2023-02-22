@@ -1,7 +1,7 @@
 = render Dsfr::CalloutComponent.new(title: @champ.libelle, extra_class_names: ['fr-mb-2w', 'fr-callout--blue-cumulus']) do |c|
   - c.with_body do
 
-    = string_to_html(@champ.description, allow_a: true)
+    = render SimpleFormatComponent.new(@champ.description, allow_a: true)
 
     - if @champ.collapsible_explanation_enabled? && @champ.collapsible_explanation_text.present?
       %div
