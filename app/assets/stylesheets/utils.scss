@@ -74,6 +74,14 @@
   display: none;
 }
 
+.visible-on-previous-hover {
+  visibility: hidden;
+}
+
+:hover + .visible-on-previous-hover {
+  visibility: visible;
+}
+
 // sizing
 .width-100 {
   width: 100%;

@@ -4,6 +4,10 @@
       Veuillez télécharger, remplir et joindre
       = link_to('le modèle suivant', url_for(template), target: '_blank', rel: 'noopener')
 
+      - if helpers.administrateur_signed_in?
+        %em.fr-text-mention--grey.fr-text--xs.visible-on-previous-hover
+          = t('shared.ephemeral_link')
+
   - if persisted?
     .attachment-actions{ id: dom_id(attachment, :actions) }
       .attachment-action
