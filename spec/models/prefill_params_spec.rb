@@ -147,7 +147,7 @@ RSpec.describe PrefillParams do
       let(:type_de_champ_child_value) { "value" }
       let(:type_de_champ_child_value2) { "value2" }
 
-      let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => [{"champ_#{type_de_champ_child.to_typed_id_for_query}"=> type_de_champ_child_value}, {"champ_#{type_de_champ_child.to_typed_id_for_query}"=> type_de_champ_child_value2 }] } }
+      let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => [{ "champ_#{type_de_champ_child.to_typed_id_for_query}" => type_de_champ_child_value }, { "champ_#{type_de_champ_child.to_typed_id_for_query}" => type_de_champ_child_value2 }] } }
 
       it "builds an array of hash(id, value) matching the given params" do
         expect(prefill_params_array).to match([{ id: type_de_champ_child.champ.first.id, value: type_de_champ_child_value }, { id: type_de_champ_child.champ.second.id, value: type_de_champ_child_value2 }])
@@ -183,7 +183,7 @@ RSpec.describe PrefillParams do
       let(:type_de_champ_child_value) { "value" }
       let(:type_de_champ_child_value2) { "value2" }
 
-      let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => [{"champ_#{type_de_champ_child.to_typed_id_for_query}" => type_de_champ_child_value}, {"champ_#{type_de_champ_child.to_typed_id_for_query}" => type_de_champ_child_value2}] } }
+      let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => [{ "champ_#{type_de_champ_child.to_typed_id_for_query}" => type_de_champ_child_value }, { "champ_#{type_de_champ_child.to_typed_id_for_query}" => type_de_champ_child_value2 }] } }
 
       it "builds an array of hash(id, value) matching the given params" do
         expect(prefill_params_array).to match([{ id: type_de_champ_child.champ.first.id, value: type_de_champ_child_value }, { id: type_de_champ_child.champ.second.id, value: type_de_champ_child_value2 }])

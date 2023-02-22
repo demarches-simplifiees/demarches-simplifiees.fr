@@ -34,7 +34,7 @@ RSpec.describe TypesDeChamp::PrefillRepetitionTypeDeChamp, type: :model, vcr: { 
 
   describe '#example_value' do
     subject(:example_value) { described_class.new(type_de_champ, procedure.active_revision).example_value }
-    let(:expected_value) { [{"champ_#{text_repetition.to_typed_id_for_query}" => "Texte court", "champ_#{integer_repetition.to_typed_id_for_query}" => "42", "champ_#{region_repetition.to_typed_id_for_query}" => "53"}, {"champ_#{text_repetition.to_typed_id_for_query}" => "Texte court", "champ_#{integer_repetition.to_typed_id_for_query}" => "42", "champ_#{region_repetition.to_typed_id_for_query}" => "53"}] }
+    let(:expected_value) { [{ "champ_#{text_repetition.to_typed_id_for_query}" => "Texte court", "champ_#{integer_repetition.to_typed_id_for_query}" => "42", "champ_#{region_repetition.to_typed_id_for_query}" => "53" }, { "champ_#{text_repetition.to_typed_id_for_query}" => "Texte court", "champ_#{integer_repetition.to_typed_id_for_query}" => "42", "champ_#{region_repetition.to_typed_id_for_query}" => "53" }] }
 
     it { expect(example_value).to eq(expected_value) }
   end
@@ -64,13 +64,13 @@ RSpec.describe TypesDeChamp::PrefillRepetitionTypeDeChamp, type: :model, vcr: { 
     end
 
     context 'when the value is an array with some wrong keys' do
-      let(:value) { [{"champ_#{text_repetition.to_typed_id_for_query}" => "value", "blabla" => "value2"}, {"champ_#{integer_repetition.to_typed_id_for_query}" => "value3"}, {"blabla" =>"false"}] }
+      let(:value) { [{ "champ_#{text_repetition.to_typed_id_for_query}" => "value", "blabla" => "value2" }, { "champ_#{integer_repetition.to_typed_id_for_query}" => "value3" }, { "blabla" => "false" }] }
 
       it { is_expected.to match([[{ id: text_repetition.champ.first.id, value: "value" }], [{ id: integer_repetition.champ.second.id, value: "value3" }]]) }
     end
 
     context 'when the value is an array with right keys' do
-      let(:value) { [{"champ_#{text_repetition.to_typed_id_for_query}" =>"value"}, {"champ_#{text_repetition.to_typed_id_for_query}" => "value2"}] }
+      let(:value) { [{ "champ_#{text_repetition.to_typed_id_for_query}" => "value" }, { "champ_#{text_repetition.to_typed_id_for_query}" => "value2" }] }
 
       it { is_expected.to match([[{ id: text_repetition.champ.first.id, value: "value" }], [{ id: text_repetition.champ.second.id, value: "value2" }]]) }
     end
