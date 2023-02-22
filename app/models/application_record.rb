@@ -22,4 +22,8 @@ class ApplicationRecord < ActiveRecord::Base
   def to_typed_id
     GraphQL::Schema::UniqueWithinType.encode(self.class.name, id)
   end
+
+  def to_typed_id_for_query
+    to_typed_id.delete("==")
+  end
 end

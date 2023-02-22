@@ -24,7 +24,7 @@ RSpec.describe TypesDeChamp::PrefillRepetitionTypeDeChamp, type: :model, vcr: { 
   describe '#possible_values' do
     subject(:possible_values) { described_class.new(type_de_champ, procedure.active_revision).possible_values }
     let(:expected_value) {
-      "Un tableau de dictionnaires avec les valeurs possibles pour chaque champ de la répétition.</br><ul><li>#{text_repetition.to_typed_id}: Un texte court<br></li><li>#{integer_repetition.to_typed_id}: Un nombre entier<br></li><li>#{region_repetition.to_typed_id}: Un <a href=\"https://fr.wikipedia.org/wiki/R%C3%A9gion_fran%C3%A7aise\" target=\"_blank\" rel=\"noopener noreferrer\">code INSEE de région</a><br><a title=\"Toutes les valeurs possibles — Nouvel onglet\" target=\"_blank\" rel=\"noopener noreferrer\" href=\"/procedures/#{procedure.path}/prefill_type_de_champs/#{region_repetition.id}\">Voir toutes les valeurs possibles</a></li></ul>"
+      "Un tableau de dictionnaires avec les valeurs possibles pour chaque champ de la répétition.</br><ul><li>champ_#{text_repetition.to_typed_id_for_query}: Un texte court<br></li><li>champ_#{integer_repetition.to_typed_id_for_query}: Un nombre entier<br></li><li>champ_#{region_repetition.to_typed_id_for_query}: Un <a href=\"https://fr.wikipedia.org/wiki/R%C3%A9gion_fran%C3%A7aise\" target=\"_blank\" rel=\"noopener noreferrer\">code INSEE de région</a><br><a title=\"Toutes les valeurs possibles — Nouvel onglet\" target=\"_blank\" rel=\"noopener noreferrer\" href=\"/procedures/#{procedure.path}/prefill_type_de_champs/#{region_repetition.id}\">Voir toutes les valeurs possibles</a></li></ul>"
     }
 
     it {
@@ -34,7 +34,7 @@ RSpec.describe TypesDeChamp::PrefillRepetitionTypeDeChamp, type: :model, vcr: { 
 
   describe '#example_value' do
     subject(:example_value) { described_class.new(type_de_champ, procedure.active_revision).example_value }
-    let(:expected_value) { ["{\"#{text_repetition.to_typed_id}\":\"Texte court\", \"#{integer_repetition.to_typed_id}\":\"42\", \"#{region_repetition.to_typed_id}\":\"53\"}", "{\"#{text_repetition.to_typed_id}\":\"Texte court\", \"#{integer_repetition.to_typed_id}\":\"42\", \"#{region_repetition.to_typed_id}\":\"53\"}"] }
+    let(:expected_value) { [{"champ_#{text_repetition.to_typed_id_for_query}" => "Texte court", "champ_#{integer_repetition.to_typed_id_for_query}" => "42", "champ_#{region_repetition.to_typed_id_for_query}" => "53"}, {"champ_#{text_repetition.to_typed_id_for_query}" => "Texte court", "champ_#{integer_repetition.to_typed_id_for_query}" => "42", "champ_#{region_repetition.to_typed_id_for_query}" => "53"}] }
 
     it { expect(example_value).to eq(expected_value) }
   end
@@ -64,13 +64,13 @@ RSpec.describe TypesDeChamp::PrefillRepetitionTypeDeChamp, type: :model, vcr: { 
     end
 
     context 'when the value is an array with some wrong keys' do
-      let(:value) { ["{\"#{text_repetition.to_typed_id}\":\"value\", \"blabla\":\"value2\"}", "{\"#{integer_repetition.to_typed_id}\":\"value3\"}", "{\"blabla\":\"false\"}"] }
+      let(:value) { [{"champ_#{text_repetition.to_typed_id_for_query}" => "value", "blabla" => "value2"}, {"champ_#{integer_repetition.to_typed_id_for_query}" => "value3"}, {"blabla" =>"false"}] }
 
       it { is_expected.to match([[{ id: text_repetition.champ.first.id, value: "value" }], [{ id: integer_repetition.champ.second.id, value: "value3" }]]) }
     end
 
     context 'when the value is an array with right keys' do
-      let(:value) { ["{\"#{text_repetition.to_typed_id}\":\"value\"}", "{\"#{text_repetition.to_typed_id}\":\"value2\"}"] }
+      let(:value) { [{"champ_#{text_repetition.to_typed_id_for_query}" =>"value"}, {"champ_#{text_repetition.to_typed_id_for_query}" => "value2"}] }
 
       it { is_expected.to match([[{ id: text_repetition.champ.first.id, value: "value" }], [{ id: text_repetition.champ.second.id, value: "value2" }]]) }
     end

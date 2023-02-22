@@ -72,7 +72,7 @@ class Champ < ApplicationRecord
     :refresh_after_update?,
     to: :type_de_champ
 
-  delegate :to_typed_id, to: :type_de_champ, prefix: true
+  delegate :to_typed_id, :to_typed_id_for_query, to: :type_de_champ, prefix: true
 
   delegate :revision, to: :dossier, prefix: true
 

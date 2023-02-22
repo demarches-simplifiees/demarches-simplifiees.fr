@@ -67,24 +67,19 @@ describe PrefillDescriptionsController, type: :controller do
       it { expect(response).to render_template(:update) }
 
       it "includes the prefill URL" do
+        type_de_champ_value = I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")
+        type_de_champ_to_add_value = I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ_to_add.type_champ}")
         expect(response.body).to include(commencer_path(path: procedure.path))
-        expect(response.body).to include(
-          {
-            "champ_#{type_de_champ.to_typed_id}" => I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")
-          }.to_query
-        )
-        expect(response.body).to include({
-          "champ_#{type_de_champ_to_add.to_typed_id}" => I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ_to_add.type_champ}")
-        }.to_query)
+        expect(response.body).to include("champ_#{type_de_champ.to_typed_id_for_query}=#{type_de_champ_value}")
+        expect(response.body).to include("champ_#{type_de_champ_to_add.to_typed_id_for_query}=#{type_de_champ_to_add_value}")
       end
 
       it "includes the prefill query" do
         type_de_champ_value = I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")
         type_de_champ_to_add_value = I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ_to_add.type_champ}")
-
         expect(response.body).to include(api_public_v1_dossiers_path(procedure))
         expect(response.body).to include(
-          "&quot;champ_#{type_de_champ.to_typed_id}&quot;: &quot;#{type_de_champ_value}&quot;, &quot;champ_#{type_de_champ_to_add.to_typed_id}&quot;: &quot;#{type_de_champ_to_add_value}&quot"
+          "&quot;champ_#{type_de_champ.to_typed_id_for_query}&quot;:&quot;#{type_de_champ_value}&quot;,&quot;champ_#{type_de_champ_to_add.to_typed_id_for_query}&quot;:&quot;#{type_de_champ_to_add_value}&quot"
         )
       end
     end
@@ -96,13 +91,11 @@ describe PrefillDescriptionsController, type: :controller do
       it { expect(response).to render_template(:update) }
 
       it "includes the prefill URL" do
+        type_de_champ_value = I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")
+        type_de_champ_to_remove_value = I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ_to_remove.type_champ}")
         expect(response.body).to include(commencer_path(path: procedure.path))
-        expect(response.body).to include({
-          "champ_#{type_de_champ.to_typed_id}" => I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")
-        }.to_query)
-        expect(response.body).not_to include({
-          "champ_#{type_de_champ_to_remove.to_typed_id}" => I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ_to_remove.type_champ}")
-        }.to_query)
+        expect(response.body).to include("champ_#{type_de_champ.to_typed_id_for_query}=#{type_de_champ_value}")
+        expect(response.body).not_to include("champ_#{type_de_champ_to_remove.to_typed_id_for_query}=#{type_de_champ_to_remove_value}")
       end
 
       it "includes the prefill query" do
@@ -111,10 +104,10 @@ describe PrefillDescriptionsController, type: :controller do
 
         expect(response.body).to include(api_public_v1_dossiers_path(procedure))
         expect(response.body).to include(
-          "&quot;champ_#{type_de_champ.to_typed_id}&quot;: &quot;#{type_de_champ_value}&quot;"
+          "&quot;champ_#{type_de_champ.to_typed_id_for_query}&quot;:&quot;#{type_de_champ_value}&quot;"
         )
         expect(response.body).not_to include(
-          "&quot;champ_#{type_de_champ_to_remove.to_typed_id}&quot;: &quot;#{type_de_champ_to_remove_value}&quot;"
+          "&quot;champ_#{type_de_champ_to_remove.to_typed_id_for_query}&quot;:&quot;#{type_de_champ_to_remove_value}&quot;"
         )
       end
     end
