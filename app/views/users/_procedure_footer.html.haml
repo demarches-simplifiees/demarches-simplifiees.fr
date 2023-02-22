@@ -19,9 +19,9 @@
                     = link_to service.telephone_url, class: 'fr-footer__top-link' do
                       %p
                         = I18n.t('users.procedure_footer.contact.phone.link', service_telephone: service.telephone)
-                  - if service.horaires.present?
-                    %p
-                      = horaires
+                      - if service.horaires.present?
+                        %p
+                          = horaires
               %li
                 = link_to I18n.t('users.procedure_footer.contact.stats.link'), statistiques_path(procedure.path), class: 'fr-footer__top-link', rel: 'noopener'
 
