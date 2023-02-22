@@ -63,7 +63,7 @@ describe 'Inviting an expert:', js: true do
         click_on 'Avis externes'
 
         expect(page).to have_content(answered_avis.expert.email)
-        answered_avis.answer.split("\n").each do |answer_line|
+        answered_avis.answer.split("\n").map { |line| line.gsub("- ", "") }.map do |answer_line|
           expect(page).to have_content(answer_line)
         end
       end
