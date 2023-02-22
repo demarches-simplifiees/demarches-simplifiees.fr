@@ -4,23 +4,9 @@
       %td.libelle Déposé le :
       %td= l(dossier.depose_at, format: '%d %B %Y')
 
-  - if dossier.motivation.present?
-    %tr
-      %td.libelle Motivation :
-      %td
-        .action
-          = dossier.motivation
-
   - if dossier.justificatif_motivation.attached?
     %tr
       %td.libelle Justificatif :
       %td
         .action
           = render Attachment::ShowComponent.new(attachment: dossier.justificatif_motivation.attachment)
-
-  - if dossier.attestation.present?
-    %tr
-      %td.libelle Attestation :
-      %td
-        .action
-          = link_to(attestation_instructeur_dossier_path(dossier.procedure, dossier), target: '_blank', rel: 'noopener')
