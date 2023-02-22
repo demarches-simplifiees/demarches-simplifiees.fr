@@ -27,4 +27,8 @@ class Champs::CheckboxChamp < Champs::YesNoChamp
   def for_export
     true? ? 'on' : 'off'
   end
+
+  def mandatory_blank_and_visible?
+    mandatory? && (blank? || !true?)
+  end
 end

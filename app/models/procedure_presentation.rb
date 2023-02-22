@@ -48,7 +48,7 @@ class ProcedurePresentation < ApplicationRecord
       field_hash('self', 'en_construction_since', type: :date, virtual: true),
       field_hash('self', 'en_instruction_since', type: :date, virtual: true),
       field_hash('self', 'processed_since', type: :date, virtual: true),
-      field_hash('self', 'state', type: :enum, scope: 'instructeurs.dossiers.filterable_state')
+      field_hash('self', 'state', type: :enum, scope: 'instructeurs.dossiers.filterable_state', virtual: true)
     ]
   end
 
