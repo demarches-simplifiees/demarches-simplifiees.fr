@@ -15,12 +15,14 @@ RSpec.describe PrefillParams do
 
       VCR.insert_cassette('api_geo_regions')
       VCR.insert_cassette('api_geo_departements')
+      VCR.insert_cassette('api_geo_communes')
       VCR.insert_cassette('api_geo_epcis')
     end
 
     after do
       VCR.eject_cassette('api_geo_regions')
       VCR.eject_cassette('api_geo_departements')
+      VCR.eject_cassette('api_geo_communes')
       VCR.eject_cassette('api_geo_epcis')
     end
 
@@ -137,7 +139,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is authorized", :checkbox, "false"
     it_behaves_like "a champ public value that is authorized", :drop_down_list, "value"
     it_behaves_like "a champ public value that is authorized", :departements, "03"
-    it_behaves_like "a champ public value that is authorized", :communes, ['56', '56081']
+    it_behaves_like "a champ public value that is authorized", :communes, ['01', '01457']
     it_behaves_like "a champ public value that is authorized", :multiple_drop_down_list, ["val1", "val2"]
     it_behaves_like "a champ public value that is authorized", :epci, ['01', '200042935']
 
@@ -174,7 +176,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ private value that is authorized", :drop_down_list, "value"
     it_behaves_like "a champ private value that is authorized", :regions, "93"
     it_behaves_like "a champ private value that is authorized", :departements, "03"
-    it_behaves_like "a champ private value that is authorized", :communes, ['56', '56081']
+    it_behaves_like "a champ private value that is authorized", :communes, ['01', '01457']
     it_behaves_like "a champ private value that is authorized", :multiple_drop_down_list, ["val1", "val2"]
     it_behaves_like "a champ private value that is authorized", :epci, ['01', '200042935']
 
