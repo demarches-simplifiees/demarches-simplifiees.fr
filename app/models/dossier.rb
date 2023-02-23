@@ -224,6 +224,9 @@ class Dossier < ApplicationRecord
   scope :state_instruction_commencee,          -> { where(state: INSTRUCTION_COMMENCEE) }
   scope :state_termine,                        -> { where(state: TERMINE) }
   scope :state_not_termine,                    -> { where.not(state: TERMINE) }
+  scope :state_accepte,                        -> { where(state: states.fetch(:accepte)) }
+  scope :state_refuse,                         -> { where(state: states.fetch(:refuse)) }
+  scope :state_sans_suite,                     -> { where(state: states.fetch(:sans_suite)) }
 
   scope :archived,                  -> { where(archived: true) }
   scope :not_archived,              -> { where(archived: false) }
