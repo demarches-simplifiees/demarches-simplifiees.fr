@@ -5,8 +5,6 @@ $procedure-context-breakpoint: $two-columns-breakpoint;
 $procedure-description-line-height: 22px;
 
 .procedure-preview {
-  font-size: 24px;
-
   .paperless-logo {
     width: 100%;
     margin-bottom: 60px;
@@ -72,17 +70,6 @@ $procedure-description-line-height: 22px;
 
   .procedure-auto-archive-title {
     border-bottom: 1px dotted $blue-france-500;
-  }
-
-  .procedure-description {
-    font-size: 16px;
-
-    p:not(:last-of-type) {
-      // Space the paragraphs by exactly one line height,
-      // so that the text always is truncated in the middle of a line,
-      // regarless of the number of paragraphs.
-      margin-bottom: 3 * $default-spacer;
-    }
   }
 
   .read-more-button {
