@@ -59,7 +59,7 @@ class TypesDeChamp::PrefillRepetitionTypeDeChamp < TypesDeChamp::PrefillTypeDeCh
       repetition.map do |key, value|
         next unless key.is_a?(String) && key.starts_with?("champ_")
 
-        subchamp = row.find { |champ| champ.type_de_champ_to_typed_id_for_query == key.split("_").last }
+        subchamp = row.find { |champ| champ.stable_id == Champ.stable_id_from_typed_id(key) }
         next unless subchamp
 
         TypesDeChamp::PrefillTypeDeChamp.build(subchamp.type_de_champ, revision).to_assignable_attributes(subchamp, value)
