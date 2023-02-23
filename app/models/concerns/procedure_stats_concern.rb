@@ -22,9 +22,9 @@ module ProcedureStatsConcern
   def stats_dossiers_funnel
     Rails.cache.fetch("#{cache_key_with_version}/stats_dossiers_funnel", expires_in: 12.hours) do
       [
-        ['Démarrés', dossiers.visible_by_user_or_administration.count],
-        ['Déposés', dossiers.visible_by_administration.count],
-        ['Instruction débutée', dossiers.visible_by_administration.state_instruction_commencee.count],
+        ['Démarrés', dossiers.visible_by_user_or_administration.count + nb_dossiers_termines_supprimes],
+        ['Déposés', dossiers.visible_by_administration.count + nb_dossiers_termines_supprimes],
+        ['Instruction débutée', dossiers.visible_by_administration.state_instruction_commencee.count + nb_dossiers_termines_supprimes],
         ['Traités', nb_dossiers_termines]
       ]
     end
@@ -96,7 +96,11 @@ module ProcedureStatsConcern
   private
 
   def nb_dossiers_termines
-    @nb_dossiers_termines ||= dossiers.visible_by_administration.state_termine.count
+    @nb_dossiers_termines ||= dossiers.visible_by_administration.state_termine.count + nb_dossiers_termines_supprimes
+  end
+
+  def nb_dossiers_termines_supprimes
+    @nb_dossiers_termines_supprimes ||= deleted_dossiers.state_termine.count
   end
 
   def first_processed_at
