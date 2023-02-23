@@ -37,7 +37,7 @@ export class ApplicationController extends Controller {
     this.onTarget(document.documentElement, eventName, handler);
   }
 
-  private onTarget<HandlerEvent extends Event = Event>(
+  protected onTarget<HandlerEvent extends Event = Event>(
     target: EventTarget,
     eventName: string,
     handler: (event: HandlerEvent) => void
