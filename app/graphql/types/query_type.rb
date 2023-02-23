@@ -19,7 +19,7 @@ module Types
     field :demarches_publiques, DemarcheDescriptorType.connection_type, null: false, internal: true
 
     def demarches_publiques
-      Procedure.opendata.includes(draft_revision: :procedure, published_revision: :procedure)
+      Procedure.publiees_ou_closes.opendata.includes(draft_revision: :procedure, published_revision: :procedure)
     end
 
     def demarche_descriptor(demarche:)
