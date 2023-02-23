@@ -10,3 +10,17 @@
       %td
         .action
           = render Attachment::ShowComponent.new(attachment: dossier.justificatif_motivation.attachment)
+
+  - if dossier.motivation.present?
+    %tr
+      %td.libelle Motivation :
+      %td
+        .action
+          = dossier.motivation
+
+  - if dossier.attestation.present?
+    %tr
+      %td.libelle Attestation :
+      %td
+        .action
+          = link_to('Voir l’attestation', attestation_instructeur_dossier_path(dossier.procedure, dossier), target: '_blank', rel: 'noopener')
