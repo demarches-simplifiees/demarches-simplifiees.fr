@@ -35,7 +35,7 @@ describe 'instructeurs/dossiers/show.html.haml', type: :view do
     let(:dossier) { create :dossier, :accepte, :with_attestation }
 
     it 'provides a link to the attestation' do
-      expect(subject).to have_text('Cette attestation a été envoyée automatiquement au demandeur.')
+      expect(subject).to have_text('Attestation')
       expect(subject).to have_link(href: attestation_instructeur_dossier_path(dossier.procedure, dossier))
     end
   end
