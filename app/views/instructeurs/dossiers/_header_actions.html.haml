@@ -8,5 +8,5 @@
               close_to_expiration: dossier.close_to_expiration?,
               hidden_by_administration: dossier.hidden_by_administration? }
 
-  %li.state-button
-    = render partial: "state_button", locals: { dossier: dossier }
+  %li.instruction-button
+    = render partial: "instruction_button", locals: { dossier: dossier }
