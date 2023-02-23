@@ -1,0 +1,33 @@
+class TypesDeChamp::PrefillCommuneTypeDeChamp < TypesDeChamp::PrefillTypeDeChamp
+  def transform_value_to_assignable_attributes(value)
+    return if value.blank? || !value.is_a?(Array)
+    return if (departement_code = value.first).blank?
+    return if (departement_name = APIGeoService.departement_name(departement_code)).blank?
+    return if !value.one? && (commune_code = value.second).blank?
+    return if !value.one? && (commune_name = APIGeoService.commune_name(departement_code, commune_code)).blank?
+
+    if value.one?
+      departement_attributes(departement_code, departement_name)
+    else
+      departement_and_commune_attributes(departement_code, departement_name, commune_code, commune_name)
+    end
+  end
+
+  private
+
+  def departement_attributes(departement_code, departement_name)
+    {
+      code_departement: departement_code,
+      departement: departement_name
+    }
+  end
+
+  def departement_and_commune_attributes(departement_code, departement_name, commune_code, commune_name)
+    postal_code = APIGeoService.commune_postal_codes(departement_code, commune_code).first
+
+    departement_attributes(departement_code, departement_name).merge(
+      external_id: commune_code,
+      value: "#{commune_name} (#{postal_code})"
+    )
+  end
+end
