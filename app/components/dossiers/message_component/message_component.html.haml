@@ -8,7 +8,14 @@
       %span.fr-text--xs.fr-text-mention--grey.font-weight-normal= t('.guest')
     %span.date{ class: ["fr-text--xs", "fr-text-mention--grey", "font-weight-normal", highlight_if_unseen_class], data: scroll_to_target }
       = commentaire_date
-  .rich-text= commentaire_body
+  .rich-text
+    - if commentaire.discarded?
+      %p= t('.deleted_body')
+    - elsif commentaire.sent_by_system?
+      = sanitize(commentaire.body, scrubber: Sanitizers::MailScrubber.new)
+    - else
+      = render SimpleFormatComponent.new(commentaire.body, allow_a: false)
+
 
   .message-extras.flex.justify-start
     - if commentaire.soft_deletable?(connected_user)

@@ -6,11 +6,11 @@
       Pour poser une question sur ce dossier, contactez :
     %p
       = service.nom
-      %br
+    %p
       = service.organisme
-      %br
-      - horaires = "Horaires : #{formatted_horaires(service.horaires)}"
-      = simple_format(horaires)
+
+    - if service.horaires.present?
+      = render SimpleFormatComponent.new("Horaires : #{formatted_horaires(service.horaires)}")
     %p
       = mail_to service.email,
         service.email,
