@@ -21,7 +21,7 @@ describe InstructeursImportService do
       end
 
       it 'imports groupes' do
-        errors = subject
+        _, errors = subject
 
         expect(procedure_groupes.keys).to contain_exactly("Auvergne Rhone-Alpes", "Occitanie", "défaut")
         expect(procedure_groupes["Auvergne Rhone-Alpes"]).to contain_exactly("john@lennon.fr")
@@ -63,7 +63,7 @@ describe InstructeursImportService do
       end
 
       it 'ignores or corrects' do
-        errors = subject
+        _, errors = subject
 
         expect(procedure_groupes.keys).to contain_exactly("Occitanie", "défaut")
         expect(procedure_groupes["Occitanie"]).to contain_exactly("paul@mccartney.uk", "ringo@starr.uk")
@@ -117,7 +117,7 @@ describe InstructeursImportService do
       end
 
       it 'ignores instructeur' do
-        errors = subject
+        _, errors = subject
 
         expect(procedure_groupes.keys).to contain_exactly("défaut")
         expect(procedure_groupes["défaut"]).to be_empty
@@ -136,7 +136,7 @@ describe InstructeursImportService do
       let(:emails) { [{ "email" => "john@lennon.fr" }, { "email" => "paul@mccartney.uk" }, { "email" => "ringo@starr.uk" }] }
 
       it 'imports instructeurs' do
-        errors = subject
+        _, errors = subject
         expect(procedure_non_routee.defaut_groupe_instructeur.instructeurs.pluck(:email)).to contain_exactly("john@lennon.fr", "paul@mccartney.uk", "ringo@starr.uk")
 
         expect(errors).to match_array([])
