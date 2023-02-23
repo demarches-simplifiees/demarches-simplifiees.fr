@@ -19,7 +19,7 @@ import {
   showMotivation,
   motivationCancel,
   showImportJustificatif
-} from '../new_design/state-button';
+} from '../new_design/instruction-button';
 import { showFusion, showNewAccount } from '../new_design/fc-fusion';
 
 const application = Application.start();

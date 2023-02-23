@@ -46,7 +46,7 @@ describe 'Instructing a dossier:', js: true do
 
     click_on 'Instruire le dossier'
 
-    within('.state-button') do
+    within('.instruction-button') do
       click_on 'Accepter'
     end
 

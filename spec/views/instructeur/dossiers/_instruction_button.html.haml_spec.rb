@@ -1,8 +1,8 @@
-describe 'instructeurs/dossiers/state_button.html.haml', type: :view do
+describe 'instructeurs/dossiers/instruction_button.html.haml', type: :view do
   include DossierHelper
 
   subject! do
-    render('instructeurs/dossiers/state_button.html.haml', dossier: dossier)
+    render('instructeurs/dossiers/instruction_button.html.haml', dossier: dossier)
   end
 
   matcher :have_dropdown_title do |expected_title|
