@@ -7,15 +7,17 @@ describe ProcedureStatsConcern do
     before do
       create_list(:dossier, 2, :brouillon, procedure: procedure)
       create(:dossier, :en_instruction, procedure: procedure)
+      create(:dossier, procedure: procedure, for_procedure_preview: true)
+      create(:dossier, :accepte, procedure: procedure, hidden_by_administration_at: Time.zone.now)
     end
 
     it "returns the funnel stats" do
       expect(stats_dossiers_funnel).to match(
         [
-          ['Démarrés', procedure.dossiers.count],
-          ['Déposés', procedure.dossiers.state_not_brouillon.count],
-          ['Instruction débutée', procedure.dossiers.state_instruction_commencee.count],
-          ['Traités', procedure.dossiers.state_termine.count]
+          ['Démarrés', procedure.dossiers.visible_by_user_or_administration.count],
+          ['Déposés', procedure.dossiers.visible_by_administration.count],
+          ['Instruction débutée', procedure.dossiers.visible_by_administration.state_instruction_commencee.count],
+          ['Traités', procedure.dossiers.visible_by_administration.state_termine.count]
         ]
       )
     end
