@@ -29,12 +29,15 @@ class InstructeursImportService
       .map { [_1, emails_in_groupe[_1.label]] }
       .to_h
 
+    added_instructeurs_by_group = []
+
     target_groupes.each do |groupe_instructeur, emails|
-      _, invalid_emails = groupe_instructeur.add_instructeurs(emails:)
+      added_instructeurs, invalid_emails = groupe_instructeur.add_instructeurs(emails:)
+      added_instructeurs_by_group << [groupe_instructeur, added_instructeurs]
       errors << invalid_emails
     end
 
-    errors.flatten
+    [added_instructeurs_by_group, errors.flatten]
   end
 
   def self.import_instructeurs(procedure, emails)
@@ -45,8 +48,8 @@ class InstructeursImportService
 
     groupe_instructeur = procedure.defaut_groupe_instructeur
 
-    _, invalid_emails = groupe_instructeur.add_instructeurs(emails: instructeurs_emails)
+    instructeurs, invalid_emails = groupe_instructeur.add_instructeurs(emails: instructeurs_emails)
 
-    invalid_emails
+    [instructeurs, invalid_emails]
   end
 end

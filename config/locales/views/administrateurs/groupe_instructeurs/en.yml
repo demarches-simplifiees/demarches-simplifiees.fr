@@ -49,6 +49,7 @@ en:
           download_exemple: Download sample CSV file
           import_file: Import file
           import_file_procedure_not_published: The import of instructors by CSV file is available once the process has been published
+          import_file_alert: Instructors added to the procedure will receive an email. Are you sure you want to continue ?"
         set_up: set up
         button:
           add_group: Add group
