@@ -4,10 +4,9 @@ describe Stat do
   describe '.deleted_dossiers_states' do
     subject { Stat.send(:deleted_dossiers_states) }
     it 'find counts for columns' do
-      create(:deleted_dossier, dossier_id: create(:dossier).id, state: :termine)
+      create(:deleted_dossier, dossier_id: create(:dossier).id, state: :accepte)
       create(:deleted_dossier, dossier_id: create(:dossier).id, state: :en_construction, deleted_at: 1.month.ago)
       create(:deleted_dossier, dossier_id: create(:dossier).id, state: :en_construction, deleted_at: 2.months.ago)
-      create(:deleted_dossier, dossier_id: create(:dossier).id, state: :brouillon, deleted_at: 3.months.ago)
       create(:deleted_dossier, dossier_id: create(:dossier).id, state: :en_construction, deleted_at: 3.months.ago)
       create(:deleted_dossier, dossier_id: create(:dossier).id, state: :en_instruction, deleted_at: 3.months.ago)
       create(:deleted_dossier, dossier_id: create(:dossier).id, state: :accepte, deleted_at: 3.months.ago)
@@ -17,10 +16,10 @@ describe Stat do
       expect(subject["not_brouillon"]).to eq(8)
       expect(subject["dossiers_depose_avant_30_jours"]).to eq(1)
       expect(subject["dossiers_deposes_entre_60_et_30_jours"]).to eq(1)
-      expect(subject["brouillon"]).to eq(1)
+      expect(subject["brouillon"]).to eq(0)
       expect(subject["en_construction"]).to eq(3)
       expect(subject["en_instruction"]).to eq(1)
-      expect(subject["termines"]).to eq(3)
+      expect(subject["termines"]).to eq(4)
     end
   end
 
