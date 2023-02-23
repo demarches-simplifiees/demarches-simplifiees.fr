@@ -1,6 +1,6 @@
 - if hidden_by_administration
   %li
-    = link_to restore_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: "fr-btn" do
+    = link_to restore_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: "fr-btn fr-icon-refresh-line" do
       = t('views.instructeurs.dossiers.restore')
 - elsif close_to_expiration || Dossier::TERMINE.include?(state)
   %li
@@ -9,7 +9,7 @@
         = t('instructeurs.dossiers.header.banner.button_delay_expiration')
 
     - if archived
-      = link_to( unarchive_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: "fr-btn") do
+      = link_to( unarchive_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: "fr-btn fr-icon-upload-2-line") do
         Désarchiver le dossier
 
     - else
@@ -19,7 +19,7 @@
       = link_to(  archive_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: 'fr-btn fr-icon-folder-2-line') do
         Archiver le dossier
 
-      = link_to('', instructeur_dossier_path(procedure_id, dossier_id), method: :delete, class: 'fr-btn fr-btn--secondary fr-icon-delete-line icon-only', title: t('views.instructeurs.dossiers.delete_dossier'))
+      = link_to('', instructeur_dossier_path(procedure_id, dossier_id), method: :delete, class: 'fr-btn fr-btn--secondary fr-icon-delete-line icon-only danger', title: t('views.instructeurs.dossiers.delete_dossier'))
 
 
 - elsif Dossier::EN_CONSTRUCTION_OU_INSTRUCTION.include?(state)

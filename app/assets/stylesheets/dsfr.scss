@@ -60,3 +60,8 @@ fieldset {
   margin-left: 0;
   margin-right: 0;
 }
+
+.fr-btn.fr-btn--secondary.danger {
+  color: $light-red;
+  box-shadow: 0px 0px 0px 1px $light-red;
+}
