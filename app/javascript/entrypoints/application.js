@@ -19,7 +19,6 @@ import '../new_design/spinner';
 import '../new_design/support';
 
 import '../new_design/champs/te_fenua';
-import '../new_design/champs/numero_dn';
 import '../new_design/champs/visa';
 
 import {
