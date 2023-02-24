@@ -1,4 +1,10 @@
 class TypesDeChamp::PrefillCommuneTypeDeChamp < TypesDeChamp::PrefillTypeDeChamp
+  def possible_values
+    departements.map do |departement|
+      "#{departement[:code]} (#{departement[:name]}) : https://geo.api.gouv.fr/communes?codeDepartement=#{departement[:code]}"
+    end
+  end
+
   def transform_value_to_assignable_attributes(value)
     return if value.blank? || !value.is_a?(Array)
     return if (departement_code = value.first).blank?
@@ -29,5 +35,9 @@ class TypesDeChamp::PrefillCommuneTypeDeChamp < TypesDeChamp::PrefillTypeDeChamp
       external_id: commune_code,
       value: "#{commune_name} (#{postal_code})"
     )
+  end
+
+  def departements
+    @departements ||= APIGeoService.departements.sort_by { _1[:code] }
   end
 end

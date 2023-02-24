@@ -120,13 +120,14 @@ fr:
           yes_no_html: '"true" pour Oui, "false" pour Non'
           checkbox_html: '"true" pour coché, "false" pour décoché'
           pays_html: Un <a href="https://en.wikipedia.org/wiki/ISO_3166-2" target="_blank" rel="noopener noreferrer">code pays ISO 3166-2</a>
+          regions_html: Un <a href="https://fr.wikipedia.org/wiki/R%C3%A9gion_fran%C3%A7aise" target="_blank" rel="noopener noreferrer">code INSEE de région</a>
           departements_html: Un <a href="https://fr.wikipedia.org/wiki/Num%C3%A9rotation_des_d%C3%A9partements_fran%C3%A7ais" target="_blank">numéro de département</a>
+          communes_html: Un tableau contenant le code de département et <a href="https://geo.api.gouv.fr/communes" target="_blank" rel="noopener noreferrer">le code INSEE de la commune</a>.
           drop_down_list_html: Un choix parmi ceux sélectionnés à la création de la procédure
           datetime_html: Datetime au format ISO8601
           date_html: Date au format ISO8601
           drop_down_list_other_html: Toute valeur
           repetition_html: Un tableau de dictionnaires avec les valeurs possibles pour chaque champ de la répétition.
-          regions_html: Un <a href="https://fr.wikipedia.org/wiki/R%C3%A9gion_fran%C3%A7aise" target="_blank" rel="noopener noreferrer">code INSEE de région</a>
           epci_html: Un tableau contenant le code de département et <a href="https://geo.api.gouv.fr/epcis" target="_blank" rel="noopener noreferrer">celui de l'EPCI</a>.
         examples:
           title: Exemple

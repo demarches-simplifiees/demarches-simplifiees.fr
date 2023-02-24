@@ -15,6 +15,15 @@ RSpec.describe TypesDeChamp::PrefillCommuneTypeDeChamp do
     it { is_expected.to be_kind_of(TypesDeChamp::PrefillTypeDeChamp) }
   end
 
+  describe '#possible_values', vcr: { cassette_name: 'api_geo_departements' } do
+    let(:expected_values) do
+      departements.map { |departement| "#{departement[:code]} (#{departement[:name]}) : https://geo.api.gouv.fr/communes?codeDepartement=#{departement[:code]}" }
+    end
+    subject(:possible_values) { described_class.new(type_de_champ).possible_values }
+
+    it { expect(possible_values).to match(expected_values) }
+  end
+
   describe '#transform_value_to_assignable_attributes' do
     subject(:transform_value_to_assignable_attributes) do
       described_class.build(type_de_champ).transform_value_to_assignable_attributes(value)
@@ -98,5 +107,11 @@ RSpec.describe TypesDeChamp::PrefillCommuneTypeDeChamp do
         it_behaves_like "a transformation to", nil
       end
     end
+  end
+
+  private
+
+  def departements
+    APIGeoService.departements.sort_by { _1[:code] }
   end
 end
