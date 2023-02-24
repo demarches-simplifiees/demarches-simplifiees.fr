@@ -161,7 +161,7 @@ describe FranceConnect::ParticulierController, type: :controller do
         else
           expect(subject).to redirect_to root_path
         end
-        expect(flash.alert).to eq('Le délai pour fusionner les comptes FranceConnect et demarches-simplifiees.fr est expirée. Veuillez recommencer la procédure pour vous fusionner les comptes.')
+        expect(flash.alert).to eq('Le délai pour fusionner les comptes FranceConnect et demarches-simplifiees.fr est expiré. Veuillez recommencer la procédure pour fusionner les comptes.')
       end
     end
   end
@@ -188,7 +188,7 @@ describe FranceConnect::ParticulierController, type: :controller do
 
       it do
         expect(subject).to redirect_to root_path
-        expect(flash.alert).to eq("Le délai pour fusionner les comptes FranceConnect et demarches-simplifiees.fr est expirée. Veuillez recommencer la procédure pour vous fusionner les comptes.")
+        expect(flash.alert).to eq("Le délai pour fusionner les comptes FranceConnect et demarches-simplifiees.fr est expiré. Veuillez recommencer la procédure pour fusionner les comptes.")
       end
     end
   end

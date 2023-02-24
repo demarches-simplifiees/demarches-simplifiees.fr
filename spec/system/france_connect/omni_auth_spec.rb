@@ -100,7 +100,7 @@ feature 'Omni Auth Connexion' do
         end
 
         scenario 'error message is displayed' do
-          expect(page).to have_content(I18n.t('errors.messages.omni_auth.connexion', provider: I18n.t('errors.messages.omni_auth.google')))
+          expect(page).to have_content(I18n.t('errors.messages.omniauth.connexion', provider: I18n.t('errors.messages.omniauth.google')))
         end
       end
     end

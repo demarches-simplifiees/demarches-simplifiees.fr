@@ -382,15 +382,11 @@ fr:
       cps_network_error: 'Désolé, la vérification du numéro DN auprès de la CPS est temporairement indisponible. Vérifiez bien vos informations'
       france_connect:
         connexion: "Erreur lors de la connexion à France Connect."
-        forbidden_html: "Seul-e-s les usagers peuvent se connecter via France Connect. En tant qu’instructeur ou administrateur, nous vous invitons à <a href='%{reset_link}'>réininitialiser votre mot de passe</a>."
-      omni_auth:
+        forbidden_html: "Seul-e-s les usager-e-s peuvent se connecter via France Connect. En tant qu’instructeur ou administrateur, nous vous invitons à <a href='%{reset_link}'>réininitialiser votre mot de passe</a>."
+      omniauth:
         connexion: "Erreur lors de la connexion à %{provider}."
-        forbidden_html: "Seul-e-s les usagers peuvent se connecter via %{provider}. En tant qu'instructeur ou administrateur, nous vous invitons à <a href='%{reset_link}'>créer un mot de passe</a>."
+        forbidden_html: "Seul-e-s les usager-e-s peuvent se connecter via %{provider}. En tant qu'instructeur ou administrateur, nous vous invitons à <a href='%{reset_link}'>créer un mot de passe</a>."
         sipf: l'authentification des agents de l'administration
-        facebook: Facebook
-        google: Google
-        microsoft: Microsoft
-        yahoo: Yahoo
       procedure_archived:
         with_service_and_phone_email: Cette démarche en ligne a été close, il n’est plus possible de déposer de dossier. Pour plus d'informations veuillez contacter le service %{service_name} au %{service_phone_number} ou par email à %{service_email}
         with_organisation_only: Cette démarche en ligne a été close, il n’est plus possible de déposer de dossier. Pour plus d'informations veuillez contacter le service %{organisation_name}
@@ -560,7 +556,31 @@ fr:
         confirmation_mail_sent: "Nous venons de vous envoyer le mail de confirmation, veuillez cliquer sur le lien contenu dans ce mail pour fusionner vos comptes"
         invalid_password: "Mauvais mot de passe"
         connection_done: "Les comptes FranceConnect et %{application_name} sont à présent fusionnés"
-        merger_token_expired: "Le délai pour fusionner les comptes FranceConnect et %{application_name} est expirée. Veuillez recommencer la procédure pour vous fusionner les comptes."
+        merger_token_expired: "Le délai pour fusionner les comptes FranceConnect et %{application_name} est expiré. Veuillez recommencer la procédure pour fusionner les comptes."
+  omniauth:
+    provider:
+      facebook: Facebook
+      google: Google
+      microsoft: Microsoft 365
+      yahoo: Yahoo
+    password_confirmation:
+      back: 'revenir en arrière'
+      already_exists: Le compte %{email} existe déjà sur %{application_name}
+      fill_in_password: entrez votre mot de passe pour fusionner les comptes
+    merge:
+      title: "Fusion des comptes %{provider} et %{application_name}"
+      subtitle: "Bonjour,<br /><br />Votre compte %{provider} utilise <b class='bold'>%{email}</b> comme email de contact.<br />Or il existe un compte sur %{application_name} avec cet email."
+      label_select_merge_flow: Ce compte %{email} vous appartient-il ?
+      title_fill_in_password:  Pour les fusionner, entrez votre mot de passe
+      button_merge: Fusionner les comptes
+      title_fill_in_email: Donnez-nous alors le mail que %{application_name} utilisera pour vous contacter
+      button_use_this_email: Utiliser ce mail
+      link_confirm_by_email: Confirmer mon compte par email
+    flash:
+      confirmation_mail_sent: "Nous venons de vous envoyer le mail de confirmation, veuillez cliquer sur le lien contenu dans ce mail pour fusionner vos comptes"
+      invalid_password: "Mauvais mot de passe"
+      connection_done: "Les comptes %{provider} et %{application_name} sont à présent fusionnés"
+      merger_token_expired: "Le délai pour fusionner les comptes %{provider} et %{application_name} est expiré. Veuillez recommencer la procédure pour vous fusionner les comptes."
   shared:
     ephemeral_link: Ce lien est éphémère et ne devrait pas être partagé.
     procedures:

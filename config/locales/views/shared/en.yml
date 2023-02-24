@@ -17,7 +17,7 @@ en:
         separator: or
       social_login:
         google: "Gmail, Google"
-        microsoft: "Hotmail, Office365"
+        microsoft: "Outlook, Microsoft 365"
         yahoo: "Yahoo!"
         tatou: "Your DN number • Tatou"
         sipf: "Administration officer"

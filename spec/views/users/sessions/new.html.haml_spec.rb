@@ -19,7 +19,7 @@ describe 'users/sessions/new.html.haml', type: :view do
       expect(rendered).to have_link('Gmail, Google')
     end
     if ENV['MICROSOFT_CLIENT_ID'].present?
-      expect(rendered).to have_link('Hotmail, Office365')
+      expect(rendered).to have_link('Outlook, Microsoft 365')
     end
     if ENV['YAHOO_CLIENT_ID'].present?
       expect(rendered).to have_link('Yahoo!')
