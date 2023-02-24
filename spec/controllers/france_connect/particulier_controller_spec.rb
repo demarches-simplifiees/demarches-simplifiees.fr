@@ -263,7 +263,7 @@ describe FranceConnect::ParticulierController, type: :controller do
     context 'when the merge_token is ok and the user is found' do
       subject { post :mail_merge_with_existing_account, params: { merge_token: fci.merge_token } }
 
-      let!(:user) { create(:user, email: email, password: 'abcdefgh') }
+      let!(:user) { create(:user, email: email, password: TEST_PASSWORD) }
 
       it 'merges the account, signs in, and delete the merge token' do
         subject
@@ -276,7 +276,7 @@ describe FranceConnect::ParticulierController, type: :controller do
       end
 
       context 'but the targeted user is an instructeur' do
-        let!(:user) { create(:instructeur, email: email, password: 'abcdefgh').user }
+        let!(:user) { create(:instructeur, email: email, password: TEST_PASSWORD).user }
 
         it 'redirects to the new session' do
           subject
