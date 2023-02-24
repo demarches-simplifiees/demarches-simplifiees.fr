@@ -46,13 +46,13 @@
             = t(".public.enable_mandatory", label: change.label)
             - if !total_dossiers.zero? && !change.can_rebase?
               %strong
-                = t(:breaking_change, count: total_dossiers)
+                = t('.breaking_change', count: total_dossiers)
         - else
           - list.with_item do
             = t(".public.disable_mandatory", label: change.label)
             - if !total_dossiers.zero? && !change.can_rebase?
               %strong
-                = t(:breaking_change, count: total_dossiers)
+                = t('.breaking_change', count: total_dossiers)
       - when :piece_justificative_template
         - list.with_item do
           = t(".#{prefix}.update_piece_justificative_template", label: change.label)
@@ -115,19 +115,19 @@
             = t(".#{prefix}.add_condition", label: change.label, to: change.to)
             - if !total_dossiers.zero? && !change.can_rebase?
               %strong
-                = t(:breaking_change, count: total_dossiers)
+                = t('.breaking_change', count: total_dossiers)
         - elsif change.to.nil?
           - list.with_item do
             = t(".#{prefix}.remove_condition", label: change.label)
             - if !total_dossiers.zero? && !change.can_rebase?
               %strong
-                = t(:breaking_change, count: total_dossiers)
+                = t('.breaking_change', count: total_dossiers)
         - else
           - list.with_item do
             = t(".#{prefix}.update_condition", label: change.label, to: change.to)
             - if !total_dossiers.zero? && !change.can_rebase?
               %strong
-                = t(:breaking_change, count: total_dossiers)
+                = t('.breaking_change', count: total_dossiers)
 
   - if @public_move_changes.present?
     - list.with_item do
