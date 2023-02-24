@@ -1,5 +1,5 @@
 .editable-champ{ html_options }
-  - if @champ.repetition?
+  - if @champ.block?
     %h3.header-subsection= @champ.libelle
     - if @champ.description.present?
       %p.notice= string_to_html(@champ.description, false)
@@ -9,5 +9,5 @@
   - if @champ.type_champ == "titre_identite"
     %p.notice  Carte nationale d’identité (uniquement le recto), passeport, titre de séjour ou autre justificatif d’identité. Formats acceptés : jpg/png
 
-  = @form.hidden_field :id, value: @champ.id, data: @champ.repetition? ? { id: true } : {}
+  = @form.hidden_field :id, value: @champ.id, data: @champ.block? ? { id: true } : {}
   = render component_class.new(form: @form, champ: @champ, seen_at: @seen_at)
