@@ -26,5 +26,6 @@ shared_examples "the user has got a prefilled dossier, owned by themselves" do
     expect(page).to have_content(multiple_drop_down_list_values.first)
     expect(page).to have_content(multiple_drop_down_list_values.last)
     expect(page).to have_field(type_de_champ_epci.libelle, with: epci_value.last)
+    expect(page).to have_selector("input[value='Vonnas (01540)']")
   end
 end
