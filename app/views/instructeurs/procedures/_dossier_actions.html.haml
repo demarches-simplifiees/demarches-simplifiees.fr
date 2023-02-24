@@ -3,7 +3,7 @@
     = link_to restore_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: "fr-btn fr-icon-refresh-line" do
       = t('views.instructeurs.dossiers.restore')
 - elsif close_to_expiration || Dossier::TERMINE.include?(state)
-  %li
+  %li{ 'data-turbo': 'true' }
     - if close_to_expiration
       = link_to(repousser_expiration_instructeur_dossier_path(procedure_id, dossier_id), method: :post, class: "fr-btn") do
         = t('instructeurs.dossiers.header.banner.button_delay_expiration')
@@ -15,7 +15,7 @@
       = link_to('', instructeur_dossier_path(procedure_id, dossier_id), method: :delete, class: 'fr-btn fr-btn--secondary fr-icon-delete-line icon-only danger', title: t('views.instructeurs.dossiers.delete_dossier'))
 
     - else
-      = link_to(repasser_en_instruction_instructeur_dossier_path(procedure_id, dossier_id), method: :post, class: 'fr-btn fr-btn--secondary fr-icon-edit-line') do
+      = link_to repasser_en_instruction_instructeur_dossier_path(procedure_id, dossier_id), { class: 'fr-btn fr-btn--secondary fr-icon-edit-line' }.deep_merge!(post_method) do
         Repasser en instruction
 
       = link_to(  archive_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: 'fr-btn fr-icon-folder-2-line') do
@@ -25,12 +25,12 @@
 
 - elsif Dossier::EN_CONSTRUCTION_OU_INSTRUCTION.include?(state)
   - if Dossier.states[:en_construction] == state
-    %li
-      = link_to passer_en_instruction_instructeur_dossier_path(procedure_id, dossier_id), method: :post, class: 'fr-btn fr-btn--secondary fr-icon-edit-line' do
+    %li{ 'data-turbo': 'true' }
+      = link_to passer_en_instruction_instructeur_dossier_path(procedure_id, dossier_id), { class: 'fr-btn fr-btn--secondary fr-icon-edit-line' }.deep_merge!(post_method) do
         Passer en instruction
   - elsif Dossier.states[:en_instruction] == state
-    %li
-      = link_to repasser_en_construction_instructeur_dossier_path(procedure_id, dossier_id), method: :post, class: 'fr-btn fr-btn--secondary fr-icon-draft-line' do
+    %li{ 'data-turbo': 'true' }
+      = link_to repasser_en_construction_instructeur_dossier_path(procedure_id, dossier_id), { class: 'fr-btn fr-btn--secondary fr-icon-draft-line' }.deep_merge!(post_method) do
         Repasser en construction
 
 
