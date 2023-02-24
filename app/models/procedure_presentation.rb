@@ -336,7 +336,7 @@ class ProcedurePresentation < ApplicationRecord
         end
       end
     else
-      TypeDeChamp.find(field['column']).options_for_select
+      TypeDeChamp.find_by(stable_id: field['column']).options_for_select
     end
   end
 
