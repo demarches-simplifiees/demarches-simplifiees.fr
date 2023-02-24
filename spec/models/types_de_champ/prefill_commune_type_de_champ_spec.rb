@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe TypesDeChamp::PrefillCommuneTypeDeChamp do
-  let(:type_de_champ) { build(:type_de_champ_communes) }
+  let(:procedure) { create(:procedure) }
+  let(:type_de_champ) { build(:type_de_champ_communes, procedure: procedure) }
   let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
 
   before do
@@ -9,64 +10,69 @@ RSpec.describe TypesDeChamp::PrefillCommuneTypeDeChamp do
     Rails.cache.clear
   end
 
+  before do
+    VCR.insert_cassette('api_geo_departements')
+    VCR.insert_cassette('api_geo_communes')
+  end
+
+  after do
+    VCR.eject_cassette('api_geo_departements')
+    VCR.eject_cassette('api_geo_communes')
+  end
+
   describe 'ancestors' do
-    subject { described_class.new(type_de_champ) }
+    subject { described_class.new(type_de_champ, procedure.active_revision) }
 
     it { is_expected.to be_kind_of(TypesDeChamp::PrefillTypeDeChamp) }
   end
 
-  describe '#possible_values', vcr: { cassette_name: 'api_geo_departements' } do
+  describe '#possible_values' do
     let(:expected_values) do
       departements.map { |departement| "#{departement[:code]} (#{departement[:name]}) : https://geo.api.gouv.fr/communes?codeDepartement=#{departement[:code]}" }
     end
-    subject(:possible_values) { described_class.new(type_de_champ).possible_values }
+    subject(:possible_values) { described_class.new(type_de_champ, procedure.active_revision).possible_values }
 
     it { expect(possible_values).to match(expected_values) }
   end
 
-  describe '#transform_value_to_assignable_attributes' do
-    subject(:transform_value_to_assignable_attributes) do
-      described_class.build(type_de_champ).transform_value_to_assignable_attributes(value)
-    end
+  describe '#example_value' do
+    let(:departement_code) { departements.pick(:code) }
+    let(:commune_code) { APIGeoService.communes(departement_code).pick(:code) }
+    subject(:example_value) { described_class.new(type_de_champ, procedure.active_revision).example_value }
 
-    before do
-      VCR.insert_cassette('api_geo_departements')
-      VCR.insert_cassette('api_geo_communes')
-    end
+    it { is_expected.to eq([departement_code, commune_code]) }
+  end
 
-    after do
-      VCR.eject_cassette('api_geo_departements')
-      VCR.eject_cassette('api_geo_communes')
-    end
-
-    shared_examples "a transformation to" do |expected|
-      it { is_expected.to match(expected) }
+  describe '#to_assignable_attributes' do
+    let(:champ) { create(:champ_communes, type_de_champ: type_de_champ) }
+    subject(:to_assignable_attributes) do
+      described_class.build(type_de_champ, procedure.active_revision).to_assignable_attributes(champ, value)
     end
 
     context 'when the value is nil' do
       let(:value) { nil }
-      it_behaves_like "a transformation to", nil
+      it { is_expected.to match(nil) }
     end
 
     context 'when the value is empty' do
       let(:value) { '' }
-      it_behaves_like "a transformation to", nil
+      it { is_expected.to match(nil) }
     end
 
     context 'when the value is a string' do
       let(:value) { 'hello' }
-      it_behaves_like "a transformation to", nil
+      it { is_expected.to match(nil) }
     end
 
     context 'when the value is an array of one element' do
       context 'when the first element is a valid departement code' do
         let(:value) { ['01'] }
-        it_behaves_like "a transformation to", { code_departement: '01', departement: 'Ain' }
+        it { is_expected.to match({ id: champ.id, code_departement: '01', departement: 'Ain' }) }
       end
 
       context 'when the first element is not a valid departement code' do
         let(:value) { ['totoro'] }
-        it_behaves_like "a transformation to", nil
+        it { is_expected.to match(nil) }
       end
     end
 
@@ -74,18 +80,18 @@ RSpec.describe TypesDeChamp::PrefillCommuneTypeDeChamp do
       context 'when the first element is a valid departement code' do
         context 'when the second element is a valid insee code' do
           let(:value) { ['01', '01457'] }
-          it_behaves_like "a transformation to", { code_departement: '01', departement: 'Ain', external_id: '01457', value: 'Vonnas (01540)' }
+          it { is_expected.to match({ id: champ.id, code_departement: '01', departement: 'Ain', external_id: '01457', value: 'Vonnas (01540)' }) }
         end
 
         context 'when the second element is not a valid insee code' do
           let(:value) { ['01', 'totoro'] }
-          it_behaves_like "a transformation to", nil
+          it { is_expected.to match(nil) }
         end
       end
 
       context 'when the first element is not a valid departement code' do
         let(:value) { ['totoro', '01457'] }
-        it_behaves_like "a transformation to", nil
+        it { is_expected.to match(nil) }
       end
     end
 
@@ -93,18 +99,18 @@ RSpec.describe TypesDeChamp::PrefillCommuneTypeDeChamp do
       context 'when the first element is a valid departement code' do
         context 'when the second element is a valid insee code' do
           let(:value) { ['01', '01457', 'hello'] }
-          it_behaves_like "a transformation to", { code_departement: '01', departement: 'Ain', external_id: '01457', value: 'Vonnas (01540)' }
+          it { is_expected.to match({ id: champ.id, code_departement: '01', departement: 'Ain', external_id: '01457', value: 'Vonnas (01540)' }) }
         end
 
         context 'when the second element is not a valid insee code' do
           let(:value) { ['01', 'totoro', 'hello'] }
-          it_behaves_like "a transformation to", nil
+          it { is_expected.to match(nil) }
         end
       end
 
       context 'when the first element is not a valid departement code' do
         let(:value) { ['totoro', '01457', 'hello'] }
-        it_behaves_like "a transformation to", nil
+        it { is_expected.to match(nil) }
       end
     end
   end
