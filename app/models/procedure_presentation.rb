@@ -18,6 +18,8 @@ class ProcedurePresentation < ApplicationRecord
 
   TABLE = 'table'
   COLUMN = 'column'
+  ORDER = 'order'
+
   SLASH = '/'
   TYPE_DE_CHAMP = 'type_de_champ'
   TYPE_DE_CHAMP_PRIVATE = 'type_de_champ_private'
@@ -286,18 +288,20 @@ class ProcedurePresentation < ApplicationRecord
     end
   end
 
-  def update_sort(table, column)
-    order = if sort.values_at(TABLE, COLUMN) == [table, column]
+  def update_sort(table, column, order)
+    update!(sort: {
+      TABLE => table,
+      COLUMN => column,
+      ORDER => opposite_order_for(table, column)
+    })
+  end
+
+  def opposite_order_for(table, column)
+    if sort.values_at(TABLE, COLUMN) == [table, column]
       sort['order'] == 'asc' ? 'desc' : 'asc'
     else
       'asc'
     end
-
-    update!(sort: {
-      TABLE => table,
-      COLUMN => column,
-      'order' => order
-    })
   end
 
   def snapshot
