@@ -182,7 +182,7 @@ class ProcedurePresentation < ApplicationRecord
 
           dossiers.filter_by_datetimes(column, dates)
         else
-          dossiers.where("dossiers.#{column} = ?", values)
+          dossiers.where("dossiers.#{column} IN (?)", values)
         end
       when TYPE_DE_CHAMP
         dossiers.with_type_de_champ(column)

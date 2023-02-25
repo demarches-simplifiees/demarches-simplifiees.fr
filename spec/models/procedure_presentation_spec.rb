@@ -487,6 +487,23 @@ describe ProcedurePresentation do
           is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
         end
       end
+
+      context 'with multiple state filters' do
+        let(:filter) do
+          [
+            { 'table' => 'self', 'column' => 'state', 'value' => 'en_construction' },
+            { 'table' => 'self', 'column' => 'state', 'value' => 'en_instruction' }
+          ]
+        end
+
+        let!(:kept_dossier) { create(:dossier, :en_construction, procedure: procedure) }
+        let!(:other_kept_dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+        let!(:discarded_dossier) { create(:dossier, :accepte, procedure: procedure) }
+
+        it 'returns every dossier that matches any of the search criteria for a given column' do
+          is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
+        end
+      end
     end
 
     context 'for type_de_champ table' do
