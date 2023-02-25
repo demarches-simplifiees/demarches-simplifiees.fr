@@ -1,0 +1,27 @@
+- content_for(:root_class, 'scroll-margins-for-sticky-footer')
+
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [['Démarches', admin_procedures_path],
+                    [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
+                    ['Description']] }
+.container
+  = form_for @procedure,
+    url: url_for({ controller: 'administrateurs/procedures', action: :update, id: @procedure.id }),
+    multipart: true,
+    html: { class: 'form' } do |f|
+
+    %h1.page-title Zones
+
+    = f.label :zone do
+      = t('zone', scope: 'activerecord.attributes.procedure')
+    - if Flipper.enabled? :zonage
+      = f.collection_check_boxes :zone_ids, Zone.available_at(@procedure.published_or_created_at), :id, :label do |b|
+        .editable-champ.editable-champ-checkbox
+          = b.check_box
+          = b.label
+
+    .procedure-form__actions.sticky--bottom
+      .actions-right
+        = link_to 'Annuler', admin_procedure_path(id: @procedure), class: 'button', data: { confirm: 'Êtes-vous sûr de vouloir annuler les modifications effectuées ?'}
+        = f.button 'Enregistrer', class: 'button primary send'
+

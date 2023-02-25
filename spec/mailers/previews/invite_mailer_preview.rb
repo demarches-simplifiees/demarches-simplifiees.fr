@@ -15,8 +15,13 @@ class InviteMailerPreview < ActionMailer::Preview
       dossier: dossier,
       user: invited_user,
       email: invited_user.email,
-      email_sender: 'sender@gouv.fr'
+      email_sender: 'sender@gouv.fr',
+      targeted_user_link: targeted_user_link
     )
+  end
+
+  def targeted_user_link
+    TargetedUserLink.new(id: SecureRandom.uuid)
   end
 
   def dossier

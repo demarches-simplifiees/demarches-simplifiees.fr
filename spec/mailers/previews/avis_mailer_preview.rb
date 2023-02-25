@@ -1,12 +1,30 @@
 # Preview all emails at http://localhost:3000/rails/mailers/avis_mailer
 class AvisMailerPreview < ActionMailer::Preview
   def avis_invitation
-    gestionaire = Instructeur.new(id: 1, user: User.new(email: 'jeanmichel.de-chauvigny@exemple.fr'))
-    avis = Avis.new(id: 1, email: 'test@exemple.fr', claimant: gestionaire)
-    targeted_link = TargetedUserLink.build(target_model: avis, user: avis.expert.user, target_context: :avis)
-    avis.dossier = Dossier.new(id: 1)
-    avis.dossier.procedure = Procedure.new(libelle: 'Démarche pour faire des marches')
-    avis.introduction = 'Il faudrait vérifier le certificat de conformité.'
-    AvisMailer.avis_invitation(avis, targeted_link)
+    procedure = Procedure.new(libelle: 'une belle procedure')
+    dossier = Dossier.new(id: 1, procedure:)
+    def dossier.visible_by_administration? = true
+    claimant = Instructeur.new(user: User.new(email: 'claimant@ds.fr'))
+
+    expert = Expert.new(user: User.new(email: '1@sa.com'))
+
+    avis = Avis.new(
+      id: 1,
+      introduction: 'intro',
+      dossier:,
+      expert:,
+      claimant:,
+      procedure:
+    )
+
+    def avis.targeted_user_links
+      stub = {}
+      def stub.find_or_create_by(_h)
+        TargetedUserLink.new(id: SecureRandom.uuid)
+      end
+      stub
+    end
+
+    AvisMailer.avis_invitation(avis, nil)
   end
 end

@@ -428,8 +428,8 @@ fr:
       one: dossier invité
       other: dossiers invités
     dossiers_supprimes_recemment:
-      one:  supprimé recemment
-      other: supprimés recemment
+      one:  supprimé récemment
+      other: supprimés récemment
     dossiers_supprimes_definitivement:
       one:  supprimé définitivement
       other: supprimés définitivement
@@ -440,8 +440,7 @@ fr:
       one: expirant
       other: expirant
     dossier_trouve:
-      '0': 0 dossier trouvé
-      '1': 1 dossier trouvé
+      one: "%{count} dossier trouvé"
       other: "%{count} dossiers trouvés"
     published:
       one: Publiée

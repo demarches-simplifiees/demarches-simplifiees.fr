@@ -1,6 +1,6 @@
 module Administrateurs
   class ProceduresController < AdministrateurController
-    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :allow_expert_review, :experts_require_administrateur_invitation, :reset_draft]
+    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :zones, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :allow_expert_review, :experts_require_administrateur_invitation, :reset_draft]
     before_action :procedure_revisable?, only: [:champs, :annotations, :modifications, :reset_draft]
     before_action :draft_valid?, only: [:apercu]
 
@@ -110,6 +110,9 @@ module Administrateurs
     def edit
     end
 
+    def zones
+    end
+
     def create
       @procedure = Procedure.new(procedure_params.merge(administrateurs: [current_administrateur]))
       @procedure.draft_revision = @procedure.revisions.build
@@ -132,7 +135,11 @@ module Administrateurs
       check_terms_of_use
       if !@procedure.errors.empty? || !@procedure.update(procedure_params)
         flash.now.alert = @procedure.errors.full_messages
-        render 'edit'
+        if @procedure.errors[:zones].present?
+          render 'zones'
+        else
+          render 'edit'
+        end
       elsif @procedure.brouillon?
         reset_procedure
         flash.notice = 'Démarche modifiée. Tous les dossiers de cette démarche ont été supprimés.'
@@ -355,7 +362,7 @@ module Administrateurs
         :monavis_embed,
         :api_entreprise_token,
         :duree_conservation_dossiers_dans_ds,
-        :zone_id,
+        { zone_ids: [] },
         :lien_dpo,
         :opendata,
         :procedure_expires_when_termine_enabled

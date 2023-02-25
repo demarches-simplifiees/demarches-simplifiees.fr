@@ -9,10 +9,10 @@ FactoryBot.define do
     cadre_juridique { "un cadre juridique important" }
     published_at { nil }
     duree_conservation_dossiers_dans_ds { 3 }
+    max_duree_conservation_dossiers_dans_ds { Procedure::OLD_MAX_DUREE_CONSERVATION }
     ask_birthday { false }
     lien_site_web { "https://mon-site.gouv" }
     path { SecureRandom.uuid }
-    association :zone
 
     groupe_instructeurs { [association(:groupe_instructeur, :default, procedure: instance, strategy: :build)] }
     administrateurs { administrateur.present? ? [administrateur] : [association(:administrateur)] }
@@ -293,6 +293,7 @@ FactoryBot.define do
       published_at { Time.zone.now }
       unpublished_at { nil }
       closed_at { nil }
+      zones { [association(:zone, strategy: :build)] }
     end
 
     trait :closed do
