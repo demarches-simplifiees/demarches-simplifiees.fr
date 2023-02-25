@@ -60,6 +60,8 @@ describe 'Using Visa field', js: true do
     visa_label_path = ".//label[normalize-space(text())='visa_to_test']"
     divs_path = visa_label_path + "/parent::div/#{axe}-sibling::div"
     fields_path = divs_path + "//*[contains(@name, 'dossier')]"
+    sleep(2)
+    wait_until { has_css?('.editable-champ-address > input') }
     fields = page.all(:xpath, fields_path)
     fields.each do |field|
       expect(field.disabled?).to be disabled

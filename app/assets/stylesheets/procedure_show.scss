@@ -103,6 +103,11 @@
       border-color: $blue-france-500;
     }
   }
+
+  // fix/dsfr
+  .fr-checkbox-group.fix-dsfr-notified-toggle-component {
+    margin-top: -7px;
+  }
 }
 
 ul.revision-changes {

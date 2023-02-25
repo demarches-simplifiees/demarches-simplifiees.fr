@@ -1,46 +1,46 @@
-= content_for :title, "Fusion des comptes #{@provider} et #{APPLICATION_NAME}"
+= content_for :title, "Fusion des comptes #{t("omniauth.provider.#{@provider}")} et #{APPLICATION_NAME}"
 
 .container
-  %h1.page-title Fusion des comptes #{@provider} et #{APPLICATION_NAME}
+  %h1.page-title= t('.title', provider: t("omniauth.provider.#{@provider}"), application_name: APPLICATION_NAME)
 
-  %p
-    Bonjour,
-    %br
-    %br
-    Votre compte #{@provider} utilise <b class='bold'>#{@fci.email_france_connect}</b> comme email de contact.
-    %br
-    Or il existe un compte sur #{APPLICATION_NAME} avec cet email.
+  %p= t('.subtitle', email: sanitize(@fci.email_france_connect), application_name: APPLICATION_NAME, provider: sanitize(t("omniauth.provider.#{@provider}"))).html_safe
 
   .form.mt-2
-    %label Ce compte #{@fci.email_france_connect} vous appartient-il ?
+    %label= t('.label_select_merge_flow', email: @fci.email_france_connect)
     %fieldset.radios
       %label{ onclick: "DS.showFusion(event);" }
         = radio_button_tag :value, true, false, autocomplete: "off", id: 'it-is-mine'
-        Oui
+        = t('utils.yes')
 
       %label{ onclick: "DS.showNewAccount(event);" }
         = radio_button_tag :value, false, false, autocomplete: "off", id: 'it-is-not-mine'
-        Non
+        = t('utils.no')
 
   .fusion.hidden
-    %p Pour les fusionner, entrez votre mot de passe
+    %p= t('.title_fill_in_password')
 
-    = form_tag omniauth_merge_with_existing_account_path, remote: true, class: 'mt-2 form' do
-      = hidden_field_tag :merge_token, @fci.merge_token
-      = hidden_field_tag :email, @fci.email_france_connect
-      = hidden_field_tag :provider, @provider
-      = label_tag :password, 'Mot de passe (8 caractères minimum)'
-      = password_field_tag :password, nil, autocomplete: 'current-password'
-      = submit_tag 'Fusionner les comptes', class: 'button primary'
+    = form_tag omniauth_merge_with_existing_account_path, data: { turbo: true }, class: 'mt-2 form fconnect-form' do
+      = hidden_field_tag :merge_token, @fci.merge_token, id: dom_id(@fci, :fusion_merge_token)
+      = hidden_field_tag :email, @fci.email_france_connect, id: dom_id(@fci, :fusion_email)
+      = hidden_field_tag :provider, @provider,  id: dom_id(@fci, :provider)
+      = label_tag :password, t('views.registrations.new.password_label', min_length: 8)
+      = password_field_tag :password, nil, autocomplete: 'current-password', class: 'mb-1'
+      .mb-2
+        = t('views.users.sessions.new.reset_password')
+        = link_to omniauth_resend_and_renew_merge_confirmation_path(provider: @provider, merge_token: @fci.merge_token), method: :post do
+          = t('.link_confirm_by_email')
+
+      = submit_tag t('.button_merge'), class: 'button primary'
 
   .new-account.hidden
-    %p Donnez-nous alors le mail ggjrioejgierogjeioque #{APPLICATION_NAME} utilisera pour vous contacter
+    %p= t('.title_fill_in_email', application_name: APPLICATION_NAME)
 
-    = form_tag omniauth_merge_with_new_account_path, remote: true, class: 'mt-2 form' do
-      = hidden_field_tag :merge_token, @fci.merge_token
-      = hidden_field_tag :provider, @provider
-      = label_tag :email, 'Email (nom@site.com)'
-      = email_field_tag :email
-      = submit_tag 'Utiliser ce mail', class: 'button primary'
+    = form_tag omniauth_merge_with_new_account_path, data: { turbo: true }, class: 'mt-2 form' do
+      = hidden_field_tag :merge_token, @fci.merge_token, id: dom_id(@fci, :new_account_merge_token)
+      = hidden_field_tag :provider, @provider, id: dom_id(@fci, :new_account_provider)
+      = label_tag :email, t('views.registrations.new.email_label'), for: dom_id(@fci, :new_account_email)
+      = email_field_tag :email, "", required: true, id: dom_id(@fci, :new_account_email)
+      = submit_tag t('.button_use_this_email'), class: 'button primary'
 
-  .new-account-password-confirmation.hidden
+
+  #new-account-password-confirmation.hidden

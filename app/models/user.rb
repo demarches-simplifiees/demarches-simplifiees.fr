@@ -194,6 +194,10 @@ class User < ApplicationRecord
     !administrateur? && !instructeur?
   end
 
+  def can_openid_connect?(provider)
+    can_france_connect? || provider == 'microsoft'
+  end
+
   def can_be_deleted?
     !administrateur? && !instructeur? && !expert?
   end

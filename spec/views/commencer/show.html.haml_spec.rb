@@ -24,7 +24,7 @@ RSpec.describe 'commencer/show.html.haml', type: :view do
         expect(rendered).to have_link('Gmail, Google')
       end
       if ENV['MICROSOFT_CLIENT_ID'].present?
-        expect(rendered).to have_link('Hotmail, Office365')
+        expect(rendered).to have_link('Outlook, Microsoft 365')
       end
       if ENV['YAHOO_CLIENT_ID'].present?
         expect(rendered).to have_link('Yahoo!')
@@ -49,7 +49,7 @@ RSpec.describe 'commencer/show.html.haml', type: :view do
         subject
         expect(rendered).to have_link(button_label, href: new_dossier_url(procedure_id: procedure.id))
         expect(rendered).not_to have_link('Gmail, Google')
-        expect(rendered).not_to have_link('Hotmail, Office365')
+        expect(rendered).not_to have_link('Outlook, Microsoft 365')
         expect(rendered).not_to have_link('Yahoo!')
         expect(rendered).not_to have_link('Tatou')
         expect(rendered).not_to have_link('administration')

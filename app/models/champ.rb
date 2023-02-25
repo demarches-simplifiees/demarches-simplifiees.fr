@@ -45,6 +45,7 @@ class Champ < ApplicationRecord
     :exclude_from_export?,
     :exclude_from_view?,
     :repetition?,
+    :block?,
     :dossier_link?,
     :titre_identite?,
     :header_section?,
