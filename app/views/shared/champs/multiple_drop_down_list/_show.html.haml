@@ -1,5 +1,4 @@
-- if champ.to_s.present?
+- if !champ.blank?
   %ul
-    - champ.to_s.split(", ").each do |item|
-      %li
-        = item
+    - champ.selected_options.each do |item|
+      %li= item
