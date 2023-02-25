@@ -39,6 +39,15 @@ class TypeDeChamp < ApplicationRecord
 
   CATEGORIES = [CADRE, ETAT_CIVIL, LOCALISATION, PAIEMENT_IDENTIFICATION, STANDARD, CHOICE, REFERENTIEL_EXTERNE]
 
+  INSTANCE_TYPE_DE_CHAMP_TO_CATEGORIE = {
+    nationalites: ETAT_CIVIL,
+    commune_de_polynesie: LOCALISATION,
+    code_postal_de_polynesie: LOCALISATION,
+    numero_dn: REFERENTIEL_EXTERNE,
+    te_fenua: REFERENTIEL_EXTERNE,
+    visa: CADRE
+  }
+
   TYPE_DE_CHAMP_TO_CATEGORIE = {
     text: STANDARD,
     textarea: STANDARD,
@@ -74,7 +83,7 @@ class TypeDeChamp < ApplicationRecord
     dgfip: REFERENTIEL_EXTERNE,
     pole_emploi: REFERENTIEL_EXTERNE,
     mesri: REFERENTIEL_EXTERNE
-  }
+  }.merge(INSTANCE_TYPE_DE_CHAMP_TO_CATEGORIE)
 
   enum type_champs: {
     text: 'text',
