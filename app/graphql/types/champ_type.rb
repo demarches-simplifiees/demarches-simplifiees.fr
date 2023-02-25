@@ -15,7 +15,7 @@ module Types
           else
             Types::Champs::TextChampType
           end
-        when ::Champs::EngagementChamp, ::Champs::YesNoChamp, ::Champs::CheckboxChamp
+        when ::Champs::YesNoChamp, ::Champs::CheckboxChamp
           Types::Champs::CheckboxChampType
         when ::Champs::DateChamp
           Types::Champs::DateChampType
