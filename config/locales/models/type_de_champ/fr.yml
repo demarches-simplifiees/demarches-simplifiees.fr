@@ -4,6 +4,15 @@ fr:
       type_de_champ: 'Type de champ'
     attributes:
       type_de_champ:
+        categorie:
+          standard: 'Standard'
+          choice: 'Choix'
+          etat_civil: 'État civil'
+          cadre: 'Cadre'
+          file: 'Fichier'
+          paiement_identification: 'Paiement - Identification'
+          referentiel_externe: 'Référentiel externe'
+          localisation: 'Localisation'
         type_champs:
           text: 'Texte'
           textarea: 'Zone de texte'
