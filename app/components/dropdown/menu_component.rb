@@ -9,11 +9,13 @@ class Dropdown::MenuComponent < ApplicationComponent
   def initialize(wrapper:,
     wrapper_options: {},
     button_options: {},
-    menu_options: {})
+    menu_options: {},
+    role: nil)
     @wrapper = wrapper
     @wrapper_options = wrapper_options
     @button_options = button_options
     @menu_options = menu_options
+    @role = role
   end
 
   def wrapper_options
@@ -37,6 +39,7 @@ class Dropdown::MenuComponent < ApplicationComponent
   end
 
   def menu_role
+    return @role if @role
     forms? ? :region : :menu
   end
 
