@@ -45,6 +45,12 @@ RSpec.describe TypesDeChamp::PrefillTypeDeChamp, type: :model do
       it { expect(built).to be_kind_of(TypesDeChamp::PrefillDepartementTypeDeChamp) }
     end
 
+    context 'when the type de champ is a communes' do
+      let(:type_de_champ) { build(:type_de_champ_communes) }
+
+      it { expect(built).to be_kind_of(TypesDeChamp::PrefillCommuneTypeDeChamp) }
+    end
+
     context 'when the type de champ is a epci' do
       let(:type_de_champ) { build(:type_de_champ_epci, procedure: procedure) }
 

@@ -23,6 +23,8 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
       TypesDeChamp::PrefillRepetitionTypeDeChamp.new(type_de_champ, revision)
     when TypeDeChamp.type_champs.fetch(:departements)
       TypesDeChamp::PrefillDepartementTypeDeChamp.new(type_de_champ, revision)
+    when TypeDeChamp.type_champs.fetch(:communes)
+      TypesDeChamp::PrefillCommuneTypeDeChamp.new(type_de_champ, revision)
     when TypeDeChamp.type_champs.fetch(:epci)
       TypesDeChamp::PrefillEpciTypeDeChamp.new(type_de_champ, revision)
     else
