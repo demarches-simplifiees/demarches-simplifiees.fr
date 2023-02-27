@@ -14,18 +14,18 @@ namespace :anonymizer do
 
     sql_rules = [
       # fake emails
-      "SECURITY LABEL FOR anon ON COLUMN avis.email IS 'MASKED WITH VALUE anon.fake_email()'",
-      "SECURITY LABEL FOR anon ON COLUMN commentaires.email IS 'MASKED WITH VALUE anon.fake_email()'",
-      "SECURITY LABEL FOR anon ON COLUMN dossier_transfers.email IS 'MASKED WITH VALUE anon.fake_email()'",
-      "SECURITY LABEL FOR anon ON COLUMN invites.email IS 'MASKED WITH VALUE anon.fake_email()'",
-      "SECURITY LABEL FOR anon ON COLUMN invites.email_sender IS 'MASKED WITH VALUE anon.fake_email()'",
-      "SECURITY LABEL FOR anon ON COLUMN traitements.instructeur_email IS 'MASKED WITH VALUE anon.fake_email()'",
-      "SECURITY LABEL FOR anon ON COLUMN users.unconfirmed_email IS 'MASKED WITH FUNCTION anon.fake_email()'",
+      "SECURITY LABEL FOR anon ON COLUMN avis.email IS 'MASKED WITH VALUE anon.partial_email(email)'",
+      "SECURITY LABEL FOR anon ON COLUMN commentaires.email IS 'MASKED WITH VALUE anon.partial_email(email)'",
+      "SECURITY LABEL FOR anon ON COLUMN dossier_transfers.email IS 'MASKED WITH VALUE anon.partial_email(email)'",
+      "SECURITY LABEL FOR anon ON COLUMN invites.email IS 'MASKED WITH VALUE anon.partial_email(email)'",
+      "SECURITY LABEL FOR anon ON COLUMN invites.email_sender IS 'MASKED WITH VALUE anon.partial_email(email_sender)'",
+      "SECURITY LABEL FOR anon ON COLUMN traitements.instructeur_email IS 'MASKED WITH VALUE anon.partial_email(instructeur_email)'",
+      "SECURITY LABEL FOR anon ON COLUMN users.unconfirmed_email IS 'MASKED WITH FUNCTION anon.partial_email(unconfirmed_email)'",
 
-      # users: fake emails except for super admins accounts
+      # users: partial emails except for super admins accounts, but ensure unicity
       "SECURITY LABEL FOR anon ON COLUMN users.email IS 'MASKED WITH VALUE CASE
                                                                            WHEN email IN (#{super_admin_emails.map { "$$#{_1}$$" }.join(',')}) THEN email
-                                                                           ELSE anon.fake_email()
+                                                                           ELSE CONCAT(id, $$+$$, anon.partial_email(email))
                                                                            END'",
 
       # partial emails
@@ -35,26 +35,33 @@ namespace :anonymizer do
       "SECURITY LABEL FOR anon ON COLUMN individuals.nom IS 'MASKED WITH VALUE anon.fake_last_name()'",
       "SECURITY LABEL FOR anon ON COLUMN individuals.prenom IS 'MASKED WITH VALUE anon.fake_first_name()'",
 
-      "SECURITY LABEL FOR anon ON COLUMN france_connect_informations.email_france_connect IS 'MASKED WITH VALUE anon.fake_email()'",
+      "SECURITY LABEL FOR anon ON COLUMN france_connect_informations.email_france_connect IS 'MASKED WITH VALUE anon.partial_email(email_france_connect)'",
       "SECURITY LABEL FOR anon ON COLUMN france_connect_informations.family_name IS 'MASKED WITH VALUE anon.fake_last_name()'",
       "SECURITY LABEL FOR anon ON COLUMN france_connect_informations.france_connect_particulier_id IS 'MASKED WITH VALUE anon.random_string(2)'",
       "SECURITY LABEL FOR anon ON COLUMN france_connect_informations.given_name IS 'MASKED WITH VALUE anon.fake_first_name()'",
       "SECURITY LABEL FOR anon ON COLUMN france_connect_informations.birthplace IS 'MASKED WITH VALUE anon.fake_city()'",
       "SECURITY LABEL FOR anon ON COLUMN france_connect_informations.merge_token IS 'MASKED WITH VALUE anon.random_string(2)'",
 
+      # delayed jobs may contain sensitive data
+      "SECURITY LABEL FOR anon ON COLUMN delayed_jobs.handler IS 'MASKED WITH VALUE NULL'",
+
       # various data
       "SECURITY LABEL FOR anon ON COLUMN active_storage_blobs.key IS 'MASKED WITH VALUE $$REDACTED$$'",
       "SECURITY LABEL FOR anon ON COLUMN api_tokens.encrypted_token IS 'MASKED WITH VALUE anon.random_string(5)'",
-      "SECURITY LABEL FOR anon ON COLUMN avis.answer IS 'MASKED WITH VALUE anon.random_string(2)'",
-      "SECURITY LABEL FOR anon ON COLUMN avis.introduction IS 'MASKED WITH VALUE anon.random_string(2)'",
-      "SECURITY LABEL FOR anon ON COLUMN commentaires.body IS 'MASKED WITH VALUE anon.random_string(2)'",
+      "SECURITY LABEL FOR anon ON COLUMN avis.answer IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN avis.introduction IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN commentaires.body IS 'MASKED WITH VALUE NULL'",
       "SECURITY LABEL FOR anon ON COLUMN dossiers.search_terms IS 'MASKED WITH VALUE NULL'",
       "SECURITY LABEL FOR anon on COLUMN dossiers.private_search_terms IS 'MASKED WITH VALUE NULL'",
       "SECURITY LABEL FOR anon ON COLUMN exercices.ca IS 'MASKED WITH VALUE NULL'",
       "SECURITY LABEL FOR anon ON COLUMN trusted_device_tokens.token IS 'MASKED WITH VALUE NULL'",
 
       # champs values
-      "SECURITY LABEL FOR anon ON COLUMN champs.value IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN champs.value IS 'MASKED WITH VALUE CASE
+                                                                            WHEN type = $$Champs::DossierLinkChamp$$ THEN value
+                                                                            ELSE NULL
+                                                                            END'",
+
       "SECURITY LABEL FOR anon ON COLUMN champs.value_json IS 'MASKED WITH VALUE NULL'",
       "SECURITY LABEL FOR anon ON COLUMN champs.external_id IS 'MASKED WITH VALUE NULL'",
       "SECURITY LABEL FOR anon ON COLUMN champs.data IS 'MASKED WITH VALUE NULL'"
@@ -91,6 +98,9 @@ namespace :anonymizer do
 
     sa_email = FactoryBot.create(:super_admin, email: "me@superadmin.ds").email
     FactoryBot.create(:user, email: sa_email)
+
+    # test for short email anonymization
+    FactoryBot.create(:user, email: "a@hey.com")
 
     FactoryBot.create(:dossier, :with_populated_champs, procedure: FactoryBot.create(:procedure, :with_all_champs))
     FactoryBot.create(:avis)
