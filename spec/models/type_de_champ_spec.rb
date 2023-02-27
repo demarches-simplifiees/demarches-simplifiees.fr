@@ -273,4 +273,9 @@ describe TypeDeChamp do
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_address
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_annuaire_education
   end
+
+  describe '#normalize_libelle' do
+    it { expect(create(:type_de_champ, :header_section, libelle: " 2.3 Test").libelle).to eq("2.3 Test") }
+    it { expect(create(:type_de_champ, libelle: " fix me ").libelle).to eq("fix me") }
+  end
 end
