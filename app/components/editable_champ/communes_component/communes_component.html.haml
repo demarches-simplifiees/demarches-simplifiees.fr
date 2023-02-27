@@ -1,3 +1,4 @@
+- render_parent
 = @form.hidden_field :value
 = @form.hidden_field :external_id
 = @form.hidden_field :departement
@@ -7,4 +8,5 @@
   id: @champ.input_id,
   classNameDepartement: "width-33-desktop width-100-mobile",
   className: "width-66-desktop width-100-mobile",
-  describedby: @champ.describedby_id)
+  describedby: @champ.describedby_id,
+  **react_combo_props)

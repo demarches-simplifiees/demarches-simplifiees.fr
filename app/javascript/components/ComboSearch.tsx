@@ -24,7 +24,7 @@ type TransformResult<Result> = (
   result: Result
 ) => [key: string, value: string, label?: string];
 
-export type ComboSearchProps<Result> = {
+export type ComboSearchProps<Result = unknown> = {
   onChange?: (value: string | null, result?: Result) => void;
   value?: string;
   scope: string;

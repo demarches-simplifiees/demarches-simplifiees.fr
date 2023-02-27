@@ -1,4 +1,11 @@
-= react_component("MapEditor", featureCollection: @champ.to_feature_collection, url: champs_carte_features_path(@champ), options: @champ.render_options)
+= render @autocomplete_component
+
+= react_component("MapEditor",
+  featureCollection: @champ.to_feature_collection,
+  url: champs_carte_features_path(@champ),
+  options: @champ.render_options,
+  autocompleteAnnounceTemplateId: @autocomplete_component.announce_template_id,
+  autocompleteScreenReaderInstructions: t("combo_search_component.screen_reader_instructions"))
 
 .geo-areas{ id: dom_id(@champ, :geo_areas) }
   = render partial: 'shared/champs/carte/geo_areas', locals: { champ: @champ, editing: true }
