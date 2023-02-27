@@ -140,6 +140,7 @@ en:
           rna_html: A RNA number
           repetition_html: A array of hashes with possible values for each field of the repetition.
           epci_html: An array of the department code and the <a href="https://geo.api.gouv.fr/epcis" target="_blank" rel="noopener noreferrer">EPCI one</a>.
+          dossier_link_html: The file ID, as integer.
         examples:
           title: Example
           text: Short text
@@ -156,6 +157,7 @@ en:
           date: "2023-02-01"
           datetime: "2023-02-01T10:30"
           checkbox: "true"
+          dossier_link: 42
           rna: "W503726238"
           siret: "13002526500013"
         prefill_link_title: Prefill link (GET)
@@ -507,6 +509,10 @@ en:
               not_in_departement_epci_codes: "must be a valid EPCI code of the matching department"
             value:
               not_in_departement_epci_names: "must be a valid EPCI name of the matching department"
+        "champs/dossier_link_champ":
+          attributes:
+            value:
+              not_integerable: "must be an integer"
   errors:
     format: "Field « %{attribute} » %{message}"
     messages:
