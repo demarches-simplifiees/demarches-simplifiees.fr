@@ -207,7 +207,7 @@ class Procedure < ApplicationRecord
   has_one :refused_mail, class_name: "Mails::RefusedMail", dependent: :destroy
   has_one :without_continuation_mail, class_name: "Mails::WithoutContinuationMail", dependent: :destroy
 
-  has_one :defaut_groupe_instructeur, -> { active.order(:label) }, class_name: 'GroupeInstructeur', inverse_of: false
+  has_one :defaut_groupe_instructeur, -> { active.order(id: :asc) }, class_name: 'GroupeInstructeur', inverse_of: false
 
   has_one_attached :logo
   has_one_attached :notice
@@ -906,7 +906,7 @@ class Procedure < ApplicationRecord
 
   def ensure_defaut_groupe_instructeur
     if self.groupe_instructeurs.empty?
-      groupe_instructeurs.create(label: GroupeInstructeur::DEFAUT_LABEL)
+      self.create_defaut_groupe_instructeur(label: GroupeInstructeur::DEFAUT_LABEL)
     end
   end
 end
