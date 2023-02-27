@@ -108,7 +108,8 @@ describe 'instructeurs/dossiers/show.html.haml', type: :view do
 
     it 'displays the correct actions' do
       expect(subject).to have_text('Conserver un mois de plus')
-      expect(subject).to have_selector('.header-actions ul:first-child .fr-btn', count: 1)
+      expect(subject).to have_link('Repasser en instruction', href: repasser_en_instruction_instructeur_dossier_path(dossier.procedure, dossier))
+      expect(subject).to have_selector('.header-actions ul:first-child .fr-btn', count: 2)
     end
   end
 
