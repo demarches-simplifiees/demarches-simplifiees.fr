@@ -16,6 +16,7 @@ const Gon = z
         api_education_url: z.string().optional()
       })
       .default({}),
+    locale: z.string().default('fr'),
     matomo: z
       .object({
         cookieDomain: z.string().optional(),

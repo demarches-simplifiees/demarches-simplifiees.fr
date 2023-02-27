@@ -1,7 +1,8 @@
 = render Dropdown::MenuComponent.new(wrapper: :span, wrapper_options: { class: ['help-dropdown']}, menu_options: { id: "help-menu" }) do |menu|
   - menu.with_button_inner_html do
     = t('help')
-  - title = dossier.brouillon? ? "Besoin d’aide pour remplir votre dossier ?" : "Une question sur votre dossier ?"
+
+  - title = dossier.brouillon? ? t("help_dropdown.help_brouillon_title") : t("help_dropdown.help_filled_dossier")
 
   - if dossier.messagerie_available?
     - menu.with_item do

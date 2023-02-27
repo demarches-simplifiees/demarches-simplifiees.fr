@@ -3,16 +3,11 @@
 
 .help-dropdown {
   .dropdown-content {
-    width: 340px;
-  }
-
-  .dropdown-description {
-    font-size: 14px;
+    width: 360px;
   }
 }
 
 .help-dropdown-title {
-  font-size: 16px;
   color: $blue-france-500;
 }
 
@@ -37,15 +32,5 @@
 .help-dropdown-service-item {
   margin-top: $default-spacer;
   line-height: 18px;
-
-  .icon {
-    vertical-align: middle;
-    margin-right: 5px;
-
-    &.clock {
-      filter: contrast(0) brightness(120%);
-      vertical-align: -4px;
-    }
-  }
 }
 
