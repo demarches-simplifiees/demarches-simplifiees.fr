@@ -27,7 +27,7 @@
                 %th
                   = t("views.prefill_descriptions.edit.champ_id")
                 %td
-                  = type_de_champ.to_typed_id
+                  = type_de_champ.to_typed_id_for_query
               %tr
                 %th
                   = t("views.prefill_descriptions.edit.champ_type")
@@ -37,13 +37,7 @@
                 %th
                   = t("views.prefill_descriptions.edit.possible_values.title")
                 %td
-                  - if I18n.exists?("views.prefill_descriptions.edit.possible_values.#{type_de_champ.type_champ}_html")
-                    = t("views.prefill_descriptions.edit.possible_values.#{type_de_champ.type_champ}_html")
-                    %br
-                  - if type_de_champ.too_many_possible_values?
-                    = link_to t("views.prefill_descriptions.edit.possible_values.link.text"), prefill_type_de_champ_path(prefill_description.path, type_de_champ), title: new_tab_suffix(t("views.prefill_descriptions.edit.possible_values.link.title")), **external_link_attributes
-                  - else
-                    = type_de_champ.possible_values.to_sentence
+                  = type_de_champ.possible_values
               %tr{ class: prefillable ? "" : "fr-text-mention--grey" }
                 %th
                   = t("views.prefill_descriptions.edit.examples.title")

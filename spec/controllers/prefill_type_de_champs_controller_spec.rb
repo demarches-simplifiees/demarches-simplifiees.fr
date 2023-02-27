@@ -8,6 +8,8 @@ RSpec.describe PrefillTypeDeChampsController, type: :controller do
     context 'when the procedure is found' do
       context 'when the procedure is publiee' do
         context 'when the procedure is opendata' do
+          render_views
+
           let(:procedure) { create(:procedure, :published, opendata: true) }
 
           it { expect(show_request).to render_template(:show) }
