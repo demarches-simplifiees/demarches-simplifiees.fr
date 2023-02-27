@@ -1,0 +1,23 @@
+#header-bottom.container
+  %nav.tabs
+    %ul
+      - notifications_summary = current_instructeur.notifications_for_dossier(dossier)
+
+      = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.request'),
+        instructeur_dossier_path(dossier.procedure, dossier),
+        notification: notifications_summary[:demande])
+
+      = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.private_annotations'),
+        annotations_privees_instructeur_dossier_path(dossier.procedure, dossier),
+        notification: notifications_summary[:annotations_privees])
+
+      = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.external_opinion'),
+        avis_instructeur_dossier_path(dossier.procedure, dossier),
+        notification: notifications_summary[:avis])
+
+      = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.messaging'),
+        messagerie_instructeur_dossier_path(dossier.procedure, dossier),
+        notification: notifications_summary[:messagerie])
+
+      = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.involved_persons'),
+        personnes_impliquees_instructeur_dossier_path(dossier.procedure, dossier))
