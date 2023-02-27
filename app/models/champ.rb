@@ -232,6 +232,10 @@ class Champ < ApplicationRecord
     end
   end
 
+  def focusable_input_id
+    input_id
+  end
+
   private
 
   def html_id

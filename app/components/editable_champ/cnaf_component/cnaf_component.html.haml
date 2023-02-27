@@ -1,16 +1,18 @@
 .cnaf-inputs
   %div
-    = @form.label :numero_allocataire, t('.numero_allocataire_label')
+    = @form.label :numero_allocataire, t('.numero_allocataire_label'), for: @champ.numero_allocataire_input_id
     %p.notice= t('.numero_allocataire_notice')
     = @form.text_field :numero_allocataire,
       required: @champ.required?,
       aria: { describedby: @champ.describedby_id },
-      class: "width-33-desktop"
+      class: "width-33-desktop", id: @champ.numero_allocataire_input_id
 
   %div
-    = @form.label :code_postal, t('.code_postal_label')
+    = @form.label :code_postal, t('.code_postal_label'), for: @champ.code_postal_input_id
     %p.notice= t('.code_postal_notice')
     = @form.text_field :code_postal,
       required: @champ.required?,
       aria: { describedby: @champ.describedby_id },
-      class: "width-33-desktop"
+      class: "width-33-desktop",
+      id: @champ.code_postal_input_id
+

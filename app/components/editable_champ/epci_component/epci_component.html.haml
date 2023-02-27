@@ -1,4 +1,5 @@
-%label.notice{ for: departement_input_id } Le département de l’EPCI
-= @form.select :code_departement, departement_options, departement_select_options, required: @champ.required?, id: departement_input_id, class: "width-33-desktop width-100-mobile"
+%label.notice{ for: @champ.code_departement_input_id } Le département de l’EPCI
+= @form.select :code_departement, departement_options, departement_select_options, required: @champ.required?, id: @champ.code_departement_input_id, class: "width-33-desktop width-100-mobile"
 - if @champ.departement?
-  = @form.select :value, epci_options, epci_select_options, required: @champ.required?, id: @champ.input_id, aria: { describedby: @champ.describedby_id }, class: "width-33-desktop width-100-mobile"
+  = @form.label "EPCI", for: @champ.epci_input_id
+  = @form.select :value, epci_options, epci_select_options, required: @champ.required?, id: @champ.epci_input_id, aria: { describedby: @champ.describedby_id }, class: "width-33-desktop width-100-mobile"

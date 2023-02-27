@@ -1,16 +1,16 @@
 .dgfip-inputs
   %div
-    = @form.label :numero_fiscal, t('.numero_fiscal_label')
+    = @form.label :numero_fiscal, t('.numero_fiscal_label'), for: @champ.numero_fiscal_input_id
     %p.notice= t('.numero_fiscal_notice')
     = @form.text_field :numero_fiscal,
       required: @champ.required?,
       aria: { describedby: @champ.describedby_id },
-      class: "width-33-desktop"
+      class: "width-33-desktop", id: @champ.numero_fiscal_input_id
 
   %div
-    = @form.label :reference_avis, t('.reference_avis_label')
+    = @form.label :reference_avis, t('.reference_avis_label'), for: @champ.reference_avis_input_id
     %p.notice= t('.reference_avis_notice')
     = @form.text_field :reference_avis,
       required: @champ.required?,
       aria: { describedby: @champ.describedby_id },
-      class: "width-33-desktop"
+      class: "width-33-desktop", id: @champ.reference_avis_input_id

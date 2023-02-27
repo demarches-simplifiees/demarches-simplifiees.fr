@@ -28,6 +28,7 @@ class Champs::RepetitionChamp < Champ
     champs.group_by(&:row_id).values
   end
 
+
   def add_row(revision)
     added_champs = []
     transaction do
