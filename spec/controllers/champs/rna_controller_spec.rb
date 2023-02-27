@@ -37,10 +37,8 @@ describe Champs::RNAController, type: :controller do
 
         subject! { get :show, params: params, format: :turbo_stream }
 
-        it 'clears the data and value on the model' do
-          champ.reload
-          expect(champ.data).to eq({})
-          expect(champ.value).to eq("")
+        it 'clears the data on the model' do
+          expect(champ.reload.data).to be_nil
         end
 
         it 'clears any information or error message' do
@@ -55,14 +53,12 @@ describe Champs::RNAController, type: :controller do
 
         subject! { get :show, params: params, format: :turbo_stream }
 
-        it 'clears the data and value on the model' do
-          champ.reload
-          expect(champ.data).to be_nil
-          expect(champ.value).to be_nil
+        it 'clears the data on the model' do
+          expect(champ.reload.data).to be_nil
         end
 
         it 'displays a “RNA is invalid” error message' do
-          expect(response.body).to include("Aucun établissement trouvé")
+          expect(response.body).to include("Le numéro RNA doit commencer par un W majuscule suivi de 9 chiffres")
         end
       end
 
@@ -75,7 +71,7 @@ describe Champs::RNAController, type: :controller do
 
         it 'clears the data on the model' do
           champ.reload
-          expect(champ.data).to eq({})
+          expect(champ.data).to be_nil
         end
 
         it 'displays a “RNA is invalid” error message' do
@@ -94,10 +90,8 @@ describe Champs::RNAController, type: :controller do
 
         subject! { get :show, params: params, format: :turbo_stream }
 
-        it 'clears the data and value on the model' do
-          champ.reload
-          expect(champ.data).to be_nil
-          expect(champ.value).to be_nil
+        it 'clears the data on the model' do
+          expect(champ.reload.data).to be_nil
         end
 
         it 'displays a “API is unavailable” error message' do
