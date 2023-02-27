@@ -1,6 +1,9 @@
 - case siret
-- when :invalid
-  Le numéro de SIRET doit comporter exactement 14 chiffres.
+- when :invalid_length
+  = t('errors.messages.invalid_siret_length')
+
+- when :invalid_checksum
+  = t('errors.messages.invalid_siret_checksum')
 
 - when :not_found
   Nous n’avons pas trouvé d’établissement correspondant à ce numéro de SIRET.
