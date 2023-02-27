@@ -2,15 +2,17 @@ module Users
   class CommencerController < ApplicationController
     layout 'procedure_context'
 
+    before_action :clean_prefil_session_if_needed, only: :commencer
+
     def commencer
       @procedure = retrieve_procedure
       return procedure_not_found if @procedure.blank? || @procedure.brouillon?
       @revision = @procedure.published_revision
 
-      if prefill_params_present?
+      if params[:prefill_token].present? || commencer_page_is_reloaded?
+        retrieve_prefilled_dossier(params[:prefill_token] || session[:prefill_token])
+      elsif prefill_params_present?
         build_prefilled_dossier
-      elsif params[:prefill_token].present?
-        retrieve_prefilled_dossier
       end
 
       if user_signed_in?
@@ -73,6 +75,18 @@ module Users
 
     private
 
+    def clean_prefil_session_if_needed
+      if session[:prefill_token_expires_at] && session[:prefill_token_expires_at] < Time.zone.now
+        session.delete(:prefill_token)
+        session.delete(:prefill_token_expires_at)
+        session.delete(:prefill_params)
+      end
+    end
+
+    def commencer_page_is_reloaded?
+      session[:prefill_token].present? && session[:prefill_params] == params.to_unsafe_h
+    end
+
     def prefill_params_present?
       params.keys.find { |param| param.split('_').first == "champ" }
     end
@@ -96,10 +110,13 @@ module Users
       if @prefilled_dossier.save
         @prefilled_dossier.prefill!(PrefillParams.new(@prefilled_dossier, params.to_unsafe_h).to_a)
       end
+      session[:prefill_token] = @prefilled_dossier.prefilled_token
+      session[:prefill_token_expires_at] = Time.zone.now + 5.minutes
+      session[:prefill_params] = params.to_unsafe_h
     end
 
-    def retrieve_prefilled_dossier
-      @prefilled_dossier = Dossier.state_brouillon.prefilled.find_by!(prefill_token: params[:prefill_token])
+    def retrieve_prefilled_dossier(prefill_token)
+      @prefilled_dossier = Dossier.state_brouillon.prefilled.find_by!(prefill_token: prefill_token)
     end
 
     # The prefilled dossier is not owned yet, and the user is signed in: they become the new owner

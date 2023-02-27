@@ -143,6 +143,9 @@ module Users
     end
 
     def brouillon
+      session.delete(:prefill_token)
+      session.delete(:prefill_token_expires_at)
+      session.delete(:prefill_params)
       @dossier = dossier_with_champs
       @dossier.valid?(context: :prefilling)
 
