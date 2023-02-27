@@ -26,7 +26,7 @@ type QueryKey = readonly [
 ];
 
 function buildURL(scope: string, term: string, extra?: string) {
-  term = encodeURIComponent(term.replace(/\(|\)/g, ''));
+  term = term.replace(/\(|\)/g, '');
   const params = new URLSearchParams();
   let path = `${api_geo_url}/${scope}`;
 
@@ -71,6 +71,11 @@ const defaultQueryFn: QueryFunction<unknown, QueryKey> = async ({
 }) => {
   if (scope == 'pays') {
     return matchSorter(await getPays(signal), term, { keys: ['label'] });
+  }
+
+  // BAN will error with queries less then 3 chars long
+  if (scope == 'adresse' && term.length < 3) {
+    return [];
   }
 
   const url = buildURL(scope, term, extra);
