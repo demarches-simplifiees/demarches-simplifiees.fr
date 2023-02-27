@@ -1,14 +1,14 @@
-%span.icon.person
-.dropdown-description
+%span.fr-icon-user-fill.fr-text-action-high--blue-france{ "aria-hidden": "true" }
+.dropdown-description.fr-text--sm
   %span.help-dropdown-title= title
   .help-dropdown-service-action
-    %p Contactez directement l’administration :
-    %p.help-dropdown-service-item
-      %span.icon.small.mail
+    %p.fr-text--sm= t('help_dropdown.contact_administration')
+    %p.fr-text--sm.help-dropdown-service-item
+      %span.fr-icon-mail-fill.fr-icon--sm{ "aria-hidden": "true" }
       = link_to service.email, "mailto:#{service.email}", role: 'menuitem'
-    %p.help-dropdown-service-item
-      %span.icon.small.phone
+    %p.fr-text--sm
+      %span.fr-icon-phone-fill.fr-icon--sm{ "aria-hidden": "true" }
       = link_to service.telephone, service.telephone_url, role: 'menuitem'
-    %p.help-dropdown-service-item
-      %span.icon.small.clock
+    %p.fr-text--sm
+      %span.fr-icon-time-fill.fr-icon--sm{ "aria-hidden": "true" }
       = service.horaires

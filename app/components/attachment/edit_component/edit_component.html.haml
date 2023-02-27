@@ -12,7 +12,7 @@
           = render Dsfr::DownloadComponent.new(attachment:)
         - else
           .fr-py-1v
-            %span.attachment-filename.fr-mr-1w= link_to_if(viewable?, attachment.filename.to_s, helpers.url_for(attachment.blob), title: "Ouvrir le fichier #{attachment.filename.to_s}", **helpers.external_link_attributes)
+            %span.attachment-filename.fr-mr-1w= link_to_if(viewable?, attachment.filename.to_s, helpers.url_for(attachment.blob), title: t(".open_file", filename: attachment.filename), **helpers.external_link_attributes)
 
           = render Attachment::ProgressComponent.new(attachment: attachment)
 
