@@ -1,61 +1,3 @@
-@import "colors";
-@import "constants";
-
-.label {
-  display: inline-block;
-  padding: 4px $default-spacer;
-  background: $dark-grey;
-  border: 1px solid transparent;
-  color: #FFFFFF;
-  border-radius: 4px;
-  font-size: 12px;
-  line-height: 18px;
-
-  &.instruction {
-    background-color: #FFFFFF;
-    color: $blue-france-500;
-    border: 1px solid $blue-france-500;
-  }
-
-  &.en-instruction {
-    @extend .instruction;
-  }
-
-  &.construction {
-    background-color: #FFFFFF;
-    color: $black;
-    border: 1px solid $black;
-  }
-
-  &.en-construction {
-    @extend .construction;
-  }
-
-  &.accepted {
-    background-color: $green;
-  }
-
-  &.accepte {
-    @extend .accepted;
-  }
-
-  &.refused {
-    background-color: $dark-red;
-  }
-
-  &.refuse {
-    @extend .refused;
-  }
-
-  &.without-continuation {
-    background-color: $black;
-  }
-
-  &.sans-suite {
-    @extend .without-continuation;
-  }
-}
-
 // Labels that we only want for screen readers
 // https://www.coolfields.co.uk/2016/05/text-for-screen-readers-only-updated/
 .sr-only {
@@ -68,11 +10,4 @@
   overflow: hidden;
   position: absolute !important;
   word-wrap: normal !important;
-}
-
-.label-bold {
-  font-size: 18px;
-  margin-bottom: 16px;
-  display: block;
-  font-weight: bold;
 }
