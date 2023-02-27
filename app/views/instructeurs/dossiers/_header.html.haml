@@ -6,49 +6,8 @@
       pour voir si l'opération est finie.
 
 .sub-header
-  .container.turbo-header
-    .flex.fr-mb-3w
-      %div
-        %h1.fr-h2.fr-mb-1w
-          = "Dossier nº #{dossier.id}"
-
-          = status_badge(dossier.state, 'super')
-        = link_to dossier.procedure.libelle.truncate_words(10), instructeur_procedure_path(dossier.procedure), title: dossier.procedure.libelle, class: "fr-link"
-        = procedure_badge(dossier.procedure)
-
-      .header-actions.fr-ml-auto
-        = render partial: 'instructeurs/dossiers/header_actions', locals: { dossier: dossier }
-        = render(partial: 'instructeurs/dossiers/print_and_export_actions', locals: {dossier: dossier})
-
-    = render(partial: 'instructeurs/dossiers/expiration_banner', locals: {dossier: dossier})
-
-    - if dossier.user_deleted?
-      %p.fr-mb-1w
-        %small L’usager a supprimé son compte. Vous pouvez archiver puis supprimer le dossier.
-
-  .container
-    %nav.tabs
-      %ul
-        - notifications_summary = current_instructeur.notifications_for_dossier(dossier)
-
-        = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.request'),
-          instructeur_dossier_path(dossier.procedure, dossier),
-          notification: notifications_summary[:demande])
-
-        = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.private_annotations'),
-          annotations_privees_instructeur_dossier_path(dossier.procedure, dossier),
-          notification: notifications_summary[:annotations_privees])
-
-        = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.external_opinion'),
-          avis_instructeur_dossier_path(dossier.procedure, dossier),
-          notification: notifications_summary[:avis])
-
-        = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.messaging'),
-          messagerie_instructeur_dossier_path(dossier.procedure, dossier),
-          notification: notifications_summary[:messagerie])
-
-        = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.involved_persons'),
-          personnes_impliquees_instructeur_dossier_path(dossier.procedure, dossier))
+  = render partial: 'instructeurs/dossiers/header_top', locals: { dossier: }
+  = render partial: 'instructeurs/dossiers/header_bottom', locals: { dossier: }
 
 .container
   .print-header
