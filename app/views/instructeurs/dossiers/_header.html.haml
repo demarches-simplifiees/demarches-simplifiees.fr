@@ -6,7 +6,7 @@
       pour voir si l'opération est finie.
 
 .sub-header
-  .container
+  .container.turbo-header
     .flex.fr-mb-3w
       %div
         %h1.fr-h2.fr-mb-1w
@@ -26,6 +26,7 @@
       %p.fr-mb-1w
         %small L’usager a supprimé son compte. Vous pouvez archiver puis supprimer le dossier.
 
+  .container
     %nav.tabs
       %ul
         - notifications_summary = current_instructeur.notifications_for_dossier(dossier)
