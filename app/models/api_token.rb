@@ -18,6 +18,8 @@ class APIToken < ApplicationRecord
   belongs_to :administrateur, inverse_of: :api_tokens
   has_many :procedures, through: :administrateur
 
+  before_save :check_allowed_procedure_ids_ownership
+
   def context
     context = { administrateur_id: administrateur_id, write_access: write_access? }
 
@@ -26,6 +28,30 @@ class APIToken < ApplicationRecord
     else
       context.merge procedure_ids: procedure_ids & allowed_procedure_ids
     end
+  end
+
+  def full_access?
+    allowed_procedure_ids.nil?
+  end
+
+  def procedures_to_allow
+    procedures.select(:id, :libelle, :path).where.not(id: allowed_procedure_ids || []).order(:libelle)
+  end
+
+  def allowed_procedures
+    if allowed_procedure_ids.present?
+      procedures.select(:id, :libelle, :path).where(id: allowed_procedure_ids).order(:libelle)
+    else
+      []
+    end
+  end
+
+  def disallow_procedure(procedure_id)
+    allowed_procedure_ids = allowed_procedures.map(&:id) - [procedure_id]
+    if allowed_procedure_ids.empty?
+      allowed_procedure_ids = nil
+    end
+    update!(allowed_procedure_ids:)
   end
 
   # Prefix is made of the first 6 characters of the uuid base64 encoded
@@ -82,6 +108,14 @@ class APIToken < ApplicationRecord
 
     def ensure_valid_token(plain_token)
       -> (api_token) { api_token if BCrypt::Password.new(api_token.encrypted_token) == plain_token }
+    end
+  end
+
+  private
+
+  def check_allowed_procedure_ids_ownership
+    if allowed_procedure_ids.present?
+      self.allowed_procedure_ids = allowed_procedures.map(&:id)
     end
   end
 end
