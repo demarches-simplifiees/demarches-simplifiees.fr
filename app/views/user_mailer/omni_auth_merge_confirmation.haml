@@ -1,0 +1,21 @@
+- content_for(:title, @subject)
+
+%p
+  Bonjour,
+
+%p
+  Pour confirmer la fusion de votre compte #{provider} avec votre compte #{APPLICATION_NAME}, veuillez cliquer sur le lien suivant :
+- merge_path = omniauth_mail_merge_with_existing_account_url(provider: @provider, merge_token: @merge_token)
+= round_button 'Je confirme', merge_path, :primary
+
+%p
+  Vous pouvez aussi visiter ce lien : #{link_to merge_path, merge_path}
+
+%p Ce lien est valide #{distance_of_time_in_words(FranceConnectInformation::MERGE_VALIDITY)}, jusqu'à #{@merge_token_created_at.strftime("%d-%m-%Y à %H:%M (%Z)")}
+
+%p
+  Si vous n’êtes pas à l’origine de cette demande, vous pouvez ignorer ce message. Et si vous avez besoin d’assistance, n’hésitez pas à nous contacter à
+  = succeed '.' do
+    = mail_to CONTACT_EMAIL
+
+= render partial: "layouts/mailers/signature"

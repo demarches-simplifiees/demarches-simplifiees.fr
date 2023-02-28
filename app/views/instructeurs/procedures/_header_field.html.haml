@@ -1,5 +1,5 @@
 %th{ class: classname }
-  = link_to update_sort_instructeur_procedure_path(@procedure, table: field['table'], column: field['column']) do
+  = link_to update_sort_instructeur_procedure_path(@procedure, table: field['table'], column: field['column'], order: @procedure_presentation.opposite_order_for(field['table'], field['column'])) do
     - if @procedure_presentation.sort['table'] == field['table'] && @procedure_presentation.sort['column'] == field['column']
       - if @procedure_presentation.sort['order'] == 'asc'
         #{field['label']} ↑

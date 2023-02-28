@@ -1,26 +1,6 @@
 {
   "ignored_warnings": [
     {
-      "warning_type": "Redirect",
-      "warning_code": 18,
-      "fingerprint": "170b506bd3d25eb50f464703f9d993bf2e124d5cbc8478ce9d9d06a15b4bc55e",
-      "check_name": "Redirect",
-      "message": "Possible unprotected redirect",
-      "file": "app/controllers/instructeurs/exports_controller.rb",
-      "line": 26,
-      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(Export.find_or_create_export(export_format, groupe_instructeurs, **export_options).file.service_url)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Instructeurs::ExportsController",
-        "method": "download"
-      },
-      "user_input": "Export.find_or_create_export(export_format, groupe_instructeurs, **export_options).file.service_url",
-      "confidence": "High",
-      "note": ""
-    },
-    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "1b805585567775589825c0eda58cb84c074fc760d0a7afb101c023a51427f2b5",
@@ -35,7 +15,7 @@
           "type": "controller",
           "class": "Users::DossiersController",
           "method": "merci",
-          "line": 204,
+          "line": 230,
           "file": "app/controllers/users/dossiers_controller.rb",
           "rendered": {
             "name": "users/dossiers/merci",
@@ -139,7 +119,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/administrateurs/exports_controller.rb",
-      "line": 22,
+      "line": 23,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Export.find_or_create_export(export_format, all_groupe_instructeurs, **export_options).file.service_url)",
       "render_path": null,
@@ -153,13 +133,44 @@
       "note": ""
     },
     {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "aee1320d481492d4ad69689a3f1442399545cfac16481029c25e0b08d4518fbf",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/omniauth/merge.html.haml",
+      "line": 6,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "t(\".subtitle\", :email => sanitize(FranceConnectInformation.find_by(:merge_token => merge_token_params).email_france_connect), :application_name => (APPLICATION_NAME), :provider => sanitize(t(\"omniauth.provider.#{provider_param}\")))",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "OmniauthController",
+          "method": "merge",
+          "line": 52,
+          "file": "app/controllers/omniauth_controller.rb",
+          "rendered": {
+            "name": "omniauth/merge",
+            "file": "app/views/omniauth/merge.html.haml"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "omniauth/merge"
+      },
+      "user_input": "FranceConnectInformation.find_by(:merge_token => merge_token_params).email_france_connect",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
       "warning_type": "SQL Injection",
       "warning_code": 0,
       "fingerprint": "bd1df30f95135357b646e21a03d95498874faffa32e3804fc643e9b6b957ee14",
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/concerns/dossier_filtering_concern.rb",
-      "line": 25,
+      "line": 30,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "where(\"#{values.count} OR #{\"(#{ProcedurePresentation.sanitized_column(table, column)} ILIKE ?)\"}\", *values.map do\n \"%#{value}%\"\n end)",
       "render_path": null,
@@ -179,7 +190,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/instructeurs/procedures_controller.rb",
-      "line": 168,
+      "line": 179,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Export.find_or_create_export(export_format, current_instructeur.groupe_instructeurs.where(:procedure => procedure), **export_options).file.service_url)",
       "render_path": null,
@@ -193,6 +204,6 @@
       "note": ""
     }
   ],
-  "updated": "2022-07-08 13:14:19 +0200",
+  "updated": "2023-02-24 15:02:14 -1000",
   "brakeman_version": "5.2.2"
 }

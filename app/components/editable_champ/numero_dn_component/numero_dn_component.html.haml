@@ -1,4 +1,4 @@
-.numero-dn
+.numero-dn{ data: { controller: 'numero-dn', numero_dn_url_value: champs_dn_path(@champ.id) } }
   %span
     = @form.label :numero_dn, "DN"
   = @form.text_field :numero_dn,
@@ -6,9 +6,9 @@
     required: @champ.mandatory?,
     placeholder: '0123456',
     style: 'width: 7em',
-    pattern: "[0-9]{3,7}",
+    pattern: "[0-9]{6,7}",
     aria: { describedby: @champ.describedby_id },
-    data: { dn: true, remote: true, debounce: true, url: champs_dn_path(@champ.id), spinner: true }
+    data: { numero_dn_target: 'dn' }
 
   %span
     = @form.label :date_de_naissance, t('.date')
@@ -16,6 +16,5 @@
     value: @champ.date_de_naissance,
     required: @champ.mandatory?,
     max: Date.today,
-    data: { ddn: true, remote: true, debounce: true, url: champs_dn_path(@champ.id), spinner: true }
-  .numero-dn-info
-  .spinner.right.hidden
+    data: { numero_dn_target: 'ddn' }
+  .numero-dn-info{ id: dom_id(@champ, :status), data: { numero_dn_target: 'info' } }

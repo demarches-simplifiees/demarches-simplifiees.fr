@@ -28,6 +28,15 @@ class UserMailer < ApplicationMailer
     mail(to: email, subject: @subject)
   end
 
+  def omniauth_merge_confirmation(email, merge_token, merge_token_created_at, provider)
+    @merge_token = merge_token
+    @merge_token_created_at = merge_token_created_at
+    @subject = "Veuillez confirmer la fusion de compte"
+    @provider = provider
+
+    mail(to: email, subject: @subject)
+  end
+
   def invite_instructeur(user, reset_password_token)
     @reset_password_token = reset_password_token
     @user = user

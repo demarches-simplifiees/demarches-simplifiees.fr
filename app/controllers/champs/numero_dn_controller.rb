@@ -2,26 +2,40 @@ class Champs::NumeroDnController < ApplicationController
   before_action :authenticate_logged_user!
 
   def show
-    set_dn_ddn
-    if @dn.empty?
-      return @status = :empty
-    end
-    if !/\d{6,7}/.match?(@dn)
-      return @status = :bad_dn_format
-    end
-    begin
-      @ddn = Date.parse(@ddn)
-      # don't even call CPS WS if user has not finished giving the year (0196)
-      return :bad_ddn_format if @ddn.year < 1900
-    rescue
-      return @status = :bad_ddn_format
-    end
+    @champ = policy_scope(Champ).find(params[:champ_id])
+    @dn = params[:dn]
+    @ddn = params[:ddn]
+    puts "#{@dn}:#{@ddn}"
+    pp params
+
+    @status = dn_empty? || bad_dn_format? || bad_ddn_format?
+    return if @status
     check_dn
   end
 
   private
 
+  def dn_empty?
+    @dn.empty? ? :empty : nil
+  end
+
+  def bad_dn_format?
+    /\d{6,7}/.match?(@dn) ? nil : :bad_dn_format
+  end
+
+  def bad_ddn_format?
+    begin
+      @ddn = Date.parse(@ddn)
+      # don't even call CPS WS if user has not finished giving the year (0196)
+      return :bad_ddn_format if @ddn.year < 1900
+    rescue
+      return :bad_ddn_format
+    end
+  end
+
   def set_dn_ddn
+    # @champ = policy_scope(Champ).find(params[:champ_id])
+    # @linked_dossier_id = read_param_value(@champ.input_name, 'value')
     @base_id = "dossier_"
     champs   = params[:dossier]
     loop do

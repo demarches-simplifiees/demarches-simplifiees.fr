@@ -20,12 +20,12 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
     {
       class: "editable-champ-#{@champ.type_champ} #{'hidden' if !@champ.visible?}",
       id: @champ.input_group_id,
-      data: { controller: stimulus_controller }
+      data: { controller: stimulus_controller, block: @champ.block? }
     }
   end
 
   def stimulus_controller
-    if !@champ.repetition? && @champ.fillable?
+    if !@champ.block? && @champ.fillable?
       # This is an editable champ. Lets find what controllers it might need.
       controllers = []
 

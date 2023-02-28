@@ -343,3 +343,7 @@
 .link {
   color: $blue-france-500;
 }
+
+.account-btn::before {
+  content: none !important;
+}
