@@ -10,7 +10,7 @@
             %p Ce tableau de bord permet de consulter les informations sur les démarches simplifiées pour toutes les zones. Filtrez par zone et statut. Consultez la liste des démarches et cliquez sur une démarche pour voir la zone et quels sont les administrateurs.
 
     .fr-container--fluid{ data: { turbo: 'true' } }
-      .fr-grid-row.fr-grid-row--gutters
+      %turbo-frame#procedures.fr-grid-row.fr-grid-row--gutters{ 'data-turbo-action': 'advance' }
         .fr-col-3
           = form_with(url: all_admin_procedures_path, method: :get, data: { controller: 'autosubmit', turbo_frame: 'procedures' }) do |f|
 
@@ -20,7 +20,7 @@
                   %span.fr-icon-filter-fill.fr-icon--sm.fr-mr-1w{ 'aria-hidden': 'true' }
                   Filtrer
                 .reinit
-                  = link_to all_admin_procedures_path(zone_ids: current_administrateur.zones) do
+                  = link_to all_admin_procedures_path(zone_ids: current_administrateur.zones), { data: { turbo: 'false' } } do
                     %span.fr-icon-arrow-go-back-line Réinitialiser
               %ul
                 %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
@@ -71,11 +71,11 @@
                       Tags
                   .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
                     %div
-                      = f.search_field :tag, placeholder: 'Choisissez un tag', list: 'tags_list', class: 'fr-input', data: { no_autosubmit: 'input' }
+                      = f.search_field :tag, placeholder: 'Choisissez un tag', list: 'tags_list', class: 'fr-input', data: { no_autosubmit: 'input', turbo_force: true }
                       %datalist#tags_list
                         - Procedure.tags.each do |tag|
                           %option{ value: tag }
 
-        %turbo-frame#procedures.fr-col-9{ 'data-turbo-action': 'advance' }
+        .fr-col-9
           = yield(:results)
 = render template: 'layouts/application'
