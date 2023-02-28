@@ -6,7 +6,6 @@ RSpec.describe PrefillParams do
     let(:dossier) { create(:dossier, :brouillon, procedure: procedure) }
     let(:types_de_champ_public) { [] }
     let(:types_de_champ_private) { [] }
-    let(:api_annuaire_education_body) { File.read('spec/fixtures/files/api_education/annuaire_education.json') }
 
     subject(:prefill_params_array) { described_class.new(dossier, params).to_a }
 
@@ -18,11 +17,6 @@ RSpec.describe PrefillParams do
       VCR.insert_cassette('api_geo_departements')
       VCR.insert_cassette('api_geo_communes')
       VCR.insert_cassette('api_geo_epcis')
-
-      stub_request(:get, /https:\/\/data.education.gouv.fr\/api\/records\/1.0/).to_return(
-        body: api_annuaire_education_body,
-        status: 200
-      )
     end
 
     after do
@@ -255,12 +249,6 @@ RSpec.describe PrefillParams do
       it "builds an array of hash(id, value) matching the given params" do
         expect(prefill_params_array).to match([])
       end
-    end
-
-    context "when the annuaire education can't find the school for the given value" do
-      let(:api_annuaire_education_body) { File.read('spec/fixtures/files/api_education/annuaire_education_empty.json') }
-
-      it_behaves_like "a champ public value that is unauthorized", :annuaire_education, "value"
     end
   end
 

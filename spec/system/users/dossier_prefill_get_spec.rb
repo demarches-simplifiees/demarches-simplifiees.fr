@@ -74,9 +74,6 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
     stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/associations\//)
       .to_return(status: 200, body: File.read('spec/fixtures/files/api_entreprise/associations.json'))
 
-    stub_request(:get, /https:\/\/data.education.gouv.fr\/api\/records\/1.0/)
-      .to_return(status: 200, body: File.read('spec/fixtures/files/api_education/annuaire_education.json'))
-
     VCR.insert_cassette('api_geo_departements')
     VCR.insert_cassette('api_geo_communes')
     VCR.insert_cassette('api_geo_epcis')
