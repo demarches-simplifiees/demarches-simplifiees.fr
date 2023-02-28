@@ -12,4 +12,6 @@
 class DossierResolution < ApplicationRecord
   belongs_to :dossier
   belongs_to :commentaire
+
+  scope :pending, -> { where(resolved_at: nil) }
 end
