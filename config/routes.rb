@@ -274,7 +274,7 @@ Rails.application.routes.draw do
       namespace :v1 do
         resources :demarches, only: [] do
           member do
-            resources :dossiers, only: :create
+            resources :dossiers, only: [:create, :index]
             resources :stats, only: :index
           end
         end
