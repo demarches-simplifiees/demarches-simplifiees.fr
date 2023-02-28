@@ -9,49 +9,55 @@ RSpec.describe TypesDeChamp::PrefillTypeDeChamp, type: :model do
   describe '.build' do
     subject(:built) { described_class.build(type_de_champ, procedure.active_revision) }
 
-    context 'when the type de champ is a drop_down_list' do
+    context 'when type de champ is drop_down_list' do
       let(:type_de_champ) { build(:type_de_champ_drop_down_list, procedure: procedure) }
 
       it { expect(built).to be_kind_of(TypesDeChamp::PrefillDropDownListTypeDeChamp) }
     end
 
-    context 'when the type de champ is a multiple_drop_down_list' do
+    context 'when type de champ is multiple_drop_down_list' do
       let(:type_de_champ) { build(:type_de_champ_multiple_drop_down_list, procedure: procedure) }
 
       it { expect(built).to be_kind_of(TypesDeChamp::PrefillMultipleDropDownListTypeDeChamp) }
     end
 
-    context 'when the type de champ is a pays' do
+    context 'when type de champ is pays' do
       let(:type_de_champ) { build(:type_de_champ_pays, procedure: procedure) }
 
       it { expect(built).to be_kind_of(TypesDeChamp::PrefillPaysTypeDeChamp) }
     end
 
-    context 'when the type de champ is a regions' do
+    context 'when type de champ is regions' do
       let(:type_de_champ) { build(:type_de_champ_regions, procedure: procedure) }
 
       it { expect(built).to be_kind_of(TypesDeChamp::PrefillRegionTypeDeChamp) }
     end
 
-    context 'when the type de champ is a repetition' do
+    context 'when type de champ is repetition' do
       let(:type_de_champ) { build(:type_de_champ_repetition, procedure: procedure) }
 
       it { expect(built).to be_kind_of(TypesDeChamp::PrefillRepetitionTypeDeChamp) }
     end
 
-    context 'when the type de champ is a departements' do
+    context 'when type de champ is departements' do
       let(:type_de_champ) { build(:type_de_champ_departements, procedure: procedure) }
 
       it { expect(built).to be_kind_of(TypesDeChamp::PrefillDepartementTypeDeChamp) }
     end
 
-    context 'when the type de champ is a communes' do
+    context 'when type de champ is communes' do
       let(:type_de_champ) { build(:type_de_champ_communes) }
 
       it { expect(built).to be_kind_of(TypesDeChamp::PrefillCommuneTypeDeChamp) }
     end
 
-    context 'when the type de champ is a epci' do
+    context 'when type de champ is address' do
+      let(:type_de_champ) { build(:type_de_champ_address) }
+
+      it { expect(built).to be_kind_of(TypesDeChamp::PrefillAddressTypeDeChamp) }
+    end
+
+    context 'when type de champ is epci' do
       let(:type_de_champ) { build(:type_de_champ_epci, procedure: procedure) }
 
       it { expect(built).to be_kind_of(TypesDeChamp::PrefillEpciTypeDeChamp) }
