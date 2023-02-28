@@ -132,6 +132,16 @@ describe Administrateurs::ProceduresController, type: :controller do
         expect(assigns(:procedures).any? { |p| p.id == procedure2.id }).to be_truthy
         expect(assigns(:procedures).any? { |p| p.id == procedure1.id }).to be_falsey
       end
+
+      context "without zones" do
+        let!(:procedure) { create(:procedure, :published, zones: []) }
+        subject { get :all }
+
+        it 'displays procedures without zones' do
+          subject
+          expect(assigns(:procedures).any? { |p| p.id == procedure.id }).to be_truthy
+        end
+      end
     end
 
     context 'for specific status' do
