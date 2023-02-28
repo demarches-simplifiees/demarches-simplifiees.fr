@@ -1,4 +1,10 @@
 describe Procedure do
+  describe 'uuid' do
+    let(:procedure) { create(:procedure) }
+
+    it { expect(procedure.uuid).to be_present }
+  end
+
   describe 'mail templates' do
     subject { create(:procedure) }
 
@@ -529,10 +535,7 @@ describe Procedure do
       expect(subject.attestation_template.title).to eq(procedure.attestation_template.title)
 
       expect(subject.cloned_from_library).to be(false)
-
-      cloned_procedure = subject
-      cloned_procedure.parent_procedure_id = nil
-      expect(cloned_procedure).to have_same_attributes_as(procedure, except: ["path", "draft_revision_id", "service_id", "duree_conservation_etendue_par_ds", "duree_conservation_dossiers_dans_ds", 'max_duree_conservation_dossiers_dans_ds'])
+      expect(subject).to have_same_attributes_as(procedure, except: ["uuid", "parent_procedure_id", "path", "draft_revision_id", "service_id", "duree_conservation_etendue_par_ds", "duree_conservation_dossiers_dans_ds", 'max_duree_conservation_dossiers_dans_ds'])
     end
 
     context 'which is opendata' do

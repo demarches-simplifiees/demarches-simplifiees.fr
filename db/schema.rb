@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_02_17_094119) do
+ActiveRecord::Schema.define(version: 2023_02_18_094119) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -386,6 +386,7 @@ ActiveRecord::Schema.define(version: 2023_02_17_094119) do
     t.datetime "termine_close_to_expiration_notice_sent_at"
     t.datetime "updated_at"
     t.integer "user_id"
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }
     t.index ["archived"], name: "index_dossiers_on_archived"
     t.index ["batch_operation_id"], name: "index_dossiers_on_batch_operation_id"
     t.index ["dossier_transfer_id"], name: "index_dossiers_on_dossier_transfer_id"
@@ -395,6 +396,7 @@ ActiveRecord::Schema.define(version: 2023_02_17_094119) do
     t.index ["revision_id"], name: "index_dossiers_on_revision_id"
     t.index ["state"], name: "index_dossiers_on_state"
     t.index ["user_id"], name: "index_dossiers_on_user_id"
+    t.index ["uuid"], name: "index_dossiers_on_uuid", unique: true
   end
 
   create_table "drop_down_lists", id: :serial, force: :cascade do |t|
@@ -741,6 +743,7 @@ ActiveRecord::Schema.define(version: 2023_02_17_094119) do
     t.datetime "test_started_at"
     t.datetime "unpublished_at"
     t.datetime "updated_at", null: false
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }
     t.string "web_hook_url"
     t.datetime "whitelisted_at"
     t.bigint "zone_id"
@@ -757,6 +760,7 @@ ActiveRecord::Schema.define(version: 2023_02_17_094119) do
     t.index ["service_id"], name: "index_procedures_on_service_id"
     t.index ["tags"], name: "index_procedures_on_tags", using: :gin
     t.index ["zone_id"], name: "index_procedures_on_zone_id"
+    t.index ["uuid"], name: "index_procedures_on_uuid", unique: true
   end
 
   create_table "procedures_zones", id: false, force: :cascade do |t|
@@ -927,11 +931,13 @@ ActiveRecord::Schema.define(version: 2023_02_17_094119) do
     t.text "unconfirmed_email"
     t.string "unlock_token"
     t.datetime "updated_at"
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["requested_merge_into_id"], name: "index_users_on_requested_merge_into_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
+    t.index ["uuid"], name: "index_users_on_uuid", unique: true
   end
 
   create_table "virus_scans", force: :cascade do |t|

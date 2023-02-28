@@ -45,6 +45,7 @@
 #  routing_enabled                           :boolean
 #  tags                                      :text             default([]), is an Array
 #  unpublished_at                            :datetime
+#  uuid                                      :uuid
 #  web_hook_url                              :string
 #  whitelisted_at                            :datetime
 #  created_at                                :datetime         not null
@@ -496,16 +497,13 @@ class Procedure < ApplicationRecord
         dossier_submitted_message: []
       }
     }
+    except_list = [:uuid, :closed_at, :unpublished_at, :published_at, :auto_archive_on]
     include_list[:groupe_instructeurs] = :instructeurs if !is_different_admin
-    procedure = self.deep_clone(include: include_list) do |original, kopy|
+    procedure = self.deep_clone(except: except_list, include: include_list) do |original, kopy|
       PiecesJustificativesService.clone_attachments(original, kopy)
     end
     procedure.path = SecureRandom.uuid
     procedure.aasm_state = :brouillon
-    procedure.closed_at = nil
-    procedure.unpublished_at = nil
-    procedure.published_at = nil
-    procedure.auto_archive_on = nil
     procedure.lien_notice = nil
     procedure.duree_conservation_etendue_par_ds = false
     if procedure.duree_conservation_dossiers_dans_ds > NEW_MAX_DUREE_CONSERVATION

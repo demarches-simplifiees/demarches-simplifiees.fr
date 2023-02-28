@@ -24,6 +24,7 @@
 #  team_account                 :boolean          default(FALSE)
 #  unconfirmed_email            :text
 #  unlock_token                 :string
+#  uuid                         :uuid
 #  created_at                   :datetime
 #  updated_at                   :datetime
 #  requested_merge_into_id      :bigint

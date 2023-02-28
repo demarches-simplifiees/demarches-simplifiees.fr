@@ -36,6 +36,7 @@
 #  search_terms                                       :text
 #  state                                              :string
 #  termine_close_to_expiration_notice_sent_at         :datetime
+#  uuid                                               :uuid
 #  created_at                                         :datetime
 #  updated_at                                         :datetime
 #  batch_operation_id                                 :bigint

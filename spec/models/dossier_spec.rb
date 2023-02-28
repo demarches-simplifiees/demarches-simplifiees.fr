@@ -3,6 +3,12 @@ describe Dossier do
 
   let(:user) { create(:user) }
 
+  describe 'uuid' do
+    let(:dossier) { create(:dossier) }
+
+    it { expect(dossier.uuid).to be_present }
+  end
+
   describe 'scopes' do
     describe '.default_scope' do
       let!(:dossier) { create(:dossier) }
