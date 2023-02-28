@@ -162,6 +162,7 @@ fr:
           pays: "FR"
           departements: "56"
           regions: "53"
+          address: "20 Avenue de Ségur 75007 Paris"
           date: "2023-02-01"
           datetime: "2023-02-01T10:30"
           checkbox: "true"
