@@ -5,6 +5,9 @@
 - elsif close_to_expiration || Dossier::TERMINE.include?(state)
   %li{ 'data-turbo': 'true' }
     - if close_to_expiration
+      = link_to repasser_en_instruction_instructeur_dossier_path(procedure_id, dossier_id), { class: 'fr-btn fr-btn--secondary fr-icon-edit-line' }.deep_merge!(post_method) do
+        Repasser en instruction
+
       = link_to(repousser_expiration_instructeur_dossier_path(procedure_id, dossier_id), method: :post, class: "fr-btn") do
         = t('instructeurs.dossiers.header.banner.button_delay_expiration')
 
