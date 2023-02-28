@@ -50,6 +50,7 @@ class Dossier < ApplicationRecord
   include DossierFilteringConcern
   include DossierPrefillableConcern
   include DossierRebaseConcern
+  include DossierResolvableConcern
   include DossierSearchableConcern
   include DossierSectionsConcern
   include DossierCloneConcern

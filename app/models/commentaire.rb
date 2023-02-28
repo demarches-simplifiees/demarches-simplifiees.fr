@@ -19,6 +19,7 @@ class Commentaire < ApplicationRecord
 
   belongs_to :instructeur, inverse_of: :commentaires, optional: true
   belongs_to :expert, inverse_of: :commentaires, optional: true
+  has_one :dossier_resolution, inverse_of: :commentaire, dependent: :nullify
 
   validate :messagerie_available?, on: :create, unless: -> { dossier.brouillon? }
 
