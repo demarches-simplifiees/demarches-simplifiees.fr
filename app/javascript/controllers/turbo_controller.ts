@@ -9,6 +9,10 @@ type StreamRenderEvent = CustomEvent<{
   render(streamElement: StreamElement): void;
 }>;
 
+type FrameRenderEvent = CustomEvent<{
+  render(currentElement: Element, newElement: Element): void;
+}>;
+
 export class TurboController extends ApplicationController {
   static targets = ['spinner'];
 
@@ -29,7 +33,7 @@ export class TurboController extends ApplicationController {
 
   connect() {
     this.#actions = new Actions({
-      element: document.documentElement,
+      element: document.body,
       schema: { forceAttribute: 'data-turbo-force', hiddenClassName: 'hidden' },
       debug: false
     });
@@ -46,13 +50,21 @@ export class TurboController extends ApplicationController {
     // prevent scroll on turbo form submits
     this.onGlobal('turbo:render', () => this.preventScrollIfNeeded());
 
-    // reset state preserved for actions between pages
-    this.onGlobal('turbo:load', () => this.actions.reset());
-
     // see: https://turbo.hotwired.dev/handbook/streams#custom-actions
     this.onGlobal('turbo:before-stream-render', (event: StreamRenderEvent) => {
       event.detail.render = (streamElement: StreamElement) =>
         this.actions.applyActions([parseTurboStream(streamElement)]);
+    });
+
+    // see: https://turbo.hotwired.dev/handbook/frames#custom-rendering
+    this.onGlobal('turbo:before-frame-render', (event: FrameRenderEvent) => {
+      event.detail.render = (currentElement, newElement) => {
+        // There is a bug in morphdom when it comes to mutate a custom element. It will miserably
+        // crash. We mutate its content instead.
+        const fragment = document.createDocumentFragment();
+        fragment.append(...newElement.childNodes);
+        this.actions.update({ targets: [currentElement], fragment });
+      };
     });
   }
 
