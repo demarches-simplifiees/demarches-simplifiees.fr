@@ -256,7 +256,7 @@ describe Users::DossiersController, type: :controller do
 
       context 'When API-Entreprise is globally down' do
         let(:api_etablissement_status) { 502 }
-        let(:api_current_status_response) { File.read('spec/fixtures/files/api_entreprise/current_status.json').tr('200', '502') }
+        let(:api_current_status_response) { File.read('spec/fixtures/files/api_entreprise/current_status.json').gsub('200', '502') }
 
         it "create an etablissement only with SIRET as degraded mode" do
           dossier.reload
