@@ -114,8 +114,8 @@ describe Zone do
     end
 
     it 'returns only available zones at specific date' do
-      expect(Zone.available_at(start_last_government + 1.day)).to eq [culture]
-      expect(Zone.available_at(start_previous_government + 1.day)).to eq [culture, om]
+      expect(Zone.available_at(start_last_government + 1.day).map(&:label)).to eq ["Ministère de la Culture"]
+      expect(Zone.available_at(start_previous_government + 1.day).map(&:label)).to eq ["Ministère de la Culture", "Ministère des Outre-mer"]
     end
   end
 end

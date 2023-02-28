@@ -56,13 +56,32 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
   end
 
   def types_of_type_de_champ
-    TypeDeChamp.type_champs
-      .keys
-      .filter(&method(:filter_type_champ))
-      .filter(&method(:filter_featured_type_champ))
-      .filter(&method(:filter_block_type_champ))
-      .map { |type_champ| [t("activerecord.attributes.type_de_champ.type_champs.#{type_champ}"), type_champ] }
-      .sort_by(&:first)
+    if Flipper.enabled?(:categories_type_de_champ, controller.current_user)
+      cat_scope = "activerecord.attributes.type_de_champ.categorie"
+      tdc_scope = "activerecord.attributes.type_de_champ.type_champs"
+
+      TypeDeChamp.type_champs
+        .keys
+        .filter(&method(:filter_type_champ))
+        .filter(&method(:filter_featured_type_champ))
+        .filter(&method(:filter_block_type_champ))
+        .group_by { TypeDeChamp::TYPE_DE_CHAMP_TO_CATEGORIE.fetch(_1.to_sym) }
+        .sort_by { |k, _v| TypeDeChamp::CATEGORIES.find_index(k) }
+        .to_h do |cat, tdc|
+          [
+            t(cat, scope: cat_scope),
+            tdc.map { [t(_1, scope: tdc_scope), _1] }
+          ]
+        end
+    else
+      TypeDeChamp.type_champs
+        .keys
+        .filter(&method(:filter_type_champ))
+        .filter(&method(:filter_featured_type_champ))
+        .filter(&method(:filter_block_type_champ))
+        .map { |type_champ| [t("activerecord.attributes.type_de_champ.type_champs.#{type_champ}"), type_champ] }
+        .sort_by(&:first)
+    end
   end
 
   def piece_justificative_options(form)
