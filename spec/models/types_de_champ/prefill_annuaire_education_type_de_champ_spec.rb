@@ -16,41 +16,17 @@ RSpec.describe TypesDeChamp::PrefillAnnuaireEducationTypeDeChamp do
 
     context 'when the value is nil' do
       let(:value) { nil }
-
       it { is_expected.to eq(nil) }
     end
 
     context 'when the value is empty' do
       let(:value) { '' }
-
       it { is_expected.to eq(nil) }
     end
 
     context 'when the value is present' do
       let(:value) { '0050009H' }
-
-      before do
-        stub_request(:get, /https:\/\/data.education.gouv.fr\/api\/records\/1.0/)
-          .to_return(body: body, status: 200)
-      end
-
-      context 'when the annuaire education api responds with a valid schema' do
-        let(:body) { File.read('spec/fixtures/files/api_education/annuaire_education.json') }
-
-        it { is_expected.to match({ id: champ.id, external_id: '0050009H', value: 'Lycée professionnel Sévigné, Gap (0050009H)' }) }
-      end
-
-      context "when the annuaire education api responds with invalid schema" do
-        let(:body) { File.read('spec/fixtures/files/api_education/annuaire_education_invalid.json') }
-
-        it { is_expected.to eq(nil) }
-      end
-
-      context 'when the annuaire education api responds with empty schema' do
-        let(:body) { File.read('spec/fixtures/files/api_education/annuaire_education_empty.json') }
-
-        it { is_expected.to eq(nil) }
-      end
+      it { is_expected.to match({ id: champ.id, external_id: '0050009H', value: '0050009H' }) }
     end
   end
 end
