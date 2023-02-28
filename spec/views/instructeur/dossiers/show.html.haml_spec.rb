@@ -73,7 +73,8 @@ describe 'instructeurs/dossiers/show.html.haml', type: :view do
       expect(subject).to have_link('Repasser en construction', href: repasser_en_construction_instructeur_dossier_path(dossier.procedure, dossier))
       expect(subject).to have_link('Ne plus suivre', href: unfollow_instructeur_dossier_path(dossier.procedure, dossier))
       expect(subject).to have_button('Instruire le dossier')
-      expect(subject).to have_selector('.header-actions ul:first-child .fr-btn', count: 3)
+      expect(subject).to have_selector('.header-actions ul:first-child > li a.fr-btn', count: 2)
+      expect(subject).to have_selector('.header-actions ul:first-child > li.instruction-button', count: 1)
     end
   end
 
