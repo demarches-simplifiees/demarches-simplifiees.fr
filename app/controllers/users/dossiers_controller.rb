@@ -144,7 +144,6 @@ module Users
 
     def brouillon
       session.delete(:prefill_token)
-      session.delete(:prefill_token_expires_at)
       session.delete(:prefill_params)
       @dossier = dossier_with_champs
       @dossier.valid?(context: :prefilling)
@@ -297,7 +296,6 @@ module Users
       )
       dossier.build_default_individual
       dossier.save!
-      dossier.prefill!(PrefillParams.new(dossier, params.to_unsafe_h).to_a)
       DossierMailer.with(dossier:).notify_new_draft.deliver_later
 
       if dossier.procedure.for_individual

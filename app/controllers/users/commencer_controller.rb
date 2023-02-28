@@ -2,8 +2,6 @@ module Users
   class CommencerController < ApplicationController
     layout 'procedure_context'
 
-    before_action :clean_prefil_session_if_needed, only: :commencer
-
     def commencer
       @procedure = retrieve_procedure
       return procedure_not_found if @procedure.blank? || @procedure.brouillon?
@@ -75,14 +73,6 @@ module Users
 
     private
 
-    def clean_prefil_session_if_needed
-      if session[:prefill_token_expires_at] && session[:prefill_token_expires_at] < Time.zone.now
-        session.delete(:prefill_token)
-        session.delete(:prefill_token_expires_at)
-        session.delete(:prefill_params)
-      end
-    end
-
     def commencer_page_is_reloaded?
       session[:prefill_token].present? && session[:prefill_params] == params.to_unsafe_h
     end
@@ -110,8 +100,7 @@ module Users
       if @prefilled_dossier.save
         @prefilled_dossier.prefill!(PrefillParams.new(@prefilled_dossier, params.to_unsafe_h).to_a)
       end
-      session[:prefill_token] = @prefilled_dossier.prefilled_token
-      session[:prefill_token_expires_at] = Time.zone.now + 5.minutes
+      session[:prefill_token] = @prefilled_dossier.prefill_token
       session[:prefill_params] = params.to_unsafe_h
     end
 
