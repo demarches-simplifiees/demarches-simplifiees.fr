@@ -15,7 +15,7 @@
                   %h4= opt[:label]
 
               .motivation.accept
-                = form.text_area :motivation, class: 'motivation-text-area'
+                = form.text_area :motivation, class: 'fr-input'
                 #justificatif_motivation_suggest_accept.optional-justificatif
                   %button.button{ type: 'button', onclick: "DS.showImportJustificatif('accept');" } Ajouter un justificatif (optionnel)
                 #justificatif_motivation_import_accept.hidden
