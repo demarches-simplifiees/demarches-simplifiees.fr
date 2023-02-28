@@ -3,7 +3,7 @@ import { show, hide } from '@utils';
 export function showMotivation(event, state) {
   event.preventDefault();
   motivationCancel();
-  const stateElement = document.querySelector(`.motivation.${state}`)
+  const stateElement = document.querySelector(`.motivation.${state}`);
 
   show(stateElement.parentElement);
   show(stateElement);
@@ -12,7 +12,9 @@ export function showMotivation(event, state) {
 
 export function motivationCancel() {
   document.querySelectorAll('.motivation').forEach(hide);
-  document.querySelectorAll('.motivation').forEach(el => hide(el.parentElement));
+  document
+    .querySelectorAll('.motivation')
+    .forEach((el) => hide(el.parentElement));
 
   show(document.querySelector('.dropdown-items'));
 }
