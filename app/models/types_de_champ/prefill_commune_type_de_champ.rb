@@ -1,5 +1,5 @@
 class TypesDeChamp::PrefillCommuneTypeDeChamp < TypesDeChamp::PrefillTypeDeChamp
-  def possible_values
+  def all_possible_values
     departements.map do |departement|
       "#{departement[:code]} (#{departement[:name]}) : https://geo.api.gouv.fr/communes?codeDepartement=#{departement[:code]}"
     end
