@@ -6,7 +6,10 @@
   = render Dsfr::ListComponent.new do |list|
     - api_and_packed_tokens.each do |(api_token, packed_token)|
       - list.with_item do
-        = render Profile::APITokenComponent.new(api_token:, packed_token:)
+        .fr-card.fr-card--horizontal
+          .fr-card__body.width-100
+            .fr-card__content
+              = render Profile::APITokenComponent.new(api_token:, packed_token:)
 
   %br
   = button_to "Créer et afficher un nouveau jeton", api_tokens_path, method: :post, class: "fr-btn fr-btn--secondary"
