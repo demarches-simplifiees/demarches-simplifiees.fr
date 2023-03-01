@@ -908,7 +908,15 @@ describe Procedure do
     end
 
     context "published procedure" do
-      let(:procedure) { create(:procedure, :published, attestation_template: create(:attestation_template), dossier_submitted_message: create(:dossier_submitted_message)) }
+      let(:procedure) do
+        create(
+          :procedure,
+          :published,
+          attestation_template: create(:attestation_template),
+          dossier_submitted_message: create(:dossier_submitted_message),
+          types_de_champ_public: [{ type: :text, libelle: 'published tdc' }]
+        )
+      end
 
       it "should reset draft revision" do
         procedure.draft_revision.add_type_de_champ(tdc_attributes)
@@ -923,6 +931,16 @@ describe Procedure do
         expect { previous_draft_revision.reload }.to raise_error(ActiveRecord::RecordNotFound)
         expect(procedure.draft_revision.attestation_template).to eq(previous_attestation_template)
         expect(procedure.draft_revision.dossier_submitted_message).to eq(previous_dossier_submitted_message)
+      end
+
+      it "should erase orphan tdc" do
+        published_tdc = procedure.published_revision.types_de_champ.first
+        draft_tdc = procedure.draft_revision.add_type_de_champ(tdc_attributes)
+
+        procedure.reset_draft_revision!
+
+        expect { published_tdc.reload }.not_to raise_error(ActiveRecord::RecordNotFound)
+        expect { draft_tdc.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
   end
