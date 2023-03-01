@@ -1,12 +1,17 @@
 class Dossiers::EditFooterComponent < ApplicationComponent
-  def initialize(dossier:)
+  def initialize(dossier:, annotation:)
     @dossier = dossier
+    @annotation = annotation
   end
 
   private
 
   def owner?
     controller.current_user.owns?(@dossier)
+  end
+
+  def annotation?
+    @annotation
   end
 
   def button_options
