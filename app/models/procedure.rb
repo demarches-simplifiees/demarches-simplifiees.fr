@@ -219,6 +219,15 @@ class Procedure < ApplicationRecord
   scope :closes,                 -> { where(aasm_state: [:close, :depubliee]) }
   scope :opendata,               -> { where(opendata: true) }
   scope :publiees_ou_closes,     -> { where(aasm_state: [:publiee, :close, :depubliee]) }
+
+  scope :publiques,              -> do
+    publiees_ou_closes
+      .opendata
+      .where('estimated_dossiers_count >= ?', 4)
+      .where.not('lien_site_web LIKE ?', '%mail%')
+      .where.not('lien_site_web LIKE ?', '%intra%')
+  end
+
   scope :by_libelle,             -> { order(libelle: :asc) }
   scope :created_during,         -> (range) { where(created_at: range) }
   scope :cloned_from_library,    -> { where(cloned_from_library: true) }

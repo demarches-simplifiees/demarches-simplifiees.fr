@@ -1,5 +1,5 @@
 describe DemarchesPubliquesExportService do
-  let(:procedure) { create(:procedure, :published, :with_service, :with_type_de_champ) }
+  let(:procedure) { create(:procedure, :published, :with_service, :with_type_de_champ, estimated_dossiers_count: 4) }
   let!(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
   let(:gzip_filename) { "demarches.json.gz" }
 
