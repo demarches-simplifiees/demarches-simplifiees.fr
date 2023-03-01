@@ -1,4 +1,10 @@
-import React, { useState, useRef, ChangeEventHandler } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useId,
+  ChangeEventHandler
+} from 'react';
 import { useDebounce } from 'use-debounce';
 import { useQuery } from 'react-query';
 import {
@@ -18,7 +24,7 @@ type TransformResult<Result> = (
   result: Result
 ) => [key: string, value: string, label?: string];
 
-export type ComboSearchProps<Result> = {
+export type ComboSearchProps<Result = unknown> = {
   onChange?: (value: string | null, result?: Result) => void;
   value?: string;
   scope: string;
@@ -32,6 +38,8 @@ export type ComboSearchProps<Result> = {
   className?: string;
   placeholder?: string;
   debounceDelay?: number;
+  screenReaderInstructions: string;
+  announceTemplateId: string;
 };
 
 type QueryKey = readonly [
@@ -51,6 +59,8 @@ function ComboSearch<Result>({
   transformResults = (_, results) => results as Result[],
   id,
   describedby,
+  screenReaderInstructions,
+  announceTemplateId,
   debounceDelay = 0,
   ...props
 }: ComboSearchProps<Result>) {
@@ -127,6 +137,46 @@ function ComboSearch<Result>({
     }
   };
 
+  const [announceLive, setAnnounceLive] = useState('');
+  const announceTimeout = useRef<ReturnType<typeof setTimeout>>();
+  const announceTemplate = document.querySelector<HTMLTemplateElement>(
+    `#${announceTemplateId}`
+  );
+  invariant(announceTemplate, `Missing #${announceTemplateId}`);
+
+  const announceFragment = useRef(
+    announceTemplate.content.cloneNode(true) as DocumentFragment
+  ).current;
+
+  useEffect(() => {
+    if (isSuccess) {
+      const slot = announceFragment.querySelector<HTMLSlotElement>(
+        'slot[name="' + (results.length <= 1 ? results.length : 'many') + '"]'
+      );
+
+      if (!slot) {
+        return;
+      }
+
+      const countSlot =
+        slot.querySelector<HTMLSlotElement>('slot[name="count"]');
+      if (countSlot) {
+        countSlot.replaceWith(String(results.length));
+      }
+
+      setAnnounceLive(slot.textContent ?? '');
+    }
+
+    announceTimeout.current = setTimeout(() => {
+      setAnnounceLive('');
+    }, 3000);
+
+    return () => clearTimeout(announceTimeout.current);
+  }, [announceFragment, results.length, isSuccess]);
+
+  const initInstrId = useId();
+  const resultsId = useId();
+
   return (
     <Combobox onSelect={handleOnSelect}>
       <ComboboxInput
@@ -136,10 +186,11 @@ function ComboSearch<Result>({
         value={value ?? ''}
         autocomplete={false}
         id={id}
-        aria-describedby={describedby}
+        aria-describedby={describedby ?? initInstrId}
+        aria-owns={resultsId}
       />
       {isSuccess && (
-        <ComboboxPopover className="shadow-popup">
+        <ComboboxPopover id={resultsId} className="shadow-popup">
           {results.length > 0 ? (
             <ComboboxList>
               {results.map((result, index) => {
@@ -156,6 +207,14 @@ function ComboSearch<Result>({
           )}
         </ComboboxPopover>
       )}
+      {!describedby && (
+        <span id={initInstrId} className="hidden">
+          {screenReaderInstructions}
+        </span>
+      )}
+      <div aria-live="assertive" className="sr-only">
+        {announceLive}
+      </div>
     </Combobox>
   );
 }
