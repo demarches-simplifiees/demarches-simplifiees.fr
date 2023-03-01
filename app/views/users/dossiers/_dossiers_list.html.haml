@@ -1,36 +1,45 @@
 - if dossiers.present?
-  %table.table.dossiers-table.hoverable
-    %caption= t('views.users.dossiers.dossiers_list.caption')
-    %thead
-      %tr
-        %th.number-col{ scope: :col }= t('views.users.dossiers.dossiers_list.n_dossier')
-        %th{ scope: :col }= t('views.users.dossiers.dossiers_list.procedure')
-        - if dossiers.present?
-          %th{ scope: :col }= t('views.users.dossiers.dossiers_list.requester')
-        %th.status-col{ scope: :col }= t('views.users.dossiers.dossiers_list.status')
-        %th.updated-at-col{ scope: :col }= t('views.users.dossiers.dossiers_list.updated')
-        %th.sr-only{ scope: :col }= t('views.users.dossiers.dossiers_list.actions')
-    %tbody
-      - dossiers.each do |dossier|
-        %tr{ data: { 'dossier-id': dossier.id } }
-          %th.number-col{ scope: :row }
-            = link_to(url_for_dossier(dossier), class: 'cell-link', tabindex: -1) do
-              %span.icon.folder
-              = dossier.id
-          %td
-            = link_to(url_for_dossier(dossier), class: 'cell-link') do
-              = procedure_libelle(dossier.procedure)
+  .fr-table.fr-table--bordered
+    %table.table.dossiers-table.hoverable
+      %caption= t('views.users.dossiers.dossiers_list.caption')
+      %thead
+        %tr
+          %th.number-col{ scope: :col }= t('views.users.dossiers.dossiers_list.n_dossier')
+          %th{ scope: :col }= t('views.users.dossiers.dossiers_list.procedure')
           - if dossiers.present?
-            %td
-              %span.cell-link= demandeur_dossier(dossier)
-          %td.status-col
-            = status_badge(dossier.state)
-          %td.updated-at-col.cell-link
-            = try_format_date(dossier.updated_at)
-          %td.action-col
-            = render partial: 'dossier_actions', locals: { dossier: dossier }
+            %th{ scope: :col }= t('views.users.dossiers.dossiers_list.requester')
+          %th.status-col{ scope: :col }= t('views.users.dossiers.dossiers_list.status')
+          %th.updated-at-col{ scope: :col }= t('views.users.dossiers.dossiers_list.updated')
+          %th.sr-only{ scope: :col }= t('views.users.dossiers.dossiers_list.actions')
+      %tbody
+        - dossiers.each do |dossier|
+          - if dossier.transfer.present?
+            %tr.fr-background-alt--blue-france.no-border
+              %td.fr-py-2w.text-center{ colspan: 100 }
+                %p
+                  %small
+                    = t('views.users.dossiers.transfers.demande_en_cours', id: dossier.id, email: dossier.transfer.email)
+                    = link_to t('views.users.dossiers.transfers.revoke'), transfer_path(dossier.transfer), class: 'fr-btn fr-btn--sm fr-btn--tertiary-no-outline', method: :delete
 
-  = paginate(dossiers)
+          %tr{ data: { 'dossier-id': dossier.id } }
+            %th.number-col{ scope: :row }
+              = link_to(url_for_dossier(dossier), class: 'cell-link', tabindex: -1) do
+                %span.icon.folder
+                = dossier.id
+            %td
+              = link_to(url_for_dossier(dossier), class: 'cell-link') do
+                = procedure_libelle(dossier.procedure)
+            - if dossiers.present?
+              %td
+                %span.cell-link= demandeur_dossier(dossier)
+            %td.status-col
+              = status_badge(dossier.state)
+            %td.updated-at-col.cell-link
+              = try_format_date(dossier.updated_at)
+            %td.action-col
+              = render partial: 'dossier_actions', locals: { dossier: dossier }
+
+    = paginate(dossiers)
 
 - else
   .blank-tab

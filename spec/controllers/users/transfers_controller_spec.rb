@@ -4,19 +4,38 @@ describe Users::TransfersController, type: :controller do
   let(:dossier) { create(:dossier, user: sender_user) }
 
   describe 'DELETE destroy' do
-    let(:dossier_transfert) { DossierTransfer.initiate(recipient_user.email, [dossier]) }
+    context "as transfer receiver" do
+      let(:dossier_transfert) { DossierTransfer.initiate(recipient_user.email, [dossier]) }
 
-    subject { delete :destroy, params: { id: dossier_transfert.id } }
+      subject { delete :destroy, params: { id: dossier_transfert.id } }
 
-    before do
-      sign_in(recipient_user)
+      before do
+        sign_in(recipient_user)
+      end
+
+      it { expect { subject }.not_to raise_error }
+
+      it "deletes dossier transfert" do
+        subject
+        expect { dossier_transfert.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
     end
 
-    it { expect { subject }.not_to raise_error }
+    context "as transfer sender" do
+      let(:dossier_transfert) { DossierTransfer.initiate(recipient_user.email, [dossier]) }
 
-    it "deletes dossier transfert" do
-      subject
-      expect { dossier_transfert.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      subject { delete :destroy, params: { id: dossier_transfert.id } }
+
+      before do
+        sign_in(sender_user)
+      end
+
+      it { expect { subject }.not_to raise_error }
+
+      it "deletes dossier transfert" do
+        subject
+        expect { dossier_transfert.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
     end
   end
 

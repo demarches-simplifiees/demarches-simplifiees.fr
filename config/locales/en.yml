@@ -357,6 +357,9 @@ en:
           status: "Status"
           updated: "Updated"
           actions: "Actions"
+        transfers:
+          demande_en_cours: "Une demande de transfert est en cours sur le dossier %{id} pour %{email}"
+          revoke: Révoquer cette demande
         dossier_action:
           edit_dossier: "Edit the file"
           start_other_dossier: "Start another empty file"
