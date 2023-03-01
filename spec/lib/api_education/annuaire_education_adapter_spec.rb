@@ -38,4 +38,13 @@ describe APIEducation::AnnuaireEducationAdapter do
       expect { subject }.to raise_exception(APIEducation::AnnuaireEducationAdapter::InvalidSchemaError)
     end
   end
+
+  context "when responds with empty schema" do
+    let(:body) { File.read('spec/fixtures/files/api_education/annuaire_education_empty.json') }
+    let(:status) { 200 }
+
+    it '#to_params returns nil' do
+      expect(subject).to eq(nil)
+    end
+  end
 end
