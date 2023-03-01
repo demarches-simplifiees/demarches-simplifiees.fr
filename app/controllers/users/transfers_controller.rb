@@ -19,7 +19,10 @@ module Users
     end
 
     def destroy
-      transfer = DossierTransfer.find_by!(id: params[:id], email: current_user.email)
+      transfer = DossierTransfer.find(params[:id])
+
+      authorized_email = (transfer.email == current_user.email || transfer.dossiers.where(dossiers: { user: current_user }).present?)
+      return if !authorized_email
 
       transfer.destroy_and_nullify
       redirect_to dossiers_path
