@@ -19,7 +19,19 @@ class ApplicationRecord < ActiveRecord::Base
     GraphQL::Schema::UniqueWithinType.decode(id)[1]
   end
 
+  def self.stable_id_from_typed_id(prefixed_typed_id)
+    return nil unless prefixed_typed_id.starts_with?("champ_")
+
+    self.id_from_typed_id(prefixed_typed_id.gsub("champ_", "")).to_i
+  rescue
+    nil
+  end
+
   def to_typed_id
     GraphQL::Schema::UniqueWithinType.encode(self.class.name, id)
+  end
+
+  def to_typed_id_for_query
+    to_typed_id.delete("==")
   end
 end

@@ -32,6 +32,8 @@ class ProcedureRevision < ApplicationRecord
 
   validate :conditions_are_valid?
 
+  delegate :path, to: :procedure, prefix: true
+
   def build_champs_public
     # reload: it can be out of sync in test if some tdcs are added wihtout using add_tdc
     types_de_champ_public.reload.map(&:build_champ)
@@ -132,7 +134,7 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def draft?
-    procedure.draft_revision == self
+    procedure.draft_revision_id == id
   end
 
   def locked?
@@ -172,11 +174,22 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def children_of(tdc)
-    parent_coordinate_id = revision_types_de_champ.where(type_de_champ: tdc).select(:id)
+    if revision_types_de_champ.loaded?
+      parent_coordinate_id = revision_types_de_champ
+        .filter { _1.type_de_champ_id == tdc.id }
+        .map(&:id)
 
-    types_de_champ
-      .where(procedure_revision_types_de_champ: { parent_id: parent_coordinate_id })
-      .order("procedure_revision_types_de_champ.position")
+      revision_types_de_champ
+        .filter { _1.parent_id.in?(parent_coordinate_id) }
+        .sort_by(&:position)
+        .map(&:type_de_champ)
+    else
+      parent_coordinate_id = revision_types_de_champ.where(type_de_champ: tdc).select(:id)
+
+      types_de_champ
+        .where(procedure_revision_types_de_champ: { parent_id: parent_coordinate_id })
+        .order("procedure_revision_types_de_champ.position")
+    end
   end
 
   def remove_children_of(tdc)
@@ -380,7 +393,7 @@ class ProcedureRevision < ApplicationRecord
 
     public_tdcs
       .map.with_index
-      .filter_map { |tdc, i| tdc.condition.present? ? [tdc, i] : nil }
+      .filter_map { |tdc, i| tdc.condition? ? [tdc, i] : nil }
       .map { |tdc, i| [tdc, tdc.condition.errors(public_tdcs.take(i))] }
       .filter { |_tdc, errors| errors.present? }
       .each { |tdc, message| errors.add(:condition, message, type_de_champ: tdc) }

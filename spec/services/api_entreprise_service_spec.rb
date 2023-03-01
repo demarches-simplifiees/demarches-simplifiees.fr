@@ -15,11 +15,16 @@ describe APIEntrepriseService do
     before do
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}/)
         .to_return(body: etablissements_body, status: etablissements_status)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siret[0..8]}/)
+        .to_return(body: entreprises_body, status: entreprises_status)
     end
 
     let(:siret) { '41816609600051' }
+    let(:raison_sociale) { "OCTO-TECHNOLOGY" }
     let(:etablissements_status) { 200 }
     let(:etablissements_body) { File.read('spec/fixtures/files/api_entreprise/etablissements.json') }
+    let(:entreprises_status) { 200 }
+    let(:entreprises_body) { File.read('spec/fixtures/files/api_entreprise/entreprises.json') }
     let(:valid_token) { "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" }
     let(:procedure) { create(:procedure, api_entreprise_token: valid_token) }
     let(:dossier) { create(:dossier, procedure: procedure) }
@@ -33,6 +38,10 @@ describe APIEntrepriseService do
     context 'when service is up' do
       it 'should fetch etablissement params' do
         expect(subject[:siret]).to eq(siret)
+      end
+
+      it 'should fetch entreprise params' do
+        expect(subject[:entreprise_raison_sociale]).to eq(raison_sociale)
       end
 
       it_behaves_like 'schedule fetch of all etablissement params'

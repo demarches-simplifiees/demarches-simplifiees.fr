@@ -25,10 +25,15 @@ fr:
   help: 'Aide'
   help_dropdown:
     general_title: "Aide en ligne"
+    procedure_title: "Une question sur cette démarche ?"
     problem_title: Un problème avec le site ?
     problem_description: Trouvez votre réponse dans l’aide en ligne.
     technical_contact_title: Contact technique
     technical_contact_description: Envoyez nous un message à %{contact_email}.
+    contact_administration: "Contactez directement l’administration :"
+    help_brouillon_title: "Besoin d’aide pour remplir votre dossier ?"
+    help_filled_dossier: "Une question sur votre dossier ?"
+    contact_instructeur: Envoyez directement un message à l’instructeur.
   utils:
     'yes': Oui
     'no': Non
@@ -50,6 +55,15 @@ fr:
     commentaire:
       send_message_to_instructeur: "Envoyer un message à l’instructeur"
       reply_in_mailbox: "Répondre dans la messagerie"
+  skiplinks:
+    quick: Accès rapide
+    content: Contenu
+  combo_search_component:
+    screen_reader_instructions: "Quand les résultats de l’autocomplete sont disponibles, utilisez les flèches haut et bas pour naviguer dans la liste des résultats. Appuyez sur Entrée pour sélectionner un résultat. Appuyez sur Echap pour fermer la liste des résultats."
+    result_slot_html:
+      zero: Aucun résultat
+      one: 1 résultat
+      other: <slot name="count"></slot> résultats
   layouts:
     commencer:
       no_procedure:
@@ -59,7 +73,6 @@ fr:
         are_you_new: Vous êtes nouveau sur %{app_name} ?
     my_account: Mon compte
     header:
-      label_modal: "Menu en-tête de page"
       close_modal: 'Fermer'
       back: "Revenir en arrière"
       back_title: "Revenir sur le site de mon administration"
@@ -119,11 +132,20 @@ fr:
           iban_html: Un numéro Iban
           yes_no_html: '"true" pour Oui, "false" pour Non'
           checkbox_html: '"true" pour coché, "false" pour décoché'
-          pays_html: Un <a href="https://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">code pays ISO 3166-2</a>
-          regions_html: Un <a href="https://fr.wikipedia.org/wiki/R%C3%A9gion_fran%C3%A7aise" target="_blank">code INSEE de région</a>
+          pays_html: Un <a href="https://en.wikipedia.org/wiki/ISO_3166-2" target="_blank" rel="noopener noreferrer">code pays ISO 3166-2</a>
+          regions_html: Un <a href="https://fr.wikipedia.org/wiki/R%C3%A9gion_fran%C3%A7aise" target="_blank" rel="noopener noreferrer">code INSEE de région</a>
+          departements_html: Un <a href="https://fr.wikipedia.org/wiki/Num%C3%A9rotation_des_d%C3%A9partements_fran%C3%A7ais" target="_blank">numéro de département</a>
+          communes_html: Un tableau contenant le code de département et <a href="https://geo.api.gouv.fr/communes" target="_blank" rel="noopener noreferrer">le code INSEE de la commune</a>.
+          drop_down_list_html: Un choix parmi ceux sélectionnés à la création de la procédure
           datetime_html: Datetime au format ISO8601
           date_html: Date au format ISO8601
           drop_down_list_other_html: Toute valeur
+          rna_html: Un numéro RNA
+          siret_html: Un numéro de SIRET
+          repetition_html: Un tableau de dictionnaires avec les valeurs possibles pour chaque champ de la répétition.
+          epci_html: Un tableau contenant le code de département et <a href="https://geo.api.gouv.fr/epcis" target="_blank" rel="noopener noreferrer">celui de l'EPCI</a>.
+          annuaire_education_html: Un code d'établissement scolaire, tel que défini par <a href="https://api.gouv.fr/les-api/api-annuaire-education" target="_blank" rel="noopener noreferrer">l'Annuaire de l'Éducation Nationale</a>
+          dossier_link_html: L'identifiant du dossier, sous forme de nombre entier
         examples:
           title: Exemple
           text: Texte court
@@ -136,10 +158,15 @@ fr:
           yes_no: "true"
           civilite: "M."
           pays: "FR"
+          departements: "56"
           regions: "53"
           date: "2023-02-01"
           datetime: "2023-02-01T10:30"
           checkbox: "true"
+          annuaire_education: "0561383Z"
+          dossier_link: 42
+          rna: "W503726238"
+          siret: "13002526500013"
         prefill_link_title: Lien de préremplissage (GET)
         prefill_link_info: Copiez le lien grâce au bouton ci-dessous et remplacez les valeurs par les données dont vous disposez.
         prefill_link_too_long: Attention, ce lien de préremplissage est trop long et risque de ne pas fonctionner sur certains navigateurs.
@@ -258,6 +285,7 @@ fr:
           identity_data: Données d’identité
           all_required: Tous les champs sont obligatoires.
           civility: Civilité
+          description: Description de la démarche
           first_name: Prénom
           last_name: Nom
           birthdate: Date de naissance
@@ -343,6 +371,10 @@ fr:
           connect_with_agent_connect: Accédez à notre page dédiée
           subtitle: "Se connecter avec son compte"
       passwords:
+        edit:
+          subtitle: Changement de mot de passe
+          submit: Changer le mot de passe
+          submit_loading: Envoi…
         reset_link_sent:
           email_sent_html: "Nous vous avons envoyé un email à l’adresse <strong>%{email}</strong>."
           click_link_to_reset_password: "Cliquez sur le lien contenu dans l’email pour changer votre mot de passe."
@@ -391,6 +423,19 @@ fr:
         zone: La démarche est mise en œuvre par
       champs:
         value: Valeur du champ
+      default_mail_attributes: &default_mail_attributes
+        hints:
+          subject: "L’objet généré sera tronqué s’il dépasse 100 caractères."
+      mails/closed_mail:
+        << : *default_mail_attributes
+      mails/initiated_mail:
+        << : *default_mail_attributes
+      mails/received_mail:
+        << : *default_mail_attributes
+      mails/refused_mail:
+        << : *default_mail_attributes
+      mails/without_continuation_mail:
+        << : *default_mail_attributes
 
     errors:
       messages:
@@ -450,12 +495,34 @@ fr:
           attributes:
             value:
               not_in_options: "doit être dans les options proposées"
+        "champs/multiple_drop_down_list_champ":
+          attributes:
+            value:
+              not_in_options: "doit être dans les options proposées"
         "champs/region_champ":
           attributes:
             value:
               not_in_region_names: "doit être un nom de région valide"
             external_id:
               not_in_region_codes: "doit être un code de région valide"
+        "champs/departement_champ":
+          attributes:
+            value:
+              not_in_departement_names: "doit être un nom de département valide"
+            external_id:
+              not_in_departement_codes: "doit être un code de département valide"
+        "champs/epci_champ":
+          attributes:
+            code_departement:
+              not_in_departement_codes: "doit être un code de département valide"
+            external_id:
+              not_in_departement_epci_codes: "doit être un code d'EPCI du département correspondant"
+            value:
+              not_in_departement_epci_names: "doit être un nom d'EPCI du département correspondant"
+        "champs/dossier_link_champ":
+          attributes:
+            value:
+              not_integerable: "doit être un entier"
   errors:
     format: "Le champ « %{attribute} » %{message}"
     messages:
@@ -463,7 +530,8 @@ fr:
       dossier_not_found: "Le dossier n’existe pas ou vous n’y avez pas accès."
       # dossier_map_not_activated: "Le dossier n’a pas accès à la cartographie."
       targeted_user_link_expired: "Ce lien d’invitation n’est plus valable ou le dossier n’est plus accessible."
-      invalid_siret: "Le siret est incorrect"
+      invalid_siret_length: "Le numéro de SIRET doit comporter exactement 14 chiffres."
+      invalid_siret_checksum: "Le format du numéro de SIRET est invalide."
       procedure_not_found: "La démarche n’existe pas"
       siret_unknown: 'Désolé, nous n’avons pas trouvé d’établissement enregistré correspondant à ce numéro SIRET.'
       siret_network_error: 'Désolé, la récupération des informations SIRET est temporairement indisponible. Veuillez réessayer dans quelques instants.'
@@ -590,6 +658,10 @@ fr:
         to_follow: à suivre
         total: dossiers
   administrateurs:
+    activate:
+      new:
+        title: Choix du mot de passe
+        continue: Continuer
     index:
       restored: La démarche %{procedure_id} a été restaurée
     dropdown_actions:

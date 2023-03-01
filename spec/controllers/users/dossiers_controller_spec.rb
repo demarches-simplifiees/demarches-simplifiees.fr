@@ -196,6 +196,8 @@ describe Users::DossiersController, type: :controller do
       sign_in(user)
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}/)
         .to_return(status: api_etablissement_status, body: api_etablissement_body)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}/)
+        .to_return(body: File.read('spec/fixtures/files/api_entreprise/entreprises.json'), status: 200)
       allow_any_instance_of(APIEntrepriseToken).to receive(:roles)
         .and_return(["attestations_fiscales", "attestations_sociales", "bilans_entreprise_bdf"])
       allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(token_expired)
@@ -254,7 +256,7 @@ describe Users::DossiersController, type: :controller do
 
       context 'When API-Entreprise is globally down' do
         let(:api_etablissement_status) { 502 }
-        let(:api_current_status_response) { File.read('spec/fixtures/files/api_entreprise/current_status.json').tr('200', '502') }
+        let(:api_current_status_response) { File.read('spec/fixtures/files/api_entreprise/current_status.json').gsub('200', '502') }
 
         it "create an etablissement only with SIRET as degraded mode" do
           dossier.reload

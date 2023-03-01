@@ -35,10 +35,15 @@ en:
   help: 'Help'
   help_dropdown:
     general_title: "Online help"
+    procedure_title: "Do you have a question about this procedure?"
     problem_title: A problem with the website ?
     problem_description: Find your answer in the online help.
     technical_contact_title: Technical contact
     technical_contact_description: Send us a message to %{contact_email}.
+    contact_administration: "Contact the administration directly:"
+    help_brouillon_title: "Need help filling out your file?"
+    help_filled_dossier: "A question about your file?"
+    contact_instructeur: Send a message directly to the instructor.
   utils:
     'yes': Yes
     'no': No
@@ -59,6 +64,15 @@ en:
     commentaire:
       send_message_to_instructeur: "Send a message to the instructor"
       reply_in_mailbox: "Reply in mailbox"
+  skiplinks:
+    quick: Quick access
+    content: Content
+  combo_search_component:
+    screen_reader_instructions: "When autocomplete results are available, use the up and down arrows to navigate through the list of results. Press Enter to select a result. Press Escape to close the results list."
+    result_slot_html:
+      zero: No result
+      one: 1 result
+      other: <slot name="count"></slot> results
   layouts:
     commencer:
       no_procedure:
@@ -68,7 +82,6 @@ en:
         are_you_new: First time on %{app_name}?
     my_account: My account
     header:
-      label_modal: "Burger menu"
       close_modal: 'Close'
       back: "Back"
       back_title: "Revenir sur le site de mon administration"
@@ -128,11 +141,20 @@ en:
           iban_html: An Iban number
           yes_no_html: '"true" for Yes, "false" pour No'
           checkbox_html: '"true" to check, "false" to uncheck'
-          pays_html: An <a href="https://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">ISO 3166-2 country code</a>
-          regions_html: An <a href="https://fr.wikipedia.org/wiki/R%C3%A9gion_fran%C3%A7aise" target="_blank">INSEE region code</a>
+          pays_html: An <a href="https://en.wikipedia.org/wiki/ISO_3166-2" target="_blank" rel="noopener noreferrer">ISO 3166-2 country code</a>
+          regions_html: An <a href="https://fr.wikipedia.org/wiki/R%C3%A9gion_fran%C3%A7aise" target="_blank" rel="noopener noreferrer">INSEE region code</a>
+          departements_html: A <a href="https://fr.wikipedia.org/wiki/Num%C3%A9rotation_des_d%C3%A9partements_fran%C3%A7ais" target="_blank">department number</a>
+          communes_html: An array of the department code and the <a href="https://geo.api.gouv.fr/communes" target="_blank" rel="noopener noreferrer">INSEE commune code</a>.
+          drop_down_list_html: A choice among those selected when the procedure was created
           date_html: ISO8601 date
           datetime_html: ISO8601 datetime
           drop_down_list_other_html: Any value
+          siret_html: A SIRET number
+          rna_html: A RNA number
+          repetition_html: A array of hashes with possible values for each field of the repetition.
+          epci_html: An array of the department code and the <a href="https://geo.api.gouv.fr/epcis" target="_blank" rel="noopener noreferrer">EPCI one</a>.
+          annuaire_education_html: An educational institution code, as defined by the <a href="https://api.gouv.fr/les-api/api-annuaire-education" target="_blank" rel="noopener noreferrer">Éducation Nationale</a> directory
+          dossier_link_html: The file ID, as integer
         examples:
           title: Example
           text: Short text
@@ -144,10 +166,15 @@ en:
           iban: FR7611315000011234567890138
           yes_no: "true"
           pays: "FR"
+          departements: "56"
           regions: "53"
           date: "2023-02-01"
           datetime: "2023-02-01T10:30"
           checkbox: "true"
+          annuaire_education: "0561383Z"
+          dossier_link: 42
+          rna: "W503726238"
+          siret: "13002526500013"
         prefill_link_title: Prefill link (GET)
         prefill_link_info: Use the button to copy the link, then remplace the values with your data.
         prefill_link_too_long: Warning, the prefill link is too long and may not work on all browsers.
@@ -262,6 +289,7 @@ en:
           identity_data: Identity data
           all_required: All fields are required.
           civility: Civility
+          description: Description of the procedure
           first_name: First Name
           last_name: Last Name
           birthdate: Date de naissance
@@ -347,6 +375,10 @@ en:
           connect_with_agent_connect: Visit our dedicated page
           subtitle: "Sign in with my account"
       passwords:
+        edit:
+          subtitle: Change password
+          submit: Change password
+          submit_loading: Sending…
         reset_link_sent:
           got_it: Got it!
           open_your_mailbox: Now open your mailbox.
@@ -394,6 +426,19 @@ en:
         zone: This procedure is run by
       champs:
         value: Value
+      default_mail_attributes: &default_mail_attributes
+        hints:
+          subject: The generated subject will be truncated if it exceeds 100 characters.
+      mails/closed_mail:
+        << : *default_mail_attributes
+      mails/initiated_mail:
+        << : *default_mail_attributes
+      mails/received_mail:
+        << : *default_mail_attributes
+      mails/refused_mail:
+        << : *default_mail_attributes
+      mails/without_continuation_mail:
+        << : *default_mail_attributes
 
     errors:
       messages:
@@ -455,19 +500,42 @@ en:
           attributes:
             value:
               not_in_options: "must be in the given options"
+        "champs/multiple_drop_down_list_champ":
+          attributes:
+            value:
+              not_in_options: "must be in the given options"
         "champs/region_champ":
           attributes:
             value:
               not_in_region_names: "must be a valid region name"
             external_id:
               not_in_region_codes: "must be a valid region code"
+        "champs/departement_champ":
+          attributes:
+            value:
+              not_in_departement_names: "must be a valid department name"
+            external_id:
+              not_in_departement_codes: "must be a valid department code"
+        "champs/epci_champ":
+          attributes:
+            code_departement:
+              not_in_departement_codes: "must be a valid department code"
+            external_id:
+              not_in_departement_epci_codes: "must be a valid EPCI code of the matching department"
+            value:
+              not_in_departement_epci_names: "must be a valid EPCI name of the matching department"
+        "champs/dossier_link_champ":
+          attributes:
+            value:
+              not_integerable: "must be an integer"
   errors:
     format: "Field « %{attribute} » %{message}"
     messages:
       dossier_not_found: "The file does not exist or you do not have access to it."
       # # dossier_map_not_activated: "The file does not have access to the map."
       targeted_user_link_expired: "This invitation link or the file is no longer available."
-      invalid_siret: "The SIRET is incorrect"
+      invalid_siret_length: "The SIRET number must contain exactly 14 numbers."
+      invalid_siret_checksum: "The SIRET number is invalid."
       procedure_not_found: "The procedure does not exist"
       siret_unknown: 'Sorry, we did not find any establishment registered under this SIRET number.'
       siret_network_error: 'Désolé, la récupération des informations SIRET est temporairement indisponible. Veuillez réessayer dans quelques instants.'
@@ -541,6 +609,11 @@ en:
     deleted:
       one: Deleted
       other: Deleted
+  administrateurs:
+    activate:
+      new:
+        title: Pick a password
+        continue: Continue
   users:
     dossiers:
       test_procedure: "This file is submitted on a test procedure. Any modification of the procedure by the administrator (addition of a field, publication of the procedure, etc.) will result in the removal of the file."

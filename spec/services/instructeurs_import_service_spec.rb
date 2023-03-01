@@ -1,5 +1,5 @@
 describe InstructeursImportService do
-  describe '#import' do
+  describe '#import_groupes' do
     let(:procedure) { create(:procedure) }
 
     let(:procedure_groupes) do
@@ -9,7 +9,7 @@ describe InstructeursImportService do
         .to_h
     end
 
-    subject { described_class.import(procedure, lines) }
+    subject { described_class.import_groupes(procedure, lines) }
 
     context 'nominal case' do
       let(:lines) do
@@ -20,8 +20,8 @@ describe InstructeursImportService do
         ]
       end
 
-      it 'imports' do
-        errors = subject
+      it 'imports groupes' do
+        _, errors = subject
 
         expect(procedure_groupes.keys).to contain_exactly("Auvergne Rhone-Alpes", "Occitanie", "défaut")
         expect(procedure_groupes["Auvergne Rhone-Alpes"]).to contain_exactly("john@lennon.fr")
@@ -63,7 +63,7 @@ describe InstructeursImportService do
       end
 
       it 'ignores or corrects' do
-        errors = subject
+        _, errors = subject
 
         expect(procedure_groupes.keys).to contain_exactly("Occitanie", "défaut")
         expect(procedure_groupes["Occitanie"]).to contain_exactly("paul@mccartney.uk", "ringo@starr.uk")
@@ -117,12 +117,29 @@ describe InstructeursImportService do
       end
 
       it 'ignores instructeur' do
-        errors = subject
+        _, errors = subject
 
         expect(procedure_groupes.keys).to contain_exactly("défaut")
         expect(procedure_groupes["défaut"]).to be_empty
 
         expect(errors).to contain_exactly("ringo@starr.uk", "paul@starr.uk")
+      end
+    end
+  end
+
+  describe '#import_instructeurs' do
+    let(:procedure_non_routee) { create(:procedure) }
+
+    subject { described_class.import_instructeurs(procedure_non_routee, emails) }
+
+    context 'nominal case' do
+      let(:emails) { [{ "email" => "john@lennon.fr" }, { "email" => "paul@mccartney.uk" }, { "email" => "ringo@starr.uk" }] }
+
+      it 'imports instructeurs' do
+        _, errors = subject
+        expect(procedure_non_routee.defaut_groupe_instructeur.instructeurs.pluck(:email)).to contain_exactly("john@lennon.fr", "paul@mccartney.uk", "ringo@starr.uk")
+
+        expect(errors).to match_array([])
       end
     end
   end

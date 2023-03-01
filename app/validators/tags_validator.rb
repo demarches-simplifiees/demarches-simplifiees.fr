@@ -7,18 +7,18 @@ class TagsValidator < ActiveModel::EachValidator
       tag if stable_id.nil?
     end
 
-    invalid_for_draft_revision = invalid_tags_for_revision(record, attribute, tags, procedure.draft_revision_id)
+    invalid_for_draft_revision = invalid_tags_for_revision(record, attribute, tags, procedure.draft_revision)
 
     invalid_for_published_revision = if procedure.published_revision_id.present?
-      invalid_tags_for_revision(record, attribute, tags, procedure.published_revision_id)
+      invalid_tags_for_revision(record, attribute, tags, procedure.published_revision)
     else
       []
     end
 
     invalid_for_previous_revision = procedure
-      .revision_ids_with_pending_dossiers
-      .flat_map do |revision_id|
-        invalid_tags_for_revision(record, attribute, tags, revision_id)
+      .revisions_with_pending_dossiers
+      .flat_map do |revision|
+        invalid_tags_for_revision(record, attribute, tags, revision)
       end.uniq
 
     # champ is added in draft revision but not yet published
@@ -48,12 +48,12 @@ class TagsValidator < ActiveModel::EachValidator
     end
   end
 
-  def invalid_tags_for_revision(record, attribute, tags, revision_id)
-    revision_stable_ids = TypeDeChamp
-      .joins(:revision_types_de_champ)
-      .where(procedure_revision_types_de_champ: { revision_id: revision_id, parent_id: nil })
-      .distinct(:stable_id)
-      .pluck(:stable_id)
+  def invalid_tags_for_revision(record, attribute, tags, revision)
+    revision_stable_ids = revision
+      .revision_types_de_champ
+      .filter { !_1.child? }
+      .map(&:stable_id)
+      .uniq
 
     tags.filter_map do |(tag, stable_id)|
       if stable_id.present? && !stable_id.in?(revision_stable_ids)

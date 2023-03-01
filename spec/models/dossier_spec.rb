@@ -1516,8 +1516,8 @@ describe Dossier do
           {
             type: 'Feature',
             geometry: {
-              'coordinates' => [[[2.428439855575562, 46.538476837725796], [2.4284291267395024, 46.53842148758162], [2.4282521009445195, 46.53841410755813], [2.42824137210846, 46.53847314771794], [2.428284287452698, 46.53847314771794], [2.428364753723145, 46.538487907747864], [2.4284291267395024, 46.538491597754714], [2.428439855575562, 46.538476837725796]]],
-              'type' => 'Polygon'
+              coordinates: [[[2.428439855575562, 46.538476837725796], [2.4284291267395024, 46.53842148758162], [2.4282521009445195, 46.53841410755813], [2.42824137210846, 46.53847314771794], [2.428284287452698, 46.53847314771794], [2.428364753723145, 46.538487907747864], [2.4284291267395024, 46.538491597754714], [2.428439855575562, 46.538476837725796]]],
+              type: 'Polygon'
             },
             properties: {
               area: 103.6,
@@ -1861,7 +1861,7 @@ describe Dossier do
           let(:champ_repetition) { create(:champ_repetition, type_de_champ: type_de_champ_repetition, dossier: dossier) }
           before { dossier.champs_public << champ_repetition }
 
-          it { expect(Champs::RepetitionChamp.where(dossier: new_dossier).first.champs.count).to eq(2) }
+          it { expect(Champs::RepetitionChamp.where(dossier: new_dossier).first.champs.count).to eq(4) }
           it { expect(Champs::RepetitionChamp.where(dossier: new_dossier).first.champs.ids).not_to eq(champ_repetition.champs.ids) }
         end
 
@@ -2077,6 +2077,15 @@ describe Dossier do
       let(:user) { build(:user) }
 
       it { expect(owned_by).to be_truthy }
+    end
+  end
+
+  describe 'update procedure dossiers count' do
+    let(:dossier) { create(:dossier, :brouillon, :with_individual) }
+
+    it 'update procedure dossiers count when passing to construction' do
+      expect(dossier.procedure).to receive(:compute_dossiers_count)
+      dossier.passer_en_construction!
     end
   end
 

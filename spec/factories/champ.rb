@@ -97,7 +97,7 @@ FactoryBot.define do
 
     factory :champ_multiple_drop_down_list, class: 'Champs::MultipleDropDownListChamp' do
       type_de_champ { association :type_de_champ_multiple_drop_down_list, procedure: dossier.procedure }
-      value { '["choix 1", "choix 2"]' }
+      value { '["val1", "val2"]' }
     end
 
     factory :champ_linked_drop_down_list, class: 'Champs::LinkedDropDownListChamp' do
@@ -122,7 +122,9 @@ FactoryBot.define do
 
     factory :champ_communes, class: 'Champs::CommuneChamp' do
       type_de_champ { association :type_de_champ_communes, procedure: dossier.procedure }
-      value { 'Paris' }
+      value { 'Coye-la-Forêt (60580)' }
+      value_json { { "departement" => "Oise", "code_departement" => "60" } }
+      external_id { "60172" }
     end
 
     factory :champ_epci, class: 'Champs::EpciChamp' do

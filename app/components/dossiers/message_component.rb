@@ -55,15 +55,6 @@ class Dossiers::MessageComponent < ApplicationComponent
     l(commentaire.created_at, format: is_current_year ? :message_date : :message_date_with_year)
   end
 
-  def commentaire_body
-    if commentaire.discarded?
-      t('.deleted_body')
-    else
-      body_formatted = commentaire.sent_by_system? ? commentaire.body : simple_format(commentaire.body)
-      sanitize(body_formatted)
-    end
-  end
-
   def highlight?
     commentaire.created_at.present? && @messagerie_seen_at&.<(commentaire.created_at)
   end

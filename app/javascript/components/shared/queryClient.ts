@@ -26,25 +26,43 @@ type QueryKey = readonly [
 ];
 
 function buildURL(scope: string, term: string, extra?: string) {
-  term = encodeURIComponent(term.replace(/\(|\)/g, ''));
-  if (scope === 'adresse') {
-    return `${api_adresse_url}/search?q=${term}&limit=${API_ADRESSE_QUERY_LIMIT}`;
-  } else if (scope === 'annuaire-education') {
-    return `${api_education_url}/search?dataset=fr-en-annuaire-education&q=${term}&rows=${API_EDUCATION_QUERY_LIMIT}`;
-  } else if (scope === 'communes') {
-    const limit = `limit=${API_GEO_COMMUNES_QUERY_LIMIT}`;
-    const url = extra
-      ? `${api_geo_url}/communes?codeDepartement=${extra}&${limit}&`
-      : `${api_geo_url}/communes?${limit}&`;
-    if (isNumeric(term)) {
-      return `${url}codePostal=${term}`;
+  term = term.replace(/\(|\)/g, '');
+  const params = new URLSearchParams();
+  let path = `${api_geo_url}/${scope}`;
+
+  if (scope == 'adresse') {
+    path = `${api_adresse_url}/search`;
+    params.set('q', term);
+    params.set('limit', `${API_ADRESSE_QUERY_LIMIT}`);
+  } else if (scope == 'annuaire-education') {
+    path = `${api_education_url}/search`;
+    params.set('q', term);
+    params.set('rows', `${API_EDUCATION_QUERY_LIMIT}`);
+    params.set('dataset', 'fr-en-annuaire-education');
+  } else if (scope == 'communes') {
+    if (extra) {
+      params.set('codeDepartement', extra);
     }
-    return `${url}nom=${term}&boost=population`;
-  } else if (isNumeric(term)) {
-    const code = term.padStart(2, '0');
-    return `${api_geo_url}/${scope}?code=${code}&limit=${API_GEO_QUERY_LIMIT}`;
+    if (isNumeric(term)) {
+      params.set('codePostal', term);
+    } else {
+      params.set('nom', term);
+      params.set('boost', 'population');
+    }
+    params.set('limit', `${API_GEO_COMMUNES_QUERY_LIMIT}`);
+  } else {
+    if (isNumeric(term)) {
+      params.set('code', term.padStart(2, '0'));
+    } else {
+      params.set('nom', term);
+    }
+    if (scope == 'departements') {
+      params.set('zone', 'metro,drom,com');
+    }
+    params.set('limit', `${API_GEO_QUERY_LIMIT}`);
   }
-  return `${api_geo_url}/${scope}?nom=${term}&limit=${API_GEO_QUERY_LIMIT}`;
+
+  return `${path}?${params}`;
 }
 
 const defaultQueryFn: QueryFunction<unknown, QueryKey> = async ({
@@ -53,6 +71,16 @@ const defaultQueryFn: QueryFunction<unknown, QueryKey> = async ({
 }) => {
   if (scope == 'pays') {
     return matchSorter(await getPays(signal), term, { keys: ['label'] });
+  }
+
+  // BAN will error with queries less then 3 chars long
+  if (scope == 'adresse' && term.length < 3) {
+    return {
+      type: 'FeatureCollection',
+      version: 'draft',
+      features: [],
+      query: term
+    };
   }
 
   const url = buildURL(scope, term, extra);

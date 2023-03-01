@@ -5,8 +5,8 @@
 
   - if prefill_description.prefilled_champs.any?
     = render Dsfr::CalloutComponent.new(title: t("views.prefill_descriptions.edit.prefill_link_title"), theme: theme, icon: icon) do |c|
-      - c.with_body do
-        = body
+      - c.with_html_body do
+        %p= body
         %pre
           %code.code-block
             = prefill_description.prefill_link
