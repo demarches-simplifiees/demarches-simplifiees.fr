@@ -8,7 +8,8 @@ fr:
       procedure:
         path: Lien public
         organisation: Organisme
-        duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers sur Mes-Démarches
+        duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers sur Mes-Démarches (choisi par un usager)
+        max_duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers maximum (autorisé par un super admin de MD)
         aasm_state/brouillon: Brouillon
         aasm_state/publiee: Publiée
         aasm_state/close: Close

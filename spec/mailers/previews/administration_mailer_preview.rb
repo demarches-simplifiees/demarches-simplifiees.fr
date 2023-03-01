@@ -1,12 +1,4 @@
 class AdministrationMailerPreview < ActionMailer::Preview
-  def dubious_procedures
-    procedures_and_champs = [
-      [procedure_1, [TypeDeChamp.new(libelle: 'iban'), TypeDeChamp.new(libelle: 'religion')]],
-      [procedure_2, [TypeDeChamp.new(libelle: 'iban'), TypeDeChamp.new(libelle: 'numéro de carte bleu')]]
-    ]
-    AdministrationMailer.dubious_procedures(procedures_and_champs)
-  end
-
   def invite_admin
     AdministrationMailer.invite_admin(administrateur, "12345678", 0)
   end

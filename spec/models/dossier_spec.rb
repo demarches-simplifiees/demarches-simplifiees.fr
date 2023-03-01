@@ -1484,7 +1484,7 @@ describe Dossier do
   end
 
   describe "champs_for_export" do
-    let(:procedure) { create(:procedure, :with_type_de_champ, :with_datetime, :with_yes_no, :with_explication, :with_commune, :with_repetition) }
+    let(:procedure) { create(:procedure, :with_type_de_champ, :with_datetime, :with_yes_no, :with_explication, :with_commune, :with_repetition, zones: [create(:zone)]) }
     let(:text_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
     let(:yes_no_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:yes_no) } }
     let(:datetime_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:datetime) } }

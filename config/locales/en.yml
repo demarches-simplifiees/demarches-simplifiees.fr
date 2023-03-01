@@ -364,6 +364,7 @@ en:
     messages:
       dossier_not_found: "The file does not exist or you do not have access to it."
       # # dossier_map_not_activated: "The file does not have access to the map."
+      targeted_user_link_expired: "This invitation link is not more accessible."
       invalid_siret: "The Tahiti number is incorrect"
       procedure_not_found: "The procedure does not exist"
       siret_unknown: 'Sorry, we did not find any company registered under this TAHITI number.'
@@ -423,8 +424,7 @@ en:
       one: expiring file
       other: expiring files
     dossier_trouve:
-      '0': 0 file found
-      '1': 1 file found
+      one: "%{count} file found"
       other: "%{count} files found"
     published:
       one: Published
