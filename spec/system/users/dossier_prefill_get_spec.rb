@@ -16,6 +16,7 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
   let(:type_de_champ_annuaire_education) { create(:type_de_champ_annuaire_education, procedure: procedure) }
   let(:type_de_champ_dossier_link) { create(:type_de_champ_dossier_link, procedure: procedure) }
   let(:type_de_champ_commune) { create(:type_de_champ_communes, procedure: procedure) }
+  let(:type_de_champ_address) { create(:type_de_champ_address, procedure: procedure) }
   let(:type_de_champ_repetition) { create(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure) }
 
   let(:text_value) { "My Neighbor Totoro is the best movie ever" }
@@ -32,6 +33,7 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
   let(:epci_value) { ['01', '200029999'] }
   let(:dossier_link_value) { '42' }
   let(:commune_value) { ['01', '01457'] } # Vonnas (01540)
+  let(:address_value) { "20 Avenue de Ségur 75007 Paris" }
   let(:sub_type_de_champs_repetition) { procedure.active_revision.children_of(type_de_champ_repetition) }
   let(:text_repetition_libelle) { sub_type_de_champs_repetition.first.libelle }
   let(:integer_repetition_libelle) { sub_type_de_champs_repetition.second.libelle }
@@ -49,6 +51,7 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
       "champ_#{type_de_champ_epci.to_typed_id_for_query}" => epci_value,
       "champ_#{type_de_champ_dossier_link.to_typed_id_for_query}" => dossier_link_value,
       "champ_#{type_de_champ_commune.to_typed_id_for_query}" => commune_value,
+      "champ_#{type_de_champ_address.to_typed_id_for_query}" => address_value,
       "champ_#{type_de_champ_siret.to_typed_id_for_query}" => siret_value,
       "champ_#{type_de_champ_rna.to_typed_id_for_query}" => rna_value,
       "champ_#{type_de_champ_repetition.to_typed_id_for_query}" => [
