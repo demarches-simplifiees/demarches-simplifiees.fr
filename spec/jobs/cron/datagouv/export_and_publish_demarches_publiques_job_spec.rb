@@ -1,5 +1,5 @@
 RSpec.describe Cron::Datagouv::ExportAndPublishDemarchesPubliquesJob, type: :job do
-  let!(:procedure) { create(:procedure, :published, :with_service, :with_type_de_champ) }
+  let!(:procedure) { create(:procedure, :published, :with_service, :with_type_de_champ, estimated_dossiers_count: 4) }
   let(:status) { 200 }
   let(:body) { "ok" }
   let(:stub) { stub_request(:post, /https:\/\/www.data.gouv.fr\/api\/.*\/upload\//) }
