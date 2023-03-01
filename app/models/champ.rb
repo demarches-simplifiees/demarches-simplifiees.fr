@@ -217,6 +217,10 @@ class Champ < ApplicationRecord
     raise NotImplemented.new(:fetch_external_data)
   end
 
+  def update_with_external_data!(data:)
+    update!(data: data)
+  end
+
   def clone
     champ_attributes = [:parent_id, :private, :row_id, :type, :type_de_champ_id]
     value_attributes = private? ? [] : [:value, :value_json, :data, :external_id]

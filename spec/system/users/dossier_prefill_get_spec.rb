@@ -13,6 +13,7 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
   let(:type_de_champ_datetime) { create(:type_de_champ_datetime, procedure: procedure) }
   let(:type_de_champ_multiple_drop_down_list) { create(:type_de_champ_multiple_drop_down_list, procedure: procedure) }
   let(:type_de_champ_epci) { create(:type_de_champ_epci, procedure: procedure) }
+  let(:type_de_champ_annuaire_education) { create(:type_de_champ_annuaire_education, procedure: procedure) }
   let(:type_de_champ_dossier_link) { create(:type_de_champ_dossier_link, procedure: procedure) }
   let(:type_de_champ_commune) { create(:type_de_champ_communes, procedure: procedure) }
   let(:type_de_champ_repetition) { create(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure) }
@@ -36,6 +37,7 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
   let(:integer_repetition_libelle) { sub_type_de_champs_repetition.second.libelle }
   let(:text_repetition_value) { "First repetition text" }
   let(:integer_repetition_value) { "42" }
+  let(:annuaire_education_value) { '0050009H' }
 
   let(:entry_path) {
     commencer_path(
@@ -54,7 +56,8 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
           "champ_#{sub_type_de_champs_repetition.first.to_typed_id_for_query}": text_repetition_value,
           "champ_#{sub_type_de_champs_repetition.second.to_typed_id_for_query}": integer_repetition_value
         }
-      ]
+      ],
+      "champ_#{type_de_champ_annuaire_education.to_typed_id_for_query}" => annuaire_education_value
     )
   }
 
