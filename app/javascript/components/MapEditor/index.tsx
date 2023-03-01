@@ -12,15 +12,20 @@ import { AddressInput } from './components/AddressInput';
 import { PointInput } from './components/PointInput';
 import { ImportFileInput } from './components/ImportFileInput';
 import { FlashMessage } from '../shared/FlashMessage';
+import { ComboSearchProps } from '../ComboSearch';
 
 export default function MapEditor({
   featureCollection: initialFeatureCollection,
   url,
-  options
+  options,
+  autocompleteAnnounceTemplateId,
+  autocompleteScreenReaderInstructions
 }: {
   featureCollection: FeatureCollection;
   url: string;
   options: { layers: string[] };
+  autocompleteAnnounceTemplateId: ComboSearchProps['announceTemplateId'];
+  autocompleteScreenReaderInstructions: ComboSearchProps['screenReaderInstructions'];
 }) {
   const [cadastreEnabled, setCadastreEnabled] = useState(false);
 
@@ -46,7 +51,10 @@ export default function MapEditor({
       {error && <FlashMessage message={error} level="alert" fixed={true} />}
 
       <ImportFileInput featureCollection={featureCollection} {...actions} />
-      <AddressInput />
+      <AddressInput
+        screenReaderInstructions={autocompleteScreenReaderInstructions}
+        announceTemplateId={autocompleteAnnounceTemplateId}
+      />
 
       <MapLibre layers={options.layers}>
         <DrawLayer
