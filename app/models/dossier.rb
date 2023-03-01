@@ -48,8 +48,9 @@
 class Dossier < ApplicationRecord
   self.ignored_columns = [:en_construction_conservation_extension]
   include DossierFilteringConcern
-  include DossierRebaseConcern
   include DossierPrefillableConcern
+  include DossierRebaseConcern
+  include DossierSectionsConcern
 
   enum state: {
     brouillon:       'brouillon',
@@ -224,6 +225,9 @@ class Dossier < ApplicationRecord
   scope :state_instruction_commencee,          -> { where(state: INSTRUCTION_COMMENCEE) }
   scope :state_termine,                        -> { where(state: TERMINE) }
   scope :state_not_termine,                    -> { where.not(state: TERMINE) }
+  scope :state_accepte,                        -> { where(state: states.fetch(:accepte)) }
+  scope :state_refuse,                         -> { where(state: states.fetch(:refuse)) }
+  scope :state_sans_suite,                     -> { where(state: states.fetch(:sans_suite)) }
 
   scope :archived,                  -> { where(archived: true) }
   scope :not_archived,              -> { where(archived: false) }
@@ -874,6 +878,7 @@ class Dossier < ApplicationRecord
       .passer_en_construction
       .processed_at
     save!
+    procedure.compute_dossiers_count
   end
 
   def after_passer_en_instruction(h)
@@ -1233,20 +1238,6 @@ class Dossier < ApplicationRecord
     termine_expired_to_delete.find_each(&:purge_discarded)
   end
 
-  def sections_for(champ)
-    @sections = Hash.new do |hash, parent|
-      case parent
-      when :public
-        hash[parent] = champs_public.filter(&:header_section?)
-      when :private
-        hash[parent] = champs_private.filter(&:header_section?)
-      else
-        hash[parent] = parent.champs.filter(&:header_section?)
-      end
-    end
-    @sections[champ.parent || (champ.public? ? :public : :private)]
-  end
-
   def clone
     dossier_attributes = [:autorisation_donnees, :user_id, :revision_id, :groupe_instructeur_id]
     relationships = [:individual, :etablissement]
@@ -1312,14 +1303,7 @@ class Dossier < ApplicationRecord
   end
 
   def bounding_box
-    factory = RGeo::Geographic.simple_mercator_factory
-    bounding_box = RGeo::Cartesian::BoundingBox.new(factory)
-
-    geo_areas.filter_map(&:rgeo_geometry).each do |geometry|
-      bounding_box.add(geometry)
-    end
-
-    [bounding_box.max_point, bounding_box.min_point].compact.flat_map(&:coordinates)
+    GeojsonService.bbox(type: 'FeatureCollection', features: geo_areas.map(&:to_feature))
   end
 
   def log_dossier_operation(author, operation, subject = nil)

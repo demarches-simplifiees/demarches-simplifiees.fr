@@ -96,8 +96,20 @@ module Administrateurs
       @procedure = current_administrateur
         .procedures
         .includes(
-          published_revision: :types_de_champ,
-          draft_revision: :types_de_champ
+          published_revision: {
+            types_de_champ: [],
+            revision_types_de_champ: { type_de_champ: { piece_justificative_template_attachment: :blob } }
+          },
+          draft_revision: {
+            types_de_champ: [],
+            revision_types_de_champ: { type_de_champ: { piece_justificative_template_attachment: :blob } }
+          },
+          attestation_template: [],
+          initiated_mail: [],
+          received_mail: [],
+          closed_mail: [],
+          refused_mail: [],
+          without_continuation_mail: []
         )
         .find(params[:id])
 
@@ -332,7 +344,35 @@ module Administrateurs
     end
 
     def champs
-      @procedure = Procedure.includes(draft_revision: { revision_types_de_champ_public: :type_de_champ }).find(@procedure.id)
+      @procedure = Procedure.includes(draft_revision: {
+        revision_types_de_champ: {
+          type_de_champ: { piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
+          revision: [],
+          procedure: []
+        },
+        revision_types_de_champ_public: {
+          type_de_champ: { piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
+          revision: [],
+          procedure: []
+        },
+        procedure: []
+      }).find(@procedure.id)
+    end
+
+    def annotations
+      @procedure = Procedure.includes(draft_revision: {
+        revision_types_de_champ: {
+          type_de_champ: { piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
+          revision: [],
+          procedure: []
+        },
+        revision_types_de_champ_private: {
+          type_de_champ: { piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
+          revision: [],
+          procedure: []
+        },
+        procedure: []
+      }).find(@procedure.id)
     end
 
     def detail
@@ -370,7 +410,7 @@ module Administrateurs
     private
 
     def filter_procedures(filter)
-      procedures_result = Procedure.select(:id).joins(:procedures_zones).distinct.publiees_ou_closes
+      procedures_result = Procedure.select(:id).left_joins(:procedures_zones).distinct.publiees_ou_closes
       procedures_result = procedures_result.where(procedures_zones: { zone_id: filter.zone_ids }) if filter.zone_ids.present?
       procedures_result = procedures_result.where(aasm_state: filter.statuses) if filter.statuses.present?
       procedures_result = procedures_result.where("? = ANY(tags)", filter.tag) if filter.tag.present?
@@ -378,7 +418,7 @@ module Administrateurs
       procedures_result = procedures_result.where('unaccent(libelle) ILIKE unaccent(?)', "%#{filter.libelle}%") if filter.libelle.present?
       procedures_sql = procedures_result.to_sql
 
-      sql = "select id, libelle, published_at, aasm_state, count(administrateurs_procedures.administrateur_id) as admin_count from administrateurs_procedures inner join procedures on procedures.id = administrateurs_procedures.procedure_id where procedures.id in (#{procedures_sql}) group by procedures.id order by published_at desc"
+      sql = "select id, libelle, published_at, aasm_state, estimated_dossiers_count, count(administrateurs_procedures.administrateur_id) as admin_count from administrateurs_procedures inner join procedures on procedures.id = administrateurs_procedures.procedure_id where procedures.id in (#{procedures_sql}) group by procedures.id order by published_at desc"
       ActiveRecord::Base.connection.execute(sql)
     end
 

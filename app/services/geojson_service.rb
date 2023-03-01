@@ -45,6 +45,66 @@ class GeojsonService
     radians * EQUATORIAL_RADIUS
   end
 
+  def self.bbox(geojson)
+    result = [-Float::INFINITY, -Float::INFINITY, Float::INFINITY, Float::INFINITY]
+
+    self.coord_each(geojson) do |coord|
+      if result[3] > coord[1]
+        result[3] = coord[1]
+      end
+      if result[2] > coord[0]
+        result[2] = coord[0]
+      end
+      if result[1] < coord[1]
+        result[1] = coord[1]
+      end
+      if result[0] < coord[0]
+        result[0] = coord[0]
+      end
+    end
+
+    result
+  end
+
+  def self.coord_each(geojson)
+    geometries = if geojson.fetch(:type) == "FeatureCollection"
+      geojson.fetch(:features).map { _1.fetch(:geometry) }
+    else
+      [geojson.fetch(:geometry)]
+    end.compact
+
+    geometries.each do |geometry|
+      geometries = if geometry.fetch(:type) == "GeometryCollection"
+        geometry.fetch(:geometries)
+      else
+        [geometry]
+      end.compact
+
+      geometries.each do |geometry|
+        case geometry.fetch(:type)
+        when "Point"
+          yield geometry.fetch(:coordinates).map(&:to_f)
+        when "LineString", "MultiPoint"
+          geometry.fetch(:coordinates).each { yield _1.map(&:to_f) }
+        when "Polygon", "MultiLineString"
+          geometry.fetch(:coordinates).each do |shapes|
+            shapes.each { yield _1.map(&:to_f) }
+          end
+        when "MultiPolygon"
+          geometry.fetch(:coordinates).each do |polygons|
+            polygons.each do |shapes|
+              shapes.each { yield _1.map(&:to_f) }
+            end
+          end
+        when "GeometryCollection"
+          geometry.fetch(:geometries).each do |geometry|
+            coord_each(geometry) { yield _1 }
+          end
+        end
+      end
+    end
+  end
+
   def self.calculate_area(geom)
     total = 0
     case geom[:type]

@@ -35,7 +35,7 @@ class APIGeoService
     end
 
     def departements
-      [{ code: '99', name: 'Etranger' }] + get_from_api_geo(:departements).sort_by { _1[:code] }
+      [{ code: '99', name: 'Etranger' }] + get_from_api_geo('departements?zone=metro,drom,com').sort_by { _1[:code] }
     end
 
     def departement_name(code)
@@ -45,6 +45,25 @@ class APIGeoService
     def departement_code(name)
       return if name.nil?
       departements.find { _1[:name] == name }&.dig(:code)
+    end
+
+    def communes(departement_code)
+      get_from_api_geo(
+        "communes?codeDepartement=#{departement_code}",
+        additional_keys: { postal_codes: :codesPostaux }
+      ).sort_by { I18n.transliterate(_1[:name]) }
+    end
+
+    def commune_name(departement_code, code)
+      communes(departement_code).find { _1[:code] == code }&.dig(:name)
+    end
+
+    def commune_code(departement_code, name)
+      communes(departement_code).find { _1[:name] == name }&.dig(:code)
+    end
+
+    def commune_postal_codes(departement_code, code)
+      communes(departement_code).find { _1[:code] == code }&.dig(:postal_codes)
     end
 
     def epcis(departement_code)
@@ -61,11 +80,16 @@ class APIGeoService
 
     private
 
-    def get_from_api_geo(scope)
+    def get_from_api_geo(scope, additional_keys: {})
       Rails.cache.fetch("api_geo_#{scope}", expires_in: 1.year) do
         response = Typhoeus.get("#{API_GEO_URL}/#{scope}")
-        JSON.parse(response.body).map(&:symbolize_keys)
-          .map { { name: _1[:nom].tr("'", '’'), code: _1[:code] } }
+        JSON.parse(response.body)
+          .map(&:symbolize_keys)
+          .map do |result|
+            data = { name: result[:nom].tr("'", '’'), code: result[:code] }
+            additional_keys.each { |key, value| data = data.merge(key => result[value]) }
+            data
+          end
       end
     end
 

@@ -22,21 +22,20 @@ module ProcedureStatsConcern
   def stats_dossiers_funnel
     Rails.cache.fetch("#{cache_key_with_version}/stats_dossiers_funnel", expires_in: 12.hours) do
       [
-        ['Démarrés', dossiers.count],
-        ['Déposés', dossiers.state_not_brouillon.count],
-        ['Instruction débutée', dossiers.state_instruction_commencee.count],
-        ['Traités', dossiers.state_termine.count]
+        ['Démarrés', dossiers.visible_by_user_or_administration.count + nb_dossiers_termines_supprimes],
+        ['Déposés', dossiers.visible_by_administration.count + nb_dossiers_termines_supprimes],
+        ['Instruction débutée', dossiers.visible_by_administration.state_instruction_commencee.count + nb_dossiers_termines_supprimes],
+        ['Traités', nb_dossiers_termines]
       ]
     end
   end
 
   def stats_termines_states
-    nb_dossiers_termines = dossiers.state_termine.count
     Rails.cache.fetch("#{cache_key_with_version}/stats_termines_states", expires_in: 12.hours) do
       [
-        ['Acceptés', percentage(dossiers.where(state: :accepte).count, nb_dossiers_termines)],
-        ['Refusés', percentage(dossiers.where(state: :refuse).count, nb_dossiers_termines)],
-        ['Classés sans suite', percentage(dossiers.where(state: :sans_suite).count, nb_dossiers_termines)]
+        ['Acceptés', percentage(dossiers.visible_by_administration.state_accepte.count, nb_dossiers_termines)],
+        ['Refusés', percentage(dossiers.visible_by_administration.state_refuse.count, nb_dossiers_termines)],
+        ['Classés sans suite', percentage(dossiers.visible_by_administration.state_sans_suite.count, nb_dossiers_termines)]
       ]
     end
   end
@@ -45,6 +44,7 @@ module ProcedureStatsConcern
     Rails.cache.fetch("#{cache_key_with_version}/stats_termines_by_week", expires_in: 12.hours) do
       now = Time.zone.now
       chart_data = dossiers.includes(:traitements)
+        .visible_by_administration
         .state_termine
         .where(traitements: { processed_at: (now.beginning_of_week - 6.months)..now.end_of_week })
 
@@ -94,6 +94,14 @@ module ProcedureStatsConcern
   end
 
   private
+
+  def nb_dossiers_termines
+    @nb_dossiers_termines ||= dossiers.visible_by_administration.state_termine.count + nb_dossiers_termines_supprimes
+  end
+
+  def nb_dossiers_termines_supprimes
+    @nb_dossiers_termines_supprimes ||= deleted_dossiers.state_termine.count
+  end
 
   def first_processed_at
     Traitement.for_traitement_time_stats(self).pick(:processed_at)

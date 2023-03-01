@@ -89,8 +89,8 @@ class ProcedurePresentation < ApplicationRecord
     end
 
     fields.concat procedure.types_de_champ_for_procedure_presentation
-      .pluck(:libelle, :private, :stable_id)
-      .map { |(libelle, is_private, stable_id)| field_hash(is_private ? TYPE_DE_CHAMP_PRIVATE : TYPE_DE_CHAMP, stable_id.to_s, label: libelle, type: :text) }
+      .pluck(:type_champ, :libelle, :private, :stable_id)
+      .map { |(type_champ, libelle, is_private, stable_id)| field_hash(is_private ? TYPE_DE_CHAMP_PRIVATE : TYPE_DE_CHAMP, stable_id.to_s, label: libelle, type: (TypeDeChamp.options_for_select?(type_champ) ? :enum : :text)) }
 
     fields
   end
@@ -335,6 +335,8 @@ class ProcedurePresentation < ApplicationRecord
           [_1.label, _1.id]
         end
       end
+    else
+      find_type_de_champ(field['column']).options_for_select
     end
   end
 

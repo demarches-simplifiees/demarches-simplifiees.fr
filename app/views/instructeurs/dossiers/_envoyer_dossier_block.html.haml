@@ -6,14 +6,13 @@
 - else
   %p.tab-paragrah.mb-1
     Le destinataire suivra automatiquement le dossier
-  = form_for dossier, url: send_to_instructeurs_instructeur_dossier_path(dossier.procedure, dossier), method: :post, html: { class: 'form recipients-form' } do |f|
-    .flex.justify-start.align-start
-      = hidden_field_tag :recipients, nil
-      = react_component("ComboMultiple",
-        options: potential_recipients.map{|r| [r.email, r.id]},
-        selected: [], disabled: [],
-        group: '.recipients-form',
-        name: 'recipients',
-        label: 'Emails')
+  = form_for dossier, url: send_to_instructeurs_instructeur_dossier_path(dossier.procedure, dossier), method: :post, html: { class: 'form recipients-form fr-mb-4w' } do |f|
+    = hidden_field_tag :recipients, nil
+    = react_component("ComboMultiple",
+      options: potential_recipients.map{|r| [r.email, r.id]},
+      selected: [], disabled: [],
+      group: '.recipients-form',
+      name: 'recipients',
+      label: 'Emails')
 
-      = f.submit "Envoyer", class: "button large send gap-left"
+    = f.submit "Envoyer", class: "fr-btn fr-mt-2w"

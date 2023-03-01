@@ -27,6 +27,7 @@ gem 'devise-i18n'
 gem 'devise-two-factor'
 gem 'discard'
 gem 'dotenv-rails', require: 'dotenv/rails-now' # dotenv should always be loaded before rails
+gem 'elastic-apm'
 gem 'flipper'
 gem 'flipper-active_record'
 gem 'flipper-ui'
@@ -69,6 +70,7 @@ gem 'rack-attack'
 gem 'rails'
 gem 'rails-i18n' # Locales par défaut
 gem 'rake-progressbar', require: false
+gem 'redcarpet'
 gem 'rexml' # add missing gem due to ruby3 (https://github.com/Shopify/bootsnap/issues/325)
 gem 'rgeo-geojson'
 gem 'rqrcode'

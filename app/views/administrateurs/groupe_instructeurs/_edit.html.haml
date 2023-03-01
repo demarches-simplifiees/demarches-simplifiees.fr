@@ -28,12 +28,14 @@
     = form_tag import_admin_procedure_groupe_instructeurs_path(procedure), method: :post, multipart: true, class: "mt-4 form" do
       = label_tag t('.csv_import.title')
       %p.notice
-        = t('.csv_import.notice_1')
+        = procedure.routing_enabled? ? t('.csv_import.routing_enabled.notice_1') : t('.csv_import.routing_disabled.notice_1')
       %p.notice
         = t('.csv_import.notice_2', csv_max_size: number_to_human_size(csv_max_size))
-      %p.mt-2.mb-2= link_to t('.csv_import.download_exemple'), "/csv/#{I18n.locale}/import-groupe-test.csv"
-      = file_field_tag :group_csv_file, required: true, accept: 'text/csv', size: "1"
-      = submit_tag t('.csv_import.import_file'), class: 'button primary send', data: { disable_with: "Envoi..." }
+      - sample_file_path = procedure.routing_enabled? ? "/csv/#{I18n.locale}/import-groupe-test.csv" : "/csv/import-instructeurs-test.csv"
+      %p.mt-2.mb-2= link_to t('.csv_import.download_exemple'), sample_file_path
+      - csv_params = procedure.routing_enabled? ? :group_csv_file : :instructeurs_csv_file
+      = file_field_tag csv_params, required: true, accept: 'text/csv', size: "1"
+      = submit_tag t('.csv_import.import_file'), class: 'button primary send', data: { disable_with: "Envoi...", confirm: t('.csv_import.import_file_alert') }
   - else
     %p.mt-4.form.font-weight-bold.mb-2.text-lg
       = t('.csv_import.title')

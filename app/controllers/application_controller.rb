@@ -337,6 +337,8 @@ class ApplicationController < ActionController::Base
       extract_locale_from_accept_language_header ||
       I18n.default_locale
 
+    gon.locale = locale
+
     I18n.with_locale(locale, &action)
   end
 

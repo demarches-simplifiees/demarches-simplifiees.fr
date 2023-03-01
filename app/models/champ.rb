@@ -53,6 +53,8 @@ class Champ < ApplicationRecord
     :repetition?,
     :block?,
     :dossier_link?,
+    :departement?,
+    :region?,
     :titre_identite?,
     :header_section?,
     :simple_drop_down_list?,
@@ -71,6 +73,10 @@ class Champ < ApplicationRecord
     :prefillable?,
     :refresh_after_update?,
     to: :type_de_champ
+
+  delegate :to_typed_id, :to_typed_id_for_query, to: :type_de_champ, prefix: true
+
+  delegate :revision, to: :dossier, prefix: true
 
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
   scope :public_only, -> { where(private: false) }
@@ -209,6 +215,10 @@ class Champ < ApplicationRecord
 
   def fetch_external_data
     raise NotImplemented.new(:fetch_external_data)
+  end
+
+  def update_with_external_data!(data:)
+    update!(data: data)
   end
 
   def clone

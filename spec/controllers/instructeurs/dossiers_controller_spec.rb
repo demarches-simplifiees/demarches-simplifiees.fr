@@ -792,7 +792,7 @@ describe Instructeurs::DossiersController, type: :controller do
             champs_private_attributes: {
               '0': {
                 id: champ_multiple_drop_down_list.id,
-                value: ['', 'un', 'deux']
+                value: ['', 'val1', 'val2']
               },
               '1': {
                 id: champ_datetime.id,
@@ -813,7 +813,7 @@ describe Instructeurs::DossiersController, type: :controller do
       end
 
       it {
-        expect(champ_multiple_drop_down_list.value).to eq('["un", "deux"]')
+        expect(champ_multiple_drop_down_list.value).to eq('["val1", "val2"]')
         expect(champ_linked_drop_down_list.primary_value).to eq('primary')
         expect(champ_linked_drop_down_list.secondary_value).to eq('secondary')
         expect(champ_datetime.value).to eq('2019-12-21T13:17:00+01:00')
@@ -839,7 +839,7 @@ describe Instructeurs::DossiersController, type: :controller do
             champs_public_attributes: {
               '0': {
                 id: champ_multiple_drop_down_list.id,
-                value: ['', 'un', 'deux']
+                value: ['', 'val1', 'val2']
               }
             }
           }

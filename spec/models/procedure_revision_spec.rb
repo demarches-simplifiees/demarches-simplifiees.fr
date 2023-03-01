@@ -134,15 +134,15 @@ describe ProcedureRevision do
       end
 
       it 'move down' do
-        expect(draft.children_of(type_de_champ_repetition).index(second_child)).to eq(1)
-
-        draft.move_type_de_champ(second_child.stable_id, 2)
-
         expect(draft.children_of(type_de_champ_repetition).index(second_child)).to eq(2)
+
+        draft.move_type_de_champ(second_child.stable_id, 3)
+
+        expect(draft.children_of(type_de_champ_repetition).index(second_child)).to eq(3)
       end
 
       it 'move up' do
-        expect(draft.children_of(type_de_champ_repetition).index(last_child)).to eq(2)
+        expect(draft.children_of(type_de_champ_repetition).index(last_child)).to eq(3)
 
         draft.move_type_de_champ(last_child.stable_id, 0)
 
@@ -205,13 +205,13 @@ describe ProcedureRevision do
 
         it 'reorders' do
           children = draft.children_of(type_de_champ_repetition)
-          expect(children.pluck(:position)).to eq([0, 1, 2])
+          expect(children.pluck(:position)).to eq([0, 1, 2, 3])
 
           draft.remove_type_de_champ(children[1].stable_id)
 
           children.reload
 
-          expect(children.pluck(:position)).to eq([0, 1])
+          expect(children.pluck(:position)).to eq([0, 1, 2])
         end
       end
     end
@@ -242,8 +242,8 @@ describe ProcedureRevision do
           new_draft.remove_type_de_champ(child.stable_id)
 
           expect { child.reload }.not_to raise_error
-          expect(draft.children_of(type_de_champ_repetition).size).to eq(1)
-          expect(new_draft.children_of(type_de_champ_repetition)).to be_empty
+          expect(draft.children_of(type_de_champ_repetition).size).to eq(2)
+          expect(new_draft.children_of(type_de_champ_repetition).size).to eq(1)
         end
 
         it 'can remove the parent only in the new revision' do
@@ -291,7 +291,7 @@ describe ProcedureRevision do
       let(:procedure) { create(:procedure, :with_repetition) }
 
       it 'should have the same tdcs with different links' do
-        expect(new_draft.types_de_champ.count).to eq(2)
+        expect(new_draft.types_de_champ.count).to eq(3)
         expect(new_draft.types_de_champ).to eq(draft.types_de_champ)
 
         new_repetition, new_child = new_draft.types_de_champ.partition(&:repetition?).map(&:first)
@@ -320,7 +320,7 @@ describe ProcedureRevision do
 
       it do
         expect(procedure.revisions.size).to eq(2)
-        expect(draft.revision_types_de_champ.where.not(parent_id: nil).size).to eq(1)
+        expect(draft.revision_types_de_champ.where.not(parent_id: nil).size).to eq(2)
       end
     end
   end
@@ -639,9 +639,10 @@ describe ProcedureRevision do
     context 'with a repetition tdc' do
       let(:procedure) { create(:procedure, :with_repetition) }
       let!(:parent) { draft.types_de_champ.find(&:repetition?) }
-      let!(:child) { draft.types_de_champ.reject(&:repetition?).first }
+      let!(:first_child) { draft.types_de_champ.reject(&:repetition?).first }
+      let!(:second_child) { draft.types_de_champ.reject(&:repetition?).second }
 
-      it { expect(draft.children_of(parent)).to match([child]) }
+      it { expect(draft.children_of(parent)).to match([first_child, second_child]) }
 
       context 'with multiple child' do
         let(:child_position_2) { create(:type_de_champ_text) }
@@ -654,7 +655,7 @@ describe ProcedureRevision do
         end
 
         it 'returns the children in order' do
-          expect(draft.children_of(parent)).to eq([child, child_position_1, child_position_2])
+          expect(draft.children_of(parent)).to eq([first_child, second_child, child_position_1, child_position_2])
         end
       end
 
@@ -668,13 +669,13 @@ describe ProcedureRevision do
         before do
           new_draft
             .revision_types_de_champ
-            .where(type_de_champ: child)
+            .where(type_de_champ: first_child)
             .update(type_de_champ: new_child)
         end
 
         it 'returns the children regarding the revision' do
-          expect(draft.children_of(parent)).to match([child])
-          expect(new_draft.children_of(parent)).to match([new_child])
+          expect(draft.children_of(parent)).to match([first_child, second_child])
+          expect(new_draft.children_of(parent)).to match([new_child, second_child])
         end
       end
     end

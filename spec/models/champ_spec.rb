@@ -117,7 +117,7 @@ describe Champ do
     # when using the old form, and the ChampsService Class
     # TODO: to remove
     context 'when the value is already deserialized' do
-      let(:value) { '["1", "2"]' }
+      let(:value) { '["val1", "val2"]' }
 
       it { expect(champ.value).to eq(value) }
 
@@ -133,9 +133,9 @@ describe Champ do
     # GOTCHA
     context 'when the value is not already deserialized' do
       context 'when a choice is selected' do
-        let(:value) { '["", "1", "2"]' }
+        let(:value) { '["", "val1", "val2"]' }
 
-        it { expect(champ.value).to eq('["1", "2"]') }
+        it { expect(champ.value).to eq('["val1", "val2"]') }
       end
 
       context 'when all choices are removed' do
@@ -526,7 +526,7 @@ describe Champ do
 
         expect(dossier.champs_public.size).to eq(2)
         expect(champ.rows.size).to eq(2)
-        second_row = champ.rows.second
+        second_row = champ.reload.rows.second
         expect(second_row.size).to eq(1)
         expect(second_row.first.dossier).to eq(dossier)
 
@@ -601,5 +601,13 @@ describe Champ do
         it { expect(champ.input_name).to eq "dossier[champs_private_attributes][#{champ.id}]" }
       end
     end
+  end
+
+  describe '#update_with_external_data!' do
+    let(:champ) { create(:champ_siret) }
+    let(:data) { "data" }
+    subject { champ.update_with_external_data!(data: data) }
+
+    it { expect { subject }.to change { champ.reload.data }.to(data) }
   end
 end

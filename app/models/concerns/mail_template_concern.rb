@@ -10,7 +10,7 @@ module MailTemplateConcern
   end
 
   def subject_for_dossier(dossier)
-    replace_tags(subject, dossier)
+    replace_tags(subject, dossier).presence || replace_tags(self.class::DEFAULT_SUBJECT, dossier)
   end
 
   def body_for_dossier(dossier)

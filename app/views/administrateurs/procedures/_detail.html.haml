@@ -8,15 +8,16 @@
 
   %td= procedure.libelle
   %td= procedure.id
+  %td= procedure.estimated_dossiers_count
   %td= procedure.administrateurs.count
   %td= t procedure.aasm_state, scope: 'activerecord.attributes.procedure.aasm_state'
-  %td= l(procedure.published_at, format: :message_date_without_time)
+  %td= l(procedure.published_at, format: :message_date_without_time) if procedure.published_at
   %td= link_to('Cloner', admin_procedure_clone_path(procedure.id, from_new_from_existing: true), 'data-method' => :put, class: 'fr-btn fr-btn--tertiary fr-btn--sm')
 
 
 - if show_detail
   %tr.procedure{ id: "procedure_detail_#{procedure.id}" }
-    %td.fr-highlight--beige-gris-galet{ colspan: '6' }
+    %td.fr-highlight--beige-gris-galet{ colspan: '8' }
       .fr-container
         .fr-grid-row
           .fr-col-6

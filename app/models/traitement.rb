@@ -21,7 +21,7 @@ class Traitement < ApplicationRecord
   scope :for_traitement_time_stats, -> (procedure) do
     includes(:dossier)
       .termine
-      .where(dossier: procedure.dossiers)
+      .where(dossier: procedure.dossiers.visible_by_administration)
       .where.not('dossiers.depose_at' => nil, processed_at: nil)
       .order(:processed_at)
   end

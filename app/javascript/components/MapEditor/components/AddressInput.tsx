@@ -2,8 +2,14 @@ import React from 'react';
 import { fire } from '@utils';
 
 import ComboAdresseSearch from '../../ComboAdresseSearch';
+import { ComboSearchProps } from '~/components/ComboSearch';
 
-export function AddressInput() {
+export function AddressInput(
+  comboProps: Pick<
+    ComboSearchProps,
+    'screenReaderInstructions' | 'announceTemplateId'
+  >
+) {
   return (
     <div
       style={{
@@ -17,6 +23,7 @@ export function AddressInput() {
         onChange={(_, feature) => {
           fire(document, 'map:zoom', { feature });
         }}
+        {...comboProps}
       />
     </div>
   );

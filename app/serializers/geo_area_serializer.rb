@@ -12,7 +12,7 @@ class GeoAreaSerializer < ActiveModel::Serializer
   attribute :code_arr, if: :include_cadastre?
 
   def geometry
-    object.safe_geometry
+    object.geometry
   end
 
   def include_cadastre?

@@ -2,7 +2,7 @@
   id: @champ.input_id,
   aria: { describedby: @champ.describedby_id },
   placeholder: t(".placeholder"),
-  data: { controller: 'turbo-input', turbo_input_url_value: champs_siret_path(@champ.id) },
+  data: { controller: 'turbo-input', turbo_input_load_on_connect_value: @champ.prefilled? && @champ.value.present? && @champ.etablissement.blank?, turbo_input_url_value: champs_siret_path(@champ.id) },
   required: @champ.required?,
   pattern: "[0-9]{14}",
   title: t(".title"),

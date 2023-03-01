@@ -192,6 +192,7 @@ class TypeDeChamp < ApplicationRecord
   validates :type_champ, presence: true, allow_blank: false, allow_nil: false
 
   before_validation :check_mandatory
+  before_validation :normalize_libelle
   before_save :remove_piece_justificative_template, if: -> { type_champ_changed? }
   before_validation :remove_drop_down_list, if: -> { type_champ_changed? }
   before_save :remove_block, if: -> { type_champ_changed? }
@@ -262,12 +263,21 @@ class TypeDeChamp < ApplicationRecord
       TypeDeChamp.type_champs.fetch(:iban),
       TypeDeChamp.type_champs.fetch(:civilite),
       TypeDeChamp.type_champs.fetch(:pays),
+      TypeDeChamp.type_champs.fetch(:regions),
+      TypeDeChamp.type_champs.fetch(:departements),
+      TypeDeChamp.type_champs.fetch(:communes),
       TypeDeChamp.type_champs.fetch(:date),
       TypeDeChamp.type_champs.fetch(:datetime),
       TypeDeChamp.type_champs.fetch(:yes_no),
       TypeDeChamp.type_champs.fetch(:checkbox),
       TypeDeChamp.type_champs.fetch(:drop_down_list),
-      TypeDeChamp.type_champs.fetch(:regions)
+      TypeDeChamp.type_champs.fetch(:repetition),
+      TypeDeChamp.type_champs.fetch(:multiple_drop_down_list),
+      TypeDeChamp.type_champs.fetch(:epci),
+      TypeDeChamp.type_champs.fetch(:annuaire_education),
+      TypeDeChamp.type_champs.fetch(:dossier_link),
+      TypeDeChamp.type_champs.fetch(:siret),
+      TypeDeChamp.type_champs.fetch(:rna)
     ])
   end
 
@@ -366,6 +376,14 @@ class TypeDeChamp < ApplicationRecord
     type_champ == TypeDeChamp.type_champs.fetch(:pole_emploi)
   end
 
+  def departement?
+    type_champ == TypeDeChamp.type_champs.fetch(:departements)
+  end
+
+  def region?
+    type_champ == TypeDeChamp.type_champs.fetch(:regions)
+  end
+
   def mesri?
     type_champ == TypeDeChamp.type_champs.fetch(:mesri)
   end
@@ -400,6 +418,21 @@ class TypeDeChamp < ApplicationRecord
 
   def drop_down_list_value=(value)
     self.drop_down_options = parse_drop_down_list_value(value)
+  end
+
+  def self.options_for_select?(type_champs)
+    [
+      TypeDeChamp.type_champs.fetch(:departements),
+      TypeDeChamp.type_champs.fetch(:regions)
+    ].include?(type_champs)
+  end
+
+  def options_for_select
+    if departement?
+      APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:name]] }
+    elsif region?
+      APIGeoService.regions.map { [_1[:name], _1[:name]] }
+    end
   end
 
   # historicaly we added a blank ("") option by default to avoid wrong selection
@@ -522,5 +555,9 @@ class TypeDeChamp < ApplicationRecord
         .draft_revision # action occurs only on draft
         .remove_children_of(self)
     end
+  end
+
+  def normalize_libelle
+    self.libelle&.strip!
   end
 end

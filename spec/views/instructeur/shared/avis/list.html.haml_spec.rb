@@ -26,7 +26,9 @@ describe 'instructeurs/shared/avis/_list.html.haml', type: :view do
     let(:avis) { [create(:avis, :with_answer, claimant: instructeur, experts_procedure: experts_procedure)] }
 
     it 'renders the answer formatted with newlines' do
-      expect(subject).to include(simple_format(avis.first.answer))
+      expect(subject).to have_selector(".answer-body p", text: avis.first.answer.split("\n").first)
+      expect(subject).to have_selector(".answer-body ul", count: 1) # avis.answer has two list item
+      expect(subject).to have_selector(".answer-body ul li", count: 2)
     end
   end
 

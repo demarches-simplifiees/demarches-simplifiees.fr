@@ -1,0 +1,7 @@
+%p= t(:hello, scope: [:views, :shared, :greetings])
+
+%p
+  - number_of_groups = @group.procedure.groupe_instructeurs.many? ? 'many_groups' : 'one_group'
+  = t(".email_body.#{number_of_groups}", groupe: @group.label, email: @current_instructeur_email, procedure: @group.procedure.libelle)
+
+= render partial: "layouts/mailers/signature"

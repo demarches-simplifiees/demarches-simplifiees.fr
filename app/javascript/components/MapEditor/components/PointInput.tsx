@@ -41,9 +41,11 @@ export function PointInput() {
             type="button"
             className="button mr-1"
             onClick={getCurrentPosition}
-            title="Localiser votre position"
+            title="Afficher votre position sur la carte"
           >
-            <span className="sr-only">Localiser votre position</span>
+            <span className="sr-only">
+              Afficher votre position sur la carte
+            </span>
             <LocationMarkerIcon className="icon-size-big" aria-hidden />
           </button>
         ) : null}

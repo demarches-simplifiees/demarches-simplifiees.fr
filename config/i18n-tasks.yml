@@ -110,6 +110,8 @@ ignore_unused:
 - 'instructeurs.dossiers.filterable_state.*'
 - 'views.prefill_descriptions.edit.possible_values.*'
 - 'helpers.page_entries_info.*'
+- 'combo_search_component.result_slot_html.*'
+- 'combo_search_component.screen_reader_instructions'
 # - '{devise,kaminari,will_paginate}.*'
 # - 'simple_form.{yes,no}'
 # - 'simple_form.{placeholders,hints,labels}.*'
