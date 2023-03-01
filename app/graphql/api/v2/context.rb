@@ -49,16 +49,23 @@ class API::V2::Context < GraphQL::Query::Context
     self[:authorized] ||= {}
 
     if self[:authorized][demarche.id].nil?
-      self[:authorized][demarche.id] = if self[:procedure_ids].present?
-        self[:procedure_ids].include?(demarche.id)
-      elsif self[:token].present?
-        APIToken.find_and_verify(self[:token], demarche.administrateurs).present?
-      else
-        false
-      end
+      self[:authorized][demarche.id] = compute_demarche_authorization(demarche)
     end
 
     self[:authorized][demarche.id]
+  end
+
+  private
+
+  def compute_demarche_authorization(demarche)
+    # procedure_ids and token are passed from graphql controller
+    if self[:procedure_ids].present?
+      self[:procedure_ids].include?(demarche.id)
+    elsif self[:token].present?
+      APIToken.find_and_verify(self[:token], demarche.administrateurs).present?
+    else
+      false
+    end
   end
 
   # This is a query AST visitor that we use to check
