@@ -6,6 +6,7 @@ export type Detail = Record<string, unknown>;
 
 // see: https://www.quirksmode.org/blog/archives/2008/04/delegating_the.html
 const FOCUS_EVENTS = ['focus', 'blur'];
+const ACTIVE_EVENTS = ['wheel'];
 
 export class ApplicationController extends Controller {
   #debounced = new Map<() => void, ReturnType<typeof debounce>>();
@@ -58,12 +59,7 @@ export class ApplicationController extends Controller {
   ): void {
     if (typeof targetOrEventName == 'string') {
       invariant(typeof eventNameOrHandler != 'string', 'handler is required');
-      this.onTarget(
-        this.element,
-        targetOrEventName,
-        eventNameOrHandler,
-        FOCUS_EVENTS.includes(targetOrEventName)
-      );
+      this.onTarget(this.element, targetOrEventName, eventNameOrHandler);
     } else {
       invariant(
         typeof eventNameOrHandler == 'string',
@@ -84,16 +80,19 @@ export class ApplicationController extends Controller {
   private onTarget<HandlerEvent extends Event = Event>(
     target: EventTarget,
     eventName: string,
-    handler: (event: HandlerEvent) => void,
-    capture?: boolean
+    handler: (event: HandlerEvent) => void
   ): void {
     const disconnect = this.disconnect;
     const callback = (event: Event): void => {
       handler(event as HandlerEvent);
     };
-    target.addEventListener(eventName, callback, capture);
+    const options = {
+      capture: FOCUS_EVENTS.includes(eventName),
+      passive: ACTIVE_EVENTS.includes(eventName) ? false : undefined
+    };
+    target.addEventListener(eventName, callback, options);
     this.disconnect = () => {
-      target.removeEventListener(eventName, callback, capture);
+      target.removeEventListener(eventName, callback, options);
       disconnect.call(this);
     };
   }
