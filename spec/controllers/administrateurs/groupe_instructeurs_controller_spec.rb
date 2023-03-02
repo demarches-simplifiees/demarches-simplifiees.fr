@@ -389,165 +389,169 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     end
   end
 
-  describe '#add_groupe_instructeurs_via_csv_file' do
-    subject do
-      post :import, params: { procedure_id: procedure.id, group_csv_file: csv_file }
-    end
-
-    context 'when the csv file is less than 1 mo and content type text/csv' do
-      let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe-instructeur.csv', 'text/csv') }
-
-      before { subject }
-
-      it { expect(response.status).to eq(302) }
-      it { expect(procedure.groupe_instructeurs.first.label).to eq("Afrique") }
-      it { expect(flash.alert).to be_present }
-      it { expect(flash.alert).to eq("Import terminé. Cependant les emails suivants ne sont pas pris en compte: kara") }
-    end
-
-    context 'when the csv file has only one column' do
-      let(:csv_file) { fixture_file_upload('spec/fixtures/files/valid-instructeurs-file.csv', 'text/csv') }
-
-      before { subject }
-
-      it { expect { subject }.not_to raise_error }
-      it { expect(response.status).to eq(302) }
-      it { expect(flash.alert).to be_present }
-      it { expect(flash.alert).to eq("Importation impossible, veuillez importer un csv <a href=\"/csv/#{I18n.locale}/import-groupe-test.csv\">suivant ce modèle</a>") }
-    end
-
-    context 'when the file content type is application/vnd.ms-excel' do
-      let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe_avec_caracteres_speciaux.csv', "application/vnd.ms-excel") }
-
-      before { subject }
-
-      it { expect(flash.notice).to be_present }
-      it { expect(flash.notice).to eq("La liste des instructeurs a été importée avec succès") }
-    end
-
-    context 'when the content of csv contains special characters' do
-      let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe_avec_caracteres_speciaux.csv', 'text/csv') }
-
-      before do
-        allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs)
-          .and_return(double(deliver_later: true))
-        subject
-      end
-
-      it { expect(procedure.groupe_instructeurs.pluck(:label)).to match_array(["Auvergne-Rhône-Alpes", "Vendée", "défaut"]) }
-      it { expect(flash.notice).to be_present }
-      it { expect(flash.notice).to eq("La liste des instructeurs a été importée avec succès") }
-      it { expect(GroupeInstructeurMailer).to have_received(:notify_added_instructeurs).twice }
-    end
-
-    context 'when the csv file length is more than 1 mo' do
-      let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe-instructeur.csv', 'text/csv') }
-
-      before do
-        allow_any_instance_of(ActionDispatch::Http::UploadedFile).to receive(:size).and_return(3.megabytes)
-        subject
-      end
-
-      it { expect(flash.alert).to be_present }
-      it { expect(flash.alert).to eq("Importation impossible : le poids du fichier est supérieur à 1 Mo") }
-    end
-
-    context 'when the file content type is not accepted' do
-      let(:csv_file) { fixture_file_upload('spec/fixtures/files/french-flag.gif', 'image/gif') }
-
-      before { subject }
-
-      it { expect(flash.alert).to be_present }
-      it { expect(flash.alert).to eq("Importation impossible : veuillez importer un fichier CSV") }
-    end
-
-    context 'when the headers are wrong' do
-      let(:csv_file) { fixture_file_upload('spec/fixtures/files/invalid-group-file.csv', 'text/csv') }
-
-      before { subject }
-
-      it { expect(flash.alert).to be_present }
-      it { expect(flash.alert).to eq("Importation impossible, veuillez importer un csv <a href=\"/csv/#{I18n.locale}/import-groupe-test.csv\">suivant ce modèle</a>") }
-    end
-
-    context 'when procedure is closed' do
-      let(:procedure) { create(:procedure, :closed, administrateurs: [admin]) }
-      let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe-instructeur.csv', 'text/csv') }
-
-      before { subject }
-
-      it { expect(procedure.groupe_instructeurs.first.label).to eq("Afrique") }
-      it { expect(flash.alert).to eq("Import terminé. Cependant les emails suivants ne sont pas pris en compte: kara") }
-    end
-  end
-
-  describe '#add_instructeurs_via_csv_file' do
-    let(:procedure_non_routee) { create(:procedure, :published, :for_individual, administrateurs: [admin]) }
+  describe '#import' do
+    let!(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }
 
     subject do
-      post :import, params: { procedure_id: procedure_non_routee.id, instructeurs_csv_file: csv_file }
+      post :import, params: { procedure_id: procedure.id, csv_file: csv_file }
     end
 
-    context 'when the csv file is less than 1 mo and content type text/csv' do
-      let(:csv_file) { fixture_file_upload('spec/fixtures/files/instructeurs-file.csv', 'text/csv') }
+    context 'routed procedures' do
+      context 'when the csv file is less than 1 mo and content type text/csv' do
+        let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe-instructeur.csv', 'text/csv') }
 
-      before do
-        allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs)
-          .and_return(double(deliver_later: true))
-        subject
+        before { subject }
+
+        it { expect(response.status).to eq(302) }
+        it { expect(procedure.groupe_instructeurs.first.label).to eq("Afrique") }
+        it { expect(flash.alert).to be_present }
+        it { expect(flash.alert).to eq("Import terminé. Cependant les emails suivants ne sont pas pris en compte: kara") }
       end
 
-      it { expect(response.status).to eq(302) }
-      it { expect(procedure_non_routee.instructeurs.pluck(:email)).to match_array(["kara@beta-gouv.fr", "philippe@mail.com", "lisa@gouv.fr"]) }
-      it { expect(flash.alert).to be_present }
-      it { expect(flash.alert).to eq("Import terminé. Cependant les emails suivants ne sont pas pris en compte: eric") }
-      it "calls GroupeInstructeurMailer" do
-        expect(GroupeInstructeurMailer).to have_received(:notify_added_instructeurs).with(
-          procedure_non_routee.defaut_groupe_instructeur,
-          any_args,
-          admin.email
-        )
+      context 'when the csv file has only one column' do
+        let(:csv_file) { fixture_file_upload('spec/fixtures/files/valid-instructeurs-file.csv', 'text/csv') }
+
+        before { subject }
+
+        it { expect { subject }.not_to raise_error }
+        it { expect(response.status).to eq(302) }
+        it { expect(flash.alert).to be_present }
+        it { expect(flash.alert).to eq("Importation impossible, veuillez importer un csv suivant <a href=\"/csv/import-instructeurs-test.csv\">ce modèle</a> pour une procédure classique ou <a href=\"/csv/fr/import-groupe-test.csv\">celui-ci</a> pour une procédure routée") }
+      end
+
+      context 'when the file content type is application/vnd.ms-excel' do
+        let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe_avec_caracteres_speciaux.csv', "application/vnd.ms-excel") }
+
+        before { subject }
+
+        it { expect(flash.notice).to be_present }
+        it { expect(flash.notice).to eq("La liste des instructeurs a été importée avec succès") }
+      end
+
+      context 'when the content of csv contains special characters' do
+        let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe_avec_caracteres_speciaux.csv', 'text/csv') }
+
+        before do
+          allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs)
+            .and_return(double(deliver_later: true))
+          subject
+        end
+
+        it { expect(procedure.groupe_instructeurs.pluck(:label)).to match_array(["Auvergne-Rhône-Alpes", "Vendée", "défaut", "groupe instructeur 2"]) }
+        it { expect(flash.notice).to be_present }
+        it { expect(flash.notice).to eq("La liste des instructeurs a été importée avec succès") }
+        it { expect(GroupeInstructeurMailer).to have_received(:notify_added_instructeurs).twice }
+      end
+
+      context 'when the csv file length is more than 1 mo' do
+        let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe-instructeur.csv', 'text/csv') }
+
+        before do
+          allow_any_instance_of(ActionDispatch::Http::UploadedFile).to receive(:size).and_return(3.megabytes)
+          subject
+        end
+
+        it { expect(flash.alert).to be_present }
+        it { expect(flash.alert).to eq("Importation impossible : le poids du fichier est supérieur à 1 Mo") }
+      end
+
+      context 'when the file content type is not accepted' do
+        let(:csv_file) { fixture_file_upload('spec/fixtures/files/french-flag.gif', 'image/gif') }
+
+        before { subject }
+
+        it { expect(flash.alert).to be_present }
+        it { expect(flash.alert).to eq("Importation impossible : veuillez importer un fichier CSV") }
+      end
+
+      context 'when the headers are wrong' do
+        let(:csv_file) { fixture_file_upload('spec/fixtures/files/invalid-group-file.csv', 'text/csv') }
+
+        before { subject }
+
+        it { expect(flash.alert).to be_present }
+        it { expect(flash.alert).to eq("Importation impossible, veuillez importer un csv suivant <a href=\"/csv/import-instructeurs-test.csv\">ce modèle</a> pour une procédure classique ou <a href=\"/csv/fr/import-groupe-test.csv\">celui-ci</a> pour une procédure routée") }
+      end
+
+      context 'when procedure is closed' do
+        let(:procedure) { create(:procedure, :closed, administrateurs: [admin]) }
+        let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe-instructeur.csv', 'text/csv') }
+
+        before { subject }
+
+        it { expect(procedure.groupe_instructeurs.first.label).to eq("Afrique") }
+        it { expect(flash.alert).to eq("Import terminé. Cependant les emails suivants ne sont pas pris en compte: kara") }
       end
     end
 
-    context 'when the csv file has more than one column' do
-      let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe-instructeur.csv', 'text/csv') }
+    context 'unrouted procedures' do
+      let(:procedure_non_routee) { create(:procedure, :published, :for_individual, administrateurs: [admin]) }
 
-      before { subject }
-
-      it { expect(response.status).to eq(302) }
-      it { expect(flash.alert).to be_present }
-      it { expect(flash.alert).to eq("Importation impossible, veuillez importer un csv <a href=\"/csv/import-instructeurs-test.csv\">suivant ce modèle</a>") }
-    end
-
-    context 'when the file content type is application/vnd.ms-excel' do
-      let(:csv_file) { fixture_file_upload('spec/fixtures/files/valid-instructeurs-file.csv', "application/vnd.ms-excel") }
-
-      before { subject }
-      it { expect(procedure_non_routee.instructeurs.pluck(:email)).to match_array(["kara@beta-gouv.fr", "philippe@mail.com", "lisa@gouv.fr"]) }
-      it { expect(flash.notice).to be_present }
-      it { expect(flash.notice).to eq("La liste des instructeurs a été importée avec succès") }
-    end
-
-    context 'when the csv file length is more than 1 mo' do
-      let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe-instructeur.csv', 'text/csv') }
-
-      before do
-        allow_any_instance_of(ActionDispatch::Http::UploadedFile).to receive(:size).and_return(3.megabytes)
-        subject
+      subject do
+        post :import, params: { procedure_id: procedure_non_routee.id, csv_file: csv_file }
       end
 
-      it { expect(flash.alert).to be_present }
-      it { expect(flash.alert).to eq("Importation impossible : le poids du fichier est supérieur à 1 Mo") }
-    end
+      context 'when the csv file is less than 1 mo and content type text/csv' do
+        let(:csv_file) { fixture_file_upload('spec/fixtures/files/instructeurs-file.csv', 'text/csv') }
 
-    context 'when the file content type is not accepted' do
-      let(:csv_file) { fixture_file_upload('spec/fixtures/files/french-flag.gif', 'image/gif') }
+        before do
+          allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs)
+            .and_return(double(deliver_later: true))
+          subject
+        end
 
-      before { subject }
+        it { expect(response.status).to eq(302) }
+        it { expect(procedure_non_routee.instructeurs.pluck(:email)).to match_array(["kara@beta-gouv.fr", "philippe@mail.com", "lisa@gouv.fr"]) }
+        it { expect(flash.alert).to be_present }
+        it { expect(flash.alert).to eq("Import terminé. Cependant les emails suivants ne sont pas pris en compte: eric") }
+        it "calls GroupeInstructeurMailer" do
+          expect(GroupeInstructeurMailer).to have_received(:notify_added_instructeurs).with(
+            procedure_non_routee.defaut_groupe_instructeur,
+            any_args,
+            admin.email
+          )
+        end
+      end
 
-      it { expect(flash.alert).to be_present }
-      it { expect(flash.alert).to eq("Importation impossible : veuillez importer un fichier CSV") }
+      context 'when the csv file has more than one column' do
+        let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe-instructeur.csv', 'text/csv') }
+
+        before { subject }
+
+        it { expect(response.status).to eq(302) }
+        it { expect(flash.alert).to be_present }
+        it { expect(flash.alert).to eq("Import terminé. Cependant les emails suivants ne sont pas pris en compte: kara") }
+      end
+
+      context 'when the file content type is application/vnd.ms-excel' do
+        let(:csv_file) { fixture_file_upload('spec/fixtures/files/valid-instructeurs-file.csv', "application/vnd.ms-excel") }
+
+        before { subject }
+        it { expect(procedure_non_routee.instructeurs.pluck(:email)).to match_array(["kara@beta-gouv.fr", "philippe@mail.com", "lisa@gouv.fr"]) }
+        it { expect(flash.notice).to be_present }
+        it { expect(flash.notice).to eq("La liste des instructeurs a été importée avec succès") }
+      end
+
+      context 'when the csv file length is more than 1 mo' do
+        let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe-instructeur.csv', 'text/csv') }
+
+        before do
+          allow_any_instance_of(ActionDispatch::Http::UploadedFile).to receive(:size).and_return(3.megabytes)
+          subject
+        end
+
+        it { expect(flash.alert).to be_present }
+        it { expect(flash.alert).to eq("Importation impossible : le poids du fichier est supérieur à 1 Mo") }
+      end
+
+      context 'when the file content type is not accepted' do
+        let(:csv_file) { fixture_file_upload('spec/fixtures/files/french-flag.gif', 'image/gif') }
+
+        before { subject }
+
+        it { expect(flash.alert).to be_present }
+        it { expect(flash.alert).to eq("Importation impossible : veuillez importer un fichier CSV") }
+      end
     end
   end
 
