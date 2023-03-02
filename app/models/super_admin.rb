@@ -27,8 +27,12 @@
 class SuperAdmin < ApplicationRecord
   include PasswordComplexityConcern
 
-  devise :rememberable, :trackable, :validatable, :lockable, :recoverable,
-    :two_factor_authenticatable, :otp_secret_encryption_key => Rails.application.secrets.otp_secret_key
+  devise :rememberable, :trackable, :validatable, :lockable, :recoverable
+  if SUPER_ADMIN_OTP_ENABLED
+    devise :two_factor_authenticatable, :otp_secret_encryption_key => Rails.application.secrets.otp_secret_key
+  else
+    devise :database_authenticatable
+  end
 
   def enable_otp!
     self.otp_secret = SuperAdmin.generate_otp_secret
