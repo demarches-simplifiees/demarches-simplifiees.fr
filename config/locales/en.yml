@@ -99,10 +99,11 @@ en:
         show_my_submitted_file: 'Show my submitted file'
         want_empty_pdf: "You prefer to submit a paper form? You can download an empty PDF file, and send it to the right administration : %{service} - %{adresse}"
         download_empty_pdf: 'Download an empty PDF file'
-        social_title: "Quick, simple and safe"
+        social_title: "Connect safely and quickly using"
     registrations:
       new:
-        title: "Create an account %{name}"
+        title: "Create %{name} account"
+        social_title: "Connect safely and quickly using"
         email_label: 'Email (name@site.com)'
         email_placeholder: 'Your email address'
         wanna_say: 'Do you mean to say'
@@ -259,7 +260,7 @@ en:
       sessions:
         new:
           sign_in: If you already have %{app_name} account
-          social_sign_in: To connect quicly and securely
+          social_sign_in: Connect quicly and securely using
           email: Email address (name@site.com)
           password: Password (minimum length %{min_length} characters)
           remember_me: Remember me

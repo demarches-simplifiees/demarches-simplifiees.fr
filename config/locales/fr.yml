@@ -89,10 +89,11 @@ fr:
         show_my_submitted_file: 'Voir mon dossier déposé'
         want_empty_pdf: "Vous souhaitez effectuer une demande par papier ? Vous pouvez télécharger un dossier vide au format PDF, et l'envoyer à l’administration concernée : %{service} - %{adresse}"
         download_empty_pdf: 'Télécharger un dossier vide au format PDF'
-        social_title: "Rapide, simple et sûr, identifiez vous"
+        social_title: "Rapide, simple et sûr, connectez-vous avec"
     registrations:
       new:
         title: "Créez-vous un compte %{name}"
+        social_title: "Rapide, simple et sûr, connectez-vous avec"
         email_label: 'Email'
         email_placeholder: 'Votre adresse email'
         wanna_say: 'Voulez-vous dire'
@@ -253,7 +254,7 @@ fr:
       sessions:
         new:
           sign_in: Si vous avez un compte %{app_name}
-          social_sign_in: Pour se connecter rapidement
+          social_sign_in: Connectez vous rapidement avec
           email: Email
           password: Mot de passe (%{min_length} caractères minimum)
           remember_me: Se souvenir de moi

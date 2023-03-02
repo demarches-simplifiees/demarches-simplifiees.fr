@@ -6,31 +6,30 @@
 - fc = ENV['FC_PARTICULIER_ID'].present?
 - prefix ||= "S'identifier avec "
 - if google || microsoft || yahoo || tatou || sipf || fc
-  -# %h2.huge-title= title
   .column.prior-border.ou-border.procedure-context-content
     .auth-form.sign-in-form
       .social-logins
-        %h1.fr-h6.mb-0.center
-          %span= title
+        %h1.fr-h3.mb-0.center= title
+        %br
         - if google
-          = link_to '/auth/google', class: "button expand"  do
+          = link_to '/auth/google', class: "fr-btn fr-btn--lg fr-btn--secondary"  do
             = image_tag 'icons/logo_google.svg', alt: 'icone Google'
             #{prefix}  #{t('views.shared.social_login.google')}
         - if microsoft
-          = link_to '/auth/microsoft', class: "button expand "  do
+          = link_to '/auth/microsoft', class: "fr-btn fr-btn--lg fr-btn--secondary "  do
             = image_tag 'icons/logo_microsoft.svg', alt: 'icone Microsoft'
             #{prefix}  #{t('views.shared.social_login.microsoft')}
         - if yahoo
-          = link_to '/auth/yahoo', class: "button expand "  do
+          = link_to '/auth/yahoo', class: "fr-btn fr-btn--lg fr-btn--secondary "  do
             = image_tag 'icons/logo_yahoo.svg', alt: 'icone Yahoo'
             #{prefix} #{t('views.shared.social_login.yahoo')}
         - if tatou
-          = link_to '/auth/tatou', class: "button expand "  do
+          = link_to '/auth/tatou', class: "fr-btn fr-btn--lg fr-btn--secondary "  do
             = image_tag 'icons/logo_tatou.svg', alt: 'icone Tàtou'
             #{prefix} #{t('views.shared.social_login.tatou')}
         - if sipf
-          = link_to '/auth/sipf', class: "button expand "  do
+          = link_to '/auth/sipf', class: "fr-btn fr-btn--lg fr-btn--secondary "  do
             = image_tag 'icons/logo_sipf.svg', alt: 'icone Polynesie'
             = t('views.shared.social_login.sipf')
-        - if fc
-          = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
+    - if fc
+      = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
