@@ -1,42 +1,47 @@
 - if hidden_by_administration
-  = link_to restore_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: "fr-btn fr-btn--secondary" do
-    = t('views.instructeurs.dossiers.restore')
+  %li
+    = link_to restore_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: "fr-btn fr-icon-refresh-line" do
+      = t('views.instructeurs.dossiers.restore')
 - elsif close_to_expiration || Dossier::TERMINE.include?(state)
-  = render Dropdown::MenuComponent.new(wrapper: :li, button_options: { class: ['fr-mb-0']}, menu_options: { id: "dossier_#{dossier_id}_actions_menu", class: 'user-dossier-actions' }) do |menu|
-    - menu.with_button_inner_html do
-      Actions
-
+  %li{ 'data-turbo': 'true' }
     - if close_to_expiration
-      - menu.with_item do
-        = link_to(repousser_expiration_instructeur_dossier_path(procedure_id, dossier_id), method: :post, role: 'menuitem') do
-          %span.icon.standby
-          %span.dropdown-description= t('instructeurs.dossiers.header.banner.button_delay_expiration')
+      = link_to repasser_en_instruction_instructeur_dossier_path(procedure_id, dossier_id), { class: 'fr-btn fr-btn--secondary fr-icon-edit-line' }.deep_merge!(post_method) do
+        Repasser en instruction
 
-    - if archived
-      - menu.with_item do
-        = link_to( unarchive_instructeur_dossier_path(procedure_id, dossier_id), role: 'menuitem', method: :patch) do
-          %span.icon.unarchive
-          %span.dropdown-description
-            Désarchiver le dossier
+      = link_to(repousser_expiration_instructeur_dossier_path(procedure_id, dossier_id), method: :post, class: "fr-btn") do
+        = t('instructeurs.dossiers.header.banner.button_delay_expiration')
+
+    - elsif archived
+      = link_to( unarchive_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: "fr-btn fr-icon-upload-2-line") do
+        Désarchiver le dossier
+
+      = link_to('', instructeur_dossier_path(procedure_id, dossier_id), method: :delete, class: 'fr-btn fr-btn--secondary fr-icon-delete-line icon-only danger', title: t('views.instructeurs.dossiers.delete_dossier'))
 
     - else
-      - menu.with_item do
-        = link_to(  archive_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, role: 'menuitem') do
-          %span.icon.archive
-          %span.dropdown-description
-            Archiver le dossier
+      = link_to repasser_en_instruction_instructeur_dossier_path(procedure_id, dossier_id), { class: 'fr-btn fr-btn--secondary fr-icon-edit-line' }.deep_merge!(post_method) do
+        Repasser en instruction
 
-      - menu.with_item(class: 'danger') do
-        = link_to(instructeur_dossier_path(procedure_id, dossier_id), method: :delete, role: 'menuitem') do
-          %span.icon.delete
-          %span.dropdown-description
-            = t('views.instructeurs.dossiers.delete_dossier')
+      = link_to(  archive_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: 'fr-btn fr-icon-folder-2-line') do
+        Archiver le dossier
 
+      = link_to('', instructeur_dossier_path(procedure_id, dossier_id), method: :delete, class: 'fr-btn fr-btn--secondary fr-icon-delete-line icon-only danger', title: t('views.instructeurs.dossiers.delete_dossier'))
 
 - elsif Dossier::EN_CONSTRUCTION_OU_INSTRUCTION.include?(state)
+  - if Dossier.states[:en_construction] == state
+    %li{ 'data-turbo': 'true' }
+      = link_to passer_en_instruction_instructeur_dossier_path(procedure_id, dossier_id), { class: 'fr-btn fr-btn--secondary fr-icon-edit-line' }.deep_merge!(post_method) do
+        Passer en instruction
+  - elsif Dossier.states[:en_instruction] == state
+    %li{ 'data-turbo': 'true' }
+      = link_to repasser_en_construction_instructeur_dossier_path(procedure_id, dossier_id), { class: 'fr-btn fr-btn--secondary fr-icon-draft-line' }.deep_merge!(post_method) do
+        Repasser en construction
+
+
   - if dossier_is_followed
-    = link_to unfollow_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: 'fr-btn fr-btn--secondary fr-icon-star-fill' do
-      = t('views.instructeurs.dossiers.stop_follow')
+    %li
+      = link_to unfollow_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: 'fr-btn fr-btn--secondary fr-icon-star-fill' do
+        = t('views.instructeurs.dossiers.stop_follow')
   - else
-    = link_to follow_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: 'fr-btn fr-btn--secondary fr-icon-star-line' do
-      = t('views.instructeurs.dossiers.follow_file')
+    %li
+      = link_to follow_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: 'fr-btn fr-icon-star-line' do
+        = t('views.instructeurs.dossiers.follow_file')
