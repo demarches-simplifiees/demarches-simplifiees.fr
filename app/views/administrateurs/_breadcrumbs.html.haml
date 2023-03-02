@@ -17,8 +17,8 @@
 
     - if defined?(preview) && preview
       .mb-2
-        = link_to t('preview', scope: [:layouts, :breadcrumb]), apercu_admin_procedure_path(@procedure), target: "_blank", rel: "noopener", class: 'button'
-        = link_to t('continue', scope: [:layouts, :breadcrumb]), admin_procedure_path(@procedure), title: t('continue_title', scope: [:layouts, :breadcrumb]), class: 'button accepted'
+        = link_to t('preview', scope: [:layouts, :breadcrumb]), apercu_admin_procedure_path(@procedure), target: "_blank", rel: "noopener", class: 'fr-btn fr-btn--secondary'
+        = link_to t('continue', scope: [:layouts, :breadcrumb]), admin_procedure_path(@procedure), title: t('continue_title', scope: [:layouts, :breadcrumb]), class: 'fr-btn fr-ml-2w fr-btn--icon-right fr-icon-arrow-right-fill'
 
     - if defined?(metadatas)
       .metadatas.pb-3

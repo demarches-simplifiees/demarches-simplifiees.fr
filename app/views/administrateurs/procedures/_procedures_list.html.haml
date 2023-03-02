@@ -6,7 +6,7 @@
       .flex.column.ml-1
         .card-title
           = link_to procedure.libelle, admin_procedure_path(procedure), style: 'color: black;'
-        = link_to(procedure_lien(procedure), procedure_lien(procedure), class: 'mb-1')
+        = link_to(procedure_lien(procedure), procedure_lien(procedure), class: 'fr-link fr-mb-1w')
 
       .admin-procedures-list-timestamps
         %p.notice N° #{procedure.id}
@@ -36,13 +36,13 @@
         %span.icon.folder
         %span.badge.baseline= procedure.dossiers.state_not_brouillon.visible_by_administration.count
 
-      %div
+      %ul.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
         - unless procedure.discarded?
-          = link_to admin_procedure_path(procedure), class: 'button mr-1 edit-procedure' do
-            %span.icon.edit
-            Modifier
-        .dropdown{ data: { controller: 'menu-button' } }
-          %button.button.dropdown-button.procedures-actions-btn{ data: { menu_button_target: 'button' } }
+          %li
+            = link_to admin_procedure_path(procedure), class: 'fr-btn fr-icon-draft-line fr-btn--tertiary' do
+              Modifier
+        %li.dropdown{ data: { controller: 'menu-button' } }
+          %button.fr-btn.fr-btn--tertiary.dropdown-button.procedures-actions-btn{ data: { menu_button_target: 'button' } }
             Actions
           .dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' }, id: dom_id(procedure, :actions_menu) }
             %ul.dropdown-items.pl-0

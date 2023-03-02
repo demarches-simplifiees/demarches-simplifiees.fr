@@ -11,7 +11,7 @@
 .admin-procedures-list-row.infos {
   align-items: flex-start;
 
-  a {
-    color: $blue-france-500;
+  a:not(:hover) {
+    background-image: none; // remove DSFR underline
   }
 }

@@ -7,7 +7,7 @@
       = render partial: "shared/dossiers/identite_individual", locals: { individual: dossier.individual }
 
       .center
-        = link_to t('views.shared.dossiers.demande.edit_identity'), identite_dossier_path(dossier), class: 'button'
+        = link_to t('views.shared.dossiers.demande.edit_identity'), identite_dossier_path(dossier), class: 'fr-btn fr-btn--secondary'
 
     - elsif dossier.etablissement
       = render partial: "shared/dossiers/identite_entreprise", locals: { etablissement: dossier.etablissement, short_identity: true, profile: "usager" }

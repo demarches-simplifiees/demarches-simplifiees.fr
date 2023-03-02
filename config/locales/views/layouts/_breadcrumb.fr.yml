@@ -5,7 +5,7 @@ fr:
       you_are_here: "Vous êtes ici"
       show: "Voir le fil d’Ariane"
       preview: "Prévisualiser le formulaire"
-      continue: "Continuer >"
+      continue: "Continuer"
       continue_title: "Vous pourrez revenir ici par la suite"
       created_at: "Créée le %{date} - n° %{number}"
       closed_at: "Close le %{date}"

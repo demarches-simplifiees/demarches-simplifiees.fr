@@ -2,10 +2,12 @@
   - if template&.attached?
     %p.mb-1
       Veuillez télécharger, remplir et joindre
-      = link_to('le modèle suivant', url_for(template), target: '_blank', rel: 'noopener')
+      = link_to(url_for(template), download: "", class: "fr-link fr-link--icon-right fr-icon-download-line") do
+        le modèle suivant
 
       - if helpers.administrateur_signed_in?
-        %em.fr-text-mention--grey.fr-text--xs.visible-on-previous-hover
+        %span.ml-2.fr-text--xs.fr-text-mention--grey.visible-on-previous-hover
+          %span.fr-text-action-high--blue-france.fr-icon-questionnaire-line{ "aria-hidden": "true" }
           = t('shared.ephemeral_link')
 
   - if persisted?

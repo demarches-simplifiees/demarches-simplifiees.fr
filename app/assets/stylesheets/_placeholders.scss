@@ -1,4 +1,5 @@
 @import "colors";
+@import "mixins";
 @import "constants";
 
 %horizontal-list {
@@ -24,4 +25,11 @@
   &:focus {
     outline: 3px solid $blue-france-500;
   }
+}
+
+%container { // TODO: switch to new design with preview in two view not in two column https://github.com/betagouv/demarches-simplifiees.fr/issues/7882
+  @include horizontal-padding($default-padding);
+  max-width: $page-width + 2 * $default-padding;
+  margin-left: auto;
+  margin-right: auto;
 }
