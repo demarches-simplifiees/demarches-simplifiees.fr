@@ -358,8 +358,11 @@ en:
           updated: "Updated"
           actions: "Actions"
         transfers:
-          demande_en_cours: "Une demande de transfert est en cours sur le dossier %{id} pour %{email}"
-          revoke: Révoquer cette demande
+          sender_demande_en_cours: "A transfer request is pending on file Nº %{id} to %{email}"
+          receiver_demande_en_cours: "Transfer request on file Nº %{id} sent by %{email}"
+          revoke: Revoke this request
+          accept: Accept
+          reject: Reject
         dossier_action:
           edit_dossier: "Edit the file"
           start_other_dossier: "Start another empty file"
