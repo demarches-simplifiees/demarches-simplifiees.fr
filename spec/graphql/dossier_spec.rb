@@ -27,7 +27,7 @@ RSpec.describe Types::DossierType, type: :graphql do
   end
 
   describe 'dossier with champs' do
-    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :communes }, { type: :address }]) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :communes }, { type: :address }, { type: :siret }]) }
     let(:dossier) { create(:dossier, :accepte, :with_populated_champs, procedure: procedure) }
     let(:query) { DOSSIER_WITH_CHAMPS_QUERY }
     let(:variables) { { number: dossier.id } }
@@ -52,9 +52,26 @@ RSpec.describe Types::DossierType, type: :graphql do
       dossier.champs_public.second.update(data: address)
     end
 
-    it { expect(data[:dossier][:champs][0][:__typename]).to eq "CommuneChamp" }
-    it { expect(data[:dossier][:champs][1][:__typename]).to eq "AddressChamp" }
-    it { expect(data[:dossier][:champs][0][:id]).to eq(data[:dossier][:revision][:champDescriptors][0][:id]) }
+    it do
+      expect(data[:dossier][:champs][0][:__typename]).to eq "CommuneChamp"
+      expect(data[:dossier][:champs][1][:__typename]).to eq "AddressChamp"
+      expect(data[:dossier][:champs][2][:__typename]).to eq "SiretChamp"
+      expect(data[:dossier][:champs][2][:etablissement][:siret]).to eq dossier.champs_public[2].etablissement.siret
+      expect(data[:dossier][:champs][0][:id]).to eq(data[:dossier][:revision][:champDescriptors][0][:id])
+    end
+
+    context 'when etablissement is in degraded mode' do
+      let(:etablissement) { dossier.champs_public.third.etablissement }
+      before do
+        etablissement.update(adresse: nil)
+      end
+
+      it do
+        expect(etablissement).to be_as_degraded_mode
+        expect(data[:dossier][:champs][2][:__typename]).to eq "SiretChamp"
+        expect(data[:dossier][:champs][2][:etablissement]).to be_nil
+      end
+    end
   end
 
   describe 'dossier with conditional champs' do
@@ -258,6 +275,12 @@ RSpec.describe Types::DossierType, type: :graphql do
         ... on AddressChamp {
           address {
             ...AddressFragment
+          }
+        }
+        ... on SiretChamp {
+          etablissement {
+            siret
+            entreprise { capitalSocial }
           }
         }
       }

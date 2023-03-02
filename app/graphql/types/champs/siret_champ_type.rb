@@ -7,8 +7,7 @@ module Types::Champs
     def etablissement
       if object.etablissement_id.present?
         Loaders::Record.for(Etablissement).load(object.etablissement_id).then do |etablissement|
-          return nil if etablissement.as_degraded_mode?
-          etablissement
+          etablissement unless etablissement&.as_degraded_mode?
         end
       end
     end
