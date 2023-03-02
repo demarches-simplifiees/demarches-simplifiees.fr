@@ -372,11 +372,6 @@ describe API::V2::GraphqlController do
         expect(gql_data[:groupeInstructeurAjouterInstructeurs][:groupeInstructeur][:id]).to eq(groupe_instructeur.to_typed_id)
         expect(groupe_instructeur.instructeurs.count).to eq(2)
         expect(gql_data[:groupeInstructeurAjouterInstructeurs][:groupeInstructeur][:instructeurs]).to eq([{ id: existing_instructeur.to_typed_id, email: existing_instructeur.email }, { id: Instructeur.last.to_typed_id, email: }])
-        expect(GroupeInstructeurMailer).to have_received(:notify_added_instructeurs).with(
-          groupe_instructeur,
-          [Instructeur.last],
-          admin.email
-        )
       }
     end
 
@@ -390,8 +385,6 @@ describe API::V2::GraphqlController do
       let(:operation_name) { 'groupeInstructeurSupprimerInstructeurs' }
 
       before do
-        allow(GroupeInstructeurMailer).to receive(:notify_group_when_instructeurs_removed)
-          .and_return(double(deliver_later: true))
         allow(GroupeInstructeurMailer).to receive(:notify_removed_instructeur)
           .and_return(double(deliver_later: true))
         existing_instructeur
@@ -406,11 +399,6 @@ describe API::V2::GraphqlController do
         expect(gql_data[:groupeInstructeurSupprimerInstructeurs][:groupeInstructeur][:id]).to eq(groupe_instructeur.to_typed_id)
         expect(groupe_instructeur.instructeurs.count).to eq(1)
         expect(gql_data[:groupeInstructeurSupprimerInstructeurs][:groupeInstructeur][:instructeurs]).to eq([{ id: existing_instructeur.to_typed_id, email: existing_instructeur.email }])
-        expect(GroupeInstructeurMailer).to have_received(:notify_group_when_instructeurs_removed).with(
-          groupe_instructeur,
-          [instructeur_2, instructeur_3],
-          admin.email
-        )
         expect(GroupeInstructeurMailer).to have_received(:notify_removed_instructeur).twice
       }
     end
