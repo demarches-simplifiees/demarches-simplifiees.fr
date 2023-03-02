@@ -25,7 +25,7 @@ describe 'Transfer dossier:' do
     login_as other_user, scope: :user
     visit dossiers_path
 
-    expect(page).to have_content("Demande de transfert Nº #{dossier.reload.transfer.id} envoyé par #{user.email}")
+    expect(page).to have_content("Demande de transfert pour le dossier Nº #{dossier.id} envoyé par #{user.email}")
     click_on 'Accepter'
     expect(page).to have_current_path(dossiers_path)
   end
