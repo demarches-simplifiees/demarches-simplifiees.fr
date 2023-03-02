@@ -1,0 +1,36 @@
+- if dossier.en_instruction?
+  = render Dropdown::MenuComponent.new(wrapper: :div, wrapper_options: { data: {'turbo-force': true} }, button_options: { class: [button_or_label_class(dossier)] }) do |menu|
+    - menu.with_button_inner_html do
+      Instruire le dossier
+
+    - menu.with_item do
+      = link_to('#', onclick: "DS.showMotivation(event, 'accept');", role: 'menuitem') do
+        %span.icon.accept
+        .dropdown-description
+          %h4 Accepter
+          L’usager sera notifié que son dossier a été accepté
+
+
+    - menu.with_item do
+      = link_to('#', onclick: "DS.showMotivation(event, 'without-continuation');", role: 'menuitem') do
+        %span.icon.without-continuation
+        .dropdown-description
+          %h4 Classer sans suite
+          L’usager sera notifié que son dossier a été classé sans suite
+
+
+    - menu.with_item do
+      = link_to('#', onclick: "DS.showMotivation(event, 'refuse');", role: 'menuitem') do
+        %span.icon.refuse
+        .dropdown-description
+          %h4 Refuser
+          L’usager sera notifié que son dossier a été refusé
+
+    - menu.with_form do
+      = render partial: 'instructeurs/dossiers/instruction_button_motivation', locals: { dossier: dossier, popup_title: 'Accepter le dossier', placeholder: 'Expliquez au demandeur pourquoi ce dossier est accepté (facultatif)', popup_class: 'accept', process_action: 'accepter', title: 'Accepter', confirm: "Confirmez-vous l'acceptation ce dossier ?" }
+
+    - menu.with_form do
+      = render partial: 'instructeurs/dossiers/instruction_button_motivation', locals: { dossier: dossier, popup_title: 'Classer le dossier sans suite', placeholder: 'Expliquez au demandeur pourquoi ce dossier est classé sans suite (obligatoire)', popup_class: 'without-continuation', process_action: 'classer_sans_suite', title: 'Classer sans suite', confirm: 'Confirmez-vous le classement sans suite de ce dossier ?' }
+
+    - menu.with_form do
+      = render partial: 'instructeurs/dossiers/instruction_button_motivation', locals: { dossier: dossier, popup_title: 'Refuser le dossier', placeholder: 'Expliquez au demandeur pourquoi ce dossier est refusé (obligatoire)', popup_class: 'refuse', process_action: 'refuser', title: 'Refuser', confirm: 'Confirmez-vous le refus de ce dossier ?' }
