@@ -8,10 +8,6 @@
     padding: (2 * $default-spacer) $default-spacer;
   }
 
-  td {
-    padding: 0;
-  }
-
   a {
     background-image: none; // remove DSFR underline
   }
@@ -90,4 +86,8 @@
   &:hover {
     background-color: rgba(242, 137, 0, 0.6) !important;
   }
+}
+
+table.display-table {
+  display: table;
 }
