@@ -8,7 +8,7 @@ namespace :after_party do
     progress = ProgressReport.new(procedure_without_routing_criteria_name.count)
     procedure_without_routing_criteria_name.in_batches do |relation|
       count = relation.count
-      relation.update_all(routing_criteria_name: 'Votre ville')
+      relation.update_all(routing_criteria_name: 'Votre commune')
       progress.inc(count)
     end
     progress.finish
