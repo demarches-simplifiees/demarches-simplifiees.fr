@@ -41,12 +41,8 @@ en:
           notice: This group will be a choice from the list "%{routing_criteria_name}"
         csv_import:
           title: CSV Import
-          routing_enabled:
-            notice_1: The csv file must have 2 columns (Group, Email) and be separated by commas. The import does not overwrite existing groups and instructors.
-          routing_disabled:
-            notice_1: The csv file must have 1 column with instructors emails.
+          notice_1_html: The csv file must have 1 column with instructors emails. For routed procedures, the csv file must have 2 columns (Group, Email) and be separated by commas. The import does not overwrite existing groups and instructors.
           notice_2: The size of the file must be less than %{csv_max_size}.
-          download_exemple: Download sample CSV file
           import_file: Import file
           import_file_procedure_not_published: The import of instructors by CSV file is available once the process has been published
           import_file_alert: Instructors added to the procedure will receive an email. Are you sure you want to continue ?"
