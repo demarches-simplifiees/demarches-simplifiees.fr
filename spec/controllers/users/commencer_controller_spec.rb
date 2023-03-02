@@ -15,16 +15,6 @@ describe Users::CommencerController, type: :controller do
         expect(assigns(:procedure)).to eq published_procedure
         expect(assigns(:revision)).to eq published_procedure.published_revision
       end
-
-      context 'when there are query params' do
-        subject { get :commencer, params: { path: path, any_param: "any param" } }
-
-        it "stores the parameters in session" do
-          subject
-
-          expect(session[:stored_params]).to be_present
-        end
-      end
     end
 
     context 'when the path is for a draft procedure' do
@@ -73,7 +63,7 @@ describe Users::CommencerController, type: :controller do
       end
     end
 
-    context 'when a dossier has been prefilled' do
+    context 'when a dossier has been prefilled by POST before' do
       let(:dossier) { create(:dossier, :brouillon, :prefilled, user: user) }
       let(:path) { dossier.procedure.path }
 
@@ -148,6 +138,85 @@ describe Users::CommencerController, type: :controller do
             expect(mail.subject).to eq("Retrouvez votre brouillon pour la démarche « #{dossier.procedure.libelle} »")
             expect(mail.html_part.body).to include(dossier_path(dossier))
           end
+        end
+      end
+    end
+
+    context 'when a dossier is being prefilled by GET' do
+      let(:type_de_champ_text) { create(:type_de_champ_text, procedure: published_procedure) }
+      let(:path) { published_procedure.path }
+      let(:user) { create(:user) }
+
+      context "when the dossier does not exists yet" do
+        subject { get :commencer, params: { path: path, "champ_#{type_de_champ_text.to_typed_id}" => "blabla" } }
+
+        shared_examples 'a prefilled brouillon dossier creator' do
+          it 'creates a dossier' do
+            subject
+            expect(Dossier.count).to eq(1)
+            expect(session[:prefill_token]).to eq(Dossier.last.prefill_token)
+            expect(session[:prefill_params]).to eq({ "action" => "commencer", "champ_#{type_de_champ_text.to_typed_id}" => "blabla", "controller" => "users/commencer", "path" => path.to_s })
+            expect(Dossier.last.champs.where(type_de_champ: type_de_champ_text).first.value).to eq("blabla")
+          end
+        end
+
+        context 'when the user is unauthenticated' do
+          it_behaves_like 'a prefilled brouillon dossier creator'
+        end
+
+        context 'when the user is authenticated' do
+          before { sign_in user }
+
+          it_behaves_like 'a prefilled brouillon dossier creator'
+
+          it { expect { subject }.to change { Dossier.last&.user }.from(nil).to(user) }
+
+          it 'sends the notify_new_draft email' do
+            expect { perform_enqueued_jobs { subject } }.to change { ActionMailer::Base.deliveries.count }.by(1)
+
+            dossier = Dossier.last
+            mail = ActionMailer::Base.deliveries.last
+            expect(mail.subject).to eq("Retrouvez votre brouillon pour la démarche « #{dossier.procedure.libelle} »")
+            expect(mail.html_part.body).to include(dossier_path(dossier))
+          end
+        end
+      end
+      context "when prefilled params are passed" do
+        subject { get :commencer, params: { path: path, prefill_token: "token", "champ_#{type_de_champ_text.to_typed_id}" => "blabla" } }
+
+        context "when the associated dossier exists" do
+          let!(:dossier) { create(:dossier, :prefilled, prefill_token: "token") }
+          let!(:champ_text) { create(:champ_text, dossier: dossier, type_de_champ: type_de_champ_text) }
+
+          it "does not create a new dossier" do
+            subject
+            expect(Dossier.count).to eq(1)
+            expect(assigns(:prefilled_dossier)).to eq(dossier)
+          end
+        end
+        context "when the associated dossier does not exists" do
+          it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
+        end
+      end
+      context "when session params exists" do
+        subject { get :commencer, params: { path: path, "champ_#{type_de_champ_text.to_typed_id}" => "blabla" } }
+
+        before do
+          session[:prefill_token] = "token"
+          session[:prefill_params] = { "action" => "commencer", "champ_#{type_de_champ_text.to_typed_id}" => "blabla", "controller" => "users/commencer", "path" => path.to_s }
+        end
+
+        context "when the associated dossier exists" do
+          let!(:dossier) { create(:dossier, :prefilled, prefill_token: "token") }
+
+          it "does not create a new dossier" do
+            subject
+            expect(Dossier.count).to eq(1)
+            expect(assigns(:prefilled_dossier)).to eq(dossier)
+          end
+        end
+        context "when the associated dossier does not exists" do
+          it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
         end
       end
     end

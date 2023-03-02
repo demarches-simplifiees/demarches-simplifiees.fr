@@ -1,7 +1,6 @@
 module Users
   class DossiersController < UserController
     include DossierHelper
-    include QueryParamsStoreConcern
 
     layout 'procedure_context', only: [:identite, :update_identite, :siret, :update_siret]
 
@@ -144,6 +143,8 @@ module Users
     end
 
     def brouillon
+      session.delete(:prefill_token)
+      session.delete(:prefill_params)
       @dossier = dossier_with_champs
       @dossier.valid?(context: :prefilling)
 
@@ -295,7 +296,6 @@ module Users
       )
       dossier.build_default_individual
       dossier.save!
-      dossier.prefill!(PrefillParams.new(dossier, retrieve_and_delete_stored_query_params).to_a)
       DossierMailer.with(dossier:).notify_new_draft.deliver_later
 
       if dossier.procedure.for_individual

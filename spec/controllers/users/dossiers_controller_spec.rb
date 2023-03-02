@@ -1068,60 +1068,6 @@ describe Users::DossiersController, type: :controller do
 
             it { is_expected.to redirect_to dossiers_path }
           end
-
-          context 'when prefill values have been stored in session before' do
-            let!(:type_de_champ_1) { create(:type_de_champ_text, procedure: procedure) }
-            let(:value_1) { "any value" }
-
-            let!(:type_de_champ_2) { create(:type_de_champ_textarea, procedure: procedure) }
-            let(:value_2) { "another value" }
-
-            let(:params) {
-              {
-                procedure_id: procedure_id,
-                "champ_#{type_de_champ_1.to_typed_id_for_query}" => value_1,
-                "champ_#{type_de_champ_2.to_typed_id_for_query}" => value_2
-              }
-            }
-
-            before { session[:stored_params] = params.to_json }
-
-            it { expect { subject }.to change { session[:stored_params] }.to(nil) }
-
-            it { expect { subject }.to change { Dossier.count }.by(1) }
-
-            it "prefills the dossier's champs with the given values" do
-              subject
-
-              dossier = Dossier.last
-              expect(find_champ_by_stable_id(dossier, type_de_champ_1.stable_id).value).to eq(value_1)
-              expect(find_champ_by_stable_id(dossier, type_de_champ_2.stable_id).value).to eq(value_2)
-            end
-
-            it { is_expected.to redirect_to siret_dossier_path(id: Dossier.last) }
-
-            context 'when prefill values contain a hash' do
-              let(:value_2) { { evil: "payload" } }
-
-              it "prefills the dossier's champ with the hash stored as a string" do
-                subject
-
-                dossier = Dossier.last
-                expect(find_champ_by_stable_id(dossier, type_de_champ_2.stable_id).value).to eq("{\"evil\"=>\"payload\"}")
-              end
-            end
-
-            context 'when prefill values contain an array' do
-              let(:value_2) { ["a", "b", "c"] }
-
-              it "prefills the dossier's champ with the array stored as a string" do
-                subject
-
-                dossier = Dossier.last
-                expect(find_champ_by_stable_id(dossier, type_de_champ_2.stable_id).value).to eq("[\"a\", \"b\", \"c\"]")
-              end
-            end
-          end
         end
         context 'when user is not logged' do
           it { is_expected.to have_http_status(302) }
