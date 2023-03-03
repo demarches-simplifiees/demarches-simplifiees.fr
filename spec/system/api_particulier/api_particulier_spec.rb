@@ -274,9 +274,7 @@ describe 'fetch API Particulier Data', js: true do
 
         fill_in 'Le numéro d’allocataire CAF', with: numero_allocataire
         fill_in 'Le code postal', with: 'wrong_code'
-
-        blur
-        expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
+        wait_for_autosave
 
         dossier = Dossier.last
         cnaf_champ = dossier.champs.find(&:cnaf?)
@@ -286,11 +284,14 @@ describe 'fetch API Particulier Data', js: true do
         click_on 'Déposer le dossier'
         expect(page).to have_content(/code postal doit posséder 5 caractères/)
 
-        fill_in 'Le code postal', with: code_postal
-
         VCR.use_cassette('api_particulier/success/composition_familiale') do
-          perform_enqueued_jobs { click_on 'Déposer le dossier' }
+          perform_enqueued_jobs do
+            fill_in 'Le code postal', with: code_postal
+            wait_for_autosave
+          end
         end
+
+        click_on 'Déposer le dossier'
 
         visit demande_dossier_path(dossier)
         expect(page).to have_content(/Des données.*ont été reçues depuis la CAF/)
@@ -329,20 +330,23 @@ describe 'fetch API Particulier Data', js: true do
         click_button('Continuer')
 
         fill_in "Identifiant", with: 'wrong code'
-
-        blur
-        expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
+        wait_for_autosave
 
         dossier = Dossier.last
         pole_emploi_champ = dossier.champs.find(&:pole_emploi?)
 
         expect(pole_emploi_champ.identifiant).to eq('wrong code')
-
-        fill_in "Identifiant", with: identifiant
+        clear_enqueued_jobs
+        pole_emploi_champ.update(external_id: nil, identifiant: nil)
 
         VCR.use_cassette('api_particulier/success/situation_pole_emploi') do
-          perform_enqueued_jobs { click_on 'Déposer le dossier' }
+          perform_enqueued_jobs do
+            fill_in "Identifiant", with: identifiant
+            wait_until { pole_emploi_champ.reload.external_id.present? }
+          end
         end
+
+        click_on 'Déposer le dossier'
 
         visit demande_dossier_path(dossier)
         expect(page).to have_content(/Des données.*ont été reçues depuis Pôle emploi/)
@@ -397,20 +401,23 @@ describe 'fetch API Particulier Data', js: true do
         click_button('Continuer')
 
         fill_in "INE", with: 'wrong code'
-
-        blur
-        expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
+        wait_for_autosave
 
         dossier = Dossier.last
         mesri_champ = dossier.champs.find(&:mesri?)
 
         expect(mesri_champ.ine).to eq('wrong code')
-
-        fill_in "INE", with: ine
+        clear_enqueued_jobs
+        mesri_champ.update(external_id: nil, ine: nil)
 
         VCR.use_cassette('api_particulier/success/etudiants') do
-          perform_enqueued_jobs { click_on 'Déposer le dossier' }
+          perform_enqueued_jobs do
+            fill_in "INE", with: ine
+            wait_until { mesri_champ.reload.external_id.present? }
+          end
         end
+
+        click_on 'Déposer le dossier'
 
         visit demande_dossier_path(dossier)
         expect(page).to have_content(/Des données.*ont été reçues depuis le MESRI/)
@@ -457,9 +464,7 @@ describe 'fetch API Particulier Data', js: true do
 
         fill_in 'Le numéro fiscal', with: numero_fiscal
         fill_in "La référence d'avis d'imposition", with: 'wrong_code'
-
-        blur
-        expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
+        wait_for_autosave
 
         dossier = Dossier.last
         dgfip_champ = dossier.champs.find(&:dgfip?)
@@ -469,11 +474,14 @@ describe 'fetch API Particulier Data', js: true do
         click_on 'Déposer le dossier'
         expect(page).to have_content(/reference avis doit posséder 13 ou 14 caractères/)
 
-        fill_in "La référence d'avis d'imposition", with: reference_avis
-
         VCR.use_cassette('api_particulier/success/avis_imposition') do
-          perform_enqueued_jobs { click_on 'Déposer le dossier' }
+          perform_enqueued_jobs do
+            fill_in "La référence d'avis d'imposition", with: reference_avis
+            wait_for_autosave
+          end
         end
+
+        click_on 'Déposer le dossier'
 
         visit demande_dossier_path(dossier)
         expect(page).to have_content(/Des données.*ont été reçues depuis la DGFiP/)

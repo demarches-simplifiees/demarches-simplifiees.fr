@@ -955,7 +955,7 @@ DEPENDENCIES
   vite_rails
   warden
   web-console
-  webdrivers (~> 4.0)
+  webdrivers
   webmock
   zipline
   zxcvbn-ruby

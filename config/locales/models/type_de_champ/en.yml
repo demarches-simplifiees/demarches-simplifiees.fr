@@ -1,0 +1,43 @@
+fr:
+  activerecord:
+    models:
+      type_de_champ: 'Field type'
+    attributes:
+      type_de_champ:
+        type_champs:
+          text: 'Text'
+          textarea: 'Text area'
+          date: 'Date'
+          datetime: 'Datetime'
+          number: 'Number'
+          decimal_number: 'Decimal number'
+          integer_number: 'Integer number'
+          checkbox: 'Checkbox'
+          civilite: 'Civility'
+          email: 'Email'
+          phone: 'Phone'
+          address: 'Adress'
+          yes_no: 'Yes/No'
+          drop_down_list: 'Dropdown list'
+          multiple_drop_down_list: 'Multiple dropdown list'
+          linked_drop_down_list: 'Linked dropdown list'
+          pays: 'Country'
+          regions: 'Regions'
+          departements: 'County'
+          communes: 'Municipality'
+          engagement: 'Commitment'
+          header_section: 'Header section'
+          explication: 'Explication'
+          dossier_link: 'File link'
+          piece_justificative: 'Supporting document'
+          siret: 'SIRET'
+          rna: 'RNA'
+          carte: 'Card'
+          repetition: 'Repetition'
+          titre_identite: 'Identity title'
+          iban: 'Iban'
+          annuaire_education: 'Schooling directory'
+          cnaf: 'Data from Caisse nationale des allocations familiales'
+          dgfip: 'Data from Direction générale des Finances publiques'
+          pole_emploi: 'Pôle emploi status'
+          mesri: "Data from Ministère de l'Enseignement Supérieur, de la Recherche et de l'Innovation"

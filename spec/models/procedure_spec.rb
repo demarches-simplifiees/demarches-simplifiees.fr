@@ -1261,10 +1261,6 @@ describe Procedure do
       Flipper.enable :zonage
     end
 
-    after do
-      Flipper.disable :zonage
-    end
-
     let(:procedure) { create(:procedure, zones: []) }
 
     subject { procedure.missing_zones? }
@@ -1283,10 +1279,6 @@ describe Procedure do
   describe '.missing_steps' do
     before do
       Flipper.enable :zonage
-    end
-
-    after do
-      Flipper.disable :zonage
     end
 
     subject { procedure.missing_steps.include?(step) }

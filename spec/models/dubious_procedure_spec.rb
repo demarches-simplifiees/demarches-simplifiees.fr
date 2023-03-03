@@ -17,7 +17,8 @@ describe DubiousProcedure, type: :model do
       it 'returns dubious procedures' do
         expect(subject.first.id).to eq(procedure.id)
         expect(subject.first.libelle).to eq(procedure.libelle)
-        expect(subject.first.dubious_champs).to eq("num de securite sociale, stp - t'aurais une carte bancaire ?")
+        expect(subject.first.dubious_champs).to include("num de securite sociale, stp")
+        expect(subject.first.dubious_champs).to include("t'aurais une carte bancaire ?")
       end
 
       context 'and a whitelisted procedure' do

@@ -14,7 +14,7 @@
 
     = f.label :zone do
       = t('zone', scope: 'activerecord.attributes.procedure')
-    - if Flipper.enabled? :zonage
+    - if @procedure.feature_enabled?(:zonage)
       = f.collection_check_boxes :zone_ids, Zone.available_at(@procedure.published_or_created_at), :id, :label do |b|
         .editable-champ.editable-champ-checkbox
           = b.check_box

@@ -161,6 +161,7 @@ Rails.application.routes.draw do
 
   namespace :champs do
     get ':champ_id/siret', to: 'siret#show', as: :siret
+    get ':champ_id/rna', to: 'rna#show', as: :rna
     get ':champ_id/dossier_link', to: 'dossier_link#show', as: :dossier_link
     get ':champ_id/dn', to: 'numero_dn#show', as: :dn
     post ':champ_id/carte', to: 'carte#show', as: :carte
@@ -292,6 +293,7 @@ Rails.application.routes.draw do
         get 'etablissement'
         get 'brouillon'
         patch 'brouillon', to: 'dossiers#update_brouillon'
+        post 'brouillon', to: 'dossiers#submit_brouillon'
         get 'modifier', to: 'dossiers#modifier'
         patch 'modifier', to: 'dossiers#update'
         get 'merci'

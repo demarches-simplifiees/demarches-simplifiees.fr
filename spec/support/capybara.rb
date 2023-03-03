@@ -3,21 +3,31 @@ require 'capybara-screenshot/rspec'
 require 'capybara/email/rspec'
 require 'selenium/webdriver'
 
-Capybara.javascript_driver = ENV.fetch('CAPYBARA_DRIVER', 'headless_chrome').to_sym
-
 Capybara.register_driver :chrome do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome)
+  options = Selenium::WebDriver::Chrome::Options.new
+  options.add_argument('--no-sandbox') unless ENV['SANDBOX']
+  options.add_argument('--mute-audio')
+
+  download_path = Capybara.save_path
+  # Chromedriver 77 requires setting this for headless mode on linux
+  # Different versions of Chrome/selenium-webdriver require setting differently - just set them all
+  options.add_preference('download.default_directory', download_path)
+  options.add_preference(:download, default_directory: download_path)
+
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options).tap do |driver|
+    # Set download dir for Chrome < 77
+    driver.browser.download_path = download_path
+  end
 end
 
 Capybara.register_driver :headless_chrome do |app|
   options = Selenium::WebDriver::Chrome::Options.new
   options.add_argument('--no-sandbox') unless ENV['SANDBOX']
-  options.add_argument('--headless') unless ENV['NO_HEADLESS']
+  options.add_argument('--headless')
   options.add_argument('--window-size=1440,900')
-
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    "goog:chromeOptions" => { args: ['disable-dev-shm-usage', 'disable-software-rasterizer', 'mute-audio', 'window-size=1440,900'] }
-  )
+  options.add_argument('--disable-dev-shm-usage')
+  options.add_argument('--disable-software-rasterizer')
+  options.add_argument('--mute-audio')
 
   download_path = Capybara.save_path
   # Chromedriver 77 requires setting this for headless mode on linux
@@ -25,22 +35,10 @@ Capybara.register_driver :headless_chrome do |app|
   options.add_preference('download.default_directory', download_path)
   options.add_preference(:download, default_directory: download_path)
 
-  Capybara::Selenium::Driver.new(app, browser: :chrome, capabilities: [capabilities, options])
-end
-
-Capybara.register_driver :wsl do |app|
-  options = Selenium::WebDriver::Chrome::Options.new
-  options.add_argument('--window-size=1440,900')
-  # Chromedriver 77 requires setting this for headless mode on linux
-  # Different versions of Chrome/selenium-webdriver require setting differently - just set them all
-  download_path = Capybara.save_path
-  options.add_preference('download.default_directory', download_path)
-  options.add_preference(:download, default_directory: download_path)
-
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    "goog:chromeOptions" => { args: ['disable-dev-shm-usage', 'disable-software-rasterizer', 'mute-audio', 'window-size=1440,900'] }
-  )
-  Capybara::Selenium::Driver.new(app, browser: :remote, url: "http://localhost:4444/wd/hub", capabilities: [options, capabilities])
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options).tap do |driver|
+    # Set download dir for Chrome < 77
+    driver.browser.download_path = download_path
+  end
 end
 
 Capybara.default_max_wait_time = 2
@@ -67,7 +65,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each, type: :system, js: true) do
-    driven_by ENV['CAPYBARA_DRIVER']&.to_sym || :headless_chrome
+    driven_by ENV['NO_HEADLESS'] ? :chrome : :headless_chrome
   end
 
   # Set the user preferred language before Javascript system specs.
@@ -77,7 +75,7 @@ RSpec.configure do |config|
   # the default Accept-Language value reliably.
   # So instead we set the locale cookie explicitly before each Javascript test.
   config.before(:each, type: :system, js: true) do
-    Capybara.visit '/' # Webdriver needs visiting a page before setting the cookie
+    visit '/' # Webdriver needs visiting a page before setting the cookie
     Capybara.current_session.driver.browser.manage.add_cookie(
       name: :locale,
       value: Rails.application.config.i18n.default_locale
