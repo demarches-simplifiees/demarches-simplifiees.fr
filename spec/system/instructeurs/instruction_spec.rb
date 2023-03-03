@@ -1,7 +1,7 @@
 describe 'Instructing a dossier:', js: true, retry: 3 do
   include ActiveJob::TestHelper
 
-  let(:password) { 'my-s3cure-p4ssword' }
+  let(:password) { SECURE_PASSWORD }
   let!(:instructeur) { create(:instructeur, password: password) }
 
   let!(:procedure) { create(:procedure, :with_type_de_champ, :published, instructeurs: [instructeur]) }

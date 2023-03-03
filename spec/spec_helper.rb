@@ -18,6 +18,8 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 require 'rspec/retry'
 
+SECURE_PASSWORD = 'my-s3cure-p4ssword'
+
 RSpec.configure do |config|
   config.filter_run_excluding disable: true
   config.color = true

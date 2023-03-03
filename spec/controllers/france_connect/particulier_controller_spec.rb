@@ -197,7 +197,7 @@ describe FranceConnect::ParticulierController, type: :controller do
     let(:fci) { FranceConnectInformation.create!(user_info) }
     let(:merge_token) { fci.create_merge_token! }
     let(:email) { 'EXISTING_account@a.com ' }
-    let(:password) { 'my-s3cure-p4ssword' }
+    let(:password) { SECURE_PASSWORD }
     let(:format) { :turbo_stream }
 
     subject { post :merge_with_existing_account, params: { merge_token: merge_token, email: email, password: password }, format: format }

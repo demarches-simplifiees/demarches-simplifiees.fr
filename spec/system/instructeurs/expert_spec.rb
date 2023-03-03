@@ -2,7 +2,7 @@ describe 'Inviting an expert:', js: true, retry: 3 do
   include ActiveJob::TestHelper
   include ActionView::Helpers
 
-  let(:instructeur) { create(:instructeur, password: 'my-s3cure-p4ssword') }
+  let(:instructeur) { create(:instructeur, password: SECURE_PASSWORD) }
   let(:expert) { create(:expert, password: expert_password) }
   let(:expert2) { create(:expert, password: expert_password) }
   let(:expert_password) { 'mot de passe d’expert' }
