@@ -521,6 +521,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         it { expect(response.status).to eq(302) }
         it { expect(flash.alert).to be_present }
         it { expect(flash.alert).to eq("Import terminé. Cependant les emails suivants ne sont pas pris en compte: kara") }
+        it { expect(procedure_non_routee.reload.routing_enabled?).to be_truthy }
       end
 
       context 'when the file content type is application/vnd.ms-excel' do
