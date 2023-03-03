@@ -14,7 +14,7 @@
       %section.list-avis.mt-8
         %h1.tab-title
           Messages envoyés précedemment
-          %span.count= @bulk_messages.count
+          %span.fr-badge= @bulk_messages.count
 
         %ul
           - @bulk_messages.each do |message|

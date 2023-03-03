@@ -18,7 +18,7 @@
           label: 'Emails',
           acceptNewValues: true)
 
-      = f.submit 'Affecter', class: 'button primary send', disabled: disabled_as_super_admin
+      = f.submit 'Affecter', class: 'fr-btn', disabled: disabled_as_super_admin
 
   %table.table.mt-2
     %thead
@@ -32,11 +32,11 @@
             #{instructeur.email}
 
           - confirmation_message = procedure.routee? ? "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » du groupe « #{groupe_instructeur.label} » ?" : "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » de la démarche ?"
-          %td.actions= button_to 'retirer',
+          %td.actions= button_to 'Retirer',
             { action: :remove_instructeur, id: groupe_instructeur.id },
             { method: :delete,
               data: { confirm: confirmation_message },
               params: { instructeur: { id: instructeur.id }},
-              class: 'button' }
+              class: 'fr-btn fr-btn--secondary' }
 
   = paginate instructeurs

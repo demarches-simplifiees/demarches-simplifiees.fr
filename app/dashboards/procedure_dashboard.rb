@@ -19,7 +19,6 @@ class ProcedureDashboard < Administrate::BaseDashboard
     zone: Field::BelongsTo,
     lien_site_web: Field::String, # TODO: use Field::Url when administrate-v0.12 will be released
     organisation: Field::String,
-    direction: Field::String,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
     for_individual: Field::Boolean,
@@ -67,7 +66,6 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :description,
     :lien_site_web,
     :organisation,
-    :direction,
     :zone,
     :service,
     :created_at,

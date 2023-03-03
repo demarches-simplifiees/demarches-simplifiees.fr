@@ -19,8 +19,8 @@
       %p.m-2= procedure.active_dossier_submitted_message.message_on_submit_by_usager
 
     .flex.column.align-center
-      = link_to t('views.users.dossiers.merci.acces_dossier'), dossier ? dossier_path(dossier) : "#dossier" , class: 'button large primary mt-4'
-      = link_to t('views.users.dossiers.merci.submit_dossier'), procedure_lien(procedure), class: 'mt-4'
+      = link_to t('views.users.dossiers.merci.acces_dossier'), dossier ? dossier_path(dossier) : "#dossier" , class: 'fr-btn fr-btn--xl fr-mt-5w'
+      = link_to t('views.users.dossiers.merci.submit_dossier'), procedure_lien(procedure), class: 'fr-btn fr-btn--secondary fr-mt-3w'
 
       .monavis
         != procedure.monavis_embed

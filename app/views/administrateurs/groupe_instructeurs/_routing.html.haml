@@ -6,9 +6,9 @@
 
   - if procedure.routee?
     - if procedure.routing_enabled? && procedure.groupe_instructeurs.size == 1
-      = link_to t('.button.routing_disable'), update_routing_enabled_admin_procedure_groupe_instructeurs_path(procedure, routing: :disable), class: 'button primary mt-1', method: 'patch'
+      = link_to t('.button.routing_disable'), update_routing_enabled_admin_procedure_groupe_instructeurs_path(procedure, routing: :disable), class: 'fr-btn', method: 'patch'
   - else
-    = link_to t('.button.routing_enable'), update_routing_enabled_admin_procedure_groupe_instructeurs_path(procedure, routing: :enable), class: 'button primary mt-1', method: 'patch'
+    = link_to t('.button.routing_enable'), update_routing_enabled_admin_procedure_groupe_instructeurs_path(procedure, routing: :enable), class: 'fr-btn', method: 'patch'
 .card
   %h2.card-title L‘autogestion des instructeurs
   %p.notice= t('.self_managment_notice_html')

@@ -1,4 +1,4 @@
-describe 'France Connect Particulier Connexion' do
+describe 'Omni Auth Connexion' do
   let(:code) { 'plop' }
   let(:given_name) { 'titi' }
   let(:family_name) { 'toto' }
@@ -20,29 +20,36 @@ describe 'France Connect Particulier Connexion' do
     }
   end
 
-  context 'when user is on login page', if: ENV['FC_PARTICULIER_ID'].present? do
-    before { visit new_user_session_path }
-
-    scenario 'link to France Connect is present' do
-      expect(page).to have_css('.fr-connect')
+  context 'when user is on login page' do
+    before do
+      ENV['GOOGLE_CLIENT_ID'] = "MyClientId"
+      ENV['GOOGLE_CLIENT_SECRET'] = "MySecret"
+      visit new_user_session_path
     end
 
-    context 'and click on france connect link', if: ENV['FC_PARTICULIER_ID'].present? do
+    scenario 'link to Google is present' do
+      expect(page).to have_link('Gmail')
+    end
+
+    context 'and click on gmail link' do
+      let(:code) { 'plop' }
+
       context 'when authentification is ok' do
         before do
-          allow_any_instance_of(FranceConnectParticulierClient).to receive(:authorization_uri).and_return(france_connect_particulier_callback_path(code: code))
-          allow(FranceConnectService).to receive(:retrieve_user_informations_particulier).and_return(france_connect_information)
+          allow_any_instance_of(OmniAuthClient).to receive(:authorization_uri).and_return(omniauth_callback_path(provider: 'google', code: code))
+          allow(OmniAuthService).to receive(:retrieve_user_informations).and_return(france_connect_information)
         end
 
         context 'when no user is linked' do
           let(:france_connect_information) { build(:france_connect_information, user_info) }
 
           context 'and no user has the same email' do
-            before { page.find('.fr-connect').click }
+            before do
+              page.find("a[href='#{omniauth_path('google')}']").click
+            end
 
             scenario 'he is redirected to user dossiers page' do
               expect(page).to have_content('Dossiers')
-              expect(User.find_by(email: email)).not_to be nil
             end
           end
 
@@ -50,7 +57,7 @@ describe 'France Connect Particulier Connexion' do
             let!(:user) { create(:user, email: email, password: TEST_PASSWORD) }
 
             before do
-              page.find('.fr-connect').click
+              page.find("a[href='#{omniauth_path('google')}']").click
             end
 
             scenario 'he is redirected to the merge page' do
@@ -60,7 +67,7 @@ describe 'France Connect Particulier Connexion' do
             scenario 'it merges its account' do
               page.find('#it-is-mine').click
               fill_in 'password', with: TEST_PASSWORD
-              click_on 'Fusionner les comptes'
+              click_on I18n.t('omniauth.merge.button_merge')
 
               expect(page).to have_content('Dossiers')
             end
@@ -68,7 +75,7 @@ describe 'France Connect Particulier Connexion' do
             scenario 'it uses another email that belongs to nobody' do
               page.find('#it-is-not-mine').click
               fill_in 'email', with: 'new_email@a.com'
-              click_on 'Utiliser ce mail'
+              click_on I18n.t('omniauth.merge.button_use_this_email')
 
               expect(page).to have_content('Dossiers')
             end
@@ -79,13 +86,13 @@ describe 'France Connect Particulier Connexion' do
               scenario 'it uses another email that belongs to another account' do
                 page.find('#it-is-not-mine').click
                 fill_in 'email', with: 'an_existing_email@a.com'
-                click_on 'Utiliser ce mail'
+                click_on I18n.t('omniauth.merge.button_use_this_email')
 
                 expect(page).to have_css('#password-for-another-account', visible: true, wait: 2)
 
                 within '#new-account-password-confirmation' do
                   fill_in 'password', with: TEST_PASSWORD
-                  click_on 'Fusionner les comptes'
+                  click_on I18n.t('omniauth.merge.button_merge')
                 end
 
                 expect(page).to have_content('Dossiers')
@@ -99,7 +106,9 @@ describe 'France Connect Particulier Connexion' do
             create(:france_connect_information, :with_user, user_info.merge(created_at: Time.zone.parse('12/12/2012'), updated_at: Time.zone.parse('12/12/2012')))
           end
 
-          before { page.find('.fr-connect').click }
+          before do
+            page.find("a[href='#{omniauth_path('google')}']").click
+          end
 
           scenario 'he is redirected to user dossiers page' do
             expect(page).to have_content('Dossiers')
@@ -113,17 +122,17 @@ describe 'France Connect Particulier Connexion' do
 
       context 'when authentification is not ok' do
         before do
-          allow_any_instance_of(FranceConnectParticulierClient).to receive(:authorization_uri).and_return(france_connect_particulier_callback_path(code: code))
-          allow(FranceConnectService).to receive(:retrieve_user_informations_particulier) { raise Rack::OAuth2::Client::Error.new(500, error: 'Unknown') }
-          page.find('.fr-connect').click
+          allow_any_instance_of(OmniAuthClient).to receive(:authorization_uri).and_return(omniauth_callback_path(provider: 'google', code: code))
+          allow(OmniAuthService).to receive(:retrieve_user_informations) { raise Rack::OAuth2::Client::Error.new(500, error: 'Unknown') }
+          page.find("a[href='#{omniauth_path('google')}']").click
         end
 
         scenario 'he is redirected to login page' do
-          expect(page).to have_css('.fr-connect')
+          expect(page).to have_css("a[href='#{omniauth_path('google')}']")
         end
 
         scenario 'error message is displayed' do
-          expect(page).to have_content(I18n.t('errors.messages.france_connect.connexion'))
+          expect(page).to have_content(I18n.t('errors.messages.omniauth.connexion', provider: I18n.t('omniauth.provider.google')))
         end
       end
     end

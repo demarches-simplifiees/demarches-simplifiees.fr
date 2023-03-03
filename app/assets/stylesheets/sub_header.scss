@@ -10,4 +10,13 @@
   .container {
     margin-bottom: -1px;
   }
+
+  .breadcrumbs {
+    list-style: none;
+    padding-inline-start: 0;
+
+    a:not(:hover) {
+      background-image: none; // remove DSFR underline
+    }
+  }
 }

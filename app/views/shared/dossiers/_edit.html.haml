@@ -21,15 +21,18 @@
             = t('views.shared.dossiers.edit.autosave')
 
           - if notice_url(dossier.procedure).present?
-            %br
-            = link_to t("views.shared.dossiers.edit.notice"), notice_url(dossier.procedure),
-                class: "fr-btn fr-btn--secondary mt-2",
-                title: t("views.shared.dossiers.edit.notice_title"), **external_link_attributes
+            .fr-download
+              %p
+                = link_to notice_url(dossier.procedure), download: "", class: "fr-download__link mr-2", title: t("views.shared.dossiers.edit.notice_title") do
+                  = t("views.shared.dossiers.edit.notice")
+                  - if dossier.procedure.notice.attached?
+                    %span.fr-download__detail
+                      = download_details(dossier.procedure.notice)
 
-            - if administrateur_signed_in?
-              %em.ml-1.fr-text-mention--grey.visible-on-previous-hover
-                %span.fr-icon-feedback-line{ "aria-hidden": "true" }
-                  = t('shared.ephemeral_link')
+                - if administrateur_signed_in?
+                  %span.fr-text--xs.fr-text-mention--grey.visible-on-previous-hover
+                    %span.fr-text-action-high--blue-france.fr-icon-questionnaire-line{ "aria-hidden": "true" }
+                    = t('shared.ephemeral_link')
 
     - if dossier.show_groupe_instructeur_selector?
       %span{ data: { controller: 'autosave' } }
@@ -53,7 +56,7 @@
             = f.button t('views.shared.dossiers.edit.submit_dossier'),
               name: :submit_draft,
               value: true,
-              class: 'button send primary',
+              class: 'fr-btn fr-btn--sm',
               disabled: !current_user.owns?(dossier),
               data: { 'disable-with': "Envoi en cours…" }
 

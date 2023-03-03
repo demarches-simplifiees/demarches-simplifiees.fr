@@ -15,4 +15,4 @@
             %span.badge.baseline modifié le #{mail_template.updated_at.strftime('%d-%m-%Y')}
 
         %div
-          = link_to 'Modifier', edit_admin_procedure_mail_template_path(@procedure, mail_template.class.const_get(:SLUG)), class: 'button'
+          = link_to 'Modifier', edit_admin_procedure_mail_template_path(@procedure, mail_template.class.const_get(:SLUG)), class: 'fr-btn'

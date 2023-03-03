@@ -191,10 +191,12 @@ module Administrateurs
     end
 
     def update_routing_criteria_name
-      procedure.update!(routing_criteria_name: routing_criteria_name)
-
-      redirect_to admin_procedure_groupe_instructeurs_path(procedure),
-        notice: "Le libellé est maintenant « #{procedure.routing_criteria_name} »."
+      if procedure.update(routing_criteria_name: routing_criteria_name)
+        flash[:notice] = "Le libellé est maintenant « #{procedure.routing_criteria_name} »."
+      else
+        flash[:alert] = "Le libellé du routage doit être rempli."
+      end
+      redirect_to admin_procedure_groupe_instructeurs_path(procedure)
     end
 
     def update_routing_enabled

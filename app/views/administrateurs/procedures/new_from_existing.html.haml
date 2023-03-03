@@ -34,11 +34,11 @@
 
   .form
     .send-wrapper
-      %a#from-scratch.button.primary{ href: new_admin_procedure_path }
+      %a#from-scratch.fr-btn.fr-btn--lg{ href: new_admin_procedure_path }
         Créer une nouvelle démarche de zéro
 
     .card
-      %h2.header-section
+      %h2.fr-h4.header-section
         Créer une nouvelle démarche à partir d’une démarche existante
 
       = render Procedure::SearchComponent.new(grouped_procedures: @grouped_procedures)
