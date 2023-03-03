@@ -2,8 +2,9 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
   render_views
 
   let(:admin) { create(:administrateur) }
-  let(:procedure) { create(:procedure, :published, :for_individual, administrateurs: [admin], routing_enabled: true) }
+  let(:procedure) { create(:procedure, :published, :for_individual, administrateurs: [admin]) }
   let!(:gi_1_1) { procedure.defaut_groupe_instructeur }
+  let!(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }
 
   let(:procedure2) { create(:procedure, :published) }
   let!(:gi_2_2) { procedure2.groupe_instructeurs.create(label: 'groupe instructeur 2 2') }
@@ -12,8 +13,6 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
   describe '#index' do
     context 'of a procedure I own' do
-      let!(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }
-
       before { get :index, params: { procedure_id: procedure.id } }
 
       context 'when a procedure has multiple groups' do
@@ -63,14 +62,14 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
       it { expect(flash.notice).to be_present }
       it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, procedure.groupe_instructeurs.last)) }
-      it { expect(procedure.groupe_instructeurs.count).to eq(2) }
+      it { expect(procedure.groupe_instructeurs.count).to eq(3) }
     end
 
     context 'with an invalid group name' do
       let(:label) { gi_1_1.label }
 
       it { expect(response).to render_template(:index) }
-      it { expect(procedure.groupe_instructeurs.count).to eq(1) }
+      it { expect(procedure.groupe_instructeurs.count).to eq(2) }
       it { expect(flash.alert).to be_present }
     end
   end
@@ -85,7 +84,10 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     end
 
     context 'with only one group' do
-      before { delete_group gi_1_1 }
+      before do
+        delete_group gi_1_1
+        delete_group gi_1_2
+      end
 
       it { expect(flash.alert).to be_present }
       it { expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure)) }
@@ -93,8 +95,6 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     end
 
     context 'with many groups' do
-      let!(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }
-
       context 'of a group that can be deleted' do
         before { delete_group gi_1_2 }
         it { expect(flash.notice).to eq "le groupe « groupe instructeur 2 » a été supprimé et le routage a été désactivé." }
@@ -115,7 +115,6 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
   end
 
   describe '#reaffecter_dossiers' do
-    let!(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }
     let!(:gi_1_3) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 3') }
 
     before do
@@ -137,7 +136,6 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
   end
 
   describe '#reaffecter' do
-    let!(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }
     let!(:gi_1_3) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 3') }
     let!(:dossier12) { create(:dossier, :en_construction, :with_individual, procedure: procedure, groupe_instructeur: gi_1_1) }
     let!(:instructeur) { create(:instructeur) }
@@ -184,18 +182,20 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
   describe '#update' do
     let(:new_name) { 'nouveau nom du groupe' }
     let(:closed_value) { false }
+    let!(:procedure_non_routee) { create(:procedure, :published, :for_individual, administrateurs: [admin]) }
+    let!(:gi_1_1) { procedure_non_routee.defaut_groupe_instructeur }
 
     before do
       patch :update,
         params: {
-          procedure_id: procedure.id,
+          procedure_id: procedure_non_routee.id,
           id: gi_1_1.id,
           groupe_instructeur: { label: new_name, closed: closed_value }
         }
       gi_1_1.reload
     end
 
-    it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_1)) }
+    it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure_non_routee, gi_1_1)) }
     it { expect(gi_1_1.label).to eq(new_name) }
     it { expect(gi_1_1.closed).to eq(false) }
     it { expect(flash.notice).to be_present }
@@ -210,7 +210,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     end
 
     context 'when the name is already taken' do
-      let!(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }
+      let!(:gi_1_2) { procedure_non_routee.groupe_instructeurs.create(label: 'groupe instructeur 2') }
       let(:new_name) { gi_1_2.label }
 
       it { expect(gi_1_1.label).not_to eq(new_name) }
@@ -219,17 +219,18 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
   end
 
   describe '#add_instructeur_procedure_non_routee' do
-    let(:procedure) { create :procedure }
-    let!(:groupe_instructeur) { create(:administrateurs_procedure, procedure: procedure, administrateur: admin, manager: manager) }
+    # faire la meme chose sur une procedure non routee
+    let(:procedure_non_routee) { create :procedure }
+    let!(:groupe_instructeur) { create(:administrateurs_procedure, procedure: procedure_non_routee, administrateur: admin, manager: manager) }
     let(:emails) { ['instructeur_3@ministere_a.gouv.fr', 'instructeur_4@ministere_b.gouv.fr'].to_json }
-    subject { post :add_instructeur, params: { emails: emails, procedure_id: procedure.id, id: gi_1_1.id } }
+    subject { post :add_instructeur, params: { emails: emails, procedure_id: procedure_non_routee.id, id: procedure_non_routee.defaut_groupe_instructeur.id } }
     let(:manager) { false }
     context 'when all emails are valid' do
       let(:emails) { ['test@b.gouv.fr', 'test2@b.gouv.fr'].to_json }
       it { expect(response.status).to eq(200) }
       it { expect(subject.request.flash[:alert]).to be_nil }
       it { expect(subject.request.flash[:notice]).to be_present }
-      it { expect(subject).to redirect_to admin_procedure_groupe_instructeurs_path(procedure) }
+      it { expect(subject).to redirect_to admin_procedure_groupe_instructeurs_path(procedure_non_routee) }
     end
 
     context 'when there is at least one bad email' do
@@ -237,13 +238,13 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       it { expect(response.status).to eq(200) }
       it { expect(subject.request.flash[:alert]).to be_present }
       it { expect(subject.request.flash[:notice]).to be_present }
-      it { expect(subject).to redirect_to admin_procedure_groupe_instructeurs_path(procedure) }
+      it { expect(subject).to redirect_to admin_procedure_groupe_instructeurs_path(procedure_non_routee) }
     end
 
     context 'when the admin wants to assign an instructor who is already assigned on this procedure' do
       let(:emails) { ['instructeur_1@ministere_a.gouv.fr'].to_json }
       it { expect(subject.request.flash[:alert]).to be_present }
-      it { expect(subject).to redirect_to admin_procedure_groupe_instructeurs_path(procedure) }
+      it { expect(subject).to redirect_to admin_procedure_groupe_instructeurs_path(procedure_non_routee) }
     end
 
     context 'when signed in admin comes from manager' do
@@ -254,7 +255,6 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
   describe '#add_instructeur' do
     let!(:instructeur) { create(:instructeur) }
-    let(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }
     let(:do_request) do
       post :add_instructeur,
         params: {
@@ -363,35 +363,33 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
   end
 
   describe '#remove_instructeur_procedure_non_routee' do
-    let(:procedure) { create :procedure, administrateur: admin, instructeurs: [instructeur_assigned_1, instructeur_assigned_2] }
+    let(:procedure_non_routee) { create :procedure, administrateur: admin, instructeurs: [instructeur_assigned_1, instructeur_assigned_2] }
     let!(:instructeur_assigned_1) { create :instructeur, email: 'instructeur_1@ministere-a.gouv.fr', administrateurs: [admin] }
     let!(:instructeur_assigned_2) { create :instructeur, email: 'instructeur_2@ministere-b.gouv.fr', administrateurs: [admin] }
     let!(:instructeur_assigned_3) { create :instructeur, email: 'instructeur_3@ministere-a.gouv.fr', administrateurs: [admin] }
-    subject! { get :show, params: { procedure_id: procedure.id, id: gi_1_1.id } }
+    subject! { get :show, params: { procedure_id: procedure_non_routee.id, id: procedure_non_routee.defaut_groupe_instructeur.id } }
     it 'sets the assigned instructeurs' do
       expect(assigns(:instructeurs)).to match_array([instructeur_assigned_1, instructeur_assigned_2])
     end
 
     context 'when the instructor is assigned to the procedure' do
-      subject { delete :remove_instructeur, params: { instructeur: { id: instructeur_assigned_1.id }, procedure_id: procedure.id, id: gi_1_1.id } }
+      subject { delete :remove_instructeur, params: { instructeur: { id: instructeur_assigned_1.id }, procedure_id: procedure_non_routee.id, id: procedure_non_routee.defaut_groupe_instructeur.id } }
       it { expect(subject.request.flash[:notice]).to be_present }
       it { expect(subject.request.flash[:alert]).to be_nil }
       it { expect(response.status).to eq(302) }
-      it { expect(subject).to redirect_to admin_procedure_groupe_instructeurs_path(procedure) }
+      it { expect(subject).to redirect_to admin_procedure_groupe_instructeurs_path(procedure_non_routee) }
     end
 
     context 'when the instructor is not assigned to the procedure' do
-      subject { delete :remove_instructeur, params: { instructeur: { id: instructeur_assigned_3.id }, procedure_id: procedure.id, id: gi_1_1.id } }
+      subject { delete :remove_instructeur, params: { instructeur: { id: instructeur_assigned_3.id }, procedure_id: procedure_non_routee.id, id: procedure_non_routee.defaut_groupe_instructeur.id } }
       it { expect(subject.request.flash[:alert]).to be_present }
       it { expect(subject.request.flash[:notice]).to be_nil }
       it { expect(response.status).to eq(302) }
-      it { expect(subject).to redirect_to admin_procedure_groupe_instructeurs_path(procedure) }
+      it { expect(subject).to redirect_to admin_procedure_groupe_instructeurs_path(procedure_non_routee) }
     end
   end
 
   describe '#import' do
-    let!(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }
-
     subject do
       post :import, params: { procedure_id: procedure.id, csv_file: csv_file }
     end
@@ -557,8 +555,6 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
   end
 
   describe '#export_groupe_instructeurs' do
-    let(:procedure) { create(:procedure, :published) }
-    let(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 1 2') }
     let(:instructeur_assigned_1) { create :instructeur, email: 'instructeur_1@ministere-a.gouv.fr', administrateurs: [admin] }
     let(:instructeur_assigned_2) { create :instructeur, email: 'instructeur_2@ministere-b.gouv.fr', administrateurs: [admin] }
 
@@ -567,14 +563,13 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     end
 
     before do
-      procedure.administrateurs << admin
       gi_1_2.instructeurs << [instructeur_assigned_1, instructeur_assigned_2]
     end
 
     it 'generates a CSV file containing the instructeurs and groups' do
       expect(subject.status).to eq(200)
       expect(subject.stream.body.split("\n").size).to eq(3)
-      expect(subject.stream.body).to include("groupe instructeur 1 2")
+      expect(subject.stream.body).to include("groupe instructeur 2")
       expect(subject.stream.body).to include(instructeur_assigned_1.email)
       expect(subject.stream.body).to include(instructeur_assigned_2.email)
       expect(subject.header["Content-Disposition"]).to include("#{procedure.id}-groupe-instructeurs-#{Date.today}.csv")
