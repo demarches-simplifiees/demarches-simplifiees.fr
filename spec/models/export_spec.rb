@@ -67,21 +67,42 @@ RSpec.describe Export, type: :model do
   end
 
   describe '.dossiers_for_export' do
-    let!(:procedure) { create(:procedure, :published) }
+    let!(:procedure) { create(:procedure, :published, :with_instructeur) }
 
     let!(:dossier_brouillon) { create(:dossier, :brouillon, procedure: procedure) }
     let!(:dossier_en_construction) { create(:dossier, :en_construction, procedure: procedure) }
     let!(:dossier_en_instruction) { create(:dossier, :en_instruction, procedure: procedure) }
     let!(:dossier_accepte) { create(:dossier, :accepte, procedure: procedure) }
 
-    let(:export) { create(:export, groupe_instructeurs: [procedure.groupe_instructeurs.first]) }
+    let(:export) do
+      create(:export,
+             groupe_instructeurs: [procedure.groupe_instructeurs.first],
+             procedure_presentation: procedure_presentation,
+             statut: statut)
+    end
 
     context 'without procedure_presentation or since' do
+      let(:procedure_presentation) { nil }
+      let(:statut) { nil }
       it 'does not includes brouillons' do
         expect(export.send(:dossiers_for_export)).to include(dossier_en_construction)
         expect(export.send(:dossiers_for_export)).to include(dossier_en_instruction)
         expect(export.send(:dossiers_for_export)).to include(dossier_accepte)
         expect(export.send(:dossiers_for_export)).not_to include(dossier_brouillon)
+      end
+    end
+
+    context 'with procedure_presentation and statut supprimes_recemment' do
+      let(:statut) { 'supprimes_recemment' }
+      let(:procedure_presentation) do
+        create(:procedure_presentation,
+               procedure: procedure,
+               assign_to: procedure.groupe_instructeurs.first.assign_tos.first)
+      end
+      let!(:dossier_recemment_supprime) { create(:dossier, :accepte, procedure: procedure, hidden_by_administration_at: 2.days.ago) }
+
+      it 'includes supprimes_recemment' do
+        expect(export.send(:dossiers_for_export)).to include(dossier_recemment_supprime)
       end
     end
   end

@@ -1,81 +1,81 @@
-%li.procedure-item.flex.align-start
-  = link_to(instructeur_procedure_path(p)) do
-    .flex
-
+%li.procedure-item.flex.align-start.fr-my-3w.fr-p-2w
+  .flex
+    = link_to instructeur_procedure_path(p), class: 'procedure-logo-link' do
       .procedure-logo{ style: "background-image: url(#{p.logo_url})" }
 
-      .procedure-details
-        %p.procedure-title
-          = procedure_libelle p
-        %ul.procedure-stats.flex
-          %li
-            %object
-              = link_to(instructeur_procedure_path(p, statut: 'a-suivre')) do
-                - a_suivre_count = dossiers_a_suivre_count_per_procedure[p.id] || 0
-                .stats-number
-                  = number_with_html_delimiter(a_suivre_count)
-                .stats-legend
-                  = t('instructeurs.dossiers.labels.to_follow')
-          %li
-            %object
-              = link_to(instructeur_procedure_path(p, statut: 'suivis')) do
-                - if procedure_ids_en_cours_with_notifications.include?(p.id)
-                  %span.notifications{ 'aria-label': "notifications" }
-                - followed_count = followed_dossiers_count_per_procedure[p.id] || 0
-                .stats-number
-                  = number_with_html_delimiter(followed_count)
-                .stats-legend
-                  = t('pluralize.followed', count: followed_count)
-          %li
-            %object
-              = link_to(instructeur_procedure_path(p, statut: 'traites')) do
-                - if procedure_ids_termines_with_notifications.include?(p.id)
-                  %span.notifications{ 'aria-label': "notifications" }
-                - termines_count = dossiers_termines_count_per_procedure[p.id] || 0
-                .stats-number
-                  = number_with_html_delimiter(termines_count)
-                .stats-legend
-                  = t('pluralize.processed', count: termines_count)
-          %li
-            %object
-              = link_to(instructeur_procedure_path(p, statut: 'tous')) do
-                - dossier_count = dossiers_count_per_procedure[p.id] || 0
-                .stats-number
-                  = number_with_html_delimiter(dossier_count)
-                .stats-legend
-                  = t('pluralize.case', count: dossier_count)
+    .procedure-details
+      %p.fr-mb-2w
+        = procedure_badge(p)
+        = link_to(p.libelle, instructeur_procedure_path(p), class: "fr-link fr-ml-1w")
+      %ul.procedure-stats.flex
+        %li
+          %object
+            = link_to(instructeur_procedure_path(p, statut: 'a-suivre')) do
+              - a_suivre_count = dossiers_a_suivre_count_per_procedure[p.id] || 0
+              .stats-number
+                = number_with_html_delimiter(a_suivre_count)
+              .stats-legend
+                = t('instructeurs.dossiers.labels.to_follow')
+        %li
+          %object
+            = link_to(instructeur_procedure_path(p, statut: 'suivis')) do
+              - if procedure_ids_en_cours_with_notifications.include?(p.id)
+                %span.notifications{ 'aria-label': "notifications" }
+              - followed_count = followed_dossiers_count_per_procedure[p.id] || 0
+              .stats-number
+                = number_with_html_delimiter(followed_count)
+              .stats-legend
+                = t('pluralize.followed', count: followed_count)
+        %li
+          %object
+            = link_to(instructeur_procedure_path(p, statut: 'traites')) do
+              - if procedure_ids_termines_with_notifications.include?(p.id)
+                %span.notifications{ 'aria-label': "notifications" }
+              - termines_count = dossiers_termines_count_per_procedure[p.id] || 0
+              .stats-number
+                = number_with_html_delimiter(termines_count)
+              .stats-legend
+                = t('pluralize.processed', count: termines_count)
+        %li
+          %object
+            = link_to(instructeur_procedure_path(p, statut: 'tous')) do
+              - dossier_count = dossiers_count_per_procedure[p.id] || 0
+              .stats-number
+                = number_with_html_delimiter(dossier_count)
+              .stats-legend
+                = t('pluralize.case', count: dossier_count)
 
+        %li
+          %object
+            = link_to(instructeur_procedure_path(p, statut: 'supprimes_recemment')) do
+              - dossier_count = dossiers_supprimes_recemment_count_per_procedure[p.id] || 0
+              .stats-number
+                = number_with_html_delimiter(dossier_count)
+              .stats-legend
+                = t('pluralize.dossiers_supprimes_recemment', count: dossier_count)
+
+        - if p.procedure_expires_when_termine_enabled
           %li
             %object
-              = link_to(instructeur_procedure_path(p, statut: 'supprimes_recemment')) do
-                - dossier_count = dossiers_supprimes_recemment_count_per_procedure[p.id] || 0
+              = link_to(instructeur_procedure_path(p, statut: 'expirant')) do
+                - expirant_count = dossiers_expirant_count_per_procedure[p.id] || 0
                 .stats-number
-                  = number_with_html_delimiter(dossier_count)
+                  = number_with_html_delimiter(expirant_count)
                 .stats-legend
-                  = t('pluralize.dossiers_supprimes_recemment', count: dossier_count)
+                  = t('pluralize.dossiers_close_to_expiration', count: expirant_count)
 
-          - if p.procedure_expires_when_termine_enabled
-            %li
-              %object
-                = link_to(instructeur_procedure_path(p, statut: 'expirant')) do
-                  - expirant_count = dossiers_expirant_count_per_procedure[p.id] || 0
-                  .stats-number
-                    = number_with_html_delimiter(expirant_count)
-                  .stats-legend
-                    = t('pluralize.dossiers_close_to_expiration', count: expirant_count)
+        %li
+          %object
+            = link_to(instructeur_procedure_path(p, statut: 'archives')) do
+              - archived_count = dossiers_archived_count_per_procedure[p.id] || 0
+              .stats-number
+                = number_with_html_delimiter(archived_count)
+              .stats-legend
+                = t('pluralize.archived', count: archived_count)
 
-          %li
-            %object
-              = link_to(instructeur_procedure_path(p, statut: 'archives')) do
-                - archived_count = dossiers_archived_count_per_procedure[p.id] || 0
-                .stats-number
-                  = number_with_html_delimiter(archived_count)
-                .stats-legend
-                  = t('pluralize.archived', count: archived_count)
-
-      - if p.close?
-        .procedure-status
-          %span.label Close
-      - elsif p.depubliee?
-        .procedure-status
-          %span.label Dépubliée
+    - if p.close?
+      .procedure-status
+        %span.label Close
+    - elsif p.depubliee?
+      .procedure-status
+        %span.label Dépubliée

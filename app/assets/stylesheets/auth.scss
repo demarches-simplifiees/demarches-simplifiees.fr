@@ -55,11 +55,17 @@
     align-items: stretch;
     margin-bottom: 1 * $default-spacer;
 
-    .button {
+    .fr-btn {
       margin-bottom: 2 * $default-spacer;
       display: inline;
-      flex-wrap: nowrap;
-      text-align: left;
+      width: 95%;
+
+      padding: 8px 16px;
+      background-color: #FFFFFF;
+
+      &:hover {
+        background-color: #EEEEEE;
+      }
 
       img {
         height: 32px;
@@ -134,3 +140,4 @@
     font-size: 18px;
   }
 }
+

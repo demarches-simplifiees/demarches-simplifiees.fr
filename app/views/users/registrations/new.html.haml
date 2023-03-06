@@ -1,12 +1,12 @@
 = content_for(:page_id, 'auth')
 
-= render partial: 'shared/social_login', locals: { title: "Rapide, simple et sûr. Aucun mot de passe à créer.", prefix: "Créez vous un compte via" }
+= render partial: 'shared/social_login', locals: { title: t('views.registrations.new.social_title'), prefix: "" }
 
 .column.procedure-context-content
   .auth-form
     = devise_error_messages!
     = form_for resource, url: user_registration_path, html: { class: "form" } do |f|
-      %h1.fr-h2= t('views.registrations.new.title', name: APPLICATION_NAME)
+      %h1.fr-h3= t('views.registrations.new.title', name: APPLICATION_NAME)
 
       -# = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
 
@@ -28,4 +28,4 @@
 
       = render 'password_complexity/field', { form: f, test_complexity: true, min_complexity: PASSWORD_COMPLEXITY_FOR_USER }
 
-      = f.submit t('views.shared.account.create'), class: "button large primary expand", id: 'submit-password'
+      = f.submit t('views.shared.account.create'), class: "fr-btn fr-btn--lg", id: 'submit-password'

@@ -6,6 +6,5 @@
     .message.inverted-background
       = render Dossiers::MessageComponent.new(commentaire: latest_message, connected_user: current_user)
 
-    = link_to messagerie_dossier_url(dossier, anchor: 'new_commentaire'), class: 'button send' do
-      %span.icon.reply
+    = link_to messagerie_dossier_url(dossier, anchor: 'new_commentaire'), class: 'fr-btn fr-btn--icon-left fr-icon-discuss-line' do
       = commentaire_answer_action(latest_message, current_user)

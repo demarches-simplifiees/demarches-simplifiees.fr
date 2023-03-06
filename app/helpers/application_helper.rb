@@ -128,4 +128,8 @@ module ApplicationHelper
   def external_link_attributes
     { target: "_blank", rel: "noopener noreferrer" }
   end
+
+  def download_details(attachment)
+    "#{attachment.filename.extension.upcase} – #{number_to_human_size(attachment.byte_size)}"
+  end
 end

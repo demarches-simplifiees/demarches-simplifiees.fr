@@ -1,16 +1,18 @@
 - content_for(:title, @procedure.libelle)
 
 - if !user_signed_in?
-  = render partial: 'shared/social_login', locals: { title: t('views.commencer.show.social_title'), prefix: "via " }
+  = render partial: 'shared/social_login', locals: { title: t('views.commencer.show.social_title'), prefix: "" }
 
 .column.commencer
   .form
     - if !user_signed_in?
-      %p.center= t('views.shared.account.title', name: APPLICATION_NAME)
+      %h2.fr-h3.center= t('views.shared.account.title', name: APPLICATION_NAME)
       %br
-      = link_to new_user_registration_path, class: ['button large expand'] do
+      = link_to new_user_registration_path, class: ['fr-btn fr-btn--lg'] do
         = t('views.shared.account.create')
-      = link_to t('views.shared.account.already_user'), new_user_session_path, class: ['button large expand']
+      %br
+      %br
+      = link_to t('views.shared.account.already_user'), new_user_session_path, class: ['fr-btn fr-btn--lg fr-btn--secondary']
 
     - else
       - revision = @revision.draft? ? @revision : @procedure.revisions.where.not(id: @procedure.draft_revision_id)

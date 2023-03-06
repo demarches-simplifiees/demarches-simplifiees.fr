@@ -597,14 +597,13 @@ describe Dossier do
     end
   end
 
-  describe '.downloadable_sorted' do
+  describe '.ordered_for_export' do
     let(:procedure) { create(:procedure) }
-    let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:brouillon)) }
     let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_construction), depose_at: Time.zone.parse('03/01/2010')) }
     let!(:dossier3) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_instruction), depose_at: Time.zone.parse('01/01/2010')) }
     let!(:dossier4) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_instruction), archived: true, depose_at: Time.zone.parse('02/01/2010')) }
 
-    subject { procedure.dossiers.downloadable_sorted }
+    subject { procedure.dossiers.ordered_for_export }
 
     it { is_expected.to match([dossier3, dossier4, dossier2]) }
   end

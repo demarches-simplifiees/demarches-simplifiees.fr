@@ -25,6 +25,7 @@ export default function ComboAdresseSearch({
         minimumInputLength={2}
         transformResult={({ properties: { label } }) => [label, label, label]}
         transformResults={(_, result) => (result as RawResult).features}
+        debounceDelay={300}
       />
     </QueryClientProvider>
   );

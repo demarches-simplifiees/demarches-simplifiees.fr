@@ -17,6 +17,8 @@ delegate('focusout', userNewEmailSelector, () => {
     const address = email.substring(0, email.indexOf('@'));
     suggestedEmailSpan.innerHTML = address + '@gmail.com';
     show(document.querySelector(suggestionsSelector));
+  } else if (email.toLowerCase().endsWith('@mail.pf')) {
+    hide(document.querySelector(suggestionsSelector));
   } else {
     const suggestion = suggest(email);
     if (suggestion && suggestion.full && suggestedEmailSpan) {
