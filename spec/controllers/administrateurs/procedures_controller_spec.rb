@@ -176,11 +176,21 @@ describe Administrateurs::ProceduresController, type: :controller do
     end
 
     context 'with specific tag' do
-      let!(:tag_procedure) { create(:procedure, :published, tags: ['environnement']) }
+      let!(:tags_procedure) { create(:procedure, :published, tags: ['environnement', 'diplomatie']) }
 
-      it 'returns procedures with specific tag' do
-        get :all, params: { tag: 'environnement' }
-        expect(assigns(:procedures).any? { |p| p.id == tag_procedure.id }).to be_truthy
+      it 'returns procedure who contains at least one tag included in params' do
+        get :all, params: { tags: ['environnement'] }
+        expect(assigns(:procedures).any? { |p| p.id == tags_procedure.id }).to be_truthy
+      end
+
+      it 'returns procedures who contains all tags included in params' do
+        get :all, params: { tags: ['environnement', 'diplomatie'] }
+        expect(assigns(:procedures).any? { |p| p.id == tags_procedure.id }).to be_truthy
+      end
+
+      it 'does not returns the procedure' do
+        get :all, params: { tags: ['environnement', 'diplomatie', 'football'] }
+        expect(assigns(:procedures).any? { |p| p.id == tags_procedure.id }).to be_falsey
       end
     end
 
