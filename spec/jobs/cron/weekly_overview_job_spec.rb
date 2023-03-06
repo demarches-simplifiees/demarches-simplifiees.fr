@@ -2,7 +2,6 @@ RSpec.describe Cron::WeeklyOverviewJob, type: :job do
   describe 'perform' do
     let!(:instructeur) { create(:instructeur) }
     let(:overview) { double('overview') }
-    let(:mailer_double) { double('mailer', deliver_later: true) }
 
     context 'if the feature is enabled' do
       before do
@@ -12,11 +11,14 @@ RSpec.describe Cron::WeeklyOverviewJob, type: :job do
         Rails.application.config.ds_weekly_overview = false
       end
 
+      subject(:run_job) { Cron::WeeklyOverviewJob.new.perform }
+      # See also spec/mailers/instructeur_mailer_spec.rb
+
       context 'with one instructeur with one overview' do
+        let(:mailer_double) { double('mailer', deliver_later: true) }
         before do
-          expect_any_instance_of(Instructeur).to receive(:last_week_overview).and_return(overview)
           allow(InstructeurMailer).to receive(:last_week_overview).and_return(mailer_double)
-          Cron::WeeklyOverviewJob.new.perform
+          run_job
         end
 
         it { expect(InstructeurMailer).to have_received(:last_week_overview).with(instructeur) }
@@ -25,22 +27,22 @@ RSpec.describe Cron::WeeklyOverviewJob, type: :job do
 
       context 'with one instructeur with no overviews' do
         before do
-          expect_any_instance_of(Instructeur).to receive(:last_week_overview).and_return(nil)
-          allow(InstructeurMailer).to receive(:last_week_overview)
-          Cron::WeeklyOverviewJob.new.perform
+          allow(InstructeurMailer).to receive(:last_week_overview).and_return(nil)
+          run_job
         end
 
-        it { expect(InstructeurMailer).not_to have_received(:last_week_overview) }
+        it { expect(InstructeurMailer).to have_received(:last_week_overview).with(instructeur) }
+        it { expect { run_job }.not_to raise_error(NoMethodError) }
       end
     end
 
     context 'if the feature is disabled' do
       before do
-        allow(Instructeur).to receive(:all)
+        allow(Instructeur).to receive(:find_each)
         Cron::WeeklyOverviewJob.new.perform
       end
 
-      it { expect(Instructeur).not_to receive(:all) }
+      it { expect(Instructeur).not_to receive(:find_each) }
     end
   end
 end
