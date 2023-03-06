@@ -177,6 +177,8 @@ type Avis {
   id: ID!
   instructeur: Profile! @deprecated(reason: "Utilisez le champ `claimant` à la place.")
   question: String!
+  questionAnswer: Boolean
+  questionLabel: String
   reponse: String
 }
 
