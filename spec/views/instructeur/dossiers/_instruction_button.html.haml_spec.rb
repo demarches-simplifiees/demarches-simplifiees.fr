@@ -14,7 +14,7 @@ describe 'instructeurs/dossiers/instruction_button.html.haml', type: :view do
   matcher :have_dropdown_items do |options|
     match do |rendered|
       expected_count = options[:count] || 1
-      expect(rendered).to have_selector('ul.dropdown-items li', count: expected_count)
+      expect(rendered).to have_selector('ul.dropdown-items li:not(.hidden)', count: expected_count)
     end
   end
 
