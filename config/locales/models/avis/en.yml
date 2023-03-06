@@ -1,0 +1,26 @@
+en:
+  activerecord:
+    models:
+      avis: 'opinion'
+    attributes:
+      avis:
+        answer: "Answer"
+        claimant: Claimant
+        confidentiel: Confidential
+  helpers:
+    label:
+      invite_linked_dossiers:
+        one: Invite also the expert on this linked file n° %{ids}
+        other: Invite also the expert on theses linked files n° %{ids}
+      revoke: Revoke opinion request
+      remind: Remind the expert
+      question_label: Ask a question to the expert
+      introduction: Introduction message
+      question_answer:
+        true: 'yes'
+        false: 'no'
+    hint:
+      confidentiel: "This advice is not displayed to the others consulted experts"
+    confirmation:
+      revoke: "Would you like to revoke the opinion request to %{email} ?"
+      remind: "Would you like to remind %{email} ?"

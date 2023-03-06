@@ -14,6 +14,11 @@ fr:
         other: Inviter aussi l’expert sur les dossiers liés n° %{ids}
       revoke: Révoquer la demande d’avis
       remind: Relancer l’expert
+      question_label: Posez une question à l'expert
+      introduction: Message d'introduction
+      question_answer:
+        true: oui
+        false: non
     hint:
       confidentiel: "Cet avis n’est pas affiché avec les autres experts consultés"
     confirmation:

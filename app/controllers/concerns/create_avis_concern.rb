@@ -33,7 +33,8 @@ module CreateAvisConcern
             claimant: instructeur_or_expert,
             dossier: dossier,
             confidentiel: confidentiel,
-            experts_procedure: experts_procedure
+            experts_procedure: experts_procedure,
+            question_label: create_avis_params[:question_label]
           }
         end
       end
@@ -71,6 +72,6 @@ module CreateAvisConcern
   end
 
   def create_avis_params
-    params.require(:avis).permit(:introduction_file, :introduction, :confidentiel, :invite_linked_dossiers, :emails)
+    params.require(:avis).permit(:introduction_file, :introduction, :confidentiel, :invite_linked_dossiers, :emails, :question_label)
   end
 end
