@@ -98,6 +98,24 @@ describe GroupeInstructeur, type: :model do
     end
   end
 
+  describe "active group validations" do
+    context "there is at least one active groupe instructeur" do
+      let!(:gi_active) { create(:groupe_instructeur, procedure:, closed: false) }
+      let!(:gi_closed) { create(:groupe_instructeur, procedure:, closed: true) }
+      before { procedure.defaut_groupe_instructeur.destroy! }
+
+      it "closed is valid when there is one other active groupe" do
+        expect(gi_active).to be_valid
+        expect(gi_closed).to be_valid
+      end
+
+      it "closed is invalid when there is no active groupe" do
+        gi_active.closed = true
+        expect(gi_active).not_to be_valid
+      end
+    end
+  end
+
   private
 
   def assign(procedure_to_assign, instructeur_assigne: instructeur)
