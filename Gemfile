@@ -67,7 +67,7 @@ gem 'premailer-rails'
 gem 'puma' # Use Puma as the app server
 gem 'pundit'
 gem 'rack-attack'
-gem 'rails'
+gem 'rails', '~> 7.0'
 gem 'rails-i18n' # Locales par défaut
 gem 'rake-progressbar', require: false
 gem 'redcarpet'
