@@ -1,6 +1,8 @@
 class AvisSerializer < ActiveModel::Serializer
   attributes :answer,
     :introduction,
+    :question_label,
+    :question_answer,
     :created_at,
     :answered_at
 
