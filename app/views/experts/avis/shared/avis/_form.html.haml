@@ -2,9 +2,9 @@
   %h1.tab-title Inviter des personnes à donner leur avis
   %p.avis-notice Les invités pourront consulter le dossier, donner un avis et contribuer au fil de messagerie. Ils ne pourront pas modifier le dossier.
 
-  = form_for avis, url: url, html: { class: 'form' } do |f|
+  = form_for avis, url: url do |f|
     = f.email_field :emails, placeholder: 'Adresses email, séparées par des virgules', required: true, multiple: true, data: { controller: 'format', format: 'list' }
-    = f.text_area :introduction, rows: 3, value: avis.introduction || 'Bonjour, merci de me donner votre avis sur ce dossier.', required: true
+    = f.text_area :introduction, rows: 3, class: 'fr-input', value: avis.introduction || 'Bonjour, merci de me donner votre avis sur ce dossier.', required: true
     %p.tab-title Ajouter une pièce jointe
     .form-group
       = render Attachment::EditComponent.new(attached_file: avis.introduction_file)
@@ -22,8 +22,8 @@
 
       - else
         .confidentiel-wrapper
-          = f.label :confidentiel, 'Cet avis sera '
-          = f.select :confidentiel, [['partagé avec les autres experts', false], ['confidentiel', true]], {}, onchange: "javascript:DS.toggleCondidentielExplanation(event);"
+          = f.label :confidentiel, 'Cet avis sera ', class: 'fr-label'
+          = f.select :confidentiel, [['partagé avec les autres experts', false], ['confidentiel', true]], {}, onchange: "javascript:DS.toggleCondidentielExplanation(event);", class: 'fr-select'
           .confidentiel-explanation.hidden
             Il ne sera pas affiché aux autres experts consultés, mais sera visible par les instructeurs.
 

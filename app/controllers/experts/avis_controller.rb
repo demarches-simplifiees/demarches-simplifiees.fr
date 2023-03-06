@@ -179,7 +179,7 @@ module Experts
     end
 
     def avis_params
-      params.require(:avis).permit(:answer, :piece_justificative_file)
+      params.require(:avis).permit(:answer, :piece_justificative_file, :question_answer)
     end
 
     def commentaire_params
