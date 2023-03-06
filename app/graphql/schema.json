@@ -6272,13 +6272,9 @@
 
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "ISO8601Date",
-                  "ofType": null
-                }
+                "kind": "SCALAR",
+                "name": "ISO8601Date",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -6306,6 +6302,20 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "Effectif",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "etatAdministratif",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "ENUM",
+                "name": "EntrepriseEtatAdministratif",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -6477,6 +6487,29 @@
 
           ],
           "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "ENUM",
+          "name": "EntrepriseEtatAdministratif",
+          "description": null,
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "enumValues": [
+            {
+              "name": "Actif",
+              "description": "L'entreprise est en activité",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "Ferme",
+              "description": "L'entreprise a cessé son activité",
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
           "possibleTypes": null
         },
         {
@@ -9452,6 +9485,20 @@
               "deprecationReason": null
             },
             {
+              "name": "siret",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "typeOrganisme",
               "description": null,
               "args": [
@@ -9972,7 +10019,7 @@
             },
             {
               "name": "drop_down_list",
-              "description": "Choix parmi une liste",
+              "description": "Choix unique",
               "isDeprecated": false,
               "deprecationReason": null
             },
@@ -9989,14 +10036,8 @@
               "deprecationReason": null
             },
             {
-              "name": "pays",
-              "description": "Pays",
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "regions",
-              "description": "Régions",
+              "name": "communes",
+              "description": "Communes",
               "isDeprecated": false,
               "deprecationReason": null
             },
@@ -10007,14 +10048,14 @@
               "deprecationReason": null
             },
             {
-              "name": "communes",
-              "description": "Communes",
+              "name": "regions",
+              "description": "Régions",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "engagement",
-              "description": "Engagement",
+              "name": "pays",
+              "description": "Pays",
               "isDeprecated": false,
               "deprecationReason": null
             },
@@ -10043,8 +10084,8 @@
               "deprecationReason": null
             },
             {
-              "name": "siret",
-              "description": "Numéro TAHITI",
+              "name": "rna",
+              "description": "RNA",
               "isDeprecated": false,
               "deprecationReason": null
             },
@@ -10069,6 +10110,12 @@
             {
               "name": "iban",
               "description": "Iban",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "siret",
+              "description": "Numéro TAHITI",
               "isDeprecated": false,
               "deprecationReason": null
             },

@@ -1,0 +1,6 @@
+- if network_error
+  %p.pt-1= t('.network_error')
+- elsif @rna.present? && champ.data.blank?
+  %p.pt-1= t('.not_found')
+- elsif champ.value.present?
+  %p.pt-1= t('.data_fetched', title: champ.title)

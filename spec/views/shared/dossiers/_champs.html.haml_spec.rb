@@ -17,7 +17,8 @@ describe 'shared/dossiers/champs.html.haml', type: :view do
     let(:champ3) { create(:champ_explication, dossier: dossier, value: "mazette") }
     let(:champ4) { create(:champ_dossier_link, dossier: dossier, value: dossier.id) }
     let(:champ5) { create(:champ_textarea, dossier: dossier, value: "Some long text in a textarea.") }
-    let(:champs) { [champ1, champ2, champ3, champ4, champ5] }
+    let(:champ6) { create(:champ_rna, value: "W173847273") }
+    let(:champs) { [champ1, champ2, champ3, champ4, champ5, champ6] }
 
     it "renders titles and values of champs" do
       expect(subject).to include(champ1.libelle)
@@ -29,7 +30,9 @@ describe 'shared/dossiers/champs.html.haml', type: :view do
       expect(subject).to include(dossier.text_summary)
 
       expect(subject).to include(champ5.libelle)
-      expect(subject).to include(champ5.libelle)
+      expect(subject).to include(champ5.value)
+      expect(subject).to include(champ6.libelle)
+      expect(subject).to include(champ6.value)
     end
 
     it "doesn't render explication champs" do

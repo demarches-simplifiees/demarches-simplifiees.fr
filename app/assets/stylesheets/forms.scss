@@ -256,23 +256,6 @@
     }
   }
 
-  .constraints {
-    label {
-      padding: 0 $default-padding 0 $default-spacer;
-    }
-  }
-
-  .add-row {
-    margin-bottom: $default-fields-spacer;
-    color: #FFFFFF;
-    border-color: $green;
-    background-color: $green;
-
-    &:hover:not(:disabled) {
-      color: $green;
-      background-color: #FFFFFF;
-    }
-  }
 
   input[type=checkbox] {
     &.small-margin {
@@ -436,43 +419,6 @@
     }
   }
 
-  .select2 {
-    min-width: 50%;
-  }
-
-  .select2-container {
-    display: block;
-    margin-bottom: $default-fields-spacer;
-
-    &.select2-container--focus {
-      .select2-selection {
-        border-color: $border-grey;
-      }
-    }
-
-    .select2-selection--single {
-      min-height: 62px;
-
-      // scss-lint:disable SelectorFormat
-      .select2-selection__arrow {
-        display: none;
-      }
-
-      // scss-lint:enable
-    }
-
-    // scss-lint:disable SelectorFormat
-    .select2-selection__rendered {
-      padding: $default-padding;
-    }
-
-    .select2-selection__choice {
-      background-color: #FFFFFF;
-    }
-
-    // scss-lint:enable
-  }
-
   [data-reach-combobox-token-list] {
     padding: $default-spacer;
     display: flex;
@@ -553,25 +499,6 @@
     border-bottom: 3px solid $blue-france-500;
   }
 
-  h3.header-section {
-    display: inline-block;
-    color: $blue-france-500;
-    font-size: 26px;
-    margin-bottom: $default-padding;
-  }
-
-  h4.header-section {
-    display: inline-block;
-    color: $blue-france-500;
-    font-size: 20px;
-    margin-bottom: $default-padding;
-  }
-
-  .header-section {
-    display: inline-block;
-    color: $blue-france-500;
-  }
-
   .header-subsection {
     font-size: 22px;
     color: $blue-france-500;
@@ -597,6 +524,13 @@
   }
 
   .siret-info {
+    margin-top: -$default-fields-spacer;
+    margin-bottom: $default-fields-spacer;
+    // Ensure the bottom-margin is not collapsed when the element is empty
+    min-height: 1px;
+  }
+
+  .rna-info {
     margin-top: -$default-fields-spacer;
     margin-bottom: $default-fields-spacer;
     // Ensure the bottom-margin is not collapsed when the element is empty
