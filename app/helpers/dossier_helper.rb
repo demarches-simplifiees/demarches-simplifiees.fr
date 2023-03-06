@@ -62,9 +62,7 @@ module DossierHelper
 
   def class_badge_state(state)
     case state
-    when Dossier.states.fetch(:en_construction)
-      'fr-badge--info'
-    when Dossier.states.fetch(:en_instruction)
+    when Dossier.states.fetch(:en_construction), Dossier.states.fetch(:en_instruction)
       'fr-badge--info'
     when Dossier.states.fetch(:accepte)
       'fr-badge--success'
