@@ -3,10 +3,7 @@ class Cron::FixMissingAntivirusAnalysisJob < Cron::CronJob
 
   def perform
     ActiveStorage::Blob.where(virus_scan_result: ActiveStorage::VirusScanner::PENDING).find_each do |blob|
-      begin
-        VirusScannerJob.perform_now(blob)
-      rescue ActiveStorage::IntegrityError
-      end
+      VirusScannerJob.perform_later(blob)
     end
   end
 end
