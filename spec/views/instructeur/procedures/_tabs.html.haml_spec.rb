@@ -1,10 +1,10 @@
-describe 'instructeurs/procedures/_tabs.html.haml', type: :view do
+describe 'instructeurs/procedures/_tabs', type: :view do
   let(:procedure) { create(:procedure, id: 1, procedure_expires_when_termine_enabled: expiration_enabled) }
 
   before { allow(view).to receive(:current_instructeur).and_return(create(:instructeur)) }
 
   subject do
-    render('instructeurs/procedures/tabs.html.haml',
+    render('instructeurs/procedures/tabs',
             procedure: procedure,
             statut: 'tous',
             a_suivre_count: 0,

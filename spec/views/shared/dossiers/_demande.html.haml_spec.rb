@@ -1,4 +1,4 @@
-describe 'shared/dossiers/demande.html.haml', type: :view do
+describe 'shared/dossiers/demande', type: :view do
   let(:current_instructeur) { create(:instructeur) }
   let(:individual) { nil }
   let(:etablissement) { nil }
@@ -9,7 +9,7 @@ describe 'shared/dossiers/demande.html.haml', type: :view do
     sign_in(current_instructeur.user)
   end
 
-  subject { render 'shared/dossiers/demande.html.haml', dossier: dossier, demande_seen_at: nil, profile: 'usager' }
+  subject { render 'shared/dossiers/demande', dossier: dossier, demande_seen_at: nil, profile: 'usager' }
 
   context 'when dossier was created by an etablissement' do
     let(:etablissement) { create(:etablissement) }

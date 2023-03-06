@@ -1,4 +1,4 @@
-describe 'users/dossiers/expiration_banner.html.haml', type: :view do
+describe 'users/dossiers/expiration_banner', type: :view do
   include DossierHelper
   let(:duree_conservation_dossiers_dans_ds) { 3 }
   let(:dossier) do
@@ -11,7 +11,7 @@ describe 'users/dossiers/expiration_banner.html.haml', type: :view do
   end
   let(:i18n_key_state) { state }
   subject do
-    render('users/dossiers/expiration_banner.html.haml',
+    render('users/dossiers/expiration_banner',
            dossier: dossier,
            current_user: build(:user))
   end

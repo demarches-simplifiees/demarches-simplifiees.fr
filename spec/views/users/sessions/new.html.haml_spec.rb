@@ -1,4 +1,4 @@
-describe 'users/sessions/new.html.haml', type: :view do
+describe 'users/sessions/new', type: :view do
   let(:dossier) { create :dossier }
 
   before(:each) do

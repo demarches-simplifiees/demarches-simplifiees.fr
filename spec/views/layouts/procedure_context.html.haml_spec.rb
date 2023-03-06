@@ -1,4 +1,4 @@
-describe 'layouts/procedure_context.html.haml', type: :view do
+describe 'layouts/procedure_context', type: :view do
   let(:procedure) { create(:simple_procedure, :with_service) }
   let(:dossier) { create(:dossier, procedure: procedure) }
 
@@ -9,7 +9,7 @@ describe 'layouts/procedure_context.html.haml', type: :view do
   end
 
   subject do
-    render html: 'Column content', layout: 'layouts/procedure_context.html.haml'
+    render html: 'Column content', layout: 'layouts/procedure_context'
   end
 
   context 'when a procedure is assigned' do

@@ -1,10 +1,10 @@
-describe 'shared/dossiers/edit.html.haml', type: :view do
+describe 'shared/dossiers/edit', type: :view do
   before do
     allow(controller).to receive(:current_user).and_return(dossier.user)
     allow(view).to receive(:administrateur_signed_in?).and_return(false)
   end
 
-  subject { render 'shared/dossiers/edit.html.haml', dossier: dossier, apercu: false }
+  subject { render 'shared/dossiers/edit', dossier: dossier, apercu: false }
 
   context 'when there are some champs' do
     let(:dossier) { create(:dossier) }
