@@ -11,7 +11,7 @@ class Dossiers::EditFooterComponent < ApplicationComponent
   end
 
   def annotation?
-    @annotation
+    @annotation.present?
   end
 
   def button_options
