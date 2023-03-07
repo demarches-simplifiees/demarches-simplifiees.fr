@@ -12,15 +12,15 @@
       .fr-header__body-row
         .fr-header__brand.fr-enlarge-link
           .fr-header__brand-top
-            .fr-header__logo
-              -# %p.fr-logo
+            -# .fr-header__service
+              %p.fr-logo
                 République
                 = succeed "Française" do
                   %br/
-            - root_profile_link, root_profile_libelle = root_path_info_for_profile(nav_bar_profile)
-            = link_to root_profile_link, class: 'header-logo', title: root_profile_libelle  do
-              = image_tag 'header/logo-md-wide.svg', alt: '', class: 'site-title big'
-              = image_tag 'header/logo-md-narrow.svg', alt: '', class: 'site-title small'
+            .fr-header__operator
+              - root_profile_link, root_profile_libelle = root_path_info_for_profile(nav_bar_profile)
+              = link_to root_profile_link, title: root_profile_libelle  do
+                = image_tag 'header/logo-md-wide.svg', alt: '', class: 'fr-responsive-img', style: 'width: 360px'
             .fr-header__navbar
               - if is_search_enabled
                 %button.fr-btn--search.fr-btn{ "aria-controls" => "search-modal", "data-fr-opened" => "false", :title => t('views.users.dossiers.search.search_file') }= t('views.users.dossiers.search.search_file')
