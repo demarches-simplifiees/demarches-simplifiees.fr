@@ -199,11 +199,12 @@ class GeoArea < ApplicationRecord
   end
 
   def surface
-    if legacy_cadastre?
+    api_surface = if legacy_cadastre?
       properties['surface_parcelle']
     else
       properties['contenance']
     end
+    api_surface ? api_surface : area
   end
 
   def prefixe
