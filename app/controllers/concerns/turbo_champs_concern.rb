@@ -16,8 +16,7 @@ module TurboChampsConcern
 
   def champs_to_one_selector(champs)
     champs
-      .map(&:input_group_id)
-      .map { |id| "##{id}" }
+      .map { "##{_1.input_group_id}" }
       .join(',')
   end
 end
