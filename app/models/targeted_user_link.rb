@@ -35,6 +35,9 @@ class TargetedUserLink < ApplicationRecord
     case target_context
     when "invite"
       invite = target_model
+
+      fail ActiveRecord::RecordNotFound if invite.nil?
+
       user = User.find_by(email: target_email)
       user&.active? ?
       url_helper.invite_path(invite) :
