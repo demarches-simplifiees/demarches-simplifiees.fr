@@ -7,6 +7,10 @@ class ExportJob < ApplicationJob
     Sentry.set_tags(procedure: job.arguments.first.procedure.id)
   end
 
+  def max_run_time
+    Export::MAX_DUREE_GENERATION
+  end
+
   def perform(export)
     return if export.generated?
 
