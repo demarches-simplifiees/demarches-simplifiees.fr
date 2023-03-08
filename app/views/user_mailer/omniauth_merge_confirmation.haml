@@ -4,7 +4,7 @@
   Bonjour,
 
 %p
-  Pour confirmer la fusion de votre compte #{provider} avec votre compte #{APPLICATION_NAME}, veuillez cliquer sur le lien suivant :
+  Pour confirmer la fusion de votre compte #{t("omniauth.provider.#{@provider}")} avec votre compte #{APPLICATION_NAME}, veuillez cliquer sur le lien suivant :
 - merge_path = omniauth_mail_merge_with_existing_account_url(provider: @provider, merge_token: @merge_token)
 = round_button 'Je confirme', merge_path, :primary
 

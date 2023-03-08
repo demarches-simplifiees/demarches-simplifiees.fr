@@ -665,7 +665,7 @@ class Procedure < ApplicationRecord
   end
 
   def missing_zones?
-    if Flipper.enabled?(:zonage)
+    if feature_enabled?(:zonage)
       zones.empty?
     else
       false
@@ -690,7 +690,7 @@ class Procedure < ApplicationRecord
   end
 
   def defaut_groupe_instructeur_for_new_dossier
-    if !routee? || feature_enabled?(:procedure_routage_api)
+    if !routee? || feature_enabled?(:procedure_routage_api) || (routee? && self.groupe_instructeurs.size == 1)
       defaut_groupe_instructeur
     end
   end

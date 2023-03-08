@@ -22,7 +22,7 @@ class APIAddress::AddressAdapter
           street_address: result.street_address,
           street_number: result.street_number,
           street_name: result.street_name,
-          postal_code: result.postal_code,
+          postal_code: result.postal_code.presence || "",
           city_name: result.city_name,
           city_code: result.city_code,
           department_name: result.department_name,

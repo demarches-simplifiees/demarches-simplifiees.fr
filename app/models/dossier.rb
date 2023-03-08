@@ -615,7 +615,7 @@ class Dossier < ApplicationRecord
   end
 
   def show_groupe_instructeur_selector?
-    procedure.routee? && !procedure.feature_enabled?(:procedure_routage_api)
+    procedure.routee? && !procedure.feature_enabled?(:procedure_routage_api) && procedure.groupe_instructeurs.size > 1
   end
 
   def assign_to_groupe_instructeur(groupe_instructeur, author = nil)
@@ -1102,7 +1102,14 @@ class Dossier < ApplicationRecord
     types_de_champ.flat_map do |type_de_champ|
       champ_or_new = champs.find { |champ| champ.stable_id == type_de_champ.stable_id }
       champ_or_new ||= type_de_champ.champ.build
-      Array.wrap(champ_or_new.for_export || [nil]).map.with_index do |champ_value, index|
+
+      champ_values = if champ_or_new.visible?
+        champ_or_new.for_export || [nil]
+      else
+        [nil]
+      end
+
+      Array.wrap(champ_values).map.with_index do |champ_value, index|
         [type_de_champ.libelle_for_export(index), champ_value]
       end
     end

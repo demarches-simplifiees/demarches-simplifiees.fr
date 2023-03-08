@@ -1,6 +1,7 @@
 describe APIAddress::AddressAdapter do
   let(:search_term) { 'Paris' }
   let(:adapter) { described_class.new(search_term) }
+  let(:status) { 200 }
   subject { adapter.to_params }
 
   before do
@@ -15,7 +16,6 @@ describe APIAddress::AddressAdapter do
 
   context "when responds with valid schema" do
     let(:body) { File.read('spec/fixtures/files/api_address/address.json') }
-    let(:status) { 200 }
 
     it '#to_params returns a valid' do
       expect(subject).to be_an_instance_of(Hash)
@@ -26,7 +26,6 @@ describe APIAddress::AddressAdapter do
 
   context "when responds with an address which is not a direct match to search term" do
     let(:body) { File.read('spec/fixtures/files/api_address/address.json') }
-    let(:status) { 200 }
     let(:search_term) { 'Lyon' }
 
     it '#to_params ignores the response' do
@@ -36,10 +35,21 @@ describe APIAddress::AddressAdapter do
 
   context "when responds with invalid schema" do
     let(:body) { File.read('spec/fixtures/files/api_address/address_invalid.json') }
-    let(:status) { 200 }
 
     it '#to_params raise exception' do
       expect { subject }.to raise_exception(APIAddress::AddressAdapter::InvalidSchemaError)
+    end
+  end
+
+  context "when responds without postcode" do
+    let(:body) {
+      json = JSON.parse(File.read('spec/fixtures/files/api_address/address.json'))
+      json["features"][0]["properties"].delete("postcode")
+      json.to_json
+    }
+
+    it "#to_params default to an empty postcode" do
+      expect(subject[:postal_code]).to eq("")
     end
   end
 end

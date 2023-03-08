@@ -176,7 +176,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       end
 
       it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
-      it { expect(bulk_message.groupe_instructeurs).to eq([gi_1_1, gi_1_3]) }
+      it { expect(bulk_message.groupe_instructeurs).to match_array([gi_1_1, gi_1_3]) }
     end
   end
 

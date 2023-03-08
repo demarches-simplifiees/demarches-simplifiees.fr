@@ -277,6 +277,16 @@ export function isNumeric(s: string) {
   return !isNaN(n) && isFinite(n);
 }
 
+export function isButtonElement(
+  element: Element
+): element is HTMLButtonElement {
+  return (
+    element.tagName == 'BUTTON' ||
+    (element.tagName == 'INPUT' &&
+      (element as HTMLInputElement).type == 'submit')
+  );
+}
+
 export function isSelectElement(
   element: HTMLElement
 ): element is HTMLSelectElement {

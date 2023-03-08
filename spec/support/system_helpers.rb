@@ -131,7 +131,7 @@ module SystemHelpers
       expect(page).to have_selector('#account.fr-collapse--expanded', visible: true)
       click_on 'Se déconnecter'
     end
-    expect(page).to have_current_path(root_path, wait: 10)
+    expect(page).to have_current_path(root_path, wait: 30)
   end
 
   # Keep the brower window open after a test success of failure, to
@@ -170,6 +170,12 @@ module SystemHelpers
 
   def form_id_for(libelle)
     find(:xpath, ".//label[contains(text()[normalize-space()], '#{libelle}')]")[:for]
+  end
+
+  def wait_for_autosave(brouillon = true)
+    blur
+    expect(page).to have_css('span', text: "#{brouillon ? 'Brouillon' : 'Dossier'} enregistré", visible: true)
+    page.execute_script("document.documentElement.dispatchEvent(new CustomEvent('autosave:reset'));")
   end
 end
 

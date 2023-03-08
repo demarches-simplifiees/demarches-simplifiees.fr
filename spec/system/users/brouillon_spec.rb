@@ -47,8 +47,7 @@ describe 'The user' do
     find('.editable-champ-piece_justificative input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
 
     expect(page).to have_css('span', text: 'Votre brouillon est automatiquement enregistré', visible: true)
-    blur
-    expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
+    wait_for_autosave
 
     # check data on the dossier from db
     # Sometimes, `user_dossier.champs` are not yet all updated with the new values
@@ -145,18 +144,14 @@ describe 'The user' do
     end
 
     expect(page).to have_content('Supprimer', count: 2)
-
-    blur
-    expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
+    wait_for_autosave
 
     expect(page).to have_content('Supprimer', count: 2)
 
     within '.repetition .row:first-child' do
       click_on 'Supprimer l’élément'
     end
-
-    blur
-    expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
+    wait_for_autosave
 
     expect(page).to have_content('Supprimer', count: 1)
   end
@@ -169,8 +164,8 @@ describe 'The user' do
 
     # Check an incomplete dossier can be saved as a draft, even when mandatory fields are missing
     fill_in('texte optionnel', with: 'ça ne suffira pas')
-    blur
-    expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
+    wait_for_autosave
+
     expect(page).to have_current_path(brouillon_dossier_path(user_dossier))
 
     # Check an incomplete dossier cannot be submitted when mandatory fields are missing
@@ -180,6 +175,7 @@ describe 'The user' do
 
     # Check a dossier can be submitted when all mandatory fields are filled
     fill_in('texte obligatoire', with: 'super texte')
+    wait_for_autosave
 
     click_on 'Déposer le dossier'
     expect(user_dossier.reload.en_construction?).to be(true)
@@ -189,7 +185,6 @@ describe 'The user' do
 
   scenario 'extends dossier experation date more than one time, ', js: true do
     simple_procedure.update(procedure_expires_when_termine_enabled: true)
-    allow(simple_procedure).to receive(:feature_enabled?).with(:procedure_process_expired_dossiers_termine).and_return(true)
     user_old_dossier = create(:dossier,
       procedure: simple_procedure,
       created_at: simple_procedure.duree_conservation_dossiers_dans_ds.month.ago,
@@ -274,6 +269,29 @@ describe 'The user' do
 
     # Expect the file to have been saved on the dossier
     expect(page).to have_text('file.pdf')
+  end
+
+  context 'with routing activated and one instructor group' do
+    let!(:simple_procedure) { create(:simple_procedure, :published, :with_type_de_champ, :for_individual) }
+    let!(:administrateur) { create(:administrateur, procedures: [simple_procedure]) }
+
+    before do
+      simple_procedure.update(routing_enabled: true)
+      simple_procedure.defaut_groupe_instructeur.instructeurs << administrateur.instructeur
+    end
+
+    it 'sends the dossier without selecting instructor group', js: true do
+      log_in(user, simple_procedure)
+      fill_individual
+      fill_in('Texte obligatoire', with: 'bla bla')
+      wait_for_autosave
+
+      expect(page).not_to have_text('Votre ville')
+
+      click_on 'Déposer le dossier'
+
+      expect(page).to have_text('Merci')
+    end
   end
 
   context 'with condition' do
@@ -400,8 +418,7 @@ describe 'The user' do
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
         fill_in('age', with: '18')
-        blur
-        expect(page).to have_css('span', text: 'Dossier enregistré', visible: true)
+        wait_for_autosave(false)
 
         # the champ keeps their previous value so they are all displayed
         expect(page).to have_css('label', text: 'permis de conduire', visible: true)
@@ -419,9 +436,7 @@ describe 'The user' do
       expect(page).to have_content('Votre brouillon est automatiquement enregistré')
 
       fill_in('texte obligatoire', with: 'a valid user input')
-      blur
-
-      expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
+      wait_for_autosave
 
       visit current_path
       expect(page).to have_field('texte obligatoire', with: 'a valid user input')
@@ -440,7 +455,7 @@ describe 'The user' do
       # Test that retrying after a failure works
       allow_any_instance_of(Users::DossiersController).to receive(:update_brouillon).and_call_original
       click_on 'réessayer'
-      expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
+      wait_for_autosave
 
       visit current_path
       expect(page).to have_field('texte obligatoire', with: 'a valid user input')
@@ -464,8 +479,7 @@ describe 'The user' do
       expect(page).to have_current_path(brouillon_dossier_path(user_dossier))
 
       fill_in('texte obligatoire', with: 'a valid user input')
-      blur
-      expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
+      wait_for_autosave
     end
   end
 

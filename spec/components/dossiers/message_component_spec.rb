@@ -35,7 +35,7 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
     let(:dossier) { create(:dossier, :en_construction, commentaires: [commentaire], procedure: procedure) }
 
     context 'on a procedure with anonymous instructeurs' do
-      before { Flipper.enable_actor(:hide_instructeur_email, procedure) }
+      before { Flipper.enable(:hide_instructeur_email, procedure) }
 
       context 'redacts the instructeur email' do
         it { is_expected.to have_text(commentaire.body) }
@@ -45,7 +45,7 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
     end
 
     context 'on a procedure where instructeurs names are not redacted' do
-      before { Flipper.disable_actor(:hide_instructeur_email, procedure) }
+      before { Flipper.disable(:hide_instructeur_email, procedure) }
 
       context 'redacts the instructeur email but keeps the name' do
         it { is_expected.to have_text(commentaire.body) }
