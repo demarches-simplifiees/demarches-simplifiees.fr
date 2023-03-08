@@ -1172,14 +1172,14 @@ describe Dossier do
     end
   end
 
-  describe "#check_mandatory_champs" do
+  describe "#check_mandatory_and_visible_champs" do
     include Logic
 
     let(:procedure) { create(:procedure, types_de_champ_public: types_de_champ) }
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:types_de_champ) { [type_de_champ] }
     let(:type_de_champ) { {} }
-    let(:errors) { dossier.check_mandatory_champs }
+    let(:errors) { dossier.check_mandatory_and_visible_champs }
 
     it 'no mandatory champs' do
       expect(errors).to be_empty
