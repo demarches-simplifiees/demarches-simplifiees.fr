@@ -414,7 +414,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         it { expect { subject }.not_to raise_error }
         it { expect(response.status).to eq(302) }
         it { expect(flash.alert).to be_present }
-        it { expect(flash.alert).to eq("Importation impossible, veuillez importer un csv suivant <a href=\"/csv/import-instructeurs-test.csv\">ce modèle</a> pour une procédure classique ou <a href=\"/csv/fr/import-groupe-test.csv\">celui-ci</a> pour une procédure routée") }
+        it { expect(flash.alert).to eq("Importation impossible, veuillez importer un csv suivant <a href=\"/csv/import-instructeurs-test.csv\">ce modèle</a> pour une procédure sans routage ou <a href=\"/csv/fr/import-groupe-test.csv\">celui-ci</a> pour une procédure routée") }
       end
 
       context 'when the file content type is application/vnd.ms-excel' do
@@ -468,7 +468,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         before { subject }
 
         it { expect(flash.alert).to be_present }
-        it { expect(flash.alert).to eq("Importation impossible, veuillez importer un csv suivant <a href=\"/csv/import-instructeurs-test.csv\">ce modèle</a> pour une procédure classique ou <a href=\"/csv/fr/import-groupe-test.csv\">celui-ci</a> pour une procédure routée") }
+        it { expect(flash.alert).to eq("Importation impossible, veuillez importer un csv suivant <a href=\"/csv/import-instructeurs-test.csv\">ce modèle</a> pour une procédure sans routage ou <a href=\"/csv/fr/import-groupe-test.csv\">celui-ci</a> pour une procédure routée") }
       end
 
       context 'when procedure is closed' do
@@ -479,6 +479,20 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
         it { expect(procedure.groupe_instructeurs.first.label).to eq("Afrique") }
         it { expect(flash.alert).to eq("Import terminé. Cependant les emails suivants ne sont pas pris en compte: kara") }
+      end
+
+      context 'when emails are invalid' do
+        let(:procedure) { create(:procedure, :closed, administrateurs: [admin]) }
+        let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe-instructeur-emails-invalides.csv', 'text/csv') }
+
+        before do
+          allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs)
+            .and_return(double(deliver_later: true))
+          subject
+        end
+
+        it { expect(flash.alert).to include("Import terminé. Cependant les emails suivants ne sont pas pris en compte:") }
+        it { expect(GroupeInstructeurMailer).not_to have_received(:notify_added_instructeurs) }
       end
     end
 
@@ -550,6 +564,19 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
         it { expect(flash.alert).to be_present }
         it { expect(flash.alert).to eq("Importation impossible : veuillez importer un fichier CSV") }
+      end
+
+      context 'when emails are invalid' do
+        let(:csv_file) { fixture_file_upload('spec/fixtures/files/instructeurs-emails-invalides.csv', 'text/csv') }
+
+        before do
+          allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs)
+            .and_return(double(deliver_later: true))
+          subject
+        end
+
+        it { expect(flash.alert).to include("Import terminé. Cependant les emails suivants ne sont pas pris en compte:") }
+        it { expect(GroupeInstructeurMailer).not_to have_received(:notify_added_instructeurs) }
       end
     end
   end

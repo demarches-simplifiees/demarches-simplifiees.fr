@@ -212,10 +212,11 @@ module Administrateurs
             added_instructeurs_by_group, invalid_emails = InstructeursImportService.import_groupes(procedure, groupes_emails)
 
             added_instructeurs_by_group.each do |groupe, added_instructeurs|
-              GroupeInstructeurMailer
-                .notify_added_instructeurs(groupe, added_instructeurs, current_administrateur.email)
-                .deliver_later
-
+              if added_instructeurs.present?
+                GroupeInstructeurMailer
+                  .notify_added_instructeurs(groupe, added_instructeurs, current_administrateur.email)
+                  .deliver_later
+              end
               flash_message_for_import(invalid_emails)
             end
 
@@ -223,11 +224,11 @@ module Administrateurs
             instructors_emails = csv_content.map(&:to_h)
 
             added_instructeurs, invalid_emails = InstructeursImportService.import_instructeurs(procedure, instructors_emails)
-
-            GroupeInstructeurMailer
-              .notify_added_instructeurs(groupe_instructeur, added_instructeurs, current_administrateur.email)
-              .deliver_later
-
+            if added_instructeurs.present?
+              GroupeInstructeurMailer
+                .notify_added_instructeurs(groupe_instructeur, added_instructeurs, current_administrateur.email)
+                .deliver_later
+            end
             flash_message_for_import(invalid_emails)
           else
             flash_message_for_invalid_csv
