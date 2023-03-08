@@ -204,43 +204,34 @@ module Administrateurs
           file = csv_file.read
           base_encoding = CharlockHolmes::EncodingDetector.detect(file)
 
-          if params[:group_csv_file]
-            groupes_emails = ACSV::CSV.new_for_ruby3(file.encode("UTF-8", base_encoding[:encoding], invalid: :replace, replace: ""), headers: true, header_converters: :downcase)
-              .map { |r| r.to_h.slice('groupe', 'email') }
+          csv_content = ACSV::CSV.new_for_ruby3(file.encode("UTF-8", base_encoding[:encoding], invalid: :replace, replace: ""), headers: true, header_converters: :downcase).map(&:to_h)
 
-            groupes_emails_has_keys = groupes_emails.first.has_key?("groupe") && groupes_emails.first.has_key?("email")
+          if csv_content.first.has_key?("groupe") && csv_content.first.has_key?("email")
+            groupes_emails = csv_content.map { |r| r.to_h.slice('groupe', 'email') }
 
-            if groupes_emails_has_keys.blank?
-              flash[:alert] = "Importation impossible, veuillez importer un csv #{view_context.link_to('suivant ce modèle', "/csv/#{I18n.locale}/import-groupe-test.csv")}"
-            else
-              added_instructeurs_by_group, invalid_emails = InstructeursImportService.import_groupes(procedure, groupes_emails)
+            added_instructeurs_by_group, invalid_emails = InstructeursImportService.import_groupes(procedure, groupes_emails)
 
-              added_instructeurs_by_group.each do |groupe, added_instructeurs|
+            added_instructeurs_by_group.each do |groupe, added_instructeurs|
+              if added_instructeurs.present?
                 GroupeInstructeurMailer
                   .notify_added_instructeurs(groupe, added_instructeurs, current_administrateur.email)
                   .deliver_later
               end
-
               flash_message_for_import(invalid_emails)
             end
 
-          elsif params[:instructeurs_csv_file]
-            instructors_emails = ACSV::CSV.new_for_ruby3(file.encode("UTF-8", base_encoding[:encoding], invalid: :replace, replace: ""), headers: true, header_converters: :downcase)
-              .map(&:to_h)
+          elsif csv_content.first.has_key?("email") && !csv_content.map(&:to_h).first.keys.many? && procedure.groupe_instructeurs.one?
+            instructors_emails = csv_content.map(&:to_h)
 
-            instructors_emails_has_key = instructors_emails.first.has_key?("email") && !instructors_emails.first.keys.many?
-
-            if instructors_emails_has_key.blank?
-              flash[:alert] = "Importation impossible, veuillez importer un csv #{view_context.link_to('suivant ce modèle', "/csv/import-instructeurs-test.csv")}"
-            else
-              added_instructeurs, invalid_emails = InstructeursImportService.import_instructeurs(procedure, instructors_emails)
-
+            added_instructeurs, invalid_emails = InstructeursImportService.import_instructeurs(procedure, instructors_emails)
+            if added_instructeurs.present?
               GroupeInstructeurMailer
                 .notify_added_instructeurs(groupe_instructeur, added_instructeurs, current_administrateur.email)
                 .deliver_later
-
-              flash_message_for_import(invalid_emails)
             end
+            flash_message_for_import(invalid_emails)
+          else
+            flash_message_for_invalid_csv
           end
           redirect_to admin_procedure_groupe_instructeurs_path(procedure)
         end
@@ -316,7 +307,7 @@ module Administrateurs
     end
 
     def csv_file
-      params[:group_csv_file] || params[:instructeurs_csv_file]
+      params[:csv_file]
     end
 
     def marcel_content_type
@@ -337,6 +328,10 @@ module Administrateurs
       else
         flash[:alert] = "Import terminé. Cependant les emails suivants ne sont pas pris en compte: #{result.join(', ')}"
       end
+    end
+
+    def flash_message_for_invalid_csv
+      flash[:alert] = "Importation impossible, veuillez importer un csv suivant #{view_context.link_to('ce modèle', "/csv/import-instructeurs-test.csv")} pour une procédure sans routage ou #{view_context.link_to('celui-ci', "/csv/#{I18n.locale}/import-groupe-test.csv")} pour une procédure routée"
     end
   end
 end
