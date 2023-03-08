@@ -10,7 +10,7 @@ class SerializerService
 
   def self.dossiers(procedure)
     Sentry.with_scope do |scope|
-      scope.set_tags(procedure_id: procedure.id)
+      scope.set_tags(procedure: procedure.id)
 
       data = execute_query('serializeDossiers', { number: procedure.id })
       data && data['demarche']['dossiers']
