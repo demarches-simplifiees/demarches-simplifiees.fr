@@ -990,9 +990,10 @@ class Dossier < ApplicationRecord
     champs.filter(&:titre_identite?).map(&:piece_justificative_file).each(&:purge_later)
   end
 
-  def check_mandatory_champs
+  def check_mandatory_and_visible_champs
     (champs + champs.filter(&:block?).filter(&:visible?).flat_map(&:champs))
-      .filter(&:mandatory_blank_and_visible?)
+      .filter(&:visible?)
+      .filter(&:mandatory_blank?)
       .map do |champ|
         "Le champ #{champ.libelle.truncate(200)} doit être rempli."
       end
@@ -1100,16 +1101,23 @@ class Dossier < ApplicationRecord
   # To do so, we build a virtual champ when there is no value so we can call for_export with all indexes
   def self.champs_for_export(champs, types_de_champ)
     types_de_champ.flat_map do |type_de_champ|
-      champ_or_new = champs.find { |champ| champ.stable_id == type_de_champ.stable_id }
-      champ_or_new ||= type_de_champ.champ.build
+      champ = champs.find { |champ| champ.stable_id == type_de_champ.stable_id }
 
-      champ_values = if champ_or_new.visible?
-        champ_or_new.for_export || [nil]
+      exported_values = if champ.nil? || !champ.visible?
+        # some champs export multiple columns
+        # ex: commune.for_export => [commune, insee, departement]
+        # so we build a fake champ to have the right export
+        type_de_champ.champ.build.for_export
       else
-        [nil]
+        champ.for_export
       end
 
-      Array.wrap(champ_values).map.with_index do |champ_value, index|
+      # nil => [nil]
+      # text => [text]
+      # [commune, insee, departement] => [commune, insee, departement]
+      wrapped_exported_values = [exported_values].flatten
+
+      wrapped_exported_values.map.with_index do |champ_value, index|
         [type_de_champ.libelle_for_export(index), champ_value]
       end
     end

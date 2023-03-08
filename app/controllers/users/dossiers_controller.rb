@@ -448,7 +448,7 @@ module Users
     end
 
     def should_fill_groupe_instructeur?
-      !@dossier.procedure.routee? && @dossier.groupe_instructeur_id.nil?
+      (!@dossier.procedure.routee? || @dossier.procedure.groupe_instructeurs.size == 1) && @dossier.groupe_instructeur_id.nil?
     end
 
     def defaut_groupe_instructeur
@@ -478,7 +478,7 @@ module Users
       end
 
       if dossier.en_construction?
-        errors += @dossier.check_mandatory_champs
+        errors += @dossier.check_mandatory_and_visible_champs
       end
 
       errors
@@ -489,7 +489,7 @@ module Users
 
       @dossier.valid?(**submit_validation_options)
       errors += @dossier.errors.full_messages
-      errors += @dossier.check_mandatory_champs
+      errors += @dossier.check_mandatory_and_visible_champs
 
       if should_fill_groupe_instructeur?
         @dossier.assign_to_groupe_instructeur(defaut_groupe_instructeur)

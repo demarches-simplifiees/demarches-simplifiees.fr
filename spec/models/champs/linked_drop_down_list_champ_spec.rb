@@ -78,7 +78,7 @@ describe Champs::LinkedDropDownListChamp do
       let(:type_de_champ) { build(:type_de_champ_linked_drop_down_list, drop_down_list_value: value) }
 
       it 'blank is fine' do
-        is_expected.not_to be_mandatory_blank_and_visible
+        is_expected.not_to be_mandatory_blank
       end
     end
 
@@ -86,27 +86,27 @@ describe Champs::LinkedDropDownListChamp do
       let(:type_de_champ) { build(:type_de_champ_linked_drop_down_list, mandatory: true, drop_down_list_value: value) }
 
       context 'when there is no value' do
-        it { is_expected.to be_mandatory_blank_and_visible }
+        it { is_expected.to be_mandatory_blank }
       end
 
       context 'when there is a primary value' do
         before { subject.primary_value = 'Primary' }
 
         context 'when there is no secondary value' do
-          it { is_expected.to be_mandatory_blank_and_visible }
+          it { is_expected.to be_mandatory_blank }
         end
 
         context 'when there is a secondary value' do
           before { subject.secondary_value = 'Secondary' }
 
-          it { is_expected.not_to be_mandatory_blank_and_visible }
+          it { is_expected.not_to be_mandatory_blank }
         end
 
         context 'when there is nothing to select for the secondary value' do
           let(:value) { "--A--\nAbbott\nAbelard\n--B--\n--C--\nCynthia" }
           before { subject.primary_value = 'B' }
 
-          it { is_expected.not_to be_mandatory_blank_and_visible }
+          it { is_expected.not_to be_mandatory_blank }
         end
       end
     end

@@ -3,7 +3,7 @@
     = @form.label :numero_dn, "DN"
   = @form.text_field :numero_dn,
     value: @champ.numero_dn,
-    required: @champ.mandatory?,
+    required: @champ.required?,
     placeholder: '0123456',
     style: 'width: 7em',
     pattern: "[0-9]{6,7}",
@@ -14,7 +14,7 @@
     = @form.label :date_de_naissance, t('.date')
   = @form.date_field :date_de_naissance,
     value: @champ.date_de_naissance,
-    required: @champ.mandatory?,
+    required: @champ.required?,
     max: Date.today,
     data: { numero_dn_target: 'ddn' }
   .numero-dn-info{ id: dom_id(@champ, :status), data: { numero_dn_target: 'info' } }

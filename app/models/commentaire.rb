@@ -18,8 +18,8 @@ class Commentaire < ApplicationRecord
   self.ignored_columns = [:user_id]
   belongs_to :dossier, inverse_of: :commentaires, touch: true, optional: false
 
-  belongs_to :instructeur, optional: true
-  belongs_to :expert, optional: true
+  belongs_to :instructeur, inverse_of: :commentaires, optional: true
+  belongs_to :expert, inverse_of: :commentaires, optional: true
 
   validate :messagerie_available?, on: :create, unless: -> { dossier.brouillon? }
 
