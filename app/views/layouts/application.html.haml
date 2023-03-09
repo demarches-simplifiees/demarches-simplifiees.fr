@@ -57,13 +57,3 @@
       - if Rails.env.development?
         = vite_typescript_tag 'axe-core'
       = yield :charts_js
-
-    // Container for custom turbo-stream actions
-    %turbo-events
-
-    // We patch `@hotwired/turbo` to attach forms generated from links to this
-    // container instead of the body to avoid conflicts with `@rails/ujs`. We also
-    // patch `@hotwired/turbo` to add a timeout before removing the form because in
-    // order to be accepted as a valid `turbo form`` either global `turbo drive`` should
-    // be enabled or the form needs to have a parent with `data-turbo="true"` on it.
-    %div{ 'data-turbo': 'true' }
