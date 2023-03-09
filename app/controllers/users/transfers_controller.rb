@@ -20,11 +20,14 @@ module Users
 
     def destroy
       transfer = DossierTransfer.find(params[:id])
+      authorized = (transfer.email == current_user.email || transfer.dossiers.exists?(dossiers: { user: current_user }))
 
-      authorized_email = (transfer.email == current_user.email || transfer.dossiers.where(dossiers: { user: current_user }).present?)
-      return if !authorized_email
-
-      transfer.destroy_and_nullify
+      if authorized
+        transfer.destroy_and_nullify
+        flash.notice = t("users.dossiers.transferer.destroy")
+      else
+        flash.alert = t("users.dossiers.transferer.unauthorized_destroy")
+      end
       redirect_to dossiers_path
     end
 

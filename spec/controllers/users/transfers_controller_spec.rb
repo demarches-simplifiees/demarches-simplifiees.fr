@@ -18,6 +18,8 @@ describe Users::TransfersController, type: :controller do
       it "deletes dossier transfert" do
         subject
         expect { dossier_transfert.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { (flash.notice).to eq('La demande de transfert a été supprimée avec succès') }
+        expect { (subject).to redirect_to dossiers_path }
       end
     end
 
@@ -35,6 +37,27 @@ describe Users::TransfersController, type: :controller do
       it "deletes dossier transfert" do
         subject
         expect { dossier_transfert.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    context "as transfer unauthorized" do
+      let(:dossier_transfert) { DossierTransfer.initiate(recipient_user.email, [dossier]) }
+      let(:random_user) { create(:user) }
+
+      subject { delete :destroy, params: { id: dossier_transfert.id } }
+
+      before do
+        sign_in(random_user)
+      end
+
+      it { expect { subject }.not_to raise_error }
+
+      it "does not delete dossier transfert" do
+        subject
+
+        expect { dossier_transfert.reload.to eq(dossier_transfert) }
+        expect { (flash.alert).to eq("Vous n'avez pas l'autorisation pour supprimer cette demande de transfert") }
+        expect { (subject).to redirect_to dossiers_path }
       end
     end
   end
