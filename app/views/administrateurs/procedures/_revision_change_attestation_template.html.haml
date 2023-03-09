@@ -1,15 +1,21 @@
 - case change[:op]
 - when :add
-  %li.mb-1= t(:add, scope: [:administrateurs, :revision_changes, :attestation_template])
+  - list.with_item do
+    = t(:add, scope: [:administrateurs, :revision_changes, :attestation_template])
 - when :update
   - case change[:attribute]
   - when :title
-    %li.mb-1= t(:update_title, scope: [:administrateurs, :revision_changes, :attestation_template], to: change[:to])
+    - list.with_item do
+      = t(:update_title, scope: [:administrateurs, :revision_changes, :attestation_template], to: change[:to])
   - when :body
-    %li.mb-1= t(:update_body, scope: [:administrateurs, :revision_changes, :attestation_template])
+    - list.with_item do
+      = t(:update_body, scope: [:administrateurs, :revision_changes, :attestation_template])
   - when :footer
-    %li.mb-1= t(:update_footer, scope: [:administrateurs, :revision_changes, :attestation_template])
+    - list.with_item do
+      = t(:update_footer, scope: [:administrateurs, :revision_changes, :attestation_template])
   - when :logo
-    %li.mb-1= t(:update_logo, scope: [:administrateurs, :revision_changes, :attestation_template], to: change[:to])
+    - list.with_item do
+      = t(:update_logo, scope: [:administrateurs, :revision_changes, :attestation_template], to: change[:to])
   - when :signature
-    %li.mb-1= t(:update_signature, scope: [:administrateurs, :revision_changes, :attestation_template], to: change[:to])
+    - list.with_item do
+      = t(:update_signature, scope: [:administrateurs, :revision_changes, :attestation_template], to: change[:to])

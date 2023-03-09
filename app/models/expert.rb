@@ -13,7 +13,7 @@ class Expert < ApplicationRecord
   has_many :procedures, through: :experts_procedures
   has_many :avis, through: :experts_procedures
   has_many :dossiers, through: :avis
-  has_many :commentaires
+  has_many :commentaires, inverse_of: :expert, dependent: :nullify
 
   default_scope { eager_load(:user) }
 

@@ -1,6 +1,6 @@
 .row
   = @form.check_box :value,
-    { required: @champ.mandatory?,
+    { required: @champ.required?,
       id: @champ.input_id,
       disabled: !@champ.user_accredited?(helpers.current_user),
       checked: @champ.value.present?,

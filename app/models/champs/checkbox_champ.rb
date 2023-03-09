@@ -28,7 +28,7 @@ class Champs::CheckboxChamp < Champs::YesNoChamp
     true? ? 'on' : 'off'
   end
 
-  def mandatory_blank_and_visible?
+  def mandatory_blank?
     mandatory? && (blank? || !true?)
   end
 end
