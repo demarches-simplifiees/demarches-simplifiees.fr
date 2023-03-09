@@ -512,7 +512,7 @@ GEM
       activesupport (>= 3.0.0)
     raabro (1.4.0)
     racc (1.6.2)
-    rack (2.2.6.2)
+    rack (2.2.6.3)
     rack-attack (6.5.0)
       rack (>= 1.0, < 3)
     rack-mini-profiler (3.0.0)
