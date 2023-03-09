@@ -17,6 +17,8 @@ module DossierSectionsConcern
     end
 
     def auto_numbering_section_headers_for?(champ)
+      return false if champ.child?
+
       sections_for(champ)&.none?(&:libelle_with_section_index?)
     end
 
