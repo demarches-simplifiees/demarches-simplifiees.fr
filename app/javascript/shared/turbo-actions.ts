@@ -38,8 +38,19 @@ const enable: TurboStreamAction = function () {
 };
 const morph: TurboStreamAction = function () {
   this.targetElements.forEach((element: Element) => {
-    morphdom(element, this.templateContent, {
-      onBeforeElUpdated(fromEl, toEl) {
+    let content: Element | DocumentFragment = this.templateContent;
+
+    // content.children ignores text node, the empty text nodes in particular
+    // so if templateContent contains an empty text node,
+    // we only keep the first element and happily morph it
+    if (content.children.length == 1) {
+      content = content.children[0];
+    }
+
+    // morphom morphes if content is an element
+    // swaps if content if a documentFragment
+    morphdom(element, content, {
+      onBeforeElUpdated: function (fromEl, toEl) {
         if (isTouchedInput(fromEl)) {
           fromEl.removeAttribute('data-touched');
           mergeInputValue(fromEl as HTMLInputElement, toEl as HTMLInputElement);

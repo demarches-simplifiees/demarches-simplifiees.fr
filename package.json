@@ -9,7 +9,7 @@
     "@popperjs/core": "^2.11.6",
     "@rails/actiontext": "^6.0.5",
     "@rails/activestorage": "^6.0.5",
-    "@rails/ujs": "^6.0.5",
+    "@rails/ujs": "^7.0.4",
     "@reach/combobox": "^0.17.0",
     "@reach/slider": "^0.17.0",
     "@sentry/browser": "7.8.1",
@@ -78,7 +78,7 @@
     "vitest": "^0.20.3"
   },
   "scripts": {
-    "clean": "del tmp public/packs public/packs-test public/vite public/vite-dev public/vite-test node_modules/.vite public/graphql",
+    "clean": "del tmp public/graphql && bin/vite clobber",
     "lint:js": "eslint --ext .js,.jsx,.ts,.tsx ./app/javascript",
     "webpack:build": "NODE_ENV=production bin/webpack",
     "lint:types": "tsc",

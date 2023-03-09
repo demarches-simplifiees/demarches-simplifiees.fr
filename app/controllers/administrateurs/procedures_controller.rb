@@ -64,6 +64,7 @@ module Administrateurs
     def new
       @procedure ||= Procedure.new(for_individual: true)
       @terms_of_use_read = {}
+      @existing_tags = get_existing_tags
     end
 
     SIGNIFICANT_DOSSIERS_THRESHOLD = 30
@@ -365,7 +366,8 @@ module Administrateurs
         { zone_ids: [] },
         :lien_dpo,
         :opendata,
-        :procedure_expires_when_termine_enabled
+        :procedure_expires_when_termine_enabled,
+        :tags
       ]
       permited_params = if @procedure&.locked?
         params.require(:procedure).permit(*editable_params)
@@ -374,6 +376,9 @@ module Administrateurs
       end
       if permited_params[:auto_archive_on].present?
         permited_params[:auto_archive_on] = Date.parse(permited_params[:auto_archive_on]) + 1.day
+      end
+      if permited_params[:tags].present?
+        permited_params[:tags] = JSON.parse(permited_params[:tags])
       end
       permited_params
     end
@@ -396,6 +401,12 @@ module Administrateurs
 
     def cloned_from_library?
       params[:from_new_from_existing].present?
+    end
+
+    def get_existing_tags
+      unnest = Arel::Nodes::NamedFunction.new('UNNEST', [Procedure.arel_table[:tags]])
+      query = Procedure.select(unnest.as('tags')).distinct.order('tags')
+      Procedure.connection.query(query.to_sql).flatten
     end
   end
 end

@@ -685,7 +685,9 @@ GEM
     scss_lint (0.59.0)
       sass (~> 3.5, >= 3.5.5)
     selectize-rails (0.12.6)
-    selenium-webdriver (4.1.0)
+    selenium-devtools (0.106.0)
+      selenium-webdriver (~> 4.2)
+    selenium-webdriver (4.5.0)
       childprocess (>= 0.5, < 5.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2)
@@ -735,7 +737,7 @@ GEM
     stackprof (0.2.21)
     strong_migrations (0.8.0)
       activerecord (>= 5.2)
-    strscan (3.0.3)
+    strscan (3.0.4)
     swd (1.3.0)
       activesupport (>= 3)
       attr_required (>= 0.0.5)
@@ -934,7 +936,8 @@ DEPENDENCIES
   sanitize-url
   sassc-rails
   scss_lint
-  selenium-webdriver (~> 4.0)
+  selenium-devtools
+  selenium-webdriver
   sentry-delayed_job
   sentry-rails
   sentry-ruby

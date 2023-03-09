@@ -174,8 +174,8 @@ module SystemHelpers
 
   def wait_for_autosave(brouillon = true)
     blur
-    expect(page).to have_css('span', text: "#{brouillon ? 'Brouillon' : 'Dossier'} enregistré", visible: true)
-    page.execute_script("document.documentElement.dispatchEvent(new CustomEvent('autosave:reset'));")
+    expect(page).to have_css('.debounced-empty') # no more debounce
+    expect(page).to have_css('.autosave-state-idle') # no more in flight promise
   end
 end
 
