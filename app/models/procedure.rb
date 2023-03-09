@@ -521,6 +521,7 @@ class Procedure < ApplicationRecord
       procedure.duree_conservation_dossiers_dans_ds = NEW_MAX_DUREE_CONSERVATION
       procedure.max_duree_conservation_dossiers_dans_ds = NEW_MAX_DUREE_CONSERVATION
     end
+    procedure.estimated_dossiers_count = 0
     procedure.published_revision = nil
     procedure.draft_revision.procedure = procedure
 
