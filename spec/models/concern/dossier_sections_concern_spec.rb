@@ -24,6 +24,20 @@ describe DossierSectionsConcern do
       it { expect(dossier.auto_numbering_section_headers_for?(dossier.champs_public[1])).to eq(true) }
       it { expect(dossier.auto_numbering_section_headers_for?(dossier.champs_private[1])).to eq(false) }
     end
+
+    context "header_section in a repetition are not auto-numbered" do
+      let(:types_de_champ_public) { [{ type: :header_section, libelle: public_libelle }, { type: :repetition, mandatory: true, children: [{ type: :header_section, libelle: "Enfant" }, { type: :text }] }] }
+
+      context "with parent section having headers with number" do
+        let(:public_libelle) { "1. Infos" }
+        it { expect(dossier.auto_numbering_section_headers_for?(dossier.champs_public[1].rows[0][0])).to eq(false) }
+      end
+
+      context "with parent section having headers without number" do
+        let(:public_libelle) { "infos" }
+        it { expect(dossier.auto_numbering_section_headers_for?(dossier.champs_public[1].rows[0][0])).to eq(false) }
+      end
+    end
   end
 
   describe '#index_for_section_header' do
