@@ -486,7 +486,8 @@ describe Procedure do
         types_de_champ_public: [{}, {}, { type: :drop_down_list }, { type: :piece_justificative }, { type: :repetition, children: [{}] }],
         types_de_champ_private: [{}, {}, { type: :drop_down_list }, { type: :repetition, children: [{}] }],
         api_particulier_token: '123456789012345',
-        api_particulier_scopes: ['cnaf_famille'])
+        api_particulier_scopes: ['cnaf_famille'],
+        estimated_dossiers_count: 4)
     end
     let(:type_de_champ_repetition) { procedure.draft_revision.types_de_champ_public.last }
     let(:type_de_champ_private_repetition) { procedure.draft_revision.types_de_champ_private.last }
@@ -565,7 +566,10 @@ describe Procedure do
 
       cloned_procedure = subject
       cloned_procedure.parent_procedure_id = nil
-      expect(cloned_procedure).to have_same_attributes_as(procedure, except: ["path", "draft_revision_id", "service_id", "duree_conservation_etendue_par_ds", "duree_conservation_dossiers_dans_ds", 'max_duree_conservation_dossiers_dans_ds'])
+      expect(cloned_procedure).to have_same_attributes_as(procedure, except: [
+        "path", "draft_revision_id", "service_id", 'estimated_dossiers_count',
+        "duree_conservation_etendue_par_ds", "duree_conservation_dossiers_dans_ds", 'max_duree_conservation_dossiers_dans_ds'
+      ])
     end
 
     context 'which is opendata' do
@@ -670,6 +674,10 @@ describe Procedure do
 
     it 'should not duplicate specific related objects' do
       expect(subject.dossiers).to eq([])
+    end
+
+    it "should reset estimated_dossiers_count" do
+      expect(subject.estimated_dossiers_count).to eq(0)
     end
 
     describe 'should not duplicate lien_notice' do
