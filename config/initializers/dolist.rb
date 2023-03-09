@@ -6,7 +6,6 @@ ActiveSupport.on_load(:action_mailer) do
         mail.sender(ENV['DOLIST_NO_REPLY_EMAIL'])
         mail['X-ACCOUNT-ID'] = Rails.application.secrets.dolist[:account_id]
 
-        mail['X-Dolist-Message-Name'] = mail.subject # for tracking in Dolist UI
         mail['X-Dolist-Sending-Type'] = 'TransactionalService' # send even if the target is not active
 
         super(mail)
