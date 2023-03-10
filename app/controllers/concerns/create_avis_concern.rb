@@ -4,6 +4,11 @@ module CreateAvisConcern
   private
 
   def create_avis_from_params(dossier, instructeur_or_expert, confidentiel = false)
+    if create_avis_params[:emails].empty?
+      flash.alert = t('activerecord.errors.models.email.empty')
+      return Avis.new(create_avis_params)
+    end
+
     confidentiel ||= create_avis_params[:confidentiel]
     # Because of a limitation of the email_field rails helper,
     # the :emails parameter is a 1-element array.
