@@ -7,6 +7,10 @@ fr:
         answer: "Réponse"
         claimant: Demandeur
         confidentiel: confidentiel
+    errors:
+      models:
+        email:
+          empty: Le champ email ne peut pas être vide
   helpers:
     label:
       invite_linked_dossiers:

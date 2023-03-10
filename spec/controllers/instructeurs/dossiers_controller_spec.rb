@@ -628,6 +628,17 @@ describe Instructeurs::DossiersController, type: :controller do
         it { expect(dossier.last_avis_updated_at).to eq(nil) }
       end
 
+      context "with no email" do
+        let(:emails) { "" }
+
+        before { subject }
+
+        it { expect(response).to render_template :avis }
+        it { expect(flash.alert).to eq("Le champ email ne peut pas être vide") }
+        it { expect { subject }.not_to change(Avis, :count) }
+        it { expect(dossier.last_avis_updated_at).to eq(nil) }
+      end
+
       context 'with multiple emails' do
         let(:emails) { "[\"toto.fr\",\"titi@titimail.com\"]" }
 

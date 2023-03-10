@@ -7,6 +7,10 @@ en:
         answer: "Answer"
         claimant: Claimant
         confidentiel: Confidential
+    errors:
+      models:
+        email:
+          empty: Email field can not be empty
   helpers:
     label:
       invite_linked_dossiers:
