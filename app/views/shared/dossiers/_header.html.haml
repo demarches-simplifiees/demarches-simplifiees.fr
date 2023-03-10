@@ -1,7 +1,7 @@
-= status_badge(dossier.state)
 .title-container
-  %span.icon.folder
-  %h1= procedure_libelle(dossier.procedure)
+  %h1
+    = procedure_libelle(dossier.procedure)
+    = status_badge(dossier.state, 'super')
   %h2
     = t('views.users.dossiers.show.header.dossier_number', dossier_id: dossier.id)
     = t('views.users.dossiers.show.header.created_date', date_du_dossier: I18n.l(dossier.created_at))

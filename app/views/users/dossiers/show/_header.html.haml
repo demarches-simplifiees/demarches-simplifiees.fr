@@ -1,10 +1,9 @@
 .sub-header
   .container
-    = status_badge(dossier.state)
-
     .title-container
-      %span.icon.folder
-      %h1= dossier.procedure.libelle
+      %h1
+        = dossier.procedure.libelle
+        = status_badge(dossier.state, 'super')
       %h2
         = t('views.users.dossiers.show.header.dossier_number', dossier_id: dossier.id)
         - if dossier.depose_at.present?
