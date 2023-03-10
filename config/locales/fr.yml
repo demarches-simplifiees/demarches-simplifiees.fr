@@ -361,6 +361,12 @@ fr:
           transfer_dossier: "Transférer le dossier"
           edit_draft: "Modifier le brouillon"
           actions: "Actions"
+        transfers:
+          sender_demande_en_cours: "Une demande de transfert est en cours sur le dossier Nº %{id} pour %{email}"
+          receiver_demande_en_cours: "Demande de transfert pour le dossier Nº %{id} envoyé par %{email}"
+          revoke: Révoquer cette demande
+          accept: Accepter
+          reject: Rejeter
       sessions:
         new:
           sign_in: Connexion à %{application_name}
