@@ -12,7 +12,8 @@
         notification: notifications_summary[:annotations_privees])
 
       = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.external_opinion'),
-        avis_instructeur_dossier_path(dossier.procedure, dossier),
+        [avis_instructeur_dossier_path(dossier.procedure, dossier),
+        avis_new_instructeur_dossier_path(dossier.procedure, dossier)],
         notification: notifications_summary[:avis])
 
       = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.messaging'),

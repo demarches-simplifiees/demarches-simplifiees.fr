@@ -1,0 +1,12 @@
+- content_for(:title, "Avis · Dossier nº #{@dossier.id} (#{@dossier.owner_name})")
+
+= render partial: "header", locals: { dossier: @dossier }
+
+.container
+  - if !@dossier.termine?
+    - if @dossier.procedure.allow_expert_review
+      - if @dossier.avis.present?
+        = link_to '< retour aux avis', avis_instructeur_dossier_path(@dossier.procedure, @dossier), class: 'fr-link'
+      = render partial: "instructeurs/avis/shared/form", locals: { url: avis_instructeur_dossier_path(@dossier.procedure, @dossier), linked_dossiers: @dossier.linked_dossiers_for(current_instructeur), must_be_confidentiel: false, avis: @avis }
+    - else
+      %p Cette démarche n’autorise pas la demande d’avis à un expert. Veuillez contacter votre administrateur
