@@ -79,4 +79,22 @@ describe 'Administrateurs can edit procedures', js: true do
       expect(procedure.reload.tags).to eq(['social'])
     end
   end
+
+  context 'when duree extension > 12' do
+    let!(:procedure) do
+      create(:procedure_with_dossiers,
+        :published,
+        :with_path,
+        :with_type_de_champ,
+        duree_conservation_dossiers_dans_ds: 24,
+        max_duree_conservation_dossiers_dans_ds: 24,
+        administrateur: administrateur)
+    end
+
+    scenario 'the administrator can edit and persist title' do
+      visit edit_admin_procedure_path(procedure)
+      fill_in('Titre de la démarche', with: 'Hello')
+      expect { click_on 'Enregistrer' }.to change { procedure.reload.libelle }
+    end
+  end
 end
