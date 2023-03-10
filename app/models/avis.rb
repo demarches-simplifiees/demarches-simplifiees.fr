@@ -69,8 +69,10 @@ class Avis < ApplicationRecord
   def spreadsheet_columns
     [
       ['Dossier ID', dossier_id.to_s],
-      ['Question / Introduction', :introduction],
+      ['Introduction', :introduction],
       ['Réponse', :answer],
+      ['Question', :question_label],
+      ['Réponse oui/non', :question_answer],
       ['Créé le', :created_at],
       ['Répondu le', :updated_at],
       ['Instructeur', claimant&.email],
