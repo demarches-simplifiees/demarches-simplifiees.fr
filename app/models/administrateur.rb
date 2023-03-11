@@ -131,7 +131,7 @@ class Administrateur < ApplicationRecord
         old_service.procedures.update_all(service_id: corresponding_service.id)
         old_service.destroy
       else
-        old_service.update!(administrateur_id: id)
+        old_service.update_column(:administrateur_id, id)
       end
     end
 
