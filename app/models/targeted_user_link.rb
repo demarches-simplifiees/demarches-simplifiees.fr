@@ -25,7 +25,8 @@ class TargetedUserLink < ApplicationRecord
     when 'avis'
       user.email
     when 'invite'
-      target_model.user&.email || target_model.email
+      invite = find_invite!
+      invite.user&.email || invite.email
     else
       raise 'invalid target_context'
     end
@@ -34,19 +35,23 @@ class TargetedUserLink < ApplicationRecord
   def redirect_url(url_helper)
     case target_context
     when "invite"
-      invite = target_model
-
-      fail ActiveRecord::RecordNotFound if invite.nil?
+      invite = find_invite!
 
       user = User.find_by(email: target_email)
       user&.active? ?
-      url_helper.invite_path(invite) :
-      url_helper.invite_path(invite, params: { email: invite.email })
+        url_helper.invite_path(invite) :
+        url_helper.invite_path(invite, params: { email: invite.email })
     when "avis"
       avis = target_model
       avis.expert.user.active? ?
         url_helper.expert_avis_path(avis.procedure, avis) :
         url_helper.sign_up_expert_avis_path(avis.procedure, avis, email: avis.expert.email)
     end
+  end
+
+  private
+
+  def find_invite!
+    target_model || (fail ActiveRecord::RecordNotFound.new("Could not find Invite with id `#{target_model_id}`"))
   end
 end
