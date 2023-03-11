@@ -53,16 +53,34 @@ RSpec.describe Export, type: :model do
 
   describe '.find_by groupe_instructeurs' do
     let!(:procedure) { create(:procedure) }
-    let!(:gi_1) { create(:groupe_instructeur, procedure: procedure) }
-    let!(:gi_2) { create(:groupe_instructeur, procedure: procedure) }
-    let!(:gi_3) { create(:groupe_instructeur, procedure: procedure) }
+    let!(:gi_1) { create(:groupe_instructeur, procedure: procedure, instructeurs: [create(:instructeur)]) }
+    let!(:gi_2) { create(:groupe_instructeur, procedure: procedure, instructeurs: [create(:instructeur)]) }
+    let!(:gi_3) { create(:groupe_instructeur, procedure: procedure, instructeurs: [create(:instructeur)]) }
 
-    context 'when an export is made for one groupe instructeur' do
-      let!(:export) { create(:export, groupe_instructeurs: [gi_1, gi_2]) }
+    context 'without procedure_presentation' do
+      context 'when an export is made for one groupe instructeur' do
+        let!(:export) { create(:export, groupe_instructeurs: [gi_1, gi_2]) }
 
-      it { expect(Export.find_for_groupe_instructeurs([gi_1.id], nil)).to eq({ csv: { statut: {}, time_span_type: {} }, xlsx: { statut: {}, time_span_type: {} }, ods: { statut: {}, time_span_type: {} }, zip: { statut: {}, time_span_type: {} } }) }
-      it { expect(Export.find_for_groupe_instructeurs([gi_2.id, gi_1.id], nil)).to eq({ csv: { statut: {}, time_span_type: { 'everything' => export } }, xlsx: { statut: {}, time_span_type: {} }, ods: { statut: {}, time_span_type: {} }, zip: { statut: {}, time_span_type: {} } }) }
-      it { expect(Export.find_for_groupe_instructeurs([gi_1.id, gi_2.id, gi_3.id], nil)).to eq({ csv: { statut: {}, time_span_type: {} }, xlsx: { statut: {}, time_span_type: {} }, ods: { statut: {}, time_span_type: {} }, zip: { statut: {}, time_span_type: {} } }) }
+        it { expect(Export.find_for_groupe_instructeurs([gi_1.id], nil)).to eq({ csv: { statut: {}, time_span_type: {} }, xlsx: { statut: {}, time_span_type: {} }, ods: { statut: {}, time_span_type: {} }, zip: { statut: {}, time_span_type: {} } }) }
+        it { expect(Export.find_for_groupe_instructeurs([gi_2.id, gi_1.id], nil)).to eq({ csv: { statut: {}, time_span_type: { 'everything' => export } }, xlsx: { statut: {}, time_span_type: {} }, ods: { statut: {}, time_span_type: {} }, zip: { statut: {}, time_span_type: {} } }) }
+        it { expect(Export.find_for_groupe_instructeurs([gi_1.id, gi_2.id, gi_3.id], nil)).to eq({ csv: { statut: {}, time_span_type: {} }, xlsx: { statut: {}, time_span_type: {} }, ods: { statut: {}, time_span_type: {} }, zip: { statut: {}, time_span_type: {} } }) }
+      end
+    end
+
+    context 'with procedure_presentation and without' do
+      let!(:export_global) { create(:export, statut: Export.statuts.fetch(:tous), groupe_instructeurs: [gi_1, gi_2], procedure_presentation: nil) }
+      let!(:export_with_filter) { create(:export, statut: Export.statuts.fetch(:suivis), groupe_instructeurs: [gi_1, gi_2], procedure_presentation: create(:procedure_presentation, procedure: procedure, assign_to: gi_1.instructeurs.first.assign_to.first)) }
+      let!(:procedure_presentation) { create(:procedure_presentation, procedure: gi_1.procedure) }
+
+      it 'find global exports as well as filtered one' do
+        expect(Export.find_for_groupe_instructeurs([gi_2.id, gi_1.id], export_with_filter.procedure_presentation))
+          .to eq({
+            csv: { statut: { Export.statuts.fetch(:suivis) => export_with_filter }, time_span_type: { 'everything' => export_global } },
+                   xlsx: { statut: {}, time_span_type: {} },
+                   ods: { statut: {}, time_span_type: {} },
+                   zip: { statut: {}, time_span_type: {} }
+          })
+      end
     end
   end
 

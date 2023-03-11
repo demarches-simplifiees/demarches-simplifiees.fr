@@ -95,6 +95,7 @@ class Export < ApplicationRecord
   def self.find_for_groupe_instructeurs(groupe_instructeurs_ids, procedure_presentation)
     exports = if procedure_presentation.present?
       where(key: generate_cache_key(groupe_instructeurs_ids, procedure_presentation))
+        .or(where(key: generate_cache_key(groupe_instructeurs_ids)))
     else
       where(key: generate_cache_key(groupe_instructeurs_ids))
     end
