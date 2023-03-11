@@ -76,7 +76,7 @@ Rails.application.configure do
   config.active_storage.service = :test
 
   config.ds_autosave = {
-    debounce_delay: 500,
+    debounce_delay: 0,
     status_visible_duration: 500
   }
 

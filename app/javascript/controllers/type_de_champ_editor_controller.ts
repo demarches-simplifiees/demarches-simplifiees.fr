@@ -4,11 +4,20 @@ import {
   httpRequest,
   isSelectElement,
   isCheckboxOrRadioInputElement,
-  isTextInputElement
+  isTextInputElement,
+  getConfig
 } from '@utils';
 import { useIntersection } from 'stimulus-use';
 import { AutoUpload } from '../shared/activestorage/auto-upload';
 import { ApplicationController } from './application_controller';
+
+const {
+  autosave: { debounce_delay }
+} = getConfig();
+
+const AUTOSAVE_DEBOUNCE_DELAY = debounce_delay;
+
+console.log(AUTOSAVE_DEBOUNCE_DELAY);
 
 export class TypeDeChampEditorController extends ApplicationController {
   static values = {
@@ -78,7 +87,7 @@ export class TypeDeChampEditorController extends ApplicationController {
 
     if (target.form && isTextInputElement(target)) {
       this.#dirtyForms.add(target.form);
-      this.debounce(this.save, 600);
+      this.debounce(this.save, AUTOSAVE_DEBOUNCE_DELAY);
     } else if (target.form && target.type == 'file' && target.files?.length) {
       const autoupload = new AutoUpload(target, target.files[0]);
       autoupload.start();

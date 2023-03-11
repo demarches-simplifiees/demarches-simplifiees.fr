@@ -1,15 +1,39 @@
-.card.featured
-  .card-title Gestion de vos archives
-  %p
-    L'archivage de votre démarche se fait mensuellement. Ainsi pour chaque mois depuis la publication de votre démarche vous pouvez faire une demande de création d'archive.
+= render Dsfr::AlertComponent.new(title: "Gestion de vos archives", state: :info) do |c|
+  - c.body do
+    %p
+      L'archivage de votre démarche se fait mensuellement. Pour chaque mois depuis la publication de votre démarche vous pouvez faire une demande de création d'archive.
 
-  %p
-    Cette archive contient uniquement les dossiers terminés, les demandes déposées par l'usager et la liste des pièces justificatives transmises.
+    %p
+      Cette archive contient
 
-  %p
-    Les archives dont le poid est estimé à plus de #{number_to_human_size(Archive::MAX_SIZE)} ne sont pas supportées.
-    Nous vous invitons à regarder
-    = link_to 'la documentation', ARCHIVAGE_DOC_URL
-    afin de voir les options à votre disposition pour mettre en place un système d’archive.
+    %ul
+      %li
+        %span.fr-badge un fichier _LISTE-DES_FICHIERS-EN-ERREURS.txt
+        présent si des erreurs de téléchargement ont eu lieu (ex: impossible de récupérer une PJ).
+      %li
+        %span.fr-badge des répertoires dossier-{id}/
+        Les répertoires de chaque dossiers terminés (acceptés, refusés et classés sans suite). Chacun de ces répertoires est structuré ainsi :
+      %ul
+        %li
+          %span.fr-badge un repertoire horodatage/
+          contenant le journal d'outil de chaque opération (un fichier terminant en .json) effectuée sur ce dossier
+        %li
+          %span.fr-badge un répertoire dossier/
+          contenant l'attestation de la décision finale sur ce dossier
+        %li
+          %span.fr-badge un répertoire pieces_justificatives/
+          contenant les pièces justificatives associées à ce dossier
+        %li
+          %span.fr-badge le dossier
+          exporté au format PDF
+      %li
+        %span.fr-badge un répertoire bills/
+        contenant l'horodatage signé de toute la plateforme pour chaque jour où une opération a été effectuée sur l'un des dossiers présent dans l'archive
+
+    %p
+      Les archives dont le poids est estimé à plus de #{number_to_human_size(Archive::MAX_SIZE)} ne sont pas supportées.
+      Nous vous invitons à regarder
+      = link_to 'la documentation', ARCHIVAGE_DOC_URL
+      afin de voir les options à votre disposition pour mettre en place un système d’archive.
 
 

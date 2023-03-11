@@ -25,7 +25,7 @@ module DownloadManager
     end
 
     def write_report
-      manifest_path = File.join(destination, 'LISEZMOI.txt')
+      manifest_path = File.join(destination, '-LISTE-DES-FICHIERS-EN-ERREURS.txt')
       manifest_content = errors.map do |file_basename, _failed|
                                                       "Impossible de récupérer le fichier #{file_basename}"
                                                     end
