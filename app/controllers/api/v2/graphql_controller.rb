@@ -2,9 +2,7 @@ class API::V2::GraphqlController < API::V2::BaseController
   include GraphqlOperationLogConcern
 
   def execute
-    variables = ensure_hash(params[:variables])
-
-    result = API::V2::Schema.execute(params[:query],
+    result = API::V2::Schema.execute(query,
       variables: variables,
       context: context,
       operation_name: params[:operationName])
@@ -26,7 +24,7 @@ class API::V2::GraphqlController < API::V2::BaseController
     super
 
     payload.merge!({
-      graphql_operation: operation_log(params[:query], params[:operationName], to_unsafe_hash(params[:variables]))
+      graphql_operation: operation_log(query(fallback: ''), params[:operationName], to_unsafe_hash(params[:variables]))
     })
   end
 
@@ -39,6 +37,18 @@ class API::V2::GraphqlController < API::V2::BaseController
       ],
       data: nil
     }, status: 400
+  end
+
+  def query(fallback: nil)
+    if params[:queryId].present?
+      API::V2::StoredQuery.get(params[:queryId], fallback: fallback)
+    else
+      params[:query]
+    end
+  end
+
+  def variables
+    ensure_hash(params[:variables])
   end
 
   # Handle form data, JSON body, or a blank value
@@ -99,11 +109,7 @@ class API::V2::GraphqlController < API::V2::BaseController
 
   def handle_error_in_production(exception)
     id = SecureRandom.uuid
-    Sentry.capture_exception(exception, extra: {
-      exception_id: id,
-      query: params[:query],
-      variables: params[:variables].to_json
-    })
+    Sentry.capture_exception(exception, extra: { exception_id: id })
 
     render json: {
       errors: [
