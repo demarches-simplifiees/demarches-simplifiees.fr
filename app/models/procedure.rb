@@ -39,7 +39,6 @@
 #  routing_criteria_name                     :text             default("Votre ville")
 #  routing_enabled                           :boolean
 #  tags                                      :text             default([]), is an Array
-#  test_started_at                           :datetime
 #  unpublished_at                            :datetime
 #  web_hook_url                              :string
 #  whitelisted_at                            :datetime

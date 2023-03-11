@@ -3,3 +3,4 @@
 //= link_tree ../fonts
 //= link administrate/application.css
 //= link administrate/application.js
+//= link manager.css

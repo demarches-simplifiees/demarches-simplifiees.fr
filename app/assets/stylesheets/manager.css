@@ -1,0 +1,39 @@
+[data-reach-combobox-token-label] {
+  border: 1px solid #CCCCCC;
+  border-radius: 4px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.form [data-reach-combobox-token-list] {
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+
+.form [data-reach-combobox-input]:not([class^='width-']) {
+  width: 100%;
+  min-width: 50%;
+  max-width: 100%;
+}
+
+.form [data-reach-combobox-token] button {
+  border: solid 1px #CCCCCC;
+  background-color: transparent;
+  color: #333333;
+  border-radius: 4px;
+  padding: 8px;
+  margin-right: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.hidden {
+  display: none;
+}
+
+.mt-1 {
+  margin-top: 1rem;
+}
