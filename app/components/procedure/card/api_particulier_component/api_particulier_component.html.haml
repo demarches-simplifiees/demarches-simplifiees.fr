@@ -1,13 +1,14 @@
-= link_to admin_procedure_api_particulier_path(@procedure), class: 'card-admin', id: 'api-particulier' do
-  - if @procedure.api_particulier_token.present?
+= link_to admin_procedure_api_particulier_path(@procedure), class: 'fr-tile fr-enlarge-link', id: 'api-particulier' do
+  .fr-tile__body.flex.justify-between
+    - if @procedure.api_particulier_token.present?
+      %div
+        %span.icon.accept
+        %p.fr-tile-status-accept= t('.ready')
+    - else
+      %div
+        %span.icon.clock
+        %p.fr-tile-status-todo= t('.needs_configuration')
     %div
-      %span.icon.accept
-      %p.card-admin-status-accept= t('.ready')
-  - else
-    %div
-      %span.icon.clock
-      %p.card-admin-status-todo= t('.needs_configuration')
-  %div
-    %p.card-admin-title= Procedure.human_attribute_name(:api_particulier_token)
-    %p.card-admin-subtitle= t('.configure_api_particulier_token')
-  %p.button= t('views.shared.actions.edit')
+      %h3.fr-h6.fr-mt-10v= Procedure.human_attribute_name(:api_particulier_token)
+      %p.fr-tile-subtitle= t('.configure_api_particulier_token')
+    %p.fr-btn.fr-btn--tertiary= t('views.shared.actions.edit')

@@ -1,13 +1,14 @@
-= link_to edit_admin_procedure_attestation_template_path(@procedure), class: 'card-admin' do
-  - if @procedure.draft_attestation_template&.activated?
+= link_to edit_admin_procedure_attestation_template_path(@procedure), class: 'fr-tile fr-enlarge-link' do
+  .fr-tile__body.flex.justify-between
+    - if @procedure.draft_attestation_template&.activated?
+      %div
+        %span.icon.accept
+        %p.fr-tile-status-accept Activée
+    - else
+      %div
+        %span.icon.clock
+        %p.fr-tile-status-todo Désactivée
     %div
-      %span.icon.accept
-      %p.card-admin-status-accept Activée
-  - else
-    %div
-      %span.icon.clock
-      %p.card-admin-status-todo Désactivée
-  %div
-    %p.card-admin-title= t('.title')
-    %p.card-admin-subtitle Délivrance automatique pour les dossiers acceptés
-  %p.button= t('views.shared.actions.edit')
+      %h3.fr-h6.fr-mt-10v= t('.title')
+      %p.fr-tile-subtitle Délivrance automatique pour les dossiers acceptés
+    %p.fr-btn.fr-btn--tertiary= t('views.shared.actions.edit')

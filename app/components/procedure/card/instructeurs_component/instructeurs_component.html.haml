@@ -1,19 +1,21 @@
-= link_to admin_procedure_groupe_instructeurs_path(@procedure), id: 'groupe-instructeurs', class: 'card-admin' do
-  - if @procedure.routee? || @procedure.instructeurs.size > 1
+= link_to admin_procedure_groupe_instructeurs_path(@procedure), id: 'groupe-instructeurs', class: 'fr-tile fr-enlarge-link' do
+  .fr-tile__body.flex.justify-between
+    - if @procedure.routee? || @procedure.instructeurs.size > 1
+      %div
+        %span.icon.accept
+        %p.fr-tile-status-accept Validé
+    - else
+      %div
+        %span.icon.clock
+        %p.fr-tile-status-todo À faire
     %div
-      %span.icon.accept
-      %p.card-admin-status-accept Validé
-  - else
-    %div
-      %span.icon.clock
-      %p.card-admin-status-todo À faire
-  %div
-    %p.card-admin-title
-      - if @procedure.routee?
-        %span.badge.baseline= @procedure.groupe_instructeurs.size
-      - else
-        %span.badge.baseline= @procedure.instructeurs.size
+      .line-count.fr-my-1w
+        - if @procedure.routee?
+          %p.fr-tag= @procedure.groupe_instructeurs.size
+        - else
+          %p.fr-tag= @procedure.instructeurs.size
 
-      = @procedure.routee? ? t('.routee.title', count: @procedure.groupe_instructeurs.size) : t('.title', count: @procedure.instructeurs.size)
-    %p.card-admin-subtitle Suivi des dossiers
-  %p.button= t('views.shared.actions.edit')
+      %h3.fr-h6
+        = @procedure.routee? ? t('.routee.title', count: @procedure.groupe_instructeurs.size) : t('.title', count: @procedure.instructeurs.size)
+      %p.fr-tile-subtitle Suivi des dossiers
+    %p.fr-btn.fr-btn--tertiary= t('views.shared.actions.edit')
