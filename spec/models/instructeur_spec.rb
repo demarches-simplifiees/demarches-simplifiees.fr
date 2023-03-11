@@ -169,14 +169,17 @@ describe Instructeur, type: :model do
         pp.save(:validate => false)
       end
 
-      it { expect(procedure_presentation).not_to be_persisted }
+      it 'recreates a valid prsentation' do
+        expect(procedure_presentation).to be_persisted
+      end
+      it { expect(procedure_presentation).to be_valid }
       it { expect(errors).to be_present }
     end
 
     context 'with default presentation' do
       let(:procedure_id) { procedure_2.id }
 
-      it { expect(procedure_presentation).not_to be_persisted }
+      it { expect(procedure_presentation).to be_persisted }
       it { expect(errors).to be_nil }
     end
   end
