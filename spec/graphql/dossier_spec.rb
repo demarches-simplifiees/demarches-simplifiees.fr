@@ -137,6 +137,27 @@ RSpec.describe Types::DossierType, type: :graphql do
     end
   end
 
+  describe 'dossier with repetition' do
+    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :repetition, children: [{ libelle: 'Nom' }, { libelle: 'Age' }] }]) }
+    let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure: procedure) }
+    let(:linked_dossier) { create(:dossier, :en_construction) }
+    let(:query) { DOSSIER_WITH_REPETITION_QUERY }
+    let(:variables) { { number: dossier.id } }
+
+    let(:rows) do
+      dossier.champs.first.rows.map do |champs|
+        { champs: champs.map { { id: _1.to_typed_id } } }
+      end
+    end
+
+    it {
+      expect(data[:dossier][:champs].first).not_to be_nil
+      expect(data[:dossier][:champs].first[:rows]).not_to be_nil
+      expect(data[:dossier][:champs].first[:rows].size).to eq(2)
+      expect(data[:dossier][:champs].first[:rows]).to eq(rows)
+    }
+  end
+
   DOSSIER_QUERY = <<-GRAPHQL
   query($number: Int!) {
     dossier(number: $number) {
@@ -218,6 +239,21 @@ RSpec.describe Types::DossierType, type: :graphql do
           dossier {
             id
             state
+          }
+        }
+      }
+    }
+  }
+  GRAPHQL
+
+  DOSSIER_WITH_REPETITION_QUERY = <<-GRAPHQL
+  query($number: Int!) {
+    dossier(number: $number) {
+      champs {
+        id
+        ... on RepetitionChamp {
+          rows {
+            champs { id }
           }
         }
       }
