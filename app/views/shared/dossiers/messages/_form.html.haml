@@ -1,5 +1,5 @@
 = render NestedForms::FormOwnerComponent.new
-= form_for(commentaire, url: form_url, html: { class: 'form', multipart: true, data: { controller: 'persisted-form', persisted_form_key_value: @dossier.present? ? dom_id(@dossier) : dom_id(@procedure, :bulk_message) } }) do |f|
+= form_for(commentaire, url: form_url, html: { multipart: true, data: { controller: 'persisted-form', persisted_form_key_value: @dossier.present? ? dom_id(@dossier) : dom_id(@procedure, :bulk_message) } }) do |f|
   - dossier = commentaire.dossier
   - placeholder = t('views.shared.dossiers.messages.form.write_message_to_administration_placeholder')
   - if instructeur_signed_in? || administrateur_signed_in? || expert_signed_in?
@@ -10,11 +10,11 @@
       = t('message', scope: [:utils])
       %span.mandatory *
     = f.text_area :body, rows: 5, placeholder: placeholder, title: placeholder, required: true, class: 'fr-input message-textarea'
-  .flex.justify-between.wrap
-    - disable_piece_jointe = defined?(disable_piece_jointe) ? disable_piece_jointe : false
-    %div
-      - if !disable_piece_jointe
-        = render Attachment::EditComponent.new(attached_file: commentaire.piece_jointe)
 
-    .send-wrapper.fr-my-3w
-      = f.submit t('views.shared.dossiers.messages.form.send_message'), class: 'fr-btn send', data: { disable: true }
+  - disable_piece_jointe = defined?(disable_piece_jointe) ? disable_piece_jointe : false
+  - if !disable_piece_jointe
+    .fr-mt-3w
+      = render Attachment::EditComponent.new(attached_file: commentaire.piece_jointe)
+
+  .fr-mt-3w
+    = f.submit t('views.shared.dossiers.messages.form.send_message'), class: 'fr-btn', data: { disable: true }
