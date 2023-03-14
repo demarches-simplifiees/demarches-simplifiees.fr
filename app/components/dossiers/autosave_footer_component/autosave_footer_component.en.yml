@@ -1,0 +1,15 @@
+---
+en:
+  brouillon:
+    explanation: Your draft is automatically saved.
+    confirmation: Draft saved
+    error: Impossible to save the draft
+  en_construction:
+    explanation: Your file is automatically saved.
+    confirmation: File saved
+    error: Impossible to save the file
+  annotations:
+    explanation: Your annotations are automatically saved.
+    confirmation: Annotations saved
+    error: Impossible to save the annotations
+  more_information: More informations

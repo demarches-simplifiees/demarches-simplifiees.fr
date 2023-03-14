@@ -4,6 +4,7 @@ module Instructeurs
     include ActionView::Helpers::TextHelper
     include CreateAvisConcern
     include DossierHelper
+    include TurboChampsConcern
 
     include ActionController::Streaming
     include Zipline
@@ -244,12 +245,14 @@ module Instructeurs
       if dossier.champs_private_all.any?(&:changed?)
         dossier.last_champ_private_updated_at = Time.zone.now
       end
-      dossier.save
-      dossier.log_modifier_annotations!(current_instructeur)
+      if !dossier.save(context: :annotations)
+        flash.now.alert = dossier.errors.full_messages
+      end
 
       respond_to do |format|
-        format.html { redirect_to annotations_privees_instructeur_dossier_path(procedure, dossier) }
-        format.turbo_stream
+        format.turbo_stream do
+          @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_private_params.fetch(:champs_private_all_attributes), dossier.champs_private_all)
+        end
       end
     end
 

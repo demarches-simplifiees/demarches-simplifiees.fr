@@ -21,8 +21,6 @@ module Mutations
       end
 
       if annotation.save
-        dossier.log_modifier_annotation!(annotation, instructeur)
-
         { annotation: }
       else
         { errors: annotation.errors.full_messages }
