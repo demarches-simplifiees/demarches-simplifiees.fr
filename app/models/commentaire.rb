@@ -19,7 +19,7 @@ class Commentaire < ApplicationRecord
 
   belongs_to :instructeur, inverse_of: :commentaires, optional: true
   belongs_to :expert, inverse_of: :commentaires, optional: true
-  has_one :dossier_resolution, inverse_of: :commentaire, dependent: :nullify
+  has_one :dossier_correction, inverse_of: :commentaire, dependent: :nullify
 
   validate :messagerie_available?, on: :create, unless: -> { dossier.brouillon? }
 
@@ -95,8 +95,8 @@ class Commentaire < ApplicationRecord
     update! body: ''
   end
 
-  def flagged_pending_corrections?
-    DossierResolution.exists?(commentaire: self)
+  def flagged_pending_correction?
+    DossierCorrection.exists?(commentaire: self)
   end
 
   private
@@ -113,7 +113,11 @@ class Commentaire < ApplicationRecord
   end
 
   def notify_user(job_options = {})
-    DossierMailer.with(commentaire: self).notify_new_answer.deliver_later(job_options)
+    if flagged_pending_correction?
+      DossierMailer.notify_pending_correction(dossier).deliver_later(job_options)
+    else
+      DossierMailer.with(commentaire: self).notify_new_answer.deliver_later(job_options)
+    end
   end
 
   def messagerie_available?

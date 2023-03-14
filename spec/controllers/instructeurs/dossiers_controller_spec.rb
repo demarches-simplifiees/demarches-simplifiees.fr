@@ -507,12 +507,22 @@ describe Instructeurs::DossiersController, type: :controller do
       }, format: :turbo_stream
     end
 
-    before { sign_in(instructeur.user) }
+    before do
+      sign_in(instructeur.user)
+
+      allow(DossierMailer).to receive(:notify_pending_correction)
+        .and_return(double(deliver_later: nil))
+    end
 
     context "dossier en instruction" do
       let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
 
       before { subject }
+
+      it 'sends an email to user' do
+        expect(DossierMailer).to have_received(:notify_pending_correction).once
+        expect(DossierMailer).to have_received(:notify_pending_correction).with(dossier)
+      end
 
       it 'pass en_construction and create a pending resolution' do
         expect(response).to have_http_status(:ok)
