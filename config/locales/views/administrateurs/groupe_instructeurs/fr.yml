@@ -6,12 +6,12 @@ fr:
           other: "%{value} ne sont pas des adresses emails valides"
       create:
         experts_assignment:
-          one: "L'expert %{value} a été affecté à la démarche n° %{procedure}"
+          one: "L’expert %{value} a été affecté à la démarche n° %{procedure}"
           other: "Les experts %{value} ont été affectés à la démarche n° %{procedure}"
     groupe_instructeurs:
       index:
         procedures: Démarches
-        instructors_group: Groupe d'instructeurs
+        instructors_group: Groupe d’instructeurs
         existing_groupe:
           one: "%{count} groupe existe"
           other: "%{count} groupes existent"
@@ -44,9 +44,9 @@ fr:
           notice: Ce groupe sera un choix de la liste "%{routing_criteria_name}"
         csv_import:
           title: Importer par CSV
-          notice_1: Le fichier csv doit comporter 2 colonnes (Groupe, Email) et être séparé par des virgules. L'import n'écrase pas les groupes et les instructeurs existants.
+          notice_1: Le fichier csv doit comporter 2 colonnes (Groupe, Email) et être séparé par des virgules. L’import n’écrase pas les groupes et les instructeurs existants. La modification du fichier csv ne s’opère que pour l’ajout de nouveaux instructeurs. La suppression d’un instructeur s’opère manuellement en cliquant sur le bouton « retirer ».
           notice_2: Le poids du fichier doit être inférieur à %{csv_max_size}
-          download_exemple: Télécharger l'exemple de fichier CSV
+          download_exemple: Télécharger l’exemple de fichier CSV
           import_file: Importer le fichier
           import_file_procedure_not_published: L’import d’instructeurs par fichier CSV est disponible une fois la démarche publiée
         view: voir
@@ -60,7 +60,7 @@ fr:
       routing:
         title: Routage
         notice_html: |
-          Le routage permet d'acheminer les dossiers vers différents groupes d'instructeurs. Il s'active automatiquement dès qu'une démarche compte au moins deux groupes actifs.
+          Le routage permet d’acheminer les dossiers vers différents groupes d’instructeurs. Il s’active automatiquement dès qu’une démarche compte au moins deux groupes actifs.
         button:
           self_managment_toggle: Activer l’autogestion des instructeurs
           add_group: Ajouter le groupe
