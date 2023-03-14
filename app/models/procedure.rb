@@ -899,7 +899,7 @@ class Procedure < ApplicationRecord
   def fixed_column_offset
     size = index_of_dates
     size += 6 # Dernière mise à jour le, Déposé le, Passé en instruction le, Traité le, Motivation de la décision, Instructeurs
-    size += 1 if routee? # groupe instructeur
+    size += 1 if routing_enabled? # groupe instructeur
     size
   end
 
