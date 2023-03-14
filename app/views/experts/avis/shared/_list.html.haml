@@ -17,6 +17,8 @@
             %span.date.fr-text--xs.fr-text-mention--grey{ class: highlight_if_unseen_class(avis_seen_at, avis.created_at) }
               = t('demande_envoyee_le', scope: 'views.shared.avis', date: l(avis.created_at, format: '%d/%m/%y à %H:%M'))
           %p= avis.introduction
+          - if avis.question_label
+            %p= avis.question_label
 
           .answer.flex.align-start
             %span.icon.bubble.avis-icon

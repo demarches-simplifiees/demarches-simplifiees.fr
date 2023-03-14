@@ -98,6 +98,10 @@ describe 'Inviting an expert:' do
       expect(page).to have_text('Question ?')
       expect(page).to have_text('Cet avis est confidentiel')
 
+      # check validation
+      click_on 'Envoyer votre avis'
+      expect(page).to have_content('Le champ « Réponse oui/non » doit être rempli')
+
       choose 'oui'
       fill_in 'avis_answer', with: 'Ma réponse d’expert.'
       click_on 'Envoyer votre avis'

@@ -634,7 +634,7 @@ describe Instructeurs::DossiersController, type: :controller do
         before { subject }
 
         it { expect(response).to render_template :avis }
-        it { expect(flash.alert).to eq("Le champ email ne peut pas être vide") }
+        it { expect(flash.alert).to eq("Le champ « Emails » doit être rempli") }
         it { expect { subject }.not_to change(Avis, :count) }
         it { expect(dossier.last_avis_updated_at).to eq(nil) }
       end
