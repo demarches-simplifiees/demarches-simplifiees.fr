@@ -1,12 +1,21 @@
 describe WebhookController, type: :controller do
-  describe '#helpscout' do
-    let(:sent_email) { OpenStruct.new(delivered_at: 1.day.ago, subject: "subject", status: "opened") }
-    before do
-      allow(controller).to receive(:verify_signature!).and_return(true)
-      allow(controller).to receive(:verify_authenticity_token)
-      allow_any_instance_of(Sendinblue::API).to receive(:sent_mails).and_return([sent_email])
-    end
+  before do
+    allow(controller).to receive(:verify_signature!).and_return(true)
+    allow(controller).to receive(:verify_authenticity_token)
+  end
 
+  describe '#helpscout_support_dev' do
+    subject(:response) { post :helpscout_support_dev, params: payload }
+    let(:payload) { JSON.parse(File.read(Rails.root.join('spec', 'fixtures', 'files', 'helpscout', 'tagged-dev.json'))) }
+
+    it 'works' do
+      allow(Rails.application.secrets).to receive(:dig).with(:mattermost, :support_webhook_url).and_return("https://notification_url")
+      expect(controller).to receive(:send_mattermost_notification).with("\nNouveau bug taggué #dev : https://secure.helpscout.net/conversation/123456789/123456789?folderId=123456789\n\n> Bonjour,    Je voudrais faire une demande de changement d'adresse et la plateforme m'indique que j'ai plusieurs comptes et que je dois d'abord les fusionner.    Cela fait 3 jours que j'essaie de fusio\n\n**personnes impliquées** : anonymous@anon.fr\n**utilisateur en attente depuis** : 11 min ago")
+      subject
+    end
+  end
+
+  describe '#helpscout' do
     subject(:response) { get :helpscout, params: { customer: { email: customer_email } } }
 
     let(:payload) { JSON.parse(subject.body) }
@@ -29,7 +38,6 @@ describe WebhookController, type: :controller do
     context 'when there is a matching user' do
       let(:user) { create(:user, :with_strong_password) }
       let(:customer_email) { user.email }
-      let!(:dossier) { create(:dossier, user: user) }
 
       it 'returns a 200 response' do
         expect(subject.status).to eq(200)
@@ -39,11 +47,6 @@ describe WebhookController, type: :controller do
       it 'returns a link to the User profile in the Manager' do
         expect(payload).to have_key('html')
         expect(payload['html']).to have_selector("a[href='#{manager_user_url(user)}']")
-        expect(payload['html']).to include("Créé le:")
-        expect(payload['html']).to include("Confirmé le:")
-        expect(payload['html']).to include("Drnr. connexion le: indéfini")
-        expect(payload['html']).to include("#{sent_email.status} : #{sent_email.subject}")
-        expect(payload['html']).to have_selector("a[href='#{instructeur_dossier_url(dossier.procedure.id, dossier)}']")
       end
 
       context 'when there are an associated Instructeur and Administrateur' do

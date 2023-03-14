@@ -1,6 +1,14 @@
 class WebhookController < ActionController::Base
-  before_action :verify_signature!, only: :helpscout
+  before_action :verify_signature!
   skip_before_action :verify_authenticity_token
+
+  def helpscout_support_dev
+    if tagged_dev? && status_active?
+      send_mattermost_notification(message_to_mattermost_channel)
+    end
+
+    head :no_content
+  end
 
   def helpscout
     email = params[:customer][:email].downcase
@@ -33,6 +41,38 @@ class WebhookController < ActionController::Base
   end
 
   private
+
+  def send_mattermost_notification(text)
+    return if Rails.application.secrets.dig(:mattermost, :support_webhook_url).blank?
+
+    Net::HTTP.post(
+      URI.parse(Rails.application.secrets.mattermost[:support_webhook_url]),
+      { "text": text }.to_json,
+     "Content-Type" => "application/json"
+    )
+  end
+
+  def message_to_mattermost_channel
+    %Q(
+Nouveau bug taggué #dev : https://secure.helpscout.net/conversation/#{params["id"]}/#{params["number"]}?folderId=#{params["folderId"]}
+
+> #{params['webhook']['preview']}
+
+**personnes impliquées** : #{threads.map { |thread| thread['createdBy']['email'] }.uniq.join(", ")}
+**utilisateur en attente depuis** : #{params['customerWaitingSince']['friendly']})
+  end
+
+  def threads
+    params['_embedded']['threads']
+  end
+
+  def tagged_dev?
+    params["tags"].any? { _1['tag'].include?('dev') }
+  end
+
+  def status_active?
+    params["status"] == 'active'
+  end
 
   def link_to_manager(model, url)
     "<a target='_blank' href='#{url}' rel='noopener'>#{model.model_name.human}##{model.id}</a>"

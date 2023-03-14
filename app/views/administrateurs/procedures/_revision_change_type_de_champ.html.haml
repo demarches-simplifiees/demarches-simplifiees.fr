@@ -87,6 +87,17 @@
     - to = to.strftime('%d/%m/%Y') if to.is_a?(Date)
     - list.with_item do
       = t("update_#{change[:attribute]}#{postfix}", label: change[:label], to: to, scope: [:administrateurs, :revision_changes])
+  - when :collapsible_explanation_enabled
+    - if change[:to]
+      - list.with_item do
+        = t("administrateurs.revision_changes.update_collapsible_explanation_enabled#{postfix}.enabled", label: change[:label])
+    - else
+      - list.with_item do
+        = t("administrateurs.revision_changes.update_collapsible_explanation_enabled#{postfix}.disabled", label: change[:label])
+  - when :collapsible_explanation_text
+    - list.with_item do
+      = t("administrateurs.revision_changes.update_collapsible_explanation_text#{postfix}", label: change[:label], text: change[:to])
+
   - when :condition
     - if change[:from].nil?
       - list.with_item do

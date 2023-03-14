@@ -359,6 +359,30 @@ class ProcedureRevision < ApplicationRecord
         stable_id: from_type_de_champ.stable_id
       }
     end
+    if from_type_de_champ.collapsible_explanation_enabled? != to_type_de_champ.collapsible_explanation_enabled?
+      changes << {
+        model: :type_de_champ,
+        op: :update,
+        attribute: :collapsible_explanation_enabled,
+        label: from_type_de_champ.libelle,
+        private: from_type_de_champ.private?,
+        from: from_type_de_champ.collapsible_explanation_enabled?,
+        to: to_type_de_champ.collapsible_explanation_enabled?,
+        stable_id: from_type_de_champ.stable_id
+      }
+    end
+    if from_type_de_champ.collapsible_explanation_text != to_type_de_champ.collapsible_explanation_text
+      changes << {
+        model: :type_de_champ,
+        op: :update,
+        attribute: :collapsible_explanation_text,
+        label: from_type_de_champ.libelle,
+        private: from_type_de_champ.private?,
+        from: from_type_de_champ.collapsible_explanation_text,
+        to: to_type_de_champ.collapsible_explanation_text,
+        stable_id: from_type_de_champ.stable_id
+      }
+    end
     if from_type_de_champ.description != to_type_de_champ.description
       changes << {
         model: :type_de_champ,
