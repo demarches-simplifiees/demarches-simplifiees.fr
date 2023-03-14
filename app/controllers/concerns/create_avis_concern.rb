@@ -5,8 +5,13 @@ module CreateAvisConcern
 
   def create_avis_from_params(dossier, instructeur_or_expert, confidentiel = false)
     if create_avis_params[:emails].empty?
-      flash.alert = t('activerecord.errors.models.email.empty')
-      return Avis.new(create_avis_params)
+      avis = Avis.new(create_avis_params)
+      errors = avis.errors
+      errors.add(:emails, :blank)
+
+      flash.alert = errors.full_message(:emails, errors[:emails].first)
+
+      return avis
     end
 
     confidentiel ||= create_avis_params[:confidentiel]

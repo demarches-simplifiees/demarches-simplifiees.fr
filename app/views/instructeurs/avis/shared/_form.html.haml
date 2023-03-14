@@ -26,7 +26,10 @@
       = f.text_area :introduction, rows: 3, class: 'fr-input', value: avis.introduction || 'Bonjour, merci de me donner votre avis sur ce dossier.', required: true
 
     .fr-input-group
-      = f.label :question_label, t('helpers.label.question_label'), class: 'fr-label'
+      = f.label :question_label, class: 'fr-label' do
+        = t('helpers.label.question_label')
+        %span.fr-hint-text
+          = t('helpers.label.question_label_hint')
       = f.text_area :question_label, label: "question", class: 'fr-input'
     %p.tab-title Ajouter une pièce jointe
     .form-group
