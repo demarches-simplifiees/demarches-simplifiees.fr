@@ -15,6 +15,7 @@ class GroupeInstructeur < ApplicationRecord
   has_many :assign_tos, dependent: :destroy
   has_many :instructeurs, through: :assign_tos
   has_many :dossiers
+  has_many :deleted_dossiers
   has_and_belongs_to_many :exports, dependent: :destroy
   has_and_belongs_to_many :bulk_messages, dependent: :destroy
 
