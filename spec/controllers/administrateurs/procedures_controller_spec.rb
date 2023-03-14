@@ -16,6 +16,7 @@ describe Administrateurs::ProceduresController, type: :controller do
   let(:base_params) { { rgpd: '1', rgs_stamp: '1' } }
   let(:zone) { create(:zone) }
   let(:zone_ids) { [zone.id] }
+  let(:tags) { "[\"planete\",\"environnement\"]" }
 
   describe '#apercu' do
     render_views
@@ -59,7 +60,8 @@ describe Administrateurs::ProceduresController, type: :controller do
       duree_conservation_dossiers_dans_ds: duree_conservation_dossiers_dans_ds,
       monavis_embed: monavis_embed,
       zone_ids: zone_ids,
-      lien_site_web: lien_site_web
+      lien_site_web: lien_site_web,
+      tags: tags
     }
   }
 
@@ -209,6 +211,7 @@ describe Administrateurs::ProceduresController, type: :controller do
           it { expect(subject.organisation).to eq(organisation) }
           it { expect(subject.administrateurs).to eq([admin]) }
           it { expect(subject.duree_conservation_dossiers_dans_ds).to eq(duree_conservation_dossiers_dans_ds) }
+          it { expect(subject.tags).to eq(["planete", "environnement"]) }
         end
 
         it { is_expected.to redirect_to(champs_admin_procedure_path(Procedure.last)) }

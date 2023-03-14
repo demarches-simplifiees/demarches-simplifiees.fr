@@ -16,4 +16,4 @@
     %li
       Liste des champs remplis par l'organisme
       = procedure.service&.nom
-      = render partial: "field_table", locals: { champs: procedure.types_de_champ_private }
+      = render partial: "field_table", locals: { champs: procedure.active_revision.types_de_champ_private }

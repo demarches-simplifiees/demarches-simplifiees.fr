@@ -4,6 +4,7 @@ import * as Turbo from '@hotwired/turbo';
 import { Application } from '@hotwired/stimulus';
 import '@gouvfr/dsfr/dist/dsfr.module.js';
 
+import '../shared/turbo-actions';
 import '../shared/activestorage/ujs';
 import '../shared/safari-11-empty-file-workaround';
 import '../shared/toggle-target';
@@ -37,7 +38,6 @@ registerControllers(application);
 
 // This is the global application namespace where we expose helpers used from rails views
 const DS = {
-  fire: (eventName, data) => Rails.fire(document, eventName, data),
   toggleCondidentielExplanation,
   showMotivation,
   motivationCancel,
