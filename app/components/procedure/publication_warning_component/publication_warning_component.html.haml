@@ -1,0 +1,7 @@
+= render Dsfr::AlertComponent.new(state: :warning, title: "Des problèmes empêchent la publication de la démarche") do |c|
+  - c.body do
+    - error_messages.each do |(messages, path)|
+      %p.mt-2
+        = messages.to_sentence
+        - if path.present?
+          = "(#{link_to 'corriger', path, class: 'fr-link'})"
