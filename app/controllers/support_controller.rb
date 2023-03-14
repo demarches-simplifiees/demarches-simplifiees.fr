@@ -66,8 +66,7 @@ class SupportController < ApplicationController
       piece_jointe: params[:piece_jointe],
       body: "[#{params[:subject]}]<br><br>#{params[:text]}"
     }
-    commentaire = CommentaireService.build(current_user, dossier, attributes)
-    commentaire.save!
+    CommentaireService.create!(current_user, dossier, attributes)
   end
 
   def tags

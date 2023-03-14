@@ -102,7 +102,7 @@ describe Commentaire do
     end
 
     context "with a commentaire automatically created (notification)" do
-      let(:commentaire) { CommentaireService.build_with_email(CONTACT_EMAIL, dossier, body: "Mon commentaire") }
+      let(:commentaire) { CommentaireService.build(CONTACT_EMAIL, dossier, body: "Mon commentaire") }
 
       it "does not call notify_user" do
         expect(commentaire).not_to receive(:notify_user).with(no_args)

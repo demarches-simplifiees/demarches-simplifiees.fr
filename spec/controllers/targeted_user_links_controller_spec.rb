@@ -102,6 +102,13 @@ describe TargetedUserLinksController, type: :controller do
           expect(response).to redirect_to(root_path)
           expect(flash[:error]).to match(/dossier n'est plus accessible/)
         end
+
+        it 'redirect nicely also when user is signed on another account' do
+          sign_in(create(:expert).user)
+          get :show, params: { id: targeted_user_link.id }
+          expect(response).to redirect_to(root_path)
+          expect(flash[:error]).to match(/dossier n'est plus accessible/)
+        end
       end
     end
 

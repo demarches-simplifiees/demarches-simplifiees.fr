@@ -10,10 +10,11 @@ en:
         organisation: Service
         duree_conservation_dossiers_dans_ds: Duration files will be kept
         max_duree_conservation_dossiers_dans_ds: Max duration allowed to keep files
-        aasm_state/brouillon: Draft
-        aasm_state/publiee: Published
-        aasm_state/close: Close
-        aasm_state/hidden: Destroyed
+        aasm_state:
+          brouillon: Draft
+          publiee: Published
+          close: Closed
+          hidden: Destroyed
         declarative_with_state/en_instruction: Instruction
         declarative_with_state/accepte: Accepted
         api_particulier_token: Token API Particulier

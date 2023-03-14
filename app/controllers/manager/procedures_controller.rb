@@ -93,6 +93,16 @@ module Manager
       redirect_to manager_procedure_path(procedure)
     end
 
+    def add_tags
+      tags_h = { tags: JSON.parse(tags_params[:tags]) }
+      if procedure.update(tags_h)
+        flash.notice = "Le modèle est mis à jour."
+      else
+        flash.alert = procedure.errors.full_messages.join(', ')
+      end
+      redirect_to manager_procedure_path(procedure)
+    end
+
     private
 
     def procedure
@@ -105,6 +115,10 @@ module Manager
 
     def type_de_champ_params
       params.require(:type_de_champ).permit(:piece_justificative_template)
+    end
+
+    def tags_params
+      params.require(:procedure).permit(:tags)
     end
 
     def unfiltered_list?

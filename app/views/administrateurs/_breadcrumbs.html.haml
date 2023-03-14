@@ -22,7 +22,7 @@
 
     - if defined?(metadatas)
       .metadatas.pb-3
-        %p.fr-h1.fr-mb-0= t('created_at', scope: [:layouts, :breadcrumb], number: @procedure.id, date: @procedure.created_at.strftime('%d/%m/%Y'))
+        %h1.fr-h6.fr-mb-0= t('created_at', scope: [:layouts, :breadcrumb], number: @procedure.id, date: @procedure.created_at.strftime('%d/%m/%Y'))
         - if @procedure.close?
           %p.fr-h2= t('closed_at', scope: [:layouts, :breadcrumb], date: @procedure.closed_at.strftime('%d/%m/%Y'))
         %p

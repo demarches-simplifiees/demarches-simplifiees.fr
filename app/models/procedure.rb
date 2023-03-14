@@ -39,7 +39,6 @@
 #  routing_criteria_name                     :text             default("Votre ville")
 #  routing_enabled                           :boolean
 #  tags                                      :text             default([]), is an Array
-#  test_started_at                           :datetime
 #  unpublished_at                            :datetime
 #  web_hook_url                              :string
 #  whitelisted_at                            :datetime
@@ -479,7 +478,7 @@ class Procedure < ApplicationRecord
     procedure = self.deep_clone(include: include_list) do |original, kopy|
       begin
         PiecesJustificativesService.clone_attachments(original, kopy)
-      rescue ActiveStorage::FileNotFoundError
+      rescue ActiveStorage::FileNotFoundError, ActiveStorage::IntegrityError
       end
     end
     procedure.path = SecureRandom.uuid
@@ -846,6 +845,12 @@ class Procedure < ApplicationRecord
 
   def published_or_created_at
     published_at || created_at
+  end
+
+  def self.tags
+    unnest = Arel::Nodes::NamedFunction.new('UNNEST', [self.arel_table[:tags]])
+    query = self.select(unnest.as('tags')).distinct.order('tags')
+    self.connection.query(query.to_sql).flatten
   end
 
   private

@@ -37,7 +37,8 @@ class ProcedureDashboard < Administrate::BaseDashboard
     attestation_template: AttestationTemplateField,
     procedure_expires_when_termine_enabled: Field::Boolean,
     duree_conservation_dossiers_dans_ds: Field::Number,
-    max_duree_conservation_dossiers_dans_ds: Field::Number
+    max_duree_conservation_dossiers_dans_ds: Field::Number,
+    tags: Field::Text
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -64,6 +65,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :administrateurs,
     :libelle,
     :description,
+    :tags,
     :lien_site_web,
     :organisation,
     :zone,
