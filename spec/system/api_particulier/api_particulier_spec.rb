@@ -290,6 +290,7 @@ describe 'fetch API Particulier Data', js: true do
           click_on 'Déposer le dossier'
           perform_enqueued_jobs
         end
+        expect(page).to have_current_path(merci_dossier_path(Dossier.last))
 
         visit demande_dossier_path(dossier)
         expect(page).to have_content(/Des données.*ont été reçues depuis la CAF/)
@@ -344,6 +345,7 @@ describe 'fetch API Particulier Data', js: true do
           click_on 'Déposer le dossier'
           perform_enqueued_jobs
         end
+        expect(page).to have_current_path(merci_dossier_path(Dossier.last))
 
         visit demande_dossier_path(dossier)
         expect(page).to have_content(/Des données.*ont été reçues depuis Pôle emploi/)
@@ -413,6 +415,7 @@ describe 'fetch API Particulier Data', js: true do
           click_on 'Déposer le dossier'
           perform_enqueued_jobs
         end
+        expect(page).to have_current_path(merci_dossier_path(Dossier.last))
 
         visit demande_dossier_path(dossier)
         expect(page).to have_content(/Des données.*ont été reçues depuis le MESRI/)
@@ -475,6 +478,7 @@ describe 'fetch API Particulier Data', js: true do
           click_on 'Déposer le dossier'
           perform_enqueued_jobs
         end
+        expect(page).to have_current_path(merci_dossier_path(Dossier.last))
 
         visit demande_dossier_path(dossier)
         expect(page).to have_content(/Des données.*ont été reçues depuis la DGFiP/)

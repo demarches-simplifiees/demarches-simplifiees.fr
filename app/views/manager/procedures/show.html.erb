@@ -15,7 +15,6 @@ as well as a link to its edit page.
 
 [1]: http://www.rubydoc.info/gems/administrate/Administrate/Page/Show
 %>
-
 <% content_for(:title) { t("administrate.actions.show_resource", name: page.page_title) } %>
 <% procedure = page.resource %>
 
@@ -78,6 +77,21 @@ as well as a link to its edit page.
               <p>J'utilise cette option temporairement à des fins de support.</p>
 
             <% end %>
+          <% end %>
+        <% end %>
+        <% if attribute.name == 'tags' %>
+          <%= form_for procedure, url: add_tags_manager_procedure_path(procedure), html: { class: 'form procedure-form__column--form mt-1' }  do %>
+            <%=  hidden_field_tag 'procedure[tags]', nil %>
+            <%=  react_component("ComboMultiple",
+                  options: Procedure.tags,
+                  selected: procedure.tags,
+                  disabled: [],
+                  label: 'Tags',
+                  group: '.procedure-form__column--form',
+                  name: 'tags',
+                  describedby: 'procedure-tags',
+                  acceptNewValues: true) %>
+            <button class="mt-1">Ajouter des tags</button>
           <% end %>
         <% end %>
       </dd>

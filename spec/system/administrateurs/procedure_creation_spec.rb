@@ -64,7 +64,7 @@ describe 'Creating a new procedure', js: true do
       click_link procedure.libelle
       expect(page).to have_current_path(admin_procedure_path(procedure))
 
-      champs_card = find('.card-admin', text: 'Champs du formulaire')
+      champs_card = find('.fr-tile', text: 'Champs du formulaire')
       expect(champs_card).to have_selector('.icon.refuse')
       expect(champs_card).to have_content('À modifier')
     end

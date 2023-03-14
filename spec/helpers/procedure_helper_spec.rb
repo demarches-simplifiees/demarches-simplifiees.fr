@@ -11,10 +11,10 @@ RSpec.describe ProcedureHelper, type: :helper do
   end
 
   describe '#estimated_fill_duration_minutes' do
-    subject { estimated_fill_duration_minutes(procedure) }
+    subject { estimated_fill_duration_minutes(procedure.reload) }
 
     context 'with champs' do
-      let(:procedure) { build(:procedure, :with_yes_no, :with_piece_justificative) }
+      let(:procedure) { create(:procedure, :with_yes_no, :with_piece_justificative) }
 
       it 'rounds up the duration to the minute' do
         expect(subject).to eq(2)
@@ -22,7 +22,7 @@ RSpec.describe ProcedureHelper, type: :helper do
     end
 
     context 'without champs' do
-      let(:procedure) { build(:procedure) }
+      let(:procedure) { create(:procedure) }
 
       it 'never displays ‘zero minutes’' do
         expect(subject).to eq(1)

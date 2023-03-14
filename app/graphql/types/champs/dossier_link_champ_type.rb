@@ -6,7 +6,7 @@ module Types::Champs
 
     def dossier
       if object.value.present?
-        Loaders::Record.for(Dossier).load(object.value)
+        Loaders::Dossier.for.load(object.value)
       end
     end
   end
