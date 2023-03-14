@@ -1,16 +1,14 @@
 .sub-header
   .container
-    = status_badge(dossier.state)
+    %h1
+      = dossier.procedure.libelle
+      = status_badge(dossier.state, 'super')
+    %h2
+      = t('views.users.dossiers.show.header.dossier_number', dossier_id: dossier.id)
+      - if dossier.depose_at.present?
+        = t('views.users.dossiers.show.header.submit_date', date_du_dossier: I18n.l(dossier.depose_at))
 
-    .title-container
-      %span.icon.folder
-      %h1= dossier.procedure.libelle
-      %h2
-        = t('views.users.dossiers.show.header.dossier_number', dossier_id: dossier.id)
-        - if dossier.depose_at.present?
-          = t('views.users.dossiers.show.header.submit_date', date_du_dossier: I18n.l(dossier.depose_at))
-
-      = render(partial: 'users/dossiers/expiration_banner', locals: {dossier: dossier})
+    = render(partial: 'users/dossiers/expiration_banner', locals: {dossier: dossier})
 
     - if dossier.show_procedure_state_warning?
       = render(partial: 'users/dossiers/procedure_removed_banner', locals: { dossier: dossier })

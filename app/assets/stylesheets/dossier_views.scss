@@ -3,22 +3,6 @@
 
 .dossier-container {
   .sub-header {
-    .label {
-      float: right;
-      margin-left: $default-spacer;
-    }
-
-    .title-container {
-      margin-bottom: $default-spacer;
-      padding-left: 32px;
-
-      .icon.folder {
-        float: left;
-        margin-left: -32px;
-        margin-top: 3px;
-      }
-    }
-
     h1 {
       color: $black;
       font-size: 22px;
