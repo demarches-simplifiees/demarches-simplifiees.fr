@@ -35,7 +35,7 @@ describe ProcedureArchiveService do
             "#{service.send(:zip_root_folder, archive)}/",
             "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier.id}/",
             "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier.id}/pieces_justificatives/",
-            "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier.id}/pieces_justificatives/attestation-dossier--05-03-2021-00-00-#{dossier.attestation.pdf.id % 10000}.pdf",
+            "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier.id}/pieces_justificatives/attestation-dossier-#{dossier.id}-05-03-2021-00-00-#{dossier.attestation.pdf.id % 10000}.pdf",
             "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2021-00-00-#{dossier.id}.pdf"
           ]
           expect(files.map(&:filename)).to match_array(structure)
@@ -136,12 +136,12 @@ describe ProcedureArchiveService do
             "#{service.send(:zip_root_folder, archive)}/",
             "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier.id}/",
             "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier.id}/pieces_justificatives/",
-            "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier.id}/pieces_justificatives/attestation-dossier--05-03-2020-00-00-#{dossier.attestation.pdf.id % 10000}.pdf",
+            "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier.id}/pieces_justificatives/attestation-dossier-#{dossier.id}-05-03-2020-00-00-#{dossier.attestation.pdf.id % 10000}.pdf",
             "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2020-00-00-#{dossier.id}.pdf",
             "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier_2020.id}/",
             "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier_2020.id}/export-#{dossier_2020.id}-05-03-2020-00-00-#{dossier_2020.id}.pdf",
             "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier_2020.id}/pieces_justificatives/",
-            "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier_2020.id}/pieces_justificatives/attestation-dossier--05-03-2020-00-00-#{dossier_2020.attestation.pdf.id % 10000}.pdf"
+            "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier_2020.id}/pieces_justificatives/attestation-dossier-#{dossier_2020.id}-05-03-2020-00-00-#{dossier_2020.attestation.pdf.id % 10000}.pdf"
           ]
           expect(files.map(&:filename)).to match_array(structure)
         end
