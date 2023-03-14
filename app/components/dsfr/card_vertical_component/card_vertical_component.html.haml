@@ -7,6 +7,16 @@
       - if desc
         %p.fr-card__desc
           = desc
+      .fr-card__start
+        - if tags
+          %ul.fr-tags-group
+            - tags.each do |tag|
+              %li
+                %p.fr-tag=tag
+      .fr-card__end
+        - if error
+          .fr-card__detail.fr-alert.fr-alert--error
+            %p=error
 
     - if footer_buttons?
       .fr-card__footer

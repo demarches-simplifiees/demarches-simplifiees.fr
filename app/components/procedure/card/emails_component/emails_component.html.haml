@@ -2,8 +2,12 @@
   = link_to admin_procedure_mail_templates_path(@procedure), class: 'fr-tile fr-enlarge-link' do
     .fr-tile__body.flex.justify-between
       %div
-        %span.icon.clock
-        %p.fr-tile-status-todo À configurer
+        - if error_messages.present?
+          %span.icon.refuse
+          %p.fr-tile-status-error À modifier
+        - else
+          %span.icon.clock
+          %p.fr-tile-status-todo À configurer
       %div
         %h3.fr-h6.fr-mt-10v= t('.title')
         %p.fr-tile-subtitle Notifications automatiques

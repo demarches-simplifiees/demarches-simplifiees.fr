@@ -1,10 +1,12 @@
 class Dsfr::CardVerticalComponent < ApplicationComponent
   renders_many :footer_buttons
 
-  attr_reader :title, :desc
+  attr_reader :title, :desc, :tags, :error
 
-  def initialize(title: nil, desc: nil)
+  def initialize(title: nil, desc: nil, tags: nil, error: nil)
     @title = title
     @desc = desc
+    @tags = tags
+    @error = error
   end
 end
