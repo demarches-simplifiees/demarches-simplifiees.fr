@@ -3,7 +3,7 @@
   .card-title Affectation des instructeurs
   = form_for :instructeur, url: { action: :add_instructeur, id: groupe_instructeur.id }, html: { class: 'form' } do |f|
     .instructeur-wrapper
-      - if !procedure.routee?
+      - if !procedure.routing_enabled?
         %p.notice Entrez les adresses email des instructeurs que vous souhaitez affecter à cette démarche
 
       - if disabled_as_super_admin
@@ -31,7 +31,7 @@
             %span.icon.person
             #{instructeur.email}
 
-          - confirmation_message = procedure.routee? ? "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » du groupe « #{groupe_instructeur.label} » ?" : "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » de la démarche ?"
+          - confirmation_message = procedure.routing_enabled? ? "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » du groupe « #{groupe_instructeur.label} » ?" : "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » de la démarche ?"
           %td.actions= button_to 'Retirer',
             { action: :remove_instructeur, id: groupe_instructeur.id },
             { method: :delete,

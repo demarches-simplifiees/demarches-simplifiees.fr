@@ -32,8 +32,7 @@ fr:
           other: "%{count} instructeurs sont affectés"
       edit:
         routing:
-          title: Libellé du routage
-          notice: Ce texte apparaitra sur le formulaire usager comme le libellé d’une liste
+          title: Libellé de la liste de groupes
         group_management:
           title: Gestion des Groupes
           delete: supprimer le groupe
@@ -41,9 +40,8 @@ fr:
           move_folders: déplacer les dossiers
           move_folders_confirmation: Réaffecter les dossiers à un autre groupe afin de pouvoir le supprimer
         add_a_group:
-          title: Ajouter un groupe
+          title: Ajouter un nom de groupe
           notice: Ce groupe sera un choix de la liste "%{routing_criteria_name}"
-          placeholder: ex. Ville de Bordeaux
         csv_import:
           title: Importer par CSV
           notice_1: Le fichier csv doit comporter 2 colonnes (Groupe, Email) et être séparé par des virgules. L'import n'écrase pas les groupes et les instructeurs existants.
@@ -52,6 +50,7 @@ fr:
           import_file: Importer le fichier
           import_file_procedure_not_published: L’import d’instructeurs par fichier CSV est disponible une fois la démarche publiée
         view: voir
+        set_up: paramétrer
         button:
           add_group: Ajouter le groupe
           rename: Renommer
@@ -61,15 +60,10 @@ fr:
       routing:
         title: Routage
         notice_html: |
-          Le routage est une fonctionnalité pour les démarches nécessitant le partage de l’instruction entre différents groupes en fonction d’un critère précis (territoire, thématique ou autre).
-          <br><br>
-          Cette fonctionnalité permet d’acheminer les dossier vers chaque groupe, et de ne plus avoir besoin de filtrer ses dossiers parmi une grande quantité de demandes. Elle est donc particulièrement adaptée pour les démarches nationales instruites localement.
-          <br><br>
-          Les instructeurs ne voient que les dossiers les concernant, et n’ont donc pas accès aux données extérieures à leur périmètre.
-        self_managment_notice_html: |
-          L’autogestion des instructeurs permet aux instructeurs de gérer eux-mêmes la liste des instructeurs de la démarche.
+          Le routage permet d'acheminer les dossiers vers différents groupes d'instructeurs. Il s'active automatiquement dès qu'une démarche compte au moins deux groupes actifs.
         button:
-          routing_enable: Activer le routage
-          routing_disable: Désactiver le routage
           self_managment_toggle: Activer l’autogestion des instructeurs
           add_group: Ajouter le groupe
+      instructeurs_self_management:
+        self_managment_notice_html: |
+          L’autogestion des instructeurs permet aux instructeurs de gérer eux-mêmes la liste des instructeurs de la démarche.

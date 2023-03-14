@@ -49,7 +49,7 @@ module ProcedureHelper
   end
 
   def can_manage_groupe_instructeurs?(procedure)
-    procedure.routee? && current_administrateur&.owns?(procedure)
+    procedure.routing_enabled? && current_administrateur&.owns?(procedure)
   end
 
   def can_send_groupe_message?(procedure)
