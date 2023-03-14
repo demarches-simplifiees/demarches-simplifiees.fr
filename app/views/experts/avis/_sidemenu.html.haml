@@ -1,0 +1,17 @@
+%nav.fr-sidemenu{"aria-labelledby" => "fr-sidemenu-title"}
+  .fr-sidemenu__inner
+    %button.fr-sidemenu__btn{"aria-controls" => "fr-sidemenu-wrapper", "aria-expanded" => "false", hidden: ""} Dans cette rubrique
+    #fr-sidemenu-wrapper.fr-collapse
+      %ul.fr-sidemenu__list
+        - current_page = current_page?(instruction_expert_avis_path(@avis.procedure, @avis))
+        %li{class: "fr-sidemenu__item fr-sidemenu__item#{current_page ? '--active' : ''}"}
+          %a.fr-sidemenu__link{'aria-current': current_page ? 'page' : nil, href: instruction_expert_avis_path(@avis.procedure, @avis), target: "_self"} Donner votre avis
+
+        - current_page = current_page?(avis_list_expert_avis_path(@avis.procedure, @avis))
+        - if @dossier.avis_for_expert(current_expert).present?
+          %li{class: "fr-sidemenu__item fr-sidemenu__item#{current_page ? '--active' : ''}"}
+            %a.fr-sidemenu__link{'aria-current': current_page ? 'page' : nil,href: avis_list_expert_avis_path(@avis.procedure, @avis), target: "_self"} Voir les avis
+
+        -# - if !@dossier.termine?
+        -#   %li.fr-sidemenu__item
+        -#     %a.fr-sidemenu__link{href: "#", target: "_self"} Demander un nouvel avis
