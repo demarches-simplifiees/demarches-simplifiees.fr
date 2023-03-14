@@ -223,6 +223,34 @@ module Instructeurs
       render :change_state
     end
 
+    def pending_corrections
+      message, piece_jointe = params.require(:dossier).permit(:motivation, :justificatif_motivation).values
+
+      if message.empty?
+        flash.alert = "Vous devez préciser quelle modification est attendue."
+      elsif !dossier.may_flag_as_pending_correction?
+        flash.alert = dossier.termine? ? "Impossible de demander de corriger un dossier terminé." : "Le dossier est déjà en attente de correction."
+      else
+        commentaire = CommentaireService.create(current_instructeur, dossier, { body: message, piece_jointe: })
+        dossier.flag_as_pending_correction!(commentaire)
+        dossier.update!(last_commentaire_updated_at: Time.zone.now)
+        current_instructeur.follow(dossier)
+
+        flash.notice = "Dossier marqué comme en attente de correction."
+      end
+
+      respond_to do |format|
+        format.turbo_stream do
+          @dossier = dossier
+          render :change_state
+        end
+
+        format.html do
+          redirect_back(fallback_location: instructeur_procedure_path(procedure))
+        end
+      end
+    end
+
     def create_commentaire
       @commentaire = CommentaireService.create(current_instructeur, dossier, commentaire_params)
 

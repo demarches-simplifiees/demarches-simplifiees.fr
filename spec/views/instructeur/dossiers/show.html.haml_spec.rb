@@ -61,7 +61,8 @@ describe 'instructeurs/dossiers/show', type: :view do
       within("form[action=\"#{follow_instructeur_dossier_path(dossier.procedure, dossier)}\"]") do
         expect(subject).to have_button('Suivre le dossier')
       end
-      expect(subject).to have_selector('.header-actions ul:first-child .fr-btn', count: 2)
+      expect(subject).to have_button('Demander une modification')
+      expect(subject).to have_selector('.header-actions ul:first-child > li.instruction-button', count: 1)
     end
   end
 

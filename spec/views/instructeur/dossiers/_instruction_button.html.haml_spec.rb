@@ -29,15 +29,25 @@ describe 'instructeurs/dossiers/instruction_button', type: :view do
     end
   end
 
+  context 'en_construction' do
+    let(:dossier) { create(:dossier, :en_construction) }
+
+    it 'renders a dropdown' do
+      expect(rendered).to have_dropdown_title('Demander une modification')
+      expect(rendered).to have_dropdown_items(count: 2) # form is already expanded so we have 2 visible items
+    end
+  end
+
   context 'en_instruction' do
     let(:dossier) { create(:dossier, :en_instruction) }
 
     it 'renders a dropdown' do
       expect(rendered).to have_dropdown_title('Instruire le dossier')
-      expect(rendered).to have_dropdown_items(count: 3)
+      expect(rendered).to have_dropdown_items(count: 4)
       expect(rendered).to have_dropdown_item('Accepter')
       expect(rendered).to have_dropdown_item('Classer sans suite')
       expect(rendered).to have_dropdown_item('Refuser')
+      expect(rendered).to have_dropdown_item('Demander une modification')
     end
   end
 end

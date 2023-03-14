@@ -6,6 +6,9 @@
       = commentaire_issuer
     - if commentaire_from_guest?
       %span.fr-text--xs.fr-text-mention--grey.font-weight-normal= t('.guest')
+    - if commentaire.flagged_pending_corrections?
+      %span.fr-badge.fr-badge--sm.fr-badge--info
+        = t('.flagged_pending_corrections')
     %span.date{ class: ["fr-text--xs", "fr-text-mention--grey", "font-weight-normal", highlight_if_unseen_class], data: scroll_to_target }
       = commentaire_date
   .rich-text

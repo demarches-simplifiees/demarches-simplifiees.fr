@@ -95,6 +95,10 @@ class Commentaire < ApplicationRecord
     update! body: ''
   end
 
+  def flagged_pending_corrections?
+    DossierResolution.exists?(commentaire: self)
+  end
+
   private
 
   def notify
