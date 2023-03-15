@@ -1,7 +1,9 @@
 describe WebhookController, type: :controller do
+  let(:sent_email) { OpenStruct.new(delivered_at: 1.day.ago, subject: "subject", status: "opened") }
   before do
     allow(controller).to receive(:verify_signature!).and_return(true)
     allow(controller).to receive(:verify_authenticity_token)
+    allow_any_instance_of(Sendinblue::API).to receive(:sent_mails).and_return([sent_email])
   end
 
   describe '#helpscout_support_dev' do
