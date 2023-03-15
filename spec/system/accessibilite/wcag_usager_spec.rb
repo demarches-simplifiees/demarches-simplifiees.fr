@@ -44,6 +44,12 @@ describe 'wcag rules for usager', js: true do
       visit commencer_path(path: procedure.reload.path)
       expect(page).to be_axe_clean
     end
+    scenario 'commencer page, help dropdown' do
+      visit commencer_path(path: procedure.reload.path)
+
+      page.find("#help-menu_button").click
+      expect(page).to be_axe_clean
+    end
   end
 
   context "logged in, depot d'un dossier as individual" do
@@ -66,7 +72,7 @@ describe 'wcag rules for usager', js: true do
       fill_in('individual_nom', with: 'nom')
       click_on 'Continuer'
 
-      expect(page).to be_axe_clean.skipping :'aria-input-field-name'
+      expect(page).to be_axe_clean
     end
   end
 
@@ -80,24 +86,37 @@ describe 'wcag rules for usager', js: true do
 
     scenario "écran identification de l'entreprise" do
       click_on 'Commencer la démarche'
-      expect(page).to be_axe_clean.skipping :label
+      expect(page).to be_axe_clean
     end
   end
 
-  context "logged in, avec des dossiers dossiers déposés" do
+  context "logged in, avec des dossiers déposés" do
     let(:dossier) { create(:dossier, procedure: procedure, user: litteraire_user) }
     before do
       login_as litteraire_user, scope: :user
     end
 
-    scenario 'liste des dossiers' do
+    scenario 'liste des dossiers sans dossiers' do
       visit dossiers_path
+      expect(page).to be_axe_clean
+    end
+
+    scenario 'liste des dossiers avec des dossiers' do
+      dossier
+      visit dossiers_path
+      expect(page).to be_axe_clean
+    end
+
+    scenario 'liste des dossiers et actions sur le dossier' do
+      dossier
+      visit dossiers_path
+      page.find("#actions_menu_dossier_#{dossier.id}_button").click
       expect(page).to be_axe_clean
     end
 
     scenario 'dossier' do
       visit dossier_path(dossier)
-      expect(page).to be_axe_clean.skipping :'aria-input-field-name'
+      expect(page).to be_axe_clean
     end
 
     scenario 'merci' do
@@ -110,19 +129,21 @@ describe 'wcag rules for usager', js: true do
       expect(page).to be_axe_clean
     end
 
-    scenario 'messagerie' do
+    scenario 'messagerie avec des messages' do
+      create(:commentaire, dossier: dossier, instructeur: procedure.instructeurs.first, body: 'hello')
+      create(:commentaire, dossier: dossier, email: dossier.user.email, body: 'hello')
       visit messagerie_dossier_path(dossier)
       expect(page).to be_axe_clean
     end
 
     scenario 'modifier' do
       visit modifier_dossier_path(dossier)
-      expect(page).to be_axe_clean.skipping :'aria-input-field-name'
+      expect(page).to be_axe_clean
     end
 
     scenario 'brouillon' do
       visit brouillon_dossier_path(dossier)
-      expect(page).to be_axe_clean.skipping :'aria-input-field-name'
+      expect(page).to be_axe_clean
     end
   end
 end

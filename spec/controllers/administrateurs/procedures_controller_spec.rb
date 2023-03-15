@@ -100,13 +100,13 @@ describe Administrateurs::ProceduresController, type: :controller do
 
     it 'display published or closed procedures' do
       subject
-      expect(assigns(:procedures)).to include(published_procedure)
-      expect(assigns(:procedures)).to include(closed_procedure)
+      expect(assigns(:filter).procedures_result).to include(published_procedure)
+      expect(assigns(:filter).procedures_result).to include(closed_procedure)
     end
 
     it 'doesn’t display draft procedures' do
       subject
-      expect(assigns(:procedures)).not_to include(draft_procedure)
+      expect(assigns(:filter).procedures_result).not_to include(draft_procedure)
     end
 
     context "for specific zones" do
@@ -119,8 +119,8 @@ describe Administrateurs::ProceduresController, type: :controller do
 
       it 'display only procedures for specified zones' do
         subject
-        expect(assigns(:procedures)).to include(procedure2)
-        expect(assigns(:procedures)).not_to include(procedure1)
+        expect(assigns(:filter).procedures_result).to include(procedure2)
+        expect(assigns(:filter).procedures_result).not_to include(procedure1)
       end
     end
 
@@ -130,14 +130,14 @@ describe Administrateurs::ProceduresController, type: :controller do
 
       it 'display only published procedures' do
         get :all, params: { statuses: ['publiee'] }
-        expect(assigns(:procedures)).to include(procedure1)
-        expect(assigns(:procedures)).not_to include(procedure2)
+        expect(assigns(:filter).procedures_result).to include(procedure1)
+        expect(assigns(:filter).procedures_result).not_to include(procedure2)
       end
 
       it 'display only closed procedures' do
         get :all, params: { statuses: ['close'] }
-        expect(assigns(:procedures)).to include(procedure2)
-        expect(assigns(:procedures)).not_to include(procedure1)
+        expect(assigns(:filter).procedures_result).to include(procedure2)
+        expect(assigns(:filter).procedures_result).not_to include(procedure1)
       end
     end
   end

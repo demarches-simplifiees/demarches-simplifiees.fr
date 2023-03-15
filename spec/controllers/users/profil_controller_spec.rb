@@ -188,4 +188,17 @@ describe Users::ProfilController, type: :controller do
       expect(response).to redirect_to(profil_path)
     end
   end
+
+  context 'DELETE #destroy_fci' do
+    let!(:fci) { create(:france_connect_information, user: user) }
+
+    subject { delete :destroy_fci, params: { fci_id: fci.id } }
+
+    it do
+      expect(FranceConnectInformation.where(user: user).count).to eq(1)
+      subject
+      expect(FranceConnectInformation.where(user: user).count).to eq(0)
+      expect(response).to redirect_to(profil_path)
+    end
+  end
 end

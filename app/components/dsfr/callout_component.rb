@@ -3,16 +3,17 @@ class Dsfr::CalloutComponent < ApplicationComponent
   renders_one :body
   renders_one :bottom
 
-  attr_reader :title, :theme, :icon
+  attr_reader :title, :theme, :icon, :extra_class_names
 
-  def initialize(title:, theme: :info, icon: nil)
+  def initialize(title:, theme: :info, icon: nil, extra_class_names: nil)
     @title = title
     @theme = theme
     @icon = icon
+    @extra_class_names = extra_class_names
   end
 
   def callout_class
-    ["fr-callout", theme_class, icon]
+    ["fr-callout", theme_class, icon, extra_class_names].compact.flatten
   end
 
   private

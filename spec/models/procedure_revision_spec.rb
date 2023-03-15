@@ -440,47 +440,83 @@ describe ProcedureRevision do
     end
 
     context 'when a type de champ is changed' do
-      let(:procedure) { create(:procedure, :with_type_de_champ) }
+      context 'when libelle, description, and mandatory are changed' do
+        let(:procedure) { create(:procedure, :with_type_de_champ) }
 
-      before do
-        updated_tdc = new_draft.find_and_ensure_exclusive_use(first_tdc.stable_id)
+        before do
+          updated_tdc = new_draft.find_and_ensure_exclusive_use(first_tdc.stable_id)
 
-        updated_tdc.update(libelle: 'modifier le libelle', description: 'une description', mandatory: !updated_tdc.mandatory)
+          updated_tdc.update(libelle: 'modifier le libelle', description: 'une description', mandatory: !updated_tdc.mandatory)
+        end
+
+        it do
+          is_expected.to eq([
+            {
+              model: :type_de_champ,
+              op: :update,
+              attribute: :libelle,
+              label: first_tdc.libelle,
+              private: false,
+              from: first_tdc.libelle,
+              to: "modifier le libelle",
+              stable_id: first_tdc.stable_id
+            },
+            {
+              model: :type_de_champ,
+              op: :update,
+              attribute: :description,
+              label: first_tdc.libelle,
+              private: false,
+              from: first_tdc.description,
+              to: "une description",
+              stable_id: first_tdc.stable_id
+            },
+            {
+              model: :type_de_champ,
+              op: :update,
+              attribute: :mandatory,
+              label: first_tdc.libelle,
+              private: false,
+              from: false,
+              to: true,
+              stable_id: first_tdc.stable_id
+            }
+          ])
+        end
       end
 
-      it do
-        is_expected.to eq([
-          {
-            model: :type_de_champ,
-            op: :update,
-            attribute: :libelle,
-            label: first_tdc.libelle,
-            private: false,
-            from: first_tdc.libelle,
-            to: "modifier le libelle",
-            stable_id: first_tdc.stable_id
-          },
-          {
-            model: :type_de_champ,
-            op: :update,
-            attribute: :description,
-            label: first_tdc.libelle,
-            private: false,
-            from: first_tdc.description,
-            to: "une description",
-            stable_id: first_tdc.stable_id
-          },
-          {
-            model: :type_de_champ,
-            op: :update,
-            attribute: :mandatory,
-            label: first_tdc.libelle,
-            private: false,
-            from: false,
-            to: true,
-            stable_id: first_tdc.stable_id
-          }
-        ])
+      context 'when collapsible_explanation_enabled and collapsible_explanation_text are changed' do
+        let(:procedure) { create(:procedure, :with_explication) }
+
+        before do
+          updated_tdc = new_draft.find_and_ensure_exclusive_use(first_tdc.stable_id)
+
+          updated_tdc.update(collapsible_explanation_enabled: "1", collapsible_explanation_text: 'afficher au clique')
+        end
+        it do
+          is_expected.to eq([
+            {
+              model: :type_de_champ,
+              op: :update,
+              attribute: :collapsible_explanation_enabled,
+              label: first_tdc.libelle,
+              private: first_tdc.private?,
+              from: false,
+              to: true,
+              stable_id: first_tdc.stable_id
+            },
+            {
+              model: :type_de_champ,
+              op: :update,
+              attribute: :collapsible_explanation_text,
+              label: first_tdc.libelle,
+              private: first_tdc.private?,
+              from: nil,
+              to: 'afficher au clique',
+              stable_id: first_tdc.stable_id
+            }
+          ])
+        end
       end
     end
 

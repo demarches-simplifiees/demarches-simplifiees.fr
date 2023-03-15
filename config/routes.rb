@@ -63,6 +63,8 @@ Rails.application.routes.draw do
 
     resources :zones, only: [:index, :show]
 
+    resources :team_accounts, only: [:index, :show]
+
     resources :dubious_procedures, only: [:index]
     resources :outdated_procedures, only: [:index] do
       patch :bulk_update, on: :collection
@@ -194,6 +196,7 @@ Rails.application.routes.draw do
   get "contact-admin", to: "support#admin"
 
   post "webhooks/helpscout", to: "webhook#helpscout"
+  post "webhooks/helpscout_support_dev", to: "webhook#helpscout_support_dev"
   match "webhooks/helpscout", to: lambda { |_| [204, {}, nil] }, via: :head
 
   #
@@ -327,6 +330,7 @@ Rails.application.routes.draw do
     post 'transfer_all_dossiers' => 'profil#transfer_all_dossiers'
     post 'accept_merge' => 'profil#accept_merge'
     post 'refuse_merge' => 'profil#refuse_merge'
+    delete 'france_connect_information' => 'profil#destroy_fci'
   end
 
   #
@@ -498,7 +502,6 @@ Rails.application.routes.draw do
 
         collection do
           patch 'update_routing_criteria_name'
-          patch 'update_routing_enabled'
           patch 'update_instructeurs_self_management_enabled'
           post 'import'
           get 'export_groupe_instructeurs'

@@ -110,7 +110,9 @@ class Administrateur < ApplicationRecord
   def merge(old_admin)
     return if old_admin.nil?
 
-    procedures_with_new_admin, procedures_without_new_admin = old_admin.procedures
+    procedures_with_new_admin, procedures_without_new_admin = old_admin
+      .procedures
+      .with_discarded
       .partition { |p| p.administrateurs.exists?(id) }
 
     procedures_with_new_admin.each do |p|
