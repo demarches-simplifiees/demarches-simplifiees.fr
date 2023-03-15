@@ -1,0 +1,29 @@
+- content_for(:title, t('views.legal_notice.title'))
+- content_for :footer do
+  = render partial: "root/footer"
+
+#legal-notice.static-page
+  .container
+    %h1.new-h1
+      = t('views.legal_notice.title')
+
+    .legal-block
+      %h2
+        = t('views.legal_notice.editing')
+      %p.legal= t('views.legal_notice.editing_content.line_one')
+      %p.legal= t('views.legal_notice.editing_content.line_two')
+      %p.legal= t('views.legal_notice.editing_content.line_three')
+
+    .legal-block
+      %h2
+        = t('views.legal_notice.direction')
+      %p.legal= t('views.legal_notice.direction_content')
+
+    .legal-block
+      %h2
+        = t('views.legal_notice.hosting')
+      %p.legal= t('views.legal_notice.hosting_content.line_one')
+      %p.legal= t('views.legal_notice.hosting_content.line_two')
+      %p.legal= t('views.legal_notice.hosting_content.line_three')
+      %p.legal= t('views.legal_notice.hosting_content.line_four')
+      %p.legal= t('views.legal_notice.hosting_content.line_five') 
