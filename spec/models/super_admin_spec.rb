@@ -58,7 +58,8 @@ describe SuperAdmin, type: :model do
 
     it 'nullifies otp_secret' do
       super_admin.enable_otp!
-      expect { subject }.to change { super_admin.reload.otp_secret }.to(nil)
+      super_admin.disable_otp!
+      expect(super_admin.reload.otp_secret).to eq nil
     end
   end
 
