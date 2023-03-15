@@ -18,6 +18,12 @@ RSpec.describe EtablissementHelper, type: :helper do
   end
   let(:etablissement) { create(:etablissement, etablissement_params) }
 
+  describe "#pretty_siret" do
+    subject { pretty_siret("12345678900001") }
+
+    it { is_expected.to eq("123 456 789 00001") }
+  end
+
   describe '#raison_sociale_or_name' do
     subject { raison_sociale_or_name(etablissement) }
 

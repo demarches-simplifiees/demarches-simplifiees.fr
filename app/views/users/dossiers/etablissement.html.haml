@@ -17,7 +17,7 @@
             %br
             %br
             Veuillez vérifier par vous-même que le numéro
-            %strong= etablissement.siret
+            %strong= pretty_siret(etablissement.siret)
             correspond bien à votre entreprise :
 
           %p
@@ -25,7 +25,7 @@
               Vérifier dans l'annuaire des entreprises
 
     - elsif etablissement.diffusable_commercialement == false
-      %p= t('warning_for_private_info', scope: 'views.shared.dossiers.identite_entreprise', etablissement: raison_sociale_or_name(etablissement))
+      %p= t('warning_for_private_info', scope: 'views.shared.dossiers.identite_entreprise', siret: pretty_siret(etablissement.siret))
 
     - else
       %p
