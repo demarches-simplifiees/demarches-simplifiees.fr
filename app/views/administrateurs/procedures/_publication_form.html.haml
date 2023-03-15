@@ -22,4 +22,4 @@
       = render partial: 'publication_form_inputs', locals: { procedure: procedure, closed_procedures: @closed_procedures }
 
     .flex.justify-end
-      = submit_tag procedure_publish_label(procedure, :submit), { disabled: publication_errors.present?, class: "button primary", id: 'publish' }
+      = submit_tag procedure_publish_label(procedure, :submit), { disabled: publication_errors.present?, class: "fr-btn fr-btn--primary", id: 'publish' }

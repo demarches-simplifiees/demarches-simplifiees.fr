@@ -17,7 +17,7 @@
     .tag Balise
     .description Description
   .items
-    - @mail_template.tags.each do |tag|
+    - tags.each do |tag|
       .item
         %code.tag
           = "--#{tag[:libelle]}--"

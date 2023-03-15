@@ -15,6 +15,9 @@ module Mails
 
     belongs_to :procedure, optional: false
 
+    validates :subject, tags: true
+    validates :body, tags: true
+
     SLUG = "initiated_mail"
     DEFAULT_TEMPLATE_NAME = "notification_mailer/default_templates/initiated_mail"
     DISPLAYED_NAME = I18n.t('activerecord.models.mail.initiated_mail.proof_of_receipt')

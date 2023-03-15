@@ -45,7 +45,7 @@ describe Administrateurs::MailTemplatesController, type: :controller do
 
   describe 'PATCH update' do
     let(:mail_subject) { 'Mise à jour de votre démarche' }
-    let(:mail_body) { '<div>Une mise à jour a été effectuée sur votre démarche n° --demarche-id--.</div>' }
+    let(:mail_body) { '<div>Une mise à jour a été effectuée sur votre démarche n° --numéro du dossier--.</div>' }
 
     before :each do
       patch :update,
@@ -58,11 +58,23 @@ describe Administrateurs::MailTemplatesController, type: :controller do
 
     it { expect(response).to redirect_to edit_admin_procedure_mail_template_path(procedure, initiated_mail.class.const_get(:SLUG)) }
 
-    context 'the mail template' do
+    context 'with valid email template' do
       subject { procedure.reload; procedure.initiated_mail_template }
 
-      it { expect(subject.subject).to eq(mail_subject) }
-      it { expect(subject.body).to eq(mail_body) }
+      it do
+        expect(subject.subject).to eq(mail_subject)
+        expect(subject.body).to eq(mail_body)
+      end
+    end
+
+    context 'with invalid email template' do
+      subject { procedure.reload; procedure.initiated_mail_template }
+      let(:mail_body) { '<div>Une mise à jour a été effectuée sur votre démarche n° --numéro--.</div>' }
+
+      it do
+        expect(subject.body).not_to eq(mail_body)
+        expect(response.body).to match("Le contenu de l’email de notification de passage du dossier en instruction réfère au champ \"numéro\" qui n’existe pas")
+      end
     end
   end
 end

@@ -181,7 +181,7 @@ module TagsSubstitutionConcern
     {
       libelle: 'groupe instructeur',
       description: 'Le groupe instructeur en charge du dossier',
-      lambda: -> (d) { d.groupe_instructeur.label },
+      lambda: -> (d) { d.groupe_instructeur&.label },
       available_for_states: Dossier::SOUMIS
     }
   ]

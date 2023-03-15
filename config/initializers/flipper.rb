@@ -21,7 +21,6 @@ end
 features = [
   :administrateur_web_hook,
   :api_particulier,
-  :categories_type_de_champ,
   :dossier_pdf_vide,
   :expert_not_allowed_to_invite,
   :hide_instructeur_email,

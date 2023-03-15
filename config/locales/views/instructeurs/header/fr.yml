@@ -7,7 +7,7 @@ fr:
           title: Ce dossier va expirer
           states:
             brouillon: "" # not applicable, instructeur does not see brouillons
-            en_construction: Ce dossier est en attente de prise en charge. Vous pouvez toutefois entendre cette durée d'un mois en cliquant sur le bouton suivant.
+            en_construction: Ce dossier est en attente de prise en charge. Vous pouvez toutefois étendre cette durée d'un mois en cliquant sur le bouton suivant.
             termine: Le traitement de ce dossier est terminé, mais il va bientôt expirer. Cela signifie qu’il va bientôt être supprimé. Si vous souhaitez conserver une trace, vous pouvez le télécharger au format PDF.
           button_delay_expiration: "Conserver un mois de plus"
           notification_management: gestion des notifications
