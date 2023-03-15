@@ -33,9 +33,10 @@ module Instructeurs
     end
 
     def apercu_attestation
-      @attestation = dossier.attestation_template.render_attributes_for(dossier: dossier)
+      attestation_template = dossier.attestation_template
+      @attestation = attestation_template.render_attributes_for(dossier: dossier)
 
-      render 'administrateurs/attestation_templates/show', formats: [:pdf]
+      render 'administrateurs/attestation_templates/show', formats: [:pdf], locals: attestation_template.version(dossier.procedure)
     end
 
     def bilans_bdf

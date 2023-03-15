@@ -7,7 +7,7 @@ page_size = 'A4'
 page_width = 595
 
 #----- margins
-body_width = 400
+body_width = version == :v2 ? 450 : 400
 top_margin = 50
 bottom_margin = 20
 
@@ -155,8 +155,7 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
     pdf.pad_top(30) do
       print pdf, body, size: 11
     end
-
-    if signature.present?
+    if signature.present? && version == :v1
       pdf.pad_top(20) do
         signature_content = if signature.is_a?(ActiveStorage::Attached::One)
           signature.download
@@ -173,9 +172,20 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
     pdf.fill_color grey
     if qrcode.present?
       pdf.move_cursor_to footer_height
-      pdf.print_qr_code(qrcode, level: :q, extent: qrcode_size, margin: margin, align: :center)
+      qrcode_align = :center # version == :v1 ? :center : :left
+      pdf.print_qr_code(qrcode, level: :q, extent: qrcode_size, margin: margin, align: qrcode_align)
       pdf.move_down 3
-      pdf.text "<u><link href='#{qrcode}'>#{title}</link></u>", :inline_format => true, size: 9, align: :center, color: "0000FF"
+      pdf.text "<u><link href='#{qrcode}'>#{title}</link></u>", :inline_format => true, size: 9, align: qrcode_align, color: "0000FF"
+      if signature.present? && version == :v2
+        pdf.move_cursor_to footer_height
+        signature_content = if signature.is_a?(ActiveStorage::Attached::One)
+          signature.download
+        else
+          signature.rewind && signature.read
+        end
+        pdf.image StringIO.new(signature_content), fit: [max_signature_size, max_signature_size], position: :right
+      end
+
     end
     pdf.move_cursor_to 20
     if footer.present?

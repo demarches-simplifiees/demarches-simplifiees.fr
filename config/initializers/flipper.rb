@@ -26,6 +26,7 @@ features = [
   :hide_instructeur_email,
   :qrcoded_pdf,
   :visa,
+  :attestation_v2,
   :procedure_revisions,
   :procedure_routage_api
 ]
