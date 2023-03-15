@@ -19,6 +19,12 @@ class API::V2::GraphqlController < API::V2::BaseController
   private
 
   def append_info_to_payload(payload)
+    # if on the graphql playground, authenticate via devise
+    # if authenticate by a v2 or v3 token
+    # @current_user is set by `api_v2_base_controller.authenticate_administrateur_from_token`
+    # else it is set on `context.authorized_demarche`
+    @current_user ||= Current.user
+
     super
 
     payload.merge!({
