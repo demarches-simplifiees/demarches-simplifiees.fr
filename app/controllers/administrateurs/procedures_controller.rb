@@ -109,6 +109,7 @@ module Administrateurs
     end
 
     def edit
+      @existing_tags = Procedure.tags
     end
 
     def zones
