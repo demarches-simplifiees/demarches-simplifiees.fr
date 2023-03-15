@@ -7,7 +7,6 @@ class ApplicationController < ActionController::Base
 
   MAINTENANCE_MESSAGE = 'Le site est actuellement en maintenance. Il sera à nouveau disponible dans un court instant.'
 
-  before_action :set_current_roles
   before_action :set_sentry_user
   before_action :redirect_if_untrusted
   before_action :reject, if: -> { ENV.fetch("MAINTENANCE_MODE", 'false') == 'true' }
@@ -149,10 +148,6 @@ class ApplicationController < ActionController::Base
   end
 
   private
-
-  def set_current_roles
-    Current.instructeur = current_instructeur
-  end
 
   def set_active_storage_host
     ActiveStorage::Current.host = request.base_url
