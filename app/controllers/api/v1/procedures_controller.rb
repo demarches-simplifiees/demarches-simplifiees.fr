@@ -13,8 +13,11 @@ class API::V1::ProceduresController < APIController
     administrateur = find_administrateur_for_token(@procedure)
     if administrateur.nil?
       render json: {}, status: :unauthorized
+    else
+      # allow BaseController append_info_to_payload
+      # to log info on current_user
+      @current_user = administrateur.user
     end
-
   rescue ActiveRecord::RecordNotFound
     render json: {}, status: :not_found
   end
