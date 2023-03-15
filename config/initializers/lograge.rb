@@ -20,7 +20,10 @@ Rails.application.configure do
         browser_version: event.payload[:browser_version],
         platform: event.payload[:platform],
         client_ip: event.payload[:client_ip],
-        request_id: event.payload[:request_id]
+        request_id: event.payload[:request_id],
+        process: {
+          pid: Process.pid
+        }
       }.compact
     end
 
