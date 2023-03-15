@@ -151,7 +151,6 @@ class ApplicationController < ActionController::Base
   private
 
   def set_current_roles
-    Current.administrateur = current_administrateur
     Current.instructeur = current_instructeur
   end
 
