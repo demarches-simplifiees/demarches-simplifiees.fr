@@ -14,7 +14,7 @@ class Zone < ApplicationRecord
   has_and_belongs_to_many :procedures, -> { order(published_at: :desc) }, inverse_of: :zone
 
   def current_label
-    labels.where.not(name: 'Non attribué').first.name
+    labels.where.not(name: 'Non attribué').first&.name || label
   end
 
   def label_at(date)
