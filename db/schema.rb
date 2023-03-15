@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_02_17_094119) do
+ActiveRecord::Schema.define(version: 2023_02_18_094119) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -89,9 +89,11 @@ ActiveRecord::Schema.define(version: 2023_02_17_094119) do
 
   create_table "api_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.bigint "administrateur_id", null: false
+    t.bigint "allowed_procedure_ids", array: true
     t.datetime "created_at", precision: 6, null: false
     t.string "encrypted_token", null: false
     t.string "name", null: false
+    t.boolean "write_access", default: true, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "version", default: 3, null: false
     t.index ["administrateur_id"], name: "index_api_tokens_on_administrateur_id"

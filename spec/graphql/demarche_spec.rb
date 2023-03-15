@@ -1,6 +1,7 @@
 RSpec.describe Types::DemarcheType, type: :graphql do
+  let(:admin) { create(:administrateur) }
   let(:query) { '' }
-  let(:context) { { internal_use: true } }
+  let(:context) { { procedure_ids: admin.procedure_ids } }
   let(:variables) { {} }
 
   subject { API::V2::Schema.execute(query, variables: variables, context: context) }
@@ -10,11 +11,9 @@ RSpec.describe Types::DemarcheType, type: :graphql do
 
   describe 'context should correctly preserve demarche authorization state' do
     let(:query) { DEMARCHE_QUERY }
-    let(:admin) { create(:administrateur) }
     let(:procedure) { create(:procedure, administrateurs: [admin]) }
 
     let(:other_admin_procedure) { create(:procedure) }
-    let(:context) { { administrateur_id: admin.id } }
     let(:variables) { { number: procedure.id } }
 
     it do
@@ -27,8 +26,8 @@ RSpec.describe Types::DemarcheType, type: :graphql do
   end
 
   describe 'demarche with clone' do
-    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :yes_no }]) }
-    let(:procedure_clone) { procedure.clone(procedure.administrateurs.first, false) }
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :yes_no }], administrateurs: [admin]) }
+    let(:procedure_clone) { procedure.clone(admin, false) }
     let(:query) { DEMARCHE_WITH_CHAMP_DESCRIPTORS_QUERY }
     let(:variables) { { number: procedure_clone.id } }
     let(:champ_descriptor_id) { procedure.draft_revision.types_de_champ_public.first.to_typed_id }

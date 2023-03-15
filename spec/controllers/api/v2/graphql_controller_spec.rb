@@ -1,6 +1,8 @@
 describe API::V2::GraphqlController do
   let(:admin) { create(:administrateur) }
-  let(:token) { APIToken.generate(admin)[1] }
+  let(:generated_token) { APIToken.generate(admin) }
+  let(:api_token) { generated_token.first }
+  let(:token) { generated_token.second }
   let(:legacy_token) { APIToken.send(:unpack, token)[:plain_token] }
   let(:procedure) { create(:procedure, :published, :for_individual, :with_service, administrateurs: [admin]) }
   let(:dossier)  { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
@@ -190,6 +192,15 @@ describe API::V2::GraphqlController do
 
         it {
           expect(token).not_to be_nil
+          expect(gql_errors.first[:message]).to eq("An object of type Demarche was hidden due to permissions")
+        }
+      end
+
+      context 'when procedure is not selected' do
+        let(:other_procedure) { create(:procedure, administrateurs: [admin]) }
+        before { api_token.update(allowed_procedure_ids: [other_procedure.id]) }
+
+        it {
           expect(gql_errors.first[:message]).to eq("An object of type Demarche was hidden due to permissions")
         }
       end

@@ -5,7 +5,7 @@ RSpec.describe Mutations::DossierModifierAnnotation, type: :graphql do
   let(:instructeur) { create(:instructeur, followed_dossiers: dossiers) }
 
   let(:query) { '' }
-  let(:context) { { administrateur_id: admin.id } }
+  let(:context) { { administrateur_id: admin.id, procedure_ids: admin.procedure_ids, write_access: true } }
   let(:variables) { {} }
 
   subject { API::V2::Schema.execute(query, variables: variables, context: context) }
