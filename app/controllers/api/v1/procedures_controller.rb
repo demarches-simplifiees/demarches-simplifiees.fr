@@ -11,9 +11,7 @@ class API::V1::ProceduresController < APIController
     @procedure = Procedure.for_api.find(params[:id])
 
     administrateur = find_administrateur_for_token(@procedure)
-    if administrateur
-      Current.administrateur = administrateur
-    else
+    if administrateur.nil?
       render json: {}, status: :unauthorized
     end
 
