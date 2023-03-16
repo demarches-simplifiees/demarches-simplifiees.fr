@@ -356,6 +356,7 @@ Rails.application.routes.draw do
           member do
             get 'instruction'
             get 'avis_list'
+            get 'avis_new'
             get 'messagerie'
             post 'commentaire' => 'avis#create_commentaire'
             post 'avis' => 'avis#create_avis'
