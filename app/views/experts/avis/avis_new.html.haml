@@ -1,0 +1,11 @@
+- content_for(:title, "Avis · Dossier nº #{@dossier.id} (#{@dossier.owner_name})")
+
+= render partial: 'header', locals: { avis: @avis, dossier: @dossier }
+
+.container
+  .fr-grid-row
+    .fr-col.fr-col-12.fr-col-md-3
+      = render partial: 'sidemenu'
+    .fr-col
+      - if !@dossier.termine?
+        = render partial: "experts/avis/shared/form", locals: { url: avis_expert_avis_path(@avis.procedure, @avis), linked_dossiers: @dossier.linked_dossiers_for(current_expert), must_be_confidentiel: @avis.confidentiel?, avis: @new_avis }
