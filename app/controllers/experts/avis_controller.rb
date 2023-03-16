@@ -6,7 +6,7 @@ module Experts
     before_action :authenticate_expert!, except: [:sign_up, :update_expert]
     before_action :check_if_avis_revoked, except: [:index, :procedure]
     before_action :redirect_if_no_sign_up_needed, only: [:sign_up, :update_expert]
-    before_action :set_avis_and_dossier, only: [:show, :instruction, :avis_list, :messagerie, :create_commentaire, :delete_commentaire, :update, :telecharger_pjs]
+    before_action :set_avis_and_dossier, only: [:show, :instruction, :avis_list, :avis_new, :messagerie, :create_commentaire, :delete_commentaire, :update, :telecharger_pjs]
 
     A_DONNER_STATUS = 'a-donner'
     DONNES_STATUS   = 'donnes'
@@ -57,6 +57,10 @@ module Experts
     end
 
     def avis_list
+    end
+
+    def avis_new
+      @new_avis = Avis.new
     end
 
     def create_avis
