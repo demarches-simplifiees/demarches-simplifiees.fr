@@ -62,7 +62,13 @@ class API::V2::Context < GraphQL::Query::Context
     if self[:procedure_ids].present?
       self[:procedure_ids].include?(demarche.id)
     elsif self[:token].present?
-      APIToken.find_and_verify(self[:token], demarche.administrateurs).present?
+      token = APIToken.find_and_verify(self[:token], demarche.administrateurs)
+      if token.present?
+        Current.user = token.administrateur.user
+        true
+      else
+        false
+      end
     else
       false
     end
