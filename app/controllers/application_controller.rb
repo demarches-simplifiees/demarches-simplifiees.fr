@@ -184,6 +184,13 @@ class ApplicationController < ActionController::Base
     Sentry.set_user(sentry_user)
   end
 
+  def set_sentry_dossier(dossier)
+    Sentry.configure_scope do |scope|
+      scope.set_tags(procedure: dossier.procedure.id)
+      scope.set_tags(dossier: dossier.id)
+    end
+  end
+
   # private method called by rails fwk
   # see https://github.com/roidrage/lograge
   def append_info_to_payload(payload)
