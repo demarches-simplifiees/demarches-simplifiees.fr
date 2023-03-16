@@ -59,7 +59,7 @@ describe 'shared/dossiers/champs.html.haml', type: :view do
         :routee,
         routing_criteria_name: 'departement')
     end
-    let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
     let(:champs) { [] }
 
     it "renders the routing criteria name and its value" do

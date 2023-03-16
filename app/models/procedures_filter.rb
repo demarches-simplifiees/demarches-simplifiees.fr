@@ -5,7 +5,7 @@ class ProceduresFilter
 
   def initialize(admin, params)
     @admin = admin
-    @params = params.permit(zone_ids: [], statuses: [])
+    @params = params.permit(:page, :from_publication_date, zone_ids: [], statuses: [])
   end
 
   def admin_zones
@@ -28,6 +28,14 @@ class ProceduresFilter
     params[:statuses].compact_blank if params[:statuses].present?
   end
 
+  def from_publication_date
+    return if params[:from_publication_date].blank?
+
+    Date.parse(params[:from_publication_date])
+  rescue Date::Error
+    nil
+  end
+
   def zone_filtered?(zone_id)
     zone_ids&.map(&:to_i)&.include?(zone_id)
   end
@@ -36,9 +44,13 @@ class ProceduresFilter
     statuses&.include?(status)
   end
 
-  def without(filter, value)
-    new_filter = params.to_h[filter] - [value.to_s]
-    params.to_h.merge(filter => new_filter)
+  def without(filter, value = nil)
+    if value.nil?
+      params.to_h.except(filter)
+    else
+      new_filter = params.to_h[filter] - [value.to_s]
+      params.to_h.merge(filter => new_filter)
+    end
   end
 
   def procedures_result
@@ -46,6 +58,7 @@ class ProceduresFilter
     @procedures_result = Procedure.joins(:procedures_zones).publiees_ou_closes
     @procedures_result = @procedures_result.where(procedures_zones: { zone_id: zone_ids }) if zone_ids.present?
     @procedures_result = @procedures_result.where(aasm_state: statuses) if statuses.present?
+    @procedures_result = @procedures_result.where('published_at >= ?', from_publication_date) if from_publication_date.present?
     @procedures_result = @procedures_result.page(params[:page]).per(ITEMS_PER_PAGE).order(published_at: :desc)
   end
 end

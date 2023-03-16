@@ -191,7 +191,7 @@ class Procedure < ApplicationRecord
 
   has_many :administrateurs_procedures, dependent: :delete_all
   has_many :administrateurs, through: :administrateurs_procedures, after_remove: -> (procedure, _admin) { procedure.validate! }
-  has_many :groupe_instructeurs, dependent: :destroy
+  has_many :groupe_instructeurs, -> { order(:label) }, inverse_of: :procedure, dependent: :destroy
   has_many :instructeurs, through: :groupe_instructeurs
 
   # This relationship is used in following dossiers through. We can not use revisions relationship
@@ -205,7 +205,7 @@ class Procedure < ApplicationRecord
   has_one :refused_mail, class_name: "Mails::RefusedMail", dependent: :destroy
   has_one :without_continuation_mail, class_name: "Mails::WithoutContinuationMail", dependent: :destroy
 
-  has_one :defaut_groupe_instructeur, -> { actif.order(:label) }, class_name: 'GroupeInstructeur', inverse_of: :procedure
+  has_one :defaut_groupe_instructeur, -> { actif.order(:label) }, class_name: 'GroupeInstructeur', inverse_of: false
 
   has_one_attached :logo
   has_one_attached :notice
