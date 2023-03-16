@@ -175,7 +175,7 @@ module Instructeurs
           end
 
           format.html do
-            redirect_to export.file.url
+            redirect_to url_from(export.file.url)
           end
         end
       else
