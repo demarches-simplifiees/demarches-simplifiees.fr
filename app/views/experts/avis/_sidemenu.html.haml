@@ -3,16 +3,19 @@
     %button.fr-sidemenu__btn{"aria-controls" => "fr-sidemenu-wrapper", "aria-expanded" => "false", hidden: ""} Dans cette rubrique
     #fr-sidemenu-wrapper.fr-collapse
       %ul.fr-sidemenu__list
-        - current_page = current_page?(instruction_expert_avis_path(@avis.procedure, @avis))
+        - url = instruction_expert_avis_path(@avis.procedure, @avis)
+        - current_page = current_page?(url)
         %li{class: "fr-sidemenu__item fr-sidemenu__item#{current_page ? '--active' : ''}"}
-          %a.fr-sidemenu__link{'aria-current': current_page ? 'page' : nil, href: instruction_expert_avis_path(@avis.procedure, @avis), target: "_self"} Donner votre avis
+          %a.fr-sidemenu__link{'aria-current': current_page ? 'page' : nil, href: url, target: "_self"} Donner votre avis
 
         - if @dossier.avis_for_expert(current_expert).present?
-          - current_page = current_page?(avis_list_expert_avis_path(@avis.procedure, @avis))
+          - url = avis_list_expert_avis_path(@avis.procedure, @avis)
+          - current_page = current_page?(url)
           %li{class: "fr-sidemenu__item fr-sidemenu__item#{current_page ? '--active' : ''}"}
-            %a.fr-sidemenu__link{'aria-current': current_page ? 'page' : nil,href: avis_list_expert_avis_path(@avis.procedure, @avis), target: "_self"} Voir les avis
+            %a.fr-sidemenu__link{'aria-current': current_page ? 'page' : nil,href: url, target: "_self"} Voir les avis
 
         - if !@dossier.termine?
-          - current_page = current_page?(avis_new_expert_avis_path(@avis.procedure, @avis))
+          - url = avis_new_expert_avis_path(@avis.procedure, @avis)
+          - current_page = current_page?(url)
           %li{class: "fr-sidemenu__item fr-sidemenu__item#{current_page ? '--active' : ''}"}
-            %a.fr-sidemenu__link{'aria-current': current_page ? 'page' : nil,href: avis_new_expert_avis_path(@avis.procedure, @avis), target: "_self"} Demander un nouvel avis
+            %a.fr-sidemenu__link{'aria-current': current_page ? 'page' : nil,href: url, target: "_self"} Demander un nouvel avis
