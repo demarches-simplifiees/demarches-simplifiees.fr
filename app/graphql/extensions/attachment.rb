@@ -45,7 +45,7 @@ module Extensions
       else
         attachment = after_resolve_attachment(value)
         if options[:as] == :multiple
-          [attachment]
+          [attachment].compact
         else
           attachment
         end
