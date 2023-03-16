@@ -16,7 +16,7 @@ en:
       revoke: Revoke opinion request
       remind: Remind the expert
       question_label: Ask a question to the expert
-      question_label_hint: (optional field) the expert could answer by yes/no
+      question_label_hint: (optional) the expert could answer by yes/no
       introduction: Introduction message
       question_answer:
         true: 'yes'
