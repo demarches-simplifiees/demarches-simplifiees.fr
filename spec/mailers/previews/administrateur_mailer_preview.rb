@@ -10,4 +10,10 @@ class AdministrateurMailerPreview < ActionMailer::Preview
     procedure = Procedure.first
     AdministrateurMailer.notify_procedure_expires_when_termine_forced(email, procedure)
   end
+
+  def api_token_expiration
+    user = User.last
+    tokens = [APIToken.last, APIToken.last]
+    AdministrateurMailer.api_token_expiration(user, tokens)
+  end
 end
