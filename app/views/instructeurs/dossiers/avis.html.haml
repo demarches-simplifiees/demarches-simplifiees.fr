@@ -8,7 +8,7 @@
       = render partial: 'instructeurs/avis/sidemenu'
     .fr-col
       - if @dossier.avis.present?
-        = render partial: 'instructeurs/avis/shared/list', locals: { avis: @dossier.avis, avis_seen_at: @avis_seen_at }
+        = render partial: 'instructeurs/avis/list', locals: { avis: @dossier.avis, avis_seen_at: @avis_seen_at }
 
       -else
         %h2.empty-text Aucun avis.
