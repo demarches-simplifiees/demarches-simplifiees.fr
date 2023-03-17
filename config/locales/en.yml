@@ -160,7 +160,7 @@ en:
           title: Example
           text: Short text
           textarea: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          decimal_number: 3.14
+          decimal_number: 49.3
           integer_number: 42
           email: personne@fournisseur.fr
           phone: 0612345678
