@@ -394,8 +394,7 @@ Rails.application.routes.draw do
           end
         end
 
-        resources :avis, only: [:show, :update] do
-          get '', action: 'procedure', on: :collection, as: :procedure
+        resources :avis, only: [] do
           member do
             patch 'revoquer'
             get 'remind'

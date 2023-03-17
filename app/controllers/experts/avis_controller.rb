@@ -142,7 +142,7 @@ module Experts
         extension = params[:format]
         render extension.to_sym => avis.dossier.etablissement.entreprise_bilans_bdf_to_sheet(extension)
       else
-        redirect_to instructeur_avis_path(avis)
+        redirect_to expert_avis_path(avis)
       end
     end
 
