@@ -10,6 +10,6 @@
       - if @dossier.avis.present?
         = render partial: 'instructeurs/avis/list', locals: { avis: @dossier.avis, avis_seen_at: @avis_seen_at }
 
-      -else
+      - else
         %h2.empty-text Aucun avis.
         %p.empty-text-details Aucun avis n’a été demandé sur ce dossier.

@@ -82,7 +82,7 @@ describe Experts::AvisController, type: :controller do
 
       before { get :bilans_bdf, params: { id: avis, procedure_id: } }
 
-      it { expect(response).to redirect_to(instructeur_avis_path(avis_without_answer)) }
+      it { expect(response).to redirect_to(expert_avis_path(avis_without_answer)) }
 
       context 'with a revoked avis' do
         let(:avis) { revoked_avis }
