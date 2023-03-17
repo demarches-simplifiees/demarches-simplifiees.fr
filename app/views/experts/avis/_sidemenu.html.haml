@@ -1,21 +1,21 @@
-%nav.fr-sidemenu{"aria-labelledby" => "fr-sidemenu-title"}
+%nav.fr-sidemenu{ "aria-labelledby" => "fr-sidemenu-title" }
   .fr-sidemenu__inner
-    %button.fr-sidemenu__btn{"aria-controls" => "fr-sidemenu-wrapper", "aria-expanded" => "false", hidden: ""} Dans cette rubrique
+    %button.fr-sidemenu__btn{ "aria-controls" => "fr-sidemenu-wrapper", "aria-expanded" => "false", hidden: "" } Dans cette rubrique
     #fr-sidemenu-wrapper.fr-collapse
       %ul.fr-sidemenu__list
         - url = instruction_expert_avis_path(@avis.procedure, @avis)
         - current_page = current_page?(url)
-        %li{class: "fr-sidemenu__item fr-sidemenu__item#{current_page ? '--active' : ''}"}
-          %a.fr-sidemenu__link{'aria-current': current_page ? 'page' : nil, href: url, target: "_self"} Donner votre avis
+        %li{ class: "fr-sidemenu__item fr-sidemenu__item#{current_page ? '--active' : ''}" }
+          %a.fr-sidemenu__link{ 'aria-current': current_page ? 'page' : nil, href: url, target: "_self" } Donner votre avis
 
         - if @dossier.avis_for_expert(current_expert).present?
           - url = avis_list_expert_avis_path(@avis.procedure, @avis)
           - current_page = current_page?(url)
-          %li{class: "fr-sidemenu__item fr-sidemenu__item#{current_page ? '--active' : ''}"}
-            %a.fr-sidemenu__link{'aria-current': current_page ? 'page' : nil,href: url, target: "_self"} Voir les avis
+          %li{ class: "fr-sidemenu__item fr-sidemenu__item#{current_page ? '--active' : ''}" }
+            %a.fr-sidemenu__link{ 'aria-current': current_page ? 'page' : nil,href: url, target: "_self" } Voir les avis
 
         - if !@dossier.termine?
           - url = avis_new_expert_avis_path(@avis.procedure, @avis)
           - current_page = current_page?(url)
-          %li{class: "fr-sidemenu__item fr-sidemenu__item#{current_page ? '--active' : ''}"}
-            %a.fr-sidemenu__link{'aria-current': current_page ? 'page' : nil,href: url, target: "_self"} Demander un nouvel avis
+          %li{ class: "fr-sidemenu__item fr-sidemenu__item#{current_page ? '--active' : ''}" }
+            %a.fr-sidemenu__link{ 'aria-current': current_page ? 'page' : nil,href: url, target: "_self" } Demander un nouvel avis

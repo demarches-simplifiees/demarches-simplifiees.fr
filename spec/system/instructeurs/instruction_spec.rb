@@ -139,6 +139,8 @@ describe 'Instructing a dossier:', js: true do
 
     click_on 'Avis externes'
     expect(page).to have_current_path(avis_instructeur_dossier_path(procedure, dossier))
+    within('.fr-sidemenu') { click_on 'Demander un avis' }
+    expect(page).to have_current_path(avis_new_instructeur_dossier_path(procedure, dossier))
 
     expert_email_formated = "[\"expert@tps.com\"]"
     expert_email = 'expert@tps.com'
@@ -270,6 +272,7 @@ describe 'Instructing a dossier:', js: true do
     page.execute_script("document.querySelector('#avis_emails').value = '#{to}'")
     fill_in 'avis_introduction', with: introduction
     select 'confidentiel', from: 'avis_confidentiel'
+    within('form#new_avis') { click_on 'Demander un avis' }
     click_on 'Demander un avis'
   end
 

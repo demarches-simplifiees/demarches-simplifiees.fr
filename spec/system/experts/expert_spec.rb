@@ -189,6 +189,7 @@ describe 'Inviting an expert:' do
       click_on avis_1.dossier.user.email
       within('.tabs') { click_on 'Avis' }
       expect(page).to have_text("Demandeur : #{avis_1.claimant.email}")
+      click_on 'Voir les avis'
       expect(page).to have_text("Vous")
       expect(page).to have_text(avis_2.expert.email.to_s)
     end
@@ -204,6 +205,7 @@ describe 'Inviting an expert:' do
       click_on avis_2.dossier.user.email
       within('.tabs') { click_on 'Avis' }
       expect(page).to have_text("Demandeur : #{avis_2.claimant.email}")
+      click_on 'Voir les avis'
       expect(page).to have_text("Vous")
       expect(page).not_to have_text(avis_1.expert.email.to_s)
     end
