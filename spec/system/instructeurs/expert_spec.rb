@@ -26,13 +26,15 @@ describe 'Inviting an expert:', js: true do
 
       click_on 'Avis externes'
       expect(page).to have_current_path(avis_instructeur_dossier_path(procedure, dossier))
+      within('.fr-sidemenu') { click_on 'Demander un avis' }
+      expect(page).to have_current_path(avis_new_instructeur_dossier_path(procedure, dossier))
 
       page.execute_script("document.querySelector('#avis_emails').value = '[\"#{expert.email}\",\"#{expert2.email}\"]'")
       fill_in 'avis_introduction', with: 'Bonjour, merci de me donner votre avis sur ce dossier.'
       check 'avis_invite_linked_dossiers'
       page.select 'confidentiel', from: 'avis_confidentiel'
 
-      click_on 'Demander un avis'
+      within('form#new_avis') { click_on 'Demander un avis' }
       perform_enqueued_jobs
 
       expect(page).to have_content('Une demande d’avis a été envoyée')
