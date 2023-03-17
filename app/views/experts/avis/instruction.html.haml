@@ -15,8 +15,27 @@
       = render Attachment::ShowComponent.new(attachment: @avis.introduction_file.attachment)
     %br/
     = render Attachment::DeleteFormComponent.new
-    = form_for @avis, url: expert_avis_path(@avis.procedure, @avis), html: { class: 'form', data: { controller: 'persisted-form', persisted_form_key_value: dom_id(@avis) }, multipart: true } do |f|
-      = f.text_area :answer, rows: 3, placeholder: 'Votre avis', required: true
+    = form_for @avis, url: expert_avis_path(@avis.procedure, @avis), html: { data: { controller: 'persisted-form', persisted_form_key_value: dom_id(@avis) }, multipart: true } do |f|
+
+      - if @avis.question_label
+        .fr-form-group
+          %fieldset.fr-fieldset.fr-fieldset--inline
+            %legend#radio-inline-legend.fr-fieldset__legend.fr-text--regular
+              = @avis.question_label
+            .fr-fieldset__content
+              .fr-radio-group
+                = f.radio_button :question_answer, true
+                = f.label :question_answer, 'oui', value: true, class: 'fr-label'
+
+              .fr-radio-group
+                = f.radio_button :question_answer, false
+                = f.label :question_answer, 'non', value: false, class: 'fr-label'
+
+      .fr-select-group
+        = f.text_area :answer, rows: 3, class: 'fr-input', placeholder: 'Votre avis', required: true
+
+
+
       = render Attachment::EditComponent.new(attached_file: @avis.piece_justificative_file, view_as: :download)
 
       .flex.justify-between.align-baseline
@@ -32,7 +51,7 @@
           = f.submit 'Envoyer votre avis', class: 'fr-btn'
 
   - if !@dossier.termine?
-    = render partial: "experts/shared/avis/form", locals: { url: avis_expert_avis_path(@avis.procedure, @avis), linked_dossiers: @dossier.linked_dossiers_for(current_expert), must_be_confidentiel: @avis.confidentiel?, avis: @new_avis }
+    = render partial: "experts/avis/shared/form", locals: { url: avis_expert_avis_path(@avis.procedure, @avis), linked_dossiers: @dossier.linked_dossiers_for(current_expert), must_be_confidentiel: @avis.confidentiel?, avis: @new_avis }
 
   - if @dossier.avis_for_expert(current_expert).present?
-    = render partial: 'experts/shared/avis/list', locals: { avis: @dossier.avis_for_expert(current_expert), avis_seen_at: nil }
+    = render partial: 'experts/avis/shared/list', locals: { avis: @dossier.avis_for_expert(current_expert), avis_seen_at: nil }

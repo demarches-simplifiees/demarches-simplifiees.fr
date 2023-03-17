@@ -7,6 +7,7 @@ fr:
         answer: "Réponse"
         claimant: Demandeur
         confidentiel: confidentiel
+        question_answer: "Réponse oui/non"
   helpers:
     label:
       invite_linked_dossiers:
@@ -14,6 +15,12 @@ fr:
         other: Inviter aussi l’expert sur les dossiers liés n° %{ids}
       revoke: Révoquer la demande d’avis
       remind: Relancer l’expert
+      question_label: Posez une question à l'expert
+      question_label_hint: (facultatif) l'expert pourra répondre par oui/non
+      introduction: Message d'introduction
+      question_answer:
+        true: oui
+        false: non
     hint:
       confidentiel: "Cet avis n’est pas affiché avec les autres experts consultés"
     confirmation:
