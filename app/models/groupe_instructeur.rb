@@ -15,16 +15,20 @@ class GroupeInstructeur < ApplicationRecord
   has_many :assign_tos, dependent: :destroy
   has_many :instructeurs, through: :assign_tos
   has_many :dossiers
+  has_many :deleted_dossiers
   has_and_belongs_to_many :exports, dependent: :destroy
   has_and_belongs_to_many :bulk_messages, dependent: :destroy
 
   validates :label, presence: { message: 'doit être renseigné' }, allow_nil: false
   validates :label, uniqueness: { scope: :procedure, message: 'existe déjà' }
+  validates :closed, acceptance: { accept: [false], message: "Modification impossible : il doit y avoir au moins un groupe instructeur actif sur chaque procédure" }, if: -> { self.procedure.groupe_instructeurs.actif.one? }
 
   before_validation -> { label&.strip! }
+  after_save :toggle_routing
 
   scope :without_group, -> (group) { where.not(id: group) }
   scope :for_api_v2, -> { includes(procedure: [:administrateurs]) }
+  scope :actif, -> { where(closed: false) }
 
   def add(instructeur)
     return if in?(instructeur.groupe_instructeurs)
@@ -41,5 +45,15 @@ class GroupeInstructeur < ApplicationRecord
       .joins(:dossier)
       .where(dossiers: { groupe_instructeur: self })
       .update_all(unfollowed_at: Time.zone.now)
+  end
+
+  def can_delete?
+    dossiers.empty? && (procedure.groupe_instructeurs.actif.many? || (procedure.groupe_instructeurs.actif.one? && closed))
+  end
+
+  private
+
+  def toggle_routing
+    procedure.update!(routing_enabled: procedure.groupe_instructeurs.actif.many?)
   end
 end

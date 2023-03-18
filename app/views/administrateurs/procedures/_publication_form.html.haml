@@ -1,25 +1,15 @@
 .card.mb-4
   %h2.card-title Publiez votre démarche
   = form_tag admin_procedure_publish_path(procedure_id: procedure.id), method: :put, class: 'form' do
-    - publication_errors = procedure_publication_errors(procedure)
-    - if publication_errors.present?
-      .card.warning
-        .card-title Des problèmes empêchent la publication de la démarche
-        - publication_errors.each do |_attribute, full_messages|
-          %p= full_messages.to_sentence
-
-    - if procedure.draft_changed?
-      - if procedure.close?
+    = render Procedure::PublicationWarningComponent.new(procedure: procedure)
+    .mt-2
+      - if procedure.draft_changed?
         %p.mb-2 Publiez une nouvelle version de votre démarche. Les modifications suivantes seront appliquées :
         = render partial: 'revision_changes', locals: { changes: procedure.revision_changes }
+        - if procedure.close?
+          = render partial: 'publication_form_inputs', locals: { procedure: procedure, closed_procedures: @closed_procedures }
+      - else
         = render partial: 'publication_form_inputs', locals: { procedure: procedure, closed_procedures: @closed_procedures }
 
-      - else
-        %p.mb-2 Publiez une nouvelle version de votre démarche. Les modifications suivantes seront appliquées :
-        = render partial: 'revision_changes', locals: { changes: procedure.revision_changes }
-
-    - else
-      = render partial: 'publication_form_inputs', locals: { procedure: procedure, closed_procedures: @closed_procedures }
-
     .flex.justify-end
-      = submit_tag procedure_publish_label(procedure, :submit), { disabled: publication_errors.present?, class: "fr-btn fr-btn--primary", id: 'publish' }
+      = submit_tag procedure_publish_label(procedure, :submit), { disabled: procedure.errors.present?, class: "fr-btn fr-btn--primary", id: 'publish' }

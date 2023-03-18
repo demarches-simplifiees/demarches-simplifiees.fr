@@ -16,6 +16,7 @@
 #
 class DeletedDossier < ApplicationRecord
   belongs_to :procedure, -> { with_discarded }, inverse_of: :deleted_dossiers, optional: false
+  belongs_to :groupe_instructeur, inverse_of: :deleted_dossiers, optional: true
 
   scope :order_by_updated_at, -> (order = :desc) { order(created_at: order) }
   scope :deleted_since,       -> (since) { where('deleted_dossiers.deleted_at >= ?', since) }

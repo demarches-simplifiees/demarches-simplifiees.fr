@@ -141,6 +141,10 @@ class AttestationTemplate < ApplicationRecord
     signature.attached? ? signature.filename : nil
   end
 
+  def version(procedure)
+    { version: procedure.feature_enabled?(:attestation_v2) ? :v2 : :v1 }
+  end
+
   private
 
   def used_tags
@@ -152,7 +156,8 @@ class AttestationTemplate < ApplicationRecord
     attestation_view = ApplicationController.render(
       template: 'administrateurs/attestation_templates/show',
       formats: :pdf,
-      assigns: { attestation: attestation }
+      assigns: { attestation: attestation },
+      locals: version(dossier.procedure)
     )
 
     StringIO.new(attestation_view)

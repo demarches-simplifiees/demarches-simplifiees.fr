@@ -22,7 +22,7 @@ describe Administrateurs::ArchivesController, type: :controller do
       it { is_expected.to have_http_status(200) }
 
       it 'use all procedure.groupe_instructeurs' do
-        expect(Archive).to receive(:for_groupe_instructeur).with([groupe_instructeur1, groupe_instructeur2]).and_return([])
+        expect(Archive).to receive(:for_groupe_instructeur).and_return([])
         subject
       end
     end

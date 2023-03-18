@@ -1,4 +1,4 @@
-- if @procedure.routee?
+- if @procedure.routing_enabled?
   - content_for(:title, "Instructeurs du groupe #{@groupe_instructeur.label}")
 
   = render partial: 'administrateurs/breadcrumbs',
@@ -14,7 +14,7 @@
 
 .container.groupe-instructeur
   %h1
-    - if @procedure.routee?
+    - if @procedure.routing_enabled?
       Groupe « #{@groupe_instructeur.label} »
     - else
       Démarche « #{@procedure.libelle} »
@@ -38,7 +38,7 @@
         - @instructeurs.each do |instructeur|
           %tr
             %td= instructeur.email
-            - confirmation_message = @procedure.routee? ? "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » du groupe « #{@groupe_instructeur.label} » ?" : "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » de la démarche ?"
+            - confirmation_message = @procedure.routing_enabled? ? "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » du groupe « #{@groupe_instructeur.label} » ?" : "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » de la démarche ?"
             %td.actions= button_to 'retirer',
               { action: :remove_instructeur },
               { method: :delete,

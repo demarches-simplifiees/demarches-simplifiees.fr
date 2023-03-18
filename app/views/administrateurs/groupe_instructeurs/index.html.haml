@@ -1,4 +1,4 @@
-- if @procedure.routee?
+- if @procedure.routing_enabled?
   = render partial: 'administrateurs/breadcrumbs',
     locals: { steps: [[t('.procedures'), admin_procedures_path],
                       [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
@@ -12,14 +12,16 @@
 .container.groupe-instructeur
   %h1 Gérer les instructeurs et les options d'instruction de « #{@procedure.libelle} »
 
-  = render partial: 'administrateurs/groupe_instructeurs/routing', locals: { procedure: @procedure }
-
-  - if @procedure.routee?
-    = render partial: 'administrateurs/groupe_instructeurs/edit', locals: { procedure: @procedure, groupes_instructeurs: @groupes_instructeurs }
-  - else
+  - if @procedure.groupe_instructeurs.one?
     = render partial: 'administrateurs/groupe_instructeurs/instructeurs',
       locals: { procedure: @procedure,
         groupe_instructeur: @procedure.defaut_groupe_instructeur,
         instructeurs: @instructeurs,
         available_instructeur_emails: @available_instructeur_emails,
         disabled_as_super_admin: administrateur_as_manager? }
+  - if !@procedure.routing_enabled?
+    = render partial: 'administrateurs/groupe_instructeurs/instructeurs_self_management', locals: { procedure: @procedure }
+
+  = render partial: 'administrateurs/groupe_instructeurs/routing', locals: { procedure: @procedure }
+
+  = render partial: 'administrateurs/groupe_instructeurs/edit', locals: { procedure: @procedure, groupes_instructeurs: @groupes_instructeurs }
