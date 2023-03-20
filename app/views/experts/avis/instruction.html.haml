@@ -7,49 +7,55 @@
     .fr-col.fr-col-12.fr-col-md-3
       = render partial: 'sidemenu'
     .fr-col
-      %section.give-avis
-        %h1.tab-title Donner votre avis
-        %h2.claimant
-          Demandeur :
-          %span.email.font-weight-normal= safe_claimant_email(@avis.claimant)
-          %span.date.font-weight-normal Demande d’avis envoyée le #{l(@avis.created_at, format: '%d/%m/%y')}
-        %p.introduction= @avis.introduction
+      - if !@dossier.termine?
+        %section.give-avis
+          %h1.tab-title Donner votre avis
+          %h2.claimant
+            Demandeur :
+            %span.email.font-weight-normal= safe_claimant_email(@avis.claimant)
+            %span.date.font-weight-normal Demande d’avis envoyée le #{l(@avis.created_at, format: '%d/%m/%y')}
+          %p.introduction= @avis.introduction
 
-        - if @avis.introduction_file.attached?
-          = render Attachment::ShowComponent.new(attachment: @avis.introduction_file.attachment)
-        %br/
-        = render Attachment::DeleteFormComponent.new
-        = form_for @avis, url: expert_avis_path(@avis.procedure, @avis), html: { data: { controller: 'persisted-form', persisted_form_key_value: dom_id(@avis) }, multipart: true } do |f|
+          - if @avis.introduction_file.attached?
+            = render Attachment::ShowComponent.new(attachment: @avis.introduction_file.attachment)
+          %br/
+          = render Attachment::DeleteFormComponent.new
+          = form_for @avis, url: expert_avis_path(@avis.procedure, @avis), html: { data: { controller: 'persisted-form', persisted_form_key_value: dom_id(@avis) }, multipart: true } do |f|
 
-          - if @avis.question_label
-            .fr-form-group
-              %fieldset.fr-fieldset.fr-fieldset--inline
-                %legend#radio-inline-legend.fr-fieldset__legend.fr-text--regular
-                  = @avis.question_label
-                .fr-fieldset__content
-                  .fr-radio-group
-                    = f.radio_button :question_answer, true
-                    = f.label :question_answer, 'oui', value: true, class: 'fr-label'
+            - if @avis.question_label
+              .fr-form-group
+                %fieldset.fr-fieldset.fr-fieldset--inline
+                  %legend#radio-inline-legend.fr-fieldset__legend.fr-text--regular
+                    = @avis.question_label
+                  .fr-fieldset__content
+                    .fr-radio-group
+                      = f.radio_button :question_answer, true
+                      = f.label :question_answer, 'oui', value: true, class: 'fr-label'
 
-                  .fr-radio-group
-                    = f.radio_button :question_answer, false
-                    = f.label :question_answer, 'non', value: false, class: 'fr-label'
+                    .fr-radio-group
+                      = f.radio_button :question_answer, false
+                      = f.label :question_answer, 'non', value: false, class: 'fr-label'
 
-          .fr-select-group
-            = f.text_area :answer, rows: 3, class: 'fr-input', placeholder: 'Votre avis', required: true
+            .fr-select-group
+              = f.text_area :answer, rows: 3, class: 'fr-input', placeholder: 'Votre avis', required: true
 
 
 
-          = render Attachment::EditComponent.new(attached_file: @avis.piece_justificative_file, view_as: :download)
+            = render Attachment::EditComponent.new(attached_file: @avis.piece_justificative_file, view_as: :download)
 
-          .flex.justify-between.align-baseline
-            %p.confidentiel.flex
-              - if @avis.confidentiel?
-                %span.icon.lock
-                %span
-                  Cet avis est confidentiel et n’est pas affiché aux autres experts consultés
-              - else
-                %span
-                  Cet avis est partagé avec les autres experts
-            .send-wrapper
-              = f.submit 'Envoyer votre avis', class: 'fr-btn'
+            .flex.justify-between.align-baseline
+              %p.confidentiel.flex
+                - if @avis.confidentiel?
+                  %span.icon.lock
+                  %span
+                    Cet avis est confidentiel et n’est pas affiché aux autres experts consultés
+                - else
+                  %span
+                    Cet avis est partagé avec les autres experts
+              .send-wrapper
+                = f.submit 'Envoyer votre avis', class: 'fr-btn'
+      - else
+        %h2.empty-text
+          = t('helpers.information_text.no_new_avis_text')
+        %p.empty-text-details
+          = t('helpers.information_text.no_new_avis_text_detail')

@@ -9,3 +9,8 @@
     .fr-col
       - if !@dossier.termine?
         = render partial: "experts/avis/shared/form", locals: { url: avis_expert_avis_path(@avis.procedure, @avis), linked_dossiers: @dossier.linked_dossiers_for(current_expert), must_be_confidentiel: @avis.confidentiel?, avis: @new_avis }
+      - else
+        %h2.empty-text
+          = t('helpers.information_text.no_new_avis_text')
+        %p.empty-text-details
+          = t('helpers.information_text.no_new_avis_text_detail')
