@@ -455,7 +455,7 @@ module Users
         @dossier.assign_to_groupe_instructeur(groupe_instructeur_from_params)
       end
 
-      if @dossier.procedure.with_routing_rules?
+      if @dossier.procedure.feature_enabled?(:routing_logic)
         RoutingEngine.compute(@dossier)
       end
 

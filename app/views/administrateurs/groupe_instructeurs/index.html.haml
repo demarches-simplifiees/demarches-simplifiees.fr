@@ -26,5 +26,5 @@
 
   = render partial: 'administrateurs/groupe_instructeurs/edit', locals: { procedure: @procedure, groupes_instructeurs: @groupes_instructeurs }
 
-  -  if @procedure.routing_enabled?
+  -  if @procedure.routing_enabled? && @procedure.feature_enabled?(:routing_logic)
     = render(Procedure::RoutingRulesComponent.new(procedure: @procedure))

@@ -1,4 +1,4 @@
-- if groupes_instructeurs.many?
+- if groupes_instructeurs.many? && !procedure.feature_enabled?(:routing_logic)
   .card
     = form_for procedure,
       url: { action: :update_routing_criteria_name },
