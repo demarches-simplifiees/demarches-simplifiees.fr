@@ -9,12 +9,11 @@ module SiretChampEtablissementFetchableConcern
     return clear_etablissement!(:invalid_checksum) if invalid_because?(siret, :checksum) # i18n-tasks-use t('errors.messages.invalid_siret_checksum')
     return clear_etablissement!(:not_found) unless (etablissement = APIEntrepriseService.create_etablissement(self, siret, user&.id)) # i18n-tasks-use t('errors.messages.siret_not_found')
 
-    update!(value: siret, etablissement: etablissement)
+    update!(etablissement: etablissement)
   rescue => error
     if error.try(:network_error?) && !APIEntrepriseService.api_up?
       # TODO: notify ops
       update!(
-        value: siret,
         etablissement: APIEntrepriseService.create_etablissement_as_degraded_mode(self, siret, user.id)
       )
       @etablissement_fetch_error_key = :api_entreprise_down
