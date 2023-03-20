@@ -19,6 +19,7 @@ describe 'As an administrateur I can manage procedure routing', js: true do
   let(:drop_down_tdc) { procedure.draft_revision.types_de_champ.first }
 
   before do
+    Flipper.enable(:routing_rules, procedure)
     procedure.publish_revision!
     login_as administrateur.user, scope: :user
   end

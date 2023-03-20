@@ -16,7 +16,8 @@ features = [
   :api_particulier,
   :dossier_pdf_vide,
   :hide_instructeur_email,
-  :procedure_routage_api
+  :procedure_routage_api,
+  :routing_rules
 ]
 
 def database_exists?
