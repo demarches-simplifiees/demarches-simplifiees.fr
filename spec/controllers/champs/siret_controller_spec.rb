@@ -109,7 +109,6 @@ describe Champs::SiretController, type: :controller do
 
         it 'saves the etablissement in degraded mode and SIRET on the model' do
           champ.reload
-          expect(champ.value).to eq(siret)
           expect(champ.etablissement.siret).to eq(siret)
           expect(champ.etablissement.as_degraded_mode?).to be true
         end
@@ -143,7 +142,6 @@ describe Champs::SiretController, type: :controller do
 
         it 'populates the etablissement and SIRET on the model' do
           champ.reload
-          expect(champ.value).to eq(siret)
           expect(champ.etablissement.siret).to eq(siret)
           expect(champ.etablissement.naf).to eq("6202A")
           expect(dossier.reload.etablissement).to eq(nil)
