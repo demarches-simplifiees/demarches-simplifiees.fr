@@ -11,5 +11,7 @@
         = render partial: 'instructeurs/avis/list', locals: { avis: @dossier.avis, avis_seen_at: @avis_seen_at }
 
       - else
-        %h2.empty-text Aucun avis.
-        %p.empty-text-details Aucun avis n’a été demandé sur ce dossier.
+        %h2.empty-text
+          = t('helpers.information_text.empty_text')
+        %p.empty-text-details
+          = t('helpers.information_text.empty_text_detail')

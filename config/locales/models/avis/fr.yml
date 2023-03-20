@@ -26,3 +26,15 @@ fr:
     confirmation:
       revoke: "Souhaitez-vous révoquer la demande d’avis à %{email} ?"
       remind: "Souhaitez-vous relancer %{email} ?"
+    sidemenu:
+      give_avis: Donner votre avis
+      see_avis: Voir les avis
+      ask_avis: Demander un avis
+      ask_new_avis: Demander un nouvel avis
+    information_text:
+      no_new_avis_text: Le dossier a été traité
+      no_new_avis_text_detail: Les demandes d'avis ne sont plus autorisées
+      unauthorized_avis_text: Cette démarche n’autorise pas la demande d’avis à un expert.
+      unauthorized_avis_text_detail: Veuillez contacter votre administrateur
+      empty_text: Aucun avis.
+      empty_text_detail: Aucun avis n’est disponible sur ce dossier.
