@@ -237,7 +237,7 @@ Devise.setup do |config|
   # change the failure app, you can configure them inside the config.warden block.
   #
   config.warden do |manager|
-    manager.default_strategies(:scope => :administration).unshift :two_factor_authenticatable
+    manager.default_strategies(:scope => :administration).unshift :two_factor_authenticatable if SUPER_ADMIN_OTP_ENABLED
   end
 
   # ==> Mountable engine configurations
