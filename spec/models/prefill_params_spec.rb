@@ -15,14 +15,14 @@ RSpec.describe PrefillParams do
 
       VCR.insert_cassette('api_geo_regions')
       VCR.insert_cassette('api_geo_departements')
-      VCR.insert_cassette('api_geo_communes')
+      VCR.insert_cassette('api_geo_communes_01')
       VCR.insert_cassette('api_geo_epcis')
     end
 
     after do
       VCR.eject_cassette('api_geo_regions')
       VCR.eject_cassette('api_geo_departements')
-      VCR.eject_cassette('api_geo_communes')
+      VCR.eject_cassette('api_geo_communes_01')
       VCR.eject_cassette('api_geo_epcis')
     end
 
@@ -139,7 +139,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is authorized", :checkbox, "false"
     it_behaves_like "a champ public value that is authorized", :drop_down_list, "value"
     it_behaves_like "a champ public value that is authorized", :departements, "03"
-    it_behaves_like "a champ public value that is authorized", :communes, ['01', '01457']
+    it_behaves_like "a champ public value that is authorized", :communes, ['01540', '01457']
     it_behaves_like "a champ public value that is authorized", :address, "20 avenue de Ségur 75007 Paris"
     it_behaves_like "a champ public value that is authorized", :annuaire_education, "0050009H"
     it_behaves_like "a champ public value that is authorized", :multiple_drop_down_list, ["val1", "val2"]
@@ -183,7 +183,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ private value that is authorized", :rna, "value"
     it_behaves_like "a champ private value that is authorized", :siret, "13002526500013"
     it_behaves_like "a champ private value that is authorized", :departements, "03"
-    it_behaves_like "a champ private value that is authorized", :communes, ['01', '01457']
+    it_behaves_like "a champ private value that is authorized", :communes, ['01540', '01457']
     it_behaves_like "a champ private value that is authorized", :address, "20 avenue de Ségur 75007 Paris"
     it_behaves_like "a champ private value that is authorized", :annuaire_education, "0050009H"
     it_behaves_like "a champ private value that is authorized", :multiple_drop_down_list, ["val1", "val2"]
