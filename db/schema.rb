@@ -267,13 +267,13 @@ ActiveRecord::Schema.define(version: 2022_11_22_124009) do
     t.boolean "automatic_operation", default: false, null: false
     t.bigint "bill_signature_id"
     t.datetime "created_at", null: false
+    t.jsonb "data"
     t.text "digest"
     t.bigint "dossier_id"
     t.datetime "executed_at"
     t.datetime "keep_until"
     t.string "operation", null: false
     t.datetime "updated_at", null: false
-    t.jsonb "data"
     t.index ["bill_signature_id"], name: "index_dossier_operation_logs_on_bill_signature_id"
     t.index ["dossier_id"], name: "index_dossier_operation_logs_on_dossier_id"
     t.index ["keep_until"], name: "index_dossier_operation_logs_on_keep_until"
@@ -329,7 +329,7 @@ ActiveRecord::Schema.define(version: 2022_11_22_124009) do
     t.datetime "last_commentaire_updated_at"
     t.text "motivation"
     t.bigint "parent_dossier_id"
-    t.string "private_search_terms"
+    t.text "private_search_terms"
     t.datetime "processed_at"
     t.bigint "revision_id"
     t.text "search_terms"
@@ -644,7 +644,7 @@ ActiveRecord::Schema.define(version: 2022_11_22_124009) do
     t.string "direction"
     t.bigint "draft_revision_id"
     t.integer "duree_conservation_dossiers_dans_ds"
-    t.boolean "duree_conservation_etendue_par_ds", default: false
+    t.boolean "duree_conservation_etendue_par_ds", default: false, null: false
     t.boolean "durees_conservation_required", default: true
     t.string "encrypted_api_particulier_token"
     t.boolean "euro_flag", default: false
@@ -658,7 +658,7 @@ ActiveRecord::Schema.define(version: 2022_11_22_124009) do
     t.string "lien_dpo"
     t.string "lien_notice"
     t.string "lien_site_web"
-    t.integer "max_duree_conservation_dossiers_dans_ds", default: 12
+    t.integer "max_duree_conservation_dossiers_dans_ds", default: 12, null: false
     t.text "monavis_embed"
     t.boolean "opendata", default: true
     t.string "organisation"
@@ -785,7 +785,6 @@ ActiveRecord::Schema.define(version: 2022_11_22_124009) do
     t.integer "sign_in_count", default: 0, null: false
     t.string "unlock_token"
     t.datetime "updated_at"
-    t.boolean "team_account", default: false
     t.index ["email"], name: "index_super_admins_on_email", unique: true
     t.index ["reset_password_token"], name: "index_super_admins_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_super_admins_on_unlock_token", unique: true
@@ -863,6 +862,7 @@ ActiveRecord::Schema.define(version: 2022_11_22_124009) do
     t.string "reset_password_token"
     t.integer "sign_in_count", default: 0, null: false
     t.string "siret"
+    t.boolean "team_account", default: false
     t.text "unconfirmed_email"
     t.string "unlock_token"
     t.datetime "updated_at"
