@@ -8,7 +8,7 @@ describe 'Inviting an expert:' do
     let(:procedure) { create(:procedure, :published, :with_piece_justificative, instructeurs: [instructeur]) }
     let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
     let(:dossier) { create(:dossier, :en_construction, :with_dossier_link, procedure: procedure) }
-    let(:champ) { dossier.champs.first }
+    let(:champ) { dossier.champs_public.first }
     let(:avis) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure, confidentiel: true) }
 
     context 'when I don’t already have an account' do

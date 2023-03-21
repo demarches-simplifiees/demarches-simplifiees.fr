@@ -45,7 +45,7 @@ class PiecesJustificativesService
   end
 
   def self.serialize_champs_as_pjs(dossier)
-    dossier.champs.filter { |champ| champ.type_de_champ.old_pj }.map do |champ|
+    dossier.champs_public.filter { |champ| champ.type_de_champ.old_pj }.map do |champ|
       {
         created_at: champ.created_at&.in_time_zone('UTC'),
         type_de_piece_justificative_id: champ.type_de_champ.old_pj[:stable_id],
@@ -56,26 +56,24 @@ class PiecesJustificativesService
   end
 
   def self.clone_attachments(original, kopy)
-    if original.is_a?(TypeDeChamp)
+    case original
+    when Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp
+      clone_attachment(original.piece_justificative_file, kopy.piece_justificative_file)
+    when TypeDeChamp
       clone_attachment(original.piece_justificative_template, kopy.piece_justificative_template)
-    elsif original.is_a?(Procedure)
+    when Procedure
       clone_attachment(original.logo, kopy.logo)
       clone_attachment(original.notice, kopy.notice)
       clone_attachment(original.deliberation, kopy.deliberation)
+    when AttestationTemplate
+      clone_attachment(original.logo, kopy.logo)
+      clone_attachment(original.signature, kopy.signature)
     end
   end
 
   def self.clone_attachment(original_attachment, copy_attachment)
     if original_attachment.attached?
-      original_attachment.open do |tempfile|
-        copy_attachment.attach({
-          io: File.open(tempfile.path),
-          filename: original_attachment.filename,
-          content_type: original_attachment.content_type,
-          # we don't want to run virus scanner on cloned file
-          metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
-        })
-      end
+      copy_attachment.attach(original_attachment.blob)
     end
   end
 

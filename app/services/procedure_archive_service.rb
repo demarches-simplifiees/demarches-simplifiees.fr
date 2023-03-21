@@ -52,10 +52,10 @@ class ProcedureArchiveService
   end
 
   def self.liste_pieces_justificatives_for_archive(dossier)
-    champs_blocs_repetables = dossier.champs
+    champs_blocs_repetables = dossier.champs_public
       .filter { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) }
       .flat_map(&:champs)
 
-    attachments_from_champs_piece_justificative(champs_blocs_repetables + dossier.champs)
+    attachments_from_champs_piece_justificative(champs_blocs_repetables + dossier.champs_public)
   end
 end

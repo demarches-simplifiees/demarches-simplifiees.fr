@@ -2,7 +2,7 @@ describe Champs::PieceJustificativeController, type: :controller do
   let(:user) { create(:user) }
   let(:procedure) { create(:procedure, :published, :with_piece_justificative, :with_private_piece_justificative, :with_instructeur) }
   let(:dossier) { create(:dossier, user: user, procedure: procedure) }
-  let(:champ) { dossier.champs.first }
+  let(:champ) { dossier.champs_public.first }
 
   describe '#download' do
     let(:instructeur) { procedure.defaut_groupe_instructeur.instructeurs.first }

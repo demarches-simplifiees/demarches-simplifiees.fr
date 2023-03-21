@@ -225,7 +225,7 @@ prawn_document(page_size: "A4") do |pdf|
 
   add_title(pdf, 'Formulaire')
   add_single_line(pdf, @dossier.procedure.description + "\n", 9, :italic) if @dossier.procedure.description.present?
-  add_champs(pdf, @dossier.champs)
+  add_champs(pdf, @dossier.champs_public)
   add_page_numbering(pdf)
   add_procedure(pdf, @dossier)
 end

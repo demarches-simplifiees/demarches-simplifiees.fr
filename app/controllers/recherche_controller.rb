@@ -28,6 +28,23 @@ class RechercheController < ApplicationController
     @dossiers_count = matching_dossiers_ids.count
     @followed_dossiers_id = current_instructeur&.followed_dossiers&.where(id: @paginated_ids)&.ids || []
     @dossier_avis_ids_h = current_expert&.avis&.where(dossier_id: @paginated_ids)&.pluck(:dossier_id, :id).to_h || {}
+
+    # if an instructor search for a dossier which is in his procedures but not available to his intructor group
+    # we want to display an alert in view
+
+    # to make it simpler we only do it if the @search_terms is an id
+    return if !DossierSearchService.id_compatible?(@search_terms)
+
+    dossier_instructeur_searched_for = Dossier.find_by(id: @search_terms)
+
+    return if dossier_instructeur_searched_for.nil?
+    return if current_instructeur&.groupe_instructeur_ids&.include?(dossier_instructeur_searched_for.groupe_instructeur_id)
+
+    if current_instructeur&.procedures&.include?(dossier_instructeur_searched_for.procedure)
+      @dossier_not_in_instructor_group = dossier_instructeur_searched_for
+    else
+      return
+    end
   end
 
   private

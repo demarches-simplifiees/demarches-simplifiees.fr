@@ -78,7 +78,7 @@ class DossierPreloader
   def load_dossier(dossier, champs, children_by_parent = {})
     champs_public, champs_private = champs.partition(&:public?)
 
-    load_champs(dossier, :champs, champs_public, dossier, children_by_parent)
+    load_champs(dossier, :champs_public, champs_public, dossier, children_by_parent)
     load_champs(dossier, :champs_private, champs_private, dossier, children_by_parent)
 
     # We need to do this because of the check on `Etablissement#champ` in

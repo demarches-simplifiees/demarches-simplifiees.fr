@@ -46,7 +46,7 @@ describe 'shared/dossiers/demande.html.haml', type: :view do
     let(:procedure) { create(:procedure, :published, :with_type_de_champ) }
 
     it 'renders the champs' do
-      dossier.champs.each do |champ|
+      dossier.champs_public.each do |champ|
         expect(subject).to include(champ.libelle)
       end
     end

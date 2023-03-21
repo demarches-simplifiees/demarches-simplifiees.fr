@@ -23,8 +23,8 @@ describe DemarchesPubliquesExportService do
         revision: {
           champDescriptors: [
             {
-              description: procedure.types_de_champ.first.description,
-              label: procedure.types_de_champ.first.libelle,
+              description: procedure.active_revision.types_de_champ_public.first.description,
+              label: procedure.active_revision.types_de_champ_public.first.libelle,
               options: nil,
               required: false,
               type: "text",

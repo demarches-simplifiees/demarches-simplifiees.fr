@@ -82,7 +82,7 @@ class ProcedureExportService
 
   def etablissements
     @etablissements ||= dossiers.flat_map do |dossier|
-      [dossier.champs, dossier.champs_private]
+      [dossier.champs_public, dossier.champs_private]
         .flatten
         .filter { |champ| champ.is_a?(Champs::SiretChamp) }
     end.filter_map(&:etablissement) + dossiers.filter_map(&:etablissement)
@@ -94,7 +94,7 @@ class ProcedureExportService
 
   def champs_repetables_options
     champs_by_stable_id = dossiers
-      .flat_map { |dossier| (dossier.champs + dossier.champs_private).filter(&:repetition?) }
+      .flat_map { |dossier| (dossier.champs_public + dossier.champs_private).filter(&:repetition?) }
       .group_by(&:stable_id)
 
     procedure

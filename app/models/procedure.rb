@@ -75,10 +75,11 @@ class Procedure < ApplicationRecord
   belongs_to :published_revision, class_name: 'ProcedureRevision', optional: true
   has_many :deleted_dossiers, dependent: :destroy
 
-  has_many :published_types_de_champ, through: :published_revision, source: :types_de_champ_public
-  has_many :published_types_de_champ_private, through: :published_revision, source: :types_de_champ_private
-  has_many :draft_types_de_champ, through: :draft_revision, source: :types_de_champ_public
+  has_many :draft_types_de_champ_public, through: :draft_revision, source: :types_de_champ_public
   has_many :draft_types_de_champ_private, through: :draft_revision, source: :types_de_champ_private
+  has_many :published_types_de_champ_public, through: :published_revision, source: :types_de_champ_public
+  has_many :published_types_de_champ_private, through: :published_revision, source: :types_de_champ_private
+
   has_one :draft_attestation_template, through: :draft_revision, source: :attestation_template
   has_one :published_attestation_template, through: :published_revision, source: :attestation_template
 
@@ -108,14 +109,6 @@ class Procedure < ApplicationRecord
 
   def active_revision
     brouillon? ? draft_revision : published_revision
-  end
-
-  def types_de_champ
-    brouillon? ? draft_types_de_champ : published_types_de_champ
-  end
-
-  def types_de_champ_private
-    brouillon? ? draft_types_de_champ_private : published_types_de_champ_private
   end
 
   def types_de_champ_for_procedure_presentation(parent = nil)
@@ -255,7 +248,7 @@ class Procedure < ApplicationRecord
     includes(
       :groupe_instructeurs,
       dossiers: {
-        champs: [
+        champs_public: [
           piece_justificative_file_attachment: :blob,
           champs: [
             piece_justificative_file_attachment: :blob
@@ -269,7 +262,7 @@ class Procedure < ApplicationRecord
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validates :administrateurs, presence: true
   validates :lien_site_web, presence: true, if: :publiee?
-  validates :draft_types_de_champ,
+  validates :draft_types_de_champ_public,
     'types_de_champ/no_empty_block': true,
     'types_de_champ/no_empty_drop_down': true,
     on: :publication
@@ -491,10 +484,7 @@ class Procedure < ApplicationRecord
     }
     include_list[:groupe_instructeurs] = :instructeurs if !is_different_admin
     procedure = self.deep_clone(include: include_list) do |original, kopy|
-      begin
-        PiecesJustificativesService.clone_attachments(original, kopy)
-      rescue ActiveStorage::FileNotFoundError, ActiveStorage::IntegrityError
-      end
+      PiecesJustificativesService.clone_attachments(original, kopy)
     end
     procedure.path = SecureRandom.uuid
     procedure.aasm_state = :brouillon
@@ -541,7 +531,7 @@ class Procedure < ApplicationRecord
     end
 
     if is_different_admin || from_library
-      procedure.draft_types_de_champ.each { |tdc| tdc.options&.delete(:old_pj) }
+      procedure.draft_revision.types_de_champ_public.each { |tdc| tdc.options&.delete(:old_pj) }
     end
 
     procedure
@@ -874,8 +864,8 @@ class Procedure < ApplicationRecord
 
   def dossier_column_styles
     date_index = index_of_dates
-    exported_champs = types_de_champ.reject(&:exclude_from_export?)
-    exported_annotations = types_de_champ_private.reject(&:exclude_from_export?)
+    exported_champs = active_revision.types_de_champ_public.reject(&:exclude_from_export?)
+    exported_annotations = active_revision.types_de_champ_private.reject(&:exclude_from_export?)
     champ_start = fixed_column_offset
     private_champ_start = champ_start + exported_champs.length
     [{ columns: (date_index..date_index + 3), styles: { format_code: 'dd/mm/yyyy hh:mm:ss' } }] +
@@ -936,7 +926,7 @@ class Procedure < ApplicationRecord
     children.each do |child|
       child.update!(parent: coordinates_by_stable_id.fetch(child.parent.stable_id))
     end
-    new_draft.revision_types_de_champ.reload
+    new_draft.reload
   end
 
   def before_publish

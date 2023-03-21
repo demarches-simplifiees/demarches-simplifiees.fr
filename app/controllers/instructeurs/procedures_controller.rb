@@ -158,21 +158,17 @@ module Instructeurs
         .visible_by_administration
         .exists?(groupe_instructeur_id: groupe_instructeur_ids) && !instructeur_as_manager?
 
-      export = Export.find_or_create_export(export_format, groupe_instructeurs, **export_options)
+      export = Export.find_or_create_export(export_format, groupe_instructeurs, force: force_export?, **export_options)
 
-      if export.available? && export.old? && force_export?
-        export.destroy
-        export = Export.find_or_create_export(export_format, groupe_instructeurs, **export_options)
-      end
+      @procedure = procedure
+      @statut = export_options[:statut]
+      @dossiers_count = export.count
+      assign_exports
 
       if export.available?
         respond_to do |format|
           format.turbo_stream do
-            @procedure = procedure
-            @statut = export_options[:statut]
-            @dossiers_count = export.count
-            assign_exports
-            flash.notice = "L’export au format \"#{export_format}\" est prêt. Vous pouvez le <a href=\"#{export.file.service_url}\">télécharger</a>"
+            flash.notice = export.flash_message
           end
 
           format.html do
@@ -181,20 +177,13 @@ module Instructeurs
         end
       else
         respond_to do |format|
-          notice_message = "Nous générons cet export. Veuillez revenir dans quelques minutes pour le télécharger."
-
           format.turbo_stream do
-            @procedure = procedure
-            @statut = export_options[:statut]
-            @dossiers_count = export.count
-            assign_exports
             if !params[:no_progress_notification]
-              flash.notice = notice_message
+              flash.notice = export.flash_message
             end
           end
-
           format.html do
-            redirect_to instructeur_procedure_url(procedure), notice: notice_message
+            redirect_to instructeur_procedure_url(procedure), notice: export.flash_message
           end
         end
       end

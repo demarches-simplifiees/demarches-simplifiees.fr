@@ -124,11 +124,11 @@ class Instructeur < ApplicationRecord
 
   def notifications_for_dossier(dossier)
     follow = Follow
-      .includes(dossier: [:champs, :avis, :commentaires])
+      .includes(dossier: [:champs_public, :champs_private, :avis, :commentaires])
       .find_by(instructeur: self, dossier: dossier)
 
     if follow.present?
-      demande = follow.dossier.champs.updated_since?(follow.demande_seen_at).any? ||
+      demande = follow.dossier.champs_public.updated_since?(follow.demande_seen_at).any? ||
         follow.dossier.groupe_instructeur_updated_at&.>(follow.demande_seen_at) ||
         dossier.identity_updated_at&.>(follow.demande_seen_at) ||
         false

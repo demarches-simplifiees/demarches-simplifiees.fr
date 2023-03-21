@@ -37,6 +37,11 @@
               %span.icon.new-folder
               .dropdown-description
                 = t('views.users.dossiers.dossier_action.start_other_dossier')
+          %li
+            = link_to clone_dossier_path(dossier), method: :post do
+              %span.icon.new-folder
+              .dropdown-description
+                = t('views.users.dossiers.dossier_action.clone')
 
         - if has_delete_action
           %li.danger

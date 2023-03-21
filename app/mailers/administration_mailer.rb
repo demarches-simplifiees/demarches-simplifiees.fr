@@ -31,7 +31,6 @@ class AdministrationMailer < ApplicationMailer
 
   def procedure_published(procedure)
     @procedure = procedure
-    @champs = procedure.types_de_champ
     subject = "Une nouvelle démarche vient d'être publiée"
     mail(to: EQUIPE_EMAIL, subject: subject)
   end

@@ -6,7 +6,9 @@ describe ChampPolicy do
   let(:signed_in_user) { create(:user) }
   let(:account) { { user: signed_in_user } }
 
-  let(:champ) { dossier.champs.first }
+  subject { Pundit.policy_scope(account, Champ) }
+
+  let(:champ) { dossier.champs_public.first }
   let(:champ_private) { dossier.champs_private.first }
 
   shared_examples_for 'they can access a public champ' do

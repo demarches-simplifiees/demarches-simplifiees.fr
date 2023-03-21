@@ -44,7 +44,7 @@
 
     %form.form
       = form_for @dossier, url: '', html: { class: 'form' } do |f|
-        = f.fields_for :champs do |champ_form|
+        = f.fields_for :champs_public do |champ_form|
           = render EditableChamp::EditableChampComponent.new champ: champ_form.object, form: champ_form
 
         .editable-champ.editable-champ-text

@@ -21,11 +21,11 @@ describe DossierSerializer do
       let(:dossier) { create(:dossier, :en_construction, procedure: create(:procedure, :published, :with_type_de_champ)) }
 
       before do
-        dossier.champs << build(:champ_carte, dossier: dossier)
-        dossier.champs << build(:champ_siret, dossier: dossier)
-        dossier.champs << build(:champ_integer_number, dossier: dossier)
-        dossier.champs << build(:champ_decimal_number, dossier: dossier)
-        dossier.champs << build(:champ_linked_drop_down_list, dossier: dossier)
+        dossier.champs_public << build(:champ_carte, dossier: dossier)
+        dossier.champs_public << build(:champ_siret, dossier: dossier)
+        dossier.champs_public << build(:champ_integer_number, dossier: dossier)
+        dossier.champs_public << build(:champ_decimal_number, dossier: dossier)
+        dossier.champs_public << build(:champ_linked_drop_down_list, dossier: dossier)
       end
 
       it {
@@ -58,7 +58,7 @@ describe DossierSerializer do
     end
     let(:procedure) { create(:procedure, :published, types_de_champ_public: [cloned_type_de_champ]) }
     let(:dossier) { create(:dossier, procedure: procedure) }
-    let(:champ_pj) { dossier.champs.last }
+    let(:champ_pj) { dossier.champs_public.last }
 
     before do
       champ_pj.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")

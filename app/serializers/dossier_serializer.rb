@@ -30,7 +30,7 @@ class DossierSerializer < ActiveModel::Serializer
   has_many :champs, serializer: ChampSerializer
 
   def champs
-    champs = object.champs.reject { |c| c.type_de_champ.old_pj.present? }
+    champs = object.champs_public.reject { |c| c.type_de_champ.old_pj.present? }
 
     if object.expose_legacy_carto_api?
       champ_carte = champs.find do |champ|

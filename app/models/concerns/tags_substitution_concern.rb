@@ -287,7 +287,7 @@ module TagsSubstitutionConcern
     tokens = parse_tags(text)
 
     tags_and_datas = [
-      [champ_public_tags(dossier: dossier), dossier.champs],
+      [champ_public_tags(dossier: dossier), dossier.champs_public],
       [champ_private_tags(dossier: dossier), dossier.champs_private],
       [dossier_tags, dossier],
       [ROUTAGE_TAGS, dossier],

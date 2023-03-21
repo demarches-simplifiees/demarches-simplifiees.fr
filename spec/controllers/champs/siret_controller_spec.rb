@@ -4,9 +4,9 @@ describe Champs::SiretController, type: :controller do
 
   describe '#show' do
     let(:dossier) { create(:dossier, user: user, procedure: procedure) }
-    let(:champ) { dossier.champs.first }
+    let(:champ) { dossier.champs_public.first }
 
-    let(:champs_attributes) do
+    let(:champs_public_attributes) do
       champ_attributes = []
       champ_attributes[champ.id] = { value: siret }
       champ_attributes
@@ -15,7 +15,7 @@ describe Champs::SiretController, type: :controller do
       {
         champ_id: champ.id,
         dossier: {
-          champs_attributes: champs_attributes
+          champs_public_attributes: champs_public_attributes
         }
       }
     end
