@@ -12,7 +12,7 @@
   -# %li
     Liste des champs remplis par l'usager
     = render partial: "field_table", locals: { champs: procedure.types_de_champ }
-  - if procedure.types_de_champ_private.present?
+  - if procedure.active_revision.types_de_champ_private.present?
     %li
       Liste des champs remplis par l'organisme
       = procedure.service&.nom

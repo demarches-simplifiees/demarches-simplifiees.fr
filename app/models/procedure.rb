@@ -864,8 +864,8 @@ class Procedure < ApplicationRecord
 
   def dossier_column_styles
     date_index = index_of_dates
-    exported_champs = types_de_champ.reject(&:exclude_from_export?)
-    exported_annotations = types_de_champ_private.reject(&:exclude_from_export?)
+    exported_champs = active_revision.types_de_champ_public.reject(&:exclude_from_export?)
+    exported_annotations = active_revision.types_de_champ_private.reject(&:exclude_from_export?)
     champ_start = fixed_column_offset
     private_champ_start = champ_start + exported_champs.length
     [{ columns: (date_index..date_index + 3), styles: { format_code: 'dd/mm/yyyy hh:mm:ss' } }] +

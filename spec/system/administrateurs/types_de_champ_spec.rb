@@ -148,7 +148,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
     check 'Parcelles du cadastre'
     check 'Zones Manuelles'
 
-    wait_until { procedure.types_de_champ.first.batiments == '1' }
+    wait_until { procedure.active_revision.types_de_champ_public.first.batiments == '1' }
     expect(page).to have_content('Formulaire enregistré')
 
     preview_window = window_opened_by { click_on 'Prévisualiser le formulaire' }
@@ -184,7 +184,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
       fill_in 'Libellé du champ', with: 'Libellé de champ visa', fill_options: { clear: :backspace }
       fill_in 'Mails des personnes accréditées', with: 'boss@company.com', fill_options: { clear: :backspace }
 
-      wait_until { procedure.draft_types_de_champ.first.accredited_user_list == ['boss@company.com'] }
+      wait_until { procedure.draft_types_de_champ_public.first.accredited_user_list == ['boss@company.com'] }
       expect(page).to have_content('Formulaire enregistré')
 
       page.refresh
