@@ -111,6 +111,15 @@ en:
       hosting_content:
         line_four: "VAT NUMBER: FR 22 424 761 419"
         line_five: "Head office : 2 rue Kellermann - 59100 Roubaix - France."   
+    accessibility_statement: 
+      title: "Accessibility statement"
+      intro: "DINUM is committed to making its service accessible in accordance with Article 47 of Law No. 2005-102 of 11 February 2005."
+      compliance: "Compliance status"
+      results: "Test results"
+      no_accessible: "Non-accessible content"
+      preparation: "Preparation of this accessibility declaration"
+      contact: "Improvement and contact"
+      remedies: "Remedies"
     commencer:
       show:
         start_procedure: Start the procedure
