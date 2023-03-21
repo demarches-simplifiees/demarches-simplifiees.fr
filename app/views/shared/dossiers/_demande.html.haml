@@ -30,7 +30,7 @@
 
       - if profile == 'usager' && !dossier.read_only?
         .flex.row-reverse
-          = link_to t('views.shared.dossiers.demande.edit_identity'), identite_dossier_path(dossier), class: 'button'
+          = link_to t('views.shared.dossiers.demande.edit_identity'), identite_dossier_path(dossier), class: 'fr-btn fr-btn--tertiary'
 
   .tab-title= t('views.shared.dossiers.demande.form')
   - champs = dossier.champs_public.includes(:type_de_champ)

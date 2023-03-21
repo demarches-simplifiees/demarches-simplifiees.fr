@@ -13,16 +13,23 @@ select {
   font-weight: bold;
 }
 
-// fix firefox < 80 not supporting "appearance: auto" on inputs
+// Fix firefox < 80, Safari < 15.4, Chrome < 83 not supporting "appearance: auto" on inputs
+// This rule was set by DSFR for DSFR design, but broke our legacy forms.
 // scss-lint:disable DuplicateProperty
 input[type="checkbox"] {
   -moz-appearance: checkbox;
   -moz-appearance: auto;
+
+  -webkit-appearance: checkbox;
+  -webkit-appearance: auto;
 }
 
 input[type="radio"] {
   -moz-appearance: radio;
   -moz-appearance: auto;
+
+  -webkit-appearance: radio;
+  -webkit-appearance: auto;
 }
 // scss-lint:enable DuplicateProperty
 
