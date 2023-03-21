@@ -263,18 +263,20 @@ describe InvitesController, type: :controller do
   end
 
   describe '#DELETE destroy' do
-    let!(:invite) { create :invite, email: email, dossier: dossier }
-    let(:signed_in_profile) { dossier.user }
+    render_views
+    let(:invite) { create(:invite, email: email, dossier: dossier) }
 
     before do
-      sign_in signed_in_profile
+      invite
+      sign_in dossier.user
     end
 
-    subject { delete :destroy, params: { id: invite.id } }
+    subject { delete :destroy, params: { id: invite.id }, format: :turbo_stream }
 
     context 'when user is signed in' do
       it "destroy invites" do
         expect { subject }.to change { Invite.count }.from(1).to(0)
+        expect(response.body).to include(".invite-user-action")
       end
     end
 
@@ -284,6 +286,7 @@ describe InvitesController, type: :controller do
       it 'does not destroy invite' do
         sign_in another_user
         expect { subject }.not_to change { Invite.count }
+        expect(response.body).not_to include(".invite-user-action")
       end
     end
   end
