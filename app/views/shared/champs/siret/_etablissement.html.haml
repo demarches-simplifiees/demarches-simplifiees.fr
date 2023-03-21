@@ -15,8 +15,10 @@
 - when :api_entreprise_down
   = t('errors.messages.api_entreprise_down')
 
+- when :empty
+  // NOOP
 - else
-  - if siret.present?
+  - if siret.present? # NOTE: probably always true because siret is a symbol or the string value
     - if siret == etablissement&.siret && raison_sociale_or_name(etablissement).present?
       = render EditableChamp::EtablissementTitreComponent.new(etablissement: etablissement)
     - else

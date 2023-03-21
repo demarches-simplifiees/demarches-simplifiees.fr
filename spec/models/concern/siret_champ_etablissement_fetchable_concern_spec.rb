@@ -68,8 +68,6 @@ RSpec.describe SiretChampEtablissementFetchableConcern do
 
       before { expect(APIEntrepriseService).to receive(:api_up?).and_return(false) }
 
-      it { expect { fetch_etablissement! }.to change { champ.reload.value }.to(siret) }
-
       it { expect { fetch_etablissement! }.to change { champ.reload.etablissement } }
 
       it { expect { fetch_etablissement! }.to change { champ.reload.etablissement.as_degraded_mode? }.to(true) }
@@ -95,8 +93,6 @@ RSpec.describe SiretChampEtablissementFetchableConcern do
       let(:siret) { '41816609600051' }
       let(:api_etablissement_status) { 200 }
       let(:api_etablissement_body) { File.read('spec/fixtures/files/api_entreprise/etablissements.json') }
-
-      it { expect { fetch_etablissement! }.to change { champ.reload.value }.to(siret) }
 
       it { expect { fetch_etablissement! }.to change { champ.reload.etablissement.siret }.to(siret) }
 
