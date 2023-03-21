@@ -54,7 +54,7 @@ describe Champs::HeaderSectionChamp do
       let(:ref) { dossier }
 
       it 'returns the index of the section (starting from 1)' do
-        expect(ref.champs.map(&:section_index)).to eq(['1', '1.1', '2', '1', '2', '2.1', '2.1.1', '2.1.2'])
+        expect(ref.champs_public.map(&:section_index)).to eq(['1', '1.1', '2', '1', '2', '2.1', '2.1.1', '2.1.2'])
       end
     end
   end
