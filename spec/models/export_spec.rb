@@ -61,9 +61,9 @@ RSpec.describe Export, type: :model do
       context 'when an export is made for one groupe instructeur' do
         let!(:export) { create(:export, groupe_instructeurs: [gi_1, gi_2]) }
 
-        it { expect(Export.find_for_groupe_instructeurs([gi_1.id], nil)).to eq({ csv: { statut: {}, time_span_type: {} }, xlsx: { statut: {}, time_span_type: {} }, ods: { statut: {}, time_span_type: {} }, zip: { statut: {}, time_span_type: {} } }) }
-        it { expect(Export.find_for_groupe_instructeurs([gi_2.id, gi_1.id], nil)).to eq({ csv: { statut: {}, time_span_type: { 'everything' => export } }, xlsx: { statut: {}, time_span_type: {} }, ods: { statut: {}, time_span_type: {} }, zip: { statut: {}, time_span_type: {} } }) }
-        it { expect(Export.find_for_groupe_instructeurs([gi_1.id, gi_2.id, gi_3.id], nil)).to eq({ csv: { statut: {}, time_span_type: {} }, xlsx: { statut: {}, time_span_type: {} }, ods: { statut: {}, time_span_type: {} }, zip: { statut: {}, time_span_type: {} } }) }
+        it { expect(Export.find_for_groupe_instructeurs([gi_1.id], nil)).to eq({ csv: { statut: {}, time_span_type: {} }, xlsx: { statut: {}, time_span_type: {} }, ods: { statut: {}, time_span_type: {} }, zip: { statut: {}, time_span_type: {} }, json: { statut: {}, time_span_type: {} } }) }
+        it { expect(Export.find_for_groupe_instructeurs([gi_2.id, gi_1.id], nil)).to eq({ csv: { statut: {}, time_span_type: { 'everything' => export } }, xlsx: { statut: {}, time_span_type: {} }, ods: { statut: {}, time_span_type: {} }, zip: { statut: {}, time_span_type: {} }, json: { statut: {}, time_span_type: {} } }) }
+        it { expect(Export.find_for_groupe_instructeurs([gi_1.id, gi_2.id, gi_3.id], nil)).to eq({ csv: { statut: {}, time_span_type: {} }, xlsx: { statut: {}, time_span_type: {} }, ods: { statut: {}, time_span_type: {} }, zip: { statut: {}, time_span_type: {} }, json: { statut: {}, time_span_type: {} } }) }
       end
     end
 
@@ -78,7 +78,8 @@ RSpec.describe Export, type: :model do
             csv: { statut: { Export.statuts.fetch(:suivis) => export_with_filter }, time_span_type: { 'everything' => export_global } },
                    xlsx: { statut: {}, time_span_type: {} },
                    ods: { statut: {}, time_span_type: {} },
-                   zip: { statut: {}, time_span_type: {} }
+                   zip: { statut: {}, time_span_type: {} },
+                   json: { statut: {}, time_span_type: {} }
           })
       end
     end

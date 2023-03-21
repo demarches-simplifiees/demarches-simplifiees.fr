@@ -42,6 +42,11 @@ class ProcedureExportService
     end
   end
 
+  def to_geo_json
+    io = StringIO.new(dossiers.to_feature_collection.to_json)
+    create_blob(io, :json)
+  end
+
   private
 
   def create_blob(io, format)
@@ -77,6 +82,8 @@ class ProcedureExportService
       'application/vnd.oasis.opendocument.spreadsheet'
     when :zip
       'application/zip'
+    when :json
+      'application/json'
     end
   end
 

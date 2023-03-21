@@ -1444,7 +1444,9 @@ describe Dossier do
             },
             properties: {
               area: 103.6,
+              champ_label: champ_carte.libelle,
               champ_id: champ_carte.stable_id,
+              champ_private: false,
               dossier_id: dossier.id,
               id: geo_area.id,
               source: 'selection_utilisateur'

@@ -61,6 +61,7 @@ class Champ < ApplicationRecord
     :mesri?,
     :rna?,
     :siret?,
+    :carte?,
     :stable_id,
     :mandatory?,
     to: :type_de_champ
