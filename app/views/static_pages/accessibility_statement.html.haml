@@ -1,0 +1,39 @@
+- content_for(:title, t('views.accessibility_statement.title'))
+- content_for :footer do
+  = render partial: "root/footer"
+
+#accessibility-statement.fr-pt-2w
+  .fr-container
+    %h1.fr-mb-4w
+      = t('views.accessibility_statement.title')
+    %p.fr-mb-2w= t('views.accessibility_statement.intro')
+
+    .accessibility-block
+      %h2
+        = t('views.accessibility_statement.compliance')
+      %p.fr-mb-2w= t('views.legal_notice.editing_content.line_one')
+
+    .accessibility-block
+      %h2
+        = t('views.accessibility_statement.results')
+      %p.fr-mb-2w= t('views.legal_notice.direction_content')
+
+    .accessibility-block
+      %h2
+        = t('views.accessibility_statement.no_accessible')
+      %p.fr-mb-2w= t('views.legal_notice.hosting_content.line_one')
+
+    .accessibility-block
+      %h2
+        = t('views.accessibility_statement.preparation')
+      %p.fr-mb-2w= t('views.legal_notice.hosting_content.line_one')
+
+    .accessibility-block
+      %h2
+        = t('views.accessibility_statement.contact')
+      %p.fr-mb-2w= t('views.legal_notice.hosting_content.line_one')
+
+    .accessibility-block
+      %h2
+        = t('views.accessibility_statement.remedies')
+      %p.fr-mb-2w= t('views.legal_notice.hosting_content.line_one')

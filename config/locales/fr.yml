@@ -107,6 +107,15 @@ fr:
         line_three: "Code APE 6202A"
         line_four: "N° TVA : FR 22 424 761 419"
         line_five: "Siège social : 2 rue Kellermann - 59100 Roubaix - France."    
+    accessibility_statement: 
+      title: "Déclaration d’accessibilité"
+      intro: "La DINUM s’engage à rendre son service accessible, conformément à l’article 47 de la loi n° 2005-102 du 11 février 2005."
+      compliance: "État de conformité"
+      results: "Résultats des tests"
+      no_accessible: "Contenus non accessibles"
+      preparation: "Établissement de cette déclaration d’accessibilité"
+      contact: "Amélioration et contact"
+      remedies: "Voies de recours"
     commencer:
       show:
         start_procedure: Commencer la démarche
