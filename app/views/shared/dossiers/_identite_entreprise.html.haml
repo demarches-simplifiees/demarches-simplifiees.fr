@@ -27,7 +27,8 @@
           %td= raison_sociale_or_name(etablissement)
         %tr
           %td.libelle SIRET :
-          %td= pretty_siret(etablissement.siret)
+          %td #{pretty_siret(etablissement.siret)} #{ render Dsfr::CopyButtonComponent.new(text: etablissement.siret, title: "Copier le siret dans le presse-papier", success: "Le siret a été copié dans le presse-papier") }
+
 
         - unless local_assigns[:short_identity]
           - if etablissement.siret != etablissement.entreprise.siret_siege_social
