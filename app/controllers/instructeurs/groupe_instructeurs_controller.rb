@@ -77,7 +77,6 @@ module Instructeurs
         .where(procedure: procedure)
         .page(params[:page])
         .per(ITEMS_PER_PAGE)
-        .order(:label)
     end
 
     def paginated_instructeurs

@@ -545,10 +545,11 @@ describe Instructeurs::ProceduresController, type: :controller do
 
   describe '#create_multiple_commentaire' do
     let(:instructeur) { create(:instructeur) }
-    let!(:gi_p1_1) { GroupeInstructeur.create(label: '1', procedure: procedure) }
-    let!(:gi_p1_2) { GroupeInstructeur.create(label: '2', procedure: procedure) }
+    let!(:gi_p1_1) { create(:groupe_instructeur, label: '1', procedure: procedure) }
+    let!(:gi_p1_2) { create(:groupe_instructeur, label: '2', procedure: procedure) }
     let(:body) { "avant\napres" }
-    let!(:dossier) { create(:dossier, state: "brouillon", procedure: procedure, groupe_instructeur: procedure.groupe_instructeurs.first) }
+    let(:bulk_message) { BulkMessage.first }
+    let!(:dossier) { create(:dossier, state: "brouillon", procedure: procedure, groupe_instructeur: gi_p1_1) }
     let!(:dossier_2) { create(:dossier, state: "brouillon", procedure: procedure, groupe_instructeur: gi_p1_1) }
     let!(:dossier_3) { create(:dossier, state: "brouillon", procedure: procedure, groupe_instructeur: gi_p1_2) }
     let!(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
@@ -565,16 +566,16 @@ describe Instructeurs::ProceduresController, type: :controller do
     end
 
     it "creates a commentaire for 2 dossiers" do
-      expect(Commentaire.all.count).to eq(2)
+      expect(Commentaire.count).to eq(2)
       expect(dossier.commentaires.first.body).to eq("avant\napres")
       expect(dossier_2.commentaires.first.body).to eq("avant\napres")
       expect(dossier_3.commentaires).to eq([])
     end
 
     it "creates a Bulk Message for 2 groupes instructeurs" do
-      expect(BulkMessage.all.count).to eq(1)
-      expect(BulkMessage.all.first.body).to eq("avant\napres")
-      expect(BulkMessage.all.first.groupe_instructeurs.sort).to match([procedure.groupe_instructeurs.first, gi_p1_1])
+      expect(BulkMessage.count).to eq(1)
+      expect(bulk_message.body).to eq("avant\napres")
+      expect(bulk_message.groupe_instructeurs).to match([gi_p1_1])
     end
 
     it "creates a flash notice" do
