@@ -1568,6 +1568,55 @@ describe API::V2::GraphqlController do
         end
       end
 
+      describe 'dossierAjouterInstructeur' do
+        let(:sender_instructeur) { create(:instructeur) }
+        let(:recipient_instructeur) { create(:instructeur) }
+        let(:query) do
+          "mutation {
+            dossierAjouterInstructeur(input: {
+              senderInstructeurId: \"#{sender_instructeur.to_typed_id}\"
+              dossierId: \"#{dossier.to_typed_id}\",
+              recipientInstructeurId: \"#{recipient_instructeur.to_typed_id}\"
+            }) {
+              errors {
+                message
+              }
+            }
+          }"
+        end
+        context "with valid instructors" do
+          it "should succeed" do
+            dossier.groupe_instructeur.add(sender_instructeur)
+            dossier.groupe_instructeur.add(recipient_instructeur)
+            expect(gql_errors).to eq(nil)
+            expect(gql_data).to eq(dossierAjouterInstructeur: {
+              errors: nil
+            })
+            expect(dossier.followers_instructeurs).to include(recipient_instructeur)
+          end
+        end
+        context "with invalid" do
+          context "recipient" do
+            it "should fail" do
+              dossier.groupe_instructeur.add(sender_instructeur)
+              expect(gql_errors).to eq(nil)
+              expect(gql_data).to eq(dossierAjouterInstructeur: {
+                errors: [{ message: "L'instructeur '#{recipient_instructeur.email}' ne fait pas partie du groupe d'instructeurs 'défaut'" }]
+              })
+            end
+          end
+          context "sender" do
+            it "should fail" do
+              dossier.groupe_instructeur.add(recipient_instructeur)
+              expect(gql_errors).to eq(nil)
+              expect(gql_data).to eq(dossierAjouterInstructeur: {
+                errors: [{ message: "L'instructeur '#{sender_instructeur.email}' ne fait pas partie du groupe d'instructeurs 'défaut'" }]
+              })
+            end
+          end
+        end
+      end
+
       describe 'dossierArchiver' do
         let(:query) do
           "mutation {

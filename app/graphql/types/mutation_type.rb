@@ -10,6 +10,7 @@ module Types
     field :dossier_repasser_en_construction, mutation: Mutations::DossierRepasserEnConstruction
     field :dossier_archiver, mutation: Mutations::DossierArchiver
     field :dossier_changer_groupe_instructeur, mutation: Mutations::DossierChangerGroupeInstructeur
+    field :dossier_ajouter_instructeur, mutation: Mutations::DossierAjouterInstructeur
 
     field :dossier_modifier_annotation_text, mutation: Mutations::DossierModifierAnnotationText
     field :dossier_modifier_annotation_checkbox, mutation: Mutations::DossierModifierAnnotationCheckbox
