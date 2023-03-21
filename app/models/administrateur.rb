@@ -12,6 +12,8 @@
 class Administrateur < ApplicationRecord
   include ActiveRecord::SecureToken
 
+  self.ignored_columns = [:active]
+
   UNUSED_ADMIN_THRESHOLD = 6.months
 
   has_and_belongs_to_many :instructeurs
@@ -40,6 +42,10 @@ class Administrateur < ApplicationRecord
 
   def email
     user&.email
+  end
+
+  def active?
+    user&.active?
   end
 
   def self.find_inactive_by_token(reset_password_token)

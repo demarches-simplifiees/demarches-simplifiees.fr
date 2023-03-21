@@ -12,7 +12,7 @@
       %th= 'Enregistré le'
       %th= 'État'
     %tbody#administrateurs
-      = render partial: 'administrateur', collection: @procedure.administrateurs.order('users.email'), locals: { procedure: @procedure }
+      = render(Procedure::ProcedureAdministrateurs::AdministrateurComponent.with_collection(@procedure.administrateurs.order('users.email'), procedure: @procedure))
     %tfoot
       %tr
         %th{ colspan: 4 }
