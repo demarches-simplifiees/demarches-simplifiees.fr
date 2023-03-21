@@ -31,9 +31,14 @@ class API::V2::StoredQuery
     $deletedFirst: Int
     $deletedAfter: String
     $deletedSince: ISO8601DateTime
+    $pendingDeletedOrder: Order
+    $pendingDeletedFirst: Int
+    $pendingDeletedAfter: String
+    $pendingDeletedSince: ISO8601DateTime
     $includeGroupeInstructeurs: Boolean = false
     $includeDossiers: Boolean = false
     $includeDeletedDossiers: Boolean = false
+    $includePendingDeletedDossiers: Boolean = false
     $includeRevision: Boolean = false
     $includeService: Boolean = false
     $includeChamps: Boolean = true
@@ -76,6 +81,19 @@ class API::V2::StoredQuery
         }
         nodes {
           ...DossierFragment
+        }
+      }
+      pendingDeletedDossiers(
+        order: $pendingDeletedOrder
+        first: $pendingDeletedFirst
+        after: $pendingDeletedAfter
+        deletedSince: $pendingDeletedSince
+      ) @include(if: $includePendingDeletedDossiers) {
+        pageInfo {
+          ...PageInfoFragment
+        }
+        nodes {
+          ...DeletedDossierFragment
         }
       }
       deletedDossiers(

@@ -49,6 +49,10 @@ module Types
       argument :order, Types::Order, default_value: :asc, required: false, description: "L’ordre des dossiers supprimés."
       argument :deleted_since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers supprimés depuis la date."
     end
+    field :pending_deleted_dossiers, Types::DeletedDossierType.connection_type, "Liste de tous les dossiers en attente de suppression définitive d’une démarche.", null: false do
+      argument :order, Types::Order, default_value: :asc, required: false, description: "L’ordre des dossiers en attente de suppression."
+      argument :deleted_since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers en attente de suppression depuis la date."
+    end
 
     field :champ_descriptors, [Types::ChampDescriptorType], null: false, deprecation_reason: 'Utilisez le champ `activeRevision.champDescriptors` à la place.'
     field :annotation_descriptors, [Types::ChampDescriptorType], null: false, deprecation_reason: 'Utilisez le champ `activeRevision.annotationDescriptors` à la place.'
@@ -131,6 +135,16 @@ module Types
       end
 
       dossiers.order(deleted_at: order)
+    end
+
+    def pending_deleted_dossiers(deleted_since: nil, order:)
+      dossiers = object.dossiers.hidden_for_administration
+
+      if deleted_since.present?
+        dossiers = dossiers.hidden_since(deleted_since)
+      end
+
+      dossiers.order(hidden_by_user_at: order, hidden_by_administration_at: order)
     end
 
     def champ_descriptors

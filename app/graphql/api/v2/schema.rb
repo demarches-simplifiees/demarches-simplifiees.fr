@@ -14,6 +14,8 @@ class API::V2::Schema < GraphQL::Schema
   def self.id_from_object(object, type_definition, ctx)
     if type_definition == Types::DemarcheDescriptorType
       (object.is_a?(Procedure) ? object : object.procedure).to_typed_id
+    elsif type_definition == Types::DeletedDossierType
+      object.is_a?(DeletedDossier) ? object.to_typed_id : GraphQL::Schema::UniqueWithinType.encode('DeletedDossier', object.id)
     elsif object.is_a?(Hash)
       object[:id]
     else
