@@ -4,7 +4,7 @@ describe 'wcag rules for usager', js: true do
   let(:litteraire_user) { create(:user, password: password) }
 
   before do
-    procedure.types_de_champ.find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:carte) }.destroy
+    procedure.active_revision.types_de_champ_public.find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:carte) }.destroy
   end
 
   context 'pages without the need to be logged in' do
