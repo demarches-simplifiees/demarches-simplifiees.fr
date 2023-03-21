@@ -240,6 +240,10 @@ class Champ < ApplicationRecord
     input_id
   end
 
+  def forked_with_changes?
+    public? && dossier.champ_forked_with_changes?(self)
+  end
+
   private
 
   def html_id

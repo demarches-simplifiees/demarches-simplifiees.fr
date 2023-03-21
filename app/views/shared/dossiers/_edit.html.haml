@@ -1,17 +1,13 @@
+- dossier_for_editing = dossier.en_construction? ? dossier.owner_editing_fork : dossier
+
 - if dossier.france_connect_information.present?
   - content_for(:notice_info) do
     = render partial: "shared/dossiers/france_connect_informations_notice", locals: { user_information: dossier.france_connect_information }
 
 .dossier-edit.container.counter-start-header-section
   = render partial: "shared/dossiers/submit_is_over", locals: { dossier: dossier }
-
-  - if dossier.brouillon?
-    - form_options = { url: brouillon_dossier_url(dossier), method: :patch }
-  - else
-    - form_options = { url: modifier_dossier_url(dossier), method: :patch }
   = render NestedForms::FormOwnerComponent.new
-  = form_for dossier, form_options.merge({ html: { id: 'dossier-edit-form', class: 'form', multipart: true, novalidate: 'novalidate' } }) do |f|
-
+  = form_for dossier_for_editing, url: brouillon_dossier_url(dossier), method: :patch, html: { id: 'dossier-edit-form', class: 'form', multipart: true, novalidate: 'novalidate' } do |f|
     %header.mb-6
       .fr-highlight
         %p.fr-text--sm
@@ -43,8 +39,8 @@
           dossier.procedure.groupe_instructeurs.active.map { |gi| [gi.label, gi.id] },
           { include_blank: dossier.brouillon? }
 
-    - dossier.champs_public.each do |champ|
+    - dossier_for_editing.champs_public.each do |champ|
       = fields_for champ.input_name, champ do |form|
         = render EditableChamp::EditableChampComponent.new form: form, champ: champ
 
-  = render Dossiers::EditFooterComponent.new(dossier: dossier, annotation: false)
+  = render Dossiers::EditFooterComponent.new(dossier: dossier_for_editing, annotation: false)

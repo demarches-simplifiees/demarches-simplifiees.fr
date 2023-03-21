@@ -6,11 +6,11 @@ module Users
     layout 'procedure_context', only: [:identite, :update_identite, :siret, :update_siret]
 
     ACTIONS_ALLOWED_TO_ANY_USER = [:index, :recherche, :new, :transferer_all]
-    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :destroy, :demande, :messagerie, :brouillon, :update_brouillon, :submit_brouillon, :modifier, :update, :create_commentaire, :papertrail, :restore]
+    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :destroy, :demande, :messagerie, :brouillon, :submit_brouillon, :submit_en_construction, :modifier, :update, :create_commentaire, :papertrail, :restore]
 
     before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
     before_action :ensure_ownership_or_invitation!, only: ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
-    before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_brouillon, :submit_brouillon, :modifier, :update]
+    before_action :ensure_dossier_can_be_updated, only: [:update_identite, :submit_brouillon, :submit_en_construction, :modifier, :update]
     before_action :forbid_invite_submission!, only: [:submit_brouillon]
     before_action :forbid_closed_submission!, only: [:submit_brouillon]
     before_action :show_demarche_en_test_banner
@@ -192,21 +192,30 @@ module Users
       @dossier = dossier_with_champs
     end
 
-    def update_brouillon
-      @dossier = dossier_with_champs
-      update_dossier_and_compute_errors
+    def submit_en_construction
+      @dossier = dossier.find_editing_fork(dossier.user)
+      @dossier = dossier_with_champs(pj_template: false)
+      errors = submit_dossier_and_compute_errors
 
-      respond_to do |format|
-        format.html { render :brouillon }
-        format.turbo_stream do
-          @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_public_params.fetch(:champs_public_all_attributes), dossier.champs_public_all)
+      if errors.blank?
+        editing_fork_origin = @dossier.editing_fork_origin
+        editing_fork_origin.merge_fork(@dossier)
+        redirect_to dossier_path(editing_fork_origin)
+      else
+        flash.now.alert = errors
 
-          render(:update, layout: false)
+        respond_to do |format|
+          format.html { render :modifier }
+          format.turbo_stream do
+            @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_public_params.fetch(:champs_public_all_attributes), dossier.champs_public_all)
+            render :update, layout: false
+          end
         end
       end
     end
 
     def update
+      @dossier = dossier.en_construction? ? dossier.find_editing_fork(dossier.user) : dossier
       @dossier = dossier_with_champs(pj_template: false)
       errors = update_dossier_and_compute_errors
 
@@ -215,9 +224,9 @@ module Users
       end
 
       respond_to do |format|
-        format.html { render :modifier }
         format.turbo_stream do
           @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_public_params.fetch(:champs_public_all_attributes), dossier.champs_public_all)
+          render :update, layout: false
         end
       end
     end
@@ -399,8 +408,8 @@ module Users
     end
 
     def dossier_scope
-      if action_name == 'update_brouillon'
-        Dossier.visible_by_user.or(Dossier.for_procedure_preview)
+      if action_name == 'update'
+        Dossier.visible_by_user.or(Dossier.for_procedure_preview).or(Dossier.for_editing_fork)
       elsif action_name == 'restore'
         Dossier.hidden_by_user
       else
@@ -461,10 +470,6 @@ module Users
 
       if @dossier.procedure.feature_enabled?(:routing_rules)
         RoutingEngine.compute(@dossier)
-      end
-
-      if dossier.en_construction?
-        errors += @dossier.check_mandatory_and_visible_champs
       end
 
       errors
