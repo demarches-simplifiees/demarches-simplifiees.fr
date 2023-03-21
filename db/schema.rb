@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_22_123809) do
+ActiveRecord::Schema.define(version: 2022_11_22_124009) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -273,6 +273,7 @@ ActiveRecord::Schema.define(version: 2022_11_22_123809) do
     t.datetime "keep_until"
     t.string "operation", null: false
     t.datetime "updated_at", null: false
+    t.jsonb "data"
     t.index ["bill_signature_id"], name: "index_dossier_operation_logs_on_bill_signature_id"
     t.index ["dossier_id"], name: "index_dossier_operation_logs_on_dossier_id"
     t.index ["keep_until"], name: "index_dossier_operation_logs_on_keep_until"

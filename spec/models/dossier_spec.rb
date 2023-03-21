@@ -1043,7 +1043,7 @@ describe Dossier do
   describe '#accepter!' do
     let(:dossier) { create(:dossier, :en_instruction, :with_individual) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
-    let(:operation_serialized) { JSON.parse(last_operation.serialized.download) }
+    let(:operation_serialized) { last_operation.data }
     let!(:instructeur) { create(:instructeur) }
     let!(:now) { Time.zone.parse('01/01/2100') }
     let(:attestation) { Attestation.new }
@@ -1105,7 +1105,7 @@ describe Dossier do
   describe '#passer_en_instruction!' do
     let(:dossier) { create(:dossier, :en_construction, en_construction_close_to_expiration_notice_sent_at: Time.zone.now) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
-    let(:operation_serialized) { JSON.parse(last_operation.serialized.download) }
+    let(:operation_serialized) { last_operation.data }
     let(:instructeur) { create(:instructeur) }
 
     before { dossier.passer_en_instruction!(instructeur: instructeur) }
@@ -1123,7 +1123,7 @@ describe Dossier do
   describe '#passer_automatiquement_en_instruction!' do
     let(:dossier) { create(:dossier, :en_construction, en_construction_close_to_expiration_notice_sent_at: Time.zone.now) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
-    let(:operation_serialized) { JSON.parse(last_operation.serialized.download) }
+    let(:operation_serialized) { last_operation.data }
     let(:instructeur) { create(:instructeur) }
 
     before { dossier.passer_automatiquement_en_instruction! }
@@ -1300,7 +1300,7 @@ describe Dossier do
     it { expect(dossier.attestation).to be_nil }
     it { expect(dossier.termine_close_to_expiration_notice_sent_at).to be_nil }
     it { expect(last_operation.operation).to eq('repasser_en_instruction') }
-    it { expect(JSON.parse(last_operation.serialized.download)['author']['email']).to eq(instructeur.email) }
+    it { expect(last_operation.data['author']['email']).to eq(instructeur.email) }
     it { expect(DossierMailer).to have_received(:notify_revert_to_instruction).with(dossier) }
 
     after { Timecop.return }
