@@ -393,7 +393,7 @@ describe Users::DossiersController, type: :controller do
     before { sign_in(user) }
 
     let!(:dossier) { create(:dossier, user: user) }
-    let(:first_champ) { dossier.champs.first }
+    let(:first_champ) { dossier.champs_public.first }
     let(:value) { 'beautiful value' }
     let(:now) { Time.zone.parse('01/01/2100') }
     let(:payload) { { id: dossier.id } }
@@ -488,8 +488,8 @@ describe Users::DossiersController, type: :controller do
 
     let(:procedure) { create(:procedure, :published, :with_type_de_champ, :with_piece_justificative) }
     let!(:dossier) { create(:dossier, user: user, procedure: procedure) }
-    let(:first_champ) { dossier.champs.first }
-    let(:piece_justificative_champ) { dossier.champs.last }
+    let(:first_champ) { dossier.champs_public.first }
+    let(:piece_justificative_champ) { dossier.champs_public.last }
     let(:value) { 'beautiful value' }
     let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
     let(:now) { Time.zone.parse('01/01/2100') }
@@ -499,7 +499,7 @@ describe Users::DossiersController, type: :controller do
         id: dossier.id,
         dossier: {
           groupe_instructeur_id: dossier.groupe_instructeur_id,
-          champs_attributes: [
+          champs_public_attributes: [
             {
               id: first_champ.id,
               value: value
@@ -545,7 +545,7 @@ describe Users::DossiersController, type: :controller do
           {
             id: dossier.id,
             dossier: {
-              champs_attributes: {}
+              champs_public_attributes: {}
             }
           }
         end
@@ -583,8 +583,8 @@ describe Users::DossiersController, type: :controller do
 
     let(:procedure) { create(:procedure, :published, :with_type_de_champ, :with_piece_justificative) }
     let!(:dossier) { create(:dossier, :en_construction, user: user, procedure: procedure) }
-    let(:first_champ) { dossier.champs.first }
-    let(:piece_justificative_champ) { dossier.champs.last }
+    let(:first_champ) { dossier.champs_public.first }
+    let(:piece_justificative_champ) { dossier.champs_public.last }
     let(:value) { 'beautiful value' }
     let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
     let(:now) { Time.zone.parse('01/01/2100') }
@@ -594,7 +594,7 @@ describe Users::DossiersController, type: :controller do
         id: dossier.id,
         dossier: {
           groupe_instructeur_id: dossier.groupe_instructeur_id,
-          champs_attributes: [
+          champs_public_attributes: [
             {
               id: first_champ.id,
               value: value
@@ -659,7 +659,7 @@ describe Users::DossiersController, type: :controller do
           {
             id: dossier.id,
             dossier: {
-              champs_attributes: [
+              champs_public_attributes: [
                 {
                   id: piece_justificative_champ.id,
                   piece_justificative_file: file
@@ -754,14 +754,14 @@ describe Users::DossiersController, type: :controller do
     context 'when the champ is a phone number' do
       let(:procedure) { create(:procedure, :published, :with_phone) }
       let!(:dossier) { create(:dossier, :en_construction, user: user, procedure: procedure) }
-      let(:first_champ) { dossier.champs.first }
+      let(:first_champ) { dossier.champs_public.first }
       let(:now) { Time.zone.parse('01/01/2100') }
 
       let(:submit_payload) do
         {
           id: dossier.id,
           dossier: {
-            champs_attributes: [
+            champs_public_attributes: [
               {
                 id: first_champ.id,
                 value: value

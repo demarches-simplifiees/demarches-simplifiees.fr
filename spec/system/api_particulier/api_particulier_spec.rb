@@ -277,7 +277,7 @@ describe 'fetch API Particulier Data', js: true do
         wait_for_autosave
 
         dossier = Dossier.last
-        cnaf_champ = dossier.champs.find(&:cnaf?)
+        cnaf_champ = dossier.champs_public.find(&:cnaf?)
 
         wait_until { cnaf_champ.reload.code_postal == 'wrong_code' }
 
@@ -332,7 +332,7 @@ describe 'fetch API Particulier Data', js: true do
         wait_for_autosave
 
         dossier = Dossier.last
-        pole_emploi_champ = dossier.champs.find(&:pole_emploi?)
+        pole_emploi_champ = dossier.champs_public.find(&:pole_emploi?)
 
         wait_until { pole_emploi_champ.reload.identifiant == 'wrong code' }
 
@@ -403,7 +403,7 @@ describe 'fetch API Particulier Data', js: true do
         wait_for_autosave
 
         dossier = Dossier.last
-        mesri_champ = dossier.champs.find(&:mesri?)
+        mesri_champ = dossier.champs_public.find(&:mesri?)
 
         wait_until { mesri_champ.reload.ine == 'wrong code' }
         clear_enqueued_jobs
@@ -465,7 +465,7 @@ describe 'fetch API Particulier Data', js: true do
         wait_for_autosave
 
         dossier = Dossier.last
-        dgfip_champ = dossier.champs.find(&:dgfip?)
+        dgfip_champ = dossier.champs_public.find(&:dgfip?)
 
         wait_until { dgfip_champ.reload.reference_avis == 'wrong_code' }
 

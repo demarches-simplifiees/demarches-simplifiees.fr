@@ -19,14 +19,14 @@ describe RechercheController, type: :controller do
   before do
     instructeur.assign_to_procedure(dossier.procedure)
 
-    dossier.champs[0].value = "Name of district A"
-    dossier.champs[1].value = "Name of city A"
+    dossier.champs_public[0].value = "Name of district A"
+    dossier.champs_public[1].value = "Name of city A"
     dossier.champs_private[0].value = "Dossier A is complete"
     dossier.champs_private[1].value = "Dossier A is valid"
     dossier.save!
 
-    dossier_with_expert.champs[0].value = "Name of district B"
-    dossier_with_expert.champs[1].value = "name of city B"
+    dossier_with_expert.champs_public[0].value = "Name of district B"
+    dossier_with_expert.champs_public[1].value = "name of city B"
     dossier_with_expert.champs_private[0].value = "Dossier B is incomplete"
     dossier_with_expert.champs_private[1].value = "Dossier B is invalid"
     dossier_with_expert.save!

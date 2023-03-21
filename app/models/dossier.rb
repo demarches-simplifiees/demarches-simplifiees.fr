@@ -75,7 +75,7 @@ class Dossier < ApplicationRecord
 
   has_one_attached :justificatif_motivation
 
-  has_many :champs, -> { root.public_ordered }, inverse_of: false, dependent: :destroy
+  has_many :champs_public, -> { root.public_ordered }, class_name: 'Champ', inverse_of: false, dependent: :destroy
   has_many :champs_private, -> { root.private_ordered }, class_name: 'Champ', inverse_of: false, dependent: :destroy
   has_many :commentaires, inverse_of: :dossier, dependent: :destroy
   has_many :invites, dependent: :destroy
@@ -141,7 +141,7 @@ class Dossier < ApplicationRecord
   belongs_to :transfer, class_name: 'DossierTransfer', foreign_key: 'dossier_transfer_id', optional: true, inverse_of: :dossiers
   has_many :transfer_logs, class_name: 'DossierTransferLog', dependent: :destroy
 
-  accepts_nested_attributes_for :champs
+  accepts_nested_attributes_for :champs_public
   accepts_nested_attributes_for :champs_private
 
   include AASM
@@ -253,7 +253,7 @@ class Dossier < ApplicationRecord
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
   scope :with_champs, -> {
-    includes(champs: [
+    includes(champs_public: [
       :type_de_champ,
       :geo_areas,
       piece_justificative_file_attachment: :blob,
@@ -466,7 +466,7 @@ class Dossier < ApplicationRecord
   def update_search_terms
     self.search_terms = [
       user&.email,
-      *champs.flat_map(&:search_terms),
+      *champs_public.flat_map(&:search_terms),
       *etablissement&.search_terms,
       individual&.nom,
       individual&.prenom
@@ -475,8 +475,8 @@ class Dossier < ApplicationRecord
   end
 
   def build_default_champs
-    revision.build_champs.each do |champ|
-      champs << champ
+    revision.build_champs_public.each do |champ|
+      champs_public << champ
     end
     revision.build_champs_private.each do |champ|
       champs_private << champ
@@ -992,11 +992,11 @@ class Dossier < ApplicationRecord
   end
 
   def remove_titres_identite!
-    champs.filter(&:titre_identite?).map(&:piece_justificative_file).each(&:purge_later)
+    champs_public.filter(&:titre_identite?).map(&:piece_justificative_file).each(&:purge_later)
   end
 
   def check_mandatory_and_visible_champs
-    (champs + champs.filter(&:block?).filter(&:visible?).flat_map(&:champs))
+    (champs_public + champs_public.filter(&:block?).filter(&:visible?).flat_map(&:champs))
       .filter(&:visible?)
       .filter(&:mandatory_blank?)
       .map do |champ|
@@ -1098,7 +1098,7 @@ class Dossier < ApplicationRecord
     if procedure.routing_enabled?
       columns << ['Groupe instructeur', groupe_instructeur.label]
     end
-    columns + self.class.champs_for_export(champs + champs_private, types_de_champ)
+    columns + self.class.champs_for_export(champs_public + champs_private, types_de_champ)
   end
 
   # Get all the champs values for the types de champ in the final list.
@@ -1129,7 +1129,7 @@ class Dossier < ApplicationRecord
   end
 
   def linked_dossiers_for(instructeur_or_expert)
-    dossier_ids = champs.filter(&:dossier_link?).filter_map(&:value)
+    dossier_ids = champs_public.filter(&:dossier_link?).filter_map(&:value)
     instructeur_or_expert.dossiers.where(id: dossier_ids)
   end
 
@@ -1178,7 +1178,7 @@ class Dossier < ApplicationRecord
     @sections = Hash.new do |hash, parent|
       case parent
       when :public
-        hash[parent] = champs.filter(&:header_section?)
+        hash[parent] = champs_public.filter(&:header_section?)
       when :private
         hash[parent] = champs_private.filter(&:header_section?)
       else
@@ -1209,7 +1209,7 @@ class Dossier < ApplicationRecord
   end
 
   def geo_areas
-    champs.flat_map(&:geo_areas) + champs_private.flat_map(&:geo_areas)
+    champs_public.flat_map(&:geo_areas) + champs_private.flat_map(&:geo_areas)
   end
 
   def bounding_box

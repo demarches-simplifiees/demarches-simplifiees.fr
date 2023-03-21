@@ -74,7 +74,7 @@ class RootController < ApplicationController
         .each { |champ| champ.value = value }
     end
 
-    @dossier = Dossier.new(champs: all_champs)
+    @dossier = Dossier.new(champs_public: all_champs)
     all_champs.each do |champ|
       champ.association(:dossier).target = @dossier
       champ.champs.each do |champ|

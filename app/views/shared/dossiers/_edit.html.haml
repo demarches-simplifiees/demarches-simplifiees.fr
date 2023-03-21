@@ -43,7 +43,7 @@
           dossier.procedure.groupe_instructeurs.actif.map { |gi| [gi.label, gi.id] },
           { include_blank: dossier.brouillon? }
 
-    - dossier.champs.each do |champ|
+    - dossier.champs_public.each do |champ|
       = fields_for champ.input_name, champ do |form|
         = render EditableChamp::EditableChampComponent.new form: form, champ: champ
 

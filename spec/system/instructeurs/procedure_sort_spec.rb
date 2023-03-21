@@ -7,7 +7,7 @@ describe "procedure sort" do
 
   before do
     instructeur.follow(followed_dossier)
-    followed_dossier.champs.first.update(value: '123')
+    followed_dossier.champs_public.first.update(value: '123')
 
     login_as(instructeur.user, scope: :user)
     visit instructeur_procedure_path(procedure)

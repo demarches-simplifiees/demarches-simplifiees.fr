@@ -19,9 +19,9 @@ describe DossierProjectionService do
       end
 
       before do
-        dossier_1.champs.first.update(value: 'champ_1')
-        dossier_2.champs.first.update(value: 'champ_2')
-        dossier_3.champs.first.destroy
+        dossier_1.champs_public.first.update(value: 'champ_1')
+        dossier_2.champs_public.first.update(value: 'champ_2')
+        dossier_3.champs_public.first.destroy
       end
 
       let(:result) { subject }
@@ -155,7 +155,7 @@ describe DossierProjectionService do
         let(:dossier) { create(:dossier) }
         let(:column) { dossier.procedure.types_de_champ.first.stable_id.to_s }
 
-        before { dossier.champs.first.update(value: 'kale') }
+        before { dossier.champs_public.first.update(value: 'kale') }
 
         it { is_expected.to eq('kale') }
       end
@@ -176,7 +176,7 @@ describe DossierProjectionService do
         let(:dossier) { create(:dossier, procedure: procedure) }
         let(:column) { dossier.procedure.types_de_champ.first.stable_id.to_s }
 
-        before { dossier.champs.first.update(value: 'true') }
+        before { dossier.champs_public.first.update(value: 'true') }
 
         it { is_expected.to eq('Oui') }
       end
@@ -187,7 +187,7 @@ describe DossierProjectionService do
         let(:dossier) { create(:dossier, procedure: procedure) }
         let(:column) { dossier.procedure.types_de_champ.first.stable_id.to_s }
 
-        before { dossier.champs.first.update(data: { 'label' => '18 a la bonne rue', 'departement' => 'd' }) }
+        before { dossier.champs_public.first.update(data: { 'label' => '18 a la bonne rue', 'departement' => 'd' }) }
 
         it { is_expected.to eq('18 a la bonne rue') }
       end
@@ -204,7 +204,7 @@ describe DossierProjectionService do
 
         context 'when external id is set' do
           before do
-            dossier.champs.first.update(external_id: 'GB')
+            dossier.champs_public.first.update(external_id: 'GB')
           end
 
           it { is_expected.to eq('Royaume-Uni') }
@@ -212,7 +212,7 @@ describe DossierProjectionService do
 
         context 'when no external id is set' do
           before do
-            dossier.champs.first.update(value: "qu'il est beau mon pays")
+            dossier.champs_public.first.update(value: "qu'il est beau mon pays")
           end
 
           it { is_expected.to eq("qu'il est beau mon pays") }
