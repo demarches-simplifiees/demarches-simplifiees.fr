@@ -3,7 +3,7 @@ import morphdom from 'morphdom';
 
 const hide: TurboStreamAction = function () {
   this.targetElements.forEach((element: Element) => {
-    const delay = element.getAttribute('delay');
+    const delay = this.getAttribute('delay');
     const hide = () => element.classList.add('hidden');
     if (delay) {
       setTimeout(hide, parseInt(delay, 10));
@@ -14,7 +14,7 @@ const hide: TurboStreamAction = function () {
 };
 const show: TurboStreamAction = function () {
   this.targetElements.forEach((element: Element) => {
-    const delay = element.getAttribute('delay');
+    const delay = this.getAttribute('delay');
     const show = () => element.classList.remove('hidden');
     if (delay) {
       setTimeout(show, parseInt(delay, 10));

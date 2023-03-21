@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   include TrustedDeviceConcern
-  include Pundit
+  include Pundit::Authorization
   include Devise::StoreLocationExtension
   include ApplicationController::LongLivedAuthenticityToken
   include ApplicationController::ErrorHandling

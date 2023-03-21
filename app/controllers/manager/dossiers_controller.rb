@@ -21,5 +21,9 @@ module Manager
     def unfiltered_list?
       action_name == "index" && !params[:search]
     end
+
+    def paginate_resources(_resources)
+      super.without_count
+    end
   end
 end
