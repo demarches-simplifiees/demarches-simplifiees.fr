@@ -124,11 +124,11 @@ describe TagsSubstitutionConcern, type: :model do
 
         context 'and their value in the dossier are not nil' do
           before do
-            dossier.champs
+            dossier.champs_public
               .find { |champ| champ.libelle == 'libelleA' }
               .update(value: 'libelle1')
 
-            dossier.champs
+            dossier.champs_public
               .find { |champ| champ.libelle == "libelle\xc2\xA0B".encode('utf-8') }
               .update(value: 'libelle2')
           end
@@ -150,7 +150,7 @@ describe TagsSubstitutionConcern, type: :model do
 
         context 'and their value in the dossier are not nil' do
           before do
-            dossier.champs
+            dossier.champs_public
               .find { |champ| champ.libelle == "Intitulé de l'‘«\"évènement\"»’" }
               .update(value: 'ceci est mon évènement')
           end
@@ -176,7 +176,7 @@ describe TagsSubstitutionConcern, type: :model do
       end
 
       before do
-        repetition = dossier.champs
+        repetition = dossier.champs_public
           .find { |champ| champ.libelle == 'Répétition' }
         repetition.add_row(dossier.revision)
         repetition.add_row(dossier.revision)
@@ -203,7 +203,7 @@ describe TagsSubstitutionConcern, type: :model do
 
       context 'and the champ has a primary value' do
         before do
-          dossier.champs.find_by(type_de_champ: type_de_champ).update(primary_value: 'primo')
+          dossier.champs_public.find_by(type_de_champ: type_de_champ).update(primary_value: 'primo')
           dossier.reload
         end
 
@@ -211,7 +211,7 @@ describe TagsSubstitutionConcern, type: :model do
 
         context 'and the champ has a secondary value' do
           before do
-            dossier.champs.find_by(type_de_champ: type_de_champ).update(secondary_value: 'secundo')
+            dossier.champs_public.find_by(type_de_champ: type_de_champ).update(secondary_value: 'secundo')
             dossier.reload
           end
 
@@ -284,7 +284,7 @@ describe TagsSubstitutionConcern, type: :model do
       context 'champs publics are valid tags' do
         let(:types_de_champ_public) { [{ libelle: 'libelleA' }] }
 
-        before { dossier.champs.first.update(value: 'libelle1') }
+        before { dossier.champs_public.first.update(value: 'libelle1') }
 
         it { is_expected.to eq('libelle1') }
       end
@@ -303,11 +303,11 @@ describe TagsSubstitutionConcern, type: :model do
 
         context 'and its value in the dossier are not nil' do
           before do
-            dossier.champs
+            dossier.champs_public
               .find { |champ| champ.type_champ == TypeDeChamp.type_champs.fetch(:date) }
               .update(value: '2017-04-15')
 
-            dossier.champs
+            dossier.champs_public
               .find { |champ| champ.type_champ == TypeDeChamp.type_champs.fetch(:datetime) }
               .update(value: '2017-09-13 09:00')
           end
@@ -354,7 +354,7 @@ describe TagsSubstitutionConcern, type: :model do
     end
 
     context "match breaking and non breaking spaces" do
-      before { dossier.champs.first.update(value: 'valeur') }
+      before { dossier.champs_public.first.update(value: 'valeur') }
 
       shared_examples "treat all kinds of space as equivalent" do
         context 'and the champ has a non breaking space' do
@@ -401,7 +401,7 @@ describe TagsSubstitutionConcern, type: :model do
 
       before do
         draft_type_de_champ.update(libelle: 'mon nouveau libellé')
-        dossier.champs.first.update(value: 'valeur')
+        dossier.champs_public.first.update(value: 'valeur')
         procedure.update!(draft_revision: procedure.create_new_revision, published_revision: procedure.draft_revision)
       end
 

@@ -51,8 +51,8 @@ describe 'dropdown list with other option activated', js: true do
       select("Secondary 1.2")
       expect(page).to have_selector(".autosave-status.succeeded", visible: true)
 
-      wait_until { user_dossier.champs.first.value == "Secondary 1.2" }
-      expect(user_dossier.champs.first.value).to eq("Secondary 1.2")
+      wait_until { user_dossier.champs_public.first.value == "Secondary 1.2" }
+      expect(user_dossier.champs_public.first.value).to eq("Secondary 1.2")
     end
   end
 

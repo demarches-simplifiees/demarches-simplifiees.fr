@@ -1,0 +1,19 @@
+%tr
+  %td{ class: cell_class(cell: :label) }
+    = row.libelle
+    - if row.mandatory?
+      %span.mandatory *
+  %td{ class: cell_class }
+    = I18n.t("activerecord.attributes.type_de_champ.type_champs.#{row.type_champ}")
+
+  %td{ class: cell_class }
+    = icon
+    = status
+
+  - nested_rows.each_with_index do |group_rows, index|
+    %thead
+      %tr
+        %td.cell-group-header{ colspan: 3 }
+          = "Bloc ##{index + 1} “#{row.libelle}”"
+
+    = render Manager::DossierChampRowComponent.with_collection(group_rows)

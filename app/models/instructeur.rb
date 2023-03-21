@@ -15,14 +15,15 @@ class Instructeur < ApplicationRecord
   has_and_belongs_to_many :administrateurs
 
   has_many :assign_to, dependent: :destroy
-  has_many :groupe_instructeurs, through: :assign_to
-  has_many :procedures, -> { distinct }, through: :groupe_instructeurs
+  has_many :groupe_instructeurs, -> { order(:label) }, through: :assign_to
+  has_many :unordered_groupe_instructeurs, through: :assign_to, source: :groupe_instructeur
+  has_many :procedures, -> { distinct }, through: :unordered_groupe_instructeurs
 
   has_many :assign_to_with_email_notifications, -> { with_email_notifications }, class_name: 'AssignTo', inverse_of: :instructeur
   has_many :groupe_instructeur_with_email_notifications, through: :assign_to_with_email_notifications, source: :groupe_instructeur
 
   has_many :commentaires, inverse_of: :instructeur, dependent: :nullify
-  has_many :dossiers, -> { state_not_brouillon }, through: :groupe_instructeurs
+  has_many :dossiers, -> { state_not_brouillon }, through: :unordered_groupe_instructeurs
   has_many :follows, -> { active }, inverse_of: :instructeur
   has_many :previous_follows, -> { inactive }, class_name: 'Follow', inverse_of: :instructeur
   has_many :followed_dossiers, through: :follows, source: :dossier
@@ -123,11 +124,11 @@ class Instructeur < ApplicationRecord
 
   def notifications_for_dossier(dossier)
     follow = Follow
-      .includes(dossier: [:champs, :avis, :commentaires])
+      .includes(dossier: [:champs_public, :champs_private, :avis, :commentaires])
       .find_by(instructeur: self, dossier: dossier)
 
     if follow.present?
-      demande = follow.dossier.champs.updated_since?(follow.demande_seen_at).any? ||
+      demande = follow.dossier.champs_public.updated_since?(follow.demande_seen_at).any? ||
         follow.dossier.groupe_instructeur_updated_at&.>(follow.demande_seen_at) ||
         dossier.identity_updated_at&.>(follow.demande_seen_at) ||
         false

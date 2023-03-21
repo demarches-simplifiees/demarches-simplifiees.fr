@@ -16,7 +16,6 @@
     = Gon::Base.render_data(camel_case: true, init: true, nonce:  request.content_security_policy_nonce)
 
     = vite_client_tag
-    = vite_react_refresh_tag
     = vite_javascript_tag 'application'
     - if administrateur_signed_in?
       = vite_javascript_tag 'track-admin'

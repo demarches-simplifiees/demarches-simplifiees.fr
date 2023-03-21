@@ -591,7 +591,7 @@ describe Instructeurs::DossiersController, type: :controller do
           context 'and the expert can access the linked dossiers' do
             let(:saved_avis) { Avis.last(2).first }
             let(:linked_avis) { Avis.last }
-            let(:linked_dossier) { Dossier.find_by(id: dossier.reload.champs.filter(&:dossier_link?).filter_map(&:value)) }
+            let(:linked_dossier) { Dossier.find_by(id: dossier.reload.champs_public.filter(&:dossier_link?).filter_map(&:value)) }
             let(:invite_linked_dossiers) do
               instructeur.assign_to_procedure(linked_dossier.procedure)
               true
@@ -763,7 +763,7 @@ describe Instructeurs::DossiersController, type: :controller do
           dossier_id: dossier.id,
           dossier: {
             champs_private_attributes: {},
-            champs_attributes: {
+            champs_public_attributes: {
               '0': {
                 id: champ_multiple_drop_down_list.id,
                 value: ['', 'un', 'deux']

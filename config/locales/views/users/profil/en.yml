@@ -30,16 +30,16 @@ en:
           If this is not the case for you, contact support:
           <a href="mailto:%{contact_email}">%{contact_email}</a>
         identities:
-          one: FranceConnect Identity
-          other: FranceConnect Identities
+          one: Identity
+          other: Identities
         linked_identities:
           one: 'Your account on %{application_name} is currently linked to the following identity:'
           other: 'Your account on %{application_name} is currently linked to the following %{count} identities:'
-        unlink_confirmation: 'the FranceConnect account "%{full_name}" will no longer be able to access your files.'
-        forbid_access: forbid access
+        unlink_confirmation: 'the account "%{full_name}" will no longer be able to access your files.'
+        forbid_access: Delete access
       ensure_update_email_is_authorized:
         email_not_allowed: "The email %{requested_email} cannot be used, contact support: <a href='mailto:%{contact_email}'>%{contact_email}</a>"
       transfer_all_dossiers:
-        new_transfer: 
+        new_transfer:
           one: "The transfer of a file to %{email} is in progress"
           other: "The transfer of %{count} files to %{email} is in progress"
