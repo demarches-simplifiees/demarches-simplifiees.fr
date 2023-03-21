@@ -2,7 +2,10 @@
 - if @champ.mandatory?
   %span.mandatory *
 
-- if @champ.updated_at.present? && @seen_at.present?
+- if @champ.forked_with_changes?
+  %span.updated-at.highlighted
+    = @champ.updated_at > 1.minutes.ago ? "modifié à l’instant" : "modification à déposer"
+- elsif @champ.updated_at.present? && @seen_at.present?
   %span.updated-at{ class: highlight_if_unseen_class }
     = "modifié le #{try_format_datetime(@champ.updated_at)}"
 

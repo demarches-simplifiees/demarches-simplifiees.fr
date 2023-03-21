@@ -3,10 +3,10 @@
     %span.autosave-explanation-text
       - if annotation?
         = t('.annotations.explanation')
-      - elsif dossier.brouillon?
-        = t('.brouillon.explanation')
-      - else
+      - elsif dossier.editing_fork?
         = t('.en_construction.explanation')
+      - else
+        = t('.brouillon.explanation')
     - if !annotation?
       = link_to t('.more_information'), t("links.common.faq.autosave_url"), class: 'autosave-more-infos fr-link fr-link--sm', **external_link_attributes
 
@@ -15,10 +15,10 @@
     %span.autosave-label
       - if annotation?
         = t('.annotations.confirmation')
-      - elsif dossier.brouillon?
-        = t('.brouillon.confirmation')
-      - else
+      - elsif dossier.editing_fork?
         = t('.en_construction.confirmation')
+      - else
+        = t('.brouillon.confirmation')
     - if !annotation?
       = link_to t('.more_information'), t("links.common.faq.autosave_url"), class: 'autosave-more-infos fr-link fr-link--sm', **external_link_attributes
 
@@ -27,10 +27,10 @@
     %span.autosave-label
       - if annotation?
         = t('.annotations.error')
-      - elsif dossier.brouillon?
-        = t('.brouillon.error')
-      - else
+      - elsif dossier.editing_fork?
         = t('.en_construction.error')
+      - else
+        = t('.brouillon.error')
     %button.button.small.autosave-retry{ type: :button, data: { action: 'autosave-status#onClickRetryButton', autosave_status_target: 'retryButton' } }
       %span.autosave-retry-label réessayer
       %span.autosave-retrying-label enregistrement en cours…

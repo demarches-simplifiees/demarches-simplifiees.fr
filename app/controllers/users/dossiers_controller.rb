@@ -6,12 +6,12 @@ module Users
     layout 'procedure_context', only: [:identite, :update_identite, :siret, :update_siret]
 
     ACTIONS_ALLOWED_TO_ANY_USER = [:index, :recherche, :new, :transferer_all]
-    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :destroy, :demande, :messagerie, :brouillon, :update_brouillon, :submit_brouillon, :modifier, :update, :create_commentaire, :papertrail, :restore]
+    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :destroy, :demande, :messagerie, :brouillon, :submit_brouillon, :submit_en_construction, :modifier, :update, :create_commentaire, :papertrail, :restore]
 
     before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
     before_action :ensure_ownership_or_invitation!, only: ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
-    before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_siret, :brouillon, :update_brouillon, :submit_brouillon, :modifier, :update]
-    before_action :ensure_dossier_can_be_filled, only: [:brouillon, :modifier, :update_brouillon, :submit_brouillon, :update]
+    before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_siret, :brouillon, :submit_brouillon, :submit_en_construction, :modifier, :update]
+    before_action :ensure_dossier_can_be_filled, only: [:brouillon, :modifier, :submit_brouillon, :submit_en_construction, :update]
     before_action :ensure_dossier_can_be_viewed, only: [:show]
     before_action :forbid_invite_submission!, only: [:submit_brouillon]
     before_action :forbid_closed_submission!, only: [:submit_brouillon]
@@ -202,21 +202,30 @@ module Users
       @dossier = dossier_with_champs
     end
 
-    def update_brouillon
-      @dossier = dossier_with_champs
-      update_dossier_and_compute_errors
+    def submit_en_construction
+      @dossier = dossier.find_editing_fork(dossier.user)
+      @dossier = dossier_with_champs(pj_template: false)
+      errors = submit_dossier_and_compute_errors
 
-      respond_to do |format|
-        format.html { render :brouillon }
-        format.turbo_stream do
-          @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_public_params.fetch(:champs_public_all_attributes), dossier.champs_public_all)
+      if errors.blank?
+        editing_fork_origin = @dossier.editing_fork_origin
+        editing_fork_origin.merge_fork(@dossier)
+        redirect_to dossier_path(editing_fork_origin)
+      else
+        flash.now.alert = errors
 
-          render(:update, layout: false)
+        respond_to do |format|
+          format.html { render :modifier }
+          format.turbo_stream do
+            @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_public_params.fetch(:champs_public_all_attributes), dossier.champs_public_all)
+            render :update, layout: false
+          end
         end
       end
     end
 
     def update
+      @dossier = dossier.en_construction? ? dossier.find_editing_fork(dossier.user) : dossier
       @dossier = dossier_with_champs(pj_template: false)
       errors = update_dossier_and_compute_errors
 
@@ -225,9 +234,9 @@ module Users
       end
 
       respond_to do |format|
-        format.html { render :modifier }
         format.turbo_stream do
           @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_public_params.fetch(:champs_public_all_attributes), dossier.champs_public_all)
+          render :update, layout: false
         end
       end
     end
@@ -425,8 +434,8 @@ module Users
     end
 
     def dossier_scope
-      if action_name == 'update_brouillon'
-        Dossier.visible_by_user.or(Dossier.for_procedure_preview)
+      if action_name == 'update'
+        Dossier.visible_by_user.or(Dossier.for_procedure_preview).or(Dossier.for_editing_fork)
       elsif action_name == 'restore'
         Dossier.hidden_by_user
       else
@@ -488,10 +497,6 @@ module Users
         RoutingEngine.compute(@dossier)
       end
 
-      if dossier.en_construction?
-        errors += format_errors(errors: @dossier.check_mandatory_and_visible_champs)
-      end
-
       errors
     end
 
@@ -528,9 +533,12 @@ module Users
 
     def append_anchor_link(str_error, model)
       return str_error.full_message if !model.is_a?(Champ)
+
+      route_helper = @dossier.editing_fork? ? :modifier_dossier_path : :brouillon_dossier_path
+
       [
         "Le champ « #{model.libelle.truncate(200)} » #{str_error}",
-        helpers.link_to(t('views.users.dossiers.fix_champ'), brouillon_dossier_path(anchor: model.input_id))
+        helpers.link_to(t('views.users.dossiers.fix_champ'), public_send(route_helper, anchor: model.input_id))
       ].join(", ")
     rescue # case of invalid type de champ on champ
       str_error

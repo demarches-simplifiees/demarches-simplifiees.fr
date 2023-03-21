@@ -8,7 +8,7 @@ describe "Dossier en_construction" do
   }
 
   let(:champ) {
-    dossier.champs_public.find { _1.type_de_champ_id == tdc.id }
+    dossier.find_editing_fork(dossier.user).champs_public.find { _1.type_de_champ_id == tdc.id }
   }
 
   scenario 'delete a non mandatory piece justificative', js: true do
@@ -28,7 +28,7 @@ describe "Dossier en_construction" do
     scenario 'remplace a mandatory piece justificative', js: true do
       visit_dossier(dossier)
 
-      click_on "Remplacer le fichier toto.txt"
+      click_on "Supprimer le fichier toto.txt"
 
       input_selector = "#attachment-multiple-empty-#{champ.id}"
       expect(page).to have_selector(input_selector)
@@ -51,9 +51,9 @@ describe "Dossier en_construction" do
     scenario 'remplace a mandatory titre identite', js: true do
       visit_dossier(dossier)
 
-      click_on "Remplacer le fichier toto.png"
+      click_on "Supprimer le fichier toto.png"
 
-      input_selector = ".attachment-input-#{champ.piece_justificative_file.attachments.first.id}"
+      input_selector = "##{champ.input_id}"
       expect(page).to have_selector(input_selector)
       find(input_selector).attach_file(Rails.root.join('spec/fixtures/files/file.pdf'))
 
