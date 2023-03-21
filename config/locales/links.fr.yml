@@ -58,7 +58,7 @@ fr:
       mentions_legales:
         label: "Mentions légales"
         title: "Consulter nos Mentions légales"
-        url: "https://www.demarches-simplifiees.fr/mentions-legales"
+        url: "/mentions-legales"
       releases:
         label: "Nouveautés"
         title: "Les dernière mises à jour de la plateforme"
