@@ -23,7 +23,6 @@ describe 'Administrateurs can manage administrateurs', js: true do
     scenario 'the administrator can add another administrator' do
       another_administrateur = create(:administrateur)
       visit admin_procedure_administrateurs_path(procedure)
-      find('#administrateurs').click
 
       fill_in('administrateur_email', with: another_administrateur.email)
 
@@ -40,8 +39,6 @@ describe 'Administrateurs can manage administrateurs', js: true do
     scenario 'the administrator from manager can not add another administrator' do
       administrateur.administrateurs_procedures.update_all(manager: true)
       visit admin_procedure_administrateurs_path(procedure)
-
-      find('#administrateurs').click
 
       expect(page).to have_css("#administrateur_email[disabled=\"disabled\"]")
     end

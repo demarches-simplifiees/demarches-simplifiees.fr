@@ -1,4 +1,6 @@
 class EditableChamp::ChampLabelContentComponent < ApplicationComponent
+  include ApplicationHelper
+
   def initialize(champ:, seen_at: nil)
     @champ, @seen_at = champ, seen_at
   end
@@ -11,9 +13,5 @@ class EditableChamp::ChampLabelContentComponent < ApplicationComponent
 
   def highlight?
     @champ.updated_at.present? && @seen_at&.<(@champ.updated_at)
-  end
-
-  def try_format_datetime(datetime)
-    datetime.present? ? I18n.l(datetime) : ''
   end
 end
