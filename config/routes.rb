@@ -193,7 +193,7 @@ Rails.application.routes.draw do
 
   get "contact-admin", to: "support#admin"
 
-  get "mentions-legales", to: "legal_notice#index"
+  get "mentions-legales", to: "static_pages#legal_notice"
 
   post "webhooks/sendinblue", to: "webhook#sendinblue"
   post "webhooks/helpscout", to: "webhook#helpscout"
