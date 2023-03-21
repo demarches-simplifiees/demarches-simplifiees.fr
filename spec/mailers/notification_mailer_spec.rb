@@ -91,7 +91,7 @@ RSpec.describe NotificationMailer, type: :mailer do
 
     context 'when dossier user is deleted' do
       before do
-        dossier.user.delete_and_keep_track_dossiers(administrateur)
+        dossier.user.delete_and_keep_track_dossiers_also_delete_user(administrateur)
         dossier.reload
       end
 
