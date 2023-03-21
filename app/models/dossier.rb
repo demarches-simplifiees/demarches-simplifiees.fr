@@ -40,6 +40,7 @@
 #  updated_at                                         :datetime
 #  batch_operation_id                                 :bigint
 #  dossier_transfer_id                                :bigint
+#  editing_fork_origin_id                             :bigint
 #  groupe_instructeur_id                              :bigint
 #  parent_dossier_id                                  :bigint
 #  revision_id                                        :bigint
@@ -50,6 +51,7 @@ class Dossier < ApplicationRecord
   include DossierPrefillableConcern
   include DossierRebaseConcern
   include DossierSectionsConcern
+  include DossierCloneConcern
 
   enum state: {
     brouillon:       'brouillon',
@@ -148,7 +150,6 @@ class Dossier < ApplicationRecord
   belongs_to :groupe_instructeur, optional: true
   belongs_to :revision, class_name: 'ProcedureRevision', optional: false
   belongs_to :user, optional: true
-  belongs_to :parent_dossier, class_name: 'Dossier', optional: true
   belongs_to :batch_operation, optional: true
   has_many :dossier_batch_operations, dependent: :destroy
   has_many :batch_operations, through: :dossier_batch_operations
@@ -161,7 +162,6 @@ class Dossier < ApplicationRecord
 
   belongs_to :transfer, class_name: 'DossierTransfer', foreign_key: 'dossier_transfer_id', optional: true, inverse_of: :dossiers
   has_many :transfer_logs, class_name: 'DossierTransferLog', dependent: :destroy
-  has_many :cloned_dossiers, class_name: 'Dossier', foreign_key: 'parent_dossier_id', dependent: :nullify, inverse_of: :parent_dossier
 
   accepts_nested_attributes_for :champs
   accepts_nested_attributes_for :champs_public
@@ -236,7 +236,7 @@ class Dossier < ApplicationRecord
   scope :prefilled,                 -> { where(prefilled: true) }
   scope :hidden_by_user,            -> { where.not(hidden_by_user_at: nil) }
   scope :hidden_by_administration,  -> { where.not(hidden_by_administration_at: nil) }
-  scope :visible_by_user,           -> { where(for_procedure_preview: false).or(where(for_procedure_preview: nil)).where(hidden_by_user_at: nil) }
+  scope :visible_by_user,           -> { where(for_procedure_preview: false).or(where(for_procedure_preview: nil)).where(hidden_by_user_at: nil, editing_fork_origin_id: nil) }
   scope :visible_by_administration, -> {
     state_not_brouillon
       .where(hidden_by_administration_at: nil)
@@ -247,6 +247,7 @@ class Dossier < ApplicationRecord
     state_not_brouillon.hidden_by_administration.or(state_en_construction.hidden_by_user)
   }
   scope :for_procedure_preview, -> { where(for_procedure_preview: true) }
+  scope :for_editing_fork, -> { where.not(editing_fork_origin_id: nil) }
 
   scope :order_by_updated_at,            -> (order = :desc) { order(updated_at: order) }
   scope :order_by_created_at,            -> (order = :asc) { order(depose_at: order, created_at: order, id: order) }
@@ -453,7 +454,7 @@ class Dossier < ApplicationRecord
   delegate :siret, :siren, to: :etablissement, allow_nil: true
   delegate :france_connect_information, to: :user, allow_nil: true
 
-  before_save :build_default_champs_for_new_dossier, if: Proc.new { revision_id_was.nil? && parent_dossier_id.nil? }
+  before_save :build_default_champs_for_new_dossier, if: Proc.new { revision_id_was.nil? && parent_dossier_id.nil? && editing_fork_origin_id.nil? }
   before_save :update_search_terms
 
   after_save :send_web_hook
@@ -556,7 +557,7 @@ class Dossier < ApplicationRecord
   end
 
   def can_transition_to_en_construction?
-    brouillon? && procedure.dossier_can_transition_to_en_construction? && !for_procedure_preview?
+    brouillon? && procedure.dossier_can_transition_to_en_construction? && !for_procedure_preview? && !editing_fork?
   end
 
   def can_terminer?
@@ -1236,32 +1237,6 @@ class Dossier < ApplicationRecord
     en_brouillon_expired_to_delete.find_each(&:purge_discarded)
     en_construction_expired_to_delete.find_each(&:purge_discarded)
     termine_expired_to_delete.find_each(&:purge_discarded)
-  end
-
-  def clone
-    dossier_attributes = [:autorisation_donnees, :user_id, :revision_id, :groupe_instructeur_id]
-    relationships = [:individual, :etablissement]
-
-    cloned_dossier = deep_clone(only: dossier_attributes, include: relationships) do |original, kopy|
-      PiecesJustificativesService.clone_attachments(original, kopy)
-
-      if original.is_a?(Dossier)
-        kopy.parent_dossier_id = original.id
-        kopy.state = Dossier.states.fetch(:brouillon)
-        cloned_champs = original.champs
-          .index_by(&:id)
-          .transform_values(&:clone)
-
-        kopy.champs = cloned_champs.values.map do |champ|
-          champ.dossier = kopy
-          champ.parent = cloned_champs[champ.parent_id] if champ.child?
-          champ
-        end
-      end
-    end
-
-    transaction { cloned_dossier.save! }
-    cloned_dossier.reload
   end
 
   def find_champs_by_stable_ids(stable_ids)

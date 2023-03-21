@@ -362,6 +362,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_02_160046) do
     t.string "deleted_user_email_never_send"
     t.datetime "depose_at", precision: 6
     t.bigint "dossier_transfer_id"
+    t.bigint "editing_fork_origin_id"
     t.datetime "en_construction_at", precision: 6
     t.datetime "en_construction_close_to_expiration_notice_sent_at", precision: 6
     t.datetime "en_instruction_at", precision: 6
@@ -393,6 +394,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_02_160046) do
     t.index ["archived"], name: "index_dossiers_on_archived"
     t.index ["batch_operation_id"], name: "index_dossiers_on_batch_operation_id"
     t.index ["dossier_transfer_id"], name: "index_dossiers_on_dossier_transfer_id"
+    t.index ["editing_fork_origin_id"], name: "index_dossiers_on_editing_fork_origin_id"
     t.index ["groupe_instructeur_id"], name: "index_dossiers_on_groupe_instructeur_id"
     t.index ["hidden_at"], name: "index_dossiers_on_hidden_at"
     t.index ["prefill_token"], name: "index_dossiers_on_prefill_token", unique: true

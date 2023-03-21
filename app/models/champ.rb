@@ -5,7 +5,7 @@
 #  id                             :integer          not null, primary key
 #  data                           :jsonb
 #  fetch_external_data_exceptions :string           is an Array
-#  prefilled                      :boolean          default(FALSE)
+#  prefilled                      :boolean
 #  private                        :boolean          default(FALSE), not null
 #  rebased_at                     :datetime
 #  type                           :string
@@ -109,6 +109,10 @@ class Champ < ApplicationRecord
 
   def child?
     parent_id.present?
+  end
+
+  def stable_id_with_row
+    [row_id, stable_id].compact
   end
 
   def sections
@@ -226,10 +230,10 @@ class Champ < ApplicationRecord
     update!(data: data)
   end
 
-  def clone
+  def clone(fork = false)
     champ_attributes = [:parent_id, :private, :row_id, :type, :type_de_champ_id]
-    value_attributes = private? ? [] : [:value, :value_json, :data, :external_id]
-    relationships = private? ? [] : [:etablissement, :geo_areas]
+    value_attributes = fork || !private? ? [:value, :value_json, :data, :external_id] : []
+    relationships = fork || !private? ? [:etablissement, :geo_areas] : []
 
     deep_clone(only: champ_attributes + value_attributes, include: relationships) do |original, kopy|
       PiecesJustificativesService.clone_attachments(original, kopy)
