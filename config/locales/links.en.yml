@@ -55,6 +55,7 @@ en:
       mentions_legales:
         label: "Legal notices"
         title: "Legal notices regarding our platform"
+        url: "https://www.demarches-simplifiees.fr/mentions-legales"
       releases:
         label: "Releases notes"
         title: "Our last updates"
