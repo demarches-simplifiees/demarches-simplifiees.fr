@@ -83,7 +83,7 @@ class AttestationTemplate < ApplicationRecord
       footer: params.fetch(:footer, footer),
       logo: params.fetch(:logo, logo.attached? ? logo : nil),
       signature: params.fetch(:signature, signature.attached? ? signature : nil),
-      qrcode: dossier ? qrcode_dossier_url(dossier, created_at: dossier.encoded_date(:created_at)) : nil
+      qrcode: dossier && dossier.id ? qrcode_dossier_url(dossier, created_at: dossier.encoded_date(:created_at)) : nil
     }
   end
 
