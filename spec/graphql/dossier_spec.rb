@@ -26,7 +26,7 @@ RSpec.describe Types::DossierType, type: :graphql do
     end
   end
 
-  describe 'dossier with champs' do
+  describe 'dossier with champs', vcr: { cassette_name: 'graphql_communes' } do
     let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :communes }, { type: :address }, { type: :siret }]) }
     let(:dossier) { create(:dossier, :accepte, :with_populated_champs, procedure: procedure) }
     let(:query) { DOSSIER_WITH_CHAMPS_QUERY }
