@@ -71,12 +71,14 @@ describe AttestationTemplate, type: :model do
       let(:attestation_template) { create(:attestation_template, :with_files) }
 
       it do
-        expect(subject.logo.blob).not_to eq(attestation_template.logo.blob)
+        expect(subject.logo.attachment).not_to eq(attestation_template.logo.attachment)
+        expect(subject.logo.blob).to eq(attestation_template.logo.blob)
         expect(subject.logo.attached?).to be_truthy
       end
 
       it do
-        expect(subject.signature.blob).not_to eq(attestation_template.signature.blob)
+        expect(subject.signature.attachment).not_to eq(attestation_template.signature.attachment)
+        expect(subject.signature.blob).to eq(attestation_template.signature.blob)
         expect(subject.signature.attached?).to be_truthy
       end
     end
