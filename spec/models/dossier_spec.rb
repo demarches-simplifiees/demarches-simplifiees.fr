@@ -775,20 +775,20 @@ describe Dossier do
     end
 
     context 'when the dossier is in en_instruction state ' do
-      let!(:dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
+      let!(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
 
       context 'when the procedure has no attestation' do
         it { expect(dossier.attestation).to be_nil }
       end
 
       context 'when the procedure has an unactivated attestation' do
-        let(:attestation_template) { AttestationTemplate.new(activated: false) }
+        let(:attestation_template) { build(:attestation_template, activated: false) }
 
         it { expect(dossier.attestation).to be_nil }
       end
 
       context 'when the procedure attached has an activated attestation' do
-        let(:attestation_template) { AttestationTemplate.new(activated: true) }
+        let(:attestation_template) { build(:attestation_template, activated: true) }
 
         it { expect(dossier.attestation).not_to be_nil }
       end

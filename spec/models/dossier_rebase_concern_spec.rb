@@ -70,19 +70,6 @@ describe Dossier do
           expect(dossier.can_rebase?).to be_truthy
         end
       end
-
-      context 'with attestation template changes' do
-        before do
-          attestation_template.update(title: "Test")
-          procedure.publish_revision!
-          dossier.reload
-        end
-
-        it 'should be true' do
-          expect(dossier.pending_changes).not_to be_empty
-          expect(dossier.can_rebase?).to be_truthy
-        end
-      end
     end
 
     context 'en_instruction' do
@@ -120,19 +107,6 @@ describe Dossier do
         it 'should be false' do
           expect(dossier.pending_changes).not_to be_empty
           expect(dossier.can_rebase?).to be_falsey
-        end
-      end
-
-      context 'with attestation template changes' do
-        before do
-          attestation_template.update(title: "Test")
-          procedure.publish_revision!
-          dossier.reload
-        end
-
-        it 'should be true' do
-          expect(dossier.pending_changes).not_to be_empty
-          expect(dossier.can_rebase?).to be_truthy
         end
       end
 

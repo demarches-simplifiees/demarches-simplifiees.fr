@@ -25,6 +25,8 @@ fr:
         closed_mail: L’email de notification d’acceptation de dossier
         refused_mail: L’email de notification de refus de dossier
         without_continuation_mail: L’email de notification de classement sans suite de dossier
+        attestation_template: Le modèle d'attestation
+        draft_revision: Le formulaire
     errors:
       models:
         procedure:

@@ -2,45 +2,48 @@ module Administrateurs
   class AttestationTemplatesController < AdministrateurController
     before_action :retrieve_procedure
 
+    def show
+      redirect_to edit_admin_procedure_attestation_template_path(@procedure)
+    end
+
     def edit
-      @attestation_template = build_attestation
+      @attestation_template = build_attestation_template
     end
 
     def update
-      attestation_template = @procedure.draft_attestation_template.find_or_revise!
+      @procedure.move_attestation_template_to_procedure!
 
-      if attestation_template.update(activated_attestation_params)
-        AttestationTemplate
-          .where(id: @procedure.revisions.pluck(:attestation_template_id).compact)
-          .update_all(activated: attestation_template.activated?)
+      @attestation_template = @procedure.attestation_template
 
-        flash.notice = "L'attestation a bien été modifiée"
+      if @attestation_template.update(activated_attestation_params)
+        flash.notice = "Le model de l’attestation a bien été modifiée"
+
+        redirect_to edit_admin_procedure_attestation_template_path(@procedure)
       else
-        flash.alert = attestation_template.errors.full_messages.join('<br>')
-      end
+        flash.now.alert = @attestation_template.errors.full_messages
 
-      redirect_to edit_admin_procedure_attestation_template_path(@procedure)
+        render :edit
+      end
     end
 
     def create
-      attestation_template = build_attestation(activated_attestation_params)
+      @procedure.move_attestation_template_to_procedure!
 
-      if attestation_template.save
-        if @procedure.publiee? && !@procedure.feature_enabled?(:procedure_revisions)
-          # If revisions support is not enabled and procedure is published
-          # attach the same attestation template to published revision.
-          @procedure.published_revision.update(attestation_template: attestation_template)
-        end
-        flash.notice = "L'attestation a bien été sauvegardée"
+      @attestation_template = build_attestation_template(activated_attestation_params)
+
+      if @attestation_template.save
+        flash.notice = "Le model de l’attestation a bien été enregistrée"
+
+        redirect_to edit_admin_procedure_attestation_template_path(@procedure)
       else
-        flash.alert = attestation_template.errors.full_messages.join('<br>')
-      end
+        flash.now.alert = @attestation_template.errors.full_messages
 
-      redirect_to edit_admin_procedure_attestation_template_path(@procedure)
+        render :edit
+      end
     end
 
     def preview
-      attestation_template = build_attestation
+      attestation_template = build_attestation_template
       @attestation = attestation_template.render_attributes_for({})
 
       render 'administrateurs/attestation_templates/show', formats: [:pdf], locals: attestation_template.version(@procedure)
@@ -48,8 +51,8 @@ module Administrateurs
 
     private
 
-    def build_attestation(attributes = {})
-      attestation_template = @procedure.draft_attestation_template || @procedure.draft_revision.build_attestation_template
+    def build_attestation_template(attributes = {})
+      attestation_template = @procedure.attestation_template || @procedure.build_attestation_template
       attestation_template.attributes = attributes
       attestation_template
     end

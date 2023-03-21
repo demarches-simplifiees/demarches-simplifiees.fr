@@ -23,7 +23,6 @@ FactoryBot.define do
       types_de_champ_public { [] }
       types_de_champ_private { [] }
       updated_at { nil }
-      attestation_template { nil }
       dossier_submitted_message { nil }
     end
 
@@ -32,7 +31,7 @@ FactoryBot.define do
         raise "use types_de_champ_public instead of types_de_champ"
       end
 
-      initial_revision = build(:procedure_revision, procedure: procedure, attestation_template: evaluator.attestation_template, dossier_submitted_message: evaluator.dossier_submitted_message)
+      initial_revision = build(:procedure_revision, procedure: procedure, dossier_submitted_message: evaluator.dossier_submitted_message)
 
       if evaluator.types_de_champ_public.present?
         if !evaluator.types_de_champ_public.first.is_a?(Hash)

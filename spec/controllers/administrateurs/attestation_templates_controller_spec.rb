@@ -1,7 +1,7 @@
 describe Administrateurs::AttestationTemplatesController, type: :controller do
   let(:admin) { create(:administrateur) }
   let(:attestation_template) { build(:attestation_template) }
-  let(:procedure) { create :procedure, administrateur: admin, attestation_template: attestation_template }
+  let(:procedure) { create(:procedure, administrateur: admin, attestation_template: attestation_template) }
   let(:logo) { fixture_file_upload('spec/fixtures/files/white.png', 'image/png') }
   let(:logo2) { fixture_file_upload('spec/fixtures/files/white.png', 'image/png') }
   let(:signature) { fixture_file_upload('spec/fixtures/files/black.png', 'image/png') }
@@ -36,48 +36,41 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
         params: {
           procedure_id: procedure.id
         }
-      procedure.reload
     end
 
     context 'if an attestation template exists on the procedure' do
-      after { procedure.draft_revision.attestation_template&.destroy }
-
       context 'with images' do
-        let!(:attestation_template) do
-          create(:attestation_template, attestation_params.merge(logo: logo, signature: signature))
-        end
+        let(:attestation_template) { build(:attestation_template, attestation_params.merge(logo: logo, signature: signature)) }
 
-        it { expect(assigns(:attestation)).to include(attestation_params) }
-        it { expect(assigns(:attestation)[:created_at]).to eq(Time.zone.now) }
-        it { expect(assigns(:attestation)[:logo].download).to eq(logo2.read) }
-        it { expect(assigns(:attestation)[:signature].download).to eq(signature2.read) }
+        it do
+          expect(assigns(:attestation)).to include(attestation_params)
+          expect(assigns(:attestation)[:created_at]).to eq(Time.zone.now)
+          expect(assigns(:attestation)[:logo].download).to eq(logo2.read)
+          expect(assigns(:attestation)[:signature].download).to eq(signature2.read)
+        end
         it_behaves_like 'rendering a PDF successfully'
       end
 
       context 'without images' do
-        let!(:attestation_template) do
-          create(:attestation_template, attestation_params)
-        end
+        let(:attestation_template) { build(:attestation_template, attestation_params) }
 
-        it { expect(assigns(:attestation)).to include(attestation_params) }
-        it { expect(assigns(:attestation)[:created_at]).to eq(Time.zone.now) }
-        it { expect(assigns(:attestation)[:logo]).to eq(nil) }
-        it { expect(assigns(:attestation)[:signature]).to eq(nil) }
+        it do
+          expect(assigns(:attestation)).to include(attestation_params)
+          expect(assigns(:attestation)[:created_at]).to eq(Time.zone.now)
+          expect(assigns(:attestation)[:logo]).to eq(nil)
+          expect(assigns(:attestation)[:signature]).to eq(nil)
+        end
         it_behaves_like 'rendering a PDF successfully'
       end
 
       context 'with empty footer' do
-        let!(:attestation_template) do
-          create(:attestation_template, { title: 't', body: 'b', footer: nil })
-        end
+        let(:attestation_template) { build(:attestation_template, { title: 't', body: 'b', footer: nil }) }
 
         it_behaves_like 'rendering a PDF successfully'
       end
 
       context 'with large footer' do
-        let!(:attestation_params) do
-          create(:attestation_template, { title: 't', body: 'b', footer: ' ' * 190 })
-        end
+        let(:attestation_params) { build(:attestation_template, { title: 't', body: 'b', footer: ' ' * 190 }) }
 
         it_behaves_like 'rendering a PDF successfully'
       end
@@ -94,9 +87,12 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
 
     context 'if an attestation template does not exist on the procedure' do
       let(:attestation_template) { nil }
-      it { expect(subject.status).to eq(200) }
-      it { expect(assigns(:attestation_template).id).to be_nil }
-      it { expect(assigns(:attestation_template)).to be_an_instance_of(AttestationTemplate) }
+
+      it do
+        expect(subject.status).to eq(200)
+        expect(assigns(:attestation_template).id).to be_nil
+        expect(assigns(:attestation_template)).to be_an_instance_of(AttestationTemplate)
+      end
     end
   end
 
@@ -111,17 +107,16 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
             procedure_id: procedure.id,
             attestation_template: attestation_params.merge(logo: logo, signature: signature)
           }
-        procedure.reload
       end
 
-      it { expect(procedure.draft_attestation_template).to have_attributes(attestation_params) }
-      it { expect(procedure.draft_attestation_template.activated).to be true }
-      it { expect(procedure.draft_attestation_template.logo.download).to eq(logo2.read) }
-      it { expect(procedure.draft_attestation_template.signature.download).to eq(signature2.read) }
-      it { expect(response).to redirect_to edit_admin_procedure_attestation_template_path(procedure) }
-      it { expect(flash.notice).to eq("L'attestation a bien été sauvegardée") }
-
-      after { procedure.draft_attestation_template.destroy }
+      it do
+        expect(procedure.attestation_template).to have_attributes(attestation_params)
+        expect(procedure.attestation_template.activated).to be true
+        expect(procedure.attestation_template.logo.download).to eq(logo2.read)
+        expect(procedure.attestation_template.signature.download).to eq(signature2.read)
+        expect(response).to redirect_to edit_admin_procedure_attestation_template_path(procedure)
+        expect(flash.notice).to eq("Le model de l’attestation a bien été enregistrée")
+      end
     end
 
     context 'when something wrong happens in the attestation template creation' do
@@ -134,16 +129,16 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
             procedure_id: procedure.id,
             attestation_template: attestation_params
           }
-        procedure.reload
       end
 
-      it { expect(response).to redirect_to edit_admin_procedure_attestation_template_path(procedure) }
-      it { expect(flash.alert).to be_present }
-      it { expect(procedure.draft_attestation_template).to be nil }
+      it do
+        expect(flash.alert).to be_present
+        expect(procedure.draft_attestation_template).to be nil
+      end
     end
 
     context 'when procedure is published' do
-      let(:procedure) { create(:procedure, :published, administrateur: admin, attestation_template: attestation_template) }
+      let(:procedure) { create(:procedure, :published, administrateur: admin) }
       let(:attestation_template) { nil }
       let(:attestation_params) { { title: 't', body: 'b', footer: '', activated: true } }
       let(:revisions_enabled) { false }
@@ -158,23 +153,11 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
             procedure_id: procedure.id,
             attestation_template: attestation_params
           }
-        procedure.reload
       end
 
-      context 'and revisions are not activated' do
-        it do
-          expect(procedure.draft_attestation_template).to eq(procedure.published_attestation_template)
-          expect(procedure.draft_attestation_template.title).to eq('t')
-        end
-      end
-
-      context 'and revisions are activated' do
-        let(:revisions_enabled) { true }
-        it do
-          expect(procedure.draft_attestation_template).not_to eq(procedure.published_attestation_template)
-          expect(procedure.draft_attestation_template.title).to eq('t')
-          expect(procedure.published_attestation_template).to be_nil
-        end
+      it do
+        expect(procedure.attestation_template).to eq(procedure.attestation_template)
+        expect(procedure.attestation_template.title).to eq('t')
       end
     end
   end
@@ -190,69 +173,93 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
             procedure_id: procedure.id,
             attestation_template: attestation_params_with_images
           }
-        procedure.reload
       end
 
-      it { expect(procedure.draft_attestation_template).to have_attributes(attestation_params) }
-      it { expect(procedure.draft_attestation_template.logo.download).to eq(logo2.read) }
-      it { expect(procedure.draft_attestation_template.signature.download).to eq(signature2.read) }
-      it { expect(response).to redirect_to edit_admin_procedure_attestation_template_path(procedure) }
-      it { expect(flash.notice).to eq("L'attestation a bien été modifiée") }
-
-      after { procedure.draft_attestation_template&.destroy }
-    end
-
-    context 'when something wrong happens in the attestation template creation' do
-      before do
-        expect_any_instance_of(AttestationTemplate).to receive(:update).and_return(false)
-        expect_any_instance_of(AttestationTemplate).to receive(:errors)
-          .and_return(double(full_messages: ['nop']))
-
-        patch :update,
-          params: {
-            procedure_id: procedure.id,
-            attestation_template: attestation_params_with_images
-          }
-        procedure.reload
+      it do
+        expect(procedure.attestation_template).to have_attributes(attestation_params)
+        expect(procedure.attestation_template.logo.download).to eq(logo2.read)
+        expect(procedure.attestation_template.signature.download).to eq(signature2.read)
+        expect(response).to redirect_to edit_admin_procedure_attestation_template_path(procedure)
+        expect(flash.notice).to eq("Le model de l’attestation a bien été modifiée")
       end
-
-      it { expect(response).to redirect_to edit_admin_procedure_attestation_template_path(procedure) }
-      it { expect(flash.alert).to eq('nop') }
     end
 
     context 'when procedure is published' do
-      let(:procedure) { create(:procedure, :published, administrateur: admin, attestation_template: attestation_template) }
-      let(:attestation_template) { create(:attestation_template, title: 'a') }
-      let(:attestation_params) { { title: 't', body: 'b', footer: '', activated: true } }
-      let(:revisions_enabled) { false }
+      let(:procedure) { create(:procedure, :with_type_de_champ, types_de_champ_count: 3, administrateur: admin, attestation_template: attestation_template) }
+      let(:dossier) {}
+      let(:attestation_template) { build(:attestation_template, title: 'a') }
+      let(:attestation_params) do
+        {
+          title: title,
+          body: body,
+          footer: '',
+          activated: true
+        }
+      end
+      let(:type_de_champ) { procedure.draft_revision.types_de_champ_public[0] }
+      let(:removed_type_de_champ) { procedure.draft_revision.types_de_champ_public[1] }
+      let(:removed_and_published_type_de_champ) { procedure.draft_revision.types_de_champ_public[2] }
+      let(:new_type_de_champ) { procedure.draft_revision.types_de_champ_public.find_by(libelle: 'new type de champ') }
+      let(:draft_type_de_champ) { procedure.draft_revision.types_de_champ_public.find_by(libelle: 'draft type de champ') }
+      let(:title) { 'title --numéro du dossier--' }
+      let(:body) { "body --#{type_de_champ.libelle}-- et --#{new_type_de_champ.libelle}--" }
 
       before do
-        if revisions_enabled
-          Flipper.enable(:procedure_revisions, procedure)
-        end
+        procedure.publish!
+        procedure.reload
+        procedure.draft_revision.remove_type_de_champ(removed_and_published_type_de_champ.stable_id)
+        procedure.draft_revision.add_type_de_champ(libelle: 'new type de champ', type_champ: 'text')
+        procedure.publish_revision!
+        procedure.reload
+        procedure.draft_revision.remove_type_de_champ(removed_type_de_champ.stable_id)
+        procedure.draft_revision.add_type_de_champ(libelle: 'draft type de champ', type_champ: 'text')
+
+        dossier
 
         patch :update,
           params: {
             procedure_id: procedure.id,
             attestation_template: attestation_params
           }
-        procedure.reload
       end
 
-      context 'and revisions are not activated' do
+      context 'normal' do
         it do
-          expect(procedure.draft_attestation_template).to eq(procedure.published_attestation_template)
-          expect(procedure.draft_attestation_template.title).to eq('t')
+          expect(response).to redirect_to edit_admin_procedure_attestation_template_path(procedure)
+          expect(procedure.attestation_template.title).to eq(title)
+          expect(procedure.attestation_template.body).to eq(body)
         end
       end
 
-      context 'and revisions are activated' do
-        let(:revisions_enabled) { true }
-        it do
-          expect(procedure.draft_attestation_template).not_to eq(procedure.published_attestation_template)
-          expect(procedure.draft_attestation_template.title).to eq('t')
-          expect(procedure.published_attestation_template.title).to eq('a')
-        end
+      context 'with invalid tag' do
+        let(:body) { 'body --yolo--' }
+
+        it { expect(flash.alert).to eq(['Le contenu du modèle de l’attestation réfère au champ "yolo" qui n’existe pas']) }
+      end
+
+      context 'with removed champ' do
+        let(:body) { "body --#{removed_type_de_champ.libelle}--" }
+
+        it { expect(flash.alert).to eq(["Le contenu du modèle de l’attestation réfère au champ \"#{removed_type_de_champ.libelle}\" qui a été supprimé mais la suppression n’est pas encore publiée"]) }
+      end
+
+      context 'with removed and published' do
+        let(:body) { "body --#{removed_and_published_type_de_champ.libelle}--" }
+
+        it { expect(flash.alert).to eq(["Le contenu du modèle de l’attestation réfère au champ \"#{removed_and_published_type_de_champ.libelle}\" qui a été supprimé"]) }
+      end
+
+      context 'with new champ missing on dossier submitted on previous revision' do
+        let(:dossier) { create(:dossier, :en_construction, procedure: procedure, revision: procedure.revisions.first) }
+        let(:body) { "body --#{new_type_de_champ.libelle}--" }
+
+        it { expect(flash.alert).to eq(["Le contenu du modèle de l’attestation réfère au champ \"#{new_type_de_champ.libelle}\" qui n’existe pas sur un des dossiers en cours de traitement"]) }
+      end
+
+      context 'with champ on draft' do
+        let(:body) { "body --#{draft_type_de_champ.libelle}--" }
+
+        it { expect(flash.alert).to eq(["Le contenu du modèle de l’attestation réfère au champ \"#{draft_type_de_champ.libelle}\" qui n’est pas encore publié"]) }
       end
     end
   end
