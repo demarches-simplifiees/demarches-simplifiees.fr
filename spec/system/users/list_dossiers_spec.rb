@@ -80,6 +80,25 @@ describe 'user access to the list of their dossiers', js: true do
         expect(page).not_to have_content(dossier_brouillon.procedure.libelle)
       end
     end
+
+    describe 'clone' do
+      it 'should have links to clone dossiers' do
+        expect(page).to have_link(nil, href: clone_dossier_path(dossier_brouillon))
+        expect(page).to have_link(nil, href: clone_dossier_path(dossier_en_construction))
+        expect(page).to have_link(nil, href: clone_dossier_path(dossier_en_instruction))
+      end
+
+      context 'when user clicks on clone button', js: true do
+        scenario 'the dossier is deleted' do
+          within(:css, "tr[data-dossier-id=\"#{dossier_brouillon.id}\"]") do
+            click_on 'Actions'
+            click_on 'Dupliquer ce dossier'
+          end
+
+          expect(page).to have_content("Votre dossier a bien été dupliqué. Vous pouvez maintenant le vérifier, l’adapter puis le déposer.")
+        end
+      end
+    end
   end
 
   describe "recherche" do
