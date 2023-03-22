@@ -32,7 +32,6 @@ fr:
       accessibilite:
         label: "Accessibilité : partiellement conforme"
         title: "Consulter notre déclaration d’accessibilité"
-        url: "https://www.demarches-simplifiees.fr/declaration-accessibilite"
       api_doc:
         label: "Documentation de l’API"
         title: "Documentation graphql de l’API"
