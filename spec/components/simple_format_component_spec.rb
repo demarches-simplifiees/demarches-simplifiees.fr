@@ -64,6 +64,11 @@ TEXT
     context 'enabled' do
       let(:allow_a) { true }
       it { expect(page).to have_selector("a") }
+      it "inject expected attributes" do
+        link = page.find_link("https://www.demarches-simplifiees.fr").native
+        expect(link[:rel]).to eq("noopener noreferrer")
+        expect(link[:title]).to eq("Nouvel onglet")
+      end
     end
 
     context 'disabled' do
