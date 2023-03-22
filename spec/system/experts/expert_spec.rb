@@ -110,6 +110,10 @@ describe 'Inviting an expert:' do
       expect(page).to have_content('Ma réponse d’expert.')
       expect(page).to have_content('non')
 
+      click_on 'Voir les avis'
+      expect(page).to have_text('Vous')
+      expect(page).to have_text('non')
+
       within('.breadcrumbs') { click_on 'Avis' }
       expect(page).to have_text('1 avis donné')
     end

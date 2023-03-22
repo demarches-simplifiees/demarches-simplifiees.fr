@@ -212,7 +212,7 @@ def add_avis(pdf, avis)
   format_in_2_lines(pdf, "Avis de #{avis.email_to_display}#{avis.confidentiel? ? ' (confidentiel)' : ''}",
     avis.answer || 'En attente de réponse')
 
-  if avis.question_answer.present?
+  if [true, false].include? avis.question_answer
     format_in_2_columns(pdf, "Réponse oui/non ", t("question_answer.#{avis.question_answer}", scope: 'helpers.label'))
   end
 end
