@@ -910,6 +910,9 @@ Ceci est une version abrégée du type `Demarche`, qui n’expose que les métad
 Cela évite l’accès récursif aux dossiers.
 """
 type DemarcheDescriptor {
+  """
+  URL du cadre juridique qui justifie le droit de collecter les données demandées dans la démarche
+  """
   cadreJuridiqueUrl: String
 
   """
@@ -941,13 +944,25 @@ type DemarcheDescriptor {
   Pour une démarche déclarative, état cible des dossiers à valider automatiquement
   """
   declarative: DossierDeclarativeState
+
+  """
+  fichier contenant le cadre juridique
+  """
   deliberation: File
+
+  """
+  URL pour commencer la démarche
+  """
   demarcheUrl: String
 
   """
   Description de la démarche.
   """
   description: String!
+
+  """
+  URL ou email pour contacter le Délégué à la Protection des Données (DPO)
+  """
   dpoUrl: String
 
   """
@@ -956,6 +971,10 @@ type DemarcheDescriptor {
   dureeConservationDossiers: Int!
   id: ID!
   logo: File
+
+  """
+  notice explicative de la démarche
+  """
   notice: File
   noticeUrl: String
 
@@ -966,18 +985,30 @@ type DemarcheDescriptor {
   opendata: Boolean!
   revision: Revision!
   service: Service
+
+  """
+  URL où les usagers trouvent le lien vers la démarche
+  """
   siteWebUrl: String
 
   """
   État de la démarche.
   """
   state: DemarcheState!
+
+  """
+  mots ou expressions attribués à la démarche pour décrire son contenu et la retrouver
+  """
   tags: [String!]!
 
   """
   Titre de la démarche.
   """
   title: String!
+
+  """
+  ministère(s) ou collectivité(s) qui mettent en oeuvre la démarche
+  """
   zones: [String!]!
 }
 
@@ -3333,9 +3364,25 @@ type SelectionUtilisateur implements GeoArea {
 
 type Service {
   id: ID!
+
+  """
+  nom du service qui met en oeuvre la démarche
+  """
   nom: String!
+
+  """
+  nom de l'organisme qui met en oeuvre la démarche
+  """
   organisme: String!
+
+  """
+  n° siret du service qui met en oeuvre la démarche
+  """
   siret: String
+
+  """
+  type d'organisme qui met en oeuvre la démarche
+  """
   typeOrganisme: TypeOrganisme!
 }
 
