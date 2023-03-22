@@ -71,9 +71,7 @@ module DossierRebaseConcern
     changes_by_op[:remove].each { champs_by_stable_id[_1.stable_id].destroy_all }
 
     # update champ
-    if brouillon?
-      changes_by_op[:update].each { apply(_1, champs_by_stable_id[_1.stable_id]) }
-    end
+    changes_by_op[:update].each { apply(_1, champs_by_stable_id[_1.stable_id]) }
 
     # due to repetition tdc clone on update or erase
     # we must reassign tdc to the latest version
