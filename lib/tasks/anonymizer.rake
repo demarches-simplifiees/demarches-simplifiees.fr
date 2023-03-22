@@ -45,6 +45,52 @@ namespace :anonymizer do
       # delayed jobs may contain sensitive data
       "SECURITY LABEL FOR anon ON COLUMN delayed_jobs.handler IS 'MASKED WITH VALUE NULL'",
 
+      # etablissement - nullify everything, random siret and address with respect of degraded mode
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.siret IS 'MASKED WITH VALUE REPLACE(anon.fake_siret(), $$ $$, $$$$)'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.adresse IS 'MASKED WITH VALUE CASE
+                                                                    WHEN adresse IS NULL THEN NULL
+                                                                    ELSE anon.fake_address()
+                                                                    END'",
+
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.association_date_creation IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.association_date_declaration IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.association_date_publication IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.association_objet IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.association_rna IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.association_titre IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.code_insee_localite IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.code_postal IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.complement_adresse IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.diffusable_commercialement IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.enseigne IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.entreprise_bilans_bdf IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.entreprise_bilans_bdf_monnaie IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.entreprise_capital_social IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.entreprise_code_effectif_entreprise IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.entreprise_date_creation IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.entreprise_effectif_annee IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.entreprise_effectif_annuel IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.entreprise_effectif_annuel_annee IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.entreprise_effectif_mensuel IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.entreprise_effectif_mois IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.entreprise_etat_administratif IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.entreprise_forme_juridique IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.entreprise_forme_juridique_code IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.entreprise_nom IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.entreprise_nom_commercial IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.entreprise_numero_tva_intracommunautaire IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.entreprise_prenom IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.entreprise_raison_sociale IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.entreprise_siren IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.entreprise_siret_siege_social IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.libelle_naf IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.localite IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.naf IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.nom_voie IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.numero_voie IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.siege_social IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN etablissements.type_voie IS 'MASKED WITH VALUE NULL'",
+
       # various data
       "SECURITY LABEL FOR anon ON COLUMN active_storage_blobs.key IS 'MASKED WITH VALUE $$REDACTED$$'",
       "SECURITY LABEL FOR anon ON COLUMN api_tokens.encrypted_token IS 'MASKED WITH VALUE anon.random_string(5)'",
@@ -107,6 +153,8 @@ namespace :anonymizer do
     FactoryBot.create(:commentaire)
     FactoryBot.create(:dossier_transfer)
     FactoryBot.create(:email_event)
+    FactoryBot.create(:etablissement)
+    Etablissement.create(siret: "41816609600051", dossier: FactoryBot.create(:dossier)) # degraded mode
     FactoryBot.create(:france_connect_information)
     FactoryBot.create(:individual)
     FactoryBot.create(:traitement, dossier: FactoryBot.create(:dossier))
