@@ -172,10 +172,10 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
     pdf.fill_color grey
     if qrcode.present?
       pdf.move_cursor_to footer_height
-      qrcode_align = :center # version == :v1 ? :center : :left
+      qrcode_align = version == :v1 ? :center : :left
       pdf.print_qr_code(qrcode, level: :q, extent: qrcode_size, margin: margin, align: qrcode_align)
       pdf.move_down 3
-      pdf.text "<u><link href='#{qrcode}'>#{title}</link></u>", :inline_format => true, size: 9, align: qrcode_align, color: "0000FF"
+      pdf.text "<u><link href='#{qrcode}'>cliquez pour vérifier</link></u>", :inline_format => true, size: 9, align: qrcode_align, color: "0000FF"
       if signature.present? && version == :v2
         pdf.move_cursor_to footer_height
         signature_content = if signature.is_a?(ActiveStorage::Attached::One)
@@ -183,7 +183,7 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
         else
           signature.rewind && signature.read
         end
-        pdf.image StringIO.new(signature_content), fit: [max_signature_size, max_signature_size], position: :right
+        pdf.image StringIO.new(signature_content), fit: [qrcode_size, qrcode_size], position: :right
       end
 
     end
