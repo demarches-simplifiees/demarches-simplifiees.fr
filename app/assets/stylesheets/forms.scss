@@ -575,6 +575,16 @@
     padding: $default-padding;
     margin: $default-spacer;
     margin-top: 0;
+    width: 100%;
+  }
+
+  ul {
+    list-style: none;
+
+    li {
+      margin-right: $default-spacer;
+      display: inline-block;
+    }
   }
 }
 
