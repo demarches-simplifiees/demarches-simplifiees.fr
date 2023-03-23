@@ -23,7 +23,8 @@ class Export < ApplicationRecord
     csv: 'csv',
     ods: 'ods',
     xlsx: 'xlsx',
-    zip: 'zip'
+    zip: 'zip',
+    json: 'json'
   }, _prefix: true
 
   enum time_span_type: {
@@ -53,7 +54,7 @@ class Export < ApplicationRecord
   FORMATS_WITH_TIME_SPAN = [:xlsx, :ods, :csv].flat_map do |format|
     [{ format: format, time_span_type: 'everything' }]
   end
-  FORMATS = [:xlsx, :ods, :csv, :zip].map do |format|
+  FORMATS = [:xlsx, :ods, :csv, :zip, :json].map do |format|
     { format: format }
   end
 
@@ -127,6 +128,10 @@ class Export < ApplicationRecord
       zip: {
         time_span_type: {},
         statut: filtered.filter(&:format_zip?).index_by(&:statut)
+      },
+      json: {
+        time_span_type: {},
+        statut: filtered.filter(&:format_json?).index_by(&:statut)
       }
     }
   end
@@ -195,6 +200,8 @@ class Export < ApplicationRecord
       service.to_ods
     when :zip
       service.to_zip
+    when :json
+      service.to_geo_json
     end
   end
 

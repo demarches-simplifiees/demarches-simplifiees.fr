@@ -8,9 +8,14 @@ module Types::Champs
     end
 
     field :grant_type, TitreIdentiteGrantTypeType, null: false
+    field :filled, Boolean, null: false
 
     def grant_type
       TypesDeChamp::TitreIdentiteTypeDeChamp::PIECE_JUSTIFICATIVE
+    end
+
+    def filled
+      object.piece_justificative_file.attached?
     end
   end
 end

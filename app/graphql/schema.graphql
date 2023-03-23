@@ -2204,6 +2204,7 @@ type TextChamp implements Champ {
 }
 
 type TitreIdentiteChamp implements Champ {
+  filled: Boolean!
   grantType: TitreIdentiteGrantType!
   id: ID!
 

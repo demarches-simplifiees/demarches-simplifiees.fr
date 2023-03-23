@@ -200,6 +200,10 @@ class ProcedureRevision < ApplicationRecord
     revision_types_de_champ.find_by!(type_de_champ: tdc)
   end
 
+  def carte?
+    types_de_champ_public.any?(&:carte?)
+  end
+
   private
 
   def compute_estimated_fill_duration

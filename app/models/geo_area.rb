@@ -64,7 +64,10 @@ class GeoArea < ApplicationRecord
         description: description,
         filename: filename,
         id: id,
+        champ_label: champ.libelle,
         champ_id: champ.stable_id,
+        champ_row: champ.row,
+        champ_private: champ.private?,
         dossier_id: champ.dossier_id
       ).compact
     }

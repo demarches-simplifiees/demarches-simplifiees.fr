@@ -1,7 +1,8 @@
 @import "placeholders";
 
-turbo-events {
-  display: none;
+html,
+body {
+  min-height: 100vh;
 }
 
 .page-wrapper {

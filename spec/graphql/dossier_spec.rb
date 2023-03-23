@@ -158,6 +158,30 @@ RSpec.describe Types::DossierType, type: :graphql do
     }
   end
 
+  describe 'dossier with titre identite filled' do
+    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :titre_identite }]) }
+    let(:dossier) { create(:dossier, :accepte, :with_populated_champs, procedure: procedure) }
+
+    let(:query) { DOSSIER_WITH_TITRE_IDENTITE_QUERY }
+    let(:variables) { { number: dossier.id } }
+
+    it {
+      expect(data[:dossier][:champs][0][:filled]).to eq(true)
+    }
+  end
+
+  describe 'dossier with titre identite not filled' do
+    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :titre_identite }]) }
+    let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
+
+    let(:query) { DOSSIER_WITH_TITRE_IDENTITE_QUERY }
+    let(:variables) { { number: dossier.id } }
+
+    it {
+      expect(data[:dossier][:champs][0][:filled]).to eq(false)
+    }
+  end
+
   DOSSIER_QUERY = <<-GRAPHQL
   query($number: Int!) {
     dossier(number: $number) {
@@ -255,6 +279,23 @@ RSpec.describe Types::DossierType, type: :graphql do
           rows {
             champs { id }
           }
+        }
+      }
+    }
+  }
+  GRAPHQL
+
+  DOSSIER_WITH_TITRE_IDENTITE_QUERY = <<-GRAPHQL
+  query($number: Int!) {
+    dossier(number: $number) {
+      id
+      number
+      champs {
+        id
+        label
+        __typename
+        ... on TitreIdentiteChamp {
+          filled
         }
       }
     }

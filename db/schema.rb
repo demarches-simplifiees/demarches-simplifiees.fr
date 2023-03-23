@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_10_100759) do
+ActiveRecord::Schema.define(version: 2022_11_22_124009) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -273,6 +273,7 @@ ActiveRecord::Schema.define(version: 2022_11_10_100759) do
     t.datetime "keep_until"
     t.string "operation", null: false
     t.datetime "updated_at", null: false
+    t.jsonb "data"
     t.index ["bill_signature_id"], name: "index_dossier_operation_logs_on_bill_signature_id"
     t.index ["dossier_id"], name: "index_dossier_operation_logs_on_dossier_id"
     t.index ["keep_until"], name: "index_dossier_operation_logs_on_keep_until"
@@ -681,6 +682,7 @@ ActiveRecord::Schema.define(version: 2022_11_10_100759) do
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
     t.index ["draft_revision_id"], name: "index_procedures_on_draft_revision_id"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
+    t.index ["libelle"], name: "index_procedures_on_libelle"
     t.index ["parent_procedure_id"], name: "index_procedures_on_parent_procedure_id"
     t.index ["path", "closed_at", "hidden_at", "unpublished_at"], name: "procedure_path_uniqueness", unique: true
     t.index ["path", "closed_at", "hidden_at"], name: "index_procedures_on_path_and_closed_at_and_hidden_at", unique: true

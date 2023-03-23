@@ -1,2 +1,2 @@
-- if @administrateur.present?
-  = turbo_stream.remove(@administrateur)
+= turbo_stream.update 'administrateurs',
+  render(Procedure::ProcedureAdministrateurs::AdministrateurComponent.with_collection(@procedure.administrateurs.order('users.email'), procedure: @procedure))
