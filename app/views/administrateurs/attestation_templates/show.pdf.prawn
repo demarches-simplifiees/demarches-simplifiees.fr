@@ -15,10 +15,10 @@ right_margin = (page_width - body_width) / 2
 left_margin = right_margin
 
 #----- size of images
-max_logo_width = body_width
-max_logo_height = 40.mm
-max_signature_size = 40.mm
 qrcode_size = 30.mm
+max_signature_size = 40.mm
+max_logo_height = 40.mm
+max_logo_width = version == :v2 ? body_width - qrcode_size - 5.mm : body_width
 
 def normalize_pdf_text(text)
   text&.tr("\t", '  ')
@@ -32,7 +32,7 @@ created_at = @attestation.fetch(:created_at)
 logo = @attestation[:logo]
 signature = @attestation[:signature]
 qrcode = @attestation[:qrcode]
-footer_height = qrcode.present? ? qrcode_size + 40 : 30
+footer_height = qrcode.present? && version == :v1 ? qrcode_size + 40 : 30
 
 info = {
   :Title => title,
@@ -136,15 +136,24 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
   body_height = pdf.cursor - footer_height
 
   pdf.bounding_box([0, pdf.cursor], width: body_width, height: body_height) do
+    logo_top_position = pdf.cursor
     if logo.present?
       logo_content = if logo.is_a?(ActiveStorage::Attached::One)
         logo.download
       else
         logo.rewind && logo.read
       end
-      pdf.image StringIO.new(logo_content), fit: [max_logo_width, max_logo_height], position: :center
+      pdf.image StringIO.new(logo_content), fit: [max_logo_width, max_logo_height], position: :left
     end
-
+    if qrcode.present? && version == :v2
+      logo_bottom_position = pdf.cursor
+      pdf.move_cursor_to logo_top_position
+      qrcode_align = :right
+      pdf.print_qr_code(qrcode, level: :q, extent: qrcode_size, margin: 5, align: qrcode_align)
+      pdf.move_down 3
+      pdf.text "<u><link href='#{qrcode}'>Scannez pour vérifier</link></u>", :inline_format => true, size: 9, align: qrcode_align, color: "0000FF"
+      pdf.move_cursor_to [logo_bottom_position, pdf.cursor].min
+    end
     pdf.fill_color grey
     pdf.pad_top(10) { pdf.text "le #{l(created_at, format: '%e %B %Y')}", size: 11, align: :right, character_spacing: -0.5 }
 
@@ -155,7 +164,7 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
     pdf.pad_top(30) do
       print pdf, body, size: 11
     end
-    if signature.present? && version == :v1
+    if signature.present?
       pdf.pad_top(20) do
         signature_content = if signature.is_a?(ActiveStorage::Attached::One)
           signature.download
@@ -170,25 +179,15 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
   pdf.repeat(:all) do
     margin = 2
     pdf.fill_color grey
-    if qrcode.present?
+    if qrcode.present? && version == :v1
       pdf.move_cursor_to footer_height
-      qrcode_align = version == :v1 ? :center : :left
+      qrcode_align = :center
       pdf.print_qr_code(qrcode, level: :q, extent: qrcode_size, margin: margin, align: qrcode_align)
       pdf.move_down 3
-      pdf.text "<u><link href='#{qrcode}'>cliquez pour vérifier</link></u>", :inline_format => true, size: 9, align: qrcode_align, color: "0000FF"
-      if signature.present? && version == :v2
-        pdf.move_cursor_to footer_height
-        signature_content = if signature.is_a?(ActiveStorage::Attached::One)
-          signature.download
-        else
-          signature.rewind && signature.read
-        end
-        pdf.image StringIO.new(signature_content), fit: [qrcode_size, qrcode_size], position: :right
-      end
-
+      pdf.text "<u><link href='#{qrcode}'>Scannez pour vérifier</link></u>", :inline_format => true, size: 9, align: qrcode_align, color: "0000FF"
     end
-    pdf.move_cursor_to 20
     if footer.present?
+      pdf.move_cursor_to 20
       # We reduce the size of large footer so they can be drawn in the corresponding area.
       # This is due to a font change, the replacing font is slightly bigger than the previous one
       footer_font_size = footer.length > 170 ? 7 : 8
