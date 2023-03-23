@@ -3,7 +3,7 @@ module Administrateurs
     layout 'all', only: [:all, :administrateurs]
     respond_to :html, :xlsx
 
-    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :zones, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :allow_expert_review, :experts_require_administrateur_invitation, :reset_draft]
+    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :zones, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :allow_expert_review, :allow_expert_messaging, :experts_require_administrateur_invitation, :reset_draft]
     before_action :draft_valid?, only: [:apercu]
     after_action :reset_procedure, only: [:update]
 
@@ -321,6 +321,12 @@ module Administrateurs
     def allow_expert_review
       @procedure.update!(allow_expert_review: !@procedure.allow_expert_review)
       flash.notice = @procedure.allow_expert_review? ? "Avis externes activés" : "Avis externes désactivés"
+      redirect_to admin_procedure_experts_path(@procedure)
+    end
+
+    def allow_expert_messaging
+      @procedure.update!(allow_expert_messaging: !@procedure.allow_expert_messaging)
+      flash.notice = @procedure.allow_expert_messaging ? "Les experts ont accès à la messagerie" : "Les experts n'ont plus accès à la messagerie"
       redirect_to admin_procedure_experts_path(@procedure)
     end
 
