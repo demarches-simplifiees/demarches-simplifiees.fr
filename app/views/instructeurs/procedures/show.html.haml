@@ -170,10 +170,9 @@
                           = "- #{t('views.instructeurs.dossiers.deleted_by_user')}" if p.hidden_by_user_at.present?
 
                   %td.status-col
-                    - if p.hidden_by_administration_at.present?
-                      %span.cell-link= status_badge(p.state)
-                    - else
-                      %a.cell-link{ href: path }= status_badge(p.state)
+                    - status = [status_badge(p.state)]
+                    - status << pending_correction_badge(:for_instructeur, html_class: "fr-mt-1v") if p.pending_correction?
+                    = link_to_if(p.hidden_by_administration_at.blank?, safe_join(status), path, class: class_names("cell-link": true, "fr-py-0": status.many?))
 
                   %td.action-col.follow-col
                     %ul.inline.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
