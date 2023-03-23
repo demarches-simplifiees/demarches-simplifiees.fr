@@ -79,7 +79,7 @@ module DossierHelper
 
   def status_badge(state, alignment_class = '')
     status_text = dossier_display_state(state, lower: true)
-    tag.span(status_text, class: "fr-badge #{class_badge_state(state)} fr-badge--no-icon #{alignment_class}", role: 'status')
+    tag.span(status_text, class: "fr-badge fr-badge--sm #{class_badge_state(state)} fr-badge--no-icon #{alignment_class}", role: 'status')
   end
 
   def deletion_reason_badge(reason)
