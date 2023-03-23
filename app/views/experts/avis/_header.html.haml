@@ -18,5 +18,6 @@
     %nav.tabs
       %ul
         = dynamic_tab_item('Demande', expert_avis_path(avis.procedure, avis))
-        = dynamic_tab_item('Avis', [instruction_expert_avis_path(avis.procedure, avis), avis_list_expert_avis_path(avis.procedure, avis), avis_new_expert_avis_path(avis.procedure, avis)], notification: avis.answer.blank?)
-        = dynamic_tab_item('Messagerie', messagerie_expert_avis_path(avis.procedure, avis))
+        = dynamic_tab_item('Avis', instruction_expert_avis_path(avis.procedure, avis), notification: avis.answer.blank?)
+        - if avis.procedure.allow_expert_messaging
+          = dynamic_tab_item('Messagerie', messagerie_expert_avis_path(avis.procedure, avis))
