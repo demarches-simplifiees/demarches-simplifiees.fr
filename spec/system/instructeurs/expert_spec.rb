@@ -39,7 +39,7 @@ describe 'Inviting an expert:', js: true do
 
       expect(page).to have_content('Une demande d’avis a été envoyée')
       expect(page).to have_content('Avis des invités')
-      within('.list-avis') do
+      within('section') do
         expect(page).to have_content(expert.email.to_s)
         expect(page).to have_content(expert2.email.to_s)
         expect(page).to have_content('Bonjour, merci de me donner votre avis sur ce dossier.')

@@ -21,8 +21,6 @@ fr:
       question_answer:
         true: oui
         false: non
-    hint:
-      confidentiel: "Cet avis n’est pas affiché avec les autres experts consultés"
     confirmation:
       revoke: "Souhaitez-vous révoquer la demande d’avis à %{email} ?"
       remind: "Souhaitez-vous relancer %{email} ?"
