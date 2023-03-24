@@ -81,4 +81,20 @@ class GroupeInstructeur < ApplicationRecord
   def toggle_routing
     procedure.update!(routing_enabled: procedure.groupe_instructeurs.active.many?)
   end
+
+  class RoutingSerializer
+    def self.load(routing)
+      if routing.present?
+        Logic.from_h(routing)
+      end
+    end
+
+    def self.dump(routing)
+      if routing.present?
+        routing.to_h
+      end
+    end
+  end
+
+  serialize :routing, RoutingSerializer
 end
