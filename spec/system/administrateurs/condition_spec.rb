@@ -87,19 +87,19 @@ describe 'As an administrateur I can edit types de champ condition', js: true do
     end
 
     scenario "changing target champ to a not managed type" do
-      expect(page).to have_no_selector('.condition-error')
+      expect(page).to have_no_selector('.errors-summary')
 
       within '.type-de-champ:nth-child(1)' do
         select('Départements', from: 'Type de champ')
       end
 
       within '.type-de-champ:nth-child(2)' do
-        expect(page).to have_selector('.condition-error')
+        expect(page).to have_selector('.errors-summary')
       end
     end
 
     scenario "moving a target champ below the condition" do
-      expect(page).to have_no_selector('.condition-error')
+      expect(page).to have_no_selector('.errors-summary')
 
       within '.type-de-champ:nth-child(1)' do
         click_on 'Déplacer le champ vers le bas'
@@ -107,12 +107,12 @@ describe 'As an administrateur I can edit types de champ condition', js: true do
 
       # the now first champ has an error
       within '.type-de-champ:nth-child(1)' do
-        expect(page).to have_selector('.condition-error')
+        expect(page).to have_selector('.errors-summary')
       end
     end
 
     scenario "moving the condition champ above the target" do
-      expect(page).to have_no_selector('.condition-error')
+      expect(page).to have_no_selector('.errors-summary')
 
       within '.type-de-champ:nth-child(2)' do
         click_on 'Déplacer le champ vers le haut'
@@ -120,7 +120,7 @@ describe 'As an administrateur I can edit types de champ condition', js: true do
 
       # the now first champ has an error
       within '.type-de-champ:nth-child(1)' do
-        expect(page).to have_selector('.condition-error')
+        expect(page).to have_selector('.errors-summary')
       end
     end
   end

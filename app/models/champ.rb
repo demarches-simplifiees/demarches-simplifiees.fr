@@ -48,6 +48,8 @@ class Champ < ApplicationRecord
     :drop_down_secondary_description,
     :collapsible_explanation_enabled?,
     :collapsible_explanation_text,
+    :header_section_level,
+    :current_section_level,
     :exclude_from_export?,
     :exclude_from_view?,
     :repetition?,
