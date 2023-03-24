@@ -2,13 +2,6 @@ fr:
   administrateurs:
     revision_changes:
       no_changes: Aucune modification
-      attestation_template:
-        add: Un model d’attestation à été ajouté
-        update_title: Le titre de l’attestation à été modifié. Le nouveau titre est « %{to} »
-        update_body: Le corps du document de l’attestation à été modifié
-        update_footer: Le pied de page de l’attestation à été modifié
-        update_logo: Le logo de l’attestation à été modifié. Le nouveau logo est « %{to} »
-        update_signature: La signature de l’attestation à été modifié. La nouvelle signature est « %{to} »
       has_changes: Modifications en cours (appliqué à la prochaine publication)
       add: Le champ « %{label} » a été ajouté
       remove: Le champ « %{label} » a été supprimé

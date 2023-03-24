@@ -44,10 +44,10 @@ class InvitesController < ApplicationController
   end
 
   def destroy
-    invite = Invite.find(params[:id])
-    @dossier = invite.dossier
+    invite = Invite.find_by(id: params[:id], dossier: current_user.dossiers.visible_by_user)
 
-    if @dossier.user == current_user
+    if invite.present?
+      @dossier = invite.dossier
       invite.destroy!
       flash.notice = "L’autorisation de #{invite.email} vient d’être révoquée."
     else
@@ -55,7 +55,7 @@ class InvitesController < ApplicationController
     end
 
     respond_to do |format|
-      format.html { redirect_back(fallback_location: helpers.url_for_dossier(@dossier)) }
+      format.html { redirect_back(fallback_location: @dossier.present? ? helpers.url_for_dossier(@dossier) : root_url) }
       format.turbo_stream
     end
   end
