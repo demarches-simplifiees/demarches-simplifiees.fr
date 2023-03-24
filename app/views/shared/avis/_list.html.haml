@@ -9,7 +9,7 @@
         %h2.fr-text--sm.fr-mb-2w
           %span.fr-icon-questionnaire-line.fr-mr-1v
           = "#{t('claimant', scope: 'activerecord.attributes.avis')} :"
-          %span= (avis.claimant.email == current_instructeur.email) ? 'Vous' : avis.claimant.email
+          %span= (avis.claimant.email == expert_or_instructeur.email) ? 'Vous' : avis.claimant.email
           - if avis.confidentiel?
             %span.fr-badge.fr-badge--sm.fr-badge--warning.fr-badge--no-icon
               = t('confidentiel', scope: 'activerecord.attributes.avis')
@@ -25,7 +25,7 @@
 
         %h2.fr-text--sm.fr-mt-5w.fr-mb-2w
           %span.fr-icon-message-2-line.fr-mr-1v
-          = (avis.expert.email == current_instructeur.email) ? 'Vous' : avis.expert.email
+          = (avis.expert.email == expert_or_instructeur.email) ? 'Vous' : avis.expert.email
           - if avis.answer.present?
             - if avis.revoked?
               %span.fr-badge.fr-badge--sm{ class: highlight_if_unseen_class(avis_seen_at, avis.revoked_at) }
@@ -41,10 +41,11 @@
           - if avis.reminded_at
             %span.date.fr-text--xs.fr-text-mention--grey{ class: highlight_if_unseen_class(avis_seen_at, avis.reminded_at) }
               = t('relance_effectuee_le', scope: 'views.shared.avis', date: l(avis.reminded_at, format: '%d/%m/%y à %H:%M'))
-          - if avis.answer.blank?
-            = link_to(t('remind', scope: 'helpers.label'), remind_instructeur_avis_path(avis.procedure, avis), class:'fr-btn fr-btn--sm fr-btn--tertiary-no-outline', data: { confirm: t('remind', scope: 'helpers.confirmation', email: avis.expert.email) })
+          - if expert_or_instructeur.is_a?(Instructeur)
+            - if avis.answer.blank?
+              = link_to(t('remind', scope: 'helpers.label'), remind_instructeur_avis_path(avis.procedure, avis), class:'fr-btn fr-btn--sm fr-btn--tertiary-no-outline', data: { confirm: t('remind', scope: 'helpers.confirmation', email: avis.expert.email) })
 
-            - if avis.revokable_by?(current_instructeur)
+            - if avis.revokable_by?(expert_or_instructeur)
               = link_to(t('revoke', scope: 'helpers.label'), revoquer_instructeur_avis_path(avis.procedure, avis), class:'fr-btn fr-btn--sm fr-btn--tertiary-no-outline', data: { confirm: t('revoke', scope: 'helpers.confirmation', email: avis.expert.email) }, method: :patch)
 
         .border-left

@@ -8,7 +8,7 @@
       = render partial: 'sidemenu'
     .fr-col
       - if @dossier.avis_for_expert(current_expert).present?
-        = render partial: 'experts/avis/shared/list', locals: { avis: @dossier.avis_for_expert(current_expert), avis_seen_at: nil }
+        = render partial: 'shared/avis/list', locals: { avis: @dossier.avis_for_expert(current_expert), avis_seen_at: nil, expert_or_instructeur: current_expert }
 
       - else
         %h2.empty-text
