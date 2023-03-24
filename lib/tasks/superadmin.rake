@@ -18,12 +18,17 @@ namespace :superadmin do
     email = args[:email]
 
     rake_puts "Creating SuperAdmin for #{email}"
-    a = SuperAdmin.new(email: email, password: Devise.friendly_token)
+    password = Devise.friendly_token
+    a = SuperAdmin.new(email:, password:)
 
     if a.save
       rake_puts "#{a.email} created"
       a.send_reset_password_instructions
       rake_puts "Password reset instructions sent to #{a.email}"
+
+      user = User.create_or_promote_to_administrateur(email, password)
+
+      user.update!(team_account: true)
     else
       rake_puts "An error occured: #{a.errors.full_messages}"
     end

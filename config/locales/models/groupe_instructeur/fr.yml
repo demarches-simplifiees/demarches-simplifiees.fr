@@ -1,0 +1,18 @@
+fr:
+  activerecord:
+    models:
+      procedure:
+        one: Groupe instructeur
+        other: Groupes instructeur
+    attributes:
+      groupe_instructeur:
+        label: Libellé
+    errors:
+      models:
+        groupe_instructeur:
+          attributes:
+            label:
+              format: "Le libellé %{message}"
+            closed:
+              format: "%{message}"
+              accepted: Il doit y avoir au moins un groupe instructeur actif sur chaque démarche

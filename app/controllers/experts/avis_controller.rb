@@ -31,7 +31,7 @@ module Experts
       when DONNES_STATUS
         @avis_donnes
       end
-
+      @avis = @avis.by_latest
       @avis = @avis.page([params[:page].to_i, 1].max)
     end
 

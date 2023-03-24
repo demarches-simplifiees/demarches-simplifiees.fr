@@ -40,7 +40,7 @@
           = dossier.procedure.routing_criteria_name
           %span.mandatory *
         = f.select :groupe_instructeur_id,
-          dossier.procedure.groupe_instructeurs.actif.map { |gi| [gi.label, gi.id] },
+          dossier.procedure.groupe_instructeurs.active.map { |gi| [gi.label, gi.id] },
           { include_blank: dossier.brouillon? }
 
     - dossier.champs_public.each do |champ|

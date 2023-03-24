@@ -28,10 +28,11 @@ describe Experts::AvisController, type: :controller do
 
     describe '#procedure' do
       context 'without filter' do
+        let!(:oldest_avis_without_answer) { create(:avis, dossier: dossier, claimant: claimant, experts_procedure: experts_procedure, created_at: 2.years.ago) }
         before { get :procedure, params: { procedure_id: procedure.id } }
 
         it { expect(response).to have_http_status(:success) }
-        it { expect(assigns(:avis_a_donner)).to match([avis_without_answer]) }
+        it { expect(assigns(:avis_a_donner)).to match([avis_without_answer, oldest_avis_without_answer]) }
         it { expect(assigns(:avis_donnes)).to match([avis_with_answer]) }
         it { expect(assigns(:statut)).to eq('a-donner') }
       end

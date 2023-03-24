@@ -19,16 +19,17 @@ class GroupeInstructeur < ApplicationRecord
   has_and_belongs_to_many :exports, dependent: :destroy
   has_and_belongs_to_many :bulk_messages, dependent: :destroy
 
-  validates :label, presence: { message: 'doit être renseigné' }, allow_nil: false
-  validates :label, uniqueness: { scope: :procedure, message: 'existe déjà' }
-  validates :closed, acceptance: { accept: [false], message: "Modification impossible : il doit y avoir au moins un groupe instructeur actif sur chaque procédure" }, if: -> { self.procedure.groupe_instructeurs.actif.one? }
+  validates :label, presence: true, allow_nil: false
+  validates :label, uniqueness: { scope: :procedure }
+  validates :closed, acceptance: { accept: [false] }, if: -> { self.procedure.groupe_instructeurs.active.one? }
 
   before_validation -> { label&.strip! }
   after_save :toggle_routing
 
   scope :without_group, -> (group) { where.not(id: group) }
   scope :for_api_v2, -> { includes(procedure: [:administrateurs]) }
-  scope :actif, -> { where(closed: false) }
+  scope :active, -> { where(closed: false) }
+  scope :closed, -> { where(closed: true) }
 
   def add(instructeur)
     return if in?(instructeur.groupe_instructeurs)
@@ -48,12 +49,12 @@ class GroupeInstructeur < ApplicationRecord
   end
 
   def can_delete?
-    dossiers.empty? && (procedure.groupe_instructeurs.actif.many? || (procedure.groupe_instructeurs.actif.one? && closed))
+    dossiers.empty? && (procedure.groupe_instructeurs.active.many? || (procedure.groupe_instructeurs.active.one? && closed))
   end
 
   private
 
   def toggle_routing
-    procedure.update!(routing_enabled: procedure.groupe_instructeurs.actif.many?)
+    procedure.update!(routing_enabled: procedure.groupe_instructeurs.active.many?)
   end
 end

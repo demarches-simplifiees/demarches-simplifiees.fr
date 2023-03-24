@@ -711,5 +711,16 @@ class API::V2::StoredQuery
       }
     }
   }
+
+  mutation groupeInstructeurModifier($input: GroupeInstructeurModifierInput!) {
+    groupeInstructeurModifier(input: $input) {
+      groupeInstructeur {
+        id
+      }
+      errors {
+        message
+      }
+    }
+  }
   GRAPHQL
 end
