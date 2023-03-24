@@ -444,6 +444,10 @@ class Procedure < ApplicationRecord
     !brouillon? && published_revision.different_from?(draft_revision) && revision_changes.present?
   end
 
+  def with_routing_rules?
+    groupe_instructeurs.any? { |gi| gi.routing.present? }
+  end
+
   def revision_changes
     published_revision.compare(draft_revision)
   end

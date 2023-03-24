@@ -455,6 +455,10 @@ module Users
         @dossier.assign_to_groupe_instructeur(groupe_instructeur_from_params)
       end
 
+      if @dossier.procedure.with_routing_rules?
+        RoutingEngine.compute(@dossier)
+      end
+
       if dossier.en_construction?
         errors += @dossier.check_mandatory_and_visible_champs
       end
