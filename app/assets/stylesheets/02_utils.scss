@@ -143,6 +143,11 @@
   vertical-align: super;
 }
 
+.border-left {
+  border-left: 4px solid var(--background-contrast-grey);
+  padding-left: $default-padding;
+}
+
 // Labels that we only want for screen readers
 // https://www.coolfields.co.uk/2016/05/text-for-screen-readers-only-updated/
 .sr-only {
