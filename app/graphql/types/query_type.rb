@@ -14,10 +14,21 @@ module Types
       argument :number, Int, "Numéro du groupe instructeur.", required: true
     end
 
+    field :demarche_descriptor, DemarcheDescriptorType, null: true do
+      argument :demarche, DemarcheDescriptorType::FindDemarcheInput, "La démarche.", required: true
+    end
+
     field :demarches_publiques, DemarcheDescriptorType.connection_type, null: false, internal: true
 
     def demarches_publiques
       Procedure.opendata.includes(draft_revision: :procedure, published_revision: :procedure)
+    end
+
+    def demarche_descriptor(demarche:)
+      demarche_number = demarche.number.presence || ApplicationRecord.id_from_typed_id(demarche.id)
+      Procedure
+        .includes(draft_revision: :procedure, published_revision: :procedure)
+        .find_by(id: demarche_number)
     end
 
     def demarche(number:)

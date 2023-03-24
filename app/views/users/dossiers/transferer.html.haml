@@ -1,9 +1,20 @@
-.container.mt-4
-  - dossier = @transfer.dossiers.first
-  Transferer le dossier #{dossier_display_state(dossier.state, lower: true)} nº #{@dossier.id} déposé par #{demandeur_dossier(dossier)} le #{try_format_date(dossier.created_at)} vers le compte d‘un autre usager :
+.fr-container.fr-mt-3w
+  .fr-grid-row
+    .fr-col-lg-8.fr-col-offset-lg-2
 
-  = form_for @transfer, url: transfers_path, html: { class: 'form mt-2' } do |f|
-    = f.label :email, 'Email du compte destinataire'
-    = f.email_field :email, required: true
-    = f.hidden_field :dossier, value: dossier.id
-    = f.submit "Envoyer la demande de transfert", class: 'button primary'
+      %h1.fr-h2= t(".title")
+      %p= t(".detail", number: @dossier.id,
+        state: dossier_display_state(@dossier.state, lower: true),
+        demandeur: demandeur_dossier(@dossier),
+        created_at: try_format_date(@dossier.created_at))
+
+      .fr-highlight
+        %p= t(".irrevocable_html").html_safe
+
+      = form_for @transfer, url: transfers_path, class: "fr-mt-4w" do |f|
+        .fr-input-group
+          = f.label :email, t('.email_label'), class: "fr-label"
+          = f.email_field :email, required: true, class: "fr-input", autocomplete: "email"
+
+        = f.hidden_field :dossier, value: @dossier.id
+        = f.submit t('.submit'), class: 'fr-btn'

@@ -123,6 +123,34 @@ describe API::V2::GraphqlController do
       request.env['HTTP_AUTHORIZATION'] = authorization_header
     end
 
+    describe "token authentication" do
+      it {
+        expect(gql_errors).to eq(nil)
+        expect(gql_data).not_to be_nil
+      }
+
+      context "when the token is invalid" do
+        before do
+          request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Token.encode_credentials('invalid')
+        end
+
+        it {
+          expect(gql_errors.first[:message]).to eq("An object of type Demarche was hidden due to permissions")
+        }
+      end
+
+      context "when the token is revoked" do
+        before do
+          admin.update(encrypted_token: nil)
+        end
+
+        it {
+          expect(token).not_to be_nil
+          expect(gql_errors.first[:message]).to eq("An object of type Demarche was hidden due to permissions")
+        }
+      end
+    end
+
     describe "demarche" do
       describe "query a demarche" do
         let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_all_champs, :with_all_annotations, administrateurs: [admin]) }
@@ -901,6 +929,63 @@ describe API::V2::GraphqlController do
             expect(gql_data[:groupeInstructeur][:id]).to eq(groupe_instructeur.to_typed_id)
             expect(gql_data[:groupeInstructeur][:dossiers][:nodes].size).to eq(1)
           }
+        end
+      end
+
+      context 'getDemarcheDescriptor' do
+        let(:operation_name) { 'getDemarcheDescriptor' }
+
+        context 'find by number' do
+          let(:variables) { { demarche: { number: procedure.id } } }
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:demarcheDescriptor][:id]).to eq(procedure.to_typed_id)
+          }
+        end
+
+        context 'find by id' do
+          let(:variables) { { demarche: { id: procedure.to_typed_id } } }
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:demarcheDescriptor][:id]).to eq(procedure.to_typed_id)
+          }
+        end
+
+        context 'not opendata' do
+          let(:variables) { { demarche: { id: procedure.to_typed_id } } }
+
+          before { procedure.update(opendata: false) }
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:demarcheDescriptor][:id]).to eq(procedure.to_typed_id)
+          }
+        end
+
+        context 'without authorization token' do
+          let(:authorization_header) { nil }
+
+          context 'opendata' do
+            let(:variables) { { demarche: { id: procedure.to_typed_id } } }
+
+            it {
+              expect(gql_errors).to be_nil
+              expect(gql_data[:demarcheDescriptor][:id]).to eq(procedure.to_typed_id)
+            }
+          end
+
+          context 'not opendata' do
+            let(:variables) { { demarche: { id: procedure.to_typed_id } } }
+
+            before { procedure.update(opendata: false) }
+
+            it {
+              expect(gql_errors).not_to be_nil
+              expect(gql_errors.first[:message]).to eq('An object of type DemarcheDescriptor was hidden due to permissions')
+            }
+          end
         end
       end
 

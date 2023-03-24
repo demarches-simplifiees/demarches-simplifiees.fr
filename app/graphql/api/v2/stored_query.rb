@@ -177,6 +177,16 @@ class API::V2::StoredQuery
     }
   }
 
+  query getDemarcheDescriptor(
+    $demarche: FindDemarcheInput!
+    $includeRevision: Boolean = false
+    $includeService: Boolean = false
+  ) {
+    demarcheDescriptor(demarche: $demarche) {
+      ...DemarcheDescriptorFragment
+    }
+  }
+
   fragment ServiceFragment on Service {
     nom
     siret
