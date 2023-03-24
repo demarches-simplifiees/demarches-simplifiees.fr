@@ -1,0 +1,17 @@
+- if render_within_fieldset?
+  = tag.fieldset(class: "reset-#{tag_for_depth}") do
+    = tag.legend do
+      = render EditableChamp::HeaderSectionComponent.new(champ: header_section, form: nil, level: level)
+    - @nodes.each do |champ_or_section|
+      - if champ_or_section.is_a?(Champ)
+        = render EditableChamp::FieldsForChampComponent.new(champ: champ_or_section, seen_at: nil)
+      - else
+        = render champ_or_section
+- elsif render_header_section_only?
+  = render EditableChamp::HeaderSectionComponent.new(champ: header_section, form: nil, level: level)
+- else
+  - @nodes.each do |champ_or_section|
+    - if champ_or_section.is_a?(Champ)
+      = render EditableChamp::FieldsForChampComponent.new(champ: champ_or_section, seen_at: nil)
+    - else
+      = render champ_or_section

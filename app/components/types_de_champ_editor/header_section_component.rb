@@ -9,7 +9,7 @@ class TypesDeChampEditor::HeaderSectionComponent < ApplicationComponent
 
   def header_section_options_for_select
     closest_level = @tdc.previous_section_level(@upper_tdcs)
-    next_level = [MAX_LEVEL, closest_level + 1].min
+    next_level = [closest_level + 1, MAX_LEVEL].min
 
     available_levels = (1..next_level).map(&method(:option_for_level))
     disabled_levels = errors? ? (next_level + 1..MAX_LEVEL).map(&method(:option_for_level)) : []
@@ -21,7 +21,7 @@ class TypesDeChampEditor::HeaderSectionComponent < ApplicationComponent
   end
 
   def errors
-    @tdc.check_nesting(@upper_tdcs)
+    @tdc.check_coherent_header_level(@upper_tdcs)
   end
 
   private

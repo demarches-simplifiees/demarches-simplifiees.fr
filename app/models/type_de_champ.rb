@@ -423,7 +423,7 @@ class TypeDeChamp < ApplicationRecord
     previous_header_section.header_section_level_value.to_i
   end
 
-  def check_nesting(upper_tdcs)
+  def check_coherent_header_level(upper_tdcs)
     errs = []
     previous_level = previous_section_level(upper_tdcs)
 

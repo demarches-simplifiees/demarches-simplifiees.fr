@@ -198,9 +198,8 @@ describe 'As an administrateur I can edit types de champ', js: true do
   context 'header section' do
     scenario 'invalid order, it pops up errors summary' do
       add_champ
-      wait_until { procedure.active_revision.types_de_champ_public.size == 1 }
-      first_header = procedure.active_revision.types_de_champ_public.first
       select('Titre de section', from: 'Type de champ')
+      first_header = procedure.active_revision.types_de_champ_public.first
       select('Titre de niveau 1', from: dom_id(first_header, :header_section_level))
 
       add_champ

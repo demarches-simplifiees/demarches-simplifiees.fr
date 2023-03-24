@@ -42,9 +42,5 @@
         = f.select :groupe_instructeur_id,
           dossier.procedure.groupe_instructeurs.active.map { |gi| [gi.label, gi.id] },
           { include_blank: dossier.brouillon? }
-
-    - dossier.champs_public.each do |champ|
-      = fields_for champ.input_name, champ do |form|
-        = render EditableChamp::EditableChampComponent.new form: form, champ: champ
-
+    = render EditableChamp::ChampsTreeComponent.new(champs: dossier.champs_public, root_depth: 0)
   = render Dossiers::EditFooterComponent.new(dossier: dossier, annotation: false)

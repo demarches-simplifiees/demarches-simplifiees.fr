@@ -418,7 +418,7 @@ class ProcedureRevision < ApplicationRecord
     tdcs
       .map.with_index
       .filter_map { |tdc, i| tdc.header_section? ? [tdc, i] : nil }
-      .map { |tdc, i| [tdc, tdc.check_nesting(tdcs.take(i))] }
+      .map { |tdc, i| [tdc, tdc.check_coherent_header_level(tdcs.take(i))] }
       .filter { |_tdc, errors| errors.present? }
       .each { |tdc, message| errors.add(:header_section, message, type_de_champ: tdc) }
   end
