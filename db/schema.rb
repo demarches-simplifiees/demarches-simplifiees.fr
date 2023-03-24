@@ -644,7 +644,7 @@ ActiveRecord::Schema.define(version: 2022_11_22_145030) do
     t.string "direction"
     t.bigint "draft_revision_id"
     t.integer "duree_conservation_dossiers_dans_ds"
-    t.boolean "duree_conservation_etendue_par_ds", default: false, null: false
+    t.boolean "duree_conservation_etendue_par_ds", default: false
     t.boolean "durees_conservation_required", default: true
     t.string "encrypted_api_particulier_token"
     t.boolean "euro_flag", default: false
@@ -658,7 +658,7 @@ ActiveRecord::Schema.define(version: 2022_11_22_145030) do
     t.string "lien_dpo"
     t.string "lien_notice"
     t.string "lien_site_web"
-    t.integer "max_duree_conservation_dossiers_dans_ds", default: 12, null: false
+    t.integer "max_duree_conservation_dossiers_dans_ds", default: 12
     t.text "monavis_embed"
     t.boolean "opendata", default: true
     t.string "organisation"
