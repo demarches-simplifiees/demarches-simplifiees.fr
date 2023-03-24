@@ -57,7 +57,9 @@ const Gon = z
             DS_ID: 0
           })
       })
-      .default({})
+      .default({}),
+    defaultQuery: z.string().optional(),
+    defaultVariables: z.string().optional()
   })
   .default({});
 declare const window: Window & typeof globalThis & { gon: unknown };
@@ -320,7 +322,7 @@ export function fire<T>(obj: EventTarget, name: string, data?: T) {
   return !event.defaultPrevented;
 }
 
-function csrfToken() {
+export function csrfToken() {
   const meta = document.querySelector<HTMLMetaElement>('meta[name=csrf-token]');
   return meta?.content;
 }

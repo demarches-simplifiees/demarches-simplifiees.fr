@@ -1,6 +1,7 @@
 module Redcarpet
   class BareRenderer < Redcarpet::Render::HTML
     include ActionView::Helpers::TagHelper
+    include ApplicationHelper
 
     # won't use rubocop tag method because it is missing output buffer
     # rubocop:disable Rails/ContentTag
@@ -16,6 +17,17 @@ module Redcarpet
     def paragraph(text)
       content_tag(:p, text, { class: @options[:class_names_map].fetch(:paragraph) {} }, false)
     end
+
+    def link(href, title, content)
+      content_tag(:a, content, { href:, title: new_tab_suffix(title), **external_link_attributes }, false)
+    end
+
+    def autolink(link, link_type)
+      return super unless link_type == :url
+
+      link(link, nil, link)
+    end
+
     # rubocop:enable Rails/ContentTag
   end
 end
