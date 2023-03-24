@@ -8,6 +8,7 @@
       %li.one-avis.flex.align-start
         .width-100
           %h2.claimant.fr-font--md.font-weight-normal
+            %span.fr-icon-questionnaire-line.fr-mr-1v
             = "#{t('claimant', scope: 'activerecord.attributes.avis')} :"
             %span.font-weight-bold= (safe_claimant_email(avis.claimant) == current_expert.email) ? 'Vous' : safe_claimant_email(avis.claimant)
             - if avis.confidentiel?
@@ -16,14 +17,16 @@
                 %span.icon.lock{ title: t('confidentiel', scope: 'helpers.hint') }
             %span.date.fr-text--xs.fr-text-mention--grey{ class: highlight_if_unseen_class(avis_seen_at, avis.created_at) }
               = t('demande_envoyee_le', scope: 'views.shared.avis', date: l(avis.created_at, format: '%d/%m/%y à %H:%M'))
-          %p= avis.introduction
-          - if avis.question_label
-            %p= avis.question_label
+
+          .border-left
+            %p= avis.introduction
+            - if avis.question_label
+              %p= avis.question_label
 
           .answer.flex.align-start
-            %span.icon.bubble.avis-icon
             .width-100
               %h2.instructeur.fr-font--md.font-weight-normal
+                %span.fr-icon-message-2-line.fr-mr-1v
                 = (avis.expert.email == current_expert.email) ? 'Vous' : avis.expert.email
                 - if avis.answer.present?
                   - if avis.revoked?
@@ -34,9 +37,10 @@
                 - else
                   %span.fr-text--xs.fr-text-mention--grey
                     = t('en_attente', scope: 'views.shared.avis')
-              - if avis.piece_justificative_file.attached?
-                = render Attachment::ShowComponent.new(attachment: avis.piece_justificative_file.attachment)
-              .answer-body
-                - if avis.question_answer
-                  %p= t("question_answer.#{avis.question_answer}", scope: 'helpers.label')
-                = render SimpleFormatComponent.new(avis.answer, allow_a: false)
+              .border-left
+                - if avis.piece_justificative_file.attached?
+                  = render Attachment::ShowComponent.new(attachment: avis.piece_justificative_file.attachment)
+                .answer-body
+                  - if avis.question_answer
+                    %p= t("question_answer.#{avis.question_answer}", scope: 'helpers.label')
+                  = render SimpleFormatComponent.new(avis.answer, allow_a: false)

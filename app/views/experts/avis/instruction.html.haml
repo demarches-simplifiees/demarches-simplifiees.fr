@@ -10,15 +10,15 @@
       - if !@dossier.termine?
         %section.give-avis
           %h1.tab-title Donner votre avis
-          %h2.claimant
+          %h2.fr-text--sm.fr-mb-2w
             Demandeur :
             %span.email.font-weight-normal= safe_claimant_email(@avis.claimant)
-            %span.date.font-weight-normal Demande d’avis envoyée le #{l(@avis.created_at, format: '%d/%m/%y')}
+            %span.fr-text--xs.fr-text-mention--grey.pull-right Demande d’avis envoyée le #{l(@avis.created_at, format: '%d/%m/%y')}
           %p.introduction= @avis.introduction
 
           - if @avis.introduction_file.attached?
             = render Attachment::ShowComponent.new(attachment: @avis.introduction_file.attachment)
-          %br/
+
           = render Attachment::DeleteFormComponent.new
           = form_for @avis, url: expert_avis_path(@avis.procedure, @avis), html: { data: { controller: 'persisted-form', persisted_form_key_value: dom_id(@avis) }, multipart: true } do |f|
 
