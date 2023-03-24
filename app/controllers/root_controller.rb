@@ -75,6 +75,7 @@ class RootController < ApplicationController
     end
 
     @dossier = Dossier.new(champs_public: all_champs)
+    @dossier.association(:procedure).target = Procedure.new
     all_champs.each do |champ|
       champ.association(:dossier).target = @dossier
       champ.champs.each do |champ|

@@ -7,15 +7,32 @@ describe 'wcag rules for usager', js: true do
     procedure.active_revision.types_de_champ_public.find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:carte) }.destroy
   end
 
+  shared_examples "external links have title says it opens in a new tab" do
+    it do
+      links = page.all("a[target=_blank]")
+      expect(links.count).to be_positive
+
+      links.each do |link|
+        expect(link[:title]).to include("Nouvel onglet"), "link #{link[:href]} does not have title mentioning it opens in a new tab"
+      end
+    end
+  end
+
   context 'pages without the need to be logged in' do
-    scenario 'homepage' do
-      visit root_path
-      expect(page).to be_axe_clean
+    before do
+      visit path
     end
 
-    scenario 'sign_up page' do
-      visit new_user_registration_path
-      expect(page).to be_axe_clean
+    context 'homepage' do
+      let(:path) { root_path }
+      it { expect(page).to be_axe_clean }
+      it_behaves_like "external links have title says it opens in a new tab"
+    end
+
+    context 'sign_up page' do
+      let(:path) { new_user_registration_path }
+      it { expect(page).to be_axe_clean }
+      it_behaves_like "external links have title says it opens in a new tab"
     end
 
     scenario 'account confirmation page' do
@@ -30,20 +47,30 @@ describe 'wcag rules for usager', js: true do
       end
     end
 
-    scenario 'sign_in page' do
-      visit new_user_session_path
-      expect(page).to be_axe_clean.excluding '#user_email'
+    context 'sign_upc confirmation' do
+      let(:path) { user_confirmation_path("user[email]" => "some@email.com") }
+
+      it_behaves_like "external links have title says it opens in a new tab"
     end
 
-    scenario 'contact page' do
-      visit contact_path
-      expect(page).to be_axe_clean
+    context 'sign_in page' do
+      let(:path) { new_user_session_path }
+      it { expect(page).to be_axe_clean.excluding '#user_email' }
+      it_behaves_like "external links have title says it opens in a new tab"
     end
 
-    scenario 'commencer page' do
-      visit commencer_path(path: procedure.reload.path)
-      expect(page).to be_axe_clean
+    context 'contact page' do
+      let(:path) { contact_path }
+      it { expect(page).to be_axe_clean }
+      it_behaves_like "external links have title says it opens in a new tab"
     end
+
+    context 'commencer page' do
+      let(:path) { commencer_path(path: procedure.path) }
+      it { expect(page).to be_axe_clean }
+      it_behaves_like "external links have title says it opens in a new tab"
+    end
+
     scenario 'commencer page, help dropdown' do
       visit commencer_path(path: procedure.reload.path)
 

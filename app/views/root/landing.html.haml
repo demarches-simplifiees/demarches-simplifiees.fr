@@ -26,7 +26,7 @@
           %h2 Vous souhaitez effectuer une demande auprès d’une administration ?
           %p.fr-h5 Réalisez vos demandes en toute simplicité et retrouvez vos dossiers en ligne
 
-          = link_to "Comment trouver ma démarche ?", COMMENT_TROUVER_MA_DEMARCHE_URL, class: "fr-btn fr-btn--lg fr-mr-1w fr-mb-2w", **external_link_attributes
+          = link_to "Comment trouver ma démarche ?", COMMENT_TROUVER_MA_DEMARCHE_URL, class: "fr-btn fr-btn--lg fr-mr-1w fr-mb-2w", title: new_tab_suffix("Comment trouver ma démarche ?"), **external_link_attributes
           = link_to "Se connecter", new_user_session_path, class: "fr-btn fr-btn--secondary fr-btn--lg"
 
   - cache "numbers-panel", :expires_in => 3.hours do
@@ -63,7 +63,7 @@
           %h2.cta-panel-title Une question, un problème ?
           %p.cta-panel-explanation La réponse est dans l’aide en ligne
         %div
-          = link_to "Accéder à l’aide en ligne", FAQ_URL, class: "fr-btn fr-btn--lg", **external_link_attributes
+          = link_to "Accéder à l’aide en ligne", FAQ_URL, class: "fr-btn fr-btn--lg", title: new_tab_suffix("Accéder à l’aide en ligne"), **external_link_attributes
         -#   We temporarily disable the link to the contact page on the homepage
         -#   %p.cta-panel-explanation Notre équipe est disponible pour vous renseigner et vous aider
         -# %div

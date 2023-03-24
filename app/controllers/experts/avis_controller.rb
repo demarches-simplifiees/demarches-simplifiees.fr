@@ -4,7 +4,7 @@ module Experts
     include Zipline
 
     before_action :authenticate_expert!, except: [:sign_up, :update_expert]
-    before_action :check_if_avis_revoked, only: [:show]
+    before_action :check_if_avis_revoked, except: [:index, :procedure]
     before_action :redirect_if_no_sign_up_needed, only: [:sign_up, :update_expert]
     before_action :set_avis_and_dossier, only: [:show, :instruction, :messagerie, :create_commentaire, :delete_commentaire, :update, :telecharger_pjs]
 
@@ -12,14 +12,28 @@ module Experts
     DONNES_STATUS   = 'donnes'
 
     def index
-      avis = current_expert.avis.includes(dossier: [groupe_instructeur: :procedure]).not_hidden_by_administration
+      avis = current_expert.avis.not_revoked.includes(dossier: [groupe_instructeur: :procedure]).not_hidden_by_administration
       @avis_by_procedure = avis.to_a.group_by(&:procedure)
     end
 
     def procedure
       @procedure = current_expert.procedures.find_by(id: params[:procedure_id])
-      redirect_to(expert_all_avis_path, flash: { alert: "Vous n’avez pas accès à cette démarche." }) and return unless @procedure
-      expert_avis = current_expert.avis.includes(:dossier).not_hidden_by_administration.where(dossiers: { groupe_instructeur: GroupeInstructeur.where(procedure: @procedure.id) })
+
+      if @procedure.nil?
+        redirect_to(expert_all_avis_path, flash: { alert: "Vous n’avez pas accès à cette démarche." }) and return
+      end
+
+      expert_avis = current_expert
+        .avis
+        .not_revoked
+        .includes(:dossier)
+        .not_hidden_by_administration
+        .where(dossiers: { groupe_instructeur: GroupeInstructeur.where(procedure: @procedure) })
+
+      if expert_avis.empty?
+        redirect_to(expert_all_avis_path, flash: { alert: "Vous n’avez pas accès à cette démarche." }) and return
+      end
+
       @avis_a_donner = expert_avis.without_answer
       @avis_donnes = expert_avis.with_answer
 

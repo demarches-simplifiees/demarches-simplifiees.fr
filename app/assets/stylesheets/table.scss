@@ -9,7 +9,8 @@
     border-top: 1px solid $border-grey;
   }
 
-  td {
+  td,
+  th[scope="row"] {
     @include vertical-padding($default-spacer);
     vertical-align: middle;
   }

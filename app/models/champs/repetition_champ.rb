@@ -21,7 +21,8 @@
 #
 class Champs::RepetitionChamp < Champ
   include ActionView::Helpers::TagHelper
-  accepts_nested_attributes_for :champs, allow_destroy: true
+
+  accepts_nested_attributes_for :champs
   delegate :libelle_for_export, to: :type_de_champ
 
   def rows

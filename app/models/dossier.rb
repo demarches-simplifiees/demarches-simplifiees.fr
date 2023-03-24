@@ -509,12 +509,6 @@ class Dossier < ApplicationRecord
     INSTRUCTION_COMMENCEE.include?(state)
   end
 
-  def reset!
-    etablissement.destroy
-
-    update_columns(autorisation_donnees: false)
-  end
-
   def read_only?
     en_instruction? || accepte? || refuse? || sans_suite? || procedure.discarded? || procedure.close? && brouillon?
   end
@@ -753,13 +747,9 @@ class Dossier < ApplicationRecord
     { lon: lon, lat: lat, zoom: zoom }
   end
 
-  def active_attestation_template
-    attestation_template || revision.attestation_template
-  end
-
   def unspecified_attestation_champs
-    if active_attestation_template&.activated?
-      active_attestation_template.unspecified_champs_for_dossier(self)
+    if attestation_template&.activated?
+      attestation_template.unspecified_champs_for_dossier(self)
     else
       []
     end
@@ -770,8 +760,8 @@ class Dossier < ApplicationRecord
   end
 
   def build_attestation
-    if active_attestation_template&.activated?
-      active_attestation_template.attestation_for(self)
+    if attestation_template&.activated?
+      attestation_template.attestation_for(self)
     end
   end
 

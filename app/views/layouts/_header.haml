@@ -28,7 +28,7 @@
           -# .fr-header__service
             - root_profile_link, root_profile_libelle = root_path_info_for_profile(nav_bar_profile)
 
-            = link_to root_profile_link, :title => root_profile_libelle do
+            = link_to root_profile_link, title: "#{root_profile_libelle} — #{APPLICATION_NAME}" do
               %p.fr-header__service-title= APPLICATION_NAME
 
         .fr-header__tools
@@ -54,7 +54,8 @@
                 - elsif nav_bar_profile == :instructeur
                   = render partial: 'shared/help/help_dropdown_instructeur'
                 - else
-                  = render partial: 'shared/help/help_button'
+                  // NB: on mobile in order to have links correctly aligned, we need a left icon
+                  = link_to t('help'), FAQ_URL, class: 'fr-btn fr-icon-questionnaire-line fr-btn--icon-left', title: new_tab_suffix(t('help')), **external_link_attributes
 
 
 
