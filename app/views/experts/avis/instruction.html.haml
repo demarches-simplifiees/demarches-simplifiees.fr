@@ -43,17 +43,15 @@
 
             = render Attachment::EditComponent.new(attached_file: @avis.piece_justificative_file, view_as: :download)
 
-            .flex.justify-between.align-baseline
-              %p.confidentiel.flex
-                - if @avis.confidentiel?
-                  %span.icon.lock
-                  %span
-                    Cet avis est confidentiel et n’est pas affiché aux autres experts consultés
-                - else
-                  %span
-                    Cet avis est partagé avec les autres experts
-              .send-wrapper
-                = f.submit 'Envoyer votre avis', class: 'fr-btn'
+            %p.confidentiel
+              - if @avis.confidentiel?
+                %span
+                  Cet avis est confidentiel et n’est pas affiché aux autres experts consultés
+              - else
+                %span
+                  Cet avis est partagé avec les autres experts
+            .send-wrapper
+              = f.submit 'Envoyer votre avis', class: 'fr-btn'
       - else
         %h2.empty-text
           = t('helpers.information_text.no_new_avis_text')
