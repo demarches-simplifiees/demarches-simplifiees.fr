@@ -506,6 +506,8 @@ Rails.application.routes.draw do
         delete :delete_row, on: :member
       end
 
+      patch :update, controller: 'routing', as: :routing_rules
+
       put 'clone'
       put 'archive'
       get 'publication' => 'procedures#publication', as: :publication
