@@ -572,7 +572,7 @@ describe Instructeur, type: :model do
     let(:instructeur_2) { create(:instructeur) }
     let(:instructeur_3) { create(:instructeur) }
     let(:procedure) { create(:procedure, instructeurs: [instructeur_2, instructeur_3], procedure_expires_when_termine_enabled: true) }
-    let(:gi_1) { procedure.groupe_instructeurs.first }
+    let(:gi_1) { procedure.defaut_groupe_instructeur }
     let(:gi_2) { procedure.groupe_instructeurs.create(label: '2') }
     let(:gi_3) { procedure.groupe_instructeurs.create(label: '3') }
 
