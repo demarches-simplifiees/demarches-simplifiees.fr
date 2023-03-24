@@ -1,0 +1,28 @@
+ministeres:
+  - MLA:
+      - '2018-05-18': Ministère du Logement et de l’Aménagement, en charge des Transports
+          interinsulaires
+  - MEF:
+      - '2018-05-18': Ministère des Finances et de l’Economie, en charge de l’Energie,
+          de la Protection sociale généralisée, de la Coordination de l’action gouvernementale
+          et des Télécommunications
+  - MAF:
+      - '2018-05-18': Ministère de l’Agriculture et du Foncier, en charge du Domaine et
+          de la Recherche
+  - MCE:
+      - '2018-05-18': Ministère de la Culture, de l’Environnement et des Ressources marines,
+          en charge de l’Artisanat
+  - MGT:
+      - '2018-05-18': Ministère des Grands travaux et des Transports terrestres, en charge
+          des Relations avec les institutions
+  - MEA:
+      - '2018-05-18': Ministère de l’Education et de la Modernisation de l’administration,
+          en charge du Numérique
+  - MSP:
+      - '2018-05-18': Ministère de la Santé, en charge de la Prévention
+  - MTS:
+      - '2018-05-18': Ministère du Travail, des Solidarités et de la Formation, en charge
+          de la Condition féminine, de la Famille et des Personnes non autonomes
+  - MJP:
+      - '2018-05-18': Ministère de la Jeunesse et de la Prévention contre la délinquance,
+          en charge des Sports
