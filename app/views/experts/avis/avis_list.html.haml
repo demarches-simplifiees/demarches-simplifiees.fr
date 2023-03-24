@@ -1,14 +1,14 @@
 - content_for(:title, "Avis · Dossier nº #{@dossier.id} (#{@dossier.owner_name})")
 
-= render partial: "header", locals: { dossier: @dossier }
+= render partial: 'header', locals: { avis: @avis, dossier: @dossier }
 
 .container
   .fr-grid-row
     .fr-col.fr-col-12.fr-col-md-3
-      = render partial: 'instructeurs/avis/sidemenu'
+      = render partial: 'sidemenu'
     .fr-col
-      - if @dossier.avis.present?
-        = render partial: 'instructeurs/avis/list', locals: { avis: @dossier.avis, avis_seen_at: @avis_seen_at }
+      - if @dossier.avis_for_expert(current_expert).present?
+        = render partial: 'experts/avis/shared/list', locals: { avis: @dossier.avis_for_expert(current_expert), avis_seen_at: nil }
 
       - else
         %h2.empty-text
