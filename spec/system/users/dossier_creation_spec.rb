@@ -9,7 +9,8 @@ describe 'Creating a new dossier:' do
     end
 
     context 'when the procedure has identification by individual' do
-      let(:procedure) { create(:procedure, :published, :for_individual, :with_service, ask_birthday: ask_birthday) }
+      let(:libelle) { "[title] with characters to escape : '@*^$" }
+      let(:procedure) { create(:procedure, :published, :for_individual, :with_service, ask_birthday: ask_birthday, libelle: libelle) }
       let(:ask_birthday) { false }
       let(:expected_birthday) { nil }
 
@@ -19,6 +20,7 @@ describe 'Creating a new dossier:' do
 
         expect(page).to have_current_path identite_dossier_path(user.reload.dossiers.last)
         expect(page).to have_procedure_description(procedure)
+        expect(page).to have_title(libelle)
 
         choose 'Monsieur'
         fill_in 'individual_nom',    with: 'Nom'

@@ -370,30 +370,6 @@ describe Dossier do
     end
   end
 
-  describe '#reset!' do
-    let!(:dossier) { create :dossier, :with_entreprise, autorisation_donnees: true }
-
-    subject { dossier.reset! }
-
-    it { expect(dossier.etablissement).not_to be_nil }
-    it { expect(dossier.etablissement.exercices).not_to be_empty }
-    it { expect(dossier.etablissement.exercices.size).to eq 1 }
-    it { expect(dossier.autorisation_donnees).to be_truthy }
-
-    it { expect { subject }.to change(Exercice, :count).by(-1) }
-    it { expect { subject }.to change(Etablissement, :count).by(-1) }
-
-    context 'when method reset! is call' do
-      before do
-        subject
-        dossier.reload
-      end
-
-      it { expect(dossier.etablissement).to be_nil }
-      it { expect(dossier.autorisation_donnees).to be_falsey }
-    end
-  end
-
   describe '#champs' do
     let(:procedure) { create(:procedure) }
     let!(:tdc_1) { create(:type_de_champ, libelle: 'l1', position: 1, procedure: procedure) }

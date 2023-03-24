@@ -31,9 +31,10 @@ class Champ < ApplicationRecord
   belongs_to :etablissement, optional: true, dependent: :destroy
   has_many :champs, -> { ordered }, foreign_key: :parent_id, inverse_of: :parent, dependent: :destroy
 
+  delegate :procedure, to: :dossier
+
   delegate :libelle,
     :type_champ,
-    :procedure,
     :description,
     :drop_down_list_options,
     :drop_down_other?,
@@ -222,7 +223,7 @@ class Champ < ApplicationRecord
   end
 
   def clone(dossier:, parent: nil)
-    kopy = deep_clone(only: (private? ? [] : [:value, :value_json]) + [:data, :private, :row, :type, :external_id, :type_de_champ_id],
+    kopy = deep_clone(only: (private? ? [] : [:value, :value_json, :data, :external_id]) + [:private, :row, :type, :type_de_champ_id],
                       include: private? ? [] : [:etablissement, :geo_areas])
 
     kopy.dossier = dossier
@@ -236,18 +237,6 @@ class Champ < ApplicationRecord
       PiecesJustificativesService.clone_attachments(self, kopy) if !private? && piece_justificative_file.attached?
     end
     kopy
-  end
-
-  def clone_piece_justificative(kopy)
-    piece_justificative_file.open do |tempfile|
-      kopy.piece_justificative_file.attach({
-        io: File.open(tempfile.path),
-        filename: piece_justificative_file.filename,
-        content_type: piece_justificative_file.content_type,
-        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
-      })
-    end
-  rescue ActiveStorage::FileNotFoundError, ActiveStorage::IntegrityError
   end
 
   private

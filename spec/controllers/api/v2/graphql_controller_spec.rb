@@ -123,6 +123,34 @@ describe API::V2::GraphqlController do
       request.env['HTTP_AUTHORIZATION'] = authorization_header
     end
 
+    describe "token authentication" do
+      it {
+        expect(gql_errors).to eq(nil)
+        expect(gql_data).not_to be_nil
+      }
+
+      context "when the token is invalid" do
+        before do
+          request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Token.encode_credentials('invalid')
+        end
+
+        it {
+          expect(gql_errors.first[:message]).to eq("An object of type Demarche was hidden due to permissions")
+        }
+      end
+
+      context "when the token is revoked" do
+        before do
+          admin.update(encrypted_token: nil)
+        end
+
+        it {
+          expect(token).not_to be_nil
+          expect(gql_errors.first[:message]).to eq("An object of type Demarche was hidden due to permissions")
+        }
+      end
+    end
+
     describe "demarche" do
       describe "query a demarche" do
         let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_all_champs, :with_all_annotations, administrateurs: [admin]) }
@@ -904,6 +932,63 @@ describe API::V2::GraphqlController do
         end
       end
 
+      context 'getDemarcheDescriptor' do
+        let(:operation_name) { 'getDemarcheDescriptor' }
+
+        context 'find by number' do
+          let(:variables) { { demarche: { number: procedure.id } } }
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:demarcheDescriptor][:id]).to eq(procedure.to_typed_id)
+          }
+        end
+
+        context 'find by id' do
+          let(:variables) { { demarche: { id: procedure.to_typed_id } } }
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:demarcheDescriptor][:id]).to eq(procedure.to_typed_id)
+          }
+        end
+
+        context 'not opendata' do
+          let(:variables) { { demarche: { id: procedure.to_typed_id } } }
+
+          before { procedure.update(opendata: false) }
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:demarcheDescriptor][:id]).to eq(procedure.to_typed_id)
+          }
+        end
+
+        context 'without authorization token' do
+          let(:authorization_header) { nil }
+
+          context 'opendata' do
+            let(:variables) { { demarche: { id: procedure.to_typed_id } } }
+
+            it {
+              expect(gql_errors).to be_nil
+              expect(gql_data[:demarcheDescriptor][:id]).to eq(procedure.to_typed_id)
+            }
+          end
+
+          context 'not opendata' do
+            let(:variables) { { demarche: { id: procedure.to_typed_id } } }
+
+            before { procedure.update(opendata: false) }
+
+            it {
+              expect(gql_errors).not_to be_nil
+              expect(gql_errors.first[:message]).to eq('An object of type DemarcheDescriptor was hidden due to permissions')
+            }
+          end
+        end
+      end
+
       context 'mutation' do
         let(:query_id) { 'ds-mutation-v2' }
 
@@ -1004,6 +1089,43 @@ describe API::V2::GraphqlController do
             expect(gql_data[:dossierClasserSansSuite][:dossier][:id]).to eq(dossier.to_typed_id)
             expect(gql_data[:dossierClasserSansSuite][:dossier][:state]).to eq('sans_suite')
           }
+        end
+
+        context 'groupeInstructeurModifier' do
+          let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
+          let(:variables) { { input: { groupeInstructeurId: dossier.groupe_instructeur.to_typed_id, label: 'nouveau groupe instructeur' } } }
+          let(:operation_name) { 'groupeInstructeurModifier' }
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:groupeInstructeurModifier][:errors]).to be_nil
+            expect(gql_data[:groupeInstructeurModifier][:groupeInstructeur][:id]).to eq(dossier.groupe_instructeur.to_typed_id)
+            expect(dossier.groupe_instructeur.reload.label).to eq('nouveau groupe instructeur')
+          }
+
+          context 'close groupe instructeur' do
+            let(:variables) { { input: { groupeInstructeurId: dossier.groupe_instructeur.to_typed_id, closed: true } } }
+
+            context 'with multiple groupes' do
+              before do
+                create(:groupe_instructeur, procedure: procedure)
+              end
+
+              it {
+                expect(gql_errors).to be_nil
+                expect(gql_data[:groupeInstructeurModifier][:errors]).to be_nil
+                expect(gql_data[:groupeInstructeurModifier][:groupeInstructeur][:id]).to eq(dossier.groupe_instructeur.to_typed_id)
+                expect(dossier.groupe_instructeur.reload.closed).to be_truthy
+              }
+            end
+
+            context 'validation error' do
+              it {
+                expect(gql_errors).to be_nil
+                expect(gql_data[:groupeInstructeurModifier][:errors].first[:message]).to eq('Il doit y avoir au moins un groupe instructeur actif sur chaque démarche')
+              }
+            end
+          end
         end
       end
     end

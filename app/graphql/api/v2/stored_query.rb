@@ -177,6 +177,16 @@ class API::V2::StoredQuery
     }
   }
 
+  query getDemarcheDescriptor(
+    $demarche: FindDemarcheInput!
+    $includeRevision: Boolean = false
+    $includeService: Boolean = false
+  ) {
+    demarcheDescriptor(demarche: $demarche) {
+      ...DemarcheDescriptorFragment
+    }
+  }
+
   fragment ServiceFragment on Service {
     nom
     siret
@@ -708,6 +718,17 @@ class API::V2::StoredQuery
         signedBlobId
         headers
         url
+      }
+    }
+  }
+
+  mutation groupeInstructeurModifier($input: GroupeInstructeurModifierInput!) {
+    groupeInstructeurModifier(input: $input) {
+      groupeInstructeur {
+        id
+      }
+      errors {
+        message
       }
     }
   }

@@ -1,5 +1,5 @@
 %li
-  = link_to FAQ_URL, target: "_blank", rel: "noopener" do
+  = link_to FAQ_URL, title: new_tab_suffix(t('help_dropdown.general_title')), **external_link_attributes do
     %span.icon.help
     .dropdown-description
       %span.help-dropdown-title

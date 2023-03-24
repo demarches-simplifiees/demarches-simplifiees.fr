@@ -7,9 +7,13 @@ module Types
     field :dossier_classer_sans_suite, mutation: Mutations::DossierClasserSansSuite
     field :dossier_refuser, mutation: Mutations::DossierRefuser
     field :dossier_accepter, mutation: Mutations::DossierAccepter
+    field :dossier_repasser_en_instruction, mutation: Mutations::DossierRepasserEnInstruction
     field :dossier_repasser_en_construction, mutation: Mutations::DossierRepasserEnConstruction
     field :dossier_archiver, mutation: Mutations::DossierArchiver
     field :dossier_changer_groupe_instructeur, mutation: Mutations::DossierChangerGroupeInstructeur
+
+    # pf mutations
+    field :dossier_modifier_annotation_piece_justificative, mutation: Mutations::DossierModifierAnnotationPieceJustificative
     field :dossier_ajouter_instructeur, mutation: Mutations::DossierAjouterInstructeur
 
     field :dossier_modifier_annotation_text, mutation: Mutations::DossierModifierAnnotationText
@@ -19,8 +23,6 @@ module Types
     field :dossier_modifier_annotation_integer_number, mutation: Mutations::DossierModifierAnnotationIntegerNumber
     field :dossier_modifier_annotation_ajouter_ligne, mutation: Mutations::DossierModifierAnnotationAjouterLigne
 
-    # pf mutations
-    field :dossier_repasser_en_instruction, mutation: Mutations::DossierRepasserEnInstruction
-    field :dossier_modifier_annotation_piece_justificative, mutation: Mutations::DossierModifierAnnotationPieceJustificative
+    field :groupe_instructeur_modifier, mutation: Mutations::GroupeInstructeurModifier
   end
 end
