@@ -1,2 +1,3 @@
-= turbo_stream.replace_all '.invite-user-action', partial: 'invites/dropdown', locals: { dossier: @dossier }
-= turbo_stream.focus_all '.invite-user-action > button'
+- if @dossier.present?
+  = turbo_stream.replace_all '.invite-user-action', partial: 'invites/dropdown', locals: { dossier: @dossier }
+  = turbo_stream.focus_all '.invite-user-action > button'
