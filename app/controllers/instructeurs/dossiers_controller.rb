@@ -293,8 +293,10 @@ module Instructeurs
     def champs_private_params
       params.require(:dossier).permit(champs_private_attributes: [
         :id, :primary_value, :secondary_value, :piece_justificative_file, :value_other, :external_id, :numero_allocataire, :code_postal, :departement, :code_departement, :value, value: [],
-        champs_attributes: [:id, :_destroy, :value, :primary_value, :secondary_value, :piece_justificative_file, :value_other, :external_id, :numero_allocataire, :code_postal, :departement, :code_departement, value: []]
-      ])
+        champs_attributes: [
+          :id, :_destroy, :value, :primary_value, :secondary_value, :piece_justificative_file, :value_other, :external_id, :numero_allocataire, :code_postal, :departement, :code_departement, value: []
+        ] + TypeDeChamp::INSTANCE_CHAMPS_PARAMS
+      ] + TypeDeChamp::INSTANCE_CHAMPS_PARAMS)
     end
 
     def remove_changes_forbidden_by_visa(params, champs)

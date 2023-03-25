@@ -408,9 +408,11 @@ module Users
     def champs_params
       params.permit(dossier: {
         champs_public_attributes: [
-          :id, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: [],
-          champs_attributes: [:id, :_destroy, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: []]
-        ]
+          :id, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_dn, :date_de_naissance, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: [],
+          champs_attributes: [
+            :id, :_destroy, :value, :value_other, :external_id, :numero_dn, :date_de_naissance, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: []
+          ] + TypeDeChamp::INSTANCE_CHAMPS_PARAMS
+        ] + TypeDeChamp::INSTANCE_CHAMPS_PARAMS
       })
     end
 
@@ -426,12 +428,12 @@ module Users
 
     def dossier
       @dossier ||= dossier_scope.find(params[:id] || params[:dossier_id]).tap do |dossier|
-                       # Ease search & groupments by tags
-                       Sentry.configure_scope do |scope|
-                         scope.set_tags(procedure: dossier.procedure.id)
-                         scope.set_tags(dossier: dossier.id)
-                       end
-                     end
+        # Ease search & groupments by tags
+        Sentry.configure_scope do |scope|
+          scope.set_tags(procedure: dossier.procedure.id)
+          scope.set_tags(dossier: dossier.id)
+        end
+      end
     end
 
     def dossier_with_champs(pj_template: true)
@@ -467,8 +469,9 @@ module Users
     def update_dossier_and_compute_errors
       errors = []
 
-      if champs_params[:dossier]
-        @dossier.assign_attributes(champs_params[:dossier])
+      dossier_params = champs_params[:dossier]
+      if dossier_params
+        @dossier.assign_attributes(dossier_params)
         # FIXME: in some cases a removed repetition bloc row is submitted.
         # In this case it will be treated as a new record, and the action will fail.
         @dossier.champs_public.filter(&:block?).each do |champ|

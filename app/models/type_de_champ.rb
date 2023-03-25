@@ -125,6 +125,7 @@ class TypeDeChamp < ApplicationRecord
   }.merge(INSTANCE_TYPE_CHAMPS)
 
   INSTANCE_OPTIONS = [:parcelles, :batiments, :zones_manuelles, :min, :max, :level, :accredited_users]
+  INSTANCE_CHAMPS_PARAMS = [:numero_dn, :date_de_naissance]
 
   store_accessor :options,
                  *INSTANCE_OPTIONS,
