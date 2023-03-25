@@ -409,13 +409,17 @@ module Users
       params.permit(dossier: {
         champs_public_attributes: [
           :id, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: [],
-          champs_attributes: [:id, :_destroy, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: []]
-        ],
+          champs_attributes: [
+            :id, :_destroy, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: []
+          ] + TypeDeChamp::INSTANCE_CHAMPS_PARAMS
+        ] + TypeDeChamp::INSTANCE_CHAMPS_PARAMS,
         # FIXME: remove after migration
         champs_attributes: [
-          :id, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :date_de_naissance, :numero_dn, :departement, :code_departement, value: [],
-          champs_attributes: [:id, :_destroy, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :date_de_naissance, :numero_dn, :departement, :code_departement, value: []]
-        ]
+          :id, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: [],
+          champs_attributes: [
+            :id, :_destroy, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: []
+          ] + TypeDeChamp::INSTANCE_CHAMPS_PARAMS
+        ] + TypeDeChamp::INSTANCE_CHAMPS_PARAMS
       })
     end
 
@@ -431,12 +435,12 @@ module Users
 
     def dossier
       @dossier ||= dossier_scope.find(params[:id] || params[:dossier_id]).tap do |dossier|
-                       # Ease search & groupments by tags
-                       Sentry.configure_scope do |scope|
-                         scope.set_tags(procedure: dossier.procedure.id)
-                         scope.set_tags(dossier: dossier.id)
-                       end
-                     end
+        # Ease search & groupments by tags
+        Sentry.configure_scope do |scope|
+          scope.set_tags(procedure: dossier.procedure.id)
+          scope.set_tags(dossier: dossier.id)
+        end
+      end
     end
 
     def dossier_with_champs(pj_template: true)
