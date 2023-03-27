@@ -5,6 +5,7 @@
 #  id         :bigint           not null, primary key
 #  acronym    :string           not null
 #  label      :string
+#  tchap_hs   :string           default([]), is an Array
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
