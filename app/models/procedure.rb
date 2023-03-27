@@ -16,7 +16,7 @@
 #  declarative_with_state                    :string
 #  description                               :string
 #  duree_conservation_dossiers_dans_ds       :integer
-#  duree_conservation_etendue_par_ds         :boolean          default(FALSE)
+#  duree_conservation_etendue_par_ds         :boolean          default(FALSE), not null
 #  encrypted_api_particulier_token           :string
 #  euro_flag                                 :boolean          default(FALSE)
 #  experts_require_administrateur_invitation :boolean          default(FALSE)
@@ -29,7 +29,7 @@
 #  lien_dpo                                  :string
 #  lien_notice                               :string
 #  lien_site_web                             :string
-#  max_duree_conservation_dossiers_dans_ds   :integer          default(12)
+#  max_duree_conservation_dossiers_dans_ds   :integer          default(12), not null
 #  monavis_embed                             :text
 #  opendata                                  :boolean          default(TRUE)
 #  organisation                              :string
