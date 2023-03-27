@@ -33,4 +33,9 @@ class Zone < ApplicationRecord
       OpenStruct.new(id: zone.id, label: zone.label_at(date))
     end
   end
+
+  def self.default_for(tchap_hs)
+    sanitized_sql = ActiveRecord::Base.sanitize_sql "'#{tchap_hs}' = ANY (tchap_hs)"
+    Zone.where(sanitized_sql)
+  end
 end
