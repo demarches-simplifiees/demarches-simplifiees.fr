@@ -19,6 +19,19 @@ export function motivationCancel() {
   show(document.querySelector('.dropdown-items'));
 }
 
+export function showDeleteJustificatif(name) {
+  const justificatif = document.querySelector('#dossier_justificatif_motivation_' + name)
+  if (justificatif.value != '') {
+    show(document.querySelector('#delete_motivation_import_' + name));
+  }
+}
+
+export function deleteJustificatif(name) {
+  const justificatif = document.querySelector('#dossier_justificatif_motivation_' + name)
+  justificatif.value = ''
+  hide(document.querySelector('#delete_motivation_import_' + name));
+}
+
 export function showImportJustificatif(name) {
   show(document.querySelector('#justificatif_motivation_import_' + name));
   hide(document.querySelector('#justificatif_motivation_suggest_' + name));

@@ -18,7 +18,9 @@ import { toggleCondidentielExplanation } from '../new_design/avis';
 import {
   showMotivation,
   motivationCancel,
-  showImportJustificatif
+  showImportJustificatif,
+  showDeleteJustificatif,
+  deleteJustificatif
 } from '../new_design/instruction-button';
 import { showFusion, showNewAccount } from '../new_design/fc-fusion';
 
@@ -31,6 +33,8 @@ const DS = {
   showMotivation,
   motivationCancel,
   showImportJustificatif,
+  showDeleteJustificatif,
+  deleteJustificatif,
   showFusion,
   showNewAccount
 };
