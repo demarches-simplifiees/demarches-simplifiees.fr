@@ -1,26 +1,29 @@
 .card#routing-rules
   .card-title
     = t('.apply_routing_rules')
-  %p.notice
-    = t('.routing_rules_notice')
-  .conditionnel.mt-2.width-100
-    %table.condition-table.mt-2.width-100
-      %thead
-        %tr
-          %th.far-left
-          %th.target Champ cible du routage
-          %th.operator Opérateur
-          %th.value Valeur
-          %th.delete-column
-  .conditionnel.mt-2.width-100
-    - rows.each.with_index do |(targeted_champ, value, groupe_instructeur_id), row_index|
-      = form_tag admin_procedure_routing_rules_path, method: :post, class: 'form width-100' do
-        %table.condition-table.mt-2.width-100
-          %tbody
-            %tr{ data: { controller: 'autosave' } }
-              %td.far-left Router vers « #{GroupeInstructeur.find(groupe_instructeur_id).label} »  si
-              %td.target= targeted_champ_tag(targeted_champ, row_index)
-              %td.operator Est égal à
-              %td.value= value_tag(targeted_champ, value, row_index)
-              %td.delete-column
-              = hidden_groupe_instructeur_tag(groupe_instructeur_id)
+  - if can_route?
+    %p.notice
+      = t('.routing_rules_notice')
+    .conditionnel.mt-2.width-100
+      %table.condition-table.mt-2.width-100
+        %thead
+          %tr
+            %th.far-left
+            %th.target Champ cible du routage
+            %th.operator Opérateur
+            %th.value Valeur
+            %th.delete-column
+    .conditionnel.mt-2.width-100
+      - rows.each.with_index do |(targeted_champ, value, groupe_instructeur_id), row_index|
+        = form_tag admin_procedure_routing_rules_path(@procedure), method: :post, class: 'form width-100' do
+          %table.condition-table.mt-2.width-100
+            %tbody
+              %tr{ data: { controller: 'autosave' } }
+                %td.far-left Router vers « #{GroupeInstructeur.find(groupe_instructeur_id).label} »  si
+                %td.target= targeted_champ_tag(targeted_champ, row_index)
+                %td.operator Est égal à
+                %td.value= value_tag(targeted_champ, value, row_index)
+                %td.delete-column
+                = hidden_groupe_instructeur_tag(groupe_instructeur_id)
+  - else
+    NONONO
