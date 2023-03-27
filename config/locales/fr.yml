@@ -110,7 +110,7 @@ fr:
     accessibility_statement:
       title: "Déclaration d’accessibilité"
       line_one: "La DINUM s’engage à rendre son service accessible, conformément à l’article 47 de la loi n° 2005-102 du 11 février 2005."
-      line_two: "Cette déclaration d’accessibilité s’applique à Démarches simplifiées"
+      line_two: "Cette déclaration d’accessibilité s’applique à %{app_name} (%{host})."
       compliance:
         title: "État de conformité"
         line_one_html: "Le site Démarches simplifiées est <strong>partiellement conforme</strong> avec le référentiel général d’amélioration de l’accessibilité (RGAA) version 4."
@@ -154,7 +154,7 @@ fr:
         tool_six: "Stylus (extension Firefox)"
         subtitle_four: "Pages du site ayant fait l’objet de la vérification de conformité"
         page_one:
-          label: "Démarches simplifiées"
+          label: "Accueil"
         page_two:
           label: "Contact"
         page_three:
