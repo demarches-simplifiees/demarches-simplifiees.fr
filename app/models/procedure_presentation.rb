@@ -183,6 +183,8 @@ class ProcedurePresentation < ApplicationRecord
             .filter_map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
 
           dossiers.filter_by_datetimes(column, dates)
+        elsif field['column'] == "state" && values.include?("pending_correction")
+          dossiers.joins(:resolutions).where(resolutions: DossierResolution.pending)
         else
           dossiers.where("dossiers.#{column} IN (?)", values)
         end
@@ -245,7 +247,11 @@ class ProcedurePresentation < ApplicationRecord
     if [TYPE_DE_CHAMP, TYPE_DE_CHAMP_PRIVATE].include?(filter[TABLE])
       find_type_de_champ(filter[COLUMN]).dynamic_type.filter_to_human(filter['value'])
     elsif filter['column'] == 'state'
-      Dossier.human_attribute_name("state.#{filter['value']}")
+      if filter['value'] == 'pending_correction'
+        Dossier.human_attribute_name("pending_correction.for_instructeur")
+      else
+        Dossier.human_attribute_name("state.#{filter['value']}")
+      end
     elsif filter['table'] == 'groupe_instructeur' && filter['column'] == 'id'
       instructeur.groupe_instructeurs
         .find { _1.id == filter['value'].to_i }&.label || filter['value']
