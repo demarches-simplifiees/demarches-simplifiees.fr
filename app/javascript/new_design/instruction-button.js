@@ -30,8 +30,10 @@ export function showDeleteJustificatif(name) {
   const justificatif = document.querySelector(
     '#dossier_justificatif_motivation_' + name
   );
+
   if (justificatif.value != '') {
     show(document.querySelector('#delete_motivation_import_' + name));
+    document.querySelector('#delete_motivation_import_' + name);
   }
 }
 
