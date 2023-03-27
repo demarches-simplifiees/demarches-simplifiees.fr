@@ -7,4 +7,4 @@
       %p.fr-my-2w
         %button{ type: "button", "aria-controls": dom_id(@champ, :explanation), "aria-expanded": "false", href: dom_id(@champ, :explanation), class: "fr-btn ft-btn--sm fr-btn--secondary" } Lire plus
       %p.fr-collapse{ id: dom_id(@champ, :explanation) }
-        = @champ.collapsible_explanation_text
+        = render SimpleFormatComponent.new(@champ.collapsible_explanation_text, allow_a: true)
