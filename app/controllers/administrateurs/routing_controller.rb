@@ -6,7 +6,7 @@ module Administrateurs
 
     def update
       left = champ_value(targeted_champ)
-      right = constant(value)
+      right = parsed_value
 
       @procedure.groupe_instructeurs.find(groupe_instructeur_id).update!(routing_rule: ds_eq(left, right))
     end
@@ -19,6 +19,12 @@ module Administrateurs
 
     def value
       routing_params[:value]
+    end
+
+    def parsed_value
+      term = Logic.from_json(value) rescue nil
+
+      term.presence || constant(value)
     end
 
     def groupe_instructeur_id
