@@ -4,13 +4,32 @@ describe Procedure::RoutingRulesComponent, type: :component do
   describe 'render' do
     let(:procedure) do
       create(:procedure, types_de_champ_public: [{ type: :integer_number, libelle: 'Age' }])
-        .tap {_1.groupe_instructeurs.create(label: 'groupe 2')}
+        .tap { _1.groupe_instructeurs.create(label: 'groupe 2') }
     end
 
-    before { render_inline(described_class.new(procedure:)) }
+    subject { render_inline(described_class.new(procedure:)) }
 
     context 'when there are no types de champ that can be routed' do
+      before do
+        procedure.publish_revision!
+        procedure.reload
+        subject
+      end
       it { expect(page).to have_text('NONONO') }
+    end
+
+    context 'when there are types de champ that can be routed' do
+      before do
+        procedure.draft_revision.add_type_de_champ({
+          type_champ: :drop_down_list,
+          libelle: 'Votre ville',
+          drop_down_list_value: "Paris\nLyon\nMarseille"
+        })
+        procedure.publish_revision!
+        procedure.reload
+        subject
+      end
+      it { expect(page).to have_text('Router vers') }
     end
   end
 end
