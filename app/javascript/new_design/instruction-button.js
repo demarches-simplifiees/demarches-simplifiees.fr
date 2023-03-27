@@ -17,6 +17,13 @@ export function motivationCancel() {
     .forEach((el) => hide(el.parentElement));
 
   show(document.querySelector('.dropdown-items'));
+
+  document.querySelectorAll('.js_delete_motivation').forEach(hide);
+}
+
+export function motivationCancelBatch() {
+  document.querySelector('#dropdown_batch' ).classList.remove("open");;
+  hide(document.querySelector('.js_delete_motivation'));
 }
 
 export function showDeleteJustificatif(name) {
