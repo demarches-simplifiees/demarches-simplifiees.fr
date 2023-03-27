@@ -1,0 +1,140 @@
+- content_for(:title, t('views.accessibility_statement.title'))
+- content_for :footer do
+  = render partial: "root/footer"
+
+#accessibility-statement.fr-pt-2w
+  .fr-container.fr-my-4w
+    .fr-grid-row
+      .fr-col-xl-2
+      .fr-col-xl-8
+        %h1.fr-mb-4w
+          = t('views.accessibility_statement.title')
+        %p.fr-mb-2w= t('views.accessibility_statement.line_one')
+        %p.fr-mb-2w= t('views.accessibility_statement.line_two', app_name: APPLICATION_NAME, host: URI(APPLICATION_BASE_URL).host)
+
+        %div
+          %h2
+            = t('views.accessibility_statement.compliance.title')
+          %p.fr-mb-2w= t('views.accessibility_statement.compliance.line_one_html')
+
+          %h3
+            = t('views.accessibility_statement.results.title')
+          %p.fr-mb-2w= t('views.accessibility_statement.results.line_one')
+          %p.fr-mb-2w= t('views.accessibility_statement.results.line_three')
+          %p.fr-mb-2w
+            = link_to t("views.accessibility_statement.results.programme.label"), t("views.accessibility_statement.results.programme.url"), title: t("views.accessibility_statement.results.programme.title"), target: "_blank", rel: "noopener noreferrer"
+
+        %div
+          %h2
+            = t('views.accessibility_statement.no_accessible.title')
+          %h3
+            = t('views.accessibility_statement.no_accessible.subtitle_one')
+          .fr-mb-2w
+            = t('views.accessibility_statement.no_accessible.examples_html')
+
+        %div
+          %h2
+            = t('views.accessibility_statement.preparation.title')
+          %p.fr-mb-2w= t('views.accessibility_statement.preparation.intro')
+          %h3
+            = t('views.accessibility_statement.preparation.subtitle_one')
+          %ul.fr-mb-2w
+            %li
+              = link_to t("views.accessibility_statement.preparation.techno_ruby.label"), t("views.accessibility_statement.preparation.techno_ruby.url"), title: t("views.accessibility_statement.preparation.techno_ruby.title"), target: "_blank", rel: "noopener noreferrer"
+            %li
+              = "HTML 5"
+            %li
+              = "CSS 3"
+            %li
+              = "Javascript"
+            %li
+              = "PDF"
+          %h3
+            = t('views.accessibility_statement.preparation.subtitle_two')
+          %p.fr-mb-2w= t('views.accessibility_statement.preparation.environment_intro')
+          %ul.fr-mb-2w
+            %li
+              = t('views.accessibility_statement.preparation.environment_one')
+            %li
+              = t('views.accessibility_statement.preparation.environment_two')
+            %li
+              = t('views.accessibility_statement.preparation.environment_three')
+          %h3
+            = t('views.accessibility_statement.preparation.subtitle_three')
+          %ul.fr-mb-2w
+            %li
+              = t('views.accessibility_statement.preparation.tool_one')
+            %li
+              = t('views.accessibility_statement.preparation.tool_two')
+            %li
+              = t('views.accessibility_statement.preparation.tool_three')
+            %li
+              = t('views.accessibility_statement.preparation.tool_four')
+            %li
+              = t('views.accessibility_statement.preparation.tool_five')
+            %li
+              = t('views.accessibility_statement.preparation.tool_six')
+          %h3
+            = t('views.accessibility_statement.preparation.subtitle_four')
+          %ul.fr-mb-2w
+            %li
+              = link_to t("views.accessibility_statement.preparation.page_one.label"), root_path
+            %li
+              = link_to t("views.accessibility_statement.preparation.page_two.label"), contact_path
+            %li
+              = link_to t("views.accessibility_statement.preparation.page_three.label"), MENTIONS_LEGALES_URL
+            %li
+              = link_to t("views.accessibility_statement.preparation.page_four.label"), ACCESSIBILITE_URL
+            %li
+              = link_to t("views.accessibility_statement.preparation.page_five.label"), new_user_session_path
+            %li
+              = t("views.accessibility_statement.preparation.page_six")
+            %li
+              = link_to t("views.accessibility_statement.preparation.page_seven.label"), t("views.accessibility_statement.preparation.page_seven.url"),
+                title: t("views.accessibility_statement.preparation.page_seven.title"), **external_link_attributes
+            %li
+              = link_to t("views.accessibility_statement.preparation.page_eight.label"), t("views.accessibility_statement.preparation.page_eight.url"),
+                title: t("views.accessibility_statement.preparation.page_eight.title"), **external_link_attributes
+            %li
+              = t("views.accessibility_statement.preparation.page_nine")
+            %li
+              = t("views.accessibility_statement.preparation.page_ten")
+            %li
+              = t("views.accessibility_statement.preparation.page_eleven")
+            %li
+              = t("views.accessibility_statement.preparation.page_twelve")
+            %li
+              = t("views.accessibility_statement.preparation.page_thirteen")
+            %li
+              = t("views.accessibility_statement.preparation.page_fourteen")
+            %li
+              = t("views.accessibility_statement.preparation.page_fifteen")
+            %li
+              = t("views.accessibility_statement.preparation.page_sixteen")
+
+        %div
+          %h2
+            = t('views.accessibility_statement.contact.title')
+          %p.fr-mb-2w= t('views.accessibility_statement.contact.intro')
+          %ul.fr-mb-2w
+            %li
+              = t('views.accessibility_statement.contact.infos.email_html')
+              = mail_to CONTACT_EMAIL
+            %li
+              = t('views.accessibility_statement.contact.infos.phone_html')
+              = phone_to CONTACT_PHONE.gsub(" ", ""), CONTACT_PHONE
+            %li
+              = t('views.accessibility_statement.contact.infos.adress_html')
+
+        %div
+          %h2
+            = t('views.accessibility_statement.remedies.title')
+          %p.fr-mb-2w= t('views.accessibility_statement.remedies.line_one')
+          %p.fr-mb-2w= t('views.accessibility_statement.remedies.line_two')
+          %ul.fr-mb-2w
+            %li
+              = link_to t("views.accessibility_statement.remedies.remedies_one.label"), t("views.accessibility_statement.remedies.remedies_one.url"), title: t("views.accessibility_statement.remedies.remedies_one.title"), target: "_blank", rel: "noopener noreferrer"
+            %li
+              = link_to t("views.accessibility_statement.remedies.remedies_two.label"), t("views.accessibility_statement.remedies.remedies_two.url"), title: t("views.accessibility_statement.remedies.remedies_two.title"), target: "_blank", rel: "noopener noreferrer"
+            %li
+              = t('views.accessibility_statement.remedies.remedies_three')

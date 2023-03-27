@@ -32,7 +32,6 @@ en:
       accessibilite:
         label: "Accessibility: partially compliant"
         title: "Accessibility declaration"
-        url: "https://doc.demarches-simplifiees.fr/declaration-daccessibilite"
       api_doc:
         label: "API Documentation"
         title: "API Documentation"
