@@ -10,7 +10,7 @@
         %h1.fr-mb-4w
           = t('views.accessibility_statement.title')
         %p.fr-mb-2w= t('views.accessibility_statement.line_one')
-        %p.fr-mb-2w= t('views.accessibility_statement.line_two') + " (" +ENV["APP_HOST"]+ ")."
+        %p.fr-mb-2w= t('views.accessibility_statement.line_two', app_name: APPLICATION_NAME, host: URI(APPLICATION_BASE_URL).host)
 
         %div
           %h2
@@ -84,15 +84,17 @@
             %li
               = link_to t("views.accessibility_statement.preparation.page_three.label"), MENTIONS_LEGALES_URL
             %li
-            = link_to t("views.accessibility_statement.preparation.page_four.label"), ACCESSIBILITE_URL
+              = link_to t("views.accessibility_statement.preparation.page_four.label"), ACCESSIBILITE_URL
             %li
               = link_to t("views.accessibility_statement.preparation.page_five.label"), new_user_session_path
             %li
               = t("views.accessibility_statement.preparation.page_six")
             %li
-              = link_to t("views.accessibility_statement.preparation.page_seven.label"), t("views.accessibility_statement.preparation.page_seven.url"), title: t("views.accessibility_statement.preparation.page_seven.title"), target: "_blank", rel: "noopener noreferrer"
+              = link_to t("views.accessibility_statement.preparation.page_seven.label"), t("views.accessibility_statement.preparation.page_seven.url"),
+                title: t("views.accessibility_statement.preparation.page_seven.title"), **external_link_attributes
             %li
-              = link_to t("views.accessibility_statement.preparation.page_eight.label"), t("views.accessibility_statement.preparation.page_eight.url"), title: t("views.accessibility_statement.preparation.page_eight.title"), target: "_blank", rel: "noopener noreferrer"
+              = link_to t("views.accessibility_statement.preparation.page_eight.label"), t("views.accessibility_statement.preparation.page_eight.url"),
+                title: t("views.accessibility_statement.preparation.page_eight.title"), **external_link_attributes
             %li
               = t("views.accessibility_statement.preparation.page_nine")
             %li
@@ -120,7 +122,7 @@
               = mail_to CONTACT_EMAIL
             %li
               = t('views.accessibility_statement.contact.infos.phone_html')
-              = phone_to CONTACT_PHONE.gsub(" "), CONTACT_PHONE
+              = phone_to CONTACT_PHONE.gsub(" ", ""), CONTACT_PHONE
             %li
               = t('views.accessibility_statement.contact.infos.adress_html')
 

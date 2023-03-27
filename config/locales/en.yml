@@ -114,7 +114,7 @@ en:
     accessibility_statement:
       title: "Accessibility statement"
       line_one: "DINUM is committed to making its service accessible in accordance with Article 47 of Law No. 2005-102 of 11 February 2005."
-      line_two: "This accessibility statement applies to Démarches simplifiées"
+      line_two: "This accessibility statement applies to %{app_name} (%{host})."
       compliance:
         title: "Compliance status"
         line_one_html: "The website Démarches simplifiées is <strong>partially compliant</strong> with the General Accessibility Guidelines (RGAA) version 4."
@@ -158,7 +158,7 @@ en:
         tool_six: "Stylus (Firefox extension)"
         subtitle_four: "Pages of the site subject to the compliance check"
         page_one:
-          label: "Démarches simplifiées"
+          label: "Home"
         page_two:
           label: "Contact"
         page_three:
