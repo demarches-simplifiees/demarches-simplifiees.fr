@@ -22,7 +22,7 @@
                   = form.file_field :justificatif_motivation, direct_upload: true, id: "dossier_justificatif_motivation_accept", onchange: "DS.showDeleteJustificatif('accept');"
 
                 .hidden{ id: "delete_motivation_import_accept" }
-                  %button.fr-btn.fr-btn--sm.fr-btn--tertiary-no-outline.fr-btn--icon-left.fr-icon-delete-line.fr-ml-0.fr-mt-1w.js_delete_motivation{ type: 'button', onclick: "DS.deleteJustificatif('accept');"} Supprimer le  justificatif
+                  %button.fr-btn.fr-btn--sm.fr-btn--tertiary-no-outline.fr-btn--icon-left.fr-icon-delete-line.fr-ml-0.fr-mt-1w.js_delete_motivation{ type: 'button', onclick: "DS.deleteJustificatif('accept');" } Supprimer le  justificatif
 
                 = button_tag "Annuler", type: :reset, class: 'fr-btn fr-btn--sm fr-btn--secondary', onclick: 'DS.motivationCancelBatch();'
                 = form.button "Valider la décision", class: ['fr-btn fr-btn--sm fr-mt-2w'], disabled: true, name: "#{form.object_name}[operation]", value: opt[:operation]

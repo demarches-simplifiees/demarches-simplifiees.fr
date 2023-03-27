@@ -32,7 +32,7 @@
     .hidden{ id: "justificatif_motivation_import_#{popup_class}" }
       = file_field :dossier, :justificatif_motivation, direct_upload: true, id: "dossier_justificatif_motivation_#{popup_class}",onchange: "DS.showDeleteJustificatif('#{popup_class}');"
     .hidden{ id: "delete_motivation_import_#{popup_class}" }
-      %button.fr-btn.fr-btn--tertiary-no-outline.fr-btn--icon-left.fr-icon-delete-line.fr-ml-0.fr-mt-1w.js_delete_motivation{ type: 'button', onclick: "DS.deleteJustificatif('#{popup_class}');"} Supprimer le  justificatif
+      %button.fr-btn.fr-btn--tertiary-no-outline.fr-btn--icon-left.fr-icon-delete-line.fr-ml-0.fr-mt-1w.js_delete_motivation{ type: 'button', onclick: "DS.deleteJustificatif('#{popup_class}');" } Supprimer le  justificatif
     .fr-mt-2w
       = button_tag "Annuler", type: :reset, class: 'fr-btn fr-btn--secondary', onclick: 'DS.motivationCancel();'
       = button_tag 'Valider la décision', name: :process_action, value: process_action, class: 'fr-btn fr-mr-0', title: title
