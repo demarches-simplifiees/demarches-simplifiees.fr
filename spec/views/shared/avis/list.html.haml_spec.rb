@@ -1,7 +1,7 @@
-describe 'instructeurs/avis/_list.html.haml', type: :view do
+describe 'shared/avis/_list.html.haml', type: :view do
   before { view.extend DossierHelper }
 
-  subject { render 'instructeurs/avis/list.html.haml', avis: avis, avis_seen_at: seen_at, current_instructeur: instructeur }
+  subject { render 'shared/avis/list.html.haml', avis: avis, avis_seen_at: seen_at, expert_or_instructeur: instructeur }
 
   let(:instructeur) { create(:instructeur) }
   let(:instructeur2) { create(:instructeur) }
@@ -26,9 +26,9 @@ describe 'instructeurs/avis/_list.html.haml', type: :view do
     let(:avis) { [create(:avis, :with_answer, claimant: instructeur, experts_procedure: experts_procedure)] }
 
     it 'renders the answer formatted with newlines' do
-      expect(subject).to have_selector(".answer-body p", text: avis.first.answer.split("\n").first)
-      expect(subject).to have_selector(".answer-body ul", count: 1) # avis.answer has two list item
-      expect(subject).to have_selector(".answer-body ul li", count: 2)
+      expect(subject).to have_selector("p", text: avis.first.answer.split("\n").first)
+      expect(subject).to have_selector("ul.list-style-type-none ul", count: 1) # avis.answer has two list item
+      expect(subject).to have_selector("ul.list-style-type-none ul li", count: 2)
     end
   end
 
