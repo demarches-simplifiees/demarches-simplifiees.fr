@@ -22,20 +22,24 @@ export function motivationCancel() {
 }
 
 export function motivationCancelBatch() {
-  document.querySelector('#dropdown_batch' ).classList.remove("open");;
+  document.querySelector('#dropdown_batch').classList.remove('open');
   hide(document.querySelector('.js_delete_motivation'));
 }
 
 export function showDeleteJustificatif(name) {
-  const justificatif = document.querySelector('#dossier_justificatif_motivation_' + name)
+  const justificatif = document.querySelector(
+    '#dossier_justificatif_motivation_' + name
+  );
   if (justificatif.value != '') {
     show(document.querySelector('#delete_motivation_import_' + name));
   }
 }
 
 export function deleteJustificatif(name) {
-  const justificatif = document.querySelector('#dossier_justificatif_motivation_' + name)
-  justificatif.value = ''
+  const justificatif = document.querySelector(
+    '#dossier_justificatif_motivation_' + name
+  );
+  justificatif.value = '';
   hide(document.querySelector('#delete_motivation_import_' + name));
 }
 
