@@ -13,6 +13,10 @@ class Procedure::RoutingRulesComponent < ApplicationComponent
     end
   end
 
+  def can_route?
+    available_targets_for_select.present?
+  end
+
   def targeted_champ_tag(targeted_champ, row_index)
     select_tag(
       'targeted_champ',

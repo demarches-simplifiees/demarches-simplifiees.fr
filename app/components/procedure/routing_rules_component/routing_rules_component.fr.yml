@@ -6,3 +6,7 @@ fr:
     Ajoutez des règles de routage à partir de champs créés dans le formulaire.
     Si les mêmes règles de routage sont appliquées à plusieurs groupes,
     les dossiers seront routés vers le premier groupe affiché dans la liste.
+  routing_rules_warning_html: |
+    Pour appliquer des règles de routage, votre formulaire doit comporter
+    au moins un champ « choix simple ». <br>
+    Ajoutez ce champ dans la page <a href="%{path}">« Configuration des champs »</a>
