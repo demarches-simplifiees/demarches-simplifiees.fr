@@ -77,6 +77,17 @@ Rails.application.configure do
     config.action_mailer.delivery_method = :mailtrap
   elsif ENV['MAILCATCHER_ENABLED'] == 'enabled'
     config.action_mailer.delivery_method = :mailcatcher
+  elsif ENV['CLASSIC_SMTP_ENABLED'] == 'enabled'
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+      address:              ENV.fetch("SMTP_HOST"),
+      port:                 ENV.fetch("SMTP_PORT"),
+      domain:               ENV.fetch("SMTP_HOST"),
+      user_name:            ENV.fetch("SMTP_USER"),
+      password:             ENV.fetch("SMTP_PASS"),
+      authentication:       ENV.fetch("SMTP_AUTHENTICATION"),
+      enable_starttls_auto: ENV.fetch("SMTP_TLS").present?
+    }
   else
     sendinblue_weigth = ENV.fetch('SENDINBLUE_BALANCING_VALUE') { 0 }.to_i
     dolist_weigth = ENV.fetch('DOLIST_BALANCING_VALUE') { 0 }.to_i
