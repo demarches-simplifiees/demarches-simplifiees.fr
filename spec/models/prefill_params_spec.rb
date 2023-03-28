@@ -15,14 +15,14 @@ RSpec.describe PrefillParams do
 
       VCR.insert_cassette('api_geo_regions')
       VCR.insert_cassette('api_geo_departements')
-      VCR.insert_cassette('api_geo_communes_01')
+      VCR.insert_cassette('api_geo_communes')
       VCR.insert_cassette('api_geo_epcis')
     end
 
     after do
       VCR.eject_cassette('api_geo_regions')
       VCR.eject_cassette('api_geo_departements')
-      VCR.eject_cassette('api_geo_communes_01')
+      VCR.eject_cassette('api_geo_communes')
       VCR.eject_cassette('api_geo_epcis')
     end
 

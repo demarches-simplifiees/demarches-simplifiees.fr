@@ -12,12 +12,12 @@ RSpec.describe TypesDeChamp::PrefillCommuneTypeDeChamp do
 
   before do
     VCR.insert_cassette('api_geo_departements')
-    VCR.insert_cassette('api_geo_communes_01')
+    VCR.insert_cassette('api_geo_communes')
   end
 
   after do
     VCR.eject_cassette('api_geo_departements')
-    VCR.eject_cassette('api_geo_communes_01')
+    VCR.eject_cassette('api_geo_communes')
   end
 
   describe 'ancestors' do

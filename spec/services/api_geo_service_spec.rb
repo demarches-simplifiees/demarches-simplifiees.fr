@@ -43,7 +43,7 @@ describe APIGeoService do
     end
   end
 
-  describe 'communes', vcr: { cassette_name: 'api_geo_communes_01' } do
+  describe 'communes', vcr: { cassette_name: 'api_geo_communes' } do
     it 'return sorted results' do
       expect(APIGeoService.communes('01').size).to eq(399)
       expect(APIGeoService.communes('01').first).to eq(code: '01004', name: 'Ambérieu-en-Bugey', postal_code: '01500', departement_code: '01', epci_code: '240100883')
@@ -51,12 +51,22 @@ describe APIGeoService do
     end
   end
 
-  describe 'commune_name', vcr: { cassette_name: 'api_geo_communes_01' } do
+  describe 'communes_by_postal_code', vcr: { cassette_name: 'api_geo_communes' } do
+    it 'return results' do
+      expect(APIGeoService.communes_by_postal_code('75019').size).to eq(2)
+      expect(APIGeoService.communes_by_postal_code('69005').size).to eq(2)
+      expect(APIGeoService.communes_by_postal_code('13006').size).to eq(2)
+      expect(APIGeoService.communes_by_postal_code('73480').size).to eq(3)
+      expect(APIGeoService.communes_by_postal_code('20000').first[:code]).to eq('2A004')
+    end
+  end
+
+  describe 'commune_name', vcr: { cassette_name: 'api_geo_communes' } do
     subject { APIGeoService.commune_name('01', '01457') }
     it { is_expected.to eq('Vonnas') }
   end
 
-  describe 'commune_code', vcr: { cassette_name: 'api_geo_communes_01' } do
+  describe 'commune_code', vcr: { cassette_name: 'api_geo_communes' } do
     subject { APIGeoService.commune_code('01', 'Vonnas') }
     it { is_expected.to eq('01457') }
   end
