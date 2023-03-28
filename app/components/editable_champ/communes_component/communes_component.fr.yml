@@ -1,0 +1,4 @@
+---
+fr:
+  postal_code: Code postal de la commune
+  not_found: Aucune commune trouvée pour le code postal %{postal_code}

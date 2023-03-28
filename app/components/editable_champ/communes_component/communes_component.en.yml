@@ -1,0 +1,4 @@
+---
+en:
+  postal_code: Postal code of the municipality
+  not_found: No municipality found for postal code %{postal_code}
