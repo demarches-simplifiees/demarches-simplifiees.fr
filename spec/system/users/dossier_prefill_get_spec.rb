@@ -79,13 +79,13 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
       .to_return(status: 200, body: File.read('spec/fixtures/files/api_entreprise/associations.json'))
 
     VCR.insert_cassette('api_geo_departements')
-    VCR.insert_cassette('api_geo_communes_01')
+    VCR.insert_cassette('api_geo_communes')
     VCR.insert_cassette('api_geo_epcis')
   end
 
   after do
     VCR.eject_cassette('api_geo_departements')
-    VCR.eject_cassette('api_geo_communes_01')
+    VCR.eject_cassette('api_geo_communes')
     VCR.eject_cassette('api_geo_epcis')
   end
 
