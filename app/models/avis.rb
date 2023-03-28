@@ -47,6 +47,7 @@ class Avis < ApplicationRecord
   validates :piece_justificative_file, size: { less_than: FILE_MAX_SIZE }
   validates :introduction_file, size: { less_than: FILE_MAX_SIZE }
   before_validation -> { sanitize_email(:email) }
+  before_validation -> { strip_attribute(:question_label) }
 
   default_scope { joins(:dossier) }
   scope :with_answer, -> { where.not(answer: nil) }
@@ -110,5 +111,11 @@ class Avis < ApplicationRecord
   def remind_by!(revocator)
     return false if !remindable_by?(revocator) || answer.present?
     update!(reminded_at: Time.zone.now)
+  end
+
+  private
+
+  def strip_attribute(attribute)
+    self[attribute] = self[attribute]&.strip&.presence
   end
 end
