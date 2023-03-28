@@ -5,6 +5,7 @@ module Users
 
       if transfer.valid?
         transfer.save!
+        flash.notice = t("users.dossiers.transferer.notice_sent")
         redirect_to dossiers_path
       else
         flash.alert = transfer.errors.full_messages

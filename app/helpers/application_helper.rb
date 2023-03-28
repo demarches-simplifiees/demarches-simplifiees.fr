@@ -5,6 +5,18 @@ module ApplicationHelper
     I18n.locale.to_s
   end
 
+  def active_locale_link(locale)
+    link_to save_locale_path(locale:), {
+      method: :post,
+      class: "fr-translate__language fr-nav__link",
+      hreflang: locale,
+      lang: locale,
+      "aria-current": I18n.locale == locale ? "true" : nil
+    }.compact do
+      yield
+    end
+  end
+
   def sanitize_url(url)
     if !url.nil?
       super(url, schemes: ['http', 'https'], replace_evil_with: root_url)
@@ -72,13 +84,13 @@ module ApplicationHelper
   def root_path_info_for_profile(nav_bar_profile)
     case nav_bar_profile
     when :administrateur
-      [admin_procedures_path, "Aller au panneau d’administration"]
+      [admin_procedures_path, t("admin", scope: "layouts.root_path_link_title")]
     when :instructeur
-      [instructeur_procedures_path, 'Aller à la liste des démarches']
+      [instructeur_procedures_path, t("instructeur", scope: "layouts.root_path_link_title")]
     when :user
-      [dossiers_path, 'Aller à la liste des dossiers']
+      [dossiers_path, t("user", scope: "layouts.root_path_link_title")]
     else
-      [root_path, "Aller à la page d’accueil"]
+      [root_path, t("default", scope: "layouts.root_path_link_title")]
     end
   end
 
@@ -127,6 +139,10 @@ module ApplicationHelper
 
   def external_link_attributes
     { target: "_blank", rel: "noopener noreferrer" }
+  end
+
+  def new_tab_suffix(title)
+    "#{title} — #{t('utils.new_tab')}"
   end
 
   def download_details(attachment)

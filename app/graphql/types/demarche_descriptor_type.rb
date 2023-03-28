@@ -1,6 +1,13 @@
 module Types
   class DemarcheDescriptorType < Types::BaseObject
     field_class BaseField
+
+    class FindDemarcheInput < Types::BaseInputObject
+      one_of
+      argument :number, Int, "Numero de la démarche.", required: false
+      argument :id, ID, "ID de la démarche.", required: false
+    end
+
     description "Une démarche (métadonnées)
 Ceci est une version abrégée du type `Demarche`, qui n’expose que les métadonnées.
 Cela évite l’accès récursif aux dossiers."
@@ -87,11 +94,8 @@ Cela évite l’accès récursif aux dossiers."
     end
 
     def self.authorized?(object, context)
-      if object.is_a?(ProcedureRevision)
-        context.authorized_demarche?(object.procedure)
-      else
-        context.authorized_demarche?(object)
-      end
+      procedure = object.is_a?(ProcedureRevision) ? object.procedure : object
+      procedure.opendata? || context.authorized_demarche?(procedure)
     end
 
     private

@@ -60,7 +60,7 @@ class StatsController < ApplicationController
     end
 
     respond_to do |format|
-      format.csv { send_data(SpreadsheetArchitect.to_xlsx(headers: headers, data: data), filename: "statistiques.csv") }
+      format.csv { send_data(SpreadsheetArchitect.to_csv(headers: headers, data: data), filename: "statistiques.csv") }
     end
   end
 

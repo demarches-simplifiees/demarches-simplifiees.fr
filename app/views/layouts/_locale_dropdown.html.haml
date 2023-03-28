@@ -1,14 +1,13 @@
 %nav.fr-translate.fr-nav{ :role => "navigation", title: t('.select_locale') }
   .fr-nav__item
     %button.fr-translate__btn.fr-btn{ "aria-controls" => "translate", "aria-expanded" => "false", :title => t('.select_locale') }
-      = t(".#{I18n.locale}")
-      %span.fr-hidden-lg= t('.francais')
+      = I18n.locale.upcase
+      %span.fr-hidden-lg= " - #{t('.locale_name')}"
     #translate.fr-collapse.fr-menu
       %ul.fr-menu__list
         %li
-          = active_link_to save_locale_path(locale: :fr), method: :post, class: "fr-translate__language fr-nav__link", active: I18n.locale == :fr, hreflang: "fr", lang: "fr" do
-            = t('.fr_francais')
+          = active_locale_link(:fr) do
+            FR - Français
         %li
-          = active_link_to save_locale_path(locale: :en), method: :post, class: "fr-translate__language   fr-nav__link", active: I18n.locale == :en, hreflang: "en", lang: "en" do
-            = t('.en_english')
-
+          = active_locale_link(:en) do
+            EN - English

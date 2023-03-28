@@ -35,6 +35,7 @@ en:
 
   help: 'Help'
   help_dropdown:
+    general_title: "Online help"
     problem_title: A problem with the website ?
     problem_description: Find your answer in the online help.
     technical_contact_title: Technical contact
@@ -50,6 +51,7 @@ en:
     message: Message
     send_mail: Send message
     procedure: Procedures
+    new_tab: New tab
   helpers:
     procedure:
       testing_procedure: testing procedure
@@ -67,23 +69,23 @@ en:
         are_you_new: First time on %{app_name}?
     my_account: My account
     header:
-      close_modal: 'Fermer'
+      close_modal: 'Close'
       back: "Back"
       back_title: "Revenir sur le site de mon administration"
       main_menu: "Main menu"
     locale_dropdown:
-      languages: "Languages"
       select_locale: "Choose a language"
-      fr: FR
-      en: EN
-      francais: " - French"
-      fr_francais:  FR - French
-      en_english: EN - English
+      locale_name: "English"
     notifications:
       actions:
         access: View your File
         question: I have a question
         reply: Reply to this message
+    root_path_link_title:
+      default: 'Go to homepage'
+      user: 'Go to files list'
+      instructeur: 'Go to procedures list'
+      admin: 'Go to administration panel'
   views:
     commencer:
       show:
@@ -245,6 +247,7 @@ en:
         index:
           dossiers: "Files"
         dossiers_list:
+          caption: My files
           procedure: "Procedure"
           n_dossier: "File n."
           requester: "Requester"

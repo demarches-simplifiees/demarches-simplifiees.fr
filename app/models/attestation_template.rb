@@ -16,7 +16,6 @@ class AttestationTemplate < ApplicationRecord
   include TagsSubstitutionConcern
 
   belongs_to :procedure, inverse_of: :attestation_template
-  has_many :revisions, class_name: 'ProcedureRevision', inverse_of: :attestation_template, dependent: :nullify
 
   has_one_attached :logo
   has_one_attached :signature
@@ -85,10 +84,6 @@ class AttestationTemplate < ApplicationRecord
       signature: params.fetch(:signature, signature.attached? ? signature : nil),
       qrcode: dossier && dossier.id ? qrcode_dossier_url(dossier, created_at: dossier.encoded_date(:created_at)) : nil
     }
-  end
-
-  def procedure
-    super || revisions.last&.procedure
   end
 
   def logo_checksum

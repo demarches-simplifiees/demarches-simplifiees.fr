@@ -34,6 +34,13 @@ describe ProcedureOverview, type: :model do
     let!(:dossier_en_construction) do
       create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction), created_at: monday)
     end
+    let(:dossier_en_construction_deleted_by_user) do
+      create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction), created_at: monday)
+    end
+
+    before do
+      dossier_en_construction_deleted_by_user.update(hidden_by_user_at: Time.zone.now)
+    end
 
     it { expect(procedure_overview.dossiers_en_construction_count).to eq(1) }
   end

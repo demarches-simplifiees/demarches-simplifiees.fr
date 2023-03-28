@@ -5,7 +5,7 @@ class ProceduresFilter
 
   def initialize(admin, params)
     @admin = admin
-    @params = params.permit(:page, :libelle, :from_publication_date, zone_ids: [], statuses: [])
+    @params = params.permit(:page, :libelle, :email, :from_publication_date, zone_ids: [], statuses: [])
   end
 
   def admin_zones
@@ -37,7 +37,11 @@ class ProceduresFilter
   end
 
   def libelle
-    ActiveRecord::Base.sanitize_sql_like(params[:libelle]) if params[:libelle].present?
+    ActiveRecord::Base.sanitize_sql_like(params[:libelle]).strip if params[:libelle].present?
+  end
+
+  def email
+    ActiveRecord::Base.sanitize_sql_like(params[:email]).strip if params[:email].present?
   end
 
   def zone_filtered?(zone_id)

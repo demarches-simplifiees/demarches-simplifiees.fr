@@ -39,7 +39,7 @@
       = t('.csv_import.title')
     %p.notice
       = t('.csv_import.import_file_procedure_not_published')
-  - if groupes_instructeurs.many?
+  - if procedure.groupe_instructeurs.many?
     %table.table.mt-2
       %thead
         %tr

@@ -408,16 +408,9 @@ module Users
     def champs_params
       params.permit(dossier: {
         champs_public_attributes: [
-          :id, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: [],
+          :id, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_dn, :date_de_naissance, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: [],
           champs_attributes: [
-            :id, :_destroy, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: []
-          ] + TypeDeChamp::INSTANCE_CHAMPS_PARAMS
-        ] + TypeDeChamp::INSTANCE_CHAMPS_PARAMS,
-        # FIXME: remove after migration
-        champs_attributes: [
-          :id, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: [],
-          champs_attributes: [
-            :id, :_destroy, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: []
+            :id, :_destroy, :value, :value_other, :external_id, :numero_dn, :date_de_naissance, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: []
           ] + TypeDeChamp::INSTANCE_CHAMPS_PARAMS
         ] + TypeDeChamp::INSTANCE_CHAMPS_PARAMS
       })
@@ -476,12 +469,8 @@ module Users
     def update_dossier_and_compute_errors
       errors = []
 
-      if champs_params[:dossier]
-        # FIXME: remove after migration
-        dossier_params = champs_params[:dossier]
-        if dossier_params.key?(:champs_attributes)
-          dossier_params[:champs_public_attributes] = dossier_params.delete(:champs_attributes)
-        end
+      dossier_params = champs_params[:dossier]
+      if dossier_params
         @dossier.assign_attributes(dossier_params)
         # FIXME: in some cases a removed repetition bloc row is submitted.
         # In this case it will be treated as a new record, and the action will fail.
