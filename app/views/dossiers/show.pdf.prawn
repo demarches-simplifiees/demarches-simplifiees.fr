@@ -287,6 +287,13 @@ prawn_document(page_size: "A4") do |pdf|
     end
   end
 
+  if @include_avis_for_expert && @dossier.avis.present?
+     add_title(pdf, "Avis")
+     @dossier.avis_for_expert(@include_avis_for_expert).each do |avis|
+        add_avis(pdf, avis)
+     end
+  end
+
   if @dossier.commentaires.present?
     add_title(pdf, 'Messagerie')
     @dossier.commentaires.each do |commentaire|
