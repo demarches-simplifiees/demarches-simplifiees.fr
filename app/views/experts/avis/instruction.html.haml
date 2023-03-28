@@ -22,7 +22,7 @@
           = render Attachment::DeleteFormComponent.new
           = form_for @avis, url: expert_avis_path(@avis.procedure, @avis), html: { data: { controller: 'persisted-form', persisted_form_key_value: dom_id(@avis) }, multipart: true } do |f|
 
-            - if @avis.question_label
+            - if @avis.question_label.present?
               .fr-form-group
                 %fieldset.fr-fieldset.fr-fieldset--inline
                   %legend#radio-inline-legend.fr-fieldset__legend.fr-text--regular
