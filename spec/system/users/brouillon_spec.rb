@@ -44,8 +44,8 @@ describe 'The user' do
     select('Australie', from: form_id_for('pays'))
     select('Martinique', from: form_id_for('regions'))
     select('02 – Aisne', from: form_id_for('departements'))
-    select_combobox('communes', 'Ai', '02 - Aisne', check: false)
-    select_combobox('communes', 'Ambl', 'Ambléon (01300)')
+    fill_in('Code postal de la commune', with: '60400')
+    select('Brétigny (60400)', from: form_id_for('communes'))
 
     fill_in('dossier_link', with: '123')
     find('.editable-champ-piece_justificative input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
@@ -74,7 +74,7 @@ describe 'The user' do
     expect(champ_value_for('pays')).to eq('Australie')
     expect(champ_value_for('regions')).to eq('Martinique')
     expect(champ_value_for('departements')).to eq('Aisne')
-    expect(champ_value_for('communes')).to eq('Ambléon (01300)')
+    expect(champ_value_for('communes')).to eq('Brétigny')
     expect(champ_value_for('dossier_link')).to eq('123')
     expect(champ_value_for('piece_justificative')).to be_nil # antivirus hasn't approved the file yet
 
@@ -98,7 +98,8 @@ describe 'The user' do
     expect(page).to have_selected_value('regions', selected: 'Martinique')
     expect(page).to have_selected_value('departements', selected: '02 – Aisne')
     check_selected_value('multiple_choice_drop_down_list_long', with: ['alpha', 'charly'])
-    check_selected_value('communes', with: 'Ambléon (01300)')
+    expect(page).to have_selected_value('communes', selected: 'Brétigny (60400)')
+    expect(page).to have_selected_value('pays', selected: 'Australie')
     expect(page).to have_field('dossier_link', with: '123')
     expect(page).to have_text('file.pdf')
     expect(page).to have_text('Analyse antivirus en cours')
