@@ -23,9 +23,14 @@ module Redcarpet
     end
 
     def autolink(link, link_type)
-      return super unless link_type == :url
-
-      link(link, nil, link)
+      case link_type
+      when :url
+        link(link, nil, link)
+      when :email
+        content_tag(:a, link, { href: "mailto:#{link}" })
+      else
+        link
+      end
     end
 
     # rubocop:enable Rails/ContentTag
