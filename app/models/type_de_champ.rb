@@ -504,7 +504,8 @@ class TypeDeChamp < ApplicationRecord
       type_champs.fetch(:communes),
       type_champs.fetch(:multiple_drop_down_list),
       type_champs.fetch(:dossier_link),
-      type_champs.fetch(:linked_drop_down_list)
+      type_champs.fetch(:linked_drop_down_list),
+      type_champs.fetch(:drop_down_list)
       true
     else
       false
