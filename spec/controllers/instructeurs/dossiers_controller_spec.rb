@@ -873,7 +873,7 @@ describe Instructeurs::DossiersController, type: :controller do
     end
 
     before do
-      allow(PiecesJustificativesService).to receive(:generate_dossier_export).with([dossier], include_infos_administration: true).and_call_original
+      allow(PiecesJustificativesService).to receive(:generate_dossier_export).with([dossier], include_infos_administration: true, include_avis_for_expert: false).and_call_original
     end
 
     it 'includes an attachment' do
