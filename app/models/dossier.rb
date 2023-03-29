@@ -262,16 +262,16 @@ class Dossier < ApplicationRecord
     includes(champs_public: [
       :type_de_champ,
       :geo_areas,
-      piece_justificative_file_attachment: :blob,
-      champs: [:type_de_champ, piece_justificative_file_attachment: :blob]
+      piece_justificative_file_attachments: :blob,
+      champs: [:type_de_champ, piece_justificative_file_attachments: :blob]
     ])
   }
   scope :with_annotations, -> {
     includes(champs_private: [
       :type_de_champ,
       :geo_areas,
-      piece_justificative_file_attachment: :blob,
-      champs: [:type_de_champ, piece_justificative_file_attachment: :blob]
+      piece_justificative_file_attachments: :blob,
+      champs: [:type_de_champ, piece_justificative_file_attachments: :blob]
     ])
   }
   scope :for_api, -> {
@@ -280,7 +280,7 @@ class Dossier < ApplicationRecord
       .includes(commentaires: { piece_jointe_attachment: :blob },
         justificatif_motivation_attachment: :blob,
         attestation: [],
-        avis: { piece_justificative_file_attachment: :blob },
+        avis: { piece_justificative_file_attachments: :blob },
         traitement: [],
         etablissement: [],
         individual: [],

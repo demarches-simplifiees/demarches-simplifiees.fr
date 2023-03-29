@@ -1,0 +1,8 @@
+.fr-download
+  %p
+    = link_to url_for(attachment.blob), download: "", class: "fr-download__link", title: title do
+      = name
+      %span.fr-download__detail
+        = helpers.download_details(attachment)
+
+    = right

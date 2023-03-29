@@ -1,37 +1,39 @@
-.attachment
-  - if template&.attached?
-    %p.mb-1
-      Veuillez télécharger, remplir et joindre
-      = link_to(url_for(template), download: "", class: "fr-link fr-link--icon-right fr-icon-download-line") do
-        le modèle suivant
-
-      - if helpers.administrateur_signed_in?
-        %span.ml-2.fr-text--xs.fr-text-mention--grey.visible-on-previous-hover
-          %span.fr-text-action-high--blue-france.fr-icon-questionnaire-line{ "aria-hidden": "true" }
-          = t('shared.ephemeral_link')
-
+.attachment.fr-upload-group{ { id: attachment ? dom_id(attachment, :edit) : nil, class: class_names("fr-mb-2w": !(as_multiple? && downloadable?)) }.compact }
   - if persisted?
-    .attachment-actions{ id: dom_id(attachment, :actions) }
-      .attachment-action
-        = render Attachment::ShowComponent.new(attachment: attachment, user_can_upload: true)
-      - if user_can_destroy?
-        .attachment-action{ "data-turbo": "true" }
-          = link_to('Supprimer', attachment_path, **remove_button_options)
-      .attachment-action
-        = button_tag('Remplacer', **replace_button_options)
+    %div{ id: dom_id(attachment, :persisted_row) }
+      .flex.flex-gap-2{ class: class_names("attachment-error": attachment.virus_scanner_error?) }
+        - if user_can_destroy?
+          = link_to(t('.delete'), destroy_attachment_path, **remove_button_options, class: "fr-btn fr-btn--tertiary fr-btn--sm fr-icon-delete-line", title: "Supprimer le fichier #{attachment.filename}")
 
-  .attachment-error.hidden
-    .attachment-error-message
-      %p.attachment-error-title
-        Une erreur s’est produite pendant l’envoi du fichier.
-      %p.attachment-error-description
-        Une erreur inconnue s'est produite pendant l'envoi du fichier
-    = button_tag(**retry_button_options) do
-      %span.icon.retry
-      Ré-essayer
+        .fr-py-1v
+          - if downloadable?
+            = render Dsfr::DownloadComponent.new(attachment:)
+          - else
+            %span.attachment-filename.fr-mr-1w-= attachment.filename.to_s
+
+          = render Attachment::ProgressComponent.new(attachment: attachment)
+
+      - if error?
+        %p.fr-error-text= error_message
+
+  - elsif first?
+    %p.fr-text--sm.fr-text-mention--grey.fr-mb-1w
+      - if max_file_size.present?
+        = t('.max_file_size', max_file_size: number_to_human_size(max_file_size))
+      - if allowed_formats
+        = t('.allowed_formats', formats: allowed_formats.join(', '))
 
 
-  %label.text-sm.font-weight-normal{ for: file_field_options[:id] }
-    = t('.max_file_size', max_file_size: number_to_human_size(max_file_size))
+  - if !as_multiple?
+    = file_field(champ, field_name, **file_field_options)
 
-  = form.file_field(file_field_name, **file_field_options)
+    - if persisted?
+      - Attachment::PendingPollComponent.new(attachment: attachment, poll_url:).then do |component|
+        .fr-mt-2w
+          = render component
+
+    .attachment-upload-error.hidden
+      %p.fr-error-text= t('.errors.uploading')
+      = button_tag(**retry_button_options) do
+        = t(".retry")
+

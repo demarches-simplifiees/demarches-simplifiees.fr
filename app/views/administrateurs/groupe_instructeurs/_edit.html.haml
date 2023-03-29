@@ -25,7 +25,7 @@
 
   - csv_max_size = Administrateurs::GroupeInstructeursController::CSV_MAX_SIZE
   - if procedure.publiee?
-    = form_tag import_admin_procedure_groupe_instructeurs_path(procedure), method: :post, multipart: true, class: "mt-4 form" do
+    = form_tag import_admin_procedure_groupe_instructeurs_path(procedure), method: :post, html: { multipart: true, class: "mt-4 form" } do
       = label_tag t('.csv_import.title')
       %p.notice
         = t('.csv_import.notice_1')

@@ -2147,7 +2147,8 @@ type PersonnePhysique implements Demandeur {
 }
 
 type PieceJustificativeChamp implements Champ {
-  file: File
+  file: File @deprecated(reason: "Utilisez le champ `files` à la place.")
+  files: [File!]
   id: ID!
 
   """

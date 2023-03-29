@@ -2,8 +2,11 @@ class ApplicationComponent < ViewComponent::Base
   include ViewComponent::Translatable
   include FlipperHelper
 
+  # Takes a Hash of { class_name: boolean }.
+  # Returns truthy class names in an array. Array can be passed as-it in rails helpers,
+  # and is still manipulable if needed.
   def class_names(class_names)
-    class_names.to_a.filter_map { |(class_name, flag)| class_name if flag }.join(' ')
+    class_names.filter { _2 }.keys
   end
 
   def current_user

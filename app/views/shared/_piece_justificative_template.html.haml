@@ -1,0 +1,7 @@
+= render Dsfr::DownloadComponent.new(attachment: attachment, name: "Modèle à télécharger") do |c|
+  - if administrateur_signed_in?
+    - c.with_right do
+      %span.fr-ml-2w.fr-text--xs.fr-text-mention--grey.visible-on-previous-hover
+        %span.fr-text-action-high--blue-france.fr-icon-questionnaire-line{ "aria-hidden": "true" }
+        = t('shared.ephemeral_link')
+

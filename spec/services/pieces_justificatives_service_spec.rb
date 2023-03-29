@@ -20,7 +20,18 @@ describe PiecesJustificativesService do
         attach_file_to_champ(pj_champ.call(witness))
       end
 
-      it { expect(subject).to match_array([pj_champ.call(dossier).piece_justificative_file.attachment]) }
+      context 'with a single attachment' do
+        it { expect(subject).to match_array(pj_champ.call(dossier).piece_justificative_file.attachments) }
+      end
+
+      context 'with a multiple attachments' do
+        before do
+          attach_file_to_champ(pj_champ.call(dossier))
+        end
+
+        it { expect(subject.count).to eq(2) }
+        it { expect(subject).to match_array(pj_champ.call(dossier).piece_justificative_file.attachments) }
+      end
     end
 
     context 'with a pj not safe on a champ' do
@@ -46,7 +57,7 @@ describe PiecesJustificativesService do
         attach_file_to_champ(private_pj_champ.call(witness))
       end
 
-      it { expect(subject).to match_array([private_pj_champ.call(dossier).piece_justificative_file.attachment]) }
+      it { expect(subject).to match_array(private_pj_champ.call(dossier).piece_justificative_file.attachments) }
 
       context 'for expert' do
         let(:for_expert) { true }

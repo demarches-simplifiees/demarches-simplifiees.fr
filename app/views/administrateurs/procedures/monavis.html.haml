@@ -9,7 +9,7 @@
 
 .container
   %h1
-  = form_for @procedure, url: url_for({ controller: 'administrateurs/procedures', action: :update_monavis }), multipart: true, html: { class: 'form' } do |f|
+  = form_for @procedure, url: url_for({ controller: 'administrateurs/procedures', action: :update_monavis }), html: { class: 'form', multipart: true } do |f|
     = render partial: 'monavis', locals: { f: f }
     .text-right
       = f.button 'Enregistrer', class: 'button primary send'

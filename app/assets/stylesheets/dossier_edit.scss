@@ -77,6 +77,8 @@ $dossier-actions-bar-border-width: 1px;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     border-bottom: none;
+
+    z-index: 10; // above DSFR btn which are at 1
   }
 
   .send-dossier-actions-bar {

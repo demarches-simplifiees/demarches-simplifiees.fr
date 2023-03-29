@@ -9,8 +9,7 @@
   .procedure-form__columns.container
     = form_for @attestation_template,
       url: admin_procedure_attestation_template_path(@procedure),
-      multipart: true,
-      html: { class: 'form procedure-form__column--form' } do |f|
+      html: { multipart: true, class: 'form procedure-form__column--form' } do |f|
 
       %h1.page-title
         Délivrance d’attestation

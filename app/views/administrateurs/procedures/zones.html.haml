@@ -7,8 +7,7 @@
 .container
   = form_for @procedure,
     url: url_for({ controller: 'administrateurs/procedures', action: :update, id: @procedure.id }),
-    multipart: true,
-    html: { class: 'form' } do |f|
+    html: { multipart: true, class: 'form' } do |f|
 
     %h1.page-title Zones
 

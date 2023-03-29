@@ -1,30 +1,14 @@
-.attachment-link{ id: dom_id(attachment, :show) }
+%div{ id: dom_id(attachment, :show), class: class_names("attachment-error": error?, "fr-mb-2w": !should_display_link?) }
   - if should_display_link?
-    = link_to url_for(attachment.blob), target: '_blank', rel: 'noopener',  title: "Télécharger la pièce jointe" do
-      %span.icon.attached
-      = attachment.filename.to_s
-    - if !attachment.virus_scanner.started?
-      (ce fichier n’a pas été analysé par notre antivirus, téléchargez-le avec précaution)
+    = render Dsfr::DownloadComponent.new(attachment: attachment) do |c|
+      - if !attachment.virus_scanner.started?
+        - c.right do
+          = "(#{t(".virus_not_analyzed")})"
 
   - else
-    %span{ data: poll_controller_options }
-    = attachment.filename.to_s
-    - if attachment.virus_scanner.pending?
-      (analyse antivirus en cours
-      = link_to "rafraichir", attachment_path, data: { action: 'turbo-poll#refresh' }
-      )
-    - elsif attachment.watermark_pending?
-      (traitement de la pièce en cours
-      = link_to "rafraichir", attachment_path, data: { action: 'turbo-poll#refresh' }
-      )
-    - elsif attachment.virus_scanner.infected?
-      - if user_can_upload?
-        (virus détecté, merci d’envoyer un autre fichier)
-      - else
-        (virus détecté, le téléchargement de ce fichier est bloqué)
-    - elsif attachment.virus_scanner.corrupt?
-      - if user_can_upload?
-        (le fichier est corrompu, merci d’envoyer un autre fichier)
-      - else
-        (le fichier est corrompu, le téléchargement est bloqué)
+    .attachment-filename.fr-mb-1w.fr-mr-1w= attachment.filename.to_s
 
+    = render Attachment::ProgressComponent.new(attachment: attachment)
+
+  - if error?
+    %p.fr-error-text= error_message

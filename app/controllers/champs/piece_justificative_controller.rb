@@ -1,5 +1,16 @@
 class Champs::PieceJustificativeController < ApplicationController
   before_action :authenticate_logged_user!
+  before_action :set_champ
+
+  def show
+    # pf used to redirect to this route to download PJ ==> if param h is present (old pf link) then redirect to new route
+    return redirect_to champs_piece_justificative_download_path(params) if params[:h].present?
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_back(fallback_location: root_url) }
+    end
+  end
 
   def update
     if attach_piece_justificative_or_retry
@@ -7,20 +18,6 @@ class Champs::PieceJustificativeController < ApplicationController
     else
       render json: { errors: @champ.errors.full_messages }, status: 422
     end
-  end
-
-  def attach_piece_justificative
-    @champ = policy_scope(Champ).find(params[:champ_id])
-    @champ.piece_justificative_file.attach(params[:blob_signed_id])
-    save_succeed = @champ.save
-    @champ.dossier.update(last_champ_updated_at: Time.zone.now.utc) if save_succeed
-    save_succeed
-  end
-
-  def attach_piece_justificative_or_retry
-    attach_piece_justificative
-  rescue ActiveRecord::StaleObjectError
-    attach_piece_justificative
   end
 
   def download
@@ -43,6 +40,23 @@ class Champs::PieceJustificativeController < ApplicationController
   end
 
   private
+
+  def set_champ
+    @champ = policy_scope(Champ).find(params[:champ_id])
+  end
+
+  def attach_piece_justificative
+    @champ.piece_justificative_file.attach(params[:blob_signed_id])
+    save_succeed = @champ.save
+    @champ.dossier.update(last_champ_updated_at: Time.zone.now.utc) if save_succeed
+    save_succeed
+  end
+
+  def attach_piece_justificative_or_retry
+    attach_piece_justificative
+  rescue ActiveRecord::StaleObjectError
+    attach_piece_justificative
+  end
 
   def find_champ
     h = params[:h]

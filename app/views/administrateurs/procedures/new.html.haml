@@ -8,8 +8,7 @@
   .procedure-form__columns.container
     = form_for @procedure,
       url: url_for({ controller: 'administrateurs/procedures', action: :create, id: @procedure.id }),
-      multipart: true,
-      html: { class: 'form procedure-form__column--form' } do |f|
+      html: { class: 'form procedure-form__column--form', multipart: true } do |f|
 
       %h1.page-title Nouvelle démarche
 

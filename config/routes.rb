@@ -176,10 +176,9 @@ Rails.application.routes.draw do
     patch ':champ_id/carte/features/:id', to: 'carte#update'
     delete ':champ_id/carte/features/:id', to: 'carte#destroy'
 
-    put ':champ_id/piece_justificative', to: 'piece_justificative#update', as: :piece_justificative
-    get ':champ_id/piece_justificative/:h', to: 'piece_justificative#download', as: :piece_justificative_download
-    # TODO: to be removed by september 2022
-    get 'piece_justificative/:champ_id/:h', to: 'piece_justificative#download'
+    get ':champ_id/piece_justificative(/:h)', to: 'piece_justificative#show', as: :piece_justificative
+    put ':champ_id/piece_justificative', to: 'piece_justificative#update', as: :attach_piece_justificative
+    get ':champ_id/piece_justificative/download/:h', to: 'piece_justificative#download', as: :piece_justificative_download
   end
 
   resources :attachments, only: [:show, :destroy]

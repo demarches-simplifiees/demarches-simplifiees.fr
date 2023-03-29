@@ -1783,7 +1783,7 @@ describe Dossier do
           let(:dossier) { create(:dossier) }
           let(:champ_piece_justificative) { create(:champ_piece_justificative, dossier_id: dossier.id) }
           before { dossier.champs_public << champ_piece_justificative }
-          it { expect(Champs::PieceJustificativeChamp.where(dossier: new_dossier).first.piece_justificative_file.blob).to eq(champ_piece_justificative.piece_justificative_file.blob) }
+          it { expect(Champs::PieceJustificativeChamp.where(dossier: new_dossier).first.piece_justificative_file.first.blob).to eq(champ_piece_justificative.piece_justificative_file.first.blob) }
         end
       end
 
