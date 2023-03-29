@@ -23,3 +23,5 @@ fr:
         accepte: "Accepté"
         refuse: "Refusé"
         sans_suite: "Classé sans suite"
+      archived_block:
+        archived: "Ce dossier a été archivé le %{date} par %{email}"

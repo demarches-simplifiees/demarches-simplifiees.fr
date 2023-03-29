@@ -8,4 +8,4 @@ fr:
       opendata: "Autorisez-vous la publication du descriptif de la démarche ?"
     duree_conservation_dossiers_dans_ds:
       notice: Durée en mois après le début de l’instruction.
-      new_duration_constraint: Pour les démarches classiques, cette durée ne peut exceder %{new_duration_in_month} mois. Si vous avez besoin d'une durée supérieure à %{new_duration_in_month} mois, merci d'en faire la demande à notre support.
+      new_duration_constraint: Pour les démarches classiques, cette durée ne peut exceder %{new_duration_in_month} mois. Si vous avez besoin d’une durée supérieure à %{new_duration_in_month} mois, merci d’en faire la demande à notre support.

@@ -119,15 +119,15 @@ fr:
             libelle: Inscriptions
             statut: statut
             regime: régime
-            dateDebutInscription: date de début d'inscription
-            dateFinInscription: date de fin d'inscription
+            dateDebutInscription: date de début d’inscription
+            dateFinInscription: date de fin d’inscription
             codeCommune: code de la commune
           admissions:
             libelle: Admissions
             statut: statut
             regime: régime
-            dateDebutAdmission: date de début d'admission
-            dateFinAdmission: date de fin d'admission
+            dateDebutAdmission: date de début d’admission
+            dateFinAdmission: date de fin d’admission
             codeCommune: code de la commune
           etablissements:
             libelle: Établissements
