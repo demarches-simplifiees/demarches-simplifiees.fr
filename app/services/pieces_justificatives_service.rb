@@ -83,7 +83,7 @@ class PiecesJustificativesService
     end
   end
 
-  def self.generate_dossier_export(dossiers, include_infos_administration: false)
+  def self.generate_dossier_export(dossiers, include_infos_administration: false, include_avis_for_expert: false)
     return [] if dossiers.empty?
 
     pdfs = []
@@ -98,6 +98,7 @@ class PiecesJustificativesService
         .render(template: 'dossiers/show', formats: [:pdf],
                 assigns: {
                   include_infos_administration:,
+                  include_avis_for_expert:,
                   dossier: dossier
                 })
 

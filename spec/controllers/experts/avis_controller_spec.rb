@@ -97,7 +97,7 @@ describe Experts::AvisController, type: :controller do
       subject { get :telecharger_pjs, params: { id: avis.id, procedure_id: } }
 
       before do
-        allow(PiecesJustificativesService).to receive(:generate_dossier_export).and_return([]).with([dossier], include_infos_administration: false)
+        allow(PiecesJustificativesService).to receive(:generate_dossier_export).and_return([]).with([dossier], include_infos_administration: false, include_avis_for_expert: expert)
       end
 
       context 'with a valid avis' do

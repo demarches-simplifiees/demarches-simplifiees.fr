@@ -210,6 +210,19 @@ describe PiecesJustificativesService do
     it "doesn't update dossier" do
       expect { subject }.not_to change { dossier.updated_at }
     end
+
+    context 'when given an expert' do
+      let!(:expert) { create(:expert) }
+      let!(:confidentiel_avis) { create(:avis, :confidentiel, dossier: dossier) }
+      let!(:not_confidentiel_avis) { create(:avis, :not_confidentiel, dossier: dossier) }
+      let!(:expert_avis) { create(:avis, :confidentiel, dossier: dossier, expert: expert) }
+
+      subject { PiecesJustificativesService.generate_dossier_export(Dossier.where(id: dossier.id), include_avis_for_expert: expert) }
+      it "includes avis not confidentiel as well as expert's avis" do
+        expect_any_instance_of(Dossier).to receive(:avis_for_expert).with(expert).and_return([])
+        subject
+      end
+    end
   end
 
   def attach_file_to_champ(champ, safe = true)
