@@ -1749,11 +1749,11 @@ describe Dossier do
 
         context 'for Champs::Repetition with rows, original_champ.repetition and rows are duped' do
           let(:dossier) { create(:dossier) }
-          let(:type_de_champ_repetition) { create(:type_de_champ_repetition, procedure: dossier.procedure) }
+          let(:type_de_champ_repetition) { create(:type_de_champ_repetition, :with_types_de_champ, procedure: dossier.procedure) }
           let(:champ_repetition) { create(:champ_repetition, type_de_champ: type_de_champ_repetition, dossier: dossier) }
           before { dossier.champs_public << champ_repetition }
 
-          it { expect(Champs::RepetitionChamp.where(dossier: new_dossier).first.champs.count).to eq(4) }
+          it { expect(Champs::RepetitionChamp.where(dossier: new_dossier).first.champs.count).to eq(2) }
           it { expect(Champs::RepetitionChamp.where(dossier: new_dossier).first.champs.ids).not_to eq(champ_repetition.champs.ids) }
         end
 
