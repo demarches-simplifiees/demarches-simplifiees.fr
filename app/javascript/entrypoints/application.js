@@ -18,9 +18,9 @@ import { toggleCondidentielExplanation } from '../new_design/avis';
 import {
   showMotivation,
   motivationCancel,
+  motivationCancelBatchDropdown,
   showImportJustificatif,
   showDeleteJustificatif,
-  motivationCancelBatch,
   deleteJustificatif
 } from '../new_design/instruction-button';
 import { showFusion, showNewAccount } from '../new_design/fc-fusion';
@@ -33,9 +33,9 @@ const DS = {
   toggleCondidentielExplanation,
   showMotivation,
   motivationCancel,
+  motivationCancelBatchDropdown,
   showImportJustificatif,
   showDeleteJustificatif,
-  motivationCancelBatch,
   deleteJustificatif,
   showFusion,
   showNewAccount

@@ -21,7 +21,7 @@ export function motivationCancel() {
   document.querySelectorAll('.js_delete_motivation').forEach(hide);
 }
 
-export function motivationCancelBatch() {
+export function motivationCancelBatchDropdown() {
   document.querySelector('#dropdown_batch').classList.remove('open');
   hide(document.querySelector('.js_delete_motivation'));
 }
