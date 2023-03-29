@@ -18,8 +18,9 @@ const fetcher = createGraphiQLFetcher({
 function GraphiQLWithExplorer() {
   const [query, setQuery] = useState(defaultQuery);
   const explorerPlugin = useExplorerPlugin({
-    query: query,
-    onEdit: setQuery
+    query: query ?? '',
+    onEdit: setQuery,
+    showAttribution: false
   });
   return createElement(GraphiQL, {
     fetcher: fetcher,
