@@ -121,7 +121,21 @@ class API::V2::Schema < GraphQL::Schema
     raise GraphQL::ExecutionError.new("An object of type #{error.type.graphql_name} was hidden due to permissions", extensions: { code: :unauthorized })
   end
 
-  use GraphQL::Schema::Timeout, max_seconds: 10
+  def self.type_error(error, ctx)
+    # Capture type errors in Sentry. Thouse errors are our responsability and usually linked to
+    # instances of "bad data".
+    Sentry.capture_exception(error)
+    super
+  end
+
+  class Timeout < GraphQL::Schema::Timeout
+    def handle_timeout(error, query)
+      extra = { query: query.query_string, variables: query.provided_variables&.to_json }
+      Sentry.capture_exception(error, extra:)
+    end
+  end
+
+  use Timeout, max_seconds: 10
   use GraphQL::Batch
   use GraphQL::Backtrace
 
