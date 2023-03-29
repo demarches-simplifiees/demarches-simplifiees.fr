@@ -28,9 +28,13 @@ class SimpleFormatComponent < ApplicationComponent
       .join("\n\n")   #
     @allow_a = allow_a
     @renderer = Redcarpet::Markdown.new(
-      Redcarpet::BareRenderer.new(class_names_map:),
+      Redcarpet::BareRenderer.new(link_attributes: external_link_attributes, class_names_map: class_names_map),
       REDCARPET_EXTENSIONS.merge(autolink: @allow_a)
     )
+  end
+
+  def external_link_attributes
+    { target: '_blank', rel: 'noopener noreferrer' }
   end
 
   def tags
@@ -42,6 +46,6 @@ class SimpleFormatComponent < ApplicationComponent
   end
 
   def attributes
-    ['target', 'rel', 'href', 'class', 'title']
+    ['target', 'rel', 'href', 'class']
   end
 end
