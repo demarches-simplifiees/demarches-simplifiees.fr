@@ -9,8 +9,11 @@ en:
         archived: archived
         dossiers_close_to_expiration: expiring
         dossiers_supprimes_recemment: recently deleted
+        copy_link_button: Copy the procedure link to clipboard
       email_usagers:
         contact_users: Contact users (draft)
         notice: "You will send a message to %{dossiers_count} whose files are in draft, in the instructor groups : %{groupe_instructeurs}."
+      administrators_list:
+        title: "%{procedure_libelle} - n°%{procedure_id} - administrators"
       stats: 
         title: Statistics

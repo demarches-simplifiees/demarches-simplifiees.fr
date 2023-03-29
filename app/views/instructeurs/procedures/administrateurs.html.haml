@@ -1,0 +1,12 @@
+- content_for(:title, "Administrateurs de #{@procedure.libelle}")
+
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [[@procedure.libelle.truncate_words(10), administrateurs_instructeur_procedure_path(@procedure)],['Administrateurs']] }
+
+.container
+  %h1
+    = t('instructeurs.procedures.administrators_list.title', procedure_id: @procedure.id, procedure_libelle: @procedure.libelle)
+
+  %ul
+    - @administrateurs.each do |admin|
+      %li= admin.email
