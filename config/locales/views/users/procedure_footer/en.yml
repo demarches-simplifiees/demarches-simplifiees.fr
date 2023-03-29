@@ -8,7 +8,7 @@ en:
         in_app_mail:
           link: "Direclty via the chat"
         email:
-          link: "Direcly by email %{service_email}"
+          link: "Directly by email %{service_email}"
         phone:
           link: 'By phone %{service_telephone}'
         schedule:
@@ -20,21 +20,8 @@ en:
         data_retention: "%{application_name} : %{duree_conservation_dossiers_dans_ds} months"
         terms: "Laws regarding this data collection"
         dpo: "Contact the Data Protection Officer"
-      official_links:
-        legifrance:
-          title: legifrance.gouv.fr
-          url: "https://legifrance.gouv.fr"
-        gouvernement:
-          title: gouvernement.fr
-          url: "https://gouvernement.fr"
-        service_public:
-          title: service-public.fr
-          url: "https://service-public.fr"
-        data_gouv:
-          title: data.gouv.fr
-          url: "https://data.gouv.fr"
-      dematerialisation:
-        header: Dematerialization
-        title_1: Access to PDF file to print
-        title_2: Online administrative formalities
+      dematerialisation: 
+        header: Paperless
+        title_1: Access to the printable PDF form
+        title_2: Online administrative procedures
         link: "https://www.solidarite-numerique.fr/cartographie/"

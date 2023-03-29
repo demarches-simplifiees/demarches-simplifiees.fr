@@ -1,5 +1,6 @@
 - content_for :footer do
   = render partial: "root/footer"
+- content_for :title, t(".promise")
 
 .landing
   .landing-panel.hero-panel
@@ -7,11 +8,7 @@
       .hero-wrapper
         .hero-text
           %h1.hero-tagline
-            %em.hero-tagline-em Effectuer
-            %br<>
-            %em.hero-tagline-em une démarche administrative
-            %br<>
-            %em.hero-tagline-em en ligne
+            = simple_format(t(".promise"), { class: "hero-tagline-em" }, wrapper_tag: "em")
 
         .hero-illustration
           %img{ :src => image_url("landing/hero/dematerialiser.svg"), alt: '', width: 499, height: 280, loading: 'lazy' }
@@ -23,47 +20,38 @@
           %img.role-image{ :src => image_url("landing/roles/usagers.svg"), alt: '', width: 176, height: 180, loading: 'lazy' }
 
         .role-panel-70
-          %h2 Vous souhaitez effectuer une demande auprès d’une administration ?
-          %p.fr-h5 Réalisez vos demandes en toute simplicité et retrouvez vos dossiers en ligne
+          %h2= t(".have_a_procedure")
+          %p.fr-h5= t(".fill_procedure")
 
-          = link_to "Comment trouver ma démarche ?", COMMENT_TROUVER_MA_DEMARCHE_URL, class: "fr-btn fr-btn--lg fr-mr-1w fr-mb-2w", title: new_tab_suffix("Comment trouver ma démarche ?"), **external_link_attributes
-          = link_to "Se connecter", new_user_session_path, class: "fr-btn fr-btn--secondary fr-btn--lg"
+          = link_to t(".how_to_find_procedure"), COMMENT_TROUVER_MA_DEMARCHE_URL, class: "fr-btn fr-btn--lg fr-mr-1w fr-mb-2w", title: new_tab_suffix(t(".how_to_find_procedure")), **external_link_attributes
+          = link_to t("views.users.sessions.new.connection"), new_user_session_path, class: "fr-btn fr-btn--secondary fr-btn--lg"
 
   - cache "numbers-panel", :expires_in => 3.hours do
     .landing-panel
       .container
-        %h2.center.fr-mb-4w #{APPLICATION_NAME} en chiffres
+        %h2.center.fr-mb-4w= t(".our_numbers", name: APPLICATION_NAME)
         %ul.numbers
           %li.number
             .number-value
-              = number_with_delimiter(@stat&.administrations_partenaires, :locale => :fr)
-            .number-label<
-              administrations
-              %br<>
-              partenaires
+              = number_with_delimiter(@stat&.administrations_partenaires)
+            = simple_format(t(".numbers.administrations"), { class: "number-label" }, wrapper_tag: "div")
           %li.number
             .number-value
-              = number_with_delimiter(@stat&.dossiers_not_brouillon, :locale => :fr)
-            .number-label<
-              dossiers
-              %br<>
-              déposés
+              = number_with_delimiter(@stat&.dossiers_not_brouillon)
+            = simple_format(t(".numbers.files"), { class: "number-label" }, wrapper_tag: "div")
           %li.number
             .number-value
-              = "#{number_with_delimiter(50, :locale => :fr)} %"
-            .number-label<
-              de réduction
-              %br<>
-              des délais de traitement
+              = "#{number_with_delimiter(50)} %"
+            = simple_format(t(".numbers.processing_time"), { class: "number-label" }, wrapper_tag: "div")
 
   .landing-panel.cta-panel
     .container
       .cta-panel-wrapper
         %div
-          %h2.cta-panel-title Une question, un problème ?
-          %p.cta-panel-explanation La réponse est dans l’aide en ligne
+          %h2.cta-panel-title= t(".question")
+          %p.cta-panel-explanation= t(".answer_in_faq")
         %div
-          = link_to "Accéder à l’aide en ligne", FAQ_URL, class: "fr-btn fr-btn--lg", title: new_tab_suffix("Accéder à l’aide en ligne"), **external_link_attributes
+          = link_to t(".online_help"), FAQ_URL, class: "fr-btn fr-btn--lg", title: new_tab_suffix(t(".online_help")), **external_link_attributes
         -#   We temporarily disable the link to the contact page on the homepage
         -#   %p.cta-panel-explanation Notre équipe est disponible pour vous renseigner et vous aider
         -# %div
@@ -77,7 +65,7 @@
     .container
       .cta-panel-wrapper
         %div
-          %h2.fr-h4 Administration : vous voulez dématerialiser ?
-          %p.cta-panel-explanation.grey Proposez à vos usagers de remplir leurs dossiers en ligne
+          %h2.fr-h4= t(".administration_dematerialize")
+          %p.cta-panel-explanation.grey= t(".administration_fill_online")
         %div
-          = link_to "Découvrez notre outil", administration_path, class: "fr-btn fr-btn--lg"
+          = link_to t(".administration_discover"), administration_path, class: "fr-btn fr-btn--lg"

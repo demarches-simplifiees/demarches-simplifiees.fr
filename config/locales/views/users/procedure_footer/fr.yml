@@ -35,7 +35,7 @@ fr:
           title: data.gouv.fr
           url: "https://data.gouv.fr"
       dematerialisation: 
-        header: Dematérialisation
+        header: Dématérialisation
         title_1: Accès au formulaire PDF à imprimer
         title_2: Les démarches administratives en ligne
         link: "https://www.solidarite-numerique.fr/cartographie/"
