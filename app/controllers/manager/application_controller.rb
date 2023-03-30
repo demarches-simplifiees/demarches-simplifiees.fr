@@ -5,7 +5,7 @@ module Manager
 
     def default_params
       request.query_parameters[resource_name] ||= {
-        order: "created_at",
+        order: "id",
         direction: "desc"
       }
     end
@@ -23,6 +23,15 @@ module Manager
     end
 
     private
+
+    def sorting_attribute
+      attribute = super
+
+      # do not sort by non-indexed created_at. This require a full table scan, locking every other transactions.
+      return :id if attribute.to_sym == :created_at
+
+      attribute
+    end
 
     # private method called by rails fwk
     # see https://github.com/roidrage/lograge
