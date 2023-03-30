@@ -1,4 +1,3 @@
-- # TODO, manage input id for focus on add repetition
 - if @champ.options?
   - if @champ.render_as_checkboxes?
     = @form.collection_check_boxes(:value, @champ.enabled_non_empty_options, :to_s, :to_s) do |b|
