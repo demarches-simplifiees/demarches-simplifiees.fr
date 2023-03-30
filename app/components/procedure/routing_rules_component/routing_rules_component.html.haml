@@ -14,7 +14,7 @@
           %th.delete-column
   .conditionnel.mt-2.width-100
     - rows.each.with_index do |(targeted_champ, value, groupe_instructeur), row_index|
-      = form_tag admin_procedure_routing_rules_path, method: :post, class: 'form width-100' do
+      = form_tag admin_procedure_routing_rules_path, method: :post, class: "form width-100 gi-#{groupe_instructeur.id}" do
         %table.condition-table.mt-2.width-100
           %tbody
             %tr{ data: { controller: 'autosave' } }
