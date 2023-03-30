@@ -96,6 +96,10 @@ namespace :anonymizer do
       "SECURITY LABEL FOR anon ON COLUMN api_tokens.encrypted_token IS 'MASKED WITH VALUE anon.random_string(5)'",
       "SECURITY LABEL FOR anon ON COLUMN avis.answer IS 'MASKED WITH VALUE NULL'",
       "SECURITY LABEL FOR anon ON COLUMN avis.introduction IS 'MASKED WITH VALUE NULL'",
+      "SECURITY LABEL FOR anon ON COLUMN avis.question_label IS 'MASKED WITH CASE
+                                                                             WHEN question_label IS NULL THEN NULL
+                                                                             ELSE $$REDACTED$$
+                                                                             END'",
       "SECURITY LABEL FOR anon ON COLUMN commentaires.body IS 'MASKED WITH VALUE NULL'",
       "SECURITY LABEL FOR anon ON COLUMN dossiers.search_terms IS 'MASKED WITH VALUE NULL'",
       "SECURITY LABEL FOR anon on COLUMN dossiers.private_search_terms IS 'MASKED WITH VALUE NULL'",
