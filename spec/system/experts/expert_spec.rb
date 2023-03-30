@@ -78,7 +78,7 @@ describe 'Inviting an expert:' do
       expect(page).to have_content('Ma réponse d’expert : c’est un oui.')
       expect(page).to have_content('RIB.pdf')
 
-      within('.breadcrumbs') { click_on 'Avis' }
+      within('.fr-breadcrumb__list') { click_on 'Avis' }
       expect(page).to have_text('0 avis à donner')
       expect(page).to have_text('1 avis donné')
     end
@@ -114,7 +114,7 @@ describe 'Inviting an expert:' do
       expect(page).to have_text('Vous')
       expect(page).to have_text('non')
 
-      within('.breadcrumbs') { click_on 'Avis' }
+      within('.fr-breadcrumb__list') { click_on 'Avis' }
       expect(page).to have_text('1 avis donné')
     end
 
