@@ -1,8 +1,8 @@
 .sub-header
   .container
     .flex.justify-between
-      %nav.fr-breadcrumb{"aria-label" => "vous êtes ici :", role: "navigation"}
-        %button.fr-breadcrumb__button{"aria-controls" => "breadcrumb-1", "aria-expanded" => "false"} Voir le fil d’Ariane
+      %nav.fr-breadcrumb{ "aria-label" => "vous êtes ici :", role: "navigation" }
+        %button.fr-breadcrumb__button{ "aria-controls" => "breadcrumb-1", "aria-expanded" => "false" } Voir le fil d’Ariane
         #breadcrumb-1.fr-collapse
           %ol.fr-breadcrumb__list
             %li= link_to('Avis', expert_all_avis_path, class: 'fr-breadcrumb__link')
