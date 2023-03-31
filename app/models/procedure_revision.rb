@@ -392,6 +392,7 @@ class ProcedureRevision < ApplicationRecord
     public_tdcs = types_de_champ_public.to_a
 
     public_tdcs
+      .flat_map { _1.repetition? ? children_of(_1) : _1 }
       .map.with_index
       .filter_map { |tdc, i| tdc.condition? ? [tdc, i] : nil }
       .map { |tdc, i| [tdc, tdc.condition.errors(public_tdcs.take(i))] }
