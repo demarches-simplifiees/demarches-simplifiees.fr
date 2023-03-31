@@ -6,5 +6,5 @@
 .container
   %h1 Configuration des champs
   %br
-  = render Attachment::DeleteFormComponent.new
+  = render NestedForms::FormOwnerComponent.new
   = render TypesDeChampEditor::EditorComponent.new(revision: @procedure.draft_revision)

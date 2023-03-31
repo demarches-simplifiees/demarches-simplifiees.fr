@@ -79,6 +79,14 @@ class Champs::MultipleDropDownListChamp < Champ
     update_column(:value, (selected_options - options).to_json)
   end
 
+  def focusable_input_id
+    render_as_checkboxes? ? checkbox_id(options.find(&:present?)) : input_id
+  end
+
+  def checkbox_id(value)
+    "#{input_id}-#{value.parameterize}"
+  end
+
   private
 
   def format_before_save

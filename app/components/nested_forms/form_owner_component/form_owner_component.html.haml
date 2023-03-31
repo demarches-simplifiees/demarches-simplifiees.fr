@@ -1,0 +1,2 @@
+- HTTP_METHODS.map do |http_method|
+  = form_tag('/', method: http_method, data: { 'turbo-method': http_method, turbo: true }, id: NestedForms::FormOwnerComponent.form_id(http_method)) {}
