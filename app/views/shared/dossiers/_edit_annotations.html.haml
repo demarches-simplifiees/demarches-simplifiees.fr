@@ -1,6 +1,7 @@
 .container.dossier-edit
   - if dossier.champs_private.present?
     %section.counter-start-header-section
+      = render EditableChamp::AddFormRepetitionRowComponent.new
       = render EditableChamp::DeleteFormRepetitionRowComponent.new
       = render Attachment::DeleteFormComponent.new
       = form_for dossier, url: annotations_instructeur_dossier_path(dossier.procedure, dossier), html: { class: 'form', multipart: true } do |f|

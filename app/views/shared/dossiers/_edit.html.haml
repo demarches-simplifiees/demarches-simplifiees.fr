@@ -10,6 +10,7 @@
   - else
     - form_options = { url: modifier_dossier_url(dossier), method: :patch }
   = render EditableChamp::DeleteFormRepetitionRowComponent.new
+  = render EditableChamp::AddFormRepetitionRowComponent.new
   = render Attachment::DeleteFormComponent.new
   = form_for dossier, form_options.merge({ html: { id: 'dossier-edit-form', class: 'form', multipart: true, novalidate: 'novalidate' } }) do |f|
 
