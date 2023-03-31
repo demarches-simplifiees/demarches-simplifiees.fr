@@ -2,28 +2,31 @@
   .card-title
     = t('.apply_routing_rules')
   - if can_route?
-    %p.notice
-      = t('.routing_rules_notice')
-    .conditionnel.mt-2.width-100
-      %table.condition-table.mt-2.width-100
+    .notice
+      = t('.routing_rules_notice_html', path: champs_admin_procedure_path(@procedure_id))
+    .mt-2.width-100
+      %table.routing-rules-table.mt-2.width-100
         %thead
           %tr
-            %th.far-left
+            %th.far-left Router vers
+            %th.if
             %th.target Champ cible du routage
-            %th.operator Opérateur
+            %th.operator
             %th.value Valeur
-            %th.delete-column
-    .conditionnel.mt-2.width-100
+    .mt-2.width-100
       - rows.each.with_index do |(targeted_champ, value, groupe_instructeur), row_index|
-        = form_tag admin_procedure_routing_rules_path(@procedure_id), method: :post, class: "form width-100 gi-#{groupe_instructeur.id}" do
-          %table.condition-table.mt-2.width-100
+        = form_tag admin_procedure_routing_rules_path(@procedure_id),
+          method: :post,
+          class: "form width-100 gi-#{groupe_instructeur.id}",
+          data: { controller: 'autosave' } do
+          = hidden_groupe_instructeur_tag(groupe_instructeur.id)
+          %table.routing-rules-table.condition-table.mt-2.width-100
             %tbody
-              %tr{ data: { controller: 'autosave' } }
-                %td.far-left Router vers « #{groupe_instructeur.label} »  si
+              %tr
+                %td.far-left= groupe_instructeur.label
+                %td.if si
                 %td.target= targeted_champ_tag(targeted_champ, row_index)
-                %td.operator Est égal à
+                %td.operator est égal à
                 %td.value= value_tag(targeted_champ, value, row_index)
-                %td.delete-column
-                = hidden_groupe_instructeur_tag(groupe_instructeur.id)
   - else
-    %p= t('.routing_rules_warning_html', path: champs_admin_procedure_path(@procedure_id))
+    .notice= t('.routing_rules_warning_html', path: champs_admin_procedure_path(@procedure_id))

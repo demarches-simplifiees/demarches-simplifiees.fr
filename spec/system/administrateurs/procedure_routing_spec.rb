@@ -41,8 +41,8 @@ describe 'As an administrateur I can manage procedure routing', js: true do
     visit admin_procedure_groupe_instructeurs_path(procedure)
 
     within('.condition-table tbody tr:nth-child(1)', match: :first) do
-      expect(page).to have_content 'Router vers « a second group »'
-      expect(page).not_to have_content 'Router vers « défaut »'
+      expect(page).to have_content 'second group'
+      expect(page).not_to have_content 'défaut'
     end
   end
 end
