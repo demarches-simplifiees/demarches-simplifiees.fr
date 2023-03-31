@@ -50,6 +50,7 @@
 #  created_at                                :datetime         not null
 #  updated_at                                :datetime         not null
 #  canonical_procedure_id                    :bigint
+#  defaut_groupe_instructeur_id              :bigint
 #  draft_revision_id                         :bigint
 #  parent_procedure_id                       :bigint
 #  published_revision_id                     :bigint
