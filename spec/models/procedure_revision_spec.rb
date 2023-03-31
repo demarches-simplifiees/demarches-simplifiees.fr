@@ -828,21 +828,22 @@ describe ProcedureRevision do
       draft_revision.errors
     end
 
-    before { second_champ.update(condition: condition) }
-
     context 'when a champ has a valid condition (type)' do
+      before { second_champ.update(condition: condition) }
       let(:condition) { ds_eq(constant(true), constant(true)) }
 
       it { is_expected.to be_empty }
     end
 
     context 'when a champ has a valid condition: needed tdc is up in the forms' do
+      before { second_champ.update(condition: condition) }
       let(:condition) { ds_eq(champ_value(first_champ.stable_id), constant(1)) }
 
       it { is_expected.to be_empty }
     end
 
     context 'when a champ has an invalid condition' do
+      before { second_champ.update(condition: condition) }
       let(:condition) { ds_eq(constant(true), constant(1)) }
 
       it { expect(subject.first.attribute).to eq(:condition) }
@@ -851,7 +852,28 @@ describe ProcedureRevision do
     context 'when a champ has an invalid condition: needed tdc is down in the forms' do
       let(:need_second_champ) { ds_eq(constant('oui'), champ_value(second_champ.stable_id)) }
 
-      before { first_champ.update(condition: need_second_champ) }
+      before do
+        second_champ.update(condition: condition)
+        first_champ.update(condition: need_second_champ)
+      end
+
+      it { expect(subject.first.attribute).to eq(:condition) }
+    end
+
+    context 'when a champ belongs to a repetition' do
+      let(:procedure) do
+        create(:procedure,
+               types_de_champ_public: [{ type: :repetition, children: [{ type: :integer_number }, { type: :text }] }])
+      end
+      let(:condition) { ds_eq(constant(true), constant(1)) }
+
+      before do
+        repetition = procedure.draft_revision.types_de_champ_public.find(&:repetition?)
+        champs_repetition = procedure.draft_revision.children_of(repetition)
+        integer_champ = champs_repetition.first
+        text_champ = champs_repetition.last
+        text_champ.update(condition: condition)
+      end
 
       it { expect(subject.first.attribute).to eq(:condition) }
     end
