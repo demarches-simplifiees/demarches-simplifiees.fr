@@ -1,0 +1,8 @@
+---
+fr:
+  select: Sélectionner
+  apply_routing_rules: Appliquer des règles de routage
+  routing_rules_notice: |
+    Ajoutez des règles de routage à partir de champs créés dans le formulaire.
+    Si les mêmes règles de routage sont appliquées à plusieurs groupes,
+    les dossiers seront routés vers le premier groupe affiché dans la liste.
