@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_22_150907) do
+ActiveRecord::Schema.define(version: 2023_03_31_075755) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -399,14 +399,6 @@ ActiveRecord::Schema.define(version: 2023_03_22_150907) do
     t.index ["revision_id"], name: "index_dossiers_on_revision_id"
     t.index ["state"], name: "index_dossiers_on_state"
     t.index ["user_id"], name: "index_dossiers_on_user_id"
-  end
-
-  create_table "drop_down_lists", id: :serial, force: :cascade do |t|
-    t.datetime "created_at"
-    t.integer "type_de_champ_id"
-    t.datetime "updated_at"
-    t.string "value"
-    t.index ["type_de_champ_id"], name: "index_drop_down_lists_on_type_de_champ_id"
   end
 
   create_table "email_events", force: :cascade do |t|
