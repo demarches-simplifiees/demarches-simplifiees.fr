@@ -1,10 +1,17 @@
 %li.type-de-champ.flex.column.justify-start{ html_options }
-  .flex.justify-start.section.head.hr
+  .flex.justify-between.section.head.hr
     .handle.small.icon-only.icon.move-handle{ title: "Déplacer le champ vers le haut ou vers le bas" }
-    .flex.justify-start.delete
-      = button_to type_de_champ_path, class: 'button small icon-only danger', method: :delete, form: { data: { turbo_confirm: 'Êtes vous sûr de vouloir supprimer ce champ ?' } } do
-        .icon.delete
-        %span.sr-only Supprimer
+
+    - if coordinate.used_by_routing_rules?
+      .flex.align-center
+        %span
+          utilisé pour
+          = link_to('le routage', admin_procedure_groupe_instructeurs_path(revision.procedure_id, anchor: 'routing-rules'))
+    - else
+      .flex.justify-start.delete
+        = button_to type_de_champ_path, class: 'button small icon-only danger', method: :delete, form: { data: { turbo_confirm: 'Êtes vous sûr de vouloir supprimer ce champ ?' } } do
+          .icon.delete
+          %span.sr-only Supprimer
 
   - if @errors.present?
     .types-de-champ-errors
