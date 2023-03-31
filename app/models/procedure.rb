@@ -919,4 +919,8 @@ class Procedure < ApplicationRecord
       groupe_instructeurs.create(label: GroupeInstructeur::DEFAUT_LABEL)
     end
   end
+
+  def stable_ids_used_by_routing_rules
+    @stable_ids_used_by_routing_rules ||= groupe_instructeurs.flat_map { _1.routing_rule&.sources }.compact
+  end
 end
