@@ -987,6 +987,23 @@ describe Administrateurs::ProceduresController, type: :controller do
     end
   end
 
+  describe 'PUT #allow_expert_messaging' do
+    let!(:procedure) { create :procedure, :with_service, administrateur: admin }
+
+    context 'when admin refuse to let experts discuss with users on this procedure' do
+      before do
+        procedure.update!(allow_expert_messaging: false)
+        procedure.reload
+      end
+
+      it { expect(procedure.allow_expert_messaging).to be_falsy }
+    end
+
+    context 'when admin accept to let experts discuss with users (true by default)' do
+      it { expect(procedure.allow_expert_messaging).to be_truthy }
+    end
+  end
+
   describe 'PUT #restore' do
     let(:procedure) { create :procedure_with_dossiers, :with_service, :published, administrateur: admin }
 

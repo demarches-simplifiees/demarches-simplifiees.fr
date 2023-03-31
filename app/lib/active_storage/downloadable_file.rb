@@ -1,6 +1,12 @@
 class ActiveStorage::DownloadableFile
-  def self.create_list_from_dossiers(dossiers, with_bills: false, with_champs_private: false, include_infos_administration: false)
-    PiecesJustificativesService.generate_dossier_export(dossiers, include_infos_administration:) +
+  def self.create_list_from_dossiers(
+    dossiers,
+    with_bills: false,
+    with_champs_private: false,
+    include_infos_administration: false,
+    include_avis_for_expert: false
+  )
+    PiecesJustificativesService.generate_dossier_export(dossiers, include_infos_administration:, include_avis_for_expert:) +
       PiecesJustificativesService.liste_documents(dossiers, with_bills:, with_champs_private:)
   end
 

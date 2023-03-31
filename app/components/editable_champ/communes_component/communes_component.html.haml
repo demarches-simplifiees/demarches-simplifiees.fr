@@ -1,12 +1,13 @@
-- render_parent
-= @form.hidden_field :value
-= @form.hidden_field :external_id
-= @form.hidden_field :departement
-= @form.hidden_field :code_departement
-= react_component("ComboCommunesSearch",
-  required: @champ.required?,
-  id: @champ.input_id,
-  classNameDepartement: "width-33-desktop width-100-mobile",
-  className: "width-66-desktop width-100-mobile",
-  describedby: @champ.describedby_id,
-  **react_combo_props)
+%label.notice{ for: code_postal_input_id }= t('.postal_code')
+= @form.text_field :code_postal, required: @champ.required?, id: code_postal_input_id, class: "width-33-desktop width-100-mobile small-margin"
+- if @champ.code_postal_with_fallback?
+  - if commune_options.empty?
+    .fr-error-text.mb-4= t('.not_found', postal_code: @champ.code_postal_with_fallback)
+  - elsif commune_options.size <= 3
+    %fieldset.radios
+      - commune_options.each.with_index do |(option, value), index|
+        %label
+          = @form.radio_button :value, value, checked: @champ.selected == value, id: index == 0 ? @champ.input_id : nil
+          = option
+  - else
+    = @form.select :value, commune_options, commune_select_options, required: @champ.required?, id: @champ.input_id, aria: { describedby: @champ.describedby_id }, class: "width-33-desktop width-100-mobile"

@@ -1,12 +1,15 @@
 .sub-header
   .container
     .flex.justify-between
-      %ul.breadcrumbs
-        %li= link_to('Avis', expert_all_avis_path)
-        %li
-          = link_to(dossier.procedure.libelle.truncate_words(10), procedure_expert_avis_index_path(avis.procedure), class: "fr-link")
-          = procedure_badge(dossier.procedure)
-        %li= link_to("Dossier nº #{dossier.id}", expert_avis_path(avis.procedure, avis))
+      %nav.fr-breadcrumb{ "aria-label" => "vous êtes ici :", role: "navigation" }
+        %button.fr-breadcrumb__button{ "aria-controls" => "breadcrumb-1", "aria-expanded" => "false" } Voir le fil d’Ariane
+        #breadcrumb-1.fr-collapse
+          %ol.fr-breadcrumb__list
+            %li= link_to('Avis', expert_all_avis_path, class: 'fr-breadcrumb__link')
+            %li
+              = link_to(dossier.procedure.libelle.truncate_words(10), procedure_expert_avis_index_path(avis.procedure), class: "fr-breadcrumb__link")
+              = procedure_badge(dossier.procedure)
+            %li= content_tag("a","Dossier nº #{dossier.id}", class: 'fr-breadcrumb__link', 'aria-current': 'page')
 
       .header-actions
         .fr-download
@@ -19,4 +22,5 @@
       %ul
         = dynamic_tab_item('Demande', expert_avis_path(avis.procedure, avis))
         = dynamic_tab_item('Avis', instruction_expert_avis_path(avis.procedure, avis), notification: avis.answer.blank?)
-        = dynamic_tab_item('Messagerie', messagerie_expert_avis_path(avis.procedure, avis))
+        - if avis.procedure.allow_expert_messaging
+          = dynamic_tab_item('Messagerie', messagerie_expert_avis_path(avis.procedure, avis))

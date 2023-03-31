@@ -19,7 +19,7 @@ DS_PROXY_URL = ENV.fetch("DS_PROXY_URL", "")
 
 # External services URLs
 WEBINAIRE_URL = "https://app.livestorm.co/demarches-simplifiees"
-INSCRIPTION_WEBINAIRE_URL = "https://app.livestorm.co/demarches-simplifiees/inscription-webinaire-les-avances-de-la-demarche-simplifiee"
+INSCRIPTION_WEBINAIRE_URL = "https://bbb-dinum-scalelite.visio.education.fr/playback/presentation/2.3/cbb6e43626fa1b67755d9fb05ecf5e7f3be50d48-1675342730585"
 CALENDLY_URL = "https://calendly.com/demarches-simplifiees/accompagnement-administrateur-demarches-simplifiees-fr"
 
 DOC_URL = ENV.fetch("DOC_URL", "https://doc.demarches-simplifiees.fr")
@@ -29,8 +29,8 @@ INSTRUCTEUR_TUTORIAL_URL = [DOC_URL, "tutoriels", "tutoriel-accompagnateur"].joi
 CADRE_JURIDIQUE_URL = [DOC_URL, "tutoriels/video-le-cadre-juridique"].join("/")
 LISTE_DES_DEMARCHES_URL = [DOC_URL, "listes-des-demarches"].join("/")
 CGU_URL = ENV.fetch("CGU_URL", [DOC_URL, "cgu"].join("/"))
-MENTIONS_LEGALES_URL = ENV.fetch("MENTIONS_LEGALES_URL", [DOC_URL, "mentions-legales"].join("/"))
-ACCESSIBILITE_URL = ENV.fetch("ACCESSIBILITE_URL", [DOC_URL, "declaration-daccessibilite"].join("/"))
+MENTIONS_LEGALES_URL = ENV.fetch("MENTIONS_LEGALES_URL", "/mentions-legales")
+ACCESSIBILITE_URL = ENV.fetch("ACCESSIBILITE_URL", "/declaration-accessibilite")
 API_DOC_URL = [DOC_URL, "pour-aller-plus-loin", "graphql"].join("/")
 WEBHOOK_DOC_URL = [DOC_URL, "pour-aller-plus-loin", "webhook"].join("/")
 ARCHIVAGE_DOC_URL = [DOC_URL, "pour-aller-plus-loin", "archivage-longue-duree-des-demarches"].join("/")

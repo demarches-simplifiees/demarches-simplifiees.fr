@@ -212,7 +212,7 @@ def add_avis(pdf, avis)
   format_in_2_lines(pdf, "Avis de #{avis.email_to_display}#{avis.confidentiel? ? ' (confidentiel)' : ''}",
     avis.answer || 'En attente de réponse')
 
-  if avis.question_answer.present?
+  if [true, false].include? avis.question_answer
     format_in_2_columns(pdf, "Réponse oui/non ", t("question_answer.#{avis.question_answer}", scope: 'helpers.label'))
   end
 end
@@ -283,6 +283,13 @@ prawn_document(page_size: "A4") do |pdf|
   if @include_infos_administration && @dossier.avis.present?
     add_title(pdf, "Avis")
     @dossier.avis.each do |avis|
+      add_avis(pdf, avis)
+    end
+  end
+
+  if @include_avis_for_expert && @dossier.avis.present?
+    add_title(pdf, "Avis")
+    @dossier.avis_for_expert(@include_avis_for_expert).each do |avis|
       add_avis(pdf, avis)
     end
   end

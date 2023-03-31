@@ -47,25 +47,6 @@ class APIGeoService
       departements.find { _1[:name] == name }&.dig(:code)
     end
 
-    def communes(departement_code)
-      get_from_api_geo(
-        "communes?codeDepartement=#{departement_code}",
-        additional_keys: { postal_codes: :codesPostaux }
-      ).sort_by { I18n.transliterate(_1[:name]) }
-    end
-
-    def commune_name(departement_code, code)
-      communes(departement_code).find { _1[:code] == code }&.dig(:name)
-    end
-
-    def commune_code(departement_code, name)
-      communes(departement_code).find { _1[:name] == name }&.dig(:code)
-    end
-
-    def commune_postal_codes(departement_code, code)
-      communes(departement_code).find { _1[:code] == code }&.dig(:postal_codes)
-    end
-
     def epcis(departement_code)
       get_from_api_geo("epcis?codeDepartement=#{departement_code}").sort_by { I18n.transliterate(_1[:name]) }
     end
@@ -78,18 +59,55 @@ class APIGeoService
       epcis(departement_code).find { _1[:name] == name }&.dig(:code)
     end
 
+    def communes(departement_code)
+      get_from_api_geo("communes?codeDepartement=#{departement_code}&type=commune-actuelle,arrondissement-municipal").sort_by { I18n.transliterate([_1[:name], _1[:postal_code]].join(' ')) }
+    end
+
+    def communes_by_postal_code(postal_code)
+      if postal_code.size > 3
+        metro_code = postal_code[0..1]
+        drom_com_code = postal_code[0..2]
+        if metro_code == '20'
+          communes('2A') + communes('2B')
+        elsif metro_code == '97' || metro_code == '98'
+          departement_name(drom_com_code) ? communes(drom_com_code) : []
+        else
+          departement_name(metro_code) ? communes(metro_code) : []
+        end
+          .filter { _1[:postal_code] == postal_code }
+          .sort_by { I18n.transliterate([_1[:name], _1[:postal_code]].join(' ')) }
+      else
+        []
+      end
+    end
+
+    def commune_name(departement_code, code)
+      communes(departement_code).find { _1[:code] == code }&.dig(:name)
+    end
+
+    def commune_code(departement_code, name)
+      communes(departement_code).find { _1[:name] == name }&.dig(:code)
+    end
+
     private
 
-    def get_from_api_geo(scope, additional_keys: {})
+    def get_from_api_geo(scope)
       Rails.cache.fetch("api_geo_#{scope}", expires_in: 1.year) do
         response = Typhoeus.get("#{API_GEO_URL}/#{scope}")
-        JSON.parse(response.body)
-          .map(&:symbolize_keys)
-          .map do |result|
-            data = { name: result[:nom].tr("'", '’'), code: result[:code] }
-            additional_keys.each { |key, value| data = data.merge(key => result[value]) }
-            data
+        JSON.parse(response.body).map(&:symbolize_keys).flat_map do |result|
+          item = {
+            name: result[:nom].tr("'", '’'),
+            code: result[:code],
+            epci_code: result[:codeEpci],
+            departement_code: result[:codeDepartement]
+          }.compact
+
+          if result[:codesPostaux].present?
+            result[:codesPostaux].map { item.merge(postal_code: _1) }
+          else
+            [item]
           end
+        end
       end
     end
 

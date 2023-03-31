@@ -82,7 +82,7 @@ describe Experts::AvisController, type: :controller do
 
       before { get :bilans_bdf, params: { id: avis, procedure_id: } }
 
-      it { expect(response).to redirect_to(instructeur_avis_path(avis_without_answer)) }
+      it { expect(response).to redirect_to(expert_avis_path(avis_without_answer)) }
 
       context 'with a revoked avis' do
         let(:avis) { revoked_avis }
@@ -97,7 +97,7 @@ describe Experts::AvisController, type: :controller do
       subject { get :telecharger_pjs, params: { id: avis.id, procedure_id: } }
 
       before do
-        allow(PiecesJustificativesService).to receive(:generate_dossier_export).and_return([]).with([dossier], include_infos_administration: false)
+        allow(PiecesJustificativesService).to receive(:generate_dossier_export).and_return([]).with([dossier], include_infos_administration: false, include_avis_for_expert: expert)
       end
 
       context 'with a valid avis' do

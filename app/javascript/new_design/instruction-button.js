@@ -17,6 +17,32 @@ export function motivationCancel() {
     .forEach((el) => hide(el.parentElement));
 
   show(document.querySelector('.dropdown-items'));
+
+  document.querySelectorAll('.js_delete_motivation').forEach(hide);
+}
+
+export function motivationCancelBatchDropdown() {
+  document.querySelector('#dropdown_batch').classList.remove('open');
+  hide(document.querySelector('.js_delete_motivation'));
+}
+
+export function showDeleteJustificatif(name) {
+  const justificatif = document.querySelector(
+    '#dossier_justificatif_motivation_' + name
+  );
+
+  if (justificatif.value != '') {
+    show(document.querySelector('#delete_motivation_import_' + name));
+    document.querySelector('#delete_motivation_import_' + name);
+  }
+}
+
+export function deleteJustificatif(name) {
+  const justificatif = document.querySelector(
+    '#dossier_justificatif_motivation_' + name
+  );
+  justificatif.value = '';
+  hide(document.querySelector('#delete_motivation_import_' + name));
 }
 
 export function showImportJustificatif(name) {

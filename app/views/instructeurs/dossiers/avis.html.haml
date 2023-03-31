@@ -3,16 +3,15 @@
 = render partial: "header", locals: { dossier: @dossier }
 
 .container
-  - if !@dossier.termine?
-    - if @dossier.procedure.allow_expert_review
-      = render partial: "instructeurs/avis/shared/form", locals: { url: avis_instructeur_dossier_path(@dossier.procedure, @dossier), linked_dossiers: @dossier.linked_dossiers_for(current_instructeur), must_be_confidentiel: false, avis: @avis }
-    - else
-      %p Cette démarche n’autorise pas la demande d’avis à un expert. Veuillez contacter votre administrateur
+  .fr-grid-row
+    .fr-col.fr-col-12.fr-col-md-3
+      = render partial: 'instructeurs/avis/sidemenu'
+    .fr-col
+      - if @dossier.avis.present?
+        = render partial: 'shared/avis/list', locals: { avis: @dossier.avis, avis_seen_at: @avis_seen_at, expert_or_instructeur: current_instructeur }
 
-  - if @dossier.avis.present?
-    = render partial: 'instructeurs/avis/shared/list', locals: { avis: @dossier.avis, avis_seen_at: @avis_seen_at }
-
-  - if @dossier.termine? && !@dossier.avis.present?
-    .blank-tab
-      %h2.empty-text Aucun avis.
-      %p.empty-text-details Aucun avis n’a été demandé sur ce dossier.
+      - else
+        %h2.empty-text
+          = t('helpers.information_text.empty_text')
+        %p.empty-text-details
+          = t('helpers.information_text.empty_text_detail')

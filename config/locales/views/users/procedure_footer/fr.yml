@@ -19,6 +19,7 @@ fr:
         header: "Cadre juridique"
         data_retention: "%{application_name} : %{duree_conservation_dossiers_dans_ds} mois"
         data_retention_url: "https://doc.demarches-simplifiees.fr/pour-aller-plus-loin/archivage-longue-duree-des-demarches"
+        data_retention_title: "Explications sur notre politique de rétention et d’archivage des données"
         terms: "Texte cadrant la demande d’information"
         dpo: "Contacter le Délégué à la Protection des Données"
       official_links:
@@ -37,5 +38,5 @@ fr:
       dematerialisation: 
         header: Dématérialisation
         title_1: Accès au formulaire PDF à imprimer
-        title_2: Les démarches administratives en ligne
-        link: "https://www.solidarite-numerique.fr/cartographie/"
+        title_2: Trouver une maison France Services
+        link: "https://www.transformation.gouv.fr/france-services"

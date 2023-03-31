@@ -21,8 +21,18 @@ en:
       question_answer:
         true: 'yes'
         false: 'no'
-    hint:
-      confidentiel: "This advice is not displayed to the others consulted experts"
     confirmation:
       revoke: "Would you like to revoke the opinion request to %{email} ?"
       remind: "Would you like to remind %{email} ?"
+    sidemenu:
+      give_avis: Give your opinion
+      see_avis: Read opinions
+      ask_avis: Ask for an opinion
+      ask_new_avis: Ask for another opinion
+    information_text:
+      no_new_avis_text: The file has been proceed
+      no_new_avis_text_detail: Opinion requests are closed
+      unauthorized_avis_text: This procedure does not allowed expert opinions
+      unauthorized_avis_text_detail: Would you please contact your administrator
+      empty_text: No opinion.
+      empty_text_detail: No opinion available on this file

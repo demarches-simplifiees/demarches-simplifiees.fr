@@ -149,4 +149,16 @@ RSpec.describe Avis, type: :model do
       end
     end
   end
+
+  describe "question_label cleanup" do
+    it "nullify empty" do
+      avis = create(:avis, question_label: " ")
+      expect(avis.question_label).to be_nil
+    end
+
+    it "strip" do
+      avis = create(:avis, question_label: "my question ")
+      expect(avis.question_label).to eq("my question")
+    end
+  end
 end

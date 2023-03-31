@@ -1,0 +1,13 @@
+fr:
+  administrateurs:
+    experts_procedures:
+      index:
+        titles:
+          main: Experts invités sur %{libelle}
+          allow_invite_experts: "Autoriser les instructeurs à solliciter des experts invités"
+          allow_expert_messaging: "Autoriser les experts à acceder à la messagerie usager"
+          manage_procedure_experts: "Gérer les experts invités de la démarche"
+        descriptions:
+          allow_invite_experts : Lorsque cette fonctionnalité est active, les instructeurs peuvent solliciter les experts
+          allow_expert_messaging: Lorsque cette fonctionnalité est active, les experts peuvent demander des informations aux usagers
+          manage_procedure_experts: Lorsque cette fonctionnalité est active, les instructeurs ne peuvent uniquement solliciter les experts de votre liste

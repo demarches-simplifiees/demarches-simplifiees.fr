@@ -1,0 +1,32 @@
+- content_for(:title, t('views.legal_notice.title'))
+- content_for :footer do
+  = render partial: "root/footer"
+
+#legal-notice.fr-pt-2w
+  .fr-container.fr-my-4w
+    .fr-grid-row
+      .fr-col-xl-2
+      .fr-col-xl-8
+        %h1.fr-mb-4w
+          = t('views.legal_notice.title')
+
+        .fr-mb-4w
+          %h2
+            = t('views.legal_notice.editing')
+          %p.fr-mb-2w= t('views.legal_notice.editing_content.line_one')
+          %p.fr-mb-2w= t('views.legal_notice.editing_content.line_two')
+          %p.fr-mb-2w= t('views.legal_notice.editing_content.line_three')
+
+        .fr-mb-4w
+          %h2
+            = t('views.legal_notice.direction')
+          %p.fr-mb-2w= t('views.legal_notice.direction_content')
+
+        .fr-mb-4w
+          %h2
+            = t('views.legal_notice.hosting')
+          %p.fr-mb-2w= t('views.legal_notice.hosting_content.line_one')
+          %p.fr-mb-2w= t('views.legal_notice.hosting_content.line_two')
+          %p.fr-mb-2w= t('views.legal_notice.hosting_content.line_three')
+          %p.fr-mb-2w= t('views.legal_notice.hosting_content.line_four')
+          %p.fr-mb-2w= t('views.legal_notice.hosting_content.line_five')

@@ -76,6 +76,14 @@ module Instructeurs
       end
     end
 
+    def avis_new
+      @avis_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.avis_seen_at
+      @avis = Avis.new
+      if @dossier.procedure.experts_require_administrateur_invitation?
+        @experts_emails = dossier.procedure.experts_procedures.where(revoked_at: nil).map(&:expert).map(&:email).sort
+      end
+    end
+
     def personnes_impliquees
       @following_instructeurs_emails = dossier.followers_instructeurs.map(&:email)
       previous_followers = dossier.previous_followers_instructeurs - dossier.followers_instructeurs
@@ -318,8 +326,8 @@ module Instructeurs
 
     def champs_private_params
       champs_params = params.require(:dossier).permit(champs_private_attributes: [
-        :id, :primary_value, :secondary_value, :piece_justificative_file, :value_other, :external_id, :numero_allocataire, :code_postal, :departement, :code_departement, :value, value: [],
-        champs_attributes: [:id, :_destroy, :value, :primary_value, :secondary_value, :piece_justificative_file, :value_other, :external_id, :numero_allocataire, :code_postal, :departement, :code_departement, value: []]
+        :id, :primary_value, :secondary_value, :piece_justificative_file, :value_other, :external_id, :numero_allocataire, :code_postal, :code_departement, :value, value: [],
+        champs_attributes: [:id, :_destroy, :value, :primary_value, :secondary_value, :piece_justificative_file, :value_other, :external_id, :numero_allocataire, :code_postal, :code_departement, value: []]
       ])
       champs_params[:champs_private_all_attributes] = champs_params.delete(:champs_private_attributes) || {}
       champs_params

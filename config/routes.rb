@@ -195,6 +195,9 @@ Rails.application.routes.draw do
 
   get "contact-admin", to: "support#admin"
 
+  get "mentions-legales", to: "static_pages#legal_notice"
+  get "declaration-accessibilite", to: "static_pages#accessibility_statement"
+
   post "webhooks/sendinblue", to: "webhook#sendinblue"
   post "webhooks/helpscout", to: "webhook#helpscout"
   post "webhooks/helpscout_support_dev", to: "webhook#helpscout_support_dev"
@@ -357,6 +360,8 @@ Rails.application.routes.draw do
           get '', action: 'procedure', on: :collection, as: :procedure
           member do
             get 'instruction'
+            get 'avis_list'
+            get 'avis_new'
             get 'messagerie'
             post 'commentaire' => 'avis#create_commentaire'
             post 'avis' => 'avis#create_avis'
@@ -392,8 +397,7 @@ Rails.application.routes.draw do
           end
         end
 
-        resources :avis, only: [:show, :update] do
-          get '', action: 'procedure', on: :collection, as: :procedure
+        resources :avis, only: [] do
           member do
             patch 'revoquer'
             get 'remind'
@@ -426,6 +430,7 @@ Rails.application.routes.draw do
             get 'messagerie'
             get 'annotations-privees' => 'dossiers#annotations_privees'
             get 'avis'
+            get 'avis_new'
             get 'personnes-impliquees' => 'dossiers#personnes_impliquees'
             patch 'follow'
             patch 'unfollow'
@@ -483,6 +488,7 @@ Rails.application.routes.draw do
         get 'jeton'
         patch 'update_jeton'
         put :allow_expert_review
+        put :allow_expert_messaging
         put :experts_require_administrateur_invitation
         put :restore
       end
