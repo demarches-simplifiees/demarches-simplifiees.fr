@@ -15,6 +15,9 @@ ActiveSupport.on_load(:active_storage_attachment) do
 end
 
 Rails.application.reloader.to_prepare do
+  if Rails.application.config.active_storage.service == :local && ActiveStorage::Current.host.blank?
+    ActiveStorage::Current.host = "#{ENV.fetch("APP_HOST_SCHEME", "https")}://#{ENV['APP_HOST']}"
+  end
   class ActiveStorage::BaseJob
     include ActiveJob::RetryOnTransientErrors
   end
