@@ -28,7 +28,9 @@ module Mutations
     end
 
     def authorized?(dossier:, instructeur:, **args)
-      if !dossier.en_instruction?
+      if dossier.en_instruction? && dossier.any_etablissement_as_degraded_mode?
+        return false, { errors: ["Les informations du SIRET du dossier ne sont pas complètes. Veuillez réessayer plus tard."] }
+      elsif !dossier.en_instruction? || !dossier.can_terminer?
         return false, { errors: ["Le dossier est déjà #{dossier_display_state(dossier, lower: true)}"] }
       end
 

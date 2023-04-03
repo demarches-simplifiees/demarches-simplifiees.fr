@@ -315,6 +315,25 @@ describe API::V2::GraphqlController do
           expect(gql_data[:dossierAccepter][:errors].first[:message]).to eq('Le jeton utilisé est configuré seulement en lecture')
         }
       end
+
+      context 'when already rejected' do
+        let(:dossier) { create(:dossier, :refuse, :with_individual, procedure:) }
+
+        it {
+          expect(gql_data[:dossierAccepter][:errors].first[:message]).to eq('Le dossier est déjà refusé')
+        }
+      end
+
+      context 'when in degraded mode' do
+        let(:procedure) { create(:procedure, :published, :with_service, administrateurs: [admin]) }
+        let(:dossier) { create(:dossier, :en_instruction, :with_entreprise, procedure:) }
+
+        before { dossier.etablissement.update(adresse: nil) }
+
+        it {
+          expect(gql_data[:dossierAccepter][:errors].first[:message]).to eq('Les informations du SIRET du dossier ne sont pas complètes. Veuillez réessayer plus tard.')
+        }
+      end
     end
 
     context 'dossierRefuser' do
