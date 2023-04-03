@@ -19,6 +19,7 @@ class TypeDeChamp < ApplicationRecord
 
   FILE_MAX_SIZE = 200.megabytes
   FEATURE_FLAGS = {}
+  MINIMUM_TEXTAREA_CHARACTER_LIMIT_LENGTH = 400
 
   STRUCTURE = :structure
   ETAT_CIVIL = :etat_civil
@@ -118,6 +119,7 @@ class TypeDeChamp < ApplicationRecord
                  :drop_down_secondary_libelle,
                  :drop_down_secondary_description,
                  :drop_down_other,
+                 :textarea_character_limit,
                  :collapsible_explanation_enabled,
                  :collapsible_explanation_text,
                  :header_section_level
@@ -177,6 +179,11 @@ class TypeDeChamp < ApplicationRecord
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :type_champ, presence: true, allow_blank: false, allow_nil: false
+  validates :textarea_character_limit, numericality: {
+    greater_than_or_equal_to: MINIMUM_TEXTAREA_CHARACTER_LIMIT_LENGTH,
+    only_integer: true,
+    allow_nil: true
+  }
 
   before_validation :check_mandatory
   before_validation :normalize_libelle
@@ -233,6 +240,10 @@ class TypeDeChamp < ApplicationRecord
 
   def drop_down_other?
     drop_down_other == "1" || drop_down_other == true
+  end
+
+  def textarea_character_limit?
+    textarea_character_limit.present?
   end
 
   def collapsible_explanation_enabled?
@@ -338,6 +349,10 @@ class TypeDeChamp < ApplicationRecord
 
   def legacy_number?
     type_champ == TypeDeChamp.type_champs.fetch(:number)
+  end
+
+  def textarea?
+    type_champ == TypeDeChamp.type_champs.fetch(:textarea)
   end
 
   def titre_identite?
@@ -539,7 +554,8 @@ class TypeDeChamp < ApplicationRecord
       type_champs.fetch(:multiple_drop_down_list),
       type_champs.fetch(:dossier_link),
       type_champs.fetch(:linked_drop_down_list),
-      type_champs.fetch(:drop_down_list)
+      type_champs.fetch(:drop_down_list),
+      type_champs.fetch(:textarea)
       true
     else
       false
