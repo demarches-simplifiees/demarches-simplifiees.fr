@@ -28,16 +28,30 @@ RSpec.describe ApplicationMailer, type: :mailer do
 
   describe 'dealing with Dolist API error' do
     let(:dossier) { create(:dossier, procedure: create(:simple_procedure)) }
-    before do
-      ActionMailer::Base.delivery_method = :dolist_api
-      api_error_response = { "ResponseStatus": { "ErrorCode": "Forbidden", "Message": "Blocked non authorized request", "Errors": [] } }
-      allow_any_instance_of(Dolist::API).to receive(:send_email).and_return(api_error_response)
-    end
     subject { DossierMailer.with(dossier:).notify_new_draft.deliver_now }
+    context 'not ignored error' do
+      before do
+        ActionMailer::Base.delivery_method = :dolist_api
+        api_error_response = { "ResponseStatus": { "ErrorCode": "Forbidden", "Message": "Blocked non authorized request", "Errors": [] } }
+        allow_any_instance_of(Dolist::API).to receive(:send_email).and_return(api_error_response)
+      end
 
-    it 'raise classic error to retry' do
-      expect { subject }.to raise_error(MailDeliveryError)
-      expect(EmailEvent.dolist_api.dispatch_error.count).to eq(1)
+      it 'raise classic error to retry' do
+        expect { subject }.to raise_error(MailDeliveryError)
+        expect(EmailEvent.dolist_api.dispatch_error.count).to eq(1)
+      end
+    end
+
+    context 'ignored error', vcr: { cassette_name: 'dolist_fetch_contact_status_hardbounce' } do
+      before do
+        ActionMailer::Base.delivery_method = :dolist_api
+        api_error_response = { "ResponseStatus" => { "ErrorCode" => "458", "Message" => "The contact is disabled.", "Errors" => [] } }
+        allow_any_instance_of(Dolist::API).to receive(:send_email).and_return(api_error_response)
+      end
+
+      it 'raise classic error to retry' do
+        expect { subject }.not_to raise_error
+      end
     end
   end
 
