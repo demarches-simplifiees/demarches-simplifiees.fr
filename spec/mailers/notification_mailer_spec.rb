@@ -124,4 +124,21 @@ RSpec.describe NotificationMailer, type: :mailer do
       it { expect(mail.subject.length).to be <= 100 }
     end
   end
+
+  describe 'subject with apostrophe' do
+    let(:procedure) { create(:simple_procedure, libelle: "Mon titre avec l'apostrophe") }
+    let(:dossier) { create(:dossier, :en_instruction, :with_individual, :with_service, user: user, procedure: procedure) }
+    let(:email_template) { create(:closed_mail, subject:, body: 'Your dossier was accepted. Thanks.') }
+
+    before do
+      dossier.procedure.closed_mail = email_template
+    end
+
+    subject(:mail) { described_class.send_accepte_notification(dossier) }
+
+    context "subject has a special character" do
+      let(:subject) { '--libellé démarche--' }
+      it { expect(mail.subject).to eq("Mon titre avec l'apostrophe") }
+    end
+  end
 end
