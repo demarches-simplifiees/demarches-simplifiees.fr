@@ -170,6 +170,7 @@ Rails.application.routes.draw do
     get ':champ_id/dossier_link', to: 'dossier_link#show', as: :dossier_link
     post ':champ_id/repetition', to: 'repetition#add', as: :repetition
     delete ':champ_id/repetition', to: 'repetition#remove'
+    delete ':champ_id/options', to: 'options#remove', as: :options
 
     get ':champ_id/carte/features', to: 'carte#index', as: :carte_features
     post ':champ_id/carte/features', to: 'carte#create'

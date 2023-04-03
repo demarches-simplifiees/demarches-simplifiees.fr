@@ -500,7 +500,9 @@ class TypeDeChamp < ApplicationRecord
 
   def self.refresh_after_update?(type_champ)
     case type_champ
-    when type_champs.fetch(:epci), type_champs.fetch(:communes)
+    when type_champs.fetch(:epci),
+      type_champs.fetch(:communes),
+      type_champs.fetch(:multiple_drop_down_list)
       true
     else
       false

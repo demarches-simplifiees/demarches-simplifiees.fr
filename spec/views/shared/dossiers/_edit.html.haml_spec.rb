@@ -101,7 +101,7 @@ describe 'shared/dossiers/edit.html.haml', type: :view do
       let(:champ_value) { ['banana', 'grapefruit'].to_json }
 
       it 'renders the list as a multiple-selection dropdown' do
-        expect(subject).to have_selector('[data-react-component-value="ComboMultipleDropdownList"]')
+        expect(subject).to have_selector('select')
       end
     end
   end
