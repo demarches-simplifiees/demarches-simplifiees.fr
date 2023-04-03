@@ -1,4 +1,4 @@
 ---
 fr:
-  postal_code: Code postal de la commune
-  not_found: Aucune commune trouvée pour le code postal %{postal_code}
+  postal_code: Renseignez le code postal puis sélectionnez la commune dans la liste
+  not_found: Aucune commune trouvée pour le code postal %{postal_code}. Verifiez que vous n'avez pas fait d’erreur.

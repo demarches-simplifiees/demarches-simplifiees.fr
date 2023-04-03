@@ -44,7 +44,7 @@ describe 'The user' do
     select('Australie', from: form_id_for('pays'))
     select('Martinique', from: form_id_for('regions'))
     select('02 – Aisne', from: form_id_for('departements'))
-    fill_in('Code postal de la commune', with: '60400')
+    fill_in('Renseignez le code postal puis sélectionnez la commune dans la liste', with: '60400')
     select('Brétigny (60400)', from: form_id_for('communes'))
 
     fill_in('dossier_link', with: '123')

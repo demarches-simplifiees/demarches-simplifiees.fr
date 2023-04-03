@@ -1,4 +1,4 @@
 ---
 en:
-  postal_code: Postal code of the municipality
-  not_found: No municipality found for postal code %{postal_code}
+  postal_code: Enter the postal code then select the municipality from the list
+  not_found: No municipality found for postal code %{postal_code}. Please check that you haven't made any mistakes.
