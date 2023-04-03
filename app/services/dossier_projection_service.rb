@@ -35,7 +35,7 @@ class DossierProjectionService
             types_de_champ: { stable_id: fields.map { |f| f[COLUMN] } },
             dossier_id: dossiers_ids
           )
-          .select(:dossier_id, :value, :type_de_champ_id, :stable_id, :type, :external_id, :data) # we cannot pluck :value, as we need the champ.to_s method
+          .select(:dossier_id, :value, :type_de_champ_id, :stable_id, :type, :external_id, :data, :value_json) # we cannot pluck :value, as we need the champ.to_s method
           .group_by(&:stable_id) # the champs are redispatched to their respective fields
           .map do |stable_id, champs|
             field = fields.find { |f| f[COLUMN] == stable_id.to_s }
