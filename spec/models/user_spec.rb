@@ -53,7 +53,7 @@ describe User, type: :model do
     let(:dossier) { create :dossier }
     let(:user) { dossier.user }
 
-    subject { user.invite? dossier.id }
+    subject { user.invite? dossier }
 
     context 'when user is invite at the dossier' do
       before do

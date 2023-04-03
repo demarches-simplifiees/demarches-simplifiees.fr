@@ -6,7 +6,7 @@ module Users
     layout 'procedure_context', only: [:identite, :update_identite, :siret, :update_siret]
 
     ACTIONS_ALLOWED_TO_ANY_USER = [:index, :recherche, :new, :transferer_all]
-    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :demande, :messagerie, :brouillon, :update_brouillon, :submit_brouillon, :modifier, :update, :create_commentaire, :papertrail, :restore]
+    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :destroy, :demande, :messagerie, :brouillon, :update_brouillon, :submit_brouillon, :modifier, :update, :create_commentaire, :papertrail, :restore]
 
     before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
     before_action :ensure_ownership_or_invitation!, only: ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
@@ -244,9 +244,13 @@ module Users
       end
     end
 
-    def delete_dossier
+    def destroy
       if dossier.can_be_deleted_by_user?
-        dossier.hide_and_keep_track!(current_user, :user_request)
+        if current_user.owns?(dossier)
+          dossier.hide_and_keep_track!(current_user, :user_request)
+        elsif current_user.invite?(dossier)
+          current_user.invites.where(dossier:).destroy_all
+        end
         flash.notice = t('users.dossiers.ask_deletion.soft_deleted_dossier')
         redirect_to dossiers_path
       else
