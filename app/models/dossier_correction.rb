@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: dossier_resolutions
+# Table name: dossier_corrections
 #
 #  id             :bigint           not null, primary key
 #  resolved_at    :datetime
@@ -9,7 +9,7 @@
 #  commentaire_id :bigint
 #  dossier_id     :bigint           not null
 #
-class DossierResolution < ApplicationRecord
+class DossierCorrection < ApplicationRecord
   belongs_to :dossier
   belongs_to :commentaire
 

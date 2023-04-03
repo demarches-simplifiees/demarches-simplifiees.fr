@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :dossier_resolution do
+  factory :dossier_correction do
     dossier
     commentaire
     resolved_at { nil }

@@ -47,13 +47,13 @@
 #  user_id                                            :integer
 #
 class Dossier < ApplicationRecord
+  include DossierCloneConcern
+  include DossierCorrectableConcern
   include DossierFilteringConcern
   include DossierPrefillableConcern
   include DossierRebaseConcern
-  include DossierResolvableConcern
   include DossierSearchableConcern
   include DossierSectionsConcern
-  include DossierCloneConcern
 
   enum state: {
     brouillon:       'brouillon',

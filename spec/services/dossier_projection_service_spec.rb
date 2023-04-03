@@ -250,19 +250,19 @@ describe DossierProjectionService do
       end
 
       context 'for dossier reolutions table' do
-        let(:table) { 'dossier_resolutions' }
+        let(:table) { 'dossier_corrections' }
         let(:column) { 'resolved_at' }
         let(:dossier) { create(:dossier, :en_construction) }
         subject { described_class.project(dossiers_ids, fields)[0] }
 
         context "when dossier has pending correction" do
-          before { create(:dossier_resolution, dossier:) }
+          before { create(:dossier_correction, dossier:) }
 
           it { expect(subject.pending_correction?).to be(true) }
         end
 
         context "when dossier has a resolved correction" do
-          before { create(:dossier_resolution, :resolved, dossier:) }
+          before { create(:dossier_correction, :resolved, dossier:) }
 
           it { expect(subject.pending_correction?).to eq(false) }
         end

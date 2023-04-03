@@ -524,12 +524,12 @@ describe Instructeurs::DossiersController, type: :controller do
         expect(DossierMailer).to have_received(:notify_pending_correction).with(dossier)
       end
 
-      it 'pass en_construction and create a pending resolution' do
+      it 'pass en_construction and create a pending correction' do
         expect(response).to have_http_status(:ok)
         expect(response.body).to include('en attente de modifications')
 
         expect(dossier.reload).to be_en_construction
-        expect(dossier).to be_pending_resolution
+        expect(dossier).to be_pending_correction
       end
 
       it 'create a comment with text body' do
@@ -549,7 +549,7 @@ describe Instructeurs::DossiersController, type: :controller do
         let(:message) { '' }
 
         it 'requires a message' do
-          expect(dossier.reload).not_to be_pending_resolution
+          expect(dossier.reload).not_to be_pending_correction
           expect(dossier.commentaires.count).to eq(0)
           expect(response.body).to include('Vous devez préciser')
         end
@@ -557,11 +557,11 @@ describe Instructeurs::DossiersController, type: :controller do
 
       context 'dossier already having pending corrections' do
         before do
-          create(:dossier_resolution, dossier:)
+          create(:dossier_correction, dossier:)
         end
 
-        it 'does not create an new pending resolution' do
-          expect { subject }.not_to change { DossierResolution.count }
+        it 'does not create an new pending correction' do
+          expect { subject }.not_to change { DossierCorrection.count }
         end
 
         it 'shows a flash alert' do
@@ -573,9 +573,9 @@ describe Instructeurs::DossiersController, type: :controller do
     end
 
     context 'dossier en_construction' do
-      it 'can create a pending resolution' do
+      it 'can create a pending correction' do
         subject
-        expect(dossier.reload).to be_pending_resolution
+        expect(dossier.reload).to be_pending_correction
         expect(dossier.commentaires.last).to be_flagged_pending_corrections
       end
     end
@@ -583,8 +583,8 @@ describe Instructeurs::DossiersController, type: :controller do
     context 'dossier is termine' do
       let(:dossier) { create(:dossier, :accepte, :with_individual, procedure: procedure) }
 
-      it 'does not create a pending resolution' do
-        expect { subject }.not_to change { DossierResolution.count }
+      it 'does not create a pending correction' do
+        expect { subject }.not_to change { DossierCorrection.count }
         expect(response.body).to include('Impossible')
       end
     end
