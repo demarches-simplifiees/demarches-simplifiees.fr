@@ -3,7 +3,7 @@ describe Administrateurs::TypesDeChampController, type: :controller do
     create(:procedure).tap do |p|
       p.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'l1')
       p.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'l2')
-      p.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'l3')
+      p.draft_revision.add_type_de_champ(type_champ: :drop_down_list, libelle: 'l3')
       p.draft_revision.add_type_de_champ(type_champ: :yes_no, libelle: 'bon dossier', private: true)
     end
   end
@@ -95,6 +95,21 @@ describe Administrateurs::TypesDeChampController, type: :controller do
         is_expected.to have_http_status(:ok)
         expect(assigns(:coordinate)).to be_nil
         expect(flash.alert).to eq(["Le champ « Libelle » doit être rempli"])
+      end
+    end
+
+    context 'rejected if type changed and routing involved' do
+      let(:params) do
+        default_params.deep_merge(type_de_champ: { type_champ: 'text', stable_id: third_coordinate.stable_id })
+      end
+
+      before do
+        allow_any_instance_of(ProcedureRevisionTypeDeChamp).to receive(:used_by_routing_rules?).and_return(true)
+      end
+
+      it do
+        is_expected.to have_http_status(:ok)
+        expect(flash.alert).to include("utilisé pour le routage")
       end
     end
   end
