@@ -20,7 +20,12 @@ module Administrateurs
     def update
       type_de_champ = draft.find_and_ensure_exclusive_use(params[:stable_id])
 
-      if type_de_champ.update(type_de_champ_update_params)
+      if type_de_champ.revision_type_de_champ.used_by_routing_rules? && changing_of_type?(type_de_champ)
+        coordinate = draft.coordinate_for(type_de_champ)
+        errors = "« #{type_de_champ.libelle} » est utilisé pour le routage, vous ne pouvez pas modifier son type."
+        @morphed = [champ_component_from(coordinate, focused: false, errors:)]
+        flash.alert = errors
+      elsif type_de_champ.update(type_de_champ_update_params)
         @coordinate = draft.coordinate_for(type_de_champ)
         @morphed = champ_components_starting_at(@coordinate)
 
@@ -86,6 +91,10 @@ module Administrateurs
 
     private
 
+    def changing_of_type?(type_de_champ)
+      type_de_champ_update_params['type_champ'].present? && (type_de_champ_update_params['type_champ'] != type_de_champ.type_champ)
+    end
+
     def champ_components_starting_at(coordinate, offset = 0)
       coordinate
         .siblings_starting_at(offset)
@@ -93,11 +102,12 @@ module Administrateurs
         .map { |c| champ_component_from(c) }
     end
 
-    def champ_component_from(coordinate, focused: false)
+    def champ_component_from(coordinate, focused: false, errors: '')
       TypesDeChampEditor::ChampComponent.new(
-        coordinate: coordinate,
+        coordinate:,
         upper_coordinates: coordinate.upper_siblings,
-        focused: focused
+        focused: focused,
+        errors:
       )
     end
 
