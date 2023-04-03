@@ -1,0 +1,65 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://apiv9.dolist.net/v1/contacts/read?AccountID=6636
+    body:
+      encoding: UTF-8
+      string: '{"Query":{"FieldValueList":[{"ID":7,"Value":"user1@user.com"}],"OutputFieldIDList":[72]}}'
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Api-Key:
+      - kikoolol
+      Expect:
+      - ''
+  response:
+    status:
+      code: 402
+      message: Blocked non authorized request
+    headers:
+      X-Gravitee-Transaction-Id:
+      - a523d0c6-b7ca-4b84-a3d0-c6b7ca0b8435
+      X-Gravitee-Request-Id:
+      - a523d0c6-b7ca-4b84-a3d0-c6b7ca0b8435
+      X-Rate-Limit-Limit:
+      - '1000'
+      X-Rate-Limit-Remaining:
+      - '999'
+      X-Rate-Limit-Reset:
+      - '1680531844686'
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Language:
+      - en-US
+      Vary:
+      - Accept
+      Server:
+      - Microsoft-HTTPAPI/2.0
+      Set-Cookie:
+      - ss-id=f2UL9ks3gCY2M235RP78;path=/;SameSite=Lax;HttpOnly
+      - ss-opt=temp;path=/;expires=Fri, 03 Apr 2043 14:14:06 GMT;SameSite=Lax;HttpOnly
+      - ss-pid=kpi2SCHQeKOz4ai05Naj;path=/;expires=Fri, 03 Apr 2043 14:14:06 GMT;SameSite=Lax;HttpOnly
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, PUT, DELETE, OPTIONS
+      Access-Control-Allow-Headers:
+      - origin, content-type, accept, x-api-key, x-api-internal
+      Access-Control-Max-Age:
+      - '600'
+      Date:
+      - Mon, 03 Apr 2023 14:14:06 GMT
+      Connection:
+      - close
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: '{"ID":1691,"SubscribeDate":"2022-10-19T14:24:12.9170000+02:00","UpdateDate":"2022-10-19T14:24:12.9170000+02:00","UnsubscribeDate":"2022-10-19T14:24:12.9170000+02:00","FieldList": [{"ID":7, "Value":"martin.fourcade@beta.gouv.fr"},  {"ID":31, "Value":""},  {"ID":36, "Value":""},  {"ID":44},  {"ID":10, "Value":"139"},  {"ID":72, "Value":"7"},  {"ID":74, "Value":""},  {"ID":43, "Value":""}]}'
+  recorded_at: Mon, 03 Apr 2023 14:14:06 GMT
+recorded_with: VCR 6.1.0

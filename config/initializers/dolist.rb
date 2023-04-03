@@ -15,12 +15,21 @@ ActiveSupport.on_load(:action_mailer) do
       def initialize(mail); end
 
       def deliver!(mail)
-        response = Dolist::API.new.send_email(mail)
-
+        client = Dolist::API.new
+        response = client.send_email(mail)
         if response&.dig("Result")
           mail.message_id = response.dig("Result")
         else
-          fail "DoList delivery error. Body: #{response}"
+          error_code = response&.dig("ResponseStatus", "ErrorCode")
+
+          contact_status = if client.ignorable_api_error_code?(error_code)
+            client.fetch_contact_status(mail.to.first)
+          else
+            nil
+          end
+          if !client.ignorable_contact_status?(contact_status)
+            fail "DoList delivery error. Body: #{response}"
+          end
         end
       end
     end
