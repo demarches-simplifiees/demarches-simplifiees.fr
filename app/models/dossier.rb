@@ -891,6 +891,8 @@ class Dossier < ApplicationRecord
       .processed_at
     save!
 
+    resolve_pending_correction!
+
     if !disable_notification
       NotificationMailer.send_en_instruction_notification(self).deliver_later
     end

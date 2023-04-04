@@ -77,4 +77,27 @@ describe DossierCorrectableConcern do
       end
     end
   end
+
+  describe "#resolve_pending_correction!" do
+    let(:dossier) { create(:dossier, :en_construction) }
+
+    subject(:resolve) { dossier.resolve_pending_correction! }
+    context "when dossier has no correction" do
+      it { expect { resolve }.not_to change { dossier.corrections.pending.count } }
+    end
+
+    context "when dossier has a pending correction" do
+      let!(:correction) { create(:dossier_correction, dossier:) }
+
+      it {
+        expect { resolve }.to change { correction.reload.resolved_at }.from(nil)
+      }
+    end
+
+    context "when dossier has a already resolved correction" do
+      before { create(:dossier_correction, :resolved, dossier:) }
+
+      it { expect { resolve }.not_to change { dossier.corrections.pending.count } }
+    end
+  end
 end
