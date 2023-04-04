@@ -860,22 +860,33 @@ describe ProcedureRevision do
       it { expect(subject.first.attribute).to eq(:condition) }
     end
 
-    context 'when a champ belongs to a repetition' do
+    context 'with a repetition' do
       let(:procedure) do
         create(:procedure,
                types_de_champ_public: [{ type: :repetition, children: [{ type: :integer_number }, { type: :text }] }])
       end
-      let(:condition) { ds_eq(constant(true), constant(1)) }
 
-      before do
+      let(:children_of_repetition) do
         repetition = procedure.draft_revision.types_de_champ_public.find(&:repetition?)
-        champs_repetition = procedure.draft_revision.children_of(repetition)
-        integer_champ = champs_repetition.first
-        text_champ = champs_repetition.last
-        text_champ.update(condition: condition)
+        procedure.draft_revision.children_of(repetition)
       end
 
-      it { expect(subject.first.attribute).to eq(:condition) }
+      let(:integer_champ) { children_of_repetition.first }
+      let(:text_champ) { children_of_repetition.last }
+
+      before { text_champ.update(condition: condition) }
+
+      context 'when a child champ has a valid condition' do
+        let(:condition) { ds_eq(champ_value(integer_champ.stable_id), constant(1)) }
+
+        it { is_expected.to be_empty }
+      end
+
+      context 'when a champ belongs to a repetition' do
+        let(:condition) { ds_eq(champ_value(-1), constant(1)) }
+
+        it { expect(subject.first.attribute).to eq(:condition) }
+      end
     end
   end
 
