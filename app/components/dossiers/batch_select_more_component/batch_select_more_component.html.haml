@@ -1,13 +1,13 @@
 %tr#js_batch_select_more.fr-background-alt--blue-france.hidden
   %td.fr-py-2w.text-center{ colspan: 100 }
     #not_selected
-      %p
+      %p{ role: "status" }
         = t('.pagination_files_selected_html')
         %button.fr-btn.fr-btn--sm.fr-btn--tertiary-no-outline{ data: not_selected_button_data }
           = not_selected_text
 
     #selected.hidden
-      %p
+      %p{ role: "status" }
         = selected_text
         %button.fr-btn.fr-btn--sm.fr-btn--tertiary-no-outline{ data: selected_button_data }
           = t(".delete_selection")
