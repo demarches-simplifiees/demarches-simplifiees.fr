@@ -25,7 +25,7 @@ class Champs::CommuneChamp < Champs::TextChamp
   before_validation :on_code_postal_change
 
   def for_export
-    [name, code, departement? ? departement_code_and_name : '']
+    [name, code? ? code : '', departement? ? departement_code_and_name : '']
   end
 
   def departement_name
