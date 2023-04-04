@@ -14,6 +14,7 @@ ActiveSupport.on_load(:action_mailer) do
     class ApiSender
       def initialize(mail); end
 
+
       def deliver!(mail)
         client = Dolist::API.new
         response = client.send_email(mail)
