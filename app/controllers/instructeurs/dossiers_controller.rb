@@ -13,7 +13,7 @@ module Instructeurs
     before_action :redirect_on_dossier_in_batch_operation, only: [:archive, :unarchive, :follow, :unfollow, :passer_en_instruction, :repasser_en_construction, :repasser_en_instruction, :terminer, :restore, :destroy, :extend_conservation]
     after_action :mark_demande_as_read, only: :show
 
-    after_action :mark_messagerie_as_read, only: [:messagerie, :create_commentaire]
+    after_action :mark_messagerie_as_read, only: [:messagerie, :create_commentaire, :pending_corrections]
     after_action :mark_avis_as_read, only: [:avis, :create_avis]
     after_action :mark_annotations_privees_as_read, only: [:annotations_privees, :update_annotations]
 

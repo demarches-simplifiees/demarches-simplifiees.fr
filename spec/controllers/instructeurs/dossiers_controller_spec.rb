@@ -512,6 +512,8 @@ describe Instructeurs::DossiersController, type: :controller do
 
       allow(DossierMailer).to receive(:notify_pending_correction)
         .and_return(double(deliver_later: nil))
+
+      expect(controller.current_instructeur).to receive(:mark_tab_as_seen).with(dossier, :messagerie)
     end
 
     context "dossier en instruction" do
