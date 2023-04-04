@@ -120,21 +120,25 @@ describe Administrateur, type: :model do
     end
 
     context 'when both admins have a service with the same name' do
-      let(:service_1) { create(:service, nom: 'S', administrateur: old_admin) }
-      let(:service_2) { create(:service, nom: 'S', administrateur: new_admin) }
-      let(:procedure_1) { create(:procedure, service: service_1) }
-
-      before do
-        service_1
-        service_2
-        procedure_1
-        subject
-        [new_admin, old_admin, service_2].map(&:reload)
-      end
+      let!(:service_1) { create(:service, nom: 'S', administrateur: old_admin) }
+      let!(:service_2) { create(:service, nom: 'S', administrateur: new_admin) }
+      let!(:procedure_1) { create(:procedure, service: service_1) }
 
       it 'removes the service from the old one' do
+        subject
+        [new_admin, old_admin, service_2].map(&:reload)
+
         expect(old_admin.services).to be_empty
         expect(service_2.procedures).to include(procedure_1)
+      end
+
+      context 'and a discarded procedure use this service' do
+        let!(:procedure_1) { create(:procedure, :discarded, service: service_1) }
+        let!(:procedure_2) { create(:procedure, :discarded, service: service_1) }
+
+        it 'transfers old service to targeted_administrateur' do
+          expect { subject }.not_to raise_error
+        end
       end
     end
 

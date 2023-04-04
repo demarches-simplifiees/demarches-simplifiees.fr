@@ -118,7 +118,7 @@ class Administrateur < ApplicationRecord
     old_services.each do |old_service|
       corresponding_service = new_service_by_nom[old_service.nom]
       if corresponding_service.present?
-        old_service.procedures.update_all(service_id: corresponding_service.id)
+        old_service.procedures.with_discarded.update_all(service_id: corresponding_service.id)
         old_service.destroy
       else
         old_service.update_column(:administrateur_id, id)
