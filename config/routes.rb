@@ -178,7 +178,7 @@ Rails.application.routes.draw do
 
     get ':champ_id/piece_justificative(/:h)', to: 'piece_justificative#show', as: :piece_justificative
     put ':champ_id/piece_justificative', to: 'piece_justificative#update', as: :attach_piece_justificative
-    get ':champ_id/piece_justificative/download/:h', to: 'piece_justificative#download', as: :piece_justificative_download
+    get ':champ_id/piece_justificative/download/:h/(:i)', to: 'piece_justificative#download', as: :piece_justificative_download
   end
 
   resources :attachments, only: [:show, :destroy]

@@ -4,7 +4,7 @@ class Champs::PieceJustificativeController < ApplicationController
 
   def show
     # pf used to redirect to this route to download PJ ==> if param h is present (old pf link) then redirect to new route
-    return redirect_to champs_piece_justificative_download_path(params) if params[:h].present?
+    return redirect_to champs_piece_justificative_download_path({ champ_id: params[:champ_id], h: params[:h] }) if params[:h].present?
 
     respond_to do |format|
       format.turbo_stream
@@ -24,19 +24,28 @@ class Champs::PieceJustificativeController < ApplicationController
     champ = find_champ
 
     if champ&.is_a? Champs::PieceJustificativeChamp
-      blob = champ.piece_justificative_file
-      if blob.filename.extension == 'pdf' && champ.dossier.procedure.feature_enabled?(:qrcoded_pdf)
-        url = Rails.application.routes.url_helpers.champs_piece_justificative_download_url(
-          { champ_id: champ.id, h: champ.encoded_date(:created_at) }
-        )
-        send_data StampService.new.stamp(blob, url), filename: blob.filename.to_s, type: 'application/pdf'
+      index = (params[:i] || "0").to_i
+      if (0..champ.piece_justificative_file.size).cover?(index)
+        blob = champ.piece_justificative_file[index]
+        if blob.filename.extension == 'pdf' && champ.dossier.procedure.feature_enabled?(:qrcoded_pdf)
+          send_data StampService.new.stamp(blob, download_url(champ, index)), filename: blob.filename.to_s, type: 'application/pdf'
+        else
+          redirect_to blob.service_url, status: :found
+        end
       else
-        redirect_to blob.service_url, status: :found
+        flash.alert = "Le document demandé n'existe pas."
+        redirect_to :root, status: :bad_request
       end
     else
       flash.alert = "Le document demandé n'existe pas ou vous n'avez pas l'autorisation d'y accéder."
       redirect_to :root, status: :bad_request
     end
+  end
+
+  def download_url(champ, index)
+    Rails.application.routes.url_helpers.champs_piece_justificative_download_url(
+      { champ_id: champ.id, h: champ.encoded_date(:created_at), i: index }
+    )
   end
 
   private

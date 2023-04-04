@@ -22,9 +22,11 @@ describe Champs::PieceJustificativeController, type: :controller do
       annotation.reload
       {
         champ_id: annotation.id.to_s,
-        h: annotation.encoded_date(:created_at)
+        h: annotation.encoded_date(:created_at),
+        i: 0
       }
     end
+
     subject do
       get :download, params: params
     end
@@ -68,6 +70,19 @@ describe Champs::PieceJustificativeController, type: :controller do
         context 'when created_date is wrong' do
           let(:params) { { champ_id: annotation.id.to_s, h: 'x' } }
           it_behaves_like "he can't download pdf"
+        end
+      end
+
+      context 'using legacy link' do
+        subject do
+          params.delete(:i)
+          get :show, params: params
+        end
+
+        it 'is redirected to download url' do
+          subject
+          expect(response.status).to eq(302)
+          expect(response.location).to include("#{params[:champ_id]}/piece_justificative/download/#{params[:h]}")
         end
       end
     end
