@@ -47,7 +47,7 @@
 
     - if has_delete_action
       - menu.with_item(class: 'danger') do
-        = link_to(delete_dossier_dossier_path(dossier), role: 'menuitem', method: :patch, data: { disable: true, confirm: "En continuant, vous allez supprimer ce dossier ainsi que les informations qu’il contient. Toute suppression entraîne l’annulation de la démarche en cours.\n\nConfirmer la suppression ?" }) do
+        = link_to(dossier_path(dossier), role: 'menuitem', method: :delete, data: { disable: true, confirm: "En continuant, vous allez supprimer ce dossier ainsi que les informations qu’il contient. Toute suppression entraîne l’annulation de la démarche en cours.\n\nConfirmer la suppression ?" }) do
 
           %span.icon.delete
           .dropdown-description

@@ -307,7 +307,7 @@ Rails.application.routes.draw do
       get '/:path/france_connect', action: 'france_connect', as: :france_connect
     end
 
-    resources :dossiers, only: [:index, :show, :new] do
+    resources :dossiers, only: [:index, :show, :destroy, :new] do
       member do
         get 'identite'
         patch 'update_identite'
@@ -324,7 +324,6 @@ Rails.application.routes.draw do
         get 'demande'
         get 'messagerie'
         post 'commentaire' => 'dossiers#create_commentaire'
-        patch 'delete_dossier'
         patch 'restore', to: 'dossiers#restore'
         get 'attestation'
         get 'transferer', to: 'dossiers#transferer'
