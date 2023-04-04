@@ -10,7 +10,11 @@ module Types
         when Individual
           Types::PersonnePhysiqueType
         when Etablissement
-          Types::PersonneMoraleType
+          if object.as_degraded_mode? && context.has_fragment?(:PersonneMoraleIncomplete)
+            Types::PersonneMoraleIncompleteType
+          else
+            Types::PersonneMoraleType
+          end
         end
       end
     end

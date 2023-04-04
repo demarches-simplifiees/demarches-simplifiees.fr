@@ -253,12 +253,14 @@ class API::V2::StoredQuery
       ...GroupeInstructeurFragment
     }
     demandeur {
+      __typename
       ... on PersonnePhysique {
         civilite
         nom
         prenom
         dateDeNaissance
       }
+      ... on PersonneMoraleIncomplete { siret }
       ...PersonneMoraleFragment
     }
     demarche {

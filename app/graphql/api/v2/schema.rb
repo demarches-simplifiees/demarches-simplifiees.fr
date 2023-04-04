@@ -78,6 +78,7 @@ class API::V2::Schema < GraphQL::Schema
     Types::GeoAreas::ParcelleCadastraleType,
     Types::GeoAreas::SelectionUtilisateurType,
     Types::PersonneMoraleType,
+    Types::PersonneMoraleIncompleteType,
     Types::PersonnePhysiqueType,
     Types::Champs::Descriptor::AddressChampDescriptorType,
     Types::Champs::Descriptor::AnnuaireEducationChampDescriptorType,
