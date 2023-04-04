@@ -56,7 +56,7 @@ class Champs::CommuneChamp < Champs::TextChamp
     if code?
       "#{APIGeoService.commune_name(code_departement, code)} (#{code_postal_with_fallback})"
     else
-      value
+      value.present? ? value.to_s : ''
     end
   end
 
