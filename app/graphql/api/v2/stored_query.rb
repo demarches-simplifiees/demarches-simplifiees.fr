@@ -493,21 +493,33 @@ class API::V2::StoredQuery
       address {
         ...AddressFragment
       }
-    }
-    ... on CommuneChamp {
       commune {
+        ...CommuneFragment
+      }
+      departement {
+        ...DepartementFragment
+      }
+    }
+    ... on EpciChamp {
+      epci {
         name
         code
       }
       departement {
-        name
-        code
+        ...DepartementFragment
+      }
+    }
+    ... on CommuneChamp {
+      commune {
+        ...CommuneFragment
+      }
+      departement {
+        ...DepartementFragment
       }
     }
     ... on DepartementChamp {
       departement {
-        name
-        code
+        ...DepartementFragment
       }
     }
     ... on RegionChamp {
@@ -588,6 +600,17 @@ class API::V2::StoredQuery
     departmentCode
     regionName
     regionCode
+  }
+
+  fragment DepartementFragment on Departement {
+    name
+    code
+  }
+
+  fragment CommuneFragment on Commune {
+    name
+    code
+    postalCode
   }
 
   fragment PageInfoFragment on PageInfo {

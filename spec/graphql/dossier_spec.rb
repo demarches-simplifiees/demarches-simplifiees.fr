@@ -48,7 +48,11 @@ RSpec.describe Types::DossierType, type: :graphql do
       }
     end
 
+    let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
+
     before do
+      allow(Rails).to receive(:cache).and_return(memory_store)
+      Rails.cache.clear
       dossier.champs_public.second.update(data: address)
     end
 
@@ -56,6 +60,9 @@ RSpec.describe Types::DossierType, type: :graphql do
       expect(data[:dossier][:champs][0][:__typename]).to eq "CommuneChamp"
       expect(data[:dossier][:champs][1][:__typename]).to eq "AddressChamp"
       expect(data[:dossier][:champs][2][:__typename]).to eq "SiretChamp"
+      expect(data[:dossier][:champs][1][:commune][:code]).to eq('75119')
+      expect(data[:dossier][:champs][1][:commune][:postalCode]).to eq('75019')
+      expect(data[:dossier][:champs][1][:departement][:code]).to eq('75')
       expect(data[:dossier][:champs][2][:etablissement][:siret]).to eq dossier.champs_public[2].etablissement.siret
       expect(data[:dossier][:champs][0][:id]).to eq(data[:dossier][:revision][:champDescriptors][0][:id])
     end
@@ -288,6 +295,13 @@ RSpec.describe Types::DossierType, type: :graphql do
           address {
             ...AddressFragment
           }
+          commune {
+            ...CommuneFragment
+          }
+          departement {
+            name
+            code
+          }
         }
         ... on SiretChamp {
           etablissement {
@@ -302,9 +316,15 @@ RSpec.describe Types::DossierType, type: :graphql do
     commune {
       ...CommuneFragment
     }
+    departement {
+      name
+      code
+    }
   }
   fragment CommuneFragment on Commune {
+    name
     code
+    postalCode
   }
   fragment AddressFragment on Address {
     type
