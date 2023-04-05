@@ -183,6 +183,16 @@ RSpec.describe Types::DossierType, type: :graphql do
     }
   end
 
+  describe 'dossier with motivation attachment' do
+    let(:dossier) { create(:dossier, :accepte, :with_motivation, :with_justificatif) }
+    let(:query) { DOSSIER_WITH_MOTIVATION_QUERY }
+    let(:variables) { { number: dossier.id } }
+
+    it {
+      expect(data[:dossier][:motivationAttachment][:url]).not_to be_nil
+    }
+  end
+
   DOSSIER_QUERY = <<-GRAPHQL
   query($number: Int!) {
     dossier(number: $number) {
@@ -215,6 +225,16 @@ RSpec.describe Types::DossierType, type: :graphql do
         state
       }
       dateExpiration
+    }
+  }
+  GRAPHQL
+
+  DOSSIER_WITH_MOTIVATION_QUERY = <<-GRAPHQL
+  query($number: Int!) {
+    dossier(number: $number) {
+      motivationAttachment {
+        url
+      }
     }
   }
   GRAPHQL

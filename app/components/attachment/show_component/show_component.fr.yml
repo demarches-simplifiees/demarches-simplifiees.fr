@@ -1,2 +1,6 @@
 ---
 fr:
+  virus_not_analyzed: ce fichier n’a pas été analysé par notre antivirus, téléchargez-le avec précaution
+  errors:
+    virus_infected: "Virus détecté, le téléchargement est bloqué."
+    corrupted_file: "Le fichier est corrompu, le téléchargement est bloqué."

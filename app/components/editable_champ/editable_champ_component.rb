@@ -18,7 +18,10 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
 
   def html_options
     {
-      class: "editable-champ-#{@champ.type_champ} #{'hidden' if !@champ.visible?}",
+      class: class_names(
+        "editable-champ-#{@champ.type_champ}": true,
+        "hidden": !@champ.visible?
+      ),
       id: @champ.input_group_id,
       data: { controller: stimulus_controller, block: @champ.block? }
     }

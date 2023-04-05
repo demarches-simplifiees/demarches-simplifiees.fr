@@ -15,7 +15,7 @@
       - else
         %td.libelle{ class: repetition ? 'padded' : '' }
           = "#{c.libelle} :"
-        %td.rich-text
+        %td.rich-text{ class: c.type_champ }
           %div{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
             - case c.type_champ
             - when TypeDeChamp.type_champs.fetch(:carte)

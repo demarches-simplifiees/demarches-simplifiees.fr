@@ -24,12 +24,12 @@ class Champs::PieceJustificativeChamp < Champ
   FILE_MAX_SIZE = 200.megabytes
 
   validates :piece_justificative_file,
-    size: { less_than: FILE_MAX_SIZE },
-    if: -> { !type_de_champ.skip_pj_validation }
+            size: { less_than: FILE_MAX_SIZE },
+            if: -> { !type_de_champ.skip_pj_validation }
 
   validates :piece_justificative_file,
-    content_type: AUTHORIZED_CONTENT_TYPES,
-    if: -> { !type_de_champ.skip_content_type_pj_validation }
+            content_type: AUTHORIZED_CONTENT_TYPES,
+            if: -> { !type_de_champ.skip_content_type_pj_validation }
 
   def main_value_name
     :piece_justificative_file
@@ -44,25 +44,33 @@ class Champs::PieceJustificativeChamp < Champ
   end
 
   def for_export
-    piece_justificative_file.filename.to_s if piece_justificative_file.attached?
+    piece_justificative_file.map { _1.filename.to_s }
   end
 
   def for_api
-    if piece_justificative_file.attached? && (piece_justificative_file.virus_scanner.safe? || piece_justificative_file.virus_scanner.pending?)
-      piece_justificative_file.service_url
+    return nil unless piece_justificative_file.attached?
+
+    piece_justificative_file.filter_map do |attachment|
+      if attachment.virus_scanner.safe? || attachment.virus_scanner.pending?
+        attachment.service_url
+      end
     end
   end
 
   def for_tag
-    if piece_justificative_file.attached? && (piece_justificative_file.virus_scanner.safe? || piece_justificative_file.virus_scanner.pending?)
-      url = Rails.application.routes.url_helpers.champs_piece_justificative_download_url({ champ_id: id, h: encoded_date(:created_at) })
-      display = piece_justificative_file.filename
-      if piece_justificative_file.image?
-        tag.img '', src: url, width: '100', id: piece_justificative_file.id, display: display
-      else
-        tag.a display, href: url, target: '_blank', rel: 'noopener', title: "Télécharger la pièce jointe"
+    return nil unless piece_justificative_file.attached?
+
+    piece_justificative_file.each_with_index.filter_map do |attachment, i|
+      if attachment.virus_scanner.safe? || attachment.virus_scanner.pending?
+        url = Rails.application.routes.url_helpers.champs_piece_justificative_download_url({ champ_id: id, h: encoded_date(:created_at), i: })
+        display = attachment.filename
+        if attachment.image?
+          tag.img '', src: url, width: '100', id: attachment.id, display: display
+        else
+          tag.a display, href: url, target: '_blank', rel: 'noopener', title: "Télécharger la pièce jointe"
+        end
       end
-    end
+    end.join(',<br> ')
   end
 
   def update_skip_pj_validation

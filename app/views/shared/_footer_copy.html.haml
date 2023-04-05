@@ -1,4 +1,2 @@
 .fr-footer__bottom-copy
-  %p
-    Sauf mention contraire, tous les contenus de ce site sont sous
-    %a{ href: "https://github.com/etalab/licence-ouverte/blob/master/LO.md", target:"_blank", rel: "noopener", title: new_tab_suffix("licence etalab-2.0") } licence etalab-2.0
+  %p= t("links.footer.copy_html", link: link_to(t("links.footer.license"), "https://github.com/etalab/licence-ouverte/blob/master/LO.md", title: new_tab_suffix("licence etalab-2.0"), **external_link_attributes))

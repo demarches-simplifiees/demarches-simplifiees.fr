@@ -199,6 +199,7 @@ en:
           more_information: More informations
         identite:
           identity_data: Identity data
+          all_required: All fields are required.
           civility: Civility
           first_name: First Name
           last_name: Last Name
@@ -220,6 +221,7 @@ en:
         show:
           header:
             edit_dossier: Edit my file
+            edit_dossier_title: "Edit my file - You can modify your file as long as it has not been sent for processing"
             summary: "Summary"
             request: "Request"
             mailbox: "Mailbox"

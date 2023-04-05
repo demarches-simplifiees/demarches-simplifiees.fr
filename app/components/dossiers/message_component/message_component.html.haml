@@ -17,7 +17,7 @@
         = t('.delete_button')
 
     - if commentaire.piece_jointe.attached?
-      .attachment-link
+      .fr-ml-2w
         = render Attachment::ShowComponent.new(attachment: commentaire.piece_jointe.attachment)
 
     - if show_reply_button?

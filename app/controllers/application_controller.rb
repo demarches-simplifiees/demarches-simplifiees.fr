@@ -375,4 +375,8 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+
+  def cast_bool(value)
+    ActiveRecord::Type::Boolean.new.deserialize(value)
+  end
 end

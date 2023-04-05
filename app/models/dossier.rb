@@ -5,6 +5,8 @@
 #  id                                                 :integer          not null, primary key
 #  api_entreprise_job_exceptions                      :string           is an Array
 #  archived                                           :boolean          default(FALSE)
+#  archived_at                                        :datetime
+#  archived_by                                        :string
 #  autorisation_donnees                               :boolean
 #  brouillon_close_to_expiration_notice_sent_at       :datetime
 #  conservation_extension                             :interval         default(0 seconds)
@@ -260,16 +262,16 @@ class Dossier < ApplicationRecord
     includes(champs_public: [
       :type_de_champ,
       :geo_areas,
-      piece_justificative_file_attachment: :blob,
-      champs: [:type_de_champ, piece_justificative_file_attachment: :blob]
+      piece_justificative_file_attachments: :blob,
+      champs: [:type_de_champ, piece_justificative_file_attachments: :blob]
     ])
   }
   scope :with_annotations, -> {
     includes(champs_private: [
       :type_de_champ,
       :geo_areas,
-      piece_justificative_file_attachment: :blob,
-      champs: [:type_de_champ, piece_justificative_file_attachment: :blob]
+      piece_justificative_file_attachments: :blob,
+      champs: [:type_de_champ, piece_justificative_file_attachments: :blob]
     ])
   }
   scope :for_api, -> {
@@ -278,7 +280,7 @@ class Dossier < ApplicationRecord
       .includes(commentaires: { piece_jointe_attachment: :blob },
         justificatif_motivation_attachment: :blob,
         attestation: [],
-        avis: { piece_justificative_file_attachment: :blob },
+        avis: { piece_justificative_file_attachments: :blob },
         traitement: [],
         etablissement: [],
         individual: [],
@@ -637,14 +639,12 @@ class Dossier < ApplicationRecord
     end
   end
 
-  def archiver!(author)
-    update!(archived: true)
-    log_dossier_operation(author, :archiver)
+  def archiver!(instructeur)
+    update!(archived: true, archived_at: Time.zone.now, archived_by: instructeur.email)
   end
 
-  def desarchiver!(author)
-    update!(archived: false)
-    log_dossier_operation(author, :desarchiver)
+  def desarchiver!
+    update!(archived: false, archived_at: nil, archived_by: nil)
   end
 
   def text_summary

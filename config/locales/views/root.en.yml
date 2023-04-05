@@ -1,0 +1,28 @@
+---
+en:
+  root:
+    landing:
+      promise: |
+        Carry out
+        an administrative procedure
+        online
+      have_a_procedure: You wish to make a request to an administration?
+      fill_procedure: Make your requests easily and find your files online
+      how_to_find_procedure: How do I find my procedure?
+      our_numbers: "%{name} in numbers"
+      numbers:
+        administrations: |
+          partner
+          administrations
+        files: |
+          files
+          submitted
+        processing_time: |
+          reduction
+          in processing time
+      question: A question, a problem?
+      answer_in_faq: The answer is in the online help
+      online_help: Access the online help
+      administration_dematerialize: "Administration: do you want to go paperless?"
+      administration_fill_online: Offer your users the possibility to fill in their files online
+      administration_discover: Find out more about our tool

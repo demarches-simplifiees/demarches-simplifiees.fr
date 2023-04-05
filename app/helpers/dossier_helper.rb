@@ -29,6 +29,10 @@ module DossierHelper
     new_dossier_url(procedure_id: revision.procedure.id, brouillon: revision.draft? ? true : nil)
   end
 
+  def commencer_dossier_vide_for_revision_path(revision)
+    revision.draft? ? commencer_dossier_vide_test_path(path: revision.procedure.path) : commencer_dossier_vide_path(path: revision.procedure.path)
+  end
+
   def dossier_submission_is_closed?(dossier)
     dossier.brouillon? && dossier.procedure.close?
   end
