@@ -11,11 +11,18 @@ en:
         instructors_group: Group of instructors
       add_instructeur:
         wrong_address:
-          one: "%{value} is not a valid email address"
-          other: "%{value} are not valid email addresses"
+          one: "%{emails} is not a valid email address"
+          other: "%{emails} are not valid email addresses"
         assignment:
-          one: "The instructor %{value} was assigned to the group « %{groupe} »."
-          other: "The instructors %{value} were assigned to the group « %{groupe} »."
+          one: "The instructor %{emails} was assigned to the group « %{groupe} »."
+          other: "The instructors %{emails} were assigned to the group « %{groupe} »."
+        email_body:
+          one: "The instructor %{emails} was assigned to the group « %{groupe} » by « %{email} », in charge of procedure « %{procedure} »."
+          other: "The instructors %{emails} were assigned to the group « %{groupe} » by « %{email} », in charge of procedure « %{procedure} »."
+      remove_instructeur:
+        email_body:
+          one: "The instructor %{emails} was removed from the group « %{groupe} » by « %{email} », in charge of procedure « %{procedure} »."
+          other: "The instructors %{emails} were removed from the group « %{groupe} » by « %{email} », in charge of procedure « %{procedure} »."
       reaffecter_dossiers:
         existing_groupe:
           one: "%{count} group exist"
