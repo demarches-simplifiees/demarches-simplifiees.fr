@@ -3085,6 +3085,11 @@ type PersonneMorale implements Demandeur {
   typeVoie: String @deprecated(reason: "Utilisez le champ `address.street_address` à la place.")
 }
 
+type PersonneMoraleIncomplete implements Demandeur {
+  id: ID!
+  siret: String!
+}
+
 type PersonnePhysique implements Demandeur {
   civilite: Civilite
   dateDeNaissance: ISO8601Date
