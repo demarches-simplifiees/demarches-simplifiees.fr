@@ -225,6 +225,16 @@ class ProcedureRevision < ApplicationRecord
     types_de_champ_public.any?(&:carte?)
   end
 
+  def coordinate_and_tdc(stable_id)
+    return [nil, nil] if stable_id.blank?
+
+    coordinate = revision_types_de_champ
+      .joins(:type_de_champ)
+      .find_by(type_de_champ: { stable_id: stable_id })
+
+    [coordinate, coordinate&.type_de_champ]
+  end
+
   private
 
   def compute_estimated_fill_duration
@@ -243,16 +253,6 @@ class ProcedureRevision < ApplicationRecord
       tdc_as_json = tdcs_as_json.find { |json| json["id"] == parent_tdc.stable_id }
       tdc_as_json&.merge!(types_de_champ: children_of(parent_tdc).includes(piece_justificative_template_attachment: :blob).map(&:as_json_for_editor))
     end
-  end
-
-  def coordinate_and_tdc(stable_id)
-    return [nil, nil] if stable_id.blank?
-
-    coordinate = revision_types_de_champ
-      .joins(:type_de_champ)
-      .find_by(type_de_champ: { stable_id: stable_id })
-
-    [coordinate, coordinate&.type_de_champ]
   end
 
   def renumber(siblings)
