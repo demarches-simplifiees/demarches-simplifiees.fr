@@ -157,5 +157,20 @@ describe Administrateurs::TypesDeChampController, type: :controller do
       expect(assigns(:destroyed).libelle).to eq('l2')
       expect(morpheds).to eq([['l3', ['l1']]])
     end
+
+    context 'rejected if type changed and routing involved' do
+      let(:params) do
+        { procedure_id: procedure.id, stable_id: third_coordinate.stable_id }
+      end
+
+      before do
+        allow_any_instance_of(ProcedureRevisionTypeDeChamp).to receive(:used_by_routing_rules?).and_return(true)
+      end
+
+      it do
+        is_expected.to have_http_status(:ok)
+        expect(flash.alert).to include("utilisé pour le routage")
+      end
+    end
   end
 end
