@@ -4,6 +4,7 @@ class Procedure::RoutingRulesComponent < ApplicationComponent
   def initialize(revision:, groupe_instructeurs:)
     @revision = revision
     @groupe_instructeurs = groupe_instructeurs
+    @procedure_id = revision.procedure_id
   end
 
   def rows
