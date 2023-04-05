@@ -23,12 +23,4 @@ describe 'experts/avis/instruction.html.haml', type: :view do
     let(:confidentiel) { false }
     it { is_expected.to have_text("Cet avis est partagé avec les autres experts") }
   end
-
-  context 'when an expert is not allowed to invite another expert' do
-    let(:confidentiel) { false }
-    before do
-      Flipper.enable(:expert_not_allowed_to_invite, avis.procedure)
-    end
-    it { is_expected.to have_no_text("Inviter des personnes à donner leur avis") }
-  end
 end

@@ -326,26 +326,6 @@ describe Experts::AvisController, type: :controller do
       end
     end
 
-    describe '#expert_cannot_invite_another_expert' do
-      let!(:previous_avis) { create(:avis, dossier: dossier, claimant: claimant, experts_procedure: experts_procedure, confidentiel: previous_avis_confidentiel) }
-      let(:previous_avis_confidentiel) { false }
-      let(:asked_confidentiel) { false }
-      let(:intro) { 'introduction' }
-      let(:emails) { "[\"toto@totomail.com\"]" }
-      let(:invite_linked_dossiers) { nil }
-
-      before do
-        Flipper.enable_actor(:expert_not_allowed_to_invite, procedure)
-        post :create_avis, params: { id: previous_avis.id, procedure_id: procedure.id, avis: { emails: emails, introduction: intro, confidentiel: asked_confidentiel, invite_linked_dossiers: invite_linked_dossiers, introduction_file: @introduction_file } }
-      end
-
-      context 'when the expert cannot invite another expert' do
-        let(:asked_confidentiel) { false }
-        it { expect(flash.alert).to eq("Cette démarche ne vous permet pas de demander un avis externe") }
-        it { expect(response).to redirect_to(instruction_expert_avis_path(procedure, previous_avis)) }
-      end
-    end
-
     describe '#create_avis' do
       let(:previous_avis_confidentiel) { false }
       let(:previous_revoked_at) { nil }
