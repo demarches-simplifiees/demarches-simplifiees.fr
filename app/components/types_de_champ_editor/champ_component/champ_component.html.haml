@@ -6,6 +6,10 @@
         .icon.delete
         %span.sr-only Supprimer
 
+  - if @errors.present?
+    .types-de-champ-errors
+      = @errors
+
   .flex.justify-start.section.ml-1
     = form_for(type_de_champ, form_options) do |form|
       .flex.justify-start
