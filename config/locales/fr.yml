@@ -371,8 +371,8 @@ fr:
           title: Sélectionner un filtre
         select_all: Tout selectionner
         batch_operation:
-          enabled: "Ajouter ce dossier à la selection pour un traitement de masse"
-          disabled: "Impossible d'ajouter ce dossier à la selection car il est déjà dans un traitement de masse"
+          enabled: "Ajouter le dossier %{dossier_id} à la selection pour un traitement de masse"
+          disabled: "Impossible d'ajouter le dossier %{dossier_id} à la selection car il est déjà dans un traitement de masse"
         show_deleted_dossiers: Afficher les dossiers supprimés
         personalize: Personnaliser le tableau
         download: Télécharger un dossier
