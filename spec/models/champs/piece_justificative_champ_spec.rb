@@ -61,17 +61,17 @@ describe Champs::PieceJustificativeChamp do
 
     context 'when file is safe' do
       let(:status) { ActiveStorage::VirusScanner::SAFE }
-      it { is_expected.to match_array([include("/rails/active_storage/disk/")]) }
+      it { is_expected.to include("/rails/active_storage/disk/") }
     end
 
     context 'when file is not scanned' do
       let(:status) { ActiveStorage::VirusScanner::PENDING }
-      it { is_expected.to match_array([include("/rails/active_storage/disk/")]) }
+      it { is_expected.to include("/rails/active_storage/disk/") }
     end
 
     context 'when file is infected' do
       let(:status) { ActiveStorage::VirusScanner::INFECTED }
-      it { is_expected.to eq([]) }
+      it { is_expected.to be_nil }
     end
   end
 end
