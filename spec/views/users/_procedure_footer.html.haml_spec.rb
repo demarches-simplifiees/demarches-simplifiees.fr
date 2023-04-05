@@ -30,12 +30,12 @@ describe 'users/procedure_footer.html.haml', type: :view do
   describe '#cadre_juridique' do
     context 'when an external link is provided' do
       before { dossier.procedure.update(cadre_juridique: "http://google.fr") }
-      it { is_expected.to have_link("Texte cadrant la demande d'information", href: 'http://google.fr') }
+      it { is_expected.to have_link("Texte cadrant la demande d’information", href: 'http://google.fr') }
     end
 
     context 'when there is deliberation attached' do
       before { dossier.procedure.update(cadre_juridique: nil, deliberation: fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf')) }
-      it { is_expected.to have_link("Texte cadrant la demande d'information") }
+      it { is_expected.to have_link("Texte cadrant la demande d’information") }
     end
   end
 

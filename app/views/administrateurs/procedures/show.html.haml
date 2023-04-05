@@ -10,7 +10,7 @@
         %span.icon.download
         Télécharger
 
-      = link_to @procedure.active_revision.draft? ? commencer_dossier_vide_test_path(path: @procedure.path) : commencer_dossier_vide_path(path: @procedure.path), target: "_blank", rel: "noopener", class: 'button', id: "pdf-procedure" do
+      = link_to commencer_dossier_vide_for_revision_path(@procedure.active_revision), target: "_blank", rel: "noopener", class: 'button', id: "pdf-procedure" do
         %span.icon.printer
         PDF
 

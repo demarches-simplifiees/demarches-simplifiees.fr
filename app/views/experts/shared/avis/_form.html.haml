@@ -3,7 +3,7 @@
     %h1.tab-title Inviter des personnes à donner leur avis
     %p.avis-notice Les invités pourront consulter le dossier, donner un avis et contribuer au fil de messagerie. Ils ne pourront pas modifier le dossier.
 
-    = form_for avis, url: url, html: { class: 'form', data: { controller: 'persisted-form', persisted_form_key_value: dom_id(@avis.dossier, :avis_by_expert) } } do |f|
+    = form_for avis, url: url, html: { class: 'form', multipart: true, data: { controller: 'persisted-form', persisted_form_key_value: dom_id(@avis.dossier, :avis_by_expert) } } do |f|
       = hidden_field_tag  'avis[emails]', nil
       = react_component("ComboMultiple",
           options: [], selected: [], disabled: [],
@@ -14,7 +14,7 @@
       = f.text_area :introduction, rows: 3, value: avis.introduction || 'Bonjour, merci de me donner votre avis sur ce dossier.', required: true
       %p.tab-title Ajouter une pièce jointe
       .form-group
-        = render Attachment::EditComponent.new(form: f, attached_file: avis.introduction_file, user_can_destroy: true)
+        = render Attachment::EditComponent.new(attached_file: avis.introduction_file)
 
       - if linked_dossiers.present?
         = f.check_box :invite_linked_dossiers, {}, true, false

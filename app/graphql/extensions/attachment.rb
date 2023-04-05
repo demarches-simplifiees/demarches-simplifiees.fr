@@ -6,14 +6,18 @@ module Extensions
     attr_reader :attachment_assoc
 
     def apply
-      # Here we try to define the attachment name:
+      # Here we try to define the ActiveRecord association name:
       # - it could be set explicitly via extension options
       # - or we imply that is the same as the field name w/o "_url"
       # suffix (e.g., "avatar_url" => "avatar")
-      attachment = options&.[](:attachment) || field.original_name.to_s.sub(/_url$/, "")
-
-      # that's the name of the Active Record association
-      @attachment_assoc = "#{attachment}_attachment"
+      @attachment_assoc = if options.key?(:attachment)
+        "#{options[:attachment]}_attachment"
+      elsif options.key?(:attachments)
+        "#{options[:attachments]}_attachments"
+      else
+        attachment = field.original_name.to_s.sub(/_url$/, "")
+        "#{attachment}_attachment"
+      end
     end
 
     # This method resolves (as it states) the field itself
@@ -28,8 +32,26 @@ module Extensions
     # This method is called if the result of the `resolve`
     # is a lazy value (e.g., a Promise – like in our case)
     def after_resolve(value:, **_rest)
-      if value&.virus_scanner&.safe? || value&.virus_scanner&.pending?
-        value
+      if value.respond_to?(:map)
+        attachments = value.map { after_resolve_attachment(_1) }
+
+        if options[:flat_first]
+          attachments.first
+        else
+          attachments
+        end
+      else
+        after_resolve_attachment(value)
+      end
+    end
+
+    private
+
+    def after_resolve_attachment(attachment)
+      return unless attachment
+
+      if attachment.virus_scanner.safe? || attachment.virus_scanner.pending?
+        attachment
       end
     end
   end

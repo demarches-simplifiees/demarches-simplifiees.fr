@@ -304,6 +304,8 @@ ActiveRecord::Schema.define(version: 2023_03_27_230248) do
   create_table "dossiers", id: :serial, force: :cascade do |t|
     t.string "api_entreprise_job_exceptions", array: true
     t.boolean "archived", default: false
+    t.datetime "archived_at"
+    t.string "archived_by"
     t.boolean "autorisation_donnees"
     t.datetime "brouillon_close_to_expiration_notice_sent_at"
     t.interval "conservation_extension", default: "PT0S"
@@ -664,6 +666,7 @@ ActiveRecord::Schema.define(version: 2023_03_27_230248) do
     t.string "organisation"
     t.bigint "parent_procedure_id"
     t.string "path", null: false
+    t.boolean "piece_justificative_multiple", default: true, null: false
     t.boolean "procedure_expires_when_termine_enabled", default: true
     t.datetime "published_at"
     t.bigint "published_revision_id"

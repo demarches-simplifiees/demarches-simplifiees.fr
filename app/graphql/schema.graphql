@@ -2147,7 +2147,8 @@ type PersonnePhysique implements Demandeur {
 }
 
 type PieceJustificativeChamp implements Champ {
-  file: File
+  file: File @deprecated(reason: "Utilisez le champ `files` à la place.")
+  files: [File!]
   id: ID!
 
   """
@@ -2458,7 +2459,7 @@ enum TypeDeChamp {
   linked_drop_down_list
 
   """
-  Données du Ministère de l'Enseignement Supérieur, de la Recherche et de l'Innovation
+  Données du Ministère de l’Enseignement Supérieur, de la Recherche et de l’Innovation
   """
   mesri
 

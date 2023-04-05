@@ -38,8 +38,7 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
   def form_options
     {
       url: admin_procedure_type_de_champ_path(procedure, type_de_champ.stable_id),
-      multipart: true,
-      html: { id: nil, class: 'form width-100' }
+      html: { multipart: true, id: nil, class: 'form width-100' }
     }
   end
 
@@ -74,12 +73,11 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
       end
   end
 
-  def piece_justificative_options(form)
+  def piece_justificative_template_options
     {
-      form: form,
       attached_file: type_de_champ.piece_justificative_template,
-      user_can_destroy: true,
-      id: dom_id(type_de_champ, :piece_justificative_template)
+      auto_attach_url: helpers.auto_attach_url(type_de_champ),
+      user_can_download: true
     }
   end
 

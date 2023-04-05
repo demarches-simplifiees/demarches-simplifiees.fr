@@ -19,6 +19,7 @@ class VirusScannerJob < ApplicationJob
     if blob.virus_scanner.done? then return end
 
     metadata = extract_metadata_via_virus_scanner(blob)
+
     VirusScannerJob.merge_and_update_metadata(blob, metadata)
   end
 

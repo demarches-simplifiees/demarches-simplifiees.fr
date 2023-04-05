@@ -13,6 +13,13 @@ module BlobVirusScannerConcern
     VirusScannerJob.perform_later(self)
   end
 
+  def virus_scanner_error?
+    return true if virus_scanner.infected?
+    return true if virus_scanner.corrupt?
+
+    false
+  end
+
   private
 
   def set_pending

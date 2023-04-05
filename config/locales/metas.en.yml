@@ -2,3 +2,18 @@ en:
   metas:
     signin:
       title: "Sign-in"
+    users:
+      dossiers:
+        index:
+          title: Files
+          title_search: "Search: %{terms}"
+        show:
+          title: "Summary · File nº %{number} (%{procedure_label})"
+        demande:
+          title: "Application · File nº %{number} (%{procedure_label})"
+        messagerie:
+          title: "Mailbox · File nº %{number} (%{procedure_label})"
+        brouillon:
+          title: "Modification of draft nº %{number} (%{procedure_label})"
+        merci:
+          title: "File submitted (%{procedure_label})"

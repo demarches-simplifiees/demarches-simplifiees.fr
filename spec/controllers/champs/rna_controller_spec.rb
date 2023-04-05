@@ -101,7 +101,7 @@ describe Champs::RNAController, type: :controller do
         end
 
         it 'displays a “API is unavailable” error message' do
-          expect(response.body).to include("Une erreur réseau a empêché l&#39;association liée à ce RNA d&#39;être trouvée")
+          expect(response.body).to include("Une erreur réseau a empêché l’association liée à ce RNA d’être trouvée")
         end
       end
 

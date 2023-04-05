@@ -18,6 +18,15 @@ describe 'wcag rules for usager', js: true do
     end
   end
 
+  shared_examples "aria-label do not mix with title attribute" do
+    it do
+      elements = page.all("[aria-label][title]")
+      elements.each do |element|
+        expect(element[:title]).to be_blank, "path=#{path}, element title=\"#{element[:title]}\" mixes aria-label and title attributes"
+      end
+    end
+  end
+
   context 'pages without the need to be logged in' do
     before do
       visit path
@@ -27,12 +36,14 @@ describe 'wcag rules for usager', js: true do
       let(:path) { root_path }
       it { expect(page).to be_axe_clean }
       it_behaves_like "external links have title says it opens in a new tab"
+      it_behaves_like "aria-label do not mix with title attribute"
     end
 
     context 'sign_up page' do
       let(:path) { new_user_registration_path }
       it { expect(page).to be_axe_clean }
       it_behaves_like "external links have title says it opens in a new tab"
+      it_behaves_like "aria-label do not mix with title attribute"
     end
 
     scenario 'account confirmation page' do
@@ -51,24 +62,28 @@ describe 'wcag rules for usager', js: true do
       let(:path) { user_confirmation_path("user[email]" => "some@email.com") }
 
       it_behaves_like "external links have title says it opens in a new tab"
+      it_behaves_like "aria-label do not mix with title attribute"
     end
 
     context 'sign_in page' do
       let(:path) { new_user_session_path }
       it { expect(page).to be_axe_clean.excluding '#user_email' }
       it_behaves_like "external links have title says it opens in a new tab"
+      it_behaves_like "aria-label do not mix with title attribute"
     end
 
     context 'contact page' do
       let(:path) { contact_path }
       it { expect(page).to be_axe_clean }
       it_behaves_like "external links have title says it opens in a new tab"
+      it_behaves_like "aria-label do not mix with title attribute"
     end
 
     context 'commencer page' do
       let(:path) { commencer_path(path: procedure.path) }
       it { expect(page).to be_axe_clean }
       it_behaves_like "external links have title says it opens in a new tab"
+      it_behaves_like "aria-label do not mix with title attribute"
     end
 
     scenario 'commencer page, help dropdown' do

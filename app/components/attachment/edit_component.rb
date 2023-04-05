@@ -1,111 +1,182 @@
 # Display a widget for uploading, editing and deleting a file attachment
 class Attachment::EditComponent < ApplicationComponent
-  def initialize(form:, attached_file:, template: nil, user_can_destroy: false, direct_upload: true, id: nil)
-    @form = form
+  attr_reader :champ
+  attr_reader :attachment
+  attr_reader :user_can_download
+  alias user_can_download? user_can_download
+  attr_reader :user_can_destroy
+  alias user_can_destroy? user_can_destroy
+  attr_reader :as_multiple
+  alias as_multiple? as_multiple
+
+  EXTENSIONS_ORDER = ['jpeg', 'png', 'pdf', 'zip'].freeze
+
+  def initialize(champ: nil, auto_attach_url: nil, attached_file:, direct_upload: true, index: 0, as_multiple: false, user_can_download: false, user_can_destroy: true, **kwargs)
+    @as_multiple = as_multiple
     @attached_file = attached_file
-    @template = template
-    @user_can_destroy = user_can_destroy
+    @auto_attach_url = auto_attach_url
+    @champ = champ
     @direct_upload = direct_upload
-    @id = id
+    @index = index
+    @user_can_download = user_can_download
+    @user_can_destroy = user_can_destroy
+
+    # attachment passed by kwarg because we don't want a default (nil) value.
+    @attachment = if kwargs.key?(:attachment)
+      kwargs.delete(:attachment)
+    elsif attached_file.respond_to?(:attachment)
+      attached_file.attachment
+    else
+      fail ArgumentError, "You must pass an `attachment` kwarg when not using as single attachment like in #{attached_file.name}. Set it to nil for a new attachment."
+    end
+
+    # When parent form has nested attributes, pass the form builder object_name
+    # to correctly infer the input attribute name.
+    @form_object_name = kwargs.delete(:form_object_name)
+
+    verify_initialization!(kwargs)
   end
 
-  attr_reader :template, :form
+  def first?
+    @index.zero?
+  end
 
   def max_file_size
+    return if file_size_validator.nil?
+
     file_size_validator.options[:less_than]
   end
 
-  def user_can_destroy?
-    @user_can_destroy
-  end
-
-  def attachment
-    @attached_file.attachment
-  end
-
-  def attachment_path
-    helpers.attachment_path attachment.id, { signed_id: attachment.blob.signed_id }
-  end
-
   def attachment_id
-    @attachment_id ||= attachment ? attachment.id : SecureRandom.uuid
+    @attachment_id ||= (attachment&.id || SecureRandom.uuid)
+  end
+
+  def attachment_path(**args)
+    helpers.attachment_path attachment.id, args.merge(signed_id: attachment.blob.signed_id)
+  end
+
+  def destroy_attachment_path
+    attachment_path(champ_id: champ&.id)
   end
 
   def attachment_input_class
     "attachment-input-#{attachment_id}"
   end
 
-  def persisted?
-    attachment&.persisted?
-  end
-
-  def champ
-    @form.object.is_a?(Champ) ? @form.object : nil
-  end
-
   def file_field_options
     track_issue_with_missing_validators if missing_validators?
     {
-      class: "attachment-input #{attachment_input_class} #{'hidden' if persisted?}",
+      class: "fr-upload attachment-input #{attachment_input_class} #{persisted? ? 'hidden' : ''}",
       direct_upload: @direct_upload,
-      id: input_id(@id),
+      id: input_id,
       aria: { describedby: champ&.describedby_id },
       data: {
-        auto_attach_url: helpers.auto_attach_url(form.object)
-      }.merge(has_file_size_validator? ? { max_file_size: max_file_size } : {})
+        auto_attach_url:
+      }.merge(has_file_size_validator? ? { max_file_size: } : {})
     }.merge(has_content_type_validator? ? { accept: accept_content_type } : {})
   end
 
-  def input_id(given_id)
-    [given_id, champ&.input_id, file_field_name].reject(&:blank?).compact.first
+  def poll_url
+    if champ.present?
+      auto_attach_url
+    else
+      attachment_path(user_can_edit: true, user_can_download: @user_can_download, auto_attach_url: @auto_attach_url)
+    end
   end
 
-  def file_field_name
+  def field_name
+    helpers.field_name(@form_object_name || ActiveModel::Naming.param_key(@attached_file.record), attribute_name)
+  end
+
+  def attribute_name
     @attached_file.name
   end
 
   def remove_button_options
     {
       role: 'button',
-      class: 'button small danger',
-      data: { turbo_method: :delete }
+      data: { turbo: "true", turbo_method: :delete }
     }
   end
 
   def retry_button_options
     {
       type: 'button',
-      class: 'button attachment-error-retry',
+      class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-mt-1w attachment-upload-error-retry',
       data: { input_target: ".#{attachment_input_class}", action: 'autosave#onClickRetryButton' }
     }
   end
 
-  def replace_button_options
-    {
-      type: 'button',
-      class: 'button small',
-      data: { toggle_target: ".#{attachment_input_class}" }
-    }
+  def persisted?
+    !!attachment&.persisted?
+  end
+
+  def downloadable?
+    return false unless user_can_download?
+    return false if attachment.virus_scanner_error?
+    return false if attachment.watermark_pending?
+
+    true
+  end
+
+  def error?
+    attachment.virus_scanner_error?
+  end
+
+  def error_message
+    case
+    when attachment.virus_scanner.infected?
+      t(".errors.virus_infected")
+    when attachment.virus_scanner.corrupt?
+      t(".errors.corrupted_file")
+    end
+  end
+
+  private
+
+  def input_id
+    if champ.present?
+      # There is always a single input by champ, its id must match the label "for" attribute.
+      return champ.input_id
+    end
+
+    helpers.field_id(@form_object_name || @attached_file.record, attribute_name)
+  end
+
+  def auto_attach_url
+    return @auto_attach_url if @auto_attach_url.present?
+
+    return helpers.auto_attach_url(@champ) if @champ.present?
+
+    nil
   end
 
   def file_size_validator
     @attached_file.record
-      ._validators[file_field_name.to_sym]
+      ._validators[attribute_name.to_sym]
       .find { |validator| validator.class == ActiveStorageValidations::SizeValidator }
   end
 
   def content_type_validator
     @attached_file.record
-      ._validators[file_field_name.to_sym]
+      ._validators[attribute_name.to_sym]
       .find { |validator| validator.class == ActiveStorageValidations::ContentTypeValidator }
   end
 
   def accept_content_type
-    list = content_type_validator.options[:in]
-    if list.include?("application/octet-stream")
-      list.push(".acidcsa")
-    end
+    list = content_type_validator.options[:in].dup
+    list << ".acidcsa" if list.include?("application/octet-stream")
     list.join(', ')
+  end
+
+  def allowed_formats
+    return nil unless champ&.titre_identite?
+
+    @allowed_formats ||= begin
+                           content_type_validator.options[:in].filter_map do |content_type|
+                             MiniMime.lookup_by_content_type(content_type)&.extension
+                           end.uniq.sort_by { EXTENSIONS_ORDER.index(_1) || 999 }
+                         end
   end
 
   def has_content_type_validator?
@@ -122,12 +193,16 @@ class Attachment::EditComponent < ApplicationComponent
     return false
   end
 
+  def verify_initialization!(kwargs)
+    fail ArgumentError, "Unknown kwarg #{kwargs.keys.join(', ')}" unless kwargs.empty?
+  end
+
   def track_issue_with_missing_validators
     Sentry.capture_message(
       "Strange case of missing validator",
       extra: {
         champ: champ,
-        file_field_name: file_field_name,
+        field_name: field_name,
         attachment_id: attachment_id
       }
     )

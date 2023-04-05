@@ -22,9 +22,11 @@ describe Champs::PieceJustificativeController, type: :controller do
       annotation.reload
       {
         champ_id: annotation.id.to_s,
-        h: annotation.encoded_date(:created_at)
+        h: annotation.encoded_date(:created_at),
+        i: 0
       }
     end
+
     subject do
       get :download, params: params
     end
@@ -68,6 +70,19 @@ describe Champs::PieceJustificativeController, type: :controller do
         context 'when created_date is wrong' do
           let(:params) { { champ_id: annotation.id.to_s, h: 'x' } }
           it_behaves_like "he can't download pdf"
+        end
+      end
+
+      context 'using legacy link' do
+        subject do
+          params.delete(:i)
+          get :show, params: params
+        end
+
+        it 'is redirected to download url' do
+          subject
+          expect(response.status).to eq(302)
+          expect(response.location).to include("#{params[:champ_id]}/piece_justificative/download/#{params[:h]}")
         end
       end
     end
@@ -133,7 +148,7 @@ describe Champs::PieceJustificativeController, type: :controller do
         subject
         champ.reload
         expect(champ.piece_justificative_file.attached?).to be true
-        expect(champ.piece_justificative_file.filename).to eq('piece_justificative_0.pdf')
+        expect(champ.piece_justificative_file[0].filename).to eq('piece_justificative_0.pdf')
       end
 
       it 'renders the attachment template as Javascript' do
@@ -173,6 +188,41 @@ describe Champs::PieceJustificativeController, type: :controller do
         expect(response.status).to eq(422)
         expect(response.header['Content-Type']).to include('application/json')
         expect(JSON.parse(response.body)).to eq({ 'errors' => ['La pièce justificative n’est pas d’un type accepté'] })
+      end
+    end
+  end
+
+  describe '#template' do
+    before { Timecop.freeze }
+    after { Timecop.return }
+
+    subject do
+      get :template, params: {
+        champ_id: champ.id
+      }
+    end
+
+    context "user signed in" do
+      before { sign_in user }
+
+      it 'redirects to the template' do
+        subject
+        expect(response).to redirect_to(champ.type_de_champ.piece_justificative_template.blob)
+      end
+    end
+
+    context "another user signed in" do
+      before { sign_in create(:user) }
+
+      it "should not share template url" do
+        expect { subject }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    context "user anonymous" do
+      it 'does not redirect to the template' do
+        subject
+        expect(response).to redirect_to(new_user_session_path)
       end
     end
   end

@@ -10,11 +10,11 @@ fr:
         for_each_file_submitted:
           title: Recevoir une notification à chaque dossier déposé
           notice_1: Cet email vous signale le dépôt d’un nouveau dossier.
-          notice_2: Il est envoyé à chaque fois qu'un usager dépose un dossier.
+          notice_2: Il est envoyé à chaque fois qu’un usager dépose un dossier.
         for_each_message_submitted:
           title: Recevoir une notification à chaque message déposé
           notice_1: Cet email vous signale le dépôt d’un nouveau message sur vos dossiers suivis.
-          notice_2: Il est envoyé à chaque fois qu'un usager dépose un message.
+          notice_2: Il est envoyé à chaque fois qu’un usager dépose un message.
         daily_notifications:
           title: Recevoir une notification quotidienne
           notice_1: Cet email vous signale le dépôt de nouveaux dossiers sur cette démarche, ou des changements sur vos dossiers suivis.
@@ -26,7 +26,7 @@ fr:
         avis_notifications:
           title: Recevoir une notification pour chaque avis rendu par un expert
           notice_1: Cet email vous signale un nouvel avis posté par un expert que vous avez sollicité sur un dossier.
-          notice_2: Il est envoyé à chaque fois qu'un expert rend un avis.
+          notice_2: Il est envoyé à chaque fois qu’un expert rend un avis.
         buttons:
           back_to_procedure: Revenir à la procédure
           save: Enregistrer

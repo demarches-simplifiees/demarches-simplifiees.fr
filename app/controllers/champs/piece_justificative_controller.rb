@@ -1,5 +1,16 @@
 class Champs::PieceJustificativeController < ApplicationController
   before_action :authenticate_logged_user!
+  before_action :set_champ
+
+  def show
+    # pf used to redirect to this route to download PJ ==> if param h is present (old pf link) then redirect to new route
+    return redirect_to champs_piece_justificative_download_path({ champ_id: params[:champ_id], h: params[:h] }) if params[:h].present?
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_back(fallback_location: root_url) }
+    end
+  end
 
   def update
     if attach_piece_justificative_or_retry
@@ -9,8 +20,45 @@ class Champs::PieceJustificativeController < ApplicationController
     end
   end
 
-  def attach_piece_justificative
+  def download
+    champ = find_champ
+
+    if champ&.is_a? Champs::PieceJustificativeChamp
+      index = (params[:i] || "0").to_i
+      if (0..champ.piece_justificative_file.size).cover?(index)
+        blob = champ.piece_justificative_file[index]
+        if blob.filename.extension == 'pdf' && champ.dossier.procedure.feature_enabled?(:qrcoded_pdf)
+          send_data StampService.new.stamp(blob, download_url(champ, index)), filename: blob.filename.to_s, type: 'application/pdf'
+        else
+          redirect_to blob.service_url, status: :found
+        end
+      else
+        flash.alert = "Le document demandé n'existe pas."
+        redirect_to :root, status: :bad_request
+      end
+    else
+      flash.alert = "Le document demandé n'existe pas ou vous n'avez pas l'autorisation d'y accéder."
+      redirect_to :root, status: :bad_request
+    end
+  end
+
+  def download_url(champ, index)
+    Rails.application.routes.url_helpers.champs_piece_justificative_download_url(
+      { champ_id: champ.id, h: champ.encoded_date(:created_at), i: index }
+    )
+  end
+
+  def template
+    redirect_to @champ.type_de_champ.piece_justificative_template.blob
+  end
+
+  private
+
+  def set_champ
     @champ = policy_scope(Champ).find(params[:champ_id])
+  end
+
+  def attach_piece_justificative
     @champ.piece_justificative_file.attach(params[:blob_signed_id])
     save_succeed = @champ.save
     @champ.dossier.update(last_champ_updated_at: Time.zone.now.utc) if save_succeed
@@ -22,27 +70,6 @@ class Champs::PieceJustificativeController < ApplicationController
   rescue ActiveRecord::StaleObjectError
     attach_piece_justificative
   end
-
-  def download
-    champ = find_champ
-
-    if champ&.is_a? Champs::PieceJustificativeChamp
-      blob = champ.piece_justificative_file
-      if blob.filename.extension == 'pdf' && champ.dossier.procedure.feature_enabled?(:qrcoded_pdf)
-        url = Rails.application.routes.url_helpers.champs_piece_justificative_download_url(
-          { champ_id: champ.id, h: champ.encoded_date(:created_at) }
-        )
-        send_data StampService.new.stamp(blob, url), filename: blob.filename.to_s, type: 'application/pdf'
-      else
-        redirect_to blob.service_url, status: :found
-      end
-    else
-      flash.alert = "Le document demandé n'existe pas ou vous n'avez pas l'autorisation d'y accéder."
-      redirect_to :root, status: :bad_request
-    end
-  end
-
-  private
 
   def find_champ
     h = params[:h]
