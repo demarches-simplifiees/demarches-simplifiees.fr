@@ -8,7 +8,7 @@
     - if @champ.selected_options.present?
       .fr-mb-2w{ "data-turbo": "true" }
         - @champ.selected_options.each do |option|
-          = render NestedForms::OwnedButtonComponent.new(formaction: champs_options_path(@champ.id, option:), http_method: :delete, opt: { class: 'fr-tag fr-tag--dismiss fr-mb-1w fr-mr-1w', id: @champ.checkbox_id(option) }) do
+          = render NestedForms::OwnedButtonComponent.new(formaction: champs_options_path(@champ.id, option:), http_method: :delete, opt: { class: 'fr-tag fr-tag--dismiss fr-mb-1w fr-mr-1w', id: @champ.checkbox_id(option), data: { turbo_focus: true } }) do
             = option
     - if @champ.unselected_options.present?
-      = @form.select :value, @champ.unselected_options, { selected: '', include_blank: '' }, id: @champ.input_id, aria: { describedby: @champ.describedby_id }
+      = @form.select :value, @champ.unselected_options, { selected: '', include_blank: '' }, id: @champ.input_id, aria: { describedby: @champ.describedby_id }, data: { turbo_focus: true }

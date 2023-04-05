@@ -1287,21 +1287,21 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@coldwired/actions@^0.8.1":
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/@coldwired/actions/-/actions-0.8.1.tgz#c309a2a38f5a0af11c03c4cf8e16c6496c7f9894"
-  integrity sha512-d+rgz+FHeKRcqPS8c8mPRuwYsbfDwIExJIOdpexAmhhW67c1V3xo4+oAwNSE395/qU5/JXmOnHPeqA6t6Fx9ew==
+"@coldwired/actions@^0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@coldwired/actions/-/actions-0.9.0.tgz#674c652c3e20628ed6f7ea1d21bfbfb3758c4e62"
+  integrity sha512-/7zNkx5e9iygtWvXyOd2IT2DdHMd+wdTXD/sjmo73rOfzY5S3BFS/SUJf74FSZMB574VoW0QCpRm4SBfLaP9VQ==
   dependencies:
     "@coldwired/utils" "^0.8.1"
-    morphdom "^2.6.1"
+    morphdom "^2.7.0"
     tiny-invariant "^1.3.1"
 
-"@coldwired/turbo-stream@^0.8.1":
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/@coldwired/turbo-stream/-/turbo-stream-0.8.1.tgz#3f2f52b8cd59906c2387b78949c66fad79cb0eae"
-  integrity sha512-rxDzEObIZ4MQQzM2joXV2yjOLcveHBDkghDu6EiiCAMl95wV/O6dMTM1KW3+l6tjd0a5hTTKrhoNJKuWLTV5GA==
+"@coldwired/turbo-stream@^0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@coldwired/turbo-stream/-/turbo-stream-0.9.0.tgz#e1f9ff8cbac6532a4b0618f5d719749c0fef6c7b"
+  integrity sha512-+s0iEFmmLCoIKz1ir7mHugIOfYwzNruEa3JgnC3wd7VwGWYHunR3PnwMo4P1Ls6y1fiOXuoxBUopX/DMTsx6SQ==
   dependencies:
-    "@coldwired/actions" "^0.8.1"
+    "@coldwired/actions" "^0.9.0"
     "@coldwired/utils" "^0.8.1"
     tiny-invariant "^1.3.1"
 
@@ -4849,10 +4849,10 @@ mlly@^1.1.0:
     pkg-types "^1.0.1"
     ufo "^1.0.1"
 
-morphdom@^2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/morphdom/-/morphdom-2.6.1.tgz#e868e24f989fa3183004b159aed643e628b4306e"
-  integrity sha512-Y8YRbAEP3eKykroIBWrjcfMw7mmwJfjhqdpSvoqinu8Y702nAwikpXcNFDiIkyvfCLxLM9Wu95RZqo4a9jFBaA==
+morphdom@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/morphdom/-/morphdom-2.7.0.tgz#9ef0c4bc15ac8725df398d127c6984f62e7f89e8"
+  integrity sha512-8L8DwbdjjWwM/aNqj7BSoSn4G7SQLNiDcxCnMWbf506jojR6lNQ5YOmQqXEIE8u3C492UlkN4d0hQwz97+M1oQ==
 
 ms@2.1.2:
   version "2.1.2"
