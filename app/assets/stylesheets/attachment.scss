@@ -35,3 +35,18 @@
     padding-bottom: 0;
   }
 }
+
+.attachment {
+  // Anti-virus badge for just uploaded attachment when seen as downloadable
+  .fr-download + .fr-badge {
+    position: relative;
+    top: -1rem;
+  }
+}
+
+.attachment-multiple.fr-downloads-group.destroyable {
+  ul {
+    list-style-type: none;
+    padding-inline-start: 0;
+  }
+}
