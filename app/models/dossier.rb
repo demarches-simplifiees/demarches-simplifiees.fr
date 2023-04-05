@@ -170,7 +170,7 @@ class Dossier < ApplicationRecord
     end
 
     event :passer_automatiquement_en_instruction, after: :after_passer_automatiquement_en_instruction do
-      transitions from: :en_construction, to: :en_instruction
+      transitions from: :en_construction, to: :en_instruction, guard: :can_passer_automatiquement_en_instruction?
     end
 
     event :repasser_en_construction, after: :after_repasser_en_construction do
@@ -182,7 +182,7 @@ class Dossier < ApplicationRecord
     end
 
     event :accepter_automatiquement, after: :after_accepter_automatiquement do
-      transitions from: :en_construction, to: :accepte, guard: :can_terminer?
+      transitions from: :en_construction, to: :accepte, guard: :can_accepter_automatiquement?
     end
 
     event :refuser, after: :after_refuser do
@@ -525,6 +525,14 @@ class Dossier < ApplicationRecord
     return false if etablissement&.as_degraded_mode?
 
     true
+  end
+
+  def can_accepter_automatiquement?
+    declarative_triggered_at.nil? && can_terminer?
+  end
+
+  def can_passer_automatiquement_en_instruction?
+    declarative_triggered_at.nil?
   end
 
   def can_repasser_en_instruction?
@@ -985,6 +993,14 @@ class Dossier < ApplicationRecord
     end
     send_dossier_decision_to_experts(self)
     log_dossier_operation(instructeur, :classer_sans_suite, self)
+  end
+
+  def process_declarative!
+    if procedure.declarative_accepte? && may_accepter_automatiquement?
+      accepter_automatiquement!
+    elsif procedure.declarative_en_instruction? && may_passer_automatiquement_en_instruction?
+      passer_automatiquement_en_instruction!
+    end
   end
 
   def remove_titres_identite!
