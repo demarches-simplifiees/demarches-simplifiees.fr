@@ -88,7 +88,7 @@ Rails.application.configure do
       authentication:       ENV.fetch("SMTP_AUTHENTICATION"),
       enable_starttls_auto: ENV.fetch("SMTP_TLS").present?
     }
-  elsif ENV['SENDMAIL_ENABLED']  = 'enabled'
+  elsif ENV['SENDMAIL_ENABLED'] == 'enabled'
     config.action_mailer.delivery_method = :sendmail
     config.action_mailer.sendmail_settings = {
       location: ENV.fetch("SENDMAIL_LOCATION"),
