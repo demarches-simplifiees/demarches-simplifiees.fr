@@ -18,6 +18,7 @@ class GroupeInstructeur < ApplicationRecord
   has_many :deleted_dossiers
   has_and_belongs_to_many :exports, dependent: :destroy
   has_and_belongs_to_many :bulk_messages, dependent: :destroy
+  has_and_belongs_to_many :batch_operations, dependent: :destroy
 
   validates :label, presence: true, allow_nil: false
   validates :label, uniqueness: { scope: :procedure }

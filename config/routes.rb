@@ -430,6 +430,8 @@ Rails.application.routes.draw do
             get 'telecharger_pjs' => 'dossiers#telecharger_pjs'
           end
         end
+
+        resources :batch_operations, only: [:create]
       end
     end
   end

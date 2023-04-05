@@ -1,5 +1,5 @@
 class DossierProjectionService
-  class DossierProjection < Struct.new(:dossier_id, :state, :archived, :hidden_by_user_at, :hidden_by_administration_at, :columns)
+  class DossierProjection < Struct.new(:dossier_id, :state, :archived, :hidden_by_user_at, :hidden_by_administration_at, :batch_operation_id, :columns)
   end
 
   TABLE = 'table'
@@ -20,9 +20,10 @@ class DossierProjectionService
   def self.project(dossiers_ids, fields)
     state_field = { TABLE => 'self', COLUMN => 'state' }
     archived_field = { TABLE => 'self', COLUMN => 'archived' }
+    batch_operation_field = { TABLE => 'self', COLUMN => 'batch_operation_id' }
     hidden_by_user_at_field = { TABLE => 'self', COLUMN => 'hidden_by_user_at' }
     hidden_by_administration_at_field = { TABLE => 'self', COLUMN => 'hidden_by_administration_at' }
-    ([state_field, archived_field, hidden_by_user_at_field, hidden_by_administration_at_field] + fields) # the view needs state and archived dossier attributes
+    ([state_field, archived_field, hidden_by_user_at_field, hidden_by_administration_at_field, batch_operation_field] + fields) # the view needs state and archived dossier attributes
       .each { |f| f[:id_value_h] = {} }
       .group_by { |f| f[TABLE] } # one query per table
       .each do |table, fields|
@@ -46,7 +47,7 @@ class DossierProjectionService
           .pluck(:id, *fields.map { |f| f[COLUMN].to_sym })
           .each do |id, *columns|
             fields.zip(columns).each do |field, value|
-              if [state_field, archived_field, hidden_by_user_at_field, hidden_by_administration_at_field].include?(field)
+              if [state_field, archived_field, hidden_by_user_at_field, hidden_by_administration_at_field, batch_operation_field].include?(field)
                 field[:id_value_h][id] = value
               else
                 field[:id_value_h][id] = value&.strftime('%d/%m/%Y') # other fields are datetime
@@ -101,6 +102,7 @@ class DossierProjectionService
         archived_field[:id_value_h][dossier_id],
         hidden_by_user_at_field[:id_value_h][dossier_id],
         hidden_by_administration_at_field[:id_value_h][dossier_id],
+        batch_operation_field[:id_value_h][dossier_id],
         fields.map { |f| f[:id_value_h][dossier_id] }
       )
     end

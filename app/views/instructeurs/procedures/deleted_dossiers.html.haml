@@ -45,7 +45,7 @@
         %tbody
           - @deleted_dossiers.each do |deleted_dossier|
             %tr
-              %td.folder-col
+              %td.text-center
                 %span.icon.folder
               %td.number-col
                 = deleted_dossier.dossier_id
@@ -56,4 +56,3 @@
       = paginate @deleted_dossiers
     - else
       Aucun dossier supprimé
-
