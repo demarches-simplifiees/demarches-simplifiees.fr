@@ -6,7 +6,6 @@ en:
         alt: "Logo DMRA"
         height: 164
         width: 120
-      name: "DINUM"
       provided_by: "la DINUM"
       title: "Direction Interministérielle au Numérique"
       url: "https://numerique.gouv.fr"
@@ -16,7 +15,7 @@ en:
         legals: Legal information
         resources: Resources
         diagnostic: Diagnostic
-      description_1: Démarches simplifiées is powered by 
+      description_1: Démarches simplifiées is powered by
       link_1_label: the interdepartmental direction of digital (DINUM).
       link_1_url: "https://www.numerique.gouv.fr/dinum/"
       link_2_label: The source code
