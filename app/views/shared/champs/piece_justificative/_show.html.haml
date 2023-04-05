@@ -3,6 +3,6 @@
   .fr-downloads-group
     %ul
       - pj.attachments.each do |attachment|
-        %li= render Attachment::ShowComponent.new(attachment:)
+        %li= render Attachment::ShowComponent.new(attachment:, new_tab: true)
 - else
   Pièce justificative non fournie

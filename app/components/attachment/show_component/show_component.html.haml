@@ -1,6 +1,6 @@
 %div{ id: dom_id(attachment, :show), class: class_names("attachment-error": error?, "fr-mb-2w": !should_display_link?) }
   - if should_display_link?
-    = render Dsfr::DownloadComponent.new(attachment: attachment) do |c|
+    = render Dsfr::DownloadComponent.new(attachment: attachment, new_tab: new_tab) do |c|
       - if !attachment.virus_scanner.started?
         - c.right do
           = "(#{t(".virus_not_analyzed")})"
