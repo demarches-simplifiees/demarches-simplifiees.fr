@@ -1,5 +1,5 @@
 class API::V2::StoredQuery
-  def self.get(query_id, fallback: nil)
+  def self.get(query_id)
     case query_id
     when 'ds-query-v2'
       QUERY_V2
@@ -8,11 +8,7 @@ class API::V2::StoredQuery
     when 'introspection'
       GraphQL::Introspection::INTROSPECTION_QUERY
     else
-      if fallback.nil?
-        raise GraphQL::ExecutionError.new("No query with id \"#{query_id}\"")
-      else
-        fallback
-      end
+      raise GraphQL::ExecutionError.new("No query with id \"#{query_id}\"")
     end
   end
 

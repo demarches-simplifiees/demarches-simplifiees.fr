@@ -125,14 +125,13 @@ class API::V2::Schema < GraphQL::Schema
   def self.type_error(error, ctx)
     # Capture type errors in Sentry. Thouse errors are our responsability and usually linked to
     # instances of "bad data".
-    Sentry.capture_exception(error)
+    Sentry.capture_exception(error, extra: ctx.query_info)
     super
   end
 
   class Timeout < GraphQL::Schema::Timeout
     def handle_timeout(error, query)
-      extra = { query: query.query_string, variables: query.provided_variables&.to_json }
-      Sentry.capture_exception(error, extra:)
+      Sentry.capture_exception(error, extra: query.context.query_info)
     end
   end
 

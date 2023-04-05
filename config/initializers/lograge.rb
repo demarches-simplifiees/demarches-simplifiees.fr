@@ -16,6 +16,8 @@ Rails.application.configure do
         user_agent: event.payload[:user_agent],
         graphql_query: event.payload[:graphql_query],
         graphql_variables: event.payload[:graphql_variables],
+        graphql_null_error: event.payload[:graphql_null_error],
+        graphql_timeout_error: event.payload[:graphql_timeout_error],
         browser: event.payload[:browser],
         browser_version: event.payload[:browser_version],
         platform: event.payload[:platform],
