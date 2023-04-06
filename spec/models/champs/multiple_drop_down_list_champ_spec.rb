@@ -32,6 +32,23 @@ describe Champs::MultipleDropDownListChamp do
 
         it { is_expected.not_to be_valid }
       end
+
+      context 'set value' do
+        it {
+          subject.value = ["val1"]
+          expect(subject.value).to eq("[\"val1\"]")
+          subject.value = 'val2'
+          expect(subject.value).to eq("[\"val1\",\"val2\"]")
+          subject.value = ''
+          expect(subject.value).to eq("[\"val1\",\"val2\"]")
+          subject.value = nil
+          expect(subject.value).to be_nil
+          subject.value = ["val1"]
+          expect(subject.value).to eq("[\"val1\"]")
+          subject.value = []
+          expect(subject.value).to be_nil
+        }
+      end
     end
   end
 
