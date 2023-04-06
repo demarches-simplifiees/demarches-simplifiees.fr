@@ -26,10 +26,9 @@ class API::V2::Context < GraphQL::Query::Context
 
     if self[:authorized][demarche.id].nil?
       self[:authorized][demarche.id] = if self[:token]
-          APIToken.find_and_verify(self[:token], demarche.administrateurs).present?
-        elsif self[:administrateur_id]
-          demarche.administrateurs.map(&:id).include?(self[:administrateur_id])
-        end
+        APIToken.find_and_verify(self[:token], demarche.administrateurs).present?
+      elsif self[:administrateur_id]
+        demarche.administrateurs.map(&:id).include?(self[:administrateur_id])
       end
     end
 
