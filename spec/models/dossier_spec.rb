@@ -493,7 +493,7 @@ describe Dossier do
       it 'should keep first en_construction_at date' do
         Timecop.return
         dossier.passer_en_instruction!(instructeur: instructeur)
-        dossier.repasser_en_construction!(instructeur)
+        dossier.repasser_en_construction!(instructeur: instructeur)
 
         expect(dossier.traitements.size).to eq(3)
         expect(dossier.traitements.first.processed_at).to eq(beginning_of_day)
@@ -519,7 +519,7 @@ describe Dossier do
 
       it 'should keep first en_instruction_at date if dossier is set to en_construction again' do
         Timecop.return
-        dossier.repasser_en_construction!(instructeur)
+        dossier.repasser_en_construction!(instructeur: instructeur)
         dossier.passer_en_instruction!(instructeur: instructeur)
 
         expect(dossier.traitements.size).to eq(4)

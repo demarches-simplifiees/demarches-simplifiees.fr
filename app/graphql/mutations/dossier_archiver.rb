@@ -11,7 +11,7 @@ module Mutations
     def resolve(dossier:, instructeur:)
       dossier.archiver!(instructeur)
 
-      { dossier: dossier }
+      { dossier: }
     end
 
     def authorized?(dossier:, instructeur:)
