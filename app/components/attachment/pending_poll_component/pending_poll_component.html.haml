@@ -2,6 +2,10 @@
   - if long_pending?
     = render Dsfr::CalloutComponent.new(title: nil) do |c|
       - c.with_body do
-        = t(".explanation")
+        = t(".explanation", count: attachments.count)
+
       - c.with_bottom do
         = button_tag t(".reload"), type: "button", class: "fr-btn", data: { action: 'click->turbo-poll#refresh' }
+
+        - if as_dossier?
+          %p.fr-callout__text.fr-mt-4w= t(".dossier_submittable")

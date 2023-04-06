@@ -56,4 +56,18 @@ RSpec.describe Attachment::PendingPollComponent, type: :component do
       end
     end
   end
+
+  context "when it's a dossier context" do
+    before do
+      attachment.created_at = 5.minutes.ago
+    end
+
+    let(:component) {
+      described_class.new(poll_url: "poll-here", attachment:, context: :dossier)
+    }
+
+    it "indicates it's not blocker to submit" do
+      expect(subject).to have_content("déposer votre dossier")
+    end
+  end
 end
