@@ -18,7 +18,7 @@ class Instructeur < ApplicationRecord
   has_many :groupe_instructeurs, -> { order(:label) }, through: :assign_to
   has_many :unordered_groupe_instructeurs, through: :assign_to, source: :groupe_instructeur
   has_many :procedures, -> { distinct }, through: :unordered_groupe_instructeurs
-
+  has_many :batch_operations, dependent: :nullify
   has_many :assign_to_with_email_notifications, -> { with_email_notifications }, class_name: 'AssignTo', inverse_of: :instructeur
   has_many :groupe_instructeur_with_email_notifications, through: :assign_to_with_email_notifications, source: :groupe_instructeur
 
@@ -49,7 +49,45 @@ class Instructeur < ApplicationRecord
   default_scope { eager_load(:user) }
 
   def self.by_email(email)
-    Instructeur.eager_load(:user).find_by(users: { email: email })
+    find_by(users: { email: email })
+  end
+
+  def self.find_or_invite(emails: [], ids: [], groupe_instructeur:)
+    valid_emails, invalid_emails = emails
+      .map(&:strip)
+      .map(&:downcase)
+      .partition { URI::MailTo::EMAIL_REGEXP.match?(_1) }
+    valid_ids = ids.map { _1.is_a?(String) ? id_from_typed_id(_1) : _1 }
+
+    instructeurs_by_ids = where(id: valid_ids)
+    instructeurs_by_emails = where(users: { email: valid_emails })
+
+    instructeurs = if valid_ids.present? && valid_emails.present?
+      instructeurs_by_ids.or(instructeurs_by_emails).distinct(:id)
+    elsif valid_emails.present?
+      instructeurs_by_emails
+    else
+      instructeurs_by_ids
+    end
+
+    not_found_emails = valid_emails - instructeurs.map(&:email)
+
+    # Send invitations to users without account
+    if not_found_emails.present?
+      administrateurs = groupe_instructeur.procedure.administrateurs
+      instructeurs += not_found_emails.map { invite(_1, administrateurs) }
+    end
+
+    # We dont't want to assign a user to a groupe_instructeur if they are already assigned to it
+    instructeurs -= groupe_instructeur.instructeurs
+
+    [instructeurs, invalid_emails]
+  end
+
+  def self.invite(email, administrateurs)
+    user = User.create_or_promote_to_instructeur(email, SecureRandom.hex, administrateurs:)
+    user.invite!
+    user.instructeur
   end
 
   def email

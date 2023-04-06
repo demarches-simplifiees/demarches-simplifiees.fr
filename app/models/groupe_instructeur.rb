@@ -18,6 +18,7 @@ class GroupeInstructeur < ApplicationRecord
   has_many :deleted_dossiers
   has_and_belongs_to_many :exports, dependent: :destroy
   has_and_belongs_to_many :bulk_messages, dependent: :destroy
+  has_and_belongs_to_many :batch_operations, dependent: :destroy
 
   validates :label, presence: true, allow_nil: false
   validates :label, uniqueness: { scope: :procedure }
@@ -32,6 +33,7 @@ class GroupeInstructeur < ApplicationRecord
   scope :closed, -> { where(closed: true) }
 
   def add(instructeur)
+    return if instructeur.nil?
     return if in?(instructeur.groupe_instructeurs)
 
     default_notification_settings = instructeur.notification_settings(procedure_id)
@@ -39,6 +41,7 @@ class GroupeInstructeur < ApplicationRecord
   end
 
   def remove(instructeur)
+    return if instructeur.nil?
     return if !in?(instructeur.groupe_instructeurs)
 
     instructeur.groupe_instructeurs.destroy(self)

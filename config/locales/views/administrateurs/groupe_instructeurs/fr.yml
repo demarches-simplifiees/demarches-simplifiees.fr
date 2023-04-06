@@ -17,11 +17,18 @@ fr:
           other: "%{count} groupes existent"
       add_instructeur:
         wrong_address:
-          one: "%{value} n’est pas une adresse email valide"
-          other: "%{value} ne sont pas des adresses emails valides"
+          one: "%{emails} n’est pas une adresse email valide"
+          other: "%{emails} ne sont pas des adresses emails valides"
         assignment:
-          one: "L’instructeur %{value} a été affecté au groupe « %{groupe} »."
-          other: "Les instructeurs %{value} ont été affectés au groupe « %{groupe} »."
+          one: "L’instructeur %{emails} a été affecté au groupe « %{groupe} »."
+          other: "Les instructeurs %{emails} ont été affectés au groupe « %{groupe} »."
+        email_body:
+          one: "L’instructeur %{emails} a été affecté au groupe « %{groupe} » par « %{email} », en charge de la démarche « %{procedure} »."
+          other: "Les instructeurs %{emails} ont été affectés au groupe « %{groupe} » par « %{email} », en charge de la démarche « %{procedure} »."
+      remove_instructeur:
+        email_body:
+          one: "L’instructeur %{emails} a été retiré du groupe « %{groupe} » par « %{email} », en charge de la démarche « %{procedure} »."
+          other: "Les instructeurs %{emails} ont été retirés du groupe « %{groupe} » par « %{email} », en charge de la démarche « %{procedure} »."
       reaffecter_dossiers:
         existing_groupe:
           one: "%{count} groupe existe"

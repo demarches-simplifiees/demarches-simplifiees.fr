@@ -18,7 +18,7 @@
 
     - if commentaire.piece_jointe.attached?
       .fr-ml-2w
-        = render Attachment::ShowComponent.new(attachment: commentaire.piece_jointe.attachment)
+        = render Attachment::ShowComponent.new(attachment: commentaire.piece_jointe.attachment, new_tab: true)
 
     - if show_reply_button?
       = button_tag type: 'button', class: 'button small message-answer-button', onclick: 'document.querySelector("#commentaire_body").focus()' do

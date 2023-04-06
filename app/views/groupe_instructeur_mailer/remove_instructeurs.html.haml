@@ -1,0 +1,11 @@
+%p
+  Bonjour,
+
+%p
+  = t('administrateurs.groupe_instructeurs.remove_instructeur.email_body', count: @removed_instructeur_emails.size, emails: @removed_instructeur_emails.join(', '), groupe: @group.label, email: @current_instructeur_email, procedure: @group.procedure.libelle)
+
+%p
+  Cliquez sur le lien ci-dessous pour voir la liste des instructeurs de ce groupe :
+  = link_to(@group.label, admin_procedure_groupe_instructeur_url(@group.procedure, @group))
+
+= render partial: "layouts/mailers/signature"

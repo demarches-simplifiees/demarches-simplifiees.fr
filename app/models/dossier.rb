@@ -35,6 +35,7 @@
 #  termine_close_to_expiration_notice_sent_at         :datetime
 #  created_at                                         :datetime
 #  updated_at                                         :datetime
+#  batch_operation_id                                 :bigint
 #  dossier_transfer_id                                :bigint
 #  groupe_instructeur_id                              :bigint
 #  parent_dossier_id                                  :bigint
@@ -135,7 +136,7 @@ class Dossier < ApplicationRecord
   belongs_to :revision, class_name: 'ProcedureRevision', optional: false
   belongs_to :user, optional: true
   belongs_to :parent_dossier, class_name: 'Dossier', optional: true
-
+  belongs_to :batch_operation, optional: true
   has_one :france_connect_information, through: :user
 
   has_one :procedure, through: :revision
@@ -169,7 +170,7 @@ class Dossier < ApplicationRecord
     end
 
     event :passer_automatiquement_en_instruction, after: :after_passer_automatiquement_en_instruction do
-      transitions from: :en_construction, to: :en_instruction
+      transitions from: :en_construction, to: :en_instruction, guard: :can_passer_automatiquement_en_instruction?
     end
 
     event :repasser_en_construction, after: :after_repasser_en_construction do
@@ -181,7 +182,7 @@ class Dossier < ApplicationRecord
     end
 
     event :accepter_automatiquement, after: :after_accepter_automatiquement do
-      transitions from: :en_construction, to: :accepte, guard: :can_terminer?
+      transitions from: :en_construction, to: :accepte, guard: :can_accepter_automatiquement?
     end
 
     event :refuser, after: :after_refuser do
@@ -280,7 +281,7 @@ class Dossier < ApplicationRecord
       .includes(commentaires: { piece_jointe_attachment: :blob },
         justificatif_motivation_attachment: :blob,
         attestation: [],
-        avis: { piece_justificative_file_attachments: :blob },
+        avis: { piece_justificative_file_attachment: :blob },
         traitement: [],
         etablissement: [],
         individual: [],
@@ -415,6 +416,7 @@ class Dossier < ApplicationRecord
     end
   end
 
+  scope :not_having_batch_operation, -> { where(batch_operation_id: nil) }
   accepts_nested_attributes_for :individual
 
   delegate :siret, :siren, to: :etablissement, allow_nil: true
@@ -523,6 +525,14 @@ class Dossier < ApplicationRecord
     return false if etablissement&.as_degraded_mode?
 
     true
+  end
+
+  def can_accepter_automatiquement?
+    declarative_triggered_at.nil? && can_terminer?
+  end
+
+  def can_passer_automatiquement_en_instruction?
+    declarative_triggered_at.nil?
   end
 
   def can_repasser_en_instruction?
@@ -983,6 +993,14 @@ class Dossier < ApplicationRecord
     end
     send_dossier_decision_to_experts(self)
     log_dossier_operation(instructeur, :classer_sans_suite, self)
+  end
+
+  def process_declarative!
+    if procedure.declarative_accepte? && may_accepter_automatiquement?
+      accepter_automatiquement!
+    elsif procedure.declarative_en_instruction? && may_passer_automatiquement_en_instruction?
+      passer_automatiquement_en_instruction!
+    end
   end
 
   def remove_titres_identite!

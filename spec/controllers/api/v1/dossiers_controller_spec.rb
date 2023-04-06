@@ -316,6 +316,14 @@ describe API::V1::DossiersController do
           it { expect(subject.first[:email]).to eq 'plop@plip.com' }
         end
 
+        describe 'avis' do
+          let!(:avis) { create(:avis, dossier: dossier) }
+
+          subject { super()[:avis] }
+
+          it { expect(subject[0][:introduction]).to eq(avis.introduction) }
+        end
+
         describe 'etablissement' do
           let(:field_list) {
             [
