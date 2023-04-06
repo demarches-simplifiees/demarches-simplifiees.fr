@@ -220,6 +220,7 @@ ActiveRecord::Schema.define(version: 2023_03_27_230248) do
     t.string "external_id"
     t.string "fetch_external_data_exceptions", array: true
     t.bigint "parent_id"
+    t.boolean "prefilled", default: false
     t.boolean "private", default: false, null: false
     t.datetime "rebased_at"
     t.integer "row"
