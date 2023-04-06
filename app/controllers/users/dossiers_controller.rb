@@ -215,7 +215,7 @@ module Users
       respond_to do |format|
         format.html { render :brouillon }
         format.turbo_stream do
-          @to_shows, @to_hides = @dossier.champs_public
+          @to_shows, @to_hides = @dossier.champs_public_all
             .filter(&:conditional?)
             .partition(&:visible?)
             .map { |champs| champs_to_one_selector(champs) }
@@ -236,7 +236,7 @@ module Users
       respond_to do |format|
         format.html { render :modifier }
         format.turbo_stream do
-          @to_shows, @to_hides = @dossier.champs_public
+          @to_shows, @to_hides = @dossier.champs_public_all
             .filter(&:conditional?)
             .partition(&:visible?)
             .map { |champs| champs_to_one_selector(champs) }
