@@ -38,24 +38,13 @@ class APIToken < ApplicationRecord
         # the migration to the APIToken model set `version: 1` for all the v1 and v2 token
         # this is the only place where we can fix the version
         where(administrateur_id:, version: 1).update_all(version: 2) # update to v2
-        find_by(administrateur_id:, version: 2)&.then(&ensure_valid_token(plain_token)) ||
-          find_with_administrateur_encrypted_token(plain_token, administrateurs) # before migration
+        find_by(administrateur_id:, version: 2)&.then(&ensure_valid_token(plain_token))
       in { plain_token: } # token v1
-        where(administrateur: administrateurs, version: 1).find(&ensure_valid_token(plain_token)) ||
-          find_with_administrateur_encrypted_token(plain_token, administrateurs) # before migration
+        where(administrateur: administrateurs, version: 1).find(&ensure_valid_token(plain_token))
       end
     end
 
     private
-
-    # FIXME remove after migration
-    def find_with_administrateur_encrypted_token(plain_token, administrateurs)
-      administrateurs
-        .lazy
-        .filter { _1.encrypted_token.present? }
-        .map { APIToken.new(administrateur: _1, encrypted_token: _1.encrypted_token, version: 1) }
-        .find(&ensure_valid_token(plain_token))
-    end
 
     UUID_SIZE = SecureRandom.uuid.size
     def unpack(maybe_packed_token)
