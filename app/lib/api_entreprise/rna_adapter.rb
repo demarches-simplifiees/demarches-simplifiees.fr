@@ -15,12 +15,13 @@ class APIEntreprise::RNAAdapter < APIEntreprise::Adapter
 
   def process_params
     params = data_source[:association]
+    return {} if params.nil?
 
     Sentry.with_scope do |scope|
       scope.set_tags(siret: @siret)
       scope.set_extras(source: params)
 
-      params = params&.slice(*attr_to_fetch) if @depreciated
+      params = params.slice(*attr_to_fetch) if @depreciated
       params[:rna] = data_source.dig(:association, :id)
 
       if params[:rna].present? && valid_params?(params)
