@@ -1,0 +1,15 @@
+%p
+  %b= "#{@api_token.name} "
+  %span.fr-text--sm= @api_token.prefix
+
+- if @packed_token.present?
+  .fr-text--sm{ style: "width: 80%; word-break: break-all;" }
+    - button = render Dsfr::CopyButtonComponent.new(text: @packed_token, title: "Copier le jeton dans le presse-papier", success: "Le jeton a été copié dans le presse-papier")
+    = "#{@packed_token} #{button}"
+
+  %p Pour des raisons de sécurité, il ne sera plus ré-affiché, notez-le bien.
+
+- else
+  %p Pour des raisons de sécurité, nous ne pouvons vous l’afficher que lors de sa création.
+
+= button_to "Révoquer le jeton", api_token_path(@api_token), method: :delete, class: "fr-btn fr-btn--secondary", data: { turbo_confirm: "Confirmez-vous la révocation de ce jeton ? Les applications qui l’utilisent actuellement seront bloquées." }

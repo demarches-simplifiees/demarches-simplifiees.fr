@@ -86,6 +86,16 @@ ActiveRecord::Schema.define(version: 2023_03_27_230248) do
     t.index ["procedure_id"], name: "index_administrateurs_procedures_on_procedure_id"
   end
 
+  create_table "api_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.bigint "administrateur_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.string "encrypted_token", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "version", default: 3, null: false
+    t.index ["administrateur_id"], name: "index_api_tokens_on_administrateur_id"
+  end
+
   create_table "archives", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.string "job_status", null: false
@@ -940,6 +950,7 @@ ActiveRecord::Schema.define(version: 2023_03_27_230248) do
   add_foreign_key "administrateurs_instructeurs", "instructeurs"
   add_foreign_key "administrateurs_procedures", "administrateurs"
   add_foreign_key "administrateurs_procedures", "procedures"
+  add_foreign_key "api_tokens", "administrateurs"
   add_foreign_key "archives_groupe_instructeurs", "archives"
   add_foreign_key "archives_groupe_instructeurs", "groupe_instructeurs"
   add_foreign_key "assign_tos", "groupe_instructeurs"
