@@ -338,7 +338,7 @@ class API::V2::StoredQuery
     expert {
       email
     }
-    attachment {
+    attachments {
       ...FileFragment
     }
   }
@@ -348,7 +348,7 @@ class API::V2::StoredQuery
     email
     body
     createdAt
-    attachment {
+    attachments {
       ...FileFragment
     }
   }
@@ -423,7 +423,7 @@ class API::V2::StoredQuery
       values
     }
     ... on PieceJustificativeChamp {
-      file {
+      files {
         ...FileFragment
       }
     }

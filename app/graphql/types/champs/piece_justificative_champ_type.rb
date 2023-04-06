@@ -3,10 +3,10 @@ module Types::Champs
     implements Types::ChampType
 
     field :file, Types::File, null: true, deprecation_reason: "Utilisez le champ `files` à la place.", extensions: [
-      { Extensions::Attachment => { attachments: :piece_justificative_file, flat_first: true } }
+      { Extensions::Attachment => { attachments: :piece_justificative_file, as: :single } }
     ]
 
-    field :files, [Types::File], null: true, extensions: [
+    field :files, [Types::File], null: false, extensions: [
       { Extensions::Attachment => { attachments: :piece_justificative_file } }
     ]
   end
