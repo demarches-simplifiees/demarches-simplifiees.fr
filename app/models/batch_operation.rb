@@ -40,10 +40,10 @@ class BatchOperation < ApplicationRecord
   }
 
   def dossiers_safe_scope(dossier_ids = self.dossier_ids)
-    query = Dossier.joins(:procedure)
-      .where(procedure: { id: instructeur.procedures.ids })
-      .where(id: dossier_ids)
+    query = instructeur
+      .dossiers
       .visible_by_administration
+      .where(id: dossier_ids)
     case operation
     when BatchOperation.operations.fetch(:archiver) then
       query.not_archived.state_termine
