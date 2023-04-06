@@ -98,7 +98,7 @@ class Champs::MultipleDropDownListChamp < Champ
   end
 
   def value=(value)
-    return super(nil) if value.blank?
+    return super(nil) if value.nil?
 
     values = if value.is_a?(Array)
       value
