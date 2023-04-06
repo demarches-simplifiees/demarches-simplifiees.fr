@@ -135,7 +135,7 @@ describe API::V2::GraphqlController do
       end
 
       context 'include deleted Dossiers' do
-        let(:variables) { { demarcheNumber: procedure.id, includeDeletedDossiers: true } }
+        let(:variables) { { demarcheNumber: procedure.id, includeDeletedDossiers: true, deletedSince: 2.weeks.ago.iso8601 } }
         let(:deleted_dossier) { create(:deleted_dossier, dossier: dossier_accepte) }
 
         before { deleted_dossier }
@@ -150,7 +150,7 @@ describe API::V2::GraphqlController do
       end
 
       context 'include pending deleted Dossiers' do
-        let(:variables) { { demarcheNumber: procedure.id, includePendingDeletedDossiers: true } }
+        let(:variables) { { demarcheNumber: procedure.id, includePendingDeletedDossiers: true, pendingDeletedSince: 2.weeks.ago.iso8601 } }
 
         before {
           dossier.hide_and_keep_track!(dossier.user, DeletedDossier.reasons.fetch(:user_request))
