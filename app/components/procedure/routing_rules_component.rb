@@ -32,7 +32,10 @@ class Procedure::RoutingRulesComponent < ApplicationComponent
   def value_tag(targeted_champ, value, row_index)
     select_tag(
       'value',
-      options_for_select(values_for_select(targeted_champ), selected: value.to_json),
+      options_for_select(
+        values_for_select(targeted_champ, row_index),
+        selected: value.to_json
+      ),
       id: input_id_for('value', row_index)
     )
   end
@@ -67,8 +70,10 @@ class Procedure::RoutingRulesComponent < ApplicationComponent
       .map { |tdc| [tdc.first, constant(tdc.first).to_json] }
   end
 
-  def values_for_select(targeted_champ)
-    empty_target_for_select + available_values_for_select(targeted_champ)
+  def values_for_select(targeted_champ, row_index)
+    (empty_target_for_select + available_values_for_select(targeted_champ))
+      # add id to help morph render selected option
+      .map { |(libelle, json)| [libelle, json, { id: "#{row_index}-option-#{libelle}" }] }
   end
 
   def input_id_for(name, row_index)
