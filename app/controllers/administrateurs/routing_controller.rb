@@ -13,7 +13,8 @@ module Administrateurs
     end
 
     def update_defaut_groupe_instructeur
-      @procedure.update!(defaut_groupe_instructeur_id: defaut_groupe_instructeur_id)
+      new_defaut = @procedure.groupe_instructeurs.find(defaut_groupe_instructeur_id)
+      @procedure.update!(defaut_groupe_instructeur: new_defaut)
     end
 
     private
