@@ -1,4 +1,8 @@
 namespace :anonymizer do
+  # When you created table or columns, you must anonymize them by updating anonymization rules below if necessary.
+  # Then update this version number to match the version defined in db/schema.rb.
+  ANONYMIZER_VERSION = 2023_03_31_075755
+
   desc "Inject pg_anonymizer dynamic rules. Rules can evolve over time so this tas is idempotent."
   task setup_rules: :environment do
     # First check if pg_anonymizer is installed
@@ -256,5 +260,36 @@ namespace :anonymizer do
 
     puts "Now, connect to db with anonymized role and execute a query verifying anonymization, for example: (update with actual credentials)"
     puts "psql -U pganonrole -h localhost -d tps_development -c 'SELECT email FROM users;'"
+  end
+
+  desc "Check version consistency with schema version when new migrations are added"
+  task :lint do
+    changes_cmd = "git diff -G 'add_column|rename_column|create_table' origin/main -- db/migrate || echo 'error'"
+
+    puts "Running: #{changes_cmd}"
+    changes = `#{changes_cmd}`
+
+    if changes.empty? # no schema change
+      puts "No additive migration changes detected."
+      next
+    elsif changes.strip == "error"
+      exit 1
+    end
+
+    schema_version = File.read("db/schema.rb").match(/ActiveRecord::Schema\[7\.\d\].define\(version: ([0-9_]+)\)/)[1]
+    if schema_version.to_i == ANONYMIZER_VERSION
+      puts "Anonymizer version matches Schema version: #{schema_version}"
+      next
+    end
+
+    schema_format = "%Y_%m_%d_%H%M%S"
+    anonymizer_version_formatted = Time.parse(ANONYMIZER_VERSION.to_s).utc.strftime(schema_format) # rubocop:disable Rails/TimeZone
+
+    puts "You created table or columns but Anonymizer version does not match Schema version:"
+    puts "        SCHEMA_VERSION = #{schema_version} (config/schema.rb)"
+    puts "    ANONYMIZER_VERSION = #{anonymizer_version_formatted} (lib/tasks/anonymizer.rake)"
+    puts "Open lib/tasks/anonymizer.rake, update anonymization rules if necessary and ANONYMIZER_VERSION to match the Schema version."
+
+    exit 1
   end
 end
