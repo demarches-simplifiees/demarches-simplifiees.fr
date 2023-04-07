@@ -15,7 +15,8 @@ describe Champs::CommuneChamp do
 
     it 'with code_postal' do
       champ.update(value: code_insee)
-      expect(champ.name).to eq('Châteldon (63290)')
+      expect(champ.to_s).to eq('Châteldon (63290)')
+      expect(champ.name).to eq('Châteldon')
       expect(champ.external_id).to eq(code_insee)
       expect(champ.code).to eq(code_insee)
       expect(champ.code_departement).to eq(code_departement)
@@ -29,7 +30,8 @@ describe Champs::CommuneChamp do
 
       it 'with value' do
         champ.update_column(:value, 'Châteldon (63290)')
-        expect(champ.name).to eq('Châteldon (63290)')
+        expect(champ.to_s).to eq('Châteldon (63290)')
+        expect(champ.name).to eq('Châteldon')
         expect(champ.external_id).to eq(code_insee)
         expect(champ.code).to eq(code_insee)
         expect(champ.code_departement).to eq(code_departement)

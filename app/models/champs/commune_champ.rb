@@ -25,7 +25,7 @@ class Champs::CommuneChamp < Champs::TextChamp
   before_validation :on_code_postal_change
 
   def for_export
-    [name, code? ? code : '', departement? ? departement_code_and_name : '']
+    [to_s, code? ? code : '', departement? ? departement_code_and_name : '']
   end
 
   def departement_name
@@ -52,16 +52,22 @@ class Champs::CommuneChamp < Champs::TextChamp
     code_postal.present?
   end
 
+  alias postal_code code_postal
+
   def name
     if code?
-      "#{APIGeoService.commune_name(code_departement, code)} (#{code_postal_with_fallback})"
+      APIGeoService.commune_name(code_departement, code)
     else
       value.present? ? value.to_s : ''
     end
   end
 
   def to_s
-    name
+    if code?
+      "#{APIGeoService.commune_name(code_departement, code)} (#{code_postal_with_fallback})"
+    else
+      value.present? ? value.to_s : ''
+    end
   end
 
   def code

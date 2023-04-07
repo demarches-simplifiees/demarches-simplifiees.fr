@@ -5,7 +5,7 @@ module Types::Champs
     class CommuneType < Types::BaseObject
       field :name, String, "Le nom de la commune", null: false
       field :code, String, "Le code INSEE", null: false
-      field :postal_code, String, "Le code postal", null: true, method: :code_postal
+      field :postal_code, String, "Le code postal", null: true
     end
 
     field :commune, CommuneType, null: true
