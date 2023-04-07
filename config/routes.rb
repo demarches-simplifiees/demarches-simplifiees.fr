@@ -506,6 +506,7 @@ Rails.application.routes.draw do
       end
 
       patch :update, controller: 'routing', as: :routing_rules
+      patch :update_defaut_groupe_instructeur, controller: 'routing', as: :update_defaut_groupe_instructeur
 
       put 'clone'
       put 'archive'

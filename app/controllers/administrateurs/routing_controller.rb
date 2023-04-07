@@ -12,6 +12,10 @@ module Administrateurs
       groupe_instructeur.update!(routing_rule: ds_eq(left, right))
     end
 
+    def update_defaut_groupe_instructeur
+      @procedure.update!(defaut_groupe_instructeur_id: defaut_groupe_instructeur_id)
+    end
+
     private
 
     def targeted_champ_changed?
@@ -34,8 +38,12 @@ module Administrateurs
       routing_params[:groupe_instructeur_id]
     end
 
+    def defaut_groupe_instructeur_id
+      routing_params[:defaut_groupe_instructeur_id]
+    end
+
     def routing_params
-      params.permit(:targeted_champ, :value, :groupe_instructeur_id)
+      params.permit(:targeted_champ, :value, :groupe_instructeur_id, :defaut_groupe_instructeur_id)
     end
   end
 end
