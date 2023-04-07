@@ -5,8 +5,8 @@ module Administrateurs
     before_action :retrieve_procedure
 
     def update
-      left = champ_value(targeted_champ)
-      right = parsed_value
+      left = targeted_champ
+      right = value
 
       groupe_instructeur.update!(routing_rule: ds_eq(left, right))
     end
@@ -14,17 +14,11 @@ module Administrateurs
     private
 
     def targeted_champ
-      routing_params[:targeted_champ].to_i
+      Logic.from_json(routing_params[:targeted_champ])
     end
 
     def value
-      routing_params[:value]
-    end
-
-    def parsed_value
-      term = Logic.from_json(value) rescue nil
-
-      term.presence || constant(value)
+      Logic.from_json(routing_params[:value])
     end
 
     def groupe_instructeur
