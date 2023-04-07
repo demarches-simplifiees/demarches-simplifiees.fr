@@ -46,7 +46,7 @@ describe Champs::CarteController, type: :controller do
       end
 
       context 'error' do
-        let(:feature) { attributes_for(:geo_area, :invalid_right_hand_rule_polygon) }
+        let(:feature) { attributes_for(:geo_area, :invalid_point) }
         let(:params) do
           {
             champ_id: champ.id,
@@ -92,7 +92,7 @@ describe Champs::CarteController, type: :controller do
       end
 
       context 'error' do
-        let(:feature) { attributes_for(:geo_area, :invalid_right_hand_rule_polygon) }
+        let(:feature) { attributes_for(:geo_area, :invalid_point) }
 
         it { expect(response.status).to eq 422 }
       end
