@@ -60,6 +60,15 @@ describe Administrateur, type: :model do
       expect(Service.find_by(id: procedure.service.id)).not_to be_nil
       expect(Administrateur.find_by(id: administrateur.id)).to be_nil
     end
+
+    context "proedure without service" do
+      let!(:procedure) { create(:procedure, :draft, administrateurs: [administrateur, autre_administrateur]) }
+
+      it "delete procedure without service" do
+        administrateur.delete_and_transfer_services
+        expect(Administrateur.find_by(id: administrateur.id)).to be_nil
+      end
+    end
   end
 
   describe '#merge' do
