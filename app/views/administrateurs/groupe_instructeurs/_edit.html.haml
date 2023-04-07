@@ -46,13 +46,13 @@
         %tr
           // i18n-tasks-use t('.existing_groupe')
           %th{ colspan: 2 }= t(".existing_groupe", count: groupes_instructeurs.total_count)
-          %th
+          %th.actions
             = link_to "Exporter au format CSV", export_groupe_instructeurs_admin_procedure_groupe_instructeurs_path(procedure, format: :csv)
       %tbody
         - groupes_instructeurs.each do |group|
           %tr
             %td= group.label
-            %td.actions= link_to t('.set_up'), admin_procedure_groupe_instructeur_path(procedure, group)
+            %td.setup= link_to t('.set_up'), admin_procedure_groupe_instructeur_path(procedure, group)
             - if group.can_delete?
               %td.actions
                 = link_to admin_procedure_groupe_instructeur_path(procedure, group), { method: :delete, class: 'button', data: { confirm: t('.group_management.delete_confirmation', group_name: group.label) }} do
