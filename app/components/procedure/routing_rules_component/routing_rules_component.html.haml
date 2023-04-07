@@ -28,5 +28,11 @@
                 %td.target= targeted_champ_tag(targeted_champ, row_index)
                 %td.operator est égal à
                 %td.value= value_tag(targeted_champ, value, row_index)
+
+    %p Choix du groupe d’instructeurs par défaut
+    %p.notice Sélectionnez un groupe d’instructeurs qui recevra les dossiers non routés
+    = form_tag class: 'form' do |f|
+      = select_tag :defaut_groupe_instructeur_id, options_for_select(['a', 'b', 'c'])
+
   - else
     .notice= t('.routing_rules_warning_html', path: champs_admin_procedure_path(@procedure_id))
