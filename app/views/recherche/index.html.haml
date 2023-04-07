@@ -98,7 +98,7 @@
                                                                       dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
                                                                       close_to_expiration: nil,
                                                                       hidden_by_administration: nil,
-                                                                      post_method: { method: :post } }
+                                                                      turbo: false }
 
             - else
               %td
