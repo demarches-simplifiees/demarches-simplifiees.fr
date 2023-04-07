@@ -1,7 +1,7 @@
 ---
 fr:
   select: Sélectionner
-  apply_routing_rules: Appliquer des règles de routage
+  apply_routing_rules: Règles de routage
   routing_rules_notice_html: |
     <p>Ajoutez des règles de routage à partir de champs « choix simple » créés dans le <a href="%{path}">formulaire</a>.</p>
     <p>Les dossiers seront routées vers le premier groupe affiché dont la règle correspond.</p>
