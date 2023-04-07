@@ -1,6 +1,5 @@
 .card#routing-rules
-  .card-title
-    = t('.apply_routing_rules')
+  %h2.card-title= t('.apply_routing_rules')
   - if can_route?
     .notice
       = t('.routing_rules_notice_html', path: champs_admin_procedure_path(@procedure_id))
