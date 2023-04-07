@@ -61,7 +61,7 @@ describe 'Instructing a dossier:', js: true do
     end
 
     expect(page).to have_text('Dossier traité avec succès.')
-    expect(page).to have_link('Archiver le dossier')
+    expect(page).to have_button('Archiver le dossier')
 
     dossier.reload
     expect(dossier.state).to eq(Dossier.states.fetch(:accepte))
@@ -69,10 +69,10 @@ describe 'Instructing a dossier:', js: true do
 
     click_on procedure.libelle
     click_on 'traité'
-    expect(page).to have_link('Repasser en instruction')
-    page.click_link('', title: 'Supprimer le dossier')
+    expect(page).to have_button('Repasser en instruction')
+    click_on 'Supprimer le dossier'
     click_on 'traité'
-    expect(page).not_to have_link('Repasser en instruction')
+    expect(page).not_to have_button('Repasser en instruction')
   end
 
   scenario 'An instructeur can destroy a dossier from view' do
@@ -81,7 +81,7 @@ describe 'Instructing a dossier:', js: true do
     dossier.passer_en_instruction(instructeur: instructeur)
     dossier.accepter!(instructeur: instructeur)
     visit instructeur_dossier_path(procedure, dossier)
-    page.click_link('', title: 'Supprimer le dossier')
+    click_on 'Supprimer le dossier'
   end
 
   scenario 'A instructeur can follow/unfollow a dossier' do

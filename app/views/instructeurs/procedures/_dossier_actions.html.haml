@@ -1,47 +1,49 @@
 - if hidden_by_administration
   %li
-    = link_to restore_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: "fr-btn fr-icon-refresh-line" do
+    = button_to restore_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: "fr-btn fr-icon-refresh-line" do
       = t('views.instructeurs.dossiers.restore')
 - elsif close_to_expiration || Dossier::TERMINE.include?(state)
-  %li{ 'data-turbo': 'true' }
+  %li
     - if close_to_expiration
-      = link_to repasser_en_instruction_instructeur_dossier_path(procedure_id, dossier_id), { class: 'fr-btn fr-btn--secondary fr-icon-edit-line' }.deep_merge!(post_method) do
+      = button_to repasser_en_instruction_instructeur_dossier_path(procedure_id, dossier_id), method: :post, class: 'fr-btn fr-btn--secondary fr-icon-edit-line', form: { data: { turbo: turbo ? 'true' : 'false' } } do
         Repasser en instruction
 
-      = link_to(repousser_expiration_instructeur_dossier_path(procedure_id, dossier_id), method: :post, class: "fr-btn") do
+      = button_to repousser_expiration_instructeur_dossier_path(procedure_id, dossier_id), method: :post, class: "fr-btn" do
         = t('instructeurs.dossiers.header.banner.button_delay_expiration')
 
     - elsif archived
-      = link_to( unarchive_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: "fr-btn fr-icon-upload-2-line") do
+      = button_to unarchive_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: "fr-btn fr-icon-upload-2-line" do
         Désarchiver le dossier
 
-      = link_to('', instructeur_dossier_path(procedure_id, dossier_id), method: :delete, class: 'fr-btn fr-btn--secondary fr-icon-delete-line icon-only danger', title: t('views.instructeurs.dossiers.delete_dossier'))
+      = button_to instructeur_dossier_path(procedure_id, dossier_id), method: :delete, class: 'fr-btn fr-btn--secondary fr-icon-delete-line icon-only danger', title: t('views.instructeurs.dossiers.delete_dossier') do
+        = ""
 
     - else
-      = link_to repasser_en_instruction_instructeur_dossier_path(procedure_id, dossier_id), { class: 'fr-btn fr-btn--secondary fr-icon-edit-line' }.deep_merge!(post_method) do
+      = button_to repasser_en_instruction_instructeur_dossier_path(procedure_id, dossier_id), method: :post, class: 'fr-btn fr-btn--secondary fr-icon-edit-line', form: { data: { turbo: turbo ? 'true' : 'false' } } do
         Repasser en instruction
 
-      = link_to(  archive_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: 'fr-btn fr-icon-folder-2-line') do
+      = button_to archive_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: 'fr-btn fr-icon-folder-2-line' do
         Archiver le dossier
 
-      = link_to('', instructeur_dossier_path(procedure_id, dossier_id), method: :delete, class: 'fr-btn fr-btn--secondary fr-icon-delete-line icon-only danger', title: t('views.instructeurs.dossiers.delete_dossier'))
+      = button_to instructeur_dossier_path(procedure_id, dossier_id), method: :delete, class: 'fr-btn fr-btn--secondary fr-icon-delete-line icon-only danger', title: t('views.instructeurs.dossiers.delete_dossier') do
+        = ""
 
 - elsif Dossier::EN_CONSTRUCTION_OU_INSTRUCTION.include?(state)
   - if Dossier.states[:en_construction] == state
-    %li{ 'data-turbo': 'true' }
-      = link_to passer_en_instruction_instructeur_dossier_path(procedure_id, dossier_id), { class: 'fr-btn fr-btn--secondary fr-icon-edit-line' }.deep_merge!(post_method) do
+    %li{ 'data-turbo': turbo ? 'true' : 'false' }
+      = button_to passer_en_instruction_instructeur_dossier_path(procedure_id, dossier_id), method: :post, class: 'fr-btn fr-btn--secondary fr-icon-edit-line' do
         Passer en instruction
   - elsif Dossier.states[:en_instruction] == state
-    %li{ 'data-turbo': 'true' }
-      = link_to repasser_en_construction_instructeur_dossier_path(procedure_id, dossier_id), { class: 'fr-btn fr-btn--secondary fr-icon-draft-line' }.deep_merge!(post_method) do
+    %li{ 'data-turbo': turbo ? 'true' : 'false' }
+      = button_to repasser_en_construction_instructeur_dossier_path(procedure_id, dossier_id), method: :post, class: 'fr-btn fr-btn--secondary fr-icon-draft-line' do
         Repasser en construction
 
 
   - if dossier_is_followed
     %li
-      = link_to unfollow_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: 'fr-btn fr-btn--secondary fr-icon-star-fill' do
+      = button_to unfollow_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: 'fr-btn fr-btn--secondary fr-icon-star-fill' do
         = t('views.instructeurs.dossiers.stop_follow')
   - else
     %li
-      = link_to follow_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: 'fr-btn fr-icon-star-line' do
+      = button_to follow_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: 'fr-btn fr-icon-star-line' do
         = t('views.instructeurs.dossiers.follow_file')
