@@ -917,7 +917,8 @@ class Procedure < ApplicationRecord
 
   def ensure_defaut_groupe_instructeur
     if self.groupe_instructeurs.empty?
-      groupe_instructeurs.create(label: GroupeInstructeur::DEFAUT_LABEL)
+      gi = groupe_instructeurs.create(label: GroupeInstructeur::DEFAUT_LABEL)
+      self.update(defaut_groupe_instructeur_id: gi.id)
     end
   end
 

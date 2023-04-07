@@ -1274,10 +1274,13 @@ describe Procedure do
   end
 
   describe '.ensure_a_groupe_instructeur_exists' do
-    let!(:procedure) { create(:procedure) }
+    let(:procedure) { create(:procedure, groupe_instructeurs: []) }
 
-    it { expect(procedure.groupe_instructeurs.count).to eq(1) }
-    it { expect(procedure.groupe_instructeurs.first.label).to eq(GroupeInstructeur::DEFAUT_LABEL) }
+    it do
+      expect(procedure.groupe_instructeurs.count).to eq(1)
+      expect(procedure.groupe_instructeurs.first.label).to eq(GroupeInstructeur::DEFAUT_LABEL)
+      expect(procedure.defaut_groupe_instructeur_id).not_to be_nil
+    end
   end
 
   describe '.missing_instructeurs?' do
