@@ -6,12 +6,17 @@ module Administrateurs
 
     def update
       left = targeted_champ
-      right = value
+
+      right = targeted_champ_changed? ? empty : value
 
       groupe_instructeur.update!(routing_rule: ds_eq(left, right))
     end
 
     private
+
+    def targeted_champ_changed?
+      targeted_champ != groupe_instructeur.routing_rule&.left
+    end
 
     def targeted_champ
       Logic.from_json(routing_params[:targeted_champ])
