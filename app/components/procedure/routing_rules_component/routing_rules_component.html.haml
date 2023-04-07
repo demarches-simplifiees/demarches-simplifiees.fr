@@ -29,14 +29,14 @@
                 %td.operator est égal à
                 %td.value= value_tag(targeted_champ, value, row_index)
 
-    %p Choix du groupe d’instructeurs par défaut
-    %p.notice Sélectionnez un groupe d’instructeurs qui recevra les dossiers non routés
     = form_tag admin_procedure_update_defaut_groupe_instructeur_path,
       method: :post,
-      class: 'form',
+      class: 'form flex align-baseline defaut-groupe',
       data: { controller: 'autosave' } do
+      = label_tag :defaut_groupe_instructeur_id, 'Et si aucune règle ne correspond, router vers :'
       = select_tag :defaut_groupe_instructeur_id,
         options_for_select(@groupe_instructeurs.pluck(:label, :id), selected: @revision.procedure.defaut_groupe_instructeur.id),
         class: 'width-100'
+
   - else
     .notice= t('.routing_rules_warning_html', path: champs_admin_procedure_path(@procedure_id))
