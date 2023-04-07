@@ -5,7 +5,6 @@ namespace :after_party do
 
     Rake::Task["anonymizer:setup_rules"].invoke
 
-    AfterParty::TaskRecord
-      .create version: AfterParty::TaskRecorder.new(__FILE__).timestamp
+    # We want this task to run at each deployment
   end
 end
