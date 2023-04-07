@@ -11,8 +11,7 @@
       = f.submit t('.button.rename'), class: 'button primary send'
 
 .card
-  .card-title
-    = t('.group_management.title')
+  %h2.card-title= t('.group_management.title')
 
   = form_for :groupe_instructeur, html: { class: 'form' } do |f|
     = f.label :label do
