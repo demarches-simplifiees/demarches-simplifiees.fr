@@ -28,6 +28,8 @@
                 %td.operator est égal à
                 %td.value= value_tag(targeted_champ, value, row_index)
 
+    = paginate @groupe_instructeurs
+
     = form_tag admin_procedure_update_defaut_groupe_instructeur_path,
       class: 'form flex align-baseline defaut-groupe',
       data: { controller: 'autosave' } do

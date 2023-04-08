@@ -28,4 +28,4 @@
 
   -  if @procedure.routing_enabled? && @procedure.feature_enabled?(:routing_rules)
     = render(Procedure::RoutingRulesComponent.new(revision: @procedure.active_revision,
-      groupe_instructeurs: @procedure.groupe_instructeurs))
+      groupe_instructeurs: @groupes_instructeurs))
