@@ -1,34 +1,45 @@
-.card#routing-rules
+.card#routing-rules{ data: { turbo: 'true' } }
   %h2.card-title= t('.apply_routing_rules')
   - if can_route?
     .notice
       = t('.routing_rules_notice_html', path: champs_admin_procedure_path(@procedure_id))
-    .mt-2.width-100
-      %table.routing-rules-table.mt-2.width-100
-        %thead
-          %tr
-            %th.far-left Router vers
-            %th.if
-            %th.target Champ cible du routage
-            %th.operator
-            %th.value Valeur
-    .mt-2.width-100
-      - rows.each.with_index do |(targeted_champ, value, groupe_instructeur), row_index|
-        = form_tag admin_procedure_routing_rules_path(@procedure_id),
-          method: :post,
-          class: "form width-100 gi-#{groupe_instructeur.id}",
-          data: { controller: 'autosave' } do
-          = hidden_groupe_instructeur_tag(groupe_instructeur.id)
-          %table.routing-rules-table.condition-table.mt-2.width-100
-            %tbody
-              %tr
-                %td.far-left= groupe_instructeur.label
-                %td.if si
-                %td.target= targeted_champ_tag(targeted_champ, row_index)
-                %td.operator est égal à
-                %td.value= value_tag(targeted_champ, value, row_index)
 
-    = paginate @groupe_instructeurs
+    %turbo-frame#go
+      = form_tag admin_procedure_groupe_instructeurs_path(@procedure_id),
+        method: :get do
+
+        .flex.align-baseline
+          #header-search.fr-search-bar{role: "search", data: { controller: 'autosubmit' } }
+            = label_tag :q, 'Rechercher par nom', class: 'fr-label'
+            = text_field_tag :q, '', class: 'fr-input', type: 'search', placeholder: 'Rechercher par nom'
+            %button.fr-btn{title: "Rechercher"} Rechercher
+
+        .mt-2.width-100
+          %table.routing-rules-table.mt-2.width-100
+            %thead
+              %tr
+                %th.far-left Router vers
+                %th.if
+                %th.target Champ cible du routage
+                %th.operator
+                %th.value Valeur
+        .mt-2.width-100
+          - rows.each.with_index do |(targeted_champ, value, groupe_instructeur), row_index|
+            = form_tag admin_procedure_routing_rules_path(@procedure_id),
+              method: :post,
+              class: "form width-100 gi-#{groupe_instructeur.id}",
+              data: { controller: 'autosave' } do
+              = hidden_groupe_instructeur_tag(groupe_instructeur.id)
+              %table.routing-rules-table.condition-table.mt-2.width-100
+                %tbody
+                  %tr
+                    %td.far-left= groupe_instructeur.label
+                    %td.if si
+                    %td.target= targeted_champ_tag(targeted_champ, row_index)
+                    %td.operator est égal à
+                    %td.value= value_tag(targeted_champ, value, row_index)
+
+      = paginate @groupe_instructeurs
 
     = form_tag admin_procedure_update_defaut_groupe_instructeur_path,
       class: 'form flex align-baseline defaut-groupe',

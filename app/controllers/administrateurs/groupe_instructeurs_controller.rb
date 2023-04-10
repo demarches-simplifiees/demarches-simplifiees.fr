@@ -4,7 +4,7 @@ module Administrateurs
 
     before_action :ensure_not_super_admin!, only: [:add_instructeur]
 
-    ITEMS_PER_PAGE = 25
+    ITEMS_PER_PAGE = 5
     CSV_MAX_SIZE = 1.megabytes
     CSV_ACCEPTED_CONTENT_TYPES = [
       "text/csv",
@@ -282,8 +282,17 @@ module Administrateurs
     end
 
     def paginated_groupe_instructeurs
-      procedure
+      groupes = procedure
         .groupe_instructeurs
+
+      if params[:q].present?
+        query = ActiveRecord::Base.sanitize_sql_like(params[:q])
+
+        groupes = groupes
+          .where('unaccent(label) ILIKE unaccent(?)', "%#{query}%")
+      end
+
+      groupes
         .page(params[:page])
         .per(ITEMS_PER_PAGE)
     end
