@@ -14,6 +14,14 @@
             = text_field_tag :q, '', class: 'fr-input', type: 'search', placeholder: 'Rechercher par nom'
             %button.fr-btn{title: "Rechercher"} Rechercher
 
+          %fieldset#checkboxes-inline.fr-fieldset.ml-1{"aria-labelledby" => "checkboxes-inline-legend checkboxes-inline-messages"}
+            .fr-fieldset__element.fr-fieldset__element--inline
+              .fr-checkbox-group
+                %input#checkboxes-inline-1{"aria-describedby" => "checkboxes-inline-1-messages", name: "checkboxes-inline-1", type: "checkbox"}/
+                %label.fr-label{for: "checkboxes-inline-1"}
+                  A configurer (12/20)
+                #checkboxes-inline-1-messages.fr-messages-group{"aria-live" => "assertive"}
+
         .mt-2.width-100
           %table.routing-rules-table.mt-2.width-100
             %thead
