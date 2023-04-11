@@ -19,3 +19,7 @@ fr:
           button_delay_expiration:
             one: "Conserver %{count} mois supplémentaire"
             other: "Conserver %{count} mois supplémentaires"
+        callout:
+          last_dossier_editable_title: Vous avez déjà commencé à remplir un dossier
+          last_dossier_editable_text: Il y a %{time_ago} vous avez commencé à remplir un dossier sur la démarche « %{libelle} ».
+          last_dossier_editable_button: Continuer à remplir

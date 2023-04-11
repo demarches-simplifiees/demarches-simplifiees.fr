@@ -18,6 +18,13 @@ describe Dossier do
 
       it { expect(Dossier.without_followers.to_a).to eq([dossier_without_follower]) }
     end
+
+    describe 'last_editable' do
+      let!(:dossier_en_construction) { create(:dossier, :en_construction) }
+      let!(:dossier_en_construction_2) { create(:dossier, :en_construction) }
+
+      it { expect(Dossier.last_editable).to eq(dossier_en_construction_2) }
+    end
   end
 
   describe 'validations' do

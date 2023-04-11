@@ -448,7 +448,7 @@ en:
           simple: Search
         secondary_menu: Secondary menu
         index:
-          dossiers: "Files"
+          dossiers: "My files"
         dossiers_list:
           caption: My files
           procedure: "Procedure"

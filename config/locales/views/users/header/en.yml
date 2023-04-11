@@ -19,3 +19,7 @@ en:
           button_delay_expiration:
             one: "Keep for %{count} more month"
             other: "Keep for %{count} more months"
+        callout:
+          last_dossier_editable_title: You already started to fill a file
+          last_dossier_editable_text: "%{time_ago} ago you started to fill a file on « %{libelle} » procedure."
+          last_dossier_editable_button: Keep filling this file

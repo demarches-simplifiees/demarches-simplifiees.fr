@@ -795,6 +795,15 @@ describe Users::DossiersController, type: :controller do
       end
     end
 
+    context 'when the user has dossier he can edit' do
+      let!(:own_dossier) { create(:dossier, user: user) }
+      let!(:own_dossier_2) { create(:dossier, :en_instruction, user: user) }
+
+      before { get(:index) }
+
+      it { expect(assigns(:last_dossier_editable)).to match(own_dossier) }
+    end
+
     describe 'sort order' do
       before do
         Timecop.freeze(4.days.ago) { create(:dossier, user: user) }

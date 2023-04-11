@@ -28,6 +28,8 @@ module Users
       @dossiers_supprimes_definitivement = current_user.deleted_dossiers.order_by_updated_at.page(page)
       @dossier_transfers = DossierTransfer.for_email(current_user.email).page(page)
       @statut = statut(@user_dossiers, @dossiers_traites, @dossiers_invites, @dossiers_supprimes_recemment, @dossiers_supprimes_definitivement, @dossier_transfers, @dossiers_close_to_expiration, params[:statut])
+
+      @last_dossier_editable = current_user.dossiers.last_editable
     end
 
     def show
