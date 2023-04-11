@@ -28,7 +28,9 @@
     = form_tag import_admin_procedure_groupe_instructeurs_path(procedure), method: :post, multipart: true, class: "mt-4 form" do
       = label_tag t('.csv_import.title')
       %p.notice
-        = t('.csv_import.notice_1_html')
+        = t('.csv_import.notice_1_html',
+          instructeurs_link: link_to(t('.csv_import.link_text'), t('.csv_import.instructeurs_file_path')),
+          groupes_link: link_to(t('.csv_import.link_text'), t('.csv_import.groupes_file_path')))
       %p.notice
         = t('.csv_import.notice_2', csv_max_size: number_to_human_size(csv_max_size))
       = file_field_tag :csv_file, required: true, accept: 'text/csv', size: "1"
