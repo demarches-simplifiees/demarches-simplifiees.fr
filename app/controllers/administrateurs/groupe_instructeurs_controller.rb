@@ -19,6 +19,14 @@ module Administrateurs
       @available_instructeur_emails = available_instructeur_emails
     end
 
+    def index2
+      @procedure = procedure
+      @groupes_instructeurs = paginated_groupe_instructeurs
+
+      @instructeurs = paginated_instructeurs
+      @available_instructeur_emails = available_instructeur_emails
+    end
+
     def show
       @procedure = procedure
       @groupe_instructeur = groupe_instructeur

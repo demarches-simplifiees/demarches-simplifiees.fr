@@ -1,0 +1,104 @@
+- if @procedure.routing_enabled?
+  = render partial: 'administrateurs/breadcrumbs',
+    locals: { steps: [[t('.procedures'), admin_procedures_path],
+                      [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
+                      [t('.instructors_group')]] }
+- else
+  = render partial: 'administrateurs/breadcrumbs',
+    locals: { steps: [[t('.procedures'), admin_procedures_path],
+                      [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
+                      ['Instructeurs']] }
+
+.container{ turbo: true }
+  %turbo-frame#ouaich.fr-grid-row
+    .fr-col.fr-col-12.fr-col-md-3
+      = render(Dsfr::SidemenuComponent.new) do |component|
+        - component.with_links([{ name: 'Nommer des instructeurs', url: index2_admin_procedure_groupe_instructeurs_path(@procedure, menu: :nommer) },
+          { name: 'Options', url: index2_admin_procedure_groupe_instructeurs_path(@procedure, menu: :options) },
+          { name: 'Routage', url: index2_admin_procedure_groupe_instructeurs_path(@procedure, menu: :routage) }])
+    .fr-col
+      .container.groupe-instructeur
+        - if params[:menu] == 'nommer'
+          %h1 Nommer et Révoquer des instructeurs
+
+          = render partial: 'administrateurs/groupe_instructeurs/instructeurs',
+            locals: { procedure: @procedure,
+              groupe_instructeur: @procedure.defaut_groupe_instructeur,
+              instructeurs: @instructeurs,
+              available_instructeur_emails: @available_instructeur_emails,
+              disabled_as_super_admin: administrateur_as_manager? }
+
+        - elsif params[:menu] == 'options'
+          %h1 Options concernant l'instruction
+
+          %ul.fr-toggle__list
+            %li
+              .fr-toggle.fr-toggle--border-bottom.fr-toggle--label-left
+                %input#group-4-toggle-0.fr-toggle__input{type: "checkbox"}/
+                %label.fr-toggle__label{"data-fr-checked-label" => "Activé", "data-fr-unchecked-label" => "Désactivé", for: "group-4-toggle-0"} Autogestion des instructeurs
+                %p.fr-hint-text#toggle-hint-0-hint-text L’autogestion des instructeurs permet aux instructeurs de gérer eux-mêmes la liste des instructeurs de la démarche.
+
+        - elsif params[:menu] == 'routage'
+          %h1 Routage
+          %p Le routage permet d’acheminer les dossiers vers différents groupes d’instructeurs
+          = form_tag index2_admin_procedure_groupe_instructeurs_path(@procedure), method: :get do
+            = hidden_field_tag :menu, 'routage_1'
+            %button.fr-btn Configurer le routage
+
+        - elsif params[:menu] == 'routage_1'
+          = form_tag index2_admin_procedure_groupe_instructeurs_path(@procedure), method: :get do
+            %fieldset#radio-hint-element.fr-fieldset{"aria-labelledby" => "radio-hint-element-legend radio-hint-element-messages"}
+              %legend#radio-hint-element-legend.fr-fieldset__legend--regular.fr-fieldset__legend
+                %h1 Choix du type de routage
+              .fr-fieldset__element
+                .fr-radio-group
+                  %input#radio-hint-element-1{name: "menu", value: "routage_simple", type: "radio"}
+                  %label.fr-label{for: "radio-hint-element-1"}
+                    En fonction d'une liste choix simple présente dans le formulaire
+                    %span.fr-hint-text un groupe sera créé pour chaque choix
+              .fr-fieldset__element
+                .fr-radio-group
+                  %input#radio-hint-element-2{name: "menu", value: "routage_geo", type: "radio", disabled: true}/
+                  %label.fr-label{for: "radio-hint-element-2"}
+                    Géographique
+                    %span.fr-hint-text le dossier sera routé selon une adresse, un département ou une région
+              .fr-fieldset__element
+                .fr-radio-group
+                  %input#radio-hint-element-3{name: "menu", value: "routage_custom", type: "radio"}/
+                  %label.fr-label{for: "radio-hint-element-3"}
+                    Personnalisé
+                    %span.fr-hint-text libre à vous de créer et de configurer les groupes
+              #radio-hint-element-messages.fr-messages-group{"aria-live" => "assertive"}
+
+            %ul.fr-btns-group.fr-btns-group--inline-sm
+              %li
+                %a.fr-btn.fr-btn--secondary{ href: index2_admin_procedure_groupe_instructeurs_path(@procedure, menu: :routage) } Retour
+              %li
+                %button.fr-btn Continuer
+
+        - elsif params[:menu] == 'routage_simple'
+          %h1 Routage en fonction d'un choix simple
+          = form_tag index2_admin_procedure_groupe_instructeurs_path(@procedure), method: :get do
+            .fr-select-group
+              = label_tag :target_choix_simple, 'Créer les groupes à partir du champ :', class: 'fr-label'
+              = select_tag :target_choix_simple,
+                options_for_select(@procedure.active_revision.types_de_champ_public.select { _1.type_champ == 'drop_down_list' }.map{[_1.libelle, _1.id]}),
+                class: 'fr-select'
+
+            %ul.fr-btns-group.fr-btns-group--inline-sm
+              %li
+                = form_tag index2_admin_procedure_groupe_instructeurs_path(@procedure), method: :get do
+                  = hidden_field_tag :menu, 'routage_1'
+                  %button.fr-btn.fr-btn--secondary Retour
+              %li
+                = form_tag index2_admin_procedure_groupe_instructeurs_path(@procedure), method: :get do
+                  = hidden_field_tag :menu, 'nommer'
+                  %button.fr-btn Créer les groupes
+
+        - elsif params[:menu] == 'routage_custom'
+          %h1 personnalisé
+          %ul.fr-btns-group.fr-btns-group--inline-sm
+            %li
+              = form_tag index2_admin_procedure_groupe_instructeurs_path(@procedure), method: :get do
+                = hidden_field_tag :menu, 'routage_1'
+                %button.fr-btn.fr-btn--secondary Retour

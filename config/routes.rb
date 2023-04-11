@@ -527,6 +527,7 @@ Rails.application.routes.draw do
         end
 
         collection do
+          get 'index2'
           patch 'update_routing_criteria_name'
           patch 'update_instructeurs_self_management_enabled'
           post 'import'
