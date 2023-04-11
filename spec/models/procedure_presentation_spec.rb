@@ -1,5 +1,5 @@
 describe ProcedurePresentation do
-  let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
+  let(:procedure) { create(:procedure, :published, types_de_champ_public: [{}], types_de_champ_private: [{}]) }
   let(:instructeur) { create(:instructeur) }
   let(:assign_to) { create(:assign_to, procedure: procedure, instructeur: instructeur) }
   let(:first_type_de_champ) { assign_to.procedure.active_revision.types_de_champ_public.first }
