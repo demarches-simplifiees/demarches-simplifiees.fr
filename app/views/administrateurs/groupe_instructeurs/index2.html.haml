@@ -46,9 +46,36 @@
 
           %ul.fr-toggle__list.fr-mt-2w
             - @procedure.groupe_instructeurs.each do |gi|
-              %li
-                .fr-toggle.fr-toggle--border-bottom
+              %li.fr-mt-4w.fr-toggle--border-bottom
+                .flex.align-baseline.justify-between
                   %p= gi.label
+
+                  %ul.fr-btns-group.fr-btns-group--inline-sm
+                    %li
+                      %button.fr-btn.fr-btn--secondary Paramétrer
+                    %li
+                      %button.fr-btn.fr-btn--secondary Supprimer
+
+                .flex.align-baseline
+                  %p condition :
+                  .target
+                    = select_tag :target,
+                      options_for_select(['ville', 'desser'], selected: 'ville'),
+                      class: 'fr-select'
+                  .operator est égal à
+                  .value
+                    = select_tag :value,
+                      options_for_select(['Paris', 'Marseille', 'Lille', selected: 'Lille']),
+                      class: 'fr-select'
+
+          = form_tag admin_procedure_update_defaut_groupe_instructeur_path,
+            class: 'flex align-baseline fr-mt-2w',
+            data: { controller: 'autosave' } do
+            = label_tag :defaut_groupe_instructeur_id, 'Et si aucune règle ne correspond, router vers :'
+            = select_tag :defaut_groupe_instructeur_id,
+              options_for_select(@procedure.groupe_instructeurs.pluck(:label, :id), selected: @procedure.defaut_groupe_instructeur.id),
+              class: 'fr-select'
+
 
           -# = render(Procedure::RoutingRulesComponent.new(revision: @procedure.active_revision,
           -#   groupe_instructeurs: @groupes_instructeurs))
