@@ -1,4 +1,4 @@
-module Champs::Treeable
+module TreeableConcern
   extend ActiveSupport::Concern
 
   MAX_DEPTH = 6 # deepest level for header_sections is 3.
@@ -16,27 +16,22 @@ module Champs::Treeable
     #   are added to the most_recent_subtree
     # given a root_depth at 0, we build a full tree
     # given a root_depth > 0, we build a partial tree (aka, a repetition)
-    def to_tree(champs:, root_depth:, build_champs_subtree_component:)
-      root = build_champs_subtree_component(header_section: nil)
+    def to_tree(champs:, root_depth:)
+      root = []
       depth_cache = Array.new(MAX_DEPTH)
       depth_cache[root_depth] = root
       most_recent_subtree = root
 
       champs.each do |champ|
         if champ.header_section?
-          champs_subtree = build_champs_subtree_component(header_section: champ)
-          depth_cache[champs_subtree.level - 1].add_node(champs_subtree)
-          most_recent_subtree = depth_cache[champs_subtree.level] = champs_subtree
+          champs_subtree = [champ]
+          depth_cache[champ.level - 1].push(champs_subtree)
+          most_recent_subtree = depth_cache[champ.level] = champs_subtree
         else
-          most_recent_subtree.add_node(champ)
+          most_recent_subtree.push(champ)
         end
       end
       root
-    end
-
-    # must be implemented to render subtree
-    def build_champs_subtree_component(header_section:)
-      raise NotImplementedError
     end
   end
 end

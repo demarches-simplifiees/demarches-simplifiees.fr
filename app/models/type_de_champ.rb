@@ -413,8 +413,13 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def header_section_level_value
-    header_section_level.presence || 1
+    if header_section_level.presence
+      header_section_level.to_i
+    else
+      1
+    end
   end
+
 
   def previous_section_level(upper_tdcs)
     previous_header_section = upper_tdcs.reverse.find(&:header_section?)
