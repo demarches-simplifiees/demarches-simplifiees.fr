@@ -1,8 +1,8 @@
 %label.notice{ for: code_postal_input_id }= t('.postal_code')
 = @form.text_field :code_postal, required: @champ.required?, id: code_postal_input_id, class: "width-33-desktop width-100-mobile small-margin"
-- if @champ.code_postal_with_fallback?
+- if @champ.code_postal?
   - if commune_options.empty?
-    .fr-error-text.mb-4= t('.not_found', postal_code: @champ.code_postal_with_fallback)
+    .fr-error-text.mb-4= t('.not_found', postal_code: @champ.code_postal)
   - elsif commune_options.size <= 3
     %fieldset.radios
       - commune_options.each.with_index do |(option, value), index|

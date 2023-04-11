@@ -24,22 +24,5 @@ describe Champs::CommuneChamp do
       expect(champ.for_export).to eq(['Châteldon (63290)', '63102', '63 – Puy-de-Dôme'])
       expect(champ.communes.size).to eq(8)
     end
-
-    context 'when code_postal is nil', vcr: { cassette_name: 'api_geo_communes' } do
-      let(:champ) { create(:champ_communes, external_id: code_insee, code_departement:) }
-
-      it 'with value' do
-        champ.update_column(:value, 'Châteldon (63290)')
-        expect(champ.to_s).to eq('Châteldon (63290)')
-        expect(champ.name).to eq('Châteldon')
-        expect(champ.external_id).to eq(code_insee)
-        expect(champ.code).to eq(code_insee)
-        expect(champ.code_departement).to eq(code_departement)
-        expect(champ.code_postal).to be_nil
-        expect(champ.code_postal_with_fallback).to eq(code_postal)
-        expect(champ.for_export).to eq(['Châteldon (63290)', '63102', '63 – Puy-de-Dôme'])
-        expect(champ.communes.size).to eq(8)
-      end
-    end
   end
 end
