@@ -37,7 +37,37 @@
 
         - elsif params[:menu] == 'groupes'
           %h1 Gestion des groupes
-
+          %section.fr-accordion
+            %h3.fr-accordion__title
+              %button.fr-accordion__btn{"aria-controls" => "accordion-106", "aria-expanded" => "false"} Import de masse
+            #accordion-106.fr-collapse
+              - csv_max_size = Administrateurs::GroupeInstructeursController::CSV_MAX_SIZE
+              - if @procedure.publiee_or_close?
+                = form_tag import_admin_procedure_groupe_instructeurs_path(@procedure), method: :post, multipart: true, class: "mt-4 form" do
+                  -# = label_tag t('.csv_import.title')
+                  %p |
+                    Pour une procédure standard, le fichier csv doit comporter 1 seule colonne (Email) avec une adresse email d'instructeur par ligne (exemple de fichier). Pour une procédure routée, le fichier doit comporter 2 colonnes (Groupe, Email) et être séparé par des virgules (exemple de fichier).
+                    L’import n’écrase pas les instructeurs existants. Il permet uniquement d'en ajouter. Pour supprimer un instructeur, cliquez sur le bouton « retirer ». Le poids du fichier doit être inférieur 1 Mo.
+                  -#%p.notice
+                  -#  = t('.csv_import.notice_1_html')
+                  -#%p.notice
+                  -#  = t('.csv_import.notice_2', csv_max_size: number_to_human_size(csv_max_size))
+                  = file_field_tag :csv_file, required: true, accept: 'text/csv', size: "1"
+                  = submit_tag 'Envoi', class: 'button primary send', data: { disable_with: "Envoi...", confirm: 'OK ?'}
+                  -# = submit_tag t('.csv_import.import_file'), class: 'button primary send', data: { disable_with: "Envoi...", confirm: t('.csv_import.import_file_alert') }
+              - else
+                %p.mt-4.form.font-weight-bold.mb-2.text-lg
+                  = t('.csv_import.title')
+                %p.notice
+                  = t('.csv_import.import_file_procedure_not_published')
+              - if @procedure.groupe_instructeurs.many?
+                %table.table.mt-2
+                  %thead
+                    %tr
+                      // i18n-tasks-use t('.existing_groupe')
+                      %th{ colspan: 2 }= t(".existing_groupe", count: @groupes_instructeurs.total_count)
+                      %th.actions
+                        = link_to "Exporter au format CSV", export_groupe_instructeurs_admin_procedure_groupe_instructeurs_path(@procedure, format: :csv)
 
           #header-search.fr-search-bar{role: "search", data: { controller: 'autosubmit' } }
             = label_tag :q, 'Rechercher par nom', class: 'fr-label'
@@ -104,6 +134,7 @@
               %button.fr-btn Supprimer le routage
 
         - elsif params[:menu] == 'routage_1'
+
           = form_tag index2_admin_procedure_groupe_instructeurs_path(@procedure), method: :get do
             %fieldset#radio-hint-element.fr-fieldset{"aria-labelledby" => "radio-hint-element-legend radio-hint-element-messages"}
               %legend#radio-hint-element-legend.fr-fieldset__legend--regular.fr-fieldset__legend
