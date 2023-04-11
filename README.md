@@ -198,6 +198,7 @@ Créez le rôle qui supportera l’anonymisation.
 (Adaptez avec le nom de rôle de votre choix, un mot de passe,
 et le nom de la base en production).
 
+
 ```sql
 CREATE ROLE pganonrole LOGIN PASSWORD 'password' IN ROLE tps_development;
 
@@ -205,11 +206,9 @@ CREATE ROLE pganonrole LOGIN PASSWORD 'password' IN ROLE tps_development;
 GRANT SELECT ON ALL TABLES IN SCHEMA public to pganonrole
 ```
 
-Définissez la variable d'environment `PG_ANONYMIZER_ROLE` avec le nom de ce rôle.
-Jouez les migrations avec `rails db:migrate`: une migration va créer l’extension et l'activera pour ce rôle.
 
-
-Puis terminez la configuration :
+Puis activez et configurez l’extension. Voici les étapes indicatives successives,
+référez-vous à la documentation pour plus de détails.
 
 ```sql
 CREATE EXTENSION IF NOT EXISTS anon CASCADE;
@@ -218,7 +217,6 @@ SELECT anon.init();
 
 SECURITY LABEL FOR anon ON ROLE pganonrole IS 'MASKED';
 
->>>>>>> 817bbf8f6 (fixup! chore(db): setup pg_anonymizer)
 ALTER DATABASE tps_development SET session_preload_libraries = 'anon';
 # Il peut être nécessaire d'ouvrir une nouvelle session sql pour terminer la configuration.
 

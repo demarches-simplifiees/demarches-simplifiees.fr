@@ -1,6 +1,15 @@
 namespace :anonymizer do
   desc "Inject pg_anonymizer dynamic rules. Rules can evolve over time so this tas is idempotent."
   task setup_rules: :environment do
+    # First check if pg_anonymizer is installed
+    result = ActiveRecord::Base.connection.execute "SELECT 1 as one FROM pg_extension WHERE extname = 'anon';"
+
+    if result.count.zero?
+      puts "Skip anonymizer:setup_rules because `anon` pg extension is not installed on this server."
+      next
+    end
+
+    # grab super admin emails
     super_admin_emails = SuperAdmin.pluck(:email)
 
     sql_rules = [
@@ -94,7 +103,7 @@ namespace :anonymizer do
     FactoryBot.create(:invite)
     FactoryBot.create(:trusted_device_token)
 
-    puts "Now, connect to db with anonymized role and execute a query verifying anonymization:"
-    puts "psql -U #{ENV["PG_ANONYMIZER_ROLE"]} -h localhost -d tps_development -c 'SELECT email FROM users;'"
+    puts "Now, connect to db with anonymized role and execute a query verifying anonymization, for example: (update with actual credentials)"
+    puts "psql -U pganonrole -h localhost -d tps_development -c 'SELECT email FROM users;'"
   end
 end
