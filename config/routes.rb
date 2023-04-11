@@ -528,6 +528,8 @@ Rails.application.routes.draw do
 
         collection do
           get 'index2'
+          get 'destroy_routage'
+          get 'two_groupe'
           patch 'update_routing_criteria_name'
           patch 'update_instructeurs_self_management_enabled'
           post 'import'

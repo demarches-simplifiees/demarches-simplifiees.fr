@@ -27,6 +27,16 @@ module Administrateurs
       @available_instructeur_emails = available_instructeur_emails
     end
 
+    def destroy_routage
+      (procedure.groupe_instructeurs - [procedure.defaut_groupe_instructeur]).each(&:destroy)
+      redirect_to index2_admin_procedure_groupe_instructeurs_path(procedure, menu: :options)
+    end
+
+    def two_groupe
+      procedure.groupe_instructeurs.create(label: 'un autre')
+      redirect_to index2_admin_procedure_groupe_instructeurs_path(procedure, menu: :routage)
+    end
+
     def show
       @procedure = procedure
       @groupe_instructeur = groupe_instructeur

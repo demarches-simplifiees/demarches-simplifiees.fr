@@ -9,13 +9,20 @@
                       [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
                       ['Instructeurs']] }
 
-.container{ turbo: true }
+.container
   %turbo-frame#ouaich.fr-grid-row
     .fr-col.fr-col-12.fr-col-md-3
+      :ruby
+        liste = if @procedure.groupe_instructeurs.one?
+          [{ name: 'Nommer des instructeurs', url: index2_admin_procedure_groupe_instructeurs_path(@procedure, menu: :nommer) },
+           { name: 'Options', url: index2_admin_procedure_groupe_instructeurs_path(@procedure, menu: :options) }]
+        else
+          [{ name: 'Routage', url: index2_admin_procedure_groupe_instructeurs_path(@procedure, menu: :routage) },
+           { name: 'Options', url: index2_admin_procedure_groupe_instructeurs_path(@procedure, menu: :options) }]
+        end
+
       = render(Dsfr::SidemenuComponent.new) do |component|
-        - component.with_links([{ name: 'Nommer des instructeurs', url: index2_admin_procedure_groupe_instructeurs_path(@procedure, menu: :nommer) },
-          { name: 'Options', url: index2_admin_procedure_groupe_instructeurs_path(@procedure, menu: :options) },
-          { name: 'Routage', url: index2_admin_procedure_groupe_instructeurs_path(@procedure, menu: :routage) }])
+        - component.with_links(liste)
     .fr-col
       .container.groupe-instructeur
         - if params[:menu] == 'nommer'
@@ -28,6 +35,15 @@
               available_instructeur_emails: @available_instructeur_emails,
               disabled_as_super_admin: administrateur_as_manager? }
 
+        - elsif params[:menu] == 'routage'
+          %h1 Routage
+
+          %ul
+            - @procedure.groupe_instructeurs.each do |gi|
+              %li= gi.label
+          -# = render(Procedure::RoutingRulesComponent.new(revision: @procedure.active_revision,
+          -#   groupe_instructeurs: @groupes_instructeurs))
+
         - elsif params[:menu] == 'options'
           %h1 Options concernant l'instruction
 
@@ -38,12 +54,15 @@
                 %label.fr-toggle__label{"data-fr-checked-label" => "Activé", "data-fr-unchecked-label" => "Désactivé", for: "group-4-toggle-0"} Autogestion des instructeurs
                 %p.fr-hint-text#toggle-hint-0-hint-text L’autogestion des instructeurs permet aux instructeurs de gérer eux-mêmes la liste des instructeurs de la démarche.
 
-        - elsif params[:menu] == 'routage'
-          %h1 Routage
-          %p Le routage permet d’acheminer les dossiers vers différents groupes d’instructeurs
-          = form_tag index2_admin_procedure_groupe_instructeurs_path(@procedure), method: :get do
-            = hidden_field_tag :menu, 'routage_1'
-            %button.fr-btn Configurer le routage
+          - if @procedure.groupe_instructeurs.active.one?
+            %p.mt-2 Le routage permet d’acheminer les dossiers vers différents groupes d’instructeurs
+            = form_tag index2_admin_procedure_groupe_instructeurs_path(@procedure), method: :get do
+              = hidden_field_tag :menu, 'routage_1'
+              %button.fr-btn Configurer le routage
+
+          - else
+            = form_tag destroy_routage_admin_procedure_groupe_instructeurs_path(@procedure), method: :get do
+              %button.fr-btn Supprimer le routage
 
         - elsif params[:menu] == 'routage_1'
           = form_tag index2_admin_procedure_groupe_instructeurs_path(@procedure), method: :get do
@@ -72,9 +91,9 @@
 
             %ul.fr-btns-group.fr-btns-group--inline-sm
               %li
-                %a.fr-btn.fr-btn--secondary{ href: index2_admin_procedure_groupe_instructeurs_path(@procedure, menu: :routage) } Retour
+                %a.fr-btn.fr-btn--secondary{ href: index2_admin_procedure_groupe_instructeurs_path(@procedure, menu: :options) } Retour
               %li
-                %button.fr-btn Continuer
+                %a.fr-btn{ href: two_groupe_admin_procedure_groupe_instructeurs_path(@procedure) } Continuer
 
         - elsif params[:menu] == 'routage_simple'
           %h1 Routage en fonction d'un choix simple
