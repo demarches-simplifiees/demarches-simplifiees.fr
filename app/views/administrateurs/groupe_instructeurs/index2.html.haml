@@ -14,10 +14,10 @@
     .fr-col.fr-col-12.fr-col-md-3
       :ruby
         liste = if @procedure.groupe_instructeurs.one?
-          [{ name: 'Nommer des instructeurs', url: index2_admin_procedure_groupe_instructeurs_path(@procedure, menu: :nommer) },
+          [{ name: 'Instructeurs', url: index2_admin_procedure_groupe_instructeurs_path(@procedure, menu: :nommer) },
            { name: 'Options', url: index2_admin_procedure_groupe_instructeurs_path(@procedure, menu: :options) }]
         else
-          [{ name: 'Routage', url: index2_admin_procedure_groupe_instructeurs_path(@procedure, menu: :routage) },
+          [{ name: 'Groupes', url: index2_admin_procedure_groupe_instructeurs_path(@procedure, menu: :groupes) },
            { name: 'Options', url: index2_admin_procedure_groupe_instructeurs_path(@procedure, menu: :options) }]
         end
 
@@ -35,14 +35,14 @@
               available_instructeur_emails: @available_instructeur_emails,
               disabled_as_super_admin: administrateur_as_manager? }
 
-        - elsif params[:menu] == 'routage'
-          %h1 Routage
+        - elsif params[:menu] == 'groupes'
+          %h1 Gestion des groupes
 
-          %ul
-            - @procedure.groupe_instructeurs.each do |gi|
-              %li= gi.label
-          -# = render(Procedure::RoutingRulesComponent.new(revision: @procedure.active_revision,
-          -#   groupe_instructeurs: @groupes_instructeurs))
+          -# %ul
+          -#   - @procedure.groupe_instructeurs.each do |gi|
+          -#     %li= gi.label
+          = render(Procedure::RoutingRulesComponent.new(revision: @procedure.active_revision,
+            groupe_instructeurs: @groupes_instructeurs))
 
         - elsif params[:menu] == 'options'
           %h1 Options concernant l'instruction
@@ -62,6 +62,7 @@
 
           - else
             = form_tag destroy_routage_admin_procedure_groupe_instructeurs_path(@procedure), method: :get do
+              %p.mt-2 Attention: tous les dossiers vont être dans le groupe "défaut" et seuls les instructeurs présent dans ce groupe resteront affectés à la procédure
               %button.fr-btn Supprimer le routage
 
         - elsif params[:menu] == 'routage_1'

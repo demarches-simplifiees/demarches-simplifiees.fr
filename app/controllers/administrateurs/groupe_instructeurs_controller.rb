@@ -34,7 +34,7 @@ module Administrateurs
 
     def two_groupe
       procedure.groupe_instructeurs.create(label: 'un autre')
-      redirect_to index2_admin_procedure_groupe_instructeurs_path(procedure, menu: :routage)
+      redirect_to index2_admin_procedure_groupe_instructeurs_path(procedure, menu: :groupes)
     end
 
     def show
