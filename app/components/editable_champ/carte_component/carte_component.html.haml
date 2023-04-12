@@ -1,5 +1,4 @@
-%p
-  = link_to t('.map_skiplink'), 'javascript:void(0)', class: 'skiplink fr-link fr-link--sm'
+= link_to t('.map_skiplink'), '#', id: 'skiplink-' + dom_id(@champ) , class: 'fr-link fr-link--sm'
 
 = render @autocomplete_component
 
