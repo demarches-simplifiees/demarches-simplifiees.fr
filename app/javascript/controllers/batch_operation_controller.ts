@@ -149,3 +149,22 @@ function emptyCheckboxes() {
   );
   inputs.forEach((e) => (e.checked = false));
 }
+
+// Disable select_all checkbox if all checkboxes are disabled
+addEventListener('DOMContentLoaded', () => {
+  const checkbox_all = document.querySelector<HTMLInputElement>(
+    '#checkbox_all_batch_operation'
+  );
+  const inputs = document.querySelectorAll<HTMLInputElement>(
+    'div[data-controller="batch-operation"] input[data-batch-operation-target="input"]'
+  );
+  if (checkbox_all) {
+    const disabled_inputs = Array.from(inputs).filter(
+      (input) => input.disabled == true
+    );
+    if (disabled_inputs.length == inputs.length) {
+      checkbox_all.checked = true;
+      checkbox_all.disabled = true;
+    }
+  }
+});
