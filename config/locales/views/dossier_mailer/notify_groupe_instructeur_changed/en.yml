@@ -1,0 +1,4 @@
+en:
+  dossier_mailer:
+    notify_groupe_instructeur_changed:
+      subject: File no. %{dossier_id} has changed instructing group

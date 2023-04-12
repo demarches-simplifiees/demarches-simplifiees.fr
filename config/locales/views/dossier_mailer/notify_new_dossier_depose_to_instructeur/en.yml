@@ -1,0 +1,5 @@
+en:
+  dossier_mailer:
+    notify_new_dossier_depose_to_instructeur:
+      subject: New dossier filed for the approach "%{libelle_demarche}"
+      body: A new dossier has been filed (n° %{dossier_id}) for the approach " %{libelle_demarche} ".

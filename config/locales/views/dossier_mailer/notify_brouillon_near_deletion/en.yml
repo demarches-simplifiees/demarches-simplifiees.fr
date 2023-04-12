@@ -1,0 +1,12 @@
+en:
+  dossier_mailer:
+    notify_brouillon_near_deletion:
+      subject:
+        one: A draft file will soon be deleted
+        other: Draft files will soon be deleted
+      header:
+        one: "In order to limit the retention of your personal data, the following draft folder will soon be automatically deleted:"
+        other: "In order to limit the retention of your personal data, the following draft files will soon be automatically deleted:"
+      footer:
+        one: "If you still want to file this file, you can retrieve your draft for <b>another month</b>. If you want to keep your file longer, you can <b>extend its retention period</b> in the interface. Otherwise, you don't have to do anything."
+        other: "If you still wish to file these files, you can retrieve your drafts for <b>another month</b>. If you want to keep your files longer, you can <b>extend their retention period</b> on a case-by-case basis in the interface. Otherwise, you don't have to do anything."

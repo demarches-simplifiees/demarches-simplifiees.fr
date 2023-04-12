@@ -1,0 +1,9 @@
+en:
+  dossier_mailer:
+    notify_automatic_deletion_to_administration:
+      subject:
+        one: "A file has been deleted automatically"
+        other: "Files have been deleted automatically"
+      header:
+        one: "The maximum retention period for the following file has been reached and it has been deleted:"
+        other: "The maximum retention period for the following files has been reached and they have been deleted:"

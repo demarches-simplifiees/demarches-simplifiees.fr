@@ -1,0 +1,4 @@
+en:
+  dossier_mailer:
+    notify_brouillon_not_submitted:
+      subject: "Warning: your file no. %{dossier_id} is not submitted"

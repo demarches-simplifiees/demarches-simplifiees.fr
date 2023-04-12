@@ -1,0 +1,24 @@
+en:
+  dossier_mailer:
+    notify_near_deletion_to_user:
+      subject_in_construction:
+        one: A file under construction will be deleted soon
+        other: Folders under construction will be deleted soon
+      subject_termine:
+        one: A file that is finished being processed will be deleted soon
+        other: Folders that are finished being processed will be deleted soon
+      header_in_construction:
+        one: "In order to respect the retention period of your personal data, the following file under construction will be deleted automatically in a fortnight:"
+        other: "In order to respect the retention period of your personal data, the following files under construction will be deleted automatically in a fortnight:"
+      header_termine:
+        one: "In order to respect the retention period of your personal data, the following file whose processing has been completed will be deleted automatically in a fortnight:"
+        other: "In order to respect the retention period of your personal data, the following folders whose processing is completed will be deleted automatically in a fortnight:"
+      account_active:
+        one: Your account remains active on Démarches Simplifiées, only the folder will be deleted.
+        other: Votre compte reste activé sur Démarches Simplifiées, seuls les dossiers seront supprimés.
+      footer_termine:
+        one: "You can download your file in PDF format from the "Expiring" tab on the <a href=\"%{dossiers_url}\">My files</a>."
+        other: "You can download your files in PDF format from the "Expiring" tab on the <a href=\"%{dossiers_url}\">My files</a>."
+      footer_en_construction:
+        one: "If you want to keep your file longer, you can <b>extend its shelf life</b> in the interface."
+        other: "If you want to keep your records longer, you can <b>extend their shelf life</b> on a case-by-case basis in the interface."

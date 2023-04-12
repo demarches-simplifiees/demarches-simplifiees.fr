@@ -1,0 +1,9 @@
+en:
+  dossier_mailer:
+    notify_brouillon_deletion:
+      subject:
+        one: "A draft folder has been deleted automatically"
+        other: "Draft files were deleted automatically"
+      header:
+        one: "The maximum retention period for the following draft file has been reached and it has been deleted:"
+        other: "The maximum retention period for the following draft files has been reached and they have been deleted:"

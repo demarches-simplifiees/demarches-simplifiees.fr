@@ -1,0 +1,5 @@
+fr:
+  dossier_mailer:
+    notify_en_construction_deletion_to_administration:
+      subject: Folder no. %{dossier_id} has been deleted at the user's request
+      body: At the user's request, file no. %{dossier_id} (%{procedure}) has been deleted.

@@ -1,0 +1,5 @@
+en:
+  dossier_mailer:
+    notify_new_avis_to_instructeur:
+      subject: New notice filed on file n°%{dossier_id}
+      body: A new one has been filed by an expert on dossier n° %{dossier_id} of the %{libelle_demarche} approach.
