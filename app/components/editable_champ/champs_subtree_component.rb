@@ -1,41 +1,47 @@
 class EditableChamp::ChampsSubtreeComponent < ApplicationComponent
   include ApplicationHelper
+  include TreeableConcern
 
-  attr_reader :header_section, :nodes
-
-  def initialize(header_section:)
-    @header_section = header_section
-    @nodes = []
-  end
-
-  # a nodes can be either a champs, or a subtree
-  def add_node(node)
-    nodes.push(node)
+  def initialize(nodes:)
+    @nodes = to_fieldset(nodes:)
   end
 
   def render_within_fieldset?
-    header_section && !empty_section?
+    first_champ_is_an_header_section? && any_champ_fillable?
   end
 
-  def render_header_section_only?
-    header_section && empty_section?
+  def header_section
+    first_champ = @nodes.first
+    return first_champ if first_champ.is_a?(Champs::HeaderSectionChamp)
+    nil
   end
 
-  def empty_section?
-    nodes.none? { |node| node.is_a?(Champ) }
-  end
+  def champs
+    return @nodes if !first_champ_is_an_header_section?
+    _, *rest_of_champ = @nodes
 
-  def level
-    if header_section.parent.present?
-      header_section.header_section_level_value.to_i + header_section.parent.current_section_level
-    elsif header_section
-      header_section.header_section_level_value.to_i
-    else
-      0
-    end
+    rest_of_champ
   end
 
   def tag_for_depth
-    "h#{level + 1}"
+    "h#{header_section.level + 1}"
+  end
+
+  def fillable?
+    false
+  end
+
+  private
+
+  def to_fieldset(nodes:)
+    nodes.map { _1.is_a?(Array) ? EditableChamp::ChampsSubtreeComponent.new(nodes: _1) : _1 }
+  end
+
+  def first_champ_is_an_header_section?
+    header_section.present?
+  end
+
+  def any_champ_fillable?
+    champs.any? { _1&.fillable? }
   end
 end

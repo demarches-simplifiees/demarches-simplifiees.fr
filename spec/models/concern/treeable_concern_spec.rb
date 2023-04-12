@@ -1,6 +1,7 @@
 describe TreeableConcern do
   class ChampsToTree
     include TreeableConcern
+
     attr_reader :root
     def initialize(champs:, root_depth:)
       @root = to_tree(champs:, root_depth:)
@@ -43,8 +44,8 @@ describe TreeableConcern do
       it 'wraps champs within preview header section' do
         expect(subject.size).to eq(2)
         expect(subject).to eq([
-          [ header_1, champ_explication, champ_text ],
-          [ header_2, champ_textarea ]
+          [header_1, champ_explication, champ_text],
+          [header_2, champ_textarea]
         ])
       end
     end

@@ -420,7 +420,6 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-
   def previous_section_level(upper_tdcs)
     previous_header_section = upper_tdcs.reverse.find(&:header_section?)
 
