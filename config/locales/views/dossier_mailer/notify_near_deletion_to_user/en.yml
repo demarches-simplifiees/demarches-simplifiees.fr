@@ -17,8 +17,8 @@ en:
         one: Your account remains active on Démarches Simplifiées, only the folder will be deleted.
         other: Votre compte reste activé sur Démarches Simplifiées, seuls les dossiers seront supprimés.
       footer_termine:
-        one: "You can download your file in PDF format from the "Expiring" tab on the <a href=\"%{dossiers_url}\">My files</a>."
-        other: "You can download your files in PDF format from the "Expiring" tab on the <a href=\"%{dossiers_url}\">My files</a>."
+        one: "You can download your file in PDF format from the «Expiring» tab on the <a href=\"%{dossiers_url}\">My files</a>."
+        other: "You can download your files in PDF format from the «Expiring» tab on the <a href=\"%{dossiers_url}\">My files</a>."
       footer_en_construction:
         one: "If you want to keep your file longer, you can <b>extend its shelf life</b> in the interface."
         other: "If you want to keep your records longer, you can <b>extend their shelf life</b> on a case-by-case basis in the interface."
