@@ -13,9 +13,16 @@
         %th.header-section{ colspan: 3, class: c.dossier.auto_numbering_section_headers_for?(c) ? "header-section-counter" : nil }= c.libelle
       - else
         %td.libelle{ class: repetition ? 'padded' : '' }
-          = "#{c.libelle} :"
-        %td.rich-text{ class: c.type_champ }
-          %div{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
+          = "#{c.libelle} :"
+      - if c.type_champ != TypeDeChamp.type_champs.fetch(:header_section)
+        %td.updated-at
+          %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
+            modifié le
+            = try_format_datetime(c.updated_at)
+
+        %tr
+          %td.rich-text{ class: c.type_champ }
+            %div{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
             - case c.type_champ
             - when TypeDeChamp.type_champs.fetch(:carte)
               = render partial: "shared/champs/carte/show", locals: { champ: c }
@@ -62,8 +69,4 @@
             - else
               = format_text_value(c.to_s) unless c.blank?
 
-      - if c.type_champ != TypeDeChamp.type_champs.fetch(:header_section)
-        %td.updated-at
-          %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
-            modifié le
-            = try_format_datetime(c.updated_at)
+
