@@ -2,6 +2,7 @@ fr:
   users:
     profil:
       show:
+        dashboard: Tableau de bord
         profile: Profil
         contact: Coordonnées
         new_email_address: Nouvelle adresse email

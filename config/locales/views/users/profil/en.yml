@@ -2,6 +2,7 @@ en:
   users:
     profil:
       show:
+        dashboard: Dashboard
         profile: Profile
         contact: Contact Information
         your_email: Your current email is

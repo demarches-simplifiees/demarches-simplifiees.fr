@@ -1,7 +1,7 @@
 - content_for(:title, t('.profile'))
 
 = render partial: 'administrateurs/breadcrumbs',
-  locals: { steps: [['Tableau de bord', tableau_de_bord_helper_path],
+  locals: { steps: [[t('.dashboard'), tableau_de_bord_helper_path],
                     [t('.profile')]] }
 
 #profil-page.container
