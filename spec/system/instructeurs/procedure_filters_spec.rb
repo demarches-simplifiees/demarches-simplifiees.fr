@@ -95,14 +95,7 @@ describe "procedure filters" do
   end
 
   describe 'with a vcr cached cassette' do
-    let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
-
-    before do
-      allow(Rails).to receive(:cache).and_return(memory_store)
-      Rails.cache.clear
-    end
-
-    scenario "should be able to find by departements with custom enum lookup", js: true, vcr: { cassette_name: 'api_geo_departements' } do
+    scenario "should be able to find by departements with custom enum lookup", js: true do
       departement_champ = new_unfollow_dossier.champs.find(&:departement?)
       departement_champ.update!(value: 'Oise', external_id: '60')
       departement_champ.reload
@@ -117,7 +110,7 @@ describe "procedure filters" do
       expect(page).to have_link(new_unfollow_dossier.id.to_s)
     end
 
-    scenario "should be able to find by region with custom enum lookup", js: true, vcr: { cassette_name: 'api_geo_regions' } do
+    scenario "should be able to find by region with custom enum lookup", js: true do
       region_champ = new_unfollow_dossier.champs.find(&:region?)
       region_champ.update!(value: 'Bretagne', external_id: '53')
       region_champ.reload

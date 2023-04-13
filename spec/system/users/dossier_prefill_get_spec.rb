@@ -1,6 +1,4 @@
 describe 'Prefilling a dossier (with a GET request):', js: true do
-  let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
-
   let(:password) { 'my-s3cure-p4ssword' }
 
   let(:procedure) { create(:procedure, :published, opendata: true) }
@@ -66,9 +64,6 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
   }
 
   before do
-    allow(Rails).to receive(:cache).and_return(memory_store)
-    Rails.cache.clear
-
     stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\//)
       .to_return(status: 200, body: File.read('spec/fixtures/files/api_entreprise/etablissements.json'))
 
@@ -77,16 +72,6 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
 
     stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/associations\//)
       .to_return(status: 200, body: File.read('spec/fixtures/files/api_entreprise/associations.json'))
-
-    VCR.insert_cassette('api_geo_departements')
-    VCR.insert_cassette('api_geo_communes')
-    VCR.insert_cassette('api_geo_epcis')
-  end
-
-  after do
-    VCR.eject_cassette('api_geo_departements')
-    VCR.eject_cassette('api_geo_communes')
-    VCR.eject_cassette('api_geo_epcis')
   end
 
   context 'when authenticated' do

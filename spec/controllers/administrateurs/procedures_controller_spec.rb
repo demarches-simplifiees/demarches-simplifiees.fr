@@ -15,18 +15,15 @@ describe Administrateurs::ProceduresController, type: :controller do
   let(:zone_ids) { [zone.id] }
   let(:tags) { "[\"planete\",\"environnement\"]" }
 
-  describe '#apercu', vcr: { cassette_name: 'api_geo_all' } do
+  describe '#apercu' do
     render_views
 
     let(:procedure) { create(:procedure, :with_all_champs) }
-    let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
 
     subject { get :apercu, params: { id: procedure.id } }
 
     before do
       sign_in(admin.user)
-      allow(Rails).to receive(:cache).and_return(memory_store)
-      Rails.cache.clear
     end
 
     it do
