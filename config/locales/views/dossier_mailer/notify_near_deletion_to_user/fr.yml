@@ -1,13 +1,13 @@
 fr:
   dossier_mailer:
     notify_near_deletion_to_user:
-      subject_en_construction:
+      subject_in_construction:
         one: Un dossier en construction va bientôt être supprimé
         other: Des dossiers en construction vont bientôt être supprimés
       subject_termine:
         one: Un dossier dont le traitement est terminé va bientôt être supprimé
         other: Des dossiers dont le traitement est terminé vont bientôt être supprimés
-      header_en_construction:
+      header_in_construction:
         one: "Afin de respecter la durée de conservation de vos données personnelles, le dossier en construction suivant sera supprimé automatiquement dans deux semaines :"
         other: "Afin de respecter la durée de conservation de vos données personnelles, les dossiers en construction suivants seront supprimés automatiquement dans deux semaines :"
       header_termine:
@@ -19,6 +19,6 @@ fr:
       footer_termine:
         one: "Vous pouvez télécharger votre dossier au format PDF depuis l’onglet « Expirant » sur la page <a href=\"%{dossiers_url}\">Mes dossiers</a>."
         other: "Vous pouvez télécharger vos dossiers au format PDF depuis l’onglet « Expirant » sur la page <a href=\"%{dossiers_url}\">Mes dossiers</a>."
-      footer_en_construction:
+      footer_in_construction:
         one: "Si vous souhaitez conserver votre dossier plus longtemps, vous pouvez <b>prolonger sa durée de conservation</b> dans l’interface."
         other: "Si vous souhaitez conserver vos dossiers plus longtemps, vous pouvez <b>prolonger leur durée de conservation</b> au cas par cas dans l’interface."
