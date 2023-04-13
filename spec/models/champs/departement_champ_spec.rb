@@ -1,12 +1,5 @@
 describe Champs::DepartementChamp, type: :model do
-  let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
-
-  before do
-    allow(Rails).to receive(:cache).and_return(memory_store)
-    Rails.cache.clear
-  end
-
-  describe 'validations', vcr: { cassette_name: 'api_geo_departements' } do
+  describe 'validations' do
     describe 'external link' do
       subject { build(:champ_departements, external_id: external_id) }
 
@@ -66,7 +59,7 @@ describe Champs::DepartementChamp, type: :model do
     end
   end
 
-  describe 'value', vcr: { cassette_name: 'api_geo_departements' } do
+  describe 'value' do
     let(:champ) { described_class.new }
 
     it 'with code having 2 chars' do

@@ -1573,7 +1573,7 @@ describe Dossier do
     end
   end
 
-  describe "champs_for_export", vcr: { cassette_name: 'api_geo_communes' } do
+  describe "champs_for_export" do
     context 'with a unconditionnal procedure' do
       let(:procedure) { create(:procedure, :with_type_de_champ, :with_datetime, :with_yes_no, :with_explication, :with_commune, :with_repetition, zones: [create(:zone)]) }
       let(:text_type_de_champ) { procedure.active_revision.types_de_champ_public.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
@@ -1749,14 +1749,7 @@ describe Dossier do
     end
   end
 
-  describe "#destroy", vcr: { cassette_name: 'api_geo_all' } do
-    let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
-
-    before do
-      allow(Rails).to receive(:cache).and_return(memory_store)
-      Rails.cache.clear
-    end
-
+  describe "#destroy" do
     let(:procedure) { create(:procedure, :with_all_champs, :with_all_annotations) }
     let(:transfer) { create(:dossier_transfer) }
     let(:dossier) { create(:dossier, :with_populated_champs, :with_populated_annotations, transfer: transfer, procedure: procedure) }

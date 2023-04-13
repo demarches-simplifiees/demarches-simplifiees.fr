@@ -4,13 +4,6 @@ describe API::V1::DossiersController do
   let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, administrateur: admin) }
   let(:wrong_procedure) { create(:procedure) }
 
-  let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
-
-  before do
-    allow(Rails).to receive(:cache).and_return(memory_store)
-    Rails.cache.clear
-  end
-
   it { expect(described_class).to be < APIController }
 
   describe 'GET index (with bearer token)' do
@@ -265,7 +258,7 @@ describe API::V1::DossiersController do
             end
           end
 
-          describe 'departement', vcr: { cassette_name: 'api_geo_departements' } do
+          describe 'departement' do
             let(:procedure) { create(:procedure, :with_departement, administrateur: admin) }
             let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure: procedure) }
 

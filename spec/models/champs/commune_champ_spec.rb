@@ -1,16 +1,9 @@
 describe Champs::CommuneChamp do
-  let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
-
-  before do
-    allow(Rails).to receive(:cache).and_return(memory_store)
-    Rails.cache.clear
-  end
-
   let(:code_insee) { '63102' }
   let(:code_postal) { '63290' }
   let(:code_departement) { '63' }
 
-  describe 'value', vcr: { cassette_name: 'api_geo_communes' } do
+  describe 'value' do
     let(:champ) { create(:champ_communes, code_postal: code_postal) }
 
     it 'with code_postal' do
