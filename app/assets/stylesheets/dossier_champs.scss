@@ -11,10 +11,13 @@
     width: 325px;
   }
 
+  td.libelle, td.updated-at {
+    width: 50%;
+  }
+
   td.updated-at {
     font-size: 13px;
     color: $dark-grey;
-    text-align: right;
-    width: 190px;
+    text-align: left;
   }
 }
