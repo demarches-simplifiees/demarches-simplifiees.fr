@@ -1,0 +1,22 @@
+- content_for(:title, @subject)
+
+%p
+  Hello,
+
+%p
+  The user <b>« #{@user.email} »</b> has requested to merge its account with yours <b>« #{@requested_email} »</b>.
+
+%p
+  If you wish to confirm the merger of these accounts:
+
+%ol
+  %li log in with the account #{@requested_email}
+  %li go to your profile page
+  %li accept the merger
+
+%p
+  If you did not initiate this request, you can ignore this message. And if you need assistance, please contact us at
+  = succeed '.' do
+    = mail_to CONTACT_EMAIL
+
+= render partial: "layouts/mailers/signature"
