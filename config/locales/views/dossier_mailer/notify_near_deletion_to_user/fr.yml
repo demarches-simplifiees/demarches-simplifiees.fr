@@ -19,6 +19,6 @@ fr:
       footer_termine:
         one: "Vous pouvez télécharger votre dossier au format PDF depuis l’onglet « Expirant » sur la page <a href=\"%{dossiers_url}\">Mes dossiers</a>."
         other: "Vous pouvez télécharger vos dossiers au format PDF depuis l’onglet « Expirant » sur la page <a href=\"%{dossiers_url}\">Mes dossiers</a>."
-      footer_in_construction:
+      footer_en_construction:
         one: "Si vous souhaitez conserver votre dossier plus longtemps, vous pouvez <b>prolonger sa durée de conservation</b> dans l’interface."
         other: "Si vous souhaitez conserver vos dossiers plus longtemps, vous pouvez <b>prolonger leur durée de conservation</b> au cas par cas dans l’interface."

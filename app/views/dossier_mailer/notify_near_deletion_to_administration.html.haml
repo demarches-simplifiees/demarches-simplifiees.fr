@@ -14,7 +14,7 @@
 
 %p
   - if @state == Dossier.states.fetch(:en_construction)
-    = sanitize(t('.footer_in_construction', count: @dossiers.size))
+    = sanitize(t('.footer_en_construction', count: @dossiers.size))
   - else
     = sanitize(t('.footer_termine', count: @dossiers.size))
 

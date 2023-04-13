@@ -4,7 +4,7 @@
 
 %p
   - if @state == Dossier.states.fetch(:en_construction)
-    = t('.header_en_construction', count: @dossiers.size)
+    = t('.header_in_construction', count: @dossiers.size)
   - else
     = t('.header_termine', count: @dossiers.size)
   %ul
