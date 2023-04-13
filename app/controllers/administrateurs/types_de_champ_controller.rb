@@ -1,7 +1,7 @@
 module Administrateurs
   class TypesDeChampController < AdministrateurController
     before_action :retrieve_procedure
-    after_action :reset_procedure, only: [:create, :update, :destroy]
+    after_action :reset_procedure, only: [:create, :update, :destroy, :piece_justificative_template]
 
     def create
       type_de_champ = draft.add_type_de_champ(type_de_champ_create_params)

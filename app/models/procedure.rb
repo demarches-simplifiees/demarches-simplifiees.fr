@@ -797,6 +797,7 @@ class Procedure < ApplicationRecord
   end
 
   def publish_revision!
+    reset!
     transaction do
       self.published_revision = draft_revision
       self.draft_revision = create_new_revision
@@ -810,8 +811,8 @@ class Procedure < ApplicationRecord
 
   def reset_draft_revision!
     if published_revision.present? && draft_changed?
+      reset!
       transaction do
-        reset!
         draft_revision.types_de_champ.filter(&:only_present_on_draft?).each(&:destroy)
         draft_revision.update(dossier_submitted_message: nil)
         draft_revision.destroy
