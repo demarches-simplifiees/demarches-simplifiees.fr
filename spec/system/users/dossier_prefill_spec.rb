@@ -21,15 +21,15 @@ describe 'Prefilling a dossier:' do
   end
 
   context 'when the user already exists' do
-    let(:password) { 'my-s3cure-p4ssword' }
+    let(:password) { TEST_PASSWORD }
     let!(:user) { create(:user, password: password) }
 
     scenario "the user has got a prefilled dossier after signing in" do
-      expect(page).to have_content("Connectez-vous")
+      expect(page).to have_content("Si vous avez un compte")
       sign_in_with user.email, password
 
       expect(page).to have_current_path siret_dossier_path(procedure.dossiers.last)
-      fill_in 'Numéro SIRET', with: siret
+      fill_in 'Numéro TAHIT', with: siret
       click_on 'Valider'
 
       expect(page).to have_current_path(etablissement_dossier_path(dossier))
@@ -50,11 +50,11 @@ describe 'Prefilling a dossier:' do
     end
 
     scenario "the user has got a prefilled dossier after signing up" do
-      expect(page).to have_content("Connectez-vous")
+      expect(page).to have_content("Si vous avez un compte")
       page.find('.fr-connect').click
 
       expect(page).to have_current_path siret_dossier_path(procedure.dossiers.last)
-      fill_in 'Numéro SIRET', with: siret
+      fill_in 'Numéro TAHITI', with: siret
       click_on 'Valider'
 
       expect(page).to have_current_path(etablissement_dossier_path(dossier))

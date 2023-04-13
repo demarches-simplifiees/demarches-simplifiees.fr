@@ -38,7 +38,9 @@ describe 'France Connect Particulier Connexion' do
           let(:france_connect_information) { build(:france_connect_information, user_info) }
 
           context 'and no user has the same email' do
-            before { page.find('.fr-connect').click }
+            before {
+              page.find('.fr-connect').click
+            }
 
             scenario 'he is redirected to user dossiers page' do
               expect(page).to have_content('Dossiers')
