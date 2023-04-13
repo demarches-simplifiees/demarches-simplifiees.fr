@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_27_230248) do
+ActiveRecord::Schema.define(version: 2023_04_13_171421) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -220,7 +220,7 @@ ActiveRecord::Schema.define(version: 2023_03_27_230248) do
     t.string "external_id"
     t.string "fetch_external_data_exceptions", array: true
     t.bigint "parent_id"
-    t.boolean "prefilled", default: false
+    t.boolean "prefilled"
     t.boolean "private", default: false, null: false
     t.datetime "rebased_at"
     t.integer "row"

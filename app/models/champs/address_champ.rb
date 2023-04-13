@@ -5,7 +5,7 @@
 #  id                             :integer          not null, primary key
 #  data                           :jsonb
 #  fetch_external_data_exceptions :string           is an Array
-#  prefilled                      :boolean          default(FALSE)
+#  prefilled                      :boolean
 #  private                        :boolean          default(FALSE), not null
 #  rebased_at                     :datetime
 #  row                            :integer
