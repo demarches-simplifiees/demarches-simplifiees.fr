@@ -1,9 +1,6 @@
 en:
   dossier_mailer:
     notify_automatic_deletion_to_user:
-      subject:
-        one: "A folder has been automatically deleted from your account"
-        other: "Folders have been automatically deleted from your account"
       header:
         one: "The maximum time limit for keeping the following file has been reached.\nThe following file has been automatically deleted:"
         other: "The maximum retention period for the following files has been reached.\nThe following files have been automatically deleted:"

@@ -1,12 +1,6 @@
 en:
   dossier_mailer:
     notify_near_deletion_to_user:
-      subject_in_construction:
-        one: A file under construction will be deleted soon
-        other: Folders under construction will be deleted soon
-      subject_termine:
-        one: A file that is finished being processed will be deleted soon
-        other: Folders that are finished being processed will be deleted soon
       header_in_construction:
         one: "In order to respect the retention period of your personal data, the following file under construction will be deleted automatically in a fortnight:"
         other: "In order to respect the retention period of your personal data, the following files under construction will be deleted automatically in a fortnight:"

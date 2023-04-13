@@ -1,9 +1,6 @@
 en:
   dossier_mailer:
     notify_transfer:
-      subject:
-        one: A file transfer request has been sent to you
-        other: You have been sent a request to transfer files
       transfer_link: transfer request
       body:
         one: |

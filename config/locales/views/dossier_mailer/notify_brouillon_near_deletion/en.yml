@@ -1,9 +1,6 @@
 en:
   dossier_mailer:
     notify_brouillon_near_deletion:
-      subject:
-        one: A draft file will soon be deleted
-        other: Draft files will soon be deleted
       header:
         one: "In order to limit the retention of your personal data, the following draft folder will soon be automatically deleted:"
         other: "In order to limit the retention of your personal data, the following draft files will soon be automatically deleted:"
