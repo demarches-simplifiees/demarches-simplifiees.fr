@@ -7,7 +7,7 @@ en:
       subject_termine:
         one: A file that has been completed will soon be deleted
         other: Cases that have been completed will soon be deleted
-      header_en_construction:
+      header_in_construction:
         one: "The following folder under construction will soon be automatically deleted:"
         other: "The following files under construction will soon be automatically deleted:"
       header_termine:

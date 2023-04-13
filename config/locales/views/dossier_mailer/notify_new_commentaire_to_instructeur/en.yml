@@ -1,5 +1,5 @@
 en:
   dossier_mailer:
-    notify_new_comment_to_instructor:
+    notify_new_comment_to_instructeur:
       subject: New comment filed on file n°%{dossier_id}
       body: A new comment has been submitted by the user on dossier n°%{dossier_id} of the procedure %{libelle_demarche}

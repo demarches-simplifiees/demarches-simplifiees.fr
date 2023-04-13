@@ -7,7 +7,7 @@ fr:
       subject_termine:
         one: Un dossier dont le traitement est terminé va bientôt être supprimé
         other: Des dossiers dont le traitement est terminé vont bientôt être supprimés
-      header_en_construction:
+      header_in_construction:
         one: "Le dossier en construction suivant sera bientôt automatiquement supprimé :"
         other: "Les dossiers en construction suivant seront bientôt automatiquement supprimés :"
       header_termine:
