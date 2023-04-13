@@ -496,12 +496,12 @@ describe Instructeurs::DossiersController, type: :controller do
     end
   end
 
-  describe '#pending_corrections' do
+  describe '#pending_correction' do
     let(:message) { 'do that' }
     let(:justificatif) { nil }
 
     subject do
-      post :pending_corrections, params: {
+      post :pending_correction, params: {
         procedure_id: procedure.id, dossier_id: dossier.id,
         dossier: { motivation: message, justificatif_motivation: justificatif }
       }, format: :turbo_stream
@@ -528,7 +528,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
       it 'pass en_construction and create a pending correction' do
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include('en attente de modifications')
+        expect(response.body).to include('en attente de correction')
 
         expect(dossier.reload).to be_en_construction
         expect(dossier).to be_pending_correction
@@ -536,7 +536,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
       it 'create a comment with text body' do
         expect(dossier.commentaires.last.body).to eq("do that")
-        expect(dossier.commentaires.last).to be_flagged_pending_corrections
+        expect(dossier.commentaires.last).to be_flagged_pending_correction
       end
 
       context 'with an attachment' do
@@ -578,7 +578,7 @@ describe Instructeurs::DossiersController, type: :controller do
       it 'can create a pending correction' do
         subject
         expect(dossier.reload).to be_pending_correction
-        expect(dossier.commentaires.last).to be_flagged_pending_corrections
+        expect(dossier.commentaires.last).to be_flagged_pending_correction
       end
     end
 

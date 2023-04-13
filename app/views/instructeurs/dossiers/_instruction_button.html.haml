@@ -1,7 +1,7 @@
 - if dossier.en_instruction? || (dossier.en_construction? && dossier.may_flag_as_pending_correction?)
   = render Dropdown::MenuComponent.new(wrapper: :div, wrapper_options: { data: { turbo_force: :server } }, button_options: { class: [button_or_label_class(dossier)]}, role: dossier.en_instruction? ? :region : :menu) do |menu|
     - menu.with_button_inner_html do
-      = dossier.en_instruction? ? "Instruire le dossier" : "Demander une modification"
+      = dossier.en_instruction? ? "Instruire le dossier" : "Demander une correction"
 
     - if dossier.en_instruction?
       - menu.with_item do
@@ -37,18 +37,18 @@
 
     - if dossier.may_flag_as_pending_correction?
       - menu.with_item do
-        = link_to('#', onclick: "DS.showMotivation(event, 'pending_corrections');", role: 'menuitem') do
+        = link_to('#', onclick: "DS.showMotivation(event, 'pending_correction');", role: 'menuitem') do
           %span.fr-icon.fr-icon-error-warning-line.fr-text-default--info{ "aria-hidden": "true" }
           .dropdown-description
-            %h4 Demander une modification
+            %h4 Demander une correction
             L’usager sera informé que des modifications sont attendues
 
       - menu.with_item(class: class_names("inactive form-inside": true, hidden: dossier.en_instruction?)) do
         = render partial: 'instructeurs/dossiers/instruction_button_motivation', locals: { dossier: dossier,
             visible: !dossier.en_instruction?,
-            form_path: pending_corrections_instructeur_dossier_path(dossier.procedure, dossier),
-            placeholder: 'Expliquez au demandeur quelles modifications sont attendues',
-            popup_class: 'pending_corrections',
+            form_path: pending_correction_instructeur_dossier_path(dossier.procedure, dossier),
+            placeholder: 'Expliquez au demandeur quelle(s) correction(s) sont attendues',
+            popup_class: 'pending_correction',
             button_justificatif_label: "Ajouter une pièce jointe (facultatif)",
             process_button: dossier.en_construction? ? 'Valider' : 'Valider et repasser en construction',
             process_action: nil,

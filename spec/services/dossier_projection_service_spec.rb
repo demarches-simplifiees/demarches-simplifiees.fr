@@ -249,7 +249,7 @@ describe DossierProjectionService do
         end
       end
 
-      context 'for dossier reolutions table' do
+      context 'for dossier corrections table' do
         let(:table) { 'dossier_corrections' }
         let(:column) { 'resolved_at' }
         let(:dossier) { create(:dossier, :en_construction) }

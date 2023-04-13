@@ -13,7 +13,7 @@ module Instructeurs
     before_action :redirect_on_dossier_in_batch_operation, only: [:archive, :unarchive, :follow, :unfollow, :passer_en_instruction, :repasser_en_construction, :repasser_en_instruction, :terminer, :restore, :destroy, :extend_conservation]
     after_action :mark_demande_as_read, only: :show
 
-    after_action :mark_messagerie_as_read, only: [:messagerie, :create_commentaire, :pending_corrections]
+    after_action :mark_messagerie_as_read, only: [:messagerie, :create_commentaire, :pending_correction]
     after_action :mark_avis_as_read, only: [:avis, :create_avis]
     after_action :mark_annotations_privees_as_read, only: [:annotations_privees, :update_annotations]
 
@@ -223,11 +223,11 @@ module Instructeurs
       render :change_state
     end
 
-    def pending_corrections
+    def pending_correction
       message, piece_jointe = params.require(:dossier).permit(:motivation, :justificatif_motivation).values
 
       if message.empty?
-        flash.alert = "Vous devez préciser quelle modification est attendue."
+        flash.alert = "Vous devez préciser quelle correction est attendue."
       elsif !dossier.may_flag_as_pending_correction?
         flash.alert = dossier.termine? ? "Impossible de demander de corriger un dossier terminé." : "Le dossier est déjà en attente de correction."
       else
