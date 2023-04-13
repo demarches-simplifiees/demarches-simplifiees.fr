@@ -176,10 +176,10 @@ Rails.application.routes.draw do
     patch ':champ_id/carte/features/:id', to: 'carte#update'
     delete ':champ_id/carte/features/:id', to: 'carte#destroy'
 
+    get ':champ_id/piece_justificative/template', to: 'piece_justificative#template', as: :piece_justificative_template
     get ':champ_id/piece_justificative(/:h)', to: 'piece_justificative#show', as: :piece_justificative
     put ':champ_id/piece_justificative', to: 'piece_justificative#update', as: :attach_piece_justificative
     get ':champ_id/piece_justificative/download/:h/(:i)', to: 'piece_justificative#download', as: :piece_justificative_download
-    get ':champ_id/piece_justificative/template', to: 'piece_justificative#template', as: :piece_justificative_template
   end
 
   resources :attachments, only: [:show, :destroy]

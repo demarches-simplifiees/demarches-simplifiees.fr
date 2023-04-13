@@ -69,10 +69,10 @@ class Champs::PieceJustificativeChamp < Champ
         if attachment.image?
           tag.img '', src: url, width: '100', id: attachment.id, display: display
         else
-          tag.a display, href: url, target: '_blank', rel: 'noopener', title: "Télécharger la pièce jointe"
+          tag.a(display, href: url, target: '_blank', rel: 'noopener', title: "Télécharger la pièce jointe")
         end
       end
-    end.join(',<br> ')
+    end.flat_map { |e| [e, ",", tag.br] }[0..-3].reduce(&:+)
   end
 
   def update_skip_pj_validation
