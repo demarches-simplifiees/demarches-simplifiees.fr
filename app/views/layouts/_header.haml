@@ -60,16 +60,13 @@
 
 
           - if params[:controller] == 'recherche'
-            = render partial: 'layouts/search_dossiers_form', locals: { search_endpoint: recherche_index_path }
+            = render partial: 'layouts/search_dossiers_form'
 
           - if is_instructeur_context
-            = render partial: 'layouts/search_dossiers_form', locals: { search_endpoint: recherche_index_path }
+            = render partial: 'layouts/search_dossiers_form'
 
           - if is_expert_context
-            = render partial: 'layouts/search_dossiers_form', locals: { search_endpoint: recherche_index_path }
-
-          - if is_user_context && current_user.dossiers.count > 2
-            = render partial: 'layouts/search_dossiers_form', locals: { search_endpoint: recherche_dossiers_path }
+            = render partial: 'layouts/search_dossiers_form'
 
   - has_header = [is_instructeur_context, is_expert_context, is_user_context]
   #burger-menu.fr-header__menu.fr-modal
