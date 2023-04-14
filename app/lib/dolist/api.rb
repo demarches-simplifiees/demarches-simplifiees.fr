@@ -192,6 +192,7 @@ class Dolist::API
     post(url, body)["ItemList"]
   end
 
+  # see: https://api.dolist.com/documentation/index.html#/7edc2948ba01f-creer-un-envoi-transactionnel
   def prepare_mail_body(mail)
     {
       "Type": "TransactionalService",
@@ -207,15 +208,15 @@ class Dolist::API
         "Name": mail['X-Dolist-Message-Name'].value,
         "Subject": mail.subject,
         "SenderID": sender_id,
-        "ForceHttp": true,
+        "ForceHttp": false, # ForceHttp : force le tracking http non sécurisé (True/False).
         "Format": "html",
-        "DisableOpenTracking": true,
-        "IsTrackingValidated": true
+        "DisableOpenTracking": true, # DisableOpenTracking : désactivation du tracking d'ouverture (True/False).
+        "IsTrackingValidated": true # IsTrackingValidated : est-ce que le tracking de ce message est validé ? (True/False). Passez la valeur True pour un envoi transactionnel.
       },
       "MessageContent": {
         "SourceCode":  mail_source_code(mail),
         "EncodingType": "UTF8",
-        "EnableTrackingDetection": false
+        "EnableTrackingDetection": false # EnableTrackingDetection : booléen pour l’activation du tracking personnalisé des liens des messages utilisés lors des précédents envois (True/False).
       }
     }
   end
