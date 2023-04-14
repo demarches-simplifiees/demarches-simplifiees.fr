@@ -1,7 +1,6 @@
 class EditableChamp::HeaderSectionComponent < ApplicationComponent
-  def initialize(form:, champ:, seen_at: nil)
+  def initialize(form: nil, champ:, seen_at: nil)
     @champ = champ
-    @form = form
   end
 
   def level
@@ -13,9 +12,9 @@ class EditableChamp::HeaderSectionComponent < ApplicationComponent
   end
 
   def header_section_classnames
-    class_names = ["fr-h#{level}", 'header-section']
+    class_names = ["fr-h#{level}"]
 
-    class_names << 'header-section-counter' if @champ.dossier.auto_numbering_section_headers_for?(@champ)
+    class_names << 'header-section' if @champ.dossier.auto_numbering_section_headers_for?(@champ)
     class_names
   end
 

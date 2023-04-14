@@ -1,8 +1,6 @@
-describe EditableChamp::ChampsSubtreeComponent, type: :component do
+describe EditableChamp::SectionComponent, type: :component do
   include TreeableConcern
-  let(:component) { described_class.new(nodes: nodes) }
-  let(:nodes) { to_tree(champs:, root_depth:) }
-  let(:root_depth) { 0 }
+  let(:component) { described_class.new(champs: champs) }
   before { render_inline(component).to_html }
 
   context 'list of champs without an header_section' do
@@ -81,6 +79,35 @@ describe EditableChamp::ChampsSubtreeComponent, type: :component do
     it 'contains all champs' do
       expect(page).to have_selector("fieldset input[type=text]", count: 1)
       expect(page).to have_selector("fieldset fieldset textarea", count: 1)
+    end
+  end
+
+  context 'with repetition' do
+    let(:procedure) do
+      create(:procedure, types_de_champ_public: [
+        { type: :header_section, header_section_level: 1 },
+        {
+          type: :repetition,
+          libelle: 'repetition',
+          children: [
+            { type: :header_section, header_section_level: 1, libelle: 'child_1' },
+            { type: :text, libelle: 'child_2' }
+          ]
+        }
+      ])
+    end
+    let(:dossier) { create(:dossier, :with_populated_champs, procedure: procedure) }
+    let(:champs) { dossier.champs_public }
+
+    it 'render nested fieldsets, increase heading level for repetition header_section' do
+      expect(page).to have_selector("fieldset")
+      expect(page).to have_selector("legend h2")
+      expect(page).to have_selector("fieldset fieldset")
+      expect(page).to have_selector("fieldset fieldset legend h3")
+    end
+
+    it 'contains as many text champ as repetition.rows' do
+      expect(page).to have_selector("fieldset fieldset input[type=text]", count: dossier.champs_public.find(&:repetition?).rows.size)
     end
   end
 end

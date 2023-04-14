@@ -42,5 +42,5 @@
         = f.select :groupe_instructeur_id,
           dossier.procedure.groupe_instructeurs.active.map { |gi| [gi.label, gi.id] },
           { include_blank: dossier.brouillon? }
-    = render EditableChamp::ChampsTreeComponent.new(champs: dossier.champs_public, root_depth: 0)
+    = render EditableChamp::SectionComponent.new(champs: dossier.champs_public)
   = render Dossiers::EditFooterComponent.new(dossier: dossier, annotation: false)

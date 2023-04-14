@@ -3,12 +3,12 @@ describe TreeableConcern do
     include TreeableConcern
 
     attr_reader :root
-    def initialize(champs:, root_depth:)
-      @root = to_tree(champs:, root_depth:)
+    def initialize(champs:)
+      @root = to_tree(champs:)
     end
   end
 
-  subject { ChampsToTree.new(champs: champs, root_depth: 0).root }
+  subject { ChampsToTree.new(champs: champs).root }
   describe "to_tree" do
     let(:header_1) { build(:champ_header_section_level_1) }
     let(:header_1_2) { build(:champ_header_section_level_2) }

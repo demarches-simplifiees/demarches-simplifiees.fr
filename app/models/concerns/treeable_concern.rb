@@ -6,32 +6,32 @@ module TreeableConcern
 
   included do
     # as we progress in the list of ordered champs
-    #   we keep a reference to each level of nesting (depth_cache)
+    #   we keep a reference to each level of nesting (walk)
     # when we encounter an header_section, it depends of its own depth of nesting minus 1, ie:
-    #   h1 belongs to prior (root)
+    #   h1 belongs to prior (rooted_tree)
     #   h2 belongs to prior h1
     #   h3 belongs to prior h2
-    #   h1 belongs to prior (root)
+    #   h1 belongs to prior (rooted_tree)
     # then, each and every champs which are not an header_section
-    #   are added to the most_recent_subtree
+    #   are added to the current_tree
     # given a root_depth at 0, we build a full tree
     # given a root_depth > 0, we build a partial tree (aka, a repetition)
-    def to_tree(champs:, root_depth:)
-      root = []
-      depth_cache = Array.new(MAX_DEPTH)
-      depth_cache[root_depth] = root
-      most_recent_subtree = root
+    def to_tree(champs:)
+      rooted_tree = []
+      walk = Array.new(MAX_DEPTH)
+      walk[0] = rooted_tree
+      current_tree = rooted_tree
 
       champs.each do |champ|
         if champ.header_section?
-          champs_subtree = [champ]
-          depth_cache[champ.level - 1].push(champs_subtree)
-          most_recent_subtree = depth_cache[champ.level] = champs_subtree
+          new_tree = [champ]
+          walk[champ.header_section_level_value - 1].push(new_tree)
+          current_tree = walk[champ.header_section_level_value] = new_tree
         else
-          most_recent_subtree.push(champ)
+          current_tree.push(champ)
         end
       end
-      root
+      rooted_tree
     end
   end
 end
