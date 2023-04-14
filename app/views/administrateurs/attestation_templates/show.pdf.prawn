@@ -43,7 +43,7 @@ info = {
 }
 
 def print_text(pdf, text, size)
-  pdf.text text, size: size, character_spacing: -0.2, align: :justify, inline_format: true
+  pdf.text prawn_text(text), size: size, character_spacing: -0.2, align: :justify, inline_format: true
 end
 
 def print_image(pdf, c)
@@ -58,11 +58,12 @@ end
 def prawn_text(message)
   tags = ['a', 'b', 'br', 'color', 'font', 'i', 'strong', 'sub', 'sup', 'u']
   atts = ['alt', 'character_spacing', 'href', 'name', 'rel', 'rgb', 'size', 'src', 'target']
+  message = message.gsub(/(<a[^>]*>)/, "\\1<color rgb='2d2bb3'><u>").gsub(/(<\/a>)/, "</u></color>\\1")
   ActionView::Base.safe_list_sanitizer.sanitize(message.to_s, tags: tags, attributes: atts)
 end
 
 def make_link(display, url)
-  tag.a(display, href: url, target: '_blank', rel: 'noopener')
+  tag.a(tag.u(tag.color(display, rgb: "2d2bb3")), href: url, target: '_blank', rel: 'noopener')
 end
 
 def cell_link(pdf, display, url)
@@ -75,11 +76,10 @@ def cell_image(pdf, c)
   id = c.attributes['id']&.to_s
   if id && display
     attachment = ActiveStorage::Attachment.find_by(id: id)
-    content = [
-      [attachment.blob.open { |file| ::Prawn::Table::Cell::Image.new(pdf, [], { image: file, fit: [20.mm, 20.mm], position: :center }) }],
-      [cell_link(pdf, display, url)]
+    [
+      attachment.blob.open { |file| ::Prawn::Table::Cell::Image.new(pdf, [], { image: file, fit: [20.mm, 20.mm], position: :center }) },
+      cell_link(pdf, display, url)
     ]
-    Prawn::Table.new(content, pdf, cell_style: { border_width: 0, padding: 1, align: :center })
   else
     ""
   end
@@ -89,15 +89,30 @@ def cell_text(pdf, c)
   ::Prawn::Table::Cell::Text.new(pdf, [], { content: prawn_text(c.to_s), inline_format: true, size: 10 })
 end
 
+def cell_values(pdf, cells)
+  cells.children.chunk_while { |prev, curr| prev.name != 'img' && curr.name != 'img' }.flat_map do |chunk|
+    if chunk.first.name == 'img'
+      cell_image(pdf, chunk.first)
+    else
+      cell_text(pdf, chunk.map(&:to_s).join)
+    end
+  end
+end
+
+def cell_value(pdf, values)
+  if values.size > 1
+    table_content = values.map { |e| [e] }
+    Prawn::Table.new(table_content, pdf, cell_style: { border_width: 0, padding: 1, align: :center })
+  else
+    values.first
+  end
+end
+
 def print_table(pdf, data)
   table = data.children.filter('tr').map do |line|
     line.children.filter('th,td').map do |cells|
-      c = cells.children[0] # only one element per cell
-      if c.present? && c.name == 'img' # prawn doesn't handle img
-        cell_image(pdf, c)
-      else
-        cell_text(pdf, c)
-      end
+      values = cell_values(pdf, cells)
+      cell_value(pdf, values)
     end
   end
   pdf.table table, position: :center, row_colors: ["F0EFEF", "FFFFFF"]

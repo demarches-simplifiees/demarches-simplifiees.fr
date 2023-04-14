@@ -4,12 +4,16 @@ class Champs::PieceJustificativeController < ApplicationController
 
   def show
     # pf used to redirect to this route to download PJ ==> if param h is present (old pf link) then redirect to new route
-    return redirect_to champs_piece_justificative_download_path({ champ_id: params[:champ_id], h: params[:h] }) if params[:h].present?
+    return redirect_to download_path if params[:h].present?
 
     respond_to do |format|
       format.turbo_stream
       format.html { redirect_back(fallback_location: root_url) }
     end
+  end
+
+  def download_path
+    champs_piece_justificative_download_path({ champ_id: params[:champ_id], h: params[:h], i: "0" })
   end
 
   def update
@@ -21,14 +25,12 @@ class Champs::PieceJustificativeController < ApplicationController
   end
 
   def download
-    champ = find_champ
-
-    if champ&.is_a? Champs::PieceJustificativeChamp
+    if @champ&.is_a? Champs::PieceJustificativeChamp
       index = (params[:i] || "0").to_i
-      if (0..champ.piece_justificative_file.size).cover?(index)
-        blob = champ.piece_justificative_file[index]
-        if blob.filename.extension == 'pdf' && champ.dossier.procedure.feature_enabled?(:qrcoded_pdf)
-          send_data StampService.new.stamp(blob, download_url(champ, index)), filename: blob.filename.to_s, type: 'application/pdf'
+      if (0..@champ.piece_justificative_file.size).cover?(index)
+        blob = @champ.piece_justificative_file[index]
+        if blob.filename.extension == 'pdf' && @champ.dossier.procedure.feature_enabled?(:qrcoded_pdf)
+          send_data StampService.new.stamp(blob, download_url(@champ, index)), filename: blob.filename.to_s, type: 'application/pdf'
         else
           redirect_to blob.service_url, status: :found
         end
@@ -55,7 +57,13 @@ class Champs::PieceJustificativeController < ApplicationController
   private
 
   def set_champ
-    @champ = policy_scope(Champ).find(params[:champ_id])
+    h = params[:h]
+
+    @champ = if h.blank?
+      policy_scope(Champ).find(params[:champ_id])
+    else
+      find_champ
+    end
   end
 
   def attach_piece_justificative
