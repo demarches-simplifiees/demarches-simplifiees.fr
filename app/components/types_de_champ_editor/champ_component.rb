@@ -77,7 +77,7 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
     {
       attached_file: type_de_champ.piece_justificative_template,
       auto_attach_url: helpers.auto_attach_url(type_de_champ),
-      user_can_download: true
+      view_as: :download
     }
   end
 
@@ -118,6 +118,6 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
   end
 
   def conditional_enabled?
-    !type_de_champ.private? && !coordinate.child?
+    !type_de_champ.private?
   end
 end

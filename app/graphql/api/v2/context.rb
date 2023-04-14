@@ -25,14 +25,11 @@ class API::V2::Context < GraphQL::Query::Context
     self[:authorized] ||= {}
 
     if self[:authorized][demarche.id].nil?
-      authorized_administrateur = demarche.administrateurs.find do |administrateur|
-        if self[:token]
-          administrateur.valid_api_token?(self[:token])
-        else
-          administrateur.id == self[:administrateur_id]
-        end
+      self[:authorized][demarche.id] = if self[:token]
+        APIToken.find_and_verify(self[:token], demarche.administrateurs).present?
+      elsif self[:administrateur_id]
+        demarche.administrateurs.map(&:id).include?(self[:administrateur_id])
       end
-      self[:authorized][demarche.id] = authorized_administrateur.present?
     end
 
     self[:authorized][demarche.id]

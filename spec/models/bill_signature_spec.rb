@@ -73,8 +73,8 @@ RSpec.describe BillSignature, type: :model do
 
     describe 'check_signature_contents' do
       let(:signature) { File.open('spec/fixtures/files/bill_signature/signature.der') }
-      let(:signature_date) { DateTime.parse('2019-04-30 15:30:20') }
-      let(:signature_digest) { Digest::SHA256.hexdigest('CECI EST UN BLOB') }
+      let(:signature_date) { DateTime.parse('2022-12-06 11:00:00') }
+      let(:signature_digest) { Digest::SHA256.hexdigest('{"1":"hash1","2":"hash2"}') }
       let(:current_date) { Time.zone.now }
 
       before do

@@ -18,7 +18,7 @@ FactoryBot.define do
 
   trait :with_api_token do
     after(:create) do |admin|
-      admin.renew_api_token
+      APIToken.generate(admin)
     end
   end
 

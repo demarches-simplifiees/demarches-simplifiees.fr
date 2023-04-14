@@ -131,6 +131,9 @@ jobs:
           results_path: tmp/*.junit.xml
 
       - name: Run tests
+        env:
+          FC_PARTICULIER_ID: MyFCEnvId
+          GOOGLE_CLIENT_ID: MyGEnvId
         run: |
           SPEC_FILES=$(./split_tests -glob='spec/system/**/*_spec.rb' -split-index=${{ strategy.job-index }} -split-total=${{ strategy.job-total }} -junit -junit-path=tmp/*.junit.xml)
           echo "Running tests for bin/rspec $SPEC_FILES"

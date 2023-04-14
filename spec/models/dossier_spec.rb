@@ -493,7 +493,7 @@ describe Dossier do
       it 'should keep first en_construction_at date' do
         Timecop.return
         dossier.passer_en_instruction!(instructeur: instructeur)
-        dossier.repasser_en_construction!(instructeur)
+        dossier.repasser_en_construction!(instructeur: instructeur)
 
         expect(dossier.traitements.size).to eq(3)
         expect(dossier.traitements.first.processed_at).to eq(beginning_of_day)
@@ -519,7 +519,7 @@ describe Dossier do
 
       it 'should keep first en_instruction_at date if dossier is set to en_construction again' do
         Timecop.return
-        dossier.repasser_en_construction!(instructeur)
+        dossier.repasser_en_construction!(instructeur: instructeur)
         dossier.passer_en_instruction!(instructeur: instructeur)
 
         expect(dossier.traitements.size).to eq(4)
@@ -1852,6 +1852,41 @@ describe Dossier do
     it 'returns descending order by month' do
       expect(subject.keys.first.month).to eq 3
       expect(subject.keys.last.month).to eq 2
+    end
+  end
+
+  describe '#find_champs_by_stable_ids' do
+    let(:procedure) { create(:procedure, :published) }
+    let(:dossier) { create(:dossier, :brouillon, procedure: procedure) }
+
+    subject { dossier.find_champs_by_stable_ids(stable_ids) }
+
+    context 'when stable_ids is empty' do
+      let(:stable_ids) { [] }
+
+      it { expect(subject).to match([]) }
+    end
+
+    context 'when stable_ids contains nil or blank values' do
+      let(:stable_ids) { [nil, ""] }
+
+      it { expect(subject).to match([]) }
+    end
+
+    context 'when stable_ids contains present values' do
+      context 'when the dossier has no champ with the given stable ids' do
+        let(:stable_ids) { ['My Neighbor Totoro', 'Miyazaki'] }
+
+        it { expect(subject).to match([]) }
+      end
+
+      context 'when the dossier has champs with the given stable ids' do
+        let!(:type_de_champ_1) { create(:type_de_champ_text, procedure: procedure) }
+        let!(:type_de_champ_2) { create(:type_de_champ_textarea, procedure: procedure) }
+        let(:stable_ids) { [type_de_champ_1.stable_id, type_de_champ_2.stable_id] }
+
+        it { expect(subject).to match(dossier.champs_public.joins(:type_de_champ).where(types_de_champ: { stable_id: stable_ids })) }
+      end
     end
   end
 

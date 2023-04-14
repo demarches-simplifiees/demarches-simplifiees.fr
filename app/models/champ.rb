@@ -5,6 +5,7 @@
 #  id                             :integer          not null, primary key
 #  data                           :jsonb
 #  fetch_external_data_exceptions :string           is an Array
+#  prefilled                      :boolean
 #  private                        :boolean          default(FALSE), not null
 #  rebased_at                     :datetime
 #  row                            :integer
@@ -84,6 +85,7 @@ class Champ < ApplicationRecord
   scope :public_ordered, -> { public_only.ordered }
   scope :private_ordered, -> { private_only.ordered }
   scope :root, -> { where(parent_id: nil) }
+  scope :prefilled, -> { where(prefilled: true) }
 
   before_create :set_dossier_id, if: :needs_dossier_id?
   before_validation :set_dossier_id, if: :needs_dossier_id?
@@ -242,7 +244,7 @@ class Champ < ApplicationRecord
   private
 
   def champs_for_condition
-    private? ? dossier.champs_private : dossier.champs_public
+    dossier.champs.filter { _1.row.nil? || _1.row == row }
   end
 
   def html_id

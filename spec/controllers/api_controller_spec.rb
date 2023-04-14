@@ -12,7 +12,7 @@ describe APIController, type: :controller do
     end
 
     context 'when the admin has a token' do
-      let!(:token) { admin.renew_api_token }
+      let!(:token) { APIToken.generate(admin)[1] }
 
       context 'and the token is given by params' do
         before { controller.params[:token] = token }

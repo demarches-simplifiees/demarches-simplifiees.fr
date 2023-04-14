@@ -1,0 +1,12 @@
+.card.no-list{ 'data-turbo': 'true', id: dom_id(current_administrateur, :profil_api_token) }
+  .card-title Jetons d’identification de l’API (token)
+  %p Ces jetons sont nécessaire pour effectuer des appels vers l’API de #{APPLICATION_NAME}.
+  %p Si vous avez déjà des applications qui utilisent un jeton et vous le révoquez, l’accès à l’API sera bloqué pour ces applications.
+
+  = render Dsfr::ListComponent.new do |list|
+    - api_and_packed_tokens.each do |(api_token, packed_token)|
+      - list.with_item do
+        = render Profile::APITokenComponent.new(api_token:, packed_token:)
+
+  %br
+  = button_to "Créer et afficher un nouveau jeton", api_tokens_path, method: :post, class: "fr-btn fr-btn--secondary"

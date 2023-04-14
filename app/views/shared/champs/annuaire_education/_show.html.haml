@@ -35,7 +35,8 @@
       %tr
         %th.libelle Adresse :
         %td
-          = champ.data['adresse_1']
+          - if champ.data['adresse_1'].present?
+            = champ.data['adresse_1']
           %br
           = "#{champ.data['code_postal']} #{champ.data['nom_commune']}"
           %br

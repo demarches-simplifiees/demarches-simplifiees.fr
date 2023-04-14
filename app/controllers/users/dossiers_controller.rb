@@ -164,6 +164,7 @@ module Users
 
     def brouillon
       @dossier = dossier_with_champs
+      @dossier.valid?(context: :prefilling)
 
       # TODO: remove when the champs are unifed
       if !@dossier.autorisation_donnees
@@ -215,7 +216,7 @@ module Users
       respond_to do |format|
         format.html { render :brouillon }
         format.turbo_stream do
-          @to_shows, @to_hides = @dossier.champs_public
+          @to_shows, @to_hides = @dossier.champs_public_all
             .filter(&:conditional?)
             .partition(&:visible?)
             .map { |champs| champs_to_one_selector(champs) }
@@ -236,7 +237,7 @@ module Users
       respond_to do |format|
         format.html { render :modifier }
         format.turbo_stream do
-          @to_shows, @to_hides = @dossier.champs_public
+          @to_shows, @to_hides = @dossier.champs_public_all
             .filter(&:conditional?)
             .partition(&:visible?)
             .map { |champs| champs_to_one_selector(champs) }
@@ -319,6 +320,7 @@ module Users
       )
       dossier.build_default_individual
       dossier.save!
+      dossier.prefill!(PrefillParams.new(dossier, params).to_a)
 
       if dossier.procedure.for_individual
         redirect_to identite_dossier_path(dossier)

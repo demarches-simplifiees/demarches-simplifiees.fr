@@ -10,8 +10,8 @@ module Mutations
     field :errors, [Types::ValidationErrorType], null: true
 
     def resolve(groupe_instructeur:, label: nil, closed: nil)
-      if groupe_instructeur.update({ label: label, closed: closed }.compact)
-        { groupe_instructeur: groupe_instructeur }
+      if groupe_instructeur.update({ label:, closed: }.compact)
+        { groupe_instructeur: }
       else
         { errors: groupe_instructeur.errors.full_messages }
       end

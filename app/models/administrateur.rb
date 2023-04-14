@@ -9,8 +9,6 @@
 #  user_id         :bigint           not null
 #
 class Administrateur < ApplicationRecord
-  include ActiveRecord::SecureToken
-
   self.ignored_columns = [:active]
 
   UNUSED_ADMIN_THRESHOLD = 6.months
@@ -19,6 +17,7 @@ class Administrateur < ApplicationRecord
   has_many :administrateurs_procedures
   has_many :procedures, through: :administrateurs_procedures
   has_many :services
+  has_many :api_tokens, inverse_of: :administrateur, dependent: :destroy
 
   belongs_to :user
 
@@ -53,19 +52,6 @@ class Administrateur < ApplicationRecord
 
   def self.find_inactive_by_id(id)
     self.inactive.find(id)
-  end
-
-  def renew_api_token
-    api_token = Administrateur.generate_unique_secure_token
-    encrypted_token = BCrypt::Password.create(api_token)
-    update(encrypted_token: encrypted_token)
-    APIToken.signe(id, api_token)
-  end
-
-  def valid_api_token?(api_token)
-    BCrypt::Password.new(encrypted_token) == api_token
-  rescue BCrypt::Errors::InvalidHash
-    false
   end
 
   def registration_state

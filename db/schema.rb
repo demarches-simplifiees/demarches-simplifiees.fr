@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_27_230248) do
+ActiveRecord::Schema.define(version: 2023_04_13_171421) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -84,6 +84,16 @@ ActiveRecord::Schema.define(version: 2023_03_27_230248) do
     t.index ["administrateur_id", "procedure_id"], name: "index_unique_admin_proc_couple", unique: true
     t.index ["administrateur_id"], name: "index_administrateurs_procedures_on_administrateur_id"
     t.index ["procedure_id"], name: "index_administrateurs_procedures_on_procedure_id"
+  end
+
+  create_table "api_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.bigint "administrateur_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.string "encrypted_token", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "version", default: 3, null: false
+    t.index ["administrateur_id"], name: "index_api_tokens_on_administrateur_id"
   end
 
   create_table "archives", force: :cascade do |t|
@@ -210,6 +220,7 @@ ActiveRecord::Schema.define(version: 2023_03_27_230248) do
     t.string "external_id"
     t.string "fetch_external_data_exceptions", array: true
     t.bigint "parent_id"
+    t.boolean "prefilled"
     t.boolean "private", default: false, null: false
     t.datetime "rebased_at"
     t.integer "row"
@@ -940,6 +951,7 @@ ActiveRecord::Schema.define(version: 2023_03_27_230248) do
   add_foreign_key "administrateurs_instructeurs", "instructeurs"
   add_foreign_key "administrateurs_procedures", "administrateurs"
   add_foreign_key "administrateurs_procedures", "procedures"
+  add_foreign_key "api_tokens", "administrateurs"
   add_foreign_key "archives_groupe_instructeurs", "archives"
   add_foreign_key "archives_groupe_instructeurs", "groupe_instructeurs"
   add_foreign_key "assign_tos", "groupe_instructeurs"

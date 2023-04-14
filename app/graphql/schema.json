@@ -461,6 +461,32 @@
                 "name": "File",
                 "ofType": null
               },
+              "isDeprecated": true,
+              "deprecationReason": "Utilisez le champ `attachments` à la place."
+            },
+            {
+              "name": "attachments",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "File",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
               "isDeprecated": false,
               "deprecationReason": null
             },
@@ -7821,6 +7847,32 @@
                 "name": "File",
                 "ofType": null
               },
+              "isDeprecated": true,
+              "deprecationReason": "Utilisez le champ `attachments` à la place."
+            },
+            {
+              "name": "attachments",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "File",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
               "isDeprecated": false,
               "deprecationReason": null
             },
@@ -9459,15 +9511,19 @@
 
               ],
               "type": {
-                "kind": "LIST",
+                "kind": "NON_NULL",
                 "name": null,
                 "ofType": {
-                  "kind": "NON_NULL",
+                  "kind": "LIST",
                   "name": null,
                   "ofType": {
-                    "kind": "OBJECT",
-                    "name": "File",
-                    "ofType": null
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "File",
+                      "ofType": null
+                    }
                   }
                 }
               },
