@@ -164,6 +164,7 @@ module Users
       errors = submit_dossier_and_compute_errors
 
       if errors.blank?
+        RoutingEngine.compute(@dossier)
         @dossier.passer_en_construction!
         @dossier.process_declarative!
         NotificationMailer.send_en_construction_notification(@dossier).deliver_later
@@ -200,6 +201,8 @@ module Users
       if errors.blank?
         editing_fork_origin = @dossier.editing_fork_origin
         editing_fork_origin.merge_fork(@dossier)
+        RoutingEngine.compute(editing_fork_origin)
+
         redirect_to dossier_path(editing_fork_origin)
       else
         flash.now.alert = errors
@@ -468,10 +471,6 @@ module Users
         @dossier.assign_to_groupe_instructeur(groupe_instructeur_from_params)
       end
 
-      if @dossier.procedure.feature_enabled?(:routing_rules)
-        RoutingEngine.compute(@dossier)
-      end
-
       errors
     end
 
@@ -486,7 +485,7 @@ module Users
         @dossier.assign_to_groupe_instructeur(defaut_groupe_instructeur)
       end
 
-      if @dossier.groupe_instructeur.nil?
+      if !@dossier.procedure.feature_enabled?(:routing_rules) && @dossier.groupe_instructeur.nil?
         errors << "Le champ « #{@dossier.procedure.routing_criteria_name} » doit être rempli"
       end
 

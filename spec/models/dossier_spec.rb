@@ -605,12 +605,12 @@ describe Dossier do
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
 
     it "can change groupe instructeur" do
-      expect(dossier.assign_to_groupe_instructeur(new_groupe_instructeur_new_procedure)).to be_falsey
+      dossier.assign_to_groupe_instructeur(new_groupe_instructeur_new_procedure)
       expect(dossier.groupe_instructeur).not_to eq(new_groupe_instructeur_new_procedure)
     end
 
     it "can not change groupe instructeur if new groupe is from another procedure" do
-      expect(dossier.assign_to_groupe_instructeur(new_groupe_instructeur)).to be_truthy
+      dossier.assign_to_groupe_instructeur(new_groupe_instructeur)
       expect(dossier.groupe_instructeur).to eq(new_groupe_instructeur)
     end
   end
