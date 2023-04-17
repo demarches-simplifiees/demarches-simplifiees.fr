@@ -79,7 +79,7 @@ class APIGeoService
     private
 
     def communes_by_postal_code_map
-      Rails.cache.fetch('api_geo_communes', expires_in: 1.week) do
+      Rails.cache.fetch('api_geo_communes_v2', expires_in: 1.week) do
         departements
           .filter { _1[:code] != '99' }
           .flat_map { communes(_1[:code]) }
@@ -88,7 +88,7 @@ class APIGeoService
     end
 
     def get_from_api_geo(scope)
-      Rails.cache.fetch("api_geo_#{scope}", expires_in: 1.week) do
+      Rails.cache.fetch("api_geo_#{scope}_v2", expires_in: 1.week) do
         JSON.parse(Rails.root.join('lib', 'data', 'api_geo', "#{scope}.json").read, symbolize_names: true)
       end
     end
