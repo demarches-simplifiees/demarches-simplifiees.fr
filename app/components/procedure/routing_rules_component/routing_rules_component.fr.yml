@@ -2,7 +2,10 @@
 fr:
   select: Sélectionner
   apply_routing_rules: Appliquer des règles de routage
-  routing_rules_notice: |
-    Ajoutez des règles de routage à partir de champs créés dans le formulaire.
-    Si les mêmes règles de routage sont appliquées à plusieurs groupes,
-    les dossiers seront routés vers le premier groupe affiché dans la liste.
+  routing_rules_notice_html: |
+    <p>Ajoutez des règles de routage à partir de champs « choix simple » créés dans le <a href="%{path}">formulaire</a>.</p>
+    <p>Les dossiers seront routées vers le premier groupe affiché dont la règle correspond.</p>
+  routing_rules_warning_html: |
+    <p>Pour appliquer des règles de routage, votre formulaire doit comporter
+    au moins un champ « choix simple ».</p>
+    <p>Ajoutez ce champ dans la page <a href="%{path}">« Configuration des champs »</a>.</p>

@@ -50,6 +50,7 @@
 #  created_at                                :datetime         not null
 #  updated_at                                :datetime         not null
 #  canonical_procedure_id                    :bigint
+#  defaut_groupe_instructeur_id              :bigint
 #  draft_revision_id                         :bigint
 #  parent_procedure_id                       :bigint
 #  published_revision_id                     :bigint
@@ -917,7 +918,12 @@ class Procedure < ApplicationRecord
 
   def ensure_defaut_groupe_instructeur
     if self.groupe_instructeurs.empty?
-      groupe_instructeurs.create(label: GroupeInstructeur::DEFAUT_LABEL)
+      gi = groupe_instructeurs.create(label: GroupeInstructeur::DEFAUT_LABEL)
+      self.update(defaut_groupe_instructeur_id: gi.id)
     end
+  end
+
+  def stable_ids_used_by_routing_rules
+    @stable_ids_used_by_routing_rules ||= groupe_instructeurs.flat_map { _1.routing_rule&.sources }.compact
   end
 end
