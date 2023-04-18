@@ -133,6 +133,7 @@ class API::V2::Schema < GraphQL::Schema
 
   class Timeout < GraphQL::Schema::Timeout
     def handle_timeout(error, query)
+      error.extensions = { code: :timeout }
       Sentry.capture_exception(error, extra: query.context.query_info)
     end
   end

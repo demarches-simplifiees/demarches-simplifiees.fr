@@ -64,6 +64,18 @@ describe API::V2::GraphqlController do
       }
     end
 
+    context 'timeout' do
+      let(:variables) { { dossierNumber: dossier.id } }
+      let(:operation_name) { 'getDossier' }
+
+      before { allow_any_instance_of(API::V2::Schema::Timeout).to receive(:max_seconds).and_return(0) }
+
+      it {
+        expect(gql_errors.first[:message]).to eq('Timeout on Query.dossier')
+        expect(gql_errors.first[:extensions]).to eq({ code: 'timeout' })
+      }
+    end
+
     context 'getDossier' do
       let(:variables) { { dossierNumber: dossier.id } }
       let(:operation_name) { 'getDossier' }
