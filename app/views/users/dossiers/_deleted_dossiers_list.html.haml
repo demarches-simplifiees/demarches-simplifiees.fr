@@ -1,33 +1,54 @@
-- if deleted_dossiers.present?
-  %table.table.dossiers-table.hoverable
-    %thead
-      %tr
-        %th.number-col Nº dossier
-        %th Démarche
-        %th Raison de suppression
-        %th Date de suppression
-    %tbody
-      - deleted_dossiers.each do |dossier|
-        - libelle_demarche = Procedure.find(dossier.procedure_id).libelle
+- if dossiers.present?
+  .fr-table.fr-table--bordered
+    %table.table.dossiers-table.hoverable
+      %caption= t('views.users.dossiers.dossiers_list.caption')
+      %thead
+        %tr
+          %th.number-col{ scope: :col }= t('views.users.dossiers.dossiers_list.n_dossier')
+          %th{ scope: :col }= t('views.users.dossiers.dossiers_list.procedure')
+          - if dossiers.present?
+            %th{ scope: :col }= t('views.users.dossiers.dossiers_list.requester')
+          %th.status-col{ scope: :col }= t('views.users.dossiers.dossiers_list.status')
+          %th.updated-at-col{ scope: :col }= t('views.users.dossiers.dossiers_list.updated')
+          %th.action-col.follow-col{ scope: :col }= t('views.users.dossiers.dossiers_list.actions')
+      %tbody
+        - dossiers.each do |dossier|
+          - if dossier.transfer.present?
+            %tr.fr-background-alt--blue-france.no-border
+              %td.fr-py-2w{ colspan: 100 }
+                .flex.align-center
+                  %p.fr-mb-0
+                    %small
+                      = t('views.users.dossiers.transfers.sender_demande_en_cours', id: dossier.id, email: dossier.transfer.email)
+                  .ml-auto
+                    = link_to t('views.users.dossiers.transfers.revoke'), transfer_path(dossier.transfer), class: 'fr-btn fr-btn--sm fr-btn--tertiary-no-outline', method: :delete
 
-        %tr{ data: { 'dossier-id': dossier.dossier_id } }
-          %td.number-col
-            %span.icon.folder
-            = dossier.dossier_id
-          %td
-            = libelle_demarche
+          %tr{ data: { 'dossier-id': dossier.id } }
+            %th.number-col{ scope: :row }
+              = link_to(url_for_dossier(dossier), class: 'cell-link', tabindex: -1) do
+                %span.icon.folder
+                = dossier.id
+            %td
+              = link_to(url_for_dossier(dossier), class: 'cell-link') do
+                = procedure_libelle(dossier.procedure)
+            - if dossiers.present?
+              %td
+                %span.cell-link= demandeur_dossier(dossier)
+            %td.status-col
+              = status_badge(dossier.state)
+            %td.updated-at-col.cell-link
+              = try_format_date(dossier.updated_at)
+            %td.action-col.follow-col
+              = render partial: 'dossier_actions', locals: { dossier: dossier }
 
-          %td.cell-link
-            = deletion_reason_badge(dossier.reason)
-          %td
-            = dossier.updated_at.strftime('%d/%m/%Y')
-
-  = paginate(deleted_dossiers)
+    = paginate(dossiers)
 
 - else
   .blank-tab
-    %h2.empty-text Aucun dossier.
+    %h2.empty-text
+      = t("views.users.dossiers.account_creation.empty")
     %p.empty-text-details
-      Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche.
-      %br
-      Celui ci doit ressembler à #{APPLICATION_BASE_URL}/commencer/xxx.
+      = t("views.users.dossiers.account_creation.detail_one")
+    %p.empty-text-details
+      = t("views.users.dossiers.account_creation.detail_two")
+      #{APPLICATION_BASE_URL}/commencer/xxx.
