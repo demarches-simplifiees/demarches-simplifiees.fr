@@ -240,7 +240,7 @@ class API::V2::StoredQuery
       ...FileFragment
     }
     pdf {
-      url
+      ...FileFragment
     }
     usager {
       email
