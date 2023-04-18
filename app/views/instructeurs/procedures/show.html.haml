@@ -109,7 +109,7 @@
               %tr
                 - if batch_operation_component.render?
                   %th.text-center
-                    %input{ type: "checkbox", data: { action: "batch-operation#onCheckAll" }, id: dom_id(BatchOperation.new, :checkbox_all), aria: { label: t('views.instructeurs.dossiers.select_all') } }
+                    %input{ type: "checkbox", disabled: @disable_checkbox_all, checked: @disable_checkbox_all, data: { action: "batch-operation#onCheckAll" }, id: dom_id(BatchOperation.new, :checkbox_all), aria: { label: t('views.instructeurs.dossiers.select_all') } }
                 - else
                   - if @statut.in? %w(suivis traites tous)
                     = render partial: "header_field", locals: { field: { "label" => "●", "table" => "notifications", "column" => "notifications" }, classname: "notification-col text-center" }
