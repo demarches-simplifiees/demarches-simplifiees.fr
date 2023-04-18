@@ -388,8 +388,8 @@ en:
       dossiers:
         account_creation:
           empty: "No file"
-          empty_details_one: "To complete a procedure, contact your administration and ask for the link to the procedure."
-          empty_details_two: "This one should look like"
+          detail_one: "To complete a procedure, contact your administration and ask for the link to the procedure."
+          detail_two: "This one should look like"
         archived_dossier: "Your file will be kept %{duree_conservation_dossiers_dans_ds} more months"
         identite:
           identity_data: Identity data
