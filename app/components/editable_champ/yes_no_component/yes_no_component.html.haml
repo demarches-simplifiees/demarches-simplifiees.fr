@@ -1,8 +1,15 @@
-%fieldset.radios
-  %label{ for: @champ.yes_input_id }
-    = @form.radio_button :value, true, id: @champ.yes_input_id
-    Oui
+%fieldset.fr-fieldset
+  %legend.fr-fieldset__legend.visually-hidden
+    = t(".legend")
 
-  %label{ for: @champ.no_input_id }
-    = @form.radio_button :value, false, id: @champ.no_input_id
-    Non
+  .fr-fieldset__element.fr-fieldset__element--inline
+    .fr-radio-group
+      = @form.radio_button :value, false, id: @champ.yes_input_id
+      %label.fr-label{ for: @champ.yes_input_id }
+        = t(".yes")
+
+  .fr-fieldset__element.fr-fieldset__element--inline
+    .fr-radio-group
+      = @form.radio_button :value, false, id: @champ.no_input_id
+      %label.fr-label{ for: @champ.no_input_id }
+        = t(".no")
