@@ -1,0 +1,5 @@
+fr:
+  tokens_title: Jetons d’identification de l’API (token)
+  first_paragraph: Ces jetons sont nécessaire pour effectuer des appels vers l’API de
+  second_paragraph: Si vous avez déjà des applications qui utilisent un jeton et vous le révoquez, l’accès à l’API sera bloqué pour ces applications.
+  action: Créer et afficher un nouveau jeton
