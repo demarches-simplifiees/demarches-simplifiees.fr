@@ -10,4 +10,4 @@
               turbo: true }
 
   %li.instruction-button
-    = render partial: "instruction_button", locals: { dossier: dossier }
+    = render Instructeurs::InstructionMenuComponent.new(dossier:)
