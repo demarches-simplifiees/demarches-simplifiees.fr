@@ -1072,7 +1072,7 @@ describe API::V2::GraphqlController do
           it "should fail" do
             expect(gql_errors).to eq(nil)
             expect(gql_data).to eq(dossierPasserEnInstruction: {
-              errors: [{ message: "Le dossier est déjà en instruction" }],
+              errors: [{ message: "Le dossier est déjà en instruction" }],
               dossier: nil
             })
           end
@@ -1289,7 +1289,7 @@ describe API::V2::GraphqlController do
           it "should fail" do
             expect(gql_errors).to eq(nil)
             expect(gql_data).to eq(dossierRefuser: {
-              errors: [{ message: "Le dossier est déjà classé sans suite" }],
+              errors: [{ message: "Le dossier est déjà classé sans suite" }],
               dossier: nil
             })
           end
