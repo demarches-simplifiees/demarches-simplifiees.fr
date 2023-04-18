@@ -28,7 +28,7 @@
                 %td.operator est égal à
                 %td.value= value_tag(targeted_champ, value, row_index)
 
-    = form_tag admin_procedure_update_defaut_groupe_instructeur_path,
+    = form_tag admin_procedure_update_defaut_groupe_instructeur_path(@procedure_id),
       class: 'form flex align-baseline defaut-groupe',
       data: { controller: 'autosave' } do
       = label_tag :defaut_groupe_instructeur_id, 'Et si aucune règle ne correspond, router vers :'

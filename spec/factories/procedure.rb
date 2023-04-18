@@ -27,6 +27,7 @@ FactoryBot.define do
     end
 
     after(:build) do |procedure, evaluator|
+      procedure.defaut_groupe_instructeur = procedure.groupe_instructeurs.first
       initial_revision = build(:procedure_revision, procedure: procedure, dossier_submitted_message: evaluator.dossier_submitted_message)
 
       if evaluator.types_de_champ_public.present?
