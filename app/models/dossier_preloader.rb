@@ -78,7 +78,6 @@ class DossierPreloader
   def load_dossier(dossier, champs, children_by_parent = {})
     champs_public, champs_private = champs.partition(&:public?)
 
-    dossier.association(:champs).target = []
     load_champs(dossier, :champs_public, champs_public, dossier, children_by_parent)
     load_champs(dossier, :champs_private, champs_private, dossier, children_by_parent)
 
@@ -98,7 +97,6 @@ class DossierPreloader
         champ.association(:parent).target = parent
       end
     end
-    dossier.association(:champs).target += champs
 
     parent.association(name).target = champs.sort_by do |champ|
       [champ.row, positions[dossier.revision_id][champ.type_de_champ_id]]
