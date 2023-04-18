@@ -25,8 +25,6 @@ class API::V2::Schema < GraphQL::Schema
 
   def self.object_from_id(id, ctx)
     ApplicationRecord.record_from_typed_id(id)
-  rescue => e
-    raise GraphQL::ExecutionError.new(e.message, extensions: { code: :not_found })
   end
 
   def self.resolve_type(type_definition, object, ctx)
@@ -127,6 +125,10 @@ class API::V2::Schema < GraphQL::Schema
     # instances of "bad data".
     Sentry.capture_exception(error, extra: ctx.query_info)
     super
+  end
+
+  rescue_from(ActiveRecord::RecordNotFound) do |_error, _object, _args, _ctx, field|
+    raise GraphQL::ExecutionError.new("#{field.type.unwrap.graphql_name} not found", extensions: { code: :not_found })
   end
 
   class Timeout < GraphQL::Schema::Timeout
