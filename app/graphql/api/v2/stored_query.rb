@@ -8,7 +8,7 @@ class API::V2::StoredQuery
     when 'introspection'
       GraphQL::Introspection::INTROSPECTION_QUERY
     else
-      raise GraphQL::ExecutionError.new("No query with id \"#{query_id}\"")
+      raise GraphQL::ExecutionError.new("No query with id \"#{query_id}\"", extensions: { code: :bad_request })
     end
   end
 

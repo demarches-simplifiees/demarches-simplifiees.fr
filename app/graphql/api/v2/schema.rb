@@ -50,7 +50,7 @@ class API::V2::Schema < GraphQL::Schema
     when GroupeInstructeur
       Types::GroupeInstructeurType
     else
-      raise GraphQL::ExecutionError.new("Unexpected object: #{object}")
+      type_definition
     end
   end
 
