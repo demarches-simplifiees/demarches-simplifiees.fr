@@ -83,15 +83,15 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         }
     end
 
-    context 'with only one group' do
+    context 'default group' do
       before do
         delete_group gi_1_1
-        delete_group gi_1_2
       end
 
       it { expect(flash.alert).to be_present }
+      it { expect(flash.alert).to eq "Suppression impossible : le groupe « défaut » est le groupe par défaut." }
       it { expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure)) }
-      it { expect(procedure.groupe_instructeurs.count).to eq(1) }
+      it { expect(procedure.groupe_instructeurs.count).to eq(2) }
     end
 
     context 'with many groups' do

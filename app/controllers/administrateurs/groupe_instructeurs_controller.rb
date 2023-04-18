@@ -68,6 +68,8 @@ module Administrateurs
         flash[:alert] = "Impossible de supprimer un groupe avec des dossiers. Il faut le réaffecter avant"
       elsif procedure.groupe_instructeurs.one?
         flash[:alert] = "Suppression impossible : il doit y avoir au moins un groupe instructeur sur chaque procédure"
+      elsif @groupe_instructeur.id == procedure.defaut_groupe_instructeur.id
+        flash[:alert] = "Suppression impossible : le groupe « #{@groupe_instructeur.label} » est le groupe par défaut."
       else
         @groupe_instructeur.destroy!
         if procedure.groupe_instructeurs.active.one?
