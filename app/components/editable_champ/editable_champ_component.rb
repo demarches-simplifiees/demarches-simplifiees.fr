@@ -30,11 +30,6 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
       # This is an editable champ. Lets find what controllers it might need.
       controllers = ['autosave']
 
-      # This is a dropdown champ. Activate special behaviours it might have.
-      if @champ.simple_drop_down_list? || @champ.linked_drop_down_list?
-        controllers << 'champ-dropdown'
-      end
-
       controllers.join(' ')
     end
   end
