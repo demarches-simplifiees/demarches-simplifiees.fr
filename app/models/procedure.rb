@@ -802,6 +802,7 @@ class Procedure < ApplicationRecord
     dossiers
       .state_not_termine
       .find_each(&:rebase_later)
+    AdministrationMailer.procedure_published(self).deliver_later
   end
 
   def reset_draft_revision!

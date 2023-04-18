@@ -8,9 +8,9 @@
       %th{ style: 'border: 1px solid #0069CC;padding: 5px' }
         Description
   %tbody
-    - champs.each do |champ|
-      = render partial: "field_description", locals: { champ: champ }
-      - if champ.types_de_champ.present? # only one level of recursion
-        - champ.types_de_champ.each do |subchamp|
-          = render partial: "field_description", locals: { champ: subchamp }
+    - types_de_champ.each do |champ|
+      = render partial: "field_description", locals: { champ: champ, repetition: false }
+      - repetition_type_de_champs = procedure.types_de_champ_for_procedure_presentation(champ)
+      - repetition_type_de_champs.each do |repetition_type_de_champ|
+        = render partial: "field_description", locals: { champ: repetition_type_de_champ, repetition: true }
 

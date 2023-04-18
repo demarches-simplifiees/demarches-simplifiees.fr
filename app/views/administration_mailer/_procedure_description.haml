@@ -9,11 +9,11 @@
       - procedure.administrateurs.each do |administrateur|
         %li
           = link_to "#{administrateur.email}", "mailto:#{administrateur.email}"
-  -# %li
+  %li
     Liste des champs remplis par l'usager
-    = render partial: "field_table", locals: { champs: procedure.types_de_champ }
+    = render partial: "field_table", locals: { procedure: procedure, types_de_champ: procedure.types_de_champ_for_procedure_presentation.public_only }
   - if procedure.active_revision.types_de_champ_private.present?
     %li
       Liste des champs remplis par l'organisme
       = procedure.service&.nom
-      = render partial: "field_table", locals: { champs: procedure.active_revision.types_de_champ_private }
+      = render partial: "field_table", locals: { procedure: procedure, types_de_champ: procedure.types_de_champ_for_procedure_presentation.private_only }

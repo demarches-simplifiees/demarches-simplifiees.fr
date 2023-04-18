@@ -1,11 +1,14 @@
 %tr
   %td{ style: 'border: 1px solid #0069CC;padding: 5px' }
+    - if repetition
+      &nbsp;&nbsp;&nbsp;
     = champ.libelle
   %td{ style: 'border: 1px solid #0069CC;padding: 5px' }
     = champ.type_champ
     - if champ.drop_down_list_options?
       %ul
         - champ.drop_down_list_options.each do |o|
-          %li= o
+          - if o.present?
+            %li= o
   %td{ style: 'border: 1px solid #0069CC;padding: 5px' }
-    = champ.description
+    = champ.description&.[](0..30)
