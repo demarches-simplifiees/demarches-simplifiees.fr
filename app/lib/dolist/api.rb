@@ -154,6 +154,18 @@ class Dolist::API
     post(url, body)["FieldList"].find { _1['ID'] == 72 }['Value']
   end
 
+  def ignorable_error?(response, mail)
+    error_code = response&.dig("ResponseStatus", "ErrorCode")
+    invalid_contact_status = if ignorable_api_error_code?(error_code)
+      fetch_contact_status(mail.to.first)
+    else
+      nil
+    end
+    [error_code, invalid_contact_status]
+  end
+
+  private
+
   def ignorable_api_error_code?(api_error_code)
     IGNORABLE_API_ERROR_CODE.include?(api_error_code)
   end
@@ -161,8 +173,6 @@ class Dolist::API
   def ignorable_contact_status?(contact_status)
     IGNORABLE_CONTACT_STATUSES.include?(contact_status)
   end
-
-  private
 
   def format_url(base)
     format(base, account_id: account_id)

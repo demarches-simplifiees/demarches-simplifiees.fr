@@ -1,5 +1,8 @@
 ActiveSupport.on_load(:action_mailer) do
   module Dolist
+    class IgnorableError < StandardError
+    end
+
     class SMTP < ::Mail::SMTP
       def deliver!(mail)
         mail.from(ENV['DOLIST_NO_REPLY_EMAIL'])
@@ -20,14 +23,11 @@ ActiveSupport.on_load(:action_mailer) do
         if response&.dig("Result")
           mail.message_id = response.dig("Result")
         else
-          error_code = response&.dig("ResponseStatus", "ErrorCode")
+          _, invalid_contact_status = client.ignorable_error?(response, mail)
 
-          contact_status = if client.ignorable_api_error_code?(error_code)
-            client.fetch_contact_status(mail.to.first)
+          if invalid_contact_status
+            raise Dolist::IgnorableError.new("DoList delivery error. contact unreachable: #{invalid_contact_status}")
           else
-            nil
-          end
-          if !client.ignorable_contact_status?(contact_status)
             fail "DoList delivery error. Body: #{response}"
           end
         end
