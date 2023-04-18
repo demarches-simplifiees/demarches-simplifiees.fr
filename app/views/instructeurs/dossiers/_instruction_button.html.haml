@@ -1,5 +1,5 @@
 - if dossier.en_instruction? || (dossier.en_construction? && dossier.may_flag_as_pending_correction?)
-  = render Dropdown::MenuComponent.new(wrapper: :div, wrapper_options: { data: { turbo_force: :server } }, button_options: { class: [button_or_label_class(dossier)]}, role: dossier.en_instruction? ? :region : :menu) do |menu|
+  = render Dropdown::MenuComponent.new(wrapper: :div, wrapper_options: { data: { turbo_force: :server } }, button_options: { class: [button_or_label_class(dossier)]}, role: :region) do |menu|
     - menu.with_button_inner_html do
       = dossier.en_instruction? ? "Instruire le dossier" : "Demander une correction"
 
