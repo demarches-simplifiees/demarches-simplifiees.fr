@@ -29,11 +29,15 @@
         = ""
 
 - elsif Dossier::EN_CONSTRUCTION_OU_INSTRUCTION.include?(state)
+  - if with_menu
+    %li.en-construction-menu{ 'data-turbo': turbo ? 'true' : 'false' }
+      = render Instructeurs::EnConstructionMenuComponent.new(dossier:)
+
   - if Dossier.states[:en_construction] == state
     %li{ 'data-turbo': turbo ? 'true' : 'false' }
       = button_to passer_en_instruction_instructeur_dossier_path(procedure_id, dossier_id), method: :post, class: 'fr-btn fr-btn--secondary fr-icon-edit-line' do
         Passer en instruction
-  - elsif Dossier.states[:en_instruction] == state
+  - elsif Dossier.states[:en_instruction] == state && !with_menu
     %li{ 'data-turbo': turbo ? 'true' : 'false' }
       = button_to repasser_en_construction_instructeur_dossier_path(procedure_id, dossier_id), method: :post, class: 'fr-btn fr-btn--secondary fr-icon-draft-line' do
         Repasser en construction

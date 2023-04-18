@@ -2,12 +2,14 @@
   = render partial: "instructeurs/procedures/dossier_actions",
     locals: { procedure_id: dossier.procedure.id,
               dossier_id: dossier.id,
+              dossier: dossier,
               state: dossier.state,
               archived: dossier.archived,
               dossier_is_followed: current_instructeur&.follow?(dossier),
               close_to_expiration: dossier.close_to_expiration?,
               hidden_by_administration: dossier.hidden_by_administration?,
-              turbo: true }
+              turbo: true,
+              with_menu: true }
 
   %li.instruction-button
     = render Instructeurs::InstructionMenuComponent.new(dossier:)

@@ -52,7 +52,7 @@ describe 'instructeurs/dossiers/show', type: :view do
     end
   end
 
-  context 'en_contruction' do
+  context 'en_construction' do
     let(:dossier) { create(:dossier, :en_construction) }
     it 'displays the correct actions' do
       within("form[action=\"#{passer_en_instruction_instructeur_dossier_path(dossier.procedure, dossier)}\"]") do
@@ -75,15 +75,15 @@ describe 'instructeurs/dossiers/show', type: :view do
     end
 
     it 'displays the correct actions' do
-      within("form[action=\"#{repasser_en_construction_instructeur_dossier_path(dossier.procedure, dossier)}\"]") do
-        expect(subject).to have_button('Repasser en construction')
-      end
       within("form[action=\"#{unfollow_instructeur_dossier_path(dossier.procedure, dossier)}\"]") do
         expect(subject).to have_button('Ne plus suivre')
       end
+
+      expect(subject).to have_button('Repasser en construction')
+      expect(subject).to have_selector('.en-construction-menu .fr-btn', count: 5)
+
       expect(subject).to have_button('Instruire le dossier')
-      expect(subject).to have_selector('.header-actions ul:first-child > li .fr-btn', count: 15)
-      expect(subject).to have_selector('.header-actions ul:first-child > li.instruction-button', count: 1)
+      expect(subject).to have_selector('.instruction-button .fr-btn', count: 13)
     end
   end
 

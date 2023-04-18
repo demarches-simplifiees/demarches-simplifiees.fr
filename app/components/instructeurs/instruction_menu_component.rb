@@ -8,17 +8,10 @@ class Instructeurs::InstructionMenuComponent < ApplicationComponent
   end
 
   def render?
-    return true if dossier.en_instruction?
-    return true if dossier.en_construction? && dossier.may_flag_as_pending_correction?
-
-    false
+    dossier.en_instruction?
   end
 
   def menu_label
-    if dossier.en_instruction?
-      t(".instruct")
-    else
-      "Demander une correction"
-    end
+    t(".instruct")
   end
 end

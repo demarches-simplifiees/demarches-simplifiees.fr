@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Instructeurs::InstructionMenuComponent, type: :component do
+RSpec.describe Instructeurs::EnConstructionMenuComponent, type: :component do
   include DossierHelper
 
   subject do
@@ -34,8 +34,9 @@ RSpec.describe Instructeurs::InstructionMenuComponent, type: :component do
   context 'en_construction' do
     let(:dossier) { create(:dossier, :en_construction) }
 
-    it 'does not render' do
-      expect(subject.to_s).to be_empty
+    it 'renders a dropdown' do
+      expect(subject).to have_dropdown_title('Demander une correction')
+      expect(subject).to have_dropdown_items(count: 2) # form is already expanded so we have 2 visible items
     end
   end
 
@@ -43,11 +44,10 @@ RSpec.describe Instructeurs::InstructionMenuComponent, type: :component do
     let(:dossier) { create(:dossier, :en_instruction) }
 
     it 'renders a dropdown' do
-      expect(subject).to have_dropdown_title('Instruire le dossier')
+      expect(subject).to have_dropdown_title('Repasser en construction')
+      expect(subject).to have_dropdown_item('Demander une correction')
+      expect(subject).to have_dropdown_item('Repasser en construction')
       expect(subject).to have_dropdown_items(count: 3)
-      expect(subject).to have_dropdown_item('Accepter')
-      expect(subject).to have_dropdown_item('Classer sans suite')
-      expect(subject).to have_dropdown_item('Refuser')
     end
   end
 end
