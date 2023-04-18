@@ -20,6 +20,6 @@ fr:
             one: "Conserver %{count} mois supplémentaire"
             other: "Conserver %{count} mois supplémentaires"
         callout:
-          last_dossier_editable_title: Vous avez déjà commencé à remplir un dossier
-          last_dossier_editable_text: Il y a %{time_ago} vous avez commencé à remplir un dossier sur la démarche « %{libelle} ».
-          last_dossier_editable_button: Continuer à remplir
+          first_brouillon_recently_updated_title: Vous avez déjà commencé à remplir un dossier
+          first_brouillon_recently_updated_text: Il y a %{time_ago} vous avez commencé à remplir un dossier sur la démarche « %{libelle} ».
+          first_brouillon_recently_updated_button: Continuer à remplir

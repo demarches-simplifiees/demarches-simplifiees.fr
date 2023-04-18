@@ -65,7 +65,6 @@ class Dossier < ApplicationRecord
   TERMINE = [states.fetch(:accepte), states.fetch(:refuse), states.fetch(:sans_suite)]
   INSTRUCTION_COMMENCEE = TERMINE + [states.fetch(:en_instruction)]
   SOUMIS = EN_CONSTRUCTION_OU_INSTRUCTION + TERMINE
-  EDITABLE = [states.fetch(:brouillon), states.fetch(:en_construction)]
 
   REMAINING_DAYS_BEFORE_CLOSING = 2
   INTERVAL_BEFORE_CLOSING = "#{REMAINING_DAYS_BEFORE_CLOSING} days"
@@ -223,7 +222,6 @@ class Dossier < ApplicationRecord
   scope :state_not_en_construction,            -> { where.not(state: states.fetch(:en_construction)) }
   scope :state_en_instruction,                 -> { where(state: states.fetch(:en_instruction)) }
   scope :state_en_construction_ou_instruction, -> { where(state: EN_CONSTRUCTION_OU_INSTRUCTION) }
-  scope :state_editable,                       -> { where(state: EDITABLE) }
   scope :state_instruction_commencee,          -> { where(state: INSTRUCTION_COMMENCEE) }
   scope :state_termine,                        -> { where(state: TERMINE) }
   scope :state_not_termine,                    -> { where.not(state: TERMINE) }
@@ -296,7 +294,8 @@ class Dossier < ApplicationRecord
       champs: [:type_de_champ, piece_justificative_file_attachments: :blob]
     ])
   }
-  scope :last_editable, -> { not_archived.state_editable.order_by_updated_at.first }
+
+  scope :brouillons_recently_updated, -> { not_archived.updated_since(2.days.ago).state_brouillon.order_by_updated_at }
   scope :with_annotations, -> {
     includes(champs_private: [
       :type_de_champ,

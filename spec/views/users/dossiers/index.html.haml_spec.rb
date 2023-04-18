@@ -40,14 +40,14 @@ describe 'users/dossiers/index.html.haml', type: :view do
     expect(rendered).not_to have_selector('.fr-callout', count: 1)
   end
 
-  context 'quand il y a un dossier à éditer' do
+  context 'quand il y a un dossier en brouillon récemment mis à jour' do
     before do
-      assign(:last_dossier_editable, dossier_en_construction)
+      assign(:first_brouillon_recently_updated, dossier_brouillon)
       render
     end
     it 'affiche une alerte pour continuer à remplir un dossier' do
       expect(rendered).to have_selector('.fr-callout', count: 1)
-      expect(rendered).to have_link(href: modifier_dossier_path(dossier_en_construction))
+      expect(rendered).to have_link(href: modifier_dossier_path(dossier_brouillon))
     end
   end
 

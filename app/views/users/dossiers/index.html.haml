@@ -14,14 +14,6 @@
 
     - else
       %h1.page-title.fr-h2= t('views.users.dossiers.index.dossiers')
-
-      - if @last_dossier_editable.present?
-        = render Dsfr::CalloutComponent.new(title: t('users.dossiers.header.callout.last_dossier_editable_title'), heading_level: 'h2') do |c|
-          - c.with_body do
-            %p
-              = t('users.dossiers.header.callout.last_dossier_editable_text', time_ago: time_ago_in_words(@last_dossier_editable.created_at), libelle: @last_dossier_editable.procedure.libelle  )
-            = link_to t('users.dossiers.header.callout.last_dossier_editable_button'), modifier_dossier_path(@last_dossier_editable), class: 'fr-btn'
-
       %nav.tabs{ role: 'navigation', 'aria-label': t('views.users.dossiers.secondary_menu') }
         %ul
           - if @user_dossiers.present?
@@ -68,6 +60,13 @@
 
 .container
   - if @statut == "en-cours"
+    - if @first_brouillon_recently_updated.present?
+      = render Dsfr::CalloutComponent.new(title: t('users.dossiers.header.callout.first_brouillon_recently_updated_title'), heading_level: 'h2') do |c|
+        - c.with_body do
+          %p
+            = t('users.dossiers.header.callout.first_brouillon_recently_updated_text', time_ago: time_ago_in_words(@first_brouillon_recently_updated.created_at), libelle: @first_brouillon_recently_updated.procedure.libelle  )
+          = link_to t('users.dossiers.header.callout.first_brouillon_recently_updated_button'), modifier_dossier_path(@first_brouillon_recently_updated), class: 'fr-btn'
+
     = render partial: "dossiers_list", locals: { dossiers: @user_dossiers }
 
   - if @statut == "traites"
