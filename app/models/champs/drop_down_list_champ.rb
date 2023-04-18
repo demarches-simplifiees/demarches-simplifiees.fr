@@ -21,6 +21,7 @@
 #  type_de_champ_id               :integer
 #
 class Champs::DropDownListChamp < Champ
+  store_accessor :value_json, :other
   THRESHOLD_NB_OPTIONS_AS_RADIO = 5
   OTHER = '__other__'
   delegate :options_without_empty_value_when_mandatory, to: :type_de_champ
@@ -44,7 +45,7 @@ class Champs::DropDownListChamp < Champ
   end
 
   def selected
-    other_value_present? ? OTHER : value
+    other? ? OTHER : value
   end
 
   def disabled_options
@@ -55,22 +56,28 @@ class Champs::DropDownListChamp < Champ
     drop_down_list_enabled_non_empty_options
   end
 
-  def other_value_present?
-    drop_down_other? && value.present? && drop_down_list_options.exclude?(value)
+  def other?
+    drop_down_other? && (other || (value.present? && drop_down_list_options.exclude?(value)))
   end
 
   def value=(value)
-    if value != OTHER
+    if value == OTHER
+      self.other = true
+      write_attribute(:value, nil)
+    else
+      self.other = false
       write_attribute(:value, value)
     end
   end
 
   def value_other=(value)
-    write_attribute(:value, value)
+    if other?
+      write_attribute(:value, value)
+    end
   end
 
   def value_other
-    other_value_present? ? value : ""
+    other? ? value : ""
   end
 
   def in?(options)
