@@ -1,7 +1,7 @@
 fr:
   dossier_mailer:
     notify_near_deletion_to_administration:
-      subject_en_construction:
+      subject_in_construction:
         one: Un dossier en construction va bientôt être supprimé
         other: Des dossiers en construction vont bientôt être supprimés
       subject_termine:
