@@ -281,7 +281,7 @@ class Dossier < ApplicationRecord
   scope :processed_in_month, -> (date) do
     date = date.to_datetime
     state_termine
-      .where(processed_at: date.beginning_of_month..date.end_of_month)
+      .where(processed_at: date.all_month)
   end
   scope :ordered_for_export, -> {
     order(depose_at: 'asc')
