@@ -233,9 +233,10 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def human_value_for_filter(filter)
-    case filter[TABLE]
-    when TYPE_DE_CHAMP, TYPE_DE_CHAMP_PRIVATE
+    if [TYPE_DE_CHAMP, TYPE_DE_CHAMP_PRIVATE].include?(filter[TABLE])
       find_type_de_champ(filter[COLUMN]).dynamic_type.filter_to_human(filter['value'])
+    elsif filter['column'] == 'state'
+      Dossier.human_attribute_name("state.#{filter['value']}")
     else
       filter['value']
     end
