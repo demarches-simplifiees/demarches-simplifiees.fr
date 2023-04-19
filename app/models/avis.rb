@@ -42,7 +42,6 @@ class Avis < ApplicationRecord
     size: { less_than: FILE_MAX_SIZE }
 
   validates :email, format: { with: Devise.email_regexp, message: "n'est pas valide" }, allow_nil: true
-  validates :claimant, presence: true
   validates :question_answer, inclusion: { in: [true, false] }, on: :update, if: -> { question_label.present? }
   validates :piece_justificative_file, size: { less_than: FILE_MAX_SIZE }
   validates :introduction_file, size: { less_than: FILE_MAX_SIZE }
