@@ -937,6 +937,13 @@ Rails/StripHeredoc:
 
 Rails/ThreeStateBooleanColumn:
   Enabled: true
+  Exclude:
+    - db/migrate/2019*
+    - db/migrate/2020*
+    - db/migrate/2021*
+    - db/migrate/2022*
+    - db/migrate/202301*
+    - db/migrate/202303*
 
 Rails/TimeZone:
   EnforcedStyle: strict
