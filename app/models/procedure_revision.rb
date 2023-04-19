@@ -252,7 +252,7 @@ class ProcedureRevision < ApplicationRecord
       end
 
       added = (to_sids - from_sids).map do |sid|
-        { model: :type_de_champ, op: :add, label: to_h[sid].libelle, private: to_h[sid].private?, _position: to_sids.index(sid), stable_id: sid }
+        { model: :type_de_champ, op: :add, label: to_h[sid].libelle, private: to_h[sid].private?, mandatory: to_h[sid].mandatory?, _position: to_sids.index(sid), stable_id: sid }
       end
 
       kept = from_sids.intersection(to_sids)
