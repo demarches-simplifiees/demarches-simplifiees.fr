@@ -64,6 +64,18 @@ describe API::V2::GraphqlController do
       }
     end
 
+    context 'timeout' do
+      let(:variables) { { dossierNumber: dossier.id } }
+      let(:operation_name) { 'getDossier' }
+
+      before { allow_any_instance_of(API::V2::Schema::Timeout).to receive(:max_seconds).and_return(0) }
+
+      it {
+        expect(gql_errors.first[:message]).to eq('Timeout on Query.dossier')
+        expect(gql_errors.first[:extensions]).to eq({ code: 'timeout' })
+      }
+    end
+
     context 'getDossier' do
       let(:variables) { { dossierNumber: dossier.id } }
       let(:operation_name) { 'getDossier' }
@@ -75,6 +87,15 @@ describe API::V2::GraphqlController do
         expect(gql_data[:dossier][:demandeur][:nom]).to eq(dossier.individual.nom)
         expect(gql_data[:dossier][:demandeur][:prenom]).to eq(dossier.individual.prenom)
       }
+
+      context 'not found' do
+        let(:variables) { { dossierNumber: 0 } }
+
+        it {
+          expect(gql_errors.first[:message]).to eq('Dossier not found')
+          expect(gql_errors.first[:extensions]).to eq({ code: 'not_found' })
+        }
+      end
 
       context 'with entreprise' do
         let(:procedure) { create(:procedure, :published, :with_service, administrateurs: [admin], types_de_champ_public:) }
@@ -113,6 +134,15 @@ describe API::V2::GraphqlController do
         expect(gql_data[:demarche][:id]).to eq(procedure.to_typed_id)
         expect(gql_data[:demarche][:dossiers]).to be_nil
       }
+
+      context 'not found' do
+        let(:variables) { { demarcheNumber: 0 } }
+
+        it {
+          expect(gql_errors.first[:message]).to eq('Demarche not found')
+          expect(gql_errors.first[:extensions]).to eq({ code: 'not_found' })
+        }
+      end
 
       context 'include Dossiers' do
         let(:variables) { { demarcheNumber: procedure.id, includeDossiers: true } }
@@ -182,6 +212,15 @@ describe API::V2::GraphqlController do
         expect(gql_data[:groupeInstructeur][:dossiers]).to be_nil
       }
 
+      context 'not found' do
+        let(:variables) { { groupeInstructeurNumber: 0 } }
+
+        it {
+          expect(gql_errors.first[:message]).to eq('GroupeInstructeurWithDossiers not found')
+          expect(gql_errors.first[:extensions]).to eq({ code: 'not_found' })
+        }
+      end
+
       context 'include Dossiers' do
         let(:variables) { { groupeInstructeurNumber: groupe_instructeur.id, includeDossiers: true } }
 
@@ -238,6 +277,15 @@ describe API::V2::GraphqlController do
           expect(gql_errors).to be_nil
           expect(gql_data[:demarcheDescriptor][:id]).to eq(procedure.to_typed_id)
           expect(gql_data[:demarcheDescriptor][:demarcheUrl]).to match("commencer/#{procedure.path}")
+        }
+      end
+
+      context 'not found' do
+        let(:variables) { { demarche: { number: 0 } } }
+
+        it {
+          expect(gql_errors.first[:message]).to eq('DemarcheDescriptor not found')
+          expect(gql_errors.first[:extensions]).to eq({ code: 'not_found' })
         }
       end
 

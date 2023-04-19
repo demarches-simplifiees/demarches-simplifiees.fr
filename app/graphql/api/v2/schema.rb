@@ -25,8 +25,6 @@ class API::V2::Schema < GraphQL::Schema
 
   def self.object_from_id(id, ctx)
     ApplicationRecord.record_from_typed_id(id)
-  rescue => e
-    raise GraphQL::ExecutionError.new(e.message, extensions: { code: :not_found })
   end
 
   def self.resolve_type(type_definition, object, ctx)
@@ -50,7 +48,7 @@ class API::V2::Schema < GraphQL::Schema
     when GroupeInstructeur
       Types::GroupeInstructeurType
     else
-      raise GraphQL::ExecutionError.new("Unexpected object: #{object}")
+      type_definition
     end
   end
 
@@ -129,8 +127,13 @@ class API::V2::Schema < GraphQL::Schema
     super
   end
 
+  rescue_from(ActiveRecord::RecordNotFound) do |_error, _object, _args, _ctx, field|
+    raise GraphQL::ExecutionError.new("#{field.type.unwrap.graphql_name} not found", extensions: { code: :not_found })
+  end
+
   class Timeout < GraphQL::Schema::Timeout
     def handle_timeout(error, query)
+      error.extensions = { code: :timeout }
       Sentry.capture_exception(error, extra: query.context.query_info)
     end
   end
