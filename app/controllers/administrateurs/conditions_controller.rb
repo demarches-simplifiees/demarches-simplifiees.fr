@@ -56,7 +56,13 @@ module Administrateurs
     def retrieve_coordinate_and_uppers
       @tdc = draft_revision.find_and_ensure_exclusive_use(params[:stable_id])
       @coordinate = draft_revision.coordinate_for(@tdc)
-      @upper_tdcs = @coordinate.upper_siblings.map(&:type_de_champ)
+
+      upper_coordinates = @coordinate.upper_siblings
+      if @coordinate.child?
+        upper_coordinates += @coordinate.parent.upper_siblings
+      end
+
+      @upper_tdcs = upper_coordinates.map(&:type_de_champ)
     end
 
     def draft_revision
