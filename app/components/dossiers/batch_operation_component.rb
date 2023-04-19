@@ -7,7 +7,7 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
   end
 
   def render?
-    @statut == 'traites' || 'suivis'
+    ['traites', 'suivis'].include?(@statut)
   end
 
   def available_operations
