@@ -17,15 +17,15 @@ RSpec.describe Cron::AutoArchiveProcedureJob, type: :job do
   end
 
   context "when procedures have auto_archive_on set on yesterday or today" do
-    let!(:dossier1) { create(:dossier, procedure: procedure_hier, state: Dossier.states.fetch(:brouillon), archived: false) }
-    let!(:dossier2) { create(:dossier, procedure: procedure_hier, state: Dossier.states.fetch(:en_construction), archived: false) }
-    let!(:dossier3) { create(:dossier, procedure: procedure_hier, state: Dossier.states.fetch(:en_construction), archived: false) }
-    let!(:dossier4) { create(:dossier, procedure: procedure_hier, state: Dossier.states.fetch(:en_construction), archived: false) }
-    let!(:dossier5) { create(:dossier, procedure: procedure_hier, state: Dossier.states.fetch(:en_instruction), archived: false) }
-    let!(:dossier6) { create(:dossier, procedure: procedure_hier, state: Dossier.states.fetch(:accepte), archived: false) }
-    let!(:dossier7) { create(:dossier, procedure: procedure_hier, state: Dossier.states.fetch(:refuse), archived: false) }
-    let!(:dossier8) { create(:dossier, procedure: procedure_hier, state: Dossier.states.fetch(:sans_suite), archived: false) }
-    let!(:dossier9) { create(:dossier, procedure: procedure_aujourdhui, state: Dossier.states.fetch(:en_construction), archived: false) }
+    let!(:dossier1) { create(:dossier, procedure: procedure_hier) }
+    let!(:dossier2) { create(:dossier, :en_construction, procedure: procedure_hier) }
+    let!(:dossier3) { create(:dossier, :en_construction, procedure: procedure_hier) }
+    let!(:dossier4) { create(:dossier, :en_construction, procedure: procedure_hier) }
+    let!(:dossier5) { create(:dossier, :en_instruction, procedure: procedure_hier) }
+    let!(:dossier6) { create(:dossier, :accepte, procedure: procedure_hier) }
+    let!(:dossier7) { create(:dossier, :refuse, procedure: procedure_hier) }
+    let!(:dossier8) { create(:dossier, :sans_suite, procedure: procedure_hier) }
+    let!(:dossier9) { create(:dossier, :en_construction, procedure: procedure_aujourdhui) }
     let(:last_operation) { dossier2.dossier_operation_logs.last }
 
     before do
