@@ -27,6 +27,10 @@ module DossierCorrectableConcern
       corrections.pending.exists?
     end
 
+    def pending_correction
+      corrections.pending.first
+    end
+
     def resolve_pending_correction!
       corrections.pending.update(resolved_at: Time.current)
     end
