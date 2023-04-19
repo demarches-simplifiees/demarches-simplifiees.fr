@@ -14,11 +14,11 @@ fr:
         autorisation_donnees: Acceptation des CGU
       dossier/state: &state
         brouillon: "Brouillon"
-        en_construction: "En construction"
-        en_instruction: "En instruction"
+        en_construction: "En construction"
+        en_instruction: "En instruction"
         accepte: "Accepté"
         refuse: "Refusé"
-        sans_suite: "Classé sans suite"
+        sans_suite: "Classé sans suite"
       traitement:
         state: "État"
       traitement/state:
