@@ -545,7 +545,7 @@ describe Users::DossiersController, type: :controller do
           {
             id: dossier.id,
             dossier: {
-              champs_public_attributes: {}
+              champs_public_attributes: [{ value: '' }]
             }
           }
         end
@@ -554,16 +554,6 @@ describe Users::DossiersController, type: :controller do
           subject
           expect(dossier.reload.last_champ_updated_at).to eq(nil)
         end
-      end
-    end
-
-    context 'when dossier has no champ' do
-      let(:submit_payload) { { id: dossier.id } }
-
-      it 'does not raise any errors' do
-        subject
-
-        expect(response).to have_http_status(:ok)
       end
     end
 
@@ -713,16 +703,6 @@ describe Users::DossiersController, type: :controller do
 
       it { expect(response).to render_template(:modifier) }
       it { expect(flash.alert).to eq(['Le champ l doit être rempli.']) }
-    end
-
-    context 'when dossier has no champ' do
-      let(:submit_payload) { { id: dossier.id } }
-
-      it 'does not raise any errors' do
-        subject
-
-        expect(response).to have_http_status(:ok)
-      end
     end
 
     context 'when the user has an invitation but is not the owner' do
@@ -1138,7 +1118,7 @@ describe Users::DossiersController, type: :controller do
             it { is_expected.to redirect_to dossiers_path }
           end
 
-          context 'when prefill values are given' do
+          context 'when prefill values have been stored in session before' do
             let!(:type_de_champ_1) { create(:type_de_champ_text, procedure: procedure) }
             let(:value_1) { "any value" }
 
@@ -1152,6 +1132,10 @@ describe Users::DossiersController, type: :controller do
                 "champ_#{type_de_champ_2.to_typed_id}" => value_2
               }
             }
+
+            before { session[:stored_params] = params.to_json }
+
+            it { expect { subject }.to change { session[:stored_params] }.to(nil) }
 
             it { expect { subject }.to change { Dossier.count }.by(1) }
 

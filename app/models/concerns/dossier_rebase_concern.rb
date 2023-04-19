@@ -9,6 +9,10 @@ module DossierRebaseConcern
     end
   end
 
+  def rebase_later
+    DossierRebaseJob.perform_later(self)
+  end
+
   def can_rebase?
     revision != procedure.published_revision &&
       (brouillon? || accepted_en_construction_changes? || accepted_en_instruction_changes?)
@@ -21,32 +25,30 @@ module DossierRebaseConcern
   private
 
   def accepted_en_construction_changes?
-    en_construction? && pending_changes.all? { |change| accepted_en_construction_change?(change) }
+    en_construction? && pending_changes.all? { |change| accepted_change?(change) }
   end
 
   def accepted_en_instruction_changes?
-    en_instruction? && pending_changes.all? { |change| accepted_en_instruction_change?(change) }
+    en_instruction? && pending_changes.all? { |change| accepted_change?(change) }
   end
 
-  def accepted_en_construction_change?(change)
-    if change[:op] == :move || change[:op] == :remove
-      true
-    elsif change[:op] == :update
-      case change[:attribute]
-      when :carte_layers
-        true
-      when :mandatory
-        change[:from] && !change[:to]
-      else
-        false
-      end
-    else
+  def accepted_change?(change)
+    return true if change[:private]
+    return true if change[:op].in?([:remove, :move])
+    return !change[:mandatory] if change[:op] == :add
+
+    case change[:attribute]
+    when :drop_down_options
+      (change[:from] - change[:to]).empty?
+    when :drop_down_other
+      !change[:from] && change[:to]
+    when :mandatory
+      change[:from] && !change[:to]
+    when :type_champ, :condition
       false
+    else
+      true
     end
-  end
-
-  def accepted_en_instruction_change?(change)
-    false
   end
 
   def rebase
@@ -93,12 +95,14 @@ module DossierRebaseConcern
   def apply(change, champs)
     case change[:attribute]
     when :type_champ
-      champs.each { |champ| champ.piece_justificative_file.purge_later } # FIX ME: change updated_at
+      champs.each { |champ| purge_piece_justificative_file(champ) }
       GeoArea.where(champ: champs).destroy_all
+      Etablissement.where(champ: champs).destroy_all
 
       {
         type: "Champs::#{change[:to].classify}Champ",
         value: nil,
+        value_json: nil,
         external_id: nil,
         data:  nil
       }
@@ -151,5 +155,9 @@ module DossierRebaseConcern
       .joins(:type_de_champ)
       .where(dossier: self, types_de_champ: { stable_id: stable_id })
       .destroy_all
+  end
+
+  def purge_piece_justificative_file(champ)
+    ActiveStorage::Attachment.where(id: champ.piece_justificative_file.ids).delete_all
   end
 end

@@ -13,9 +13,7 @@ module Administrateurs
     end
 
     def reset_procedure
-      if @procedure.brouillon? || @procedure.draft_changed?
-        @procedure.reset!
-      end
+      @procedure.reset!
     end
 
     def ensure_not_super_admin!

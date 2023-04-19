@@ -1,11 +1,10 @@
 describe Dossier do
   describe '#can_rebase?' do
-    let(:procedure) { create(:procedure, :with_type_de_champ_mandatory, :with_yes_no, attestation_template: build(:attestation_template)) }
+    let(:procedure) { create(:procedure, :with_type_de_champ_mandatory, :with_type_de_champ_private, :with_yes_no) }
     let(:attestation_template) { procedure.draft_revision.attestation_template.find_or_revise! }
     let(:type_de_champ) { procedure.active_revision.types_de_champ_public.find { |tdc| !tdc.mandatory? } }
+    let(:private_type_de_champ) { procedure.active_revision.types_de_champ_private.first }
     let(:mandatory_type_de_champ) { procedure.active_revision.types_de_champ_public.find(&:mandatory?) }
-
-    before { Flipper.enable(:procedure_revisions, procedure) }
 
     context 'en_construction' do
       let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
@@ -21,6 +20,23 @@ describe Dossier do
           procedure.draft_revision.add_type_de_champ({
             type_champ: TypeDeChamp.type_champs.fetch(:text),
             libelle: "Un champ text"
+          })
+          procedure.publish_revision!
+          dossier.reload
+        end
+
+        it 'should be true' do
+          expect(dossier.pending_changes).not_to be_empty
+          expect(dossier.can_rebase?).to be_truthy
+        end
+      end
+
+      context 'with added mandatory type de champ' do
+        before do
+          procedure.draft_revision.add_type_de_champ({
+            type_champ: TypeDeChamp.type_champs.fetch(:text),
+            libelle: "Un champ text",
+            mandatory: true
           })
           procedure.publish_revision!
           dossier.reload
@@ -58,6 +74,34 @@ describe Dossier do
         end
       end
 
+      context 'with type de champ change type' do
+        context 'type de champ public' do
+          before do
+            procedure.draft_revision.find_and_ensure_exclusive_use(type_de_champ.stable_id).update(type_champ: :checkbox)
+            procedure.publish_revision!
+            dossier.reload
+          end
+
+          it 'should be false' do
+            expect(dossier.pending_changes).not_to be_empty
+            expect(dossier.can_rebase?).to be_falsey
+          end
+        end
+
+        context 'type de champ private' do
+          before do
+            procedure.draft_revision.find_and_ensure_exclusive_use(private_type_de_champ.stable_id).update(type_champ: :checkbox)
+            procedure.publish_revision!
+            dossier.reload
+          end
+
+          it 'should be true' do
+            expect(dossier.pending_changes).not_to be_empty
+            expect(dossier.can_rebase?).to be_truthy
+          end
+        end
+      end
+
       context 'with removed type de champ' do
         before do
           procedure.draft_revision.remove_type_de_champ(type_de_champ.stable_id)
@@ -91,15 +135,19 @@ describe Dossier do
           dossier.reload
         end
 
-        it 'should be false' do
+        it 'should be true' do
           expect(dossier.pending_changes).not_to be_empty
-          expect(dossier.can_rebase?).to be_falsey
+          expect(dossier.can_rebase?).to be_truthy
         end
       end
 
-      context 'with removed type de champ' do
+      context 'with added mandatory type de champ' do
         before do
-          procedure.draft_revision.remove_type_de_champ(type_de_champ.stable_id)
+          procedure.draft_revision.add_type_de_champ({
+            type_champ: TypeDeChamp.type_champs.fetch(:text),
+            libelle: "Un champ text",
+            mandatory: true
+          })
           procedure.publish_revision!
           dossier.reload
         end
@@ -117,9 +165,63 @@ describe Dossier do
           dossier.reload
         end
 
+        it 'should be true' do
+          expect(dossier.pending_changes).not_to be_empty
+          expect(dossier.can_rebase?).to be_truthy
+        end
+      end
+
+      context 'with type de champ made mandatory' do
+        before do
+          procedure.draft_revision.find_and_ensure_exclusive_use(type_de_champ.stable_id).update(mandatory: true)
+          procedure.publish_revision!
+          dossier.reload
+        end
+
         it 'should be false' do
           expect(dossier.pending_changes).not_to be_empty
           expect(dossier.can_rebase?).to be_falsey
+        end
+      end
+
+      context 'with type de champ change type' do
+        context 'type de champ public' do
+          before do
+            procedure.draft_revision.find_and_ensure_exclusive_use(type_de_champ.stable_id).update(type_champ: :checkbox)
+            procedure.publish_revision!
+            dossier.reload
+          end
+
+          it 'should be false' do
+            expect(dossier.pending_changes).not_to be_empty
+            expect(dossier.can_rebase?).to be_falsey
+          end
+        end
+
+        context 'type de champ private' do
+          before do
+            procedure.draft_revision.find_and_ensure_exclusive_use(private_type_de_champ.stable_id).update(type_champ: :checkbox)
+            procedure.publish_revision!
+            dossier.reload
+          end
+
+          it 'should be true' do
+            expect(dossier.pending_changes).not_to be_empty
+            expect(dossier.can_rebase?).to be_truthy
+          end
+        end
+      end
+
+      context 'with removed type de champ' do
+        before do
+          procedure.draft_revision.remove_type_de_champ(type_de_champ.stable_id)
+          procedure.publish_revision!
+          dossier.reload
+        end
+
+        it 'should be true' do
+          expect(dossier.pending_changes).not_to be_empty
+          expect(dossier.can_rebase?).to be_truthy
         end
       end
     end
@@ -330,8 +432,7 @@ describe Dossier do
         it { expect { subject }.to change { first_champ.data }.from({ 'a' => 1 }).to(nil) }
         it { expect { subject }.to change { first_champ.geo_areas.count }.from(1).to(0) }
         it { expect { subject }.to change { first_champ.piece_justificative_file.attached? }.from(true).to(false) }
-        # pb with pj.purge_later
-        xit { expect { subject }.not_to change { first_champ.updated_at }.from(Time.zone.parse('01/01/1901')) }
+        it { expect { subject }.not_to change { first_champ.updated_at }.from(Time.zone.parse('01/01/1901')) }
       end
     end
 

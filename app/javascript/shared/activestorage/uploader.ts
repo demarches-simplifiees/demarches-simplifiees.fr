@@ -96,8 +96,9 @@ export default class Uploader {
 
     try {
       await httpRequest(autoAttachUrl, {
-        method: 'put',
-        body: formData
+        method: 'post',
+        body: formData,
+        headers: { 'x-http-method-override': 'PUT' }
       }).turbo();
     } catch (e) {
       const error = e as ResponseError;

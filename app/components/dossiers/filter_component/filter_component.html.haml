@@ -9,5 +9,4 @@
     %input#value{ type: field_type, name: :value, maxlength: ProcedurePresentation::FILTERS_VALUE_MAX_LENGTH, disabled: field_id.nil? ? true : false }
 
   = hidden_field_tag :statut, statut
-  %br
-  = submit_tag t('.add_filter'), class: 'button'
+  = submit_tag t('.add_filter'), class: 'fr-btn fr-btn--secondary fr-mt-2w'

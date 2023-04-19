@@ -12,6 +12,13 @@ module TagsSubstitutionConcern
       doc.parse io
     end
 
+    def self.normalize(str)
+      str
+        .sub(/^[[:space:]]+/, '')
+        .sub(/[[:space:]]+$/, '')
+        .gsub(/[[:space:]]/, ' ')
+    end
+
     define_combinator :doc do
       many(tag | text) < eof
     end
@@ -24,7 +31,7 @@ module TagsSubstitutionConcern
 
     define_combinator :tag do
       between(tag_delimiter, tag_delimiter, tag_text).fmap do |tag|
-        { tag: tag }
+        { tag: TagsParser.normalize(tag) }
       end
     end
 

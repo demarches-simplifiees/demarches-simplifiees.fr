@@ -84,7 +84,9 @@ class Dossier < ApplicationRecord
   has_many :champs_public, -> { root.public_ordered }, class_name: 'Champ', inverse_of: false, dependent: :destroy
   has_many :champs_private, -> { root.private_ordered }, class_name: 'Champ', inverse_of: false, dependent: :destroy
   has_many :champs_public_all, -> { public_only }, class_name: 'Champ', inverse_of: false
-  has_many :prefilled_champs_public, -> { root.public_only.prefilled }, class_name: 'Champ', inverse_of: false, dependent: :destroy
+  has_many :champs_private_all, -> { private_only }, class_name: 'Champ', inverse_of: false
+  has_many :prefilled_champs_public, -> { root.public_only.prefilled }, class_name: 'Champ', inverse_of: false
+
   has_many :commentaires, inverse_of: :dossier, dependent: :destroy
   has_many :invites, dependent: :destroy
   has_many :follows, -> { active }, inverse_of: :dossier
@@ -150,10 +152,12 @@ class Dossier < ApplicationRecord
 
   belongs_to :transfer, class_name: 'DossierTransfer', foreign_key: 'dossier_transfer_id', optional: true, inverse_of: :dossiers
   has_many :transfer_logs, class_name: 'DossierTransferLog', dependent: :destroy
-  has_many :parent_dossiers, class_name: 'Dossier', foreign_key: 'parent_dossier_id', dependent: :nullify, inverse_of: :parent_dossier
+  has_many :cloned_dossiers, class_name: 'Dossier', foreign_key: 'parent_dossier_id', dependent: :nullify, inverse_of: :parent_dossier
 
   accepts_nested_attributes_for :champs_public
   accepts_nested_attributes_for :champs_private
+  accepts_nested_attributes_for :champs_public_all
+  accepts_nested_attributes_for :champs_private_all
 
   include AASM
 
@@ -534,11 +538,11 @@ class Dossier < ApplicationRecord
   end
 
   def can_accepter_automatiquement?
-    declarative_triggered_at.nil? && can_terminer?
+    declarative_triggered_at.nil? && procedure.declarative_accepte? && can_terminer?
   end
 
   def can_passer_automatiquement_en_instruction?
-    declarative_triggered_at.nil?
+    (declarative_triggered_at.nil? && procedure.declarative_en_instruction?) || procedure.auto_archive_on&.then { _1 <= Time.zone.today }
   end
 
   def can_repasser_en_instruction?

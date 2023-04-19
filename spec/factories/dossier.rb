@@ -56,6 +56,18 @@ FactoryBot.define do
       end
     end
 
+    trait :with_declarative_accepte do
+      after(:build) do |dossier, _evaluator|
+        dossier.procedure.declarative_with_state = 'accepte'
+      end
+    end
+
+    trait :with_declarative_en_instruction do
+      after(:build) do |dossier, _evaluator|
+        dossier.procedure.declarative_with_state = 'en_instruction'
+      end
+    end
+
     trait :archived do
       archived { true }
     end

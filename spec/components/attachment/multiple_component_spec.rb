@@ -38,13 +38,7 @@ RSpec.describe Attachment::MultipleComponent, type: :component do
 
   context 'when there is an attachment' do
     before do
-      attached_file.attach(
-        io: StringIO.new("x" * 2),
-        filename: "me.jpg",
-        content_type: "image/jpeg",
-        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
-      )
-      champ.save!
+      attach_to_champ(attached_file, champ)
     end
 
     it 'renders the filenames' do
@@ -97,5 +91,27 @@ RSpec.describe Attachment::MultipleComponent, type: :component do
     it 'setup polling' do
       expect(subject).to have_selector('[data-controller=turbo-poll]')
     end
+  end
+
+  context 'when user can replace' do
+    let(:kwargs) { { user_can_replace: true } }
+
+    before do
+      attach_to_champ(attached_file, champ)
+    end
+
+    it 'setup controller' do
+      expect(subject).to have_selector('[data-controller=replace-attachment]').once
+    end
+  end
+
+  def attach_to_champ(attached_file, champ)
+    attached_file.attach(
+      io: StringIO.new("x" * 2),
+      filename: "me.jpg",
+      content_type: "image/jpeg",
+      metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+    )
+    champ.save!
   end
 end

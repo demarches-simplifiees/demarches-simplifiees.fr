@@ -30,8 +30,8 @@ module Instructeurs
 
     def geo_data
       send_data dossier.to_feature_collection.to_json,
-                type: 'application/json',
-                filename: "dossier-#{dossier.id}-features.json"
+        type: 'application/json',
+        filename: "dossier-#{dossier.id}-features.json"
     end
 
     def apercu_attestation
@@ -213,11 +213,8 @@ module Instructeurs
 
     def update_annotations
       dossier_with_champs.assign_attributes(remove_changes_forbidden_by_visa(champs_private_params, dossier.champs_private))
-      if dossier.champs_private.any?(&:changed?)
+      if dossier.champs_private_all.any?(&:changed?)
         dossier.last_champ_private_updated_at = Time.zone.now
-        flash.notice = 'Modifications sauvegardées'
-      else
-        flash.notice = 'Aucune modification à sauvegarder'
       end
       dossier.save
       dossier.log_modifier_annotations!(current_instructeur)
@@ -294,12 +291,14 @@ module Instructeurs
     end
 
     def champs_private_params
-      params.require(:dossier).permit(champs_private_attributes: [
+      champs_params = params.require(:dossier).permit(champs_private_attributes: [
         :id, :primary_value, :secondary_value, :piece_justificative_file, :value_other, :external_id, :numero_allocataire, :code_postal, :departement, :code_departement, :value, value: [],
         champs_attributes: [
           :id, :_destroy, :value, :primary_value, :secondary_value, :piece_justificative_file, :value_other, :external_id, :numero_allocataire, :code_postal, :departement, :code_departement, value: []
         ] + TypeDeChamp::INSTANCE_CHAMPS_PARAMS
       ] + TypeDeChamp::INSTANCE_CHAMPS_PARAMS)
+      champs_params[:champs_private_all_attributes] = champs_params.delete(:champs_private_attributes) || {}
+      champs_params
     end
 
     def remove_changes_forbidden_by_visa(params, champs)

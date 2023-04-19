@@ -17,5 +17,16 @@ FactoryBot.define do
         ]
       end
     end
+
+    trait :passer_en_instruction do
+      operation { BatchOperation.operations.fetch(:passer_en_instruction) }
+      after(:build) do |batch_operation, evaluator|
+        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur], administrateurs: [create(:administrateur)])
+        batch_operation.dossiers = [
+          create(:dossier, :with_individual, :en_construction, procedure: procedure),
+          create(:dossier, :with_individual, :en_construction, procedure: procedure)
+        ]
+      end
+    end
   end
 end
