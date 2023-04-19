@@ -16,7 +16,7 @@ namespace :after_party do
     end
     progress.finish
 
-    Dossier.ignored_columns = ignored_columns
+    Dossier.ignored_columns = ignored_columns # rubocop:disable Rails/IgnoredColumnsAssignment
 
     dossiers_without_conservation_extension = Dossier.where(conservation_extension: nil)
     progress = ProgressReport.new((dossiers_without_conservation_extension.count.to_f / BATCH_SIZE).round)

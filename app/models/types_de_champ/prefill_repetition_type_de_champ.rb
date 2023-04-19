@@ -6,7 +6,7 @@ class TypesDeChamp::PrefillRepetitionTypeDeChamp < TypesDeChamp::PrefillTypeDeCh
     [
       I18n.t("views.prefill_descriptions.edit.possible_values.#{type_champ}_html"),
       subchamps_all_possible_values
-    ].join("</br>").html_safe # rubocop:disable Rails/OutputSafety
+    ].join("</br>").html_safe
   end
 
   def example_value
@@ -18,7 +18,7 @@ class TypesDeChamp::PrefillRepetitionTypeDeChamp < TypesDeChamp::PrefillTypeDeCh
 
     value.map.with_index do |repetition, index|
       PrefillRepetitionRow.new(champ, repetition, index, @revision).to_assignable_attributes
-    end.reject(&:blank?)
+    end.compact_blank
   end
 
   private

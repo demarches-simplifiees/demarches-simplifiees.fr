@@ -15,7 +15,7 @@
 #  stable_id   :bigint
 #
 class TypeDeChamp < ApplicationRecord
-  self.ignored_columns = [:migrated_parent, :revision_id, :parent_id, :order_place]
+  self.ignored_columns += [:migrated_parent, :revision_id, :parent_id, :order_place]
 
   FILE_MAX_SIZE = 200.megabytes
   FEATURE_FLAGS = {}
@@ -431,7 +431,7 @@ class TypeDeChamp < ApplicationRecord
   #   then rails decided to add this blank ("") option when the select is required
   #   so we revert this change
   def options_without_empty_value_when_mandatory(options)
-    mandatory? ? options.reject(&:blank?) : options
+    mandatory? ? options.compact_blank : options
   end
 
   def drop_down_list_options?

@@ -462,12 +462,12 @@ describe Procedure do
     end
 
     context "with token expired" do
-      let(:expiration_time) { (Time.zone.now - 1.day).to_i }
+      let(:expiration_time) { (1.day.ago).to_i }
       it { is_expected.to be_truthy }
     end
 
     context "with token not expired" do
-      let(:expiration_time) { (Time.zone.now + 1.day).to_i }
+      let(:expiration_time) { (1.day.from_now).to_i }
       it { is_expected.to be_falsey }
     end
   end

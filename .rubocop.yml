@@ -14,6 +14,7 @@ AllCops:
   TargetRubyVersion: 3.1
   DisabledByDefault: true
   SuggestExtensions: false
+  NewCops: enable
   Include:
     - "app/**/*.prawn"
   Exclude:
@@ -683,8 +684,17 @@ Performance/UriDefaultParser:
 Rails:
   Enabled: true
 
+Rails/ActionControllerFlashBeforeRender:
+  Enabled: true
+
+Rails/ActionControllerTestCase:
+  Enabled: true
+
 Rails/ActionFilter:
   Enabled: true
+
+Rails/ActionOrder:
+  Enabled: false
 
 Rails/ActiveRecordAliases:
   Enabled: true
@@ -695,17 +705,23 @@ Rails/ActiveRecordCallbacksOrder:
 Rails/ActiveSupportAliases:
   Enabled: true
 
+Rails/ActiveSupportOnLoad:
+  Enabled: true
+
+Rails/AddColumnIndex:
+  Enabled: true
+
 Rails/AfterCommitOverride:
   Enabled: true
+
+Rails/ApplicationController:
+  Enabled: false
 
 Rails/ApplicationJob:
   Enabled: true
 
 Rails/ApplicationRecord:
   Enabled: true
-
-Rails/ApplicationController:
-  Enabled: false
 
 Rails/AttributeDefaultBlockValue:
   Enabled: true
@@ -715,6 +731,9 @@ Rails/Blank:
 
 Rails/BulkChangeTable:
   Enabled: false
+
+Rails/CompactBlank:
+  Enabled: true
 
 Rails/CreateTableWithTimestamps:
   Enabled: true
@@ -734,10 +753,28 @@ Rails/Delegate:
 Rails/DelegateAllowBlank:
   Enabled: true
 
+Rails/DeprecatedActiveModelErrorsMethods:
+  Enabled: false # re-enable in rails 7
+
+Rails/DotSeparatedKeys:
+  Enabled: true
+
+Rails/DuplicateAssociation:
+  Enabled: true
+
+Rails/DuplicateScope:
+  Enabled: true
+
+Rails/DurationArithmetic:
+  Enabled: true
+
 Rails/DynamicFindBy:
   Enabled: true
   Exclude:
-    - "spec/system/**/*.rb"
+    - spec/system/**/*.rb
+
+Rails/EagerEvaluationLogMessage:
+  Enabled: true
 
 Rails/EnumUniqueness:
   Enabled: true
@@ -746,6 +783,9 @@ Rails/EnvironmentComparison:
   Enabled: false
 
 Rails/Exit:
+  Enabled: true
+
+Rails/ExpandedDateRange:
   Enabled: true
 
 Rails/FilePath:
@@ -760,6 +800,9 @@ Rails/FindById:
 Rails/FindEach:
   Enabled: true
 
+Rails/FreezeTime:
+  Enabled: true
+
 Rails/HasAndBelongsToMany:
   Enabled: false
 
@@ -771,6 +814,18 @@ Rails/HttpPositionalArguments:
 
 Rails/HttpStatus:
   Enabled: false
+
+Rails/I18nLazyLookup:
+  Enabled: true
+
+Rails/I18nLocaleAssignment:
+  Enabled: true
+
+Rails/I18nLocaleTexts:
+  Enabled: false
+
+Rails/IgnoredColumnsAssignment:
+  Enabled: true
 
 Rails/Inquiry:
   Enabled: true
@@ -785,6 +840,9 @@ Rails/MailerName:
   Enabled: true
 
 Rails/MatchRoute:
+  Enabled: true
+
+Rails/MigrationClassName:
   Enabled: true
 
 Rails/NegateInclude:
@@ -823,7 +881,13 @@ Rails/ReadWriteAttribute:
 Rails/RedundantAllowNil:
   Enabled: false
 
+Rails/RedundantPresenceValidationOnBelongsTo:
+  Enabled: true
+
 Rails/RedundantReceiverInWithOptions:
+  Enabled: true
+
+Rails/RedundantTravelBack:
   Enabled: true
 
 Rails/RelativeDateConstant:
@@ -838,8 +902,20 @@ Rails/RenderPlainText:
 Rails/RequestReferer:
   Enabled: true
 
+Rails/ResponseParsedBody:
+  Enabled: true
+
 Rails/ReversibleMigration:
   Enabled: false
+
+Rails/RootJoinChain:
+  Enabled: true
+
+Rails/RootPathnameMethods:
+  Enabled: true
+
+Rails/RootPublicPath:
+  Enabled: true
 
 Rails/SaveBang:
   Enabled: false
@@ -856,8 +932,36 @@ Rails/SkipsModelValidations:
 Rails/SquishedSQLHeredocs:
   Enabled: true
 
+Rails/StripHeredoc:
+  Enabled: true
+
+Rails/ThreeStateBooleanColumn:
+  Enabled: true
+  Exclude:
+    - db/migrate/2019*
+    - db/migrate/2020*
+    - db/migrate/2021*
+    - db/migrate/2022*
+    - db/migrate/202301*
+    - db/migrate/202303*
+
 Rails/TimeZone:
   EnforcedStyle: strict
+
+Rails/TimeZoneAssignment:
+  Enabled: true
+
+Rails/ToFormattedS:
+  Enabled: true
+
+Rails/ToSWithArgument:
+  Enabled: true
+
+Rails/TopLevelHashWithIndifferentAccess:
+  Enabled: true
+
+Rails/TransactionExitStatement:
+  Enabled: true
 
 Rails/UniqBeforePluck:
   Enabled: true
@@ -868,6 +972,9 @@ Rails/UniqueValidationWithoutIndex:
 Rails/UnknownEnv:
   Enabled: false
 
+Rails/UnusedIgnoredColumns:
+  Enabled: true
+
 Rails/Validation:
   Enabled: true
 
@@ -877,7 +984,13 @@ Rails/WhereEquals:
 Rails/WhereExists:
   Enabled: true
 
+Rails/WhereMissing:
+  Enabled: true
+
 Rails/WhereNot:
+  Enabled: true
+
+Rails/WhereNotWithMultipleConditions:
   Enabled: true
 
 RSpec/Focus:
@@ -1037,6 +1150,12 @@ Style/EvenOdd:
   Enabled: true
 
 Style/ExpandPathArguments:
+  Enabled: true
+
+Style/FileRead:
+  Enabled: true
+
+Style/FileWrite:
   Enabled: true
 
 Style/For:
