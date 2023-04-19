@@ -12,15 +12,18 @@ class Attachment::MultipleComponent < ApplicationComponent
   attr_reader :view_as
   attr_reader :user_can_destroy
   alias user_can_destroy? user_can_destroy
+  attr_reader :user_can_replace
+  alias user_can_replace? user_can_replace
 
   delegate :count, :empty?, to: :attachments, prefix: true
 
-  def initialize(champ:, attached_file:, form_object_name: nil, view_as: :link, user_can_destroy: true, max: nil)
+  def initialize(champ:, attached_file:, form_object_name: nil, view_as: :link, user_can_destroy: true, user_can_replace: false, max: nil)
     @champ = champ
     @attached_file = attached_file
     @form_object_name = form_object_name
     @view_as = view_as
     @user_can_destroy = user_can_destroy
+    @user_can_replace = user_can_replace
     @max = max || DEFAULT_MAX_ATTACHMENTS
 
     @attachments = attached_file.attachments || []
@@ -47,5 +50,13 @@ class Attachment::MultipleComponent < ApplicationComponent
     return :dossier if champ.present?
 
     nil
+  end
+
+  def replace_controller_attributes
+    return {} unless user_can_replace?
+
+    {
+      "data-controller": 'replace-attachment'
+    }
   end
 end

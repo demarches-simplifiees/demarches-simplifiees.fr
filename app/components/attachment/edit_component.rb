@@ -4,12 +4,14 @@ class Attachment::EditComponent < ApplicationComponent
   attr_reader :attachment
   attr_reader :user_can_destroy
   alias user_can_destroy? user_can_destroy
+  attr_reader :user_can_replace
+  alias user_can_replace? user_can_replace
   attr_reader :as_multiple
   alias as_multiple? as_multiple
 
   EXTENSIONS_ORDER = ['jpeg', 'png', 'pdf', 'zip'].freeze
 
-  def initialize(champ: nil, auto_attach_url: nil, attached_file:, direct_upload: true, index: 0, as_multiple: false, view_as: :link, user_can_destroy: true, **kwargs)
+  def initialize(champ: nil, auto_attach_url: nil, attached_file:, direct_upload: true, index: 0, as_multiple: false, view_as: :link, user_can_destroy: true, user_can_replace: false, **kwargs)
     @as_multiple = as_multiple
     @attached_file = attached_file
     @auto_attach_url = auto_attach_url
@@ -18,6 +20,7 @@ class Attachment::EditComponent < ApplicationComponent
     @index = index
     @view_as = view_as
     @user_can_destroy = user_can_destroy
+    @user_can_replace = user_can_replace
 
     # attachment passed by kwarg because we don't want a default (nil) value.
     @attachment = if kwargs.key?(:attachment)
@@ -64,13 +67,14 @@ class Attachment::EditComponent < ApplicationComponent
   def file_field_options
     track_issue_with_missing_validators if missing_validators?
     {
-      class: "fr-upload attachment-input #{attachment_input_class} #{persisted? ? 'hidden' : ''}",
+      class: class_names("fr-upload attachment-input": true, "#{attachment_input_class}": true, "hidden": persisted?, "fr-mt-2w": user_can_replace?),
       direct_upload: @direct_upload,
       id: input_id,
       aria: { describedby: champ&.describedby_id },
       data: {
         auto_attach_url:
       }.merge(has_file_size_validator? ? { max_file_size: } : {})
+        .merge(user_can_replace? ? { replace_attachment_target: "input" } : {})
     }.merge(has_content_type_validator? ? { accept: accept_content_type } : {})
   end
 
@@ -100,6 +104,24 @@ class Attachment::EditComponent < ApplicationComponent
     {
       role: 'button',
       data: { turbo: "true", turbo_method: :delete }
+    }
+  end
+
+  def replace_button_options
+    {
+      type: 'button',
+      data: {
+        action: "click->replace-attachment#open",
+        auto_attach_url: auto_attach_url
+      }.compact
+    }
+  end
+
+  def replace_controller_attributes
+    return {} if !persisted? || !user_can_replace? || as_multiple?
+
+    {
+      "data-controller": 'replace-attachment'
     }
   end
 
@@ -155,7 +177,9 @@ class Attachment::EditComponent < ApplicationComponent
   def auto_attach_url
     return @auto_attach_url if @auto_attach_url.present?
 
-    return helpers.auto_attach_url(@champ) if @champ.present?
+    params = { replace_attachment_id: @attachment.id } if user_can_replace? && @attachment.present?
+
+    return helpers.auto_attach_url(@champ, params) if @champ.present?
 
     nil
   end
