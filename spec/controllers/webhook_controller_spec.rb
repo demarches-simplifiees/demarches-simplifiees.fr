@@ -6,7 +6,7 @@ describe WebhookController, type: :controller do
 
   describe '#helpscout_support_dev' do
     subject(:response) { post :helpscout_support_dev, params: payload }
-    let(:payload) { JSON.parse(File.read(Rails.root.join('spec', 'fixtures', 'files', 'helpscout', 'tagged-dev.json'))) }
+    let(:payload) { JSON.parse(Rails.root.join('spec', 'fixtures', 'files', 'helpscout', 'tagged-dev.json').read) }
     let(:webhook_url) { "https://notification_url" }
     it 'works' do
       allow(Rails.application.secrets).to receive(:dig).with(:mattermost, :support_webhook_url).and_return(webhook_url)
@@ -68,7 +68,7 @@ describe WebhookController, type: :controller do
 
   describe '#sendinblue' do
     subject(:response) { post :sendinblue, params: payload }
-    let(:payload) { JSON.parse(File.read(Rails.root.join('spec', 'fixtures', 'files', 'sendinblue', 'incident.json'))) }
+    let(:payload) { JSON.parse(Rails.root.join('spec', 'fixtures', 'files', 'sendinblue', 'incident.json').read) }
 
     it 'sends notification to mattermost' do
       notification_url = "https://notification_url"

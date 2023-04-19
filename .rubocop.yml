@@ -1152,6 +1152,12 @@ Style/EvenOdd:
 Style/ExpandPathArguments:
   Enabled: true
 
+Style/FileRead:
+  Enabled: true
+
+Style/FileWrite:
+  Enabled: true
+
 Style/For:
   Enabled: true
 
