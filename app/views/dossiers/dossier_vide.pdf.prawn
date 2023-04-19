@@ -154,7 +154,7 @@ def render_single_champ(pdf, champ)
     add_libelle(pdf, champ)
     add_optionnal_description(pdf, champ)
     add_explanation(pdf, 'Cochez la mention applicable, une seule valeur possible')
-    champ.options.reject(&:blank?).each do |option|
+    champ.options.compact_blank.each do |option|
       format_with_checkbox(pdf, option)
     end
     pdf.text "\n"
@@ -162,15 +162,15 @@ def render_single_champ(pdf, champ)
     add_libelle(pdf, champ)
     add_optionnal_description(pdf, champ)
     add_explanation(pdf, 'Cochez la mention applicable, plusieurs valeurs possibles')
-    champ.options.reject(&:blank?).each do |option|
+    champ.options.compact_blank.each do |option|
       format_with_checkbox(pdf, option)
     end
     pdf.text "\n"
   when 'Champs::LinkedDropDownListChamp'
     add_libelle(pdf, champ)
-    champ.primary_options.reject(&:blank?).each do |o|
+    champ.primary_options.compact_blank.each do |o|
       format_with_checkbox(pdf, o)
-      champ.secondary_options[o].reject(&:blank?).each do |secondary_option|
+      champ.secondary_options[o].compact_blank.each do |secondary_option|
         format_with_checkbox(pdf, secondary_option, 15)
       end
     end

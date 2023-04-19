@@ -18,7 +18,7 @@ class TypesDeChamp::PrefillRepetitionTypeDeChamp < TypesDeChamp::PrefillTypeDeCh
 
     value.map.with_index do |repetition, index|
       PrefillRepetitionRow.new(champ, repetition, index, @revision).to_assignable_attributes
-    end.reject(&:blank?)
+    end.compact_blank
   end
 
   private
