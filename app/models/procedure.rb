@@ -210,10 +210,6 @@ class Procedure < ApplicationRecord
 
   belongs_to :defaut_groupe_instructeur, class_name: 'GroupeInstructeur', inverse_of: false, optional: true
 
-  before_destroy prepend: true do |record|
-    record.update(defaut_groupe_instructeur_id: nil)
-  end
-
   has_one_attached :logo
   has_one_attached :notice
   has_one_attached :deliberation
