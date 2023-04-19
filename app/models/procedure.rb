@@ -741,15 +741,6 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def restore_procedure(author)
-    if discarded?
-      undiscard
-      self.dossiers.hidden_by_administration.each do |dossier|
-        dossier.restore(author)
-      end
-    end
-  end
-
   def flipper_id
     "Procedure;#{id}"
   end
