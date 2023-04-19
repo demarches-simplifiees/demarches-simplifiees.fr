@@ -46,7 +46,6 @@
 #  user_id                                            :integer
 #
 class Dossier < ApplicationRecord
-  self.ignored_columns = [:en_construction_conservation_extension]
   include DossierFilteringConcern
   include DossierPrefillableConcern
   include DossierRebaseConcern
