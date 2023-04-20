@@ -60,7 +60,8 @@ class ProcedurePresentation < ApplicationRecord
     fields.push(
       field_hash('user', 'email', type: :text),
       field_hash('followers_instructeurs', 'email', type: :text),
-      field_hash('groupe_instructeur', 'id', type: :enum)
+      field_hash('groupe_instructeur', 'id', type: :enum),
+      field_hash('avis', 'id', type: :text)
     )
 
     if procedure.for_individual
@@ -246,7 +247,7 @@ class ProcedurePresentation < ApplicationRecord
       Dossier.human_attribute_name("state.#{filter['value']}")
     elsif filter['table'] == 'groupe_instructeur' && filter['column'] == 'id'
       instructeur.groupe_instructeurs
-        .find { _1.id == filter['value'].to_i }&.label || "Groupe Instucteur #{filter['value']}"
+        .find { _1.id == filter['value'].to_i }&.label || "Groupe Instructeur #{filter['value']}"
     else
       filter['value']
     end

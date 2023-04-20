@@ -92,6 +92,14 @@ class DossierProjectionService
           .group_by { |dossier_id, _| dossier_id }
           .to_h { |dossier_id, dossier_id_emails| [dossier_id, dossier_id_emails.sort.map { |_, email| email }&.join(', ')] }
         # rubocop:enable Style/HashTransformValues
+      when 'avis'
+        # rubocop:disable Style/HashTransformValues
+        fields[0][:id_value_h] = Avis
+          .where(dossier_id: dossiers_ids)
+          .pluck('dossier_id', 'question_answer')
+          .group_by { |dossier_id, _| dossier_id }
+          .to_h { |dossier_id, question_answer| [dossier_id, question_answer.map { |_, answer| answer }&.compact&.tally&.map { |k, v| I18n.t("helpers.label.question_answer.#{k}") + ": #{v}" }&.join(' / ')] }
+        # rubocop:enable Style/HashTransformValues
       end
     end
 
