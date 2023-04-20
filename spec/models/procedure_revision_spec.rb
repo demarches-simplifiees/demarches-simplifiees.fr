@@ -890,6 +890,24 @@ describe ProcedureRevision do
     end
   end
 
+  describe 'header_sections_are_valid' do
+    let(:procedure) do
+      create(:procedure).tap do |p|
+        p.draft_revision.add_type_de_champ(type_champ: :header_section, libelle: 'hs', header_section_level: '2')
+      end
+    end
+    let(:draft_revision) { procedure.draft_revision }
+
+    subject do
+      draft_revision.save
+      draft_revision.errors
+    end
+
+    it 'find error' do
+      expect(subject.errors).not_to be_empty
+    end
+  end
+
   describe "#dependent_conditions" do
     include Logic
 

@@ -1,2 +1,2 @@
-%h2.header-section{ class: @champ.dossier.auto_numbering_section_headers_for?(@champ) ? "header-section-counter" : nil }
-  = @champ.libelle
+= tag.send(tag_for_depth, class: header_section_classnames) do
+  = libelle

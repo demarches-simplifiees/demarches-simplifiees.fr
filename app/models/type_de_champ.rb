@@ -119,7 +119,8 @@ class TypeDeChamp < ApplicationRecord
                  :drop_down_secondary_description,
                  :drop_down_other,
                  :collapsible_explanation_enabled,
-                 :collapsible_explanation_text
+                 :collapsible_explanation_text,
+                 :header_section_level
 
   has_many :revision_types_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
   has_one :revision_type_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', inverse_of: false
@@ -409,6 +410,39 @@ class TypeDeChamp < ApplicationRecord
 
   def drop_down_list_value=(value)
     self.drop_down_options = parse_drop_down_list_value(value)
+  end
+
+  def header_section_level_value
+    if header_section_level.presence
+      header_section_level.to_i
+    else
+      1
+    end
+  end
+
+  def previous_section_level(upper_tdcs)
+    previous_header_section = upper_tdcs.reverse.find(&:header_section?)
+
+    return 0 if !previous_header_section
+    previous_header_section.header_section_level_value.to_i
+  end
+
+  def check_coherent_header_level(upper_tdcs)
+    errs = []
+    previous_level = previous_section_level(upper_tdcs)
+
+    current_level = header_section_level_value.to_i
+    difference = current_level - previous_level
+    if current_level > previous_level && difference != 1
+      errs << I18n.t('activerecord.errors.type_de_champ.attributes.header_section_level.gap_error', level: current_level - previous_level - 1)
+    end
+    errs
+  end
+
+  def current_section_level
+    tdcs = private? ? revision.type_champs_private.to_a : revision.types_de_champ_public.to_a
+
+    previous_section_level(tdcs.take(tdcs.find_index(self)))
   end
 
   def self.options_for_select?(type_champs)

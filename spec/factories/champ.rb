@@ -137,6 +137,18 @@ FactoryBot.define do
       type_de_champ { association :type_de_champ_header_section, procedure: dossier.procedure }
       value { 'une section' }
     end
+    factory :champ_header_section_level_1, class: 'Champs::HeaderSectionChamp' do
+      type_de_champ { association :type_de_champ_header_section_level_1, procedure: dossier.procedure }
+      value { 'une section' }
+    end
+    factory :champ_header_section_level_2, class: 'Champs::HeaderSectionChamp' do
+      type_de_champ { association :type_de_champ_header_section_level_2, procedure: dossier.procedure }
+      value { 'une section' }
+    end
+    factory :champ_header_section_level_3, class: 'Champs::HeaderSectionChamp' do
+      type_de_champ { association :type_de_champ_header_section_level_3, procedure: dossier.procedure }
+      value { 'une section' }
+    end
 
     factory :champ_explication, class: 'Champs::ExplicationChamp' do
       type_de_champ { association :type_de_champ_explication, procedure: dossier.procedure }
