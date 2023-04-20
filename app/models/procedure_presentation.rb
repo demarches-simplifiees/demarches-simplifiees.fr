@@ -247,7 +247,7 @@ class ProcedurePresentation < ApplicationRecord
       Dossier.human_attribute_name("state.#{filter['value']}")
     elsif filter['table'] == 'groupe_instructeur' && filter['column'] == 'id'
       instructeur.groupe_instructeurs
-        .find { _1.id == filter['value'].to_i }&.label || "Groupe Instructeur #{filter['value']}"
+        .find { _1.id == filter['value'].to_i }&.label || I18n.t('activerecord.attributes.procedure_presentation.fields.groupe_instructeur.label') + " #{filter['value']}"
     else
       filter['value']
     end
