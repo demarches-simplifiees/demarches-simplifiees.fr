@@ -29,6 +29,10 @@
 
     .value {
       width: 200px;
+
+      select {
+        width: 100%;
+      }
     }
   }
 
@@ -54,6 +58,15 @@
     input.alert,
     select.alert {
       border-color: $dark-red;
+    }
+  }
+
+  .form.defaut-groupe {
+    padding: $default-spacer;
+
+    label {
+      width: 600px;
+      font-size: 16px;
     }
   }
 }
