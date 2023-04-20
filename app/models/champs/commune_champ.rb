@@ -52,6 +52,10 @@ class Champs::CommuneChamp < Champs::TextChamp
     code_postal.present?
   end
 
+  def code_postal=(value)
+    super(value&.gsub(/[[:space:]]/, ''))
+  end
+
   alias postal_code code_postal
 
   def name
