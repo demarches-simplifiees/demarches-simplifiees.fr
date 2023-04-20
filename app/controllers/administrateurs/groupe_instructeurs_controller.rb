@@ -48,7 +48,10 @@ module Administrateurs
     def update
       @groupe_instructeur = groupe_instructeur
 
-      if @groupe_instructeur.update(groupe_instructeur_params)
+      if closed_params? && @groupe_instructeur.id == procedure.defaut_groupe_instructeur.id
+        redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur),
+          alert: "Il est impossible de désactiver le groupe d’instructeurs par défaut."
+      elsif @groupe_instructeur.update(groupe_instructeur_params)
         redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur),
           notice: "Le nom est à présent « #{@groupe_instructeur.label} »."
       else
@@ -68,6 +71,8 @@ module Administrateurs
         flash[:alert] = "Impossible de supprimer un groupe avec des dossiers. Il faut le réaffecter avant"
       elsif procedure.groupe_instructeurs.one?
         flash[:alert] = "Suppression impossible : il doit y avoir au moins un groupe instructeur sur chaque procédure"
+      elsif @groupe_instructeur.id == procedure.defaut_groupe_instructeur.id
+        flash[:alert] = "Suppression impossible : le groupe « #{@groupe_instructeur.label} » est le groupe par défaut."
       else
         @groupe_instructeur.destroy!
         if procedure.groupe_instructeurs.active.one?
@@ -257,6 +262,10 @@ module Administrateurs
     end
 
     private
+
+    def closed_params?
+      groupe_instructeur_params[:closed] == "1"
+    end
 
     def procedure
       current_administrateur
