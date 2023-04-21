@@ -306,7 +306,7 @@ module Instructeurs
       if visa.present?
         switch_point = visa.id.to_s
         notfound = true
-        params[:champs_private_attributes].reject! do |_k, v|
+        params[:champs_private_all_attributes].reject! do |_k, v|
           notfound &&= v[:id] != switch_point
         end
       end
