@@ -453,6 +453,10 @@ class Procedure < ApplicationRecord
     publiee? || brouillon?
   end
 
+  def replaced_by_procedure?
+    replaced_by_procedure_id.present?
+  end
+
   def dossier_can_transition_to_en_construction?
     accepts_new_dossiers? || depubliee?
   end

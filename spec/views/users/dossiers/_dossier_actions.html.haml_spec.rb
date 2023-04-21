@@ -18,4 +18,9 @@ describe 'users/dossiers/dossier_actions.html.haml', type: :view do
     let(:procedure) { create(:procedure, :closed) }
     it { is_expected.not_to have_link('Commencer un autre dossier') }
   end
+
+  context 'when the procedure is closed and replaced' do
+    let(:procedure) { create(:procedure, :closed, replaced_by_procedure: create(:procedure)) }
+    it { is_expected.to have_link('Commencer un autre dossier') }
+  end
 end
