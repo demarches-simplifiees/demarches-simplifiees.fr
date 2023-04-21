@@ -1,26 +1,31 @@
 - if deleted_dossiers.present?
-  %table.table.dossiers-table.hoverable
-    %thead
-      %tr
-        %th.number-col Nº dossier
-        %th Démarche
-        %th Raison de suppression
-        %th Date de suppression
-    %tbody
-      - deleted_dossiers.each do |dossier|
-        - libelle_demarche = Procedure.find(dossier.procedure_id).libelle
+  %span.fr-h6.fr-mr-2w
+    = page_entries_info hidden_dossiers
 
-        %tr{ data: { 'dossier-id': dossier.dossier_id } }
-          %td.number-col
-            %span.icon.folder
-            = dossier.dossier_id
-          %td
-            = libelle_demarche
+  .fr-table.fr-table--bordered.fr-table--no-caption.fr-mt-2w
+    %table.table.dossiers-table.hoverable.display-table
+      %caption= t('views.users.dossiers.dossiers_list.caption')
+      %thead
+        %tr
+          %th.number-col Nº dossier
+          %th Démarche
+          %th Raison de suppression
+          %th Date de suppression
+      %tbody
+        - deleted_dossiers.each do |dossier|
+          - libelle_demarche = Procedure.find(dossier.procedure_id).libelle
 
-          %td.cell-link
-            = deletion_reason_badge(dossier.reason)
-          %td
-            = dossier.updated_at.strftime('%d/%m/%Y')
+          %tr{ data: { 'dossier-id': dossier.dossier_id } }
+            %td.number-col
+              %span.icon.folder
+              = dossier.dossier_id
+            %td
+              = libelle_demarche
+
+            %td.cell-link
+              = deletion_reason_badge(dossier.reason)
+            %td
+              = dossier.updated_at.strftime('%d/%m/%Y')
 
   = paginate(deleted_dossiers)
 
