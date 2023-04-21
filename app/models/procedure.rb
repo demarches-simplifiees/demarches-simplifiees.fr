@@ -559,6 +559,9 @@ class Procedure < ApplicationRecord
       procedure.draft_revision.types_de_champ_public.each { |tdc| tdc.options&.delete(:old_pj) }
     end
 
+    new_defaut_groupe = procedure.groupe_instructeurs.find_by(label: defaut_groupe_instructeur.label)
+    procedure.update!(defaut_groupe_instructeur: new_defaut_groupe)
+
     procedure
   end
 
