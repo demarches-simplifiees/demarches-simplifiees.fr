@@ -8,8 +8,11 @@ namespace :after_party do
 
     procedures.each do |p|
       if !p.defaut_groupe_instructeur_id.in?(p.groupe_instructeurs.map(&:id))
+        wrong_groupe = p.defaut_groupe_instructeur
         new_defaut_groupe = p.groupe_instructeurs.find_by(label: p.parent_procedure.defaut_groupe_instructeur.label)
         p.update!(defaut_groupe_instructeur: new_defaut_groupe)
+
+        p.dossiers.where(groupe_instructeur: wrong_groupe).update_all(groupe_instructeur_id: new_defaut_groupe.id)
       end
     end
 
