@@ -59,7 +59,7 @@ class Champs::CommuneChamp < Champs::TextChamp
   alias postal_code code_postal
 
   def name
-    if code?
+    if code? && code_departement.present?
       APIGeoService.commune_name(code_departement, code)
     else
       value.present? ? value.to_s : ''
@@ -67,7 +67,7 @@ class Champs::CommuneChamp < Champs::TextChamp
   end
 
   def to_s
-    if code?
+    if code? && code_departement.present?
       "#{APIGeoService.commune_name(code_departement, code)} (#{code_postal})"
     else
       value.present? ? value.to_s : ''
