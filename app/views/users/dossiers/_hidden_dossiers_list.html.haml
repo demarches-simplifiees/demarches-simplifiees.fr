@@ -31,7 +31,7 @@
               = link_to restore_dossier_path(dossier.id), method: :patch, class: "fr-btn" do
                 Restaurer
 
-    = paginate(hidden_dossiers)
+    = paginate hidden_dossiers, views_prefix: 'shared'
 
 - else
   .blank-tab

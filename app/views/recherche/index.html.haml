@@ -11,7 +11,7 @@
     = t('pluralize.dossier_trouve', count: @dossiers_count)
 
   - if @projected_dossiers.present?
-    = paginate @paginated_ids
+    = paginate @paginated_ids, views_prefix: 'shared'
     .fr-table.fr-table--bordered
       %table.table.dossiers-table.hoverable
         %thead
@@ -105,7 +105,7 @@
 
             - else
               %td
-    = paginate @paginated_ids
+    = paginate @paginated_ids, views_prefix: 'shared'
 
   - else
     %h2 Aucun dossier correspondant à votre recherche n’a été trouvé

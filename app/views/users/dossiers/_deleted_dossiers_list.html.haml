@@ -27,7 +27,7 @@
             %td
               = dossier.updated_at.strftime('%d/%m/%Y')
 
-  = paginate(deleted_dossiers)
+  = paginate deleted_dossiers, views_prefix: 'shared'
 
 - else
   .blank-tab

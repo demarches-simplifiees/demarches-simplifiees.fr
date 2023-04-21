@@ -64,4 +64,4 @@
                   = t('.group_management.move_files', count: group.dossiers.visible_by_administration.size)
 
 
-  = paginate groupes_instructeurs
+  = paginate groupes_instructeurs, views_prefix: 'shared'

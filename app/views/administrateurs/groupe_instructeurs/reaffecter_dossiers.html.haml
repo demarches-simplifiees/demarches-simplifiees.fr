@@ -23,4 +23,4 @@
               { class: 'button',
                 data: { confirm: "Êtes-vous sûr de vouloir réaffecter les dossiers du groupe « #{@groupe_instructeur.label} » vers le groupe  « #{group.label} » ?" } }
 
-    = paginate @groupes_instructeurs
+    = paginate @groupes_instructeurs, views_prefix: 'shared'

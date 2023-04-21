@@ -34,7 +34,7 @@
         %li L’utilisateur a intentionnellement supprimé son dossier.
         %li Le délai de conservation maximal de #{@procedure.duree_conservation_dossiers_dans_ds} mois a expiré. Conformément au règlement RGPD, DS ne peut continuer à les héberger.
     - if @deleted_dossiers.any?
-      = paginate @deleted_dossiers
+      = paginate @deleted_dossiers, views_prefix: 'shared'
       %table.table.dossiers-table.hoverable
         %thead
           %tr
@@ -53,6 +53,6 @@
                 = deletion_reason_badge(deleted_dossier.reason)
               %td.deleted-cell
                 = l(deleted_dossier.deleted_at, format: '%d/%m/%y')
-      = paginate @deleted_dossiers
+      = paginate @deleted_dossiers, views_prefix: 'shared'
     - else
       Aucun dossier supprimé

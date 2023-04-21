@@ -43,7 +43,7 @@
             %td.action-col.follow-col
               = render partial: 'dossier_actions', locals: { dossier: dossier }
 
-    = paginate(dossiers)
+    = paginate dossiers, views_prefix: 'shared'
 
 - else
   .blank-tab
