@@ -9,7 +9,7 @@
 
       = f.label 'email', 'Recercher des administrateurs par email', class: 'fr-label'
       = f.search_field 'email', size: 40, class: 'fr-input'
-    .switch= link_to 'Voir la liste des démarches', all_admin_procedures_path(@filter.params), class: 'fr-btn fr-btn--secondary'
+    .actions= link_to 'Voir la liste des démarches', all_admin_procedures_path(@filter.params), class: 'fr-btn fr-btn--secondary'
   .fr-table.fr-table--bordered
     %table#all-admins
       %caption
