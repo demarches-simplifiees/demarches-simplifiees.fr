@@ -490,7 +490,7 @@ describe 'The user' do
 
       # Test that retrying after a failure works
       allow_any_instance_of(Users::DossiersController).to receive(:update).and_call_original
-      click_on 'réessayer'
+      click_on 'Réessayer'
       wait_for_autosave
 
       visit current_path
