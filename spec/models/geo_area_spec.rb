@@ -81,6 +81,16 @@ RSpec.describe GeoArea, type: :model do
         let(:geo_area) { build(:geo_area, :invalid_right_hand_rule_polygon, champ: nil) }
         it { expect(geo_area.errors).to have_key(:geometry) }
       end
+
+      context "nil" do
+        let(:geo_area) { build(:geo_area, geometry: nil) }
+        it { expect(geo_area.errors).to have_key(:geometry) }
+      end
+
+      context "allow empty {}" do
+        let(:geo_area) { build(:geo_area, geometry: {}) }
+        it { expect(geo_area.errors).not_to have_key(:geometry) }
+      end
     end
   end
 

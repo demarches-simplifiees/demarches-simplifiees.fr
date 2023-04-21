@@ -51,7 +51,7 @@ class GeoArea < ApplicationRecord
   scope :selections_utilisateur, -> { where(source: sources.fetch(:selection_utilisateur)) }
   scope :cadastres, -> { where(source: sources.fetch(:cadastre)) }
 
-  validates :geometry, geo_json: true, allow_blank: false
+  validates :geometry, geo_json: true, allow_nil: false
   before_validation :normalize_geometry
 
   def to_feature

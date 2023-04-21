@@ -1,9 +1,13 @@
 class GeoJSONValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
+    if options[:allow_nil] == false && value.nil?
+      record.errors.add(attribute, :blank, message: options[:message] || "ne peut pas être vide")
+    end
+
     begin
       RGeo::GeoJSON.decode(value.to_json, geo_factory: RGeo::Geographic.simple_mercator_factory)
     rescue RGeo::Error::InvalidGeometry
-      record.errors[attribute] << (options[:message] || "n'est pas un GeoJSON valide")
+      record.errors.add(attribute, :invalid_geometry, message: options[:message] || "n'est pas un GeoJSON valide")
     end
   end
 end
