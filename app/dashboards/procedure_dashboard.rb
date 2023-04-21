@@ -41,6 +41,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     max_duree_conservation_dossiers_dans_ds: Field::Number,
     estimated_duration_visible: Field::Boolean,
     piece_justificative_multiple: Field::Boolean,
+    replaced_by_procedure_id: Field::String,
     tags: Field::Text
   }.freeze
 
@@ -95,7 +96,8 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :duree_conservation_dossiers_dans_ds,
     :max_duree_conservation_dossiers_dans_ds,
     :estimated_duration_visible,
-    :piece_justificative_multiple
+    :piece_justificative_multiple,
+    :replaced_by_procedure_id
   ].freeze
 
   # FORM_ATTRIBUTES
@@ -106,7 +108,8 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :duree_conservation_dossiers_dans_ds,
     :max_duree_conservation_dossiers_dans_ds,
     :estimated_duration_visible,
-    :piece_justificative_multiple
+    :piece_justificative_multiple,
+    :replaced_by_procedure_id
   ].freeze
 
   # Overwrite this method to customize how procedures are displayed
