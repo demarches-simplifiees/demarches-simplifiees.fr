@@ -68,6 +68,7 @@ module DossierCloneConcern
       assign_to_groupe_instructeur(editing_fork.groupe_instructeur)
     end
     reload
+    update_search_terms_later
     editing_fork.destroy_editing_fork!
   end
 
