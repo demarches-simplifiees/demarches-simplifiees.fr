@@ -50,6 +50,7 @@ class Dossier < ApplicationRecord
   include DossierFilteringConcern
   include DossierPrefillableConcern
   include DossierRebaseConcern
+  include DossierSearchableConcern
   include DossierSectionsConcern
   include DossierCloneConcern
 
@@ -453,7 +454,6 @@ class Dossier < ApplicationRecord
   delegate :france_connect_information, to: :user, allow_nil: true
 
   before_save :build_default_champs_for_new_dossier, if: Proc.new { revision_id_was.nil? && parent_dossier_id.nil? && editing_fork_origin_id.nil? }
-  before_save :update_search_terms
 
   after_save :send_web_hook
 
@@ -500,17 +500,6 @@ class Dossier < ApplicationRecord
     if termine?
       traitement&.motivation || read_attribute(:motivation)
     end
-  end
-
-  def update_search_terms
-    self.search_terms = [
-      user&.email,
-      *champs_public.flat_map(&:search_terms),
-      *etablissement&.search_terms,
-      individual&.nom,
-      individual&.prenom
-    ].compact.join(' ')
-    self.private_search_terms = champs_private.flat_map(&:search_terms).compact.join(' ')
   end
 
   def build_default_champs_for_new_dossier
