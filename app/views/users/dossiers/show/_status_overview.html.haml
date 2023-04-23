@@ -13,6 +13,11 @@
           %li.termine{ class: dossier.termine? ? 'active' : nil }
             = t('views.users.dossiers.show.status_overview.status_completed')
 
+  - if dossier.en_construction?
+    .fr-grid-row.fr-grid-row--center
+      .fr-col-md-10.fr-col-lg-9
+        = render Dossiers::EnConstructionNotSubmittedComponent.new(dossier: dossier, user: current_user)
+
   .fr-grid-row.fr-grid-row--center
     .fr-col-md-10.fr-col-lg-9.status-explanation
       -# brouillon does not occure

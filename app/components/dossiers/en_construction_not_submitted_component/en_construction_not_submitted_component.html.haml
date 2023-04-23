@@ -1,0 +1,9 @@
+= render Dsfr::CalloutComponent.new(title: t(".title"), icon: "fr-fi-information-line") do |c|
+  - c.body do
+    = t(".body")
+
+  - c.bottom do
+    %ul.fr-mt-2w.fr-btns-group.fr-btns-group--inline
+      %li= link_to t(".buttons.edit"), modifier_dossier_path(dossier), class: "fr-btn"
+      %li= button_to t(".buttons.submit"), modifier_dossier_path(dossier), class: "fr-btn fr-btn--secondary", method: :post
+
