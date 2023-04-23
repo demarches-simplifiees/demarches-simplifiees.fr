@@ -13,8 +13,11 @@ module DossierCloneConcern
     find_editing_fork(user) || clone(user:, fork: true)
   end
 
-  def find_editing_fork(user)
-    editing_forks.find_by(user:)&.tap(&:rebase!)
+  def find_editing_fork(user, rebase: true)
+    fork = editing_forks.find_by(user:)
+    fork.rebase! if rebase && fork
+
+    fork
   end
 
   def owner_editing_fork
