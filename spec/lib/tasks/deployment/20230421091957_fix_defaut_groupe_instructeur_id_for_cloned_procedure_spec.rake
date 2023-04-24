@@ -1,8 +1,8 @@
 describe '20230421091957_fix_defaut_groupe_instructeur_id_for_cloned_procedure' do
   let(:rake_task) { Rake::Task['after_party:fix_defaut_groupe_instructeur_id_for_cloned_procedure'] }
 
-  let!(:parent_procedure) { create(:procedure) }
-  let(:procedure) { create(:procedure, parent_procedure:) }
+  let!(:parent_procedure) { create(:procedure, hidden_at: Time.zone.now) }
+  let(:procedure) { create(:procedure, parent_procedure:, hidden_at: Time.zone.now) }
   let(:dossier) { create(:dossier, procedure:) }
 
   subject(:run_task) { rake_task.invoke }
