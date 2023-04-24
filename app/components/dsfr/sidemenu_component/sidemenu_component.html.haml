@@ -6,4 +6,8 @@
       %ul.fr-sidemenu__list
         - links.each do |link|
           %li{ class: "fr-sidemenu__item fr-sidemenu__item#{active?(link.url) ? '--active' : ''}" }
-            = link_to link.name, link.url, class: 'fr-sidemenu__link', 'aria-current': active?(link.url) ? 'page' : nil, target: "_self"
+            = link_to link.url, class: 'fr-sidemenu__link ', 'aria-current': active?(link.url) ? 'page' : nil, target: "_self" do
+              - capture do
+                - if link.icon.present?
+                  %span{ class: link.icon } 
+                = link.name
