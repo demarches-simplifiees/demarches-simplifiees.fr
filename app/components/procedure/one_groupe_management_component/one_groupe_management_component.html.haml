@@ -1,0 +1,54 @@
+%div{ id: dom_id(@groupe_instructeur, :routing) }
+  %h2 Paramètres principaux
+
+  = form_for @groupe_instructeur,
+    url: { controller: 'administrateurs/groupe_instructeurs', action: :update } do |f|
+    = f.label :label, 'Nom du groupe', class: 'fr-label fr-mb-1w'
+    .flex
+      = f.text_field :label, required: true, class: 'fr-input flex auto fr-mr-2w'
+      = f.button 'Renommer', class: 'fr-btn fr-btn--secondary'
+
+  = form_for @groupe_instructeur,
+    url: admin_procedure_groupe_instructeur_update_state_path(@procedure_id, @groupe_instructeur),
+    method: :patch,
+    data: { turbo: true, controller: 'autosubmit' } do |f|
+    .fr-checkbox-group.fr-my-3w
+      = f.check_box :closed, { id: 'closed', "aria-describedby" => "closed-messages", :name => "closed" }
+      %label.fr-label{ :for => "closed" }
+        Groupe inactif
+        %span.fr-hint-text Si cette option est activée, les usagers ne pourront plus sélectionner ce groupe d'instructeurs
+
+  = form_tag admin_procedure_routing_rules_path(@procedure_id),
+    method: :post,
+    data: { controller: 'autosave' },
+    class: 'fr-mb-3w' do
+
+    = hidden_field_tag('groupe_instructeur_id', @groupe_instructeur.id)
+
+    .flex
+      %p.fr-mb-1w.fr-mr-2w Routage
+      - if @groupe_instructeur.routing_to_configure?
+        %p.fr-mb-1w.fr-badge.fr-badge--warning.fr-badge--sm à configurer
+
+    .flex.align-baseline
+      .fr-mr-2w si le champ
+      .target.fr-mr-2w
+        = targeted_champ_tag
+      .operator.fr-mr-2w est égal à
+      .value
+        = value_tag
+
+  %ul.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
+    %li
+      - if @groupe_instructeur.can_delete?
+        %p Supprimer le groupe
+        = button_to admin_procedure_groupe_instructeur_path(@procedure_id, @groupe_instructeur),
+        class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-delete-line',
+        method: :delete do
+          Supprimer
+      - else
+        = button_to reaffecter_dossiers_admin_procedure_groupe_instructeur_path(@procedure_id, @groupe_instructeur),
+        class: 'fr-btn fr-btn--tertiary fr-icon-folder-2-line',
+        title: t('.move_files_confirmation'),
+        method: :get do
+          = t('.move_files', count: @groupe_instructeur.dossiers.visible_by_administration.size)

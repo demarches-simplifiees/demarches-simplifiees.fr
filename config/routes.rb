@@ -522,6 +522,8 @@ Rails.application.routes.draw do
       resources :mail_templates, only: [:edit, :update, :show]
 
       resources :groupe_instructeurs, only: [:index, :show, :create, :update, :destroy] do
+        patch 'update_state' => 'groupe_instructeurs#update_state'
+
         member do
           post 'add_instructeur'
           delete 'remove_instructeur'

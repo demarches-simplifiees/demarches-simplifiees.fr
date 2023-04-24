@@ -48,12 +48,29 @@ module Administrateurs
     def update
       @groupe_instructeur = groupe_instructeur
 
-      if closed_params? && @groupe_instructeur.id == procedure.defaut_groupe_instructeur.id
-        redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur),
-          alert: "Il est impossible de désactiver le groupe d’instructeurs par défaut."
-      elsif @groupe_instructeur.update(groupe_instructeur_params)
+      if @groupe_instructeur.update(groupe_instructeur_params)
         redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur),
           notice: "Le nom est à présent « #{@groupe_instructeur.label} »."
+      else
+        @procedure = procedure
+        @instructeurs = paginated_instructeurs
+        @available_instructeur_emails = available_instructeur_emails
+
+        flash.now[:alert] = @groupe_instructeur.errors.full_messages
+        render :show
+      end
+    end
+
+    def update_state
+      @groupe_instructeur = procedure.groupe_instructeurs.find(params[:groupe_instructeur_id])
+
+      if closed_params? && @groupe_instructeur.id == procedure.defaut_groupe_instructeur.id
+        redirect_to admin_procedure_groupe_instructeur_path(procedure, @groupe_instructeur),
+          alert: "Il est impossible de désactiver le groupe d’instructeurs par défaut."
+      elsif @groupe_instructeur.update(closed: params[:closed])
+        state_for_notice = @groupe_instructeur.closed ? 'désactivé' : 'activé'
+        redirect_to admin_procedure_groupe_instructeur_path(procedure, @groupe_instructeur),
+          notice: "Le groupe #{@groupe_instructeur.label} est #{state_for_notice}."
       else
         @procedure = procedure
         @instructeurs = paginated_instructeurs
@@ -264,7 +281,7 @@ module Administrateurs
     private
 
     def closed_params?
-      groupe_instructeur_params[:closed] == "1"
+      params[:closed] == "1"
     end
 
     def procedure
@@ -287,7 +304,7 @@ module Administrateurs
     end
 
     def groupe_instructeur_params
-      params.require(:groupe_instructeur).permit(:label, :closed)
+      params.require(:groupe_instructeur).permit(:label)
     end
 
     def paginated_groupe_instructeurs
