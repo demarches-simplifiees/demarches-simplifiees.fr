@@ -86,6 +86,11 @@ class GroupeInstructeur < ApplicationRecord
     dossiers.empty? && (procedure.groupe_instructeurs.active.many? || (procedure.groupe_instructeurs.active.one? && closed))
   end
 
+  def routing_to_configure?
+    rule = routing_rule
+    !(rule.is_a?(Logic::Eq) && rule.left.is_a?(Logic::ChampValue) && rule.right.is_a?(Logic::Constant))
+  end
+
   private
 
   def toggle_routing
