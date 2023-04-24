@@ -427,11 +427,9 @@ describe 'The user' do
         expect(page).to have_css('legend h2', text: 'info voiture', visible: true)
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
-
         choose('Oui')
         expect(page).to have_css('label', text: 'permis de conduire', visible: true)
         expect(page).to have_css('label', text: 'tonnage', visible: true)
-
 
         fill_in('tonnage', with: '1')
         expect(page).to have_css('label', text: 'parking', visible: true)
