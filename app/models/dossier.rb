@@ -31,9 +31,9 @@
 #  motivation                                         :text
 #  prefill_token                                      :string
 #  prefilled                                          :boolean
-#  private_search_terms                               :text
+#  private_search_terms                               :string
 #  processed_at                                       :datetime
-#  search_terms                                       :text
+#  search_terms                                       :string
 #  state                                              :string
 #  termine_close_to_expiration_notice_sent_at         :datetime
 #  created_at                                         :datetime
