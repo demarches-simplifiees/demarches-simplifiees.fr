@@ -10,7 +10,6 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
 ActiveRecord::Schema[7.0].define(version: 2023_03_31_125931) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -51,6 +50,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_31_125931) do
     t.datetime "virus_scanned_at", precision: 6
     t.datetime "watermarked_at", precision: 6
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+    t.index ["virus_scan_result"], name: "index_active_storage_blobs_on_virus_scan_result"
   end
 
   create_table "active_storage_variant_records", force: :cascade do |t|
@@ -93,9 +93,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_31_125931) do
     t.datetime "created_at", precision: 6, null: false
     t.string "encrypted_token", null: false
     t.string "name", null: false
-    t.boolean "write_access", default: true, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "version", default: 3, null: false
+    t.boolean "write_access", default: true, null: false
     t.index ["administrateur_id"], name: "index_api_tokens_on_administrateur_id"
   end
 
@@ -221,7 +221,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_31_125931) do
   create_table "champs", id: :serial, force: :cascade do |t|
     t.datetime "created_at", precision: 6
     t.jsonb "data"
-    t.integer "dossier_id", null: false
+    t.integer "dossier_id"
     t.integer "etablissement_id"
     t.string "external_id"
     t.string "fetch_external_data_exceptions", array: true
@@ -385,7 +385,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_31_125931) do
     t.string "private_search_terms"
     t.datetime "processed_at", precision: 6
     t.bigint "revision_id"
-    t.text "search_terms"
+    t.string "search_terms"
     t.string "state"
     t.datetime "termine_close_to_expiration_notice_sent_at", precision: 6
     t.datetime "updated_at", precision: 6
@@ -651,9 +651,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_31_125931) do
   create_table "procedure_presentations", id: :serial, force: :cascade do |t|
     t.integer "assign_to_id"
     t.datetime "created_at", precision: 6
-    t.jsonb "displayed_fields", default: [{"label"=>"Demandeur", "table"=>"user", "column"=>"email"}], null: false
-    t.jsonb "filters", default: {"tous"=>[], "suivis"=>[], "traites"=>[], "a-suivre"=>[], "archives"=>[], "expirant"=>[], "supprimes_recemment"=>[]}, null: false
-    t.jsonb "sort", default: {"order"=>"desc", "table"=>"notifications", "column"=>"notifications"}, null: false
+    t.jsonb "displayed_fields", default: [{ "label" => "Demandeur", "table" => "user", "column" => "email" }], null: false
+    t.jsonb "filters", default: { "tous" => [], "suivis" => [], "traites" => [], "a-suivre" => [], "archives" => [], "expirant" => [], "supprimes_recemment" => [] }, null: false
+    t.jsonb "sort", default: { "order" => "desc", "table" => "notifications", "column" => "notifications" }, null: false
     t.datetime "updated_at", precision: 6
     t.index ["assign_to_id"], name: "index_procedure_presentations_on_assign_to_id", unique: true
   end
@@ -705,11 +705,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_31_125931) do
     t.datetime "dossiers_count_computed_at", precision: 6
     t.bigint "draft_revision_id"
     t.integer "duree_conservation_dossiers_dans_ds"
-    t.boolean "duree_conservation_etendue_par_ds", default: false
+    t.boolean "duree_conservation_etendue_par_ds", default: false, null: false
     t.boolean "durees_conservation_required", default: true
     t.string "encrypted_api_particulier_token"
-    t.boolean "estimated_duration_visible", default: true, null: false
     t.integer "estimated_dossiers_count"
+    t.boolean "estimated_duration_visible", default: true, null: false
     t.boolean "euro_flag", default: false
     t.boolean "experts_require_administrateur_invitation", default: false
     t.boolean "for_individual", default: false
@@ -721,7 +721,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_31_125931) do
     t.string "lien_dpo"
     t.string "lien_notice"
     t.string "lien_site_web"
-    t.integer "max_duree_conservation_dossiers_dans_ds", default: 12
+    t.integer "max_duree_conservation_dossiers_dans_ds", default: 12, null: false
     t.boolean "migrated_champ_routage"
     t.text "monavis_embed"
     t.boolean "opendata", default: true
@@ -852,7 +852,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_31_125931) do
     t.index ["unlock_token"], name: "index_super_admins_on_unlock_token", unique: true
   end
 
-  create_table "targeted_user_links", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "targeted_user_links", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.string "target_context", null: false
     t.bigint "target_model_id", null: false
@@ -882,7 +882,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_31_125931) do
   create_table "trusted_device_tokens", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.bigint "instructeur_id"
-    t.string "token", null: false
+    t.string "token"
     t.datetime "updated_at", precision: 6, null: false
     t.index ["instructeur_id"], name: "index_trusted_device_tokens_on_instructeur_id"
   end
@@ -923,6 +923,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_31_125931) do
     t.string "reset_password_token"
     t.integer "sign_in_count", default: 0, null: false
     t.string "siret"
+    t.boolean "team_account", default: false
     t.text "unconfirmed_email"
     t.string "unlock_token"
     t.datetime "updated_at", precision: 6
