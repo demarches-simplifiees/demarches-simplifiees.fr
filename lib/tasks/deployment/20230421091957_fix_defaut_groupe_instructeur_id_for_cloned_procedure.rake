@@ -12,7 +12,9 @@ namespace :after_party do
       if !p.defaut_groupe_instructeur_id.in?(p.groupe_instructeurs.map(&:id))
         wrong_groupe = p.defaut_groupe_instructeur
         parent_procedure = Procedure.unscoped.find(p.parent_procedure_id)
-        new_defaut_groupe = p.groupe_instructeurs.find_by(label: parent_procedure.defaut_groupe_instructeur.label)
+        new_defaut_groupe = p.groupe_instructeurs
+          .find_by(label: parent_procedure.defaut_groupe_instructeur.label).presence || p.groupe_instructeurs.first
+
         p.update!(defaut_groupe_instructeur: new_defaut_groupe)
 
         p.dossiers.where(groupe_instructeur: wrong_groupe).update_all(groupe_instructeur_id: new_defaut_groupe.id)
