@@ -406,6 +406,7 @@ describe 'The user' do
           types_de_champ_public: [
             { type: :integer_number, libelle: 'age', stable_id: age_stable_id },
             { type: :yes_no, libelle: 'permis de conduire', stable_id: permis_stable_id, condition: permis_condition },
+            { type: :header_section, libelle: 'info voiture', condition: permis_condition },
             { type: :integer_number, libelle: 'tonnage', stable_id: tonnage_stable_id, condition: tonnage_condition },
             { type: :text, libelle: 'parking', condition: parking_condition }
           ])
@@ -418,15 +419,19 @@ describe 'The user' do
 
         expect(page).to have_css('label', text: 'age', visible: true)
         expect(page).to have_no_css('label', text: 'permis de conduire', visible: true)
+        expect(page).to have_no_css('legend h2', text: 'info voiture', visible: true)
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
         fill_in('age', with: '18')
         expect(page).to have_css('label', text: 'permis de conduire', visible: true)
+        expect(page).to have_css('legend h2', text: 'info voiture', visible: true)
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
+
 
         choose('Oui')
         expect(page).to have_css('label', text: 'permis de conduire', visible: true)
         expect(page).to have_css('label', text: 'tonnage', visible: true)
+
 
         fill_in('tonnage', with: '1')
         expect(page).to have_css('label', text: 'parking', visible: true)
