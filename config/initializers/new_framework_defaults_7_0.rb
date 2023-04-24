@@ -123,7 +123,7 @@ Rails.application.config.action_dispatch.default_headers = {
 # have been converted to JSON. To keep using `:hybrid` long term, move this config to its own
 # initializer or to `config/application.rb`.
 #
-Rails.application.config.action_dispatch.cookies_serializer = :hybrid
+# Rails.application.config.action_dispatch.cookies_serializer = :hybrid
 #
 #
 # If your cookies can't yet be serialized to JSON, keep using `:marshal` for backward-compatibility.
