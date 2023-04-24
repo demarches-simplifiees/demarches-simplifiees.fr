@@ -2,7 +2,8 @@
   %h2 Paramètres principaux
 
   = form_for @groupe_instructeur,
-    url: { controller: 'administrateurs/groupe_instructeurs', action: :update } do |f|
+    url: admin_procedure_groupe_instructeur_path(@procedure_id, @groupe_instructeur),
+    method: :patch do |f|
     = f.label :label, 'Nom du groupe', class: 'fr-label fr-mb-1w'
     .flex
       = f.text_field :label, required: true, class: 'fr-input flex auto fr-mr-2w'
