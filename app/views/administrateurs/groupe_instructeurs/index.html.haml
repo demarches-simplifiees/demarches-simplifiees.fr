@@ -1,31 +1,4 @@
-- if @procedure.routing_enabled?
-  = render partial: 'administrateurs/breadcrumbs',
-    locals: { steps: [[t('.procedures'), admin_procedures_path],
-                      [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
-                      [t('.instructors_group')]] }
-- else
-  = render partial: 'administrateurs/breadcrumbs',
-    locals: { steps: [[t('.procedures'), admin_procedures_path],
-                      [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
-                      ['Instructeurs']] }
-
-.container.groupe-instructeur
-  %h1 Gérer les instructeurs et les options d'instruction de « #{@procedure.libelle} »
-
-  - if @procedure.groupe_instructeurs.one?
-    = render partial: 'administrateurs/groupe_instructeurs/instructeurs',
-      locals: { procedure: @procedure,
-        groupe_instructeur: @procedure.defaut_groupe_instructeur,
-        instructeurs: @instructeurs,
-        available_instructeur_emails: @available_instructeur_emails,
-        disabled_as_super_admin: administrateur_as_manager? }
-  - if !@procedure.routing_enabled?
-    = render partial: 'administrateurs/groupe_instructeurs/instructeurs_self_management', locals: { procedure: @procedure }
-
-  = render partial: 'administrateurs/groupe_instructeurs/routing', locals: { procedure: @procedure }
-
-  = render partial: 'administrateurs/groupe_instructeurs/edit', locals: { procedure: @procedure, groupes_instructeurs: @groupes_instructeurs }
-
-  -  if @procedure.routing_enabled? && @procedure.feature_enabled?(:routing_rules)
-    = render(Procedure::RoutingRulesComponent.new(revision: @procedure.active_revision,
-      groupe_instructeurs: @procedure.groupe_instructeurs))
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [[t('.procedures'), admin_procedures_path],
+                    [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
+                    [t('.instructors_group')]] }
