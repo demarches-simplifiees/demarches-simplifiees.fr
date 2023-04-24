@@ -2,3 +2,11 @@
   locals: { steps: [[t('.procedures'), admin_procedures_path],
                     [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
                     [@procedure.groupe_instructeurs.many? ? 'Groupes' : 'Instructeurs']] }
+
+= render Procedure::InstructeursMenuComponent.new(procedure: @procedure) do
+  - if @procedure.groupe_instructeurs.one?
+    = render Procedure::InstructeursManagementComponent.new(procedure: @procedure,
+      groupe_instructeur: @procedure.groupe_instructeurs.first,
+      instructeurs: @instructeurs,
+      available_instructeur_emails: @available_instructeur_emails,
+      disabled_as_super_admin: administrateur_as_manager?)
