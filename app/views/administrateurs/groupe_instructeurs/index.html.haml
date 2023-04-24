@@ -1,4 +1,4 @@
 = render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [[t('.procedures'), admin_procedures_path],
                     [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
-                    [t('.instructors_group')]] }
+                    [@procedure.groupe_instructeurs.many? ? 'Groupes' : 'Instructeurs']] }
