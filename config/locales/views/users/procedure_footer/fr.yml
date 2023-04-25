@@ -37,6 +37,6 @@ fr:
           url: "https://data.gouv.fr"
       dematerialisation: 
         header: Dématérialisation
-        title_1: Accès au formulaire PDF à imprimer
+        title_1: Télécharger le formulaire
         title_2: Trouver une maison France Services
         link: "https://www.transformation.gouv.fr/france-services"
