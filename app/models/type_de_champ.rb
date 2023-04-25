@@ -439,8 +439,8 @@ class TypeDeChamp < ApplicationRecord
     errs
   end
 
-  def current_section_level
-    tdcs = private? ? revision.type_champs_private.to_a : revision.types_de_champ_public.to_a
+  def current_section_level(revision)
+    tdcs = private? ? revision.types_de_champ_private.to_a : revision.types_de_champ_public.to_a
 
     previous_section_level(tdcs.take(tdcs.find_index(self)))
   end
