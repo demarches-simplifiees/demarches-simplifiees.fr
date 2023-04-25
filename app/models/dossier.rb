@@ -295,7 +295,7 @@ class Dossier < ApplicationRecord
     ])
   }
 
-  scope :brouillons_recently_updated, -> { not_archived.updated_since(2.days.ago).state_brouillon.order_by_updated_at }
+  scope :brouillons_recently_updated, -> { updated_since(2.days.ago).state_brouillon.order_by_updated_at }
   scope :with_annotations, -> {
     includes(champs_private: [
       :type_de_champ,
