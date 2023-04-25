@@ -73,7 +73,7 @@ class SupportController < ApplicationController
     [params[:tags], params[:type]].flatten.compact
       .map { |tag| tag.split(',') }
       .flatten
-      .reject(&:blank?).uniq
+      .compact_blank.uniq
   end
 
   def browser_name

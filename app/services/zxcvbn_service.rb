@@ -19,7 +19,7 @@ class ZxcvbnService
     #
     # This is slow: loading and parsing the dictionary may take around 1s.
     def build_tester
-      dictionaries = YAML.safe_load(File.read(Rails.root.join("config", "initializers", "zxcvbn_dictionnaries.yaml")))
+      dictionaries = YAML.safe_load(Rails.root.join("config", "initializers", "zxcvbn_dictionnaries.yaml").read)
 
       tester = Zxcvbn::Tester.new
       tester.add_word_lists(dictionaries)

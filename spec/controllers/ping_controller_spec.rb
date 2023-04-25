@@ -13,8 +13,13 @@ describe PingController, type: :controller do
     end
 
     context 'when a maintenance file is present' do
+      let(:filepath) { Rails.root.join('maintenance') }
       before do
-        allow(File).to receive(:file?).and_return(true)
+        filepath.write("")
+      end
+
+      after do
+        filepath.delete
       end
 
       it 'tells HAProxy that the app is in maintenance, but will be available again soon' do

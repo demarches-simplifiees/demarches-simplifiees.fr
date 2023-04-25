@@ -46,7 +46,6 @@
 #  user_id                                            :integer
 #
 class Dossier < ApplicationRecord
-  self.ignored_columns = [:en_construction_conservation_extension]
   include DossierFilteringConcern
   include DossierPrefillableConcern
   include DossierRebaseConcern
@@ -281,13 +280,13 @@ class Dossier < ApplicationRecord
   scope :processed_in_month, -> (date) do
     date = date.to_datetime
     state_termine
-      .where(processed_at: date.beginning_of_month..date.end_of_month)
+      .where(processed_at: date.all_month)
   end
   scope :ordered_for_export, -> {
     order(depose_at: 'asc')
   }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
-  scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
+  scope :without_followers,           -> { where.missing(:follows) }
   scope :with_followers,              -> { left_outer_joins(:follows).where.not(follows: { id: nil }) }
   scope :with_champs, -> {
     includes(champs_public: [

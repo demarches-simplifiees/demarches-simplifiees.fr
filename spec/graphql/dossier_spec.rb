@@ -75,6 +75,27 @@ RSpec.describe Types::DossierType, type: :graphql do
     end
   end
 
+  describe 'dossier with selected champ' do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ libelle: 'yolo' }, { libelle: 'toto' }]) }
+    let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:) }
+    let(:query) { DOSSIER_WITH_SELECTED_CHAMP_QUERY }
+    let(:variables) { { number: dossier.id, id: champ.to_typed_id } }
+    let(:champ) { dossier.champs_public.last }
+
+    context 'when champ exists' do
+      it {
+        expect(data[:dossier][:champs].size).to eq 1
+        expect(data[:dossier][:champs][0][:label]).to eq "toto"
+      }
+    end
+
+    context "when champ dosen't exists" do
+      let(:variables) { { number: dossier.id, id: '1234' } }
+
+      it { expect(data[:dossier][:champs].size).to eq 0 }
+    end
+  end
+
   describe 'dossier with conditional champs' do
     include Logic
     let(:stable_id) { 1234 }
@@ -386,6 +407,17 @@ RSpec.describe Types::DossierType, type: :graphql do
         attachments {
           filename
         }
+      }
+    }
+  }
+  GRAPHQL
+
+  DOSSIER_WITH_SELECTED_CHAMP_QUERY = <<-GRAPHQL
+  query($number: Int!, $id: ID!) {
+    dossier(number: $number) {
+      champs(id: $id) {
+        id
+        label
       }
     }
   }

@@ -789,7 +789,7 @@ describe ProcedurePresentation do
       let(:filters) { { "suivis" => [{ "table" => "self", "column" => "state", "value" => "en_construction" }] } }
 
       it 'should get i18n value' do
-        expect(subject).to eq("En construction")
+        expect(subject).to eq("En construction")
       end
     end
   end

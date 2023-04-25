@@ -3,16 +3,32 @@ class TypesDeChampEditor::ErrorsSummary < ApplicationComponent
     @revision = revision
   end
 
+  def invalid?
+    @revision.invalid?
+  end
+
+  def condition_errors?
+    @revision.errors.include?(:condition)
+  end
+
+  def header_section_errors?
+    @revision.errors.include?(:header_section)
+  end
+
   private
 
-  def error_message
-    @revision.errors
+  def errors_for(key)
+    @revision.errors.filter { _1.attribute == key }
+  end
+
+  def error_message_for(key)
+    errors_for(key)
       .map { |error| error.options[:type_de_champ] }
-      .map { |tdc| tag.li(tdc_anchor(tdc)) }
+      .map { |tdc| tag.li(tdc_anchor(tdc, key)) }
       .then { |lis| tag.ul(lis.reduce(&:+)) }
   end
 
-  def tdc_anchor(tdc)
-    tag.a(tdc.libelle, href: champs_admin_procedure_path(@revision.procedure_id, anchor: dom_id(tdc.stable_self, :conditions)), data: { turbo: false })
+  def tdc_anchor(tdc, key)
+    tag.a(tdc.libelle, href: champs_admin_procedure_path(@revision.procedure_id, anchor: dom_id(tdc.stable_self, key)), data: { turbo: false })
   end
 end

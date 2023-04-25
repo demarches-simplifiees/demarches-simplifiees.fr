@@ -3,10 +3,8 @@ namespace :hotfix do
   task dossiers_attestations: :environment do
     dossiers = Dossier
       .joins(procedure: :attestation_template)
-      .left_outer_joins(:attestation)
-      .where(attestation_templates: { activated: true },
-        attestations: { id: nil },
-        state: "accepte")
+      .where.missing(:attestation)
+      .where(attestation_templates: { activated: true }, state: "accepte")
       .where("dossiers.processed_at > '2022-01-24'")
     progress = ProgressReport.new(dossiers.count)
 

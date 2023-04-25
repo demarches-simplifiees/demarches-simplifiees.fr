@@ -108,7 +108,7 @@ module ProcedureStatsConcern
   end
 
   def last_considered_processed_at
-    (Time.zone.now - 1.month).end_of_month
+    (1.month.ago).end_of_month
   end
 
   def convert_seconds_in_days(seconds)

@@ -20,7 +20,7 @@ export class BatchOperationController extends ApplicationController {
     this.inputTargets.forEach((e) => (e.checked = target.checked));
     this.toggleSubmitButtonWhenNeeded();
 
-    const pagination = document.querySelector('tfoot .pagination');
+    const pagination = document.querySelector('tfoot .fr-pagination');
     if (pagination) {
       displayNotice(this.inputTargets);
     }

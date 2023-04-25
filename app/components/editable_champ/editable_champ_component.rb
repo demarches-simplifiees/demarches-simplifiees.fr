@@ -6,7 +6,11 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
   private
 
   def has_label?(champ)
-    types_without_label = [TypeDeChamp.type_champs.fetch(:header_section), TypeDeChamp.type_champs.fetch(:explication)]
+    types_without_label = [
+      TypeDeChamp.type_champs.fetch(:header_section),
+      TypeDeChamp.type_champs.fetch(:explication),
+      TypeDeChamp.type_champs.fetch(:repetition)
+    ]
     !types_without_label.include?(@champ.type_champ)
   end
 
@@ -29,11 +33,6 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
     if !@champ.block? && @champ.fillable?
       # This is an editable champ. Lets find what controllers it might need.
       controllers = ['autosave']
-
-      # This is a dropdown champ. Activate special behaviours it might have.
-      if @champ.simple_drop_down_list? || @champ.linked_drop_down_list?
-        controllers << 'champ-dropdown'
-      end
 
       controllers.join(' ')
     end

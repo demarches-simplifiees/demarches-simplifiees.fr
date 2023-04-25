@@ -100,9 +100,12 @@ describe GroupeInstructeur, type: :model do
 
   describe "active group validations" do
     context "there is at least one active groupe instructeur" do
-      let!(:gi_active) { create(:groupe_instructeur, procedure:, closed: false) }
-      let!(:gi_closed) { create(:groupe_instructeur, procedure:, closed: true) }
-      before { procedure.defaut_groupe_instructeur.destroy! }
+      let(:gi_active) { procedure.defaut_groupe_instructeur }
+      let(:gi_closed) { create(:groupe_instructeur, procedure:) }
+      before do
+        gi_active
+        gi_closed.update(closed: true)
+      end
 
       it "closed is valid when there is one other active groupe" do
         expect(gi_active).to be_valid

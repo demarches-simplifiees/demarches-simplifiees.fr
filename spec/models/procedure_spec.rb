@@ -462,12 +462,12 @@ describe Procedure do
     end
 
     context "with token expired" do
-      let(:expiration_time) { (Time.zone.now - 1.day).to_i }
+      let(:expiration_time) { (1.day.ago).to_i }
       it { is_expected.to be_truthy }
     end
 
     context "with token not expired" do
-      let(:expiration_time) { (Time.zone.now + 1.day).to_i }
+      let(:expiration_time) { (1.day.from_now).to_i }
       it { is_expected.to be_falsey }
     end
   end
@@ -518,6 +518,7 @@ describe Procedure do
         expect(subject.groupe_instructeurs.size).to eq(2)
         expect(subject.groupe_instructeurs.size).to eq(procedure.groupe_instructeurs.size)
         expect(subject.groupe_instructeurs.where(label: "groupe_1").first).not_to be nil
+        expect(subject.defaut_groupe_instructeur_id).to eq(subject.groupe_instructeurs.find_by(label: 'défaut').id)
       end
 
       it "should clone instructeurs in the groupe" do
@@ -568,7 +569,8 @@ describe Procedure do
       cloned_procedure.parent_procedure_id = nil
       expect(cloned_procedure).to have_same_attributes_as(procedure, except: [
         "path", "draft_revision_id", "service_id", 'estimated_dossiers_count',
-        "duree_conservation_etendue_par_ds", "duree_conservation_dossiers_dans_ds", 'max_duree_conservation_dossiers_dans_ds'
+        "duree_conservation_etendue_par_ds", "duree_conservation_dossiers_dans_ds", 'max_duree_conservation_dossiers_dans_ds',
+        "defaut_groupe_instructeur_id"
       ])
     end
 

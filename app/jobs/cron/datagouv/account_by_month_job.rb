@@ -14,6 +14,6 @@ class Cron::Datagouv::AccountByMonthJob < Cron::CronJob
   end
 
   def data
-    User.where(created_at: 1.month.ago.beginning_of_month..1.month.ago.end_of_month).count
+    User.where(created_at: 1.month.ago.all_month).count
   end
 end
