@@ -4,6 +4,7 @@ class Dolist::API
   CONTACT_URL = "https://apiv9.dolist.net/v1/contacts/read?AccountID=%{account_id}"
   EMAIL_LOGS_URL = "https://apiv9.dolist.net/v1/statistics/email/sendings/transactional/search?AccountID=%{account_id}"
   EMAIL_KEY = 7
+  STATUS_KEY = 72
   DOLIST_WEB_DASHBOARD = "https://campaign.dolist.net/#/%{account_id}/contacts/%{contact_id}/sendings"
   EMAIL_MESSAGES_ADRESSES_REPLIES = "https://apiv9.dolist.net/v1/email/messages/addresses/replies?AccountID=%{account_id}"
   EMAIL_MESSAGES_ADRESSES_PACKSENDERS = "https://apiv9.dolist.net/v1/email/messages/addresses/packsenders?AccountID=%{account_id}"
@@ -12,6 +13,18 @@ class Dolist::API
   EMAIL_SENDING_TRANSACTIONAL_SEARCH = "https://apiv9.dolist.net/v1/email/sendings/transactional/search?AccountID=%{account_id}"
 
   class_attribute :limit_remaining, :limit_reset_at
+
+  # those code are just undocumented
+  IGNORABLE_API_ERROR_CODE = [
+    "458",
+    "402"
+  ]
+
+  # see: https://usercampaign.dolist.net/wp-content/uploads/2022/12/Comprendre-les-Opt-out-tableau-v2.pdf
+  IGNORABLE_CONTACT_STATUSES = [
+    "4", # Le serveur distant n'accepte pas le mail car il identifie que l’adresse e-mail est en erreur.
+    "7" # Suite à un envoi, le serveur distant accepte le mail dans un premier temps mais envoie une erreur définitive car l’adresse e-mail est en erreur. L'adresse e-mail n’existe pas ou n'existe plus.
+  ]
 
   class << self
     def save_rate_limit_headers(headers)
@@ -124,7 +137,42 @@ class Dolist::API
     get format_url(EMAIL_MESSAGES_ADRESSES_REPLIES)
   end
 
+  # Une adresse e-mail peut ne pas être adressable pour différentes raisons (injoignable, plainte pour spam, blocage d’un FAI).
+  # Dans ce cas l’API d’envoi transactionnel renvoie différentes erreurs.
+  # Pour connaitre exactement le statut d’une adresse, je vous invite à récupérer le champ 72 du contact à partir de son adresse e-mail avec la méthode https://api.dolist.com/documentation/index.html#/40e7751d00dc3-rechercher-un-contact
+  #
+  # La liste des différents statuts est disponible sur https://usercampaign.dolist.net/wp-content/uploads/2022/12/Comprendre-les-Opt-out-tableau-v2.pdf
+  def fetch_contact_status(email_address)
+    url = format(Dolist::API::CONTACT_URL, account_id: account_id)
+    body = {
+      Query: {
+        FieldValueList: [{ ID: 7, Value: email_address }],
+        OutputFieldIDList: [72]
+      }
+    }.to_json
+
+    post(url, body)["FieldList"].find { _1['ID'] == 72 }['Value']
+  end
+
+  def ignorable_error?(response, mail)
+    error_code = response&.dig("ResponseStatus", "ErrorCode")
+    invalid_contact_status = if ignorable_api_error_code?(error_code)
+      fetch_contact_status(mail.to.first)
+    else
+      nil
+    end
+    [error_code, invalid_contact_status]
+  end
+
   private
+
+  def ignorable_api_error_code?(api_error_code)
+    IGNORABLE_API_ERROR_CODE.include?(api_error_code)
+  end
+
+  def ignorable_contact_status?(contact_status)
+    IGNORABLE_CONTACT_STATUSES.include?(contact_status)
+  end
 
   def format_url(base)
     format(base, account_id: account_id)
@@ -192,6 +240,7 @@ class Dolist::API
     post(url, body)["ItemList"]
   end
 
+  # see: https://api.dolist.com/documentation/index.html#/7edc2948ba01f-creer-un-envoi-transactionnel
   def prepare_mail_body(mail)
     {
       "Type": "TransactionalService",
@@ -207,15 +256,15 @@ class Dolist::API
         "Name": mail['X-Dolist-Message-Name'].value,
         "Subject": mail.subject,
         "SenderID": sender_id,
-        "ForceHttp": true,
+        "ForceHttp": false, # ForceHttp : force le tracking http non sécurisé (True/False).
         "Format": "html",
-        "DisableOpenTracking": true,
-        "IsTrackingValidated": true
+        "DisableOpenTracking": true, # DisableOpenTracking : désactivation du tracking d'ouverture (True/False).
+        "IsTrackingValidated": true # IsTrackingValidated : est-ce que le tracking de ce message est validé ? (True/False). Passez la valeur True pour un envoi transactionnel.
       },
       "MessageContent": {
         "SourceCode":  mail_source_code(mail),
         "EncodingType": "UTF8",
-        "EnableTrackingDetection": false
+        "EnableTrackingDetection": false # EnableTrackingDetection : booléen pour l’activation du tracking personnalisé des liens des messages utilisés lors des précédents envois (True/False).
       }
     }
   end

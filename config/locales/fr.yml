@@ -187,7 +187,6 @@ fr:
         intro: "Si vous n’arrivez pas à accéder à un contenu ou à un service, vous pouvez contacter le responsable de Démarches simplifiées pour être orienté vers une alternative accessible ou obtenir le contenu sous une autre forme."
         infos:
           email_html: "Par voie électronique :"
-          phone_html: "Contacter la DINUM par téléphone :"
           adress_html: "Par voie postale : DINUM , 20 avenue de Ségur 75007 Paris"
       remedies:
         title: "Voies de recours"

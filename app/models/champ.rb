@@ -32,7 +32,7 @@ class Champ < ApplicationRecord
   # here because otherwise we can't easily use includes in our queries.
   has_many :geo_areas, -> { order(:created_at) }, dependent: :destroy, inverse_of: :champ
   belongs_to :etablissement, optional: true, dependent: :destroy
-  has_many :champs, -> { ordered }, foreign_key: :parent_id, inverse_of: :parent, dependent: :destroy
+  has_many :champs, -> { ordered }, foreign_key: :parent_id, inverse_of: :parent
 
   delegate :procedure, to: :dossier
 
@@ -48,6 +48,8 @@ class Champ < ApplicationRecord
     :drop_down_secondary_description,
     :collapsible_explanation_enabled?,
     :collapsible_explanation_text,
+    :header_section_level_value,
+    :current_section_level,
     :exclude_from_export?,
     :exclude_from_view?,
     :repetition?,

@@ -1,11 +1,4 @@
 describe DossierProjectionService do
-  let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
-
-  before do
-    allow(Rails).to receive(:cache).and_return(memory_store)
-    Rails.cache.clear
-  end
-
   describe '#project' do
     subject { described_class.project(dossiers_ids, fields) }
 
@@ -54,7 +47,7 @@ describe DossierProjectionService do
       end
     end
 
-    context 'with commune champ', vcr: { cassette_name: 'api_geo_communes' } do
+    context 'with commune champ' do
       let!(:procedure) { create(:procedure, types_de_champ_public: [{ type: :communes }]) }
       let!(:dossier) { create(:dossier, procedure:) }
 
@@ -232,10 +225,12 @@ describe DossierProjectionService do
         let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :pays }]) }
         let(:dossier) { create(:dossier, procedure: procedure) }
         let(:column) { dossier.procedure.active_revision.types_de_champ_public.first.stable_id.to_s }
-        let!(:previous_locale) { I18n.locale }
 
-        before { I18n.locale = :fr }
-        after { I18n.locale = previous_locale }
+        around do |example|
+          I18n.with_locale(:fr) do
+            example.run
+          end
+        end
 
         context 'when external id is set' do
           before do

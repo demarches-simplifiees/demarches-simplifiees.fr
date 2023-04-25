@@ -8,12 +8,16 @@
 
 .dossiers-headers.sub-header
   .container
-    - if @search_terms.present?
-      %h1.page-title.fr-h2 Résultat de la recherche pour « #{@search_terms} »
-      = render partial: "dossiers_list", locals: { dossiers: @dossiers }
+    %h1.page-title.fr-h2= t('views.users.dossiers.index.dossiers')
+    - if current_user.dossiers.count > 2
+      #search-2.fr-search-bar.fr-search-bar--lg{ role: "search", "aria-label": t('views.users.dossiers.search.search_file') }
+        = form_tag recherche_dossiers_path, method: :get, :role => "search", class: "flex width-100 fr-mb-5w" do
+          = label_tag "q", t('views.users.dossiers.search.search_file'), class: 'fr-label'
+          = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: t('views.users.dossiers.search.search_file'), class: "fr-input"
+          %button.fr-btn
+            = t('views.users.dossiers.search.simple')
 
-    - else
-      %h1.page-title.fr-h2= t('views.users.dossiers.index.dossiers')
+    - if @search_terms.blank?
       %nav.tabs{ role: 'navigation', 'aria-label': t('views.users.dossiers.secondary_menu') }
         %ul
           - if @user_dossiers.present?
@@ -59,30 +63,35 @@
               badge: number_with_html_delimiter(@dossier_transfers.count))
 
 .container
-  - if @statut == "en-cours"
-    - if @first_brouillon_recently_updated.present?
-      = render Dsfr::CalloutComponent.new(title: t('users.dossiers.header.callout.first_brouillon_recently_updated_title'), heading_level: 'h2') do |c|
-        - c.with_body do
-          %p
-            = t('users.dossiers.header.callout.first_brouillon_recently_updated_text', time_ago: time_ago_in_words(@first_brouillon_recently_updated.created_at), libelle: @first_brouillon_recently_updated.procedure.libelle  )
-          = link_to t('users.dossiers.header.callout.first_brouillon_recently_updated_button'), modifier_dossier_path(@first_brouillon_recently_updated), class: 'fr-btn'
+  - if @search_terms.present?
+    %h2.page-title Résultat de la recherche pour « #{@search_terms} »
+    = render partial: "dossiers_list", locals: { dossiers: @dossiers }
 
-    = render partial: "dossiers_list", locals: { dossiers: @user_dossiers }
+  - else
+    - if @statut == "en-cours"
+      - if @first_brouillon_recently_updated.present?
+        = render Dsfr::CalloutComponent.new(title: t('users.dossiers.header.callout.first_brouillon_recently_updated_title'), heading_level: 'h2') do |c|
+          - c.with_body do
+            %p
+              = t('users.dossiers.header.callout.first_brouillon_recently_updated_text', time_ago: time_ago_in_words(@first_brouillon_recently_updated.created_at), libelle: @first_brouillon_recently_updated.procedure.libelle  )
+            = link_to t('users.dossiers.header.callout.first_brouillon_recently_updated_button'), modifier_dossier_path(@first_brouillon_recently_updated), class: 'fr-btn'
 
-  - if @statut == "traites"
-    = render partial: "dossiers_list", locals: { dossiers: @dossiers_traites }
+      = render partial: "dossiers_list", locals: { dossiers: @user_dossiers }
 
-  - if @statut == "dossiers-invites"
-    = render partial: "dossiers_list", locals: { dossiers: @dossiers_invites }
+    - if @statut == "traites"
+      = render partial: "dossiers_list", locals: { dossiers: @dossiers_traites }
 
-  - if @statut == "dossiers-supprimes-recemment"
-    = render partial: "hidden_dossiers_list", locals: { hidden_dossiers: @dossiers_supprimes_recemment }
+    - if @statut == "dossiers-invites"
+      = render partial: "dossiers_list", locals: { dossiers: @dossiers_invites }
 
-  - if @statut == "dossiers-supprimes-definitivement"
-    = render partial: "deleted_dossiers_list", locals: { deleted_dossiers: @dossiers_supprimes_definitivement }
+    - if @statut == "dossiers-supprimes-recemment"
+      = render partial: "hidden_dossiers_list", locals: { hidden_dossiers: @dossiers_supprimes_recemment }
 
-  - if @statut == "dossiers-transferes"
-    = render partial: "transfered_dossiers_list", locals: { dossier_transfers: @dossier_transfers }
+    - if @statut == "dossiers-supprimes-definitivement"
+      = render partial: "deleted_dossiers_list", locals: { deleted_dossiers: @dossiers_supprimes_definitivement }
 
-  - if @statut == "dossiers-expirant"
-    = render partial: "dossiers_list", locals: { dossiers: @dossiers_close_to_expiration }
+    - if @statut == "dossiers-transferes"
+      = render partial: "transfered_dossiers_list", locals: { dossier_transfers: @dossier_transfers }
+
+    - if @statut == "dossiers-expirant"
+      = render partial: "dossiers_list", locals: { dossiers: @dossiers_close_to_expiration }

@@ -48,12 +48,15 @@ fr:
         csv_import:
           title: Importer par CSV
           notice_1_html: |
-            Pour une procédure standard, le fichier csv doit comporter 1 seule colonne (Email) avec une adresse email d'instructeur par ligne (<a href=\"/csv/import-instructeurs-test.csv\">exemple de fichier</a>).
-            Pour une procédure routée, le fichier doit comporter 2 colonnes (Groupe, Email) et être séparé par des virgules (<a href=\"/csv/fr/import-groupe-test.csv\">exemple de fichier</a>).
+            Pour une procédure standard, le fichier csv doit comporter 1 seule colonne (Email) avec une adresse email d'instructeur par ligne (%{instructeurs_link}).
+            Pour une procédure routée, le fichier doit comporter 2 colonnes (Groupe, Email) et être séparé par des virgules (%{groupes_link}).
           notice_2: L’import n’écrase pas les instructeurs existants. Il permet uniquement d'en ajouter. Pour supprimer un instructeur, cliquez sur le bouton « retirer ». Le poids du fichier doit être inférieur %{csv_max_size}.
           import_file: Importer le fichier
           import_file_procedure_not_published: L’import d’instructeurs par fichier CSV est disponible une fois la démarche publiée
-          import_file_alert: Tous les instructeurs ajoutés à la procédure vont être notifiés par email. Voulez-vous continuer ?
+          import_file_alert: Tous les instructeurs ajoutés à la procédure vont être informés par email. Voulez-vous continuer ?
+          link_text: exemple de fichier
+          instructeurs_file_path: /csv/import-instructeurs-test.csv
+          groupes_file_path: /csv/fr/import-groupe-test.csv
         view: voir
         set_up: paramétrer
         button:

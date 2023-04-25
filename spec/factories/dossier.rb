@@ -241,19 +241,21 @@ FactoryBot.define do
 
     trait :with_populated_champs do
       after(:create) do |dossier, _evaluator|
-        dossier.champs_public = dossier.types_de_champ.map do |type_de_champ|
-          build(:"champ_#{type_de_champ.type_champ}", dossier: dossier, type_de_champ: type_de_champ)
+        dossier.champs_to_destroy.where(private: false).destroy_all
+        dossier.types_de_champ.each do |type_de_champ|
+          create(:"champ_#{type_de_champ.type_champ}", dossier:, type_de_champ:)
         end
-        dossier.save!
+        dossier.reload
       end
     end
 
     trait :with_populated_annotations do
       after(:create) do |dossier, _evaluator|
-        dossier.champs_private = dossier.types_de_champ_private.map do |type_de_champ|
-          build(:"champ_#{type_de_champ.type_champ}", private: true, dossier: dossier, type_de_champ: type_de_champ)
+        dossier.champs_to_destroy.where(private: true).destroy_all
+        dossier.types_de_champ_private.each do |type_de_champ|
+          create(:"champ_#{type_de_champ.type_champ}", private: true, dossier:, type_de_champ:)
         end
-        dossier.save!
+        dossier.reload
       end
     end
 

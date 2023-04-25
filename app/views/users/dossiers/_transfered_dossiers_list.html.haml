@@ -28,7 +28,7 @@
               %td= status_badge(dossier.state)
               %td.action-col.follow-col{ style: 'padding: 18px;' }= (dossier.depose_at || dossier.created_at).strftime('%d/%m/%Y')
 
-    = paginate(dossier_transfers)
+    = paginate dossier_transfers, views_prefix: 'shared'
 
 - else
   .blank-tab

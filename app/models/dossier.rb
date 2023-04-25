@@ -46,7 +46,6 @@
 #  user_id                                            :integer
 #
 class Dossier < ApplicationRecord
-  self.ignored_columns = [:en_construction_conservation_extension]
   include DossierFilteringConcern
   include DossierPrefillableConcern
   include DossierRebaseConcern
@@ -86,8 +85,11 @@ class Dossier < ApplicationRecord
   has_one_attached :justificatif_motivation
 
   has_many :champs
-  has_many :champs_public, -> { root.public_ordered }, class_name: 'Champ', inverse_of: false, dependent: :destroy
-  has_many :champs_private, -> { root.private_ordered }, class_name: 'Champ', inverse_of: false, dependent: :destroy
+  # We have to remove champs in a particular order - champs with a reference to a parent have to be
+  # removed first, otherwise we get a foreign key constraint error.
+  has_many :champs_to_destroy, -> { order(:parent_id) }, class_name: 'Champ', inverse_of: false, dependent: :destroy
+  has_many :champs_public, -> { root.public_ordered }, class_name: 'Champ', inverse_of: false
+  has_many :champs_private, -> { root.private_ordered }, class_name: 'Champ', inverse_of: false
   has_many :champs_public_all, -> { public_only }, class_name: 'Champ', inverse_of: false
   has_many :champs_private_all, -> { private_only }, class_name: 'Champ', inverse_of: false
   has_many :prefilled_champs_public, -> { root.public_only.prefilled }, class_name: 'Champ', inverse_of: false
@@ -278,13 +280,13 @@ class Dossier < ApplicationRecord
   scope :processed_in_month, -> (date) do
     date = date.to_datetime
     state_termine
-      .where(processed_at: date.beginning_of_month..date.end_of_month)
+      .where(processed_at: date.all_month)
   end
   scope :ordered_for_export, -> {
     order(depose_at: 'asc')
   }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
-  scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
+  scope :without_followers,           -> { where.missing(:follows) }
   scope :with_followers,              -> { left_outer_joins(:follows).where.not(follows: { id: nil }) }
   scope :with_champs, -> {
     includes(champs_public: [

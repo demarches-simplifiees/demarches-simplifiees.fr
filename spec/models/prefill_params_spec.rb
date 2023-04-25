@@ -1,30 +1,11 @@
 RSpec.describe PrefillParams do
-  describe "#to_a", vcr: { cassette_name: 'api_geo_all' } do
-    let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
-
+  describe "#to_a" do
     let(:procedure) { create(:procedure, :published, types_de_champ_public:, types_de_champ_private:) }
     let(:dossier) { create(:dossier, :brouillon, procedure: procedure) }
     let(:types_de_champ_public) { [] }
     let(:types_de_champ_private) { [] }
 
     subject(:prefill_params_array) { described_class.new(dossier, params).to_a }
-
-    before do
-      allow(Rails).to receive(:cache).and_return(memory_store)
-      Rails.cache.clear
-
-      VCR.insert_cassette('api_geo_regions')
-      VCR.insert_cassette('api_geo_departements')
-      VCR.insert_cassette('api_geo_communes')
-      VCR.insert_cassette('api_geo_epcis')
-    end
-
-    after do
-      VCR.eject_cassette('api_geo_regions')
-      VCR.eject_cassette('api_geo_departements')
-      VCR.eject_cassette('api_geo_communes')
-      VCR.eject_cassette('api_geo_epcis')
-    end
 
     context "when the stable ids match the TypeDeChamp of the corresponding procedure" do
       let(:types_de_champ_public) { [{ type: :text }, { type: :textarea }] }

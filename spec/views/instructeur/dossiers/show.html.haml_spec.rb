@@ -20,7 +20,7 @@ describe 'instructeurs/dossiers/show.html.haml', type: :view do
   end
 
   it 'renders the correct dossier state' do
-    expect(subject).to have_text('en construction')
+    expect(subject).to have_text('en construction')
   end
 
   context 'with a motivation' do

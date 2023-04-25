@@ -86,7 +86,7 @@ RSpec.describe PrefillDescription, type: :model do
     end
   end
 
-  describe '#prefill_link', vcr: { cassette_name: 'api_geo_regions' } do
+  describe '#prefill_link' do
     let(:procedure) { create(:procedure) }
     let(:type_de_champ_text) { build(:type_de_champ_text, procedure: procedure) }
     let(:type_de_champ_epci) { build(:type_de_champ_epci, procedure: procedure) }
@@ -95,21 +95,8 @@ RSpec.describe PrefillDescription, type: :model do
     let(:region_repetition) { prefillable_subchamps.third }
     let(:prefill_description) { described_class.new(procedure) }
 
-    let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
-
     before do
-      allow(Rails).to receive(:cache).and_return(memory_store)
-      Rails.cache.clear
-
-      VCR.insert_cassette('api_geo_departements')
-      VCR.insert_cassette('api_geo_epcis')
-
       prefill_description.update(selected_type_de_champ_ids: [type_de_champ_text.id, type_de_champ_epci.id, type_de_champ_repetition.id])
-    end
-
-    after do
-      VCR.eject_cassette('api_geo_departements')
-      VCR.eject_cassette('api_geo_epcis')
     end
 
     it "builds the URL to create a new prefilled dossier" do
@@ -126,7 +113,7 @@ RSpec.describe PrefillDescription, type: :model do
     end
   end
 
-  describe '#prefill_query', vcr: { cassette_name: 'api_geo_regions' } do
+  describe '#prefill_query' do
     let(:procedure) { create(:procedure) }
     let(:type_de_champ_text) { create(:type_de_champ_text, procedure: procedure) }
     let(:type_de_champ_epci) { TypesDeChamp::PrefillTypeDeChamp.build(create(:type_de_champ_epci, procedure: procedure), procedure.active_revision) }
@@ -144,21 +131,8 @@ RSpec.describe PrefillDescription, type: :model do
       TEXT
     end
 
-    let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
-
     before do
-      allow(Rails).to receive(:cache).and_return(memory_store)
-      Rails.cache.clear
-
-      VCR.insert_cassette('api_geo_departements')
-      VCR.insert_cassette('api_geo_epcis')
-
       prefill_description.update(selected_type_de_champ_ids: [type_de_champ_text.id, type_de_champ_epci.id, type_de_champ_repetition.id])
-    end
-
-    after do
-      VCR.eject_cassette('api_geo_departements')
-      VCR.eject_cassette('api_geo_epcis')
     end
 
     it "builds the query to create a new prefilled dossier" do

@@ -27,6 +27,7 @@ FactoryBot.define do
     end
 
     after(:build) do |procedure, evaluator|
+      procedure.defaut_groupe_instructeur = procedure.groupe_instructeurs.first
       initial_revision = build(:procedure_revision, procedure: procedure, dossier_submitted_message: evaluator.dossier_submitted_message)
 
       if evaluator.types_de_champ_public.present?
@@ -318,7 +319,7 @@ FactoryBot.define do
       published
 
       aasm_state { :close }
-      published_at { Time.zone.now - 1.second }
+      published_at { 1.second.ago }
       closed_at { Time.zone.now }
     end
 
@@ -326,7 +327,7 @@ FactoryBot.define do
       published
 
       aasm_state { :depubliee }
-      published_at { Time.zone.now - 1.second }
+      published_at { 1.second.ago }
       unpublished_at { Time.zone.now }
     end
 

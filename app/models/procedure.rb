@@ -50,6 +50,7 @@
 #  created_at                                :datetime         not null
 #  updated_at                                :datetime         not null
 #  canonical_procedure_id                    :bigint
+#  defaut_groupe_instructeur_id              :bigint
 #  draft_revision_id                         :bigint
 #  parent_procedure_id                       :bigint
 #  published_revision_id                     :bigint
@@ -64,7 +65,7 @@ class Procedure < ApplicationRecord
 
   include Discard::Model
   self.discard_column = :hidden_at
-  self.ignored_columns = [:direction, :durees_conservation_required, :cerfa_flag, :test_started_at, :lien_demarche]
+  self.ignored_columns += [:direction, :durees_conservation_required, :cerfa_flag, :test_started_at, :lien_demarche]
 
   default_scope -> { kept }
 
@@ -207,7 +208,7 @@ class Procedure < ApplicationRecord
   has_one :refused_mail, class_name: "Mails::RefusedMail", dependent: :destroy
   has_one :without_continuation_mail, class_name: "Mails::WithoutContinuationMail", dependent: :destroy
 
-  has_one :defaut_groupe_instructeur, -> { active.order(id: :asc) }, class_name: 'GroupeInstructeur', inverse_of: false
+  belongs_to :defaut_groupe_instructeur, class_name: 'GroupeInstructeur', inverse_of: false, optional: true
 
   has_one_attached :logo
   has_one_attached :notice
@@ -452,6 +453,10 @@ class Procedure < ApplicationRecord
     publiee? || brouillon?
   end
 
+  def replaced_by_procedure?
+    replaced_by_procedure_id.present?
+  end
+
   def dossier_can_transition_to_en_construction?
     accepts_new_dossiers? || depubliee?
   end
@@ -475,6 +480,23 @@ class Procedure < ApplicationRecord
   def self.declarative_attributes_for_select
     declarative_with_states.map do |state, _|
       [I18n.t("activerecord.attributes.#{model_name.i18n_key}.declarative_with_state/#{state}"), state]
+    end
+  end
+
+  def process_stalled_dossiers!
+    case declarative_with_state
+    when Procedure.declarative_with_states.fetch(:en_instruction)
+      dossiers
+        .state_en_construction
+        .where(declarative_triggered_at: nil)
+        .find_each(&:passer_automatiquement_en_instruction!)
+    when Procedure.declarative_with_states.fetch(:accepte)
+      dossiers
+        .state_en_construction
+        .where(declarative_triggered_at: nil)
+        .find_each do |dossier|
+          dossier.accepter_automatiquement! if dossier.can_accepter_automatiquement?
+        end
     end
   end
 
@@ -557,6 +579,9 @@ class Procedure < ApplicationRecord
     if is_different_admin || from_library
       procedure.draft_revision.types_de_champ_public.each { |tdc| tdc.options&.delete(:old_pj) }
     end
+
+    new_defaut_groupe = procedure.groupe_instructeurs.find_by(label: defaut_groupe_instructeur.label)
+    procedure.update!(defaut_groupe_instructeur: new_defaut_groupe)
 
     procedure
   end
@@ -740,15 +765,6 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def restore_procedure(author)
-    if discarded?
-      undiscard
-      self.dossiers.hidden_by_administration.each do |dossier|
-        dossier.restore(author)
-      end
-    end
-  end
-
   def flipper_id
     "Procedure;#{id}"
   end
@@ -797,6 +813,7 @@ class Procedure < ApplicationRecord
   end
 
   def publish_revision!
+    reset!
     transaction do
       self.published_revision = draft_revision
       self.draft_revision = create_new_revision
@@ -810,8 +827,8 @@ class Procedure < ApplicationRecord
 
   def reset_draft_revision!
     if published_revision.present? && draft_changed?
+      reset!
       transaction do
-        reset!
         draft_revision.types_de_champ.filter(&:only_present_on_draft?).each(&:destroy)
         draft_revision.update(dossier_submitted_message: nil)
         draft_revision.destroy
@@ -916,7 +933,21 @@ class Procedure < ApplicationRecord
 
   def ensure_defaut_groupe_instructeur
     if self.groupe_instructeurs.empty?
-      groupe_instructeurs.create(label: GroupeInstructeur::DEFAUT_LABEL)
+      gi = groupe_instructeurs.create(label: GroupeInstructeur::DEFAUT_LABEL)
+      self.update(defaut_groupe_instructeur_id: gi.id)
+    end
+  end
+
+  def stable_ids_used_by_routing_rules
+    @stable_ids_used_by_routing_rules ||= groupe_instructeurs.flat_map { _1.routing_rule&.sources }.compact
+  end
+
+  # We need this to unfuck administrate + aasm
+  def self.human_attribute_name(attribute, options = {})
+    if attribute == :aasm_state
+      'Statut'
+    else
+      super
     end
   end
 end

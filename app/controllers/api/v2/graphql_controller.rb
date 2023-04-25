@@ -5,7 +5,9 @@ class API::V2::GraphqlController < API::V2::BaseController
 
     render json: result
   rescue GraphQL::ParseError, JSON::ParserError => exception
-    handle_parse_error(exception)
+    handle_parse_error(exception, :graphql_parse_failed)
+  rescue ArgumentError => exception
+    handle_parse_error(exception, :bad_request)
   rescue => exception
     if Rails.env.production?
       handle_error_in_production(exception)
@@ -33,7 +35,12 @@ class API::V2::GraphqlController < API::V2::BaseController
   rescue ActionDispatch::Http::Parameters::ParseError => exception
     render json: {
       errors: [
-        { message: exception.cause.message }
+        {
+          message: exception.cause.message,
+          extensions: {
+            code: :bad_request
+          }
+        }
       ],
       data: nil
     }, status: 400
@@ -75,10 +82,13 @@ class API::V2::GraphqlController < API::V2::BaseController
     end
   end
 
-  def handle_parse_error(exception)
+  def handle_parse_error(exception, code)
     render json: {
       errors: [
-        { message: exception.message }
+        {
+          message: exception.message,
+          extensions: { code: }
+        }
       ],
       data: nil
     }, status: 400
@@ -90,22 +100,32 @@ class API::V2::GraphqlController < API::V2::BaseController
 
     render json: {
       errors: [
-        { message: exception.message, backtrace: exception.backtrace }
+        {
+          message: exception.message,
+          extensions: {
+            code: :internal_server_error,
+            backtrace: exception.backtrace
+          }
+        }
       ],
       data: nil
     }, status: 500
   end
 
   def handle_error_in_production(exception)
-    extra = { exception_id: SecureRandom.uuid }
-    Sentry.capture_exception(exception, extra:)
+    exception_id = SecureRandom.uuid
+    Sentry.with_scope do |scope|
+      scope.set_tags(exception_id:)
+      Sentry.capture_exception(exception)
+    end
 
     render json: {
       errors: [
         {
           message: "Internal Server Error",
           extensions: {
-            exception: { id: extra[:exception_id] }
+            code: :internal_server_error,
+            exception_id:
           }
         }
       ],

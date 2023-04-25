@@ -26,7 +26,7 @@ RSpec.describe Types::DossierType, type: :graphql do
     end
   end
 
-  describe 'dossier with champs', vcr: { cassette_name: 'graphql_communes' } do
+  describe 'dossier with champs' do
     let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :communes }, { type: :address }, { type: :siret }]) }
     let(:dossier) { create(:dossier, :accepte, :with_populated_champs, procedure: procedure) }
     let(:query) { DOSSIER_WITH_CHAMPS_QUERY }
@@ -48,13 +48,7 @@ RSpec.describe Types::DossierType, type: :graphql do
       }
     end
 
-    let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
-
-    before do
-      allow(Rails).to receive(:cache).and_return(memory_store)
-      Rails.cache.clear
-      dossier.champs_public.second.update(data: address)
-    end
+    before { dossier.champs_public.second.update(data: address) }
 
     it do
       expect(data[:dossier][:champs][0][:__typename]).to eq "CommuneChamp"
@@ -78,6 +72,27 @@ RSpec.describe Types::DossierType, type: :graphql do
         expect(data[:dossier][:champs][2][:__typename]).to eq "SiretChamp"
         expect(data[:dossier][:champs][2][:etablissement]).to be_nil
       end
+    end
+  end
+
+  describe 'dossier with selected champ' do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ libelle: 'yolo' }, { libelle: 'toto' }]) }
+    let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:) }
+    let(:query) { DOSSIER_WITH_SELECTED_CHAMP_QUERY }
+    let(:variables) { { number: dossier.id, id: champ.to_typed_id } }
+    let(:champ) { dossier.champs_public.last }
+
+    context 'when champ exists' do
+      it {
+        expect(data[:dossier][:champs].size).to eq 1
+        expect(data[:dossier][:champs][0][:label]).to eq "toto"
+      }
+    end
+
+    context "when champ dosen't exists" do
+      let(:variables) { { number: dossier.id, id: '1234' } }
+
+      it { expect(data[:dossier][:champs].size).to eq 0 }
     end
   end
 
@@ -392,6 +407,17 @@ RSpec.describe Types::DossierType, type: :graphql do
         attachments {
           filename
         }
+      }
+    }
+  }
+  GRAPHQL
+
+  DOSSIER_WITH_SELECTED_CHAMP_QUERY = <<-GRAPHQL
+  query($number: Int!, $id: ID!) {
+    dossier(number: $number) {
+      champs(id: $id) {
+        id
+        label
       }
     }
   }

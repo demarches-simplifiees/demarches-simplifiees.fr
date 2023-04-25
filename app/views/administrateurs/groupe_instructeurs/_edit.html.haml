@@ -11,8 +11,7 @@
       = f.submit t('.button.rename'), class: 'button primary send'
 
 .card
-  .card-title
-    = t('.group_management.title')
+  %h2.card-title= t('.group_management.title')
 
   = form_for :groupe_instructeur, html: { class: 'form' } do |f|
     = f.label :label do
@@ -28,7 +27,9 @@
     = form_tag import_admin_procedure_groupe_instructeurs_path(procedure), method: :post, multipart: true, class: "mt-4 form" do
       = label_tag t('.csv_import.title')
       %p.notice
-        = t('.csv_import.notice_1_html')
+        = t('.csv_import.notice_1_html',
+          instructeurs_link: link_to(t('.csv_import.link_text'), t('.csv_import.instructeurs_file_path')),
+          groupes_link: link_to(t('.csv_import.link_text'), t('.csv_import.groupes_file_path')))
       %p.notice
         = t('.csv_import.notice_2', csv_max_size: number_to_human_size(csv_max_size))
       = file_field_tag :csv_file, required: true, accept: 'text/csv', size: "1"
@@ -44,13 +45,13 @@
         %tr
           // i18n-tasks-use t('.existing_groupe')
           %th{ colspan: 2 }= t(".existing_groupe", count: groupes_instructeurs.total_count)
-          %th
+          %th.actions
             = link_to "Exporter au format CSV", export_groupe_instructeurs_admin_procedure_groupe_instructeurs_path(procedure, format: :csv)
       %tbody
         - groupes_instructeurs.each do |group|
           %tr
             %td= group.label
-            %td.actions= link_to t('.set_up'), admin_procedure_groupe_instructeur_path(procedure, group)
+            %td.setup= link_to t('.set_up'), admin_procedure_groupe_instructeur_path(procedure, group)
             - if group.can_delete?
               %td.actions
                 = link_to admin_procedure_groupe_instructeur_path(procedure, group), { method: :delete, class: 'button', data: { confirm: t('.group_management.delete_confirmation', group_name: group.label) }} do
@@ -63,4 +64,4 @@
                   = t('.group_management.move_files', count: group.dossiers.visible_by_administration.size)
 
 
-  = paginate groupes_instructeurs
+  = paginate groupes_instructeurs, views_prefix: 'shared'

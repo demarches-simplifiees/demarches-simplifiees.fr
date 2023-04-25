@@ -47,4 +47,4 @@
                 params: { instructeur: { id: instructeur.id }},
                 class: 'button' }
 
-    = paginate @instructeurs
+    = paginate @instructeurs, views_prefix: 'shared'

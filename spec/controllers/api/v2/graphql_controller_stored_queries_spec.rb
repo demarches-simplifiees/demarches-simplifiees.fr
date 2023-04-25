@@ -64,6 +64,18 @@ describe API::V2::GraphqlController do
       }
     end
 
+    context 'timeout' do
+      let(:variables) { { dossierNumber: dossier.id } }
+      let(:operation_name) { 'getDossier' }
+
+      before { allow_any_instance_of(API::V2::Schema::Timeout).to receive(:max_seconds).and_return(0) }
+
+      it {
+        expect(gql_errors.first[:message]).to eq('Timeout on Query.dossier')
+        expect(gql_errors.first[:extensions]).to eq({ code: 'timeout' })
+      }
+    end
+
     context 'getDossier' do
       let(:variables) { { dossierNumber: dossier.id } }
       let(:operation_name) { 'getDossier' }
@@ -75,6 +87,15 @@ describe API::V2::GraphqlController do
         expect(gql_data[:dossier][:demandeur][:nom]).to eq(dossier.individual.nom)
         expect(gql_data[:dossier][:demandeur][:prenom]).to eq(dossier.individual.prenom)
       }
+
+      context 'not found' do
+        let(:variables) { { dossierNumber: 0 } }
+
+        it {
+          expect(gql_errors.first[:message]).to eq('Dossier not found')
+          expect(gql_errors.first[:extensions]).to eq({ code: 'not_found' })
+        }
+      end
 
       context 'with entreprise' do
         let(:procedure) { create(:procedure, :published, :with_service, administrateurs: [admin], types_de_champ_public:) }
@@ -114,6 +135,15 @@ describe API::V2::GraphqlController do
         expect(gql_data[:demarche][:dossiers]).to be_nil
       }
 
+      context 'not found' do
+        let(:variables) { { demarcheNumber: 0 } }
+
+        it {
+          expect(gql_errors.first[:message]).to eq('Demarche not found')
+          expect(gql_errors.first[:extensions]).to eq({ code: 'not_found' })
+        }
+      end
+
       context 'include Dossiers' do
         let(:variables) { { demarcheNumber: procedure.id, includeDossiers: true } }
 
@@ -136,7 +166,7 @@ describe API::V2::GraphqlController do
 
       context 'include deleted Dossiers' do
         let(:variables) { { demarcheNumber: procedure.id, includeDeletedDossiers: true, deletedSince: 2.weeks.ago.iso8601 } }
-        let(:deleted_dossier) { create(:deleted_dossier, dossier: dossier_accepte) }
+        let(:deleted_dossier) { DeletedDossier.create_from_dossier(dossier_accepte, DeletedDossier.reasons.fetch(:user_request)) }
 
         before { deleted_dossier }
 
@@ -182,6 +212,15 @@ describe API::V2::GraphqlController do
         expect(gql_data[:groupeInstructeur][:dossiers]).to be_nil
       }
 
+      context 'not found' do
+        let(:variables) { { groupeInstructeurNumber: 0 } }
+
+        it {
+          expect(gql_errors.first[:message]).to eq('GroupeInstructeurWithDossiers not found')
+          expect(gql_errors.first[:extensions]).to eq({ code: 'not_found' })
+        }
+      end
+
       context 'include Dossiers' do
         let(:variables) { { groupeInstructeurNumber: groupe_instructeur.id, includeDossiers: true } }
 
@@ -191,9 +230,43 @@ describe API::V2::GraphqlController do
           expect(gql_data[:groupeInstructeur][:dossiers][:nodes].size).to eq(1)
         }
       end
+
+      context 'include deleted Dossiers' do
+        let(:variables) { { groupeInstructeurNumber: groupe_instructeur.id, includeDeletedDossiers: true, deletedSince: 2.weeks.ago.iso8601 } }
+        let(:deleted_dossier) { DeletedDossier.create_from_dossier(dossier_accepte, DeletedDossier.reasons.fetch(:user_request)) }
+
+        before { deleted_dossier }
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data[:groupeInstructeur][:id]).to eq(groupe_instructeur.to_typed_id)
+          expect(gql_data[:groupeInstructeur][:deletedDossiers][:nodes].size).to eq(1)
+          expect(gql_data[:groupeInstructeur][:deletedDossiers][:nodes].first[:id]).to eq(deleted_dossier.to_typed_id)
+          expect(gql_data[:groupeInstructeur][:deletedDossiers][:nodes].first[:dateSupression]).to eq(deleted_dossier.deleted_at.iso8601)
+        }
+      end
+
+      context 'include pending deleted Dossiers' do
+        let(:variables) { { groupeInstructeurNumber: groupe_instructeur.id, includePendingDeletedDossiers: true, pendingDeletedSince: 2.weeks.ago.iso8601 } }
+
+        before {
+          dossier.hide_and_keep_track!(dossier.user, DeletedDossier.reasons.fetch(:user_request))
+          dossier_accepte.hide_and_keep_track!(instructeur, DeletedDossier.reasons.fetch(:instructeur_request))
+        }
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data[:groupeInstructeur][:id]).to eq(groupe_instructeur.to_typed_id)
+          expect(gql_data[:groupeInstructeur][:pendingDeletedDossiers][:nodes].size).to eq(2)
+          expect(gql_data[:groupeInstructeur][:pendingDeletedDossiers][:nodes].first[:id]).to eq(GraphQL::Schema::UniqueWithinType.encode('DeletedDossier', dossier.id))
+          expect(gql_data[:groupeInstructeur][:pendingDeletedDossiers][:nodes].second[:id]).to eq(GraphQL::Schema::UniqueWithinType.encode('DeletedDossier', dossier_accepte.id))
+          expect(gql_data[:groupeInstructeur][:pendingDeletedDossiers][:nodes].first[:dateSupression]).to eq(dossier.hidden_by_user_at.iso8601)
+          expect(gql_data[:groupeInstructeur][:pendingDeletedDossiers][:nodes].second[:dateSupression]).to eq(dossier_accepte.hidden_by_administration_at.iso8601)
+        }
+      end
     end
 
-    context 'getDemarcheDescriptor', vcr: { cassette_name: 'api_geo_regions' } do
+    context 'getDemarcheDescriptor' do
       let(:operation_name) { 'getDemarcheDescriptor' }
       let(:types_de_champ_public) { [{ type: :text }, { type: :piece_justificative }, { type: :regions }] }
 
@@ -204,6 +277,15 @@ describe API::V2::GraphqlController do
           expect(gql_errors).to be_nil
           expect(gql_data[:demarcheDescriptor][:id]).to eq(procedure.to_typed_id)
           expect(gql_data[:demarcheDescriptor][:demarcheUrl]).to match("commencer/#{procedure.path}")
+        }
+      end
+
+      context 'not found' do
+        let(:variables) { { demarche: { number: 0 } } }
+
+        it {
+          expect(gql_errors.first[:message]).to eq('DemarcheDescriptor not found')
+          expect(gql_errors.first[:extensions]).to eq({ code: 'not_found' })
         }
       end
 

@@ -1,5 +1,7 @@
 - if dossiers.present?
-  .fr-table.fr-table--bordered
+  %span.fr-h6.fr-mr-2w
+    = page_entries_info dossiers
+  .fr-table.fr-table--bordered.fr-table--no-caption.fr-mt-2w
     %table.table.dossiers-table.hoverable
       %caption= t('views.users.dossiers.dossiers_list.caption')
       %thead
@@ -41,7 +43,7 @@
             %td.action-col.follow-col
               = render partial: 'dossier_actions', locals: { dossier: dossier }
 
-    = paginate(dossiers)
+    = paginate dossiers, views_prefix: 'shared'
 
 - else
   .blank-tab

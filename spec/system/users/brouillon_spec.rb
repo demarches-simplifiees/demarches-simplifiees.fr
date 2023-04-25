@@ -6,14 +6,7 @@ describe 'The user' do
   let(:user_dossier) { user.dossiers.first }
   let!(:dossier_to_link) { create(:dossier) }
 
-  let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
-
-  before do
-    allow(Rails).to receive(:cache).and_return(memory_store)
-    Rails.cache.clear
-  end
-
-  scenario 'fill a dossier', js: true, vcr: { cassette_name: 'api_geo_all' } do
+  scenario 'fill a dossier', js: true do
     log_in(user, procedure)
 
     fill_individual
@@ -413,6 +406,7 @@ describe 'The user' do
           types_de_champ_public: [
             { type: :integer_number, libelle: 'age', stable_id: age_stable_id },
             { type: :yes_no, libelle: 'permis de conduire', stable_id: permis_stable_id, condition: permis_condition },
+            { type: :header_section, libelle: 'info voiture', condition: permis_condition },
             { type: :integer_number, libelle: 'tonnage', stable_id: tonnage_stable_id, condition: tonnage_condition },
             { type: :text, libelle: 'parking', condition: parking_condition }
           ])
@@ -425,10 +419,12 @@ describe 'The user' do
 
         expect(page).to have_css('label', text: 'age', visible: true)
         expect(page).to have_no_css('label', text: 'permis de conduire', visible: true)
+        expect(page).to have_no_css('legend h2', text: 'info voiture', visible: true)
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
         fill_in('age', with: '18')
         expect(page).to have_css('label', text: 'permis de conduire', visible: true)
+        expect(page).to have_css('legend h2', text: 'info voiture', visible: true)
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
         choose('Oui')
