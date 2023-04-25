@@ -56,6 +56,10 @@ class TypesDeChampEditor::ConditionsErrorsComponent < ApplicationComponent
         right: right.to_s.downcase)
     in { type: :required_list }
       t('required_list', scope: '.errors')
+    in { type: :required_include, operator_name: "Logic::Eq" }
+      t("required_include.eq", scope: '.errors')
+    in { type: :required_include, operator_name: "Logic::NotEq" }
+      t("required_include.not_eq", scope: '.errors')
     else
       nil
     end
