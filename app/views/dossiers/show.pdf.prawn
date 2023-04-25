@@ -10,6 +10,10 @@ def maybe_start_new_page(pdf, size)
   end
 end
 
+def clean_string(str)
+  str.tr(' ', ' ') # replace non breaking space, which are invalid in pdf
+end
+
 def text_box(pdf, text, x, width)
   box = ::Prawn::Text::Box.new(text.to_s,
     document: pdf,
@@ -158,7 +162,7 @@ def add_single_champ(pdf, champ)
 
       pdf.indent(default_margin) do
         champ.geo_areas.each do |area|
-          pdf.text "- #{area.label}".tr(' ', ' ') # replace non breaking space, which are invalid in pdf
+          pdf.text "- #{clean_string(area.label)}"
         end
       end
     end
@@ -219,7 +223,7 @@ end
 
 def add_etat_dossier(pdf, dossier)
   pdf.pad_bottom(default_margin) do
-    pdf.text "Ce dossier est <b>#{dossier_display_state(dossier, lower: true)}</b>.", inline_format: true
+    pdf.text "Ce dossier est <b>#{clean_string(dossier_display_state(dossier, lower: true))}</b>.", inline_format: true
   end
 end
 
