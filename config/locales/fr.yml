@@ -444,7 +444,8 @@ fr:
         demande:
           edit_dossier: "Modifier le dossier"
         search:
-          search_file: Rechercher un dossier
+          placeholder: N° de dossier, mots-clés
+          search_file: Rechercher un dossier (N° de dossier, mots-clés)
           simple: Rechercher
         secondary_menu: Menu secondaire
         index:
