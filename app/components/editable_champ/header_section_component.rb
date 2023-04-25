@@ -4,7 +4,7 @@ class EditableChamp::HeaderSectionComponent < ApplicationComponent
   end
 
   def level
-    @champ.level
+    @champ.level + 1 # skip one heading level
   end
 
   def libelle
@@ -20,6 +20,10 @@ class EditableChamp::HeaderSectionComponent < ApplicationComponent
   end
 
   def tag_for_depth
-    "h#{level + 1}"
+    if level <= 6
+      "h#{level}"
+    else
+      "p"
+    end
   end
 end
