@@ -795,6 +795,15 @@ describe Users::DossiersController, type: :controller do
       end
     end
 
+    context 'when the user has dossier in brouillon recently updated' do
+      let!(:own_dossier) { create(:dossier, user: user) }
+      let!(:own_dossier_2) { create(:dossier, user: user) }
+
+      before { get(:index) }
+
+      it { expect(assigns(:first_brouillon_recently_updated)).to match(own_dossier_2) }
+    end
+
     describe 'sort order' do
       before do
         Timecop.freeze(4.days.ago) { create(:dossier, user: user) }

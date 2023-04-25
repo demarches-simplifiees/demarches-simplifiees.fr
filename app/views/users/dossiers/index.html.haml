@@ -8,7 +8,7 @@
 
 .dossiers-headers.sub-header
   .container
-    %h1.page-title= t('views.users.dossiers.index.dossiers')
+    %h1.page-title.fr-h2= t('views.users.dossiers.index.dossiers')
     - if current_user.dossiers.count > 2
       #search-2.fr-search-bar.fr-search-bar--lg{ role: "search", "aria-label": t('views.users.dossiers.search.search_file') }
         = form_tag recherche_dossiers_path, method: :get, :role => "search", class: "flex width-100 fr-mb-5w" do
@@ -69,6 +69,13 @@
 
   - else
     - if @statut == "en-cours"
+      - if @first_brouillon_recently_updated.present?
+        = render Dsfr::CalloutComponent.new(title: t('users.dossiers.header.callout.first_brouillon_recently_updated_title'), heading_level: 'h2') do |c|
+          - c.with_body do
+            %p
+              = t('users.dossiers.header.callout.first_brouillon_recently_updated_text', time_ago: time_ago_in_words(@first_brouillon_recently_updated.created_at), libelle: @first_brouillon_recently_updated.procedure.libelle  )
+            = link_to t('users.dossiers.header.callout.first_brouillon_recently_updated_button'), modifier_dossier_path(@first_brouillon_recently_updated), class: 'fr-btn'
+
       = render partial: "dossiers_list", locals: { dossiers: @user_dossiers }
 
     - if @statut == "traites"

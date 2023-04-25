@@ -18,6 +18,13 @@ describe Dossier do
 
       it { expect(Dossier.without_followers.to_a).to eq([dossier_without_follower]) }
     end
+
+    describe 'brouillons_recently_updated' do
+      let!(:dossier_en_brouillon) { create(:dossier) }
+      let!(:dossier_en_brouillon_2) { create(:dossier) }
+
+      it { expect(Dossier.brouillons_recently_updated).to eq([dossier_en_brouillon_2, dossier_en_brouillon]) }
+    end
   end
 
   describe 'validations' do

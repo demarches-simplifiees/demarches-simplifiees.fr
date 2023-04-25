@@ -296,6 +296,8 @@ class Dossier < ApplicationRecord
       champs: [:type_de_champ, piece_justificative_file_attachments: :blob]
     ])
   }
+
+  scope :brouillons_recently_updated, -> { updated_since(2.days.ago).state_brouillon.order_by_updated_at }
   scope :with_annotations, -> {
     includes(champs_private: [
       :type_de_champ,

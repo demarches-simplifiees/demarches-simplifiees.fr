@@ -36,6 +36,21 @@ describe 'users/dossiers/index.html.haml', type: :view do
     expect(rendered).to have_link(dossier_en_construction.id.to_s, href: dossier_path(dossier_en_construction))
   end
 
+  it 'n’affiche pas une alerte pour continuer à remplir un dossier' do
+    expect(rendered).not_to have_selector('.fr-callout', count: 1)
+  end
+
+  context 'quand il y a un dossier en brouillon récemment mis à jour' do
+    before do
+      assign(:first_brouillon_recently_updated, dossier_brouillon)
+      render
+    end
+    it 'affiche une alerte pour continuer à remplir un dossier' do
+      expect(rendered).to have_selector('.fr-callout', count: 1)
+      expect(rendered).to have_link(href: modifier_dossier_path(dossier_brouillon))
+    end
+  end
+
   context 'quand il n’y a aucun dossier' do
     let(:user_dossiers)    { [] }
     let(:dossiers_invites) { [] }
@@ -53,7 +68,7 @@ describe 'users/dossiers/index.html.haml', type: :view do
     let(:dossiers_invites) { [] }
 
     it 'affiche un titre adapté' do
-      expect(rendered).to have_selector('h1', text: 'Dossiers')
+      expect(rendered).to have_selector('h1', text: 'Mes dossiers')
     end
 
     it 'n’affiche la barre d’onglets' do
@@ -65,7 +80,7 @@ describe 'users/dossiers/index.html.haml', type: :view do
     let(:dossiers_invites) { create_list(:dossier, 1) }
 
     it 'affiche un titre adapté' do
-      expect(rendered).to have_selector('h1', text: 'Dossiers')
+      expect(rendered).to have_selector('h1', text: 'Mes dossiers')
     end
 
     it 'affiche la barre d’onglets' do
