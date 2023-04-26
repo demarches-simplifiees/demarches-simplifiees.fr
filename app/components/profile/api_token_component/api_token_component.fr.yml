@@ -4,3 +4,13 @@ fr:
     zero: Ce jeton n’a accès à <strong>aucune</strong> démarche
     one: Ce jeton a accès a une démarche sélectionnée
     other: Ce jeton a accès a %{count} démarches sélectionnées
+  security_one: Pour des raisons de sécurité, il ne sera plus ré-affiché, notez-le bien.
+  security_two: Pour des raisons de sécurité, nous ne pouvons vous l’afficher que lors de sa création.
+  action_all: Autoriser l’accès a toutes les démarches
+  action_choice: Autoriser l’accès seulement a des démarches choisies
+  add: Ajouter
+  delete: Supprimer
+  token_procedures: Ce jeton a accès aux démarches
+  revoke_token: Révoquer le jeton
+  reading_writing: En lecture et écriture
+  reading: En lecture seule
