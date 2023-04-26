@@ -43,6 +43,14 @@
                       .fr-checkbox-group.fr-ml-2w.fr-py-1w
                         = b.check_box(checked: @filter.zone_filtered?(b.value))
                         = b.label(class: 'fr-label') { b.text }
+                %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
+                  .fr-mb-1w
+                    %button{ 'data-action': 'expand#toggle' }
+                      %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
+                      Service
+                  .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
+                    %div
+                      = f.text_field :service_siret, placeholder: 'Indiquez le SIRET', class: 'fr-input'
                 %li.fr-py-2w{ 'data-controller': "expand" }
                   .fr-mb-1w.fr-pl-2w
                     %button{ 'data-action': 'click->expand#toggle' }
