@@ -24,6 +24,29 @@ en:
         assigned_instructeur:
           one: "%{count} instructor is assigned"
           other: "%{count} instructors are assigned"
+      import_export:
+        csv_import:
+          import_file: Importer le fichier
+          import_file_alert: Tous les instructeurs ajoutés à la procédure vont être notifiés par email. Voulez-vous continuer ?
+          import_file_procedure_not_published: L’import par fichier CSV est disponible une fois la démarche publiée
+          groupes:
+            title: Import / Export en masse
+            notice_1_html: Pour l'import, votre fichier csv doit comporter 2 colonnes (Groupe, Email) et être séparé par des virgules (<a href=/csv/fr/import-groupe-test.csv>exemple de fichier</a>). Le poids du fichier doit être inférieur %{csv_max_size}.
+            notice_2: L’import n’écrase pas les groupes existants. Il permet uniquement d'en ajouter. Pour supprimer un groupe, allez dans la page dédiée et cliquez sur le bouton « Supprimer ».
+          instructeurs:
+            title: Import en masse
+            notice_1_html: Pour l'import, le fichier csv doit comporter 1 seule colonne (Email) avec une adresse email d'instructeur par ligne (<a href=/csv/import-instructeurs-test.csv>exemple de fichier</a>). Le poids du fichier doit être inférieur %{csv_max_size}.
+            notice_2: L’import n’écrase pas les instructeurs existants. Il permet uniquement d'en ajouter. Pour supprimer un instructeur, cliquez sur le bouton « Retirer ».
+        existing_groupe:
+          one: "%{count} groupe existe"
+          other: "%{count} groupes existent"
+        groupe:
+          one: "%{count} groupe"
+          other: "%{count} groupes"
+        found:
+          one: "trouvé"
+          other: "trouvés"
+
       edit:
         routing:
           title: Label of the groups list
@@ -39,16 +62,6 @@ en:
         add_a_group:
           title: Add a group
           notice: This group will be a choice from the list "%{routing_criteria_name}"
-        csv_import:
-          title: CSV Import
-          notice_1_html: The csv file must have 1 column with instructors emails(%{instructeurs_link}). For routed procedures, the csv file must have 2 columns (Group, Email) and be separated by commas (%{groupes_link}). The import does not overwrite existing groups and instructors.
-          notice_2: The size of the file must be less than %{csv_max_size}.
-          import_file: Import file
-          import_file_procedure_not_published: The import of instructors by CSV file is available once the process has been published
-          import_file_alert: Instructors added to the procedure will receive an email. Are you sure you want to continue ?"
-          link_text: file example
-          instructeurs_file_path: /csv/import-instructeurs-test.csv
-          groupes_file_path: /csv/en/import-groupe-test.csv
         set_up: set up
         button:
           add_group: Add group
