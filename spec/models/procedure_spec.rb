@@ -504,12 +504,11 @@ describe Procedure do
     let!(:assign_to_1) { create(:assign_to, procedure: procedure, groupe_instructeur: groupe_instructeur_1, instructeur: instructeur_1) }
     let!(:assign_to_2) { create(:assign_to, procedure: procedure, groupe_instructeur: groupe_instructeur_1, instructeur: instructeur_2) }
 
-    before do
+    subject do
       @procedure = procedure.clone(administrateur, from_library)
       @procedure.save
+      @procedure
     end
-
-    subject { @procedure }
 
     it { expect(subject.parent_procedure).to eq(procedure) }
 
