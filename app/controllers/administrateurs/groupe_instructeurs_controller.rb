@@ -23,6 +23,12 @@ module Administrateurs
       @procedure = procedure
     end
 
+    def ajout
+      redirect_to admin_procedure_groupe_instructeurs_path(procedure) if procedure.groupe_instructeurs.one?
+      @procedure = procedure
+      @groupes_instructeurs = paginated_groupe_instructeurs
+    end
+
     def show
       @procedure = procedure
       @groupe_instructeur = groupe_instructeur

@@ -533,6 +533,8 @@ Rails.application.routes.draw do
 
         collection do
           get 'options'
+          get 'ajout'
+          post 'ajout' => 'groupe_instructeurs#create'
           patch 'update_routing_criteria_name'
           patch 'update_instructeurs_self_management_enabled'
           post 'import'
