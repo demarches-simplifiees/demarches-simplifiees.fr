@@ -1,8 +1,11 @@
-%fieldset.radios
+%fieldset.fr-fieldset
+  %legend.fr-fieldset__legend.visually-hidden
+    = t(".legend")
+
   %label{ for: @champ.yes_input_id }
     = @form.radio_button :value, true, id: @champ.yes_input_id
-    Oui
+    = t(".yes")
 
   %label{ for: @champ.no_input_id }
     = @form.radio_button :value, false, id: @champ.no_input_id
-    Non
+    = t(".no")
