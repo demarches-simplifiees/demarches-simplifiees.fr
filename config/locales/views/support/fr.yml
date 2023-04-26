@@ -8,6 +8,7 @@ fr:
       our_answer: 👉 Notre réponse
       notice_pj_product: Une capture d’écran peut nous aider à identifier plus facilement l’endroit à améliorer.
       notice_pj_other: Une capture d’écran peut nous aider à identifier plus facilement le problème.
+      notice_upload_group: "Taille maximale : 200 Mo. Formats supportés : jpg, png, pdf."
       procedure_info:
         question: J’ai un problème lors du remplissage de mon dossier
         answer_html: "<p>Avez-vous bien vérifié que tous les champs obligatoires (<span class= mandatory> * </span>) sont remplis ?
