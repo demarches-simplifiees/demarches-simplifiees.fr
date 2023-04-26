@@ -1,6 +1,7 @@
 module Administrateurs
   class GroupeInstructeursController < AdministrateurController
     include ActiveSupport::NumberHelper
+    include Logic
 
     before_action :ensure_not_super_admin!, only: [:add_instructeur]
 
@@ -27,6 +28,38 @@ module Administrateurs
       redirect_to admin_procedure_groupe_instructeurs_path(procedure) if procedure.groupe_instructeurs.one?
       @procedure = procedure
       @groupes_instructeurs = paginated_groupe_instructeurs
+    end
+
+    def simple_routing
+      @procedure = procedure
+    end
+
+    def create_simple_routing
+      @procedure = procedure
+      stable_id = params[:create_simple_routing][:stable_id].to_i
+
+      tdc = @procedure.active_revision.routable_types_de_champ.find { |tdc| tdc.stable_id == stable_id }
+
+      tdc_options = tdc.options["drop_down_options"].reject(&:empty?)
+
+      tdc_options.each do |option_label|
+        gi = procedure.groupe_instructeurs.find_by({ label: option_label }) || procedure.groupe_instructeurs
+          .create({ label: option_label, instructeurs: [current_administrateur.instructeur] })
+        gi.update(routing_rule: ds_eq(champ_value(stable_id), constant(gi.label)))
+      end
+
+      defaut = @procedure.defaut_groupe_instructeur
+
+      if !tdc_options.include?(defaut.label)
+        new_defaut = @procedure.reload.groupe_instructeurs_but_defaut.first
+        @procedure.update!(defaut_groupe_instructeur: new_defaut)
+        reaffecter_all_dossiers_to_defaut_groupe
+        defaut.instructeurs.each { new_defaut.add(_1) }
+        defaut.destroy!
+      end
+
+      flash.notice = 'Les groupes instructeurs ont été ajoutés'
+      redirect_to admin_procedure_groupe_instructeurs_path(procedure)
     end
 
     def show
