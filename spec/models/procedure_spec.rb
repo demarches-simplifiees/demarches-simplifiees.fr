@@ -622,6 +622,16 @@ describe Procedure do
       let(:administrateur) { create(:administrateur) }
       let(:opendata) { false }
 
+      context 'and the procedure does not have a groupe with the defaut label' do
+        before do
+          procedure.defaut_groupe_instructeur.update!(label: 'another label')
+        end
+
+        it "affects the first groupe as the defaut groupe" do
+          expect(subject.defaut_groupe_instructeur).to eq(subject.groupe_instructeurs.first)
+        end
+      end
+
       it 'should not clone service' do
         expect(subject.service).to eq(nil)
       end
