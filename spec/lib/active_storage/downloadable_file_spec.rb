@@ -22,6 +22,7 @@ describe ActiveStorage::DownloadableFile do
 
     context 'active_storage.service local' do
       before { Rails.application.config.active_storage.service = :local }
+      after { Rails.application.config.active_storage.service = :test }
       it 'returns the list' do
         list = [:a, :b, :c]
         result = ActiveStorage::DownloadableFile.cleanup_list_from_dossier(list)
@@ -40,6 +41,7 @@ describe ActiveStorage::DownloadableFile do
         require 'fog/openstack'
         Rails.application.config.active_storage.service = :openstack
       end
+      after { Rails.application.config.active_storage.service = :test }
 
       it 'returns the list' do
         available_blob = double(key: available_blob_key)
