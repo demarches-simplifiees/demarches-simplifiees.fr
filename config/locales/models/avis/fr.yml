@@ -21,6 +21,9 @@ fr:
       question_answer:
         true: oui
         false: non
+      question_answer_with_count:
+        true: "oui : %{count}"
+        false: "non : %{count}"
     confirmation:
       revoke: "Souhaitez-vous révoquer la demande d’avis à %{email} ?"
       remind: "Souhaitez-vous relancer %{email} ?"
