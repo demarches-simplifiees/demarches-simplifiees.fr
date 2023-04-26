@@ -23,15 +23,46 @@ describe 'The routing with rules', js: true do
     procedure.defaut_groupe_instructeur.instructeurs << administrateur.instructeur
   end
 
-  scenario 'works' do
-    login_as administrateur.user, scope: :user
-    visit admin_procedure_path(procedure.id)
-    find('#groupe-instructeurs').click
+  scenario 'Routage à partir d’un champ' do
+    steps_to_routing_configuration
 
-    # add littéraire groupe
-    fill_in 'Ajouter un nom de groupe', with: 'littéraire'
-    click_on 'Ajouter le groupe'
-    expect(page).to have_text('Le groupe d’instructeurs « littéraire » a été créé et le routage a été activé.')
+    choose('À partir d’un champ', allow_label_click: true)
+    click_on 'Continuer'
+
+    expect(page).to have_text('Routage à partir d’un champ')
+
+    choose('Spécialité', allow_label_click: true)
+    click_on 'Créer les groupes'
+
+    expect(page).to have_text('Gestion des groupes')
+    expect(page).to have_text('2 groupes')
+    expect(page).not_to have_text('À configurer')
+
+    click_on 'littéraire'
+    expect(page).to have_select("targeted_champ", selected: "Spécialité")
+    expect(page).to have_select("value", selected: "littéraire")
+
+    click_on '2 groupes'
+    click_on 'scientifique'
+
+    expect(page).to have_select("targeted_champ", selected: "Spécialité")
+    expect(page).to have_select("value", selected: "scientifique")
+  end
+
+  scenario 'Routage personnalisé' do
+    steps_to_routing_configuration
+
+    choose('Avancé', allow_label_click: true)
+    click_on 'Continuer'
+
+    expect(page).to have_text('Gestion des groupes')
+
+    # update defaut groupe
+    click_on 'défaut'
+    expect(page).to have_text('Paramètres principaux')
+    fill_in 'Nom du groupe', with: 'littéraire'
+    click_on 'Renommer'
+    expect(page).to have_text('Le nom est à présent « littéraire ». ')
 
     # add victor to littéraire groupe
     fill_in 'Emails', with: 'victor@inst.com'
@@ -48,18 +79,19 @@ describe 'The routing with rules', js: true do
     superwoman = User.find_by(email: 'superwoman@inst.com').instructeur
 
     # add inactive groupe
-    click_on 'Groupes d’instructeurs'
-    fill_in 'Ajouter un nom de groupe', with: 'non visible car inactif'
-    click_on 'Ajouter le groupe'
-    check "Groupe inactif"
-    click_on 'Modifier'
+    click_on 'Ajout de groupes'
+    fill_in 'Nouveau groupe', with: 'non visible car inactif'
+    click_on 'Ajouter'
+    expect(page).to have_text('Le groupe d’instructeurs « non visible car inactif » a été créé. ')
+    check("Groupe inactif", allow_label_click: true)
 
-    # add scientifique groupe
-    click_on 'Groupes d’instructeurs'
-    fill_in 'Ajouter un nom de groupe', with: 'scientifique'
-    click_on 'Ajouter le groupe'
-    expect(page).to have_text('Le groupe d’instructeurs « scientifique » a été créé.')
-
+    # # add scientifique groupe
+    click_on '3 groupes'
+    click_on 'défaut bis'
+    fill_in 'Nom du groupe', with: 'scientifique'
+    click_on 'Renommer'
+    expect(page).to have_text('Le nom est à présent « scientifique ». ')
+    #
     # add marie to scientifique groupe
     fill_in 'Emails', with: 'marie@inst.com'
     perform_enqueued_jobs { click_on 'Affecter' }
@@ -71,24 +103,19 @@ describe 'The routing with rules', js: true do
     fill_in 'Emails', with: 'superwoman@inst.com'
     perform_enqueued_jobs { click_on 'Affecter' }
     expect(page).to have_text("L’instructeur superwoman@inst.com a été affecté")
-
+    #
     # add routing rules
-    click_on 'Groupes d’instructeurs'
+    within('.target') { select('Spécialité') }
+    within('.value') { select('scientifique') }
 
-    h = procedure.groupe_instructeurs.index_by(&:label).transform_values(&:id)
+    click_on '3 groupes'
 
-    within(".gi-#{h['scientifique']}") do
-      within('.target') { select('Spécialité') }
-      within('.value') { select('scientifique') }
-    end
+    click_on 'littéraire'
 
-    within(".gi-#{h['littéraire']}") do
-      within('.target') { select('Spécialité') }
-      within('.value') { select('littéraire') }
-    end
+    within('.target') { select('Spécialité') }
+    within('.value') { select('littéraire') }
 
-    not_defauts = procedure.groupe_instructeurs.filter { |gi| ['littéraire', 'scientifique'].include?(gi.label) }
-    not_defauts.each { |gi| wait_until { gi.reload.routing_rule.present? } }
+    procedure.groupe_instructeurs.where(closed: false).each { |gi| wait_until { gi.reload.routing_rule.present? } }
 
     # publish
     publish_procedure(procedure)
@@ -179,7 +206,7 @@ describe 'The routing with rules', js: true do
     expect(find('.procedure-stats')).not_to have_css('span.notifications')
     log_out
 
-    # the instructeurs who belong to scientifique AND litteraire groups manage scientifique and litterraire dossiers
+    # the instructeurs who belong to scientifique AND litteraire groups manage scientifique and litteraire dossiers
     register_instructeur_and_log_in(superwoman.email)
     visit instructeur_procedure_path(procedure, params: { statut: 'tous' })
     expect(page).to have_text(litteraire_user.email)
@@ -262,5 +289,16 @@ describe 'The routing with rules', js: true do
     click_button 'Définir le mot de passe'
 
     expect(page).to have_text('Mot de passe enregistré')
+  end
+
+  def steps_to_routing_configuration
+    login_as administrateur.user, scope: :user
+    visit admin_procedure_path(procedure.id)
+    find('#groupe-instructeurs').click
+
+    click_on 'Options'
+    expect(page).to have_text('Options concernant l’instruction')
+    click_on 'Configurer le routage'
+    expect(page).to have_text('Choix du type de routage')
   end
 end

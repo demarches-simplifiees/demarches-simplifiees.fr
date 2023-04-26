@@ -17,24 +17,7 @@ describe 'Manage procedure instructeurs', js: true do
     scenario 'it works' do
       visit admin_procedure_path(procedure)
       find('#groupe-instructeurs').click
-      expect(page).to have_css("h1", text: "Gérer les instructeurs et les options d'instruction de « #{procedure.libelle} »")
-    end
-  end
-
-  context 'as admin not from manager' do
-    let(:manager) { false }
-
-    scenario 'can add instructeur' do
-      visit admin_procedure_groupe_instructeurs_path(procedure)
-      expect {
-        fill_in "instructeur_emails", with: create(:instructeur).email
-        click_on "Affecter"
-      }.to change { procedure.instructeurs.count }.by(1)
-      expect {
-        fill_in "groupe_instructeur_label", with: "Bordeaux"
-        click_on "Ajouter le groupe"
-      }.to change { procedure.groupe_instructeurs.count }.by(1)
-      expect(procedure.reload.routing_enabled).to eq true
+      expect(page).to have_css("h1", text: "Gestion des instructeurs")
     end
   end
 
