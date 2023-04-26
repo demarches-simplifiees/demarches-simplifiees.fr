@@ -111,7 +111,7 @@ class Avis < ApplicationRecord
 
   def remind_by!(revocator)
     return false if !remindable_by?(revocator) || answer.present?
-    update!(reminded_at: Time.zone.now)
+    update_column(:reminded_at, Time.zone.now)
   end
 
   private
