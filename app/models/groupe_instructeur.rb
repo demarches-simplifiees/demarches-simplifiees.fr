@@ -95,6 +95,7 @@ class GroupeInstructeur < ApplicationRecord
 
   def toggle_routing
     procedure.update!(routing_enabled: procedure.groupe_instructeurs.active.many?)
+    procedure.update!(instructeurs_self_management_enabled: true) if procedure.routing_enabled?
   end
 
   serialize :routing_rule, LogicSerializer
