@@ -19,6 +19,10 @@ module Administrateurs
       @available_instructeur_emails = available_instructeur_emails
     end
 
+    def options
+      @procedure = procedure
+    end
+
     def show
       @procedure = procedure
       @groupe_instructeur = groupe_instructeur
@@ -210,7 +214,7 @@ module Administrateurs
     def update_instructeurs_self_management_enabled
       procedure.update!(instructeurs_self_management_enabled_params)
 
-      redirect_to admin_procedure_groupe_instructeurs_path(procedure),
+      redirect_to options_admin_procedure_groupe_instructeurs_path(procedure),
       notice: "L’autogestion des instructeurs est #{procedure.instructeurs_self_management_enabled? ? "activée" : "désactivée"}."
     end
 
