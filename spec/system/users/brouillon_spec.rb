@@ -40,6 +40,9 @@ describe 'The user' do
     fill_in('Renseignez le code postal puis sélectionnez la commune dans la liste', with: '60400')
     select('Brétigny (60400)', from: form_id_for('communes'))
 
+    # communes needs more time to be updated
+    wait_until { champ_value_for('communes') == "Brétigny" }
+
     fill_in('dossier_link', with: '123')
     find('.editable-champ-piece_justificative input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
 
