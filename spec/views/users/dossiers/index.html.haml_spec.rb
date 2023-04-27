@@ -47,7 +47,7 @@ describe 'users/dossiers/index.html.haml', type: :view do
     end
     it 'affiche une alerte pour continuer à remplir un dossier' do
       expect(rendered).to have_selector('.fr-callout', count: 1)
-      expect(rendered).to have_link(href: modifier_dossier_path(dossier_brouillon))
+      expect(rendered).to have_link(href: brouillon_dossier_path(dossier_brouillon))
     end
   end
 
