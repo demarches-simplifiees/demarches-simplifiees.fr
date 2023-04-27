@@ -44,7 +44,7 @@ describe Users::SessionsController, type: :controller do
       end
 
       context 'when a previous path was registered' do
-        let(:stored_path) { 'a_path' }
+        let(:stored_path) { '/a_path' }
 
         before { controller.store_location_for(:user, stored_path) }
 
