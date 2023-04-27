@@ -8,9 +8,9 @@ en:
         in_app_mail:
           link: "Direclty via the chat"
         email:
-          link: "Directly by email %{service_email}"
+          link: "Directly by email:"
         phone:
-          link: 'By phone %{service_telephone}'
+          link: 'By phone: %{service_telephone}'
         schedule:
           prefix: 'Hours : '
         stats:
@@ -23,6 +23,9 @@ en:
         dpo: "Contact the Data Protection Officer"
       dematerialisation: 
         header: Paperless
-        title_1: Access to the printable PDF form
+        title_1: Download the form
         title_2: Find a “France Services” desk
         link: "https://www.transformation.gouv.fr/france-services"
+        alt: France services
+      support:
+        header: Being supported in your approach

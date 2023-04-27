@@ -8,7 +8,7 @@ fr:
         in_app_mail:
           link: "Directement par la messagerie"
         email:
-          link: "Directement par courriel : %{service_email}"
+          link: "Directement par courriel :"
         phone:
           link: 'Par téléphone au %{service_telephone}'
         schedule:
@@ -40,3 +40,6 @@ fr:
         title_1: Télécharger le formulaire
         title_2: Trouver une maison France Services
         link: "https://www.transformation.gouv.fr/france-services"
+        alt: France services
+      support:
+        header: Être accompagné dans votre démarche
