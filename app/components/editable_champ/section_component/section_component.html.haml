@@ -1,5 +1,5 @@
 - if render_within_fieldset?
-  = tag.fieldset(class: "reset-#{tag_for_depth}") do
+  = tag.fieldset(class: "reset-#{tag_for_depth} fr-m-0 fr-p-0") do
     = tag.legend do
       = render EditableChamp::HeaderSectionComponent.new(champ: header_section)
     - splitted_tail.each do |section, champ|
