@@ -179,7 +179,6 @@ module Users
       errors = submit_dossier_and_compute_errors
 
       if errors.blank?
-        RoutingEngine.compute(@dossier)
         @dossier.passer_en_construction!
         @dossier.process_declarative!
         NotificationMailer.send_en_construction_notification(@dossier).deliver_later
@@ -538,9 +537,7 @@ module Users
         @dossier.assign_to_groupe_instructeur(defaut_groupe_instructeur)
       end
 
-      if !@dossier.procedure.feature_enabled?(:routing_rules) && @dossier.groupe_instructeur.nil?
-        errors += format_errors(errors: ["Le champ « #{@dossier.procedure.routing_criteria_name} » doit être rempli"])
-      end
+      RoutingEngine.compute(@dossier)
 
       errors
     end
