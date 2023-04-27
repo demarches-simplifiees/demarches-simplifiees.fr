@@ -3,6 +3,7 @@ describe 'user access to the list of their dossiers', js: true do
   let!(:dossier_brouillon)       { create(:dossier, user: user) }
   let!(:dossier_en_construction) { create(:dossier, :with_populated_champs, :en_construction, user: user) }
   let!(:dossier_en_instruction)  { create(:dossier, :en_instruction, user: user) }
+  let!(:dossier_traite)          { create(:dossier, :accepte, user: user) }
   let!(:dossier_archived)        { create(:dossier, :en_instruction, :archived, user: user) }
   let(:dossiers_per_page) { 25 }
   let(:last_updated_dossier) { dossier_en_construction }
@@ -26,6 +27,8 @@ describe 'user access to the list of their dossiers', js: true do
     expect(page).to have_content(dossier_en_construction.procedure.libelle)
     expect(page).to have_content(dossier_en_instruction.procedure.libelle)
     expect(page).to have_content(dossier_archived.procedure.libelle)
+    expect(page).to have_text('4 en cours')
+    expect(page).to have_text('1 traité')
   end
 
   it 'the list must be ordered by last updated' do
@@ -47,6 +50,8 @@ describe 'user access to the list of their dossiers', js: true do
       expect(page).not_to have_content(dossier_en_instruction.procedure.libelle)
       page.click_link("Suivant")
       expect(page).to have_content(dossier_en_instruction.procedure.libelle)
+      expect(page).to have_text('4 en cours')
+      expect(page).to have_text('1 traité')
     end
   end
 
