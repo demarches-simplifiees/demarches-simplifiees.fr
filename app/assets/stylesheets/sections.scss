@@ -1,9 +1,5 @@
 .counter-start-header-section {
-  counter-reset: h1 h2 h3 h4 h5 h6;
-
-  .reset-h1 {
-    counter-reset: h2;
-  }
+  counter-reset: h2 h3 h4 h5 h6 h7;
 
   .reset-h2 {
     counter-reset: h3;
@@ -21,35 +17,46 @@
     counter-reset: h6;
   }
 
+  .reset-h6 {
+    counter-reset: h6;
+  }
 
-  .header-section.fr-h1::before {
-    counter-increment: h1;
-    content: counter(h1) ". ";
+  .reset-h5 {
+    counter-reset: h6;
+  }
+
+  .reset-h6 {
+    counter-reset: h7;
   }
 
   .header-section.fr-h2::before {
     counter-increment: h2;
-    content: counter(h1) "."counter(h2) ". ";
+    content: counter(h2) ". ";
   }
 
   .header-section.fr-h3::before {
     counter-increment: h3;
-    content: counter(h1) "."counter(h2) "." counter(h3) ". ";
+    content: counter(h2) "." counter(h3) ". ";
   }
 
   .header-section.fr-h4::before {
     counter-increment: h4;
-    content: counter(h1) "."counter(h2) "." counter(h3) "." counter(h4) ". ";
+    content: counter(h2) "." counter(h3) "." counter(h4) ". ";
   }
 
   .header-section.fr-h5::before {
     counter-increment: h5;
-    content: counter(h1) "."counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) ". ";
+    content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) ". ";
   }
 
   .header-section.fr-h6::before {
     counter-increment: h6;
-    content: counter(h1) "."counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) ". ";
+    content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) ". ";
+  }
+
+  .header-section.fr-h7::before {
+    counter-increment: h7;
+    content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) "." counter(h7) ". ";
   }
 
   .repetition {
