@@ -43,8 +43,8 @@
       .fr-footer__brand.fr-enlarge-link
         %p.fr-logo
           gouvernement
-        = link_to t("links.footer.betagouv.url"), title: t("links.footer.betagouv.title"), class: "fr-footer__brand-link" do
-          = image_tag("footer/logo-dinum.svg", class: "fr-footer__logo logo-beta-gouv-fr", alt: "beta.gouv.fr")
+        = link_to t("links.footer.dinum.url"), title: t("links.footer.dinum.title"), class: "fr-footer__brand-link" do
+          = image_tag("footer/logo-dinum.svg", class: "fr-footer__logo logo-beta-gouv-fr", alt: t("links.footer.dinum.alt"))
       .fr-footer__content
         %p.fr-footer__content-desc
           = t('links.footer.description_1')
