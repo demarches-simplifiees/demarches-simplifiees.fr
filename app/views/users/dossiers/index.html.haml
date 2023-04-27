@@ -91,6 +91,7 @@
       = render partial: "deleted_dossiers_list", locals: { deleted_dossiers: @dossiers }
 
     - if @statut == "dossiers-transferes"
+      -# /!\ in this context, @dossiers is a collection of DossierTransfer not Dossier
       = render partial: "transfered_dossiers_list", locals: { dossier_transfers: @dossiers }
 
     - if @statut == "dossiers-expirant"

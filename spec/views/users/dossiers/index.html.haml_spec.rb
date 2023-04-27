@@ -17,6 +17,7 @@ describe 'users/dossiers/index.html.haml', type: :view do
     assign(:dossiers_traites, Kaminari.paginate_array(user_dossiers).page(1))
     assign(:dossier_transfers, Kaminari.paginate_array([]).page(1))
     assign(:dossiers_close_to_expiration, Kaminari.paginate_array([]).page(1))
+    assign(:dossiers, Kaminari.paginate_array(user_dossiers).page(1))
     assign(:statut, statut)
     render
   end
