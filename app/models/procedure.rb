@@ -738,6 +738,10 @@ class Procedure < ApplicationRecord
     end
   end
 
+  def groupe_instructeurs_but_defaut
+    groupe_instructeurs - [defaut_groupe_instructeur]
+  end
+
   def can_be_deleted_by_administrateur?
     brouillon? || dossiers.state_en_instruction.empty?
   end

@@ -74,6 +74,19 @@ module Administrateurs
       end
     end
 
+    def destroy_all_groups_but_defaut
+      reaffecter_all_dossiers_to_defaut_groupe
+      procedure.groupe_instructeurs_but_defaut.each(&:destroy!)
+      procedure.update!(routing_enabled: false, instructeurs_self_management_enabled: false)
+      procedure.defaut_groupe_instructeur.update!(
+        routing_rule: nil,
+        label: GroupeInstructeur::DEFAUT_LABEL,
+        closed: false
+      )
+      flash.notice = 'Tous les groupes instructeurs ont été supprimés'
+      redirect_to admin_procedure_groupe_instructeurs_path(procedure)
+    end
+
     def show
       @procedure = procedure
       @groupe_instructeur = groupe_instructeur
@@ -149,6 +162,12 @@ module Administrateurs
         @groupe_instructeur.destroy!
         if procedure.groupe_instructeurs.active.one?
           procedure.update!(routing_enabled: false)
+          procedure.update!(instructeurs_self_management_enabled: false)
+          procedure.defaut_groupe_instructeur.update!(
+            routing_rule: nil,
+            label: GroupeInstructeur::DEFAUT_LABEL,
+            closed: false
+          )
           routing_notice = " et le routage a été désactivé"
         end
         flash[:notice] = "le groupe « #{@groupe_instructeur.label} » a été supprimé#{routing_notice}."
@@ -182,6 +201,14 @@ module Administrateurs
 
       flash[:notice] = "Les dossiers du groupe « #{groupe_instructeur.label} » ont été réaffectés au groupe « #{target_group.label} »."
       redirect_to admin_procedure_groupe_instructeurs_path(procedure)
+    end
+
+    def reaffecter_all_dossiers_to_defaut_groupe
+      procedure.groupe_instructeurs_but_defaut.each do |gi|
+        gi.dossiers.find_each do |dossier|
+          dossier.assign_to_groupe_instructeur(procedure.defaut_groupe_instructeur, current_administrateur)
+        end
+      end
     end
 
     def add_instructeur
