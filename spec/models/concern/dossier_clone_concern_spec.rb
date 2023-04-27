@@ -86,6 +86,12 @@ RSpec.describe DossierCloneConcern do
       it 'update dossier search terms' do
         expect { subject }.to have_enqueued_job(DossierUpdateSearchTermsJob).with(dossier)
       end
+
+      it 'fork is hidden after merge' do
+        subject
+        expect(forked_dossier.reload.hidden_by_reason).to eq("stale_fork")
+        expect(dossier.reload.editing_forks).to be_empty
+      end
     end
 
     context 'with new revision' do

@@ -6,7 +6,7 @@ module DossierCloneConcern
     has_many :cloned_dossiers, class_name: 'Dossier', foreign_key: :parent_dossier_id, dependent: :nullify, inverse_of: :parent_dossier
 
     belongs_to :editing_fork_origin, class_name: 'Dossier', optional: true
-    has_many :editing_forks, class_name: 'Dossier', foreign_key: :editing_fork_origin_id, dependent: :destroy, inverse_of: :editing_fork_origin
+    has_many :editing_forks, -> { where(hidden_by_reason: nil) }, class_name: 'Dossier', foreign_key: :editing_fork_origin_id, dependent: :destroy, inverse_of: :editing_fork_origin
   end
 
   def find_or_create_editing_fork(user)
@@ -32,6 +32,7 @@ module DossierCloneConcern
 
   def destroy_editing_fork!
     if editing_fork?
+      update!(hidden_by_administration_at: Time.current, hidden_by_reason: :stale_fork)
       DestroyRecordLaterJob.perform_later(self)
     end
   end
