@@ -73,7 +73,7 @@ class APIEntreprise::API
   end
 
   def current_status
-    status_url = "https://entreprise.api.gouv.fr/watchdoge/dashboard/current_status"
+    status_url = "https://status.entreprise.api.gouv.fr/summary.json"
     response = Typhoeus.get(status_url, timeout: 1)
 
     handle_response(response)
