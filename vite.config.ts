@@ -6,7 +6,7 @@ import RubyPlugin from 'vite-plugin-ruby';
 
 const plugins = [
   RubyPlugin(),
-  ViteReact({ jsxRuntime: 'classic' }),
+  ViteReact({ jsxRuntime: 'classic', fastRefresh: false }),
   FullReload(['config/routes.rb', 'app/views/**/*'], { delay: 200 })
 ];
 
