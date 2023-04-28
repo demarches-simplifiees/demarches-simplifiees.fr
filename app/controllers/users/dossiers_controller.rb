@@ -49,6 +49,16 @@ module Users
       end.page(page)
 
       @first_brouillon_recently_updated = current_user.dossiers.visible_by_user.brouillons_recently_updated.first
+
+      @filter = DossiersFilter.new(current_user, params)
+      if params[:states]
+        @dossiers_result = filter_procedures(@filter, current_user.dossiers.visible_by_user)
+        @dossiers = @dossiers_result.page(page)
+      end
+    end
+
+    def filter_procedures(filter, dossiers)
+      dossiers.where(state: filter.states) if filter.states.present?
     end
 
     def show

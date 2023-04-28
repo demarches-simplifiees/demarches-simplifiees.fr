@@ -4,6 +4,7 @@ describe 'user access to the list of their dossiers', js: true do
   let!(:dossier_en_construction) { create(:dossier, :with_populated_champs, :en_construction, user: user) }
   let!(:dossier_en_instruction)  { create(:dossier, :en_instruction, user: user) }
   let!(:dossier_traite)          { create(:dossier, :accepte, user: user) }
+  let!(:dossier_refuse)          { create(:dossier, :refuse, user: user) }
   let!(:dossier_archived)        { create(:dossier, :en_instruction, :archived, user: user) }
   let(:dossiers_per_page) { 25 }
   let(:last_updated_dossier) { dossier_en_construction }
@@ -28,7 +29,7 @@ describe 'user access to the list of their dossiers', js: true do
     expect(page).to have_content(dossier_en_instruction.procedure.libelle)
     expect(page).to have_content(dossier_archived.procedure.libelle)
     expect(page).to have_text('4 en cours')
-    expect(page).to have_text('1 traité')
+    expect(page).to have_text('2 traités')
   end
 
   it 'the list must be ordered by last updated' do
@@ -51,7 +52,33 @@ describe 'user access to the list of their dossiers', js: true do
       page.click_link("Suivant")
       expect(page).to have_content(dossier_en_instruction.procedure.libelle)
       expect(page).to have_text('4 en cours')
-      expect(page).to have_text('1 traité')
+      expect(page).to have_text('2 traités')
+    end
+  end
+
+  context 'when user uses filter' do
+    scenario 'user filter by brouillon state on tab "en-cours"' do
+      expect(page).to have_text('4 en cours')
+      expect(page).to have_text('2 traités')
+      expect(page).to have_text('4 sur 4 dossiers')
+      find("label", text: "Brouillon").click
+      click_on('Appliquer les filtres')
+      expect(page).to have_text('1 dossier')
+      expect(page).to have_checked_field('Brouillon')
+    end
+
+    scenario 'user filter by brouillon state on tab "traité"' do
+      visit dossiers_path(statut: 'traites')
+      expect(page).to have_text('4 en cours')
+      expect(page).to have_text('2 traités')
+      expect(page).to have_text('2 sur 2 dossiers')
+      find("label", text: "Refuse").click
+      click_on('Appliquer les filtres')
+      expect(page).to have_text('1 dossier')
+      expect(page).to have_checked_field('Refuse')
+      click_on('Réinitialiser les filtres')
+      expect(page).to have_text('2 sur 2 dossiers')
+      expect(page).to have_unchecked_field('Refuse')
     end
   end
 

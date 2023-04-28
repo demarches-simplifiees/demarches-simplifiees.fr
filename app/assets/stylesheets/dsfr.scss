@@ -39,6 +39,11 @@ input[type="radio"] {
 }
 // scss-lint:enable DuplicateProperty
 
+// remove additional calendar icon on date input already handle by navigator
+.fr-input[type="date"] {
+  background-image: none;
+}
+
 // remove pointer cursor on textarea
 textarea {
   cursor: auto;

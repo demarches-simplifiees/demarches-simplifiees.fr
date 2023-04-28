@@ -1,0 +1,18 @@
+= form_with(url: dossiers_path(), method: :get ) do |f|
+  = f.hidden_field :statut, value: @statut
+  .fr-grid-row.fr-grid-row--gutters
+    .fr-col-12.fr-col-md-6
+      %fieldset#checkboxes-inline.fr-fieldset{ "aria-labelledby" => "checkboxes-inline-legend checkboxes-inline-messages" }
+        %legend.fr-fieldset__legend--regular.fr-fieldset__legend
+          = t('.legend.states')
+        = f.collection_check_boxes :states, states_collection(@statut), :to_s, :to_s, include_hidden: false do |b|
+          .fr-fieldset__element.fr-fieldset__element--inline
+            .fr-checkbox-group.fr-ml-2w.fr-py-1w
+              = b.check_box(checked: filter.states_filtered?(b.value))
+              = b.label(class: 'fr-label') { t b.text, scope: 'activerecord.attributes.procedure.aasm_state' }
+
+  .fr-mb-2w
+    = f.submit 'Appliquer les filtres', class: 'fr-btn fr-btn--sm'
+    = link_to 'Réinitialiser les filtres', dossiers_path(statut: @statut), class: 'fr-btn fr-btn--sm fr-btn--tertiary-no-outline'
+
+  %hr
