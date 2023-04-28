@@ -377,6 +377,13 @@ class ProcedureRevision < ApplicationRecord
           from_type_de_champ.piece_justificative_template_filename,
           to_type_de_champ.piece_justificative_template_filename)
       end
+    elsif to_type_de_champ.textarea?
+      if from_type_de_champ.textarea_character_limit != to_type_de_champ.textarea_character_limit
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          :textarea_character_limit,
+          from_type_de_champ.textarea_character_limit,
+          to_type_de_champ.textarea_character_limit)
+      end
     end
     changes
   end
