@@ -129,7 +129,7 @@ module Administrateurs
         :collapsible_explanation_enabled,
         :collapsible_explanation_text,
         :header_section_level,
-        :textarea_character_limit,
+        :character_limit,
         editable_options: [
           :cadastres,
           :unesco,

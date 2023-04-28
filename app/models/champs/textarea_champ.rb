@@ -25,28 +25,43 @@ class Champs::TextareaChamp < Champs::TextChamp
     value.present? ? ActionView::Base.full_sanitizer.sanitize(value) : nil
   end
 
-  def character_count(text)
-    return text&.bytesize
+  def remaining_characters
+    character_limit_base - character_count if character_count >= character_limit_threshold_75
   end
 
-  def analyze_character_count(characters, limit)
-    if characters
-      threshold_75 = limit * 0.75
+  def excess_characters
+    character_count - character_limit_base if character_count > character_limit_base
+  end
 
-      if characters >= limit
+  def character_limit_info?
+    analyze_character_count == :info
+  end
+
+  def character_limit_warning?
+    analyze_character_count == :warning
+  end
+
+  private
+
+  def character_count
+    return value&.bytesize
+  end
+
+  def character_limit_base
+    character_limit&.to_i
+  end
+
+  def character_limit_threshold_75
+    character_limit_base * 0.75
+  end
+
+  def analyze_character_count
+    if character_limit? && character_count.present?
+      if character_count >= character_limit_base
         return :warning
-      elsif characters >= threshold_75
+      elsif character_count >= character_limit_threshold_75
         return :info
       end
     end
-  end
-
-  def remaining_characters(characters, limit)
-    threshold_75 = limit * 0.75
-    limit - characters if characters >= threshold_75
-  end
-
-  def excess_characters(characters, limit)
-    characters - limit if characters > limit
   end
 end

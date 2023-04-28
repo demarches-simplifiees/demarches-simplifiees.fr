@@ -10,3 +10,6 @@ fr:
     natura_2000: Natura 2000
     zones_humides: Zones humides d’importance internationale
     znieff: ZNIEFF
+  character_limit:
+    unlimited: Pas de limite de charactères
+    limit: Limité à %{limit} caractères

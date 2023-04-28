@@ -1,7 +1,3 @@
-- character_limit = @champ.textarea_character_limit.to_i if !@champ.textarea_character_limit&.empty?
-- character_count = @champ.character_count(@champ.value)
-- analyze_character_count = @champ.analyze_character_count(character_count, character_limit)
-
 ~ @form.text_area :value,
   id: @champ.input_id,
   aria: { describedby: @champ.describedby_id },
@@ -9,12 +5,10 @@
   required: @champ.required?,
   value: html_to_string(@champ.value)
 
-- if @champ.textarea_character_limit?
+- if @champ.character_limit_info?
+  %span.fr-icon-information-fill.fr-text-default--info.characters-count
+    = t('.remaining_characters', remaining_words: @champ.remaining_characters)
 
-  - if analyze_character_count == :info
-    %span.fr-icon-information-fill.fr-text-default--info.characters-count
-      = t('.remaining_characters', remaining_words: @champ.remaining_characters(character_count, character_limit))
-
-  - if analyze_character_count == :warning
-    %span.fr-icon-close-circle-fill.fr-text-default--error.characters-count
-      = t('.excess_characters', excess_words: @champ.excess_characters(character_count, character_limit))
+- if @champ.character_limit_warning?
+  %span.fr-icon-close-circle-fill.fr-text-default--error.characters-count
+    = t('.excess_characters', excess_words: @champ.excess_characters)

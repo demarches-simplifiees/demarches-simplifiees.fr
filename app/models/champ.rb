@@ -75,8 +75,8 @@ class Champ < ApplicationRecord
     :mandatory?,
     :prefillable?,
     :refresh_after_update?,
-    :textarea_character_limit?,
-    :textarea_character_limit,
+    :character_limit?,
+    :character_limit,
     to: :type_de_champ
 
   delegate :to_typed_id, :to_typed_id_for_query, to: :type_de_champ, prefix: true
