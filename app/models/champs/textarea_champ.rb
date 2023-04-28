@@ -24,29 +24,4 @@ class Champs::TextareaChamp < Champs::TextChamp
   def for_export
     value.present? ? ActionView::Base.full_sanitizer.sanitize(value) : nil
   end
-
-  def character_count(text)
-    return text&.bytesize
-  end
-
-  def analyze_character_count(characters, limit)
-    if characters
-      threshold_75 = limit * 0.75
-
-      if characters >= limit
-        return :warning
-      elsif characters >= threshold_75
-        return :info
-      end
-    end
-  end
-
-  def remaining_characters(characters, limit)
-    threshold_75 = limit * 0.75
-    limit - characters if characters >= threshold_75
-  end
-
-  def excess_characters(characters, limit)
-    characters - limit if characters > limit
-  end
 end
