@@ -1,10 +1,15 @@
 class EditableChamp::HeaderSectionComponent < ApplicationComponent
-  def initialize(form: nil, champ:, seen_at: nil)
+  def initialize(form: nil, champ:, seen_at: nil, html_class: {})
     @champ = champ
+    @html_class = html_class
   end
 
   def level
     @champ.level + 1 # skip one heading level
+  end
+
+  def collapsible?
+    @champ.level == 1
   end
 
   def libelle
@@ -13,9 +18,11 @@ class EditableChamp::HeaderSectionComponent < ApplicationComponent
 
   def header_section_classnames
     class_names(
-      "fr-h#{level}": true,
-      'header-section': @champ.dossier.auto_numbering_section_headers_for?(@champ),
-      'hidden': !@champ.visible?
+      {
+        "section-#{level}": true,
+        'header-section': @champ.dossier.auto_numbering_section_headers_for?(@champ),
+        'hidden': !@champ.visible?
+      }.merge(@html_class)
     )
   end
 

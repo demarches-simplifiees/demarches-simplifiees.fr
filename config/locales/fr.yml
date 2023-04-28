@@ -341,9 +341,11 @@ fr:
             write_message_placeholder: "Écrivez votre message ici"
             write_message_to_administration_placeholder: "Écrivez votre message à l’administration ici"
         demande:
+          en_construction: "Date de dépôt du dossier"
+          updated_at: "mis à jour le %{updated_at}"
           requester_identity: "Identité du demandeur"
           my_identity: "Mon identité"
-          form: "Formulaire"
+          form: "Sections du formulaire"
           edit_siret: "Modifier le SIRET"
           edit_identity: "Modifier l’identité"
     instructeurs:

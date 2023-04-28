@@ -11,14 +11,22 @@
     width: 325px;
   }
 
-  td.libelle,
-  td.updated-at {
-    width: 50%;
-  }
-
   td.updated-at {
     font-size: 13px;
     color: $dark-grey;
-    text-align: left;
+    text-align: right;
+    width: 190px;
+
+    > span {
+      opacity: 0;
+
+      &.highlighted {
+        opacity: 1;
+      }
+    }
+  }
+
+  tr:hover .updated-at > span {
+    opacity: 1;
   }
 }

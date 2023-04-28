@@ -1,19 +1,18 @@
-%table.table.vertical.dossier-champs{ role: :presentation }
-  %tbody
-    %tr
-      %td.libelle
-        = t('views.users.dossiers.identite.civility')
-      %td= individual.gender
-    %tr
-      %td.libelle
-        = t('views.users.dossiers.identite.first_name')
-      %td= individual.prenom
-    %tr
-      %td.libelle
-        = t('views.users.dossiers.identite.last_name')
-      %td= individual.nom
-    - if individual.birthdate.present?
-      %tr
-        %td.libelle
-          = t('views.users.dossiers.identite.birthdate')
-        %td= try_format_date(individual.birthdate)
+
+.fr-my-2v
+  %p.fr-text-action-high--grey.fr-mb-0= t('views.users.dossiers.identite.civility')
+  .champ-content.fr-text-action-high--grey
+    %p= individual.gender
+.fr-my-2v
+  %p.fr-text-action-high--grey.fr-mb-0= t('views.users.dossiers.identite.first_name')
+  .champ-content.fr-text-action-high--grey
+    %p= individual.prenom
+.fr-my-2v
+  %p.fr-text-action-high--grey.fr-mb-0= t('views.users.dossiers.identite.last_name')
+  .champ-content.fr-text-action-high--grey
+    %p= individual.nom
+- if individual.birthdate.present?
+  .fr-my-2v
+    %p.fr-text-action-high--grey.fr-mb-0= t('views.users.dossiers.identite.birthdate')
+    .champ-content.fr-text-action-high--grey
+      %p= try_format_date(individual.birthdate)
