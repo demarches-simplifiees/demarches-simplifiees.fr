@@ -86,11 +86,11 @@ describe APIEntrepriseService do
 
   describe "#api_up?" do
     subject { described_class.api_up? }
-    let(:body) { File.read('spec/fixtures/files/api_entreprise/current_status.json') }
+    let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/status.json').read }
     let(:status) { 200 }
 
     before do
-      stub_request(:get, "https://entreprise.api.gouv.fr/watchdoge/dashboard/current_status")
+      stub_request(:get, "https://status.entreprise.api.gouv.fr/summary.json")
         .to_return(body: body, status: status)
     end
 
@@ -99,18 +99,10 @@ describe APIEntrepriseService do
     end
 
     context "when api entreprise is down" do
-      let(:body) do
-        original_body = super()
-
-        json = JSON.parse(original_body)
-        # API etablissements is the first listed
-        json["results"][0]["code"] = 502
-
-        JSON.generate(json)
-      end
+      let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/status.json').read.gsub('UP', 'HASISSUES') }
 
       it "returns false" do
-        expect(subject).to be_falsy
+        expect(subject).to be_falsey
       end
     end
 
@@ -119,7 +111,7 @@ describe APIEntrepriseService do
       let(:status) { 0 }
 
       it "returns nil" do
-        expect(subject).to be_nil
+        expect(subject).to be_falsey
       end
     end
   end
