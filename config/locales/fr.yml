@@ -566,10 +566,6 @@ fr:
           attributes:
             email:
               taken: ': Invitation déjà envoyée'
-        email_champ:
-          attributes:
-            value:
-              invalid: "est invalide. Saisir une adresse éléctronique valide, exemple : john.doe@exemple.fr"
         user:
           attributes: &error_attributes
             reset_password_token:
