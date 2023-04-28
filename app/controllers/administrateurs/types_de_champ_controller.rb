@@ -119,29 +119,28 @@ module Administrateurs
 
     def type_de_champ_update_params
       params.required(:type_de_champ).permit(:type_champ,
-        :libelle,
-        :description,
-        :mandatory,
-        :drop_down_list_value,
-        :drop_down_other,
-        :drop_down_secondary_libelle,
-        :drop_down_secondary_description,
-        :collapsible_explanation_enabled,
-        :collapsible_explanation_text,
-        :header_section_level,
-        :textarea_character_limit,
-        editable_options: [
-          :cadastres,
-          :unesco,
-          :arretes_protection,
-          :conservatoire_littoral,
-          :reserves_chasse_faune_sauvage,
-          :reserves_biologiques,
-          :reserves_naturelles,
-          :natura_2000,
-          :zones_humides,
-          :znieff
-        ])
+                                             :libelle,
+                                             :description,
+                                             :mandatory,
+                                             :drop_down_list_value,
+                                             :drop_down_other,
+                                             :drop_down_secondary_libelle,
+                                             :drop_down_secondary_description,
+                                             :collapsible_explanation_enabled,
+                                             :collapsible_explanation_text,
+                                             :header_section_level,
+                                             editable_options: [
+                                               :cadastres,
+                                               :unesco,
+                                               :arretes_protection,
+                                               :conservatoire_littoral,
+                                               :reserves_chasse_faune_sauvage,
+                                               :reserves_biologiques,
+                                               :reserves_naturelles,
+                                               :natura_2000,
+                                               :zones_humides,
+                                               :znieff
+                                             ])
     end
 
     def draft
