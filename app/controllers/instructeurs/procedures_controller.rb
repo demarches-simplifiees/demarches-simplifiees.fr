@@ -343,7 +343,7 @@ module Instructeurs
     end
 
     def current_filters
-      @current_filters ||= procedure_presentation.filters[statut]
+      @current_filters ||= procedure_presentation.filters.fetch(statut, [])
     end
 
     def email_usagers_dossiers
