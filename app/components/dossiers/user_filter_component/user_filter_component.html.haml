@@ -9,20 +9,20 @@
           .fr-fieldset__element.fr-fieldset__element--inline
             .fr-checkbox-group.fr-ml-2w.fr-py-1w
               = b.check_box(checked: filter.states_filtered?(b.value))
-              = b.label(class: 'fr-label') { t b.text, scope: 'activerecord.attributes.procedure.aasm_state' }
+              = b.label(class: 'fr-label') { dossier_display_state(b.text) }
 
     .fr-col-12.fr-col-md-3
       .fr-input-group
-        = f.label 'from_created_at_date', 'Dossier créé depuis le', class: 'fr-label'
+        = f.label 'from_created_at_date', t('.legend.created_at'), class: 'fr-label'
         = f.date_field 'from_created_at_date', value: @filter.from_created_at_date, class: 'fr-input'
 
     .fr-col-12.fr-col-md-3
       .fr-input-group
-        = f.label 'from_depose_at_date', 'Dossier déposé depuis le', class: 'fr-label'
+        = f.label 'from_depose_at_date', t('.legend.depose_at'), class: 'fr-label'
         = f.date_field 'from_depose_at_date', value: @filter.from_depose_at_date, class: 'fr-input'
 
   .fr-mb-2w
-    = f.submit 'Appliquer les filtres', class: 'fr-btn fr-btn--sm'
-    = link_to 'Réinitialiser les filtres', dossiers_path(statut: @statut), class: 'fr-btn fr-btn--sm fr-btn--tertiary-no-outline'
+    = f.submit t('.button.apply_filters'), class: 'fr-btn fr-btn--sm'
+    = link_to t('.button.reset_filters'), dossiers_path(statut: @statut), class: 'fr-btn fr-btn--sm fr-btn--tertiary-no-outline'
 
   %hr

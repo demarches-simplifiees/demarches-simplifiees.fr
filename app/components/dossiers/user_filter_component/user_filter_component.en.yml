@@ -1,3 +1,8 @@
 en:
   legend:
     states: States
+    created_at: Creation date
+    depose_at: Submission date
+  button:
+    apply_filters: Apply filters
+    reset_filters: Reset filters

@@ -62,8 +62,8 @@ describe 'user access to the list of their dossiers', js: true do
       expect(page).to have_text('2 traités')
       expect(page).to have_text('4 sur 4 dossiers')
       expect(page).to have_text('Brouillon')
-      expect(page).to have_text('En Construction')
-      expect(page).to have_text('En Instruction')
+      expect(page).to have_text('En construction')
+      expect(page).to have_text('En instruction')
       find("label", text: "Brouillon").click
       click_on('Appliquer les filtres')
       expect(page).to have_text('1 dossier')
@@ -75,16 +75,16 @@ describe 'user access to the list of their dossiers', js: true do
       expect(page).to have_text('4 en cours')
       expect(page).to have_text('2 traités')
       expect(page).to have_text('2 sur 2 dossiers')
-      expect(page).to have_text('Accepte')
-      expect(page).to have_text('Refuse')
-      expect(page).to have_text('Sans Suite')
-      find("label", text: "Refuse").click
+      expect(page).to have_text('Accepté')
+      expect(page).to have_text('Refusé')
+      expect(page).to have_text('Classé sans suite')
+      find("label", text: "Refusé").click
       click_on('Appliquer les filtres')
       expect(page).to have_text('1 dossier')
-      expect(page).to have_checked_field('Refuse')
+      expect(page).to have_checked_field('Refusé')
       click_on('Réinitialiser les filtres')
       expect(page).to have_text('2 sur 2 dossiers')
-      expect(page).to have_unchecked_field('Refuse')
+      expect(page).to have_unchecked_field('Refusé')
     end
 
     scenario 'user filters by created_at' do
@@ -105,8 +105,8 @@ describe 'user access to the list of their dossiers', js: true do
       click_on('Appliquer les filtres')
       expect(page).to have_text('3 sur 3 dossiers')
 
-      find("label", text: "En Construction").click
-      find("label", text: "En Instruction").click
+      find("label", text: "En construction").click
+      find("label", text: "En instruction").click
       click_on('Appliquer les filtres')
       expect(page).to have_text('2 sur 2 dossiers')
 

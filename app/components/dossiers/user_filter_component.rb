@@ -1,4 +1,6 @@
 class Dossiers::UserFilterComponent < ApplicationComponent
+  include DossierHelper
+
   def initialize(statut:, filter:)
     @statut = statut
     @filter = filter
