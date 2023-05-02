@@ -6,3 +6,5 @@ en:
   button:
     apply_filters: Apply filters
     reset_filters: Reset filters
+    select_filters: Select a filter
+    filter_title: Filter

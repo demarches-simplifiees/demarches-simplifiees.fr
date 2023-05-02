@@ -6,3 +6,5 @@ fr:
   button:
     apply_filters: Appliquer les filtres
     reset_filters: Réinitialiser les filtres
+    select_filters: Sélectionner un filtre
+    filter_title: Filtrer

@@ -39,9 +39,11 @@ input[type="radio"] {
 }
 // scss-lint:enable DuplicateProperty
 
-// remove additional calendar icon on date input already handle by navigator
-.fr-input[type="date"] {
-  background-image: none;
+// remove additional calendar icon on date input already handle by Firefox navigator
+@-moz-document url-prefix() {
+  .fr-input[type="date"] {
+    background-image: none;
+  }
 }
 
 // remove pointer cursor on textarea
@@ -70,4 +72,16 @@ fieldset {
 .fr-btn.fr-btn--secondary.danger {
   color: $light-red;
   box-shadow: 0px 0px 0px 1px $light-red;
+}
+
+// on utilise le dropdown de sélecteur de langue pour un autre usage donc on veut retirer l'icone
+.fr-translate .fr-translate__btn.custom-fr-translate-no-icon::before {
+  display: none;
+}
+
+// on veut ferrer à droite le dropdown de sélecteur de langue
+@media (min-width: 62em) {
+  .fr-nav__item.custom-fr-translate-flex-end {
+    align-items: flex-end;
+  }
 }
