@@ -6,6 +6,7 @@ describe 'users/dossiers/index.html.haml', type: :view do
   let(:user_dossiers) { [dossier_brouillon, dossier_en_construction, dossier_termine] }
   let(:dossiers_invites) { [] }
   let(:statut) { 'en-cours' }
+  let(:filter) { DossiersFilter.new(user, ActionController::Parameters.new(random_param: 'random_param')) }
 
   before do
     allow(view).to receive(:new_demarche_url).and_return('#')
@@ -19,6 +20,7 @@ describe 'users/dossiers/index.html.haml', type: :view do
     assign(:dossiers_close_to_expiration, Kaminari.paginate_array([]).page(1))
     assign(:dossiers, Kaminari.paginate_array(user_dossiers).page(1))
     assign(:statut, statut)
+    assign(:filter, filter)
     render
   end
 
