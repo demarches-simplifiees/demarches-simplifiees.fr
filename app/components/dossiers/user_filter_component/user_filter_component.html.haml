@@ -16,6 +16,11 @@
         = f.label 'from_created_at_date', 'Dossier créé depuis le', class: 'fr-label'
         = f.date_field 'from_created_at_date', value: @filter.from_created_at_date, class: 'fr-input'
 
+    .fr-col-12.fr-col-md-3
+      .fr-input-group
+        = f.label 'from_depose_at_date', 'Dossier déposé depuis le', class: 'fr-label'
+        = f.date_field 'from_depose_at_date', value: @filter.from_depose_at_date, class: 'fr-input'
+
   .fr-mb-2w
     = f.submit 'Appliquer les filtres', class: 'fr-btn fr-btn--sm'
     = link_to 'Réinitialiser les filtres', dossiers_path(statut: @statut), class: 'fr-btn fr-btn--sm fr-btn--tertiary-no-outline'

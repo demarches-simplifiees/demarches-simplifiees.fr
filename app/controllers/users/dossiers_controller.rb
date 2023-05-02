@@ -61,6 +61,7 @@ module Users
       dossiers_result = dossiers
       dossiers_result = dossiers_result.where(state: filter.states) if filter.states.present?
       dossiers_result = dossiers_result.where('created_at >= ?', filter.from_created_at_date) if filter.from_created_at_date.present?
+      dossiers_result = dossiers_result.where('depose_at >= ?', filter.from_depose_at_date) if filter.from_depose_at_date.present?
       dossiers_result
     end
 

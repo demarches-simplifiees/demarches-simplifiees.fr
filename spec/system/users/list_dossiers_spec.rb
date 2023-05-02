@@ -57,21 +57,27 @@ describe 'user access to the list of their dossiers', js: true do
   end
 
   context 'when user uses filter' do
-    scenario 'user filters by brouillon state on tab "en-cours"' do
+    scenario 'user filters state on tab "en-cours"' do
       expect(page).to have_text('4 en cours')
       expect(page).to have_text('2 traités')
       expect(page).to have_text('4 sur 4 dossiers')
+      expect(page).to have_text('Brouillon')
+      expect(page).to have_text('En Construction')
+      expect(page).to have_text('En Instruction')
       find("label", text: "Brouillon").click
       click_on('Appliquer les filtres')
       expect(page).to have_text('1 dossier')
       expect(page).to have_checked_field('Brouillon')
     end
 
-    scenario 'user filters by brouillon state on tab "traité"' do
+    scenario 'user filters state on tab "traité"' do
       visit dossiers_path(statut: 'traites')
       expect(page).to have_text('4 en cours')
       expect(page).to have_text('2 traités')
       expect(page).to have_text('2 sur 2 dossiers')
+      expect(page).to have_text('Accepte')
+      expect(page).to have_text('Refuse')
+      expect(page).to have_text('Sans Suite')
       find("label", text: "Refuse").click
       click_on('Appliquer les filtres')
       expect(page).to have_text('1 dossier')
@@ -90,8 +96,9 @@ describe 'user access to the list of their dossiers', js: true do
       expect(page).to have_text('3 sur 3 dossiers')
     end
 
-    scenario 'user filters by states and created at' do
+    scenario 'user uses multiple filters' do
       dossier_en_construction.update!(created_at: Date.yesterday)
+      dossier_en_instruction.update!(depose_at: Date.yesterday)
 
       expect(page).to have_text('4 sur 4 dossiers')
       fill_in 'from_created_at_date', with: Date.today
@@ -102,6 +109,10 @@ describe 'user access to the list of their dossiers', js: true do
       find("label", text: "En Instruction").click
       click_on('Appliquer les filtres')
       expect(page).to have_text('2 sur 2 dossiers')
+
+      fill_in 'from_depose_at_date', with: Date.today
+      click_on('Appliquer les filtres')
+      expect(page).to have_text('1 dossier')
     end
   end
 
