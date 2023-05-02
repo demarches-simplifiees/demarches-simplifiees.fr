@@ -57,7 +57,7 @@ describe 'user access to the list of their dossiers', js: true do
   end
 
   context 'when user uses filter' do
-    scenario 'user filter by brouillon state on tab "en-cours"' do
+    scenario 'user filters by brouillon state on tab "en-cours"' do
       expect(page).to have_text('4 en cours')
       expect(page).to have_text('2 traités')
       expect(page).to have_text('4 sur 4 dossiers')
@@ -67,7 +67,7 @@ describe 'user access to the list of their dossiers', js: true do
       expect(page).to have_checked_field('Brouillon')
     end
 
-    scenario 'user filter by brouillon state on tab "traité"' do
+    scenario 'user filters by brouillon state on tab "traité"' do
       visit dossiers_path(statut: 'traites')
       expect(page).to have_text('4 en cours')
       expect(page).to have_text('2 traités')
@@ -79,6 +79,29 @@ describe 'user access to the list of their dossiers', js: true do
       click_on('Réinitialiser les filtres')
       expect(page).to have_text('2 sur 2 dossiers')
       expect(page).to have_unchecked_field('Refuse')
+    end
+
+    scenario 'user filters by created_at' do
+      dossier_en_construction.update!(created_at: Date.yesterday)
+
+      expect(page).to have_text('4 sur 4 dossiers')
+      fill_in 'from_created_at_date', with: Date.today
+      click_on('Appliquer les filtres')
+      expect(page).to have_text('3 sur 3 dossiers')
+    end
+
+    scenario 'user filters by states and created at' do
+      dossier_en_construction.update!(created_at: Date.yesterday)
+
+      expect(page).to have_text('4 sur 4 dossiers')
+      fill_in 'from_created_at_date', with: Date.today
+      click_on('Appliquer les filtres')
+      expect(page).to have_text('3 sur 3 dossiers')
+
+      find("label", text: "En Construction").click
+      find("label", text: "En Instruction").click
+      click_on('Appliquer les filtres')
+      expect(page).to have_text('2 sur 2 dossiers')
     end
   end
 

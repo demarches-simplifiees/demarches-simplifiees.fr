@@ -5,7 +5,11 @@ class DossiersFilter
 
   def initialize(user, params)
     @user = user
-    @params = params.permit(:page, :from_publication_date, states: [])
+    @params = params.permit(:page, :from_created_at_date, states: [])
+  end
+
+  def filter_params
+    params[:from_created_at_date].presence || params[:states].presence
   end
 
   def states
@@ -14,5 +18,13 @@ class DossiersFilter
 
   def states_filtered?(state)
     states&.include?(state)
+  end
+
+  def from_created_at_date
+    return if params[:from_created_at_date].blank?
+
+    Date.parse(params[:from_created_at_date])
+  rescue Date::Error
+    nil
   end
 end
