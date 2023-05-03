@@ -61,6 +61,7 @@ describe 'user access to the list of their dossiers', js: true do
       expect(page).to have_text('4 en cours')
       expect(page).to have_text('2 traités')
       expect(page).to have_text('4 sur 4 dossiers')
+      click_on('Filtrer')
       expect(page).to have_text('Brouillon')
       expect(page).to have_text('En construction')
       expect(page).to have_text('En instruction')
@@ -75,6 +76,8 @@ describe 'user access to the list of their dossiers', js: true do
       expect(page).to have_text('4 en cours')
       expect(page).to have_text('2 traités')
       expect(page).to have_text('2 sur 2 dossiers')
+
+      click_on('Filtrer')
       expect(page).to have_text('Accepté')
       expect(page).to have_text('Refusé')
       expect(page).to have_text('Classé sans suite')
@@ -82,6 +85,8 @@ describe 'user access to the list of their dossiers', js: true do
       click_on('Appliquer les filtres')
       expect(page).to have_text('1 dossier')
       expect(page).to have_checked_field('Refusé')
+
+      click_on('Filtrer')
       click_on('Réinitialiser les filtres')
       expect(page).to have_text('2 sur 2 dossiers')
       expect(page).to have_unchecked_field('Refusé')
@@ -91,6 +96,7 @@ describe 'user access to the list of their dossiers', js: true do
       dossier_en_construction.update!(created_at: Date.yesterday)
 
       expect(page).to have_text('4 sur 4 dossiers')
+      click_on('Filtrer')
       fill_in 'from_created_at_date', with: Date.today
       click_on('Appliquer les filtres')
       expect(page).to have_text('3 sur 3 dossiers')
@@ -101,15 +107,18 @@ describe 'user access to the list of their dossiers', js: true do
       dossier_en_instruction.update!(depose_at: Date.yesterday)
 
       expect(page).to have_text('4 sur 4 dossiers')
+      click_on('Filtrer')
       fill_in 'from_created_at_date', with: Date.today
       click_on('Appliquer les filtres')
       expect(page).to have_text('3 sur 3 dossiers')
 
+      click_on('Filtrer')
       find("label", text: "En construction").click
       find("label", text: "En instruction").click
       click_on('Appliquer les filtres')
       expect(page).to have_text('2 sur 2 dossiers')
 
+      click_on('Filtrer')
       fill_in 'from_depose_at_date', with: Date.today
       click_on('Appliquer les filtres')
       expect(page).to have_text('1 dossier')
