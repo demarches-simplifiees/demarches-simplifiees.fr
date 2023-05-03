@@ -58,8 +58,10 @@ describe SuperAdmin, type: :model do
 
     it 'nullifies otp_secret' do
       super_admin.enable_otp!
+      expect(super_admin.reload.otp_secret).not_to be_nil
+
       super_admin.disable_otp!
-      expect(super_admin.reload.otp_secret).to eq nil
+      expect(super_admin.reload.otp_secret).to be_nil
     end
   end
 
