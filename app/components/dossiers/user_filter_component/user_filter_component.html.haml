@@ -1,9 +1,9 @@
 .fr-grid-row
-  .fr-col
+  .fr-col-12
     %nav.fr-translate.fr-nav{ role: "combobox" }
       .fr-nav__item.custom-fr-translate-flex-end
         %button.fr-translate__btn.translate-no-icon.fr-btn.fr-btn--tertiary.custom-fr-translate-no-icon{ "aria-controls" => "filters", "aria-expanded" => "false", title: t('.button.select_filters') }
-          = t('.button.filter_title')
+          = t('.button.select_filters')
         #filters.fr-collapse.fr-translate__menu.fr-menu
           %ul.fr-menu__list.fr-p-3w
             = form_with(url: dossiers_path(), method: :get ) do |f|
@@ -31,3 +31,7 @@
               .fr-my-2w
                 = f.submit t('.button.apply_filters'), class: 'fr-btn fr-btn--sm'
                 = link_to t('.button.reset_filters'), dossiers_path(statut: @statut), class: 'fr-btn fr-btn--sm fr-btn--tertiary-no-outline'
+
+  - if @filter.filter_params.present?
+    .fr-col-12.text-right
+      = link_to t('.tag.active_filters', count: @filter.filter_params_count), dossiers_path(statut: @statut), title: t('.tag.active_filters_link_title', count: @filter.filter_params_count), class: 'fr-tag fr-tag--sm fr-tag--dismiss'

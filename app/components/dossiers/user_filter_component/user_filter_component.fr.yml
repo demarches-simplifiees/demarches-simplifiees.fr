@@ -7,4 +7,10 @@ fr:
     apply_filters: Appliquer les filtres
     reset_filters: Réinitialiser les filtres
     select_filters: Sélectionner un filtre
-    filter_title: Filtrer
+  tag:
+    active_filters:
+      one: "1 filtre actif"
+      other: "%{count} filtres actifs"
+    active_filters_link_title:
+      one: Retirer le filtre actif
+      other: "Retirer les %{count} filtres actifs"

@@ -7,4 +7,10 @@ en:
     apply_filters: Apply filters
     reset_filters: Reset filters
     select_filters: Select a filter
-    filter_title: Filter
+  tag:
+    active_filters:
+      one: "1 active filter"
+      other: "%{count} active filters"
+    active_filters_link_title:
+      one: Remove the active filter
+      other: "Remove the %{count} active filters"

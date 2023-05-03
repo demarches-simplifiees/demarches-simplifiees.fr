@@ -12,6 +12,14 @@ class DossiersFilter
     params[:from_created_at_date].presence || params[:from_depose_at_date].presence || params[:states].presence
   end
 
+  def filter_params_count
+    count = 0
+    count += 1 if params[:from_created_at_date].presence
+    count += 1 if params[:from_depose_at_date].presence
+    count += params[:states].count if params[:states].presence
+    count
+  end
+
   def states
     params[:states].compact_blank if params[:states].present?
   end
