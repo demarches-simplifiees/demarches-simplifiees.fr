@@ -460,6 +460,10 @@ en:
           status: "Status"
           updated: "Updated"
           actions: "Actions"
+          no_result_title: No files
+          no_result_text_html: "To fill a procedure, contact your administration asking for the procedure link. <br> It should look like #{APPLICATION_BASE_URL}/commencer/xxx."
+          no_result_text_with_filter: found with selected filters
+          no_result_reset_filter: Reset filters
         transfers:
           sender_demande_en_cours: "A transfer request is pending on file Nº %{id} to %{email}"
           receiver_demande_en_cours: "Transfer request on file Nº %{id} sent by %{email}"

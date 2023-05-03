@@ -80,13 +80,13 @@
               = t('users.dossiers.header.callout.first_brouillon_recently_updated_text', time_ago: time_ago_in_words(@first_brouillon_recently_updated.created_at), libelle: @first_brouillon_recently_updated.procedure.libelle  )
             = link_to t('users.dossiers.header.callout.first_brouillon_recently_updated_button'), url_for_dossier(@first_brouillon_recently_updated), class: 'fr-btn'
 
-      = render partial: "dossiers_list", locals: { dossiers: @dossiers }
+      = render partial: "dossiers_list", locals: { dossiers: @dossiers, filter: @filter, statut: @statut }
 
     - if @statut == "traites"
-      = render partial: "dossiers_list", locals: { dossiers: @dossiers }
+      = render partial: "dossiers_list", locals: { dossiers: @dossiers, filter: @filter, statut: @statut }
 
     - if @statut == "dossiers-invites"
-      = render partial: "dossiers_list", locals: { dossiers: @dossiers }
+      = render partial: "dossiers_list", locals: { dossiers: @dossiers, filter: @filter, statut: @statut }
 
     - if @statut == "dossiers-supprimes-recemment"
       = render partial: "hidden_dossiers_list", locals: { hidden_dossiers: @dossiers }
@@ -99,4 +99,4 @@
       = render partial: "transfered_dossiers_list", locals: { dossier_transfers: @dossiers }
 
     - if @statut == "dossiers-expirant"
-      = render partial: "dossiers_list", locals: { dossiers: @dossiers }
+      = render partial: "dossiers_list", locals: { dossiers: @dossiers, filter: @filter, statut: @statut }
