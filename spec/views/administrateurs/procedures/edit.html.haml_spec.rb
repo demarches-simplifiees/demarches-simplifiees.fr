@@ -1,4 +1,4 @@
-describe 'administrateurs/procedures/edit' do
+RSpec.describe 'administrateurs/procedures/edit', type: :view do
   let(:logo) { fixture_file_upload('spec/fixtures/files/logo_test_procedure.png', 'image/png') }
   let(:procedure) { create(:procedure, logo: logo, lien_site_web: 'http://some.website') }
 
