@@ -19,7 +19,7 @@ module Instructeurs
 
     def attestation
       if dossier.attestation.pdf.attached?
-        redirect_to dossier.attestation.pdf.url
+        redirect_to dossier.attestation.pdf.url, allow_other_host: true
       end
     end
 
