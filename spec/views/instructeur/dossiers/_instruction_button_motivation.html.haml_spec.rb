@@ -1,9 +1,9 @@
-describe 'instructeurs/dossiers/instruction_button_motivation.html.haml', type: :view do
+describe 'instructeurs/dossiers/instruction_button_motivation', type: :view do
   let(:dossier) { create(:dossier, :en_instruction) }
 
   subject do
     render(
-      'instructeurs/dossiers/instruction_button_motivation.html.haml',
+      'instructeurs/dossiers/instruction_button_motivation',
       dossier: dossier,
       popup_title: 'Accepter le dossier',
       placeholder: 'Expliquez au demandeur pourquoi ce dossier est accepté (facultatif)',

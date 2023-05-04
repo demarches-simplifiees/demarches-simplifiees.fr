@@ -4,6 +4,7 @@
 #
 #  id                                        :integer          not null, primary key
 #  aasm_state                                :string           default("brouillon")
+#  allow_expert_messaging                    :boolean          default(TRUE), not null
 #  allow_expert_review                       :boolean          default(TRUE), not null
 #  api_entreprise_token                      :string
 #  api_particulier_scopes                    :text             default([]), is an Array
@@ -17,10 +18,10 @@
 #  description                               :string
 #  dossiers_count_computed_at                :datetime
 #  duree_conservation_dossiers_dans_ds       :integer
-#  duree_conservation_etendue_par_ds         :boolean          default(FALSE)
+#  duree_conservation_etendue_par_ds         :boolean          default(FALSE), not null
 #  encrypted_api_particulier_token           :string
-#  estimated_duration_visible                :boolean          default(TRUE), not null
 #  estimated_dossiers_count                  :integer
+#  estimated_duration_visible                :boolean          default(TRUE), not null
 #  euro_flag                                 :boolean          default(FALSE)
 #  experts_require_administrateur_invitation :boolean          default(FALSE)
 #  for_individual                            :boolean          default(FALSE)
@@ -28,11 +29,10 @@
 #  instructeurs_self_management_enabled      :boolean
 #  juridique_required                        :boolean          default(TRUE)
 #  libelle                                   :string
-#  lien_demarche                             :string
 #  lien_dpo                                  :string
 #  lien_notice                               :string
 #  lien_site_web                             :string
-#  max_duree_conservation_dossiers_dans_ds   :integer          default(12)
+#  max_duree_conservation_dossiers_dans_ds   :integer          default(12), not null
 #  migrated_champ_routage                    :boolean
 #  monavis_embed                             :text
 #  opendata                                  :boolean          default(TRUE)

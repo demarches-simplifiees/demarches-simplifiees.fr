@@ -1,4 +1,4 @@
-describe 'shared/_procedure_description.html.haml', type: :view do
+describe 'shared/_procedure_description', type: :view do
   let(:estimated_duration_visible) { true }
   let(:procedure) { create(:procedure, :published, :with_service, estimated_duration_visible:) }
 

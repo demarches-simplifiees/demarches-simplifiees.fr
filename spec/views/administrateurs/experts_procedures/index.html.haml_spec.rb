@@ -1,4 +1,4 @@
-describe 'administrateurs/experts_procedures/index.html.haml', type: :view do
+describe 'administrateurs/experts_procedures/index', type: :view do
   let!(:procedure) { create(:procedure, :published) }
 
   before do

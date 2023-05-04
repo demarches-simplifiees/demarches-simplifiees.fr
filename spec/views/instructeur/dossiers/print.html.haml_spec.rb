@@ -1,4 +1,4 @@
-describe 'instructeurs/dossiers/print.html.haml', type: :view do
+describe 'instructeurs/dossiers/print', type: :view do
   before { view.extend DossierHelper }
 
   context "with a dossier" do

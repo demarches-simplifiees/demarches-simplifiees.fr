@@ -1,4 +1,4 @@
-describe 'instructeurs/procedures/_synthese.html.haml', type: :view do
+describe 'instructeurs/procedures/_synthese', type: :view do
   let(:current_instructeur) { create(:instructeur) }
   let(:procedure) { create(:procedure) }
   let!(:dossier) { create(:dossier, procedure: procedure) }
@@ -7,7 +7,7 @@ describe 'instructeurs/procedures/_synthese.html.haml', type: :view do
     let(:procedure2) { create(:procedure) }
 
     subject {
-      render 'instructeurs/procedures/synthese.html.haml',
+      render 'instructeurs/procedures/synthese',
       all_dossiers_counts: {
         'à suivre': 0,
         'suivis': 0,
@@ -27,7 +27,7 @@ describe 'instructeurs/procedures/_synthese.html.haml', type: :view do
 
   context 'when instructeur has 1 procedure and 1 file, table is not shown' do
     subject {
-      render 'instructeurs/procedures/synthese.html.haml',
+      render 'instructeurs/procedures/synthese',
       all_dossiers_counts: {
         'à suivre': 0,
         'suivis': 0,

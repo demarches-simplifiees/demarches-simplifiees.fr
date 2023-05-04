@@ -2,7 +2,7 @@ describe ProcedureArchiveService do
   let(:procedure) { build(:procedure) }
   let(:archive) { create(:archive) }
   let(:file) { Tempfile.new }
-  let(:fixture_blob) { ActiveStorage::Blob.create_before_direct_upload!(filename: File.basename(file.path), byte_size: file.size, checksum: 'osf') }
+  let(:fixture_blob) { ActiveStorage::Blob.create_before_direct_upload!(filename: File.basename(file.path), byte_size: file.size, checksum: 'osf', content_type: 'text/plain') }
 
   let(:uploader) { ArchiveUploader.new(procedure: procedure, filename: archive.filename(procedure), filepath: file.path) }
 
