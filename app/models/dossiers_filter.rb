@@ -1,8 +1,6 @@
 class DossiersFilter
   attr_reader :user, :params
 
-  ITEMS_PER_PAGE = 25
-
   def initialize(user, params)
     @user = user
     @params = params.permit(:page, :from_created_at_date, :from_depose_at_date, states: [])
@@ -18,6 +16,15 @@ class DossiersFilter
     count += 1 if params[:from_depose_at_date].presence
     count += params[:states].count if params[:states].presence
     count
+  end
+
+  def filter_procedures(dossiers)
+    return dossiers if filter_params.blank?
+    dossiers_result = dossiers
+    dossiers_result = dossiers_result.where(state: states) if states.present?
+    dossiers_result = dossiers_result.where('created_at >= ?', from_created_at_date) if from_created_at_date.present?
+    dossiers_result = dossiers_result.where('depose_at >= ?', from_depose_at_date) if from_depose_at_date.present?
+    dossiers_result
   end
 
   def states

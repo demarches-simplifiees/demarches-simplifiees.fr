@@ -68,9 +68,7 @@
     = render partial: "dossiers_list", locals: { dossiers: @dossiers }
 
   - else
-    - user_filter_component = Dossiers::UserFilterComponent.new(statut: @statut, filter: @filter)
-    - if user_filter_component.render?
-      = render user_filter_component
+    = render Dossiers::UserFilterComponent.new(statut: @statut, filter: @filter)
 
     - if @statut == "en-cours"
       - if @first_brouillon_recently_updated.present?

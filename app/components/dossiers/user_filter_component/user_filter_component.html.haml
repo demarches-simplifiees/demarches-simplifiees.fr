@@ -9,7 +9,7 @@
             = form_with(url: dossiers_path(), method: :get ) do |f|
               = f.hidden_field :statut, value: @statut
 
-              %fieldset#checkboxes.fr-fieldset{ "aria-labelledby" => "checkboxes-legend checkboxes-messages" }
+              %fieldset#checkboxes.fr-fieldset{ "aria-labelledby" => "checkboxes-legend" }
                 %legend#checkboxes-legend.fr-fieldset__legend--regular.fr-fieldset__legend
                   = t('.legend.states')
                 = f.collection_check_boxes :states, states_collection(@statut), :to_s, :to_s, include_hidden: false do |b|
