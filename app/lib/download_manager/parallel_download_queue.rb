@@ -8,7 +8,7 @@ module DownloadManager
 
     def initialize(attachments, destination)
       @attachments = attachments
-      @destination = destination
+      @destination = Pathname.new(destination)
     end
 
     def download_all
@@ -28,21 +28,22 @@ module DownloadManager
 
     # can't be used with typhoeus, otherwise block is closed before the request is run by hydra
     def download_one(attachment:, path_in_download_dir:, http_client:)
-      attachment_path = File.join(destination, sanitize_filename(path_in_download_dir))
-      attachment_dir = File.dirname(attachment_path)
+      path = Pathname.new(path_in_download_dir)
+      attachment_path = destination.join(path.dirname, sanitize_filename(path.basename.to_s))
 
-      FileUtils.mkdir_p(attachment_dir) if !Dir.exist?(attachment_dir) # defensive, do not write in undefined dir
+      attachment_path.dirname.mkpath # defensive, do not write in undefined dir
+
       if attachment.is_a?(ActiveStorage::FakeAttachment)
-        File.write(attachment_path, attachment.file.read, mode: 'wb')
+        attachment_path.write(attachment.file.read, mode: 'wb')
       else
         request = Typhoeus::Request.new(attachment.url)
         request.on_complete do |response|
           if response.success?
-            File.open(attachment_path, mode: "wb") do |fd|
+            attachment_path.open(mode: "wb") do |fd|
               fd.write(response.body)
             end
           else
-            File.delete(attachment_path) if File.exist?(attachment_path) # -> case of retries failed, must cleanup partialy downloaded file
+            attachment_path.delete if attachment_path.exist? # -> case of retries failed, must cleanup partialy downloaded file
             on_error.call(attachment, path_in_download_dir, response.code)
           end
         end
@@ -52,7 +53,9 @@ module DownloadManager
 
     private
 
-    def sanitize_filename(filename)
+    def sanitize_filename(original_filename)
+      filename = ActiveStorage::Filename.new(original_filename).sanitized
+
       return filename if filename.bytesize <= 255
 
       ext = File.extname(filename)

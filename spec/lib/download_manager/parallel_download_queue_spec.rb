@@ -51,5 +51,27 @@ describe DownloadManager::ParallelDownloadQueue do
         expect(attachment.file.read).to eq(File.read(target))
       end
     end
+
+    context 'with filename containing unsafe characters for storage' do
+      let(:destination) { "file:éà\u{202e} K.txt" }
+
+      it 'sanitize the problematic chars' do
+        target = File.join(download_to_dir, 'file-éà- K.txt')
+        expect { subject }.to change { File.exist?(target) }
+        attachment.file.rewind
+        expect(attachment.file.read).to eq(File.read(target))
+      end
+
+      context 'with a destination tree' do
+        let(:destination) { 'subdir/file.txt' }
+
+        it 'preserves the destination tree' do
+          target = File.join(download_to_dir, 'subdir/file.txt')
+          expect { subject }.to change { File.exist?(target) }
+          attachment.file.rewind
+          expect(attachment.file.read).to eq(File.read(target))
+        end
+      end
+    end
   end
 end
