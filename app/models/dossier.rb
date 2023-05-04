@@ -432,8 +432,8 @@ class Dossier < ApplicationRecord
     when 'suivis'
       instructeur
         .followed_dossiers
-        .en_cours
         .merge(visible_by_administration)
+        .en_cours
     when 'traites'
       visible_by_administration.termine
     when 'tous'
