@@ -1,7 +1,7 @@
 namespace :anonymizer do
   # When you created table or columns, you must anonymize them by updating anonymization rules below if necessary.
   # Then update this version number to match the version defined in db/schema.rb.
-  ANONYMIZER_VERSION = 2023_03_31_075755
+  ANONYMIZER_VERSION = 2023_05_02_160046
 
   desc "Inject pg_anonymizer dynamic rules. Rules can evolve over time so this tas is idempotent."
   task setup_rules: :environment do
@@ -65,6 +65,7 @@ namespace :anonymizer do
       "SECURITY LABEL FOR anon ON COLUMN super_admins.encrypted_otp_secret_iv IS 'MASKED WITH VALUE NULL'",
       "SECURITY LABEL FOR anon ON COLUMN super_admins.encrypted_otp_secret_salt IS 'MASKED WITH VALUE NULL'",
       "SECURITY LABEL FOR anon ON COLUMN super_admins.encrypted_password IS 'MASKED WITH VALUE $$REDACTED$$'",
+      "SECURITY LABEL FOR anon ON COLUMN super_admins.otp_secret IS 'MASKED WITH VALUE NULL'",
       "SECURITY LABEL FOR anon ON COLUMN super_admins.reset_password_token IS 'MASKED WITH VALUE NULL'",
       "SECURITY LABEL FOR anon ON COLUMN super_admins.unlock_token IS 'MASKED WITH VALUE NULL'",
 
