@@ -28,7 +28,7 @@ module DownloadManager
 
     # can't be used with typhoeus, otherwise block is closed before the request is run by hydra
     def download_one(attachment:, path_in_download_dir:, http_client:)
-      attachment_path = File.join(destination, path_in_download_dir)
+      attachment_path = File.join(destination, sanitize_filename(path_in_download_dir))
       attachment_dir = File.dirname(attachment_path)
 
       FileUtils.mkdir_p(attachment_dir) if !Dir.exist?(attachment_dir) # defensive, do not write in undefined dir
@@ -48,6 +48,17 @@ module DownloadManager
         end
         http_client.queue(request)
       end
+    end
+
+    private
+
+    def sanitize_filename(filename)
+      return filename if filename.bytesize <= 255
+
+      ext = File.extname(filename)
+      basename = File.basename(filename, ext).byteslice(0, 255 - ext.bytesize)
+
+      basename + ext
     end
   end
 end

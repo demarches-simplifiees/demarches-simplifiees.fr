@@ -40,5 +40,16 @@ describe DownloadManager::ParallelDownloadQueue do
         # expect(downloadable_manager.errors).to have_key(destination)
       end
     end
+
+    context 'with a destination filename too long' do
+      let(:destination) { 'a' * 252 + '.txt' }
+
+      it 'limit the file path to 255 bytes' do
+        target = File.join(download_to_dir, 'a' * 251 + '.txt')
+        expect { subject }.to change { File.exist?(target) }
+        attachment.file.rewind
+        expect(attachment.file.read).to eq(File.read(target))
+      end
+    end
   end
 end
