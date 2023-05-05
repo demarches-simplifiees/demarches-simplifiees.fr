@@ -4,3 +4,11 @@
   rows: 6,
   required: @champ.required?,
   value: html_to_string(@champ.value)
+
+- if @champ.character_limit_info?
+  %span.fr-icon-information-fill.fr-text-default--info.characters-count
+    = t('.remaining_characters', remaining_words: @champ.remaining_characters)
+
+- if @champ.character_limit_warning?
+  %span.fr-icon-close-circle-fill.fr-text-default--error.characters-count
+    = t('.excess_characters', excess_words: @champ.excess_characters)
