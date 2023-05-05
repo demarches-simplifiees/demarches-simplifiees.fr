@@ -1,10 +1,15 @@
-.editable-champ{ html_options }
+= content_tag(:div, html_options) do
   - if has_label?(@champ)
     = render EditableChamp::ChampLabelComponent.new form: @form, champ: @champ, seen_at: @seen_at
-  - if @champ.titre_identite?
-    %p.notice= t('.titre_identite_notice')
-  - elsif @champ.datetime?
-    %p.notice= t('.datetime_notice')
+  = render component_class.new(form: @form, champ: @champ, seen_at: @seen_at)
+
+  - if errors_on_attribute?
+    - if error_messages.size == 1
+      %p.fr-error-text{ id: describedby_id }= error_messages.first
+    - else
+      .fr-error-text{ id: describedby_id }
+        %ul.list-style-type-none.fr-pl-0
+          - error_messages.map do |error_message|
+            %li= error_message
 
   = @form.hidden_field :id, value: @champ.id
-  = render component_class.new(form: @form, champ: @champ, seen_at: @seen_at)

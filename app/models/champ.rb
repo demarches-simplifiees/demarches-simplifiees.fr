@@ -57,6 +57,7 @@ class Champ < ApplicationRecord
     :dossier_link?,
     :departement?,
     :region?,
+    :textarea?,
     :titre_identite?,
     :header_section?,
     :checkbox?,

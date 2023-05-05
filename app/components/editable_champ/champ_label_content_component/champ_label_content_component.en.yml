@@ -4,3 +4,5 @@ en:
   modified_at: "modified on %{datetime}"
   check_content_rebased: The type of this field or its description has been modified by the administration. Check its content.
   optional_champ: (optional)
+  recommended_size: The recommended maximum size is %{size} characters.
+  titre_identite_notice: National identity card (front side only), passport, residency permit or other proof of identity.

@@ -1,6 +1,9 @@
 class EditableChamp::EditableChampComponent < ApplicationComponent
+  include Dsfr::InputErrorable
+
   def initialize(form:, champ:, seen_at: nil)
     @form, @champ, @seen_at = form, champ, seen_at
+    @attribute = :value
   end
 
   private
@@ -21,8 +24,12 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
   def html_options
     {
       class: class_names(
-        "editable-champ-#{@champ.type_champ}": true,
-        "hidden": !@champ.visible?
+        {
+          'editable-champ': true,
+          "editable-champ-#{@champ.type_champ}": true,
+          "hidden": !@champ.visible?,
+          "fr-input-group": true,
+        }.merge(input_group_error_class_names)
       ),
       id: @champ.input_group_id,
       data: { controller: stimulus_controller, **data_dependent_conditions, **stimulus_values }

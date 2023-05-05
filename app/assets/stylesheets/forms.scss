@@ -183,15 +183,16 @@
       font-weight: normal;
     }
   }
-
-  input[type=text],
-  input[type=email],
+  .fr-label {
+    // la description d'un champ peut contenir du markup (markdown->html),
+    // on herite donc la fontsize/mrgin/padding du fr-hint-text
+    .fr-hint-text > *{
+      font-size: inherit;
+      margin: inherit;
+      padding: inherit;
+    }
+  }
   input[type=password],
-  input[type=date],
-  input[type=datetime-local],
-  input[type=number],
-  input[type=tel],
-  textarea,
   select {
     display: block;
     margin-bottom: $default-fields-spacer;
@@ -218,13 +219,6 @@
   }
 
   input[type=text]:not([data-address='true']),
-  input[type=email],
-  input[type=password],
-  input[type=date],
-  input[type=number],
-  input[type=tel],
-  input[type=datetime-local],
-  textarea,
   select {
     border-radius: 4px;
     border: solid 1px $border-grey;
@@ -266,8 +260,8 @@
   input[type=date],
   input[type=number],
   input[type=datetime-local],
-  input[type=tel],
-  textarea {
+  textarea,
+  input[type=tel], {
     @media (max-width: $two-columns-breakpoint) {
       width: 100%;
     }
@@ -413,16 +407,6 @@
     color: $dark-grey;
   }
 
-  .datetime {
-    input[type=date] {
-      display: inline-block;
-    }
-
-    select {
-      display: inline-block;
-    }
-  }
-
   .header-subsection {
     font-size: 22px;
     color: $blue-france-500;
@@ -443,20 +427,6 @@
     p:not(:last-child) {
       margin-bottom: $default-padding;
     }
-  }
-
-  .siret-info {
-    margin-top: -$default-fields-spacer;
-    margin-bottom: $default-fields-spacer;
-    // Ensure the bottom-margin is not collapsed when the element is empty
-    min-height: 1px;
-  }
-
-  .rna-info {
-    margin-top: -$default-fields-spacer;
-    margin-bottom: $default-fields-spacer;
-    // Ensure the bottom-margin is not collapsed when the element is empty
-    min-height: 1px;
   }
 
   .send-wrapper {
