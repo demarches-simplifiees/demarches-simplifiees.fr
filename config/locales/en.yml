@@ -389,6 +389,7 @@ en:
           empty: "No file"
           detail_one: "To complete a procedure, contact your administration and ask for the link to the procedure."
           detail_two: "This one should look like"
+        fix_champ: "fill in this field"
         archived_dossier: "Your file will be kept %{duree_conservation_dossiers_dans_ds} more months"
         identite:
           identity_data: Identity data
@@ -595,6 +596,11 @@ en:
               taken: is already used for procedure. You cannot use it because it belongs to another administrator.
               taken_can_be_claimed: Is the same as another of your procedure. If you publish this procedure, the other one will be unpublished
               invalid: is not valid. It must countain between 3 and 50 characters among a-z, 0-9, '_' and '-'.
+        "dossier/champs":
+          format: "%{message}"
+          attributes:
+            value:
+              format: "%{message}"
         "champs/cnaf_champ":
           attributes:
             numero_allocataire:

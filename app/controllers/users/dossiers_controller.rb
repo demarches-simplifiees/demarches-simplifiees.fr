@@ -469,13 +469,12 @@ module Users
 
     def update_dossier_and_compute_errors
       errors = []
-
       @dossier.assign_attributes(champs_public_params)
       if @dossier.champs_public_all.any?(&:changed_for_autosave?)
         @dossier.last_champ_updated_at = Time.zone.now
       end
       if !@dossier.save(**validation_options)
-        errors += @dossier.errors.full_messages
+        errors += format_errors(errors: @dossier.errors)
       end
 
       if should_change_groupe_instructeur?
@@ -487,7 +486,7 @@ module Users
       end
 
       if dossier.en_construction?
-        errors += @dossier.check_mandatory_and_visible_champs
+        errors += format_errors(errors: @dossier.check_mandatory_and_visible_champs)
       end
 
       errors
@@ -497,18 +496,41 @@ module Users
       errors = []
 
       @dossier.valid?(**submit_validation_options)
-      errors += @dossier.errors.full_messages
-      errors += @dossier.check_mandatory_and_visible_champs
+      errors += format_errors(errors: @dossier.errors)
+      errors += format_errors(errors: @dossier.check_mandatory_and_visible_champs)
 
       if should_fill_groupe_instructeur?
         @dossier.assign_to_groupe_instructeur(defaut_groupe_instructeur)
       end
 
       if @dossier.groupe_instructeur.nil?
-        errors << "Le champ « #{@dossier.procedure.routing_criteria_name} » doit être rempli"
+        errors += format_errors(errors: ["Le champ « #{@dossier.procedure.routing_criteria_name} » doit être rempli"])
       end
 
       errors
+    end
+
+    def format_errors(errors:)
+      errors.map do |active_model_error|
+        case active_model_error.class.name
+        when "ActiveModel::NestedError"
+          append_anchor_link(active_model_error.full_message, active_model_error.inner_error.base)
+        when "ActiveModel::Error"
+          append_anchor_link(active_model_error.full_message, active_model_error.base)
+        else # "String"
+          active_model_error
+        end
+      end
+    end
+
+    def append_anchor_link(str_error, model)
+      return str_error.full_message if !model.is_a?(Champ)
+      [
+        "Le champ « #{model.libelle.truncate(200)} » #{str_error}",
+        helpers.link_to(t('views.users.dossiers.fix_champ'), brouillon_dossier_path(anchor: model.input_id))
+      ].join(", ")
+    rescue # case of invalid type de champ on champ
+      str_error
     end
 
     def ensure_ownership!

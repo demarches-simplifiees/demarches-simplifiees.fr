@@ -345,6 +345,7 @@ describe Users::DossiersController, type: :controller do
 
     let!(:dossier) { create(:dossier, user: user) }
     let(:first_champ) { dossier.champs_public.first }
+    let(:anchor_to_first_champ) { controller.helpers.link_to I18n.t('views.users.dossiers.fix_champ'), brouillon_dossier_path(anchor: first_champ.input_id) }
     let(:value) { 'beautiful value' }
     let(:now) { Time.zone.parse('01/01/2100') }
     let(:payload) { { id: dossier.id } }
@@ -383,14 +384,14 @@ describe Users::DossiersController, type: :controller do
     context 'when the update fails' do
       before do
         expect_any_instance_of(Dossier).to receive(:valid?).and_return(false)
-        expect_any_instance_of(Dossier).to receive(:errors)
-          .and_return(double('errors', full_messages: ['nop']))
-
+        expect_any_instance_of(Dossier).to receive(:errors).and_return(
+          [double(class: ActiveModel::Error, full_message: 'nop', base: first_champ)]
+        )
         subject
       end
 
       it { expect(response).to render_template(:brouillon) }
-      it { expect(flash.alert).to eq(['nop']) }
+      it { expect(flash.alert).to eq(["Le champ « #{first_champ.libelle} » nop, #{anchor_to_first_champ}"]) }
 
       it 'does not send an email' do
         expect(NotificationMailer).not_to receive(:send_en_construction_notification)
@@ -408,7 +409,17 @@ describe Users::DossiersController, type: :controller do
       end
 
       it { expect(response).to render_template(:brouillon) }
-      it { expect(flash.alert).to eq(['Le champ l doit être rempli.']) }
+      it { expect(flash.alert).to eq(["Le champ « l » doit être rempli, #{anchor_to_first_champ}"]) }
+    end
+
+    context 'when a dossier is invalid' do
+      before do
+        allow_any_instance_of(Dossier).to receive(:groupe_instructeur).and_return(double(nil?: true))
+        subject
+      end
+
+      it { expect(response).to render_template(:brouillon) }
+      it { expect(flash.alert).to eq(["Le champ « Votre ville » doit être rempli"]) }
     end
 
     context 'when dossier has no champ' do
@@ -525,6 +536,7 @@ describe Users::DossiersController, type: :controller do
     let(:procedure) { create(:procedure, :published, :with_type_de_champ, :with_piece_justificative) }
     let!(:dossier) { create(:dossier, :en_construction, user: user, procedure: procedure) }
     let(:first_champ) { dossier.champs_public.first }
+    let(:anchor_to_first_champ) { controller.helpers.link_to I18n.t('views.users.dossiers.fix_champ'), brouillon_dossier_path(anchor: first_champ.input_id) }
     let(:piece_justificative_champ) { dossier.champs_public.last }
     let(:value) { 'beautiful value' }
     let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
@@ -622,14 +634,14 @@ describe Users::DossiersController, type: :controller do
     context 'when the update fails' do
       before do
         expect_any_instance_of(Dossier).to receive(:save).and_return(false)
-        expect_any_instance_of(Dossier).to receive(:errors)
-          .and_return(double(full_messages: ['nop']))
-
+        expect_any_instance_of(Dossier).to receive(:errors).and_return(
+          [double(class: ActiveModel::Error, full_message: 'nop', base: first_champ)]
+        )
         subject
       end
 
       it { expect(response).to render_template(:modifier) }
-      it { expect(flash.alert).to eq(['nop']) }
+      it { expect(flash.alert).to eq(["Le champ « #{first_champ.libelle} » nop, #{anchor_to_first_champ}"]) }
 
       it 'does not update the dossier timestamps' do
         dossier.reload
@@ -653,7 +665,20 @@ describe Users::DossiersController, type: :controller do
       end
 
       it { expect(response).to render_template(:modifier) }
-      it { expect(flash.alert).to eq(['Le champ l doit être rempli.']) }
+      it { expect(flash.alert).to eq(["Le champ « l » doit être rempli, #{anchor_to_first_champ}"]) }
+    end
+
+    context 'when a champ validation fails' do
+      let(:value) { 'abc' }
+
+      before do
+        first_champ.type_de_champ.update!(type_champ: :iban, mandatory: true, libelle: 'l')
+        dossier.champs_public.first.becomes!(Champs::IbanChamp).save!
+
+        subject
+      end
+
+      it { expect(flash.alert).to include("Le champ « l » n'est pas au format IBAN, #{anchor_to_first_champ}") }
     end
 
     context 'when the user has an invitation but is not the owner' do
