@@ -34,8 +34,8 @@ class Procedure::OneGroupeManagementComponent < ApplicationComponent
   end
 
   def available_targets_for_select
-    @revision.types_de_champ_public
-      .filter { |tdc| [:drop_down_list].include?(tdc.type_champ.to_sym) }
+    @revision
+      .routable_types_de_champ
       .map { |tdc| [tdc.libelle, champ_value(tdc.stable_id).to_json] }
   end
 
