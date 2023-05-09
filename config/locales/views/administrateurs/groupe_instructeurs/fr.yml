@@ -52,6 +52,12 @@ fr:
         found:
           one: "trouvé"
           other: "trouvés"
+      ajout:
+        procedures: Démarches
+      options:
+        procedures: Démarches
+      simple_routing:
+        procedures: Démarches
       edit:
         routing:
           title: Libellé de la liste de groupes
@@ -86,6 +92,3 @@ fr:
         button:
           self_managment_toggle: Activer l’autogestion des instructeurs
           add_group: Ajouter le groupe
-      instructeurs_self_management:
-        self_managment_notice_html: |
-          L’autogestion des instructeurs permet aux instructeurs de gérer eux-mêmes la liste des instructeurs de la démarche.
