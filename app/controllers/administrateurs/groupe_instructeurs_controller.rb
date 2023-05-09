@@ -291,8 +291,17 @@ module Administrateurs
     end
 
     def paginated_groupe_instructeurs
-      procedure
-        .groupe_instructeurs
+      groupes = if params[:q].present?
+        query = ActiveRecord::Base.sanitize_sql_like(params[:q])
+
+        procedure
+          .groupe_instructeurs
+          .where('unaccent(label) ILIKE unaccent(?)', "%#{query}%")
+      else
+        procedure.groupe_instructeurs
+      end
+
+      groupes
         .page(params[:page])
         .per(ITEMS_PER_PAGE)
     end

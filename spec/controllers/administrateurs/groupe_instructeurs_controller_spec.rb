@@ -13,13 +13,25 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
   describe '#index' do
     context 'of a procedure I own' do
-      before { get :index, params: { procedure_id: procedure.id } }
+      before { get :index, params: }
 
       context 'when a procedure has multiple groups' do
-        it { expect(response).to have_http_status(:ok) }
-        it { expect(response.body).to include(gi_1_1.label) }
-        it { expect(response.body).to include(gi_1_2.label) }
-        it { expect(response.body).not_to include(gi_2_2.label) }
+        let(:params) { { procedure_id: procedure.id } }
+
+        it do
+          expect(response).to have_http_status(:ok)
+          expect(response.body).to include(gi_1_1.label)
+          expect(response.body).to include(gi_1_2.label)
+          expect(response.body).not_to include(gi_2_2.label)
+        end
+
+        context 'when there is a search' do
+          let(:params) { { procedure_id: procedure.id, q: '2' } }
+
+          it do
+            expect(assigns(:groupes_instructeurs)).to match_array([gi_1_2])
+          end
+        end
       end
     end
   end
