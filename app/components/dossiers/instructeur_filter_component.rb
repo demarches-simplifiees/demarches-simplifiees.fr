@@ -1,4 +1,4 @@
-class Dossiers::FilterComponent < ApplicationComponent
+class Dossiers::InstructeurFilterComponent < ApplicationComponent
   def initialize(procedure:, procedure_presentation:, statut:, field_id: nil)
     @procedure = procedure
     @procedure_presentation = procedure_presentation
