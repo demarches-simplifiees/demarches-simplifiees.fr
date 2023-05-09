@@ -17,13 +17,12 @@ module Instructeurs
       dossiers = current_instructeur.dossiers
         .joins(groupe_instructeur: :procedure)
         .where(procedures: { hidden_at: nil })
-      dossiers_visibles = dossiers.visible_by_administration
-      @dossiers_count_per_procedure = dossiers_visibles.all_state.group('groupe_instructeurs.procedure_id').reorder(nil).count
-      @dossiers_a_suivre_count_per_procedure = dossiers_visibles.without_followers.en_cours.group('groupe_instructeurs.procedure_id').reorder(nil).count
-      @dossiers_archived_count_per_procedure = dossiers_visibles.archived.group('groupe_instructeurs.procedure_id').count
-      @dossiers_termines_count_per_procedure = dossiers_visibles.termine.group('groupe_instructeurs.procedure_id').reorder(nil).count
-      @dossiers_expirant_count_per_procedure = dossiers_visibles.termine_or_en_construction_close_to_expiration.group('groupe_instructeurs.procedure_id').count
-      @dossiers_supprimes_recemment_count_per_procedure = dossiers.hidden_by_administration.group('groupe_instructeurs.procedure_id').reorder(nil).count
+      @dossiers_count_per_procedure = dossiers.by_statut('tous').group('groupe_instructeurs.procedure_id').reorder(nil).count
+      @dossiers_a_suivre_count_per_procedure = dossiers.by_statut('a-suivre').group('groupe_instructeurs.procedure_id').reorder(nil).count
+      @dossiers_archived_count_per_procedure = dossiers.by_statut('archives').group('groupe_instructeurs.procedure_id').count
+      @dossiers_termines_count_per_procedure = dossiers.by_statut('traites').group('groupe_instructeurs.procedure_id').reorder(nil).count
+      @dossiers_expirant_count_per_procedure = dossiers.by_statut('expirant').group('groupe_instructeurs.procedure_id').count
+      @dossiers_supprimes_recemment_count_per_procedure = dossiers.by_statut('supprimes_recemment').group('groupe_instructeurs.procedure_id').reorder(nil).count
 
       groupe_ids = current_instructeur.groupe_instructeurs.pluck(:id)
       @followed_dossiers_count_per_procedure = current_instructeur
