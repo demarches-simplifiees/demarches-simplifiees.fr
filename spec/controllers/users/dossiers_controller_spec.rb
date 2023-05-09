@@ -475,16 +475,20 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'when the update fails' do
+      render_views
+
       before do
         expect_any_instance_of(Dossier).to receive(:valid?).and_return(false)
         expect_any_instance_of(Dossier).to receive(:errors).and_return(
           [double(class: ActiveModel::Error, full_message: 'nop', base: first_champ)]
         )
+
         subject
       end
 
       it { expect(response).to render_template(:modifier) }
       it { expect(flash.alert).to eq(["Le champ « #{first_champ.libelle} » nop, #{anchor_to_first_champ}"]) }
+      it { expect(response.body).to include("Dossier nº #{dossier.id}") }
     end
 
     context 'when a mandatory champ is missing' do

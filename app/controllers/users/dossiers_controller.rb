@@ -229,7 +229,11 @@ module Users
         flash.now.alert = errors
 
         respond_to do |format|
-          format.html { render :modifier }
+          format.html do
+            @dossier = @dossier.editing_fork_origin
+            render :modifier
+          end
+
           format.turbo_stream do
             @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_public_params.fetch(:champs_public_all_attributes), dossier.champs_public_all)
             render :update, layout: false
