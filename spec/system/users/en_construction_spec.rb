@@ -17,6 +17,7 @@ describe "Dossier en_construction" do
     expect(page).not_to have_button("Remplacer")
     click_on "Supprimer le fichier toto.txt"
 
+    wait_until { champ.reload.for_export.blank? }
     expect(page).not_to have_text("toto.txt")
   end
 
@@ -34,6 +35,7 @@ describe "Dossier en_construction" do
       expect(page).to have_selector(input_selector)
       find(input_selector).attach_file(Rails.root.join('spec/fixtures/files/file.pdf'))
 
+      wait_until { champ.reload.for_export == 'file.pdf' }
       expect(page).to have_text("file.pdf")
       expect(page).not_to have_text("toto.txt")
     end
