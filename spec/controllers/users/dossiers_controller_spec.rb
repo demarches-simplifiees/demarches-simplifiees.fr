@@ -445,11 +445,80 @@ describe Users::DossiersController, type: :controller do
     end
   end
 
-  describe '#update_brouillon' do
+  describe '#submit_en_construction' do
     before { sign_in(user) }
 
-    let(:procedure) { create(:procedure, :published, :with_type_de_champ, :with_piece_justificative) }
-    let!(:dossier) { create(:dossier, user: user, procedure: procedure) }
+    let!(:dossier) { create(:dossier, :en_construction, user: user) }
+    let(:first_champ) { dossier.owner_editing_fork.champs_public.first }
+    let(:anchor_to_first_champ) { controller.helpers.link_to I18n.t('views.users.dossiers.fix_champ'), modifier_dossier_path(anchor: first_champ.input_id) }
+    let(:value) { 'beautiful value' }
+    let(:now) { Time.zone.parse('01/01/2100') }
+    let(:payload) { { id: dossier.id } }
+
+    before { dossier.owner_editing_fork }
+
+    subject do
+      Timecop.freeze(now) do
+        post :submit_en_construction, params: payload
+      end
+    end
+
+    context 'when the dossier cannot be updated by the user' do
+      let!(:dossier) { create(:dossier, :en_instruction, user: user) }
+
+      it 'redirects to the dossiers list' do
+        subject
+
+        expect(response).to redirect_to(dossier_path(dossier))
+        expect(flash.alert).to eq('Votre dossier ne peut plus être modifié')
+      end
+    end
+
+    context 'when the update fails' do
+      render_views
+
+      before do
+        expect_any_instance_of(Dossier).to receive(:valid?).and_return(false)
+        expect_any_instance_of(Dossier).to receive(:errors).and_return(
+          [double(class: ActiveModel::Error, full_message: 'nop', base: first_champ)]
+        )
+
+        subject
+      end
+
+      it { expect(response).to render_template(:modifier) }
+      it { expect(flash.alert).to eq(["Le champ « #{first_champ.libelle} » nop, #{anchor_to_first_champ}"]) }
+      it { expect(response.body).to include("Dossier nº #{dossier.id}") }
+    end
+
+    context 'when a mandatory champ is missing' do
+      let(:value) { nil }
+
+      before do
+        first_champ.type_de_champ.update(mandatory: true, libelle: 'l')
+        subject
+      end
+
+      it { expect(response).to render_template(:modifier) }
+      it { expect(flash.alert).to eq(["Le champ « l » doit être rempli, #{anchor_to_first_champ}"]) }
+    end
+
+    context 'when dossier has no champ' do
+      let(:submit_payload) { { id: dossier.id } }
+
+      it 'does not raise any errors' do
+        subject
+
+        expect(response).to redirect_to(dossier_path(dossier))
+      end
+    end
+  end
+
+  describe '#update brouillon' do
+    before { sign_in(user) }
+
+    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{}, { type: :piece_justificative }]) }
+    let(:dossier) { create(:dossier, user:, procedure:) }
     let(:first_champ) { dossier.champs_public.first }
     let(:piece_justificative_champ) { dossier.champs_public.last }
     let(:value) { 'beautiful value' }
@@ -461,16 +530,16 @@ describe Users::DossiersController, type: :controller do
         id: dossier.id,
         dossier: {
           groupe_instructeur_id: dossier.groupe_instructeur_id,
-          champs_public_attributes: [
-            {
+          champs_public_attributes: {
+            first_champ.id => {
               id: first_champ.id,
               value: value
             },
-            {
+            piece_justificative_champ.id => {
               id: piece_justificative_champ.id,
               piece_justificative_file: file
             }
-          ]
+          }
         }
       }
     end
@@ -478,12 +547,12 @@ describe Users::DossiersController, type: :controller do
 
     subject do
       Timecop.freeze(now) do
-        patch :update_brouillon, params: payload
+        patch :update, params: payload, format: :turbo_stream
       end
     end
 
     context 'when the dossier cannot be updated by the user' do
-      let!(:dossier) { create(:dossier, :en_instruction, user: user) }
+      let(:dossier) { create(:dossier, :en_instruction, user:, procedure:) }
 
       it 'redirects to the dossiers list' do
         subject
@@ -507,7 +576,7 @@ describe Users::DossiersController, type: :controller do
           {
             id: dossier.id,
             dossier: {
-              champs_public_attributes: [{ value: '' }]
+              champs_public_attributes: { first_champ.id => { id: first_champ.id } }
             }
           }
         end
@@ -520,7 +589,7 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'when the user has an invitation but is not the owner' do
-      let(:dossier) { create(:dossier) }
+      let(:dossier) { create(:dossier, procedure: procedure) }
       let!(:invite) { create(:invite, dossier: dossier, user: user) }
 
       before { subject }
@@ -530,11 +599,11 @@ describe Users::DossiersController, type: :controller do
     end
   end
 
-  describe '#update' do
+  describe '#update en_construction' do
     before { sign_in(user) }
 
-    let(:procedure) { create(:procedure, :published, :with_type_de_champ, :with_piece_justificative) }
-    let!(:dossier) { create(:dossier, :en_construction, user: user, procedure: procedure) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{}, { type: :piece_justificative }]) }
+    let!(:dossier) { create(:dossier, :en_construction, user:, procedure:) }
     let(:first_champ) { dossier.champs_public.first }
     let(:anchor_to_first_champ) { controller.helpers.link_to I18n.t('views.users.dossiers.fix_champ'), brouillon_dossier_path(anchor: first_champ.input_id) }
     let(:piece_justificative_champ) { dossier.champs_public.last }
@@ -547,16 +616,16 @@ describe Users::DossiersController, type: :controller do
         id: dossier.id,
         dossier: {
           groupe_instructeur_id: dossier.groupe_instructeur_id,
-          champs_public_attributes: [
-            {
+          champs_public_attributes: {
+            first_champ.id => {
               id: first_champ.id,
               value: value
             },
-            {
+            piece_justificative_champ.id => {
               id: piece_justificative_champ.id,
               piece_justificative_file: file
             }
-          ]
+          }
         }
       }
     end
@@ -564,12 +633,12 @@ describe Users::DossiersController, type: :controller do
 
     subject do
       Timecop.freeze(now) do
-        patch :update, params: payload
+        patch :update, params: payload, format: :turbo_stream
       end
     end
 
     context 'when the dossier cannot be updated by the user' do
-      let!(:dossier) { create(:dossier, :en_instruction, user: user) }
+      let!(:dossier) { create(:dossier, :en_instruction, user:, procedure:) }
 
       it 'redirects to the dossiers list' do
         subject
@@ -612,12 +681,12 @@ describe Users::DossiersController, type: :controller do
           {
             id: dossier.id,
             dossier: {
-              champs_public_attributes: [
-                {
+              champs_public_attributes: {
+                piece_justificative_champ.id => {
                   id: piece_justificative_champ.id,
                   piece_justificative_file: file
                 }
-              ]
+              }
             }
           }
         end
@@ -640,7 +709,7 @@ describe Users::DossiersController, type: :controller do
         subject
       end
 
-      it { expect(response).to render_template(:modifier) }
+      it { expect(response).to render_template(:update) }
       it { expect(flash.alert).to eq(["Le champ « #{first_champ.libelle} » nop, #{anchor_to_first_champ}"]) }
 
       it 'does not update the dossier timestamps' do
@@ -654,18 +723,6 @@ describe Users::DossiersController, type: :controller do
 
         subject
       end
-    end
-
-    context 'when a mandatory champ is missing' do
-      let(:value) { nil }
-
-      before do
-        first_champ.type_de_champ.update(mandatory: true, libelle: 'l')
-        subject
-      end
-
-      it { expect(response).to render_template(:modifier) }
-      it { expect(flash.alert).to eq(["Le champ « l » doit être rempli, #{anchor_to_first_champ}"]) }
     end
 
     context 'when a champ validation fails' do
@@ -682,8 +739,8 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'when the user has an invitation but is not the owner' do
-      let(:dossier) { create(:dossier, :en_construction) }
-      let!(:invite) { create(:invite, dossier: dossier, user: user) }
+      let(:dossier) { create(:dossier, :en_construction, procedure:) }
+      let!(:invite) { create(:invite, dossier:, user:) }
 
       before { subject }
 
@@ -692,9 +749,9 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'when the dossier is followed by an instructeur' do
-      let(:dossier) { create(:dossier) }
+      let(:dossier) { create(:dossier, procedure:) }
       let(:instructeur) { create(:instructeur) }
-      let!(:invite) { create(:invite, dossier: dossier, user: user) }
+      let!(:invite) { create(:invite, dossier:, user:) }
 
       before do
         instructeur.follow(dossier)
@@ -708,8 +765,8 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'when the champ is a phone number' do
-      let(:procedure) { create(:procedure, :published, :with_phone) }
-      let!(:dossier) { create(:dossier, :en_construction, user: user, procedure: procedure) }
+      let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :phone }]) }
+      let!(:dossier) { create(:dossier, :en_construction, user:, procedure:) }
       let(:first_champ) { dossier.champs_public.first }
       let(:now) { Time.zone.parse('01/01/2100') }
 
@@ -717,12 +774,12 @@ describe Users::DossiersController, type: :controller do
         {
           id: dossier.id,
           dossier: {
-            champs_public_attributes: [
-              {
+            champs_public_attributes: {
+              first_champ.id => {
                 id: first_champ.id,
                 value: value
               }
-            ]
+            }
           }
         }
       end

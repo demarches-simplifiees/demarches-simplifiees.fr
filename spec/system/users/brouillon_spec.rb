@@ -483,14 +483,14 @@ describe 'The user' do
       fill_individual
 
       # Test autosave failure
-      allow_any_instance_of(Users::DossiersController).to receive(:update_brouillon).and_raise("Server is busy")
+      allow_any_instance_of(Users::DossiersController).to receive(:update).and_raise("Server is busy")
       fill_in('texte obligatoire', with: 'a valid user input')
       blur
       expect(page).to have_css('span', text: 'Impossible d’enregistrer le brouillon', visible: true)
 
       # Test that retrying after a failure works
-      allow_any_instance_of(Users::DossiersController).to receive(:update_brouillon).and_call_original
-      click_on 'réessayer'
+      allow_any_instance_of(Users::DossiersController).to receive(:update).and_call_original
+      click_on 'Réessayer'
       wait_for_autosave
 
       visit current_path

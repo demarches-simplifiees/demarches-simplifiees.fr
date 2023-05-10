@@ -5,11 +5,11 @@ fr:
     confirmation: Brouillon enregistré
     error: Impossible d’enregistrer le brouillon
   en_construction:
-    explanation: Votre dossier est automatiquement enregistré.
-    confirmation: Dossier enregistré
-    error: Impossible d’enregistrer le dossier
+    explanation: Vos modifications sont automatiquement enregistrées. Déposez-les quand vous aurez terminé.
+    confirmation: Modifications enregistrées.
+    error: Impossible d’enregistrer les modifications
   annotations:
     explanation: Vos annotations sont automatiquement enregistrées.
-    confirmation: Annotations enregistré
+    confirmation: Annotations enregistrées
     error: Impossible d’enregistrer les annotations
   more_information: En savoir plus

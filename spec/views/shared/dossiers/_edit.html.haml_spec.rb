@@ -115,8 +115,8 @@ describe 'shared/dossiers/edit', type: :view do
       let(:dossier) { create(:dossier, :en_construction) }
       before { dossier.champs_public << champ }
 
-      it 'cannot delete a piece justificative' do
-        expect(subject).not_to have_selector("[title='Supprimer le fichier #{champ.piece_justificative_file.attachments[0].filename}']")
+      it 'can delete a piece justificative' do
+        expect(subject).to have_selector("[title='Supprimer le fichier #{champ.piece_justificative_file.attachments[0].filename}']")
       end
     end
 

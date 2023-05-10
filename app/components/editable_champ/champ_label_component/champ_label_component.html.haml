@@ -3,7 +3,7 @@
   = @form.label @champ.main_value_name, id: @champ.labelledby_id, for: @champ.input_id do
     - render EditableChamp::ChampLabelContentComponent.new champ: @champ, seen_at: @seen_at
 - else
-  .form-label.mb-4
+  .form-label.mb-4{ id: @champ.labelledby_id }
     = render EditableChamp::ChampLabelContentComponent.new champ: @champ, seen_at: @seen_at
 
 - if @champ.description.present?
