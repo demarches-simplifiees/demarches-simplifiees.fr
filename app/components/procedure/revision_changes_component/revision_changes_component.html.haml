@@ -130,7 +130,7 @@
             = t(".#{prefix}.update_condition", label: change.label, to: change.to)
             - if !total_dossiers.zero? && !change.can_rebase?
               .fr-alert.fr-alert--warning.fr-mt-1v
-                %p= t('.breakigng_change', count: total_dossiers)
+                %p= t('.breaking_change', count: total_dossiers)
       - when :character_limit
         - if change.to.blank?
           - list.with_item do
