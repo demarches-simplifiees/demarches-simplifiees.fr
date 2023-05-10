@@ -358,7 +358,7 @@ fr:
           suivis: Les dossiers qui sont dans cet onglet sont uniquement ceux que vous suivez. Vous pouvez échanger avec le demandeur jusqu’à pouvoir les accepter, les refuser ou les classer sans suite.
           traites_html: "Les dossiers dans cet onglet sont terminés : ils ont été acceptés, refusés ou classés sans suite. Vous pouvez <a href=%{archives_path}>télécharger</a> les archives au format zip des dossiers terminés et leurs pièces jointes."
           tous: Tous les dossiers qui ont été déposés sur cette démarche, quel que soit le statut.
-          supprimes_recemment: Tous les dossiers terminés et supprimés par les instructeurs sur cette démarche
+          supprimes_recemment: Tous les dossiers <strong>non archivés</strong>, <strong>terminés</strong> et <strong>supprimés par les instructeurs</strong> sur cette démarche
           archives:  "Les dossiers de cet onglet sont archivés : vous ne pouvez plus y répondre, et les demandeurs ne peuvent plus les modifier."
           expirant: Les dossiers n’expireront pas avant la période de conservation des données.
         archived_dossier: "Le dossier sera conservé 1 mois supplémentaire"

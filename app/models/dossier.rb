@@ -423,7 +423,7 @@ class Dossier < ApplicationRecord
       .distinct
   end
 
-  scope :by_statut, -> (instructeur, statut = 'tous') do
+  scope :by_statut, -> (statut, instructeur = nil) do
     case statut
     when 'a-suivre'
       visible_by_administration

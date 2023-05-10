@@ -40,7 +40,7 @@
         = t('views.instructeurs.dossiers.tab_explainations.tous')
     - if @statut == 'supprimes_recemment'
       %p
-        = t('views.instructeurs.dossiers.tab_explainations.supprimes_recemment')
+        = t('views.instructeurs.dossiers.tab_explainations.supprimes_recemment').html_safe
     - if @statut == 'archives'
       %p
         = t('views.instructeurs.dossiers.tab_explainations.archives')
