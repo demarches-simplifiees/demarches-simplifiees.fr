@@ -74,6 +74,11 @@ fieldset {
   box-shadow: 0px 0px 0px 1px $light-red;
 }
 
+.fr-table table.hack-to-display-dropdown {
+  padding-bottom: 300px;
+  margin-bottom: -300px;
+}
+
 // on utilise le dropdown de sélecteur de langue pour un autre usage donc on veut retirer l'icone
 .fr-translate .fr-translate__btn.custom-fr-translate-no-icon::before {
   display: none;
