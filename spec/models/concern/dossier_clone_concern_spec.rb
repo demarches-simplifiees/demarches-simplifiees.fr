@@ -162,6 +162,27 @@ RSpec.describe DossierCloneConcern do
         end
       end
     end
+
+    context "as a fork" do
+      let(:new_dossier) { dossier.clone(fork: true) }
+
+      it { expect(new_dossier.editing_fork_origin).to eq(dossier) }
+      it { expect(new_dossier.champs_public[0].id).not_to eq(dossier.champs_public[0].id) }
+      it { expect(new_dossier.champs_public[0].created_at).to eq(dossier.champs_public[0].created_at) }
+      it { expect(new_dossier.champs_public[0].updated_at).to eq(dossier.champs_public[0].updated_at) }
+
+      context "piece justificative champ" do
+        let(:champ_pj) { create(:champ_piece_justificative, dossier_id: dossier.id) }
+        before { dossier.champs_public << champ_pj }
+
+        it {
+          champ_pj_fork = Champs::PieceJustificativeChamp.where(dossier: new_dossier).first
+          expect(champ_pj_fork.piece_justificative_file.first.blob).to eq(champ_pj.piece_justificative_file.first.blob)
+          expect(champ_pj_fork.created_at).to eq(champ_pj.created_at)
+          expect(champ_pj_fork.updated_at).to eq(champ_pj.updated_at)
+        }
+      end
+    end
   end
 
   describe '#make_diff' do
