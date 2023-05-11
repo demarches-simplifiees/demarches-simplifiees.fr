@@ -7,7 +7,7 @@ en:
     in_progress:
       text_success:
         one: 1/1 is being archived
-        other: "%{progress_count}/%{count} files have been archived"
+        other: "%{success_count}/%{count} files have been archived"
   passer_en_instruction:
     finish:
       text_success:
@@ -16,7 +16,7 @@ en:
     in_progress:
       text_success:
         one: 1/1 is being changed to instructing
-        other: "%{progress_count}/%{count} files have been changed to instructing"
+        other: "%{success_count}/%{count} files have been changed to instructing"
   accepter:
     finish:
       text_success:
@@ -25,7 +25,7 @@ en:
     in_progress:
       text_success:
         one: 1/1 is being accepted
-        other: "%{progress_count}/%{count} files have been accepted"
+        other: "%{success_count}/%{count} files have been accepted"
   follow:
     finish:
       text_success:
@@ -34,7 +34,7 @@ en:
     in_progress:
       text_success:
         one: 1/1 is being followed
-        other: "%{progress_count}/%{count} files have been followed"
+        other: "%{success_count}/%{count} files have been followed"
   unfollow:
     finish:
       text_success:
@@ -43,7 +43,7 @@ en:
     in_progress:
       text_success:
         one: 1/1 is being unfollowed
-        other: "%{progress_count}/%{count} files have been unfollowed"
+        other: "%{success_count}/%{count} files have been unfollowed"
   repasser_en_construction:
     finish:
       text_success:
@@ -52,7 +52,7 @@ en:
     in_progress:
       text_success:
         one: 1/1 is being changed to in progress
-        other: "%{progress_count}/%{count} files have been changed to in progress"
+        other: "%{success_count}/%{count} files have been changed to in progress"
   title:
     finish: The bulk action is finished
     in_progress:  A bulk action is processing
