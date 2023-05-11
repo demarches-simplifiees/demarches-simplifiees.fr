@@ -154,7 +154,14 @@ module Dolist
 
       fields = post(url, body).fetch("FieldList", [])
 
-      return nil if fields.empty?
+      if fields.empty?
+        Sentry.with_scope do |scope|
+          scope.set_extra(:email, email_address)
+          Sentry.capture_message("Dolist::API: contact not found")
+        end
+
+        return nil
+      end
 
       fields.find { _1['ID'] == 72 }.fetch('Value')
     end
