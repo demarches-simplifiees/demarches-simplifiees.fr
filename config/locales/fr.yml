@@ -745,6 +745,7 @@ fr:
       test_procedure: "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l’administrateur (ajout d’un champ, publication de la démarche...) entraînera sa suppression."
       no_access: "Vous n’avez pas accès à ce dossier"
       no_longer_editable: "Votre dossier ne peut plus être modifié"
+      en_construction_submitted: "Les modifications ont déjà été déposées"
       create_commentaire:
         message_send: "Votre message a bien été envoyé à l’instructeur en charge de votre dossier."
       cloned_success: "Votre dossier a bien été dupliqué. Vous pouvez maintenant le vérifier, l’adapter puis le déposer."
