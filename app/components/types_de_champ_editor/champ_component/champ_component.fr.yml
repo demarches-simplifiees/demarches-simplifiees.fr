@@ -11,5 +11,5 @@ fr:
     zones_humides: Zones humides d’importance internationale
     znieff: ZNIEFF
   character_limit:
-    unlimited: Pas de limite de charactères
+    unlimited: Pas de limite de caractère
     limit: Limité à %{limit} caractères
