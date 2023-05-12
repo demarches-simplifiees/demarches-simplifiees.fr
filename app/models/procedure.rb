@@ -403,6 +403,7 @@ class Procedure < ApplicationRecord
   end
 
   def reset!
+    return false
     if !locked? || draft_changed?
       draft_revision.dossiers.destroy_all
     end
