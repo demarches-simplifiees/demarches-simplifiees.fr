@@ -25,8 +25,10 @@ namespace :after_party do
         bad_champs = dossier.champs.filter { !dossier.revision_id.in?(_1.type_de_champ.revisions.ids) }
         bad_champs.each do |champ|
           type_de_champ = dossier.revision.types_de_champ.find { _1.stable_id == champ.stable_id }
-          puts "Updating champ #{champ.id} on dossier #{dossier.id} from #{champ.type_de_champ_id} to type_de_champ #{type_de_champ.id}"
-          champ.update_column(:type_de_champ_id, type_de_champ.id)
+          if type_de_champ.present?
+            puts "Updating champ #{champ.id} on dossier #{dossier.id} from #{champ.type_de_champ_id} to type_de_champ #{type_de_champ.id}"
+            champ.update_column(:type_de_champ_id, type_de_champ.id)
+          end
         end
       end
 
