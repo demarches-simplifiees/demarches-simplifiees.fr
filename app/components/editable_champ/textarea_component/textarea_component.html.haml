@@ -1,3 +1,5 @@
+%span.sr-only= t('.recommended_size', size: @champ.character_limit_base)
+
 ~ @form.text_area :value,
   id: @champ.input_id,
   aria: { describedby: @champ.describedby_id },
