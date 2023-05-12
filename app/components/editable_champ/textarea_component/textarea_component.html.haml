@@ -12,5 +12,5 @@
     = t('.remaining_characters', remaining_words: @champ.remaining_characters)
 
 - if @champ.character_limit_warning?
-  %span.fr-icon-close-circle-fill.fr-text-default--error.characters-count
+  %span.fr-icon-warning-fill.fr-text-default--warning.characters-count
     = t('.excess_characters', excess_words: @champ.excess_characters)
