@@ -675,18 +675,6 @@ describe Procedure do
         expect(subject.groupe_instructeurs.first.label).to eq(GroupeInstructeur::DEFAUT_LABEL)
         expect(subject.groupe_instructeurs.first.instructeurs.size).to eq(0)
       end
-
-      context 'when published' do
-        before { procedure.publish! }
-
-        it 'should clone published revision as draft' do
-          expect(procedure.revisions.size).to eq(2)
-          expect(procedure.published_revision).not_to be_nil
-          expect(subject.published_revision).to be_nil
-          expect(subject.draft_revision.published_at).to be_nil
-          expect(subject.draft_revision.types_de_champ.first.stable_id).to eq(procedure.published_revision.types_de_champ.first.stable_id)
-        end
-      end
     end
 
     it 'should duplicate existing mail_templates' do

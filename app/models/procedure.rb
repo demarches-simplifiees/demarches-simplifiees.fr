@@ -521,16 +521,12 @@ class Procedure < ApplicationRecord
     is_different_admin = !admin.owns?(self)
 
     populate_champ_stable_ids
-
-    revision_to_clone = if is_different_admin && published_revision_id.present?
-      :published_revision
-    else
-      :draft_revision
-    end
-    include_list = { attestation_template: [] }
-    include_list[revision_to_clone] = {
-      revision_types_de_champ: [:type_de_champ],
-      dossier_submitted_message: []
+    include_list = {
+      attestation_template: [],
+      draft_revision: {
+        revision_types_de_champ: [:type_de_champ],
+        dossier_submitted_message: []
+      }
     }
     include_list[:groupe_instructeurs] = :instructeurs if !is_different_admin
     procedure = self.deep_clone(include: include_list) do |original, kopy|
@@ -549,12 +545,8 @@ class Procedure < ApplicationRecord
       procedure.max_duree_conservation_dossiers_dans_ds = NEW_MAX_DUREE_CONSERVATION
     end
     procedure.estimated_dossiers_count = 0
-    if procedure.published_revision.present?
-      procedure.draft_revision = procedure.published_revision
-    end
-    procedure.draft_revision.procedure = procedure
-    procedure.draft_revision.published_at = nil
     procedure.published_revision = nil
+    procedure.draft_revision.procedure = procedure
 
     if is_different_admin
       procedure.administrateurs = [admin]
