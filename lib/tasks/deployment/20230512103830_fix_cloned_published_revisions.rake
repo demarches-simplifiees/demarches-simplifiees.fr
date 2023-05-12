@@ -32,11 +32,9 @@ namespace :after_party do
         cloned_procedure_dossiers.each { _1.update(revision_id: new_revision.id) }
         puts "Update dossiers #{cloned_procedure_dossiers.map(&:id)} for procedure: #{cloned_procedure.id}"
 
-        revisions = cloned_procedure
-          .revisions
-          .where(id: foreign_revision.id)
-        revisions.update_all(procedure_id: parent_procedure.id)
-        puts "Update revisions #{revisions.map(&:id)} for procedure: #{cloned_procedure.id}"
+        foreign_revision.update(procedure_id: parent_procedure.id)
+
+        puts "Update revision #{foreign_revision.id} for procedure: #{cloned_procedure.id}"
       end
     end
 
