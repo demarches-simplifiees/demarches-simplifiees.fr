@@ -12,7 +12,7 @@ namespace :after_party do
       .group_by(&:first).transform_values { _1.map(&:second) }
 
     bad_dossiers = dossiers.filter do |(id, revision_id)|
-      champs_by_dossier_id[id].any? do |type_de_champ_id|
+      (champs_by_dossier_id[id] || []).any? do |type_de_champ_id|
         revision_ids = revisions_by_type_de_champ_id[type_de_champ_id] || []
         !revision_id.in?(revision_ids)
       end
