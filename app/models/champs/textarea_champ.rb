@@ -41,14 +41,14 @@ class Champs::TextareaChamp < Champs::TextChamp
     analyze_character_count == :warning
   end
 
+  def character_limit_base
+    character_limit&.to_i
+  end
+
   private
 
   def character_count
     return value&.bytesize
-  end
-
-  def character_limit_base
-    character_limit&.to_i
   end
 
   def character_limit_threshold_75
