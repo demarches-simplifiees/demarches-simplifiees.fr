@@ -11,7 +11,7 @@ describe 'Recovery::LifeCycle' do
 
     let(:some_file) { Rack::Test::UploadedFile.new('spec/fixtures/files/white.png', 'image/png') }
     let(:geo_area) { build(:geo_area, :selection_utilisateur, :polygon) }
-
+    let(:fp) { Rails.root.join('spec', 'fixtures', 'export.dump') }
     let(:dossier) do
       d = create(:dossier, procedure:)
 
@@ -52,21 +52,28 @@ describe 'Recovery::LifeCycle' do
     def carte(d) = d.champs.find_by(type: "Champs::CarteChamp")
     def siret(d) = d.champs.find_by(type: "Champs::SiretChamp")
 
+    def cleanup_export_file
+      if File.exist?(fp)
+        FileUtils.rm(fp)
+      end
+    end
     let(:instructeur) { create(:instructeur) }
 
     before do
       instructeur.followed_dossiers << dossier
+      cleanup_export_file
     end
 
+    after { cleanup_export_file }
     it 'reloads the full grappe' do
       expect(Dossier.count).to eq(1)
       expect(Dossier.first.champs.count).not_to be(0)
 
       @dossier_ids = Dossier.ids
 
-      Recovery::Exporter.new(dossier_ids: @dossier_ids).dump
+      Recovery::Exporter.new(dossier_ids: @dossier_ids, file_path: fp).dump
       Dossier.where(id: @dossier_ids).destroy_all
-      Recovery::Importer.new().load
+      Recovery::Importer.new(file_path: fp).load
 
       expect(Dossier.count).to eq(1)
 

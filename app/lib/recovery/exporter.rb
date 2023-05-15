@@ -2,7 +2,7 @@ module Recovery
   class Exporter
     FILE_PATH = Rails.root.join('lib', 'data', 'export.dump')
 
-    attr_reader :dossiers
+    attr_reader :dossiers, :file_path
     def initialize(dossier_ids:, file_path: FILE_PATH)
       dossier_with_data = Dossier.where(id: dossier_ids)
         .preload(:user,
@@ -17,12 +17,14 @@ module Recovery
                  justificatif_motivation_attachment: :blob,
                  etablissement: :exercices,
                  revision: :procedure)
-      @dossiers = DossierPreloader.new(dossier_with_data).all
+      @dossiers = DossierPreloader.new(dossier_with_data,
+                                       includes_for_dossier: [:geo_areas, etablissement: :exercices],
+                                       includes_for_etablissement: [:exercices]).all
       @file_path = file_path
     end
 
     def dump
-      File.open(@file_path, 'wb') { _1.write(Marshal.dump(@dossiers)) }
+      @file_path.binwrite(Marshal.dump(@dossiers))
     end
   end
 end
