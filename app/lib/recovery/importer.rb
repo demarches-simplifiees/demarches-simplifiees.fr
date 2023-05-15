@@ -3,7 +3,9 @@ module Recovery
     attr_reader :dossiers
 
     def initialize(file_path: Recovery::Exporter::FILE_PATH)
+      # rubocop:disable Security/MarshalLoad
       @dossiers = Marshal.load(File.read(file_path))
+      # rubocop:enable Security/MarshalLoad
     end
 
     def load
@@ -12,12 +14,19 @@ module Recovery
 
         Dossier.insert(dossier.attributes)
 
-        Etablissement.insert(dossier.etablissement.attributes)
         if dossier.etablissement.present?
-          APIEntreprise::EntrepriseJob.perform_later(dossier.etablissement.id, dossier.procedure.id)
-        end
+          Etablissement.insert(dossier.etablissement.attributes)
+          if dossier.etablissement.present?
+            APIEntreprise::EntrepriseJob.perform_later(dossier.etablissement.id, dossier.procedure.id)
+          end
 
-        Individual.insert(dossier.individual.attributes)
+          dossier.etablissement.exercices.each do |exercice|
+            Exercice.insert(exercice.attributes)
+          end
+        end
+        if dossier.individual.present?
+          Individual.insert(dossier.individual.attributes)
+        end
 
         dossier.invites.each do |invite|
           Invite.insert(invite.attributes)
@@ -29,10 +38,6 @@ module Recovery
 
         dossier.transfer_logs.each do |transfer|
           DossierTransferLog.insert(transfer.attributes)
-        end
-
-        dossier.etablissement.exercices.each do |exercice|
-          Exercice.insert(exercice.attributes)
         end
 
         dossier.commentaires.each do |commentaire|
@@ -53,8 +58,11 @@ module Recovery
             import(avis.piece_justificative_file)
           end
         end
-
         dossier.dossier_operation_logs.each do |dol|
+          if dol.operation.nil?
+            puts "dol nil: #{dol.id}"
+            next
+          end
           DossierOperationLog.insert(dol.attributes)
 
           if dol.serialized.attached?
@@ -90,6 +98,7 @@ module Recovery
             champ.geo_areas.each { GeoArea.insert(_1.attributes) }
           end
         end
+        puts "imported dossier: #{dossier.id}"
       end
     end
 
