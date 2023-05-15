@@ -35,7 +35,7 @@ class DossierPreloader
   end
 
   def load_dossiers(dossiers, pj_template: false)
-    to_include = [piece_justificative_file_attachments: :blob]
+    to_include = [:geo_areas, piece_justificative_file_attachments: :blob, etablissement: :exercices]
 
     if pj_template
       to_include << { type_de_champ: { piece_justificative_template_attachment: :blob } }
@@ -65,7 +65,7 @@ class DossierPreloader
 
   def load_etablissements(champs)
     champs_siret = champs.filter(&:siret?)
-    etablissements_by_id = Etablissement.where(id: champs_siret.map(&:etablissement_id).compact).index_by(&:id)
+    etablissements_by_id = Etablissement.includes(:exercices).where(id: champs_siret.map(&:etablissement_id).compact).index_by(&:id)
     champs_siret.each do |champ|
       etablissement = etablissements_by_id[champ.etablissement_id]
       champ.association(:etablissement).target = etablissement
