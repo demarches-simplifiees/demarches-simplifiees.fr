@@ -5,7 +5,7 @@ describe Recovery::Exporter do
 
   def cleanup_export_file
     # if File.exist?(fp)
-      # FileUtils.rm(fp)
+    # FileUtils.rm(fp)
     # end
   end
 
@@ -13,11 +13,11 @@ describe Recovery::Exporter do
   after { cleanup_export_file }
 
   it 'exports dossiers to .dump' do
-    expect{ subject }.not_to raise_error
+    expect { subject }.not_to raise_error
   end
 
   it 'exports dossiers local file .dump' do
-    expect{ subject }.to change { File.exist?(fp) }
+    expect { subject }.to change { File.exist?(fp) }
       .from(false).to(true)
   end
 

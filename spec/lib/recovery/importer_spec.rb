@@ -3,7 +3,7 @@ describe Recovery::Importer do
   let(:importer) { Recovery::Importer.new(file_path:) }
   subject { importer.load }
   context 'loaded_data' do
-    let(:loaded_dossiers) { importer.dossiers}
+    let(:loaded_dossiers) { importer.dossiers }
 
     it 'contains user' do
       expect(loaded_dossiers.first.user).to be_an_instance_of(User)
@@ -11,6 +11,6 @@ describe Recovery::Importer do
   end
 
   it 're-import dossiers from .dump' do
-    expect{ subject }.to change { Dossier.count }.by(importer.dossiers.size)
+    expect { subject }.to change { Dossier.count }.by(importer.dossiers.size)
   end
 end
