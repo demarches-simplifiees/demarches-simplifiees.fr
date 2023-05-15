@@ -109,10 +109,13 @@ module DossierCloneConcern
       cloned_dossier.save!
 
       if fork
-        cloned_champs.values.each do |(original, champ)|
-          champ.update_columns(created_at: original.created_at, updated_at: original.updated_at)
-        end
         cloned_dossier.rebase!
+      end
+    end
+
+    if fork
+      cloned_champs.values.each do |(original, champ)|
+        champ.update_columns(created_at: original.created_at, updated_at: original.updated_at)
       end
     end
 
