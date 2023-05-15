@@ -88,10 +88,16 @@ class GroupeInstructeur < ApplicationRecord
 
   def routing_to_configure?
     rule = routing_rule
-    !(rule.is_a?(Logic::Eq) && rule.left.is_a?(Logic::ChampValue) && rule.right.is_a?(Logic::Constant))
+    return true if !(rule.is_a?(Logic::Eq) && rule.left.is_a?(Logic::ChampValue) && rule.right.is_a?(Logic::Constant))
+    !routing_rule_matches_tdc?
   end
 
   private
+
+  def routing_rule_matches_tdc?
+    routing_tdc = procedure.active_revision.types_de_champ.find_by(stable_id: routing_rule.left.stable_id)
+    routing_rule.right.value.in?(routing_tdc.options['drop_down_options'])
+  end
 
   def toggle_routing
     procedure.update!(routing_enabled: procedure.groupe_instructeurs.active.many?)
