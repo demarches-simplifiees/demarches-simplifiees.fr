@@ -1,4 +1,4 @@
-describe Recovery::LifeCycle do
+describe 'Recovery::LifeCycle' do
   describe '.load_export_destroy_and_import' do
     let(:procedure) do
       create(:procedure,
@@ -62,7 +62,11 @@ describe Recovery::LifeCycle do
       expect(Dossier.count).to eq(1)
       expect(Dossier.first.champs.count).not_to be(0)
 
-      Recovery::LifeCycle.new(dossier_ids: [dossier.id]).load_export_destroy_and_import
+      @dossier_ids = Dossier.ids
+
+      Recovery::Exporter.new(dossier_ids: @dossier_ids).dump
+      Dossier.where(id: @dossier_ids).destroy_all
+      Recovery::Importer.new().load
 
       expect(Dossier.count).to eq(1)
 
