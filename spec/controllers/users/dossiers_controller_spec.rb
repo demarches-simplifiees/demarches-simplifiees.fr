@@ -512,6 +512,17 @@ describe Users::DossiersController, type: :controller do
         expect(response).to redirect_to(dossier_path(dossier))
       end
     end
+
+    context 'when dossier was already submitted' do
+      before { post :submit_en_construction, params: payload }
+
+      it 'redirects to the dossier' do
+        subject
+
+        expect(response).to redirect_to(dossier_path(dossier))
+        expect(flash.alert).to eq("Les modifications ont déjà été déposées")
+      end
+    end
   end
 
   describe '#update brouillon' do
