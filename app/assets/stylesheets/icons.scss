@@ -173,4 +173,8 @@
   &.move-handle {
     background-image: image-url("icons/move-handle.svg");
   }
+
+  &.mandatory {
+    width: 10px;
+  }
 }
