@@ -576,8 +576,13 @@ class Procedure < ApplicationRecord
     procedure.service = nil
 
     transaction do
-      procedure.save
+      if !procedure.valid?
+        procedure.errors.attribute_names.each do |attribute|
+          procedure.send("#{attribute}=", nil)
+        end
+      end
 
+      procedure.save
       move_new_children_to_new_parent_coordinate(procedure.draft_revision)
     end
 
