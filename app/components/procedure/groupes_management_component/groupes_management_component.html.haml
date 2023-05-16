@@ -1,7 +1,10 @@
 - content_for(:title, 'Groupes')
 %h1 Gestion des groupes
 
-= render Procedure::GroupesSearchComponent.new(procedure: @procedure, query: @query, to_configure_count: @procedure.groupe_instructeurs.filter(&:routing_to_configure?).count)
+= render Procedure::GroupesSearchComponent.new(procedure: @procedure,
+  query: @query,
+  to_configure_count: @procedure.groupe_instructeurs.filter(&:routing_to_configure?).count,
+  to_configure_filter: @to_configure_filter)
 
 .fr-table.fr-table--no-caption.fr-table--layout-fixed.fr-mt-2w
   %table

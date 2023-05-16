@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 class Procedure::GroupesManagementComponent < ApplicationComponent
-  def initialize(procedure:, groupe_instructeurs:, query:)
+  def initialize(procedure:, groupe_instructeurs:, query:, to_configure_filter:)
     @procedure = procedure
     @groupe_instructeurs = groupe_instructeurs
     @query = query
     @total = groupe_instructeurs.total_count
+    @to_configure_filter = to_configure_filter
   end
 
   def table_header

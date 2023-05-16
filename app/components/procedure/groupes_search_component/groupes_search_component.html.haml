@@ -5,5 +5,17 @@
     = text_field_tag :q, @query, class: 'fr-input', type: 'search', autocomplete: 'off', placeholder: 'Rechercher par nom'
     %button.fr-btn{ title: "Rechercher" } Rechercher
 
-- if @to_configure_count > 0
-  %span #{ @to_configure_count } à configurer
+- if show_to_configure?
+  .flex.align-baseline
+    %ul.fr-btns-group.fr-btns-group--sm
+      - if @query.present?
+        %li= link_to "Réinialiser la recherche",
+          admin_procedure_groupe_instructeurs_path(@procedure),
+          class: 'fr-btn fr-btn--tertiary-no-outline'
+      - else
+        = form_with(url: admin_procedure_groupe_instructeurs_path(@procedure),
+          method: :get,
+          data: { controller: 'autosubmit' }) do |f|
+          .fr-checkbox-group.fr-ml-2w.fr-py-1w
+            = f.check_box :filter, checked: @filter_value
+            = f.label :filter, "#{ @to_configure_count } à configurer"
