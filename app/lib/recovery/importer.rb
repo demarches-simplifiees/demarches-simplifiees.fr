@@ -9,10 +9,20 @@ module Recovery
     end
 
     def load
-      @dossiers.map do |dossier|
+      @dossiers.each do |dossier|
+        if Dossier.exists?(dossier.id)
+          puts "Dossier #{dossier.id} already exists"
+          next
+        end
         dossier.instance_variable_set :@new_record, true
+        dossier_attributes = dossier.attributes.dup
 
-        Dossier.insert(dossier.attributes)
+        parent_dossier_id = dossier_attributes['parent_dossier_id']
+        if parent_dossier_id && !Dossier.exists?(id: parent_dossier_id)
+          dossier_attributes.delete('parent_dossier_id')
+        end
+
+        Dossier.insert(dossier_attributes)
 
         if dossier.etablissement.present?
           Etablissement.insert(dossier.etablissement.attributes)
@@ -98,7 +108,7 @@ module Recovery
             champ.geo_areas.each { GeoArea.insert(_1.attributes) }
           end
         end
-        puts "imported dossier: #{dossier.id}"
+        puts "imported dossier #{dossier.id}: #{Dossier.exists?(dossier.id)}"
       end
     end
 

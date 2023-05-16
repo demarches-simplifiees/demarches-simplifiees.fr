@@ -115,5 +115,18 @@ describe 'Recovery::LifeCycle' do
 
       expect(reloaded_dossier.transfer_logs).to be_present
     end
+
+    it 'skip parent_dossier_id when dossier does not exists any more' do
+      parent = create(:dossier)
+      dossier.update!(parent_dossier_id: parent.id)
+      @dossier_ids = [dossier.id]
+
+      Recovery::Exporter.new(dossier_ids: @dossier_ids, file_path: fp).dump
+      Dossier.where(id: @dossier_ids).destroy_all
+      parent.destroy
+      Recovery::Importer.new(file_path: fp).load
+
+      expect(Dossier.count).to eq(1)
+    end
   end
 end
