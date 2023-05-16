@@ -184,11 +184,12 @@ namespace :anonymizer do
       "SECURITY LABEL FOR anon ON COLUMN virus_scans.blob_key IS 'MASKED WITH VALUE $$REDACTED$$'",
 
       # champs values
-      "SECURITY LABEL FOR anon ON COLUMN champs.value IS 'MASKED WITH VALUE CASE
-                                                                            WHEN type = $$Champs::DossierLinkChamp$$ THEN value
-                                                                            ELSE NULL
-                                                                            END'",
+      # "SECURITY LABEL FOR anon ON COLUMN champs.value IS 'MASKED WITH VALUE CASE
+      #                                                                       WHEN type = $$Champs::DossierLinkChamp$$ THEN value
+      #                                                                       ELSE NULL
+      #                                                                       END'",
 
+      "SECURITY LABEL FOR anon ON COLUMN champs.value IS 'MASKED WITH VALUE NULL'",
       "SECURITY LABEL FOR anon ON COLUMN champs.value_json IS 'MASKED WITH VALUE NULL'",
       "SECURITY LABEL FOR anon ON COLUMN champs.external_id IS 'MASKED WITH VALUE NULL'",
       "SECURITY LABEL FOR anon ON COLUMN champs.data IS 'MASKED WITH VALUE NULL'"
@@ -199,6 +200,7 @@ namespace :anonymizer do
       ActiveRecord::Base.connection.execute "SELECT anon.remove_masks_for_all_columns()"
 
       sql_rules.each do |sql|
+        # puts "#{sql};"
         ActiveRecord::Base.connection.execute sql
       rescue StandardError
         puts sql
