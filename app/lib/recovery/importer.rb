@@ -11,8 +11,14 @@ module Recovery
     def load
       @dossiers.map do |dossier|
         dossier.instance_variable_set :@new_record, true
+        dossier_attributes = dossier.attributes.dup
 
-        Dossier.insert(dossier.attributes)
+        parent_dossier_id = dossier_attributes['parent_dossier_id']
+        if parent_dossier_id && !Dossier.exists?(id: parent_dossier_id)
+          dossier_attributes.delete('parent_dossier_id')
+        end
+
+        Dossier.insert(dossier_attributes)
 
         if dossier.etablissement.present?
           Etablissement.insert(dossier.etablissement.attributes)
