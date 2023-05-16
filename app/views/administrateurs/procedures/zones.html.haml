@@ -14,7 +14,11 @@
     = f.label :zone do
       = t('zone', scope: 'activerecord.attributes.procedure')
     - if Rails.application.config.ds_zonage_enabled
-      = f.collection_check_boxes :zone_ids, Zone.available_at(@procedure.published_or_created_at), :id, :label do |b|
+      = f.collection_check_boxes :zone_ids, current_administrateur.default_zones, :id, :current_label do |b|
+        .editable-champ.editable-champ-checkbox
+          = b.check_box
+          = b.label class: "admin-default-zone"
+      = f.collection_check_boxes :zone_ids, Zone.available_at(@procedure.published_or_created_at, current_administrateur.default_zones), :id, :label do |b|
         .editable-champ.editable-champ-checkbox
           = b.check_box
           = b.label
