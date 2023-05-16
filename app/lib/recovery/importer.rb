@@ -9,7 +9,11 @@ module Recovery
     end
 
     def load
-      @dossiers.map do |dossier|
+      @dossiers.each do |dossier|
+        if Dossier.exists?(dossier.id)
+          puts "Dossier #{dossier.id} already exists"
+          next
+        end
         dossier.instance_variable_set :@new_record, true
         dossier_attributes = dossier.attributes.dup
 
@@ -104,7 +108,7 @@ module Recovery
             champ.geo_areas.each { GeoArea.insert(_1.attributes) }
           end
         end
-        puts "imported dossier: #{dossier.id}"
+        puts "imported dossier #{dossier.id}: #{Dossier.exists?(dossier.id)}"
       end
     end
 
