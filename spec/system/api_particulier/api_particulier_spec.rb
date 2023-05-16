@@ -459,7 +459,7 @@ describe 'fetch API Particulier Data', js: true do
     end
 
     context 'DGFiP' do
-      scenario 'it can fill a DGFiP field' do
+      scenario 'it can fill a DGFiP field', vcr: { cassette_name: 'api_particulier/success/avis_imposition' } do
         visit commencer_path(path: procedure.path)
         click_on 'Commencer la démarche'
 
@@ -481,12 +481,11 @@ describe 'fetch API Particulier Data', js: true do
         click_on 'Déposer le dossier'
         expect(page).to have_content(/Le champ « Champs public reference avis » doit posséder 13 ou 14 caractères/)
 
-        VCR.use_cassette('api_particulier/success/avis_imposition') do
-          fill_in "La référence d’avis d’imposition", with: reference_avis
-          wait_for_autosave
-          click_on 'Déposer le dossier'
-          perform_enqueued_jobs
-        end
+        fill_in "La référence d’avis d’imposition", with: reference_avis
+        wait_for_autosave
+        click_on 'Déposer le dossier'
+        perform_enqueued_jobs
+
         expect(page).to have_current_path(merci_dossier_path(Dossier.last))
 
         perform_enqueued_jobs
