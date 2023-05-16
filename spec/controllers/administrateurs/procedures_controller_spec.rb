@@ -548,7 +548,7 @@ describe Administrateurs::ProceduresController, type: :controller do
         expect(Procedure.last.cloned_from_library).to be_falsey
         expect(Procedure.last.notice.attached?).to be_truthy
         expect(Procedure.last.deliberation.attached?).to be_truthy
-        expect(flash[:notice]).to have_content 'Démarche clonée, pensez a vérifier la Présentation et choisir le service a laquelle cette procédure est associé.'
+        expect(flash[:notice]).to have_content 'Démarche clonée. Pensez à vérifier la présentation et choisir le service à laquelle cette démarche est associée.'
       end
 
       context 'when the procedure is cloned from the library' do
@@ -569,7 +569,7 @@ describe Administrateurs::ProceduresController, type: :controller do
 
       it 'creates a new procedure and redirect to it' do
         expect(response).to redirect_to admin_procedure_path(id: Procedure.last.id)
-        expect(flash[:notice]).to have_content 'Démarche clonée, pensez a vérifier la Présentation et choisir le service a laquelle cette procédure est associé.'
+        expect(flash[:notice]).to have_content 'Démarche clonée. Pensez à vérifier la présentation et choisir le service à laquelle cette démarche est associée.'
       end
     end
 
@@ -601,7 +601,7 @@ describe Administrateurs::ProceduresController, type: :controller do
         expect(response).to redirect_to admin_procedure_path(id: Procedure.last.id)
         expect(Procedure.last.notice.attached?).to be_falsey
         expect(Procedure.last.deliberation.attached?).to be_falsey
-        expect(flash[:notice]).to have_content 'Démarche clonée, pensez a vérifier la Présentation et choisir le service a laquelle cette procédure est associé.'
+        expect(flash[:notice]).to have_content 'Démarche clonée. Pensez à vérifier la présentation et choisir le service à laquelle cette démarche est associée.'
       end
     end
   end

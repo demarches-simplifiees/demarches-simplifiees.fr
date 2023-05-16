@@ -575,14 +575,15 @@ class Procedure < ApplicationRecord
     procedure.replaced_by_procedure = nil
     procedure.service = nil
 
-    transaction do
-      if !procedure.valid?
-        procedure.errors.attribute_names.each do |attribute|
-          procedure.send("#{attribute}=", nil)
-        end
+    if !procedure.valid?
+      procedure.errors.attribute_names.each do |attribute|
+        next if [:notice, :deliberation, :logo].exclude?(attribute)
+        procedure.public_send("#{attribute}=", nil)
       end
+    end
 
-      procedure.save
+    transaction do
+      procedure.save!
       move_new_children_to_new_parent_coordinate(procedure.draft_revision)
     end
 
