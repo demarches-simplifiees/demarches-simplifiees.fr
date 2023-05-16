@@ -49,13 +49,14 @@ describe 'The routing with rules', js: true do
     expect(page).to have_select("value", selected: "scientifique")
   end
 
-  scenario 'Routage personnalisé' do
+  scenario 'Routage avancé' do
     steps_to_routing_configuration
 
     choose('Avancé', allow_label_click: true)
     click_on 'Continuer'
 
     expect(page).to have_text('Gestion des groupes')
+    expect(page).to have_text('à configurer')
 
     # update defaut groupe
     click_on 'défaut'
@@ -113,7 +114,14 @@ describe 'The routing with rules', js: true do
     click_on 'littéraire'
 
     within('.target') { select('Spécialité') }
+    within('.value') { select('scientifique') }
+
+    expect(page).to have_text('règle déjà attribuée à scientifique')
+
+    within('.target') { select('Spécialité') }
     within('.value') { select('littéraire') }
+
+    expect(page).not_to have_text('règle déjà attribuée à scientifique')
 
     procedure.groupe_instructeurs.where(closed: false).each { |gi| wait_until { gi.reload.routing_rule.present? } }
 

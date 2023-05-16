@@ -33,6 +33,8 @@
       %p.fr-mb-1w.fr-mr-2w Routage
       - if @groupe_instructeur.routing_to_configure?
         %p.fr-mb-1w.fr-badge.fr-badge--warning.fr-badge--sm à configurer
+      - elsif @groupe_instructeur.non_unic_rule?
+        %p.fr-mb-1w.fr-badge.fr-badge--warning.fr-badge--sm règle déjà attribuée à #{@groupe_instructeur.groups_with_same_rule}
 
     .flex.align-baseline.fr-mb-1w
       .fr-mr-2w.no-wrap si le champ

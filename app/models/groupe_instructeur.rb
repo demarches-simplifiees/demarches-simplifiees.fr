@@ -11,6 +11,7 @@
 #  procedure_id :bigint           not null
 #
 class GroupeInstructeur < ApplicationRecord
+  include Logic
   DEFAUT_LABEL = 'défaut'
   belongs_to :procedure, -> { with_discarded }, inverse_of: :groupe_instructeurs, optional: false
   has_many :assign_tos, dependent: :destroy
@@ -87,7 +88,20 @@ class GroupeInstructeur < ApplicationRecord
   def routing_to_configure?
     rule = routing_rule
     return true if !(rule.is_a?(Logic::Eq) && rule.left.is_a?(Logic::ChampValue) && rule.right.is_a?(Logic::Constant))
-    !routing_rule_matches_tdc?
+    return true if !routing_rule_matches_tdc?
+  end
+
+  def non_unic_rule?
+    return false if routing_to_configure?
+    routing_rule.in?((procedure.groupe_instructeurs - [self]).map(&:routing_rule))
+  end
+
+  def groups_with_same_rule
+    return if routing_rule.nil?
+    other_groupe_instructeurs
+      .filter { |gi| !gi.routing_rule.nil? && gi.routing_rule.right != empty && gi.routing_rule == routing_rule }
+      .map(&:label)
+      .join(', ')
   end
 
   def other_groupe_instructeurs

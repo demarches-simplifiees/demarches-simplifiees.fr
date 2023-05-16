@@ -23,6 +23,8 @@
                   %p.fr-badge.fr-badge--info.fr-badge--sm.fr-ml-1w inactif
                 - elsif gi.routing_to_configure?
                   %p.fr-badge.fr-badge--warning.fr-badge--sm.fr-ml-1w à configurer
+                - elsif gi.non_unic_rule?
+                  %p.fr-badge.fr-badge--warning.fr-badge--sm.fr-ml-1w règle déjà attribuée à #{gi.groups_with_same_rule}
 
               %span.fr-mr-1w
                 #{gi.dossiers.visible_by_administration.size}
