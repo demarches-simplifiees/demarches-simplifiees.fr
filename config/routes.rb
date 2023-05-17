@@ -450,6 +450,7 @@ Rails.application.routes.draw do
             post 'avis' => 'dossiers#create_avis'
             get 'print' => 'dossiers#print'
             get 'telecharger_pjs' => 'dossiers#telecharger_pjs'
+            post 'reaffecter_un_dossier'
           end
         end
 
