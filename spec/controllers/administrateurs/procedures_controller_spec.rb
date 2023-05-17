@@ -548,7 +548,7 @@ describe Administrateurs::ProceduresController, type: :controller do
         expect(Procedure.last.cloned_from_library).to be_falsey
         expect(Procedure.last.notice.attached?).to be_truthy
         expect(Procedure.last.deliberation.attached?).to be_truthy
-        expect(flash[:notice]).to have_content 'Démarche clonée, pensez a vérifier la Présentation et choisir le service a laquelle cette procédure est associé.'
+        expect(flash[:notice]).to have_content 'Démarche clonée. Pensez à vérifier la présentation et choisir le service à laquelle cette démarche est associée.'
       end
 
       context 'when the procedure is cloned from the library' do
@@ -569,7 +569,39 @@ describe Administrateurs::ProceduresController, type: :controller do
 
       it 'creates a new procedure and redirect to it' do
         expect(response).to redirect_to admin_procedure_path(id: Procedure.last.id)
-        expect(flash[:notice]).to have_content 'Démarche clonée, pensez a vérifier la Présentation et choisir le service a laquelle cette procédure est associé.'
+        expect(flash[:notice]).to have_content 'Démarche clonée. Pensez à vérifier la présentation et choisir le service à laquelle cette démarche est associée.'
+      end
+    end
+
+    context 'when procedure has invalid fields' do
+      let(:admin_2) { create(:administrateur) }
+      let(:path) { 'spec/fixtures/files/invalid_file_format.json' }
+
+      before do
+        sign_out(admin.user)
+        sign_in(admin_2.user)
+
+        procedure.notice.attach(io: File.open(path),
+        filename: "invalid_file_format.json",
+        content_type: "application/json",
+        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE })
+
+        procedure.deliberation.attach(io: File.open(path),
+        filename: "invalid_file_format.json",
+        content_type: "application/json",
+        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE })
+
+        procedure.created_at = Date.new(2020, 2, 27)
+        procedure.save!
+
+        subject { put :clone, params: { procedure_id: procedure.id } }
+      end
+
+      it 'empty invalid fields and allow procedure to be cloned' do
+        expect(response).to redirect_to admin_procedure_path(id: Procedure.last.id)
+        expect(Procedure.last.notice.attached?).to be_falsey
+        expect(Procedure.last.deliberation.attached?).to be_falsey
+        expect(flash[:notice]).to have_content 'Démarche clonée. Pensez à vérifier la présentation et choisir le service à laquelle cette démarche est associée.'
       end
     end
   end
