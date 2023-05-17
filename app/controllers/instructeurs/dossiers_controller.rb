@@ -331,7 +331,17 @@ module Instructeurs
       end
     end
 
-    def reaffecter_un_dossier
+    def reaffectation
+      @dossier = current_instructeur.dossiers.find(params[:dossier_id])
+
+      @groupe_instructeur = @dossier.groupe_instructeur
+
+      @groupes_instructeurs = Kaminari.paginate_array(@groupe_instructeur.other_groupe_instructeurs)
+        .page(params[:page])
+        .per(ITEMS_PER_PAGE)
+    end
+
+    def reaffecter
       dossier = current_instructeur.dossiers.find(params[:dossier_id])
 
       new_group = dossier
