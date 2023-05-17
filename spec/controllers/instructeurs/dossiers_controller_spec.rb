@@ -1046,7 +1046,27 @@ describe Instructeurs::DossiersController, type: :controller do
     end
   end
 
-  describe '#reaffecter_un_dossier' do
+  describe '#reaffectation' do
+    let!(:gi_2) { GroupeInstructeur.create(label: 'deuxième groupe', procedure: procedure) }
+    let!(:gi_3) { GroupeInstructeur.create(label: 'troisième groupe', procedure: procedure) }
+    let!(:dossier) { create(:dossier, :en_construction, procedure: procedure, groupe_instructeur: procedure.groupe_instructeurs.first) }
+
+    before do
+      post :reaffectation,
+         params: {
+           procedure_id: procedure.id,
+           dossier_id: dossier.id
+         }
+    end
+
+    it do
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Vous pouvez réaffecter le dossier nº #{dossier.id} à l'un des groupes d'instructeurs suivants.")
+      expect(response.body).to include('2 groupes existent')
+    end
+  end
+
+  describe '#reaffecter' do
     let!(:gi_2) { GroupeInstructeur.create(label: 'deuxième groupe', procedure: procedure) }
     let!(:dossier) { create(:dossier, :en_construction, procedure: procedure, groupe_instructeur: procedure.groupe_instructeurs.first) }
 
