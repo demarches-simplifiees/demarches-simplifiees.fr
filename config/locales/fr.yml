@@ -784,6 +784,10 @@ fr:
        deleted_by_instructeur: "Le dossier a bien été supprimé de votre interface"
        impossible_deletion: "Supression impossible : le dossier n’est pas traité"
        restore: "Le dossier a bien été restauré"
+       reaffectation: "Le dossier nº %{dossier_id} a été réaffecté au groupe d’instructeurs « %{label} »."
+       existing_groupe:
+         one: "%{count} groupe existe"
+         other: "%{count} groupes existent"
        labels:
         to_follow: à suivre
         total: dossiers

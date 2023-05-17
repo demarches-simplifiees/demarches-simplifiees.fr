@@ -298,6 +298,21 @@ module Instructeurs
       end
     end
 
+    def reaffecter_un_dossier
+      dossier = current_instructeur.dossiers.find(params[:dossier_id])
+
+      procedure = current_instructeur.procedures.find(params[:procedure_id])
+
+      new_group = procedure.groupe_instructeurs.find_by(id: params[:groupe_instructeur_id])
+
+      dossier.assign_to_groupe_instructeur(new_group)
+
+      dossier.update!(forced_groupe_instructeur: true)
+
+      flash.notice = t('instructeurs.dossiers.reaffectation', dossier_id: dossier.id, label: new_group.label)
+      redirect_to instructeur_procedure_path(procedure)
+    end
+
     private
 
     def dossier_scope
