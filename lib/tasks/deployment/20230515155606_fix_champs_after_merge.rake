@@ -44,8 +44,8 @@ namespace :after_party do
         bad_champs = dossier.champs.filter { !dossier.revision_id.in?(_1.type_de_champ.revisions.ids) || _1.type != "Champs::#{_1.type_champ.classify}Champ" }
         if bad_champs.present?
           if dossier.revision_id == dossier.procedure.draft_revision_id
-            puts "Deleting dossier #{dossier.id} on procedure #{dossier.procedure.id} draft revision"
-            dossier.destroy
+            # puts "Deleting dossier #{dossier.id} on procedure #{dossier.procedure.id} draft revision"
+            # dossier.destroy
           else
             bad_champs.each do |champ|
               type_de_champ = dossier.revision.types_de_champ.find { _1.stable_id == champ.stable_id && champ.type == "Champs::#{_1.type_champ.classify}Champ" }
