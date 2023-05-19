@@ -1,14 +1,14 @@
 class APIEntreprise::API
-  ENTREPRISE_RESOURCE_NAME = "entreprises"
-  ETABLISSEMENT_RESOURCE_NAME = "etablissements"
-  EXERCICES_RESOURCE_NAME = "exercices"
-  RNA_RESOURCE_NAME = "associations"
-  EFFECTIFS_RESOURCE_NAME = "effectifs_mensuels_acoss_covid"
-  EFFECTIFS_ANNUELS_RESOURCE_NAME = "effectifs_annuels_acoss_covid"
-  ATTESTATION_SOCIALE_RESOURCE_NAME = "attestations_sociales_acoss"
-  ATTESTATION_FISCALE_RESOURCE_NAME = "attestations_fiscales_dgfip"
-  BILANS_BDF_RESOURCE_NAME = "bilans_entreprises_bdf"
-  PRIVILEGES_RESOURCE_NAME = "privileges"
+  ENTREPRISE_RESOURCE_NAME = "v2/entreprises/%{id}"
+  ETABLISSEMENT_RESOURCE_NAME = "v2/etablissements/%{id}"
+  EXERCICES_RESOURCE_NAME = "v2/exercices/%{id}"
+  RNA_RESOURCE_NAME = "v2/associations/%{id}"
+  EFFECTIFS_RESOURCE_NAME = "v2/effectifs_mensuels_acoss_covid"
+  EFFECTIFS_ANNUELS_RESOURCE_NAME = "v2/effectifs_annuels_acoss_covid/%{id}"
+  ATTESTATION_SOCIALE_RESOURCE_NAME = "v2/attestations_sociales_acoss/%{id}"
+  ATTESTATION_FISCALE_RESOURCE_NAME = "v2/attestations_fiscales_dgfip/%{id}"
+  BILANS_BDF_RESOURCE_NAME = "v2/bilans_entreprises_bdf/%{id}"
+  PRIVILEGES_RESOURCE_NAME = "v2/privileges"
 
   TIMEOUT = 20
   DEFAULT_API_ENTREPRISE_DELAY = 0.0
@@ -41,7 +41,7 @@ class APIEntreprise::API
   end
 
   def effectifs(siren, annee, mois)
-    endpoint = [EFFECTIFS_RESOURCE_NAME, annee, mois, "entreprise"].join('/')
+    endpoint = [EFFECTIFS_RESOURCE_NAME, annee, mois, "entreprise", "%{id}"].join('/')
     call_with_siret(endpoint, siren)
   end
 
@@ -127,7 +127,7 @@ class APIEntreprise::API
   end
 
   def make_url(resource_name, siret_or_siren = nil)
-    [API_ENTREPRISE_URL, resource_name, siret_or_siren].compact.join("/")
+    [API_ENTREPRISE_URL, format(resource_name, id: siret_or_siren)].compact.join("/")
   end
 
   def build_params(user_id)
