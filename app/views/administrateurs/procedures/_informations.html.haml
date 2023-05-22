@@ -6,12 +6,17 @@
 = f.label :libelle do
   Titre de la démarche
   %span.mandatory *
-= f.text_field :libelle, class: 'form-control', placeholder: 'Titre', required: true
+= f.text_field :libelle, class: 'form-control', placeholder: 'Titre'
 
-= f.label :description do
-  Description
+= f.label :description_what do
+  Quel est l’objet de la démarche ?
   %span.mandatory *
-= f.text_area :description, rows: '6', placeholder: 'Description de la démarche, destinataires, etc. ', class: 'form-control', required: true
+= f.text_area :description_what, rows: '6', placeholder: 'Décrivez en quelques lignes le contexte, la finalité etc.', class: 'form-control'
+
+= f.label :description_for_who do
+  À qui s’adresse la démarche ?
+  %span.mandatory *
+= f.text_area :description_for_who, rows: '6', placeholder: 'Décrivez en quelques lignes les destinataires finaux de la démarche, les critères d’éligibilité s’il y en a, les pré-requis, etc.', class: 'form-control'
 
 %h3.header-subsection Logo de la démarche
 = render Attachment::EditComponent.new(attached_file: @procedure.logo, view_as: :link)
