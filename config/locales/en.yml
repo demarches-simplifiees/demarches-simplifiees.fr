@@ -357,7 +357,8 @@ en:
           a_suivre: No instructor is assigned to follow up on these files. Be the first !
           suivis: The folders that are in this tab are only those that you follow. You can exchange with the requester until you can accept them, refuse them or classify them without follow-up.
           traites_html: "The files in this tab are finished: they have been accepted, refused or closed without follow-up. You can <a href=%{archives_path}>download</a> the zip archives of finished files and their attachments."
-          tous: All the files that have been submitted on this approach, regardless of the status.
+          tous: All the files that have been submitted on this approach, included files to be follow and files followed by you or other instructors.
+          tous_with_routing: All the files that have been submitted on this approach, and assigned to your instructors groups.
           supprimes_recemment: All files not <strong>archive</strong>, <strong>completed</strong> and <strong>deleted by the instructors</strong> on this approach.
           archives: "The files in this tab are archived: you can no longer reply to them, and requesters can no longer modify them."
           expirant: Records will not expire prior to the data retention period.
