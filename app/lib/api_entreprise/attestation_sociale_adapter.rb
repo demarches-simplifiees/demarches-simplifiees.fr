@@ -11,9 +11,9 @@ class APIEntreprise::AttestationSocialeAdapter < APIEntreprise::Adapter
   end
 
   def process_params
-    if data_source[:url].present?
+    if data_source[:data] && data_source[:data][:document_url].present?
       {
-        entreprise_attestation_sociale_url: data_source[:url]
+        entreprise_attestation_sociale_url: data_source[:data][:document_url]
       }
     else
       {}

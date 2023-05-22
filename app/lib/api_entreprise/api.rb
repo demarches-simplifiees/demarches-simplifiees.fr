@@ -5,7 +5,7 @@ class APIEntreprise::API
   RNA_RESOURCE_NAME = "v2/associations/%{id}"
   EFFECTIFS_RESOURCE_NAME = "v2/effectifs_mensuels_acoss_covid"
   EFFECTIFS_ANNUELS_RESOURCE_NAME = "v2/effectifs_annuels_acoss_covid/%{id}"
-  ATTESTATION_SOCIALE_RESOURCE_NAME = "v2/attestations_sociales_acoss/%{id}"
+  ATTESTATION_SOCIALE_RESOURCE_NAME = "v4/urssaf/unites_legales/%{id}/attestation_vigilance"
   ATTESTATION_FISCALE_RESOURCE_NAME = "v2/attestations_fiscales_dgfip/%{id}"
   BILANS_BDF_RESOURCE_NAME = "v2/bilans_entreprises_bdf/%{id}"
   PRIVILEGES_RESOURCE_NAME = "v2/privileges"
