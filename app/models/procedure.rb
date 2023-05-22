@@ -282,8 +282,8 @@ class Procedure < ApplicationRecord
   }
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
-  validates :description, presence: true, allow_blank: false, allow_nil: false, if: -> { description_what.nil? && description_for_who.nil?}
-  validates :description_what, :description_for_who, presence: true, allow_blank: false, allow_nil: false, if: -> { description.nil?}
+  validates :description, presence: true, allow_blank: false, allow_nil: false, if: -> { description_what.nil? && description_for_who.nil? }
+  validates :description_what, :description_for_who, presence: true, allow_blank: false, allow_nil: false, if: -> { description.nil? }
   validates :administrateurs, presence: true
   validates :lien_site_web, presence: true, if: :publiee?
   validates :draft_types_de_champ_public,

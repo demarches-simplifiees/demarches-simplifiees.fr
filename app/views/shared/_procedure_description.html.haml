@@ -37,12 +37,12 @@
     .fr-accordions-group
       %section.fr-accordion
         %h3.fr-accordion__title
-          %button.fr-accordion__btn{"aria-controls" => "accordion-114", "aria-expanded" => "true"} Quel est l’objet de cette démarche ?
+          %button.fr-accordion__btn{ "aria-controls" => "accordion-114", "aria-expanded" => "true" } Quel est l’objet de cette démarche ?
         #accordion-114.fr-collapse.js_description_what
           = h render SimpleFormatComponent.new(procedure.description_what, allow_a: true)
 
       %section.fr-accordion
         %h3.fr-accordion__title
-          %button.fr-accordion__btn{"aria-controls" => "accordion-115", "aria-expanded" => "false"} À qui s’adresse la démarche ?
+          %button.fr-accordion__btn{ "aria-controls" => "accordion-115", "aria-expanded" => "false" } À qui s’adresse la démarche ?
         #accordion-115.fr-collapse.js_description_for_who
           = h render SimpleFormatComponent.new(procedure.description_for_who, allow_a: true)

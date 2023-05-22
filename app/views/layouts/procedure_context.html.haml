@@ -9,6 +9,7 @@
             = render partial: 'shared/procedure_description', locals: { procedure: procedure }
           - else
             = render partial: 'layouts/commencer/no_procedure'
+            = yield
 
 - content_for :footer do
   - if procedure
