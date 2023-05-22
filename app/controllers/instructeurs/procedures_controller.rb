@@ -314,6 +314,7 @@ module Instructeurs
       Procedure
         .with_attached_logo
         .find(procedure_id)
+        .tap { Sentry.set_tags(procedure: _1.id) }
     end
 
     def ensure_ownership!
