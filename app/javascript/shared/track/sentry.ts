@@ -2,13 +2,14 @@ import * as Sentry from '@sentry/browser';
 import { getConfig } from '@utils';
 
 const {
-  sentry: { key, enabled, user, environment, browser }
+  sentry: { key, enabled, user, environment, browser, release }
 } = getConfig();
 
 // We need to check for key presence here as we do not have a dsn for browser yet
 if (enabled && key) {
   Sentry.init({
     dsn: key,
+    release: release ?? undefined,
     environment,
     tracesSampleRate: 0.1,
     ignoreErrors: [
