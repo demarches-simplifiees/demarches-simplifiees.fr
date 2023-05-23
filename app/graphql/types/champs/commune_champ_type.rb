@@ -7,13 +7,8 @@ module Types::Champs
       field :code, String, "Le code INSEE", null: false
     end
 
-    class DepartementType < Types::BaseObject
-      field :name, String, null: false
-      field :code, String, null: false
-    end
-
     field :commune, CommuneType, null: true
-    field :departement, DepartementType, null: true
+    field :departement, Types::Champs::DepartementChampType::DepartementType, null: true
 
     def commune
       if object.code?
