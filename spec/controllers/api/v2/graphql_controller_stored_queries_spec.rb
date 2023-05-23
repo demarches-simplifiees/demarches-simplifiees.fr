@@ -83,6 +83,7 @@ describe API::V2::GraphqlController do
       it {
         expect(gql_errors).to be_nil
         expect(gql_data[:dossier][:id]).to eq(dossier.to_typed_id)
+        expect(gql_data[:dossier][:connectionUsager]).to eq('password')
         expect(gql_data[:dossier][:demandeur][:__typename]).to eq('PersonnePhysique')
         expect(gql_data[:dossier][:demandeur][:nom]).to eq(dossier.individual.nom)
         expect(gql_data[:dossier][:demandeur][:prenom]).to eq(dossier.individual.prenom)
