@@ -68,8 +68,14 @@ describe PrefillDescriptionsController, type: :controller do
 
       it "includes the prefill URL" do
         expect(response.body).to include(commencer_path(path: procedure.path))
-        expect(response.body).to include({ "champ_#{type_de_champ.to_typed_id}" => type_de_champ.libelle }.to_query)
-        expect(response.body).to include({ "champ_#{type_de_champ_to_add.to_typed_id}" => type_de_champ_to_add.libelle }.to_query)
+        expect(response.body).to include(
+          {
+            "champ_#{type_de_champ.to_typed_id}" => I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")
+          }.to_query
+        )
+        expect(response.body).to include({
+          "champ_#{type_de_champ_to_add.to_typed_id}" => I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ_to_add.type_champ}")
+        }.to_query)
       end
     end
 
@@ -81,8 +87,12 @@ describe PrefillDescriptionsController, type: :controller do
 
       it "includes the prefill URL" do
         expect(response.body).to include(commencer_path(path: procedure.path))
-        expect(response.body).to include({ "champ_#{type_de_champ.to_typed_id}" => type_de_champ.libelle }.to_query)
-        expect(response.body).not_to include({ "champ_#{type_de_champ_to_remove.to_typed_id}" => type_de_champ_to_remove.libelle }.to_query)
+        expect(response.body).to include({
+          "champ_#{type_de_champ.to_typed_id}" => I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")
+        }.to_query)
+        expect(response.body).not_to include({
+          "champ_#{type_de_champ_to_remove.to_typed_id}" => I18n.t("views.prefill_descriptions.edit.examples.#{type_de_champ_to_remove.type_champ}")
+        }.to_query)
       end
     end
 

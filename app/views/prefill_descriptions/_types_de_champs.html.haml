@@ -1,44 +1,44 @@
 = turbo_frame_tag "#{dom_id(@prefill_description)}_types_de_champs" do
-  .card
-    .card-title
-      %span.icon.edit
-      = t("views.prefill_descriptions.edit.champs_title")
+  .fr-grid-row.fr-grid-row--gutters.fr-py-5w
+    - prefill_description.types_de_champ.each do |type_de_champ|
+      .fr-col-md-6.fr-col-12
+        .card
+          .card-title.flex.justify-between.align-center
+            = type_de_champ.libelle
+            = form_for prefill_description, url: prefill_description_path(prefill_description.path), data: { turbo: true } do |f|
+              - if prefill_description.include?(type_de_champ.id)
+                - (prefill_description.selected_type_de_champ_ids - [type_de_champ.id.to_s]).each do |id|
+                  = f.hidden_field :selected_type_de_champ_ids, value: id, multiple: true
+                = f.submit t("views.prefill_descriptions.edit.champ_remove"), class: 'fr-btn fr-btn--secondary fr-btn--md'
+              - elsif type_de_champ.prefillable?
+                - (prefill_description.selected_type_de_champ_ids + [type_de_champ.id.to_s]).each do |id|
+                  = f.hidden_field :selected_type_de_champ_ids, value: id, multiple: true
+                = f.submit t("views.prefill_descriptions.edit.champ_add"), class: 'fr-btn fr-btn--md'
+              - else
+                %button.fr-btn.fr-btn--secondary{ disabled: true }
+                  = t("views.prefill_descriptions.edit.champ_unavailable")
 
-    %table.table.hoverable
-      %thead
-        %tr
-          %th
-            = t("views.prefill_descriptions.edit.champ_id")
-          %th
-            = t("views.prefill_descriptions.edit.champ_type")
-          %th
-            = t("views.prefill_descriptions.edit.champ_libelle")
-          %th
-            = t("views.prefill_descriptions.edit.champ_description")
-          %th
-            = t("views.prefill_descriptions.edit.champ_prefill")
+          = type_de_champ.description
 
-      %tbody
-        - prefill_description.types_de_champ.each do |type_de_champ|
-          %tr
-            %td
-              = type_de_champ.to_typed_id
-            %td
-              = t("activerecord.attributes.type_de_champ.type_champs.#{type_de_champ.type_champ}")
-            %td
-              = type_de_champ.libelle
-            %td
-              = type_de_champ.description
-            %td.text-center
-              = form_for prefill_description, url: prefill_description_path(prefill_description.path), data: { turbo: true } do |f|
-                - if prefill_description.include?(type_de_champ.id)
-                  - (prefill_description.selected_type_de_champ_ids - [type_de_champ.id.to_s]).each do |id|
-                    = f.hidden_field :selected_type_de_champ_ids, value: id, multiple: true
-                  = f.submit t("views.prefill_descriptions.edit.champ_remove"), class: 'fr-btn fr-btn--secondary fr-btn--md'
-                - elsif type_de_champ.prefillable?
-                  - (prefill_description.selected_type_de_champ_ids + [type_de_champ.id.to_s]).each do |id|
-                    = f.hidden_field :selected_type_de_champ_ids, value: id, multiple: true
-                  = f.submit t("views.prefill_descriptions.edit.champ_add"), class: 'fr-btn fr-btn--md'
-                - else
-                  %button.fr-btn.fr-btn--secondary{ disabled: true }
-                    = t("views.prefill_descriptions.edit.champ_unavailable")
+          %table.table.vertical
+            %tbody
+              %tr
+                %th
+                  = t("views.prefill_descriptions.edit.champ_id")
+                %td
+                  = type_de_champ.to_typed_id
+              %tr
+                %th
+                  = t("views.prefill_descriptions.edit.champ_type")
+                %td
+                  = t("activerecord.attributes.type_de_champ.type_champs.#{type_de_champ.type_champ}")
+              %tr
+                %th
+                  = t("views.prefill_descriptions.edit.possible_values.title")
+                %td
+                  = t("views.prefill_descriptions.edit.possible_values.#{type_de_champ.type_champ}")
+              %tr
+                %th
+                  = t("views.prefill_descriptions.edit.examples.title")
+                %td
+                  = t("views.prefill_descriptions.edit.examples.#{type_de_champ.type_champ}")
