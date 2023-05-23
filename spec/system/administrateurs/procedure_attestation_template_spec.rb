@@ -5,7 +5,7 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
 
   let(:administrateur) { create(:administrateur) }
   let(:procedure) do
-    create(:procedure, :with_service, :with_instructeur,
+    create(:procedure, :with_service, :with_instructeur, :with_zone,
       aasm_state: :brouillon,
       administrateurs: [administrateur],
       libelle: 'libellé de la procédure',

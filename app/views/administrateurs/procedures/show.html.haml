@@ -58,7 +58,7 @@
   %h2.fr-mt-5w.fr-mb-3w.fr-h1 Indispensable avant publication
   .fr-grid-row.fr-grid-row--gutters
     = render Procedure::Card::PresentationComponent.new(procedure: @procedure)
-    = render Procedure::Card::ZonesComponent.new(procedure: @procedure) if @procedure.feature_enabled?(:zonage)
+    = render Procedure::Card::ZonesComponent.new(procedure: @procedure) if Rails.application.config.ds_zonage_enabled
     = render Procedure::Card::ChampsComponent.new(procedure: @procedure)
     = render Procedure::Card::ServiceComponent.new(procedure: @procedure, administrateur: current_administrateur)
     = render Procedure::Card::AdministrateursComponent.new(procedure: @procedure)

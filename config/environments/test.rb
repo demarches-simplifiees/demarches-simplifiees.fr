@@ -80,6 +80,8 @@ Rails.application.configure do
     status_visible_duration: 500
   }
 
+  config.ds_zonage_enabled = true
+
   # BCrypt is slow by design - but during tests we want to make it faster
   # to compute hashes of passwords.
   silence_warnings do

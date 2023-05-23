@@ -1,6 +1,6 @@
 describe 'The routing', js: true do
   let(:password) { 'a very complicated password' }
-  let(:procedure) { create(:procedure, :with_type_de_champ, :with_service, :for_individual) }
+  let(:procedure) { create(:procedure, :with_type_de_champ, :with_service, :for_individual, :with_zone) }
   let(:administrateur) { create(:administrateur, procedures: [procedure]) }
   let(:scientifique_user) { create(:user, password: password) }
   let(:litteraire_user) { create(:user, password: password) }

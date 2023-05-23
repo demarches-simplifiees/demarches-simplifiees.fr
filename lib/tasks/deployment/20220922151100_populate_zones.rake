@@ -1,7 +1,7 @@
 namespace :after_party do
   desc 'Deployment task: populate_zones'
   task populate_zones: :environment do
-    if Flipper.enabled? :zonage
+    if Rails.application.config.ds_zonage_enabled
       puts "Running deploy task 'populate_zones'"
       collectivite = Zone.find_or_create_by!(acronym: 'COLLECTIVITE')
       coll_label = collectivite.labels.find_or_initialize_by(designated_on: Date.parse('1977-07-30'))
