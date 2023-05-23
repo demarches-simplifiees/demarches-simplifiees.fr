@@ -22,7 +22,7 @@ export class VisaController extends ApplicationController {
         .querySelectorAll<HTMLInputElement>('input, select, button, textarea')
         .forEach((node) => (node.disabled = visa.checked));
       champ
-        .querySelectorAll<HTMLInputElement>('a.button')
+        .querySelectorAll<HTMLInputElement>('a.fr-btn')
         .forEach((node) => (node.style.visibility = visibility));
     }
   }
