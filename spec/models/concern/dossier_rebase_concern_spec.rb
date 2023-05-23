@@ -250,8 +250,9 @@ describe DossierRebaseConcern do
   end
 
   describe "#rebase" do
-    let(:procedure) do
-      create(:procedure, types_de_champ_public: [
+    let(:procedure) { create(:procedure, types_de_champ_public:, types_de_champ_private:) }
+    let(:types_de_champ_public) do
+      [
         { type: :text, mandatory: true, stable_id: 1 },
         {
           type: :repetition, stable_id: 101, mandatory: true, children: [
@@ -261,8 +262,9 @@ describe DossierRebaseConcern do
         { type: :datetime, stable_id: 103 },
         { type: :yes_no, stable_id: 104 },
         { type: :integer_number, stable_id: 105 }
-      ], types_de_champ_private: [{ type: :text, stable_id: 11 }])
+      ]
     end
+    let(:types_de_champ_private) { [{ type: :text, stable_id: 11 }] }
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:types_de_champ) { procedure.active_revision.types_de_champ }
 
@@ -286,87 +288,103 @@ describe DossierRebaseConcern do
     let(:private_text_type_de_champ) { types_de_champ.find { _1.stable_id == 11 } }
     let(:rebased_private_text_champ) { dossier.champs_private.find { _1.stable_id == 11 } }
 
-    before do
-      procedure.publish!
-      procedure.draft_revision.add_type_de_champ({
-        type_champ: TypeDeChamp.type_champs.fetch(:text),
-        libelle: "Un champ text"
-      })
-      procedure.draft_revision.find_and_ensure_exclusive_use(text_type_de_champ.stable_id).update(mandatory: false, libelle: "nouveau libelle")
-      procedure.draft_revision.find_and_ensure_exclusive_use(datetime_type_de_champ.stable_id).update(type_champ: TypeDeChamp.type_champs.fetch(:date))
-      procedure.draft_revision.find_and_ensure_exclusive_use(repetition_text_type_de_champ.stable_id).update(libelle: "nouveau libelle dans une repetition")
-      procedure.draft_revision.add_type_de_champ({
-        type_champ: TypeDeChamp.type_champs.fetch(:checkbox),
-        libelle: "oui ou non",
-        parent_stable_id: repetition_type_de_champ.stable_id
-      })
-      procedure.draft_revision.remove_type_de_champ(yes_no_type_de_champ.stable_id)
-      new_repetition_type_de_champ = procedure.draft_revision.add_type_de_champ({
-        type_champ: TypeDeChamp.type_champs.fetch(:repetition),
-        libelle: "une autre repetition",
-        mandatory: true
-      })
-      procedure.draft_revision.add_type_de_champ({
-        type_champ: TypeDeChamp.type_champs.fetch(:text),
-        libelle: "un champ text dans une autre repetition",
-        parent_stable_id: new_repetition_type_de_champ.stable_id
-      })
-      procedure.draft_revision.add_type_de_champ({
-        type_champ: TypeDeChamp.type_champs.fetch(:date),
-        libelle: "un champ date dans une autre repetition",
-        parent_stable_id: new_repetition_type_de_champ.stable_id
-      })
+    context "when revision is published" do
+      before do
+        procedure.publish!
+        procedure.draft_revision.add_type_de_champ({
+          type_champ: TypeDeChamp.type_champs.fetch(:text),
+          libelle: "Un champ text"
+        })
+        procedure.draft_revision.find_and_ensure_exclusive_use(text_type_de_champ.stable_id).update(mandatory: false, libelle: "nouveau libelle")
+        procedure.draft_revision.find_and_ensure_exclusive_use(datetime_type_de_champ.stable_id).update(type_champ: TypeDeChamp.type_champs.fetch(:date))
+        procedure.draft_revision.find_and_ensure_exclusive_use(repetition_text_type_de_champ.stable_id).update(libelle: "nouveau libelle dans une repetition")
+        procedure.draft_revision.add_type_de_champ({
+          type_champ: TypeDeChamp.type_champs.fetch(:checkbox),
+          libelle: "oui ou non",
+          parent_stable_id: repetition_type_de_champ.stable_id
+        })
+        procedure.draft_revision.remove_type_de_champ(yes_no_type_de_champ.stable_id)
+        new_repetition_type_de_champ = procedure.draft_revision.add_type_de_champ({
+          type_champ: TypeDeChamp.type_champs.fetch(:repetition),
+          libelle: "une autre repetition",
+          mandatory: true
+        })
+        procedure.draft_revision.add_type_de_champ({
+          type_champ: TypeDeChamp.type_champs.fetch(:text),
+          libelle: "un champ text dans une autre repetition",
+          parent_stable_id: new_repetition_type_de_champ.stable_id
+        })
+        procedure.draft_revision.add_type_de_champ({
+          type_champ: TypeDeChamp.type_champs.fetch(:date),
+          libelle: "un champ date dans une autre repetition",
+          parent_stable_id: new_repetition_type_de_champ.stable_id
+        })
 
-      datetime_champ.update(value: Time.zone.now.to_s)
-      text_champ.update(value: 'bonjour')
-      # Add two rows then remove previous to last row in order to create a "hole" in the sequence
-      repetition_champ.add_row(repetition_champ.dossier.revision)
-      repetition_champ.add_row(repetition_champ.dossier.revision)
-      repetition_champ.champs.where(row_id: repetition_champ.rows[-2].first.row_id).destroy_all
-      repetition_champ.reload
+        datetime_champ.update(value: Time.zone.now.to_s)
+        text_champ.update(value: 'bonjour')
+        # Add two rows then remove previous to last row in order to create a "hole" in the sequence
+        repetition_champ.add_row(repetition_champ.dossier.revision)
+        repetition_champ.add_row(repetition_champ.dossier.revision)
+        repetition_champ.champs.where(row_id: repetition_champ.rows[-2].first.row_id).destroy_all
+        repetition_champ.reload
+      end
+
+      it "updates the brouillon champs with the latest revision changes" do
+        expect(dossier.revision).to eq(procedure.published_revision)
+        expect(dossier.champs_public.size).to eq(5)
+        expect(dossier.champs_public_all.size).to eq(7)
+        expect(repetition_champ.rows.size).to eq(2)
+        expect(repetition_champ.rows[0].size).to eq(1)
+        expect(repetition_champ.rows[1].size).to eq(1)
+
+        procedure.publish_revision!
+        perform_enqueued_jobs
+        procedure.reload
+        dossier.reload
+
+        expect(procedure.revisions.size).to eq(3)
+        expect(dossier.revision).to eq(procedure.published_revision)
+        expect(dossier.champs_public.size).to eq(6)
+        expect(dossier.champs_public_all.size).to eq(12)
+        expect(rebased_text_champ.value).to eq(text_champ.value)
+        expect(rebased_text_champ.type_de_champ_id).not_to eq(text_champ.type_de_champ_id)
+        expect(rebased_datetime_champ.type_champ).to eq(TypeDeChamp.type_champs.fetch(:date))
+        expect(rebased_datetime_champ.value).to be_nil
+        expect(rebased_repetition_champ.rows.size).to eq(2)
+        expect(rebased_repetition_champ.rows[0].size).to eq(2)
+        expect(rebased_repetition_champ.rows[1].size).to eq(2)
+        expect(rebased_text_champ.rebased_at).not_to be_nil
+        expect(rebased_datetime_champ.rebased_at).not_to be_nil
+        expect(rebased_number_champ.rebased_at).to be_nil
+        expect(rebased_new_repetition_champ).not_to be_nil
+        expect(rebased_new_repetition_champ.rebased_at).not_to be_nil
+        expect(rebased_new_repetition_champ.rows.size).to eq(1)
+        expect(rebased_new_repetition_champ.rows[0].size).to eq(2)
+
+        dossier.passer_en_construction!
+        procedure.draft_revision.find_and_ensure_exclusive_use(private_text_type_de_champ.stable_id).update(type_champ: TypeDeChamp.type_champs.fetch(:textarea))
+        procedure.publish_revision!
+        perform_enqueued_jobs
+        procedure.reload
+        dossier.reload
+
+        expect(rebased_private_text_champ.type_champ).to eq(TypeDeChamp.type_champs.fetch(:textarea))
+        expect(rebased_private_text_champ.type).to eq("Champs::TextareaChamp")
+      end
     end
 
-    it "updates the brouillon champs with the latest revision changes" do
-      expect(dossier.revision).to eq(procedure.published_revision)
-      expect(dossier.champs_public.size).to eq(5)
-      expect(dossier.champs_public_all.size).to eq(7)
-      expect(repetition_champ.rows.size).to eq(2)
-      expect(repetition_champ.rows[0].size).to eq(1)
-      expect(repetition_champ.rows[1].size).to eq(1)
+    context 'force rebase en construction' do
+      subject { dossier.rebase!(force: true) }
 
-      procedure.publish_revision!
-      perform_enqueued_jobs
-      procedure.reload
-      dossier.reload
+      context 'procedure not published' do
+        let(:procedure) { create(:procedure, :draft, types_de_champ_public:, types_de_champ_private:) }
+        let(:dossier) { create(:dossier, :en_construction, procedure:) }
 
-      expect(procedure.revisions.size).to eq(3)
-      expect(dossier.revision).to eq(procedure.published_revision)
-      expect(dossier.champs_public.size).to eq(6)
-      expect(dossier.champs_public_all.size).to eq(12)
-      expect(rebased_text_champ.value).to eq(text_champ.value)
-      expect(rebased_text_champ.type_de_champ_id).not_to eq(text_champ.type_de_champ_id)
-      expect(rebased_datetime_champ.type_champ).to eq(TypeDeChamp.type_champs.fetch(:date))
-      expect(rebased_datetime_champ.value).to be_nil
-      expect(rebased_repetition_champ.rows.size).to eq(2)
-      expect(rebased_repetition_champ.rows[0].size).to eq(2)
-      expect(rebased_repetition_champ.rows[1].size).to eq(2)
-      expect(rebased_text_champ.rebased_at).not_to be_nil
-      expect(rebased_datetime_champ.rebased_at).not_to be_nil
-      expect(rebased_number_champ.rebased_at).to be_nil
-      expect(rebased_new_repetition_champ).not_to be_nil
-      expect(rebased_new_repetition_champ.rebased_at).not_to be_nil
-      expect(rebased_new_repetition_champ.rows.size).to eq(1)
-      expect(rebased_new_repetition_champ.rows[0].size).to eq(2)
-
-      dossier.passer_en_construction!
-      procedure.draft_revision.find_and_ensure_exclusive_use(private_text_type_de_champ.stable_id).update(type_champ: TypeDeChamp.type_champs.fetch(:textarea))
-      procedure.publish_revision!
-      perform_enqueued_jobs
-      procedure.reload
-      dossier.reload
-
-      expect(rebased_private_text_champ.type_champ).to eq(TypeDeChamp.type_champs.fetch(:textarea))
-      expect(rebased_private_text_champ.type).to eq("Champs::TextareaChamp")
+        it 'is noop' do
+          expect { subject }.not_to change { dossier.reload.champs_public[0].rebased_at }
+          expect { subject }.not_to change { dossier.updated_at }
+        end
+      end
     end
   end
 
