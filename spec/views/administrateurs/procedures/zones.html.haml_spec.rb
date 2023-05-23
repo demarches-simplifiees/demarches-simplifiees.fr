@@ -3,7 +3,7 @@ describe 'administrateurs/procedures/zones.html.haml' do
   let(:populate_zones_task) { Rake::Task['after_party:populate_zones'] }
 
   before do
-    Flipper.enable(:zonage)
+    Rails.application.config.ds_zonage_enabled = true
     populate_zones_task.invoke
   end
 

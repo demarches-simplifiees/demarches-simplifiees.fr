@@ -186,6 +186,7 @@ class TypeDeChamp < ApplicationRecord
   scope :private_only, -> { where(private: true) }
   scope :repetition, -> { where(type_champ: type_champs.fetch(:repetition)) }
   scope :not_repetition, -> { where.not(type_champ: type_champs.fetch(:repetition)) }
+  scope :not_condition, -> { where(condition: nil) }
   scope :fillable, -> { where.not(type_champ: [type_champs.fetch(:header_section), type_champs.fetch(:explication)]) }
 
   scope :dubious, -> {
@@ -270,6 +271,18 @@ class TypeDeChamp < ApplicationRecord
 
   def collapsible_explanation_enabled?
     collapsible_explanation_enabled == "1"
+  end
+
+  def prefillable?
+    type_champ.in?([
+      TypeDeChamp.type_champs.fetch(:text),
+      TypeDeChamp.type_champs.fetch(:textarea),
+      TypeDeChamp.type_champs.fetch(:decimal_number),
+      TypeDeChamp.type_champs.fetch(:integer_number),
+      TypeDeChamp.type_champs.fetch(:email),
+      TypeDeChamp.type_champs.fetch(:phone),
+      TypeDeChamp.type_champs.fetch(:iban)
+    ])
   end
 
   def fillable?

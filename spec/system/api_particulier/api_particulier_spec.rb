@@ -44,7 +44,7 @@ describe 'fetch API Particulier Data', js: true do
 
   context 'when an administrateur is logged in' do
     let(:procedure) do
-      create(:procedure, :with_service, :with_instructeur,
+      create(:procedure, :with_service, :with_instructeur, :with_zone,
              aasm_state: :brouillon,
              administrateurs: [administrateur],
              libelle: 'libellé de la procédure',

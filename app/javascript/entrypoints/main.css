@@ -8,6 +8,7 @@
 
 /* Verify README of each component to insert them in the expected order. */
 @import '@gouvfr/dsfr/dist/component/alert/alert.css';
+@import '@gouvfr/dsfr/dist/component/radio/radio.css';
 @import '@gouvfr/dsfr/dist/component/badge/badge.css';
 @import '@gouvfr/dsfr/dist/component/breadcrumb/breadcrumb.css';
 @import '@gouvfr/dsfr/dist/component/callout/callout.css';

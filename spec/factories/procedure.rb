@@ -116,6 +116,15 @@ FactoryBot.define do
       end
     end
 
+    trait :with_zone do
+      zones {
+        [
+          create(:zone, labels:
+                 [{ designated_on: Time.zone.now, name: "Ministère 1" }])
+        ]
+      }
+    end
+
     trait :routee do
       after(:create) do |procedure, _evaluator|
         procedure.groupe_instructeurs.create(label: 'deuxième groupe')
@@ -289,6 +298,10 @@ FactoryBot.define do
       after(:build) do |procedure, _evaluator|
         build(:type_de_champ_carte, procedure: procedure)
       end
+    end
+
+    trait :draft do
+      aasm_state { :brouillon }
     end
 
     trait :published do

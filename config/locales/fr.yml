@@ -92,6 +92,41 @@ fr:
         want_empty_pdf: "Vous souhaitez effectuer une demande par papier ? Vous pouvez télécharger un dossier vide au format PDF, et l’envoyer à l’administration concernée : %{service} - %{adresse}"
         download_empty_pdf: 'Télécharger un dossier vide au format PDF'
         social_title: "Rapide, simple et sûr, connectez-vous avec"
+    prefill_descriptions:
+      edit:
+        intro_html: "Vous souhaitez permettre à vos usager·ères la <strong>création d'un dossier prérempli</strong>, à partir de données dont vous disposez déjà, pour la démarche « %{libelle} »."
+        info: Pour cela, ajoutez les champs que vous souhaitez préremplir, grâce au tableau ci-dessous. Lorsque vous avez terminé, il ne vous reste plus qu'à copier le lien de préremplissage, à remplacer les valeurs et à le partager.
+        champ_id: ID
+        champ_type: Type
+        champ_add: Ajouter
+        champ_remove: Retirer
+        champ_unavailable: Indisponible
+        possible_values:
+          title: Valeurs
+          text: Un texte court
+          textarea: Un texte long
+          decimal_number: Un nombre décimal
+          integer_number: Un nombre entier
+          email: Une adresse email
+          phone: Un numéro de téléphone
+          iban: Un numéro Iban
+          yes_no: '"true" pour Oui, "false" pour Non'
+          checkbox: '"on" pour coché, "off" pour décoché'
+        examples:
+          title: Exemple
+          text: Texte court
+          textarea: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          decimal_number: 3.14
+          integer_number: 42
+          email: personne@fournisseur.fr
+          phone: 0612345678
+          iban: FR7611315000011234567890138
+          yes_no: "true"
+          checkbox: "on"
+        prefill_link_title: Lien de préremplissage (GET)
+        prefill_link_info: Copiez le lien grâce au bouton ci-dessous et remplacez les valeurs par les données dont vous disposez.
+        prefill_link_too_long: Attention, ce lien de préremplissage est trop long et risque de ne pas fonctionner sur certains navigateurs.
+        prefill_link_copy: Copier le lien de préremplissage
     registrations:
       new:
         title: "Créez-vous un compte %{name}"
@@ -175,6 +210,7 @@ fr:
         batch_operation:
           enabled: "Ajouter ce dossier à la selection pour un traitement de masse"
           disabled: "Impossible d'ajouter ce dossier à la selection car il est déjà dans un traitement de masse"
+        show_deleted_dossiers: Afficher les dossiers supprimés
         personalize: Personnaliser
         download: Télécharger un dossier
         follow_file: Suivre le dossier

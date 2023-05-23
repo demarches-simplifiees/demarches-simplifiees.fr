@@ -78,6 +78,8 @@ Rails.application.routes.draw do
       match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post]
     end
 
+    get 'import_procedure_tags' => 'procedures#import_data'
+    post 'import_tags' => 'procedures#import_tags'
     root to: "administrateurs#index"
   end
 
@@ -200,6 +202,13 @@ Rails.application.routes.draw do
   post "webhooks/helpscout_support_dev", to: "webhook#helpscout_support_dev"
   match "webhooks/helpscout", to: lambda { |_| [204, {}, nil] }, via: :head
 
+  get '/preremplir/:path', to: 'prefill_descriptions#edit'
+  resources :procedures, only: [], param: :path do
+    member do
+      resource :prefill_description, only: :update
+    end
+  end
+
   #
   # Deprecated UI
   #
@@ -265,6 +274,12 @@ Rails.application.routes.draw do
     end
 
     resources :pays, only: :index
+
+    namespace :public do
+      namespace :v1 do
+        resources :dossiers, only: :create
+      end
+    end
   end
 
   #
@@ -451,8 +466,8 @@ Rails.application.routes.draw do
       collection do
         get 'new_from_existing'
         post 'search'
-        get 'all'
-        get 'administrateurs'
+        get 'all' if Rails.application.config.ds_zonage_enabled
+        get 'administrateurs' if Rails.application.config.ds_zonage_enabled
       end
 
       member do
