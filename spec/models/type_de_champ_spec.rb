@@ -225,4 +225,51 @@ describe TypeDeChamp do
       expect(type_de_champ.condition).to eq(condition)
     end
   end
+
+  describe '#prefillable?' do
+    shared_examples 'a prefillable type de champ' do |factory|
+      it { expect(build(factory).prefillable?).to eq(true) }
+    end
+
+    shared_examples 'a non-prefillable type de champ' do |factory|
+      it { expect(build(factory).prefillable?).to eq(false) }
+    end
+
+    it_behaves_like "a prefillable type de champ", :type_de_champ_text
+    it_behaves_like "a prefillable type de champ", :type_de_champ_textarea
+    it_behaves_like "a prefillable type de champ", :type_de_champ_decimal_number
+    it_behaves_like "a prefillable type de champ", :type_de_champ_integer_number
+    it_behaves_like "a prefillable type de champ", :type_de_champ_email
+    it_behaves_like "a prefillable type de champ", :type_de_champ_phone
+    it_behaves_like "a prefillable type de champ", :type_de_champ_iban
+
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_number
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_communes
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_dossier_link
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_titre_identite
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_checkbox
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_civilite
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_yes_no
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_date
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_datetime
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_drop_down_list
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_multiple_drop_down_list
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_linked_drop_down_list
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_header_section
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_explication
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_piece_justificative
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_repetition
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_cnaf
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_dgfip
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_pole_emploi
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_mesri
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_carte
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_address
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_pays
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_regions
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_departements
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_siret
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_rna
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_annuaire_education
+  end
 end

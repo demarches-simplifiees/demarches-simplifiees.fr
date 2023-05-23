@@ -92,6 +92,23 @@ fr:
         want_empty_pdf: "Vous souhaitez effectuer une demande par papier ? Vous pouvez télécharger un dossier vide au format PDF, et l’envoyer à l’administration concernée : %{service} - %{adresse}"
         download_empty_pdf: 'Télécharger un dossier vide au format PDF'
         social_title: "Rapide, simple et sûr, connectez-vous avec"
+    prefill_descriptions:
+      edit:
+        intro_html: "Vous souhaitez permettre à vos usager·ères la <strong>création d'un dossier prérempli</strong>, à partir de données dont vous disposez déjà, pour la démarche « %{libelle} »."
+        info: Pour cela, ajoutez les champs que vous souhaitez préremplir, grâce au tableau ci-dessous. Lorsque vous avez terminé, il ne vous reste plus qu'à copier le lien de préremplissage, à remplacer les valeurs et à le partager.
+        champs_title: Champs de la démarche
+        champ_id: ID
+        champ_type: Type
+        champ_libelle: Libellé
+        champ_description: Description
+        champ_prefill: Préremplissable
+        champ_add: Ajouter
+        champ_remove: Retirer
+        champ_unavailable: Indisponible
+        prefill_link_title: Lien de préremplissage (GET)
+        prefill_link_info: Copiez le lien grâce au bouton ci-dessous et remplacez les valeurs par les données dont vous disposez.
+        prefill_link_too_long: Attention, ce lien de préremplissage est trop long et risque de ne pas fonctionner sur certains navigateurs.
+        prefill_link_copy: Copier le lien de préremplissage
     registrations:
       new:
         title: "Créez-vous un compte %{name}"
