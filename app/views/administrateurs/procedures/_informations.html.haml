@@ -62,7 +62,7 @@
 = f.label :lien_dpo, 'Lien ou email pour contacter le Délégué à la Protection des Données (DPO)'
 = f.text_field :lien_dpo, class: 'form-control'
 
-- if @procedure.feature_enabled?(:opendata)
+- if Rails.application.config.ds_opendata_enabled
   %h3.header-subsection= t(:opendata_header, scope: [:administrateurs, :informations])
   %p.notice= t(:opendata_notice_html, scope: [:administrateurs, :informations])
   %p.notice= t(:opendata, scope: [:administrateurs, :informations])

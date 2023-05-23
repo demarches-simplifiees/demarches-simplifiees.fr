@@ -27,15 +27,15 @@ RSpec.describe Cron::Datagouv::ExportAndPublishDemarchesPubliquesJob, type: :job
   end
 
   describe '#schedulable?' do
-    context "when ENV['OPENDATA_ENABLED'] == 'enabled'" do
-      it 'is not schedulable' do
-        ENV['OPENDATA_ENABLED'] = 'enabled'
-        expect(Cron::Datagouv::ExportAndPublishDemarchesPubliquesJob.schedulable?).to be_falsy
+    context "when Rails.application.config.ds_opendata_enabled == 'enabled'" do
+      it 'is schedulable' do
+        Rails.application.config.ds_opendata_enabled = 'enabled'
+        expect(Cron::Datagouv::ExportAndPublishDemarchesPubliquesJob.schedulable?).to be_truthy
       end
     end
-    context "when ENV['OPENDATA_ENABLED'] != 'enabled'" do
-      it 'is not schedulable' do
-        ENV['OPENDATA_ENABLED'] = nil
+    context "when Rails.application.config.ds_opendata_enabled != 'enabled'" do
+      it 'is schedulable' do
+        Rails.application.config.ds_opendata_enabled = nil
         expect(Cron::Datagouv::ExportAndPublishDemarchesPubliquesJob.schedulable?).to be_falsy
       end
     end
