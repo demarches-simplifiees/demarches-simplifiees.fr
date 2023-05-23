@@ -28,11 +28,34 @@ describe Experts::AvisController, type: :controller do
     end
 
     describe '#index' do
-      before { get :index }
-      it do
-        expect(response).to have_http_status(:success)
-        expect(assigns(:avis_by_procedure).keys).to match_array(procedure)
-        expect(assigns(:avis_by_procedure).values.flatten).to match_array([avis_without_answer, avis_with_answer])
+      context 'nominal' do
+        before { get :index }
+
+        it do
+          expect(response).to have_http_status(:success)
+          expect(assigns(:avis_by_procedure).keys).to match_array(procedure)
+          expect(assigns(:avis_by_procedure).values.flatten).to match_array([avis_without_answer, avis_with_answer])
+        end
+      end
+
+      context 'avis on termine dossier' do
+        let(:another_experts_procedure) { create(:experts_procedure, expert:, procedure: another_procedure) }
+        let(:dossier_termine) { create(:dossier, :accepte, procedure: another_procedure) }
+        let(:another_avis_without_answer) { create(:avis, claimant:, dossier: dossier_termine, experts_procedure: another_experts_procedure) }
+        let(:another_avis_with_answer) { create(:avis, claimant:, dossier: dossier_termine, experts_procedure: another_experts_procedure, answer: 'yop') }
+
+        before do
+          another_experts_procedure
+          dossier_termine
+          another_avis_without_answer
+          another_avis_with_answer
+          get :index
+        end
+
+        it do
+          expect(response).to have_http_status(:success)
+          expect(assigns(:avis_by_procedure).keys).to match_array([procedure, another_procedure])
+        end
       end
     end
 
