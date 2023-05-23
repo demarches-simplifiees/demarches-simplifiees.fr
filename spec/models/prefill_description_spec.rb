@@ -17,7 +17,7 @@ RSpec.describe PrefillDescription, type: :model do
 
   describe '#types_de_champ' do
     let(:procedure) { create(:procedure) }
-    let(:type_de_champ) { create(:type_de_champ_text, procedure: procedure) }
+    let!(:type_de_champ) { create(:type_de_champ_text, procedure: procedure) }
     let(:prefill_description) { described_class.new(procedure) }
 
     it { expect(prefill_description.types_de_champ).to match([type_de_champ]) }
@@ -32,6 +32,19 @@ RSpec.describe PrefillDescription, type: :model do
 
     it_behaves_like "filters out non fillable types de champ", :type_de_champ_header_section
     it_behaves_like "filters out non fillable types de champ", :type_de_champ_explication
+
+    context 'when the procedure contains prefillable and non prefillable types de champ' do
+      let!(:non_prefillable_type_de_champ) { create(:type_de_champ_carte, procedure: procedure) }
+      let!(:prefillable_type_de_champ) { create(:type_de_champ_decimal_number, procedure: procedure) }
+
+      it "sort types de champ by putting prefillable ones first" do
+        expect(prefill_description.types_de_champ).to eq([
+          type_de_champ,
+          prefillable_type_de_champ,
+          non_prefillable_type_de_champ
+        ])
+      end
+    end
   end
 
   describe '#include?' do
