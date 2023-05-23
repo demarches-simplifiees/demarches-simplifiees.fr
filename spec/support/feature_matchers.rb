@@ -5,9 +5,5 @@ module Capybara
     def has_procedure_description?(procedure)
       has_content?(procedure.libelle) && has_content?(procedure.description) && has_content?(procedure.service.email)
     end
-
-    def has_procedure_sumup_description?(procedure)
-      has_content?(procedure.libelle) && has_content?(procedure.service.email)
-    end
   end
 end

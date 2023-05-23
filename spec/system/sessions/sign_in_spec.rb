@@ -43,7 +43,7 @@ describe 'Signin in:' do
       click_on 'Commencer la démarche'
 
       expect(page).to have_current_path identite_dossier_path(user.reload.dossiers.last)
-      expect(page).to have_procedure_sumup_description(procedure)
+      expect(page).to have_procedure_description(procedure)
       expect(page).to have_content "Données d’identité"
     end
   end

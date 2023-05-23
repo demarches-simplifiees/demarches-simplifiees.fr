@@ -1,15 +1,17 @@
 - procedure = @procedure || @dossier&.procedure || nil
 
 - content_for :content do
-  .fr-container.fr-mt-5w
-    .fr-grid-row
-      .fr-col-12.fr-col-md-8.fr-col-offset-md-2
-        .procedure-preview.fr-mb-5w
-          - if procedure
-            = render partial: 'shared/procedure_description', locals: { procedure: procedure }
-          - else
-            = render partial: 'layouts/commencer/no_procedure'
-            = yield
+  .two-columns.procedure-context
+    .columns-container
+
+      .column.procedure-preview
+        - if procedure
+          = render partial: 'shared/procedure_description', locals: { procedure: procedure, full_screen_display: false }
+        - else
+          = render partial: 'layouts/commencer/no_procedure'
+
+      .column.procedure-context-content
+        = yield
 
 - content_for :footer do
   - if procedure
