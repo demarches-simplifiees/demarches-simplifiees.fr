@@ -34,11 +34,6 @@
     }
   }
 
-  .afficher-dossiers-supprimes {
-    display: flex;
-    justify-content: flex-end;
-  }
-
   .filter {
     display: inline-block;
     padding-left: 10px;
@@ -106,6 +101,6 @@
 
   // fix/dsfr
   .fr-checkbox-group.fix-dsfr-notified-toggle-component {
-    margin-top: -7px;
+    margin-top: -0.5rem;
   }
 }
