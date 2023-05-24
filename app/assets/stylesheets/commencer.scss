@@ -1,16 +1,6 @@
 @import "constants";
 
 .commencer {
-  @media (min-width: $two-columns-breakpoint) {
-    .button:first-of-type {
-      margin-top: 4 * $default-spacer;
-    }
-  }
-
-  .button {
-    margin-bottom: 2 * $default-spacer;
-  }
-
   .optional-on-small-screens {
     color: #FFFFFF;
   }

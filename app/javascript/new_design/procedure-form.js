@@ -18,11 +18,7 @@ function syncFormToPreview() {
 }
 
 delegate('input', '.procedure-form #procedure_libelle', syncFormToPreview);
-delegate(
-  'input',
-  '.procedure-form #procedure_description',
-  syncFormToPreview
-);
+delegate('input', '.procedure-form #procedure_description', syncFormToPreview);
 delegate(
   'input',
   '.procedure-form #procedure_description_target_audience',
