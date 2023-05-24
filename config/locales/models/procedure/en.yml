@@ -6,9 +6,18 @@ en:
         other: Procedure
     attributes:
       procedure:
+        hints:
+          description: Describe in a few lines the context, the aim etc.
+          description_target_audience: Describe in a few lines the final recipients of the process, the eligibility criteria if there are any, the prerequisites, etc.
+          lien_site_web: "Exemple: 'https://exemple.gouv.fr/ma_demarche'"
+          cadre_juridique: "Exemple: 'https://www.legifrance.gouv.fr/'"
         path: Public link
         organisation: Service
-        description_target_audience: For who
+        description: Procedure subject
+        description_target_audience: For who is the procedure ?
+        lien_site_web: Where to find the procedure link ?
+        cadre_juridique: Link to the legal text
+        lien_dpo: Link or email to contact the data protection officer (DPO)
         duree_conservation_dossiers_dans_ds: Duration files will be kept
         max_duree_conservation_dossiers_dans_ds: Max duration allowed to keep files
         aasm_state:
