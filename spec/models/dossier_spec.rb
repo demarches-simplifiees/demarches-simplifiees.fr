@@ -650,34 +650,6 @@ describe Dossier do
     end
   end
 
-  describe "#send_draft_notification_email" do
-    include Rails.application.routes.url_helpers
-
-    let(:procedure) { create(:procedure) }
-    let(:user) { create(:user) }
-
-    it "send an email when the dossier is created for the very first time" do
-      dossier = nil
-      expect do
-        perform_enqueued_jobs do
-          dossier = create(:dossier, procedure: procedure, state: Dossier.states.fetch(:brouillon), user: user)
-        end
-      end.to change(ActionMailer::Base.deliveries, :size).from(0).to(1)
-
-      mail = ActionMailer::Base.deliveries.last
-      expect(mail.subject).to eq("Retrouvez votre brouillon pour la démarche « #{procedure.libelle} »")
-      expect(mail.html_part.body).to include(dossier_url(dossier))
-    end
-
-    it "does not send an email when the dossier is created with a non brouillon state" do
-      expect { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
-      expect { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
-      expect { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:accepte), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
-      expect { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:refuse), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
-      expect { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:sans_suite), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
-    end
-  end
-
   describe "#unspecified_attestation_champs" do
     let(:procedure) { create(:procedure, attestation_template: attestation_template, types_de_champ_public: types_de_champ, types_de_champ_private: types_de_champ_private) }
     let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
@@ -1697,6 +1669,7 @@ describe Dossier do
   end
 
   describe "#destroy" do
+    before { allow(APIGeoService).to receive(:departement_name).with('01').and_return('Ain') }
     let(:procedure) { create(:procedure, :with_all_champs, :with_all_annotations) }
     let(:transfer) { create(:dossier_transfer) }
     let(:dossier) { create(:dossier, :with_populated_champs, :with_populated_annotations, transfer: transfer, procedure: procedure) }

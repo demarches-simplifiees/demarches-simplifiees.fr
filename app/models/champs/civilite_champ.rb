@@ -21,6 +21,8 @@
 #  type_de_champ_id               :integer
 #
 class Champs::CiviliteChamp < Champ
+  validates :value, inclusion: ["M.", "Mme"], allow_nil: true, allow_blank: false
+
   def html_label?
     false
   end

@@ -154,6 +154,7 @@ class Dossier < ApplicationRecord
   has_many :transfer_logs, class_name: 'DossierTransferLog', dependent: :destroy
   has_many :cloned_dossiers, class_name: 'Dossier', foreign_key: 'parent_dossier_id', dependent: :nullify, inverse_of: :parent_dossier
 
+  accepts_nested_attributes_for :champs
   accepts_nested_attributes_for :champs_public
   accepts_nested_attributes_for :champs_private
   accepts_nested_attributes_for :champs_public_all
@@ -434,7 +435,6 @@ class Dossier < ApplicationRecord
   before_save :update_search_terms
 
   after_save :send_web_hook
-  after_create_commit :send_draft_notification_email
 
   validates :user, presence: true, if: -> { deleted_user_email_never_send.nil? }
   validates :individual, presence: true, if: -> { revision.procedure.for_individual? }
@@ -1251,7 +1251,15 @@ class Dossier < ApplicationRecord
   def find_champs_by_stable_ids(stable_ids)
     return [] if stable_ids.compact.empty?
 
-    champs_public.joins(:type_de_champ).where(types_de_champ: { stable_id: stable_ids })
+    champs.joins(:type_de_champ).where(types_de_champ: { stable_id: stable_ids })
+  end
+
+  def skip_user_notification_email?
+    return true if brouillon? && procedure.declarative?
+    return true if for_procedure_preview?
+    return true if user_deleted?
+
+    false
   end
 
   private
@@ -1308,12 +1316,6 @@ class Dossier < ApplicationRecord
         automatic_operation: true,
         subject: subject
       )
-    end
-  end
-
-  def send_draft_notification_email
-    if brouillon? && !procedure.declarative? && !for_procedure_preview?
-      DossierMailer.notify_new_draft(self).deliver_later
     end
   end
 

@@ -24,19 +24,6 @@ describe 'users/dossiers/show/_status_overview.html.haml', type: :view do
     end
   end
 
-  context 'when brouillon' do
-    let(:dossier) { create :dossier }
-
-    it 'renders the timeline (without the final states)' do
-      expect(rendered).to have_timeline_item('.brouillon').active
-      expect(rendered).to have_timeline_item('.en-construction').inactive
-      expect(rendered).to have_timeline_item('.en-instruction').inactive
-      expect(rendered).to have_timeline_item('.termine').inactive
-    end
-
-    it { is_expected.to have_selector('.status-explanation .brouillon') }
-  end
-
   context 'when en construction' do
     let(:dossier) { create :dossier, :en_construction }
 

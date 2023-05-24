@@ -18,6 +18,9 @@ describe ProcedureExportService do
       end
     end
   end
+  before do
+    allow(APIGeoService).to receive(:departement_name).with('01').and_return('Ain')
+  end
 
   describe 'to_xlsx' do
     subject do

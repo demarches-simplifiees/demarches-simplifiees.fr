@@ -9,7 +9,7 @@ describe Champs::DepartementChamp, type: :model do
   let(:champ) { described_class.new }
 
   describe 'value', vcr: { cassette_name: 'api_geo_departements' } do
-    it 'with code' do
+    it 'with code having 2 chars' do
       champ.value = '01'
       expect(champ.external_id).to eq('01')
       expect(champ.code).to eq('01')
@@ -17,6 +17,16 @@ describe Champs::DepartementChamp, type: :model do
       expect(champ.value).to eq('Ain')
       expect(champ.selected).to eq('01')
       expect(champ.to_s).to eq('01 – Ain')
+    end
+
+    it 'with code having 3 chars' do
+      champ.value = '971'
+      expect(champ.external_id).to eq('971')
+      expect(champ.code).to eq('971')
+      expect(champ.name).to eq('Guadeloupe')
+      expect(champ.value).to eq('Guadeloupe')
+      expect(champ.selected).to eq('971')
+      expect(champ.to_s).to eq('971 – Guadeloupe')
     end
 
     it 'with nil' do

@@ -37,6 +37,7 @@ describe API::V2::GraphqlController do
   end
 
   before do
+    allow(APIGeoService).to receive(:departement_name).with('01').and_return('Ain')
     instructeur.assign_to_procedure(procedure)
   end
 
@@ -1007,7 +1008,7 @@ describe API::V2::GraphqlController do
             })
 
             perform_enqueued_jobs except: [APIEntreprise::ServiceJob]
-            expect(ActionMailer::Base.deliveries.size).to eq(4)
+            expect(ActionMailer::Base.deliveries.size).to eq(1)
           end
         end
 
@@ -1050,7 +1051,7 @@ describe API::V2::GraphqlController do
             })
 
             perform_enqueued_jobs except: [APIEntreprise::ServiceJob]
-            expect(ActionMailer::Base.deliveries.size).to eq(3)
+            expect(ActionMailer::Base.deliveries.size).to eq(0)
           end
         end
       end
@@ -1093,7 +1094,7 @@ describe API::V2::GraphqlController do
             })
 
             perform_enqueued_jobs except: [APIEntreprise::ServiceJob]
-            expect(ActionMailer::Base.deliveries.size).to eq(4)
+            expect(ActionMailer::Base.deliveries.size).to eq(1)
           end
         end
       end
@@ -1136,7 +1137,7 @@ describe API::V2::GraphqlController do
             })
 
             perform_enqueued_jobs except: [APIEntreprise::ServiceJob]
-            expect(ActionMailer::Base.deliveries.size).to eq(3)
+            expect(ActionMailer::Base.deliveries.size).to eq(0)
           end
         end
       end
