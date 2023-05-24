@@ -14,7 +14,7 @@ RSpec.describe DossierMailer, type: :mailer do
   describe '.notify_new_draft' do
     let(:dossier) { create(:dossier, procedure: create(:simple_procedure, :with_auto_archive)) }
 
-    subject { described_class.notify_new_draft(dossier) }
+    subject { described_class.with(dossier:).notify_new_draft }
 
     it { expect(subject.subject).to include("brouillon") }
     it { expect(subject.subject).to include(dossier.procedure.libelle) }
