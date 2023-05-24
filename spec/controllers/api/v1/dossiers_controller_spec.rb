@@ -120,6 +120,10 @@ describe API::V1::DossiersController do
   end
 
   describe 'GET show' do
+    before do
+      allow(APIGeoService).to receive(:departement_name).with('01').and_return('Ain')
+    end
+
     let(:retour) { get :show, params: { token: token, procedure_id: procedure_id, id: dossier_id } }
     subject { retour }
 
@@ -251,6 +255,18 @@ describe API::V1::DossiersController do
               it { expect(subject[:description]).to include('description du champ') }
               it { expect(subject.key?(:order_place)).to be_truthy }
               it { expect(subject[:type_champ]).to eq('text') }
+            end
+          end
+
+          describe 'departement' do
+            let(:procedure) { create(:procedure, :with_departement, administrateur: admin) }
+            let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure: procedure) }
+
+            subject { super() }
+
+            it 'should have rows' do
+              expect(subject.size).to eq(1)
+              expect(subject.first[:value]).to eq("01 – Ain")
             end
           end
 
