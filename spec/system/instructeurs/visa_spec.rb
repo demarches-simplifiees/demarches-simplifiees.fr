@@ -21,7 +21,7 @@ describe 'Using Visa field', js: true do
     )
   end
 
-  scenario 'instructor1 cannot validate visa', :js do
+  scenario 'instructor1 cannot validate visa', :js, vcr: { cassette_name: 'api_geo_all' } do
     login_as instructeur1.user, scope: :user
     visit instructeur_dossier_path(procedure, dossier)
 
@@ -31,7 +31,7 @@ describe 'Using Visa field', js: true do
     expect(page).to have_field('visa_to_test', disabled: true)
   end
 
-  scenario 'instructor2 can validate visa', :js do
+  scenario 'instructor2 can validate visa', :js, vcr: { cassette_name: 'api_geo_for_visa' } do
     login_as instructeur2.user, scope: :user
     visit instructeur_dossier_path(procedure, dossier)
 
