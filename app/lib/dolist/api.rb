@@ -156,7 +156,7 @@ module Dolist
 
       if fields.empty?
         Sentry.with_scope do |scope|
-          scope.set_extra(:email, email_address)
+          scope.set_extra(:contact, email_address)
           Sentry.capture_message("Dolist::API: contact not found")
         end
 
