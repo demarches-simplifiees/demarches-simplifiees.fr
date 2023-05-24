@@ -15,6 +15,10 @@ select,
   font-weight: bold;
 }
 
+trix-editor.fr-input {
+  max-height: none;
+}
+
 // Fix firefox < 80, Safari < 15.4, Chrome < 83 not supporting "appearance: auto" on inputs
 // This rule was set by DSFR for DSFR design, but broke our legacy forms.
 // scss-lint:disable DuplicateProperty
