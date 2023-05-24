@@ -911,6 +911,7 @@ class Dossier < ApplicationRecord
     attestation&.destroy
 
     save!
+    rebase_later
     if !disable_notification
       DossierMailer.notify_revert_to_instruction(self).deliver_later
     end
