@@ -43,7 +43,7 @@ module DossierRebaseConcern
     when :drop_down_other
       !change[:from] && change[:to]
     when :mandatory
-      change[:from] && !change[:to]
+      (change[:from] && !change[:to]) || can_change_mandatory?(change)
     when :type_champ, :condition
       false
     else
@@ -159,5 +159,9 @@ module DossierRebaseConcern
 
   def purge_piece_justificative_file(champ)
     ActiveStorage::Attachment.where(id: champ.piece_justificative_file.ids).delete_all
+  end
+
+  def can_change_mandatory?(change)
+    !champs.filter { _1.stable_id == change[:stable_id] }.any?(&:blank?)
   end
 end
