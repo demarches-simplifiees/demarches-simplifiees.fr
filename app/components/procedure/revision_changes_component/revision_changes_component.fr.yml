@@ -1,0 +1,59 @@
+---
+fr:
+  no_changes: Aucune modification
+  breaking_change:
+    one: Un dossier en cours de traitement n’est pas compatible avec ce changement.
+    other: "%{count} dossiers en cours de traitement ne sont pas compatible avec ce changement."
+  add_option: "ajoutés : %{items}"
+  remove_option: "supprimés : %{items}"
+  public:
+    add: Le champ « %{label} » a été ajouté.
+    add_mandatory: Le champ obligatoire « %{label} » a été ajouté.
+    remove: Le champ « %{label} » a été supprimé.
+    move:
+      one: La position d’un champ a été modifiée.
+      other: Les positions de %{count} champs ont été modifiées.
+    update_libelle: Le libellé du champ « %{label} » a été modifié. Le nouveau libellé est « %{to} ».
+    update_description: La description du champ « %{label} » a été modifiée. La nouvelle description est « %{to} ».
+    remove_description: La description du champ « %{label} » a été supprimée.
+    update_drop_down_secondary_libelle: Le libellé secondaire du champ « %{label} » a été modifié. Le nouveau libellé est « %{to} ».
+    update_drop_down_secondary_description: La description secondaire du champ « %{label} » a été modifiée. La nouvelle description est « %{to} ».
+    update_type_champ: Le type du champ « %{label} » a été modifié. Il est maintenant de type « %{to} ».
+    update_piece_justificative_template: Le modèle de pièce justificative du champ « %{label} » a été modifié.
+    update_drop_down_options: "Les options de sélection du champ « %{label} » ont été modifiées :"
+    enable_mandatory: Le champ « %{label} » est maintenant obligatoire.
+    disable_mandatory: Le champ « %{label} » n’est plus obligatoire.
+    enable_drop_down_other: Le champ « %{label} » comporte maintenant un choix « Autre ».
+    disable_drop_down_other: Le champ « %{label} » ne comporte plus de choix « Autre ».
+    update_carte_layers: "Les référentiels cartographiques du champ « %{label} » ont été modifiés :"
+    enable_update_collapsible_explanation: Le texte complementaire affichable au clique du champ « %{label} » a été ajouté.
+    disable_update_collapsible_explanation: Le texte complementaire affichable au clique du champ « %{label} » a été supprimée.
+    update_collapsible_explanation_text: Le texte complementaire affichable au clique du champ « %{label} » a été modifié. Le nouveau texte est « %{to} ».
+    remove_collapsible_explanation_text: Le texte complementaire affichable au clique du champ « %{label} » a été supprimée.
+    add_condition: Une condition a été ajoutée sur le champ « %{label} ». La nouvelle condition est « %{to} ».
+    remove_condition: La condition du champ « %{label} » a été supprimée.
+    update_condition: La condition du champ « %{label} » a été modifiée. La nouvelle condition est « %{to} ».
+  private:
+    add: L’annotation privée « %{label} » a été ajoutée.
+    remove: L’annotation privée « %{label} » a été supprimée.
+    move:
+      one: La position d’une annotation privée a été modifiée.
+      other: Les positions de %{count} annotations privées ont été modifiées.
+    update_libelle: Le libellé de l’annotation privée « %{label} » a été modifié. Le nouveau libellé est « %{to} ».
+    update_description: La description de l’annotation privée « %{label} » a été modifiée. La nouvelle description est « %{to} ».
+    remove_description: La description de l’annotation privée « %{label} » a été supprimée.
+    update_drop_down_secondary_libelle: Le libellé secondaire de l’annotation « %{label} » a été modifié. Le nouveau libellé est « %{to} ».
+    update_drop_down_secondary_description: La description secondaire de l’annotation « %{label} » a été modifiée. La nouvelle description est « %{to} ».
+    update_type_champ_private: Le type de l’annotation privée « %{label} » a été modifié. Elle est maintenant de type « %{to} ».
+    update_piece_justificative_template_private: Le modèle de pièce justificative de l’annotation privée « %{label} » a été modifié.
+    update_drop_down_options_private: "Les options de sélection de l’annotation privée « %{label} » ont été modifiées :"
+    update_carte_layers_private: "Les référentiels cartographiques de l’annotation privée « %{label} » ont été modifiés :"
+    enable_drop_down_other: L’annotation privée « %{label} » comporte maintenant un choix « Autre ».
+    disable_drop_down_other: L’annotation privée « %{label} » ne comporte plus de choix « Autre ».
+    enable_collapsible_explanation: Le texte complementaire affichable au clique de l’annotation privée « %{label} » a été ajouté.
+    disable_collapsible_explanation: Le texte complementaire affichable au clique de l’annotation privée « %{label} » a été supprimée.
+    update_collapsible_explanation: Le texte complementaire affichable au clique de l’annotation privée « %{label} » a été modifié. Le nouveau texte est « %{to} ».
+    remove_collapsible_explanation: Le texte complementaire affichable au clique de l’annotation privée « %{label} » a été supprimée.
+    add_condition: Une condition a été ajoutée sur l’annotation privée « %{label} ». La nouvelle condition est « %{to} ».
+    remove_condition: La condition de l’annotation privée « %{label} » a été supprimée.
+    update_condition: La condition de l’annotation privée « %{label} » a été modifiée. La nouvelle condition est « %{to} ».

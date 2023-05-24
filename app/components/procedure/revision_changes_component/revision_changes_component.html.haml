@@ -1,0 +1,137 @@
+= render Dsfr::ListComponent.new do |list|
+  - list.with_empty do
+    = t('.no_changes')
+
+  - @changes.each do |change|
+    - prefix = change.private? ? 'private' : 'public'
+    - case change.op
+    - when :add
+      - list.with_item do
+        - if change.mandatory?
+          = t('.public.add_mandatory', label: change.label)
+        - else
+          = t(".#{prefix}.add", label: change.label)
+        - if !total_dossiers.zero? && !change.can_rebase?
+          %strong
+            = t('.breaking_change', count: total_dossiers)
+    - when :remove
+      - list.with_item do
+        = t(".#{prefix}.remove", label: change.label)
+    - when :update
+      - case change.attribute
+      - when :libelle
+        - list.with_item do
+          = t(".#{prefix}.update_libelle", label: change.label, to: change.to)
+      - when :type_champ
+        - list.with_item do
+          = t(".#{prefix}.update_type_champ", label: change.label, to: t("activerecord.attributes.type_de_champ.type_champs.#{change.to}"))
+          - if !total_dossiers.zero? && !change.can_rebase?
+            %strong
+              = t('.breaking_change', count: total_dossiers)
+      - when :description
+        - list.with_item do
+          - if change.to.blank?
+            = t(".#{prefix}.remove_description", label: change.label, to: change.to)
+          - else
+            = t(".#{prefix}.update_description", label: change.label, to: change.to)
+      - when :drop_down_secondary_libelle
+        - list.with_item do
+          = t(".#{prefix}.update_drop_down_secondary_libelle", label: change.label, to: change.to)
+      - when :drop_down_secondary_description
+        - list.with_item do
+          = t(".#{prefix}.update_drop_down_secondary_description", label: change.label, to: change.to)
+      - when :mandatory
+        - if change.from == false
+          - list.with_item do
+            = t(".public.enable_mandatory", label: change.label)
+            - if !total_dossiers.zero? && !change.can_rebase?
+              %strong
+                = t(:breaking_change, count: total_dossiers)
+        - else
+          - list.with_item do
+            = t(".public.disable_mandatory", label: change.label)
+            - if !total_dossiers.zero? && !change.can_rebase?
+              %strong
+                = t(:breaking_change, count: total_dossiers)
+      - when :piece_justificative_template
+        - list.with_item do
+          = t(".#{prefix}.update_piece_justificative_template", label: change.label)
+      - when :drop_down_options
+        - added = change.to.sort - change.from.sort
+        - removed = change.from.sort - change.to.sort
+        - list.with_item do
+          = t(".#{prefix}.update_drop_down_options", label: change.label)
+          = render Dsfr::ListComponent.new do |list|
+            - if added.present?
+              - list.with_item do
+                = t('.add_option', items: added.map{ |term| "« #{term.strip} »" }.join(", "))
+            - if removed.present?
+              - list.with_item do
+                = t('.remove_option', items: removed.map{ |term| "« #{term.strip} »" }.join(", "))
+          - if !total_dossiers.zero? && !change.can_rebase?
+            %strong
+              = t('.breaking_change', count: total_dossiers)
+      - when :drop_down_other
+        - if change.from == false
+          - list.with_item do
+            = t(".#{prefix}.enable_drop_down_other", label: change.label)
+            - if !total_dossiers.zero? && !change.can_rebase?
+              %strong
+                = t('.breaking_change', count: total_dossiers)
+        - else
+          - list.with_item do
+            = t(".#{prefix}.disable_drop_down_other", label: change.label)
+            - if !total_dossiers.zero? && !change.can_rebase?
+              %strong
+                = t('.breaking_change', count: total_dossiers)
+      - when :carte_layers
+        - added = change.to.sort - change.from.sort
+        - removed = change.from.sort - change.to.sort
+        - list.with_item do
+          = t(".#{prefix}.update_carte_layers", label: change.label)
+          = render Dsfr::ListComponent.new do |list|
+            - if added.present?
+              - list.with_item do
+                = t('.add_option', items: added.map{ |term| "« #{t(term, scope: [:administrateurs, :carte_layers])} »" }.join(", "))
+            - if removed.present?
+              - list.with_item do
+                = t('.remove_option', items: removed.map{ |term| "« #{t(term, scope: [:administrateurs, :carte_layers])} »" }.join(", "))
+      - when :collapsible_explanation_enabled
+        - if change.to
+          - list.with_item do
+            = t(".#{prefix}.enable_collapsible_explanation", label: change.label)
+        - else
+          - list.with_item do
+            = t(".#{prefix}.disable_collapsible_explanation", label: change.label)
+      - when :collapsible_explanation_text
+        - list.with_item do
+          - if change.to.blank?
+            = t(".#{prefix}.remove_collapsible_explanation_text", label: change.label, to: change.to)
+          - else
+            = t(".#{prefix}.update_collapsible_explanation_text", label: change.label, to: change.to)
+      - when :condition
+        - if change.from.nil?
+          - list.with_item do
+            = t(".#{prefix}.add_condition", label: change.label, to: change.to)
+            - if !total_dossiers.zero? && !change.can_rebase?
+              %strong
+                = t(:breaking_change, count: total_dossiers)
+        - elsif change.to.nil?
+          - list.with_item do
+            = t(".#{prefix}.remove_condition", label: change.label)
+            - if !total_dossiers.zero? && !change.can_rebase?
+              %strong
+                = t(:breaking_change, count: total_dossiers)
+        - else
+          - list.with_item do
+            = t(".#{prefix}.update_condition", label: change.label, to: change.to)
+            - if !total_dossiers.zero? && !change.can_rebase?
+              %strong
+                = t(:breaking_change, count: total_dossiers)
+
+  - if @public_move_changes.present?
+    - list.with_item do
+      = t(".public.move", count: @public_move_changes.size)
+  - if @private_move_changes.present?
+    - list.with_item do
+      = t(".private.move", count: @private_move_changes.size)

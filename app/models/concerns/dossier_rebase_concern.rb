@@ -22,33 +22,18 @@ module DossierRebaseConcern
     revision.compare(procedure.published_revision)
   end
 
+  def can_rebase_mandatory_change?(stable_id)
+    !champs.filter { _1.stable_id == stable_id }.any?(&:blank?)
+  end
+
   private
 
   def accepted_en_construction_changes?
-    en_construction? && pending_changes.all? { |change| accepted_change?(change) }
+    en_construction? && pending_changes.all? { _1.can_rebase?(self) }
   end
 
   def accepted_en_instruction_changes?
-    en_instruction? && pending_changes.all? { |change| accepted_change?(change) }
-  end
-
-  def accepted_change?(change)
-    return true if change[:private]
-    return true if change[:op].in?([:remove, :move])
-    return !change[:mandatory] if change[:op] == :add
-
-    case change[:attribute]
-    when :drop_down_options
-      (change[:from] - change[:to]).empty?
-    when :drop_down_other
-      !change[:from] && change[:to]
-    when :mandatory
-      (change[:from] && !change[:to]) || can_change_mandatory?(change)
-    when :type_champ, :condition
-      false
-    else
-      true
-    end
+    en_instruction? && pending_changes.all? { _1.can_rebase?(self) }
   end
 
   def rebase
@@ -62,22 +47,21 @@ module DossierRebaseConcern
       .index_by(&:stable_id)
 
     changes_by_op = pending_changes
-      .filter { |change| change[:model] == :type_de_champ }
-      .group_by { |change| change[:op] }
-      .tap { |h| h.default = [] }
+      .group_by(&:op)
+      .tap { _1.default = [] }
 
     # add champ
     changes_by_op[:add]
-      .map { |change| change[:stable_id] }
-      .map { |stable_id| target_coordinates_by_stable_id[stable_id] }
-      .each { |coordinate| add_new_champs_for_revision(coordinate) }
+      .map(&:stable_id)
+      .map { target_coordinates_by_stable_id[_1] }
+      .each { add_new_champs_for_revision(_1) }
 
     # remove champ
     changes_by_op[:remove]
-      .each { |change| delete_champs_for_revision(change[:stable_id]) }
+      .each { delete_champs_for_revision(_1.stable_id) }
 
     changes_by_op[:update]
-      .map { |change| [change, Champ.joins(:type_de_champ).where(dossier: self, type_de_champ: { stable_id: change[:stable_id] })] }
+      .map { |change| [change, champs.joins(:type_de_champ).where(type_de_champ: { stable_id: change.stable_id })] }
       .each { |change, champs| apply(change, champs) }
 
     # due to repetition tdc clone on update or erase
@@ -85,22 +69,22 @@ module DossierRebaseConcern
     Champ
       .includes(:type_de_champ)
       .where(dossier: self)
-      .map { |c| [c, target_coordinates_by_stable_id[c.stable_id].type_de_champ] }
-      .each { |c, target_tdc| c.update_columns(type_de_champ_id: target_tdc.id, rebased_at: Time.zone.now) }
+      .map { [_1, target_coordinates_by_stable_id[_1.stable_id].type_de_champ] }
+      .each { |champ, target_tdc| champ.update_columns(type_de_champ_id: target_tdc.id, rebased_at: Time.zone.now) }
 
     # update dossier revision
     self.update_column(:revision_id, target_revision.id)
   end
 
   def apply(change, champs)
-    case change[:attribute]
+    case change.attribute
     when :type_champ
-      champs.each { |champ| purge_piece_justificative_file(champ) }
+      champs.each { purge_piece_justificative_file(_1) }
       GeoArea.where(champ: champs).destroy_all
       Etablissement.where(champ: champs).destroy_all
 
       {
-        type: "Champs::#{change[:to].classify}Champ",
+        type: "Champs::#{change.to.classify}Champ",
         value: nil,
         value_json: nil,
         external_id: nil,
@@ -110,22 +94,22 @@ module DossierRebaseConcern
       { value: nil }
     when :carte_layers
       # if we are removing cadastres layer, we need to remove cadastre geo areas
-      if change[:from].include?(:cadastres) && !change[:to].include?(:cadastres)
-        champs.each { |champ| champ.cadastres.each(&:destroy) }
+      if change.from.include?(:cadastres) && !change.to.include?(:cadastres)
+        champs.each { _1.cadastres.each(&:destroy) }
       end
 
       nil
     end
-      &.then { |update_params| champs.update_all(update_params) }
+      &.then { champs.update_all(_1) }
   end
 
   def add_new_champs_for_revision(target_coordinate)
     if target_coordinate.child?
       # If this type de champ is a child, we create a new champ for each row of the parent
       parent_stable_id = target_coordinate.parent.stable_id
-      champs_repetition = Champ
+      champs_repetition = champs
         .includes(:champs, :type_de_champ)
-        .where(dossier: self, type_de_champ: { stable_id: parent_stable_id })
+        .where(type_de_champ: { stable_id: parent_stable_id })
 
       champs_repetition.each do |champ_repetition|
         champ_repetition.champs.map(&:row).uniq.each do |row|
@@ -147,17 +131,13 @@ module DossierRebaseConcern
   end
 
   def delete_champs_for_revision(stable_id)
-    Champ
+    champs
       .joins(:type_de_champ)
-      .where(dossier: self, types_de_champ: { stable_id: stable_id })
+      .where(types_de_champ: { stable_id: })
       .destroy_all
   end
 
   def purge_piece_justificative_file(champ)
     ActiveStorage::Attachment.where(id: champ.piece_justificative_file.ids).delete_all
-  end
-
-  def can_change_mandatory?(change)
-    !champs.filter { _1.stable_id == change[:stable_id] }.any?(&:blank?)
   end
 end

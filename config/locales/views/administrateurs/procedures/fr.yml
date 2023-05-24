@@ -6,3 +6,17 @@ fr:
         actions:
           close_procedure: Clore la démarche
       preview_unavailable: Aperçu non disponible car la démarche est mal configurée
+      modifications:
+        dossiers_en_construction_and_dossiers_en_instruction: Il y a %{en_construction_count} dossiers « en construction » et %{en_instruction_count} dossiers « en instruction » sur cette version de la démarche.
+        dossier_en_construction_and_dossiers_en_instruction:
+          one: Il y a un dossier « en construction » et un dossier « en instruction » sur cette version de la démarche.
+          other: Il y a un dossier « en construction » et %{count} dossiers « en instruction » sur cette version de la démarche.
+        dossier_en_instruction_and_dossiers_en_construction:
+          one: Il y a un dossier « en instruction » et un dossier « en construction » sur cette version de la démarche.
+          other: Il y a un dossier « en instruction » et %{count} dossiers « en construction » sur cette version de la démarche.
+        dossiers_en_construction:
+          one: Il y a un dossier « en construction » sur cette version de la démarche.
+          other: Il y a %{count} dossiers « en construction » sur cette version de la démarche.
+        dossiers_en_instruction:
+          one: Il y a un dossier « en instruction » sur cette version de la démarche.
+          other: Il y a %{count} dossiers « en instruction » sur cette version de la démarche.
