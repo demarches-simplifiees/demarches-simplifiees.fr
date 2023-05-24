@@ -4,7 +4,7 @@ en:
       managed_by:
         header: 'This procedure is managed by :'
       contact:
-        header: 'Ask a question about your file :'
+        header: 'Ask a question about the procedure :'
         in_app_mail:
           link: "Direclty via the chat"
         email:
