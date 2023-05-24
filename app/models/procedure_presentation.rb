@@ -61,7 +61,7 @@ class ProcedurePresentation < ApplicationRecord
       field_hash('user', 'email', type: :text),
       field_hash('followers_instructeurs', 'email', type: :text),
       field_hash('groupe_instructeur', 'id', type: :enum),
-      field_hash('avis', 'id', type: :text)
+      field_hash('avis', 'answer', type: :text)
     )
 
     if procedure.for_individual
@@ -211,7 +211,7 @@ class ProcedurePresentation < ApplicationRecord
           .includes(:followers_instructeurs)
           .joins('INNER JOIN users instructeurs_users ON instructeurs_users.id = instructeurs.user_id')
           .filter_ilike('instructeurs_users', :email, values)
-      when 'user', 'individual'
+      when 'user', 'individual', 'avis'
         dossiers
           .includes(table)
           .filter_ilike(table, column, values)
