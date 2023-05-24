@@ -312,42 +312,38 @@ class ProcedureRevision < ApplicationRecord
     end
     if to_type_de_champ.visa?
       if from_type_de_champ.accredited_user_list != to_type_de_champ.accredited_user_list
-        changes << {
-          model: :type_de_champ,
-          op: :update,
-          attribute: :accredited_user_list,
-          label: from_type_de_champ.libelle,
-          private: from_type_de_champ.private?,
-          from: from_type_de_champ.accredited_user_list,
-          to: to_type_de_champ.accredited_user_list,
-          stable_id: from_type_de_champ.stable_id
-        }
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          :accredited_user_list,
+          from_type_de_champ.accredited_user_list,
+          to_type_de_champ.accredited_user_list)
       end
     end
-    if to_type_de_champ.date? || to_type_de_champ.integer_number? || to_type_de_champ.decimal_number?
+    if to_type_de_champ.integer_number? || to_type_de_champ.decimal_number?
       if from_type_de_champ.min != to_type_de_champ.min
-        changes << {
-          model: :type_de_champ,
-          op: :update,
-          attribute: :min,
-          label: from_type_de_champ.libelle,
-          private: from_type_de_champ.private?,
-          from: value_of(to_type_de_champ, from_type_de_champ.min),
-          to: value_of(to_type_de_champ, to_type_de_champ.min),
-          stable_id: from_type_de_champ.stable_id
-        }
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+                                                            :min,
+                                                            from_type_de_champ.min,
+                                                            to_type_de_champ.min)
       end
       if from_type_de_champ.max != to_type_de_champ.max
-        changes << {
-          model: :type_de_champ,
-          op: :update,
-          attribute: :max,
-          label: from_type_de_champ.libelle,
-          private: from_type_de_champ.private?,
-          from: value_of(to_type_de_champ, from_type_de_champ.max),
-          to: value_of(to_type_de_champ, to_type_de_champ.max),
-          stable_id: from_type_de_champ.stable_id
-        }
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+                                                            :max,
+                                                            from_type_de_champ.max,
+                                                            to_type_de_champ.max)
+      end
+    end
+    if to_type_de_champ.date?
+      if from_type_de_champ.min != to_type_de_champ.min
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+                                                            :min,
+                                                            Date.iso8601(from_type_de_champ.min),
+                                                            Date.iso8601(to_type_de_champ.min))
+      end
+      if from_type_de_champ.max != to_type_de_champ.max
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+                                                            :max,
+                                                            Date.iso8601(from_type_de_champ.max),
+                                                            Date.iso8601(to_type_de_champ.max))
       end
     end
 
