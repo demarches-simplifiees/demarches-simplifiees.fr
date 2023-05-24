@@ -843,6 +843,11 @@
             },
             {
               "kind": "OBJECT",
+              "name": "DepartementChamp",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
               "name": "DossierLinkChamp",
               "ofType": null
             },
@@ -868,7 +873,17 @@
             },
             {
               "kind": "OBJECT",
+              "name": "PaysChamp",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
               "name": "PieceJustificativeChamp",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "RegionChamp",
               "ofType": null
             },
             {
@@ -3005,6 +3020,87 @@
           "inputFields": null,
           "interfaces": [
 
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "DepartementChamp",
+          "description": null,
+          "fields": [
+            {
+              "name": "departement",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Departement",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "label",
+              "description": "Libellé du champ.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "stringValue",
+              "description": "La valeur du champ sous forme texte.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "kind": "INTERFACE",
+              "name": "Champ",
+              "ofType": null
+            }
           ],
           "enumValues": null,
           "possibleTypes": null
@@ -9111,6 +9207,136 @@
         },
         {
           "kind": "OBJECT",
+          "name": "Pays",
+          "description": null,
+          "fields": [
+            {
+              "name": "code",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "name",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "PaysChamp",
+          "description": null,
+          "fields": [
+            {
+              "name": "id",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "label",
+              "description": "Libellé du champ.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "pays",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Pays",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "stringValue",
+              "description": "La valeur du champ sous forme texte.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "kind": "INTERFACE",
+              "name": "Champ",
+              "ofType": null
+            }
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
           "name": "PersonneMorale",
           "description": null,
           "fields": [
@@ -9778,6 +10004,136 @@
           "inputFields": null,
           "interfaces": [
 
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "Region",
+          "description": null,
+          "fields": [
+            {
+              "name": "code",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "name",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "RegionChamp",
+          "description": null,
+          "fields": [
+            {
+              "name": "id",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "label",
+              "description": "Libellé du champ.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "region",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Region",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "stringValue",
+              "description": "La valeur du champ sous forme texte.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "kind": "INTERFACE",
+              "name": "Champ",
+              "ofType": null
+            }
           ],
           "enumValues": null,
           "possibleTypes": null
@@ -10673,50 +11029,26 @@
           "interfaces": null,
           "enumValues": [
             {
-              "name": "text",
-              "description": "Texte",
+              "name": "header_section",
+              "description": "Titre de section",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "textarea",
-              "description": "Zone de texte",
+              "name": "repetition",
+              "description": "Bloc répétable",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "date",
-              "description": "Date",
+              "name": "dossier_link",
+              "description": "Lien vers un autre dossier",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "datetime",
-              "description": "Date et Heure",
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "number",
-              "description": "Nombre",
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "decimal_number",
-              "description": "Nombre décimal",
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "integer_number",
-              "description": "Nombre entier",
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "checkbox",
-              "description": "Case à cocher",
+              "name": "explication",
+              "description": "Explication",
               "isDeprecated": false,
               "deprecationReason": null
             },
@@ -10728,7 +11060,7 @@
             },
             {
               "name": "email",
-              "description": "Email",
+              "description": "Adresse électronique",
               "isDeprecated": false,
               "deprecationReason": null
             },
@@ -10741,30 +11073,6 @@
             {
               "name": "address",
               "description": "Adresse en France",
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "yes_no",
-              "description": "Oui/Non",
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "drop_down_list",
-              "description": "Choix unique",
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "multiple_drop_down_list",
-              "description": "Choix multiples",
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "linked_drop_down_list",
-              "description": "Deux menus déroulants liés",
               "isDeprecated": false,
               "deprecationReason": null
             },
@@ -10793,26 +11101,104 @@
               "deprecationReason": null
             },
             {
-              "name": "header_section",
-              "description": "Titre de section",
+              "name": "iban",
+              "description": "Numéro Iban",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "explication",
-              "description": "Explication",
+              "name": "siret",
+              "description": "Numéro TAHITI",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "dossier_link",
-              "description": "Lien vers un autre dossier",
+              "name": "text",
+              "description": "Texte court",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "textarea",
+              "description": "Texte long",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "number",
+              "description": "Nombre",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "decimal_number",
+              "description": "Nombre décimal",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "integer_number",
+              "description": "Nombre entier",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "date",
+              "description": "Date",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "datetime",
+              "description": "Date et Heure",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "piece_justificative",
               "description": "Pièce justificative",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "titre_identite",
+              "description": "Titre identité",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "checkbox",
+              "description": "Case à cocher seule",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "drop_down_list",
+              "description": "Choix simple",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "multiple_drop_down_list",
+              "description": "Choix multiple",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "linked_drop_down_list",
+              "description": "Deux menus déroulants liés",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "yes_no",
+              "description": "Oui/Non",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "annuaire_education",
+              "description": "Annuaire de l’éducation",
               "isDeprecated": false,
               "deprecationReason": null
             },
@@ -10825,36 +11211,6 @@
             {
               "name": "carte",
               "description": "Carte de France",
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "repetition",
-              "description": "Bloc répétable",
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "titre_identite",
-              "description": "Titre identité",
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "iban",
-              "description": "Iban",
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "siret",
-              "description": "Numéro TAHITI",
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "annuaire_education",
-              "description": "Annuaire de l’éducation",
               "isDeprecated": false,
               "deprecationReason": null
             },

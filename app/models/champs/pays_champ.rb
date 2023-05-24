@@ -22,15 +22,15 @@
 #
 class Champs::PaysChamp < Champs::TextChamp
   def for_export
-    [formatted_value, code]
+    [name, code]
   end
 
   def to_s
-    formatted_value
+    name
   end
 
   def for_tag
-    formatted_value
+    name
   end
 
   def selected
@@ -54,9 +54,7 @@ class Champs::PaysChamp < Champs::TextChamp
     external_id || APIGeoService.country_code(value)
   end
 
-  private
-
-  def formatted_value
+  def name
     if external_id
       APIGeoService.country_name(external_id)
     else

@@ -60,6 +60,7 @@ class API::V2::Schema < GraphQL::Schema
     Types::Champs::LinkedDropDownListChampType,
     Types::Champs::MultipleDropDownListChampType,
     Types::Champs::NumeroDnChampType,
+    Types::Champs::PaysChampType,
     Types::Champs::PieceJustificativeChampType,
     Types::Champs::RegionChampType,
     Types::Champs::RepetitionChampType,
