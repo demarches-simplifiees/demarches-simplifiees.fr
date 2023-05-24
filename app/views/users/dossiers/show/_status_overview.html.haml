@@ -13,14 +13,10 @@
 
 
   .status-explanation
-    - if dossier.brouillon?
-      .brouillon
-        %p Votre dossier n’est pas encore visible par l’administration.
-        %p Vous pouvez déposer votre dossier afin de le transmettre à l’administration. Une fois soumis, vous pourrez toujours modifier votre dossier.
-
-    - elsif dossier.en_construction?
+    -# brouillon does not occure
+    - if dossier.en_construction?
       .en-construction
-        %p
+        %p{ role: 'status' }
           = t('views.users.dossiers.show.status_overview.en_construction_html')
 
         = render partial: 'users/dossiers/show/estimated_delay', locals: { procedure: dossier.procedure }
@@ -30,7 +26,7 @@
 
     - elsif dossier.en_instruction?
       .en-instruction
-        %p
+        %p{ role: 'alert' }
           = t('views.users.dossiers.show.status_overview.admin_review')
 
         = render partial: 'users/dossiers/show/estimated_delay', locals: { procedure: dossier.procedure }
@@ -40,14 +36,12 @@
 
     - elsif dossier.accepte?
       .accepte
-        %p.decision
+        %p.decision{ role: 'alert' }
           %span.icon.accept
-          Votre dossier a été
-          = succeed '.' do
-            %strong accepté
+          = t('views.users.dossiers.show.status_overview.acceptee_html')
 
         - if dossier.motivation.present?
-          %h3 Motif de l’acceptation
+          %h3= t('views.users.dossiers.show.status_overview.accepte_motivation')
           %blockquote= dossier.motivation
 
         = render partial: 'users/dossiers/show/download_justificatif', locals: { dossier: dossier }
@@ -56,35 +50,31 @@
           .action
             = link_to attestation_dossier_path(dossier), target: '_blank', rel: 'noopener', class: 'button primary' do
               %span.icon.download-white
-              Télécharger l’attestation
+              = t('views.users.dossiers.show.status_overview.accepte_attestation')
 
 
     - elsif dossier.refuse?
       .refuse
-        %p.decision
+        %p.decision{ role: 'alert' }
           %span.icon.refuse
-          Nous sommes désolés, votre dossier a malheureusement été
-          = succeed '.' do
-            %strong refusé
+          = t('views.users.dossiers.show.status_overview.refuse_html')
 
         - if dossier.motivation.present?
-          %h3 Motif du refus
+          %h3= t('views.users.dossiers.show.status_overview.refuse_motivation')
           %blockquote= dossier.motivation
 
         = render partial: 'users/dossiers/show/download_justificatif', locals: { dossier: dossier }
         .action
-          = link_to 'Envoyer un message à l’administration', messagerie_dossier_url(dossier, anchor: 'new_commentaire'), class: 'button'
+          = link_to t('views.users.dossiers.show.status_overview.refuse_reply'), messagerie_dossier_url(dossier, anchor: 'new_commentaire'), class: 'button'
 
     - elsif dossier.sans_suite?
       .sans-suite
-        %p.decision
+        %p.decision{ role: 'alert' }
           %span.icon.without-continuation
-          Votre dossier a été classé
-          = succeed '.' do
-            %strong sans suite
+          = t('views.users.dossiers.show.status_overview.sans_suite_html')
 
         = render partial: 'users/dossiers/show/download_justificatif', locals: { dossier: dossier }
 
         - if dossier.motivation.present?
-          %h3 Motif du classement sans suite
+          %h3= t('views.users.dossiers.show.status_overview.sans_suite_motivation')
           %blockquote= dossier.motivation
