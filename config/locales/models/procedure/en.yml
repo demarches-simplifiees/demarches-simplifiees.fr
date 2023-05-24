@@ -8,8 +8,7 @@ en:
       procedure:
         path: Public link
         organisation: Service
-        description_for_who: For who
-        description_what: Procedure subject
+        description_target_audience: For who
         duree_conservation_dossiers_dans_ds: Duration files will be kept
         max_duree_conservation_dossiers_dans_ds: Max duration allowed to keep files
         aasm_state:

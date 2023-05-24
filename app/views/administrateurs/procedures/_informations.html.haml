@@ -8,26 +8,18 @@
     %span.mandatory *
   = f.text_field :libelle, class: 'fr-input', required: true
 
-- if @procedure.description.present?
-  .fr-input-group
-    = f.label :description, class: 'fr-label' do
-      Description
-      %span.fr-hint-text Ce champ est déprécié, il n'est plus possible de le modifier. Pour plus de clarté pour les usagers, la description a été scindée en deux nouveaux champs : "objet de la démarche" et "à qui s'adresse la démarche". Vous pouvez remplir ces nouveaux champs en remplacement.
-    = f.text_field :description, class: 'fr-input', disabled: true
-
 .fr-input-group
-  = f.label :description_what, class: 'fr-label' do
+  = f.label :description, class: 'fr-label' do
     Quel est l’objet de la démarche ?
     %span.mandatory *
     %span.fr-hint-text Décrivez en quelques lignes le contexte, la finalité etc.
-  = f.text_area :description_what, rows: '6', class: 'fr-input'
+  = f.text_area :description, rows: '6', class: 'fr-input', required: true
 
 .fr-input-group
-  = f.label :description_for_who, class: 'fr-label' do
+  = f.label :description_target_audience, class: 'fr-label' do
     À qui s’adresse la démarche ?
-    %span.mandatory *
     %span.fr-hint-text Décrivez en quelques lignes les destinataires finaux de la démarche, les critères d’éligibilité s’il y en a, les pré-requis, etc.
-  = f.text_area :description_for_who, rows: '6', class: 'fr-input'
+  = f.text_area :description_target_audience, rows: '6', class: 'fr-input'
 
 %h3.header-subsection Logo de la démarche
 = render Attachment::EditComponent.new(attached_file: @procedure.logo, view_as: :link)

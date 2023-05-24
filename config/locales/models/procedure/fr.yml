@@ -8,8 +8,7 @@ fr:
       procedure:
         path: Lien public
         organisation: Organisme
-        description_for_who: À qui s’adresse la démarche
-        description_what: Objet de la démarche
+        description_target_audience: À qui s’adresse la démarche
         duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers sur demarches-simplifiees.fr (choisi par un usager)
         max_duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers maximum (autorisé par un super admin de DS)
         id: Id

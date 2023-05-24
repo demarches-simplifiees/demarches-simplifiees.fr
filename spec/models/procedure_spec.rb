@@ -178,26 +178,9 @@ describe Procedure do
     end
 
     context 'description' do
-      context 'description can not be nil if description_what and description_for_who are nil too' do
-        let(:procedure) { build(:procedure, description: nil) }
-        it { is_expected.to allow_value('Description Demande de subvention').for(:description) }
-        it { expect(procedure.valid?).to eq(false) }
-      end
-
-      context 'description can be nil if description_what and description_for_who are filled' do
-        let(:procedure) { build(:procedure, description: nil, description_for_who: 'for who', description_what: 'what') }
-        it { expect(procedure.valid?).to eq(true) }
-      end
-
-      context 'description_what and description_for_who can not be nil if description is nil too' do
-        let(:procedure) { build(:procedure, description: nil) }
-        it { expect(procedure.valid?).to eq(false) }
-      end
-
-      context 'description_what and description_for_who can be nil if description is filled' do
-        let(:procedure) { build(:procedure, description: 'description') }
-        it { expect(procedure.valid?).to eq(true) }
-      end
+      it { is_expected.not_to allow_value(nil).for(:description) }
+      it { is_expected.not_to allow_value('').for(:description) }
+      it { is_expected.to allow_value('Description Demande de subvention').for(:description) }
     end
 
     context 'organisation' do

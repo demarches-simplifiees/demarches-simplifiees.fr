@@ -26,22 +26,16 @@
     %p Vous pouvez déposer vos dossiers jusqu’au #{procedure_auto_archive_datetime(procedure)}.
 
 
-- if procedure.description_what.present? && procedure.description_for_who.present?
-  .fr-accordions-group
-    %section.fr-accordion
-      %h3.fr-accordion__title
-        %button.fr-accordion__btn{ "aria-controls" => "accordion-114", "aria-expanded" => "true" } Quel est l’objet de cette démarche ?
-      #accordion-114.fr-collapse.js_description_what
-        = h render SimpleFormatComponent.new(procedure.description_what, allow_a: true)
-
-    %section.fr-accordion
-      %h3.fr-accordion__title
-        %button.fr-accordion__btn{ "aria-controls" => "accordion-115", "aria-expanded" => "false" } À qui s’adresse la démarche ?
-      #accordion-115.fr-collapse.js_description_for_who
-        = h render SimpleFormatComponent.new(procedure.description_for_who, allow_a: true)
-
-- else
-  .procedure-description
-    .procedure-description-body.read-more-enabled.read-more-collapsed{ tabindex: "0", role: "region", "aria-label": t('views.users.dossiers.identite.description') }
+.fr-accordions-group
+  %section.fr-accordion
+    %h2.fr-accordion__title
+      %button.fr-accordion__btn{ "aria-controls" => "accordion-114", "aria-expanded" => "true" } Quel est l’objet de cette démarche ?
+    #accordion-114.fr-collapse.js_description
       = h render SimpleFormatComponent.new(procedure.description, allow_a: true)
-    = button_tag "Afficher la description complète", class: 'button read-more-button'
+
+  - if procedure.description_target_audience.present?
+    %section.fr-accordion
+      %h2.fr-accordion__title
+        %button.fr-accordion__btn{ "aria-controls" => "accordion-115", "aria-expanded" => "false" } À qui s’adresse la démarche ?
+      #accordion-115.fr-collapse.js_description_target_audience
+        = h render SimpleFormatComponent.new(procedure.description_target_audience, allow_a: true)

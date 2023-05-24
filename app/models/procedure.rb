@@ -16,8 +16,7 @@
 #  closed_at                                 :datetime
 #  declarative_with_state                    :string
 #  description                               :string
-#  description_for_who                       :string
-#  description_what                          :string
+#  description_target_audience               :string
 #  dossiers_count_computed_at                :datetime
 #  duree_conservation_dossiers_dans_ds       :integer
 #  duree_conservation_etendue_par_ds         :boolean          default(FALSE), not null
@@ -282,8 +281,7 @@ class Procedure < ApplicationRecord
   }
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
-  validates :description, presence: true, allow_blank: false, allow_nil: false, if: -> { description_what.nil? && description_for_who.nil? }
-  validates :description_what, :description_for_who, presence: true, allow_blank: false, allow_nil: false, if: -> { description.nil? }
+  validates :description, presence: true, allow_blank: false, allow_nil: false
   validates :administrateurs, presence: true
   validates :lien_site_web, presence: true, if: :publiee?
   validates :draft_types_de_champ_public,
