@@ -6,7 +6,14 @@ describe 'The user' do
   let(:user_dossier) { user.dossiers.first }
   let!(:dossier_to_link) { create(:dossier) }
 
-  scenario 'fill a dossier 1', js: true do
+  let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
+
+  before do
+    allow(Rails).to receive(:cache).and_return(memory_store)
+    Rails.cache.clear
+  end
+
+  scenario 'fill a dossier', js: true, vcr: { cassette_name: 'api_geo_all' } do
     log_in(user, procedure)
 
     fill_individual
@@ -33,11 +40,11 @@ describe 'The user' do
     select_combobox('multiple_choice_drop_down_list_long', 'alp', 'alpha')
     select_combobox('multiple_choice_drop_down_list_long', 'cha', 'charly')
 
-    select_combobox('pays', 'aust', 'Australie')
-    select_combobox('regions', 'Ma', 'Martinique')
-    select_combobox('departements', 'Ai', '02 - Aisne')
+    select('Australie', from: form_id_for('pays'))
+    select('Martinique', from: form_id_for('regions'))
+    select('02 – Aisne', from: form_id_for('departements'))
     select_combobox('communes', 'Ai', '02 - Aisne', check: false)
-    # select_combobox('communes', 'Ambl', 'Ambléon (01300)')
+    select_combobox('communes', 'Ambl', 'Ambléon (01300)')
 
     select('Australienne', from: form_id_for('nationalites'))
     select('Mahina - Tahiti - 98709', from: form_id_for('commune_de_polynesie'))
@@ -49,52 +56,40 @@ describe 'The user' do
     expect(page).to have_css('span', text: 'Votre brouillon est automatiquement enregistré', visible: true)
     wait_for_autosave
 
-    # check data on the dossier from db
-    # Sometimes, `user_dossier.champs` are not yet all updated with the new values
-    # when we first load `user_dossier`, causing random errors.
-    # Strategy is to retry & reload them if necessary for a few seconds,
-    # and raise expectation error instead of timeout error.
-    last_expection_error = nil
-    begin
-      Timeout.timeout(Capybara.default_max_wait_time * 6) do
-        # check data on the dossier
-        expect(user_dossier.brouillon?).to be true
-        expect(champ_value_for('text')).to eq('super texte')
-        expect(champ_value_for('textarea')).to eq('super textarea')
-        expect(champ_value_for('date')).to eq('2012-12-12')
-        expect(champ_value_for('datetime')).to eq('06/01/2030 07:05')
-        expect(champ_value_for('number')).to eq('42')
-        expect(champ_value_for('decimal_number')).to eq('17')
-        expect(champ_value_for('integer_number')).to eq('12')
-        expect(champ_value_for('checkbox')).to eq('on')
-        expect(champ_value_for('civilite')).to eq('Mme')
-        expect(champ_value_for('email')).to eq('loulou@yopmail.com')
-        expect(champ_value_for('phone')).to eq('0123456789')
-        expect(champ_value_for('yes_no')).to eq('false')
-        expect(champ_value_for('simple_drop_down_list')).to eq('val2')
-        expect(champ_value_for('simple_choice_drop_down_list_long')).to eq('bravo')
-        expect(JSON.parse(champ_value_for('multiple_choice_drop_down_list_long'))).to match(['alpha', 'charly'])
-        expect(JSON.parse(champ_value_for('multiple_drop_down_list'))).to match(['val1', 'val3'])
-        expect(champ_value_for('pays')).to eq('Australie')
-        expect(champ_value_for('regions')).to eq('Martinique')
-        expect(champ_value_for('departements')).to eq('02 - Aisne')
-        # expect(champ_value_for('communes')).to eq('Ambléon (01300)')
-        expect(champ_value_for('dossier_link')).to eq(dossier_to_link.id.to_s)
-        expect(champ_value_for('piece_justificative')).to be_nil # antivirus hasn't approved the file yet
+    # check data on the dossier
+    expect(champ_value_for('nationalites')).to eq('Australienne')
+    expect(champ_value_for('commune_de_polynesie')).to eq('Mahina - Tahiti - 98709')
+    expect(champ_value_for('code_postal_de_polynesie')).to eq('98709 - Mahina - Tahiti')
 
-        expect(champ_value_for('nationalites')).to eq('Australienne')
-        expect(champ_value_for('commune_de_polynesie')).to eq('Mahina - Tahiti - 98709')
-        expect(champ_value_for('code_postal_de_polynesie')).to eq('98709 - Mahina - Tahiti')
-      rescue RSpec::Expectations::ExpectationNotMetError => e
-        Rails.logger.debug "Error #{e.message.tr("\n", " ")}, will retry"
-        last_expection_error = e
-        sleep(0.1)
-        retry
-      end
-    rescue Timeout::Error => e
-      raise last_expection_error || e
-    end
+    expect(user_dossier.brouillon?).to be true
+    expect(champ_value_for('text')).to eq('super texte')
+    expect(champ_value_for('textarea')).to eq('super textarea')
+    expect(champ_value_for('date')).to eq('2012-12-12')
+    expect(champ_value_for('datetime')).to eq('06/01/2030 07:05')
+    expect(champ_value_for('number')).to eq('42')
+    expect(champ_value_for('decimal_number')).to eq('17')
+    expect(champ_value_for('integer_number')).to eq('12')
+    expect(champ_value_for('checkbox')).to eq('on')
+    expect(champ_value_for('civilite')).to eq('Mme')
+    expect(champ_value_for('email')).to eq('loulou@yopmail.com')
+    expect(champ_value_for('phone')).to eq('0123456789')
+    expect(champ_value_for('yes_no')).to eq('false')
+    expect(champ_value_for('simple_drop_down_list')).to eq('val2')
+    expect(champ_value_for('simple_choice_drop_down_list_long')).to eq('bravo')
+    expect(JSON.parse(champ_value_for('multiple_choice_drop_down_list_long'))).to match(['alpha', 'charly'])
+    expect(JSON.parse(champ_value_for('multiple_drop_down_list'))).to match(['val1', 'val3'])
+    expect(champ_value_for('pays')).to eq('Australie')
+    expect(champ_value_for('regions')).to eq('Martinique')
+    expect(champ_value_for('departements')).to eq('Aisne')
+    expect(champ_value_for('communes')).to eq('Ambléon (01300)')
+    expect(champ_value_for('dossier_link')).to eq(dossier_to_link.id.to_s)
+    expect(champ_value_for('piece_justificative')).to be_nil # antivirus hasn't approved the file yet
+
     ## check data on the gui
+
+    expect(page).to have_selected_value('nationalites', selected: 'Australienne')
+    expect(page).to have_selected_value('commune_de_polynesie', selected: 'Mahina - Tahiti - 98709')
+    expect(page).to have_selected_value('code_postal_de_polynesie', selected: '98709 - Mahina - Tahiti')
 
     expect(page).to have_field('text', with: 'super texte')
     expect(page).to have_field('textarea', with: 'super textarea')
@@ -110,16 +105,11 @@ describe 'The user' do
     expect(page).to have_checked_field('val1')
     expect(page).to have_checked_field('val3')
     expect(page).to have_selected_value('simple_choice_drop_down_list_long', selected: 'bravo')
+    expect(page).to have_selected_value('pays', selected: 'Australie')
+    expect(page).to have_selected_value('regions', selected: 'Martinique')
+    expect(page).to have_selected_value('departements', selected: '02 – Aisne')
     check_selected_value('multiple_choice_drop_down_list_long', with: ['alpha', 'charly'])
-
-    expect(page).to have_selected_value('nationalites', selected: 'Australienne')
-    expect(page).to have_selected_value('commune_de_polynesie', selected: 'Mahina - Tahiti - 98709')
-    expect(page).to have_selected_value('code_postal_de_polynesie', selected: '98709 - Mahina - Tahiti')
-
-    check_selected_value('pays', with: 'Australie')
-    check_selected_value('regions', with: 'Martinique')
-    check_selected_value('departements', with: '02 - Aisne')
-    # check_selected_value('communes', with: 'Ambléon (01300)')
+    check_selected_value('communes', with: 'Ambléon (01300)')
     expect(page).to have_field('dossier_link', with: dossier_to_link.id.to_s)
     expect(page).to have_text('file.pdf')
     expect(page).to have_text('Analyse antivirus en cours')
@@ -182,9 +172,9 @@ describe 'The user' do
   scenario 'extends dossier experation date more than one time, ', js: true do
     simple_procedure.update(procedure_expires_when_termine_enabled: true)
     user_old_dossier = create(:dossier,
-      procedure: simple_procedure,
-      created_at: simple_procedure.duree_conservation_dossiers_dans_ds.month.ago,
-      user: user)
+                              procedure: simple_procedure,
+                              created_at: simple_procedure.duree_conservation_dossiers_dans_ds.month.ago,
+                              user: user)
     login_as(user, scope: :user)
     visit brouillon_dossier_path(user_old_dossier)
 

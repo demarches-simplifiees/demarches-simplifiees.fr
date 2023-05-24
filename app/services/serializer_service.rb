@@ -191,6 +191,28 @@ class SerializerService
           ...AddressFragment
         }
       }
+      ... on CommuneChamp {
+        commune {
+          name
+          code
+        }
+        departement {
+          name
+          code
+        }
+      }
+      ... on DepartementChamp {
+        departement {
+          name
+          code
+        }
+      }
+      ... on RegionChamp {
+        region {
+          name
+          code
+        }
+      }
     }
 
     fragment RepetitionChampFragment on RepetitionChamp {
