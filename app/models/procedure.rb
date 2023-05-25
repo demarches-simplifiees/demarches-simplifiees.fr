@@ -69,6 +69,7 @@ class Procedure < ApplicationRecord
   include EncryptableConcern
   include InitiationProcedureConcern
   include ProcedureGroupeInstructeurAPIHackConcern
+  include ProcedureSVASVRConcern
 
   include Discard::Model
   self.discard_column = :hidden_at

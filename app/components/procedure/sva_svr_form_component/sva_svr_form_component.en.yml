@@ -1,0 +1,26 @@
+---
+en:
+  rule: Rule to apply
+  delay: Configuration of the delay before decision
+  unit_labels:
+    months: months
+    weeks: weeks
+    days: days
+  resume_method: How to calculate the delay when the applicant resubmits their corrected file?
+  resume_intro: |
+    When an instructor asks for a file to be corrected, the countdown of the delay is interrupted.
+    The delay resumes when the applicant resubmits their file stating that they have made the requested corrections.
+  submit: Apply SVA/SVR configuration
+  cancel: Cancel
+  decision_buttons:
+    disabled: "Disabled"
+    sva:  "Silence Equals Acceptation (SVA)"
+    sva_hint: "A file is automatically accepted if no instructor has pronounced before the allotted time"
+    svr: "Silence Equals Rejection (SVR)"
+    svr_hint: "A file is automatically rejected if no instructor has pronounced before the allotted time"
+  resume_buttons:
+    continue_label: "Resume countdown from where it stopped"
+    continue_hint: "Example: if the instructor asks for corrections while there are 10 days left before the automatic decision, and the file is resubmitted on April 15, it will be automatically accepted on April 25, unless the instructor pronounces in the meantime or asks for corrections again"
+    reset_label: "Reset the delay"
+    reset_hint: "Example: if the file is resubmitted on April 15 and the delay is 2 months, the decision will be automatically made on June 15, unless the instructor pronounces in the meantime or asks for corrections again"
+  notice_new_files_only: "Information: if you activate this rule, only the newly submitted files will be subject to it."
