@@ -44,7 +44,9 @@ fr:
           title: Gestion des Groupes
           delete: supprimer le groupe
           delete_confirmation: Êtes-vous sûr de vouloir supprimer le groupe "%{group_name}"
-          move_folders: déplacer les dossiers
+          move_folders:
+            one: déplacer 1 dossier
+            other: déplacer les %{count} dossiers
           move_folders_confirmation: Réaffecter les dossiers à un autre groupe afin de pouvoir le supprimer
         add_a_group:
           title: Ajouter un nom de groupe
