@@ -14,8 +14,8 @@
       %span.fr-icon-timer-line
       = t('shared.procedure_description.estimated_fill_duration', estimated_minutes: estimated_fill_duration_minutes(procedure))
 
-- if full_screen_display
-  = yield
+
+= yield
 
 - if procedure.auto_archive_on
   %details.procedure-configuration--auto-archive
@@ -25,17 +25,17 @@
       %span.procedure-auto-archive-title Date limite : #{procedure_auto_archive_date(procedure)}
     %p Vous pouvez déposer vos dossiers jusqu’au #{procedure_auto_archive_datetime(procedure)}.
 
-
-.fr-accordions-group
-  %section.fr-accordion
-    %h2.fr-accordion__title
-      %button.fr-accordion__btn{ "aria-controls" => "accordion-114", "aria-expanded" => "true" } Quel est l’objet de cette démarche ?
-    #accordion-114.fr-collapse.js_description
-      = h render SimpleFormatComponent.new(procedure.description, allow_a: true)
-
-  - if procedure.description_target_audience.present?
+- unless @no_description
+  .fr-accordions-group
     %section.fr-accordion
       %h2.fr-accordion__title
-        %button.fr-accordion__btn{ "aria-controls" => "accordion-115", "aria-expanded" => "false" } À qui s’adresse la démarche ?
-      #accordion-115.fr-collapse.js_description_target_audience
-        = h render SimpleFormatComponent.new(procedure.description_target_audience, allow_a: true)
+        %button.fr-accordion__btn{ "aria-controls" => "accordion-114", "aria-expanded" => "true" } Quel est l’objet de cette démarche ?
+      #accordion-114.fr-collapse.js_description
+        = h render SimpleFormatComponent.new(procedure.description, allow_a: true)
+
+    - if procedure.description_target_audience.present?
+      %section.fr-accordion
+        %h2.fr-accordion__title
+          %button.fr-accordion__btn{ "aria-controls" => "accordion-115", "aria-expanded" => "false" } À qui s’adresse la démarche ?
+        #accordion-115.fr-collapse.js_description_target_audience
+          = h render SimpleFormatComponent.new(procedure.description_target_audience, allow_a: true)

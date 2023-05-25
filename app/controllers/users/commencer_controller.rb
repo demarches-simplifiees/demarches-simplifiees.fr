@@ -1,6 +1,6 @@
 module Users
   class CommencerController < ApplicationController
-    layout 'procedure_context_full_screen'
+    layout 'procedure_context'
 
     def commencer
       @procedure = retrieve_procedure
