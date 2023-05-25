@@ -1,7 +1,7 @@
 describe APIEntrepriseService do
   shared_examples 'schedule fetch of all etablissement params' do
     [
-      APIEntreprise::EntrepriseJob, APIEntreprise::ExtraitKbisJob,
+      APIEntreprise::EntrepriseJob, APIEntreprise::ExtraitKbisJob, APIEntreprise::TvaJob,
       APIEntreprise::AssociationJob, APIEntreprise::ExercicesJob,
       APIEntreprise::EffectifsJob, APIEntreprise::EffectifsAnnuelsJob, APIEntreprise::AttestationSocialeJob,
       APIEntreprise::BilansBdfJob
