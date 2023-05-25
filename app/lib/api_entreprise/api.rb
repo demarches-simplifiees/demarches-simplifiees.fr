@@ -1,5 +1,5 @@
 class APIEntreprise::API
-  ENTREPRISE_RESOURCE_NAME = "v2/entreprises/%{id}"
+  ENTREPRISE_RESOURCE_NAME = "v3/insee/sirene/unites_legales/%{id}"
   ETABLISSEMENT_RESOURCE_NAME = "v2/etablissements/%{id}"
   EXERCICES_RESOURCE_NAME = "v2/exercices/%{id}"
   RNA_RESOURCE_NAME = "v2/associations/%{id}"

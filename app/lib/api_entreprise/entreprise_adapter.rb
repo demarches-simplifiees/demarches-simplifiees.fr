@@ -6,7 +6,7 @@ class APIEntreprise::EntrepriseAdapter < APIEntreprise::Adapter
   end
 
   def process_params
-    params = data_source[:entreprise]
+    params = data_source[:data]
     return {} if params.nil?
 
     Sentry.with_scope do |scope|
@@ -18,9 +18,29 @@ class APIEntreprise::EntrepriseAdapter < APIEntreprise::Adapter
 
       if params.present? && valid_params?(params)
         params[:date_creation] = Time.zone.at(params[:date_creation]).to_datetime if params[:date_creation].present?
-        if params[:raison_sociale].present? && is_individual_entreprise?(params[:forme_juridique_code])
-          params[:raison_sociale] = humanize_raison_sociale(params[:raison_sociale])
+
+        forme_juridique = params.extract! :forme_juridique
+        if forme_juridique.present?
+          params[:forme_juridique] = forme_juridique[:forme_juridique][:libelle]
+          params[:forme_juridique_code] = forme_juridique[:forme_juridique][:code]
         end
+
+        personne_morale_attributs = params.extract! :personne_morale_attributs
+        if personne_morale_attributs.present?
+          params[:raison_sociale] = personne_morale_attributs[:personne_morale_attributs][:raison_sociale]
+        end
+
+        personne_physique_attributs = params.extract! :personne_physique_attributs
+        if personne_physique_attributs.present?
+          params[:nom] = build_nom(personne_physique_attributs)
+          params[:prenom] = personne_physique_attributs[:personne_physique_attributs][:prenom_usuel]
+        end
+
+        tranche_effectif = params.extract! :tranche_effectif_salarie
+        if tranche_effectif.present?
+          params[:code_effectif_entreprise] = tranche_effectif[:tranche_effectif_salarie][:code]
+        end
+
         params.transform_keys { |k| :"entreprise_#{k}" }
       else
         {}
@@ -28,49 +48,34 @@ class APIEntreprise::EntrepriseAdapter < APIEntreprise::Adapter
     end
   end
 
+  def build_nom(personne_physique_attributs)
+    nom_usage = personne_physique_attributs[:personne_physique_attributs][:nom_usage]&.strip
+    nom_naissance = personne_physique_attributs[:personne_physique_attributs][:nom_naissance]&.strip
+
+    return nom_usage if nom_naissance.blank? || nom_usage == nom_naissance
+    return nom_naissance if nom_usage.blank?
+    "#{nom_usage} (#{nom_naissance})"
+  end
+
   def attr_to_fetch
     [
       :siren,
-      :capital_social,
-      :numero_tva_intracommunautaire,
       :forme_juridique,
-      :forme_juridique_code,
-      :nom_commercial,
+      :personne_morale_attributs,
+      :personne_physique_attributs,
       :raison_sociale,
       :siret_siege_social,
-      :code_effectif_entreprise,
-      :date_creation,
-      :nom,
-      :prenom
+      :tranche_effectif_salarie,
+      :date_creation
     ]
   end
 
   def map_etat_administratif(data_source)
-    raw_value = data_source.dig(:entreprise, :etat_administratif, :value) # data structure will change in v3
+    raw_value = data_source.dig(:data, :etat_administratif) # data structure will change in v3
 
     case raw_value
     when 'A' then 'actif'
     when 'F', 'C' then 'fermé'
     end
-  end
-
-  def humanize_raison_sociale(params_raison_sociale)
-    # see SIREN official spec : https://sirene.fr/sirene/public/variable/syr-nomen-long
-    splitted_raison_sociale = params_raison_sociale.split(/[*,\/]/)
-
-    nom_patronymique = splitted_raison_sociale.first
-    prenom = splitted_raison_sociale.last.titleize.strip
-
-    if splitted_raison_sociale.count == 3
-      nom_usage = splitted_raison_sociale.second
-      raison_sociale = "#{prenom} #{nom_usage} (#{nom_patronymique})"
-    else
-      raison_sociale = "#{prenom} #{nom_patronymique}"
-    end
-    raison_sociale
-  end
-
-  def is_individual_entreprise?(forme_juridique_code)
-    forme_juridique_code == "1000"
   end
 end
