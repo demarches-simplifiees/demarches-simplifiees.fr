@@ -1,6 +1,7 @@
 class APIEntreprise::API
   ENTREPRISE_RESOURCE_NAME = "v3/insee/sirene/unites_legales/%{id}"
   ETABLISSEMENT_RESOURCE_NAME = "v2/etablissements/%{id}"
+  EXTRAIT_KBIS_NAME = "v3/infogreffe/rcs/unites_legales/%{id}/extrait_kbis"
   EXERCICES_RESOURCE_NAME = "v2/exercices/%{id}"
   RNA_RESOURCE_NAME = "v2/associations/%{id}"
   EFFECTIFS_RESOURCE_NAME = "v2/effectifs_mensuels_acoss_covid"
@@ -30,6 +31,10 @@ class APIEntreprise::API
 
   def etablissement(siret)
     call_with_siret(ETABLISSEMENT_RESOURCE_NAME, siret)
+  end
+
+  def extrait_kbis(siren)
+    call_with_siret(EXTRAIT_KBIS_NAME, siren)
   end
 
   def exercices(siret)
