@@ -8,7 +8,7 @@
       = render partial: "shared/dossiers/infos_generales", locals: { dossier: dossier }
 
   .tab-title
-    = t('views.shared.dossiers.demande.requester_identity')
+    %h2.fr-h6= t('views.shared.dossiers.demande.requester_identity')
 
     - if dossier.identity_updated_at.present? && demande_seen_at&.<(dossier.identity_updated_at)
       %span.highlighted
@@ -32,7 +32,7 @@
         .flex.row-reverse
           = link_to t('views.shared.dossiers.demande.edit_identity'), identite_dossier_path(dossier), class: 'fr-btn fr-btn--tertiary'
 
-  .tab-title= t('views.shared.dossiers.demande.form')
+  %h2.fr-h6= t('views.shared.dossiers.demande.form')
   - champs = dossier.champs_public.includes(:type_de_champ)
   - if champs.any? || dossier.procedure.routing_enabled?
     .card
