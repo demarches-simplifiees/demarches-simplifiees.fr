@@ -13,7 +13,6 @@ fr:
           cadre_juridique: "Exemple: 'https://www.legifrance.gouv.fr/'"
         path: Lien public
         organisation: Organisme
-        description_target_audience: À qui s’adresse la démarche
         duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers sur demarches-simplifiees.fr (choisi par un usager)
         max_duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers maximum (autorisé par un super admin de DS)
         id: Id
