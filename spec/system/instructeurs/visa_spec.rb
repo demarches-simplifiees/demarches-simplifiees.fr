@@ -10,6 +10,8 @@ describe 'Using Visa field', js: true do
   let!(:dossier) { create(:dossier, :en_construction, :with_entreprise, procedure: procedure) }
   let(:etablissement_geo_adresse_lat) { "40.7143528" }
   let(:etablissement_geo_adresse_lon) { "-74.0059731" }
+  let(:departements) { [['01 - Ain', '01']] }
+  let(:regions) { [['Normandie', '28']] }
 
   before do
     Geocoder::Lookup::Test.add_stub(
@@ -19,9 +21,11 @@ describe 'Using Visa field', js: true do
         }
       ]
     )
+    allow_any_instance_of(EditableChamp::DepartementsComponent).to receive(:options).and_return(departements)
+    allow_any_instance_of(EditableChamp::RegionsComponent).to receive(:options).and_return(regions)
   end
 
-  scenario 'instructor1 cannot validate visa', :js, vcr: { cassette_name: 'api_geo_all' } do
+  scenario 'instructor1 cannot validate visa', :js do
     login_as instructeur1.user, scope: :user
     visit instructeur_dossier_path(procedure, dossier)
 
@@ -31,7 +35,7 @@ describe 'Using Visa field', js: true do
     expect(page).to have_field('visa_to_test', disabled: true)
   end
 
-  scenario 'instructor2 can validate visa', :js, vcr: { cassette_name: 'api_geo_for_visa' } do
+  scenario 'instructor2 can validate visa', :js do
     login_as instructeur2.user, scope: :user
     visit instructeur_dossier_path(procedure, dossier)
 
