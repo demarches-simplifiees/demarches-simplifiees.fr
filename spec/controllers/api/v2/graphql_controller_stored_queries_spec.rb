@@ -338,6 +338,7 @@ describe API::V2::GraphqlController do
 
   describe 'ds-mutation-v2' do
     let(:query_id) { 'ds-mutation-v2' }
+    let(:disableNotification) { nil }
 
     context 'not found operation name' do
       let(:operation_name) { 'dossierStuff' }
@@ -366,11 +367,19 @@ describe API::V2::GraphqlController do
           expect(gql_data[:dossierArchiver][:errors].first[:message]).to eq('Le jeton utilisé est configuré seulement en lecture')
         }
       end
+
+      context 'when not processed' do
+        let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure:) }
+
+        it {
+          expect(gql_data[:dossierArchiver][:errors].first[:message]).to eq('Un dossier ne peut être archivé qu’une fois le traitement terminé')
+        }
+      end
     end
 
     context 'dossierPasserEnInstruction' do
       let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
-      let(:variables) { { input: { dossierId: dossier.to_typed_id, instructeurId: instructeur.to_typed_id } } }
+      let(:variables) { { input: { dossierId: dossier.to_typed_id, instructeurId: instructeur.to_typed_id, disableNotification: } } }
       let(:operation_name) { 'dossierPasserEnInstruction' }
 
       it {
@@ -378,12 +387,24 @@ describe API::V2::GraphqlController do
         expect(gql_data[:dossierPasserEnInstruction][:errors]).to be_nil
         expect(gql_data[:dossierPasserEnInstruction][:dossier][:id]).to eq(dossier.to_typed_id)
         expect(gql_data[:dossierPasserEnInstruction][:dossier][:state]).to eq('en_instruction')
+        perform_enqueued_jobs
+        expect(ActionMailer::Base.deliveries.size).to eq(1)
       }
+
+      context 'without notifications' do
+        let(:disableNotification) { true }
+
+        it {
+          expect(gql_errors).to be_nil
+          perform_enqueued_jobs
+          expect(ActionMailer::Base.deliveries.size).to eq(0)
+        }
+      end
     end
 
     context 'dossierRepasserEnConstruction' do
       let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
-      let(:variables) { { input: { dossierId: dossier.to_typed_id, instructeurId: instructeur.to_typed_id } } }
+      let(:variables) { { input: { dossierId: dossier.to_typed_id, instructeurId: instructeur.to_typed_id, disableNotification: } } }
       let(:operation_name) { 'dossierRepasserEnConstruction' }
 
       it {
@@ -396,7 +417,7 @@ describe API::V2::GraphqlController do
 
     context 'dossierRepasserEnInstruction' do
       let(:dossier) { create(:dossier, :refuse, :with_individual, procedure: procedure) }
-      let(:variables) { { input: { dossierId: dossier.to_typed_id, instructeurId: instructeur.to_typed_id } } }
+      let(:variables) { { input: { dossierId: dossier.to_typed_id, instructeurId: instructeur.to_typed_id, disableNotification: } } }
       let(:operation_name) { 'dossierRepasserEnInstruction' }
 
       it {
@@ -404,12 +425,24 @@ describe API::V2::GraphqlController do
         expect(gql_data[:dossierRepasserEnInstruction][:errors]).to be_nil
         expect(gql_data[:dossierRepasserEnInstruction][:dossier][:id]).to eq(dossier.to_typed_id)
         expect(gql_data[:dossierRepasserEnInstruction][:dossier][:state]).to eq('en_instruction')
+        perform_enqueued_jobs
+        expect(ActionMailer::Base.deliveries.size).to eq(1)
       }
+
+      context 'without notifications' do
+        let(:disableNotification) { true }
+
+        it {
+          expect(gql_errors).to be_nil
+          perform_enqueued_jobs
+          expect(ActionMailer::Base.deliveries.size).to eq(0)
+        }
+      end
     end
 
     context 'dossierAccepter' do
       let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
-      let(:variables) { { input: { dossierId: dossier.to_typed_id, instructeurId: instructeur.to_typed_id } } }
+      let(:variables) { { input: { dossierId: dossier.to_typed_id, instructeurId: instructeur.to_typed_id, disableNotification: } } }
       let(:operation_name) { 'dossierAccepter' }
 
       it {
@@ -417,7 +450,19 @@ describe API::V2::GraphqlController do
         expect(gql_data[:dossierAccepter][:errors]).to be_nil
         expect(gql_data[:dossierAccepter][:dossier][:id]).to eq(dossier.to_typed_id)
         expect(gql_data[:dossierAccepter][:dossier][:state]).to eq('accepte')
+        perform_enqueued_jobs
+        expect(ActionMailer::Base.deliveries.size).to eq(1)
       }
+
+      context 'without notifications' do
+        let(:disableNotification) { true }
+
+        it {
+          expect(gql_errors).to be_nil
+          perform_enqueued_jobs
+          expect(ActionMailer::Base.deliveries.size).to eq(0)
+        }
+      end
 
       context 'read only token' do
         before { api_token.update(write_access: false) }
@@ -458,7 +503,7 @@ describe API::V2::GraphqlController do
 
     context 'dossierRefuser' do
       let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
-      let(:variables) { { input: { dossierId: dossier.to_typed_id, instructeurId: instructeur.to_typed_id, motivation: 'yolo' } } }
+      let(:variables) { { input: { dossierId: dossier.to_typed_id, instructeurId: instructeur.to_typed_id, motivation: 'yolo', disableNotification: } } }
       let(:operation_name) { 'dossierRefuser' }
 
       it {
@@ -466,7 +511,19 @@ describe API::V2::GraphqlController do
         expect(gql_data[:dossierRefuser][:errors]).to be_nil
         expect(gql_data[:dossierRefuser][:dossier][:id]).to eq(dossier.to_typed_id)
         expect(gql_data[:dossierRefuser][:dossier][:state]).to eq('refuse')
+        perform_enqueued_jobs
+        expect(ActionMailer::Base.deliveries.size).to eq(1)
       }
+
+      context 'without notifications' do
+        let(:disableNotification) { true }
+
+        it {
+          expect(gql_errors).to be_nil
+          perform_enqueued_jobs
+          expect(ActionMailer::Base.deliveries.size).to eq(0)
+        }
+      end
 
       context 'read only token' do
         before { api_token.update(write_access: false) }
@@ -475,11 +532,39 @@ describe API::V2::GraphqlController do
           expect(gql_data[:dossierRefuser][:errors].first[:message]).to eq('Le jeton utilisé est configuré seulement en lecture')
         }
       end
+
+      context 'when already accepted' do
+        let(:dossier) { create(:dossier, :accepte, :with_individual, procedure:) }
+
+        it {
+          expect(gql_data[:dossierRefuser][:errors].first[:message]).to eq('Le dossier est déjà accepté')
+        }
+      end
+
+      context 'with entreprise' do
+        let(:procedure) { create(:procedure, :published, :with_service, administrateurs: [admin]) }
+        let(:dossier) { create(:dossier, :en_instruction, :with_entreprise, procedure:) }
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data[:dossierRefuser][:errors]).to be_nil
+          expect(gql_data[:dossierRefuser][:dossier][:id]).to eq(dossier.to_typed_id)
+          expect(gql_data[:dossierRefuser][:dossier][:state]).to eq('refuse')
+        }
+
+        context 'when in degraded mode' do
+          before { dossier.etablissement.update(adresse: nil) }
+
+          it {
+            expect(gql_data[:dossierRefuser][:errors].first[:message]).to eq('Les informations du SIRET du dossier ne sont pas complètes. Veuillez réessayer plus tard.')
+          }
+        end
+      end
     end
 
     context 'dossierClasserSansSuite' do
       let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
-      let(:variables) { { input: { dossierId: dossier.to_typed_id, instructeurId: instructeur.to_typed_id, motivation: 'yolo' } } }
+      let(:variables) { { input: { dossierId: dossier.to_typed_id, instructeurId: instructeur.to_typed_id, motivation: 'yolo', disableNotification: } } }
       let(:operation_name) { 'dossierClasserSansSuite' }
 
       it {
@@ -487,7 +572,19 @@ describe API::V2::GraphqlController do
         expect(gql_data[:dossierClasserSansSuite][:errors]).to be_nil
         expect(gql_data[:dossierClasserSansSuite][:dossier][:id]).to eq(dossier.to_typed_id)
         expect(gql_data[:dossierClasserSansSuite][:dossier][:state]).to eq('sans_suite')
+        perform_enqueued_jobs
+        expect(ActionMailer::Base.deliveries.size).to eq(1)
       }
+
+      context 'without notifications' do
+        let(:disableNotification) { true }
+
+        it {
+          expect(gql_errors).to be_nil
+          perform_enqueued_jobs
+          expect(ActionMailer::Base.deliveries.size).to eq(0)
+        }
+      end
 
       context 'read only token' do
         before { api_token.update(write_access: false) }
@@ -495,6 +592,34 @@ describe API::V2::GraphqlController do
         it {
           expect(gql_data[:dossierClasserSansSuite][:errors].first[:message]).to eq('Le jeton utilisé est configuré seulement en lecture')
         }
+      end
+
+      context 'when already accepted' do
+        let(:dossier) { create(:dossier, :accepte, :with_individual, procedure:) }
+
+        it {
+          expect(gql_data[:dossierClasserSansSuite][:errors].first[:message]).to eq('Le dossier est déjà accepté')
+        }
+      end
+
+      context 'with entreprise' do
+        let(:procedure) { create(:procedure, :published, :with_service, administrateurs: [admin]) }
+        let(:dossier) { create(:dossier, :en_instruction, :with_entreprise, procedure:) }
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data[:dossierClasserSansSuite][:errors]).to be_nil
+          expect(gql_data[:dossierClasserSansSuite][:dossier][:id]).to eq(dossier.to_typed_id)
+          expect(gql_data[:dossierClasserSansSuite][:dossier][:state]).to eq('sans_suite')
+        }
+
+        context 'when in degraded mode' do
+          before { dossier.etablissement.update(adresse: nil) }
+
+          it {
+            expect(gql_data[:dossierClasserSansSuite][:errors].first[:message]).to eq('Les informations du SIRET du dossier ne sont pas complètes. Veuillez réessayer plus tard.')
+          }
+        end
       end
     end
 
