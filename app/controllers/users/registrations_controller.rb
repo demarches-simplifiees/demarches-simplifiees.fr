@@ -26,6 +26,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     # all Devise code.
     # So instead we use a per-request global variable.
     CurrentConfirmation.procedure_after_confirmation = @procedure
+    CurrentConfirmation.prefill_token = @prefill_token
 
     # Handle existing user trying to sign up again
     existing_user = User.find_by(email: params[:user][:email])

@@ -363,6 +363,8 @@ ActiveRecord::Schema.define(version: 2023_04_13_171421) do
     t.datetime "last_commentaire_updated_at"
     t.text "motivation"
     t.bigint "parent_dossier_id"
+    t.string "prefill_token"
+    t.boolean "prefilled"
     t.text "private_search_terms"
     t.datetime "processed_at"
     t.bigint "revision_id"
@@ -378,6 +380,7 @@ ActiveRecord::Schema.define(version: 2023_04_13_171421) do
     t.index ["dossier_transfer_id"], name: "index_dossiers_on_dossier_transfer_id"
     t.index ["groupe_instructeur_id"], name: "index_dossiers_on_groupe_instructeur_id"
     t.index ["hidden_at"], name: "index_dossiers_on_hidden_at"
+    t.index ["prefill_token"], name: "index_dossiers_on_prefill_token", unique: true
     t.index ["revision_id"], name: "index_dossiers_on_revision_id"
     t.index ["state"], name: "index_dossiers_on_state"
     t.index ["user_id"], name: "index_dossiers_on_user_id"

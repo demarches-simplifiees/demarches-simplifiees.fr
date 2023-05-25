@@ -25,6 +25,20 @@ describe Dossier do
     subject(:dossier) { create(:dossier, procedure: procedure) }
 
     it { is_expected.to validate_presence_of(:individual) }
+
+    it { is_expected.to validate_presence_of(:user) }
+
+    context 'when dossier has deleted_user_email_never_send' do
+      subject(:dossier) { create(:dossier, procedure: procedure, deleted_user_email_never_send: "seb@totoro.org") }
+
+      it { is_expected.not_to validate_presence_of(:user) }
+    end
+
+    context 'when dossier is prefilled' do
+      subject(:dossier) { create(:dossier, procedure: procedure, prefilled: true) }
+
+      it { is_expected.not_to validate_presence_of(:user) }
+    end
   end
 
   describe 'with_champs' do
@@ -1926,6 +1940,70 @@ describe Dossier do
   describe 'BatchOperation' do
     subject { build(:dossier) }
     it { is_expected.to belong_to(:batch_operation).optional }
+  end
+
+  describe '#orphan?' do
+    subject(:orphan) { dossier.orphan? }
+
+    context 'when the dossier is prefilled' do
+      context 'when the dossier has a user' do
+        let(:dossier) { build(:dossier, :prefilled) }
+
+        it { expect(orphan).to be_falsey }
+      end
+
+      context 'when the dossier does not have a user' do
+        let(:dossier) { build(:dossier, :prefilled, user: nil) }
+
+        it { expect(orphan).to be_truthy }
+      end
+    end
+
+    context 'when the dossier is not prefilled' do
+      context 'when the dossier has a user' do
+        let(:dossier) { build(:dossier) }
+
+        it { expect(orphan).to be_falsey }
+      end
+
+      context 'when the dossier does not have a user' do
+        let(:dossier) { build(:dossier, user: nil) }
+
+        it { expect(orphan).to be_falsey }
+      end
+    end
+  end
+
+  describe '#owned_by?' do
+    subject(:owned_by) { dossier.owned_by?(user) }
+
+    context 'when the dossier is orphan' do
+      let(:dossier) { build(:dossier, user: nil) }
+      let(:user) { build(:user) }
+
+      it { expect(owned_by).to be_falsey }
+    end
+
+    context 'when the given user is nil' do
+      let(:dossier) { build(:dossier) }
+      let(:user) { nil }
+
+      it { expect(owned_by).to be_falsey }
+    end
+
+    context 'when the dossier has a user and it is not the given user' do
+      let(:dossier) { build(:dossier) }
+      let(:user) { build(:user) }
+
+      it { expect(owned_by).to be_falsey }
+    end
+
+    context 'when the dossier has a user and it is the given user' do
+      let(:dossier) { build(:dossier, user: user) }
+      let(:user) { build(:user) }
+
+      it { expect(owned_by).to be_truthy }
+    end
   end
 
   private

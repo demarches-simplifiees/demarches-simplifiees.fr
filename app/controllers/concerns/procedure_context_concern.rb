@@ -5,12 +5,14 @@ module ProcedureContextConcern
   include Devise::StoreLocationExtension
 
   def restore_procedure_context
-    if has_stored_procedure_path?
-      @procedure = find_procedure_in_context
+    return unless has_stored_procedure_path?
 
-      if @procedure.blank?
-        invalid_procedure_context
-      end
+    @procedure = find_procedure_in_context
+
+    if @procedure.blank?
+      invalid_procedure_context
+    else
+      @prefill_token = find_prefill_token_in_context
     end
   end
 
@@ -31,6 +33,11 @@ module ProcedureContextConcern
     else
       nil
     end
+  end
+
+  def find_prefill_token_in_context
+    uri = URI(get_stored_location_for(:user))
+    CGI.parse(uri.query).dig("prefill_token")&.first if uri.query
   end
 
   def invalid_procedure_context
