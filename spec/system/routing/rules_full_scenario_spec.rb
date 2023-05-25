@@ -10,13 +10,14 @@ describe 'The routing with rules', js: true do
       p.draft_revision.add_type_de_champ(
         type_champ: :drop_down_list,
         libelle: 'Spécialité',
-        options: { "drop_down_other" => "0", "drop_down_options" => ["", "littéraire", "scientifique"] }
+        options: { "drop_down_other" => "0", "drop_down_options" => ["", "littéraire", "scientifique", "artistique"] }
       )
     end
   end
   let(:administrateur) { create(:administrateur, procedures: [procedure]) }
   let(:scientifique_user) { create(:user, password: password) }
   let(:litteraire_user) { create(:user, password: password) }
+  let(:artistique_user) { create(:user, password: password) }
 
   before do
     Flipper.enable(:routing_rules, procedure)
@@ -35,14 +36,14 @@ describe 'The routing with rules', js: true do
     click_on 'Créer les groupes'
 
     expect(page).to have_text('Gestion des groupes')
-    expect(page).to have_text('2 groupes')
+    expect(page).to have_text('3 groupes')
     expect(page).not_to have_text('À configurer')
 
     click_on 'littéraire'
     expect(page).to have_select("targeted_champ", selected: "Spécialité")
     expect(page).to have_select("value", selected: "littéraire")
 
-    click_on '2 groupes'
+    click_on '3 groupes'
     click_on 'scientifique'
 
     expect(page).to have_select("targeted_champ", selected: "Spécialité")
@@ -91,7 +92,7 @@ describe 'The routing with rules', js: true do
     fill_in 'Nom du groupe', with: 'scientifique'
     click_on 'Renommer'
     expect(page).to have_text('Le nom est à présent « scientifique ». ')
-    #
+
     # add marie to scientifique groupe
     fill_in 'Emails', with: 'marie@inst.com'
     perform_enqueued_jobs { click_on 'Affecter' }
@@ -103,7 +104,7 @@ describe 'The routing with rules', js: true do
     fill_in 'Emails', with: 'superwoman@inst.com'
     perform_enqueued_jobs { click_on 'Affecter' }
     expect(page).to have_text("L’instructeur superwoman@inst.com a été affecté")
-    #
+
     # add routing rules
     within('.target') { select('Spécialité') }
     within('.value') { select('scientifique') }
@@ -117,13 +118,21 @@ describe 'The routing with rules', js: true do
 
     procedure.groupe_instructeurs.where(closed: false).each { |gi| wait_until { gi.reload.routing_rule.present? } }
 
+    # add a group without routing rules
+    click_on 'Ajout de groupes'
+    fill_in 'Nouveau groupe', with: 'artistique'
+    click_on 'Ajouter'
+    expect(page).to have_text('Le groupe d’instructeurs « artistique » a été créé. ')
+    expect(procedure.groupe_instructeurs.count).to eq(4)
+
     # publish
     publish_procedure(procedure)
     log_out
 
-    # 2 users fill a dossier in each group
+    # 3 users fill a dossier in each group
     user_send_dossier(scientifique_user, 'scientifique')
     user_send_dossier(litteraire_user, 'littéraire')
+    user_send_dossier(artistique_user, 'artistique')
 
     # the litteraires instructeurs only manage the litteraires dossiers
     register_instructeur_and_log_in(victor.email)
