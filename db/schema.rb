@@ -762,6 +762,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_29_102031) do
     t.text "routing_criteria_name", default: "Votre ville"
     t.boolean "routing_enabled"
     t.bigint "service_id"
+    t.jsonb "sva_svr", default: {}, null: false
     t.text "tags", default: [], array: true
     t.datetime "test_started_at", precision: 6
     t.datetime "unpublished_at", precision: 6

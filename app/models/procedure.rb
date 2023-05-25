@@ -47,6 +47,7 @@
 #  published_at                              :datetime
 #  routing_criteria_name                     :text             default("Votre ville")
 #  routing_enabled                           :boolean
+#  sva_svr                                   :jsonb            not null
 #  tags                                      :text             default([]), is an Array
 #  unpublished_at                            :datetime
 #  web_hook_url                              :string
