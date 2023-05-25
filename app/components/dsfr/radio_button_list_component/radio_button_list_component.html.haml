@@ -1,4 +1,4 @@
-%fieldset.fr-fieldset{ 'aria-labelledby': 'radio-hint-element-legend radio-hint-element-messages' }
+%fieldset{ class: class_names("fr-fieldset": true, "fr-fieldset--error": error?), 'aria-labelledby': 'radio-hint-element-legend radio-hint-element-messages', role: error? ? :group : nil }
   %legend.fr-fieldset__legend--regular.fr-fieldset__legend
     = content
 
@@ -10,4 +10,6 @@
           - capture do
             = label
             %span.fr-hint-text= hint
-    .fr-messages-group{ 'aria-live': 'assertive' }
+  .fr-messages-group{ 'aria-live': 'assertive' }
+    - if error?
+      %p.fr-message.fr-message--error= error
