@@ -40,10 +40,10 @@ class DossierDashboard < Administrate::BaseDashboard
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
   SHOW_PAGE_ATTRIBUTES = [
+    :user,
     :text_summary,
     :state,
     :procedure,
-    :user,
     :groupe_instructeur,
     :champs_public,
     :created_at,
