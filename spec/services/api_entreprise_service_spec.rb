@@ -1,7 +1,8 @@
 describe APIEntrepriseService do
   shared_examples 'schedule fetch of all etablissement params' do
     [
-      APIEntreprise::EntrepriseJob, APIEntreprise::AssociationJob, APIEntreprise::ExercicesJob,
+      APIEntreprise::EntrepriseJob, APIEntreprise::ExtraitKbisJob,
+      APIEntreprise::AssociationJob, APIEntreprise::ExercicesJob,
       APIEntreprise::EffectifsJob, APIEntreprise::EffectifsAnnuelsJob, APIEntreprise::AttestationSocialeJob,
       APIEntreprise::BilansBdfJob
     ].each do |job|
