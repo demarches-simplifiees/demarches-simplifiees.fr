@@ -36,9 +36,10 @@ fr:
         label: "Documentation de l’API"
         title: "Documentation graphql de l’API"
         url: "https://doc.demarches-simplifiees.fr/pour-aller-plus-loin/graphql"
-      betagouv:
-        title: "Le site de beta.gouv.fr — Premier Ministre"
-        url: "https://beta.gouv.fr"
+      dinum:
+        title: "Le site de la DINUM — Gouvernement"
+        url: "https://www.numerique.gouv.fr/dinum/"
+        alt: "Direction interministérielle du numérique"
       cgu:
         label: "CGU"
         title: "Conditions Générales d’Utilisation"
@@ -83,5 +84,5 @@ fr:
         label: Gestion des cookies
         title: Gestion des cookies
       contact:
-        label: Contactez-nous
-        title: Contactez-nous
+        label: Nous contacter
+        title: Nous contacter
