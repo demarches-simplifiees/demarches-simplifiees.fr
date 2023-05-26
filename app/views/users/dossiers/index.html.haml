@@ -10,10 +10,10 @@
   .container
     %h1.page-title.fr-h2= t('views.users.dossiers.index.dossiers')
     - if current_user.dossiers.count > 2
-      #search-2.fr-search-bar.fr-search-bar--lg{ role: "search", "aria-label": t('views.users.dossiers.search.search_file') }
+      #search-2.fr-search-bar.fr-search-bar--lg
         = form_tag recherche_dossiers_path, method: :get, :role => "search", class: "flex width-100 fr-mb-5w" do
           = label_tag "q", t('views.users.dossiers.search.search_file'), class: 'fr-label'
-          = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: t('views.users.dossiers.search.search_file'), class: "fr-input"
+          = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: t('views.users.dossiers.search.placeholder'), class: "fr-input"
           %button.fr-btn
             = t('views.users.dossiers.search.simple')
 
