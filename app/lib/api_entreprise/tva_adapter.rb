@@ -9,10 +9,16 @@ class APIEntreprise::TvaAdapter < APIEntreprise::Adapter
   end
 
   def process_params
-    result = {}
-    if data_source[:data]
-      result[:entreprise_numero_tva_intracommunautaire] = data_source[:data][:tva_number]
+    Sentry.with_scope do |scope|
+      data = data_source[:data]
+      scope.set_tags(siret: @siret)
+      scope.set_extras(source: data)
+
+      result = {}
+      if data
+        result[:entreprise_numero_tva_intracommunautaire] = data[:tva_number]
+      end
+      result
     end
-    result
   end
 end
