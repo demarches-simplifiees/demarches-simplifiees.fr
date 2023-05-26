@@ -8,7 +8,7 @@ RSpec.describe APIEntreprise::EntrepriseJob, type: :job do
   let(:status) { 200 }
 
   before do
-    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}/)
+    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/unites_legales\/#{siren}/)
       .to_return(body: body, status: status)
     allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
   end
@@ -17,7 +17,7 @@ RSpec.describe APIEntreprise::EntrepriseJob, type: :job do
 
   it 'updates etablissement' do
     subject
-    expect(Etablissement.find(etablissement.id).entreprise_numero_tva_intracommunautaire).to eq('FR16418166096')
+    expect(Etablissement.find(etablissement.id).entreprise_raison_sociale).to eq("DIRECTION INTERMINISTERIELLE DU NUMERIQUE")
   end
 
   it 'convert entreprise etat_administratif source to an enum' do
