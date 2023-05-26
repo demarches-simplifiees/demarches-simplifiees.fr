@@ -11,10 +11,15 @@ class APIEntreprise::ExtraitKbisAdapter < APIEntreprise::Adapter
   def process_params
     result = {}
     data = data_source[:data]
-    if data
-      result[:entreprise_capital_social] = data[:capital][:montant] if data[:capital]
-      result[:entreprise_nom_commercial] = data[:nom_commercial]
+
+    Sentry.with_scope do |scope|
+      scope.set_tags(siret: @siret)
+      scope.set_extras(source: data)
+      if data
+        result[:entreprise_capital_social] = data[:capital][:montant] if data[:capital]
+        result[:entreprise_nom_commercial] = data[:nom_commercial]
+      end
+      result
     end
-    result
   end
 end
