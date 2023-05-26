@@ -74,3 +74,6 @@
               method: :delete,
               data: { confirm: t('.unlink_confirmation', full_name: fci.full_name) },
               class: 'fr-btn fr-btn--secondary fr-ml-2w'
+
+- content_for :footer do
+  = render partial: 'users/dossiers/index_footer'
