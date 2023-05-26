@@ -18,3 +18,5 @@
 
         = f.hidden_field :dossier, value: @dossier.id
         = f.submit t('.submit'), class: 'fr-btn'
+- content_for :footer do
+  = render partial: 'users/dossiers/index_footer'
