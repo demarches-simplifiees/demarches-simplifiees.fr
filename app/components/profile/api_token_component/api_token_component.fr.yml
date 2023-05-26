@@ -6,8 +6,10 @@ fr:
     other: Ce jeton a accès a %{count} démarches sélectionnées
   security_one: Pour des raisons de sécurité, il ne sera plus ré-affiché, notez-le bien.
   security_two: Pour des raisons de sécurité, nous ne pouvons vous l’afficher que lors de sa création.
+  security_title: "Options de sécurité"
   action_all: Autoriser l’accès a toutes les démarches
-  action_choice: Autoriser l’accès seulement a des démarches choisies
+  prompt_choose_procedure: "-- Veuillez sélectionner une procédure à ajouter --"
+  action_choice: Si vous souhaitez autoriser l’accès seulement a des démarches choisies, ajouter les au jeton
   add: Ajouter
   delete: Supprimer
   token_procedures: Ce jeton a accès aux démarches
