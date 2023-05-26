@@ -5,6 +5,7 @@
 #  id         :bigint           not null, primary key
 #  acronym    :string           not null
 #  label      :string
+#  tchap_hs   :string           default([]), is an Array
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
@@ -26,10 +27,15 @@ class Zone < ApplicationRecord
     label_at(date) != 'Non attribué'
   end
 
-  def self.available_at(date)
-    Zone.all.filter { |zone| zone.available_at?(date) }.sort_by { |zone| zone.label_at(date) }
+  def self.available_at(date, without_zones = [])
+    (Zone.all - without_zones).filter { |zone| zone.available_at?(date) }.sort_by { |zone| zone.label_at(date) }
       .map do |zone|
       OpenStruct.new(id: zone.id, label: zone.label_at(date))
     end
+  end
+
+  def self.default_for(tchap_hs)
+    sanitized_sql = ActiveRecord::Base.sanitize_sql "'#{tchap_hs}' = ANY (tchap_hs)"
+    Zone.where(sanitized_sql)
   end
 end

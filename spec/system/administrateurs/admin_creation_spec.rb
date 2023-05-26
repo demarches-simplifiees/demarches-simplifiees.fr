@@ -6,6 +6,10 @@ describe 'As an administrateur', js: true do
   let(:strong_password) { 'a new, long, and complicated password!' }
 
   before do
+    body = "{\"hs\": \"agent.educpop.gouv.fr\" }"
+    WebMock.stub_request(:get, /https:\/\/matrix.agent.tchap.gouv.fr\/_matrix\/identity\/api\/v1\/info\?address=(.*)&medium=email/)
+      .to_return(body: body, status: 200)
+
     perform_enqueued_jobs do
       super_admin.invite_admin(admin_email)
     end
