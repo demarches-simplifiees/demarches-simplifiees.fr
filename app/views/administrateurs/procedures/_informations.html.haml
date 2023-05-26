@@ -122,7 +122,7 @@
     = f.label :web_hook_url do
       Lien de rappel HTTP (webhook)
     %p.notice
-      Vous pouvez définir un lien de rappel HTTP (aussi appelé webhook) pour notifier un service tiers du changement de l'état d’un dossier de cette démarche sur #{APPLICATION_NAME}.
+      Vous pouvez définir un lien de rappel HTTP (aussi appelé webhook) pour informer un service tiers du changement de l'état d’un dossier de cette démarche sur #{APPLICATION_NAME}.
       = link_to("Consulter la documentation du webhook", WEBHOOK_DOC_URL, target: "_blank", rel: "noopener")
     = f.text_field :web_hook_url, class: 'form-control', placeholder: 'https://callback.exemple.fr/'
 
@@ -151,4 +151,3 @@
         Champ “Pièce justificative” avec multiples fichiers
     %p.notice
       Autorise les usagers à envoyer plusieurs fichiers pour les champs de type “Pièce justificative”. L'activation de cette option est irréversible et peut nécessiter des modifications si vous utilisez des systèmes automatisés pour traiter les dossiers.
-

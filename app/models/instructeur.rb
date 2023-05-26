@@ -208,7 +208,7 @@ class Instructeur < ApplicationRecord
       h = {
         nb_en_construction: groupe.dossiers.visible_by_administration.en_construction.count,
         nb_en_instruction: groupe.dossiers.visible_by_administration.en_instruction.count,
-        nb_accepted: Traitement.where(dossier: groupe.dossiers.accepte, processed_at: Time.zone.yesterday.beginning_of_day..Time.zone.yesterday.end_of_day).count,
+        nb_accepted: Traitement.where(dossier: groupe.dossiers.accepte, processed_at: Time.zone.yesterday.all_day).count,
         nb_notification: nb_notification
       }
 

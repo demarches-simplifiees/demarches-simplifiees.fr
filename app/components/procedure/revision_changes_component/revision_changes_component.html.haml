@@ -12,11 +12,14 @@
         - else
           = t(".#{prefix}.add", label: change.label)
         - if !total_dossiers.zero? && !change.can_rebase?
-          %strong
-            = t('.breaking_change', count: total_dossiers)
+          .fr-alert.fr-alert--warning.fr-mt-1v
+            %p= t('.breaking_change', count: total_dossiers)
     - when :remove
       - list.with_item do
         = t(".#{prefix}.remove", label: change.label)
+        - if @delete_champ_warning
+          .fr-alert.fr-alert--warning.fr-mt-1v
+            %p= t('.delete_champ_html', count: total_dossiers)
     - when :update
       - case change.attribute
       - when :libelle
@@ -26,8 +29,8 @@
         - list.with_item do
           = t(".#{prefix}.update_type_champ", label: change.label, to: t("activerecord.attributes.type_de_champ.type_champs.#{change.to}"))
           - if !total_dossiers.zero? && !change.can_rebase?
-            %strong
-              = t('.breaking_change', count: total_dossiers)
+            .fr-alert.fr-alert--warning.fr-mt-1v
+              %p= t('.breaking_change', count: total_dossiers)
       - when :description
         - list.with_item do
           - if change.to.blank?
@@ -45,14 +48,14 @@
           - list.with_item do
             = t(".public.enable_mandatory", label: change.label)
             - if !total_dossiers.zero? && !change.can_rebase?
-              %strong
-                = t('.breaking_change', count: total_dossiers)
+              .fr-alert.fr-alert--warning.fr-mt-1v
+                %p= t('.breaking_change', count: total_dossiers)
         - else
           - list.with_item do
             = t(".public.disable_mandatory", label: change.label)
             - if !total_dossiers.zero? && !change.can_rebase?
-              %strong
-                = t('.breaking_change', count: total_dossiers)
+              .fr-alert.fr-alert--warning.fr-mt-1v
+                %p= t('.breaking_change', count: total_dossiers)
       - when :piece_justificative_template
         - list.with_item do
           = t(".#{prefix}.update_piece_justificative_template", label: change.label)
@@ -69,21 +72,21 @@
               - list.with_item do
                 = t('.remove_option', items: removed.map{ |term| "« #{term.strip} »" }.join(", "))
           - if !total_dossiers.zero? && !change.can_rebase?
-            %strong
-              = t('.breaking_change', count: total_dossiers)
+            .fr-alert.fr-alert--warning.fr-mt-1v
+              %p= t('.breaking_change', count: total_dossiers)
       - when :drop_down_other
         - if change.from == false
           - list.with_item do
             = t(".#{prefix}.enable_drop_down_other", label: change.label)
             - if !total_dossiers.zero? && !change.can_rebase?
-              %strong
-                = t('.breaking_change', count: total_dossiers)
+              .fr-alert.fr-alert--warning.fr-mt-1v
+                %p= t('.breaking_change', count: total_dossiers)
         - else
           - list.with_item do
             = t(".#{prefix}.disable_drop_down_other", label: change.label)
             - if !total_dossiers.zero? && !change.can_rebase?
-              %strong
-                = t('.breaking_change', count: total_dossiers)
+              .fr-alert.fr-alert--warning.fr-mt-1v
+                %p= t('.breaking_change', count: total_dossiers)
       - when :carte_layers
         - added = change.to.sort - change.from.sort
         - removed = change.from.sort - change.to.sort
@@ -114,20 +117,27 @@
           - list.with_item do
             = t(".#{prefix}.add_condition", label: change.label, to: change.to)
             - if !total_dossiers.zero? && !change.can_rebase?
-              %strong
-                = t('.breaking_change', count: total_dossiers)
+              .fr-alert.fr-alert--warning.fr-mt-1v
+                %p= t('.breaking_change', count: total_dossiers)
         - elsif change.to.nil?
           - list.with_item do
             = t(".#{prefix}.remove_condition", label: change.label)
             - if !total_dossiers.zero? && !change.can_rebase?
-              %strong
-                = t('.breaking_change', count: total_dossiers)
+              .fr-alert.fr-alert--warning.fr-mt-1v
+                %p= t('.breaking_change', count: total_dossiers)
         - else
           - list.with_item do
             = t(".#{prefix}.update_condition", label: change.label, to: change.to)
             - if !total_dossiers.zero? && !change.can_rebase?
-              %strong
-                = t('.breaking_change', count: total_dossiers)
+              .fr-alert.fr-alert--warning.fr-mt-1v
+                %p= t('.breaking_change', count: total_dossiers)
+      - when :character_limit
+        - if change.to.blank?
+          - list.with_item do
+            = t(".#{prefix}.remove_character_limit", label: change.label, to: change.to)
+        - else
+          - list.with_item do
+            = t(".#{prefix}.update_character_limit", label: change.label, to: change.to)
 
   - if @public_move_changes.present?
     - list.with_item do

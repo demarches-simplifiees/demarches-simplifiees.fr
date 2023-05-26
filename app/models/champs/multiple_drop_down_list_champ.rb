@@ -118,7 +118,7 @@ class Champs::MultipleDropDownListChamp < Champ
   private
 
   def values_are_in_options
-    json = selected_options.reject(&:blank?)
+    json = selected_options.compact_blank
     return if json.empty?
     return if (json - enabled_non_empty_options).empty?
 

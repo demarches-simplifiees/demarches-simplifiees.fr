@@ -16,7 +16,7 @@ shared_examples "the user has got a prefilled dossier, owned by themselves" do
     expect(page).to have_css('label', text: type_de_champ_phone.libelle)
     expect(page).to have_field(type_de_champ_rna.libelle, with: rna_value)
     expect(page).to have_field(type_de_champ_siret.libelle, with: siret_value)
-    expect(page).to have_css('h3', text: type_de_champ_repetition.libelle)
+    expect(page).to have_css('legend', text: type_de_champ_repetition.libelle)
     expect(page).to have_field(text_repetition_libelle, with: text_repetition_value)
     expect(page).to have_field(integer_repetition_libelle, with: integer_repetition_value)
     expect(page).to have_field(type_de_champ_datetime.libelle, with: datetime_value)

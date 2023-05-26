@@ -5,3 +5,7 @@
   - last_attached_file = @champ.piece_justificative_file.attachments.last
   - if last_attached_file
     = turbo_stream.focus_all "#persisted_row_attachment_#{last_attached_file.id} .attachment-filename a"
+
+- if @champ.dossier.editing_fork?
+  = turbo_stream.replace_all '.dossier-edit-sticky-footer' do
+    = render Dossiers::EditFooterComponent.new(dossier: @champ.dossier, annotation: @champ.private?)

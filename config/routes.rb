@@ -315,10 +315,11 @@ Rails.application.routes.draw do
         post 'siret', to: 'dossiers#update_siret'
         get 'etablissement'
         get 'brouillon'
-        patch 'brouillon', to: 'dossiers#update_brouillon'
+        patch 'brouillon', to: 'dossiers#update'
         post 'brouillon', to: 'dossiers#submit_brouillon'
         get 'modifier', to: 'dossiers#modifier'
-        patch 'modifier', to: 'dossiers#update'
+        post 'modifier', to: 'dossiers#submit_en_construction'
+        patch 'modifier', to: 'dossiers#modifier_legacy'
         get 'merci'
         get 'demande'
         get 'messagerie'
@@ -506,6 +507,7 @@ Rails.application.routes.draw do
       end
 
       patch :update, controller: 'routing', as: :routing_rules
+      patch :update_defaut_groupe_instructeur, controller: 'routing', as: :update_defaut_groupe_instructeur
 
       put 'clone'
       put 'archive'

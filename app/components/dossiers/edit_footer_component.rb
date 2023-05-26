@@ -14,10 +14,18 @@ class Dossiers::EditFooterComponent < ApplicationComponent
     @annotation.present?
   end
 
-  def button_options
+  def submit_draft_button_options
     {
       class: 'fr-btn fr-btn--sm',
       disabled: !owner?,
+      method: :post,
+      data: { 'disable-with': t('.submitting'), controller: 'autosave-submit' }
+    }
+  end
+
+  def submit_en_construction_button_options
+    {
+      class: 'fr-btn fr-btn--sm',
       method: :post,
       data: { 'disable-with': t('.submitting'), controller: 'autosave-submit' }
     }

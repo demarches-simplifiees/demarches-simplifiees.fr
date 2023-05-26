@@ -38,7 +38,7 @@ describe AttachmentsController, type: :controller do
     end
 
     context 'when not authenticated' do
-      it { is_expected.to have_http_status(401) }
+      it { is_expected.to redirect_to(new_user_session_path) }
     end
   end
 
@@ -79,7 +79,7 @@ describe AttachmentsController, type: :controller do
     end
 
     context 'when not authenticated' do
-      it { is_expected.to have_http_status(401) }
+      it { is_expected.to redirect_to(new_user_session_path) }
 
       it 'doesn’t remove the attachment' do
         subject

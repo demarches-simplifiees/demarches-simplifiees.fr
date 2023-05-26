@@ -357,8 +357,9 @@ en:
           a_suivre: No instructor is assigned to follow up on these files. Be the first !
           suivis: The folders that are in this tab are only those that you follow. You can exchange with the requester until you can accept them, refuse them or classify them without follow-up.
           traites_html: "The files in this tab are finished: they have been accepted, refused or closed without follow-up. You can <a href=%{archives_path}>download</a> the zip archives of finished files and their attachments."
-          tous: All the files that have been submitted on this approach, regardless of the status.
-          supprimes_recemment: All files completed and deleted by the instructors on this approach.
+          tous: All the files that have been submitted on this approach, included files to be follow and files followed by you or other instructors.
+          tous_with_routing: All the files that have been submitted on this approach, and assigned to your instructors groups.
+          supprimes_recemment: All files not <strong>archive</strong>, <strong>completed</strong> and <strong>deleted by the instructors</strong> on this approach.
           archives: "The files in this tab are archived: you can no longer reply to them, and requesters can no longer modify them."
           expirant: Records will not expire prior to the data retention period.
         archived_dossier: "This file will be kept for an additional month"
@@ -385,6 +386,11 @@ en:
         dossier_not_in_instructor_group: "File no. %{dossier_id} of the “%{procedure_libelle}” procedure corresponds to your search, but it is attached to the “%{groupe_instructeur_label}” instructor group."
     users:
       dossiers:
+        account_creation:
+          empty: "No file"
+          detail_one: "To complete a procedure, contact your administration and ask for the link to the procedure."
+          detail_two: "This one should look like"
+        fix_champ: "fill in this field"
         archived_dossier: "Your file will be kept %{duree_conservation_dossiers_dans_ds} more months"
         identite:
           identity_data: Identity data
@@ -448,7 +454,7 @@ en:
           simple: Search
         secondary_menu: Secondary menu
         index:
-          dossiers: "Files"
+          dossiers: "My files"
         dossiers_list:
           caption: My files
           procedure: "Procedure"
@@ -457,6 +463,10 @@ en:
           status: "Status"
           updated: "Updated"
           actions: "Actions"
+          no_result_title: No files
+          no_result_text_html: "To fill a procedure, contact your administration asking for the procedure link. <br> It should look like %{app_base}/commencer/xxx."
+          no_result_text_with_filter: found with selected filters
+          no_result_reset_filter: Reset filters
         transfers:
           sender_demande_en_cours: "A transfer request is pending on file Nº %{id} to %{email}"
           receiver_demande_en_cours: "Transfer request on file Nº %{id} sent by %{email}"
@@ -490,12 +500,13 @@ en:
         reset_link_sent:
           got_it: Got it!
           open_your_mailbox: Now open your mailbox.
-          email_sent_html: We have sent you an email to the address <strong>%{email}</strong>.
+          email_sent_html: "If a <strong>%{application_name}</strong> account exists with the address <strong>%{email}</strong>, we have sent you an email."
           click_link_to_reset_password: Click on the link in the email to change your password.
           no_mail: Didn't receive the email?
           check_spams: Check your junk or spam email.
           check_account: Have you created a %{application_name} account with the adress %{email}? You will not receive any message if no account is linked to your email adress.
           check_france_connect_html: Have you once logged in with France Connect? If yes, <a href=\"%{href}\">try again with France Connect</a>.
+          check_gpdr: "The account may have been deleted in the event of prolonged inactivity and no current file. In this case you will have to recreate an account from a procedure."
       shared:
         email_can_take_a_while_html: <strong>Please note</strong> that this message can take up to 15 minutes to arrive.
         contact_us_if_any_trouble_html: 'You can contact us <a href="%{href}">through this form</a> if a problem still exists.'
@@ -592,6 +603,11 @@ en:
               taken: is already used for procedure. You cannot use it because it belongs to another administrator.
               taken_can_be_claimed: Is the same as another of your procedure. If you publish this procedure, the other one will be unpublished
               invalid: is not valid. It must countain between 3 and 50 characters among a-z, 0-9, '_' and '-'.
+        "dossier/champs":
+          format: "%{message}"
+          attributes:
+            value:
+              format: "%{message}"
         "champs/cnaf_champ":
           attributes:
             numero_allocataire:
@@ -727,6 +743,7 @@ en:
       test_procedure: "This file is submitted on a test procedure. Any modification of the procedure by the administrator (addition of a field, publication of the procedure, etc.) will result in the removal of the file."
       no_access: "You do not have access to this file"
       no_longer_editable: "Your file can no longer be edited"
+      en_construction_submitted: "The modifications have already been submitted"
       create_commentaire:
         message_send: "Your message has been sent to the instructor in charge of your file."
       cloned_success: "Your file has been duplicated. Please review it then you can submit it"

@@ -61,7 +61,7 @@
     }
 
     input[type='date'] {
-      display: inline;
+      display: inline-block;
     }
   }
 
@@ -436,14 +436,6 @@
     select {
       display: inline-block;
     }
-  }
-
-  .header-section {
-    display: inline-block;
-    color: $blue-france-500;
-    font-size: 30px;
-    margin-bottom: 3 * $default-padding;
-    border-bottom: 3px solid $blue-france-500;
   }
 
   .header-subsection {

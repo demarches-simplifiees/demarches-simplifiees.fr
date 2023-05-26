@@ -3,6 +3,8 @@ describe 'user access to the list of their dossiers', js: true do
   let!(:dossier_brouillon)       { create(:dossier, user: user) }
   let!(:dossier_en_construction) { create(:dossier, :with_populated_champs, :en_construction, user: user) }
   let!(:dossier_en_instruction)  { create(:dossier, :en_instruction, user: user) }
+  let!(:dossier_traite)          { create(:dossier, :accepte, user: user) }
+  let!(:dossier_refuse)          { create(:dossier, :refuse, user: user) }
   let!(:dossier_archived)        { create(:dossier, :en_instruction, :archived, user: user) }
   let(:dossiers_per_page) { 25 }
   let(:last_updated_dossier) { dossier_en_construction }
@@ -26,6 +28,8 @@ describe 'user access to the list of their dossiers', js: true do
     expect(page).to have_content(dossier_en_construction.procedure.libelle)
     expect(page).to have_content(dossier_en_instruction.procedure.libelle)
     expect(page).to have_content(dossier_archived.procedure.libelle)
+    expect(page).to have_text('4 en cours')
+    expect(page).to have_text('2 traités')
   end
 
   it 'the list must be ordered by last updated' do
@@ -47,6 +51,83 @@ describe 'user access to the list of their dossiers', js: true do
       expect(page).not_to have_content(dossier_en_instruction.procedure.libelle)
       page.click_link("Suivant")
       expect(page).to have_content(dossier_en_instruction.procedure.libelle)
+      expect(page).to have_text('4 en cours')
+      expect(page).to have_text('2 traités')
+    end
+  end
+
+  context 'when user uses filter' do
+    scenario 'user filters state on tab "en-cours"' do
+      expect(page).to have_text('4 en cours')
+      expect(page).to have_text('2 traités')
+      expect(page).to have_text('4 sur 4 dossiers')
+      click_on('Sélectionner un filtre')
+      expect(page).to have_text('Brouillon')
+      expect(page).to have_text('En construction')
+      expect(page).to have_text('En instruction')
+      find("label", text: "Brouillon").click
+      click_on('Appliquer les filtres')
+      expect(page).to have_text('1 dossier')
+      expect(page).to have_checked_field('Brouillon')
+    end
+
+    scenario 'user filters state on tab "traité"' do
+      visit dossiers_path(statut: 'traites')
+      expect(page).to have_text('4 en cours')
+      expect(page).to have_text('2 traités')
+      expect(page).to have_text('2 sur 2 dossiers')
+
+      click_on('Sélectionner un filtre')
+      expect(page).to have_text('Accepté')
+      expect(page).to have_text('Refusé')
+      expect(page).to have_text('Classé sans suite')
+      find("label", text: "Refusé").click
+      click_on('Appliquer les filtres')
+      expect(page).to have_text('1 dossier')
+      expect(page).to have_checked_field('Refusé')
+
+      click_on('Sélectionner un filtre')
+      click_on('Réinitialiser les filtres')
+      expect(page).to have_text('2 sur 2 dossiers')
+      expect(page).to have_unchecked_field('Refusé')
+    end
+
+    scenario 'user filters by created_at' do
+      dossier_en_construction.update!(created_at: Date.yesterday)
+
+      expect(page).to have_text('4 sur 4 dossiers')
+      click_on('Sélectionner un filtre')
+      fill_in 'from_created_at_date', with: Date.today
+      click_on('Appliquer les filtres')
+      expect(page).to have_text('3 sur 3 dossiers')
+    end
+
+    scenario 'user uses multiple filters' do
+      dossier_en_construction.update!(created_at: Date.yesterday)
+      dossier_en_instruction.update!(depose_at: Date.yesterday)
+
+      expect(page).to have_text('4 sur 4 dossiers')
+      click_on('Sélectionner un filtre')
+      fill_in 'from_created_at_date', with: Date.today
+      click_on('Appliquer les filtres')
+      expect(page).to have_text('3 sur 3 dossiers')
+      expect(page).to have_text('1 filtre actif')
+
+      click_on('Sélectionner un filtre')
+      find("label", text: "En construction").click
+      find("label", text: "En instruction").click
+      click_on('Appliquer les filtres')
+      expect(page).to have_text('2 sur 2 dossiers')
+      expect(page).to have_text('3 filtres actifs')
+
+      click_on('Sélectionner un filtre')
+      fill_in 'from_depose_at_date', with: Date.today
+      click_on('Appliquer les filtres')
+      expect(page).to have_text('1 dossier')
+      expect(page).to have_text('4 filtres actifs')
+      click_on('4 filtres actifs')
+      expect(page).to have_text('4 sur 4 dossiers')
+      expect(page).not_to have_text('4 filtres actifs')
     end
   end
 

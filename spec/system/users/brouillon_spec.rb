@@ -40,6 +40,9 @@ describe 'The user' do
     fill_in('Renseignez le code postal puis sélectionnez la commune dans la liste', with: '60400')
     select('Brétigny (60400)', from: form_id_for('communes'))
 
+    # communes needs more time to be updated
+    wait_until { champ_value_for('communes') == "Brétigny" }
+
     fill_in('dossier_link', with: '123')
     find('.editable-champ-piece_justificative input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
 
@@ -99,6 +102,18 @@ describe 'The user' do
     expect(page).to have_field('dossier_link', with: '123')
     expect(page).to have_text('file.pdf')
     expect(page).to have_text('Analyse antivirus en cours')
+  end
+
+  scenario 'fill nothing and every error anchor links points to an existing element', js: true do
+    log_in(user, procedure)
+    fill_individual
+    click_on 'Déposer le dossier'
+
+    expect(page).to have_selector("#flash_message")
+    all('.error-anchor').map do |link_element|
+      error_anchor = URI(link_element['href'])
+      expect(page).to have_selector("##{error_anchor.fragment}")
+    end
   end
 
   let(:procedure_with_repetition) do
@@ -406,6 +421,7 @@ describe 'The user' do
           types_de_champ_public: [
             { type: :integer_number, libelle: 'age', stable_id: age_stable_id },
             { type: :yes_no, libelle: 'permis de conduire', stable_id: permis_stable_id, condition: permis_condition },
+            { type: :header_section, libelle: 'info voiture', condition: permis_condition },
             { type: :integer_number, libelle: 'tonnage', stable_id: tonnage_stable_id, condition: tonnage_condition },
             { type: :text, libelle: 'parking', condition: parking_condition }
           ])
@@ -418,10 +434,12 @@ describe 'The user' do
 
         expect(page).to have_css('label', text: 'age', visible: true)
         expect(page).to have_no_css('label', text: 'permis de conduire', visible: true)
+        expect(page).to have_no_css('legend h2', text: 'info voiture', visible: true)
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
         fill_in('age', with: '18')
         expect(page).to have_css('label', text: 'permis de conduire', visible: true)
+        expect(page).to have_css('legend h2', text: 'info voiture', visible: true)
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
         choose('Oui')
@@ -467,6 +485,7 @@ describe 'The user' do
 
       fill_in('texte obligatoire', with: 'a valid user input')
       wait_for_autosave
+      wait_until { champ_value_for('texte obligatoire') == 'a valid user input' }
 
       visit current_path
       expect(page).to have_field('texte obligatoire', with: 'a valid user input')
@@ -477,15 +496,16 @@ describe 'The user' do
       fill_individual
 
       # Test autosave failure
-      allow_any_instance_of(Users::DossiersController).to receive(:update_brouillon).and_raise("Server is busy")
+      allow_any_instance_of(Users::DossiersController).to receive(:update).and_raise("Server is busy")
       fill_in('texte obligatoire', with: 'a valid user input')
       blur
       expect(page).to have_css('span', text: 'Impossible d’enregistrer le brouillon', visible: true)
 
       # Test that retrying after a failure works
-      allow_any_instance_of(Users::DossiersController).to receive(:update_brouillon).and_call_original
-      click_on 'réessayer'
+      allow_any_instance_of(Users::DossiersController).to receive(:update).and_call_original
+      click_on 'Réessayer'
       wait_for_autosave
+      wait_until { champ_value_for('texte obligatoire') == 'a valid user input' }
 
       visit current_path
       expect(page).to have_field('texte obligatoire', with: 'a valid user input')

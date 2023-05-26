@@ -4,7 +4,7 @@ class FranceConnect::ParticulierController < ApplicationController
 
   def login
     if FranceConnectService.enabled?
-      redirect_to FranceConnectService.authorization_uri
+      redirect_to FranceConnectService.authorization_uri, allow_other_host: true
     else
       redirect_to new_user_session_path
     end

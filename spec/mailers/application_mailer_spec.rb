@@ -11,7 +11,7 @@ RSpec.describe ApplicationMailer, type: :mailer do
       end
 
       context 'when the server handles invalid emails with Net::SMTPSyntaxError' do
-        let(:smtp_error) { Net::SMTPSyntaxError.new }
+        let(:smtp_error) { Net::SMTPSyntaxError.new('400 unexpected recipients: want atleast 1, got 0') }
         it { expect(subject.message).to be_an_instance_of(ActionMailer::Base::NullMail) }
       end
 
@@ -28,16 +28,31 @@ RSpec.describe ApplicationMailer, type: :mailer do
 
   describe 'dealing with Dolist API error' do
     let(:dossier) { create(:dossier, procedure: create(:simple_procedure)) }
-    before do
-      ActionMailer::Base.delivery_method = :dolist_api
-      api_error_response = { "ResponseStatus": { "ErrorCode": "Forbidden", "Message": "Blocked non authorized request", "Errors": [] } }
-      allow_any_instance_of(Dolist::API).to receive(:send_email).and_return(api_error_response)
-    end
     subject { DossierMailer.with(dossier:).notify_new_draft.deliver_now }
+    context 'not ignored error' do
+      before do
+        ActionMailer::Base.delivery_method = :dolist_api
+        api_error_response = { "ResponseStatus": { "ErrorCode": "Forbidden", "Message": "Blocked non authorized request", "Errors": [] } }
+        allow_any_instance_of(Dolist::API).to receive(:send_email).and_return(api_error_response)
+      end
 
-    it 'raise classic error to retry' do
-      expect { subject }.to raise_error(MailDeliveryError)
-      expect(EmailEvent.dolist_api.dispatch_error.count).to eq(1)
+      it 'raise classic error to retry' do
+        expect { subject }.to raise_error(MailDeliveryError)
+        expect(EmailEvent.dolist_api.dispatch_error.count).to eq(1)
+      end
+    end
+
+    context 'ignored error' do
+      before do
+        ActionMailer::Base.delivery_method = :dolist_api
+        api_error_response = { "ResponseStatus" => { "ErrorCode" => "458", "Message" => "The contact is disabled.", "Errors" => [] } }
+        allow_any_instance_of(Dolist::API).to receive(:send_email).and_return(api_error_response)
+        allow_any_instance_of(Dolist::API).to receive(:fetch_contact_status).with(dossier.user.email).and_return("7")
+      end
+
+      it 'does not raise' do
+        expect { subject }.not_to raise_error
+      end
     end
   end
 
@@ -81,7 +96,7 @@ RSpec.describe ApplicationMailer, type: :mailer do
       end
 
       context "smtp server busy" do
-        let(:smtp_error) { Net::SMTPServerBusy.new }
+        let(:smtp_error) { Net::SMTPServerBusy.new('451 4.7.500 Server busy') }
 
         it "re-raise an error and creates an event" do
           expect { subject.deliver_now }.to change { EmailEvent.count }.by(1).and raise_error(MailDeliveryError)

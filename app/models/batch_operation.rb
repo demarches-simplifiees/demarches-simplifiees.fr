@@ -128,10 +128,6 @@ class BatchOperation < ApplicationRecord
     dossier_operations.size
   end
 
-  def progress_count
-    dossier_operations.pending.size
-  end
-
   def success_count
     dossier_operations.success.size
   end

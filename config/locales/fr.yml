@@ -357,8 +357,9 @@ fr:
           a_suivre: Aucun instructeur n’est affecté au suivi de ces dossiers. Soyez le premier !
           suivis: Les dossiers qui sont dans cet onglet sont uniquement ceux que vous suivez. Vous pouvez échanger avec le demandeur jusqu’à pouvoir les accepter, les refuser ou les classer sans suite.
           traites_html: "Les dossiers dans cet onglet sont terminés : ils ont été acceptés, refusés ou classés sans suite. Vous pouvez <a href=%{archives_path}>télécharger</a> les archives au format zip des dossiers terminés et leurs pièces jointes."
-          tous: Tous les dossiers qui ont été déposés sur cette démarche, quel que soit le statut.
-          supprimes_recemment: Tous les dossiers terminés et supprimés par les instructeurs sur cette démarche
+          tous: Tous les dossiers déposés sur cette démarche, qu'ils soient à suivre, suivis par vous ou suivis par d'autres instructeurs.
+          tous_with_routing: Tous les dossiers déposés sur cette démarche et attribués aux groupes d'instructeurs dont vous faites partie.
+          supprimes_recemment: Tous les dossiers <strong>non archivés</strong>, <strong>terminés</strong> et <strong>supprimés par les instructeurs</strong> sur cette démarche
           archives:  "Les dossiers de cet onglet sont archivés : vous ne pouvez plus y répondre, et les demandeurs ne peuvent plus les modifier."
           expirant: Les dossiers n’expireront pas avant la période de conservation des données.
         archived_dossier: "Le dossier sera conservé 1 mois supplémentaire"
@@ -386,6 +387,11 @@ fr:
         dossier_not_in_instructor_group: "Le dossier n° %{dossier_id} de la procédure « %{procedure_libelle} » correspond à votre recherche mais il est rattaché au groupe d’instructeurs « %{groupe_instructeur_label} »."
     users:
       dossiers:
+        account_creation:
+          empty: "Aucun dossier"
+          detail_one: "Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche."
+          detail_two: "Celui ci doit ressembler à"
+        fix_champ: "corriger l'erreur"
         archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
         identite:
           identity_data: Données d’identité
@@ -449,7 +455,7 @@ fr:
           simple: Rechercher
         secondary_menu: Menu secondaire
         index:
-          dossiers: "Dossiers"
+          dossiers: "Mes dossiers"
         dossiers_list:
           caption: Mes dossiers
           procedure: "Démarche"
@@ -458,6 +464,10 @@ fr:
           status: "Statut"
           updated: "Mis à jour"
           actions: "Actions"
+          no_result_title: Aucun dossier
+          no_result_text_html: "Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche. <br> Celui ci doit ressembler à %{app_base}/commencer/xxx."
+          no_result_text_with_filter: ne correspond aux filtres sélectionnés
+          no_result_reset_filter: Réinitialiser les filtres
         dossier_action:
           edit_dossier: "Modifier le dossier"
           start_other_dossier: "Commencer un autre dossier vide"
@@ -489,12 +499,13 @@ fr:
           submit: Changer le mot de passe
           submit_loading: Envoi…
         reset_link_sent:
-          email_sent_html: "Nous vous avons envoyé un email à l’adresse <strong>%{email}</strong>."
+          email_sent_html: "Si un compte <strong>%{application_name}</strong> existe avec l’adresse <strong>%{email}</strong>, nous vous avons envoyé un email."
           click_link_to_reset_password: "Cliquez sur le lien contenu dans l’email pour changer votre mot de passe."
           no_mail: "Vous n’avez pas reçu l’email ?"
           check_spams: "Vérifiez la boite Indésirables ou Spam de votre boite email."
-          check_account: "Avez-vous bien créé un compte %{application_name} avec l’adresse %{email} ? Si aucun compte n’existe avec cette adresse, vous ne recevrez pas de message."
+          check_account: "Avez-vous bien créé un compte %{application_name} avec l’adresse %{email} ? Si aucun compte n’existe avec cette adresse, vous ne recevrez pas de message."
           check_france_connect_html: "Vous êtes-vous connecté avec France Connect par le passé ? Dans ce cas <a href=\"%{href}\">essayez à nouveau avec France Connect</a>."
+          check_gpdr: "Le compte a pu être supprimé en cas d’inactivité prolongée et sans dossier en cours. Dans ce cas vous devrez recréer un compte à partir d’une démarche."
           got_it: "Bien reçu !"
           open_your_mailbox: "Maintenant ouvrez votre boite email."
           title: "Lien de réinitialisation du mot de passe envoyé"
@@ -592,6 +603,12 @@ fr:
               taken: est déjà utilisé par une démarche. Vous ne pouvez pas l’utiliser car il appartient à un autre administrateur.
               taken_can_be_claimed: est identique à celui d’une autre de vos démarches publiées. Si vous publiez cette démarche, l’ancienne sera dépubliée et ne sera plus accessible au public. Les utilisateurs qui ont commencé un brouillon vont pouvoir le déposer.
               invalid: n’est pas valide. Il doit comporter au moins 3 caractères, au plus 50 caractères et seuls les caractères a-z, 0-9, '_' et '-' sont autorisés.
+        "dossier/champs":
+          format: "%{message}"
+          attributes:
+            value:
+              format: "%{message}"
+
         "champs/cnaf_champ":
           attributes:
             numero_allocataire:
@@ -731,6 +748,7 @@ fr:
       test_procedure: "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l’administrateur (ajout d’un champ, publication de la démarche...) entraînera sa suppression."
       no_access: "Vous n’avez pas accès à ce dossier"
       no_longer_editable: "Votre dossier ne peut plus être modifié"
+      en_construction_submitted: "Les modifications ont déjà été déposées"
       create_commentaire:
         message_send: "Votre message a bien été envoyé à l’instructeur en charge de votre dossier."
       cloned_success: "Votre dossier a bien été dupliqué. Vous pouvez maintenant le vérifier, l’adapter puis le déposer."

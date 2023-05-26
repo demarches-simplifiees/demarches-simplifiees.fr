@@ -1,8 +1,10 @@
 module DossierRebaseConcern
   extend ActiveSupport::Concern
 
-  def rebase!
-    if can_rebase?
+  def rebase!(force: false)
+    return if procedure.published_revision.blank?
+
+    if force || can_rebase?
       transaction do
         rebase
       end

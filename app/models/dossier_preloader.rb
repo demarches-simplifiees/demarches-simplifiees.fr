@@ -1,8 +1,10 @@
 class DossierPreloader
   DEFAULT_BATCH_SIZE = 2000
 
-  def initialize(dossiers)
+  def initialize(dossiers, includes_for_dossier: [], includes_for_etablissement: [])
     @dossiers = dossiers
+    @includes_for_etablissement = includes_for_etablissement
+    @includes_for_dossier = includes_for_dossier
   end
 
   def in_batches(size = DEFAULT_BATCH_SIZE)
@@ -35,7 +37,8 @@ class DossierPreloader
   end
 
   def load_dossiers(dossiers, pj_template: false)
-    to_include = [piece_justificative_file_attachments: :blob]
+    to_include = @includes_for_dossier.dup
+    to_include << [piece_justificative_file_attachments: :blob]
 
     if pj_template
       to_include << { type_de_champ: { piece_justificative_template_attachment: :blob } }
@@ -64,8 +67,9 @@ class DossierPreloader
   end
 
   def load_etablissements(champs)
+    to_include = @includes_for_etablissement.dup
     champs_siret = champs.filter(&:siret?)
-    etablissements_by_id = Etablissement.where(id: champs_siret.map(&:etablissement_id).compact).index_by(&:id)
+    etablissements_by_id = Etablissement.includes(to_include).where(id: champs_siret.map(&:etablissement_id).compact).index_by(&:id)
     champs_siret.each do |champ|
       etablissement = etablissements_by_id[champ.etablissement_id]
       champ.association(:etablissement).target = etablissement

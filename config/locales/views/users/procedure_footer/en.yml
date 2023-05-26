@@ -2,27 +2,29 @@ en:
   users:
     procedure_footer:
       managed_by:
-        header: 'This procedure is managed by :'
+        header: 'This procedure is managed by'
       contact:
-        header: 'Ask a question about your file :'
+        header: 'Ask a question about the procedure :'
         in_app_mail:
           link: "Direclty via the chat"
         email:
-          link: "Directly by email %{service_email}"
+          link: "Directly by email:"
         phone:
-          link: 'By phone %{service_telephone}'
+          link: 'By phone: %{service_telephone}'
         schedule:
           prefix: 'Hours : '
         stats:
           link: "See the procedure's stats"
       legals:
-        header: "Legals :"
+        header: "Legals"
         data_retention: "%{application_name} : %{duree_conservation_dossiers_dans_ds} months"
         data_retention_title: "Explanation of our data retention and archiving policy"
         terms: "Laws regarding this data collection"
         dpo: "Contact the Data Protection Officer"
       dematerialisation: 
         header: Paperless
-        title_1: Access to the printable PDF form
-        title_2: Find a “France Services” desk
+        title_1: Download the PDF form
         link: "https://www.transformation.gouv.fr/france-services"
+        alt: France services
+      support:
+        header: Being supported in your approach

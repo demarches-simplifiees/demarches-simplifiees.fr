@@ -4,6 +4,7 @@
 #
 #  id                                        :integer          not null, primary key
 #  aasm_state                                :string           default("brouillon")
+#  allow_expert_messaging                    :boolean          default(TRUE), not null
 #  allow_expert_review                       :boolean          default(TRUE), not null
 #  api_entreprise_token                      :string
 #  api_particulier_scopes                    :text             default([]), is an Array
@@ -17,10 +18,10 @@
 #  description                               :string
 #  dossiers_count_computed_at                :datetime
 #  duree_conservation_dossiers_dans_ds       :integer
-#  duree_conservation_etendue_par_ds         :boolean          default(FALSE)
+#  duree_conservation_etendue_par_ds         :boolean          default(FALSE), not null
 #  encrypted_api_particulier_token           :string
-#  estimated_duration_visible                :boolean          default(TRUE), not null
 #  estimated_dossiers_count                  :integer
+#  estimated_duration_visible                :boolean          default(TRUE), not null
 #  euro_flag                                 :boolean          default(FALSE)
 #  experts_require_administrateur_invitation :boolean          default(FALSE)
 #  for_individual                            :boolean          default(FALSE)
@@ -28,11 +29,10 @@
 #  instructeurs_self_management_enabled      :boolean
 #  juridique_required                        :boolean          default(TRUE)
 #  libelle                                   :string
-#  lien_demarche                             :string
 #  lien_dpo                                  :string
 #  lien_notice                               :string
 #  lien_site_web                             :string
-#  max_duree_conservation_dossiers_dans_ds   :integer          default(12)
+#  max_duree_conservation_dossiers_dans_ds   :integer          default(12), not null
 #  migrated_champ_routage                    :boolean
 #  monavis_embed                             :text
 #  opendata                                  :boolean          default(TRUE)
@@ -62,10 +62,11 @@
 class Procedure < ApplicationRecord
   include ProcedureStatsConcern
   include EncryptableConcern
+  include InitiationProcedureConcern
 
   include Discard::Model
   self.discard_column = :hidden_at
-  self.ignored_columns = [:direction, :durees_conservation_required, :cerfa_flag, :test_started_at, :lien_demarche]
+  self.ignored_columns += [:direction, :durees_conservation_required, :cerfa_flag, :test_started_at, :lien_demarche]
 
   default_scope -> { kept }
 
@@ -208,7 +209,7 @@ class Procedure < ApplicationRecord
   has_one :refused_mail, class_name: "Mails::RefusedMail", dependent: :destroy
   has_one :without_continuation_mail, class_name: "Mails::WithoutContinuationMail", dependent: :destroy
 
-  has_one :defaut_groupe_instructeur, -> { active.order(id: :asc) }, class_name: 'GroupeInstructeur', inverse_of: false
+  belongs_to :defaut_groupe_instructeur, class_name: 'GroupeInstructeur', inverse_of: false, optional: true
 
   has_one_attached :logo
   has_one_attached :notice
@@ -403,7 +404,11 @@ class Procedure < ApplicationRecord
 
   def reset!
     if !locked? || draft_changed?
-      draft_revision.dossiers.destroy_all
+      dossier_ids_to_destroy = draft_revision.dossiers.ids
+      if dossier_ids_to_destroy.present?
+        Rails.logger.info("Resetting #{dossier_ids_to_destroy.size} dossiers on procedure #{id}: #{dossier_ids_to_destroy}")
+        draft_revision.dossiers.destroy_all
+      end
     end
   end
 
@@ -453,6 +458,10 @@ class Procedure < ApplicationRecord
     publiee? || brouillon?
   end
 
+  def replaced_by_procedure?
+    replaced_by_procedure_id.present?
+  end
+
   def dossier_can_transition_to_en_construction?
     accepts_new_dossiers? || depubliee?
   end
@@ -476,6 +485,23 @@ class Procedure < ApplicationRecord
   def self.declarative_attributes_for_select
     declarative_with_states.map do |state, _|
       [I18n.t("activerecord.attributes.#{model_name.i18n_key}.declarative_with_state/#{state}"), state]
+    end
+  end
+
+  def process_stalled_dossiers!
+    case declarative_with_state
+    when Procedure.declarative_with_states.fetch(:en_instruction)
+      dossiers
+        .state_en_construction
+        .where(declarative_triggered_at: nil)
+        .find_each(&:passer_automatiquement_en_instruction!)
+    when Procedure.declarative_with_states.fetch(:accepte)
+      dossiers
+        .state_en_construction
+        .where(declarative_triggered_at: nil)
+        .find_each do |dossier|
+          dossier.accepter_automatiquement! if dossier.can_accepter_automatiquement?
+        end
     end
   end
 
@@ -549,15 +575,25 @@ class Procedure < ApplicationRecord
     procedure.replaced_by_procedure = nil
     procedure.service = nil
 
-    transaction do
-      procedure.save
+    if !procedure.valid?
+      procedure.errors.attribute_names.each do |attribute|
+        next if [:notice, :deliberation, :logo].exclude?(attribute)
+        procedure.public_send("#{attribute}=", nil)
+      end
+    end
 
+    transaction do
+      procedure.save!
       move_new_children_to_new_parent_coordinate(procedure.draft_revision)
     end
 
     if is_different_admin || from_library
       procedure.draft_revision.types_de_champ_public.each { |tdc| tdc.options&.delete(:old_pj) }
     end
+
+    new_defaut_groupe = procedure.groupe_instructeurs
+      .find_by(label: defaut_groupe_instructeur.label) || procedure.groupe_instructeurs.first
+    procedure.update!(defaut_groupe_instructeur: new_defaut_groupe)
 
     procedure
   end
@@ -741,15 +777,6 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def restore_procedure(author)
-    if discarded?
-      undiscard
-      self.dossiers.hidden_by_administration.each do |dossier|
-        dossier.restore(author)
-      end
-    end
-  end
-
   def flipper_id
     "Procedure;#{id}"
   end
@@ -925,5 +952,14 @@ class Procedure < ApplicationRecord
 
   def stable_ids_used_by_routing_rules
     @stable_ids_used_by_routing_rules ||= groupe_instructeurs.flat_map { _1.routing_rule&.sources }.compact
+  end
+
+  # We need this to unfuck administrate + aasm
+  def self.human_attribute_name(attribute, options = {})
+    if attribute == :aasm_state
+      'Statut'
+    else
+      super
+    end
   end
 end

@@ -18,6 +18,8 @@ Rails.application.configure do
         graphql_variables: event.payload[:graphql_variables],
         graphql_null_error: event.payload[:graphql_null_error],
         graphql_timeout_error: event.payload[:graphql_timeout_error],
+        ds_procedure_id: event.payload[:ds_procedure_id],
+        ds_dossier_id: event.payload[:ds_dossier_id],
         browser: event.payload[:browser],
         browser_version: event.payload[:browser_version],
         platform: event.payload[:platform],
@@ -38,8 +40,10 @@ Rails.application.configure do
 
   config.lograge.keep_original_rails_log = true
   config.lograge.logger = ActiveSupport::Logger.new(Rails.root.join('log', "logstash_#{Rails.env}.log"))
+end
 
-  if config.lograge.enabled
+Rails.application.config.after_initialize do |app|
+  if app.config.lograge.enabled
     ActiveJob::ApplicationLogSubscriber.attach_to(:active_job)
   end
 end

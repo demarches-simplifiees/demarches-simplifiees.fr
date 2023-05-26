@@ -1,4 +1,4 @@
-describe 'instructeur_mailer/send_notifications.html.haml', type: :view do
+describe 'instructeur_mailer/send_notifications', type: :view do
   let(:instructeur) { create(:instructeur) }
 
   before do

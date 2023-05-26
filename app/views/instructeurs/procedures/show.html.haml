@@ -37,10 +37,13 @@
         = t('views.instructeurs.dossiers.tab_explainations.traites_html', archives_path: instructeur_archives_path(@procedure))
     - if @statut == 'tous'
       %p
-        = t('views.instructeurs.dossiers.tab_explainations.tous')
+        - if @procedure.routing_enabled?
+          = t('views.instructeurs.dossiers.tab_explainations.tous_with_routing')
+        - else
+          = t('views.instructeurs.dossiers.tab_explainations.tous')
     - if @statut == 'supprimes_recemment'
       %p
-        = t('views.instructeurs.dossiers.tab_explainations.supprimes_recemment')
+        = t('views.instructeurs.dossiers.tab_explainations.supprimes_recemment').html_safe
     - if @statut == 'archives'
       %p
         = t('views.instructeurs.dossiers.tab_explainations.archives')
@@ -184,7 +187,8 @@
                                   turbo: false }
             %tfoot
               %tr
-                %td.force-table-100{ colspan: @procedure_presentation.displayed_fields_for_headers.size + 2 }= paginate @filtered_sorted_paginated_ids
+                %td.force-table-100{ colspan: @procedure_presentation.displayed_fields_for_headers.size + 2 }
+                  = paginate @filtered_sorted_paginated_ids, views_prefix: 'shared'
 
     - else
       %h2.empty-text

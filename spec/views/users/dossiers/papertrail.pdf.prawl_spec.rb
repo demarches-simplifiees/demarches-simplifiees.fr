@@ -1,4 +1,4 @@
-describe 'users/dossiers/papertrail.pdf.prawn', type: :view do
+describe 'users/dossiers/papertrail', type: :view do
   before do
     assign(:dossier, dossier)
   end

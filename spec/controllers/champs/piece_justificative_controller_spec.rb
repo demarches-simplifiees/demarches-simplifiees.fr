@@ -65,7 +65,7 @@ describe Champs::PieceJustificativeController, type: :controller do
         subject
         expect(response.status).to eq(422)
         expect(response.header['Content-Type']).to include('application/json')
-        expect(JSON.parse(response.body)).to eq({ 'errors' => ['La pièce justificative n’est pas d’un type accepté'] })
+        expect(response.parsed_body).to eq({ 'errors' => ['La pièce justificative n’est pas d’un type accepté'] })
       end
     end
 

@@ -28,6 +28,8 @@ fr:
             prenom: Prénom
             nom: Nom
             gender: Civilité
+          avis:
+            answer: Avis
           etablissement:
             entreprise_siren: SIREN
             entreprise_forme_juridique: Forme juridique

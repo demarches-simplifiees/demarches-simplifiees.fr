@@ -26,13 +26,11 @@ module Types
       demarche_number = demarche.number.presence || ApplicationRecord.id_from_typed_id(demarche.id)
       Procedure
         .includes(draft_revision: :procedure, published_revision: :procedure)
-        .find_by(id: demarche_number)
+        .find(demarche_number)
     end
 
     def demarche(number:)
       Procedure.for_api_v2.find(number)
-    rescue => e
-      raise GraphQL::ExecutionError.new(e.message, extensions: { code: :not_found })
     end
 
     def dossier(number:)
@@ -42,14 +40,10 @@ module Types
         Dossier.visible_by_administration.for_api_v2.find(number)
       end
       DossierPreloader.load_one(dossier)
-    rescue => e
-      raise GraphQL::ExecutionError.new(e.message, extensions: { code: :not_found })
     end
 
     def groupe_instructeur(number:)
       GroupeInstructeur.for_api_v2.find(number)
-    rescue => e
-      raise GraphQL::ExecutionError.new(e.message, extensions: { code: :not_found })
     end
 
     def self.accessible?(context)

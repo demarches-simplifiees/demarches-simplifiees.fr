@@ -4,6 +4,9 @@ fr:
   breaking_change:
     one: Un dossier en cours de traitement n’est pas compatible avec ce changement.
     other: "%{count} dossiers en cours de traitement ne sont pas compatible avec ce changement."
+  delete_champ_html:
+    one: "Un dossier en cours de traitement porte ce champ. Les données associées à ce champ seront supprimées."
+    other: "%{count} dossiers en cours de traitement portent ce champ. Les <strong>données</strong> associées avec ce champ seront <strong>supprimées</strong>."
   add_option: "ajoutés : %{items}"
   remove_option: "supprimés : %{items}"
   public:
@@ -33,6 +36,8 @@ fr:
     add_condition: Une condition a été ajoutée sur le champ « %{label} ». La nouvelle condition est « %{to} ».
     remove_condition: La condition du champ « %{label} » a été supprimée.
     update_condition: La condition du champ « %{label} » a été modifiée. La nouvelle condition est « %{to} ».
+    update_character_limit: La limite de caractères du champ texte « %{label} » a été modifiée. La nouvelle limite est « %{to} ».
+    remove_character_limit: La limite de caractères du champ texte « %{label} » a été supprimée.
   private:
     add: L’annotation privée « %{label} » a été ajoutée.
     remove: L’annotation privée « %{label} » a été supprimée.

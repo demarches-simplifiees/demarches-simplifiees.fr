@@ -4,13 +4,14 @@ class Dsfr::CalloutComponent < ApplicationComponent
   renders_one :html_body
   renders_one :bottom
 
-  attr_reader :title, :theme, :icon, :extra_class_names
+  attr_reader :title, :theme, :icon, :extra_class_names, :heading_level
 
-  def initialize(title:, theme: :info, icon: nil, extra_class_names: nil)
+  def initialize(title:, theme: :info, icon: nil, extra_class_names: nil, heading_level: 'h3')
     @title = title
     @theme = theme
     @icon = icon
     @extra_class_names = extra_class_names
+    @heading_level = heading_level
   end
 
   def callout_class
@@ -26,7 +27,7 @@ class Dsfr::CalloutComponent < ApplicationComponent
     when :success
       "fr-callout--green-emeraude"
     else
-      # info is default theme
+      "fr-background-alt--blue-france"
     end
   end
 end

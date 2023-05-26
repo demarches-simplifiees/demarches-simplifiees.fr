@@ -8,7 +8,7 @@ describe TypesDeChampEditor::ConditionsErrorsComponent, type: :component do
     before { render_inline(described_class.new(conditions: conditions, upper_tdcs: upper_tdcs)) }
 
     context 'when there are no condition' do
-      it { expect(page).to have_no_css('.condition-error') }
+      it { expect(page).to have_no_css('.errors-summary') }
     end
 
     context 'when the targeted_champ is not available' do
@@ -16,7 +16,7 @@ describe TypesDeChampEditor::ConditionsErrorsComponent, type: :component do
       let(:conditions) { [ds_eq(champ_value(tdc.stable_id), constant(1))] }
 
       it do
-        expect(page).to have_css('.condition-error')
+        expect(page).to have_css('.errors-summary')
         expect(page).to have_content("Un champ cible n'est plus disponible")
       end
     end
@@ -27,7 +27,7 @@ describe TypesDeChampEditor::ConditionsErrorsComponent, type: :component do
       let(:conditions) { [ds_eq(champ_value(tdc.stable_id), constant(1))] }
 
       it do
-        expect(page).to have_css('.condition-error')
+        expect(page).to have_css('.errors-summary')
         expect(page).to have_content("Le champ « #{tdc.libelle} » est de type « adresse » et ne peut pas être utilisé comme champ cible.")
       end
     end
@@ -70,6 +70,22 @@ describe TypesDeChampEditor::ConditionsErrorsComponent, type: :component do
       let(:conditions) { [ds_include(champ_value(tdc.stable_id), constant('another choice'))] }
 
       it { expect(page).to have_content("« another choice » ne fait pas partie de « #{tdc.libelle} ».") }
+    end
+
+    context 'when an eq operator applies to a multiple_drop_down' do
+      let(:tdc) { create(:type_de_champ_multiple_drop_down_list) }
+      let(:upper_tdcs) { [tdc] }
+      let(:conditions) { [ds_eq(champ_value(tdc.stable_id), constant(tdc.drop_down_list_enabled_non_empty_options.first))] }
+
+      it { expect(page).to have_content("« est » ne s'applique pas au choix multiple.") }
+    end
+
+    context 'when an not_eq operator applies to a multiple_drop_down' do
+      let(:tdc) { create(:type_de_champ_multiple_drop_down_list) }
+      let(:upper_tdcs) { [tdc] }
+      let(:conditions) { [ds_not_eq(champ_value(tdc.stable_id), constant(tdc.drop_down_list_enabled_non_empty_options.first))] }
+
+      it { expect(page).to have_content("« n’est pas » ne s'applique pas au choix multiple.") }
     end
 
     context 'when target became unavailable but a right still references the value' do

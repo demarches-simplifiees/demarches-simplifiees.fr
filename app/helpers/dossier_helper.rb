@@ -84,10 +84,10 @@ module DossierHelper
 
   def deletion_reason_badge(reason)
     if reason.present?
-      status_text = I18n.t(reason, scope: [:activerecord, :attributes, :deleted_dossier, :reason])
+      status_text = I18n.t(reason, scope: 'activerecord.attributes.deleted_dossier.reason')
       status_class = reason.tr('_', '-')
     else
-      status_text = I18n.t(:unknown, scope: [:activerecord, :attributes, :deleted_dossier, :reason])
+      status_text = I18n.t('activerecord.attributes.deleted_dossier.reason.unknown')
       status_class = 'unknown'
     end
 

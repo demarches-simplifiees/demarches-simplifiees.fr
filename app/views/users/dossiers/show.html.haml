@@ -6,7 +6,7 @@
 .dossier-container.mb-4
   = render partial: 'users/dossiers/show/header', locals: { dossier: @dossier }
 
-  .container
+  .fr-container
     = render partial: 'users/dossiers/show/status_overview', locals: { dossier: @dossier }
     = render partial: 'users/dossiers/show/papertrail', locals: { dossier: @dossier }
 

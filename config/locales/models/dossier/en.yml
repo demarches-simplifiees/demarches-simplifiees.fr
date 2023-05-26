@@ -10,11 +10,11 @@ en:
         state: "State"
       dossier/state: &state
         brouillon: "Draft"
-        en_construction: "In progress"
+        en_construction: "In progress"
         en_instruction: "Processing"
         accepte: "Accepted"
         refuse: "Refused"
-        sans_suite: "No further action"
+        sans_suite: "No further action"
       traitement:
         state: "State"
       traitement/state:

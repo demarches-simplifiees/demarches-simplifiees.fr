@@ -14,6 +14,6 @@ class Cron::Datagouv::AdministrateurByMonthJob < Cron::CronJob
   end
 
   def data
-    Administrateur.where(created_at: 1.month.ago.beginning_of_month..1.month.ago.end_of_month).count
+    Administrateur.where(created_at: 1.month.ago.all_month).count
   end
 end

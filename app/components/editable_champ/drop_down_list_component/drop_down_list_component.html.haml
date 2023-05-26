@@ -8,15 +8,15 @@
 
       - if !@champ.mandatory?
         %label.blank-radio
-          = @form.radio_button :value, ''
+          = @form.radio_button :value, '', checked: @champ.value.blank? && !@champ.other?
           Non renseigné
 
       - if @champ.drop_down_other?
         %label
-          = @form.radio_button :value, Champs::DropDownListChamp::OTHER, checked: @champ.other_value_present?
+          = @form.radio_button :value, Champs::DropDownListChamp::OTHER, checked: @champ.other?
           Autre
   - else
-    = @form.select :value, @champ.options_without_empty_value_when_mandatory(@champ.options), { selected: @champ.selected }, required: @champ.required?, id: @champ.input_id, aria: { describedby: @champ.describedby_id }
+    = @form.select :value, @champ.options_without_empty_value_when_mandatory(@champ.options), { selected: @champ.selected }, required: @champ.required?, id: @champ.input_id, class: select_class_names, aria: { describedby: @champ.describedby_id }
 
   - if @champ.drop_down_other?
     = render EditableChamp::DropDownOtherInputComponent.new(form: @form, champ: @champ)

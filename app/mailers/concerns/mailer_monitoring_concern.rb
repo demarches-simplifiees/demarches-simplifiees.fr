@@ -19,12 +19,18 @@ module MailerMonitoringConcern
       end
     end
 
+    rescue_from Dolist::IgnorableError, with: :log_delivery_error
+
     def log_and_raise_delivery_error(exception)
-      EmailEvent.create_from_message!(message, status: "dispatch_error")
+      log_delivery_error(exception)
       Sentry.capture_exception(exception, extra: { to: message.to, subject: message.subject })
 
       # re-raise another error so job will retry later
       raise MailDeliveryError.new(exception)
+    end
+
+    def log_delivery_error(exception)
+      EmailEvent.create_from_message!(message, status: "dispatch_error")
     end
   end
 end

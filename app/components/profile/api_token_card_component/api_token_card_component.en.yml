@@ -1,0 +1,5 @@
+en:
+  tokens_title: API identification tokens
+  first_paragraph: These tokens are needed to make calls to the
+  second_paragraph: If you already have applications that use a token and you revoke it, access to the API will be blocked for those applications.
+  action: Create and display a new token

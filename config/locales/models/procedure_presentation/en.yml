@@ -28,6 +28,8 @@ en:
             prenom: First name
             nom: Last name
             gender: Title
+          avis:
+            answer: Opinion
           etablissement:
             entreprise_siren: SIREN
             entreprise_forme_juridique: Forme juridique

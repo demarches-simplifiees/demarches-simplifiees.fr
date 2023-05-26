@@ -169,7 +169,7 @@ module Administrateurs
       new_procedure = procedure.clone(current_administrateur, cloned_from_library?)
 
       if new_procedure.valid?
-        flash.notice = 'Démarche clonée, pensez a vérifier la Présentation et choisir le service a laquelle cette procédure est associé.'
+        flash.notice = 'Démarche clonée. Pensez à vérifier la présentation et choisir le service à laquelle cette démarche est associée.'
         redirect_to admin_procedure_path(id: new_procedure.id)
       else
         if cloned_from_library?
@@ -219,7 +219,7 @@ module Administrateurs
 
     def restore
       procedure = current_administrateur.procedures.with_discarded.discarded.find(params[:id])
-      procedure.restore_procedure(current_administrateur)
+      procedure.restore(current_administrateur)
       flash.notice = t('administrateurs.index.restored', procedure_id: procedure.id)
       redirect_to admin_procedures_path
     end
@@ -416,11 +416,17 @@ module Administrateurs
     private
 
     def filter_procedures(filter)
+      if filter.service_siret.present?
+        service = Service.find_by(siret: filter.service_siret)
+        return Procedure.none if service.nil?
+      end
+
       procedures_result = Procedure.select(:id).left_joins(:procedures_zones).distinct.publiees_ou_closes
       procedures_result = procedures_result.where(procedures_zones: { zone_id: filter.zone_ids }) if filter.zone_ids.present?
       procedures_result = procedures_result.where(aasm_state: filter.statuses) if filter.statuses.present?
       procedures_result = procedures_result.where("tags @> ARRAY[?]::text[]", filter.tags) if filter.tags.present?
       procedures_result = procedures_result.where('published_at >= ?', filter.from_publication_date) if filter.from_publication_date.present?
+      procedures_result = procedures_result.where(service: service) if filter.service_siret.present?
       procedures_result = procedures_result.where('unaccent(libelle) ILIKE unaccent(?)', "%#{filter.libelle}%") if filter.libelle.present?
       procedures_sql = procedures_result.to_sql
 

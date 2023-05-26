@@ -1,5 +1,9 @@
 fr:
-  fix:
-    one: 'Corrigez le champ suivant :'
-    other: 'Corrigez les champs suivants :'
+  fix_conditional:
+    one: 'La logique conditionnelle du champ suivant est invalide, veuillez la corriger :'
+    other: 'La logique conditionnelle des champs suivants sont invalides, veuillez les corriger :'
+
+  fix_header_section:
+    one: 'Le titre de section suivant est invalide, veuillez le corriger :'
+    other: 'Les titres de section suivants sont invalides, veuillez les corriger :'
 

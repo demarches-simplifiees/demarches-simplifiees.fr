@@ -19,7 +19,7 @@ module Instructeurs
 
     def attestation
       if dossier.attestation.pdf.attached?
-        redirect_to dossier.attestation.pdf.service_url
+        redirect_to dossier.attestation.pdf.url, allow_other_host: true
       end
     end
 
@@ -326,7 +326,7 @@ module Instructeurs
 
     def champs_private_params
       champs_params = params.require(:dossier).permit(champs_private_attributes: [
-        :id, :primary_value, :secondary_value, :piece_justificative_file, :value_other, :external_id, :numero_allocataire, :code_postal, :code_departement, :value, value: [],
+        :id, :value, :primary_value, :secondary_value, :piece_justificative_file, :value_other, :external_id, :numero_allocataire, :code_postal, :code_departement, value: [],
         champs_attributes: [:id, :_destroy, :value, :primary_value, :secondary_value, :piece_justificative_file, :value_other, :external_id, :numero_allocataire, :code_postal, :code_departement, value: []]
       ])
       champs_params[:champs_private_all_attributes] = champs_params.delete(:champs_private_attributes) || {}

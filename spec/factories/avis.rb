@@ -29,5 +29,13 @@ FactoryBot.define do
     trait :with_answer do
       answer { "Mon avis se décompose en deux points :\n- La demande semble pertinente\n- Le demandeur remplit les conditions." }
     end
+
+    trait :with_introduction do
+      introduction_file { Rack::Test::UploadedFile.new('spec/fixtures/files/white.png', 'image/png') }
+    end
+
+    trait :with_piece_justificative do
+      piece_justificative_file { Rack::Test::UploadedFile.new('spec/fixtures/files/white.png', 'image/png') }
+    end
   end
 end
