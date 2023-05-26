@@ -119,7 +119,7 @@ class TypeDeChamp < ApplicationRecord
                  :drop_down_secondary_libelle,
                  :drop_down_secondary_description,
                  :drop_down_other,
-                 :textarea_character_limit,
+                 :character_limit,
                  :collapsible_explanation_enabled,
                  :collapsible_explanation_text,
                  :header_section_level
@@ -179,10 +179,10 @@ class TypeDeChamp < ApplicationRecord
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :type_champ, presence: true, allow_blank: false, allow_nil: false
-  validates :textarea_character_limit, numericality: {
+  validates :character_limit, numericality: {
     greater_than_or_equal_to: MINIMUM_TEXTAREA_CHARACTER_LIMIT_LENGTH,
     only_integer: true,
-    allow_nil: true
+    allow_blank: true
   }
 
   before_validation :check_mandatory
@@ -242,8 +242,8 @@ class TypeDeChamp < ApplicationRecord
     drop_down_other == "1" || drop_down_other == true
   end
 
-  def textarea_character_limit?
-    textarea_character_limit.present?
+  def character_limit?
+    character_limit.present?
   end
 
   def collapsible_explanation_enabled?

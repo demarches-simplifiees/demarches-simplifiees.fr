@@ -169,7 +169,7 @@ module Administrateurs
       new_procedure = procedure.clone(current_administrateur, cloned_from_library?)
 
       if new_procedure.valid?
-        flash.notice = 'Démarche clonée, pensez a vérifier la Présentation et choisir le service a laquelle cette procédure est associé.'
+        flash.notice = 'Démarche clonée. Pensez à vérifier la présentation et choisir le service à laquelle cette démarche est associée.'
         redirect_to admin_procedure_path(id: new_procedure.id)
       else
         if cloned_from_library?

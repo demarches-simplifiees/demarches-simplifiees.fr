@@ -42,7 +42,10 @@ module Loaders
     end
 
     def preload_association(records)
-      ::ActiveRecord::Associations::Preloader.new.preload(records, @association_schema)
+      ::ActiveRecord::Associations::Preloader.new(
+        records: records,
+        associations: @association_schema
+      ).call
     end
 
     def read_association(record)

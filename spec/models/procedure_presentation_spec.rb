@@ -73,7 +73,7 @@ describe ProcedurePresentation do
           { "label" => 'Demandeur', "table" => 'user', "column" => 'email', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
           { "label" => 'Email instructeur', "table" => 'followers_instructeurs', "column" => 'email', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
           { "label" => 'Groupe instructeur', "table" => 'groupe_instructeur', "column" => 'id', 'classname' => '', 'virtual' => false, 'type' => :enum, "scope" => '' },
-          { "label" => 'Avis', "table" => 'avis', "column" => 'id', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
+          { "label" => 'Avis', "table" => 'avis', "column" => 'answer', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
           { "label" => 'SIREN', "table" => 'etablissement', "column" => 'entreprise_siren', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
           { "label" => 'Forme juridique', "table" => 'etablissement', "column" => 'entreprise_forme_juridique', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
           { "label" => 'Nom commercial', "table" => 'etablissement', "column" => 'entreprise_nom_commercial', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
@@ -706,6 +706,19 @@ describe ProcedurePresentation do
       end
     end
 
+    context 'for avis table' do
+      let(:procedure) { create(:procedure, :for_individual) }
+      let!(:kept_dossier) { create(:dossier, procedure:) }
+      let!(:discarded_dossier) { create(:dossier, procedure:) }
+      let!(:avis) { create(:avis, :with_answer, dossier: kept_dossier) }
+
+      context 'for answer column' do
+        let(:filter) { [{ 'table' => 'avis', 'column' => 'answer', 'value' => 'Pertinente' }] }
+
+        it { is_expected.to contain_exactly(kept_dossier.id) }
+      end
+    end
+
     context 'for followers_instructeurs table' do
       let(:filter) { [{ 'table' => 'followers_instructeurs', 'column' => 'email', 'value' => 'keepmail' }] }
 
@@ -829,30 +842,49 @@ describe ProcedurePresentation do
   end
 
   describe '#filtered_sorted_ids' do
+    let(:procedure_presentation) { create(:procedure_presentation, assign_to:) }
     let(:dossier_1) { create(:dossier) }
     let(:dossier_2) { create(:dossier) }
     let(:dossier_3) { create(:dossier) }
     let(:dossiers) { Dossier.where(id: [dossier_1, dossier_2, dossier_3].map(&:id)) }
 
     let(:sorted_ids) { [dossier_2, dossier_3, dossier_1].map(&:id) }
+    let(:statut) { 'tous' }
 
-    subject { procedure_presentation.filtered_sorted_ids(dossiers, 'tous') }
+    subject { procedure_presentation.filtered_sorted_ids(dossiers, statut) }
 
-    before do
-      expect(procedure_presentation).to receive(:sorted_ids).and_return(sorted_ids)
-    end
-
-    it { is_expected.to eq(sorted_ids) }
-
-    context 'when a filter is present' do
-      let(:filtered_ids) { [dossier_1, dossier_2, dossier_3].map(&:id) }
+    context 'with no filters' do
+      let(:statut) { 'suivis' }
+      let(:dossiers) { procedure.dossiers }
 
       before do
-        procedure_presentation.filters['tous'] = 'some_filter'
-        expect(procedure_presentation).to receive(:filtered_ids).and_return(filtered_ids)
+        create(:follow, dossier: en_construction_dossier, instructeur: procedure_presentation.instructeur)
+        create(:follow, dossier: accepte_dossier, instructeur: procedure_presentation.instructeur)
+      end
+
+      let(:en_construction_dossier) { create(:dossier, :en_construction, procedure:) }
+      let(:accepte_dossier) { create(:dossier, :accepte, procedure:) }
+
+      it { is_expected.to contain_exactly(en_construction_dossier.id) }
+    end
+
+    context 'with mocked sorted_ids' do
+      before do
+        expect(procedure_presentation).to receive(:sorted_ids).and_return(sorted_ids)
       end
 
       it { is_expected.to eq(sorted_ids) }
+
+      context 'when a filter is present' do
+        let(:filtered_ids) { [dossier_1, dossier_2, dossier_3].map(&:id) }
+
+        before do
+          procedure_presentation.filters['tous'] = 'some_filter'
+          expect(procedure_presentation).to receive(:filtered_ids).and_return(filtered_ids)
+        end
+
+        it { is_expected.to eq(sorted_ids) }
+      end
     end
   end
 

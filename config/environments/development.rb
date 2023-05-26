@@ -92,6 +92,10 @@ Rails.application.configure do
     protocol: :http
   }
 
+  Rails.application.config.after_initialize do # allow attachment.url with disk service
+    ActiveStorage::Current.url_options = { host: ENV.fetch("APP_HOST") }
+  end
+
   # Use Content-Security-Policy-Report-Only headers
   config.content_security_policy_report_only = true
 

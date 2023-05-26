@@ -1,9 +1,9 @@
-describe 'instructeurs/dossiers/envoyer_dossier_block.html.haml', type: :view do
+describe 'instructeurs/dossiers/envoyer_dossier_block', type: :view do
   let(:dossier) { create(:dossier) }
 
   subject do
     render(
-      'instructeurs/dossiers/envoyer_dossier_block.html.haml',
+      'instructeurs/dossiers/envoyer_dossier_block',
       dossier: dossier,
       potential_recipients: potential_recipients
     )

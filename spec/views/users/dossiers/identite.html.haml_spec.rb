@@ -1,4 +1,4 @@
-describe 'users/dossiers/identite.html.haml', type: :view do
+describe 'users/dossiers/identite', type: :view do
   let(:procedure) { create(:simple_procedure, :for_individual) }
   let(:dossier) { create(:dossier, :with_service, state: Dossier.states.fetch(:brouillon), procedure: procedure) }
 

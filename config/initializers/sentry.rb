@@ -1,8 +1,21 @@
+class SentryRelease
+  @@current = nil
+
+  def self.current
+    @@current ||= begin
+      version = Rails.root.join('version')
+      version.readable? ? version.read.strip : ''
+    end
+    @@current.presence
+  end
+end
+
 Sentry.init do |config|
   secrets = Rails.application.secrets.sentry
 
   config.dsn = secrets[:enabled] ? secrets[:rails_client_key] : nil
   config.send_default_pii = false
+  config.release = SentryRelease.current
   config.environment = secrets[:environment] || Rails.env
   config.enabled_environments = ['production', secrets[:environment].presence].compact
   config.breadcrumbs_logger = [:active_support_logger]
@@ -29,7 +42,11 @@ Sentry.init do |config|
       # Don't trace on all attempts
       [0, 2, 5, 10, 20, max_attempts].include?(attempts)
     else # rails requests
-      0.001
+      if sampling_context.dig(:env, "REQUEST_METHOD") == "GET"
+        0.001
+      else
+        0.01
+      end
     end
   end
 

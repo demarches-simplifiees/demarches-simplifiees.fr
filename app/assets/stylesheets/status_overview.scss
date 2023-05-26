@@ -1,15 +1,8 @@
 @import "colors";
 @import "constants";
 
-.status-overview {
-  text-align: center;
-  margin-bottom: $default-padding * 2;
-}
-
 .status-timeline {
   display: inline-block;
-  margin-top: $default-padding * 2;
-  margin-bottom: $default-padding * 2;
   border: 1px solid #808080;
   border-radius: 3px;
 
@@ -46,15 +39,6 @@
 }
 
 .status-explanation {
-  text-align: left;
-
-  .brouillon,
-  .en-construction,
-  .en-instruction {
-    max-width: 650px;
-    margin: auto;
-  }
-
   p {
     margin-bottom: $default-padding;
   }

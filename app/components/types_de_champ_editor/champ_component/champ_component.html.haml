@@ -103,9 +103,9 @@
               = form.text_area :collapsible_explanation_text, class: "small-margin small", id: dom_id(type_de_champ, :collapsible_explanation_text)
         - if type_de_champ.textarea?
           .cell
-            = form.label :textarea_character_limit, for: dom_id(type_de_champ, :textarea_character_limit) do
-              Spécifier un nombre maximal de caractères (non restrictif) :
-            = form.number_field :textarea_character_limit, min: 400, value: form.object.textarea_character_limit, id: dom_id(type_de_champ, :textarea_character_limit)
+            = form.label :character_limit, for: dom_id(type_de_champ, :character_limit) do
+              Spécifier un nombre maximal conseillé de caractères :
+            = form.select :character_limit, options_for_character_limit, id: dom_id(type_de_champ, :character_limit)
 
   - if type_de_champ.block?
     .flex.justify-start.section.ml-1

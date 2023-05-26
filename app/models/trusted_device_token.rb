@@ -3,7 +3,7 @@
 # Table name: trusted_device_tokens
 #
 #  id             :bigint           not null, primary key
-#  token          :string           not null
+#  token          :string
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  instructeur_id :bigint

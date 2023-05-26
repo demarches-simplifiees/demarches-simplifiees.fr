@@ -1,0 +1,9 @@
+fr:
+  activerecord:
+    errors:
+      models:
+        champs/iban_champ:
+          attributes:
+            value:
+              invalid_iban: n'est pas au format IBAN
+

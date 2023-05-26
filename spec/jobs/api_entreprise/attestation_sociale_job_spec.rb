@@ -9,9 +9,9 @@ RSpec.describe APIEntreprise::AttestationSocialeJob, type: :job do
   let(:status) { 200 }
 
   before do
-    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_sociales_acoss\/#{siren}/)
+    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v4\/urssaf\/unites_legales\/#{siren}\/attestation_vigilance/)
       .to_return(body: body, status: status)
-    stub_request(:get, "https://storage.entreprise.api.gouv.fr/siade/1569156881-f749d75e2bfd443316e2e02d59015f-attestation_vigilance_acoss.pdf")
+    stub_request(:get, "https://storage.entreprise.api.gouv.fr/siade/1569139162-b99824d9c764aae19a862a0af-attestation_vigilance_acoss.pdf")
       .to_return(body: "body attestation", status: 200)
     allow_any_instance_of(APIEntrepriseToken).to receive(:roles).and_return(["attestations_sociales"])
     allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)

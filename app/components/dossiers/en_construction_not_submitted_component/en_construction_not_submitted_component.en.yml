@@ -1,0 +1,9 @@
+---
+en:
+  title: Modifications not yet submitted
+  body: |
+    You have made changes after submitting your file. Submit them
+     so that the administration can take them into account.
+  buttons:
+    edit: Continue to edit
+    submit: Submit file changes

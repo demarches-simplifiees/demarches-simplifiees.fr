@@ -6,15 +6,16 @@ module Users
     layout 'procedure_context', only: [:identite, :update_identite, :siret, :update_siret]
 
     ACTIONS_ALLOWED_TO_ANY_USER = [:index, :recherche, :new, :transferer_all]
-    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :destroy, :demande, :messagerie, :brouillon, :update_brouillon, :submit_brouillon, :modifier, :update, :create_commentaire, :papertrail, :restore]
+    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :destroy, :demande, :messagerie, :brouillon, :submit_brouillon, :submit_en_construction, :modifier, :modifier_legacy, :update, :create_commentaire, :papertrail, :restore]
 
     before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
     before_action :ensure_ownership_or_invitation!, only: ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
-    before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_siret, :brouillon, :update_brouillon, :submit_brouillon, :modifier, :update]
-    before_action :ensure_dossier_can_be_filled, only: [:brouillon, :modifier, :update_brouillon, :submit_brouillon, :update]
+    before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_siret, :brouillon, :submit_brouillon, :submit_en_construction, :modifier, :modifier_legacy, :update]
+    before_action :ensure_dossier_can_be_filled, only: [:brouillon, :modifier, :submit_brouillon, :submit_en_construction, :update]
     before_action :ensure_dossier_can_be_viewed, only: [:show]
     before_action :forbid_invite_submission!, only: [:submit_brouillon]
     before_action :forbid_closed_submission!, only: [:submit_brouillon]
+    before_action :set_dossier_as_editing_fork, only: [:submit_en_construction]
     before_action :show_demarche_en_test_banner
     before_action :store_user_location!, only: :new
 
@@ -49,6 +50,9 @@ module Users
       end.page(page)
 
       @first_brouillon_recently_updated = current_user.dossiers.visible_by_user.brouillons_recently_updated.first
+
+      @filter = DossiersFilter.new(current_user, params)
+      @dossiers = @filter.filter_procedures(@dossiers).page(page)
     end
 
     def show
@@ -73,7 +77,7 @@ module Users
 
     def attestation
       if dossier.attestation&.pdf&.attached?
-        redirect_to dossier.attestation.pdf.service_url
+        redirect_to dossier.attestation.pdf.url, allow_other_host: true
       else
         flash.notice = t('.no_longer_available')
         redirect_to dossier_path(dossier)
@@ -171,6 +175,7 @@ module Users
       errors = submit_dossier_and_compute_errors
 
       if errors.blank?
+        RoutingEngine.compute(@dossier)
         @dossier.passer_en_construction!
         @dossier.process_declarative!
         NotificationMailer.send_en_construction_notification(@dossier).deliver_later
@@ -199,21 +204,46 @@ module Users
       @dossier = dossier_with_champs
     end
 
-    def update_brouillon
-      @dossier = dossier_with_champs
-      update_dossier_and_compute_errors
-
+    # Transition to en_construction forks,
+    # so users editing en_construction dossiers won't completely break their changes.
+    # TODO: remove me after fork en_construction feature deploy (PR #8790)
+    def modifier_legacy
       respond_to do |format|
-        format.html { render :brouillon }
         format.turbo_stream do
-          @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_public_params.fetch(:champs_public_all_attributes), dossier.champs_public_all)
+          flash.alert = "Une mise à jour de cette page est nécessaire pour poursuivre, veuillez la recharger (touche F5). Attention: le dernier champ modifié n’a pas été sauvegardé, vous devrez le ressaisir."
+        end
+      end
+    end
 
-          render(:update, layout: false)
+    def submit_en_construction
+      @dossier = dossier_with_champs(pj_template: false)
+      errors = submit_dossier_and_compute_errors
+
+      if errors.blank?
+        editing_fork_origin = @dossier.editing_fork_origin
+        editing_fork_origin.merge_fork(@dossier)
+        RoutingEngine.compute(editing_fork_origin)
+
+        redirect_to dossier_path(editing_fork_origin)
+      else
+        flash.now.alert = errors
+
+        respond_to do |format|
+          format.html do
+            @dossier = @dossier.editing_fork_origin
+            render :modifier
+          end
+
+          format.turbo_stream do
+            @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_public_params.fetch(:champs_public_all_attributes), dossier.champs_public_all)
+            render :update, layout: false
+          end
         end
       end
     end
 
     def update
+      @dossier = dossier.en_construction? ? dossier.find_editing_fork(dossier.user) : dossier
       @dossier = dossier_with_champs(pj_template: false)
       errors = update_dossier_and_compute_errors
 
@@ -222,9 +252,9 @@ module Users
       end
 
       respond_to do |format|
-        format.html { render :modifier }
         format.turbo_stream do
           @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_public_params.fetch(:champs_public_all_attributes), dossier.champs_public_all)
+          render :update, layout: false
         end
       end
     end
@@ -422,8 +452,8 @@ module Users
     end
 
     def dossier_scope
-      if action_name == 'update_brouillon'
-        Dossier.visible_by_user.or(Dossier.for_procedure_preview)
+      if action_name == 'update'
+        Dossier.visible_by_user.or(Dossier.for_procedure_preview).or(Dossier.for_editing_fork)
       elsif action_name == 'restore'
         Dossier.hidden_by_user
       else
@@ -439,6 +469,15 @@ module Users
 
     def dossier_with_champs(pj_template: true)
       DossierPreloader.load_one(dossier, pj_template:)
+    end
+
+    def set_dossier_as_editing_fork
+      @dossier = dossier.find_editing_fork(dossier.user)
+
+      return if @dossier.present?
+
+      flash[:alert] = t('users.dossiers.en_construction_submitted')
+      redirect_to dossier_path(dossier)
     end
 
     def should_change_groupe_instructeur?
@@ -469,25 +508,16 @@ module Users
 
     def update_dossier_and_compute_errors
       errors = []
-
       @dossier.assign_attributes(champs_public_params)
       if @dossier.champs_public_all.any?(&:changed_for_autosave?)
         @dossier.last_champ_updated_at = Time.zone.now
       end
       if !@dossier.save(**validation_options)
-        errors += @dossier.errors.full_messages
+        errors += format_errors(errors: @dossier.errors)
       end
 
       if should_change_groupe_instructeur?
         @dossier.assign_to_groupe_instructeur(groupe_instructeur_from_params)
-      end
-
-      if @dossier.procedure.feature_enabled?(:routing_rules)
-        RoutingEngine.compute(@dossier)
-      end
-
-      if dossier.en_construction?
-        errors += @dossier.check_mandatory_and_visible_champs
       end
 
       errors
@@ -497,18 +527,44 @@ module Users
       errors = []
 
       @dossier.valid?(**submit_validation_options)
-      errors += @dossier.errors.full_messages
-      errors += @dossier.check_mandatory_and_visible_champs
+      errors += format_errors(errors: @dossier.errors)
+      errors += format_errors(errors: @dossier.check_mandatory_and_visible_champs)
 
       if should_fill_groupe_instructeur?
         @dossier.assign_to_groupe_instructeur(defaut_groupe_instructeur)
       end
 
-      if @dossier.groupe_instructeur.nil?
-        errors << "Le champ « #{@dossier.procedure.routing_criteria_name} » doit être rempli"
+      if !@dossier.procedure.feature_enabled?(:routing_rules) && @dossier.groupe_instructeur.nil?
+        errors += format_errors(errors: ["Le champ « #{@dossier.procedure.routing_criteria_name} » doit être rempli"])
       end
 
       errors
+    end
+
+    def format_errors(errors:)
+      errors.map do |active_model_error|
+        case active_model_error.class.name
+        when "ActiveModel::NestedError"
+          append_anchor_link(active_model_error.full_message, active_model_error.inner_error.base)
+        when "ActiveModel::Error"
+          append_anchor_link(active_model_error.full_message, active_model_error.base)
+        else # "String"
+          active_model_error
+        end
+      end
+    end
+
+    def append_anchor_link(str_error, model)
+      return str_error.full_message if !model.is_a?(Champ)
+
+      route_helper = @dossier.editing_fork? ? :modifier_dossier_path : :brouillon_dossier_path
+
+      [
+        "Le champ « #{model.libelle.truncate(200)} » #{str_error}",
+        helpers.link_to(t('views.users.dossiers.fix_champ'), public_send(route_helper, anchor: model.labelledby_id), class: 'error-anchor')
+      ].join(", ")
+    rescue # case of invalid type de champ on champ
+      str_error
     end
 
     def ensure_ownership!

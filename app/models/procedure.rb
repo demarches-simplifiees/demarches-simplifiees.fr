@@ -4,6 +4,7 @@
 #
 #  id                                        :integer          not null, primary key
 #  aasm_state                                :string           default("brouillon")
+#  allow_expert_messaging                    :boolean          default(TRUE), not null
 #  allow_expert_review                       :boolean          default(TRUE), not null
 #  api_entreprise_token                      :string
 #  api_particulier_scopes                    :text             default([]), is an Array
@@ -17,10 +18,10 @@
 #  description                               :string
 #  dossiers_count_computed_at                :datetime
 #  duree_conservation_dossiers_dans_ds       :integer
-#  duree_conservation_etendue_par_ds         :boolean          default(FALSE)
+#  duree_conservation_etendue_par_ds         :boolean          default(FALSE), not null
 #  encrypted_api_particulier_token           :string
-#  estimated_duration_visible                :boolean          default(TRUE), not null
 #  estimated_dossiers_count                  :integer
+#  estimated_duration_visible                :boolean          default(TRUE), not null
 #  euro_flag                                 :boolean          default(FALSE)
 #  experts_require_administrateur_invitation :boolean          default(FALSE)
 #  for_individual                            :boolean          default(FALSE)
@@ -28,11 +29,10 @@
 #  instructeurs_self_management_enabled      :boolean
 #  juridique_required                        :boolean          default(TRUE)
 #  libelle                                   :string
-#  lien_demarche                             :string
 #  lien_dpo                                  :string
 #  lien_notice                               :string
 #  lien_site_web                             :string
-#  max_duree_conservation_dossiers_dans_ds   :integer          default(12)
+#  max_duree_conservation_dossiers_dans_ds   :integer          default(12), not null
 #  migrated_champ_routage                    :boolean
 #  monavis_embed                             :text
 #  opendata                                  :boolean          default(TRUE)
@@ -62,6 +62,7 @@
 class Procedure < ApplicationRecord
   include ProcedureStatsConcern
   include EncryptableConcern
+  include InitiationProcedureConcern
 
   include Discard::Model
   self.discard_column = :hidden_at
@@ -403,7 +404,11 @@ class Procedure < ApplicationRecord
 
   def reset!
     if !locked? || draft_changed?
-      draft_revision.dossiers.destroy_all
+      dossier_ids_to_destroy = draft_revision.dossiers.ids
+      if dossier_ids_to_destroy.present?
+        Rails.logger.info("Resetting #{dossier_ids_to_destroy.size} dossiers on procedure #{id}: #{dossier_ids_to_destroy}")
+        draft_revision.dossiers.destroy_all
+      end
     end
   end
 
@@ -570,9 +575,15 @@ class Procedure < ApplicationRecord
     procedure.replaced_by_procedure = nil
     procedure.service = nil
 
-    transaction do
-      procedure.save
+    if !procedure.valid?
+      procedure.errors.attribute_names.each do |attribute|
+        next if [:notice, :deliberation, :logo].exclude?(attribute)
+        procedure.public_send("#{attribute}=", nil)
+      end
+    end
 
+    transaction do
+      procedure.save!
       move_new_children_to_new_parent_coordinate(procedure.draft_revision)
     end
 

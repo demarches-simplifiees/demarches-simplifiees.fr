@@ -188,7 +188,7 @@ describe Users::DossiersController, type: :controller do
     let(:siret) { params_siret.delete(' ') }
     let(:siren) { siret[0..8] }
     let(:api_etablissement_status) { 200 }
-    let(:api_etablissement_body) { File.read('spec/fixtures/files/api_entreprise/etablissements.json') }
+    let(:api_etablissement_body) { Rails.root.join('spec/fixtures/files/api_entreprise/etablissements.json').read }
     let(:token_expired) { false }
     let(:api_current_status_response) { nil }
 
@@ -197,13 +197,13 @@ describe Users::DossiersController, type: :controller do
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}/)
         .to_return(status: api_etablissement_status, body: api_etablissement_body)
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}/)
-        .to_return(body: File.read('spec/fixtures/files/api_entreprise/entreprises.json'), status: 200)
+        .to_return(body: Rails.root.join('spec/fixtures/files/api_entreprise/status.json').read, status: 200)
       allow_any_instance_of(APIEntrepriseToken).to receive(:roles)
         .and_return(["attestations_fiscales", "attestations_sociales", "bilans_entreprise_bdf"])
       allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(token_expired)
 
       if api_current_status_response
-        stub_request(:get, "https://entreprise.api.gouv.fr/watchdoge/dashboard/current_status")
+        stub_request(:get, "https://status.entreprise.api.gouv.fr/summary.json")
           .to_return(body: api_current_status_response)
       end
     end
@@ -249,14 +249,14 @@ describe Users::DossiersController, type: :controller do
 
       context 'When API-Entreprise is ponctually down' do
         let(:api_etablissement_status) { 502 }
-        let(:api_current_status_response) { File.read('spec/fixtures/files/api_entreprise/current_status.json') }
+        let(:api_current_status_response) { Rails.root.join('spec/fixtures/files/api_entreprise/status.json').read }
 
         it_behaves_like 'the request fails with an error', I18n.t('errors.messages.siret_network_error')
       end
 
       context 'When API-Entreprise is globally down' do
         let(:api_etablissement_status) { 502 }
-        let(:api_current_status_response) { File.read('spec/fixtures/files/api_entreprise/current_status.json').gsub('200', '502') }
+        let(:api_current_status_response) { Rails.root.join('spec/fixtures/files/api_entreprise/status.json').read.gsub('UP', 'HASISSUES') }
 
         it "create an etablissement only with SIRET as degraded mode" do
           dossier.reload
@@ -273,7 +273,7 @@ describe Users::DossiersController, type: :controller do
 
       context 'when default token has expired' do
         let(:api_etablissement_status) { 200 }
-        let(:api_current_status_response) { File.read('spec/fixtures/files/api_entreprise/current_status.json') }
+        let(:api_current_status_response) { Rails.root.join('spec/fixtures/files/api_entreprise/status.json').read }
         let(:token_expired) { true }
 
         it_behaves_like 'the request fails with an error', I18n.t('errors.messages.siret_network_error')
@@ -345,6 +345,7 @@ describe Users::DossiersController, type: :controller do
 
     let!(:dossier) { create(:dossier, user: user) }
     let(:first_champ) { dossier.champs_public.first }
+    let(:anchor_to_first_champ) { controller.helpers.link_to I18n.t('views.users.dossiers.fix_champ'), brouillon_dossier_path(anchor: first_champ.labelledby_id), class: 'error-anchor' }
     let(:value) { 'beautiful value' }
     let(:now) { Time.zone.parse('01/01/2100') }
     let(:payload) { { id: dossier.id } }
@@ -383,14 +384,14 @@ describe Users::DossiersController, type: :controller do
     context 'when the update fails' do
       before do
         expect_any_instance_of(Dossier).to receive(:valid?).and_return(false)
-        expect_any_instance_of(Dossier).to receive(:errors)
-          .and_return(double('errors', full_messages: ['nop']))
-
+        expect_any_instance_of(Dossier).to receive(:errors).and_return(
+          [double(class: ActiveModel::Error, full_message: 'nop', base: first_champ)]
+        )
         subject
       end
 
       it { expect(response).to render_template(:brouillon) }
-      it { expect(flash.alert).to eq(['nop']) }
+      it { expect(flash.alert).to eq(["Le champ « #{first_champ.libelle} » nop, #{anchor_to_first_champ}"]) }
 
       it 'does not send an email' do
         expect(NotificationMailer).not_to receive(:send_en_construction_notification)
@@ -408,7 +409,17 @@ describe Users::DossiersController, type: :controller do
       end
 
       it { expect(response).to render_template(:brouillon) }
-      it { expect(flash.alert).to eq(['Le champ l doit être rempli.']) }
+      it { expect(flash.alert).to eq(["Le champ « l » doit être rempli, #{anchor_to_first_champ}"]) }
+    end
+
+    context 'when a dossier is invalid' do
+      before do
+        allow_any_instance_of(Dossier).to receive(:groupe_instructeur).and_return(double(nil?: true))
+        subject
+      end
+
+      it { expect(response).to render_template(:brouillon) }
+      it { expect(flash.alert).to eq(["Le champ « Votre ville » doit être rempli"]) }
     end
 
     context 'when dossier has no champ' do
@@ -434,11 +445,91 @@ describe Users::DossiersController, type: :controller do
     end
   end
 
-  describe '#update_brouillon' do
+  describe '#submit_en_construction' do
     before { sign_in(user) }
 
-    let(:procedure) { create(:procedure, :published, :with_type_de_champ, :with_piece_justificative) }
-    let!(:dossier) { create(:dossier, user: user, procedure: procedure) }
+    let!(:dossier) { create(:dossier, :en_construction, user: user) }
+    let(:first_champ) { dossier.owner_editing_fork.champs_public.first }
+    let(:anchor_to_first_champ) { controller.helpers.link_to I18n.t('views.users.dossiers.fix_champ'), modifier_dossier_path(anchor: first_champ.labelledby_id), class: 'error-anchor' }
+    let(:value) { 'beautiful value' }
+    let(:now) { Time.zone.parse('01/01/2100') }
+    let(:payload) { { id: dossier.id } }
+
+    before { dossier.owner_editing_fork }
+
+    subject do
+      Timecop.freeze(now) do
+        post :submit_en_construction, params: payload
+      end
+    end
+
+    context 'when the dossier cannot be updated by the user' do
+      let!(:dossier) { create(:dossier, :en_instruction, user: user) }
+
+      it 'redirects to the dossiers list' do
+        subject
+
+        expect(response).to redirect_to(dossier_path(dossier))
+        expect(flash.alert).to eq('Votre dossier ne peut plus être modifié')
+      end
+    end
+
+    context 'when the update fails' do
+      render_views
+
+      before do
+        expect_any_instance_of(Dossier).to receive(:valid?).and_return(false)
+        expect_any_instance_of(Dossier).to receive(:errors).and_return(
+          [double(class: ActiveModel::Error, full_message: 'nop', base: first_champ)]
+        )
+
+        subject
+      end
+
+      it { expect(response).to render_template(:modifier) }
+      it { expect(flash.alert).to eq(["Le champ « #{first_champ.libelle} » nop, #{anchor_to_first_champ}"]) }
+      it { expect(response.body).to include("Dossier nº #{dossier.id}") }
+    end
+
+    context 'when a mandatory champ is missing' do
+      let(:value) { nil }
+
+      before do
+        first_champ.type_de_champ.update(mandatory: true, libelle: 'l')
+        subject
+      end
+
+      it { expect(response).to render_template(:modifier) }
+      it { expect(flash.alert).to eq(["Le champ « l » doit être rempli, #{anchor_to_first_champ}"]) }
+    end
+
+    context 'when dossier has no champ' do
+      let(:submit_payload) { { id: dossier.id } }
+
+      it 'does not raise any errors' do
+        subject
+
+        expect(response).to redirect_to(dossier_path(dossier))
+      end
+    end
+
+    context 'when dossier was already submitted' do
+      before { post :submit_en_construction, params: payload }
+
+      it 'redirects to the dossier' do
+        subject
+
+        expect(response).to redirect_to(dossier_path(dossier))
+        expect(flash.alert).to eq("Les modifications ont déjà été déposées")
+      end
+    end
+  end
+
+  describe '#update brouillon' do
+    before { sign_in(user) }
+
+    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{}, { type: :piece_justificative }]) }
+    let(:dossier) { create(:dossier, user:, procedure:) }
     let(:first_champ) { dossier.champs_public.first }
     let(:piece_justificative_champ) { dossier.champs_public.last }
     let(:value) { 'beautiful value' }
@@ -450,16 +541,16 @@ describe Users::DossiersController, type: :controller do
         id: dossier.id,
         dossier: {
           groupe_instructeur_id: dossier.groupe_instructeur_id,
-          champs_public_attributes: [
-            {
+          champs_public_attributes: {
+            first_champ.id => {
               id: first_champ.id,
               value: value
             },
-            {
+            piece_justificative_champ.id => {
               id: piece_justificative_champ.id,
               piece_justificative_file: file
             }
-          ]
+          }
         }
       }
     end
@@ -467,12 +558,12 @@ describe Users::DossiersController, type: :controller do
 
     subject do
       Timecop.freeze(now) do
-        patch :update_brouillon, params: payload
+        patch :update, params: payload, format: :turbo_stream
       end
     end
 
     context 'when the dossier cannot be updated by the user' do
-      let!(:dossier) { create(:dossier, :en_instruction, user: user) }
+      let(:dossier) { create(:dossier, :en_instruction, user:, procedure:) }
 
       it 'redirects to the dossiers list' do
         subject
@@ -496,7 +587,7 @@ describe Users::DossiersController, type: :controller do
           {
             id: dossier.id,
             dossier: {
-              champs_public_attributes: [{ value: '' }]
+              champs_public_attributes: { first_champ.id => { id: first_champ.id } }
             }
           }
         end
@@ -509,7 +600,7 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'when the user has an invitation but is not the owner' do
-      let(:dossier) { create(:dossier) }
+      let(:dossier) { create(:dossier, procedure: procedure) }
       let!(:invite) { create(:invite, dossier: dossier, user: user) }
 
       before { subject }
@@ -519,12 +610,13 @@ describe Users::DossiersController, type: :controller do
     end
   end
 
-  describe '#update' do
+  describe '#update en_construction' do
     before { sign_in(user) }
 
-    let(:procedure) { create(:procedure, :published, :with_type_de_champ, :with_piece_justificative) }
-    let!(:dossier) { create(:dossier, :en_construction, user: user, procedure: procedure) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{}, { type: :piece_justificative }]) }
+    let!(:dossier) { create(:dossier, :en_construction, user:, procedure:) }
     let(:first_champ) { dossier.champs_public.first }
+    let(:anchor_to_first_champ) { controller.helpers.link_to I18n.t('views.users.dossiers.fix_champ'), brouillon_dossier_path(anchor: first_champ.labelledby_id), class: 'error-anchor' }
     let(:piece_justificative_champ) { dossier.champs_public.last }
     let(:value) { 'beautiful value' }
     let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
@@ -535,16 +627,16 @@ describe Users::DossiersController, type: :controller do
         id: dossier.id,
         dossier: {
           groupe_instructeur_id: dossier.groupe_instructeur_id,
-          champs_public_attributes: [
-            {
+          champs_public_attributes: {
+            first_champ.id => {
               id: first_champ.id,
               value: value
             },
-            {
+            piece_justificative_champ.id => {
               id: piece_justificative_champ.id,
               piece_justificative_file: file
             }
-          ]
+          }
         }
       }
     end
@@ -552,12 +644,12 @@ describe Users::DossiersController, type: :controller do
 
     subject do
       Timecop.freeze(now) do
-        patch :update, params: payload
+        patch :update, params: payload, format: :turbo_stream
       end
     end
 
     context 'when the dossier cannot be updated by the user' do
-      let!(:dossier) { create(:dossier, :en_instruction, user: user) }
+      let!(:dossier) { create(:dossier, :en_instruction, user:, procedure:) }
 
       it 'redirects to the dossiers list' do
         subject
@@ -600,12 +692,12 @@ describe Users::DossiersController, type: :controller do
           {
             id: dossier.id,
             dossier: {
-              champs_public_attributes: [
-                {
+              champs_public_attributes: {
+                piece_justificative_champ.id => {
                   id: piece_justificative_champ.id,
                   piece_justificative_file: file
                 }
-              ]
+              }
             }
           }
         end
@@ -622,14 +714,14 @@ describe Users::DossiersController, type: :controller do
     context 'when the update fails' do
       before do
         expect_any_instance_of(Dossier).to receive(:save).and_return(false)
-        expect_any_instance_of(Dossier).to receive(:errors)
-          .and_return(double(full_messages: ['nop']))
-
+        expect_any_instance_of(Dossier).to receive(:errors).and_return(
+          [double(class: ActiveModel::Error, full_message: 'nop', base: first_champ)]
+        )
         subject
       end
 
-      it { expect(response).to render_template(:modifier) }
-      it { expect(flash.alert).to eq(['nop']) }
+      it { expect(response).to render_template(:update) }
+      it { expect(flash.alert).to eq(["Le champ « #{first_champ.libelle} » nop, #{anchor_to_first_champ}"]) }
 
       it 'does not update the dossier timestamps' do
         dossier.reload
@@ -644,21 +736,22 @@ describe Users::DossiersController, type: :controller do
       end
     end
 
-    context 'when a mandatory champ is missing' do
-      let(:value) { nil }
+    context 'when a champ validation fails' do
+      let(:value) { 'abc' }
 
       before do
-        first_champ.type_de_champ.update(mandatory: true, libelle: 'l')
+        first_champ.type_de_champ.update!(type_champ: :iban, mandatory: true, libelle: 'l')
+        dossier.champs_public.first.becomes!(Champs::IbanChamp).save!
+
         subject
       end
 
-      it { expect(response).to render_template(:modifier) }
-      it { expect(flash.alert).to eq(['Le champ l doit être rempli.']) }
+      it { expect(flash.alert).to include("Le champ « l » n'est pas au format IBAN, #{anchor_to_first_champ}") }
     end
 
     context 'when the user has an invitation but is not the owner' do
-      let(:dossier) { create(:dossier, :en_construction) }
-      let!(:invite) { create(:invite, dossier: dossier, user: user) }
+      let(:dossier) { create(:dossier, :en_construction, procedure:) }
+      let!(:invite) { create(:invite, dossier:, user:) }
 
       before { subject }
 
@@ -667,9 +760,9 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'when the dossier is followed by an instructeur' do
-      let(:dossier) { create(:dossier) }
+      let(:dossier) { create(:dossier, procedure:) }
       let(:instructeur) { create(:instructeur) }
-      let!(:invite) { create(:invite, dossier: dossier, user: user) }
+      let!(:invite) { create(:invite, dossier:, user:) }
 
       before do
         instructeur.follow(dossier)
@@ -683,8 +776,8 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'when the champ is a phone number' do
-      let(:procedure) { create(:procedure, :published, :with_phone) }
-      let!(:dossier) { create(:dossier, :en_construction, user: user, procedure: procedure) }
+      let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :phone }]) }
+      let!(:dossier) { create(:dossier, :en_construction, user:, procedure:) }
       let(:first_champ) { dossier.champs_public.first }
       let(:now) { Time.zone.parse('01/01/2100') }
 
@@ -692,12 +785,12 @@ describe Users::DossiersController, type: :controller do
         {
           id: dossier.id,
           dossier: {
-            champs_public_attributes: [
-              {
+            champs_public_attributes: {
+              first_champ.id => {
                 id: first_champ.id,
                 value: value
               }
-            ]
+            }
           }
         }
       end

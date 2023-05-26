@@ -1,4 +1,4 @@
-describe 'users/dossiers/show.html.haml', type: :view do
+describe 'users/dossiers/show', type: :view do
   let(:dossier) { create(:dossier, :en_construction) }
 
   before do
@@ -10,7 +10,7 @@ describe 'users/dossiers/show.html.haml', type: :view do
 
   it 'renders a summary of the dossier state' do
     expect(rendered).to have_text("Dossier nº #{dossier.id}")
-    expect(rendered).to have_selector('.status-overview')
+    expect(rendered).to have_text('dossier est en construction')
   end
 
   context 'with messages' do

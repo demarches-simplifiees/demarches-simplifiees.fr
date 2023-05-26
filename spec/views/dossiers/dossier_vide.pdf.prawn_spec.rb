@@ -1,4 +1,4 @@
-describe 'dossiers/dossier_vide.pdf.prawn', type: :view do
+describe 'dossiers/dossier_vide', type: :view do
   let(:procedure) { create(:procedure, :with_all_champs, :with_drop_down_list) }
   let(:dossier) { create(:dossier, procedure: procedure) }
 

@@ -2,3 +2,13 @@
   .site-banner.warning
     .container
       = sanitize(ENV['BANNER_MESSAGE'])
+
+- if ENV['ADMINISTRATION_BANNER_MESSAGE'].present? && instructeur_signed_in?
+  .site-banner.warning
+    .container
+      = sanitize(ENV['ADMINISTRATION_BANNER_MESSAGE'])
+
+- if ENV['USAGER_BANNER_MESSAGE'].present? && !instructeur_signed_in?
+  .site-banner.warning
+    .container
+      = sanitize(ENV['USAGER_BANNER_MESSAGE'])

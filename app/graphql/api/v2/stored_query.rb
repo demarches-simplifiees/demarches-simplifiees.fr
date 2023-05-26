@@ -263,6 +263,7 @@ class API::V2::StoredQuery
     usager {
       email
     }
+    connectionUsager
     groupeInstructeur {
       ...GroupeInstructeurFragment
     }

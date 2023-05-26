@@ -1,0 +1,37 @@
+.fr-grid-row
+  .fr-col-12
+    %nav.fr-translate.fr-nav
+      .fr-nav__item.custom-fr-translate-flex-end
+        %button.fr-translate__btn.translate-no-icon.fr-btn.fr-btn--tertiary.custom-fr-translate-no-icon{ "aria-controls" => "filters", "aria-expanded" => "false", title: t('.button.select_filters') }
+          = t('.button.select_filters')
+        #filters.fr-collapse.fr-translate__menu.fr-menu
+          %ul.fr-menu__list.fr-p-3w
+            = form_with(url: dossiers_path(), method: :get ) do |f|
+              = f.hidden_field :statut, value: @statut
+
+              %fieldset#checkboxes.fr-fieldset{ "aria-labelledby" => "checkboxes-legend" }
+                %legend#checkboxes-legend.fr-fieldset__legend--regular.fr-fieldset__legend
+                  = t('.legend.states')
+                = f.collection_check_boxes :states, states_collection(@statut), :to_s, :to_s, include_hidden: false do |b|
+                  .fr-fieldset__element
+                    .fr-checkbox-group.fr-ml-2w.fr-py-1w
+                      = b.check_box(checked: filter.states_filtered?(b.value))
+                      = b.label(class: 'fr-label') { dossier_display_state(b.text) }
+
+
+              .fr-input-group
+                = f.label 'from_created_at_date', t('.legend.created_at'), class: 'fr-label'
+                = f.date_field 'from_created_at_date', value: @filter.from_created_at_date, class: 'fr-input'
+
+
+              .fr-input-group
+                = f.label 'from_depose_at_date', t('.legend.depose_at'), class: 'fr-label'
+                = f.date_field 'from_depose_at_date', value: @filter.from_depose_at_date, class: 'fr-input'
+
+              .fr-my-2w
+                = f.submit t('.button.apply_filters'), class: 'fr-btn fr-btn--sm'
+                = link_to t('.button.reset_filters'), dossiers_path(statut: @statut), class: 'fr-btn fr-btn--sm fr-btn--tertiary-no-outline'
+
+  - if @filter.filter_params.present?
+    .fr-col-12.text-right
+      = link_to t('.tag.active_filters', count: @filter.filter_params_count), dossiers_path(statut: @statut), title: t('.tag.active_filters_link_title', count: @filter.filter_params_count), class: 'fr-tag fr-tag--sm fr-tag--dismiss'

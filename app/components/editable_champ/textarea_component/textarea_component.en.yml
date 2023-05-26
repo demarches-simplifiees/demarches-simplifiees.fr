@@ -1,3 +1,4 @@
 en:
   remaining_characters: You have %{remaining_words} characters remaining.
   excess_characters: You have %{excess_words} characters too many.
+  recommended_size: The recommended maximum size is %{size} characters.

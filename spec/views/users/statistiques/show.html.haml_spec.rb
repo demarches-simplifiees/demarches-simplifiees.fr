@@ -1,4 +1,4 @@
-describe 'users/statistiques/show.html.haml', type: :view do
+describe 'users/statistiques/show', type: :view do
   let(:procedure) { create(:procedure) }
 
   before do

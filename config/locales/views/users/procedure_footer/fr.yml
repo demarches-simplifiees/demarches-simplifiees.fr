@@ -4,7 +4,7 @@ fr:
       managed_by:
         header: 'Cette démarche est gérée par'
       contact:
-        header: 'Poser une question sur votre démarche'
+        header: 'Poser une question sur la démarche'
         in_app_mail:
           link: "Directement par la messagerie"
         email:
