@@ -211,7 +211,7 @@ describe APIEntreprise::API do
     before do
       allow_any_instance_of(APIEntrepriseToken).to receive(:roles).and_return(roles)
       allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_fiscales_dgfip\/#{siren}/)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v4\/dgfip\/unites_legales\/#{siren}\/attestation_fiscale/)
         .to_return(body: body, status: status)
     end
 
