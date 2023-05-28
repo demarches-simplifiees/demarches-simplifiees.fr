@@ -9,7 +9,7 @@ class APIEntreprise::API
   EFFECTIFS_ANNUELS_RESOURCE_NAME = "v2/effectifs_annuels_acoss_covid/%{id}"
   ATTESTATION_SOCIALE_RESOURCE_NAME = "v4/urssaf/unites_legales/%{id}/attestation_vigilance"
   ATTESTATION_FISCALE_RESOURCE_NAME = "v4/dgfip/unites_legales/%{id}/attestation_fiscale"
-  BILANS_BDF_RESOURCE_NAME = "v2/bilans_entreprises_bdf/%{id}"
+  BILANS_BDF_RESOURCE_NAME = "v3/banque_de_france/unites_legales/%{id}/bilans"
   PRIVILEGES_RESOURCE_NAME = "v2/privileges"
 
   TIMEOUT = 20
