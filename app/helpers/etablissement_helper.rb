@@ -1,14 +1,23 @@
 module EtablissementHelper
+  def value_for_bilan_key(bilan, key)
+    if bilan["data"]
+      return "NA" if key == "resultat_exercice"
+      bilan["data"][key].presence || bilan["data"]["valeurs_calculees"][0][key].present? ? bilan["data"]["valeurs_calculees"][0][key]["valeur"] : nil
+    else
+      bilan[key]
+    end
+  end
+
   def pretty_siret(siret)
     "#{siret[0..2]} #{siret[3..5]} #{siret[6..8]} #{siret[9..]}"
   end
 
-  def pretty_currency(capital_social, unit: '€')
-    number_to_currency(capital_social, locale: :fr, unit: unit, precision: 0)
+  def pretty_currency(value, unit: '€')
+    number_to_currency(value, locale: :fr, unit: unit, precision: 0)
   end
 
   def pretty_currency_unit(unit)
-    dict = { 'kEuros' => 'k€' }
+    dict = { 'kEuros' => 'k€', 'euros' => '€' }
     dict[unit]
   end
 
