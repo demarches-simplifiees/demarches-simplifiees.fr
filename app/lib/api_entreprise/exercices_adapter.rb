@@ -1,4 +1,7 @@
 class APIEntreprise::ExercicesAdapter < APIEntreprise::Adapter
+  # Doc métier : https://entreprise.api.gouv.fr/catalogue/dgfip/chiffres_affaires
+  # Swagger : https://entreprise.api.gouv.fr/developpeurs/openapi#tag/Informations-financieres/paths/~1v3~1dgfip~1etablissements~1%7Bsiret%7D~1chiffres_affaires/get
+
   private
 
   def get_resource
@@ -6,22 +9,25 @@ class APIEntreprise::ExercicesAdapter < APIEntreprise::Adapter
   end
 
   def process_params
-    exercices_array = data_source[:exercices].map do |exercice|
-      exercice.slice(*attr_to_fetch)
-    end
+    data = data_source[:data]
+    Sentry.with_scope do |scope|
+      scope.set_tags(siret: @siret)
+      scope.set_extras(source: data)
 
-    if exercices_array.all? { |params| valid_params?(params) }
-      { exercices_attributes: exercices_array }
-    else
-      {}
-    end
-  end
+      if data
+        exercices_array = data.map do |exercice|
+          {
+            ca: exercice[:data][:chiffre_affaires].to_s,
+            date_fin_exercice: Date.parse(exercice[:data][:date_fin_exercice])
+          }
+        end
 
-  def attr_to_fetch
-    [
-      :ca,
-      :date_fin_exercice,
-      :date_fin_exercice_timestamp
-    ]
+        if exercices_array.all? { |params| valid_params?(params) }
+          { exercices_attributes: exercices_array }
+        else
+          {}
+        end
+      end
+    end
   end
 end
