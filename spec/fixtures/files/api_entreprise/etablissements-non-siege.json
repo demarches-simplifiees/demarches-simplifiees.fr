@@ -1,53 +1,100 @@
 {
-  "etablissement": {
-    "adresse": {
-      "cedex": null,
-      "code_insee_localite": "31555",
-      "code_postal": "31400",
-      "complement_adresse": null,
-      "l1": "DIRECTION INTERREGIONALE DES SERVICES PENITENTIAIRES TOULOUSE - SUD",
-      "l2": "SERVICE PENITENTIAIRE D'INSERTION ET DE PROBATION, DE LA HAUTE-GARONNE",
-      "l3": null,
-      "l4": "109 AV DE LESPINET",
-      "l5": "BP 4087",
-      "l6": "31400 TOULOUSE",
-      "l7": "FRANCE",
-      "localite": "TOULOUSE",
-      "nom_voie": "DE LESPINET",
-      "numero_voie": "109",
-      "type_voie": "AV"
-    },
-    "commune_implantation": {
-      "code": "31555",
-      "value": "Toulouse"
-    },
-    "date_creation_etablissement": 1458946800,
-    "date_mise_a_jour": 1533648919,
-    "diffusable_commercialement": true,
-    "enseigne": "SERVICE PENITENTIAIRE D'INSERTION ET DE PROBATION, DE LA HAUTE-GARONNE",
-    "etat_administratif": {
-      "date_fermeture": null,
-      "value": "A"
-    },
-    "libelle_naf": "Justice",
-    "naf": "8423Z",
-    "pays_implantation": {
-      "code": "FR",
-      "value": "FRANCE"
-    },
-    "region_implantation": {
-      "code": "76",
-      "value": "Occitanie"
-    },
-    "siege_social": false,
-    "siret": "17310120500719",
-    "tranche_effectif_salarie_etablissement": {
-      "a": null,
-      "code": null,
-      "date_reference": null,
-      "de": null,
-      "intitule": null
-    }
-  },
-  "gateway_error": false
+   "data" : {
+      "activite_principale" : {
+         "code" : "84.23Z",
+         "libelle" : "Justice",
+         "nomenclature" : "NAFRev2"
+      },
+      "adresse" : {
+         "acheminement_postal" : {
+            "l1" : "DIRECTION INTERREGIONALE DES SERVICES PENITENTIAIRES TOULOUSE - SUD",
+            "l2" : "",
+            "l3" : "",
+            "l4" : "109 AVENUE DE LESPINET",
+            "l5" : "BP 4087",
+            "l6" : "31400 TOULOUSE",
+            "l7" : "FRANCE"
+         },
+         "code_cedex" : null,
+         "code_commune" : "31555",
+         "code_pays_etranger" : null,
+         "code_postal" : "31400",
+         "complement_adresse" : null,
+         "distribution_speciale" : "BP 4087",
+         "indice_repetition_voie" : null,
+         "libelle_cedex" : null,
+         "libelle_commune" : "TOULOUSE",
+         "libelle_commune_etranger" : null,
+         "libelle_pays_etranger" : null,
+         "libelle_voie" : "DE LESPINET",
+         "numero_voie" : "109",
+         "status_diffusion" : "diffusible",
+         "type_voie" : "AVENUE"
+      },
+      "date_creation" : 1458946800,
+      "date_fermeture" : null,
+      "diffusable_commercialement" : true,
+      "enseigne" : "SERVICE PENITENTIAIRE D'INSERTION ET DE PROBATION, DE LA HAUTE-GARONNE",
+      "etat_administratif" : "A",
+      "siege_social" : false,
+      "siret" : "17310120500719",
+      "status_diffusion" : "diffusible",
+      "tranche_effectif_salarie" : {
+         "a" : 99,
+         "code" : "21",
+         "date_reference" : "2020",
+         "de" : 50,
+         "intitule" : "50 Ã  99 salariÃ©s"
+      },
+      "unite_legale" : {
+         "activite_principale" : {
+            "code" : "84.23Z",
+            "libelle" : "Justice",
+            "nomenclature" : "NAFRev2"
+         },
+         "categorie_entreprise" : "ETI",
+         "date_creation" : 362095200,
+         "diffusable_commercialement" : true,
+         "economie_sociale_et_solidaire" : false,
+         "etat_administratif" : "A",
+         "forme_juridique" : {
+            "code" : "7171",
+            "libelle" : "Service dÃ©concentrÃ© de l'Ãtat Ã  compÃ©tence (inter) rÃ©gionale"
+         },
+         "personne_morale_attributs" : {
+            "raison_sociale" : "DIRECTION INTERREGIONALE DES SERVICES PENITENTIAIRES TOULOUSE - SUD",
+            "sigle" : "DISP"
+         },
+         "personne_physique_attributs" : {
+            "nom_naissance" : null,
+            "nom_usage" : null,
+            "prenom_1" : null,
+            "prenom_2" : null,
+            "prenom_3" : null,
+            "prenom_4" : null,
+            "prenom_usuel" : null,
+            "pseudonyme" : null,
+            "sexe" : null
+         },
+         "rna" : null,
+         "siren" : "173101205",
+         "siret_siege_social" : "17310120500016",
+         "status_diffusion" : "diffusible",
+         "tranche_effectif_salarie" : {
+            "a" : 4999,
+            "code" : "51",
+            "date_reference" : "2020",
+            "de" : 2000,
+            "intitule" : "2 000 Ã  4 999 salariÃ©s"
+         },
+         "type" : "personne_morale"
+      }
+   },
+   "links" : {
+      "unite_legale" : "https://entreprise.api.gouv.fr/v3/insee/sirene/unites_legales/173101205"
+   },
+   "meta" : {
+      "date_derniere_mise_a_jour" : 1661724000,
+      "redirect_from_siret" : null
+   }
 }
