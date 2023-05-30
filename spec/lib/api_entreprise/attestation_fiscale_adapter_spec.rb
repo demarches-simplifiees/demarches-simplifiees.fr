@@ -7,7 +7,7 @@ describe APIEntreprise::AttestationFiscaleAdapter do
   subject { adapter.to_params }
 
   before do
-    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_fiscales_dgfip\/#{siren}/)
+    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v4\/dgfip\/unites_legales\/#{siren}\/attestation_fiscale/)
       .to_return(body: body, status: status)
     allow_any_instance_of(APIEntrepriseToken).to receive(:roles).and_return(["attestations_fiscales"])
     allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
@@ -22,7 +22,7 @@ describe APIEntreprise::AttestationFiscaleAdapter do
     end
 
     it "returns url of attestation_fiscale" do
-      expect(subject[:entreprise_attestation_fiscale_url]).to eq("https://storage.entreprise.api.gouv.fr/siade/1569156756-f6b7779f99fa95cd60dc03c04fcb-attestation_fiscale_dgfip.pdf")
+      expect(subject[:entreprise_attestation_fiscale_url]).to eq("https://storage.entreprise.api.gouv.fr/siade/1569139162-b99824d9c764aae19a862a0af-attestation_fiscale_dgfip.pdf")
     end
   end
 end

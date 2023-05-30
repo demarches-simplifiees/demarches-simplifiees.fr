@@ -8,9 +8,9 @@ RSpec.describe APIEntreprise::AttestationFiscaleJob, type: :job do
   let(:status) { 200 }
 
   before do
-    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_fiscales_dgfip\/#{siren}/)
+    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v4\/dgfip\/unites_legales\/#{siren}\/attestation_fiscale/)
       .to_return(body: body, status: status)
-    stub_request(:get, "https://storage.entreprise.api.gouv.fr/siade/1569156756-f6b7779f99fa95cd60dc03c04fcb-attestation_fiscale_dgfip.pdf")
+    stub_request(:get, "https://storage.entreprise.api.gouv.fr/siade/1569139162-b99824d9c764aae19a862a0af-attestation_fiscale_dgfip.pdf")
       .to_return(body: "body attestation", status: 200)
     allow_any_instance_of(APIEntrepriseToken).to receive(:roles).and_return(["attestations_fiscales"])
     allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
