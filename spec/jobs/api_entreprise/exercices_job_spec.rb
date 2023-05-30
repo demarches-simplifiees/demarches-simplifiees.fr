@@ -6,7 +6,7 @@ RSpec.describe APIEntreprise::ExercicesJob, type: :job do
   let(:status) { 200 }
 
   before do
-    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/exercices\//)
+    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/dgfip\/etablissements\/#{siret}\/chiffres_affaires/)
       .to_return(body: body, status: status)
     allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
   end
@@ -16,6 +16,6 @@ RSpec.describe APIEntreprise::ExercicesJob, type: :job do
   it 'updates etablissement' do
     subject
     ca_list = Etablissement.find(etablissement.id).exercices.map(&:ca)
-    expect(ca_list).to contain_exactly('21009417', '18968298', '17768838')
+    expect(ca_list).to contain_exactly('900001', '1900051')
   end
 end
