@@ -41,7 +41,7 @@ describe 'Prefilling a dossier (with a POST request):', js: true do
   let(:annuaire_education_value) { '0050009H' }
 
   before do
-    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret_value}/)
+    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/etablissements\/#{siret_value}/)
       .to_return(status: 200, body: File.read('spec/fixtures/files/api_entreprise/etablissements.json'))
 
     stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/unites_legales\/#{siret_value[0..8]}/)

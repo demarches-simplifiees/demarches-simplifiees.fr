@@ -7,12 +7,12 @@ describe APIEntreprise::EtablissementAdapter do
   end
 
   context 'SIRET valide avec infos diffusables' do
-    let(:siret) { '41816609600051' }
+    let(:siret) { '30613890001294' }
     let(:fixture) { 'spec/fixtures/files/api_entreprise/etablissements.json' }
     subject { described_class.new(siret, procedure_id).to_params }
 
     before do
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}/)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/etablissements\/#{siret}/)
         .to_return(body: File.read(fixture, status: 200))
     end
 
@@ -30,11 +30,11 @@ describe APIEntreprise::EtablissementAdapter do
       end
 
       it 'L\'entreprise contient bien un naf' do
-        expect(subject[:naf]).to eq('6202A')
+        expect(subject[:naf]).to eq('8411Z')
       end
 
       it 'L\'entreprise contient bien un libelle_naf' do
-        expect(subject[:libelle_naf]).to eq('Conseil en systèmes et logiciels informatiques')
+        expect(subject[:libelle_naf]).to eq('Administration publique générale')
       end
 
       it 'L\'entreprise contient bien un diffusable_commercialement qui vaut true' do
@@ -43,36 +43,37 @@ describe APIEntreprise::EtablissementAdapter do
 
       context 'Concaténation lignes adresse' do
         it 'L\'entreprise contient bien une adresse sur plusieurs lignes' do
-          expect(subject[:adresse]).to eq("OCTO TECHNOLOGY\r\n50 AVENUE DES CHAMPS ELYSEES\r\n75008 PARIS\r\nFRANCE")
+          expect(subject[:adresse]).to eq("DIRECTION INTERMINISTERIELLE DU NUMERIQUE\r\nJEAN MARIE DURAND\r\nZAE SAINT GUENAULT\r\n51 BIS RUE DE LA PAIX\r\nCS 72809\r\n75256 PARIX CEDEX 12\r\nFRANCE")
         end
       end
 
       context 'Détails adresse' do
         it 'L\'entreprise contient bien un numero_voie' do
-          expect(subject[:numero_voie]).to eq('50')
+          expect(subject[:numero_voie]).to eq('22')
         end
 
         it 'L\'entreprise contient bien un type_voie' do
-          expect(subject[:type_voie]).to eq('AV')
+          expect(subject[:type_voie]).to eq('RUE')
         end
 
         it 'L\'entreprise contient bien un nom_voie' do
-          expect(subject[:nom_voie]).to eq('DES CHAMPS ELYSEES')
+          expect(subject[:nom_voie]).to eq('DE LA PAIX')
         end
+
         it 'L\'entreprise contient bien un complement_adresse' do
-          expect(subject[:complement_adresse]).to eq('complement_adresse')
+          expect(subject[:complement_adresse]).to eq('ZAE SAINT GUENAULT')
         end
 
         it 'L\'entreprise contient bien un code_postal' do
-          expect(subject[:code_postal]).to eq('75008')
+          expect(subject[:code_postal]).to eq('75016')
         end
 
         it 'L\'entreprise contient bien une localite' do
-          expect(subject[:localite]).to eq('PARIS 8')
+          expect(subject[:localite]).to eq('PARIS 12')
         end
 
         it 'L\'entreprise contient bien un code_insee_localite' do
-          expect(subject[:code_insee_localite]).to eq('75108')
+          expect(subject[:code_insee_localite]).to eq('75112')
         end
       end
     end
@@ -99,7 +100,7 @@ describe APIEntreprise::EtablissementAdapter do
     subject { described_class.new(siret, procedure_id).to_params }
 
     before do
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}/)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/etablissements\/#{siret}/)
         .to_return(body: File.read('spec/fixtures/files/api_entreprise/etablissements_private.json', status: 200))
     end
 
@@ -113,7 +114,7 @@ describe APIEntreprise::EtablissementAdapter do
     subject { described_class.new(bad_siret, procedure_id).to_params }
 
     before do
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{bad_siret}/)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/etablissements\/#{bad_siret}/)
         .to_return(body: 'Fake body', status: 404)
     end
 

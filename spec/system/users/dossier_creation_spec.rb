@@ -67,7 +67,7 @@ describe 'Creating a new dossier:' do
       let(:dossier) { procedure.dossiers.last }
 
       before do
-        stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}/)
+        stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/etablissements\/#{siret}/)
           .to_return(status: 200, body: File.read('spec/fixtures/files/api_entreprise/etablissements.json'))
         stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/unites_legales\/#{siren}/)
           .to_return(status: 200, body: File.read('spec/fixtures/files/api_entreprise/entreprises.json'))
@@ -96,7 +96,7 @@ describe 'Creating a new dossier:' do
         click_on 'Valider'
 
         expect(page).to have_current_path(etablissement_dossier_path(dossier))
-        expect(page).to have_content('OCTO TECHNOLOGY')
+        expect(page).to have_content('Coiff Land, CoiffureLand')
         click_on 'Continuer avec ces informations'
 
         expect(page).to have_current_path(brouillon_dossier_path(dossier))

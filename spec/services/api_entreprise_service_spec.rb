@@ -14,13 +14,13 @@ describe APIEntrepriseService do
 
   describe '#create_etablissement' do
     before do
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}/)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/etablissements\/#{siret}/)
         .to_return(body: etablissements_body, status: etablissements_status)
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/unites_legales\/#{siret[0..8]}/)
         .to_return(body: entreprises_body, status: entreprises_status)
     end
 
-    let(:siret) { '41816609600051' }
+    let(:siret) { '30613890001294' }
     let(:raison_sociale) { "DIRECTION INTERMINISTERIELLE DU NUMERIQUE" }
     let(:etablissements_status) { 200 }
     let(:etablissements_body) { File.read('spec/fixtures/files/api_entreprise/etablissements.json') }
