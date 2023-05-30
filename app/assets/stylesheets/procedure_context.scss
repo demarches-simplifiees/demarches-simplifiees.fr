@@ -2,7 +2,6 @@
 @import "constants";
 
 $procedure-context-breakpoint: $two-columns-breakpoint;
-$procedure-description-line-height: 22px;
 
 .procedure-preview {
   .paperless-logo {
@@ -31,23 +30,6 @@ $procedure-description-line-height: 22px;
     font-size: 12px;
   }
 
-  .procedure-title {
-    font-size: 26px;
-    margin: 0 0 20px 0;
-    text-align: center;
-
-    @media (min-width: $procedure-context-breakpoint) {
-      margin: 50px 0 32px;
-      font-size: 30px;
-      text-align: left;
-    }
-  }
-
-  .procedure-configuration {
-    font-size: 20px;
-    margin-bottom: 32px;
-  }
-
   .procedure-configuration--auto-archive {
     cursor: pointer;
 
@@ -72,39 +54,8 @@ $procedure-description-line-height: 22px;
     border-bottom: 1px dotted $blue-france-500;
   }
 
-  .read-more-button {
-    display: none;
-  }
-
-  @media (max-width: $procedure-context-breakpoint) {
-    // Truncate description and display the "Read more" UI if the text is too long
-    .procedure-description-body.read-more-collapsed {
-      // Setting the description at 25% of the viewport height:
-      // - displays more text on screens having more vertical space (like small tablets);
-      // - is enough for the action buttons to be visible on the bottom (even on mobiles).
-      max-height: 25vh;
-
-      // If the text exceeds the max-height,
-      // truncate it and displays the "Read more" button.
-      &.read-more-enabled {
-        overflow: auto;
-        border-bottom: 1px solid $border-grey;
-
-        + .read-more-button {
-          display: block;
-          position: relative;
-          margin-left: auto;
-          margin-right: auto;
-          top: -19px;
-          margin-bottom: -19px;
-        }
-      }
-    }
-  }
-
   .procedure-logos {
     display: flex;
-    justify-content: space-around;
     align-items: center;
     margin-bottom: 20px;
 
@@ -116,16 +67,8 @@ $procedure-description-line-height: 22px;
       max-width: 100%;
       max-height: 50px;
 
-      // Fix Chrome flexbox issue
-      // See https://github.com/philipwalton/flexbugs/issues/225
-      width: 100%;
-      height: 100%;
-      min-width: 0;
-      object-fit: contain;
-
       @media (min-width: $procedure-context-breakpoint) {
-        max-width: 500px;
-        max-height: 130px;
+        max-height: 90px;
       }
     }
   }

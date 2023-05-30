@@ -3,7 +3,7 @@ class Users::SessionsController < Devise::SessionsController
   include TrustedDeviceConcern
   include ActionView::Helpers::DateHelper
 
-  layout 'procedure_context', only: [:new, :create]
+  layout 'login', only: [:new, :create]
 
   before_action :restore_procedure_context, only: [:new, :create]
 

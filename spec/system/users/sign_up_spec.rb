@@ -70,7 +70,6 @@ describe 'Signing up:' do
 
       click_on 'Créer un compte'
       expect(page).to have_current_path new_user_registration_path
-      expect(page).to have_procedure_description(procedure)
 
       sign_up_with user_email, user_password
       expect(page).to have_content "nous avons besoin de vérifier votre adresse #{user_email}"
@@ -84,7 +83,7 @@ describe 'Signing up:' do
       click_on 'Commencer la démarche'
 
       expect(page).to have_current_path identite_dossier_path(procedure.reload.dossiers.last)
-      expect(page).to have_procedure_description(procedure)
+      expect(page).to have_content(procedure.libelle)
     end
   end
 
@@ -141,7 +140,6 @@ describe 'Signing up:' do
       click_procedure_sign_in_link_for user_email
 
       expect(page).to have_current_path new_user_session_path
-      expect(page).to have_procedure_description(procedure)
     end
   end
 end

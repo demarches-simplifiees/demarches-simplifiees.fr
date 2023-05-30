@@ -5,23 +5,37 @@
   = image_tag procedure.logo_url, alt: procedure_logo_alt
   - if procedure.euro_flag
     = image_tag("flag_of_europe.svg", id: 'euro_flag', class: (!procedure.euro_flag ? "hidden" : ""))
-%h1.procedure-title
+%h1.procedure-title.fr-h2
   = procedure.libelle
 
 - if procedure.persisted? && procedure.estimated_duration_visible?
-  %p.procedure-configuration.procedure-configuration--fill-duration
-    %span.icon.clock
-    = t('shared.procedure_description.estimated_fill_duration', estimated_minutes: estimated_fill_duration_minutes(procedure))
+  %p
+    %small
+      %span.fr-icon-timer-line
+      = t('shared.procedure_description.estimated_fill_duration', estimated_minutes: estimated_fill_duration_minutes(procedure))
+
+
+= yield
 
 - if procedure.auto_archive_on
-  %details.procedure-configuration.procedure-configuration--auto-archive
+  %details.procedure-configuration--auto-archive
     %summary
       %span.icon.edit
 
       %span.procedure-auto-archive-title Date limite : #{procedure_auto_archive_date(procedure)}
     %p Vous pouvez déposer vos dossiers jusqu’au #{procedure_auto_archive_datetime(procedure)}.
 
-.procedure-description
-  .procedure-description-body.read-more-enabled.read-more-collapsed{ tabindex: "0", role: "region", "aria-label": t('views.users.dossiers.identite.description') }
-    = h render SimpleFormatComponent.new(procedure.description, allow_a: true)
-  = button_tag "Afficher la description complète", class: 'button read-more-button'
+- unless @no_description
+  .fr-accordions-group
+    %section.fr-accordion
+      %h2.fr-accordion__title
+        %button.fr-accordion__btn{ "aria-controls" => "accordion-114", "aria-expanded" => "true" } Quel est l’objet de cette démarche ?
+      #accordion-114.fr-collapse.js_description
+        = h render SimpleFormatComponent.new(procedure.description, allow_a: true)
+
+    - if procedure.description_target_audience.present?
+      %section.fr-accordion
+        %h2.fr-accordion__title
+          %button.fr-accordion__btn{ "aria-controls" => "accordion-115", "aria-expanded" => "false" } À qui s’adresse la démarche ?
+        #accordion-115.fr-collapse.js_description_target_audience
+          = h render SimpleFormatComponent.new(procedure.description_target_audience, allow_a: true)

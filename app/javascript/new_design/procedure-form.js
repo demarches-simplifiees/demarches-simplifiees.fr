@@ -10,8 +10,17 @@ function syncInputToElement(fromSelector, toSelector) {
 
 function syncFormToPreview() {
   syncInputToElement('#procedure_libelle', '.procedure-title');
-  syncInputToElement('#procedure_description', '.procedure-description-body');
+  syncInputToElement('#procedure_description', '.js_description p');
+  syncInputToElement(
+    '#procedure_description_target_audience',
+    '.js_description_target_audience p'
+  );
 }
 
 delegate('input', '.procedure-form #procedure_libelle', syncFormToPreview);
 delegate('input', '.procedure-form #procedure_description', syncFormToPreview);
+delegate(
+  'input',
+  '.procedure-form #procedure_description_target_audience',
+  syncFormToPreview
+);
