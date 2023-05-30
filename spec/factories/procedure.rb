@@ -13,6 +13,7 @@ FactoryBot.define do
     ask_birthday { false }
     lien_site_web { "https://mon-site.gouv" }
     path { SecureRandom.uuid }
+    sva_svr { {} }
 
     groupe_instructeurs { [association(:groupe_instructeur, :default, procedure: instance, strategy: :build)] }
     administrateurs { administrateur.present? ? [administrateur] : [association(:administrateur)] }
