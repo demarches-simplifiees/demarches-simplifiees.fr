@@ -5,7 +5,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # before_action :configure_account_update_params, only: [:update]
   before_action :restore_procedure_context, only: [:new, :create]
 
-  layout 'procedure_context', only: [:new, :create]
+  layout 'login', only: [:new, :create]
 
   # GET /resource/sign_up
   def new

@@ -457,6 +457,7 @@ module Administrateurs
       editable_params = [
         :libelle,
         :description,
+        :description_target_audience,
         :organisation,
         :direction,
         :lien_site_web,
