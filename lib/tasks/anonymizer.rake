@@ -156,7 +156,7 @@ namespace :anonymizer do
                                                                                     END'",
       "SECURITY LABEL FOR anon ON COLUMN instructeurs.agent_connect_id IS 'MASKED WITH VALUE CASE
                                                                            WHEN agent_connect_id IS NULL THEN NULL
-                                                                           ELSE $$REDACTED$$
+                                                                           ELSE CONCAT(id, $$+REDACTED$$)
                                                                            END'",
       "SECURITY LABEL FOR anon ON COLUMN instructeurs.encrypted_login_token IS 'MASKED WITH VALUE $$REDACTED$$'",
       "SECURITY LABEL FOR anon ON COLUMN invites.message IS 'MASKED WITH VALUE CASE
