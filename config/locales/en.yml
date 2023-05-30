@@ -448,7 +448,7 @@ en:
         demande:
           edit_dossier: "Edit file"
         search:
-          search_file: Search a file
+          search_file: Search a file (File number, keywords)
           simple: Search
         secondary_menu: Secondary menu
         index:
