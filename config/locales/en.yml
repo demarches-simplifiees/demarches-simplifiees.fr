@@ -448,7 +448,6 @@ en:
         demande:
           edit_dossier: "Edit file"
         search:
-          placeholder: File number, keywords
           search_file: Search a file (File number, keywords)
           simple: Search
         secondary_menu: Secondary menu
