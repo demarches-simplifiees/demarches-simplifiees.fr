@@ -1,4 +1,10 @@
 {
-  "url":
-  "https://storage.entreprise.api.gouv.fr/siade/1569156756-f6b7779f99fa95cd60dc03c04fcb-attestation_fiscale_dgfip.pdf"
+  "data": {
+    "document_url": "https://storage.entreprise.api.gouv.fr/siade/1569139162-b99824d9c764aae19a862a0af-attestation_fiscale_dgfip.pdf",
+    "document_url_expires_in": 86400,
+    "date_delivrance_attestation": "2023-04-11",
+    "date_periode_analysee": "2023-03-31"
+  },
+  "links": {},
+  "meta": {}
 }
