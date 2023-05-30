@@ -6,9 +6,11 @@ namespace :anonymizer do
   desc "Inject pg_anonymizer dynamic rules. Rules can evolve over time so this tas is idempotent."
   task setup_rules: :environment do
     # First check if pg_anonymizer is installed
+    dry_run = ENV["DRY_RUN"] == "1"
+
     result = ActiveRecord::Base.connection.execute "SELECT 1 as one FROM pg_extension WHERE extname = 'anon';"
 
-    if result.count.zero?
+    if result.count.zero? && !dry_run
       puts "Skip anonymizer:setup_rules because `anon` pg extension is not installed on this server."
       next
     end
@@ -197,11 +199,14 @@ namespace :anonymizer do
 
     # Wrap in transaction to ensure previous rules won't be removed in case of error
     ActiveRecord::Base.transaction do
-      ActiveRecord::Base.connection.execute "SELECT anon.remove_masks_for_all_columns()"
+      sql_rules.prepend "SELECT anon.remove_masks_for_all_columns()"
 
       sql_rules.each do |sql|
-        # puts "#{sql};"
-        ActiveRecord::Base.connection.execute sql
+        if dry_run
+          puts "#{sql};"
+        else
+          ActiveRecord::Base.connection.execute sql
+        end
       rescue StandardError
         puts sql
         raise
