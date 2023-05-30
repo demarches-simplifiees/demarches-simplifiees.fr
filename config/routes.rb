@@ -322,6 +322,7 @@ Rails.application.routes.draw do
         get 'modifier', to: 'dossiers#modifier'
         post 'modifier', to: 'dossiers#submit_en_construction'
         patch 'modifier', to: 'dossiers#modifier_legacy'
+        get 'champs/:champ_id', to: 'dossiers#champ', as: :champ
         get 'merci'
         get 'demande'
         get 'messagerie'
@@ -434,6 +435,7 @@ Rails.application.routes.draw do
             get 'avis'
             get 'avis_new'
             get 'personnes-impliquees' => 'dossiers#personnes_impliquees'
+            get 'annotations/:annotation_id', to: 'dossiers#annotation', as: :annotation
             patch 'follow'
             patch 'unfollow'
             patch 'archive'

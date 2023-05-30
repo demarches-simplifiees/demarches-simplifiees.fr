@@ -6,11 +6,11 @@ module Users
     layout 'procedure_context', only: [:identite, :update_identite, :siret, :update_siret]
 
     ACTIONS_ALLOWED_TO_ANY_USER = [:index, :recherche, :new, :transferer_all]
-    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :destroy, :demande, :messagerie, :brouillon, :submit_brouillon, :submit_en_construction, :modifier, :modifier_legacy, :update, :create_commentaire, :papertrail, :restore]
+    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :destroy, :demande, :messagerie, :brouillon, :submit_brouillon, :submit_en_construction, :modifier, :modifier_legacy, :update, :create_commentaire, :papertrail, :restore, :champ]
 
     before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
     before_action :ensure_ownership_or_invitation!, only: ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
-    before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_siret, :brouillon, :submit_brouillon, :submit_en_construction, :modifier, :modifier_legacy, :update]
+    before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_siret, :brouillon, :submit_brouillon, :submit_en_construction, :modifier, :modifier_legacy, :update, :champ]
     before_action :ensure_dossier_can_be_filled, only: [:brouillon, :modifier, :submit_brouillon, :submit_en_construction, :update]
     before_action :ensure_dossier_can_be_viewed, only: [:show]
     before_action :forbid_invite_submission!, only: [:submit_brouillon]
@@ -274,6 +274,20 @@ module Users
       @dossier = current_user.dossiers.includes(:procedure).find(params[:id])
     end
 
+    def champ
+      @dossier = dossier_with_champs(pj_template: false)
+      champ = @dossier.champs_public_all.find(params[:champ_id])
+
+      respond_to do |format|
+        format.turbo_stream do
+          @to_show, @to_hide = []
+          @to_update = [champ]
+
+          render :update, layout: false
+        end
+      end
+    end
+
     def create_commentaire
       @commentaire = CommentaireService.create(current_user, dossier, commentaire_params)
 
@@ -465,7 +479,7 @@ module Users
     end
 
     def dossier_scope
-      if action_name == 'update'
+      if action_name == 'update' || action_name == 'champ'
         Dossier.visible_by_user.or(Dossier.for_procedure_preview).or(Dossier.for_editing_fork)
       elsif action_name == 'restore'
         Dossier.hidden_by_user
