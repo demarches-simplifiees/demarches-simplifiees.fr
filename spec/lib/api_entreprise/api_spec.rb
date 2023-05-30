@@ -115,7 +115,7 @@ describe APIEntreprise::API do
 
   describe '.exercices' do
     before do
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/exercices\//)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/dgfip\/etablissements\/#{siret}\/chiffres_affaires/)
         .to_return(status: status, body: body)
       allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
     end
