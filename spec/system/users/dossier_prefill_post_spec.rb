@@ -47,7 +47,7 @@ describe 'Prefilling a dossier (with a POST request):', js: true do
     stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/unites_legales\/#{siret_value[0..8]}/)
       .to_return(status: 200, body: File.read('spec/fixtures/files/api_entreprise/entreprises.json'))
 
-    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/associations\//)
+    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v4\/djepva\/api-association\/associations\/open_data\/#{rna_value}/)
       .to_return(status: 200, body: File.read('spec/fixtures/files/api_entreprise/associations.json'))
   end
 

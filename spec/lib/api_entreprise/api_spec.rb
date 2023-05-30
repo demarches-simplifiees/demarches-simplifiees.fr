@@ -147,7 +147,7 @@ describe APIEntreprise::API do
 
   describe '.rna' do
     before do
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/associations\//)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v4\/djepva\/api-association\/associations\/open_data\/#{siren}/)
         .to_return(status: status, body: body)
       allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
     end

@@ -1,11 +1,6 @@
-require 'json_schemer'
-
 class APIEntreprise::RNAAdapter < APIEntreprise::Adapter
-  class InvalidSchemaError < ::StandardError
-    def initialize(errors)
-      super(errors.map(&:to_json).join("\n"))
-    end
-  end
+  # Doc métier : https://entreprise.api.gouv.fr/catalogue/djepva/associations_open_data
+  # Swagger : https://entreprise.api.gouv.fr/developpeurs/openapi#tag/Informations-generales/paths/~1v4~1djepva~1api-association~1associations~1open_data~1%7Bsiren_or_rna%7D/get
 
   private
 
@@ -14,39 +9,21 @@ class APIEntreprise::RNAAdapter < APIEntreprise::Adapter
   end
 
   def process_params
-    params = data_source[:association]
-    return {} if params.nil?
+    data = data_source[:data]
+    return {} if data.nil?
 
     Sentry.with_scope do |scope|
       scope.set_tags(siret: @siret)
-      scope.set_extras(source: params)
+      scope.set_extras(source: data)
 
-      params = params.slice(*attr_to_fetch) if @depreciated
-      params[:rna] = data_source.dig(:association, :id)
-
-      if params[:rna].present? && valid_params?(params)
-        params = params.transform_keys { |k| :"association_#{k}" }.deep_stringify_keys
-
-        raise InvalidSchemaError.new(schemer.validate(params).to_a) unless schemer.valid?(params)
-
-        params
-      else
-        {}
-      end
+      {
+        "association_rna" => data[:rna],
+        "association_titre" => data[:nom],
+        "association_objet" => data[:activites][:objet],
+        "association_date_creation" => data[:date_creation],
+        "association_date_declaration" => data[:date_publication_journal_officiel],
+        "association_date_publication" => data[:date_publication_journal_officiel]
+      }
     end
-  end
-
-  def schemer
-    @schemer ||= JSONSchemer.schema(Rails.root.join('app/schemas/association.json'))
-  end
-
-  def attr_to_fetch
-    [
-      :titre,
-      :objet,
-      :date_creation,
-      :date_declaration,
-      :date_publication
-    ]
   end
 end
