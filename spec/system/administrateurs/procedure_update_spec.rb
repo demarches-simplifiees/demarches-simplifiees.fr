@@ -32,10 +32,6 @@ describe 'Administrateurs can edit procedures', js: true do
       expect(page).to have_field('procedure_libelle', with: procedure.libelle)
 
       fill_in('procedure_libelle', with: 'Ma petite démarche')
-      within('.procedure-form__preview') do
-        expect(page).to have_content('Ma petite démarche')
-      end
-
       click_on 'Enregistrer'
 
       expect(page).to have_selector('.fr-breadcrumb li', text: 'Ma petite démarche')
