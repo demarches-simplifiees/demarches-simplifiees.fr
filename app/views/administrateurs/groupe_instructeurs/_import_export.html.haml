@@ -1,0 +1,28 @@
+- key = @procedure.groupe_instructeurs.one? ? 'instructeurs' : 'groupes'
+%section.fr-accordion.fr-mb-3w
+  %h3.fr-accordion__title
+    %button.fr-accordion__btn{ "aria-controls" => "accordion-106", "aria-expanded" => "false" }
+      = t(".csv_import.#{key}.title")
+  .fr-collapse#accordion-106
+    - csv_max_size = Administrateurs::GroupeInstructeursController::CSV_MAX_SIZE
+    - if procedure.publiee_or_close?
+      %p.notice
+        = t(".csv_import.#{key}.notice_1_html", csv_max_size: number_to_human_size(csv_max_size))
+      %p.notice
+        = t(".csv_import.#{key}.notice_2")
+      = form_tag import_admin_procedure_groupe_instructeurs_path(@procedure), method: :post, multipart: true, class: "mt-4 form flex justify-between align-center" do
+        = file_field_tag :csv_file, required: true, accept: 'text/csv', size: "1"
+        = submit_tag t('.csv_import.import_file'), class: 'fr-btn fr-btn--secondary', data: { disable_with: "Envoi...", confirm: t('.csv_import.import_file_alert') }
+    - else
+      %p.mt-4.form.font-weight-bold.mb-2.text-lg
+        = t(".csv_import.#{key}.title")
+      %p.notice
+        = t('.csv_import.import_file_procedure_not_published')
+    - if groupe_instructeurs.many?
+      .flex.justify-between.align-center.mt-4
+        %div
+          = t(".existing_groupe", count: groupe_instructeurs.total_count)
+        = button_to "Exporter au format CSV",
+          export_groupe_instructeurs_admin_procedure_groupe_instructeurs_path(@procedure, format: :csv),
+          method: :get,
+          class: 'fr-btn fr-btn--secondary'

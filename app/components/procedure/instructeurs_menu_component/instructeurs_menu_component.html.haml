@@ -1,0 +1,7 @@
+.container
+  .fr-grid-row
+    .fr-col.fr-col-12.fr-col-md-3
+      = render(Dsfr::SidemenuComponent.new) do |component|
+        - component.with_links(links)
+    .fr-col= content
+

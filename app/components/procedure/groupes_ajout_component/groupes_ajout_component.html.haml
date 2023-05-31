@@ -1,0 +1,15 @@
+- content_for(:title, 'Ajout de groupes')
+%h1 Ajout de groupes d'instructeurs
+
+= render partial: 'administrateurs/groupe_instructeurs/import_export',
+    locals: { procedure: @procedure,
+    groupe_instructeurs: @groupe_instructeurs }
+
+%section
+  = form_for :groupe_instructeur,
+    method: :post do |f|
+    = f.label :label, class: 'fr-label fr-mb-1w' do
+      = t('.add_a_group.title')
+    .flex.justify-between.align-baseline.fr-mb-1w
+      = f.text_field :label, required: true, class: 'fr-input', placeholder: 'Entrer un nom de groupe'
+      = f.button t('.button.add_group'), class: "fr-btn fr-btn fr-btn--secondary fr-btn--icon-right fr-icon-add-line ml-2"

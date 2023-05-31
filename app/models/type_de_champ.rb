@@ -131,6 +131,7 @@ class TypeDeChamp < ApplicationRecord
   has_one :procedure, through: :revision
 
   delegate :estimated_fill_duration, :estimated_read_duration, :tags_for_template, :libelle_for_export, to: :dynamic_type
+  delegate :used_by_routing_rules?, to: :revision_type_de_champ
 
   class WithIndifferentAccess
     def self.load(options)

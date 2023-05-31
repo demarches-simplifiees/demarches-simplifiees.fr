@@ -24,6 +24,7 @@ fr:
     update_type_champ: Le type du champ « %{label} » a été modifié. Il est maintenant de type « %{to} ».
     update_piece_justificative_template: Le modèle de pièce justificative du champ « %{label} » a été modifié.
     update_drop_down_options: "Les options de sélection du champ « %{label} » ont été modifiées :"
+    update_drop_down_options_alert: "Le champ « %{label} » est utilisé pour le routage des dossiers. Veuillez mettre à jour la configuration des groupes d'instructeurs après avoir publié les modifications."
     enable_mandatory: Le champ « %{label} » est maintenant obligatoire.
     disable_mandatory: Le champ « %{label} » n’est plus obligatoire.
     enable_drop_down_other: Le champ « %{label} » comporte maintenant un choix « Autre ».

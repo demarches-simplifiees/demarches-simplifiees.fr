@@ -412,16 +412,6 @@ describe Users::DossiersController, type: :controller do
       it { expect(flash.alert).to eq(["Le champ « l » doit être rempli, #{anchor_to_first_champ}"]) }
     end
 
-    context 'when a dossier is invalid' do
-      before do
-        allow_any_instance_of(Dossier).to receive(:groupe_instructeur).and_return(double(nil?: true))
-        subject
-      end
-
-      it { expect(response).to render_template(:brouillon) }
-      it { expect(flash.alert).to eq(["Le champ « Votre ville » doit être rempli"]) }
-    end
-
     context 'when dossier has no champ' do
       let(:submit_payload) { { id: dossier.id } }
 

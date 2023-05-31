@@ -1,4 +1,4 @@
-describe Procedure::RoutingRulesComponent, type: :component do
+describe Procedure::OneGroupeManagementComponent, type: :component do
   include Logic
 
   describe 'render' do
@@ -9,16 +9,7 @@ describe Procedure::RoutingRulesComponent, type: :component do
 
     subject do
       render_inline(described_class.new(revision: procedure.active_revision,
-        groupe_instructeurs: procedure.groupe_instructeurs))
-    end
-
-    context 'when there are no types de champ that can be routed' do
-      before do
-        procedure.publish_revision!
-        procedure.reload
-        subject
-      end
-      it { expect(page).to have_text('Ajoutez ce champ dans la page') }
+        groupe_instructeur: procedure.defaut_groupe_instructeur))
     end
 
     context 'when there are types de champ that can be routed' do
@@ -32,7 +23,7 @@ describe Procedure::RoutingRulesComponent, type: :component do
         procedure.reload
         subject
       end
-      it { expect(page).to have_text('Router vers') }
+      it { expect(page).to have_text('à configurer') }
     end
   end
 end

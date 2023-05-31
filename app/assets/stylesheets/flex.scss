@@ -42,6 +42,10 @@
   &.row-reverse {
     flex-direction: row-reverse;
   }
+
+  &.auto {
+    flex: auto;
+  }
 }
 
 .flex-grow {

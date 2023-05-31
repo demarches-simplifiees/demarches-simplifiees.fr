@@ -1,0 +1,27 @@
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [[t('.procedures'), admin_procedures_path],
+                    [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
+                    ['Groupes', admin_procedure_groupe_instructeurs_path(@procedure)],
+                    ['Routage à partir d’un champ']] }
+
+= render Procedure::InstructeursMenuComponent.new(procedure: @procedure) do
+  - content_for(:title, 'Routage')
+  %h1 Routage à partir d’un champ
+  = form_for :create_simple_routing,
+    method: :post,
+    data: { controller: 'radio-enabled-submit' },
+    url: create_simple_routing_admin_procedure_groupe_instructeurs_path(@procedure) do |f|
+
+    %div{ data: { 'action': "click->radio-enabled-submit#click" } }
+      .notice
+        Sélectionner le champ à partir duquel créer des groupes d'instructeurs
+      - buttons_content = @procedure.active_revision.routable_types_de_champ.map { |tdc| { label: tdc.libelle, value: tdc.stable_id } }
+      = render Dsfr::RadioButtonListComponent.new(form: f,
+        target: :stable_id,
+        buttons: buttons_content)
+
+      %ul.fr-btns-group.fr-btns-group--inline-sm
+        %li
+          = link_to 'Retour', options_admin_procedure_groupe_instructeurs_path(@procedure, state: :choix), class: 'fr-btn fr-btn--secondary'
+        %li
+          %button.fr-btn{ disabled: true,  data: { 'radio-enabled-submit-target': 'submit' } } Créer les groupes

@@ -1,0 +1,40 @@
+- content_for(:title, 'Groupes')
+%h1 Gestion des groupes
+
+= render Procedure::GroupesSearchComponent.new(procedure: @procedure, query: @query, to_configure_count: @procedure.groupe_instructeurs.filter(&:routing_to_configure?).count)
+
+.fr-table.fr-table--no-caption.fr-table--layout-fixed.fr-mt-2w
+  %table
+    %caption= table_header
+    %thead
+      %tr
+        %th{ scope: "col" }
+          .flex
+            .flex.auto= table_header
+            %span.fr-icon.fr-icon-user-line
+    %tbody
+      - @groupe_instructeurs.each do |gi|
+        %tr
+          %td
+            .flex
+              .flex.auto
+                = link_to admin_procedure_groupe_instructeur_path(@procedure, gi), class: 'fr-link' do
+                  %span= gi.label
+                - if gi.closed
+                  %p.fr-badge.fr-badge--info.fr-badge--sm.fr-ml-1w inactif
+                - elsif gi.routing_to_configure?
+                  %p.fr-badge.fr-badge--warning.fr-badge--sm.fr-ml-1w à configurer
+
+              %div{ style: 'width: 25px; text-align: center;' }
+                #{gi.instructeurs.count}
+            %p= gi.routing_rule&.to_s(@procedure.active_revision.types_de_champ)
+  .fr-mt-1w
+    = paginate @groupe_instructeurs
+
+= form_tag admin_procedure_update_defaut_groupe_instructeur_path,
+  class: 'fr-my-3w',
+  data: { controller: 'autosave' } do
+  = label_tag :defaut_groupe_instructeur_id, 'Et si aucune règle ne correspond, router vers :', class: 'fr-label'
+  = select_tag :defaut_groupe_instructeur_id,
+    options_for_select(@procedure.groupe_instructeurs.pluck(:label, :id), selected: @procedure.defaut_groupe_instructeur.id),
+    class: 'fr-select'
