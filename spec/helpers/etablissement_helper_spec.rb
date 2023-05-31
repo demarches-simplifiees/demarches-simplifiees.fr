@@ -24,6 +24,25 @@ RSpec.describe EtablissementHelper, type: :helper do
     it { is_expected.to eq("123 456 789 00001") }
   end
 
+  describe "#extract_resultat_exercice" do
+    let(:bilan) { bilans.first }
+    context 'having results' do
+      let(:bilans) { JSON.parse(File.read('spec/fixtures/files/api_entreprise/bilans_entreprise_bdf_with_bilans.json'))["data"] }
+
+      it 'find value' do
+        expect(extract_resultat_exercice(bilan["data"])).to eq("97065000")
+      end
+    end
+
+    context 'without results' do
+      let(:bilans) { JSON.parse(File.read('spec/fixtures/files/api_entreprise/bilans_entreprise_bdf.json'))["data"] }
+
+      it 'does not crash' do
+        expect(extract_resultat_exercice(bilan["data"])).to eq(nil)
+      end
+    end
+  end
+
   describe '#raison_sociale_or_name' do
     subject { raison_sociale_or_name(etablissement) }
 

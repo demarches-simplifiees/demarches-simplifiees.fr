@@ -239,7 +239,7 @@ describe APIEntreprise::API do
     before do
       allow_any_instance_of(APIEntrepriseToken).to receive(:roles).and_return(roles)
       allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/bilans_entreprises_bdf\/#{siren}/)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/banque_de_france\/unites_legales\/#{siren}\/bilans/)
         .to_return(body: body, status: status)
     end
 

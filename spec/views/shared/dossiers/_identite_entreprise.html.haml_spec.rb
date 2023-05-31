@@ -3,7 +3,6 @@ describe 'shared/dossiers/identite_entreprise', type: :view do
   let(:profile) { 'usager' }
 
   context "there is an association" do
-
     let(:etablissement) { create(:etablissement, :is_association) }
 
     context "date_publication is missing on rna" do
