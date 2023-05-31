@@ -29,7 +29,7 @@ describe APIEntreprise::RNAAdapter do
       expect(subject["association_rna"]).to eq("W751080001")
       expect(subject["association_titre"]).to eq("LA PRÉVENTION ROUTIERE")
       expect(subject["association_objet"]).to eq("L'association a pour objet de promouvoir la pratique du sport de haut niveau et de contribuer à la formation des jeunes sportifs.")
-      expect(subject["association_date_declaration"]).to eq("2018-01-01")
+      expect(subject["association_date_declaration"]).to eq("2019-01-01")
       expect(subject["association_date_publication"]).to eq("2018-01-01")
     end
   end
