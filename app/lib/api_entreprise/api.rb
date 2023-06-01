@@ -4,7 +4,7 @@ class APIEntreprise::API
   EXTRAIT_KBIS_NAME = "v3/infogreffe/rcs/unites_legales/%{id}/extrait_kbis"
   TVA_NAME = "v3/european_commission/unites_legales/%{id}/numero_tva"
   EXERCICES_RESOURCE_NAME = "v3/dgfip/etablissements/%{id}/chiffres_affaires"
-  RNA_RESOURCE_NAME = "v2/associations/%{id}"
+  RNA_RESOURCE_NAME = "v4/djepva/api-association/associations/open_data/%{id}"
   EFFECTIFS_RESOURCE_NAME = "v2/effectifs_mensuels_acoss_covid"
   EFFECTIFS_ANNUELS_RESOURCE_NAME = "v2/effectifs_annuels_acoss_covid/%{id}"
   ATTESTATION_SOCIALE_RESOURCE_NAME = "v4/urssaf/unites_legales/%{id}/attestation_vigilance"
