@@ -7,7 +7,7 @@ describe APIEntreprise::BilansBdfAdapter do
   subject { adapter.to_params }
 
   before do
-    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/bilans_entreprises_bdf\/#{siren}/)
+    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/banque_de_france\/unites_legales\/#{siren}\/bilans/)
       .to_return(body: body, status: status)
     allow_any_instance_of(APIEntrepriseToken).to receive(:roles).and_return(["bilans_entreprise_bdf"])
     allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
@@ -22,7 +22,7 @@ describe APIEntreprise::BilansBdfAdapter do
     end
 
     it "returns bilans bdf" do
-      expect(subject[:entreprise_bilans_bdf][0][:valeur_ajoutee_bdf]).to eq("7848792")
+      expect(subject[:entreprise_bilans_bdf][0][:data][:valeurs_calculees][0][:excedent_brut_exploitation][:valeur]).to eq "9001"
     end
   end
 end

@@ -1,14 +1,39 @@
 module EtablissementHelper
+  def value_for_bilan_key(bilan, key)
+    if bilan_v3?(bilan)
+      return extract_resultat_exercice(bilan['data']) if key == "resultat_exercice"
+      bilan["data"][key].presence || bilan["data"]["valeurs_calculees"][0][key].present? ? bilan["data"]["valeurs_calculees"][0][key]["valeur"] : nil
+    else
+      bilan[key]
+    end
+  end
+
+  # trouver la declaration 2051, et prendre la premiere valeur du bilan identifié par le code code_nref: 300476
+  # autrement connu comme le resultat d'un exercice dans un bilan comptable "funky magic accountant lingo"
+  def extract_resultat_exercice(bilan)
+    declaration_2051 = bilan.dig('declarations').find { _1["numero_imprime"] == "2051" }
+    return nil if declaration_2051.nil?
+
+    total_general_data = declaration_2051.dig("donnees").find { _1["code_nref"] == "300476" }
+    return nil if total_general_data.nil?
+
+    total_general_data.dig("valeurs", 0)
+  end
+
+  def bilan_v3?(bilan)
+    bilan&.key?("data")
+  end
+
   def pretty_siret(siret)
     "#{siret[0..2]} #{siret[3..5]} #{siret[6..8]} #{siret[9..]}"
   end
 
-  def pretty_currency(capital_social, unit: '€')
-    number_to_currency(capital_social, locale: :fr, unit: unit, precision: 0)
+  def pretty_currency(value, unit: '€')
+    number_to_currency(value, locale: :fr, unit: unit, precision: 0)
   end
 
   def pretty_currency_unit(unit)
-    dict = { 'kEuros' => 'k€' }
+    dict = { 'kEuros' => 'k€', 'euros' => '€' }
     dict[unit]
   end
 
