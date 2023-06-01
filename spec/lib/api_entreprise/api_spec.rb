@@ -87,7 +87,7 @@ describe APIEntreprise::API do
   describe '.etablissement' do
     subject { described_class.new(procedure_id).etablissement(siret) }
     before do
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*non_diffusables=true/)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/etablissements\/#{siret}?.*non_diffusables=true/)
         .to_return(status: status, body: body)
       allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
     end

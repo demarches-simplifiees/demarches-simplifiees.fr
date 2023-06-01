@@ -1,4 +1,7 @@
 class APIEntreprise::EtablissementAdapter < APIEntreprise::Adapter
+  # Doc Métier : https://entreprise.api.gouv.fr/catalogue/insee/etablissements
+  # Swagger : https://entreprise.api.gouv.fr/developpeurs/openapi#tag/Informations-generales/paths/~1v3~1insee~1sirene~1etablissements~1%7Bsiret%7D/get
+
   private
 
   def get_resource
@@ -6,15 +9,26 @@ class APIEntreprise::EtablissementAdapter < APIEntreprise::Adapter
   end
 
   def process_params
-    params = data_source[:etablissement].slice(*attr_to_fetch)
+    raw_data = data_source[:data]
+    Sentry.with_scope do |scope|
+      scope.set_tags(siret: @siret)
+      scope.set_extras(source: raw_data)
 
-    if valid_params?(params)
-      adresse_line = params[:adresse].slice(*address_lines_to_fetch).values.compact.join("\r\n")
-      params.merge!(params[:adresse].slice(*address_attr_to_fetch))
-      params[:adresse] = adresse_line
-      params
-    else
-      {}
+      params = raw_data.slice(*attr_to_fetch)
+      params[:naf] = raw_data.dig(:activite_principale, :code)
+      params[:libelle_naf] = raw_data.dig(:activite_principale, :libelle)
+
+      if valid_params?(params)
+        adresse_line = raw_data[:adresse][:acheminement_postal].slice(*address_lines_to_fetch).values.compact.join("\r\n")
+        params.merge!(params[:adresse].slice(*address_attr_to_fetch))
+        params[:nom_voie] = raw_data[:adresse][:libelle_voie]
+        params[:code_insee_localite] = raw_data[:adresse][:code_commune]
+        params[:localite] = raw_data[:adresse][:libelle_commune]
+        params[:adresse] = adresse_line
+        params
+      else
+        {}
+      end
     end
   end
 
@@ -23,8 +37,6 @@ class APIEntreprise::EtablissementAdapter < APIEntreprise::Adapter
       :adresse,
       :siret,
       :siege_social,
-      :naf,
-      :libelle_naf,
       :enseigne,
       :diffusable_commercialement
     ]
@@ -34,11 +46,8 @@ class APIEntreprise::EtablissementAdapter < APIEntreprise::Adapter
     [
       :numero_voie,
       :type_voie,
-      :nom_voie,
       :complement_adresse,
-      :code_postal,
-      :localite,
-      :code_insee_localite
+      :code_postal
     ]
   end
 

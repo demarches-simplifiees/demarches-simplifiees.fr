@@ -7,7 +7,7 @@ shared_examples "the user has got a prefilled dossier, owned by themselves" do
     click_on 'Valider'
 
     expect(page).to have_current_path(etablissement_dossier_path(dossier))
-    expect(page).to have_content('OCTO TECHNOLOGY')
+    expect(page).to have_content('DIRECTION INTERMINISTERIELLE DU NUMERIQUE')
     click_on 'Continuer avec ces informations'
 
     expect(page).to have_current_path(brouillon_dossier_path(dossier))
