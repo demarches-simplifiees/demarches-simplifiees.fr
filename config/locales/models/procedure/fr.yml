@@ -34,7 +34,6 @@ fr:
         declarative_with_state/en_instruction: En instruction
         declarative_with_state/accepte: Accepté
         api_particulier_token: Jeton API Particulier
-        lien_dpo: Contact du DPO
         routing_criteria_name: Nomination du routage
         initiated_mail: L’email de notification de passage de dossier en instruction
         received_mail: L’email de notification de dépot de dossier
@@ -43,6 +42,7 @@ fr:
         without_continuation_mail: L’email de notification de classement sans suite de dossier
         attestation_template: Le modèle d’attestation
         draft_revision: Le formulaire
+        auto_archive_on: Date limite de dépôt des dossiers
       procedure_export:
         id: Id
         libelle: Libelle
@@ -61,3 +61,5 @@ fr:
               format: 'L’annotation privée %{message}'
             lien_dpo:
               invalid_uri_or_email: "Veuillez saisir un mail ou un lien"
+            auto_archive_on:
+              future: doit être dans le futur

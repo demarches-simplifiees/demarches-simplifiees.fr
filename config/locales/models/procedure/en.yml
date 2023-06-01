@@ -28,7 +28,6 @@ en:
         declarative_with_state/en_instruction: Instruction
         declarative_with_state/accepte: Accepted
         api_particulier_token: Token API Particulier
-        lien_dpo: DPO contact
         routing_criteria_name: Routing criteria name
         initiated_mail: File sorted for processing notification email
         received_mail: File submitted notification email
@@ -37,6 +36,7 @@ en:
         without_continuation_mail: File sorted with no further action notification email
         attestation_template: Attestation template
         draft_revision: The form
+        auto_archive_on: Application deadline
       procedure_export:
         id: Id
         libelle: Libelle
