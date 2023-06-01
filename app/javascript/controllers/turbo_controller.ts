@@ -36,7 +36,6 @@ export class TurboController extends ApplicationController {
       element: document.body,
       schema: {
         forceAttribute: 'data-turbo-force',
-        permanentAttribute: 'data-turbo-permanent',
         focusGroupAttribute: 'data-turbo-focus-group',
         focusDirectionAttribute: 'data-turbo-focus-direction',
         hiddenClassName: 'hidden'

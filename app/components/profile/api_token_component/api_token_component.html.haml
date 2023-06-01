@@ -45,7 +45,7 @@
       = t('.action_choice')
     - @api_token.allowed_procedures.each do |procedure|
       = f.hidden_field :allowed_procedure_ids, value: procedure.id, multiple: true, id: dom_id(procedure, :allowed_procedure)
-    .flex.justify-between.align-center{ 'data-turbo-force': true }
+    .flex.justify-between.align-center{ 'data-turbo-force': :server }
       = f.select :allowed_procedure_ids, procedures_to_allow_options, {prompt: t('.prompt_choose_procedure')}, { class: 'no-margin width-66 small', name: "api_token[allowed_procedure_ids][]" }
       = f.button type: :submit, class: "fr-btn fr-btn--secondary" do
         = t('.add')
