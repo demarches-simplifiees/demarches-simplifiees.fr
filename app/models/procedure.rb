@@ -965,6 +965,14 @@ class Procedure < ApplicationRecord
     end
   end
 
+  def pieces_jointes_list
+    if publiee?
+      published_types_de_champ_public.filter(&:piece_justificative?)
+    else
+      draft_types_de_champ_public.filter(&:piece_justificative?)
+    end
+  end
+
   private
 
   def validate_auto_archive_on_in_the_future

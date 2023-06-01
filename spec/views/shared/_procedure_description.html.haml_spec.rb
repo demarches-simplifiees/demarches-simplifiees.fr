@@ -10,6 +10,7 @@ describe 'shared/_procedure_description', type: :view do
     expect(rendered).to have_text(procedure.libelle)
     expect(rendered).to have_text(procedure.description)
     expect(rendered).to have_text('Temps de remplissage estimé')
+    expect(rendered).not_to have_text('Quelles sont les pièces justificatives à fournir')
   end
 
   context 'procedure with estimated duration not visible' do
@@ -30,6 +31,24 @@ describe 'shared/_procedure_description', type: :view do
     it 'shows the auto_archive_on' do
       subject
       expect(rendered).to have_text('Date limite')
+    end
+  end
+
+  context 'when the procedure has pieces jointes' do
+    let(:procedure) { create(:procedure, :draft, :with_titre_identite, :with_piece_justificative, :with_siret) }
+    it 'shows the pieces jointes list for draft procedure' do
+      subject
+      expect(rendered).to have_text('Quelles sont les pièces justificatives à fournir')
+      expect(rendered).to have_text('Libelle du champ')
+      expect(rendered).to have_selector('.pieces_jointes ul li', count: 2)
+    end
+
+    it 'shows the pieces jointes list for published procedure' do
+      procedure.publish!
+      subject
+      expect(rendered).to have_text('Quelles sont les pièces justificatives à fournir')
+      expect(rendered).to have_text('Libelle du champ')
+      expect(rendered).to have_selector('.pieces_jointes ul li', count: 2)
     end
   end
 end

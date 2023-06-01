@@ -28,7 +28,7 @@
       %h2.fr-accordion__title
         %button.fr-accordion__btn{ "aria-controls" => "accordion-114", "aria-expanded" => "true" }
           = t('activerecord.attributes.procedure.description')
-      #accordion-114.fr-collapse.js_description
+      #accordion-114.fr-collapse
         = h render SimpleFormatComponent.new(procedure.description, allow_a: true)
 
     - if procedure.description_target_audience.present?
@@ -36,15 +36,26 @@
         %h2.fr-accordion__title
           %button.fr-accordion__btn{ "aria-controls" => "accordion-115", "aria-expanded" => "false" }
             = t('activerecord.attributes.procedure.description_target_audience')
-        #accordion-115.fr-collapse.js_description_target_audience
+        #accordion-115.fr-collapse
           = h render SimpleFormatComponent.new(procedure.description_target_audience, allow_a: true)
+
+    - if procedure.pieces_jointes_list.present?
+      %section.fr-accordion.pieces_jointes
+        %h2.fr-accordion__title
+          %button.fr-accordion__btn{ "aria-controls" => "accordion-116", "aria-expanded" => "false" }
+            = t('shared.procedure_description.pieces_jointes')
+        #accordion-116.fr-collapse
+          %ul
+            - procedure.pieces_jointes_list.each do |pj|
+              %li
+                = pj.libelle
 
     - if procedure.persisted? && procedure.estimated_duration_visible?
       %section.fr-accordion
         %h2.fr-accordion__title
-          %button.fr-accordion__btn{ "aria-controls" => "accordion-116", "aria-expanded" => "false" }
+          %button.fr-accordion__btn{ "aria-controls" => "accordion-117", "aria-expanded" => "false" }
             = t('shared.procedure_description.estimated_fill_duration_title')
-        #accordion-116.fr-collapse.js_description_target_audience
+        #accordion-117.fr-collapse
           = t('shared.procedure_description.estimated_fill_duration_detail', estimated_minutes: estimated_fill_duration_minutes(procedure))
 
 - if procedure.notice.attached?
