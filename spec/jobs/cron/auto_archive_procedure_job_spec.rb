@@ -1,9 +1,16 @@
 RSpec.describe Cron::AutoArchiveProcedureJob, type: :job do
   let!(:procedure) { create(:procedure, :published, :with_instructeur, auto_archive_on: nil) }
-  let!(:procedure_hier) { create(:procedure, :published, :with_instructeur, auto_archive_on: 1.day.ago.to_date) }
-  let!(:procedure_aujourdhui) { create(:procedure, :published, :with_instructeur, auto_archive_on: Time.zone.today) }
+  let!(:procedure_hier) { create(:procedure, :published, :with_instructeur) }
+  let!(:procedure_aujourdhui) { create(:procedure, :published, :with_instructeur) }
   let!(:procedure_demain) { create(:procedure, :published, :with_instructeur, auto_archive_on: 1.day.from_now.to_date) }
   let!(:job) { Cron::AutoArchiveProcedureJob.new }
+
+  before do
+    procedure_hier.auto_archive_on = 1.day.ago.to_date
+    procedure_hier.save!(validate: false)
+    procedure_aujourdhui.auto_archive_on = Date.current
+    procedure_aujourdhui.save!(validate: false)
+  end
 
   subject { job.perform }
 
@@ -66,9 +73,12 @@ RSpec.describe Cron::AutoArchiveProcedureJob, type: :job do
   end
 
   context 'when an error occurs' do
-    let!(:buggy_procedure) { create(:procedure, :published, :with_instructeur, auto_archive_on: 1.day.ago.to_date) }
+    let!(:buggy_procedure) { create(:procedure, :published, :with_instructeur) }
 
     before do
+      buggy_procedure.auto_archive_on = 1.day.ago.to_date
+      buggy_procedure.save!(validate: false)
+
       error = StandardError.new('nop')
       expect(buggy_procedure).to receive(:close!).and_raise(error)
       expect(job).to receive(:procedures_to_close).and_return([buggy_procedure, procedure_hier])
