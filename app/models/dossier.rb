@@ -36,6 +36,8 @@
 #  processed_at                                       :datetime
 #  search_terms                                       :string
 #  state                                              :string
+#  sva_svr_decision_on                                :date
+#  sva_svr_decision_triggered_at                      :datetime
 #  termine_close_to_expiration_notice_sent_at         :datetime
 #  created_at                                         :datetime
 #  updated_at                                         :datetime

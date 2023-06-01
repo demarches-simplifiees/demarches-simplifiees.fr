@@ -409,6 +409,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_29_102031) do
     t.string "state"
     t.datetime "termine_close_to_expiration_notice_sent_at", precision: 6
     t.datetime "updated_at", precision: 6
+    t.date "sva_svr_decision_on"
+    t.datetime "sva_svr_decision_triggered_at", precision: 6
     t.integer "user_id"
     t.index ["archived"], name: "index_dossiers_on_archived"
     t.index ["batch_operation_id"], name: "index_dossiers_on_batch_operation_id"
