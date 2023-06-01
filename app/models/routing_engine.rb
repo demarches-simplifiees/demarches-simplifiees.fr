@@ -1,6 +1,7 @@
 module RoutingEngine
   def self.compute(dossier)
     return if !dossier.procedure.feature_enabled?(:routing_rules)
+    # comment to drop
     return if dossier.forced_groupe_instructeur
 
     matching_groupe = dossier.procedure.groupe_instructeurs.active.find do |gi|
