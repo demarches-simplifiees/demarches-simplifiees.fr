@@ -53,6 +53,10 @@ module Types
         object.capital_social || '-1'
       end
 
+      def nom_commercial
+        object.nom_commercial || ''
+      end
+
       def code_effectif_entreprise
         # we need this in order to bypass Hashie::Dash deserialization issue on nil values
         object.code_effectif_entreprise
