@@ -1062,20 +1062,49 @@ describe Dossier, type: :model do
   end
 
   describe '#passer_automatiquement_en_instruction!' do
-    let(:dossier) { create(:dossier, :en_construction, :with_declarative_en_instruction, en_construction_close_to_expiration_notice_sent_at: Time.zone.now) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let(:operation_serialized) { last_operation.data }
     let(:instructeur) { create(:instructeur) }
 
-    before { dossier.passer_automatiquement_en_instruction! }
+    context "via procedure declarative en instruction" do
+      let(:dossier) { create(:dossier, :en_construction, :with_declarative_en_instruction, en_construction_close_to_expiration_notice_sent_at: Time.zone.now) }
 
-    it { expect(dossier.followers_instructeurs).not_to include(instructeur) }
-    it { expect(dossier.en_construction_close_to_expiration_notice_sent_at).to be_nil }
-    it { expect(last_operation.operation).to eq('passer_en_instruction') }
-    it { expect(last_operation.automatic_operation?).to be_truthy }
-    it { expect(operation_serialized['operation']).to eq('passer_en_instruction') }
-    it { expect(operation_serialized['dossier_id']).to eq(dossier.id) }
-    it { expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601) }
+      subject do
+        dossier.process_declarative!
+        dossier.reload
+      end
+
+      it 'passes dossier en instruction' do
+        expect(subject.followers_instructeurs).not_to include(instructeur)
+        expect(subject.en_construction_close_to_expiration_notice_sent_at).to be_nil
+        expect(subject.declarative_triggered_at).to be_within(1.second).of(Time.current)
+        expect(last_operation.operation).to eq('passer_en_instruction')
+        expect(last_operation.automatic_operation?).to be_truthy
+        expect(operation_serialized['operation']).to eq('passer_en_instruction')
+        expect(operation_serialized['dossier_id']).to eq(dossier.id)
+        expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601)
+      end
+    end
+
+    context "via procedure sva" do
+      let(:procedure) { create(:procedure, :sva, :published) }
+      let(:dossier) { create(:dossier, :en_construction, procedure:) }
+
+      subject do
+        dossier.process_sva_svr!
+        dossier.reload
+      end
+
+      it 'passes dossier en instruction' do
+        expect(subject.followers_instructeurs).not_to include(instructeur)
+        expect(subject.sva_svr_decision_on).to eq(2.months.from_now.to_date)
+        expect(last_operation.operation).to eq('passer_en_instruction')
+        expect(last_operation.automatic_operation?).to be_truthy
+        expect(operation_serialized['operation']).to eq('passer_en_instruction')
+        expect(operation_serialized['dossier_id']).to eq(dossier.id)
+        expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601)
+      end
+    end
   end
 
   describe '#can_passer_automatiquement_en_instruction?' do
@@ -1113,6 +1142,19 @@ describe Dossier, type: :model do
         let(:declarative_triggered_at) { 1.day.ago }
 
         it { expect(dossier.can_passer_automatiquement_en_instruction?).to be_truthy }
+      end
+    end
+
+    context 'when procedure has sva or svr enabled' do
+      let(:procedure) { create(:procedure, :published, :sva) }
+      let(:dossier) { create(:dossier, :en_construction, procedure:) }
+
+      it { expect(dossier.can_passer_automatiquement_en_instruction?).to be_truthy }
+
+      context 'when dossier was already processed by sva' do
+        let(:dossier) { create(:dossier, :en_construction, procedure:, sva_svr_decision_triggered_at: 1.hour.ago) }
+
+        it { expect(dossier.can_passer_automatiquement_en_instruction?).to be_falsey }
       end
     end
   end

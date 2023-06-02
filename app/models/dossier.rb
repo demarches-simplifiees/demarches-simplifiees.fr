@@ -569,7 +569,11 @@ class Dossier < ApplicationRecord
   end
 
   def can_passer_automatiquement_en_instruction?
-    (declarative_triggered_at.nil? && procedure.declarative_en_instruction?) || procedure.auto_archive_on&.then { _1 <= Time.zone.today }
+    return true if declarative_triggered_at.nil? && procedure.declarative_en_instruction?
+    return true if procedure.auto_archive_on? && !procedure.auto_archive_on.future?
+    return true if procedure.sva_svr_enabled? && sva_svr_decision_triggered_at.nil? && !pending_correction?
+
+    false
   end
 
   def can_repasser_en_instruction?
@@ -902,9 +906,12 @@ class Dossier < ApplicationRecord
   def after_passer_automatiquement_en_instruction
     self.en_construction_close_to_expiration_notice_sent_at = nil
     self.conservation_extension = 0.days
-    self.en_instruction_at = self.declarative_triggered_at = self.traitements
-      .passer_en_instruction
-      .processed_at
+    self.en_instruction_at = traitements.passer_en_instruction.processed_at
+
+    if procedure.declarative_en_instruction?
+      self.declarative_triggered_at = en_instruction_at
+    end
+
     save!
 
     NotificationMailer.send_en_instruction_notification(self).deliver_later
@@ -1046,6 +1053,14 @@ class Dossier < ApplicationRecord
     elsif procedure.declarative_en_instruction? && may_passer_automatiquement_en_instruction?
       passer_automatiquement_en_instruction!
     end
+  end
+
+  def process_sva_svr!
+    return unless procedure.sva_svr_enabled?
+    return if sva_svr_decision_triggered_at.present?
+
+    self.sva_svr_decision_on = SVASVRDateCalculatorService.new(self, procedure).calculate
+    passer_automatiquement_en_instruction!
   end
 
   def remove_titres_identite!

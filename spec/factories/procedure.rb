@@ -412,6 +412,10 @@ FactoryBot.define do
         build(:dossier_submitted_message, revisions: [procedure.active_revision])
       end
     end
+
+    trait :sva do
+      sva_svr { SVASVRConfiguration.new(decision: :sva).attributes }
+    end
   end
 end
 

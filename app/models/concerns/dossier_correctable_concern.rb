@@ -39,6 +39,7 @@ module DossierCorrectableConcern
 
     def resolve_pending_correction!
       pending_corrections.update!(resolved_at: Time.current)
+      pending_corrections.reset
     end
   end
 end

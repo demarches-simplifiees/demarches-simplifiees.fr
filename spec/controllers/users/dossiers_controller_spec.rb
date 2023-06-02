@@ -522,6 +522,47 @@ describe Users::DossiersController, type: :controller do
       it "resolve correction" do
         expect { subject }.to change { correction.reload.resolved_at }.to be_truthy
       end
+
+      context 'when procedure has sva enabled' do
+        let(:procedure) { create(:procedure, :sva) }
+        let!(:dossier) { create(:dossier, :en_construction, procedure:, user:) }
+
+        it 'passe automatiquement en instruction' do
+          expect(dossier.pending_correction?).to be_truthy
+
+          subject
+          dossier.reload
+
+          expect(dossier).to be_en_instruction
+          expect(dossier.pending_correction?).to be_falsey
+          expect(dossier.en_instruction_at).to within(5.seconds).of(Time.current)
+        end
+      end
+    end
+
+    context 'when there is sva without confirming correction' do
+      let!(:correction) { create(:dossier_correction, dossier: dossier) }
+
+      subject { post :submit_en_construction, params: { id: dossier.id } }
+
+      it "does not resolve correction" do
+        expect { subject }.not_to change { correction.reload.resolved_at }
+      end
+
+      context 'when procedure has sva enabled' do
+        let(:procedure) { create(:procedure, :sva) }
+        let!(:dossier) { create(:dossier, :en_construction, procedure:, user:) }
+
+        it 'does not passe automatiquement en instruction' do
+          expect(dossier.pending_correction?).to be_truthy
+
+          subject
+          dossier.reload
+
+          expect(dossier).to be_en_construction
+          expect(dossier.pending_correction?).to be_truthy
+        end
+      end
     end
   end
 
