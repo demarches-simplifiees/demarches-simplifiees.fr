@@ -163,6 +163,11 @@ class ProcedurePresentation < ApplicationRecord
         .order("instructeurs_users.email #{order}")
         .pluck(:id)
         .uniq
+    when 'avis'
+      dossiers.includes(table)
+        .order("#{self.class.sanitized_column(table, column)} #{order}")
+        .pluck(:id)
+        .uniq
     when 'self', 'user', 'individual', 'etablissement', 'groupe_instructeur'
       (table == 'self' ? dossiers : dossiers.includes(table))
         .order("#{self.class.sanitized_column(table, column)} #{order}")
