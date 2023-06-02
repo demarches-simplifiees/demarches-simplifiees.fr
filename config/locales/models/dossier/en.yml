@@ -18,6 +18,7 @@ en:
       pending_correction:
         for_instructeur: "pending"
         for_user: "to be corrected"
+        resolved: corrected
       traitement:
         state: "State"
       traitement/state:

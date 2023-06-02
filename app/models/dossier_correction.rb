@@ -16,4 +16,8 @@ class DossierCorrection < ApplicationRecord
   validates_associated :commentaire
 
   scope :pending, -> { where(resolved_at: nil) }
+
+  def resolved?
+    resolved_at.present?
+  end
 end

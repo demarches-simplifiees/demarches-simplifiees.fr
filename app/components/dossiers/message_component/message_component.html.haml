@@ -6,8 +6,9 @@
       = commentaire_issuer
     - if commentaire_from_guest?
       %span.fr-text--xs.fr-text-mention--grey.font-weight-normal= t('.guest')
-    - if commentaire.flagged_pending_correction?
-      = helpers.pending_correction_badge(connected_user.is_a?(Instructeur) ? :for_instructeur : :for_user)
+
+    = correction_badge
+
     %span.date{ class: ["fr-text--xs", "fr-text-mention--grey", "font-weight-normal", highlight_if_unseen_class], data: scroll_to_target }
       = commentaire_date
   .rich-text
