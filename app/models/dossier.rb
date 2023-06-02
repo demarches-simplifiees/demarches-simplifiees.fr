@@ -99,6 +99,8 @@ class Dossier < ApplicationRecord
   has_many :prefilled_champs_public, -> { root.public_only.prefilled }, class_name: 'Champ', inverse_of: false
 
   has_many :commentaires, inverse_of: :dossier, dependent: :destroy
+  has_many :preloaded_commentaires, -> { includes(:dossier_correction, piece_jointe_attachment: :blob) }, class_name: 'Commentaire', inverse_of: :dossier
+
   has_many :invites, dependent: :destroy
   has_many :follows, -> { active }, inverse_of: :dossier
   has_many :previous_follows, -> { inactive }, class_name: 'Follow', inverse_of: :dossier
