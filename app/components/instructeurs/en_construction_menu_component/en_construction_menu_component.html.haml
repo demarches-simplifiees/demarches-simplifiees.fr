@@ -1,4 +1,4 @@
-= render Dropdown::MenuComponent.new(wrapper: :div, button_options: { class: "fr-btn--secondary" }, wrapper_options: { data: {'turbo-force': true} }, role: :region) do |menu|
+= render Dropdown::MenuComponent.new(wrapper: :div, menu_options: { id: "menu-en-construction" }, button_options: { class: "fr-btn--secondary" }, role: :region) do |menu|
   - menu.with_button_inner_html do
     = menu_label
 

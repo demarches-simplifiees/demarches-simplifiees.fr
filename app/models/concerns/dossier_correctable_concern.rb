@@ -7,7 +7,7 @@ module DossierCorrectableConcern
     def flag_as_pending_correction!(commentaire)
       return unless may_flag_as_pending_correction?
 
-      corrections.create(commentaire:)
+      corrections.create!(commentaire:)
 
       return if en_construction?
 
@@ -32,7 +32,7 @@ module DossierCorrectableConcern
     end
 
     def resolve_pending_correction!
-      corrections.pending.update(resolved_at: Time.current)
+      corrections.pending.update!(resolved_at: Time.current)
     end
   end
 end

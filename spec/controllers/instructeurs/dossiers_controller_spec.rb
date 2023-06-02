@@ -547,6 +547,16 @@ describe Instructeurs::DossiersController, type: :controller do
         end
       end
 
+      context 'with an invalid comment / attachment' do
+        let(:justificatif) { Rack::Test::UploadedFile.new(Rails.root.join('Gemfile.lock'), 'text/lock') }
+
+        it 'does not save anything' do
+          expect(dossier.reload).not_to be_pending_correction
+          expect(dossier.commentaires.count).to eq(0)
+          expect(response.body).to include('pas d’un type accepté')
+        end
+      end
+
       context 'with an empty message' do
         let(:message) { '' }
 

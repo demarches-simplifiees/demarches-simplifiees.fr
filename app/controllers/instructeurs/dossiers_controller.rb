@@ -232,11 +232,16 @@ module Instructeurs
         flash.alert = dossier.termine? ? "Impossible de demander de corriger un dossier terminé." : "Le dossier est déjà en attente de correction."
       else
         commentaire = CommentaireService.build(current_instructeur, dossier, { body: message, piece_jointe: })
-        dossier.flag_as_pending_correction!(commentaire)
-        dossier.update!(last_commentaire_updated_at: Time.zone.now)
-        current_instructeur.follow(dossier)
 
-        flash.notice = "Dossier marqué comme en attente de correction."
+        if commentaire.valid?
+          dossier.flag_as_pending_correction!(commentaire)
+          dossier.update!(last_commentaire_updated_at: Time.zone.now)
+          current_instructeur.follow(dossier)
+
+          flash.notice = "Dossier marqué comme en attente de correction."
+        else
+          flash.alert = commentaire.errors.full_messages.map { "Commentaire : #{_1}" }
+        end
       end
 
       respond_to do |format|
