@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_08_160551) do
-
+ActiveRecord::Schema[7.0].define(version: 2023_05_16_132925) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -711,6 +710,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_08_160551) do
     t.string "declarative_with_state"
     t.bigint "defaut_groupe_instructeur_id"
     t.string "description"
+    t.string "description_target_audience"
     t.string "direction"
     t.datetime "dossiers_count_computed_at", precision: 6
     t.bigint "draft_revision_id"
