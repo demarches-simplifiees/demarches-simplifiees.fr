@@ -53,7 +53,7 @@ Rails.application.config.content_security_policy do |policy|
 
     # CSP are not enforced in development (see content_security_policy_report_only in development.rb)
     # However we notify a random local URL, to see breakage in the DevTools when adding a new external resource.
-    policy.report_uri "http://#{ENV.fetch('APP_HOST')}/csp/"
+    policy.report_uri CSP_REPORT_URI if CSP_REPORT_URI.present?
 
   elsif Rails.env.test?
     # Disallow all connections to external domains during tests
