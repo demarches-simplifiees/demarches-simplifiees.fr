@@ -65,3 +65,5 @@ fr:
               invalid_uri_or_email: "Veuillez saisir un mail ou un lien"
             auto_archive_on:
               future: doit être dans le futur
+            sva_svr:
+              immutable: "La configuration SVA/SVR ne peut plus être modifiée"

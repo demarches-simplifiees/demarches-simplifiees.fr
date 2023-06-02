@@ -1,11 +1,11 @@
 = form_for [procedure, configuration], url: admin_procedure_sva_svr_path(procedure), method: :put do |f|
-  - if procedure.publiee?
+  - if procedure.publiee? && !procedure.sva_svr_enabled?
     .fr-alert.fr-alert--info.fr-alert--sm.fr-mb-4w
-      - if procedure.sva_svr_enabled?
-        %p Information : si vous désactivez cette règle, seuls les nouveaux dossiers seront impactés. Ceux déjà déjà déposés la conserveront.
-      - else
-        %p= t('.notice_new_files_only')
+      %p= t('.notice_new_files_only')
 
+  - if procedure.publiee? && procedure.sva_svr_enabled?
+    .fr-alert.fr-alert--warning.fr-alert--sm.fr-mb-4w
+      %p= t('.notice_edit_denied')
 
   %fieldset.fr-fieldset
     %legend.fr-fieldset__legend= t(".rule")
@@ -27,11 +27,7 @@
       %span.fr-hint-text
         = t(".resume_intro")
 
-    - if procedure.publiee? && procedure.sva_svr_enabled?
-      .fr-alert.fr-alert--warning.fr-alert--sm
-        %p Attention : un changement de ce réglage affectera les éventuels dossiers en cours.
-
     = render Dsfr::RadioButtonListComponent.new(form: f, target: :resume, buttons: resume_buttons)
 
-  = f.submit t(".submit"), class: "fr-btn"
+  = f.submit t(".submit"), class: "fr-btn", disabled: form_disabled?
   = link_to t(".cancel"), admin_procedure_path(procedure.id), class: "fr-btn fr-btn--secondary fr-ml-2w"

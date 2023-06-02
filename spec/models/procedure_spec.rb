@@ -401,6 +401,46 @@ describe Procedure do
         end
       end
     end
+
+    context 'with sva svr' do
+      before {
+        procedure.sva_svr["decision"] = "svr"
+      }
+
+      context 'when procedure is published with sva' do
+        let(:procedure) { create(:procedure, :published, :sva) }
+
+        it 'prevents changes to sva_svr' do
+          expect(procedure).not_to be_valid
+          expect(procedure.errors[:sva_svr].join).to include('ne peut plus être modifiée')
+        end
+      end
+
+      context 'when procedure is published without sva' do
+        let(:procedure) { create(:procedure, :published) }
+
+        it 'allow activation' do
+          expect(procedure).to be_valid
+        end
+
+        it 'allow activation from disabled value' do
+          procedure.sva_svr["decision"] = "disabled"
+          procedure.save!
+
+          procedure.sva_svr["decision"] = "svr"
+
+          expect(procedure).to be_valid
+        end
+      end
+
+      context 'brouillon procedure' do
+        let(:procedure) { create(:procedure, :sva) }
+
+        it "can update sva config" do
+          expect(procedure).to be_valid
+        end
+      end
+    end
   end
 
   describe 'opendata' do

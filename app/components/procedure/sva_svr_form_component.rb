@@ -8,6 +8,12 @@ class Procedure::SVASVRFormComponent < ApplicationComponent
     @configuration = configuration
   end
 
+  def form_disabled?
+    return false if procedure.brouillon?
+
+    procedure.sva_svr_enabled?
+  end
+
   def decision_buttons
     scope = ".decision_buttons"
 
