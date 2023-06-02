@@ -1,5 +1,5 @@
 - if dossier.en_instruction?
-  = render Dropdown::MenuComponent.new(wrapper: :div, wrapper_options: { data: {'turbo-force': true} }, button_options: { class: [button_or_label_class(dossier)]}, role: dossier.en_instruction? ? :region : :menu) do |menu|
+  = render Dropdown::MenuComponent.new(wrapper: :div, wrapper_options: { data: { turbo_force: :server } }, button_options: { class: [button_or_label_class(dossier)]}, role: dossier.en_instruction? ? :region : :menu) do |menu|
     - menu.with_button_inner_html do
       Instruire le dossier
 

@@ -73,7 +73,7 @@ class Attachment::EditComponent < ApplicationComponent
       aria: { describedby: champ&.describedby_id },
       data: {
         auto_attach_url:,
-        turbo_force: true
+        turbo_force: :server
       }.merge(has_file_size_validator? ? { max_file_size: } : {})
         .merge(user_can_replace? ? { replace_attachment_target: "input" } : {})
     }.merge(has_content_type_validator? ? { accept: accept_content_type } : {})
