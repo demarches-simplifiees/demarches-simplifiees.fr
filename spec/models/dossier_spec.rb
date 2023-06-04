@@ -1011,7 +1011,6 @@ describe Dossier, type: :model do
   end
 
   describe '#accepter_automatiquement!' do
-    let(:dossier) { create(:dossier, :en_construction, :with_individual, :with_declarative_accepte) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let!(:now) { Time.zone.parse('01/01/2100') }
     let(:attestation) { Attestation.new }
@@ -1021,20 +1020,49 @@ describe Dossier, type: :model do
       allow(dossier).to receive(:build_attestation).and_return(attestation)
 
       Timecop.freeze(now)
-      dossier.accepter_automatiquement!
-      dossier.reload
     end
 
     after { Timecop.return }
 
-    it { expect(dossier.motivation).to eq(nil) }
-    it { expect(dossier.en_instruction_at).to eq(now) }
-    it { expect(dossier.processed_at).to eq(now) }
-    it { expect(dossier.state).to eq('accepte') }
-    it { expect(last_operation.operation).to eq('accepter') }
-    it { expect(last_operation.automatic_operation?).to be_truthy }
-    it { expect(NotificationMailer).to have_received(:send_accepte_notification).with(dossier) }
-    it { expect(dossier.attestation).to eq(attestation) }
+    subject {
+      dossier.accepter_automatiquement!
+      dossier.reload
+    }
+
+    context 'as declarative procedure' do
+      let(:dossier) { create(:dossier, :en_construction, :with_individual, :with_declarative_accepte) }
+
+      it 'accepts dossier automatiquement' do
+        expect(subject.motivation).to eq(nil)
+        expect(subject.en_instruction_at).to eq(now)
+        expect(subject.processed_at).to eq(now)
+        expect(subject.declarative_triggered_at).to eq(now)
+        expect(subject.sva_svr_decision_triggered_at).to be_nil
+        expect(subject).to be_accepte
+        expect(last_operation.operation).to eq('accepter')
+        expect(last_operation.automatic_operation?).to be_truthy
+        expect(NotificationMailer).to have_received(:send_accepte_notification).with(dossier)
+        expect(subject.attestation).to eq(attestation)
+      end
+    end
+
+    context 'as sva procedure' do
+      let(:procedure) { create(:procedure, :for_individual, :published, :sva) }
+      let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure:, sva_svr_decision_on: Date.current, en_instruction_at: DateTime.new(2021, 5, 1, 12)) }
+
+      it 'accepts dossier automatiquement' do
+        expect(subject.motivation).to eq(nil)
+        expect(subject.en_instruction_at).to eq(DateTime.new(2021, 5, 1, 12))
+        expect(subject.processed_at).to eq(now)
+        expect(subject.declarative_triggered_at).to be_nil
+        expect(subject.sva_svr_decision_triggered_at).to eq(now)
+        expect(subject).to be_accepte
+        expect(last_operation.operation).to eq('accepter')
+        expect(last_operation.automatic_operation?).to be_truthy
+        expect(NotificationMailer).to have_received(:send_accepte_notification).with(dossier)
+        expect(subject.attestation).to eq(attestation)
+      end
+    end
   end
 
   describe '#passer_en_instruction!' do
@@ -1160,7 +1188,8 @@ describe Dossier, type: :model do
   end
 
   describe '#can_accepter_automatiquement?' do
-    let(:dossier) { create(:dossier, :en_instruction, declarative_triggered_at: declarative_triggered_at) }
+    let(:dossier) { create(:dossier, state: initial_state, declarative_triggered_at: declarative_triggered_at) }
+    let(:initial_state) { :en_construction }
     let(:declarative_triggered_at) { nil }
 
     it { expect(dossier.can_accepter_automatiquement?).to be_falsey }
@@ -1174,6 +1203,43 @@ describe Dossier, type: :model do
 
       context 'when dossier transitioned before' do
         let(:declarative_triggered_at) { 1.day.ago }
+
+        it { expect(dossier.can_accepter_automatiquement?).to be_falsey }
+      end
+    end
+
+    context 'when procedure is sva/svr' do
+      let(:decision) { :sva }
+      let(:initial_state) { :en_instruction }
+
+      before do
+        dossier.procedure.update!(sva_svr: SVASVRConfiguration.new(decision:).attributes)
+        dossier.update!(sva_svr_decision_on: Date.current)
+      end
+
+      it { expect(dossier.can_accepter_automatiquement?).to be_truthy }
+
+      context 'when sva_svr_decision_on is in the future' do
+        before { dossier.update!(sva_svr_decision_on: 1.day.from_now) }
+
+        it { expect(dossier.can_accepter_automatiquement?).to be_falsey }
+      end
+
+      context 'when dossier has pending correction' do
+        let(:dossier) { create(:dossier, :en_construction) }
+        let!(:dossier_correction) { create(:dossier_correction, dossier:) }
+
+        it { expect(dossier.can_accepter_automatiquement?).to be_falsey }
+      end
+
+      context 'when decision is svr' do
+        let(:decision) { :svr }
+
+        it { expect(dossier.can_accepter_automatiquement?).to be_falsey }
+      end
+
+      context 'when dossier was already processed by sva' do
+        before { dossier.update!(sva_svr_decision_triggered_at: 1.hour.ago) }
 
         it { expect(dossier.can_accepter_automatiquement?).to be_falsey }
       end

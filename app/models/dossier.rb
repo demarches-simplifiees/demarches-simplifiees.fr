@@ -210,6 +210,7 @@ class Dossier < ApplicationRecord
 
     event :accepter_automatiquement, after: :after_accepter_automatiquement do
       transitions from: :en_construction, to: :accepte, guard: :can_accepter_automatiquement?
+      transitions from: :en_instruction, to: :accepte, guard: :can_accepter_automatiquement?
     end
 
     event :refuser, after: :after_refuser do
@@ -565,7 +566,11 @@ class Dossier < ApplicationRecord
   end
 
   def can_accepter_automatiquement?
-    declarative_triggered_at.nil? && procedure.declarative_accepte? && can_terminer?
+    return false unless can_terminer?
+    return true if declarative_triggered_at.nil? && procedure.declarative_accepte? && en_construction?
+    return true if procedure.sva? && sva_svr_decision_triggered_at.nil? && !pending_correction? && (sva_svr_decision_on.today? || sva_svr_decision_on.past?)
+
+    false
   end
 
   def can_passer_automatiquement_en_instruction?
@@ -984,9 +989,15 @@ class Dossier < ApplicationRecord
   end
 
   def after_accepter_automatiquement
-    self.processed_at = self.en_instruction_at = self.declarative_triggered_at = self.traitements
-      .accepter_automatiquement
-      .processed_at
+    self.processed_at = traitements.accepter_automatiquement.processed_at
+
+    if procedure.declarative_accepte?
+      self.en_instruction_at = self.processed_at
+      self.declarative_triggered_at = self.processed_at
+    elsif procedure.sva_svr_enabled?
+      self.sva_svr_decision_triggered_at = self.processed_at
+    end
+
     save!
 
     if attestation.nil?
@@ -1060,7 +1071,12 @@ class Dossier < ApplicationRecord
     return if sva_svr_decision_triggered_at.present?
 
     self.sva_svr_decision_on = SVASVRDateCalculatorService.new(self, procedure).calculate
-    passer_automatiquement_en_instruction!
+
+    if en_construction? && may_passer_automatiquement_en_instruction?
+      passer_automatiquement_en_instruction!
+    elsif en_instruction? && procedure.sva? && may_accepter_automatiquement?
+      accepter_automatiquement!
+    end
   end
 
   def remove_titres_identite!
