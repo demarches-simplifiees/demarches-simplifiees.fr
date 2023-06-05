@@ -649,4 +649,5 @@ textarea::placeholder {
   bottom: 0;
   padding: $default-padding 0;
   background-color: $white;
+  z-index: 2;
 }
