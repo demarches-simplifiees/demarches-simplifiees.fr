@@ -42,10 +42,11 @@
   %ul.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
     %li
       - if @groupe_instructeur.can_delete?
-        %p Supprimer le groupe
+        %p= t('.delete')
         = button_to admin_procedure_groupe_instructeur_path(@procedure_id, @groupe_instructeur),
         class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-delete-line',
-        method: :delete do
+        method: :delete,
+        data: { confirm: t('.delete_confirmation', group_name: @groupe_instructeur.label) } do
           Supprimer
       - else
         = button_to reaffecter_dossiers_admin_procedure_groupe_instructeur_path(@procedure_id, @groupe_instructeur),
