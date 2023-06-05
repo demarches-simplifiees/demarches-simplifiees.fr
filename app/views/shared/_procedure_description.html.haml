@@ -5,7 +5,7 @@
   = image_tag procedure.logo_url, alt: procedure_logo_alt
   - if procedure.euro_flag
     = image_tag("flag_of_europe.svg", id: 'euro_flag', class: (!procedure.euro_flag ? "hidden" : ""))
-%h1.procedure-title.fr-h2
+%h1.fr-h2
   = procedure.libelle
 
 - if procedure.persisted? && procedure.estimated_duration_visible?

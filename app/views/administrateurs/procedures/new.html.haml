@@ -4,25 +4,20 @@
   locals: { steps: [['Démarches', admin_procedures_back_path(@procedure)],
                     ['Nouvelle']] }
 
-.procedure-form
-  .procedure-form__columns.container
-    = render NestedForms::FormOwnerComponent.new
-    = form_for @procedure,
-      url: url_for({ controller: 'administrateurs/procedures', action: :create, id: @procedure.id }),
-      html: { class: 'form procedure-form__column--form', multipart: true } do |f|
+= render NestedForms::FormOwnerComponent.new
+= form_for @procedure,
+  url: url_for({ controller: 'administrateurs/procedures', action: :create, id: @procedure.id }),
+  html: { class: 'form procedure_tags_combo', multipart: true } do |f|
+  .fr-container
+    .fr-grid-row
+      .fr-col-12.fr-col-offset-sm-2.fr-col-sm-8
+        %h1.fr-h2 Nouvelle démarche
 
-      %h1.page-title Nouvelle démarche
+        = render partial: 'administrateurs/procedures/informations', locals: { f: f }
 
-
-      = render partial: 'administrateurs/procedures/informations', locals: { f: f }
-
-      .procedure-form__actions.sticky--bottom
-        .actions-right
-          = link_to 'Annuler', admin_procedures_path, class: 'fr-btn fr-btn--secondary fr-mr-2w', data: { confirm: 'Êtes-vous sûr de vouloir annuler la création de cette démarche ?'}
-          = f.button 'Créer la démarche', class: 'fr-btn'
-
-    .procedure-form__column--preview
-      .procedure-form__preview.sticky--top
-        %h3.procedure-form__preview-title Aperçu
-        .procedure-preview
-          = render partial: 'shared/procedure_description', locals: { procedure: @procedure }
+  .sticky-action-footer
+    .fr-container
+      .fr-grid-row
+        .fr-col-12.fr-col-offset-sm-2.fr-col-sm-8
+          = f.button 'Créer la démarche', class: 'fr-btn fr-mr-2w'
+          = link_to 'Annuler', admin_procedures_path, class: 'fr-btn fr-btn--secondary', data: { confirm: 'Êtes-vous sûr de vouloir annuler la création de cette démarche ?'}

@@ -44,7 +44,6 @@ describe 'Publishing a procedure', js: true do
       click_on 'Publier'
 
       expect(page).to have_text('Démarche publiée')
-      expect(page).to have_selector('#preview-procedure')
     end
 
     context 'when the procedure has invalid champs' do
@@ -93,7 +92,6 @@ describe 'Publishing a procedure', js: true do
       click_on 'publish'
 
       expect(page).to have_text('Démarche publiée')
-      expect(page).to have_selector('#preview-procedure')
     end
   end
 
@@ -125,7 +123,6 @@ describe 'Publishing a procedure', js: true do
       find('#publish').click
 
       expect(page).to have_text('Démarche publiée')
-      expect(page).to have_selector('#preview-procedure')
     end
   end
 
