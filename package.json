@@ -3,7 +3,7 @@
     "@coldwired/actions": "^0.11.0",
     "@coldwired/turbo-stream": "^0.11.0",
     "@coldwired/utils": "^0.10.0",
-    "@gouvfr/dsfr": "^1.7.2",
+    "@gouvfr/dsfr": "^1.9.3",
     "@graphiql/plugin-explorer": "^0.1.15",
     "@graphiql/toolkit": "^0.8.3",
     "@headlessui/react": "^1.6.6",

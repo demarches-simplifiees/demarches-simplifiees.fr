@@ -1425,10 +1425,10 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.39.0.tgz#58b536bcc843f4cd1e02a7e6171da5c040f4d44b"
   integrity sha512-kf9RB0Fg7NZfap83B3QOqOGg9QmD9yBudqQXzzOtn3i4y7ZUXe5ONeW34Gwi+TxhH4mvj72R1Zc300KUMa9Bng==
 
-"@gouvfr/dsfr@^1.7.2":
-  version "1.8.1"
-  resolved "https://registry.yarnpkg.com/@gouvfr/dsfr/-/dsfr-1.8.1.tgz#2484eb8ad9a73b5f01c5f41f49146d1aa8a71b7b"
-  integrity sha512-XpVFdvhtalA5jSAhzzNaMd+/Hvf8Ef9jCdAZhuukEEMo2/cWvCgzz9tfbE+9QTJDIVP+EwJ7aCGWcXUSWkOHJg==
+"@gouvfr/dsfr@^1.9.3":
+  version "1.9.3"
+  resolved "https://registry.yarnpkg.com/@gouvfr/dsfr/-/dsfr-1.9.3.tgz#289148c79566f6332cc930230742c4fe509d96f2"
+  integrity sha512-toPM1nvzSxPAwpLhnIgf7a/TJV0WOUa6sDqYummvMhZ9PBolFPGuD+3r8e3vg0bR5BkYxOt9hFErOPDU1tU4sQ==
 
 "@graphiql/plugin-explorer@^0.1.15":
   version "0.1.15"

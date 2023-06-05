@@ -89,7 +89,7 @@ describe 'wcag rules for usager', js: true do
     scenario 'commencer page, help dropdown' do
       visit commencer_path(path: procedure.reload.path)
 
-      page.find("#help-menu_button").click
+      page.first("#help-menu_button").click
       expect(page).to be_axe_clean
     end
   end
