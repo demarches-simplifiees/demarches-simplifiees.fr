@@ -8,6 +8,10 @@ class DossierMailerPreview < ActionMailer::Preview
     DossierMailer.with(commentaire: commentaire(on: draft)).notify_new_answer
   end
 
+  def notify_pending_correction
+    DossierMailer.with(dossier: dossier_en_construction).notify_pending_correction
+  end
+
   def notify_revert_to_instruction
     DossierMailer.notify_revert_to_instruction(dossier)
   end

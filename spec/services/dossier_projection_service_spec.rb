@@ -248,6 +248,29 @@ describe DossierProjectionService do
           it { is_expected.to eq("") }
         end
       end
+
+      context 'for dossier corrections table' do
+        let(:table) { 'dossier_corrections' }
+        let(:column) { 'resolved_at' }
+        let(:dossier) { create(:dossier, :en_construction) }
+        subject { described_class.project(dossiers_ids, fields)[0] }
+
+        context "when dossier has pending correction" do
+          before { create(:dossier_correction, dossier:) }
+
+          it { expect(subject.pending_correction?).to be(true) }
+        end
+
+        context "when dossier has a resolved correction" do
+          before { create(:dossier_correction, :resolved, dossier:) }
+
+          it { expect(subject.pending_correction?).to eq(false) }
+        end
+
+        context "when dossier has no correction at all" do
+          it { expect(subject.pending_correction?).to eq(false) }
+        end
+      end
     end
   end
 end

@@ -318,6 +318,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_08_160551) do
     t.index ["dossier_id"], name: "index_dossier_batch_operations_on_dossier_id"
   end
 
+  create_table "dossier_corrections", force: :cascade do |t|
+    t.bigint "commentaire_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.bigint "dossier_id", null: false
+    t.datetime "resolved_at", precision: 6
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["commentaire_id"], name: "index_dossier_corrections_on_commentaire_id"
+    t.index ["dossier_id"], name: "index_dossier_corrections_on_dossier_id"
+    t.index ["resolved_at"], name: "index_dossier_corrections_on_resolved_at", where: "((resolved_at IS NULL) OR (resolved_at IS NOT NULL))"
+  end
+
   create_table "dossier_operation_logs", force: :cascade do |t|
     t.boolean "automatic_operation", default: false, null: false
     t.bigint "bill_signature_id"
@@ -1010,6 +1021,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_08_160551) do
   add_foreign_key "commentaires", "instructeurs"
   add_foreign_key "dossier_batch_operations", "batch_operations"
   add_foreign_key "dossier_batch_operations", "dossiers"
+  add_foreign_key "dossier_corrections", "commentaires"
+  add_foreign_key "dossier_corrections", "dossiers"
   add_foreign_key "dossier_operation_logs", "bill_signatures"
   add_foreign_key "dossier_transfer_logs", "dossiers"
   add_foreign_key "dossiers", "batch_operations"

@@ -39,6 +39,12 @@
           dossier.procedure.groupe_instructeurs.active.map { |gi| [gi.label, gi.id] },
           { include_blank: dossier.brouillon? }
 
-
     = render EditableChamp::SectionComponent.new(champs: dossier_for_editing.champs_public)
+
+    - if dossier.pending_correction?
+      .fr-checkbox-group.fr-my-3w
+        = check_box_tag field_name(:dossier, :pending_correction_confirm), "1", false, form: "form-submit-en-construction"
+        %label.fr-label{ for: :dossier_pending_correction_confirm }= t('views.shared.dossiers.edit.pending_correction.confirm_label')
+
+
   = render Dossiers::EditFooterComponent.new(dossier: dossier_for_editing, annotation: false)

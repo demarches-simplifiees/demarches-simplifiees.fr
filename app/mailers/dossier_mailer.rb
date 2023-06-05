@@ -46,6 +46,19 @@ class DossierMailer < ApplicationMailer
     end
   end
 
+  def notify_pending_correction(dossier)
+    I18n.with_locale(dossier.user_locale) do
+      @dossier = dossier
+      @service = dossier.procedure.service
+      @logo_url = attach_logo(dossier.procedure)
+      @subject = default_i18n_subject(dossier_id: dossier.id, libelle_demarche: dossier.procedure.libelle)
+
+      mail(to: dossier.user_email_for(:notification), subject: @subject) do |format|
+        format.html { render layout: 'mailers/notifications_layout' }
+      end
+    end
+  end
+
   def notify_new_avis_to_instructeur(avis, instructeur_email)
     I18n.with_locale(avis.dossier.user_locale) do
       @avis = avis

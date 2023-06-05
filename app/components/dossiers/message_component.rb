@@ -8,6 +8,13 @@ class Dossiers::MessageComponent < ApplicationComponent
 
   attr_reader :commentaire, :connected_user, :messagerie_seen_at
 
+  def correction_badge
+    return if commentaire.dossier_correction.nil?
+    return helpers.correction_resolved_badge if commentaire.dossier_correction.resolved?
+
+    helpers.pending_correction_badge(connected_user.is_a?(Instructeur) ? :for_instructeur : :for_user)
+  end
+
   private
 
   def show_reply_button?

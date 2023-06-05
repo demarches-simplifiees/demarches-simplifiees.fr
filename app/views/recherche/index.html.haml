@@ -101,7 +101,8 @@
                                                                       dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
                                                                       close_to_expiration: nil,
                                                                       hidden_by_administration: nil,
-                                                                      turbo: false }
+                                                                      turbo: false,
+                                                                      with_menu: false }
 
             - else
               %td

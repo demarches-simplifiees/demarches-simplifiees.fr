@@ -50,6 +50,10 @@ class NotificationMailer < ApplicationMailer
     with(dossier: dossier, state: Dossier.states.fetch(:sans_suite)).send_notification
   end
 
+  def self.send_pending_correction(dossier)
+    with(dossier: dossier).send_notification
+  end
+
   private
 
   def set_services_publics_plus

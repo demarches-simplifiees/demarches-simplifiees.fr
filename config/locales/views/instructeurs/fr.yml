@@ -19,6 +19,7 @@ fr:
           classe_sans_suite: Le %{processed_at}, %{email} a classé ce dossier sans suite
       filterable_state:
         en_construction: "En construction"
+        pending_correction: "En attente"
         en_instruction: "En instruction"
         accepte: "Accepté"
         refuse: "Refusé"

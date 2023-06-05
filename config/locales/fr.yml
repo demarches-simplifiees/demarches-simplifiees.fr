@@ -332,6 +332,8 @@ fr:
           autosave: Votre dossier est enregistré automatiquement après chaque modification. Vous pouvez à tout moment fermer la fenêtre et reprendre plus tard là où vous en étiez.
           notice: Télécharger le guide de la démarche
           notice_title: "Pour vous aider à remplir votre dossier, vous pouvez consulter le guide de cette démarche."
+          pending_correction:
+            confirm_label: Je certifie avoir effectué toutes les corrections demandées par l’administration.
         messages:
           form:
             send_message: "Envoyer le message"
@@ -824,11 +826,6 @@ fr:
         explication_html: "<p>API Particulier facilite l’accès des administrations aux données familiales (CAF), aux données fiscales (DGFiP), au statut pôle-emploi et au statut étudiant d’un citoyen pour simplifier les démarches administratives mises en œuvre par les collectivités et les administrations.<br> Cela permet aux administrations d’accéder à des informations certifiées à la source et ainsi : </p> <ul> <li>de s’affranchir des pièces justificatives lors des démarches en ligne,</li> <li>de réduire le nombre d’erreurs de saisie,</li> <li>d’écarter le risque de fraude documentaire.</li> </ul> <p> <strong>Important&nbsp;:</strong> les disposition de l’article <a href='https://www.legifrance.gouv.fr/affichCodeArticle.do?cidTexte=LEGITEXT000031366350&amp;idArticle=LEGIARTI000031367412&amp;dateTexte=&amp;categorieLien=cid'>L144-8</a> n’autorisent que l’échange des informations strictement nécessaires pour traiter une démarche.<br /><br />En conséquence, ne sélectionnez ici que les données auxquelles vous aurez accès d’un point de vue légal.</p>"
       update:
         sources_ok: 'Mise à jour effectuée'
-    procedures:
-      show:
-        ready: "Validé"
-        needs_configuration: "À configurer"
-        configure_api_particulier_token: "Configurer le jeton API particulier"
   zones:
     ministeres: Ministères
   france_connect:
