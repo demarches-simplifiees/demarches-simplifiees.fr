@@ -95,7 +95,7 @@
         - if type_de_champ.explication?
           .cell.width-66
             = form.label :collapsible_explanation_enabled, for: dom_id(type_de_champ, :collapsible_explanation_enabled) do
-              Afficher un texte complementaire affichable au clique
+              Afficher un texte complementaire affichable au clic
             = form.check_box :collapsible_explanation_enabled, class: "small-margin small", id: dom_id(type_de_champ, :collapsible_explanation_enabled)
             - if form.object.collapsible_explanation_enabled?
               = form.label :collapsible_explanation_text, for: dom_id(type_de_champ, :collapsible_explanation_text) do
