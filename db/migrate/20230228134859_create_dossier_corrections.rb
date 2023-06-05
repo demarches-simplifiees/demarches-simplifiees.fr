@@ -3,8 +3,10 @@ class CreateDossierCorrections < ActiveRecord::Migration[6.1]
 
   def change
     create_table :dossier_corrections do |t|
-      t.references :dossier, null: false, foreign_key: true
-      t.references :commentaire, foreign_key: true
+      # foreign keys are added in a later migration
+      # see https://github.com/fatkodima/online_migrations#adding-multiple-foreign-keys
+      t.references :dossier, null: false, foreign_key: false
+      t.references :commentaire, foreign_key: false
       t.datetime :resolved_at, precision: 6
 
       t.timestamps
