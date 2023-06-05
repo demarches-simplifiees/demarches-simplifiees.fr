@@ -331,7 +331,6 @@ fr:
         edit:
           autosave: Votre dossier est enregistré automatiquement après chaque modification. Vous pouvez à tout moment fermer la fenêtre et reprendre plus tard là où vous en étiez.
           notice: Télécharger le guide de la démarche
-          notice_title: "Pour vous aider à remplir votre dossier, vous pouvez consulter le guide de cette démarche."
           pending_correction:
             confirm_label: Je certifie avoir effectué toutes les corrections demandées par l’administration.
         messages:
@@ -849,7 +848,6 @@ fr:
         connection_done: "Les comptes FranceConnect et %{application_name} sont à présent fusionnés"
         merger_token_expired: "Le délai pour fusionner les comptes FranceConnect et %{application_name} est expirée. Veuillez recommencer la procédure pour vous fusionner les comptes."
   shared:
-    ephemeral_link: Ce lien est éphémère et ne devrait pas être partagé.
     procedures:
       stats:
         usual_processing_time: "Temps de traitement usuel"
