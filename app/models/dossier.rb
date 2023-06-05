@@ -1076,6 +1076,8 @@ class Dossier < ApplicationRecord
       passer_automatiquement_en_instruction!
     elsif en_instruction? && procedure.sva? && may_accepter_automatiquement?
       accepter_automatiquement!
+    elsif will_save_change_to_sva_svr_decision_on?
+      save! # we always want the most up to date decision when there is a pending correction
     end
   end
 

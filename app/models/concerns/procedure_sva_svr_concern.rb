@@ -2,6 +2,7 @@ module ProcedureSVASVRConcern
   extend ActiveSupport::Concern
 
   included do
+    scope :sva_svr, -> { where("sva_svr ->> 'decision' IN (?)", ['sva', 'svr']) }
     validate :sva_svr_immutable_on_published, if: :will_save_change_to_sva_svr?
 
     def sva_svr_enabled?
