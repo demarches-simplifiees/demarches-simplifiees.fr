@@ -30,7 +30,7 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
   end
 
   def stimulus_controller
-    if !@champ.block? && @champ.fillable?
+    if autosave_enabled?
       # This is an editable champ. Lets find what controllers it might need.
       controllers = ['autosave']
 
@@ -44,5 +44,9 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
     else
       {}
     end
+  end
+
+  def autosave_enabled?
+    !@champ.carte? && !@champ.block? && @champ.fillable?
   end
 end

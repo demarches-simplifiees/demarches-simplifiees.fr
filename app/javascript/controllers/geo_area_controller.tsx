@@ -19,7 +19,7 @@ export class GeoAreaController extends ApplicationController {
   }
 
   onInput() {
-    this.debounce(this.updateDescription, 200);
+    this.debounce(this.updateDescription, 500);
   }
 
   private updateDescription(): void {
