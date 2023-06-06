@@ -201,6 +201,10 @@ class Dossier < ApplicationRecord
     end
 
     event :repasser_en_construction, after: :after_repasser_en_construction do
+      transitions from: :en_instruction, to: :en_construction, guard: :can_repasser_en_construction?
+    end
+
+    event :repasser_en_construction_with_pending_correction, after: :after_repasser_en_construction do
       transitions from: :en_instruction, to: :en_construction
     end
 
@@ -579,6 +583,10 @@ class Dossier < ApplicationRecord
     return true if procedure.sva_svr_enabled? && sva_svr_decision_triggered_at.nil? && !pending_correction?
 
     false
+  end
+
+  def can_repasser_en_construction?
+    !procedure.sva_svr_enabled?
   end
 
   def can_repasser_en_instruction?

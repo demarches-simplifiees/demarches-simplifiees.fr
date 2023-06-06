@@ -1135,6 +1135,17 @@ describe Dossier, type: :model do
     end
   end
 
+  describe '#can_repasser_en_construction?' do
+    let(:dossier) { create(:dossier, :en_instruction) }
+    it { expect(dossier.can_repasser_en_construction?).to be_truthy }
+
+    context 'when procedure is sva' do
+      let(:dossier) { create(:dossier, :en_instruction, procedure: create(:procedure, :sva)) }
+
+      it { expect(dossier.can_repasser_en_construction?).to be_falsey }
+    end
+  end
+
   describe '#can_passer_automatiquement_en_instruction?' do
     let(:dossier) { create(:dossier, :en_construction, declarative_triggered_at: declarative_triggered_at) }
     let(:declarative_triggered_at) { nil }

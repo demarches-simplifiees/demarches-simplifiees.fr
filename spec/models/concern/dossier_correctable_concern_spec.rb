@@ -41,7 +41,7 @@ describe DossierCorrectableConcern do
       end
     end
 
-    context 'when dossier is not en_instruction' do
+    context 'when dossier is en_instruction' do
       let(:dossier) { create(:dossier, :en_instruction) }
 
       it 'creates a correction' do
@@ -74,6 +74,18 @@ describe DossierCorrectableConcern do
 
       it 'does not create a correction' do
         expect { dossier.flag_as_pending_correction!(commentaire) }.not_to change { dossier.corrections.pending.count }
+      end
+    end
+
+    context 'when procedure is sva' do
+      let(:dossier) { create(:dossier, :en_instruction, procedure: create(:procedure, :published, :sva)) }
+
+      it 'creates a correction' do
+        expect { dossier.flag_as_pending_correction!(commentaire) }.to change { dossier.corrections.pending.count }.by(1)
+      end
+
+      it 'repasse dossier en_construction' do
+        expect { dossier.flag_as_pending_correction!(commentaire) }.to change { dossier.state }.to('en_construction')
       end
     end
   end

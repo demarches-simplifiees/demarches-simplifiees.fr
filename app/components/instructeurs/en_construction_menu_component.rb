@@ -15,7 +15,7 @@ class Instructeurs::EnConstructionMenuComponent < ApplicationComponent
   end
 
   def menu_label
-    if dossier.en_construction?
+    if !dossier.may_repasser_en_construction?
       t('.request_correction')
     else
       t(".revert_en_construction")

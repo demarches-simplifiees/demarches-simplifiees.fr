@@ -101,6 +101,7 @@
                                                                       dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
                                                                       close_to_expiration: nil,
                                                                       hidden_by_administration: nil,
+                                                                      sva_svr: p.sva_svr_decision_on.present?,
                                                                       turbo: false,
                                                                       with_menu: false }
 

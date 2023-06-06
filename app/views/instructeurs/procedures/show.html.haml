@@ -183,6 +183,7 @@
                                   dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
                                   close_to_expiration: @statut == 'expirant',
                                   hidden_by_administration: @statut == 'supprimes_recemment',
+                                  sva_svr: @procedure.sva_svr_enabled?,
                                   turbo: false,
                                   with_menu: false }
             %tfoot

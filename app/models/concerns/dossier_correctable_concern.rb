@@ -15,13 +15,13 @@ module DossierCorrectableConcern
 
       return if en_construction?
 
-      repasser_en_construction!(instructeur: commentaire.instructeur)
+      repasser_en_construction_with_pending_correction!(instructeur: commentaire.instructeur)
     end
 
     def may_flag_as_pending_correction?
       return false if pending_corrections.exists?
 
-      en_construction? || may_repasser_en_construction?
+      en_construction? || may_repasser_en_construction_with_pending_correction?
     end
 
     def pending_correction?
