@@ -1,7 +1,1 @@
-= render Dsfr::DownloadComponent.new(attachment: champ.type_de_champ.piece_justificative_template, url: champs_piece_justificative_template_path(champ), name: "Modèle à télécharger") do |c|
-  - if administrateur_signed_in?
-    - c.with_right do
-      %span.fr-ml-2w.fr-text--xs.fr-text-mention--grey.visible-on-previous-hover
-        %span.fr-text-action-high--blue-france.fr-icon-questionnaire-line{ "aria-hidden": "true" }
-        = t('shared.ephemeral_link')
-
+= render Dsfr::DownloadComponent.new(attachment: champ.type_de_champ.piece_justificative_template, url: champs_piece_justificative_template_path(champ), name: "Modèle à télécharger", ephemeral_link: administrateur_signed_in? )

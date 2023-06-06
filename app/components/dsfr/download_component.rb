@@ -1,15 +1,17 @@
 class Dsfr::DownloadComponent < ApplicationComponent
-  renders_one :right
-
   attr_reader :attachment
   attr_reader :html_class
   attr_reader :name
+  attr_reader :ephemeral_link
+  attr_reader :virus_not_analyzed
   attr_reader :new_tab
 
-  def initialize(attachment:, name: nil, url: nil, new_tab: false)
+  def initialize(attachment:, name: nil, url: nil, ephemeral_link: false, virus_not_analyzed: false, new_tab: false)
     @attachment = attachment
     @name = name || attachment.filename.to_s
     @url = url
+    @ephemeral_link = ephemeral_link
+    @virus_not_analyzed = virus_not_analyzed
     @new_tab = new_tab
   end
 

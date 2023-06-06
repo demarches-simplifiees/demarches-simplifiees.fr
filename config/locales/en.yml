@@ -331,7 +331,6 @@ en:
         edit:
           autosave: Your file is automatically saved after each modification. You can close the window at any time and pick up where you left off later.
           notice: "Download the notice of the procedure"
-          notice_title: "To help you complete your file, you can consult the notice to this procedure."
           pending_correction:
             confirm_label: I certify that I have made all corrections requested by the administration.
         messages:
@@ -803,7 +802,6 @@ en:
           connection_done: "The accounts for FranceConnect and %{application_name} are now merged."
           merger_token_expired: "Le delay to merge your FranceConnect and %{application_name} accounts is expired. Please retry."
   shared:
-    ephemeral_link: This link is ephemeral and should not be shared.
     procedures:
       stats:
         usual_processing_time: "Usual processing time"
