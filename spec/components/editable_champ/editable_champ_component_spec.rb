@@ -21,6 +21,12 @@ describe EditableChamp::EditableChampComponent, type: :component do
       it { expect(subject).to eq(nil) }
     end
 
+    context 'when a carte champ' do
+      let(:champ) { create(:champ_carte, dossier: dossier) }
+
+      it { expect(subject).to eq(nil) }
+    end
+
     context 'when a private champ' do
       let(:champ) { create(:champ, dossier: dossier, private: true) }
 
