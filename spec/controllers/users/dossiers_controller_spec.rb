@@ -1,4 +1,6 @@
 describe Users::DossiersController, type: :controller do
+  include ActiveSupport::Testing::TimeHelpers
+
   let(:user) { create(:user) }
 
   describe 'before_actions' do
@@ -351,9 +353,8 @@ describe Users::DossiersController, type: :controller do
     let(:payload) { { id: dossier.id } }
 
     subject do
-      Timecop.freeze(now) do
-        post :submit_brouillon, params: payload
-      end
+      travel_to now
+      post :submit_brouillon, params: payload
     end
 
     context 'when the dossier cannot be updated by the user' do
@@ -431,6 +432,24 @@ describe Users::DossiersController, type: :controller do
 
         it { expect(response).to redirect_to(root_path) }
         it { expect(flash.alert).to eq("Vous n’avez pas accès à ce dossier") }
+      end
+    end
+
+    context 'when procedure has sva enabled' do
+      let(:procedure) { create(:procedure, :sva) }
+      let!(:dossier) { create(:dossier, :brouillon, procedure:, user:) }
+
+      it 'passe automatiquement en instruction' do
+        delivery = double.tap { expect(_1).to receive(:deliver_later).with(no_args).twice }
+        expect(NotificationMailer).to receive(:send_en_construction_notification).and_return(delivery)
+        expect(NotificationMailer).to receive(:send_en_instruction_notification).and_return(delivery)
+
+        subject
+        dossier.reload
+
+        expect(dossier).to be_en_instruction
+        expect(dossier.pending_correction?).to be_falsey
+        expect(dossier.en_instruction_at).to within(5.seconds).of(Time.current)
       end
     end
   end
