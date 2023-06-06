@@ -893,3 +893,7 @@ fr:
       estimated_fill_duration_detail: "La durée de remplissage est estimée à %{estimated_minutes} min. Ce délai peut varier selon les options que vous choisirez."
       pieces_jointes : Quelles sont les pièces justificatives à fournir ?
       pieces_jointes_conditionnal_list_title : Liste des pièces en fonction de votre situation
+      sva_title: "Qu’est-ce que le cadre législatif « Silence Vaut Accord » ?"
+      sva_text_html: "Le SVA « <strong>Silence Vaut Accord</strong> » est un principe législatif qui définit le comportement d’une demande en cas de silence de l’administration : la demande est automatiquement acceptée (par opposition au « Silence Vaut Rejet » où elle serait automatiquement refusée)."
+      svr_title: "Qu’est-ce que le cadre législatif « Silence Vaut Rejet » ?"
+      svr_text_html: "Le SVR « <strong>Silence Vaut Rejet</strong> » est un principe législatif qui définit le comportement d’une demande en cas de silence de l’administration : la demande est automatiquement refusée (par opposition au « Silence Vaut Accord » où elle serait automatiquement acceptée)."

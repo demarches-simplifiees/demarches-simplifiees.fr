@@ -23,7 +23,7 @@
 = yield
 
 - unless @no_description
-  .fr-accordions-group
+  .fr-accordions-group.fr-mb-3w
     %section.fr-accordion
       %h2.fr-accordion__title
         %button.fr-accordion__btn{ "aria-controls" => "accordion-114", "aria-expanded" => "true" }
@@ -77,5 +77,17 @@
         #accordion-117.fr-collapse
           = t('shared.procedure_description.estimated_fill_duration_detail', estimated_minutes: estimated_fill_duration_minutes(procedure))
 
-.fr-my-3w
-  = render Procedure::NoticeComponent.new(procedure:)
+  .fr-my-3w
+    = render Procedure::NoticeComponent.new(procedure:)
+
+  - if procedure.sva?
+    = render Dsfr::CalloutComponent.new(title: t('shared.procedure_description.sva_title'), icon: "fr-fi-information-line") do |c|
+      - c.with_body do
+        %p
+          = t('shared.procedure_description.sva_text_html')
+
+  - elsif procedure.svr?
+    = render Dsfr::CalloutComponent.new(title: t('shared.procedure_description.svr_title'), icon: "fr-fi-information-line") do |c|
+      - c.with_body do
+        %p
+          = t('shared.procedure_description.svr_text_html')

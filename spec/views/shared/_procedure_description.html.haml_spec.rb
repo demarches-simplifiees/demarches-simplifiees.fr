@@ -11,6 +11,7 @@ describe 'shared/_procedure_description', type: :view do
     expect(rendered).to have_text(procedure.description)
     expect(rendered).to have_text('Temps de remplissage estimé')
     expect(rendered).not_to have_text('Quelles sont les pièces justificatives à fournir')
+    expect(rendered).not_to have_text('Qu’est-ce que le cadre législatif « silence vaut accord » ?')
   end
 
   context 'procedure with estimated duration not visible' do
@@ -68,6 +69,14 @@ describe 'shared/_procedure_description', type: :view do
       subject
       expect(rendered).to have_text('Quelles sont les pièces justificatives à fournir')
       expect(rendered).to have_text('une description des pj manuelle')
+    end
+  end
+
+  context 'when the procedure is sva' do
+    let(:procedure) { create(:procedure, :published, :sva) }
+    it 'shows an explanation text' do
+      subject
+      expect(rendered).to have_text('Cette démarche applique le « Silence Vaut Accord »')
     end
   end
 end
