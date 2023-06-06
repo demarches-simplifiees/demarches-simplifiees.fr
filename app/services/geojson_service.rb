@@ -1,4 +1,9 @@
 class GeojsonService
+  def self.valid?(json)
+    schemer = JSONSchemer.schema(Rails.root.join('app/schemas/geojson.json'))
+    schemer.valid?(json)
+  end
+
   def self.to_json_polygon_for_cadastre(coordinates)
     polygon = {
       geom: {

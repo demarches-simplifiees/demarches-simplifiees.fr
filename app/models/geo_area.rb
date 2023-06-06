@@ -52,7 +52,6 @@ class GeoArea < ApplicationRecord
   scope :cadastres, -> { where(source: sources.fetch(:cadastre)) }
 
   validates :geometry, geo_json: true, allow_nil: false
-  before_validation :normalize_geometry
 
   def to_feature
     {
@@ -229,22 +228,5 @@ class GeoArea < ApplicationRecord
     else
       properties['id']
     end
-  end
-
-  private
-
-  def normalize_geometry
-    if geometry.present?
-      normalized_geometry = rgeo_geometry
-      if normalized_geometry.present?
-        self.geometry = RGeo::GeoJSON.encode(normalized_geometry)
-      end
-    end
-  end
-
-  def rgeo_geometry
-    RGeo::GeoJSON.decode(geometry.to_json, geo_factory: RGeo::Geographic.simple_mercator_factory)
-  rescue RGeo::Error::InvalidGeometry
-    nil
   end
 end

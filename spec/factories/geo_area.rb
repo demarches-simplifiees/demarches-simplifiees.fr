@@ -116,6 +116,15 @@ FactoryBot.define do
       end
     end
 
+    trait :invalid_point do
+      geometry do
+        {
+          "type": "Point",
+          "coordinates": [46.538476837725796]
+        }
+      end
+    end
+
     trait :multi_polygon do
       geometry do
         {
