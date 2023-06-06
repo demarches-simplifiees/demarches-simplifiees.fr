@@ -9,93 +9,92 @@
 
 = render Dsfr::InputComponent.new(form: f, attribute: :description_target_audience, input_type: :text_area, opts: {}, required: false)
 
-%h3.header-subsection Logo de la démarche
+= f.label :logo, 'Ajouter un logo de la démarche (facultatif)', class: 'fr-label'
 = render Attachment::EditComponent.new(attached_file: @procedure.logo, view_as: :link)
 
-%h3.header-subsection Conservation des données
-= f.label :duree_conservation_dossiers_dans_ds, class: 'fr-label' do
-  Sur #{APPLICATION_NAME}
-  %span.mandatory *
-
-%p.notice
-  = t(:notice, scope: [:administrateurs, :duree_conservation_dossiers_dans_ds])
-  - if f.object.duree_conservation_dossiers_dans_ds.to_i < Procedure::NEW_MAX_DUREE_CONSERVATION
-    = t(:new_duration_constraint, scope: [:administrateurs, :duree_conservation_dossiers_dans_ds], new_duration_in_month: f.object.max_duree_conservation_dossiers_dans_ds)
+= render Dsfr::CalloutComponent.new(title: "Conservation des données") do |c|
+  - c.with_body do
+    %p
+      = t(:notice, scope: [:administrateurs, :duree_conservation_dossiers_dans_ds])
+    - if f.object.duree_conservation_dossiers_dans_ds.to_i < Procedure::NEW_MAX_DUREE_CONSERVATION
+      %p
+        = t(:new_duration_constraint, scope: [:administrateurs, :duree_conservation_dossiers_dans_ds], new_duration_in_month: f.object.max_duree_conservation_dossiers_dans_ds)
 
 .fr-input-group
+  = f.label :duree_conservation_dossiers_dans_ds, class: 'fr-label' do
+    Sur #{APPLICATION_NAME}
+    %span.mandatory *
+
   = f.number_field :duree_conservation_dossiers_dans_ds, { class: 'fr-input', placeholder: '6', required: true, max: f.object.max_duree_conservation_dossiers_dans_ds }
 
 - if @procedure.created_at.present?
   = render Dsfr::InputComponent.new(form: f, attribute: :lien_site_web, input_type: :text_field, opts: {}, required: false)
 
-%h3.header-subsection
-  Cadre juridique
-  %span.mandatory *
+= render Dsfr::CalloutComponent.new(title: "Cadre juridique") do |c|
+  - c.with_body do
+    %p
+      Le cadre juridique justifie le droit de collecter les données demandées dans votre démarche auprès des usagers. Par exemple :
+      %br
+      • Texte de loi (loi, décret, circulaire, arrêté…)
+      %br
+      • Texte juridique (statuts, délibération, décision du conseil d’administration…)
+      %br
+      = link_to("En savoir plus avec cette vidéo de 5 minutes", CADRE_JURIDIQUE_URL, target: "_blank", rel: "noopener")
+    %p Vous pouvez saisir un lien web vers ce texte, ou l’importer depuis un fichier.
 
-%p.notice
-  Le cadre juridique justifie le droit de collecter les données demandées dans votre démarche auprès des usagers. Par exemple :
-  %br
-  • Texte de loi (loi, décret, circulaire, arrêté…)
-  %br
-  • Texte juridique (statuts, délibération, décision du conseil d’administration…)
-  %br
-  = link_to("En savoir plus avec cette vidéo de 5 minutes", CADRE_JURIDIQUE_URL, target: "_blank", rel: "noopener")
-
-%p.notice
-  Vous pouvez saisir un lien web vers ce texte, ou l’importer depuis un fichier.
 
 = render Dsfr::InputComponent.new(form: f, attribute: :cadre_juridique, input_type: :text_field, opts: {})
 
 = f.label :deliberation, 'Importer le texte', class: 'fr-label'
 = render Attachment::EditComponent.new(attached_file: @procedure.deliberation, view_as: :download)
 
-%h3.header-subsection
-  RGPD
-%p.notice
-  Pour certaines démarches, veuillez indiquer soit le mail de contact de votre délégué à la protection des données, soit un lien web pointant vers les informations
+= render Dsfr::CalloutComponent.new(title: "RGPD") do |c|
+  - c.with_body do
+    %p Pour certaines démarches, veuillez indiquer soit le mail de contact de votre délégué à la protection des données, soit un lien web pointant vers les informations
 
 = render Dsfr::InputComponent.new(form: f, attribute: :lien_dpo, input_type: :text_field, opts: {}, required: false)
 
 - if Rails.application.config.ds_opendata_enabled
-  %h3.header-subsection= t(:opendata_header, scope: [:administrateurs, :informations])
-  %p.notice= t(:opendata_notice_html, scope: [:administrateurs, :informations])
-  %p.notice= t(:opendata, scope: [:administrateurs, :informations])
+  = render Dsfr::CalloutComponent.new(title: t(:opendata_header, scope: [:administrateurs, :informations])) do |c|
+    - c.with_body do
+      %p= t(:opendata_notice_html, scope: [:administrateurs, :informations])
 
-  %label.toggle-switch
-    = f.check_box :opendata, class: 'toggle-switch-checkbox'
-    %span.toggle-switch-control.round
-    %span.toggle-switch-label.on Oui
-    %span.toggle-switch-label.off Non
+  .fr-input-group
+    = f.label :opendata, t(:opendata, scope: [:administrateurs, :informations]), class: 'fr-label'
+    %label.toggle-switch
+      = f.check_box :opendata, class: 'toggle-switch-checkbox'
+      %span.toggle-switch-control.round
+      %span.toggle-switch-label.on Oui
+      %span.toggle-switch-label.off Non
 
-%h3.header-subsection Notice explicative de la démarche
-
-%p.notice
-  Une notice explicative est un document destiné à guider l’usager dans sa démarche. C’est un document que vous avez élaboré et qui peut prendre la forme d’un fichier doc, d’un pdf ou encore de diapositives. Le bouton pour télécharger cette notice apparaît en haut du formulaire pour l’usager.
+= render Dsfr::CalloutComponent.new(title: "Notice explicative de la démarche") do |c|
+  - c.with_body do
+    %p Une notice explicative est un document destiné à guider l’usager dans sa démarche. C’est un document que vous avez élaboré et qui peut prendre la forme d’un fichier doc, d’un pdf ou encore de diapositives. Le bouton pour télécharger cette notice apparaît en haut du formulaire pour l’usager.
 
 = f.label :notice, 'Notice', class: 'fr-label'
-%p.notice
+%p.fr-hint-text
   Formats acceptés : .doc, .odt, .pdf, .ppt, .pptx
 = render Attachment::EditComponent.new(attached_file: @procedure.notice, view_as: :download)
 
 - if !@procedure.locked?
-  %h3.header-subsection À qui s’adresse ma démarche ?
+  %h3.fr-h6 À qui s’adresse ma démarche ?
   .radios.vertical
     = f.label :for_individual, value: true do
       = f.radio_button :for_individual, true
       Ma démarche s’adresse à un particulier
-      %p.notice En choisissant cette option, l’usager devra renseigner son nom et prénom avant d’accéder au formulaire
+      %p.fr-hint-text En choisissant cette option, l’usager devra renseigner son nom et prénom avant d’accéder au formulaire
 
     = f.label :for_individual, value: false, class: 'fr-label' do
       = f.radio_button :for_individual, false
       Ma démarche s’adresse à une personne morale
-      %p.notice
+      %p.fr-hint-text
         En choisissant cette option, l’usager devra renseigner son n° SIRET.<br>Grâce à l’API Entreprise, les informations sur la personne morale (raison sociale, adresse du siège, etc.) seront automatiquement renseignées.
+  .fr-highlight
+    %p
+      Si votre démarche s’adresse indifféremment à une personne morale ou un particulier, choisissez l'option « Particuliers ». Vous pourrez ajouter un champ SIRET directement dans le formulaire.
 
-  %p
-    Si votre démarche s’adresse indifféremment à une personne morale ou un particulier, choisissez l'option « Particuliers ». Vous pourrez ajouter un champ SIRET directement dans le formulaire.
-
-%h3.header-subsection Ajouter des tags
-%p Les tags sont des mots ou des expressions que vous attribuez aux démarches pour décrire leur contenu et pour les retrouver. Les tags sont partagés avec la communauté, ce qui vous permet de voir les tags attribués aux démarches créées par les autres administrateurs.
+= f.label :tags, 'Associez les tags à la démarche (facultatif)', class: 'fr-label'
+%p.fr-hint-text Les tags sont des mots ou des expressions que vous attribuez aux démarches pour décrire leur contenu et pour les retrouver. Les tags sont partagés avec la communauté, ce qui vous permet de voir les tags attribués aux démarches créées par les autres administrateurs.
 = hidden_field_tag  'procedure[tags]', JSON.generate(@procedure.tags)
 = react_component("ComboMultiple",
   id: "procedure_tags_combo",
@@ -110,33 +109,37 @@
 
 %details.procedure-form__options-details
   %summary.procedure-form__options-summary
-    %h3.header-subsection Options avancées
+    %h3.fr-h6 Options avancées
 
   - if feature_enabled?(:administrateur_web_hook)
     = f.label :web_hook_url, class: 'fr-label' do
       Lien de rappel HTTP (webhook)
-    %p.notice
+    %p.fr-hint-text
       Vous pouvez définir un lien de rappel HTTP (aussi appelé webhook) pour informer un service tiers du changement de l'état d’un dossier de cette démarche sur #{APPLICATION_NAME}.
       = link_to("Consulter la documentation du webhook", WEBHOOK_DOC_URL, target: "_blank", rel: "noopener")
     = f.text_field :web_hook_url, class: 'fr-input', placeholder: 'https://callback.exemple.fr/'
 
-  = f.label :auto_archive_on, class: 'fr-label' do
-    Date limite de dépôt des dossiers
-  %p.notice
-    Si une date est définie, aucun dossier ne pourra plus être déposé ou modifié après cette limite.
-    %strong Les dossiers en construction passeront en instruction et la démarche sera clôturée.
+  = render Dsfr::CalloutComponent.new(title: "Date limite de dépôt des dossiers") do |c|
+    - c.with_body do
+      %p
+        Si une date est définie, aucun dossier ne pourra plus être déposé ou modifié après cette limite.
+        Les dossiers en construction passeront en instruction et la démarche sera clôturée.
+
+  = f.label :auto_archive_on, 'Mentionnez une date (facultatif)', class: 'fr-label fr-mb-2w'
   %p.notice
     Le
     - value = @procedure.auto_archive_on ? @procedure.auto_archive_on - 1.day : nil
     = f.date_field :auto_archive_on, id: 'auto_archive_on', value: value
     #{procedure_auto_archive_time(@procedure)}.
 
-  = f.label :declarative_with_state, class: 'fr-label' do
-    Démarche déclarative
-  %p.notice
-    Par défaut, un dossier déposé peut être complété ou corrigé par le demandeur jusqu'à sa mise en instruction.<br>
-    Dans une démarche déclarative, une fois déposé, un dossier ne peut plus être modifié.
-    Soit il passe immédiatement « en instruction » pour être traité soit il est immédiatement « accepté ».
+  = render Dsfr::CalloutComponent.new(title: "Démarche déclarative") do |c|
+    - c.with_body do
+      %p
+        Par défaut, un dossier déposé peut être complété ou corrigé par le demandeur jusqu'à sa mise en instruction.<br>
+        Dans une démarche déclarative, une fois déposé, un dossier ne peut plus être modifié.
+        Soit il passe immédiatement « en instruction » pour être traité soit il est immédiatement « accepté ».
+
+  = f.label :declarative_with_state, 'Mentionnez l’état d’avancement (facultatif)', class: 'fr-label fr-mb-2w'
   = f.select :declarative_with_state, Procedure.declarative_attributes_for_select, { include_blank: 'Non' }, class: 'form-control'
 
   - if !@procedure.piece_justificative_multiple?
@@ -144,5 +147,5 @@
       = f.check_box :piece_justificative_multiple
       = f.label :piece_justificative_multiple, class: 'fr-label' do
         Champ “Pièce justificative” avec multiples fichiers
-    %p.notice
+    %p.fr-hint-text
       Autorise les usagers à envoyer plusieurs fichiers pour les champs de type “Pièce justificative”. L'activation de cette option est irréversible et peut nécessiter des modifications si vous utilisez des systèmes automatisés pour traiter les dossiers.
