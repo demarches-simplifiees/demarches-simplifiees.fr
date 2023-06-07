@@ -11,5 +11,5 @@ fr:
         one: Votre compte reste activé sur Démarches Simplifiées, seul le dossier est supprimé.
         other: Votre compte reste activé sur Démarches Simplifiées, seuls les dossiers ont été supprimés.
       footer_en_construction:
-        one: "Le dossier ne sera pas traité, nous nous excusons de la gène occasionnée."
-        other: "Les dossiers ne seront pas traités, nous nous excusons de la gène occasionnée."
+        one: "Le dossier ne sera pas traité, nous nous excusons de la gêne occasionnée."
+        other: "Les dossiers ne seront pas traités, nous nous excusons de la gêne occasionnée."

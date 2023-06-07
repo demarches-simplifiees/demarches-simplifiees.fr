@@ -1,7 +1,7 @@
 fr:
   administrateurs:
     revision_changes:
-      has_changes: Modifications en cours (appliqué à la prochaine publication)
+      has_changes: Modifications en cours (appliquées à la prochaine publication)
     carte_layers:
       unesco: UNESCO
       arretes_protection: Arrêtés de protection
