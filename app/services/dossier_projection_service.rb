@@ -55,7 +55,7 @@ class DossierProjectionService
           .pluck(:id, *fields.map { |f| f[COLUMN].to_sym })
           .each do |id, *columns|
             fields.zip(columns).each do |field, value|
-              if [state_field, archived_field, hidden_by_user_at_field, hidden_by_administration_at_field, batch_operation_field].include?(field)
+              if [state_field, archived_field, hidden_by_user_at_field, hidden_by_administration_at_field, batch_operation_field, sva_svr_decision_on_field].include?(field)
                 field[:id_value_h][id] = value
               else
                 field[:id_value_h][id] = value&.strftime('%d/%m/%Y') # other fields are datetime

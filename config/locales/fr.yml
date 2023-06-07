@@ -389,7 +389,6 @@ fr:
         save: Enregistrer
         no_file: Aucun dossier
         dossier_synthesis: Synthèse des dossiers
-        sva_svr_decision_on: "%{time_ago} restant(s)"
       avis:
         introduction_file_explaination: "Fichier joint à la demande d’avis"
       search:
