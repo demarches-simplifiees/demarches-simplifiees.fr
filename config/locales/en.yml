@@ -387,6 +387,7 @@ en:
         stop_follow: No longer follow
         no_file: No file
         dossier_synthesis: Summary of files
+        sva_svr_decision_on: "%{time_ago} left"
       avis:
         introduction_file_explaination: "File attached to the request for advice"
       search:

@@ -1,5 +1,5 @@
 class DossierProjectionService
-  class DossierProjection < Struct.new(:dossier_id, :state, :archived, :hidden_by_user_at, :hidden_by_administration_at, :batch_operation_id, :corrections, :columns) do
+  class DossierProjection < Struct.new(:dossier_id, :state, :archived, :hidden_by_user_at, :hidden_by_administration_at, :batch_operation_id, :sva_svr_decision_on, :corrections, :columns) do
       def pending_correction?
         return false if corrections.blank?
 
@@ -29,8 +29,9 @@ class DossierProjectionService
     batch_operation_field = { TABLE => 'self', COLUMN => 'batch_operation_id' }
     hidden_by_user_at_field = { TABLE => 'self', COLUMN => 'hidden_by_user_at' }
     hidden_by_administration_at_field = { TABLE => 'self', COLUMN => 'hidden_by_administration_at' }
+    sva_svr_decision_on_field = { TABLE => 'self', COLUMN => 'sva_svr_decision_on' }
     dossier_corrections = { TABLE => 'dossier_corrections', COLUMN => 'resolved_at' }
-    ([state_field, archived_field, hidden_by_user_at_field, hidden_by_administration_at_field, batch_operation_field, dossier_corrections] + fields) # the view needs state and archived dossier attributes
+    ([state_field, archived_field, sva_svr_decision_on_field, hidden_by_user_at_field, hidden_by_administration_at_field, batch_operation_field, dossier_corrections] + fields) # the view needs state and archived dossier attributes
       .each { |f| f[:id_value_h] = {} }
       .group_by { |f| f[TABLE] } # one query per table
       .each do |table, fields|
@@ -130,6 +131,7 @@ class DossierProjectionService
         hidden_by_user_at_field[:id_value_h][dossier_id],
         hidden_by_administration_at_field[:id_value_h][dossier_id],
         batch_operation_field[:id_value_h][dossier_id],
+        sva_svr_decision_on_field[:id_value_h][dossier_id],
         dossier_corrections[:id_value_h][dossier_id],
         fields.map { |f| f[:id_value_h][dossier_id] }
       )

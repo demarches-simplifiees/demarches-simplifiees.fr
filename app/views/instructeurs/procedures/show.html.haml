@@ -174,6 +174,18 @@
                     - status << pending_correction_badge(:for_instructeur, html_class: "fr-mt-1v") if p.pending_correction?
                     = link_to_if(p.hidden_by_administration_at.blank?, safe_join(status), path, class: class_names("cell-link": true, "fr-py-0": status.many?))
 
+                  - if @procedure.sva?
+                    %td
+                      - if p.hidden_by_administration_at.present?
+                        %span.cell-link
+                          .fr-badge.fr-badge--info.fr-badge--sm
+                            = t('views.instructeurs.dossiers.sva_svr_decision_on', time_ago: time_ago_in_words(p.sva_svr_decision_on))
+
+                      - else
+                        %a.cell-link{ href: path }
+                          .fr-badge.fr-badge--info.fr-badge--sm
+                            = t('views.instructeurs.dossiers.sva_svr_decision_on', time_ago: time_ago_in_words(p.sva_svr_decision_on))
+
                   %td.action-col.follow-col
                     %ul.inline.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
                       = render partial: 'instructeurs/procedures/dossier_actions', locals: { procedure_id: @procedure.id,

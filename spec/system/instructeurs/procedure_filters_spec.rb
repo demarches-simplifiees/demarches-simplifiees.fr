@@ -21,6 +21,15 @@ describe "procedure filters" do
     end
   end
 
+  scenario "should display sva by default if procedure has sva enabled" do
+    procedure.update!(sva_svr: SVASVRConfiguration.new(decision: :sva).attributes)
+    visit instructeur_procedure_path(procedure)
+    within ".dossiers-table" do
+      expect(page).to have_link("SVA date de décision")
+      expect(page).to have_link(new_unfollow_dossier.user.email)
+    end
+  end
+
   scenario "should list all dossiers" do
     within ".dossiers-table" do
       expect(page).to have_link(new_unfollow_dossier.id.to_s)

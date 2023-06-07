@@ -45,6 +45,7 @@ class ProcedurePresentation < ApplicationRecord
       field_hash('self', 'en_construction_at', type: :date),
       field_hash('self', 'en_instruction_at', type: :date),
       field_hash('self', 'processed_at', type: :date),
+      field_hash('self', 'sva_svr_decision_on', type: :date),
       field_hash('self', 'updated_since', type: :date, virtual: true),
       field_hash('self', 'depose_since', type: :date, virtual: true),
       field_hash('self', 'en_construction_since', type: :date, virtual: true),
@@ -118,11 +119,15 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def displayed_fields_for_headers
-    [
+    array = [
       field_hash('self', 'id', classname: 'number-col'),
       *displayed_fields,
       field_hash('self', 'state', classname: 'state-col')
     ]
+
+    array << field_hash('self', 'sva_svr_decision_on', classname: 'sva-col') if procedure.sva_svr_enabled?
+
+    array
   end
 
   def sorted_ids(dossiers, count)
