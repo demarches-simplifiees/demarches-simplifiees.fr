@@ -30,14 +30,14 @@ fr:
       copy_html: "Sauf mention contraire, tous les contenus de ce site sont sous %{link}"
       license: "licence etalab 2.0"
       accessibilite:
-        label: "Accessibilité : partiellement conforme"
+        label: "Accessibilité : partiellement conforme"
         title: "Consulter notre déclaration d’accessibilité"
       api_doc:
         label: "Documentation de l’API"
         title: "Documentation graphql de l’API"
         url: "https://doc.demarches-simplifiees.fr/pour-aller-plus-loin/graphql"
       dinum:
-        title: "Le site de la DINUM — Gouvernement"
+        title: "Le site de la DINUM — Gouvernement"
         url: "https://www.numerique.gouv.fr/dinum/"
         alt: "Direction interministérielle du numérique"
       cgu:
