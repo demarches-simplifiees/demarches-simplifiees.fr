@@ -47,6 +47,6 @@
         #accordion-116.fr-collapse.js_description_target_audience
           = t('shared.procedure_description.estimated_fill_duration_detail', estimated_minutes: estimated_fill_duration_minutes(procedure))
 
-- if notice_url(procedure).present?
+- if procedure.notice.attached?
   .fr-my-3w
     = render Dsfr::DownloadComponent.new(attachment: procedure.notice , url: notice_url(procedure), name: t("views.shared.dossiers.edit.notice"), ephemeral_link: administrateur_signed_in?)
