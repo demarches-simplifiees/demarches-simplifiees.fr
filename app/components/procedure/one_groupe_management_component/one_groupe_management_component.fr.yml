@@ -6,3 +6,5 @@ fr:
     zero: Déplacer les dossiers en brouillon
     one: Déplacer un dossier
     other: Déplacer les %{count} dossiers
+  delete: Supprimer le groupe
+  delete_confirmation: Êtes-vous sûr de vouloir supprimer le groupe "%{group_name}" ?

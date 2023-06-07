@@ -32,20 +32,21 @@
         %p.fr-mb-1w.fr-badge.fr-badge--warning.fr-badge--sm à configurer
 
     .flex.align-baseline
-      .fr-mr-2w si le champ
+      .fr-mr-2w.no-wrap si le champ
       .target.fr-mr-2w
         = targeted_champ_tag
-      .operator.fr-mr-2w est égal à
+      .operator.fr-mr-2w.no-wrap est égal à
       .value
         = value_tag
 
   %ul.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
     %li
       - if @groupe_instructeur.can_delete?
-        %p Supprimer le groupe
+        %p= t('.delete')
         = button_to admin_procedure_groupe_instructeur_path(@procedure_id, @groupe_instructeur),
         class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-delete-line',
-        method: :delete do
+        method: :delete,
+        data: { confirm: t('.delete_confirmation', group_name: @groupe_instructeur.label) } do
           Supprimer
       - else
         = button_to reaffecter_dossiers_admin_procedure_groupe_instructeur_path(@procedure_id, @groupe_instructeur),

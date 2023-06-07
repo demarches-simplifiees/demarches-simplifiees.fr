@@ -11,7 +11,6 @@
         %th{ scope: "col" }
           .flex
             .flex.auto= table_header
-            %span.fr-icon.fr-icon-user-line
     %tbody
       - @groupe_instructeurs.each do |gi|
         %tr
@@ -25,9 +24,15 @@
                 - elsif gi.routing_to_configure?
                   %p.fr-badge.fr-badge--warning.fr-badge--sm.fr-ml-1w à configurer
 
-              %div{ style: 'width: 25px; text-align: center;' }
+              %span.fr-mr-1w
+                #{gi.dossiers.visible_by_administration.size}
+              %span.fr-icon.fr-icon-folder-2-line.fr-mr-2w{ style: 'width: 25px; text-align: center;' }
+              %span.fr-mr-1w
                 #{gi.instructeurs.count}
+              %span.fr-icon.fr-icon-user-line{ style: 'width: 25px; text-align: center;' }
+
             %p= gi.routing_rule&.to_s(@procedure.active_revision.types_de_champ)
+
   .fr-mt-1w
     = paginate @groupe_instructeurs
 
