@@ -1,6 +1,7 @@
 class Champs::DropDownListChamp < Champ
   store_accessor :value_json, :other
   THRESHOLD_NB_OPTIONS_AS_RADIO = 5
+  THRESHOLD_NB_OPTIONS_AS_AUTOCOMPLETE = 20
   OTHER = '__other__'
   delegate :options_without_empty_value_when_mandatory, to: :type_de_champ
 
@@ -8,6 +9,10 @@ class Champs::DropDownListChamp < Champ
 
   def render_as_radios?
     enabled_non_empty_options.size <= THRESHOLD_NB_OPTIONS_AS_RADIO
+  end
+
+  def render_as_combobox?
+    enabled_non_empty_options.size >= THRESHOLD_NB_OPTIONS_AS_AUTOCOMPLETE
   end
 
   def options?
