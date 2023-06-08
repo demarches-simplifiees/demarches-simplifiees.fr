@@ -621,3 +621,18 @@ textarea::placeholder {
   background-color: $white;
   z-index: 2;
 }
+
+.fr-menu__list {
+  padding: $default-spacer;
+  overflow-y: auto;
+  max-height: 300px;
+
+  .fr-menu__item {
+    list-style-type: none;
+    margin-bottom: $default-spacer;
+
+    &[aria-selected] {
+      font-weight: bold;
+    }
+  }
+}
