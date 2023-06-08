@@ -79,11 +79,12 @@ module DossierHelper
 
   def status_badge(state, alignment_class = '')
     status_text = dossier_display_state(state, lower: true)
-    if [Dossier.states.fetch(:en_instruction), Dossier.states.fetch(:accepte)].include?(state)
-      tag.span(status_text, class: "fr-badge fr-badge--sm #{class_badge_state(state)} #{alignment_class}", role: 'status')
-    else
-      tag.span(status_text, class: "fr-badge fr-badge--sm #{class_badge_state(state)} fr-badge--no-icon #{alignment_class}", role: 'status')
-    end
+      tag.span status_text, role: 'status', class: class_names(
+        'fr-badge fr-badge--sm' => true,
+        'fr-badge--no-icon' => [Dossier.states.fetch(:en_instruction), Dossier.states.fetch(:accepte)].include?(state),
+        class_badge_state(state) => true,
+        alignment_class => true
+      )
   end
 
   def deletion_reason_badge(reason)
