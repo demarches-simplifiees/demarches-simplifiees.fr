@@ -7,6 +7,6 @@
   - else
     = render EditableChamp::SectionComponent.new(champs: @row)
 
-  .flex.row-reverse{ 'data-turbo': 'true' }
+  .flex.row-reverse
     = render NestedForms::OwnedButtonComponent.new(formaction: champs_repetition_path(@champ.id, row_id: @row.first.row_id), http_method: :delete, opt: { class: "fr-btn fr-btn--sm fr-btn--tertiary fr-text-action-high--red-marianne", title: t(".delete_title", row_number: @champ.rows.find_index(@row))}) do
       = t(".delete")

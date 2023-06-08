@@ -8,6 +8,6 @@ class NestedForms::OwnedButtonComponent < ApplicationComponent
   end
 
   def call
-    button_tag(content, @opt.merge(formaction: @formaction, form: NestedForms::FormOwnerComponent.form_id(@http_method)))
+    button_tag(content, @opt.merge(formaction: @formaction, form: NestedForms::FormOwnerComponent.form_id(@http_method), data: { turbo: 'true' }))
   end
 end
