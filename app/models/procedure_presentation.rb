@@ -261,8 +261,22 @@ class ProcedurePresentation < ApplicationRecord
       instructeur.groupe_instructeurs
         .find { _1.id == filter['value'].to_i }&.label || filter['value']
     else
+      field = find_field(filter[TABLE], filter[COLUMN])
+
+      if field["type"] == :date
+        parsed_date = safe_parse_date(filter['value'])
+
+        return parsed_date.present? ? I18n.l(parsed_date) : nil
+      end
+
       filter['value']
     end
+  end
+
+  def safe_parse_date(string)
+    Date.parse(string)
+  rescue Date::Error
+    nil
   end
 
   def add_filter(statut, field, value)
