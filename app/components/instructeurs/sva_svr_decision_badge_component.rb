@@ -2,10 +2,12 @@
 
 class Instructeurs::SVASVRDecisionBadgeComponent < ApplicationComponent
   attr_reader :object
+  attr_reader :with_label
 
-  def initialize(projection_or_dossier:, decision:)
+  def initialize(projection_or_dossier:, decision:, with_label: false)
     @object = projection_or_dossier
     @decision = decision.to_sym
+    @with_label = with_label
   end
 
   def render?
@@ -42,5 +44,9 @@ class Instructeurs::SVASVRDecisionBadgeComponent < ApplicationComponent
 
   def svr?
     @decision == :svr
+  end
+
+  def label_for_badge
+    sva? ? "SVA :" : "SVR :"
   end
 end

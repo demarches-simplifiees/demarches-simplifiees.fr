@@ -8,7 +8,7 @@ module ProcedureHelper
   def procedure_badge(procedure)
     return nil unless procedure.brouillon?
 
-    tag.span(t('helpers.procedure.testing_procedure'), class: 'fr-badge')
+    tag.span(t('helpers.procedure.testing_procedure'), class: 'fr-badge fr-badge--sm')
   end
 
   def procedure_publish_label(procedure, key)
