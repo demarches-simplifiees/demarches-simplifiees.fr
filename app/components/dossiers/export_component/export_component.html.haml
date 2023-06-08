@@ -1,4 +1,12 @@
 = render Dropdown::MenuComponent.new(wrapper: :span, button_options: { class: ['fr-btn--sm', @class_btn.present? ? @class_btn : 'fr-btn--secondary']}, menu_options: { id: @count.nil? ? "download_menu" : "download_all_menu", class: ['dropdown-export'] }) do |menu|
+  - menu.with_menu_header_html do
+    %p.menu-component-header.fr-px-2w.fr-pt-2w.fr-mb-0
+      %span.fr-icon-info-line{ aria: { hidden: true } }
+        Des macros ? Lisez la
+        = link_to('doc', t('.macros_doc.url'),
+          title: t('.macros_doc.title'),
+          **external_link_attributes)
+
   - menu.with_button_inner_html do
     = @count.nil? ? t(".download_all") : t(".download", count: @count)
   - exports.each do |item|
