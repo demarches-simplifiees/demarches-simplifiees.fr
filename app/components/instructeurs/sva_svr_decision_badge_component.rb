@@ -2,15 +2,19 @@
 
 class Instructeurs::SVASVRDecisionBadgeComponent < ApplicationComponent
   attr_reader :object
+  attr_reader :procedure
   attr_reader :with_label
 
-  def initialize(projection_or_dossier:, decision:, with_label: false)
+  def initialize(projection_or_dossier:, procedure:, with_label: false)
     @object = projection_or_dossier
-    @decision = decision.to_sym
+    @procedure = procedure
+    @decision = procedure.sva_svr_configuration.decision.to_sym
     @with_label = with_label
   end
 
   def render?
+    return false unless procedure.sva_svr_enabled?
+
     [:en_construction, :en_instruction].include? object.state.to_sym
   end
 
