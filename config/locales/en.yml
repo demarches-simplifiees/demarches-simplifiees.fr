@@ -432,6 +432,10 @@ en:
             en_construction_html: Your file is in progress. It means that <strong>you can still edit it</strong>. You will no longer be able to edit the file when the administration will switch it to "review".
             status_review: undergoing review
             admin_review: The administration is reviewing your file. You are no longer able to edit it.
+            delay_title:
+              sva: "Your file is subject to the legislative framework « Silence Vaut Accord »"
+              svr: "Your file is subject to the legislative framework « Silence Vaut Rejet »"
+            delay_text_sva_svr: "You will receive a reply from the administration no later than %{date}."
             status_completed: completed
             use_mailbox_for_questions_html: "<strong>You have a question?</strong> Use the mailbox to <a href=\"%{mailbox_url}\">contact the administration directly</a>."
             acceptee_html: "Your file had been <strong>accepted</strong>."
