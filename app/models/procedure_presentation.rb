@@ -38,6 +38,8 @@ class ProcedurePresentation < ApplicationRecord
   validate :check_filters_max_length
 
   def self_fields
+    sva_svr_enabled = procedure.sva_svr_enabled?
+
     [
       field_hash('self', 'created_at', type: :date),
       field_hash('self', 'updated_at', type: :date),
@@ -45,14 +47,15 @@ class ProcedurePresentation < ApplicationRecord
       field_hash('self', 'en_construction_at', type: :date),
       field_hash('self', 'en_instruction_at', type: :date),
       field_hash('self', 'processed_at', type: :date),
-      field_hash('self', 'sva_svr_decision_on', type: :date),
+      sva_svr_enabled && field_hash('self', 'sva_svr_decision_on', type: :date),
+      sva_svr_enabled && field_hash('self', 'sva_svr_decision_before', type: :date, virtual: true),
       field_hash('self', 'updated_since', type: :date, virtual: true),
       field_hash('self', 'depose_since', type: :date, virtual: true),
       field_hash('self', 'en_construction_since', type: :date, virtual: true),
       field_hash('self', 'en_instruction_since', type: :date, virtual: true),
       field_hash('self', 'processed_since', type: :date, virtual: true),
       field_hash('self', 'state', type: :enum, scope: 'instructeurs.dossiers.filterable_state', virtual: true)
-    ]
+    ].compact_blank
   end
 
   def fields

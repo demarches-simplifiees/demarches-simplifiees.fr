@@ -25,7 +25,7 @@ describe "procedure filters" do
     procedure.update!(sva_svr: SVASVRConfiguration.new(decision: :sva).attributes)
     visit instructeur_procedure_path(procedure)
     within ".dossiers-table" do
-      expect(page).to have_link("Décision SVA")
+      expect(page).to have_link("Date décision SVA")
       expect(page).to have_link(new_unfollow_dossier.user.email)
     end
   end
