@@ -13,6 +13,10 @@ end
 Sentry.init do |config|
   secrets = Rails.application.secrets.sentry
 
+  if ENV['http_proxy'].present?
+    config.transport.proxy = ENV['http_proxy']
+  end
+
   config.dsn = secrets[:enabled] ? secrets[:rails_client_key] : nil
   config.send_default_pii = false
   config.release = SentryRelease.current
