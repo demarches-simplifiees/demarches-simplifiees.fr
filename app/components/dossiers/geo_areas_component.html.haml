@@ -3,7 +3,7 @@
   .areas
     %ul
       - champ.selections_utilisateur.slice(0, 20).each do |geo_area|
-        = render partial: 'shared/champs/carte/geo_area', locals: { geo_area: geo_area, editing: editing }
+        = render Dossiers::GeoAreaComponent.new(geo_area:, editing:)
       - if champ.selections_utilisateur.size > 20
         %li
           %span
@@ -14,4 +14,4 @@
   .areas
     %ul
       - champ.cadastres.each do |geo_area|
-        = render partial: 'shared/champs/carte/geo_area', locals: { geo_area: geo_area, editing: editing }
+        = render Dossiers::GeoAreaComponent.new(geo_area:, editing:)
