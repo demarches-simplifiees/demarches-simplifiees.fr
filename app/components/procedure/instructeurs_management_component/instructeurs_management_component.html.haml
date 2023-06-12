@@ -2,8 +2,7 @@
 %h1 Gestion des instructeurs
 
 = render partial: 'administrateurs/groupe_instructeurs/import_export',
-    locals: { procedure: @procedure,
-    groupe_instructeurs: @procedure.groupe_instructeurs }
+    locals: { procedure: @procedure }
 
 = render partial: 'administrateurs/groupe_instructeurs/instructeurs',
     locals: { procedure: @procedure,
