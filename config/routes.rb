@@ -542,7 +542,6 @@ Rails.application.routes.draw do
           get 'simple_routing'
           post 'create_simple_routing'
           delete 'destroy_all_groups_but_defaut'
-          patch 'update_routing_criteria_name'
           patch 'update_instructeurs_self_management_enabled'
           post 'import'
           get 'export_groupe_instructeurs'

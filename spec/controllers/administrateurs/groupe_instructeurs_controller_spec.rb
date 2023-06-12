@@ -692,18 +692,6 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     end
   end
 
-  describe '#update_routing_criteria_name' do
-    before do
-      patch :update_routing_criteria_name,
-        params: {
-          procedure_id: procedure.id,
-          procedure: { routing_criteria_name: 'new name !' }
-        }
-    end
-
-    it { expect(procedure.reload.routing_criteria_name).to eq('new name !') }
-  end
-
   describe '#create_simple_routing' do
     let!(:procedure3) do
       create(:procedure,

@@ -664,14 +664,6 @@ class Dossier < ApplicationRecord
     procedure.discarded? || (brouillon? && !procedure.dossier_can_transition_to_en_construction?)
   end
 
-  def show_groupe_instructeur_details?
-    procedure.routing_enabled? && groupe_instructeur.present? && (!procedure.feature_enabled?(:procedure_routage_api) || !defaut_groupe_instructeur?) && !procedure.feature_enabled?(:routing_rules)
-  end
-
-  def show_groupe_instructeur_selector?
-    procedure.routing_enabled? && !procedure.feature_enabled?(:procedure_routage_api) && !procedure.feature_enabled?(:routing_rules)
-  end
-
   def assign_to_groupe_instructeur(groupe_instructeur, author = nil)
     return if groupe_instructeur.present? && groupe_instructeur.procedure != procedure
     return if self.groupe_instructeur == groupe_instructeur
