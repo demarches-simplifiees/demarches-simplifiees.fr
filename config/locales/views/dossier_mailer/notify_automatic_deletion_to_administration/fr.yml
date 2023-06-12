@@ -5,5 +5,5 @@ fr:
         one: "Un dossier a été supprimé automatiquement"
         other: "Des dossiers ont été supprimés automatiquement"
       header:
-        one: "Le délai maximum de conservation du dossier suivant a été atteint, il a donc été supprimé :"
-        other: "Le délai maximum de conservation des dossiers suivants a été atteint, ils ont donc été supprimés :"
+        one: "Le délai maximal de conservation du dossier suivant a été atteint, celui-ci a donc été supprimé :"
+        other: "Le délai maximal de conservation des dossiers suivants a été atteint, ceux-ci ont donc été supprimés :"

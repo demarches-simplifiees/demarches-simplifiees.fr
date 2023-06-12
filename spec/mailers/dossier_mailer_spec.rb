@@ -128,7 +128,7 @@ RSpec.describe DossierMailer, type: :mailer do
       it { expect(subject.subject).to eq("Un dossier a été supprimé automatiquement de votre compte") }
       it { expect(subject.body).to include("N° #{dossier.id} ") }
       it { expect(subject.body).to include(dossier.procedure.libelle) }
-      it { expect(subject.body).to include("nous nous excusons de la gène occasionnée") }
+      it { expect(subject.body).to include("nous nous excusons de la gêne occasionnée") }
     end
 
     describe 'termine' do
@@ -223,7 +223,7 @@ RSpec.describe DossierMailer, type: :mailer do
 
     subject { described_class.notify_groupe_instructeur_changed(instructeur, dossier) }
 
-    it { expect(subject.subject).to eq("Le dossier nº #{dossier.id} a changé de groupe instructeur") }
+    it { expect(subject.subject).to eq("Le dossier nº #{dossier.id} a changé de groupe d’instructeurs") }
     it { expect(subject.body).to include("n° #{dossier.id}") }
     it { expect(subject.body).to include(dossier.procedure.libelle) }
     it { expect(subject.body).to include("Suite à cette modification, vous ne suivez plus ce dossier.") }

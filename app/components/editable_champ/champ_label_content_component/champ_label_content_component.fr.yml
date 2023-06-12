@@ -2,4 +2,4 @@
 fr:
   changes_to_save: "modification à déposer"
   modified_at: "modifié le %{datetime}"
-  check_content_rebased: Le type de ce champ ou sa description ont été modifiés par l'administration. Vérifier son contenu.
+  check_content_rebased: Le type de ce champ ou sa description ont été modifiés par l’administration. Vérifier son contenu.

@@ -7,14 +7,14 @@ fr:
     attributes:
       procedure:
         hints:
-          description: Décrivez en quelques lignes le contexte, la finalité etc.
+          description: Décrivez en quelques lignes le contexte, la finalité, etc.
           description_target_audience: Décrivez en quelques lignes les destinataires finaux de la démarche, les critères d’éligibilité s’il y en a, les pré-requis, etc.
           lien_site_web: "Exemple: 'https://exemple.gouv.fr/ma_demarche'"
           cadre_juridique: "Exemple: 'https://www.legifrance.gouv.fr/'"
         path: Lien public
         organisation: Organisme
         duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers sur demarches-simplifiees.fr (choisi par un usager)
-        max_duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers maximum (autorisé par un super admin de DS)
+        max_duree_conservation_dossiers_dans_ds: Durée maximale de conservation des dossiers (autorisée par un super admin de DS)
         id: Id
         libelle: Titre de la démarche
         description: Quel est l’objet de la démarche ?
@@ -36,7 +36,7 @@ fr:
         api_particulier_token: Jeton API Particulier
         routing_criteria_name: Nomination du routage
         initiated_mail: L’email de notification de passage de dossier en instruction
-        received_mail: L’email de notification de dépot de dossier
+        received_mail: L’email de notification de dépôt de dossier
         closed_mail: L’email de notification d’acceptation de dossier
         refused_mail: L’email de notification de refus de dossier
         without_continuation_mail: L’email de notification de classement sans suite de dossier

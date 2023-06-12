@@ -34,7 +34,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
        }
 
       it { is_expected.to have_selector('.fr-alert--success') }
-      it { is_expected.to have_text("L'action de masse est terminée") }
+      it { is_expected.to have_text("L’action de masse est terminée") }
       it { is_expected.to have_text("2 dossiers ont été archivés") }
       it { expect(batch_operation.seen_at).to eq(nil) }
     end
@@ -47,7 +47,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
       }
 
       it { is_expected.to have_selector('.fr-alert--warning') }
-      it { is_expected.to have_text("L'action de masse est terminée") }
+      it { is_expected.to have_text("L’action de masse est terminée") }
       it { is_expected.to have_text("1/2 dossiers ont été archivés") }
       it { expect(batch_operation.seen_at).to eq(nil) }
 
@@ -88,7 +88,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
        }
 
       it { is_expected.to have_selector('.fr-alert--success') }
-      it { is_expected.to have_text("L'action de masse est terminée") }
+      it { is_expected.to have_text("L’action de masse est terminée") }
       it { is_expected.to have_text("2 dossiers ont été passés en instruction") }
       it { expect(batch_operation.seen_at).to eq(nil) }
     end
@@ -101,7 +101,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
       }
 
       it { is_expected.to have_selector('.fr-alert--warning') }
-      it { is_expected.to have_text("L'action de masse est terminée") }
+      it { is_expected.to have_text("L’action de masse est terminée") }
       it { is_expected.to have_text("1/2 dossiers ont été passés en instruction") }
       it { expect(batch_operation.seen_at).to eq(nil) }
 
@@ -142,7 +142,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
        }
 
       it { is_expected.to have_selector('.fr-alert--success') }
-      it { is_expected.to have_text("L'action de masse est terminée") }
+      it { is_expected.to have_text("L’action de masse est terminée") }
       it { is_expected.to have_text("2 dossiers ont été acceptés") }
       it { expect(batch_operation.seen_at).to eq(nil) }
     end
@@ -155,7 +155,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
       }
 
       it { is_expected.to have_selector('.fr-alert--warning') }
-      it { is_expected.to have_text("L'action de masse est terminée") }
+      it { is_expected.to have_text("L’action de masse est terminée") }
       it { is_expected.to have_text("1/2 dossiers ont été acceptés") }
       it { expect(batch_operation.seen_at).to eq(nil) }
 
@@ -196,7 +196,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
        }
 
       it { is_expected.to have_selector('.fr-alert--success') }
-      it { is_expected.to have_text("L'action de masse est terminée") }
+      it { is_expected.to have_text("L’action de masse est terminée") }
       it { is_expected.to have_text("2 dossiers ont été suivis") }
       it { expect(batch_operation.seen_at).to eq(nil) }
     end
@@ -209,7 +209,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
       }
 
       it { is_expected.to have_selector('.fr-alert--warning') }
-      it { is_expected.to have_text("L'action de masse est terminée") }
+      it { is_expected.to have_text("L’action de masse est terminée") }
       it { is_expected.to have_text("1/2 dossiers ont été suivis") }
       it { expect(batch_operation.seen_at).to eq(nil) }
 
@@ -250,7 +250,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
        }
 
       it { is_expected.to have_selector('.fr-alert--success') }
-      it { is_expected.to have_text("L'action de masse est terminée") }
+      it { is_expected.to have_text("L’action de masse est terminée") }
       it { is_expected.to have_text("2 dossiers ne sont plus suivis") }
       it { expect(batch_operation.seen_at).to eq(nil) }
     end
@@ -263,7 +263,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
       }
 
       it { is_expected.to have_selector('.fr-alert--warning') }
-      it { is_expected.to have_text("L'action de masse est terminée") }
+      it { is_expected.to have_text("L’action de masse est terminée") }
       it { is_expected.to have_text("1/2 dossiers ne sont plus suivis") }
       it { expect(batch_operation.seen_at).to eq(nil) }
 
@@ -304,7 +304,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
        }
 
       it { is_expected.to have_selector('.fr-alert--success') }
-      it { is_expected.to have_text("L'action de masse est terminée") }
+      it { is_expected.to have_text("L’action de masse est terminée") }
       it { is_expected.to have_text("2 dossiers ont été repassés en construction") }
       it { expect(batch_operation.seen_at).to eq(nil) }
     end
@@ -317,7 +317,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
       }
 
       it { is_expected.to have_selector('.fr-alert--warning') }
-      it { is_expected.to have_text("L'action de masse est terminée") }
+      it { is_expected.to have_text("L’action de masse est terminée") }
       it { is_expected.to have_text("1/2 dossiers ont été repassés en construction") }
       it { expect(batch_operation.seen_at).to eq(nil) }
 
