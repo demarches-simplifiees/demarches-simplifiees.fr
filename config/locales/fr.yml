@@ -40,7 +40,8 @@ fr:
     i_dont_know: Je ne sais pas
     deconnexion: "Déconnexion"
     pj: "Pièces jointes"
-    asterisk_html: Les champs suivis d’un astérisque ( <span class = mandatory> * </span> ) sont obligatoires.
+    asterisk_html: Les champs suivis d’un astérisque ( * ) sont obligatoires.
+    mandatory_champs: Tous les champs sont obligatoires.
     file_number: Numéro de dossier
     subject: Sujet
     message: Message
