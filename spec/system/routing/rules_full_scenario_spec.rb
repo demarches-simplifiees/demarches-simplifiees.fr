@@ -60,7 +60,7 @@ describe 'The routing with rules', js: true do
 
     # update defaut groupe
     click_on 'défaut'
-    expect(page).to have_text('Paramètres principaux')
+    expect(page).to have_text('Paramètres du groupe')
     fill_in 'Nom du groupe', with: 'littéraire'
     click_on 'Renommer'
     expect(page).to have_text('Le nom est à présent « littéraire ». ')
