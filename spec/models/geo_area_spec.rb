@@ -122,6 +122,20 @@ RSpec.describe GeoArea, type: :model do
       end
     end
 
+    context "when geo is a point" do
+      let(:geo_area) { build(:geo_area, :selection_utilisateur, :point, champ: nil) }
+      it "should return the label" do
+        expect(geo_area.label).to eq("Un point situé à 46°32'19\"N 2°25'42\"E")
+      end
+    end
+
+    context "when geo is a point with elevation" do
+      let(:geo_area) { build(:geo_area, :selection_utilisateur, :point_with_z, champ: nil) }
+      it "should return the label" do
+        expect(geo_area.label).to eq("Un point situé à 46°32'19\"N 2°25'42\"E")
+      end
+    end
+
     context "when geo is a cadastre parcelle" do
       let(:geo_area) { build(:geo_area, :selection_utilisateur, :cadastre, champ: nil) }
       it "should return the label" do
