@@ -20,8 +20,11 @@ describe Users::CommencerController, type: :controller do
     context 'when the path is for a draft procedure' do
       let(:path) { draft_procedure.path }
 
-      it 'redirects with an error message' do
-        expect(subject).to redirect_to(root_path)
+      it 'renders the view' do
+        expect(subject.status).to eq(200)
+        expect(subject).to render_template('show')
+        expect(assigns(:procedure)).to eq draft_procedure
+        expect(assigns(:revision)).to eq draft_procedure.draft_revision
       end
     end
 
@@ -155,7 +158,7 @@ describe Users::CommencerController, type: :controller do
             subject
             expect(Dossier.count).to eq(1)
             expect(session[:prefill_token]).to eq(Dossier.last.prefill_token)
-            expect(session[:prefill_params]).to eq({ "action" => "commencer", "champ_#{type_de_champ_text.to_typed_id}" => "blabla", "controller" => "users/commencer", "path" => path.to_s })
+            expect(session[:prefill_params_digest]).to eq(PrefillParams.digest({ "champ_#{type_de_champ_text.to_typed_id}" => "blabla" }))
             expect(Dossier.last.champs.where(type_de_champ: type_de_champ_text).first.value).to eq("blabla")
           end
         end
@@ -181,6 +184,7 @@ describe Users::CommencerController, type: :controller do
           end
         end
       end
+
       context "when prefilled params are passed" do
         subject { get :commencer, params: { path: path, prefill_token: "token", "champ_#{type_de_champ_text.to_typed_id}" => "blabla" } }
 
@@ -198,12 +202,13 @@ describe Users::CommencerController, type: :controller do
           it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
         end
       end
+
       context "when session params exists" do
         subject { get :commencer, params: { path: path, "champ_#{type_de_champ_text.to_typed_id}" => "blabla" } }
 
         before do
           session[:prefill_token] = "token"
-          session[:prefill_params] = { "action" => "commencer", "champ_#{type_de_champ_text.to_typed_id}" => "blabla", "controller" => "users/commencer", "path" => path.to_s }
+          session[:prefill_params_digest] = PrefillParams.digest({ "champ_#{type_de_champ_text.to_typed_id}" => "blabla" })
         end
 
         context "when the associated dossier exists" do
@@ -215,40 +220,10 @@ describe Users::CommencerController, type: :controller do
             expect(assigns(:prefilled_dossier)).to eq(dossier)
           end
         end
+
         context "when the associated dossier does not exists" do
           it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
         end
-      end
-    end
-  end
-
-  describe '#commencer_test' do
-    subject { get :commencer_test, params: { path: path } }
-
-    context 'when the path is for a draft procedure' do
-      let(:path) { draft_procedure.path }
-
-      it 'renders the view' do
-        expect(subject.status).to eq(200)
-        expect(subject).to render_template('show')
-        expect(assigns(:procedure)).to eq draft_procedure
-        expect(assigns(:revision)).to eq draft_procedure.draft_revision
-      end
-    end
-
-    context 'when the path is for a published procedure' do
-      let(:path) { published_procedure.path }
-
-      it 'redirects with an error message' do
-        expect(subject).to redirect_to(root_path)
-      end
-    end
-
-    context 'when the path does not exist' do
-      let(:path) { 'hello' }
-
-      it 'redirects with an error message' do
-        expect(subject).to redirect_to(root_path)
       end
     end
   end
@@ -283,7 +258,7 @@ describe Users::CommencerController, type: :controller do
 
       it 'set the path to return after sign-in to the draft procedure start page' do
         subject
-        expect(controller.stored_location_for(:user)).to eq(commencer_test_path(path: draft_procedure.path))
+        expect(controller.stored_location_for(:user)).to eq(commencer_path(path: draft_procedure.path))
       end
 
       it { expect(subject).to redirect_to(new_user_session_path) }
@@ -327,7 +302,7 @@ describe Users::CommencerController, type: :controller do
 
       it 'set the path to return after sign-up to the draft procedure start page' do
         subject
-        expect(controller.stored_location_for(:user)).to eq(commencer_test_path(path: draft_procedure.path))
+        expect(controller.stored_location_for(:user)).to eq(commencer_path(path: draft_procedure.path))
       end
 
       it { expect(subject).to redirect_to(new_user_registration_path) }
@@ -371,7 +346,7 @@ describe Users::CommencerController, type: :controller do
 
       it 'set the path to return after sign-up to the draft procedure start page' do
         subject
-        expect(controller.stored_location_for(:user)).to eq(commencer_test_path(path: draft_procedure.path))
+        expect(controller.stored_location_for(:user)).to eq(commencer_path(path: draft_procedure.path))
       end
 
       it { expect(subject).to redirect_to(france_connect_particulier_path) }
@@ -401,6 +376,7 @@ describe Users::CommencerController, type: :controller do
         expect(response).to have_http_status(:success)
       end
     end
+
     context 'not yet published procedure' do
       let(:procedure) { create(:procedure, :with_service, :with_path) }
 
@@ -408,6 +384,7 @@ describe Users::CommencerController, type: :controller do
         expect(response).to have_http_status(302)
       end
     end
+
     context 'closed procedure' do
       it 'works' do
         procedure.service = create(:service)
@@ -428,6 +405,7 @@ describe Users::CommencerController, type: :controller do
         expect(response).to have_http_status(:success)
       end
     end
+
     context 'not published procedure without service' do
       let(:procedure) { create(:procedure, :with_path, service: nil, organisation: nil) }
 

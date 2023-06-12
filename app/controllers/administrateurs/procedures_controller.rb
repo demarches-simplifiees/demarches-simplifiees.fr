@@ -116,8 +116,6 @@ module Administrateurs
       @procedure.validate(:publication)
 
       @current_administrateur = current_administrateur
-      @procedure_lien = commencer_url(path: @procedure.path)
-      @procedure_lien_test = commencer_test_url(path: @procedure.path)
     end
 
     def edit
@@ -267,8 +265,6 @@ module Administrateurs
           draft_revision: :types_de_champ
         ).find(params[:procedure_id])
 
-      @procedure_lien = commencer_url(path: @procedure.path)
-      @procedure_lien_test = commencer_test_url(path: @procedure.path)
       @procedure.path = @procedure.suggested_path(current_administrateur)
       @current_administrateur = current_administrateur
       @closed_procedures = current_administrateur.procedures.with_discarded.closes.map { |p| ["#{p.libelle} (#{p.id})", p.id] }.to_h
