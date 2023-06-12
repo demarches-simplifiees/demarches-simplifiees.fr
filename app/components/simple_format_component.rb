@@ -28,8 +28,8 @@ class SimpleFormatComponent < ApplicationComponent
     @allow_a = allow_a
 
     @text = (text || "").gsub(/\R/, "\n\n") # force double \n otherwise a single one won't split paragraph
-      .split("\n\n")  #
-      .map(&:lstrip)  # this block prevent redcarpet to consider "   text" as block code by lstriping
+      .split("\n\n")
+      .map(&:lstrip) # this block prevent redcarpet to consider "   text" as block code by lstriping
       .join("\n\n")
       .gsub(EMAIL_IN_TEXT_REGEX) { _1.gsub('_', '\\_') } # Workaround for redcarpet bug on autolink email having _. Cf tests
 
