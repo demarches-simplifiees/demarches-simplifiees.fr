@@ -39,16 +39,27 @@
         #accordion-115.fr-collapse
           = h render SimpleFormatComponent.new(procedure.description_target_audience, allow_a: true)
 
-    - if procedure.pieces_jointes_list.present?
+    - if procedure.pieces_jointes_list?
       %section.fr-accordion.pieces_jointes
         %h2.fr-accordion__title
           %button.fr-accordion__btn{ "aria-controls" => "accordion-116", "aria-expanded" => "false" }
             = t('shared.procedure_description.pieces_jointes')
         #accordion-116.fr-collapse
-          %ul
-            - procedure.pieces_jointes_list.each do |pj|
-              %li
-                = pj.libelle
+          - if procedure.pieces_jointes_list_without_conditionnal.present?
+            %ul
+              - procedure.pieces_jointes_list_without_conditionnal.each do |pj|
+                %li
+                  = pj.libelle
+                  = t('utils.no_mandatory') unless pj.mandatory?
+
+          - if procedure.pieces_jointes_list_with_conditionnal.present?
+            %h3.fr-text--sm.fr-mb-0.fr-mt-2w
+              = t('shared.procedure_description.pieces_jointes_conditionnal_list_title')
+            %ul
+              - procedure.pieces_jointes_list_with_conditionnal.each do |pj|
+                %li
+                  = pj.libelle
+                  = t('utils.no_mandatory') unless pj.mandatory?
 
     - if procedure.persisted? && procedure.estimated_duration_visible?
       %section.fr-accordion
