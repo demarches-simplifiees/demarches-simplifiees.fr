@@ -1,4 +1,6 @@
 class Dossiers::ExportComponent < ApplicationComponent
+  include ApplicationHelper
+
   def initialize(procedure:, exports:, statut: nil, count: nil, class_btn: nil, export_url: nil)
     @procedure = procedure
     @exports = exports

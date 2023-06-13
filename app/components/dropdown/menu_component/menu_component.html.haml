@@ -3,6 +3,7 @@
     = button_inner_html
 
   %div{ data: { menu_button_target: 'menu' }, id: menu_id, 'aria-labelledby': button_id, role: menu_role, 'tab-index': -1, class: menu_class_names }
+    = menu_header_html
 
     -# the dropdown can be a menu with a list of item
     - if items?

@@ -1,0 +1,10 @@
+@import "colors";
+
+.menu-component-header {
+  color: $dark-grey;
+  font-size: 12px;
+
+  a {
+    text-decoration: underline;
+  }
+}
