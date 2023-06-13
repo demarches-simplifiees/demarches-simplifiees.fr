@@ -870,13 +870,15 @@ describe Administrateurs::ProceduresController, type: :controller do
     let(:procedure3) { create(:procedure, :published, lien_site_web: lien_site_web) }
     let(:lien_site_web) { 'http://some.administration/' }
 
+    subject(:perform_request) { put :publish, params: { procedure_id: procedure.id, path: path, lien_site_web: lien_site_web } }
+
     context 'when admin is the owner of the procedure' do
       context 'procedure path does not exist' do
         let(:path) { 'new_path' }
         let(:lien_site_web) { 'http://mon-site.gouv.fr' }
 
         before do
-          put :publish, params: { procedure_id: procedure.id, path: path, lien_site_web: lien_site_web }
+          perform_request
           procedure.reload
         end
 
@@ -895,7 +897,7 @@ describe Administrateurs::ProceduresController, type: :controller do
 
       context 'procedure path exists and is owned by current administrator' do
         before do
-          put :publish, params: { procedure_id: procedure.id, path: path, lien_site_web: lien_site_web }
+          perform_request
           procedure.reload
           procedure2.reload
         end
@@ -923,13 +925,22 @@ describe Administrateurs::ProceduresController, type: :controller do
       context 'procedure path exists and is not owned by current administrator' do
         let(:path) { procedure3.path }
         let(:lien_site_web) { 'http://mon-site.gouv.fr' }
-        it { expect { put :publish, params: { procedure_id: procedure.id, path: path, lien_site_web: lien_site_web } }.to raise_error(ActiveRecord::RecordInvalid) }
+
+        it {
+          expect { perform_request }.not_to change { procedure.reload.updated_at }
+          expect(response).to redirect_to(admin_procedure_publication_path(procedure.id))
+          expect(flash[:alert]).to have_content "« Lien public » est déjà utilisé"
+        }
       end
 
       context 'procedure path is invalid' do
         let(:lien_site_web) { 'http://mon-site.gouv.fr' }
         let(:path) { 'Invalid Procedure Path' }
-        it { expect { put :publish, params: { procedure_id: procedure.id, path: path, lien_site_web: lien_site_web } }.to raise_error(ActiveRecord::RecordInvalid) }
+
+        it {
+          expect { perform_request }.not_to change { procedure.reload.updated_at }
+          expect(flash[:alert]).to have_content "« Lien public » n’est pas valide"
+        }
       end
 
       context 'procedure revision is invalid' do
@@ -941,7 +952,10 @@ describe Administrateurs::ProceduresController, type: :controller do
                  types_de_champ_public: [{ type: :repetition, children: [] }])
         end
 
-        it { expect { put :publish, params: { procedure_id: procedure.id, path: path, lien_site_web: lien_site_web } }.to raise_error(ActiveRecord::RecordInvalid) }
+        it {
+          expect { perform_request }.not_to change { procedure.reload.updated_at }
+          expect(flash[:alert]).to have_content "doit comporter au moins un champ"
+        }
       end
     end
 
@@ -964,7 +978,10 @@ describe Administrateurs::ProceduresController, type: :controller do
       context 'procedure path is valid but lien_site_web is missing' do
         let(:path) { 'new_path2' }
         let(:lien_site_web) { nil }
-        it { expect { put :publish, params: { procedure_id: procedure.id, path: path, lien_site_web: lien_site_web } }.to raise_error(ActiveRecord::RecordInvalid) }
+        it {
+          expect { perform_request }.not_to change { procedure.reload.updated_at }
+          expect(flash[:alert]).to have_content "doit être rempli"
+        }
       end
     end
   end
