@@ -309,6 +309,7 @@ module Administrateurs
 
     def reset_draft
       @procedure.reset_draft_revision!
+      flash.notice = 'Les modifications ont été annulées'
       redirect_to admin_procedure_path(@procedure)
     end
 
