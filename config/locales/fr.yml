@@ -355,6 +355,7 @@ fr:
           external_opinion: Avis externes
           messaging: Messagerie
           involved_persons: Personnes impliquées
+          reaffectation: Réaffectation
         tab_explainations:
           a_suivre: Aucun instructeur n’est affecté au suivi de ces dossiers. Soyez le premier !
           suivis: Les dossiers qui sont dans cet onglet sont uniquement ceux que vous suivez. Vous pouvez échanger avec le demandeur jusqu’à pouvoir les accepter, les refuser ou les classer sans suite.
