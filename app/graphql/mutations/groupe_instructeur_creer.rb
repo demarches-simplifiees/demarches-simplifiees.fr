@@ -29,12 +29,7 @@ module Mutations
 
         # ugly hack to keep retro compatibility
         # do not judge
-        if !ENV['OLD_GROUPE_INSTRUCTEURS_CREATE_API_PROCEDURE_ID'].nil? && demarche_number.in?(ENV['OLD_GROUPE_INSTRUCTEURS_CREATE_API_PROCEDURE_ID']&.split(',')&.map(&:to_i))
-          stable_id = procedure.groupe_instructeurs.first.routing_rule.left.stable_id
-          tdc = procedure.published_revision.types_de_champ.find_by(stable_id: stable_ids)
-          tdc.update(options: tdc.options['drop_down_options'].push(groupe_instructeur.label))
-          groupe_instructeur.update(routing_rule: ds_eq(champ_value(stable_id), constant(groupe_instruteur.label)))
-        end
+        groupe_instructeur.procedure.update_groupe_instructeur_routing_roules!
 
         result = { groupe_instructeur: }
 
