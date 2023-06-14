@@ -56,7 +56,8 @@ RSpec.describe Instructeurs::EnConstructionMenuComponent, type: :component do
       it 'renders a dropdown' do
         expect(subject).to have_dropdown_title('Demander une correction')
         expect(subject).to have_dropdown_item('Demander une correction')
-        expect(subject).to have_dropdown_items(count: 2)
+        expect(subject).to have_dropdown_item('Demander à compléter')
+        expect(subject).to have_dropdown_items(count: 4)
       end
     end
   end

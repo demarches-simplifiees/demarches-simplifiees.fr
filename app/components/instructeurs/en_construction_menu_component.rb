@@ -21,4 +21,12 @@ class Instructeurs::EnConstructionMenuComponent < ApplicationComponent
       t(".revert_en_construction")
     end
   end
+
+  def sva?
+    dossier.procedure.sva?
+  end
+
+  def sva_resume_method
+    dossier.procedure.sva_svr_configuration.resume
+  end
 end

@@ -8,10 +8,12 @@ module DossierCorrectableConcern
 
     scope :with_pending_corrections, -> { joins(:corrections).where(corrections: { resolved_at: nil }) }
 
-    def flag_as_pending_correction!(commentaire)
+    def flag_as_pending_correction!(commentaire, kind)
       return unless may_flag_as_pending_correction?
 
-      corrections.create!(commentaire:)
+      kind ||= :correction
+
+      corrections.create!(commentaire:, kind:)
 
       return if en_construction?
 

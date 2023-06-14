@@ -10,6 +10,7 @@ fr:
   resume_intro: |
     Lorsqu’un instructeur demande de corriger un dossier, le décompte du délai est interrompu.
     Le délai reprend lorsque le demandeur redépose son dossier en déclarant avoir effectué les corrections demandées.
+    Si le dossier avait été déclaré incomplet, le délai sera réinitialisé, quelle que soit la configuration ci-dessous.
   submit: Appliquer la configuration SVA/SVR
   cancel: Annuler
   decision_buttons:
@@ -20,8 +21,8 @@ fr:
     svr_hint: "Un dossier est automatiquement refusé si aucun n’instructeur ne s’est prononcé avant le délai imparti"
   resume_buttons:
     continue_label: "Reprendre le décompte depuis le moment où il s’était arrêté"
-    continue_hint: "Exemple: si l’instructeur demande des corrections alors qu’il reste 10 jours avant la décision automatique, et que le dossier est re-déposé le 15 avril, il sera automatiquement accepté le 25 avril, sauf à ce que l’instructeur se prononce d’ici là ou demande à nouveau des corrections"
+    continue_hint: "Exemple: si l’instructeur demande des corrections d’un dossier complet alors qu’il reste 10 jours avant la décision automatique, et que le dossier est re-déposé le 15 avril, il sera automatiquement accepté le 25 avril, sauf à ce que l’instructeur se prononce d’ici là ou demande à nouveau des corrections. En revanche si l’instructeur demande à compléter le dossier, le délai sera réinitialisé."
     reset_label: "Réinitialiser le délai"
-    reset_hint: "Exemple: si le dossier est re-déposé le 15 avril et que le délai est de 2 mois, la décision sera automatiquement prise le 15 juin, sauf à ce que l’instructeur se prononce d’ici là ou demande à nouveau des corrections"
+    reset_hint: "Exemple: si le dossier est re-déposé le 15 avril et que le délai est de 2 mois, la décision sera automatiquement prise le 15 juin, sauf à ce que l’instructeur se prononce d’ici là ou demande à nouveau des corrections."
   notice_new_files_only: "Information : si vous activez cette règle, seuls les nouveaux dossiers déposés y seront soumis."
   notice_edit_denied: "Avertissement : le changement ou la désactivation du SVA/SVR est impossible."
