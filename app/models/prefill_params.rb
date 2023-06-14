@@ -10,6 +10,10 @@ class PrefillParams
     build_prefill_values.filter(&:prefillable?).map(&:champ_attributes).flatten
   end
 
+  def self.digest(params)
+    Digest::SHA256.hexdigest(params.reject { |(key, _)| key.split('_').first != "champ" }.to_json)
+  end
+
   private
 
   def build_prefill_values
