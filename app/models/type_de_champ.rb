@@ -396,6 +396,10 @@ class TypeDeChamp < ApplicationRecord
     type_champ == TypeDeChamp.type_champs.fetch(:datetime)
   end
 
+  def checkbox?
+    type_champ == TypeDeChamp.type_champs.fetch(:checkbox)
+  end
+
   def public?
     !private?
   end
