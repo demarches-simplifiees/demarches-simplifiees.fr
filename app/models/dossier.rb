@@ -1229,12 +1229,6 @@ class Dossier < ApplicationRecord
     termine_expired_to_delete.find_each(&:purge_discarded)
   end
 
-  def find_champs_by_stable_ids(stable_ids)
-    return [] if stable_ids.compact.empty?
-
-    champs.joins(:type_de_champ).where(types_de_champ: { stable_id: stable_ids })
-  end
-
   def skip_user_notification_email?
     return true if brouillon? && procedure.declarative?
     return true if for_procedure_preview?
