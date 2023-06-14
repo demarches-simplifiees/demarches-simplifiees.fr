@@ -11,6 +11,11 @@ module Mutations
 
     def resolve(groupe_instructeur:, label: nil, closed: nil)
       if groupe_instructeur.update({ label:, closed: }.compact)
+
+        # ugly hack to keep retro compatibility
+        # do not judge
+        groupe_instructeur.procedure.update_groupe_instructeur_routing_roules!
+
         { groupe_instructeur: }
       else
         { errors: groupe_instructeur.errors.full_messages }
