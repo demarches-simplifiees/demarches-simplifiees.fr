@@ -278,8 +278,6 @@ module Administrateurs
           if @procedure.publish_or_reopen!(current_administrateur)
             @procedure.publish_revision!
             flash.notice = "Démarche publiée"
-          else
-            flash.alert = @procedure.errors.full_messages
           end
         else
           @procedure.publish_revision!
@@ -287,8 +285,6 @@ module Administrateurs
         end
       elsif @procedure.publish_or_reopen!(current_administrateur)
         flash.notice = "Démarche publiée"
-      else
-        flash.alert = @procedure.errors.full_messages
       end
 
       if params[:old_procedure].present? && @procedure.errors.empty?
@@ -301,6 +297,9 @@ module Administrateurs
       end
 
       redirect_to admin_procedure_path(@procedure)
+    rescue ActiveRecord::RecordInvalid
+      flash.alert = @procedure.errors.full_messages
+      redirect_to admin_procedure_publication_path(@procedure)
     end
 
     def reset_draft
