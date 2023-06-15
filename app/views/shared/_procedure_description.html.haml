@@ -50,7 +50,7 @@
               - procedure.pieces_jointes_list_without_conditionnal.each do |pj|
                 %li
                   = pj.libelle
-                  = t('utils.no_mandatory') unless pj.mandatory?
+                  = t('utils.no_mandatory') if !pj.mandatory?
 
           - if procedure.pieces_jointes_list_with_conditionnal.present?
             %h3.fr-text--sm.fr-mb-0.fr-mt-2w
@@ -59,7 +59,7 @@
               - procedure.pieces_jointes_list_with_conditionnal.each do |pj|
                 %li
                   = pj.libelle
-                  = t('utils.no_mandatory') unless pj.mandatory?
+                  = t('utils.no_mandatory') if !pj.mandatory?
 
     - if procedure.persisted? && procedure.estimated_duration_visible?
       %section.fr-accordion
