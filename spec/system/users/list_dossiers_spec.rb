@@ -1,11 +1,13 @@
 describe 'user access to the list of their dossiers', js: true do
   let(:user) { create(:user) }
-  let!(:dossier_brouillon)       { create(:dossier, user: user) }
-  let!(:dossier_en_construction) { create(:dossier, :with_populated_champs, :en_construction, user: user) }
-  let!(:dossier_en_instruction)  { create(:dossier, :en_instruction, user: user) }
-  let!(:dossier_traite)          { create(:dossier, :accepte, user: user) }
-  let!(:dossier_refuse)          { create(:dossier, :refuse, user: user) }
-  let!(:dossier_archived)        { create(:dossier, :en_instruction, :archived, user: user) }
+  let!(:dossier_brouillon)          { create(:dossier, user: user) }
+  let!(:dossier_en_construction)    { create(:dossier, :with_populated_champs, :en_construction, user: user) }
+  let!(:dossier_en_construction_2)  { create(:dossier, :en_construction, user: user) }
+  let!(:dossier_en_instruction)     { create(:dossier, :en_instruction, user: user) }
+  let!(:dossier_traite)             { create(:dossier, :accepte, user: user) }
+  let!(:dossier_refuse)             { create(:dossier, :refuse, user: user) }
+  let!(:dossier_a_corriger)         { create(:dossier_correction, dossier: dossier_en_construction_2) }
+  let!(:dossier_archived)           { create(:dossier, :en_instruction, :archived, user: user) }
   let(:dossiers_per_page) { 25 }
   let(:last_updated_dossier) { dossier_en_construction }
 
@@ -28,7 +30,7 @@ describe 'user access to the list of their dossiers', js: true do
     expect(page).to have_content(dossier_en_construction.procedure.libelle)
     expect(page).to have_content(dossier_en_instruction.procedure.libelle)
     expect(page).to have_content(dossier_archived.procedure.libelle)
-    expect(page).to have_text('4 en cours')
+    expect(page).to have_text('5 en cours')
     expect(page).to have_text('2 traités')
   end
 
@@ -51,83 +53,88 @@ describe 'user access to the list of their dossiers', js: true do
       expect(page).not_to have_content(dossier_en_instruction.procedure.libelle)
       page.click_link("Suivant")
       expect(page).to have_content(dossier_en_instruction.procedure.libelle)
-      expect(page).to have_text('4 en cours')
+      expect(page).to have_text('5 en cours')
       expect(page).to have_text('2 traités')
     end
   end
 
   context 'when user uses filter' do
     scenario 'user filters state on tab "en-cours"' do
-      expect(page).to have_text('4 en cours')
+      expect(page).to have_text('5 en cours')
       expect(page).to have_text('2 traités')
-      expect(page).to have_text('4 sur 4 dossiers')
+      expect(page).to have_text('5 sur 5 dossiers')
+
       click_on('Sélectionner un filtre')
-      expect(page).to have_text('Brouillon')
-      expect(page).to have_text('En construction')
-      expect(page).to have_text('En instruction')
-      find("label", text: "Brouillon").click
+      expect(page).to have_select 'Statut', selected: 'Sélectionner un statut', options: ['Sélectionner un statut', 'Brouillon', 'En construction', 'En instruction', 'À corriger']
+      select('Brouillon', from: 'Statut')
       click_on('Appliquer les filtres')
+
       expect(page).to have_text('1 dossier')
-      expect(page).to have_checked_field('Brouillon')
+      expect(page).to have_select 'Statut', selected: 'Brouillon', options: ['Sélectionner un statut', 'Brouillon', 'En construction', 'En instruction', 'À corriger']
+
+      click_on('Sélectionner un filtre')
+      select('À corriger', from: 'Statut')
+      click_on('Appliquer les filtres')
+
+      expect(page).to have_text('1 dossier')
+      expect(page).to have_select 'Statut', selected: 'À corriger', options: ['Sélectionner un statut', 'Brouillon', 'En construction', 'En instruction', 'À corriger']
     end
 
     scenario 'user filters state on tab "traité"' do
       visit dossiers_path(statut: 'traites')
-      expect(page).to have_text('4 en cours')
+      expect(page).to have_text('5 en cours')
       expect(page).to have_text('2 traités')
       expect(page).to have_text('2 sur 2 dossiers')
 
       click_on('Sélectionner un filtre')
-      expect(page).to have_text('Accepté')
-      expect(page).to have_text('Refusé')
-      expect(page).to have_text('Classé sans suite')
-      find("label", text: "Refusé").click
+      expect(page).to have_select 'Statut', selected: 'Sélectionner un statut', options: ['Sélectionner un statut', 'Accepté', 'Refusé', 'Classé sans suite']
+      select('Refusé', from: 'Statut')
       click_on('Appliquer les filtres')
       expect(page).to have_text('1 dossier')
-      expect(page).to have_checked_field('Refusé')
+      expect(page).to have_select 'Statut', selected: 'Refusé', options: ['Sélectionner un statut', 'Accepté', 'Refusé', 'Classé sans suite']
 
       click_on('Sélectionner un filtre')
       click_on('Réinitialiser les filtres')
       expect(page).to have_text('2 sur 2 dossiers')
-      expect(page).to have_unchecked_field('Refusé')
+      expect(page).to have_select 'Statut', selected: 'Sélectionner un statut', options: ['Sélectionner un statut', 'Accepté', 'Refusé', 'Classé sans suite']
     end
 
     scenario 'user filters by created_at' do
       dossier_en_construction.update!(created_at: Date.yesterday)
 
-      expect(page).to have_text('4 sur 4 dossiers')
+      expect(page).to have_text('5 sur 5 dossiers')
       click_on('Sélectionner un filtre')
       fill_in 'from_created_at_date', with: Date.today
       click_on('Appliquer les filtres')
-      expect(page).to have_text('3 sur 3 dossiers')
+      expect(page).to have_text('4 sur 4 dossiers')
     end
 
     scenario 'user uses multiple filters' do
       dossier_en_construction.update!(created_at: Date.yesterday)
-      dossier_en_instruction.update!(depose_at: Date.yesterday)
 
-      expect(page).to have_text('4 sur 4 dossiers')
+      expect(page).to have_select 'Statut', selected: 'Sélectionner un statut', options: ['Sélectionner un statut', 'Brouillon', 'En construction', 'En instruction', 'À corriger']
+
+      expect(page).to have_text('5 sur 5 dossiers')
       click_on('Sélectionner un filtre')
       fill_in 'from_created_at_date', with: Date.today
       click_on('Appliquer les filtres')
-      expect(page).to have_text('3 sur 3 dossiers')
+      expect(page).to have_text('4 sur 4 dossiers')
       expect(page).to have_text('1 filtre actif')
 
       click_on('Sélectionner un filtre')
-      find("label", text: "En construction").click
-      find("label", text: "En instruction").click
+      select('En construction', from: 'Statut')
       click_on('Appliquer les filtres')
-      expect(page).to have_text('2 sur 2 dossiers')
-      expect(page).to have_text('3 filtres actifs')
+      expect(page).to have_text('1 dossier')
+      expect(page).to have_text('2 filtres actifs')
 
       click_on('Sélectionner un filtre')
       fill_in 'from_depose_at_date', with: Date.today
       click_on('Appliquer les filtres')
       expect(page).to have_text('1 dossier')
-      expect(page).to have_text('4 filtres actifs')
-      click_on('4 filtres actifs')
-      expect(page).to have_text('4 sur 4 dossiers')
-      expect(page).not_to have_text('4 filtres actifs')
+      expect(page).to have_text('3 filtres actifs')
+      click_on('3 filtres actifs')
+      expect(page).to have_text('5 sur 5 dossiers')
+      expect(page).not_to have_text('5 filtres actifs')
     end
   end
 
@@ -221,7 +228,6 @@ describe 'user access to the list of their dossiers', js: true do
     end
 
     context "when user search for something inside the dossier" do
-      let(:dossier_en_construction2) { create(:dossier, :with_populated_champs, :en_construction, user: user) }
       before do
         page.find_by_id('q').set(dossier_en_construction.champs_public.first.value)
       end
@@ -236,15 +242,15 @@ describe 'user access to the list of their dossiers', js: true do
       end
 
       context 'when it matches multiple dossier' do
+        let!(:dossier_with_champs) { create(:dossier, :with_populated_champs, :en_construction, user: user) }
         before do
-          dossier_en_construction2.champs_public.first.update(value: dossier_en_construction.champs_public.first.value)
           find('.fr-search-bar .fr-btn').click
         end
 
         it "redirects to the search results" do
           expect(current_path).to eq(recherche_dossiers_path)
           expect(page).to have_content(dossier_en_construction.id)
-          expect(page).to have_content(dossier_en_construction2.id)
+          expect(page).to have_content(dossier_with_champs.id)
         end
       end
     end

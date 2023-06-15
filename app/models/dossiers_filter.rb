@@ -3,36 +3,33 @@ class DossiersFilter
 
   def initialize(user, params)
     @user = user
-    @params = params.permit(:page, :from_created_at_date, :from_depose_at_date, states: [])
+    @params = params.permit(:page, :from_created_at_date, :from_depose_at_date, :state)
   end
 
   def filter_params
-    params[:from_created_at_date].presence || params[:from_depose_at_date].presence || params[:states].presence
+    params[:from_created_at_date].presence || params[:from_depose_at_date].presence || params[:state].presence
   end
 
   def filter_params_count
     count = 0
     count += 1 if params[:from_created_at_date].presence
     count += 1 if params[:from_depose_at_date].presence
-    count += params[:states].count if params[:states].presence
+    count += 1 if params[:state].presence
     count
   end
 
   def filter_procedures(dossiers)
     return dossiers if filter_params.blank?
     dossiers_result = dossiers
-    dossiers_result = dossiers_result.where(state: states) if states.present?
-    dossiers_result = dossiers_result.where('created_at >= ?', from_created_at_date) if from_created_at_date.present?
-    dossiers_result = dossiers_result.where('depose_at >= ?', from_depose_at_date) if from_depose_at_date.present?
+    dossiers_result = dossiers_result.where(state: state) if state.present? && state != "a_corriger"
+    dossiers_result = dossiers_result.with_pending_corrections if state.present? && state == "a_corriger"
+    dossiers_result = dossiers_result.where('dossiers.created_at >= ?', from_created_at_date) if from_created_at_date.present?
+    dossiers_result = dossiers_result.where('dossiers.depose_at >= ?', from_depose_at_date) if from_depose_at_date.present?
     dossiers_result
   end
 
-  def states
-    params[:states].compact_blank if params[:states].present?
-  end
-
-  def states_filtered?(state)
-    states&.include?(state)
+  def state
+    params[:state]
   end
 
   def from_created_at_date
