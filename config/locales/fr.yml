@@ -42,6 +42,7 @@ fr:
     pj: "Pièces jointes"
     asterisk_html: Les champs suivis d’un astérisque ( * ) sont obligatoires.
     mandatory_champs: Tous les champs sont obligatoires.
+    no_mandatory: (facultatif)
     file_number: Numéro de dossier
     subject: Sujet
     message: Message
@@ -869,3 +870,5 @@ fr:
       estimated_fill_duration: "Temps de remplissage estimé : %{estimated_minutes} mn"
       estimated_fill_duration_title: Quelle est la durée de remplissage de la démarche ?
       estimated_fill_duration_detail: "La durée de remplissage est estimée à %{estimated_minutes} min. Ce délai peut varier selon les options que vous choisirez."
+      pieces_jointes : Quelles sont les pièces justificatives à fournir ?
+      pieces_jointes_conditionnal_list_title : Liste des pièces en fonction de votre situation
