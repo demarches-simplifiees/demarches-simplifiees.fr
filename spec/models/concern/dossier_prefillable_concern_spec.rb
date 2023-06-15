@@ -2,9 +2,10 @@
 
 RSpec.describe DossierPrefillableConcern do
   describe '.prefill!' do
-    let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public:, types_de_champ_private:) }
     let(:dossier) { create(:dossier, :brouillon, procedure: procedure) }
     let(:types_de_champ_public) { [] }
+    let(:types_de_champ_private) { [] }
 
     subject(:fill) do
       dossier.prefill!(values)
@@ -17,7 +18,7 @@ RSpec.describe DossierPrefillableConcern do
       end
     end
 
-    context 'when champs_public_attributes is empty' do
+    context 'when champs_attributes is empty' do
       let(:values) { [] }
 
       it "doesn't mark the dossier as prefilled" do
@@ -29,9 +30,11 @@ RSpec.describe DossierPrefillableConcern do
       end
     end
 
-    context 'when champs_public_attributes has values' do
+    context 'when champs_attributes has values' do
       context 'when the champs are valid' do
         let(:types_de_champ_public) { [{ type: :text }, { type: :phone }] }
+        let(:types_de_champ_private) { [{ type: :text }] }
+
         let(:type_de_champ_1) { procedure.published_revision.types_de_champ_public.first }
         let(:value_1) { "any value" }
         let(:champ_id_1) { find_champ_by_stable_id(dossier, type_de_champ_1.stable_id).id }
@@ -40,7 +43,11 @@ RSpec.describe DossierPrefillableConcern do
         let(:value_2) { "33612345678" }
         let(:champ_id_2) { find_champ_by_stable_id(dossier, type_de_champ_2.stable_id).id }
 
-        let(:values) { [{ id: champ_id_1, value: value_1 }, { id: champ_id_2, value: value_2 }] }
+        let(:type_de_champ_3) { procedure.published_revision.types_de_champ_private.first }
+        let(:value_3) { "some value" }
+        let(:champ_id_3) { find_champ_by_stable_id(dossier, type_de_champ_3.stable_id).id }
+
+        let(:values) { [{ id: champ_id_1, value: value_1 }, { id: champ_id_2, value: value_2 }, { id: champ_id_3, value: value_3 }] }
 
         it_behaves_like 'a dossier marked as prefilled'
 
@@ -51,6 +58,8 @@ RSpec.describe DossierPrefillableConcern do
           expect(dossier.champs_public.first.prefilled).to eq(true)
           expect(dossier.champs_public.last.value).to eq(value_2)
           expect(dossier.champs_public.last.prefilled).to eq(true)
+          expect(dossier.champs_private.first.value).to eq(value_3)
+          expect(dossier.champs_private.first.prefilled).to eq(true)
         end
       end
 
