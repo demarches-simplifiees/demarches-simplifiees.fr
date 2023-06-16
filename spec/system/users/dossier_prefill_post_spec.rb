@@ -55,7 +55,7 @@ describe 'Prefilling a dossier (with a POST request):' do
           let(:user) { User.find_by(email: user_email) }
 
           before do
-            click_on "Créer un compte #{APPLICATION_NAME}"
+            click_on "Créer un compte"
 
             sign_up_with user_email, password
             expect(page).to have_content "nous avons besoin de vérifier votre adresse #{user_email}"

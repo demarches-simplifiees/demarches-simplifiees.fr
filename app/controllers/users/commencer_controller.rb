@@ -54,22 +54,21 @@ module Users
       redirect_to new_user_session_path
     end
 
-    # Not needed anymore as the procedure is stored before when user is not logged
-    # def sign_up
-    #   @procedure = retrieve_procedure
-    #   return procedure_not_found if @procedure.blank?
-    #   store_user_location!(@procedure)
-    #
-    #   redirect_to new_user_registration_path
-    # end
-    #
-    # def france_connect
-    #   @procedure = retrieve_procedure
-    #   return procedure_not_found if @procedure.blank?
-    #   store_user_location!(@procedure)
-    #
-    #   redirect_to france_connect_particulier_path
-    # end
+    def sign_up
+      @procedure = retrieve_procedure
+      return procedure_not_found if @procedure.blank?
+
+      store_user_location!(@procedure)
+      redirect_to new_user_registration_path
+    end
+
+    def france_connect
+      @procedure = retrieve_procedure
+      return procedure_not_found if @procedure.blank?
+
+      store_user_location!(@procedure)
+      redirect_to france_connect_particulier_path
+    end
 
     def procedure_for_help
       retrieve_procedure

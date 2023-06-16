@@ -7,7 +7,7 @@ shared_examples "the user has got a prefilled dossier, owned by themselves" do
     expect(dossier.user).to eq(user)
 
     expect(page).to have_current_path siret_dossier_path(procedure.dossiers.last)
-    fill_in 'Numéro SIRET', with: siret
+    fill_in 'Numéro TAHITI', with: siret
     click_on 'Valider'
 
     expect(page).to have_current_path(etablissement_dossier_path(dossier))
