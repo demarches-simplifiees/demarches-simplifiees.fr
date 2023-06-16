@@ -356,6 +356,7 @@ fr:
           external_opinion: Avis externes
           messaging: Messagerie
           involved_persons: Personnes impliquées
+          reaffectation: Réaffectation
         tab_explainations:
           a_suivre: Aucun instructeur n’est affecté au suivi de ces dossiers. Soyez le premier !
           suivis: Les dossiers qui sont dans cet onglet sont uniquement ceux que vous suivez. Vous pouvez échanger avec le demandeur jusqu’à pouvoir les accepter, les refuser ou les classer sans suite.
@@ -786,6 +787,10 @@ fr:
        deleted_by_instructeur: "Le dossier a bien été supprimé de votre interface"
        impossible_deletion: "Supression impossible : le dossier n’est pas traité"
        restore: "Le dossier a bien été restauré"
+       reaffectation: "Le dossier nº %{dossier_id} a été réaffecté au groupe d’instructeurs « %{label} »."
+       existing_groupe:
+         one: "%{count} groupe existe"
+         other: "%{count} groupes existent"
        labels:
         to_follow: à suivre
         total: dossiers
