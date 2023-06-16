@@ -16,6 +16,10 @@
         = form_with(url: admin_procedure_groupe_instructeurs_path(@procedure),
           method: :get,
           data: { controller: 'autosubmit' }) do |f|
-          .fr-checkbox-group.fr-ml-2w.fr-py-1w
+          .fr-checkbox-group.fr-ml-1w.fr-py-1w
+            .title.font-weight-bold.fr-mb-1w
+              %span.fr-icon-filter-fill.fr-icon--sm.fr-mr-1w{ 'aria-hidden': 'true' }
+                Filtre
+
             = f.check_box :filter, checked: @filter_value
-            = f.label :filter, "#{ @to_configure_count } à configurer"
+            = f.label :filter, t('.to_configure_filter', count: @to_configure_count)

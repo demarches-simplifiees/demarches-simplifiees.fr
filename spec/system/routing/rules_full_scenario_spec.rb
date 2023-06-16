@@ -36,7 +36,7 @@ describe 'The routing with rules', js: true do
 
     expect(page).to have_text('Gestion des groupes')
     expect(page).to have_text('3 groupes')
-    expect(page).not_to have_text('À configurer')
+    expect(page).not_to have_text('à configurer')
 
     click_on 'littéraire'
     expect(page).to have_select("targeted_champ", selected: "Spécialité")
@@ -56,7 +56,7 @@ describe 'The routing with rules', js: true do
     click_on 'Continuer'
 
     expect(page).to have_text('Gestion des groupes')
-    expect(page).to have_text('à configurer')
+    expect(page).to have_text('règle invalide')
 
     # update defaut groupe
     click_on 'défaut'

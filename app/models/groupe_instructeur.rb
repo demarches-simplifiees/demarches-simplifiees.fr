@@ -86,14 +86,18 @@ class GroupeInstructeur < ApplicationRecord
   end
 
   def routing_to_configure?
+    invalid_rule? || non_unique_rule?
+  end
+
+  def invalid_rule?
     rule = routing_rule
     return true if !(rule.is_a?(Logic::Eq) && rule.left.is_a?(Logic::ChampValue) && rule.right.is_a?(Logic::Constant))
     return true if !routing_rule_matches_tdc?
   end
 
-  def non_unic_rule?
-    return false if routing_to_configure?
-    routing_rule.in?((procedure.groupe_instructeurs - [self]).map(&:routing_rule))
+  def non_unique_rule?
+    return false if invalid_rule?
+    routing_rule.in?(other_groupe_instructeurs.map(&:routing_rule))
   end
 
   def groups_with_same_rule
