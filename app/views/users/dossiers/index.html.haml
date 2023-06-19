@@ -63,6 +63,14 @@
               badge: number_with_html_delimiter(@dossier_transfers.count))
 
 .fr-container
+  - if @statut == "en-cours"
+    - if @first_brouillon_recently_updated.present?
+      = render Dsfr::CalloutComponent.new(title: t('users.dossiers.header.callout.first_brouillon_recently_updated_title'), heading_level: 'h2') do |c|
+        - c.with_body do
+          %p
+            = t('users.dossiers.header.callout.first_brouillon_recently_updated_text', time_ago: time_ago_in_words(@first_brouillon_recently_updated.created_at), libelle: @first_brouillon_recently_updated.procedure.libelle  )
+          = link_to t('users.dossiers.header.callout.first_brouillon_recently_updated_button'), url_for_dossier(@first_brouillon_recently_updated), class: 'fr-btn'
+
   - if @search_terms.present?
     %h2.page-title Résultat de la recherche pour « #{@search_terms} »
     = render partial: "dossiers_list", locals: { dossiers: @dossiers }
@@ -71,13 +79,6 @@
     = render Dossiers::UserFilterComponent.new(statut: @statut, filter: @filter)
 
     - if @statut == "en-cours"
-      - if @first_brouillon_recently_updated.present?
-        = render Dsfr::CalloutComponent.new(title: t('users.dossiers.header.callout.first_brouillon_recently_updated_title'), heading_level: 'h2') do |c|
-          - c.with_body do
-            %p
-              = t('users.dossiers.header.callout.first_brouillon_recently_updated_text', time_ago: time_ago_in_words(@first_brouillon_recently_updated.created_at), libelle: @first_brouillon_recently_updated.procedure.libelle  )
-            = link_to t('users.dossiers.header.callout.first_brouillon_recently_updated_button'), url_for_dossier(@first_brouillon_recently_updated), class: 'fr-btn'
-
       = render partial: "dossiers_list", locals: { dossiers: @dossiers, filter: @filter, statut: @statut }
 
     - if @statut == "traites"

@@ -1,8 +1,8 @@
 en:
   legend:
-    states: States
-    created_at: Creation date
-    depose_at: Submission date
+    state: States
+    created_at: Creation date since
+    depose_at: Submission date since
   button:
     apply_filters: Apply filters
     reset_filters: Reset filters
@@ -14,3 +14,5 @@ en:
     active_filters_link_title:
       one: Remove the active filter
       other: "Remove the %{count} active filters"
+  states:
+    prompt: Select a state

@@ -19,6 +19,7 @@ fr:
         accepte: "Accepté"
         refuse: "Refusé"
         sans_suite: "Classé sans suite"
+        a_corriger: À corriger
       pending_correction:
         for_instructeur: "en attente"
         for_user: "à corriger"

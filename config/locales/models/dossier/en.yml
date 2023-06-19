@@ -15,6 +15,7 @@ en:
         accepte: "Accepted"
         refuse: "Refused"
         sans_suite: "No further action"
+        a_corriger: To be corrected
       pending_correction:
         for_instructeur: "pending"
         for_user: "to be corrected"
