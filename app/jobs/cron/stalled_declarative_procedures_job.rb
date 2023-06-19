@@ -1,13 +1,10 @@
 class Cron::StalledDeclarativeProceduresJob < Cron::CronJob
-  self.schedule_expression = "every 10 minute"
+  self.schedule_expression = "every 10 minutes"
 
-  def perform(*args)
+  def perform
     Procedure.declarative.find_each do |procedure|
-      begin
-        procedure.process_stalled_dossiers!
-      rescue => e
-        Sentry.set_tags(procedure: procedure.id)
-        Sentry.capture_exception(e)
+      procedure.dossiers.state_en_construction.where(declarative_triggered_at: nil).find_each do |dossier|
+        ProcessStalledDeclarativeDossierJob.perform_later(dossier)
       end
     end
   end

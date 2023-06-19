@@ -491,23 +491,6 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def process_stalled_dossiers!
-    case declarative_with_state
-    when Procedure.declarative_with_states.fetch(:en_instruction)
-      dossiers
-        .state_en_construction
-        .where(declarative_triggered_at: nil)
-        .find_each(&:passer_automatiquement_en_instruction!)
-    when Procedure.declarative_with_states.fetch(:accepte)
-      dossiers
-        .state_en_construction
-        .where(declarative_triggered_at: nil)
-        .find_each do |dossier|
-          dossier.accepter_automatiquement! if dossier.can_accepter_automatiquement?
-        end
-    end
-  end
-
   def feature_enabled?(feature)
     Flipper.enabled?(feature, self)
   end
