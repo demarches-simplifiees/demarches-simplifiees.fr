@@ -2,6 +2,7 @@ module DossierCorrectableConcern
   extend ActiveSupport::Concern
 
   included do
+    A_CORRIGER = 'a_corriger'
     has_many :corrections, class_name: 'DossierCorrection', dependent: :destroy
 
     scope :with_pending_corrections, -> { joins(:corrections).where(corrections: { resolved_at: nil }) }
