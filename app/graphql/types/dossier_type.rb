@@ -98,7 +98,7 @@ module Types
     end
 
     def groupe_instructeur
-      Loaders::Record.for(GroupeInstructeur, includes: [:procedure]).load(object.groupe_instructeur_id)
+      dataloader.with(Sources::RecordById, GroupeInstructeur.includes(:procedure)).load(object.groupe_instructeur_id)
     end
 
     def demandeur
@@ -119,9 +119,9 @@ module Types
 
     def messages(id: nil)
       if id.present?
-        Loaders::Record
-          .for(Commentaire, where: { dossier: object }, includes: [:instructeur, :expert], array: true)
-          .load(ApplicationRecord.id_from_typed_id(id))
+        dataloader
+          .with(Sources::RecordById, Commentaire.where(dossier: object).includes(:instructeur, :expert))
+          .load_all([ApplicationRecord.id_from_typed_id(id)])
       else
         Loaders::Association.for(object.class, commentaires: [:instructeur, :expert]).load(object)
       end
@@ -129,9 +129,9 @@ module Types
 
     def avis(id: nil)
       if id.present?
-        Loaders::Record
-          .for(Avis, where: { dossier: object }, includes: [:expert, :claimant], array: true)
-          .load(ApplicationRecord.id_from_typed_id(id))
+        dataloader
+          .with(Sources::RecordById, Avis.where(dossier: object).includes(:expert, :claimant))
+          .load_all([ApplicationRecord.id_from_typed_id(id)])
       else
         Loaders::Association.for(object.class, avis: [:expert, :claimant]).load(object)
       end
@@ -139,9 +139,12 @@ module Types
 
     def champs(id: nil)
       if id.present?
-        Loaders::Champ
-          .for(object, private: false)
-          .load(ApplicationRecord.id_from_typed_id(id))
+        dataloader
+          .with(Sources::RecordById,
+            Champ.where(dossier: object, private: false).includes(:type_de_champ),
+            where: -> (ids) { { types_de_champ: { stable_id: ids } } },
+            index_by: -> (champ) { champ.stable_id })
+            .load_all([ApplicationRecord.id_from_typed_id(id)])
       else
         Loaders::Association
           .for(object.class, champs_public: :type_de_champ)
@@ -152,9 +155,12 @@ module Types
 
     def annotations(id: nil)
       if id.present?
-        Loaders::Champ
-          .for(object, private: true)
-          .load(ApplicationRecord.id_from_typed_id(id))
+        dataloader
+          .with(Sources::RecordById,
+            Champ.where(dossier: object, private: true).includes(:type_de_champ),
+            where: -> (ids) { { types_de_champ: { stable_id: ids } } },
+            index_by: -> (champ) { champ.stable_id })
+            .load_all([ApplicationRecord.id_from_typed_id(id)])
       else
         Loaders::Association.for(object.class, champs_private: :type_de_champ).load(object)
       end
@@ -199,7 +205,7 @@ module Types
     private
 
     def user_loader
-      Loaders::Record.for(User, includes: :france_connect_information).load(object.user_id)
+      dataloader.with(Sources::RecordById, User.includes(:france_connect_information)).load(object.user_id)
     end
   end
 end

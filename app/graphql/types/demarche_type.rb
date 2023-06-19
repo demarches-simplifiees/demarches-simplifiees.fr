@@ -77,7 +77,7 @@ module Types
     end
 
     def service
-      Loaders::Record.for(Service).load(object.service_id)
+      dataloader.with(Sources::RecordById, Service).load(object.service_id)
     end
 
     def revisions
