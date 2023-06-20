@@ -35,6 +35,8 @@ en:
             entreprise_forme_juridique: Forme juridique
             entreprise_nom_commercial: Commercial name
             entreprise_raison_sociale: Raison sociale
+            entreprise_nom: Last name of contractor
+            entreprise_prenom: First name of contractor
             entreprise_siret_siege_social: SIRET siège social
             entreprise_date_creation: Creation date
             siret: SIRET

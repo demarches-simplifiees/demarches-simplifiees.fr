@@ -78,6 +78,8 @@ describe ProcedurePresentation do
           { "label" => 'Forme juridique', "table" => 'etablissement', "column" => 'entreprise_forme_juridique', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
           { "label" => 'Nom commercial', "table" => 'etablissement', "column" => 'entreprise_nom_commercial', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
           { "label" => 'Raison sociale', "table" => 'etablissement', "column" => 'entreprise_raison_sociale', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
+          { "label" => "Nom de l'entrepreneur individuel", "table" => 'etablissement', "column" => 'entreprise_nom', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
+          { "label" => "Prénom de l'entrepreneur individuel", "table" => 'etablissement', "column" => 'entreprise_prenom', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
           { "label" => 'SIRET siège social', "table" => 'etablissement', "column" => 'entreprise_siret_siege_social', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
           { "label" => 'Date de création', "table" => 'etablissement', "column" => 'entreprise_date_creation', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '' },
           { "label" => 'SIRET', "table" => 'etablissement', "column" => 'siret', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },

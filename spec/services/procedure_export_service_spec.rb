@@ -150,6 +150,8 @@ describe ProcedureExportService do
         [
           "ID",
           "Email",
+          "Entreprise nom de l'EI",
+          "Entreprise prénom de l'EI",
           "Entreprise raison sociale",
           "Archivé",
           "État du dossier",

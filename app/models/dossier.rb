@@ -1131,6 +1131,8 @@ class Dossier < ApplicationRecord
       ]
     else
       columns << ['Entreprise raison sociale', etablissement&.entreprise_raison_sociale]
+      columns << ["Entreprise nom de l'EI", etablissement&.entreprise_nom]
+      columns << ["Entreprise prénom de l'EI", etablissement&.entreprise_prenom]
     end
 
     columns += [

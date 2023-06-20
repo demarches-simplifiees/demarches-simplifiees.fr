@@ -35,6 +35,8 @@ fr:
             entreprise_forme_juridique: Forme juridique
             entreprise_nom_commercial: Nom commercial
             entreprise_raison_sociale: Raison sociale
+            entreprise_nom: Nom de l'entrepreneur individuel
+            entreprise_prenom: Prénom de l'entrepreneur individuel
             entreprise_siret_siege_social: SIRET siège social
             entreprise_date_creation: Date de création
             siret: SIRET

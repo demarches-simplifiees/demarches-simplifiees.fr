@@ -78,6 +78,8 @@ class ProcedurePresentation < ApplicationRecord
         field_hash('etablissement', 'entreprise_forme_juridique', type: :text),
         field_hash('etablissement', 'entreprise_nom_commercial', type: :text),
         field_hash('etablissement', 'entreprise_raison_sociale', type: :text),
+        field_hash('etablissement', 'entreprise_nom', type: :text),
+        field_hash('etablissement', 'entreprise_prenom', type: :text),
         field_hash('etablissement', 'entreprise_siret_siege_social', type: :text),
         field_hash('etablissement', 'entreprise_date_creation', type: :date)
       )
