@@ -37,8 +37,8 @@ RSpec.describe ApplicationMailer, type: :mailer do
       end
 
       it 'raise classic error to retry' do
-        expect { subject }.to raise_error(MailDeliveryError)
-        expect(EmailEvent.dolist_api.dispatch_error.count).to eq(1)
+        expect { subject }.to raise_error(RuntimeError)
+        expect(EmailEvent.pending.count).to eq(1)
       end
     end
 
@@ -76,8 +76,9 @@ RSpec.describe ApplicationMailer, type: :mailer do
     let(:user2) { create(:user, email: "your@email.com") }
 
     it 'creates a new EmailEvent record with the correct information' do
-      expect { UserMailer.ask_for_merge(user1, user2.email).deliver_now }.to change { EmailEvent.count }.by(1)
+      expect { UserMailer.ask_for_merge(user1, user2.email).deliver_now }.to change { EmailEvent.count }.by(2)
       event = EmailEvent.last
+      expect(EmailEvent.first.status).to eq('pending')
 
       expect(event.to).to eq("your@email.com")
       expect(event.method).to eq("test")
@@ -85,31 +86,36 @@ RSpec.describe ApplicationMailer, type: :mailer do
       expect(event.processed_at).to be_within(1.second).of(Time.zone.now)
       expect(event.status).to eq('dispatched')
     end
+  end
+
+  context 'EmailDeliveringInterceptor is invoked' do
+    let(:user1) { create(:user) }
+    let(:user2) { create(:user, email: "your@email.com") }
 
     context "when there is an error and email are not sent" do
       subject { UserMailer.ask_for_merge(user1, user2.email) }
 
       before do
         allow_any_instance_of(Mail::Message)
-          .to receive(:deliver)
+          .to receive(:do_delivery)
           .and_raise(smtp_error)
       end
 
       context "smtp server busy" do
         let(:smtp_error) { Net::SMTPServerBusy.new('451 4.7.500 Server busy') }
 
-        it "re-raise an error and creates an event" do
-          expect { subject.deliver_now }.to change { EmailEvent.count }.by(1).and raise_error(MailDeliveryError)
-          expect(EmailEvent.last.status).to eq('dispatch_error')
+        it "catches the smtp error" do
+          expect { subject.deliver_now }.not_to raise_error
+          expect(EmailEvent.pending.count).to eq(1)
         end
       end
 
-      context "generic unknown error" do
+      context "does not catches other error" do
         let(:smtp_error) { Net::OpenTimeout.new }
 
         it "re-raise an error and creates an event" do
-          expect { subject.deliver_now }.to change { EmailEvent.count }.by(1).and raise_error(MailDeliveryError)
-          expect(EmailEvent.last.status).to eq('dispatch_error')
+          expect { subject.deliver_now }.to raise_error(Net::OpenTimeout)
+          expect(EmailEvent.pending.count).to eq(1)
         end
       end
     end

@@ -16,6 +16,7 @@ class EmailEvent < ApplicationRecord
   RETENTION_DURATION = 1.month
 
   enum status: {
+    pending: 'pending',
     dispatched: 'dispatched',
     dispatch_error: 'dispatch_error'
   }
