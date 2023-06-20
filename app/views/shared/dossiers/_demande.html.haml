@@ -37,19 +37,3 @@
   - if champs.any? || dossier.procedure.routing_enabled?
     .card
       = render partial: "shared/dossiers/champs", locals: { champs: champs, dossier: dossier, demande_seen_at: demande_seen_at, profile: profile }
-
-  - if dossier.procedure.routing_enabled?
-    %h2.fr-h6
-      Réaffectation
-    .card
-      En cas d'erreur de l'usager, vous pouvez réaffecter le dossier vers l'un des groupes d'instructeurs suivants
-      = form_tag reaffecter_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id),
-        method: :post,
-        class: 'fr-mb-3w mt-2' do
-        .flex
-          = select_tag(:groupe_instructeur_id,
-            options_for_select(@dossier.groupe_instructeur.other_groupe_instructeurs.pluck(:label, :id)),
-            include_blank: true,
-            class: 'fr-select flex auto fr-mr-2w')
-
-          = button_tag 'Réaffecter', class: 'fr-btn fr-btn--secondary'
