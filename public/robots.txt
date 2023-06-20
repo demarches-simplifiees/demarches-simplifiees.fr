@@ -4,3 +4,4 @@
 User-agent: *
 Disallow: /commencer*
 Disallow: /rails/
+Disallow: /super_admins/
