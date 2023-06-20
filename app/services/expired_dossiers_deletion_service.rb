@@ -73,7 +73,7 @@ class ExpiredDossiersDeletionService
     user_notifications = group_by_user_email(dossiers_close_to_expiration)
     administration_notifications = group_by_fonctionnaire_email(dossiers_close_to_expiration)
 
-    dossiers_close_to_expiration.update_all(close_to_expiration_flag => Time.zone.now)
+    dossiers_close_to_expiration.in_batches.update_all(close_to_expiration_flag => Time.zone.now)
 
     user_notifications.each do |(email, dossiers)|
       DossierMailer.notify_near_deletion_to_user(dossiers, email).deliver_later
