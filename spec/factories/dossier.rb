@@ -256,5 +256,9 @@ FactoryBot.define do
         dossier.save!
       end
     end
+
+    trait :prefilled do
+      prefilled { true }
+    end
   end
 end

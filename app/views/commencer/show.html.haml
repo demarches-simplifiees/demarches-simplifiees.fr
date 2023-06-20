@@ -12,7 +12,7 @@
         = t('views.shared.account.create')
       %br
       %br
-      = link_to t('views.shared.account.already_user'), new_user_session_path, class: ['fr-btn fr-btn--lg fr-btn--secondary']
+      = link_to t('views.shared.account.already_user'), commencer_sign_in_path(path: @procedure.path, prefill_token: @prefilled_dossier&.prefill_token), class: 'fr-btn fr-btn--secondary fr-btn--lg fr-my-2w'
 
     - else
       - revision = @revision.draft? ? @revision : @procedure.revisions.where.not(id: @procedure.draft_revision_id)
@@ -21,28 +21,35 @@
       - not_drafts = dossiers.merge(Dossier.state_not_brouillon)
 
       - if dossiers.empty?
-        = link_to t('views.commencer.show.start_procedure'), url_for_new_dossier(@revision), class: ['button large expand primary']
+        = link_to t('views.commencer.show.start_procedure'), url_for_new_dossier(@revision), class: 'fr-btn fr-btn--lg fr-my-2w'
+
+      - elsif @prefilled_dossier
+        %h2.huge-title= t('views.commencer.show.prefilled_draft')
+        %p
+          = t('views.commencer.show.prefilled_draft_detail_html', time_ago: time_ago_in_words(@prefilled_dossier.created_at), procedure: @prefilled_dossier.procedure.libelle)
+        = link_to t('views.commencer.show.continue_file'), brouillon_dossier_path(@prefilled_dossier), class: 'fr-btn fr-btn--lg fr-my-2w'
+        = link_to t('views.commencer.show.start_new_file'), url_for_new_dossier(@revision), class: 'fr-btn fr-btn--lg fr-btn--secondary fr-my-2w'
 
       - elsif drafts.size == 1 && not_drafts.empty?
         - dossier = drafts.first
         %h2.huge-title= t('views.commencer.show.already_draft')
         %p
           = t('views.commencer.show.already_draft_detail_html', time_ago: time_ago_in_words(dossier.created_at), procedure: dossier.procedure.libelle)
-        = link_to t('views.commencer.show.continue_file'), brouillon_dossier_path(dossier), class: ['button large expand primary']
-        = link_to t('views.commencer.show.start_new_file'), url_for_new_dossier(@revision), class: ['button large expand']
+        = link_to t('views.commencer.show.continue_file'), brouillon_dossier_path(dossier), class: 'fr-btn fr-btn--lg fr-my-2w'
+        = link_to t('views.commencer.show.start_new_file'), url_for_new_dossier(@revision), class: 'fr-btn fr-btn--lg fr-btn--secondary fr-my-2w'
 
       - elsif not_drafts.size == 1
         - dossier = not_drafts.first
         %h2.huge-title= t('views.commencer.show.already_not_draft')
         %p
           = t('views.commencer.show.already_not_draft_detail_html', time_ago: time_ago_in_words(dossier.depose_at), procedure: dossier.procedure.libelle)
-        = link_to t('views.commencer.show.show_my_submitted_file'), dossier_path(dossier), class: ['button large expand primary']
-        = link_to t('views.commencer.show.start_new_file'), url_for_new_dossier(@revision), class: ['button large expand']
+        = link_to t('views.commencer.show.show_my_submitted_file'), dossier_path(dossier), class: 'fr-btn fr-btn--lg fr-my-2w'
+        = link_to t('views.commencer.show.start_new_file'), url_for_new_dossier(@revision), class: 'fr-btn fr-btn--lg fr-btn--secondary fr-my-2w'
 
       - else
         %h2.huge-title= t('views.commencer.show.existing_dossiers')
-        = link_to t('views.commencer.show.show_dossiers'), dossiers_path, class: ['button large expand primary']
-        = link_to t('views.commencer.show.start_new_file'), url_for_new_dossier(@revision), class: ['button large expand']
+        = link_to t('views.commencer.show.show_dossiers'), dossiers_path, class: "fr-btn fr-btn--lg fr-my-2w"
+        = link_to t('views.commencer.show.start_new_file'), url_for_new_dossier(@revision), class: "fr-btn fr-btn--lg fr-btn--secondary fr-my-2w"
 
     - if @procedure.feature_enabled?(:dossier_pdf_vide)
       %hr

@@ -8,12 +8,19 @@ RSpec.describe DossierPrefillableConcern do
 
     subject(:fill) { dossier.prefill!(values); dossier.reload }
 
+    shared_examples 'a dossier marked as prefilled' do
+      it 'marks the dossier as prefilled' do
+        expect { fill }.to change { dossier.reload.prefilled }.from(nil).to(true)
+      end
+    end
+
     context 'when champs_public_attributes is empty' do
       let(:values) { [] }
 
-      it "does nothing" do
-        expect(dossier).not_to receive(:save)
-        fill
+      it_behaves_like 'a dossier marked as prefilled'
+
+      it "doesn't change champs_public" do
+        expect { fill }.not_to change { dossier.champs_public.to_a }
       end
     end
 
@@ -29,6 +36,8 @@ RSpec.describe DossierPrefillableConcern do
         let(:champ_id_2) { find_champ_by_stable_id(dossier, type_de_champ_2.stable_id).id }
 
         let(:values) { [{ id: champ_id_1, value: value_1 }, { id: champ_id_2, value: value_2 }] }
+
+        it_behaves_like 'a dossier marked as prefilled'
 
         it "updates the champs with the new values and mark them as prefilled" do
           fill
@@ -47,6 +56,8 @@ RSpec.describe DossierPrefillableConcern do
         let(:champ_id) { find_champ_by_stable_id(dossier, type_de_champ_1.stable_id).id }
 
         let(:values) { [{ id: champ_id, value: value }] }
+
+        it_behaves_like 'a dossier marked as prefilled'
 
         it "still updates the champ" do
           expect { fill }.to change { dossier.champs_public.first.value }.from(nil).to(value)

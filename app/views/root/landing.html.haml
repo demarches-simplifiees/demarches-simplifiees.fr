@@ -26,7 +26,7 @@
           = link_to t(".how_to_find_procedure"), COMMENT_TROUVER_MA_DEMARCHE_URL, class: "fr-btn fr-btn--lg fr-mr-1w fr-mb-2w", title: new_tab_suffix(t(".how_to_find_procedure")), **external_link_attributes
           = link_to t("views.users.sessions.new.connection"), new_user_session_path, class: "fr-btn fr-btn--secondary fr-btn--lg"
 
-  - cache "numbers-panel", :expires_in => 3.hours do
+  - cache [I18n.locale, "numbers-panel"], expires_in: 3.hours do
     .landing-panel
       .container
         %h2.center.fr-mb-4w= t(".our_numbers", name: APPLICATION_NAME)

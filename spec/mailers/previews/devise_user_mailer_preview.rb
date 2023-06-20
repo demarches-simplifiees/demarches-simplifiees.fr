@@ -8,6 +8,10 @@ class DeviseUserMailerPreview < ActionMailer::Preview
     DeviseUserMailer.confirmation_instructions(user, "faketoken", {})
   end
 
+  def confirmation_instructions___with_procedure_and_prefill_token
+    DeviseUserMailer.confirmation_instructions(user, "faketoken", procedure_after_confirmation: procedure, prefill_token: "prefill_token")
+  end
+
   def reset_password_instructions
     DeviseUserMailer.reset_password_instructions(user, "faketoken", {})
   end
