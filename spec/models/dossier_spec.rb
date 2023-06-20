@@ -1115,8 +1115,8 @@ describe Dossier, type: :model do
     end
 
     context "via procedure sva" do
-      let(:procedure) { create(:procedure, :sva, :published) }
-      let(:dossier) { create(:dossier, :en_construction, procedure:) }
+      let(:procedure) { create(:procedure, :sva, :published, :for_individual) }
+      let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure:) }
 
       subject do
         dossier.process_sva_svr!

@@ -928,7 +928,13 @@ class Dossier < ApplicationRecord
     save!
 
     NotificationMailer.send_en_instruction_notification(self).deliver_later
-    log_automatic_dossier_operation(:passer_en_instruction)
+
+    if procedure.sva_svr_enabled?
+      # TODO: handle serialization errors when SIRET demandeur was not completed
+      log_automatic_dossier_operation(:passer_en_instruction, self)
+    else
+      log_automatic_dossier_operation(:passer_en_instruction)
+    end
   end
 
   def after_repasser_en_construction(h)

@@ -31,9 +31,11 @@ describe DossierCorrectableConcern do
     let(:instructeur) { create(:instructeur) }
     let(:commentaire) { create(:commentaire, dossier:, instructeur:) }
 
+    subject(:flag) { dossier.flag_as_pending_correction!(commentaire) }
+
     context 'when dossier is en_construction' do
       it 'creates a correction' do
-        expect { dossier.flag_as_pending_correction!(commentaire) }.to change { dossier.corrections.pending.count }.by(1)
+        expect { flag }.to change { dossier.corrections.pending.count }.by(1)
         expect(dossier.corrections.last).to be_correction
       end
 
@@ -43,7 +45,7 @@ describe DossierCorrectableConcern do
       end
 
       it 'does not change dossier state' do
-        expect { dossier.flag_as_pending_correction!(commentaire) }.not_to change { dossier.state }
+        expect { flag }.not_to change { dossier.state }
       end
     end
 
@@ -51,11 +53,11 @@ describe DossierCorrectableConcern do
       let(:dossier) { create(:dossier, :en_instruction) }
 
       it 'creates a correction' do
-        expect { dossier.flag_as_pending_correction!(commentaire) }.to change { dossier.corrections.pending.count }.by(1)
+        expect { flag }.to change { dossier.corrections.pending.count }.by(1)
       end
 
       it 'repasse dossier en_construction' do
-        expect { dossier.flag_as_pending_correction!(commentaire) }.to change { dossier.state }.to('en_construction')
+        expect { flag }.to change { dossier.state }.to('en_construction')
       end
     end
 
@@ -63,7 +65,7 @@ describe DossierCorrectableConcern do
       before { create(:dossier_correction, dossier:) }
 
       it 'does not create a correction' do
-        expect { dossier.flag_as_pending_correction!(commentaire) }.not_to change { dossier.corrections.pending.count }
+        expect { flag }.not_to change { dossier.corrections.pending.count }
       end
     end
 
@@ -71,7 +73,7 @@ describe DossierCorrectableConcern do
       before { create(:dossier_correction, :resolved, dossier:) }
 
       it 'creates a correction' do
-        expect { dossier.flag_as_pending_correction!(commentaire) }.to change { dossier.corrections.pending.count }.by(1)
+        expect { flag }.to change { dossier.corrections.pending.count }.by(1)
       end
     end
 
@@ -79,7 +81,7 @@ describe DossierCorrectableConcern do
       let(:dossier) { create(:dossier, :accepte) }
 
       it 'does not create a correction' do
-        expect { dossier.flag_as_pending_correction!(commentaire) }.not_to change { dossier.corrections.pending.count }
+        expect { flag }.not_to change { dossier.corrections.pending.count }
       end
     end
 
@@ -87,11 +89,31 @@ describe DossierCorrectableConcern do
       let(:dossier) { create(:dossier, :en_instruction, procedure: create(:procedure, :published, :sva)) }
 
       it 'creates a correction' do
-        expect { dossier.flag_as_pending_correction!(commentaire) }.to change { dossier.corrections.pending.count }.by(1)
+        expect { flag }.to change { dossier.corrections.pending.count }.by(1)
       end
 
       it 'repasse dossier en_construction' do
-        expect { dossier.flag_as_pending_correction!(commentaire) }.to change { dossier.state }.to('en_construction')
+        expect { flag }.to change { dossier.state }.to('en_construction')
+      end
+
+      it 'creates a log operation' do
+        expect { flag }.to change { dossier.dossier_operation_logs.count }.by(2)
+
+        log_correction, log_construction = dossier.dossier_operation_logs.last(2)
+        expect(log_correction.operation).to eq("demander_une_correction")
+        expect(log_construction.operation).to eq("repasser_en_construction")
+
+        expect(log_correction.data["subject"]["body"]).to eq(commentaire.body)
+        expect(log_correction.data["subject"]["email"]).to eq(commentaire.instructeur.email)
+      end
+
+      it 'creates a log operation of incomplete dossier' do
+        expect { dossier.flag_as_pending_correction!(commentaire, "incomplete") }.to change { dossier.dossier_operation_logs.count }.by(2)
+
+        log_correction, _ = dossier.dossier_operation_logs.last(2)
+        expect(log_correction.operation).to eq("demander_a_completer")
+        expect(log_correction.data["subject"]["body"]).to eq(commentaire.body)
+        expect(log_correction.data["subject"]["email"]).to eq(commentaire.instructeur.email)
       end
     end
   end
