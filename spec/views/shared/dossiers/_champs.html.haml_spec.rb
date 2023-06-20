@@ -59,17 +59,10 @@ describe 'shared/dossiers/champs', type: :view do
 
   context "with a routed procedure" do
     let(:procedure) do
-      create(:procedure,
-        :routee,
-        routing_criteria_name: 'departement')
+      create(:procedure, :routee)
     end
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
     let(:champs) { [] }
-
-    it "renders the routing criteria name and its value" do
-      expect(subject).to include(procedure.routing_criteria_name)
-      expect(subject).to include(dossier.groupe_instructeur.label)
-    end
 
     context "with seen_at" do
       let(:dossier) { create(:dossier) }
