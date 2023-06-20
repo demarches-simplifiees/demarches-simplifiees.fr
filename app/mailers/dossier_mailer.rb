@@ -6,7 +6,7 @@ class DossierMailer < ApplicationMailer
 
   layout 'mailers/layout'
   default from: NO_REPLY_EMAIL
-  after_action :prevent_perform_deliveries, only: [:notify_new_draft, :notify_new_answer]
+  after_action :prevent_perform_deliveries, only: [:notify_new_draft, :notify_new_answer, :notify_pending_correction]
 
   def notify_new_draft
     @dossier = params[:dossier]
@@ -46,7 +46,9 @@ class DossierMailer < ApplicationMailer
     end
   end
 
-  def notify_pending_correction(dossier)
+  def notify_pending_correction
+    commentaire = params[:commentaire]
+    dossier = commentaire.dossier
     I18n.with_locale(dossier.user_locale) do
       @dossier = dossier
       @service = dossier.procedure.service
@@ -183,7 +185,10 @@ class DossierMailer < ApplicationMailer
   protected
 
   def prevent_perform_deliveries
-    if params[:commentaire]&.discarded? || params[:dossier]&.skip_user_notification_email?
+    commentaire = params[:commentaire]
+    dossier = commentaire&.dossier || params[:dossier]
+
+    if commentaire&.discarded? || dossier&.skip_user_notification_email?
       mail.perform_deliveries = false
     end
   end
