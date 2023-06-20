@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_16_132925) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_17_085816) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -385,6 +385,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_16_132925) do
     t.datetime "en_construction_close_to_expiration_notice_sent_at", precision: 6
     t.datetime "en_instruction_at", precision: 6
     t.boolean "for_procedure_preview", default: false
+    t.boolean "forced_groupe_instructeur", default: false, null: false
     t.bigint "groupe_instructeur_id"
     t.datetime "groupe_instructeur_updated_at", precision: 6
     t.datetime "hidden_at", precision: 6

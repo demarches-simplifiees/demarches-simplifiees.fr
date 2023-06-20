@@ -1,6 +1,4 @@
-include ActiveSupport::Testing::TimeHelpers
-
-describe Stat do
+describe Stat, type: :model do
   describe '.deleted_dossiers_states' do
     subject { Stat.send(:deleted_dossiers_states) }
     it 'find counts for columns' do

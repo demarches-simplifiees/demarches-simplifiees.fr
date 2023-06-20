@@ -1,6 +1,4 @@
 RSpec.describe ProcessStalledDeclarativeDossierJob, type: :job do
-  include ActiveSupport::Testing::TimeHelpers
-
   describe "perform" do
     let(:procedure) { create(:procedure, :published, :for_individual, :with_instructeur, declarative_with_state: state) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
