@@ -58,35 +58,35 @@ describe ProcedurePresentation do
       let(:tdc_private_2) { procedure.active_revision.types_de_champ_private[1] }
       let(:expected) {
         [
-          { "label" => 'Créé le', "table" => 'self', "column" => 'created_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '' },
-          { "label" => 'Mis à jour le', "table" => 'self', "column" => 'updated_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '' },
-          { "label" => 'Déposé le', "table" => 'self', "column" => 'depose_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '' },
-          { "label" => 'En construction le', "table" => 'self', "column" => 'en_construction_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '' },
-          { "label" => 'En instruction le', "table" => 'self', "column" => 'en_instruction_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '' },
-          { "label" => 'Terminé le', "table" => 'self', "column" => 'processed_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '' },
-          { "label" => "Mis à jour depuis", "table" => "self", "column" => "updated_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '' },
-          { "label" => "Déposé depuis", "table" => "self", "column" => "depose_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '' },
-          { "label" => "En construction depuis", "table" => "self", "column" => "en_construction_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '' },
-          { "label" => "En instruction depuis", "table" => "self", "column" => "en_instruction_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '' },
-          { "label" => "Terminé depuis", "table" => "self", "column" => "processed_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '' },
-          { "label" => "Statut", "table" => "self", "column" => "state", "classname" => "", 'virtual' => true, 'scope' => 'instructeurs.dossiers.filterable_state', 'type' => :enum },
-          { "label" => 'Demandeur', "table" => 'user', "column" => 'email', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
-          { "label" => 'Email instructeur', "table" => 'followers_instructeurs', "column" => 'email', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
-          { "label" => 'Groupe instructeur', "table" => 'groupe_instructeur', "column" => 'id', 'classname' => '', 'virtual' => false, 'type' => :enum, "scope" => '' },
-          { "label" => 'Avis', "table" => 'avis', "column" => 'answer', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
-          { "label" => 'SIREN', "table" => 'etablissement', "column" => 'entreprise_siren', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
-          { "label" => 'Forme juridique', "table" => 'etablissement', "column" => 'entreprise_forme_juridique', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
-          { "label" => 'Nom commercial', "table" => 'etablissement', "column" => 'entreprise_nom_commercial', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
-          { "label" => 'Raison sociale', "table" => 'etablissement', "column" => 'entreprise_raison_sociale', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
-          { "label" => 'SIRET siège social', "table" => 'etablissement', "column" => 'entreprise_siret_siege_social', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
-          { "label" => 'Date de création', "table" => 'etablissement', "column" => 'entreprise_date_creation', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '' },
-          { "label" => 'SIRET', "table" => 'etablissement', "column" => 'siret', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
-          { "label" => 'Libellé NAF', "table" => 'etablissement', "column" => 'libelle_naf', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
-          { "label" => 'Code postal', "table" => 'etablissement', "column" => 'code_postal', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
-          { "label" => tdc_1.libelle, "table" => 'type_de_champ', "column" => tdc_1.stable_id.to_s, 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
-          { "label" => tdc_2.libelle, "table" => 'type_de_champ', "column" => tdc_2.stable_id.to_s, 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
-          { "label" => tdc_private_1.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_1.stable_id.to_s, 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
-          { "label" => tdc_private_2.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_2.stable_id.to_s, 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' }
+          { "label" => 'Créé le', "table" => 'self', "column" => 'created_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value },
+          { "label" => 'Mis à jour le', "table" => 'self', "column" => 'updated_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value },
+          { "label" => 'Déposé le', "table" => 'self', "column" => 'depose_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value },
+          { "label" => 'En construction le', "table" => 'self', "column" => 'en_construction_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value },
+          { "label" => 'En instruction le', "table" => 'self', "column" => 'en_instruction_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value },
+          { "label" => 'Terminé le', "table" => 'self', "column" => 'processed_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value },
+          { "label" => "Mis à jour depuis", "table" => "self", "column" => "updated_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '', "value_column" => :value },
+          { "label" => "Déposé depuis", "table" => "self", "column" => "depose_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '', "value_column" => :value },
+          { "label" => "En construction depuis", "table" => "self", "column" => "en_construction_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '', "value_column" => :value },
+          { "label" => "En instruction depuis", "table" => "self", "column" => "en_instruction_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '', "value_column" => :value },
+          { "label" => "Terminé depuis", "table" => "self", "column" => "processed_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '', "value_column" => :value },
+          { "label" => "Statut", "table" => "self", "column" => "state", "classname" => "", 'virtual' => true, 'scope' => 'instructeurs.dossiers.filterable_state', 'type' => :enum, "value_column" => :value },
+          { "label" => 'Demandeur', "table" => 'user', "column" => 'email', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value },
+          { "label" => 'Email instructeur', "table" => 'followers_instructeurs', "column" => 'email', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value },
+          { "label" => 'Groupe instructeur', "table" => 'groupe_instructeur', "column" => 'id', 'classname' => '', 'virtual' => false, 'type' => :enum, "scope" => '', "value_column" => :value },
+          { "label" => 'Avis', "table" => 'avis', "column" => 'answer', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value },
+          { "label" => 'SIREN', "table" => 'etablissement', "column" => 'entreprise_siren', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value },
+          { "label" => 'Forme juridique', "table" => 'etablissement', "column" => 'entreprise_forme_juridique', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value },
+          { "label" => 'Nom commercial', "table" => 'etablissement', "column" => 'entreprise_nom_commercial', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value },
+          { "label" => 'Raison sociale', "table" => 'etablissement', "column" => 'entreprise_raison_sociale', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value },
+          { "label" => 'SIRET siège social', "table" => 'etablissement', "column" => 'entreprise_siret_siege_social', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value },
+          { "label" => 'Date de création', "table" => 'etablissement', "column" => 'entreprise_date_creation', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value },
+          { "label" => 'SIRET', "table" => 'etablissement', "column" => 'siret', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value },
+          { "label" => 'Libellé NAF', "table" => 'etablissement', "column" => 'libelle_naf', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value },
+          { "label" => 'Code postal', "table" => 'etablissement', "column" => 'code_postal', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value },
+          { "label" => tdc_1.libelle, "table" => 'type_de_champ', "column" => tdc_1.stable_id.to_s, 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value },
+          { "label" => tdc_2.libelle, "table" => 'type_de_champ', "column" => tdc_2.stable_id.to_s, 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value },
+          { "label" => tdc_private_1.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_1.stable_id.to_s, 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value },
+          { "label" => tdc_private_2.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_2.stable_id.to_s, 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value }
         ]
       }
 
@@ -103,9 +103,9 @@ describe ProcedurePresentation do
     end
 
     context 'when the procedure is for individuals' do
-      let(:name_field) { { "label" => "Prénom", "table" => "individual", "column" => "prenom", 'classname' => '', 'virtual' => false, "type" => :text, "scope" => '' } }
-      let(:surname_field) { { "label" => "Nom", "table" => "individual", "column" => "nom", 'classname' => '', 'virtual' => false, "type" => :text, "scope" => '' } }
-      let(:gender_field) { { "label" => "Civilité", "table" => "individual", "column" => "gender", 'classname' => '', 'virtual' => false, "type" => :text, "scope" => '' } }
+      let(:name_field) { { "label" => "Prénom", "table" => "individual", "column" => "prenom", 'classname' => '', 'virtual' => false, "type" => :text, "scope" => '', "value_column" => :value } }
+      let(:surname_field) { { "label" => "Nom", "table" => "individual", "column" => "nom", 'classname' => '', 'virtual' => false, "type" => :text, "scope" => '', "value_column" => :value } }
+      let(:gender_field) { { "label" => "Civilité", "table" => "individual", "column" => "gender", 'classname' => '', 'virtual' => false, "type" => :text, "scope" => '', "value_column" => :value } }
       let(:procedure) { create(:procedure, :for_individual) }
       let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to) }
 
@@ -563,11 +563,23 @@ describe ProcedurePresentation do
 
       context 'with yes_no type_de_champ' do
         let(:filter) { [{ 'table' => 'type_de_champ', 'column' => type_de_champ.stable_id.to_s, 'value' => 'true' }] }
-        let(:procedure) { create(:procedure, :with_yes_no) }
+        let(:types_de_champ_public) { [{ type: :yes_no }] }
 
         before do
           kept_dossier.champs_public.find_by(type_de_champ: type_de_champ).update(value: 'true')
           discarded_dossier.champs_public.find_by(type_de_champ: type_de_champ).update(value: 'false')
+        end
+
+        it { is_expected.to contain_exactly(kept_dossier.id) }
+      end
+
+      context 'with departement type_de_champ' do
+        let(:filter) { [{ 'table' => 'type_de_champ', 'column' => type_de_champ.stable_id.to_s, 'value_column' => :external_id, 'value' => '13' }] }
+        let(:types_de_champ_public) { [{ type: :departements }] }
+
+        before do
+          kept_dossier.champs_public.find_by(type_de_champ: type_de_champ).update(external_id: '13')
+          discarded_dossier.champs_public.find_by(type_de_champ: type_de_champ).update(external_id: '69')
         end
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
@@ -845,7 +857,7 @@ describe ProcedurePresentation do
         expect(procedure_presentation.filters).to eq({
           "suivis" =>
                     [
-                      { "label" => first_type_de_champ.libelle, "table" => "type_de_champ", "column" => first_type_de_champ_id, "value" => "true" }
+                      { "label" => first_type_de_champ.libelle, "table" => "type_de_champ", "column" => first_type_de_champ_id, "value" => "true", "value_column" => "value" }
                     ]
         })
       end
@@ -859,7 +871,22 @@ describe ProcedurePresentation do
 
         expect(procedure_presentation.filters).to eq({
           "suivis" => [
-            { "label" => first_type_de_champ.libelle, "table" => "type_de_champ", "column" => first_type_de_champ_id, "value" => "Oui" }
+            { "label" => first_type_de_champ.libelle, "table" => "type_de_champ", "column" => first_type_de_champ_id, "value" => "Oui", "value_column" => "value" }
+          ]
+        })
+      end
+    end
+
+    context 'when type_de_champ departements' do
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :departements }]) }
+      let(:filters) { { "suivis" => [] } }
+
+      it 'should set value_column' do
+        procedure_presentation.add_filter("suivis", "type_de_champ/#{first_type_de_champ_id}", "13")
+
+        expect(procedure_presentation.filters).to eq({
+          "suivis" => [
+            { "label" => first_type_de_champ.libelle, "table" => "type_de_champ", "column" => first_type_de_champ_id, "value" => "13", "value_column" => "external_id" }
           ]
         })
       end
