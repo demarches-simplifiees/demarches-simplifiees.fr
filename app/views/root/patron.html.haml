@@ -177,16 +177,6 @@
         Titre de la carte
       %p Et voici le contenu de la carte
 
-    .card.featured
-      .card-title
-        Titre de la carte mise en avant
-      %p Et voici le contenu de la carte
-
-    .card.warning
-      .card-title
-        Titre de la carte d’avertissement
-      %p Et voici le contenu de la carte
-
     .card.feedback
       .card-title
         Titre de la carte pour demander un avis
@@ -397,4 +387,3 @@
 
       %h3.fr-mt-4w Existing attachment on generic object, view as download
       = render Attachment::EditComponent.new(attached_file: avis.introduction_file, attachment: attachment.reload, view_as: :download)
-

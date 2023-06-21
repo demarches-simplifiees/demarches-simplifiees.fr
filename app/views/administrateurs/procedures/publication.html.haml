@@ -5,11 +5,11 @@
                     ['Publication']] }
 .container
   - if @procedure.draft_revision.types_de_champ_public.dubious.present?
-    .card.warning.mb-3
-      .card-title Attention, certains champs ne peuvent être demandés par l’administration. Voici les champs qui nous semblent suspects :
-      %ul
-        - @procedure.draft_revision.types_de_champ_public.dubious.each do |dubious_champs|
-          %li.dubious-champs= "#{dubious_champs.libelle} (#{dubious_champs.description})"
+    = render Dsfr::AlertComponent.new(state: :warning, title: "Attention, certains champs ne peuvent être demandés par l’administration. Voici les champs qui nous semblent suspects :", extra_class_names: 'fr-mb-2w') do |c|
+      - c.body do
+        %ul
+          - @procedure.draft_revision.types_de_champ_public.dubious.each do |dubious_champs|
+            %li.dubious-champs= "#{dubious_champs.libelle} (#{dubious_champs.description})"
   .lien-demarche
     %h1
       - if @procedure.brouillon?

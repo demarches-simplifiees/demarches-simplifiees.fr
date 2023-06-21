@@ -1,7 +1,8 @@
 - if @procedure.locked?
-  .card.warning
-    .card-title Cette démarche est publiée.
-    Certains éléments de la description ne sont plus modifiables.
+  = render Dsfr::AlertComponent.new(state: :warning, title: "Cette démarche est publiée.", extra_class_names: 'fr-mb-2w') do |c|
+    - c.body do
+      %p
+        Certains éléments de la description ne sont plus modifiables.
 
 = render Dsfr::InputComponent.new(form: f, attribute: :libelle, input_type: :text_field, opts: {})
 

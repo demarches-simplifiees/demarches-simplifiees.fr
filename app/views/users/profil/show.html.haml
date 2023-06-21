@@ -53,11 +53,11 @@
         = submit_tag t('.transfer_my_files'), class: 'fr-btn fr-btn--secondary', data: { confirm: t('.transfer_confirmation') }
 
       - if @waiting_transfers.present?
-        .card.warning
-          .card-title= t('.waiting_transfers')
-          %ul
-            - @waiting_transfers.each do |email, nb_dossier|
-              %li= t('.one_waiting_transfer', email: email, count: nb_dossier)
+        = render Dsfr::AlertComponent.new(title: t('.waiting_transfers'), state: :warning, heading_level: 'h2', extra_class_names: 'fr-mt-2w') do |c|
+          - c.body do
+            %ul
+              - @waiting_transfers.each do |email, nb_dossier|
+                %li= t('.one_waiting_transfer', email: email, count: nb_dossier)
 
   = render Profile::APITokenCardComponent.new
 
