@@ -11,7 +11,7 @@ class SVASVRConfiguration
   UNIT_OPTIONS = ['days', 'weeks', 'months']
   RESUME_OPTIONS = ['continue', 'reset']
 
-  validates :decision, inclusion: { in: DECISION_OPTIONS }
+  validates :decision, inclusion: { in: DECISION_OPTIONS.without('svr') }
   validates :period, presence: true, numericality: { only_integer: true }, if: -> { enabled? }
   validates :unit, presence: true, inclusion: { in: UNIT_OPTIONS }, if: -> { enabled? }
   validates :resume, presence: true, inclusion: { in: RESUME_OPTIONS }, if: -> { enabled? }

@@ -13,4 +13,10 @@ class Dsfr::RadioButtonListComponent < ApplicationComponent
     # https://www.systeme-de-design.gouv.fr/elements-d-interface/composants/bouton-radio/
     @error.present?
   end
+
+  def each_button
+    @buttons.each do |button|
+      yield(*button.values_at(:label, :value, :hint), **button.except(:label, :value, :hint))
+    end
+  end
 end
