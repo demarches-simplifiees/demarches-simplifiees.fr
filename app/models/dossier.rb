@@ -125,6 +125,8 @@ class Dossier < ApplicationRecord
   belongs_to :transfer, class_name: 'DossierTransfer', foreign_key: 'dossier_transfer_id', optional: true, inverse_of: :dossiers
   has_many :transfer_logs, class_name: 'DossierTransferLog', dependent: :destroy
 
+  after_destroy_commit :log_destroy
+
   accepts_nested_attributes_for :champs
   accepts_nested_attributes_for :champs_public
   accepts_nested_attributes_for :champs_private
@@ -1394,5 +1396,23 @@ class Dossier < ApplicationRecord
     # rubocop:enable Lint/UnusedBlockArgument
 
     avis.each { |a| ExpertMailer.send_dossier_decision_v2(a).deliver_later }
+  end
+
+  def log_destroy
+    app_traces = caller.reject { _1.match?(%r{/ruby/.+/gems/}) }.map { _1.sub(Rails.root.to_s, "") }
+
+    payload = {
+      message: "Dossier destroyed",
+      dossier_id: id,
+      procedure_id: procedure.id,
+      request_id: Current.request_id,
+      user_id: Current.user&.id,
+      controller: app_traces.find { _1.match?(%r{/controllers/|/jobs/}) },
+      caller: app_traces.second # first is the callback definition
+    }
+
+    logger = Lograge.logger || Rails.logger
+
+    logger.info payload.to_json
   end
 end
