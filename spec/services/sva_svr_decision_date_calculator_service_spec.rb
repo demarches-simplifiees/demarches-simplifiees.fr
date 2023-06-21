@@ -13,7 +13,7 @@ describe SVASVRDecisionDateCalculatorService do
       let(:config) { { decision: :sva, period: 2, unit: :months, resume: :continue } }
 
       it 'calculates the date based on SVA rules' do
-        expect(subject).to eq(Date.new(2023, 7, 15))
+        expect(subject).to eq(Date.new(2023, 7, 16))
       end
     end
 
@@ -21,7 +21,7 @@ describe SVASVRDecisionDateCalculatorService do
       let(:config) { { decision: :sva, period: 30, unit: :days, resume: :continue } }
 
       it 'calculates the date based on SVA rules' do
-        expect(subject).to eq(Date.new(2023, 6, 14))
+        expect(subject).to eq(Date.new(2023, 6, 15))
       end
     end
 
@@ -29,7 +29,7 @@ describe SVASVRDecisionDateCalculatorService do
       let(:config) { { decision: :sva, period: 8, unit: :weeks, resume: :continue } }
 
       it 'calculates the date based on SVA rules' do
-        expect(subject).to eq(Date.new(2023, 7, 10))
+        expect(subject).to eq(Date.new(2023, 7, 11))
       end
     end
 
@@ -44,7 +44,7 @@ describe SVASVRDecisionDateCalculatorService do
         end
 
         it 'calculates the date based on SVA rules with correction delay' do
-          expect(subject).to eq(Date.new(2023, 7, 20))
+          expect(subject).to eq(Date.new(2023, 7, 22))
         end
 
         context 'when there are multiple corrections' do
@@ -55,7 +55,7 @@ describe SVASVRDecisionDateCalculatorService do
           end
 
           it 'calculates the date based on SVA rules with all correction delays' do
-            expect(subject).to eq(Date.new(2023, 7, 24))
+            expect(subject).to eq(Date.new(2023, 7, 27))
           end
         end
 
@@ -65,11 +65,11 @@ describe SVASVRDecisionDateCalculatorService do
               dossier.flag_as_pending_correction!(build(:commentaire, dossier:))
             end
 
-            travel_to DateTime.new(2023, 6, 5, 8) # 6 days elapsed
+            travel_to DateTime.new(2023, 6, 5, 8) # 6 days elapsed, restart 1 day after resolved
           end
 
           it 'calculates the date, like if resolution will be today' do
-            expect(subject).to eq(Date.new(2023, 7, 26))
+            expect(subject).to eq(Date.new(2023, 7, 29))
           end
         end
 
@@ -83,7 +83,7 @@ describe SVASVRDecisionDateCalculatorService do
           end
 
           it 'calculates the date, like if resolution will be today' do
-            expect(subject).to eq(Date.new(2023, 8, 5))
+            expect(subject).to eq(Date.new(2023, 8, 6))
           end
         end
 
@@ -95,7 +95,7 @@ describe SVASVRDecisionDateCalculatorService do
           end
 
           it 'calculates the date by resetting delay' do
-            expect(subject).to eq(Date.new(2023, 7, 25))
+            expect(subject).to eq(Date.new(2023, 7, 26))
           end
 
           context 'when there are multiple corrections' do
@@ -106,7 +106,7 @@ describe SVASVRDecisionDateCalculatorService do
             end
 
             it 'calculates the date based on SVA rules with all correction delays' do
-              expect(subject).to eq(Date.new(2023, 7, 29))
+              expect(subject).to eq(Date.new(2023, 7, 31))
             end
           end
         end
@@ -118,7 +118,7 @@ describe SVASVRDecisionDateCalculatorService do
 
       context 'there is no correction' do
         it 'calculates the date based on deposed_at' do
-          expect(subject).to eq(Date.new(2023, 7, 15))
+          expect(subject).to eq(Date.new(2023, 7, 16))
         end
       end
 
@@ -134,7 +134,7 @@ describe SVASVRDecisionDateCalculatorService do
         end
 
         it 'calculates the date based on SVA rules from the last resolved date' do
-          expect(subject).to eq(Date.new(2023, 7, 25))
+          expect(subject).to eq(Date.new(2023, 7, 26))
         end
       end
 
@@ -148,7 +148,7 @@ describe SVASVRDecisionDateCalculatorService do
         end
 
         it 'calculates the date, like if resolution will be today and delay restarted' do
-          expect(subject).to eq(Date.new(2023, 8, 5))
+          expect(subject).to eq(Date.new(2023, 8, 6))
         end
       end
     end

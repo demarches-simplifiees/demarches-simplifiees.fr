@@ -14,7 +14,7 @@ class SVASVRDecisionDateCalculatorService
   def decision_date
     duration = calculate_duration
 
-    start_date = determine_start_date
+    start_date = determine_start_date + 1.day
     correction_delay = calculate_correction_delay(start_date)
 
     start_date + correction_delay + duration
@@ -54,7 +54,7 @@ class SVASVRDecisionDateCalculatorService
       resolved_date = correction_date(correction)
       next 0 unless resolved_date > start_date
 
-      (resolved_date - correction.created_at.to_date).days
+      (resolved_date + 1.day - correction.created_at.to_date).days # restart from next day after resolution
     end
   end
 
