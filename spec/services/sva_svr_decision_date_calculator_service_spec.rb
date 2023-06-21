@@ -59,7 +59,7 @@ describe SVASVRDecisionDateCalculatorService do
           end
         end
 
-        context 'there is a pending correction' do
+        context 'there is a pending correction kind = correct' do
           before do
             travel_to DateTime.new(2023, 5, 30, 18) do
               dossier.flag_as_pending_correction!(build(:commentaire, dossier:))
@@ -70,6 +70,44 @@ describe SVASVRDecisionDateCalculatorService do
 
           it 'calculates the date, like if resolution will be today' do
             expect(subject).to eq(Date.new(2023, 7, 26))
+          end
+        end
+
+        context 'there is a pending correction kind = incomplete' do
+          before do
+            travel_to DateTime.new(2023, 5, 30, 18) do
+              dossier.flag_as_pending_correction!(build(:commentaire, dossier:), :incomplete)
+            end
+
+            travel_to DateTime.new(2023, 6, 5, 8) # 6 days elapsed
+          end
+
+          it 'calculates the date, like if resolution will be today' do
+            expect(subject).to eq(Date.new(2023, 8, 5))
+          end
+        end
+
+        context 'when correction was for an incomplete dossier' do
+          let!(:correction) do
+            created_at = DateTime.new(2023, 5, 20, 15)
+            resolved_at = DateTime.new(2023, 5, 25, 12)
+            create(:dossier_correction, :incomplete, dossier:, created_at:, resolved_at:)
+          end
+
+          it 'calculates the date by resetting delay' do
+            expect(subject).to eq(Date.new(2023, 7, 25))
+          end
+
+          context 'when there are multiple corrections' do
+            let!(:correction2) do
+              created_at = DateTime.new(2023, 5, 30, 18)
+              resolved_at = DateTime.new(2023, 6, 3, 8)
+              create(:dossier_correction, dossier:, created_at:, resolved_at:)
+            end
+
+            it 'calculates the date based on SVA rules with all correction delays' do
+              expect(subject).to eq(Date.new(2023, 7, 29))
+            end
           end
         end
       end
@@ -88,7 +126,7 @@ describe SVASVRDecisionDateCalculatorService do
         before do
           created_at = DateTime.new(2023, 5, 16, 15)
           resolved_at = DateTime.new(2023, 5, 17, 12)
-          create(:dossier_correction, dossier:, created_at:, resolved_at:)
+          create(:dossier_correction, :incomplete, dossier:, created_at:, resolved_at:)
 
           created_at = DateTime.new(2023, 5, 20, 15)
           resolved_at = DateTime.new(2023, 5, 25, 12)

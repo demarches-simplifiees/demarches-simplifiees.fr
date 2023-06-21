@@ -12,9 +12,18 @@ class SVASVRDecisionDateCalculatorService
   end
 
   def decision_date
-    base_date = determine_base_date
+    duration = calculate_duration
 
-    duration = case unit
+    start_date = determine_start_date
+    correction_delay = calculate_correction_delay(start_date)
+
+    start_date + correction_delay + duration
+  end
+
+  private
+
+  def calculate_duration
+    case unit
     when :days
       period.days
     when :weeks
@@ -22,35 +31,36 @@ class SVASVRDecisionDateCalculatorService
     when :months
       period.months
     end
-
-    base_date + duration
   end
 
-  private
+  def determine_start_date
+    return dossier.depose_at.to_date if dossier.corrections.empty?
+    return latest_correction_date if resume_method == :reset
+    return latest_incomplete_correction_date if dossier.corrections.any?(&:incomplete?)
 
-  def determine_base_date
-    return dossier.depose_at.to_date + total_correction_delay if resume_method == :continue
-
-    if dossier.corrections.any?
-      most_recent_correction_date
-    else
-      dossier.depose_at.to_date
-    end
+    dossier.depose_at.to_date
   end
 
-  def total_correction_delay
+  def latest_incomplete_correction_date
+    correction_date dossier.corrections.filter(&:incomplete?).max_by(&:resolved_at)
+  end
+
+  def latest_correction_date
+    correction_date dossier.corrections.max_by(&:resolved_at)
+  end
+
+  def calculate_correction_delay(start_date)
     dossier.corrections.sum do |correction|
-      # If the correction is not resolved, we use the current date
-      # so interfaces could calculate how many remaining days
-      resolved_date = correction.resolved_at&.to_date || Date.current
+      resolved_date = correction_date(correction)
+      next 0 unless resolved_date > start_date
 
       (resolved_date - correction.created_at.to_date).days
     end
   end
 
-  def most_recent_correction_date
-    return Date.current if dossier.pending_correction?
-
-    dossier.corrections.max_by(&:resolved_at).resolved_at.to_date
+  def correction_date(correction)
+    # NOTE: when correction is not resolved, assume it could be done today
+    # so interfaces could show how many days are remaining after correction
+    correction.resolved_at&.to_date || Date.current
   end
 end
