@@ -34,13 +34,12 @@
                 = question
 
               - if link.present?
-                .support.card.featured.mb-4.ml-4.hidden{ id: "card-#{question_type}", "aria-hidden": true , data: { "support-target": "content" } }
-                  %p.card-title
-                    = t('.our_answer')
-                  .card-content
-                    -# i18n-tasks-use t("support.index.#{question_type}.answer_html")
-                    = t('answer_html', scope: [:support, :index, question_type], base_url: APPLICATION_BASE_URL, "link_#{question_type}": link)
-
+                .fr-ml-3w.hidden{ id: "card-#{question_type}", "aria-hidden": true , data: { "support-target": "content" } }
+                  = render Dsfr::CalloutComponent.new(title: t('.our_answer')) do |c|
+                    - c.with_body do
+                      %p
+                        -# i18n-tasks-use t("support.index.#{question_type}.answer_html")
+                        = t('answer_html', scope: [:support, :index, question_type], base_url: APPLICATION_BASE_URL, "link_#{question_type}": link)
 
       .fr-input-group
         = label_tag :dossier_id, t('file_number', scope: [:utils]), class: 'fr-label'

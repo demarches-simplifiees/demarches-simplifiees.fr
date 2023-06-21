@@ -3,7 +3,7 @@
 - content_for :footer do
   = render partial: "users/procedure_footer", locals: { procedure: @dossier.procedure, dossier: @dossier }
 
-.etablissement
+.fr-mt-5w
   .container
     %h1 Informations sur l’établissement
 
@@ -34,12 +34,10 @@
       %p
         Ces informations seront jointes à votre dossier.
 
-      .etablissement-infos.card.featured
+      = render Dsfr::CalloutComponent.new(title: raison_sociale_or_name(etablissement)) do |c|
+        - c.with_body do
+          = render partial: 'users/dossiers/etablissement/infos_entreprise', locals: { etablissement: etablissement }
 
-        %h2.card-title= raison_sociale_or_name(etablissement)
-
-        = render partial: 'users/dossiers/etablissement/infos_entreprise', locals: { etablissement: etablissement }
-
-    .actions
-      = link_to 'Utiliser un autre numéro SIRET', siret_dossier_path(@dossier), class: 'fr-btn fr-btn--secondary'
-      = link_to 'Continuer avec ces informations', url_for_dossier(@dossier), class: 'fr-btn'
+    %ul.fr-mt-2w.fr-mb-5w.fr-btns-group.fr-btns-group--inline
+      %li= link_to 'Utiliser un autre numéro SIRET', siret_dossier_path(@dossier), class: 'fr-btn fr-btn--secondary'
+      %li= link_to 'Continuer avec ces informations', url_for_dossier(@dossier), class: 'fr-btn'

@@ -20,22 +20,6 @@
     margin-bottom: $default-spacer * 2;
   }
 
-  &.featured {
-    border-top: 8px solid $blue-france-500;
-
-    .card-title {
-      color: $blue-france-500;
-    }
-  }
-
-  &.warning {
-    border-top: 8px solid $orange;
-
-    .card-title {
-      color: $orange;
-    }
-  }
-
   &.feedback {
     max-width: 600px;
     margin: 30px auto;

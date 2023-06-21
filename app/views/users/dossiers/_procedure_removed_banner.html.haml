@@ -1,30 +1,20 @@
-.card.warning.mb-3.no-list
-  - if dossier.procedure.discarded?
-    .flex.justify-between
-      .card-title= t('users.dossiers.header.banner.procedure_deleted_title')
-      = render(partial: 'users/dossiers/show/print_dossier', locals: { dossier: dossier}) if !dossier.brouillon?
-    - if dossier.termine?
+- title = dossier.procedure.discarded? ? "procedure_deleted_title" : "procedure_close_title"
+= render Dsfr::AlertComponent.new(state: :warning, title: t("users.dossiers.header.banner.#{title}"), extra_class_names: 'fr-mb-2w') do |c|
+  - c.body do
+    - if dossier.termine? && dossier.procedure.discarded?
       %p
         = t('users.dossiers.header.banner.procedure_deleted_dossier_termine_content')
-    - elsif dossier.brouillon?
-      %p
-        = t('users.dossiers.header.banner.procedure_close_content')
-    - else
+    - elsif !dossier.brouillon? && dossier.procedure.discarded?
       %p
         = t('users.dossiers.header.banner.procedure_deleted_dossier_en_cours_content')
+    - else
+      %p
+        = t('users.dossiers.header.banner.procedure_close_content')
 
     = render partial: "users/dossiers/replacement_procedure", locals: { replacement_procedure: dossier.procedure.replaced_by_procedure }
+
     %p
       = t('users.dossiers.header.banner.contact_service', service_name: dossier.procedure.service.nom, service_phone_number: dossier.procedure.service.telephone, service_email: dossier.procedure.service.email)
 
-  - else
-    .flex.justify-between
-      .card-title= t('users.dossiers.header.banner.procedure_close_title')
-      = render(partial: 'users/dossiers/show/print_dossier', locals: { dossier: dossier }) if !dossier.brouillon?
-    %p
-      = t('users.dossiers.header.banner.procedure_close_content')
-
-    = render partial: "users/dossiers/replacement_procedure", locals: { replacement_procedure: dossier.procedure.replaced_by_procedure }
-    %p
-      = t('users.dossiers.header.banner.contact_service', service_name: dossier.procedure.service.nom, service_phone_number: dossier.procedure.service.telephone, service_email: dossier.procedure.service.email)
-
+    - if !dossier.brouillon?
+      = render(partial: 'users/dossiers/show/print_dossier', locals: { dossier: dossier })
