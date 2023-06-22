@@ -454,6 +454,7 @@ module Administrateurs
         :libelle,
         :description,
         :description_target_audience,
+        :description_pj,
         :organisation,
         :direction,
         :lien_site_web,

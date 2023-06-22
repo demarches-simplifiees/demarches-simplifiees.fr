@@ -16,6 +16,7 @@
 #  closed_at                                 :datetime
 #  declarative_with_state                    :string
 #  description                               :string
+#  description_pj                            :string
 #  description_target_audience               :string
 #  dossiers_count_computed_at                :datetime
 #  duree_conservation_dossiers_dans_ds       :integer
