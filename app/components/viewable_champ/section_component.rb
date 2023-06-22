@@ -4,9 +4,7 @@ class ViewableChamp::SectionComponent < ApplicationComponent
 
   def initialize(champs: nil, nodes: nil, demande_seen_at:, profile:)
     @demande_seen_at, @profile, @repetition = demande_seen_at, profile
-    if nodes.nil?
-      nodes = to_tree(champs:)
-    end
+    nodes ||= to_tree(champs:)
     @nodes = to_sections(nodes:)
   end
 
@@ -15,7 +13,9 @@ class ViewableChamp::SectionComponent < ApplicationComponent
   end
 
   def header_section
-    return @nodes.first if @nodes.first.is_a?(Champs::HeaderSectionChamp)
+    if @nodes.first.is_a?(Champs::HeaderSectionChamp)
+      @nodes.first
+    end
   end
 
   def champs
@@ -35,6 +35,10 @@ class ViewableChamp::SectionComponent < ApplicationComponent
 
   def tag_for_depth
     "h#{header_section.level + 1}" if header_section
+  end
+
+  def first_level?
+    header_section.level == 1
   end
 
   private

@@ -11,9 +11,7 @@
         %p.champ-updated-at.fr-mb-0.fr-text--sm
           - if updated_after_deposer?(champ)
             %span{ class: highlight_if_unseen_class(@demande_seen_at, champ.updated_at) }
-              modifié le
-              = try_format_datetime(champ.updated_at)
-
+              = t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: try_format_datetime(champ.updated_at))
       - if champ.blank?
         .champ-content.fr-text-mention--grey{ class: [highlight_if_unseen_class(@demande_seen_at, champ.updated_at), champ.type_champ] }
           %p= t('.blank')

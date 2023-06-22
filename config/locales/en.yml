@@ -330,6 +330,8 @@ en:
         hello: Dear Sir or Madam,
         best_regards: Best Regards,
       dossiers:
+        form:
+          updated_at: "updated at %{datetime}"
         edit:
           autosave: Your file is automatically saved after each modification. You can close the window at any time and pick up where you left off later.
           notice: "Download the notice of the procedure"
@@ -341,8 +343,6 @@ en:
             write_message_placeholder: "Write your message here"
             write_message_to_administration_placeholder: "Write your message to the administration here"
         demande:
-          en_construction: "File submission date"
-          updated_at: "updated at %{updated_at}"
           requester_identity: "Identity of the requester"
           my_identity: "My identity"
           form: "Form"

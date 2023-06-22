@@ -6,8 +6,7 @@
       %p.champ-updated-at.fr-mb-0.fr-text--sm
         - if demande_seen_at&.<(dossier.groupe_instructeur_updated_at)
           %span{ class: highlight_if_unseen_class(demande_seen_at, dossier.groupe_instructeur_updated_at) }
-            modifié le
-            = try_format_datetime(dossier.updated_at)
+            = t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: try_format_datetime(dossier.updated_at))
 
     .champ-content.fr-text-action-high--grey{ class: highlight_if_unseen_class(demande_seen_at, dossier.groupe_instructeur_updated_at) }
       %p= dossier.groupe_instructeur.label

@@ -3,9 +3,7 @@ class EditableChamp::SectionComponent < ApplicationComponent
   include TreeableConcern
 
   def initialize(nodes: nil, champs: nil)
-    if (nodes.nil?)
-      nodes = to_tree(champs:)
-    end
+    nodes ||= to_tree(champs:)
     @nodes = to_fieldset(nodes:)
   end
 

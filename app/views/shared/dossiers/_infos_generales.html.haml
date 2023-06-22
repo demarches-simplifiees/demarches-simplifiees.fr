@@ -2,7 +2,8 @@
   %p.fr-my-4v.fr-px-4v.fr-text-action-high--grey
     = l(dossier.depose_at, format: '%d %B %Y %H:%m')
     - if dossier.updated_at != dossier.depose_at
-      = t('views.shared.dossiers.demande.updated_at', updated_at: l(dossier.updated_at, format: '%d %B %y %H:%m'))
+      = t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: l(dossier.updated_at, format: :long))
+
 
   - if dossier.justificatif_motivation.attached?
     .fr-my-4v.fr-px-4v
