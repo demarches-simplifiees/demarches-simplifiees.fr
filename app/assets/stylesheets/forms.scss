@@ -20,6 +20,33 @@
     font-style: italic;
   }
 
+  .fr-input-group {
+    margin-bottom: 1rem;
+  }
+
+  .section-2 {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 2px solid var(--border-default-grey);
+  }
+
+  .section-2,
+  .section-3 {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-4,
+  .section-5,
+  .section-6 {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  legend {
+    width: 100%;
+  }
+
   hr {
     width: 100%;
     height: 0;
