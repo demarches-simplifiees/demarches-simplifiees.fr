@@ -1871,6 +1871,12 @@ describe Dossier, type: :model do
     let(:dossier) { create(:dossier) }
 
     it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["État du dossier", "Brouillon"]) }
+
+    context 'procedure sva' do
+      let(:dossier) { create(:dossier, :en_instruction, procedure: create(:procedure, :sva)) }
+
+      it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["Date SVA", :sva_svr_decision_on]) }
+    end
   end
 
   describe '#processed_in_month' do

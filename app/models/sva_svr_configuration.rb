@@ -20,6 +20,12 @@ class SVASVRConfiguration
     UNIT_OPTIONS
   end
 
+  def human_decision
+    return if decision == 'disabled'
+
+    decision.upcase
+  end
+
   private
 
   def enabled?
