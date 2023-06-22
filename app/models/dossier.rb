@@ -1283,6 +1283,10 @@ class Dossier < ApplicationRecord
     false
   end
 
+  def sva_svr_decision_in_days
+    (sva_svr_decision_on - Date.current).to_i
+  end
+
   private
 
   def create_missing_traitemets

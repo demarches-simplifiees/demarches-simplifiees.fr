@@ -241,6 +241,18 @@ def add_etats_dossier(pdf, dossier)
     format_in_2_columns(pdf, "En instruction le", try_format_date(dossier.en_instruction_at))
   end
 
+  if dossier.sva_svr_decision_triggered_at.present?
+    format_in_2_columns(pdf, "Décision #{dossier.procedure.sva_svr_configuration.human_decision} prise le", try_format_date(dossier.sva_svr_decision_triggered_at))
+  elsif dossier.sva_svr_decision_on.present?
+    value = if dossier.pending_correction?
+      "#{dossier.sva_svr_decision_in_days} jours après la correction"
+    else
+      try_format_date(dossier.sva_svr_decision_on)
+    end
+
+    format_in_2_columns(pdf, "Date prévisionnelle #{dossier.procedure.sva_svr_configuration.human_decision}", value)
+  end
+
   if dossier.processed_at.present?
     format_in_2_columns(pdf, "Décision le", try_format_date(dossier.processed_at))
   end

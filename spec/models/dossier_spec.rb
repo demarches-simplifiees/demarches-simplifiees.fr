@@ -2043,6 +2043,12 @@ describe Dossier, type: :model do
     end
   end
 
+  describe '#sva_svr_decision_in_days' do
+    let(:dossier) { create(:dossier, :en_instruction, sva_svr_decision_on: 10.days.from_now) }
+
+    it { expect(dossier.sva_svr_decision_in_days).to eq 10 }
+  end
+
   private
 
   def count_for_month(processed_by_month, month)
