@@ -1,9 +1,9 @@
 ~ @form.text_area(:value, input_opts(id: @champ.input_id, aria: { describedby: @champ.describedby_id }, rows: 6, required: @champ.required?, value: html_to_string(@champ.value)))
 
 - if @champ.character_limit_info?
-  %span.fr-icon-information-fill.fr-text-default--info.characters-count
+  %p.fr-info-text
     = t('.remaining_characters', remaining_words: @champ.remaining_characters)
 
 - if @champ.character_limit_warning?
-  %p.fr-icon-warning-fill.fr-text-default--warning.characters-count
+  %p.fr-icon--sm.fr-mt-4v.fr-mb-0.fr-hint-text.fr-icon-warning-fill.fr-text-default--warning.characters-count
     = t('.excess_characters', excess_words: @champ.excess_characters)
