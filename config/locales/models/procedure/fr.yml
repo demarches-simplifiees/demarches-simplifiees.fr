@@ -9,6 +9,7 @@ fr:
         hints:
           description: Décrivez en quelques lignes le contexte, la finalité, etc.
           description_target_audience: Décrivez en quelques lignes les destinataires finaux de la démarche, les critères d’éligibilité s’il y en a, les pré-requis, etc.
+          description_pj: Décrivez la liste des pièces jointes à fournir s’il y en a
           lien_site_web: "Exemple: 'https://exemple.gouv.fr/ma_demarche'"
           cadre_juridique: "Exemple: 'https://www.legifrance.gouv.fr/'"
         path: Lien public
@@ -19,6 +20,8 @@ fr:
         libelle: Titre de la démarche
         description: Quel est l’objet de la démarche ?
         description_target_audience: À qui s’adresse la démarche ?
+        description_pj: Liste des pièces jointes demandées
+        description_pj_placeholder: Si vous ne renseignez pas ce champ et que votre formulaire contient des pièces jointes, une liste générée automatiquement s'affichera dans la page d'accueil de votre démarche.
         lien_site_web: Où les usagers trouveront-ils le lien vers la démarche ?
         cadre_juridique: Lien vers le texte
         lien_dpo: Lien ou email pour contacter le Délégué à la Protection des Données (DPO)

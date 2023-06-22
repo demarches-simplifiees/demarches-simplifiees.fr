@@ -50,5 +50,12 @@ describe 'shared/_procedure_description', type: :view do
       expect(rendered).to have_text('Libelle du champ')
       expect(rendered).to have_selector('.pieces_jointes ul li', count: 2)
     end
+
+    it 'shows the manual description pieces jointes list if admin filled one' do
+      procedure.update!(description_pj: 'une description des pj manuelle')
+      subject
+      expect(rendered).to have_text('Quelles sont les pièces justificatives à fournir')
+      expect(rendered).to have_text('une description des pj manuelle')
+    end
   end
 end
