@@ -295,6 +295,7 @@ RSpec.describe DossierCloneConcern do
 
     context 'with new revision' do
       let(:added_champ) { forked_dossier.champs.find { _1.libelle == "Un nouveau champ text" } }
+      let(:added_repetition_champ) { forked_dossier.champs.find { _1.libelle == "Texte en répétition" } }
       let(:removed_champ) { dossier.champs.find { _1.stable_id == 99 } }
       let(:updated_champ) { dossier.champs.find { _1.stable_id == 991 } }
 
@@ -306,6 +307,11 @@ RSpec.describe DossierCloneConcern do
           type_champ: TypeDeChamp.type_champs.fetch(:text),
           libelle: "Un nouveau champ text"
         })
+        procedure.draft_revision.add_type_de_champ({
+          type_champ: TypeDeChamp.type_champs.fetch(:text),
+          parent_stable_id: 993,
+          libelle: "Texte en répétition"
+        })
         procedure.draft_revision.remove_type_de_champ(removed_champ.stable_id)
         procedure.draft_revision.find_and_ensure_exclusive_use(updated_champ.stable_id).update(libelle: "Un nouveau libelle")
         procedure.publish_revision!
@@ -314,13 +320,14 @@ RSpec.describe DossierCloneConcern do
       subject {
         added_champ.update(value: 'new value for added champ')
         updated_champ.update(value: 'new value for updated champ')
+        added_repetition_champ.update(value: "new value in repetition champ")
         dossier.reload
         super()
         dossier.reload
       }
 
-      it { expect { subject }.to change { dossier.reload.champs.size }.by(0) }
-      it { expect { subject }.to change { dossier.reload.champs.order(:created_at).map(&:to_s) }.from(['old value', 'old value', 'Non', 'old value', 'old value']).to(['new value for updated champ', 'Non', 'old value', 'old value', 'new value for added champ']) }
+      it { expect { subject }.to change { dossier.reload.champs.size }.by(1) }
+      it { expect { subject }.to change { dossier.reload.champs.order(:created_at).map(&:to_s) }.from(['old value', 'old value', 'Non', 'old value', 'old value']).to(['new value for updated champ', 'Non', 'old value', 'old value', 'new value for added champ', 'new value in repetition champ']) }
 
       it "dossier after merge should be on last published revision" do
         expect(dossier.revision_id).to eq(procedure.revisions.first.id)
