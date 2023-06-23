@@ -145,11 +145,11 @@ module DossierCloneConcern
   end
 
   def apply_diff(diff)
-    champs_index = (champs + diff[:added]).index_by(&:stable_id_with_row)
+    champs_index = (champs_public_all + diff[:added]).index_by(&:stable_id_with_row)
 
     diff[:added].each do |champ|
       if champ.child?
-        champ.update_columns(dossier_id: id, parent_id: champs_index[champ.parent.stable_id_with_row].id)
+        champ.update_columns(dossier_id: id, parent_id: champs_index.fetch(champ.parent.stable_id_with_row).id)
       else
         champ.update_column(:dossier_id, id)
       end
@@ -157,13 +157,13 @@ module DossierCloneConcern
 
     champs_to_remove = []
     diff[:updated].each do |champ|
-      old_champ = champs_index[champ.stable_id_with_row]
+      old_champ = champs_index.fetch(champ.stable_id_with_row)
       champs_to_remove << old_champ
 
       if champ.child?
         # we need to do that in order to avoid a foreign key constraint
         old_champ.update(row_id: nil)
-        champ.update_columns(dossier_id: id, parent_id: champs_index[champ.parent.stable_id_with_row].id)
+        champ.update_columns(dossier_id: id, parent_id: champs_index.fetch(champ.parent.stable_id_with_row).id)
       else
         champ.update_column(:dossier_id, id)
       end

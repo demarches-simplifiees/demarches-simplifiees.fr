@@ -129,10 +129,10 @@ module DossierRebaseConcern
       champs.filter { _1.stable_id == parent_stable_id }.each do |champ_repetition|
         if champ_repetition.champs.present?
           champ_repetition.champs.map(&:row_id).uniq.each do |row_id|
-            create_champ(target_coordinate, champ_repetition, row_id:)
+            champs << create_champ(target_coordinate, champ_repetition, row_id:)
           end
         elsif champ_repetition.mandatory?
-          create_champ(target_coordinate, champ_repetition, row_id: ULID.generate)
+          champs << create_champ(target_coordinate, champ_repetition, row_id: ULID.generate)
         end
       end
     else
@@ -141,10 +141,10 @@ module DossierRebaseConcern
   end
 
   def create_champ(target_coordinate, parent, row_id: nil)
-    champ = target_coordinate
+    target_coordinate
       .type_de_champ
       .build_champ(rebased_at: Time.zone.now, row_id:)
-    parent.champs << champ
+      .tap { parent.champs << _1 }
   end
 
   def purge_piece_justificative_file(champ)
