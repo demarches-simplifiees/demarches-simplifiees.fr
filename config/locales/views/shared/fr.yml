@@ -10,7 +10,11 @@ fr:
         reponse_donnee_le: "Réponse donnée le %{date}"
         en_attente: "En attente de réponse"
       france_connect_login:
+<<<<<<< HEAD
         title: 'Pour les personnes enregistrées en métropole'
+=======
+        title: 'Se créer un compte avec FranceConnect'
+>>>>>>> 580437234381fa07f17c32d1833ee7b0d1be947d
         description: "FranceConnect est la solution proposée par l’État pour sécuriser et simplifier la connexion aux services en ligne."
         login_button: "S’identifier avec"
         help_link: "Qu’est-ce que FranceConnect ?"

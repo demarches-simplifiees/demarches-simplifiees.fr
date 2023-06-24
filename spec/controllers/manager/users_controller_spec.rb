@@ -40,7 +40,7 @@ describe Manager::UsersController, type: :controller do
           subject
 
           expect(User.find_by(id: user.id).email).not_to eq(nouvel_email)
-          expect(flash[:error]).to match("Courriel invalide")
+          expect(flash[:error]).to match("Le champ « Adresse éléctronique » est invalide. Saisir une adresse éléctronique valide, exemple : john.doe@exemple.fr")
         end
       end
     end

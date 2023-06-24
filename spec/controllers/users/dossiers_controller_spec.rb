@@ -212,7 +212,7 @@ describe Users::DossiersController, type: :controller do
 
       it do
         expect(response).not_to have_http_status(:redirect)
-        expect(flash[:alert]).to include("Civilité doit être rempli", "Nom doit être rempli", "Prénom doit être rempli")
+        expect(flash[:alert]).to include("Le champ « Civilité » doit être rempli", "Le champ « Nom » doit être rempli", "Le champ « Prénom » doit être rempli")
       end
     end
   end
@@ -290,7 +290,11 @@ describe Users::DossiersController, type: :controller do
     context 'with an invalid SIRET' do
       let(:params_siret) { '000 000 000' }
 
+<<<<<<< HEAD
       it_behaves_like 'the request fails with an error', ["Numéro TAHITI " + I18n.t('activemodel.errors.models.siret.attributes.siret.length')]
+=======
+      it_behaves_like 'the request fails with an error', ['Le champ « Siret » est invalide. Saisir un numéro SIRET avec 14 chiffres']
+>>>>>>> 580437234381fa07f17c32d1833ee7b0d1be947d
     end
 
     context 'with a valid SIRET' do

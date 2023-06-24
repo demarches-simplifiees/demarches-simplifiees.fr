@@ -1,16 +1,25 @@
 = content_for(:page_id, 'auth')
 = content_for(:title, t('metas.signin.title'))
 
+<<<<<<< HEAD
 = render partial: 'shared/social_login', locals: { title: t('views.users.sessions.new.social_sign_in'), prefix: "" }
 
 .form-column.procedure-context-content
   .auth-form.sign-in-form
     %h2.fr-h3.center= t('views.users.sessions.new.sign_in', app_name: APPLICATION_NAME.gsub("-","&#8209;")).html_safe
     = form_for resource, url: user_session_path, html: { class: "form" } do |f|
+=======
+
+#session-new.auth-form.sign-in-form
+  = form_for resource, url: user_session_path, html: { class: "fr-py-5w" } do |f|
+
+    %h1.fr-h2= t('views.users.sessions.new.sign_in', application_name: APPLICATION_NAME)
+>>>>>>> 580437234381fa07f17c32d1833ee7b0d1be947d
 
       = f.label :email, t('views.users.sessions.new.email')
       = f.text_field :email, type: :email, autocomplete: 'email', autofocus: false
 
+<<<<<<< HEAD
       = f.label :password, t('views.users.sessions.new.password', min_length: PASSWORD_MIN_LENGTH)
       = f.password_field :password, autocomplete: 'current-password'
 
@@ -31,3 +40,34 @@
         %h2.important-header.mb-1= t('views.users.sessions.new.state_civil_servant')
         %br
         = link_to t('views.users.sessions.new.connect_with_agent_connect'), agent_connect_path, class: "fr-btn fr-btn--secondary"
+=======
+    %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'new-account-legend' } }
+      %legend.fr-fieldset__legend#new-account-legend
+        %h2.fr-h6= I18n.t('views.users.sessions.new.subtitle')
+
+      .fr-fieldset__element
+        %p.fr-text--sm= t('utils.asterisk_html')
+
+      .fr-fieldset__element= render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { autocomplete: 'email', autofocus: true })
+
+      .fr-fieldset__element
+        = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field, opts: { autocomplete: 'current-password' })
+
+        %p= link_to t('views.users.sessions.new.reset_password'), new_user_password_path, class: "link"
+
+
+      .fr-fieldset__element
+        .auth-options
+          .flex-no-shrink
+            = f.check_box :remember_me
+            = f.label :remember_me, t('views.users.sessions.new.remember_me'), class: 'remember-me'
+
+
+    = f.submit t('views.users.sessions.new.connection'), class: "fr-btn fr-btn--lg"
+
+  - if AgentConnectService.enabled?
+    %p.fr-hr-or= t('views.shared.france_connect_login.separator')
+    .center
+      %h2.important-header.mb-1= t('views.users.sessions.new.state_civil_servant')
+      = link_to t('views.users.sessions.new.connect_with_agent_connect'), agent_connect_path, class: "fr-btn fr-btn--secondary"
+>>>>>>> 580437234381fa07f17c32d1833ee7b0d1be947d

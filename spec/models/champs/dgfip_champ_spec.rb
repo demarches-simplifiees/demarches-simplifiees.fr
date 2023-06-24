@@ -63,7 +63,7 @@ describe Champs::DgfipChamp, type: :model do
 
       it do
         is_expected.to be false
-        expect(champ.errors.full_messages).to eq(["Reference avis doit posséder 13 ou 14 caractères"])
+        expect(champ.errors.full_messages).to eq(["Le champ « Reference avis » doit posséder 13 ou 14 caractères"])
       end
     end
 
@@ -72,7 +72,7 @@ describe Champs::DgfipChamp, type: :model do
 
       it do
         is_expected.to be false
-        expect(champ.errors.full_messages).to eq(["Numero fiscal doit posséder 13 ou 14 caractères"])
+        expect(champ.errors.full_messages).to eq(["Le champ « Numero fiscal » doit posséder 13 ou 14 caractères"])
       end
     end
 
@@ -81,7 +81,7 @@ describe Champs::DgfipChamp, type: :model do
 
       it do
         is_expected.to be false
-        expect(champ.errors.full_messages).to eq(["Numero fiscal doit posséder 13 ou 14 caractères"])
+        expect(champ.errors.full_messages).to eq(["Le champ « Numero fiscal » doit posséder 13 ou 14 caractères"])
       end
 
       context 'and the validation_context is :brouillon' do
@@ -96,7 +96,7 @@ describe Champs::DgfipChamp, type: :model do
 
       it do
         is_expected.to be false
-        expect(champ.errors.full_messages).to eq(["Reference avis doit posséder 13 ou 14 caractères"])
+        expect(champ.errors.full_messages).to eq(["Le champ « Reference avis » doit posséder 13 ou 14 caractères"])
       end
     end
   end

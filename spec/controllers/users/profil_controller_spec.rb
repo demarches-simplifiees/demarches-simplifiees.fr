@@ -36,7 +36,7 @@ describe Users::ProfilController, type: :controller do
       it 'fails' do
         patch :update_email, params: { user: { email: user.email } }
         expect(response).to have_http_status(302)
-        expect(flash[:alert]).to eq(["La nouvelle adresse email ne peut être identique à l’ancienne"])
+        expect(flash[:alert]).to eq(["Le champ « La nouvelle adresse email » ne peut être identique à l’ancienne. Saisir une autre adresse email"])
       end
     end
 
@@ -83,7 +83,7 @@ describe Users::ProfilController, type: :controller do
       end
 
       it { expect(response).to redirect_to(profil_path) }
-      it { expect(flash.alert).to eq(['Courriel invalide']) }
+      it { expect(flash.alert).to eq(["Le champ « Adresse éléctronique » est invalide. Saisir une adresse éléctronique valide, exemple : john.doe@exemple.fr"]) }
     end
 
     context 'when the user has an instructeur role' do

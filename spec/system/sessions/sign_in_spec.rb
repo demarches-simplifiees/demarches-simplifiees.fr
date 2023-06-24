@@ -7,8 +7,8 @@ describe 'Signin in:' do
     click_on 'Se connecter', match: :first
 
     sign_in_with user.email, 'invalid-password'
-    expect(page).to have_content 'Courriel ou mot de passe incorrect.'
-    expect(page).to have_field('Email', with: user.email)
+    expect(page).to have_content 'Adresse éléctronique ou mot de passe incorrect.'
+    expect(page).to have_field('Adresse éléctronique', with: user.email)
 
     sign_in_with user.email, password
     expect(page).to have_current_path dossiers_path

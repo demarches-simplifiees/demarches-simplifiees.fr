@@ -63,7 +63,7 @@ describe BillSignatureService do
       let(:operations_hash) { [['1', 'hash1'], ['2', 'hash3']] }
 
       it do
-        expect { subject }.to raise_error(/La validation a échoué : signature ne correspond pas à l’empreinte/)
+        expect { subject }.to raise_error(/La validation a échoué : Le champ « signature » ne correspond pas à l’empreinte/)
         expect(BillSignature.count).to eq(0)
       end
     end
