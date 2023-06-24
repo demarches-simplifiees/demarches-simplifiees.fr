@@ -5,10 +5,10 @@ describe User, type: :model do
     let!(:invite2) { create(:invite, email: email) }
     let(:user) do
       create(:user,
-             email: email,
-             password: TEST_PASSWORD,
-             confirmation_token: '123',
-             confirmed_at: nil)
+        email: email,
+        password: TEST_PASSWORD,
+        confirmation_token: '123',
+        confirmed_at: nil)
     end
 
     it 'when confirming a user, it links the pending invitations to this user' do
@@ -394,22 +394,10 @@ describe User, type: :model do
       end
     end
 
-<<<<<<< HEAD
     context 'for administrateurs' do
       it_should_behave_like 'password_spec', PASSWORD_COMPLEXITY_FOR_ADMIN do
         let(:user) { build(:user, email: 'admin@exemple.fr', password: password, administrateur: build(:administrateur, user: nil)) }
         let(:min_complexity) { PASSWORD_COMPLEXITY_FOR_ADMIN }
-=======
-    context 'for simple users' do
-      let(:user) { build(:user, email: 'user@exemple.fr', password: password) }
-
-      context 'when the password is too short' do
-        let(:password) { 's' * (PASSWORD_MIN_LENGTH - 1) }
-
-        it 'reports an error about password length (but not about complexity)' do
-          expect(subject).to eq(["Le champ « Mot de passe » est trop court. Saisir un mot de passe avec au moins 8 caractères"])
-        end
->>>>>>> 580437234381fa07f17c32d1833ee7b0d1be947d
       end
     end
 

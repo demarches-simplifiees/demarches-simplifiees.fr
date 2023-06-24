@@ -140,21 +140,19 @@ en:
         prefill_link_copy: Copy prefill link
     registrations:
       new:
-<<<<<<< HEAD
         title: "Create %{name} account"
+        subtitle: "Create an account using an email"
         social_title: "Connect safely and quickly using"
         email_label: 'Email (name@site.com)'
-        email_placeholder: 'Your email address'
-        wanna_say: 'Do you mean to say'
+        password_message: "Enter a password"
         password_label: "Password"
-=======
-        title: "Create an account %{name}"
-        subtitle: "Create an account using an email"
-        email_label: 'Email (name@site.com)'
-        password_label: "Password (%{min_length} characters minimum)"
-        password_message: "Your password must have :"
->>>>>>> 580437234381fa07f17c32d1833ee7b0d1be947d
         password_placeholder: "%{min_length} characters minimum"
+        password_hint: "A short phrase with punctuation can be a highly secure password."
+        password_min: "The password must be at least %{min_length} characters long."
+        simple_password: "Very vulnerable password."
+        easy_password: "Vulnerable password."
+        acceptable_password: "Acceptable password. You can proceed with validation... or improve your password."
+        great_password: "Congratulations ! Password is strong and secure."
     invites:
       dropdown:
         invite_to_edit: Invite someone to edit this file
@@ -323,21 +321,16 @@ en:
           actions: "Actions"
       sessions:
         new:
-<<<<<<< HEAD
-          sign_in: If you already have %{app_name} account
-          social_sign_in: Connect quicly and securely using
-          email: Email address (name@site.com)
-=======
-          sign_in: Sign in on %{application_name}
->>>>>>> 580437234381fa07f17c32d1833ee7b0d1be947d
-          password: Password (minimum length %{min_length} characters)
-          remember_me: Remember me
-          reset_password: Forgot password?
-          connection: Sign in
-          find_procedure: Find your procedure
-          state_civil_servant: Are you a state civil servant?
-          connect_with_agent_connect: Visit our dedicated page
-          subtitle: "Sign in with my account"
+          sign_in: "Connect with %{application_name} account"
+          social_sign_in: "Connect quickly and securely using"
+          password: "Password (minimum length %{min_length} characters)"
+          remember_me: "Remember me"
+          reset_password: "Forgot password?"
+          connection: "Sign in"
+          find_procedure: "Find your procedure"
+          state_civil_servant: "Are you a state civil servant?"
+          connect_with_agent_connect: "Visit our dedicated page"
+          subtitle: "Sign in with your account"
       passwords:
         reset_link_sent:
           got_it: Got it!
@@ -383,14 +376,10 @@ en:
       super_admin:
         << : *default_attributes
       procedure:
-<<<<<<< HEAD
-        zone: Procedure is handled by
-=======
         zone: This procedure is run by
       champs:
         value: Value
 
->>>>>>> 580437234381fa07f17c32d1833ee7b0d1be947d
     errors:
       messages:
         not_a_phone: 'Invalid phone number'

@@ -10,7 +10,7 @@ en:
         reponse_donnee_le: "Response sent at %{date}"
         en_attente: "Waiting for response"
       france_connect_login:
-        title: "With FranceConnect"
+        title: "For people registered with FranceConnect"
         description: "FranceConnect is a solution proposed by the government to secure and simplify the connection to web services."
         login_button: "Sign in with"
         help_link: What is FranceConnect?

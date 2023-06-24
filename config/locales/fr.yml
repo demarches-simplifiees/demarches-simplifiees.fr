@@ -133,21 +133,19 @@ fr:
         prefill_link_copy: Copier le lien de préremplissage
     registrations:
       new:
-<<<<<<< HEAD
         title: "Créez-vous un compte %{name}"
         social_title: "Rapide, simple et sûr, connectez-vous avec"
-        email_label: 'Email'
-        email_placeholder: 'Votre adresse email'
-        wanna_say: 'Voulez-vous dire'
-        password_label: "Mot de passe"
-=======
-        title: "Creation de compte sur %{name}"
         subtitle: "Se créer un compte en choisissant un identifiant"
         email_label: 'Email'
-        password_label: "Mot de passe (%{min_length} caractères minimum)"
-        password_message: "Votre mot de passe doit contenir :"
->>>>>>> 580437234381fa07f17c32d1833ee7b0d1be947d
+        password_label: "Mot de passe"
+        password_message: "Inscrivez un mot de passe"
         password_placeholder: "%{min_length} caractères minimum"
+        password_hint: "Une courte phrase avec ponctuation peut être un mot de passe très sécurisé."
+        password_min: "Le mot de passe doit faire au moins %{min_length} caractères."
+        simple_password: "Mot de passe très vulnérable."
+        easy_password: "Mot de passe vulnérable."
+        acceptable_password: "Mot de passe acceptable. Vous pouvez valider... ou améliorer votre mot de passe."
+        great_password: "Félicitations ! Mot de passe suffisamment fort et sécurisé."
     invites:
       dropdown:
         invite_to_edit: Inviter une personne à modifier ce dossier
@@ -320,20 +318,15 @@ fr:
           actions: "Actions"
       sessions:
         new:
-<<<<<<< HEAD
-          sign_in: Si vous avez un compte %{app_name}
-          social_sign_in: Connectez vous rapidement avec
-          email: Email
-=======
-          sign_in: Connexion à %{application_name}
->>>>>>> 580437234381fa07f17c32d1833ee7b0d1be947d
-          password: Mot de passe (%{min_length} caractères minimum)
-          remember_me: Se souvenir de moi
-          reset_password: Mot de passe oublié ?
-          connection: Se connecter
-          find_procedure: Trouvez votre démarche
-          state_civil_servant: Vous êtes agent de la fonction publique d’État ?
-          connect_with_agent_connect: Accédez à notre page dédiée
+          sign_in: "Connectez vous avec un compte %{application_name}"
+          social_sign_in: "Connectez vous rapidement avec"
+          password: "Mot de passe (%{min_length} caractères minimum)"
+          remember_me: "Se souvenir de moi"
+          reset_password: "Mot de passe oublié ?"
+          connection: "Se connecter"
+          find_procedure: "Trouvez votre démarche"
+          state_civil_servant: "Vous êtes agent de la fonction publique d’État ?"
+          connect_with_agent_connect: "Accédez à notre page dédiée"
           subtitle: "Se connecter avec son compte"
       passwords:
         reset_link_sent:
@@ -375,7 +368,7 @@ fr:
 
     attributes:
       default_attributes: &default_attributes
-        email: Adresse éléctronique
+        email: Adresse électronique
         password: 'Mot de passe'
         requested_merge_into: 'La nouvelle adresse email'
         hints:

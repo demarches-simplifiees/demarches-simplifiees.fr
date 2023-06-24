@@ -24,7 +24,7 @@
   - if password?
     .fr-password__checkbox.fr-checkbox-group.fr-checkbox-group--sm
       %input#show_password{ "aria-label" => t('.show_password.aria_label'), type: "checkbox" }/
-      %label.fr--password__checkbox.fr-label{ for: "show_password" }= t('.show_password.label')
+      -# %label.fr--password__checkbox.fr-label{ for: "show_password" }= t('.show_password.label')
 
   - if email?
     .suspect-email.hidden{ data: { "email-input-target": 'ariaRegion'}, aria: { live: 'off' } }

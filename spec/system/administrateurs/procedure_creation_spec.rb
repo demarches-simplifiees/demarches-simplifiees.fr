@@ -21,11 +21,9 @@ describe 'Creating a new procedure', js: true do
     fill_in 'procedure_duree_conservation_dossiers_dans_ds', with: '3'
     click_on 'Créer la démarche'
 
-<<<<<<< HEAD
     expect(page).to have_text('Toutes les cases concernant le RGPD et le RGS doivent être cochées')
-=======
+
     expect(page).to have_text('Le champ « Libelle » doit être rempli')
->>>>>>> 580437234381fa07f17c32d1833ee7b0d1be947d
     fill_in_dummy_procedure_details
     click_on 'Créer la démarche'
 

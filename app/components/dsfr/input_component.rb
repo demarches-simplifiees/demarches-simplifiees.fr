@@ -6,12 +6,13 @@ class Dsfr::InputComponent < ApplicationComponent
   # it uses aria-describedby on input and link it to yielded content
   renders_one :describedby
 
-  def initialize(form:, attribute:, input_type:, opts: {}, required: true)
+  def initialize(form:, attribute:, input_type:, opts: {}, min_complexity: 0, required: true)
     @form = form
     @attribute = attribute
     @input_type = input_type
     @opts = opts
     @required = required
+    @min_complexity = min_complexity
   end
 
   # add invalid class on input when input is invalid
@@ -52,7 +53,12 @@ class Dsfr::InputComponent < ApplicationComponent
     if email?
       @opts = @opts.deep_merge(data: {
         action: "blur->email-input#checkEmail",
-                                       'email-input-target': 'input'
+        'email-input-target': 'input'
+      })
+    elsif password? && @min_complexity.positive?
+      @opts = @opts.deep_merge(data: {
+        controller: 'turbo-input',
+        turbo_input_url_value: show_password_complexity_path(@min_complexity)
       })
     end
     @opts
