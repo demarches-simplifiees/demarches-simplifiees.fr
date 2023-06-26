@@ -10,7 +10,7 @@ class Cron::WeeklyOverviewJob < Cron::CronJob
       Dolist::API.sleep_until_limit_reset if Dolist::API.near_rate_limit?
 
       # mailer won't send anything if overview if empty
-      InstructeurMailer.last_week_overview(instructeur)&.deliver_later
+      InstructeurMailer.last_week_overview(instructeur)&.deliver_later(wait: rand(0..3.hours))
     end
   end
 end

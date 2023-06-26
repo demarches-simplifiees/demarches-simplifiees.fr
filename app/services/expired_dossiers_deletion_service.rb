@@ -1,4 +1,6 @@
 class ExpiredDossiersDeletionService
+  SPREAD_DURATION = 3.hours
+
   def self.process_expired_dossiers_brouillon
     send_brouillon_expiration_notices
     delete_expired_brouillons_and_notify
@@ -27,7 +29,7 @@ class ExpiredDossiersDeletionService
       DossierMailer.notify_brouillon_near_deletion(
         dossiers,
         email
-      ).deliver_later
+      ).deliver_later(wait: rand(0..SPREAD_DURATION))
     end
   end
 
@@ -55,7 +57,7 @@ class ExpiredDossiersDeletionService
       DossierMailer.notify_brouillon_deletion(
         dossiers_hash,
         email
-      ).deliver_later
+      ).deliver_later(wait: rand(0..SPREAD_DURATION))
     end
   end
 
@@ -76,10 +78,10 @@ class ExpiredDossiersDeletionService
     dossiers_close_to_expiration.in_batches.update_all(close_to_expiration_flag => Time.zone.now)
 
     user_notifications.each do |(email, dossiers)|
-      DossierMailer.notify_near_deletion_to_user(dossiers, email).deliver_later
+      DossierMailer.notify_near_deletion_to_user(dossiers, email).deliver_later(wait: rand(0..SPREAD_DURATION))
     end
     administration_notifications.each do |(email, dossiers)|
-      DossierMailer.notify_near_deletion_to_administration(dossiers, email).deliver_later
+      DossierMailer.notify_near_deletion_to_administration(dossiers, email).deliver_later(wait: rand(0..SPREAD_DURATION))
     end
   end
 
@@ -101,7 +103,7 @@ class ExpiredDossiersDeletionService
         DossierMailer.notify_automatic_deletion_to_user(
           DeletedDossier.where(dossier_id: dossier_ids).to_a,
           email
-        ).deliver_later
+        ).deliver_later(wait: rand(0..SPREAD_DURATION))
       end
     end
     administration_notifications.each do |(email, dossier_ids)|
@@ -110,7 +112,7 @@ class ExpiredDossiersDeletionService
         DossierMailer.notify_automatic_deletion_to_administration(
           DeletedDossier.where(dossier_id: dossier_ids).to_a,
           email
-        ).deliver_later
+        ).deliver_later(wait: rand(0..SPREAD_DURATION))
       end
     end
   end
