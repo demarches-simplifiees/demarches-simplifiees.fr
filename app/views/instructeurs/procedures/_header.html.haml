@@ -7,7 +7,7 @@
   |
   = link_to t('instructeurs.dossiers.header.banner.statistics'), stats_instructeur_procedure_path(procedure), class: 'header-link'
 
-  - if procedure.instructeurs_self_management_enabled?
+  - if procedure.instructeurs_self_management?
     |
     - if can_manage_groupe_instructeurs?(procedure)
       = link_to t('instructeurs.dossiers.header.banner.instructeurs'), admin_procedure_groupe_instructeurs_path(procedure), class: 'header-link'
