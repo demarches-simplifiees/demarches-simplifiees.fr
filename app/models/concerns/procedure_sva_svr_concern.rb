@@ -4,6 +4,7 @@ module ProcedureSVASVRConcern
   included do
     scope :sva_svr, -> { where("sva_svr ->> 'decision' IN (?)", ['sva', 'svr']) }
     validate :sva_svr_immutable_on_published, if: :will_save_change_to_sva_svr?
+    validate :validates_sva_svr_compatible
 
     def sva_svr_enabled?
       sva? || svr?
@@ -36,6 +37,14 @@ module ProcedureSVASVRConcern
       return if [:sva, :svr].exclude?(decision_was)
 
       errors.add(:sva_svr, :immutable)
+    end
+
+    def validates_sva_svr_compatible
+      return if !sva_svr_enabled?
+
+      if declarative_with_state.present?
+        errors.add(:sva_svr, :declarative_incompatible)
+      end
     end
   end
 end

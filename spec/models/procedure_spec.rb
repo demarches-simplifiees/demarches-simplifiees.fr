@@ -440,6 +440,15 @@ describe Procedure do
           expect(procedure).to be_valid
         end
       end
+
+      context "with declarative" do
+        let(:procedure) { create(:procedure, declarative_with_state: "accepte") }
+
+        it 'is not valid' do
+          expect(procedure).not_to be_valid
+          expect(procedure.errors[:sva_svr].join).to include('incompatible avec une démarche déclarative')
+        end
+      end
     end
   end
 
