@@ -34,7 +34,6 @@ class GroupeInstructeur < ApplicationRecord
   end
 
   before_validation -> { label&.strip! }
-  after_save :toggle_routing
 
   scope :without_group, -> (group) { where.not(id: group) }
   scope :for_api_v2, -> { includes(procedure: [:administrateurs]) }
