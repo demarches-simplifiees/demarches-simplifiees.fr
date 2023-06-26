@@ -734,6 +734,11 @@ describe API::V2::GraphqlController do
       let(:variables) { { input: { groupeInstructeurId: groupe_instructeur.to_typed_id, instructeurs: [{ email: }, { email: 'yolo' }, { id: existing_instructeur.to_typed_id }] }, includeInstructeurs: true } }
       let(:operation_name) { 'groupeInstructeurAjouterInstructeurs' }
 
+      before do
+        allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs)
+          .and_return(double(deliver_later: true))
+      end
+
       it {
         expect(gql_errors).to be_nil
         expect(gql_data[:groupeInstructeurAjouterInstructeurs][:errors]).to be_nil
@@ -748,22 +753,27 @@ describe API::V2::GraphqlController do
       let(:email) { 'test@test.com' }
       let(:groupe_instructeur) { procedure.groupe_instructeurs.first }
       let(:existing_instructeur) { groupe_instructeur.instructeurs.first }
-      let(:new_instructeur) { create(:instructeur) }
-      let(:variables) { { input: { groupeInstructeurId: groupe_instructeur.to_typed_id, instructeurs: [{ email: }, { id: new_instructeur.to_typed_id }] }, includeInstructeurs: true } }
+      let(:instructeur_2) { create(:instructeur) }
+      let(:instructeur_3) { create(:instructeur) }
+      let(:variables) { { input: { groupeInstructeurId: groupe_instructeur.to_typed_id, instructeurs: [{ email: }, { id: instructeur_2.to_typed_id }, { id: instructeur_3.to_typed_id }] }, includeInstructeurs: true } }
       let(:operation_name) { 'groupeInstructeurSupprimerInstructeurs' }
 
       before do
+        allow(GroupeInstructeurMailer).to receive(:notify_removed_instructeur)
+          .and_return(double(deliver_later: true))
         existing_instructeur
-        groupe_instructeur.add(new_instructeur)
+        groupe_instructeur.add(instructeur_2)
+        groupe_instructeur.add(instructeur_3)
       end
 
       it {
-        expect(groupe_instructeur.reload.instructeurs.count).to eq(2)
+        expect(groupe_instructeur.reload.instructeurs.count).to eq(3)
         expect(gql_errors).to be_nil
         expect(gql_data[:groupeInstructeurSupprimerInstructeurs][:errors]).to be_nil
         expect(gql_data[:groupeInstructeurSupprimerInstructeurs][:groupeInstructeur][:id]).to eq(groupe_instructeur.to_typed_id)
         expect(groupe_instructeur.instructeurs.count).to eq(1)
         expect(gql_data[:groupeInstructeurSupprimerInstructeurs][:groupeInstructeur][:instructeurs]).to eq([{ id: existing_instructeur.to_typed_id, email: existing_instructeur.email }])
+        expect(GroupeInstructeurMailer).to have_received(:notify_removed_instructeur).twice
       }
     end
 
