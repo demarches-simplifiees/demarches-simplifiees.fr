@@ -213,7 +213,7 @@
   .fr-label {
     // la description d'un champ peut contenir du markup (markdown->html),
     // on herite donc la fontsize/mrgin/padding du fr-hint-text
-    .fr-hint-text > *{
+    .fr-hint-text > * {
       font-size: inherit;
       margin: inherit;
       padding: inherit;
@@ -223,7 +223,6 @@
   input[type=password],
   select {
     display: block;
-    margin-bottom: $default-fields-spacer;
     margin-bottom: 0;
 
     &.small-margin {

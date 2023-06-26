@@ -103,7 +103,6 @@ module Dsfr
       def hint?
         I18n.exists?("activerecord.attributes.#{object.class.name.underscore}.hints.#{@attribute}")
       end
-
     end
   end
 end
