@@ -100,6 +100,7 @@ module Administrateurs
         .new({ instructeurs: [current_administrateur.instructeur] }.merge(groupe_instructeur_params))
 
       if @groupe_instructeur.save
+        @groupe_instructeur.toggle_routing
         routing_notice = " et le routage a été activé" if procedure.groupe_instructeurs.active.size == 2
         redirect_to admin_procedure_groupe_instructeur_path(procedure, @groupe_instructeur),
           notice: "Le groupe d’instructeurs « #{@groupe_instructeur.label} » a été créé#{routing_notice}."
@@ -117,6 +118,7 @@ module Administrateurs
       @groupe_instructeur = groupe_instructeur
 
       if @groupe_instructeur.update(groupe_instructeur_params)
+        @groupe_instructeur.toggle_routing
         redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur),
           notice: "Le nom est à présent « #{@groupe_instructeur.label} »."
       else
