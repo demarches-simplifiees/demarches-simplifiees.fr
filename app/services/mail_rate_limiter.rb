@@ -23,10 +23,10 @@ class MailRateLimiter
   end
 
   def current_window_expired?
-    @current_window[:started_at] + @window <= Time.zone.now.utc
+    (@current_window[:started_at] + @window).past?
   end
 
   def current_window_full?
-    @current_window[:sent] == @limit
+    @current_window[:sent] >= @limit
   end
 end

@@ -17,7 +17,7 @@ describe MailRateLimiter do
 
     it 'renews current_window when it expires' do
       rate_limiter.send_with_delay(mail)
-      Timecop.travel(window + 1.second) do
+      travel_to(Time.current + window + 1.second) do
         rate_limiter.send_with_delay(mail)
         expect(rate_limiter.current_window[:sent]).to eq(1)
       end
