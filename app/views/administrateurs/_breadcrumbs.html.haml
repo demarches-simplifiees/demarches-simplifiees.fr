@@ -22,12 +22,24 @@
 
     - if defined?(metadatas)
       .metadatas.pb-3
-        %h1.fr-h6.fr-mb-0= t('created_at', scope: [:layouts, :breadcrumb], number: @procedure.id, date: @procedure.created_at.strftime('%d/%m/%Y'))
+        %h1.fr-h6.fr-mb-1w
+          = @procedure.libelle
+
         - if @procedure.close?
-          %p.fr-h2= t('closed_at', scope: [:layouts, :breadcrumb], date: @procedure.closed_at.strftime('%d/%m/%Y'))
-        %p
-          - if @procedure.locked?
-            = t('published', scope: [:layouts, :breadcrumb])
-            = link_to commencer_url(@procedure.path), commencer_url(@procedure.path)
-          - else
-            = t('draft', scope: [:layouts, :breadcrumb])
+          .flex
+            %span.fr-badge.fr-badge--warning.fr-mr-1w
+              = t('closed', scope: [:layouts, :breadcrumb])
+            = t('since', scope: [:layouts, :breadcrumb], date: l(@procedure.closed_at.to_date))
+
+        - elsif @procedure.locked?
+          = link_to commencer_url(@procedure.path), commencer_url(@procedure.path), class: "fr-link"
+          .flex.fr-mt-1w
+            %span.fr-badge.fr-badge--success.fr-mr-1w
+              = t('published', scope: [:layouts, :breadcrumb])
+            = t('since', scope: [:layouts, :breadcrumb], number: @procedure.id, date: l(@procedure.published_at.to_date))
+
+        - else
+          .flex
+            %span.fr-badge.fr-badge--new.fr-mr-1w
+              = t('draft', scope: [:layouts, :breadcrumb])
+            = t('since', scope: [:layouts, :breadcrumb], number: @procedure.id, date: l(@procedure.created_at.to_date))

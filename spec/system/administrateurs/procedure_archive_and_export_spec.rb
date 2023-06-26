@@ -7,6 +7,7 @@ describe 'Creating a new procedure', js: true do
   let(:procedure) do
     create(:procedure, :with_service, :with_instructeur,
       aasm_state: :publiee,
+      published_at: Date.today,
       administrateurs: [administrateur],
       libelle: 'libellé de la procédure',
       path: 'libelle-de-la-procedure')
