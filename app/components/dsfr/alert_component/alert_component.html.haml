@@ -1,4 +1,5 @@
 %div{ class: alert_class(state) }
-  = content_tag(heading_level, class: 'fr-alert__title') do
-    = "#{prefix_for_state}#{title}"
+  - if size != 'small'
+    = content_tag(heading_level, class: 'fr-alert__title') do
+      = "#{prefix_for_state}#{title}"
   = body

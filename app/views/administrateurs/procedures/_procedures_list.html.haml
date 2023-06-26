@@ -5,24 +5,24 @@
         = image_tag procedure.logo, alt: procedure.libelle, width: '100'
       .flex.column.ml-1
         .card-title
-          = link_to procedure.libelle, admin_procedure_path(procedure), style: 'color: black;'
+          = link_to procedure.libelle, admin_procedure_path(procedure)
         = link_to commencer_url(procedure.path), commencer_url(procedure.path), class: 'fr-link fr-mb-1w'
 
       .admin-procedures-list-timestamps
-        %p.notice N° #{procedure.id}
-        %p.notice créée le #{procedure.created_at.strftime('%d/%m/%Y')}
+        %p N° #{procedure.id}
+        %p créée le #{procedure.created_at.strftime('%d/%m/%Y')}
         - if procedure.published_at.present?
-          %p.notice publiée le #{procedure.published_at.strftime('%d/%m/%Y')}
+          %p publiée le #{procedure.published_at.strftime('%d/%m/%Y')}
 
         - if procedure.updated_at.today?
-          %p.notice modifiée à #{procedure.updated_at.strftime('%H:%M')}
+          %p modifiée à #{procedure.updated_at.strftime('%H:%M')}
         - else
-          %p.notice modifiée le #{procedure.updated_at.strftime('%d/%m/%Y %H:%M')}
+          %p modifiée le #{procedure.updated_at.strftime('%d/%m/%Y %H:%M')}
 
         - if procedure.closed_at.present?
-          %p.notice archivée le #{procedure.closed_at.strftime('%d/%m/%Y')}
+          %p archivée le #{procedure.closed_at.strftime('%d/%m/%Y')}
         - elsif procedure.auto_archive_on&.future?
-          %p.notice sera clôturée le #{procedure.auto_archive_on.strftime('%d/%m/%Y')}
+          %p sera clôturée le #{procedure.auto_archive_on.strftime('%d/%m/%Y')}
 
     .admin-procedures-list-row.actions.flex.justify-between
       %div
@@ -80,4 +80,3 @@
                 %span.icon.unarchive
                 .dropdown-description
                   %h4= t('administrateurs.dropdown_actions.restore')
-

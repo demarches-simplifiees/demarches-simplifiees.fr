@@ -1,53 +1,70 @@
 - if dossiers.present?
-  %span.fr-h6.fr-mr-2w
+  .fr-h6.fr-mb-2w
     = page_entries_info dossiers
-  .fr-table.fr-table--bordered.fr-table--no-caption.fr-mt-2w
-    %table.table.dossiers-table.hoverable.hack-to-display-dropdown
-      %caption= t('views.users.dossiers.dossiers_list.caption')
-      %thead
-        %tr
-          %th.number-col{ scope: :col }= t('views.users.dossiers.dossiers_list.n_dossier')
-          %th{ scope: :col }= t('views.users.dossiers.dossiers_list.procedure')
-          - if dossiers.present?
-            %th{ scope: :col }= t('views.users.dossiers.dossiers_list.requester')
-          %th.status-col{ scope: :col }= t('views.users.dossiers.dossiers_list.status')
-          %th.updated-at-col{ scope: :col }= t('views.users.dossiers.dossiers_list.updated')
-          %th.action-col.follow-col{ scope: :col }= t('views.users.dossiers.dossiers_list.actions')
-      %tbody
-        - dossiers.each do |dossier|
-          - if dossier.transfer.present?
-            %tr.fr-background-alt--blue-france.no-border
-              %td.fr-py-2w{ colspan: 100 }
-                .flex.align-center
-                  %p.fr-mb-0
-                    %small
-                      = t('views.users.dossiers.transfers.sender_demande_en_cours', id: dossier.id, email: dossier.transfer.email)
-                  .ml-auto
-                    = link_to t('views.users.dossiers.transfers.revoke'), transfer_path(dossier.transfer), class: 'fr-btn fr-btn--sm fr-btn--tertiary-no-outline', method: :delete
 
-          %tr{ data: { 'dossier-id': dossier.id } }
-            %th.number-col{ scope: :row }
-              = link_to(url_for_dossier(dossier), class: 'cell-link', tabindex: -1) do
-                %span.icon.folder
-                = dossier.id
-            %td
-              = link_to(url_for_dossier(dossier), class: 'cell-link') do
-                = procedure_libelle(dossier.procedure)
-            - if dossiers.present?
-              %td
-                %span.cell-link= demandeur_dossier(dossier)
-            %td.status-col
-              - if dossier.pending_correction?
-                = pending_correction_badge(:for_user)
-              - else
-                = status_badge(dossier.state)
+  - dossiers.each do |dossier|
+    .card
+      .flex.justify-between
+        %div
+          %h2.card-title
+            = link_to(url_for_dossier(dossier), class: 'cell-link') do
+              = procedure_libelle(dossier.procedure)
 
-            %td.updated-at-col.cell-link
-              = try_format_date(dossier.updated_at)
-            %td.action-col.follow-col
-              = render partial: 'dossier_actions', locals: { dossier: dossier }
+          %p.fr-icon--sm.fr-icon-user-line
+            = demandeur_dossier(dossier)
+
+          %p.fr-icon--sm.fr-icon-edit-box-line
+            - if dossier.depose_at.present?
+              %span
+                = t('views.users.dossiers.dossiers_list.depose_at', date: dossier.depose_at.strftime('%d/%m/%Y'))
+            - else
+              %span
+                = t('views.users.dossiers.dossiers_list.created_at', date: dossier.created_at.strftime('%d/%m/%Y'))
+              - if dossier.created_at != dossier.updated_at
+                = t('views.users.dossiers.dossiers_list.updated_at', date: dossier.updated_at.strftime('%d/%m/%Y %H:%M'))
+          - if dossier.invites.present?
+            %p.fr-icon--sm.fr-icon-shield-line
+              = t('views.users.dossiers.dossiers_list.shared_with')
+              = dossier.invites.map(&:email).join(', ')
+
+
+        .text-right
+          %p.fr-mb-0
+            = t('views.users.dossiers.dossiers_list.n_dossier')
+            = dossier.id
+
+          = status_badge(dossier.state, 'fr-mb-1w')
+
+          - if dossier.pending_correction?
+            %br
+            = pending_correction_badge(:for_user)
+
+      - if dossier.procedure.close?
+        = render Dsfr::AlertComponent.new(state: :info, size: 'small', extra_class_names: "fr-mb-2w") do |c|
+          - c.body do
+            %p
+              = t('views.users.dossiers.dossiers_list.procedure_closed')
+
+      - if dossier.pending_correction?
+        = render Dsfr::AlertComponent.new(state: :warning, size: 'small', extra_class_names: "fr-mb-2w") do |c|
+          - c.body do
+            %p
+              = t('views.users.dossiers.dossiers_list.pending_correction')
+
+      - if dossier.transfer.present?
+        = render Dsfr::AlertComponent.new(state: :info, size: 'small', extra_class_names: "fr-mb-2w") do |c|
+          - c.body do
+            %p
+              = t('views.users.dossiers.transfers.sender_demande_en_cours', id: dossier.id, email: dossier.transfer.email)
+            %p
+              = link_to t('views.users.dossiers.transfers.revoke'), transfer_path(dossier.transfer), class: 'fr-link', method: :delete
+
+
+      .flex.justify-end
+        = render partial: 'dossier_actions', locals: { dossier: dossier }
 
     = paginate dossiers, views_prefix: 'shared'
+
 
 - else
   - if filter.filter_params.present?

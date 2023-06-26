@@ -6,18 +6,18 @@
   border: 1px solid $border-grey;
   margin-bottom: $default-spacer * 2;
   background: #FFFFFF;
-
-  .notice {
-    font-size: 16px;
-    color: #666666;
-    margin-top: -8px;
-    margin-bottom: 16px;
-  }
+  color: $dark-grey;
 
   .card-title {
+    color: $black;
     font-weight: bold;
     font-size: 20px;
+    line-height: 1.5rem;
     margin-bottom: $default-spacer * 2;
+
+    a:not(:hover) {
+      background-image: none; // remove DSFR underline
+    }
   }
 
   &.feedback {

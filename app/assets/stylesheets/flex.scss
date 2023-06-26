@@ -11,6 +11,10 @@
     align-items: flex-start;
   }
 
+  &.align-end {
+    align-items: end;
+  }
+
   &.align-baseline {
     align-items: baseline;
   }
