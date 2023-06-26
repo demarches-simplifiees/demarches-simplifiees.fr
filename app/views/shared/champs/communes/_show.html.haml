@@ -1,9 +1,9 @@
-= champ.to_s
+%p= champ.to_s
 - if champ.code?
-  %p.text-sm
+  %p.fr-text--sm
     Code INSEE :
     = champ.code
-    - if champ.departement?
-      %br
-      Departement :
-      = champ.departement_code_and_name
+- if champ.departement?
+  %p.fr-text--sm
+    Departement :
+    = champ.departement_code_and_name

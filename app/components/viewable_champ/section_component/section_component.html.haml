@@ -1,0 +1,14 @@
+= tag.div(class: "reset-#{tag_for_depth} fr-mt-4v", 'data-controller': 'expand') do
+  - if header_section
+    %div{ class: class_names(flex: true, "top-bordered" => header_section.level == 1) }
+      = render EditableChamp::HeaderSectionComponent.new(champ:  header_section, html_class: {' fr-m-0 fr-text--md fr-px-4v flex-grow' => true, "fr-text-action-high--blue-france" => header_section.level == 1, 'fr-py-3v' => header_section.level == 1, 'fr-pt-3v' => header_section.level == 1})
+      - if ![champs, sections].map(&:empty?).all? && header_section.level == 1
+        %button{ type: "button", aria: { controls: section_id, "expanded": "true", label: t('.toggle_section', section: header_section.libelle) }, href: section_id, 'data-action': 'click->expand#toggle', class: "fr-btn fr-btn--tertiary-no-outline" }
+          %i.fr-icon-arrow-up-s-line{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
+
+  %div{ id: section_id, 'data-expand-target': 'content' }
+    - if !champs.empty?
+      = render Dossiers::ChampRowShowComponent.new(champs: champs, demande_seen_at: @demande_seen_at, profile: @profile, repetition: false)
+
+    - sections.each do |section|
+      = render section
