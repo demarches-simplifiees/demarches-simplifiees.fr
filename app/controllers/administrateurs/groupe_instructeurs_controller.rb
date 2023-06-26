@@ -163,10 +163,7 @@ module Administrateurs
       else
         @groupe_instructeur.destroy!
         if procedure.groupe_instructeurs.active.one?
-          procedure.update!(
-            routing_enabled: false,
-            instructeurs_self_management_enabled: false
-          )
+          procedure.defaut_groupe_instructeur.toggle_routing
           procedure.defaut_groupe_instructeur.update!(
             routing_rule: nil,
             label: GroupeInstructeur::DEFAUT_LABEL,
