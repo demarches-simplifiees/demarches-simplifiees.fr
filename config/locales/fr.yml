@@ -891,6 +891,9 @@ fr:
         dossiers_count: "Nb dossiers"
         weekly_distribution: "Répartition par semaine"
         weekly_distribution_details: "au cours des 6 derniers mois"
+      sva_svr_rule_name:
+        sva: "Silence Vaut Accord"
+        svr: "Silence Vaut Rejet"
     procedure_description:
       estimated_fill_duration: "Temps de remplissage estimé : %{estimated_minutes} mn"
       estimated_fill_duration_title: Quelle est la durée de remplissage de la démarche ?

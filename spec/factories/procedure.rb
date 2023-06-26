@@ -416,6 +416,10 @@ FactoryBot.define do
     trait :sva do
       sva_svr { SVASVRConfiguration.new(decision: :sva).attributes }
     end
+
+    trait :svr do
+      sva_svr { SVASVRConfiguration.new(decision: :svr).attributes }
+    end
   end
 end
 

@@ -837,6 +837,9 @@ en:
         dossiers_count: "Nb files"
         weekly_distribution: "Weekly distribution"
         weekly_distribution_details: "in the last 6 months"
+      sva_svr_rule_name:
+        sva: "Silence Vaut Accord"
+        svr: "Silence Vaut Rejet"
     procedure_description:
       estimated_fill_duration: "Estimated fill time: %{estimated_minutes} mn"
       estimated_fill_duration_title: What is the procedure estimated fill time ?
