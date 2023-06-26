@@ -28,7 +28,7 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
           'editable-champ': true,
           "editable-champ-#{@champ.type_champ}": true,
           "hidden": !@champ.visible?,
-          "fr-input-group": true,
+          "fr-input-group": true
         }.merge(input_group_error_class_names)
       ),
       id: @champ.input_group_id,

@@ -124,7 +124,6 @@
     }
 
     &.editable-champ-checkbox {
-      p,
       label {
         padding-left: 28px;
         font-weight: normal;
@@ -174,7 +173,7 @@
       user-select: none;
 
       &:last-of-type {
-        margin-bottom: $default-fields-spacer;
+        margin-bottom: 0;
       }
 
       &:hover {
@@ -210,6 +209,7 @@
       font-weight: normal;
     }
   }
+
   .fr-label {
     // la description d'un champ peut contenir du markup (markdown->html),
     // on herite donc la fontsize/mrgin/padding du fr-hint-text
@@ -219,10 +219,12 @@
       padding: inherit;
     }
   }
+
   input[type=password],
   select {
     display: block;
     margin-bottom: $default-fields-spacer;
+    margin-bottom: 0;
 
     &.small-margin {
       margin-bottom: $default-spacer;
@@ -347,7 +349,7 @@
 
     margin-left: 5px;
     margin-right: 4px;
-    margin-bottom: $default-fields-spacer;
+    margin-bottom: 0;
   }
 
   [data-reach-combobox-input] {
@@ -526,12 +528,6 @@
   fieldset ~ .spinner {
     position: relative;
     top: -($default-fields-spacer / 2);
-  }
-}
-
-[data-react-component-value]:not([data-react-component-value^="ComboMultiple"]) {
-  [data-reach-combobox-input]:not(.no-margin) {
-    margin-bottom: $default-fields-spacer;
   }
 }
 

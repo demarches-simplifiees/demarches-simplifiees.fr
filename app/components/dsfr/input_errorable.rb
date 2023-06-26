@@ -68,7 +68,7 @@ module Dsfr
       end
 
       def describedby_id
-        dom_id(@champ, :error_messages)
+        dom_id(@champ, :error_full_messages)
       end
 
       def errors_on_another_attribute?
@@ -80,7 +80,7 @@ module Dsfr
       end
 
       # errors helpers
-      def error_messages
+      def error_full_messages
         errors.full_messages_for(attribute_or_rich_body)
       end
 

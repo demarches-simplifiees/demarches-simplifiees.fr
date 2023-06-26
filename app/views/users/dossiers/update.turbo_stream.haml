@@ -9,7 +9,7 @@
         = render EditableChamp::EditableChampComponent.new champ:, form:
     - else
       = turbo_stream.update champ.labelledby_id do
-        = render EditableChamp::ChampLabelContentComponent.new champ:
+        = render EditableChamp::ChampLabelContentComponent.new champ:, form:
 
 = turbo_stream.remove_all(".editable-champ .spinner-removable");
 = turbo_stream.hide_all(".editable-champ .spinner");

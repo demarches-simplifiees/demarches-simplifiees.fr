@@ -49,7 +49,6 @@ class Dsfr::InputComponent < ApplicationComponent
     object.class.human_attribute_name(@attribute)
   end
 
-
   # kind of input helpers
   def password?
     @input_type == :password_field
@@ -64,6 +63,4 @@ class Dsfr::InputComponent < ApplicationComponent
   end
 
   private
-
-
 end
