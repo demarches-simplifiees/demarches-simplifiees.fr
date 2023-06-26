@@ -7,6 +7,8 @@ class ApplicationMailer < ActionMailer::Base
   default from: "#{APPLICATION_NAME} <#{CONTACT_EMAIL}>"
   layout 'mailer'
 
+  before_action -> { Sentry.set_tags(mailer: mailer_name, action: action_name) }
+
   # Attach the procedure logo to the email (if any).
   # Returns the attachment url.
   def attach_logo(procedure)

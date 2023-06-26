@@ -6,7 +6,7 @@ describe ExpiredDossiersDeletionService do
   let(:procedure) { create(:procedure, :published, procedure_opts) }
   let(:procedure_2) { create(:procedure, :published, procedure_opts) }
   let(:reference_date) { Date.parse("March 8") }
-
+  let(:service) { ExpiredDossiersDeletionService.new }
   describe '#process_expired_dossiers_brouillon' do
     before { Timecop.freeze(reference_date) }
     after  { Timecop.return }
@@ -26,7 +26,7 @@ describe ExpiredDossiersDeletionService do
         allow(DossierMailer).to receive(:notify_brouillon_near_deletion).and_call_original
         allow(DossierMailer).to receive(:notify_brouillon_deletion).and_call_original
 
-        ExpiredDossiersDeletionService.process_expired_dossiers_brouillon
+        service.process_expired_dossiers_brouillon
       end
 
       it 'emails should be sent' do
@@ -58,7 +58,7 @@ describe ExpiredDossiersDeletionService do
     context 'with a single dossier' do
       let!(:dossier) { create(:dossier, procedure: procedure, created_at: created_at) }
 
-      before { ExpiredDossiersDeletionService.send_brouillon_expiration_notices }
+      before { service.send_brouillon_expiration_notices }
 
       context 'when the dossier is not close to expiration' do
         let(:created_at) { (conservation_par_defaut - 2.weeks - 1.day).ago }
@@ -80,7 +80,7 @@ describe ExpiredDossiersDeletionService do
       let!(:dossier_1) { create(:dossier, procedure: procedure, user: user, created_at: (conservation_par_defaut - 2.weeks + 1.day).ago) }
       let!(:dossier_2) { create(:dossier, procedure: procedure_2, user: user, created_at: (conservation_par_defaut - 2.weeks + 1.day).ago) }
 
-      before { ExpiredDossiersDeletionService.send_brouillon_expiration_notices }
+      before { service.send_brouillon_expiration_notices }
 
       it { expect(DossierMailer).to have_received(:notify_brouillon_near_deletion).once }
       it { expect(DossierMailer).to have_received(:notify_brouillon_near_deletion).with(match_array([dossier_1, dossier_2]), user.email) }
@@ -98,7 +98,7 @@ describe ExpiredDossiersDeletionService do
     context 'with a single dossier' do
       let!(:dossier) { create(:dossier, procedure: procedure, brouillon_close_to_expiration_notice_sent_at: notice_sent_at) }
 
-      before { ExpiredDossiersDeletionService.delete_expired_brouillons_and_notify }
+      before { service.delete_expired_brouillons_and_notify }
 
       context 'when no notice has been sent' do
         let(:notice_sent_at) { nil }
@@ -128,7 +128,7 @@ describe ExpiredDossiersDeletionService do
       let!(:dossier_1) { create(:dossier, procedure: procedure, user: user, brouillon_close_to_expiration_notice_sent_at: (warning_period + 1.day).ago) }
       let!(:dossier_2) { create(:dossier, procedure: procedure_2, user: user, brouillon_close_to_expiration_notice_sent_at: (warning_period + 1.day).ago) }
 
-      before { ExpiredDossiersDeletionService.delete_expired_brouillons_and_notify }
+      before { service.delete_expired_brouillons_and_notify }
 
       it { expect(DossierMailer).to have_received(:notify_brouillon_deletion).once }
       it { expect(DossierMailer).to have_received(:notify_brouillon_deletion).with(match_array([dossier_1.hash_for_deletion_mail, dossier_2.hash_for_deletion_mail]), user.email) }
@@ -147,7 +147,7 @@ describe ExpiredDossiersDeletionService do
     context 'with a single dossier' do
       let!(:dossier) { create(:dossier, :en_construction, :followed, procedure: procedure, en_construction_at: en_construction_at) }
 
-      before { ExpiredDossiersDeletionService.send_en_construction_expiration_notices }
+      before { service.send_en_construction_expiration_notices }
 
       context 'when the dossier is not near deletion' do
         let(:en_construction_at) { (conservation_par_defaut - 2.weeks - 1.day).ago }
@@ -178,7 +178,7 @@ describe ExpiredDossiersDeletionService do
 
       before do
         instructeur.followed_dossiers << dossier_1 << dossier_2
-        ExpiredDossiersDeletionService.send_en_construction_expiration_notices
+        service.send_en_construction_expiration_notices
       end
 
       it { expect(DossierMailer).to have_received(:notify_near_deletion_to_user).once }
@@ -195,7 +195,7 @@ describe ExpiredDossiersDeletionService do
 
       before do
         administrateur.instructeur.followed_dossiers << dossier
-        ExpiredDossiersDeletionService.send_en_construction_expiration_notices
+        service.send_en_construction_expiration_notices
       end
 
       it { expect(DossierMailer).to have_received(:notify_near_deletion_to_user).once }
@@ -219,7 +219,7 @@ describe ExpiredDossiersDeletionService do
       let!(:dossier) { create(:dossier, :en_construction, :followed, procedure: procedure, en_construction_close_to_expiration_notice_sent_at: notice_sent_at) }
       let(:deleted_dossier) { DeletedDossier.find_by(dossier_id: dossier.id) }
 
-      before { ExpiredDossiersDeletionService.delete_expired_en_construction_and_notify }
+      before { service.delete_expired_en_construction_and_notify }
 
       context 'when no notice has been sent' do
         let(:notice_sent_at) { nil }
@@ -261,7 +261,7 @@ describe ExpiredDossiersDeletionService do
 
       before do
         instructeur.followed_dossiers << dossier_1 << dossier_2
-        ExpiredDossiersDeletionService.delete_expired_en_construction_and_notify
+        service.delete_expired_en_construction_and_notify
       end
 
       it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_user).once }
@@ -290,7 +290,7 @@ describe ExpiredDossiersDeletionService do
     context 'with a single dossier' do
       let!(:dossier) { create(:dossier, :followed, state: :accepte, procedure: procedure, processed_at: processed_at) }
 
-      before { ExpiredDossiersDeletionService.send_termine_expiration_notices }
+      before { service.send_termine_expiration_notices }
 
       context 'when the dossier is not near deletion' do
         let(:processed_at) { (conservation_par_defaut - 2.weeks - 1.day).ago }
@@ -321,7 +321,7 @@ describe ExpiredDossiersDeletionService do
 
       before do
         instructeur.followed_dossiers << dossier_1 << dossier_2
-        ExpiredDossiersDeletionService.send_termine_expiration_notices
+        service.send_termine_expiration_notices
       end
 
       it { expect(DossierMailer).to have_received(:notify_near_deletion_to_user).once }
@@ -338,7 +338,7 @@ describe ExpiredDossiersDeletionService do
 
       before do
         administrateur.instructeur.followed_dossiers << dossier
-        ExpiredDossiersDeletionService.send_termine_expiration_notices
+        service.send_termine_expiration_notices
       end
 
       it { expect(DossierMailer).to have_received(:notify_near_deletion_to_user).once }
@@ -366,7 +366,7 @@ describe ExpiredDossiersDeletionService do
       let!(:dossier) { create(:dossier, :followed, :accepte, procedure: procedure, termine_close_to_expiration_notice_sent_at: notice_sent_at) }
       let(:deleted_dossier) { DeletedDossier.find_by(dossier_id: dossier.id) }
 
-      before { ExpiredDossiersDeletionService.delete_expired_termine_and_notify }
+      before { service.delete_expired_termine_and_notify }
 
       context 'when no notice has been sent' do
         let(:notice_sent_at) { nil }
@@ -408,7 +408,7 @@ describe ExpiredDossiersDeletionService do
 
       before do
         instructeur.followed_dossiers << dossier_1 << dossier_2
-        ExpiredDossiersDeletionService.delete_expired_termine_and_notify
+        service.delete_expired_termine_and_notify
       end
 
       it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_user).once }
@@ -430,7 +430,7 @@ describe ExpiredDossiersDeletionService do
 
       before do
         instructeur.followed_dossiers << dossier_1 << dossier_2
-        ExpiredDossiersDeletionService.delete_expired_termine_and_notify
+        service.delete_expired_termine_and_notify
       end
 
       it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_user).once }
