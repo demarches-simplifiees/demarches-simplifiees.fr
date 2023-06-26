@@ -39,27 +39,27 @@ describe 'Signing up:' do
       visit commencer_path(path: procedure.path)
       click_on "Créer un compte"
       expect(page).to have_selector('.suspect-email', visible: false)
-      fill_in 'Adresse éléctronique', with: 'bidou@yahoo.rf'
+      fill_in 'Adresse électronique', with: 'bidou@yahoo.rf'
       fill_in 'Mot de passe', with: '12345'
     end
 
     scenario 'they can accept the suggestion', js: true do
       expect(page).to have_selector('.suspect-email', visible: true)
       click_on 'Oui'
-      expect(page).to have_field("Adresse éléctronique", :with => 'bidou@yahoo.fr')
+      expect(page).to have_field("Adresse électronique", :with => 'bidou@yahoo.fr')
       expect(page).to have_selector('.suspect-email', visible: false)
     end
 
     scenario 'they can discard the suggestion', js: true do
       expect(page).to have_selector('.suspect-email', visible: true)
       click_on 'Non'
-      expect(page).to have_field("Adresse éléctronique", :with => 'bidou@yahoo.rf')
+      expect(page).to have_field("Adresse électronique", :with => 'bidou@yahoo.rf')
       expect(page).to have_selector('.suspect-email', visible: false)
     end
 
     scenario 'they can fix the typo themselves', js: true do
       expect(page).to have_selector('.suspect-email', visible: true)
-      fill_in 'Adresse éléctronique', with: 'bidou@yahoo.fr'
+      fill_in 'Adresse électronique', with: 'bidou@yahoo.fr'
       blur
       expect(page).to have_selector('.suspect-email', visible: false)
     end

@@ -403,9 +403,9 @@ fr:
             reset_password_token:
               invalid: ": Votre lien de nouveau mot de passe a expiré. Merci d’en demander un nouveau."
             email:
-              blank: "est vide. Saisir une adresse éléctronique"
-              invalid: "est invalide. Saisir une adresse éléctronique valide, exemple : john.doe@exemple.fr"
-              taken: "déjà utilisé. Saisir une autre adresse éléctronique."
+              blank: "est vide. Saisir une adresse électronique"
+              invalid: "est invalide. Saisir une adresse électronique valide, exemple : john.doe@exemple.fr"
+              taken: "déjà utilisé. Saisir une autre adresse électronique."
             password:
               too_short: "est trop court. Saisir un mot de passe avec au moins 8 caractères"
               not_strong: "n’est pas assez complexe. Saisir un mot de passe plus complexe"
