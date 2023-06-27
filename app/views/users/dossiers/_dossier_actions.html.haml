@@ -14,7 +14,6 @@
     - else
       = link_to t('views.users.dossiers.dossier_action.edit_dossier'), modifier_dossier_path(dossier), class: 'fr-btn fr-btn--tertiary fr-mr-1w'
 
-
   = render Dropdown::MenuComponent.new(wrapper: :div, wrapper_options: {class: 'invite-user-actions'}, menu_options: {id: dom_id(dossier, :actions_menu)}, button_options: {class: 'fr-btn--tertiary'}) do |menu|
     - menu.with_button_inner_html do
       - if has_edit_action

@@ -20,6 +20,13 @@
     }
   }
 
+  .logo {
+    width: auto;
+    max-width: 50px;
+    height: fit-content;
+    margin-right: $default-spacer * 2;
+  }
+
   &.feedback {
     max-width: 600px;
     margin: 30px auto;
