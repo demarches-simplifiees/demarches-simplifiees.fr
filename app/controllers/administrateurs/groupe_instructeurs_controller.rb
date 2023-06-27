@@ -43,7 +43,7 @@ module Administrateurs
       tdc_options = tdc.options["drop_down_options"].reject(&:empty?)
 
       tdc_options.each do |option_label|
-        gi = procedure.groupe_instructeurs.find_by({ label: option_label }) || procedure.groupe_instructeurs
+        gi = @procedure.groupe_instructeurs.find_by({ label: option_label }) || @procedure.groupe_instructeurs
           .create({ label: option_label, instructeurs: [current_administrateur.instructeur] })
         gi.update(routing_rule: ds_eq(champ_value(stable_id), constant(gi.label)))
       end
@@ -59,7 +59,7 @@ module Administrateurs
       end
 
       flash.notice = 'Les groupes instructeurs ont été ajoutés'
-      redirect_to admin_procedure_groupe_instructeurs_path(procedure)
+      redirect_to admin_procedure_groupe_instructeurs_path(@procedure)
     end
 
     def wizard
