@@ -3,7 +3,7 @@
     .flex
 
       %p.flex-grow.fr-text-action-high--grey.fr-mb-0= dossier.procedure.routing_criteria_name
-      %p.champ-updated-at.fr-mb-0.fr-text--xs
+      %p.fr-mb-0.fr-text--xs
         - if demande_seen_at&.<(dossier.groupe_instructeur_updated_at)
           %span{ class: highlight_if_unseen_class(demande_seen_at, dossier.groupe_instructeur_updated_at) }
             = t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: try_format_datetime(dossier.updated_at))

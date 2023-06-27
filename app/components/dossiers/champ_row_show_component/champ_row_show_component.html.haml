@@ -8,7 +8,7 @@
     - else
       .flex.d-block-sm
         %p.flex-grow.fr-text-action-high--grey.fr-mb-0= "#{champ.libelle} :"
-        %p.champ-updated-at.fr-mb-0.fr-text--sm
+        %p.fr-mb-0.fr-text--sm
           - if updated_after_deposer?(champ)
             %span{ class: highlight_if_unseen_class(@demande_seen_at, champ.updated_at) }
               = t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: try_format_datetime(champ.updated_at))
