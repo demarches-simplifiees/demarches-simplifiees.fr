@@ -1,18 +1,18 @@
 
 .fr-my-2v
-  %p.fr-text-action-high--grey.fr-mb-0= t('views.users.dossiers.identite.civility')
-  .champ-content.fr-text-action-high--grey
+  %p.champ-label= t('views.users.dossiers.identite.civility')
+  .champ-content
     %p= individual.gender
 .fr-my-2v
-  %p.fr-text-action-high--grey.fr-mb-0= t('views.users.dossiers.identite.first_name')
-  .champ-content.fr-text-action-high--grey
+  %p.champ-label= t('views.users.dossiers.identite.first_name')
+  .champ-content
     %p= individual.prenom
 .fr-my-2v
-  %p.fr-text-action-high--grey.fr-mb-0= t('views.users.dossiers.identite.last_name')
-  .champ-content.fr-text-action-high--grey
+  %p.champ-label= t('views.users.dossiers.identite.last_name')
+  .champ-content
     %p= individual.nom
 - if individual.birthdate.present?
   .fr-my-2v
-    %p.fr-text-action-high--grey.fr-mb-0= t('views.users.dossiers.identite.birthdate')
-    .champ-content.fr-text-action-high--grey
+    %p.champ-label= t('views.users.dossiers.identite.birthdate')
+    .champ-content
       %p= try_format_date(individual.birthdate)

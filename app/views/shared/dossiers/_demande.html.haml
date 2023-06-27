@@ -2,9 +2,9 @@
   - content_for(:notice_info) do
     = render partial: "shared/dossiers/france_connect_informations_notice", locals: { user_information: dossier.france_connect_information }
 
-.fr-container.counter-start-header-section
-  .fr-grid-row
-    .fr-col-12.fr-col-offset-lg-2.fr-col-lg-8
+.fr-container.counter-start-header-section.dossier-show
+  .fr-grid-row.fr-grid-row--center
+    .fr-col-12.fr-col-lg-10.fr-col-xl-8
       %h2.fr-h6.fr-background-alt--grey.fr-mb-0
         .flex-grow.fr-py-3v.fr-px-4v= t('views.shared.dossiers.demande.en_construction')
 

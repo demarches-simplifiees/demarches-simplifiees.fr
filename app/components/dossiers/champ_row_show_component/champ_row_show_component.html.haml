@@ -1,13 +1,13 @@
 - @champs.each do |champ|
   .fr-px-4v.fr-my-2v
     - if champ.repetition?
-      = champ.libelle
+      %p.champ-label= "#{champ.libelle} :"
       - champ.rows.each do |row|
         = render Dossiers::ChampRowShowComponent.new(champs: row, demande_seen_at: @demande_seen_at, profile: @profile, repetition: true)
 
     - else
       .flex.d-block-sm
-        %p.flex-grow.fr-text-action-high--grey.fr-mb-0= "#{champ.libelle} :"
+        %p.champ-label.flex-grow= "#{champ.libelle} :"
         %p.fr-mb-0.fr-text--sm
           - if updated_after_deposer?(champ)
             %span{ class: highlight_if_unseen_class(@demande_seen_at, champ.updated_at) }
@@ -16,7 +16,7 @@
         .champ-content.fr-text-mention--grey{ class: [highlight_if_unseen_class(@demande_seen_at, champ.updated_at), champ.type_champ] }
           %p= t('.blank')
       - else
-        .champ-content.fr-text-action-high--grey{ class: [highlight_if_unseen_class(@demande_seen_at, champ.updated_at), champ.type_champ] }
+        .champ-content{ class: [highlight_if_unseen_class(@demande_seen_at, champ.updated_at), champ.type_champ] }
           - case champ.type_champ
           - when TypeDeChamp.type_champs.fetch(:carte)
             = render partial: "shared/champs/carte/show", locals: { champ: champ }

@@ -1,25 +1,29 @@
 @import "colors";
 @import "constants";
 
-.fr-container {
+.dossier-show {
   @media (max-width: 48em) {
     .d-block-sm {
       display: block;
     }
   }
-}
 
-.champ-content {
-  padding: 0 0 ,5rem;
+  .champ-label {
+    font-weight: 600;
+    margin-bottom: 0;
+    color: var(--text-action-high-grey);
+  }
 
-  p {
-    padding: 0;
-    margin: 0;
+  .champ-content {
+    padding: 0 0 0.5rem;
+
+    p {
+      padding: 0;
+      margin: 0;
+    }
+  }
+
+  .top-bordered {
+    border-top: 1px solid var(--border-default-grey);
   }
 }
-
-.top-bordered {
-  border-top: 1px solid var(--border-default-grey);
-}
-
-
