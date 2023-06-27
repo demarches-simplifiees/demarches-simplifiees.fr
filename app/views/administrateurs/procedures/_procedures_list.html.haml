@@ -13,19 +13,31 @@
             = link_to commencer_url(procedure.path), commencer_url(procedure.path), class: 'fr-link fr-mb-1w'
 
             %p.fr-mt-1w.fr-mb-1w
-              créée le #{procedure.created_at.strftime('%d/%m/%Y')}
+              = t('administrateurs.procedures.created_at')
+              = procedure.created_at.strftime('%d/%m/%Y')
+
               - if procedure.published_at.present?
-                %span publiée le #{procedure.published_at.strftime('%d/%m/%Y')}
+                %span
+                  = t('administrateurs.procedures.published_at')
+                  = procedure.published_at.strftime('%d/%m/%Y')
 
               - if procedure.updated_at.today?
-                %span modifiée à #{procedure.updated_at.strftime('%H:%M')}
+                %span
+                  = t('administrateurs.procedures.updated_at_today')
+                  = procedure.updated_at.strftime('%H:%M')
               - else
-                %span modifiée le #{procedure.updated_at.strftime('%d/%m/%Y %H:%M')}
+                %span
+                  = t('administrateurs.procedures.updated_at')
+                  = procedure.updated_at.strftime('%d/%m/%Y %H:%M')
 
               - if procedure.closed_at.present?
-                %span archivée le #{procedure.closed_at.strftime('%d/%m/%Y')}
+                %span
+                  = t('administrateurs.procedures.closed_at')
+                  = procedure.closed_at.strftime('%d/%m/%Y')
               - elsif procedure.auto_archive_on&.future?
-                %span sera clôturée le #{procedure.auto_archive_on.strftime('%d/%m/%Y')}
+                %span
+                  = t('administrateurs.procedures.auto_archive_on')
+                  = procedure.auto_archive_on.strftime('%d/%m/%Y')
 
             %div
               - if procedure.routing_enabled?
@@ -41,15 +53,12 @@
       .text-right
         %p.fr-mb-0 N° #{procedure.id}
         - if procedure.close?
-
           %span.fr-badge.fr-badge--sm.fr-badge--warning
             = t('closed', scope: [:layouts, :breadcrumb])
 
         - elsif procedure.locked?
-
           %span.fr-badge.fr-badge--sm.fr-badge--success
             = t('published', scope: [:layouts, :breadcrumb])
-
 
         - else
           %span.fr-badge.fr-badge--sm.fr-badge--new

@@ -823,6 +823,12 @@ fr:
       to_clone: Cloner
       to_close: Clore
     procedures:
+      created_at: créée le
+      published_at: publiée le
+      updated_at_today: modifiée à
+      updated_at: modifiée le
+      closed_at: archivée le
+      auto_archive_on: sera clôturée le
       show:
         ready: "Validé"
         needs_configuration: "À configurer"
