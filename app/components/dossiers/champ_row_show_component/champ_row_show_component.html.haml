@@ -8,10 +8,12 @@
     - else
       .flex.d-block-sm
         %p.champ-label.flex-grow= "#{champ.libelle} :"
-        %p.fr-mb-0.fr-text--sm
-          - if updated_after_deposer?(champ)
+
+        - if updated_after_deposer?(champ)
+          %p.fr-mb-0.fr-text--sm
             %span{ class: highlight_if_unseen_class(@demande_seen_at, champ.updated_at) }
               = t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: try_format_datetime(champ.updated_at))
+
       - if champ.blank? && ![TypeDeChamp.type_champs.fetch(:piece_justificative), TypeDeChamp.type_champs.fetch(:titre_identite)].include?(champ.type_champ)
         .champ-content.fr-text-mention--grey{ class: [highlight_if_unseen_class(@demande_seen_at, champ.updated_at), champ.type_champ] }
           %p= t('.blank')
@@ -59,4 +61,5 @@
           - when TypeDeChamp.type_champs.fetch(:number)
             %p= number_with_html_delimiter(champ.to_s)
           - else
-            %p= format_text_value(champ.to_s.strip) unless champ.blank?
+            - if champ.present?
+              = format_text_value(champ.to_s.strip) # format already wrap in p
