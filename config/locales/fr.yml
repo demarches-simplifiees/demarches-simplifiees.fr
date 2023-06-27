@@ -345,6 +345,7 @@ fr:
         demande:
           en_construction: "Date de dépôt du dossier"
           requester_identity: "Identité du demandeur"
+          requester_identity_updated_at: "modifiée le %{date}"
           my_identity: "Mon identité"
           form: "Sections du formulaire"
           edit_siret: "Modifier le SIRET"
