@@ -67,6 +67,7 @@ module Administrateurs
         new_label = procedure.defaut_groupe_instructeur.label + ' bis'
         procedure.groupe_instructeurs
           .create({ label: new_label, instructeurs: [current_administrateur.instructeur] })
+          .tap(&:toggle_routing)
 
         redirect_to admin_procedure_groupe_instructeurs_path(procedure)
       elsif params[:choice][:state] == 'routage_simple'

@@ -726,4 +726,25 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       expect(procedure3.routing_enabled).to be_truthy
     end
   end
+
+  describe '#wizard' do
+    let!(:procedure4) do
+      create(:procedure,
+             types_de_champ_public: [
+               { type: :drop_down_list, libelle: 'Votre ville', options: ['Paris', 'Lyon', 'Marseille'] },
+               { type: :text, libelle: 'Un champ texte' }
+             ],
+             administrateurs: [admin])
+    end
+
+    let!(:drop_down_tdc) { procedure4.draft_revision.types_de_champ.first }
+
+    before { patch :wizard, params: { procedure_id: procedure4.id, choice: { state: 'routage_custom' } } }
+
+    it do
+      expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure4))
+      expect(procedure4.groupe_instructeurs.pluck(:label)).to match_array(['défaut', 'défaut bis'])
+      expect(procedure4.reload.routing_enabled).to be_truthy
+    end
+  end
 end
