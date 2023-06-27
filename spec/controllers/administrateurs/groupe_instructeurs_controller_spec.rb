@@ -723,6 +723,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       expect(flash.notice).to eq 'Les groupes instructeurs ont été ajoutés'
       expect(procedure3.groupe_instructeurs.pluck(:label)).to match_array(['Paris', 'Lyon', 'Marseille'])
       expect(procedure3.reload.defaut_groupe_instructeur.routing_rule).to eq(ds_eq(champ_value(drop_down_tdc.stable_id), constant('Lyon')))
+      expect(procedure3.routing_enabled).to be_truthy
     end
   end
 end

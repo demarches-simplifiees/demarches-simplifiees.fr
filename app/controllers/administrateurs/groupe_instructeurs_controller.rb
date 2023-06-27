@@ -48,7 +48,7 @@ module Administrateurs
         gi.update(routing_rule: ds_eq(champ_value(stable_id), constant(gi.label)))
       end
 
-      defaut = @procedure.defaut_groupe_instructeur
+      defaut = @procedure.defaut_groupe_instructeur.tap(&:toggle_routing)
 
       if !tdc_options.include?(defaut.label)
         new_defaut = @procedure.reload.groupe_instructeurs_but_defaut.first
