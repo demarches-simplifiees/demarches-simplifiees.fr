@@ -28,9 +28,9 @@ module Users
       @dossiers_invites = current_user.dossiers_invites.merge(dossiers_visibles)
       @dossiers_supprimes_recemment = current_user.dossiers.hidden_by_user.merge(dossiers)
       @dossiers_supprimes_definitivement = current_user.deleted_dossiers.includes(:procedure).order_by_updated_at
-      @dossier_transfers = DossierTransfer.for_email(current_user.email)
+      @dossiers_transferes = dossiers_visibles.where(dossier_transfer_id: DossierTransfer.for_email(current_user.email).ids)
       @dossiers_close_to_expiration = current_user.dossiers.close_to_expiration.merge(dossiers_visibles)
-      @statut = statut(@user_dossiers, @dossiers_traites, @dossiers_invites, @dossiers_supprimes_recemment, @dossiers_supprimes_definitivement, @dossier_transfers, @dossiers_close_to_expiration, params[:statut])
+      @statut = statut(@user_dossiers, @dossiers_traites, @dossiers_invites, @dossiers_supprimes_recemment, @dossiers_supprimes_definitivement, @dossiers_transferes, @dossiers_close_to_expiration, params[:statut])
 
       @dossiers = case @statut
       when 'en-cours'
@@ -44,7 +44,7 @@ module Users
       when 'dossiers-supprimes-definitivement'
         @dossiers_supprimes_definitivement
       when 'dossiers-transferes'
-        @dossier_transfers
+        @dossiers_transferes
       when 'dossiers-expirant'
         @dossiers_close_to_expiration
       end.page(page)
@@ -388,14 +388,14 @@ module Users
     # if the status tab is filled, then this tab
     # else first filled tab
     # else en-cours
-    def statut(mes_dossiers, dossiers_traites, dossiers_invites, dossiers_supprimes_recemment, dossiers_supprimes_definitivement, dossier_transfers, dossiers_close_to_expiration, params_statut)
+    def statut(mes_dossiers, dossiers_traites, dossiers_invites, dossiers_supprimes_recemment, dossiers_supprimes_definitivement, dossiers_transferes, dossiers_close_to_expiration, params_statut)
       tabs = {
         'en-cours' => mes_dossiers.present?,
         'traites' => dossiers_traites.present?,
         'dossiers-invites' => dossiers_invites.present?,
         'dossiers-supprimes-recemment' => dossiers_supprimes_recemment.present?,
         'dossiers-supprimes-definitivement' => dossiers_supprimes_definitivement.present?,
-        'dossiers-transferes' => dossier_transfers.present?,
+        'dossiers-transferes' => dossiers_transferes.present?,
         'dossiers-expirant' => dossiers_close_to_expiration.present?
       }
       if tabs[params_statut]

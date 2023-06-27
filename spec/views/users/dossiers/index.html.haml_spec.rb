@@ -16,7 +16,7 @@ describe 'users/dossiers/index', type: :view do
     assign(:dossiers_supprimes_recemment, Kaminari.paginate_array(user_dossiers).page(1))
     assign(:dossiers_supprimes_definitivement, Kaminari.paginate_array(user_dossiers).page(1))
     assign(:dossiers_traites, Kaminari.paginate_array(user_dossiers).page(1))
-    assign(:dossier_transfers, Kaminari.paginate_array([]).page(1))
+    assign(:dossiers_transferes, Kaminari.paginate_array([]).page(1))
     assign(:dossiers_close_to_expiration, Kaminari.paginate_array([]).page(1))
     assign(:dossiers, Kaminari.paginate_array(user_dossiers).page(1))
     assign(:statut, statut)
