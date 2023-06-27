@@ -9,12 +9,12 @@
 - if has_actions
   - if has_edit_action
     - if dossier.brouillon?
-      = link_to t('views.users.dossiers.dossier_action.edit_draft'), (url_for_dossier(dossier)), class: 'fr-btn fr-mr-1w'
+      = link_to t('views.users.dossiers.dossier_action.edit_draft'), (url_for_dossier(dossier)), class: 'fr-btn fr-btn--sm fr-mr-1w'
 
     - else
-      = link_to t('views.users.dossiers.dossier_action.edit_dossier'), modifier_dossier_path(dossier), class: 'fr-btn fr-btn--tertiary fr-mr-1w'
+      = link_to t('views.users.dossiers.dossier_action.edit_dossier'), modifier_dossier_path(dossier), class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-mr-1w'
 
-  = render Dropdown::MenuComponent.new(wrapper: :div, wrapper_options: {class: 'invite-user-actions'}, menu_options: {id: dom_id(dossier, :actions_menu)}, button_options: {class: 'fr-btn--tertiary'}) do |menu|
+  = render Dropdown::MenuComponent.new(wrapper: :div, wrapper_options: {class: 'invite-user-actions'}, menu_options: {id: dom_id(dossier, :actions_menu)}, button_options: {class: 'fr-btn--sm fr-btn--tertiary'}) do |menu|
     - menu.with_button_inner_html do
       - if has_edit_action
         = t('views.users.dossiers.dossier_action.other_actions')
