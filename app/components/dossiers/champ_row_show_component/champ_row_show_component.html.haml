@@ -16,7 +16,8 @@
 
       - if champ.blank? && ![TypeDeChamp.type_champs.fetch(:piece_justificative), TypeDeChamp.type_champs.fetch(:titre_identite)].include?(champ.type_champ)
         .champ-content.fr-text-mention--grey{ class: [highlight_if_unseen_class(@demande_seen_at, champ.updated_at), champ.type_champ] }
-          %p= t('.blank')
+          %p
+            %em= t('.blank')
       - else
         .champ-content{ class: [highlight_if_unseen_class(@demande_seen_at, champ.updated_at), champ.type_champ] }
           - case champ.type_champ
