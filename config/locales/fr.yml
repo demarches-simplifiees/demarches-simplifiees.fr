@@ -331,7 +331,8 @@ fr:
         best_regards: Bonne journée,
       dossiers:
         form:
-          updated_at: "modifié le %{datetime}"
+          submitted_at: "Déposé le %{datetime}"
+          updated_at: "Modifié le %{datetime}"
         edit:
           autosave: Votre dossier est enregistré automatiquement après chaque modification. Vous pouvez à tout moment fermer la fenêtre et reprendre plus tard là où vous en étiez.
           notice: Télécharger le guide de la démarche
@@ -345,6 +346,7 @@ fr:
         demande:
           en_construction: "Date de dépôt du dossier"
           requester_identity: "Identité du demandeur"
+          requester_identity_updated_at: "modifiée le %{date}"
           my_identity: "Mon identité"
           form: "Sections du formulaire"
           edit_siret: "Modifier le SIRET"

@@ -3,21 +3,21 @@
 - content_for :footer do
   = render partial: "users/procedure_footer", locals: { procedure: @dossier.procedure, dossier: @dossier }
 
-.dossier-container.mb-4
+.dossier-container.fr-mb-4w
   = render partial: 'users/dossiers/show/header', locals: { dossier: @dossier }
 
   - if @dossier.en_construction?
     .fr-container
       .fr-grid-row.fr-grid-row--center
-        .fr-col-md-10.fr-col-lg-9
+        .fr-col-md-10.fr-col-xl-9
           = render Dossiers::EnConstructionNotSubmittedComponent.new(dossier: @dossier, user: current_user)
 
   = render partial: 'shared/dossiers/demande', locals: { dossier: @dossier, demande_seen_at: nil, profile: 'usager' }
 
 
-  .fr-container
-    .fr-grid-row
-      .fr-col-12.fr-col-offset-lg-2.fr-col-lg-8
+  .fr-container.fr-mt-2w
+    .fr-grid-row.fr-grid-row--center
+      .fr-col-12.fr-col-lg-10.fr-col-xl-8
         - if !@dossier.read_only?
           = link_to t('views.users.dossiers.demande.edit_dossier'), modifier_dossier_path(@dossier), class: 'fr-btn fr-btn-sm', 'title'=> "Modifier mon dossier tant qu'il n'est pas passé en instruction"
           .clearfix

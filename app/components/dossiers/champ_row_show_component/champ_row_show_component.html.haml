@@ -1,22 +1,25 @@
 - @champs.each do |champ|
   .fr-px-4v.fr-my-2v
     - if champ.repetition?
-      = champ.libelle
+      %p.champ-label= "#{champ.libelle} :"
       - champ.rows.each do |row|
         = render Dossiers::ChampRowShowComponent.new(champs: row, demande_seen_at: @demande_seen_at, profile: @profile, repetition: true)
 
     - else
       .flex.d-block-sm
-        %p.flex-grow.fr-text-action-high--grey.fr-mb-0= "#{champ.libelle} :"
-        %p.champ-updated-at.fr-mb-0.fr-text--sm
-          - if updated_after_deposer?(champ)
+        %p.champ-label.flex-grow= "#{champ.libelle} :"
+
+        - if updated_after_deposer?(champ)
+          %p.fr-mb-0.fr-text--sm
             %span{ class: highlight_if_unseen_class(@demande_seen_at, champ.updated_at) }
               = t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: try_format_datetime(champ.updated_at))
+
       - if champ.blank? && ![TypeDeChamp.type_champs.fetch(:piece_justificative), TypeDeChamp.type_champs.fetch(:titre_identite)].include?(champ.type_champ)
         .champ-content.fr-text-mention--grey{ class: [highlight_if_unseen_class(@demande_seen_at, champ.updated_at), champ.type_champ] }
-          %p= t('.blank')
+          %p
+            %em= t('.blank')
       - else
-        .champ-content.fr-text-action-high--grey{ class: [highlight_if_unseen_class(@demande_seen_at, champ.updated_at), champ.type_champ] }
+        .champ-content{ class: [highlight_if_unseen_class(@demande_seen_at, champ.updated_at), champ.type_champ] }
           - case champ.type_champ
           - when TypeDeChamp.type_champs.fetch(:carte)
             = render partial: "shared/champs/carte/show", locals: { champ: champ }
@@ -59,4 +62,5 @@
           - when TypeDeChamp.type_champs.fetch(:number)
             %p= number_with_html_delimiter(champ.to_s)
           - else
-            %p= format_text_value(champ.to_s.strip) unless champ.blank?
+            - if champ.present?
+              = format_text_value(champ.to_s.strip) # format already wrap in p

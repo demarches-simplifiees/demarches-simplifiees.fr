@@ -136,8 +136,9 @@
 
 // who known
 .highlighted {
-  background: $orange-bg;
-  color: $black;
+  background-color: var(--background-contrast-yellow-moutarde); // from fr-badge--new
+  color: var(--text-action-high-grey);
+  background-clip: content-box;
 }
 
 .overflow-y-visible {
