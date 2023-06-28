@@ -17,7 +17,7 @@
       - if champ.blank?
         .champ-content.fr-text-mention--grey{ class: [highlight_if_unseen_class(@demande_seen_at, champ.updated_at), champ.type_champ] }
           %p
-            %em= t(champ.type_de_champ.piece_justificative? ? '.blank_attachment' : '.blank')
+            %em= t(blank_key(champ))
       - else
         .champ-content{ class: [highlight_if_unseen_class(@demande_seen_at, champ.updated_at), champ.type_champ] }
           - case champ.type_champ
