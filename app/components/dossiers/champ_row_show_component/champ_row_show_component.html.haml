@@ -5,7 +5,7 @@
       - champ.rows.each do |row|
         = render Dossiers::ChampRowShowComponent.new(champs: row, demande_seen_at: @demande_seen_at, profile: @profile, repetition: true)
 
-    - else
+    - elsif !champ.header_section?
       .flex.d-block-sm
         %p.champ-label.flex-grow= "#{champ.libelle} :"
 
