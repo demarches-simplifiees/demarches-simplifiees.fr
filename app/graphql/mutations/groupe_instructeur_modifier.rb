@@ -11,7 +11,7 @@ module Mutations
 
     def resolve(groupe_instructeur:, label: nil, closed: nil)
       if groupe_instructeur.update({ label:, closed: }.compact)
-        groupe_instructeur.toggle_routing
+        groupe_instructeur.procedure.toggle_routing
 
         # ugly hack to keep retro compatibility
         # do not judge

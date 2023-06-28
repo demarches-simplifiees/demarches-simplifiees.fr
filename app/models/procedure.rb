@@ -966,6 +966,10 @@ class Procedure < ApplicationRecord
     active_revision.types_de_champ_public.where.not(condition: nil).filter(&:piece_justificative?)
   end
 
+  def toggle_routing
+    update!(routing_enabled: self.groupe_instructeurs.active.many?)
+  end
+
   private
 
   def validate_auto_archive_on_in_the_future

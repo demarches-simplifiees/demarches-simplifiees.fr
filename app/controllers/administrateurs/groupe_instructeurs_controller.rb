@@ -48,7 +48,8 @@ module Administrateurs
         gi.update(routing_rule: ds_eq(champ_value(stable_id), constant(gi.label)))
       end
 
-      defaut = @procedure.defaut_groupe_instructeur.tap(&:toggle_routing)
+      @procedure.toggle_routing
+      defaut = @procedure.defaut_groupe_instructeur
 
       if !tdc_options.include?(defaut.label)
         new_defaut = @procedure.reload.groupe_instructeurs_but_defaut.first
@@ -67,7 +68,8 @@ module Administrateurs
         new_label = procedure.defaut_groupe_instructeur.label + ' bis'
         procedure.groupe_instructeurs
           .create({ label: new_label, instructeurs: [current_administrateur.instructeur] })
-          .tap(&:toggle_routing)
+
+        procedure.toggle_routing
 
         redirect_to admin_procedure_groupe_instructeurs_path(procedure)
       elsif params[:choice][:state] == 'routage_simple'
@@ -101,7 +103,7 @@ module Administrateurs
         .new({ instructeurs: [current_administrateur.instructeur] }.merge(groupe_instructeur_params))
 
       if @groupe_instructeur.save
-        @groupe_instructeur.toggle_routing
+        procedure.toggle_routing
         routing_notice = " et le routage a été activé" if procedure.groupe_instructeurs.active.size == 2
         redirect_to admin_procedure_groupe_instructeur_path(procedure, @groupe_instructeur),
           notice: "Le groupe d’instructeurs « #{@groupe_instructeur.label} » a été créé#{routing_notice}."
@@ -119,7 +121,7 @@ module Administrateurs
       @groupe_instructeur = groupe_instructeur
 
       if @groupe_instructeur.update(groupe_instructeur_params)
-        @groupe_instructeur.toggle_routing
+        procedure.toggle_routing
         redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur),
           notice: "Le nom est à présent « #{@groupe_instructeur.label} »."
       else
@@ -164,7 +166,7 @@ module Administrateurs
       else
         @groupe_instructeur.destroy!
         if procedure.groupe_instructeurs.active.one?
-          procedure.defaut_groupe_instructeur.toggle_routing
+          procedure.toggle_routing
           procedure.defaut_groupe_instructeur.update!(
             routing_rule: nil,
             label: GroupeInstructeur::DEFAUT_LABEL,

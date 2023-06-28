@@ -93,10 +93,6 @@ class GroupeInstructeur < ApplicationRecord
     procedure.groupe_instructeurs - [self]
   end
 
-  def toggle_routing
-    procedure.update!(routing_enabled: procedure.groupe_instructeurs.active.many?)
-  end
-
   private
 
   def routing_rule_matches_tdc?

@@ -16,7 +16,7 @@ class InstructeursImportService
     if missing_labels.present?
       created_at = Time.zone.now
       GroupeInstructeur.create!(missing_labels.map { |label| { procedure_id: procedure.id, label:, created_at:, updated_at: created_at } })
-      procedure.defaut_groupe_instructeur.toggle_routing
+      procedure.toggle_routing
     end
 
     emails_in_groupe = groupes_emails
