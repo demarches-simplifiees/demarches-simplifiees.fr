@@ -246,8 +246,7 @@
     }
   }
 
-  input[type=text]:not([data-address='true']),
-  select {
+  input[type=text]:not([data-address='true']) {
     border-radius: 4px;
     border: solid 1px $border-grey;
     padding: $default-padding;
