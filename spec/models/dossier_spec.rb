@@ -1116,7 +1116,7 @@ describe Dossier, type: :model do
 
     context "via procedure sva" do
       let(:procedure) { create(:procedure, :sva, :published, :for_individual) }
-      let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure:) }
+      let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure:, sva_svr_decision_on: 10.days.from_now) }
 
       subject do
         dossier.process_sva_svr!
@@ -1124,13 +1124,23 @@ describe Dossier, type: :model do
       end
 
       it 'passes dossier en instruction' do
+        expect(subject.state).to eq('en_instruction')
         expect(subject.followers_instructeurs).not_to include(instructeur)
-        expect(subject.sva_svr_decision_on).to eq(2.months.from_now.to_date + 1.day)
+        expect(subject.sva_svr_decision_on).to eq(2.months.from_now.to_date + 1.day) # date is updated
         expect(last_operation.operation).to eq('passer_en_instruction')
         expect(last_operation.automatic_operation?).to be_truthy
         expect(operation_serialized['operation']).to eq('passer_en_instruction')
         expect(operation_serialized['dossier_id']).to eq(dossier.id)
         expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601)
+      end
+
+      context 'when dossier was submitted with sva not yet enabled' do
+        let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure:, depose_at: 10.days.ago) }
+
+        it 'leaves dossier en construction' do
+          expect(subject.sva_svr_decision_on).to be_nil
+          expect(subject.state).to eq('en_construction')
+        end
       end
     end
   end

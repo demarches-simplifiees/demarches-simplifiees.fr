@@ -3,7 +3,7 @@ RSpec.describe ProcedureSVASVRProcessDossierJob, type: :job do
   include ActiveSupport::Testing::TimeHelpers
 
   let(:procedure) { create(:procedure, :published, :sva, :for_individual) }
-  let!(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure:, depose_at: 2.months.ago, sva_svr_decision_on: Date.current) }
+  let!(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure:, depose_at: 2.months.ago - 1.day, sva_svr_decision_on: Date.current) }
 
   subject do
     described_class.perform_now(dossier)
@@ -18,7 +18,7 @@ RSpec.describe ProcedureSVASVRProcessDossierJob, type: :job do
     end
 
     context 'when decision is scheduled in the future' do
-      let!(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure:, depose_at: 1.day.ago, sva_svr_decision_on: Date.yesterday + 2.months) }
+      let!(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure:, depose_at: 1.day.ago, sva_svr_decision_on: 2.months.from_now.to_date) }
 
       it 'should not accept dossier' do
         expect { subject }.not_to change { dossier.reload.updated_at }
@@ -28,7 +28,7 @@ RSpec.describe ProcedureSVASVRProcessDossierJob, type: :job do
 
     context 'when dossier has pending correction / is en_construction' do
       before do
-        travel_to 2.days.ago do # create correction in past so it will be 2 days of delay
+        travel_to 2.days.ago do # create correction in past so it will be 3 days of delay
           dossier.flag_as_pending_correction!(build(:commentaire, dossier: dossier))
         end
       end
@@ -39,8 +39,18 @@ RSpec.describe ProcedureSVASVRProcessDossierJob, type: :job do
       end
 
       it 'should update sva_svr_decision_on with corrections delay' do
-        expect { subject }.to change { dossier.reload.sva_svr_decision_on }.from(Date.current).to(Date.current + 2.days)
+        expect { subject }.to change { dossier.reload.sva_svr_decision_on }.from(Date.current).to(Date.current + 3.days)
       end
+    end
+  end
+
+  context 'when dossier was submitted before sva was enabled' do
+    let!(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure:, depose_at: 2.months.ago) }
+
+    it 'should be noop' do
+      expect(subject.sva_svr_decision_on).to be_nil
+      expect(subject).to be_en_instruction
+      expect(subject.processed_at).to be_nil
     end
   end
 end

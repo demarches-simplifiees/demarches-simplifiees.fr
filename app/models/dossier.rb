@@ -1084,7 +1084,12 @@ class Dossier < ApplicationRecord
     return unless procedure.sva_svr_enabled?
     return if sva_svr_decision_triggered_at.present?
 
-    self.sva_svr_decision_on = SVASVRDecisionDateCalculatorService.new(self, procedure).decision_date
+    # set or recompute sva date, except for dossiers submitted before sva was enabled
+    if depose_at.today? || sva_svr_decision_on.present?
+      self.sva_svr_decision_on = SVASVRDecisionDateCalculatorService.new(self, procedure).decision_date
+    end
+
+    return if sva_svr_decision_on.nil?
 
     if en_construction? && may_passer_automatiquement_en_instruction?
       passer_automatiquement_en_instruction!

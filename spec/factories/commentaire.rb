@@ -1,6 +1,7 @@
 FactoryBot.define do
   factory :commentaire do
     association :dossier, :en_construction
+    email { generate(:user_email) }
 
     body { 'plop' }
 
