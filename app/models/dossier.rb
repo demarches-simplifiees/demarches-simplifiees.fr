@@ -481,6 +481,7 @@ class Dossier < ApplicationRecord
       :traitement,
       :groupe_instructeur,
       :etablissement,
+      :pending_corrections,
       procedure: [:groupe_instructeurs],
       avis: [:claimant, :expert]
     ).ordered_for_export).in_batches
