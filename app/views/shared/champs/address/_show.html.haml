@@ -1,6 +1,5 @@
 - if champ.to_s.present?
-  %p= format_text_value(champ.to_s)
-- if champ.data.present?
-  %p
-    Code INSEE :
-    = champ.data['city_code']
+  = format_text_value(champ.to_s)
+- if champ.full_address?
+  Code INSEE :
+  = champ.commune&.fetch(:code)
