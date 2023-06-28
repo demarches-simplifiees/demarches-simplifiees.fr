@@ -139,6 +139,10 @@ class Administrateur < ApplicationRecord
       i.administrateurs << self
       i.administrateurs.delete(old_admin)
     end
+
+    old_admin.api_tokens.each do |token|
+      self.api_tokens << token
+    end
   end
 
   def zones

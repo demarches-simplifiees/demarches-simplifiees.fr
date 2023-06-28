@@ -166,6 +166,16 @@ describe Administrateur, type: :model do
       end
     end
 
+    context 'when the old admin has an api token' do
+      let(:old_admin) { create(:administrateur, :with_api_token) }
+
+      it 'transferts the api token' do
+        subject
+        expect(new_admin.api_tokens.count).to eq 1
+        expect(new_admin.api_tokens.first).to eq old_admin.api_tokens.first
+      end
+    end
+
     context 'when both admins share an instructeur' do
       let(:instructeur) { create(:instructeur) }
 
