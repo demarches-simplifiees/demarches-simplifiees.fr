@@ -12,7 +12,7 @@ describe 'users/sessions/new', type: :view do
   end
 
   it 'renders' do
-    expect(rendered).to have_field('Adresse éléctronique')
+    expect(rendered).to have_field('Adresse électronique')
     expect(rendered).to have_field('Mot de passe')
     expect(rendered).to have_button('Se connecter')
   end
