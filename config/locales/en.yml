@@ -846,7 +846,10 @@ en:
       estimated_fill_duration_detail: "The fill time is etimated to %{estimated_minutes} min. This period may vary depending on the options you choose"
       pieces_jointes : What are the required attachments ?
       pieces_jointes_conditionnal_list_title : Attachments list according to your situation
-      sva_title: "Qu’est-ce que le cadre législatif « Silence Vaut Accord » ?"
-      sva_text_html: "Le SVA « <strong>Silence Vaut Accord</strong> » est un principe législatif qui définit le comportement d’une demande en cas de silence de l’administration : la demande est automatiquement acceptée (par opposition au « Silence Vaut Rejet » où elle serait automatiquement refusée)."
-      svr_title: "Qu’est-ce que le cadre législatif « Silence Vaut Rejet » ?"
-      svr_text_html: "Le SVR « <strong>Silence Vaut Rejet</strong> » est un principe législatif qui définit le comportement d’une demande en cas de silence de l’administration : la demande est automatiquement refusée (par opposition au « Silence Vaut Accord » où elle serait automatiquement acceptée)."
+      sva_svr_title: "This procedure applies the « %{rule} »"
+      sva_text_html: "SVA, or « <strong>Silence Vaut Rejet</strong> » is a legislative principle that defines the behavior of a request in the event of silence from the administration: the request is automatically accepted after a certain period if your file is complete."
+      svr_text_html: "SVR, or « <strong>Silence Vaut Rejet</strong> » is a legislative principle that defines the behavior of a request in the event of silence from the administration: the request is automatically refused after a certain period if your file is complete."
+      sva_svr_prevision_date:
+        Thus, you will receive an answer to your request within %{delay} of submitting your complete file.
+        For example, if you submit your application today, you will receive a reply no later than %{date}.
+        If your file is incomplete, this date may be postponed until submitting a completed file.

@@ -1,6 +1,17 @@
 class SVASVRDecisionDateCalculatorService
   attr_reader :dossier, :procedure, :unit, :period, :resume_method
 
+  EMPTY_DOSSIER = Struct.new(:depose_at) do
+    def corrections
+      []
+    end
+  end
+
+  def self.decision_date_from_today(procedure)
+    dossier = EMPTY_DOSSIER.new(Date.current)
+    new(dossier, procedure).decision_date
+  end
+
   def initialize(dossier, procedure)
     @dossier = dossier
     @procedure = procedure

@@ -6,9 +6,9 @@ describe SVASVRDecisionDateCalculatorService do
   let(:procedure) { create(:procedure, sva_svr: config) }
   let(:dossier) { create(:dossier, :en_instruction, procedure:, depose_at: DateTime.new(2023, 5, 15, 12)) }
 
-  subject { described_class.new(dossier, procedure).decision_date }
-
   describe '#decision_date' do
+    subject { described_class.new(dossier, procedure).decision_date }
+
     context 'when sva has a months period' do
       let(:config) { { decision: :sva, period: 2, unit: :months, resume: :continue } }
 
@@ -151,6 +151,17 @@ describe SVASVRDecisionDateCalculatorService do
           expect(subject).to eq(Date.new(2023, 8, 6))
         end
       end
+    end
+  end
+
+  describe '#decision_date_from_today' do
+    let(:config) { { decision: :sva, period: 2, unit: :months, resume: :continue } }
+    before { travel_to DateTime.new(2023, 4, 15, 12) }
+
+    subject { described_class.decision_date_from_today(procedure) }
+
+    it 'calculates the date based on today' do
+      expect(subject).to eq(Date.new(2023, 6, 16))
     end
   end
 end

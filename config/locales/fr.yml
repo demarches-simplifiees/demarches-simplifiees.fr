@@ -900,7 +900,10 @@ fr:
       estimated_fill_duration_detail: "La durée de remplissage est estimée à %{estimated_minutes} min. Ce délai peut varier selon les options que vous choisirez."
       pieces_jointes : Quelles sont les pièces justificatives à fournir ?
       pieces_jointes_conditionnal_list_title : Liste des pièces en fonction de votre situation
-      sva_title: "Qu’est-ce que le cadre législatif « Silence Vaut Accord » ?"
-      sva_text_html: "Le SVA « <strong>Silence Vaut Accord</strong> » est un principe législatif qui définit le comportement d’une demande en cas de silence de l’administration : la demande est automatiquement acceptée (par opposition au « Silence Vaut Rejet » où elle serait automatiquement refusée)."
-      svr_title: "Qu’est-ce que le cadre législatif « Silence Vaut Rejet » ?"
-      svr_text_html: "Le SVR « <strong>Silence Vaut Rejet</strong> » est un principe législatif qui définit le comportement d’une demande en cas de silence de l’administration : la demande est automatiquement refusée (par opposition au « Silence Vaut Accord » où elle serait automatiquement acceptée)."
+      sva_svr_title: "Cette démarche applique le « %{rule} »"
+      sva_text_html: "Le SVA, ou « <strong>Silence Vaut Accord</strong> », est un principe législatif qui définit le comportement d’une demande en cas d’absence de réponse de l’administration : la demande sera automatiquement acceptée à l’issue d’un délai si votre dossier est complet."
+      svr_text_html: "Le SVR, ou « <strong>Silence Vaut Rejet</strong> », est un principe législatif qui définit le comportement d’une demande en cas d’absence de réponse de l’administration : la demande sera automatiquement refusée à l’issue d’un délai si votre dossier est complet."
+      sva_svr_prevision_date:
+        Ainsi, vous recevrez une réponse à votre demande dans les %{delay} après avoir déposé votre dossier complet.
+        Par exemple, si vous déposez votre dossier aujourd'hui, vous aurez une réponse au plus tard le %{date}.
+        Si votre dossier est incomplet, cette date pourrait être repoussée jusqu’à la soumission d’un dossier complété.

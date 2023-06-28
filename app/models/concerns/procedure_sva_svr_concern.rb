@@ -22,6 +22,10 @@ module ProcedureSVASVRConcern
       @sva_svr_configuration ||= SVASVRConfiguration.new(sva_svr)
     end
 
+    def sva_svr_decision
+      decision
+    end
+
     private
 
     def decision

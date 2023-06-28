@@ -80,14 +80,13 @@
   .fr-my-3w
     = render Procedure::NoticeComponent.new(procedure:)
 
-  - if procedure.sva?
-    = render Dsfr::CalloutComponent.new(title: t('shared.procedure_description.sva_title'), icon: "fr-fi-information-line") do |c|
+  - if procedure.sva_svr_enabled?
+    = render Dsfr::CalloutComponent.new(title: t('shared.procedure_description.sva_svr_title', rule: t(procedure.sva_svr_decision, scope: 'shared.procedures.sva_svr_rule_name')), icon: "fr-fi-information-line", extra_class_names: "fr-my-6w") do |c|
       - c.with_body do
         %p
-          = t('shared.procedure_description.sva_text_html')
+          = t("#{procedure.sva_svr_decision}_text_html", scope: 'shared.procedure_description') # i18n-tasks-use: t('shared.procedure_description.sva_text_html') t('shared.procedure_description.svr_text_html')
+        %p.fr-mt-1w
+          = t('shared.procedure_description.sva_svr_prevision_date',
+            delay: t("x_#{procedure.sva_svr_configuration.unit}", count: procedure.sva_svr_configuration.period.to_i, scope: 'datetime.distance_in_words'),
+            date: l(SVASVRDecisionDateCalculatorService.decision_date_from_today(procedure), format: :long).gsub(' ', " "))
 
-  - elsif procedure.svr?
-    = render Dsfr::CalloutComponent.new(title: t('shared.procedure_description.svr_title'), icon: "fr-fi-information-line") do |c|
-      - c.with_body do
-        %p
-          = t('shared.procedure_description.svr_text_html')
