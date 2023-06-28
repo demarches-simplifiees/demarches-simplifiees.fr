@@ -11,7 +11,7 @@
 
         - if updated_after_deposer?(champ)
           %p.fr-mb-0.fr-text--sm
-            %span{ class: highlight_if_unseen_class(@demande_seen_at, champ.updated_at) }
+            %span.fr-badge.fr-badge--sm{ class: badge_class_if_unseen(@demande_seen_at, champ.updated_at) }
               = t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: try_format_datetime(champ.updated_at))
 
       - if champ.blank?

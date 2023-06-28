@@ -4,9 +4,9 @@
 
       %p.champ-label.flex-grow= dossier.procedure.routing_criteria_name
       %p.fr-mb-0.fr-text--xs
-        - if demande_seen_at&.<(dossier.groupe_instructeur_updated_at)
-          %span{ class: highlight_if_unseen_class(demande_seen_at, dossier.groupe_instructeur_updated_at) }
-            = t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: try_format_datetime(dossier.updated_at))
+        - if demande_seen_at && dossier.groupe_instructeur_updated_at && dossier.groupe_instructeur_updated_at > dossier.depose_at
+          %span.fr-badge.fr-badge--sm{ class: badge_class_if_unseen(demande_seen_at, dossier.groupe_instructeur_updated_at) }
+            = t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: try_format_datetime(dossier.groupe_instructeur_updated_at))
 
     .champ-content{ class: highlight_if_unseen_class(demande_seen_at, dossier.groupe_instructeur_updated_at) }
       %p= dossier.groupe_instructeur.label
