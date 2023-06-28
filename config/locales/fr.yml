@@ -474,6 +474,8 @@ fr:
           created_at: Créé le %{date}
           updated_at: modifié le %{date}
           shared_with: Dossier partagé avec
+          hidden_by_user: Supprimé le %{date}
+          hidden_by_user_badge: Supprimé
         dossier_action:
           edit_dossier: "Modifier le dossier"
           start_other_dossier: "Commencer un autre dossier vide"

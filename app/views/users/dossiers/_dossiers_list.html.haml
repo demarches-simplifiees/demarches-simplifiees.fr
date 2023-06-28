@@ -7,36 +7,44 @@
       .flex.justify-between
         %div
           %h2.card-title
-            - if @statut == "dossiers-transferes"
-              = dossier.procedure.libelle
-            - else
+            - if ["dossiers-transferes", "dossiers-supprimes-recemment"].exclude?(@statut)
               = link_to(url_for_dossier(dossier), class: 'cell-link') do
                 = dossier.procedure.libelle
+            - else
+              = dossier.procedure.libelle
 
           %p.fr-icon--sm.fr-icon-user-line
             = demandeur_dossier(dossier)
 
-          %p.fr-icon--sm.fr-icon-edit-box-line
-            - if dossier.depose_at.present?
-              %span
-                = t('views.users.dossiers.dossiers_list.depose_at', date: dossier.depose_at.strftime('%d/%m/%Y'))
-            - else
-              %span
-                = t('views.users.dossiers.dossiers_list.created_at', date: dossier.created_at.strftime('%d/%m/%Y'))
-              - if dossier.created_at != dossier.updated_at
-                = t('views.users.dossiers.dossiers_list.updated_at', date: dossier.updated_at.strftime('%d/%m/%Y %H:%M'))
-          - if dossier.invites.present?
-            %p.fr-icon--sm.fr-icon-shield-line
-              = t('views.users.dossiers.dossiers_list.shared_with')
-              = dossier.invites.map(&:email).join(', ')
+          - if dossier.hidden_by_user?
+            %p.fr-icon--sm.fr-icon-delete-line
+              = t('views.users.dossiers.dossiers_list.hidden_by_user', date: dossier.hidden_by_user_at.strftime('%d/%m/%Y'))
+          - else
+            %p.fr-icon--sm.fr-icon-edit-box-line
+              - if dossier.depose_at.present?
+                %span
+                  = t('views.users.dossiers.dossiers_list.depose_at', date: dossier.depose_at.strftime('%d/%m/%Y'))
+              - else
+                %span
+                  = t('views.users.dossiers.dossiers_list.created_at', date: dossier.created_at.strftime('%d/%m/%Y'))
+                - if dossier.created_at != dossier.updated_at
+                  = t('views.users.dossiers.dossiers_list.updated_at', date: dossier.updated_at.strftime('%d/%m/%Y %H:%M'))
 
+            - if dossier.invites.present?
+              %p.fr-icon--sm.fr-icon-shield-line
+                = t('views.users.dossiers.dossiers_list.shared_with')
+                = dossier.invites.map(&:email).join(', ')
 
         .text-right
           %p.fr-mb-0
             = t('views.users.dossiers.dossiers_list.n_dossier')
             = dossier.id
 
-          = status_badge(dossier.state, 'fr-mb-1w')
+          - if @statut == "dossiers-supprimes-recemment"
+            %span.fr-badge.fr-badge--warning
+              = t('views.users.dossiers.dossiers_list.hidden_by_user_badge')
+          - else
+            = status_badge(dossier.state, 'fr-mb-1w')
 
           - if dossier.pending_correction?
             %br
@@ -72,9 +80,14 @@
                 = link_to t('views.users.dossiers.transfers.revoke'), transfer_path(dossier.transfer), class: 'fr-link', method: :delete
 
 
-      - if @statut != "dossiers-transferes"
+      - if ["dossiers-transferes", "dossiers-supprimes-recemment"].exclude?(@statut)
         .flex.justify-end
           = render partial: 'dossier_actions', locals: { dossier: dossier }
+
+      - if @statut == "dossiers-supprimes-recemment"
+        .flex.justify-end
+          = link_to restore_dossier_path(dossier.id), method: :patch, class: "fr-btn fr-btn--sm" do
+            Restaurer
 
   = paginate dossiers, views_prefix: 'shared'
 

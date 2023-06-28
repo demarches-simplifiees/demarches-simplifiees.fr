@@ -472,6 +472,8 @@ en:
           created_at: Created at %{date}
           updated_at: updated at %{date}
           shared_with: File shared with
+          hidden_by_user: Deleted at %{date}
+          hidden_by_user_badge: Deleted
         transfers:
           sender_demande_en_cours: "A transfer request is pending on file Nº %{id} to %{email}"
           receiver_demande_en_cours: "Transfer request on file Nº %{id} sent by %{email}"

@@ -88,7 +88,7 @@
       = render partial: "dossiers_list", locals: { dossiers: @dossiers, filter: @filter, statut: @statut }
 
     - if @statut == "dossiers-supprimes-recemment"
-      = render partial: "hidden_dossiers_list", locals: { hidden_dossiers: @dossiers }
+      = render partial: "dossiers_list", locals: { dossiers: @dossiers, filter: @filter, statut: @statut }
 
     - if @statut == "dossiers-supprimes-definitivement"
       = render partial: "deleted_dossiers_list", locals: { deleted_dossiers: @dossiers }
