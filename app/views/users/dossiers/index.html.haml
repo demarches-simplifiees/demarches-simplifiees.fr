@@ -56,11 +56,11 @@
             active: @statut == 'dossiers-supprimes-definitivement',
             badge: number_with_html_delimiter(@dossiers_supprimes_definitivement.count))
 
-          - if @dossier_transfers.present?
-            = tab_item(t('pluralize.dossiers_transferes', count: @dossier_transfers.count),
+          - if @dossier_transferes.present?
+            = tab_item(t('pluralize.dossiers_transferes', count: @dossier_transferes.count),
               dossiers_path(statut: 'dossiers-transferes'),
               active: @statut == 'dossiers-transferes',
-              badge: number_with_html_delimiter(@dossier_transfers.count))
+              badge: number_with_html_delimiter(@dossier_transferes.count))
 
 .fr-container
   - if @statut == "en-cours"
@@ -94,8 +94,7 @@
       = render partial: "deleted_dossiers_list", locals: { deleted_dossiers: @dossiers }
 
     - if @statut == "dossiers-transferes"
-      -# /!\ in this context, @dossiers is a collection of DossierTransfer not Dossier
-      = render partial: "transfered_dossiers_list", locals: { dossier_transfers: @dossiers }
+      = render partial: "dossiers_list", locals: {  dossiers: @dossiers, filter: @filter, statut: @statut }
 
     - if @statut == "dossiers-expirant"
       = render partial: "dossiers_list", locals: { dossiers: @dossiers, filter: @filter, statut: @statut }
