@@ -19,7 +19,7 @@ class ViewableChamp::SectionComponent < ApplicationComponent
   end
 
   def champs
-    tail.filter { _1.is_a?(Champ) && _1.visible? && !_1.exclude_from_view? }
+    tail.filter { _1.is_a?(Champ) }
   end
 
   def sections
