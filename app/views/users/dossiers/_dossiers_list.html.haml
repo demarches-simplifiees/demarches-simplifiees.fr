@@ -13,22 +13,23 @@
             - else
               = dossier.procedure.libelle
 
-          %p.fr-icon--sm.fr-icon-user-line
-            = demandeur_dossier(dossier)
+          - if demandeur_dossier(dossier).present?
+            %p.fr-icon--sm.fr-icon-user-line
+              = demandeur_dossier(dossier)
 
           - if dossier.hidden_by_user?
             %p.fr-icon--sm.fr-icon-delete-line
-              = t('views.users.dossiers.dossiers_list.deleted', date: dossier.hidden_by_user_at.strftime('%d/%m/%Y'))
+              = t('views.users.dossiers.dossiers_list.deleted', date: l(dossier.hidden_by_user_at.to_date))
           - else
             %p.fr-icon--sm.fr-icon-edit-box-line
               - if dossier.depose_at.present?
                 %span
-                  = t('views.users.dossiers.dossiers_list.depose_at', date: dossier.depose_at.strftime('%d/%m/%Y'))
+                  = t('views.users.dossiers.dossiers_list.depose_at', date: l(dossier.depose_at.to_date))
               - else
                 %span
-                  = t('views.users.dossiers.dossiers_list.created_at', date: dossier.created_at.strftime('%d/%m/%Y'))
+                  = t('views.users.dossiers.dossiers_list.created_at', date: l(dossier.created_at.to_date))
                 - if dossier.created_at != dossier.updated_at
-                  = t('views.users.dossiers.dossiers_list.updated_at', date: dossier.updated_at.strftime('%d/%m/%Y %H:%M'))
+                  = t('views.users.dossiers.dossiers_list.updated_at', date: l(dossier.updated_at.to_datetime))
 
             - if dossier.invites.present?
               %p.fr-icon--sm.fr-icon-shield-line

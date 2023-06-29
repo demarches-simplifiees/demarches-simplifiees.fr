@@ -10,7 +10,7 @@
             = dossier.procedure.libelle
 
           %p.fr-icon--sm.fr-icon-delete-line.fr-mb-0
-            = t('views.users.dossiers.dossiers_list.deleted', date: dossier.updated_at.strftime('%d/%m/%Y'))
+            = t('views.users.dossiers.dossiers_list.deleted', date: l(dossier.updated_at.to_date))
             = "-"
             = t("activerecord.attributes.deleted_dossier.reason.#{dossier.reason}")
 
