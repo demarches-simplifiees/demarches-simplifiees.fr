@@ -8,14 +8,17 @@ fr:
         one: Un dossier dont le traitement est terminé va bientôt être supprimé
         other: Des dossiers dont le traitement est terminé vont bientôt être supprimés
       header_en_construction:
-        one: "Le dossier en construction suivant est présent depuis longtemps sur la plateforme. Afin de proteger vos données personnelles, ce dossier sera bientôt supprimé :"
-        other: "Les dossiers en construction suivants sont présents depuis longtemps sur la plateforme. Afin de proteger vos données personnelles, ces dossier seront bientôt supprimés :"
+        one: "Afin de respecter la durée de conservation de vos données personnelles, le dossier en construction suivant sera supprimé automatiquement dans deux semaines :"
+        other: "Afin de respecter la durée de conservation de vos données personnelles, les dossiers en construction suivants seront supprimés automatiquement dans deux semaines :"
       header_termine:
-        one: "Le dossier suivant est clôt depuis longtemps. Afin de protéger vos données personnelles, ce dossier sera donc bientôt supprimé :"
-        other: "Les dossiers suivants sont clôts depuis longtemps. Afin de protéger vos données personnelles, ces dossiers seront donc bientôt supprimé :"
-      footer:
-        one: "Vous n'avez aucune action particulière à faire. Si vous avez besoin d'y accéder, ce dossier reste disponible pendant encore <b>deux semaines</b>."
-        other: "Vous n'avez aucune action particulière à faire. Si vous avez besoin d'y accéder, ces dossiers restent disponibles pendant encore <b>deux semaines</b>."
+        one: "Afin de respecter la durée de conservation de vos données personnelles, le dossier suivant dont le traitement est terminé sera supprimé automatiquement dans deux semaines :"
+        other: "Afin de respecter la durée de conservation de vos données personnelles, les dossiers suivants dont le traitement est terminé seront supprimés automatiquement dans deux semaines :"
+      account_active:
+        one: Votre compte reste activé sur Mes-Démarches, seul le dossier sera supprimé.
+        other: Votre compte reste activé sur Mes-Démarches, seuls les dossiers seront supprimés.
+      footer_termine:
+        one: "Vous pouvez télécharger votre dossier au format PDF depuis l’onglet « Expirant » sur la page <a href=\"%{dossiers_url}\">Mes dossiers</a>."
+        other: "Vous pouvez télécharger vos dossiers au format PDF depuis l’onglet « Expirant » sur la page <a href=\"%{dossiers_url}\">Mes dossiers</a>."
       footer_en_construction:
         one: "Si vous souhaitez conserver votre dossier plus longtemps, vous pouvez <b>prolonger sa durée de conservation</b> dans l’interface."
         other: "Si vous souhaitez conserver vos dossiers plus longtemps, vous pouvez <b>prolonger leur durée de conservation</b> au cas par cas dans l’interface."

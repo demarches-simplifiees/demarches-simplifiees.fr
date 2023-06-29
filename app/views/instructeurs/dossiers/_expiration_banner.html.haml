@@ -6,23 +6,22 @@
       = t("shared.dossiers.header.expires_at.#{dossier.state}", date: safe_expiration_date(dossier), duree_conservation_totale: dossier.duree_totale_conservation_in_months)
       - if dossier.conservation_extension.positive?
         = t('instructeurs.dossiers.header.banner.expiration_date_extended')
-  -# big banner warning
+
   - if dossier.close_to_expiration?
-    .card.warning.mb-3
-      .card-title= t('instructeurs.dossiers.header.banner.title')
-      %p
-      - if dossier.brouillon?
-        = t('instructeurs.dossiers.header.banner.states.brouillon')
-      - elsif dossier.en_construction?
-        = t('instructeurs.dossiers.header.banner.states.en_construction')
-      - elsif dossier.termine?
-        = t('instructeurs.dossiers.header.banner.states.termine')
+    = render Dsfr::CalloutComponent.new(title: t('instructeurs.dossiers.header.banner.title'), theme: :warning) do |c|
+      - c.with_body do
+        - if dossier.brouillon?
+          = t('instructeurs.dossiers.header.banner.states.brouillon')
+        - elsif dossier.en_construction?
+          = t('instructeurs.dossiers.header.banner.states.en_construction', nominal_duration_months: dossier.procedure.duree_conservation_dossiers_dans_ds)
+        - elsif dossier.termine?
+          = t('instructeurs.dossiers.header.banner.states.termine')
 
       - if dossier.expiration_can_be_extended?
-        %br
-        = button_to repousser_expiration_instructeur_dossier_path(dossier.procedure, dossier), class: 'button mt-2', id: 'test-instructeur-repousser-expiration' do
-          %span.icon.standby
-          = t('instructeurs.dossiers.header.banner.button_delay_expiration')
+        - c.with_bottom do
+          = button_to repousser_expiration_instructeur_dossier_path(dossier.procedure, dossier), class: 'fr-btn', id: 'test-instructeur-repousser-expiration' do
+            = t('instructeurs.dossiers.header.banner.button_delay_expiration', count: dossier.procedure.duree_conservation_dossiers_dans_ds)
+
 - elsif dossier.en_instruction? && dossier.procedure.procedure_expires_when_termine_enabled
   %p.expires_at_en_instruction
     %small= t("shared.dossiers.header.expires_at.en_instruction")

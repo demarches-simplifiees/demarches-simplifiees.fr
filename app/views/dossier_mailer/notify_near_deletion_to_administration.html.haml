@@ -10,7 +10,7 @@
   %ul
     - @dossiers.each do |d|
       %li
-        #{link_to("n° #{d.id} (#{d.procedure.libelle})", dossier_url(d))}. Retrouvez le dossier au format #{link_to("PDF", instructeur_dossier_url(d.procedure, d, format: :pdf))}
+        #{link_to("N° #{d.id} (#{d.procedure.libelle})", dossier_url(d))}. Retrouvez le dossier au format #{link_to("PDF", instructeur_dossier_url(d.procedure, d, format: :pdf))}
 
 %p
   - if @state == Dossier.states.fetch(:en_construction)

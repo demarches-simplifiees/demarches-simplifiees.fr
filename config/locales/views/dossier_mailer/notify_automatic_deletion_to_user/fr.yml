@@ -2,11 +2,14 @@ fr:
   dossier_mailer:
     notify_automatic_deletion_to_user:
       subject:
-        one: "Un dossier a été supprimé automatiquement"
-        other: "Des dossiers ont été supprimés automatiquement"
+        one: "Un dossier a été supprimé automatiquement de votre compte"
+        other: "Des dossiers ont été supprimés automatiquement de votre compte"
       header:
-        one: "Le délai maximum de conservation du dossier suivant a été atteint, il a donc été supprimé :"
-        other: "Le délai maximum de conservation des dossiers suivants a été atteint, ils ont donc été supprimés :"
+        one: "Le délai maximum pour la conservation du dossier suivant a été atteint.\nLe dossier suivant a été automatiquement supprimé :"
+        other: "Le délai maximum pour la conservation des dossiers suivants a été atteint.\nLes dossiers suivants ont été automatiquement supprimés :"
+      account_active:
+        one: Votre compte reste activé sur Démarches Simplifiées, seul le dossier est supprimé.
+        other: Votre compte reste activé sur Démarches Simplifiées, seuls les dossiers ont été supprimés.
       footer_en_construction:
         one: "Le dossier ne sera pas traité, nous nous excusons de la gène occasionnée."
         other: "Les dossiers ne seront pas traités, nous nous excusons de la gène occasionnée."
