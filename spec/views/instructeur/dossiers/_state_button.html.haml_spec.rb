@@ -95,7 +95,7 @@ describe 'instructeurs/dossiers/state_button.html.haml', type: :view do
     context 'with a justificatif' do
       let(:dossier) do
         dossier = create(:dossier, state, :with_justificatif)
-        dossier.justificatif_motivation.blob.update(metadata: dossier.justificatif_motivation.blob.metadata.merge(virus_scan_result: ActiveStorage::VirusScanner::SAFE))
+        dossier.justificatif_motivation.blob.update(virus_scan_result: ActiveStorage::VirusScanner::SAFE)
         dossier
       end
 

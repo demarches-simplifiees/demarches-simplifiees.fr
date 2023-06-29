@@ -11,36 +11,42 @@ class ActiveStorage::VirusScanner
   INTEGRITY_ERROR = 'integrity_error'
 
   def pending?
-    blob.metadata[:virus_scan_result] == PENDING
+    virus_scan_result == PENDING
   end
 
   def infected?
-    blob.metadata[:virus_scan_result] == INFECTED
+    virus_scan_result == INFECTED
   end
 
   def safe?
-    blob.metadata[:virus_scan_result] == SAFE
+    virus_scan_result == SAFE
   end
 
   def corrupt?
-    blob.metadata[:virus_scan_result] == INTEGRITY_ERROR
+    virus_scan_result == INTEGRITY_ERROR
   end
 
   def done?
-    started? && blob.metadata[:virus_scan_result] != PENDING
+    started? && virus_scan_result != PENDING
   end
 
   def started?
-    blob.metadata[:virus_scan_result].present?
+    virus_scan_result.present?
   end
 
-  def metadata
+  def attributes
     blob.open do |file|
       if ClamavService.safe_file?(file.path)
-        { virus_scan_result: SAFE, scanned_at: Time.zone.now }
+        { virus_scan_result: SAFE, virus_scanned_at: Time.zone.now }
       else
-        { virus_scan_result: INFECTED, scanned_at: Time.zone.now }
+        { virus_scan_result: INFECTED, virus_scanned_at: Time.zone.now }
       end
     end
+  end
+
+  private
+
+  def virus_scan_result
+    blob.virus_scan_result || blob.metadata[:virus_scan_result]
   end
 end

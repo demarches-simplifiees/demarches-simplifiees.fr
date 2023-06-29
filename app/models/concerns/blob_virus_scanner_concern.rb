@@ -2,6 +2,7 @@ module BlobVirusScannerConcern
   extend ActiveSupport::Concern
 
   included do
+    self.ignored_columns = [:lock_version]
     before_create :set_pending
   end
 
@@ -23,6 +24,6 @@ module BlobVirusScannerConcern
   private
 
   def set_pending
-    metadata[:virus_scan_result] ||= ActiveStorage::VirusScanner::PENDING
+    self.virus_scan_result = metadata[:virus_scan_result] || ActiveStorage::VirusScanner::PENDING
   end
 end

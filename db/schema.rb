@@ -47,7 +47,11 @@ ActiveRecord::Schema.define(version: 2023_04_13_171421) do
     t.integer "lock_version"
     t.text "metadata"
     t.string "service_name", null: false
+    t.string "virus_scan_result"
+    t.datetime "virus_scanned_at"
+    t.datetime "watermarked_at"
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+    t.index ["virus_scan_result"], name: "index_active_storage_blobs_on_virus_scan_result"
   end
 
   create_table "active_storage_variant_records", force: :cascade do |t|
