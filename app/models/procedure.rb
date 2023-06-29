@@ -32,7 +32,9 @@
 #  juridique_required                        :boolean          default(TRUE)
 #  libelle                                   :string
 #  lien_dpo                                  :string
+#  lien_dpo_error                            :text
 #  lien_notice                               :string
+#  lien_notice_error                         :text
 #  lien_site_web                             :string
 #  max_duree_conservation_dossiers_dans_ds   :integer          default(12), not null
 #  migrated_champ_routage                    :boolean
