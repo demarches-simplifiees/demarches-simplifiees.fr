@@ -21,14 +21,14 @@ describe 'Signing up:' do
       visit commencer_path(path: procedure.path)
       click_on "Créer un compte"
       expect(page).to have_selector('.suspect-email', visible: false)
-      fill_in 'Email', with: 'bidou@gmail.pf'
+      fill_in 'Adresse électronique', with: 'bidou@gmail.pf'
       fill_in 'Mot de passe', with: '12345'
     end
 
     scenario 'they can accept the suggestion', js: true do
       expect(page).to have_selector('.suspect-email', visible: true)
       click_on 'Oui'
-      expect(page).to have_field("Email", :with => 'bidou@gmail.com')
+      expect(page).to have_field("Adresse électronique", :with => 'bidou@gmail.com')
     end
   end
 

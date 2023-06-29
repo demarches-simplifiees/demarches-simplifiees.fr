@@ -10,11 +10,21 @@ export class EmailInputController extends ApplicationController {
   declare readonly inputTarget: HTMLInputElement;
 
   checkEmail() {
-    const suggestion = suggest(this.inputTarget.value);
-    if (suggestion && suggestion.full) {
-      this.suggestionTarget.innerHTML = suggestion.full;
+    const email = this.inputTarget.value;
+    if (email.toLowerCase().endsWith('@gmail.pf')) {
+      const address = email.substring(0, email.indexOf('@')) + '@gmail.com';
+      this.suggestionTarget.innerHTML = address;
       show(this.ariaRegionTarget);
       this.ariaRegionTarget.setAttribute('aria-live', 'assertive');
+    } else if (email.toLowerCase().endsWith('@mail.pf')) {
+      this.discard();
+    } else {
+      const suggestion = suggest(email);
+      if (suggestion && suggestion.full) {
+        this.suggestionTarget.innerHTML = suggestion.full;
+        show(this.ariaRegionTarget);
+        this.ariaRegionTarget.setAttribute('aria-live', 'assertive');
+      }
     }
   }
 
