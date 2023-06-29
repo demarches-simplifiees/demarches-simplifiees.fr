@@ -18,7 +18,7 @@
 
           - if dossier.hidden_by_user?
             %p.fr-icon--sm.fr-icon-delete-line
-              = t('views.users.dossiers.dossiers_list.hidden_by_user', date: dossier.hidden_by_user_at.strftime('%d/%m/%Y'))
+              = t('views.users.dossiers.dossiers_list.deleted', date: dossier.hidden_by_user_at.strftime('%d/%m/%Y'))
           - else
             %p.fr-icon--sm.fr-icon-edit-box-line
               - if dossier.depose_at.present?
@@ -42,7 +42,7 @@
 
           - if @statut == "dossiers-supprimes-recemment"
             %span.fr-badge.fr-badge--warning
-              = t('views.users.dossiers.dossiers_list.hidden_by_user_badge')
+              = t('views.users.dossiers.dossiers_list.deleted_badge')
           - else
             = status_badge(dossier.state, 'fr-mb-1w')
 

@@ -78,23 +78,8 @@
   - else
     = render Dossiers::UserFilterComponent.new(statut: @statut, filter: @filter)
 
-    - if @statut == "en-cours"
-      = render partial: "dossiers_list", locals: { dossiers: @dossiers, filter: @filter, statut: @statut }
-
-    - if @statut == "traites"
-      = render partial: "dossiers_list", locals: { dossiers: @dossiers, filter: @filter, statut: @statut }
-
-    - if @statut == "dossiers-invites"
-      = render partial: "dossiers_list", locals: { dossiers: @dossiers, filter: @filter, statut: @statut }
-
-    - if @statut == "dossiers-supprimes-recemment"
-      = render partial: "dossiers_list", locals: { dossiers: @dossiers, filter: @filter, statut: @statut }
-
     - if @statut == "dossiers-supprimes-definitivement"
+      -# /!\ in this context, @dossiers is a collection of DeletedDossier not Dossier
       = render partial: "deleted_dossiers_list", locals: { deleted_dossiers: @dossiers }
-
-    - if @statut == "dossiers-transferes"
-      = render partial: "dossiers_list", locals: {  dossiers: @dossiers, filter: @filter, statut: @statut }
-
-    - if @statut == "dossiers-expirant"
+    - else
       = render partial: "dossiers_list", locals: { dossiers: @dossiers, filter: @filter, statut: @statut }

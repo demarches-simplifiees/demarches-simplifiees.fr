@@ -1,38 +1,31 @@
 - if deleted_dossiers.present?
-  %span.fr-h6.fr-mr-2w
+  .fr-h6.fr-mb-2w
     = page_entries_info deleted_dossiers
 
-  .fr-table.fr-table--bordered.fr-table--no-caption.fr-mt-2w
-    %table.table.dossiers-table.hoverable.display-table
-      %caption= t('views.users.dossiers.dossiers_list.caption')
-      %thead
-        %tr
-          %th.number-col Nº dossier
-          %th Démarche
-          %th Raison de suppression
-          %th Date de suppression
-      %tbody
-        - deleted_dossiers.each do |dossier|
-          %tr{ data: { 'dossier-id': dossier.dossier_id } }
-            %td.number-col
-              %span.icon.folder
-              = dossier.dossier_id
-            %td
-              = dossier.procedure.libelle
+  - deleted_dossiers.each do |dossier|
+    .card
+      .flex.justify-between
+        %div
+          %h2.card-title
+            = dossier.procedure.libelle
 
-            %td.cell-link
-              = deletion_reason_badge(dossier.reason)
-            %td
-              = dossier.updated_at.strftime('%d/%m/%Y')
+          %p.fr-icon--sm.fr-icon-delete-line.fr-mb-0
+            = t('views.users.dossiers.dossiers_list.deleted', date: dossier.updated_at.strftime('%d/%m/%Y'))
+            = "-"
+            = t("activerecord.attributes.deleted_dossier.reason.#{dossier.reason}")
 
-  = paginate deleted_dossiers, views_prefix: 'shared'
+        .text-right
+          %p.fr-mb-0
+            = t('views.users.dossiers.dossiers_list.n_dossier')
+            = dossier.dossier_id
+
+          %span.fr-badge.fr-badge--warning
+            = t('views.users.dossiers.dossiers_list.deleted_badge')
+
+    = paginate deleted_dossiers, views_prefix: 'shared'
 
 - else
   .blank-tab
-    %h2.empty-text
-      = t("views.users.dossiers.account_creation.empty")
+    %h2.empty-text= t('views.users.dossiers.dossiers_list.no_result_title')
     %p.empty-text-details
-      = t("views.users.dossiers.account_creation.detail_one")
-    %p.empty-text-details
-      = t("views.users.dossiers.account_creation.detail_two")
-      #{APPLICATION_BASE_URL}/commencer/xxx.
+      = t('views.users.dossiers.dossiers_list.no_result_text_html', app_base: APPLICATION_BASE_URL)
