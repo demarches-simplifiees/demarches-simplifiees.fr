@@ -1016,7 +1016,7 @@ type DemarcheDescriptor {
   """
   URL pour commencer la démarche
   """
-  demarcheUrl: String
+  demarcheUrl: URL
 
   """
   Description de la démarche.
@@ -1039,7 +1039,7 @@ type DemarcheDescriptor {
   notice explicative de la démarche
   """
   notice: File
-  noticeUrl: String
+  noticeUrl: URL
 
   """
   Numero de la démarche.

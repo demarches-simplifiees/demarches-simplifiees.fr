@@ -335,7 +335,6 @@ en:
           updated_at: "Updated on %{datetime}"
         edit:
           autosave: Your file is automatically saved after each modification. You can close the window at any time and pick up where you left off later.
-          notice: "Download the notice of the procedure"
           pending_correction:
             confirm_label: I certify that I have made all corrections requested by the administration.
         messages:
@@ -569,6 +568,7 @@ en:
       messages:
         not_a_phone: 'Invalid phone number'
         not_a_rna: 'Invalid RNA number'
+        url: 'is not a valid link'
       models:
         attestation_template:
           attributes:
