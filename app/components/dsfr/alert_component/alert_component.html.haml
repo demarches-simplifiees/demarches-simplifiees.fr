@@ -1,5 +1,5 @@
 %div{ class: alert_class(state) }
-  - if size != 'small'
+  - if size != :sm
     = content_tag(heading_level, class: 'fr-alert__title') do
       = "#{prefix_for_state}#{title}"
   = body

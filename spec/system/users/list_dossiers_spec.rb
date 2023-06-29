@@ -179,14 +179,12 @@ describe 'user access to the list of their dossiers', js: true do
 
       context 'when user clicks on clone button', js: true do
         scenario 'the dossier is cloned' do
-          expect(Dossier.count).to eq(8)
           within(:css, ".card", match: :first) do
             click_on 'Autres actions'
-            click_on 'Dupliquer ce dossier'
+            expect { click_on 'Dupliquer ce dossier' }.to change { dossier_brouillon.user.dossiers.count }.by(1)
           end
 
           expect(page).to have_content("Votre dossier a bien été dupliqué. Vous pouvez maintenant le vérifier, l’adapter puis le déposer.")
-          expect(Dossier.count).to eq(9)
         end
       end
     end

@@ -13,11 +13,11 @@ class Dsfr::AlertComponent < ApplicationComponent
   end
 
   def alert_class(state)
-    if size == 'small'
-      ["fr-alert fr-alert--sm fr-alert--#{state}", extra_class_names].compact.flatten
-    else
-      ["fr-alert fr-alert--#{state}", extra_class_names].compact.flatten
-    end
+    class_names(
+      "fr-alert fr-alert--#{state}" => true,
+      "fr-alert--sm" => size == :sm,
+      extra_class_names => true
+    )
   end
 
   private

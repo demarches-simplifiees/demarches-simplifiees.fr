@@ -52,20 +52,20 @@
             = pending_correction_badge(:for_user)
 
       - if dossier.procedure.close?
-        = render Dsfr::AlertComponent.new(state: :info, size: 'small', extra_class_names: "fr-mb-2w") do |c|
+        = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: "fr-mb-2w") do |c|
           - c.body do
             %p
               = t('views.users.dossiers.dossiers_list.procedure_closed')
 
       - if dossier.pending_correction?
-        = render Dsfr::AlertComponent.new(state: :warning, size: 'small', extra_class_names: "fr-mb-2w") do |c|
+        = render Dsfr::AlertComponent.new(state: :warning, size: :sm, extra_class_names: "fr-mb-2w") do |c|
           - c.body do
             %p
               = t('views.users.dossiers.dossiers_list.pending_correction')
 
       - if dossier.transfer.present?
         - if @statut == "dossiers-transferes"
-          = render Dsfr::AlertComponent.new(state: :info, size: 'small', extra_class_names: "fr-mt-2w") do |c|
+          = render Dsfr::AlertComponent.new(state: :info, size: :sm) do |c|
             - c.body do
               %p
                 = t('views.users.dossiers.transfers.receiver_demande_en_cours', id: dossier.id, email: dossier.user.email)
@@ -73,7 +73,7 @@
                 = link_to t('views.users.dossiers.transfers.accept'), transfer_path(dossier.transfer), class: "fr-link fr-mr-1w", method: :put
                 = link_to t('views.users.dossiers.transfers.reject'), transfer_path(dossier.transfer), class: "fr-link", method: :delete
         - else
-          = render Dsfr::AlertComponent.new(state: :info, size: 'small', extra_class_names: "fr-mb-2w") do |c|
+          = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: "fr-mb-2w") do |c|
             - c.body do
               %p
                 = t('views.users.dossiers.transfers.sender_demande_en_cours', id: dossier.id, email: dossier.transfer.email)
