@@ -5,7 +5,7 @@ describe Administrateurs::RoutingController, type: :controller do
 
   describe '#update targeted champ' do
     let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :drop_down_list, libelle: 'Votre ville', options: ['Paris', 'Lyon', 'Marseille'] }, { type: :text, libelle: 'Un champ texte' }]) }
-    let(:gi_2) { procedure.groupe_instructeurs.create(label: 'groupe 2') }
+    let(:gi_2) { create(:groupe_instructeur, label: 'groupe 2', procedure: procedure) }
     let(:drop_down_tdc) { procedure.draft_revision.types_de_champ.first }
     let(:params) do
       {
@@ -52,7 +52,7 @@ describe Administrateurs::RoutingController, type: :controller do
 
   describe "#update_defaut_groupe_instructeur" do
     let(:procedure) { create(:procedure) }
-    let(:gi_2) { procedure.groupe_instructeurs.create(label: 'groupe 2') }
+    let(:gi_2) { create(:groupe_instructeur, label: 'groupe 2', procedure: procedure) }
     let(:params) do
       {
         procedure_id: procedure.id,

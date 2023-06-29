@@ -3,13 +3,13 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
   include Logic
 
   let(:admin) { create(:administrateur) }
-  let(:procedure) { create(:procedure, :published, :for_individual, administrateurs: [admin]) }
+  let(:procedure) { create(:procedure, :routee, :published, :for_individual, administrateurs: [admin]) }
 
   let!(:gi_1_1) { procedure.defaut_groupe_instructeur }
-  let!(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }
+  let!(:gi_1_2) { procedure.defaut_groupe_instructeur.other_groupe_instructeurs.first }
 
-  let(:procedure2) { create(:procedure, :published) }
-  let!(:gi_2_2) { procedure2.groupe_instructeurs.create(label: 'groupe instructeur 2 2') }
+  let(:procedure2) { create(:procedure, :routee, :published) }
+  let!(:gi_2_2) { procedure2.defaut_groupe_instructeur.other_groupe_instructeurs.first }
 
   before { sign_in(admin.user) }
 
@@ -24,11 +24,10 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
           expect(response).to have_http_status(:ok)
           expect(response.body).to include(gi_1_1.label)
           expect(response.body).to include(gi_1_2.label)
-          expect(response.body).not_to include(gi_2_2.label)
         end
 
         context 'when there is a search' do
-          let(:params) { { procedure_id: procedure.id, q: '2' } }
+          let(:params) { { procedure_id: procedure.id, q: 'deuxième' } }
 
           it do
             expect(assigns(:groupes_instructeurs)).to match_array([gi_1_2])
@@ -150,7 +149,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     context 'with many groups' do
       context 'of a group that can be deleted' do
         before { delete_group gi_1_2 }
-        it { expect(flash.notice).to eq "le groupe « groupe instructeur 2 » a été supprimé et le routage a été désactivé." }
+        it { expect(flash.notice).to eq "le groupe « deuxième groupe » a été supprimé et le routage a été désactivé." }
         it { expect(procedure.groupe_instructeurs.count).to eq(1) }
         it { expect(procedure.reload.routing_enabled?).to eq(false) }
         it { expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure)) }
@@ -168,7 +167,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
   end
 
   describe '#reaffecter_dossiers' do
-    let!(:gi_1_3) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 3') }
+    let!(:gi_1_3) { create(:groupe_instructeur, label: 'groupe instructeur 3', procedure: procedure) }
 
     before do
       get :reaffecter_dossiers,
@@ -189,7 +188,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
   end
 
   describe '#reaffecter' do
-    let!(:gi_1_3) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 3') }
+    let!(:gi_1_3) { create(:groupe_instructeur, label: 'groupe instructeur 3', procedure: procedure) }
     let!(:dossier12) { create(:dossier, :en_construction, :with_individual, procedure: procedure, groupe_instructeur: gi_1_1) }
     let!(:instructeur) { create(:instructeur) }
     let!(:bulk_message) { BulkMessage.create(dossier_count: 2, dossier_state: "brouillon", body: "hello", sent_at: Time.zone.now, groupe_instructeurs: [gi_1_1, gi_1_3], instructeur: instructeur) }
@@ -255,7 +254,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     end
 
     context 'when the name is already taken' do
-      let!(:gi_1_2) { procedure_non_routee.groupe_instructeurs.create(label: 'groupe instructeur 2') }
+      let!(:gi_1_2) { procedure_non_routee.groupe_instructeurs.create(label: 'deuxième groupe') }
       let(:new_name) { gi_1_2.label }
 
       it do
@@ -269,7 +268,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     let(:closed_value) { '0' }
     let!(:procedure_non_routee) { create(:procedure, :published, :for_individual, administrateurs: [admin]) }
     let!(:gi_1_1) { procedure_non_routee.defaut_groupe_instructeur }
-    let!(:gi_1_2) { procedure_non_routee.groupe_instructeurs.create(label: 'groupe instructeur 2') }
+    let!(:gi_1_2) { procedure_non_routee.groupe_instructeurs.create(label: 'deuxième groupe') }
 
     before do
       patch :update_state,
@@ -299,7 +298,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       it do
         expect(subject).to redirect_to admin_procedure_groupe_instructeur_path(procedure_non_routee, gi_1_2)
         expect(gi_1_2.closed).to eq(true)
-        expect(flash.notice).to eq('Le groupe groupe instructeur 2 est désactivé.')
+        expect(flash.notice).to eq('Le groupe deuxième groupe est désactivé.')
       end
     end
   end
@@ -524,7 +523,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
           subject
         end
 
-        it { expect(procedure.groupe_instructeurs.pluck(:label)).to match_array(["Auvergne-Rhône-Alpes", "Vendée", "défaut", "groupe instructeur 2"]) }
+        it { expect(procedure.groupe_instructeurs.pluck(:label)).to match_array(["Auvergne-Rhône-Alpes", "Vendée", "défaut", "deuxième groupe"]) }
         it { expect(flash.notice).to be_present }
         it { expect(flash.notice).to eq("La liste des instructeurs a été importée avec succès") }
         it { expect(GroupeInstructeurMailer).to have_received(:notify_added_instructeurs).twice }
@@ -685,7 +684,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     it 'generates a CSV file containing the instructeurs and groups' do
       expect(subject.status).to eq(200)
       expect(subject.stream.body.split("\n").size).to eq(3)
-      expect(subject.stream.body).to include("groupe instructeur 2")
+      expect(subject.stream.body).to include("deuxième groupe")
       expect(subject.stream.body).to include(instructeur_assigned_1.email)
       expect(subject.stream.body).to include(instructeur_assigned_2.email)
       expect(subject.header["Content-Disposition"]).to include("#{procedure.id}-groupe-instructeurs-#{Date.today}.csv")
