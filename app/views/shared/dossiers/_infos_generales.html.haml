@@ -1,9 +1,13 @@
 .fr-px-2w
-  %p.fr-my-2w
-    = t(:submitted_at, scope: [:views, :shared, :dossiers, :form], datetime: l(dossier.depose_at))
-    %br
-    - if dossier.last_champ_updated_at.present? && dossier.last_champ_updated_at > dossier.depose_at
-      = t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: l(dossier.last_champ_updated_at))
+  .fr-my-2w
+    %p
+      = t(:submitted_at, scope: [:views, :shared, :dossiers, :form], datetime: l(dossier.depose_at))
+      %br
+      - if dossier.last_champ_updated_at.present? && dossier.last_champ_updated_at > dossier.depose_at
+        = t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: l(dossier.last_champ_updated_at))
+
+    .fr-highlight
+      %p.fr-text--sm.fr-text-mention--grey Sauf mention contraire, les champs ont été saisis à la date du dépôt du dossier.
 
 
   - if dossier.justificatif_motivation.attached?
