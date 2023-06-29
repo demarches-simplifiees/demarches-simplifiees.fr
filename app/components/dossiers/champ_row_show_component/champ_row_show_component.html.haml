@@ -1,9 +1,11 @@
 - each_champ do |champ|
   .fr-px-4v.fr-my-2v
     - if champ.repetition?
-      %p.champ-label= "#{champ.libelle} :"
-      - champ.rows.each do |row|
-        = render Dossiers::ChampRowShowComponent.new(champs: row, demande_seen_at: @demande_seen_at, profile: @profile, repetition: true)
+      - champ.rows.each.with_index do |row, i|
+        .fr-background-alt--grey.fr-p-3v.fr-my-3w
+          %p.champ-label= "#{champ.libelle} #{i + 1}: "
+
+          = render Dossiers::ChampRowShowComponent.new(champs: row, demande_seen_at: @demande_seen_at, profile: @profile, repetition: true)
 
     - elsif !champ.header_section?
       .flex.d-block-sm
