@@ -4,7 +4,13 @@
     - manual_assignments.each do |assignment|
       %li
         - assigned_at = l(assignment.assigned_at, format: '%d %B %Y à %R')
-        = "Le #{assigned_at}, #{assignment.assigned_by} a réaffecté le dossier #{assignment.dossier_id} du groupe #{assignment.previous_groupe_instructeur_id} au groupe #{assignment.groupe_instructeur_id}"
+        - assigned_by = assignment.assigned_by
+        - if assigned_by.present?
+          = "Le #{assigned_at}, #{assigned_by} a réaffecté ce dossier du groupe « #{assignment.previous_groupe_instructeur_label} » au groupe « #{assignment.groupe_instructeur_label} »"
+        - else
+          = "Le #{assigned_at}, ce dossier a été réaffecté du groupe « #{assignment.previous_groupe_instructeur_label} » au groupe « #{assignment.groupe_instructeur_label} »"
 
+- elsif dossier.forced_groupe_instructeur
+  %p.tab-paragraph Ce dossier a été réaffecté au groupe « #{dossier.groupe_instructeur.label} »
 - else
   %p.tab-paragraph Ce dossier n'a pas été réaffecté
