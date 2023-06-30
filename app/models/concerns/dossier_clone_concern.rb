@@ -172,6 +172,9 @@ module DossierCloneConcern
     champs_to_remove += diff[:removed]
     champs_to_remove
       .filter { !_1.child? || !champs_to_remove.include?(_1.parent) }
-      .each(&:destroy!)
+      .each do |champ|
+        champ.rows.flatten.each(&:destroy!) if champ.repetition?
+        champ.destroy!
+      end
   end
 end
