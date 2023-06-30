@@ -16,6 +16,7 @@
 
   = render partial: 'instructeurs/dossiers/decisions_rendues_block', locals: { traitements: @dossier.traitements }
 
+  = render partial: 'instructeurs/dossiers/reaffectations_block', locals: { manual_assignments: @dossier.dossier_assignments.manual }
+
   - if @dossier.archived? && @dossier.archived_at.present?
     = render partial: 'instructeurs/dossiers/archived_block', locals: @dossier.slice(:archived_by, :archived_at)
-

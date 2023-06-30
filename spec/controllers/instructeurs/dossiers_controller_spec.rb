@@ -1217,4 +1217,34 @@ describe Instructeurs::DossiersController, type: :controller do
       expect(flash.notice).to eq("Le dossier nº #{dossier.id} a été réaffecté au groupe d’instructeurs « deuxième groupe ».")
     end
   end
+
+  describe '#personnes_impliquees' do
+    let!(:gi_1) { procedure.groupe_instructeurs.first }
+    let!(:gi_2) { GroupeInstructeur.create(label: 'deuxième groupe', procedure: procedure) }
+    let!(:dossier) { create(:dossier, :en_construction, procedure: procedure, groupe_instructeur: gi_1) }
+    let!(:new_instructeur) { create(:instructeur) }
+
+    before do
+      gi_1.instructeurs << new_instructeur
+      gi_2.instructeurs << instructeur
+      new_instructeur.followed_dossiers << dossier
+      dossier.assign_to_groupe_instructeur(gi_2)
+      dossier.create_assignment(
+        DossierAssignment.modes.fetch(:manual),
+        gi_1,
+        gi_2,
+        new_instructeur.email
+      )
+
+      get :personnes_impliquees,
+        params: {
+          procedure_id: procedure.id,
+          dossier_id: dossier.id
+        }
+    end
+
+    it do
+      expect(response.body).to include('a réaffecté ce dossier du groupe « défaut » au groupe « deuxième groupe »')
+    end
+  end
 end

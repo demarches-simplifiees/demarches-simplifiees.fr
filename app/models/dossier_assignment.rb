@@ -19,4 +19,5 @@ class DossierAssignment < ApplicationRecord
     auto: 'auto',
     manual: 'manual'
   }
+  scope :manual, -> { where(mode: :manual) }
 end
