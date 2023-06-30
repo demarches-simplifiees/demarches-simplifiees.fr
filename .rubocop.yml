@@ -743,6 +743,7 @@ Rails/CreateTableWithTimestamps:
     - db/migrate/2017*.rb
     - db/migrate/2018*.rb
     - db/migrate/20200630140356_create_traitements.rb
+    - db/migrate/20230630091637_create_dossier_assignments.rb
 
 Rails/Date:
   Enabled: false

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_18_113720) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_18_113820) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -305,6 +305,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_18_113720) do
     t.index ["deleted_at"], name: "index_deleted_dossiers_on_deleted_at"
     t.index ["dossier_id"], name: "index_deleted_dossiers_on_dossier_id", unique: true
     t.index ["procedure_id"], name: "index_deleted_dossiers_on_procedure_id"
+  end
+
+  create_table "dossier_assignments", force: :cascade do |t|
+    t.datetime "assigned_at", precision: nil, null: false
+    t.string "assigned_by"
+    t.bigint "dossier_id", null: false
+    t.bigint "groupe_instructeur_id"
+    t.string "groupe_instructeur_label"
+    t.string "mode", null: false
+    t.bigint "previous_groupe_instructeur_id"
+    t.string "previous_groupe_instructeur_label"
+    t.index ["dossier_id"], name: "index_dossier_assignments_on_dossier_id"
   end
 
   create_table "dossier_batch_operations", force: :cascade do |t|
@@ -1030,6 +1042,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_18_113720) do
   add_foreign_key "commentaires", "dossiers"
   add_foreign_key "commentaires", "experts"
   add_foreign_key "commentaires", "instructeurs"
+  add_foreign_key "dossier_assignments", "dossiers"
   add_foreign_key "dossier_batch_operations", "batch_operations"
   add_foreign_key "dossier_batch_operations", "dossiers"
   add_foreign_key "dossier_corrections", "commentaires"

@@ -155,6 +155,8 @@ class Dossier < ApplicationRecord
   has_one :traitement, -> { order(processed_at: :desc) }, inverse_of: false
 
   has_many :dossier_operation_logs, -> { order(:created_at) }, inverse_of: :dossier
+  has_many :dossier_assignments, -> { order(:assigned_at) }, inverse_of: :dossier, dependent: :destroy
+  has_one :dossier_assignment, -> { order(assigned_at: :desc) }, inverse_of: false
 
   belongs_to :groupe_instructeur, optional: true
   belongs_to :revision, class_name: 'ProcedureRevision', optional: false
