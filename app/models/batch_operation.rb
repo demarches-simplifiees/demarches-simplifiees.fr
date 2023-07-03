@@ -17,9 +17,10 @@
 
 class BatchOperation < ApplicationRecord
   enum operation: {
+    accepter: 'accepter',
     archiver: 'archiver',
-    passer_en_instruction: 'passer_en_instruction',
-    accepter: 'accepter'
+    follow: 'follow',
+    passer_en_instruction: 'passer_en_instruction'
   }
 
   has_many :dossiers, dependent: :nullify
@@ -58,6 +59,8 @@ class BatchOperation < ApplicationRecord
       query.state_en_construction
     when BatchOperation.operations.fetch(:accepter) then
       query.state_en_instruction
+    when BatchOperation.operations.fetch(:follow) then
+      query.without_followers
     end
   end
 
@@ -74,6 +77,8 @@ class BatchOperation < ApplicationRecord
       dossier.passer_en_instruction(instructeur: instructeur)
     when BatchOperation.operations.fetch(:accepter)
       dossier.accepter(instructeur: instructeur, motivation: motivation, justificatif: justificatif_motivation)
+    when BatchOperation.operations.fetch(:follow)
+      instructeur.follow(dossier)
     end
   end
 

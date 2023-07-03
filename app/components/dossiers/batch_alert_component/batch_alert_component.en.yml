@@ -26,6 +26,15 @@ en:
       text_success:
         one: 1/1 is being accepted
         other: "%{progress_count}/%{count} files have been accepted"
+  follow:
+    finish:
+      text_success:
+        one: 1/1 file has been followed
+        other: "%{success_count}/%{count} files have been followed"
+    in_progress:
+      text_success:
+        one: 1/1 is being followed
+        other: "%{progress_count}/%{count} files have been followed"
   title:
     finish: The bulk action is finished
     in_progress:  A bulk action is processing
