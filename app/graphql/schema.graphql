@@ -2296,6 +2296,7 @@ type Revision {
 
 type Row {
   champs: [Champ!]!
+  id: ID!
 }
 
 type SelectionUtilisateur implements GeoArea {

@@ -66,7 +66,7 @@ class GeoArea < ApplicationRecord
         id: id,
         champ_label: champ.libelle,
         champ_id: champ.stable_id,
-        champ_row: champ.row,
+        champ_row: champ.row_id,
         champ_private: champ.private?,
         dossier_id: champ.dossier_id
       ).compact
