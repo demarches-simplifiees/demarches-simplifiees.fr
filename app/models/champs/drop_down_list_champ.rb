@@ -22,6 +22,14 @@ class Champs::DropDownListChamp < Champ
     end
   end
 
+  def html_label?
+    !render_as_radios?
+  end
+
+  def legend_label?
+    render_as_radios?
+  end
+
   def selected
     other? ? OTHER : value
   end

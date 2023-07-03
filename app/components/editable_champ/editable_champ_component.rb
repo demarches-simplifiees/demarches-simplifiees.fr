@@ -55,6 +55,13 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
     ]
   end
 
+  def radio_group
+    [
+      'boolean',
+      'yes_no'
+    ]
+  end
+
   def html_options
     {
       class: class_names(
@@ -63,7 +70,9 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
           "editable-champ-#{@champ.type_champ}": true,
           "hidden": !@champ.visible?,
           "fr-input-group": input_group.include?(@champ.type_champ),
-          "fr-select-group": select_group.include?(@champ.type_champ)
+          "fr-select-group": select_group.include?(@champ.type_champ),
+          "fr-radio-group": radio_group.include?(@champ.type_champ),
+          "fr-fieldset": @champ.legend_label?
         }.merge(input_group_error_class_names)
       ),
       id: @champ.input_group_id,

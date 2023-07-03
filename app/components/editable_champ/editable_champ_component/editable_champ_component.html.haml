@@ -1,4 +1,4 @@
-= content_tag(:div, html_options) do
+= content_tag((@champ.legend_label? ? :fieldset : :div), html_options) do
   - if has_label?(@champ)
     = render EditableChamp::ChampLabelComponent.new form: @form, champ: @champ, seen_at: @seen_at
   = render component_class.new(form: @form, champ: @champ, seen_at: @seen_at)

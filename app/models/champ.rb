@@ -160,6 +160,10 @@ class Champ < ApplicationRecord
     true
   end
 
+  def legend_label?
+    false
+  end
+
   def input_group_id
     "champ-#{html_id}"
   end
