@@ -2,7 +2,14 @@ fr:
   operations:
     archiver: 'Archiver les dossiers'
     passer_en_instruction: 'Passer les dossiers en instruction'
+    instruction: Instruire les dossiers
     accepter: 'Accepter les dossiers'
+    accepter_description: Les usagers seront informés que leur dossier a été accepté
+    refuser: 'Refuser les dossiers'
+    refuser_description: Les usagers seront informés que leur dossier a été refusé
+    classer_sans_suite: 'Classer sans suite les dossiers'
+    classer_sans_suite_description: Les usagers seront informés que leur dossier a été classé sans suite
     follow: 'Suivre les dossiers'
     unfollow: 'Ne plus suivre les dossiers'
     repasser_en_construction: 'Repasser les dossiers en construction'
+    other: Autres actions multiples

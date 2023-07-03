@@ -1,31 +1,17 @@
-- if opt[:operation] == 'accepter'
-  .dropdown{ data: { controller: 'menu-button', popover: 'true', operation: opt[:operation] }, id: 'dropdown_batch' }
-    -# Dropdown button title
-    %button{ disabled: true, class: ['fr-btn fr-btn--sm fr-btn--icon-left fr-ml-1w', icons[opt[:operation].to_sym]], disabled: true, name: "#{form.object_name}[operation]" , data: { menu_button_target: 'button' } }
-      = opt[:label]
+- if opt.keys.include?(:instruction)
+  = render Dropdown::MenuComponent.new(wrapper: :div, wrapper_options: { data: {controller: 'menu-button', popover: 'true', operation: opt[:operation]} }, menu_options: { id: "dropdown_batch" }, button_options: { class: "fr-btn fr-btn--sm fr-ml-1w"}, role: :region ) do |menu|
+    - menu.with_button_inner_html do
+      = t(".labels.instruction")
 
-    #state-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
-      %ul.dropdown-items
-        %li.inactive{ 'data-turbo': 'true' }
-          - if opt[:operation] == 'accepter'
-            .wrapper
-              .dropdown-items-link
-                %span{ class: icons[opt[:operation].to_sym] }
-                .dropdown-description
-                  %h4= opt[:label]
+      - opt[:instruction].each do |opt|
+        - menu.with_item do
+          = link_to('#', onclick: "DS.showMotivation(event, '#{opt[:operation_class_name]}');", role: 'menuitem') do
+            %span{ class: "icon #{opt[:operation_class_name]}" }
+            .dropdown-description
+              %h4= opt[:label]
+              = opt[:operation_description]
 
-              .motivation.accept
-                = form.text_area :motivation, class: 'fr-input'
-                #justificatif_motivation_suggest_accept.optional-justificatif
-                  %button.fr-btn.fr-btn--sm.fr-btn--tertiary-no-outline.fr-btn--icon-left.fr-icon-attachment-line.fr-ml-0{ type: 'button', onclick: "DS.showImportJustificatif('accept');" } Ajouter un justificatif (optionnel)
-                #justificatif_motivation_import_accept.hidden
-                  = form.file_field :justificatif_motivation, direct_upload: true, id: "dossier_justificatif_motivation_accept", onchange: "DS.showDeleteJustificatif('accept');"
-
-                .hidden.js_delete_motivation{ id: "delete_motivation_import_accept" }
-                  %button.fr-btn.fr-btn--sm.fr-btn--tertiary-no-outline.fr-btn--icon-left.fr-icon-delete-line.fr-ml-0.fr-mt-1w{ type: 'button', onclick: "DS.deleteJustificatif('accept');" } Supprimer le  justificatif
-
-                = button_tag "Annuler", type: :reset, class: 'fr-btn fr-btn--sm fr-btn--secondary', onclick: 'DS.motivationCancelBatch();'
-                = form.button "Valider la décision", class: ['fr-btn fr-btn--sm fr-mt-2w'], disabled: true, name: "#{form.object_name}[operation]", value: opt[:operation]
-
+        - menu.with_item(class: "hidden inactive form-inside fr-pt-1v") do
+          = render partial: 'instructeurs/dossiers/instruction_button_motivation_batch', locals: { instruction_operation: opt[:operation_class_name], form:, opt: }
 - else
   = form.button opt[:label], class: ['fr-btn fr-btn--sm fr-btn--icon-left fr-ml-1w', icons[opt[:operation].to_sym]], disabled: true, name: "#{form.object_name}[operation]", value: opt[:operation], data: { operation: opt[:operation] }

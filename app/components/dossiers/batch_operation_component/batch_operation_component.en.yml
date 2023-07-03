@@ -2,7 +2,14 @@ fr:
   operations:
     archiver: 'Archive selected files'
     passer_en_instruction: 'Change selected files to instructing'
+    instruction: Instructing files
     accepter: 'Accept seleted files'
+    accepter_description: Users will be notified that their file has been accepted
+    refuser: 'Refuse seleted files'
+    refuser_description: Users will be notified that their file has been refused
+    without_continuation: 'Close without continuation seleted files'
+    without_continuation_description: Users will be notified that their file has been closed without continuation
     follow: 'Follow seleted files'
     unfollow: 'Unfollow seleted files'
     repasser_en_construction: 'Change selected files to in progress'
+    other: Other batch operations
