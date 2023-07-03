@@ -487,32 +487,6 @@ module Users
       redirect_to dossier_path(dossier)
     end
 
-    def should_change_groupe_instructeur?
-      if params[:dossier].key?(:groupe_instructeur_id)
-        groupe_instructeur_id = params[:dossier][:groupe_instructeur_id]
-        if groupe_instructeur_id.nil?
-          @dossier.groupe_instructeur_id.present?
-        else
-          @dossier.groupe_instructeur_id != groupe_instructeur_id.to_i
-        end
-      end
-    end
-
-    def groupe_instructeur_from_params
-      groupe_instructeur_id = params[:dossier][:groupe_instructeur_id]
-      if groupe_instructeur_id.present?
-        @dossier.procedure.groupe_instructeurs.find(groupe_instructeur_id)
-      end
-    end
-
-    def should_fill_groupe_instructeur?
-      !@dossier.procedure.routing_enabled? && @dossier.groupe_instructeur_id.nil?
-    end
-
-    def defaut_groupe_instructeur
-      @dossier.procedure.defaut_groupe_instructeur
-    end
-
     def update_dossier_and_compute_errors
       errors = []
       @dossier.assign_attributes(champs_public_params)
@@ -521,10 +495,6 @@ module Users
       end
       if !@dossier.save(**validation_options)
         errors += format_errors(errors: @dossier.errors)
-      end
-
-      if should_change_groupe_instructeur?
-        @dossier.assign_to_groupe_instructeur(groupe_instructeur_from_params)
       end
 
       errors
@@ -536,10 +506,6 @@ module Users
       @dossier.valid?(**submit_validation_options)
       errors += format_errors(errors: @dossier.errors)
       errors += format_errors(errors: @dossier.check_mandatory_and_visible_champs)
-
-      if should_fill_groupe_instructeur?
-        @dossier.assign_to_groupe_instructeur(defaut_groupe_instructeur)
-      end
 
       RoutingEngine.compute(@dossier)
 

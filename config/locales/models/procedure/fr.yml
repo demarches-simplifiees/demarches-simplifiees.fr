@@ -37,7 +37,6 @@ fr:
         declarative_with_state/en_instruction: En instruction
         declarative_with_state/accepte: Accepté
         api_particulier_token: Jeton API Particulier
-        routing_criteria_name: Nomination du routage
         initiated_mail: L’email de notification de passage de dossier en instruction
         received_mail: L’email de notification de dépôt de dossier
         closed_mail: L’email de notification d’acceptation de dossier

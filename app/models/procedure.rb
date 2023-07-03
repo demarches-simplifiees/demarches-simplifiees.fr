@@ -69,7 +69,14 @@ class Procedure < ApplicationRecord
 
   include Discard::Model
   self.discard_column = :hidden_at
-  self.ignored_columns += [:direction, :durees_conservation_required, :cerfa_flag, :test_started_at, :lien_demarche]
+  self.ignored_columns += [
+    :direction,
+    :durees_conservation_required,
+    :cerfa_flag,
+    :test_started_at,
+    :lien_demarche,
+    :migrated_champ_routage
+  ]
 
   default_scope -> { kept }
 
@@ -356,7 +363,6 @@ class Procedure < ApplicationRecord
   validates :api_entreprise_token, jwt_token: true, allow_blank: true
   validates :api_particulier_token, format: { with: /\A[A-Za-z0-9\-_=.]{15,}\z/ }, allow_blank: true
   validate :validate_auto_archive_on_in_the_future, if: :will_save_change_to_auto_archive_on?
-  validates :routing_criteria_name, presence: true, allow_blank: false
 
   before_save :update_juridique_required
   after_initialize :ensure_path_exists
