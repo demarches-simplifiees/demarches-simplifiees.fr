@@ -65,7 +65,7 @@ RSpec.describe Types::DossierType, type: :graphql do
     let(:dossier) { create(:dossier, :accepte, :with_populated_champs, procedure: procedure) }
     let(:query) { DOSSIER_WITH_CHAMPS_QUERY }
     let(:variables) { { number: dossier.id } }
-    let(:checkbox_value) { 'on' }
+    let(:checkbox_value) { 'true' }
 
     before do
       dossier.champs_public.first.update(value: checkbox_value)
@@ -78,7 +78,7 @@ RSpec.describe Types::DossierType, type: :graphql do
     end
 
     context 'when checkbox is false' do
-      let(:checkbox_value) { 'off' }
+      let(:checkbox_value) { 'false' }
       it { expect(data[:dossier][:champs].size).to eq 1 }
       it { expect(data[:dossier][:champs][0][:__typename]).to eq "CheckboxChamp" }
     end

@@ -20,24 +20,50 @@
 #  parent_id                      :bigint
 #  type_de_champ_id               :integer
 #
-class Champs::CheckboxChamp < Champs::BooleanChamp
-  def for_export
-    true? ? 'on' : 'off'
-  end
+class Champs::BooleanChamp < Champ
+  TRUE_VALUE = 'true'
+  FALSE_VALUE = 'false'
 
-  def mandatory_blank?
-    mandatory? && (blank? || !true?)
-  end
+  before_validation :set_value_to_nil, if: -> { value.blank? }
+  before_validation :set_value_to_false, unless: -> { ([nil, TRUE_VALUE, FALSE_VALUE]).include?(value) }
 
-  # TODO remove when normalize_checkbox_values is over
   def true?
-    value_with_legacy == TRUE_VALUE
+    value == TRUE_VALUE
+  end
+
+  def search_terms
+    if true?
+      [libelle]
+    end
+  end
+
+  def to_s
+    processed_value
+  end
+
+  def for_tag
+    processed_value
+  end
+
+  def for_export
+    processed_value
+  end
+
+  def for_api_v2
+    true? ? 'true' : 'false'
   end
 
   private
 
-  # TODO remove when normalize_checkbox_values is over
-  def value_with_legacy
-    value == 'on' ? TRUE_VALUE : value
+  def processed_value
+    true? ? 'Oui' : 'Non'
+  end
+
+  def set_value_to_nil
+    self.value = nil
+  end
+
+  def set_value_to_false
+    self.value = FALSE_VALUE
   end
 end

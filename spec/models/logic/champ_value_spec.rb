@@ -70,7 +70,7 @@ describe Logic::ChampValue do
   end
 
   context 'checkbox tdc' do
-    let(:champ) { create(:champ_checkbox, value: 'on') }
+    let(:champ) { create(:champ_checkbox, value: 'true') }
 
     it { expect(champ_value(champ.stable_id).type([champ.type_de_champ])).to eq(:boolean) }
     it { is_expected.to eq(true) }

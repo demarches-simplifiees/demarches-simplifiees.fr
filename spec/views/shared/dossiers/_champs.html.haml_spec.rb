@@ -12,7 +12,7 @@ describe 'shared/dossiers/champs.html.haml', type: :view do
 
   context "there are some champs" do
     let(:dossier) { create(:dossier) }
-    let(:champ1) { create(:champ_checkbox, dossier: dossier, value: "on") }
+    let(:champ1) { create(:champ_checkbox, dossier: dossier, value: 'true') }
     let(:champ2) { create(:champ_header_section, dossier: dossier, value: "Section") }
     let(:champ3) { create(:champ_explication, dossier: dossier, value: "mazette") }
     let(:champ4) { create(:champ_dossier_link, dossier: dossier, value: dossier.id) }
@@ -22,7 +22,7 @@ describe 'shared/dossiers/champs.html.haml', type: :view do
 
     it "renders titles and values of champs" do
       expect(subject).to include(champ1.libelle)
-      expect(subject).to include(champ1.value)
+      expect(subject).to include('Oui')
 
       expect(subject).to have_css(".header-section")
       expect(subject).to include(champ2.libelle)
@@ -70,7 +70,7 @@ describe 'shared/dossiers/champs.html.haml', type: :view do
     context "with seen_at" do
       let(:dossier) { create(:dossier) }
       let(:nouveau_groupe_instructeur) { create(:groupe_instructeur, procedure: dossier.procedure) }
-      let(:champ1) { create(:champ_checkbox, dossier: dossier, value: "on") }
+      let(:champ1) { create(:champ_checkbox, dossier: dossier, value: 'true') }
       let(:champs) { [champ1] }
 
       context "with a demande_seen_at after groupe_instructeur_updated_at" do
@@ -113,7 +113,7 @@ describe 'shared/dossiers/champs.html.haml', type: :view do
 
   context "with seen_at" do
     let(:dossier) { create(:dossier) }
-    let(:champ1) { create(:champ_checkbox, dossier: dossier, value: "on") }
+    let(:champ1) { create(:champ_checkbox, dossier: dossier, value: 'true') }
     let(:champs) { [champ1] }
 
     context "with a demande_seen_at after champ updated_at" do

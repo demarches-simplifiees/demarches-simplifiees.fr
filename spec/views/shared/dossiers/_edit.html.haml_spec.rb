@@ -8,7 +8,7 @@ describe 'shared/dossiers/edit.html.haml', type: :view do
 
   context 'when there are some champs' do
     let(:dossier) { create(:dossier) }
-    let(:champ_checkbox) { create(:champ_checkbox, dossier: dossier, value: 'on') }
+    let(:champ_checkbox) { create(:champ_checkbox, dossier: dossier, value: 'true') }
     let(:champ_header_section) { create(:champ_header_section, dossier: dossier, value: 'Section') }
     let(:champ_explication) { create(:champ_explication, dossier: dossier, value: 'mazette') }
     let(:champ_dossier_link) { create(:champ_dossier_link, dossier: dossier, value: dossier.id) }
