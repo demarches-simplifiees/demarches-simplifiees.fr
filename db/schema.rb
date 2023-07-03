@@ -228,6 +228,7 @@ ActiveRecord::Schema.define(version: 2023_04_13_171421) do
     t.boolean "private", default: false, null: false
     t.datetime "rebased_at"
     t.integer "row"
+    t.string "row_id"
     t.string "type"
     t.integer "type_de_champ_id"
     t.datetime "updated_at"
@@ -238,6 +239,7 @@ ActiveRecord::Schema.define(version: 2023_04_13_171421) do
     t.index ["parent_id"], name: "index_champs_on_parent_id"
     t.index ["private"], name: "index_champs_on_private"
     t.index ["row"], name: "index_champs_on_row"
+    t.index ["row_id"], name: "index_champs_on_row_id"
     t.index ["type"], name: "index_champs_on_type"
     t.index ["type_de_champ_id", "dossier_id", "row"], name: "index_champs_on_type_de_champ_id_and_dossier_id_and_row", unique: true
     t.index ["type_de_champ_id"], name: "index_champs_on_type_de_champ_id"
@@ -296,6 +298,16 @@ ActiveRecord::Schema.define(version: 2023_04_13_171421) do
     t.index ["deleted_at"], name: "index_deleted_dossiers_on_deleted_at"
     t.index ["dossier_id"], name: "index_deleted_dossiers_on_dossier_id", unique: true
     t.index ["procedure_id"], name: "index_deleted_dossiers_on_procedure_id"
+  end
+
+  create_table "dossier_batch_operations", force: :cascade do |t|
+    t.bigint "batch_operation_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.bigint "dossier_id", null: false
+    t.string "state", default: "pending", null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["batch_operation_id"], name: "index_dossier_batch_operations_on_batch_operation_id"
+    t.index ["dossier_id"], name: "index_dossier_batch_operations_on_dossier_id"
   end
 
   create_table "dossier_operation_logs", force: :cascade do |t|
@@ -974,6 +986,8 @@ ActiveRecord::Schema.define(version: 2023_04_13_171421) do
   add_foreign_key "commentaires", "dossiers"
   add_foreign_key "commentaires", "experts"
   add_foreign_key "commentaires", "instructeurs"
+  add_foreign_key "dossier_batch_operations", "batch_operations"
+  add_foreign_key "dossier_batch_operations", "dossiers"
   add_foreign_key "dossier_operation_logs", "bill_signatures"
   add_foreign_key "dossier_transfer_logs", "dossiers"
   add_foreign_key "dossiers", "batch_operations"

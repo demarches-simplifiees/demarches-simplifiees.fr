@@ -6,11 +6,7 @@ module Mutations
 
     def resolve(dossier:, annotation_id:, instructeur:, value:)
       resolve_with_type(dossier:, annotation_id:, instructeur:, value:) do |annotation, value|
-        annotation.value = if annotation.type_champ == TypeDeChamp.type_champs.fetch(:yes_no)
-          value ? 'true' : 'false'
-        else
-          value ? 'on' : 'off'
-        end
+        annotation.value = value ? 'true' : 'false'
       end
     end
 

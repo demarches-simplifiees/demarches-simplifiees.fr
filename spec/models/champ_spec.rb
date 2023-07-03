@@ -212,13 +212,13 @@ describe Champ do
         let(:type_de_champ) { build(:type_de_champ_checkbox, libelle: libelle) }
 
         context 'when the box is checked' do
-          let(:value) { 'on' }
+          let(:value) { 'true' }
 
           it { is_expected.to eq([libelle]) }
         end
 
         context 'when the box is unchecked' do
-          let(:value) { 'off' }
+          let(:value) { 'false' }
 
           it { is_expected.to be_nil }
         end

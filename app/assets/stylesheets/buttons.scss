@@ -226,6 +226,11 @@
   }
 }
 
+ul.dropdown-items {
+  padding-inline-start: 0;
+  list-style: none;
+}
+
 .dropdown-items {
   li {
     display: flex;
@@ -272,11 +277,13 @@
     }
 
     // Make child links fill the whole clickable area
-    > a {
+    > a,
+      .dropdown-items-link {
       display: flex;
       flex-grow: 1;
       margin: -$default-padding;
       padding: $default-padding;
+      text-align: left;
     }
 
     .icon {

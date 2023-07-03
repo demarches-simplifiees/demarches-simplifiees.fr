@@ -11,21 +11,45 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
   end
 
   def available_operations
-    options = []
     case @statut
     when 'traites' then
-      options.push [t(".operations.archiver"), BatchOperation.operations.fetch(:archiver)]
+      {
+        options:
+          [
+            {
+              label: t(".operations.archiver"),
+              operation: BatchOperation.operations.fetch(:archiver)
+            }
+          ]
+      }
     when 'suivis' then
-      options.push [t(".operations.passer_en_instruction"), BatchOperation.operations.fetch(:passer_en_instruction)]
+      {
+        options:
+          [
+
+            {
+              label: t(".operations.passer_en_instruction"),
+              operation: BatchOperation.operations.fetch(:passer_en_instruction)
+            },
+
+            {
+              label: t(".operations.accepter"),
+              operation: BatchOperation.operations.fetch(:accepter)
+            }
+          ]
+      }
     else
+      {
+        options: []
+      }
     end
-    options
   end
 
   def icons
     {
       archiver: 'fr-icon-folder-2-line',
-      passer_en_instruction: 'fr-icon-edit-line'
+      passer_en_instruction: 'fr-icon-edit-line',
+      accepter: 'fr-icon-success-line'
     }
   end
 end

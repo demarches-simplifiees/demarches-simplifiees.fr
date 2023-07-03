@@ -13,9 +13,8 @@ module Instructeurs
 
     def batch_operation_params
       params.require(:batch_operation)
-        .permit(:operation, dossier_ids: [])
+        .permit(:operation, :motivation, :justificatif_motivation, dossier_ids: [])
         .merge(instructeur: current_instructeur)
-        .merge(groupe_instructeurs: current_instructeur.groupe_instructeurs.where(procedure_id: @procedure.id))
     end
 
     def set_procedure
