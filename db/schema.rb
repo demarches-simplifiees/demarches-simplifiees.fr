@@ -228,6 +228,7 @@ ActiveRecord::Schema.define(version: 2023_04_13_171421) do
     t.boolean "private", default: false, null: false
     t.datetime "rebased_at"
     t.integer "row"
+    t.string "row_id"
     t.string "type"
     t.integer "type_de_champ_id"
     t.datetime "updated_at"
@@ -238,6 +239,7 @@ ActiveRecord::Schema.define(version: 2023_04_13_171421) do
     t.index ["parent_id"], name: "index_champs_on_parent_id"
     t.index ["private"], name: "index_champs_on_private"
     t.index ["row"], name: "index_champs_on_row"
+    t.index ["row_id"], name: "index_champs_on_row_id"
     t.index ["type"], name: "index_champs_on_type"
     t.index ["type_de_champ_id", "dossier_id", "row"], name: "index_champs_on_type_de_champ_id_and_dossier_id_and_row", unique: true
     t.index ["type_de_champ_id"], name: "index_champs_on_type_de_champ_id"

@@ -112,8 +112,8 @@ module DossierRebaseConcern
         .where(type_de_champ: { stable_id: parent_stable_id })
 
       champs_repetition.each do |champ_repetition|
-        champ_repetition.champs.map(&:row).uniq.each do |row|
-          create_champ(target_coordinate, champ_repetition, row: row)
+        champ_repetition.champs.index_by(&:row).each do |(row, champ)|
+          create_champ(target_coordinate, champ_repetition, row:, row_id: champ.row_id)
         end
       end
     else
@@ -121,9 +121,8 @@ module DossierRebaseConcern
     end
   end
 
-  def create_champ(target_coordinate, parent, row: nil)
-    params = { revision: target_coordinate.revision }
-    params[:row] = row if row
+  def create_champ(target_coordinate, parent, row: nil, row_id: nil)
+    params = { revision: target_coordinate.revision, row:, row_id: }.compact
     champ = target_coordinate
       .type_de_champ
       .build_champ(params)
