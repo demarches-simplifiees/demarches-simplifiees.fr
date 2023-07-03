@@ -1,27 +1,29 @@
 - each_champ do |champ|
-  .fr-px-4v.fr-my-2v
-    - if champ.repetition?
-      - champ.rows.each.with_index do |row, i|
-        .fr-background-alt--grey.fr-p-3v.fr-my-3w
-          %p.champ-label= "#{champ.libelle}  #{i +1}:"
+  - if champ.repetition?
+    - champ.rows.each.with_index do |row, i|
+      .fr-background-alt--grey.fr-p-2w.fr-my-3w.fr-ml-2w.champ-repetition
+        %p.font-weight-bold= "#{champ.libelle} #{i + 1} :"
 
-          = render Dossiers::ChampRowShowComponent.new(champs: row, demande_seen_at: @demande_seen_at, profile: @profile, repetition: true)
+        = render Dossiers::ChampRowShowComponent.new(champs: row, demande_seen_at: @demande_seen_at, profile: @profile, repetition: true)
 
-    - elsif !champ.header_section?
-      .flex.d-block-sm
-        %p.champ-label.flex-grow= "#{champ.libelle} :"
-
-        - if updated_after_deposer?(champ)
-          %p.fr-mb-0.fr-text--sm
-            %span.fr-badge.fr-badge--sm{ class: badge_class_if_unseen(@demande_seen_at, champ.updated_at) }
-              = t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: try_format_datetime(champ.updated_at))
+  - else
+    .fr-px-2w.fr-my-2w.champ-row
+      %p.champ-label= "#{champ.libelle} :"
 
       - if champ.blank?
-        .champ-content.fr-text-mention--grey{ class: [highlight_if_unseen_class(@demande_seen_at, champ.updated_at), champ.type_champ] }
-          %p
-            %em= t(blank_key(champ))
+        .champ-content.fr-text-mention--grey{ class: champ.type_champ }
+          - if usager?
+            %p
+              %em= t(blank_key(champ))
+
       - else
-        .champ-content{ class: [highlight_if_unseen_class(@demande_seen_at, champ.updated_at), champ.type_champ] }
+        .champ-content{ class: champ.type_champ }
+
+          - if updated_after_deposer?(champ)
+            %p.fr-mb-1v.fr-ml-3v.champ-updated
+              %span.fr-badge.fr-badge--sm{ class: badge_class_if_unseen(@demande_seen_at, champ.updated_at) }
+                = t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: try_format_datetime(champ.updated_at, format: :veryshort))
+
           - case champ.type_champ
           - when TypeDeChamp.type_champs.fetch(:carte)
             = render partial: "shared/champs/carte/show", locals: { champ: champ }
@@ -61,8 +63,8 @@
             %p= champ.to_s
           - when TypeDeChamp.type_champs.fetch(:datetime)
             %p= champ.to_s
-          - when TypeDeChamp.type_champs.fetch(:number)
+          - when TypeDeChamp.type_champs.fetch(:number), TypeDeChamp.type_champs.fetch(:integer_number), TypeDeChamp.type_champs.fetch(:decimal_number)
             %p= number_with_html_delimiter(champ.to_s)
           - else
-            - if champ.present?
-              = format_text_value(champ.to_s.strip) # format already wrap in p
+            = format_text_value(champ.to_s.strip) # format already wrap in p
+

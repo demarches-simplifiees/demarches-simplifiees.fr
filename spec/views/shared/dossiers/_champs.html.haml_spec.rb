@@ -127,20 +127,27 @@ describe 'shared/dossiers/champs', type: :view do
   end
 
   context "with seen_at" do
-    let(:dossier) { create(:dossier) }
+    let(:dossier) { create(:dossier, :en_construction, depose_at: 1.day.ago) }
     let(:champ1) { create(:champ_checkbox, dossier: dossier, value: 'true') }
     let(:champs) { [champ1] }
 
     context "with a demande_seen_at after champ updated_at" do
       let(:demande_seen_at) { champ1.updated_at + 1.hour }
 
-      it { is_expected.not_to have_css(".highlighted") }
+      it { is_expected.not_to have_css(".fr-badge--new") }
+    end
+
+    context "with champ updated_at at depose_at" do
+      let(:champ1) { create(:champ_checkbox, dossier: dossier, value: 'true', updated_at: dossier.depose_at) }
+      let(:demande_seen_at) { champ1.updated_at - 1.hour }
+
+      it { is_expected.not_to have_css(".fr-badge--new") }
     end
 
     context "with a demande_seen_at after champ updated_at" do
       let(:demande_seen_at) { champ1.updated_at - 1.hour }
 
-      it { is_expected.to have_css(".highlighted") }
+      it { is_expected.to have_css(".fr-badge--new") }
     end
   end
 end

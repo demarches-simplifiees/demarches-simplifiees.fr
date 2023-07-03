@@ -30,29 +30,16 @@ class Dossiers::ChampRowShowComponent < ApplicationComponent
   end
 
   def each_champ(&block)
-    @champs.filter { show_champ?(_1) && _1.visible? && !_1.exclude_from_view? }.each(&block)
+    @champs.filter { _1.visible? && !_1.exclude_from_view? && !_1.header_section? }.each(&block)
   end
 
   private
 
-  # champ.blank? is overloaded, disable the cop
-  # rubocop:disable Rails/Present
-  def show_champ?(champ)
-    if view_usager?
-      true
-    elsif champ.blank? && updated_after_deposer?(champ)
-      true
-    else
-      !champ.blank?
-    end
-  end
-  # rubocop:enable Rails/Present
-
-  def view_usager?
+  def usager?
     @profile == 'usager'
   end
 
-  def view_instructeur?
+  def instructeur?
     @profile == 'instructeur'
   end
 end

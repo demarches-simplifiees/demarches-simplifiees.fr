@@ -12,22 +12,22 @@
 
   - if dossier.justificatif_motivation.attached?
     -# download component already has margin bottom
-    %div
-      %p.champ-label Justificatif :
+    %div.champ-row
+      %p.champ-label Justificatif :
       .champ-content
         .action
           = render Attachment::ShowComponent.new(attachment: dossier.justificatif_motivation.attachment)
 
   - if dossier.motivation.present?
-    .fr-mb-2w
-      %p.champ-label Motivation :
+    .fr-mb-2w.champ-row
+      %p.champ-label Motivation :
       .champ-content
         .action
           = dossier.motivation
 
   - if dossier.attestation.present?
-    .fr-mb-2w
-      %p.champ-label Attestation :
+    .fr-mb-2w.champ-row
+      %p.champ-label Attestation :
       .champ-content
         .action
           = link_to('Voir l’attestation', attestation_instructeur_dossier_path(dossier.procedure, dossier), target: '_blank', rel: 'noopener')

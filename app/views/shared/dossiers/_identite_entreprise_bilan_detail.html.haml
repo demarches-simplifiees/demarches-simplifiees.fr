@@ -1,7 +1,6 @@
-%tr
-  %td.libelle
-    = "#{libelle} :"
-  %td
+.fr-my-2v.champ-row
+  %p.champ-label= "#{libelle} :"
+  .champ-content
     %details
       - etablissement.entreprise_bilans_bdf.each do |bilan|
         = "#{pretty_date_exercice(bilan["date_arret_exercice"])} : "
