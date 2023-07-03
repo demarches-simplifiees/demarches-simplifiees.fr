@@ -1,8 +1,11 @@
 %div{ id: dom_id(@groupe_instructeur, :routing) }
   %h1 Paramètres du groupe
 
+  = render partial: 'administrateurs/groupe_instructeurs/import_export',
+      locals: { procedure: @procedure }
+
   = form_for @groupe_instructeur,
-    url: admin_procedure_groupe_instructeur_path(@procedure_id, @groupe_instructeur),
+    url: admin_procedure_groupe_instructeur_path(@procedure, @groupe_instructeur),
     method: :patch do |f|
     = f.label :label, 'Nom du groupe', class: 'fr-label fr-mb-1w'
     .flex
@@ -10,7 +13,7 @@
       = f.button 'Renommer', class: 'fr-btn fr-btn--secondary'
 
   = form_for @groupe_instructeur,
-    url: admin_procedure_groupe_instructeur_update_state_path(@procedure_id, @groupe_instructeur),
+    url: admin_procedure_groupe_instructeur_update_state_path(@procedure, @groupe_instructeur),
     method: :patch,
     data: { turbo: true, controller: 'autosubmit' } do |f|
     .fr-checkbox-group.fr-my-3w
@@ -19,7 +22,7 @@
         Groupe inactif
         %span.fr-hint-text Si cette option est activée, les usagers ne pourront plus sélectionner ce groupe d’instructeurs
 
-  = form_tag admin_procedure_routing_rules_path(@procedure_id),
+  = form_tag admin_procedure_routing_rules_path(@procedure),
     method: :post,
     data: { controller: 'autosave' },
     class: 'fr-mb-3w' do
@@ -41,18 +44,18 @@
     .fr-hint-text
       %span Si vous ne trouvez pas l'option correspondant à votre groupe, veuillez l'ajouter dans le champ dédié au
       %span
-        = link_to 'routage', champs_admin_procedure_path(@procedure_id)
+        = link_to 'routage', champs_admin_procedure_path(@procedure)
 
   .flex.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
     - if @groupe_instructeur.can_delete?
       %p= t('.delete')
-      = button_to admin_procedure_groupe_instructeur_path(@procedure_id, @groupe_instructeur),
+      = button_to admin_procedure_groupe_instructeur_path(@procedure, @groupe_instructeur),
       class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-delete-line',
       method: :delete,
       data: { confirm: t('.delete_confirmation', group_name: @groupe_instructeur.label) } do
         Supprimer
     - else
-      = button_to reaffecter_dossiers_admin_procedure_groupe_instructeur_path(@procedure_id, @groupe_instructeur),
+      = button_to reaffecter_dossiers_admin_procedure_groupe_instructeur_path(@procedure, @groupe_instructeur),
       class: 'fr-btn fr-btn--tertiary fr-icon-folder-2-line',
       title: t('.move_files_confirmation'),
       method: :get do
