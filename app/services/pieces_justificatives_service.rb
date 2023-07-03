@@ -255,6 +255,6 @@ class PiecesJustificativesService
   def self.safe_attachment(attachment)
     attachment
       .blob
-      .metadata[:virus_scan_result] == ActiveStorage::VirusScanner::SAFE
+      .virus_scan_result == ActiveStorage::VirusScanner::SAFE
   end
 end
