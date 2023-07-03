@@ -69,7 +69,14 @@ class Procedure < ApplicationRecord
 
   include Discard::Model
   self.discard_column = :hidden_at
-  self.ignored_columns += [:direction, :durees_conservation_required, :cerfa_flag, :test_started_at, :lien_demarche]
+  self.ignored_columns += [
+    :direction,
+    :durees_conservation_required,
+    :cerfa_flag,
+    :test_started_at,
+    :lien_demarche,
+    :migrated_champ_routage
+  ]
 
   default_scope -> { kept }
 

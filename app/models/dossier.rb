@@ -56,6 +56,8 @@ class Dossier < ApplicationRecord
   include DossierSearchableConcern
   include DossierSectionsConcern
 
+  self.ignored_columns += [:migrated_champ_routage]
+
   enum state: {
     brouillon:       'brouillon',
     en_construction: 'en_construction',
