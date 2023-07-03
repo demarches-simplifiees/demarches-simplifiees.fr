@@ -30,4 +30,4 @@
       %p.champ-label Attestation :
       .champ-content
         .action
-          = link_to('Voir l’attestation', attestation_instructeur_dossier_path(dossier.procedure, dossier), target: '_blank', rel: 'noopener')
+          = link_to('Voir l’attestation', attestation_instructeur_dossier_path(dossier.procedure, dossier), **external_link_attributes)

@@ -1,15 +1,18 @@
+- if etablissement.as_degraded_mode?
+  .fr-alert.fr-alert--warning.fr-alert--sm.fr-mb-2w
+    %p
+      LʼINSEE est indisponible, les informations sur lʼentreprise arriveront dʼici quelques heures.
+      - if profile == "instructeur"
+        %p
+          Il nʼest pas possible dʼaccepter ou de refuser un dossier sans cette étape.
+
 .fr-background-alt--grey.fr-p-3v
   - if etablissement.as_degraded_mode?
-    .fr-alert.fr-alert--warning.fr-alert--sm
-      %p
-        LʼINSEE est indisponible, les informations sur lʼentreprise arriveront dʼici quelques heures.
-        - if profile == "instructeur"
-          %p
-            Il nʼest pas possible dʼaccepter ou de refuser un dossier sans cette étape.
     .fr-my-2v.champ-row
       %p.champ-label SIRET :
       .champ-content
-        %p= etablissement.siret
+        %p #{pretty_siret(etablissement.siret)} #{ render Dsfr::CopyButtonComponent.new(text: etablissement.siret, title: "Copier le siret dans le presse-papier", success: "Le siret a été copié dans le presse-papier") }
+
   - else
     - if etablissement.diffusable_commercialement == false && profile != 'instructeur'
       .fr-my-2v.champ-row
@@ -31,7 +34,9 @@
           .fr-my-2v.champ-row
             %p.champ-label SIRET du siège social:
             .champ-content
-              %p= etablissement.entreprise.siret_siege_social
+              %p
+                = pretty_siret(etablissement.entreprise.siret_siege_social)
+                = render Dsfr::CopyButtonComponent.new(text: etablissement.entreprise.siret_siege_social, title: "Copier le siret dans le presse-papier", success: "Le siret a été copié dans le presse-papier")
         .fr-my-2v.champ-row
           %p.champ-label Forme juridique :
           .champ-content
@@ -51,7 +56,7 @@
             = try_format_date(etablissement.entreprise.date_creation)
 
             - if etablissement.entreprise_etat_administratif.present?
-              %span.label= humanized_entreprise_etat_administratif(etablissement)
+              %span.fr-badge.fr-badge--sm{ class: entreprise_etat_administratif_badge_class(etablissement)}= humanized_entreprise_etat_administratif(etablissement)
 
         - if profile == 'instructeur'
           .fr-my-2v.champ-row
@@ -81,7 +86,7 @@
           %p.champ-label Adresse :
           .champ-content
             %p
-            - etablissement.adresse.split("\n").each do |line|
+            - etablissement.adresse.split("\n").compact_blank.each do |line|
               = line
               %br
         .fr-my-2v.champ-row
@@ -89,17 +94,18 @@
           .champ-content
             %p= pretty_currency(etablissement.entreprise.capital_social)
         .fr-my-2v.champ-row
-          %p.champ-label Chiffre d’affaires :
-          .champ-content
-            %p
-            - if profile == 'instructeur'
-              %details
-                - etablissement.exercices.each_with_index do |exercice, index|
-                  = "#{exercice.date_fin_exercice.year} : "
-                  = pretty_currency(exercice.ca)
-                  %br
-            - elsif etablissement.exercices.present?
-              = t('activemodel.models.exercices_summary', count: etablissement.exercices.count)
+          - if etablissement.exercices.any?
+            %p.champ-label Chiffre d’affaires :
+            .champ-content
+              %p
+              - if profile == 'instructeur'
+                %details
+                  - etablissement.exercices.each_with_index do |exercice, index|
+                    = "#{exercice.date_fin_exercice.year} : "
+                    = pretty_currency(exercice.ca)
+                    %br
+              - elsif etablissement.exercices.present?
+                = t('activemodel.models.exercices_summary', count: etablissement.exercices.count)
 
 
         - if etablissement.entreprise_bilans_bdf.present?
@@ -149,7 +155,7 @@
             %p.champ-label Attestation sociale :
             - if profile == 'instructeur'
               .champ-content
-                %p= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_sociale)
+                %p= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_sociale), **external_link_attributes
             - else
               .champ-content
                 %p Une attestation de vigilance délivrée par l'ACOSS a été jointe à votre dossier.
@@ -159,7 +165,7 @@
             %p.champ-label Attestation fiscale :
             - if profile == 'instructeur'
               .champ-content
-                %p= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_fiscale)
+                %p= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_fiscale), **external_link_attributes
             - else
               .champ-content
                 %p Une attestation fiscale délivrée par l'URSSAF a été jointe à votre dossier.
@@ -191,7 +197,7 @@
               %p= try_format_date(etablissement.association_date_declaration)
 
   - unless local_assigns[:short_identity]
-    %p
+    %p.text-center
       = link_to "➡ Autres informations sur l’organisme sur « annuaire-entreprises.data.gouv.fr » (ex: fiche d’immatriculation RNCS)",
       annuaire_link(etablissement.siret),
-      target: "_blank"
+      **external_link_attributes
