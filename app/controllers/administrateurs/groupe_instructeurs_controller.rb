@@ -389,15 +389,12 @@ module Administrateurs
         procedure
           .groupe_instructeurs
           .where('unaccent(label) ILIKE unaccent(?)', "%#{query}%")
-
-      elsif params[:filter] == '1'
-        Kaminari.paginate_array(
-          procedure
-          .groupe_instructeurs
-          .filter(&:routing_to_configure?)
-        )
       else
         procedure.groupe_instructeurs
+      end
+
+      if params[:filter] == '1'
+        groupes = Kaminari.paginate_array(groupes.filter(&:routing_to_configure?))
       end
 
       groupes

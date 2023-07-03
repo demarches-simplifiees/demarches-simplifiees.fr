@@ -1,25 +1,20 @@
-= form_for admin_procedure_groupe_instructeurs_path(@procedure),
-  method: :get do
+= form_with(url: admin_procedure_groupe_instructeurs_path(@procedure),
+  method: :get) do
   #header-search.fr-search-bar.fr-mb-2w{ role: "search" }
     = label_tag :q, 'Rechercher par nom', class: 'fr-label'
     = text_field_tag :q, @query, class: 'fr-input', type: 'search', autocomplete: 'off', placeholder: 'Rechercher par nom'
     %button.fr-btn{ title: "Rechercher" } Rechercher
+  - if @query.present?
+    = link_to "Réinitialiser la recherche",
+      admin_procedure_groupe_instructeurs_path(@procedure),
+      class: 'fr-link'
+  - if show_to_configure?
+    .flex.align-baseline
+      %ul.fr-btns-group.fr-btns-group--sm
+        %li.fr-checkbox-group.fr-ml-1w.fr-py-1w
+          .title.font-weight-bold.fr-mb-1w
+            %span.fr-icon-filter-fill.fr-icon--sm.fr-mr-1w{ 'aria-hidden': 'true' }
+              Filtre
 
-- if show_to_configure?
-  .flex.align-baseline
-    %ul.fr-btns-group.fr-btns-group--sm
-      - if @query.present?
-        %li= link_to "Réinialiser la recherche",
-          admin_procedure_groupe_instructeurs_path(@procedure),
-          class: 'fr-btn fr-btn--tertiary-no-outline'
-      - else
-        = form_with(url: admin_procedure_groupe_instructeurs_path(@procedure),
-          method: :get,
-          data: { controller: 'autosubmit' }) do |f|
-          .fr-checkbox-group.fr-ml-1w.fr-py-1w
-            .title.font-weight-bold.fr-mb-1w
-              %span.fr-icon-filter-fill.fr-icon--sm.fr-mr-1w{ 'aria-hidden': 'true' }
-                Filtre
-
-            = f.check_box :filter, checked: @filter_value
-            = f.label :filter, t('.to_configure_filter', count: @to_configure_count)
+          = check_box_tag :filter, '1', @to_configure_filter, data: { controller: 'autosubmit' }
+          = label_tag :filter, t('.to_configure_filter', count: @to_configure_count)
