@@ -1,5 +1,5 @@
 import { ApplicationController } from './application_controller';
-import { toggle } from '@utils';
+import { show, hide } from '@utils';
 const AUTOSUBMIT_DEBOUNCE_DELAY = 5000;
 
 export class AutosubmitController extends ApplicationController {
@@ -7,6 +7,7 @@ export class AutosubmitController extends ApplicationController {
 
   declare readonly formTarget: HTMLFormElement;
   declare readonly spinnerTarget: HTMLElement;
+  declare readonly hasSpinnerTarget: boolean;
 
   submit() {
     this.formTarget.requestSubmit();
@@ -18,7 +19,14 @@ export class AutosubmitController extends ApplicationController {
 
   connect() {
     this.onGlobal('turbo:submit-start', () => {
-      toggle(this.spinnerTarget);
+      if (this.hasSpinnerTarget) {
+        show(this.spinnerTarget);
+      }
+    });
+    this.onGlobal('turbo:submit-end', () => {
+      if (this.hasSpinnerTarget) {
+        hide(this.spinnerTarget);
+      }
     });
   }
 }

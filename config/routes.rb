@@ -475,7 +475,7 @@ Rails.application.routes.draw do
       end
 
       member do
-        get 'detail'
+        post 'detail'
         get 'apercu'
         get 'champs'
         get 'zones'
