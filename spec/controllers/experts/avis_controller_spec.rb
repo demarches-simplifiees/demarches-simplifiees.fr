@@ -360,7 +360,7 @@ describe Experts::AvisController, type: :controller do
 
         it do
           expect(response).to render_template :instruction
-          expect(flash.alert).to eq(["toto.fr : Email n'est pas valide"])
+          expect(flash.alert).to eq(["toto.fr : Le champ « Email » n'est pas valide"])
           expect(Avis.last).to eq(previous_avis)
           expect(dossier.last_avis_updated_at).to eq(nil)
         end
@@ -382,7 +382,7 @@ describe Experts::AvisController, type: :controller do
 
         it do
           expect(response).to render_template :instruction
-          expect(flash.alert).to eq(["toto.fr : Email n'est pas valide"])
+          expect(flash.alert).to eq(["toto.fr : Le champ « Email » n'est pas valide"])
           expect(flash.notice).to eq("Une demande d’avis a été envoyée à titi@titimail.com")
           expect(Avis.count).to eq(old_avis_count + 1)
         end

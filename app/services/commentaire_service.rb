@@ -36,13 +36,9 @@ class CommentaireService
 
   def self.save(dossier, params)
     build_and_save(dossier, params)
-  rescue ActiveRecord::StaleObjectError
-    build_and_save(dossier, params)
   end
 
   def self.save!(dossier, params)
-    build_and_save(dossier, params, raise_exception: true)
-  rescue ActiveRecord::StaleObjectError
     build_and_save(dossier, params, raise_exception: true)
   end
 

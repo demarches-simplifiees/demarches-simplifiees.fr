@@ -22,6 +22,7 @@
               active: @statut == 'en-cours',
               badge: number_with_html_delimiter(@user_dossiers.count))
           - if @dossiers_traites.present?
+            // TODO: when renaming this tab in "Terminé", update notify_near_deletion_to_user email wording accordingly.
             = tab_item(t('pluralize.traites', count: @dossiers_traites.count),
               dossiers_path(statut: 'traites'),
               active: @statut == 'traites',

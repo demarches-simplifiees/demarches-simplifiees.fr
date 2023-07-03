@@ -1,7 +1,6 @@
 - if FranceConnectService.enabled?
   .france-connect-login
-    .france-connect-login-separator
-      ou
+    %p.fr-hr-or= t('views.shared.france_connect_login.separator')
     %h2.fr-h6.mb-0.center
       = t('views.shared.france_connect_login.title')
     %p
@@ -14,8 +13,5 @@
           %span.fr-connect__brand FranceConnect
       %p
         = link_to t('views.shared.france_connect_login.help_link'), "https://franceconnect.gouv.fr/", title: new_tab_suffix(t('views.shared.france_connect_login.help_link')), **external_link_attributes
-
-    -# .france-connect-login-separator
-      = t('views.shared.france_connect_login.separator')
 - else
   <!-- FranceConnect is not configured -->

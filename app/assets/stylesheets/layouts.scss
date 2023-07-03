@@ -62,45 +62,9 @@
 .ou-border {
   border-bottom: 1px solid $border-grey;
 
-  &::after {
-    display: block;
-    content: "ou";
-    position: absolute;
-    width: 40px;
-    left: 48%;
-    bottom: -20px;
-    text-align: center;
-    background-color: $white;
-    border-radius: 50%;
-    border: 1px solid $grey;
-    padding: 3px 3px 6px 3px;
-    font-weight: bold;
-    font-size: 1.1em;
-    z-index: 1;
-  }
-
   @media (min-width: $two-columns-breakpoint) {
     border-right: 1px solid $border-grey;
     border-bottom: none;
-
-    &::after {
-      display: block;
-      content: "ou";
-      position: absolute;
-      width: 40px;
-      top: ($default-padding * 2);
-      bottom: auto;
-      left: auto;
-      right: -20px;
-      text-align: center;
-      background-color: $white;
-      border-radius: 50%;
-      border: 1px solid $grey;
-      padding: 3px 3px 6px 3px;
-      font-weight: bold;
-      font-size: 1.1em;
-      z-index: 1;
-    }
   }
 }
 

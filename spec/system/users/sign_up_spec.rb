@@ -21,14 +21,14 @@ describe 'Signing up:' do
       visit commencer_path(path: procedure.path)
       click_on "Créer un compte"
       expect(page).to have_selector('.suspect-email', visible: false)
-      fill_in 'Email', with: 'bidou@gmail.pf'
+      fill_in 'Adresse électronique', with: 'bidou@gmail.pf'
       fill_in 'Mot de passe', with: '12345'
     end
 
     scenario 'they can accept the suggestion', js: true do
       expect(page).to have_selector('.suspect-email', visible: true)
       click_on 'Oui'
-      expect(page).to have_field("Email", :with => 'bidou@gmail.com')
+      expect(page).to have_field("Adresse électronique", :with => 'bidou@gmail.com')
     end
   end
 
@@ -39,27 +39,27 @@ describe 'Signing up:' do
       visit commencer_path(path: procedure.path)
       click_on "Créer un compte"
       expect(page).to have_selector('.suspect-email', visible: false)
-      fill_in 'Email', with: 'bidou@yahoo.rf'
+      fill_in 'Adresse électronique', with: 'bidou@yahoo.rf'
       fill_in 'Mot de passe', with: '12345'
     end
 
     scenario 'they can accept the suggestion', js: true do
       expect(page).to have_selector('.suspect-email', visible: true)
       click_on 'Oui'
-      expect(page).to have_field("Email", :with => 'bidou@yahoo.fr')
+      expect(page).to have_field("Adresse électronique", :with => 'bidou@yahoo.fr')
       expect(page).to have_selector('.suspect-email', visible: false)
     end
 
     scenario 'they can discard the suggestion', js: true do
       expect(page).to have_selector('.suspect-email', visible: true)
       click_on 'Non'
-      expect(page).to have_field("Email", :with => 'bidou@yahoo.rf')
+      expect(page).to have_field("Adresse électronique", :with => 'bidou@yahoo.rf')
       expect(page).to have_selector('.suspect-email', visible: false)
     end
 
     scenario 'they can fix the typo themselves', js: true do
       expect(page).to have_selector('.suspect-email', visible: true)
-      fill_in 'Email', with: 'bidou@yahoo.fr'
+      fill_in 'Adresse électronique', with: 'bidou@yahoo.fr'
       blur
       expect(page).to have_selector('.suspect-email', visible: false)
     end
@@ -72,7 +72,7 @@ describe 'Signing up:' do
     expect(page).to have_current_path new_user_registration_path
     sign_up_with user_email, '1234567'
     expect(page).to have_current_path user_registration_path
-    expect(page).to have_content 'Le mot de passe est trop court'
+    expect(page).to have_content "Le champ « Mot de passe » est trop court. Saisir un mot de passe avec au moins 8 caractères"
 
     # Then with a good password
     sign_up_with user_email, user_password

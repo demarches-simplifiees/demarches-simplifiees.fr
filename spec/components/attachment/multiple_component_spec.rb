@@ -84,7 +84,7 @@ RSpec.describe Attachment::MultipleComponent, type: :component do
     let(:created_at) { 1.second.ago }
 
     before do
-      attached_file.attachments[0].blob.update(metadata: { virus_scan_result: ActiveStorage::VirusScanner::PENDING })
+      attached_file.attachments[0].blob.update(virus_scan_result: ActiveStorage::VirusScanner::PENDING)
       attached_file.attachments[0].update!(created_at:)
     end
 

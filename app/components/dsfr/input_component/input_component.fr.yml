@@ -1,0 +1,7 @@
+---
+fr:
+  show_password:
+    aria_label: "Afficher le mot de passe"
+    label: "Afficher"
+  email_suggest:
+    wanna_say: 'Voulez-vous dire ?'

@@ -2,23 +2,22 @@
 - if dossier.expirable?
   %p.expires_at.mb-2
     %small= t("shared.dossiers.header.expires_at.#{dossier.state}", date: safe_expiration_date(dossier), duree_conservation_totale: dossier.duree_totale_conservation_in_months)
-  -# big banner warning
+
   - if dossier.close_to_expiration?
-    .card.warning.mb-3
-      .card-title= t('users.dossiers.header.banner.title')
-      %p
-      - if dossier.brouillon?
-        = t('users.dossiers.header.banner.states.brouillon')
-      - elsif dossier.en_construction?
-        = t('users.dossiers.header.banner.states.en_construction')
-      - elsif dossier.termine?
-        = t('users.dossiers.header.banner.states.termine')
+    = render Dsfr::CalloutComponent.new(title: t('users.dossiers.header.banner.title'), theme: :warning) do |c|
+      - c.with_body do
+        - if dossier.brouillon?
+          = t('users.dossiers.header.banner.states.brouillon')
+        - elsif dossier.en_construction?
+          = t('users.dossiers.header.banner.states.en_construction', nominal_duration_months: dossier.procedure.duree_conservation_dossiers_dans_ds)
+        - elsif dossier.termine?
+          = t('users.dossiers.header.banner.states.termine')
 
       - if dossier.expiration_can_be_extended?
-        %br
-        = button_to users_dossier_repousser_expiration_path(dossier), class: 'button mt-2', id: 'test-user-repousser-expiration' do
-          %span.icon.standby
-          = t('users.dossiers.header.banner.button_delay_expiration', duree_conservation_dossiers_dans_ds: dossier.procedure.duree_conservation_dossiers_dans_ds)
+        - c.with_bottom do
+          = button_to users_dossier_repousser_expiration_path(dossier), class: 'fr-btn', id: 'test-user-repousser-expiration' do
+            = t('users.dossiers.header.banner.button_delay_expiration', count: dossier.procedure.duree_conservation_dossiers_dans_ds)
+
 - elsif dossier.en_instruction? && dossier.procedure.procedure_expires_when_termine_enabled
   %p.expires_at_en_instruction
     %small= t("shared.dossiers.header.expires_at.en_instruction")

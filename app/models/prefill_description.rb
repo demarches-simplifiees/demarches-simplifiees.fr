@@ -30,6 +30,15 @@ class PrefillDescription < SimpleDelegator
     @prefill_link ||= commencer_url({ path: path }.merge(prefilled_champs_for_link))
   end
 
+  def prefill_query
+    @prefill_query ||=
+      <<~TEXT
+        curl --request POST '#{api_public_v1_dossiers_url(self)}' \\
+             --header 'Content-Type: application/json' \\
+             --data '{#{prefilled_champs_for_query}}'
+      TEXT
+  end
+
   def prefilled_champs
     @prefilled_champs ||= active_fillable_public_types_de_champ.where(id: selected_type_de_champ_ids)
   end

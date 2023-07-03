@@ -1,0 +1,31 @@
+fr:
+  activerecord:
+    attributes:
+      administrateur:
+        password: The password
+    errors:
+      models:
+        administrateur:
+          attributes:
+            email:
+              blank: 'must be filled'
+            password:
+              too_short: "is too short. Fill a password with at least 8 characters"
+              not_strong: "is not enough complex. Fill a password more complex"
+              blank: 'must be filled'
+        instructeur:
+          attributes:
+            email:
+              blank: 'must be filled'
+            password:
+              too_short: "is too short. Fill a password with at least 8 characters"
+              not_strong: "is not enough complex. Fill a password more complex"
+              blank: 'must be filled'
+        user:
+          attributes:
+            email:
+              blank: 'must be filled'
+            password:
+              too_short: "is too short. Fill a password with at least 8 characters"
+              not_strong: "is not enough complex. Fill a password more complex"
+              blank: 'must be filled'

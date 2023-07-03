@@ -131,15 +131,25 @@ fr:
         prefill_link_info: Copiez le lien grâce au bouton ci-dessous et remplacez les valeurs par les données dont vous disposez.
         prefill_link_too_long: Attention, ce lien de préremplissage est trop long et risque de ne pas fonctionner sur certains navigateurs.
         prefill_link_copy: Copier le lien de préremplissage
+        prefill_query_title: Requête de préremplissage (POST)
+        prefill_query_info: Copiez la requête grâce au bouton ci-dessous et remplacez les valeurs par les données dont vous disposez.
+        prefill_query_response_html: '# Response:<br># {"dossier_url":"%{url}"}'
+        prefill_query_copy: Copier la requête de préremplissage
     registrations:
       new:
         title: "Créez-vous un compte %{name}"
         social_title: "Rapide, simple et sûr, connectez-vous avec"
+        subtitle: "Se créer un compte en choisissant un identifiant"
         email_label: 'Email'
-        email_placeholder: 'Votre adresse email'
-        wanna_say: 'Voulez-vous dire'
         password_label: "Mot de passe"
+        password_message: "Inscrivez un mot de passe"
         password_placeholder: "%{min_length} caractères minimum"
+        password_hint: "Une courte phrase avec ponctuation peut être un mot de passe très sécurisé."
+        password_min: "Le mot de passe doit faire au moins %{min_length} caractères."
+        simple_password: "Mot de passe très vulnérable."
+        easy_password: "Mot de passe vulnérable."
+        acceptable_password: "Mot de passe acceptable. Vous pouvez valider... ou améliorer votre mot de passe."
+        great_password: "Félicitations ! Mot de passe suffisamment fort et sécurisé."
     invites:
       dropdown:
         invite_to_edit: Inviter une personne à modifier ce dossier
@@ -312,16 +322,16 @@ fr:
           actions: "Actions"
       sessions:
         new:
-          sign_in: Si vous avez un compte %{app_name}
-          social_sign_in: Connectez vous rapidement avec
-          email: Email
-          password: Mot de passe (%{min_length} caractères minimum)
-          remember_me: Se souvenir de moi
-          reset_password: Mot de passe oublié ?
-          connection: Se connecter
-          find_procedure: Trouvez votre démarche
-          state_civil_servant: Vous êtes agent de la fonction publique d’État ?
-          connect_with_agent_connect: Accédez à notre page dédiée
+          sign_in: "Connectez vous avec un compte %{application_name}"
+          social_sign_in: "Connectez vous rapidement avec"
+          password: "Mot de passe (%{min_length} caractères minimum)"
+          remember_me: "Se souvenir de moi"
+          reset_password: "Mot de passe oublié ?"
+          connection: "Se connecter"
+          find_procedure: "Trouvez votre démarche"
+          state_civil_servant: "Vous êtes agent de la fonction publique d’État ?"
+          connect_with_agent_connect: "Accédez à notre page dédiée"
+          subtitle: "Se connecter avec son compte"
       passwords:
         reset_link_sent:
           email_sent_html: "Nous vous avons envoyé un email à l’adresse <strong>%{email}</strong>."
@@ -359,10 +369,14 @@ fr:
       user:
         one: Utilisateur
         other: Utilisateurs
+
     attributes:
       default_attributes: &default_attributes
-        password: 'Le mot de passe'
+        email: Adresse électronique
+        password: 'Mot de passe'
         requested_merge_into: 'La nouvelle adresse email'
+        hints:
+          email: "Format attendu : john.doe@exemple.fr"
       user:
         siret: 'Numéro TAHITI'
         << : *default_attributes
@@ -374,6 +388,7 @@ fr:
         zone: La démarche est mise en œuvre par
       champs:
         value: Valeur du champ
+
     errors:
       messages:
         not_a_phone: 'Numéro de téléphone invalide'
@@ -383,35 +398,33 @@ fr:
           attributes:
             footer:
               too_long: ": le pied de page est trop long."
-        user:
-          attributes:
-            reset_password_token:
-              invalid: ": Votre lien de nouveau mot de passe a expiré. Merci d’en demander un nouveau."
-            email:
-              invalid: invalide
-              taken: déjà utilisé
-            password: &password
-              too_short: 'est trop court'
-              not_strong: 'n’est pas assez complexe'
-            password_confirmation:
-              confirmation: ': Les deux mots de passe ne correspondent pas'
-            requested_merge_into:
-              same: "ne peut être identique à l’ancienne"
         invite:
           attributes:
             email:
               taken: ': Invitation déjà envoyée'
+        user:
+          attributes: &error_attributes
+            reset_password_token:
+              invalid: ": Votre lien de nouveau mot de passe a expiré. Merci d’en demander un nouveau."
+            email:
+              blank: "est vide. Saisir une adresse électronique"
+              invalid: "est invalide. Saisir une adresse électronique valide, exemple : john.doe@exemple.fr"
+              taken: "déjà utilisé. Saisir une autre adresse électronique."
+            password:
+              too_short: "est trop court. Saisir un mot de passe avec au moins 8 caractères"
+              not_strong: "n’est pas assez complexe. Saisir un mot de passe plus complexe"
+            password_confirmation:
+              confirmation: ': Les deux mots de passe ne correspondent pas'
+            requested_merge_into:
+              same: "ne peut être identique à l’ancienne. Saisir une autre adresse email"
+
         instructeur:
           attributes:
-            email:
-              invalid: invalide
-              taken: déjà utilisé
-            password:
-              too_short: 'est trop court'
+            << : *error_attributes
         super_admin:
           attributes:
-            password:
-              << : *password
+            << : *error_attributes
+
         procedure:
           attributes:
             path:
@@ -430,7 +443,9 @@ fr:
               invalid: "doit posséder 13 ou 14 caractères"
             reference_avis:
               invalid: "doit posséder 13 ou 14 caractères"
+
   errors:
+    format: "Le champ « %{attribute} » %{message}"
     messages:
       saml_not_authorized: "Vous n’êtes pas autorisé à accéder à ce service."
       dossier_not_found: "Le dossier n’existe pas ou vous n’y avez pas accès."
