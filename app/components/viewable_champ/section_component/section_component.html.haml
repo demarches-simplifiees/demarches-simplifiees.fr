@@ -8,7 +8,7 @@
 
   %div{ id: section_id, 'data-expand-target': 'content' }
     - if !champs.empty?
-      = render Dossiers::ChampRowShowComponent.new(champs: champs, demande_seen_at: @demande_seen_at, profile: @profile, repetition: false)
+      = render Dossiers::ChampsRowsShowComponent.new(champs: champs, seen_at: @demande_seen_at, profile: @profile)
 
     - sections.each do |section|
       = render section

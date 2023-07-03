@@ -6,6 +6,8 @@
     @media (min-width: 48em) {
       display: flex;
     }
+
+    padding: 0.5rem 1rem;
   }
 
   .champ-label {
@@ -20,7 +22,6 @@
 
   .champ-content {
     padding: 0 0 0.5rem;
-    color: var(--text-action-high--grey);
 
     @media (min-width: 48em) {
       flex: 4;

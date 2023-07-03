@@ -1,12 +1,10 @@
-class Dossiers::ChampRowShowComponent < ApplicationComponent
-  include ChampHelper
-  include DossierHelper
-  include ApplicationHelper
+class Dossiers::ChampsRowsShowComponent < ApplicationComponent
+  attr_reader :profile
+  attr_reader :seen_at
 
-  def initialize(champs:, demande_seen_at:, profile:, repetition:)
-    @repetition = repetition
+  def initialize(champs:, profile:, seen_at:)
     @champs = champs
-    @demande_seen_at = demande_seen_at
+    @seen_at = seen_at
     @profile = profile
   end
 
@@ -22,8 +20,7 @@ class Dossiers::ChampRowShowComponent < ApplicationComponent
   end
 
   def blank_key(champ)
-    key = ".blank"
-    key += "_optional" if @profile == "usager"
+    key = ".blank_optional"
     key += "_attachment" if champ.type_de_champ.piece_justificative?
 
     key
@@ -31,15 +28,5 @@ class Dossiers::ChampRowShowComponent < ApplicationComponent
 
   def each_champ(&block)
     @champs.filter { _1.visible? && !_1.exclude_from_view? && !_1.header_section? }.each(&block)
-  end
-
-  private
-
-  def usager?
-    @profile == 'usager'
-  end
-
-  def instructeur?
-    @profile == 'instructeur'
   end
 end

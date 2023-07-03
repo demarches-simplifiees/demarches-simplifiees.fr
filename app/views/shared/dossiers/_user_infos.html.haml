@@ -1,4 +1,3 @@
-.fr-my-2w.champ-row
-  %p.champ-label Email :
-  .champ-content
-    %p= user_deleted ? "#{email} (l’usager a supprimé son compte)" : email
+= render Dossiers::RowShowComponent.new(label: 'Email', profile: @profile) do |c|
+  - c.with_value do
+    = user_deleted ? "#{email} (l’usager a supprimé son compte)" : email

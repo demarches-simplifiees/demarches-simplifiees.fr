@@ -4,26 +4,15 @@
       .fr-background-alt--grey.fr-p-2w.fr-my-3w.fr-ml-2w.champ-repetition
         %p.font-weight-bold= "#{champ.libelle} #{i + 1} :"
 
-        = render Dossiers::ChampRowShowComponent.new(champs: row, demande_seen_at: @demande_seen_at, profile: @profile, repetition: true)
+        = render Dossiers::ChampsRowsShowComponent.new(champs: row, seen_at:, profile:)
 
   - else
-    .fr-px-2w.fr-my-2w.champ-row
-      %p.champ-label= "#{champ.libelle} :"
-
+    = render Dossiers::RowShowComponent.new(label: champ.libelle, seen_at:, profile:, content_class: champ.type_champ, updated_at: updated_after_deposer?(champ) ? champ.updated_at : nil) do |c|
       - if champ.blank?
-        .champ-content.fr-text-mention--grey{ class: champ.type_champ }
-          - if usager?
-            %p
-              %em= t(blank_key(champ))
-
+        - c.blank do
+          = t(blank_key(champ))
       - else
-        .champ-content{ class: champ.type_champ }
-
-          - if updated_after_deposer?(champ)
-            %p.fr-mb-1v.fr-ml-3v.champ-updated
-              %span.fr-badge.fr-badge--sm{ class: badge_class_if_unseen(@demande_seen_at, champ.updated_at) }
-                = t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: try_format_datetime(champ.updated_at, format: :veryshort))
-
+        - c.with_value do
           - case champ.type_champ
           - when TypeDeChamp.type_champs.fetch(:carte)
             = render partial: "shared/champs/carte/show", locals: { champ: champ }
@@ -64,7 +53,7 @@
           - when TypeDeChamp.type_champs.fetch(:datetime)
             %p= champ.to_s
           - when TypeDeChamp.type_champs.fetch(:number), TypeDeChamp.type_champs.fetch(:integer_number), TypeDeChamp.type_champs.fetch(:decimal_number)
-            %p= number_with_html_delimiter(champ.to_s)
+            %p= helpers.number_with_html_delimiter(champ.to_s)
           - else
-            = format_text_value(champ.to_s.strip) # format already wrap in p
+            = helpers.format_text_value(champ.to_s.strip) # format already wrap in p
 

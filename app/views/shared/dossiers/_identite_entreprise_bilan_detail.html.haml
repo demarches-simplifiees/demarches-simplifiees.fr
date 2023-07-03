@@ -1,6 +1,5 @@
-.fr-my-2v.champ-row
-  %p.champ-label= "#{libelle} :"
-  .champ-content
+= render Dossiers::RowShowComponent.new(label: libelle) do |c|
+  - c.with_value do
     %details
       - etablissement.entreprise_bilans_bdf.each do |bilan|
         = "#{pretty_date_exercice(year_for_bilan(bilan))} :"

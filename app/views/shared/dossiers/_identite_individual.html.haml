@@ -1,17 +1,16 @@
-.fr-my-2v.champ-row
-  %p.champ-label= t('views.users.dossiers.identite.civility')
-  .champ-content
+= render Dossiers::RowShowComponent.new(label: t('views.users.dossiers.identite.civility')) do |c|
+  - c.with_value do
     %p= individual.gender
-.fr-my-2v.champ-row
-  %p.champ-label= t('views.users.dossiers.identite.first_name')
-  .champ-content
+
+= render Dossiers::RowShowComponent.new(label: t('views.users.dossiers.identite.first_name')) do |c|
+  - c.with_value do
     %p= individual.prenom
-.fr-my-2v.champ-row
-  %p.champ-label= t('views.users.dossiers.identite.last_name')
-  .champ-content
+
+= render Dossiers::RowShowComponent.new(label: t('views.users.dossiers.identite.last_name')) do |c|
+  - c.with_value do
     %p= individual.nom
+
 - if individual.birthdate.present?
-  .fr-my-2v.champ-row
-    %p.champ-label= t('views.users.dossiers.identite.birthdate')
-    .champ-content
+  = render Dossiers::RowShowComponent.new(label: t('views.users.dossiers.identite.birthdate')) do |c|
+    - c.with_value do
       %p= try_format_date(individual.birthdate)
