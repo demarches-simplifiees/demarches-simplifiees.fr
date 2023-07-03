@@ -71,4 +71,12 @@ class Champs::DropDownListChamp < Champ
   def value_other
     other_value_present? ? value : ""
   end
+
+  def in?(options)
+    options.include?(value)
+  end
+
+  def remove_option(options)
+    update_column(:value, nil)
+  end
 end
