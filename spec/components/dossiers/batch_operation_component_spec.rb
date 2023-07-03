@@ -14,13 +14,15 @@ RSpec.describe Dossiers::BatchOperationComponent, type: :component do
   subject { render_inline(component).to_html }
   context 'statut traite' do
     let(:statut) { 'traites' }
-    it { is_expected.to have_selector('button') }
+    it { is_expected.to have_button('Archiver les dossiers sélectionnés', disabled: true) }
   end
 
   subject { render_inline(component).to_html }
   context 'statut suivis' do
     let(:statut) { 'suivis' }
-    it { is_expected.to have_selector('button') }
+    it { is_expected.to have_button('Actions multiples', disabled: true) }
+    it { is_expected.to have_button('Passer en instruction les dossiers sélectionnés', disabled: true) }
+    it { is_expected.to have_link('Accepter les dossiers sélectionnés') }
   end
 
   context 'statut tous' do

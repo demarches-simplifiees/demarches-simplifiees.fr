@@ -2,3 +2,4 @@ fr:
   operations:
     archiver: 'Archiver les dossiers sélectionnés'
     passer_en_instruction: 'Passer en instruction les dossiers sélectionnés'
+    accepter: 'Accepter les dossiers sélectionnés'

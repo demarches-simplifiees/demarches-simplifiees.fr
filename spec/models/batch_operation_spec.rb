@@ -2,14 +2,12 @@ describe BatchOperation, type: :model do
   describe 'association' do
     it { is_expected.to have_many(:dossiers) }
     it { is_expected.to belong_to(:instructeur) }
-    it { is_expected.to have_and_belong_to_many(:groupe_instructeurs) }
+    it { is_expected.to have_many(:dossier_operations) }
   end
 
   describe 'attributes' do
     subject { BatchOperation.new }
     it { expect(subject.payload).to eq({}) }
-    it { expect(subject.failed_dossier_ids).to eq([]) }
-    it { expect(subject.success_dossier_ids).to eq([]) }
     it { expect(subject.run_at).to eq(nil) }
     it { expect(subject.finished_at).to eq(nil) }
     it { expect(subject.operation).to eq(nil) }
@@ -56,17 +54,20 @@ describe BatchOperation, type: :model do
     context 'when it succeed' do
       it 'pushes dossier_job id to batch_operation.success_dossier_ids' do
         expect { batch_operation.track_processed_dossier(true, dossier) }
-          .to change { batch_operation.reload.success_dossier_ids }
+          .to change { batch_operation.dossier_operations.success.pluck(:dossier_id) }
           .from([])
           .to([dossier.id])
       end
     end
 
     context 'when it succeed after a failure' do
-      let(:batch_operation) { create(:batch_operation, operation: :archiver, instructeur: instructeur, dossiers: [dossier], failed_dossier_ids: [dossier.id]) }
+      let(:batch_operation) { create(:batch_operation, operation: :archiver, instructeur: instructeur, dossiers: [dossier]) }
+      before do
+        batch_operation.track_processed_dossier(false, dossier)
+      end
       it 'remove former dossier id from failed_dossier_ids' do
         expect { batch_operation.track_processed_dossier(true, dossier) }
-          .to change { batch_operation.reload.failed_dossier_ids }
+          .to change { batch_operation.dossier_operations.error.pluck(:dossier_id) }
           .from([dossier.id])
           .to([])
       end
@@ -75,7 +76,7 @@ describe BatchOperation, type: :model do
     context 'when it fails' do
       it 'pushes dossier_job id to batch_operation.failed_dossier_ids' do
         expect { batch_operation.track_processed_dossier(false, dossier) }
-          .to change { batch_operation.reload.failed_dossier_ids }
+          .to change { batch_operation.dossier_operations.error.pluck(:dossier_id) }
           .from([])
           .to([dossier.id])
       end
@@ -168,6 +169,36 @@ describe BatchOperation, type: :model do
 
     context 'when dossier is not in state en construction' do
       let(:dossier) { create(:dossier, :accepte, :with_individual, procedure: procedure) }
+
+      it 'does not enqueue any job' do
+        expect(batch_operation.dossiers_safe_scope).not_to include(dossier)
+      end
+    end
+  end
+
+  describe '#dossiers_safe_scope (with accepter)' do
+    let(:instructeur) { create(:instructeur) }
+    let(:procedure) { create(:simple_procedure, instructeurs: [instructeur]) }
+    let(:batch_operation) { create(:batch_operation, operation: :accepter, instructeur: instructeur, dossiers: [dossier]) }
+
+    context 'when dossier is valid' do
+      let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
+
+      it 'find dosssier' do
+        expect(batch_operation.dossiers_safe_scope).to include(dossier)
+      end
+    end
+
+    context 'when dossier is already accepte' do
+      let(:dossier) { create(:dossier, :accepte, :with_individual, archived: true, procedure: procedure) }
+
+      it 'skips dossier is already en instruction' do
+        expect(batch_operation.dossiers_safe_scope).not_to include(dossier)
+      end
+    end
+
+    context 'when dossier is not in state en instruction' do
+      let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
 
       it 'does not enqueue any job' do
         expect(batch_operation.dossiers_safe_scope).not_to include(dossier)

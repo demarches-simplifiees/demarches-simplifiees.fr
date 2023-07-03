@@ -52,11 +52,6 @@
     display: inline-block;
   }
 
-  .explication-onglet {
-    margin-bottom: 3 * $default-spacer;
-    text-align: center;
-  }
-
   [data-react-component-value^="ComboMultiple"] {
     margin-bottom: $default-fields-spacer;
 
