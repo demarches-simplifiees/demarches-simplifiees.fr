@@ -4,10 +4,10 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
   let(:instructeur) { create(:instructeur) }
   let(:procedure) { create(:procedure, :published) }
   let!(:gi_1_1) { procedure.defaut_groupe_instructeur }
-  let!(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }
+  let!(:gi_1_2) { create(:groupe_instructeur, label: 'groupe instructeur 2', procedure: procedure) }
 
   let(:procedure2) { create(:procedure, :published) }
-  let!(:gi_2_2) { procedure2.groupe_instructeurs.create(label: 'groupe instructeur 2 2') }
+  let!(:gi_2_2) { create(:groupe_instructeur, label: 'groupe instructeur 2 2', procedure: procedure2) }
 
   before do
     gi_1_2.instructeurs << instructeur

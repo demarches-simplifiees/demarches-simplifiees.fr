@@ -1193,7 +1193,8 @@ describe API::V2::GraphqlController do
         end
 
         context "should changer groupe instructeur" do
-          let!(:new_groupe_instructeur) { procedure.groupe_instructeurs.create(label: 'new groupe instructeur') }
+          let!(:new_groupe_instructeur) { create(:groupe_instructeur, label: 'new groupe instructeur', procedure: procedure) }
+
           let(:query) do
             "mutation {
             dossierChangerGroupeInstructeur(input: {
