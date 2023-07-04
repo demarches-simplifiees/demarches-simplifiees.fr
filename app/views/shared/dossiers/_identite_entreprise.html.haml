@@ -1,106 +1,100 @@
+- if etablissement.as_degraded_mode?
+  .fr-alert.fr-alert--warning.fr-alert--sm.fr-mb-2w
+    %p
+      LʼINSEE est indisponible, les informations sur lʼentreprise arriveront dʼici quelques heures.
+      - if profile == "instructeur"
+        %p
+          Il nʼest pas possible dʼaccepter ou de refuser un dossier sans cette étape.
+
 .fr-background-alt--grey.fr-p-3v
   - if etablissement.as_degraded_mode?
-    .fr-alert.fr-alert--warning.fr-alert--sm
-      %p
-        LʼINSEE est indisponible, les informations sur lʼentreprise arriveront dʼici quelques heures.
-        - if profile == "instructeur"
-          %p
-            Il nʼest pas possible dʼaccepter ou de refuser un dossier sans cette étape.
-    .fr-my-2v
-      %p.champ-label SIRET :
-      .champ-content
-        %p= etablissement.siret
+    = render Dossiers::RowShowComponent.new(label: "SIRET") do |c|
+      - c.with_value do
+        %p #{pretty_siret(etablissement.siret)} #{ render Dsfr::CopyButtonComponent.new(text: etablissement.siret, title: "Copier le siret dans le presse-papier", success: "Le siret a été copié dans le presse-papier") }
+
   - else
     - if etablissement.diffusable_commercialement == false && profile != 'instructeur'
-      .fr-my-2v
-        .champ-content
+      = render Dossiers::RowShowComponent.new(label: nil) do |c|
+        - c.with_value do
           %p= t('warning_for_private_info', scope: 'views.shared.dossiers.identite_entreprise', siret: pretty_siret(etablissement.siret))
     - else
-      .fr-my-2v
-        %p.champ-label Dénomination :
-        .champ-content
+      = render Dossiers::RowShowComponent.new(label: "Dénomination") do |c|
+        - c.with_value do
           %p= raison_sociale_or_name(etablissement)
-      .fr-my-2v
-        %p.champ-label SIRET :
-        .champ-content
+
+      = render Dossiers::RowShowComponent.new(label: "SIRET") do |c|
+        - c.with_value do
           %p #{pretty_siret(etablissement.siret)} #{ render Dsfr::CopyButtonComponent.new(text: etablissement.siret, title: "Copier le siret dans le presse-papier", success: "Le siret a été copié dans le presse-papier") }
 
 
       - unless local_assigns[:short_identity]
         - if etablissement.siret != etablissement.entreprise.siret_siege_social
-          .fr-my-2v
-            %p.champ-label SIRET du siège social:
-            .champ-content
-              %p= etablissement.entreprise.siret_siege_social
-        .fr-my-2v
-          %p.champ-label Forme juridique :
-          .champ-content
-            %p= sanitize(etablissement.entreprise.forme_juridique)
-        .fr-my-2v
-          %p.champ-label Libellé NAF :
-          .champ-content
-            %p= etablissement.libelle_naf
-        .fr-my-2v
-          %p.champ-label Code NAF :
-          .champ-content
-            %p= etablissement.naf
-        .fr-my-2v
-          %p.champ-label Date de création :
-          .champ-content
-            %p
-            = try_format_date(etablissement.entreprise.date_creation)
+          = render Dossiers::RowShowComponent.new(label: "SIRET du siège social") do |c|
+            - c.with_value do
+              %p
+                = pretty_siret(etablissement.entreprise.siret_siege_social)
+                = render Dsfr::CopyButtonComponent.new(text: etablissement.entreprise.siret_siege_social, title: "Copier le siret dans le presse-papier", success: "Le siret a été copié dans le presse-papier")
 
-            - if etablissement.entreprise_etat_administratif.present?
-              %span.label= humanized_entreprise_etat_administratif(etablissement)
+        = render Dossiers::RowShowComponent.new(label: "Forme juridique") do |c|
+          - c.with_value do
+            %p= sanitize(etablissement.entreprise.forme_juridique)
+
+        = render Dossiers::RowShowComponent.new(label: "Libellé NAF") do |c|
+          - c.with_value do
+            %p= etablissement.libelle_naf
+
+        = render Dossiers::RowShowComponent.new(label: "Libellé NAF") do |c|
+          - c.with_value do
+            %p= etablissement.naf
+
+        = render Dossiers::RowShowComponent.new(label: "Date de création") do |c|
+          - c.with_value do
+            %p
+              = try_format_date(etablissement.entreprise.date_creation)
+
+              - if etablissement.entreprise_etat_administratif.present?
+                %span.fr-badge.fr-badge--sm{ class: entreprise_etat_administratif_badge_class(etablissement) }
+                  = humanized_entreprise_etat_administratif(etablissement)
 
         - if profile == 'instructeur'
-          .fr-my-2v
-            %p.champ-label
-              Effectif mensuel
-              = try_format_mois_effectif(etablissement)
-              (URSSAF) :
-            .champ-content
+          = render Dossiers::RowShowComponent.new(label: "Effectif mensuel #{try_format_mois_effectif(etablissement)} (URSSAF)") do |c|
+            - c.with_value do
               %p= etablissement.entreprise_effectif_mensuel
-          .fr-my-2v
-            %p.champ-label
-              Effectif moyen annuel
-              = etablissement.entreprise_effectif_annuel_annee
-              (URSSAF) :
-            .champ-content
-              %p= etablissement.entreprise_effectif_annuel
-        .fr-my-2v
-          %p.champ-label Effectif de l'organisation (INSEE) :
-          .champ-content
-            %p
-            = effectif(etablissement)
-        .fr-my-2v
-          %p.champ-label Numéro de TVA intracommunautaire :
-          .champ-content
-            %p= etablissement.entreprise.numero_tva_intracommunautaire
-        .fr-my-2v
-          %p.champ-label Adresse :
-          .champ-content
-            %p
-            - etablissement.adresse.split("\n").each do |line|
-              = line
-              %br
-        .fr-my-2v
-          %p.champ-label Capital social :
-          .champ-content
-            %p= pretty_currency(etablissement.entreprise.capital_social)
-        .fr-my-2v
-          %p.champ-label Chiffre d’affaires :
-          .champ-content
-            %p
-            - if profile == 'instructeur'
-              %details
-                - etablissement.exercices.each_with_index do |exercice, index|
-                  = "#{exercice.date_fin_exercice.year} : "
-                  = pretty_currency(exercice.ca)
-                  %br
-            - elsif etablissement.exercices.present?
-              = t('activemodel.models.exercices_summary', count: etablissement.exercices.count)
 
+          = render Dossiers::RowShowComponent.new(label: "Effectif moyen annuel #{etablissement.entreprise_effectif_annuel_annee} (URSSAF)") do |c|
+            - c.with_value do
+              %p= etablissement.entreprise_effectif_annuel
+
+          = render Dossiers::RowShowComponent.new(label: "Effectif de l’organisation (INSEE)") do |c|
+            - c.with_value do
+              %p= effectif(etablissement)
+
+          = render Dossiers::RowShowComponent.new(label: "Numéro de TVA intracommunautaire") do |c|
+            - c.with_value do
+              %p= etablissement.entreprise.numero_tva_intracommunautaire
+
+          = render Dossiers::RowShowComponent.new(label: "Adresse") do |c|
+            - c.with_value do
+              %p
+                - etablissement.adresse.split("\n").compact_blank.each do |line|
+                  = line
+                  %br
+
+          = render Dossiers::RowShowComponent.new(label: "Capital social") do |c|
+            - c.with_value do
+              %p= pretty_currency(etablissement.entreprise.capital_social)
+
+        - if etablissement.exercices.any?
+          = render Dossiers::RowShowComponent.new(label: "Chiffre d’affaires") do |c|
+            - c.with_value do
+              - if profile == 'instructeur'
+                %details
+                  - etablissement.exercices.each_with_index do |exercice, index|
+                    = "#{exercice.date_fin_exercice.year} : "
+                    = pretty_currency(exercice.ca)
+                    %br
+              - elsif etablissement.exercices.present?
+                = t('activemodel.models.exercices_summary', count: etablissement.exercices.count)
 
         - if etablissement.entreprise_bilans_bdf.present?
           - if profile == 'instructeur'
@@ -115,83 +109,73 @@
 
             = render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
               locals: { libelle: 'Besoin en fonds de roulement', key: 'besoin_en_fonds_de_roulement', etablissement: etablissement }
-            .fr-my-2v
-              %p.champ-label
-                Chiffres financiers clés (Banque de France)
-                = "en #{pretty_currency_unit(etablissement.entreprise_bilans_bdf_monnaie)} :"
 
-              - if controller.is_a?(Instructeurs::AvisController)
-                .champ-content
+            = render Dossiers::RowShowComponent.new(label: "Chiffres financiers clés (Banque de France) en #{pretty_currency_unit(etablissement.entreprise_bilans_bdf_monnaie)}") do |c|
+              - c.with_value do
+                - if controller.is_a?(Instructeurs::AvisController)
                   %p
-                  Les consulter
-                  = link_to "au format csv", bilans_bdf_instructeur_avis_path(@avis, format: 'csv')
-                  ,
-                  = link_to "au format xlsx", bilans_bdf_instructeur_avis_path(@avis, format: 'xlsx')
-                  ou
-                  = link_to "au format ods", bilans_bdf_instructeur_avis_path(@avis, format: 'ods')
-              - else
-                .champ-content
+                    Les consulter
+                    = link_to "au format csv", bilans_bdf_instructeur_avis_path(@avis, format: 'csv')
+                    ,
+                    = link_to "au format xlsx", bilans_bdf_instructeur_avis_path(@avis, format: 'xlsx')
+                    ou
+                    = link_to "au format ods", bilans_bdf_instructeur_avis_path(@avis, format: 'ods')
+                - else
                   %p
-                  Les consulter
-                  = link_to "au format csv", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'csv')
-                  ,
-                  = link_to "au format xlsx", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'xlsx')
-                  ou
-                  = link_to "au format ods", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'ods')
+                    Les consulter
+                    = link_to "au format csv", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'csv')
+                    ,
+                    = link_to "au format xlsx", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'xlsx')
+                    ou
+                    = link_to "au format ods", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'ods')
           - else
-            .fr-my-2v
-              %p.champ-label
-                Bilans Banque de France :
-              .champ-content
+            = render Dossiers::RowShowComponent.new(label: "Bilans Banque de France") do |c|
+              - c.with_value do
                 %p Les 3 derniers bilans connus de votre entreprise par la Banque de France ont été joints à votre dossier.
+
         - if etablissement.entreprise_attestation_sociale.attached?
-          .fr-my-2v
-            %p.champ-label Attestation sociale :
-            - if profile == 'instructeur'
-              .champ-content
-                %p= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_sociale)
-            - else
-              .champ-content
+          = render Dossiers::RowShowComponent.new(label: "Attestation sociale") do |c|
+            - c.with_value do
+              - if profile == 'instructeur'
+                %p= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_sociale), **external_link_attributes
+              - else
                 %p Une attestation de vigilance délivrée par l'ACOSS a été jointe à votre dossier.
 
         - if etablissement.entreprise_attestation_fiscale.attached?
-          .fr-my-2v
-            %p.champ-label Attestation fiscale :
-            - if profile == 'instructeur'
-              .champ-content
-                %p= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_fiscale)
-            - else
-              .champ-content
+          = render Dossiers::RowShowComponent.new(label: "Attestation fiscale") do |c|
+            - c.with_value do
+              - if profile == 'instructeur'
+                %p= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_fiscale), **external_link_attributes
+              - else
                 %p Une attestation fiscale délivrée par l'URSSAF a été jointe à votre dossier.
 
         - if etablissement.association?
-          .fr-my-2v
-            %p.champ-label Numéro RNA :
-            .champ-content
+          = render Dossiers::RowShowComponent.new(label: "Numéro RNA") do |c|
+            - c.with_value do
               %p= etablissement.association_rna
-          .fr-my-2v
-            %p.champ-label Titre :
-            .champ-content
+
+          = render Dossiers::RowShowComponent.new(label: "Titre") do |c|
+            - c.with_value do
               %p= etablissement.association_titre
-          .fr-my-2v
-            %p.champ-label Objet :
-            .champ-content
+
+          = render Dossiers::RowShowComponent.new(label: "Objet") do |c|
+            - c.with_value do
               %p= etablissement.association_objet
-          .fr-my-2v
-            %p.champ-label Date de création :
-            .champ-content
+
+          = render Dossiers::RowShowComponent.new(label: "Date de création") do |c|
+            - c.with_value do
               %p= try_format_date(etablissement.association_date_creation)
-          .fr-my-2v
-            %p.champ-label Date de publication :
-            .champ-content
+
+          = render Dossiers::RowShowComponent.new(label: "Date de publication") do |c|
+            - c.with_value do
               %p= try_format_date(etablissement.association_date_publication)
-          .fr-my-2v
-            %p.champ-label Date de déclaration :
-            .champ-content
+
+          = render Dossiers::RowShowComponent.new(label: "Date de déclaration") do |c|
+            - c.with_value do
               %p= try_format_date(etablissement.association_date_declaration)
 
   - unless local_assigns[:short_identity]
-    %p
+    %p.text-center
       = link_to "➡ Autres informations sur l’organisme sur « annuaire-entreprises.data.gouv.fr » (ex: fiche d’immatriculation RNCS)",
-      annuaire_link(etablissement.siret),
-      target: "_blank"
+        annuaire_link(etablissement.siret),
+        **external_link_attributes

@@ -17,13 +17,6 @@ module DossierHelper
     end
   end
 
-  def badge_class_if_unseen(seen_at, updated_at)
-    return if updated_at.blank? || seen_at.blank?
-    return if seen_at > updated_at
-
-    "fr-badge--new"
-  end
-
   def url_for_dossier(dossier)
     if dossier.brouillon?
       brouillon_dossier_path(dossier)
