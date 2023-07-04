@@ -84,6 +84,7 @@ describe "procedure filters" do
     find("input#value[type=date]", visible: true)
     fill_in "Valeur", with: "10/10/2010"
     click_button "Ajouter le filtre"
+    expect(page).to have_no_css("select#field", visible: true)
 
     # use enum filter
     click_on 'Sélectionner un filtre'
@@ -134,6 +135,7 @@ describe "procedure filters" do
     select column_name, from: "Colonne"
     fill_in "Valeur", with: filter_value
     click_button "Ajouter le filtre"
+    expect(page).to have_no_css("select#field", visible: true)
   end
 
   def add_column(column_name)

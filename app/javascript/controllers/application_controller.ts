@@ -4,7 +4,7 @@ import debounce from 'debounce';
 export type Detail = Record<string, unknown>;
 
 export class ApplicationController extends Controller {
-  #debounced = new Map<() => void, () => void>();
+  #debounced = new Map<() => void, ReturnType<typeof debounce>>();
 
   protected debounce(fn: () => void, interval: number): void {
     this.globalDispatch('debounced:added');
@@ -24,6 +24,10 @@ export class ApplicationController extends Controller {
       this.#debounced.set(fn, debounced);
     }
     debounced();
+  }
+
+  protected cancelDebounce(fn: () => void) {
+    this.#debounced.get(fn)?.clear();
   }
 
   protected globalDispatch<T = Detail>(type: string, detail?: T): void {

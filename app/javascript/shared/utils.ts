@@ -290,6 +290,15 @@ export function isCheckboxOrRadioInputElement(
   );
 }
 
+export function isDateInputElement(
+  element: HTMLElement & { type?: string }
+): element is HTMLInputElement {
+  return (
+    element.tagName == 'INPUT' &&
+    (element.type == 'date' || element.type == 'datetime-local')
+  );
+}
+
 export function isTextInputElement(
   element: HTMLElement & { type?: string }
 ): element is HTMLInputElement {

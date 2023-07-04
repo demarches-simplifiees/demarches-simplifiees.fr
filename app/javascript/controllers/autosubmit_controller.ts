@@ -1,32 +1,79 @@
+import {
+  isSelectElement,
+  isCheckboxOrRadioInputElement,
+  isTextInputElement,
+  isDateInputElement
+} from '@utils';
 import { ApplicationController } from './application_controller';
-import { show, hide } from '@utils';
-const AUTOSUBMIT_DEBOUNCE_DELAY = 5000;
+
+const AUTOSUBMIT_DEBOUNCE_DELAY = 500;
+const AUTOSUBMIT_DATE_DEBOUNCE_DELAY = 5000;
 
 export class AutosubmitController extends ApplicationController {
-  static targets = ['form', 'spinner'];
+  static targets = ['submitter'];
 
-  declare readonly formTarget: HTMLFormElement;
-  declare readonly spinnerTarget: HTMLElement;
-  declare readonly hasSpinnerTarget: boolean;
+  declare readonly submitterTarget: HTMLButtonElement | HTMLInputElement;
+  declare readonly hasSubmitterTarget: boolean;
 
-  submit() {
-    this.formTarget.requestSubmit();
-  }
-
-  debouncedSubmit() {
-    this.debounce(this.submit, AUTOSUBMIT_DEBOUNCE_DELAY);
-  }
+  #dateTimeChangedInputs = new WeakSet<HTMLInputElement>();
 
   connect() {
-    this.onGlobal('turbo:submit-start', () => {
-      if (this.hasSpinnerTarget) {
-        show(this.spinnerTarget);
+    this.on('input', (event) => this.onInput(event));
+    this.on('change', (event) => this.onChange(event));
+    this.on('blur', (event) => this.onBlur(event));
+  }
+
+  private onChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (target.disabled || target.hasAttribute('data-no-autosubmit')) return;
+
+    if (
+      isSelectElement(target) ||
+      isCheckboxOrRadioInputElement(target) ||
+      isTextInputElement(target)
+    ) {
+      if (isDateInputElement(target)) {
+        if (target.value.trim() == '' || !isNaN(Date.parse(target.value))) {
+          this.#dateTimeChangedInputs.add(target);
+          this.debounce(this.submit, AUTOSUBMIT_DATE_DEBOUNCE_DELAY);
+        } else {
+          this.#dateTimeChangedInputs.delete(target);
+          this.cancelDebounce(this.submit);
+        }
+      } else {
+        this.cancelDebounce(this.submit);
+        this.submit();
       }
-    });
-    this.onGlobal('turbo:submit-end', () => {
-      if (this.hasSpinnerTarget) {
-        hide(this.spinnerTarget);
-      }
-    });
+    }
+  }
+
+  private onInput(event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (target.disabled || target.hasAttribute('data-no-autosubmit')) return;
+
+    if (!isDateInputElement(target) && isTextInputElement(target)) {
+      this.debounce(this.submit, AUTOSUBMIT_DEBOUNCE_DELAY);
+    }
+  }
+
+  private onBlur(event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (target.disabled || target.hasAttribute('data-no-autosubmit')) return;
+
+    if (isDateInputElement(target)) {
+      Promise.resolve().then(() => {
+        if (this.#dateTimeChangedInputs.has(target)) {
+          this.cancelDebounce(this.submit);
+          this.submit();
+        }
+      });
+    }
+  }
+
+  private submit() {
+    const submitter = this.hasSubmitterTarget ? this.submitterTarget : null;
+    const form =
+      submitter?.form ?? this.element.closest<HTMLFormElement>('form');
+    form?.requestSubmit(submitter);
   }
 }

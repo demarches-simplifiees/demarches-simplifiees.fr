@@ -1,6 +1,6 @@
 - content_for :results do
   .main-filter-header.fr-my-3w
-    = form_with(url: all_admin_procedures_path, method: :get, html: { 'data-autosubmit-target': 'form', 'data-turbo-frame': 'procedures', role: 'search', class: 'search' }) do |f|
+    = form_with(url: all_admin_procedures_path, method: :get, data: { turbo_frame: 'procedures' }, html: { role: 'search', class: 'search' }) do |f|
       - @filter.zone_ids&.each do |zone_id|
         = hidden_field_tag 'zone_ids[]', zone_id
       - @filter.statuses&.each do |status|
@@ -16,7 +16,7 @@
     %table#all-demarches
       %caption
         = "#{@procedures.total_count} démarches"
-        %span.hidden.fr-icon-ball-pen-fill{ 'aria-hidden': 'true', 'data-autosubmit-target': 'spinner' }
+        %span.hidden.fr-icon-ball-pen-fill{ 'aria-hidden': 'true', 'data-turbo-target': 'spinner' }
       - if @filter.libelle
         .selected-query.fr-mb-2w
           = link_to @filter.libelle, all_admin_procedures_path(@filter.without(:libelle)), class: 'fr-tag fr-tag--dismiss fr-mb-1w'

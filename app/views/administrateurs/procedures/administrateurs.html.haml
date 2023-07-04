@@ -1,6 +1,6 @@
 - content_for :results do
   .main-filter-header.fr-my-3w
-    = form_with(url: administrateurs_admin_procedures_path, method: :get, html: { 'data-autosubmit-target': 'form', 'data-turbo-frame': 'procedures', role: 'search' }) do |f|
+    = form_with(url: administrateurs_admin_procedures_path, method: :get, data: { turbo_frame: 'procedures' }, html: { role: 'search' }) do |f|
       - @filter.zone_ids&.each do |zone_id|
         = hidden_field_tag 'zone_ids[]', zone_id
       - @filter.statuses&.each do |status|
@@ -14,7 +14,7 @@
     %table#all-admins
       %caption
         = "#{@admins.total_count} administrateurs"
-        %span.hidden.fr-icon-ball-pen-fill{ 'aria-hidden': 'true', 'data-autosubmit-target': 'spinner' }
+        %span.hidden.fr-icon-ball-pen-fill{ 'aria-hidden': 'true', 'data-turbo-target': 'spinner' }
       - if @filter.email
         .selected-email.fr-mb-2w
           = link_to @filter.email, administrateurs_admin_procedures_path(@filter.without(:email)), class: 'fr-tag fr-tag--dismiss fr-mb-1w'
