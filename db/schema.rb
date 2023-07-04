@@ -798,6 +798,12 @@ ActiveRecord::Schema.define(version: 2023_04_13_171421) do
     t.index ["target", "active_storage_blob_id"], name: "index_s3_synchronizations_on_target_and_active_storage_blob_id", unique: true
   end
 
+  create_table "safe_mailers", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.string "forced_delivery_method"
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "services", force: :cascade do |t|
     t.bigint "administrateur_id"
     t.text "adresse"
