@@ -23,7 +23,7 @@
           %h2= t(".have_a_procedure")
           %p.fr-h5= t(".fill_procedure")
 
-          = link_to t(".how_to_find_procedure"), COMMENT_TROUVER_MA_DEMARCHE_URL, class: "fr-btn fr-btn--lg fr-mr-1w fr-mb-2w", title: new_tab_suffix(t(".how_to_find_procedure")), **external_link_attributes
+          = link_to t(".how_to_find_procedure"), t("links.common.faq.comment_trouver_ma_demarche_url"), class: "fr-btn fr-btn--lg fr-mr-1w fr-mb-2w", title: new_tab_suffix(t(".how_to_find_procedure")), **external_link_attributes
           = link_to t("views.users.sessions.new.connection"), new_user_session_path, class: "fr-btn fr-btn--secondary fr-btn--lg"
 
   - cache [I18n.locale, "numbers-panel"], expires_in: 3.hours do
@@ -51,7 +51,7 @@
           %h2.cta-panel-title= t(".question")
           %p.cta-panel-explanation= t(".answer_in_faq")
         %div
-          = link_to t(".online_help"), FAQ_URL, class: "fr-btn fr-btn--lg", title: new_tab_suffix(t(".online_help")), **external_link_attributes
+          = link_to t(".online_help"), t("links.common.faq.url"), class: "fr-btn fr-btn--lg", title: new_tab_suffix(t(".online_help")), **external_link_attributes
         -#   We temporarily disable the link to the contact page on the homepage
         -#   %p.cta-panel-explanation Notre équipe est disponible pour vous renseigner et vous aider
         -# %div
