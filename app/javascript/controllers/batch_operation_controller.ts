@@ -5,7 +5,7 @@ import invariant from 'tiny-invariant';
 export class BatchOperationController extends ApplicationController {
   static targets = ['menu', 'input'];
 
-  declare readonly menuTarget: HTMLButtonElement;
+  declare readonly menuTargets: HTMLButtonElement[];
   declare readonly hasMenuTarget: boolean;
   declare readonly inputTargets: HTMLInputElement[];
 
@@ -78,16 +78,17 @@ export class BatchOperationController extends ApplicationController {
         switchButton(button, available);
         return available;
       });
+
       if (this.hasMenuTarget) {
         if (available.length) {
-          enable(this.menuTarget);
+          this.menuTargets.forEach((e) => enable(e));
         } else {
-          disable(this.menuTarget);
+          this.menuTargets.forEach((e) => disable(e));
         }
       }
     } else {
       if (this.hasMenuTarget) {
-        disable(this.menuTarget);
+        this.menuTargets.forEach((e) => disable(e));
       }
       buttons.forEach((button) => switchButton(button, false));
     }

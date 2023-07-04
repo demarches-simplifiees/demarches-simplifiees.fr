@@ -1,5 +1,5 @@
 - if opt.keys.include?(:instruction)
-  = render Dropdown::MenuComponent.new(wrapper: :div, wrapper_options: { data: {controller: 'menu-button', popover: 'true', operation: opt[:operation]} }, menu_options: { id: "dropdown_batch" }, button_options: { class: "fr-btn fr-btn--sm fr-ml-1w"}, role: :region ) do |menu|
+  = render Dropdown::MenuComponent.new(wrapper: :div, wrapper_options: { data: {controller: 'menu-button', popover: 'true', operation: opt[:operation]} }, menu_options: { id: "dropdown_batch" }, button_options: { disabled: true, data: { batch_operation_target: "menu" }, class: "fr-btn fr-btn--sm fr-ml-1w"}, role: :region ) do |menu|
     - menu.with_button_inner_html do
       = t(".labels.instruction")
 
