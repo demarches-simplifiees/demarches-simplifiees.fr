@@ -12,7 +12,7 @@
     .fr-container--fluid{ 'data-turbo': 'true', 'data-controller': 'autosubmit' }
       .fr-grid-row.fr-grid-row--gutters
         .fr-col-3
-          = form_with(url: all_admin_procedures_path, method: :get, html: {'data-autosubmit-target': 'form'}) do |f|
+          = form_with(url: all_admin_procedures_path, method: :get, html: { 'data-autosubmit-target': 'form', 'data-turbo-frame': 'procedures' }) do |f|
 
             %fieldset.sidebar-filter
               %legend
@@ -64,6 +64,6 @@
                         = b.check_box(checked: @filter.status_filtered?(b.value), 'data-action': 'autosubmit#submit')
                         = b.label(class: 'fr-label') { t b.text, scope: 'activerecord.attributes.procedure.aasm_state' }
 
-        .fr-col-9
+        %turbo-frame#procedures.fr-col-9{ 'data-turbo-action': 'advance' }
           = yield(:results)
 = render template: 'layouts/application'
