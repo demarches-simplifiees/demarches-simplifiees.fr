@@ -805,7 +805,7 @@ describe Instructeurs::DossiersController, type: :controller do
         expect(champ_multiple_drop_down_list.value).to eq('["un", "deux"]')
         expect(champ_linked_drop_down_list.primary_value).to eq('primary')
         expect(champ_linked_drop_down_list.secondary_value).to eq('secondary')
-        expect(champ_datetime.value).to eq('21/12/2019 13:17')
+        expect(champ_datetime.value).to eq('2019-12-21T13:17:00+01:00')
         expect(champ_repetition.champs.first.value).to eq('text')
         expect(dossier.reload.last_champ_private_updated_at).to eq(now)
         expect(response).to redirect_to(annotations_privees_instructeur_dossier_path(dossier.procedure, dossier))

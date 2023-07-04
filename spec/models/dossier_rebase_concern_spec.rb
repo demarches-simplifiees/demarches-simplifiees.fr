@@ -273,7 +273,7 @@ describe Dossier do
       })
       procedure.draft_revision.remove_type_de_champ(yes_no_type_de_champ.stable_id)
 
-      datetime_champ.update(value: Date.today.to_s)
+      datetime_champ.update(value: Time.zone.now.to_s)
       text_champ.update(value: 'bonjour')
       # Add two rows then remove previous to last row in order to create a "hole" in the sequence
       repetition_champ.add_row(repetition_champ.dossier.revision)
