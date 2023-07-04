@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_18_113820) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_18_113920) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+  enable_extension "postgis"
   enable_extension "unaccent"
 
   create_table "action_text_rich_texts", force: :cascade do |t|
