@@ -40,8 +40,11 @@ export class BatchOperationController extends ApplicationController {
           disable(this.menuTarget);
         }
       }
-    } else if (this.hasMenuTarget) {
-      disable(this.menuTarget);
+    } else {
+      if (this.hasMenuTarget) {
+        disable(this.menuTarget);
+      }
+      buttons.forEach((button) => switchButton(button, false));
     }
   }
 }

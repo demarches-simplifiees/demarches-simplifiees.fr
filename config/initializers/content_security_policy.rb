@@ -22,6 +22,7 @@ Rails.application.config.content_security_policy do |policy|
 
   connect_whitelist = ["wss://*.crisp.chat", "*.crisp.chat", "app.franceconnect.gouv.fr", "openmaptiles.geo.data.gouv.fr", "openmaptiles.github.io", "tiles.geo.api.gouv.fr", "wxs.ign.fr"]
   connect_whitelist << ENV.fetch('APP_HOST')
+  connect_whitelist << "*.amazonaws.com" if Rails.configuration.active_storage.service == :amazon
   connect_whitelist += [URI(ENV["SENTRY_DSN_JS"]).host, URI(ENV["SENTRY_DSN_RAILS"]).host].compact.uniq
   connect_whitelist << URI(DS_PROXY_URL).host if DS_PROXY_URL.present?
   connect_whitelist << URI(API_ADRESSE_URL).host if API_ADRESSE_URL.present?

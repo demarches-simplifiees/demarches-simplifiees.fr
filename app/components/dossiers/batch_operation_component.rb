@@ -13,7 +13,7 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
   def operations_for_dossier(dossier)
     case dossier.state
     when Dossier.states.fetch(:en_construction)
-      [BatchOperation.operations.fetch(:passer_en_instruction)]
+      [BatchOperation.operations.fetch(:passer_en_instruction), BatchOperation.operations.fetch(:follow)]
     when Dossier.states.fetch(:en_instruction)
       [BatchOperation.operations.fetch(:accepter)]
     when Dossier.states.fetch(:accepte), Dossier.states.fetch(:refuse), Dossier.states.fetch(:sans_suite)
