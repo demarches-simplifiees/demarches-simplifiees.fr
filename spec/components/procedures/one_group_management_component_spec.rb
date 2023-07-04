@@ -23,7 +23,7 @@ describe Procedure::OneGroupeManagementComponent, type: :component do
         procedure.reload
         subject
       end
-      it { expect(page).to have_text('à configurer') }
+      it { expect(page).to have_text('règle invalide') }
     end
   end
 end

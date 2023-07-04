@@ -393,6 +393,10 @@ module Administrateurs
         procedure.groupe_instructeurs
       end
 
+      if params[:filter] == '1'
+        groupes = Kaminari.paginate_array(groupes.filter(&:routing_to_configure?))
+      end
+
       groupes
         .page(params[:page])
         .per(ITEMS_PER_PAGE)
