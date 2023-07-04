@@ -377,6 +377,7 @@ ActiveRecord::Schema.define(version: 2023_04_13_171421) do
     t.datetime "last_champ_private_updated_at"
     t.datetime "last_champ_updated_at"
     t.datetime "last_commentaire_updated_at"
+    t.boolean "migrated_champ_routage"
     t.text "motivation"
     t.bigint "parent_dossier_id"
     t.string "prefill_token"
@@ -681,6 +682,7 @@ ActiveRecord::Schema.define(version: 2023_04_13_171421) do
     t.bigint "attestation_template_id"
     t.datetime "created_at", null: false
     t.bigint "dossier_submitted_message_id"
+    t.boolean "migrated_champ_routage"
     t.bigint "procedure_id", null: false
     t.datetime "published_at"
     t.datetime "updated_at", null: false
@@ -723,6 +725,7 @@ ActiveRecord::Schema.define(version: 2023_04_13_171421) do
     t.string "lien_notice"
     t.string "lien_site_web"
     t.integer "max_duree_conservation_dossiers_dans_ds", default: 12, null: false
+    t.boolean "migrated_champ_routage"
     t.text "monavis_embed"
     t.boolean "opendata", default: true
     t.string "organisation"
