@@ -26,6 +26,24 @@ en:
       text_success:
         one: 1/1 is being accepted
         other: "%{success_count}/%{count} files have been accepted"
+  refuser:
+    finish:
+      text_success:
+        one: 1/1 file has been refused
+        other: "%{success_count}/%{count} files have been refused"
+    in_progress:
+      text_success:
+        one: 1/1 is being refused
+        other: "%{success_count}/%{count} files have been refused"
+  classer_sans_suite:
+    finish:
+      text_success:
+        one: 1/1 file has been closed without continuation
+        other: "%{success_count}/%{count} files have been closed without continuation"
+    in_progress:
+      text_success:
+        one: 1/1 is being closed without continuation
+        other: "%{success_count}/%{count} files have been closed without continuation"
   follow:
     finish:
       text_success:

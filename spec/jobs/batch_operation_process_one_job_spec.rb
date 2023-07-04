@@ -154,6 +154,48 @@ describe BatchOperationProcessOneJob, type: :job do
       end
     end
 
+    context 'when operation is "refuser"' do
+      let(:batch_operation) do
+        create(:batch_operation, :refuser,
+                                 options.merge(instructeur: create(:instructeur), motivation: 'motivation'))
+      end
+
+      it 'refuses the dossier in the batch' do
+        expect { subject.perform_now }
+          .to change { dossier_job.reload.refuse? }
+          .from(false)
+          .to(true)
+      end
+
+      it 'refuses the dossier in the batch with a motivation' do
+        expect { subject.perform_now }
+          .to change { dossier_job.reload.motivation }
+          .from(nil)
+          .to('motivation')
+      end
+    end
+
+    context 'when operation is "classer_sans_suite"' do
+      let(:batch_operation) do
+        create(:batch_operation, :classer_sans_suite,
+                                 options.merge(instructeur: create(:instructeur), motivation: 'motivation'))
+      end
+
+      it 'closes without continuation the dossier in the batch' do
+        expect { subject.perform_now }
+          .to change { dossier_job.reload.sans_suite? }
+          .from(false)
+          .to(true)
+      end
+
+      it 'closes without continuation the dossier in the batch with a motivation' do
+        expect { subject.perform_now }
+          .to change { dossier_job.reload.motivation }
+          .from(nil)
+          .to('motivation')
+      end
+    end
+
     context 'when the dossier is out of sync (ie: someone applied a transition somewhere we do not know)' do
       let(:instructeur) { create(:instructeur) }
       let(:procedure) { create(:simple_procedure, instructeurs: [instructeur]) }

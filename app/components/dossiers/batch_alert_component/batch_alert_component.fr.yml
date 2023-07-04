@@ -26,6 +26,24 @@ fr:
       text_success:
         one: 1 dossier sera accepté
         other: "%{success_count}/%{count} dossiers ont été acceptés"
+  refuser:
+    finish:
+      text_success:
+        one: 1 dossier a été refusé
+        other: "%{success_count}/%{count} dossiers ont été refusés"
+    in_progress:
+      text_success:
+        one: 1 dossier sera refusé
+        other: "%{success_count}/%{count} dossiers ont été refusés"
+  classer_sans_suite:
+    finish:
+      text_success:
+        one: 1 dossier a été classé sans suite
+        other: "%{success_count}/%{count} dossiers ont été classés sans suite"
+    in_progress:
+      text_success:
+        one: 1 dossier sera classé sans suite
+        other: "%{success_count}/%{count} dossiers ont été classés sans suite"
   follow:
     finish:
       text_success:
