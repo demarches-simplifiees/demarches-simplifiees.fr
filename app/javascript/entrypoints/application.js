@@ -17,10 +17,7 @@ import '../new_design/procedure-form';
 
 import '../new_design/champs/te_fenua';
 
-import {
-  toggleCondidentielExplanation,
-  replaceSemicolonByComma
-} from '../new_design/avis';
+import { toggleCondidentielExplanation } from '../new_design/avis';
 import {
   showMotivation,
   motivationCancel,
@@ -38,8 +35,7 @@ const DS = {
   motivationCancel,
   showImportJustificatif,
   showFusion,
-  showNewAccount,
-  replaceSemicolonByComma
+  showNewAccount
 };
 
 // Start Rails helpers
