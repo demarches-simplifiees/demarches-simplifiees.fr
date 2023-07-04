@@ -1312,6 +1312,19 @@ class Dossier < ApplicationRecord
     (sva_svr_decision_on - Date.current).to_i
   end
 
+  def create_assignment(mode, previous_groupe_instructeur, groupe_instructeur, instructeur_email = nil)
+    DossierAssignment.create!(
+      dossier_id: self.id,
+      mode: mode,
+      previous_groupe_instructeur_id: previous_groupe_instructeur&.id,
+      groupe_instructeur_id: groupe_instructeur.id,
+      previous_groupe_instructeur_label: previous_groupe_instructeur&.label,
+      groupe_instructeur_label: groupe_instructeur.label,
+      assigned_at: Time.zone.now,
+      assigned_by: instructeur_email
+    )
+  end
+
   private
 
   def create_missing_traitemets

@@ -369,15 +369,11 @@ module Instructeurs
 
       dossier.update!(forced_groupe_instructeur: true)
 
-      DossierAssignment.create!(
-        dossier_id: dossier.id,
-        mode: :manual,
-        previous_groupe_instructeur_id: previous_groupe_instructeur&.id,
-        groupe_instructeur_id: new_group.id,
-        previous_groupe_instructeur_label: previous_groupe_instructeur&.label,
-        groupe_instructeur_label: new_group.label,
-        assigned_at: Time.zone.now,
-        assigned_by: current_instructeur.email
+      dossier.create_assignment(
+        DossierAssignment.modes.fetch(:manual),
+        previous_groupe_instructeur,
+        new_group,
+        current_instructeur.email
       )
 
       flash.notice = t('instructeurs.dossiers.reaffectation', dossier_id: dossier.id, label: new_group.label)
