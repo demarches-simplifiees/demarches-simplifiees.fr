@@ -59,9 +59,9 @@
                   = t('.group_management.delete')
             - else
               %td.actions
-                = link_to reaffecter_dossiers_admin_procedure_groupe_instructeur_path(procedure, group), class: 'button', title: t('.group_management.move_folders_confirmation') do
+                = link_to reaffecter_dossiers_admin_procedure_groupe_instructeur_path(procedure, group), class: 'button', title: t('.group_management.move_files_confirmation') do
                   %span.icon.follow
-                  = t('.group_management.move_folders', count: group.dossiers.count)
+                  = t('.group_management.move_files', count: group.dossiers.visible_by_administration.size)
 
 
   = paginate groupes_instructeurs
