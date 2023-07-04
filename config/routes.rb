@@ -71,7 +71,7 @@ Rails.application.routes.draw do
     resources :outdated_procedures, only: [:index] do
       patch :bulk_update, on: :collection
     end
-    resources :safe_mailers, only: [:index, :edit, :update, :destroy]
+    resources :safe_mailers, only: [:index, :edit, :update, :destroy, :new, :create]
 
     post 'demandes/create_administrateur'
     post 'demandes/refuse_administrateur'

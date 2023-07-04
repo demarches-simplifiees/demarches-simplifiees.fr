@@ -5,8 +5,6 @@ class ApplicationMailer < ActionMailer::Base
   default from: "#{APPLICATION_NAME} <#{CONTACT_EMAIL}>"
   layout 'mailer'
 
-  before_action :add_dolist_header
-
   # Attach the procedure logo to the email (if any).
   # Returns the attachment url.
   def attach_logo(procedure)
