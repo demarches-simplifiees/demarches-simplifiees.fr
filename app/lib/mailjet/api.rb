@@ -1,6 +1,6 @@
 class Mailjet::API
   def properly_configured?
-    [Mailjet.config.api_key, Mailjet.config.secret_key].all?(&:present?)
+    Mailjet.respond_to?(:config) && [Mailjet.config.api_key, Mailjet.config.secret_key].all?(&:present?)
   end
 
   # Get messages sent to a user through SendInBlue.

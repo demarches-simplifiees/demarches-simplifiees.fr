@@ -1,1 +1,3 @@
-= turbo_stream.after("procedure_#{@procedure.id}", partial: "detail", locals: { procedure: @procedure })
+- if !@show_detail
+  = turbo_stream.remove "procedure_detail_#{@procedure.id}"
+= turbo_stream.replace "procedure_#{@procedure.id}", partial: "detail", locals: { procedure: @procedure, show_detail: @show_detail }

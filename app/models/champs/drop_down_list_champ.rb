@@ -8,7 +8,6 @@
 #  prefilled                      :boolean
 #  private                        :boolean          default(FALSE), not null
 #  rebased_at                     :datetime
-#  row                            :integer
 #  type                           :string
 #  value                          :string
 #  value_json                     :jsonb
@@ -70,5 +69,13 @@ class Champs::DropDownListChamp < Champ
 
   def value_other
     other_value_present? ? value : ""
+  end
+
+  def in?(options)
+    options.include?(value)
+  end
+
+  def remove_option(options)
+    update_column(:value, nil)
   end
 end

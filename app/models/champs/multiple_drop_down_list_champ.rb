@@ -8,7 +8,6 @@
 #  prefilled                      :boolean
 #  private                        :boolean          default(FALSE), not null
 #  rebased_at                     :datetime
-#  row                            :integer
 #  type                           :string
 #  value                          :string
 #  value_json                     :jsonb
@@ -68,6 +67,14 @@ class Champs::MultipleDropDownListChamp < Champ
 
   def blank?
     selected_options.blank?
+  end
+
+  def in?(options)
+    (selected_options - options).size != selected_options.size
+  end
+
+  def remove_option(options)
+    update_column(:value, (selected_options - options).to_json)
   end
 
   private

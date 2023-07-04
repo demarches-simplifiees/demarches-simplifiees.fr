@@ -1,31 +1,16 @@
 import { ApplicationController } from './application_controller';
+import { disable, enable } from '@utils';
+import invariant from 'tiny-invariant';
 
 export class BatchOperationController extends ApplicationController {
-  static targets = ['form', 'input', 'submit'];
+  static targets = ['menu', 'input'];
 
-  declare readonly formTargets: HTMLFormElement[];
-  declare readonly submitTargets: HTMLInputElement[];
+  declare readonly menuTarget: HTMLButtonElement;
+  declare readonly hasMenuTarget: boolean;
   declare readonly inputTargets: HTMLInputElement[];
 
-  connect() {
-    this.formTargets.forEach((e) =>
-      e.addEventListener('submit', this.interceptFormSubmit.bind(this))
-    );
-  }
-
-  // DSFR recommends a <input type="submit" /> or <button type="submit" /> a form (not a <select>)
-  // but we have many actions on the same form (archive all, accept all, ...)
-  // so we intercept the form submit, and set the BatchOperation.operation by hand using the Event.submitter
-  interceptFormSubmit(event: SubmitEvent): SubmitEvent {
-    const submitter = event.submitter as HTMLInputElement;
-
-    submitter.setAttribute('value', submitter.dataset.submitterOperation || '');
-    return event;
-  }
-
-  onCheckOne(event: Event) {
+  onCheckOne() {
     this.toggleSubmitButtonWhenNeeded();
-    return event;
   }
 
   onCheckAll(event: Event) {
@@ -33,22 +18,45 @@ export class BatchOperationController extends ApplicationController {
 
     this.inputTargets.forEach((e) => (e.checked = target.checked));
     this.toggleSubmitButtonWhenNeeded();
-    return event;
   }
 
   toggleSubmitButtonWhenNeeded() {
-    const available = this.inputTargets.some((e) => e.checked);
-    const dropdown = document.querySelector('#batch_operation_dropdown');
-    if (available) {
-      this.submitTargets.forEach((e) => e.removeAttribute('disabled'));
-      if (dropdown) {
-        dropdown.removeAttribute('disabled');
+    const buttons = [
+      ...this.element.querySelectorAll<HTMLButtonElement>('[data-operation]')
+    ];
+    const checked = this.inputTargets.filter((input) => input.checked);
+    if (checked.length) {
+      const available = buttons.filter((button) => {
+        const operation = button.dataset.operation;
+        invariant(operation, 'data-operation is required');
+        const available = checked.every(isInputForOperation(operation));
+        switchButton(button, available);
+        return available;
+      });
+      if (this.hasMenuTarget) {
+        if (available.length) {
+          enable(this.menuTarget);
+        } else {
+          disable(this.menuTarget);
+        }
       }
-    } else {
-      this.submitTargets.forEach((e) => e.setAttribute('disabled', 'disabled'));
-      if (dropdown) {
-        dropdown.setAttribute('disabled', 'disabled');
-      }
+    } else if (this.hasMenuTarget) {
+      disable(this.menuTarget);
     }
+  }
+}
+
+function isInputForOperation(operation: string) {
+  return (input: HTMLInputElement) =>
+    (input.dataset.operations?.split(',') ?? []).includes(operation);
+}
+
+function switchButton(button: HTMLButtonElement, flag: boolean) {
+  if (flag) {
+    enable(button);
+    button.querySelectorAll('button').forEach((button) => enable(button));
+  } else {
+    disable(button);
+    button.querySelectorAll('button').forEach((button) => disable(button));
   }
 }

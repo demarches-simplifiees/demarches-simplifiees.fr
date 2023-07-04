@@ -17,7 +17,7 @@ module Administrateurs
       archive = Archive.find_or_create_archive(type, year_month, all_groupe_instructeurs)
       if archive.pending?
         ArchiveCreationJob.perform_later(@procedure, archive, current_administrateur)
-        flash[:notice] = "Votre demande a été prise en compte. Selon le nombre de dossiers, cela peut prendre de quelques minutes a plusieurs heures. Vous recevrez un courriel lorsque le fichier sera disponible."
+        flash[:notice] = "Votre demande a été prise en compte. Selon le nombre de dossiers, cela peut prendre de quelques minutes à plusieurs heures. Vous recevrez un courriel lorsque le fichier sera disponible."
       else
         flash[:notice] = "Cette archive a déjà été générée."
       end

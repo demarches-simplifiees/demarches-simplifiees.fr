@@ -3,6 +3,7 @@ module Types::Champs
     implements Types::ChampType
 
     class Row < Types::BaseObject
+      global_id_field :id
       field :champs, [Types::ChampType], null: false
     end
 
@@ -18,7 +19,7 @@ module Types::Champs
     def rows
       Loaders::Association.for(object.class, champs: :type_de_champ).load(object).then do |champs|
         object.association(:champs).target = champs.filter(&:visible?)
-        object.rows.map { { champs: _1 } }
+        object.rows.map { { champs: _1, id: GraphQL::Schema::UniqueWithinType.encode('Row', _1.first.row_id) } }
       end
     end
   end

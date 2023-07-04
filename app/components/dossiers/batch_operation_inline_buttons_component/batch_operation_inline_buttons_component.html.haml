@@ -1,0 +1,28 @@
+- if opt[:operation] == 'accepter'
+  .dropdown{ data: { controller: 'menu-button', popover: 'true', operation: opt[:operation] } }
+    -# Dropdown button title
+    %button{ disabled: true, class: ['fr-btn fr-btn--sm fr-btn--icon-left fr-ml-1w', icons[opt[:operation].to_sym]], disabled: true, name: "#{form.object_name}[operation]" , data: { menu_button_target: 'button' } }
+      = opt[:label]
+
+    #state-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
+      %ul.dropdown-items
+        %li.inactive{ 'data-turbo': 'true' }
+          - if opt[:operation] == 'accepter'
+            .wrapper
+              .dropdown-items-link
+                %span{ class: icons[opt[:operation].to_sym] }
+                .dropdown-description
+                  %h4= opt[:label]
+
+              .motivation.accept
+                = form.text_area :motivation, class: 'motivation-text-area'
+                #justificatif_motivation_suggest_accept.optional-justificatif
+                  %button.button{ type: 'button', onclick: "DS.showImportJustificatif('accept');" } Ajouter un justificatif (optionnel)
+                #justificatif_motivation_import_accept.hidden
+                  = form.file_field :justificatif_motivation, direct_upload: true
+
+
+                = form.button "Valider la décision", class: ['fr-btn fr-mt-2w'], disabled: true, name: "#{form.object_name}[operation]", value: opt[:operation]
+
+- else
+  = form.button opt[:label], class: ['fr-btn fr-btn--sm fr-btn--icon-left fr-ml-1w', icons[opt[:operation].to_sym]], disabled: true, name: "#{form.object_name}[operation]", value: opt[:operation], data: { operation: opt[:operation] }

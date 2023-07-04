@@ -1,7 +1,11 @@
 %tr.procedure{ id: "procedure_#{procedure.id}" }
   %td
-    = button_to detail_admin_procedure_path(procedure["id"]), params: show_detail ? {} : { show_detail: true }, method: :get, title: 'Cacher les détails', class: [ show_detail ? 'fr-icon-subtract-line':'fr-icon-add-line', "fr-icon--sm fr-mr-1w fr-mb-1w fr-text-action-high--blue-france fr-btn fr-btn--tertiary-no-outline"] do
-      Cacher les détails
+    - title = show_detail ? 'Cacher les détails de la démarche' : 'Afficher les détails de la démarche'
+    - icon = show_detail ? 'fr-icon-subtract-line' : 'fr-icon-add-line'
+    - params = show_detail ? {} : { show_detail: true }
+    = button_to detail_admin_procedure_path(procedure["id"]), method: :post, params:, title:, class: [icon, "fr-icon--sm fr-mr-1w fr-mb-1w fr-text-action-high--blue-france fr-btn fr-btn--tertiary-no-outline" ] do
+      = title
+
   %td= procedure.libelle
   %td= procedure.id
   %td= procedure.administrateurs.count

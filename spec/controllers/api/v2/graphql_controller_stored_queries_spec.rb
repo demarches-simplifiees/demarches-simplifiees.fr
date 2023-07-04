@@ -301,5 +301,71 @@ describe API::V2::GraphqlController do
         end
       end
     end
+
+    context 'groupeInstructeurCreer' do
+      let(:variables) { { input: { demarche: { id: procedure.to_typed_id }, groupeInstructeur: { label: 'nouveau groupe instructeur' } }, includeInstructeurs: true } }
+      let(:operation_name) { 'groupeInstructeurCreer' }
+
+      it {
+        expect(gql_errors).to be_nil
+        expect(gql_data[:groupeInstructeurCreer][:errors]).to be_nil
+        expect(gql_data[:groupeInstructeurCreer][:groupeInstructeur][:id]).not_to be_nil
+        expect(gql_data[:groupeInstructeurCreer][:groupeInstructeur][:instructeurs]).to eq([{ id: admin.instructeur.to_typed_id, email: admin.email }])
+        expect(GroupeInstructeur.last.label).to eq('nouveau groupe instructeur')
+      }
+
+      context 'with instructeurs' do
+        let(:email) { 'test@test.com' }
+        let(:variables) { { input: { demarche: { id: procedure.to_typed_id }, groupeInstructeur: { label: 'nouveau groupe instructeur avec instructeurs', instructeurs: [email:] } }, includeInstructeurs: true } }
+        let(:operation_name) { 'groupeInstructeurCreer' }
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data[:groupeInstructeurCreer][:errors]).to be_nil
+          expect(gql_data[:groupeInstructeurCreer][:groupeInstructeur][:id]).not_to be_nil
+          expect(gql_data[:groupeInstructeurCreer][:groupeInstructeur][:instructeurs]).to eq([{ id: admin.instructeur.to_typed_id, email: admin.instructeur.email }, { id: Instructeur.last.to_typed_id, email: }])
+        }
+      end
+    end
+
+    context 'groupeInstructeurAjouterInstructeurs' do
+      let(:email) { 'test@test.com' }
+      let(:groupe_instructeur) { procedure.groupe_instructeurs.first }
+      let(:existing_instructeur) { groupe_instructeur.instructeurs.first }
+      let(:variables) { { input: { groupeInstructeurId: groupe_instructeur.to_typed_id, instructeurs: [{ email: }, { email: 'yolo' }, { id: existing_instructeur.to_typed_id }] }, includeInstructeurs: true } }
+      let(:operation_name) { 'groupeInstructeurAjouterInstructeurs' }
+
+      it {
+        expect(gql_errors).to be_nil
+        expect(gql_data[:groupeInstructeurAjouterInstructeurs][:errors]).to be_nil
+        expect(gql_data[:groupeInstructeurAjouterInstructeurs][:warnings]).to eq([message: "yolo n’est pas une adresse email valide"])
+        expect(gql_data[:groupeInstructeurAjouterInstructeurs][:groupeInstructeur][:id]).to eq(groupe_instructeur.to_typed_id)
+        expect(groupe_instructeur.instructeurs.count).to eq(2)
+        expect(gql_data[:groupeInstructeurAjouterInstructeurs][:groupeInstructeur][:instructeurs]).to eq([{ id: existing_instructeur.to_typed_id, email: existing_instructeur.email }, { id: Instructeur.last.to_typed_id, email: }])
+      }
+    end
+
+    context 'groupeInstructeurSupprimerInstructeurs' do
+      let(:email) { 'test@test.com' }
+      let(:groupe_instructeur) { procedure.groupe_instructeurs.first }
+      let(:existing_instructeur) { groupe_instructeur.instructeurs.first }
+      let(:new_instructeur) { create(:instructeur) }
+      let(:variables) { { input: { groupeInstructeurId: groupe_instructeur.to_typed_id, instructeurs: [{ email: }, { id: new_instructeur.to_typed_id }] }, includeInstructeurs: true } }
+      let(:operation_name) { 'groupeInstructeurSupprimerInstructeurs' }
+
+      before do
+        existing_instructeur
+        groupe_instructeur.add(new_instructeur)
+      end
+
+      it {
+        expect(groupe_instructeur.reload.instructeurs.count).to eq(2)
+        expect(gql_errors).to be_nil
+        expect(gql_data[:groupeInstructeurSupprimerInstructeurs][:errors]).to be_nil
+        expect(gql_data[:groupeInstructeurSupprimerInstructeurs][:groupeInstructeur][:id]).to eq(groupe_instructeur.to_typed_id)
+        expect(groupe_instructeur.instructeurs.count).to eq(1)
+        expect(gql_data[:groupeInstructeurSupprimerInstructeurs][:groupeInstructeur][:instructeurs]).to eq([{ id: existing_instructeur.to_typed_id, email: existing_instructeur.email }])
+      }
+    end
   end
 end

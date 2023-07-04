@@ -65,6 +65,8 @@ Rails.application.routes.draw do
 
     resources :team_accounts, only: [:index, :show]
 
+    resources :email_events, only: [:index, :show]
+
     resources :dubious_procedures, only: [:index]
     resources :outdated_procedures, only: [:index] do
       patch :bulk_update, on: :collection
@@ -475,7 +477,7 @@ Rails.application.routes.draw do
       end
 
       member do
-        get 'detail'
+        post 'detail'
         get 'apercu'
         get 'champs'
         get 'zones'

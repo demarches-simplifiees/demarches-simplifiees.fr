@@ -140,7 +140,7 @@ en:
         prefill_link_copy: Copy prefill link
         prefill_query_title: Prefill query (POST)
         prefill_query_info: Use the button to copy the query, then remplace the values with your data.
-        prefill_query_response_html: '# Response:<br># {"dossier_url":"%{url}"}'
+        prefill_query_response_html: '# Response:<br># {<br>#    "dossier_url": "%{url}",<br>#    "dossier_id": "aBase64Id==",<br>#    "dossier_number": 42<br># }'
         prefill_query_copy: Copy prefill query
     registrations:
       new:
@@ -229,6 +229,7 @@ en:
           enabled: "Add this file to the selection for the bulk operation"
           disabled: "Impossible to add this file to the selection because it is already in a bulk operation"
         dossiers_count:
+          zero: 0 file
           one: 1 file
           other: "%{count} files"
         personalize: Personalize the table

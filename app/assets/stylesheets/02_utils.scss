@@ -87,7 +87,7 @@
 
 // display
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .visible-on-previous-hover {

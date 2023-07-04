@@ -241,7 +241,7 @@ ActiveRecord::Schema.define(version: 2023_04_13_171421) do
     t.index ["row"], name: "index_champs_on_row"
     t.index ["row_id"], name: "index_champs_on_row_id"
     t.index ["type"], name: "index_champs_on_type"
-    t.index ["type_de_champ_id", "dossier_id", "row"], name: "index_champs_on_type_de_champ_id_and_dossier_id_and_row", unique: true
+    t.index ["type_de_champ_id", "dossier_id", "row_id"], name: "index_champs_on_type_de_champ_id_and_dossier_id_and_row_id", unique: true
     t.index ["type_de_champ_id"], name: "index_champs_on_type_de_champ_id"
   end
 
@@ -408,6 +408,16 @@ ActiveRecord::Schema.define(version: 2023_04_13_171421) do
     t.datetime "updated_at"
     t.string "value"
     t.index ["type_de_champ_id"], name: "index_drop_down_lists_on_type_de_champ_id"
+  end
+
+  create_table "email_events", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.string "method", null: false
+    t.datetime "processed_at"
+    t.string "status", null: false
+    t.string "subject", null: false
+    t.string "to", null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "etablissements", id: :serial, force: :cascade do |t|
