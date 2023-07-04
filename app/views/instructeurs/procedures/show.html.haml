@@ -63,7 +63,7 @@
 
         .fr-ml-auto
           %span.dropdown{ data: { controller: 'menu-button', popover: 'true' } }
-            %button.fr-btn.fr-btn--sm.fr-btn--secondary.dropdown-button.fr-ml-1w{ data: { menu_button_target: 'button' } }
+            %button.fr-btn.fr-btn--sm.fr-btn--tertiary.dropdown-button.fr-ml-1w{ data: { menu_button_target: 'button' } }
               = t('views.instructeurs.dossiers.personalize')
             #custom-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
               = form_tag update_displayed_fields_instructeur_procedure_path(@procedure), method: :patch, class: 'dropdown-form large columns-form' do
@@ -85,7 +85,7 @@
 
           - if @dossiers_count > 0
             %span.dossiers-export
-              = render Dossiers::ExportComponent.new(procedure: @procedure, exports: @exports, statut: @statut, count: @dossiers_count, export_url: method(:download_export_instructeur_procedure_path))
+              = render Dossiers::ExportComponent.new(procedure: @procedure, exports: @exports, statut: @statut, count: @dossiers_count, class_btn: 'fr-btn--tertiary', export_url: method(:download_export_instructeur_procedure_path))
 
     - if @filtered_sorted_paginated_ids.present? || @current_filters.count > 0
       = render partial: "dossiers_filter_tags", locals: { procedure: @procedure, procedure_presentation: @procedure_presentation, current_filters: @current_filters, statut: @statut }
@@ -97,7 +97,7 @@
           = render Dossiers::BatchAlertComponent.new(batch: batch_operation, procedure: @procedure)
 
       %div{ data: batch_operation_component.render? ? { controller: 'batch-operation' } : {} }
-        .flex.align-center
+        .flex.align-center.fr-mt-2w
           %span.fr-h6.fr-mb-0.fr-mr-2w
             = t('views.instructeurs.dossiers.dossiers_count', count: @dossiers_count)
 

@@ -1,9 +1,10 @@
 class Dossiers::ExportComponent < ApplicationComponent
-  def initialize(procedure:, exports:, statut: nil, count: nil, export_url: nil)
+  def initialize(procedure:, exports:, statut: nil, count: nil, class_btn: nil, export_url: nil)
     @procedure = procedure
     @exports = exports
     @statut = statut
     @count = count
+    @class_btn = class_btn
     @export_url = export_url
   end
 
