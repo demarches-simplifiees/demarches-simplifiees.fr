@@ -200,7 +200,14 @@ module Administrateurs
       target_group = procedure.groupe_instructeurs.find(params[:target_group])
       reaffecter_bulk_messages(target_group)
       groupe_instructeur.dossiers.find_each do |dossier|
+        previous_group = dossier.groupe_instructeur
         dossier.assign_to_groupe_instructeur(target_group, current_administrateur)
+        dossier.create_assignment(
+          DossierAssignment.modes.fetch(:manual),
+          previous_group,
+          target_group,
+          current_administrateur.email
+        )
       end
 
       flash[:notice] = "Les dossiers du groupe « #{groupe_instructeur.label} » ont été réaffectés au groupe « #{target_group.label} »."
