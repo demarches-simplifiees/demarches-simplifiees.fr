@@ -1,11 +1,11 @@
 .batch-operation.fr-ml-auto.flex
   - if available_operations[:options].count.between?(1,3)
-    = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'form', id: dom_id(BatchOperation.new) }) do |form|
+    = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'form', id: dom_id(BatchOperation.new) }, data: { turbo: true, turbo_confirm: t('.operations.confirm') }) do |form|
       - available_operations[:options].each do |opt|
         = render Dossiers::BatchOperationInlineButtonsComponent.new(opt:, icons:, form:)
 
   - else
-    = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'form flex', id: dom_id(BatchOperation.new) }) do |form|
+    = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'form flex', id: dom_id(BatchOperation.new) }, data: { turbo: true, turbo_confirm: t('.operations.confirm') }) do |form|
       - available_operations[:options][0,2].each do |opt|
         = render Dossiers::BatchOperationInlineButtonsComponent.new(opt:, icons:, form:)
 
