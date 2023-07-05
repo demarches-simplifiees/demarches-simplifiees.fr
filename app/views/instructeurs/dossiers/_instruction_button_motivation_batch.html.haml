@@ -1,5 +1,5 @@
 %div{ class: "motivation #{instruction_operation}" }
-  = form.text_area :motivation, class: 'fr-input'
+  = form.text_area :motivation, class: "fr-input js_batch_operation_motivation_#{instruction_operation}"
   .optional-justificatif{ id: "justificatif_motivation_suggest_#{instruction_operation}" }
     %button.fr-btn.fr-btn--sm.fr-btn--tertiary-no-outline.fr-btn--icon-left.fr-icon-attachment-line.fr-ml-0{ type: 'button', onclick: "DS.showImportJustificatif('#{instruction_operation}');" } Ajouter un justificatif (optionnel)
   .hidden{ id: "justificatif_motivation_import_#{instruction_operation}" }
@@ -10,4 +10,4 @@
 
   = button_tag "Annuler", type: :reset, class: 'fr-btn fr-btn--sm fr-btn--secondary', onclick: 'DS.motivationCancelBatch();'
 
-  = form.button "Valider la décision", class: ['fr-btn fr-btn--sm fr-mt-2w'], disabled: true, name: "#{form.object_name}[operation]", value: opt[:operation], data: { operation: opt[:operation] }
+  = form.button "Valider la décision", class: ['fr-btn fr-btn--sm fr-mt-2w'], disabled: true, name: "#{form.object_name}[operation]", value: opt[:operation], data: { operation: opt[:operation], action: "batch-operation#onSubmitInstruction" }
