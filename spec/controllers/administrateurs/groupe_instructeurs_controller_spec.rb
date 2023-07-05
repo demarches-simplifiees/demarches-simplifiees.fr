@@ -234,6 +234,30 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     end
   end
 
+  describe '#destroy_all_groups_but_defaut' do
+    let!(:dossierA) { create(:dossier, :en_construction, :with_individual, procedure: procedure, groupe_instructeur: gi_1_2) }
+    let!(:dossierB) { create(:dossier, :en_construction, :with_individual, procedure: procedure, groupe_instructeur: gi_1_2) }
+
+    before do
+      post :destroy_all_groups_but_defaut,
+           params: {
+             procedure_id: procedure.id
+           }
+      dossierA.reload
+      dossierB.reload
+    end
+
+    it do
+      expect(dossierA.groupe_instructeur.id).to be(procedure.defaut_groupe_instructeur.id)
+      expect(dossierB.groupe_instructeur.id).to be(procedure.defaut_groupe_instructeur.id)
+      expect(dossierA.dossier_assignment.dossier_id).to be(dossierA.id)
+      expect(dossierB.dossier_assignment.dossier_id).to be(dossierB.id)
+      expect(dossierA.dossier_assignment.groupe_instructeur_id).to be(procedure.defaut_groupe_instructeur.id)
+      expect(dossierB.dossier_assignment.groupe_instructeur_id).to be(procedure.defaut_groupe_instructeur.id)
+      expect(dossierA.dossier_assignment.assigned_by).to eq(admin.email)
+      expect(dossierB.dossier_assignment.assigned_by).to eq(admin.email)
+    end
+  end
   describe '#update' do
     let(:new_name) { 'nouveau nom du groupe' }
     let!(:procedure_non_routee) { create(:procedure, :published, :for_individual, administrateurs: [admin]) }

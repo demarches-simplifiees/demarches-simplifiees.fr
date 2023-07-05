@@ -215,9 +215,17 @@ module Administrateurs
     end
 
     def reaffecter_all_dossiers_to_defaut_groupe
+      defaut_groupe = procedure.defaut_groupe_instructeur
       procedure.groupe_instructeurs_but_defaut.each do |gi|
         gi.dossiers.find_each do |dossier|
-          dossier.assign_to_groupe_instructeur(procedure.defaut_groupe_instructeur, current_administrateur)
+          previous_group = dossier.groupe_instructeur
+          dossier.assign_to_groupe_instructeur(defaut_groupe, current_administrateur)
+          dossier.create_assignment(
+            DossierAssignment.modes.fetch(:manual),
+            previous_group,
+            defaut_groupe,
+            current_administrateur.email
+          )
         end
       end
     end
