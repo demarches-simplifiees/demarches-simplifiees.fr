@@ -688,11 +688,15 @@ class Dossier < ApplicationRecord
     procedure.discarded? || (brouillon? && !procedure.dossier_can_transition_to_en_construction?)
   end
 
-  def assign_to_groupe_instructeur(groupe_instructeur, author = nil)
+  def assign_to_groupe_instructeur(groupe_instructeur, mode, author = nil)
     return if groupe_instructeur.present? && groupe_instructeur.procedure != procedure
     return if self.groupe_instructeur == groupe_instructeur
 
+    previous_groupe_instructeur = self.groupe_instructeur
+
     update!(groupe_instructeur:, groupe_instructeur_updated_at: Time.zone.now)
+
+    create_assignment(mode, previous_groupe_instructeur, groupe_instructeur, author&.email)
 
     if !brouillon?
       unfollow_stale_instructeurs

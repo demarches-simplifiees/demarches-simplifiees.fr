@@ -209,7 +209,7 @@ describe Instructeur, type: :model do
 
     context 'when there is a modification on groupe instructeur' do
       let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur], procedure: dossier.procedure) }
-      before { dossier.assign_to_groupe_instructeur(groupe_instructeur) }
+      before { dossier.assign_to_groupe_instructeur(groupe_instructeur, DossierAssignment.modes.fetch(:auto)) }
 
       it { is_expected.to match({ demande: true, annotations_privees: false, avis: false, messagerie: false }) }
     end

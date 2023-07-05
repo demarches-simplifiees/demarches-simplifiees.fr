@@ -69,7 +69,6 @@ module DossierCloneConcern
       diff = make_diff(editing_fork)
       apply_diff(diff)
       touch(:last_champ_updated_at)
-      assign_to_groupe_instructeur(editing_fork.groupe_instructeur)
     end
     reload
     update_search_terms_later

@@ -359,22 +359,13 @@ module Instructeurs
     def reaffecter
       dossier = current_instructeur.dossiers.find(params[:dossier_id])
 
-      previous_groupe_instructeur = dossier.groupe_instructeur
-
       new_group = dossier
         .procedure
         .groupe_instructeurs.find(params[:groupe_instructeur_id])
 
-      dossier.assign_to_groupe_instructeur(new_group)
+      dossier.assign_to_groupe_instructeur(new_group, DossierAssignment.modes.fetch(:manual), current_instructeur)
 
       dossier.update!(forced_groupe_instructeur: true)
-
-      dossier.create_assignment(
-        DossierAssignment.modes.fetch(:manual),
-        previous_groupe_instructeur,
-        new_group,
-        current_instructeur.email
-      )
 
       flash.notice = t('instructeurs.dossiers.reaffectation', dossier_id: dossier.id, label: new_group.label)
       redirect_to instructeur_procedure_path(procedure)

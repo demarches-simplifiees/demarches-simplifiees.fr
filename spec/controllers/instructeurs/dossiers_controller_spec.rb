@@ -1187,12 +1187,11 @@ describe Instructeurs::DossiersController, type: :controller do
   describe '#reaffecter' do
     let!(:gi_1) { procedure.groupe_instructeurs.first }
     let!(:gi_2) { GroupeInstructeur.create(label: 'deuxième groupe', procedure: procedure) }
-    let!(:dossier) { create(:dossier, :en_construction, procedure: procedure, groupe_instructeur: gi_1) }
+    let!(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure, groupe_instructeur: gi_1) }
     let!(:new_instructeur) { create(:instructeur) }
 
     before do
       gi_1.instructeurs << new_instructeur
-      gi_1.dossiers << dossier
       new_instructeur.followed_dossiers << dossier
 
       post :reaffecter,
@@ -1221,20 +1220,14 @@ describe Instructeurs::DossiersController, type: :controller do
   describe '#personnes_impliquees' do
     let!(:gi_1) { procedure.groupe_instructeurs.first }
     let!(:gi_2) { GroupeInstructeur.create(label: 'deuxième groupe', procedure: procedure) }
-    let!(:dossier) { create(:dossier, :en_construction, procedure: procedure, groupe_instructeur: gi_1) }
+    let!(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure, groupe_instructeur: gi_1) }
     let!(:new_instructeur) { create(:instructeur) }
 
     before do
       gi_1.instructeurs << new_instructeur
       gi_2.instructeurs << instructeur
       new_instructeur.followed_dossiers << dossier
-      dossier.assign_to_groupe_instructeur(gi_2)
-      dossier.create_assignment(
-        DossierAssignment.modes.fetch(:manual),
-        gi_1,
-        gi_2,
-        new_instructeur.email
-      )
+      dossier.assign_to_groupe_instructeur(gi_2, DossierAssignment.modes.fetch(:manual), new_instructeur)
 
       get :personnes_impliquees,
         params: {

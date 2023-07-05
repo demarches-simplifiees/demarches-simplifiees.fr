@@ -11,15 +11,7 @@ module Mutations
     field :errors, [Types::ValidationErrorType], null: true
 
     def resolve(dossier:, groupe_instructeur:)
-      previous_groupe_instructeur = dossier.groupe_instructeur
-
-      dossier.assign_to_groupe_instructeur(groupe_instructeur)
-
-      dossier.create_assignment(
-        DossierAssignment.modes.fetch(:manual),
-        previous_groupe_instructeur,
-        dossier.groupe_instructeur
-      )
+      dossier.assign_to_groupe_instructeur(groupe_instructeur, DossierAssignment.modes.fetch(:manual))
 
       { dossier: }
     end
