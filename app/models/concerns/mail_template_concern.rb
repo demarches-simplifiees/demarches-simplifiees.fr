@@ -34,12 +34,12 @@ module MailTemplateConcern
     before_save :update_rich_body
   end
 
-  module ClassMethods
+  class_methods do
     def default_for_procedure(procedure)
       template_name = default_template_name_for_procedure(procedure)
       rich_body = ActionController::Base.render template: template_name
       trix_rich_body = rich_body.gsub(/(?<!^|[.-])(?<!<\/strong>)\n/, '')
-      new(subject: const_get(:DEFAULT_SUBJECT), rich_body: trix_rich_body, procedure: procedure)
+      new(subject: const_get(:DEFAULT_SUBJECT), body: trix_rich_body, rich_body: trix_rich_body, procedure: procedure)
     end
 
     def default_template_name_for_procedure(procedure)
