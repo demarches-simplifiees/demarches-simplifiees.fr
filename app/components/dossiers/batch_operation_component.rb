@@ -64,21 +64,24 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
                                 label: t(".operations.accepter"),
                                 operation_description: t(".operations.accepter_description"),
                                 operation: BatchOperation.operations.fetch(:accepter),
-                                operation_class_name: 'accept'
+                                operation_class_name: 'accept',
+                                placeholder: t(".placeholders.accepter")
                               },
 
                               {
                                 label: t(".operations.refuser"),
                                 operation_description: t(".operations.refuser_description"),
                                 operation: BatchOperation.operations.fetch(:refuser),
-                                operation_class_name: 'refuse'
+                                operation_class_name: 'refuse',
+                                placeholder: t(".placeholders.refuser")
                               },
 
                               {
                                 label: t(".operations.classer_sans_suite"),
                                 operation_description: t(".operations.classer_sans_suite_description"),
                                 operation: BatchOperation.operations.fetch(:classer_sans_suite),
-                                operation_class_name: 'without-continuation'
+                                operation_class_name: 'without-continuation',
+                                placeholder: t(".placeholders.classer_sans_suite")
                               }
                             ]
             },

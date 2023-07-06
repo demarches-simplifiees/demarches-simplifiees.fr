@@ -1,3 +1,7 @@
 ---
 en:
   instruct: Instruct the file
+  placeholders:
+    accepter: "Explain to the user why this file is accepted (optional)"
+    refuser: "Explain to the user why this file is refused (mandatory)"
+    classer_sans_suite: "Explain to the user why this file is closed without continuation (mandatory)"
