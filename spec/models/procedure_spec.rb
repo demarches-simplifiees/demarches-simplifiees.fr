@@ -1019,7 +1019,7 @@ describe Procedure do
 
         procedure.reset_draft_revision!
 
-        expect { published_tdc.reload }.not_to raise_error(ActiveRecord::RecordNotFound)
+        expect { published_tdc.reload }.not_to raise_error
         expect { draft_tdc.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
