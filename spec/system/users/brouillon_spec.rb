@@ -54,7 +54,7 @@ describe 'The user' do
     expect(champ_value_for('text')).to eq('super texte')
     expect(champ_value_for('textarea')).to eq('super textarea')
     expect(champ_value_for('date')).to eq('2012-12-12')
-    expect(champ_value_for('datetime')).to eq('2023-01-06T07:05:00+01:00')
+    expect(champ_value_for('datetime')).to eq(Time.zone.parse('2023-01-06T07:05:00').iso8601)
     expect(champ_value_for('number')).to eq('42')
     expect(champ_value_for('decimal_number')).to eq('17')
     expect(champ_value_for('integer_number')).to eq('12')

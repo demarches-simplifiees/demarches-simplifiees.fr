@@ -29,19 +29,19 @@ describe Champs::DatetimeChamp do
     it 'preserves if ISO8601' do
       champ = champ_with_value("2023-12-21T03:20")
       champ.save
-      expect(champ.reload.value).to eq("2023-12-21T03:20:00+01:00")
+      expect(champ.reload.value).to eq(Time.zone.parse("2023-12-21T03:20:00").iso8601)
     end
 
     it 'converts to ISO8601 if form format' do
       champ = champ_with_value("{3=>21, 2=>12, 1=>2023, 4=>3, 5=>20}")
       champ.save
-      expect(champ.reload.value).to eq("2023-12-21T03:20:00+01:00")
+      expect(champ.reload.value).to eq(Time.zone.parse("2023-12-21T03:20:00").iso8601)
     end
 
     it 'converts to ISO8601 if old browser form format' do
       champ = champ_with_value("21/12/2023 03:20")
       champ.save
-      expect(champ.reload.value).to eq("2023-12-21T03:20:00+01:00")
+      expect(champ.reload.value).to eq(Time.zone.parse("2023-12-21T03:20:00").iso8601)
     end
   end
 

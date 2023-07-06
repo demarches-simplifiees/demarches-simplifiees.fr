@@ -4,24 +4,26 @@ describe Migrations::BatchUpdateDatetimeValuesJob, type: :job do
   end
 
   context "when the value is a valid ISO8601 date" do
-    let!(:datetime_champ) { build(:champ_datetime, value: "2023-01-10T00:00:00+01:00") }
+    let!(:value) { Time.zone.parse('10/01/2023 13:30').iso8601 }
+    let!(:datetime_champ) { build(:champ_datetime, value: value) }
 
     subject { described_class.perform_now([datetime_champ.id]) }
 
     it "keeps the existing value" do
       subject
-      expect(datetime_champ.reload.value).to eq("2023-01-10T00:00:00+01:00")
+      expect(datetime_champ.reload.value).to eq(value)
     end
   end
 
   context "when the value is a date convertible to IS8061" do
-    let!(:datetime_champ) { build(:champ_datetime, value: "2023-01-10") }
+    let!(:value) { "2023-01-10" }
+    let!(:datetime_champ) { build(:champ_datetime, value: value) }
 
     subject { described_class.perform_now([datetime_champ.id]) }
 
     it "updates the value to ISO8601" do
       subject
-      expect(datetime_champ.reload.value).to eq("2023-01-10T00:00:00+01:00")
+      expect(datetime_champ.reload.value).to eq(Time.zone.parse(value).iso8601)
     end
   end
 
