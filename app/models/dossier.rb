@@ -698,6 +698,8 @@ class Dossier < ApplicationRecord
 
     create_assignment(mode, previous_groupe_instructeur, groupe_instructeur, author&.email)
 
+    update!(forced_groupe_instructeur: true) if mode == DossierAssignment.modes.fetch(:manual)
+
     if !brouillon?
       unfollow_stale_instructeurs
       if author.present?

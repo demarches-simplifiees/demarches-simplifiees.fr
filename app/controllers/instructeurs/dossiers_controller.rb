@@ -365,8 +365,6 @@ module Instructeurs
 
       dossier.assign_to_groupe_instructeur(new_group, DossierAssignment.modes.fetch(:manual), current_instructeur)
 
-      dossier.update!(forced_groupe_instructeur: true)
-
       flash.notice = t('instructeurs.dossiers.reaffectation', dossier_id: dossier.id, label: new_group.label)
       redirect_to instructeur_procedure_path(procedure)
     end
