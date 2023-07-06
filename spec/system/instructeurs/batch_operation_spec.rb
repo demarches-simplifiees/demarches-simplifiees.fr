@@ -31,18 +31,21 @@ describe 'BatchOperation a dossier:', js: true do
       expect(page).to have_button("Archiver les dossiers")
 
       # ensure batch is created
-      expect { click_on "Archiver les dossiers" }
-        .to change { BatchOperation.count }
-        .from(0).to(1)
+
+      page.accept_alert do
+        click_on "Archiver les dossiers"
+      end
 
       # ensure batched dossier is disabled
       expect(page).to have_selector("##{checkbox_id}[disabled]")
+      # ensure Batch is created
+      expect(BatchOperation.count).to eq(1)
       # check a11y with disabled checkbox
       expect(page).to be_axe_clean
 
       # ensure alert is present
       expect(page).to have_content("Information : Une action de masse est en cours")
-      expect(page).to have_content("1 dossier sera archivé")
+      expect(page).to have_content("1 dossier est en cours d'archivage")
 
       # ensure jobs are queued
       perform_enqueued_jobs(only: [BatchOperationEnqueueAllJob])
@@ -71,10 +74,14 @@ describe 'BatchOperation a dossier:', js: true do
       end
 
       # submit checkall
-      expect { click_on "Archiver les dossiers" }
-        .to change { BatchOperation.count }
-        .from(1).to(2)
+      page.accept_alert do
+        click_on "Archiver les dossiers"
+      end
 
+      # reload
+      visit instructeur_procedure_path(procedure, statut: 'traites')
+
+      expect(BatchOperation.count).to eq(2)
       expect(BatchOperation.last.dossiers).to match_array([dossier_2, dossier_3])
     end
 
@@ -109,10 +116,14 @@ describe 'BatchOperation a dossier:', js: true do
       find("##{dom_id(BatchOperation.new, :checkbox_all)}").check
       click_on("Sélectionner tous les 3 dossiers")
 
-      expect { click_on "Suivre les dossiers" }
-        .to change { BatchOperation.count }
-        .from(0).to(1)
+      accept_alert do
+        click_on "Suivre les dossiers"
+      end
 
+      # reload
+      visit instructeur_procedure_path(procedure, statut: 'a-suivre')
+
+      expect(BatchOperation.count).to eq(1)
       expect(BatchOperation.last.dossiers).to match_array([dossier_1, dossier_2, dossier_3])
     end
 
@@ -138,10 +149,14 @@ describe 'BatchOperation a dossier:', js: true do
       expect(find_field("batch_operation[dossier_ids][]", type: :hidden).value).to eq "#{dossier_4.id},#{dossier_3.id},#{dossier_2.id}"
 
       # create batch
-      expect { click_on "Suivre les dossiers" }
-        .to change { BatchOperation.count }
-        .from(0).to(1)
+      accept_alert do
+        click_on "Suivre les dossiers"
+      end
 
+      # reload
+      visit instructeur_procedure_path(procedure, statut: 'a-suivre')
+
+      expect(BatchOperation.count).to eq(1)
       expect(BatchOperation.last.dossiers).to match_array([dossier_2, dossier_3, dossier_4])
     end
   end
