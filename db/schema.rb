@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_23_160831) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_29_102031) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -743,7 +743,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_160831) do
     t.string "libelle"
     t.string "lien_demarche"
     t.string "lien_dpo"
+    t.text "lien_dpo_error"
     t.string "lien_notice"
+    t.text "lien_notice_error"
     t.string "lien_site_web"
     t.integer "max_duree_conservation_dossiers_dans_ds", default: 12, null: false
     t.boolean "migrated_champ_routage"

@@ -16,8 +16,7 @@
           - if dossier.brouillon?
             = t('views.shared.dossiers.edit.autosave')
 
-          - if dossier.procedure.notice.attached?
-            = render Dsfr::DownloadComponent.new(attachment: dossier.procedure.notice , url: notice_url(dossier.procedure), name: t("views.shared.dossiers.edit.notice"), ephemeral_link: administrateur_signed_in?)
+          = render Procedure::NoticeComponent.new(procedure: dossier.procedure)
 
     = render EditableChamp::SectionComponent.new(champs: dossier_for_editing.champs_public)
 

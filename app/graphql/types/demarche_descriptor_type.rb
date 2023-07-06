@@ -25,10 +25,10 @@ Cela évite l’accès récursif aux dossiers."
 
     field :duree_conservation_dossiers, Int, "Durée de conservation des dossiers en mois.", null: false
 
-    field :demarche_url, String, "URL pour commencer la démarche", null: true
+    field :demarche_url, Types::URL, "URL pour commencer la démarche", null: true
     field :site_web_url, String, "URL où les usagers trouvent le lien vers la démarche", null: true
     field :dpo_url, String, "URL ou email pour contacter le Délégué à la Protection des Données (DPO)", null: true
-    field :notice_url, String, null: true
+    field :notice_url, Types::URL, null: true
     field :cadre_juridique_url, String, "URL du cadre juridique qui justifie le droit de collecter les données demandées dans la démarche", null: true
 
     field :opendata, Boolean, null: false
