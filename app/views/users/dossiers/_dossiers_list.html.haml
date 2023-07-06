@@ -42,7 +42,7 @@
             = dossier.id
 
           - if @statut == "dossiers-supprimes-recemment"
-            %span.fr-badge.fr-badge--warning
+            %span.fr-badge.fr-badge--sm.fr-badge--warning
               = t('views.users.dossiers.dossiers_list.deleted_badge')
           - else
             = status_badge(dossier.state, 'fr-mb-1w')
@@ -51,7 +51,7 @@
             %br
             = pending_correction_badge(:for_user)
 
-      - if dossier.procedure.close?
+      - if dossier.procedure.close? && !dossier.termine?
         = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: "fr-mb-2w") do |c|
           - c.body do
             %p
