@@ -1179,7 +1179,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
     it do
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include("Vous pouvez réaffecter le dossier nº #{dossier.id} à l'un des groupes d'instructeurs suivants.")
+      expect(response.body).to include("Vous pouvez réaffecter le dossier nº #{dossier.id} à l’un des groupes d’instructeurs suivants.")
       expect(response.body).to include('2 groupes existent')
     end
   end
