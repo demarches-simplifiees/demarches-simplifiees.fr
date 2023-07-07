@@ -4,10 +4,13 @@ import {
   isTextInputElement,
   isDateInputElement
 } from '@utils';
+import { isFormInputElement } from '@coldwired/utils';
+
 import { ApplicationController } from './application_controller';
 
 const AUTOSUBMIT_DEBOUNCE_DELAY = 500;
 const AUTOSUBMIT_DATE_DEBOUNCE_DELAY = 5000;
+const AUTOSUBMIT_EVENTS = ['input', 'change', 'blur'];
 
 export class AutosubmitController extends ApplicationController {
   static targets = ['submitter'];
@@ -15,7 +18,7 @@ export class AutosubmitController extends ApplicationController {
   declare readonly submitterTarget: HTMLButtonElement | HTMLInputElement;
   declare readonly hasSubmitterTarget: boolean;
 
-  #dateTimeChangedInputs = new WeakSet<HTMLInputElement>();
+  #dateTimeChangedInputs = new WeakSet<HTMLElement>();
 
   connect() {
     this.on('input', (event) => this.onInput(event));
@@ -24,8 +27,8 @@ export class AutosubmitController extends ApplicationController {
   }
 
   private onChange(event: Event) {
-    const target = event.target as HTMLInputElement;
-    if (target.disabled || target.hasAttribute('data-no-autosubmit')) return;
+    const target = this.findTargetElement(event);
+    if (!target) return;
 
     if (
       isSelectElement(target) ||
@@ -48,8 +51,8 @@ export class AutosubmitController extends ApplicationController {
   }
 
   private onInput(event: Event) {
-    const target = event.target as HTMLInputElement;
-    if (target.disabled || target.hasAttribute('data-no-autosubmit')) return;
+    const target = this.findTargetElement(event);
+    if (!target) return;
 
     if (!isDateInputElement(target) && isTextInputElement(target)) {
       this.debounce(this.submit, AUTOSUBMIT_DEBOUNCE_DELAY);
@@ -57,8 +60,8 @@ export class AutosubmitController extends ApplicationController {
   }
 
   private onBlur(event: Event) {
-    const target = event.target as HTMLInputElement;
-    if (target.disabled || target.hasAttribute('data-no-autosubmit')) return;
+    const target = this.findTargetElement(event);
+    if (!target) return;
 
     if (isDateInputElement(target)) {
       Promise.resolve().then(() => {
@@ -68,6 +71,44 @@ export class AutosubmitController extends ApplicationController {
         }
       });
     }
+  }
+
+  private findTargetElement(event: Event) {
+    const target = event.target;
+    if (
+      !isFormInputElement(target) ||
+      this.preventAutosubmit(target, event.type)
+    ) {
+      return null;
+    }
+    return target;
+  }
+
+  private preventAutosubmit(
+    target: HTMLElement & { disabled?: boolean },
+    type: string
+  ) {
+    if (target.disabled) {
+      return true;
+    }
+    const noAutosubmit = this.parseNoAutosubmit(
+      target.getAttribute('data-no-autosubmit')
+    );
+    if (Array.isArray(noAutosubmit)) {
+      return noAutosubmit.includes(type);
+    }
+    return noAutosubmit;
+  }
+
+  private parseNoAutosubmit(value?: string | null): boolean | string[] {
+    if (value == null) {
+      return false;
+    }
+    const eventTypes = value
+      .split(' ')
+      .map((token) => token.trim())
+      .filter((eventType) => AUTOSUBMIT_EVENTS.includes(eventType));
+    return eventTypes.length == 0 ? true : eventTypes;
   }
 
   private submit() {
