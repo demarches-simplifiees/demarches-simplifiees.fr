@@ -175,7 +175,8 @@
               %p= try_format_date(etablissement.association_date_declaration)
 
   - unless local_assigns[:short_identity]
-    %p.text-center
-      = link_to "➡ Autres informations sur l’organisme sur « annuaire-entreprises.data.gouv.fr » (ex: fiche d’immatriculation RNCS)",
-        annuaire_link(etablissement.siret),
-        **external_link_attributes
+    .champ-row
+      %p
+        = link_to "➡ Autres informations sur l’organisme sur « annuaire-entreprises.data.gouv.fr »",
+          annuaire_link(etablissement.siret),
+          **external_link_attributes
