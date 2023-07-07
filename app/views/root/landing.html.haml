@@ -8,7 +8,7 @@
       .hero-wrapper
         .hero-text
           %h1.hero-tagline
-            = simple_format(t(".promise"), { class: "hero-tagline-em" }, wrapper_tag: "em")
+            %em.hero-tagline-em= t(".promise")
 
         .hero-illustration
           %img{ :src => image_url("landing/hero/dematerialiser.svg"), alt: '', width: 499, height: 280, loading: 'lazy' }
@@ -34,15 +34,15 @@
           %li.number
             .number-value
               = number_with_delimiter(@stat&.administrations_partenaires)
-            = simple_format(t(".numbers.administrations"), { class: "number-label" }, wrapper_tag: "div")
+            .number-label= t(".numbers.administrations")
           %li.number
             .number-value
               = number_with_delimiter(@stat&.dossiers_not_brouillon)
-            = simple_format(t(".numbers.files"), { class: "number-label" }, wrapper_tag: "div")
+            .number-label= t(".numbers.files")
           %li.number
             .number-value
               = "#{number_with_delimiter(50)} %"
-            = simple_format(t(".numbers.processing_time"), { class: "number-label" }, wrapper_tag: "div")
+            .number-label.number-label-third= t(".numbers.processing_time")
 
   .landing-panel.cta-panel
     .container
