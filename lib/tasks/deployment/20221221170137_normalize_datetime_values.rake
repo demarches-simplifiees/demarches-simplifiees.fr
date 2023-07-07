@@ -4,8 +4,8 @@ namespace :after_party do
     puts "Running deploy task 'normalize_datetime_values'"
 
     # Put your task implementation HERE.
-    Champs::DateTimeChamp.in_batches do |datetime_champs|
-      Migrations::BatchUpdateDatetimeValueJob.perform_later(datetime_champs.pluck(:id))
+    Champs::DatetimeChamp.in_batches do |datetime_champs|
+      Migrations::BatchUpdateDatetimeValuesJob.perform_later(datetime_champs.pluck(:id))
     end
 
     # Update task as completed.  If you remove the line below, the task will

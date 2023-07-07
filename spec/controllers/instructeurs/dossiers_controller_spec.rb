@@ -23,14 +23,12 @@ describe Instructeurs::DossiersController, type: :controller do
   end
 
   describe '#send_to_instructeurs' do
-    let(:recipient) { create(:instructeur) }
-    let(:instructeurs) { [instructeur, recipient] }
     let(:mail) { double("mail") }
 
     before do
-      expect(mail).to receive(:deliver_later)
+      allow(mail).to receive(:deliver_later)
 
-      expect(InstructeurMailer)
+      allow(InstructeurMailer)
         .to receive(:send_dossier)
         .with(instructeur, dossier, recipient)
         .and_return(mail)
@@ -45,8 +43,25 @@ describe Instructeurs::DossiersController, type: :controller do
       )
     end
 
-    it { expect(response).to redirect_to(personnes_impliquees_instructeur_dossier_url) }
-    it { expect(recipient.followed_dossiers).to include(dossier) }
+    context 'when the recipient belongs to the dossier groupe instructeur' do
+      let(:recipient) { instructeur }
+
+      it do
+        expect(InstructeurMailer).to have_received(:send_dossier)
+        expect(response).to redirect_to(personnes_impliquees_instructeur_dossier_url)
+        expect(recipient.followed_dossiers).to include(dossier)
+      end
+    end
+
+    context 'when the recipient is random' do
+      let(:recipient) { create(:instructeur) }
+
+      it do
+        expect(InstructeurMailer).not_to have_received(:send_dossier)
+        expect(response).to redirect_to(personnes_impliquees_instructeur_dossier_url)
+        expect(recipient.followed_dossiers).not_to include(dossier)
+      end
+    end
   end
 
   describe '#follow' do

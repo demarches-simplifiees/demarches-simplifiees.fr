@@ -18,7 +18,13 @@ RSpec.describe InviteMailer, type: :mailer do
            v = send_mail_values.shift
            v == :raise ? raise("boom") : v
          end
-         mailer.body rescue nil
+
+         begin
+           mailer.body
+         rescue MailDeliveryError
+           nil
+         end
+
          mailer.body
          expect(TargetedUserLink.where(target_model: invite, user: invite.user).count).to eq(1)
        end
@@ -42,7 +48,13 @@ RSpec.describe InviteMailer, type: :mailer do
            v = send_mail_values.shift
            v == :raise ? raise("boom") : v
          end
-         mailer.body rescue nil
+
+         begin
+           mailer.body
+         rescue MailDeliveryError
+           nil
+         end
+
          mailer.body
          expect(TargetedUserLink.where(target_model: invite, user: invite.user).count).to eq(1)
        end
