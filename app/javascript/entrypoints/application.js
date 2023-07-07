@@ -4,7 +4,6 @@ import * as Turbo from '@hotwired/turbo';
 import { Application } from '@hotwired/stimulus';
 import '@gouvfr/dsfr/dist/dsfr.module.js';
 
-import '../shared/turbo-actions';
 import '../shared/activestorage/ujs';
 import '../shared/safari-11-empty-file-workaround';
 import '../shared/toggle-target';

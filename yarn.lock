@@ -511,6 +511,29 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
+"@coldwired/actions@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@coldwired/actions/-/actions-0.8.0.tgz#a5e92c0badbc37ffa7c9e70d2aa7982739fbba5f"
+  integrity sha512-IbqyC2ToDv1JWBVkk33ywDrftD34r3WBLokub7Tlon8xS6FQQVejwmgqIqiQ3iLE0jiXOqKz2an3Y1e69mJ55A==
+  dependencies:
+    "@coldwired/utils" "^0.4.1"
+    morphdom "^2.6.1"
+    tiny-invariant "^1.3.1"
+
+"@coldwired/turbo-stream@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@coldwired/turbo-stream/-/turbo-stream-0.8.0.tgz#596202ecbca88f9b264d5055bedcb94298db626b"
+  integrity sha512-/ZKdAcgDkcH+YkW2RyxXGMM6OdpKp4nVpFGTYnor+4mR/jjEdnTRw+3wnZJQfgPzLMG39SXEmY4mp9xQM/qA3Q==
+  dependencies:
+    "@coldwired/actions" "^0.8.0"
+    "@coldwired/utils" "^0.4.1"
+    tiny-invariant "^1.3.1"
+
+"@coldwired/utils@^0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@coldwired/utils/-/utils-0.4.1.tgz#50a615c81948754f4c7f118df05a44e078f28568"
+  integrity sha512-a673URA77AUBm8u5bWGtEmMi9oMv8HBidPT1GtRsaYma1W23Hd2Emn+oD6vUyGLfL+hJGT91w+Y2Y3x9BgLqwQ==
+
 "@esbuild/android-arm64@0.16.14":
   version "0.16.14"
   resolved "https://registry.yarnpkg.com/@esbuild/android-arm64/-/android-arm64-0.16.14.tgz#f02c9f0d43086ddf6ed2795b881ddf7990f74456"
