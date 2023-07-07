@@ -265,7 +265,7 @@ describe DossierRebaseConcern do
       ]
     end
     let(:types_de_champ_private) { [{ type: :text, stable_id: 11 }] }
-    let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:dossier) { create(:dossier, :with_entreprise, procedure: procedure) }
     let(:types_de_champ) { procedure.active_revision.types_de_champ }
 
     let(:text_type_de_champ) { types_de_champ.find { _1.stable_id == 1 } }

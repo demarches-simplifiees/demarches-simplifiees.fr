@@ -10,6 +10,7 @@
 #  procedure_id :integer
 #
 module Mails
+  # en_instruction
   class ReceivedMail < ApplicationRecord
     include MailTemplateConcern
 
