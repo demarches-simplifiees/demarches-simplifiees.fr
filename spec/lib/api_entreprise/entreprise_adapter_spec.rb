@@ -103,4 +103,20 @@ describe APIEntreprise::EntrepriseAdapter do
       expect { subject }.to raise_error(APIEntreprise::API::Error::RequestFailed)
     end
   end
+
+  context "when individual" do
+    let(:siren) { '909700890' }
+    let(:body) { File.read('spec/fixtures/files/api_entreprise/entreprise_individual.json') }
+    let(:status) { 200 }
+
+    context 'Attributs Entreprises' do
+      it 'L\'entreprise contient bien un forme_juridique_code' do
+        expect(subject[:entreprise_forme_juridique_code]).to eq('1000')
+      end
+
+      it 'L\'entreprise contient bien une raison_sociale' do
+        expect(subject[:entreprise_raison_sociale]).to eq('Marine LE LOUARN SMAIL (LE LOUARN)')
+      end
+    end
+  end
 end

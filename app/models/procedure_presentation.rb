@@ -60,7 +60,7 @@ class ProcedurePresentation < ApplicationRecord
     fields.push(
       field_hash('user', 'email', type: :text),
       field_hash('followers_instructeurs', 'email', type: :text),
-      field_hash('groupe_instructeur', 'label', type: :text)
+      field_hash('groupe_instructeur', 'id', type: :enum)
     )
 
     if procedure.for_individual
@@ -214,9 +214,16 @@ class ProcedurePresentation < ApplicationRecord
           .includes(table)
           .filter_ilike(table, column, values)
       when 'groupe_instructeur'
-        dossiers
-          .joins(:groupe_instructeur)
-          .filter_ilike(table, column, values)
+        assert_supported_column(table, column)
+        if column == 'label'
+          dossiers
+            .joins(:groupe_instructeur)
+            .filter_ilike(table, column, values)
+        else
+          dossiers
+            .joins(:groupe_instructeur)
+            .where(groupe_instructeur_id: values)
+        end
       end.pluck(:id)
     end.reduce(:&)
   end
@@ -237,6 +244,9 @@ class ProcedurePresentation < ApplicationRecord
       find_type_de_champ(filter[COLUMN]).dynamic_type.filter_to_human(filter['value'])
     elsif filter['column'] == 'state'
       Dossier.human_attribute_name("state.#{filter['value']}")
+    elsif filter['table'] == 'groupe_instructeur' && filter['column'] == 'id'
+      instructeur.groupe_instructeurs
+        .find { _1.id == filter['value'].to_i }&.label || "Groupe Instucteur #{filter['value']}"
     else
       filter['value']
     end
@@ -316,7 +326,13 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def field_enum(field_id)
-    find_field(*field_id.split(SLASH))['scope']
+    field = find_field(*field_id.split(SLASH))
+    if field['scope'].present?
+      I18n.t(field['scope']).map(&:to_a).map(&:reverse)
+    elsif field['table'] == 'groupe_instructeur'
+      instructeur.groupe_instructeurs
+        .map { [_1.label, _1.id] }
+    end
   end
 
   private
@@ -423,6 +439,9 @@ class ProcedurePresentation < ApplicationRecord
   def assert_supported_column(table, column)
     if table == 'followers_instructeurs' && column != 'email'
       raise ArgumentError, 'Table `followers_instructeurs` only supports the `email` column.'
+    end
+    if table == 'groupe_instructeur' && (column != 'label' && column != 'id')
+      raise ArgumentError, 'Table `groupe_instructeur` only supports the `label` or `id` column.'
     end
   end
 end

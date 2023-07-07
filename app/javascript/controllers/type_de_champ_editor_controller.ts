@@ -17,8 +17,6 @@ const {
 
 const AUTOSAVE_DEBOUNCE_DELAY = debounce_delay;
 
-console.log(AUTOSAVE_DEBOUNCE_DELAY);
-
 export class TypeDeChampEditorController extends ApplicationController {
   static values = {
     typeDeChampStableId: String,

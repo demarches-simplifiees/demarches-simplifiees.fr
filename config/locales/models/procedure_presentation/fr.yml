@@ -22,6 +22,7 @@ fr:
           followers_instructeurs:
             email: Email instructeur
           groupe_instructeur:
+            id: Groupe instructeur
             label: Groupe instructeur
           individual:
             prenom: Prénom

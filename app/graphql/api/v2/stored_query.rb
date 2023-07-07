@@ -801,5 +801,17 @@ class API::V2::StoredQuery
       }
     }
   }
+
+  mutation demarcheCloner($input: DemarcheClonerInput!) {
+    demarcheCloner(input: $input) {
+      demarche {
+        id
+        number
+      }
+      errors {
+        message
+      }
+    }
+  }
   GRAPHQL
 end

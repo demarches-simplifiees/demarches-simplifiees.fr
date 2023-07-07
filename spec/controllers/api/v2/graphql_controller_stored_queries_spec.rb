@@ -367,5 +367,45 @@ describe API::V2::GraphqlController do
         expect(gql_data[:groupeInstructeurSupprimerInstructeurs][:groupeInstructeur][:instructeurs]).to eq([{ id: existing_instructeur.to_typed_id, email: existing_instructeur.email }])
       }
     end
+
+    context 'demarcheCloner' do
+      let(:operation_name) { 'demarcheCloner' }
+
+      context 'find by number' do
+        let(:variables) { { input: { demarche: { number: procedure.id } } } }
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data[:demarcheCloner][:errors]).to be_nil
+          expect(gql_data[:demarcheCloner][:demarche][:id]).not_to be_nil
+          expect(gql_data[:demarcheCloner][:demarche][:id]).not_to eq(procedure.to_typed_id)
+          expect(gql_data[:demarcheCloner][:demarche][:id]).to eq(Procedure.last.to_typed_id)
+        }
+      end
+
+      context 'find by id' do
+        let(:variables) { { input: { demarche: { id: procedure.to_typed_id } } } }
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data[:demarcheCloner][:errors]).to be_nil
+          expect(gql_data[:demarcheCloner][:demarche][:id]).not_to be_nil
+          expect(gql_data[:demarcheCloner][:demarche][:id]).not_to eq(procedure.to_typed_id)
+          expect(gql_data[:demarcheCloner][:demarche][:id]).to eq(Procedure.last.to_typed_id)
+        }
+      end
+
+      context 'with title' do
+        let(:variables) { { input: { demarche: { id: procedure.to_typed_id }, title: new_title } } }
+        let(:new_title) { "#{procedure.libelle} TEST 1" }
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data[:demarcheCloner][:errors]).to be_nil
+          expect(gql_data[:demarcheCloner][:demarche][:id]).to eq(Procedure.last.to_typed_id)
+          expect(Procedure.last.libelle).to eq(new_title)
+        }
+      end
+    end
   end
 end

@@ -8,7 +8,7 @@ class ProcedureDetail < OpenStruct
   end
 
   def administrateurs
-    Administrateurs.new(count: admin_count)
+    Administrateurs.new(admin_count)
   end
 
   Administrateurs = Struct.new(:count)

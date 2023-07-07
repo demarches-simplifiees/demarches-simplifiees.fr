@@ -71,6 +71,7 @@ Rails.application.routes.draw do
     resources :outdated_procedures, only: [:index] do
       patch :bulk_update, on: :collection
     end
+    resources :safe_mailers, only: [:index, :edit, :update, :destroy, :new, :create, :show]
 
     post 'demandes/create_administrateur'
     post 'demandes/refuse_administrateur'
@@ -409,7 +410,8 @@ Rails.application.routes.draw do
         patch 'update_displayed_fields'
         get 'update_sort/:table/:column' => 'procedures#update_sort', as: 'update_sort'
         post 'add_filter'
-        get 'remove_filter' => 'procedures#remove_filter', as: 'remove_filter'
+        post 'update_filter'
+        get 'remove_filter'
         get 'download_export'
         post 'download_export'
         get 'stats'

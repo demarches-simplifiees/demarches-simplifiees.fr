@@ -17,6 +17,12 @@ class Rack::Attack
     end
   end
 
+  throttle('/api/public/v1/dossiers/ip', limit: 5, period: 20.seconds) do |req|
+    if req.path == '/api/public/v1/dossiers' && req.post? && rack_attack_enabled?
+      req.remote_ip
+    end
+  end
+
   Rack::Attack.safelist('allow from localhost') do |req|
     IPService.ip_trusted?(req.remote_ip)
   end

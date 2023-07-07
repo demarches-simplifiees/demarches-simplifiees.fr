@@ -20,7 +20,9 @@ class BatchOperation < ApplicationRecord
     accepter: 'accepter',
     archiver: 'archiver',
     follow: 'follow',
-    passer_en_instruction: 'passer_en_instruction'
+    passer_en_instruction: 'passer_en_instruction',
+    repasser_en_construction: 'repasser_en_construction',
+    unfollow: 'unfollow'
   }
 
   has_many :dossiers, dependent: :nullify
@@ -61,6 +63,10 @@ class BatchOperation < ApplicationRecord
       query.state_en_instruction
     when BatchOperation.operations.fetch(:follow) then
       query.without_followers.en_cours
+    when BatchOperation.operations.fetch(:repasser_en_construction) then
+      query.state_en_instruction
+    when BatchOperation.operations.fetch(:unfollow) then
+      query.with_followers.en_cours
     end
   end
 
@@ -79,6 +85,10 @@ class BatchOperation < ApplicationRecord
       dossier.accepter(instructeur: instructeur, motivation: motivation, justificatif: justificatif_motivation)
     when BatchOperation.operations.fetch(:follow)
       instructeur.follow(dossier)
+    when BatchOperation.operations.fetch(:repasser_en_construction)
+      dossier.repasser_en_construction!(instructeur: instructeur)
+    when BatchOperation.operations.fetch(:unfollow)
+      instructeur.unfollow(dossier)
     end
   end
 

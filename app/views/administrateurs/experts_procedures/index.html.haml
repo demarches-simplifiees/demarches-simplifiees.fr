@@ -15,8 +15,8 @@
         method: :put,
         url: allow_expert_review_admin_procedure_path(@procedure),
         html: { class: 'form procedure-form__column--form no-background' } do |f|
-        %label.toggle-switch
-          = f.check_box :allow_expert_review, class: 'toggle-switch-checkbox', onchange: 'this.form.requestSubmit()'
+        %label.toggle-switch{ data: { controller: 'autosubmit' } }
+          = f.check_box :allow_expert_review, class: 'toggle-switch-checkbox'
           %span.toggle-switch-control.round
           %span.toggle-switch-label.on
           %span.toggle-switch-label.off
@@ -29,8 +29,8 @@
           method: :put,
           url: experts_require_administrateur_invitation_admin_procedure_path(@procedure),
           html: { class: 'form procedure-form__column--form no-background' } do |f|
-          %label.toggle-switch
-            = f.check_box :experts_require_administrateur_invitation, class: 'toggle-switch-checkbox', onchange: 'this.form.requestSubmit()'
+          %label.toggle-switch{ data: { controller: 'autosubmit' } }
+            = f.check_box :experts_require_administrateur_invitation, class: 'toggle-switch-checkbox'
             %span.toggle-switch-control.round
             %span.toggle-switch-label.on
             %span.toggle-switch-label.off
@@ -79,8 +79,8 @@
                       method: :put,
                       data: { turbo: true },
                       html: { class: 'form procedure-form__column--form no-background' } do |f|
-                      %label.toggle-switch
-                        = f.check_box :allow_decision_access, class: 'toggle-switch-checkbox', onchange: 'this.form.requestSubmit()'
+                      %label.toggle-switch{ data: { controller: 'autosubmit' } }
+                        = f.check_box :allow_decision_access, class: 'toggle-switch-checkbox'
                         %span.toggle-switch-control.round
                         %span.toggle-switch-label.on
                         %span.toggle-switch-label.off

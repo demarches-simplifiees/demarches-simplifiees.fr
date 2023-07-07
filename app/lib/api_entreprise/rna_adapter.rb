@@ -15,15 +15,23 @@ class APIEntreprise::RNAAdapter < APIEntreprise::Adapter
 
   def process_params
     params = data_source[:association]
-    params = params&.slice(*attr_to_fetch) if @depreciated
-    params[:rna] = data_source.dig(:association, :id)
-    if params[:rna].present? && valid_params?(params)
-      params = params.transform_keys { |k| :"association_#{k}" }.deep_stringify_keys
-      raise InvalidSchemaError.new(schemer.validate(params).to_a) unless schemer.valid?(params)
 
-      params
-    else
-      {}
+    Sentry.with_scope do |scope|
+      scope.set_tags(siret: @siret)
+      scope.set_extras(source: params)
+
+      params = params&.slice(*attr_to_fetch) if @depreciated
+      params[:rna] = data_source.dig(:association, :id)
+
+      if params[:rna].present? && valid_params?(params)
+        params = params.transform_keys { |k| :"association_#{k}" }.deep_stringify_keys
+
+        raise InvalidSchemaError.new(schemer.validate(params).to_a) unless schemer.valid?(params)
+
+        params
+      else
+        {}
+      end
     end
   end
 

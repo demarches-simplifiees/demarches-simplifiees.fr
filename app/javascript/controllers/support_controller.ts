@@ -9,12 +9,12 @@ export class SupportController extends ApplicationController {
 
   connect() {
     this.inputRadioTargets.forEach((inputRadio) => {
-      inputRadio.addEventListener('change', this.onChange.bind(this));
-      inputRadio.addEventListener('keydown', this.onChange.bind(this));
+      this.on(inputRadio, 'change', this.onChange.bind(this));
+      this.on(inputRadio, 'keydown', this.onChange.bind(this));
     });
   }
 
-  onChange(event: Event) {
+  private onChange(event: Event) {
     const target = event.target as HTMLInputElement;
     const content = this.getContentForTarget(target);
 
@@ -29,12 +29,12 @@ export class SupportController extends ApplicationController {
     }
   }
 
-  getLabelForTarget(target: HTMLInputElement) {
+  private getLabelForTarget(target: HTMLInputElement) {
     const labelSelector = `label[for="${target.id}"]`;
     return document.querySelector(labelSelector);
   }
 
-  getContentForTarget(target: HTMLInputElement) {
+  private getContentForTarget(target: HTMLInputElement) {
     const label = this.getLabelForTarget(target);
     if (!label) {
       return null;

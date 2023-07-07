@@ -1,4 +1,4 @@
-- row_id = @row.first.row_id
+- row_id = "row-#{@row.first.row_id}"
 .row{ id: row_id }
   - @row.each do |champ|
     = fields_for champ.input_name, champ do |form|
