@@ -164,6 +164,10 @@ class Champ < ApplicationRecord
     false
   end
 
+  def single_checkbox?
+    false
+  end
+
   def input_group_id
     "champ-#{html_id}"
   end

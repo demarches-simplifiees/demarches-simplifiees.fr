@@ -5,8 +5,8 @@
     - render EditableChamp::ChampLabelContentComponent.new form: @form, champ: @champ, seen_at: @seen_at
 - elsif @champ.legend_label?
   %legend.fr-fieldset__legend.fr-text--regular= render EditableChamp::ChampLabelContentComponent.new form: @form, champ: @champ, seen_at: @seen_at
+- elsif @champ.single_checkbox?
+  -# no label to add
 - else
   .fr-label.mb-4{ id: @champ.labelledby_id }
     = render EditableChamp::ChampLabelContentComponent.new form: @form, champ: @champ, seen_at: @seen_at
-
-

@@ -12,6 +12,14 @@ class Champs::CheckboxChamp < Champs::BooleanChamp
     value_with_legacy == TRUE_VALUE
   end
 
+  def html_label?
+    false
+  end
+
+  def single_checkbox?
+    true
+  end
+
   private
 
   # TODO remove when normalize_checkbox_values is over
