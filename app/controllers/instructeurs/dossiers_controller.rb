@@ -302,6 +302,20 @@ module Instructeurs
       render layout: "print"
     end
 
+    def annotation
+      @dossier = dossier_with_champs(pj_template: false)
+      annotation = @dossier.champs_private_all.find(params[:annotation_id])
+
+      respond_to do |format|
+        format.turbo_stream do
+          @to_show, @to_hide = []
+          @to_update = [annotation]
+
+          render :update_annotations
+        end
+      end
+    end
+
     def telecharger_pjs
       files = ActiveStorage::DownloadableFile.create_list_from_dossiers(Dossier.where(id: dossier.id), with_champs_private: true, include_infos_administration: true)
       cleaned_files = ActiveStorage::DownloadableFile.cleanup_list_from_dossier(files)

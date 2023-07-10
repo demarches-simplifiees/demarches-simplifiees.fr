@@ -218,7 +218,14 @@ GEM
       dotenv (= 2.7.6)
       railties (>= 3.2)
     dry-cli (1.0.0)
+    dry-core (1.0.0)
+      concurrent-ruby (~> 1.0)
+      zeitwerk (~> 2.6)
     dry-inflector (0.2.0)
+    dry-monads (1.6.0)
+      concurrent-ruby (~> 1.0)
+      dry-core (~> 1.0, < 2)
+      zeitwerk (~> 2.6)
     dumb_delegator (1.0.0)
     ecma-re-validator (0.3.0)
       regexp_parser (~> 2.0)
@@ -828,6 +835,7 @@ DEPENDENCIES
   devise-two-factor
   discard
   dotenv-rails
+  dry-monads
   elastic-apm
   factory_bot
   flipper

@@ -223,6 +223,16 @@ class Champ < ApplicationRecord
     false
   end
 
+  def poll_external_data?
+    false
+  end
+
+  def fetch_external_data_pending?
+    # We don't have a good mechanism right now to know if the last fetch has errored. So, in order
+    # to ensure we don't poll to infinity, we stop after 5 minutes no matter what.
+    fetch_external_data? && poll_external_data? && external_id.present? && data.nil? && updated_at > 5.minutes.ago
+  end
+
   def fetch_external_data
     raise NotImplemented.new(:fetch_external_data)
   end

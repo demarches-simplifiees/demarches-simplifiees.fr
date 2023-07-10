@@ -88,7 +88,8 @@ describe ProcedureExportService do
           "text",
           "epci",
           "epci (Code)",
-          "epci (Département)"
+          "epci (Département)",
+          "cojo"
         ]
       end
 
@@ -198,7 +199,8 @@ describe ProcedureExportService do
           "text",
           "epci",
           "epci (Code)",
-          "epci (Département)"
+          "epci (Département)",
+          "cojo"
         ]
       end
 
@@ -291,7 +293,8 @@ describe ProcedureExportService do
             "text",
             "epci",
             "epci (Code)",
-            "epci (Département)"
+            "epci (Département)",
+            "cojo"
           ]
         end
 
