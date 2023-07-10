@@ -393,10 +393,6 @@ en:
         dossier_not_in_instructor_group: "File no. %{dossier_id} of the “%{procedure_libelle}” procedure corresponds to your search, but it is attached to the “%{groupe_instructeur_label}” instructor group."
     users:
       dossiers:
-        account_creation:
-          empty: "No file"
-          detail_one: "To complete a procedure, contact your administration and ask for the link to the procedure."
-          detail_two: "This one should look like"
         fix_champ: "fill in this field"
         archived_dossier: "Your file will be kept %{duree_conservation_dossiers_dans_ds} more months"
         identite:
@@ -460,17 +456,19 @@ en:
         index:
           dossiers: "My files"
         dossiers_list:
-          caption: My files
-          procedure: "Procedure"
           n_dossier: "File n."
-          requester: "Requester"
-          status: "Status"
-          updated: "Updated"
-          actions: "Actions"
           no_result_title: No files
           no_result_text_html: "To fill a procedure, contact your administration asking for the procedure link. <br> It should look like %{app_base}/commencer/xxx."
           no_result_text_with_filter: found with selected filters
           no_result_reset_filter: Reset filters
+          procedure_closed: This procedure has been closed, you will not be able to submit a file again from the procedure link, contact your administration for more information.
+          pending_correction: This procedure is awaiting your corrections. Correct the fields that are notified by an alert message in the form.
+          depose_at: First submission on %{date}
+          created_at: Created at %{date}
+          updated_at: updated at %{date}
+          shared_with: File shared with
+          deleted: Deleted at %{date}
+          deleted_badge: Deleted
         transfers:
           sender_demande_en_cours: "A transfer request is pending on file Nº %{id} to %{email}"
           receiver_demande_en_cours: "Transfer request on file Nº %{id} sent by %{email}"
@@ -483,8 +481,9 @@ en:
           clone: "Duplicate the file"
           delete_dossier: "Delete the file"
           transfer_dossier: "Transfer the file"
-          edit_draft: "Edit the draft"
+          edit_draft: "Keep filling"
           actions: "Actions"
+          other_actions: "Other actions"
       sessions:
         new:
           sign_in: Sign in on %{application_name}
@@ -743,6 +742,13 @@ en:
       new:
         title: Pick a password
         continue: Continue
+    procedures:
+      created_at: created at
+      published_at: published at
+      updated_at_today: updated at
+      updated_at: updated at
+      closed_at: closed at
+      auto_archive_on: will close at
   users:
     dossiers:
       test_procedure: "This file is submitted on a test procedure. Any modification of the procedure by the administrator (addition of a field, publication of the procedure, etc.) will result in the removal of the file."
