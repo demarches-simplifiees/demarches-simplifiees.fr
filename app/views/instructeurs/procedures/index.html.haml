@@ -1,19 +1,40 @@
 - content_for(:title, "Démarches")
 
-.container
-  %h1.page-title Démarches
-  = render partial: 'instructeurs/procedures/synthese', locals: { procedures: @procedures, all_dossiers_counts: @all_dossiers_counts }
+.sub-header
+  .fr-container
+    %h1.fr-h3.fr-mb-0 Démarches
+    = render partial: 'instructeurs/procedures/synthese', locals: { procedures: @procedures, all_dossiers_counts: @all_dossiers_counts }
 
-  %ul.procedure-list
-    = render partial: 'instructeurs/procedures/list',
-      collection: @procedures,
-      as: :p,
-      locals: { dossiers_count_per_procedure: @dossiers_count_per_procedure,
-        dossiers_a_suivre_count_per_procedure: @dossiers_a_suivre_count_per_procedure,
-        dossiers_archived_count_per_procedure: @dossiers_archived_count_per_procedure,
-        dossiers_termines_count_per_procedure: @dossiers_termines_count_per_procedure,
-        dossiers_expirant_count_per_procedure: @dossiers_expirant_count_per_procedure,
-        dossiers_supprimes_recemment_count_per_procedure: @dossiers_supprimes_recemment_count_per_procedure,
-        followed_dossiers_count_per_procedure: @followed_dossiers_count_per_procedure,
-        procedure_ids_en_cours_with_notifications: @procedure_ids_en_cours_with_notifications,
-        procedure_ids_termines_with_notifications: @procedure_ids_termines_with_notifications }
+    %nav.tabs{ role: 'navigation', 'aria-label': t('views.users.dossiers.secondary_menu') }
+      %ul
+        = tab_item(t('pluralize.published', count: @procedures_publiees_count), instructeur_procedures_path(statut: 'publiees'), active: @statut == 'publiees', badge: number_with_html_delimiter(@procedures_publiees_count))
+        = tab_item('En test', instructeur_procedures_path(statut: 'brouillons'), active: @statut == 'brouillons', badge: number_with_html_delimiter(@procedures_draft_count))
+        = tab_item(t('pluralize.closed', count: @procedures_closed_count), instructeur_procedures_path(statut: 'archivees'), active: @statut == 'archivees', badge: number_with_html_delimiter(@procedures_closed_count))
+
+.fr-container
+  - if @statut === "publiees"
+    - collection = @procedures_publiees
+  - if @statut === "brouillons"
+    - collection = @procedures_draft
+  - if @statut === "archivees"
+    - collection = @procedures_closed
+
+
+  - if collection.present?
+    .fr-h6
+      = page_entries_info collection
+    %ul.procedure-list.fr-pl-0
+      = render partial: 'instructeurs/procedures/list',
+        collection: collection,
+        as: :p,
+        locals: { dossiers_count_per_procedure: @dossiers_count_per_procedure,
+          dossiers_a_suivre_count_per_procedure: @dossiers_a_suivre_count_per_procedure,
+          dossiers_archived_count_per_procedure: @dossiers_archived_count_per_procedure,
+          dossiers_termines_count_per_procedure: @dossiers_termines_count_per_procedure,
+          dossiers_expirant_count_per_procedure: @dossiers_expirant_count_per_procedure,
+          dossiers_supprimes_recemment_count_per_procedure: @dossiers_supprimes_recemment_count_per_procedure,
+          followed_dossiers_count_per_procedure: @followed_dossiers_count_per_procedure,
+          procedure_ids_en_cours_with_notifications: @procedure_ids_en_cours_with_notifications,
+          procedure_ids_termines_with_notifications: @procedure_ids_termines_with_notifications }
+
+    = paginate collection, views_prefix: 'shared'

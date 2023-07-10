@@ -7,10 +7,10 @@
 
     %nav.tabs{ role: 'navigation', 'aria-label': t('views.users.dossiers.secondary_menu') }
       %ul
-        = tab_item(t('pluralize.published', count: @procedures_publiees.count), admin_procedures_path(statut: 'publiees'), active: @statut == 'publiees', badge: number_with_html_delimiter(@procedures_publiees_count))
+        = tab_item(t('pluralize.published', count: @procedures_publiees_count), admin_procedures_path(statut: 'publiees'), active: @statut == 'publiees', badge: number_with_html_delimiter(@procedures_publiees_count))
         = tab_item('En test', admin_procedures_path(statut: 'brouillons'), active: @statut == 'brouillons', badge: number_with_html_delimiter(@procedures_draft_count))
-        = tab_item(t('pluralize.closed', count: @procedures_closed.count), admin_procedures_path(statut: 'archivees'), active: @statut == 'archivees', badge: number_with_html_delimiter(@procedures_closed_count))
-        = tab_item(t('pluralize.deleted', count: @procedures_deleted.count), admin_procedures_path(statut: 'supprimees'), active: @statut === 'supprimees', badge: number_with_html_delimiter(@procedures_deleted_count))
+        = tab_item(t('pluralize.closed', count: @procedures_closed_count), admin_procedures_path(statut: 'archivees'), active: @statut == 'archivees', badge: number_with_html_delimiter(@procedures_closed_count))
+        = tab_item(t('pluralize.deleted', count: @procedures_deleted_count), admin_procedures_path(statut: 'supprimees'), active: @statut === 'supprimees', badge: number_with_html_delimiter(@procedures_deleted_count))
 
 .fr-container#procedures{ data: { item_count: @statut === "publiees" ? @procedures_publiees_count : @statut === "brouillons" ? @procedures_draft_count : @procedures_closed_count } }
   - if @statut === "publiees"
