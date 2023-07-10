@@ -40,7 +40,7 @@ module Administrateurs
         @instructeurs = paginated_instructeurs
         @groupes_instructeurs = paginated_groupe_instructeurs
 
-        flash[:alert] = @groupe_instructeur.errors.full_messages
+        flash.now[:alert] = @groupe_instructeur.errors.full_messages
         render :index
       end
     end
@@ -56,7 +56,7 @@ module Administrateurs
         @instructeurs = paginated_instructeurs
         @available_instructeur_emails = available_instructeur_emails
 
-        flash[:alert] = @groupe_instructeur.errors.full_messages
+        flash.now[:alert] = @groupe_instructeur.errors.full_messages
         render :show
       end
     end

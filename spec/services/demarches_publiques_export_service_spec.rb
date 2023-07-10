@@ -1,6 +1,6 @@
 describe DemarchesPubliquesExportService do
   let(:procedure) { create(:procedure, :published, :with_service, :with_type_de_champ) }
-  let!(:dossier) { create(:dossier, procedure: procedure) }
+  let!(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
   let(:gzip_filename) { "demarches.json.gz" }
 
   after { FileUtils.rm(gzip_filename) }
@@ -16,19 +16,25 @@ describe DemarchesPubliquesExportService do
           organisme: "organisme",
           typeOrganisme: "association"
         },
-        cadreJuridique: "un cadre juridique important",
+        cadreJuridiqueUrl: "un cadre juridique important",
+        demarcheUrl: nil,
+        dpoUrl: nil,
+        noticeUrl: nil,
+        siteWebUrl: "https://mon-site.gouv",
+        logo: nil,
+        notice: nil,
         deliberation: nil,
         datePublication: procedure.published_at.iso8601,
+        zones: ["Ministère de l'Education Populaire"],
+        tags: [],
         dossiersCount: 1,
         revision: {
           champDescriptors: [
             {
               description: procedure.active_revision.types_de_champ_public.first.description,
               label: procedure.active_revision.types_de_champ_public.first.libelle,
-              options: nil,
               required: false,
-              type: "text",
-              champDescriptors: nil
+              __typename: "TextChampDescriptor"
             }
           ]
         }

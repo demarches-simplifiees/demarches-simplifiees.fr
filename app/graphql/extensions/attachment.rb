@@ -3,7 +3,7 @@
 
 module Extensions
   class Attachment < GraphQL::Schema::FieldExtension
-    attr_reader :attachment_assoc
+    attr_reader :attachment_assoc, :root
 
     def apply
       # Here we try to define the ActiveRecord association name:
@@ -18,13 +18,14 @@ module Extensions
         attachment = field.original_name.to_s.sub(/_url$/, "")
         "#{attachment}_attachment"
       end
+      @root = options&.dig(:root) || :object
     end
 
     # This method resolves (as it states) the field itself
     # (it's the same as defining a method within a type)
     def resolve(object:, **_rest)
       Loaders::Association.for(
-        object.object.class,
+        object.public_send(root).class,
         attachment_assoc => :blob
       ).load(object.object)
     end

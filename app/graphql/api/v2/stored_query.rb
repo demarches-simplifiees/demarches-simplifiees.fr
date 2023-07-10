@@ -50,7 +50,7 @@ class API::V2::StoredQuery
       declarative
       dateCreation
       dateFermeture
-      publishedRevision @include(if: $includeRevision) {
+      activeRevision @include(if: $includeRevision) {
         ...RevisionFragment
       }
       groupeInstructeurs @include(if: $includeGroupeInstructeurs) {
@@ -305,25 +305,65 @@ class API::V2::StoredQuery
     datePublication
     champDescriptors {
       ...ChampDescriptorFragment
-      champDescriptors {
-        ...ChampDescriptorFragment
+      ... on RepetitionChampDescriptor {
+        champDescriptors {
+          ...ChampDescriptorFragment
+        }
       }
     }
     annotationDescriptors {
       ...ChampDescriptorFragment
-      champDescriptors {
-        ...ChampDescriptorFragment
+      ... on RepetitionChampDescriptor {
+        champDescriptors {
+          ...ChampDescriptorFragment
+        }
       }
     }
   }
 
   fragment ChampDescriptorFragment on ChampDescriptor {
+    __typename
     id
-    type
     label
     description
     required
-    options
+    ... on DropDownListChampDescriptor {
+      options
+      otherOption
+    }
+    ... on MultipleDropDownListChampDescriptor {
+      options
+    }
+    ... on LinkedDropDownListChampDescriptor {
+      options
+    }
+    ... on PieceJustificativeChampDescriptor {
+      fileTemplate {
+        ...FileFragment
+      }
+    }
+    ... on ExplicationChampDescriptor {
+      collapsibleExplanationEnabled
+      collapsibleExplanationText
+    }
+    ... on PaysChampDescriptor {
+      options {
+        name
+        code
+      }
+    }
+    ... on RegionChampDescriptor {
+      options {
+        name
+        code
+      }
+    }
+    ... on DepartementChampDescriptor {
+      options {
+        name
+        code
+      }
+    }
   }
 
   fragment AvisFragment on Avis {

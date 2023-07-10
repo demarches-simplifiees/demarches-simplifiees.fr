@@ -9,7 +9,7 @@ RSpec.describe TypesDeChamp::PrefillDropDownListTypeDeChamp do
 
       it {
         expect(possible_values).to match(
-          [I18n.t("views.prefill_descriptions.edit.possible_values.drop_down_list_other")] + type_de_champ.drop_down_list_enabled_non_empty_options
+          [I18n.t("views.prefill_descriptions.edit.possible_values.drop_down_list_other_html")] + type_de_champ.drop_down_list_enabled_non_empty_options
         )
       }
     end

@@ -21,6 +21,9 @@
 #  type_de_champ_id               :integer
 #
 class Champs::PaysChamp < Champs::TextChamp
+  validates :value, inclusion: APIGeoService.countries.pluck(:name), allow_nil: true, allow_blank: false
+  validates :external_id, inclusion: APIGeoService.countries.pluck(:code), allow_nil: true, allow_blank: false
+
   def for_export
     [name, code]
   end

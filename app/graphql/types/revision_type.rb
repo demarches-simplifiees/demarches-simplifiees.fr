@@ -12,7 +12,11 @@ module Types
     end
 
     def annotation_descriptors
-      Loaders::Association.for(object.class, revision_types_de_champ_private: :type_de_champ).load(object)
+      if context.authorized_demarche?(object.procedure, opendata: true)
+        Loaders::Association.for(object.class, revision_types_de_champ_private: :type_de_champ).load(object)
+      else
+        []
+      end
     end
   end
 end
