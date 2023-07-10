@@ -383,28 +383,6 @@
               "deprecationReason": null
             },
             {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
-            },
-            {
               "name": "required",
               "description": "Est-ce que le champ est obligatoire ?",
               "args": [
@@ -563,28 +541,6 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
-            },
-            {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
             },
             {
               "name": "required",
@@ -1111,28 +1067,6 @@
               "deprecationReason": null
             },
             {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
-            },
-            {
               "name": "required",
               "description": "Est-ce que le champ est obligatoire ?",
               "args": [
@@ -1430,28 +1364,6 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
-            },
-            {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
             },
             {
               "name": "required",
@@ -1866,28 +1778,6 @@
               "deprecationReason": null
             },
             {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
-            },
-            {
               "name": "required",
               "description": "Est-ce que le champ est obligatoire ?",
               "args": [
@@ -2117,28 +2007,6 @@
               "deprecationReason": null
             },
             {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
-            },
-            {
               "name": "required",
               "description": "Est-ce que le champ est obligatoire ?",
               "args": [
@@ -2264,28 +2132,6 @@
               "deprecationReason": null
             },
             {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
-            },
-            {
               "name": "required",
               "description": "Est-ce que le champ est obligatoire ?",
               "args": [
@@ -2409,28 +2255,6 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
-            },
-            {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
             },
             {
               "name": "required",
@@ -2702,28 +2526,6 @@
               "deprecationReason": null
             },
             {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
-            },
-            {
               "name": "required",
               "description": "Est-ce que le champ est obligatoire ?",
               "args": [
@@ -2847,28 +2649,6 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
-            },
-            {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
             },
             {
               "name": "required",
@@ -3249,28 +3029,6 @@
               "deprecationReason": null
             },
             {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
-            },
-            {
               "name": "required",
               "description": "Est-ce que le champ est obligatoire ?",
               "args": [
@@ -3477,28 +3235,6 @@
               "deprecationReason": null
             },
             {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
-            },
-            {
               "name": "required",
               "description": "Est-ce que le champ est obligatoire ?",
               "args": [
@@ -3703,28 +3439,6 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
-            },
-            {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
             },
             {
               "name": "required",
@@ -5586,28 +5300,6 @@
               "deprecationReason": null
             },
             {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
-            },
-            {
               "name": "required",
               "description": "Est-ce que le champ est obligatoire ?",
               "args": [
@@ -7429,28 +7121,6 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
-            },
-            {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
             },
             {
               "name": "required",
@@ -9411,28 +9081,6 @@
               "deprecationReason": null
             },
             {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
-            },
-            {
               "name": "required",
               "description": "Est-ce que le champ est obligatoire ?",
               "args": [
@@ -9892,28 +9540,6 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
-            },
-            {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
             },
             {
               "name": "required",
@@ -11442,28 +11068,6 @@
               "deprecationReason": null
             },
             {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
-            },
-            {
               "name": "required",
               "description": "Est-ce que le champ est obligatoire ?",
               "args": [
@@ -11617,28 +11221,6 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
-            },
-            {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
             },
             {
               "name": "required",
@@ -11855,28 +11437,6 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
-            },
-            {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
             },
             {
               "name": "required",
@@ -12244,28 +11804,6 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
-            },
-            {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
             },
             {
               "name": "required",
@@ -13438,28 +12976,6 @@
               "deprecationReason": null
             },
             {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
-            },
-            {
               "name": "required",
               "description": "Est-ce que le champ est obligatoire ?",
               "args": [
@@ -13583,28 +13099,6 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
-            },
-            {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
             },
             {
               "name": "required",
@@ -13825,28 +13319,6 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
-            },
-            {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
             },
             {
               "name": "required",
@@ -15024,28 +14496,6 @@
               "deprecationReason": null
             },
             {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
-            },
-            {
               "name": "required",
               "description": "Est-ce que le champ est obligatoire ?",
               "args": [
@@ -15292,28 +14742,6 @@
               "deprecationReason": null
             },
             {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
-            },
-            {
               "name": "required",
               "description": "Est-ce que le champ est obligatoire ?",
               "args": [
@@ -15437,28 +14865,6 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
-            },
-            {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
             },
             {
               "name": "required",
@@ -15809,28 +15215,6 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
-            },
-            {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
             },
             {
               "name": "required",
@@ -16352,28 +15736,6 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
-            },
-            {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
             },
             {
               "name": "required",
@@ -16938,28 +16300,6 @@
               "deprecationReason": null
             },
             {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
-            },
-            {
               "name": "required",
               "description": "Est-ce que le champ est obligatoire ?",
               "args": [
@@ -17093,28 +16433,6 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
-            },
-            {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
             },
             {
               "name": "required",
@@ -17323,28 +16641,6 @@
               "deprecationReason": null
             },
             {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
-            },
-            {
               "name": "required",
               "description": "Est-ce que le champ est obligatoire ?",
               "args": [
@@ -17468,28 +16764,6 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
-            },
-            {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
             },
             {
               "name": "required",
@@ -17718,28 +16992,6 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
-            },
-            {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
             },
             {
               "name": "required",
@@ -18449,28 +17701,6 @@
               "deprecationReason": null
             },
             {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
-            },
-            {
               "name": "required",
               "description": "Est-ce que le champ est obligatoire ?",
               "args": [
@@ -18625,28 +17855,6 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
-            },
-            {
-              "name": "options",
-              "description": "List des options d’un champ avec selection.",
-              "args": [
-
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Utilisez le champ `DropDownListChampDescriptor.options` à la place."
             },
             {
               "name": "required",

@@ -415,11 +415,6 @@ type CodePostalDePolynesieChampDescriptor implements ChampDescriptor {
   label: String!
 
   """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
-
-  """
   Est-ce que le champ est obligatoire ?
   """
   required: Boolean!
@@ -498,11 +493,6 @@ type CommuneDePolynesieChampDescriptor implements ChampDescriptor {
   Libellé du champ.
   """
   label: String!
-
-  """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
 
   """
   Est-ce que le champ est obligatoire ?
@@ -2983,11 +2973,6 @@ type NationaliteChampDescriptor implements ChampDescriptor {
   label: String!
 
   """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
-
-  """
   Est-ce que le champ est obligatoire ?
   """
   required: Boolean!
@@ -3065,11 +3050,6 @@ type NumeroDnChampDescriptor implements ChampDescriptor {
   Libellé du champ.
   """
   label: String!
-
-  """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
 
   """
   Est-ce que le champ est obligatoire ?
@@ -3600,11 +3580,6 @@ type TeFenuaChampDescriptor implements ChampDescriptor {
   label: String!
 
   """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
-
-  """
   Est-ce que le champ est obligatoire ?
   """
   required: Boolean!
@@ -4065,11 +4040,6 @@ type VisaChampDescriptor implements ChampDescriptor {
   Libellé du champ.
   """
   label: String!
-
-  """
-  List des options d’un champ avec selection.
-  """
-  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
 
   """
   Est-ce que le champ est obligatoire ?
