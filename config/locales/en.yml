@@ -423,8 +423,6 @@ en:
           submit_dossier: Submit an other file
         show:
           header:
-            edit_dossier: Edit my file
-            edit_dossier_title: "Edit my file - You can modify your file as long as it has not been sent for processing"
             summary: "Summary"
             request: "Request"
             mailbox: "Mailbox"
@@ -454,7 +452,8 @@ en:
         messagerie:
           mailbox: "The mailbox allows you to contact the instructor in charge of your file."
         demande:
-          edit_dossier: "Edit file"
+          edit_dossier: Edit file
+          edit_dossier_title: "Edit my file - You can modify your file as long as it has not been sent for processing"
         search:
           search_file: Search a file (File number, keywords)
           simple: Search
