@@ -395,10 +395,6 @@ fr:
         dossier_not_in_instructor_group: "Le dossier n° %{dossier_id} de la procédure « %{procedure_libelle} » correspond à votre recherche mais il est rattaché au groupe d’instructeurs « %{groupe_instructeur_label} »."
     users:
       dossiers:
-        account_creation:
-          empty: "Aucun dossier"
-          detail_one: "Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche."
-          detail_two: "Celui ci doit ressembler à"
         fix_champ: "corriger l’erreur"
         archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
         identite:
@@ -462,25 +458,28 @@ fr:
         index:
           dossiers: "Mes dossiers"
         dossiers_list:
-          caption: Mes dossiers
-          procedure: "Démarche"
           n_dossier: "Nº dossier"
-          requester: "Demandeur"
-          status: "Statut"
-          updated: "Mis à jour"
-          actions: "Actions"
           no_result_title: Aucun dossier
           no_result_text_html: "Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche. <br> Celui ci doit ressembler à %{app_base}/commencer/xxx."
           no_result_text_with_filter: ne correspond aux filtres sélectionnés
           no_result_reset_filter: Réinitialiser les filtres
+          procedure_closed: Cette démarche a été clôturée, vous ne pourrez pas redéposer de dossier à partir du lien de la démarche, contactez votre administration pour plus d’information.
+          pending_correction: Cette démarche est en attente de vos corrections. Corriger les champs qui sont notifiés par un message d’alerte dans le formulaire.
+          depose_at: Déposé le %{date}
+          created_at: Créé le %{date}
+          updated_at: modifié le %{date}
+          shared_with: Dossier partagé avec
+          deleted: Supprimé le %{date}
+          deleted_badge: Supprimé
         dossier_action:
           edit_dossier: "Modifier le dossier"
           start_other_dossier: "Commencer un autre dossier vide"
           clone: "Dupliquer ce dossier"
           delete_dossier: "Supprimer le dossier"
           transfer_dossier: "Transférer le dossier"
-          edit_draft: "Modifier le brouillon"
+          edit_draft: "Continuer à remplir"
           actions: "Actions"
+          other_actions: "Autres actions"
         transfers:
           sender_demande_en_cours: "Une demande de transfert est en cours sur le dossier Nº %{id} pour %{email}"
           receiver_demande_en_cours: "Demande de transfert pour le dossier Nº %{id} envoyé par %{email}"
@@ -819,6 +818,12 @@ fr:
       to_clone: Cloner
       to_close: Clore
     procedures:
+      created_at: créée le
+      published_at: publiée le
+      updated_at_today: modifiée à
+      updated_at: modifiée le
+      closed_at: archivée le
+      auto_archive_on: sera clôturée le
       show:
         ready: "Validé"
         needs_configuration: "À configurer"

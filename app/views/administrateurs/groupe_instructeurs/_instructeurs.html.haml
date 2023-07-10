@@ -4,7 +4,7 @@
   = form_for :instructeur, url: { action: :add_instructeur, id: groupe_instructeur.id }, html: { class: 'form' } do |f|
     .instructeur-wrapper
       - if !procedure.routing_enabled?
-        %p.notice Entrez les adresses email des instructeurs que vous souhaitez affecter à cette démarche
+        %p Entrez les adresses email des instructeurs que vous souhaitez affecter à cette démarche
 
       - if disabled_as_super_admin
         = f.select :emails, available_instructeur_emails, {}, disabled: disabled_as_super_admin, id: 'instructeur_emails'
