@@ -10,7 +10,7 @@ class PjsMigrationJob < ApplicationJob
     client = service.client
     container = service.container
     old_key = blob.key
-    new_key = "#{blob.created_at.year}/#{old_key[0..1]}/#{old_key[2..3]}/#{old_key}"
+    new_key = "#{blob.created_at.strftime('%Y/%m/%d')}/#{old_key[0..1]}/#{old_key}"
 
     excon_response = client.copy_object(container,
                                old_key,
