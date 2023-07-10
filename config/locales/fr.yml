@@ -424,8 +424,6 @@ fr:
           submit_dossier: Déposer un autre dossier
         show:
           header:
-            edit_dossier: Modifier mon dossier
-            edit_dossier_title: "Modifier mon dossier - Vous pouvez modifier votre dossier tant qu’il n’est pas passé en instruction"
             summary: "Résumé"
             request: "Demande"
             mailbox: "Messagerie"
@@ -455,7 +453,8 @@ fr:
         messagerie:
           mailbox: "La messagerie vous permet de contacter l’instructeur en charge de votre dossier."
         demande:
-          edit_dossier: "Modifier le dossier"
+          edit_dossier: Modifier le dossier
+          edit_dossier_title: "Modifier mon dossier - Vous pouvez modifier votre dossier tant qu’il n’est pas passé en instruction"
         search:
           search_file: Rechercher un dossier (N° de dossier, mots-clés)
           simple: Rechercher
