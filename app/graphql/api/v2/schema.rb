@@ -87,6 +87,7 @@ class API::V2::Schema < GraphQL::Schema
     Types::Champs::Descriptor::CiviliteChampDescriptorType,
     Types::Champs::Descriptor::CnafChampDescriptorType,
     Types::Champs::Descriptor::CodePostalDePolynesieChampDescriptorType,
+    Types::Champs::Descriptor::COJOChampDescriptorType,
     Types::Champs::Descriptor::CommuneChampDescriptorType,
     Types::Champs::Descriptor::CommuneDePolynesieChampDescriptorType,
     Types::Champs::Descriptor::DateChampDescriptorType,
