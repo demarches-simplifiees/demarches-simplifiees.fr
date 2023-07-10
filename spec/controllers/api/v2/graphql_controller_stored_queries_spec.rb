@@ -28,6 +28,19 @@ describe API::V2::GraphqlController do
     request.env['HTTP_AUTHORIZATION'] = authorization_header
   end
 
+  describe 'introspection' do
+    let(:query_id) { 'introspection' }
+    let(:operation_name) { 'IntrospectionQuery' }
+    let(:champ_descriptor) { gql_data[:__schema][:types].find { _1[:name] == 'ChampDescriptor' } }
+
+    it {
+      expect(gql_errors).to be_nil
+      expect(gql_data[:__schema]).not_to be_nil
+      expect(champ_descriptor).not_to be_nil
+      expect(champ_descriptor[:fields].find { _1[:name] == 'options' }).to be_nil
+    }
+  end
+
   describe 'ds-query-v2' do
     let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
     let(:query_id) { 'ds-query-v2' }

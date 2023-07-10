@@ -5,8 +5,26 @@ module Types
       super(*args, **kwargs, &block)
     end
 
-    def visible?(ctx)
-      super && (@internal ? ctx[:internal_use] : true)
+    def visible?(context)
+      super && visible_unless_internal?(context) && visible_unless_deprecated?(context)
+    end
+
+    private
+
+    def visible_unless_internal?(context)
+      if @internal
+        context[:internal_use]
+      else
+        true
+      end
+    end
+
+    def visible_unless_deprecated?(context)
+      if name == "options" && owner.name == 'Types::ChampDescriptorType'
+        !context.has_fragments?([:PaysChampDescriptor, :RegionChampDescriptor, :DepartementChampDescriptor])
+      else
+        true
+      end
     end
   end
 end

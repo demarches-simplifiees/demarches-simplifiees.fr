@@ -1,14 +1,25 @@
 class API::V2::Context < GraphQL::Query::Context
-  # This method is used to check if a given fragment is used in the given query.
-  # We need that in order to maintain backward compatibility for Types de Champ
-  # that we extended in later iterations of our schema.
+  # This method is used to check if a given fragment is used in the given query. We need that in
+  # order to maintain backward compatibility for Types de Champ that we extended in later iterations
+  # of our schema. If it is an introspection query, we assume all fragments are present.
   def has_fragment?(fragment_name)
+    return true if query.nil?
+    return true if introspection?
+
     self[:has_fragment] ||= Hash.new do |hash, fragment_name|
       visitor = HasFragment.new(query.document, fragment_name)
       visitor.visit
       hash[fragment_name] = visitor.found
     end
     self[:has_fragment][fragment_name]
+  end
+
+  def has_fragments?(fragment_names)
+    fragment_names.any? { has_fragment?(_1) }
+  end
+
+  def introspection?
+    query.selected_operation.name == "IntrospectionQuery"
   end
 
   def internal_use?
