@@ -432,6 +432,39 @@ type CnafChampDescriptor implements ChampDescriptor {
   type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
 }
 
+type CodePostalDePolynesieChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  List des options d’un champ avec selection.
+  """
+  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
 type Commune {
   """
   Le code INSEE
@@ -457,6 +490,39 @@ type CommuneChamp implements Champ {
 }
 
 type CommuneChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  List des options d’un champ avec selection.
+  """
+  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
+type CommuneDePolynesieChampDescriptor implements ChampDescriptor {
   """
   Description des champs d’un bloc répétable.
   """
@@ -2994,6 +3060,39 @@ type Mutation {
   ): GroupeInstructeurSupprimerInstructeursPayload
 }
 
+type NationaliteChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  List des options d’un champ avec selection.
+  """
+  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
 type NumberChampDescriptor implements ChampDescriptor {
   """
   Description des champs d’un bloc répétable.
@@ -3048,6 +3147,39 @@ type NumeroDnChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+}
+
+type NumeroDnChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  List des options d’un champ avec selection.
+  """
+  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
 }
 
 enum Order {
@@ -3580,6 +3712,39 @@ type SiretChampDescriptor implements ChampDescriptor {
   type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
 }
 
+type TeFenuaChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  List des options d’un champ avec selection.
+  """
+  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
 type TextChamp implements Champ {
   id: ID!
 
@@ -4027,6 +4192,39 @@ type VisaChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+}
+
+type VisaChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  List des options d’un champ avec selection.
+  """
+  options: [String!] @deprecated(reason: "Utilisez le champ `DropDownListChampDescriptor.options` à la place.")
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
 }
 
 """

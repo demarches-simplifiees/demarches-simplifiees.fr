@@ -168,7 +168,7 @@ describe API::V2::GraphqlController do
         let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_all_champs, :with_all_annotations, administrateurs: [admin]) }
 
         def format_type_champ(type_champ)
-          "#{type_champ.gsub('regions', 'region').gsub('departements', 'departement').gsub('communes', 'commune').camelcase}ChampDescriptor"
+          "#{type_champ.gsub('regions', 'region').gsub('departements', 'departement').gsub('communes', 'commune').gsub('nationalites', 'nationalite').camelcase}ChampDescriptor"
         end
 
         it "returns the demarche" do
