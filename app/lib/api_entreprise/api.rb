@@ -155,13 +155,11 @@ class APIEntreprise::API
   end
 
   def base_params
-    # rubocop:disable DS/ApplicationName
     {
-      context: "demarches-simplifiees.fr",
+      context: APPLICATION_NAME,
       recipient: ENV.fetch('API_ENTREPRISE_DEFAULT_SIRET'),
       non_diffusables: true
     }
-    # rubocop:enable DS/ApplicationName
   end
 
   def api_entreprise_delay
