@@ -18,7 +18,9 @@ class TypeDeChamp < ApplicationRecord
   self.ignored_columns += [:migrated_parent, :revision_id, :parent_id, :order_place]
 
   FILE_MAX_SIZE = 200.megabytes
-  FEATURE_FLAGS = {}
+  FEATURE_FLAGS = {
+    cojo: :cojo_type_de_champ
+  }
   MINIMUM_TEXTAREA_CHARACTER_LIMIT_LENGTH = 400
 
   STRUCTURE = :structure
@@ -68,7 +70,8 @@ class TypeDeChamp < ApplicationRecord
     cnaf: REFERENTIEL_EXTERNE,
     dgfip: REFERENTIEL_EXTERNE,
     pole_emploi: REFERENTIEL_EXTERNE,
-    mesri: REFERENTIEL_EXTERNE
+    mesri: REFERENTIEL_EXTERNE,
+    cojo: REFERENTIEL_EXTERNE
   }
 
   enum type_champs: {
@@ -107,7 +110,8 @@ class TypeDeChamp < ApplicationRecord
     dgfip: 'dgfip',
     pole_emploi: 'pole_emploi',
     mesri: 'mesri',
-    epci: 'epci'
+    epci: 'epci',
+    cojo: 'cojo'
   }
 
   store_accessor :options,
@@ -569,7 +573,8 @@ class TypeDeChamp < ApplicationRecord
       type_champs.fetch(:dossier_link),
       type_champs.fetch(:linked_drop_down_list),
       type_champs.fetch(:drop_down_list),
-      type_champs.fetch(:textarea)
+      type_champs.fetch(:textarea),
+      type_champs.fetch(:cojo)
       true
     else
       false
