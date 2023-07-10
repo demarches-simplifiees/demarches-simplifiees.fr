@@ -1192,6 +1192,21 @@ describe Dossier do
         expect(dossier_ok.accepter_automatiquement(instructeur:, motivation:)).to be_truthy
       end
     end
+
+    context "when a SIRET champ has etablissement in degraded mode" do
+      let(:dossier_incomplete) { create(:dossier, :en_instruction) }
+      let(:dossier_ok) { create(:dossier, :en_instruction) }
+
+      before do
+        dossier_incomplete.champs_public << create(:champ_siret, dossier: dossier_incomplete, etablissement: Etablissement.new(siret: build(:etablissement).siret))
+        dossier_ok.champs_public << create(:champ_siret, dossier: dossier_ok)
+      end
+
+      it "can't accepter" do
+        expect(dossier_incomplete.may_accepter?(instructeur:, motivation:)).to be_falsey
+        expect(dossier_ok.may_accepter?(instructeur:, motivation:)).to be_truthy
+      end
+    end
   end
 
   describe "#check_mandatory_and_visible_champs" do
