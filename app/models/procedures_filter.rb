@@ -5,7 +5,7 @@ class ProceduresFilter
 
   def initialize(admin, params)
     @admin = admin
-    @params = params.permit(:page, :libelle, :email, :from_publication_date, zone_ids: [], statuses: [])
+    @params = params.permit(:page, :libelle, :email, :from_publication_date, :tag, zone_ids: [], statuses: [])
   end
 
   def admin_zones
@@ -26,6 +26,10 @@ class ProceduresFilter
 
   def statuses
     params[:statuses].compact_blank if params[:statuses].present?
+  end
+
+  def tag
+    params[:tag].presence
   end
 
   def from_publication_date
@@ -68,6 +72,7 @@ class ProceduresFilter
     filters << email
     filters << "from-#{from_publication_date}" if from_publication_date
     filters << statuses
+    filters << tag
     filters.compact.join('-')
   end
 end

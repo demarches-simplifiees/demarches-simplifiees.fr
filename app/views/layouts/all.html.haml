@@ -64,6 +64,18 @@
                         = b.check_box(checked: @filter.status_filtered?(b.value))
                         = b.label(class: 'fr-label') { t b.text, scope: 'activerecord.attributes.procedure.aasm_state' }
 
+                %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
+                  .fr-mb-1w
+                    %button{ 'data-action': 'expand#toggle' }
+                      %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
+                      Tags
+                  .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
+                    %div
+                      = f.search_field :tag, placeholder: 'Choisissez un tag', list: 'tags_list', class: 'fr-input', data: { no_autosubmit: 'input' }
+                      %datalist#tags_list
+                        - Procedure.tags.each do |tag|
+                          %option{ value: tag }
+
         %turbo-frame#procedures.fr-col-9{ 'data-turbo-action': 'advance' }
           = yield(:results)
 = render template: 'layouts/application'
