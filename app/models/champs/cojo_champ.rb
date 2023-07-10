@@ -19,7 +19,7 @@ class Champs::COJOChamp < Champ
   end
 
   def blank?
-    accreditation_success.nil?
+    accreditation_success != true
   end
 
   def fetch_external_data?
