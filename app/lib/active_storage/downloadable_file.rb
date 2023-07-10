@@ -1,6 +1,6 @@
 class ActiveStorage::DownloadableFile
   def self.create_list_from_dossiers(dossiers, for_expert = false)
-    PiecesJustificativesService.generate_dossier_export(dossiers) +
+    PiecesJustificativesService.generate_dossier_export(dossiers, include_infos_administration: !for_expert) +
       PiecesJustificativesService.liste_documents(dossiers, for_expert)
   end
 
