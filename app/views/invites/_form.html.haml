@@ -15,7 +15,7 @@
     %p= t('views.invites.form.invite_to_edit_line1')
     %p= t('views.invites.form.invite_to_edit_line2')
 
-  = form_tag dossier_invites_path(dossier), data: { turbo: true }, method: :post, class: 'form' do
+  = form_tag dossier_invites_path(dossier), data: { turbo: true, turbo_force: true }, method: :post, class: 'form' do
     .row
       .col
         %span

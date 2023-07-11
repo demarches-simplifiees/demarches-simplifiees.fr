@@ -7,68 +7,48 @@ module TurboStreamHelper
     include ActionView::Helpers::TagHelper
 
     def show(target, delay: nil)
-      turbo_stream_simple_action_tag :show, target: target, delay: delay
+      turbo_stream_action_tag :show, target:, delay:
     end
 
     def show_all(targets, delay: nil)
-      turbo_stream_simple_action_tag :show, targets: targets, delay: delay
+      turbo_stream_action_tag :show, targets:, delay:
     end
 
     def hide(target, delay: nil)
-      turbo_stream_simple_action_tag :hide, target: target, delay: delay
+      turbo_stream_action_tag :hide, target:, delay:
     end
 
     def hide_all(targets, delay: nil)
-      turbo_stream_simple_action_tag :hide, targets: targets, delay: delay
+      turbo_stream_action_tag :hide, targets:, delay:
     end
 
-    def focus(target)
-      turbo_stream_simple_action_tag :focus, target: target
+    def focus(target, delay: nil)
+      turbo_stream_action_tag :focus, target:, delay:
     end
 
-    def focus_all(targets)
-      turbo_stream_simple_action_tag :focus, targets: targets
+    def focus_all(targets, delay: nil)
+      turbo_stream_action_tag :focus, targets:, delay:
     end
 
-    def enable(target)
-      turbo_stream_simple_action_tag :enable, target: target
+    def enable(target, delay: nil)
+      turbo_stream_action_tag :enable, target:, delay:
     end
 
-    def enable_all(targets)
-      turbo_stream_simple_action_tag :enable, targets: targets
+    def enable_all(targets, delay: nil)
+      turbo_stream_action_tag :enable, targets:, delay:
     end
 
-    def disable(target)
-      turbo_stream_simple_action_tag :disable, target: target
+    def disable(target, delay: nil)
+      turbo_stream_action_tag :disable, target:, delay:
     end
 
-    def disable_all(targets)
-      turbo_stream_simple_action_tag :disable, targets: targets
-    end
-
-    def morph(target, content = nil, **rendering, &block)
-      action :morph, target, content, **rendering, &block
-    end
-
-    def morph_all(targets, content = nil, **rendering, &block)
-      action_all :morph, targets, content, **rendering, &block
+    def disable_all(targets, delay: nil)
+      turbo_stream_action_tag :disable, targets:, delay:
     end
 
     def dispatch(type, detail = nil)
       content = detail.present? ? tag.script(cdata_section(detail.to_json), type: 'application/json') : nil
       action_all :append, 'head', tag.dispatch_event(content, type:)
-    end
-
-    private
-
-    def turbo_stream_simple_action_tag(action, target: nil, targets: nil, **attributes)
-      if (target = convert_to_turbo_stream_dom_id(target))
-        tag.turbo_stream('', **attributes.merge(action: action, target: target))
-      elsif (targets = convert_to_turbo_stream_dom_id(targets, include_selector: true))
-        tag.turbo_stream('', **attributes.merge(action: action, targets: targets))
-      else
-        tag.turbo_stream('', **attributes.merge(action: action))
-      end
     end
   end
 end
