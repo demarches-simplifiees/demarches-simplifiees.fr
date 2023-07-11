@@ -1,0 +1,4 @@
+- if champ.code?
+  = format_text_value("#{champ.code} – #{champ}")
+- else
+  = format_text_value(champ.to_s)

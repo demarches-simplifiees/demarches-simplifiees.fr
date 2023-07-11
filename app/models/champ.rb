@@ -67,6 +67,7 @@ class Champ < ApplicationRecord
     :stable_id,
     :mandatory?,
     :prefillable?,
+    :refresh_after_update?,
     to: :type_de_champ
 
   # pf champ

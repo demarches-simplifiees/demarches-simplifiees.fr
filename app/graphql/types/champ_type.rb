@@ -75,6 +75,8 @@ module Types
           Types::Champs::TitreIdentiteChampType
         when ::Champs::VisaChamp
           Types::Champs::VisaChampType
+        when ::Champs::EpciChamp
+          Types::Champs::EpciChampType
         else
           Types::Champs::TextChampType
         end

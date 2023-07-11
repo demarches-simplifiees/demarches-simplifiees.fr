@@ -47,6 +47,18 @@ class APIGeoService
       departements.find { _1[:name] == name }&.dig(:code)
     end
 
+    def epcis(departement_code)
+      get_from_api_geo("epcis?codeDepartement=#{departement_code}").sort_by { I18n.transliterate(_1[:name]) }
+    end
+
+    def epci_name(departement_code, code)
+      epcis(departement_code).find { _1[:code] == code }&.dig(:name)
+    end
+
+    def epci_code(departement_code, name)
+      epcis(departement_code).find { _1[:name] == name }&.dig(:code)
+    end
+
     private
 
     def get_from_api_geo(scope)

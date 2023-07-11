@@ -62,6 +62,7 @@ class TypeDeChamp < ApplicationRecord
     departements: LOCALISATION,
     regions: LOCALISATION,
     pays: LOCALISATION,
+    epci: LOCALISATION,
     iban: PAIEMENT_IDENTIFICATION,
     siret: PAIEMENT_IDENTIFICATION,
     text: STANDARD,
@@ -122,7 +123,8 @@ class TypeDeChamp < ApplicationRecord
     cnaf: 'cnaf',
     dgfip: 'dgfip',
     pole_emploi: 'pole_emploi',
-    mesri: 'mesri'
+    mesri: 'mesri',
+    epci: 'epci'
   }.merge(INSTANCE_TYPE_CHAMPS)
 
   INSTANCE_OPTIONS = [:parcelles, :batiments, :zones_manuelles, :min, :max, :level, :accredited_users]
@@ -540,6 +542,19 @@ class TypeDeChamp < ApplicationRecord
   def stable_self
     OpenStruct.new(to_key: [stable_id],
       model_name: OpenStruct.new(param_key: model_name.param_key))
+  end
+
+  def refresh_after_update?
+    self.class.refresh_after_update?(type_champ)
+  end
+
+  def self.refresh_after_update?(type_champ)
+    case type_champ
+    when type_champs.fetch(:epci)
+      true
+    else
+      false
+    end
   end
 
   private

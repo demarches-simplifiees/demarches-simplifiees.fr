@@ -1,10 +1,12 @@
 class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
-  POSSIBLE_VALUES_THRESHOLD = 10
+  POSSIBLE_VALUES_THRESHOLD = 5
 
   def self.build(type_de_champ)
     case type_de_champ.type_champ
     when TypeDeChamp.type_champs.fetch(:drop_down_list)
       TypesDeChamp::PrefillDropDownListTypeDeChamp.new(type_de_champ)
+    when TypeDeChamp.type_champs.fetch(:pays)
+      TypesDeChamp::PrefillPaysTypeDeChamp.new(type_de_champ)
     else
       new(type_de_champ)
     end
@@ -15,9 +17,7 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
   end
 
   def possible_values
-    return [] unless prefillable?
-
-    [I18n.t("views.prefill_descriptions.edit.possible_values.#{type_champ}_html")]
+    []
   end
 
   def example_value
@@ -28,9 +28,5 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
 
   def too_many_possible_values?
     possible_values.count > POSSIBLE_VALUES_THRESHOLD
-  end
-
-  def possible_values_sample
-    possible_values.first(POSSIBLE_VALUES_THRESHOLD)
   end
 end

@@ -182,7 +182,9 @@ FactoryBot.define do
     factory :type_de_champ_visa do
       type_champ { TypeDeChamp.type_champs.fetch(:visa) }
     end
-
+    factory :type_de_champ_epci do
+      type_champ { TypeDeChamp.type_champs.fetch(:epci) }
+    end
     factory :type_de_champ_repetition do
       type_champ { TypeDeChamp.type_champs.fetch(:repetition) }
       mandatory { true }

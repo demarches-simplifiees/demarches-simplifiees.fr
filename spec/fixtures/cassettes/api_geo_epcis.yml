@@ -1,0 +1,41 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://geo.api.gouv.fr/epcis?codeDepartement=01
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Server:
+      - nginx/1.10.3 (Ubuntu)
+      Date:
+      - Fri, 20 Jan 2023 10:11:24 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '2108'
+      Vary:
+      - Accept-Encoding
+      - Origin
+      X-Powered-By:
+      - Express
+      Etag:
+      - W/"83c-Ql239C1pTEYucFRGeoG5NpJkDYY"
+      Strict-Transport-Security:
+      - max-age=15552000
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        W3sibm9tIjoiQ0MgUml2ZXMgZGUgbCdBaW4gLSBQYXlzIGR1IENlcmRvbiIsImNvZGUiOiIyMDAwMjk5OTkiLCJjb2Rlc0RlcGFydGVtZW50cyI6WyIwMSJdLCJjb2Rlc1JlZ2lvbnMiOlsiODQiXSwicG9wdWxhdGlvbiI6MTQ2NzF9LHsibm9tIjoiQ0MgQnVnZXkgU3VkIiwiY29kZSI6IjIwMDA0MDM1MCIsImNvZGVzRGVwYXJ0ZW1lbnRzIjpbIjAxIl0sImNvZGVzUmVnaW9ucyI6WyI4NCJdLCJwb3B1bGF0aW9uIjozNDA1N30seyJub20iOiJDQSBWaWxsZWZyYW5jaGUgQmVhdWpvbGFpcyBTYcO0bmUiLCJjb2RlIjoiMjAwMDQwNTkwIiwiY29kZXNEZXBhcnRlbWVudHMiOlsiMDEiLCI2OSJdLCJjb2Rlc1JlZ2lvbnMiOlsiODQiXSwicG9wdWxhdGlvbiI6NzI4MTV9LHsibm9tIjoiQ0MgRG9tYmVzIFNhw7RuZSBWYWxsw6llIiwiY29kZSI6IjIwMDA0MjQ5NyIsImNvZGVzRGVwYXJ0ZW1lbnRzIjpbIjAxIl0sImNvZGVzUmVnaW9ucyI6WyI4NCJdLCJwb3B1bGF0aW9uIjozOTExOX0seyJub20iOiJDQSBIYXV0IC0gQnVnZXkgQWdnbG9tw6lyYXRpb24iLCJjb2RlIjoiMjAwMDQyOTM1IiwiY29kZXNEZXBhcnRlbWVudHMiOlsiMDEiXSwiY29kZXNSZWdpb25zIjpbIjg0Il0sInBvcHVsYXRpb24iOjYzMzY1fSx7Im5vbSI6IkNDIGRlIGxhIERvbWJlcyIsImNvZGUiOiIyMDAwNjkxOTMiLCJjb2Rlc0RlcGFydGVtZW50cyI6WyIwMSJdLCJjb2Rlc1JlZ2lvbnMiOlsiODQiXSwicG9wdWxhdGlvbiI6MzkzODN9LHsibm9tIjoiQ0MgVmFsIGRlIFNhw7RuZSBDZW50cmUiLCJjb2RlIjoiMjAwMDcwMTE4IiwiY29kZXNEZXBhcnRlbWVudHMiOlsiMDEiXSwiY29kZXNSZWdpb25zIjpbIjg0Il0sInBvcHVsYXRpb24iOjIwNjUxfSx7Im5vbSI6IkNBIE3DomNvbm5haXMgQmVhdWpvbGFpcyBBZ2dsb23DqXJhdGlvbiIsImNvZGUiOiIyMDAwNzAzMDgiLCJjb2Rlc0RlcGFydGVtZW50cyI6WyIwMSIsIjcxIl0sImNvZGVzUmVnaW9ucyI6WyIyNyIsIjg0Il0sInBvcHVsYXRpb24iOjc4MjgxfSx7Im5vbSI6IkNDIGRlIGxhIFZleWxlIiwiY29kZSI6IjIwMDA3MDU1NSIsImNvZGVzRGVwYXJ0ZW1lbnRzIjpbIjAxIl0sImNvZGVzUmVnaW9ucyI6WyI4NCJdLCJwb3B1bGF0aW9uIjoyMjk0MH0seyJub20iOiJDQyBVc3NlcyBldCBSaMO0bmUiLCJjb2RlIjoiMjAwMDcwODUyIiwiY29kZXNEZXBhcnRlbWVudHMiOlsiMDEiLCI3NCJdLCJjb2Rlc1JlZ2lvbnMiOlsiODQiXSwicG9wdWxhdGlvbiI6MjA4MzZ9LHsibm9tIjoiQ0MgQnJlc3NlIGV0IFNhw7RuZSIsImNvZGUiOiIyMDAwNzEzNzEiLCJjb2Rlc0RlcGFydGVtZW50cyI6WyIwMSJdLCJjb2Rlc1JlZ2lvbnMiOlsiODQiXSwicG9wdWxhdGlvbiI6MjUzODh9LHsibm9tIjoiQ0EgZHUgQmFzc2luIGRlIEJvdXJnLWVuLUJyZXNzZSIsImNvZGUiOiIyMDAwNzE3NTEiLCJjb2Rlc0RlcGFydGVtZW50cyI6WyIwMSJdLCJjb2Rlc1JlZ2lvbnMiOlsiODQiXSwicG9wdWxhdGlvbiI6MTMzMTIwfSx7Im5vbSI6IkNDIGRlIGxhIEPDtHRpw6hyZSDDoCBNb250bHVlbCIsImNvZGUiOiIyNDAxMDA2MTAiLCJjb2Rlc0RlcGFydGVtZW50cyI6WyIwMSJdLCJjb2Rlc1JlZ2lvbnMiOlsiODQiXSwicG9wdWxhdGlvbiI6MjQ4NjR9LHsibm9tIjoiQ0EgZHUgUGF5cyBkZSBHZXgiLCJjb2RlIjoiMjQwMTAwNzUwIiwiY29kZXNEZXBhcnRlbWVudHMiOlsiMDEiXSwiY29kZXNSZWdpb25zIjpbIjg0Il0sInBvcHVsYXRpb24iOjk4MjU3fSx7Im5vbSI6IkNDIGRlIE1pcmliZWwgZXQgZHUgUGxhdGVhdSIsImNvZGUiOiIyNDAxMDA4MDAiLCJjb2Rlc0RlcGFydGVtZW50cyI6WyIwMSJdLCJjb2Rlc1JlZ2lvbnMiOlsiODQiXSwicG9wdWxhdGlvbiI6MjQyNzB9LHsibm9tIjoiQ0MgZGUgbGEgUGxhaW5lIGRlIGwnQWluIiwiY29kZSI6IjI0MDEwMDg4MyIsImNvZGVzRGVwYXJ0ZW1lbnRzIjpbIjAxIl0sImNvZGVzUmVnaW9ucyI6WyI4NCJdLCJwb3B1bGF0aW9uIjo3OTA2M30seyJub20iOiJDQyBkdSBQYXlzIEJlbGxlZ2FyZGllbiAoQ0NQQikiLCJjb2RlIjoiMjQwMTAwODkxIiwiY29kZXNEZXBhcnRlbWVudHMiOlsiMDEiXSwiY29kZXNSZWdpb25zIjpbIjg0Il0sInBvcHVsYXRpb24iOjIxODY1fV0=
+  recorded_at: Fri, 20 Jan 2023 10:11:24 GMT
+recorded_with: VCR 6.1.0

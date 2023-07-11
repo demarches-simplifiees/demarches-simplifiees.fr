@@ -60,6 +60,10 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
 
     TypeDeChamp.type_champs
       .keys
+      # FIXME
+      # We can only refresh after update champs when autosave is enabled. And it is disabled for now in private forms.
+      # So for new we restrict champs that require refresh after update to public forms.
+      .filter { type_de_champ.public? || !TypeDeChamp.refresh_after_update?(_1) }
       .filter(&method(:filter_type_champ))
       .filter(&method(:filter_featured_type_champ))
       .filter(&method(:filter_block_type_champ))

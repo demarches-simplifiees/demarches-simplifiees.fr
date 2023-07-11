@@ -3,7 +3,7 @@ describe '20220705164551_remove_unused_champs' do
   let(:procedure) { create(:procedure, :with_all_champs) }
   let(:dossier) { create(:dossier, :with_populated_champs, procedure: procedure) }
   let(:champ_repetition) { dossier.champs_public.find(&:repetition?) }
-  let(:champ_count) { 43 }
+  let(:champ_count) { 44 }
 
   subject(:run_task) do
     dossier

@@ -1,8 +1,11 @@
 require 'csv'
 
-describe ProcedureExportService do
+describe ProcedureExportService, vcr: { cassette_name: 'api_geo_all' } do
   let(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs) }
   let(:service) { ProcedureExportService.new(procedure, procedure.dossiers) }
+
+  let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
+
   let(:tdc_to_ignore) { Set['repetition', 'header_section', 'explication'] }
   let(:champ_headers) do
     TypeDeChamp.type_champs.keys.reject { |tdc| tdc_to_ignore.include?(tdc) }.flat_map do |tdc|
@@ -13,13 +16,17 @@ describe ProcedureExportService do
         ['communes', "communes (Code insee)", "communes (Département)"]
       when 'departements', 'regions', 'pays'
         [tdc, "#{tdc} (Code)"]
+      when 'epci'
+        [tdc, "#{tdc} (Code)", "#{tdc} (Département)"]
       else
         tdc
       end
     end
   end
+
   before do
-    allow(APIGeoService).to receive(:departement_name).with('01').and_return('Ain')
+    allow(Rails).to receive(:cache).and_return(memory_store)
+    Rails.cache.clear
   end
 
   describe 'to_xlsx' do
