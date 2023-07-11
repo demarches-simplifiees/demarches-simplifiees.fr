@@ -76,7 +76,7 @@
             = render partial: 'layouts/search_dossiers_form', locals: { search_endpoint: recherche_dossiers_path }
 
   - has_header = [is_instructeur_context, is_expert_context, is_user_context]
-  #burger-menu.fr-header__menu.fr-modal{ "aria-labelledby" => "burger_button" }
+  #burger-menu.fr-header__menu.fr-modal{ "aria-label" => t('layouts.header.label_modal') }
     .fr-container
       %button#burger_button.fr-btn--close.fr-btn{ "aria-controls" => "burger-menu", :title => t('close_modal', scope: [:layouts, :header]) }= t('close_modal', scope: [:layouts, :header])
       .fr-header__menu-links

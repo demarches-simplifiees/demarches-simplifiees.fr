@@ -59,6 +59,7 @@ fr:
         are_you_new: Vous êtes nouveau sur %{app_name} ?
     my_account: Mon compte
     header:
+      label_modal: "Menu en-tête de page"
       close_modal: 'Fermer'
       back: "Revenir en arrière"
       back_title: "Revenir sur le site de mon administration"
@@ -320,8 +321,9 @@ fr:
         demande:
           edit_dossier: "Modifier le dossier"
         search:
-          placeholder: Rechercher un dossier
-          search_file: Rechercher
+          search_file: Rechercher un dossier
+          simple: Rechercher
+        secondary_menu: Menu secondaire
         index:
           dossiers: "Dossiers"
         dossiers_list:

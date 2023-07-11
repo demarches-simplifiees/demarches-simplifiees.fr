@@ -19,9 +19,7 @@ module Users
     end
 
     def destroy
-      transfer = DossierTransfer
-        .joins(:dossiers)
-        .find_by!(id: params[:id], dossiers: { user: current_user })
+      transfer = DossierTransfer.find_by!(id: params[:id], email: current_user.email)
 
       transfer.destroy_and_nullify
       redirect_to dossiers_path
