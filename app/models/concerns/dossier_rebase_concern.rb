@@ -14,12 +14,12 @@ module DossierRebaseConcern
   end
 
   def can_rebase?
-    revision != procedure.published_revision &&
+    procedure.published_revision.present? && revision != procedure.published_revision &&
       (brouillon? || accepted_en_construction_changes? || accepted_en_instruction_changes?)
   end
 
   def pending_changes
-    revision.compare(procedure.published_revision)
+    procedure.published_revision.present? ? revision.compare(procedure.published_revision) : []
   end
 
   def can_rebase_mandatory_change?(stable_id)
