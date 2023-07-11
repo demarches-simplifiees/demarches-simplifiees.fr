@@ -1008,6 +1008,7 @@ describe Dossier, type: :model do
     it { expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601) }
     it { expect(NotificationMailer).to have_received(:send_accepte_notification).with(dossier) }
     it { expect(dossier.attestation).to eq(attestation) }
+    it { expect(dossier.commentaires.count).to eq(1) }
   end
 
   describe '#accepter_automatiquement!' do
@@ -1061,6 +1062,7 @@ describe Dossier, type: :model do
         expect(last_operation.automatic_operation?).to be_truthy
         expect(NotificationMailer).to have_received(:send_accepte_notification).with(dossier)
         expect(subject.attestation).to eq(attestation)
+        expect(dossier.commentaires.count).to eq(1)
       end
     end
   end
@@ -1082,10 +1084,20 @@ describe Dossier, type: :model do
     it { expect(operation_serialized['operation']).to eq('passer_en_instruction') }
     it { expect(operation_serialized['dossier_id']).to eq(dossier.id) }
     it { expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601) }
+    it { expect(dossier.commentaires.count).to eq(1) }
 
     it "resolve pending correction" do
       expect(dossier.pending_correction?).to be_falsey
       expect(correction.reload.resolved_at).to be_present
+    end
+
+    it 'creates a commentaire in the messagerie with expected wording' do
+      email_template = dossier.procedure.mail_template_for(Dossier.states.fetch(:en_instruction))
+      commentaire = dossier.commentaires.first
+
+      expect(dossier.commentaires.count).to eq(1)
+      expect(commentaire.body).to include(email_template.subject_for_dossier(dossier), email_template.body_for_dossier(dossier))
+      expect(commentaire.dossier).to eq(dossier)
     end
   end
 
@@ -1111,6 +1123,7 @@ describe Dossier, type: :model do
         expect(operation_serialized['operation']).to eq('passer_en_instruction')
         expect(operation_serialized['dossier_id']).to eq(dossier.id)
         expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601)
+        expect(dossier.commentaires.count).to eq(1)
       end
     end
 

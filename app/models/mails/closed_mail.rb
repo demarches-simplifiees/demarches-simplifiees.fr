@@ -10,6 +10,7 @@
 #  procedure_id :integer
 #
 module Mails
+  # accepte
   class ClosedMail < ApplicationRecord
     include MailTemplateConcern
 

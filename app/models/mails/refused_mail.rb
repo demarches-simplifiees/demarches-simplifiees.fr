@@ -10,6 +10,7 @@
 #  procedure_id :integer
 #
 module Mails
+  # refuse
   class RefusedMail < ApplicationRecord
     include MailTemplateConcern
 
