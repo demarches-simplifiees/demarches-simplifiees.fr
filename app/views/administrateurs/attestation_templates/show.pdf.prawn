@@ -136,6 +136,22 @@ def print(pdf, text, size:)
   print_text pdf, fragment, size
 end
 
+def download_file_and_retry(file_or_attached_one, max_attempts = 3)
+  if file_or_attached_one.is_a?(ActiveStorage::Attached::One)
+    file_or_attached_one.download
+  else
+    file_or_attached_one.rewind && file_or_attached_one.read
+  end
+rescue Fog::OpenStack::Storage::NotFound => e
+  if max_attempts > 0
+    max_attempts = max_attempts - 1
+    sleep 1
+    retry
+  else
+    raise e
+  end
+end
+
 prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], page_size: page_size, info: info) do |pdf|
   pdf.font_families.update('marianne' => {
     normal: Rails.root.join('lib/prawn/fonts/marianne/marianne-regular.ttf'),
@@ -143,6 +159,7 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
     bold_italic: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf'),
     italic: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf')
   })
+
   pdf.font 'marianne'
 
   grey = '555555'
