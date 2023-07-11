@@ -466,7 +466,7 @@ en:
           no_result_text_with_filter: found with selected filters
           no_result_reset_filter: Reset filters
           procedure_closed: This procedure has been closed, you will not be able to submit a file again from the procedure link, contact your administration for more information.
-          pending_correction: This procedure is awaiting your corrections. Correct the fields that are notified by an alert message in the form.
+          pending_correction: This file is waiting for your corrections. Consult the changes to be made in the messaging system.
           depose_at: First submission on %{date}
           created_at: Created at %{date}
           updated_at: updated at %{date}
