@@ -517,7 +517,7 @@ describe TagsSubstitutionConcern, type: :model do
 
   describe 'parser' do
     it do
-      tokens = TagsSubstitutionConcern::TagsParser.parse("hello world --public--, --numéro du dossier--, un test--yolo-- encore du text\n---\n encore du text")
+      tokens = TagsSubstitutionConcern::TagsParser.parse("hello world --public--, --numéro du dossier--, un test--yolo-- encore du text\n---\n encore du text --- et encore du text\n--tag--")
       expect(tokens).to eq([
         { text: "hello world " },
         { tag: "public" },
@@ -525,14 +525,15 @@ describe TagsSubstitutionConcern, type: :model do
         { tag: "numéro du dossier" },
         { text: ", un test" },
         { tag: "yolo" },
-        { text: " encore du text\n" + "---\n" + " encore du text" }
+        { text: " encore du text\n" + "---\n" + " encore du text --- et encore du text\n" },
+        { tag: "tag" }
       ])
     end
 
     it 'allow for - before tag' do
-      tokens = TagsSubstitutionConcern::TagsParser.parse("hello --yolo-- --  before-- --after -- -- around -- world ---numéro-du - dossier--")
+      tokens = TagsSubstitutionConcern::TagsParser.parse("-----------------\nhello --yolo-- --  before-- --after -- -- around -- world ---numéro-du - dossier--")
       expect(tokens).to eq([
-        { text: "hello " },
+        { text: "-----------------\nhello " },
         { tag: "yolo" },
         { text: " " },
         { tag: "before" },

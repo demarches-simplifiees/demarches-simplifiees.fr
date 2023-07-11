@@ -26,11 +26,7 @@ module Users
       @dossiers_invites = current_user.dossiers_invites.merge(dossiers_visibles)
       @dossiers_supprimes_recemment = current_user.dossiers.hidden_by_user.merge(dossiers)
       @dossiers_supprimes_definitivement = current_user.deleted_dossiers.order_by_updated_at.page(page)
-      @dossier_transfers = DossierTransfer
-        .includes(dossiers: :user)
-        .with_dossiers
-        .where(email: current_user.email)
-        .page(page)
+      @dossier_transfers = DossierTransfer.for_email(current_user.email).page(page)
       @statut = statut(@user_dossiers, @dossiers_traites, @dossiers_invites, @dossiers_supprimes_recemment, @dossiers_supprimes_definitivement, @dossier_transfers, @dossiers_close_to_expiration, params[:statut])
     end
 

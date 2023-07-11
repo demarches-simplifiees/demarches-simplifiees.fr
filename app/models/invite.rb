@@ -16,7 +16,7 @@ class Invite < ApplicationRecord
 
   belongs_to :dossier, optional: false
   belongs_to :user, optional: true
-  has_one :targeted_user_link, dependent: :destroy, inverse_of: :target_model, foreign_key: 'target_model_id'
+  has_one :targeted_user_link, as: :target_model, dependent: :destroy, inverse_of: :target_model
 
   before_validation -> { sanitize_email(:email) }
 
