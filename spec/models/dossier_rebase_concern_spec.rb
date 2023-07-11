@@ -239,7 +239,7 @@ describe Dossier do
   end
 
   describe "#rebase" do
-    let(:procedure) { create(:procedure, :with_type_de_champ_mandatory, :with_yes_no, :with_repetition, :with_datetime) }
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :text, mandatory: true }, { type: :repetition, children: [{ type: :text }] }, { type: :datetime }, { type: :yes_no }, { type: :integer_number }]) }
     let(:dossier) { create(:dossier, procedure: procedure) }
 
     let(:yes_no_type_de_champ) { procedure.active_revision.types_de_champ_public.find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:yes_no) } }
@@ -247,6 +247,8 @@ describe Dossier do
     let(:text_type_de_champ) { procedure.active_revision.types_de_champ_public.find(&:mandatory?) }
     let(:text_champ) { dossier.champs_public.find(&:mandatory?) }
     let(:rebased_text_champ) { dossier.champs_public.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
+
+    let(:rebased_number_champ) { dossier.champs_public.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:integer_number) } }
 
     let(:datetime_type_de_champ) { procedure.active_revision.types_de_champ_public.find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:datetime) } }
     let(:datetime_champ) { dossier.champs_public.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:datetime) } }
@@ -287,7 +289,7 @@ describe Dossier do
       libelle = text_type_de_champ.libelle
 
       expect(dossier.revision).to eq(procedure.published_revision)
-      expect(dossier.champs_public.size).to eq(4)
+      expect(dossier.champs_public.size).to eq(5)
       expect(repetition_champ.rows.size).to eq(2)
       expect(repetition_champ.rows[0].size).to eq(1)
       expect(repetition_champ.rows[1].size).to eq(1)
@@ -299,7 +301,7 @@ describe Dossier do
 
       expect(procedure.revisions.size).to eq(3)
       expect(dossier.revision).to eq(procedure.published_revision)
-      expect(dossier.champs_public.size).to eq(4)
+      expect(dossier.champs_public.size).to eq(5)
       expect(rebased_text_champ.value).to eq(text_champ.value)
       expect(rebased_text_champ.type_de_champ_id).not_to eq(text_champ.type_de_champ_id)
       expect(rebased_datetime_champ.type_champ).to eq(TypeDeChamp.type_champs.fetch(:date))
@@ -309,6 +311,7 @@ describe Dossier do
       expect(rebased_repetition_champ.rows[1].size).to eq(2)
       expect(rebased_text_champ.rebased_at).not_to be_nil
       expect(rebased_datetime_champ.rebased_at).not_to be_nil
+      expect(rebased_number_champ.rebased_at).to be_nil
     end
   end
 
