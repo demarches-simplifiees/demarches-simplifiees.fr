@@ -24,15 +24,16 @@ describe Instructeurs::AvisController, type: :controller do
       end
     end
 
-    describe 'revive' do
+    describe 'remind' do
       before do
         allow(AvisMailer).to receive(:avis_invitation).and_return(double(deliver_later: nil))
       end
 
       it 'sends a reminder to the expert' do
-        get :revive, params: { procedure_id: procedure.id, id: avis.id }
+        get :remind, params: { procedure_id: procedure.id, id: avis.id }
         expect(AvisMailer).to have_received(:avis_invitation).once.with(avis)
         expect(flash.notice).to eq("Un mail de relance a été envoyé à #{avis.expert.email}")
+        expect(avis.reload.reminded_at).to be_present
       end
     end
   end

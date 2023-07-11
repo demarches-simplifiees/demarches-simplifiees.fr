@@ -1,6 +1,7 @@
 describe 'As an administrateur I can edit types de champ', js: true do
   let(:administrateur) { procedure.administrateurs.first }
-  let(:procedure) { create(:procedure) }
+  let(:estimated_duration_visible) { true }
+  let(:procedure) { create(:procedure, estimated_duration_visible:) }
 
   before do
     login_as administrateur.user, scope: :user
@@ -193,23 +194,39 @@ describe 'As an administrateur I can edit types de champ', js: true do
     end
   end
 
-  scenario "displaying the estimated fill duration" do
-    # It doesn't display anything when there are no champs
-    expect(page).not_to have_content('Durée de remplissage estimée')
+  context "estimated duration visible" do
+    scenario "displaying the estimated fill duration" do
+      # It doesn't display anything when there are no champs
+      expect(page).not_to have_content('Durée de remplissage estimée')
 
-    # It displays the estimate when adding a new champ
-    add_champ
-    select('Pièce justificative', from: 'Type de champ')
-    expect(page).to have_content('Durée de remplissage estimée : 2 min')
+      # It displays the estimate when adding a new champ
+      add_champ
+      select('Pièce justificative', from: 'Type de champ')
+      expect(page).to have_content('Durée de remplissage estimée : 2 min')
 
-    # It updates the estimate when updating the champ
-    check 'Champ obligatoire'
-    expect(page).to have_content('Durée de remplissage estimée : 3 min')
+      # It updates the estimate when updating the champ
+      check 'Champ obligatoire'
+      expect(page).to have_content('Durée de remplissage estimée : 3 min')
 
-    # It updates the estimate when removing the champ
-    page.accept_alert do
-      click_on 'Supprimer'
+      # It updates the estimate when removing the champ
+      page.accept_alert do
+        click_on 'Supprimer'
+      end
+      expect(page).not_to have_content('Durée de remplissage estimée')
     end
-    expect(page).not_to have_content('Durée de remplissage estimée')
+  end
+
+  context "estimated duration not visible" do
+    let(:estimated_duration_visible) { false }
+
+    scenario "hide the estimated fill duration" do
+      # It doesn't display anything when there are no champs
+      expect(page).not_to have_content('Durée de remplissage estimée')
+
+      # It displays the estimate when adding a new champ
+      add_champ
+      select('Pièce justificative', from: 'Type de champ')
+      expect(page).not_to have_content('Durée de remplissage estimée')
+    end
   end
 end

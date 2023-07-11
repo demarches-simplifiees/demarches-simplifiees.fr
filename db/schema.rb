@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_01_26_145329) do
+ActiveRecord::Schema.define(version: 2023_01_31_172119) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -710,6 +710,7 @@ ActiveRecord::Schema.define(version: 2023_01_26_145329) do
     t.boolean "duree_conservation_etendue_par_ds", default: false, null: false
     t.boolean "durees_conservation_required", default: true
     t.string "encrypted_api_particulier_token"
+    t.boolean "estimated_duration_visible", default: true, null: false
     t.boolean "euro_flag", default: false
     t.boolean "experts_require_administrateur_invitation", default: false
     t.boolean "for_individual", default: false

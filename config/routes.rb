@@ -409,7 +409,7 @@ Rails.application.routes.draw do
           get '', action: 'procedure', on: :collection, as: :procedure
           member do
             patch 'revoquer'
-            get 'revive'
+            get 'remind'
           end
         end
 
