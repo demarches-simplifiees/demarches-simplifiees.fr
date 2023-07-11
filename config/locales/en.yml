@@ -113,6 +113,9 @@ en:
         champ_remove: Remove
         champ_unavailable: Unavailable
         possible_values:
+          link:
+            title: All possible values
+            text: See all possible values
           title: Values
           text_html: A short text
           textarea_html: A long text

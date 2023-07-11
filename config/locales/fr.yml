@@ -104,6 +104,9 @@ fr:
         champ_remove: Retirer
         champ_unavailable: Indisponible
         possible_values:
+          link:
+            title: Toutes les valeurs possibles
+            text: Voir toutes les valeurs possibles
           title: Valeurs
           text_html: Un texte court
           textarea_html: Un texte long
