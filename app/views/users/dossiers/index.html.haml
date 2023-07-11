@@ -9,7 +9,7 @@
 .dossiers-headers.sub-header
   .fr-container
     %h1.page-title.fr-h2= t('views.users.dossiers.index.dossiers')
-    - if current_user.dossiers.count > 2
+    - if current_user.dossiers.count > 2 || current_user.dossiers_invites.count > 2
       #search-2.fr-search-bar.fr-search-bar--lg
         = form_tag recherche_dossiers_path, method: :get, :role => "search", class: "flex width-100 fr-mb-5w" do
           = label_tag "q", t('views.users.dossiers.search.search_file'), class: 'fr-label'
