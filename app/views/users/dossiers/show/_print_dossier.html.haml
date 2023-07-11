@@ -1,6 +1,1 @@
-.dropdown.print-menu-opener{ data: { controller: 'menu-button' } }
-  %button.button.dropdown-button.icon-only{ title: t('views.users.dossiers.show.header.print'), 'aria-label': 'imprimer', data: { menu_button_target: 'button' } }
-    %span.icon.printer
-  %ul#print-menu.print-menu.dropdown-content{ data: { menu_button_target: 'menu' } }
-    %li
-      = link_to t('views.users.dossiers.show.header.print_dossier'), dossier_path(dossier, format: :pdf), target: "_blank", rel: "noopener", class: "menu-item menu-link"
+= link_to t('views.users.dossiers.show.header.print'), dossier_path(dossier, format: :pdf), target: "_blank", rel: "noopener", title: t('views.users.dossiers.show.header.print_dossier'), class: 'fr-btn fr-icon-printer-line fr-btn--tertiary'

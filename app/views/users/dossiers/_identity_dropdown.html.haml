@@ -1,8 +1,8 @@
-.dropdown.edit-identity-action{ data: { controller: 'menu-button', popover: 'true' } }
-  %button.button.dropdown-button{ data: { menu_button_target: 'button' } }
+= render Dropdown::MenuComponent.new(wrapper: :div, wrapper_options: {class: ['edit-identity-action']}, menu_options: {  class:['edit-identity-content'] }) do |menu|
+  - menu.with_button_inner_html do
     = t("views.shared.dossiers.demande.my_identity")
 
-  #edit-identity-content.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
+  - menu.with_form do
     - if dossier.procedure.for_individual
       = render partial: "shared/dossiers/identite_individual", locals: { individual: dossier.individual }
 

@@ -1,10 +1,9 @@
-.dropdown.help-dropdown{ data: { controller: 'menu-button' } }
-  %button.fr-btn.dropdown-button{ data: { menu_button_target: 'button' } }
+= render Dropdown::MenuComponent.new(wrapper: :span, wrapper_options: { class: ['help-dropdown']}, menu_options: { id: "help-menu" }) do |menu|
+  - menu.with_button_inner_html do
     = t('help')
-  #help-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
-    %ul.dropdown-items
-      - if procedure.service.present?
-        = render partial: 'shared/help/dropdown_items/service_item',
-          locals: { service: procedure.service, title: "Une question sur cette démarche ?" }
 
-      = render partial: 'shared/help/dropdown_items/faq_item'
+  - if procedure.service.present?
+    - menu.with_item do
+      = render partial: 'shared/help/dropdown_items/service_item', locals: { service: procedure.service, title: "Une question sur cette démarche ?" }
+  - menu.with_item do
+    = render partial: 'shared/help/dropdown_items/faq_item'

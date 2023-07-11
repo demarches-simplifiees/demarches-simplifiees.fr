@@ -67,21 +67,21 @@
 
             - if instructeur_dossier && expert_dossier
               %td.action-col.follow-col
-                .dropdown{ data: { controller: 'menu-button' } }
-                  %button.button.dropdown-button{ data: { menu_button_target: 'button' } }
+                = render Dropdown::MenuComponent.new(wrapper: :div, button_options: {class: ['fr-btn--sm']}) do |menu|
+                  - menu.with_button_inner_html do
                     Actions
-                  .dropdown-content{ data: { menu_button_target: 'menu' } }
-                    %ul.dropdown-items
-                      %li
-                        = link_to(instructeur_dossier_path(procedure_id, p.dossier_id)) do
-                          %span.icon.in-progress>
-                          .dropdown-description
-                            Voir le dossier
-                      %li
-                        = link_to(expert_avis_path(procedure_id, @dossier_avis_ids_h[p.dossier_id])) do
-                          %span.icon.in-progress>
-                          .dropdown-description
-                            Donner mon avis
+
+                  - menu.with_item do
+                    = link_to(instructeur_dossier_path(procedure_id, p.dossier_id), role: 'menuitem') do
+                      %span.icon.in-progress>
+                      .dropdown-description
+                        Voir le dossier
+
+                  - menu.with_item do
+                    = link_to(expert_avis_path(procedure_id, @dossier_avis_ids_h[p.dossier_id]), role: 'menuitem') do
+                      %span.icon.in-progress>
+                      .dropdown-description
+                        Donner mon avis
 
             - elsif instructeur_dossier
               - if hidden_by_administration
