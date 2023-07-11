@@ -16,19 +16,19 @@ describe "procedure sort", js: true do
 
   scenario "should be able to sort with header" do
     # sorted by notifications (updated_at desc) by default, filtered by followed
-    expect(all(".dossiers-table tbody tr").count).to eq(2)
-    expect(find(".dossiers-table tbody tr:nth-child(1) .number-col a").text).to eq(followed_dossier.id.to_s)
-    expect(find(".dossiers-table tbody tr:nth-child(2) .number-col a").text).to eq(followed_dossier_2.id.to_s)
+    expect(all(".dossiers-table tbody tr").count).to eq(3)
+    expect(find(".dossiers-table tbody tr:nth-child(2) .number-col a").text).to eq(followed_dossier.id.to_s)
+    expect(find(".dossiers-table tbody tr:nth-child(3) .number-col a").text).to eq(followed_dossier_2.id.to_s)
 
     find("thead .number-col a").click # sort by id asc
 
-    expect(find(".dossiers-table tbody tr:nth-child(1) .number-col a").text).to eq(followed_dossier.id.to_s)
-    expect(find(".dossiers-table tbody tr:nth-child(2) .number-col a").text).to eq(followed_dossier_2.id.to_s)
+    expect(find(".dossiers-table tbody tr:nth-child(2) .number-col a").text).to eq(followed_dossier.id.to_s)
+    expect(find(".dossiers-table tbody tr:nth-child(3) .number-col a").text).to eq(followed_dossier_2.id.to_s)
 
     find("thead .number-col a").click # reverse order - sort by id desc
 
-    expect(find(".dossiers-table tbody tr:nth-child(1) .number-col a").text).to eq(followed_dossier_2.id.to_s)
-    expect(find(".dossiers-table tbody tr:nth-child(2) .number-col a").text).to eq(followed_dossier.id.to_s)
+    expect(find(".dossiers-table tbody tr:nth-child(2) .number-col a").text).to eq(followed_dossier_2.id.to_s)
+    expect(find(".dossiers-table tbody tr:nth-child(3) .number-col a").text).to eq(followed_dossier.id.to_s)
   end
 
   scenario "should be able to sort with direct link to notification sort" do
@@ -39,14 +39,14 @@ describe "procedure sort", js: true do
     find("label", text: "Remonter les dossiers avec une notification").click # reverse order - sort by updated_at asc
 
     expect(page).not_to have_checked_field("Remonter les dossiers avec une notification")
-    expect(find(".dossiers-table tbody tr:nth-child(1) .number-col a").text).to eq(followed_dossier_2.id.to_s)
-    expect(find(".dossiers-table tbody tr:nth-child(2) .number-col a").text).to eq(followed_dossier.id.to_s)
+    expect(find(".dossiers-table tbody tr:nth-child(2) .number-col a").text).to eq(followed_dossier_2.id.to_s)
+    expect(find(".dossiers-table tbody tr:nth-child(3) .number-col a").text).to eq(followed_dossier.id.to_s)
 
     find("label", text: "Remonter les dossiers avec une notification").click # set order back - sort by updated_at desc
 
     expect(page).to have_checked_field("Remonter les dossiers avec une notification")
-    expect(find(".dossiers-table tbody tr:nth-child(1) .number-col a").text).to eq(followed_dossier.id.to_s)
-    expect(find(".dossiers-table tbody tr:nth-child(2) .number-col a").text).to eq(followed_dossier_2.id.to_s)
+    expect(find(".dossiers-table tbody tr:nth-child(2) .number-col a").text).to eq(followed_dossier.id.to_s)
+    expect(find(".dossiers-table tbody tr:nth-child(3) .number-col a").text).to eq(followed_dossier_2.id.to_s)
   end
 
   scenario "should be able to sort back by notification filter after any other sort" do
@@ -57,7 +57,7 @@ describe "procedure sort", js: true do
     find("label", text: "Remonter les dossiers avec une notification").click # sort by updated_at desc
     expect(page).to have_checked_field("Remonter les dossiers avec une notification")
 
-    expect(find(".dossiers-table tbody tr:nth-child(1) .number-col a").text).to eq(followed_dossier.id.to_s)
-    expect(find(".dossiers-table tbody tr:nth-child(2) .number-col a").text).to eq(followed_dossier_2.id.to_s)
+    expect(find(".dossiers-table tbody tr:nth-child(2) .number-col a").text).to eq(followed_dossier.id.to_s)
+    expect(find(".dossiers-table tbody tr:nth-child(3) .number-col a").text).to eq(followed_dossier_2.id.to_s)
   end
 end
