@@ -11,10 +11,10 @@
 
       .dropdown{ data: { controller: 'menu-button', popover: 'true' } }
         -# Dropdown button title
-        %button.fr-btn.fr-btn--sm.fr-btn--secondary.fr-ml-1w.dropdown-button{ disabled: true, data: { menu_button_target: 'button', batch_operation_target: 'menu' } }
+        %button#batch_operation_others.fr-btn.fr-btn--sm.fr-btn--secondary.fr-ml-1w.dropdown-button{ disabled: true, data: { menu_button_target: 'button', batch_operation_target: 'dropdown' } }
           = t('.operations.other')
 
-        #state-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' } }
+        #state-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' }, "aria-labelledby" => "batch_operation_others" }
           %ul.dropdown-items
             - available_operations[:options][2, available_operations[:options].count].each do |opt|
               %li{ 'data-turbo': 'true' }

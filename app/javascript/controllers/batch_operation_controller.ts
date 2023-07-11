@@ -3,11 +3,11 @@ import { disable, enable, show, hide } from '@utils';
 import invariant from 'tiny-invariant';
 
 export class BatchOperationController extends ApplicationController {
-  static targets = ['menu', 'input'];
+  static targets = ['menu', 'input', 'dropdown'];
 
   declare readonly menuTargets: HTMLButtonElement[];
-  declare readonly hasMenuTarget: boolean;
   declare readonly inputTargets: HTMLInputElement[];
+  declare readonly dropdownTargets: HTMLButtonElement[];
 
   onCheckOne() {
     this.toggleSubmitButtonWhenNeeded();
@@ -110,18 +110,37 @@ export class BatchOperationController extends ApplicationController {
         return available;
       });
 
-      if (this.hasMenuTarget) {
+      if (this.menuTargets.length) {
         if (available.length) {
           this.menuTargets.forEach((e) => enable(e));
         } else {
           this.menuTargets.forEach((e) => disable(e));
         }
       }
+
+      this.dropdownTargets.forEach((dropdown) => {
+        const buttons = Array.from(
+          document.querySelectorAll<HTMLButtonElement>(
+            `[aria-labelledby='${dropdown.id}'] button[data-operation]`
+          )
+        );
+
+        const disabled = buttons.every((button) => button.disabled);
+
+        if (disabled) {
+          disable(dropdown);
+        } else {
+          enable(dropdown);
+        }
+      });
+
+      // pour chaque chaque dropdown, on va chercher tous les boutons
+      // si tous les boutons sont disabled, on disable le dropdown
     } else {
-      if (this.hasMenuTarget) {
-        this.menuTargets.forEach((e) => disable(e));
-      }
+      this.menuTargets.forEach((e) => disable(e));
       buttons.forEach((button) => switchButton(button, false));
+
+      this.dropdownTargets.forEach((e) => disable(e));
     }
   }
 }
