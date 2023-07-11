@@ -139,6 +139,45 @@ describe 'Invitations' do
     end
   end
 
+  describe 'recherche' do
+    context "when user has one invited dossier" do
+      let!(:dossier) { create(:dossier, :with_individual, :en_construction, user: owner, procedure: procedure) }
+      let!(:invite) { create(:invite, user: invited_user, dossier: dossier) }
+      before do
+        navigate_to_invited_dossier(invite)
+        visit dossiers_path
+      end
+
+      it "does not have access to search bar" do
+        expect(page).not_to have_selector('#q')
+      end
+    end
+
+    context "when user has multiple invited dossiers" do
+      let(:dossier) { create(:dossier, :with_individual, :en_construction, user: owner, procedure: procedure) }
+      let!(:dossier_2) { create(:dossier, :with_individual, :with_populated_champs, :en_construction, user: owner, procedure: procedure) }
+      let!(:invite_2) { create(:invite, user: invited_user, dossier: dossier_2) }
+      let!(:dossier_3) { create(:dossier, :with_individual, :en_construction, user: owner, procedure: procedure) }
+      let!(:invite_3) { create(:invite, user: invited_user, dossier: dossier_3) }
+      before do
+        navigate_to_invited_dossier(invite)
+        visit dossiers_path
+      end
+
+      it "can search by id and it redirects to the dossier page" do
+        page.find_by_id('q').set(dossier.id)
+        find('.fr-search-bar .fr-btn').click
+        expect(current_path).to eq(dossier_path(dossier))
+      end
+
+      it "can search something inside the dossier and it redirects to the dossier page" do
+        page.find_by_id('q').set(dossier_2.champs_public.first.value)
+        find('.fr-search-bar .fr-btn').click
+        expect(current_path).to eq(dossier_path(dossier_2))
+      end
+    end
+  end
+
   private
 
   def log_in(user)
