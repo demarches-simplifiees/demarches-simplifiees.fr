@@ -10,7 +10,7 @@ class DossierSearchService
 
   def self.matching_dossiers_for_user(search_terms, user)
     dossier_by_exact_id_for_user(search_terms, user)
-      .presence || dossier_by_full_text_for_user(search_terms, user.dossiers).presence || dossier_by_full_text_for_user(search_terms, user.dossiers_invites)
+      .presence || dossier_by_full_text_for_user(search_terms, Dossier.where(id: user.dossiers.ids + user.dossiers_invites.ids))
   end
 
   private
