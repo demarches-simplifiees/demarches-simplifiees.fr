@@ -29,3 +29,15 @@
     vertical-align: baseline;
   }
 }
+
+.badge-group {
+  display: flex;
+
+  .fr-badge {
+    margin-right: $default-spacer;
+  }
+
+  .fr-badge:last-child {
+    margin-right: 0;
+  }
+}

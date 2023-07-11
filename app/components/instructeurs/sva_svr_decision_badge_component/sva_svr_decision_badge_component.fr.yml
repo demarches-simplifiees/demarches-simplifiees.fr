@@ -1,0 +1,10 @@
+---
+  fr:
+    no_sva: Déposé avant SVA
+    no_svr: Déposé avant SVR
+    in_days:
+      zero: Aujourd’hui
+      one: Demain
+      other: dans %{count} jours
+    remaining_days_after_correction:
+      other: "%{count} j. après correction"

@@ -1,4 +1,6 @@
 describe ProcedurePresentation do
+  include ActiveSupport::Testing::TimeHelpers
+
   let(:procedure) { create(:procedure, :published, types_de_champ_public: [{}], types_de_champ_private: [{}]) }
   let(:instructeur) { create(:instructeur) }
   let(:assign_to) { create(:assign_to, procedure: procedure, instructeur: instructeur) }
@@ -112,6 +114,18 @@ describe ProcedurePresentation do
       subject { procedure_presentation.fields }
 
       it { is_expected.to include(name_field, surname_field, gender_field) }
+    end
+
+    context 'when the procedure is sva/svr' do
+      let(:procedure) { create(:procedure, :for_individual, :sva) }
+      let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to) }
+
+      let(:decision_on) { { "label" => "Date décision SVA", "table" => "self", "column" => "sva_svr_decision_on", 'classname' => '', 'virtual' => false, "type" => :date, "scope" => '', "value_column" => :value } }
+      let(:decision_before_field) { { "label" => "Date décision SVA avant", "table" => "self", "column" => "sva_svr_decision_before", 'classname' => '', 'virtual' => true, "type" => :date, "scope" => '', "value_column" => :value } }
+
+      subject { procedure_presentation.fields }
+
+      it { is_expected.to include(decision_on, decision_before_field) }
     end
   end
 
@@ -464,6 +478,23 @@ describe ProcedurePresentation do
         end
 
         it { is_expected.to match_array([kept_dossier.id, later_dossier.id]) }
+      end
+
+      context 'for sva_svr_decision_before column' do
+        before do
+          travel_to Time.zone.local(2023, 6, 10, 10)
+        end
+
+        let(:procedure) { create(:procedure, :published, :sva, types_de_champ_public: [{}], types_de_champ_private: [{}]) }
+        let(:filter) { [{ 'table' => 'self', 'column' => 'sva_svr_decision_before', 'value' => '15/06/2023' }] }
+
+        let!(:kept_dossier) { create(:dossier, :en_instruction, procedure:, sva_svr_decision_on: Date.current) }
+        let!(:later_dossier) { create(:dossier, :en_instruction, procedure:, sva_svr_decision_on: Date.current + 2.days) }
+        let!(:discarded_dossier) { create(:dossier, :en_instruction, procedure:, sva_svr_decision_on: Date.current + 10.days) }
+        let!(:en_construction_dossier) { create(:dossier, :en_construction, procedure:, sva_svr_decision_on: Date.current + 2.days) }
+        let!(:accepte_dossier) { create(:dossier, :accepte, procedure:, sva_svr_decision_on: Date.current + 2.days) }
+
+        it { is_expected.to match_array([kept_dossier.id, later_dossier.id, en_construction_dossier.id]) }
       end
 
       context 'ignore time of day' do

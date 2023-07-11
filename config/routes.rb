@@ -573,6 +573,8 @@ Rails.application.routes.draw do
       resource :dossier_submitted_message, only: [:edit, :update, :create]
       # ADDED TO ACCESS IT FROM THE IFRAME
       get 'attestation_template/preview' => 'attestation_templates#preview'
+
+      resource :sva_svr, only: [:show, :edit, :update], controller: 'sva_svr'
     end
 
     resources :services, except: [:show] do

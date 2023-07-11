@@ -17,6 +17,8 @@ fr:
             en_construction_since: En construction depuis
             en_instruction_since: En instruction depuis
             processed_since: Terminé depuis
+            sva_svr_decision_on: Date décision SVA
+            sva_svr_decision_before: Date décision SVA avant
           user:
             email: Demandeur
           followers_instructeurs:

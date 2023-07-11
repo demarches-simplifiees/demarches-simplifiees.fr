@@ -36,6 +36,8 @@
 #  processed_at                                       :datetime
 #  search_terms                                       :string
 #  state                                              :string
+#  sva_svr_decision_on                                :date
+#  sva_svr_decision_triggered_at                      :datetime
 #  termine_close_to_expiration_notice_sent_at         :datetime
 #  created_at                                         :datetime
 #  updated_at                                         :datetime
@@ -199,6 +201,10 @@ class Dossier < ApplicationRecord
     end
 
     event :repasser_en_construction, after: :after_repasser_en_construction do
+      transitions from: :en_instruction, to: :en_construction, guard: :can_repasser_en_construction?
+    end
+
+    event :repasser_en_construction_with_pending_correction, after: :after_repasser_en_construction do
       transitions from: :en_instruction, to: :en_construction
     end
 
@@ -208,6 +214,7 @@ class Dossier < ApplicationRecord
 
     event :accepter_automatiquement, after: :after_accepter_automatiquement do
       transitions from: :en_construction, to: :accepte, guard: :can_accepter_automatiquement?
+      transitions from: :en_instruction, to: :accepte, guard: :can_accepter_automatiquement?
     end
 
     event :refuser, after: :after_refuser do
@@ -563,11 +570,23 @@ class Dossier < ApplicationRecord
   end
 
   def can_accepter_automatiquement?
-    declarative_triggered_at.nil? && procedure.declarative_accepte? && can_terminer?
+    return false unless can_terminer?
+    return true if declarative_triggered_at.nil? && procedure.declarative_accepte? && en_construction?
+    return true if procedure.sva? && sva_svr_decision_triggered_at.nil? && !pending_correction? && (sva_svr_decision_on.today? || sva_svr_decision_on.past?)
+
+    false
   end
 
   def can_passer_automatiquement_en_instruction?
-    (declarative_triggered_at.nil? && procedure.declarative_en_instruction?) || procedure.auto_archive_on&.then { _1 <= Time.zone.today }
+    return true if declarative_triggered_at.nil? && procedure.declarative_en_instruction?
+    return true if procedure.auto_archive_on? && !procedure.auto_archive_on.future?
+    return true if procedure.sva_svr_enabled? && sva_svr_decision_triggered_at.nil? && !pending_correction?
+
+    false
+  end
+
+  def can_repasser_en_construction?
+    !procedure.sva_svr_enabled?
   end
 
   def can_repasser_en_instruction?
@@ -900,13 +919,22 @@ class Dossier < ApplicationRecord
   def after_passer_automatiquement_en_instruction
     self.en_construction_close_to_expiration_notice_sent_at = nil
     self.conservation_extension = 0.days
-    self.en_instruction_at = self.declarative_triggered_at = self.traitements
-      .passer_en_instruction
-      .processed_at
+    self.en_instruction_at = traitements.passer_en_instruction.processed_at
+
+    if procedure.declarative_en_instruction?
+      self.declarative_triggered_at = en_instruction_at
+    end
+
     save!
 
     NotificationMailer.send_en_instruction_notification(self).deliver_later
-    log_automatic_dossier_operation(:passer_en_instruction)
+
+    if procedure.sva_svr_enabled?
+      # TODO: handle serialization errors when SIRET demandeur was not completed
+      log_automatic_dossier_operation(:passer_en_instruction, self)
+    else
+      log_automatic_dossier_operation(:passer_en_instruction)
+    end
   end
 
   def after_repasser_en_construction(h)
@@ -975,9 +1003,15 @@ class Dossier < ApplicationRecord
   end
 
   def after_accepter_automatiquement
-    self.processed_at = self.en_instruction_at = self.declarative_triggered_at = self.traitements
-      .accepter_automatiquement
-      .processed_at
+    self.processed_at = traitements.accepter_automatiquement.processed_at
+
+    if procedure.declarative_accepte?
+      self.en_instruction_at = self.processed_at
+      self.declarative_triggered_at = self.processed_at
+    elsif procedure.sva_svr_enabled?
+      self.sva_svr_decision_triggered_at = self.processed_at
+    end
+
     save!
 
     if attestation.nil?
@@ -1043,6 +1077,26 @@ class Dossier < ApplicationRecord
       accepter_automatiquement!
     elsif procedure.declarative_en_instruction? && may_passer_automatiquement_en_instruction?
       passer_automatiquement_en_instruction!
+    end
+  end
+
+  def process_sva_svr!
+    return unless procedure.sva_svr_enabled?
+    return if sva_svr_decision_triggered_at.present?
+
+    # set or recompute sva date, except for dossiers submitted before sva was enabled
+    if depose_at.today? || sva_svr_decision_on.present?
+      self.sva_svr_decision_on = SVASVRDecisionDateCalculatorService.new(self, procedure).decision_date
+    end
+
+    return if sva_svr_decision_on.nil?
+
+    if en_construction? && may_passer_automatiquement_en_instruction?
+      passer_automatiquement_en_instruction!
+    elsif en_instruction? && procedure.sva? && may_accepter_automatiquement?
+      accepter_automatiquement!
+    elsif will_save_change_to_sva_svr_decision_on?
+      save! # we always want the most up to date decision when there is a pending correction
     end
   end
 
@@ -1134,10 +1188,11 @@ class Dossier < ApplicationRecord
       ['Dernière mise à jour le', :updated_at],
       ['Déposé le', :depose_at],
       ['Passé en instruction le', :en_instruction_at],
+      procedure.sva_svr_enabled? ? ["Date #{procedure.sva_svr_configuration.human_decision}", :sva_svr_decision_on] : nil,
       ['Traité le', :processed_at],
       ['Motivation de la décision', :motivation],
       ['Instructeurs', followers_instructeurs.map(&:email).join(' ')]
-    ]
+    ].compact
 
     if procedure.routing_enabled?
       columns << ['Groupe instructeur', groupe_instructeur.label]
@@ -1231,6 +1286,10 @@ class Dossier < ApplicationRecord
     return true if user_deleted?
 
     false
+  end
+
+  def sva_svr_decision_in_days
+    (sva_svr_decision_on - Date.current).to_i
   end
 
   private

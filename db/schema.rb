@@ -323,6 +323,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_29_102031) do
     t.bigint "dossier_id", null: false
     t.datetime "resolved_at", precision: 6
     t.datetime "updated_at", precision: 6, null: false
+    t.string "kind", default: "correction", null: false
     t.index ["commentaire_id"], name: "index_dossier_corrections_on_commentaire_id"
     t.index ["dossier_id"], name: "index_dossier_corrections_on_dossier_id"
     t.index ["resolved_at"], name: "index_dossier_corrections_on_resolved_at", where: "((resolved_at IS NULL) OR (resolved_at IS NOT NULL))"
@@ -409,6 +410,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_29_102031) do
     t.string "state"
     t.datetime "termine_close_to_expiration_notice_sent_at", precision: 6
     t.datetime "updated_at", precision: 6
+    t.date "sva_svr_decision_on"
+    t.datetime "sva_svr_decision_triggered_at", precision: 6
     t.integer "user_id"
     t.index ["archived"], name: "index_dossiers_on_archived"
     t.index ["batch_operation_id"], name: "index_dossiers_on_batch_operation_id"
@@ -762,6 +765,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_29_102031) do
     t.text "routing_criteria_name", default: "Votre ville"
     t.boolean "routing_enabled"
     t.bigint "service_id"
+    t.jsonb "sva_svr", default: {}, null: false
     t.text "tags", default: [], array: true
     t.datetime "test_started_at", precision: 6
     t.datetime "unpublished_at", precision: 6

@@ -185,6 +185,7 @@ module Users
       if errors.blank?
         @dossier.passer_en_construction!
         @dossier.process_declarative!
+        @dossier.process_sva_svr!
         NotificationMailer.send_en_construction_notification(@dossier).deliver_later
         @dossier.groupe_instructeur.instructeurs.with_instant_email_dossier_notifications.each do |instructeur|
           DossierMailer.notify_new_dossier_depose_to_instructeur(@dossier, instructeur.email).deliver_later
@@ -233,6 +234,7 @@ module Users
 
         if cast_bool(params.dig(:dossier, :pending_correction_confirm))
           editing_fork_origin.resolve_pending_correction!
+          editing_fork_origin.process_sva_svr!
         end
 
         redirect_to dossier_path(editing_fork_origin)
