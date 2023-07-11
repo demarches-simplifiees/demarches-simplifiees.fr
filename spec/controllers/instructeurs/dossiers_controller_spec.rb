@@ -865,6 +865,10 @@ describe Instructeurs::DossiersController, type: :controller do
       }
     end
 
+    before do
+      allow(PiecesJustificativesService).to receive(:generate_dossier_export).with([dossier], include_infos_administration: true).and_call_original
+    end
+
     it 'includes an attachment' do
       expect(subject.headers['Content-Disposition']).to start_with('attachment; ')
     end

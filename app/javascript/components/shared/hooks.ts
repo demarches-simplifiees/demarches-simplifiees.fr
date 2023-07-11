@@ -17,8 +17,11 @@ export function useDeferredSubmit(input?: HTMLInputElement): {
         runCallback();
 
         if (
-          !Array.from(form.elements).some((e) =>
-            e.hasAttribute('data-direct-upload-url')
+          !Array.from(form.elements).some(
+            (e) =>
+              e.hasAttribute('data-direct-upload-url') &&
+              'value' in e &&
+              e.value != ''
           )
         ) {
           form.submit();
