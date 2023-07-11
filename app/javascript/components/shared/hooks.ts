@@ -15,7 +15,15 @@ export function useDeferredSubmit(input?: HTMLInputElement): {
       const interceptFormSubmit = (event: Event) => {
         event.preventDefault();
         runCallback();
-        form.submit();
+
+        if (
+          !Array.from(form.elements).some((e) =>
+            e.hasAttribute('data-direct-upload-url')
+          )
+        ) {
+          form.submit();
+        }
+        // else: form will be submitted by diret upload once file have been uploaded
       };
       calledRef.current = false;
       form.addEventListener('submit', interceptFormSubmit);
