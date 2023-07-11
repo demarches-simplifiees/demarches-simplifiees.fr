@@ -65,7 +65,10 @@ export class ApplicationController extends Controller {
         FOCUS_EVENTS.includes(targetOrEventName)
       );
     } else {
-      invariant(eventNameOrHandler == 'string', 'event name is required');
+      invariant(
+        typeof eventNameOrHandler == 'string',
+        'event name is required'
+      );
       invariant(handler, 'handler is required');
       this.onTarget(targetOrEventName, eventNameOrHandler, handler);
     }
