@@ -32,4 +32,8 @@ class InviteMailer < ApplicationMailer
       subject: subject,
       reply_to: reply_to)
   end
+
+  def forced_delivery_for_action?
+    true
+  end
 end
