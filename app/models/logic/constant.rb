@@ -5,6 +5,10 @@ class Logic::Constant < Logic::Term
     @value = value
   end
 
+  def sources
+    []
+  end
+
   def compute(_champs = nil) = @value
 
   def to_s(_type_de_champs = [])

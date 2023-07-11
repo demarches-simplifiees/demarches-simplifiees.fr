@@ -82,6 +82,8 @@ class RootController < ApplicationController
         champ.association(:dossier).target = @dossier
       end
     end
+
+    @dossier.association(:revision).target = @dossier.procedure.build_draft_revision
   end
 
   def suivi

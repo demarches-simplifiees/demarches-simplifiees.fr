@@ -21,6 +21,7 @@ const {
 
 const AUTOSAVE_DEBOUNCE_DELAY = debounce_delay;
 const AUTOSAVE_TIMEOUT_DELAY = 60000;
+const AUTOSAVE_CONDITIONAL_SPINNER_DEBOUNCE_DELAY = 200;
 
 // This is a controller we attach to each "champ" in the main form. It performs
 // the save and dispatches a few events that allow `AutosaveStatusController` to
@@ -38,6 +39,7 @@ export class AutosaveController extends ApplicationController {
   #latestPromise = Promise.resolve();
   #needsRetry = false;
   #pendingPromiseCount = 0;
+  #spinnerTimeoutId?: ReturnType<typeof setTimeout>;
 
   connect() {
     this.#latestPromise = Promise.resolve();
@@ -88,6 +90,8 @@ export class AutosaveController extends ApplicationController {
         (!this.saveOnInput && isTextInputElement(target))
       ) {
         this.enqueueAutosaveRequest();
+
+        this.showConditionnalSpinner(target);
       }
     }
   }
@@ -101,7 +105,34 @@ export class AutosaveController extends ApplicationController {
       isTextInputElement(target)
     ) {
       this.debounce(this.enqueueAutosaveRequest, AUTOSAVE_DEBOUNCE_DELAY);
+
+      this.showConditionnalSpinner(target);
     }
+  }
+
+  private showConditionnalSpinner(target: HTMLInputElement) {
+    const champWrapperElement = target.closest(
+      '.editable-champ[data-dependent-conditions]'
+    );
+
+    if (!champWrapperElement) {
+      return;
+    }
+
+    this.showSpinner(champWrapperElement);
+  }
+
+  private showSpinner(champElement: Element) {
+    this.#spinnerTimeoutId = setTimeout(() => {
+      // do not do anything if there is already a spinner for this champ, like SIRET champ
+      if (!champElement.querySelector('.spinner')) {
+        const spinner = document.createElement('div');
+        spinner.classList.add('spinner', 'spinner-removable');
+        spinner.setAttribute('aria-live', 'live');
+        spinner.setAttribute('aria-label', 'Chargement en cours…');
+        champElement.appendChild(spinner);
+      }
+    }, AUTOSAVE_CONDITIONAL_SPINNER_DEBOUNCE_DELAY);
   }
 
   private get saveOnInput() {
@@ -123,6 +154,7 @@ export class AutosaveController extends ApplicationController {
     this.#pendingPromiseCount -= 1;
     if (this.#pendingPromiseCount == 0) {
       this.globalDispatch('autosave:end');
+      clearTimeout(this.#spinnerTimeoutId);
     }
   }
 

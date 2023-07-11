@@ -5,6 +5,10 @@ class Logic::BinaryOperator < Logic::Term
     @left, @right = left, right
   end
 
+  def sources
+    [@left, @right].flat_map(&:sources)
+  end
+
   def to_h
     {
       "term" => self.class.name,

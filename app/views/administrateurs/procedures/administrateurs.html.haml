@@ -14,7 +14,7 @@
     %table#all-admins
       %caption
         = "#{@admins.total_count} administrateurs"
-        %span.hidden.fr-icon-ball-pen-fill{ 'aria-hidden': 'true', 'data-turbo-target': 'spinner' }
+        %span.hidden.spinner{ 'aria-hidden': 'true', 'data-turbo-target': 'spinner' }
       - if @filter.email
         .selected-email.fr-mb-2w
           = link_to @filter.email, administrateurs_admin_procedures_path(@filter.without(:email)), class: 'fr-tag fr-tag--dismiss fr-mb-1w'

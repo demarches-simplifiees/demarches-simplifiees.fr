@@ -23,6 +23,10 @@ class Logic::ChampValue < Logic::Term
     @stable_id = stable_id
   end
 
+  def sources
+    [@stable_id]
+  end
+
   def compute(champs)
     targeted_champ = champ(champs)
 

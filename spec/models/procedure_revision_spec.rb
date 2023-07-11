@@ -855,4 +855,21 @@ describe ProcedureRevision do
       it { expect(subject.first.attribute).to eq(:condition) }
     end
   end
+
+  describe "#dependent_conditions" do
+    include Logic
+
+    def first_champ = procedure.draft_revision.types_de_champ_public.first
+    def second_champ = procedure.draft_revision.types_de_champ_public.second
+
+    let(:procedure) do
+      create(:procedure).tap do |p|
+        tdc = p.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'l1')
+        p.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'l2', condition: ds_eq(champ_value(tdc.stable_id), constant(true)))
+      end
+    end
+
+    it { expect(draft.dependent_conditions(first_champ)).to eq([second_champ]) }
+    it { expect(draft.dependent_conditions(second_champ)).to eq([]) }
+  end
 end

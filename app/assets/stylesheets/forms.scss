@@ -252,6 +252,11 @@
     &.no-margin {
       margin-bottom: 0;
     }
+
+    + .spinner:not(.right):not(.left) {
+      position: relative;
+      top: -($default-fields-spacer / 2);
+    }
   }
 
 
@@ -606,6 +611,11 @@
     &:last-child {
       margin-right: 0;
     }
+  }
+
+  fieldset ~ .spinner {
+    position: relative;
+    top: -($default-fields-spacer / 2);
   }
 }
 
