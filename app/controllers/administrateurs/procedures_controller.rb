@@ -118,7 +118,11 @@ module Administrateurs
     end
 
     def create
-      @procedure = Procedure.new(procedure_params.merge(administrateurs: [current_administrateur]))
+      new_procedure_params = { max_duree_conservation_dossiers_dans_ds: Procedure::NEW_MAX_DUREE_CONSERVATION }
+        .merge(procedure_params)
+        .merge(administrateurs: [current_administrateur])
+
+      @procedure = Procedure.new(new_procedure_params)
       @procedure.draft_revision = @procedure.revisions.build
 
       check_terms_of_use
