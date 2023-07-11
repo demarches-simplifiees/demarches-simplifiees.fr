@@ -22,6 +22,7 @@ describe 'Using Visa field', js: true do
       ]
     )
     allow_any_instance_of(EditableChamp::DepartementsComponent).to receive(:options).and_return(departements)
+    allow_any_instance_of(EditableChamp::EpciComponent).to receive(:departement_options).and_return(departements)
     allow_any_instance_of(EditableChamp::RegionsComponent).to receive(:options).and_return(regions)
   end
 
