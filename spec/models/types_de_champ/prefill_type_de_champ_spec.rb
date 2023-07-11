@@ -16,6 +16,12 @@ RSpec.describe TypesDeChamp::PrefillTypeDeChamp, type: :model do
       it { expect(built).to be_kind_of(TypesDeChamp::PrefillPaysTypeDeChamp) }
     end
 
+    context 'when the type de champ is a regions' do
+      let(:type_de_champ) { build(:type_de_champ_regions) }
+
+      it { expect(built).to be_kind_of(TypesDeChamp::PrefillRegionTypeDeChamp) }
+    end
+
     context 'when any other type de champ' do
       let(:type_de_champ) { build(:type_de_champ_date) }
 

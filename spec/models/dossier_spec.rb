@@ -1697,8 +1697,14 @@ describe Dossier do
     end
   end
 
-  describe "#destroy" do
-    before { allow(APIGeoService).to receive(:departement_name).with('01').and_return('Ain') }
+  describe "#destroy", vcr: { cassette_name: 'api_geo_all' } do
+    let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
+
+    before do
+      allow(Rails).to receive(:cache).and_return(memory_store)
+      Rails.cache.clear
+    end
+
     let(:procedure) { create(:procedure, :with_all_champs, :with_all_annotations) }
     let(:transfer) { create(:dossier_transfer) }
     let(:dossier) { create(:dossier, :with_populated_champs, :with_populated_annotations, transfer: transfer, procedure: procedure) }

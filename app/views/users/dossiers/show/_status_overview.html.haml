@@ -65,7 +65,7 @@
 
         = render partial: 'users/dossiers/show/download_justificatif', locals: { dossier: dossier }
         .action
-          = link_to t('views.users.dossiers.show.status_overview.refuse_reply'), messagerie_dossier_url(dossier, anchor: 'new_commentaire'), class: 'button'
+          = link_to t('views.users.dossiers.show.status_overview.refuse_reply'), messagerie_dossier_url(dossier, anchor: 'new_commentaire'), class: 'fr-link'
 
     - elsif dossier.sans_suite?
       .sans-suite
