@@ -1893,6 +1893,19 @@ describe Dossier do
           before { dossier.champs_public << champ_piece_justificative }
           it { expect(Champs::PieceJustificativeChamp.where(dossier: new_dossier).first.piece_justificative_file.first.blob).to eq(champ_piece_justificative.piece_justificative_file.first.blob) }
         end
+
+        context 'for Champs::AddressChamp, original_champ.data is duped' do
+          let(:dossier) { create(:dossier) }
+          let(:type_de_champs_adress) { create(:type_de_champ_address, procedure: dossier.procedure) }
+          let(:etablissement) { create(:etablissement) }
+          let(:champ_address) { create(:champ_address, type_de_champ: type_de_champs_adress, external_id: 'Address', data: { city_code: '75019' }) }
+          before { dossier.champs_public << champ_address }
+
+          it { expect(Champs::AddressChamp.where(dossier: dossier).first.data).not_to be_nil }
+          it { expect(Champs::AddressChamp.where(dossier: dossier).first.external_id).not_to be_nil }
+          it { expect(Champs::AddressChamp.where(dossier: new_dossier).first.external_id).to eq(champ_address.external_id) }
+          it { expect(Champs::AddressChamp.where(dossier: new_dossier).first.data).to eq(champ_address.data) }
+        end
       end
 
       context 'private are renewd' do
