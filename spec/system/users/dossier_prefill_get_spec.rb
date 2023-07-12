@@ -6,8 +6,10 @@ describe 'Prefilling a dossier (with a GET request):' do
 
   let(:type_de_champ_text) { create(:type_de_champ_text, procedure: procedure) }
   let(:type_de_champ_phone) { create(:type_de_champ_phone, procedure: procedure) }
+  let(:type_de_champ_datetime) { create(:type_de_champ_datetime, procedure: procedure) }
   let(:text_value) { "My Neighbor Totoro is the best movie ever" }
   let(:phone_value) { "invalid phone value" }
+  let(:datetime_value) { "2023-02-01T10:32" }
 
   context 'when authenticated' do
     it_behaves_like "the user has got a prefilled dossier, owned by themselves" do
@@ -20,7 +22,8 @@ describe 'Prefilling a dossier (with a GET request):' do
         visit commencer_path(
           path: procedure.path,
           "champ_#{type_de_champ_text.to_typed_id}" => text_value,
-          "champ_#{type_de_champ_phone.to_typed_id}" => phone_value
+          "champ_#{type_de_champ_phone.to_typed_id}" => phone_value,
+          "champ_#{type_de_champ_datetime.to_typed_id}" => datetime_value
         )
 
         click_on "Poursuivre mon dossier prérempli"
@@ -33,7 +36,8 @@ describe 'Prefilling a dossier (with a GET request):' do
       visit commencer_path(
         path: procedure.path,
         "champ_#{type_de_champ_text.to_typed_id}" => text_value,
-        "champ_#{type_de_champ_phone.to_typed_id}" => phone_value
+        "champ_#{type_de_champ_phone.to_typed_id}" => phone_value,
+        "champ_#{type_de_champ_datetime.to_typed_id}" => datetime_value
       )
     end
 

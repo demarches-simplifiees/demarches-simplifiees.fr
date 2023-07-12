@@ -11,7 +11,7 @@ class PrefillDescription < SimpleDelegator
   end
 
   def update(attributes)
-    @selected_type_de_champ_ids = attributes[:selected_type_de_champ_ids].presence || []
+    @selected_type_de_champ_ids = attributes[:selected_type_de_champ_ids]&.split(' ') || []
   end
 
   def types_de_champ

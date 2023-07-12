@@ -1,9 +1,10 @@
 class EditableChamp::DatetimeComponent < EditableChamp::EditableChampBaseComponent
-  def datetime_start_year(date)
-    if date == nil || date.year == 0 || date.year >= Date.today.year - 1
-      Date.today.year - 1
+  def formatted_value_for_datetime_locale
+    if @champ.valid? && @champ.value.present?
+      # convert to a format that the datetime-local input can understand
+      DateTime.iso8601(@champ.value).strftime('%Y-%m-%dT%H:%M')
     else
-      date.year
+      @champ.value
     end
   end
 end

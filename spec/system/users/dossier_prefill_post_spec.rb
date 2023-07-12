@@ -6,8 +6,10 @@ describe 'Prefilling a dossier (with a POST request):' do
 
   let(:type_de_champ_text) { create(:type_de_champ_text, procedure: procedure) }
   let(:type_de_champ_phone) { create(:type_de_champ_phone, procedure: procedure) }
+  let(:type_de_champ_datetime) { create(:type_de_champ_datetime, procedure: procedure) }
   let(:text_value) { "My Neighbor Totoro is the best movie ever" }
   let(:phone_value) { "invalid phone value" }
+  let(:datetime_value) { "2023-02-01T10:32" }
 
   scenario "the user get the URL of a prefilled orphan brouillon dossier" do
     dossier_url = create_and_prefill_dossier_with_post_request
@@ -95,7 +97,8 @@ describe 'Prefilling a dossier (with a POST request):' do
       headers: { "Content-Type" => "application/json" },
       params: {
         "champ_#{type_de_champ_text.to_typed_id}" => text_value,
-        "champ_#{type_de_champ_phone.to_typed_id}" => phone_value
+        "champ_#{type_de_champ_phone.to_typed_id}" => phone_value,
+        "champ_#{type_de_champ_datetime.to_typed_id}" => datetime_value
       }.to_json
     JSON.parse(session.response.body)["dossier_url"].gsub("http://www.example.com", "")
   end

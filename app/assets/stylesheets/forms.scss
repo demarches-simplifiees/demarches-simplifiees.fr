@@ -245,6 +245,7 @@
   input[type=email],
   input[type=password],
   input[type=date],
+  input[type=datetime-local],
   input[type=number],
   input[type=tel],
   textarea,
@@ -279,6 +280,7 @@
   input[type=date],
   input[type=number],
   input[type=tel],
+  input[type=datetime-local],
   textarea,
   select {
     border-radius: 4px;
@@ -320,6 +322,7 @@
   input[type=password],
   input[type=date],
   input[type=number],
+  input[type=datetime-local],
   input[type=tel],
   textarea {
     @media (max-width: $two-columns-breakpoint) {
@@ -356,7 +359,8 @@
         &:not([size]) {
           &[type='date'],
           &[type='tel'],
-          &[type='number'] {
+          &[type='number'],
+          &[type='datetime-local'] {
             width: 33.33%;
           }
 
