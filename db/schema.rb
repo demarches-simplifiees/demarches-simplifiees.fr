@@ -234,6 +234,7 @@ ActiveRecord::Schema.define(version: 2023_04_13_171421) do
     t.jsonb "value_json"
     t.index ["dossier_id"], name: "index_champs_on_dossier_id"
     t.index ["etablissement_id"], name: "index_champs_on_etablissement_id"
+    t.index ["external_id"], name: "index_champs_on_external_id"
     t.index ["parent_id"], name: "index_champs_on_parent_id"
     t.index ["private"], name: "index_champs_on_private"
     t.index ["row_id"], name: "index_champs_on_row_id"
