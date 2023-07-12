@@ -23,5 +23,5 @@
 
 .procedure-description
   .procedure-description-body.read-more-enabled.read-more-collapsed
-    = h string_to_html(procedure.description)
+    = h string_to_html(procedure.description, allow_a: true)
   = button_tag "Afficher la description complète", class: 'button read-more-button'

@@ -5,10 +5,8 @@
 #
 # The subject and body of a Notification can be customized by each demarche.
 #
-
 class NotificationMailer < ApplicationMailer
   include ActionView::Helpers::SanitizeHelper
-  include StringToHtmlHelper
 
   before_action :set_dossier
   after_action :create_commentaire_for_notification
@@ -22,7 +20,7 @@ class NotificationMailer < ApplicationMailer
   def send_notification
     @service = @dossier.procedure.service
     @logo_url = attach_logo(@dossier.procedure)
-    @rendered_template = sanitize_html(@body)
+    @rendered_template = sanitize(@body, scrubber: Sanitizers::MailScrubber.new)
     attachments[@attachment[:filename]] = @attachment[:content] if @attachment.present?
 
     I18n.with_locale(@dossier.user_locale) do
