@@ -3,6 +3,10 @@ module Administrateurs
     before_action :authenticate_administrateur!
     helper_method :administrateur_as_manager?
 
+    def nav_bar_profile
+      :administrateur
+    end
+
     def retrieve_procedure
       id = params[:procedure_id] || params[:id]
 
