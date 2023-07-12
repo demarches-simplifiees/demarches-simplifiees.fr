@@ -10,9 +10,14 @@ module Types
     field :attachments, [Types::File], null: false, extensions: [
       { Extensions::Attachment => { attachment: :piece_jointe, as: :multiple } }
     ]
+    field :correction, CorrectionType, null: true
 
     def body
       object.body.nil? ? "" : object.body
+    end
+
+    def correction
+      Loaders::Association.for(object.class, :dossier_correction).load(object)
     end
   end
 end

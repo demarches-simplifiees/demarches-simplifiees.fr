@@ -5,6 +5,7 @@ module DossierCorrectableConcern
     A_CORRIGER = 'a_corriger'
     has_many :corrections, class_name: 'DossierCorrection', dependent: :destroy
     has_many :pending_corrections, -> { DossierCorrection.pending }, class_name: 'DossierCorrection', inverse_of: :dossier
+    has_one :pending_correction, -> { DossierCorrection.pending }, class_name: 'DossierCorrection', inverse_of: :dossier
 
     scope :with_pending_corrections, -> { joins(:corrections).where(corrections: { resolved_at: nil }) }
 
@@ -35,10 +36,6 @@ module DossierCorrectableConcern
       return pending_corrections.any? if pending_corrections.loaded?
 
       pending_corrections.exists?
-    end
-
-    def pending_correction
-      pending_corrections.first
     end
 
     def resolve_pending_correction!
