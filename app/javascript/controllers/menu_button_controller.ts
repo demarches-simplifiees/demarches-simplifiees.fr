@@ -154,6 +154,13 @@ export class MenuButtonController extends ApplicationController {
     switch (event.key) {
       case ' ':
       case 'Enter':
+        if (this.isOpen) {
+          this.close();
+        } else {
+          this.open();
+        }
+        stopPropagation = true;
+        break;
       case 'ArrowDown':
       case 'Down':
         this.open();

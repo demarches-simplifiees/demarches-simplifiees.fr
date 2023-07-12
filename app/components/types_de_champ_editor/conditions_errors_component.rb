@@ -31,6 +31,7 @@ class TypesDeChampEditor::ConditionsErrorsComponent < ApplicationComponent
   def humanize(error)
     case error
     in { type: :not_available }
+    in { type: :incompatible, stable_id: nil }
       t('not_available', scope: '.errors')
     in { type: :unmanaged, stable_id: stable_id }
       targeted_champ = @upper_tdcs.find { |tdc| tdc.stable_id == stable_id }

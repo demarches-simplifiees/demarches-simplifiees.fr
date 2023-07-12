@@ -71,5 +71,15 @@ describe TypesDeChampEditor::ConditionsErrorsComponent, type: :component do
 
       it { expect(page).to have_content("« another choice » ne fait pas partie de « #{tdc.libelle} ».") }
     end
+
+    context 'when target became unavailable but a right still references the value' do
+      # Cf https://demarches-simplifiees.sentry.io/issues/3625488398/events/53164e105bc94d55a004d69f96d58fb2/?project=1429550
+      # However maybe we should not have empty at left with still a constant at right
+      let(:tdc) { create(:type_de_champ_integer_number) }
+      let(:upper_tdcs) { [tdc] }
+      let(:conditions) { [ds_eq(empty, constant('a text'))] }
+
+      it { expect(page).to have_content("Un champ cible n'est plus disponible") }
+    end
   end
 end
