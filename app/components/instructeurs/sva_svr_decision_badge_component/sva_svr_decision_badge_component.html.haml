@@ -2,7 +2,7 @@
   %span.fr-badge.fr-badge--sm
     = t(sva? ? '.no_sva' : '.no_svr')
 - else
-  %span{ class: classes }
+  %span{ class: classes, title: title }
     - if with_label.present?
       = label_for_badge
     - if pending_correction?
