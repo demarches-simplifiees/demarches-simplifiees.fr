@@ -114,8 +114,6 @@ module Administrateurs
         .find(params[:id])
 
       @procedure.validate(:publication)
-
-      @current_administrateur = current_administrateur
     end
 
     def edit
