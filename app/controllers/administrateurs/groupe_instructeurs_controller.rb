@@ -123,10 +123,6 @@ module Administrateurs
         instructeurs.each { groupe_instructeur.add(_1) }
 
         flash[:notice] = if procedure.routing_enabled?
-          GroupeInstructeurMailer
-            .add_instructeurs(groupe_instructeur, instructeurs, current_administrateur.email)
-            .deliver_later
-
           t('.assignment',
             count: instructeurs.size,
             emails: instructeurs.map(&:email).join(', '),

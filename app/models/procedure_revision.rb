@@ -272,7 +272,7 @@ class ProcedureRevision < ApplicationRecord
         .map { [from_h[_1], to_h[_1]] }
         .flat_map { |from, to| compare_type_de_champ(from.type_de_champ, to.type_de_champ, from_coordinates, to_coordinates) }
 
-      (removed + added + moved + changed).sort_by { _1.op == :remove ? from_sids[_1.stable_id] : to_sids[_1.stable_id] }
+      (removed + added + moved + changed).sort_by { _1.op == :remove ? from_sids.index(_1.stable_id) : to_sids.index(_1.stable_id) }
     end
   end
 
