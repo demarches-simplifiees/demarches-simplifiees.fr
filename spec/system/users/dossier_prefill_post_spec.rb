@@ -27,7 +27,7 @@ describe 'Prefilling a dossier (with a POST request):' do
           visit create_and_prefill_dossier_with_post_request
 
           expect(page).to have_content('Vous avez un dossier prérempli')
-          click_on 'Continuer à remplir mon dossier'
+          click_on 'Poursuivre mon dossier prérempli'
         end
       end
     end
@@ -44,7 +44,7 @@ describe 'Prefilling a dossier (with a POST request):' do
             sign_in_with user.email, password
 
             expect(page).to have_content('Vous avez un dossier prérempli')
-            click_on 'Continuer à remplir mon dossier'
+            click_on 'Poursuivre mon dossier prérempli'
           end
         end
       end
@@ -64,7 +64,7 @@ describe 'Prefilling a dossier (with a POST request):' do
             expect(page).to have_content('Votre compte a bien été confirmé.')
 
             expect(page).to have_content('Vous avez un dossier prérempli')
-            click_on 'Continuer à remplir mon dossier'
+            click_on 'Poursuivre mon dossier prérempli'
           end
         end
       end
@@ -80,7 +80,7 @@ describe 'Prefilling a dossier (with a POST request):' do
             page.find('.fr-connect').click
 
             expect(page).to have_content('Vous avez un dossier prérempli')
-            click_on 'Continuer à remplir mon dossier'
+            click_on 'Poursuivre mon dossier prérempli'
           end
         end
       end
