@@ -3,11 +3,11 @@ import { disable, enable, show, hide } from '@utils';
 import invariant from 'tiny-invariant';
 
 export class BatchOperationController extends ApplicationController {
-  static targets = ['menu', 'input'];
+  static targets = ['menu', 'input', 'dropdown'];
 
-  declare readonly menuTarget: HTMLButtonElement;
-  declare readonly hasMenuTarget: boolean;
+  declare readonly menuTargets: HTMLButtonElement[];
   declare readonly inputTargets: HTMLInputElement[];
+  declare readonly dropdownTargets: HTMLButtonElement[];
 
   onCheckOne() {
     this.toggleSubmitButtonWhenNeeded();
@@ -58,6 +58,37 @@ export class BatchOperationController extends ApplicationController {
     }
   }
 
+  onSubmitInstruction(event: { srcElement: HTMLInputElement }) {
+    const field_refuse = document.querySelector<HTMLInputElement>(
+      '.js_batch_operation_motivation_refuse'
+    );
+
+    const field_without_continuation = document.querySelector<HTMLInputElement>(
+      '.js_batch_operation_motivation_without-continuation'
+    );
+
+    if (field_refuse != null) {
+      if (event.srcElement.value == 'refuser' && field_refuse.value == '') {
+        field_refuse.setCustomValidity('La motivation doit être remplie');
+      } else {
+        field_refuse.setCustomValidity('');
+      }
+    }
+
+    if (field_without_continuation != null) {
+      if (
+        event.srcElement.value == 'classer_sans_suite' &&
+        field_without_continuation.value == ''
+      ) {
+        field_without_continuation.setCustomValidity(
+          'La motivation doit être remplie'
+        );
+      } else {
+        field_without_continuation.setCustomValidity('');
+      }
+    }
+  }
+
   onDeleteSelection(event: { preventDefault: () => void }) {
     event.preventDefault();
     emptyCheckboxes();
@@ -78,18 +109,38 @@ export class BatchOperationController extends ApplicationController {
         switchButton(button, available);
         return available;
       });
-      if (this.hasMenuTarget) {
+
+      if (this.menuTargets.length) {
         if (available.length) {
-          enable(this.menuTarget);
+          this.menuTargets.forEach((e) => enable(e));
         } else {
-          disable(this.menuTarget);
+          this.menuTargets.forEach((e) => disable(e));
         }
       }
+
+      this.dropdownTargets.forEach((dropdown) => {
+        const buttons = Array.from(
+          document.querySelectorAll<HTMLButtonElement>(
+            `[aria-labelledby='${dropdown.id}'] button[data-operation]`
+          )
+        );
+
+        const disabled = buttons.every((button) => button.disabled);
+
+        if (disabled) {
+          disable(dropdown);
+        } else {
+          enable(dropdown);
+        }
+      });
+
+      // pour chaque chaque dropdown, on va chercher tous les boutons
+      // si tous les boutons sont disabled, on disable le dropdown
     } else {
-      if (this.hasMenuTarget) {
-        disable(this.menuTarget);
-      }
+      this.menuTargets.forEach((e) => disable(e));
       buttons.forEach((button) => switchButton(button, false));
+
+      this.dropdownTargets.forEach((e) => disable(e));
     }
   }
 }

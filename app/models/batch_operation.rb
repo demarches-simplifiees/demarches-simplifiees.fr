@@ -18,6 +18,8 @@
 class BatchOperation < ApplicationRecord
   enum operation: {
     accepter: 'accepter',
+    refuser: 'refuser',
+    classer_sans_suite: 'classer_sans_suite',
     archiver: 'archiver',
     follow: 'follow',
     passer_en_instruction: 'passer_en_instruction',
@@ -61,6 +63,10 @@ class BatchOperation < ApplicationRecord
       query.state_en_construction
     when BatchOperation.operations.fetch(:accepter) then
       query.state_en_instruction
+    when BatchOperation.operations.fetch(:refuser) then
+      query.state_en_instruction
+    when BatchOperation.operations.fetch(:classer_sans_suite) then
+      query.state_en_instruction
     when BatchOperation.operations.fetch(:follow) then
       query.without_followers.en_cours
     when BatchOperation.operations.fetch(:repasser_en_construction) then
@@ -83,6 +89,10 @@ class BatchOperation < ApplicationRecord
       dossier.passer_en_instruction(instructeur: instructeur)
     when BatchOperation.operations.fetch(:accepter)
       dossier.accepter(instructeur: instructeur, motivation: motivation, justificatif: justificatif_motivation)
+    when BatchOperation.operations.fetch(:refuser)
+      dossier.refuser(instructeur: instructeur, motivation: motivation, justificatif: justificatif_motivation)
+    when BatchOperation.operations.fetch(:classer_sans_suite)
+      dossier.classer_sans_suite(instructeur: instructeur, motivation: motivation, justificatif: justificatif_motivation)
     when BatchOperation.operations.fetch(:follow)
       instructeur.follow(dossier)
     when BatchOperation.operations.fetch(:repasser_en_construction)

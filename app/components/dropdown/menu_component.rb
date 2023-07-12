@@ -51,4 +51,12 @@ class Dropdown::MenuComponent < ApplicationComponent
   def button_class_names
     ['fr-btn', 'dropdown-button'] + Array(@button_options[:class])
   end
+
+  def disabled?
+    @button_options[:disabled] == true
+  end
+
+  def data
+    { menu_button_target: 'button' }.deep_merge(@button_options[:data].to_h)
+  end
 end
