@@ -162,7 +162,7 @@ describe TagsSubstitutionConcern, type: :model do
 
     context 'when the procedure has a type de champ repetition' do
       let(:template) { '--Répétition--' }
-      let(:types_de_champ_public) { [{ type: :repetition, libelle: 'Répétition', mandatory: true, children: [{ libelle: 'Nom' }, { libelle: 'Prénom' }] }] }
+      let(:types_de_champ_public) { [{ type: :repetition, libelle: 'Répétition', mandatory: false, children: [{ libelle: 'Nom' }, { libelle: 'Prénom' }] }] }
       let(:dossier) { create(:dossier, procedure:) }
 
       before do
