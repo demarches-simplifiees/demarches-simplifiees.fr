@@ -508,6 +508,12 @@ class Dossier < ApplicationRecord
     revision.build_champs_private.each do |champ|
       champs_private << champ
     end
+    champs_public.filter { _1.repetition? && _1.mandatory? }.each do |champ|
+      champ.add_row(revision)
+    end
+    champs_private.filter(&:repetition?).each do |champ|
+      champ.add_row(revision)
+    end
   end
 
   def build_default_individual

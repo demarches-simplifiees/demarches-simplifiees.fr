@@ -35,7 +35,7 @@ class Champs::RepetitionChamp < Champ
     transaction do
       row_id = ULID.generate
       revision.children_of(type_de_champ).each do |type_de_champ|
-        added_champs << type_de_champ.champ.build(row_id:)
+        added_champs << type_de_champ.build_champ(row_id:)
       end
       self.champs << added_champs
     end

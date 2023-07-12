@@ -29,7 +29,7 @@ Sentry.init do |config|
       # Don't trace on all attempts
       [0, 2, 5, 10, 20, max_attempts].include?(attempts)
     else # rails requests
-      0.01
+      0.001
     end
   end
 

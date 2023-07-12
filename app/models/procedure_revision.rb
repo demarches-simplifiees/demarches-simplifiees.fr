@@ -34,12 +34,12 @@ class ProcedureRevision < ApplicationRecord
 
   def build_champs_public
     # reload: it can be out of sync in test if some tdcs are added wihtout using add_tdc
-    types_de_champ_public.reload.map { |tdc| tdc.build_champ(revision: self) }
+    types_de_champ_public.reload.map(&:build_champ)
   end
 
   def build_champs_private
     # reload: it can be out of sync in test if some tdcs are added wihtout using add_tdc
-    types_de_champ_private.reload.map { |tdc| tdc.build_champ(revision: self) }
+    types_de_champ_private.reload.map(&:build_champ)
   end
 
   def add_type_de_champ(params)
