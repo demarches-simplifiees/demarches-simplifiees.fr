@@ -4,7 +4,7 @@ describe 'As an administrateur I wanna clone a procedure', js: true do
   include ProcedureSpecHelper
 
   let(:administrateur) { create(:administrateur) }
-  let(:procedure_path) { 'service-libelle-de-la-procedure' }
+  let(:procedure_path) { 'toto' }
 
   before do
     create(:procedure, :with_service, :with_instructeur, :with_zone,
@@ -39,6 +39,7 @@ describe 'As an administrateur I wanna clone a procedure', js: true do
       # then publish
       find('#publish-procedure-link').click
       expect(find_field('procedure_path').value).to eq Procedure.last.service.suggested_path + '-libelle-de-la-procedure'
+      fill_in 'procedure_path', with: '' # workaround preventing appending value https://github.com/redux-form/redux-form/issues/686
       fill_in 'procedure_path', with: procedure_path
       fill_in 'lien_site_web', with: 'http://some.website'
       click_on 'publish'
@@ -74,7 +75,9 @@ describe 'As an administrateur I wanna clone a procedure', js: true do
 
       # then publish
       find('#publish-procedure-link').click
-      expect(find_field('procedure_path').value).to eq 'libelle-de-la-procedure'
+      expect(find_field('procedure_path').value).to eq Procedure.last.service.suggested_path + '-libelle-de-la-procedure'
+      fill_in 'procedure_path', with: '' # workaround preventing appending value https://github.com/redux-form/redux-form/issues/686
+      fill_in 'procedure_path', with: procedure_path
       fill_in 'lien_site_web', with: 'http://some.website'
       click_on 'publish'
 
