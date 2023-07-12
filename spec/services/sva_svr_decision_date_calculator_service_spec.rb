@@ -59,7 +59,7 @@ describe SVASVRDecisionDateCalculatorService do
           end
         end
 
-        context 'there is a pending correction kind = correct' do
+        context 'there is a pending correction reason = incorrect' do
           before do
             travel_to DateTime.new(2023, 5, 30, 18) do
               dossier.flag_as_pending_correction!(build(:commentaire, dossier:))
@@ -73,7 +73,7 @@ describe SVASVRDecisionDateCalculatorService do
           end
         end
 
-        context 'there is a pending correction kind = incomplete' do
+        context 'there is a pending correction reason = incomplete' do
           before do
             travel_to DateTime.new(2023, 5, 30, 18) do
               dossier.flag_as_pending_correction!(build(:commentaire, dossier:), :incomplete)

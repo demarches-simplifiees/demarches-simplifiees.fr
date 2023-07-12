@@ -1072,30 +1072,38 @@ describe Dossier, type: :model do
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let(:operation_serialized) { last_operation.data }
     let(:instructeur) { create(:instructeur) }
-    let!(:correction) { create(:dossier_correction, dossier:) }
+    let!(:correction) { create(:dossier_correction, dossier:) } # correction has a commentaire
 
-    before { dossier.passer_en_instruction!(instructeur: instructeur) }
+    subject(:passer_en_instruction) { dossier.passer_en_instruction!(instructeur: instructeur) }
 
-    it { expect(dossier.state).to eq('en_instruction') }
-    it { expect(dossier.followers_instructeurs).to include(instructeur) }
-    it { expect(dossier.en_construction_close_to_expiration_notice_sent_at).to be_nil }
-    it { expect(last_operation.operation).to eq('passer_en_instruction') }
-    it { expect(last_operation.automatic_operation?).to be_falsey }
-    it { expect(operation_serialized['operation']).to eq('passer_en_instruction') }
-    it { expect(operation_serialized['dossier_id']).to eq(dossier.id) }
-    it { expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601) }
-    it { expect(dossier.commentaires.count).to eq(1) }
+    it do
+      passer_en_instruction
+
+      expect(dossier.state).to eq('en_instruction')
+      expect(dossier.followers_instructeurs).to include(instructeur)
+      expect(dossier.en_construction_close_to_expiration_notice_sent_at).to be_nil
+      expect(last_operation.operation).to eq('passer_en_instruction')
+      expect(last_operation.automatic_operation?).to be_falsey
+      expect(operation_serialized['operation']).to eq('passer_en_instruction')
+      expect(operation_serialized['dossier_id']).to eq(dossier.id)
+      expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601)
+    end
+
+    it { expect { passer_en_instruction }.to change { dossier.commentaires.count }.by(1) }
 
     it "resolve pending correction" do
+      passer_en_instruction
+
       expect(dossier.pending_correction?).to be_falsey
       expect(correction.reload.resolved_at).to be_present
     end
 
     it 'creates a commentaire in the messagerie with expected wording' do
-      email_template = dossier.procedure.mail_template_for(Dossier.states.fetch(:en_instruction))
-      commentaire = dossier.commentaires.first
+      passer_en_instruction
 
-      expect(dossier.commentaires.count).to eq(1)
+      email_template = dossier.procedure.mail_template_for(Dossier.states.fetch(:en_instruction))
+      commentaire = dossier.commentaires.last
+
       expect(commentaire.body).to include(email_template.subject_for_dossier(dossier), email_template.body_for_dossier(dossier))
       expect(commentaire.dossier).to eq(dossier)
     end

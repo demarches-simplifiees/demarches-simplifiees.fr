@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :dossier_correction do
     dossier
-    commentaire
-    kind { :correction }
+    commentaire { association :commentaire, dossier: dossier }
+    reason { :incorrect }
     resolved_at { nil }
 
     trait :resolved do
