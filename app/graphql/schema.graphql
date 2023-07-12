@@ -1590,6 +1590,11 @@ input DossierEnvoyerMessageInput {
   A unique identifier for the client performing the mutation.
   """
   clientMutationId: String
+
+  """
+  Préciser qu’il s’agit d’une demande de correction. Le dossier repasssera en construction.
+  """
+  correction: CorrectionReason
   dossierId: ID!
   instructeurId: ID!
 }
