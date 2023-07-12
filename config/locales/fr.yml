@@ -408,6 +408,19 @@ fr:
         zone: La démarche est mise en œuvre par
       champs:
         value: Valeur du champ
+      default_mail_attributes: &default_mail_attributes
+        hints:
+          subject: "L’objet généré sera tronqué s’il dépasse 100 caractères."
+      mails/closed_mail:
+        << : *default_mail_attributes
+      mails/initiated_mail:
+        << : *default_mail_attributes
+      mails/received_mail:
+        << : *default_mail_attributes
+      mails/refused_mail:
+        << : *default_mail_attributes
+      mails/without_continuation_mail:
+        << : *default_mail_attributes
 
     errors:
       messages:
