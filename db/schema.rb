@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_19_112020) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_18_113920) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -336,7 +336,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_19_112020) do
     t.bigint "dossier_id", null: false
     t.datetime "resolved_at", precision: 6
     t.datetime "updated_at", precision: 6, null: false
-    t.string "kind", default: "correction", null: false
     t.string "reason", default: "incorrect", null: false
     t.index ["commentaire_id"], name: "index_dossier_corrections_on_commentaire_id"
     t.index ["dossier_id"], name: "index_dossier_corrections_on_dossier_id"

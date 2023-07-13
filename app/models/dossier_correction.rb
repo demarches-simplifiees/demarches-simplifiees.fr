@@ -14,8 +14,6 @@ class DossierCorrection < ApplicationRecord
   belongs_to :dossier
   belongs_to :commentaire
 
-  self.ignored_columns += ['kind']
-
   validates_associated :commentaire
 
   scope :pending, -> { where(resolved_at: nil) }
