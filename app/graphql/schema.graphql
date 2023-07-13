@@ -80,6 +80,11 @@ type AddressChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
 }
 
 type AddressChampDescriptor implements ChampDescriptor {
@@ -231,6 +236,11 @@ type CarteChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
 }
 
 type CarteChampDescriptor implements ChampDescriptor {
@@ -273,6 +283,11 @@ interface Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
 }
 
 interface ChampDescriptor {
@@ -315,6 +330,11 @@ type CheckboxChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
   value: Boolean!
 }
 
@@ -370,6 +390,11 @@ type CiviliteChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
   value: Civilite
 }
 
@@ -460,6 +485,11 @@ type CommuneChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
 }
 
 type CommuneChampDescriptor implements ChampDescriptor {
@@ -576,6 +606,11 @@ type DateChamp implements Champ {
   stringValue: String
 
   """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
+
+  """
   La valeur du champ formaté en ISO8601 (DateTime).
   """
   value: ISO8601DateTime @deprecated(reason: "Utilisez le champ `date` ou le fragment `DatetimeChamp` à la place.")
@@ -625,6 +660,11 @@ type DatetimeChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
 }
 
 type DatetimeChampDescriptor implements ChampDescriptor {
@@ -667,6 +707,11 @@ type DecimalNumberChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
   value: Float
 }
 
@@ -1143,6 +1188,11 @@ type DepartementChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
 }
 
 type DepartementChampDescriptor implements ChampDescriptor {
@@ -1547,6 +1597,11 @@ type DossierLinkChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
 }
 
 type DossierLinkChampDescriptor implements ChampDescriptor {
@@ -2122,6 +2177,11 @@ type EpciChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
 }
 
 type EpciChampDescriptor implements ChampDescriptor {
@@ -2187,6 +2247,11 @@ type File {
   byteSizeBigInt: BigInt!
   checksum: String!
   contentType: String!
+
+  """
+  Date de création du fichier.
+  """
+  createdAt: ISO8601DateTime!
   filename: String!
   url: URL!
 }
@@ -2639,6 +2704,11 @@ type IntegerNumberChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
   value: BigInt
 }
 
@@ -2684,6 +2754,11 @@ type LinkedDropDownListChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
 }
 
 type LinkedDropDownListChampDescriptor implements ChampDescriptor {
@@ -2768,6 +2843,11 @@ type MultipleDropDownListChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
   values: [String!]!
 }
 
@@ -3114,6 +3194,11 @@ type PaysChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
 }
 
 type PaysChampDescriptor implements ChampDescriptor {
@@ -3223,6 +3308,11 @@ type PieceJustificativeChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
 }
 
 type PieceJustificativeChampDescriptor implements ChampDescriptor {
@@ -3387,6 +3477,11 @@ type RegionChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
 }
 
 type RegionChampDescriptor implements ChampDescriptor {
@@ -3436,6 +3531,11 @@ type RepetitionChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
 }
 
 type RepetitionChampDescriptor implements ChampDescriptor {
@@ -3531,6 +3631,11 @@ type SiretChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
 }
 
 type SiretChampDescriptor implements ChampDescriptor {
@@ -3573,6 +3678,11 @@ type TextChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
   value: String
 }
 
@@ -3646,6 +3756,11 @@ type TitreIdentiteChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
 }
 
 type TitreIdentiteChampDescriptor implements ChampDescriptor {
