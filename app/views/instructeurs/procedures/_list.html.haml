@@ -1,4 +1,4 @@
-%li.procedure-item.flex.align-start.fr-my-3w.fr-p-2w
+%li.flex.align-start.fr-mb-5w
   .flex
     = link_to instructeur_procedure_path(p), class: 'procedure-logo-link' do
       .procedure-logo{ style: "background-image: url(#{p.logo_url})" }
@@ -77,8 +77,8 @@
                 = t('pluralize.archived', count: archived_count)
 
     - if p.close?
-      .procedure-status
-        %span.label Close
+      .ml-auto
+        %span.fr-badge Close
     - elsif p.depubliee?
-      .procedure-status
-        %span.label Dépubliée
+      .ml-auto
+        %span.fr-badge Dépubliée
