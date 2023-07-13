@@ -541,6 +541,7 @@ module Users
 
     def update_dossier_and_compute_errors
       errors = []
+
       @dossier.assign_attributes(champs_public_params)
       if @dossier.champs_public_all.any?(&:changed_for_autosave?)
         @dossier.last_champ_updated_at = Time.zone.now

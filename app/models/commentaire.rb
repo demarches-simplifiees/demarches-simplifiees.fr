@@ -1,8 +1,6 @@
 class Commentaire < ApplicationRecord
   include Discard::Model
-
   belongs_to :dossier, inverse_of: :commentaires, touch: true, optional: false
-
   belongs_to :instructeur, inverse_of: :commentaires, optional: true
   belongs_to :expert, inverse_of: :commentaires, optional: true
   has_one :dossier_correction, inverse_of: :commentaire, dependent: :nullify

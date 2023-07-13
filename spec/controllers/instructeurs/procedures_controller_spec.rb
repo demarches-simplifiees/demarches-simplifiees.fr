@@ -486,6 +486,76 @@ describe Instructeurs::ProceduresController, type: :controller do
     end
   end
 
+  describe '#email_usagers' do
+    let(:instructeur) { create(:instructeur) }
+    let(:procedure) { create(:procedure) }
+    let!(:gi_1) { create(:groupe_instructeur, label: 'gi_1', procedure: procedure, instructeurs: [instructeur]) }
+    let!(:dossier_without_groupe) { create(:dossier, :brouillon, procedure: procedure, groupe_instructeur: nil) }
+
+    subject do
+      get :email_usagers, params: { procedure_id: procedure.id }
+    end
+
+    it { is_expected.to redirect_to(new_user_session_path) }
+
+    context 'when authenticated' do
+      before { sign_in(instructeur.user) }
+      it 'lists dossier brouillon in groupe_instructeur as well as dossiers_brouillon outside groupe_instructeur' do
+        is_expected.to have_http_status(200)
+        expect(assigns(:dossiers_without_groupe_count)).to eq(1)
+      end
+    end
+  end
+
+  describe '#create_multiple_commentaire' do
+    let(:instructeur) { create(:instructeur) }
+    let!(:gi_p1_1) { create(:groupe_instructeur, label: '1', procedure: procedure, instructeurs: [instructeur]) }
+    let!(:gi_p1_2) { create(:groupe_instructeur, label: '2', procedure: procedure) }
+    let(:body) { "avant\napres" }
+    let(:bulk_message) { BulkMessage.first }
+    let!(:dossier) { create(:dossier, state: "brouillon", procedure: procedure, groupe_instructeur: gi_p1_1) }
+    let!(:dossier_2) { create(:dossier, state: "brouillon", procedure: procedure, groupe_instructeur: gi_p1_1) }
+    let!(:dossier_3) { create(:dossier, state: "brouillon", procedure: procedure, groupe_instructeur: gi_p1_2) }
+    let!(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
+
+    before do
+      sign_in(instructeur.user)
+      procedure
+    end
+
+    let!(:dossier_4) { create(:dossier, state: "brouillon", procedure: procedure, groupe_instructeur: nil) }
+    before do
+      post :create_multiple_commentaire,
+            params: {
+              procedure_id: procedure.id,
+              bulk_message: { body: body }
+            }
+    end
+
+    it "creates a commentaire for 1 dossiers" do
+      expect(Commentaire.count).to eq(1)
+      expect(dossier.commentaires).to eq([])
+      expect(dossier_2.commentaires).to eq([])
+      expect(dossier_3.commentaires).to eq([])
+      expect(dossier_4.commentaires.first.body).to eq("avant\napres")
+    end
+
+    it "creates a Bulk Message for 2 groupes instructeurs" do
+      expect(BulkMessage.count).to eq(1)
+      expect(bulk_message.body).to eq("avant\napres")
+      expect(bulk_message.groupe_instructeurs).to be_empty
+    end
+
+    it "creates a flash notice" do
+      expect(flash.notice).to be_present
+      expect(flash.notice).to eq("Tous les messages ont été envoyés avec succès")
+    end
+
+    it "redirect to instructeur_procedure_path" do
+      expect(response).to redirect_to instructeur_procedure_path(procedure)
+    end
+  end
+
   describe '#download_export' do
     let(:instructeur) { create(:instructeur) }
     let!(:procedure) { create(:procedure) }
@@ -561,51 +631,6 @@ describe Instructeurs::ProceduresController, type: :controller do
     context 'when logged in through super admin' do
       let(:manager) { true }
       it { is_expected.to have_http_status(:forbidden) }
-    end
-  end
-
-  describe '#create_multiple_commentaire' do
-    let(:instructeur) { create(:instructeur) }
-    let!(:gi_p1_1) { create(:groupe_instructeur, label: '1', procedure: procedure) }
-    let!(:gi_p1_2) { create(:groupe_instructeur, label: '2', procedure: procedure) }
-    let(:body) { "avant\napres" }
-    let(:bulk_message) { BulkMessage.first }
-    let!(:dossier) { create(:dossier, state: "brouillon", procedure: procedure, groupe_instructeur: gi_p1_1) }
-    let!(:dossier_2) { create(:dossier, state: "brouillon", procedure: procedure, groupe_instructeur: gi_p1_1) }
-    let!(:dossier_3) { create(:dossier, state: "brouillon", procedure: procedure, groupe_instructeur: gi_p1_2) }
-    let!(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
-
-    before do
-      sign_in(instructeur.user)
-      instructeur.groupe_instructeurs << gi_p1_1
-      procedure
-      post :create_multiple_commentaire,
-      params: {
-        procedure_id: procedure.id,
-        commentaire: { body: body }
-      }
-    end
-
-    it "creates a commentaire for 2 dossiers" do
-      expect(Commentaire.count).to eq(2)
-      expect(dossier.commentaires.first.body).to eq("avant\napres")
-      expect(dossier_2.commentaires.first.body).to eq("avant\napres")
-      expect(dossier_3.commentaires).to eq([])
-    end
-
-    it "creates a Bulk Message for 2 groupes instructeurs" do
-      expect(BulkMessage.count).to eq(1)
-      expect(bulk_message.body).to eq("avant\napres")
-      expect(bulk_message.groupe_instructeurs).to match([gi_p1_1])
-    end
-
-    it "creates a flash notice" do
-      expect(flash.notice).to be_present
-      expect(flash.notice).to eq("Tous les messages ont été envoyés avec succès")
-    end
-
-    it "redirect to instructeur_procedure_path" do
-      expect(response).to redirect_to instructeur_procedure_path(procedure)
     end
   end
 end
