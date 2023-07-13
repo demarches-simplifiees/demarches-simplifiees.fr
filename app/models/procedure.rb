@@ -903,7 +903,7 @@ class Procedure < ApplicationRecord
     if type_de_champ.date?
       { columns: i, styles: { format_code: 'dd/mm/yyyy' } }
     elsif type_de_champ.datetime?
-      { columns: i, styles: { format_code: 'dd/mm/yyyy hh::mm' } }
+      { columns: i, styles: { format_code: 'dd/mm/yyyy hh:mm:ss' } }
     end
   end
 

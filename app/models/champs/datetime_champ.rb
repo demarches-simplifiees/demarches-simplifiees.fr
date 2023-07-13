@@ -36,6 +36,10 @@ class Champs::DatetimeChamp < Champ
     value.present? ? I18n.l(Time.zone.parse(value)) : ""
   end
 
+  def for_export
+    value.present? ? Time.zone.parse(value) : ""
+  end
+
   private
 
   def convert_to_iso8601
