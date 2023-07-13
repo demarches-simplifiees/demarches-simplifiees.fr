@@ -712,7 +712,7 @@ ActiveRecord::Schema.define(version: 2023_04_13_171421) do
     t.boolean "duree_conservation_etendue_par_ds", default: false, null: false
     t.boolean "durees_conservation_required", default: true
     t.string "encrypted_api_particulier_token"
-    t.boolean "estimated_duration_visible", default: true, null: false
+    t.boolean "estimated_duration_visible", default: true
     t.boolean "euro_flag", default: false
     t.boolean "experts_require_administrateur_invitation", default: false
     t.boolean "for_individual", default: false
