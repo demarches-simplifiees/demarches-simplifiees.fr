@@ -11,7 +11,7 @@ fr:
     profile: "Voir mon profil"
     logout: "Se déconnecter"
     my_account: "Mon compte"
-    connected_as: "connecté en tant qu'%{profile}"
+    connected_as: "connecté en tant qu’%{profile}"
   instructeur: instructeur
   administrateur: administrateur
   expert: expert
