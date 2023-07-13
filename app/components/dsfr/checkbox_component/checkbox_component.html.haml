@@ -1,0 +1,20 @@
+%fieldset{ class: class_names("fr-fieldset": true, "fr-fieldset--error": error?), 'aria-labelledby': 'radio-hint-element-legend radio-hint-element-messages', role: error? ? :group : nil }
+  %legend.fr-fieldset__legend--regular.fr-fieldset__legend
+    = content
+
+  - each_checkboxes do |label, checked_value, unchecked_value, hint, button_options|
+    .fr-fieldset__element
+      .fr-checkbox-group
+        = @form.check_box @target, button_options.merge(id: checked_value.to_s.parameterize, multiple: true), checked_value, unchecked_value
+        = @form.label @target, for: checked_value.to_s.parameterize, class: 'fr-label' do
+          - capture do
+            = label
+
+            = button_options[:after_label] if button_options[:after_label]
+
+            %span.fr-hint-text= hint if hint
+
+  .fr-messages-group{ 'aria-live': 'assertive' }
+    - if error?
+      %p.fr-message.fr-message--error= error
+
