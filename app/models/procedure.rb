@@ -18,7 +18,7 @@
 #  duree_conservation_dossiers_dans_ds       :integer
 #  duree_conservation_etendue_par_ds         :boolean          default(FALSE), not null
 #  encrypted_api_particulier_token           :string
-#  estimated_duration_visible                :boolean          default(TRUE), not null
+#  estimated_duration_visible                :boolean          default(TRUE)
 #  euro_flag                                 :boolean          default(FALSE)
 #  experts_require_administrateur_invitation :boolean          default(FALSE)
 #  for_individual                            :boolean          default(FALSE)
