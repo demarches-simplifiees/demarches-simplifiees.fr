@@ -91,7 +91,7 @@ module Instructeurs
       @avis_emails = dossier.experts.map(&:email)
       @invites_emails = dossier.invites.map(&:email)
       @potential_recipients = dossier.groupe_instructeur.instructeurs.reject { |g| g == current_instructeur }
-      @manual_assignments = dossier.dossier_assignments.manual
+      @manual_assignments = dossier.dossier_assignments.manual.includes(:groupe_instructeur, :previous_groupe_instructeur)
     end
 
     def send_to_instructeurs
