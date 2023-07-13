@@ -4,7 +4,7 @@
       &nbsp;
       = " #{current_email}"
     #account.fr-collapse.fr-menu
-      %ul.fr-menu__list
+      %ul.fr-menu__list.max-content
         - if multiple_devise_profile_connect?
           %li
             = link_to "#", class: "fr-nav__link", "aria-current" => "true" do
@@ -13,28 +13,35 @@
           - if user_signed_in? && nav_bar_profile != :user
             %li
               = link_to dossiers_path, class: "fr-nav__link" do
+                %span.fr-icon-refresh-line.fr-icon--sm
                 = t('go_user', scope: [:layouts])
           - if instructeur_signed_in? && nav_bar_profile != :instructeur
             %li
               = link_to instructeur_procedures_path, class: "fr-nav__link" do
+                %span.fr-icon-refresh-line.fr-icon--sm
                 = t('go_instructor', scope: [:layouts])
           - if expert_signed_in? && nav_bar_profile != :expert
             %li
               = link_to expert_all_avis_path, class: "fr-nav__link" do
+                %span.fr-icon-refresh-line.fr-icon--sm
                 = t('go_expert', scope: [:layouts])
           - if administrateur_signed_in? && nav_bar_profile != :administrateur
             %li
               = link_to admin_procedures_path, class: "fr-nav__link" do
+                %span.fr-icon-refresh-line.fr-icon--sm
                 = t('go_admin', scope: [:layouts])
 
         - if super_admin_signed_in?
           %li
             = link_to manager_root_path, class: "fr-nav__link" do
+              %span.fr-icon-shield-line.fr-icon--sm
               = t('go_superadmin', scope: [:layouts])
 
         %li
           = link_to profil_path, class: "fr-nav__link" do
+            %span.fr-icon-user-line.fr-icon--sm
             = t('profile', scope: [:layouts])
         %li
           = link_to destroy_user_session_path, method: :delete, class: "fr-nav__link" do
+            %span.fr-icon-logout-box-r-line.fr-icon--sm
             = t('logout', scope: [:layouts])
