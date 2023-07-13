@@ -8,7 +8,7 @@
         - if multiple_devise_profile_connect?
           %li
             = link_to "#", class: "fr-nav__link", "aria-current" => "true" do
-              = t('connected_as', profile: t("#{nav_bar_profile}"), scope: [:layouts])
+              = t('layouts.connected_as', profile: t("layouts.#{nav_bar_profile}"))
 
           - if user_signed_in? && nav_bar_profile != :user
             %li

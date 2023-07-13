@@ -12,7 +12,7 @@ fr:
     logout: "Se déconnecter"
     my_account: "Mon compte"
     connected_as: "connecté en tant qu’%{profile}"
-  instructeur: instructeur
-  administrateur: administrateur
-  expert: expert
-  user: usager
+    instructeur: instructeur
+    administrateur: administrateur
+    expert: expert
+    user: usager
