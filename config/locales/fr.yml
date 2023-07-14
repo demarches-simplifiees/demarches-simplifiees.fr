@@ -482,6 +482,10 @@ fr:
           attributes:
             value:
               not_in_options: "doit être dans les options proposées"
+        "champs/multiple_drop_down_list_champ":
+          attributes:
+            value:
+              not_in_options: "doit être dans les options proposées"
         "champs/region_champ":
           attributes:
             value:

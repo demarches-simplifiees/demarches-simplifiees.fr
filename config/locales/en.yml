@@ -480,6 +480,10 @@ en:
           attributes:
             value:
               not_in_options: "must be in the given options"
+        "champs/multiple_drop_down_list_champ":
+          attributes:
+            value:
+              not_in_options: "must be in the given options"
         "champs/region_champ":
           attributes:
             value:
