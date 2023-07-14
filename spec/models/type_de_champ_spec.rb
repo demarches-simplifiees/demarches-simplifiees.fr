@@ -95,7 +95,7 @@ describe TypeDeChamp do
         let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:text) }
 
         it 'removes the children types de champ' do
-          expect(procedure.draft_revision.children_of(tdc)).to be_empty
+          expect(procedure.draft_revision.reload.children_of(tdc)).to be_empty
         end
       end
     end

@@ -101,7 +101,7 @@ $procedure-description-line-height: 22px;
       // If the text exceeds the max-height,
       // truncate it and displays the "Read more" button.
       &.read-more-enabled {
-        overflow: hidden;
+        overflow: auto;
         border-bottom: 1px solid $border-grey;
 
         + .read-more-button {
