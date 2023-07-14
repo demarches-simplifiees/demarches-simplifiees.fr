@@ -11,6 +11,8 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
       TypesDeChamp::PrefillRegionTypeDeChamp.new(type_de_champ)
     when TypeDeChamp.type_champs.fetch(:departements)
       TypesDeChamp::PrefillDepartementTypeDeChamp.new(type_de_champ)
+    when TypeDeChamp.type_champs.fetch(:epci)
+      TypesDeChamp::PrefillEpciTypeDeChamp.new(type_de_champ)
     else
       new(type_de_champ)
     end
@@ -32,5 +34,9 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
 
   def too_many_possible_values?
     possible_values.count > POSSIBLE_VALUES_THRESHOLD
+  end
+
+  def transform_value_to_assignable_attributes(value)
+    { value: value }
   end
 end
