@@ -7,6 +7,10 @@ module Administrateurs
       id = params[:procedure_id] || params[:id]
 
       @procedure = current_administrateur.procedures.find(id)
+
+      Sentry.configure_scope do |scope|
+        scope.set_tags(procedure: @procedure.id)
+      end
     rescue ActiveRecord::RecordNotFound
       flash.alert = 'Démarche inexistante'
       redirect_to admin_procedures_path, status: 404

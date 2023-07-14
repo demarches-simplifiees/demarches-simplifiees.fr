@@ -7,14 +7,12 @@
         .card
           .card-title.flex.justify-between.align-center
             = type_de_champ.libelle
-            = form_for prefill_description, url: prefill_description_path(prefill_description.path), data: { turbo: true } do |f|
+            = form_for type_de_champ, url: prefill_description_path(prefill_description.path), data: { turbo: true } do |f|
               - if prefill_description.include?(type_de_champ.id)
-                - (prefill_description.selected_type_de_champ_ids - [type_de_champ.id.to_s]).each do |id|
-                  = f.hidden_field :selected_type_de_champ_ids, value: id, multiple: true
+                = f.hidden_field :selected_type_de_champ_ids, value: (prefill_description.selected_type_de_champ_ids - [type_de_champ.id.to_s])
                 = f.submit t("views.prefill_descriptions.edit.champ_remove"), class: 'fr-btn fr-btn--secondary fr-btn--md'
-              - elsif prefillable
-                - (prefill_description.selected_type_de_champ_ids + [type_de_champ.id.to_s]).each do |id|
-                  = f.hidden_field :selected_type_de_champ_ids, value: id, multiple: true
+              - elsif prefillable && !prefill_description.include?(type_de_champ.id)
+                = f.hidden_field :selected_type_de_champ_ids, value: (prefill_description.selected_type_de_champ_ids + [type_de_champ.id.to_s])
                 = f.submit t("views.prefill_descriptions.edit.champ_add"), class: 'fr-btn fr-btn--md'
               - else
                 %button.fr-btn.fr-btn--secondary{ disabled: true }

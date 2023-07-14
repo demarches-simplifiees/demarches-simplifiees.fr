@@ -61,7 +61,9 @@ class Dossiers::MessageComponent < ApplicationComponent
     if commentaire.discarded?
       t('.deleted_body')
     else
-      commentaire.sent_by_system? ? sanitize_html(commentaire.body) : string_to_html(commentaire.body)
+      # pf old way to be removed : commentaire.sent_by_system? ? sanitize_html(commentaire.body) : string_to_html(commentaire.body)
+      body_formatted = commentaire.sent_by_system? ? commentaire.body : simple_format(commentaire.body)
+      sanitize(body_formatted, commentaire.sent_by_system? ? { scrubber: Sanitizers::MailScrubber.new } : {})
     end
   end
 

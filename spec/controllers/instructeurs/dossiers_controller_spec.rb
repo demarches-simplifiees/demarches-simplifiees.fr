@@ -796,11 +796,7 @@ describe Instructeurs::DossiersController, type: :controller do
               },
               '1': {
                 id: champ_datetime.id,
-                'value(1i)': 2019,
-                'value(2i)': 12,
-                'value(3i)': 21,
-                'value(4i)': 13,
-                'value(5i)': 17
+                value: '2019-12-21T13:17'
               },
               '2': {
                 id: champ_linked_drop_down_list.id,

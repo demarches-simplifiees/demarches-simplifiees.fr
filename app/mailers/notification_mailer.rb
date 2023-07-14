@@ -7,8 +7,10 @@
 #
 class NotificationMailer < ApplicationMailer
   include ActionView::Helpers::SanitizeHelper
+  include ActionView::Helpers::TextHelper
 
   before_action :set_dossier
+  before_action :set_services_publics_plus, only: :send_notification
   after_action :create_commentaire_for_notification
 
   helper ServiceHelper
@@ -50,6 +52,12 @@ class NotificationMailer < ApplicationMailer
 
   private
 
+  def set_services_publics_plus
+    return unless Dossier::TERMINE.include?(params[:state])
+
+    @services_publics_plus_url = ENV['SERVICES_PUBLICS_PLUS_URL'].presence
+  end
+
   def set_dossier
     @dossier = params[:dossier]
 
@@ -60,7 +68,7 @@ class NotificationMailer < ApplicationMailer
         mail_template = @dossier.procedure.mail_template_for(params[:state])
 
         @email = @dossier.user_email_for(:notification)
-        @subject = mail_template.subject_for_dossier(@dossier)
+        @subject = truncate(mail_template.subject_for_dossier(@dossier), length: 100)
         @body = mail_template.body_for_dossier(@dossier)
         @actions = mail_template.actions_for_dossier(@dossier)
         @attachment = mail_template.attachment_for_dossier(@dossier)
