@@ -1,21 +1,20 @@
-= label_tag :procedure_path, class: 'fr-label' do
-  Lien de la démarche
-  %span.fr-hint-text
-    Renseignez la suite de l’URL pour personnaliser le lien public.
-
 .fr-input-group
+  = form.label :procedure_path, class: 'fr-label' do
+    = t('activerecord.attributes.procedure.procedure_path')
+
+    %span.fr-hint-text
+      = t('activerecord.attributes.procedure.hints.procedure_path')
+
   .fr-input
     .flex
       %span.placeholder
         = commencer_url(path: '')
       = text_field_tag(:path, procedure.path,
                       id: 'procedure_path',
-                      label: 'Adresse de diffusion',
-                      placeholder: 'chemin-de-la-démarche',
+                      placeholder: t('activerecord.attributes.procedure.procedure_path_placeholder'),
                       required: true,
                       class: 'unstyled flex-1',
                       pattern: '^[a-z0-9_-]{3,200}$',
-                      title: "De 3 à 200 caractères; minuscules, chiffres et tiret seulement",
                       autocomplete: 'off')
 -# %span{ data: { controller: 'clipboard', clipboard_text_value: ''  } }
 -#   %button.fr-btn.fr-icon-clipboard-line.fr-btn--sm.fr-btn--secondary.fr-btn--icon-left{ data: { action: 'clipboard#copy' }, title: 'Copier le lien public' }
@@ -25,24 +24,17 @@
 
 = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
   - c.body do
-    Attention, diffusez toujours le lien complet affiché ci-dessus ( en cliquant sur le bouton « Copier le lien public »), et non pas un lien générique vers #{APPLICATION_NAME}.
+    = t('activerecord.attributes.procedure.procedure_path_alert', link: APPLICATION_NAME)
 
-.fr-input-group
-  = label_tag :procedure_path, class: 'fr-label' do
-    Où les usagers trouveront-ils le lien de la démarche ?
-    %span.fr-hint-text
-      Il s'agit de la page de votre site web où le lien sera diffusé
+= render Dsfr::InputComponent.new(form: form, attribute: :lien_site_web, input_type: :text_field, opts: {placeholder: t('activerecord.attributes.procedure.lien_site_web_placeholder')})
 
-  = text_field_tag(:lien_site_web, procedure.lien_site_web,
-                    required: true,
-                    class: 'fr-input',
-                    autocomplete: 'off',
-                    placeholder: 'https://exemple.gouv.fr/page_informant_sur_ma_demarche')
 
 - if closed_procedures.present?
   .fr-select-group
-    = label_tag :procedure_path, class: 'fr-label' do
-      Numéro de la démarche remplacée (facultatif)
+    = form.label :old_procedure, class: 'fr-label' do
+      = t('activerecord.attributes.procedure.old_procedure')
+      = t('utils.no_mandatory')
+
       %span.fr-hint-text
-        Cette démarche remplace une close ? Si oui, veuillez indiquer le n° de la démarche remplacée
+        = t('activerecord.attributes.procedure.hints.old_procedure')
     = select_tag :old_procedure, options_for_select(@closed_procedures), include_blank: true, class: 'fr-select'

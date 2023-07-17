@@ -10,8 +10,10 @@ fr:
           description: Décrivez en quelques lignes le contexte, la finalité, etc.
           description_target_audience: Décrivez en quelques lignes les destinataires finaux de la démarche, les critères d’éligibilité s’il y en a, les pré-requis, etc.
           description_pj: Décrivez la liste des pièces jointes à fournir s’il y en a
-          lien_site_web: "Exemple: 'https://exemple.gouv.fr/ma_demarche'"
+          lien_site_web: "Il s'agit de la page de votre site web où le lien sera diffusé"
           cadre_juridique: "Exemple: 'https://www.legifrance.gouv.fr/'"
+          old_procedure: Cette démarche remplace une close ? Si oui, veuillez indiquer le n° de la démarche remplacée
+          procedure_path: "Renseignez la suite de l’URL pour personnaliser le lien public. De 3 à 200 caractères :  minuscules, chiffres et tiret seulement"
         path: Lien public
         organisation: Organisme
         duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers sur demarches-simplifiees.fr (choisi par un usager)
@@ -23,6 +25,11 @@ fr:
         description_pj: Liste des pièces jointes demandées
         description_pj_placeholder: Si vous ne renseignez pas ce champ et que votre formulaire contient des pièces jointes, une liste générée automatiquement s'affichera dans la page d'accueil de votre démarche.
         lien_site_web: Où les usagers trouveront-ils le lien vers la démarche ?
+        lien_site_web_placeholder: https://exemple.gouv.fr/page_informant_sur_ma_demarche
+        old_procedure: Numéro de la démarche remplacée
+        procedure_path: Lien de la démarche
+        procedure_path_placeholder: nom-de-la-demarche
+        procedure_path_alert: Attention, diffusez toujours le lien complet affiché ci-dessus ( en cliquant sur le bouton « Copier le lien public »), et non pas un lien générique vers %{link}.
         cadre_juridique: Lien vers le texte
         lien_dpo: Lien ou email pour contacter le Délégué à la Protection des Données (DPO)
         published_at: 'Date de publication'

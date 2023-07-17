@@ -20,3 +20,26 @@ fr:
         dossiers_en_instruction:
           one: Il y a un dossier « en instruction » sur cette version de la démarche.
           other: Il y a %{count} dossiers « en instruction » sur cette version de la démarche.
+      publication:
+        publish_title: Publier votre démarche
+        closed_procedure_html: "Cette démarche est <strong>close</strong> et n’est donc plus accessible par le public. Vous pouvez la réactiver :"
+        draft_changed_procedure_html: "Cette démarche est déjà <strong>publiée</strong>. Elle a été <strong>modifiée</strong> depuis sa publication. Vous pouvez publier les changements effectués dans une nouvelle version de cette démarche :"
+        published_procedure_html: "Cette démarche est <strong>publiée</strong>, certains éléments ne peuvent plus être modifiés. Pour y accéder vous pouvez utiliser le lien :"
+        public_link_procedure_html: "Attention, diffusez toujours le <strong>lien complet</strong> affiché ci-dessus, et non pas un lien générique vers %{link}"
+        missing_information_title: informations manquantes
+        missing_information_content: "Pour pouvoir tester cette démarche, vous devez d’abord lui affecter :"
+        missing_information_service: Vous devez renseigner les coordonnées de votre Service administratif avant de pouvoir publier votre démarche.
+        missing_information_instructeurs: Vous devez affecter des instructeurs avant de pouvoir publier votre démarche.
+        missing_link: Cette démarche n’a pas encore de lien, et n’est pas accessible par le public.
+        dubious_fields: "Attention, certains champs ne peuvent être demandés par l’administration. Voici les champs qui nous semblent suspects :"
+        click_here: Cliquez ici.
+        back_to_procedure: Revenir à la page de la démarche
+      publication_form:
+        draft_changed_procedure_alert: "Publiez une nouvelle version de votre démarche. Les modifications suivantes seront appliquées :"
+        dpd_title: Avant de publier
+        dpd_part_1: Avez-vous bien pensé à informer votre Délégué à la Protection des Données personnelles (DPD).
+        dpd_part_2: Si votre démarche propose de collecter des données personnelles, vous devez informer votre DPD. Chaque organisme en a un.
+        dpd_part_3: "Ce dernier pourra vous aider dans la finalisation de votre démarche, et vous inviter à vous interroger sur les données collectées, et sur la pertinence de ces dernières. N'oubliez pas : toutes les démarches qui contiennent des données personnelles doivent être consignées dans un registre des traitements :"
+        dpd_part_4: Comment faire ? Vous pouvez soit lui communiquer par email le lien vers la démarche en test, ou bien le nommer « administrateur ». Dans tous les cas, ne publiez votre démarche qu’après avoir eu son avis.
+        back_to_procedure: 'Annuler et revenir à la page de la démarche'
+        submit: Publier
