@@ -17,13 +17,7 @@
                       pattern: '^[a-z0-9_-]{3,200}$',
                       autocomplete: 'off')
 
--# %span{ data: { controller: 'clipboard', clipboard_text_value: ''  } }
--#   %button.fr-btn.fr-icon-clipboard-line.fr-btn--sm.fr-btn--secondary.fr-btn--icon-left{ data: { action: 'clipboard#copy' }, title: 'Copier le lien public' }
--#     Copier le lien public
--#   %span.fr-text--sm.hidden{ data: { clipboard_target: 'success' } }
--#     = @success || t('.copy_confirmation')
-
-= render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
+= render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-4w') do |c|
   - c.body do
     = t('activerecord.attributes.procedure.procedure_path_alert', link: APPLICATION_NAME)
 

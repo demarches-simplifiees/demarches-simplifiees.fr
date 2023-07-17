@@ -29,7 +29,7 @@ fr:
         old_procedure: Numéro de la démarche remplacée
         procedure_path: Lien de la démarche
         procedure_path_placeholder: nom-de-la-demarche
-        procedure_path_alert: Attention, diffusez toujours le lien complet affiché ci-dessus ( en cliquant sur le bouton « Copier le lien public »), et non pas un lien générique vers %{link}.
+        procedure_path_alert: Attention, diffusez toujours le lien complet affiché ci-dessus, et non pas un lien générique vers %{link}.
         cadre_juridique: Lien vers le texte
         lien_dpo: Lien ou email pour contacter le Délégué à la Protection des Données (DPO)
         published_at: 'Date de publication'

@@ -25,7 +25,7 @@ en:
         old_procedure: Replaced procedure number
         procedure_path: Procedure link
         procedure_path_placeholder: procedure-name
-        procedure_path_alert: Please note, always post the full link displayed above (by clicking the "Copy Public Link" button), not a generic link to %{link}.
+        procedure_path_alert: Please note, always post the full link displayed above, not a generic link to %{link}.
         cadre_juridique: Link to the legal text
         lien_dpo: Link or email to contact the data protection officer (DPO)
         duree_conservation_dossiers_dans_ds: Duration files will be kept
