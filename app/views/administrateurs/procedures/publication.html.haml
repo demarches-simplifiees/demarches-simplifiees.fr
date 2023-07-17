@@ -2,97 +2,69 @@
 = render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [['Démarches', admin_procedures_back_path(@procedure)],
                     [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
-                    ['Publication']] }
-.container
-  - if @procedure.draft_revision.types_de_champ_public.dubious.present?
-    = render Dsfr::AlertComponent.new(state: :warning, title: "Attention, certains champs ne peuvent être demandés par l’administration. Voici les champs qui nous semblent suspects :", extra_class_names: 'fr-mb-2w') do |c|
-      - c.body do
-        %ul
-          - @procedure.draft_revision.types_de_champ_public.dubious.each do |dubious_champs|
-            %li.dubious-champs= "#{dubious_champs.libelle} (#{dubious_champs.description})"
-  .lien-demarche
-    %h1
-      - if @procedure.brouillon?
-        Test et publication
-      - else
-        Publication
-    %div{ style: 'margin-top: 30px;' }
-      - if @procedure.close? || @procedure.depubliee?
-        %p.mb-4 Cette démarche est <strong>close</strong> et n’est donc plus accessible par le public. Vous pouvez la réactiver :
-        = render partial: 'publication_form', locals: { procedure: @procedure, administrateur: @current_administrateur }
-      - elsif @procedure.draft_changed?
-        %p.mb-4 Cette démarche est déjà <strong>publiée</strong>. Elle a été <strong>modifiée</strong> depuis sa publication. Vous pouvez publier les changements effectués dans une nouvelle version de cette démarche :
-        = render partial: 'publication_form', locals: { procedure: @procedure, administrateur: @current_administrateur }
-      - elsif @procedure.publiee?
-        %p Cette démarche est <strong>publiée</strong>, certains éléments ne peuvent plus être modifiés.
-        Pour y accéder vous pouvez utiliser le lien :
-        = link_to commencer_url(@procedure.path), commencer_url(@procedure.path), target: :blank, rel: :noopener, class: "mb-4"
-
-        %p.mb-4 Attention, diffusez toujours le <strong>lien complet</strong> affiché ci-dessus, et non pas un lien générique vers #{APPLICATION_NAME}. Ne dites pas non plus aux usagers de se rendre sur le site générique #{APPLICATION_NAME}, donnez-leur toujours le lien complet.
-      - elsif @procedure.brouillon?
-        - if @procedure.missing_steps.empty?
-          %p
-            Cette démarche est actuellement <strong>en test</strong>,
-            pour y accéder vous pouvez utiliser le lien :
-            = link_to commencer_url(@procedure.path), commencer_url(@procedure.path), target: :blank, rel: :noopener
-          %p.mb-4
-            Toute personne ayant la connaissance de ce lien pourra ainsi remplir des dossiers de test sur votre démarche.
-
-          .card.mb-4
-            %h2.card-title Ce que vous pouvez faire lorsque vous êtes en test
-            %p
-              Profitez de la phase de test pour tester la saisie de dossiers, ainsi que toutes les fonctionnalités associées (instruction, emails automatiques, attestations, etc.).
-            %p
-              Vous pouvez effectuer toutes les modifications que vous souhaitez sur votre démarche pendant cette phase de test.
-            %p.mb-4.font-weight-bold
-              Les dossiers qui seront remplis pendant la phase de test seront automatiquement supprimés lors de la modification ou la publication de votre démarche.
-            %p.center
-              %iframe{ :src =>"https://player.vimeo.com/video/334463514?color=0069CC",:width =>"640",:height =>"360",:frameborder => "0" }
-
-
-          .card
-            %h2.card-title Prêt à publier ?
-            %p
-              À ce moment du processus de création, vous devez informer votre Délégué à la Protection des Données personnelles (DPD).
-            %p
-              (
-              %a{ href:'https://www.cnil.fr/fr/protection-des-donnees-les-bons-reflexes', target:'_blank' }
-                https://www.cnil.fr/fr/protection-des-donnees-les-bons-reflexes
-              )
-            %p
-              Si votre démarche propose de collecter des données personnelles, vous devez informer votre DPD. Chaque organisme en a un.
-            %p
-              Ce dernier pourra vous aider dans la finalisation de votre démarche, et vous inviter à vous interroger sur les données collectées, et sur la pertinence de ces dernières.
-              N'oubliez pas : toutes les démarches qui contiennent des données personnelles doivent être consignées dans un registre des traitements :
-              %a{ href:'https://www.cnil.fr/fr/RGDP-le-registre-des-activites-de-traitement', target:'_blank' }
-                https://www.cnil.fr/fr/RGDP-le-registre-des-activites-de-traitement
-            %p.mb-4
-              Comment faire :
-              vous pouvez soit lui communiquer par email le lien vers la démarche en test, ou bien le nommer « administrateur ». Dans tous les cas, ne publiez votre démarche qu’après avoir eu son avis.
-
-          = render partial: 'publication_form', locals: { procedure: @procedure, administrateur: @current_administrateur }
-
-        - else
-          .alert.alert-info
-            Pour pouvoir tester cette démarche, vous devez d’abord lui affecter :
+                    ['Publier']] }
+.fr-container
+  .fr-grid-row
+    .fr-col-12.fr-col-offset-sm-2.fr-col-sm-8
+      - if @procedure.draft_revision.types_de_champ_public.dubious.present?
+        = render Dsfr::AlertComponent.new(state: :warning, title: "Attention, certains champs ne peuvent être demandés par l’administration. Voici les champs qui nous semblent suspects :", extra_class_names: 'fr-mb-2w') do |c|
+          - c.body do
             %ul
-            - if @procedure.missing_zones?
-              %li= link_to("une ou plusieurs zones", zones_admin_procedure_path(id: @procedure.id))
-            - if @procedure.missing_instructeurs?
-              %li= link_to("des instructeurs", admin_procedure_groupe_instructeur_path(@procedure, @procedure.defaut_groupe_instructeur))
-            - if @procedure.service.nil?
-              %li= link_to("un service", admin_services_path(procedure_id: @procedure))
-            \.
-      - else
-        - if @procedure.missing_steps.include?(:service)
-          %p.alert.alert-danger
-            Vous devez renseigner les coordonnées de votre Service administratif avant de pouvoir publier votre démarche.
-            = link_to 'Cliquez ici.', (@current_administrateur.services.present? ? url_for(admin_services_path(procedure_id: @procedure.id)) : url_for(new_admin_service_path(procedure_id: @procedure.id)))
+              - @procedure.draft_revision.types_de_champ_public.dubious.each do |dubious_champs|
+                %li.dubious-champs= "#{dubious_champs.libelle} (#{dubious_champs.description})"
+      .lien-demarche
+        %h1
+          Publier votre démarche
 
-        - if @procedure.missing_steps.include?(:instructeurs)
-          %p.alert.alert-danger
-            Vous devez affecter des instructeurs avant de pouvoir publier votre démarche.
-            = link_to 'Cliquez ici.', admin_procedure_groupe_instructeur_path(@procedure, @procedure.defaut_groupe_instructeur)
+        %div{ style: 'margin-top: 30px;' }
+          - if @procedure.close? || @procedure.depubliee?
+            %p.mb-4 Cette démarche est <strong>close</strong> et n’est donc plus accessible par le public. Vous pouvez la réactiver :
+            = render partial: 'publication_form', locals: { procedure: @procedure, administrateur: @current_administrateur }
+          - elsif @procedure.draft_changed?
+            %p.mb-4 Cette démarche est déjà <strong>publiée</strong>. Elle a été <strong>modifiée</strong> depuis sa publication. Vous pouvez publier les changements effectués dans une nouvelle version de cette démarche :
+            = render partial: 'publication_form', locals: { procedure: @procedure, administrateur: @current_administrateur }
+          - elsif @procedure.publiee?
+            %p Cette démarche est <strong>publiée</strong>, certains éléments ne peuvent plus être modifiés.
+            Pour y accéder vous pouvez utiliser le lien :
+            = link_to commencer_url(@procedure.path), commencer_url(@procedure.path), target: :blank, rel: :noopener, class: "mb-4"
 
-        %p.alert.alert-info
-          Cette démarche n’a pas encore de lien, et n’est pas accessible par le public.
+            = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-my-2w') do |c|
+              - c.body do
+                %p Attention, diffusez toujours le <strong>lien complet</strong> affiché ci-dessus, et non pas un lien générique vers #{APPLICATION_NAME}. Ne dites pas non plus aux usagers de se rendre sur le site générique #{APPLICATION_NAME}, donnez-leur toujours le lien complet.
+          - elsif @procedure.brouillon?
+            - if @procedure.missing_steps.empty?
+              = render partial: 'publication_form', locals: { procedure: @procedure, administrateur: @current_administrateur }
+
+            - else
+              = render Dsfr::AlertComponent.new(state: :warning, title: "informations manquantes", heading_level: :h2) do |c|
+                - c.body do
+                  %p Pour pouvoir tester cette démarche, vous devez d’abord lui affecter :
+                  %ul
+                    - if @procedure.missing_zones?
+                      %li= link_to("une ou plusieurs zones", zones_admin_procedure_path(id: @procedure.id))
+                    - if @procedure.missing_instructeurs?
+                      %li= link_to("des instructeurs", admin_procedure_groupe_instructeur_path(@procedure, @procedure.defaut_groupe_instructeur))
+                    - if @procedure.service.nil?
+                      %li= link_to("un service", admin_services_path(procedure_id: @procedure))
+              = link_to 'Revenir à la page de la démarche', admin_procedure_path(id: @procedure), class: 'fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-arrow-go-back-line fr-mt-2w'
+
+          - else
+            - if @procedure.missing_steps.include?(:service)
+              = render Dsfr::AlertComponent.new(state: :warning, size: :sm, extra_class_names: 'fr-my-2w') do |c|
+                - c.body do
+                  %p
+                    Vous devez renseigner les coordonnées de votre Service administratif avant de pouvoir publier votre démarche.
+                    = link_to 'Cliquez ici.', (@current_administrateur.services.present? ? url_for(admin_services_path(procedure_id: @procedure.id)) : url_for(new_admin_service_path(procedure_id: @procedure.id)))
+
+            - if @procedure.missing_steps.include?(:instructeurs)
+              = render Dsfr::AlertComponent.new(state: :warning, size: :sm, extra_class_names: 'fr-my-2w') do |c|
+                - c.body do
+                  %p
+                    Vous devez affecter des instructeurs avant de pouvoir publier votre démarche.
+                    = link_to 'Cliquez ici.', admin_procedure_groupe_instructeur_path(@procedure, @procedure.defaut_groupe_instructeur)
+            = render Dsfr::AlertComponent.new(state: :warning, size: :sm, extra_class_names: 'fr-my-2w') do |c|
+              - c.body do
+                %p
+                  Cette démarche n’a pas encore de lien, et n’est pas accessible par le public.
+
+            = link_to 'Revenir à la page de la démarche', admin_procedure_path(id: @procedure), class: 'fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-arrow-go-back-line fr-mt-2w'

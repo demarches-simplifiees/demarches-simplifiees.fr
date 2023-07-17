@@ -11,3 +11,5 @@ en:
       closed: "Closed"
       published: "Published"
       draft: "Draft"
+      more_info_on_test: "For more information on test stage"
+      go_to_FAQ: "read FAQ"
