@@ -1,15 +1,21 @@
 - if @champ.options?
   - if @champ.render_as_checkboxes?
-    = @form.collection_check_boxes(:value, @champ.enabled_non_empty_options, :to_s, :to_s) do |b|
+    %legend.fr-fieldset__legend--regular.fr-fieldset__legend= render EditableChamp::ChampLabelContentComponent.new form: @form, champ: @champ, seen_at: @seen_at
+    = @form.collection_check_boxes :value, @champ.enabled_non_empty_options, :to_s, :to_s do |b|
       - tag.div(class: 'editable-champ editable-champ-checkbox') do
-        - b.label(for: @champ.checkbox_id(b.value)) do
-          - b.check_box({ multiple: true, checked: @champ.selected_options.include?(b.value), aria: { describedby: @champ.describedby_id }, id: @champ.checkbox_id(b.value) }) + b.text
+        %fieldset.fr-fieldset__element
+          .fr-checkbox-group
+            = b.check_box(checked: @champ.selected_options.include?(b.value), aria: { describedby: @champ.describedby_id }, id: @champ.checkbox_id(b.value), class: 'fr-checkbox-group__checkbox')
+            %label.fr-label{ for: @champ.checkbox_id(b.value) }
+              = b.text
+
   - else
     %div{ 'data-turbo-focus-group': true }
       - if @champ.selected_options.present?
         .fr-mb-2w
           - @champ.selected_options.each do |option|
-            = render NestedForms::OwnedButtonComponent.new(formaction: champs_options_path(@champ.id, option:), http_method: :delete, opt: { class: 'fr-tag fr-tag--dismiss fr-mb-1w fr-mr-1w', id: @champ.checkbox_id(option) }) do
+            = render NestedForms::OwnedButtonComponent.new(formaction: champs_options_path(@champ.id, option:), http_method: :delete, opt: { class: 'fr-tag fr-tag-bug fr-mb-1w fr-mr-1w', id: @champ.checkbox_id(option) }) do
               = option
+              %span.tag-dismiss x
       - if @champ.unselected_options.present?
-        = @form.select :value, @champ.unselected_options, { selected: '', include_blank: '' }, id: @champ.input_id, aria: { describedby: @champ.describedby_id }
+        = @form.select :value, @champ.unselected_options, { selected: '', include_blank: '' }, id: @champ.input_id, aria: { describedby: @champ.describedby_id }, class: 'fr-select'

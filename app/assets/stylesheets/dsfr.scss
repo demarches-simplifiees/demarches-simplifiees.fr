@@ -99,6 +99,21 @@ fieldset {
   width: max-content;
 }
 
+button.fr-tag-bug {
+  background-color: $blue-france-500;
+  color: #FFFFFF;
+
+  &:hover {
+    background-color: #1212FF;
+    color: #FFFFFF;
+  }
+
+  .tag-dismiss {
+    font-size: 1rem;
+    margin-left: 10px;
+  }
+}
+
 // on veut ferrer à droite le dropdown de sélecteur de langue
 @media (min-width: 62em) {
   .fr-nav__item.custom-fr-translate-flex-end {
