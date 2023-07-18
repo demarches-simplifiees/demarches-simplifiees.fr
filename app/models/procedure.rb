@@ -666,12 +666,6 @@ class Procedure < ApplicationRecord
     routing_enabled? || instructeurs_self_management_enabled?
   end
 
-  def defaut_groupe_instructeur_for_new_dossier
-    if !routing_enabled? || feature_enabled?(:procedure_routage_api)
-      defaut_groupe_instructeur
-    end
-  end
-
   def groupe_instructeurs_but_defaut
     groupe_instructeurs - [defaut_groupe_instructeur]
   end

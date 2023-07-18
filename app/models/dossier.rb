@@ -135,7 +135,7 @@ class Dossier < ApplicationRecord
 
   aasm whiny_persistence: true, column: :state, enum: true do
     state :brouillon, initial: true
-    state :en_construction
+    state :en_construction, before_enter: :compute_routing
     state :en_instruction
     state :accepte
     state :refuse
@@ -852,7 +852,6 @@ class Dossier < ApplicationRecord
       .passer_en_construction
       .processed_at
     save!
-
     MailTemplatePresenterService.create_commentaire_for_state(self)
     NotificationMailer.send_en_construction_notification(self).deliver_later
     procedure.compute_dossiers_count
@@ -869,6 +868,10 @@ class Dossier < ApplicationRecord
       resolve_pending_correction!
       process_sva_svr!
     end
+  end
+
+  def compute_routing
+    RoutingEngine.compute(self)
   end
 
   def after_passer_en_instruction(h)
