@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_29_102031) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_18_113720) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -935,6 +935,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_29_102031) do
 
   create_table "users", id: :serial, force: :cascade do |t|
     t.datetime "confirmation_sent_at", precision: 6
+    t.datetime "blocked_at", precision: 6
+    t.text "blocked_reason"
     t.string "confirmation_token"
     t.datetime "confirmed_at", precision: 6
     t.datetime "created_at", precision: 6

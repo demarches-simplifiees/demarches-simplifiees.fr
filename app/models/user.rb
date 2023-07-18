@@ -3,6 +3,8 @@
 # Table name: users
 #
 #  id                           :integer          not null, primary key
+#  blocked_at                   :datetime
+#  blocked_reason               :text
 #  confirmation_sent_at         :datetime
 #  confirmation_token           :string
 #  confirmed_at                 :datetime
