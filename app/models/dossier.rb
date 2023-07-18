@@ -155,6 +155,8 @@ class Dossier < ApplicationRecord
   has_one :traitement, -> { order(processed_at: :desc) }, inverse_of: false
 
   has_many :dossier_operation_logs, -> { order(:created_at) }, inverse_of: :dossier
+  has_many :dossier_assignments, -> { order(:assigned_at) }, inverse_of: :dossier, dependent: :destroy
+  has_one :dossier_assignment, -> { order(assigned_at: :desc) }, inverse_of: false
 
   belongs_to :groupe_instructeur, optional: true
   belongs_to :revision, class_name: 'ProcedureRevision', optional: false
@@ -474,7 +476,6 @@ class Dossier < ApplicationRecord
 
   validates :user, presence: true, if: -> { deleted_user_email_never_send.nil? }, unless: -> { prefilled }
   validates :individual, presence: true, if: -> { revision.procedure.for_individual? }
-  validates :groupe_instructeur, presence: true, if: -> { !brouillon? }
 
   validates_associated :prefilled_champs_public, on: :prefilling
 
@@ -686,13 +687,17 @@ class Dossier < ApplicationRecord
     procedure.discarded? || (brouillon? && !procedure.dossier_can_transition_to_en_construction?)
   end
 
-  def assign_to_groupe_instructeur(groupe_instructeur, author = nil)
+  def assign_to_groupe_instructeur(groupe_instructeur, mode, author = nil)
     return if groupe_instructeur.present? && groupe_instructeur.procedure != procedure
     return if self.groupe_instructeur == groupe_instructeur
 
+    previous_groupe_instructeur = self.groupe_instructeur
+
     update!(groupe_instructeur:, groupe_instructeur_updated_at: Time.zone.now)
+    update!(forced_groupe_instructeur: true) if mode == DossierAssignment.modes.fetch(:manual)
 
     if !brouillon?
+      create_assignment(mode, previous_groupe_instructeur, groupe_instructeur, author&.email)
       unfollow_stale_instructeurs
       if author.present?
         log_dossier_operation(author, :changer_groupe_instructeur, self)
@@ -900,6 +905,7 @@ class Dossier < ApplicationRecord
     MailTemplatePresenterService.create_commentaire_for_state(self)
     NotificationMailer.send_en_construction_notification(self).deliver_later
     procedure.compute_dossiers_count
+    RoutingEngine.compute(self)
   end
 
   def after_passer_en_instruction(h)
@@ -1308,6 +1314,19 @@ class Dossier < ApplicationRecord
 
   def sva_svr_decision_in_days
     (sva_svr_decision_on - Date.current).to_i
+  end
+
+  def create_assignment(mode, previous_groupe_instructeur, groupe_instructeur, instructeur_email = nil)
+    DossierAssignment.create!(
+      dossier_id: self.id,
+      mode: mode,
+      previous_groupe_instructeur_id: previous_groupe_instructeur&.id,
+      groupe_instructeur_id: groupe_instructeur.id,
+      previous_groupe_instructeur_label: previous_groupe_instructeur&.label,
+      groupe_instructeur_label: groupe_instructeur.label,
+      assigned_at: Time.zone.now,
+      assigned_by: instructeur_email
+    )
   end
 
   private

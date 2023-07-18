@@ -221,7 +221,7 @@ RSpec.describe DossierCloneConcern do
     context 'with updated groupe instructeur' do
       before {
         dossier.update!(groupe_instructeur: create(:groupe_instructeur))
-        forked_dossier.assign_to_groupe_instructeur(dossier.procedure.defaut_groupe_instructeur)
+        forked_dossier.assign_to_groupe_instructeur(dossier.procedure.defaut_groupe_instructeur, DossierAssignment.modes.fetch(:manual))
       }
 
       it { is_expected.to eq(added: [], updated: [], removed: []) }

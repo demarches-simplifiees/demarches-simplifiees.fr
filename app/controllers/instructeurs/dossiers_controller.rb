@@ -91,6 +91,7 @@ module Instructeurs
       @avis_emails = dossier.experts.map(&:email)
       @invites_emails = dossier.invites.map(&:email)
       @potential_recipients = dossier.groupe_instructeur.instructeurs.reject { |g| g == current_instructeur }
+      @manual_assignments = dossier.dossier_assignments.manual.includes(:groupe_instructeur, :previous_groupe_instructeur)
     end
 
     def send_to_instructeurs
@@ -362,9 +363,7 @@ module Instructeurs
         .procedure
         .groupe_instructeurs.find(params[:groupe_instructeur_id])
 
-      dossier.assign_to_groupe_instructeur(new_group)
-
-      dossier.update!(forced_groupe_instructeur: true)
+      dossier.assign_to_groupe_instructeur(new_group, DossierAssignment.modes.fetch(:manual), current_instructeur)
 
       flash.notice = t('instructeurs.dossiers.reaffectation', dossier_id: dossier.id, label: new_group.label)
       redirect_to instructeur_procedure_path(procedure)

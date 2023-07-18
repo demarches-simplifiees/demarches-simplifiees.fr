@@ -16,11 +16,11 @@
           %th{ colspan: 2 }= t(".existing_groupe", count: @groupes_instructeurs.total_count)
       %tbody
         - @groupes_instructeurs.each do |group|
-          %tr
-            %td= group.label
-            %td.actions= button_to 'Réaffecter les dossiers à ce groupe',
+          .flex.justify-between.align-center.fr-mb-2w
+            %p.fr-mb-0= group.label
+            = button_to 'Réaffecter les dossiers à ce groupe',
               reaffecter_admin_procedure_groupe_instructeur_path(:target_group => group),
-              { class: 'button',
+              { class: 'fr-btn fr-btn--secondary fr-btn--sm',
                 data: { confirm: "Êtes-vous sûr de vouloir réaffecter les dossiers du groupe « #{@groupe_instructeur.label} » vers le groupe  « #{group.label} » ?" } }
 
     = paginate @groupes_instructeurs, views_prefix: 'shared'
