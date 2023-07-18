@@ -16,9 +16,7 @@ RSpec.describe DossierAssignment, type: :model do
 
     let(:drop_down_tdc) { procedure.draft_revision.types_de_champ.first }
 
-    let(:dossier) { create(:dossier, procedure:, groupe_instructeur_id: nil) }
-    let(:defaut_groupe) { procedure.defaut_groupe_instructeur }
-    let(:gi_2) { procedure.groupe_instructeurs.find_by(label: 'a second group') }
+    let(:dossier) { create(:dossier, :en_construction, procedure:).tap { _1.update(groupe_instructeur_id: nil) } }
 
     before do
       RoutingEngine.compute(dossier)

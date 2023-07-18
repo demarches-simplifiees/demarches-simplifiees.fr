@@ -542,8 +542,6 @@ module Users
       errors += format_errors(errors: @dossier.errors)
       errors += format_errors(errors: @dossier.check_mandatory_and_visible_champs)
 
-      RoutingEngine.compute(@dossier)
-
       errors
     end
 

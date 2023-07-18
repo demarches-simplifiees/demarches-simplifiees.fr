@@ -476,7 +476,6 @@ class Dossier < ApplicationRecord
 
   validates :user, presence: true, if: -> { deleted_user_email_never_send.nil? }, unless: -> { prefilled }
   validates :individual, presence: true, if: -> { revision.procedure.for_individual? }
-  validates :groupe_instructeur, presence: true, if: -> { !brouillon? }
 
   validates_associated :prefilled_champs_public, on: :prefilling
 
@@ -695,12 +694,10 @@ class Dossier < ApplicationRecord
     previous_groupe_instructeur = self.groupe_instructeur
 
     update!(groupe_instructeur:, groupe_instructeur_updated_at: Time.zone.now)
-
-    create_assignment(mode, previous_groupe_instructeur, groupe_instructeur, author&.email)
-
     update!(forced_groupe_instructeur: true) if mode == DossierAssignment.modes.fetch(:manual)
 
     if !brouillon?
+      create_assignment(mode, previous_groupe_instructeur, groupe_instructeur, author&.email)
       unfollow_stale_instructeurs
       if author.present?
         log_dossier_operation(author, :changer_groupe_instructeur, self)
@@ -908,6 +905,7 @@ class Dossier < ApplicationRecord
     MailTemplatePresenterService.create_commentaire_for_state(self)
     NotificationMailer.send_en_construction_notification(self).deliver_later
     procedure.compute_dossiers_count
+    RoutingEngine.compute(self)
   end
 
   def after_passer_en_instruction(h)
