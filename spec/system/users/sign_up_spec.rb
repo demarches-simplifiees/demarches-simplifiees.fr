@@ -142,4 +142,17 @@ describe 'Signing up:' do
       expect(page).to have_current_path new_user_session_path
     end
   end
+
+  context 'when the user already has a confirmed account but is blocked' do
+    before do
+      create(:user, email: user_email, password: user_password, blocked_at: Time.current)
+    end
+
+    scenario 'they cannot signed in' do
+      visit new_user_session_path
+      sign_in_with user_email, user_password
+
+      expect(page).to have_current_path new_user_session_path
+    end
+  end
 end
