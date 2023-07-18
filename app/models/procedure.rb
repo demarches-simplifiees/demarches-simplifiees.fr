@@ -301,8 +301,7 @@ class Procedure < ApplicationRecord
 
   validates :lien_site_web, presence: true, if: :publiee?
   validates :lien_notice, url: { no_local: true, allow_blank: true }
-  validates :lien_dpo, format: { with: Devise.email_regexp, message: "n'est pas valide" }, if: :lien_dpo_email?
-  validates :lien_dpo, url: { no_local: true, allow_blank: true }, unless: :lien_dpo_email?
+  validates :lien_dpo, url: { no_local: true, allow_blank: true, accept_email: true }
 
   validates :draft_types_de_champ_public,
     'types_de_champ/no_empty_block': true,
