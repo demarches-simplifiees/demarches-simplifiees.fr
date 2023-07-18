@@ -267,6 +267,10 @@ class User < ApplicationRecord
     devise_mailer.send(notification, self, *args).deliver_later
   end
 
+  def active_for_authentication?
+    super && blocked_at.nil?
+  end
+
   private
 
   def does_not_merge_on_self
