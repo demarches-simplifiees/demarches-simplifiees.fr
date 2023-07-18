@@ -1598,6 +1598,11 @@ describe Procedure do
       let(:lien_notice) { 'www.démarches-simplifiées.fr' }
       it { expect(procedure.valid?).to be_falsey }
     end
+
+    context 'when an email' do
+      let(:lien_notice) { 'test@demarches-simplifiees.fr' }
+      it { expect(procedure.valid?).to be_falsey }
+    end
   end
 
   describe 'lien_dpo' do
@@ -1620,6 +1625,11 @@ describe Procedure do
 
     context 'when valid email' do
       let(:lien_dpo) { 'test@demarches-simplifiees.fr' }
+      it { expect(procedure.valid?).to be_truthy }
+    end
+
+    context 'when valid email with accents' do
+      let(:lien_dpo) { 'test@démarches-simplifiées.fr' }
       it { expect(procedure.valid?).to be_truthy }
     end
 
