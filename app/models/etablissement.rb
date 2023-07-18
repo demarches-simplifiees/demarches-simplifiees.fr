@@ -66,6 +66,16 @@ class Etablissement < ApplicationRecord
     fermé: "fermé"
   }, _prefix: true
 
+  def entreprise_raison_sociale
+    read_attribute(:entreprise_raison_sociale).presence || raison_sociale_for_ei
+  end
+
+  def raison_sociale_for_ei
+    if entreprise_nom || entreprise_prenom
+      [entreprise_nom, entreprise_prenom].join(' ')
+    end
+  end
+
   def search_terms
     [
       entreprise_siren,
