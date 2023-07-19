@@ -57,12 +57,12 @@ RSpec.describe GeoArea, type: :model do
         it { expect(geo_area.errors).to have_key(:geometry) }
       end
 
-      context.skip 'invalid_right_hand_rule_polygon' do
+      context 'invalid_right_hand_rule_polygon' do
         let(:geo_area) { build(:geo_area, :invalid_right_hand_rule_polygon, champ: nil) }
         it { expect(geo_area.errors).to have_key(:geometry) }
       end
 
-      context.skip 'hourglass_polygon' do
+      context 'hourglass_polygon' do
         let(:geo_area) { build(:geo_area, :hourglass_polygon, champ: nil) }
         it { expect(geo_area.errors).to have_key(:geometry) }
       end
