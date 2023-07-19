@@ -759,7 +759,7 @@ fr:
   users:
     dossiers:
       test_procedure: "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l’administrateur (ajout d’un champ, publication de la démarche...) entraînera sa suppression."
-      no_access: "Vous n’avez pas accès à ce dossier"
+      no_access_html: "Vous n’avez pas accès à ce dossier.<br>Vérifiez que votre adresse email de connexion <b>%{email}</b> est bien celle utilisée pour remplir cette démarche.<br> Si ce n'est pas le cas, déconnectez-vous"
       no_longer_editable: "Votre dossier ne peut plus être modifié"
       en_construction_submitted: "Les modifications ont déjà été déposées"
       fill_identity:

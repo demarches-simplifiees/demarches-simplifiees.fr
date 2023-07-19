@@ -596,7 +596,7 @@ module Users
     end
 
     def forbidden!
-      flash[:alert] = t('users.dossiers.no_access')
+      flash[:alert] = t('users.dossiers.no_access_html', email: current_user.email)
       redirect_to root_path
     end
 
