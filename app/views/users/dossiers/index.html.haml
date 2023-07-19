@@ -9,56 +9,62 @@
 .dossiers-headers.sub-header
   .fr-container
     %h1.page-title.fr-h2= t('views.users.dossiers.index.dossiers')
-    - if current_user.dossiers.count > 2 || current_user.dossiers_invites.count > 2
-      #search-2.fr-search-bar.fr-search-bar--lg
-        = form_tag recherche_dossiers_path, method: :get, :role => "search", class: "flex width-100 fr-mb-5w" do
-          = label_tag "q", t('views.users.dossiers.search.search_file'), class: 'fr-label'
-          = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: t('views.users.dossiers.search.search_file'), class: "fr-input"
-          %button.fr-btn
-            = t('views.users.dossiers.search.simple')
+
+    .fr-grid-row.fr-grid-row--gutters
+      - if current_user.dossiers.count > 2 || current_user.dossiers_invites.count > 2
+        .fr-col
+          #search-2.fr-search-bar
+            = form_tag recherche_dossiers_path, method: :get, :role => "search", class: "flex width-100 fr-mb-5w" do
+              = label_tag "q", t('views.users.dossiers.search.search_file'), class: 'fr-label'
+              = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: t('views.users.dossiers.search.search_file'), class: "fr-input"
+              %button.fr-btn.fr-btn--sm
+                = t('views.users.dossiers.search.simple')
+      - if @all_dossiers_uniq_procedures_count > 1
+        .fr-col
+          = render Dossiers::UserProcedureFilterComponent.new(dossiers: @all_dossiers)
 
     - if @search_terms.blank?
       %nav.tabs{ role: 'navigation', 'aria-label': t('views.users.dossiers.secondary_menu') }
         %ul
           - if @user_dossiers.present?
             = tab_item(t('pluralize.en_cours', count: @user_dossiers.count),
-              dossiers_path(statut: 'en-cours'),
+              dossiers_path(statut: 'en-cours', procedure_id: params[:procedure_id]),
               active: @statut == 'en-cours',
               badge: number_with_html_delimiter(@user_dossiers.count))
           - if @dossiers_traites.present?
             // TODO: when renaming this tab in "Terminé", update notify_near_deletion_to_user email wording accordingly.
             = tab_item(t('pluralize.traites', count: @dossiers_traites.count),
-              dossiers_path(statut: 'traites'),
+              dossiers_path(statut: 'traites', procedure_id: params[:procedure_id]),
               active: @statut == 'traites',
               badge: number_with_html_delimiter(@dossiers_traites.count))
 
           - if @dossiers_invites.present?
             = tab_item(t('pluralize.dossiers_invites', count: @dossiers_invites.count),
-              dossiers_path(statut: 'dossiers-invites'),
+              dossiers_path(statut: 'dossiers-invites', procedure_id: params[:procedure_id]),
               active: @statut == 'dossiers-invites',
               badge: number_with_html_delimiter(@dossiers_invites.count))
 
           - if @dossiers_close_to_expiration.count > 0
             = tab_item(t('pluralize.dossiers_close_to_expiration', count: @dossiers_close_to_expiration.count),
-              dossiers_path(statut: 'dossiers-expirant'),
+              dossiers_path(statut: 'dossiers-expirant', procedure_id: params[:procedure_id]),
               active: @statut == 'dossiers-expirant',
               badge: number_with_html_delimiter(@dossiers_close_to_expiration.count))
 
           - if @dossiers_supprimes_recemment.present?
             = tab_item(t('pluralize.dossiers_supprimes_recemment', count: @dossiers_supprimes_recemment.count),
-            dossiers_path(statut: 'dossiers-supprimes-recemment'),
+            dossiers_path(statut: 'dossiers-supprimes-recemment', procedure_id: params[:procedure_id]),
             active: @statut == 'dossiers-supprimes-recemment',
             badge: number_with_html_delimiter(@dossiers_supprimes_recemment.count))
 
           - if @dossiers_supprimes_definitivement.present?
             = tab_item(t('pluralize.dossiers_supprimes_definitivement', count: @dossiers_supprimes_definitivement.count),
-            dossiers_path(statut: 'dossiers-supprimes-definitivement'),
+            dossiers_path(statut: 'dossiers-supprimes-definitivement', procedure_id: params[:procedure_id]),
             active: @statut == 'dossiers-supprimes-definitivement',
             badge: number_with_html_delimiter(@dossiers_supprimes_definitivement.count))
 
           - if @dossier_transferes.present?
             = tab_item(t('pluralize.dossiers_transferes', count: @dossier_transferes.count),
-              dossiers_path(statut: 'dossiers-transferes'),
+              dossiers_path(statut: 'dossiers-transferes', procedure_id: params[:procedure_id]),
               active: @statut == 'dossiers-transferes',
               badge: number_with_html_delimiter(@dossier_transferes.count))
 
@@ -78,7 +84,7 @@
         = render partial: "dossiers_list", locals: { dossiers: @dossiers }
 
       - else
-        = render Dossiers::UserFilterComponent.new(statut: @statut, filter: @filter)
+        = render Dossiers::UserFilterComponent.new(statut: @statut, filter: @filter, procedure_id: @procedure_id )
 
         - if @statut == "dossiers-supprimes-definitivement"
           -# /!\ in this context, @dossiers is a collection of DeletedDossier not Dossier

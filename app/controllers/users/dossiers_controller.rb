@@ -22,14 +22,27 @@ module Users
     def index
       dossiers = Dossier.includes(:procedure).order_by_updated_at
       dossiers_visibles = dossiers.visible_by_user
+      @all_dossiers = dossiers_visibles + current_user.deleted_dossiers
+      @all_dossiers_uniq_procedures_count = @all_dossiers.map(&:procedure).pluck(:id).uniq.count
+      @procedure_id = params[:procedure_id]
+
+      if @procedure_id.present?
+        dossiers = dossiers.where(procedures: { id: @procedure_id })
+        dossiers_visibles = dossiers.visible_by_user
+      end
 
       @user_dossiers = current_user.dossiers.state_not_termine.merge(dossiers_visibles)
       @dossiers_traites = current_user.dossiers.state_termine.merge(dossiers_visibles)
       @dossiers_invites = current_user.dossiers_invites.merge(dossiers_visibles)
       @dossiers_supprimes_recemment = current_user.dossiers.hidden_by_user.merge(dossiers)
-      @dossiers_supprimes_definitivement = current_user.deleted_dossiers.includes(:procedure).order_by_updated_at
       @dossier_transferes = dossiers_visibles.where(dossier_transfer_id: DossierTransfer.for_email(current_user.email).ids)
       @dossiers_close_to_expiration = current_user.dossiers.close_to_expiration.merge(dossiers_visibles)
+      @dossiers_supprimes_definitivement = current_user.deleted_dossiers.includes(:procedure).order_by_updated_at
+
+      if @procedure_id.present?
+        @dossiers_supprimes_definitivement = @dossiers_supprimes_definitivement.where(procedures: { id: @procedure_id })
+      end
+
       @statut = statut(@user_dossiers, @dossiers_traites, @dossiers_invites, @dossiers_supprimes_recemment, @dossiers_supprimes_definitivement, @dossier_transferes, @dossiers_close_to_expiration, params[:statut])
 
       @dossiers = case @statut
