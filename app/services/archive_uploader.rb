@@ -81,10 +81,13 @@ class ArchiveUploader
     limit_to_retry = 1
     begin
       syscall_to_custom_uploader(blob)
-    rescue
+    rescue => e
       if limit_to_retry > 0
         limit_to_retry = limit_to_retry - 1
         retry
+      else
+        Sentry.set_tags(procedure:)
+        Sentry.capture_exception(e, extra: { filename: })
       end
     end
   end
