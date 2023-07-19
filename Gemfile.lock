@@ -171,6 +171,7 @@ GEM
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
     concurrent-ruby (1.2.2)
+    connection_pool (2.4.1)
     content_disposition (1.0.0)
     crack (0.4.5)
       rexml
@@ -561,6 +562,10 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     redcarpet (3.6.0)
+    redis (5.0.6)
+      redis-client (>= 0.9.0)
+    redis-client (0.14.1)
+      connection_pool
     regexp_parser (2.8.1)
     request_store (1.5.0)
       rack (>= 1.4)
@@ -893,6 +898,7 @@ DEPENDENCIES
   rails-i18n
   rake-progressbar
   redcarpet
+  redis
   rexml
   rqrcode
   rspec-rails
