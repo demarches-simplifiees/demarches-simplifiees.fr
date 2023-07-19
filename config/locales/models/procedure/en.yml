@@ -10,7 +10,7 @@ en:
           description: Describe in a few lines the context, the aim etc.
           description_target_audience: Describe in a few lines the final recipients of the process, the eligibility criteria if there are any, the prerequisites, etc.
           description_pj: Describe the required attachments list if there is any
-          lien_site_web: "This is the page of your website where the link will appear"
+          lien_site_web: "This is the page of your website where the link will appear. Ex: https://exemple.gouv.fr/page_about_my_procedure"
           cadre_juridique: "Exemple: 'https://www.legifrance.gouv.fr/'"
           old_procedure: This procedure replaces a close? If yes, please indicate the number of the replaced procedure
           procedure_path: "Complete the rest of the URL to personalize the public link. From 3 to 200 characters: lowercase letters, numbers and dashes only"
@@ -21,7 +21,6 @@ en:
         description_pj: Required attachments list
         description_pj_placeholder: If you leave this field blank and your form contains attachments, an automatically generated list will be displayed on the home page of your procedure.
         lien_site_web: Where will users find the link to the procedure?
-        lien_site_web_placeholder: https://exemple.gouv.fr/page_about_my_procedure
         old_procedure: Replaced procedure number
         procedure_path: Procedure link
         procedure_path_placeholder: procedure-name

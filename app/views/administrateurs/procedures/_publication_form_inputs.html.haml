@@ -31,8 +31,7 @@
   = text_field_tag(:lien_site_web, procedure.lien_site_web,
                     required: true,
                     class: 'fr-input',
-                    autocomplete: 'off',
-                    placeholder: t('activerecord.attributes.procedure.lien_site_web_placeholder'))
+                    autocomplete: 'off')
 
 - if closed_procedures.present?
   .fr-select-group
