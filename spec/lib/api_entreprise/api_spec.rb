@@ -81,6 +81,26 @@ describe APIEntreprise::API do
           expect(WebMock).to have_requested(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/unites_legales\/#{siren}/)
         end
       end
+
+      context 'with a service without siret' do
+        let(:procedure) { create(:procedure, :with_service) }
+        let(:dinum_siret) { "13002526500013" }
+        it 'send default recipient' do
+          ENV["API_ENTREPRISE_DEFAULT_SIRET"] = dinum_siret
+          procedure.service.siret = nil
+          procedure.service.save(validate: false)
+          subject
+          expect(WebMock).to have_requested(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/unites_legales\/#{siren}/).with(query: hash_including({ recipient: dinum_siret }))
+        end
+      end
+
+      context 'with a service with siret' do
+        let(:procedure) { create(:procedure, :with_service) }
+        it 'send default recipient' do
+          subject
+          expect(WebMock).to have_requested(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/unites_legales\/#{siren}/).with(query: hash_including({ recipient: procedure.service.siret }))
+        end
+      end
     end
   end
 
