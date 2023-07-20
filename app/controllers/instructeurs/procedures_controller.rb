@@ -14,9 +14,9 @@ module Instructeurs
         .includes(:defaut_groupe_instructeur)
         .order(closed_at: :desc, unpublished_at: :desc, published_at: :desc, created_at: :desc)
 
-      @procedures_publiees = paginated_published_procedures
-      @procedures_draft = paginated_draft_procedures
-      @procedures_closed = paginated_closed_procedures
+      @procedures_publiees = paginated_published_procedures.merge(@procedures)
+      @procedures_draft = paginated_draft_procedures.merge(@procedures)
+      @procedures_closed = paginated_closed_procedures.merge(@procedures)
       @procedures_publiees_count = current_instructeur.procedures.publiees.count
       @procedures_draft_count = current_instructeur.procedures.brouillons.count
       @procedures_closed_count = current_instructeur.procedures.closes.count
