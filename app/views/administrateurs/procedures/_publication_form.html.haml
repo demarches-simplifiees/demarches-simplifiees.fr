@@ -1,15 +1,44 @@
-.card.mb-4
-  %h2.card-title Publiez votre démarche
-  = form_tag admin_procedure_publish_path(procedure_id: procedure.id), method: :put, class: 'form' do
-    = render Procedure::PublicationWarningComponent.new(procedure: procedure)
-    .mt-2
-      - if procedure.draft_changed?
-        %p.mb-2 Publiez une nouvelle version de votre démarche. Les modifications suivantes seront appliquées :
-        = render Procedure::RevisionChangesComponent.new changes: procedure.revision_changes, previous_revision: procedure.published_revision
-        - if procedure.close?
-          = render partial: 'publication_form_inputs', locals: { procedure: procedure, closed_procedures: @closed_procedures }
-      - else
-        = render partial: 'publication_form_inputs', locals: { procedure: procedure, closed_procedures: @closed_procedures }
+= form_for procedure,
+  url: admin_procedure_publish_path(procedure_id: procedure.id),
+  method: :put,
+  html: { class: 'form' } do |f|
+  = render Procedure::PublicationWarningComponent.new(procedure: procedure)
+  .mt-2
+    - if procedure.draft_changed?
+      %p.mb-2= t('.draft_changed_procedure_alert')
+      = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
+        - c.body do
+          = render Procedure::RevisionChangesComponent.new changes: procedure.revision_changes, previous_revision: procedure.published_revision
+      - if procedure.close?
+        = render partial: 'publication_form_inputs', locals: { procedure: procedure, closed_procedures: @closed_procedures, form: f }
+    - elsif @procedure.brouillon? && @procedure.missing_steps.empty?
+      = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
+        - c.body do
+          %p
+            = t('.faq_test_alert')
+            = link_to t('.faq_test_alert_link'), t('.faq_test_alert_link_url'), **external_link_attributes
+      = render partial: 'publication_form_inputs', locals: { procedure: procedure, closed_procedures: @closed_procedures, form: f }
+      = render Dsfr::CalloutComponent.new(title: t('.dpd_title'), heading_level: 'h2') do |c|
+        - c.with_body do
+          %p.fr-mb-2w
+            = t('.dpd_part_1')
+            %a{ href:'https://www.cnil.fr/fr/protection-des-donnees-les-bons-reflexes', target:'_blank' }
+              https://www.cnil.fr/fr/protection-des-donnees-les-bons-reflexes
 
-    .flex.justify-end
-      = submit_tag procedure_publish_label(procedure, :submit), { disabled: procedure.errors.present?, class: "fr-btn fr-btn--primary", id: 'publish' }
+          %p.fr-mb-2w
+            = t('.dpd_part_2')
+
+          %p.fr-mb-2w
+            = t('.dpd_part_3')
+            %a{ href:'https://www.cnil.fr/fr/RGDP-le-registre-des-activites-de-traitement', target:'_blank' }
+              https://www.cnil.fr/fr/RGDP-le-registre-des-activites-de-traitement
+
+          %p.fr-mb-2w
+            = t('.dpd_part_4')
+
+    - else
+      = render partial: 'publication_form_inputs', locals: { procedure: procedure, closed_procedures: @closed_procedures, form: f }
+
+  %ul.fr-btns-group.fr-btns-group--inline-md.fr-btns-group--icon-left
+    = f.submit t('.submit'), { disabled: procedure.errors.present?, class: "fr-btn fr-btn--primary", id: 'publish' }
+    = link_to t('.back_to_procedure'), admin_procedure_path(id: @procedure), class: 'fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-arrow-go-back-line fr-ml-1w'

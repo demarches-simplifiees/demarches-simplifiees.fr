@@ -132,7 +132,7 @@
   %p.notice
     Le
     - value = @procedure.auto_archive_on ? @procedure.auto_archive_on - 1.day : nil
-    = f.date_field :auto_archive_on, id: 'auto_archive_on', value: value
+    = f.date_field :auto_archive_on, id: 'auto_archive_on', class: 'fr-input', value: value
     #{procedure_auto_archive_time(@procedure)}.
 
   = render Dsfr::CalloutComponent.new(title: "Démarche déclarative") do |c|
@@ -143,7 +143,7 @@
         Soit il passe immédiatement « en instruction » pour être traité soit il est immédiatement « accepté ».
 
   = f.label :declarative_with_state, 'Mentionnez l’état d’avancement (facultatif)', class: 'fr-label fr-mb-2w'
-  = f.select :declarative_with_state, Procedure.declarative_attributes_for_select, { include_blank: 'Non' }, class: 'form-control'
+  = f.select :declarative_with_state, Procedure.declarative_attributes_for_select, { include_blank: 'Non' }, class: 'fr-select'
 
   - if !@procedure.piece_justificative_multiple?
     .fr-checkbox-group

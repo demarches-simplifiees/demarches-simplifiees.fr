@@ -39,6 +39,9 @@
             = t('since', scope: [:layouts, :breadcrumb], number: @procedure.id, date: l(@procedure.published_at.to_date))
 
         - else
+          %p.fr-mb-1w
+            = t('more_info_on_test', scope: [:layouts, :breadcrumb])
+            = link_to t('go_to_FAQ', scope: [:layouts, :breadcrumb]), t("url_FAQ", scope: [:layouts, :breadcrumb]), title: new_tab_suffix(t('go_to_FAQ', scope: [:layouts, :breadcrumb])), **external_link_attributes
           .flex
             %span.fr-badge.fr-badge--new.fr-mr-1w
               = t('draft', scope: [:layouts, :breadcrumb])
