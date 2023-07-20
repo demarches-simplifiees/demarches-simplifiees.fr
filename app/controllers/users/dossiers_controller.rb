@@ -335,6 +335,7 @@ module Users
     end
 
     def recherche
+      @all_dossiers_uniq_procedures_count = 0
       @search_terms = params[:q]
       return redirect_to dossiers_path if @search_terms.blank?
 

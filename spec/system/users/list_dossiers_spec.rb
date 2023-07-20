@@ -50,9 +50,9 @@ describe 'user access to the list of their dossiers', js: true do
     let(:dossiers_per_page) { 2 }
 
     scenario 'the user can navigate through the other pages' do
-      expect(page).not_to have_content(dossier_en_instruction.procedure.libelle)
+      expect(page).not_to have_link(dossier_en_instruction.procedure.libelle)
       page.click_link("Suivant")
-      expect(page).to have_content(dossier_en_instruction.procedure.libelle)
+      expect(page).to have_link(dossier_en_instruction.procedure.libelle)
       expect(page).to have_text('5 en cours')
       expect(page).to have_text('2 traités')
     end
@@ -253,6 +253,18 @@ describe 'user access to the list of their dossiers', js: true do
           expect(page).to have_content(dossier_en_construction.id)
           expect(page).to have_content(dossier_with_champs.id)
         end
+      end
+    end
+  end
+
+  describe "filter by procedure" do
+    context "when dossiers are on different procedures" do
+      it "can filter by procedure" do
+        expect(page).to have_text('5 en cours')
+        expect(page).to have_text('2 traités')
+        expect(page).to have_select('procedure_id', selected: 'Toutes les démarches')
+        select dossier_brouillon.procedure.libelle, from: 'procedure_id'
+        expect(page).to have_text('1 en cours')
       end
     end
   end

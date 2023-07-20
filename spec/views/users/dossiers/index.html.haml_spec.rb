@@ -21,6 +21,7 @@ describe 'users/dossiers/index', type: :view do
     assign(:dossiers, Kaminari.paginate_array(user_dossiers).page(1))
     assign(:statut, statut)
     assign(:filter, filter)
+    assign(:all_dossiers_uniq_procedures_count, 0)
     render
   end
 
