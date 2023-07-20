@@ -17,10 +17,6 @@
                       pattern: '^[a-z0-9_-]{3,200}$',
                       autocomplete: 'off')
 
-= render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-4w') do |c|
-  - c.body do
-    = t('activerecord.attributes.procedure.procedure_path_alert', link: APPLICATION_NAME)
-
 .fr-input-group
   = label_tag :lien_site_web, class: 'fr-label' do
     = t('activerecord.attributes.procedure.lien_site_web')
