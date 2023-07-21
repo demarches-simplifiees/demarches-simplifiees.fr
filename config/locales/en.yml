@@ -172,12 +172,6 @@ en:
         password_message: "Enter a password"
         password_label: "Password"
         password_placeholder: "%{min_length} characters minimum"
-        password_hint: "A short phrase with punctuation can be a highly secure password."
-        password_min: "The password must be at least %{min_length} characters long."
-        simple_password: "Very vulnerable password."
-        easy_password: "Vulnerable password."
-        acceptable_password: "Acceptable password. You can proceed with validation... or improve your password."
-        great_password: "Congratulations ! Password is strong and secure."
     invites:
       dropdown:
         invite_to_edit: Invite someone to edit this file
@@ -596,6 +590,10 @@ en:
         title: Pick a password
         continue: Continue
   users:
+    activate:
+      new:
+        title: Pick a password
+        continue: Continue
     dossiers:
       test_procedure: "This file is submitted on a test procedure. Any modification of the procedure by the administrator (addition of a field, publication of the procedure, etc.) will result in the removal of the file."
       no_access: "You do not have access to this file"

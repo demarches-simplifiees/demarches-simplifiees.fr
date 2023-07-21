@@ -27,7 +27,7 @@ describe PasswordComplexityController, type: :controller do
 
       it 'renders Javascript that updates the password complexity meter' do
         subject
-        expect(response.body).to include('Mot de passe vulnérable')
+        expect(response.body).to include('Mot de passe acceptable')
       end
     end
   end

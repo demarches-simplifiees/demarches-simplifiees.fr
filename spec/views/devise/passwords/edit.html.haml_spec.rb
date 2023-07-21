@@ -18,9 +18,8 @@ describe 'devise/passwords/edit.html.haml', type: :view do
 
   it 'renders' do
     expect(rendered).to have_selector("input[id=user_password][data-turbo-input-url-value='#{show_password_complexity_path(complexity)}']")
-    expect(rendered).to have_selector('.explication')
-    expect(rendered).to have_selector('#complexity-bar')
-    expect(rendered).to have_selector('#complexity-label')
+    expect(rendered).to have_selector('#password_complexity')
+    expect(rendered).to have_selector('.fr-alert__title')
     expect(rendered).to have_selector('input[type=submit]')
   end
 end

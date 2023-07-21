@@ -6,13 +6,6 @@ class Users::ActivateController < ApplicationController
 
     if @user
       # the user activates its account from an email
-      @min_complexity = if @user&.administrateur
-        PASSWORD_COMPLEXITY_FOR_ADMIN
-      elsif @user&.instructeur
-        PASSWORD_COMPLEXITY_FOR_INSTRUCTEUR
-      else
-        PASSWORD_COMPLEXITY_FOR_USER
-      end
       trust_device(Time.zone.now)
     else
       flash.alert = "Le lien de validation du compte instructeur a expiré, #{helpers.contact_link('contactez-nous', tags: 'lien expiré')} pour obtenir un nouveau lien."

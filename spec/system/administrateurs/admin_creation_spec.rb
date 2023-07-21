@@ -21,13 +21,13 @@ describe 'As an administrateur', js: true do
     fill_in :user_password, with: weak_password
 
     expect(page).to have_text('Mot de passe très vulnérable')
-    expect(page).to have_button('Définir le mot de passe', disabled: true)
+    expect(page).to have_button('Continuer', disabled: true)
 
     fill_in :user_password, with: strong_password
     expect(page).to have_text('Mot de passe suffisamment fort et sécurisé')
-    expect(page).to have_button('Définir le mot de passe', disabled: false)
+    expect(page).to have_button('Continuer', disabled: false)
 
-    click_button 'Définir le mot de passe'
+    click_button 'Continuer'
 
     expect(page).to have_content 'Mot de passe enregistré'
 

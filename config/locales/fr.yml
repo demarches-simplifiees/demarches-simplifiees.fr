@@ -164,12 +164,6 @@ fr:
         password_label: "Mot de passe"
         password_message: "Inscrivez un mot de passe"
         password_placeholder: "%{min_length} caractères minimum"
-        password_hint: "Une courte phrase avec ponctuation peut être un mot de passe très sécurisé."
-        password_min: "Le mot de passe doit faire au moins %{min_length} caractères."
-        simple_password: "Mot de passe très vulnérable."
-        easy_password: "Mot de passe vulnérable."
-        acceptable_password: "Mot de passe acceptable. Vous pouvez valider... ou améliorer votre mot de passe."
-        great_password: "Félicitations ! Mot de passe suffisamment fort et sécurisé."
     invites:
       dropdown:
         invite_to_edit: Inviter une personne à modifier ce dossier
@@ -606,6 +600,10 @@ fr:
       one: Démarche
       other: Démarches
   users:
+    activate:
+      new:
+        title: Choix du mot de passe
+        continue: Continuer
     dossiers:
       test_procedure: "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l’administrateur (ajout d’un champ, publication de la démarche...) entraînera sa suppression."
       no_access: "Vous n’avez pas accès à ce dossier"

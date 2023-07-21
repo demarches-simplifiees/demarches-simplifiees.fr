@@ -231,7 +231,7 @@ describe 'The routing', js: true do
     expect(page).to have_content 'Choix du mot de passe'
 
     fill_in :user_password, with: password
-    click_button 'Définir le mot de passe'
+    click_button 'Continuer'
 
     expect(page).to have_text('Mot de passe enregistré')
   end
