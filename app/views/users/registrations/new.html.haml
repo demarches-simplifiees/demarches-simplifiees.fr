@@ -21,11 +21,15 @@
         .fr-fieldset__element= render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { autocomplete: 'email', autofocus: true })
 
         .fr-fieldset__element
-          = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field, min_complexity: PASSWORD_COMPLEXITY_FOR_USER, opts: { autocomplete: 'new-password', min_length: PASSWORD_MIN_LENGTH }) do |c|
+          - data_opts = { controller: resource.validate_password_complexity? ? 'turbo-input' : false, turbo_input_url_value: show_password_complexity_path(resource.min_password_complexity) }
+          = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field,
+              opts: { autofocus: 'true', autocomplete: 'new-password', minlength: PASSWORD_MIN_LENGTH, data: data_opts }) do |c|
             - c.describedby do
-              = render 'password_complexity/description'
-              -# #password-input-messages.fr-messages-group{ "aria-live" => "off" }
-              -# %p#password-input-message.fr-message= t('views.registrations.new.password_message')
-              -# %p#password-input-message-info.fr-message.fr-message--info= t('views.registrations.new.password_placeholder', min_length: PASSWORD_MIN_LENGTH)
+              - if resource.validate_password_complexity?
+                %div{ id: c.describedby_id }
+                  #password_complexity
+                    = render PasswordComplexityComponent.new
+              - else
+                = render partial: "devise/password_rules", locals: { id: c.describedby_id }
 
       = f.submit t('views.shared.account.create'), class: "fr-btn fr-btn--lg", id: "submit-password"

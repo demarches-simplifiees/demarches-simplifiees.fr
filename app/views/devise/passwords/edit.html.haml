@@ -3,25 +3,32 @@
 - content_for :footer do
   = render partial: 'root/footer'
 
-.container.devise-container
-  .one-column-centered
-    = devise_error_messages!
+.fr-container.fr-my-5w
+  .fr-grid-row.fr-grid-row--center
+    .fr-col-lg-6
+      = devise_error_messages!
 
-    - if populated_resource.present?
-      = form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :patch, class: 'form' }) do |f|
-
-        %h1 Changement de mot de passe
-
+      = form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :patch, class: '' }) do |f|
         = f.hidden_field :reset_password_token
 
-        = f.label 'Nouveau mot de passe'
-        = render 'password_complexity/field', { form: f, min_complexity: populated_resource.min_password_complexity }
 
-        = f.label 'Confirmez le nouveau mot de passe'
-        = f.password_field :password_confirmation, autocomplete: 'off'
+        %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'edit-password-legend' } }
+          %legend.fr-fieldset__legend#edit-password-legend
+            %h1.fr-h2= I18n.t('views.users.passwords.edit.subtitle')
 
-        = f.submit 'Changer le mot de passe', class: 'button large primary expand', id: "submit-password", data: { disable_with: "Envoi…" }
-    - else
-      %p
-        Ce lien n'est plus valable. Vous pouvez
-        = link_to 'redemander un nouveau mot de passe', new_password_path(resource_name)
+          .fr-fieldset__element
+            - data_opts = { controller: populated_resource.validate_password_complexity? ? 'turbo-input' : false, turbo_input_url_value: show_password_complexity_path(populated_resource.min_password_complexity) }
+            = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field,
+              opts: { autofocus: 'true', autocomplete: 'new-password', minlength: PASSWORD_MIN_LENGTH, data: data_opts }) do |c|
+              - c.describedby do
+                - if populated_resource.validate_password_complexity?
+                  %div{ id: c.describedby_id }
+                    #password_complexity
+                      = render PasswordComplexityComponent.new
+                - else
+                  = render partial: "devise/password_rules", locals: { id: c.describedby_id }
+
+          .fr-fieldset__element
+            = render Dsfr::InputComponent.new(form: f, attribute: :password_confirmation, input_type: :password_field, opts: { autocomplete: 'new-password' })
+
+        = f.submit t('views.users.passwords.edit.submit'), id: 'submit-password', class: "fr-btn fr-btn--lg fr-mt-2w", data: { disable_with: t('views.users.passwords.edit.submit_loading') }

@@ -1,4 +1,0 @@
-= form.password_field :password, autofocus: true, autocomplete: 'off', placeholder: t('views.registrations.new.password_placeholder', min_length: PASSWORD_MIN_LENGTH), data: { controller:  min_complexity.positive? ? 'turbo-input' : false, turbo_input_url_value: show_password_complexity_path(min_complexity) }
-
-- if min_complexity.positive?
-  = render 'password_complexity/description'
