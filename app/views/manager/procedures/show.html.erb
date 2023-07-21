@@ -41,6 +41,12 @@ as well as a link to its edit page.
       <%= link_to 'whitelister', whitelist_manager_procedure_path(procedure), method: :post, class: 'button' %>
     <% end %>
 
+    <% if procedure.hidden_as_template? %>
+      <%= link_to 'autoriser l\'affichage dans les modèles', unhide_as_template_manager_procedure_path(procedure), method: :post, class: 'button' %>
+    <% else %>
+      <%= link_to 'masquer l\'affichage dans les modèles', hide_as_template_manager_procedure_path(procedure), method: :post, class: 'button' %>
+    <% end %>
+
     <% if procedure.can_be_deleted_by_manager? %>
       <%= link_to 'Supprimer la démarche', discard_manager_procedure_path(procedure), method: :post, class: 'button', data: { confirm: "Confirmez-vous la suppression de la démarche ?" } %>
     <% elsif procedure.discarded? %>

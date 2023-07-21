@@ -15,6 +15,28 @@ describe Manager::ProceduresController, type: :controller do
     it { expect(procedure.whitelisted?).to be_truthy }
   end
 
+  describe '#hide_as_template' do
+    let(:procedure) { create(:procedure) }
+
+    before do
+      post :hide_as_template, params: { id: procedure.id }
+      procedure.reload
+    end
+
+    it { expect(procedure.hidden_as_template?).to be_truthy }
+  end
+
+  describe '#unhide_as_template' do
+    let(:procedure) { create(:procedure) }
+
+    before do
+      post :unhide_as_template, params: { id: procedure.id }
+      procedure.reload
+    end
+
+    it { expect(procedure.hidden_as_template?).to be_falsey }
+  end
+
   describe '#show' do
     render_views
 
@@ -25,6 +47,7 @@ describe Manager::ProceduresController, type: :controller do
     end
 
     it { expect(response.body).to include('sub type de champ') }
+    it { expect(response.body).to include('Hidden At As Template') }
   end
 
   describe '#discard' do

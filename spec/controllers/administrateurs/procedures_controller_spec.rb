@@ -172,6 +172,19 @@ describe Administrateurs::ProceduresController, type: :controller do
       end
     end
 
+    context 'only_not_hidden_as_template' do
+      let!(:procedure1) { create(:procedure, :published) }
+      let!(:procedure2) { create(:procedure, :published, hidden_at_as_template: Time.zone.now) }
+      let!(:procedure3) { create(:procedure, :published) }
+
+      it 'display only procedures which are not hidden as template' do
+        get :all
+        expect(assigns(:procedures).any? { |p| p.id == procedure1.id }).to be_truthy
+        expect(assigns(:procedures).any? { |p| p.id == procedure2.id }).to be_falsey
+        expect(assigns(:procedures).any? { |p| p.id == procedure3.id }).to be_truthy
+      end
+    end
+
     context 'with specific service' do
       let(:requested_siret) { '13001501900024' }
       let(:another_siret) { '11000004900012' }
@@ -233,6 +246,7 @@ describe Administrateurs::ProceduresController, type: :controller do
   describe 'GET #administrateurs' do
     let!(:draft_procedure)     { create(:procedure, administrateur: admin3) }
     let!(:published_procedure) { create(:procedure_with_dossiers, :published, dossiers_count: 2, administrateur: admin1) }
+    let!(:antoher_published_procedure_for_admin1) { create(:procedure_with_dossiers, :published, dossiers_count: 2, administrateur: admin1) }
     let!(:antoher_published_procedure) { create(:procedure_with_dossiers, :published, dossiers_count: 2, administrateur: admin4) }
     let!(:closed_procedure) { create(:procedure, :closed, administrateur: admin2) }
     let(:admin1) { create(:administrateur, email: 'jesuis.surmene@education.gouv.fr') }
@@ -255,6 +269,24 @@ describe Administrateurs::ProceduresController, type: :controller do
         expect(assigns(:admins)).to include(admin2)
         expect(assigns(:admins)).not_to include(admin3)
         expect(assigns(:admins)).not_to include(admin4)
+      end
+    end
+
+    context 'only_not_hidden_as_template' do
+      before do
+        published_procedure.update(hidden_at_as_template: Time.zone.now)
+        closed_procedure.update(hidden_at_as_template: Time.zone.now)
+        antoher_published_procedure.update(hidden_at_as_template: Time.zone.now)
+      end
+
+      it 'displays admins of the procedures' do
+        get :administrateurs
+        expect(assigns(:admins)).to include(admin1)
+        expect(assigns(:admins)).not_to include(admin2)
+        expect(assigns(:admins)).not_to include(admin4)
+        expect(assigns(:admins)).not_to include(admin3)
+        expect(assigns(:admins)[0].procedures).not_to include(published_procedure)
+        expect(assigns(:admins)[0].procedures).to include(antoher_published_procedure_for_admin1)
       end
     end
   end
@@ -306,6 +338,7 @@ describe Administrateurs::ProceduresController, type: :controller do
 
     describe 'searching' do
       let!(:matching_procedure) { create(:procedure_with_dossiers, :published, dossiers_count: 2, libelle: 'éléctriCITE') }
+      let!(:unmatching_procedure_cause_hidden_as_template) { create(:procedure_with_dossiers, :published, dossiers_count: 2, libelle: 'éléctriCITE', hidden_at_as_template: Time.zone.now) }
       let!(:unmatching_procedure) { create(:procedure_with_dossiers, :published, dossiers_count: 2, libelle: 'temoin') }
 
       let(:query) { 'ELECTRIcité' }
@@ -313,6 +346,11 @@ describe Administrateurs::ProceduresController, type: :controller do
       it 'is case insentivite and unaccented' do
         expect(response_procedures).to include(matching_procedure)
         expect(response_procedures).not_to include(unmatching_procedure)
+      end
+
+      it 'hide procedure if it is hidden as template' do
+        expect(response_procedures).to include(matching_procedure)
+        expect(response_procedures).not_to include(unmatching_procedure_cause_hidden_as_template)
       end
     end
   end

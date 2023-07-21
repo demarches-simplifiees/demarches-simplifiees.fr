@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_18_113920) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_14_091648) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -754,6 +754,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_18_113920) do
     t.boolean "experts_require_administrateur_invitation", default: false
     t.boolean "for_individual", default: false
     t.datetime "hidden_at", precision: 6
+    t.datetime "hidden_at_as_template", precision: 6
     t.boolean "instructeurs_self_management_enabled"
     t.boolean "juridique_required", default: true
     t.string "libelle"
