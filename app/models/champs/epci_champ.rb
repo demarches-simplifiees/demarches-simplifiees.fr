@@ -24,9 +24,9 @@ class Champs::EpciChamp < Champs::TextChamp
   store_accessor :value_json, :code_departement
   before_validation :on_departement_change
 
-  validate :code_departement_in_departement_codes, unless: -> { code_departement.nil? }
-  validate :external_id_in_departement_epci_codes, unless: -> { code_departement.nil? || external_id.nil? }
-  validate :value_in_departement_epci_names, unless: -> { code_departement.nil? || external_id.nil? || value.nil? }
+  validate :code_departement_in_departement_codes, unless: -> { code_departement.blank? }
+  validate :external_id_in_departement_epci_codes, unless: -> { code_departement.blank? || external_id.nil? }
+  validate :value_in_departement_epci_names, unless: -> { code_departement.blank? || external_id.nil? || value.nil? }
 
   def for_export
     [value, code, "#{code_departement} – #{departement_name}"]
