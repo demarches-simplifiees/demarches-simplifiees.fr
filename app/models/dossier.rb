@@ -229,8 +229,8 @@ class Dossier < ApplicationRecord
   scope :for_procedure_preview, -> { where(for_procedure_preview: true) }
   scope :for_editing_fork, -> { where.not(editing_fork_origin_id: nil) }
   scope :for_groupe_instructeur, -> (groupe_instructeurs) { where(groupe_instructeur: groupe_instructeurs) }
-  scope :order_by_updated_at,            -> (order = :desc) { order(updated_at: order) }
-  scope :order_by_created_at,            -> (order = :asc) { order(depose_at: order, created_at: order, id: order) }
+  scope :order_by_updated_at,            -> (order = :desc) { order(updated_at: order, id: order) }
+  scope :order_by_created_at,            -> (order = :asc) { order(depose_at: order, id: order) }
   scope :updated_since,                  -> (since) { where('dossiers.updated_at >= ?', since) }
   scope :created_since,                  -> (since) { where('dossiers.depose_at >= ?', since) }
   scope :hidden_by_user_since,           -> (since) { where('dossiers.hidden_by_user_at IS NOT NULL AND dossiers.hidden_by_user_at >= ?', since) }

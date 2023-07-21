@@ -35,7 +35,7 @@ module Types
     field :service, Types::ServiceType, null: true
 
     field :dossiers, Types::DossierType.connection_type, "Liste de tous les dossiers d’une démarche.", null: false, extras: [:lookahead] do
-      argument :order, Types::Order, default_value: :asc, required: false, description: "L’ordre des dossiers."
+      argument :order, Types::Order, default_value: :asc, required: false, description: "L’ordre des dossiers.", deprecation_reason: 'Utilisez l’argument `last` à la place.'
       argument :created_since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers déposés depuis la date."
       argument :updated_since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers mis à jour depuis la date."
       argument :state, Types::DossierType::DossierState, required: false, description: "Dossiers avec statut."
@@ -46,11 +46,11 @@ module Types
     end
 
     field :deleted_dossiers, Types::DeletedDossierType.connection_type, "Liste de tous les dossiers supprimés d’une démarche.", null: false do
-      argument :order, Types::Order, default_value: :asc, required: false, description: "L’ordre des dossiers supprimés."
+      argument :order, Types::Order, default_value: :asc, required: false, description: "L’ordre des dossiers supprimés.", deprecation_reason: 'Utilisez l’argument `last` à la place.'
       argument :deleted_since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers supprimés depuis la date."
     end
     field :pending_deleted_dossiers, Types::DeletedDossierType.connection_type, "Liste de tous les dossiers en attente de suppression définitive d’une démarche.", null: false do
-      argument :order, Types::Order, default_value: :asc, required: false, description: "L’ordre des dossiers en attente de suppression."
+      argument :order, Types::Order, default_value: :asc, required: false, description: "L’ordre des dossiers en attente de suppression.", deprecation_reason: 'Utilisez l’argument `last` à la place.'
       argument :deleted_since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers en attente de suppression depuis la date."
     end
 
@@ -111,20 +111,18 @@ module Types
       end
 
       if updated_since.present?
-        dossiers = dossiers.updated_since(updated_since).order_by_updated_at(order)
+        dossiers = dossiers.updated_since(updated_since)
       else
         if created_since.present?
           dossiers = dossiers.created_since(created_since)
         end
-
-        dossiers = dossiers.order_by_created_at(order)
       end
 
       # We wrap dossiers in a custom connection alongsite the lookahead for the query.
       # The custom connection is responsible for preloading paginated dossiers.
       # https://graphql-ruby.org/pagination/custom_connections.html#using-a-custom-connection
       # https://graphql-ruby.org/queries/lookahead.html
-      Connections::DossiersConnection.new(dossiers, lookahead: lookahead)
+      Connections::DossiersConnection.new(dossiers, lookahead: lookahead, deprecated_order: order)
     end
 
     def deleted_dossiers(deleted_since: nil, order:)
@@ -134,7 +132,7 @@ module Types
         dossiers = dossiers.deleted_since(deleted_since)
       end
 
-      dossiers.order(deleted_at: order)
+      Connections::DeletedDossiersConnection.new(dossiers, deprecated_order: order)
     end
 
     def pending_deleted_dossiers(deleted_since: nil, order:)
@@ -144,19 +142,7 @@ module Types
         dossiers = dossiers.hidden_since(deleted_since)
       end
 
-      dossiers_table = Dossier.arel_table
-      case_statement = dossiers_table[:state]
-        .when(:en_construction)
-        .then(dossiers_table[:hidden_by_user_at])
-        .else(dossiers_table[:hidden_by_administration_at])
-
-      dossiers = dossiers.order(case_statement)
-
-      if order == :desc
-        dossiers = dossiers.reverse_order
-      end
-
-      dossiers
+      Connections::PendingDeletedDossiersConnection.new(dossiers, deprecated_order: order)
     end
 
     def champ_descriptors
