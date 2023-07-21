@@ -6,14 +6,19 @@ module Mutations
     argument :instructeur_id, ID, required: true, loads: Types::ProfileType
     argument :body, String, required: true
     argument :attachment, ID, required: false
+    argument :correction, Types::CorrectionType::CorrectionReason, 'Préciser qu’il s’agit d’une demande de correction. Le dossier repasssera en construction.', required: false
 
     field :message, Types::MessageType, null: true
     field :errors, [Types::ValidationErrorType], null: true
 
-    def resolve(dossier:, instructeur:, body:, attachment: nil)
+    def resolve(dossier:, instructeur:, body:, attachment: nil, correction: nil)
       message = CommentaireService.create(instructeur, dossier, body: body, piece_jointe: attachment)
 
       if message.errors.empty?
+        if correction
+          dossier.flag_as_pending_correction!(message, correction)
+        end
+
         { message: }
       else
         { errors: message.errors.full_messages }

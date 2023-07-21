@@ -233,21 +233,21 @@ RSpec.describe DossierMailer, type: :mailer do
     let(:procedure) { create(:procedure) }
     let(:dossier) { create(:dossier, :en_construction, procedure:, sva_svr_decision_on:) }
     let(:sva_svr_decision_on) { nil }
-    let(:kind) { :correction }
+    let(:reason) { :incorrect }
     let(:commentaire) { create(:commentaire, dossier:) }
 
     subject {
-      dossier.flag_as_pending_correction!(commentaire, kind)
+      dossier.flag_as_pending_correction!(commentaire, reason)
       described_class.with(commentaire:).notify_pending_correction
     }
 
-    context 'kind is correction' do
+    context 'reason is incorrect' do
       it { expect(subject.subject).to eq("Vous devez corriger votre dossier nº #{dossier.id} « #{dossier.procedure.libelle} »") }
       it { expect(subject.body).to include("apporter des corrections") }
       it { expect(subject.body).not_to include("Silence") }
     end
 
-    context 'sva with kind is correction' do
+    context 'sva with reason is incorrect' do
       let(:sva_svr_decision_on) { Date.tomorrow }
       let(:procedure) { create(:procedure, :sva) }
 
@@ -257,9 +257,9 @@ RSpec.describe DossierMailer, type: :mailer do
       it { expect(subject.body).to include("suspendu") }
     end
 
-    context 'sva with kind is incomplete' do
+    context 'sva with reason is incomplete' do
       let(:sva_svr_decision_on) { Date.tomorrow }
-      let(:kind) { :incomplete }
+      let(:reason) { :incomplete }
       let(:procedure) { create(:procedure, :sva) }
 
       it { expect(subject.body).to include("compléter") }
@@ -267,9 +267,9 @@ RSpec.describe DossierMailer, type: :mailer do
       it { expect(subject.body).to include("réinitialisé") }
     end
 
-    context 'svr with kind is incomplete' do
+    context 'svr with reason is incomplete' do
       let(:sva_svr_decision_on) { Date.tomorrow }
-      let(:kind) { :incomplete }
+      let(:reason) { :incomplete }
       let(:procedure) { create(:procedure, :svr) }
 
       it { expect(subject.body).to include("compléter") }
