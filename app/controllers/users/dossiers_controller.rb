@@ -21,15 +21,15 @@ module Users
 
     def index
       dossiers = Dossier.includes(:procedure).order_by_updated_at
-      dossiers_visibles = dossiers.visible_by_user
-      @all_dossiers = dossiers_visibles + current_user.deleted_dossiers
+      @all_dossiers = dossiers.visible_by_user + current_user.deleted_dossiers
       @all_dossiers_uniq_procedures_count = @all_dossiers.map(&:procedure).pluck(:id).uniq.count
       @procedure_id = params[:procedure_id]
 
       if @procedure_id.present?
         dossiers = dossiers.where(procedures: { id: @procedure_id })
-        dossiers_visibles = dossiers.visible_by_user
       end
+
+      dossiers_visibles = dossiers.visible_by_user
 
       @user_dossiers = current_user.dossiers.state_not_termine.merge(dossiers_visibles)
       @dossiers_traites = current_user.dossiers.state_termine.merge(dossiers_visibles)
