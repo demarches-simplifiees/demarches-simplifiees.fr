@@ -226,14 +226,10 @@ module Users
       errors = submit_dossier_and_compute_errors
 
       if errors.blank?
+        pending_correction_confirm = cast_bool(params.dig(:dossier, :pending_correction_confirm))
         editing_fork_origin = @dossier.editing_fork_origin
         editing_fork_origin.merge_fork(@dossier)
-        RoutingEngine.compute(editing_fork_origin)
-
-        if cast_bool(params.dig(:dossier, :pending_correction_confirm))
-          editing_fork_origin.resolve_pending_correction!
-          editing_fork_origin.process_sva_svr!
-        end
+        editing_fork_origin.submit_en_construction!(pending_correction_confirm:)
 
         redirect_to dossier_path(editing_fork_origin)
       else
