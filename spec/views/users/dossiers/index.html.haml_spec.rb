@@ -67,6 +67,36 @@ describe 'users/dossiers/index', type: :view do
     end
   end
 
+  context 'quand le dossier a été supprimé' do
+    let(:dossiers_supprimes_definitivement) { create(:deleted_dossier, user_id: user.id) }
+    
+    before do
+      assign(:dossiers, Kaminari.paginate_array([dossiers_supprimes_definitivement]).page(1))
+      assign(:statut, 'dossiers-supprimes-definitivement')
+      render
+    end
+
+    it 'affiche les informations des dossiers' do
+      dossier = dossiers_supprimes_definitivement
+      expect(rendered).to have_text(dossiers_supprimes_definitivement.dossier_id.to_s)
+      expect(rendered).to have_text(dossiers_supprimes_definitivement.procedure.libelle)
+      expect(rendered).to have_text(I18n.t(dossiers_supprimes_definitivement.reason, scope: 'activerecord.attributes.deleted_dossier.reason'))
+    end
+
+    context 'quand la procédure a été supprimée' do
+      before do
+        dossiers_supprimes_definitivement.procedure.discard_and_keep_track!(dossiers_supprimes_definitivement.procedure.administrateurs.first)
+        render
+      end
+      it 'affiche les informations des dossiers et ne déclenche pas d\'exception' do
+        dossier = dossiers_supprimes_definitivement
+        expect(rendered).to have_text(dossiers_supprimes_definitivement.dossier_id.to_s)
+        expect(rendered).to have_text(dossiers_supprimes_definitivement.procedure.libelle)
+        expect(rendered).to have_text(I18n.t(dossiers_supprimes_definitivement.reason, scope: 'activerecord.attributes.deleted_dossier.reason'))
+      end
+    end
+  end
+
   context 'quand il n’y a pas de dossiers invités' do
     let(:dossiers_invites) { [] }
 
