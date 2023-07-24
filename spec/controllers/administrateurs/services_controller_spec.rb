@@ -177,5 +177,16 @@ describe Administrateurs::ServicesController, type: :controller do
         expect(flash.alert.last).to include(service.nom)
       end
     end
+
+    context 'when admin has procedure without service' do
+      let(:procedure) { create(:procedure, :published, service: nil, administrateur: admin) }
+
+      it 'display alert' do
+        get :index, params: { procedure_id: procedure.id }
+        expect(procedure.service).to be nil
+        expect(flash.alert.first).to eq "Certaines de vos demarches n'ont pas de service associé."
+        expect(flash.alert.last).to include "procédure #{procedure.id}"
+      end
+    end
   end
 end
