@@ -120,6 +120,10 @@ class Dossier < ApplicationRecord
         processed_at: processed_at)
     end
 
+    def submit_en_construction(processed_at: Time.zone.now)
+      build(state: Dossier.states.fetch(:en_construction), processed_at:)
+    end
+
     def passer_en_instruction(instructeur: nil, processed_at: Time.zone.now)
       build(state: Dossier.states.fetch(:en_instruction),
         instructeur_email: instructeur&.email,
@@ -906,6 +910,18 @@ class Dossier < ApplicationRecord
     NotificationMailer.send_en_construction_notification(self).deliver_later
     procedure.compute_dossiers_count
     RoutingEngine.compute(self)
+  end
+
+  def submit_en_construction!(pending_correction_confirm: false)
+    self.traitements.submit_en_construction
+    save!
+
+    RoutingEngine.compute(self)
+
+    if pending_correction_confirm
+      resolve_pending_correction!
+      process_sva_svr!
+    end
   end
 
   def after_passer_en_instruction(h)
