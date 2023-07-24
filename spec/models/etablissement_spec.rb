@@ -36,6 +36,30 @@ describe Etablissement do
     end
   end
 
+  describe '#entreprise_raison_sociale' do
+    subject { etablissement.entreprise_raison_sociale }
+
+    context "with nom and prenom" do
+      context "without raison sociale" do
+        let(:etablissement) { create(:etablissement, entreprise_raison_sociale: nil, entreprise_prenom: "Stef", entreprise_nom: "Sanseverino") }
+
+        it { is_expected.to eq "Sanseverino Stef" }
+      end
+
+      context "with raison sociale" do
+        let(:etablissement) { create(:etablissement, entreprise_raison_sociale: "Sansev Prod", entreprise_prenom: "Stef", entreprise_nom: "Sanseverino") }
+
+        it { is_expected.to eq "Sansev Prod" }
+      end
+    end
+
+    context "without nom and prenom" do
+      let(:etablissement) { create(:etablissement, entreprise_raison_sociale: "ENGIE", entreprise_prenom: nil, entreprise_nom: nil) }
+
+      it { is_expected.to eq "ENGIE" }
+    end
+  end
+
   describe '.entreprise_bilans_bdf_to_csv' do
     let(:etablissement) { build(:etablissement, entreprise_bilans_bdf: bilans) }
     let(:ordered_headers) {

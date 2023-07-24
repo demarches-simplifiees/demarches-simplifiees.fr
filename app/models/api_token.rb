@@ -70,7 +70,7 @@ class APIToken < ApplicationRecord
     end
 
     def find_and_verify(maybe_packed_token, administrateurs = [])
-      case unpack(maybe_packed_token)
+      token = case unpack(maybe_packed_token)
       in { plain_token:, id: } # token v3
         find_by(id:, version: 3)&.then(&ensure_valid_token(plain_token))
       in { plain_token:, administrateur_id: } # token v2
@@ -80,6 +80,16 @@ class APIToken < ApplicationRecord
         find_by(administrateur_id:, version: 2)&.then(&ensure_valid_token(plain_token))
       in { plain_token: } # token v1
         where(administrateur: administrateurs, version: 1).find(&ensure_valid_token(plain_token))
+      end
+
+      # TODO:
+      # remove all the not v3 version code
+      # when everyone has migrated
+      # it should also be a good place in case we need to feature flag old token use
+      if token&.version == 3 || Rails.env.test?
+        token
+      else
+        nil
       end
     end
 

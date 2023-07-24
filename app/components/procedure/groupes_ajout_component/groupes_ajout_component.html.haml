@@ -2,8 +2,7 @@
 %h1 Ajout de groupes d'instructeurs
 
 = render partial: 'administrateurs/groupe_instructeurs/import_export',
-    locals: { procedure: @procedure,
-    groupe_instructeurs: @groupe_instructeurs }
+    locals: { procedure: @procedure }
 
 %section
   = form_for :groupe_instructeur,

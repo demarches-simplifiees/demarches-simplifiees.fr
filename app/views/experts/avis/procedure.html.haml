@@ -3,13 +3,13 @@
 
 #procedure-show
   .sub-header
-    .container.flex
+    .fr-container.flex
 
       .procedure-logo{ style: "background-image: url(#{@procedure.logo_url})",
         role: 'img', 'aria-label': "logo de la démarche #{@procedure.libelle}" }
 
       .procedure-header
-        %h1= procedure_libelle @procedure
+        %h1.fr-h3= procedure_libelle @procedure
 
         %nav.tabs
           %ul
@@ -24,7 +24,7 @@
               active: @statut == Instructeurs::AvisController::DONNES_STATUS,
               badge: @avis_donnes.count)
 
-.container
+.fr-container
   - if @avis.present?
     %table.table.dossiers-table.hoverable
       %thead

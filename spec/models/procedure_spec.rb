@@ -401,6 +401,55 @@ describe Procedure do
         end
       end
     end
+
+    context 'with sva svr' do
+      before {
+        procedure.sva_svr["decision"] = "svr"
+      }
+
+      context 'when procedure is published with sva' do
+        let(:procedure) { create(:procedure, :published, :sva) }
+
+        it 'prevents changes to sva_svr' do
+          expect(procedure).not_to be_valid
+          expect(procedure.errors[:sva_svr].join).to include('ne peut plus être modifiée')
+        end
+      end
+
+      context 'when procedure is published without sva' do
+        let(:procedure) { create(:procedure, :published) }
+
+        it 'allow activation' do
+          expect(procedure).to be_valid
+        end
+
+        it 'allow activation from disabled value' do
+          procedure.sva_svr["decision"] = "disabled"
+          procedure.save!
+
+          procedure.sva_svr["decision"] = "svr"
+
+          expect(procedure).to be_valid
+        end
+      end
+
+      context 'brouillon procedure' do
+        let(:procedure) { create(:procedure, :sva) }
+
+        it "can update sva config" do
+          expect(procedure).to be_valid
+        end
+      end
+
+      context "with declarative" do
+        let(:procedure) { create(:procedure, declarative_with_state: "accepte") }
+
+        it 'is not valid' do
+          expect(procedure).not_to be_valid
+          expect(procedure.errors[:sva_svr].join).to include('incompatible avec une démarche déclarative')
+        end
+      end
+    end
   end
 
   describe 'opendata' do
@@ -1019,7 +1068,7 @@ describe Procedure do
 
         procedure.reset_draft_revision!
 
-        expect { published_tdc.reload }.not_to raise_error(ActiveRecord::RecordNotFound)
+        expect { published_tdc.reload }.not_to raise_error
         expect { draft_tdc.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
@@ -1524,6 +1573,69 @@ describe Procedure do
           end
         end
       end
+    end
+  end
+
+  describe 'lien_notice' do
+    let(:procedure) { build(:procedure, lien_notice:) }
+
+    context 'when empty' do
+      let(:lien_notice) { '' }
+      it { expect(procedure.valid?).to be_truthy }
+    end
+
+    context 'when valid link' do
+      let(:lien_notice) { 'https://www.demarches-simplifiees.fr' }
+      it { expect(procedure.valid?).to be_truthy }
+    end
+
+    context 'when valid link with accents' do
+      let(:lien_notice) { 'https://www.démarches-simplifiées.fr' }
+      it { expect(procedure.valid?).to be_truthy }
+    end
+
+    context 'when not a valid link' do
+      let(:lien_notice) { 'www.démarches-simplifiées.fr' }
+      it { expect(procedure.valid?).to be_falsey }
+    end
+
+    context 'when an email' do
+      let(:lien_notice) { 'test@demarches-simplifiees.fr' }
+      it { expect(procedure.valid?).to be_falsey }
+    end
+  end
+
+  describe 'lien_dpo' do
+    let(:procedure) { build(:procedure, lien_dpo:) }
+
+    context 'when empty' do
+      let(:lien_dpo) { '' }
+      it { expect(procedure.valid?).to be_truthy }
+    end
+
+    context 'when valid link' do
+      let(:lien_dpo) { 'https://www.demarches-simplifiees.fr' }
+      it { expect(procedure.valid?).to be_truthy }
+    end
+
+    context 'when valid link with accents' do
+      let(:lien_dpo) { 'https://www.démarches-simplifiées.fr' }
+      it { expect(procedure.valid?).to be_truthy }
+    end
+
+    context 'when valid email' do
+      let(:lien_dpo) { 'test@demarches-simplifiees.fr' }
+      it { expect(procedure.valid?).to be_truthy }
+    end
+
+    context 'when valid email with accents' do
+      let(:lien_dpo) { 'test@démarches-simplifiées.fr' }
+      it { expect(procedure.valid?).to be_truthy }
+    end
+
+    context 'when not a valid link' do
+      let(:lien_dpo) { 'www.démarches-simplifiées.fr' }
+      it { expect(procedure.valid?).to be_falsey }
     end
   end
 

@@ -1,0 +1,14 @@
+---
+ en:
+  no_sva: Submitted before SVA
+  no_svr: Submitted before SVR
+  in_days:
+    zero: Today
+    one: Tomorrow
+    other: in %{count} days
+  remaining_days_after_correction:
+    other: "%{count} d. after correction"
+    dossier_terminated_x_days_after_correction:
+      one: "The file will be automatically processed %{count} day after the applicant has re-submitted his file"
+      other: "The file will be automatically processed %{count} days after the applicant has re-submitted his file"
+    dossier_terminated_on: "The file will be automatically processed on %{date}"

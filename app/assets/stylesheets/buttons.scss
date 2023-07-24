@@ -183,7 +183,7 @@
   text-align: left;
   top: 5 * $default-spacer;
   cursor: default;
-  z-index: 10;
+  z-index: 11;
   list-style: none;
 
   a {
@@ -218,6 +218,8 @@
 ul.dropdown-items {
   padding-inline-start: 0;
   list-style: none;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .dropdown-items {

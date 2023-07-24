@@ -6,11 +6,11 @@ module Users
     layout 'procedure_context', only: [:identite, :update_identite, :siret, :update_siret]
 
     ACTIONS_ALLOWED_TO_ANY_USER = [:index, :recherche, :new, :transferer_all]
-    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :destroy, :demande, :messagerie, :brouillon, :submit_brouillon, :submit_en_construction, :modifier, :modifier_legacy, :update, :create_commentaire, :papertrail, :restore]
+    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :destroy, :demande, :messagerie, :brouillon, :submit_brouillon, :submit_en_construction, :modifier, :modifier_legacy, :update, :create_commentaire, :papertrail, :restore, :champ]
 
     before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
     before_action :ensure_ownership_or_invitation!, only: ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
-    before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_siret, :brouillon, :submit_brouillon, :submit_en_construction, :modifier, :modifier_legacy, :update]
+    before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_siret, :brouillon, :submit_brouillon, :submit_en_construction, :modifier, :modifier_legacy, :update, :champ]
     before_action :ensure_dossier_can_be_filled, only: [:brouillon, :modifier, :submit_brouillon, :submit_en_construction, :update]
     before_action :ensure_dossier_can_be_viewed, only: [:show]
     before_action :forbid_invite_submission!, only: [:submit_brouillon]
@@ -28,9 +28,9 @@ module Users
       @dossiers_invites = current_user.dossiers_invites.merge(dossiers_visibles)
       @dossiers_supprimes_recemment = current_user.dossiers.hidden_by_user.merge(dossiers)
       @dossiers_supprimes_definitivement = current_user.deleted_dossiers.includes(:procedure).order_by_updated_at
-      @dossier_transfers = DossierTransfer.for_email(current_user.email)
+      @dossier_transferes = dossiers_visibles.where(dossier_transfer_id: DossierTransfer.for_email(current_user.email).ids)
       @dossiers_close_to_expiration = current_user.dossiers.close_to_expiration.merge(dossiers_visibles)
-      @statut = statut(@user_dossiers, @dossiers_traites, @dossiers_invites, @dossiers_supprimes_recemment, @dossiers_supprimes_definitivement, @dossier_transfers, @dossiers_close_to_expiration, params[:statut])
+      @statut = statut(@user_dossiers, @dossiers_traites, @dossiers_invites, @dossiers_supprimes_recemment, @dossiers_supprimes_definitivement, @dossier_transferes, @dossiers_close_to_expiration, params[:statut])
 
       @dossiers = case @statut
       when 'en-cours'
@@ -44,7 +44,7 @@ module Users
       when 'dossiers-supprimes-definitivement'
         @dossiers_supprimes_definitivement
       when 'dossiers-transferes'
-        @dossier_transfers
+        @dossier_transferes
       when 'dossiers-expirant'
         @dossiers_close_to_expiration
       end.page(page)
@@ -103,7 +103,11 @@ module Users
         @dossier.update!(autorisation_donnees: true, identity_updated_at: Time.zone.now)
         flash.notice = t('.identity_saved')
 
-        redirect_to brouillon_dossier_path(@dossier)
+        if dossier.en_construction?
+          redirect_to demande_dossier_path(@dossier)
+        else
+          redirect_to brouillon_dossier_path(@dossier)
+        end
       else
         flash.now.alert = @dossier.individual.errors.full_messages
         render :identite
@@ -181,11 +185,10 @@ module Users
       if errors.blank?
         @dossier.passer_en_construction!
         @dossier.process_declarative!
-        NotificationMailer.send_en_construction_notification(@dossier).deliver_later
+        @dossier.process_sva_svr!
         @dossier.groupe_instructeur.instructeurs.with_instant_email_dossier_notifications.each do |instructeur|
           DossierMailer.notify_new_dossier_depose_to_instructeur(@dossier, instructeur.email).deliver_later
         end
-
         redirect_to merci_dossier_path(@dossier)
       else
         flash.now.alert = errors
@@ -229,6 +232,7 @@ module Users
 
         if cast_bool(params.dig(:dossier, :pending_correction_confirm))
           editing_fork_origin.resolve_pending_correction!
+          editing_fork_origin.process_sva_svr!
         end
 
         redirect_to dossier_path(editing_fork_origin)
@@ -268,6 +272,20 @@ module Users
 
     def merci
       @dossier = current_user.dossiers.includes(:procedure).find(params[:id])
+    end
+
+    def champ
+      @dossier = dossier_with_champs(pj_template: false)
+      champ = @dossier.champs_public_all.find(params[:champ_id])
+
+      respond_to do |format|
+        format.turbo_stream do
+          @to_show, @to_hide = []
+          @to_update = [champ]
+
+          render :update, layout: false
+        end
+      end
     end
 
     def create_commentaire
@@ -388,14 +406,14 @@ module Users
     # if the status tab is filled, then this tab
     # else first filled tab
     # else en-cours
-    def statut(mes_dossiers, dossiers_traites, dossiers_invites, dossiers_supprimes_recemment, dossiers_supprimes_definitivement, dossier_transfers, dossiers_close_to_expiration, params_statut)
+    def statut(mes_dossiers, dossiers_traites, dossiers_invites, dossiers_supprimes_recemment, dossiers_supprimes_definitivement, dossier_transferes, dossiers_close_to_expiration, params_statut)
       tabs = {
         'en-cours' => mes_dossiers.present?,
         'traites' => dossiers_traites.present?,
         'dossiers-invites' => dossiers_invites.present?,
         'dossiers-supprimes-recemment' => dossiers_supprimes_recemment.present?,
         'dossiers-supprimes-definitivement' => dossiers_supprimes_definitivement.present?,
-        'dossiers-transferes' => dossier_transfers.present?,
+        'dossiers-transferes' => dossier_transferes.present?,
         'dossiers-expirant' => dossiers_close_to_expiration.present?
       }
       if tabs[params_statut]
@@ -432,8 +450,10 @@ module Users
     def ensure_dossier_can_be_filled
       if !dossier.autorisation_donnees
         if dossier.procedure.for_individual
+          flash.alert = t('users.dossiers.fill_identity.individual')
           redirect_to identite_dossier_path(dossier)
         else
+          flash.alert = t('users.dossiers.fill_identity.siret')
           redirect_to siret_dossier_path(dossier)
         end
       end
@@ -451,15 +471,30 @@ module Users
 
     def champs_public_params
       champs_params = params.require(:dossier).permit(champs_public_attributes: [
-        :id, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :code_departement, value: [],
-        champs_attributes: [:id, :_destroy, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: []]
+        :id,
+        :value,
+        :value_other,
+        :external_id,
+        :primary_value,
+        :secondary_value,
+        :numero_allocataire,
+        :code_postal,
+        :identifiant,
+        :numero_fiscal,
+        :reference_avis,
+        :ine,
+        :piece_justificative_file,
+        :code_departement,
+        :accreditation_number,
+        :accreditation_birthdate,
+        value: []
       ])
       champs_params[:champs_public_all_attributes] = champs_params.delete(:champs_public_attributes) || {}
       champs_params
     end
 
     def dossier_scope
-      if action_name == 'update'
+      if action_name == 'update' || action_name == 'champ'
         Dossier.visible_by_user.or(Dossier.for_procedure_preview).or(Dossier.for_editing_fork)
       elsif action_name == 'restore'
         Dossier.hidden_by_user
@@ -487,32 +522,6 @@ module Users
       redirect_to dossier_path(dossier)
     end
 
-    def should_change_groupe_instructeur?
-      if params[:dossier].key?(:groupe_instructeur_id)
-        groupe_instructeur_id = params[:dossier][:groupe_instructeur_id]
-        if groupe_instructeur_id.nil?
-          @dossier.groupe_instructeur_id.present?
-        else
-          @dossier.groupe_instructeur_id != groupe_instructeur_id.to_i
-        end
-      end
-    end
-
-    def groupe_instructeur_from_params
-      groupe_instructeur_id = params[:dossier][:groupe_instructeur_id]
-      if groupe_instructeur_id.present?
-        @dossier.procedure.groupe_instructeurs.find(groupe_instructeur_id)
-      end
-    end
-
-    def should_fill_groupe_instructeur?
-      !@dossier.procedure.routing_enabled? && @dossier.groupe_instructeur_id.nil?
-    end
-
-    def defaut_groupe_instructeur
-      @dossier.procedure.defaut_groupe_instructeur
-    end
-
     def update_dossier_and_compute_errors
       errors = []
       @dossier.assign_attributes(champs_public_params)
@@ -521,10 +530,6 @@ module Users
       end
       if !@dossier.save(**validation_options)
         errors += format_errors(errors: @dossier.errors)
-      end
-
-      if should_change_groupe_instructeur?
-        @dossier.assign_to_groupe_instructeur(groupe_instructeur_from_params)
       end
 
       errors
@@ -536,12 +541,6 @@ module Users
       @dossier.valid?(**submit_validation_options)
       errors += format_errors(errors: @dossier.errors)
       errors += format_errors(errors: @dossier.check_mandatory_and_visible_champs)
-
-      if should_fill_groupe_instructeur?
-        @dossier.assign_to_groupe_instructeur(defaut_groupe_instructeur)
-      end
-
-      RoutingEngine.compute(@dossier)
 
       errors
     end
@@ -597,7 +596,7 @@ module Users
     end
 
     def forbidden!
-      flash[:alert] = t('users.dossiers.no_access')
+      flash[:alert] = t('users.dossiers.no_access_html', email: current_user.email)
       redirect_to root_path
     end
 

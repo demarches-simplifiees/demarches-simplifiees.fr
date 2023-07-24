@@ -1,8 +1,6 @@
 describe RoutingEngine, type: :model do
   include Logic
 
-  before { Flipper.enable(:routing_rules, procedure) }
-
   describe '.compute' do
     let(:procedure) do
       create(:procedure,

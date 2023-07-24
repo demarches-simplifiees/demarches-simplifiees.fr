@@ -10,6 +10,7 @@
 #  procedure_id :integer
 #
 module Mails
+  # en_construction
   class InitiatedMail < ApplicationRecord
     include MailTemplateConcern
 

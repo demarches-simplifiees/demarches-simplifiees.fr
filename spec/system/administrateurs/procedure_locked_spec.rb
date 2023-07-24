@@ -10,7 +10,7 @@ describe 'procedure locked' do
     let(:procedure) { create(:procedure, administrateur: administrateur) }
 
     scenario 'info label is not present' do
-      expect(page).to have_content('Test et publication')
+      expect(page).to have_content('Publier')
       expect(page).not_to have_content('Cette démarche est publiée, certains éléments ne peuvent plus être modifiés.')
     end
   end
@@ -19,7 +19,7 @@ describe 'procedure locked' do
     let(:procedure) { create(:procedure, :published, administrateur: administrateur) }
 
     scenario 'info label is present' do
-      expect(page).to have_content('Publication')
+      expect(page).to have_content('Publier')
       expect(page).to have_content('Cette démarche est publiée, certains éléments ne peuvent plus être modifiés.')
     end
   end

@@ -1,13 +1,13 @@
 .procedure-header
   .flex.clipboard-container
-    %h1
+    %h1.fr-h3
       = "#{procedure_libelle procedure} - n°#{procedure.id}"
     = render Dsfr::CopyButtonComponent.new(title: t('instructeurs.procedures.index.copy_link_button'), text: commencer_url(procedure.path))
   = link_to t('instructeurs.dossiers.header.banner.notification_management'), email_notifications_instructeur_procedure_path(procedure), class: 'header-link'
   |
   = link_to t('instructeurs.dossiers.header.banner.statistics'), stats_instructeur_procedure_path(procedure), class: 'header-link'
 
-  - if procedure.instructeurs_self_management_enabled?
+  - if procedure.instructeurs_self_management?
     |
     - if can_manage_groupe_instructeurs?(procedure)
       = link_to t('instructeurs.dossiers.header.banner.instructeurs'), admin_procedure_groupe_instructeurs_path(procedure), class: 'header-link'

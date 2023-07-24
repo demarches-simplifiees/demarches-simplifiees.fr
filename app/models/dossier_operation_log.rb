@@ -19,6 +19,8 @@ class DossierOperationLog < ApplicationRecord
     changer_groupe_instructeur: 'changer_groupe_instructeur',
     passer_en_instruction: 'passer_en_instruction',
     repasser_en_construction: 'repasser_en_construction',
+    demander_une_correction: 'demander_une_correction',
+    demander_a_completer: 'demander_a_completer',
     repasser_en_instruction: 'repasser_en_instruction',
     accepter: 'accepter',
     refuser: 'refuser',
@@ -134,6 +136,8 @@ class DossierOperationLog < ApplicationRecord
         SerializerService.champ(subject)
       when Avis
         SerializerService.avis(subject)
+      when Commentaire
+        SerializerService.message(subject)
       end
     end
   end

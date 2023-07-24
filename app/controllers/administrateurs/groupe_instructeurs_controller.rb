@@ -43,11 +43,12 @@ module Administrateurs
       tdc_options = tdc.options["drop_down_options"].reject(&:empty?)
 
       tdc_options.each do |option_label|
-        gi = procedure.groupe_instructeurs.find_by({ label: option_label }) || procedure.groupe_instructeurs
+        gi = @procedure.groupe_instructeurs.find_by({ label: option_label }) || @procedure.groupe_instructeurs
           .create({ label: option_label, instructeurs: [current_administrateur.instructeur] })
         gi.update(routing_rule: ds_eq(champ_value(stable_id), constant(gi.label)))
       end
 
+      @procedure.toggle_routing
       defaut = @procedure.defaut_groupe_instructeur
 
       if !tdc_options.include?(defaut.label)
@@ -59,7 +60,7 @@ module Administrateurs
       end
 
       flash.notice = 'Les groupes instructeurs ont été ajoutés'
-      redirect_to admin_procedure_groupe_instructeurs_path(procedure)
+      redirect_to admin_procedure_groupe_instructeurs_path(@procedure)
     end
 
     def wizard
@@ -67,6 +68,8 @@ module Administrateurs
         new_label = procedure.defaut_groupe_instructeur.label + ' bis'
         procedure.groupe_instructeurs
           .create({ label: new_label, instructeurs: [current_administrateur.instructeur] })
+
+        procedure.toggle_routing
 
         redirect_to admin_procedure_groupe_instructeurs_path(procedure)
       elsif params[:choice][:state] == 'routage_simple'
@@ -77,7 +80,7 @@ module Administrateurs
     def destroy_all_groups_but_defaut
       reaffecter_all_dossiers_to_defaut_groupe
       procedure.groupe_instructeurs_but_defaut.each(&:destroy!)
-      procedure.update!(routing_enabled: false, instructeurs_self_management_enabled: false)
+      procedure.update!(routing_enabled: false)
       procedure.defaut_groupe_instructeur.update!(
         routing_rule: nil,
         label: GroupeInstructeur::DEFAUT_LABEL,
@@ -100,6 +103,7 @@ module Administrateurs
         .new({ instructeurs: [current_administrateur.instructeur] }.merge(groupe_instructeur_params))
 
       if @groupe_instructeur.save
+        procedure.toggle_routing
         routing_notice = " et le routage a été activé" if procedure.groupe_instructeurs.active.size == 2
         redirect_to admin_procedure_groupe_instructeur_path(procedure, @groupe_instructeur),
           notice: "Le groupe d’instructeurs « #{@groupe_instructeur.label} » a été créé#{routing_notice}."
@@ -117,6 +121,7 @@ module Administrateurs
       @groupe_instructeur = groupe_instructeur
 
       if @groupe_instructeur.update(groupe_instructeur_params)
+        procedure.toggle_routing
         redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur),
           notice: "Le nom est à présent « #{@groupe_instructeur.label} »."
       else
@@ -161,10 +166,7 @@ module Administrateurs
       else
         @groupe_instructeur.destroy!
         if procedure.groupe_instructeurs.active.one?
-          procedure.update!(
-            routing_enabled: false,
-            instructeurs_self_management_enabled: false
-          )
+          procedure.toggle_routing
           procedure.defaut_groupe_instructeur.update!(
             routing_rule: nil,
             label: GroupeInstructeur::DEFAUT_LABEL,
@@ -198,7 +200,7 @@ module Administrateurs
       target_group = procedure.groupe_instructeurs.find(params[:target_group])
       reaffecter_bulk_messages(target_group)
       groupe_instructeur.dossiers.find_each do |dossier|
-        dossier.assign_to_groupe_instructeur(target_group, current_administrateur)
+        dossier.assign_to_groupe_instructeur(target_group, DossierAssignment.modes.fetch(:manual), current_administrateur)
       end
 
       flash[:notice] = "Les dossiers du groupe « #{groupe_instructeur.label} » ont été réaffectés au groupe « #{target_group.label} »."
@@ -208,7 +210,7 @@ module Administrateurs
     def reaffecter_all_dossiers_to_defaut_groupe
       procedure.groupe_instructeurs_but_defaut.each do |gi|
         gi.dossiers.find_each do |dossier|
-          dossier.assign_to_groupe_instructeur(procedure.defaut_groupe_instructeur, current_administrateur)
+          dossier.assign_to_groupe_instructeur(procedure.defaut_groupe_instructeur, DossierAssignment.modes.fetch(:manual), current_administrateur)
         end
       end
     end
@@ -280,15 +282,6 @@ module Administrateurs
       else
         redirect_to admin_procedure_groupe_instructeurs_path(procedure)
       end
-    end
-
-    def update_routing_criteria_name
-      if procedure.update(routing_criteria_name: routing_criteria_name)
-        flash[:notice] = "Le libellé est maintenant « #{procedure.routing_criteria_name} »."
-      else
-        flash[:alert] = "Le libellé du routage doit être rempli."
-      end
-      redirect_to admin_procedure_groupe_instructeurs_path(procedure)
     end
 
     def update_instructeurs_self_management_enabled
@@ -402,6 +395,10 @@ module Administrateurs
         procedure.groupe_instructeurs
       end
 
+      if params[:filter] == '1'
+        groupes = Kaminari.paginate_array(groupes.filter(&:routing_to_configure?))
+      end
+
       groupes
         .page(params[:page])
         .per(ITEMS_PER_PAGE)
@@ -413,10 +410,6 @@ module Administrateurs
         .page(params[:page])
         .per(ITEMS_PER_PAGE)
         .order(:email)
-    end
-
-    def routing_criteria_name
-      params[:procedure][:routing_criteria_name]
     end
 
     def available_instructeur_emails

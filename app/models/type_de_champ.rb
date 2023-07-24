@@ -18,7 +18,9 @@ class TypeDeChamp < ApplicationRecord
   self.ignored_columns += [:migrated_parent, :revision_id, :parent_id, :order_place]
 
   FILE_MAX_SIZE = 200.megabytes
-  FEATURE_FLAGS = {}
+  FEATURE_FLAGS = {
+    cojo: :cojo_type_de_champ
+  }
   MINIMUM_TEXTAREA_CHARACTER_LIMIT_LENGTH = 400
 
   STRUCTURE = :structure
@@ -68,7 +70,8 @@ class TypeDeChamp < ApplicationRecord
     cnaf: REFERENTIEL_EXTERNE,
     dgfip: REFERENTIEL_EXTERNE,
     pole_emploi: REFERENTIEL_EXTERNE,
-    mesri: REFERENTIEL_EXTERNE
+    mesri: REFERENTIEL_EXTERNE,
+    cojo: REFERENTIEL_EXTERNE
   }
 
   enum type_champs: {
@@ -107,7 +110,8 @@ class TypeDeChamp < ApplicationRecord
     dgfip: 'dgfip',
     pole_emploi: 'pole_emploi',
     mesri: 'mesri',
-    epci: 'epci'
+    epci: 'epci',
+    cojo: 'cojo'
   }
 
   store_accessor :options,
@@ -465,18 +469,27 @@ class TypeDeChamp < ApplicationRecord
     previous_section_level(tdcs.take(tdcs.find_index(self)))
   end
 
-  def self.options_for_select?(type_champs)
-    [
-      TypeDeChamp.type_champs.fetch(:departements),
-      TypeDeChamp.type_champs.fetch(:regions)
-    ].include?(type_champs)
+  def self.filter_hash_type(type_champ)
+    if type_champ.in?([TypeDeChamp.type_champs.fetch(:departements), TypeDeChamp.type_champs.fetch(:regions)])
+      :enum
+    else
+      :text
+    end
+  end
+
+  def self.filter_hash_value_column(type_champ)
+    if type_champ.in?([TypeDeChamp.type_champs.fetch(:departements), TypeDeChamp.type_champs.fetch(:regions)])
+      :external_id
+    else
+      :value
+    end
   end
 
   def options_for_select
     if departement?
-      APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:name]] }
+      APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
     elsif region?
-      APIGeoService.regions.map { [_1[:name], _1[:name]] }
+      APIGeoService.regions.map { [_1[:name], _1[:code]] }
     end
   end
 
@@ -553,17 +566,19 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def self.refresh_after_update?(type_champ)
+    # We should refresh all champs after update except for champs using react or custom refresh
+    # logic (RNA, SIRET, etc.)
     case type_champ
-    when type_champs.fetch(:epci),
-      type_champs.fetch(:communes),
-      type_champs.fetch(:multiple_drop_down_list),
-      type_champs.fetch(:dossier_link),
-      type_champs.fetch(:linked_drop_down_list),
-      type_champs.fetch(:drop_down_list),
-      type_champs.fetch(:textarea)
-      true
-    else
+    when type_champs.fetch(:address),
+      type_champs.fetch(:annuaire_education),
+      type_champs.fetch(:carte),
+      type_champs.fetch(:piece_justificative),
+      type_champs.fetch(:titre_identite),
+      type_champs.fetch(:rna),
+      type_champs.fetch(:siret)
       false
+    else
+      true
     end
   end
 

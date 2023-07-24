@@ -88,7 +88,8 @@ describe ProcedureExportService do
           "text",
           "epci",
           "epci (Code)",
-          "epci (Département)"
+          "epci (Département)",
+          "cojo"
         ]
       end
 
@@ -119,7 +120,7 @@ describe ProcedureExportService do
       end
 
       context 'with a procedure routee' do
-        before { procedure.groupe_instructeurs.create(label: '2') }
+        before { create(:groupe_instructeur, label: '2', procedure: procedure) }
 
         let(:routee_headers) { nominal_headers.insert(nominal_headers.index('textarea'), 'Groupe instructeur') }
 
@@ -198,7 +199,8 @@ describe ProcedureExportService do
           "text",
           "epci",
           "epci (Code)",
-          "epci (Département)"
+          "epci (Département)",
+          "cojo"
         ]
       end
 
@@ -291,7 +293,8 @@ describe ProcedureExportService do
             "text",
             "epci",
             "epci (Code)",
-            "epci (Département)"
+            "epci (Département)",
+            "cojo"
           ]
         end
 

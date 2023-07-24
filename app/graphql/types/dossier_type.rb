@@ -30,6 +30,8 @@ module Types
     field :date_suppression_par_administration, GraphQL::Types::ISO8601DateTime, "Date de la suppression par l’administration.", null: true, method: :hidden_by_administration_at
     field :date_expiration, GraphQL::Types::ISO8601DateTime, "Date d’expiration.", null: true
 
+    field :date_derniere_correction_en_attente, GraphQL::Types::ISO8601DateTime, "Date de la dernière demande de correction qui n’a pas encore été traitée par l’usager.", null: true
+
     field :archived, Boolean, null: false
 
     field :connection_usager, ConnectionUsager, null: false
@@ -73,6 +75,10 @@ module Types
       if !object.en_instruction?
         object.expiration_date
       end
+    end
+
+    def date_derniere_correction_en_attente
+      Loaders::Association.for(object.class, :pending_correction).load(object).then { _1&.created_at }
     end
 
     def connection_usager
@@ -168,7 +174,8 @@ module Types
         url: Rails.application.routes.url_helpers.api_v2_dossier_pdf_url(id: sgid),
         byte_size: 0,
         byte_size_big_int: '0',
-        checksum: ''
+        checksum: '',
+        created_at: Time.zone.now
       }
     end
 
@@ -180,7 +187,8 @@ module Types
         url: Rails.application.routes.url_helpers.api_v2_dossier_geojson_url(id: sgid),
         byte_size: 0,
         byte_size_big_int: '0',
-        checksum: ''
+        checksum: '',
+        created_at: Time.zone.now
       }
     end
 

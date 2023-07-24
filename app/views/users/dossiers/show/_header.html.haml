@@ -1,5 +1,5 @@
 .sub-header
-  .container
+  .fr-container
     %h1
       = dossier.procedure.libelle
       = status_badge(dossier.state, 'super')
@@ -17,8 +17,8 @@
       .header-actions
         = render partial: 'invites/dropdown', locals: { dossier: dossier, morphing: false }
         - if dossier.can_be_updated_by_user? && !current_page?(modifier_dossier_path(dossier))
-          = link_to t('views.users.dossiers.show.header.edit_dossier'), modifier_dossier_path(dossier), class: 'fr-btn fr-btn-sm',
-            title: t('views.users.dossiers.show.header.edit_dossier_title')
+          = link_to t('views.users.dossiers.demande.edit_dossier'), modifier_dossier_path(dossier), class: 'fr-btn fr-btn-sm',
+            title: t('views.users.dossiers.demande.edit_dossier_title')
         = render(partial: 'users/dossiers/show/print_dossier', locals: { dossier: dossier })
 
     %nav.tabs

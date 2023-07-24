@@ -1,0 +1,14 @@
+---
+  fr:
+    no_sva: Déposé avant SVA
+    no_svr: Déposé avant SVR
+    in_days:
+      zero: Aujourd’hui
+      one: Demain
+      other: dans %{count} jours
+    remaining_days_after_correction:
+      other: "%{count} j. après correction"
+    dossier_terminated_x_days_after_correction:
+      one: "Le dossier sera automatiquement traité %{count} jour après que le demandeur a re-déposé son dossier"
+      other: "Le dossier sera automatiquement traité %{count} jours après que le demandeur a re-déposé son dossier"
+    dossier_terminated_on: "Le dossier sera automatiquement traité le %{date}"

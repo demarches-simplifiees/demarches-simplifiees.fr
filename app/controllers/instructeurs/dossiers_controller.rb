@@ -91,6 +91,7 @@ module Instructeurs
       @avis_emails = dossier.experts.map(&:email)
       @invites_emails = dossier.invites.map(&:email)
       @potential_recipients = dossier.groupe_instructeur.instructeurs.reject { |g| g == current_instructeur }
+      @manual_assignments = dossier.dossier_assignments.manual.includes(:groupe_instructeur, :previous_groupe_instructeur)
     end
 
     def send_to_instructeurs
@@ -234,7 +235,7 @@ module Instructeurs
         commentaire = CommentaireService.build(current_instructeur, dossier, { body: message, piece_jointe: })
 
         if commentaire.valid?
-          dossier.flag_as_pending_correction!(commentaire)
+          dossier.flag_as_pending_correction!(commentaire, params[:reason].presence)
           dossier.update!(last_commentaire_updated_at: Time.zone.now)
           current_instructeur.follow(dossier)
 
@@ -302,6 +303,20 @@ module Instructeurs
       render layout: "print"
     end
 
+    def annotation
+      @dossier = dossier_with_champs(pj_template: false)
+      annotation = @dossier.champs_private_all.find(params[:annotation_id])
+
+      respond_to do |format|
+        format.turbo_stream do
+          @to_show, @to_hide = []
+          @to_update = [annotation]
+
+          render :update_annotations
+        end
+      end
+    end
+
     def telecharger_pjs
       files = ActiveStorage::DownloadableFile.create_list_from_dossiers(Dossier.where(id: dossier.id), with_champs_private: true, include_infos_administration: true)
       cleaned_files = ActiveStorage::DownloadableFile.cleanup_list_from_dossier(files)
@@ -348,9 +363,7 @@ module Instructeurs
         .procedure
         .groupe_instructeurs.find(params[:groupe_instructeur_id])
 
-      dossier.assign_to_groupe_instructeur(new_group)
-
-      dossier.update!(forced_groupe_instructeur: true)
+      dossier.assign_to_groupe_instructeur(new_group, DossierAssignment.modes.fetch(:manual), current_instructeur)
 
       flash.notice = t('instructeurs.dossiers.reaffectation', dossier_id: dossier.id, label: new_group.label)
       redirect_to instructeur_procedure_path(procedure)

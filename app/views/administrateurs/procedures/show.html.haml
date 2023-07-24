@@ -12,10 +12,10 @@
         = link_to 'PDF', commencer_dossier_vide_for_revision_path(@procedure.active_revision), target: "_blank", rel: "noopener", class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-printer-line', id: "pdf-procedure"
 
       - if @procedure.brouillon? || @procedure.draft_changed?
-        = link_to 'Tester la démarche', commencer_url(@procedure.path, test: true), target: :blank, rel: :noopener, class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-edit-line'
+        = link_to 'Tester la démarche', commencer_url(@procedure.path, test: true), target: :blank, rel: :noopener, class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-flashlight-line'
 
       - if @procedure.publiee? || @procedure.brouillon?
-        = link_to 'Envoyer une copie', admin_procedure_transfert_path(@procedure), class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-right-up-line'
+        = link_to 'Envoyer une copie', admin_procedure_transfert_path(@procedure), class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-send-plane-line'
 
       - if !@procedure.publiee? && !@procedure.close? && !@procedure.depubliee?
         = link_to 'Publier', admin_procedure_publication_path(@procedure), class: 'fr-btn fr-btn--primary fr-btn--icon-left fr-icon-success-line', id: 'publish-procedure-link', data: { disable_with: "Publication..." }
@@ -63,5 +63,6 @@
     = render Procedure::Card::AnnotationsComponent.new(procedure: @procedure)
     = render Procedure::Card::APIEntrepriseComponent.new(procedure: @procedure)
     = render Procedure::Card::APIParticulierComponent.new(procedure: @procedure)
+    = render Procedure::Card::SVASVRComponent.new(procedure: @procedure) if @procedure.sva_svr_enabled? || @procedure.feature_enabled?(:sva)
     = render Procedure::Card::MonAvisComponent.new(procedure: @procedure)
     = render Procedure::Card::DossierSubmittedMessageComponent.new(procedure: @procedure)

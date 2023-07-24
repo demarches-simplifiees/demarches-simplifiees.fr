@@ -322,6 +322,7 @@ Rails.application.routes.draw do
         get 'modifier', to: 'dossiers#modifier'
         post 'modifier', to: 'dossiers#submit_en_construction'
         patch 'modifier', to: 'dossiers#modifier_legacy'
+        get 'champs/:champ_id', to: 'dossiers#champ', as: :champ
         get 'merci'
         get 'demande'
         get 'messagerie'
@@ -434,6 +435,7 @@ Rails.application.routes.draw do
             get 'avis'
             get 'avis_new'
             get 'personnes-impliquees' => 'dossiers#personnes_impliquees'
+            get 'annotations/:annotation_id', to: 'dossiers#annotation', as: :annotation
             patch 'follow'
             patch 'unfollow'
             patch 'archive'
@@ -542,7 +544,6 @@ Rails.application.routes.draw do
           get 'simple_routing'
           post 'create_simple_routing'
           delete 'destroy_all_groups_but_defaut'
-          patch 'update_routing_criteria_name'
           patch 'update_instructeurs_self_management_enabled'
           post 'import'
           get 'export_groupe_instructeurs'
@@ -572,6 +573,8 @@ Rails.application.routes.draw do
       resource :dossier_submitted_message, only: [:edit, :update, :create]
       # ADDED TO ACCESS IT FROM THE IFRAME
       get 'attestation_template/preview' => 'attestation_templates#preview'
+
+      resource :sva_svr, only: [:show, :edit, :update], controller: 'sva_svr'
     end
 
     resources :services, except: [:show] do

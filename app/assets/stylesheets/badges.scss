@@ -19,13 +19,16 @@
     background-color: $orange;
     color: #FFFFFF;
   }
+}
 
-  &.procedure-synthese-badge {
-    color: $white;
-    background-color: $dark-grey;
-    margin-left: 3px;
-    padding-left: $default-spacer;
-    padding-right: $default-spacer;
-    vertical-align: baseline;
+.badge-group {
+  display: flex;
+
+  .fr-badge {
+    margin-right: $default-spacer;
+  }
+
+  .fr-badge:last-child {
+    margin-right: 0;
   }
 }

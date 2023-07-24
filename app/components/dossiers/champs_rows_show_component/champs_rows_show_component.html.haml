@@ -1,25 +1,18 @@
-- @champs.each do |champ|
-  .fr-px-4v.fr-my-2v
-    - if champ.repetition?
-      %p.champ-label= "#{champ.libelle} :"
-      - champ.rows.each do |row|
-        = render Dossiers::ChampRowShowComponent.new(champs: row, demande_seen_at: @demande_seen_at, profile: @profile, repetition: true)
+- each_champ do |champ|
+  - if champ.repetition?
+    - champ.rows.each.with_index do |row, i|
+      .fr-background-alt--grey.fr-p-2w.fr-my-3w.fr-ml-2w.champ-repetition
+        %p.font-weight-bold= "#{champ.libelle} #{i + 1} :"
 
-    - else
-      .flex.d-block-sm
-        %p.champ-label.flex-grow= "#{champ.libelle} :"
+        = render Dossiers::ChampsRowsShowComponent.new(champs: row, seen_at:, profile:)
 
-        - if updated_after_deposer?(champ)
-          %p.fr-mb-0.fr-text--sm
-            %span{ class: highlight_if_unseen_class(@demande_seen_at, champ.updated_at) }
-              = t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: try_format_datetime(champ.updated_at))
-
-      - if champ.blank? && ![TypeDeChamp.type_champs.fetch(:piece_justificative), TypeDeChamp.type_champs.fetch(:titre_identite)].include?(champ.type_champ)
-        .champ-content.fr-text-mention--grey{ class: [highlight_if_unseen_class(@demande_seen_at, champ.updated_at), champ.type_champ] }
-          %p
-            %em= t('.blank')
+  - else
+    = render Dossiers::RowShowComponent.new(label: champ.libelle, seen_at:, profile:, content_class: champ.type_champ, updated_at: updated_after_deposer?(champ) ? champ.updated_at : nil) do |c|
+      - if champ.blank?
+        - c.blank do
+          = t(blank_key(champ))
       - else
-        .champ-content{ class: [highlight_if_unseen_class(@demande_seen_at, champ.updated_at), champ.type_champ] }
+        - c.with_value do
           - case champ.type_champ
           - when TypeDeChamp.type_champs.fetch(:carte)
             = render partial: "shared/champs/carte/show", locals: { champ: champ }
@@ -55,12 +48,14 @@
             = render partial: "shared/champs/rna/show", locals: { champ: champ, profile: @profile }
           - when TypeDeChamp.type_champs.fetch(:epci)
             = render partial: "shared/champs/epci/show", locals: { champ: champ }
+          - when TypeDeChamp.type_champs.fetch(:cojo)
+            = render partial: "shared/champs/cojo/show", locals: { champ: champ, profile: @profile }
           - when TypeDeChamp.type_champs.fetch(:date)
             %p= champ.to_s
           - when TypeDeChamp.type_champs.fetch(:datetime)
             %p= champ.to_s
-          - when TypeDeChamp.type_champs.fetch(:number)
-            %p= number_with_html_delimiter(champ.to_s)
+          - when TypeDeChamp.type_champs.fetch(:number), TypeDeChamp.type_champs.fetch(:integer_number), TypeDeChamp.type_champs.fetch(:decimal_number)
+            %p= helpers.number_with_html_delimiter(champ.to_s)
           - else
-            - if champ.present?
-              = format_text_value(champ.to_s.strip) # format already wrap in p
+            = helpers.format_text_value(champ.to_s.strip) # format already wrap in p
+

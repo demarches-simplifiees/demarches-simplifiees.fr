@@ -17,9 +17,10 @@ features = [
   :dossier_pdf_vide,
   :hide_instructeur_email,
   :procedure_routage_api,
-  :routing_rules,
   :groupe_instructeur_api_hack,
-  :rerouting
+  :rerouting,
+  :cojo_type_de_champ,
+  :sva
 ]
 
 def database_exists?

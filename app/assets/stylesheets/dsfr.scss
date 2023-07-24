@@ -84,6 +84,11 @@ fieldset {
   display: none;
 }
 
+// on souhaite que le dropdown s'adapate correctement en largeur
+.fr-translate .fr-menu__list.max-content {
+  width: max-content;
+}
+
 // on veut ferrer à droite le dropdown de sélecteur de langue
 @media (min-width: 62em) {
   .fr-nav__item.custom-fr-translate-flex-end {

@@ -578,12 +578,12 @@ describe Dossier, type: :model do
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
 
     it "can change groupe instructeur" do
-      dossier.assign_to_groupe_instructeur(new_groupe_instructeur_new_procedure)
+      dossier.assign_to_groupe_instructeur(new_groupe_instructeur_new_procedure, DossierAssignment.modes.fetch(:auto))
       expect(dossier.groupe_instructeur).not_to eq(new_groupe_instructeur_new_procedure)
     end
 
     it "can not change groupe instructeur if new groupe is from another procedure" do
-      dossier.assign_to_groupe_instructeur(new_groupe_instructeur)
+      dossier.assign_to_groupe_instructeur(new_groupe_instructeur, DossierAssignment.modes.fetch(:auto))
       expect(dossier.groupe_instructeur).to eq(new_groupe_instructeur)
     end
   end
@@ -603,7 +603,7 @@ describe Dossier, type: :model do
     it "unfollows stale instructeurs when groupe instructeur change" do
       instructeur.follow(dossier)
       instructeur2.follow(dossier)
-      dossier.reload.assign_to_groupe_instructeur(new_groupe_instructeur, procedure.administrateurs.first)
+      dossier.reload.assign_to_groupe_instructeur(new_groupe_instructeur, DossierAssignment.modes.fetch(:auto), procedure.administrateurs.first)
 
       expect(dossier.reload.followers_instructeurs).not_to include(instructeur)
       expect(dossier.reload.followers_instructeurs).to include(instructeur2)
@@ -1008,10 +1008,10 @@ describe Dossier, type: :model do
     it { expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601) }
     it { expect(NotificationMailer).to have_received(:send_accepte_notification).with(dossier) }
     it { expect(dossier.attestation).to eq(attestation) }
+    it { expect(dossier.commentaires.count).to eq(1) }
   end
 
   describe '#accepter_automatiquement!' do
-    let(:dossier) { create(:dossier, :en_construction, :with_individual, :with_declarative_accepte) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let!(:now) { Time.zone.parse('01/01/2100') }
     let(:attestation) { Attestation.new }
@@ -1021,20 +1021,50 @@ describe Dossier, type: :model do
       allow(dossier).to receive(:build_attestation).and_return(attestation)
 
       Timecop.freeze(now)
-      dossier.accepter_automatiquement!
-      dossier.reload
     end
 
     after { Timecop.return }
 
-    it { expect(dossier.motivation).to eq(nil) }
-    it { expect(dossier.en_instruction_at).to eq(now) }
-    it { expect(dossier.processed_at).to eq(now) }
-    it { expect(dossier.state).to eq('accepte') }
-    it { expect(last_operation.operation).to eq('accepter') }
-    it { expect(last_operation.automatic_operation?).to be_truthy }
-    it { expect(NotificationMailer).to have_received(:send_accepte_notification).with(dossier) }
-    it { expect(dossier.attestation).to eq(attestation) }
+    subject {
+      dossier.accepter_automatiquement!
+      dossier.reload
+    }
+
+    context 'as declarative procedure' do
+      let(:dossier) { create(:dossier, :en_construction, :with_individual, :with_declarative_accepte) }
+
+      it 'accepts dossier automatiquement' do
+        expect(subject.motivation).to eq(nil)
+        expect(subject.en_instruction_at).to eq(now)
+        expect(subject.processed_at).to eq(now)
+        expect(subject.declarative_triggered_at).to eq(now)
+        expect(subject.sva_svr_decision_triggered_at).to be_nil
+        expect(subject).to be_accepte
+        expect(last_operation.operation).to eq('accepter')
+        expect(last_operation.automatic_operation?).to be_truthy
+        expect(NotificationMailer).to have_received(:send_accepte_notification).with(dossier)
+        expect(subject.attestation).to eq(attestation)
+      end
+    end
+
+    context 'as sva procedure' do
+      let(:procedure) { create(:procedure, :for_individual, :published, :sva) }
+      let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure:, sva_svr_decision_on: Date.current, en_instruction_at: DateTime.new(2021, 5, 1, 12)) }
+
+      it 'accepts dossier automatiquement' do
+        expect(subject.motivation).to eq(nil)
+        expect(subject.en_instruction_at).to eq(DateTime.new(2021, 5, 1, 12))
+        expect(subject.processed_at).to eq(now)
+        expect(subject.declarative_triggered_at).to be_nil
+        expect(subject.sva_svr_decision_triggered_at).to eq(now)
+        expect(subject).to be_accepte
+        expect(last_operation.operation).to eq('accepter')
+        expect(last_operation.automatic_operation?).to be_truthy
+        expect(NotificationMailer).to have_received(:send_accepte_notification).with(dossier)
+        expect(subject.attestation).to eq(attestation)
+        expect(dossier.commentaires.count).to eq(1)
+      end
+    end
   end
 
   describe '#passer_en_instruction!' do
@@ -1042,40 +1072,109 @@ describe Dossier, type: :model do
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let(:operation_serialized) { last_operation.data }
     let(:instructeur) { create(:instructeur) }
-    let!(:correction) { create(:dossier_correction, dossier:) }
+    let!(:correction) { create(:dossier_correction, dossier:) } # correction has a commentaire
 
-    before { dossier.passer_en_instruction!(instructeur: instructeur) }
+    subject(:passer_en_instruction) { dossier.passer_en_instruction!(instructeur: instructeur) }
 
-    it { expect(dossier.state).to eq('en_instruction') }
-    it { expect(dossier.followers_instructeurs).to include(instructeur) }
-    it { expect(dossier.en_construction_close_to_expiration_notice_sent_at).to be_nil }
-    it { expect(last_operation.operation).to eq('passer_en_instruction') }
-    it { expect(last_operation.automatic_operation?).to be_falsey }
-    it { expect(operation_serialized['operation']).to eq('passer_en_instruction') }
-    it { expect(operation_serialized['dossier_id']).to eq(dossier.id) }
-    it { expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601) }
+    it do
+      passer_en_instruction
+
+      expect(dossier.state).to eq('en_instruction')
+      expect(dossier.followers_instructeurs).to include(instructeur)
+      expect(dossier.en_construction_close_to_expiration_notice_sent_at).to be_nil
+      expect(last_operation.operation).to eq('passer_en_instruction')
+      expect(last_operation.automatic_operation?).to be_falsey
+      expect(operation_serialized['operation']).to eq('passer_en_instruction')
+      expect(operation_serialized['dossier_id']).to eq(dossier.id)
+      expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601)
+    end
+
+    it { expect { passer_en_instruction }.to change { dossier.commentaires.count }.by(1) }
 
     it "resolve pending correction" do
+      passer_en_instruction
+
       expect(dossier.pending_correction?).to be_falsey
       expect(correction.reload.resolved_at).to be_present
+    end
+
+    it 'creates a commentaire in the messagerie with expected wording' do
+      passer_en_instruction
+
+      email_template = dossier.procedure.mail_template_for(Dossier.states.fetch(:en_instruction))
+      commentaire = dossier.commentaires.last
+
+      expect(commentaire.body).to include(email_template.subject_for_dossier(dossier), email_template.body_for_dossier(dossier))
+      expect(commentaire.dossier).to eq(dossier)
     end
   end
 
   describe '#passer_automatiquement_en_instruction!' do
-    let(:dossier) { create(:dossier, :en_construction, :with_declarative_en_instruction, en_construction_close_to_expiration_notice_sent_at: Time.zone.now) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let(:operation_serialized) { last_operation.data }
     let(:instructeur) { create(:instructeur) }
 
-    before { dossier.passer_automatiquement_en_instruction! }
+    context "via procedure declarative en instruction" do
+      let(:dossier) { create(:dossier, :en_construction, :with_declarative_en_instruction, en_construction_close_to_expiration_notice_sent_at: Time.zone.now) }
 
-    it { expect(dossier.followers_instructeurs).not_to include(instructeur) }
-    it { expect(dossier.en_construction_close_to_expiration_notice_sent_at).to be_nil }
-    it { expect(last_operation.operation).to eq('passer_en_instruction') }
-    it { expect(last_operation.automatic_operation?).to be_truthy }
-    it { expect(operation_serialized['operation']).to eq('passer_en_instruction') }
-    it { expect(operation_serialized['dossier_id']).to eq(dossier.id) }
-    it { expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601) }
+      subject do
+        dossier.process_declarative!
+        dossier.reload
+      end
+
+      it 'passes dossier en instruction' do
+        expect(subject.followers_instructeurs).not_to include(instructeur)
+        expect(subject.en_construction_close_to_expiration_notice_sent_at).to be_nil
+        expect(subject.declarative_triggered_at).to be_within(1.second).of(Time.current)
+        expect(last_operation.operation).to eq('passer_en_instruction')
+        expect(last_operation.automatic_operation?).to be_truthy
+        expect(operation_serialized['operation']).to eq('passer_en_instruction')
+        expect(operation_serialized['dossier_id']).to eq(dossier.id)
+        expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601)
+        expect(dossier.commentaires.count).to eq(1)
+      end
+    end
+
+    context "via procedure sva" do
+      let(:procedure) { create(:procedure, :sva, :published, :for_individual) }
+      let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure:, sva_svr_decision_on: 10.days.from_now) }
+
+      subject do
+        dossier.process_sva_svr!
+        dossier.reload
+      end
+
+      it 'passes dossier en instruction' do
+        expect(subject.state).to eq('en_instruction')
+        expect(subject.followers_instructeurs).not_to include(instructeur)
+        expect(subject.sva_svr_decision_on).to eq(2.months.from_now.to_date + 1.day) # date is updated
+        expect(last_operation.operation).to eq('passer_en_instruction')
+        expect(last_operation.automatic_operation?).to be_truthy
+        expect(operation_serialized['operation']).to eq('passer_en_instruction')
+        expect(operation_serialized['dossier_id']).to eq(dossier.id)
+        expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601)
+      end
+
+      context 'when dossier was submitted with sva not yet enabled' do
+        let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure:, depose_at: 10.days.ago) }
+
+        it 'leaves dossier en construction' do
+          expect(subject.sva_svr_decision_on).to be_nil
+          expect(subject.state).to eq('en_construction')
+        end
+      end
+    end
+  end
+
+  describe '#can_repasser_en_construction?' do
+    let(:dossier) { create(:dossier, :en_instruction) }
+    it { expect(dossier.can_repasser_en_construction?).to be_truthy }
+
+    context 'when procedure is sva' do
+      let(:dossier) { create(:dossier, :en_instruction, procedure: create(:procedure, :sva)) }
+
+      it { expect(dossier.can_repasser_en_construction?).to be_falsey }
+    end
   end
 
   describe '#can_passer_automatiquement_en_instruction?' do
@@ -1115,10 +1214,24 @@ describe Dossier, type: :model do
         it { expect(dossier.can_passer_automatiquement_en_instruction?).to be_truthy }
       end
     end
+
+    context 'when procedure has sva or svr enabled' do
+      let(:procedure) { create(:procedure, :published, :sva) }
+      let(:dossier) { create(:dossier, :en_construction, procedure:) }
+
+      it { expect(dossier.can_passer_automatiquement_en_instruction?).to be_truthy }
+
+      context 'when dossier was already processed by sva' do
+        let(:dossier) { create(:dossier, :en_construction, procedure:, sva_svr_decision_triggered_at: 1.hour.ago) }
+
+        it { expect(dossier.can_passer_automatiquement_en_instruction?).to be_falsey }
+      end
+    end
   end
 
   describe '#can_accepter_automatiquement?' do
-    let(:dossier) { create(:dossier, :en_instruction, declarative_triggered_at: declarative_triggered_at) }
+    let(:dossier) { create(:dossier, state: initial_state, declarative_triggered_at: declarative_triggered_at) }
+    let(:initial_state) { :en_construction }
     let(:declarative_triggered_at) { nil }
 
     it { expect(dossier.can_accepter_automatiquement?).to be_falsey }
@@ -1132,6 +1245,43 @@ describe Dossier, type: :model do
 
       context 'when dossier transitioned before' do
         let(:declarative_triggered_at) { 1.day.ago }
+
+        it { expect(dossier.can_accepter_automatiquement?).to be_falsey }
+      end
+    end
+
+    context 'when procedure is sva/svr' do
+      let(:decision) { :sva }
+      let(:initial_state) { :en_instruction }
+
+      before do
+        dossier.procedure.update!(sva_svr: SVASVRConfiguration.new(decision:).attributes)
+        dossier.update!(sva_svr_decision_on: Date.current)
+      end
+
+      it { expect(dossier.can_accepter_automatiquement?).to be_truthy }
+
+      context 'when sva_svr_decision_on is in the future' do
+        before { dossier.update!(sva_svr_decision_on: 1.day.from_now) }
+
+        it { expect(dossier.can_accepter_automatiquement?).to be_falsey }
+      end
+
+      context 'when dossier has pending correction' do
+        let(:dossier) { create(:dossier, :en_construction) }
+        let!(:dossier_correction) { create(:dossier_correction, dossier:) }
+
+        it { expect(dossier.can_accepter_automatiquement?).to be_falsey }
+      end
+
+      context 'when decision is svr' do
+        let(:decision) { :svr }
+
+        it { expect(dossier.can_accepter_automatiquement?).to be_falsey }
+      end
+
+      context 'when dossier was already processed by sva' do
+        before { dossier.update!(sva_svr_decision_triggered_at: 1.hour.ago) }
 
         it { expect(dossier.can_accepter_automatiquement?).to be_falsey }
       end
@@ -1308,7 +1458,7 @@ describe Dossier, type: :model do
   end
 
   describe '#repasser_en_instruction!' do
-    let(:dossier) { create(:dossier, :refuse, :with_attestation, archived: true, termine_close_to_expiration_notice_sent_at: Time.zone.now) }
+    let(:dossier) { create(:dossier, :refuse, :with_attestation, :with_justificatif, archived: true, termine_close_to_expiration_notice_sent_at: Time.zone.now) }
     let!(:instructeur) { create(:instructeur) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
 
@@ -1324,6 +1474,7 @@ describe Dossier, type: :model do
     it { expect(dossier.archived).to be_falsey }
     it { expect(dossier.processed_at).to be_nil }
     it { expect(dossier.motivation).to be_nil }
+    it { expect(dossier.justificatif_motivation.attached?).to be_falsey }
     it { expect(dossier.attestation).to be_nil }
     it { expect(dossier.termine_close_to_expiration_notice_sent_at).to be_nil }
     it { expect(last_operation.operation).to eq('repasser_en_instruction') }
@@ -1752,6 +1903,12 @@ describe Dossier, type: :model do
     let(:dossier) { create(:dossier) }
 
     it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["État du dossier", "Brouillon"]) }
+
+    context 'procedure sva' do
+      let(:dossier) { create(:dossier, :en_instruction, procedure: create(:procedure, :sva)) }
+
+      it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["Date SVA", :sva_svr_decision_on]) }
+    end
   end
 
   describe '#processed_in_month' do
@@ -1916,6 +2073,12 @@ describe Dossier, type: :model do
       expect(dossier.procedure).to receive(:compute_dossiers_count)
       dossier.passer_en_construction!
     end
+  end
+
+  describe '#sva_svr_decision_in_days' do
+    let(:dossier) { create(:dossier, :en_instruction, sva_svr_decision_on: 10.days.from_now) }
+
+    it { expect(dossier.sva_svr_decision_in_days).to eq 10 }
   end
 
   private

@@ -10,8 +10,10 @@ fr:
           description: Décrivez en quelques lignes le contexte, la finalité, etc.
           description_target_audience: Décrivez en quelques lignes les destinataires finaux de la démarche, les critères d’éligibilité s’il y en a, les pré-requis, etc.
           description_pj: Décrivez la liste des pièces jointes à fournir s’il y en a
-          lien_site_web: "Exemple: 'https://exemple.gouv.fr/ma_demarche'"
+          lien_site_web: "Il s'agit de la page de votre site web où le lien sera diffusé. Ex: https://exemple.gouv.fr/page_informant_sur_ma_demarche"
           cadre_juridique: "Exemple: 'https://www.legifrance.gouv.fr/'"
+          old_procedure: Cette démarche remplace une close ? Si oui, veuillez indiquer le n° de la démarche remplacée
+          procedure_path: "Personnalisez si besoin la suite de l’URL, pour faciliter l'accès à la démarche. De 3 à 200 caractères :  minuscules, chiffres et tiret seulement"
         path: Lien public
         organisation: Organisme
         duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers sur demarches-simplifiees.fr (choisi par un usager)
@@ -23,6 +25,9 @@ fr:
         description_pj: Liste des pièces jointes demandées
         description_pj_placeholder: Si vous ne renseignez pas ce champ et que votre formulaire contient des pièces jointes, une liste générée automatiquement s'affichera dans la page d'accueil de votre démarche.
         lien_site_web: Où les usagers trouveront-ils le lien vers la démarche ?
+        old_procedure: Numéro de la démarche remplacée
+        procedure_path: Lien de la démarche à diffuser aux usagers
+        procedure_path_placeholder: nom-de-la-demarche
         cadre_juridique: Lien vers le texte
         lien_dpo: Lien ou email pour contacter le Délégué à la Protection des Données (DPO)
         published_at: 'Date de publication'
@@ -37,7 +42,6 @@ fr:
         declarative_with_state/en_instruction: En instruction
         declarative_with_state/accepte: Accepté
         api_particulier_token: Jeton API Particulier
-        routing_criteria_name: Nomination du routage
         initiated_mail: L’email de notification de passage de dossier en instruction
         received_mail: L’email de notification de dépôt de dossier
         closed_mail: L’email de notification d’acceptation de dossier
@@ -66,3 +70,6 @@ fr:
               invalid_uri_or_email: "Veuillez saisir un mail ou un lien"
             auto_archive_on:
               future: doit être dans le futur
+            sva_svr:
+              immutable: "La configuration SVA/SVR ne peut plus être modifiée"
+              declarative_incompatible: "Le SVA/SVR est incompatible avec une démarche déclarative"

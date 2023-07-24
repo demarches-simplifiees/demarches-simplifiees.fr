@@ -62,8 +62,8 @@ describe ProcedureOverview, type: :model do
   end
 
   describe 'with a procedure routee' do
-    let!(:gi_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }
-    let!(:gi_3) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 3') }
+    let!(:gi_2) { create(:groupe_instructeur, label: 'groupe instructeur 2', procedure: procedure) }
+    let!(:gi_3) { create(:groupe_instructeur, label: 'groupe instructeur 3', procedure: procedure) }
 
     def create_dossier_in_group(g)
       create(:dossier, procedure: procedure, created_at: monday, state: Dossier.states.fetch(:en_instruction), groupe_instructeur: g)

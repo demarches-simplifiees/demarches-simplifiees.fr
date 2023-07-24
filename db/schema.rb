@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_23_160831) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_19_112020) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+  enable_extension "postgis"
   enable_extension "unaccent"
 
   create_table "action_text_rich_texts", force: :cascade do |t|
@@ -307,6 +308,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_160831) do
     t.index ["procedure_id"], name: "index_deleted_dossiers_on_procedure_id"
   end
 
+  create_table "dossier_assignments", force: :cascade do |t|
+    t.datetime "assigned_at", precision: nil, null: false
+    t.string "assigned_by"
+    t.bigint "dossier_id", null: false
+    t.bigint "groupe_instructeur_id"
+    t.string "groupe_instructeur_label"
+    t.string "mode", null: false
+    t.bigint "previous_groupe_instructeur_id"
+    t.string "previous_groupe_instructeur_label"
+    t.index ["dossier_id"], name: "index_dossier_assignments_on_dossier_id"
+  end
+
   create_table "dossier_batch_operations", force: :cascade do |t|
     t.bigint "batch_operation_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -323,6 +336,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_160831) do
     t.bigint "dossier_id", null: false
     t.datetime "resolved_at", precision: 6
     t.datetime "updated_at", precision: 6, null: false
+    t.string "kind", default: "correction", null: false
+    t.string "reason", default: "incorrect", null: false
     t.index ["commentaire_id"], name: "index_dossier_corrections_on_commentaire_id"
     t.index ["dossier_id"], name: "index_dossier_corrections_on_dossier_id"
     t.index ["resolved_at"], name: "index_dossier_corrections_on_resolved_at", where: "((resolved_at IS NULL) OR (resolved_at IS NOT NULL))"
@@ -409,6 +424,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_160831) do
     t.string "state"
     t.datetime "termine_close_to_expiration_notice_sent_at", precision: 6
     t.datetime "updated_at", precision: 6
+    t.date "sva_svr_decision_on"
+    t.datetime "sva_svr_decision_triggered_at", precision: 6
     t.integer "user_id"
     t.index ["archived"], name: "index_dossiers_on_archived"
     t.index ["batch_operation_id"], name: "index_dossiers_on_batch_operation_id"
@@ -743,7 +760,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_160831) do
     t.string "libelle"
     t.string "lien_demarche"
     t.string "lien_dpo"
+    t.text "lien_dpo_error"
     t.string "lien_notice"
+    t.text "lien_notice_error"
     t.string "lien_site_web"
     t.integer "max_duree_conservation_dossiers_dans_ds", default: 12, null: false
     t.boolean "migrated_champ_routage"
@@ -760,6 +779,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_160831) do
     t.text "routing_criteria_name", default: "Votre ville"
     t.boolean "routing_enabled"
     t.bigint "service_id"
+    t.jsonb "sva_svr", default: {}, null: false
     t.text "tags", default: [], array: true
     t.datetime "test_started_at", precision: 6
     t.datetime "unpublished_at", precision: 6
@@ -929,6 +949,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_160831) do
 
   create_table "users", id: :serial, force: :cascade do |t|
     t.datetime "confirmation_sent_at", precision: 6
+    t.datetime "blocked_at", precision: 6
+    t.text "blocked_reason"
     t.string "confirmation_token"
     t.datetime "confirmed_at", precision: 6
     t.datetime "created_at", precision: 6
@@ -1022,6 +1044,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_160831) do
   add_foreign_key "commentaires", "dossiers"
   add_foreign_key "commentaires", "experts"
   add_foreign_key "commentaires", "instructeurs"
+  add_foreign_key "dossier_assignments", "dossiers"
   add_foreign_key "dossier_batch_operations", "batch_operations"
   add_foreign_key "dossier_batch_operations", "dossiers"
   add_foreign_key "dossier_corrections", "commentaires"

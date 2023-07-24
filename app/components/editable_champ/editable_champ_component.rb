@@ -25,14 +25,34 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
         "hidden": !@champ.visible?
       ),
       id: @champ.input_group_id,
-      data: { controller: stimulus_controller, **data_dependent_conditions }
+      data: { controller: stimulus_controller, **data_dependent_conditions, **stimulus_values }
     }
+  end
+
+  def stimulus_values
+    if @champ.fetch_external_data_pending?
+      { turbo_poll_url_value: }
+    else
+      {}
+    end
+  end
+
+  def turbo_poll_url_value
+    if @champ.private?
+      annotation_instructeur_dossier_path(@champ.dossier.procedure, @champ.dossier, @champ)
+    else
+      champ_dossier_path(@champ.dossier, @champ)
+    end
   end
 
   def stimulus_controller
     if autosave_enabled?
       # This is an editable champ. Lets find what controllers it might need.
       controllers = ['autosave']
+
+      if @champ.fetch_external_data_pending?
+        controllers << 'turbo-poll'
+      end
 
       controllers.join(' ')
     end

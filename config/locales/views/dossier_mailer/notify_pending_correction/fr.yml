@@ -3,8 +3,16 @@ fr:
   dossier_mailer:
     notify_pending_correction:
       subject: Vous devez corriger votre dossier nº %{dossier_id} « %{libelle_demarche} »
-      explanation_html:
-        Afin de poursuivre son instruction, <strong>un instructeur vous demande d’apporter des corrections</strong> à votre dossier nº %{dossier_id} de la démarche « %{libelle_demarche} ».
+      incorrect:
+        explanation_html:
+          Afin de poursuivre son instruction, <strong>un instructeur vous demande d’apporter des corrections</strong> à votre dossier nº %{dossier_id} de la démarche « %{libelle_demarche} ».
+        sva_svr:
+          Dans le cadre du principe du « %{rule_name} », le délai d’instruction est suspendu jusqu’à ce que vous déposiez les corrections demandées.
+      incomplete:
+        explanation_html:
+          Afin de commencer son instruction, <strong>un instructeur vous demande de compléter</strong> votre dossier nº %{dossier_id} de la démarche « %{libelle_demarche} ».
+        sva_svr:
+          Dans le cadre du principe du « %{rule_name} », le délai d’instruction sera réinitialisé à réception de votre dossier complet.
       link:
         Consultez la messagerie de votre dossier pour prendre connaissance des modifications à effectuer,
         puis modifiez le dossier directement sur le site.

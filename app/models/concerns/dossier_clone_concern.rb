@@ -69,7 +69,6 @@ module DossierCloneConcern
       diff = make_diff(editing_fork)
       apply_diff(diff)
       touch(:last_champ_updated_at)
-      assign_to_groupe_instructeur(editing_fork.groupe_instructeur)
     end
     reload
     update_search_terms_later
@@ -172,6 +171,9 @@ module DossierCloneConcern
     champs_to_remove += diff[:removed]
     champs_to_remove
       .filter { !_1.child? || !champs_to_remove.include?(_1.parent) }
-      .each(&:destroy!)
+      .each do |champ|
+        champ.rows.flatten.each(&:destroy!) if champ.repetition?
+        champ.destroy!
+      end
   end
 end

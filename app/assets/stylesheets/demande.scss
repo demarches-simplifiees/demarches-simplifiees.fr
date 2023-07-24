@@ -2,24 +2,46 @@
 @import "constants";
 
 .dossier-show {
-  @media (max-width: 48em) {
-    .d-block-sm {
-      display: block;
-    }
+  .champ-row {
+    padding: 0.5rem 1rem;
   }
 
   .champ-label {
-    font-weight: 600;
     margin-bottom: 0;
-    color: var(--text-action-high-grey);
+    font-size: 0.8rem;
+    font-weight: 300;
   }
 
   .champ-content {
     padding: 0 0 0.5rem;
+    font-weight: 600;
+
+    a {
+      font-weight: normal;
+    }
 
     p {
       padding: 0;
       margin: 0;
+    }
+
+    ul {
+      margin-block-start: 0;
+    }
+  }
+
+  .champ-blank {
+    font-weight: normal;
+    font-style: italic;
+  }
+
+  .champ-updated {
+    float: right;
+  }
+
+  .champ-repetition {
+    .champ-updated {
+      margin-right: -1rem; // align with non repetition contents and badges
     }
   }
 

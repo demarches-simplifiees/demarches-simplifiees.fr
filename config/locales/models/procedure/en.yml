@@ -10,8 +10,10 @@ en:
           description: Describe in a few lines the context, the aim etc.
           description_target_audience: Describe in a few lines the final recipients of the process, the eligibility criteria if there are any, the prerequisites, etc.
           description_pj: Describe the required attachments list if there is any
-          lien_site_web: "Exemple: 'https://exemple.gouv.fr/ma_demarche'"
+          lien_site_web: "This is the page of your website where the link will appear. Ex: https://exemple.gouv.fr/page_about_my_procedure"
           cadre_juridique: "Exemple: 'https://www.legifrance.gouv.fr/'"
+          old_procedure: This procedure replaces a close? If yes, please indicate the number of the replaced procedure
+          procedure_path: "Personalize if needed the rest of the URL to facilitate access to the procedure. From 3 to 200 characters: lowercase letters, numbers and dashes only"
         path: Public link
         organisation: Service
         description: What is the purpose of this procedure?
@@ -19,6 +21,9 @@ en:
         description_pj: Required attachments list
         description_pj_placeholder: If you leave this field blank and your form contains attachments, an automatically generated list will be displayed on the home page of your procedure.
         lien_site_web: Where will users find the link to the procedure?
+        old_procedure: Replaced procedure number
+        procedure_path: Procedure link to disseminate to users
+        procedure_path_placeholder: procedure-name
         cadre_juridique: Link to the legal text
         lien_dpo: Link or email to contact the data protection officer (DPO)
         duree_conservation_dossiers_dans_ds: Duration files will be kept
@@ -31,7 +36,6 @@ en:
         declarative_with_state/en_instruction: Instruction
         declarative_with_state/accepte: Accepted
         api_particulier_token: Token API Particulier
-        routing_criteria_name: Routing criteria name
         initiated_mail: File sorted for processing notification email
         received_mail: File submitted notification email
         closed_mail: File sorted as accepted notification email
@@ -58,3 +62,6 @@ en:
               format: 'Private field %{message}'
             lien_dpo:
               invalid_uri_or_email: "Fill in with an email or a link"
+            sva_svr:
+              immutable: "SVA/SVR configuration can no longer be modified"
+              declarative_incompatible: "SVA/SVR is incompatible with a declarative procedure"

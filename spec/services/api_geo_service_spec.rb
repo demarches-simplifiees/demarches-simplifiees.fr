@@ -38,7 +38,7 @@ describe APIGeoService do
 
   describe 'communes' do
     it 'return sorted results' do
-      expect(APIGeoService.communes('01').size).to eq(399)
+      expect(APIGeoService.communes('01').size).to eq(398)
       expect(APIGeoService.communes('01').first).to eq(code: '01004', name: 'Ambérieu-en-Bugey', postal_code: '01500', departement_code: '01', epci_code: '240100883')
       expect(APIGeoService.communes('01').last).to eq(code: '01457', name: 'Vonnas', postal_code: '01540', departement_code: '01', epci_code: '200070555')
     end

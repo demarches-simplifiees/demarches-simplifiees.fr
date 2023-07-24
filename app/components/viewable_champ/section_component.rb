@@ -19,7 +19,7 @@ class ViewableChamp::SectionComponent < ApplicationComponent
   end
 
   def champs
-    tail.filter { _1.is_a?(Champ) && _1.visible? && !_1.exclude_from_view? }
+    tail.filter { _1.is_a?(Champ) }
   end
 
   def sections
@@ -33,11 +33,15 @@ class ViewableChamp::SectionComponent < ApplicationComponent
     rest_of_champ
   end
 
-  def tag_for_depth
-    "h#{header_section.level + 1}" if header_section
+  def reset_tag_for_depth
+    return if !header_section
+
+    "reset-h#{header_section.level + 1}"
   end
 
   def first_level?
+    return if header_section.nil?
+
     header_section.level == 1
   end
 

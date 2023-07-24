@@ -8,7 +8,7 @@ module ProcedureHelper
   def procedure_badge(procedure)
     return nil unless procedure.brouillon?
 
-    tag.span(t('helpers.procedure.testing_procedure'), class: 'fr-badge')
+    tag.span(t('helpers.procedure.testing_procedure'), class: 'fr-badge fr-badge--sm')
   end
 
   def procedure_publish_label(procedure, key)
@@ -48,7 +48,7 @@ module ProcedureHelper
   def url_or_email_to_lien_dpo(procedure)
     URI::MailTo.build([procedure.lien_dpo, "subject="]).to_s
   rescue URI::InvalidComponentError
-    uri = URI.parse(procedure.lien_dpo)
+    uri = Addressable::URI.parse(procedure.lien_dpo)
     return "//#{uri}" if uri.scheme.nil?
     uri.to_s
   end

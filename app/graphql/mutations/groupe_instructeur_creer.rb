@@ -26,6 +26,7 @@ module Mutations
         .build(label: groupe_instructeur.label, closed: groupe_instructeur.closed, instructeurs: [current_administrateur.instructeur].compact)
 
       if groupe_instructeur.save
+        groupe_instructeur.procedure.toggle_routing
 
         # ugly hack to keep retro compatibility
         # do not judge

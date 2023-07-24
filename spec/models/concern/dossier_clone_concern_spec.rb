@@ -221,7 +221,7 @@ RSpec.describe DossierCloneConcern do
     context 'with updated groupe instructeur' do
       before {
         dossier.update!(groupe_instructeur: create(:groupe_instructeur))
-        forked_dossier.assign_to_groupe_instructeur(dossier.procedure.defaut_groupe_instructeur)
+        forked_dossier.assign_to_groupe_instructeur(dossier.procedure.defaut_groupe_instructeur, DossierAssignment.modes.fetch(:manual))
       }
 
       it { is_expected.to eq(added: [], updated: [], removed: []) }
@@ -339,6 +339,23 @@ RSpec.describe DossierCloneConcern do
         expect(dossier.revision_id).to eq(procedure.published_revision_id)
         expect(dossier.champs.all? { dossier.revision.in?(_1.type_de_champ.revisions) }).to be_truthy
         expect(Dossier.exists?(forked_dossier.id)).to be_falsey
+      end
+    end
+
+    context 'with old revision having repetition' do
+      let(:added_champ) { nil }
+      let(:removed_champ) { dossier.champs.find(&:repetition?) }
+      let(:updated_champ) { nil }
+
+      before do
+        dossier.champs.each do |champ|
+          champ.update(value: 'old value')
+        end
+        procedure.draft_revision.remove_type_de_champ(removed_champ.stable_id)
+        procedure.publish_revision!
+      end
+      it 'works' do
+        expect { subject }.not_to raise_error(ActiveRecord::InvalidForeignKey)
       end
     end
   end

@@ -2,18 +2,18 @@
   - content_for(:notice_info) do
     = render partial: "shared/dossiers/france_connect_informations_notice", locals: { user_information: dossier.france_connect_information }
 
-.fr-container.counter-start-header-section.dossier-show
+.fr-container.counter-start-header-section.dossier-show{ class: class_names("dossier-show-instructeur" => profile =="instructeur") }
   .fr-grid-row.fr-grid-row--center
-    .fr-col-12.fr-col-lg-10.fr-col-xl-8
+    .fr-col-12.fr-col-xl-8
       %h2.fr-h6.fr-background-alt--grey.fr-mb-0
-        .flex-grow.fr-py-3v.fr-px-4v= t('views.shared.dossiers.demande.en_construction')
+        .flex-grow.fr-py-3v.fr-px-2w= t('views.shared.dossiers.demande.en_construction')
 
       - if dossier.depose_at.present?
         = render partial: "shared/dossiers/infos_generales", locals: { dossier: dossier }
 
       .tab-title
         %h2.fr-h6.fr-background-alt--grey.fr-mb-0.flex
-          .flex-grow.fr-py-3v.fr-px-4v
+          .flex-grow.fr-py-3v.fr-px-2w
             = t('views.shared.dossiers.demande.requester_identity')
 
             - if dossier.identity_updated_at.present? && demande_seen_at&.<(dossier.identity_updated_at)
@@ -27,17 +27,17 @@
             = link_to t('views.shared.dossiers.demande.edit_identity'), identite_dossier_path(dossier), class: 'fr-py-3v fr-btn fr-btn--tertiary-no-outline'
 
 
-      .fr-my-4v.fr-px-4v
-        = render partial: "shared/dossiers/user_infos", locals: { user_deleted: dossier.user_deleted?, email: dossier.user_email_for(:display) }
+      = render partial: "shared/dossiers/user_infos", locals: { user_deleted: dossier.user_deleted?, email: dossier.user_email_for(:display) }
 
-        - if dossier.etablissement.present?
+      - if dossier.individual.present?
+        = render partial: "shared/dossiers/identite_individual", locals: { individual: dossier.individual }
+
+      - if dossier.etablissement.present?
+        .fr-mt-1w.fr-mb-4w.fr-px-2w
           = render partial: "shared/dossiers/identite_entreprise", locals: { etablissement: dossier.etablissement, profile: profile }
 
-        - if dossier.individual.present?
-          = render partial: "shared/dossiers/identite_individual", locals: { individual: dossier.individual }
-
       %h2.fr-h6.fr-background-alt--grey.fr-mb-0.flex
-        .flex-grow.fr-py-3v.fr-px-4v= t('views.shared.dossiers.demande.form')
+        .flex-grow.fr-py-3v.fr-px-2w= t('views.shared.dossiers.demande.form')
 
       - champs = dossier.champs_public
       - if champs.any? || dossier.procedure.routing_enabled?

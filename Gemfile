@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 7.0.4' # allows update to security fixes at any time
+gem 'rails', '~> 7.0.5' # allows update to security fixes at any time
 
 gem 'aasm'
 gem 'acsv'
@@ -8,6 +8,7 @@ gem 'active_link_to' # Automatically set a class on active links
 gem 'active_model_serializers'
 gem 'activestorage-openstack'
 gem 'active_storage_validations'
+gem 'addressable'
 gem 'administrate'
 gem 'administrate-field-enum' # Allow using Field::Enum in administrate
 gem 'after_party'
@@ -29,6 +30,7 @@ gem 'devise-i18n'
 gem 'devise-two-factor'
 gem 'discard'
 gem 'dotenv-rails', require: 'dotenv/rails-now' # dotenv should always be loaded before rails
+gem 'dry-monads'
 gem 'elastic-apm'
 gem 'flipper'
 gem 'flipper-active_record'
@@ -72,6 +74,7 @@ gem 'rack-attack'
 gem 'rails-i18n' # Locales par défaut
 gem 'rake-progressbar', require: false
 gem 'redcarpet'
+gem 'redis'
 gem 'rexml' # add missing gem due to ruby3 (https://github.com/Shopify/bootsnap/issues/325)
 gem 'rqrcode'
 gem 'saml_idp'

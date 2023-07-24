@@ -15,7 +15,7 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
     when Dossier.states.fetch(:en_construction)
       [BatchOperation.operations.fetch(:passer_en_instruction)]
     when Dossier.states.fetch(:en_instruction)
-      [BatchOperation.operations.fetch(:accepter), BatchOperation.operations.fetch(:repasser_en_construction)]
+      [BatchOperation.operations.fetch(:accepter), BatchOperation.operations.fetch(:refuser), BatchOperation.operations.fetch(:classer_sans_suite), BatchOperation.operations.fetch(:repasser_en_construction)]
     when Dossier.states.fetch(:accepte), Dossier.states.fetch(:refuse), Dossier.states.fetch(:sans_suite)
       [BatchOperation.operations.fetch(:archiver)]
     else
@@ -58,10 +58,33 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
             },
 
             {
-              label: t(".operations.accepter"),
-              operation: BatchOperation.operations.fetch(:accepter)
-            },
+              instruction:
+                            [
+                              {
+                                label: t(".operations.accepter"),
+                                operation_description: t(".operations.accepter_description"),
+                                operation: BatchOperation.operations.fetch(:accepter),
+                                operation_class_name: 'accept',
+                                placeholder: t(".placeholders.accepter")
+                              },
 
+                              {
+                                label: t(".operations.refuser"),
+                                operation_description: t(".operations.refuser_description"),
+                                operation: BatchOperation.operations.fetch(:refuser),
+                                operation_class_name: 'refuse',
+                                placeholder: t(".placeholders.refuser")
+                              },
+
+                              {
+                                label: t(".operations.classer_sans_suite"),
+                                operation_description: t(".operations.classer_sans_suite_description"),
+                                operation: BatchOperation.operations.fetch(:classer_sans_suite),
+                                operation_class_name: 'without-continuation',
+                                placeholder: t(".placeholders.classer_sans_suite")
+                              }
+                            ]
+            },
             {
               label: t(".operations.unfollow"),
               operation: BatchOperation.operations.fetch(:unfollow)

@@ -1,0 +1,11 @@
+- if without_date?
+  %span.fr-badge.fr-badge--sm
+    = t(sva? ? '.no_sva' : '.no_svr')
+- else
+  %span{ class: classes, title: title }
+    - if with_label.present?
+      = label_for_badge
+    - if pending_correction?
+      = t('.remaining_days_after_correction', count: days_count)
+    - else
+      = t('.in_days', count: days_count)

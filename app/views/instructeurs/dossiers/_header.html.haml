@@ -9,7 +9,7 @@
   = render partial: 'instructeurs/dossiers/header_top', locals: { dossier: }
   = render partial: 'instructeurs/dossiers/header_bottom', locals: { dossier: }
 
-.container
+.fr-container
   .print-header
     = dossier.procedure.libelle.truncate_words(10)
     >

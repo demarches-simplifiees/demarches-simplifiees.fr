@@ -10,7 +10,7 @@
   html: { class: 'form procedure_tags_combo', multipart: true } do |f|
   .fr-container
     .fr-grid-row
-      .fr-col-12.fr-col-offset-sm-2.fr-col-sm-8
+      .fr-col-12.fr-col-offset-md-2.fr-col-md-8
         %h1.fr-h2 Nouvelle démarche
 
         = render partial: 'administrateurs/procedures/informations', locals: { f: f }
@@ -18,6 +18,6 @@
   .sticky-action-footer
     .fr-container
       .fr-grid-row
-        .fr-col-12.fr-col-offset-sm-2.fr-col-sm-8
+        .fr-col-12.fr-col-offset-md-2.fr-col-md-8
           = f.button 'Créer la démarche', class: 'fr-btn fr-mr-2w'
           = link_to 'Annuler', admin_procedures_path, class: 'fr-btn fr-btn--secondary', data: { confirm: 'Êtes-vous sûr de vouloir annuler la création de cette démarche ?'}

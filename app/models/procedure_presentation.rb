@@ -38,6 +38,8 @@ class ProcedurePresentation < ApplicationRecord
   validate :check_filters_max_length
 
   def self_fields
+    sva_svr_enabled = procedure.sva_svr_enabled?
+
     [
       field_hash('self', 'created_at', type: :date),
       field_hash('self', 'updated_at', type: :date),
@@ -45,13 +47,15 @@ class ProcedurePresentation < ApplicationRecord
       field_hash('self', 'en_construction_at', type: :date),
       field_hash('self', 'en_instruction_at', type: :date),
       field_hash('self', 'processed_at', type: :date),
+      sva_svr_enabled && field_hash('self', 'sva_svr_decision_on', type: :date),
+      sva_svr_enabled && field_hash('self', 'sva_svr_decision_before', type: :date, virtual: true),
       field_hash('self', 'updated_since', type: :date, virtual: true),
       field_hash('self', 'depose_since', type: :date, virtual: true),
       field_hash('self', 'en_construction_since', type: :date, virtual: true),
       field_hash('self', 'en_instruction_since', type: :date, virtual: true),
       field_hash('self', 'processed_since', type: :date, virtual: true),
       field_hash('self', 'state', type: :enum, scope: 'instructeurs.dossiers.filterable_state', virtual: true)
-    ]
+    ].compact_blank
   end
 
   def fields
@@ -89,10 +93,16 @@ class ProcedurePresentation < ApplicationRecord
       )
     end
 
-    fields.concat procedure.types_de_champ_for_procedure_presentation
+    fields.concat(procedure.types_de_champ_for_procedure_presentation
       .pluck(:type_champ, :libelle, :private, :stable_id)
       .reject { |(type_champ)| type_champ == TypeDeChamp.type_champs.fetch(:repetition) }
-      .map { |(type_champ, libelle, is_private, stable_id)| field_hash(is_private ? TYPE_DE_CHAMP_PRIVATE : TYPE_DE_CHAMP, stable_id.to_s, label: libelle, type: (TypeDeChamp.options_for_select?(type_champ) ? :enum : :text)) }
+      .map do |(type_champ, libelle, is_private, stable_id)|
+        if is_private
+          field_hash_for_type_de_champ_private(type_champ, libelle, stable_id)
+        else
+          field_hash_for_type_de_champ_public(type_champ, libelle, stable_id)
+        end
+      end)
 
     fields
   end
@@ -112,11 +122,15 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def displayed_fields_for_headers
-    [
+    array = [
       field_hash('self', 'id', classname: 'number-col'),
       *displayed_fields,
       field_hash('self', 'state', classname: 'state-col')
     ]
+
+    array << field_hash('self', 'sva_svr_decision_on', classname: 'sva-col') if procedure.sva_svr_enabled?
+
+    array
   end
 
   def sorted_ids(dossiers, count)
@@ -180,6 +194,7 @@ class ProcedurePresentation < ApplicationRecord
       .group_by { |filter| filter.values_at(TABLE, COLUMN) }
       .map do |(table, column), filters|
       values = filters.pluck('value')
+      value_column = filters.pluck('value_column').compact.first || :value
       case table
       when 'self'
         field = self_fields.find { |h| h['column'] == column }
@@ -195,10 +210,10 @@ class ProcedurePresentation < ApplicationRecord
         end
       when TYPE_DE_CHAMP
         dossiers.with_type_de_champ(column)
-          .filter_ilike(:champs, :value, values)
+          .filter_ilike(:champs, value_column, values)
       when TYPE_DE_CHAMP_PRIVATE
         dossiers.with_type_de_champ_private(column)
-          .filter_ilike(:champs_private, :value, values)
+          .filter_ilike(:champs_private, value_column, values)
       when 'etablissement'
         if column == 'entreprise_date_creation'
           dates = values
@@ -282,7 +297,7 @@ class ProcedurePresentation < ApplicationRecord
   def add_filter(statut, field, value)
     if value.present?
       table, column = field.split(SLASH)
-      label = find_field(table, column)['label']
+      label, value_column = find_field(table, column).values_at('label', 'value_column')
 
       case table
       when TYPE_DE_CHAMP, TYPE_DE_CHAMP_PRIVATE
@@ -294,6 +309,7 @@ class ProcedurePresentation < ApplicationRecord
         'label' => label,
         TABLE => table,
         COLUMN => column,
+        'value_column' => value_column,
         'value' => value
       }
 
@@ -443,7 +459,7 @@ class ProcedurePresentation < ApplicationRecord
     end
   end
 
-  def field_hash(table, column, label: nil, classname: '', virtual: false, type: :text, scope: '')
+  def field_hash(table, column, label: nil, classname: '', virtual: false, type: :text, scope: '', value_column: :value)
     {
       'label' => label || I18n.t(column, scope: [:activerecord, :attributes, :procedure_presentation, :fields, table]),
       TABLE => table,
@@ -451,8 +467,23 @@ class ProcedurePresentation < ApplicationRecord
       'classname' => classname,
       'virtual' => virtual,
       'type' => type,
-      'scope' => scope
+      'scope' => scope,
+      'value_column' => value_column
     }
+  end
+
+  def field_hash_for_type_de_champ_public(type_champ, libelle, stable_id)
+    field_hash(TYPE_DE_CHAMP, stable_id.to_s,
+      label: libelle,
+      type: TypeDeChamp.filter_hash_type(type_champ),
+      value_column: TypeDeChamp.filter_hash_value_column(type_champ))
+  end
+
+  def field_hash_for_type_de_champ_private(type_champ, libelle, stable_id)
+    field_hash(TYPE_DE_CHAMP_PRIVATE, stable_id.to_s,
+      label: libelle,
+      type: TypeDeChamp.filter_hash_type(type_champ),
+      value_column: TypeDeChamp.filter_hash_value_column(type_champ))
   end
 
   def valid_column?(table, column, extra_columns = {})

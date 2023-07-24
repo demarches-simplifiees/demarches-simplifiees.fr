@@ -11,6 +11,10 @@
     align-items: flex-start;
   }
 
+  &.align-end {
+    align-items: end;
+  }
+
   &.align-baseline {
     align-items: baseline;
   }
@@ -58,4 +62,8 @@
 
 .flex-gap-2 {
   gap: 2 * $default-spacer; // scss-lint:disable PropertySpelling
+}
+
+.flex-1 {
+  flex: 1;
 }

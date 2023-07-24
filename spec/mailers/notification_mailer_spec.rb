@@ -1,27 +1,40 @@
 RSpec.describe NotificationMailer, type: :mailer do
   let(:administrateur) { create(:administrateur) }
   let(:user) { create(:user) }
-  let(:procedure) { create(:simple_procedure) }
+  let(:procedure) { create(:simple_procedure, :with_service) }
 
   describe 'send_en_construction_notification' do
-    let(:dossier) { create(:dossier, :en_construction, :with_individual, :with_service, user: user, procedure: procedure) }
-    let(:email_template) { create(:initiated_mail, subject: 'Email subject', body: 'Your dossier was received. Thanks.') }
-
-    before do
-      dossier.procedure.initiated_mail = email_template
-    end
+    let(:dossier) { create(:dossier, :en_construction, :with_individual, user: user, procedure: procedure) }
 
     subject(:mail) { described_class.send_en_construction_notification(dossier) }
 
-    it 'renders the template' do
-      expect(mail.subject).to eq('Email subject')
-      expect((mail.html_part || mail).body).to include('Your dossier was received')
-      expect(mail.attachments.first.filename).to eq("attestation-de-depot.pdf")
+    let(:body) { (mail.html_part || mail).body }
+
+    context "without custom template" do
+      it 'renders default template' do
+        expect(mail.subject).to eq("Votre dossier nº #{dossier.id} a bien été déposé (#{procedure.libelle})")
+        expect(body).to include("Votre dossier nº #{dossier.id}")
+        expect(body).to include(procedure.service.nom)
+        expect(mail.attachments.first.filename).to eq("attestation-de-depot.pdf")
+      end
+    end
+
+    context "with a custom template" do
+      let(:email_template) { create(:initiated_mail, subject: 'Email subject', body: 'Your dossier was received. Thanks.') }
+      before do
+        dossier.procedure.initiated_mail = email_template
+      end
+
+      it 'renders the template' do
+        expect(mail.subject).to eq('Email subject')
+        expect(body).to include('Your dossier was received')
+        expect(mail.attachments.first.filename).to eq("attestation-de-depot.pdf")
+      end
     end
   end
 
   describe 'send_en_instruction_notification' do
-    let(:dossier) { create(:dossier, :en_construction, :with_individual, :with_service, user: user, procedure: procedure) }
+    let(:dossier) { create(:dossier, :en_instruction, :with_individual, :with_service, user: user, procedure: procedure) }
     let(:email_template) { create(:received_mail, subject: 'Email subject', body: 'Your dossier was processed. Thanks.') }
 
     before do
@@ -29,15 +42,6 @@ RSpec.describe NotificationMailer, type: :mailer do
     end
 
     subject(:mail) { described_class.send_en_instruction_notification(dossier) }
-
-    it 'creates a commentaire in the messagerie' do
-      expect { subject.deliver_now }.to change { Commentaire.count }.by(1)
-      expect(subject.perform_deliveries).to be_truthy
-
-      commentaire = Commentaire.last
-      expect(commentaire.body).to include(email_template.subject_for_dossier(dossier), email_template.body_for_dossier(dossier))
-      expect(commentaire.dossier).to eq(dossier)
-    end
 
     it 'renders the template' do
       expect(mail.subject).to eq('Email subject')
@@ -79,32 +83,9 @@ RSpec.describe NotificationMailer, type: :mailer do
     end
   end
 
-  describe 'send_accepte_notification' do
-    let(:dossier) { create(:dossier, :en_instruction, :with_individual, :with_service, user: user, procedure: procedure) }
-    let(:email_template) { create(:closed_mail, subject: 'Email subject', body: 'Your dossier was accepted. Thanks.') }
-
-    before do
-      dossier.procedure.closed_mail = email_template
-    end
-
-    subject(:mail) { described_class.send_accepte_notification(dossier) }
-
-    context 'when dossier user is deleted' do
-      before do
-        dossier.user.delete_and_keep_track_dossiers_also_delete_user(administrateur)
-        dossier.reload
-      end
-
-      it 'should not send notification' do
-        expect { subject.deliver_now }.not_to change { Commentaire.count }
-        expect(subject.perform_deliveries).to be_falsey
-      end
-    end
-  end
-
   describe 'subject length' do
     let(:procedure) { create(:simple_procedure, libelle: "My super long title " + ("xo " * 100)) }
-    let(:dossier) { create(:dossier, :en_instruction, :with_individual, :with_service, user: user, procedure: procedure) }
+    let(:dossier) { create(:dossier, :accepte, :with_individual, :with_service, user: user, procedure: procedure) }
     let(:email_template) { create(:closed_mail, subject:, body: 'Your dossier was accepted. Thanks.') }
 
     before do
@@ -128,10 +109,10 @@ RSpec.describe NotificationMailer, type: :mailer do
   describe 'subject with apostrophe' do
     let(:procedure) { create(:simple_procedure, libelle: "Mon titre avec l'apostrophe") }
     let(:dossier) { create(:dossier, :en_instruction, :with_individual, :with_service, user: user, procedure: procedure) }
-    let(:email_template) { create(:closed_mail, subject:, body: 'Your dossier was accepted. Thanks.') }
+    let(:email_template) { create(:received_mail, subject:, body: 'Your dossier was accepted. Thanks.') }
 
     before do
-      dossier.procedure.closed_mail = email_template
+      dossier.procedure.received_mail = email_template
     end
 
     subject(:mail) { described_class.send_accepte_notification(dossier) }

@@ -7,12 +7,19 @@ module Instructeurs
     BATCH_SELECTION_LIMIT = 500
 
     def index
-      @procedures = current_instructeur
+      all_procedures = current_instructeur
         .procedures
         .kept
         .with_attached_logo
         .includes(:defaut_groupe_instructeur)
-        .order(closed_at: :desc, unpublished_at: :desc, published_at: :desc, created_at: :desc)
+
+      @procedures = all_procedures.order(closed_at: :desc, unpublished_at: :desc, published_at: :desc, created_at: :desc)
+      @procedures_publiees = all_procedures.publiees.order(published_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
+      @procedures_draft = all_procedures.brouillons.order(created_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
+      @procedures_closed = all_procedures.closes.order(created_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
+      @procedures_publiees_count = all_procedures.publiees.count
+      @procedures_draft_count = all_procedures.brouillons.count
+      @procedures_closed_count = all_procedures.closes.count
 
       dossiers = current_instructeur.dossiers
         .joins(groupe_instructeur: :procedure)
@@ -47,6 +54,8 @@ module Instructeurs
 
       @procedure_ids_en_cours_with_notifications = current_instructeur.procedure_ids_with_notifications(:en_cours)
       @procedure_ids_termines_with_notifications = current_instructeur.procedure_ids_with_notifications(:termine)
+      @statut = params[:statut]
+      @statut.blank? ? @statut = 'publiees' : @statut = params[:statut]
     end
 
     def show

@@ -354,15 +354,18 @@ module TagsSubstitutionConcern
   end
 
   def used_tags_and_libelle_for(text)
-    parse_tags(text).filter_map do |token|
-      case token
-      in { tag: tag, id: id }
-        [id, tag]
-      in { tag: tag }
-        [tag]
-      else
-        nil
-      end
+    # MD5 should be enough and it avoids long key
+    Rails.cache.fetch(["parse_tags", Digest::MD5.hexdigest(text)], expires_in: 1.day) do
+      parse_tags(text).filter_map do |token|
+          case token
+          in { tag: tag, id: id }
+            [id, tag]
+          in { tag: tag }
+            [tag]
+          else
+            nil
+          end
+        end
     end
   end
 end

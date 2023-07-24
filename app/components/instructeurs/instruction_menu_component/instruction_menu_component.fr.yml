@@ -1,3 +1,7 @@
 ---
 fr:
   instruct: Instruire le dossier
+  placeholders:
+    accepter: "Expliquez au demandeur pourquoi ce dossier est accepté (facultatif)"
+    refuser: "Expliquez au demandeur pourquoi ce dossier est refusé (obligatoire)"
+    classer_sans_suite: "Expliquez au demandeur pourquoi ce dossier est classé sans suite (obligatoire)"

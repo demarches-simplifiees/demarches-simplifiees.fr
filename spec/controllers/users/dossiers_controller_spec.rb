@@ -1,4 +1,6 @@
 describe Users::DossiersController, type: :controller do
+  include ActiveSupport::Testing::TimeHelpers
+
   let(:user) { create(:user) }
 
   describe 'before_actions' do
@@ -23,7 +25,7 @@ describe Users::DossiersController, type: :controller do
     before { @controller.send(ensure_authorized) }
 
     it { expect(@controller).to have_received(:redirect_to).with(root_path) }
-    it { expect(flash.alert).to eq("Vous n’avez pas accès à ce dossier") }
+    it { expect(flash.alert).to include("Vous n’avez pas accès à ce dossier") }
   end
 
   describe '#ensure_ownership!' do
@@ -33,28 +35,41 @@ describe Users::DossiersController, type: :controller do
 
     before do
       @controller.params = @controller.params.merge(dossier_id: asked_dossier.id)
-      expect(@controller).to receive(:current_user).and_return(user)
       allow(@controller).to receive(:redirect_to)
     end
 
     context 'when a user asks for their own dossier' do
+      before do
+        expect(@controller).to receive(:current_user).and_return(user)
+      end
+
       let(:asked_dossier) { create(:dossier, user: user) }
 
       it_behaves_like 'does not redirect nor flash'
     end
 
     context 'when a user asks for another dossier' do
+      before do
+        expect(@controller).to receive(:current_user).twice.and_return(user)
+      end
+
       it_behaves_like 'redirects and flashes'
     end
 
     context 'when an invite asks for a dossier where they were invited' do
-      before { create(:invite, dossier: asked_dossier, user: user) }
+      before do
+        expect(@controller).to receive(:current_user).twice.and_return(user)
+        create(:invite, dossier: asked_dossier, user: user)
+      end
 
       it_behaves_like 'redirects and flashes'
     end
 
     context 'when an invite asks for another dossier' do
-      before { create(:invite, dossier: create(:dossier), user: user) }
+      before do
+        expect(@controller).to receive(:current_user).twice.and_return(user)
+        create(:invite, dossier: create(:dossier), user: user)
+      end
 
       it_behaves_like 'redirects and flashes'
     end
@@ -67,28 +82,41 @@ describe Users::DossiersController, type: :controller do
 
     before do
       @controller.params = @controller.params.merge(dossier_id: asked_dossier.id)
-      expect(@controller).to receive(:current_user).and_return(user)
       allow(@controller).to receive(:redirect_to)
     end
 
     context 'when a user asks for their own dossier' do
+      before do
+        expect(@controller).to receive(:current_user).and_return(user)
+      end
+
       let(:asked_dossier) { create(:dossier, user: user) }
 
       it_behaves_like 'does not redirect nor flash'
     end
 
     context 'when a user asks for another dossier' do
+      before do
+        expect(@controller).to receive(:current_user).twice.and_return(user)
+      end
+
       it_behaves_like 'redirects and flashes'
     end
 
     context 'when an invite asks for a dossier where they were invited' do
-      before { create(:invite, dossier: asked_dossier, user: user) }
+      before do
+        expect(@controller).to receive(:current_user).and_return(user)
+        create(:invite, dossier: asked_dossier, user: user)
+      end
 
       it_behaves_like 'does not redirect nor flash'
     end
 
     context 'when an invite asks for another dossier' do
-      before { create(:invite, dossier: create(:dossier), user: user) }
+      before do
+        expect(@controller).to receive(:current_user).twice.and_return(user)
+        create(:invite, dossier: create(:dossier), user: user)
+      end
 
       it_behaves_like 'redirects and flashes'
     end
@@ -351,9 +379,8 @@ describe Users::DossiersController, type: :controller do
     let(:payload) { { id: dossier.id } }
 
     subject do
-      Timecop.freeze(now) do
-        post :submit_brouillon, params: payload
-      end
+      travel_to now
+      post :submit_brouillon, params: payload
     end
 
     context 'when the dossier cannot be updated by the user' do
@@ -430,7 +457,25 @@ describe Users::DossiersController, type: :controller do
         before { subject }
 
         it { expect(response).to redirect_to(root_path) }
-        it { expect(flash.alert).to eq("Vous n’avez pas accès à ce dossier") }
+        it { expect(flash.alert).to include("Vous n’avez pas accès à ce dossier") }
+      end
+    end
+
+    context 'when procedure has sva enabled' do
+      let(:procedure) { create(:procedure, :sva) }
+      let!(:dossier) { create(:dossier, :brouillon, procedure:, user:) }
+
+      it 'passe automatiquement en instruction' do
+        delivery = double.tap { expect(_1).to receive(:deliver_later).with(no_args).twice }
+        expect(NotificationMailer).to receive(:send_en_construction_notification).and_return(delivery)
+        expect(NotificationMailer).to receive(:send_en_instruction_notification).and_return(delivery)
+
+        subject
+        dossier.reload
+
+        expect(dossier).to be_en_instruction
+        expect(dossier.pending_correction?).to be_falsey
+        expect(dossier.en_instruction_at).to within(5.seconds).of(Time.current)
       end
     end
   end
@@ -521,6 +566,47 @@ describe Users::DossiersController, type: :controller do
 
       it "resolve correction" do
         expect { subject }.to change { correction.reload.resolved_at }.to be_truthy
+      end
+
+      context 'when procedure has sva enabled' do
+        let(:procedure) { create(:procedure, :sva) }
+        let!(:dossier) { create(:dossier, :en_construction, procedure:, user:) }
+
+        it 'passe automatiquement en instruction' do
+          expect(dossier.pending_correction?).to be_truthy
+
+          subject
+          dossier.reload
+
+          expect(dossier).to be_en_instruction
+          expect(dossier.pending_correction?).to be_falsey
+          expect(dossier.en_instruction_at).to within(5.seconds).of(Time.current)
+        end
+      end
+    end
+
+    context 'when there is sva without confirming correction' do
+      let!(:correction) { create(:dossier_correction, dossier: dossier) }
+
+      subject { post :submit_en_construction, params: { id: dossier.id } }
+
+      it "does not resolve correction" do
+        expect { subject }.not_to change { correction.reload.resolved_at }
+      end
+
+      context 'when procedure has sva enabled' do
+        let(:procedure) { create(:procedure, :sva) }
+        let!(:dossier) { create(:dossier, :en_construction, procedure:, user:) }
+
+        it 'does not passe automatiquement en instruction' do
+          expect(dossier.pending_correction?).to be_truthy
+
+          subject
+          dossier.reload
+
+          expect(dossier).to be_en_construction
+          expect(dossier.pending_correction?).to be_truthy
+        end
       end
     end
   end

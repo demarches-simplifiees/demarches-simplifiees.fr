@@ -52,7 +52,7 @@ Rails.application.configure do
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
-  config.log_level = ENV["DS_ENV"] == "staging" ? :debug : :info
+  config.log_level = ENV["DS_LOG_LEVEL"].presence&.to_sym || :info
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :subdomain, :uuid ]
@@ -61,7 +61,20 @@ Rails.application.configure do
   # config.logger = ActiveSupport::TaggedLogging.new(SyslogLogger.new)
 
   # Use a different cache store in production.
-  # config.cache_store = :mem_cache_store
+  if ENV['REDIS_CACHE_URL'].present?
+    redis_options = { url: ENV['REDIS_CACHE_URL'] }
+    redis_options[:ssl] = (ENV['REDIS_CACHE_SSL'] == 'enabled')
+    if ENV['REDIS_CACHE_SSL_VERIFY_NONE'] == 'enabled'
+      redis_options[:ssl_params] = { verify_mode: OpenSSL::SSL::VERIFY_NONE }
+    end
+
+    redis_options[:error_handler] = -> (method:, returning:, exception:) {
+      Sentry.capture_exception exception, level: 'warning',
+        tags: { method: method, returning: returning }
+    }
+
+    config.cache_store = :redis_cache_store, redis_options
+  end
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   config.active_job.queue_adapter = :delayed_job

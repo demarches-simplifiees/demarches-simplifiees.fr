@@ -209,7 +209,7 @@ describe Instructeur, type: :model do
 
     context 'when there is a modification on groupe instructeur' do
       let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur], procedure: dossier.procedure) }
-      before { dossier.assign_to_groupe_instructeur(groupe_instructeur) }
+      before { dossier.assign_to_groupe_instructeur(groupe_instructeur, DossierAssignment.modes.fetch(:auto)) }
 
       it { is_expected.to match({ demande: true, annotations_privees: false, avis: false, messagerie: false }) }
     end
@@ -242,7 +242,7 @@ describe Instructeur, type: :model do
   end
 
   describe '#notifications_for_groupe_instructeurs' do
-    # a procedure, one group, 2 instructeurs
+    # a procedure, two groups, 2 instructeurs
     let(:procedure) { create(:simple_procedure, :routee, :with_type_de_champ_private, :for_individual) }
     let(:gi_p1) { procedure.groupe_instructeurs.last }
     let!(:dossier) { create(:dossier, :en_construction, :with_individual, :followed, procedure: procedure, groupe_instructeur: gi_p1) }
@@ -573,8 +573,8 @@ describe Instructeur, type: :model do
     let(:instructeur_3) { create(:instructeur) }
     let(:procedure) { create(:procedure, instructeurs: [instructeur_2, instructeur_3], procedure_expires_when_termine_enabled: true) }
     let(:gi_1) { procedure.defaut_groupe_instructeur }
-    let(:gi_2) { procedure.groupe_instructeurs.create(label: '2') }
-    let(:gi_3) { procedure.groupe_instructeurs.create(label: '3') }
+    let(:gi_2) { create(:groupe_instructeur, label: '2', procedure: procedure) }
+    let(:gi_3) { create(:groupe_instructeur, label: '3', procedure: procedure) }
 
     subject do
       instructeur_2.dossiers_count_summary([gi_1.id, gi_2.id])

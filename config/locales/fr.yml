@@ -335,7 +335,6 @@ fr:
           updated_at: "Modifié le %{datetime}"
         edit:
           autosave: Votre dossier est enregistré automatiquement après chaque modification. Vous pouvez à tout moment fermer la fenêtre et reprendre plus tard là où vous en étiez.
-          notice: Télécharger le guide de la démarche
           pending_correction:
             confirm_label: Je certifie avoir effectué toutes les corrections demandées par l’administration.
         messages:
@@ -396,10 +395,6 @@ fr:
         dossier_not_in_instructor_group: "Le dossier n° %{dossier_id} de la procédure « %{procedure_libelle} » correspond à votre recherche mais il est rattaché au groupe d’instructeurs « %{groupe_instructeur_label} »."
     users:
       dossiers:
-        account_creation:
-          empty: "Aucun dossier"
-          detail_one: "Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche."
-          detail_two: "Celui ci doit ressembler à"
         fix_champ: "corriger l’erreur"
         archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
         identite:
@@ -425,8 +420,6 @@ fr:
           submit_dossier: Déposer un autre dossier
         show:
           header:
-            edit_dossier: Modifier mon dossier
-            edit_dossier_title: "Modifier mon dossier - Vous pouvez modifier votre dossier tant qu’il n’est pas passé en instruction"
             summary: "Résumé"
             request: "Demande"
             mailbox: "Messagerie"
@@ -441,6 +434,10 @@ fr:
             en_construction_html: "Votre dossier est en construction. Cela signifie que <strong>vous pouvez encore le modifier</strong>. Vous ne pourrez plus modifier votre dossier lorsque l’administration le passera « en instruction »."
             status_review: en instruction
             admin_review: Votre dossier est en cours d’instruction par l’administration. Vous ne pouvez plus le modifier.
+            delay_title:
+              sva: "Votre dossier est soumis au cadre législatif « Silence Vaut Accord »"
+              svr: "Votre dossier est soumis au cadre législatif « Silence Vaut Rejet »"
+            delay_text_sva_svr: "Vous aurez un retour de l'administration au plus tard le %{date}."
             status_completed: terminé
             use_mailbox_for_questions_html: "<strong>Vous avez une question ?</strong> Utilisez la messagerie pour <a href=\"%{mailbox_url}\">contacter l’administration directement</a>."
             acceptee_html: "Votre dossier a été <strong>accepté</strong>."
@@ -456,7 +453,8 @@ fr:
         messagerie:
           mailbox: "La messagerie vous permet de contacter l’instructeur en charge de votre dossier."
         demande:
-          edit_dossier: "Modifier le dossier"
+          edit_dossier: Modifier le dossier
+          edit_dossier_title: "Modifier mon dossier - Vous pouvez modifier votre dossier tant qu’il n’est pas passé en instruction"
         search:
           search_file: Rechercher un dossier (N° de dossier, mots-clés)
           simple: Rechercher
@@ -464,25 +462,28 @@ fr:
         index:
           dossiers: "Mes dossiers"
         dossiers_list:
-          caption: Mes dossiers
-          procedure: "Démarche"
           n_dossier: "Nº dossier"
-          requester: "Demandeur"
-          status: "Statut"
-          updated: "Mis à jour"
-          actions: "Actions"
           no_result_title: Aucun dossier
           no_result_text_html: "Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche. <br> Celui ci doit ressembler à %{app_base}/commencer/xxx."
           no_result_text_with_filter: ne correspond aux filtres sélectionnés
           no_result_reset_filter: Réinitialiser les filtres
+          procedure_closed: Cette démarche a été clôturée, vous ne pourrez pas redéposer de dossier à partir du lien de la démarche, contactez votre administration pour plus d’information.
+          pending_correction: Ce dossier attend vos corrections. Consultez les modifications à apporter dans la messagerie.
+          depose_at: Déposé le %{date}
+          created_at: Créé le %{date}
+          updated_at: modifié le %{date}
+          shared_with: Dossier partagé avec
+          deleted: Supprimé le %{date}
+          deleted_badge: Supprimé
         dossier_action:
           edit_dossier: "Modifier le dossier"
           start_other_dossier: "Commencer un autre dossier vide"
           clone: "Dupliquer ce dossier"
           delete_dossier: "Supprimer le dossier"
           transfer_dossier: "Transférer le dossier"
-          edit_draft: "Modifier le brouillon"
+          edit_draft: "Continuer à remplir"
           actions: "Actions"
+          other_actions: "Autres actions"
         transfers:
           sender_demande_en_cours: "Une demande de transfert est en cours sur le dossier Nº %{id} pour %{email}"
           receiver_demande_en_cours: "Demande de transfert pour le dossier Nº %{id} envoyé par %{email}"
@@ -538,7 +539,7 @@ fr:
 
     attributes:
       default_attributes: &default_attributes
-        email: Adresse éléctronique
+        email: Adresse électronique
         password: 'Mot de passe'
         requested_merge_into: 'La nouvelle adresse email'
         hints:
@@ -572,6 +573,7 @@ fr:
       messages:
         not_a_phone: 'Numéro de téléphone invalide'
         not_a_rna: 'Numéro RNA invalide'
+        url: 'n’est pas un lien valide'
       models:
         attestation_template:
           attributes:
@@ -586,9 +588,9 @@ fr:
             reset_password_token:
               invalid: ": Votre lien de nouveau mot de passe a expiré. Merci d’en demander un nouveau."
             email:
-              blank: "est vide. Saisir une adresse éléctronique"
-              invalid: "est invalide. Saisir une adresse éléctronique valide, exemple : john.doe@exemple.fr"
-              taken: "déjà utilisé. Saisir une autre adresse éléctronique."
+              blank: "est vide. Saisir une adresse électronique"
+              invalid: "est invalide. Saisir une adresse électronique valide, exemple : john.doe@exemple.fr"
+              taken: "déjà utilisé. Saisir une autre adresse électronique."
             password:
               too_short: "est trop court. Saisir un mot de passe avec au moins 8 caractères"
               not_strong: "n’est pas assez complexe. Saisir un mot de passe plus complexe"
@@ -757,9 +759,12 @@ fr:
   users:
     dossiers:
       test_procedure: "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l’administrateur (ajout d’un champ, publication de la démarche...) entraînera sa suppression."
-      no_access: "Vous n’avez pas accès à ce dossier"
+      no_access_html: "Vous n’avez pas accès à ce dossier.<br>Vérifiez que votre adresse email de connexion <b>%{email}</b> est bien celle utilisée pour remplir cette démarche.<br> Si ce n'est pas le cas, déconnectez-vous"
       no_longer_editable: "Votre dossier ne peut plus être modifié"
       en_construction_submitted: "Les modifications ont déjà été déposées"
+      fill_identity:
+        individual: Complétez l’identité du déposant du dossier pour poursuivre.
+        siret: Complétez l’identification de l’établissement pour poursuivre.
       create_commentaire:
         message_send: "Votre message a bien été envoyé à l’instructeur en charge de votre dossier."
       cloned_success: "Votre dossier a bien été dupliqué. Vous pouvez maintenant le vérifier, l’adapter puis le déposer."
@@ -817,6 +822,12 @@ fr:
       to_clone: Cloner
       to_close: Clore
     procedures:
+      created_at: créée le
+      published_at: publiée le
+      updated_at_today: modifiée à
+      updated_at: modifiée le
+      closed_at: archivée le
+      auto_archive_on: sera clôturée le
       show:
         ready: "Validé"
         needs_configuration: "À configurer"
@@ -880,9 +891,19 @@ fr:
         dossiers_count: "Nb dossiers"
         weekly_distribution: "Répartition par semaine"
         weekly_distribution_details: "au cours des 6 derniers mois"
+      sva_svr_rule_name:
+        sva: "Silence Vaut Accord"
+        svr: "Silence Vaut Rejet"
     procedure_description:
       estimated_fill_duration: "Temps de remplissage estimé : %{estimated_minutes} mn"
       estimated_fill_duration_title: Quelle est la durée de remplissage de la démarche ?
       estimated_fill_duration_detail: "La durée de remplissage est estimée à %{estimated_minutes} min. Ce délai peut varier selon les options que vous choisirez."
       pieces_jointes : Quelles sont les pièces justificatives à fournir ?
       pieces_jointes_conditionnal_list_title : Liste des pièces en fonction de votre situation
+      sva_svr_title: "Cette démarche applique le « %{rule} »"
+      sva_text_html: "Le SVA, ou « <strong>Silence Vaut Accord</strong> », est un principe législatif qui définit le comportement d’une demande en cas d’absence de réponse de l’administration : la demande sera automatiquement acceptée à l’issue d’un délai si votre dossier est complet."
+      svr_text_html: "Le SVR, ou « <strong>Silence Vaut Rejet</strong> », est un principe législatif qui définit le comportement d’une demande en cas d’absence de réponse de l’administration : la demande sera automatiquement refusée à l’issue d’un délai si votre dossier est complet."
+      sva_svr_prevision_date:
+        Ainsi, vous recevrez une réponse à votre demande dans les %{delay} après avoir déposé votre dossier complet.
+        Par exemple, si vous déposez votre dossier aujourd'hui, vous aurez une réponse au plus tard le %{date}.
+        Si votre dossier est incomplet, cette date pourrait être repoussée jusqu’à la soumission d’un dossier complété.

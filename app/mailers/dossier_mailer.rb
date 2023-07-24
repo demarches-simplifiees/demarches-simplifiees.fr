@@ -53,6 +53,8 @@ class DossierMailer < ApplicationMailer
       @dossier = dossier
       @service = dossier.procedure.service
       @logo_url = attach_logo(dossier.procedure)
+      @correction = commentaire.dossier_correction
+
       @subject = default_i18n_subject(dossier_id: dossier.id, libelle_demarche: dossier.procedure.libelle)
 
       mail(to: dossier.user_email_for(:notification), subject: @subject) do |format|

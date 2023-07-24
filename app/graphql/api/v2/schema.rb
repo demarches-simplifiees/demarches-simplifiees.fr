@@ -84,6 +84,7 @@ class API::V2::Schema < GraphQL::Schema
     Types::Champs::Descriptor::CheckboxChampDescriptorType,
     Types::Champs::Descriptor::CiviliteChampDescriptorType,
     Types::Champs::Descriptor::CnafChampDescriptorType,
+    Types::Champs::Descriptor::COJOChampDescriptorType,
     Types::Champs::Descriptor::CommuneChampDescriptorType,
     Types::Champs::Descriptor::DateChampDescriptorType,
     Types::Champs::Descriptor::DatetimeChampDescriptorType,

@@ -972,6 +972,23 @@ describe API::V2::GraphqlController do
           end
         end
 
+        context 'with correction' do
+          let(:input) { super().merge(correction: :incorrect) }
+
+          it 'should create a correction' do
+            expect(gql_data).to eq(dossierEnvoyerMessage: {
+              message: {
+                body: "Bonjour"
+              },
+              errors: nil
+            })
+
+            expect(dossier).to be_pending_correction
+            expect(dossier.pending_correction).to be_dossier_incorrect
+            expect(dossier.pending_correction.commentaire.body).to eq("Bonjour")
+          end
+        end
+
         context 'schema error' do
           let(:input) do
             {
@@ -1193,7 +1210,8 @@ describe API::V2::GraphqlController do
         end
 
         context "should changer groupe instructeur" do
-          let!(:new_groupe_instructeur) { procedure.groupe_instructeurs.create(label: 'new groupe instructeur') }
+          let!(:new_groupe_instructeur) { create(:groupe_instructeur, label: 'new groupe instructeur', procedure: procedure) }
+
           let(:query) do
             "mutation {
             dossierChangerGroupeInstructeur(input: {
