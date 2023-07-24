@@ -69,7 +69,7 @@ describe 'users/dossiers/index', type: :view do
 
   context 'quand le dossier a été supprimé' do
     let(:dossiers_supprimes_definitivement) { create(:deleted_dossier, user_id: user.id) }
-    
+
     before do
       assign(:dossiers, Kaminari.paginate_array([dossiers_supprimes_definitivement]).page(1))
       assign(:statut, 'dossiers-supprimes-definitivement')
