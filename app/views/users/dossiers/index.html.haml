@@ -19,9 +19,9 @@
               = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: t('views.users.dossiers.search.search_file'), class: "fr-input"
               %button.fr-btn.fr-btn--sm
                 = t('views.users.dossiers.search.simple')
-      - if @all_dossiers_uniq_procedures_count > 1
+      - if @procedures_for_select.present?
         .fr-col
-          = render Dossiers::UserProcedureFilterComponent.new(dossiers: @all_dossiers)
+          = render Dossiers::UserProcedureFilterComponent.new(procedures_for_select: @procedures_for_select)
 
     - if @search_terms.blank?
       %nav.tabs{ role: 'navigation', 'aria-label': t('views.users.dossiers.secondary_menu') }

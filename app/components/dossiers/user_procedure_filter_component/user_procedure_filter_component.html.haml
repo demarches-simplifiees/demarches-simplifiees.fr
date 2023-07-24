@@ -1,3 +1,3 @@
-= form_with(url: dossiers_path(), method: :get ) do |f|
+= form_with(url: dossiers_path, method: :get, data: { controller: 'autosubmit' } ) do |f|
   .fr-input-group
-    = f.select :procedure_id, options_for_select(procedures_collection(@dossiers), params[:procedure_id]), {prompt: t('.procedures.prompt')}, onchange: "this.form.submit();", class: 'fr-select'
+    = f.select :procedure_id, options_for_select(@procedures_for_select, params[:procedure_id]), { prompt: t('.procedures.prompt') }, class: 'fr-select'
