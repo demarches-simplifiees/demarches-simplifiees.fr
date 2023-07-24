@@ -7,19 +7,19 @@ module Instructeurs
     BATCH_SELECTION_LIMIT = 500
 
     def index
-      @procedures = current_instructeur
+      all_procedures = current_instructeur
         .procedures
         .kept
         .with_attached_logo
         .includes(:defaut_groupe_instructeur)
-        .order(closed_at: :desc, unpublished_at: :desc, published_at: :desc, created_at: :desc)
 
-      @procedures_publiees = paginated_published_procedures.merge(@procedures)
-      @procedures_draft = paginated_draft_procedures.merge(@procedures)
-      @procedures_closed = paginated_closed_procedures.merge(@procedures)
-      @procedures_publiees_count = current_instructeur.procedures.publiees.count
-      @procedures_draft_count = current_instructeur.procedures.brouillons.count
-      @procedures_closed_count = current_instructeur.procedures.closes.count
+      @procedures = all_procedures.order(closed_at: :desc, unpublished_at: :desc, published_at: :desc, created_at: :desc)
+      @procedures_publiees = all_procedures.publiees.order(published_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
+      @procedures_draft = all_procedures.brouillons.order(created_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
+      @procedures_closed = all_procedures.closes.order(created_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
+      @procedures_publiees_count = all_procedures.publiees.count
+      @procedures_draft_count = all_procedures.brouillons.count
+      @procedures_closed_count = all_procedures.closes.count
 
       dossiers = current_instructeur.dossiers
         .joins(groupe_instructeur: :procedure)
@@ -56,33 +56,6 @@ module Instructeurs
       @procedure_ids_termines_with_notifications = current_instructeur.procedure_ids_with_notifications(:termine)
       @statut = params[:statut]
       @statut.blank? ? @statut = 'publiees' : @statut = params[:statut]
-    end
-
-    def paginated_published_procedures
-      current_instructeur
-        .procedures
-        .publiees
-        .page(params[:page])
-        .per(ITEMS_PER_PAGE)
-        .order(published_at: :desc)
-    end
-
-    def paginated_draft_procedures
-      current_instructeur
-        .procedures
-        .brouillons
-        .page(params[:page])
-        .per(ITEMS_PER_PAGE)
-        .order(created_at: :desc)
-    end
-
-    def paginated_closed_procedures
-      current_instructeur
-        .procedures
-        .closes
-        .page(params[:page])
-        .per(ITEMS_PER_PAGE)
-        .order(created_at: :desc)
     end
 
     def show
