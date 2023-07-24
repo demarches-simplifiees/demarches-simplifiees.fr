@@ -8,7 +8,7 @@
 #  user_id    :bigint           not null
 #
 class Administrateur < ApplicationRecord
-  UNUSED_ADMIN_THRESHOLD = 6.months
+  UNUSED_ADMIN_THRESHOLD = ENV.fetch('UNUSED_ADMIN_THRESHOLD') { 6 }.to_i.months
 
   has_and_belongs_to_many :instructeurs
   has_many :administrateurs_procedures
