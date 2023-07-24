@@ -157,4 +157,25 @@ describe Administrateurs::ServicesController, type: :controller do
       it { expect(procedure.reload.service_id).to be_nil }
     end
   end
+
+  describe "#index" do
+    let(:admin) { create(:administrateur) }
+
+    before do
+      sign_in(admin.user)
+    end
+
+    context 'when admin has service without siret' do
+      let(:service) { create(:service) }
+      let(:procedure) { create(:procedure, :published, service: service, administrateur: admin) }
+
+      it 'display alert when admin has service without siret' do
+        service.siret = nil
+        service.save(validate: false)
+        get :index, params: { procedure_id: procedure.id }
+        expect(flash.alert.first).to eq "Vous n'avez pas renseigné le siret du service pour certaines de vos demarches. Merci de les modifier."
+        expect(flash.alert.last).to include(service.nom)
+      end
+    end
+  end
 end

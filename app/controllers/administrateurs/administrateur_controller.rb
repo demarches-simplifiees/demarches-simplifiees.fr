@@ -1,6 +1,7 @@
 module Administrateurs
   class AdministrateurController < ApplicationController
     before_action :authenticate_administrateur!
+    before_action :alert_for_missing_siret_service
     helper_method :administrateur_as_manager?
 
     def nav_bar_profile
@@ -37,6 +38,25 @@ module Administrateurs
 
       current_administrateur.administrateurs_procedures
         .exists?(procedure_id: id, manager: true)
+    end
+
+    def alert_for_missing_siret_service
+      procedures = missing_siret_services
+      if procedures.any?
+        errors = []
+        errors << I18n.t('shared.procedures.no_siret')
+        procedures.each do |p|
+          errors << I18n.t('shared.procedures.add_siret_to_service_without_siret_html', link: edit_admin_service_path(p.service, procedure_id: p.id), nom: p.service.nom)
+        end
+        flash.now.alert = errors
+      end
+    end
+
+    def missing_siret_services
+      current_administrateur
+        .procedures.publiees
+        .joins(:service)
+        .where(service: { siret: nil })
     end
   end
 end

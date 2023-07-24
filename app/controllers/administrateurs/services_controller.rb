@@ -1,5 +1,6 @@
 module Administrateurs
   class ServicesController < AdministrateurController
+    skip_before_action :alert_for_missing_siret_service, only: :edit
     def index
       @services = services.ordered
       @procedure = procedure
