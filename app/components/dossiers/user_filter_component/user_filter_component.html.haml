@@ -6,9 +6,9 @@
           = t('.button.select_filters')
         #filters.fr-collapse.fr-translate__menu.fr-menu
           %ul.fr-menu__list.fr-p-3w
-            = form_with(url: dossiers_path(), method: :get ) do |f|
+            = form_with(url: dossiers_path, method: :get ) do |f|
               = f.hidden_field :statut, value: @statut
-              = f.hidden_field :procedure_id, value: @procedure_id
+              = f.hidden_field :procedure_id, value: @procedure_id, id: nil
 
               .fr-input-group
                 = f.label :state, t('.legend.state'), class: 'fr-label'

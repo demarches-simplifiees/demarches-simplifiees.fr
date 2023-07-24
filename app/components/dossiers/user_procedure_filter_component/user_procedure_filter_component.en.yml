@@ -1,3 +1,4 @@
 fr:
   procedures:
+    label: Filter by procedure
     prompt: All procedures
