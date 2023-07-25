@@ -242,7 +242,7 @@ describe Administrateur, type: :model do
     context 'with a custom shorter threshold period' do
       before { stub_const("Administrateur::UNUSED_ADMIN_THRESHOLD", 5.months) }
 
-      it { is_expected.to match([new_admin, unused_admin]) }
+      it { is_expected.to match_array([new_admin, unused_admin]) }
     end
   end
 
