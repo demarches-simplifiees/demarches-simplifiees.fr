@@ -33,25 +33,19 @@ jobs:
 
   js_tests:
     name: JavaScript tests
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Setup Node
         uses: actions/setup-node@v3
-        with:
-          cache: 'yarn'
 
       - name: Install Node modules
-        run: |
-          node --version
-          yarn install --frozen-lockfile
-        shell: bash
+        run: npm ci
 
       - name: Run tests
-        run: |
-          yarn test
+        run: npm test
 
   unit_tests:
     name: Unit tests
