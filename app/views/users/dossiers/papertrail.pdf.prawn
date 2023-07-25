@@ -49,6 +49,7 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
         pdf.fill_color grey
         pdf.text "#{Individual.human_attribute_name(:prenom)} : #{@dossier.individual.prenom}", size: 10, character_spacing: -0.2, align: :justify
         pdf.text "#{Individual.human_attribute_name(:nom)} :  #{@dossier.individual.nom.upcase}", size: 10, character_spacing: -0.2, align: :justify
+        pdf.text "#{User.human_attribute_name(:email)} :  #{@dossier.user.email}", size: 10, character_spacing: -0.2, align: :justify
       end
     end
 
