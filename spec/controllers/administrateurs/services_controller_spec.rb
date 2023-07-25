@@ -173,7 +173,7 @@ describe Administrateurs::ServicesController, type: :controller do
         service.siret = nil
         service.save(validate: false)
         get :index, params: { procedure_id: procedure.id }
-        expect(flash.alert.first).to eq "Vous n'avez pas renseigné le siret du service pour certaines de vos demarches. Merci de les modifier."
+        expect(flash.alert.first).to eq "Vous n’avez pas renseigné le siret du service pour certaines de vos démarches. Merci de les modifier."
         expect(flash.alert.last).to include(service.nom)
       end
     end
@@ -184,8 +184,8 @@ describe Administrateurs::ServicesController, type: :controller do
       it 'display alert' do
         get :index, params: { procedure_id: procedure.id }
         expect(procedure.service).to be nil
-        expect(flash.alert.first).to eq "Certaines de vos demarches n'ont pas de service associé."
-        expect(flash.alert.last).to include "procédure #{procedure.id}"
+        expect(flash.alert.first).to eq "Certaines de vos démarches n’ont pas de service associé."
+        expect(flash.alert.last).to include "démarche #{procedure.id}"
       end
     end
   end
