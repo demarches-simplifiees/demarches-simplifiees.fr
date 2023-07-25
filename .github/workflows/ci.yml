@@ -10,7 +10,7 @@ on:
 jobs:
   linters:
     name: Linters
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     services:
       postgres:
         image: postgis/postgis:14-3.3
@@ -33,7 +33,7 @@ jobs:
 
   js_tests:
     name: JavaScript tests
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - uses: actions/checkout@v3
@@ -41,8 +41,13 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          cache: 'yarn'
+          node-version-file: '.node-version'
 
+      - name: Install yarn
+        run: |
+          npm install --global yarn
+        shell: bash
+      
       - name: Install Node modules
         run: |
           node --version
@@ -55,7 +60,7 @@ jobs:
 
   unit_tests:
     name: Unit tests
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     services:
       postgres:
         image: postgis/postgis:14-3.3
@@ -97,7 +102,7 @@ jobs:
 
   system_tests:
     name: System tests
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     services:
       postgres:
         image: postgis/postgis:14-3.3
@@ -140,7 +145,7 @@ jobs:
   save_test_reports:
     name: Save test reports
     needs: [unit_tests, system_tests]
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - uses: actions/checkout@v3
