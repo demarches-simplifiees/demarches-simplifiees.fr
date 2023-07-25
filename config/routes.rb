@@ -594,6 +594,13 @@ Rails.application.routes.draw do
   end
 
   #
+  # Error handling
+  #
+  get '/404', to: 'errors#not_found'
+  get '/500', to: 'errors#internal_server'
+  get '/422', to: 'errors#unprocessable'
+
+  #
   # Legacy routes
   #
   get 'demandes/new' => redirect(DEMANDE_INSCRIPTION_ADMIN_PAGE_URL)

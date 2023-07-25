@@ -100,6 +100,7 @@ module TPS
     end
     # rubocop:enable Rails/OutputSafety
     #
+    config.exceptions_app = self.routes
 
     config.active_record.encryption.primary_key = Rails.application.secrets.active_record_encryption.fetch(:primary_key)
     config.active_record.encryption.key_derivation_salt = Rails.application.secrets.active_record_encryption.fetch(:key_derivation_salt)
