@@ -9,8 +9,12 @@
 
 
   - if @dossier.brouillon? && !owner?
-    .send-notice.invite-cannot-submit
-      = t('.invite_notice')
+    .fr-pb-2w.invite-cannot-submit
+      = render ::Dsfr::AlertComponent.new(state: :info, title: nil, size: :sm, heading_level: :p, extra_class_names:'') do |c|
+        - c.body do
+          %p.fr-pb-0= t('.invite_notice').html_safe
+
+
 
   - if !annotation?
     = render partial: "shared/dossiers/submit_is_over", locals: { dossier: @dossier }
