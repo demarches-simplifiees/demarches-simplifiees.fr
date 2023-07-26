@@ -3,4 +3,4 @@ en:
   submit: Submit the file
   submit_changes: Submit file changes
   submitting: Submitting…
-  invite_notice: You are invited to make amendments to this file but only the owner themselves can submit it.
+  invite_notice: You are invited to make amendments to this file but <strong>only the owner themselves can submit it</strong>.
