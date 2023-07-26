@@ -91,14 +91,16 @@ class APIEntreprise::API
 
   private
 
-  def recipient
-    @procedure&.service && @procedure.service.siret.presence || ENV.fetch('API_ENTREPRISE_DEFAULT_SIRET')
+  def recipient_for(siret_or_siren)
+    service_siret = @procedure&.service && @procedure.service.siret.presence
+    return service_siret if service_siret && !service_siret.starts_with?(siret_or_siren)
+    ENV.fetch('API_ENTREPRISE_DEFAULT_SIRET')
   end
 
   def call_with_siret(resource_name, siret_or_siren, user_id: nil)
     url = make_url(resource_name, siret_or_siren)
 
-    params = build_params(user_id)
+    params = build_params(user_id, siret_or_siren)
 
     call(url, params)
   end
@@ -144,8 +146,8 @@ class APIEntreprise::API
     [API_ENTREPRISE_URL, format(resource_name, id: siret_or_siren)].compact.join("/")
   end
 
-  def build_params(user_id)
-    params = base_params
+  def build_params(user_id, siret_or_siren)
+    params = base_params(siret_or_siren)
 
     params[:object] = if api_object.present?
       api_object
@@ -158,10 +160,10 @@ class APIEntreprise::API
     params
   end
 
-  def base_params
+  def base_params(siret_or_siren)
     {
       context: APPLICATION_NAME,
-      recipient: recipient,
+      recipient: recipient_for(siret_or_siren),
       non_diffusables: true
     }
   end
