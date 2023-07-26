@@ -456,6 +456,8 @@ en:
         search:
           search_file: Search a file (File number, keywords)
           simple: Search
+          result_term_title: Search result for « %{search_terms} »
+          result_procedure_title: and procedure « %{procedure_libelle} »
         secondary_menu: Secondary menu
         index:
           dossiers: "My files"
@@ -463,6 +465,8 @@ en:
           n_dossier: "File n."
           no_result_title: No files
           no_result_text_html: "To fill a procedure, contact your administration asking for the procedure link. <br> It should look like %{app_base}/commencer/xxx."
+          no_result_text_with_search: found with search terms
+          no_result_reset_search: Reset search
           no_result_text_with_filter: found with selected filters
           no_result_reset_filter: Reset filters
           procedure_closed: This procedure has been closed, you will not be able to submit a file again from the procedure link, contact your administration for more information.

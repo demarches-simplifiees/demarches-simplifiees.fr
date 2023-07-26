@@ -1,4 +1,5 @@
 = form_with(url: dossiers_path, method: :get, data: { controller: 'autosubmit' } ) do |f|
+  = f.hidden_field :q, value: params[:q], id: nil
   = f.label :procedure_id, t('.procedure.label'), class: 'sr-only'
   .fr-input-group
     = f.select :procedure_id, options_for_select(@procedures_for_select, params[:procedure_id]), { prompt: t('.procedures.prompt') }, class: 'fr-select'

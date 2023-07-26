@@ -459,6 +459,9 @@ fr:
         search:
           search_file: Rechercher un dossier (N° de dossier, mots-clés)
           simple: Rechercher
+          result: Résultat de la recherche pour « %{search_terms} »
+          result_term_title: Résultat de la recherche pour « %{search_terms} »
+          result_procedure_title: et pour la procédure « %{procedure_libelle} »
         secondary_menu: Menu secondaire
         index:
           dossiers: "Mes dossiers"
@@ -466,6 +469,8 @@ fr:
           n_dossier: "dossier Nº "
           no_result_title: Aucun dossier
           no_result_text_html: "Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche. <br> Celui ci doit ressembler à %{app_base}/commencer/xxx."
+          no_result_text_with_search: ne correspond aux termes recherchés
+          no_result_reset_search: Réinitialiser la recherche
           no_result_text_with_filter: ne correspond aux filtres sélectionnés
           no_result_reset_filter: Réinitialiser les filtres
           procedure_closed: Cette démarche a été clôturée, vous ne pourrez pas redéposer de dossier à partir du lien de la démarche, contactez votre administration pour plus d’information.

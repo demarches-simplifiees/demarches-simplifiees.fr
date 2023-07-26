@@ -33,21 +33,28 @@ module Users
         .distinct(:procedure_id)
         .order(:libelle)
         .pluck(:libelle, :id)
-      @procedure_id = params[:procedure_id]
 
+      @procedure_id = params[:procedure_id]
       if @procedure_id.present?
         ordered_dossiers = ordered_dossiers.where(procedures: { id: @procedure_id })
         deleted_dossiers = deleted_dossiers.where(procedures: { id: @procedure_id })
       end
 
-      dossiers_visibles = ordered_dossiers.visible_by_user
+      @search_terms = params[:q]
+      if @search_terms.present?
+        dossiers_filter_by_search = DossierSearchService.matching_dossiers_for_user(@search_terms, current_user).page
+        ordered_dossiers = ordered_dossiers.merge(dossiers_filter_by_search)
+        deleted_dossiers = nil
+      end
 
-      @user_dossiers = current_user.dossiers.state_not_termine.merge(dossiers_visibles)
-      @dossiers_traites = current_user.dossiers.state_termine.merge(dossiers_visibles)
-      @dossiers_invites = current_user.dossiers_invites.merge(dossiers_visibles)
+      @dossiers_visibles = ordered_dossiers.visible_by_user
+
+      @user_dossiers = current_user.dossiers.state_not_termine.merge(@dossiers_visibles)
+      @dossiers_traites = current_user.dossiers.state_termine.merge(@dossiers_visibles)
+      @dossiers_invites = current_user.dossiers_invites.merge(@dossiers_visibles)
       @dossiers_supprimes_recemment = current_user.dossiers.hidden_by_user.merge(ordered_dossiers)
-      @dossier_transferes = dossiers_visibles.where(dossier_transfer_id: DossierTransfer.for_email(current_user.email).ids)
-      @dossiers_close_to_expiration = current_user.dossiers.close_to_expiration.merge(dossiers_visibles)
+      @dossier_transferes = @dossiers_visibles.where(dossier_transfer_id: DossierTransfer.for_email(current_user.email).ids)
+      @dossiers_close_to_expiration = current_user.dossiers.close_to_expiration.merge(@dossiers_visibles)
       @dossiers_supprimes_definitivement = deleted_dossiers
 
       @statut = statut(@user_dossiers, @dossiers_traites, @dossiers_invites, @dossiers_supprimes_recemment, @dossiers_supprimes_definitivement, @dossier_transferes, @dossiers_close_to_expiration, params[:statut])
