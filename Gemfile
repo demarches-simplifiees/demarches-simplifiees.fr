@@ -110,7 +110,6 @@ group :test do
   gem 'shoulda-matchers', require: false
   gem 'timecop'
   gem 'vcr'
-  gem 'webdrivers'
   gem 'webmock'
 end
 
