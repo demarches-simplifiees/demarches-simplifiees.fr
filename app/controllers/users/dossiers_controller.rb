@@ -5,7 +5,7 @@ module Users
 
     layout 'procedure_context', only: [:identite, :update_identite, :siret, :update_siret]
 
-    ACTIONS_ALLOWED_TO_ANY_USER = [:index, :recherche, :new, :transferer_all]
+    ACTIONS_ALLOWED_TO_ANY_USER = [:index, :new, :transferer_all]
     ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :destroy, :demande, :messagerie, :brouillon, :submit_brouillon, :submit_en_construction, :modifier, :modifier_legacy, :update, :create_commentaire, :papertrail, :restore, :champ]
 
     before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
@@ -340,28 +340,6 @@ module Users
         redirect_to dossiers_path
       else
         flash.alert = t('users.dossiers.ask_deletion.undergoingreview')
-        redirect_to dossiers_path
-      end
-    end
-
-    def recherche
-      @procedures_for_select = nil
-
-      @search_terms = params[:q]
-      return redirect_to dossiers_path if @search_terms.blank?
-
-      @dossiers = DossierSearchService.matching_dossiers_for_user(@search_terms, current_user).page(page)
-
-      if @dossiers.present?
-        # we need the page condition when accessing page n with n>1 when the page has only 1 result
-        # in order to avoid an unpleasant redirection when changing page
-        if @dossiers.count == 1 && page == 1
-          redirect_to url_for_dossier(@dossiers.first)
-        else
-          render :index
-        end
-      else
-        flash.alert = "Vous n’avez pas de dossiers contenant « #{@search_terms} »."
         redirect_to dossiers_path
       end
     end
