@@ -246,7 +246,7 @@ class Champ < ApplicationRecord
     value_attributes = fork || !private? ? [:value, :value_json, :data, :external_id] : []
     relationships = fork || !private? ? [:etablissement, :geo_areas] : []
 
-    deep_clone(only: champ_attributes + value_attributes, include: relationships) do |original, kopy|
+    deep_clone(only: champ_attributes + value_attributes, include: relationships, validate: !fork) do |original, kopy|
       PiecesJustificativesService.clone_attachments(original, kopy)
     end
   end

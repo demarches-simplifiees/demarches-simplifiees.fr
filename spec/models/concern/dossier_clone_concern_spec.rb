@@ -207,6 +207,26 @@ RSpec.describe DossierCloneConcern do
 
           # rubocop:enable Lint/BooleanSymbol
         end
+
+        context 'when associated record is invalid' do
+          let(:procedure) do
+            create(:procedure, types_de_champ_public: [
+              { type: :carte, libelle: "Carte", stable_id: 992, mandatory: true }
+            ])
+          end
+
+          before do
+            champ = dossier.champs.find { _1.stable_id == 992 }
+            geo_area = build(:geo_area, champ:, geometry: { "i'm" => "invalid" })
+            geo_area.save!(validate: false)
+          end
+
+          it 'can still fork' do
+            new_dossier.champs.load # load relation so champs are validated below
+
+            expect(new_dossier.champs.find { _1.stable_id == 992 }.geo_areas.first).not_to be_valid
+          end
+        end
       end
     end
   end
