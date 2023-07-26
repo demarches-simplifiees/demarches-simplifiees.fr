@@ -1,14 +1,14 @@
 class SimpleFormatComponent < ApplicationComponent
   # see: https://github.com/vmg/redcarpet#and-its-like-really-simple-to-use
   REDCARPET_EXTENSIONS = {
-    no_intra_emphasis: false,
+    no_intra_emphasis: true,
+    disable_indented_code_blocks: true,
+    space_after_headers: true,
     tables: false,
     fenced_code_blocks: false,
     autolink: false,
-    disable_indented_code_blocks: false,
     strikethrough: false,
     lax_spacing: false,
-    space_after_headers: false,
     superscript: false,
     underline: false,
     highlight: false,
@@ -27,15 +27,28 @@ class SimpleFormatComponent < ApplicationComponent
   def initialize(text, allow_a: true, class_names_map: {})
     @allow_a = allow_a
 
-    @text = (text || "").gsub(/\R/, "\n\n") # force double \n otherwise a single one won't split paragraph
-      .split("\n\n")
+    list_item = false
+    lines = (text || "")
+      .lines
       .map(&:lstrip) # this block prevent redcarpet to consider "   text" as block code by lstriping
-      .join("\n\n")
-      .gsub(EMAIL_IN_TEXT_REGEX) { _1.gsub('_', '\\_') } # Workaround for redcarpet bug on autolink email having _. Cf tests
 
-    if !@allow_a
-      @text = @text.gsub(SIMPLE_URL_REGEX) { _1.gsub('_', '\\_') } # Escape underscores in URLs
-    end
+    @text = lines.map do |line|
+      item_number = line.match(/\A(\d+)\./)
+      if item_number.present?
+        list_item = true
+        "\n" + line + "[value:#{item_number[1]}]"
+      elsif line.match?(/\A[-*+]\s/)
+        list_item = true
+        "\n" + line
+      elsif line == ''
+        list_item = false
+        "\n" + line
+      elsif list_item
+        line
+      else
+        "\n" + line
+      end
+    end.join.lstrip
 
     @renderer = Redcarpet::Markdown.new(
       Redcarpet::BareRenderer.new(class_names_map:),
@@ -52,6 +65,6 @@ class SimpleFormatComponent < ApplicationComponent
   end
 
   def attributes
-    ['target', 'rel', 'href', 'class', 'title']
+    ['target', 'rel', 'href', 'class', 'title', 'value']
   end
 end
