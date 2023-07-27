@@ -23,9 +23,9 @@ class SimpleFormatComponent < ApplicationComponent
 
   def initialize(text, allow_a: true, class_names_map: {})
     @text = (text || "").gsub(/\R/, "\n\n") # force double \n otherwise a single one won't split paragraph
-      .split("\n\n")  #
-      .map(&:lstrip)  # this block prevent redcarpet to consider "   text" as block code by lstriping
-      .join("\n\n")   #
+      .split("\n\n") #
+      .map { _1.sub(/^\s+(?=[0-9]\.|[^ *-])/, "") } # this block prevent redcarpet to consider "   text" as block code by lstriping
+      .join("\n\n")
     @allow_a = allow_a
     @renderer = Redcarpet::Markdown.new(
       Redcarpet::BareRenderer.new(link_attributes: external_link_attributes, class_names_map: class_names_map),
@@ -39,13 +39,13 @@ class SimpleFormatComponent < ApplicationComponent
 
   def tags
     if @allow_a
-      Rails.configuration.action_view.sanitized_allowed_tags + ['a']
+      Rails.configuration.action_view.sanitized_allowed_tags + ['a', 'img']
     else
       Rails.configuration.action_view.sanitized_allowed_tags
     end
   end
 
   def attributes
-    ['target', 'rel', 'href', 'class']
+    ['target', 'rel', 'href', 'class', 'size,', 'face,', 'color', 'src']
   end
 end
