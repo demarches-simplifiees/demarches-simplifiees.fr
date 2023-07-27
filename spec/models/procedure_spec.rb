@@ -1446,6 +1446,20 @@ describe Procedure do
     end
   end
 
+  describe '#email_logo_url' do
+    context 'with logo' do
+      let!(:procedure) { create(:procedure, :with_logo) }
+      it 'creates a blob synchronously one time' do
+        expect { procedure.email_logo_url }.to change { ActiveStorage::Blob.count }.by(1)
+      end
+
+      it 'creates the blob only the first time' do
+        procedure.email_logo_url
+        expect { procedure.email_logo_url }.not_to change { ActiveStorage::Blob.count }
+      end
+    end
+  end
+
   describe '#average_dossier_weight' do
     let(:procedure) { create(:procedure, :published) }
 

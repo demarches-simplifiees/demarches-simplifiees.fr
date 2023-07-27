@@ -158,7 +158,9 @@ class Procedure < ApplicationRecord
 
   belongs_to :defaut_groupe_instructeur, class_name: 'GroupeInstructeur', inverse_of: false, optional: true
 
-  has_one_attached :logo
+  has_one_attached :logo do |attachable|
+    attachable.variant :email, resize_to_limit: [150, 150]
+  end
   has_one_attached :notice
   has_one_attached :deliberation
 
@@ -631,6 +633,14 @@ class Procedure < ApplicationRecord
     end
 
     result
+  end
+
+  def email_logo_url
+    if logo.attached?
+      logo.variant(:email).processed.blob.url(expires_in: 1.year)
+    else
+      ActionController::Base.helpers.image_url(PROCEDURE_DEFAULT_LOGO_SRC)
+    end
   end
 
   def logo_url
