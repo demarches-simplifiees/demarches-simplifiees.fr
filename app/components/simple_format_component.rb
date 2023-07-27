@@ -51,7 +51,7 @@ class SimpleFormatComponent < ApplicationComponent
     end.join.lstrip
 
     @renderer = Redcarpet::Markdown.new(
-      Redcarpet::BareRenderer.new(class_names_map:),
+      Redcarpet::BareRenderer.new(class_names_map: { list: 'fr-ol-content--override' }),
       REDCARPET_EXTENSIONS.merge(autolink: @allow_a)
     )
   end

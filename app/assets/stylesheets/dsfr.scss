@@ -1,5 +1,15 @@
 @import "colors";
 
+// overwrite DSFR style for SimpleFormatComponent, some user use markdown with
+// ordered list having paragraph between list item
+.fr-ol-content--override {
+  list-style-type: decimal;
+
+  li::marker {
+    content: inherit;
+  }
+}
+
 // override default transparent background on inputs & font-size to 16px by default
 input,
 textarea,
