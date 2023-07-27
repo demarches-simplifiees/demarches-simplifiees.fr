@@ -40,7 +40,7 @@ module Administrateurs
 
       tdc = @procedure.active_revision.routable_types_de_champ.find { |tdc| tdc.stable_id == stable_id }
 
-      tdc_options = tdc.options["drop_down_options"].reject(&:empty?)
+      tdc_options = tdc.drop_down_options.reject(&:empty?)
 
       tdc_options.each do |option_label|
         gi = @procedure.groupe_instructeurs.find_by({ label: option_label }) || @procedure.groupe_instructeurs
