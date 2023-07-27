@@ -42,8 +42,6 @@ class API::V2::Context < GraphQL::Query::Context
       return true
     end
 
-    # We are caching authorization logic because it is called for each node
-    # of the requested graph and can be expensive. Context is reset per request so it is safe.
     self[:authorized] ||= {}
 
     if self[:authorized][demarche.id].nil?

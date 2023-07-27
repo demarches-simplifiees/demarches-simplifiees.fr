@@ -6,6 +6,7 @@
                     ['Description']] }
 .procedure-form
   .procedure-form__columns.container
+    = render Attachment::DeleteFormComponent.new
     = form_for @procedure,
       url: url_for({ controller: 'administrateurs/procedures', action: :update, id: @procedure.id }),
       html: { class: 'form procedure-form__column--form',

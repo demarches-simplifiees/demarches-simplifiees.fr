@@ -7,8 +7,8 @@
         - if value.class == Array
           .alert{ class: flash_class(key, sticky: sticky, fixed: fixed), role: flash_role(key) }
             - value.each do |message|
-              = sanitize(message)
+              = sanitize_with_link(message)
               %br
         - else
           .alert{ class: flash_class(key, sticky: sticky, fixed: fixed), role: flash_role(key) }
-            = sanitize(value)
+            = sanitize_with_link(value)

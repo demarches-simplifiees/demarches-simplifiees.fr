@@ -1,0 +1,8 @@
+# Set options ELASTIC_APM_SERVER_URL & ELASTIC_APM_SECRET_TOKEN by env vars instead
+# See https://www.elastic.co/guide/en/apm/agent/ruby/current/configuration.html
+#
+# server_url: ''
+# secret_token: ''
+
+# Enable it with ELASTIC_APM_ENABLED="true"
+enabled: false

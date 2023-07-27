@@ -17,7 +17,7 @@ describe DemarchesPubliquesExportService do
           typeOrganisme: "association"
         },
         cadreJuridiqueUrl: "un cadre juridique important",
-        demarcheUrl: nil,
+        demarcheUrl: Rails.application.routes.url_helpers.commencer_url(path: procedure.path),
         dpoUrl: nil,
         noticeUrl: nil,
         siteWebUrl: "https://mon-site.gouv",
