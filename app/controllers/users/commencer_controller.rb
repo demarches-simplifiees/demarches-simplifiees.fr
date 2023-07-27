@@ -20,6 +20,8 @@ module Users
         check_prefilled_dossier_ownership if @prefilled_dossier
       end
 
+      @usual_traitement_time = @procedure.stats_usual_traitement_time
+
       render 'commencer/show'
     end
 
