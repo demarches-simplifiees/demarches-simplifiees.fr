@@ -130,6 +130,10 @@ module Administrateurs
         else
           "Les instructeurs ont bien été affectés à la démarche"
         end
+
+        GroupeInstructeurMailer
+          .notify_added_instructeurs(groupe_instructeur, instructeurs, current_administrateur.email)
+          .deliver_later
       end
 
       if procedure.routing_enabled?
