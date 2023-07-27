@@ -150,7 +150,7 @@ linters:
     properties: {}
 
   PseudoElement:
-    enabled: true
+    enabled: false # otherwise rules on ::marker fails
 
   # To enable later
   QualifyingElement:

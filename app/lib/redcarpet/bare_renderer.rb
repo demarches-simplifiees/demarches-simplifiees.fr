@@ -10,7 +10,14 @@ module Redcarpet
     end
 
     def list_item(content, list_type)
-      content_tag(:li, content.strip.gsub(/<\/?p>/, ''), {}, false)
+      item_number = content.match(/\[value:(\d+)\]/)
+      text = content.strip
+        .gsub(/<\/?p>/, '')
+        .gsub(/\[value:\d+\]/, '')
+        .gsub(/\n/, '<br>')
+      attributes = item_number.present? ? { value: item_number[1] } : {}
+
+      content_tag(:li, text, attributes, false)
     end
 
     def paragraph(text)
