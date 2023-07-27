@@ -415,6 +415,14 @@ class TypeDeChamp < ApplicationRecord
     type_champ == TypeDeChamp.type_champs.fetch(:pole_emploi)
   end
 
+  def departement?
+    type_champ == TypeDeChamp.type_champs.fetch(:departements)
+  end
+
+  def region?
+    type_champ == TypeDeChamp.type_champs.fetch(:regions)
+  end
+
   def mesri?
     type_champ == TypeDeChamp.type_champs.fetch(:mesri)
   end
@@ -449,6 +457,21 @@ class TypeDeChamp < ApplicationRecord
 
   def drop_down_list_value=(value)
     self.drop_down_options = parse_drop_down_list_value(value)
+  end
+
+  def self.options_for_select?(type_champs)
+    [
+      TypeDeChamp.type_champs.fetch(:departements),
+      TypeDeChamp.type_champs.fetch(:regions)
+    ].include?(type_champs)
+  end
+
+  def options_for_select
+    if departement?
+      APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:name]] }
+    elsif region?
+      APIGeoService.regions.map { [_1[:name], _1[:name]] }
+    end
   end
 
   # historicaly we added a blank ("") option by default to avoid wrong selection
