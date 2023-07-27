@@ -43,9 +43,19 @@ module Administrateurs
       tdc_options = tdc.drop_down_options.reject(&:empty?)
 
       tdc_options.each do |option_label|
-        gi = @procedure.groupe_instructeurs.find_by({ label: option_label }) || @procedure.groupe_instructeurs
-          .create({ label: option_label, instructeurs: [current_administrateur.instructeur] })
-        gi.update(routing_rule: ds_eq(champ_value(stable_id), constant(gi.label)))
+        routing_rule = ds_eq(champ_value(stable_id), constant(option_label))
+        @procedure
+          .groupe_instructeurs
+          .find_or_create_by(label: option_label)
+          .update(instructeurs: [current_administrateur.instructeur], routing_rule:)
+      end
+
+      if tdc.drop_down_other?
+        routing_rule = ds_eq(champ_value(stable_id), constant(Champs::DropDownListChamp::OTHER))
+        @procedure
+          .groupe_instructeurs
+          .find_or_create_by(label: 'Autre')
+          .update(instructeurs: [current_administrateur.instructeur], routing_rule:)
       end
 
       @procedure.toggle_routing
