@@ -1,19 +1,20 @@
 - case siret
 - when :invalid_length
-  = t('errors.messages.invalid_siret_length')
+  %p.fr-error-text= t('errors.messages.invalid_siret_length')
 
 - when :invalid_checksum
-  = t('errors.messages.invalid_siret_checksum')
+  %p.fr-error-text= t('errors.messages.invalid_siret_checksum')
 
 - when :not_found
-  Nous n’avons pas trouvé d’établissement correspondant à ce numéro de SIRET.
-  = link_to('Plus d’informations', t("links.common.faq.erreur_siret_url"), **external_link_attributes)
+  %p.fr-error-text
+    Nous n’avons pas trouvé d’établissement correspondant à ce numéro de SIRET.
+    = link_to('Plus d’informations', t("links.common.faq.erreur_siret_url"), **external_link_attributes)
 
 - when :network_error
-  = t('errors.messages.siret_network_error')
+  %p.fr-error-text= t('errors.messages.siret_network_error')
 
 - when :api_entreprise_down
-  = t('errors.messages.api_entreprise_down')
+  %p.fr-error-text= t('errors.messages.api_entreprise_down')
 
 - when :empty
   // NOOP
@@ -22,4 +23,4 @@
     - if siret == etablissement&.siret && raison_sociale_or_name(etablissement).present?
       = render EditableChamp::EtablissementTitreComponent.new(etablissement: etablissement)
     - else
-      Ce SIRET existe, nous en récupérons les informations.
+      %p.fr-info-text Ce SIRET existe, nous en récupérons les informations.

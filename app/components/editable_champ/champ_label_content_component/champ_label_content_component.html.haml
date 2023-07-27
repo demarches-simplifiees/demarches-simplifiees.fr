@@ -18,3 +18,15 @@
 - if @champ.rebased_at.present? && @champ.rebased_at > (@seen_at || @champ.updated_at) && current_user.owns_or_invite?(@champ.dossier)
   %span.updated-at.highlighted
     = t('.check_content_rebased')
+
+- if @champ.titre_identite?
+  %span.fr-hint-text= t('.titre_identite_notice')
+
+- if hint?
+  %span.fr-hint-text= hint
+
+- if @champ.description.present?
+  %span.fr-hint-text{ id: @champ.describedby_id }= render SimpleFormatComponent.new(@champ.description, allow_a: true)
+
+- if @champ.textarea?
+  %span.sr-only= t('.recommended_size', size: @champ.character_limit_base)

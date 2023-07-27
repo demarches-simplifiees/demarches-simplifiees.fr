@@ -315,6 +315,7 @@ FactoryBot.define do
       unpublished_at { nil }
       closed_at { nil }
       zones { [association(:zone, strategy: :build)] }
+      service { association :service, administrateur: administrateurs.first }
     end
 
     trait :closed do

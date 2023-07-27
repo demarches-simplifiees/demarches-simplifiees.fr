@@ -419,7 +419,7 @@ describe 'The user' do
       let(:procedure) do
         create(:procedure, :published, :for_individual,
           types_de_champ_public: [
-            { type: :integer_number, libelle: 'age', stable_id: age_stable_id },
+            { type: :integer_number, libelle: 'age du candidat', stable_id: age_stable_id },
             { type: :yes_no, libelle: 'permis de conduire', stable_id: permis_stable_id, condition: permis_condition },
             { type: :header_section, libelle: 'info voiture', condition: permis_condition },
             { type: :integer_number, libelle: 'tonnage', stable_id: tonnage_stable_id, condition: tonnage_condition },
@@ -432,12 +432,12 @@ describe 'The user' do
 
         fill_individual
 
-        expect(page).to have_css('label', text: 'age', visible: true)
+        expect(page).to have_css('label', text: 'age du candidat', visible: true)
         expect(page).to have_no_css('label', text: 'permis de conduire', visible: true)
         expect(page).to have_no_css('legend h2', text: 'info voiture', visible: true)
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
-        fill_in('age (facultatif)', with: '18')
+        fill_in('age du candidat (facultatif)', with: '18')
         expect(page).to have_css('label', text: 'permis de conduire', visible: true)
         expect(page).to have_css('legend h2', text: 'info voiture', visible: true)
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
@@ -453,7 +453,7 @@ describe 'The user' do
         fill_in('tonnage (facultatif)', with: 'a')
         expect(page).to have_no_css('label', text: 'parking', visible: true)
 
-        fill_in('age (facultatif)', with: '2')
+        fill_in('age du candidat (facultatif)', with: '2')
         expect(page).to have_no_css('label', text: 'permis de conduire', visible: true)
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
@@ -461,11 +461,11 @@ describe 'The user' do
         click_on 'Accéder à votre dossier'
         click_on 'Modifier mon dossier'
 
-        expect(page).to have_css('label', text: 'age', visible: true)
+        expect(page).to have_css('label', text: 'age du candidat', visible: true)
         expect(page).to have_no_css('label', text: 'permis de conduire', visible: true)
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
-        fill_in('age (facultatif)', with: '18')
+        fill_in('age du candidat (facultatif)', with: '18')
         wait_for_autosave(false)
 
         # the champ keeps their previous value so they are all displayed

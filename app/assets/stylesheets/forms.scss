@@ -20,6 +20,33 @@
     font-style: italic;
   }
 
+  .fr-input-group {
+    margin-bottom: 1rem;
+  }
+
+  .section-2 {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 2px solid var(--border-default-grey);
+  }
+
+  .section-2,
+  .section-3 {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-4,
+  .section-5,
+  .section-6 {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  legend {
+    width: 100%;
+  }
+
   hr {
     width: 100%;
     height: 0;
@@ -36,7 +63,7 @@
 
 
   .mandatory {
-    color: $dark-red;
+    fill: currentColor;
   }
 
   label:not(.fr-label),
@@ -97,7 +124,6 @@
     }
 
     &.editable-champ-checkbox {
-      p,
       label {
         padding-left: 28px;
         font-weight: normal;
@@ -147,7 +173,7 @@
       user-select: none;
 
       &:last-of-type {
-        margin-bottom: $default-fields-spacer;
+        margin-bottom: 0;
       }
 
       &:hover {
@@ -184,17 +210,20 @@
     }
   }
 
-  input[type=text],
-  input[type=email],
+  .fr-label {
+    // la description d'un champ peut contenir du markup (markdown->html),
+    // on herite donc la fontsize/mrgin/padding du fr-hint-text
+    .fr-hint-text > * {
+      font-size: inherit;
+      margin: inherit;
+      padding: inherit;
+    }
+  }
+
   input[type=password],
-  input[type=date],
-  input[type=datetime-local],
-  input[type=number],
-  input[type=tel],
-  textarea,
   select {
     display: block;
-    margin-bottom: $default-fields-spacer;
+    margin-bottom: 0;
 
     &.small-margin {
       margin-bottom: $default-spacer;
@@ -218,13 +247,6 @@
   }
 
   input[type=text]:not([data-address='true']),
-  input[type=email],
-  input[type=password],
-  input[type=date],
-  input[type=number],
-  input[type=tel],
-  input[type=datetime-local],
-  textarea,
   select {
     border-radius: 4px;
     border: solid 1px $border-grey;
@@ -266,8 +288,8 @@
   input[type=date],
   input[type=number],
   input[type=datetime-local],
-  input[type=tel],
-  textarea {
+  textarea,
+  input[type=tel], {
     @media (max-width: $two-columns-breakpoint) {
       width: 100%;
     }
@@ -326,7 +348,7 @@
 
     margin-left: 5px;
     margin-right: 4px;
-    margin-bottom: $default-fields-spacer;
+    margin-bottom: 0;
   }
 
   [data-reach-combobox-input] {
@@ -413,16 +435,6 @@
     color: $dark-grey;
   }
 
-  .datetime {
-    input[type=date] {
-      display: inline-block;
-    }
-
-    select {
-      display: inline-block;
-    }
-  }
-
   .header-subsection {
     font-size: 22px;
     color: $blue-france-500;
@@ -443,20 +455,6 @@
     p:not(:last-child) {
       margin-bottom: $default-padding;
     }
-  }
-
-  .siret-info {
-    margin-top: -$default-fields-spacer;
-    margin-bottom: $default-fields-spacer;
-    // Ensure the bottom-margin is not collapsed when the element is empty
-    min-height: 1px;
-  }
-
-  .rna-info {
-    margin-top: -$default-fields-spacer;
-    margin-bottom: $default-fields-spacer;
-    // Ensure the bottom-margin is not collapsed when the element is empty
-    min-height: 1px;
   }
 
   .send-wrapper {
@@ -529,12 +527,6 @@
   fieldset ~ .spinner {
     position: relative;
     top: -($default-fields-spacer / 2);
-  }
-}
-
-[data-react-component-value]:not([data-react-component-value^="ComboMultiple"]) {
-  [data-reach-combobox-input]:not(.no-margin) {
-    margin-bottom: $default-fields-spacer;
   }
 }
 

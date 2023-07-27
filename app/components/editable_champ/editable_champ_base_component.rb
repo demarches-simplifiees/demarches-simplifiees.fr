@@ -1,5 +1,8 @@
 class EditableChamp::EditableChampBaseComponent < ApplicationComponent
-  def initialize(form:, champ:, seen_at: nil)
-    @form, @champ, @seen_at = form, champ, seen_at
+  include Dsfr::InputErrorable
+
+  def initialize(form:, champ:, seen_at: nil, opts: {})
+    @form, @champ, @seen_at, @opts = form, champ, seen_at, opts
+    @attribute = :value
   end
 end
