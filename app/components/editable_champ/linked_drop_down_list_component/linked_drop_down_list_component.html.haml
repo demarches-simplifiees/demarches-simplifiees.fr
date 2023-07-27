@@ -1,5 +1,5 @@
 - if @champ.options?
-  = @form.select :primary_value, @champ.primary_options, {}, required: @champ.required?, id: @champ.input_id, aria: { describedby: @champ.describedby_id }
+  = @form.select :primary_value, @champ.primary_options, {}, required: @champ.required?, class: 'fr-select', id: @champ.input_id, aria: { describedby: @champ.describedby_id }
   - if @champ.has_secondary_options_for_primary?
     .secondary
       = @form.label :secondary_value, for: "#{@champ.input_id}-secondary" do
@@ -7,6 +7,6 @@
       - if @champ.drop_down_secondary_description.present?
         .notice{ id: "#{@champ.describedby_id}-secondary" }
           = render SimpleFormatComponent.new(@champ.drop_down_secondary_description, allow_a: true)
-      = @form.select :secondary_value, @champ.secondary_options[@champ.primary_value], {}, required: @champ.required?, id: "#{@champ.input_id}-secondary", aria: { describedby: "#{@champ.describedby_id}-secondary" }
+      = @form.select :secondary_value, @champ.secondary_options[@champ.primary_value], {}, required: @champ.required?, class: 'fr-select', id: "#{@champ.input_id}-secondary", aria: { describedby: "#{@champ.describedby_id}-secondary" }
   - else
     = @form.hidden_field :secondary_value, value: ''
