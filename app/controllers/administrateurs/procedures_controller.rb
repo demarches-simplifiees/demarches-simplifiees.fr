@@ -423,7 +423,7 @@ module Administrateurs
       procedures_result = procedures_result.where('unaccent(libelle) ILIKE unaccent(?)', "%#{filter.libelle}%") if filter.libelle.present?
       procedures_sql = procedures_result.to_sql
 
-      sql = "select id, libelle, published_at, aasm_state, count(administrateurs_procedures.administrateur_id) as admin_count from administrateurs_procedures inner join procedures on procedures.id = administrateurs_procedures.procedure_id where procedures.id in (#{procedures_sql}) group by procedures.id order by published_at desc"
+      sql = "select id, libelle, published_at, aasm_state, estimated_dossiers_count, count(administrateurs_procedures.administrateur_id) as admin_count from administrateurs_procedures inner join procedures on procedures.id = administrateurs_procedures.procedure_id where procedures.id in (#{procedures_sql}) group by procedures.id order by published_at desc"
       ActiveRecord::Base.connection.execute(sql)
     end
 
