@@ -25,6 +25,12 @@ Cela évite l’accès récursif aux dossiers."
 
     field :duree_conservation_dossiers, Int, "Durée de conservation des dossiers en mois.", null: false
 
+    field :demarcheUrl, Types::URL, camelize: false, null: true, deprecation_reason: 'Utilisez le champ `demarcheURL` à la place.'
+    field :siteWebUrl, String, camelize: false, null: true, deprecation_reason: 'Utilisez le champ `siteWebURL` à la place.'
+    field :dpoUrl, String, camelize: false, null: true, deprecation_reason: 'Utilisez le champ `dpoURL` à la place.'
+    field :noticeUrl, Types::URL, camelize: false, null: true, deprecation_reason: 'Utilisez le champ `noticeURL` à la place.'
+    field :cadreJuridiqueUrl, String, camelize: false, null: true, deprecation_reason: 'Utilisez le champ `cadreJuridiqueURL` à la place.'
+
     field :demarche_url, Types::URL, "URL pour commencer la démarche", null: true
     field :site_web_url, String, "URL où les usagers trouvent le lien vers la démarche", null: true
     field :dpo_url, String, "URL ou email pour contacter le Délégué à la Protection des Données (DPO)", null: true
@@ -77,22 +83,27 @@ Cela évite l’accès récursif aux dossiers."
     def demarche_url
       Rails.application.routes.url_helpers.commencer_url(path: procedure.path)
     end
+    alias demarcheUrl demarche_url
 
     def dpo_url
       procedure.lien_dpo
     end
+    alias dpoUrl dpo_url
 
     def notice_url
       procedure.lien_notice
     end
+    alias noticeUrl notice_url
 
     def cadre_juridique_url
       procedure.cadre_juridique
     end
+    alias cadreJuridiqueUrl cadre_juridique_url
 
     def site_web_url
       procedure.lien_site_web
     end
+    alias siteWebUrl site_web_url
 
     def number
       procedure.id
