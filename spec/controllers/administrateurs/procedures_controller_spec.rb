@@ -295,7 +295,7 @@ describe Administrateurs::ProceduresController, type: :controller do
       let(:service_2) { create(:service, nom: 'DDT du Loiret') }
       let!(:procedure_with_service_1)  { create(:procedure_with_dossiers, :published, organisation: nil, service: service_1, dossiers_count: 2) }
       let!(:procedure_with_service_2)  { create(:procedure_with_dossiers, :published, organisation: nil, service: service_2, dossiers_count: 2) }
-      let!(:procedure_without_service) { create(:procedure_with_dossiers, :published, organisation: 'DDT du Loiret', dossiers_count: 2) }
+      let!(:procedure_without_service) { create(:procedure_with_dossiers, :published, service: nil, organisation: 'DDT du Loiret', dossiers_count: 2) }
 
       it 'groups procedures with services as well as procedures with organisations' do
         expect(grouped_procedures.length).to eq 2
