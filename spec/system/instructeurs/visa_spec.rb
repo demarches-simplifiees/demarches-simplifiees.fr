@@ -46,6 +46,7 @@ describe 'Using Visa field', js: true do
     expect(page).to have_field('visa_to_test', disabled: false)
     ensure_visa_is_visible
     check('visa_to_test')
+    sleep(2)
     expect(page).to have_current_path(annotations_privees_instructeur_dossier_path(dossier.procedure, dossier))
     expect(page).to have_field('visa_to_test', checked: true)
 
@@ -65,7 +66,6 @@ describe 'Using Visa field', js: true do
     visa_label_path = ".//label[normalize-space(text())='visa_to_test']"
     divs_path = visa_label_path + "/parent::div/#{axe}-sibling::div"
     fields_path = divs_path + "//*[contains(@name, 'dossier')]"
-    sleep(2)
     wait_until { has_css?('.editable-champ-address > input') }
     fields = page.all(:xpath, fields_path)
     fields.each do |field|

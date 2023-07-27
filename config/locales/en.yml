@@ -68,7 +68,6 @@ en:
         are_you_new: First time on %{app_name}?
     my_account: My account
     header:
-      label_modal: "Burger menu"
       close_modal: 'Close'
       back: "Back"
       back_title: "Revenir sur le site de mon administration"
@@ -130,11 +129,13 @@ en:
           iban_html: An Iban number
           yes_no_html: '"true" for Yes, "false" pour No'
           checkbox_html: '"true" to check, "false" to uncheck'
-          pays_html: An <a href="https://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">ISO 3166-2 country code</a>
-          regions_html: An <a href="https://fr.wikipedia.org/wiki/R%C3%A9gion_fran%C3%A7aise" target="_blank">INSEE region code</a>
+          pays_html: An <a href="https://en.wikipedia.org/wiki/ISO_3166-2" target="_blank" rel="noopener noreferrer">ISO 3166-2 country code</a>
+          departements_html: A <a href="https://fr.wikipedia.org/wiki/Num%C3%A9rotation_des_d%C3%A9partements_fran%C3%A7ais" target="_blank">department number</a>
+          regions_html: An <a href="https://fr.wikipedia.org/wiki/R%C3%A9gion_fran%C3%A7aise" target="_blank" rel="noopener noreferrer">INSEE region code</a>
           date_html: ISO8601 date
           datetime_html: ISO8601 datetime
           drop_down_list_other_html: Any value
+          epci_html: An array of the department code and the <a href="https://geo.api.gouv.fr/epcis" target="_blank" rel="noopener noreferrer">EPCI one</a>.
         examples:
           title: Example
           text: Short text
@@ -146,6 +147,7 @@ en:
           iban: FR7611315000011234567890138
           yes_no: "true"
           pays: "FR"
+          departements: "56"
           regions: "53"
           date: "2023-02-01"
           datetime: "2023-02-01T10:30"
@@ -170,12 +172,6 @@ en:
         password_message: "Enter a password"
         password_label: "Password"
         password_placeholder: "%{min_length} characters minimum"
-        password_hint: "A short phrase with punctuation can be a highly secure password."
-        password_min: "The password must be at least %{min_length} characters long."
-        simple_password: "Very vulnerable password."
-        easy_password: "Vulnerable password."
-        acceptable_password: "Acceptable password. You can proceed with validation... or improve your password."
-        great_password: "Congratulations ! Password is strong and secure."
     invites:
       dropdown:
         invite_to_edit: Invite someone to edit this file
@@ -271,6 +267,7 @@ en:
           identity_data: Identity data
           all_required: All fields are required.
           civility: Civility
+          description: Description of the procedure
           first_name: First Name
           last_name: Last Name
           birthdate: Date de naissance
@@ -357,6 +354,10 @@ en:
           connect_with_agent_connect: "Visit our dedicated page"
           subtitle: "Sign in with your account"
       passwords:
+        edit:
+          subtitle: Change password
+          submit: Change password
+          submit_loading: Sending…
         reset_link_sent:
           got_it: Got it!
           open_your_mailbox: Now open your mailbox.
@@ -478,12 +479,30 @@ en:
           attributes:
             value:
               not_in_options: "must be in the given options"
+        "champs/multiple_drop_down_list_champ":
+          attributes:
+            value:
+              not_in_options: "must be in the given options"
         "champs/region_champ":
           attributes:
             value:
               not_in_region_names: "must be a valid region name"
             external_id:
               not_in_region_codes: "must be a valid region code"
+        "champs/departement_champ":
+          attributes:
+            value:
+              not_in_departement_names: "must be a valid department name"
+            external_id:
+              not_in_departement_codes: "must be a valid department code"
+        "champs/epci_champ":
+          attributes:
+            code_departement:
+              not_in_departement_codes: "must be a valid department code"
+            external_id:
+              not_in_departement_epci_codes: "must be a valid EPCI code of the matching department"
+            value:
+              not_in_departement_epci_names: "must be a valid EPCI name of the matching department"
   errors:
     format: "Field « %{attribute} » %{message}"
     messages:
@@ -565,7 +584,16 @@ en:
     deleted:
       one: Deleted
       other: Deleted
+  administrateurs:
+    activate:
+      new:
+        title: Pick a password
+        continue: Continue
   users:
+    activate:
+      new:
+        title: Pick a password
+        continue: Continue
     dossiers:
       test_procedure: "This file is submitted on a test procedure. Any modification of the procedure by the administrator (addition of a field, publication of the procedure, etc.) will result in the removal of the file."
       no_access: "You do not have access to this file"

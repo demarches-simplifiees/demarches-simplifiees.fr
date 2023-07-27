@@ -1,5 +1,5 @@
 RSpec.describe PrefillParams do
-  describe "#to_a", vcr: { cassette_name: 'api_geo_regions' } do
+  describe "#to_a", vcr: { cassette_name: 'api_geo_all' } do
     let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
 
     let(:procedure) { create(:procedure, :published, types_de_champ_public:, types_de_champ_private:) }
@@ -12,6 +12,16 @@ RSpec.describe PrefillParams do
     before do
       allow(Rails).to receive(:cache).and_return(memory_store)
       Rails.cache.clear
+
+      VCR.insert_cassette('api_geo_regions')
+      VCR.insert_cassette('api_geo_departements')
+      VCR.insert_cassette('api_geo_epcis')
+    end
+
+    after do
+      VCR.eject_cassette('api_geo_regions')
+      VCR.eject_cassette('api_geo_departements')
+      VCR.eject_cassette('api_geo_epcis')
     end
 
     context "when the stable ids match the TypeDeChamp of the corresponding procedure" do
@@ -72,12 +82,12 @@ RSpec.describe PrefillParams do
       context "when the type de champ is authorized (#{type_de_champ_type})" do
         let(:types_de_champ_public) { [{ type: type_de_champ_type }] }
         let(:type_de_champ) { procedure.published_revision.types_de_champ_public.first }
-        let(:champ_id) { find_champ_by_stable_id(dossier, type_de_champ.stable_id).id }
+        let(:champ) { find_champ_by_stable_id(dossier, type_de_champ.stable_id) }
 
         let(:params) { { "champ_#{type_de_champ.to_typed_id}" => value } }
 
-        it "builds an array of hash(id, value) matching the given params" do
-          expect(prefill_params_array).to match([{ id: champ_id, value: value }])
+        it "builds an array of hash matching the given params" do
+          expect(prefill_params_array).to match([{ id: champ.id }.merge(attributes(champ, value))])
         end
       end
     end
@@ -86,12 +96,12 @@ RSpec.describe PrefillParams do
       context "when the type de champ is authorized (#{type_de_champ_type})" do
         let(:types_de_champ_private) { [{ type: type_de_champ_type }] }
         let(:type_de_champ) { procedure.published_revision.types_de_champ_private.first }
-        let(:champ_id) { find_champ_by_stable_id(dossier, type_de_champ.stable_id).id }
+        let(:champ) { find_champ_by_stable_id(dossier, type_de_champ.stable_id) }
 
         let(:params) { { "champ_#{type_de_champ.to_typed_id}" => value } }
 
-        it "builds an array of hash(id, value) matching the given params" do
-          expect(prefill_params_array).to match([{ id: champ_id, value: value }])
+        it "builds an array of hash matching the given params" do
+          expect(prefill_params_array).to match([{ id: champ.id }.merge(attributes(champ, value))])
         end
       end
     end
@@ -118,6 +128,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is authorized", :iban, "value"
     it_behaves_like "a champ public value that is authorized", :civilite, "M."
     it_behaves_like "a champ public value that is authorized", :pays, "FR"
+    it_behaves_like "a champ public value that is authorized", :regions, "03"
     it_behaves_like "a champ public value that is authorized", :date, "2022-12-22"
     it_behaves_like "a champ public value that is authorized", :datetime, "2022-12-22T10:30"
     it_behaves_like "a champ public value that is authorized", :yes_no, "true"
@@ -125,7 +136,9 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is authorized", :checkbox, "true"
     it_behaves_like "a champ public value that is authorized", :checkbox, "false"
     it_behaves_like "a champ public value that is authorized", :drop_down_list, "value"
-    it_behaves_like "a champ public value that is authorized", :regions, "03"
+    it_behaves_like "a champ public value that is authorized", :departements, "03"
+    it_behaves_like "a champ public value that is authorized", :multiple_drop_down_list, ["val1", "val2"]
+    it_behaves_like "a champ public value that is authorized", :epci, ['01', '200042935']
 
     it_behaves_like "a champ private value that is authorized", :text, "value"
     it_behaves_like "a champ private value that is authorized", :textarea, "value"
@@ -136,6 +149,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ private value that is authorized", :iban, "value"
     it_behaves_like "a champ private value that is authorized", :civilite, "M."
     it_behaves_like "a champ private value that is authorized", :pays, "FR"
+    it_behaves_like "a champ private value that is authorized", :regions, "93"
     it_behaves_like "a champ private value that is authorized", :date, "2022-12-22"
     it_behaves_like "a champ private value that is authorized", :datetime, "2022-12-22T10:30"
     it_behaves_like "a champ private value that is authorized", :yes_no, "true"
@@ -144,6 +158,9 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ private value that is authorized", :checkbox, "false"
     it_behaves_like "a champ private value that is authorized", :drop_down_list, "value"
     it_behaves_like "a champ private value that is authorized", :regions, "93"
+    it_behaves_like "a champ private value that is authorized", :departements, "03"
+    it_behaves_like "a champ private value that is authorized", :multiple_drop_down_list, ["val1", "val2"]
+    it_behaves_like "a champ private value that is authorized", :epci, ['01', '200042935']
 
     it_behaves_like "a champ public value that is unauthorized", :decimal_number, "non decimal string"
     it_behaves_like "a champ public value that is unauthorized", :integer_number, "non integer string"
@@ -155,7 +172,6 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is unauthorized", :date, "value"
     it_behaves_like "a champ public value that is unauthorized", :datetime, "value"
     it_behaves_like "a champ public value that is unauthorized", :datetime, "12-22-2022T10:30"
-    it_behaves_like "a champ public value that is unauthorized", :multiple_drop_down_list, "value"
     it_behaves_like "a champ public value that is unauthorized", :linked_drop_down_list, "value"
     it_behaves_like "a champ public value that is unauthorized", :header_section, "value"
     it_behaves_like "a champ public value that is unauthorized", :explication, "value"
@@ -173,11 +189,18 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is unauthorized", :siret, "value"
     it_behaves_like "a champ public value that is unauthorized", :rna, "value"
     it_behaves_like "a champ public value that is unauthorized", :annuaire_education, "value"
+    it_behaves_like "a champ public value that is unauthorized", :multiple_drop_down_list, ["value"]
   end
 
   private
 
   def find_champ_by_stable_id(dossier, stable_id)
     dossier.champs.joins(:type_de_champ).find_by(types_de_champ: { stable_id: stable_id })
+  end
+
+  def attributes(champ, value)
+    TypesDeChamp::PrefillTypeDeChamp
+      .build(champ.type_de_champ)
+      .transform_value_to_assignable_attributes(value)
   end
 end

@@ -5,28 +5,6 @@ describe Users::ActivateController, type: :controller do
       get :new, params: { token: token }
     end
 
-    context 'when the token is ok' do
-      let(:user) { create(:user) }
-      let(:token) { user.send(:set_reset_password_token) }
-
-      context 'for a simple user' do
-        it do
-          expect(controller).to have_received(:trust_device)
-          expect(assigns(:min_complexity)).to eq(PASSWORD_COMPLEXITY_FOR_USER)
-        end
-      end
-
-      context 'for an instructeur' do
-        let(:user) { create(:instructeur).user }
-        it { expect(assigns(:min_complexity)).to eq(PASSWORD_COMPLEXITY_FOR_INSTRUCTEUR) }
-      end
-
-      context 'for an administrateur' do
-        let(:user) { create(:administrateur).user }
-        it { expect(assigns(:min_complexity)).to eq(PASSWORD_COMPLEXITY_FOR_ADMIN) }
-      end
-    end
-
     context 'when the token is bad' do
       let(:user) { create(:user) }
       let(:token) { 'bad' }

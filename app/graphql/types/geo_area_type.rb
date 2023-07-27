@@ -12,7 +12,7 @@ module Types
 
     global_id_field :id
     field :source, GeoAreaSource, null: false
-    field :geometry, Types::GeoJSON, null: false, method: :safe_geometry
+    field :geometry, Types::GeoJSON, null: false
     field :description, String, null: true
 
     definition_methods do

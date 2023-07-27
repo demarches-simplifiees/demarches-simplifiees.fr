@@ -7,13 +7,13 @@
         - if hint?
           %span.fr-hint-text= hint
 
-  = @form.send(@input_type, @attribute, input_opts)
+  = @form.public_send(@input_type, @attribute, input_opts)
 
   - if errors_on_attribute?
     - if error_messages.size == 1
-      %p.fr-error-text{ id: error_message_id }= error_messages.first
+      %p.fr-error-text{ id: describedby_id }= error_messages.first
     - else
-      .fr-error-text{ id: error_message_id }
+      .fr-error-text{ id: describedby_id }
         %ul.list-style-type-none.fr-pl-0
           - error_messages.map do |error_message|
             %li= error_message
@@ -23,8 +23,8 @@
 
   - if password?
     .fr-password__checkbox.fr-checkbox-group.fr-checkbox-group--sm
-      %input#show_password{ "aria-label" => t('.show_password.aria_label'), type: "checkbox" }/
-      -# %label.fr--password__checkbox.fr-label{ for: "show_password" }= t('.show_password.label')
+      %input{ id: show_password_id, "aria-label" => t('.show_password.aria_label'), type: "checkbox" }/
+      %label.fr--password__checkbox.fr-label{ for: show_password_id }= t('.show_password.label')
 
   - if email?
     .suspect-email.hidden{ data: { "email-input-target": 'ariaRegion'}, aria: { live: 'off' } }

@@ -24,6 +24,10 @@ class Champs::EpciChamp < Champs::TextChamp
   store_accessor :value_json, :code_departement
   before_validation :on_departement_change
 
+  validate :code_departement_in_departement_codes, unless: -> { code_departement.blank? }
+  validate :external_id_in_departement_epci_codes, unless: -> { code_departement.blank? || external_id.nil? }
+  validate :value_in_departement_epci_names, unless: -> { code_departement.blank? || external_id.nil? || value.nil? }
+
   def for_export
     [value, code, "#{code_departement} – #{departement_name}"]
   end
@@ -73,5 +77,23 @@ class Champs::EpciChamp < Champs::TextChamp
       self.external_id = nil
       self.value = nil
     end
+  end
+
+  def code_departement_in_departement_codes
+    return if code_departement.in?(APIGeoService.departements.pluck(:code))
+
+    errors.add(:code_departement, :not_in_departement_codes)
+  end
+
+  def external_id_in_departement_epci_codes
+    return if external_id.in?(APIGeoService.epcis(code_departement).pluck(:code))
+
+    errors.add(:external_id, :not_in_departement_epci_codes)
+  end
+
+  def value_in_departement_epci_names
+    return if value.in?(APIGeoService.epcis(code_departement).pluck(:name))
+
+    errors.add(:value, :not_in_departement_epci_names)
   end
 end
