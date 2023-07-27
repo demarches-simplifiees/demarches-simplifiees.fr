@@ -57,16 +57,6 @@ class Dossiers::MessageComponent < ApplicationComponent
     l(commentaire.created_at, format: is_current_year ? :message_date : :message_date_with_year)
   end
 
-  def commentaire_body
-    if commentaire.discarded?
-      t('.deleted_body')
-    else
-      # pf old way to be removed : commentaire.sent_by_system? ? sanitize_html(commentaire.body) : string_to_html(commentaire.body)
-      body_formatted = commentaire.sent_by_system? ? commentaire.body : simple_format(commentaire.body)
-      sanitize(body_formatted, commentaire.sent_by_system? ? { scrubber: Sanitizers::MailScrubber.new } : {})
-    end
-  end
-
   def highlight?
     commentaire.created_at.present? && @messagerie_seen_at&.<(commentaire.created_at)
   end
