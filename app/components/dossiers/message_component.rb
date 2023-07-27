@@ -1,6 +1,4 @@
 class Dossiers::MessageComponent < ApplicationComponent
-  include StringToHtmlHelper
-
   def initialize(commentaire:, connected_user:, messagerie_seen_at: nil, show_reply_button: false)
     @commentaire = commentaire
     @connected_user = connected_user
