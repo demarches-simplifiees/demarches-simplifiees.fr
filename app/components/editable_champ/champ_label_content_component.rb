@@ -1,8 +1,10 @@
 class EditableChamp::ChampLabelContentComponent < ApplicationComponent
   include ApplicationHelper
+  include Dsfr::InputErrorable
 
-  def initialize(champ:, seen_at: nil)
-    @champ, @seen_at = champ, seen_at
+  def initialize(form:, champ:, seen_at: nil)
+    @form, @champ, @seen_at = form, champ, seen_at
+    @attribute = :value
   end
 
   def highlight_if_unseen_class
