@@ -336,7 +336,7 @@ class ProcedurePresentation < ApplicationRecord
         end
       end
     else
-      TypeDeChamp.find_by(stable_id: field['column']).options_for_select
+      find_type_de_champ(field['column']).options_for_select
     end
   end
 
