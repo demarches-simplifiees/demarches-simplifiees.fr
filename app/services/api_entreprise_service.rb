@@ -39,7 +39,11 @@ class APIEntrepriseService
 
     def update_etablissement_from_degraded_mode(etablissement, procedure_id)
       siret = etablissement.siret
-      etablissement_params = APIEntreprise::EtablissementAdapter.new(siret, procedure_id).to_params
+      etablissement_params = if siret.length == 6
+        APIEntreprise::PfEtablissementAdapter.new(siret, procedure_id).to_params
+      else
+        APIEntreprise::EtablissementAdapter.new(siret, procedure_id).to_params
+      end
       return nil if etablissement_params.empty?
 
       etablissement.update!(etablissement_params)
