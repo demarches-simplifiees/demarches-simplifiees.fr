@@ -561,7 +561,7 @@ describe Champ do
 
         expect(dossier.champs_public.size).to eq(2)
         expect(champ.rows.size).to eq(2)
-        second_row = champ.rows.second
+        second_row = champ.reload.rows.second
         expect(second_row.size).to eq(1)
         expect(second_row.first.dossier).to eq(dossier)
 

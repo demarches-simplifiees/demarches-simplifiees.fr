@@ -50,8 +50,8 @@ RSpec.describe API::Public::V1::DossiersController, type: :controller do
             let(:params) {
               {
                 id: procedure.id,
-                "champ_#{type_de_champ_1.to_typed_id}" => value_1,
-                "champ_#{type_de_champ_2.to_typed_id}" => value_2
+                "champ_#{type_de_champ_1.to_typed_id_for_query}" => value_1,
+                "champ_#{type_de_champ_2.to_typed_id_for_query}" => value_2
               }
             }
 

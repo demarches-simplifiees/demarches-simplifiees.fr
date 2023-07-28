@@ -11,6 +11,7 @@ describe 'Prefilling a dossier (with a GET request):' do
   let(:type_de_champ_datetime) { create(:type_de_champ_datetime, procedure: procedure) }
   let(:type_de_champ_multiple_drop_down_list) { create(:type_de_champ_multiple_drop_down_list, procedure: procedure) }
   let(:type_de_champ_epci) { create(:type_de_champ_epci, procedure: procedure) }
+  let(:type_de_champ_repetition) { create(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure) }
   let(:text_value) { "My Neighbor Totoro is the best movie ever" }
   let(:phone_value) { "invalid phone value" }
   let(:datetime_value) { "2023-02-01T10:32" }
@@ -21,15 +22,26 @@ describe 'Prefilling a dossier (with a GET request):' do
     ]
   }
   let(:epci_value) { ['01', '200029999'] }
+  let(:sub_type_de_champs_repetition) { procedure.active_revision.children_of(type_de_champ_repetition) }
+  let(:text_repetition_libelle) { sub_type_de_champs_repetition.first.libelle }
+  let(:integer_repetition_libelle) { sub_type_de_champs_repetition.second.libelle }
+  let(:text_repetition_value) { "First repetition text" }
+  let(:integer_repetition_value) { "42" }
 
   let(:entry_path) {
     commencer_path(
       path: procedure.path,
-      "champ_#{type_de_champ_text.to_typed_id}" => text_value,
-      "champ_#{type_de_champ_phone.to_typed_id}" => phone_value,
-      "champ_#{type_de_champ_datetime.to_typed_id}" => datetime_value,
-      "champ_#{type_de_champ_multiple_drop_down_list.to_typed_id}" => multiple_drop_down_list_values,
-      "champ_#{type_de_champ_epci.to_typed_id}" => epci_value
+      "champ_#{type_de_champ_text.to_typed_id_for_query}" => text_value,
+      "champ_#{type_de_champ_phone.to_typed_id_for_query}" => phone_value,
+      "champ_#{type_de_champ_datetime.to_typed_id_for_query}" => datetime_value,
+      "champ_#{type_de_champ_multiple_drop_down_list.to_typed_id_for_query}" => multiple_drop_down_list_values,
+      "champ_#{type_de_champ_epci.to_typed_id_for_query}" => epci_value,
+      "champ_#{type_de_champ_repetition.to_typed_id_for_query}" => [
+        {
+          "champ_#{sub_type_de_champs_repetition.first.to_typed_id_for_query}": text_repetition_value,
+          "champ_#{sub_type_de_champs_repetition.second.to_typed_id_for_query}": integer_repetition_value
+        }
+      ]
     )
   }
 
@@ -53,7 +65,6 @@ describe 'Prefilling a dossier (with a GET request):' do
       before do
         visit "/users/sign_in"
         sign_in_with user.email, password
-
         visit entry_path
 
         click_on "Poursuivre mon dossier prérempli"

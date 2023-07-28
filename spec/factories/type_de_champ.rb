@@ -217,6 +217,16 @@ FactoryBot.define do
           parent = revision.revision_types_de_champ.find { |rtdc| rtdc.type_de_champ == type_de_champ_repetition }
 
           build(:type_de_champ, procedure: evaluator.procedure, libelle: 'sub type de champ', parent: parent, position: 0)
+          build(:type_de_champ, type_champ: TypeDeChamp.type_champs.fetch(:integer_number), procedure: evaluator.procedure, libelle: 'sub type de champ2', parent: parent, position: 1)
+        end
+      end
+
+      trait :with_region_types_de_champ do
+        after(:build) do |type_de_champ_repetition, evaluator|
+          revision = evaluator.procedure.active_revision
+          parent = revision.revision_types_de_champ.find { |rtdc| rtdc.type_de_champ == type_de_champ_repetition }
+
+          build(:type_de_champ, type_champ: TypeDeChamp.type_champs.fetch(:regions), procedure: evaluator.procedure, libelle: 'region sub_champ', parent: parent, position: 10)
         end
       end
     end
