@@ -15,9 +15,11 @@
 #  closed_at                                 :datetime
 #  declarative_with_state                    :string
 #  description                               :string
+#  dossiers_count_computed_at                :datetime
 #  duree_conservation_dossiers_dans_ds       :integer
 #  duree_conservation_etendue_par_ds         :boolean          default(FALSE), not null
 #  encrypted_api_particulier_token           :string
+#  estimated_dossiers_count                  :integer
 #  estimated_duration_visible                :boolean          default(TRUE)
 #  euro_flag                                 :boolean          default(FALSE)
 #  experts_require_administrateur_invitation :boolean          default(FALSE)
@@ -70,6 +72,8 @@ class Procedure < ApplicationRecord
   NEW_MAX_DUREE_CONSERVATION = ENV.fetch('NEW_MAX_DUREE_CONSERVATION') { 12 }.to_i
 
   MIN_WEIGHT = 350000
+
+  DOSSIERS_COUNT_EXPIRING = 1.hour
 
   attr_encrypted :api_particulier_token
 
@@ -855,7 +859,13 @@ class Procedure < ApplicationRecord
     self.connection.query(query.to_sql).flatten
   end
 
-  private
+  def compute_dossiers_count
+    now = Time.zone.now
+    if now > (self.dossiers_count_computed_at || self.created_at) + DOSSIERS_COUNT_EXPIRING
+      self.update(estimated_dossiers_count: self.dossiers.visible_by_administration.count,
+                dossiers_count_computed_at: now)
+    end
+  end
 
   #----- PF section start
 

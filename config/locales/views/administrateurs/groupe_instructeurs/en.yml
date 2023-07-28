@@ -16,18 +16,6 @@ en:
         assignment:
           one: "The instructor %{emails} was assigned to the group « %{groupe} »."
           other: "The instructors %{emails} were assigned to the group « %{groupe} »."
-        email_body:
-          one: "The instructor %{emails} was assigned to the group « %{groupe} » by « %{email} », in charge of procedure « %{procedure} »."
-          other: "The instructors %{emails} were assigned to the group « %{groupe} » by « %{email} », in charge of procedure « %{procedure} »."
-      notify_group_when_instructeurs_removed:
-        email_body:
-          one: "The instructor %{emails} was removed from the group « %{groupe} » by « %{email} », in charge of procedure « %{procedure} »."
-          other: "The instructors %{emails} were removed from the group « %{groupe} » by « %{email} », in charge of procedure « %{procedure} »."
-      notify_removed_instructeur:
-        unassigned:
-          email_body: "You were unassigned from the procedure « %{procedure} » by « %{email} »."
-        assigned:
-          email_body: "You were removed from the group « %{groupe} » by « %{email} », in charge of procedure « %{procedure} »."
       reaffecter_dossiers:
         existing_groupe:
           one: "%{count} group exist"
@@ -53,11 +41,15 @@ en:
           notice: This group will be a choice from the list "%{routing_criteria_name}"
         csv_import:
           title: CSV Import
-          notice_1: The csv file must have 2 columns (Group, Email) and be separated by commas. The import does not overwrite existing groups and instructors.
+          routing_enabled:
+            notice_1: The csv file must have 2 columns (Group, Email) and be separated by commas. The import does not overwrite existing groups and instructors.
+          routing_disabled:
+            notice_1: The csv file must have 1 column with instructors emails.
           notice_2: The size of the file must be less than %{csv_max_size}.
           download_exemple: Download sample CSV file
           import_file: Import file
           import_file_procedure_not_published: The import of instructors by CSV file is available once the process has been published
+          import_file_alert: Instructors added to the procedure will receive an email. Are you sure you want to continue ?"
         set_up: set up
         button:
           add_group: Add group

@@ -883,6 +883,7 @@ class Dossier < ApplicationRecord
       .passer_en_construction
       .processed_at
     save!
+    procedure.compute_dossiers_count
   end
 
   def after_passer_en_instruction(h)

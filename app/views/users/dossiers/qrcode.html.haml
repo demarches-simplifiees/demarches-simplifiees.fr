@@ -14,7 +14,7 @@
       .tab-title= @attestation[:title]
       %span.date= l(@attestation[:created_at])
       .card
-        = string_to_html(@attestation[:body])
+        = render SimpleFormatComponent.new(@attestation[:body], allow_a: true)
         - if @attestation[:signature].present?
           = image_tag url_for(@attestation[:signature]),  style: 'display: block; margin-right: 0; margin-left: auto;  margin-bottom: 30px; margin-top: 30px; max-height: 8em;'
       -# %p.footer-bottom-line= @attestation[:footer]

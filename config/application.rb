@@ -43,9 +43,8 @@ module TPS
     default_allowed_tags = ActionView::Base.sanitized_allowed_tags
     # pf: allows using a, font and table tags
     pf_allowed_tags = Set.new(['font', 'table', 'tr', 'td', 'th'])
-    config.action_view.sanitized_allowed_tags = default_allowed_tags + ['u'] + pf_allowed_tags
-    # ds config.action_view.sanitized_allowed_tags = default_allowed_tags + ['u'] - ['img', 'a']
-    pf_allowed_attributes = Set.new(['target', 'rel', 'size,', 'face,', 'color'])
+    config.action_view.sanitized_allowed_tags = default_allowed_tags + ['u'] - ['img', 'a'] + pf_allowed_tags
+    pf_allowed_attributes = Set.new(['target', 'rel', 'size,', 'face,', 'color', 'src'])
     config.action_view.sanitized_allowed_attributes = ActionView::Base.sanitized_allowed_attributes + pf_allowed_attributes
 
     # ActionDispatch's IP spoofing detection is quite limited, and often rejects

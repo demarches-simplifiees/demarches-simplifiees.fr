@@ -16,7 +16,7 @@ describe 'As an instructeur', js: true do
   end
 
   scenario 'I can register' do
-    confirmation_email = open_email(instructeur_email)
+    confirmation_email = emails_sent_to(instructeur_email).first
     token_params = confirmation_email.body.match(/token=[^"]+/)
 
     visit "users/activate?#{token_params}"

@@ -234,7 +234,6 @@ ActiveRecord::Schema.define(version: 2023_04_13_171421) do
     t.jsonb "value_json"
     t.index ["dossier_id"], name: "index_champs_on_dossier_id"
     t.index ["etablissement_id"], name: "index_champs_on_etablissement_id"
-    t.index ["external_id"], name: "index_champs_on_external_id"
     t.index ["parent_id"], name: "index_champs_on_parent_id"
     t.index ["private"], name: "index_champs_on_private"
     t.index ["row_id"], name: "index_champs_on_row_id"
@@ -707,11 +706,13 @@ ActiveRecord::Schema.define(version: 2023_04_13_171421) do
     t.string "declarative_with_state"
     t.string "description"
     t.string "direction"
+    t.datetime "dossiers_count_computed_at"
     t.bigint "draft_revision_id"
     t.integer "duree_conservation_dossiers_dans_ds"
     t.boolean "duree_conservation_etendue_par_ds", default: false, null: false
     t.boolean "durees_conservation_required", default: true
     t.string "encrypted_api_particulier_token"
+    t.integer "estimated_dossiers_count"
     t.boolean "estimated_duration_visible", default: true
     t.boolean "euro_flag", default: false
     t.boolean "experts_require_administrateur_invitation", default: false

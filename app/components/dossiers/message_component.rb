@@ -1,6 +1,4 @@
 class Dossiers::MessageComponent < ApplicationComponent
-  include StringToHtmlHelper
-
   def initialize(commentaire:, connected_user:, messagerie_seen_at: nil, show_reply_button: false)
     @commentaire = commentaire
     @connected_user = connected_user
@@ -55,16 +53,6 @@ class Dossiers::MessageComponent < ApplicationComponent
   def commentaire_date
     is_current_year = (commentaire.created_at.year == Time.zone.today.year)
     l(commentaire.created_at, format: is_current_year ? :message_date : :message_date_with_year)
-  end
-
-  def commentaire_body
-    if commentaire.discarded?
-      t('.deleted_body')
-    else
-      # pf old way to be removed : commentaire.sent_by_system? ? sanitize_html(commentaire.body) : string_to_html(commentaire.body)
-      body_formatted = commentaire.sent_by_system? ? commentaire.body : simple_format(commentaire.body)
-      sanitize(body_formatted, commentaire.sent_by_system? ? { scrubber: Sanitizers::MailScrubber.new } : {})
-    end
   end
 
   def highlight?

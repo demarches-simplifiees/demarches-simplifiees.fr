@@ -9,7 +9,7 @@
     - form_options = { url: brouillon_dossier_url(dossier), method: :patch, data: { save_on_input: true } }
   - else
     - form_options = { url: modifier_dossier_url(dossier), method: :patch }
-
+  = render Attachment::DeleteFormComponent.new
   = form_for dossier, form_options.merge({ html: { id: 'dossier-edit-form', class: 'form', multipart: true, novalidate: 'novalidate' } }) do |f|
 
     %header.mb-6

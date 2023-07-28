@@ -2,7 +2,7 @@
   %section.ask-avis
     %h1.tab-title Inviter des personnes à donner leur avis
     %p.avis-notice Les invités pourront consulter le dossier, donner un avis et contribuer au fil de messagerie. Ils ne pourront pas modifier le dossier.
-
+    = render Attachment::DeleteFormComponent.new
     = form_for avis, url: url, html: { class: 'form', multipart: true, data: { controller: 'persisted-form', persisted_form_key_value: dom_id(@avis.dossier, :avis_by_expert) } } do |f|
       = hidden_field_tag  'avis[emails]', nil
       = react_component("ComboMultiple",

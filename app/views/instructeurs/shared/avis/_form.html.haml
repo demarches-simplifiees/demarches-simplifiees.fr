@@ -8,6 +8,7 @@
     %p#avis-emails-description.avis-notice
       Entrez les adresses email des experts à qui vous souhaitez demander un avis
 
+  = render Attachment::DeleteFormComponent.new
   = form_for avis, url: url, html: { class: 'form', multipart: true, data: { controller: 'persisted-form', persisted_form_key_value: dom_id(@dossier, :avis_by_instructeur) } } do |f|
     = hidden_field_tag  'avis[emails]', nil
     = react_component("ComboMultiple",
