@@ -137,6 +137,7 @@ en:
           date_html: ISO8601 date
           datetime_html: ISO8601 datetime
           drop_down_list_other_html: Any value
+          siret_html: A SIRET number
           repetition_html: A array of hashes with possible values for each field of the repetition.
           epci_html: An array of the department code and the <a href="https://geo.api.gouv.fr/epcis" target="_blank" rel="noopener noreferrer">EPCI one</a>.
         examples:
@@ -155,6 +156,7 @@ en:
           date: "2023-02-01"
           datetime: "2023-02-01T10:30"
           checkbox: "true"
+          siret: 13002526500013
         prefill_link_title: Prefill link (GET)
         prefill_link_info: Use the button to copy the link, then remplace the values with your data.
         prefill_link_too_long: Warning, the prefill link is too long and may not work on all browsers.
@@ -512,7 +514,8 @@ en:
       dossier_not_found: "The file does not exist or you do not have access to it."
       # # dossier_map_not_activated: "The file does not have access to the map."
       targeted_user_link_expired: "This invitation link or the file is no longer available."
-      invalid_siret: "The Tahiti number is incorrect"
+      invalid_siret_length: "The TAHITI number must contain exactly 6 characters."
+      invalid_siret_checksum: "The TAHITI number is invalid."
       procedure_not_found: "The procedure does not exist"
       siret_unknown: 'Sorry, we did not find any company registered under this TAHITI number.'
       siret_network_error: 'Sorry, TAHITI number retrieval is temporarily unavailable. Please try again in a few moments'

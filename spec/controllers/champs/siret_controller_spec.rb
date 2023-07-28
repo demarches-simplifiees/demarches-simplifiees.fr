@@ -31,6 +31,8 @@ describe Champs::SiretController, type: :controller do
         sign_in user
         stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}/)
           .to_return(status: api_etablissement_status, body: api_etablissement_body)
+        stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siret[0..8]}/)
+          .to_return(status: 200, body: File.read('spec/fixtures/files/api_entreprise/entreprises.json'))
         allow_any_instance_of(APIEntrepriseToken).to receive(:roles)
           .and_return(["attestations_fiscales", "attestations_sociales", "bilans_entreprise_bdf"])
         allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(token_expired)
@@ -39,10 +41,8 @@ describe Champs::SiretController, type: :controller do
       context 'when the SIRET is empty' do
         subject! { get :show, params: params, format: :turbo_stream }
 
-        it 'clears the etablissement and SIRET on the model' do
-          champ.reload
-          expect(champ.etablissement).to be_nil
-          expect(champ.value).to be_empty
+        it 'clears the etablissement on the model' do
+          expect(champ.reload.etablissement).to be_nil
         end
 
         it 'clears any information or error message' do
@@ -50,19 +50,31 @@ describe Champs::SiretController, type: :controller do
         end
       end
 
-      context 'when the SIRET is invalid' do
+      context "when the SIRET is invalid because of it's length" do
         let(:siret) { '1234' }
 
         subject! { get :show, params: params, format: :turbo_stream }
 
-        it 'clears the etablissement and SIRET on the model' do
-          champ.reload
-          expect(champ.etablissement).to be_nil
-          expect(champ.value).to be_empty
+        it 'clears the etablissement on the model' do
+          expect(champ.reload.etablissement).to be_nil
         end
 
         it 'displays a “SIRET is invalid” error message' do
           expect(response.body).to include("Le numéro TAHITI doit comporter exactement #{SIRET_LENGTH} caractères.")
+        end
+      end
+
+      context "when the SIRET is invalid because of it's checksum" do
+        let(:siret) { '82812345600023' }
+
+        subject! { get :show, params: params, format: :turbo_stream }
+
+        it 'clears the etablissement on the model' do
+          expect(champ.reload.etablissement).to be_nil
+        end
+
+        it 'displays a “SIRET is invalid” error message' do
+          expect(response.body).to include('Le format du numéro de SIRET est invalide.')
         end
       end
 
@@ -76,10 +88,8 @@ describe Champs::SiretController, type: :controller do
 
         subject! { get :show, params: params, format: :turbo_stream }
 
-        it 'clears the etablissement and SIRET on the model' do
-          champ.reload
-          expect(champ.etablissement).to be_nil
-          expect(champ.value).to be_empty
+        it 'clears the etablissement on the model' do
+          expect(champ.reload.etablissement).to be_nil
         end
 
         it 'displays a “API is unavailable” error message' do
@@ -115,10 +125,8 @@ describe Champs::SiretController, type: :controller do
 
         subject! { get :show, params: params, format: :turbo_stream }
 
-        it 'clears the etablissement and SIRET on the model' do
-          champ.reload
-          expect(champ.etablissement).to be_nil
-          expect(champ.value).to be_empty
+        it 'clears the etablissement on the model' do
+          expect(champ.reload.etablissement).to be_nil
         end
 
         it 'displays a “SIRET not found” error message' do

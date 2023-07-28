@@ -294,7 +294,8 @@ class TypeDeChamp < ApplicationRecord
       TypeDeChamp.type_champs.fetch(:drop_down_list),
       TypeDeChamp.type_champs.fetch(:repetition),
       TypeDeChamp.type_champs.fetch(:multiple_drop_down_list),
-      TypeDeChamp.type_champs.fetch(:epci)
+      TypeDeChamp.type_champs.fetch(:epci),
+      TypeDeChamp.type_champs.fetch(:siret)
     ])
   end
 
