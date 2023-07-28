@@ -22,10 +22,17 @@ module Dsfr
       end
 
       def input_group_error_class_names
-        {
-          "fr-input-group--error": errors_on_attribute?,
-          "fr-input-group--valid": !errors_on_attribute? && errors_on_another_attribute?
-        }
+        if @champ && @champ.legend_label?
+          {
+            "fr-fieldset--error": errors_on_attribute?,
+            "fr-fieldset--valid": !errors_on_attribute? && errors_on_another_attribute?
+          }
+        else
+          {
+            "fr-input-group--error": errors_on_attribute?,
+            "fr-input-group--valid": !errors_on_attribute? && errors_on_another_attribute?
+          }
+        end
       end
 
       def input_error_class_names
