@@ -156,7 +156,13 @@ def add_single_champ(pdf, champ)
   when 'Champs::PieceJustificativeChamp', 'Champs::TitreIdentiteChamp'
     return
   when 'Champs::HeaderSectionChamp'
-    add_section_title(pdf, tdc.libelle)
+    libelle = if @dossier.auto_numbering_section_headers_for?(champ)
+      "#{@dossier.index_for_section_header(champ)}. #{champ.libelle}"
+    else
+      champ.libelle
+    end
+
+    add_section_title(pdf, libelle)
   when 'Champs::ExplicationChamp'
     format_in_2_lines(pdf, tdc.libelle, strip_tags(tdc.description))
   when 'Champs::CarteChamp'

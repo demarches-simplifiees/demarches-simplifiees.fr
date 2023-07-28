@@ -214,6 +214,7 @@ class TypeDeChamp < ApplicationRecord
   validates :type_champ, presence: true, allow_blank: false, allow_nil: false
 
   before_validation :check_mandatory
+  before_validation :normalize_libelle
   before_save :remove_piece_justificative_template, if: -> { type_champ_changed? }
   before_validation :remove_drop_down_list, if: -> { type_champ_changed? }
   before_save :remove_block, if: -> { type_champ_changed? }
@@ -630,5 +631,9 @@ class TypeDeChamp < ApplicationRecord
         .draft_revision # action occurs only on draft
         .remove_children_of(self)
     end
+  end
+
+  def normalize_libelle
+    self.libelle&.strip!
   end
 end

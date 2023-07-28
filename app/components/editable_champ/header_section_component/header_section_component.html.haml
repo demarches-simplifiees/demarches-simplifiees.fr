@@ -1,2 +1,3 @@
-= content_tag "h" + (1+@champ.level).to_s, {class: 'header-section'} do
-  = @champ.libelle_with_section_index
+- class_names = 'header-section ' + (@champ.dossier.auto_numbering_section_headers_for?(@champ) ? "header-section-counter" : "")
+= content_tag "h" + (1+@champ.level).to_s, { class: class_names } do
+  = @champ.libelle

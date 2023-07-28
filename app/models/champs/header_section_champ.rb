@@ -32,27 +32,11 @@ class Champs::HeaderSectionChamp < Champ
     level
   end
 
-  def libelle_with_section_index
-    if sections&.none?(&:libelle_with_section_index?)
-      "#{section_index}. #{libelle}"
-    else
-      libelle
-    end
-  end
-
   def libelle_with_section_index?
     libelle =~ /^\d/
   end
 
   def section_index
-    sections
-      .take_while { |c| c != self }
-      .push(self)
-      .reduce([0, 0, 0]) do |index, c|
-      level = c.type_de_champ.level.to_i
-      level -= 1 if level > 0
-      r = level > 0 ? index[0..(level - 1)] : []
-      r << index[level].to_i + 1
-    end.reject(&:zero?).join('.')
+    sections.index(self) + 1
   end
 end

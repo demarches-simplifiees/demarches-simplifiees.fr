@@ -10,8 +10,7 @@
   - else
     %tr
       - if c.type_champ == TypeDeChamp.type_champs.fetch(:header_section)
-        %th.header-section{ colspan: 3 }
-          = c.libelle
+        %th.header-section{ colspan: 3, class: c.dossier.auto_numbering_section_headers_for?(c) ? "header-section-counter" : nil }= c.libelle
       - else
         %td.libelle{ class: repetition ? 'padded' : '' }
           = "#{c.libelle} :"
