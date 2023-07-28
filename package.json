@@ -94,7 +94,7 @@
     "coverage": "vitest run --coverage"
   },
   "engines": {
-    "node": ">= 16.*"
+    "node": ">= 18.17.0"
   },
   "graphdoc": {
     "schemaFile": "./app/graphql/schema.json",
