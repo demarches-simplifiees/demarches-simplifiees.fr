@@ -11,6 +11,7 @@ describe 'Prefilling a dossier (with a GET request):' do
   let(:type_de_champ_datetime) { create(:type_de_champ_datetime, procedure: procedure) }
   let(:type_de_champ_multiple_drop_down_list) { create(:type_de_champ_multiple_drop_down_list, procedure: procedure) }
   let(:type_de_champ_epci) { create(:type_de_champ_epci, procedure: procedure) }
+  let(:type_de_champ_commune) { create(:type_de_champ_communes, procedure: procedure) }
   let(:type_de_champ_repetition) { create(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure) }
   let(:text_value) { "My Neighbor Totoro is the best movie ever" }
   let(:phone_value) { "invalid phone value" }
@@ -22,6 +23,7 @@ describe 'Prefilling a dossier (with a GET request):' do
     ]
   }
   let(:epci_value) { ['01', '200029999'] }
+  let(:commune_value) { ['01', '01457'] } # Vonnas (01540)
   let(:sub_type_de_champs_repetition) { procedure.active_revision.children_of(type_de_champ_repetition) }
   let(:text_repetition_libelle) { sub_type_de_champs_repetition.first.libelle }
   let(:integer_repetition_libelle) { sub_type_de_champs_repetition.second.libelle }
@@ -36,6 +38,7 @@ describe 'Prefilling a dossier (with a GET request):' do
       "champ_#{type_de_champ_datetime.to_typed_id_for_query}" => datetime_value,
       "champ_#{type_de_champ_multiple_drop_down_list.to_typed_id_for_query}" => multiple_drop_down_list_values,
       "champ_#{type_de_champ_epci.to_typed_id_for_query}" => epci_value,
+      "champ_#{type_de_champ_commune.to_typed_id_for_query}" => commune_value,
       "champ_#{type_de_champ_repetition.to_typed_id_for_query}" => [
         {
           "champ_#{sub_type_de_champs_repetition.first.to_typed_id_for_query}": text_repetition_value,
@@ -50,11 +53,13 @@ describe 'Prefilling a dossier (with a GET request):' do
     Rails.cache.clear
 
     VCR.insert_cassette('api_geo_departements')
+    VCR.insert_cassette('api_geo_communes')
     VCR.insert_cassette('api_geo_epcis')
   end
 
   after do
     VCR.eject_cassette('api_geo_departements')
+    VCR.eject_cassette('api_geo_communes')
     VCR.eject_cassette('api_geo_epcis')
   end
 
