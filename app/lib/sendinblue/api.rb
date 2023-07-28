@@ -57,12 +57,13 @@ class Sendinblue::API
 
   def delete_events(day, opts = {})
     client = ::SibApiV3Sdk::TransactionalEmailsApi.new
-    event_opts = { start_date: day, end_date: day, limit: 100 }.merge(opts)
-    while (events = client.get_email_event_report(event_opts).events).present?
-      message_ids = events.map(&:message_id).uniq
-      message_ids.each do |message_id|
-        client.smtp_log_message_id_delete(message_id)
-      end
+    event_opts = { start_date: day, end_date: day }.merge(opts)
+    message_ids = ['bounces', 'hardBounces', 'softBounces', 'delivered', 'spam', 'requests', 'opened', 'clicks', 'invalid', 'deferred', 'blocked', 'unsubscribed', 'error'].flat_map do |event_type|
+      event_opts[:event] = event_type
+      client.get_email_event_report(event_opts).events.presence&.map(&:message_id)
+    end.compact.uniq
+    Parallel.each(message_ids, in_threads: 5, progress: "Deleting message logs") do |message_id|
+      client.smtp_log_message_id_delete(message_id)
     end
     true
   rescue ::SibApiV3Sdk::ApiError => e

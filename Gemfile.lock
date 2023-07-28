@@ -916,6 +916,7 @@ DEPENDENCIES
   net-pop
   net-smtp
   openid_connect
+  parallel
   parsby
   pg
   phonelib

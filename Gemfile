@@ -62,6 +62,7 @@ gem 'net-imap', require: false # See https://github.com/mikel/mail/pull/1439
 gem 'net-pop', require: false # same
 gem 'net-smtp', require: false # same
 gem 'openid_connect'
+gem 'parallel'
 gem 'parsby'
 gem 'pg'
 gem 'phonelib'
