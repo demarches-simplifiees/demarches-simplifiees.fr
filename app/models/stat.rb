@@ -63,16 +63,15 @@ class Stat < ApplicationRecord
     def deleted_dossiers_states
       sanitize_and_exec(DeletedDossier, <<-EOF
         SELECT
-          COUNT(*) FILTER ( WHERE state != 'brouillon' ) AS "not_brouillon",
-          COUNT(*) FILTER ( WHERE state != 'brouillon' and deleted_at BETWEEN :one_month_ago AND :now ) AS "dossiers_depose_avant_30_jours",
-          COUNT(*) FILTER ( WHERE state != 'brouillon' and deleted_at BETWEEN :two_months_ago AND :one_month_ago ) AS "dossiers_deposes_entre_60_et_30_jours",
-          COUNT(*) FILTER ( WHERE state = 'brouillon' ) AS "brouillon",
+          COUNT(*) AS "not_brouillon",
+          COUNT(*) FILTER ( WHERE deleted_at BETWEEN :one_month_ago AND :now ) AS "dossiers_depose_avant_30_jours",
+          COUNT(*) FILTER ( WHERE deleted_at BETWEEN :two_months_ago AND :one_month_ago ) AS "dossiers_deposes_entre_60_et_30_jours",
           COUNT(*) FILTER ( WHERE state = 'en_construction' ) AS "en_construction",
           COUNT(*) FILTER ( WHERE state = 'en_instruction' ) AS "en_instruction",
           COUNT(*) FILTER ( WHERE state in ('accepte', 'refuse', 'sans_suite') ) AS "termines"
         FROM deleted_dossiers
       EOF
-      )
+      ).merge('brouillon' => 0)
     end
 
     def last_four_months_serie(associations_with_date_attribute)
