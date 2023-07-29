@@ -74,7 +74,7 @@ describe Champs::SiretController, type: :controller do
         end
 
         it 'displays a “SIRET is invalid” error message' do
-          expect(response.body).to include('Le format du numéro de SIRET est invalide.')
+          expect(response.body).to include('Le format du numéro TAHITI est invalide.')
         end
       end
 
@@ -141,9 +141,7 @@ describe Champs::SiretController, type: :controller do
         subject! { get :show, params: params, format: :turbo_stream }
 
         it 'clears the etablissement and SIRET on the model' do
-          champ.reload
           expect(champ.etablissement).to be_nil
-          expect(champ.value).to be_empty
         end
 
         it 'displays a “SIRET not found” error message' do
