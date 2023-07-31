@@ -17,11 +17,11 @@ RSpec.describe TypesDeChamp::PrefillEpciTypeDeChamp do
     it { is_expected.to be_kind_of(TypesDeChamp::PrefillTypeDeChamp) }
   end
 
-  describe '#possible_values' do
+  describe '#all_possible_values' do
     let(:expected_values) do
       departements.map { |departement| "#{departement[:code]} (#{departement[:name]}) : https://geo.api.gouv.fr/epcis?codeDepartement=#{departement[:code]}" }
     end
-    subject(:possible_values) { described_class.new(type_de_champ, procedure.active_revision).possible_values }
+    subject(:all_possible_values) { described_class.new(type_de_champ, procedure.active_revision).all_possible_values }
 
     before do
       VCR.insert_cassette('api_geo_departements')
@@ -33,7 +33,7 @@ RSpec.describe TypesDeChamp::PrefillEpciTypeDeChamp do
       VCR.eject_cassette('api_geo_epcis')
     end
 
-    it { expect(possible_values).to match(expected_values) }
+    it { expect(all_possible_values).to match(expected_values) }
   end
 
   describe '#example_value' do
