@@ -75,7 +75,12 @@ const defaultQueryFn: QueryFunction<unknown, QueryKey> = async ({
 
   // BAN will error with queries less then 3 chars long
   if (scope == 'adresse' && term.length < 3) {
-    return [];
+    return {
+      type: 'FeatureCollection',
+      version: 'draft',
+      features: [],
+      query: term
+    };
   }
 
   const url = buildURL(scope, term, extra);
